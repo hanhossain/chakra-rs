@@ -139,9 +139,7 @@ void ScriptMemoryDumper::DumpLargeBucket(LargeHeapBucket* heapBucket)
 {
     DumpLargeHeapBlockList(heapBucket->fullLargeBlockList);
     DumpLargeHeapBlockList(heapBucket->largeBlockList);
-#ifdef RECYCLER_PAGE_HEAP
     DumpLargeHeapBlockList(heapBucket->largePageHeapBlockList);
-#endif
     DumpLargeHeapBlockList(heapBucket->pendingDisposeLargeBlockList);
     DumpLargeHeapBlockList(heapBucket->pendingSweepLargeBlockList);
     DumpLargeHeapBlockList(heapBucket->partialSweptLargeBlockList);

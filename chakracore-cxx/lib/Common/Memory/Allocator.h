@@ -29,9 +29,7 @@ enum PageHeapMode : byte
 #define DbgMemFill 0XFE
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
 #define PageHeapMemFill 0XF0
-#endif
 
 namespace Memory
 {

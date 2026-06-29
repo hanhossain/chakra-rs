@@ -21,25 +21,20 @@ public:
     ~HeapInfo();
 
     void Initialize(Recycler * recycler
-#ifdef RECYCLER_PAGE_HEAP
         , PageHeapMode pageheapmode = PageHeapMode::PageHeapModeOff
         , bool captureAllocCallStack = false
         , bool captureFreeCallStack = false
-#endif
         );
 #if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     void Initialize(Recycler * recycler, void(*trackNativeAllocCallBack)(Recycler *, void *, size_t)
-#ifdef RECYCLER_PAGE_HEAP
         , PageHeapMode pageheapmode = PageHeapMode::PageHeapModeOff
         , bool captureAllocCallStack = false
         , bool captureFreeCallStack = false
-#endif
         );
 #endif
 
     void ResetMarks(ResetMarkFlags flags);
     void EnumerateObjects(ObjectInfoBits infoBits, void(*CallBackFunction)(void * address, size_t size));
-#ifdef RECYCLER_PAGE_HEAP
     bool IsPageHeapEnabled() const{ return isPageHeapEnabled; }
     static size_t RoundObjectSize(size_t objectSize)
     {
@@ -73,9 +68,6 @@ public:
 
     template <typename TBlockAttributes>
     bool IsPageHeapEnabledForBlock(const size_t objectSize);
-#else
-    bool IsPageHeapEnabled() const{ return false; }
-#endif
 
 #if ENABLE_MEM_STATS
     void GetBucketStats(BucketStatsReporter& report);
@@ -366,7 +358,6 @@ public:
     MediumNormalWithBarrierHeapBlock * newMediumNormalWithBarrierHeapBlockList;
     MediumFinalizableWithBarrierHeapBlock * newMediumFinalizableWithBarrierHeapBlockList;
 
-#ifdef RECYCLER_PAGE_HEAP
     PageHeapMode pageHeapMode;
     bool isPageHeapEnabled;
     BVStatic<HeapConstants::BucketCount> smallBlockPageHeapBucketFilter;
@@ -374,7 +365,6 @@ public:
     bool captureAllocCallStack;
     bool captureFreeCallStack;
     PageHeapBlockTypeFilter pageHeapBlockType;
-#endif
 
     HeapBucketGroup<SmallAllocationBlockAttributes> heapBuckets[HeapConstants::BucketCount];
 

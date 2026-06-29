@@ -1236,7 +1236,6 @@ int32_t (*pfSetEnableConcurrentSweepAllocFlag)(bool flag);
 bool (*pfIsEnabledecsaFlag)();
 int32_t (*pfGetecsaFlag)(bool *flag);
 int32_t (*pfSetecsaFlag)(bool flag);
-#ifdef RECYCLER_PAGE_HEAP
 bool (*pfIsEnabledPageHeapFlag)();
 int32_t (*pfGetPageHeapFlag)(int *flag);
 int32_t (*pfSetPageHeapFlag)(int flag);
@@ -1252,7 +1251,6 @@ int32_t (*pfSetPageHeapBlockTypeFlag)(int flag);
 bool (*pfIsEnabledPageHeapDecommitGuardPageFlag)();
 int32_t (*pfGetPageHeapDecommitGuardPageFlag)(bool *flag);
 int32_t (*pfSetPageHeapDecommitGuardPageFlag)(bool flag);
-#endif
 #ifdef RECYCLER_NO_PAGE_REUSE
 bool (*pfIsEnabledRecyclerNoPageReuseFlag)();
 int32_t (*pfGetRecyclerNoPageReuseFlag)(bool *flag);

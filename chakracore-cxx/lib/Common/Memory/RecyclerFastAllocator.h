@@ -77,9 +77,7 @@ public:
 #ifdef RECYCLER_MEMORY_VERIFY
         recycler->FillCheckPad(memBlock, sizeof(T), sizeCat);
 #endif
-#ifdef RECYCLER_PAGE_HEAP
         recycler->VerifyPageHeapFillAfterAlloc(memBlock, size, attributes);
-#endif
         return memBlock;
     };
     static uint32_t GetEndAddressOffset()

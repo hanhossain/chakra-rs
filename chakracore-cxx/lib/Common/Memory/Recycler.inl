@@ -190,9 +190,7 @@ Recycler::AllocWithAttributesInlined(size_t size)
             Assert(this->hasBackgroundFinishPartial || this->clientTrackedObjectList.Empty());
         }
     }
-#ifdef RECYCLER_PAGE_HEAP
     VerifyPageHeapFillAfterAlloc(memBlock, size, attributes);
-#endif
     return memBlock;
 }
 
@@ -244,9 +242,7 @@ Recycler::AllocZeroWithAttributesInlined(size_t size)
         }
     }
 
-#ifdef RECYCLER_PAGE_HEAP
     VerifyPageHeapFillAfterAlloc(obj, size, attributes);
-#endif
 
 #if DBG
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(RecyclerVerifyMark))

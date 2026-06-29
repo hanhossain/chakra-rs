@@ -434,12 +434,10 @@ private:
 #define DEFAULT_CONFIG_PoisonObjectsForStores (false)
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
 #define DEFAULT_CONFIG_PageHeap             ((Js::Number) PageHeapMode::PageHeapModeOff)
 #define DEFAULT_CONFIG_PageHeapAllocStack   (false)
 #define DEFAULT_CONFIG_PageHeapFreeStack    (false)
 #define DEFAULT_CONFIG_PageHeapBlockType    ((Js::Number) PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll)
-#endif
 
 #define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
 #define DEFAULT_CONFIG_NewPagesCapDuringBGSweeping    (15000 * 4)

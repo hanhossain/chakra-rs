@@ -20,20 +20,16 @@ public:
     }
 
     void Initialize(Recycler * recycler
-#ifdef RECYCLER_PAGE_HEAP
         , PageHeapMode pageheapmode = PageHeapMode::PageHeapModeOff
         , bool captureAllocCallStack = false
         , bool captureFreeCallStack = false
-#endif
     );
 
 #if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     void Initialize(Recycler * recycler, void(*trackNativeAllocCallBack)(Recycler *, void *, size_t)
-#ifdef RECYCLER_PAGE_HEAP
         , PageHeapMode pageheapmode = PageHeapMode::PageHeapModeOff
         , bool captureAllocCallStack = false
         , bool captureFreeCallStack = false
-#endif
     );
 #endif
 
@@ -124,10 +120,8 @@ public:
     void DisablePageReuse();
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
     bool DoCaptureAllocCallStack();
     bool DoCaptureFreeCallStack();
-#endif
 private:
     template <class Fn>
     void ForEachHeapInfo(Fn fn);

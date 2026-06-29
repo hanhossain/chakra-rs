@@ -21,9 +21,7 @@ public:
         explicitFreeList(nullptr),
         fullLargeBlockList(nullptr),
         largeBlockList(nullptr),
-#ifdef RECYCLER_PAGE_HEAP
         largePageHeapBlockList(nullptr),
-#endif
         pendingDisposeLargeBlockList(nullptr)
         , pendingSweepLargeBlockList(nullptr)
         , partialSweptLargeBlockList(nullptr)
@@ -40,9 +38,7 @@ public:
 
     template <ObjectInfoBits attributes, bool nothrow>
     char* Alloc(Recycler * recycler, size_t sizeCat);
-#ifdef RECYCLER_PAGE_HEAP
     char *PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size, ObjectInfoBits attributes, PageHeapMode mode, bool nothrow);
-#endif
     void ExplicitFree(void * object, size_t sizeCat);
 
     void ResetMarks(ResetMarkFlags flags);
@@ -104,9 +100,7 @@ private:
 
     LargeHeapBlock * fullLargeBlockList;
     LargeHeapBlock * largeBlockList;
-#ifdef RECYCLER_PAGE_HEAP
     LargeHeapBlock * largePageHeapBlockList;
-#endif
     LargeHeapBlock * pendingDisposeLargeBlockList;
     LargeHeapBlock * pendingSweepLargeBlockList;
     // Used for concurrent-partial GC

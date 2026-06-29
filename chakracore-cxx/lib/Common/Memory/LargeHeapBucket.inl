@@ -57,9 +57,7 @@ LargeHeapBucket::Alloc(Recycler * recycler, size_t sizeCat)
     }
     else
     {
-#ifdef RECYCLER_PAGE_HEAP
         Assert(!IsPageHeapEnabled(attributes));
-#endif
     }
 
 #ifdef RECYCLER_ZERO_MEM_CHECK
@@ -77,9 +75,7 @@ LargeHeapBucket::ForEachLargeHeapBlock(Fn fn)
 {
     HeapBlockList::ForEach(fullLargeBlockList, fn);
     HeapBlockList::ForEach(largeBlockList, fn);
-#ifdef RECYCLER_PAGE_HEAP
     HeapBlockList::ForEach(largePageHeapBlockList, fn);
-#endif
     HeapBlockList::ForEach(pendingDisposeLargeBlockList, fn);
     HeapBlockList::ForEach(pendingSweepLargeBlockList, fn);
     HeapBlockList::ForEach(partialSweptLargeBlockList, fn);
@@ -91,9 +87,7 @@ LargeHeapBucket::ForEachEditingLargeHeapBlock(Fn fn)
 {
     HeapBlockList::ForEachEditing(fullLargeBlockList, fn);
     HeapBlockList::ForEachEditing(largeBlockList, fn);
-#ifdef RECYCLER_PAGE_HEAP
     HeapBlockList::ForEachEditing(largePageHeapBlockList, fn);
-#endif
     HeapBlockList::ForEachEditing(pendingDisposeLargeBlockList, fn);
     HeapBlockList::ForEachEditing(pendingSweepLargeBlockList, fn);
     HeapBlockList::ForEachEditing(partialSweptLargeBlockList, fn);

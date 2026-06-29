@@ -535,14 +535,12 @@ namespace Js
         RecyclerPriorityBoostTimeoutFlag,
         RecyclerThreadCollectTimeoutFlag,
         EnableConcurrentSweepAllocFlag, ecsaFlag,
-        #ifdef RECYCLER_PAGE_HEAP
         PageHeapFlag,
         PageHeapAllocStackFlag,
         PageHeapFreeStackFlag,
         PageHeapBucketNumberFlag,
         PageHeapBlockTypeFlag,
         PageHeapDecommitGuardPageFlag,
-        #endif
         #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuseFlag,
         #endif
@@ -1001,9 +999,7 @@ namespace Js
             IdleCollectPhase,
             MarshalPhase,
             MemoryAllocationPhase,
-    #ifdef RECYCLER_PAGE_HEAP
                 PageHeapPhase,
-    #endif
                 LargeMemoryAllocationPhase,
                 PageAllocatorAllocPhase,
             RecyclerPhase,
@@ -2022,14 +2018,12 @@ namespace Js
             Number RecyclerPriorityBoostTimeout;
             Number RecyclerThreadCollectTimeout;
             Boolean EnableConcurrentSweepAlloc; Boolean ecsa;
-        #ifdef RECYCLER_PAGE_HEAP
             Number PageHeap;
             Boolean PageHeapAllocStack;
             Boolean PageHeapFreeStack;
             NumberRange PageHeapBucketNumber;
             Number PageHeapBlockType;
             Boolean PageHeapDecommitGuardPage;
-        #endif
         #ifdef RECYCLER_NO_PAGE_REUSE
             Boolean RecyclerNoPageReuse;
         #endif

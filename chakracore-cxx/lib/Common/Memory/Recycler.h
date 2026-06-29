@@ -634,7 +634,6 @@ public:
     static const uint ConcurrentThreadStackSize = 300000;
     static const bool FakeZeroLengthArray = true;
 
-#ifdef RECYCLER_PAGE_HEAP
     // Keeping as constant in case we want to tweak the value here
     // Set to 0 so that the tool can do the filtering instead of the runtime
 #if DBG
@@ -645,7 +644,6 @@ public:
     static const int s_numFramesToSkipForPageHeapAlloc = 0;
     static const int s_numFramesToSkipForPageHeapFree = 0;
     static const int s_numFramesToCaptureForPageHeap = 32;
-#endif
 #endif
 
     uint Cookie;
@@ -778,7 +776,6 @@ private:
     DListBase<GuestArenaAllocator> guestArenaList;
     DListBase<ArenaData*> externalGuestArenaList;    // guest arenas are scanned for roots
 
-#ifdef RECYCLER_PAGE_HEAP
     bool isPageHeapEnabled;
     bool capturePageHeapAllocStack;
     bool capturePageHeapFreeStack;
@@ -786,10 +783,6 @@ private:
     inline bool IsPageHeapEnabled() const { return isPageHeapEnabled; }
     inline bool ShouldCapturePageHeapAllocStack() const { return capturePageHeapAllocStack; }
     void VerifyPageHeapFillAfterAlloc(char* memBlock, size_t size, ObjectInfoBits attributes);
-#else
-    inline bool IsPageHeapEnabled() const { return false; }
-    inline bool ShouldCapturePageHeapAllocStack() const { return false; }
-#endif
 
     // Number of pages to reserve for the primary mark stack
     // This is the minimum number of pages to guarantee that a single heap block
@@ -1074,11 +1067,9 @@ public:
     ~Recycler();
 
     void Initialize(const bool forceInThread, JsUtil::ThreadService *threadService, const bool deferThreadStartup = false
-#ifdef RECYCLER_PAGE_HEAP
         , PageHeapMode pageheapmode = PageHeapMode::PageHeapModeOff
         , bool captureAllocCallStack = false
         , bool captureFreeCallStack = false
-#endif
         );
 
     Js::ConfigFlagsTable& GetRecyclerFlagsTable() const { return this->recyclerFlagsTable; }
@@ -1100,11 +1091,7 @@ public:
     BOOL IsExiting() const;
     BOOL IsSweeping() const;
 
-#ifdef RECYCLER_PAGE_HEAP
     inline bool ShouldCapturePageHeapFreeStack() const { return capturePageHeapFreeStack; }
-#else
-    inline bool ShouldCapturePageHeapFreeStack() const { return false; }
-#endif
 
     void SetIsThreadBound();
     void SetIsScriptActive(bool isScriptActive);
@@ -1982,7 +1969,6 @@ public:
 
     void* GetObjectAddress() const { return m_address; }
 
-#ifdef RECYCLER_PAGE_HEAP
     bool IsPageHeapAlloc() const
     {
         return isUsingLargeHeapBlock && ((LargeHeapBlock*)m_heapBlock)->InPageHeapMode();
@@ -1992,7 +1978,6 @@ public:
         Assert(IsPageHeapAlloc());
         ((LargeHeapBlock*)m_heapBlock)->PageHeapLockPages();
     }
-#endif
 
     bool IsLeaf() const
     {
@@ -2048,7 +2033,6 @@ public:
         // since the background thread change the NewTrackBit
         Assert(!m_heapBlock->IsAnyFinalizableBlock());
 
-#ifdef RECYCLER_PAGE_HEAP
         Recycler* recycler = this->m_recycler;
         if (recycler->IsPageHeapEnabled() && recycler->ShouldCapturePageHeapFreeStack())
         {
@@ -2063,7 +2047,6 @@ public:
             }
 #endif
         }
-#endif
 
         if (isUsingLargeHeapBlock)
         {
