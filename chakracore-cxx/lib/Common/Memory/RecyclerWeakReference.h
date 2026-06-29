@@ -41,9 +41,7 @@ protected:
     typename WriteBarrierFieldTypeTraits<HeapBlock *, _no_write_barrier_policy, _no_write_barrier_policy>::Type weakRefHeapBlock;
     typename WriteBarrierFieldTypeTraits<RecyclerWeakReferenceBase*, _no_write_barrier_policy, _no_write_barrier_policy>::Type next;
 #if DBG
-#if ENABLE_RECYCLER_TYPE_TRACKING
     typename WriteBarrierFieldTypeTraits<type_info const *, _no_write_barrier_policy, _no_write_barrier_policy>::Type typeInfo;
-#endif
 
 #if defined TRACK_ALLOC && defined(PERF_COUNTERS)
     typename WriteBarrierFieldTypeTraits<PerfCounter::Counter *, _no_write_barrier_policy, _no_write_barrier_policy>::Type counter;
@@ -366,9 +364,7 @@ private:
         AddEntry(entry, &buckets[targetBucket]);
         count++;
 #if DBG
-#if ENABLE_RECYCLER_TYPE_TRACKING
         entry->typeInfo = nullptr;
-#endif
 #if defined(TRACK_ALLOC) && defined(PERF_COUNTERS)
         entry->counter = nullptr;
 #endif
