@@ -103,12 +103,8 @@ namespace Js
 
         DynamicObject* GetMathObject() { return mathObject; }
         DynamicObject* GetJSONObject() { return JSONObject; }
-#ifdef ENABLE_INTL_OBJECT
         DynamicObject* GetIntlObject() { return IntlObject; }
-#endif
-#if defined(ENABLE_INTL_OBJECT)  || defined(ENABLE_JS_BUILTINS)
         EngineInterfaceObject* GetEngineInterfaceObject() { return engineInterfaceObject; }
-#endif
 
         DynamicObject* GetArrayPrototype() { return arrayPrototype; }
         DynamicObject* GetBooleanPrototype() { return booleanPrototype; }
@@ -226,12 +222,8 @@ namespace Js
 
         typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type debugObject;
         typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type JSONObject;
-#ifdef ENABLE_INTL_OBJECT
         typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type IntlObject;
-#endif
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_JS_BUILTINS)
         typename WriteBarrierFieldTypeTraits<EngineInterfaceObject*>::Type engineInterfaceObject;
-#endif
         typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type reflectObject;
 
         typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type arrayPrototype;

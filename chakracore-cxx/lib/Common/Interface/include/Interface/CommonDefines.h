@@ -59,8 +59,6 @@
 #endif
 
 // Language features
-#define ENABLE_INTL_OBJECT                          // Intl support
-
 #define ENABLE_JS_BUILTINS                          // Built In functions support
 
 #define ENABLE_ES6_CHAR_CLASSIFIER                  // ES6 Unicode character classifier support

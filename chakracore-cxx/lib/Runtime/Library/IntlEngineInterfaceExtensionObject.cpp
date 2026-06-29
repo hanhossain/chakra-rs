@@ -9,7 +9,6 @@
 #include "Types/DeferredTypeHandler.h"
 #include "Base/WindowsGlobalizationAdapter.h"
 
-#ifdef ENABLE_INTL_OBJECT
 #include <chakracore-sys/src/str_helper.rs.h>
 #include <rust/cxx.h>
 
@@ -131,8 +130,6 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 
 namespace Js
 {
-#ifdef ENABLE_INTL_OBJECT
-
 // Defining Finalizable wrappers for Intl data
 
     template<typename TResource, void(* CloseFunction)(TResource)>
@@ -2209,6 +2206,4 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             return scriptContext->GetLibrary()->GetFalse();
         }
     }
-#endif
 }
-#endif

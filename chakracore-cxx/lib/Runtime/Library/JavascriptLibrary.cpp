@@ -1669,7 +1669,6 @@ namespace Js
             DeferredTypeHandler<InitializeJSONObject>::GetDefaultInstance()));
         AddMember(globalObject, PropertyIds::JSON, JSONObject);
 
-#ifdef ENABLE_INTL_OBJECT
         if (scriptContext->IsIntlEnabled())
         {
             IntlObject = DynamicObject::New(recycler,
@@ -1681,17 +1680,13 @@ namespace Js
         {
             IntlObject = nullptr;
         }
-#endif
 
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_JS_BUILTINS)
         engineInterfaceObject = EngineInterfaceObject::New(recycler,
             DynamicType::New(scriptContext, TypeIds_EngineInterfaceObject, nullValue, nullptr,
             DeferredTypeHandler<InitializeEngineInterfaceObject>::GetDefaultInstance()));
 
-#ifdef ENABLE_INTL_OBJECT
         IntlEngineInterfaceExtensionObject* intlExtension = RecyclerNew(recycler, IntlEngineInterfaceExtensionObject, scriptContext);
         engineInterfaceObject->SetEngineExtension(EngineInterfaceExtensionKind_Intl, intlExtension);
-#endif
 
 #ifdef ENABLE_JS_BUILTINS
         chakraLibraryObject = DynamicObject::New(recycler,
@@ -1707,7 +1702,6 @@ namespace Js
         builtinFuncs[BuiltinFunction::JavascriptArray_IsArray] = this->isArrayFunction;
 #endif
 
-#endif
 
         mapConstructor = CreateBuiltinConstructor(&JavascriptMap::EntryInfo::NewInstance,
             DeferredTypeHandler<InitializeMapConstructor>::GetDefaultInstance());
@@ -5070,7 +5064,6 @@ namespace Js
         return jsonStringifyFunction;
     }
 
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_JS_BUILTINS)
     bool JavascriptLibrary::InitializeEngineInterfaceObject(DynamicObject* engineInterface, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode)
     {
         typeHandler->Convert(engineInterface, mode, 3);
@@ -5081,7 +5074,6 @@ namespace Js
 
         return true;
     }
-#endif
 
     void JavascriptLibrary::SetNativeHostPromiseContinuationFunction(PromiseContinuationCallback function, void *state)
     {
@@ -5240,7 +5232,6 @@ namespace Js
 
 #endif // ENABLE_JS_BUILTINS
 
-#ifdef ENABLE_INTL_OBJECT
     void JavascriptLibrary::ResetIntlObject()
     {
         IntlObject = DynamicObject::New(
@@ -5329,7 +5320,6 @@ namespace Js
             fn(intlExtension, scriptContext, IntlObject);
         }
     }
-#endif
 
     void JavascriptLibrary::SetProfileMode(bool fSet)
     {
@@ -7321,7 +7311,6 @@ namespace Js
 #if DBG
     void JavascriptLibrary::DumpLibraryByteCode()
     {
-#if defined(ENABLE_JS_BUILTINS) || defined(ENABLE_INTL_OBJECT)
         // We aren't going to be passing in a number to check range of -dump:LibInit, that will be done by Intl/Promise
         // This is just to force init Intl code if dump:LibInit has been passed
         if (CONFIG_ISENABLED(DumpFlag) && Js::Configuration::Global.flags.Dump.IsEnabled(Js::JsLibInitPhase))
@@ -7335,7 +7324,6 @@ namespace Js
                 }
             }
         }
-#endif
     }
 #endif
 #ifdef IR_VIEWER

@@ -5,9 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_JS_BUILTINS)
-
-
 #pragma warning(push)
 #pragma warning(disable:4309) // truncation of constant value
 #pragma warning(disable:4838) // conversion from 'int' to 'const char' requires a narrowing conversion
@@ -125,5 +122,3 @@ namespace Js
         return JavascriptOperators::GetTypeId(obj) == TypeIds_EngineInterfaceObject;
     }
 }
-
-#endif // ENABLE_INTL_OBJECT || ENABLE_JS_BUILTINS

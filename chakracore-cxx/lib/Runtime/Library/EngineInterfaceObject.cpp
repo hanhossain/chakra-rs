@@ -4,8 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeLibraryPch.h"
 
-#if defined(ENABLE_INTL_OBJECT) || defined(ENABLE_JS_BUILTINS)
-
 #include "errstr.h"
 #include "Library/EngineInterfaceObject.h"
 #include "Types/DeferredTypeHandler.h"
@@ -515,4 +513,3 @@ namespace Js
 #include "EngineInterfaceObjectBuiltIns.h"
 
 }
-#endif // ENABLE_INTL_OBJECT || ENABLE_JS_BUILTINS
