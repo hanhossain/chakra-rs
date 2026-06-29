@@ -48,42 +48,34 @@ HeapInfoManager::HeapInfoManager(AllocationPolicyManager * policyManager, Js::Co
 }
 
 void HeapInfoManager::Initialize(Recycler * recycler
-#ifdef RECYCLER_PAGE_HEAP
     , PageHeapMode pageheapmode
     , bool captureAllocCallStack
     , bool captureFreeCallStack
-#endif
 )
 {
     ForEachHeapInfo([=](HeapInfo& heapInfo)
     {
         heapInfo.Initialize(recycler
-#ifdef RECYCLER_PAGE_HEAP
             , pageheapmode
             , captureAllocCallStack
             , captureFreeCallStack
-#endif
         );
     });
 }
 
 #if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
 void HeapInfoManager::Initialize(Recycler * recycler, void(*trackNativeAllocCallBack)(Recycler *, void *, size_t)
-#ifdef RECYCLER_PAGE_HEAP
     , PageHeapMode pageheapmode
     , bool captureAllocCallStack
     , bool captureFreeCallStack
-#endif
 )
 {
     ForEachHeapInfo([=](HeapInfo& heapInfo)
     {
         heapInfo.Initialize(recycler, trackNativeAllocCallBack
-#ifdef RECYCLER_PAGE_HEAP
             , pageheapmode
             , captureAllocCallStack
             , captureFreeCallStack
-#endif
         );
     });
 }
@@ -354,7 +346,6 @@ HeapInfoManager::ReportMemStats(Recycler * recycler)
 
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
 bool
 HeapInfoManager::IsPageHeapEnabled()
 {
@@ -363,7 +354,6 @@ HeapInfoManager::IsPageHeapEnabled()
         return heapInfo.IsPageHeapEnabled();
     });
 }
-#endif
 
 // ==============================================================
 // Page allocator APIs
@@ -593,7 +583,6 @@ HeapInfoManager::IsRecyclerWithBarrierPageAllocator(PageAllocator * pageAllocato
     });
 }
 
-#ifdef RECYCLER_PAGE_HEAP
 bool
 HeapInfoManager::DoCaptureAllocCallStack()
 {
@@ -611,4 +600,3 @@ HeapInfoManager::DoCaptureFreeCallStack()
         return heapInfo.captureFreeCallStack;
     });
 }
-#endif

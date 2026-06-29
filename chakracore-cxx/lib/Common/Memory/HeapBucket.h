@@ -86,7 +86,6 @@ protected:
     uint32_t emptyHeapBlockCount;
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
 protected:
     bool isPageHeapEnabled;
 public:
@@ -95,7 +94,6 @@ public:
         // LargeHeapBlock does not support TrackBit today
         return isPageHeapEnabled && ((attributes & ClientTrackableObjectBits) == 0);
     }
-#endif
 
 #if ENABLE_MEM_STATS
 protected:
@@ -155,9 +153,7 @@ public:
     template <ObjectInfoBits attributes, bool nothrow>
     inline char * RealAlloc(Recycler * recycler, size_t sizeCat, size_t size);
 
-#ifdef RECYCLER_PAGE_HEAP
     char * PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size, ObjectInfoBits attributes, PageHeapMode mode, bool nothrow);
-#endif
 
     void ExplicitFree(void* object, size_t sizeCat);
 
@@ -270,9 +266,7 @@ protected:
 
     FreeObject* explicitFreeList; // List of objects that have been explicitly freed
     TBlockAllocatorType * lastExplicitFreeListAllocator;
-#ifdef RECYCLER_PAGE_HEAP
     SmallHeapBlock* explicitFreeLockBlockList; // List of heap blocks which have been locked upon explicit free
-#endif
 
     bool isAllocationStopped;                 // whether the bucket has it's allocations stopped
 

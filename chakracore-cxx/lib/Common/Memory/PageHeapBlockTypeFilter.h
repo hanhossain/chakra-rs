@@ -4,8 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifdef RECYCLER_PAGE_HEAP
-
 namespace Memory
 {
     enum class PageHeapBlockTypeFilter
@@ -20,5 +18,3 @@ namespace Memory
         PageHeapBlockTypeFilterAll = 0xff
     };
 };
-
-#endif

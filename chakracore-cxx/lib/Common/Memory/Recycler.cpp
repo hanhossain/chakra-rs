@@ -210,11 +210,9 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #ifdef HEAP_ENUMERATION_VALIDATION
     ,pfPostHeapEnumScanCallback(nullptr)
 #endif
-#ifdef RECYCLER_PAGE_HEAP
     , isPageHeapEnabled(false)
     , capturePageHeapAllocStack(false)
     , capturePageHeapFreeStack(false)
-#endif
     , objectBeforeCollectCallbackList(nullptr)
     , objectBeforeCollectCallbackState(ObjectBeforeCollectCallback_None)
     , objectBeforeCollectCallbackArena(u"BeforeCollect-List", pageAllocator, Js::Throw::OutOfMemory)
@@ -600,11 +598,9 @@ std::recursive_mutex Recycler::recyclerListLock;
 
 void
 Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadService, const bool deferThreadStartup
-#ifdef RECYCLER_PAGE_HEAP
     , PageHeapMode pageheapmode
     , bool captureAllocCallStack
     , bool captureFreeCallStack
-#endif
 )
 {
 #ifdef PROFILE_RECYCLER_ALLOC
@@ -643,30 +639,24 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
     if (dontNeedDetailedTracking)
     {
         autoHeap.Initialize(this, TrackNativeAllocatedMemoryBlock
-#ifdef RECYCLER_PAGE_HEAP
             , pageheapmode
             , captureAllocCallStack
             , captureFreeCallStack
-#endif
         );
     }
     else
     {
         autoHeap.Initialize(this
-#ifdef RECYCLER_PAGE_HEAP
             , pageheapmode
             , captureAllocCallStack
             , captureFreeCallStack
-#endif
         );
     }
 #else
     autoHeap.Initialize(this
-#ifdef RECYCLER_PAGE_HEAP
         , pageheapmode
         , captureAllocCallStack
         , captureFreeCallStack
-#endif
     );
 #endif
 
@@ -676,14 +666,12 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
     isPrimaryMarkContextInitialized = true;
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
     isPageHeapEnabled = autoHeap.IsPageHeapEnabled();
     if (IsPageHeapEnabled())
     {
         capturePageHeapAllocStack = autoHeap.DoCaptureAllocCallStack();
         capturePageHeapFreeStack = autoHeap.DoCaptureFreeCallStack();
     }
-#endif
 
 #ifdef RECYCLER_STRESS
     if (GetRecyclerFlagsTable().RecyclerTrackStress)
@@ -1036,7 +1024,6 @@ bool Recycler::ExplicitFreeInternal(void* buffer, size_t size, size_t sizeCat)
     Assert((info.GetAttributes() & ~ObjectInfoBits::LeafBit) == 0);          // Only NoBit or LeafBit
 
     HeapInfo * heapInfo = this->GetHeapInfo<attributes>();
-#if DBG || defined(RECYCLER_MEMORY_VERIFY) || defined(RECYCLER_PAGE_HEAP)
 
     // Either the mainThreadHandle is null (we're not thread bound)
     // or we should be calling this function on the main script thread
@@ -1051,7 +1038,6 @@ bool Recycler::ExplicitFreeInternal(void* buffer, size_t size, size_t sizeCat)
     Assert(heapInfo == heapBlock->GetHeapInfo());
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
     if (this->IsPageHeapEnabled())
     {
 #ifdef STACK_BACK_TRACE
@@ -1071,11 +1057,8 @@ bool Recycler::ExplicitFreeInternal(void* buffer, size_t size, size_t sizeCat)
         // Don't do actual explicit free in page heap mode
         return false;
     }
-#endif
 
     SetExplicitFreeBitOnSmallBlock<TBlockAttributes>(heapBlock, sizeCat, buffer, attributes);
-
-#endif
 
     if (TBlockAttributes::IsMediumBlock)
     {
@@ -1156,7 +1139,6 @@ Recycler::TryLargeAlloc(HeapInfo * heap, size_t size, ObjectInfoBits attributes,
         CollectNow<CollectOnAllocation>();
     }
 
-#ifdef RECYCLER_PAGE_HEAP
     if (IsPageHeapEnabled())
     {
         if (heap->largeObjectBucket.IsPageHeapEnabled(attributes))
@@ -1171,7 +1153,6 @@ Recycler::TryLargeAlloc(HeapInfo * heap, size_t size, ObjectInfoBits attributes,
             }
         }
     }
-#endif
 
     LargeHeapBlock * heapBlock = heap->AddLargeHeapBlock(sizeCat);
     if (heapBlock == nullptr)
@@ -1304,13 +1285,11 @@ bool Recycler::AllowNativeCodeBumpAllocation()
     }
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
     // Don't allow bump allocation in the JIT when page heap is turned on
     if (this->IsPageHeapEnabled())
     {
         return false;
     }
-#endif
 
     return true;
 }
@@ -6372,7 +6351,6 @@ Recycler::PrintCollectStats()
 }
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
 void Recycler::VerifyPageHeapFillAfterAlloc(char* memBlock, size_t size, ObjectInfoBits attributes)
 {
     Assert(memBlock != nullptr);
@@ -6394,7 +6372,6 @@ void Recycler::VerifyPageHeapFillAfterAlloc(char* memBlock, size_t size, ObjectI
         }
     }
 }
-#endif
 
 #ifdef RECYCLER_ZERO_MEM_CHECK
 void

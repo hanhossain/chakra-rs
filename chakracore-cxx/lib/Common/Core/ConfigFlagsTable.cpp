@@ -411,12 +411,10 @@ namespace Js
 #define DEFAULT_CONFIG_PoisonObjectsForStores (false)
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
 #define DEFAULT_CONFIG_PageHeap             ((Js::Number) PageHeapMode::PageHeapModeOff)
 #define DEFAULT_CONFIG_PageHeapAllocStack   (false)
 #define DEFAULT_CONFIG_PageHeapFreeStack    (false)
 #define DEFAULT_CONFIG_PageHeapBlockType    ((Js::Number) PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll)
-#endif
 
 #define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
 #define DEFAULT_CONFIG_NewPagesCapDuringBGSweeping    (15000 * 4)
@@ -1225,14 +1223,12 @@ namespace Js
         u"RecyclerThreadCollectTimeout",
         u"EnableConcurrentSweepAlloc",
         u"ecsa",
-#ifdef RECYCLER_PAGE_HEAP
         u"PageHeap",
         u"PageHeapAllocStack",
         u"PageHeapFreeStack",
         u"PageHeapBucketNumber",
         u"PageHeapBlockType",
         u"PageHeapDecommitGuardPage",
-#endif
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"RecyclerNoPageReuse",
 #endif
@@ -1681,9 +1677,7 @@ namespace Js
             u"IdleCollect",
             u"Marshal",
             u"MemoryAllocation",
-    #ifdef RECYCLER_PAGE_HEAP
                 u"PageHeap",
-    #endif
                 u"LargeMemoryAllocation",
                 u"PageAllocatorAlloc",
             u"Recycler",
@@ -2328,14 +2322,12 @@ namespace Js
         u"Adjust thread collect timeout",
         u"Turns off the feature to allow allocations during concurrent sweep.",
         u"Turns off the feature to allow allocations during concurrent sweep.",
-#ifdef RECYCLER_PAGE_HEAP
         u"Use full page for heap allocations",
         u"Capture alloc stack under page heap mode",
         u"Capture free stack under page heap mode",
         u"Bucket numbers to be used for page heap allocations",
         u"Type of blocks to use page heap for",
         u"Decommit page heap guard page",
-#endif
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"Do not reuse page in recycler",
 #endif
@@ -3029,14 +3021,12 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#ifdef RECYCLER_PAGE_HEAP
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#endif
 #ifdef RECYCLER_NO_PAGE_REUSE
         NoParentFlag,
 #endif
@@ -3746,14 +3736,12 @@ namespace Js
         RecyclerThreadCollectTimeout(1000),
         EnableConcurrentSweepAlloc(true),
         ecsa(true),
-#ifdef RECYCLER_PAGE_HEAP
         PageHeap(DEFAULT_CONFIG_PageHeap),
         PageHeapAllocStack(DEFAULT_CONFIG_PageHeapAllocStack),
         PageHeapFreeStack(DEFAULT_CONFIG_PageHeapFreeStack),
         PageHeapBucketNumber(),
         PageHeapBlockType(DEFAULT_CONFIG_PageHeapBlockType),
         PageHeapDecommitGuardPage(true),
-#endif
 #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuse(false),
 #endif
@@ -5472,7 +5460,6 @@ namespace Js
             return FlagBoolean;
         case ecsaFlag:
             return FlagBoolean;
-        #ifdef RECYCLER_PAGE_HEAP
         case PageHeapFlag:
             return FlagNumber;
         case PageHeapAllocStackFlag:
@@ -5485,7 +5472,6 @@ namespace Js
             return FlagNumber;
         case PageHeapDecommitGuardPageFlag:
             return FlagBoolean;
-        #endif
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             return FlagBoolean;
@@ -6658,7 +6644,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableConcurrentSweepAlloc));
         case ecsaFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ecsa));
-        #ifdef RECYCLER_PAGE_HEAP
         case PageHeapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PageHeap));
         case PageHeapAllocStackFlag:
@@ -6671,7 +6656,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&PageHeapBlockType));
         case PageHeapDecommitGuardPageFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PageHeapDecommitGuardPage));
-        #endif
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerNoPageReuse));
@@ -16353,7 +16337,6 @@ if (IsEnabled(ecsaFlag))
     };
     Output::Print(u"\n");
 }
-#ifdef RECYCLER_PAGE_HEAP
 if (IsEnabled(PageHeapFlag))
 {
     Output::Print(u"-%s", u"PageHeap");
@@ -16504,7 +16487,6 @@ if (IsEnabled(PageHeapDecommitGuardPageFlag))
     };
     Output::Print(u"\n");
 }
-#endif
 #ifdef RECYCLER_NO_PAGE_REUSE
 if (IsEnabled(RecyclerNoPageReuseFlag))
 {
@@ -19809,7 +19791,6 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case ecsaFlag:
             retValue = (Boolean) true;
             break;
-        #ifdef RECYCLER_PAGE_HEAP
         case PageHeapAllocStackFlag:
             retValue = (Boolean) DEFAULT_CONFIG_PageHeapAllocStack;
             break;
@@ -19819,7 +19800,6 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case PageHeapDecommitGuardPageFlag:
             retValue = (Boolean) true;
             break;
-        #endif
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             retValue = (Boolean) false;

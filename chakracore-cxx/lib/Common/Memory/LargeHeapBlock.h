@@ -23,9 +23,7 @@ private:
 public:
     bool markOnOOMRescan : 1;
     bool hasWriteBarrier : 1;
-#ifdef RECYCLER_PAGE_HEAP
     bool isObjectPageLocked : 1;
-#endif
 #if DBG
     bool isExplicitFreed : 1;
 #endif
@@ -73,7 +71,6 @@ public:
 
 class HeapInfo;
 
-#ifdef RECYCLER_PAGE_HEAP
 struct PageHeapData
 {
     ~PageHeapData();
@@ -95,7 +92,6 @@ struct PageHeapData
     const static StackBackTrace* s_StackTraceAllocFailed;
 #endif
 };
-#endif
 
 // CONSIDER: Templatizing this so that we don't have free list support if we don't need it
 class LargeHeapBlock : public HeapBlock
@@ -268,7 +264,6 @@ private:
     HeapInfo * heapInfo;
     LargeHeapBlockFreeList freeList;
 
-#ifdef RECYCLER_PAGE_HEAP
     PageHeapData* pageHeapData;
 public:
     void VerifyPageHeapPattern();
@@ -279,7 +274,6 @@ public:
 
     void CapturePageHeapAllocStack();
     void CapturePageHeapFreeStack();
-#endif
 
     uint lastCollectAllocCount;
     uint finalizeCount;

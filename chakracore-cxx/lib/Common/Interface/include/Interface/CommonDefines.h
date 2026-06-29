@@ -73,8 +73,6 @@
 #endif
 
 // GC features
-#define RECYCLER_PAGE_HEAP                          // PageHeap support
-
 #define ENABLE_RECYCLER_TYPE_TRACKING 1
 
 #define ENABLE_WEAK_REFERENCE_REGIONS 1
@@ -433,9 +431,7 @@
 #define ENABLE_TRACE
 
 #if !(defined(__clang__) && defined(_M_ARM32_OR_ARM64)) // xplat-todo: ARM
-#if DBG || defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT) || defined(TRACK_DISPATCH) || defined(ENABLE_TRACE) || defined(RECYCLER_PAGE_HEAP)
 #define STACK_BACK_TRACE
-#endif
 #endif
 
 // ENABLE_DEBUG_STACK_BACK_TRACE is for capturing stack back trace for debug only.

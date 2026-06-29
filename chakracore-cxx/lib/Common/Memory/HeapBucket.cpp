@@ -18,9 +18,7 @@ HeapBucket::HeapBucket() :
     emptyHeapBlockCount = 0;
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
     isPageHeapEnabled = false;
-#endif
 }
 
 HeapInfo *
@@ -59,9 +57,7 @@ HeapBucketT<TBlockType>::HeapBucketT() :
     explicitFreeList(nullptr),
     lastExplicitFreeListAllocator(nullptr)
 {
-#ifdef RECYCLER_PAGE_HEAP
     explicitFreeLockBlockList = nullptr;
-#endif
 
     isAllocationStopped = false;
 }
@@ -119,9 +115,7 @@ void
 HeapBucketT<TBlockType>::Initialize(HeapInfo * heapInfo, uint sizeCat)
 {
     this->heapInfo = heapInfo;
-#ifdef RECYCLER_PAGE_HEAP
     this->isPageHeapEnabled = heapInfo->IsPageHeapEnabledForBlock<typename TBlockType::HeapBlockAttributes>(sizeCat);
-#endif
     this->sizeCat = sizeCat;
     allocatorHead.Initialize();
 #if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY)
@@ -156,10 +150,6 @@ void
 HeapBucketT<TBlockType>::ClearAllocators()
 {
     ForEachAllocator([](TBlockAllocatorType * allocator) { ClearAllocator(allocator); });
-
-#ifdef RECYCLER_PAGE_HEAP
-
-#endif
 
 #ifdef RECYCLER_MEMORY_VERIFY
     FreeObject* freeObject = this->explicitFreeList;
@@ -393,12 +383,10 @@ HeapBucketT<TBlockType>::TryAllocFromNewHeapBlock(Recycler * recycler, TBlockAll
 
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
 
-#ifdef RECYCLER_PAGE_HEAP
     if (IsPageHeapEnabled(attributes))
     {
         return this->PageHeapAlloc(recycler, sizeCat, size, attributes, this->heapInfo->pageHeapMode, true);
     }
-#endif
 
     TBlockType * heapBlock = CreateHeapBlock(recycler);
     if (heapBlock == nullptr)
@@ -426,7 +414,6 @@ HeapBucket::AllocationsStartedDuringConcurrentSweep() const
     return false;
 }
 
-#ifdef RECYCLER_PAGE_HEAP
 template <typename TBlockType>
 char *
 HeapBucketT<TBlockType>::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size, ObjectInfoBits attributes, PageHeapMode mode, bool nothrow)
@@ -441,7 +428,6 @@ HeapBucketT<TBlockType>::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size
 
     return addr;
 }
-#endif
 
 template <typename TBlockType>
 char *

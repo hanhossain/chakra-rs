@@ -5259,7 +5259,6 @@ int32_t SetecsaFlag(bool flag)
     Js::Configuration::Global.flags.ecsa = flag;
     return S_OK;
 }
-#ifdef RECYCLER_PAGE_HEAP
 bool IsEnabledPageHeapFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::PageHeapFlag);
@@ -5330,7 +5329,6 @@ int32_t SetPageHeapDecommitGuardPageFlag(bool flag)
     Js::Configuration::Global.flags.PageHeapDecommitGuardPage = flag;
     return S_OK;
 }
-#endif
 #ifdef RECYCLER_NO_PAGE_REUSE
 bool IsEnabledRecyclerNoPageReuseFlag()
 {
@@ -7140,14 +7138,12 @@ IsEnabledRecyclerForceMarkInteriorFlag, GetRecyclerForceMarkInteriorFlag, SetRec
 IsEnabledRecyclerPriorityBoostTimeoutFlag, GetRecyclerPriorityBoostTimeoutFlag, SetRecyclerPriorityBoostTimeoutFlag,
 IsEnabledRecyclerThreadCollectTimeoutFlag, GetRecyclerThreadCollectTimeoutFlag, SetRecyclerThreadCollectTimeoutFlag,
 IsEnabledEnableConcurrentSweepAllocFlag, GetEnableConcurrentSweepAllocFlag, SetEnableConcurrentSweepAllocFlag, IsEnabledecsaFlag, GetecsaFlag, SetecsaFlag,
-#ifdef RECYCLER_PAGE_HEAP
 IsEnabledPageHeapFlag, GetPageHeapFlag, SetPageHeapFlag,
 IsEnabledPageHeapAllocStackFlag, GetPageHeapAllocStackFlag, SetPageHeapAllocStackFlag,
 IsEnabledPageHeapFreeStackFlag, GetPageHeapFreeStackFlag, SetPageHeapFreeStackFlag,
 
 IsEnabledPageHeapBlockTypeFlag, GetPageHeapBlockTypeFlag, SetPageHeapBlockTypeFlag,
 IsEnabledPageHeapDecommitGuardPageFlag, GetPageHeapDecommitGuardPageFlag, SetPageHeapDecommitGuardPageFlag,
-#endif
 #ifdef RECYCLER_NO_PAGE_REUSE
 IsEnabledRecyclerNoPageReuseFlag, GetRecyclerNoPageReuseFlag, SetRecyclerNoPageReuseFlag,
 #endif

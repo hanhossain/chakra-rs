@@ -360,13 +360,11 @@ HeapInfo::HeapInfo(AllocationPolicyManager * policyManager, Js::ConfigFlagsTable
     pendingDisposableObjectCount(0),
     newFinalizableObjectCount(0),
 #endif
-#ifdef RECYCLER_PAGE_HEAP
     pageHeapMode(PageHeapMode::PageHeapModeOff),
     isPageHeapEnabled(false),
     pageHeapBlockType(PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll),
     captureAllocCallStack(false),
     captureFreeCallStack(false),
-#endif
     hasPendingTransferDisposedObjects(false)
 {
 #if DBG_DUMP
@@ -445,11 +443,9 @@ HeapInfo::~HeapInfo()
 
 void
 HeapInfo::Initialize(Recycler * recycler
-#ifdef RECYCLER_PAGE_HEAP
     , PageHeapMode pageheapmode
     , bool captureAllocCallStack
     , bool captureFreeCallStack
-#endif
 )
 {
     this->recycler = recycler;
@@ -460,7 +456,6 @@ HeapInfo::Initialize(Recycler * recycler
     }
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
     isPageHeapEnabled = false;
     PageHeapBlockTypeFilter blockTypeFilter = PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll;
     Js::NumberRange bucketNumberRange;
@@ -478,7 +473,6 @@ HeapInfo::Initialize(Recycler * recycler
         isPageHeapEnabled = true;
     }
 
-#ifdef RECYCLER_PAGE_HEAP
     if (isPageHeapEnabled)
     {
         this->captureAllocCallStack = captureAllocCallStack;
@@ -487,7 +481,6 @@ HeapInfo::Initialize(Recycler * recycler
         this->captureAllocCallStack = captureAllocCallStack || recycler->GetRecyclerFlagsTable().PageHeapAllocStack;
         this->captureFreeCallStack = captureFreeCallStack || recycler->GetRecyclerFlagsTable().PageHeapFreeStack;
     }
-#endif
 
     if (IsPageHeapEnabled())
     {
@@ -518,7 +511,6 @@ HeapInfo::Initialize(Recycler * recycler
         // These should not be set if we're not in page heap mode
         Assert(!(captureAllocCallStack || captureFreeCallStack));
     }
-#endif
 
     for (uint i = 0; i < HeapConstants::BucketCount; i++)
     {
@@ -537,19 +529,15 @@ HeapInfo::Initialize(Recycler * recycler
 #if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
 void
 HeapInfo::Initialize(Recycler * recycler, void(*trackNativeAllocCallBack)(Recycler *, void *, size_t)
-#ifdef RECYCLER_PAGE_HEAP
 , PageHeapMode pageheapmode
 , bool captureAllocCallStack
 , bool captureFreeCallStack
-#endif
 )
 {
     Initialize(recycler
-#ifdef RECYCLER_PAGE_HEAP
         , pageheapmode
         , captureAllocCallStack
         , captureFreeCallStack
-#endif
         );
 
     for (uint i = 0; i < HeapConstants::BucketCount; i++)
@@ -564,7 +552,6 @@ HeapInfo::Initialize(Recycler * recycler, void(*trackNativeAllocCallBack)(Recycl
 }
 #endif
 
-#ifdef RECYCLER_PAGE_HEAP
 template bool HeapInfo::IsPageHeapEnabledForBlock<MediumAllocationBlockAttributes>(const size_t objectSize);
 template bool HeapInfo::IsPageHeapEnabledForBlock<SmallAllocationBlockAttributes>(const size_t objectSize);
 template bool HeapInfo::IsPageHeapEnabledForBlock<LargeAllocationBlockAttributes>(const size_t objectSize);
@@ -589,7 +576,6 @@ bool HeapInfo::IsPageHeapEnabledForBlock(const size_t objectSize)
     }
     return false;
 }
-#endif
 
 void
 HeapInfo::ResetMarks(ResetMarkFlags flags)

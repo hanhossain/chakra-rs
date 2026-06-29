@@ -14,7 +14,6 @@ class ScriptMemoryDumper;
 
 namespace Memory
 {
-#ifdef RECYCLER_PAGE_HEAP
 enum class PageHeapBlockTypeFilter;
 
 #define PageHeapVerboseTrace(flags, ...) \
@@ -27,12 +26,6 @@ if (flags.Trace.IsEnabled(Js::PageHeapPhase)) \
     { \
         Output::Print(__VA_ARGS__); \
     }
-
-#else
-#define PageHeapVerboseTrace(...)
-#define PageHeapTrace(...)
-#endif
-
 
 class Recycler;
 class HeapBucket;
@@ -386,9 +379,7 @@ public:
     virtual void * GetTrackerData(void * address) = 0;
     virtual void SetTrackerData(void * address, void * data) = 0;
 #endif
-#if DBG || defined(RECYCLER_STATS) || defined(RECYCLER_PAGE_HEAP)
     bool isForceSweeping;
-#endif
 #ifdef RECYCLER_PERF_COUNTERS
     virtual void UpdatePerfCountersOnFree() = 0;
 #endif
