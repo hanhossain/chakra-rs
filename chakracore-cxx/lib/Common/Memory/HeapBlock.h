@@ -421,11 +421,9 @@ public:
     ushort GetInteriorAddressIndex(uint index) const;
     ushort GetAddressIndex(uint index) const;
 private:
-#if USE_VPM_TABLE
     ushort const * validPointers;
-#endif
 
-#if !USE_VPM_TABLE || DBG
+#if DBG
     uint indexPerObject;
     uint maxObjectIndex;
 

@@ -295,9 +295,7 @@ private:
         typedef BlockInfoMapRow BlockInfoMapTable[TBlockAttributes::BucketCount];
 
         // Architecture-dependent initialization done in ValidPointersMap/vpm.(32b|64b).h
-#if USE_VPM_TABLE
             ValidPointersMapTable validPointersBuffer;
-#endif
 
         BlockInfoMapTable blockInfoBuffer;
 
@@ -305,11 +303,7 @@ private:
         InvalidBitsTable invalidBitsBuffers;
         ValidPointersMap() 
         { 
-#if USE_VPM_TABLE
             GenerateValidPointersMap(&validPointersBuffer, invalidBitsBuffers, blockInfoBuffer);
-#else
-            GenerateValidPointersMap(nullptr, invalidBitsBuffers, blockInfoBuffer);
-#endif
         }
 
         static void GenerateValidPointersMap(ValidPointersMapTable * validTable, InvalidBitsTable& invalidTable, BlockInfoMapTable& blockInfoTable);
@@ -318,9 +312,7 @@ private:
         {
             AnalysisAssert(bucketIndex < TBlockAttributes::BucketCount);
             ushort const * validPointers = nullptr;
-#if USE_VPM_TABLE
             validPointers = validPointersBuffer[bucketIndex];
-#endif
             return ValidPointers<TBlockAttributes>(validPointers, bucketIndex);
         }
 
