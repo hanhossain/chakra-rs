@@ -3585,9 +3585,7 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<bool>::Type strictMode;
         typename WriteBarrierFieldTypeTraits<uint16>::Type length;
 
-#if defined(TARGET_64)
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type unused;
-#endif
         typename WriteBarrierFieldTypeTraits<void*>::Type scopes[];
     };
 #pragma region Function Body helper classes

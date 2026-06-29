@@ -44,7 +44,6 @@ namespace Memory
 
 #endif
 
-#ifdef TARGET_64
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
 
 #define X64_WB_DIAG 1
@@ -136,7 +135,6 @@ private:
 #else
 #error Not implemented
 #endif
-#endif
 
 class RecyclerWriteBarrierManager
 {
@@ -153,39 +151,25 @@ public:
 
     static bool IsCardTableCommited(_In_ uintptr_t index)
     {
-#ifdef TARGET_64
         return x64CardTableManager.IsCardTableCommited(index) != FALSE;
-#else
-        return true;
-#endif
     }
     static bool IsCardTableCommitedAddress(_In_ void* address)
     {
-#ifdef TARGET_64
         return x64CardTableManager.IsCardTableCommited(address) != FALSE;
-#else
-        return true;
-#endif
     }
 
     // For JIT
     static uintptr_t GetCardTableIndex(void * address);
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
-#ifdef TARGET_64
     static uint8_t * GetAddressOfCardTable() { return x64CardTableManager.GetAddressOfCardTable(); }
-#else
-    static uint8_t * GetAddressOfCardTable() { return cardTable; }
-#endif
 #else
     static uint32_t * GetAddressOfCardTable() { return cardTable; }
 #endif
 
     // For GC
-#ifdef TARGET_64
     static bool OnThreadInit();
     static bool OnSegmentAlloc(_In_ char* segment, size_t pageCount);
     static bool OnSegmentFree(_In_ char* segment, size_t pageCount);
-#endif
 
     static void ResetWriteBarrier(void * address, size_t pageCount);
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
@@ -209,7 +193,6 @@ public:
 private:
 
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
-#ifdef TARGET_64
     // On AMD64, we use a different scheme
     // As of Windows 8.1, the process user-mode address space is 128TB
     // We still use a write barrier page size of 4KB
@@ -220,9 +203,6 @@ private:
     // indirection to look up the card.
     static X64WriteBarrierCardTableManager x64CardTableManager;
     static uint8_t* cardTable;                         // 1 byte per 4096
-#else
-    static uint8_t cardTable[1 * 1024 * 1024];         // 1 byte per 4096
-#endif
 
 #else
     static uint32_t cardTable[1 * 1024 * 1024];        // 128 bytes per bit, 4096 per uint32_t

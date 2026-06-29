@@ -233,7 +233,6 @@ endif (CMAKE_BUILD_TYPE STREQUAL Debug)
 if (IS_64BIT_BUILD)
     add_definitions(
         -DBIT64=1
-        -DSTACK_ALIGN=16
     )
 endif (IS_64BIT_BUILD)
 

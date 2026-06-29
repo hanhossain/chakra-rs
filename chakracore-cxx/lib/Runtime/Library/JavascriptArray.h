@@ -136,11 +136,7 @@ namespace Js
         static const uint8_t MissingElementsCountIndex = 1;
         // 2nd column in allocationBuckets that stores allocation size for given bucket
         static const uint8_t AllocationSizeIndex = 2;
-#if defined(TARGET_64)
         static const uint8_t AllocationBucketsCount = 3;
-#else
-        static const uint8_t AllocationBucketsCount = 2;
-#endif
         static uint allocationBuckets[AllocationBucketsCount][AllocationBucketsInfoSize];
         static const Var MissingItem;
         static const Var IntMissingItemVar;

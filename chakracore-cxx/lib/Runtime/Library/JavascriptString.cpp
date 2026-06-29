@@ -247,17 +247,11 @@ namespace Js
     {
         size_t cchActual = std::u16string(content).length();
 
-#if defined(TARGET_64)
         if (!IsValidCharCount(cchActual))
         {
             // Limit javascript string to 31-bit length
             Js::Throw::OutOfMemory();
         }
-#else
-        // There shouldn't be enough memory to have UINT_MAX character.
-        // INT_MAX is the upper bound for 32-bit;
-        Assert(IsValidCharCount(cchActual));
-#endif
         return static_cast<charcount_t>(cchActual);
     }
 

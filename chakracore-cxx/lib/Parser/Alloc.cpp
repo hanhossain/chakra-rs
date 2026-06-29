@@ -10,17 +10,11 @@
 #define DEBUG_TRASHMEM(...)
 #endif //DEBUG
 
-#if TARGET_64
 struct __ALIGN_FOO__ {
     int w1;
     double dbl;
 };
 #define ALIGN_FULL (offsetof(__ALIGN_FOO__, dbl))
-#else
-// Force check for 4 byte alignment to support Win98/ME
-#define ALIGN_FULL 4
-#endif  // TARGET_64
-
 #define AlignFull(VALUE) (~(~((VALUE) + (ALIGN_FULL-1)) | (ALIGN_FULL-1)))
 
 NoReleaseAllocator::NoReleaseAllocator(int32_t cbFirst, int32_t cbMax)

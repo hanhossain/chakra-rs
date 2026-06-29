@@ -39,15 +39,8 @@ public:
     EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> * RecordInProcNativeCodeSize(Func *func, uint32_t bytes, ushort pdataCount, ushort xdataSize);
     void RecordNativeCode(const uint8_t* sourceBuffer, uint8_t* localCodeAddress);
     void RecordInlineeFrameOffsetsInfo(unsigned int offsetsArrayOffset, unsigned int offsetsArrayCount);
-
-#if TARGET_64
     void RecordUnwindInfo(uint8_t *unwindInfo, size_t size, uint8_t * xdataAddr, uint8_t* localXdataAddr);
-#elif _M_ARM
-    size_t RecordUnwindInfo(size_t offset, const uint8_t *unwindInfo, size_t size, uint8_t * xdataAddr);
-#endif
-
     void FinalizeNativeCode();
-
     JITOutputIDL * GetOutputData();
 private:
     template <typename TEmitBufferAllocation, typename TCodeGenAllocators>

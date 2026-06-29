@@ -13,17 +13,9 @@
 #pragma warning(disable:4838) // conversion from 'int' to 'const char' requires a narrowing conversion
 
 #if DISABLE_JIT
-#if TARGET_64
 #include "InJavascript/JsBuiltIn.nojit.bc.64b.h"
 #else
-#include "InJavascript/JsBuiltIn.nojit.bc.32b.h"
-#endif // TARGET_64
-#else
-#if TARGET_64
 #include "InJavascript/JsBuiltIn.bc.64b.h"
-#else
-#include "InJavascript/JsBuiltIn.bc.32b.h"
-#endif // TARGET_64
 #endif // DISABLE_JIT
 
 #pragma warning(pop)

@@ -31,12 +31,7 @@ import "wtypes.idl";
 #define IDL_PAD2(num) typename WriteBarrierFieldTypeTraits<short>::Type struct_pad_##num;
 #define IDL_PAD4(num) typename WriteBarrierFieldTypeTraits<int>::Type struct_pad_##num;
 
-#if defined(TARGET_64)
 #define X64_PAD4(num) typename WriteBarrierFieldTypeTraits<int>::Type struct_pad_##num;
-#else
-#define X64_PAD4(num)
-#endif
-
 #define X86_PAD4(num)
 
 #ifndef __midl
@@ -839,13 +834,7 @@ typedef struct JITOutputIDL
     unsigned int ctorCachesCount;
     X64_PAD4(2)
 
-#if TARGET_64
     CHAKRA_PTR xdataAddr;
-#elif defined(_M_ARM)
-    unsigned int xdataOffset;
-#else
-    X86_PAD4(3)
-#endif
     CHAKRA_PTR codeAddress;
     CHAKRA_PTR thunkAddress;
     TypeGuardTransferEntryIDL* typeGuardEntries;

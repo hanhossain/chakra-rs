@@ -2015,9 +2015,7 @@ WasmRegisterSpace* WasmBytecodeGenerator::GetRegisterSpace(WasmTypes::WasmType t
     switch (type)
     {
     case WasmTypes::I32: return mTypedRegisterAllocator.GetRegisterSpace(WAsmJs::INT32);
-#if TARGET_64
     case WasmTypes::Ptr:
-#endif
     case WasmTypes::I64:    return mTypedRegisterAllocator.GetRegisterSpace(WAsmJs::INT64);
     case WasmTypes::F32:    return mTypedRegisterAllocator.GetRegisterSpace(WAsmJs::FLOAT32);
     case WasmTypes::F64:    return mTypedRegisterAllocator.GetRegisterSpace(WAsmJs::FLOAT64);

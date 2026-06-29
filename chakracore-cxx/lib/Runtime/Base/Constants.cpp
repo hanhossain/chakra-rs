@@ -25,11 +25,7 @@ const char16_t Constants::StringMatch[] = u"String.prototype.match";
 const unsigned long Constants::ExponentMask = 0x3FF0000000000000;
 const unsigned long Constants::MantissaMask = 0x000FFFFFFFFFFFFF;
 
-#ifdef TARGET_64
 const size_t Constants::StackLimitForScriptInterrupt = 0x7fffffffffffffff;
-#else
-const size_t Constants::StackLimitForScriptInterrupt = 0x7fffffff;
-#endif
 
 #pragma warning(push)
 #pragma warning(disable:4815) // Allow no storage for zero-sized array at end of NullFrameDisplay struct.

@@ -4187,12 +4187,6 @@ ScriptContext::GetJitFuncRangeCache()
         }
 
         bool allowPrereserveAlloc = true;
-#if !TARGET_64
-        if (this->webWorkerId != Js::Constants::NonWebWorkerContextId)
-        {
-            allowPrereserveAlloc = false;
-        }
-#endif
         allowPrereserveAlloc = false;
         // The EnsureJITThreadContext() call could fail if the JIT Server process has died. In such cases, we should not try to do anything further in the client process.
         if (!this->GetThreadContext()->EnsureJITThreadContext(allowPrereserveAlloc))

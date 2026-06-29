@@ -31,8 +31,6 @@ using namespace Js;
     };
 
     const Var JavascriptArray::MissingItem = (Var)VarMissingItemPattern;
-
-#if defined(TARGET_64)
     const Var JavascriptArray::IntMissingItemVar = (Var)(((unsigned long)IntMissingItemPattern << 32) | (uint32_t)IntMissingItemPattern);
     uint JavascriptNativeIntArray::allocationBuckets[][AllocationBucketsInfoSize] =
     {
@@ -48,22 +46,6 @@ using namespace Js;
         {6, 0, 0},
         {8, 0, 0},
     };
-#else
-    const Var JavascriptArray::IntMissingItemVar = (Var)IntMissingItemPattern;
-    uint JavascriptNativeIntArray::allocationBuckets[][AllocationBucketsInfoSize] =
-    {
-        // See comments above on how to read this
-        { 3, 0, 0 },
-        { 7, 0, 0 },
-        { 8, 0, 0 },
-    };
-    uint JavascriptArray::allocationBuckets[][AllocationBucketsInfoSize] =
-    {
-        // See comments above on how to read this
-        { 4, 0, 0 },
-        { 8, 0, 0 },
-    };
-#endif
 
     const int32_t JavascriptNativeIntArray::MissingItem = IntMissingItemPattern;
     const double JavascriptNativeFloatArray::MissingItem = *(double*)&FloatMissingItemPattern;

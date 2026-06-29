@@ -30,22 +30,7 @@ GetFirstBitSet(uint32_t *Index, UnitWord32 Mask)
 inline BOOLEAN
 GetFirstBitSet(uint32_t *Index, UnitWord64 Mask)
 {
-#if defined(TARGET_64)
     return _BitScanForward64(Index, Mask);
-#else
-    //_BitScanForward64 intrinsic is not available in x86 & ARM
-    if (_BitScanForward(Index, (UnitWord32)Mask))
-    {
-        return true;
-    }
-
-    if(_BitScanForward(Index, (UnitWord32) (Mask >> 32)))
-    {
-        *Index = *Index + 32;
-        return true;
-    }
-    return false;
-#endif
 }
 
 inline BOOLEAN
@@ -56,17 +41,7 @@ GetLastBitSet(uint32_t *Index, UnitWord32 Mask)
 inline BOOLEAN
 GetLastBitSet(uint32_t *Index, UnitWord64 Mask)
 {
-#if defined(TARGET_64)
     return _BitScanReverse64(Index, Mask);
-#else
-    //_BitScanReverse64 intrinsic is not available in x86 & ARM
-    if (_BitScanReverse(Index, (UnitWord32)(Mask >> 32)))
-    {
-        *Index = *Index + 32;
-        return true;
-    }
-    return _BitScanReverse(Index, (UnitWord32)Mask);
-#endif
 }
 
 namespace {
@@ -498,11 +473,6 @@ public:
 
 typedef BVUnitT<UnitWord32> BVUnit32;
 typedef BVUnitT<UnitWord64> BVUnit64;
-
-#if defined(TARGET_64)
-    typedef BVUnit64 BVUnit;
-#else
-    typedef BVUnit32 BVUnit;
-#endif
+typedef BVUnit64 BVUnit;
 
 

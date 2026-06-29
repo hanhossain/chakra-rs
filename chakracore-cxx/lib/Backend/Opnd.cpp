@@ -3023,11 +3023,7 @@ Opnd::DumpAddress(void *address, bool printToConsole, bool skipMaskedAddress)
     }
     else
     {
-#ifdef TARGET_64
         Output::Print(u"0x%012I64X", address);
-#else
-        Output::Print(u"0x%08X", address);
-#endif
     }
 }
 
@@ -3556,22 +3552,14 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
         {
         case IR::AddrOpndKindConstantAddress:
         {
-#ifdef TARGET_64
             char16_t const * format = u"0x%012I64X";
-#else
-            char16_t const * format = u"0x%08X";
-#endif
             WriteToBuffer(&buffer, &n, format, address);
         }
         break;
         case IR::AddrOpndKindDynamicVar:
             if (Js::TaggedInt::Is(address))
             {
-#ifdef TARGET_64
                 char16_t const * format = u"0x%012I64X (value: %d)";
-#else
-                char16_t const * format = u"0x%08X  (value: %d)";
-#endif
                 WriteToBuffer(&buffer, &n, format, address, Js::TaggedInt::ToInt32(address));
             }
             else if (Js::JavascriptNumber::Is_NoTaggedIntCheck(address))
@@ -3623,11 +3611,7 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
             break;
         case IR::AddrOpndKindConstantVar:
         {
-#ifdef TARGET_64
             char16_t const * format = u"0x%012I64X%s";
-#else
-            char16_t const * format = u"0x%08X%s";
-#endif
             char16_t const * addressName = u"";
 
             if (address == Js::JavascriptArray::MissingItem)

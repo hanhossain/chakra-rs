@@ -143,11 +143,7 @@
 #define ENABLE_BACKGROUND_JOB_PROCESSOR 1
 #define ENABLE_COPYONACCESS_ARRAY 1
 #ifndef DYNAMIC_INTERPRETER_THUNK
-#if defined(TARGET_64)
 #define DYNAMIC_INTERPRETER_THUNK 1
-#else
-#define DYNAMIC_INTERPRETER_THUNK 0
-#endif
 #endif
 
 // Only enable background parser in debug build.
@@ -436,11 +432,7 @@
 // Platform dependent flags
 //----------------------------------------------------------------------------------------------------
 #ifndef INT32VAR
-#if defined(TARGET_64)
 #define INT32VAR 1
-#else
-#define INT32VAR 0
-#endif
 #endif
 
 #define LOWER_SPLIT_INT64 0

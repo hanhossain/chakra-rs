@@ -55,9 +55,7 @@ void Amd64StackWalkerOutOfContexts_unrecoverable_error(
 void FailedToBox_OOM_unrecoverable_error(
     size_t context);
 
-#if defined(TARGET_64)
 void X64WriteBarrier_OOM_unrecoverable_error();
-#endif
 
 void DebugHeap_OOM_fatal_error();
 

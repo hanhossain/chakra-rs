@@ -149,9 +149,7 @@ namespace Js
                 case WAsmJs::INT32: byteTable = SetConstsToTable<int>(byteTable, 0); break;
                 case WAsmJs::FLOAT32: byteTable = SetConstsToTable<float>(byteTable, 0); break;
                 case WAsmJs::FLOAT64: byteTable = SetConstsToTable<double>(byteTable, 0); break;
-#if TARGET_64
                 case WAsmJs::INT64: SetConstsToTable<long>(byteTable, 0); break;
-#endif
                 case WAsmJs::SIMD:
                 {
                     AsmJsSIMDValue zeroValue;

@@ -858,7 +858,6 @@ IRBuilderAsmJs::BuildConstantLoads()
                 }
             );
             break;
-#if TARGET_64
         case WAsmJs::INT64:
             CreateLoadConstInstrForType<long, IR::Int64ConstOpnd>(
                 table,
@@ -871,7 +870,6 @@ IRBuilderAsmJs::BuildConstantLoads()
                 [&](IR::Instr* instr, long val) {}
             );
             break;
-#endif
         case WAsmJs::FLOAT32:
             CreateLoadConstInstrForType<float, IR::Float32ConstOpnd>(
                 table,

@@ -5,11 +5,7 @@
 #pragma once
 #include "Memory/SmallFinalizableHeapBlock.h"
 
-#if defined(TARGET_64)
 #define UINT_PAD_64BIT(x) uint x
-#else
-#define UINT_PAD_64BIT(x)
-#endif
 
 namespace Memory
 {
@@ -55,11 +51,7 @@ public:
     void SetAttributes(uint cookie, unsigned char attributes);
     unsigned char GetAttributes(uint cookie);
 };
-#if defined(TARGET_64)
 static_assert(sizeof(LargeObjectHeader) == 0x20, "Incorrect LargeObjectHeader size");
-#else
-static_assert(sizeof(LargeObjectHeader) == 0x10, "Incorrect LargeObjectHeader size");
-#endif
 class LargeHeapBlock;
 class LargeHeapBucket;
 

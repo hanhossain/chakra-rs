@@ -135,11 +135,7 @@ using namespace Js;
 
     bool NumberUtilities::IsFinite(double value)
     {
-#if defined(TARGET_64)
         return 0 != (~(ToSpecial(value)) & 0x7FF0000000000000ull);
-#else
-        return 0 != (~Js::NumberUtilities::LuHiDbl(value) & 0x7FF00000);
-#endif
     }
 
     int NumberUtilities::CbitZeroLeft(uint32_t lu)

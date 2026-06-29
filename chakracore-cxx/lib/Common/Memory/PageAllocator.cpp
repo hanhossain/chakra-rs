@@ -34,10 +34,8 @@ SegmentBase<T>::SegmentBase(PageAllocatorBase<T> * allocator, size_t pageCount, 
     leadingGuardPageCount(0),
     secondaryAllocPageCount(allocator->secondaryAllocPageCount),
     secondaryAllocator(nullptr)
-#if defined(TARGET_64)
     , isWriteBarrierAllowed(false)
     , isWriteBarrierEnabled(enableWriteBarrier)
-#endif
 #if DBG
     , isPageSegment(false)
 #endif // DBG
@@ -63,7 +61,7 @@ SegmentBase<T>::~SegmentBase()
         char* originalAddress = this->address - (leadingGuardPageCount * AutoSystemInfo::PageSize);
         GetAllocator()->GetVirtualAllocator()->Free(originalAddress, GetPageCount() * AutoSystemInfo::PageSize, MEM_RELEASE);
         GetAllocator()->ReportFree(this->segmentPageCount * AutoSystemInfo::PageSize); //Note: We reported the guard pages free when we decommitted them during segment initialization
-#if defined(TARGET_64) && defined(RECYCLER_WRITE_BARRIER_BYTE)
+#if defined(RECYCLER_WRITE_BARRIER_BYTE)
         if (CONFIG_FLAG(StrictWriteBarrierCheck) && this->isWriteBarrierEnabled)
         {
             RecyclerWriteBarrierManager::ToggleBarrier(this->address, this->segmentPageCount * AutoSystemInfo::PageSize, false);
@@ -146,7 +144,7 @@ SegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
         return false;
     }
 
-#if defined(TARGET_64) && defined(RECYCLER_WRITE_BARRIER_BYTE)
+#if defined(RECYCLER_WRITE_BARRIER_BYTE)
     bool registerBarrierResult = true;
     if (CONFIG_FLAG(StrictWriteBarrierCheck))
     {
@@ -2142,11 +2140,7 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddUsedBytes(size_t bytes)
 {
     usedBytes += bytes;
-#if defined(TARGET_64)
     ::InterlockedExchangeAdd64((volatile long *)&totalUsedBytes, bytes);
-#else
-    uint32_t lastTotalUsedBytes = ::InterlockedExchangeAdd(&totalUsedBytes, bytes);
-#endif
 
     if (totalUsedBytes > maxUsedBytes)
     {
@@ -2165,15 +2159,8 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SubUsedBytes(size_t by
 {
     Assert(bytes <= usedBytes);
     Assert(bytes <= totalUsedBytes);
-
     usedBytes -= bytes;
-
-#if defined(TARGET_64)
     ::InterlockedExchangeAdd64((volatile long *)&totalUsedBytes, -(long)bytes);
-#else
-    uint32_t lastTotalUsedBytes = ::InterlockedExchangeSubtract(&totalUsedBytes, bytes);
-#endif
-
 #ifdef PERF_COUNTERS
     GetUsedSizeCounter() -= bytes;
     GetTotalUsedSizeCounter() -= bytes;

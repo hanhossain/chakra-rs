@@ -4,11 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#ifdef  TARGET_64
 # define WIN64_STACK_FACTOR 3
-#else
-# define WIN64_STACK_FACTOR 1
-#endif
 
 namespace Js
 {

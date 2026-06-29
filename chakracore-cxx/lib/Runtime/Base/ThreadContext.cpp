@@ -645,12 +645,10 @@ Recycler* ThreadContext::EnsureRecycler()
 
         try
         {
-#ifdef TARGET_64
             if (!RecyclerWriteBarrierManager::OnThreadInit())
             {
                 Js::Throw::OutOfMemory();
             }
-#endif
 
             this->expirableObjectList = Anew(&this->threadAlloc, ExpirableObjectList, &this->threadAlloc);
             this->expirableObjectDisposeList = Anew(&this->threadAlloc, ExpirableObjectList, &this->threadAlloc);

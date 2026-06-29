@@ -28,11 +28,7 @@ public:
         {
             // we use 4-bit bucket index, but we often have keys that are larger. 
             // use Fibonacci hash to reduce the possibility of collisions
-#if TARGET_64
             return (key * 11400714819323198485llu) >> 60;
-#else
-            return (key * 2654435769ul) >> 28;
-#endif
         }
 
         void Add(PropertyId key, byte value)
@@ -104,17 +100,9 @@ public:
     public:
         // This is the space between the end of the TypePath and the allocation granularity that can be used for assignments too.
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-#if defined(TARGET_64)
 #define TYPE_PATH_ALLOC_GRANULARITY_GAP 0
 #else
-#define TYPE_PATH_ALLOC_GRANULARITY_GAP 2
-#endif
-#else
-#if defined(TARGET_64)
 #define TYPE_PATH_ALLOC_GRANULARITY_GAP 1
-#else
-#define TYPE_PATH_ALLOC_GRANULARITY_GAP 3
-#endif
 #endif
         // Although we can allocate 2 more, 
         // TinyDictionary can hold only up to 128 items (see TinyDictionary::Add),

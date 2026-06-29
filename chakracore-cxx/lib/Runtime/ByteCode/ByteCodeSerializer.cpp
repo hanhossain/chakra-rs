@@ -71,11 +71,7 @@ namespace Js
 
     // Serialized files are architecture specific
 #ifndef VALIDATE_SERIALIZED_BYTECODE
-#if TARGET_64
     const byte magicArchitecture = 64;
-#else
-    const byte magicArchitecture = 32;
-#endif
 #else
 #if _M_AMD64
     const int magicArchitecture = *(int*)"amd";

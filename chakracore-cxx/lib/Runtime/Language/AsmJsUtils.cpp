@@ -207,9 +207,7 @@ namespace Js
                     intVal = 0;
                 }
 
-#if TARGET_64
                 *(long*)(argDst) = 0;
-#endif
                 *(int32_t*)argDst = intVal;
                 argDst = argDst + MachPtr;
             }
@@ -272,9 +270,7 @@ namespace Js
                 {
                     floatVal = (float)(JavascriptNumber::NaN);
                 }
-#if TARGET_64
                 *(long*)(argDst) = 0;
-#endif
                 *(float*)argDst = floatVal;
                 argDst = argDst + MachPtr;
             }

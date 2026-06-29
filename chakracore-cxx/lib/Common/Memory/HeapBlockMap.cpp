@@ -8,19 +8,13 @@
 const uint Memory::HeapBlockMap32::L1Count;
 const uint Memory::HeapBlockMap32::L2Count;
 
-#if defined(TARGET_64)
 HeapBlockMap32::HeapBlockMap32(char * startAddress) :
     startAddress(startAddress),
-#else
-HeapBlockMap32::HeapBlockMap32() :
-#endif
     count(0)
 {
     memset(map, 0, sizeof(map));
 
-#if defined(TARGET_64)
     Assert(((size_t)startAddress) % TotalSize == 0);
-#endif
 }
 
 HeapBlockMap32::~HeapBlockMap32()
@@ -572,7 +566,6 @@ HeapBlockMap32::ForEachSegment(Recycler * recycler, Fn func)
             PageAllocator* segmentPageAllocator = (PageAllocator*)currentSegment->GetAllocator();
 
             Assert(segmentPageAllocator == block->GetPageAllocator(block->GetHeapInfo()));
-#if defined(TARGET_64)
             // On 64 bit, the segment may span multiple HeapBlockMap32 structures.
             // Limit the processing to the portion of the segment in this HeapBlockMap32.
             // We'll process other portions when we visit the other HeapBlockMap32 structures.
@@ -587,7 +580,6 @@ HeapBlockMap32::ForEachSegment(Recycler * recycler, Fn func)
             {
                 segmentLength = HeapBlockMap32::TotalSize - (segmentStart - this->startAddress);
             }
-#endif
 
             func(segmentStart, segmentLength, currentSegment, segmentPageAllocator);
         }
@@ -600,10 +592,7 @@ HeapBlockMap32::ResetDirtyPages(Recycler * recycler)
     this->ForEachSegment(recycler, [=](char * segmentStart, size_t segmentLength, Segment * segment, PageAllocator * segmentPageAllocator) {
 
         Assert(segmentLength % AutoSystemInfo::PageSize == 0);
-
-#if defined(TARGET_64)
         if (segment->IsWriteBarrierEnabled())
-#endif
         {
             // Reset software write barrier for barrier segments.
             RecyclerWriteBarrierManager::ResetWriteBarrier(segmentStart, segmentLength / AutoSystemInfo::PageSize);
@@ -783,10 +772,7 @@ HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
             {
                 char * pageAddress = segmentStart + (i * AutoSystemInfo::PageSize);
                 Assert((size_t)(pageAddress - segmentStart) < segmentLength);
-
-#if defined(TARGET_64)
                 Assert(HeapBlockMap64::GetNodeStartAddress(pageAddress) == this->startAddress);
-#endif
 
                 // TODO: We are not resetting the write barrier here when RescanFlags_ResetWriteWatch is passed.
                 // We never have previously, but it still seems like we should.
@@ -841,11 +827,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
             {
                 char * pageAddress = segmentStart + (i * AutoSystemInfo::PageSize);
                 Assert((size_t)(pageAddress - segmentStart) < segmentLength);
-
-#if defined(TARGET_64)
                 Assert(HeapBlockMap64::GetNodeStartAddress(pageAddress) == this->startAddress);
-#endif
-
                 uint id1 = GetLevel1Id(pageAddress);
                 L2MapChunk * chunk = map[id1];
                 if (chunk != nullptr)
@@ -1002,8 +984,6 @@ HeapBlockMap32::Cleanup(bool concurrentFindImplicitRoot)
         }
     }
 }
-
-#if defined(TARGET_64)
 
 HeapBlockMap64::HeapBlockMap64():
     list(nullptr)
@@ -1395,6 +1375,5 @@ HeapBlockMap64::IsAddressInNewChunk(void * address)
 
     return node->map.IsAddressInNewChunk(address);
 }
-#endif
 #endif
 

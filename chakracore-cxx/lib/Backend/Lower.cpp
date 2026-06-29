@@ -15716,10 +15716,6 @@ IR::Instr *Lowerer::InsertTest(IR::Opnd *const src1, IR::Opnd *const src2, IR::I
     Assert(!src1->IsFloat64()); // not implemented
     Assert(src2);
     Assert(!src2->IsFloat64()); // not implemented
-#if !TARGET_64
-    Assert(!src1->IsInt64()); // not implemented
-    Assert(!src2->IsInt64()); // not implemented
-#endif
     Assert(insertBeforeInstr);
 
     Func *const func = insertBeforeInstr->m_func;
@@ -17474,7 +17470,6 @@ Lowerer::GenerateFastElemIIntIndexCommon(
                     autoReuseHeadSegmentLengthOpnd.Initialize(headSegmentLengthOpnd, m_func);
                 }
                 IR::RegOpnd* localMaskOpnd = nullptr;
-#if TARGET_64
                 IR::Opnd* lengthOpnd = nullptr;
                 AnalysisAssert(headSegmentLengthOpnd != nullptr);
                 lengthOpnd = IR::RegOpnd::New(headSegmentLengthOpnd->GetType(), m_func);
@@ -17506,12 +17501,6 @@ Lowerer::GenerateFastElemIIntIndexCommon(
                 localMaskOpnd = IR::RegOpnd::New(TyMachPtr, m_func);
                 InsertSub(false, localMaskOpnd, indexValueRegOpnd, lengthOpnd, instr);
                 InsertShift(Js::OpCode::Shr_A, false, localMaskOpnd, localMaskOpnd, IR::IntConstOpnd::New(63, TyInt8, m_func), instr);
-#else
-                localMaskOpnd = IR::RegOpnd::New(TyInt32, m_func);
-                InsertSub(false, localMaskOpnd, indexValueOpnd, headSegmentLengthOpnd, instr);
-                InsertShift(Js::OpCode::Shr_A, false, localMaskOpnd, localMaskOpnd, IR::IntConstOpnd::New(31, TyInt8, m_func), instr);
-#endif
-
                 // for pop we always do the masking before the load in cases where we load a value
                 IR::RegOpnd* loadAddr = IR::RegOpnd::New(TyMachPtr, m_func);
 
@@ -17693,7 +17682,6 @@ Lowerer::GenerateFastElemIIntIndexCommon(
             }
         }
         IR::RegOpnd* localMaskOpnd = nullptr;
-#if TARGET_64
         IR::Opnd* lengthOpnd = nullptr;
 #if ENABLE_FAST_ARRAYBUFFER
         if (baseValueType.IsLikelyOptimizedVirtualTypedArray())
@@ -17749,16 +17737,6 @@ Lowerer::GenerateFastElemIIntIndexCommon(
             InsertSub(false, localMaskOpnd, indexValueRegOpnd, lengthOpnd, insertForSegmentLengthIncreased);
             InsertShift(Js::OpCode::Shr_A, false, localMaskOpnd, localMaskOpnd, IR::IntConstOpnd::New(63, TyInt8, m_func), insertForSegmentLengthIncreased);
         }
-#else
-        localMaskOpnd = IR::RegOpnd::New(TyInt32, m_func);
-        InsertSub(false, localMaskOpnd, indexValueOpnd, headSegmentLengthOpnd, instr);
-        InsertShift(Js::OpCode::Shr_A, false, localMaskOpnd, localMaskOpnd, IR::IntConstOpnd::New(31, TyInt8, m_func), instr);
-        if (insertForSegmentLengthIncreased != nullptr)
-        {
-            InsertSub(false, localMaskOpnd, indexValueOpnd, headSegmentLengthOpnd, insertForSegmentLengthIncreased);
-            InsertShift(Js::OpCode::Shr_A, false, localMaskOpnd, localMaskOpnd, IR::IntConstOpnd::New(31, TyInt8, m_func), insertForSegmentLengthIncreased);
-        }
-#endif
 
         if ((IRType_IsNativeInt(indirType) || indirType == TyVar) && !isStore)
         {
@@ -18294,12 +18272,10 @@ Lowerer::GenerateFastLdElemI(IR::Instr *& ldElem, bool *instrIsInHelperBlockRef)
                 IR::Instr* instrMov = InsertMove(reg, indirOpnd, ldElem);
                 if (maskOpnd)
                 {
-#if TARGET_64
                     if (maskOpnd->GetSize() != reg->GetType())
                     {
                         maskOpnd = maskOpnd->UseWithNewType(reg->GetType(), m_func)->AsRegOpnd();
                     }
-#endif
                     instrMov = InsertAnd(reg, reg, maskOpnd, ldElem);
                 }
 
@@ -18361,12 +18337,10 @@ Lowerer::GenerateFastLdElemI(IR::Instr *& ldElem, bool *instrIsInHelperBlockRef)
             InsertMove(dst, indirOpnd, ldElem);
             if (maskOpnd)
             {
-#if TARGET_64
                 if (maskOpnd->GetSize() != dst->GetType())
                 {
                     maskOpnd = maskOpnd->UseWithNewType(dst->GetType(), m_func)->AsRegOpnd();
                 }
-#endif
                 InsertAnd(dst, dst, maskOpnd, ldElem);
             }
 
@@ -18566,14 +18540,8 @@ Lowerer::GetMissingItemOpndForCompare(IRType type, Func *func)
     case TyVar:
     case TyInt32:
         return GetMissingItemOpnd(type, func);
-
     case TyFloat64:
-#if TARGET_64
         return IR::MemRefOpnd::New(func->GetThreadContextInfo()->GetNativeFloatArrayMissingItemAddr(), TyUint64, func);
-#else
-        return IR::MemRefOpnd::New(func->GetThreadContextInfo()->GetNativeFloatArrayMissingItemAddr(), TyUint32, func);
-#endif
-
     default:
         AnalysisAssertMsg(false, "Unexpected type in Lowerer::GetMissingItemOpndForCompare");
     }

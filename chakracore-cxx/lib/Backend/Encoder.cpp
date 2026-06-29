@@ -515,7 +515,6 @@ Encoder::Encode()
     }
 #endif
 
-#ifdef TARGET_64
 #ifdef _M_X64
     PrologEncoder &unwindInfo = m_func->m_prologEncoder;
     unwindInfo.FinalizeUnwindInfo((uint8_t*)m_func->GetJITOutput()->GetCodeAddress(), (uint32_t)codeSize);
@@ -533,22 +532,6 @@ Encoder::Encode()
         unwindInfo.SizeOfUnwindInfo(),
         allocation->xdata.address,
         (uint8_t*)localXdataAddr);
-#elif _M_ARM
-    m_func->m_unwindInfo.EmitUnwindInfo(m_func->GetJITOutput(), allocation);
-    if (m_func->IsOOPJIT())
-    {
-        size_t allocSize = XDataAllocator::GetAllocSize(allocation->xdata.pdataCount, allocation->xdata.xdataSize);
-        uint8_t * xprocXdata = NativeCodeDataNewArrayNoFixup(m_func->GetNativeCodeDataAllocator(), uint8_t, allocSize);
-        memcpy(xprocXdata, allocation->xdata.address, allocSize);
-        m_func->GetJITOutput()->RecordXData(xprocXdata);
-    }
-    else
-    {
-        XDataAllocator::Register(&allocation->xdata, m_func->GetJITOutput()->GetCodeAddress(), (uint32_t)m_func->GetJITOutput()->GetCodeSize());
-        m_func->GetInProcJITEntryPointInfo()->GetNativeEntryPointData()->SetXDataInfo(&allocation->xdata);
-    }
-    m_func->GetJITOutput()->SetCodeAddress(m_func->GetJITOutput()->GetCodeAddress() | 0x1); // Set thumb mode
-#endif
 
     [[maybe_unused]] const bool isSimpleJit = m_func->IsSimpleJit();
 
@@ -893,11 +876,7 @@ Encoder::Encode()
         FOREACH_INSTR_IN_FUNC(instr, m_func)
         {
             instr->DumpGlobOptInstrString();
-#ifdef TARGET_64
             Output::Print(u"%12IX  ", m_offsetBuffer[m_instrNumber++] + (uint8_t *)m_func->GetJITOutput()->GetCodeAddress());
-#else
-            Output::Print(u"%8IX  ", m_offsetBuffer[m_instrNumber++] + (uint8_t *)m_func->GetJITOutput()->GetCodeAddress());
-#endif
             instr->Dump();
         } NEXT_INSTR_IN_FUNC;
         Output::Flush();

@@ -710,7 +710,6 @@ using namespace Js;
         Assert(packedSubstringInfoRef);
         Assert(packedSubstringInfo2Ref);
 
-    #if defined(TARGET_64)
         // On 64-bit architectures, two nonnegative 32-bit ints fit completely in a tagged pointer
         *packedSubstringInfoRef =
             reinterpret_cast<void *>(
@@ -718,26 +717,6 @@ using namespace Js;
                 (static_cast<uintptr_t>(length) << 1) +
                 1);
         *packedSubstringInfo2Ref = nullptr;
-    #else
-        static_assert(sizeof(void *) == sizeof(int32_t));
-
-        // On 32-bit architectures, it will be attempted to fit both pieces of into one pointer by using 16 bits for the
-        // start index, 15 for the length, and 1 for the tag. If it does not fit, an additional pointer will be used.
-        if(startIndex <= static_cast<CharCount>(0xffff) && length <= static_cast<CharCount>(0x7fff))
-        {
-            *packedSubstringInfoRef =
-                reinterpret_cast<void *>(
-                    (static_cast<uintptr_t>(startIndex) << 16) +
-                    (static_cast<uintptr_t>(length) << 1) +
-                    1);
-            *packedSubstringInfo2Ref = nullptr;
-        }
-        else
-        {
-            *packedSubstringInfoRef = reinterpret_cast<void *>((static_cast<uintptr_t>(startIndex) << 1) + 1);
-            *packedSubstringInfo2Ref = reinterpret_cast<void *>((static_cast<uintptr_t>(length) << 1) + 1);
-        }
-    #endif
 
     #if DBG
         CharCount unpackedStartIndex, unpackedLength;
@@ -769,29 +748,10 @@ using namespace Js;
         const uintptr_t packedSubstringInfo = reinterpret_cast<uintptr_t>(pointer);
         Assert(packedSubstringInfo & 1);
 
-    #if defined(TARGET_64)
         // On 64-bit architectures, two nonnegative 32-bit ints fit completely in a tagged pointer
         Assert(!pointer2);
         *startIndexRef = static_cast<CharCount>(packedSubstringInfo >> 32);
         *lengthRef = static_cast<CharCount>(static_cast<uint32_t>(packedSubstringInfo) >> 1);
-    #else
-        static_assert(sizeof(void *) == sizeof(int32_t));
-
-        // On 32-bit architectures, it will be attempted to fit both pieces of into one pointer by using 16 bits for the
-        // start index, 15 for the length, and 1 for the tag. If it does not fit, an additional pointer will be used.
-        if(!pointer2)
-        {
-            *startIndexRef = static_cast<CharCount>(packedSubstringInfo >> 16);
-            *lengthRef = static_cast<CharCount>(static_cast<uint16>(packedSubstringInfo) >> 1);
-        }
-        else
-        {
-            *startIndexRef = static_cast<CharCount>(packedSubstringInfo >> 1);
-            const uintptr_t packedSubstringInfo2 = reinterpret_cast<uintptr_t>(pointer2);
-            Assert(packedSubstringInfo2 & 1);
-            *lengthRef = static_cast<CharCount>(packedSubstringInfo2 >> 1);
-        }
-    #endif
     }
 
     #ifndef IsJsDiag
@@ -1093,16 +1053,7 @@ using namespace Js;
                 Assert(pointerIndex != 0);
                 void *pointer2 = blockPointers[--pointerIndex];
                 JavascriptString *s;
-    #if defined(TARGET_64)
                 Assert(!IsPackedInfo(pointer2));
-    #else
-                if(IsPackedInfo(pointer2))
-                {
-                    Assert(pointerIndex != 0);
-                    s = VarTo<JavascriptString>(blockPointers[--pointerIndex]);
-                }
-                else
-    #endif
                 {
                     s = VarTo<JavascriptString>(pointer2);
                     pointer2 = nullptr;

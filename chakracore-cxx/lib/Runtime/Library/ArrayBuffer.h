@@ -179,13 +179,8 @@ namespace Js
         virtual void AddParent(ArrayBufferParent* parent) override;
 
         void Detach();
-#if defined(TARGET_64)
         //maximum 2G -1  for amd64
         static const uint32_t MaxArrayBufferLength = 0x7FFFFFFF;
-#else
-        // maximum 1G to avoid arithmetic overflow.
-        static const uint32_t MaxArrayBufferLength = 1 << 30;
-#endif
         static const uint32_t ParentsCleanupThreshold = 1000;
 
         virtual bool IsValidAsmJsBufferLength(uint length, bool forceCheck = false) { return false; }

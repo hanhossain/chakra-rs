@@ -25,16 +25,10 @@ namespace Memory
     FN_VerifyIsNotBarrierAddress* g_verifyIsNotBarrierAddress = nullptr;
 }
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
-#ifdef TARGET_64
 X64WriteBarrierCardTableManager RecyclerWriteBarrierManager::x64CardTableManager;
 X64WriteBarrierCardTableManager::CommittedSectionBitVector X64WriteBarrierCardTableManager::committedSections(&HeapAllocator::Instance);
 
 uint8_t* RecyclerWriteBarrierManager::cardTable = RecyclerWriteBarrierManager::x64CardTableManager.Initialize();
-#else
-// Each byte in the card table covers 4096 bytes so the range covered by the table is 4GB
-uint8_t RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
-bool dummy = RecyclerWriteBarrierManager::Initialize();
-#endif
 
 #else
 // Each *bit* in the card table covers 128 bytes. So each uint32_t covers 4096 bytes and therefore the cardTable covers 4GB
@@ -42,7 +36,6 @@ uint32_t RecyclerWriteBarrierManager::cardTable[1 * 1024 * 1024];
 #endif
 
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
-#ifdef TARGET_64
 
 bool
 X64WriteBarrierCardTableManager::OnThreadInit()
@@ -282,7 +275,6 @@ RecyclerWriteBarrierManager::OnSegmentFree(_In_ char* segmentAddress, size_t num
 {
     return x64CardTableManager.OnSegmentFree(segmentAddress, numPages);
 }
-#endif
 
 #else
 #error Not implemented for bit-array card table

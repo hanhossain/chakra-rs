@@ -6,10 +6,8 @@
 
 namespace Js
 {
-#ifdef TARGET_64
 // This base class has a 4-byte length field. Change struct pack to 4 on 64bit to avoid 4 padding bytes here.
 #pragma pack(push, 4)
-#endif
 
     //
     // A base class for all array-like objects types, that can serve as an Object's internal array:
@@ -51,8 +49,6 @@ namespace Js
         virtual JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext* requestContext) = 0;
     };
 
-#ifdef TARGET_64
 #pragma pack(pop)
-#endif
 
 } // namespace Js

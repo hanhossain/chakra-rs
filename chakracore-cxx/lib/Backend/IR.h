@@ -695,10 +695,8 @@ public:
     static const uint InvalidProfileId = (uint)-1;
 };
 
-#if TARGET_64
 // Ensure that the size of the union doesn't exceed the size of a 64 bit pointer.
 static_assert(sizeof(ProfiledInstr::u) <= sizeof(void*));
-#endif
 
 ///---------------------------------------------------------------------------
 ///

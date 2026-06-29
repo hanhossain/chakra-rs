@@ -1304,9 +1304,7 @@ WasmNode WasmBinaryReader::ReadInitExpr(bool isOffset)
 
     m_funcState.count = 0;
     m_funcState.size = (uint32_t)(m_currentSection.end - m_pc);
-#if TARGET_64
     Assert(m_pc + m_funcState.size == m_currentSection.end);
-#endif
     ReadExpr();
     WasmNode node = m_currentNode;
     switch (node.op)
