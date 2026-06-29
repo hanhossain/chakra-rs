@@ -2205,14 +2205,10 @@ namespace Js
         Boolean KeepRecyclerTrackData;
 
         Number MaxSingleAllocSizeInMB;
-
-                bool            flagPresent[FlagCount];
-
-#if CONFIG_PARSE_CONFIG_FILE
-                // save the jscript.config for easier to get the raw input while analyzing dump file
-                char16_t          rawInputFromConfigFile[512];
-                int             rawInputFromConfigFileIndex;
-#endif
+        bool            flagPresent[FlagCount];
+        // save the jscript.config for easier to get the raw input while analyzing dump file
+        char16_t          rawInputFromConfigFile[512];
+        int             rawInputFromConfigFileIndex;
 
     private:
         //

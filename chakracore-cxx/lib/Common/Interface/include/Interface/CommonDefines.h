@@ -56,9 +56,6 @@
 // NOTE: Disabling these might not work and are not fully supported and maintained
 // Even if it builds, it may not work properly. Disable at your own risk
 
-// Config options
-#define CONFIG_PARSE_CONFIG_FILE 1
-
 // ByteCode
 #define VARIABLE_INT_ENCODING 1                     // Byte code serialization variable size int field encoding
 #define BYTECODE_BRANCH_ISLAND                      // Byte code short branch and branch island

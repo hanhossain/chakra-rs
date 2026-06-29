@@ -59,7 +59,6 @@ void ConfigParser::ParseOnModuleLoad(CmdLineArgsParser& parser)
 
 void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCustomConfigFile)
 {
-#if CONFIG_PARSE_CONFIG_FILE
     Assert(!_hasReadConfig || strCustomConfigFile != nullptr);
     _hasReadConfig = true;
 
@@ -173,7 +172,6 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
     {
         return;
     }
-#endif
 }
 
 void ConfigParser::ProcessConfiguration()
