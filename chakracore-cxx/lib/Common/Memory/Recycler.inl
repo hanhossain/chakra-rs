@@ -348,7 +348,6 @@ inline RecyclerWeakReference<T>* Recycler::CreateWeakReferenceHandle(T* pStrongR
     // The entry returned is recycler-allocated memory
     RecyclerWeakReference<T>* weakRef = (RecyclerWeakReference<T>*) this->weakReferenceMap.Add((char*) pStrongReference, this);
 #if DBG
-#if ENABLE_RECYCLER_TYPE_TRACKING
     if (weakRef->typeInfo == nullptr)
     {
         weakRef->typeInfo = &typeid(T);
@@ -356,7 +355,6 @@ inline RecyclerWeakReference<T>* Recycler::CreateWeakReferenceHandle(T* pStrongR
         TrackAllocWeakRef(weakRef);
 #endif
     }
-#endif
 #endif
     return weakRef;
 }
@@ -370,11 +368,9 @@ inline bool Recycler::FindOrCreateWeakReferenceHandle(T* pStrongReference, Recyc
 #if DBG
     if (!ret)
     {
-#if ENABLE_RECYCLER_TYPE_TRACKING
         (*ppWeakRef)->typeInfo = &typeid(T);
 #ifdef TRACK_ALLOC
         TrackAllocWeakRef(*ppWeakRef);
-#endif
 #endif
     }
 #endif

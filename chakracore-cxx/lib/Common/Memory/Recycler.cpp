@@ -6934,9 +6934,7 @@ Recycler::TrackUnallocated(char* address, char *endAddress, size_t sizeCat)
 void
 Recycler::TrackAllocWeakRef(RecyclerWeakReferenceBase * weakRef)
 {
-#if ENABLE_RECYCLER_TYPE_TRACKING
     Assert(weakRef->typeInfo != nullptr);
-#endif
 #if DBG && defined(PERF_COUNTERS)
     if (this->trackerDictionary != nullptr)
     {

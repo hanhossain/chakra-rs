@@ -73,7 +73,6 @@
 #endif
 
 // GC features
-#define ENABLE_RECYCLER_TYPE_TRACKING 1
 
 #define ENABLE_WEAK_REFERENCE_REGIONS 1
 
