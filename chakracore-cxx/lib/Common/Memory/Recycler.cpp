@@ -2815,12 +2815,10 @@ Recycler::SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager)
     {
         SetCollectionState(CollectionStateSetupConcurrentSweep);
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
         if (CONFIG_FLAG(EnableBGFreeZero))
         {
             autoHeap.StartQueueZeroPage();
         }
-#endif
     }
     else
     {
@@ -2834,21 +2832,17 @@ Recycler::SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager)
 
     if (concurrent)
     {
-#if ENABLE_BACKGROUND_PAGE_ZEROING
         if (CONFIG_FLAG(EnableBGFreeZero))
         {
             autoHeap.StopQueueZeroPage();
         }
-#endif
     }
     else
     {
-#if ENABLE_BACKGROUND_PAGE_ZEROING
         if (CONFIG_FLAG(EnableBGFreeZero))
         {
             Assert(!autoHeap.HasZeroQueuedPages());
         }
-#endif
     }
 }
 
@@ -5226,13 +5220,11 @@ Recycler::DoBackgroundWork(bool forceForeground)
 
         {
             RECYCLER_PROFILE_EXEC_BACKGROUND_BEGIN(this, Js::ConcurrentSweepPhase);
-#if ENABLE_BACKGROUND_PAGE_ZEROING
         if (CONFIG_FLAG(EnableBGFreeZero))
         {
             // Zero the queued pages first so they are available to be allocated
             autoHeap.BackgroundZeroQueuedPages();
         }
-#endif
         Assert(this->recyclerSweepManager != nullptr);
         this->recyclerSweepManager->BackgroundSweep();
 
@@ -5241,14 +5233,12 @@ Recycler::DoBackgroundWork(bool forceForeground)
         }
         {
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
             if (CONFIG_FLAG(EnableBGFreeZero))
             {
                 // Drain the zero queue again as we might have free more during sweep
                 // in the background
                 autoHeap.BackgroundZeroQueuedPages();
             }
-#endif
 
             {
                 Assert(this->collectionState == CollectionStateConcurrentSweep);

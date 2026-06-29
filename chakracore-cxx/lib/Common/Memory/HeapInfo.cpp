@@ -1781,7 +1781,6 @@ HeapInfo::GetRecyclerWithBarrierPageAllocator()
 }
 #endif
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
 void
 HeapInfo::StartQueueZeroPage()
 {
@@ -1840,7 +1839,6 @@ bool HeapInfo::HasZeroQueuedPages()
     });
     return hasZeroQueuedPage;
 }
-#endif
 #endif
 
 #if DBG

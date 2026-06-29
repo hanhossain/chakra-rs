@@ -44,7 +44,6 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL Darwin)
 endif ()
 
 if (ICU_INCLUDE_PATH)
-    add_definitions(-DHAS_REAL_ICU=1)
     add_definitions(-DHAS_ICU)
     set(ICU_LIBRARY_PATH "${ICU_INCLUDE_PATH}/../lib/")
     find_library(ICUUC icuuc PATHS ${ICU_LIBRARY_PATH} NO_DEFAULT_PATH)
@@ -73,7 +72,6 @@ if (SYSTEM_ICU OR (NOT ICU_INCLUDE_PATH))
         ${ICU_LIBRARIES}
         icui18n
     )
-    add_definitions(-DHAS_REAL_ICU=1)
     add_definitions(-DHAS_ICU)
 endif ()
 

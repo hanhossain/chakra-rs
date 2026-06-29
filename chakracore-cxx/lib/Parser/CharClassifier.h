@@ -106,11 +106,9 @@ namespace Js
     class CharClassifier
     {
     private:
-#if ENABLE_UNICODE_API
         static bool BigCharIsWhitespaceDefault(codepoint_t ch, const CharClassifier *instance);
         static bool BigCharIsIdStartDefault(codepoint_t ch, const CharClassifier *instance);
         static bool BigCharIsIdContinueDefault(codepoint_t ch, const CharClassifier *instance);
-#endif
 
         static bool BigCharIsWhitespaceES6(codepoint_t ch, const CharClassifier *instance);
         static bool BigCharIsIdStartES6(codepoint_t codePoint, const CharClassifier *instance);
@@ -149,9 +147,7 @@ namespace Js
 
         CharTypes GetCharType(codepoint_t ch) const;
 
-#if ENABLE_UNICODE_API
         PlatformAgnostic::UnicodeText::CharacterTypeFlags GetCharFlags(codepoint_t ch) const;
-#endif
 
         template <bool isBigChar>
         bool IsWhiteSpaceFast(codepoint_t ch) const;

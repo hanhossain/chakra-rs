@@ -658,11 +658,9 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::PageAllocatorBase(Allo
     freePageCount(0),
     allocFlags(0),
     zeroPages(zeroPages),
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     queueZeroPages(false),
     hasZeroQueuedPages(false),
     backgroundPageQueue(backgroundPageQueue),
-#endif
     minFreePageCount(0),
     isUsed(false),
     waitingToEnterIdleDecommit(false),
@@ -736,7 +734,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::~PageAllocatorBase()
     PageTracking::PageAllocatorDestroyed((PageAllocator*)this);
 }
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::StartQueueZeroPage()
@@ -774,7 +771,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::HasZeroQueuedPages() c
     return hasZeroQueuedPages;
 }
 #endif
-#endif //ENABLE_BACKGROUND_PAGE_ZEROING
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 PageAllocation *
@@ -858,7 +854,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFromZeroPagesL
     char * pages = nullptr;
     FreePageEntry* localList = nullptr;
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     if (CONFIG_FLAG(EnableBGFreeZero))
     {
         while (true)
@@ -898,7 +893,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFromZeroPagesL
             }
         }
     }
-#endif
 
     if (localList != nullptr)
     {
@@ -939,7 +933,6 @@ template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 char *
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFromZeroPages(uint pageCount, TPageSegment ** pageSegment)
 {
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     if (CONFIG_FLAG(EnableBGFreeZero))
     {
         if (backgroundPageQueue != nullptr)
@@ -952,7 +945,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFromZeroPages(
             return TryAllocFromZeroPagesList(pageCount, pageSegment, backgroundPageQueue, true);
         }
     }
-#endif
 
     return nullptr;
 }
@@ -1623,7 +1615,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ReleasePages(void * ad
     }
     else
     {
-#if ENABLE_BACKGROUND_PAGE_ZEROING
         if (CONFIG_FLAG(EnableBGFreeZero))
         {
             if (QueueZeroPages())
@@ -1633,7 +1624,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ReleasePages(void * ad
                 return;
             }
         }
-#endif
 
         this->FillFreePages((char *)address, pageCount);
         segment->ReleasePages(address, pageCount);
@@ -1651,7 +1641,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::MemSetLocal(_In_ void 
     memset(dst, val, sizeInBytes);
 }
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 typename PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FreePageEntry *
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::PopPendingZeroPage()
@@ -1672,7 +1661,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddPageToZeroQueue(voi
     ((ZeroPageQueue *)backgroundPageQueue)->PushZeroPageEntry(entry);
     this->hasZeroQueuedPages = true;
 }
-#endif
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
@@ -1699,7 +1687,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TransferSegment(TPageS
     }
 }
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::BackgroundZeroQueuedPages()
@@ -1745,7 +1732,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ZeroQueuedPages()
     }
     this->hasZeroQueuedPages = false;
 }
-#endif
 
 #if ENABLE_BACKGROUND_PAGE_FREEING
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -1849,7 +1835,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
 
     size_t deleteCount = 0;
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     if (CONFIG_FLAG(EnableBGFreeZero))
     {
         // First, drain the zero page queue.
@@ -1927,7 +1912,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
             FlushBackgroundPages();
         }
     }
-#endif
 
     if (this->freePageCount == 0)
     {
@@ -2365,13 +2349,11 @@ template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::Check()
 {
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     if (CONFIG_FLAG(EnableBGFreeZero))
     {
         // We may have backed-off from the idle decommit on the background thread.
         Assert(!this->HasZeroQueuedPages() || this->waitingToEnterIdleDecommit);
     }
-#endif
     size_t currentFreePageCount = 0;
 
     typename DListBase<TPageSegment>::Iterator segmentsIterator(&segments);
@@ -2409,9 +2391,7 @@ HeapPageAllocator<T>::HeapPageAllocator(AllocationPolicyManager * policyManager,
         PageAllocatorType_CustomHeap,
         /*maxFreePageCount*/ 0,
         /*zeroPages*/ false,
-#if ENABLE_BACKGROUND_PAGE_FREEING || ENABLE_BACKGROUND_PAGE_ZEROING
         /*zeroPageQueue*/ nullptr,
-#endif
         /*maxAllocPageCount*/ allocXdata ? (Base::DefaultMaxAllocPageCount - XDATA_RESERVE_PAGE_COUNT) : Base::DefaultMaxAllocPageCount,
         /*secondaryAllocPageCount=*/ allocXdata ? XDATA_RESERVE_PAGE_COUNT : 0,
         /*stopAllocationOnOutOfMemory*/ false,

@@ -53,11 +53,6 @@
 // NOTE: Disabling these might not work and are not fully supported and maintained
 // Even if it builds, it may not work properly. Disable at your own risk
 
-// ByteCode
-#if defined(HAS_REAL_ICU)
-#define ENABLE_UNICODE_API 1                        // Enable use of Unicode-related APIs
-#endif
-
 // Language features
 #define ENABLE_JS_BUILTINS                          // Built In functions support
 
@@ -82,11 +77,10 @@
 
 #define RECYCLER_PAGE_HEAP                          // PageHeap support
 
-#define ENABLE_BACKGROUND_PAGE_ZEROING 1
 #define ENABLE_BACKGROUND_PAGE_FREEING 1
 #define ENABLE_RECYCLER_TYPE_TRACKING 1
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING && !ENABLE_BACKGROUND_PAGE_FREEING
+#if !ENABLE_BACKGROUND_PAGE_FREEING
 #error "Background page zeroing can't be turned on if freeing pages in the background is disabled"
 #endif
 

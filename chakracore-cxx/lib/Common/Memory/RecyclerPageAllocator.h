@@ -18,9 +18,7 @@ public:
     static uint const DefaultPrimePageCount = 0x1000; // 16MB
 
 private:
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     ZeroPageQueue zeroPageQueue;
-#endif
 
     HeapInfo * heapInfo;
 

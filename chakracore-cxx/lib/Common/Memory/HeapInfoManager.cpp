@@ -451,7 +451,6 @@ HeapInfoManager::ShutdownIdleDecommit()
 }
 #endif
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
 void HeapInfoManager::StartQueueZeroPage()
 {
     ForEachHeapInfo([](HeapInfo& heapInfo)
@@ -500,7 +499,6 @@ bool HeapInfoManager::HasZeroQueuedPages()
         return heapInfo.HasZeroQueuedPages();
     });
 }
-#endif
 #endif
 
 void
