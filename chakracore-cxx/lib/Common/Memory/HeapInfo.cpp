@@ -7,8 +7,6 @@
 #include "HeapInfo.h"
 #include <print>
 
-#include "ValidPointersMap/vpm.64b.h"
-
 template char* HeapInfo::RealAlloc<NoBit, false>(Recycler * recycler, size_t sizeCat, size_t size);
 
 const uint SmallAllocationBlockAttributes::MaxSmallObjectCount;
@@ -349,38 +347,6 @@ cleanup:
 #undef IfErrorGotoCleanup
     free(valid);
     free(invalid);
-    return hr;
-}
-
-template <class TBlockAttributes>
-int32_t HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMapHeader(const char16_t* vpmFullPath)
-{
-    Assert(vpmFullPath != nullptr);
-    int32_t hr = E_FAIL;
-    FILE * file = nullptr;
-
-    if (_wfopen_s(&file, vpmFullPath, u"w") == 0 && file != nullptr)
-    {
-        const char * header =
-            "//-------------------------------------------------------------------------------------------------------\n"
-            "// Copyright (C) Microsoft. All rights reserved.\n"
-            "// Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.\n"
-            "//-------------------------------------------------------------------------------------------------------\n"
-            "// Generated via jshost -GenerateValidPointersMapHeader\n"
-            "// Target platform: 64bit - amd64 & arm64\n"
-            "#if USE_STATIC_VPM\n";
-        std::println(file, "{}", header);
-        hr = ValidPointersMap<SmallAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(file);
-        if (SUCCEEDED(hr))
-        {
-            hr = ValidPointersMap<MediumAllocationBlockAttributes>::GenerateValidPointersMapForBlockType(file);
-        }
-
-        std::println(file, "#endif // USE_STATIC_VPM");
-
-        fclose(file);
-    }
-
     return hr;
 }
 

@@ -20,9 +20,6 @@ public:
 /// BlockAttributes are used to determine the allocation characteristics of a heap block
 /// These include the number of pages to allocate, the object capacity of the block
 /// and the shape of the object's bit vectors
-/// Since the constants here are used while generating the ValidPointerMap constants
-/// please remember to regenerate the ValidPointersMap by first switching to a dynamic VPM
-/// as controlled by the USE_STATIC_VPM in HeapInfo.h, and then running GenValidPointers.cmd
 ///
 class SmallAllocationBlockAttributes
 {
