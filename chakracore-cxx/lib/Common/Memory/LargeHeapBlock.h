@@ -18,12 +18,7 @@ struct LargeObjectHeader
 private:
     LargeObjectHeader * next;
     // xxxxxxxxyyyyyyyy, where xxxxxxxx = attributes field, yyyyyyyy = checksum field
-#if LARGEHEAPBLOCK_ENCODING
     ushort attributesAndChecksum;
-#else
-    unsigned char attributes;
-    unsigned char unused2;
-#endif
 
 public:
     bool markOnOOMRescan : 1;
@@ -37,15 +32,11 @@ public:
     UINT_PAD_64BIT(unused4);
 
     void *GetAddress();
-#ifdef LARGEHEAPBLOCK_ENCODING
     unsigned char CalculateCheckSum(LargeObjectHeader* next, unsigned char attributes);
     LargeObjectHeader* EncodeNext(uint cookie, LargeObjectHeader* next);
     ushort EncodeAttributesAndChecksum(uint cookie, ushort attributesWithChecksum);
     LargeObjectHeader* DecodeNext(uint cookie, LargeObjectHeader* next);
     ushort DecodeAttributesAndChecksum(uint cookie);
-#else
-    unsigned char * GetAttributesPtr();
-#endif
     void SetNext(uint cookie, LargeObjectHeader* next);
     LargeObjectHeader * GetNext(uint cookie);
     void SetAttributes(uint cookie, unsigned char attributes);

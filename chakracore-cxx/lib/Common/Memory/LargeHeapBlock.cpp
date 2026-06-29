@@ -18,7 +18,6 @@ const StackBackTrace* PageHeapData::s_StackTraceAllocFailed = (StackBackTrace*)1
 void *
 LargeObjectHeader::GetAddress() { return ((char *)this) + sizeof(LargeObjectHeader); }
 
-#ifdef LARGEHEAPBLOCK_ENCODING
 // decodedNext = decoded next field
 // decodedAttributes = decoded attributes part of attributesAndChecksum
 // Decode 'next' and 'attributes' using _cookie
@@ -52,21 +51,10 @@ LargeObjectHeader::DecodeNext(uint cookie, LargeObjectHeader* next) { return Enc
 ushort
 LargeObjectHeader::DecodeAttributesAndChecksum(uint cookie) { return EncodeAttributesAndChecksum(cookie, this->attributesAndChecksum); }
 
-#else
-// If heap block encoding is disabled then have an API to expose
-// pointer to attributes so that can be passed to RecyclerHeapObjectInfo()
-// which updates the attributes field.
-unsigned char *
-LargeObjectHeader::GetAttributesPtr()
-{
-    return &this->attributes;
-}
-#endif
 
 void
 LargeObjectHeader::SetNext(uint cookie, LargeObjectHeader* next)
 {
-#ifdef LARGEHEAPBLOCK_ENCODING
     ushort decodedAttributesAndChecksum = this->DecodeAttributesAndChecksum(cookie);
 
     // Calculate the checksum value with new next
@@ -77,15 +65,11 @@ LargeObjectHeader::SetNext(uint cookie, LargeObjectHeader* next)
     // encode the packed (attribute + checksum), next and set them
     this->attributesAndChecksum = this->EncodeAttributesAndChecksum(cookie, newAttributeWithCheckSum);
     this->next = this->EncodeNext(cookie, next);
-#else
-    this->next = next;
-#endif
 }
 
 LargeObjectHeader *
 LargeObjectHeader::GetNext(uint cookie)
 {
-#ifdef LARGEHEAPBLOCK_ENCODING
     LargeObjectHeader *decodedNext = this->DecodeNext(cookie, this->next);
     ushort decodedAttributesAndChecksum = this->DecodeAttributesAndChecksum(cookie);
 
@@ -98,16 +82,11 @@ LargeObjectHeader::GetNext(uint cookie)
     // If checksum matches return the up-to-date next (in case other thread changed it from last time
     // we read it in this method.
     return this->DecodeNext(cookie, this->next);
-
-#else
-    return this->next;
-#endif
 }
 
 void
 LargeObjectHeader::SetAttributes(uint cookie, unsigned char attributes)
 {
-#ifdef LARGEHEAPBLOCK_ENCODING
     LargeObjectHeader *decodedNext = this->DecodeNext(cookie, this->next);
 
     // Calculate the checksum value with new attribute
@@ -116,16 +95,11 @@ LargeObjectHeader::SetAttributes(uint cookie, unsigned char attributes)
     ushort newAttributeWithCheckSum = ((ushort)attributes << 8) | newCheckSumValue;
     // encode the packed (attribute + checksum) and set it
     this->attributesAndChecksum = this->EncodeAttributesAndChecksum(cookie, newAttributeWithCheckSum);
-#else
-    this->attributes = attributes;
-#endif
 }
 
 unsigned char
 LargeObjectHeader::GetAttributes(uint cookie)
 {
-#ifdef LARGEHEAPBLOCK_ENCODING
-
     LargeObjectHeader *decodedNext = this->DecodeNext(cookie, this->next);
     ushort decodedAttributesAndChecksum = this->DecodeAttributesAndChecksum(cookie);
 
@@ -139,9 +113,6 @@ LargeObjectHeader::GetAttributes(uint cookie)
     // If checksum matches return the up-to-date attributes (in case other thread changed it from last time
     // we read it in this method.
     return this->DecodeAttributesAndChecksum(cookie) >> 8;
-#else
-    return this->attributes;
-#endif
 }
 
 size_t
@@ -837,12 +808,8 @@ LargeHeapBlock::FindImplicitRootObject(void* objectAddress, Recycler * recycler,
         return false;
     }
 
-#ifdef LARGEHEAPBLOCK_ENCODING
     heapObject = RecyclerHeapObjectInfo(objectAddress, recycler, this, nullptr);
     heapObject.SetLargeHeapBlockHeader(pHeader);
-#else
-    heapObject = RecyclerHeapObjectInfo(objectAddress, recycler, this, pHeader->GetAttributesPtr());
-#endif
     return true;
 }
 

@@ -78,7 +78,6 @@
 #endif
 
 // GC features
-#define LARGEHEAPBLOCK_ENCODING 1                   // Large heap block metadata encoding
 #define IDLE_DECOMMIT_ENABLED 1                     // Idle Decommit
 
 #define RECYCLER_PAGE_HEAP                          // PageHeap support

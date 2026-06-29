@@ -5600,11 +5600,7 @@ void
 Recycler::SetCollectionWrapper(RecyclerCollectionWrapper * wrapper)
 {
     this->collectionWrapper = wrapper;
-#if LARGEHEAPBLOCK_ENCODING
     this->Cookie = wrapper->GetRandomNumber();
-#else
-    this->Cookie = 0;
-#endif
 }
 
 // TODO: (leish) remove following function? seems not make sense to re-allocate in recycler
@@ -8043,17 +8039,10 @@ RecyclerHeapObjectInfo::GetSize() const
     Assert(m_heapBlock);
 
     size_t size;
-#if LARGEHEAPBLOCK_ENCODING
     if (isUsingLargeHeapBlock)
     {
         size = m_largeHeapBlockHeader->objectSize;
     }
-#else
-    if (m_heapBlock->IsLargeHeapBlock())
-    {
-        size = ((LargeHeapBlock*)m_heapBlock)->GetObjectSize(m_address);
-    }
-#endif
     else
     {
         // All small heap block types have the same layout for the object size field.
