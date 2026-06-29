@@ -149,19 +149,7 @@ Recycler::AllocWithAttributesInlined(size_t size)
 
     if (HeapInfo::IsMediumObject(allocSize))
     {
-#if SMALLBLOCK_MEDIUM_ALLOC
         alignedSize = HeapInfo::GetMediumObjectAlignedSizeNoCheck(allocSize);
-#else
-        HeapBlock* heapBlock = this->FindHeapBlock(memBlock);
-        Assert(heapBlock->IsLargeHeapBlock());
-        LargeHeapBlock* largeHeapBlock = (LargeHeapBlock*) heapBlock;
-        LargeObjectHeader* header = nullptr;
-        if (largeHeapBlock->GetObjectHeader(memBlock, &header))
-        {
-            size = header->objectSize - (verifyPad + sizeof(size_t));
-            alignedSize = HeapInfo::GetAlignedSizeNoCheck(header->objectSize);
-        }
-#endif
     }
 
     this->FillCheckPad(memBlock, size, alignedSize);

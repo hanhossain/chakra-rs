@@ -78,7 +78,6 @@
 #endif
 
 // GC features
-#define SMALLBLOCK_MEDIUM_ALLOC 1                   // *** TODO: Won't build if disabled currently
 #define LARGEHEAPBLOCK_ENCODING 1                   // Large heap block metadata encoding
 #define IDLE_DECOMMIT_ENABLED 1                     // Idle Decommit
 

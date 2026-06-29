@@ -150,11 +150,7 @@ public:
 
     static bool IsSmallBlockAllocation(size_t nBytes)
     {
-#if SMALLBLOCK_MEDIUM_ALLOC
         return HeapInfo::IsSmallObject(nBytes) || HeapInfo::IsMediumObject(nBytes);
-#else
-        return HeapInfo::IsSmallObject(nBytes);
-#endif
     }
 
     static bool IsLargeObject(size_t nBytes)
@@ -183,12 +179,8 @@ private:
     template <ObjectInfoBits attributes>
     typename SmallHeapBlockType<attributes, SmallAllocationBlockAttributes>::BucketType& GetBucket(size_t sizeCat);
     
-#if SMALLBLOCK_MEDIUM_ALLOC
     template <ObjectInfoBits attributes>
     typename SmallHeapBlockType<attributes, MediumAllocationBlockAttributes>::BucketType& GetMediumBucket(size_t sizeCat);
-#else
-    LargeHeapBucket& GetMediumBucket(size_t sizeCat);
-#endif
 
     LargeHeapBlock * AddLargeHeapBlock(size_t pageCount);
 
@@ -421,11 +413,7 @@ public:
 
     HeapBucketGroup<SmallAllocationBlockAttributes> heapBuckets[HeapConstants::BucketCount];
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     HeapBucketGroup<MediumAllocationBlockAttributes> mediumHeapBuckets[HeapConstants::MediumBucketCount];
-#else
-    LargeHeapBucket mediumHeapBuckets[HeapConstants::MediumBucketCount];
-#endif
     LargeHeapBucket largeObjectBucket;
     bool hasPendingTransferDisposedObjects;
 
@@ -556,7 +544,6 @@ HeapInfo::GetBucket(size_t sizeCat)
     return this->heapBuckets[bucket].GetBucket<attributes>();
 }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
 template <ObjectInfoBits attributes>
 typename SmallHeapBlockType<attributes, MediumAllocationBlockAttributes>::BucketType&
 HeapInfo::GetMediumBucket(size_t sizeCat)
@@ -564,15 +551,6 @@ HeapInfo::GetMediumBucket(size_t sizeCat)
     uint bucket = HeapInfo::GetMediumBucketIndex(sizeCat);
     return this->mediumHeapBuckets[bucket].GetBucket<attributes>();
 }
-
-#else
-LargeHeapBucket&
-HeapInfo::GetMediumBucket(size_t sizeCat)
-{
-    uint bucket = HeapInfo::GetMediumBucketIndex(sizeCat);
-    return this->mediumHeapBuckets[bucket];
-}
-#endif
 
 template <ObjectInfoBits attributes, bool nothrow>
 inline char *
@@ -583,7 +561,6 @@ HeapInfo::RealAlloc(Recycler * recycler, size_t sizeCat, size_t size)
     return bucket.template RealAlloc<attributes, nothrow>(recycler, sizeCat, size);
 }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
 template <ObjectInfoBits attributes, bool nothrow>
 inline char *
 HeapInfo::MediumAlloc(Recycler * recycler, size_t sizeCat, size_t size)
@@ -591,16 +568,6 @@ HeapInfo::MediumAlloc(Recycler * recycler, size_t sizeCat, size_t size)
     auto& bucket = this->GetMediumBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat);
     return bucket.template RealAlloc<attributes, nothrow>(recycler, sizeCat, size);
 }
-
-#else
-template <ObjectInfoBits attributes, bool nothrow>
-char *
-HeapInfo::MediumAlloc(Recycler * recycler, size_t sizeCat)
-{
-    Assert(HeapInfo::IsAlignedMediumObjectSize(sizeCat));
-    return this->GetMediumBucket<attributes>(sizeCat).Alloc<attributes, nothrow>(recycler, sizeCat);
-}
-#endif
 
 template <ObjectInfoBits attributes>
 void

@@ -8,13 +8,7 @@ class HeapConstants
 {
 public:
     static const uint MaxSmallObjectSize = 768;
-
-#if SMALLBLOCK_MEDIUM_ALLOC
     static const uint MaxMediumObjectSize = 8 * 1024; // Maximum medium object size is 8K
-#else
-    static const uint MaxMediumObjectSize = 9216;
-#endif
-
     static const uint ObjectAllocationShift = 4;        // 16
     static const uint ObjectGranularity = 1 << ObjectAllocationShift;
     static const uint BucketCount = (MaxSmallObjectSize >> ObjectAllocationShift);
