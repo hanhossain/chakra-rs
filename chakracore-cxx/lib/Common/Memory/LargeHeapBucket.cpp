@@ -266,9 +266,7 @@ LargeHeapBucket::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size,
     heapBlock->SetNextBlock(this->largePageHeapBlockList);
     this->largePageHeapBlockList = heapBlock;
 
-#if ENABLE_PARTIAL_GC
     recycler->autoHeap.uncollectedNewPageCount += pageCount;
-#endif
 
     RECYCLER_SLOW_CHECK(this->heapInfo->heapBlockCount[HeapBlock::HeapBlockType::LargeBlockType]++);
     RECYCLER_PERF_COUNTER_ADD(FreeObjectSize, heapBlock->GetPageCount() * AutoSystemInfo::PageSize);
@@ -328,9 +326,7 @@ LargeHeapBucket::AddLargeHeapBlock(size_t size, bool nothrow)
         heapInfo->GetRecyclerLargeBlockPageAllocator()->ResumeIdleDecommit();
         return nullptr;
     }
-#if ENABLE_PARTIAL_GC
     recycler->autoHeap.uncollectedNewPageCount += pageCount;
-#endif
 
     RECYCLER_SLOW_CHECK(this->heapInfo->heapBlockCount[HeapBlock::HeapBlockType::LargeBlockType]++);
 
@@ -770,13 +766,11 @@ LargeHeapBucket::Rescan(RescanFlags flags)
     scannedPageCount += LargeHeapBucket::Rescan(fullLargeBlockList, recycler, false, flags);
     scannedPageCount += LargeHeapBucket::Rescan(pendingDisposeLargeBlockList, recycler, true, flags);
 
-#if ENABLE_PARTIAL_GC
     Assert(recycler->inPartialCollectMode || partialSweptLargeBlockList == nullptr);
     if (recycler->inPartialCollectMode)
     {
         scannedPageCount += LargeHeapBucket::Rescan(partialSweptLargeBlockList, recycler, true, flags);
     }
-#endif
     return scannedPageCount;
 }
 
@@ -786,7 +780,6 @@ LargeHeapBucket::SweepPendingObjects(RecyclerSweep& recyclerSweep)
     if (recyclerSweep.IsBackground())
     {
         Recycler * recycler = recyclerSweep.GetRecycler();
-#if ENABLE_PARTIAL_GC
         if (recycler->inPartialCollectMode)
         {
             HeapBlockList::ForEach(this->pendingSweepLargeBlockList, [recycler](LargeHeapBlock * heapBlock)
@@ -796,7 +789,6 @@ LargeHeapBucket::SweepPendingObjects(RecyclerSweep& recyclerSweep)
             });
         }
         else
-#endif
         {
             HeapBlockList::ForEach(this->pendingSweepLargeBlockList, [recycler](LargeHeapBlock * heapBlock)
             {
@@ -811,7 +803,6 @@ LargeHeapBucket::SweepPendingObjects(RecyclerSweep& recyclerSweep)
     }
 }
 
-#if ENABLE_PARTIAL_GC
 void
 LargeHeapBucket::ConcurrentPartialTransferSweptObjects(RecyclerSweep& recyclerSweep)
 {
@@ -857,14 +848,11 @@ LargeHeapBucket::FinishPartialCollect(RecyclerSweep * recyclerSweep)
         this->partialSweptLargeBlockList = nullptr;
     }
 }
-#endif
 
 void
 LargeHeapBucket::ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep)
 {
-#if ENABLE_PARTIAL_GC
     Assert(!recyclerSweep.InPartialCollectMode());
-#endif
     Assert(!recyclerSweep.IsBackground());
 
     HeapBlockList::ForEachEditing(this->pendingSweepLargeBlockList, [this](LargeHeapBlock * heapBlock)
@@ -874,7 +862,6 @@ LargeHeapBucket::ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep)
     });
     this->pendingSweepLargeBlockList = nullptr;
 
-#if ENABLE_PARTIAL_GC
     // If we did a background finish partial collect, we have left the partialSweptLargeBlockList
     // there because can't reinsert the heap block in the background, do it here now.
     HeapBlockList::ForEachEditing(this->partialSweptLargeBlockList, [this](LargeHeapBlock * heapBlock)
@@ -882,7 +869,6 @@ LargeHeapBucket::ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep)
         ReinsertLargeHeapBlock(heapBlock);
     });
     this->partialSweptLargeBlockList = nullptr;
-#endif
 }
 
 
@@ -969,9 +955,7 @@ LargeHeapBucket::EnumerateObjects(ObjectInfoBits infoBits, void (*CallBackFuncti
     // and we set the header to null upon sweep/finalize
     HeapBucket::EnumerateObjects(pendingDisposeLargeBlockList, infoBits, CallBackFunction);
     Assert(this->pendingSweepLargeBlockList == nullptr);
-#if ENABLE_PARTIAL_GC
     HeapBucket::EnumerateObjects(partialSweptLargeBlockList, infoBits, CallBackFunction);
-#endif
 }
 
 #if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
@@ -986,9 +970,7 @@ LargeHeapBucket::GetLargeHeapBlockCount(bool checkCount) const
 #endif
     currentLargeHeapBlockCount += HeapBlockList::Count(pendingDisposeLargeBlockList);
     currentLargeHeapBlockCount += HeapBlockList::Count(pendingSweepLargeBlockList);
-#if ENABLE_PARTIAL_GC
     currentLargeHeapBlockCount += HeapBlockList::Count(partialSweptLargeBlockList);
-#endif
 
     return currentLargeHeapBlockCount;
 }
@@ -1005,9 +987,7 @@ LargeHeapBucket::Check()
     currentLargeHeapBlockCount += Check(true, false, fullLargeBlockList);
 
     Assert(pendingSweepLargeBlockList == nullptr);
-#if ENABLE_PARTIAL_GC
     currentLargeHeapBlockCount += Check(false, false, partialSweptLargeBlockList);
-#endif
     currentLargeHeapBlockCount += Check(false, true, pendingDisposeLargeBlockList);
     return currentLargeHeapBlockCount;
 }
@@ -1093,8 +1073,6 @@ LargeHeapBucket::AggregateBucketStats()
     HeapBlockList::ForEach(fullLargeBlockList, blockStatsAggregator);
     HeapBlockList::ForEach(pendingDisposeLargeBlockList, blockStatsAggregator);
     HeapBlockList::ForEach(pendingSweepLargeBlockList, blockStatsAggregator);
-#if ENABLE_PARTIAL_GC
     HeapBlockList::ForEach(partialSweptLargeBlockList, blockStatsAggregator);
-#endif
 }
 #endif

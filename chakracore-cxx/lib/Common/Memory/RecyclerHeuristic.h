@@ -41,9 +41,7 @@ public:
     static size_t MinBackgroundRepeatMarkRescanBytes(Js::ConfigFlagsTable&);
     static uint32_t FinishConcurrentCollectWaitTime(Js::ConfigFlagsTable&);
     static uint32_t PriorityBoostTimeout(Js::ConfigFlagsTable&);
-#if ENABLE_PARTIAL_GC
     static bool PartialConcurrentNextCollection(double ratio, Js::ConfigFlagsTable& flags);
-#endif
 
     // Constant heuristics
     static const uint IdleUncollectedAllocBytesCollection = 1 MEGABYTES;

@@ -231,10 +231,8 @@ protected:
     bool IsAllocationStopped() const;
 
     void SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlockType * heapBlockList, bool allocable);
-#if ENABLE_PARTIAL_GC
     bool DoQueuePendingSweep(Recycler * recycler);
     bool DoPartialReuseSweep(Recycler * recycler);
-#endif
 
     // Partial/Concurrent GC
     void EnumerateObjects(ObjectInfoBits infoBits, void (*CallBackFunction)(void * address, size_t size));
@@ -310,9 +308,7 @@ HeapBucketT<TBlockType>::SweepBucket(RecyclerSweep& recyclerSweep, Fn sweepFn)
     // Continue to sweep other list from derived class
     sweepFn(recyclerSweep);
 
-#if ENABLE_PARTIAL_GC
     if (!this->DoPartialReuseSweep(recyclerSweep.GetRecycler()))
-#endif
     {
         // We should only queue up pending sweep if we are doing partial collect
         Assert(recyclerSweep.GetPendingSweepBlockList(this) == nullptr);

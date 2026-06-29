@@ -40,9 +40,7 @@ bool MarkContext::AddTrackedObject(FinalizableObject * obj)
 {
     Assert(obj != nullptr);
     Assert(recycler->DoQueueTrackedObject());
-#if ENABLE_PARTIAL_GC
     Assert(!recycler->inPartialCollectMode);
-#endif
 
     return trackStack.Push(obj);
 }
@@ -178,9 +176,7 @@ void MarkContext::MarkTrackedObject(FinalizableObject * trackedObject)
 {
     Assert(!recycler->queueTrackedObject);
     Assert(!recycler->IsConcurrentExecutingState());
-#if ENABLE_PARTIAL_GC
     Assert(!recycler->inPartialCollectMode);
-#endif
     Assert(!(recycler->collectionState == CollectionStateParallelMark));
 
     // Mark is not expected to throw.

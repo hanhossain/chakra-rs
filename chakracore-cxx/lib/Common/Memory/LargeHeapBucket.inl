@@ -82,9 +82,7 @@ LargeHeapBucket::ForEachLargeHeapBlock(Fn fn)
 #endif
     HeapBlockList::ForEach(pendingDisposeLargeBlockList, fn);
     HeapBlockList::ForEach(pendingSweepLargeBlockList, fn);
-#if ENABLE_PARTIAL_GC
     HeapBlockList::ForEach(partialSweptLargeBlockList, fn);
-#endif
 }
 
 template <class Fn>
@@ -98,7 +96,5 @@ LargeHeapBucket::ForEachEditingLargeHeapBlock(Fn fn)
 #endif
     HeapBlockList::ForEachEditing(pendingDisposeLargeBlockList, fn);
     HeapBlockList::ForEachEditing(pendingSweepLargeBlockList, fn);
-#if ENABLE_PARTIAL_GC
     HeapBlockList::ForEachEditing(partialSweptLargeBlockList, fn);
-#endif
 }

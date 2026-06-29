@@ -144,9 +144,7 @@ void ScriptMemoryDumper::DumpLargeBucket(LargeHeapBucket* heapBucket)
 #endif
     DumpLargeHeapBlockList(heapBucket->pendingDisposeLargeBlockList);
     DumpLargeHeapBlockList(heapBucket->pendingSweepLargeBlockList);
-#if ENABLE_PARTIAL_GC
     DumpLargeHeapBlockList(heapBucket->partialSweptLargeBlockList);
-#endif
 }
 
 struct LargeObjectHeader;

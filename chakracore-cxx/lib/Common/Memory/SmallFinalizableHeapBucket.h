@@ -372,10 +372,8 @@ public:
     void Sweep(RecyclerSweep& recyclerSweep);
     uint Rescan(Recycler * recycler, RescanFlags flags);
     void SweepPendingObjects(RecyclerSweep& recyclerSweep);
-#if ENABLE_PARTIAL_GC
     void SweepPartialReusePages(RecyclerSweep& recyclerSweep);
     void FinishPartialCollect(RecyclerSweep * recyclerSweep);
-#endif
     void PrepareSweep();
     void SetupBackgroundSweep(RecyclerSweep& recyclerSweep);
     void TransferPendingEmptyHeapBlocks(RecyclerSweep& recyclerSweep);

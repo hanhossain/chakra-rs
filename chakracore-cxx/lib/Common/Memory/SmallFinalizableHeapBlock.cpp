@@ -396,13 +396,11 @@ bool
 SmallFinalizableHeapBlockT<TBlockAttributes>::RescanTrackedObject(FinalizableObject * object, uint objectIndex, Recycler * recycler)
 {
     RecyclerVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Marking 0x%08x during rescan\n", object);
-#if ENABLE_PARTIAL_GC
     if (recycler->inPartialCollectMode)
     {
         Assert(!recycler->DoQueueTrackedObject());
     }
     else
-#endif
     {
         Assert(recycler->DoQueueTrackedObject());
 
@@ -585,7 +583,6 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::Init(ushort objectSize, ushort obj
     __super::Init(objectSize, objectCount);
 }
 
-#if ENABLE_PARTIAL_GC
 template <class TBlockAttributes>
 void
 SmallFinalizableHeapBlockT<TBlockAttributes>::FinishPartialCollect()
@@ -594,7 +591,6 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::FinishPartialCollect()
     Assert(this->disposedObjectListTail == nullptr);
     __super::FinishPartialCollect();
 }
-#endif
 #endif
 
 #ifdef RECYCLER_SLOW_CHECK_ENABLED

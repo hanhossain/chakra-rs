@@ -567,9 +567,7 @@ LargeHeapBlock::Alloc(size_t size, ObjectInfoBits attributes)
 #endif
 
     LargeObjectHeader * header = (LargeObjectHeader *)allocAddressEnd;
-#if ENABLE_PARTIAL_GC
     Assert(!IsPartialSweptHeader(header));
-#endif
     char * allocObject = allocAddressEnd + sizeof(LargeObjectHeader);       // shouldn't overflow
     char * newAllocAddressEnd = allocObject + size;
     if (newAllocAddressEnd > addressEnd || newAllocAddressEnd < allocObject)
@@ -912,11 +910,7 @@ LargeHeapBlock::GetRealAddressFromInterior(void * interiorAddress)
     {
         LargeObjectHeader * header = this->HeaderList()[i];
 
-#if ENABLE_PARTIAL_GC
         if (header != nullptr && !IsPartialSweptHeader(header))
-#else
-        if (header != nullptr)
-#endif
         {
             Assert(header->objectIndex == i);
             byte * startAddress = (byte *)header->GetAddress();
@@ -1793,7 +1787,6 @@ LargeHeapBlock::SweepObject<SweepMode_Concurrent>(Recycler * recycler, LargeObje
 
 // Explicitly instantiate all the sweep modes
 template void LargeHeapBlock::SweepObjects<SweepMode_Concurrent>(Recycler * recycler);
-#if ENABLE_PARTIAL_GC
 template <>
 void
 LargeHeapBlock::SweepObject<SweepMode_ConcurrentPartial>(Recycler * recycler, LargeObjectHeader * header)
@@ -1806,7 +1799,6 @@ LargeHeapBlock::SweepObject<SweepMode_ConcurrentPartial>(Recycler * recycler, La
 
 // Explicitly instantiate all the sweep modes
 template void LargeHeapBlock::SweepObjects<SweepMode_ConcurrentPartial>(Recycler * recycler);
-#endif
 
 //
 // Walk through the objects in this heap block and call finalize
@@ -1972,7 +1964,6 @@ LargeHeapBlock::DisposeObjects(Recycler * recycler)
     }
 }
 
-#if ENABLE_PARTIAL_GC
 void
 LargeHeapBlock::PartialTransferSweptObjects()
 {
@@ -1998,7 +1989,6 @@ LargeHeapBlock::FinishPartialCollect(Recycler * recycler)
     }
     DebugOnly(this->hasPartialFreeObjects = false);
 }
-#endif
 
 void
 LargeHeapBlock::EnumerateObjects(ObjectInfoBits infoBits, void (*CallBackFunction)(void * address, size_t size))
@@ -2063,10 +2053,8 @@ LargeHeapBlock::Check(bool expectFull, bool expectPending)
         {
             continue;
         }
-#if ENABLE_PARTIAL_GC
         header = (LargeObjectHeader *)((size_t)header & ~PartialFreeBit);
         Assert(this->hasPartialFreeObjects || header == this->HeaderList()[i]);
-#endif
         Assert(header->objectIndex == i);
     }
 }

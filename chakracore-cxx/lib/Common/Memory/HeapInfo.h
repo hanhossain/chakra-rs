@@ -111,17 +111,13 @@ public:
     template <ObjectInfoBits attributes>
     void FreeMediumObject(void* object, size_t bytes);
 
-#if ENABLE_PARTIAL_GC
     void SweepPartialReusePages(RecyclerSweep& recyclerSweep);
     void FinishPartialCollect(RecyclerSweep * recyclerSweep);
-#endif
     void PrepareSweep();
     void TransferPendingHeapBlocks(RecyclerSweep& recyclerSweep);
     void ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep);
 
-#if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweep& recyclerSweep);
-#endif
     void DisposeObjects();
     void TransferDisposedObjects();
 

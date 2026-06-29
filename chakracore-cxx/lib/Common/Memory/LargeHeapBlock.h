@@ -143,10 +143,8 @@ public:
     ~LargeHeapBlock();
 
     size_t Rescan(Recycler* recycler, bool isPartialSwept, RescanFlags flags);
-#if ENABLE_PARTIAL_GC
     void PartialTransferSweptObjects();
     void FinishPartialCollect(Recycler * recycler);
-#endif
     void ReleasePages(Recycler * recycler);
     void ReleasePagesSweep(Recycler * recycler);
     void ReleasePagesShutdown(Recycler * recycler);
@@ -210,12 +208,10 @@ private:
     {
         Assert(index < this->allocCount);
         LargeObjectHeader * header = this->HeaderList()[index];
-#if ENABLE_PARTIAL_GC
         if (IsPartialSweptHeader(header))
         {
             return nullptr;
         }
-#endif
         return header;
     }
 
@@ -237,14 +233,12 @@ private:
     void FinalizeObject(Recycler* recycler, LargeObjectHeader* header);
 
     void FillFreeMemory(Recycler * recycler, __in_bcount(size) void * address, size_t size);
-#if ENABLE_PARTIAL_GC
     bool IsPartialSweptHeader(LargeObjectHeader * header) const
     {
         Assert(this->hasPartialFreeObjects || (((size_t)header & PartialFreeBit) != PartialFreeBit));
         return ((size_t)header & PartialFreeBit) == PartialFreeBit;
     }
     static const size_t PartialFreeBit = 0x1;
-#endif
     size_t pageCount;
 
     // The number of allocations that have occurred from this heap block

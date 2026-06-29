@@ -437,22 +437,18 @@ private:
 struct RecyclerCollectionStats
 {
     size_t startCollectAllocBytes;
-#if ENABLE_PARTIAL_GC
     size_t startCollectNewPageCount;
-#endif
     size_t continueCollectAllocBytes;
 
     size_t finishCollectTryCount;
 
     // Heuristic Stats
-#if ENABLE_PARTIAL_GC
     size_t rescanRootBytes;
     size_t estimatedPartialReuseBytes;
     size_t uncollectedNewPageCountPartialCollect;
     size_t partialCollectSmallHeapBlockReuseMinFreeBytes;
     double collectEfficacy;
     double collectCost;
-#endif
 
     // Mark stats
     size_t tryMarkCount;        // # of pointer try mark (* pointer size to get total number byte looked at)
@@ -488,9 +484,7 @@ struct RecyclerCollectionStats
     MarkData backgroundMarkData[RecyclerHeuristic::MaxBackgroundRepeatMarkCount];
     size_t trackedObjectCount;
 
-#if ENABLE_PARTIAL_GC
     size_t clientTrackedObjectCount;
-#endif
 
     // Sweep stats
     size_t heapBlockCount[HeapBlock::BlockTypeCount];                       // number of heap blocks (processed during swept)
@@ -505,12 +499,10 @@ struct RecyclerCollectionStats
     size_t objectSweepScanCount;            // number of objects walked for sweeping (exclude whole page freed)
     size_t finalizeSweepCount;              // number of objects finalizer/dispose called
 
-#if ENABLE_PARTIAL_GC
     size_t smallNonLeafHeapBlockPartialReuseCount[HeapBlock::SmallBlockTypeCount];
     size_t smallNonLeafHeapBlockPartialReuseBytes[HeapBlock::SmallBlockTypeCount];
     size_t smallNonLeafHeapBlockPartialUnusedCount[HeapBlock::SmallBlockTypeCount];
     size_t smallNonLeafHeapBlockPartialUnusedBytes[HeapBlock::SmallBlockTypeCount];
-#endif
 
     // Memory Stats
     size_t heapBlockFreeByteCount[HeapBlock::BlockTypeCount]; // The remaining usable free byte count
@@ -551,12 +543,10 @@ struct CollectionParam
     int timeDiff;
     size_t uncollectedAllocBytes;
     size_t uncollectedPinnedObjects;
-#if ENABLE_PARTIAL_GC
     size_t uncollectedNewPageCountPartialCollect;
     size_t uncollectedNewPageCount;
     size_t unusedPartialCollectFreeBytes;
     bool inPartialCollectMode;
-#endif
 };
 #endif
 
@@ -910,21 +900,17 @@ private:
     bool disableCollectOnAllocationHeuristics;
     bool disableCollection;
 
-#if ENABLE_PARTIAL_GC
     bool enablePartialCollect;
     bool inPartialCollectMode;
     bool hasBackgroundFinishPartial;
     bool partialConcurrentNextCollection;
-#endif
 #ifdef RECYCLER_STRESS
     bool forcePartialScanStack;
     bool recyclerStress;
     bool recyclerBackgroundStress;
     bool recyclerConcurrentStress;
     bool recyclerConcurrentRepeatStress;
-#if ENABLE_PARTIAL_GC
     bool recyclerPartialStress;
-#endif
 #endif
 #if DBG
     bool isExternalStackSkippingGC;
@@ -993,7 +979,6 @@ private:
     int32_t needIdleDecommitSignal;
 #endif
 
-#if ENABLE_PARTIAL_GC
     SListBase<void *> clientTrackedObjectList;
     ArenaAllocator clientTrackedObjectAllocator;
 
@@ -1001,7 +986,6 @@ private:
 
     // Dynamic Heuristics for partial GC
     size_t uncollectedNewPageCountPartialCollect;
-#endif
 
     uint tickCountNextCollection;
     uint tickCountNextFinishCollection;
@@ -1581,11 +1565,7 @@ private:
 #endif
 
     // Sweep
-#if ENABLE_PARTIAL_GC
     bool Sweep(size_t rescanRootBytes = (size_t)-1, bool concurrent = false, bool adjustPartialHeuristics = false);
-#else
-    bool Sweep(bool concurrent = false);
-#endif
     void SweepWeakReference();
     void SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager);
     void FinishSweep(RecyclerSweepManager& recyclerSweepManager);
@@ -1612,14 +1592,12 @@ private:
     template <Js::Phase phase>
     void CollectionEnd();
 
-#if ENABLE_PARTIAL_GC
     void ProcessClientTrackedObjects();
     bool PartialCollect(bool concurrent);
     void FinishPartialCollect(RecyclerSweepManager * recyclerSweep = nullptr);
     void ClearPartialCollect();
     void BackgroundFinishPartialCollect(RecyclerSweepManager * recyclerSweep);
 
-#endif
 
     size_t RescanMark(uint32_t waitTime);
     size_t FinishMark(uint32_t waitTime);
@@ -1694,9 +1672,7 @@ private:
 
     void SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager);
     void ConcurrentTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
-#if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
-#endif // ENABLE_PARTIAL_GC
 
     bool ForceSweepObject();
     void NotifyFree(char * address, size_t size);

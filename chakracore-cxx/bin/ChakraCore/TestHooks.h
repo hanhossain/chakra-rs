@@ -1211,11 +1211,9 @@ int32_t (*pfSetRecyclerConcurrentStressFlag)(bool flag);
 bool (*pfIsEnabledRecyclerConcurrentRepeatStressFlag)();
 int32_t (*pfGetRecyclerConcurrentRepeatStressFlag)(bool *flag);
 int32_t (*pfSetRecyclerConcurrentRepeatStressFlag)(bool flag);
-#if ENABLE_PARTIAL_GC
 bool (*pfIsEnabledRecyclerPartialStressFlag)();
 int32_t (*pfGetRecyclerPartialStressFlag)(bool *flag);
 int32_t (*pfSetRecyclerPartialStressFlag)(bool flag);
-#endif
 bool (*pfIsEnabledRecyclerTrackStressFlag)();
 int32_t (*pfGetRecyclerTrackStressFlag)(bool *flag);
 int32_t (*pfSetRecyclerTrackStressFlag)(bool flag);
@@ -1483,11 +1481,9 @@ int32_t (*pfSetMemProtectHeapConcurrentStressFlag)(bool flag);
 bool (*pfIsEnabledMemProtectHeapConcurrentRepeatStressFlag)();
 int32_t (*pfGetMemProtectHeapConcurrentRepeatStressFlag)(bool *flag);
 int32_t (*pfSetMemProtectHeapConcurrentRepeatStressFlag)(bool flag);
-#if ENABLE_PARTIAL_GC
 bool (*pfIsEnabledMemProtectHeapPartialStressFlag)();
 int32_t (*pfGetMemProtectHeapPartialStressFlag)(bool *flag);
 int32_t (*pfSetMemProtectHeapPartialStressFlag)(bool flag);
-#endif
 #endif
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
 bool (*pfIsEnabledFixPropsOnPathTypesFlag)();

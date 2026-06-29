@@ -58,7 +58,6 @@ SmallHeapBlockT<TBlockTypeAttributes>::SweepObject<SweepMode_Concurrent>(Recycle
 }
 // Explicit instantiate all the sweep mode
 template void SmallHeapBlockT<TBlockTypeAttributes>::SweepObjects<SweepMode_Concurrent>(Recycler * recycler);
-#if ENABLE_PARTIAL_GC
 template <>
 template <>
 void
@@ -78,7 +77,6 @@ SmallHeapBlockT<TBlockTypeAttributes>::SweepObject<SweepMode_ConcurrentPartial>(
 
 // Explicit instantiate all the sweep mode
 template void SmallHeapBlockT<TBlockTypeAttributes>::SweepObjects<SweepMode_ConcurrentPartial>(Recycler * recycler);
-#endif
 
 template <>
 template <>

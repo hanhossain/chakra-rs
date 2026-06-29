@@ -251,7 +251,6 @@ RecyclerSweep::GetPendingMergeNewHeapBlockCount(HeapInfo const * heapInfo)
 }
 #endif
 
-#if ENABLE_PARTIAL_GC
 bool
 RecyclerSweep::InPartialCollectMode() const
 {
@@ -263,4 +262,3 @@ RecyclerSweep::InPartialCollect() const
 {
     return GetManager()->InPartialCollect();
 }
-#endif

@@ -37,7 +37,6 @@ protected:
     template <SweepMode mode>
     TBlockType * SweepPendingObjects(Recycler * recycler, TBlockType * list);
     void Sweep(RecyclerSweep& recyclerSweep);
-#if ENABLE_PARTIAL_GC
     ~SmallNormalHeapBucketBase();
 
     template <class Fn>
@@ -72,7 +71,6 @@ protected:
                                             // where allocating from it causing a write watch to be triggered
                                             // is not worth the effort
     TBlockType * partialSweptHeapBlockList; // list of blocks that is partially swept
-#endif
 };
 
 template <typename TBlockAttributes>

@@ -5146,7 +5146,6 @@ int32_t SetRecyclerConcurrentRepeatStressFlag(bool flag)
     Js::Configuration::Global.flags.RecyclerConcurrentRepeatStress = flag;
     return S_OK;
 }
-#if ENABLE_PARTIAL_GC
 bool IsEnabledRecyclerPartialStressFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerPartialStressFlag);
@@ -5161,7 +5160,6 @@ int32_t SetRecyclerPartialStressFlag(bool flag)
     Js::Configuration::Global.flags.RecyclerPartialStress = flag;
     return S_OK;
 }
-#endif
 bool IsEnabledRecyclerTrackStressFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::RecyclerTrackStressFlag);
@@ -6243,7 +6241,6 @@ int32_t SetMemProtectHeapConcurrentRepeatStressFlag(bool flag)
     Js::Configuration::Global.flags.MemProtectHeapConcurrentRepeatStress = flag;
     return S_OK;
 }
-#if ENABLE_PARTIAL_GC
 bool IsEnabledMemProtectHeapPartialStressFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::MemProtectHeapPartialStressFlag);
@@ -6258,7 +6255,6 @@ int32_t SetMemProtectHeapPartialStressFlag(bool flag)
     Js::Configuration::Global.flags.MemProtectHeapPartialStress = flag;
     return S_OK;
 }
-#endif
 #endif
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
 bool IsEnabledFixPropsOnPathTypesFlag()
@@ -7136,9 +7132,7 @@ IsEnabledRecyclerStressFlag, GetRecyclerStressFlag, SetRecyclerStressFlag,
 IsEnabledRecyclerBackgroundStressFlag, GetRecyclerBackgroundStressFlag, SetRecyclerBackgroundStressFlag,
 IsEnabledRecyclerConcurrentStressFlag, GetRecyclerConcurrentStressFlag, SetRecyclerConcurrentStressFlag,
 IsEnabledRecyclerConcurrentRepeatStressFlag, GetRecyclerConcurrentRepeatStressFlag, SetRecyclerConcurrentRepeatStressFlag,
-#if ENABLE_PARTIAL_GC
 IsEnabledRecyclerPartialStressFlag, GetRecyclerPartialStressFlag, SetRecyclerPartialStressFlag,
-#endif
 IsEnabledRecyclerTrackStressFlag, GetRecyclerTrackStressFlag, SetRecyclerTrackStressFlag,
 IsEnabledRecyclerInduceFalsePositivesFlag, GetRecyclerInduceFalsePositivesFlag, SetRecyclerInduceFalsePositivesFlag,
 #endif // RECYCLER_STRESS
@@ -7254,9 +7248,7 @@ IsEnabledMemProtectHeapStressFlag, GetMemProtectHeapStressFlag, SetMemProtectHea
 IsEnabledMemProtectHeapBackgroundStressFlag, GetMemProtectHeapBackgroundStressFlag, SetMemProtectHeapBackgroundStressFlag,
 IsEnabledMemProtectHeapConcurrentStressFlag, GetMemProtectHeapConcurrentStressFlag, SetMemProtectHeapConcurrentStressFlag,
 IsEnabledMemProtectHeapConcurrentRepeatStressFlag, GetMemProtectHeapConcurrentRepeatStressFlag, SetMemProtectHeapConcurrentRepeatStressFlag,
-#if ENABLE_PARTIAL_GC
 IsEnabledMemProtectHeapPartialStressFlag, GetMemProtectHeapPartialStressFlag, SetMemProtectHeapPartialStressFlag,
-#endif
 #endif
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
 IsEnabledFixPropsOnPathTypesFlag, GetFixPropsOnPathTypesFlag, SetFixPropsOnPathTypesFlag,

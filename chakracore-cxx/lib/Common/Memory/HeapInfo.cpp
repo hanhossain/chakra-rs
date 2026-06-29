@@ -994,7 +994,6 @@ HeapInfo::GetBucketStats(BucketStatsReporter& report)
 #endif  // ENABLE_MEM_STATS
 
 
-#if ENABLE_PARTIAL_GC
 void
 HeapInfo::SweepPartialReusePages(RecyclerSweep& recyclerSweep)
 {
@@ -1037,7 +1036,6 @@ void HeapInfo::FinishPartialCollect(RecyclerSweep * recyclerSweep)
 
     largeObjectBucket.FinishPartialCollect(recyclerSweep);
 }
-#endif
 
 void
 HeapInfo::PrepareSweep()
@@ -1101,16 +1099,13 @@ HeapInfo::TransferPendingHeapBlocks(RecyclerSweep& recyclerSweep)
 void
 HeapInfo::ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep)
 {
-#if ENABLE_PARTIAL_GC
     Assert(!recyclerSweep.InPartialCollectMode());
-#endif
     Assert(!recyclerSweep.IsBackground());
     TransferPendingHeapBlocks(recyclerSweep);
 
     largeObjectBucket.ConcurrentTransferSweptObjects(recyclerSweep);
 }
 
-#if ENABLE_PARTIAL_GC
 void
 HeapInfo::ConcurrentPartialTransferSweptObjects(RecyclerSweep& recyclerSweep)
 {
@@ -1124,7 +1119,6 @@ HeapInfo::ConcurrentPartialTransferSweptObjects(RecyclerSweep& recyclerSweep)
 
     RECYCLER_SLOW_CHECK(this->VerifyLargeHeapBlockCount());
 }
-#endif
 
 void
 HeapInfo::DisposeObjects()
