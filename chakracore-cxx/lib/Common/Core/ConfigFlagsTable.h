@@ -527,9 +527,7 @@ namespace Js
         RecyclerBackgroundStressFlag,
         RecyclerConcurrentStressFlag,
         RecyclerConcurrentRepeatStressFlag,
-        #if ENABLE_PARTIAL_GC
         RecyclerPartialStressFlag,
-        #endif
         RecyclerTrackStressFlag,
         RecyclerInduceFalsePositivesFlag,
         #endif // RECYCLER_STRESS
@@ -654,9 +652,7 @@ namespace Js
         MemProtectHeapBackgroundStressFlag,
         MemProtectHeapConcurrentStressFlag,
         MemProtectHeapConcurrentRepeatStressFlag,
-        #if ENABLE_PARTIAL_GC
         MemProtectHeapPartialStressFlag,
-        #endif
         #endif
         #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         FixPropsOnPathTypesFlag,
@@ -2018,9 +2014,7 @@ namespace Js
                 Boolean RecyclerBackgroundStress;
                 Boolean RecyclerConcurrentStress;
                 Boolean RecyclerConcurrentRepeatStress;
-            #if ENABLE_PARTIAL_GC
                 Boolean RecyclerPartialStress;
-            #endif
             Boolean RecyclerTrackStress;
             Boolean RecyclerInduceFalsePositives;
         #endif // RECYCLER_STRESS
@@ -2145,9 +2139,7 @@ namespace Js
                 Boolean MemProtectHeapBackgroundStress;
                 Boolean MemProtectHeapConcurrentStress;
                 Boolean MemProtectHeapConcurrentRepeatStress;
-            #if ENABLE_PARTIAL_GC
                 Boolean MemProtectHeapPartialStress;
-            #endif
         #endif
         #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
             Boolean FixPropsOnPathTypes;

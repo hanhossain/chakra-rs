@@ -146,7 +146,6 @@ RecyclerHeuristic::PriorityBoostTimeout(Js::ConfigFlagsTable& flags)
     return TickCountConcurrentPriorityBoost;
 }
 
-#if ENABLE_PARTIAL_GC
 bool
 RecyclerHeuristic::PartialConcurrentNextCollection(double ratio, Js::ConfigFlagsTable& flags)
 {
@@ -173,4 +172,3 @@ RecyclerHeuristic::PartialConcurrentNextCollection(double ratio, Js::ConfigFlags
     }
     return ratio >= 0.5;
 }
-#endif

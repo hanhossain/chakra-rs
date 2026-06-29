@@ -26,9 +26,7 @@ public:
 #endif
         pendingDisposeLargeBlockList(nullptr)
         , pendingSweepLargeBlockList(nullptr)
-#if ENABLE_PARTIAL_GC
         , partialSweptLargeBlockList(nullptr)
-#endif
     {
     }
 
@@ -70,14 +68,10 @@ public:
 
     size_t Rescan(RescanFlags flags);
     void SweepPendingObjects(RecyclerSweep& recyclerSweep);
-#if ENABLE_PARTIAL_GC
     void FinishPartialCollect(RecyclerSweep * recyclerSweep);
-#endif
 
     void ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep);
-#if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweep& recyclerSweep);
-#endif
 
 #if DBG || defined(RECYCLER_SLOW_CHECK_ENABLED)
     size_t GetLargeHeapBlockCount(bool checkCount = false) const;
@@ -115,10 +109,8 @@ private:
 #endif
     LargeHeapBlock * pendingDisposeLargeBlockList;
     LargeHeapBlock * pendingSweepLargeBlockList;
-#if ENABLE_PARTIAL_GC
     // Used for concurrent-partial GC
     LargeHeapBlock * partialSweptLargeBlockList;
-#endif
     bool supportFreeList;
     LargeHeapBlockFreeList* freeList;
     FreeObject * explicitFreeList;

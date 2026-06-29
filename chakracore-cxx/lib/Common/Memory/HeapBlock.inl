@@ -172,9 +172,7 @@ HeapBlock::UpdateAttributesOfMarkedObjects(MarkContext * markContext, void * obj
     {
         FinalizableObject * trackedObject = (FinalizableObject *)objectAddress;
 
-#if ENABLE_PARTIAL_GC
         if (!markContext->GetRecycler()->inPartialCollectMode)
-#endif
         {
             if (markContext->GetRecycler()->DoQueueTrackedObject())
             {

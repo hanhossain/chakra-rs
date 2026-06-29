@@ -50,16 +50,12 @@ public:
 
     void SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager);
 
-#if ENABLE_PARTIAL_GC
     void SweepPartialReusePages(RecyclerSweepManager& recyclerSweepManager);
     void FinishPartialCollect(RecyclerSweepManager * recyclerSweepManager);
-#endif
     void PrepareSweep();
     void ConcurrentTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
 
-#if ENABLE_PARTIAL_GC
     void ConcurrentPartialTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
-#endif
 
     void DisposeObjects();
     void TransferDisposedObjects();
@@ -182,9 +178,7 @@ private:
     size_t lastUncollectedAllocBytes;
     size_t uncollectedExternalBytes;
     uint pendingZeroPageCount;
-#if ENABLE_PARTIAL_GC
     size_t uncollectedNewPageCount;
     size_t unusedPartialCollectFreeBytes;
-#endif
 };
 }

@@ -7,10 +7,8 @@
 
 template <typename TBlockType>
 SmallNormalHeapBucketBase<TBlockType>::SmallNormalHeapBucketBase()
-#if ENABLE_PARTIAL_GC
     : partialHeapBlockList(nullptr)
     , partialSweptHeapBlockList(nullptr)
-#endif
 {
 }
 
@@ -21,14 +19,12 @@ SmallNormalHeapBucketBase<TBlockType>::AggregateBucketStats()
 {
     __super::AggregateBucketStats();
 
-#if ENABLE_PARTIAL_GC
     HeapBlockList::ForEach(partialHeapBlockList, [this](TBlockType* heapBlock) {
         heapBlock->AggregateBlockStats(this->memStats);
     });
     HeapBlockList::ForEach(partialSweptHeapBlockList, [this](TBlockType* heapBlock) {
         heapBlock->AggregateBlockStats(this->memStats);
     });
-#endif
 }
 #endif
 
@@ -46,7 +42,6 @@ SmallNormalHeapBucketBase<TBlockType>::ScanInitialImplicitRoots(Recycler * recyc
         heapBlock->ScanInitialImplicitRoots(recycler);
     });
 
-#if ENABLE_PARTIAL_GC
     Assert(recycler->inPartialCollectMode || partialHeapBlockList == nullptr);
     if (recycler->inPartialCollectMode)
     {
@@ -59,7 +54,6 @@ SmallNormalHeapBucketBase<TBlockType>::ScanInitialImplicitRoots(Recycler * recyc
             heapBlock->ScanInitialImplicitRoots(recycler);
         });
     }
-#endif
 }
 
 template <typename TBlockType>
@@ -68,10 +62,8 @@ SmallNormalHeapBucketBase<TBlockType>::ScanNewImplicitRoots(Recycler * recycler)
 {
     __super::ScanNewImplicitRoots(recycler);
 
-#if ENABLE_PARTIAL_GC
     Assert(recycler->inPartialCollectMode || partialHeapBlockList == nullptr);
     // Don't need to scan the partial heap block list for new implicit root as we don't allocate from them
-#endif
 }
 
 
@@ -211,13 +203,10 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPendingObjects(RecyclerSweep& recycl
     TBlockType *& pendingSweepList = recyclerSweep.GetPendingSweepBlockList(this);
     TBlockType * const list = pendingSweepList;
     Recycler * const recycler = recyclerSweep.GetRecycler();
-#if ENABLE_PARTIAL_GC
     bool const partialSweep = recycler->inPartialCollectMode;
-#endif
     if (list)
     {
         pendingSweepList = nullptr;
-#if ENABLE_PARTIAL_GC
         if (partialSweep)
         {
             // We did a partial sweep.
@@ -259,7 +248,6 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPendingObjects(RecyclerSweep& recycl
             });
         }
         else
-#endif
         {
             // We decided not to do a partial sweep.
             // Blocks in the pendingSweepList need to have a regular sweep.
@@ -299,7 +287,6 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPendingObjects(Recycler * recycler, 
     return tail;
 }
 
-#if ENABLE_PARTIAL_GC
 template <typename TBlockType>
 SmallNormalHeapBucketBase<TBlockType>::~SmallNormalHeapBucketBase()
 {
@@ -573,13 +560,11 @@ SmallNormalHeapBucketBase<TBlockType>::VerifyMark()
     });
 }
 #endif // RECYCLER_VERIFY_MARK
-#endif // ENABLE_PARTIAL_GC
 
 template <typename TBlockType>
 void
 SmallNormalHeapBucketBase<TBlockType>::Sweep(RecyclerSweep& recyclerSweep)
 {
-#if ENABLE_PARTIAL_GC
 #if DBG
     Recycler * recycler = recyclerSweep.GetRecycler();
     // Don't need sweep the partialHeapBlockList, the partially collected heap block list.
@@ -588,7 +573,6 @@ SmallNormalHeapBucketBase<TBlockType>::Sweep(RecyclerSweep& recyclerSweep)
     Assert(recyclerSweep.InPartialCollect() || partialHeapBlockList == nullptr);
     Assert(recyclerSweep.InPartialCollect() || partialSweptHeapBlockList == nullptr);
     this->SweepVerifyPartialBlocks(recycler, this->partialHeapBlockList);
-#endif
 #endif
 
     BaseT::SweepBucket(recyclerSweep, [](RecyclerSweep& recyclerSweep){});

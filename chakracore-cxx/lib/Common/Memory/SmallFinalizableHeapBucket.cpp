@@ -32,15 +32,11 @@ SmallFinalizableHeapBucketBaseT<TBlockType>::FinalizeAllObjects()
     // Walk through the allocated object and call finalize and dispose on them
     this->ClearAllocators();
     FinalizeHeapBlockList(this->pendingDisposeList);
-#if ENABLE_PARTIAL_GC
     FinalizeHeapBlockList(this->partialHeapBlockList);
-#endif
     FinalizeHeapBlockList(this->heapBlockList);
     FinalizeHeapBlockList(this->fullBlockList);
 
-#if ENABLE_PARTIAL_GC
     FinalizeHeapBlockList(this->partialSweptHeapBlockList);
-#endif
 }
 
 template <class TBlockType>

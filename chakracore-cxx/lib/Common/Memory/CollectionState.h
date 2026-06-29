@@ -26,9 +26,7 @@ enum CollectionState
     Collection_TransferSwept        = 0x00000200,
 
     // State attributes
-#if ENABLE_PARTIAL_GC
     Collection_Partial              = 0x00001000,
-#endif
     Collection_Concurrent           = 0x00002000,
     Collection_ExecutingConcurrent  = 0x00004000,
     Collection_FinishConcurrent     = 0x00008000,

@@ -175,7 +175,6 @@ Recycler::AllocWithAttributesInlined(size_t size)
         RecyclerWriteBarrierManager::WriteBarrier(memBlock, size);
     }
 
-#if ENABLE_PARTIAL_GC
 #pragma prefast(suppress:6313, "attributes is a template parameter and can be 0")
     if (attributes & ClientTrackedBit)
     {
@@ -191,7 +190,6 @@ Recycler::AllocWithAttributesInlined(size_t size)
             Assert(this->hasBackgroundFinishPartial || this->clientTrackedObjectList.Empty());
         }
     }
-#endif
 #ifdef RECYCLER_PAGE_HEAP
     VerifyPageHeapFillAfterAlloc(memBlock, size, attributes);
 #endif

@@ -69,14 +69,10 @@ namespace Memory
 
 #ifdef RECYCLER_STRESS
         CollectStress                   = CollectNowForceInThread,
-#if ENABLE_PARTIAL_GC
         CollectPartialStress            = CollectMode_Partial,
-#endif
         CollectBackgroundStress         = CollectNowDefault,
         CollectConcurrentStress         = CollectNowConcurrent,
-#if ENABLE_PARTIAL_GC
         CollectConcurrentPartialStress  = CollectConcurrentStress | CollectPartialStress,
-#endif
 #endif
 
 #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)

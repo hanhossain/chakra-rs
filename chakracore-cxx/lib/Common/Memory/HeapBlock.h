@@ -398,9 +398,7 @@ enum SweepMode
 {
     SweepMode_InThread,
     SweepMode_Concurrent,
-#if ENABLE_PARTIAL_GC
     SweepMode_ConcurrentPartial
-#endif
 };
 
 // enum indicating the result of a sweep
@@ -474,9 +472,7 @@ public:
     ushort freeCount;
     ushort lastFreeCount;
     ushort markCount;
-#if ENABLE_PARTIAL_GC
     ushort oldFreeCount;
-#endif
     bool   isInAllocator;
 #if DBG
     bool   isClearedFromAllocator;
@@ -660,13 +656,11 @@ public:
 
     uint GetAndClearLastFreeCount();
     void ClearAllAllocBytes();      // Reset all unaccounted alloc bytes and the new alloc count
-#if ENABLE_PARTIAL_GC
     uint GetAndClearUnaccountedAllocBytes();
     void AdjustPartialUncollectedAllocBytes(RecyclerSweep& recyclerSweep, uint const expectSweepCount);
     bool DoPartialReusePage(RecyclerSweep const& recyclerSweep, uint& expectFreeByteCount);
 #if DBG || defined(RECYCLER_STATS)
     void SweepVerifyPartialBlock(Recycler * recycler);
-#endif
 #endif
     void TransferProcessedObjects(FreeObject * list, FreeObject * tail);
     BOOL ReassignPages(Recycler * recycler);

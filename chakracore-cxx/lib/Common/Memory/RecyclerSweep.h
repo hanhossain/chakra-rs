@@ -46,10 +46,8 @@ public:
     size_t GetPendingMergeNewHeapBlockCount(HeapInfo const * heapInfo);
 #endif
 
-#if ENABLE_PARTIAL_GC
     bool InPartialCollectMode() const;
     bool InPartialCollect() const;
-#endif
 
 private:
     template <typename TBlockType>

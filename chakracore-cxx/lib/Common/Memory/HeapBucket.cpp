@@ -466,12 +466,8 @@ HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * a
 
     if (!collected)
     {
-#if ENABLE_PARTIAL_GC
         // wait for background sweeping finish if there are too many pages allocated during background sweeping
         if (recycler->IsConcurrentSweepExecutingState() && recycler->autoHeap.uncollectedNewPageCount > (uint)CONFIG_FLAG(NewPagesCapDuringBGSweeping))
-#else
-        if (recycler->IsConcurrentSweepExecutingState())
-#endif
         {
             recycler->FinishConcurrent<ForceFinishCollection>();
             memBlock = this->TryAlloc(recycler, allocator, sizeCat, attributes);
@@ -760,7 +756,6 @@ HeapBucketT<TBlockType>::VerifyBlockConsistencyInList(TBlockType * heapBlock, Re
 }
 #endif // DBG
 
-#if ENABLE_PARTIAL_GC
 template <typename TBlockType>
 bool
 HeapBucketT<TBlockType>::DoQueuePendingSweep(Recycler * recycler)
@@ -776,7 +771,6 @@ HeapBucketT<TBlockType>::DoPartialReuseSweep(Recycler * recycler)
     // WriteBarrier-TODO: We shouldn't need to do this for write barrier heap buckets either
     return !IsLeafBucket && recycler->inPartialCollectMode;
 }
-#endif
 
 template <typename TBlockType>
 void
@@ -805,12 +799,8 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
     // only if we are doing partial GC so we can calculate the heuristics before
     // determinate we want to fully sweep the block or partially sweep the block
 
-#if ENABLE_PARTIAL_GC
     // CONCURRENT-TODO: Add a mode where we can do in thread sweep, and concurrent partial sweep?
     bool const queuePendingSweep = this->DoQueuePendingSweep(recycler);
-#else
-    bool const queuePendingSweep = false;
-#endif
 
     Assert(this->IsAllocationStopped());
     HeapBlockList::ForEachEditing(heapBlockList, [=, this, &recyclerSweep](TBlockType * heapBlock)
@@ -841,9 +831,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
 #ifdef RECYCLER_TRACE
             recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**2**] finished Sweep Pass1, heapblock added to pendingSweepList.");
 #endif
-#if ENABLE_PARTIAL_GC
             recyclerSweep.GetManager()->NotifyAllocableObjects(heapBlock);
-#endif
             break;
         }
         case SweepStatePendingDispose:
@@ -885,9 +873,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
 #ifdef RECYCLER_TRACE
             recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**6**] finished Sweep Pass1, heapblock added to heapBlockList.");
 #endif
-#if ENABLE_PARTIAL_GC
             recyclerSweep.GetManager()->NotifyAllocableObjects(heapBlock);
-#endif
             break;
         }
         case SweepStateFull:
@@ -1443,7 +1429,6 @@ HeapBucketGroup<TBlockAttributes>::SetupBackgroundSweep(RecyclerSweep& recyclerS
     leafHeapBucket.SetupBackgroundSweep(recyclerSweep);
     smallNormalWithBarrierHeapBucket.SetupBackgroundSweep(recyclerSweep);
 }
-#if ENABLE_PARTIAL_GC
 template <class TBlockAttributes>
 void
 HeapBucketGroup<TBlockAttributes>::SweepPartialReusePages(RecyclerSweep& recyclerSweep)
@@ -1479,7 +1464,6 @@ HeapBucketGroup<TBlockAttributes>::FinishPartialCollect(RecyclerSweep * recycler
     // WriteBarrier-TODO: Do that same for write barrier buckets
     RECYCLER_SLOW_CHECK(leafHeapBucket.VerifyHeapBlockCount(recyclerSweep != nullptr && recyclerSweep->IsBackground()));
 }
-#endif
 
 template <class TBlockAttributes>
 void

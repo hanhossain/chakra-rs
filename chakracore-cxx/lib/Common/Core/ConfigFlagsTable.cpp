@@ -1216,9 +1216,7 @@ namespace Js
         u"RecyclerBackgroundStress",
         u"RecyclerConcurrentStress",
         u"RecyclerConcurrentRepeatStress",
-#if ENABLE_PARTIAL_GC
         u"RecyclerPartialStress",
-#endif
         u"RecyclerTrackStress",
         u"RecyclerInduceFalsePositives",
 #endif // RECYCLER_STRESS
@@ -1344,9 +1342,7 @@ namespace Js
         u"MemProtectHeapBackgroundStress",
         u"MemProtectHeapConcurrentStress",
         u"MemProtectHeapConcurrentRepeatStress",
-#if ENABLE_PARTIAL_GC
         u"MemProtectHeapPartialStress",
-#endif
 #endif
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         u"FixPropsOnPathTypes",
@@ -2323,9 +2319,7 @@ namespace Js
         u"Stress the recycler by collect in the background thread on every allocation call",
         u"Stress the concurrent recycler by concurrent collect on every allocation call",
         u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
-#if ENABLE_PARTIAL_GC
         u"Stress the partial recycler by partial collect on every allocation call",
-#endif
         u"Stress tracked object handling by simulating tracked objects for regular allocations",
         u"Stress recycler by forcing false positive object marks",
 #endif // RECYCLER_STRESS
@@ -2451,9 +2445,7 @@ namespace Js
         u"Stress the recycler by collect in the background thread on every allocation call",
         u"Stress the concurrent recycler by concurrent collect on every allocation call",
         u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
-#if ENABLE_PARTIAL_GC
         u"Stress the partial recycler by partial collect on every allocation call",
-#endif
 #endif
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         u"Mark properties as fixed on path types (default: false).",
@@ -3028,9 +3020,7 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#if ENABLE_PARTIAL_GC
         NoParentFlag,
-#endif
         NoParentFlag,
         NoParentFlag,
 #endif // RECYCLER_STRESS
@@ -3156,9 +3146,7 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#if ENABLE_PARTIAL_GC
         NoParentFlag,
-#endif
 #endif
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         NoParentFlag,
@@ -3749,9 +3737,7 @@ namespace Js
         RecyclerBackgroundStress(false),
         RecyclerConcurrentStress(false),
         RecyclerConcurrentRepeatStress(false),
-#if ENABLE_PARTIAL_GC
         RecyclerPartialStress(false),
-#endif
         RecyclerTrackStress(false),
         RecyclerInduceFalsePositives(false),
 #endif // RECYCLER_STRESS
@@ -3877,9 +3863,7 @@ namespace Js
         MemProtectHeapBackgroundStress(false),
         MemProtectHeapConcurrentStress(false),
         MemProtectHeapConcurrentRepeatStress(false),
-#if ENABLE_PARTIAL_GC
         MemProtectHeapPartialStress(false),
-#endif
 #endif
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         FixPropsOnPathTypes(DEFAULT_CONFIG_FixPropsOnPathTypes),
@@ -5471,10 +5455,8 @@ namespace Js
             return FlagBoolean;
         case RecyclerConcurrentRepeatStressFlag:
             return FlagBoolean;
-        #if ENABLE_PARTIAL_GC
         case RecyclerPartialStressFlag:
             return FlagBoolean;
-        #endif
         case RecyclerTrackStressFlag:
             return FlagBoolean;
         case RecyclerInduceFalsePositivesFlag:
@@ -5680,10 +5662,8 @@ namespace Js
             return FlagBoolean;
         case MemProtectHeapConcurrentRepeatStressFlag:
             return FlagBoolean;
-        #if ENABLE_PARTIAL_GC
         case MemProtectHeapPartialStressFlag:
             return FlagBoolean;
-        #endif
         #endif
         #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         case FixPropsOnPathTypesFlag:
@@ -6661,10 +6641,8 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerConcurrentStress));
         case RecyclerConcurrentRepeatStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerConcurrentRepeatStress));
-        #if ENABLE_PARTIAL_GC
         case RecyclerPartialStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerPartialStress));
-        #endif
         case RecyclerTrackStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerTrackStress));
         case RecyclerInduceFalsePositivesFlag:
@@ -6870,10 +6848,8 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapConcurrentStress));
         case MemProtectHeapConcurrentRepeatStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapConcurrentRepeatStress));
-        #if ENABLE_PARTIAL_GC
         case MemProtectHeapPartialStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapPartialStress));
-        #endif
         #endif
         #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         case FixPropsOnPathTypesFlag:
@@ -16176,7 +16152,6 @@ if (IsEnabled(RecyclerConcurrentRepeatStressFlag))
     };
     Output::Print(u"\n");
 }
-#if ENABLE_PARTIAL_GC
 if (IsEnabled(RecyclerPartialStressFlag))
 {
     Output::Print(u"-%s", u"RecyclerPartialStress");
@@ -16202,7 +16177,6 @@ if (IsEnabled(RecyclerPartialStressFlag))
     };
     Output::Print(u"\n");
 }
-#endif
 if (IsEnabled(RecyclerTrackStressFlag))
 {
     Output::Print(u"-%s", u"RecyclerTrackStress");
@@ -18248,7 +18222,6 @@ if (IsEnabled(MemProtectHeapConcurrentRepeatStressFlag))
     };
     Output::Print(u"\n");
 }
-#if ENABLE_PARTIAL_GC
 if (IsEnabled(MemProtectHeapPartialStressFlag))
 {
     Output::Print(u"-%s", u"MemProtectHeapPartialStress");
@@ -18274,7 +18247,6 @@ if (IsEnabled(MemProtectHeapPartialStressFlag))
     };
     Output::Print(u"\n");
 }
-#endif
 #endif
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
 if (IsEnabled(FixPropsOnPathTypesFlag))
@@ -19818,11 +19790,9 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case RecyclerConcurrentRepeatStressFlag:
             retValue = (Boolean) false;
             break;
-        #if ENABLE_PARTIAL_GC
         case RecyclerPartialStressFlag:
             retValue = (Boolean) false;
             break;
-        #endif
         case RecyclerTrackStressFlag:
             retValue = (Boolean) false;
             break;
@@ -20011,11 +19981,9 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case MemProtectHeapConcurrentRepeatStressFlag:
             retValue = (Boolean) false;
             break;
-        #if ENABLE_PARTIAL_GC
         case MemProtectHeapPartialStressFlag:
             retValue = (Boolean) false;
             break;
-        #endif
         #endif
         #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         case FixPropsOnPathTypesFlag:

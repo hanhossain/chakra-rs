@@ -39,10 +39,8 @@ void HeapInfoManager::ForEachHeapInfo(RecyclerSweepManager * recyclerSweepManage
 
 HeapInfoManager::HeapInfoManager(AllocationPolicyManager * policyManager, Js::ConfigFlagsTable& configFlagsTable, IdleDecommitPageAllocator * leafPageAllocator) :
     defaultHeap(policyManager, configFlagsTable, leafPageAllocator),
-#if ENABLE_PARTIAL_GC
     uncollectedNewPageCount(0),
     unusedPartialCollectFreeBytes(0),
-#endif
     uncollectedAllocBytes(0),
     lastUncollectedAllocBytes(0),
     pendingZeroPageCount(0)
@@ -166,7 +164,6 @@ HeapInfoManager::SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager)
     });
 }
 
-#if ENABLE_PARTIAL_GC
 void
 HeapInfoManager::SweepPartialReusePages(RecyclerSweepManager& recyclerSweepManager)
 {
@@ -184,7 +181,6 @@ HeapInfoManager::FinishPartialCollect(RecyclerSweepManager * recyclerSweepManage
         heapInfo.FinishPartialCollect(recyclerSweep);
     });
 }
-#endif
 
 void
 HeapInfoManager::PrepareSweep()
@@ -204,7 +200,6 @@ HeapInfoManager::ConcurrentTransferSweptObjects(RecyclerSweepManager& recyclerSw
     });
 }
 
-#if ENABLE_PARTIAL_GC
 void
 HeapInfoManager::ConcurrentPartialTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager)
 {
@@ -213,7 +208,6 @@ HeapInfoManager::ConcurrentPartialTransferSweptObjects(RecyclerSweepManager& rec
         heapInfo.ConcurrentPartialTransferSweptObjects(recyclerSweep);
     });
 }
-#endif
 
 void
 HeapInfoManager::DisposeObjects()

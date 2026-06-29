@@ -99,9 +99,7 @@ public:
     virtual bool GetFreeObjectListOnAllocator(FreeObject ** freeObjectList) override;
 #endif
 #if DBG
-#if ENABLE_PARTIAL_GC
     void FinishPartialCollect();
-#endif
     bool IsPendingDispose() const { return isPendingDispose; }
     void SetIsPendingDispose() { isPendingDispose = true; }
 #endif

@@ -11,11 +11,7 @@ namespace Memory
 class RecyclerSweepManager
 {
 public:
-#if ENABLE_PARTIAL_GC
     void BeginSweep(Recycler * recycler, size_t rescanRootBytes, bool adjustPartialHeuristics);
-#else
-    void BeginSweep(Recycler * recycler);
-#endif
     void FinishSweep();
     void EndSweep();
     void ShutdownCleanup();
@@ -34,7 +30,6 @@ public:
 
     template <typename TBlockAttributes>
     void AddUnaccountedNewObjectAllocBytes(SmallHeapBlockT<TBlockAttributes> * smallHeapBlock);
-#if ENABLE_PARTIAL_GC
     bool InPartialCollect() const;
     void StartPartialCollectMode();
     bool DoPartialCollectMode();
@@ -52,7 +47,6 @@ public:
 
     static const uint MinPartialUncollectedNewPageCount; // 4MB pages
     static const uint MaxPartialCollectRescanRootBytes; // 5MB
-#endif
 
 private:
     bool IsMemProtectMode() const;
@@ -64,7 +58,6 @@ private:
     bool forceForeground;
 
     bool inPartialCollect;
-#if ENABLE_PARTIAL_GC
     bool adjustPartialHeuristics;
     size_t lastPartialUncollectedAllocBytes;
     size_t nextPartialUncollectedAllocBytes;
@@ -82,7 +75,6 @@ private:
 
 #if DBG
     bool partial;
-#endif
 #endif
 
     friend class HeapInfoManager;
