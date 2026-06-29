@@ -12,9 +12,7 @@ RecyclerPageAllocator::RecyclerPageAllocator(HeapInfo * heapInfo, AllocationPoli
         flagTable,
         0, maxFreePageCount,
         true,
-#if ENABLE_BACKGROUND_PAGE_ZEROING
         &zeroPageQueue,
-#endif
         maxAllocPageCount,
         enableWriteBarrier
         )

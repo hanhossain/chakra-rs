@@ -66,9 +66,7 @@ public:
     PagePool(Js::ConfigFlagsTable& flagsTable) :
         pageAllocator(NULL, flagsTable, PageAllocatorType_GCThread,
             PageAllocator::DefaultMaxFreePageCount, false,
-#if ENABLE_BACKGROUND_PAGE_ZEROING
             nullptr,
-#endif
             PageAllocator::DefaultMaxAllocPageCount, 0, true),
         freePageList(nullptr),
         reservedPageList(nullptr)

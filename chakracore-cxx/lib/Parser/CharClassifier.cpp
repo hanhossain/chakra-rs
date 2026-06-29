@@ -178,7 +178,6 @@ static const CharTypes charTypes[128] =
 };
 
 
-#if ENABLE_UNICODE_API
 bool Js::CharClassifier::BigCharIsWhitespaceDefault(codepoint_t ch, const Js::CharClassifier *instance)
 {
     return (instance->getBigCharFlagsFunc(ch, instance) & PlatformAgnostic::UnicodeText::CharacterTypeFlags::SpaceChar) != 0;
@@ -193,7 +192,6 @@ bool Js::CharClassifier::BigCharIsIdContinueDefault(codepoint_t ch, const Js::Ch
 {
     return (instance->getBigCharFlagsFunc(ch, instance) & PlatformAgnostic::UnicodeText::CharacterTypeFlags::IdChar) != 0;
 }
-#endif
 
 CharTypes Js::CharClassifier::GetBigCharTypeES5(codepoint_t codepoint, const Js::CharClassifier *instance)
 {
@@ -414,9 +412,7 @@ Js::CharClassifier::CharClassifier(void)
     // If we're in ES6 mode, and we have full support for Unicode character classification
     // from an external library, then use the ES6/Surrogate pair supported versions of the functions
     // Otherwise, fallback to the ES5 versions which don't need an external library
-#if ENABLE_UNICODE_API
     if (isES6UnicodeModeEnabled && isFullUnicodeSupportAvailable)
-#endif
     {
         bigCharIsIdStartFunc = &CharClassifier::BigCharIsIdStartES6;
         bigCharIsIdContinueFunc = &CharClassifier::BigCharIsIdContinueES6;
@@ -428,7 +424,6 @@ Js::CharClassifier::CharClassifier(void)
         getBigCharTypeFunc = &CharClassifier::GetBigCharTypeES6;
         getBigCharFlagsFunc = &CharClassifier::GetBigCharFlagsES6;
     }
-#if ENABLE_UNICODE_API
     else
     {
         bigCharIsIdStartFunc = &CharClassifier::BigCharIsIdStartDefault;
@@ -441,7 +436,6 @@ Js::CharClassifier::CharClassifier(void)
         getBigCharTypeFunc = &CharClassifier::GetBigCharTypeES5;
         getBigCharFlagsFunc = &CharClassifier::GetBigCharFlagsES5;
     }
-#endif
 
 }
 
@@ -645,16 +639,10 @@ CharTypes Js::CharClassifier::GetCharType(codepoint_t ch) const
     return FBigChar(ch) ? getBigCharTypeFunc(ch, this) : charTypes[ch];
 }
 
-#if ENABLE_UNICODE_API
 PlatformAgnostic::UnicodeText::CharacterTypeFlags Js::CharClassifier::GetCharFlags(codepoint_t ch) const
 {
-#if ENABLE_UNICODE_API
     return FBigChar(ch) ? getBigCharFlagsFunc(ch, this) : PlatformAgnostic::UnicodeText::charFlags[ch];
-#else
-    return PlatformAgnostics::UnicodeText::charFlags[ch];
-#endif
 }
-#endif
 
 // Explicit instantiation
 template bool Js::CharClassifier::IsIdStartFast<true>(codepoint_t) const;

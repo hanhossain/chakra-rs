@@ -493,7 +493,6 @@ public:
         }
     };
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     struct ZeroPageQueue : BackgroundPageQueue
     {
         FreePageEntry* pendingZeroPageList;
@@ -536,7 +535,6 @@ public:
             return (unsigned short)(count % 65536);
         }
     };
-#endif
 #endif
 
     PageAllocatorBase(AllocationPolicyManager * policyManager,
@@ -591,12 +589,10 @@ public:
     void SuspendIdleDecommit();
     void ResumeIdleDecommit();
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     void StartQueueZeroPage();
     void StopQueueZeroPage();
     void ZeroQueuedPages();
     void BackgroundZeroQueuedPages();
-#endif
 #if ENABLE_BACKGROUND_PAGE_FREEING
     void FlushBackgroundPages();
 #endif
@@ -614,9 +610,7 @@ public:
 #endif
 
 #if DBG
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     bool HasZeroQueuedPages() const;
-#endif
     virtual void SetDisableThreadAccessCheck() { disableThreadAccessCheck = true;}
     virtual void SetEnableThreadAccessCheck() { disableThreadAccessCheck = false; }
 
@@ -694,15 +688,11 @@ protected:
         bool committed, bool allocated, bool enableWriteBarrier);
 
     // Zero Pages
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     void AddPageToZeroQueue(void * address, uint pageCount, TPageSegment * pageSegment);
     bool HasZeroPageQueue() const;
-#endif
 
     bool ZeroPages() const { return zeroPages; }
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     bool QueueZeroPages() const { return queueZeroPages; }
-#endif
 
 #if ENABLE_BACKGROUND_PAGE_FREEING
     FreePageEntry * PopPendingZeroPage();
@@ -740,10 +730,8 @@ protected:
     bool zeroPages;
 #if ENABLE_BACKGROUND_PAGE_FREEING
     BackgroundPageQueue * backgroundPageQueue;
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     bool queueZeroPages;
     bool hasZeroQueuedPages;
-#endif
 #endif
 
     // Idle Decommit

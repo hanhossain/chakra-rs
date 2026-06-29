@@ -110,7 +110,6 @@ public:
     size_t GetCommittedBytes();
     size_t GetNumberOfSegments();
 
-#if ENABLE_BACKGROUND_PAGE_ZEROING
     void StartQueueZeroPage();
     void StopQueueZeroPage();
     void BackgroundZeroQueuedPages();
@@ -118,7 +117,6 @@ public:
     void ZeroQueuedPages();
 #if DBG
     bool HasZeroQueuedPages();
-#endif
 #endif
 
 #ifdef RECYCLER_MEMORY_VERIFY
