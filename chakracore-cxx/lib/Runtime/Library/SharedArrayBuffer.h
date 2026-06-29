@@ -92,13 +92,8 @@ namespace Js
         WaiterList *GetWaiterList(uint index);
         SharedContents *GetSharedContents() { return sharedContents; }
 
-#if defined(TARGET_64)
         //maximum 2G -1  for amd64
         static const uint32_t MaxSharedArrayBufferLength = 0x7FFFFFFF;
-#else
-        // maximum 1G to avoid arithmetic overflow.
-        static const uint32_t MaxSharedArrayBufferLength = 1 << 30;
-#endif
         virtual bool IsValidVirtualBufferLength(uint length) const;
 
     protected:

@@ -66,14 +66,10 @@ struct DefaultComparer<size_t>
 
     inline static hash_t GetHashCode(size_t i)
     {
-#ifdef TARGET_64
         // For 64 bits we want all 64 bits of the pointer to be represented in the hash code.
         uint32_t hi = ((unsigned long) i >> 32);
         uint32_t lo = (uint32_t)i;
         hash_t hash = hi ^ lo;
-#else
-        hash_t hash = i;
-#endif
         return hash;
     }
 

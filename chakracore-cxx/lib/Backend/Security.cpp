@@ -283,13 +283,11 @@ Security::CalculateConstSize(IR::Opnd *opnd)
     }
     switch (opnd->GetKind())
     {
-#if TARGET_64
     case IR::OpndKindInt64Const:
     {
         IR::Int64ConstOpnd *intConstOpnd = opnd->AsInt64ConstOpnd();
         return GetByteCount(intConstOpnd->GetValue());
     }
-#endif
     case IR::OpndKindIntConst:
     {
         IR::IntConstOpnd *intConstOpnd = opnd->AsIntConstOpnd();
@@ -411,10 +409,8 @@ Security::EncodeOpnd(IR::Instr * instr, IR::Opnd *opnd)
 
     if (dst)
     {
-#if TARGET_64
         // Ensure the left and right operand has the same type (that might not be true for constants on x64)
         newOpnd = (IR::RegOpnd *)newOpnd->UseWithNewType(dst->GetType(), instr->m_func);
-#endif
         if (dst->IsRegOpnd())
         {
             IR::RegOpnd *dstRegOpnd = dst->AsRegOpnd();
@@ -459,13 +455,11 @@ Security::BuildCookieOpnd(IRType type, Func * func)
     case TyUint32:
         cookie = (uint32_t)Math::Rand();
         break;
-#if TARGET_64
     case TyVar:
     case TyInt64:
     case TyUint64:
         cookie = Math::Rand();
         break;
-#endif
     default:
         Assume(UNREACHED);
     }
@@ -526,18 +520,10 @@ Security::EncodeValue(IR::Instr * instr, IR::Opnd *opnd, IntConstType constValue
     }
     else
     {
-#if TARGET_64
         return this->EncodeAddress(instr, opnd, constValue, pNewOpnd);
-#else
-        Assert(false);
-        // (Prefast warning on failure to assign *pNewOpnd.)
-        *pNewOpnd = nullptr;
-        return 0;
-#endif
     }
 }
 
-#if TARGET_64
 size_t
 Security::EncodeAddress(IR::Instr * instr, IR::Opnd *opnd, size_t value,  _Out_ IR::RegOpnd **pNewOpnd)
 {
@@ -560,4 +546,3 @@ Security::EncodeAddress(IR::Instr * instr, IR::Opnd *opnd, size_t value,  _Out_ 
     *pNewOpnd = regOpnd;
     return value ^ cookieOpnd->GetValue();
 }
-#endif

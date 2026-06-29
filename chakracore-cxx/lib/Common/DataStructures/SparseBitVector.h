@@ -189,11 +189,7 @@ BVSparseNode<TAllocator>::BVSparseNode(BVIndex beginIndex, BVSparseNode<TAllocat
 {
     // Performance assert, BVSparseNode is heavily used in the backend, do perf
     // measurement before changing this.
-#if defined(TARGET_64)
     static_assert(sizeof(BVSparseNode) == 24);
-#else
-    static_assert(sizeof(BVSparseNode) == 16);
-#endif
 }
 
 template <class TAllocator>

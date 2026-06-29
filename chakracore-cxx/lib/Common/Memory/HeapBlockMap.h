@@ -21,11 +21,7 @@ public:
 
     static const uint PageMarkBitCount = PageSize / HeapConstants::ObjectGranularity;
     static const uint L2ChunkMarkBitCount = L2Count * PageMarkBitCount;
-
-#if defined(TARGET_64)
     static const size_t TotalSize = 0x100000000;        // 4GB
-#endif
-
     typedef BVStatic<PageMarkBitCount> PageMarkBitVector;
     typedef BVStatic<L2ChunkMarkBitCount> L2ChunkMarkBitVector;
 
@@ -34,11 +30,7 @@ public:
     // so set it to the MaxPageCount for PageSegments.
     static const uint MaxGetWriteWatchPages = PageSegment::MaxPageCount;
 
-#if defined(TARGET_64)
     HeapBlockMap32(char * startAddress);
-#else
-    HeapBlockMap32();
-#endif
     ~HeapBlockMap32();
 
     bool EnsureHeapBlock(void * address, uint pageCount);
@@ -196,12 +188,10 @@ private:
     L2MapChunk * map[L1Count];
     bool anyHeapBlockRescannedDuringOOM;
 
-#if defined(TARGET_64)
     // On 64 bit, this structure only maps one particular 32 bit space.
     // Store the startAddress of that 32 bit space so we know which it is.
     // This value should always be 4GB aligned.
     char * startAddress;
-#endif
 
 public:
 #if DBG
@@ -216,9 +206,6 @@ private:
     template <class Fn>
     void ForEachChunkInAddressRange(void * address, size_t pageCount, Fn fn);
 };
-
-
-#if defined(TARGET_64)
 
 class HeapBlockMap64
 {
@@ -313,8 +300,4 @@ public:
 };
 
 typedef HeapBlockMap64 HeapBlockMap;
-
-#else
-typedef HeapBlockMap32 HeapBlockMap;
-#endif
 }

@@ -2655,16 +2655,11 @@ StoreCommon:
 
     ByteCodeLabel ByteCodeWriter::DefineLabel()
     {
-#if defined(TARGET_64)
         if (m_labelOffsets->Count() == INT_MAX)
         {
             // Reach our limit
             Js::Throw::OutOfMemory();
         }
-#else
-        // 32-bit machine don't have enough address space to get to INT_MAX
-        Assert(m_labelOffsets->Count() < INT_MAX);
-#endif
 
         //
         // Allocate a new label:

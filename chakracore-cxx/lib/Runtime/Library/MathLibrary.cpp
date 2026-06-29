@@ -43,11 +43,7 @@ namespace Js
 
             if (TaggedInt::Is(arg))
             {
-#if defined(TARGET_64)
                 long result = ::_abs64(TaggedInt::ToInt32(arg));
-#else
-                int32_t result = ::abs(TaggedInt::ToInt32(arg));
-#endif
                 return JavascriptNumber::ToVar(result, scriptContext);
             }
 

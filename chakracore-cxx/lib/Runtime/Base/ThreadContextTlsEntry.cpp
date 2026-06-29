@@ -61,12 +61,10 @@ bool ThreadContextTLSEntry::TrySetThreadContext(ThreadContext * threadContext)
     if (entry == NULL)
     {
         Assert(!threadContext->IsThreadBound());
-#ifdef TARGET_64
         if (!Memory::RecyclerWriteBarrierManager::OnThreadInit())
         {
             return false;
         }
-#endif
         entry = CreateEntryForCurrentThread();
         ENTRY_FOR_CURRENT_THREAD() = entry;
     }

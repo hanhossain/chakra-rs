@@ -3555,13 +3555,7 @@ namespace Js
         defaultPropertyDescriptor.SetSetter(defaultAccessorFunction);
         defaultPropertyDescriptor.SetEnumerable(false);
         defaultPropertyDescriptor.SetConfigurable(false);
-
-#if !defined(TARGET_64)
-
-        VirtualTableRecorder<Js::JavascriptNumber>::RecordVirtualTableAddress(vtableAddresses, VTableValue::VtableJavascriptNumber);
-#else
         vtableAddresses[VTableValue::VtableJavascriptNumber] = 0;
-#endif
         VirtualTableRecorder<Js::DynamicObject>::RecordVirtualTableAddress(vtableAddresses, VTableValue::VtableDynamicObject);
         vtableAddresses[VTableValue::VtableInvalid] = Js::ScriptContextOptimizationOverrideInfo::InvalidVtable;
         VirtualTableRecorder<Js::PropertyString>::RecordVirtualTableAddress(vtableAddresses, VTableValue::VtablePropertyString);

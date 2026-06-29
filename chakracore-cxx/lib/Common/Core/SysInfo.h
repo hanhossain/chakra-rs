@@ -55,17 +55,7 @@ public:
 
     static size_t const MaxPageCount = SIZE_MAX / PageSize;
 
-#ifdef STACK_ALIGN
-    static uint32_t const StackAlign = STACK_ALIGN;
-#else
-# if defined(TARGET_64)
     static uint32_t const StackAlign = 16;
-# elif defined(_M_ARM)
-    static uint32_t const StackAlign = 8;
-# else
-    # error missing_target
-# endif
-#endif
 
 private:
     AutoSystemInfo() : majorVersion(0), minorVersion(0), buildDateHash(0), buildTimeHash(0), crtSize(0) { Initialize(); }

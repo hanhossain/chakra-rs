@@ -1245,11 +1245,7 @@ namespace JsUtil
     unsigned int WINAPI BackgroundJobProcessor::StaticThreadProc(void *lpParam)
     {
         Assert(lpParam);
-
-#ifdef TARGET_64
         Memory::RecyclerWriteBarrierManager::OnThreadInit();
-#endif
-
         ParallelThreadData * threadData = static_cast<ParallelThreadData *>(lpParam);
         BackgroundJobProcessor *const processor = threadData->processor;
 

@@ -191,7 +191,6 @@ JITOutput::RecordInlineeFrameOffsetsInfo(unsigned int offsetsArrayOffset, unsign
     m_outputData->inlineeFrameOffsetArrayCount = offsetsArrayCount;
 }
 
-#if TARGET_64
 void
 JITOutput::RecordUnwindInfo(uint8_t *unwindInfo, size_t size, uint8_t * xdataAddr, uint8_t* localXdataAddr)
 {
@@ -199,26 +198,6 @@ JITOutput::RecordUnwindInfo(uint8_t *unwindInfo, size_t size, uint8_t * xdataAdd
     memcpy(localXdataAddr, unwindInfo, size);
     m_outputData->xdataAddr = (intptr_t)xdataAddr;
 }
-
-#elif _M_ARM
-size_t
-JITOutput::RecordUnwindInfo(size_t offset, const uint8_t *unwindInfo, size_t size, uint8_t * xdataAddr)
-{
-    uint8_t *xdataFinal = xdataAddr + offset;
-
-    Assert(xdataFinal);
-    Assert(((size_t)xdataFinal & 0x3) == 0); // 4 byte aligned
-    memcpy(xdataFinal, unwindInfo, size);
-
-    return (size_t)xdataFinal;
-}
-
-void
-JITOutput::RecordXData(uint8_t * xdata)
-{
-    m_outputData->xdataOffset = NativeCodeData::GetDataTotalOffset(xdata);
-}
-#endif
 
 void
 JITOutput::FinalizeNativeCode()

@@ -433,8 +433,6 @@ HeapBlockMap32::MarkInterior(void * candidate, MarkContext * markContext)
     }
 }
 
-#if defined(TARGET_64)
-
 //
 // 64-bit Mark
 // See HeapBlockMap32::Mark for explanation of return values
@@ -495,5 +493,3 @@ HeapBlockMap64::MarkInterior(void * candidate, MarkContext * markContext)
 
     // No Node found; must be an invalid reference. Do nothing.
 }
-
-#endif // defined(TARGET_64)

@@ -33,9 +33,7 @@ namespace Js
         explicit CallInfo(ArgSlot count)
             : Flags(CallFlags_None)
             , Count(count)
-#ifdef TARGET_64
             , unused(0)
-#endif
         {
             // Keeping this version to avoid the assert
         }
@@ -44,9 +42,7 @@ namespace Js
         explicit CallInfo(uint count, bool unusedBool)
             : Flags(CallFlags_None)
             , Count(count)
-#ifdef TARGET_64
             , unused(0)
-#endif
         {
             AssertOrFailFastMsg(count < CallInfo::kMaxCountArgs, "Argument list too large");
         }
@@ -54,9 +50,7 @@ namespace Js
         CallInfo(CallFlags flags, uint count)
             : Flags(flags)
             , Count(count)
-#ifdef TARGET_64
             , unused(0)
-#endif
         {
             // Keeping this version to avoid the assert
         }
@@ -127,9 +121,7 @@ namespace Js
         //
         typename WriteBarrierFieldTypeTraits<unsigned>::Type  Count : 24;
         typename WriteBarrierFieldTypeTraits<CallFlags>::Type Flags : 8;
-#ifdef TARGET_64
         typename WriteBarrierFieldTypeTraits<unsigned>::Type unused : 32;
-#endif
 
 #if DBG
         bool operator==(CallInfo other) const

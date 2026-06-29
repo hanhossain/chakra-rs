@@ -37,21 +37,10 @@ template<>
 inline long WasmMath::Ctz(long value)
 {
     uint32_t index;
-#if TARGET_64
     if (_BitScanForward64(&index, value))
     {
         return index;
     }
-#else
-    if (_BitScanForward(&index, (int32_t)value))
-    {
-        return index;
-    }
-    if (_BitScanForward(&index, (int32_t)(value >> 32)))
-    {
-        return index + 32;
-    }
-#endif
     return 64;
 }
 
@@ -59,21 +48,10 @@ template<>
 inline long WasmMath::Clz(long value)
 {
     uint32_t index;
-#if TARGET_64
     if (_BitScanReverse64(&index, value))
     {
         return 63 - index;
     }
-#else
-    if (_BitScanReverse(&index, (int32_t)(value >> 32)))
-    {
-        return 31 - index;
-    }
-    if (_BitScanReverse(&index, (int32_t)value))
-    {
-        return 63 - index;
-    }
-#endif
     return 64;
 }
 

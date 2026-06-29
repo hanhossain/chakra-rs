@@ -110,18 +110,11 @@ namespace Js
     NUMBER_UTIL_INLINE bool NumberUtilities::IsNan(double value)
     {
         const unsigned long nCompare = ToSpecial(value);
-#if defined(TARGET_64)
-        // NaN is a range of values; all bits on the exponent are 1's 
+        // NaN is a range of values; all bits on the exponent are 1's
         // and some nonzero significant. No distinction on signed NaN's.
         const bool isNan = (0 == (~nCompare & 0x7FF0000000000000ull) &&
             0 != (nCompare & 0x000FFFFFFFFFFFFFull));
         return isNan;
-#else
-        const uint32_t hi = (uint32_t)(nCompare >> 32);
-        const uint32_t lo = (uint32_t)nCompare;
-        return 0 == (~hi & 0x7FF00000) &&
-            (0 != lo || 0 != (hi & 0x000FFFFF));
-#endif
     }
 
     NUMBER_UTIL_INLINE bool NumberUtilities::IsNegative(double value)

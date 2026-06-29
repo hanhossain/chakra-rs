@@ -140,12 +140,8 @@ protected:
 // Implements most of memory management operations over ArenaData.
 // The TFreeListPolicy handles free-listing for "small objects". There
 // is no support for free-listing for "large objects".
-#if defined(TARGET_64)
 // Some data structures such as jmp_buf expect to be 16 byte aligned on AMD64.
 template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg = 4, bool RequireObjectAlignment = false, size_t MaxObjectSize = 0>
-#else
-template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg = 3, bool RequireObjectAlignment = false, size_t MaxObjectSize = 0>
-#endif
 class ArenaAllocatorBase : public Allocator, public ArenaData
 {
 private:
@@ -591,15 +587,8 @@ public:
 
     static_assert(sizeof(CacheLayout) == sizeof(FreeObject));
     static_assert(offsetof(CacheLayout, strongRef) == offsetof(FreeObject, next));
-
-#if defined(TARGET_64)
     static_assert(sizeof(CacheLayout) == 32);
     static const size_t ObjectAlignmentBitShift = 5;
-#else
-    static_assert(sizeof(CacheLayout) == 16);
-    static const size_t ObjectAlignmentBitShift = 4;
-#endif
-
     static const size_t ObjectAlignment = 1 << ObjectAlignmentBitShift;
     static const size_t MaxObjectSize = MaxPolymorphicInlineCacheSize * sizeof(CacheLayout);
 };

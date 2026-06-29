@@ -67,11 +67,7 @@ typedef void* FunctionTableHandle;
 
 #endif
 
-#ifdef TARGET_64
 #define XDATA_RESERVE_PAGE_COUNT   (2)       // Number of pages per page segment (32 pages) reserved for xdata.
-#else
-#define XDATA_RESERVE_PAGE_COUNT   (0)       // ARM uses the heap, so it's not required.
-#endif
 
 //
 // Allocation done by the secondary allocator
@@ -85,20 +81,11 @@ struct SecondaryAllocation
     }
 };
 
-#if defined(TARGET_64)
 struct XDataInfo
 {
     RUNTIME_FUNCTION pdata;
     FunctionTableHandle functionTable;
 };
-#elif defined(_M_ARM)
-struct XDataInfo
-{
-    ushort pdataCount;
-    ushort xdataSize;
-    FunctionTableHandle functionTable;
-};
-#endif
 
 //
 // For every page segment a page allocator can create a secondary allocator which can have a specified
@@ -189,7 +176,6 @@ public:
 
     SecondaryAllocator* GetSecondaryAllocator() { return secondaryAllocator; }
 
-#if defined(TARGET_64)
     bool IsWriteBarrierAllowed()
     {
         return isWriteBarrierAllowed;
@@ -198,7 +184,6 @@ public:
     {
         return this->isWriteBarrierEnabled;
     }
-#endif
 
 protected:
     static const uint VirtualAllocThreshold = 1048576; // 1MB As per spec : when we cross this threshold of bytes, we should add guard pages

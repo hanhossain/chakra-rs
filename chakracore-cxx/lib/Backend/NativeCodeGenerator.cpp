@@ -937,14 +937,10 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
         Assert(jitWriteData.pinnedTypeRefs == nullptr);
     }
 
-
-#if defined(TARGET_64)
     XDataAllocation * xdataInfo = HeapNewZ(XDataAllocation);
     xdataInfo->address = (byte*)jitWriteData.xdataAddr;
     XDataAllocator::Register(xdataInfo, jitWriteData.codeAddress, jitWriteData.codeSize);
     epInfo->GetNativeEntryPointData()->SetXDataInfo(xdataInfo);
-#endif
-
 
 #if defined(_M_ARM)
     // for in-proc jit we do registration in encoder
