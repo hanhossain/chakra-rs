@@ -1785,9 +1785,7 @@ public:
     void InvalidateIsInstInlineCachesForFunction(Js::Var function);
     void InvalidateAllIsInstInlineCaches();
     bool AreAllIsInstInlineCachesInvalidated() const;
-#ifdef PERSISTENT_INLINE_CACHES
     void ClearInlineCachesWithDeadWeakRefs();
-#endif
     void ClearInvalidatedUniqueGuards();
     void ClearInlineCaches();
     void ClearIsInstInlineCaches();

@@ -63,9 +63,6 @@
 
 #define ENABLE_ES6_CHAR_CLASSIFIER                  // ES6 Unicode character classifier support
 
-// Type system features
-#define PERSISTENT_INLINE_CACHES                    // *** TODO: Won't build if disabled currently
-
 #if !DISABLE_JIT
 #define ENABLE_FIXED_FIELDS 1                       // Turn on fixed fields if JIT is enabled
 #endif
