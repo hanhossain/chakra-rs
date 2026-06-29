@@ -512,12 +512,8 @@ namespace Js
         static void DumpScriptContext(ScriptContext * scriptContext);
         static char16_t const * GetImplicitCallFlagsString(ImplicitCallFlags flags);
 #endif
-#ifdef RUNTIME_DATA_COLLECTION
         static void DumpScriptContextToFile(ScriptContext * scriptContext);
-#endif
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         static bool NeedProfileInfoList();
-#endif
 #if JS_PROFILE_DATA_INTERFACE
         friend class ProfileDataObject;
 #endif
@@ -629,7 +625,6 @@ namespace Js
         void RecordPolymorphicCallSiteInfo(FunctionBody* functionBody, ProfileId callSiteId, FunctionInfo* calleeFunctionInfo, const std::unique_lock<std::
                                            recursive_mutex>& lock);
 
-#ifdef RUNTIME_DATA_COLLECTION
         static std::recursive_mutex s_csOutput;
         template <typename T>
         static void WriteData(const T& data, FILE * file);
@@ -637,10 +632,7 @@ namespace Js
         static void WriteArray(uint count, T * arr, FILE * file);
         template <typename T>
         static void WriteArray(uint count, WriteBarrierPtr<T> arr, FILE * file);
-#endif
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         typename WriteBarrierFieldTypeTraits<FunctionBody *>::Type functionBody; // This will only be populated if NeedProfileInfoList is true
-#endif
 #ifdef DYNAMIC_PROFILE_STORAGE
         // Used by de-serialize
         DynamicProfileInfo();

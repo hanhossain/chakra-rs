@@ -1279,11 +1279,9 @@ int32_t (*pfSetNewPagesCapDuringBGSweepingFlag)(int flag);
 bool (*pfIsEnabledAllocPolicyLimitFlag)();
 int32_t (*pfGetAllocPolicyLimitFlag)(int *flag);
 int32_t (*pfSetAllocPolicyLimitFlag)(int flag);
-#ifdef RUNTIME_DATA_COLLECTION
 bool (*pfIsEnabledRuntimeDataOutputFileFlag)();
 int32_t (*pfGetRuntimeDataOutputFileFlag)(BSTR *flag);
 int32_t (*pfSetRuntimeDataOutputFileFlag)(BSTR flag);
-#endif
 bool (*pfIsEnabledSpeculationCapFlag)();
 int32_t (*pfGetSpeculationCapFlag)(int *flag);
 int32_t (*pfSetSpeculationCapFlag)(int flag);

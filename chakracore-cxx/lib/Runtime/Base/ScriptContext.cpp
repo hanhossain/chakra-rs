@@ -208,9 +208,7 @@ namespace Js
        // potentially causing memory leaks
        BEGIN_NO_EXCEPTION;
 
-#ifdef RUNTIME_DATA_COLLECTION
         createTime = time(nullptr);
-#endif
 
 #ifdef BGJIT_STATS
         interpretedCount = maxFuncInterpret = funcJITCount = bytecodeJITCount = interpretedCallsHighPri = jitCodeUsed = funcJitCodeUsed = loopJITCount = speculativeJitCount = 0;
@@ -265,9 +263,7 @@ namespace Js
         memset(byteCodeHistogram, 0, sizeof(byteCodeHistogram));
 #endif
 
-#if DBG || defined(RUNTIME_DATA_COLLECTION)
         this->allocId = threadContext->GetScriptContextCount();
-#endif
 #if DBG
         this->hadProfiled = false;
 #endif
@@ -1206,12 +1202,10 @@ namespace Js
     {
 
 #if ENABLE_PROFILE_INFO
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         if (DynamicProfileInfo::NeedProfileInfoList())
         {
             this->Cache()->profileInfoList = RecyclerNew(this->GetRecycler(), DynamicProfileInfoList);
         }
-#endif
 #endif
 
         ClearArray(this->Cache()->propertyStrings, 80);
@@ -1368,9 +1362,7 @@ namespace Js
 #if DBG_DUMP
                 DynamicProfileInfo::DumpScriptContext(this);
 #endif
-#ifdef RUNTIME_DATA_COLLECTION
                 DynamicProfileInfo::DumpScriptContextToFile(this);
-#endif
 #endif
 
 #if ENABLE_PROFILE_INFO
@@ -1394,9 +1386,7 @@ namespace Js
                 }
 #endif
 
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
                 this->ClearDynamicProfileList();
-#endif
 #endif
             }
 
@@ -3258,13 +3248,11 @@ namespace Js
         }
 
 #if ENABLE_PROFILE_INFO
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         // Reset the dynamic profile list
         if (this->Cache()->profileInfoList)
         {
             this->Cache()->profileInfoList->Reset();
         }
-#endif
 #endif
         return hr;
     }
@@ -4483,13 +4471,11 @@ ScriptContext::GetJitFuncRangeCache()
                 dynamicProfileInfo = newDynamicProfileInfo;
             }
             Assert(functionBody->GetInterpretedCount() == 0);
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
 
             if (this->Cache()->profileInfoList)
             {
                 this->Cache()->profileInfoList->Prepend(this->GetRecycler(), newDynamicProfileInfo);
             }
-#endif
             if (!startupComplete)
             {
                 Assert(profileManager);
