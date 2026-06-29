@@ -13,15 +13,6 @@ import "wtypes.idl";
 #include "sdkddkver.h"
 #endif
 
-#if defined(TARGET_32)
-#ifdef __midl
-#define CHAKRA_WB_PTR int
-#else
-#define CHAKRA_WB_PTR void*
-#endif
-#define CHAKRA_PTR int
-#define BV_SHIFT 5
-#elif defined(TARGET_64)
 #ifdef __midl
 #define CHAKRA_WB_PTR long
 #else
@@ -29,7 +20,6 @@ import "wtypes.idl";
 #endif
 #define CHAKRA_PTR long
 #define BV_SHIFT 6
-#endif
 
 #ifdef __midl
 #define IDL_DEF(def) def
@@ -47,11 +37,7 @@ import "wtypes.idl";
 #define X64_PAD4(num)
 #endif
 
-#if defined(TARGET_32)
-#define X86_PAD4(num) typename WriteBarrierFieldTypeTraits<int>::Type struct_pad_##num;
-#else
 #define X86_PAD4(num)
-#endif
 
 #ifndef __midl
 typedef unsigned char boolean;

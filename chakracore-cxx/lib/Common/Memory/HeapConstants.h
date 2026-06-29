@@ -7,22 +7,12 @@
 class HeapConstants
 {
 public:
-#if defined(TARGET_32)
-    static const uint MaxSmallObjectSize = 512;
-#else
     static const uint MaxSmallObjectSize = 768;
-#endif
 
 #if SMALLBLOCK_MEDIUM_ALLOC
     static const uint MaxMediumObjectSize = 8 * 1024; // Maximum medium object size is 8K
 #else
     static const uint MaxMediumObjectSize = 9216;
-#endif
-
-#if defined(TARGET_32)
-    // Only if a pointer points to first 8k region of a large object, it will set the mark bit in the chunk->MarkBits
-    // If the pointer points outside of that region, no mark bit will be set
-    static const uint MaxLargeObjectMarkOffset = 8 * 1024; 
 #endif
 
     static const uint ObjectAllocationShift = 4;        // 16

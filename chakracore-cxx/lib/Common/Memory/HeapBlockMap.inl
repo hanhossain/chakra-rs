@@ -250,13 +250,6 @@ HeapBlockMap32::MarkInteriorInternal(MarkContext * markContext, L2MapChunk *& ch
     if (largeBlockType)
     {
 
-#if defined(TARGET_32)
-        // we only check the first MaxLargeObjectMarkOffset byte for marking purpuse. 
-        if ( (size_t)originalCandidate - (size_t)realCandidate > HeapConstants::MaxLargeObjectMarkOffset )
-            return true;
-#endif    
-
-#if defined(TARGET_64)
         if (HeapBlockMap64::GetNodeIndex(originalCandidate) != HeapBlockMap64::GetNodeIndex(realCandidate))
         {
             // We crossed a node boundary (very rare) so we should just re-start from the real candidate.
@@ -266,7 +259,6 @@ HeapBlockMap32::MarkInteriorInternal(MarkContext * markContext, L2MapChunk *& ch
             // This mark code therefore has nothing to do (it has already happened).
             return true;
         }
-#endif
         // Update the chunk as the interior pointer may cross an L2 boundary (e.g., a large object)
         chunk = map[GetLevel1Id(realCandidate)];
     }

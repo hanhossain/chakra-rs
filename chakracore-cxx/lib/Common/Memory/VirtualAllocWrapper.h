@@ -46,11 +46,7 @@ private:
 class PreReservedVirtualAllocWrapper
 {
 public:
-#if TARGET_32
-    static const uint PreReservedAllocationSegmentCount = 256; // (256 * 64K) == 16 MB, if 64k is the AllocationGranularity
-#else // TARGET_64
     static const uint PreReservedAllocationSegmentCount = 4096; //(4096 * 64K) == 256MB, if 64k is the AllocationGranularity
-#endif
 
 public:
     PreReservedVirtualAllocWrapper();

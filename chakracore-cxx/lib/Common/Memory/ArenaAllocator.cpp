@@ -455,10 +455,8 @@ ReleaseHeapMemory()
 
 template char *ArenaAllocatorBase<InPlaceFreeListPolicy, 0, 0, 0>::AllocInternal(size_t requestedBytes);
 
-#if !(defined(__clang__) && defined(TARGET_32))
 // otherwise duplicate instantination of AllocInternal Error
 template char *ArenaAllocatorBase<InPlaceFreeListPolicy, 3, 0, 0>::AllocInternal(size_t requestedBytes);
-#endif
 
 template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>
 char *

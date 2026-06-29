@@ -114,14 +114,9 @@ namespace Js
         static const unsigned MinStackDefault = 1 * 0x0400 * WIN64_STACK_FACTOR;
         static const unsigned ExtraStack = 2 * 0x0400 * WIN64_STACK_FACTOR;
 
-#if TARGET_32
-        static const unsigned MaxThreadJITCodeHeapSize = 28 * 1024 * 1024;
-        static const unsigned MaxProcessJITCodeHeapSize = 55 * 1024 * 1024;
-#elif TARGET_64
         // larger address space means we can keep this higher on 64 bit architectures
         static const unsigned MaxThreadJITCodeHeapSize = 800 * 1024 * 1024;
         static const unsigned MaxProcessJITCodeHeapSize = 1024 * 1024 * 1024;
-#endif
 
         static const unsigned MinStackJitEHBailout = MinStackInterpreter + MinStackDefault;
 

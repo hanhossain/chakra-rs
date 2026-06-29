@@ -81,15 +81,8 @@ Lowerer::Lower()
             {
                 int offset = m_func->GetLocalVarSlotOffset(i);
 
-                IRType opnd1Type;
-
-#if defined(TARGET_32)
-                opnd1Type = TyInt32;
-                opnd2 = IR::IntConstOpnd::New(Func::c_debugFillPattern4, opnd1Type, m_func);
-#else
-                opnd1Type = TyInt64;
+                IRType opnd1Type = TyInt64;
                 opnd2 = IR::IntConstOpnd::New(Func::c_debugFillPattern8, opnd1Type, m_func);
-#endif
 
                 sym = StackSym::New(opnd1Type, m_func);
                 sym->m_offset = offset;
@@ -17632,27 +17625,6 @@ Lowerer::GenerateFastElemIIntIndexCommon(
         insertForSegmentLengthIncreased = (*pLabelSegmentLengthIncreased)->m_next;
     }
 
-#if TARGET_32
-    if (shouldPoisonLoad)
-    {
-        // Prevent index from being negative, which would break the poisoning
-        if (indexValueOpnd->IsIntConstOpnd())
-        {
-            indexValueOpnd = IR::IntConstOpnd::New(value & INT32_MAX, TyUint32, m_func);
-        }
-        else
-        {
-            IR::RegOpnd* newIndexValueOpnd = IR::RegOpnd::New(TyUint32, m_func);
-            InsertAnd(newIndexValueOpnd, indexValueOpnd, IR::IntConstOpnd::New(INT32_MAX, TyUint32, m_func), instr);
-            if(insertForSegmentLengthIncreased != nullptr)
-            {
-                InsertAnd(newIndexValueOpnd, indexValueOpnd, IR::IntConstOpnd::New(INT32_MAX, TyUint32, m_func), insertForSegmentLengthIncreased);
-            }
-            indexValueOpnd = newIndexValueOpnd;
-        }
-    }
-#endif
-
     if (baseValueType.IsLikelyTypedArray())
     {
         if(!headSegmentOpnd)
@@ -21364,11 +21336,7 @@ Lowerer::GenerateFastCharAt(Js::BuiltinFunction index, IR::Opnd *dst, IR::Opnd *
         InsertCompareBranch(strLength, IR::IntConstOpnd::New(indexValue, TyUint32, m_func), Js::OpCode::BrLe_A, true, labelHelper, insertInstr);
 
         // Mask off the sign so that poisoning will work for negative indices
-#if TARGET_32
-        uint32_t maskedIndex = CONFIG_FLAG_RELEASE(PoisonStringLoad) ? (indexValue & INT32_MAX) : indexValue;
-#else
         uint32_t maskedIndex = indexValue;
-#endif
         indirOpnd = IR::IndirOpnd::New(r1, maskedIndex * sizeof(char16_t), TyUint16, this->m_func);
         indexOpnd = IR::IntConstOpnd::New(maskedIndex, TyMachPtr, m_func);
     }
@@ -21384,14 +21352,6 @@ Lowerer::GenerateFastCharAt(Js::BuiltinFunction index, IR::Opnd *dst, IR::Opnd *
         // Use unsigned compare, this should handle negative indexes as well (they become > INT_MAX)
         // JBE $helper
         InsertCompareBranch(strLength, r2, Js::OpCode::BrLe_A, true, labelHelper, insertInstr);
-
-#if TARGET_32
-        if (CONFIG_FLAG_RELEASE(PoisonStringLoad))
-        {
-            // Mask off the sign so that poisoning will work for negative indices
-            InsertAnd(r2, r2, IR::IntConstOpnd::New(INT32_MAX, TyInt32, m_func), insertInstr);
-        }
-#endif
 
         if (r2->GetSize() != MachPtr)
         {

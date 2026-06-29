@@ -147,11 +147,7 @@ private:
     Js::RegSlot             GetRegSlotFromTypedReg(Js::RegSlot srcReg, WAsmJs::Types type);
     Js::RegSlot             GetRegSlotFromPtrReg(Js::RegSlot srcReg)
     {
-#if TARGET_32
-        return GetRegSlotFromIntReg(srcReg);
-#elif TARGET_64
         return GetRegSlotFromInt64Reg(srcReg);
-#endif
     }
 
     Js::RegSlot             GetRegSlotFromIntReg(Js::RegSlot srcIntReg) {return GetRegSlotFromTypedReg(srcIntReg, WAsmJs::INT32);}

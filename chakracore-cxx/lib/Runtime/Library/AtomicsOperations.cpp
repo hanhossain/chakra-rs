@@ -123,16 +123,6 @@ template<typename T> T AtomicsOperations::Load(T* buffer)
     return result;
 }
 
-#if TARGET_32
-template<> long AtomicsOperations::Load(long* buffer)
-{
-    static_assert(sizeof(size_t) == 4);
-    // Implement 64bits atomic load on 32bits platform with a CompareExchange
-    // It is slower, but at least it is garantied to be an atomic operation
-    return CompareExchange<long>(buffer, 0, 0);
-}
-#endif
-
 template<typename T> T AtomicsOperations::Store(T* buffer, T value)
 {
     typedef typename ConvertType<T>::_t convertType;
