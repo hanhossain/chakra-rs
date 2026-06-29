@@ -22,9 +22,7 @@ public:
         uint maxFreePageCount = 0,
         uint maxIdleFreePageCount = DefaultMaxFreePageCount,
         bool zeroPages = false,
-#if ENABLE_BACKGROUND_PAGE_FREEING
         BackgroundPageQueue * backgroundPageQueue = nullptr,
-#endif
         uint maxAllocPageCount = PageAllocator::DefaultMaxAllocPageCount,
         bool enableWriteBarrier = false);
 

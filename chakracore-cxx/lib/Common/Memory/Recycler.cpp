@@ -3901,7 +3901,6 @@ Recycler::FinishConcurrent()
 
         if (forceFinish || !IsConcurrentExecutingState())
         {
-#if ENABLE_BACKGROUND_PAGE_FREEING
             if (CONFIG_FLAG(EnableBGFreeZero))
             {
                 if (this->IsConcurrentSweepState())
@@ -3912,7 +3911,6 @@ Recycler::FinishConcurrent()
                     autoHeap.FlushBackgroundPages();
                 }
             }
-#endif
 #ifdef RECYCLER_TRACE
             collectionParam.finishOnly = true;
             collectionParam.flags = flags;
@@ -5111,14 +5109,12 @@ Recycler::FinishTransferSwept(CollectionFlags flags)
 #endif
     SetCollectionState(CollectionStateTransferSwept);
 
-#if ENABLE_BACKGROUND_PAGE_FREEING
     if (CONFIG_FLAG(EnableBGFreeZero))
     {
         // We should have zeroed all the pages in the background thread
         Assert(!autoHeap.HasZeroQueuedPages());
         autoHeap.FlushBackgroundPages();
     }
-#endif
 
     Assert(this->recyclerSweepManager != nullptr);
     Assert(!this->recyclerSweepManager->IsBackground());

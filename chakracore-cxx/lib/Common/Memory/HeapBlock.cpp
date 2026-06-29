@@ -406,7 +406,6 @@ SmallHeapBlockT<TBlockAttributes>::ReleasePages(Recycler * recycler)
     this->address = nullptr;
 }
 
-#if ENABLE_BACKGROUND_PAGE_FREEING
 template <class TBlockAttributes>
 void
 SmallHeapBlockT<TBlockAttributes>::BackgroundReleasePagesSweep(Recycler* recycler)
@@ -424,7 +423,6 @@ SmallHeapBlockT<TBlockAttributes>::BackgroundReleasePagesSweep(Recycler* recycle
     this->segment = nullptr;
     this->Reset();
 }
-#endif
 
 template <class TBlockAttributes>
 void

@@ -77,12 +77,7 @@
 
 #define RECYCLER_PAGE_HEAP                          // PageHeap support
 
-#define ENABLE_BACKGROUND_PAGE_FREEING 1
 #define ENABLE_RECYCLER_TYPE_TRACKING 1
-
-#if !ENABLE_BACKGROUND_PAGE_FREEING
-#error "Background page zeroing can't be turned on if freeing pages in the background is disabled"
-#endif
 
 #define ENABLE_WEAK_REFERENCE_REGIONS 1
 
