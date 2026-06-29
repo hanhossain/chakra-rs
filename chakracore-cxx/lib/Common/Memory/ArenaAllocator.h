@@ -568,8 +568,6 @@ public:
 #define MinPolymorphicInlineCacheSize 4
 #define MaxPolymorphicInlineCacheSize 32
 
-#ifdef PERSISTENT_INLINE_CACHES
-
 class InlineCacheAllocatorInfo
 {
 public:
@@ -727,59 +725,6 @@ public:
     void LogPolyCacheFree(size_t size) { this->polyCacheAllocSize -= size; }
 #endif
 };
-
-#else
-
-#define InlineCacheAllocatorTraits StandAloneFreeListPolicy, InlineCacheAllocatorInfo::ObjectAlignmentBitShift, true, InlineCacheAllocatorInfo::MaxObjectSize
-
-class InlineCacheAllocator : public ArenaAllocatorBase<InlineCacheAllocatorTraits>
-{
-public:
-    struct CacheLayout
-    {
-        intptr_t weakRefs[3];
-        intptr_t strongRef;
-    };
-
-#ifdef POLY_INLINE_CACHE_SIZE_STATS
-private:
-    size_t polyCacheAllocSize;
-#endif
-
-public:
-    InlineCacheAllocator(const char16_t* name, PageAllocator * pageAllocator, void(*outOfMemoryFunc)()) :
-        ArenaAllocatorBase<InlineCacheAllocatorTraits>(name, pageAllocator, outOfMemoryFunc) {}
-
-    char * Alloc(size_t requestedBytes)
-    {
-        return AllocInternal(requestedBytes);
-    }
-
-    char * AllocZero(size_t nbytes)
-    {
-        char * buffer = Alloc(nbytes);
-        memset(buffer, 0, nbytes);
-#if DBG
-        // Since we successfully allocated, we shouldn't have integer overflow here
-        memset(buffer + nbytes, 0, Math::Align(nbytes, ArenaAllocatorBase::ObjectAlignment) - nbytes);
-#endif
-        return buffer;
-    }
-
-#if DBG
-    void CheckIsAllZero();
-#endif
-    void ZeroAll();
-
-#ifdef POLY_INLINE_CACHE_SIZE_STATS
-    size_t GetPolyInlineCacheSize() { return this->polyCacheAllocSize; }
-    void LogPolyCacheAlloc(size_t size) { this->polyCacheAllocSize += size;  }
-    void LogPolyCacheFree(size_t size) { this->polyCacheAllocSize -= size; }
-#endif
-};
-
-#endif
-
 
 #define CacheAllocatorTraits StandAloneFreeListPolicy
 

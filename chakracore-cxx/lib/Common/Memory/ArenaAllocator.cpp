@@ -995,8 +995,6 @@ bool StandAloneFreeListPolicy::TryEnsureFreeListEntry(StandAloneFreeListPolicy *
     return true;
 }
 
-#ifdef PERSISTENT_INLINE_CACHES
-
 void * InlineCacheFreeListPolicy::New(ArenaAllocatorBase<InlineCacheAllocatorTraits> * allocator)
 {
     return NewInternal();
@@ -1441,61 +1439,6 @@ void InlineCacheAllocator::ClearCachesWithDeadWeakRefs(Recycler* recycler)
         memoryBlock = next;
     }
 }
-
-#else
-
-#if DBG
-void InlineCacheAllocator::CheckIsAllZero()
-{
-    UpdateCacheBlock();
-    BigBlock *blockp = this->bigBlocks;
-    while (blockp != NULL)
-    {
-        Assert(IsAll((byte*)blockp->GetBytes(), blockp->currentByte, 0));
-        blockp = blockp->nextBigBlock;
-    }
-    blockp = this->fullBlocks;
-    while (blockp != NULL)
-    {
-        Assert(IsAll((byte*)blockp->GetBytes(), blockp->currentByte, 0));
-        blockp = blockp->nextBigBlock;
-    }
-
-    ArenaMemoryBlock * memoryBlock = this->mallocBlocks;
-    while (memoryBlock != nullptr)
-    {
-        Assert(IsAll((byte*)memoryBlock->GetBytes(), memoryBlock->nbytes, 0'));
-        memoryBlock = memoryBlock->next;
-    }
-}
-#endif
-
-void InlineCacheAllocator::ZeroAll()
-{
-    UpdateCacheBlock();
-    BigBlock *blockp = this->bigBlocks;
-    while (blockp != NULL)
-    {
-        memset(blockp->GetBytes(), 0, blockp->currentByte);
-        blockp = blockp->nextBigBlock;
-    }
-    blockp = this->fullBlocks;
-    while (blockp != NULL)
-    {
-        memset(blockp->GetBytes(), 0, blockp->currentByte);
-        blockp = blockp->nextBigBlock;
-    }
-
-    ArenaMemoryBlock * memoryBlock = this->mallocBlocks;
-    while (memoryBlock != nullptr)
-    {
-        ArenaMemoryBlock * next = memoryBlock->next;
-        memset(memoryBlock->GetBytes(), 0, memoryBlock->nbytes);
-        memoryBlock = next;
-    }
-}
-
-#endif
 
 #if DBG
 void CacheAllocator::CheckIsAllZero(bool lockdown)

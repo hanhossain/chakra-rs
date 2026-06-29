@@ -4036,7 +4036,6 @@ void ScriptContext::ClearEnumeratorCaches()
     DebugOnly(enumeratorCacheAllocator.CheckIsAllZero(false));
 }
 
-#ifdef PERSISTENT_INLINE_CACHES
 void ScriptContext::ClearInlineCachesWithDeadWeakRefs()
 {
     if (this->hasUsedInlineCache)
@@ -4045,7 +4044,6 @@ void ScriptContext::ClearInlineCachesWithDeadWeakRefs()
         Assert(this->inlineCacheAllocator.HasNoDeadWeakRefs(this->recycler));
     }
 }
-#endif
 
 #if ENABLE_NATIVE_CODEGEN
 void ScriptContext::RegisterConstructorCache(Js::PropertyId propertyId, Js::ConstructorCache* cache)

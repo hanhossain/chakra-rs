@@ -1435,9 +1435,7 @@ private:
         void ClearInlineCaches();
         void ClearIsInstInlineCaches();
         void ClearEnumeratorCaches();
-#ifdef PERSISTENT_INLINE_CACHES
         void ClearInlineCachesWithDeadWeakRefs();
-#endif
         void ClearScriptContextCaches();
 #if ENABLE_NATIVE_CODEGEN
         void RegisterConstructorCache(Js::PropertyId propertyId, Js::ConstructorCache* cache);

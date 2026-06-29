@@ -2340,11 +2340,7 @@ ThreadContext::PreSweepCallback()
 {
     CollectionCallBack(Collect_Begin_Sweep);
 
-#ifdef PERSISTENT_INLINE_CACHES
     ClearInlineCachesWithDeadWeakRefs();
-#else
-    ClearInlineCaches();
-#endif
 
     ClearIsInstInlineCaches();
 
@@ -2818,7 +2814,6 @@ ThreadContext::ClearScriptContextCaches()
     }
 }
 
-#ifdef PERSISTENT_INLINE_CACHES
 void
 ThreadContext::ClearInlineCachesWithDeadWeakRefs()
 {
@@ -2922,7 +2917,6 @@ ThreadContext::ClearInlineCaches()
     registeredInlineCacheCount = 0;
     unregisteredInlineCacheCount = 0;
 }
-#endif //PERSISTENT_INLINE_CACHES
 
 void
 ThreadContext::ClearIsInstInlineCaches()
