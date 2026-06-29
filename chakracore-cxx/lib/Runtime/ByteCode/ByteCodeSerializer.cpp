@@ -287,7 +287,6 @@ bool TryConvertToUInt32(size_t size, uint32_t * out)
     return false;
 }
 
-#if VARIABLE_INT_ENCODING
 template <typename T>
 static const byte * ReadVariableInt(const byte * buffer, size_t remainingBytes, T * value)
 {
@@ -326,7 +325,6 @@ static const byte * ReadVariableInt(const byte * buffer, size_t remainingBytes, 
         return buffer + sizeof(byte);
     }
 }
-#endif
 
 // Compile-time-check some invariants that the file format depends on
 static_assert(sizeof(PropertyId)==sizeof(int32_t));
@@ -2744,13 +2742,7 @@ public:
 
     static const byte * ReadInt16(const byte * buffer, size_t remainingBytes, int16 * value)
     {
-#if VARIABLE_INT_ENCODING
         return ReadVariableInt<int16>(buffer, remainingBytes, value);
-#else
-        Assert(remainingBytes>=sizeof(int16));
-        *value = *(int16 *) buffer;
-        return buffer + sizeof(int16);
-#endif
     }
 
     const byte * ReadInt16(const byte * buffer, int16 * value)
@@ -2792,12 +2784,7 @@ public:
 
     static const byte * ReadInt32(const byte * buffer, size_t remainingBytes, int * value)
     {
-#if VARIABLE_INT_ENCODING
         return ReadVariableInt<int>(buffer, remainingBytes, value);
-#else
-        Assert(remainingBytes >= sizeof(int));
-        return ReadConstantSizedInt32(buffer, remainingBytes, value);
-#endif
     }
 
     const byte * ReadInt32(const byte * buffer, int * value)
@@ -2808,13 +2795,7 @@ public:
 
     const byte * ReadCharCount(const byte * buffer, size_t remainingBytes, charcount_t * value)
     {
-#if VARIABLE_INT_ENCODING
         return ReadVariableInt<charcount_t>(buffer, remainingBytes, value);
-#else
-        Assert(remainingBytes >= sizeof(charcount_t));
-        *value = *(charcount_t *) buffer;
-        return buffer + sizeof(charcount_t);
-#endif
     }
 
     const byte * ReadCharCount(const byte * buffer, charcount_t * value)

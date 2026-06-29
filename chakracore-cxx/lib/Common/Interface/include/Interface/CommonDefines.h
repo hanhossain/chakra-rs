@@ -57,7 +57,6 @@
 // Even if it builds, it may not work properly. Disable at your own risk
 
 // ByteCode
-#define VARIABLE_INT_ENCODING 1                     // Byte code serialization variable size int field encoding
 #define BYTECODE_BRANCH_ISLAND                      // Byte code short branch and branch island
 #if defined(HAS_REAL_ICU)
 #define ENABLE_UNICODE_API 1                        // Enable use of Unicode-related APIs

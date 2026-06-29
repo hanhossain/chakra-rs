@@ -40,7 +40,6 @@ namespace Js
 #endif
     };
 
-#if VARIABLE_INT_ENCODING
 #define VARIABLE_INT_TAGBIT_COUNT (1)
 #define VARIABLE_INT_BYTE_SHIFT (8 - VARIABLE_INT_TAGBIT_COUNT)
 #define VARIABLE_INT_BYTE_MAX (1 << VARIABLE_INT_BYTE_SHIFT)
@@ -54,7 +53,6 @@ namespace Js
 #define FOUR_BYTE_SENTINEL  ONE_BYTE_MAX + 2
 
 #define MIN_SENTINEL TWO_BYTE_SENTINEL
-#endif
 
 #if INSTRUMENT_BUFFER_INTS
     static uint Counts[] = { 0, 0, 0, 0 };
@@ -213,21 +211,12 @@ namespace Js
         { }
     };
 
-#if VARIABLE_INT_ENCODING
     typedef BufferBuilderOf<int16, true> BufferBuilderInt16;
     typedef BufferBuilderOf<int, true> BufferBuilderInt32;
     typedef ConstantSizedBufferBuilderOf<byte> BufferBuilderByte;
     typedef ConstantSizedBufferBuilderOf<float> BufferBuilderFloat;
     typedef ConstantSizedBufferBuilderOf<double> BufferBuilderDouble;
     typedef ConstantSizedBufferBuilderOf<SIMDValue> BufferBuilderSIMD;
-#else
-    typedef ConstantSizedBufferBuilderOf<int16> BufferBuilderInt16;
-    typedef ConstantSizedBufferBuilderOf<int> BufferBuilderInt32;
-    typedef ConstantSizedBufferBuilderOf<byte> BufferBuilderByte;
-    typedef ConstantSizedBufferBuilderOf<float> BufferBuilderFloat;
-    typedef ConstantSizedBufferBuilderOf<double> BufferBuilderDouble;
-    typedef ConstantSizedBufferBuilderOf<SIMDValue> BufferBuilderSIMD;
-#endif
 
     // A buffer builder which contains a list of buffer builders
     struct BufferBuilderList : BufferBuilder
