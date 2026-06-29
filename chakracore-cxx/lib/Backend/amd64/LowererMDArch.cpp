@@ -1706,12 +1706,10 @@ LowererMDArch::LowerEntryInstr(IR::EntryInstr * entryInstr)
             this->m_func->IsJitInDebugMode() ||
             // disabling apply inlining leads to explicit load from the zero-inited slot
             this->m_func->GetJITFunctionBody()->IsInlineApplyDisabled()))
-#ifdef BAILOUT_INJECTION
         || Js::Configuration::Global.flags.IsEnabled(Js::BailOutFlag)
         || Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryLineFlag)
         || Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryByteCodeFlag)
         || Js::Configuration::Global.flags.IsEnabled(Js::BailOutByteCodeFlag)
-#endif
         )
     {
         // TODO: Support mov [rbp - n], IMM64

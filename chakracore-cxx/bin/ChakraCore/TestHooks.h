@@ -162,7 +162,6 @@ int32_t (*pfSetDumpOnCrashFlag)(BSTR flag);
 bool (*pfIsEnabledFullMemoryDumpFlag)();
 int32_t (*pfGetFullMemoryDumpFlag)(BSTR *flag);
 int32_t (*pfSetFullMemoryDumpFlag)(BSTR flag);
-#ifdef BAILOUT_INJECTION
 bool (*pfIsEnabledBailOutAtEveryLineFlag)();
 int32_t (*pfGetBailOutAtEveryLineFlag)(bool *flag);
 int32_t (*pfSetBailOutAtEveryLineFlag)(bool flag);
@@ -172,7 +171,6 @@ int32_t (*pfSetBailOutAtEveryByteCodeFlag)(bool flag);
 bool (*pfIsEnabledBailOutAtEveryImplicitCallFlag)();
 int32_t (*pfGetBailOutAtEveryImplicitCallFlag)(bool *flag);
 int32_t (*pfSetBailOutAtEveryImplicitCallFlag)(bool flag);
-#endif
 bool (*pfIsEnabledBenchmarkFlag)();
 int32_t (*pfGetBenchmarkFlag)(bool *flag);
 int32_t (*pfSetBenchmarkFlag)(bool flag);

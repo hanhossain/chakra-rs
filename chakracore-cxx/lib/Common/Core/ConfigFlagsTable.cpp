@@ -737,13 +737,11 @@ namespace Js
         u"BaselineMode",
         u"DumpOnCrash",
         u"FullMemoryDump",
-#ifdef BAILOUT_INJECTION
         u"BailOut",
         u"BailOutAtEveryLine",
         u"BailOutAtEveryByteCode",
         u"BailOutAtEveryImplicitCall",
         u"BailOutByteCode",
-#endif
         u"Benchmark",
         u"BgJit",
         u"BgParse",
@@ -1836,13 +1834,11 @@ namespace Js
         u"Dump only stable content that can be used for baseline comparison",
         u"generate heap dump on asserts or unhandled exception if set",
         u"Will perform a full memory dump when -DumpOnCrash is supplied.",
-#ifdef BAILOUT_INJECTION
         u"Source location to insert BailOut",
         u"Inserts BailOut at every line of source (default: false)",
         u"Inserts BailOut at every Byte code (default: false)",
         u"Force generating implicit call bailout even when we don't need it",
         u"Byte code location to insert BailOut. Use with -prejit only",
-#endif
         u"Disable security code which introduce variability in benchmarks",
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
         u"Background Parse. Disable to force all parsing to occur on UI thread. (default: true)",
@@ -2535,13 +2531,11 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#ifdef BAILOUT_INJECTION
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#endif
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3250,13 +3244,11 @@ namespace Js
         BaselineMode(false),
         DumpOnCrash(nullptr),
         FullMemoryDump(nullptr),
-#ifdef BAILOUT_INJECTION
         BailOut(),
         BailOutAtEveryLine(false),
         BailOutAtEveryByteCode(false),
         BailOutAtEveryImplicitCall(false),
         BailOutByteCode(),
-#endif
         Benchmark(false),
         BgJit(true),
         BgParse(DEFAULT_CONFIG_BgParse),
@@ -4651,7 +4643,6 @@ namespace Js
             return FlagString;
         case FullMemoryDumpFlag:
             return FlagString;
-        #ifdef BAILOUT_INJECTION
         case BailOutFlag:
             return FlagNumberPairSet;
         case BailOutAtEveryLineFlag:
@@ -4662,7 +4653,6 @@ namespace Js
             return FlagBoolean;
         case BailOutByteCodeFlag:
             return FlagNumberSet;
-        #endif
         case BenchmarkFlag:
             return FlagBoolean;
         case BgJitFlag:
@@ -5826,7 +5816,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<String*>(&DumpOnCrash));
         case FullMemoryDumpFlag:
             return reinterpret_cast<void*>(const_cast<String*>(&FullMemoryDump));
-        #ifdef BAILOUT_INJECTION
         case BailOutFlag:
             return reinterpret_cast<void*>(const_cast<NumberPairSet*>(&BailOut));
         case BailOutAtEveryLineFlag:
@@ -5837,7 +5826,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BailOutAtEveryImplicitCall));
         case BailOutByteCodeFlag:
             return reinterpret_cast<void*>(const_cast<NumberSet*>(&BailOutByteCode));
-        #endif
         case BenchmarkFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&Benchmark));
         case BgJitFlag:
@@ -7883,7 +7871,6 @@ if (IsEnabled(FullMemoryDumpFlag))
     };
     Output::Print(u"\n");
 }
-#ifdef BAILOUT_INJECTION
 if (IsEnabled(BailOutFlag))
 {
     Output::Print(u"-%s", u"BailOut");
@@ -8009,7 +7996,6 @@ if (IsEnabled(BailOutByteCodeFlag))
     };
     Output::Print(u"\n");
 }
-#endif
 if (IsEnabled(BenchmarkFlag))
 {
     Output::Print(u"-%s", u"Benchmark");
@@ -19064,7 +19050,6 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case BaselineModeFlag:
             retValue = (Boolean) false;
             break;
-        #ifdef BAILOUT_INJECTION
         case BailOutAtEveryLineFlag:
             retValue = (Boolean) false;
             break;
@@ -19074,7 +19059,6 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case BailOutAtEveryImplicitCallFlag:
             retValue = (Boolean) false;
             break;
-        #endif
         case BenchmarkFlag:
             retValue = (Boolean) false;
             break;
