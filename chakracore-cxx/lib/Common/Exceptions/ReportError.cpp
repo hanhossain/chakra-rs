@@ -84,14 +84,12 @@ void Version_Inconsistency_fatal_error()
     ReportFatalException(NULL, E_UNEXPECTED, Fatal_Version_Inconsistency, scenario);
 }
 
-#ifdef LARGEHEAPBLOCK_ENCODING
 void LargeHeapBlock_Metadata_Corrupted(
     size_t context, unsigned char calculatedChecksum)
 {
     int scenario = calculatedChecksum; /* For debugging purpose if checksum mismatch happen*/
     ReportFatalException(context, E_UNEXPECTED, LargeHeapBlock_Metadata_Corrupt, scenario);
 };
-#endif
 
 // If you see this error, it is because of a DOM bug. Assign to daniec or jdweiner.
 void FromDOM_NoScriptScope_unrecoverable_error()

@@ -66,10 +66,8 @@ void Version_Inconsistency_fatal_error();
 void EntryExitRecord_Corrupted_unrecoverable_error();
 void UnexpectedExceptionHandling_fatal_error();
 
-#ifdef LARGEHEAPBLOCK_ENCODING
 void LargeHeapBlock_Metadata_Corrupted(
     size_t context, unsigned char calculatedCheckSum);
-#endif
 
 void FromDOM_NoScriptScope_unrecoverable_error();
 void Debugger_AttachDetach_unrecoverable_error(int32_t hr);

@@ -1994,17 +1994,12 @@ class RecyclerHeapObjectInfo
     Recycler * m_recycler;
     HeapBlock* m_heapBlock;
 
-#if LARGEHEAPBLOCK_ENCODING
     union
     {
         byte * m_attributes;
         LargeObjectHeader * m_largeHeapBlockHeader;
     };
     bool isUsingLargeHeapBlock = false;
-#else
-    byte * m_attributes;
-#endif
-
 
 public:
     RecyclerHeapObjectInfo() : m_address(NULL), m_recycler(NULL), m_heapBlock(NULL), m_attributes(NULL) {}
@@ -2027,56 +2022,46 @@ public:
 
     bool IsLeaf() const
     {
-#if LARGEHEAPBLOCK_ENCODING
         if (isUsingLargeHeapBlock)
         {
             return (m_largeHeapBlockHeader->GetAttributes(m_recycler->Cookie) & LeafBit) != 0;
         }
-#endif
         return ((*m_attributes & LeafBit) != 0 || this->m_heapBlock->IsLeafBlock());
     }
 
     bool IsImplicitRoot() const
     {
-#if LARGEHEAPBLOCK_ENCODING
         if (isUsingLargeHeapBlock)
         {
             return (m_largeHeapBlockHeader->GetAttributes(m_recycler->Cookie) & ImplicitRootBit) != 0;
         }
-#endif
         return (*m_attributes & ImplicitRootBit) != 0;
     }
     bool IsObjectMarked() const { Assert(m_recycler); return m_recycler->heapBlockMap.IsMarked(m_address); }
     void SetObjectMarked()  { Assert(m_recycler); m_recycler->heapBlockMap.SetMark(m_address); }
     ObjectInfoBits GetAttributes() const
     {
-#if LARGEHEAPBLOCK_ENCODING
         if (isUsingLargeHeapBlock)
         {
             return (ObjectInfoBits)m_largeHeapBlockHeader->GetAttributes(m_recycler->Cookie);
         }
-#endif
         return (ObjectInfoBits)*m_attributes;
     }
     size_t GetSize() const;
 
-#if LARGEHEAPBLOCK_ENCODING
     void SetLargeHeapBlockHeader(LargeObjectHeader * largeHeapBlockHeader)
     {
         m_largeHeapBlockHeader = largeHeapBlockHeader;
         isUsingLargeHeapBlock = true;
     }
-#endif
 
     bool SetMemoryProfilerHasEnumerated()
     {
         Assert(m_heapBlock);
-#if LARGEHEAPBLOCK_ENCODING
         if (isUsingLargeHeapBlock)
         {
             return SetMemoryProfilerHasEnumeratedForLargeHeapBlock();
         }
-#endif
         bool wasMemoryProfilerOldObject = (*m_attributes & MemoryProfilerOldObjectBit) != 0;
         *m_attributes |= MemoryProfilerOldObjectBit;
         return wasMemoryProfilerOldObject;
@@ -2106,12 +2091,10 @@ public:
         }
 #endif
 
-#if LARGEHEAPBLOCK_ENCODING
         if (isUsingLargeHeapBlock)
         {
             return ClearImplicitRootBitsForLargeHeapBlock();
         }
-#endif
         Assert(m_attributes);
         bool wasImplicitRoot = (*m_attributes & ImplicitRootBit) != 0;
         *m_attributes &= ~ImplicitRootBit;
@@ -2132,7 +2115,6 @@ public:
         }
     }
 
-#if LARGEHEAPBLOCK_ENCODING
     bool ClearImplicitRootBitsForLargeHeapBlock()
     {
         Assert(m_largeHeapBlockHeader);
@@ -2151,7 +2133,6 @@ public:
         return wasMemoryProfilerOldObject;
     }
 
-#endif
 };
 // A fake heap block to replace the original heap block where the strong ref is when it has been collected
 // as the original heap block may have been freed
