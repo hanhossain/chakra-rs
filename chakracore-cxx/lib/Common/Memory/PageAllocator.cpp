@@ -1793,7 +1793,6 @@ template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SuspendIdleDecommit()
 {
-#ifdef IDLE_DECOMMIT_ENABLED
     if (this->idleDecommitEnterCount != 0)
     {
         return;
@@ -1801,14 +1800,12 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SuspendIdleDecommit()
     Assert(this->IsIdleDecommitPageAllocator());
     ((IdleDecommitPageAllocator *)this)->cs.lock();
     PAGE_ALLOC_VERBOSE_TRACE_0(u"SuspendIdleDecommit");
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ResumeIdleDecommit()
 {
-#ifdef IDLE_DECOMMIT_ENABLED
     if (this->idleDecommitEnterCount != 0)
     {
         return;
@@ -1816,7 +1813,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ResumeIdleDecommit()
     Assert(this->IsIdleDecommitPageAllocator());
     PAGE_ALLOC_VERBOSE_TRACE(u"ResumeIdleDecommit");
     ((IdleDecommitPageAllocator *)this)->cs.unlock();
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>

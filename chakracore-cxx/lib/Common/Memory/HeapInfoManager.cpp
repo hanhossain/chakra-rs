@@ -425,7 +425,6 @@ HeapInfoManager::LeaveIdleDecommit(bool allowTimer)
     return idleDecommitSignal;
 }
 
-#ifdef IDLE_DECOMMIT_ENABLED
 uint32_t
 HeapInfoManager::IdleDecommit()
 {
@@ -437,8 +436,6 @@ HeapInfoManager::IdleDecommit()
     });
     return waitTime;
 }
-
-#endif
 
 #if DBG
 void
