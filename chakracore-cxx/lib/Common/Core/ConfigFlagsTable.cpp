@@ -373,7 +373,6 @@ namespace Js
 #define DEFAULT_CONFIG_MaxJitThreadCount        (2)
 #define DEFAULT_CONFIG_ForceMaxJitThreadCount   (false)
 
-#ifdef ENABLE_SPECTRE_RUNTIME_MITIGATIONS
 #define DEFAULT_CONFIG_MitigateSpectre (true)
 
 #define DEFAULT_CONFIG_AddMaskingBlocks (true)
@@ -391,25 +390,6 @@ namespace Js
 #define DEFAULT_CONFIG_PoisonTypedArrayStore (true)
 #define DEFAULT_CONFIG_PoisonStringStore (true)
 #define DEFAULT_CONFIG_PoisonObjectsForStores (true)
-#else
-#define DEFAULT_CONFIG_MitigateSpectre (false)
-
-#define DEFAULT_CONFIG_AddMaskingBlocks (false)
-
-#define DEFAULT_CONFIG_PoisonVarArrayLoad (false)
-#define DEFAULT_CONFIG_PoisonIntArrayLoad (false)
-#define DEFAULT_CONFIG_PoisonFloatArrayLoad (false)
-#define DEFAULT_CONFIG_PoisonTypedArrayLoad (false)
-#define DEFAULT_CONFIG_PoisonStringLoad (false)
-#define DEFAULT_CONFIG_PoisonObjectsForLoads (false)
-
-#define DEFAULT_CONFIG_PoisonVarArrayStore (false)
-#define DEFAULT_CONFIG_PoisonIntArrayStore (false)
-#define DEFAULT_CONFIG_PoisonFloatArrayStore (false)
-#define DEFAULT_CONFIG_PoisonTypedArrayStore (false)
-#define DEFAULT_CONFIG_PoisonStringStore (false)
-#define DEFAULT_CONFIG_PoisonObjectsForStores (false)
-#endif
 
 #define DEFAULT_CONFIG_PageHeap             ((Js::Number) PageHeapMode::PageHeapModeOff)
 #define DEFAULT_CONFIG_PageHeapAllocStack   (false)

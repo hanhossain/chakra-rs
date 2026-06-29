@@ -3746,9 +3746,7 @@ using namespace Js;
 
     Var JavascriptOperators::OP_GetElementI(Var instance, Var index, ScriptContext* scriptContext)
     {
-#ifdef ENABLE_SPECTRE_RUNTIME_MITIGATIONS
         instance = BreakSpeculation(instance);
-#endif
         if (TaggedInt::Is(index))
         {
             return GetElementIIntIndex(instance, index, scriptContext);

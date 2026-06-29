@@ -744,9 +744,7 @@ case_2:
         // 8. Return the String value consisting of only the code unit at position k in S.
         if (pThis->GetItemAt((charcount_t)k, &value))
         {
-#ifdef ENABLE_SPECTRE_RUNTIME_MITIGATIONS
             value = BreakSpeculation(value);
-#endif
             return value;
         }
         else
@@ -793,9 +791,7 @@ case_2:
         Var value;
         if (pThis->GetItemAt(idxPosition, &value))
         {
-#ifdef ENABLE_SPECTRE_RUNTIME_MITIGATIONS
             value = BreakSpeculation(value);
-#endif
             return value;
         }
         else
@@ -845,9 +841,7 @@ case_2:
         }
 
         Var charCode = TaggedInt::ToVarUnchecked(pThis->GetItem(idxPosition));
-#ifdef ENABLE_SPECTRE_RUNTIME_MITIGATIONS
         charCode = BreakSpeculation(charCode);
-#endif
         return charCode;
     }
 
@@ -1882,9 +1876,7 @@ case_2:
             idxEnd = idxStart;
         }
 
-#ifdef ENABLE_SPECTRE_RUNTIME_MITIGATIONS
         pThis = (JavascriptString*)BreakSpeculation(pThis);
-#endif
 
         return SubstringCore(pThis, idxStart, idxEnd - idxStart, scriptContext);
     }
@@ -2005,9 +1997,7 @@ case_2:
             return pThis;
         }
 
-#ifdef ENABLE_SPECTRE_RUNTIME_MITIGATIONS
         pThis = (JavascriptString*)BreakSpeculation(pThis);
-#endif
 
         return SubstringCore(pThis, idxStart, idxEnd - idxStart, scriptContext);
     }
@@ -2065,9 +2055,7 @@ case_2:
             return pThis;
         }
 
-#ifdef ENABLE_SPECTRE_RUNTIME_MITIGATIONS
         pThis = (JavascriptString*)BreakSpeculation(pThis);
-#endif
 
         Assert(0 <= idxStart && idxStart <= idxEnd && idxEnd <= len);
         return SubstringCore(pThis, idxStart, idxEnd - idxStart, scriptContext);
