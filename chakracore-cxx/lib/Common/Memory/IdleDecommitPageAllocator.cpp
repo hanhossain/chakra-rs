@@ -11,11 +11,9 @@ IdleDecommitPageAllocator::IdleDecommitPageAllocator(AllocationPolicyManager * p
     bool zeroPages,
     BackgroundPageQueue *  backgroundPageQueue,
     uint maxAllocPageCount, bool enableWriteBarrier) :
-#ifdef IDLE_DECOMMIT_ENABLED
     idleDecommitTryEnterWaitFactor(0),
     hasDecommitTimer(false),
     hadDecommitTimer(false),
-#endif
     PageAllocator(policyManager, flagTable, type, maxFreePageCount, zeroPages,
     backgroundPageQueue,
     maxAllocPageCount, 0, false, false, GetCurrentProcess(), enableWriteBarrier),
@@ -24,10 +22,8 @@ IdleDecommitPageAllocator::IdleDecommitPageAllocator(AllocationPolicyManager * p
 {
     // if maxIdle is the same as max free, disable idleDecommit but setting the entry count to 1
     this->idleDecommitEnterCount = (maxIdleFreePageCount == maxFreePageCount);
-#ifdef IDLE_DECOMMIT_ENABLED
 #if DBG_DUMP
     idleDecommitCount = 0;
-#endif
 #endif
 }
 
@@ -40,7 +36,6 @@ IdleDecommitPageAllocator::EnterIdleDecommit()
     {
         return;
     }
-#ifdef IDLE_DECOMMIT_ENABLED
     if (!cs.try_lock())
     {
         AutoResetWaitingToEnterIdleDecommitFlag autoResetWaitingToEnterIdleDecommitFlag(this);
@@ -70,10 +65,6 @@ IdleDecommitPageAllocator::EnterIdleDecommit()
     cs.unlock();
 
     Assert(!hasDecommitTimer);
-#else
-    Assert(this->maxFreePageCount == maxNonIdleDecommitFreePageCount);
-    this->maxFreePageCount = maxIdleDecommitFreePageCount;
-#endif
 }
 
 IdleDecommitSignal
@@ -82,9 +73,7 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
     Assert(this->idleDecommitEnterCount > 0);
     Assert(this->maxFreePageCount == maxIdleDecommitFreePageCount);
 
-#ifdef IDLE_DECOMMIT_ENABLED
     Assert(!hasDecommitTimer);
-#endif
 
     this->idleDecommitEnterCount--;
     if (this->idleDecommitEnterCount != 0)
@@ -92,7 +81,6 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
         return IdleDecommitSignal_None;
     }
 
-#ifdef IDLE_DECOMMIT_ENABLED
     if (allowTimer)
     {
         if (!cs.try_lock())
@@ -143,14 +131,12 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
         cs.unlock();
         return idleDecommitSignal;
     }
-#endif
     this->maxFreePageCount = maxNonIdleDecommitFreePageCount;
     __super::DecommitNow();
     ClearMinFreePageCount();
     return IdleDecommitSignal_None;
 }
 
-#ifdef IDLE_DECOMMIT_ENABLED
 void
 IdleDecommitPageAllocator::DecommitNow(bool all)
 {
@@ -238,8 +224,6 @@ IdleDecommitPageAllocator::IdleDecommit()
     return waitTime;
 }
 
-#endif
-
 void
 IdleDecommitPageAllocator::Prime(uint primePageCount)
 {
@@ -268,13 +252,10 @@ IdleDecommitPageAllocator::ShutdownIdleDecommit()
     // The recycler thread should have died already
     // Just set the state
     idleDecommitEnterCount = 1;
-#ifdef IDLE_DECOMMIT_ENABLED
     hasDecommitTimer = false;
-#endif
 }
 #endif
 
-#ifdef IDLE_DECOMMIT_ENABLED
 #if DBG_DUMP
 void
 IdleDecommitPageAllocator::DumpStats() const
@@ -283,5 +264,4 @@ IdleDecommitPageAllocator::DumpStats() const
     Output::Print(u"  Idle Decommit Count       : %4d\n",
         this->idleDecommitCount);
 }
-#endif
 #endif

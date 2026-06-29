@@ -150,9 +150,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     isConcurrentGCOnIdle(false),
     isFinishGCOnIdle(false),
 #endif
-#ifdef IDLE_DECOMMIT_ENABLED
     concurrentIdleDecommitEvent(nullptr),
-#endif
 #if DBG
     isExternalStackSkippingGC(false),
     isProcessingRescan(false),
@@ -913,15 +911,12 @@ void
 Recycler::EnterIdleDecommit()
 {
     autoHeap.EnterIdleDecommit();
-#ifdef IDLE_DECOMMIT_ENABLED
     ::InterlockedCompareExchange(&needIdleDecommitSignal, IdleDecommitSignal_None, IdleDecommitSignal_NeedTimer);
-#endif
 }
 
 void
 Recycler::LeaveIdleDecommit()
 {
-#ifdef IDLE_DECOMMIT_ENABLED
     bool allowTimer = (this->concurrentIdleDecommitEvent != nullptr);
     IdleDecommitSignal idleDecommitSignal = autoHeap.LeaveIdleDecommit(allowTimer);
 
@@ -945,10 +940,6 @@ Recycler::LeaveIdleDecommit()
             SetEvent(this->concurrentIdleDecommitEvent);
         }
     }
-
-#else
-    autoHeap.LeaveIdleDecommit(false /*allowTimer*/);
-#endif
 }
 
 /*------------------------------------------------------------------------------------------------
@@ -4092,13 +4083,11 @@ Recycler::InitializeConcurrent(JsUtil::ThreadService *threadService)
 #endif
         if (!threadService->HasCallback())
         {
-#ifdef IDLE_DECOMMIT_ENABLED
             concurrentIdleDecommitEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
             if (concurrentIdleDecommitEvent == nullptr)
             {
                 throw Js::OutOfMemoryException();
             }
-#endif
 
             concurrentWorkReadyEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
             if (concurrentWorkReadyEvent == nullptr)
@@ -4115,13 +4104,11 @@ Recycler::InitializeConcurrent(JsUtil::ThreadService *threadService)
             CloseHandle(concurrentWorkDoneEvent);
             concurrentWorkDoneEvent = nullptr;
         }
-#ifdef IDLE_DECOMMIT_ENABLED
         if (concurrentIdleDecommitEvent)
         {
             CloseHandle(concurrentIdleDecommitEvent);
             concurrentIdleDecommitEvent = nullptr;
         }
-#endif
 
         return false;
     }
@@ -4287,13 +4274,11 @@ Recycler::FinalizeConcurrent(bool restoreState)
     parallelThread1.Shutdown();
     parallelThread2.Shutdown();
 
-#ifdef IDLE_DECOMMIT_ENABLED
     if (concurrentIdleDecommitEvent != nullptr)
     {
         CloseHandle(concurrentIdleDecommitEvent);
         concurrentIdleDecommitEvent = nullptr;
     }
-#endif
 
     CloseHandle(concurrentWorkDoneEvent);
     concurrentWorkDoneEvent = nullptr;
@@ -4431,13 +4416,11 @@ Recycler::EnableConcurrent(JsUtil::ThreadService *threadService, bool startAllTh
         CloseHandle(concurrentWorkDoneEvent);
         concurrentWorkDoneEvent = nullptr;
     }
-#ifdef IDLE_DECOMMIT_ENABLED
     if (concurrentIdleDecommitEvent)
     {
         CloseHandle(concurrentIdleDecommitEvent);
         concurrentIdleDecommitEvent = nullptr;
     }
-#endif
 
     return false;
 }
@@ -5274,13 +5257,10 @@ Recycler::ThreadProc()
 #if defined(DBG) && defined(PROFILE_EXEC)
     this->backgroundProfilerPageAllocator.SetConcurrentThreadId(::GetCurrentThreadId());
 #endif
-#ifdef IDLE_DECOMMIT_ENABLED
     uint32_t handleCount = this->concurrentIdleDecommitEvent? 2 : 1;
     HANDLE handles[2] = { this->concurrentWorkReadyEvent, this->concurrentIdleDecommitEvent };
-#endif
     do
     {
-#ifdef IDLE_DECOMMIT_ENABLED
         needIdleDecommitSignal = IdleDecommitSignal_None;
 
         uint32_t waitTime = autoHeap.IdleDecommit();
@@ -5331,10 +5311,6 @@ Recycler::ThreadProc()
 #endif
             continue;
         }
-#else
-        uint32_t result = WaitForSingleObject(this->concurrentWorkReadyEvent, INFINITE);
-        Assert(result == WAIT_OBJECT_0);
-#endif
         if (this->collectionState == CollectionStateExit)
         {
 #if DBG

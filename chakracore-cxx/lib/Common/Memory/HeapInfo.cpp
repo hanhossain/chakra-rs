@@ -1660,7 +1660,6 @@ HeapInfo::LeaveIdleDecommit(bool allowTimer)
     return idleDecommitSignal;
 }
 
-#ifdef IDLE_DECOMMIT_ENABLED
 uint32_t HeapInfo::IdleDecommit()
 {
     uint32_t waitTime = INFINITE;
@@ -1671,7 +1670,6 @@ uint32_t HeapInfo::IdleDecommit()
     });
     return waitTime;
 }
-#endif
 
 #if DBG
 void

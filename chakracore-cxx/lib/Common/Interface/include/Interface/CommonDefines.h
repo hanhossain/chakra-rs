@@ -73,8 +73,6 @@
 #endif
 
 // GC features
-#define IDLE_DECOMMIT_ENABLED 1                     // Idle Decommit
-
 #define RECYCLER_PAGE_HEAP                          // PageHeap support
 
 #define ENABLE_RECYCLER_TYPE_TRACKING 1

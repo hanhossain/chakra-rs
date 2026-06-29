@@ -30,10 +30,8 @@ public:
     IdleDecommitSignal LeaveIdleDecommit(bool allowTimer);
     void Prime(uint primePageCount);
 
-#ifdef IDLE_DECOMMIT_ENABLED
     uint32_t IdleDecommit();
     void DecommitNow(bool all = true);
-#endif
 
 #if DBG
     virtual bool IsIdleDecommitPageAllocator() const override { return true; }
@@ -60,29 +58,25 @@ private:
         IdleDecommitPageAllocator * pageAllocator;
     };
 
-#ifdef IDLE_DECOMMIT_ENABLED
 #if DBG_DUMP
     virtual void DumpStats() const override;
     size_t idleDecommitCount;
 #endif
-#endif
     uint maxIdleDecommitFreePageCount;
     uint maxNonIdleDecommitFreePageCount;
-#ifdef IDLE_DECOMMIT_ENABLED
     bool hasDecommitTimer;
     bool hadDecommitTimer;
     uint32_t decommitTime;
     uint idleDecommitTryEnterWaitFactor;
     std::recursive_mutex cs;
     static const uint IdleDecommitTimeout = 1000;
-#endif
 
     friend class PageAllocatorBase<VirtualAllocWrapper>;
 #if ENABLE_NATIVE_CODEGEN
     friend class PageAllocatorBase<PreReservedVirtualAllocWrapper>;
 #endif
 
-#if IDLE_DECOMMIT_ENABLED && DBG
+#if DBG
 public:
     virtual void UpdateThreadContextHandle(ThreadContextId threadContextHandle) override
     {

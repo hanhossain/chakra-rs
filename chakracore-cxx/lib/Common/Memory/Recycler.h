@@ -974,10 +974,8 @@ private:
 
     static const uint tickDiffToNextCollect = 300;
 
-#ifdef IDLE_DECOMMIT_ENABLED
     HANDLE concurrentIdleDecommitEvent;
     int32_t needIdleDecommitSignal;
-#endif
 
     SListBase<void *> clientTrackedObjectList;
     ArenaAllocator clientTrackedObjectAllocator;
