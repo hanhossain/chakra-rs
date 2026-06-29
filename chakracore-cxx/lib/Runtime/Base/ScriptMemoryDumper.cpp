@@ -51,13 +51,9 @@ Js::Var ScriptMemoryDumper::Dump()
         ResetCurrentStats();
         size_t sizeCat = HeapConstants::MaxSmallObjectSize + ((i + 1) * HeapConstants::ObjectGranularity);
 
-#if SMALLBLOCK_MEDIUM_ALLOC
         DumpHeapBucket(i, &heapInfo->GetMediumBucket<LeafBit>(sizeCat));
         DumpHeapBucket(i, &heapInfo->GetMediumBucket<NoBit>(sizeCat));
         DumpHeapBucket(i, (MediumFinalizableHeapBucket *)&heapInfo->GetMediumBucket<FinalizeBit>(sizeCat));
-#else
-        DumpLargeBucket(&heapInfo->GetMediumBucket(sizeCat));
-#endif
         SaveCurrentAtIndex(i + HeapConstants::BucketCount);
         MergeCurrentStats();
     }

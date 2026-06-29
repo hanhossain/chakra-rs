@@ -468,12 +468,6 @@ HeapInfo::~HeapInfo()
     size_t largeBlockCount = this->largeObjectBucket.GetLargeHeapBlockCount(false);
 
     uint mediumBlockCount = 0;
-#if !SMALLBLOCK_MEDIUM_ALLOC
-    for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
-    {
-        mediumBlockCount += mediumHeapBuckets[i].GetLargeHeapBlockCount(false);
-    }
-#endif
 #endif
 
     RECYCLER_SLOW_CHECK(Assert(this->heapBlockCount[HeapBlock::HeapBlockType::LargeBlockType] - largeBlockCount - mediumBlockCount == 0));
@@ -587,11 +581,7 @@ HeapInfo::Initialize(Recycler * recycler
 
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
-#if SMALLBLOCK_MEDIUM_ALLOC
         mediumHeapBuckets[i].Initialize(this, HeapConstants::MaxSmallObjectSize + ((i + 1) * HeapConstants::MediumObjectGranularity));
-#else
-        mediumHeapBuckets[i].Initialize(this, HeapConstants::MaxSmallObjectSize + ((i + 1) * HeapConstants::MediumObjectGranularity), true);
-#endif
     }
 
     largeObjectBucket.Initialize(this, HeapConstants::MaxMediumObjectSize);
@@ -620,12 +610,10 @@ HeapInfo::Initialize(Recycler * recycler, void(*trackNativeAllocCallBack)(Recycl
         heapBuckets[i].GetBucket<NoBit>().GetAllocator()->SetTrackNativeAllocatedObjectCallBack(trackNativeAllocCallBack);
     }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
         mediumHeapBuckets[i].GetBucket<NoBit>().GetAllocator()->SetTrackNativeAllocatedObjectCallBack(trackNativeAllocCallBack);
     }
-#endif
 }
 #endif
 
@@ -888,25 +876,16 @@ HeapInfo::Finalize(RecyclerSweep& recyclerSweep)
 
     largeObjectBucket.Finalize();
 
-#if !(SMALLBLOCK_MEDIUM_ALLOC)
-    for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
-    {
-        mediumHeapBuckets[i].Finalize();
-    }
-#endif
-
     for (uint i = 0; i < HeapConstants::BucketCount; i++)
     {
         heapBuckets[i].SweepFinalizableObjects(recyclerSweep);
     }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     // CONCURRENT-TODO: Allow this in the background as well
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
         mediumHeapBuckets[i].SweepFinalizableObjects(recyclerSweep);
     }
-#endif
 
     RECYCLER_PROFILE_EXEC_END(recycler, Js::FinalizePhase);
 }
@@ -933,13 +912,6 @@ HeapInfo::Sweep(RecyclerSweep& recyclerSweep, bool concurrent)
 
     RECYCLER_PROFILE_EXEC_CHANGE(recyclerSweep.GetRecycler(), Js::SweepSmallPhase, Js::SweepLargePhase);
 
-#if !(SMALLBLOCK_MEDIUM_ALLOC)
-    // CONCURRENT-TODO: Allow this in the background as well
-    for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
-    {
-        mediumHeapBuckets[i].Sweep(recyclerSweep);
-    }
-#endif
     largeObjectBucket.Sweep(recyclerSweep);
 
     RECYCLER_PROFILE_EXEC_END(recyclerSweep.GetRecycler(), Js::SweepLargePhase);
@@ -956,12 +928,10 @@ HeapInfo::SetupBackgroundSweep(RecyclerSweep& recyclerSweep)
         this->heapBuckets[i].SetupBackgroundSweep(recyclerSweep);
     }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
         this->mediumHeapBuckets[i].SetupBackgroundSweep(recyclerSweep);
     }
-#endif
 }
 
 void
@@ -987,12 +957,10 @@ HeapInfo::SweepSmallNonFinalizable(RecyclerSweep& recyclerSweep)
         heapBuckets[i].Sweep(recyclerSweep);
     }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
         mediumHeapBuckets[i].Sweep(recyclerSweep);
     }
-#endif
 
     if (!recyclerSweep.IsBackground())
     {
@@ -1016,11 +984,7 @@ HeapInfo::Rescan(RescanFlags flags)
 
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
-#if SMALLBLOCK_MEDIUM_ALLOC
         scannedPageCount += mediumHeapBuckets[i].Rescan(recycler, flags);
-#else
-        scannedPageCount += mediumHeapBuckets[i].Rescan(flags);
-#endif
     }
 
     scannedPageCount += largeObjectBucket.Rescan(flags);
@@ -1044,7 +1008,6 @@ HeapInfo::GetBucketStats(BucketStatsReporter& report)
     report.PreAggregateBucketStats(this->newRecyclerVisitedHostHeapBlockList);
 #endif
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     report.PreAggregateBucketStats(this->newMediumNormalHeapBlockList);
     report.PreAggregateBucketStats(this->newMediumLeafHeapBlockList);
     report.PreAggregateBucketStats(this->newMediumFinalizableHeapBlockList);
@@ -1052,7 +1015,6 @@ HeapInfo::GetBucketStats(BucketStatsReporter& report)
     report.PreAggregateBucketStats(this->newMediumFinalizableWithBarrierHeapBlockList);
 #ifdef RECYCLER_VISITED_HOST
     report.PreAggregateBucketStats(this->newMediumRecyclerVisitedHostHeapBlockList);
-#endif
 #endif
 
     for (uint i = 0; i < HeapConstants::BucketCount; i++)
@@ -1067,7 +1029,6 @@ HeapInfo::GetBucketStats(BucketStatsReporter& report)
 #endif
     }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
         report.GetBucketStats<MediumAllocationBlockAttributes, NoBit>(mediumHeapBuckets[i]);
@@ -1079,7 +1040,6 @@ HeapInfo::GetBucketStats(BucketStatsReporter& report)
         report.GetBucketStats<MediumAllocationBlockAttributes, RecyclerVisitedHostBit>(mediumHeapBuckets[i]);
 #endif
     }
-#endif
 
     report.GetBucketStats(largeObjectBucket);
 }
@@ -1098,12 +1058,10 @@ HeapInfo::SweepPartialReusePages(RecyclerSweep& recyclerSweep)
         heapBuckets[i].SweepPartialReusePages(recyclerSweep);
     }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
         mediumHeapBuckets[i].SweepPartialReusePages(recyclerSweep);
     }
-#endif
 
     RECYCLER_PROFILE_EXEC_THREAD_END(recyclerSweep.IsBackground(), recyclerSweep.GetRecycler(), Js::SweepPartialReusePhase);
 
@@ -1142,12 +1100,10 @@ HeapInfo::PrepareSweep()
         heapBuckets[i].PrepareSweep();
     }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
         mediumHeapBuckets[i].PrepareSweep();
     }
-#endif
 }
 
 void
@@ -1160,20 +1116,11 @@ HeapInfo::SweepPendingObjects(RecyclerSweep& recyclerSweep)
             heapBuckets[i].SweepPendingObjects(recyclerSweep);
         }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
         for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
         {
             mediumHeapBuckets[i].SweepPendingObjects(recyclerSweep);
         }
-#endif
     }
-
-#if !SMALLBLOCK_MEDIUM_ALLOC
-    for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
-    {
-        mediumHeapBuckets[i].SweepPendingObjects(recyclerSweep);
-    }
-#endif
 
     largeObjectBucket.SweepPendingObjects(recyclerSweep);
 }
@@ -1190,12 +1137,10 @@ HeapInfo::TransferPendingHeapBlocks(RecyclerSweep& recyclerSweep)
             heapBuckets[i].TransferPendingEmptyHeapBlocks(recyclerSweep);
         }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
         for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
         {
             mediumHeapBuckets[i].TransferPendingEmptyHeapBlocks(recyclerSweep);
         }
-#endif
 
         RECYCLER_SLOW_CHECK(VerifySmallHeapBlockCount());
     }
@@ -1215,13 +1160,6 @@ HeapInfo::ConcurrentTransferSweptObjects(RecyclerSweep& recyclerSweep)
     Assert(!recyclerSweep.IsBackground());
     TransferPendingHeapBlocks(recyclerSweep);
 
-#if !SMALLBLOCK_MEDIUM_ALLOC
-    for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
-    {
-        mediumHeapBuckets[i].ConcurrentTransferSweptObjects(recyclerSweep);
-    }
-#endif
-
     largeObjectBucket.ConcurrentTransferSweptObjects(recyclerSweep);
 }
 
@@ -1234,13 +1172,6 @@ HeapInfo::ConcurrentPartialTransferSweptObjects(RecyclerSweep& recyclerSweep)
     TransferPendingHeapBlocks(recyclerSweep);
 
     RECYCLER_SLOW_CHECK(this->VerifyLargeHeapBlockCount());
-
-#if !SMALLBLOCK_MEDIUM_ALLOC
-    for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
-    {
-        mediumHeapBuckets[i].ConcurrentPartialTransferSweptObjects(recyclerSweep);
-    }
-#endif
 
     largeObjectBucket.ConcurrentPartialTransferSweptObjects(recyclerSweep);
 
@@ -1355,13 +1286,11 @@ HeapInfo::GetSmallHeapBlockCount(bool checkCount) const
         currentSmallHeapBlockCount += heapBuckets[i].GetEmptyHeapBlockCount();
     }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
         currentSmallHeapBlockCount += mediumHeapBuckets[i].GetNonEmptyHeapBlockCount(checkCount);
         currentSmallHeapBlockCount += mediumHeapBuckets[i].GetEmptyHeapBlockCount();
     }
-#endif
 
     currentSmallHeapBlockCount += HeapBlockList::Count(this->newLeafHeapBlockList);
     currentSmallHeapBlockCount += HeapBlockList::Count(this->newNormalHeapBlockList);
@@ -1420,13 +1349,6 @@ HeapInfo::GetLargeHeapBlockCount(bool checkCount) const
 {
     size_t currentLargeHeapBlockCount = 0;
 
-#if !SMALLBLOCK_MEDIUM_ALLOC
-    for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
-    {
-        currentLargeHeapBlockCount += mediumHeapBuckets[i].GetLargeHeapBlockCount(checkCount);
-    }
-#endif
-
     currentLargeHeapBlockCount += largeObjectBucket.GetLargeHeapBlockCount(checkCount);
 
     RECYCLER_SLOW_CHECK(Assert(!checkCount || currentLargeHeapBlockCount == this->heapBlockCount[HeapBlock::HeapBlockType::LargeBlockType]));
@@ -1451,12 +1373,8 @@ HeapInfo::Check()
     size_t currentLargeHeapBlockCount = 0;
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
-#if SMALLBLOCK_MEDIUM_ALLOC
         currentSmallHeapBlockCount += mediumHeapBuckets[i].Check();
         currentSmallHeapBlockCount += mediumHeapBuckets[i].GetEmptyHeapBlockCount();
-#else
-        currentLargeHeapBlockCount += mediumHeapBuckets[i].Check();
-#endif
     }
 
     currentSmallHeapBlockCount += Check(true, false, this->newLeafHeapBlockList);
@@ -1730,7 +1648,6 @@ HeapInfo::AllocatorsAreEmpty()
         }
     }
 
-#if SMALLBLOCK_MEDIUM_ALLOC
     for (uint i = 0; i < HeapConstants::MediumBucketCount; i++)
     {
         if (!mediumHeapBuckets[i].AllocatorsAreEmpty())
@@ -1738,8 +1655,6 @@ HeapInfo::AllocatorsAreEmpty()
             return false;
         }
     }
-
-#endif
 
     return true;
 }

@@ -164,7 +164,6 @@ public:
     typedef SmallFinalizableWithBarrierHeapBucket BucketType;
 };
 
-#if SMALLBLOCK_MEDIUM_ALLOC
 template <>
 class SmallHeapBlockType<FinalizeBit, MediumAllocationBlockAttributes>
 {
@@ -238,7 +237,6 @@ public:
     typedef MediumFinalizableWithBarrierHeapBlock BlockType;
     typedef MediumFinalizableWithBarrierHeapBucket BucketType;
 };
-#endif
 
 template <class TBlockAttributes>
 class HeapBucketGroup
