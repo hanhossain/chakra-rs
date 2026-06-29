@@ -46,10 +46,6 @@
 #define _M_ARM32_OR_ARM64 1
 #endif
 
-#if defined(_M_X64) || defined(_M_ARM64)
-#define TARGET_64 1
-#endif
-
 // Memory Protections
 #define PAGE_EXECUTE_RO_TARGETS_INVALID   (PAGE_EXECUTE_READ)
 
