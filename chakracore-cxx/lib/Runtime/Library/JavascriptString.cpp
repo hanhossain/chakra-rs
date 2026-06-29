@@ -1366,7 +1366,6 @@ case_2:
 
         GetThisAndSearchStringArguments(args, scriptContext, u"String.prototype.localeCompare", &pThis, &pThat, true);
 
-#ifdef ENABLE_INTL_OBJECT
         if (CONFIG_FLAG(IntlBuiltIns) && scriptContext->IsIntlEnabled())
         {
             EngineInterfaceObject* nativeEngineInterfaceObj = scriptContext->GetLibrary()->GetEngineInterfaceObject();
@@ -1399,7 +1398,6 @@ case_2:
                 }
             }
         }
-#endif
 
         const char16_t* pThisStr = pThis->GetString();
         int thisStrCount = pThis->GetLength();

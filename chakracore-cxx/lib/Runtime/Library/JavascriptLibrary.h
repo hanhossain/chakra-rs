@@ -672,7 +672,6 @@ namespace Js
                                                             Js::JavascriptGenerator::GeneratorState generatorState);
 #endif
 
-#ifdef ENABLE_INTL_OBJECT
         void ResetIntlObject();
         void EnsureIntlObjectReady();
         template <class Fn>
@@ -680,7 +679,6 @@ namespace Js
         void InitializeIntlForStringPrototype();
         void InitializeIntlForDatePrototype();
         void InitializeIntlForNumberPrototype();
-#endif
 
 #ifdef ENABLE_JS_BUILTINS
         void EnsureArrayBuiltInsAreReady();
@@ -1255,10 +1253,7 @@ namespace Js
         static bool InitializeJSONObject(DynamicObject* JSONObject, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
         static bool InitializeEngineInterfaceObject(DynamicObject* engineInterface, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
         static bool InitializeReflectObject(DynamicObject* reflectObject, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
-#ifdef ENABLE_INTL_OBJECT
         static bool InitializeIntlObject(DynamicObject* IntlEngineObject, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
-#endif
-
         static bool InitializeAsyncIteratorPrototype(DynamicObject* asyncIteratorPrototype, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
         static bool InitializeIteratorPrototype(DynamicObject* iteratorPrototype, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
         static bool InitializeArrayIteratorPrototype(DynamicObject* arrayIteratorPrototype, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);

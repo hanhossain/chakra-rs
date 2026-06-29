@@ -5280,12 +5280,10 @@ ScriptContext::GetJitFuncRangeCache()
 
     bool ScriptContext::IsIntlEnabled()
     {
-#ifdef ENABLE_INTL_OBJECT
         if (GetConfig()->IsIntlEnabled())
         {
             return true;
         }
-#endif
         return false;
     }
     bool ScriptContext::IsJsBuiltInEnabled()

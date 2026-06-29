@@ -678,7 +678,6 @@ namespace Js
     JavascriptString* JavascriptNumber::ToLocaleStringIntl(ArgumentReader& args, CallInfo callInfo, ScriptContext* scriptContext)
     {
        Assert(scriptContext);
-#ifdef ENABLE_INTL_OBJECT
         if(CONFIG_FLAG(IntlBuiltIns) && scriptContext->IsIntlEnabled()){
 
             EngineInterfaceObject* nativeEngineInterfaceObj = scriptContext->GetLibrary()->GetEngineInterfaceObject();
@@ -707,7 +706,6 @@ namespace Js
                 }
             }
         }
-#endif
 
         double value;
         if (!GetThisValue(args[0], &value))

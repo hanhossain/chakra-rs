@@ -1332,7 +1332,6 @@ namespace Js
         }
         JavascriptDate* date = VarTo<JavascriptDate>(args[0]);
 
-#ifdef ENABLE_INTL_OBJECT
         if (CONFIG_FLAG(IntlBuiltIns) && scriptContext->IsIntlEnabled()){
 
             EngineInterfaceObject* nativeEngineInterfaceObj = scriptContext->GetLibrary()->GetEngineInterfaceObject();
@@ -1362,7 +1361,6 @@ namespace Js
                 }
             }
         }
-#endif
 
         AssertMsg(args.Info.Count > 0, "Negative argument count");
         return date->m_date.GetString(
@@ -1390,7 +1388,6 @@ namespace Js
         }
         JavascriptDate* date = VarTo<JavascriptDate>(args[0]);
 
-#ifdef ENABLE_INTL_OBJECT
         if (CONFIG_FLAG(IntlBuiltIns) && scriptContext->IsIntlEnabled()){
 
             EngineInterfaceObject* nativeEngineInterfaceObj = scriptContext->GetLibrary()->GetEngineInterfaceObject();
@@ -1419,7 +1416,6 @@ namespace Js
                 }
             }
         }
-#endif
 
         AssertMsg(args.Info.Count > 0, "Negative argument count");
         return JavascriptDate::ToLocaleString(date, scriptContext);
@@ -1458,7 +1454,6 @@ namespace Js
         }
         JavascriptDate* date = VarTo<JavascriptDate>(args[0]);
 
-#ifdef ENABLE_INTL_OBJECT
         if (CONFIG_FLAG(IntlBuiltIns) && scriptContext->IsIntlEnabled()){
 
             EngineInterfaceObject* nativeEngineInterfaceObj = scriptContext->GetLibrary()->GetEngineInterfaceObject();
@@ -1487,7 +1482,6 @@ namespace Js
                 }
             }
         }
-#endif
 
         AssertMsg(args.Info.Count > 0, "Negative argument count");
         return date->m_date.GetString(

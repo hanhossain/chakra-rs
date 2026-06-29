@@ -56,7 +56,6 @@ PROPERTY_STRING(NumberTypeDisplay, u"number")
 PROPERTY_STRING(ModuleTypeDisplay, u"Module")
 PROPERTY_STRING(SymbolTypeDisplay, u"symbol")
 
-#ifdef ENABLE_INTL_OBJECT
 STRING(IntlCaseFirstUpper, u"upper")
 STRING(IntlCaseFirstLower, u"lower")
 STRING(IntlNumsysArab, u"arab")
@@ -108,4 +107,3 @@ STRING(IntlCurrencyPart, u"currency")
 STRING(IntlPercentPart, u"percent")
 STRING(IntlPlusSignPart, u"plusSign")
 STRING(IntlMinusSignPart, u"minusSign")
-#endif
