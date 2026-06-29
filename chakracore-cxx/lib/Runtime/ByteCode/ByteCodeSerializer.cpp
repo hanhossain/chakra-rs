@@ -1050,9 +1050,7 @@ public:
                 DEFAULT_LAYOUT_WITH_ONEBYTE_AND_PROFILED(Arg);
                 DEFAULT_LAYOUT_WITH_ONEBYTE(ArgNoSrc);
                 DEFAULT_LAYOUT(Br);
-#ifdef BYTECODE_BRANCH_ISLAND
                 DEFAULT_LAYOUT(BrLong);
-#endif
                 DEFAULT_LAYOUT(BrS);
                 DEFAULT_LAYOUT_WITH_ONEBYTE(BrReg1);
                 DEFAULT_LAYOUT_WITH_ONEBYTE(BrReg1Unsigned1);

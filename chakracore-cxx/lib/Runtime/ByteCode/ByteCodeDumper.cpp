@@ -1578,12 +1578,10 @@ namespace Js
         }
     }
 
-#ifdef BYTECODE_BRANCH_ISLAND
     void ByteCodeDumper::DumpBrLong(OpCode op, const unaligned OpLayoutBrLong* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
     }
-#endif
 
     void ByteCodeDumper::DumpBr(OpCode op, const unaligned OpLayoutBr * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {

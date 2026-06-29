@@ -41,9 +41,7 @@
 
   DEF2    (FALLTHROUGH,             EndSwitch,                  /* Common case with Br */)
   DEF2    (BR,                      Br,                         OP_Br)
-#ifdef BYTECODE_BRANCH_ISLAND
 EXDEF2    (BRLONG,                  BrLong,                     OP_Br)
-#endif
   DEF3    (CUSTOM,                  StartCall,                  OP_StartCall, StartCall)
   DEF2    (NOP,                     Nop,                        Empty)
 

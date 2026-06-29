@@ -47,9 +47,7 @@ namespace Js
     void AsmJsByteCodeWriter::InitData(ArenaAllocator* alloc, int32_t initCodeBufferSize)
     {
         ByteCodeWriter::InitData(alloc, initCodeBufferSize);
-#ifdef BYTECODE_BRANCH_ISLAND
         useBranchIsland = false;
-#endif
     }
 
 #define MULTISIZE_LAYOUT_WRITE(layout, ...) \

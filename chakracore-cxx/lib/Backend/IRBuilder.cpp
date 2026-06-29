@@ -415,9 +415,7 @@ IRBuilder::Build()
     m_offsetToInstructionCount = offsetToInstructionCount;
     m_offsetToInstruction = JitAnewArrayZ(m_tempAlloc, IR::Instr *, offsetToInstructionCount);
 
-#ifdef BYTECODE_BRANCH_ISLAND
     longBranchMap = JitAnew(m_tempAlloc, LongBranchMap, m_tempAlloc);
-#endif
 
     m_switchBuilder.Init(m_func, m_tempAlloc, false);
 
@@ -664,9 +662,7 @@ IRBuilder::Build()
 
 #ifdef BAILOUT_INJECTION
         if (!this->m_func->GetTopFunc()->HasTry()
-#ifdef BYTECODE_BRANCH_ISLAND
             && newOpcode != Js::OpCode::BrLong  // Don't inject bailout on BrLong as they are just redirecting to a different offset anyways
-#endif
             )
         {
             if (!this->m_func->IsOOPJIT())
@@ -1023,14 +1019,12 @@ IRBuilder::CreateLabel(IR::BranchInstr * branchInstr, uint& offset)
         targetInstr = this->m_offsetToInstruction[offset];
         if (targetInstr != nullptr)
         {
-#ifdef BYTECODE_BRANCH_ISLAND
             // If we have a long branch, remap it to the target offset
             if (targetInstr == VirtualLongBranchInstr)
             {
                 offset = ResolveVirtualLongBranch(branchInstr, offset);
                 continue;
             }
-#endif
             break;
         }
         offset++;
@@ -6964,10 +6958,8 @@ IRBuilder::BuildBrReg2(Js::OpCode newOpcode, uint32_t offset, uint targetOffset,
 
         m_switchBuilder.OnCase(src1Opnd, src2Opnd, offset, targetOffset);
 
-#ifdef BYTECODE_BRANCH_ISLAND
         // Make sure that if there are branch island between the cases, we consume it first
         EnsureConsumeBranchIsland();
-#endif
 
         // some instructions can't be optimized past, such as LdFld for objects. In these cases we have
         // to inform the SwitchBuilder to flush any optimized cases that it has stored up to this point
@@ -7159,7 +7151,6 @@ IRBuilder::BuildEmpty(Js::OpCode newOpcode, uint32_t offset)
     }
 }
 
-#ifdef BYTECODE_BRANCH_ISLAND
 void
 IRBuilder::EnsureConsumeBranchIsland()
 {
@@ -7290,7 +7281,6 @@ IRBuilder::ResolveVirtualLongBranch(IR::BranchInstr * branchInstr, uint offset)
     }
     return GetLoopBodyExitInstrOffset();
 }
-#endif
 
 ///----------------------------------------------------------------------------
 ///
@@ -7309,13 +7299,11 @@ IRBuilder::BuildBr(Js::OpCode newOpcode, uint32_t offset)
     IR::BranchInstr * branchInstr;
     const unaligned   Js::OpLayoutBr *branchInsn = m_jnReader.Br();
     unsigned int      targetOffset = m_jnReader.GetCurrentOffset() + branchInsn->RelativeJumpOffset;
-#ifdef BYTECODE_BRANCH_ISLAND
     bool isLongBranchIsland = (m_jnReader.PeekOp() == Js::OpCode::BrLong);
     if (isLongBranchIsland)
     {
         ConsumeBranchIsland();
     }
-#endif
 
     if(newOpcode == Js::OpCode::EndSwitch)
     {
@@ -7329,7 +7317,6 @@ IRBuilder::BuildBr(Js::OpCode newOpcode, uint32_t offset)
     }
 #endif
 
-#ifdef BYTECODE_BRANCH_ISLAND
     if (isLongBranchIsland && (targetOffset == (uint)m_jnReader.GetCurrentOffset()))
     {
         // Branch to next (probably after consume branch island), try to not emit the branch
@@ -7355,7 +7342,6 @@ IRBuilder::BuildBr(Js::OpCode newOpcode, uint32_t offset)
             || (Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryByteCodeFlag)
             && m_offsetToInstruction[offset]->m_opcode == Js::OpCode::BailOnEqual));
     }
-#endif
 
     if ((newOpcode == Js::OpCode::TryCatch) && this->handlerOffsetStack)
     {

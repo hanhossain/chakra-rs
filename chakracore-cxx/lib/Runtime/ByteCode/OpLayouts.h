@@ -291,12 +291,10 @@ namespace Js {
         int32_t SlotIndex;
     };
 
-#ifdef BYTECODE_BRANCH_ISLAND
     struct OpLayoutBrLong
     {
         LongJumpOffset RelativeJumpOffset;
     };
-#endif
 
     struct OpLayoutStartCall
     {

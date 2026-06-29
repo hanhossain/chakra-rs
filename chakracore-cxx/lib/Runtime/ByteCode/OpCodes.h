@@ -134,9 +134,7 @@ MACRO(                  Break,              Empty,          OpSideEffect)       
 MACRO_EXTEND(           InvalidOpCode,      Empty,          None)               // Inserted in a dead call sequence, should not be present after GlobOpt
 
 // Control flow
-#ifdef BYTECODE_BRANCH_ISLAND
 MACRO_EXTEND(           BrLong,             BrLong,         OpByteCodeOnly|OpSideEffect|OpNoFallThrough)
-#endif
 MACRO(                  Br ,                Br,             OpSideEffect|OpNoFallThrough)           // Unconditional branch
 MACRO_BACKEND_ONLY(     MultiBr,            Empty,          OpSideEffect|OpNoFallThrough)           // Unconditional multi-target branch
 
