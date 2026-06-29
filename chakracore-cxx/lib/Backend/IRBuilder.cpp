@@ -29,7 +29,6 @@ IRBuilder::AddStatementBoundary(uint statementIndex, uint offset)
         this->AddInstr(pragmaInstr, offset);
     }
 
-#ifdef BAILOUT_INJECTION
     if (!this->m_func->IsOOPJIT())
     {
         // Don't inject bailout if the function have trys
@@ -56,7 +55,6 @@ IRBuilder::AddStatementBoundary(uint statementIndex, uint offset)
             }
         }
     }
-#endif
     return m_statementReader.MoveNextStatementBoundary();
 }
 
@@ -165,7 +163,6 @@ void IRBuilder::InsertBailOnNoProfile(IR::Instr *const insertBeforeInstr)
     InsertInstr(bailOnNoProfileInstr, insertBeforeInstr);
 }
 
-#ifdef BAILOUT_INJECTION
 void
 IRBuilder::InjectBailOut(uint offset)
 {
@@ -233,7 +230,6 @@ IRBuilder::CheckBailOutInjection(Js::OpCode opcode)
         break;
     }
 }
-#endif
 
 bool
 IRBuilder::IsLoopBody() const
@@ -442,10 +438,8 @@ IRBuilder::Build()
         this->InsertBailOutForDebugger(m_functionStartOffset, IR::BailOutForceByFlag | IR::BailOutBreakPointInFunction | IR::BailOutStep, nullptr);
     }
 
-#ifdef BAILOUT_INJECTION
     // Start bailout inject after the constant and arg load. We don't bailout before that
     IR::Instr * lastInstr = m_lastInstr;
-#endif
 
     offset = Js::Constants::NoByteCodeOffset;
     if (!this->IsLoopBody())
@@ -495,11 +489,7 @@ IRBuilder::Build()
         // Note: We need to make sure that all the values below are allocated on the heap.
         // so that they don't go away once this jit'd frame is popped off.
 
-#ifdef BAILOUT_INJECTION
         lastInstr = this->m_generatorJumpTable.BuildJumpTable();
-#else
-        this->m_generatorJumpTable.BuildJumpTable();
-#endif
 
         // When debugging generators, insert bail-out after the jump table so that we can
         // get to the right point before going back to the interpreter.
@@ -660,7 +650,6 @@ IRBuilder::Build()
     {
         Assert(newOpcode != Js::OpCode::EndOfBlock);
 
-#ifdef BAILOUT_INJECTION
         if (!this->m_func->GetTopFunc()->HasTry()
             && newOpcode != Js::OpCode::BrLong  // Don't inject bailout on BrLong as they are just redirecting to a different offset anyways
             )
@@ -686,7 +675,6 @@ IRBuilder::Build()
                 CheckBailOutInjection(newOpcode);
             }
         }
-#endif
         AssertOrFailFastMsg(Js::OpCodeUtil::IsValidByteCodeOpcode(newOpcode), "Error getting opcode from m_jnReader.Op()");
 
         uint layoutAndSize = static_cast<uint32_t>(layoutSize) * static_cast<uint32_t>(Js::OpLayoutType::Count) + Js::OpCodeUtil::GetOpCodeLayout(newOpcode);
@@ -714,7 +702,6 @@ IRBuilder::Build()
             break;
         }
 
-#ifdef BAILOUT_INJECTION
         if (!this->m_func->IsOOPJIT())
         {
             if (!this->m_func->GetTopFunc()->HasTry() && Js::Configuration::Global.flags.IsEnabled(Js::BailOutByteCodeFlag))
@@ -733,7 +720,6 @@ IRBuilder::Build()
                 threadContext->bailOutByteCodeLocationCount++;
             }
         }
-#endif
 
         if (IsLoopBodyInTry() && lastProcessedInstrForJITLoopBody != m_lastInstr)
         {

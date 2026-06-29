@@ -14,9 +14,7 @@ Instr::Init(Js::OpCode opcode, IRKind kind, Func * func)
     this->m_opcode = opcode;
     this->m_kind = kind;
     this->m_func = func;
-#ifdef BAILOUT_INJECTION
     this->bailOutByteCodeLocation = (uint)-1;
-#endif
 }
 
 uint32_t
@@ -4363,13 +4361,11 @@ Instr::DumpByteCodeOffset()
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         Output::Print(u" Func #%s", this->m_func->GetDebugNumberSet(debugStringBuffer));
     }
-#ifdef BAILOUT_INJECTION
     if (this->bailOutByteCodeLocation != (uint)-1)
     {
         Output::SkipToColumn(85);
         Output::Print(u"@%4d", this->bailOutByteCodeLocation);
     }
-#endif
     if (this->m_opcode == Js::OpCode::InlineeStart)
     {
         Output::Print(u" %s", this->m_func->GetJITFunctionBody()->GetDisplayName());

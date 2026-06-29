@@ -104,25 +104,14 @@
 
 #endif
 
-#define DELAYLOAD_SET_CFG_TARGET 1
-
 #ifndef PERFMAP_SIGNAL
 #define PERFMAP_SIGNAL SIGUSR2
 #endif
-
-#define DELAYLOAD_SECTIONAPI 1
-#define DELAYLOAD_UNLOCKMEMORY 1
-
-// Telemetry features (non-DEBUG related)
-#define TELEMETRY_OPCODE_FILTER(propertyId) false
-
-#define ENABLE_DIRECTCALL_TELEMETRY_STATS
 
 //----------------------------------------------------------------------------------------------------
 // Debug and fretest features
 //----------------------------------------------------------------------------------------------------
 
-#define BAILOUT_INJECTION
 #if ENABLE_PROFILE_INFO
 #define DYNAMIC_PROFILE_STORAGE
 #endif
@@ -409,9 +398,7 @@
 //  - flags values that are dependent on other flags
 //----------------------------------------------------------------------------------------------------
 
-#ifdef BAILOUT_INJECTION
 #define ENABLE_PREJIT
-#endif
 
 // Enable Output::Trace
 #define ENABLE_TRACE

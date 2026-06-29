@@ -541,9 +541,7 @@ private:
 
 public:
 
-#ifdef BAILOUT_INJECTION
     uint            bailOutByteCodeLocation;
-#endif
     Instr *         m_next;
     Instr *         m_prev;
     Func *          m_func;

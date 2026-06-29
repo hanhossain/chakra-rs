@@ -2098,9 +2098,7 @@ public:
     uint scriptSiteCount;
 #endif
 
-#ifdef BAILOUT_INJECTION
     uint bailOutByteCodeLocationCount;
-#endif
     //
     // Regex helpers
     //

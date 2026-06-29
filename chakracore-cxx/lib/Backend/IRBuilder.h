@@ -86,11 +86,9 @@ public:
         , m_callsOnStack(0)
         , m_usedAsTemp(nullptr)
 #endif
-#ifdef BAILOUT_INJECTION
         , seenLdStackArgPtr(false)
         , expectApplyArg(false)
         , seenProfiledBeginSwitch(false)
-#endif
         , longBranchMap(nullptr)
         , m_generatorJumpTable(GeneratorJumpTable(func, this))
     {
@@ -312,14 +310,12 @@ private:
     bool                DoLoadInstructionArrayProfileInfo();
     bool                AllowNativeArrayProfileInfo();
 
-#ifdef BAILOUT_INJECTION
     void InjectBailOut(uint offset);
     void CheckBailOutInjection(Js::OpCode opcode);
 
     bool seenLdStackArgPtr;
     bool expectApplyArg;
     bool seenProfiledBeginSwitch;
-#endif
     JitArenaAllocator *    m_tempAlloc;
     JitArenaAllocator *    m_funcAlloc;
     Func *              m_func;

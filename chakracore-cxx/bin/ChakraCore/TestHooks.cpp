@@ -661,7 +661,6 @@ int32_t SetFullMemoryDumpFlag(BSTR flag)
     Js::Configuration::Global.flags.FullMemoryDump = flag;
     return S_OK;
 }
-#ifdef BAILOUT_INJECTION
 bool IsEnabledBailOutAtEveryLineFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryLineFlag);
@@ -704,7 +703,6 @@ int32_t SetBailOutAtEveryImplicitCallFlag(bool flag)
     Js::Configuration::Global.flags.BailOutAtEveryImplicitCall = flag;
     return S_OK;
 }
-#endif
 bool IsEnabledBenchmarkFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::BenchmarkFlag);
@@ -6714,13 +6712,11 @@ IsEnabledBailOnNoProfileRejitLimitFlag, GetBailOnNoProfileRejitLimitFlag, SetBai
 IsEnabledBaselineModeFlag, GetBaselineModeFlag, SetBaselineModeFlag,
 IsEnabledDumpOnCrashFlag, GetDumpOnCrashFlag, SetDumpOnCrashFlag,
 IsEnabledFullMemoryDumpFlag, GetFullMemoryDumpFlag, SetFullMemoryDumpFlag,
-#ifdef BAILOUT_INJECTION
 
 IsEnabledBailOutAtEveryLineFlag, GetBailOutAtEveryLineFlag, SetBailOutAtEveryLineFlag,
 IsEnabledBailOutAtEveryByteCodeFlag, GetBailOutAtEveryByteCodeFlag, SetBailOutAtEveryByteCodeFlag,
 IsEnabledBailOutAtEveryImplicitCallFlag, GetBailOutAtEveryImplicitCallFlag, SetBailOutAtEveryImplicitCallFlag,
 
-#endif
 IsEnabledBenchmarkFlag, GetBenchmarkFlag, SetBenchmarkFlag,
 IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgParseFlag, GetBgParseFlag, SetBgParseFlag,

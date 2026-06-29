@@ -126,9 +126,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
 #endif
     polymorphicCacheState(0),
     stackProbeCount(0),
-#ifdef BAILOUT_INJECTION
     bailOutByteCodeLocationCount(0),
-#endif
     sourceCodeSize(0),
     nativeCodeSize(0),
     threadAlloc(u"TC", GetPageAllocator(), Js::Throw::OutOfMemory),
@@ -506,13 +504,11 @@ ThreadContext::~ThreadContext()
         this->ClearHeapEnum();
     }
 
-#ifdef BAILOUT_INJECTION
     if (Js::Configuration::Global.flags.IsEnabled(Js::BailOutByteCodeFlag)
         && Js::Configuration::Global.flags.BailOutByteCode.Empty())
     {
         Output::Print(u"Bail out byte code location count: %d", this->bailOutByteCodeLocationCount);
     }
-#endif
 
     Assert(processNativeCodeSize >= nativeCodeSize);
     ::InterlockedExchangeSubtract(&processNativeCodeSize, nativeCodeSize);

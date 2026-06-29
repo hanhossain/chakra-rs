@@ -100,13 +100,11 @@ namespace Js
         BaselineModeFlag,
         DumpOnCrashFlag,
         FullMemoryDumpFlag,
-        #ifdef BAILOUT_INJECTION
         BailOutFlag,
         BailOutAtEveryLineFlag,
         BailOutAtEveryByteCodeFlag,
         BailOutAtEveryImplicitCallFlag,
         BailOutByteCodeFlag,
-        #endif
         BenchmarkFlag,
         BgJitFlag,
         BgParseFlag,
@@ -1581,13 +1579,11 @@ namespace Js
         Boolean BaselineMode;
         String DumpOnCrash;
         String FullMemoryDump;
-        #ifdef BAILOUT_INJECTION
             NumberPairSet BailOut;
             Boolean BailOutAtEveryLine;
             Boolean BailOutAtEveryByteCode;
             Boolean BailOutAtEveryImplicitCall;
             NumberSet BailOutByteCode;
-        #endif
         Boolean Benchmark;
         Boolean BgJit;
         Boolean BgParse;
