@@ -9,9 +9,7 @@ IdleDecommitPageAllocator::IdleDecommitPageAllocator(AllocationPolicyManager * p
     Js::ConfigFlagsTable& flagTable,
     uint maxFreePageCount, uint maxIdleFreePageCount,
     bool zeroPages,
-#if ENABLE_BACKGROUND_PAGE_FREEING 
     BackgroundPageQueue *  backgroundPageQueue,
-#endif
     uint maxAllocPageCount, bool enableWriteBarrier) :
 #ifdef IDLE_DECOMMIT_ENABLED
     idleDecommitTryEnterWaitFactor(0),
@@ -19,9 +17,7 @@ IdleDecommitPageAllocator::IdleDecommitPageAllocator(AllocationPolicyManager * p
     hadDecommitTimer(false),
 #endif
     PageAllocator(policyManager, flagTable, type, maxFreePageCount, zeroPages,
-#if ENABLE_BACKGROUND_PAGE_FREEING
     backgroundPageQueue,
-#endif        
     maxAllocPageCount, 0, false, false, GetCurrentProcess(), enableWriteBarrier),
     maxIdleDecommitFreePageCount(maxIdleFreePageCount),
     maxNonIdleDecommitFreePageCount(maxFreePageCount)

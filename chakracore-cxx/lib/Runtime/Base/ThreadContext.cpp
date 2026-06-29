@@ -95,9 +95,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     bgJit(Js::Configuration::Global.flags.BgJit),
     pageAllocator(allocationPolicyManager, PageAllocatorType_Thread, Js::Configuration::Global.flags, 0, RecyclerHeuristic::Instance.DefaultMaxFreePageCount,
         false
-#if ENABLE_BACKGROUND_PAGE_FREEING
         , &backgroundPageQueue
-#endif
         ),
     recycler(nullptr),
     hasCollectionCallBack(false),

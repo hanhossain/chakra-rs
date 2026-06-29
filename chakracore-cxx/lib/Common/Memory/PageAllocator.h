@@ -452,7 +452,6 @@ public:
     static size_t GetAndResetMaxUsedBytes();
 
     // xplat TODO: implement a platform agnostic version of interlocked linked lists
-#if ENABLE_BACKGROUND_PAGE_FREEING
     struct FreePageEntry
     {
         FreePageEntry* Next;
@@ -535,16 +534,13 @@ public:
             return (unsigned short)(count % 65536);
         }
     };
-#endif
 
     PageAllocatorBase(AllocationPolicyManager * policyManager,
         Js::ConfigFlagsTable& flags = Js::Configuration::Global.flags,
         PageAllocatorType type = PageAllocatorType_Max,
         uint maxFreePageCount = DefaultMaxFreePageCount,
         bool zeroPages = false,
-#if ENABLE_BACKGROUND_PAGE_FREEING
         BackgroundPageQueue * backgroundPageQueue = nullptr,
-#endif
         uint maxAllocPageCount = DefaultMaxAllocPageCount,
         uint secondaryAllocPageCount = DefaultSecondaryAllocPageCount,
         bool stopAllocationOnOutOfMemory = false,
@@ -579,9 +575,7 @@ public:
     char * AllocPagesPageAligned(uint pageCount, TPageSegment ** pageSegment);
 
     void ReleasePages(void * address, uint pageCount, void * pageSegment);
-#if ENABLE_BACKGROUND_PAGE_FREEING
     void BackgroundReleasePages(void * address, uint pageCount, TPageSegment * pageSegment);
-#endif
     void MemSetLocal(_In_ void *dst, int val, size_t sizeInBytes);
 
     // Decommit
@@ -593,9 +587,7 @@ public:
     void StopQueueZeroPage();
     void ZeroQueuedPages();
     void BackgroundZeroQueuedPages();
-#if ENABLE_BACKGROUND_PAGE_FREEING
     void FlushBackgroundPages();
-#endif
 
     bool DisableAllocationOutOfMemory() const { return disableAllocationOutOfMemory; }
     void ResetDisableAllocationOutOfMemory() { disableAllocationOutOfMemory = false; }
@@ -655,9 +647,7 @@ protected:
 
     template <bool notPageAligned>
     char * TryAllocFreePages(uint pageCount, TPageSegment ** pageSegment);
-#if ENABLE_BACKGROUND_PAGE_FREEING
     char * TryAllocFromZeroPagesList(uint pageCount, TPageSegment ** pageSegment, BackgroundPageQueue* bgPageQueue, bool isPendingZeroList);
-#endif
     char * TryAllocFromZeroPages(uint pageCount, TPageSegment ** pageSegment);
 
     template <bool notPageAligned>
@@ -694,9 +684,7 @@ protected:
     bool ZeroPages() const { return zeroPages; }
     bool QueueZeroPages() const { return queueZeroPages; }
 
-#if ENABLE_BACKGROUND_PAGE_FREEING
     FreePageEntry * PopPendingZeroPage();
-#endif
 
 #if DBG
     void Check();
@@ -728,11 +716,9 @@ protected:
 
     // zero pages
     bool zeroPages;
-#if ENABLE_BACKGROUND_PAGE_FREEING
     BackgroundPageQueue * backgroundPageQueue;
     bool queueZeroPages;
     bool hasZeroQueuedPages;
-#endif
 
     // Idle Decommit
     bool isUsed;
@@ -788,9 +774,7 @@ protected:
 private:
     uint GetSecondaryAllocPageCount() const { return this->secondaryAllocPageCount; }
     void IntegrateSegments(DListBase<TPageSegment>& segmentList, uint segmentCount, size_t pageCount);
-#if ENABLE_BACKGROUND_PAGE_FREEING
     void QueuePages(void * address, uint pageCount, TPageSegment * pageSegment);
-#endif
 
     template <bool notPageAligned>
     char* AllocPagesInternal(uint pageCount, TPageSegment ** pageSegment);

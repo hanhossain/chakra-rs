@@ -670,9 +670,7 @@ public:
     void ReleasePagesSweep(Recycler * recycler);
     void ReleasePagesShutdown(Recycler * recycler);
 
-#if ENABLE_BACKGROUND_PAGE_FREEING
     void BackgroundReleasePagesSweep(Recycler* recycler);
-#endif
 
     void Reset();
 

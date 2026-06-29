@@ -141,7 +141,6 @@ template <typename TBlockType>
 void
 RecyclerSweep::QueueEmptyHeapBlock(HeapBucketT<TBlockType> const *heapBucket, TBlockType * heapBlock)
 {
-#if ENABLE_BACKGROUND_PAGE_FREEING
     if (CONFIG_FLAG(EnableBGFreeZero))
     {
         auto& bucketData = this->GetBucketData(heapBucket);
@@ -159,7 +158,6 @@ RecyclerSweep::QueueEmptyHeapBlock(HeapBucketT<TBlockType> const *heapBucket, TB
         heapBlock->SetNextBlock(list);
         bucketData.pendingEmptyBlockList = heapBlock;
     }
-#endif
 }
 
 template <typename TBlockType>

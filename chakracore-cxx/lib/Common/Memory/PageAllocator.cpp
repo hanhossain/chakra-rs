@@ -642,10 +642,8 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::PageAllocatorBase(Allo
     Js::ConfigFlagsTable& flagTable,
     PageAllocatorType type,
     uint maxFreePageCount, bool zeroPages,
-#if ENABLE_BACKGROUND_PAGE_FREEING
     BackgroundPageQueue * backgroundPageQueue,
-#endif
-    uint maxAllocPageCount, 
+    uint maxAllocPageCount,
     uint secondaryAllocPageCount,
     bool stopAllocationOnOutOfMemory, 
     bool excludeGuardPages, 
@@ -845,7 +843,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddPageSegment(DListBa
     return segment;
 }
 
-#if ENABLE_BACKGROUND_PAGE_FREEING
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 char *
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFromZeroPagesList(
@@ -927,7 +924,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::TryAllocFromZeroPagesL
 
     return pages;
 }
-#endif
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 char *
@@ -1733,7 +1729,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ZeroQueuedPages()
     this->hasZeroQueuedPages = false;
 }
 
-#if ENABLE_BACKGROUND_PAGE_FREEING
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::BackgroundReleasePages(void * address, uint pageCount, TPageSegment * segment)
@@ -1753,9 +1748,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::QueuePages(void * addr
     freePageEntry->pageCount = pageCount;
     backgroundPageQueue->PushFreePageEntry(freePageEntry);
 }
-#endif
 
-#if ENABLE_BACKGROUND_PAGE_FREEING
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FlushBackgroundPages()
@@ -1795,7 +1788,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FlushBackgroundPages()
     PAGE_ALLOC_VERBOSE_TRACE(u"New free pages: %d\n", newFreePages);
     this->AddFreePageCount(newFreePages);
 }
-#endif
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
