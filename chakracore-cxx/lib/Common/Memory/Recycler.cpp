@@ -176,9 +176,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     pinnedObjectMap(1024, HeapAllocator::GetNoMemProtectInstance()),
     weakReferenceMap(1024, HeapAllocator::GetNoMemProtectInstance()),
     weakReferenceCleanupId(0),
-#if ENABLE_WEAK_REFERENCE_REGIONS
     weakReferenceRegionList(HeapAllocator::GetNoMemProtectInstance()),
-#endif
     collectionWrapper(&DefaultRecyclerCollectionWrapper::Instance),
     isScriptActive(false),
     isInScript(false),
@@ -2713,8 +2711,6 @@ Recycler::SweepWeakReference()
         return true;
     });
 
-#if ENABLE_WEAK_REFERENCE_REGIONS
-
     auto edIt = this->weakReferenceRegionList.GetEditingIterator();
     while (edIt.Next())
     {
@@ -2767,7 +2763,6 @@ Recycler::SweepWeakReference()
             }
         }
     }
-#endif
 
     this->weakReferenceCleanupId += hasCleanup;
 
@@ -4680,7 +4675,6 @@ Recycler::BackgroundMark()
 void
 Recycler::BackgroundMarkWeakRefs()
 {
-#if ENABLE_WEAK_REFERENCE_REGIONS
     auto iterator = this->weakReferenceRegionList.GetIterator();
     while (iterator.Next())
     {
@@ -4717,7 +4711,6 @@ Recycler::BackgroundMarkWeakRefs()
             }
         }
     }
-#endif
 }
 
 void

@@ -128,7 +128,6 @@ template<ObjectInfoBits infoBits>
 struct InfoBitsWrapper{};
 
 
-#if ENABLE_WEAK_REFERENCE_REGIONS
 template<typename T>
 static constexpr bool is_pointer = false;
 template<typename K>
@@ -167,7 +166,6 @@ private:
     typename WriteBarrierFieldTypeTraits<HeapBlock*, _no_write_barrier_policy, _no_write_barrier_policy>::Type arrayHeapBlock;
 };
 
-#endif
 
 
 // Allocation macro
@@ -754,9 +752,7 @@ private:
 
     WeakReferenceHashTable<PrimePolicy> weakReferenceMap;
     uint weakReferenceCleanupId;
-#if ENABLE_WEAK_REFERENCE_REGIONS
     SList<RecyclerWeakReferenceRegion, HeapAllocator> weakReferenceRegionList;
-#endif
 
     void * transientPinnedObject;
 #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
@@ -1267,10 +1263,8 @@ public:
 
     template<typename T>
     RecyclerWeakReference<T>* CreateWeakReferenceHandle(T* pStrongReference);
-#if ENABLE_WEAK_REFERENCE_REGIONS
     template<typename T>
     RecyclerWeakReferenceRegionItem<T>* CreateWeakReferenceRegion(size_t count);
-#endif
 
     uint GetWeakReferenceCleanupId() const { return weakReferenceCleanupId; }
 
