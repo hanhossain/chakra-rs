@@ -18,11 +18,8 @@ public:
     static const uint ObjectAllocationShift = 4;        // 16
     static const uint ObjectGranularity = 1 << ObjectAllocationShift;
     static const uint BucketCount = (MaxSmallObjectSize >> ObjectAllocationShift);
-
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
     static const uint MediumObjectGranularity = 256;
     static const uint MediumBucketCount = (MaxMediumObjectSize - MaxSmallObjectSize) / MediumObjectGranularity;
-#endif
 };
 
 ///

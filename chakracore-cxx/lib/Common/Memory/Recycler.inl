@@ -286,13 +286,11 @@ Recycler::RealAllocFromBucket(HeapInfo* heap, size_t size)
         sizeCat = (uint)HeapInfo::GetAlignedSizeNoCheck(size);
         memBlock = heap->RealAlloc<attributes, nothrow>(this, sizeCat, size);
     }
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
     else
     {
         sizeCat = (uint)HeapInfo::GetMediumObjectAlignedSizeNoCheck(size);
         memBlock = heap->MediumAlloc<attributes, nothrow>(this, sizeCat, size);
     }
-#endif
 
     // If we are not allowed to throw, then the memory returned here could be null so check for that
     // If we are allowed to throw, then memBlock is not allowed to null so assert that
@@ -353,12 +351,10 @@ Recycler::RealAlloc(HeapInfo* heap, size_t size)
         return RealAllocFromBucket<attributes, /* isSmallAlloc = */ true, nothrow>(heap, size);
     }
 
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
     if (HeapInfo::IsMediumObject(size))
     {
         return RealAllocFromBucket<attributes, /* isSmallAlloc = */ false, nothrow>(heap, size);
     }
-#endif
 
     return LargeAlloc<nothrow>(heap, size, attributes);
 }
