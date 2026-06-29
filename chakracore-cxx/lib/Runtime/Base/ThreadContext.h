@@ -1379,9 +1379,7 @@ public:
 #endif
 #endif
 
-#if DBG || defined(RUNTIME_DATA_COLLECTION)
     uint GetScriptContextCount() const { return this->scriptContextCount; }
-#endif
     Js::ScriptContext* GetScriptContextList() const { return this->scriptContextList; }
     bool WasAnyScriptContextEverRegistered() const { return this->scriptContextEverRegistered; }
 
@@ -1546,9 +1544,7 @@ private:
     RecyclerWeakReference<const Js::PropertyRecord> * CreatePropertyRecordWeakRef(const Js::PropertyRecord * propertyRecord);
     void AddCaseInvariantPropertyRecord(const Js::PropertyRecord * propertyRecord);
 
-#if DBG || defined(RUNTIME_DATA_COLLECTION)
     uint scriptContextCount;
-#endif
 
 public:
     void UncheckedAddBuiltInPropertyId();

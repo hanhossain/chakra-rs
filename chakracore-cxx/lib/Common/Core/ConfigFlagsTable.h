@@ -554,9 +554,7 @@ namespace Js
         LowMemoryCapFlag,
         NewPagesCapDuringBGSweepingFlag,
         AllocPolicyLimitFlag,
-        #ifdef RUNTIME_DATA_COLLECTION
         RuntimeDataOutputFileFlag,
-        #endif
         SpeculationCapFlag,
         #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
         StatsFlag,
@@ -2035,9 +2033,7 @@ namespace Js
         Number LowMemoryCap;
         Number NewPagesCapDuringBGSweeping;
         Number AllocPolicyLimit;
-        #ifdef RUNTIME_DATA_COLLECTION
-            String RuntimeDataOutputFile;
-        #endif
+        String RuntimeDataOutputFile;
         Number SpeculationCap;
         #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
             Phases Stats;

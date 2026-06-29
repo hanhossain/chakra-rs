@@ -848,9 +848,7 @@ private:
         void AddToEvalMapHelper(FastEvalMapString & key, BOOL isIndirect, ScriptFunction *pFuncScript);
 
         uint moduleSrcInfoCount;
-#ifdef RUNTIME_DATA_COLLECTION
         time_t createTime;
-#endif
         char16_t const * url;
 
         void PrintStats();
@@ -911,10 +909,8 @@ private:
 
         char16_t const * GetUrl() const { return url; }
         void SetUrl(BSTR bstr);
-#ifdef RUNTIME_DATA_COLLECTION
         time_t GetCreateTime() const { return createTime; }
         uint GetAllocId() const { return allocId; }
-#endif
 
 #ifdef HEAP_ENUMERATION_VALIDATION
         bool IsInitialized() { return this->isInitialized; }
@@ -1022,7 +1018,6 @@ private:
 #endif
 
 #if ENABLE_PROFILE_INFO
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         void ClearDynamicProfileList()
         {
             if (this->Cache()->profileInfoList)
@@ -1033,7 +1028,6 @@ private:
         }
 
         DynamicProfileInfoList * GetProfileInfoList() { return this->Cache()->profileInfoList; }
-#endif
 #endif
 
         SRCINFO const * GetModuleSrcInfo(Js::ModuleID moduleID);
@@ -1587,9 +1581,7 @@ private:
         template<template<typename> class BarrierT>
         void AddDynamicProfileInfo(FunctionBody * functionBody, BarrierT<DynamicProfileInfo>& dynamicProfileInfo);
 #endif
-#if DBG || defined(RUNTIME_DATA_COLLECTION)
         uint allocId;
-#endif
 
 #ifdef PROFILE_EXEC
         void DisableProfiler();

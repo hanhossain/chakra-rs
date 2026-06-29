@@ -21,7 +21,6 @@ namespace Js
         size_t size;
     };
 
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
     bool DynamicProfileInfo::NeedProfileInfoList()
     {
 #pragma prefast(suppress: 6235 6286, "(<non-zero constant> || <expression>) is always a non-zero constant. - This is wrong, DBG_DUMP is not set in some build variants")
@@ -29,12 +28,9 @@ namespace Js
 #ifdef DYNAMIC_PROFILE_STORAGE
             || DynamicProfileStorage::IsEnabled()
 #endif
-#ifdef RUNTIME_DATA_COLLECTION
             || (Configuration::Global.flags.RuntimeDataOutputFile != nullptr)
-#endif
             ;
     }
-#endif
 
     void ArrayCallSiteInfo::SetIsNotNativeIntArray()
     {
@@ -99,13 +95,11 @@ namespace Js
         }
         else
         {
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
             if (DynamicProfileInfo::NeedProfileInfoList())
             {
                 info = RecyclerNewPlusZ(recycler, totalAlloc, DynamicProfileInfo, functionBody);
             }
             else
-#endif
             {
                 info = RecyclerNewPlusLeafZ(recycler, totalAlloc, DynamicProfileInfo, functionBody);
             }
@@ -128,9 +122,7 @@ namespace Js
     }
 
     DynamicProfileInfo::DynamicProfileInfo(FunctionBody * functionBody)
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         : functionBody(DynamicProfileInfo::NeedProfileInfoList() ? functionBody : nullptr)
-#endif
     {
         hasFunctionBody = true;
 #if DBG
@@ -393,11 +385,9 @@ namespace Js
 
     void DynamicProfileInfo::RecordParameterAtCallSite(FunctionBody * functionBody, ProfileId callSiteId, Var arg, int argNum, Js::RegSlot regSlot)
     {
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         // If we persistsAcrossScriptContext, the dynamic profile info may be referred to by multiple function body from
         // different script context
         Assert(!DynamicProfileInfo::NeedProfileInfoList() || this->persistsAcrossScriptContexts || this->functionBody == functionBody);
-#endif
 
         Assert(argNum < Js::InlineeCallInfo::MaxInlineeArgoutCount);
         Assert(callSiteId < functionBody->GetProfiledCallSiteCount());
@@ -528,11 +518,9 @@ namespace Js
             return;
         }
 
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         // If we persistsAcrossScriptContext, the dynamic profile info may be referred to by multiple function body from
         // different script context
         Assert(!DynamicProfileInfo::NeedProfileInfoList() || this->persistsAcrossScriptContexts || this->functionBody == callerBody);
-#endif
 
         bool doInline = true;
         // This is a hard limit as we only use 4 bits to encode the actual count in the InlineeCallInfo
@@ -671,11 +659,9 @@ namespace Js
     {
         std::unique_lock cs(callSiteInfoCS);
 
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         // If we persistsAcrossScriptContext, the dynamic profile info may be referred to by multiple function body from
         // different script context
         Assert(!DynamicProfileInfo::NeedProfileInfoList() || this->persistsAcrossScriptContexts || this->functionBody == functionBody);
-#endif
         bool doInline = true;
         // This is a hard limit as we only use 4 bits to encode the actual count in the InlineeCallInfo
         if (actualArgCount > Js::InlineeCallInfo::MaxInlineeArgoutCount)
@@ -742,11 +728,9 @@ namespace Js
     {
         std::unique_lock cs(callSiteInfoCS);
 
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         // If we persistsAcrossScriptContext, the dynamic profile info may be referred to by multiple function body from
         // different script context
         Assert(!DynamicProfileInfo::NeedProfileInfoList() || this->persistsAcrossScriptContexts || this->functionBody == functionBody);
-#endif
         Assert(callApplyCallSiteNum < functionBody->GetProfiledCallApplyCallSiteCount());
         Js::SourceId oldSourceId = callApplyTargetInfo[callApplyCallSiteNum].u.functionData.sourceId;
         Js::LocalFunctionId oldFunctionId = callApplyTargetInfo[callApplyCallSiteNum].u.functionData.functionId;
@@ -2496,7 +2480,6 @@ namespace Js
     }
 #endif
 
-#ifdef RUNTIME_DATA_COLLECTION
     std::recursive_mutex DynamicProfileInfo::s_csOutput;
 
     template <typename T>
@@ -2608,7 +2591,6 @@ namespace Js
         fflush(file);
         fclose(file);
     }
-#endif
 
     void DynamicProfileInfo::InstantiateForceInlinedMembers()
     {

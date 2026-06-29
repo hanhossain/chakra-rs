@@ -197,9 +197,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
 
     functionCount = 0;
     sourceInfoCount = 0;
-#if DBG || defined(RUNTIME_DATA_COLLECTION)
     scriptContextCount = 0;
-#endif
     isScriptActive = false;
 
 #ifdef ENABLE_CUSTOM_ENTROPY
@@ -2250,9 +2248,7 @@ ThreadContext::RegisterScriptContext(Js::ScriptContext *scriptContext)
         scriptContext->ForceNoDynamicThunks();
     }
 
-#if DBG || defined(RUNTIME_DATA_COLLECTION)
     scriptContextCount++;
-#endif
     scriptContextEverRegistered = true;
 }
 
@@ -2278,9 +2274,7 @@ ThreadContext::UnregisterScriptContext(Js::ScriptContext *scriptContext)
     }
     scriptContext->prev = nullptr;
     scriptContext->next = nullptr;
-#if DBG || defined(RUNTIME_DATA_COLLECTION)
     scriptContextCount--;
-#endif
 }
 
 ThreadContext::CollectCallBack *

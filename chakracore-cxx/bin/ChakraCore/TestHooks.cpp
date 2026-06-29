@@ -5445,7 +5445,6 @@ int32_t SetAllocPolicyLimitFlag(int flag)
     Js::Configuration::Global.flags.AllocPolicyLimit = flag;
     return S_OK;
 }
-#ifdef RUNTIME_DATA_COLLECTION
 bool IsEnabledRuntimeDataOutputFileFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::RuntimeDataOutputFileFlag);
@@ -5462,7 +5461,6 @@ int32_t SetRuntimeDataOutputFileFlag(BSTR flag)
     Js::Configuration::Global.flags.RuntimeDataOutputFile = flag;
     return S_OK;
 }
-#endif
 bool IsEnabledSpeculationCapFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::SpeculationCapFlag);
@@ -7154,9 +7152,7 @@ IsEnabledRecyclerVerifyMarkFlag, GetRecyclerVerifyMarkFlag, SetRecyclerVerifyMar
 IsEnabledLowMemoryCapFlag, GetLowMemoryCapFlag, SetLowMemoryCapFlag,
 IsEnabledNewPagesCapDuringBGSweepingFlag, GetNewPagesCapDuringBGSweepingFlag, SetNewPagesCapDuringBGSweepingFlag,
 IsEnabledAllocPolicyLimitFlag, GetAllocPolicyLimitFlag, SetAllocPolicyLimitFlag,
-#ifdef RUNTIME_DATA_COLLECTION
 IsEnabledRuntimeDataOutputFileFlag, GetRuntimeDataOutputFileFlag, SetRuntimeDataOutputFileFlag,
-#endif
 IsEnabledSpeculationCapFlag, GetSpeculationCapFlag, SetSpeculationCapFlag,
 #if EXCEPTION_RECOVERY
 IsEnabledSwallowExceptionsFlag, GetSwallowExceptionsFlag, SetSwallowExceptionsFlag,

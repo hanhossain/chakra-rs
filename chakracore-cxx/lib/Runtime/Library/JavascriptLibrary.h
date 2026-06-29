@@ -93,9 +93,7 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<EnumeratorCache*>::Type stringifyCache;
         typename WriteBarrierFieldTypeTraits<EnumeratorCache*>::Type createKeysCache;
 #if ENABLE_PROFILE_INFO
-#if DBG_DUMP || defined(DYNAMIC_PROFILE_STORAGE) || defined(RUNTIME_DATA_COLLECTION)
         typename WriteBarrierFieldTypeTraits<DynamicProfileInfoList*>::Type profileInfoList;
-#endif
 #endif
         Cache() : toStringTagCache(nullptr), toJSONCache(nullptr), assignCache(nullptr), stringifyCache(nullptr) { }
     };

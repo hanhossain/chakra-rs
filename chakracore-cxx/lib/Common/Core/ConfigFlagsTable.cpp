@@ -1222,9 +1222,7 @@ namespace Js
         u"LowMemoryCap",
         u"NewPagesCapDuringBGSweeping",
         u"AllocPolicyLimit",
-#ifdef RUNTIME_DATA_COLLECTION
         u"RuntimeDataOutputFile",
-#endif
         u"SpeculationCap",
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
         u"Stats",
@@ -2319,9 +2317,7 @@ namespace Js
         u"Memory cap indicating a low-memory process",
         u"New pages count allowed to be allocated during background sweeping",
         u"Memory allocation policy limit in MB (default: -1, which means no allocation policy limit).",
-#ifdef RUNTIME_DATA_COLLECTION
         u"Filename to write the dynamic profile info",
-#endif
         u"How much bytecode we'll speculatively JIT",
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
         u"Stats the given phase",
@@ -3016,9 +3012,7 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#ifdef RUNTIME_DATA_COLLECTION
         NoParentFlag,
-#endif
         NoParentFlag,
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
         NoParentFlag,
@@ -3729,9 +3723,7 @@ namespace Js
         LowMemoryCap(DEFAULT_CONFIG_LowMemoryCap),
         NewPagesCapDuringBGSweeping(DEFAULT_CONFIG_NewPagesCapDuringBGSweeping),
         AllocPolicyLimit(DEFAULT_CONFIG_AllocationPolicyLimit),
-#ifdef RUNTIME_DATA_COLLECTION
         RuntimeDataOutputFile(nullptr),
-#endif
         SpeculationCap(DEFAULT_CONFIG_SpeculationCap),
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
         Stats(),
@@ -5466,10 +5458,8 @@ namespace Js
             return FlagNumber;
         case AllocPolicyLimitFlag:
             return FlagNumber;
-        #ifdef RUNTIME_DATA_COLLECTION
         case RuntimeDataOutputFileFlag:
             return FlagString;
-        #endif
         case SpeculationCapFlag:
             return FlagNumber;
         #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
@@ -6648,10 +6638,8 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&NewPagesCapDuringBGSweeping));
         case AllocPolicyLimitFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&AllocPolicyLimit));
-        #ifdef RUNTIME_DATA_COLLECTION
         case RuntimeDataOutputFileFlag:
             return reinterpret_cast<void*>(const_cast<String*>(&RuntimeDataOutputFile));
-        #endif
         case SpeculationCapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&SpeculationCap));
         #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
@@ -16684,7 +16672,6 @@ if (IsEnabled(AllocPolicyLimitFlag))
     };
     Output::Print(u"\n");
 }
-#ifdef RUNTIME_DATA_COLLECTION
 if (IsEnabled(RuntimeDataOutputFileFlag))
 {
     Output::Print(u"-%s", u"RuntimeDataOutputFile");
@@ -16710,7 +16697,6 @@ if (IsEnabled(RuntimeDataOutputFileFlag))
     };
     Output::Print(u"\n");
 }
-#endif
 if (IsEnabled(SpeculationCapFlag))
 {
     Output::Print(u"-%s", u"SpeculationCap");
