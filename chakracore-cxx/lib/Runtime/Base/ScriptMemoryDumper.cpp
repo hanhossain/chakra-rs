@@ -46,7 +46,6 @@ Js::Var ScriptMemoryDumper::Dump()
         MergeCurrentStats();
     }
 
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
     for (uint32_t i = 0 ; i < HeapConstants::MediumBucketCount; i++)
     {
         ResetCurrentStats();
@@ -62,7 +61,6 @@ Js::Var ScriptMemoryDumper::Dump()
         SaveCurrentAtIndex(i + HeapConstants::BucketCount);
         MergeCurrentStats();
     }
-#endif
 
     ResetCurrentStats();
     DumpLargeBucket(&heapInfo->largeObjectBucket);

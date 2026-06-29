@@ -145,11 +145,7 @@ public:
     static bool IsSmallObject(size_t nBytes) { return nBytes <= HeapConstants::MaxSmallObjectSize; }
     static bool IsMediumObject(size_t nBytes)
     {
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
         return nBytes > HeapConstants::MaxSmallObjectSize && nBytes <= HeapConstants::MaxMediumObjectSize;
-#else
-        return false;
-#endif
     }
 
     static bool IsSmallBlockAllocation(size_t nBytes)
@@ -163,33 +159,23 @@ public:
 
     static bool IsLargeObject(size_t nBytes)
     {
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
         return nBytes > HeapConstants::MaxMediumObjectSize;
-#else
-        return nBytes > HeapConstants::MaxSmallObjectSize;
-#endif
     }
 
     static BOOL IsAlignedSize(size_t sizeCat) { return (sizeCat != 0) && (0 == (sizeCat & HeapInfo::ObjectAlignmentMask)); }
     static BOOL IsAlignedSmallObjectSize(size_t sizeCat) { return (sizeCat != 0) && (HeapInfo::IsSmallObject(sizeCat) && (0 == (sizeCat & HeapInfo::ObjectAlignmentMask))); }
     static BOOL IsAlignedMediumObjectSize(size_t sizeCat) { return (sizeCat != 0) && (HeapInfo::IsMediumObject(sizeCat) && (0 == (sizeCat & HeapInfo::ObjectAlignmentMask))); }
-
     static size_t GetAlignedSize(size_t size) { return AllocSizeMath::Align(size, HeapConstants::ObjectGranularity); }
     static size_t GetAlignedSizeNoCheck(size_t size) { return Math::Align<size_t>(size, HeapConstants::ObjectGranularity); }
-
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
     static size_t GetMediumObjectAlignedSize(size_t size) { return AllocSizeMath::Align(size, HeapConstants::MediumObjectGranularity); }
     static size_t GetMediumObjectAlignedSizeNoCheck(size_t size) { return Math::Align<size_t>(size, HeapConstants::MediumObjectGranularity); }
-#endif
 
     static inline uint GetBucketIndex(size_t sizeCat) { Assert(IsAlignedSmallObjectSize(sizeCat)); return (uint)(sizeCat >> HeapConstants::ObjectAllocationShift) - 1; }
 
     template <typename TBlockAttributes>
     static uint GetObjectSizeForBucketIndex(uint bucketIndex);
 
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
     static uint GetMediumBucketIndex(size_t sizeCat) { Assert(IsAlignedMediumObjectSize(sizeCat)); return (uint)((sizeCat - HeapConstants::MaxSmallObjectSize - 1) / HeapConstants::MediumObjectGranularity); }
-#endif
 
     static BOOL IsAlignedAddress(void * address) { return (0 == (((size_t)address) & HeapInfo::ObjectAlignmentMask)); }
     static void * GetAlignedAddress(void * address) { return (void*)((uintptr_t)address & ~(uintptr_t)HeapInfo::ObjectAlignmentMask); }
@@ -197,13 +183,11 @@ private:
     template <ObjectInfoBits attributes>
     typename SmallHeapBlockType<attributes, SmallAllocationBlockAttributes>::BucketType& GetBucket(size_t sizeCat);
     
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
 #if SMALLBLOCK_MEDIUM_ALLOC
     template <ObjectInfoBits attributes>
     typename SmallHeapBlockType<attributes, MediumAllocationBlockAttributes>::BucketType& GetMediumBucket(size_t sizeCat);
 #else
     LargeHeapBucket& GetMediumBucket(size_t sizeCat);
-#endif
 #endif
 
     LargeHeapBlock * AddLargeHeapBlock(size_t pageCount);
@@ -437,12 +421,10 @@ public:
 
     HeapBucketGroup<SmallAllocationBlockAttributes> heapBuckets[HeapConstants::BucketCount];
 
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
 #if SMALLBLOCK_MEDIUM_ALLOC
     HeapBucketGroup<MediumAllocationBlockAttributes> mediumHeapBuckets[HeapConstants::MediumBucketCount];
 #else
     LargeHeapBucket mediumHeapBuckets[HeapConstants::MediumBucketCount];
-#endif
 #endif
     LargeHeapBucket largeObjectBucket;
     bool hasPendingTransferDisposedObjects;
@@ -574,7 +556,6 @@ HeapInfo::GetBucket(size_t sizeCat)
     return this->heapBuckets[bucket].GetBucket<attributes>();
 }
 
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
 #if SMALLBLOCK_MEDIUM_ALLOC
 template <ObjectInfoBits attributes>
 typename SmallHeapBlockType<attributes, MediumAllocationBlockAttributes>::BucketType&
@@ -592,7 +573,6 @@ HeapInfo::GetMediumBucket(size_t sizeCat)
     return this->mediumHeapBuckets[bucket];
 }
 #endif
-#endif
 
 template <ObjectInfoBits attributes, bool nothrow>
 inline char *
@@ -603,7 +583,6 @@ HeapInfo::RealAlloc(Recycler * recycler, size_t sizeCat, size_t size)
     return bucket.template RealAlloc<attributes, nothrow>(recycler, sizeCat, size);
 }
 
-#if defined(BUCKETIZE_MEDIUM_ALLOCATIONS)
 #if SMALLBLOCK_MEDIUM_ALLOC
 template <ObjectInfoBits attributes, bool nothrow>
 inline char *
@@ -621,7 +600,6 @@ HeapInfo::MediumAlloc(Recycler * recycler, size_t sizeCat)
     Assert(HeapInfo::IsAlignedMediumObjectSize(sizeCat));
     return this->GetMediumBucket<attributes>(sizeCat).Alloc<attributes, nothrow>(recycler, sizeCat);
 }
-#endif
 #endif
 
 template <ObjectInfoBits attributes>
@@ -696,14 +674,12 @@ inline uint HeapInfo::GetObjectSizeForBucketIndex(uint bucketIndex)
     return (bucketIndex + 1) << HeapConstants::ObjectAllocationShift;
 }
 
-#ifdef BUCKETIZE_MEDIUM_ALLOCATIONS
 template <>
 inline uint HeapInfo::GetObjectSizeForBucketIndex<MediumAllocationBlockAttributes>(uint bucketIndex)
 {
     Assert(IsMediumObject(HeapConstants::MaxSmallObjectSize + ((bucketIndex + 1) * HeapConstants::MediumObjectGranularity)));
     return HeapConstants::MaxSmallObjectSize + ((bucketIndex + 1) * HeapConstants::MediumObjectGranularity);
 }
-#endif
 
 
 template <typename TBlockAttributes>
