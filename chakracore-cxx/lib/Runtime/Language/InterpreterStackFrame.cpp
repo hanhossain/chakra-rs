@@ -7481,13 +7481,13 @@ namespace Js
 
     // specialized version for doubles
     template <>
-    double VECTORCALL InterpreterStackFrame::GetRegRaw(RegSlot localRegisterID) const
+    double InterpreterStackFrame::GetRegRaw(RegSlot localRegisterID) const
     {
         return (double)m_localDoubleSlots[localRegisterID];
     }
 
     template <>
-    float VECTORCALL InterpreterStackFrame::GetRegRaw(RegSlot localRegisterID) const
+    float InterpreterStackFrame::GetRegRaw(RegSlot localRegisterID) const
     {
         return (float)m_localFloatSlots[localRegisterID];
     }

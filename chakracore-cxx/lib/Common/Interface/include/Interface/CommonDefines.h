@@ -104,13 +104,6 @@
 
 #endif
 
-#if ENABLE_NATIVE_CODEGEN
-
-// ToDo (SaAgarwa): Disable VirtualTypedArray on ARM64 till we make sure it works correctly
-#endif
-
-#define VECTORCALL
-
 #define DELAYLOAD_SET_CFG_TARGET 1
 
 #ifndef PERFMAP_SIGNAL

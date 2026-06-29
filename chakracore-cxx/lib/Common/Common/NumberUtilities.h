@@ -106,8 +106,8 @@ namespace Js
         static bool IsSpecial(double value, unsigned long nSpecial);
         static unsigned long ToSpecial(double value);
         static uint32_t ToSpecial(float value);
-        static float VECTORCALL ReinterpretBits(int value);
-        static double VECTORCALL ReinterpretBits(long value);
+        static float ReinterpretBits(int value);
+        static double ReinterpretBits(long value);
 
         // Convert a given uint16_t into its corresponding string.
         // outBufferSize is in char16_t elements (and used only for ASSERTs)
