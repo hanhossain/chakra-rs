@@ -170,10 +170,6 @@ void InlineeFrameRecord::PopulateParent(Func* func)
 void InlineeFrameRecord::Finalize(Func* inlinee, uint32_t currentOffset)
 {
     this->PopulateParent(inlinee);
-#if TARGET_32
-    const uint32_t offsetMask = (~(uint32_t)0) >> (sizeof(uint) * CHAR_BIT - Js::InlineeCallInfo::ksizeofInlineeStartOffset);
-    AssertOrFailFast(currentOffset == (currentOffset & offsetMask));
-#endif
     this->inlineeStartOffset = currentOffset;
     this->inlineDepth = inlinee->inlineDepth;
 

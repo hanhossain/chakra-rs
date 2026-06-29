@@ -201,11 +201,7 @@ public:
 #endif
 
 protected:
-#if TARGET_32
-    static const uint VirtualAllocThreshold =  524288; // 512kb As per spec
-#else // TARGET_64
     static const uint VirtualAllocThreshold = 1048576; // 1MB As per spec : when we cross this threshold of bytes, we should add guard pages
-#endif
     static const uint maxGuardPages = 15;
     static const uint minGuardPages =  1;
 

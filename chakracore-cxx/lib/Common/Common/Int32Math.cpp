@@ -7,7 +7,7 @@
 bool
 Int32Math::Add(int32_t left, int32_t right, int32_t *pResult)
 {
-#if __has_builtin(__builtin_add_overflow) || TARGET_32
+#if __has_builtin(__builtin_add_overflow)
     return IntMathCommon<int32_t>::Add(left, right, pResult);
 #else
 

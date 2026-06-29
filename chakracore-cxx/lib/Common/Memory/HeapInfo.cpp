@@ -7,13 +7,7 @@
 #include "HeapInfo.h"
 #include <print>
 
-#if defined(TARGET_32)
-#include "ValidPointersMap/vpm.32b.h"
-#elif defined(TARGET_64)
 #include "ValidPointersMap/vpm.64b.h"
-#else
-#error "Platform is not handled"
-#endif
 
 template char* HeapInfo::RealAlloc<NoBit, false>(Recycler * recycler, size_t sizeCat, size_t size);
 

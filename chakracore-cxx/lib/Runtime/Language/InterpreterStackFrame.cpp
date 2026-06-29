@@ -7566,21 +7566,13 @@ namespace Js
     template <typename RegSlotType>
     void* InterpreterStackFrame::GetRegRawPtr(RegSlotType localRegisterID) const
     {
-#if TARGET_32
-        return (void*)m_localIntSlots[localRegisterID];
-#elif TARGET_64
         return (void*)m_localInt64Slots[localRegisterID];
-#endif
     }
 
     template <typename RegSlotType>
     void InterpreterStackFrame::SetRegRawPtr(RegSlotType localRegisterID, void* val)
     {
-#if TARGET_32
-        m_localIntSlots[localRegisterID] = (int32_t)val;
-#elif TARGET_64
         m_localInt64Slots[localRegisterID] = (long)val;
-#endif
     }
 
     template <typename RegSlotType>

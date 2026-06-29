@@ -453,9 +453,6 @@ Security::BuildCookieOpnd(IRType type, Func * func)
     case TyUint16:
         cookie = (uint16)Math::Rand();
         break;
-#if TARGET_32
-    case TyVar:
-#endif
     case TyInt32:
         cookie = (int32_t)Math::Rand();
         break;
@@ -483,11 +480,7 @@ Security::BuildCookieOpnd(IRType type, Func * func)
 IntConstType
 Security::EncodeValue(IR::Instr * instr, IR::Opnd *opnd, IntConstType constValue, _Out_ IR::RegOpnd **pNewOpnd)
 {
-    if (opnd->GetType() == TyInt32 || opnd->GetType() == TyInt16 || opnd->GetType() == TyInt8
-#if TARGET_32
-        || opnd->GetType() == TyVar
-#endif
-        )
+    if (opnd->GetType() == TyInt32 || opnd->GetType() == TyInt16 || opnd->GetType() == TyInt8)
     {
         IR::RegOpnd *regOpnd = IR::RegOpnd::New(StackSym::New(opnd->GetType(), instr->m_func), opnd->GetType(), instr->m_func);
         IR::Instr * instrNew = Lowerer::InsertMove(regOpnd, opnd, instr);

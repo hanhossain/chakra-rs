@@ -472,11 +472,7 @@ namespace Js
         };
     };
 
-#if defined(TARGET_32)
-    static_assert(sizeof(InlineCache) == 0x10);
-#else
     static_assert(sizeof(InlineCache) == 0x20);
-#endif
 
     static_assert(sizeof(InlineCache) == sizeof(InlineCacheAllocator::CacheLayout));
     static_assert(offsetof(InlineCache, invalidationListSlotPtr) == offsetof(InlineCacheAllocator::CacheLayout, strongRef));
@@ -803,9 +799,5 @@ namespace Js
         }
     };
 
-#if defined(TARGET_32)
-    static_assert(sizeof(IsInstInlineCache) == 0x10);
-#else
     static_assert(sizeof(IsInstInlineCache) == 0x20);
-#endif
 }

@@ -308,13 +308,7 @@ public:
 static const uint32_t c_debugFillPattern4 = 0xcececece;
 static const unsigned long c_debugFillPattern8 = 0xcececececececece;
 
-#if defined(TARGET_32)
-    static const uint32_t c_debugFillPattern = c_debugFillPattern4;
-#elif defined(TARGET_64)
-    static const unsigned long c_debugFillPattern = c_debugFillPattern8;
-#else
-#error unsupported platform
-#endif
+static const unsigned long c_debugFillPattern = c_debugFillPattern8;
 
 #endif
     uint32_t GetInstrCount();

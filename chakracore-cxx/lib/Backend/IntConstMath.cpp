@@ -11,12 +11,6 @@ bool IntConstMath::IsValid(IntConstType val, IRType type)
 {
     switch (type)
     {
-#if TARGET_32
-    case TyInt32:
-    case TyUint32:
-        static_assert(sizeof(IntConstType) == sizeof(int32_t));
-        return true;
-#elif TARGET_64
     case TyInt32:
     case TyUint32:
         return Math::FitsInDWord(val);
@@ -24,7 +18,6 @@ bool IntConstMath::IsValid(IntConstType val, IRType type)
     case TyUint64:
         static_assert(sizeof(IntConstType) == sizeof(long));
         return true;
-#endif
     default:
         Assert(UNREACHED);
         return false;
@@ -45,13 +38,8 @@ bool IntConstMath::Sub(IntConstType left, IntConstType right, IRType type, IntCo
 
 bool IntConstMath::Mul(IntConstType left, IntConstType right, IRType type, IntConstType * result)
 {
-#if TARGET_32
-    bool overflowed = Int32Math::Mul(left, right, result);
-    static_assert(sizeof(IntConstType) == sizeof(int32_t));
-#elif TARGET_64
     bool overflowed = Int64Math::Mul(left, right, result);
     static_assert(sizeof(IntConstType) == sizeof(long));
-#endif
     return overflowed || !IsValid(*result, type);
 }
 

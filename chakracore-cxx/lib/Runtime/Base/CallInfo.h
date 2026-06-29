@@ -147,18 +147,10 @@ namespace Js
     {
         // Assumes big-endian layout.
         uint Count : 4;
-#if TARGET_32
-        uint InlineeStartOffset : 28;
-#else
         uint unused : 28;
         uint InlineeStartOffset;
-#endif
         static size_t const MaxInlineeArgoutCount = 0xF;
-#if TARGET_32
-        static uint const ksizeofInlineeStartOffset = 28;
-#else
         static uint const ksizeofInlineeStartOffset = 32;
-#endif
         static uint const inlineeStartOffsetShiftCount = (sizeof(void*) * CHAR_BIT - Js::InlineeCallInfo::ksizeofInlineeStartOffset);
 
         static bool Encode(intptr_t &callInfo, size_t count, size_t offset)

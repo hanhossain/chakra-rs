@@ -698,11 +698,7 @@ namespace Js
         , mTypedRegisterAllocator(
             allocator,
             AllocateRegisterSpace,
-            1 << WAsmJs::SIMD
-#if TARGET_32
-            | 1 << WAsmJs::INT64
-#endif
-        )
+            1 << WAsmJs::SIMD)
         , mFuncInfo(pnodeFnc->funcInfo)
         , mFuncBody(nullptr)
         , mMaxArgOutDepth(0)

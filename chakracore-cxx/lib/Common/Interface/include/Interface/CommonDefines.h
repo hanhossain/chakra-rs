@@ -46,10 +46,6 @@
 #define _M_ARM32_OR_ARM64 1
 #endif
 
-#if defined(_M_ARM)
-#define TARGET_32 1
-#endif
-
 #if defined(_M_X64) || defined(_M_ARM64)
 #define TARGET_64 1
 #endif
@@ -147,7 +143,7 @@
 #define ENABLE_BACKGROUND_JOB_PROCESSOR 1
 #define ENABLE_COPYONACCESS_ARRAY 1
 #ifndef DYNAMIC_INTERPRETER_THUNK
-#if defined(TARGET_32) || defined(TARGET_64)
+#if defined(TARGET_64)
 #define DYNAMIC_INTERPRETER_THUNK 1
 #else
 #define DYNAMIC_INTERPRETER_THUNK 0

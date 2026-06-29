@@ -2014,9 +2014,6 @@ WasmRegisterSpace* WasmBytecodeGenerator::GetRegisterSpace(WasmTypes::WasmType t
 {
     switch (type)
     {
-#if TARGET_32
-    case WasmTypes::Ptr:
-#endif
     case WasmTypes::I32: return mTypedRegisterAllocator.GetRegisterSpace(WAsmJs::INT32);
 #if TARGET_64
     case WasmTypes::Ptr:
