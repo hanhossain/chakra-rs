@@ -383,7 +383,6 @@ inline bool Recycler::TryGetWeakReferenceHandle(T* pStrongReference, RecyclerWea
     return this->weakReferenceMap.TryGetValue((char*) pStrongReference, (RecyclerWeakReferenceBase**)weakReference);
 }
 
-#if ENABLE_WEAK_REFERENCE_REGIONS
 template<typename T>
 inline RecyclerWeakReferenceRegionItem<T>* Recycler::CreateWeakReferenceRegion(size_t count)
 {
@@ -395,7 +394,6 @@ inline RecyclerWeakReferenceRegionItem<T>* Recycler::CreateWeakReferenceRegion(s
     this->weakReferenceRegionList.Push(region);
     return regionArray;
 }
-#endif
 
 
 

@@ -72,10 +72,6 @@
 #define ENABLE_SCRIPT_DEBUGGING
 #endif
 
-// GC features
-
-#define ENABLE_WEAK_REFERENCE_REGIONS 1
-
 // JIT features
 
 #define ENABLE_SPECTRE_RUNTIME_MITIGATIONS

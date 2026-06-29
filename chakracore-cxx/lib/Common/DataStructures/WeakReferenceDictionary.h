@@ -50,8 +50,6 @@ namespace JsUtil
         PREVENT_COPY(WeakReferenceDictionary);
     };
 
-#if ENABLE_WEAK_REFERENCE_REGIONS
-
     template<bool, typename T = void>
     struct enable_if {};
 
@@ -887,5 +885,4 @@ namespace JsUtil
             return this->freeCount > 0;
         }
     };
-#endif // ENABLE_WEAK_REFERENCE_REGIONS
 };

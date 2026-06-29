@@ -43,13 +43,8 @@ namespace Js
         //
         typedef JsUtil::BaseDictionary<WeakMapId, Var, Recycler, PowerOf2SizePolicy, RecyclerPointerComparer> WeakMapKeyMap;
 
-#if ENABLE_WEAK_REFERENCE_REGIONS
         typedef JsUtil::WeakReferenceRegionKeyDictionary<RecyclableObject*, bool, RecyclerPointerComparer> KeySet;
         typedef const RecyclerWeakReferenceRegionItem<RecyclableObject*>& WeakType;
-#else
-        typedef JsUtil::WeaklyReferencedKeyDictionary<RecyclableObject, bool, RecyclerPointerComparer<const RecyclableObject*>> KeySet;
-        typedef const RecyclerWeakReference<RecyclableObject>* WeakType;
-#endif
 
         typename WriteBarrierFieldTypeTraits<KeySet>::Type keySet;
 
