@@ -17,15 +17,9 @@ HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes> HeapInfo::mediumAllo
 
 template <class TBlockAttributes>
 ValidPointers<TBlockAttributes>::ValidPointers(ushort const * validPointers, uint bucketIndex)
-#if USE_VPM_TABLE
     : validPointers(validPointers)
-#endif
 {
-#if !USE_VPM_TABLE
-    Assert(validPointers == nullptr);
-    maxObjectIndex = CalculateBucketInfo(bucketIndex, &indexPerObject);
-#endif
-#if DBG && USE_VPM_TABLE
+#if DBG
     uint localIndexPerObject;
     uint localMaxObjectIndex = CalculateBucketInfo(bucketIndex, &localIndexPerObject);
     for (uint index = 0; index < TBlockAttributes::MaxSmallObjectCount; index++)
@@ -40,26 +34,17 @@ template <class TBlockAttributes>
 ushort ValidPointers<TBlockAttributes>::GetAddressIndex(uint index) const
 {
     Assert(index < TBlockAttributes::MaxSmallObjectCount);
-#if USE_VPM_TABLE    
     return validPointers[index];
-#else
-    return CalculateAddressIndex(index, indexPerObject, maxObjectIndex);
-#endif
-    
 }
 
 template <class TBlockAttributes>
 ushort ValidPointers<TBlockAttributes>::GetInteriorAddressIndex(uint index) const
 {
     Assert(index < TBlockAttributes::MaxSmallObjectCount);
-#if USE_VPM_TABLE    
     return validPointers[index + TBlockAttributes::MaxSmallObjectCount];
-#else
-    return CalculateInteriorAddressIndex(index, indexPerObject, maxObjectIndex);
-#endif
 }
 
-#if !USE_VPM_TABLE || DBG
+#if DBG
 template <class TBlockAttributes>
 uint ValidPointers<TBlockAttributes>::CalculateBucketInfo(uint bucketIndex, uint * indexPerObject)
 {
@@ -204,7 +189,6 @@ int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateVali
     }
     GenerateValidPointersMap(valid, *invalid, *blockMap);
 
-    std::println(file, "#if USE_VPM_TABLE");
     std::println(file, "const ushort HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::validPointersBuffer[HeapConstants::BucketCount][HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::rowSize] = \n{{");
     // Generate the full buffer.
     for (unsigned i = 0; i < HeapConstants::BucketCount; ++i)
@@ -217,7 +201,6 @@ int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateVali
         std::println(file, "\n    }}{}", i < HeapConstants::BucketCount - 1 ? "," : "");
     }
     std::println(file, "}};");
-    std::println(file, "#endif // USE_VPM_TABLE\n");
 
     // Generate the invalid bitvectors.
     std::println(
@@ -287,7 +270,6 @@ int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateVal
     }
     GenerateValidPointersMap(valid, *invalid, *blockMap);
 
-    std::println(file, "#if USE_VPM_TABLE");
     std::println(file, "const ushort HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::validPointersBuffer[MediumAllocationBlockAttributes::BucketCount][HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::rowSize] = \n{{");
     // Generate the full buffer.
     for (unsigned i = 0; i < HeapConstants::MediumBucketCount; ++i)
@@ -300,7 +282,6 @@ int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateVal
         std::println(file, "\n    }}{}", (i < HeapConstants::MediumBucketCount - 1 ? "," : ""));
     }
     std::println(file, "}};");
-    std::println(file, "#endif // USE_VPM_TABLE\n");
 
     // Generate the invalid bitvectors.
     std::println(
