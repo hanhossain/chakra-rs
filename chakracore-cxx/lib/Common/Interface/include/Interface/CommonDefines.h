@@ -87,9 +87,6 @@
 #define USE_VPM_TABLE 1
 
 
-// templatized code
-#define USE_STATIC_VPM 0
-
 #define ENABLE_PARTIAL_GC 1
 #define ENABLE_BACKGROUND_PAGE_ZEROING 1
 #define ENABLE_BACKGROUND_PAGE_FREEING 1
