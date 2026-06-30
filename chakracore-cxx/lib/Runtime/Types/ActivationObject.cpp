@@ -108,18 +108,6 @@ namespace Js
         return TRUE;
     }
 
-#if ENABLE_TTD
-    TTD::NSSnapObjects::SnapObjectType ActivationObject::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapActivationObject;
-    }
-
-    void ActivationObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<void*, TTD::NSSnapObjects::SnapObjectType::SnapActivationObject>(objData, nullptr);
-    }
-#endif
-
     BOOL BlockActivationObject::InitPropertyScoped(PropertyId propertyId, Var value)
     {
         // eval, etc., should not create var properties on block scope
@@ -164,18 +152,6 @@ namespace Js
         return blockScopeClone;
     }
 
-#if ENABLE_TTD
-    TTD::NSSnapObjects::SnapObjectType BlockActivationObject::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapBlockActivationObject;
-    }
-
-    void BlockActivationObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<void*, TTD::NSSnapObjects::SnapObjectType::SnapBlockActivationObject>(objData, nullptr);
-    }
-#endif
-
     template <> bool VarIsImpl<BlockActivationObject>(RecyclableObject* instance)
     {
         return VirtualTableInfo<Js::BlockActivationObject>::HasVirtualTable(instance) ||
@@ -204,36 +180,11 @@ namespace Js
         return false;
     }
 
-#if ENABLE_TTD
-    TTD::NSSnapObjects::SnapObjectType PseudoActivationObject::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapPseudoActivationObject;
-    }
-
-    void PseudoActivationObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<void*, TTD::NSSnapObjects::SnapObjectType::SnapPseudoActivationObject>(objData, nullptr);
-    }
-#endif
-
     template <> bool VarIsImpl<PseudoActivationObject>(RecyclableObject* instance)
     {
         return VirtualTableInfo<Js::PseudoActivationObject>::HasVirtualTable(instance) ||
             VirtualTableInfo<CrossSiteObject<PseudoActivationObject>>::HasVirtualTable(instance);
     }
-
-#if ENABLE_TTD
-    TTD::NSSnapObjects::SnapObjectType ConsoleScopeActivationObject::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapConsoleScopeActivationObject;
-    }
-
-    void ConsoleScopeActivationObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<void*, TTD::NSSnapObjects::SnapObjectType::SnapConsoleScopeActivationObject>(objData, nullptr);
-    }
-
-#endif
 
     template <> bool VarIsImpl<ConsoleScopeActivationObject>(RecyclableObject* instance)
     {
@@ -321,18 +272,6 @@ namespace Js
         cache[i].func = func;
         cache[i].type = (DynamicType*)func->GetType();
     }
-
-#if ENABLE_TTD
-    TTD::NSSnapObjects::SnapObjectType ActivationObjectEx::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::Invalid;
-    }
-
-    void ActivationObjectEx::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTDAssert(false, "Not implemented yet!!!");
-    }
-#endif
 
     template <> bool VarIsImpl<ActivationObjectEx>(RecyclableObject* instance)
     {

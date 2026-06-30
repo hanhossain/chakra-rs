@@ -81,19 +81,6 @@ namespace Js
         BOOL ClearAttribute(DynamicObject* instance, int index, PropertyAttributes attribute);
         BOOL AddProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects);
         virtual BOOL FreezeImpl(DynamicObject* instance, bool isConvertedType) override;
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkObjectSlots_TTD(TTD::SnapshotExtractor* extractor, DynamicObject* obj) const override
-        {
-            ;
-        }
-
-        virtual uint32_t ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const override
-        {
-            return 0;
-        }
-#endif
 #if DBG_DUMP
     public:
         void Dump(unsigned indent = 0) const override;

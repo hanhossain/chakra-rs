@@ -33,12 +33,6 @@ namespace Js
         virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
         virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
         virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<ActivationObject>(RecyclableObject* instance);
@@ -59,12 +53,6 @@ namespace Js
         virtual BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
 
         BlockActivationObject* Clone(ScriptContext *scriptContext);
-
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<BlockActivationObject>(RecyclableObject* instance);
@@ -82,12 +70,6 @@ namespace Js
         virtual BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
         virtual BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
         virtual BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
-
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<PseudoActivationObject>(RecyclableObject* instance);
@@ -105,12 +87,6 @@ namespace Js
         {
             AssertMsg(false, "ConsoleScopeActivationObject::DummyVirtualFunc function should never be called");
         }
-
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<ConsoleScopeActivationObject>(RecyclableObject* instance);
@@ -203,12 +179,6 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<uint>::Type lastFuncSlot;
         typename WriteBarrierFieldTypeTraits<bool>::Type committed;
         typename WriteBarrierFieldTypeTraits<FuncCacheEntry>::Type cache[1];
-
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<ActivationObjectEx>(RecyclableObject* instance);

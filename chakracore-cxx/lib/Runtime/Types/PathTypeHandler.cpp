@@ -3440,68 +3440,6 @@ namespace Js
     }
 #endif // ENABLE_FIXED_FIELDS
 
-#if ENABLE_TTD
-    void PathTypeHandlerBase::MarkObjectSlots_TTD(TTD::SnapshotExtractor* extractor, DynamicObject* obj) const
-    {
-        uint32_t plength = this->GetPathLength();
-        ObjectSlotAttributes * attributes = this->GetAttributeArray();
-
-        for(uint32_t index = 0; index < plength; ++index)
-        {
-            Js::PropertyId pid = GetTypePath()->GetPropertyIdUnchecked(index)->GetPropertyId();
-            ObjectSlotAttributes attr = attributes ? attributes[index] : ObjectSlotAttr_Default;
-
-            if (!DynamicTypeHandler::ShouldMarkPropertyId_TTD(pid) || (attr & ObjectSlotAttr_Deleted))
-            {
-                continue;
-            }
-
-            Js::Var value = obj->GetSlot(index);
-            extractor->MarkVisitVar(value);
-        }
-    }
-
-    uint32_t PathTypeHandlerBase::ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
-    {
-        uint32_t plength = this->GetPathLength();
-        ObjectSlotAttributes * attributes = this->GetAttributeArray();
-
-        for(uint32_t index = 0; index < plength; ++index)
-        {
-            ObjectSlotAttributes attr = attributes ? attributes[index] : ObjectSlotAttr_Default;
-            PropertyId propertyId = GetTypePath()->GetPropertyIdUnchecked(index)->GetPropertyId();
-            TTD::NSSnapType::SnapEntryDataKindTag tag;
-            if (attr == ObjectSlotAttr_Setter)
-            {
-                attr = attributes[GetTypePath()->LookupInline(propertyId, GetPathLength())];
-                tag = TTD::NSSnapType::SnapEntryDataKindTag::Setter;
-            }
-            else if (attr & ObjectSlotAttr_Accessor)
-            {
-                tag = TTD::NSSnapType::SnapEntryDataKindTag::Getter;
-            }
-            else
-            {
-                tag = TTD::NSSnapType::SnapEntryDataKindTag::Data;
-            }
-            TTD::NSSnapType::ExtractSnapPropertyEntryInfo(entryInfo + index, propertyId, ObjectSlotAttributesToPropertyAttributes(attr), tag);
-        }
-
-        return plength;
-    }
-
-    Js::BigPropertyIndex PathTypeHandlerBase::GetPropertyIndex_EnumerateTTD(const Js::PropertyRecord* pRecord)
-    {
-        //The regular LookupInline is fine for path types
-        return (Js::BigPropertyIndex)this->GetTypePath()->LookupInline(pRecord->GetPropertyId(), GetPathLength());
-    }
-
-    bool PathTypeHandlerBase::IsResetableForTTD(uint32_t snapMaxIndex) const
-    {
-        return snapMaxIndex == this->GetPathLength();
-    }
-#endif
-
     PathTypeHandlerNoAttr * PathTypeHandlerNoAttr::New(ScriptContext * scriptContext, TypePath* typePath, uint16 pathLength, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots, bool isLocked, bool isShared, DynamicType* predecessorType)
     {
         return New(scriptContext, typePath, pathLength, max(pathLength, inlineSlotCapacity), inlineSlotCapacity, offsetOfInlineSlots, isLocked, isShared, predecessorType);

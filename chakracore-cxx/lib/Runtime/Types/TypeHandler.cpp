@@ -803,58 +803,6 @@ using namespace Js;
         return scriptContext->GetOrAddPropertyIdTracked(key->GetSz(), key->GetLength());
     }
 
-#if ENABLE_TTD
-    Js::BigPropertyIndex DynamicTypeHandler::GetPropertyIndex_EnumerateTTD(const Js::PropertyRecord* pRecord)
-    {
-        TTDAssert(false, "Should never be called.");
-
-        return Js::Constants::NoBigSlot;
-    }
-
-    void DynamicTypeHandler::ExtractSnapHandler(TTD::NSSnapType::SnapHandler* handler, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
-    {
-        handler->HandlerId = TTD_CONVERT_TYPEINFO_TO_PTR_ID(this);
-
-        handler->InlineSlotCapacity = this->inlineSlotCapacity;
-        handler->TotalSlotCapacity = this->slotCapacity;
-
-        handler->MaxPropertyIndex = 0;
-        handler->PropertyInfoArray = nullptr;
-
-        if(handler->TotalSlotCapacity != 0)
-        {
-            handler->PropertyInfoArray = alloc.SlabReserveArraySpace<TTD::NSSnapType::SnapHandlerPropertyEntry>(handler->TotalSlotCapacity);
-            memset(handler->PropertyInfoArray, 0, handler->TotalSlotCapacity * sizeof(TTD::NSSnapType::SnapHandlerPropertyEntry));
-
-            handler->MaxPropertyIndex = this->ExtractSlotInfo_TTD(handler->PropertyInfoArray, threadContext, alloc);
-            TTDAssert(handler->MaxPropertyIndex <= handler->TotalSlotCapacity, "Huh we have more property entries than slots to put them in.");
-
-            if(handler->MaxPropertyIndex != 0)
-            {
-                alloc.SlabCommitArraySpace<TTD::NSSnapType::SnapHandlerPropertyEntry>(handler->MaxPropertyIndex, handler->TotalSlotCapacity);
-            }
-            else
-            {
-                alloc.SlabAbortArraySpace<TTD::NSSnapType::SnapHandlerPropertyEntry>(handler->TotalSlotCapacity);
-                handler->PropertyInfoArray = nullptr;
-            }
-        }
-
-        //The kind of type this snaptype record is associated with and the extensible flag
-        handler->IsExtensibleFlag = this->GetFlags() & Js::DynamicTypeHandler::IsExtensibleFlag;
-    }
-
-    void DynamicTypeHandler::SetExtensible_TTD()
-    {
-        this->flags |= Js::DynamicTypeHandler::IsExtensibleFlag;
-    }
-
-    bool DynamicTypeHandler::IsResetableForTTD(uint32_t snapMaxIndex) const
-    {
-        return false;
-    }
-#endif
-
 #if DBG_DUMP
     void DynamicTypeHandler::Dump(unsigned indent) const {
         const auto padding(u"");
