@@ -3595,9 +3595,6 @@ void ByteCodeGenerator::StartEmitFunction(ParseNodeFnc *pnodeFnc)
                     !pnodeFnc->HasDefaultArguments() &&
                     !pnodeFnc->HasDestructuredParams() &&
                     (PHASE_FORCE(Js::CachedScopePhase, funcInfo->byteCodeFunction) || !IsInDebugMode())
-#if ENABLE_TTD
-                    && !funcInfo->GetParsedFunctionBody()->GetScriptContext()->GetThreadContext()->IsRuntimeInTTDMode()
-#endif
                     && !funcInfo->byteCodeFunction->IsCoroutine()
                 );
 
