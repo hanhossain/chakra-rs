@@ -9,16 +9,7 @@ class ScriptSite;
 namespace Js
 {
 
-#if ENABLE_TTD
-#define DEFINE_TTD_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(T) \
-    virtual void MarshalCrossSite_TTDInflate() \
-    { \
-        AssertMsg(VirtualTableInfo<T>::HasVirtualTable(this), "Derived class need to define marshal"); \
-        VirtualTableInfo<Js::CrossSiteObject<T>>::SetVirtualTable(this); \
-    }
-#else
 #define DEFINE_TTD_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(T)
-#endif
 
 #if !defined(USED_IN_STATIC_LIB)
 #define DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(T) \
@@ -369,20 +360,6 @@ namespace Js
         virtual void Finalize(bool isShutdown) override;
         virtual void Dispose(bool isShutdown) override;
         virtual void Mark(Recycler *recycler) override;
-#endif
-
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-
-        typename WriteBarrierFieldTypeTraits<Js::Var>::Type const* GetInlineSlots_TTD() const;
-        Js::Var const* GetAuxSlots_TTD() const;
-
-#if ENABLE_OBJECT_SOURCE_TRACKING
-        void SetDiagOriginInfoAsNeeded();
-#endif
-
 #endif
 
     public:

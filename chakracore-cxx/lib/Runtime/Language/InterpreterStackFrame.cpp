@@ -1029,14 +1029,6 @@
 #define PROCESS_IP_TARG_Medium(name, func) PROCESS_IP_TARG_IMPL(name, func, Js::MediumLayout)
 #define PROCESS_IP_TARG_Small(name, func) PROCESS_IP_TARG_IMPL(name, func, Js::SmallLayout)
 
-#if ENABLE_TTD
-#if ENABLE_TTD_DIAGNOSTICS_TRACING
-#define SHOULD_DO_TTD_STACK_STMT_OP(CTX) ((CTX)->ShouldPerformRecordOrReplayAction())
-#else
-#define SHOULD_DO_TTD_STACK_STMT_OP(CTX) ((CTX)->ShouldPerformRecordOrReplayDebuggerAction())
-#endif
-#endif
-
 namespace Js
 {
     Var InterpreterStackFrame::InnerScopeFromRegSlot(RegSlot reg) const
@@ -1940,17 +1932,6 @@ namespace Js
         // - Mark that the function is current executing and may not be modified.
         //
 
-#if ENABLE_TTD
-        TTD::TTDExceptionFramePopper exceptionFramePopper;
-        if (SHOULD_DO_TTD_STACK_STMT_OP(functionScriptContext))
-        {
-            bool isInFinally = newInstance->TestFlags(Js::InterpreterStackFrameFlags_WithinFinallyBlock);
-
-            threadContext->TTDExecutionInfo->PushCallEvent(function, args.Info.Count, args.Values, isInFinally);
-            exceptionFramePopper.PushInfo(threadContext->TTDExecutionInfo, function);
-        }
-#endif
-
         Var aReturn = nullptr;
 
         {
@@ -1977,14 +1958,6 @@ namespace Js
         }
 
         executeFunction->EndExecution();
-
-#if ENABLE_TTD
-        if (SHOULD_DO_TTD_STACK_STMT_OP(functionScriptContext))
-        {
-            exceptionFramePopper.PopInfo();
-            threadContext->TTDExecutionInfo->PopCallEvent(function, aReturn);
-        }
-#endif
 
 #ifdef ASMJS_PLAT
         if (isAsmJs)
@@ -2266,18 +2239,7 @@ namespace Js
             JavascriptExceptionObject *exception = nullptr;
             try
             {
-#if ENABLE_TTD
-                if (SHOULD_DO_TTD_STACK_STMT_OP(this->scriptContext))
-                {
-                    return this->ProcessWithDebugging_PreviousStmtTracking();
-                }
-                else
-                {
-                    return this->ProcessWithDebugging();
-                }
-#else
                 return this->ProcessWithDebugging();
-#endif
             }
             catch (const Js::JavascriptException& err)
             {
@@ -2358,38 +2320,6 @@ namespace Js
         }
 #endif
     }
-
-#if ENABLE_TTD
-    template<typename OpCodeType, Js::OpCode(ReadOpFunc)(const byte*&), void (TracingFunc)(InterpreterStackFrame*, OpCodeType)>
-    OpCodeType InterpreterStackFrame::ReadOp_WPreviousStmtTracking(const byte *& ip)
-    {
-#if DBG || DBG_DUMP
-        //
-        // For debugging byte-code, store the current offset before the instruction is read:
-        // - We convert this to "void *" to encourage the debugger to always display in hex,
-        //   which matches the displayed offsets used by ByteCodeDumper.
-        //
-        this->DEBUG_currentByteOffset = (void *)m_reader.GetCurrentOffset();
-#endif
-
-#if ENABLE_TTD
-        AssertMsg(this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode(), "We never be fetching an opcode via this path if this is not true!!!");
-#endif
-
-        if (SHOULD_DO_TTD_STACK_STMT_OP(this->scriptContext))
-        {
-            TTD::ExecutionInfoManager* executionMgr = this->scriptContext->GetThreadContext()->TTDExecutionInfo;
-            executionMgr->UpdateCurrentStatementInfo(m_reader.GetCurrentOffset());
-        }
-
-        OpCodeType op = (OpCodeType)ReadOpFunc(ip);
-
-#if DBG_DUMP
-        TracingFunc(this, op);
-#endif
-        return op;
-    }
-#endif
 
         Var InterpreterStackFrame::ProcessThunk(void* address, void* addressOfReturnAddress)
     {
@@ -2974,22 +2904,6 @@ namespace Js
 #undef INTERPRETERLOOPNAME
 #endif
 
-#if ENABLE_TTD
-#define PROVIDE_INTERPRETER_STMTS
-#define INTERPRETERLOOPNAME ProcessWithDebugging_PreviousStmtTracking
-#define PROVIDE_DEBUGGING
-#if ENABLE_PROFILE_INFO
-#define PROVIDE_INTERPRETERPROFILE
-#endif
-#include "InterpreterLoop.inl"
-#if ENABLE_PROFILE_INFO
-#undef PROVIDE_INTERPRETERPROFILE
-#endif
-#undef PROVIDE_DEBUGGING
-#undef INTERPRETERLOOPNAME
-#undef PROVIDE_INTERPRETER_STMTS
-#endif
-
     Var InterpreterStackFrame::Process()
     {
 #if ENABLE_PROFILE_INFO
@@ -3099,10 +3013,6 @@ namespace Js
             functionBody->GetInterpreterExecutionMode(TestFlags(InterpreterStackFrameFlags_FromBailOut));
         if (interpreterExecutionMode == ExecutionMode::ProfilingInterpreter)
         {
-#if ENABLE_TTD
-            AssertMsg(!SHOULD_DO_TTD_STACK_STMT_OP(this->scriptContext), "We should have pinned into Interpreter mode in this case!!!");
-#endif
-
             isAutoProfiling = false;
             return ProcessProfiled();
         }
@@ -5506,13 +5416,6 @@ namespace Js
             this->DoInterruptProbe();
         }
 
-#if ENABLE_TTD
-        if (SHOULD_DO_TTD_STACK_STMT_OP(this->scriptContext))
-        {
-            this->scriptContext->GetThreadContext()->TTDExecutionInfo->UpdateLoopCountInfo();
-        }
-#endif
-
         if (!JITLoopBody || this->IsInCatchOrFinallyBlock())
         {
             // For functions having try-catch-finally, jit loop bodies for loops that are contained only in a try block,
@@ -5569,13 +5472,6 @@ namespace Js
         {
             this->DoInterruptProbe();
         }
-
-#if ENABLE_TTD
-        if (SHOULD_DO_TTD_STACK_STMT_OP(this->scriptContext))
-        {
-            this->scriptContext->GetThreadContext()->TTDExecutionInfo->UpdateLoopCountInfo();
-        }
-#endif
 
         if (!JITLoopBody || this->IsInCatchOrFinallyBlock())
         {
@@ -6253,19 +6149,7 @@ namespace Js
 #ifdef ENABLE_SCRIPT_DEBUGGING
             if (this->IsInDebugMode())
             {
-#if ENABLE_TTD
-                if (SHOULD_DO_TTD_STACK_STMT_OP(this->scriptContext))
-                {
-                    this->ProcessWithDebugging_PreviousStmtTracking();
-                }
-                else
-                {
-                    this->ProcessWithDebugging();
-                }
-#else
                 this->ProcessWithDebugging();
-#endif
-
                 this->TrySetRetOffset();
             }
             else
@@ -6330,13 +6214,6 @@ namespace Js
 
     void InterpreterStackFrame::ProcessCatch()
     {
-#if ENABLE_TTD
-        //Clear any previous Exception Info
-        if (SHOULD_DO_TTD_STACK_STMT_OP(this->scriptContext))
-        {
-            this->scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessCatchInfoForLastExecutedStatements();
-        }
-#endif
 #ifdef ENABLE_SCRIPT_DEBUGGING
         if (this->IsInDebugMode())
         {
@@ -6400,19 +6277,7 @@ namespace Js
 #ifdef ENABLE_SCRIPT_DEBUGGING
                 if (this->IsInDebugMode())
                 {
-#if ENABLE_TTD
-                    if (SHOULD_DO_TTD_STACK_STMT_OP(this->scriptContext))
-                    {
-                        this->ProcessWithDebugging_PreviousStmtTracking();
-                    }
-                    else
-                    {
-                        this->ProcessWithDebugging();
-                    }
-#else
                     this->ProcessWithDebugging();
-#endif
-
                     this->TrySetRetOffset();
                 }
                 else
@@ -6698,18 +6563,7 @@ namespace Js
 #ifdef ENABLE_SCRIPT_DEBUGGING
             if (this->IsInDebugMode())
             {
-#if ENABLE_TTD
-                if (SHOULD_DO_TTD_STACK_STMT_OP(this->scriptContext))
-                {
-                    result = this->ProcessWithDebugging_PreviousStmtTracking();
-                }
-                else
-                {
-                    result = this->ProcessWithDebugging();
-                }
-#else
                 result = this->ProcessWithDebugging();
-#endif
             }
             else
 #endif

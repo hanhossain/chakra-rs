@@ -21,13 +21,6 @@ namespace Js
 
     bool DynamicObjectPropertyEnumerator::GetUseCache() const
     {
-#if ENABLE_TTD
-        if(this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode())
-        {
-            return false;
-        }
-#endif
-
         return ((flags & (EnumeratorFlags::SnapShotSemantics | EnumeratorFlags::UseCache)) == (EnumeratorFlags::SnapShotSemantics | EnumeratorFlags::UseCache));
     }
 
@@ -137,10 +130,6 @@ namespace Js
 
     bool DynamicObjectPropertyEnumerator::CanUseJITFastPath() const
     {
-#if ENABLE_TTD
-        TTDAssert(this->cachedData == nullptr || !this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode(), "We should always have cachedData null if we are in record or replay mode");
-#endif
-
         return !this->IsNullEnumerator() && !GetEnumNonEnumerable() && this->cachedData != nullptr;
     }
 
@@ -166,10 +155,6 @@ namespace Js
 
     JavascriptString * DynamicObjectPropertyEnumerator::MoveAndGetNextWithCache(PropertyId& propertyId, PropertyAttributes* attributes)
     {
-#if ENABLE_TTD
-        AssertMsg(!this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode(), "We should always trap out to explicit enumeration in this case");
-#endif
-
         Assert(enumeratedCount <= cachedData->cachedCount);
         JavascriptString* propertyStringName;
         PropertyAttributes propertyAttributes = PropertyNone;

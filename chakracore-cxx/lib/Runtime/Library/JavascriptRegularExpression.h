@@ -204,14 +204,6 @@ namespace Js
 
         static Js::JavascriptRegExp * BoxStackInstance(Js::JavascriptRegExp * instance, bool deepCopy);
 
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-
-        void SetLastIndexInfo_TTD(CharCount lastIndex, Js::Var lastVar);
-#endif
-
     public:
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
         {

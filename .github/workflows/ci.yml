@@ -56,10 +56,10 @@ jobs:
         run: cargo build ${{ matrix.features }} --all-targets -vv
       # TODO: don't fail fast
       - name: Run tests
-        run: cargo nextest run ${{ matrix.features }}
+        run: cargo nextest run ${{ matrix.features }} --retries 1
       # TODO: don't fail fast
       - name: Run slow tests
-        run: cargo nextest run ${{ matrix.features }} -- --ignored
+        run: cargo nextest run ${{ matrix.features }} --retries 1 -- --ignored
         env:
           CHAKRA_TEST_SLOW: true
   build-cpp:

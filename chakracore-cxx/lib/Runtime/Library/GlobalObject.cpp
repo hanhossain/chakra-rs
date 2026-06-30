@@ -630,53 +630,6 @@ using namespace Js;
             }
         }
 
-#if ENABLE_TTD
-        //
-        //TODO: We may (probably?) want to use the debugger source rundown functionality here instead
-        //
-        if(!isLibraryCode && pfuncScript != nullptr && (scriptContext->IsTTDRecordModeEnabled() || scriptContext->ShouldPerformReplayAction()))
-        {
-            //Make sure we have the body and text information available
-            FunctionBody* globalBody = TTD::JsSupport::ForceAndGetFunctionBody(pfuncScript->GetParseableFunctionInfo());
-            if(!scriptContext->TTDContextInfo->IsBodyAlreadyLoadedAtTopLevel(globalBody))
-            {
-                uint32_t bodyIdCtr = 0;
-
-                if(scriptContext->IsTTDRecordModeEnabled())
-                {
-                    const TTD::NSSnapValues::TopLevelEvalFunctionBodyResolveInfo* tbfi = scriptContext->GetThreadContext()->TTDLog->AddEvalFunction(globalBody, moduleID, sourceString, sourceLen, additionalGrfscr, registerDocument, isIndirect, strictMode);
-
-                    //We always want to register the top-level load but we don't always need to log the event
-                    if(scriptContext->ShouldPerformRecordAction())
-                    {
-                        scriptContext->GetThreadContext()->TTDLog->RecordTopLevelCodeAction(tbfi->TopLevelBase.TopLevelBodyCtr);
-                    }
-
-                    bodyIdCtr = tbfi->TopLevelBase.TopLevelBodyCtr;
-                }
-
-                if(scriptContext->ShouldPerformReplayAction())
-                {
-                    bodyIdCtr = scriptContext->GetThreadContext()->TTDLog->ReplayTopLevelCodeAction();
-                }
-
-                //walk global body to (1) add functions to pin set (2) build parent map
-                scriptContext->TTDContextInfo->ProcessFunctionBodyOnLoad(globalBody, nullptr);
-                scriptContext->TTDContextInfo->RegisterEvalScript(globalBody, bodyIdCtr);
-
-                if(scriptContext->ShouldPerformRecordOrReplayAction())
-                {
-                    globalBody->GetUtf8SourceInfo()->SetSourceInfoForDebugReplay_TTD(bodyIdCtr);
-                }
-
-                if(scriptContext->ShouldPerformReplayDebuggerAction())
-                {
-                    scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessScriptLoad(scriptContext, bodyIdCtr, globalBody, globalBody->GetUtf8SourceInfo(), nullptr);
-                }
-            }
-        }
-#endif
-
         //We shouldn't be serializing eval functions; unless with -ForceSerialized flag
         if (CONFIG_FLAG(ForceSerialized)) {
             pfuncScript->GetFunctionProxy()->EnsureDeserialized();
@@ -1551,99 +1504,6 @@ LHexError:
         return function->GetScriptContext()->GetLibrary()->GetUndefined();
     }
 
-#if ENABLE_TTD
-    //Log a string in the telemetry system (and print to the console)
-    Var GlobalObject::EntryTelemetryLog(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-        PROBE_STACK(function->GetScriptContext(), Js::Constants::MinStackDefault);
-        ARGUMENTS(args, callInfo);
-
-        TTDAssert(args.Info.Count >= 2 && Js::VarIs<Js::JavascriptString>(args[1]), "Bad arguments!!!");
-
-        Js::JavascriptString* jsString = Js::VarTo<Js::JavascriptString>(args[1]);
-        bool doPrint = (args.Info.Count == 3) && Js::VarIs<Js::JavascriptBoolean>(args[2]) && (Js::VarTo<Js::JavascriptBoolean>(args[2])->GetValue());
-
-        if(function->GetScriptContext()->ShouldPerformReplayAction())
-        {
-            function->GetScriptContext()->GetThreadContext()->TTDLog->ReplayTelemetryLogEvent(jsString);
-        }
-
-        if(function->GetScriptContext()->ShouldPerformRecordAction())
-        {
-            function->GetScriptContext()->GetThreadContext()->TTDLog->RecordTelemetryLogEvent(jsString, doPrint);
-        }
-
-        if(doPrint)
-        {
-            //
-            //TODO: the host should give us a print callback which we can use here
-            //
-            Output::Print(u"%ls\n", jsString->GetSz());
-            fflush(stdout);
-        }
-
-        return function->GetScriptContext()->GetLibrary()->GetUndefined();
-    }
-
-    //Check if diagnostic trace writing is enabled
-    Var GlobalObject::EntryEnabledDiagnosticsTrace(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-        PROBE_STACK(function->GetScriptContext(), Js::Constants::MinStackDefault);
-        ARGUMENTS(args, callInfo);
-
-        if (function->GetScriptContext()->ShouldPerformReplayAction())
-        {
-            TTD::EventLog* ttlog = function->GetScriptContext()->GetThreadContext()->TTDLog;
-            bool isEnabled = ttlog->ReplayTTDFetchAutoTraceStatusLogEvent();
-
-            return function->GetScriptContext()->GetLibrary()->CreateBoolean(isEnabled);
-        }
-        else if (function->GetScriptContext()->ShouldPerformRecordAction())
-        {
-            TTD::EventLog* ttlog = function->GetScriptContext()->GetThreadContext()->TTDLog;
-            bool isEnabled = ttlog->GetAutoTraceEnabled();
-            ttlog->RecordTTDFetchAutoTraceStatusEvent(isEnabled);
-
-            return function->GetScriptContext()->GetLibrary()->CreateBoolean(isEnabled);
-        }
-        else
-        {
-            return function->GetScriptContext()->GetLibrary()->GetFalse();
-        }
-    }
-
-    //Write a copy of the current TTD log to a specified location
-    Var GlobalObject::EntryEmitTTDLog(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-        PROBE_STACK(function->GetScriptContext(), Js::Constants::MinStackDefault);
-        ARGUMENTS(args, callInfo);
-
-        Js::JavascriptLibrary* jslib = function->GetScriptContext()->GetLibrary();
-
-        if(args.Info.Count != 2 || !Js::VarIs<Js::JavascriptString>(args[1]))
-        {
-            return jslib->GetFalse();
-        }
-
-        if(function->GetScriptContext()->ShouldPerformReplayAction())
-        {
-            function->GetScriptContext()->GetThreadContext()->TTDLog->ReplayEmitLogEvent();
-
-            return jslib->GetTrue();
-        }
-
-        if(function->GetScriptContext()->ShouldPerformRecordAction())
-        {
-            Js::JavascriptString* jsString = Js::VarTo<Js::JavascriptString>(args[1]);
-            function->GetScriptContext()->GetThreadContext()->TTDLog->RecordEmitLogEvent(jsString);
-
-            return jslib->GetTrue();
-        }
-
-        return jslib->GetFalse();
-    }
-#endif
-
     //Pattern match is unique to RuntimeObject. Only leading and trailing * are implemented
     //Example: *pat*tern* actually matches all the strings having pat*tern as substring.
     BOOL GlobalObject::MatchPatternHelper(JavascriptString *propertyName, JavascriptString *pattern, ScriptContext *scriptContext)
@@ -2253,19 +2113,3 @@ LHexError:
         *value = FALSE;
         return TRUE;
     }
-
-#if ENABLE_TTD
-    TTD::NSSnapObjects::SnapObjectType GlobalObject::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapWellKnownObject;
-    }
-
-    void GlobalObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        //
-        //TODO: we assume that the global object is always set right (e.g., ignore the directHostObject and secureDirectHostObject values) we need to verify that this is ok and/or what to do about it
-        //
-
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<void*, TTD::NSSnapObjects::SnapObjectType::SnapWellKnownObject>(objData, nullptr);
-    }
-#endif

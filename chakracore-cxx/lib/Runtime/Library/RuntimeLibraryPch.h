@@ -59,22 +59,6 @@
 
 #include "Library/CustomExternalWrapperObject.h"
 
-#if ENABLE_TTD
-#include "screrror.h"
-
-#include "Debug/TTRuntimeInfoTracker.h"
-#include "Debug/TTExecutionInfo.h"
-#include "Debug/TTInflateMap.h"
-#include "Debug/TTSnapTypes.h"
-#include "Debug/TTSnapValues.h"
-#include "Debug/TTSnapObjects.h"
-#include "Debug/TTSnapshot.h"
-#include "Debug/TTSnapshotExtractor.h"
-#include "Debug/TTEvents.h"
-#include "Debug/TTActionEvents.h"
-#include "Debug/TTEventLog.h"
-#endif
-
 #include "Library/JavascriptNumberObject.h"
 #include "Library/JavascriptStringObject.h"
 #include "Library/JavascriptBooleanObject.h"

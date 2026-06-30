@@ -31,14 +31,6 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<JavascriptPromise*>::Type promise;
         typename WriteBarrierFieldTypeTraits<bool>::Type isReject;
         typename WriteBarrierFieldTypeTraits<JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper*>::Type alreadyResolvedWrapper;
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<JavascriptPromiseResolveOrRejectFunction>(RecyclableObject* obj);
@@ -56,14 +48,6 @@ namespace Js
 
     private:
         typename WriteBarrierFieldTypeTraits<JavascriptPromiseCapability*>::Type capability;
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<JavascriptPromiseCapabilitiesExecutorFunction>(RecyclableObject* obj);
@@ -88,14 +72,6 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<JavascriptPromise*>::Type promise;
         typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type thenable;
         typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type thenFunction;
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<JavascriptPromiseResolveThenableTaskFunction>(RecyclableObject* obj);
@@ -117,14 +93,6 @@ namespace Js
     private:
         typename WriteBarrierFieldTypeTraits<JavascriptPromiseReaction*>::Type reaction;
         typename WriteBarrierFieldTypeTraits<Var>::Type argument;
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<JavascriptPromiseReactionTaskFunction>(RecyclableObject* obj);
@@ -203,14 +171,6 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper*>::Type remainingElementsWrapper;
         typename WriteBarrierFieldTypeTraits<JavascriptArray*>::Type values;
         typename WriteBarrierFieldTypeTraits<bool>::Type alreadyCalled;
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<JavascriptPromiseAllResolveElementFunction>(RecyclableObject* obj);
@@ -233,14 +193,6 @@ namespace Js
     private:
         typename WriteBarrierFieldTypeTraits<JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper*>::Type alreadyCalledWrapper;
         typename WriteBarrierFieldTypeTraits<bool>::Type isRejecting;
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<JavascriptPromiseAllSettledResolveOrRejectElementFunction>(RecyclableObject* obj);
@@ -282,15 +234,6 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<Var>::Type promise;
         typename WriteBarrierFieldTypeTraits<Var>::Type resolve;
         typename WriteBarrierFieldTypeTraits<Var>::Type reject;
-
-#if ENABLE_TTD
-    public:
-        //Do any additional marking that is needed for a TT snapshotable object
-        void MarkVisitPtrs(TTD::SnapshotExtractor* extractor);
-
-        //Do the extraction
-        void ExtractSnapPromiseCapabilityInto(TTD::NSSnapValues::SnapPromiseCapabilityInfo* snapPromiseCapability, JsUtil::List<TTD_PTR_ID, HeapAllocator>& depOnList, TTD::SlabAllocator& alloc);
-#endif
     };
 
     class JavascriptPromiseReaction : FinalizableObject
@@ -324,15 +267,6 @@ namespace Js
     private:
         typename WriteBarrierFieldTypeTraits<JavascriptPromiseCapability*>::Type capabilities;
         typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type handler;
-
-#if ENABLE_TTD
-    public:
-        //Do any additional marking that is needed for a TT snapshotable object
-        void MarkVisitPtrs(TTD::SnapshotExtractor* extractor);
-
-        //Do the extraction
-        void ExtractSnapPromiseReactionInto(TTD::NSSnapValues::SnapPromiseReactionInfo* snapPromiseReaction, JsUtil::List<TTD_PTR_ID, HeapAllocator>& depOnList, TTD::SlabAllocator& alloc);
-#endif
     };
 
     struct JavascriptPromiseReactionPair
@@ -474,16 +408,6 @@ namespace Js
 
     private :
         bool WillRejectionBeUnhandled();
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-
-        static JavascriptPromise* InitializePromise_TTD(ScriptContext* scriptContext, uint32_t status, bool isHandled, Var result, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& resolveReactions, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& rejectReactions);
-#endif
     };
 
     template <> inline bool VarIsImpl<JavascriptPromise>(RecyclableObject* obj)
@@ -502,14 +426,6 @@ namespace Js
 
     private:
         typename WriteBarrierFieldTypeTraits<JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper*>::Type alreadyCalledWrapper;
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> bool VarIsImpl<JavascriptPromiseAnyRejectElementFunction>(RecyclableObject* obj);

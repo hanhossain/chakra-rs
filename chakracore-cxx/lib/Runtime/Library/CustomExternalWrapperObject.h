@@ -212,12 +212,6 @@ namespace Js
                 }
             }
         }
-
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> inline bool VarIsImpl<CustomExternalWrapperObject>(RecyclableObject* obj)

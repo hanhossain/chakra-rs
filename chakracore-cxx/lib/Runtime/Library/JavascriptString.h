@@ -80,11 +80,6 @@ namespace Js
         virtual const char16_t* GetSz();     // Get string, NULL terminated
         virtual void const * GetOriginalStringReference();  // Get the allocated object that owns the original full string buffer
 
-#if ENABLE_TTD
-        //Get the associated property id for this string if there is one (e.g. it is a propertystring otherwise return Js::PropertyIds::_none)
-        virtual Js::PropertyId TryGetAssociatedPropertyId() const { return Js::PropertyIds::_none; }
-#endif
-
     public:
         template <typename StringType>
         void Copy(__out_ecount(bufLen) char16_t *const buffer, const charcount_t bufLen);

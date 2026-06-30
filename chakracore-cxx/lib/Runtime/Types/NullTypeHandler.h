@@ -102,18 +102,6 @@ namespace Js
         static NullTypeHandler * GetDefaultInstance();
         virtual DynamicTypeHandler * Clone(Recycler * recycler);
 
-#if ENABLE_TTD
-    public:
-        virtual void MarkObjectSlots_TTD(TTD::SnapshotExtractor* extractor, DynamicObject* obj) const override
-        {
-            ;
-        }
-
-        virtual uint32_t ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const override
-        {
-            return 0;
-        }
-#endif
 #if DBG_DUMP
     public:
         void Dump(unsigned indent = 0) const override;

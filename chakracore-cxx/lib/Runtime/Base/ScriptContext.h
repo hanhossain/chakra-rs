@@ -211,39 +211,6 @@ public:
     virtual Js::Var ReadHostObject() = 0;
 };
 
-#if ENABLE_TTD
-typedef void (CALLBACK *JsTTDOnScriptLoadCallback)(FinalizableObject* hostContext, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException, bool notify);
-typedef uint32_t (CALLBACK *JsTTDOnBPRegisterCallback)(void* hostRuntime, long bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t line, uint32_t column, BOOL* isNewBP);
-typedef void (CALLBACK *JsTTDOnBPDeleteCallback)(void* hostRuntime, uint32_t bpID);
-typedef void (CALLBACK *JsTTDOnBPClearDocumentCallback)(void* hostRuntime);
-
-//A class that we use to pass in a functor from the host when we need to inform it about something we are doing
-class HostScriptContextCallbackFunctor
-{
-public:
-    FinalizableObject* HostContext;
-    void* HostRuntime;
-
-    JsTTDOnScriptLoadCallback pfOnScriptLoadCallback;
-
-    JsTTDOnBPRegisterCallback pfOnBPRegisterCallback;
-    JsTTDOnBPDeleteCallback pfOnBPDeleteCallback;
-    JsTTDOnBPClearDocumentCallback pfOnBPClearDocumentCallback;
-
-    HostScriptContextCallbackFunctor()
-        : HostContext(nullptr), HostRuntime(nullptr), pfOnScriptLoadCallback(nullptr), pfOnBPRegisterCallback(nullptr), pfOnBPDeleteCallback(nullptr), pfOnBPClearDocumentCallback(nullptr)
-    {
-        ;
-    }
-
-    HostScriptContextCallbackFunctor(FinalizableObject* hostContext, void* hostRuntime, JsTTDOnScriptLoadCallback callbackOnScriptLoad, JsTTDOnBPRegisterCallback callbackOnBPRegister, JsTTDOnBPDeleteCallback callbackOnBPDelete, JsTTDOnBPClearDocumentCallback callbackOnBPClearDocument)
-        : HostContext(hostContext), HostRuntime(hostRuntime), pfOnScriptLoadCallback(callbackOnScriptLoad), pfOnBPRegisterCallback(callbackOnBPRegister), pfOnBPDeleteCallback(callbackOnBPDelete), pfOnBPClearDocumentCallback(callbackOnBPClearDocument)
-    {
-        ;
-    }
-};
-#endif
-
 namespace Js
 {
 
@@ -1039,77 +1006,6 @@ private:
         {
             return this->Cache()->dynamicSourceContextInfoMap;
         }
-
-#if ENABLE_TTD
-        //The host callback functor info
-        HostScriptContextCallbackFunctor TTDHostCallbackFunctor;
-
-        //The LogTag for this script context (the same as the tag for the global object but we put it here for fast lookup)
-        TTD_LOG_PTR_ID ScriptContextLogTag;
-
-        //Info about the core image for the context
-        TTD::RuntimeContextInfo* TTDWellKnownInfo;
-
-        //Additional runtime context that we only care about if TTD is running (or will be running)
-        TTD::ScriptContextTTD* TTDContextInfo;
-
-        //A flag indicating a TTDSnapshot is in progress
-        bool TTDSnapshotOrInflateInProgress;
-
-        //Check if a snapshot is in progress on this context
-        bool IsTTDSnapshotOrInflateInProgress() const { return this->TTDSnapshotOrInflateInProgress; }
-
-        //Memoized results for frequently used Record/Replay action checks
-        bool TTDRecordOrReplayModeEnabled;
-        bool TTDRecordModeEnabled;
-        bool TTDReplayModeEnabled;
-
-        bool TTDShouldPerformRecordOrReplayAction;
-        bool TTDShouldPerformRecordAction;
-        bool TTDShouldPerformReplayAction;
-
-        bool TTDShouldPerformRecordOrReplayDebuggerAction;
-        bool TTDShouldPerformRecordDebuggerAction;
-        bool TTDShouldPerformReplayDebuggerAction;
-
-        bool TTDShouldSuppressGetterInvocationForDebuggerEvaluation;
-
-        //Check if the TTD system has been activated (and record/replay may or may not be enabled)
-        bool IsTTDRecordOrReplayModeEnabled() const { return this->TTDRecordOrReplayModeEnabled; }
-
-        //Check if the TTD Record system has been activated (and  may or may not be enabled)
-        bool IsTTDRecordModeEnabled() const { return this->TTDRecordModeEnabled; }
-
-        //Check if the TTD Replay system has been activated (and  may or may not be enabled)
-        bool IsTTDReplayModeEnabled() const { return this->TTDReplayModeEnabled; }
-
-        //Check if we are in (record OR replay) AND this code is being run on behalf of the user application
-        bool ShouldPerformRecordOrReplayAction() const { return this->TTDShouldPerformRecordOrReplayAction; }
-
-        //Use this to check specifically if we are in record AND this code is being run on behalf of the user application
-        bool ShouldPerformRecordAction() const { return this->TTDShouldPerformRecordAction; }
-
-        //Use this to check specifically if we are in replay mode AND this code is being run on behalf of the user application
-        bool ShouldPerformReplayAction() const { return this->TTDShouldPerformReplayAction; }
-
-        //Use this to check specifically if we are in debugging mode AND this code is being run on behalf of the user application
-        bool ShouldPerformRecordOrReplayDebuggerAction() const { return this->TTDShouldPerformRecordOrReplayDebuggerAction; }
-
-        //Use this to check specifically if we are in debugging record mode AND this code is being run on behalf of the user application
-        bool ShouldPerformRecordDebuggerAction() const { return this->TTDShouldPerformRecordDebuggerAction; }
-
-        //Use this to check specifically if we are in debugging replay mode AND this code is being run on behalf of the user application
-        bool ShouldPerformReplayDebuggerAction() const { return this->TTDShouldPerformReplayDebuggerAction; }
-
-        //A special check to see if we are debugging and want to suppress the execution of getters (which may be triggered by displaying values in the debugger)
-        bool ShouldSuppressGetterInvocationForDebuggerEvaluation() const { return this->TTDShouldSuppressGetterInvocationForDebuggerEvaluation; }
-
-        //
-        //TODO: this is currently called explicitly -- we need to fix up the core image computation and this will be eliminated then
-        //
-        //Initialize the core object image for TTD
-        void InitializeCoreImage_TTD();
-#endif
 
         void SetFirstInterpreterFrameReturnAddress(void * returnAddress) { firstInterpreterFrameReturnAddress = returnAddress;}
         void *GetFirstInterpreterFrameReturnAddress() { return firstInterpreterFrameReturnAddress;}

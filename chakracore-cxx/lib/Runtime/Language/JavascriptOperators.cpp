@@ -9634,13 +9634,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 
     Var JavascriptOperators::CallGetter(RecyclableObject * const function, Var const object, ScriptContext * requestContext)
     {
-#if ENABLE_TTD
-        if(function->GetScriptContext()->ShouldSuppressGetterInvocationForDebuggerEvaluation())
-        {
-            return requestContext->GetLibrary()->GetUndefined();
-        }
-#endif
-
         ScriptContext * scriptContext = function->GetScriptContext();
         ThreadContext * threadContext = scriptContext->GetThreadContext();
         return threadContext->ExecuteImplicitCall(function, ImplicitCall_Accessor, [=]() -> Js::Var

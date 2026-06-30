@@ -99,28 +99,6 @@ JsErrorCode CheckContext(JsrtContext *currentContext, bool verifyRuntimeState,
 
 /////////////////////
 
-#if ENABLE_TTD
-void CALLBACK OnScriptLoad_TTDCallback(FinalizableObject* jsrtCtx, Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException, bool notify)
-{
-    ((JsrtContext*)jsrtCtx)->OnScriptLoad_TTDCallback(body, utf8SourceInfo, compileException, notify);
-}
-
-uint32_t CALLBACK OnBPRegister_TTDCallback(void* runtimeRcvr, long bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t line, uint32_t column, BOOL* isNewBP)
-{
-    return ((JsrtRuntime*)runtimeRcvr)->BPRegister_TTD(bpID, scriptContext, utf8SourceInfo, line, column, isNewBP);
-}
-
-void CALLBACK OnBPDelete_TTDCallback(void* runtimeRcvr, uint32_t bpID)
-{
-    ((JsrtRuntime*)runtimeRcvr)->BPDelete_TTD(bpID);
-}
-
-void CALLBACK OnBPClearDocument_TTDCallback(void* runtimeRcvr)
-{
-    ((JsrtRuntime*)runtimeRcvr)->BPClearDocument_TTD();
-}
-#endif
-
 //A create context function that we can funnel to for regular and record or debug aware creation
 JsErrorCode CreateContextCore(_In_ JsRuntimeHandle runtimeHandle, _In_ TTDRecorder& _actionEntryPopper, _In_ bool inRecordMode, _In_ bool activelyRecording, _In_ bool inReplayMode, _Out_ JsContextRef *newContext)
 {
@@ -143,44 +121,7 @@ JsErrorCode CreateContextCore(_In_ JsRuntimeHandle runtimeHandle, _In_ TTDRecord
         return JsErrorWrongThread;
     }
 
-#if ENABLE_TTD
-    TTD::NSLogEvents::EventLogEntry* createEvent = nullptr;
-    if(activelyRecording)
-    {
-        createEvent = threadContext->TTDLog->RecordJsRTCreateScriptContext(_actionEntryPopper);
-    }
-#endif
-
     JsrtContext * context = JsrtContext::New(runtime);
-
-#if ENABLE_TTD
-    if(inRecordMode | inReplayMode)
-    {
-        Js::ScriptContext* scriptContext = context->GetScriptContext();
-        HostScriptContextCallbackFunctor callbackFunctor((FinalizableObject*)context, (void*)runtime, &OnScriptLoad_TTDCallback, &OnBPRegister_TTDCallback, &OnBPDelete_TTDCallback, &OnBPClearDocument_TTDCallback);
-
-#if ENABLE_TTD_DIAGNOSTICS_TRACING
-        bool noNative = true;
-        bool doDebug = true;
-#else
-        bool noNative = TTD_FORCE_NOJIT_MODE || threadContext->TTDLog->IsDebugModeFlagSet();
-        bool doDebug = TTD_FORCE_DEBUG_MODE || threadContext->TTDLog->IsDebugModeFlagSet();
-#endif
-
-        threadContext->TTDLog->PushMode(TTD::TTDMode::ExcludedExecutionTTAction);
-        if(inRecordMode)
-        {
-            threadContext->TTDContext->AddNewScriptContextRecord(context, scriptContext, callbackFunctor, noNative, doDebug);
-        }
-        else
-        {
-            threadContext->TTDContext->AddNewScriptContextReplay(context, scriptContext, callbackFunctor, noNative, doDebug);
-        }
-
-        threadContext->TTDLog->SetModeFlagsOnContext(scriptContext);
-        threadContext->TTDLog->PopMode(TTD::TTDMode::ExcludedExecutionTTAction);
-    }
-#endif
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
     JsrtDebugManager* jsrtDebugManager = runtime->GetJsrtDebugManager();
@@ -211,68 +152,9 @@ JsErrorCode CreateContextCore(_In_ JsRuntimeHandle runtimeHandle, _In_ TTDRecord
     }
 #endif
 
-#if ENABLE_TTD
-    if(activelyRecording)
-    {
-        threadContext->TTDLog->RecordJsRTCreateScriptContextResult(createEvent, context->GetScriptContext());
-    }
-#endif
-
     *newContext = (JsContextRef)context;
     return JsNoError;
 }
-
-#if ENABLE_TTD
-void CALLBACK CreateExternalObject_TTDCallback(Js::ScriptContext* ctx, Js::Var prototype, Js::Var* object)
-{
-    TTDAssert(object != nullptr, "This should always be a valid location");
-
-    Js::RecyclableObject * prototypeObject = nullptr;
-    if (prototype != JS_INVALID_REFERENCE)
-    {
-        prototypeObject = Js::VarTo<Js::RecyclableObject>(prototype);
-    }
-
-    *object = JsrtExternalObject::Create(nullptr, 0, nullptr, prototypeObject, ctx, nullptr);
-}
-
-void CALLBACK TTDDummyPromiseContinuationCallback(JsValueRef task, void *callbackState)
-{
-    TTDAssert(false, "This should never actually be invoked!!!");
-}
-
-void CALLBACK CreateJsRTContext_TTDCallback(void* runtimeHandle, Js::ScriptContext** result)
-{
-    JsContextRef newContext = nullptr;
-    *result = nullptr;
-
-    TTDRecorder dummyActionEntryPopper;
-    JsErrorCode err = CreateContextCore(static_cast<JsRuntimeHandle>(runtimeHandle), dummyActionEntryPopper, false /*inRecordMode*/, false /*activelyRecording*/, true /*inReplayMode*/, &newContext);
-    TTDAssert(err == JsNoError, "Shouldn't fail on us!!!");
-
-    *result = static_cast<JsrtContext*>(newContext)->GetScriptContext();
-    (*result)->GetLibrary()->SetNativeHostPromiseContinuationFunction((Js::JavascriptLibrary::PromiseContinuationCallback)TTDDummyPromiseContinuationCallback, nullptr);
-
-    //To ensure we have a valid context active (when we next try and inflate into this context) set this as active by convention
-    JsrtContext::TrySetCurrent(static_cast<JsrtContext*>(newContext));
-}
-
-void CALLBACK ReleaseJsRTContext_TTDCallback(FinalizableObject* jsrtCtx)
-{
-    static_cast<JsrtContext*>(jsrtCtx)->GetScriptContext()->GetThreadContext()->GetRecycler()->RootRelease(jsrtCtx);
-    JsrtContext::OnReplayDisposeContext_TTDCallback(jsrtCtx);
-}
-
-void CALLBACK SetActiveJsRTContext_TTDCallback(void* runtimeHandle, Js::ScriptContext* ctx)
-{
-    JsrtRuntime * runtime = JsrtRuntime::FromHandle(static_cast<JsRuntimeHandle>(runtimeHandle));
-    ThreadContext * threadContext = runtime->GetThreadContext();
-
-    threadContext->TTDContext->SetActiveScriptContext(ctx);
-    JsrtContext* runtimeCtx = (JsrtContext*)threadContext->TTDContext->GetRuntimeContextForScriptContext(ctx);
-    JsrtContext::TrySetCurrent(runtimeCtx);
-}
-#endif
 
 //A create runtime function that we can funnel to for regular and record or debug aware creation
 JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
@@ -370,41 +252,6 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
 
         return JsNoError;
     });
-
-#if ENABLE_TTD
-    if(runtimeResult != JsNoError)
-    {
-        return runtimeResult;
-    }
-
-    if(isRecord | isReplay | isDebug)
-    {
-        ThreadContext* threadContext = JsrtRuntime::FromHandle(*runtimeHandle)->GetThreadContext();
-
-        if(isRecord && isReplay)
-        {
-            return JsErrorInvalidArgument; //A runtime can only be in 1 mode
-        }
-
-        if(isReplay && optTTUri == nullptr)
-        {
-            return JsErrorInvalidArgument; //We must have a location to store data into
-        }
-
-        runtimeResult = GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
-            //Make sure the thread context recycler is allocated before we do anything else
-            ThreadContextScope scope(threadContext);
-            threadContext->EnsureRecycler();
-
-            threadContext->InitTimeTravel(threadContext, *runtimeHandle, snapInterval, max<uint32_t>(2, snapHistoryLength));
-            threadContext->InitHostFunctionsAndTTData(isRecord, isReplay, isDebug, optTTUriCount, optTTUri,
-                openResourceStream, readBytesFromStream, writeBytesToStream, flushAndCloseStream,
-                &CreateExternalObject_TTDCallback, &CreateJsRTContext_TTDCallback, &ReleaseJsRTContext_TTDCallback, &SetActiveJsRTContext_TTDCallback);
-
-            return JsNoError;
-        });
-    }
-#endif
 
     return runtimeResult;
 }
@@ -627,31 +474,7 @@ JsErrorCode chakracore::jsrt::JsAddRef(_In_ JsRef ref, _Out_opt_ unsigned int *c
                 return JsNoError;
             }
 
-#if ENABLE_TTD
-            unsigned int lCount = 0;
-            recycler->RootAddRef(ref, &lCount);
-            if (count != nullptr)
-            {
-                *count = lCount;
-            }
-
-            if((lCount == 1) && (threadContext->IsRuntimeInTTDMode()) && (!threadContext->TTDLog->IsPropertyRecordRef(ref)))
-            {
-                Js::RecyclableObject* obj = Js::VarTo<Js::RecyclableObject>(ref);
-                if(obj->GetScriptContext()->IsTTDRecordModeEnabled())
-                {
-                    if(obj->GetScriptContext()->ShouldPerformRecordAction())
-                    {
-                        threadContext->TTDLog->RecordJsRTAddRootRef(_actionEntryPopper, (Js::Var)ref);
-                    }
-
-                    threadContext->TTDContext->AddRootRef_Record(TTD_CONVERT_OBJ_TO_LOG_PTR_ID(obj), obj);
-                }
-            }
-#else
             recycler->RootAddRef(ref, count);
-#endif
-
             return JsNoError;
         });
     }
@@ -759,18 +582,6 @@ JsErrorCode chakracore::jsrt::JsCreateContext(_In_ JsRuntimeHandle runtimeHandle
         bool activelyRecording = false;
         bool inReplay = false;
 
-#if ENABLE_TTD
-        JsrtRuntime * runtime = JsrtRuntime::FromHandle(runtimeHandle);
-        ThreadContext * threadContext = runtime->GetThreadContext();
-        if(threadContext->IsRuntimeInTTDMode() && threadContext->TTDContext->GetActiveScriptContext() != nullptr)
-        {
-            Js::ScriptContext* currentCtx = threadContext->TTDContext->GetActiveScriptContext();
-            inRecord = currentCtx->IsTTDRecordModeEnabled();
-            activelyRecording = currentCtx->ShouldPerformRecordAction();
-            inReplay = currentCtx->IsTTDReplayModeEnabled();
-        }
-#endif
-
         return CreateContextCore(runtimeHandle, _actionEntryPopper, inRecord, activelyRecording, inReplay, newContext);
     });
 }
@@ -793,44 +604,6 @@ JsErrorCode chakracore::jsrt::JsSetCurrentContext(_In_opt_ JsContextRef newConte
     return GlobalAPIWrapper([&] (TTDRecorder& _actionEntryPopper) -> JsErrorCode {
         JsrtContext *currentContext = JsrtContext::GetCurrent();
         Recycler* recycler = currentContext != nullptr ? currentContext->GetScriptContext()->GetRecycler() : nullptr;
-
-#if ENABLE_TTD
-        Js::ScriptContext* newScriptContext = newContext != nullptr ? static_cast<JsrtContext*>(newContext)->GetScriptContext() : nullptr;
-        Js::ScriptContext* oldScriptContext = currentContext != nullptr ? static_cast<JsrtContext*>(currentContext)->GetScriptContext() : nullptr;
-
-        if(newScriptContext == nullptr)
-        {
-            if(oldScriptContext == nullptr)
-            {
-                ; //if newScriptContext and oldScriptContext are null then we don't worry about doing anything
-            }
-            else
-            {
-                if(oldScriptContext->IsTTDRecordModeEnabled())
-                {
-                    //already know newScriptContext != oldScriptContext so don't check again
-                    if(oldScriptContext->ShouldPerformRecordAction())
-                    {
-                        oldScriptContext->GetThreadContext()->TTDLog->RecordJsRTSetCurrentContext(_actionEntryPopper, nullptr);
-                    }
-
-                    oldScriptContext->GetThreadContext()->TTDContext->SetActiveScriptContext(nullptr);
-                }
-            }
-        }
-        else
-        {
-            if(newScriptContext->IsTTDRecordModeEnabled())
-            {
-                if(newScriptContext != oldScriptContext && newScriptContext->ShouldPerformRecordAction())
-                {
-                    newScriptContext->GetThreadContext()->TTDLog->RecordJsRTSetCurrentContext(_actionEntryPopper, newScriptContext->GetGlobalObject());
-                }
-
-                newScriptContext->GetThreadContext()->TTDContext->SetActiveScriptContext(newScriptContext);
-            }
-        }
-#endif
 
         if (currentContext && recycler->IsHeapEnumInProgress())
         {
@@ -2221,14 +1994,6 @@ JsErrorCode chakracore::jsrt::JsGetTypedArrayInfo(_In_ JsValueRef typedArray, _O
         }
     }
 
-#if ENABLE_TTD
-    Js::ScriptContext* scriptContext = Js::VarTo<Js::RecyclableObject>(typedArray)->GetScriptContext();
-    if(PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(scriptContext) && arrayBuffer != nullptr)
-    {
-        scriptContext->GetThreadContext()->TTDLog->RecordJsRTGetTypedArrayInfo(typedArray, *arrayBuffer);
-    }
-#endif
-
     END_JSRT_NO_EXCEPTION
 }
 
@@ -2757,27 +2522,6 @@ JsErrorCode chakracore::jsrt::JsCallFunction(_In_ JsValueRef function, _In_reads
     }
 
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-#if ENABLE_TTD
-        TTD::TTDJsRTFunctionCallActionPopperRecorder callInfoPopper;
-        if(PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(scriptContext))
-        {
-            TTD::NSLogEvents::EventLogEntry* callEvent = scriptContext->GetThreadContext()->TTDLog->RecordJsRTCallFunction(_actionEntryPopper, scriptContext->GetThreadContext()->TTDRootNestingCount, function, cargs, args);
-            callInfoPopper.InitializeForRecording(scriptContext, scriptContext->GetThreadContext()->TTDLog->GetCurrentWallTime(), callEvent);
-
-            if(scriptContext->GetThreadContext()->TTDRootNestingCount == 0)
-            {
-                TTD::EventLog* elog = scriptContext->GetThreadContext()->TTDLog;
-                elog->ResetCallStackForTopLevelCall(elog->GetLastEventTime());
-
-                TTD::ExecutionInfoManager* emanager = scriptContext->GetThreadContext()->TTDExecutionInfo;
-                if(emanager != nullptr)
-                {
-                    emanager->ResetCallStackForTopLevelCall(elog->GetLastEventTime());
-                }
-            }
-        }
-#endif
-
         VALIDATE_INCOMING_FUNCTION(function, scriptContext);
 
         if(cargs == 0 || args == nullptr)
@@ -2800,13 +2544,6 @@ JsErrorCode chakracore::jsrt::JsCallFunction(_In_ JsValueRef function, _In_reads
             *result = varResult;
             Assert(*result == nullptr || !Js::CrossSite::NeedMarshalVar(*result, scriptContext));
         }
-
-#if ENABLE_TTD
-        if(PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(scriptContext))
-        {
-            _actionEntryPopper.SetResult(result);
-        }
-#endif
 
         return JsNoError;
     });
@@ -3154,16 +2891,6 @@ JsErrorCode chakracore::jsrt::JsGetAndClearException(_Out_ JsValueRef *exception
     }
 
     *exception = recordedException->GetThrownObject(nullptr);
-
-#if ENABLE_TTD
-    if(hr != E_OUTOFMEMORY)
-    {
-        TTD::TTDJsRTActionResultAutoRecorder _actionEntryPopper;
-
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTGetAndClearException);
-        PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, exception);
-    }
-#endif
 
     if (*exception == nullptr)
     {
@@ -3542,49 +3269,9 @@ JsErrorCode RunScriptCore(JsValueRef scriptSource, const byte *script, size_t cb
             loadScriptFlag = (LoadScriptFlag)(loadScriptFlag | LoadScriptFlag_StrictMode);
         }
 
-#if ENABLE_TTD
-        TTD::NSLogEvents::EventLogEntry* parseEvent = nullptr;
-        if (PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(scriptContext))
-        {
-            parseEvent = scriptContext->GetThreadContext()->TTDLog->RecordJsRTCodeParse(_actionEntryPopper,
-                loadScriptFlag, ((loadScriptFlag & LoadScriptFlag_Utf8Source) == LoadScriptFlag_Utf8Source),
-                script, (uint32_t)cb, sourceContext, sourceUrl);
-        }
-#endif
-
         scriptFunction = scriptContext->LoadScript(script, cb,
             &si, &se, &utf8SourceInfo,
             Js::Constants::GlobalCode, loadScriptFlag, scriptSource);
-
-#if ENABLE_TTD
-        if(PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(scriptContext))
-        {
-            _actionEntryPopper.SetResult((Js::Var*)&scriptFunction);
-        }
-
-        //
-        //TODO: We may (probably?) want to use the debugger source rundown functionality here instead
-        //
-        if (scriptFunction != nullptr && scriptContext->IsTTDRecordModeEnabled())
-        {
-            //Make sure we have the body and text information available
-            Js::FunctionBody* globalBody = TTD::JsSupport::ForceAndGetFunctionBody(scriptFunction->GetParseableFunctionInfo());
-
-            const TTD::NSSnapValues::TopLevelScriptLoadFunctionBodyResolveInfo* tbfi = scriptContext->GetThreadContext()->TTDLog->AddScriptLoad(globalBody, kmodGlobal, sourceContext, script, (uint32_t)cb, loadScriptFlag);
-            if(parseEvent != nullptr)
-            {
-                TTD::NSLogEvents::JsRTCodeParseAction_SetBodyCtrId(parseEvent, tbfi->TopLevelBase.TopLevelBodyCtr);
-            }
-
-            //walk global body to (1) add functions to pin set (2) build parent map
-            BEGIN_JS_RUNTIME_CALL(scriptContext);
-            {
-                scriptContext->TTDContextInfo->ProcessFunctionBodyOnLoad(globalBody, nullptr);
-                scriptContext->TTDContextInfo->RegisterLoadedScript(globalBody, tbfi->TopLevelBase.TopLevelBodyCtr);
-            }
-            END_JS_RUNTIME_CALL(scriptContext);
-        }
-#endif
 
         JsrtContext * context = JsrtContext::GetCurrent();
         context->OnScriptLoad(scriptFunction, utf8SourceInfo, &se);
@@ -3623,39 +3310,11 @@ JsErrorCode RunScriptCore(JsValueRef scriptSource, const byte *script, size_t cb
                 args.Values = &varThis;
             }
 
-#if ENABLE_TTD
-            TTD::TTDJsRTFunctionCallActionPopperRecorder callInfoPopper;
-            if(PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(scriptContext))
-            {
-                TTD::NSLogEvents::EventLogEntry* callEvent = scriptContext->GetThreadContext()->TTDLog->RecordJsRTCallFunction(_actionEntryPopper, scriptContext->GetThreadContext()->TTDRootNestingCount, scriptFunction, args.Info.Count, args.Values);
-                callInfoPopper.InitializeForRecording(scriptContext, scriptContext->GetThreadContext()->TTDLog->GetCurrentWallTime(), callEvent);
-
-                if(scriptContext->GetThreadContext()->TTDRootNestingCount == 0)
-                {
-                    TTD::EventLog* elog = scriptContext->GetThreadContext()->TTDLog;
-                    elog->ResetCallStackForTopLevelCall(elog->GetLastEventTime());
-
-                    TTD::ExecutionInfoManager* emanager = scriptContext->GetThreadContext()->TTDExecutionInfo;
-                    if(emanager != nullptr)
-                    {
-                        emanager->ResetCallStackForTopLevelCall(elog->GetLastEventTime());
-                    }
-                }
-            }
-#endif
-
             Js::Var varResult = scriptFunction->CallRootFunction(args, scriptContext, true);
             if (result != nullptr)
             {
                 *result = varResult;
             }
-
-#if ENABLE_TTD
-            if(PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(scriptContext))
-            {
-                _actionEntryPopper.SetResult(result);
-            }
-#endif
         }
         return JsNoError;
     });
@@ -4006,364 +3665,83 @@ JsErrorCode chakracore::jsrt::JsTTDCreateRecordRuntime(_In_ JsRuntimeAttributes 
     _In_ TTDOpenResourceStreamCallback openResourceStream, _In_ JsTTDWriteBytesToStreamCallback writeBytesToStream, _In_ JsTTDFlushAndCloseStreamCallback flushAndCloseStream,
     _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtime)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    if(snapInterval > UINT32_MAX || snapHistoryLength > UINT32_MAX)
-    {
-        return JsErrorInvalidArgument;
-    }
-
-    return CreateRuntimeCore(attributes, nullptr, 0, true, false, enableDebugging, (uint32_t)snapInterval, (uint32_t)snapHistoryLength,
-        openResourceStream, nullptr, writeBytesToStream, flushAndCloseStream,
-        threadService, runtime);
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDCreateReplayRuntime(_In_ JsRuntimeAttributes attributes, _In_reads_(infoUriCount) const char* infoUri, _In_ size_t infoUriCount, _In_ bool enableDebugging,
     _In_ TTDOpenResourceStreamCallback openResourceStream, _In_ JsTTDReadBytesFromStreamCallback readBytesFromStream, _In_ JsTTDFlushAndCloseStreamCallback flushAndCloseStream,
     _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtime)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-
-    return CreateRuntimeCore(attributes, infoUri, infoUriCount, false, true, enableDebugging, UINT_MAX, UINT_MAX,
-        openResourceStream, readBytesFromStream, nullptr, flushAndCloseStream,
-        threadService, runtime);
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDCreateContext(_In_ JsRuntimeHandle runtimeHandle, _In_ bool useRuntimeTTDMode, _Out_ JsContextRef *newContext)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
-        PARAM_NOT_NULL(newContext);
-        VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-        JsrtRuntime * runtime = JsrtRuntime::FromHandle(runtimeHandle);
-        ThreadContext * threadContext = runtime->GetThreadContext();
-        TTDAssert(threadContext->IsRuntimeInTTDMode(), "Need to create in TTD Mode.");
-
-        bool inRecord = false;
-        bool activelyRecording = false;
-        bool inReplay = false;
-        TTDRecorder dummyActionEntryPopper;
-        if(useRuntimeTTDMode)
-        {
-            threadContext->TTDLog->GetModesForExplicitContextCreate(inRecord, activelyRecording, inReplay);
-        }
-
-        return CreateContextCore(runtimeHandle, dummyActionEntryPopper, inRecord, activelyRecording, inReplay, newContext);
-    });
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDNotifyContextDestroy(_In_ JsContextRef context)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    ThreadContext* threadContext = ThreadContext::GetContextForCurrentThread();
-    if(threadContext && threadContext->IsRuntimeInTTDMode())
-    {
-        Js::ScriptContext* ctx = static_cast<JsrtContext*>(context)->GetScriptContext();
-        threadContext->TTDContext->NotifyCtxDestroyInRecord(ctx);
-    }
-
-    return JsNoError;
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDStart()
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsrtContext *currentContext = JsrtContext::GetCurrent();
-    JsErrorCode cCheck = CheckContext(currentContext, JSRT_MAYBE_TRUE);
-    TTDAssert(cCheck == JsNoError, "Must have valid context when starting TTD.");
-
-    Js::ScriptContext* scriptContext = currentContext->GetScriptContext();
-    TTDAssert(scriptContext->IsTTDRecordOrReplayModeEnabled(), "Need to create in TTD Record Mode.");
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
-    {
-        if(scriptContext->IsTTDRecordModeEnabled())
-        {
-            scriptContext->GetThreadContext()->TTDLog->DoSnapshotExtract();
-        }
-
-        //Want to verify that we are at top-level of dispatch
-        scriptContext->GetThreadContext()->TTDLog->PushMode(TTD::TTDMode::CurrentlyEnabled);
-
-        return JsNoError;
-    });
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDStop()
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsrtContext *currentContext = JsrtContext::GetCurrent();
-    JsErrorCode cCheck = CheckContext(currentContext, JSRT_MAYBE_TRUE);
-    TTDAssert(cCheck == JsNoError, "Must have valid context when starting TTD.");
-
-    Js::ScriptContext* scriptContext = currentContext->GetScriptContext();
-    TTDAssert(scriptContext->IsTTDRecordOrReplayModeEnabled(), "Need to create in TTD mode.");
-
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
-    {
-        scriptContext->GetThreadContext()->TTDLog->PopMode(TTD::TTDMode::CurrentlyEnabled);
-
-        if(scriptContext->IsTTDRecordModeEnabled())
-        {
-            scriptContext->GetThreadContext()->TTDLog->UnloadAllLogData();
-        }
-
-        return JsNoError;
-    });
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDPauseTimeTravelBeforeRuntimeOperation()
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsrtContext *currentContext = JsrtContext::GetCurrent();
-    JsErrorCode cCheck = CheckContext(currentContext, JSRT_MAYBE_TRUE);
-    TTDAssert(cCheck == JsNoError, "Must have valid context when changing debugger mode.");
-
-    Js::ScriptContext* scriptContext = currentContext->GetScriptContext();
-    ThreadContext* threadContext = scriptContext->GetThreadContext();
-
-    if(threadContext->IsRuntimeInTTDMode())
-    {
-        threadContext->TTDLog->PushMode(TTD::TTDMode::ExcludedExecutionDebuggerAction);
-    }
-
-    return JsNoError;
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDReStartTimeTravelAfterRuntimeOperation()
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsrtContext *currentContext = JsrtContext::GetCurrent();
-    JsErrorCode cCheck = CheckContext(currentContext, JSRT_MAYBE_TRUE);
-    TTDAssert(cCheck == JsNoError, "Must have valid context when changing debugger mode.");
-
-    Js::ScriptContext* scriptContext = currentContext->GetScriptContext();
-    ThreadContext* threadContext = scriptContext->GetThreadContext();
-
-    if(threadContext->IsRuntimeInTTDMode())
-    {
-        threadContext->TTDLog->PopMode(TTD::TTDMode::ExcludedExecutionDebuggerAction);
-    }
-
-    return JsNoError;
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDNotifyYield()
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsrtContext *currentContext = JsrtContext::GetCurrent();
-    JsErrorCode cCheck = CheckContext(currentContext, JSRT_MAYBE_TRUE);
-    if(cCheck != JsNoError)
-    {
-        return JsNoError; //we are ok just aren't going to do any TTD related work
-    }
-
-    Js::ScriptContext* scriptContext = currentContext->GetScriptContext();
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
-    {
-        if(scriptContext->IsTTDRecordModeEnabled())
-        {
-            scriptContext->GetThreadContext()->TTDLog->RecordJsRTEventLoopYieldPoint();
-        }
-
-        return JsNoError;
-    });
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDNotifyLongLivedReferenceAdd(_In_ JsValueRef value)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    return GlobalAPIWrapper([&](TTDRecorder& _actionEntryPopper) -> JsErrorCode
-    {
-        ThreadContext* threadContext = ThreadContext::GetContextForCurrentThread();
-        if(threadContext == nullptr)
-        {
-            return JsErrorNoCurrentContext;
-        }
-
-        if (Js::VarIs<Js::RecyclableObject>(value))
-        {
-            Js::RecyclableObject* obj = Js::VarTo<Js::RecyclableObject>(value);
-            if (obj->GetScriptContext()->IsTTDRecordModeEnabled())
-            {
-                if (obj->GetScriptContext()->ShouldPerformRecordAction())
-                {
-                    threadContext->TTDLog->RecordJsRTAddWeakRootRef(_actionEntryPopper, (Js::Var)value);
-                }
-
-                threadContext->TTDContext->AddRootRef_Record(TTD_CONVERT_OBJ_TO_LOG_PTR_ID(obj), obj);
-            }
-        }
-
-        return JsNoError;
-    });
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDHostExit(_In_ int statusCode)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTHostExitProcess, statusCode);
-
-        return JsNoError;
-    });
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDRawBufferCopySyncIndirect(_In_ JsValueRef dst, _In_ size_t dstIndex, _In_ JsValueRef src, _In_ size_t srcIndex, _In_ size_t count)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    if(dstIndex > UINT32_MAX || srcIndex > UINT32_MAX || count > UINT32_MAX)
-    {
-        return JsErrorInvalidArgument;
-    }
-
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTRawBufferCopySync, dst, (uint32_t)dstIndex, src, (uint32_t)srcIndex, (uint32_t)count);
-
-        return JsNoError;
-    });
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDRawBufferModifySyncIndirect(_In_ JsValueRef buffer, _In_ size_t index, _In_ size_t count)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    if(index > UINT32_MAX || count > UINT32_MAX)
-    {
-        return JsErrorInvalidArgument;
-    }
-
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTRawBufferModifySync, buffer, (uint32_t)index, (uint32_t)count);
-
-        return JsNoError;
-    });
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDRawBufferAsyncModificationRegister(_In_ JsValueRef instance, _In_ byte* initialModPos)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsValueRef addRefObj = nullptr;
-    JsErrorCode addRefResult = ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        if (scriptContext->IsTTDRecordModeEnabled())
-        {
-            TTDAssert(Js::VarIs<Js::ArrayBuffer>(instance), "Not array buffer object!!!");
-            Js::ArrayBuffer* dstBuff = Js::VarTo<Js::ArrayBuffer>(instance);
-            addRefObj = dstBuff;
-
-            TTDAssert(dstBuff->GetBuffer() <= initialModPos && initialModPos < dstBuff->GetBuffer() + dstBuff->GetByteLength(), "Not array buffer object!!!");
-            TTDAssert(initialModPos - dstBuff->GetBuffer() < UINT32_MAX, "This is really big!!!");
-            ptrdiff_t index = initialModPos - Js::VarTo<Js::ArrayBuffer>(instance)->GetBuffer();
-
-            scriptContext->TTDContextInfo->AddToAsyncPendingList(dstBuff, (uint32_t)index);
-
-            PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTRawBufferAsyncModificationRegister, instance, (uint32_t)index);
-        }
-
-        return JsNoError;
-    });
-
-    if(addRefResult != JsNoError)
-    {
-        return addRefResult;
-    }
-
-    //We need to root add ref so we can find this during replay!!!
-    if(addRefObj == nullptr)
-    {
-        return JsNoError;
-    }
-    else
-    {
-        JsAddRef(addRefObj, nullptr);
-    }
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDRawBufferAsyncModifyComplete(_In_ byte* finalModPos)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsValueRef releaseObj = nullptr;
-    JsErrorCode releaseStatus = ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        if (scriptContext->IsTTDRecordModeEnabled())
-        {
-            TTD::TTDPendingAsyncBufferModification pendingAsyncInfo = { 0 };
-            scriptContext->TTDContextInfo->GetFromAsyncPendingList(&pendingAsyncInfo, finalModPos);
-
-            Js::ArrayBuffer* dstBuff = Js::VarTo<Js::ArrayBuffer>(pendingAsyncInfo.ArrayBufferVar);
-            releaseObj = dstBuff;
-
-            PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTRawBufferAsyncModifyComplete, pendingAsyncInfo, finalModPos);
-        }
-
-        return JsNoError;
-    });
-
-    if(releaseStatus != JsNoError)
-    {
-        return releaseStatus;
-    }
-
-    //We need to root release ref so we can free this in replay if needed!!!
-    if(releaseObj == nullptr)
-    {
-        return JsNoError;
-    }
-    else
-    {
-        return JsRelease(releaseObj, nullptr);
-    }
-
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDCheckAndAssertIfTTDRunning(_In_ const char* msg)
 {
-#if ENABLE_TTD
-    JsrtContext* context = JsrtContext::GetCurrent();
-    TTDAssert(context == nullptr || !context->GetScriptContext()->ShouldPerformRecordAction(), msg);
-#endif
     return JsNoError;
 }
 
@@ -4372,336 +3750,37 @@ JsErrorCode chakracore::jsrt::JsTTDGetSnapTimeTopLevelEventMove(_In_ JsRuntimeHa
    _Inout_ int64_t* targetEventTime, _Out_ int64_t* targetStartSnapTime,
    _Out_opt_ int64_t* targetEndSnapTime)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsrtRuntime* runtime = JsrtRuntime::FromHandle(runtimeHandle);
-    ThreadContext* threadContext = runtime->GetThreadContext();
-
-    *targetStartSnapTime = -1;
-    if(targetEndSnapTime != nullptr)
-    {
-        *targetEndSnapTime = -1;
-    }
-
-    TTDAssert(threadContext->IsRuntimeInTTDMode(), "Should only happen in TT debugging mode.");
-
-    //If we requested a move to a specific event then extract the event count and try to find it
-    if((moveMode & JsTTDMoveMode::JsTTDMoveFirstEvent) == JsTTDMoveMode::JsTTDMoveFirstEvent)
-    {
-        *targetEventTime = threadContext->TTDLog->GetFirstEventTimeInLog();
-        if(*targetEventTime == -1)
-        {
-            return JsErrorCategoryUsage;
-        }
-    }
-    else if((moveMode & JsTTDMoveMode::JsTTDMoveLastEvent) == JsTTDMoveMode::JsTTDMoveLastEvent)
-    {
-        *targetEventTime = threadContext->TTDLog->GetLastEventTimeInLog();
-        if(*targetEventTime == -1)
-        {
-            return JsErrorCategoryUsage;
-        }
-    }
-    else if((moveMode & JsTTDMoveMode::JsTTDMoveKthEvent) == JsTTDMoveMode::JsTTDMoveKthEvent)
-    {
-        *targetEventTime = threadContext->TTDLog->GetKthEventTimeInLog(kthEvent);
-        if(*targetEventTime == -1)
-        {
-            return JsErrorCategoryUsage;
-        }
-    }
-    else
-    {
-        ;
-    }
-
-#ifdef __APPLE__
-    //TODO: Explicit cast of ptr since compiler gets confused -- resolve in PAL later
-    static_assert(sizeof(int64_t) == sizeof(long), "int64_t and long size mis-match");
-    *targetStartSnapTime = threadContext->TTDLog->FindSnapTimeForEventTime(*targetEventTime, (long*)targetEndSnapTime);
-#else
-    *targetStartSnapTime = threadContext->TTDLog->FindSnapTimeForEventTime(*targetEventTime, targetEndSnapTime);
-#endif
-
-    return JsNoError;
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDGetSnapShotBoundInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t targetEventTime, _Out_ int64_t* startSnapTime, _Out_ int64_t* endSnapTime)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsrtRuntime* runtime = JsrtRuntime::FromHandle(runtimeHandle);
-    ThreadContext* threadContext = runtime->GetThreadContext();
-    TTDAssert(threadContext->IsRuntimeInTTDMode(), "Should only happen in TT debugging mode.");
-
-#ifdef __APPLE__
-    //TODO: Explicit cast of ptr since compiler gets confused -- resolve in PAL later
-    static_assert(sizeof(int64_t) == sizeof(long), "int64_t and long size mis-match");
-    threadContext->TTDLog->GetSnapShotBoundInterval(targetEventTime, (long*)startSnapTime, (long*)endSnapTime);
-#else
-    threadContext->TTDLog->GetSnapShotBoundInterval(targetEventTime, startSnapTime, endSnapTime);
-#endif
-
-    return JsNoError;
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDGetPreviousSnapshotInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t currentSnapStartTime, _Out_ int64_t* previousSnapTime)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsrtRuntime * runtime = JsrtRuntime::FromHandle(runtimeHandle);
-    ThreadContext * threadContext = runtime->GetThreadContext();
-    TTDAssert(threadContext->IsRuntimeInTTDMode(), "Should only happen in TT debugging mode.");
-
-    *previousSnapTime = threadContext->TTDLog->GetPreviousSnapshotInterval(currentSnapStartTime);
-
-    return JsNoError;
-#endif
 }
-
-#if ENABLE_TTD
-//Helper method for resetting breakpoint info around snapshot inflate
-JsErrorCode TTDHandleBreakpointInfoAndInflate(int64_t snapTime, JsrtRuntime* runtime, ThreadContext* threadContext)
-{
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
-    {
-        if(threadContext->TTDLog->IsDebugModeFlagSet())
-        {
-            threadContext->TTDExecutionInfo->LoadPreservedBPInfo(threadContext);
-        }
-
-        threadContext->TTDLog->DoSnapshotInflate(snapTime);
-
-        threadContext->TTDLog->ResetCallStackForTopLevelCall(-1);
-        if(threadContext->TTDExecutionInfo != nullptr)
-        {
-            threadContext->TTDExecutionInfo->ResetCallStackForTopLevelCall(-1);
-        }
-
-        return JsNoError;
-    });
-}
-#endif
 
 JsErrorCode chakracore::jsrt::JsTTDPreExecuteSnapShotInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t startSnapTime, _In_ int64_t endSnapTime, _In_ JsTTDMoveMode moveMode, _Out_ int64_t* newTargetEventTime)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-
-    *newTargetEventTime = -1;
-
-    JsrtRuntime* runtime = JsrtRuntime::FromHandle(runtimeHandle);
-    ThreadContext* threadContext = runtime->GetThreadContext();
-    TTDAssert(threadContext->IsRuntimeInTTDMode(), "Should only happen in TT debugging mode.");
-
-    TTD::EventLog* elog = threadContext->TTDLog;
-    TTD::ExecutionInfoManager* emanager = threadContext->TTDExecutionInfo;
-    JsErrorCode res = JsNoError;
-
-    JsErrorCode inflateStatus = TTDHandleBreakpointInfoAndInflate(startSnapTime, runtime, threadContext);
-    if(inflateStatus != JsNoError)
-    {
-        return inflateStatus;
-    }
-
-    //If we are in the "active" segment set the continue breakpoint
-    if((moveMode & JsTTDMoveMode::JsTTDMoveScanIntervalForContinueInActiveBreakpointSegment) == JsTTDMoveMode::JsTTDMoveScanIntervalForContinueInActiveBreakpointSegment)
-    {
-        GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
-        {
-            emanager->SetBPInfoForActiveSegmentContinueScan(threadContext->TTDContext);
-
-            return JsNoError;
-        });
-    }
-
-    elog->PushMode(TTD::TTDMode::DebuggerSuppressBreakpoints);
-    elog->PushMode(TTD::TTDMode::DebuggerLogBreakpoints);
-    try
-    {
-        if(endSnapTime == -1)
-        {
-            elog->ReplayRootEventsToTime(TTD_EVENT_MAXTIME);
-        }
-        else
-        {
-            elog->ReplayRootEventsToTime(endSnapTime);
-        }
-    }
-    catch(TTD::TTDebuggerAbortException abortException)
-    {
-        //If we hit the end of the log or we hit a terminal exception that is fine -- anything else is a problem
-        if(!abortException.IsEndOfLog() && !abortException.IsTopLevelException())
-        {
-            res = JsErrorFatal;
-        }
-    }
-    catch(...) //we are replaying something that should be known to execute successfully so encountering any error is very bad
-    {
-        res = JsErrorFatal;
-        TTDAssert(false, "Unexpected fatal Error");
-    }
-    elog->PopMode(TTD::TTDMode::DebuggerLogBreakpoints);
-    elog->PopMode(TTD::TTDMode::DebuggerSuppressBreakpoints);
-
-    //If we are in the "active" segment un-set the continue breakpoint
-    if((moveMode & JsTTDMoveMode::JsTTDMoveScanIntervalForContinueInActiveBreakpointSegment) == JsTTDMoveMode::JsTTDMoveScanIntervalForContinueInActiveBreakpointSegment)
-    {
-        GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
-        {
-            emanager->ClearBPInfoForActiveSegmentContinueScan(threadContext->TTDContext);
-
-            return JsNoError;
-        });
-    }
-
-    if((moveMode & JsTTDMoveMode::JsTTDMoveScanIntervalForContinue) == JsTTDMoveMode::JsTTDMoveScanIntervalForContinue)
-    {
-        bool bpFound = emanager->TryFindAndSetPreviousBP();
-        if(bpFound)
-        {
-            *newTargetEventTime = emanager->GetPendingTTDBPTargetEventTime();
-        }
-    }
-
-    return res;
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDMoveToTopLevelEvent(_In_ JsRuntimeHandle runtimeHandle, _In_ JsTTDMoveMode moveMode, _In_ int64_t snapshotTime, _In_ int64_t eventTime)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-
-    JsrtRuntime* runtime = JsrtRuntime::FromHandle(runtimeHandle);
-    ThreadContext* threadContext = runtime->GetThreadContext();
-    TTDAssert(threadContext->IsRuntimeInTTDMode(), "Should only happen in TT debugging mode.");
-
-    TTD::EventLog* elog = threadContext->TTDLog;
-    JsErrorCode res = JsNoError;
-
-    JsErrorCode inflateStatus = TTDHandleBreakpointInfoAndInflate(snapshotTime, runtime, threadContext);
-    if(inflateStatus != JsNoError)
-    {
-        return inflateStatus;
-    }
-
-    elog->PushMode(TTD::TTDMode::DebuggerSuppressBreakpoints);
-    try
-    {
-        elog->ReplayRootEventsToTime(eventTime);
-
-        elog->DoRtrSnapIfNeeded();
-    }
-    catch(...) //we are replaying something that should be known to execute successfully so encountering any error is very bad
-    {
-        res = JsErrorFatal;
-        TTDAssert(false, "Unexpected fatal Error");
-    }
-    elog->PopMode(TTD::TTDMode::DebuggerSuppressBreakpoints);
-
-    return res;
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDReplayExecution(_Inout_ JsTTDMoveMode* moveMode, _Out_ int64_t* rootEventTime)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsrtContext *currentContext = JsrtContext::GetCurrent();
-    JsErrorCode cCheck = CheckContext(currentContext, JSRT_MAYBE_TRUE);
-    TTDAssert(cCheck == JsNoError, "This shouldn't happen!!!");
-
-    Js::ScriptContext* scriptContext = currentContext->GetScriptContext();
-    ThreadContext* threadContext = scriptContext->GetThreadContext();
-    TTDAssert(threadContext->IsRuntimeInTTDMode(), "Should only happen in TT debugging mode.");
-
-    TTD::EventLog* elog = threadContext->TTDLog;
-    TTD::ExecutionInfoManager* emanager = threadContext->TTDExecutionInfo;
-
-    if(emanager != nullptr)
-    {
-        JsErrorCode bpstatus = GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
-        {
-            if((*moveMode & JsTTDMoveMode::JsTTDMoveBreakOnEntry) == JsTTDMoveMode::JsTTDMoveBreakOnEntry)
-            {
-                emanager->SetBreakOnFirstUserCode();
-            }
-
-            //Set the active BP info from the manager (so we will hit the BP in step back operations)
-            emanager->SetActiveBPInfoAsNeeded(threadContext->TTDContext);
-
-            return JsNoError;
-        });
-
-        if(bpstatus != JsNoError)
-        {
-            return bpstatus;
-        }
-    }
-
-    *moveMode = JsTTDMoveMode::JsTTDMoveNone;
-    *rootEventTime = -1;
-    JsErrorCode res = JsNoError;
-    try
-    {
-        elog->ReplayRootEventsToTime(TTD_EVENT_MAXTIME);
-    }
-    catch(TTD::TTDebuggerAbortException abortException)
-    {
-        //if the debugger bails out with a move time request set info on the requested event time here
-        //rest of breakpoint info should have been set by the debugger callback before aborting
-        if (abortException.IsEventTimeMove() || abortException.IsTopLevelException())
-        {
-            *moveMode = (JsTTDMoveMode)abortException.GetMoveMode();
-            *rootEventTime = abortException.GetTargetEventTime();
-
-            //Check if we are tracking execution and, if so, set the exception location so we can access it later
-            if(emanager != nullptr && abortException.IsTopLevelException())
-            {
-                emanager->SetPendingTTDUnhandledException();
-            }
-        }
-
-        res = abortException.IsTopLevelException() ? JsErrorCategoryScript : JsNoError;
-    }
-    catch(...)
-    {
-        res = JsErrorFatal;
-        TTDAssert(false, "Unexpected fatal Error");
-    }
-
-    return res;
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsTTDDiagSetAutoTraceStatus(_In_ bool status)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    JsrtContext *currentContext = JsrtContext::GetCurrent();
-    JsErrorCode cCheck = CheckContext(currentContext, JSRT_MAYBE_TRUE);
-    TTDAssert(cCheck == JsNoError, "Must have valid context when setting auto trace status.");
-
-    Js::ScriptContext* scriptContext = currentContext->GetScriptContext();
-    ThreadContext* threadContext = scriptContext->GetThreadContext();
-
-    if (threadContext->IsRuntimeInTTDMode())
-    {
-        threadContext->TTDLog->SetAutoTraceEnabled(status);
-    }
-
-    return JsNoError;
-#endif
 }
 
 template <class CopyFunc>

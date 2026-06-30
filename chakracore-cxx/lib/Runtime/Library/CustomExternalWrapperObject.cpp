@@ -1122,16 +1122,3 @@ BOOL CustomExternalWrapperObject::DeleteProperty(Js::JavascriptString *propertyN
 
     return TRUE;
 }
-
-#if ENABLE_TTD
-TTD::NSSnapObjects::SnapObjectType CustomExternalWrapperObject::GetSnapTag_TTD() const
-{
-    //TODO:akatti: TTD. Do we need to define a new TTD object type for CustomExternalWrapperObject?
-    return TTD::NSSnapObjects::SnapObjectType::SnapExternalObject;
-}
-
-void CustomExternalWrapperObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-{
-    TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<void*, TTD::NSSnapObjects::SnapObjectType::SnapExternalObject>(objData, nullptr);
-}
-#endif

@@ -51,13 +51,6 @@ namespace Js
             static FunctionInfo UnEscape;
             static FunctionInfo CollectGarbage;
 
-#if ENABLE_TTD
-            static FunctionInfo TelemetryLog;
-
-            static FunctionInfo EnabledDiagnosticsTrace;
-            static FunctionInfo EmitTTDLog;
-#endif
-
             static FunctionInfo ChWriteTraceEvent;
 
 #ifdef IR_VIEWER
@@ -81,13 +74,6 @@ namespace Js
         static Var EntryUnEscape(RecyclableObject* function, CallInfo callInfo, ...);
 
         static Var EntryCollectGarbage(RecyclableObject* function, CallInfo callInfo, ...);
-
-#if ENABLE_TTD
-        static Var EntryTelemetryLog(RecyclableObject* function, CallInfo callInfo, ...);
-
-        static Var EntryEnabledDiagnosticsTrace(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntryEmitTTDLog(RecyclableObject* function, CallInfo callInfo, ...);
-#endif
 
         static Var EntryChWriteTraceEvent(RecyclableObject* function, CallInfo callInfo, ...);
 
@@ -171,12 +157,6 @@ namespace Js
 
         typedef JsUtil::BaseHashSet<PropertyId, Recycler, PowerOf2SizePolicy> ReservedPropertiesHashSet;
         typename WriteBarrierFieldTypeTraits<ReservedPropertiesHashSet *>::Type reservedProperties;
-
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> inline bool VarIsImpl<GlobalObject>(RecyclableObject* obj)

@@ -1396,34 +1396,6 @@ public:
     bool IsInAsyncHostOperation() const;
 #endif
 
-#if ENABLE_TTD
-    //The class that holds info on the TTD state for the thread context
-    TTD::ThreadContextTTD* TTDContext;
-
-    //The class that holds information on TTD <-> debugger interaction state
-    TTD::ExecutionInfoManager* TTDExecutionInfo;
-
-    //The event log for time-travel (or null if TTD is not turned on)
-    TTD::EventLog* TTDLog;
-
-    //Keep track of the number of re-entrant calls currently pending (i.e., if we make an external call it may call back into Chakra)
-    int32_t TTDRootNestingCount;
-
-    bool IsRuntimeInTTDMode() const
-    {
-        return this->TTDLog != nullptr;
-    }
-
-    //Initialize the context for time-travel
-    void InitTimeTravel(ThreadContext* threadContext, void* runtimeHandle, uint32_t snapInterval, uint32_t snapHistoryLength);
-
-    void InitHostFunctionsAndTTData(bool record, bool replay, bool debug, size_t optTTUriLength, const char* optTTUri,
-        TTD::TTDOpenResourceStreamCallback openResourceStreamfp, TTD::TTDReadBytesFromStreamCallback readBytesFromStreamfp,
-        TTD::TTDWriteBytesToStreamCallback writeBytesToStreamfp, TTD::TTDFlushAndCloseStreamCallback flushAndCloseStreamfp,
-        TTD::TTDCreateExternalObjectCallback createExternalObjectfp,
-        TTD::TTDCreateJsRTContextCallback createJsRTContextCallbackfp, TTD::TTDReleaseJsRTContextCallback releaseJsRTContextCallbackfp, TTD::TTDSetActiveJsRTContext fpSetActiveJsRTContext);
-#endif
-
     BOOL ReserveStaticTypeIds(int first, int last);
     Js::TypeId ReserveTypeIds(int count);
     Js::TypeId CreateTypeId();
@@ -1842,10 +1814,6 @@ public:
     void EnsureSymbolRegistrationMap();
     const Js::PropertyRecord* GetSymbolFromRegistrationMap(const char16_t* stringKey, charcount_t stringLength);
     const Js::PropertyRecord* AddSymbolToRegistrationMap(const char16_t* stringKey, charcount_t stringLength);
-
-#if ENABLE_TTD
-    JsUtil::BaseDictionary<Js::HashedCharacterBuffer<char16_t>*, const Js::PropertyRecord*, Recycler, PowerOf2SizePolicy, Js::PropertyRecordStringHashComparer>* GetSymbolRegistrationMap_TTD();
-#endif
 
     inline void ClearPendingSOError()
     {

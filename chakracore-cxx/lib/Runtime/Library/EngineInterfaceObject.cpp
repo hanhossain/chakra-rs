@@ -136,28 +136,6 @@ namespace Js
         }
     }
 
-#if ENABLE_TTD
-    void EngineInterfaceObject::MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor)
-    {
-        extractor->MarkVisitVar(this->commonNativeInterfaces);
-    }
-
-    void EngineInterfaceObject::ProcessCorePaths()
-    {
-        this->GetScriptContext()->TTDWellKnownInfo->EnqueueNewPathVarAsNeeded(this, this->commonNativeInterfaces, u"!commonNativeInterfaces");
-    }
-
-    TTD::NSSnapObjects::SnapObjectType EngineInterfaceObject::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapWellKnownObject;
-    }
-
-    void EngineInterfaceObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<void*, TTD::NSSnapObjects::SnapObjectType::SnapWellKnownObject>(objData, nullptr);
-    }
-#endif
-
     bool EngineInterfaceObject::InitializeCommonNativeInterfaces(DynamicObject* commonNativeInterfaces, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode)
     {
         // start with 1 for CallInstanceFunction

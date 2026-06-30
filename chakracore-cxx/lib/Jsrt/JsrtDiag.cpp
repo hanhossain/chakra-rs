@@ -475,45 +475,11 @@ JsErrorCode chakracore::jsrt::JsDiagSetStepType(
         }
         else if (stepType == JsDiagStepTypeStepBack)
         {
-#if ENABLE_TTD
-            ThreadContext* threadContext = runtime->GetThreadContext();
-            if(!threadContext->IsRuntimeInTTDMode())
-            {
-                //Don't want to fail hard when user accidentally clicks this so pring message and step forward
-                fprintf(stderr, "Must be in replay mode to use reverse-step - launch with \"--replay-debug\" flag in Node.");
-                jsrtDebugManager->SetResumeType(BREAKRESUMEACTION_STEP_OVER);
-            }
-            else
-            {
-                threadContext->TTDExecutionInfo->SetPendingTTDStepBackMove();
-
-                //don't worry about BP suppression because we are just going to throw after we return
-                jsrtDebugManager->SetResumeType(BREAKRESUMEACTION_CONTINUE);
-            }
-#else
             return JsErrorInvalidArgument;
-#endif
         }
         else if (stepType == JsDiagStepTypeReverseContinue)
         {
-#if ENABLE_TTD
-            ThreadContext* threadContext = runtime->GetThreadContext();
-            if(!threadContext->IsRuntimeInTTDMode())
-            {
-                //Don't want to fail hard when user accidentally clicks this so pring message and step forward
-                fprintf(stderr, "Must be in replay mode to use reverse-continue - launch with \"--replay-debug\" flag in Node.");
-                jsrtDebugManager->SetResumeType(BREAKRESUMEACTION_CONTINUE);
-            }
-            else
-            {
-                threadContext->TTDExecutionInfo->SetPendingTTDReverseContinueMove(JsTTDMoveMode::JsTTDMoveScanIntervalForContinue);
-
-                //don't worry about BP suppression because we are just going to throw after we return
-                jsrtDebugManager->SetResumeType(BREAKRESUMEACTION_CONTINUE);
-            }
-#else
             return JsErrorInvalidArgument;
-#endif
         }
         else if (stepType == JsDiagStepTypeContinue)
         {
@@ -527,29 +493,7 @@ JsErrorCode chakracore::jsrt::JsDiagSetStepType(
 
 JsErrorCode chakracore::jsrt::JsTTDDiagWriteLog(_In_reads_(uriLength) const char* uri, _In_ size_t uriLength)
 {
-#if !ENABLE_TTD
     return JsErrorCategoryUsage;
-#else
-    return ContextAPIWrapper_NoRecord<true>([&](Js::ScriptContext * scriptContext) -> JsErrorCode {
-        if (!scriptContext->GetThreadContext()->IsRuntimeInTTDMode() || !scriptContext->GetThreadContext()->TTDLog->CanWriteInnerLoopTrace())
-        {
-            return JsErrorDiagUnableToPerformAction;
-        }
-
-        JsrtContext *currentContext = JsrtContext::GetCurrent();
-        JsrtRuntime* runtime = currentContext->GetRuntime();
-
-        VALIDATE_RUNTIME_IS_AT_BREAK(runtime);
-
-        JsrtDebugManager* jsrtDebugManager = runtime->GetJsrtDebugManager();
-
-        TTD::TTDebuggerSourceLocation cloc;
-        jsrtDebugManager->GetThreadContext()->TTDExecutionInfo->GetTimeAndPositionForDebugger(cloc);
-        jsrtDebugManager->GetThreadContext()->TTDLog->InnerLoopEmitLog(cloc, uri, uriLength);
-
-        return JsNoError;
-    });
-#endif
 }
 
 JsErrorCode chakracore::jsrt::JsDiagGetFunctionPosition(

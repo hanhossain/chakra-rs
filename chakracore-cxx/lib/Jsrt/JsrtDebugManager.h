@@ -19,10 +19,6 @@ public:
     void* GetAndClearCallbackState();
     bool IsDebugEventCallbackSet() const;
 
-#if ENABLE_TTD
-    void ReportScriptCompile_TTD(Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException, bool notify);
-#endif
-
     void ReportScriptCompile(Js::JavascriptFunction* scriptFunction, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException);
     void ReportBreak(Js::InterpreterHaltState* haltState);
     void ReportExceptionBreak(Js::InterpreterHaltState* haltState);
@@ -43,10 +39,6 @@ public:
 
     Js::DynamicObject* SetBreakPoint(Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t lineNumber, uint32_t columnNumber);
     void GetBreakpoints(Js::JavascriptArray** bpsArray, Js::ScriptContext* scriptContext);
-
-#if ENABLE_TTD
-    Js::BreakpointProbe* SetBreakpointHelper_TTD(long desiredBpId, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t lineNumber, uint32_t columnNumber, BOOL* isNewBP);
-#endif
 
     JsrtDebuggerObjectsManager* GetDebuggerObjectsManager();
     void ClearDebuggerObjects();

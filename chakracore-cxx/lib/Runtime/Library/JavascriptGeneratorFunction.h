@@ -83,13 +83,6 @@ namespace Js
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
         static Var NewInstanceRestrictedMode(RecyclableObject* function, CallInfo callInfo, ...);
 
-#if ENABLE_TTD
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-        void CreateSnapObjectInfo(TTD::SlabAllocator& alloc, _Out_ TTD::NSSnapObjects::SnapGeneratorFunctionInfo** info, _Out_ TTD_PTR_ID** depArray, _Out_ uint32_t* depCount);
-#endif
-
     public:
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
         {
@@ -117,12 +110,6 @@ namespace Js
 
         virtual JavascriptFunction* GetRealFunctionObject() override { return realFunction; }
         void SetRealGeneratorFunction(JavascriptGeneratorFunction* realFunction) { this->realFunction = realFunction; }
-
-#if ENABLE_TTD
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
 
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
         {

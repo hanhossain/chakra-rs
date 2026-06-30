@@ -464,36 +464,7 @@ namespace Js
         {
             return FALSE;
         }
-
-#if ENABLE_TTD
-        if(this->GetScriptContext()->ShouldPerformReplayAction())
-        {
-            BOOL res = FALSE;
-            PropertyAttributes tmpAttributes = PropertyNone;
-            this->GetScriptContext()->GetThreadContext()->TTDLog->ReplayPropertyEnumEvent(requestContext, &res, &index, this, propertyId, &tmpAttributes, propertyString);
-
-            if(attributes != nullptr)
-            {
-                *attributes = tmpAttributes;
-            }
-
-            return res;
-        }
-        else if(this->GetScriptContext()->ShouldPerformRecordAction())
-        {
-            BOOL res = this->GetTypeHandler()->FindNextProperty(requestContext, index, propertyString, propertyId, attributes, this->GetType(), typeToEnumerate, flags, this, info);
-
-            PropertyAttributes tmpAttributes = (attributes != nullptr) ? *attributes : PropertyNone;
-            this->GetScriptContext()->GetThreadContext()->TTDLog->RecordPropertyEnumEvent(res, *propertyId, tmpAttributes, *propertyString);
-            return res;
-        }
-        else
-        {
-            return this->GetTypeHandler()->FindNextProperty(requestContext, index, propertyString, propertyId, attributes, this->GetType(), typeToEnumerate, flags, this, info);
-        }
-#else
         return this->GetTypeHandler()->FindNextProperty(requestContext, index, propertyString, propertyId, attributes, this->GetType(), typeToEnumerate, flags, this, info);
-#endif
     }
 
     BOOL
@@ -907,13 +878,6 @@ namespace Js
 
     bool DynamicObject::TryCopy(DynamicObject* from)
     {
-#if ENABLE_TTD
-        if (from->GetScriptContext()->ShouldPerformRecordOrReplayAction())
-        {
-            return false;
-        }
-#endif
-
         if (PHASE_OFF1(ObjectCopyPhase))
         {
             return false;
@@ -1095,43 +1059,6 @@ namespace Js
 
         RecyclableObject::Mark(recycler);
     }
-#endif
-
-#if ENABLE_TTD
-
-    TTD::NSSnapObjects::SnapObjectType DynamicObject::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapDynamicObject;
-    }
-
-    void DynamicObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<void*, TTD::NSSnapObjects::SnapObjectType::SnapDynamicObject>(objData, nullptr);
-    }
-
-    typename WriteBarrierFieldTypeTraits<Js::Var>::Type const* DynamicObject::GetInlineSlots_TTD() const
-    {
-        return this->GetInlineSlots();
-    }
-
-    Js::Var const* DynamicObject::GetAuxSlots_TTD() const
-    {
-        return AddressOf(this->auxSlots[0]);
-    }
-
-#if ENABLE_OBJECT_SOURCE_TRACKING
-    void DynamicObject::SetDiagOriginInfoAsNeeded()
-    {
-        if(!TTD::IsDiagnosticOriginInformationValid(this->TTDDiagOriginInfo))
-        {
-            if(this->GetScriptContext()->ShouldPerformRecordOrReplayAction())
-            {
-                this->GetScriptContext()->GetThreadContext()->TTDExecutionInfo->GetTimeAndPositionForDiagnosticObjectTracking(this->TTDDiagOriginInfo);
-            }
-        }
-    }
-#endif
-
 #endif
 
 } // namespace Js

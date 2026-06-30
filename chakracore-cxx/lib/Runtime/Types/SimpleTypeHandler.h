@@ -100,15 +100,6 @@ namespace Js
 
         static bool DoConvertToPathType(DynamicType * type);
 
-#if ENABLE_TTD
-    public:
-        virtual void MarkObjectSlots_TTD(TTD::SnapshotExtractor* extractor, DynamicObject* obj) const override;
-
-        virtual uint32_t ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const override;
-
-        virtual Js::BigPropertyIndex GetPropertyIndex_EnumerateTTD(const Js::PropertyRecord* pRecord) override;
-#endif
-
 #if DBG_DUMP
     public:
         void Dump(unsigned indent = 0) const override;

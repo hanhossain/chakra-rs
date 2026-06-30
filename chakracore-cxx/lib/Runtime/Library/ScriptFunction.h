@@ -137,16 +137,6 @@ namespace Js
         virtual JavascriptFunction* GetRealFunctionObject() { return this; }
 
         bool HasFunctionBody();
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual void ProcessCorePaths() override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-        virtual void ExtractSnapObjectDataIntoSnapScriptFunctionInfo(/*TTD::NSSnapObjects::SnapScriptFunctionInfo* */ void* ssfi, TTD::SlabAllocator& alloc);
-#endif
 
     public:
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()

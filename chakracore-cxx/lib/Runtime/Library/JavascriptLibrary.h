@@ -618,58 +618,6 @@ namespace Js
 
         DynamicObject* GetChakraLib() const { return chakraLibraryObject; }
 
-#if ENABLE_TTD
-        Js::PropertyId ExtractPrimitveSymbolId_TTD(Var value);
-        Js::RecyclableObject* CreatePrimitveSymbol_TTD(Js::PropertyId pid);
-        Js::RecyclableObject* CreatePrimitveSymbol_TTD(Js::JavascriptString* str);
-
-        Js::RecyclableObject* CreateDefaultBoxedObject_TTD(Js::TypeId kind);
-        void SetBoxedObjectValue_TTD(Js::RecyclableObject* obj, Js::Var value);
-
-        Js::RecyclableObject* CreateDate_TTD(double value);
-        Js::RecyclableObject* CreateRegex_TTD(const char16_t* patternSource, uint32_t patternLength, UnifiedRegex::RegexFlags flags, CharCount lastIndex, Js::Var lastVar);
-        Js::RecyclableObject* CreateError_TTD();
-
-        Js::RecyclableObject* CreateES5Array_TTD();
-        static void SetLengthWritableES5Array_TTD(Js::RecyclableObject* es5Array, bool isLengthWritable);
-
-        Js::RecyclableObject* CreateSet_TTD();
-        Js::RecyclableObject* CreateWeakSet_TTD();
-        static void AddSetElementInflate_TTD(Js::JavascriptSet* set, Var value);
-        static void AddWeakSetElementInflate_TTD(Js::JavascriptWeakSet* set, Var value);
-
-        Js::RecyclableObject* CreateMap_TTD();
-        Js::RecyclableObject* CreateWeakMap_TTD();
-        static void AddMapElementInflate_TTD(Js::JavascriptMap* map, Var key, Var value);
-        static void AddWeakMapElementInflate_TTD(Js::JavascriptWeakMap* map, Var key, Var value);
-
-        Js::RecyclableObject* CreateExternalFunction_TTD(Js::Var fname);
-        Js::RecyclableObject* CreateBoundFunction_TTD(
-                RecyclableObject* function, Var bThis, uint32_t ct, typename WriteBarrierFieldTypeTraits<Var>::Type* args);
-
-        Js::RecyclableObject* CreateProxy_TTD(RecyclableObject* handler, RecyclableObject* target);
-        Js::RecyclableObject* CreateRevokeFunction_TTD(RecyclableObject* proxy);
-
-        Js::RecyclableObject* CreateHeapArguments_TTD(uint32_t numOfArguments, uint32_t formalCount, ActivationObject* frameObject, byte* deletedArray);
-        Js::RecyclableObject* CreateES5HeapArguments_TTD(uint32_t numOfArguments, uint32_t formalCount, ActivationObject* frameObject, byte* deletedArray);
-
-        Js::JavascriptPromiseCapability* CreatePromiseCapability_TTD(Var promise, Var resolve, Var reject);
-        Js::JavascriptPromiseReaction* CreatePromiseReaction_TTD(RecyclableObject* handler, JavascriptPromiseCapability* capabilities);
-
-        Js::RecyclableObject* CreatePromise_TTD(uint32_t status, bool isHandled, Var result, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& resolveReactions, SList<Js::JavascriptPromiseReaction*, HeapAllocator>& rejectReactions);
-        JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* CreateAlreadyDefinedWrapper_TTD(bool alreadyDefined);
-        Js::RecyclableObject* CreatePromiseResolveOrRejectFunction_TTD(RecyclableObject* promise, bool isReject, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyResolved);
-        Js::RecyclableObject* CreatePromiseReactionTaskFunction_TTD(JavascriptPromiseReaction* reaction, Var argument);
-
-        Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* CreateRemainingElementsWrapper_TTD(Js::ScriptContext* ctx, uint32_t value);
-        Js::JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* CreateAlreadyCalledWrapper_TTD(Js::ScriptContext* ctx, bool value);
-        Js::RecyclableObject* CreatePromiseAllResolveElementFunction_TTD(Js::JavascriptPromiseCapability* capabilities, uint32_t index, Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* wrapper, Js::RecyclableObject* values, bool alreadyCalled);
-        Js::RecyclableObject* CreatePromiseAllSettledResolveOrRejectElementFunction_TTD(Js::JavascriptPromiseCapability* capabilities, uint32_t index, Js::JavascriptPromiseAllResolveElementFunctionRemainingElementsWrapper* wrapper, Js::RecyclableObject* values, JavascriptPromiseResolveOrRejectFunctionAlreadyResolvedWrapper* alreadyCalledWrapper, bool isRejecting);
-        Js::RecyclableObject* CreateJavascriptGenerator_TTD(Js::ScriptContext *ctx,
-                                                            Js::RecyclableObject *prototype, Js::Arguments &arguments,
-                                                            Js::JavascriptGenerator::GeneratorState generatorState);
-#endif
-
         void ResetIntlObject();
         void EnsureIntlObjectReady();
         template <class Fn>

@@ -929,15 +929,6 @@ namespace Js
         template<class T, uint InlinePropertySlots> static uint DetermineAvailableInlineElementSlots(const size_t allocationSize, bool *const isSufficientSpaceForInlinePropertySlotsRef);
         template<class T, uint ConstInlinePropertySlots, bool UseDynamicInlinePropertySlots> static SparseArraySegment<typename T::TElement> *DetermineInlineHeadSegmentPointer(T *const array);
 
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-        virtual void ProcessCorePaths() override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
-
     public:
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
         {
@@ -1118,22 +1109,6 @@ namespace Js
     private:
         virtual int32_t HeadSegmentIndexOfHelper(Var search, uint32_t &fromIndex, uint32_t toIndex, bool includesAlgorithm, ScriptContext * scriptContext) override;
 
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override
-        {
-            return;
-        }
-
-        virtual void ProcessCorePaths() override
-        {
-            return;
-        }
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
-
     public:
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
         {
@@ -1174,22 +1149,6 @@ namespace Js
         {
             return VTableValue::VtableCopyOnAccessNativeIntArray;
         }
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override
-        {
-            return;
-        }
-
-        virtual void ProcessCorePaths() override
-        {
-            return;
-        }
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
 
     public:
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
@@ -1288,22 +1247,6 @@ namespace Js
         static double Pop(ScriptContext * scriptContext, Var nativeFloatArray);
     private:
         virtual int32_t HeadSegmentIndexOfHelper(Var search, uint32_t &fromIndex, uint32_t toIndex, bool includesAlgorithm, ScriptContext * scriptContext) override;
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override
-        {
-            return;
-        }
-
-        virtual void ProcessCorePaths() override
-        {
-            return;
-        }
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
 
     public:
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()

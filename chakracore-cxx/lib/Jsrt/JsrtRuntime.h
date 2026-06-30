@@ -49,12 +49,6 @@ public:
     JsrtDebugManager * GetJsrtDebugManager();
 #endif
 
-#if ENABLE_TTD
-    uint32_t BPRegister_TTD(long bpID, Js::ScriptContext* scriptContext, Js::Utf8SourceInfo* utf8SourceInfo, uint32_t line, uint32_t column, BOOL* isNewBP);
-    void BPDelete_TTD(uint32_t bpID);
-    void BPClearDocument_TTD();
-#endif
-
 private:
     static void RecyclerCollectCallbackStatic(void * context, RecyclerCollectCallBackFlags flags);
 

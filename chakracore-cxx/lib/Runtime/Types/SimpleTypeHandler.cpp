@@ -1219,54 +1219,6 @@ namespace Js
     }
 #endif
 
-#if ENABLE_TTD
-    template<size_t size>
-    void SimpleTypeHandler<size>::MarkObjectSlots_TTD(TTD::SnapshotExtractor* extractor, DynamicObject* obj) const
-    {
-        uint32_t plength = this->propertyCount;
-
-        for(uint32_t index = 0; index < plength; ++index)
-        {
-            Js::PropertyId pid = this->descriptors[index].Id->GetPropertyId();
-
-            if(DynamicTypeHandler::ShouldMarkPropertyId_TTD(pid) & !(this->descriptors[index].Attributes & PropertyDeleted))
-            {
-                Js::Var value = obj->GetSlot(index);
-                extractor->MarkVisitVar(value);
-            }
-        }
-    }
-
-    template<size_t size>
-    uint32_t SimpleTypeHandler<size>::ExtractSlotInfo_TTD(TTD::NSSnapType::SnapHandlerPropertyEntry* entryInfo, ThreadContext* threadContext, TTD::SlabAllocator& alloc) const
-    {
-        uint32_t plength = this->propertyCount;
-
-        for(uint32_t index = 0; index < plength; ++index)
-        {
-            TTD::NSSnapType::ExtractSnapPropertyEntryInfo(entryInfo + index, this->descriptors[index].Id->GetPropertyId(), this->descriptors[index].Attributes, TTD::NSSnapType::SnapEntryDataKindTag::Data);
-        }
-
-        return plength;
-    }
-
-    template<size_t size>
-    Js::BigPropertyIndex SimpleTypeHandler<size>::GetPropertyIndex_EnumerateTTD(const Js::PropertyRecord* pRecord)
-    {
-        PropertyIndex index;
-        if(this->GetDescriptor(pRecord->GetPropertyId(), &index))
-        {
-            TTDAssert(!(this->descriptors[index].Attributes & PropertyDeleted), "How is this deleted but we enumerated it anyway???");
-
-            return (Js::BigPropertyIndex)index;
-        }
-
-        TTDAssert(false, "We found this during enum so what is going on here?");
-        return Js::Constants::NoBigSlot;
-    }
-
-#endif
-
 #if DBG_DUMP
     template<size_t size>
     void SimpleTypeHandler<size>::Dump(unsigned indent) const
