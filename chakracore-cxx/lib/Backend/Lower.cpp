@@ -28599,12 +28599,7 @@ Lowerer::LowerInitForInEnumerator(IR::Instr * instr)
         forInCache = instr->m_func->GetJITFunctionBody()->GetForInCache(profileId);
         Assert(forInCache != nullptr);
 
-        if (!func->IsSimpleJit()
-#if ENABLE_TTD
-            && (func->IsOOPJIT() || !func->GetScriptContext()->GetThreadContext()->IsRuntimeInTTDMode())
-            //TODO: We will need to enable OOPJIT info to exclude this if we have a TTD Runtime
-#endif
-            )
+        if (!func->IsSimpleJit())
         {
             GenerateInitForInEnumeratorFastPath(instr, forInCache);
         }
