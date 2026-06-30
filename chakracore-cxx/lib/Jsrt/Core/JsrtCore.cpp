@@ -1153,15 +1153,6 @@ JsErrorCode chakracore::jsrt::JsGetAndClearExceptionWithMetadata(_Out_ JsValueRe
 
         *metadata = exceptionMetadata;
 
-#if ENABLE_TTD
-        if (hr != E_OUTOFMEMORY)
-        {
-            PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTGetAndClearExceptionWithMetadata);
-            PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, metadata);
-        }
-#endif
-
-
         return JsNoError;
     });
 }
@@ -1194,14 +1185,6 @@ JsErrorCode chakracore::jsrt::JsGetDataViewInfo(
         *byteLength = dv->GetLength();
     }
     }
-
-#if ENABLE_TTD
-    Js::ScriptContext* scriptContext = Js::VarTo<Js::RecyclableObject>(dataView)->GetScriptContext();
-    if (PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(scriptContext) && arrayBuffer != nullptr)
-    {
-        scriptContext->GetThreadContext()->TTDLog->RecordJsRTGetDataViewInfo(dataView, *arrayBuffer);
-    }
-#endif
 
     END_JSRT_NO_EXCEPTION
 }
