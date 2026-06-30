@@ -501,7 +501,6 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
             Assert(sourceContextInfo != nullptr);
 
             SRCINFO si;
-            memset(&si, 0, sizeof(si));
             si.sourceContextInfo = sourceContextInfo;
             SRCINFO *hsi = scriptContext->AddHostSrcInfo(&si);
             uint32_t flags = fscrIsLibraryCode | (CONFIG_FLAG(CreateFunctionProxy) && !scriptContext->IsProfiling() ? fscrAllowFunctionProxy : 0);
