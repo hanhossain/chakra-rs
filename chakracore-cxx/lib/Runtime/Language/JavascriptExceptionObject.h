@@ -16,29 +16,12 @@ namespace Js
     public:
         typedef Var (*HostWrapperCreateFuncType)(Var var, ScriptContext * sourceScriptContext, ScriptContext * destScriptContext);
 
-        JavascriptExceptionObject(Var object, ScriptContext * scriptContext, JavascriptExceptionContext* exceptionContextIn, bool isPendingExceptionObject = false) :
-            thrownObject(object),
-            isPendingExceptionObject(isPendingExceptionObject),
-            scriptContext(scriptContext), tag(true),
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            isDebuggerSkip(false), byteCodeOffsetAfterDebuggerSkip(Constants::InvalidByteCodeOffset), hasDebuggerLogged(false),
-            isFirstChance(false), isExceptionCaughtInNonUserCode(false), ignoreAdvanceToNextStatement(false),
-#endif
-            hostWrapperCreateFunc(nullptr),
-            next(nullptr)
-        {
-            if (exceptionContextIn)
-            {
-                exceptionContext = *exceptionContextIn;
-            }
-            else
-            {
-                memset(&exceptionContext, 0, sizeof(exceptionContext));
-            }
-#if ENABLE_DEBUG_STACK_BACK_TRACE
-            this->stackBackTrace = nullptr;
-#endif
-        }
+        explicit JavascriptExceptionObject(const bool isPendingExceptionObject);
+        JavascriptExceptionObject(Var object, ScriptContext * scriptContext, JavascriptExceptionContext* exceptionContextIn, bool isPendingExceptionObject = false);
+
+        JavascriptExceptionObject(JavascriptExceptionObject&& other) noexcept;
+
+        JavascriptExceptionObject& operator=(JavascriptExceptionObject&& other) noexcept;
 
         Var GetThrownObject(ScriptContext * requestingScriptContext);
 
@@ -63,7 +46,6 @@ namespace Js
 #endif
 
         void FillError(JavascriptExceptionContext& exceptionContext, ScriptContext *scriptContext, HostWrapperCreateFuncType hostWrapperCreateFunc = NULL);
-        void ClearError();
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
         void SetDebuggerSkip(bool skip)
@@ -161,39 +143,39 @@ namespace Js
 
     private:
         friend class ::ThreadContext;
-        static void Insert(typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type* head, JavascriptExceptionObject* item);
-        static void Remove(typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type* head, JavascriptExceptionObject* item);
+        static void Insert(WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type* head, JavascriptExceptionObject* item);
+        static void Remove(WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type* head, JavascriptExceptionObject* item);
 
     private:
-        typename WriteBarrierFieldTypeTraits<Var>::Type      thrownObject;
-        typename WriteBarrierFieldTypeTraits<ScriptContext *>::Type scriptContext;
+        WriteBarrierFieldTypeTraits<Var>::Type thrownObject = nullptr;
+        WriteBarrierFieldTypeTraits<ScriptContext *>::Type scriptContext = nullptr;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        typename WriteBarrierFieldTypeTraits<int>::Type        byteCodeOffsetAfterDebuggerSkip;
+        WriteBarrierFieldTypeTraits<int>::Type byteCodeOffsetAfterDebuggerSkip = Constants::InvalidByteCodeOffset;
 #endif
 
-        typename WriteBarrierFieldTypeTraits<const bool>::Type tag : 1;               // Tag the low bit to prevent possible GC false references
-        typename WriteBarrierFieldTypeTraits<bool>::Type       isPendingExceptionObject : 1;
+        WriteBarrierFieldTypeTraits<bool>::Type tag : 1 = true; // Tag the low bit to prevent possible GC false references
+        WriteBarrierFieldTypeTraits<bool>::Type isPendingExceptionObject : 1 = false;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        typename WriteBarrierFieldTypeTraits<bool>::Type       isDebuggerSkip : 1;
-        typename WriteBarrierFieldTypeTraits<bool>::Type       hasDebuggerLogged : 1;
-        typename WriteBarrierFieldTypeTraits<bool>::Type       isFirstChance : 1;      // Mentions whether the current exception is a handled exception or not
-        typename WriteBarrierFieldTypeTraits<bool>::Type       isExceptionCaughtInNonUserCode : 1; // Mentions if in the caller chain the exception will be handled by the non-user code.
-        typename WriteBarrierFieldTypeTraits<bool>::Type       ignoreAdvanceToNextStatement : 1;  // This will be set when user had setnext while sitting on the exception
+        WriteBarrierFieldTypeTraits<bool>::Type isDebuggerSkip : 1 = false;
+        WriteBarrierFieldTypeTraits<bool>::Type hasDebuggerLogged : 1 = false;
+        WriteBarrierFieldTypeTraits<bool>::Type isFirstChance : 1 = false; // Mentions whether the current exception is a handled exception or not
+        WriteBarrierFieldTypeTraits<bool>::Type isExceptionCaughtInNonUserCode : 1 = false; // Mentions if in the caller chain the exception will be handled by the non-user code.
+        WriteBarrierFieldTypeTraits<bool>::Type ignoreAdvanceToNextStatement : 1 = false;  // This will be set when user had setnext while sitting on the exception
                                                 // So the exception eating logic shouldn't try and advance to next statement again.
 #endif
 
-        typename WriteBarrierFieldTypeTraits<HostWrapperCreateFuncType, _no_write_barrier_policy, _no_write_barrier_policy>::Type hostWrapperCreateFunc;
+        WriteBarrierFieldTypeTraits<HostWrapperCreateFuncType, _no_write_barrier_policy, _no_write_barrier_policy>::Type hostWrapperCreateFunc = nullptr;
 
-        typename WriteBarrierFieldTypeTraits<JavascriptExceptionContext>::Type exceptionContext;
+        WriteBarrierFieldTypeTraits<JavascriptExceptionContext>::Type exceptionContext {};
 #if ENABLE_DEBUG_STACK_BACK_TRACE
-        typename WriteBarrierFieldTypeTraits<StackBackTrace*>::Type stackBackTrace;
+        WriteBarrierFieldTypeTraits<StackBackTrace*>::Type stackBackTrace = nullptr;
         static const int StackToSkip = 2;
         static const int StackTraceDepth = 30;
 #endif
 
-        typename WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type next;  // to temporarily store list of throwing exceptions
+        WriteBarrierFieldTypeTraits<JavascriptExceptionObject*>::Type next = nullptr;  // to temporarily store list of throwing exceptions
 
         PREVENT_COPY(JavascriptExceptionObject)
     };

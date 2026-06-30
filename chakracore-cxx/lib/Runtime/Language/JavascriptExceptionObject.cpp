@@ -15,13 +15,6 @@ namespace Js
         this->SetHostWrapperCreateFunc(hostWrapperCreateFunc);
     }
 
-    void JavascriptExceptionObject::ClearError()
-    {
-        Assert(this->isPendingExceptionObject);
-        memset(this, 0, sizeof(JavascriptExceptionObject));
-        this->isPendingExceptionObject = true;
-    }
-
     JavascriptExceptionObject* JavascriptExceptionObject::CloneIfStaticExceptionObject(ScriptContext* scriptContext)
     {
         Assert(scriptContext);
@@ -68,6 +61,86 @@ namespace Js
         }
 
         return exceptionObject;
+    }
+
+    JavascriptExceptionObject::JavascriptExceptionObject(const bool isPendingExceptionObject):
+        isPendingExceptionObject(isPendingExceptionObject)
+    {
+    }
+
+    JavascriptExceptionObject::JavascriptExceptionObject(Var object, ScriptContext *scriptContext,
+                                                         JavascriptExceptionContext *exceptionContextIn, bool isPendingExceptionObject):
+        thrownObject(object),
+        scriptContext(scriptContext),
+#ifdef ENABLE_SCRIPT_DEBUGGING
+        byteCodeOffsetAfterDebuggerSkip(Constants::InvalidByteCodeOffset),
+#endif
+        tag(true),
+        isPendingExceptionObject(isPendingExceptionObject),
+#ifdef ENABLE_SCRIPT_DEBUGGING
+        isDebuggerSkip(false),
+        hasDebuggerLogged(false),
+        isFirstChance(false),
+        isExceptionCaughtInNonUserCode(false),
+        ignoreAdvanceToNextStatement(false),
+#endif
+        hostWrapperCreateFunc(nullptr),
+        exceptionContext(exceptionContextIn ? std::move(*exceptionContextIn) : JavascriptExceptionContext{}),
+#if ENABLE_DEBUG_STACK_BACK_TRACE
+        stackBackTrace(nullptr),
+#endif
+        next(nullptr)
+    {
+    }
+
+    JavascriptExceptionObject::JavascriptExceptionObject(JavascriptExceptionObject&& other) noexcept: thrownObject(std::move(other.thrownObject)),
+        scriptContext(std::move(other.scriptContext)),
+#ifdef ENABLE_SCRIPT_DEBUGGING
+        byteCodeOffsetAfterDebuggerSkip(other.byteCodeOffsetAfterDebuggerSkip),
+#endif
+        tag(other.tag),
+        isPendingExceptionObject(other.isPendingExceptionObject),
+#ifdef ENABLE_SCRIPT_DEBUGGING
+        isDebuggerSkip(other.isDebuggerSkip),
+        hasDebuggerLogged(other.hasDebuggerLogged),
+        isFirstChance(other.isFirstChance),
+        isExceptionCaughtInNonUserCode(other.isExceptionCaughtInNonUserCode),
+        ignoreAdvanceToNextStatement(other.ignoreAdvanceToNextStatement),
+#endif
+        hostWrapperCreateFunc(other.hostWrapperCreateFunc),
+        exceptionContext(std::move(other.exceptionContext)),
+#if ENABLE_DEBUG_STACK_BACK_TRACE
+        stackBackTrace(std::move(other.stackBackTrace)),
+#endif
+        next(std::move(other.next))
+    {
+    }
+
+    JavascriptExceptionObject& JavascriptExceptionObject::operator=(JavascriptExceptionObject&& other) noexcept
+    {
+        if (this == &other)
+            return *this;
+        thrownObject = std::move(other.thrownObject);
+        scriptContext = std::move(other.scriptContext);
+#ifdef ENABLE_SCRIPT_DEBUGGING
+        byteCodeOffsetAfterDebuggerSkip = other.byteCodeOffsetAfterDebuggerSkip;
+#endif
+        tag = other.tag;
+        isPendingExceptionObject = other.isPendingExceptionObject;
+#ifdef ENABLE_SCRIPT_DEBUGGING
+        isDebuggerSkip = other.isDebuggerSkip;
+        hasDebuggerLogged = other.hasDebuggerLogged;
+        isFirstChance = other.isFirstChance;
+        isExceptionCaughtInNonUserCode = other.isExceptionCaughtInNonUserCode;
+        ignoreAdvanceToNextStatement = other.ignoreAdvanceToNextStatement;
+#endif
+        hostWrapperCreateFunc = other.hostWrapperCreateFunc;
+        exceptionContext = std::move(other.exceptionContext);
+#if ENABLE_DEBUG_STACK_BACK_TRACE
+        stackBackTrace = std::move(other.stackBackTrace);
+#endif
+        next = std::move(other.next);
+        return *this;
     }
 
     // Returns NULL if the exception object is the static out of memory object.
