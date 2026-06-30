@@ -11,20 +11,7 @@ add_library (Chakra.Runtime.Debug OBJECT
     MutationBreakpoint.cpp
     ProbeContainer.cpp
     RuntimeDebugPch.cpp
-    TTActionEvents.cpp
-    TTEventLog.cpp
-    TTEvents.cpp
-    TTExecutionInfo.cpp
-    TTInflateMap.cpp
-    TTRuntimeInfoTracker.cpp
-    TTSerialize.cpp
-    TTSnapObjects.cpp
-    TTSnapshot.cpp
-    TTSnapshotExtractor.cpp
-    TTSnapTypes.cpp
-    TTSnapValues.cpp
-    TTSupport.cpp
-    )
+)
 
 target_include_directories (Chakra.Runtime.Debug PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc
