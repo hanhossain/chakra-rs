@@ -119,64 +119,8 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
         {
             fileContentsFinalizeCallback((void*)fileContents);
         }
-#if !ENABLE_TTD
         std::println("Sential js file is only ok when in TTDebug mode!!!");
         return E_FAIL;
-#else
-        if(!doTTReplay)
-        {
-            std::println("Sential js file is only ok when in TTReplay mode!!!");
-            return E_FAIL;
-        }
-
-        IfFailedReturn(ChakraRTInterface::JsTTDStart());
-
-        try
-        {
-            JsTTDMoveMode moveMode = JsTTDMoveMode::JsTTDMoveKthEvent;
-            int64_t snapEventTime = -1;
-            int64_t nextEventTime = -2;
-
-            while(true)
-            {
-                JsErrorCode error = ChakraRTInterface::JsTTDGetSnapTimeTopLevelEventMove(chRuntime, moveMode, startEventCount, &nextEventTime, &snapEventTime, nullptr);
-
-                if(error != JsNoError)
-                {
-                    if(error == JsErrorCategoryUsage)
-                    {
-                        std::println("Start time not in log range.");
-                    }
-
-                    return error;
-                }
-
-                IfFailedReturn(ChakraRTInterface::JsTTDMoveToTopLevelEvent(chRuntime, moveMode, snapEventTime, nextEventTime));
-
-                JsErrorCode res = ChakraRTInterface::JsTTDReplayExecution(&moveMode, &nextEventTime);
-
-                //handle any uncaught exception by immediately time-traveling to the throwing line in the debugger -- in replay just report and exit
-                if(res == JsErrorCategoryScript)
-                {
-                    std::println("An unhandled script exception occurred!!!");
-
-                    exit(0);
-                }
-
-                if(nextEventTime == -1)
-                {
-                    std::println();
-                    std::println("Reached end of Execution -- Exiting.");
-                    break;
-                }
-            }
-        }
-        catch(...)
-        {
-            std::println("Terminal exception in Replay -- exiting.");
-            exit(0);
-        }
-#endif
     }
     else
     {
@@ -252,37 +196,10 @@ int32_t RunScript(const char* fileName, const char * fileContents, size_t fileLe
                 (unsigned int)fileLength,
                 fileContentsFinalizeCallback, (void*)fileContents, &scriptSource));
 
-#if ENABLE_TTD
-            if (doTTRecord)
-            {
-                JsPropertyIdRef ttProperty = nullptr;
-                JsValueRef ttString = nullptr;
-                JsValueRef global = nullptr;
-
-                IfFailedReturn(ChakraRTInterface::JsCreatePropertyId("ttdLogURI", strlen("ttdLogURI"), &ttProperty));
-                IfFailedReturn(ChakraRTInterface::JsCreateString(ttUri.c_str(), ttUri.length(), &ttString));
-                IfFailedReturn(ChakraRTInterface::JsGetGlobalObject(&global));
-
-                IfFailedReturn(ChakraRTInterface::JsSetProperty(global, ttProperty, ttString, false));
-
-                IfFailedReturn(ChakraRTInterface::JsTTDStart());
-            }
-
-            auto sourceContext = WScriptJsrt::GetNextSourceContext();
-            runScript = ChakraRTInterface::JsRun(scriptSource,
-                sourceContext, fname,
-                JsParseScriptAttributeNone, nullptr /*result*/);
-            if (runScript == JsErrorCategoryUsage)
-            {
-                std::println("FATAL ERROR: Core was compiled without ENABLE_TTD is defined. CH is trying to use TTD interface");
-                abort();
-            }
-#else
             runScript = ChakraRTInterface::JsRun(scriptSource,
                 WScriptJsrt::GetNextSourceContext(), fname,
                 JsParseScriptAttributeNone,
                 nullptr /*result*/);
-#endif
         }
 
         //Do a yield after the main script body executes
@@ -318,13 +235,6 @@ ErrorRunFinalize:
         }
     }
 Error:
-#if ENABLE_TTD
-    if(doTTRecord)
-    {
-        IfFailedReturn(ChakraRTInterface::JsTTDStop());
-    }
-#endif
-
     if (messageQueue != nullptr)
     {
         messageQueue->RemoveAll();
@@ -596,32 +506,8 @@ int32_t ExecuteTest(const std::string &fileName, const bool doTTRecord, const bo
 
     if (fileName.ends_with("ttdSentinal.js"))
     {
-#if !ENABLE_TTD
         std::println("Sentinel js file is only ok when in TTDebug mode!!!");
         return E_FAIL;
-#else
-        if(!doTTReplay)
-        {
-            std::println("Sentinel js file is only ok when in TTReplay mode!!!");
-            return E_FAIL;
-        }
-
-        jsrtAttributes = static_cast<JsRuntimeAttributes>(jsrtAttributes | JsRuntimeAttributeEnableExperimentalFeatures);
-
-        IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateReplayRuntime(jsrtAttributes, ttUri.c_str(), ttUri.length(), Helpers::TTCreateStreamCallback, Helpers::TTReadBytesFromStreamCallback, Helpers::TTFlushAndCloseStreamCallback, nullptr, &runtime));
-        chRuntime = runtime;
-
-        JsContextRef context = JS_INVALID_REFERENCE;
-        IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateContext(runtime, true, &context));
-        IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
-
-        IfFailGo(RunScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr, std::nullopt, nullptr, doTTRecord, doTTReplay, chRuntime, ttUri, startEventCount));
-
-        unsigned int rcount = 0;
-        IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(nullptr));
-        ChakraRTInterface::JsRelease(context, &rcount);
-        AssertMsg(rcount == 0, "Should only have had 1 ref from replay code and one ref from current context??");
-#endif
     }
     else
     {
@@ -633,47 +519,12 @@ int32_t ExecuteTest(const std::string &fileName, const bool doTTRecord, const bo
             jsrtAttributes = (JsRuntimeAttributes)(jsrtAttributes | JsRuntimeAttributeSerializeLibraryByteCode);
         }
 
-#if ENABLE_TTD
-        if (doTTRecord)
-        {
-            //Ensure we run with experimental features (as that is what Node does right now).
-            jsrtAttributes = static_cast<JsRuntimeAttributes>(jsrtAttributes | JsRuntimeAttributeEnableExperimentalFeatures);
-
-            IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateRecordRuntime(jsrtAttributes, snapInterval, snapHistoryLength, Helpers::TTCreateStreamCallback, Helpers::TTWriteBytesToStreamCallback, Helpers::TTFlushAndCloseStreamCallback, nullptr, &runtime));
-            chRuntime = runtime;
-
-            JsContextRef context = JS_INVALID_REFERENCE;
-            IfJsErrorFailLog(ChakraRTInterface::JsTTDCreateContext(runtime, true, &context));
-
-            IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
-
-#if ENABLE_TTD
-            //We need this here since this context is created in record
-            IfJsErrorFailLog(ChakraRTInterface::JsSetObjectBeforeCollectCallback(context, nullptr, WScriptJsrt::JsContextBeforeCollectCallback));
-#endif
-        }
-        else
-        {
-            AssertMsg(!doTTReplay, "Should be handled in the else case above!!!");
-
-            IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, &runtime));
-            chRuntime = runtime;
-
-            JsContextRef context = JS_INVALID_REFERENCE;
-            IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context));
-
-            //Don't need collect callback since this is always in replay
-
-            IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
-        }
-#else
         IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, &runtime));
         chRuntime = runtime;
 
         JsContextRef context = JS_INVALID_REFERENCE;
         IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context));
         IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
-#endif
 
 #ifdef DEBUG
         ChakraRTInterface::SetCheckOpHelpersFlag(true);

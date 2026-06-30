@@ -101,10 +101,6 @@ public:
         }
     }
 
-#if ENABLE_TTD
-    static void CALLBACK JsContextBeforeCollectCallback(JsRef contextRef, void *data);
-#endif
-
     static bool PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static JsValueRef LoadScript(JsValueRef callee, const char * fileName, const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
     static unsigned long GetNextSourceContext();

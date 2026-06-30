@@ -725,11 +725,6 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         // Create a new context and set it as the current context
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateContext(runtime, &newContext));
 
-#if ENABLE_TTD
-        //We need this here since this context is created in record
-        IfJsrtErrorSetGo(ChakraRTInterface::JsSetObjectBeforeCollectCallback(newContext, nullptr, WScriptJsrt::JsContextBeforeCollectCallback));
-#endif
-
         IfJsrtErrorSetGo(ChakraRTInterface::JsSetCurrentContext(newContext));
 
         IfJsErrorFailLog(ChakraRTInterface::JsSetPromiseContinuationCallback(PromiseContinuationCallback, (void*)messageQueue));
@@ -1219,13 +1214,6 @@ bool WScriptJsrt::Uninitialize()
 
     return true;
 }
-
-#if ENABLE_TTD
-void CALLBACK WScriptJsrt::JsContextBeforeCollectCallback(JsRef contextRef, void *data)
-{
-    ChakraRTInterface::JsTTDNotifyContextDestroy(contextRef);
-}
-#endif
 
 FileNode * SourceMap::root = nullptr;
 JsValueRef WScriptJsrt::RegisterModuleSourceCallback(JsValueRef callee, bool isConstructCall,
