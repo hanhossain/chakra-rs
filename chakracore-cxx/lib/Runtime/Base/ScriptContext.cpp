@@ -147,23 +147,6 @@ namespace Js
         , isCloningGlobal(false)
         , bindRef(MiscAllocator())
 #endif
-#if ENABLE_TTD
-        , TTDHostCallbackFunctor()
-        , ScriptContextLogTag(TTD_INVALID_LOG_PTR_ID)
-        , TTDWellKnownInfo(nullptr)
-        , TTDContextInfo(nullptr)
-        , TTDSnapshotOrInflateInProgress(false)
-        , TTDRecordOrReplayModeEnabled(false)
-        , TTDRecordModeEnabled(false)
-        , TTDReplayModeEnabled(false)
-        , TTDShouldPerformRecordOrReplayAction(false)
-        , TTDShouldPerformRecordAction(false)
-        , TTDShouldPerformReplayAction(false)
-        , TTDShouldPerformRecordOrReplayDebuggerAction(false)
-        , TTDShouldPerformRecordDebuggerAction(false)
-        , TTDShouldPerformReplayDebuggerAction(false)
-        , TTDShouldSuppressGetterInvocationForDebuggerEvaluation(false)
-#endif
 #ifdef REJIT_STATS
         , rejitStatsMap(nullptr)
         , bailoutReasonCounts(nullptr)
@@ -587,20 +570,6 @@ namespace Js
         {
             Output::Print(u"MemoryTrace: ScriptContext Close\n");
             Output::Flush();
-        }
-#endif
-
-#if ENABLE_TTD
-        if(this->TTDWellKnownInfo != nullptr)
-        {
-            TT_HEAP_DELETE(TTD::RuntimeContextInfo, this->TTDWellKnownInfo);
-            this->TTDWellKnownInfo = nullptr;
-        }
-
-        if(this->TTDContextInfo != nullptr)
-        {
-            TT_HEAP_DELETE(TTD::ScriptContextTTD, this->TTDContextInfo);
-            this->TTDContextInfo = nullptr;
         }
 #endif
 
@@ -2541,14 +2510,7 @@ namespace Js
             Throw::FatalInternalError();
         }
 
-#if ENABLE_TTD
-        if(!this->IsTTDRecordOrReplayModeEnabled())
-        {
-            this->AddToEvalMapHelper(key, isIndirect, pfuncScript);
-        }
-#else
         this->AddToEvalMapHelper(key, isIndirect, pfuncScript);
-#endif
     }
 
     void ScriptContext::AddToEvalMapHelper(FastEvalMapString & key, BOOL isIndirect, ScriptFunction *pFuncScript)
@@ -2762,22 +2724,6 @@ namespace Js
             }
             return si;
     }
-
-#if ENABLE_TTD
-    void ScriptContext::InitializeCoreImage_TTD()
-    {
-        TTDAssert(this->TTDWellKnownInfo == nullptr, "This should only happen once!!!");
-
-        this->TTDContextInfo = TT_HEAP_NEW(TTD::ScriptContextTTD, this);
-        this->TTDWellKnownInfo = TT_HEAP_NEW(TTD::RuntimeContextInfo);
-
-        BEGIN_ENTER_SCRIPT(this, true, true, true)
-        {
-            this->TTDWellKnownInfo->GatherKnownObjectToPathMap(this);
-        }
-        END_ENTER_SCRIPT
-    }
-#endif
 
 #ifdef PROFILE_EXEC
     void

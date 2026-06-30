@@ -197,32 +197,6 @@ namespace Js
         return fRequestWrapper && VarIs<JavascriptFunction>(object) && VarTo<JavascriptFunction>(object)->IsExternalFunction();
     }
 
-#if ENABLE_TTD
-    void CrossSite::MarshalCrossSite_TTDInflate(DynamicObject* obj)
-    {
-        obj->MarshalCrossSite_TTDInflate();
-
-        if(obj->GetTypeId() == TypeIds_Function)
-        {
-            AssertMsg(obj != obj->GetScriptContext()->GetLibrary()->GetDefaultAccessorFunction(), "default accessor marshalled -- I don't think this should ever happen as it is marshalled in a special case?");
-            JavascriptFunction * function = VarTo<JavascriptFunction>(obj);
-
-            //
-            //TODO: what happens if the gaurd in marshal (MarshalDynamicObject) isn't true?
-            //
-
-            if(function->GetTypeHandler()->GetIsLocked())
-            {
-                function->GetLibrary()->SetCrossSiteForLockedFunctionType(function);
-            }
-            else
-            {
-                function->SetEntryPoint(function->GetScriptContext()->CurrentCrossSiteThunk);
-            }
-        }
-    }
-#endif
-
     Var CrossSite::MarshalVarInner(ScriptContext* scriptContext, Js::RecyclableObject* object, bool fRequestWrapper)
     {
         if (scriptContext == object->GetScriptContext())
@@ -245,13 +219,6 @@ namespace Js
         {
             return object;
         }
-
-#if ENABLE_TTD
-        if (scriptContext->IsTTDSnapshotOrInflateInProgress())
-        {
-            return object;
-        }
-#endif
 
         // Marshaling should not cause any re-entrancy.
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());

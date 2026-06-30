@@ -3278,10 +3278,6 @@ namespace Js
             uint32_t * line, int32_t * col);
 #endif
 
-#if ENABLE_TTD
-        void GetSourceLineFromStartOffset_TTD(const uint startOffset, uint32_t* line, int32_t* col);
-#endif
-
 #ifdef ENABLE_SCRIPT_DEBUGGING
         void CheckAndRegisterFuncToDiag(ScriptContext *scriptContext);
         void SetEntryToDeferParseForDebugger();
@@ -3862,10 +3858,6 @@ namespace Js
 #if DBG
         void Dump();
         const char16_t * GetDebuggerScopeTypeString(DiagExtraScopesType scopeType);
-#endif
-
-#if ENABLE_TTD
-        Js::PropertyId GetPropertyIdForSlotIndex_TTD(uint32_t slotIndex) const;
 #endif
 
     public:

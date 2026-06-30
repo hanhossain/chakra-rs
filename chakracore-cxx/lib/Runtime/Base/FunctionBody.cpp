@@ -4717,13 +4717,6 @@ namespace Js
 /* END potentially reusable code */
 #endif /* IR_VIEWER */
 
-#if ENABLE_TTD
-    void FunctionBody::GetSourceLineFromStartOffset_TTD(const uint startOffset, uint32_t* line, int32_t* col)
-    {
-        GetLineCharOffsetFromStartChar(startOffset, line, col);
-    }
-#endif
-
 #ifdef IR_VIEWER
     Js::DynamicObject * FunctionBody::GetIRDumpBaseObject()
     {
@@ -5605,14 +5598,6 @@ namespace Js
             AssertMsg(false, "Missing a debug scope type.");
             return u"";
         }
-    }
-#endif
-
-#if ENABLE_TTD
-    Js::PropertyId DebuggerScope::GetPropertyIdForSlotIndex_TTD(uint32_t slotIndex) const
-    {
-        const Js::DebuggerScopeProperty& scopeProperty = this->scopeProperties->Item(slotIndex);
-        return scopeProperty.propId;
     }
 #endif
 

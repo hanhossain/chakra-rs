@@ -174,12 +174,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
 #ifdef ENABLE_SCRIPT_DEBUGGING
     , debugManager(nullptr)
 #endif
-#if ENABLE_TTD
-    , TTDContext(nullptr)
-    , TTDExecutionInfo(nullptr)
-    , TTDLog(nullptr)
-    , TTDRootNestingCount(0)
-#endif
 #ifdef ENABLE_DIRECTCALL_TELEMETRY
     , directCallTelemetry(this)
 #endif
@@ -341,26 +335,6 @@ ThreadContext::~ThreadContext()
         std::unique_lock autocs(ThreadContext::GetMutex());
         ThreadContext::Unlink(this, &ThreadContext::globalListFirst, &ThreadContext::globalListLast);
     }
-
-#if ENABLE_TTD
-    if(this->TTDContext != nullptr)
-    {
-        TT_HEAP_DELETE(TTD::ThreadContextTTD, this->TTDContext);
-        this->TTDContext = nullptr;
-    }
-
-    if(this->TTDExecutionInfo != nullptr)
-    {
-        TT_HEAP_DELETE(TTD::ThreadContextTTD, this->TTDExecutionInfo);
-        this->TTDExecutionInfo = nullptr;
-    }
-
-    if(this->TTDLog != nullptr)
-    {
-        TT_HEAP_DELETE(TTD::EventLog, this->TTDLog);
-        this->TTDLog = nullptr;
-    }
-#endif
 
 #ifdef LEAK_REPORT
     if (Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag))
@@ -856,26 +830,6 @@ ThreadContext::CreatePropertyRecordWeakRef(const Js::PropertyRecord * propertyRe
 Js::PropertyRecord const *
 ThreadContext::UncheckedAddPropertyId(JsUtil::CharacterBuffer<char16_t> const& propertyName, bool bind, bool isSymbol)
 {
-#if ENABLE_TTD
-    if(isSymbol & this->IsRuntimeInTTDMode())
-    {
-        if(this->TTDContext->GetActiveScriptContext() != nullptr && this->TTDContext->GetActiveScriptContext()->ShouldPerformReplayAction())
-        {
-            //We reload all properties that occur in the trace so they only way we get here in TTD mode is:
-            //(1) if the program is creating a new symbol (which always gets a fresh id) and we should recreate it or
-            //(2) if it is forcing arguments in debug parse mode (instead of regular which we recorded in)
-            Js::PropertyId propertyId = Js::Constants::NoProperty;
-            this->TTDLog->ReplaySymbolCreationEvent(&propertyId);
-
-            //Don't recreate the symbol below, instead return the known symbol by looking up on the pid
-            const Js::PropertyRecord* res = this->GetPropertyName(propertyId);
-            AssertMsg(res != nullptr, "This should never happen!!!");
-
-            return res;
-        }
-    }
-#endif
-
     this->propertyMap->EnsureCapacity();
 
     // Automatically bind direct (single-character) property names, so that they can be
@@ -905,16 +859,6 @@ ThreadContext::UncheckedAddPropertyId(JsUtil::CharacterBuffer<char16_t> const& p
 
     Js::PropertyId propertyId = this->GetNextPropertyId();
 
-#if ENABLE_TTD
-    if(isSymbol & this->IsRuntimeInTTDMode())
-    {
-        if(this->TTDContext->GetActiveScriptContext() != nullptr && this->TTDContext->GetActiveScriptContext()->ShouldPerformRecordAction())
-        {
-            this->TTDLog->RecordSymbolCreationEvent(propertyId);
-        }
-    }
-#endif
-
     propertyRecord->pid = propertyId;
 
     AddPropertyRecordInternal(propertyRecord);
@@ -940,13 +884,6 @@ ThreadContext::AddPropertyRecordInternal(const Js::PropertyRecord * propertyReco
     if (propertyNameLength > 0 && !propertyRecord->IsSymbol())
     {
         Assert(FindPropertyRecord(propertyName, propertyNameLength) == nullptr);
-    }
-#endif
-
-#if ENABLE_TTD
-    if(this->IsRuntimeInTTDMode())
-    {
-        this->TTDLog->AddPropertyRecord(propertyRecord);
     }
 #endif
 
@@ -1781,61 +1718,6 @@ ThreadContext::EnsureJITThreadContext(bool allowPrereserveAlloc)
 }
 #endif
 
-#if ENABLE_TTD
-void ThreadContext::InitTimeTravel(ThreadContext* threadContext, void* runtimeHandle, uint32_t snapInterval, uint32_t snapHistoryLength)
-{
-    TTDAssert(!this->IsRuntimeInTTDMode(), "We should only init once.");
-
-    this->TTDContext = HeapNew(TTD::ThreadContextTTD, this, runtimeHandle, snapInterval, snapHistoryLength);
-    this->TTDLog = HeapNew(TTD::EventLog, this);
-}
-
-void ThreadContext::InitHostFunctionsAndTTData(bool record, bool replay, bool debug, size_t optTTUriLength, const char* optTTUri,
-    TTD::TTDOpenResourceStreamCallback openResourceStreamfp, TTD::TTDReadBytesFromStreamCallback readBytesFromStreamfp,
-    TTD::TTDWriteBytesToStreamCallback writeBytesToStreamfp, TTD::TTDFlushAndCloseStreamCallback flushAndCloseStreamfp,
-    TTD::TTDCreateExternalObjectCallback createExternalObjectfp,
-    TTD::TTDCreateJsRTContextCallback createJsRTContextCallbackfp, TTD::TTDReleaseJsRTContextCallback releaseJsRTContextCallbackfp, TTD::TTDSetActiveJsRTContext setActiveJsRTContextfp)
-{
-    AssertMsg(this->IsRuntimeInTTDMode(), "Need to call init first.");
-
-    this->TTDContext->TTDataIOInfo = { openResourceStreamfp, readBytesFromStreamfp, writeBytesToStreamfp, flushAndCloseStreamfp, 0, nullptr };
-    this->TTDContext->TTDExternalObjectFunctions = { createExternalObjectfp, createJsRTContextCallbackfp, releaseJsRTContextCallbackfp, setActiveJsRTContextfp };
-
-    if(record)
-    {
-        TTDAssert(optTTUri == nullptr, "No URI is needed in record mode (the host explicitly provides it when writing.");
-
-        this->TTDLog->InitForTTDRecord(debug);
-    }
-    else
-    {
-        TTDAssert(optTTUri != nullptr, "We need a URI in replay mode so we can initialize the log from it");
-
-        this->TTDLog->InitForTTDReplay(this->TTDContext->TTDataIOInfo, optTTUri, optTTUriLength, debug);
-        this->sourceInfoCount = this->TTDLog->GetSourceInfoCount();
-    }
-
-#if !ENABLE_TTD_DIAGNOSTICS_TRACING
-    if(debug)
-    {
-#endif
-
-        TTD::TTInnerLoopLastStatementInfo lsi;
-        TTD::TTDebuggerSourceLocation dsl;
-        this->TTDLog->LoadLastSourceLineInfo(lsi, dsl);
-
-        this->TTDExecutionInfo = HeapNew(TTD::ExecutionInfoManager, lsi);
-        if(dsl.HasValue())
-        {
-            this->TTDExecutionInfo->SetPendingTTDToTarget(dsl);
-        }
-
-#if !ENABLE_TTD_DIAGNOSTICS_TRACING
-    }
-#endif
-}
-#endif
-
 BOOL
 ThreadContext::ExecuteRecyclerCollectionFunction(Recycler * recycler, CollectionFunction function, CollectionFlags flags)
 {
@@ -1854,18 +1736,6 @@ ThreadContext::ExecuteRecyclerCollectionFunction(Recycler * recycler, Collection
 
     BOOL ret = FALSE;
 
-
-#if ENABLE_TTD
-    //
-    //TODO: We lose any events that happen in the callbacks (such as JsRelease) which may be a problem in the future.
-    //      It may be possible to defer the collection of these objects to an explicit collection at the yield loop (same for weak set/map).
-    //      We already indirectly do this for ScriptContext collection (but that is buggy so needs to be fixed too).
-    //
-    if(this->IsRuntimeInTTDMode())
-    {
-        this->TTDLog->PushMode(TTD::TTDMode::ExcludedExecutionTTAction);
-    }
-#endif
 
     if (!this->IsScriptActive())
     {
@@ -1908,13 +1778,6 @@ ThreadContext::ExecuteRecyclerCollectionFunction(Recycler * recycler, Collection
             this->CheckScriptInterrupt();
         }
     }
-
-#if ENABLE_TTD
-    if(this->IsRuntimeInTTDMode())
-    {
-        this->TTDLog->PopMode(TTD::TTDMode::ExcludedExecutionTTAction);
-    }
-#endif
 
     return ret;
 }
@@ -2488,13 +2351,6 @@ ThreadContext::OnScanStackCallback(void ** stackTop, size_t byteCount, void ** r
 bool
 ThreadContext::DoRedeferFunctionBodies() const
 {
-#if ENABLE_TTD
-    if (this->IsRuntimeInTTDMode())
-    {
-        return false;
-    }
-#endif
-
     if (PHASE_FORCE1(Js::RedeferralPhase) || PHASE_STRESS1(Js::RedeferralPhase))
     {
         return true;
@@ -4008,16 +3864,6 @@ const Js::PropertyRecord* ThreadContext::AddSymbolToRegistrationMap(const char16
 
     return propertyRecord;
 }
-
-#if ENABLE_TTD
-JsUtil::BaseDictionary<Js::HashedCharacterBuffer<char16_t>*, const Js::PropertyRecord*, Recycler, PowerOf2SizePolicy, Js::PropertyRecordStringHashComparer>* ThreadContext::GetSymbolRegistrationMap_TTD()
-{
-    //This adds a little memory but makes simplifies other logic -- maybe revise later
-    this->EnsureSymbolRegistrationMap();
-
-    return this->recyclableData->symbolRegistrationMap;
-}
-#endif
 
 void ThreadContext::ClearImplicitCallFlags()
 {
