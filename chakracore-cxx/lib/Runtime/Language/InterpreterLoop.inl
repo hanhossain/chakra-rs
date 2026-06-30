@@ -182,19 +182,6 @@ Js::Var Js::InterpreterStackFrame::INTERPRETERLOOPNAME()
     {
         INTERPRETER_OPCODE op = READ_OP(ip);
 
-#ifndef INTERPRETER_ASMJS
-#if ENABLE_TTD
-        //In case where we don't have a BP set at the final statemnt
-        if(this->scriptContext->ShouldPerformReplayDebuggerAction())
-        {
-            if(op != INTERPRETER_OPCODE::Break)
-            {
-                this->scriptContext->GetThreadContext()->TTDExecutionInfo->ManageLastSourceInfoChecks(this->m_functionBody, false);
-            }
-        }
-#endif
-#endif
-
 #if DEBUGGING_LOOP
         if (this->scriptContext->GetThreadContext()->GetDebugManager()->stepController.IsActive() &&
             this->scriptContext->GetThreadContext()->GetDebugManager()->stepController.IsStepComplete_AllowingFalsePositives(this))
@@ -204,29 +191,8 @@ Js::Var Js::InterpreterStackFrame::INTERPRETERLOOPNAME()
             {
                 uint prevOffset = m_reader.GetCurrentOffset();
 
-#if ENABLE_TTD
-                bool bpTaken = (!this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode()) || this->scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessBPInfoPreBreak(this->m_functionBody, this->scriptContext->GetThreadContext()->TTDLog);
-                if(bpTaken)
-                {
-                    InterpreterHaltState haltState(STOP_STEPCOMPLETE, m_functionBody);
-                    this->scriptContext->GetDebugContext()->GetProbeContainer()->DispatchStepHandler(&haltState, &op);
-                }
-#else
                 InterpreterHaltState haltState(STOP_STEPCOMPLETE, m_functionBody);
                 this->scriptContext->GetDebugContext()->GetProbeContainer()->DispatchStepHandler(&haltState, &op);
-#endif
-
-#if ENABLE_TTD
-                if(bpTaken && this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode())
-                {
-                    this->scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessBPInfoPostBreak(this->m_functionBody);
-                }
-
-                if(this->scriptContext->ShouldPerformReplayDebuggerAction())
-                {
-                    this->scriptContext->GetThreadContext()->TTDExecutionInfo->ManageLastSourceInfoChecks(this->m_functionBody, true);
-                }
-#endif
 
                 if (prevOffset != m_reader.GetCurrentOffset())
                 {
@@ -247,29 +213,8 @@ Js::Var Js::InterpreterStackFrame::INTERPRETERLOOPNAME()
             {
                 uint prevOffset = m_reader.GetCurrentOffset();
 
-#if ENABLE_TTD
-                bool bpTaken = (!this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode()) || this->scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessBPInfoPreBreak(this->m_functionBody, this->scriptContext->GetThreadContext()->TTDLog);
-                if(bpTaken)
-                {
-                    InterpreterHaltState haltState(STOP_ASYNCBREAK, m_functionBody);
-                    this->scriptContext->GetDebugContext()->GetProbeContainer()->DispatchAsyncBreak(&haltState);
-                }
-#else
                 InterpreterHaltState haltState(STOP_ASYNCBREAK, m_functionBody);
                 this->scriptContext->GetDebugContext()->GetProbeContainer()->DispatchAsyncBreak(&haltState);
-#endif
-
-#if ENABLE_TTD
-                if(bpTaken && this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode())
-                {
-                    this->scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessBPInfoPostBreak(this->m_functionBody);
-                }
-
-                if(this->scriptContext->ShouldPerformReplayDebuggerAction())
-                {
-                    this->scriptContext->GetThreadContext()->TTDExecutionInfo->ManageLastSourceInfoChecks(this->m_functionBody, true);
-                }
-#endif
 
                 if (prevOffset != m_reader.GetCurrentOffset())
                 {
@@ -405,29 +350,8 @@ SWAP_BP_FOR_OPCODE:
                 {
                     uint prevOffset = m_reader.GetCurrentOffset();
 
-#if ENABLE_TTD
-                    bool bpTaken = (!this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode()) || this->scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessBPInfoPreBreak(this->m_functionBody, this->scriptContext->GetThreadContext()->TTDLog);
-                    if(bpTaken)
-                    {
-                        InterpreterHaltState haltState(STOP_BREAKPOINT, m_functionBody);
-                        this->scriptContext->GetDebugContext()->GetProbeContainer()->DispatchProbeHandlers(&haltState);
-                    }
-#else
                     InterpreterHaltState haltState(STOP_BREAKPOINT, m_functionBody);
                     this->scriptContext->GetDebugContext()->GetProbeContainer()->DispatchProbeHandlers(&haltState);
-#endif
-
-#if ENABLE_TTD
-                    if(bpTaken && this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode())
-                    {
-                        this->scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessBPInfoPostBreak(this->m_functionBody);
-                    }
-
-                    if(this->scriptContext->ShouldPerformReplayDebuggerAction())
-                    {
-                        this->scriptContext->GetThreadContext()->TTDExecutionInfo->ManageLastSourceInfoChecks(this->m_functionBody, true);
-                    }
-#endif
 
                     if (prevOffset != m_reader.GetCurrentOffset())
                     {
@@ -446,30 +370,8 @@ SWAP_BP_FOR_OPCODE:
                     {
                         uint prevOffset = m_reader.GetCurrentOffset();
 
-#if ENABLE_TTD
-                        bool bpTaken = (!this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode()) || this->scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessBPInfoPreBreak(this->m_functionBody, this->scriptContext->GetThreadContext()->TTDLog);
-                        if(bpTaken)
-                        {
-                            InterpreterHaltState haltState(STOP_INLINEBREAKPOINT, m_functionBody);
-                            this->scriptContext->GetDebugContext()->GetProbeContainer()->DispatchInlineBreakpoint(&haltState);
-                        }
-#else
                         InterpreterHaltState haltState(STOP_INLINEBREAKPOINT, m_functionBody);
                         this->scriptContext->GetDebugContext()->GetProbeContainer()->DispatchInlineBreakpoint(&haltState);
-#endif
-
-#if ENABLE_TTD
-                        if(bpTaken && this->scriptContext->GetThreadContext()->IsRuntimeInTTDMode())
-                        {
-                            this->scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessBPInfoPostBreak(this->m_functionBody);
-                        }
-
-                        if(this->scriptContext->ShouldPerformReplayDebuggerAction())
-                        {
-                            this->scriptContext->GetThreadContext()->TTDExecutionInfo->ManageLastSourceInfoChecks(this->m_functionBody, true);
-                        }
-#endif
-
                         if (prevOffset != m_reader.GetCurrentOffset())
                         {
                             // The location of the statement has been changed, setnextstatement was called.

@@ -377,11 +377,6 @@ namespace Js
         static void TraceOpCode(InterpreterStackFrame* that, Js::OpCode op);
         static void TraceAsmJsOpCode(InterpreterStackFrame* that, Js::OpCodeAsmJs op);
 
-#if ENABLE_TTD
-        template<typename OpCodeType, Js::OpCode(ReadOpFunc)(const byte*&), void (TracingFunc)(InterpreterStackFrame*, OpCodeType)>
-        OpCodeType ReadOp_WPreviousStmtTracking(const byte *& ip);
-#endif
-
         void* operator new(size_t byteSize, void* previousAllocation) throw();
         void operator delete(void* allocationToFree, void* previousAllocation) throw();
 
@@ -429,23 +424,6 @@ namespace Js
         bool IsInDebugMode() const { return this->GetFunctionBody()->IsInDebugMode(); }
 #endif
 
-#if ENABLE_TTD
-        Var ProcessWithDebugging_PreviousStmtTracking();
-        const byte* ProcessWithDebugging_PreviousStmtTrackingExtendedOpcodePrefix(const byte* ip);
-        const byte* ProcessWithDebugging_PreviousStmtTrackingMediumLayoutPrefix(const byte* ip, Var&);
-        const byte* ProcessWithDebugging_PreviousStmtTrackingExtendedMediumLayoutPrefix(const byte* ip);
-        const byte* ProcessWithDebugging_PreviousStmtTrackingLargeLayoutPrefix(const byte* ip, Var&);
-        const byte* ProcessWithDebugging_PreviousStmtTrackingExtendedLargeLayoutPrefix(const byte* ip);
-
-#if ENABLE_TTD_DIAGNOSTICS_TRACING
-        Var ProcessUnprofiled_PreviousStmtTracking();
-        const byte* ProcessUnprofiled_PreviousStmtTrackingExtendedOpcodePrefix(const byte* ip);
-        const byte* ProcessUnprofiled_PreviousStmtTrackingMediumLayoutPrefix(const byte* ip, Var&);
-        const byte* ProcessUnprofiled_PreviousStmtTrackingExtendedMediumLayoutPrefix(const byte* ip);
-        const byte* ProcessUnprofiled_PreviousStmtTrackingLargeLayoutPrefix(const byte* ip, Var&);
-        const byte* ProcessUnprofiled_PreviousStmtTrackingExtendedLargeLayoutPrefix(const byte* ip);
-#endif
-#endif
         // This will be called for reseting outs when resume from break on error happened
         void ResetOut();
 
