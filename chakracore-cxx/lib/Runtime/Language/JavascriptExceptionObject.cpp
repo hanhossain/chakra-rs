@@ -85,16 +85,9 @@ namespace Js
         ignoreAdvanceToNextStatement(false),
 #endif
         hostWrapperCreateFunc(nullptr),
+        exceptionContext(exceptionContextIn ? std::move(*exceptionContextIn) : JavascriptExceptionContext{}),
         next(nullptr)
     {
-        if (exceptionContextIn)
-        {
-            exceptionContext = *exceptionContextIn;
-        }
-        else
-        {
-            memset(&exceptionContext, 0, sizeof(exceptionContext));
-        }
 #if ENABLE_DEBUG_STACK_BACK_TRACE
         this->stackBackTrace = nullptr;
 #endif
