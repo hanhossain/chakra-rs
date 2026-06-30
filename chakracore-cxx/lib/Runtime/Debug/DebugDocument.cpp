@@ -160,19 +160,6 @@ namespace Js
         }
     }
 
-#if ENABLE_TTD
-    BreakpointProbe* DebugDocument::SetBreakPoint_TTDWbpId(long bpId, StatementLocation statement)
-    {
-        ScriptContext* scriptContext = this->utf8SourceInfo->GetScriptContext();
-        BreakpointProbe* pProbe = Anew(scriptContext->AllocatorForDiagnostics(), BreakpointProbe, this, statement, (uint32_t)bpId);
-
-        scriptContext->GetDebugContext()->GetProbeContainer()->AddProbe(pProbe);
-        BreakpointProbeList* pBreakpointList = this->GetBreakpointList();
-        pBreakpointList->Add(pProbe);
-        return pProbe;
-    }
-#endif
-
     Js::BreakpointProbe* DebugDocument::FindBreakpoint(StatementLocation statement)
     {
         Js::BreakpointProbe* probe = nullptr;

@@ -1861,14 +1861,6 @@ namespace Js
             ScriptContext* requestContext = obj->GetScriptContext();
             Var objValue = nullptr;
 
-#if ENABLE_TTD
-            TTD::TTModeStackAutoPopper suppressModeAutoPopper(requestContext->GetThreadContext()->TTDLog);
-            if(requestContext->GetThreadContext()->IsRuntimeInTTDMode())
-            {
-                suppressModeAutoPopper.PushModeAndSetToAutoPop(TTD::TTDMode::DebuggerSuppressGetter);
-            }
-#endif
-
             if (Js::JavascriptOperators::GetProperty(obj, propId, &objValue, requestContext))
             {
                 return objValue;
@@ -2213,14 +2205,6 @@ namespace Js
     BOOL RecyclableObjectDisplay::GetPropertyWithScriptEnter(RecyclableObject* originalInstance, RecyclableObject* instance, PropertyId propertyId, Var* value, ScriptContext* scriptContext)
     {
         BOOL retValue = FALSE;
-
-#if ENABLE_TTD
-        TTD::TTModeStackAutoPopper suppressModeAutoPopper(scriptContext->GetThreadContext()->TTDLog);
-        if(scriptContext->GetThreadContext()->IsRuntimeInTTDMode())
-        {
-            suppressModeAutoPopper.PushModeAndSetToAutoPop(TTD::TTDMode::DebuggerSuppressGetter);
-        }
-#endif
 
         if(!scriptContext->GetThreadContext()->IsScriptActive())
         {
