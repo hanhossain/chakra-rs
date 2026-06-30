@@ -159,11 +159,10 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<SlotType>::Type slotType;
         union SlotInfo
         {
-            typename WriteBarrierFieldTypeTraits<void *>::Type slot;
+            typename WriteBarrierFieldTypeTraits<void *>::Type slot {};
             typename WriteBarrierFieldTypeTraits<uint>::Type inlineSlotSize;
             SlotInfo()
             {
-                memset(this, 0, sizeof(SlotInfo));
             }
         };
         typename WriteBarrierFieldTypeTraits<SlotInfo>::Type u;
