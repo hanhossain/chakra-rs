@@ -22,11 +22,6 @@ public:
     static bool Is(void * ref);
 
     virtual void Mark(Recycler * recycler) override;
-
-#if ENABLE_TTD
-    void OnScriptLoad_TTDCallback(Js::FunctionBody* body, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException, bool notify);
-    static void OnReplayDisposeContext_TTDCallback(FinalizableObject* jsrtCtx);
-#endif
     void OnScriptLoad(Js::JavascriptFunction * scriptFunction, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException);
 protected:
     DEFINE_VTABLE_CTOR_NOBASE(JsrtContext);

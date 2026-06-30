@@ -7,12 +7,7 @@
 #include "JsrtExceptionBase.h"
 #include "Exceptions/EvalDisabledException.h"
 
-//A class to ensure that even when exceptions are thrown we update any event recording info we were in the middle of
-#if ENABLE_TTD
-typedef TTD::TTDJsRTActionResultAutoRecorder TTDRecorder;
-#else
 typedef struct {} TTDRecorder;
-#endif
 
 // JSRT Unsafe mode leaves runtime health-state responsibility to the host
 #ifndef JSRT_VERIFY_RUNTIME_STATE
@@ -148,10 +143,6 @@ JsErrorCode GlobalAPIWrapper(Fn fn)
         return fn(_actionEntryPopper);
     });
 
-#if ENABLE_TTD
-    _actionEntryPopper.CompleteWithStatusCode(errCode);
-#endif
-
     return errCode;
 }
 
@@ -233,10 +224,6 @@ JsErrorCode ContextAPIWrapper(Fn fn)
         return fn(scriptContext, _actionEntryPopper);
     });
 
-#if ENABLE_TTD
-    _actionEntryPopper.CompleteWithStatusCode(errCode);
-#endif
-
     return errCode;
 }
 
@@ -311,10 +298,6 @@ JsErrorCode ContextAPINoScriptWrapper(Fn fn, bool allowInObjectBeforeCollectCall
     {
         return fn(scriptContext, _actionEntryPopper);
     }, allowInObjectBeforeCollectCallback, scriptExceptionAllowed);
-
-#if ENABLE_TTD
-    _actionEntryPopper.CompleteWithStatusCode(errCode);
-#endif
 
     return errCode;
 }
@@ -408,27 +391,9 @@ void HandleScriptCompileError(Js::ScriptContext * scriptContext, CompileScriptEx
 ////
 //Define compact TTD macros for use in the JSRT API's
 //A class to ensure that even when exceptions are thrown we update any event recording info we were in the middle of
-#if ENABLE_TTD
-#define PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(CTX) (CTX)->ShouldPerformRecordAction()
-
-#define PERFORM_JSRT_TTD_RECORD_ACTION(CTX, ACTION_CODE, ...) \
-    if(PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(CTX)) \
-    { \
-        (CTX)->GetThreadContext()->TTDLog->##ACTION_CODE##(_actionEntryPopper, ##__VA_ARGS__); \
-    }
-
-#define PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(CTX, RESULT) if(PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(CTX)) \
-    { \
-        _actionEntryPopper.SetResult(RESULT); \
-    }
-
-//TODO: find and replace all of the occourences of this in jsrt.cpp
-#define PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(CTX) if(PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(CTX)) { AssertMsg(false, "Need to implement support here!!!"); }
-#else
 #define PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(CTX) false
 
 #define PERFORM_JSRT_TTD_RECORD_ACTION(CTX, ACTION_CODE, ...)
 #define PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(CTX, RESULT)
 
 #define PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(CTX)
-#endif
