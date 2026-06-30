@@ -16,29 +16,7 @@ namespace Js
     public:
         typedef Var (*HostWrapperCreateFuncType)(Var var, ScriptContext * sourceScriptContext, ScriptContext * destScriptContext);
 
-        JavascriptExceptionObject(Var object, ScriptContext * scriptContext, JavascriptExceptionContext* exceptionContextIn, bool isPendingExceptionObject = false) :
-            thrownObject(object),
-            isPendingExceptionObject(isPendingExceptionObject),
-            scriptContext(scriptContext), tag(true),
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            isDebuggerSkip(false), byteCodeOffsetAfterDebuggerSkip(Constants::InvalidByteCodeOffset), hasDebuggerLogged(false),
-            isFirstChance(false), isExceptionCaughtInNonUserCode(false), ignoreAdvanceToNextStatement(false),
-#endif
-            hostWrapperCreateFunc(nullptr),
-            next(nullptr)
-        {
-            if (exceptionContextIn)
-            {
-                exceptionContext = *exceptionContextIn;
-            }
-            else
-            {
-                memset(&exceptionContext, 0, sizeof(exceptionContext));
-            }
-#if ENABLE_DEBUG_STACK_BACK_TRACE
-            this->stackBackTrace = nullptr;
-#endif
-        }
+        JavascriptExceptionObject(Var object, ScriptContext * scriptContext, JavascriptExceptionContext* exceptionContextIn, bool isPendingExceptionObject = false);
 
         Var GetThrownObject(ScriptContext * requestingScriptContext);
 

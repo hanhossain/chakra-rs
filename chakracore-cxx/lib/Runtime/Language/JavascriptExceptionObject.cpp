@@ -70,6 +70,38 @@ namespace Js
         return exceptionObject;
     }
 
+    JavascriptExceptionObject::JavascriptExceptionObject(Var object, ScriptContext *scriptContext,
+        JavascriptExceptionContext *exceptionContextIn, bool isPendingExceptionObject):
+        thrownObject(object),
+        scriptContext(scriptContext),
+#ifdef ENABLE_SCRIPT_DEBUGGING
+        byteCodeOffsetAfterDebuggerSkip(Constants::InvalidByteCodeOffset),
+#endif
+        tag(true),
+        isPendingExceptionObject(isPendingExceptionObject),
+#ifdef ENABLE_SCRIPT_DEBUGGING
+        isDebuggerSkip(false),
+        hasDebuggerLogged(false),
+        isFirstChance(false),
+        isExceptionCaughtInNonUserCode(false),
+        ignoreAdvanceToNextStatement(false),
+#endif
+        hostWrapperCreateFunc(nullptr),
+        next(nullptr)
+    {
+        if (exceptionContextIn)
+        {
+            exceptionContext = *exceptionContextIn;
+        }
+        else
+        {
+            memset(&exceptionContext, 0, sizeof(exceptionContext));
+        }
+#if ENABLE_DEBUG_STACK_BACK_TRACE
+        this->stackBackTrace = nullptr;
+#endif
+    }
+
     // Returns NULL if the exception object is the static out of memory object.
     Var JavascriptExceptionObject::GetThrownObject(ScriptContext * requestingScriptContext)
     {
