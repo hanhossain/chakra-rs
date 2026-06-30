@@ -170,7 +170,7 @@ namespace Js
 
         WriteBarrierFieldTypeTraits<JavascriptExceptionContext>::Type exceptionContext {};
 #if ENABLE_DEBUG_STACK_BACK_TRACE
-        typename WriteBarrierFieldTypeTraits<StackBackTrace*>::Type stackBackTrace;
+        WriteBarrierFieldTypeTraits<StackBackTrace*>::Type stackBackTrace = nullptr;
         static const int StackToSkip = 2;
         static const int StackTraceDepth = 30;
 #endif

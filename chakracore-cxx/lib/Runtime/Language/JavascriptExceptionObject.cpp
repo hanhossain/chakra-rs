@@ -86,11 +86,11 @@ namespace Js
 #endif
         hostWrapperCreateFunc(nullptr),
         exceptionContext(exceptionContextIn ? std::move(*exceptionContextIn) : JavascriptExceptionContext{}),
+#if ENABLE_DEBUG_STACK_BACK_TRACE
+        stackBackTrace(nullptr),
+#endif
         next(nullptr)
     {
-#if ENABLE_DEBUG_STACK_BACK_TRACE
-        this->stackBackTrace = nullptr;
-#endif
     }
 
     JavascriptExceptionObject::JavascriptExceptionObject(JavascriptExceptionObject&& other) noexcept: thrownObject(std::move(other.thrownObject)),
@@ -109,6 +109,9 @@ namespace Js
 #endif
         hostWrapperCreateFunc(other.hostWrapperCreateFunc),
         exceptionContext(std::move(other.exceptionContext)),
+#if ENABLE_DEBUG_STACK_BACK_TRACE
+        stackBackTrace(std::move(other.stackBackTrace)),
+#endif
         next(std::move(other.next))
     {
     }
@@ -133,6 +136,9 @@ namespace Js
 #endif
         hostWrapperCreateFunc = other.hostWrapperCreateFunc;
         exceptionContext = std::move(other.exceptionContext);
+#if ENABLE_DEBUG_STACK_BACK_TRACE
+        stackBackTrace = std::move(other.stackBackTrace);
+#endif
         next = std::move(other.next);
         return *this;
     }
