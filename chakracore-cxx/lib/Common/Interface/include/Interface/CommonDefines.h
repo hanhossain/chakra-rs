@@ -152,57 +152,8 @@
 #define ENABLE_TTD 0
 #endif
 
-#if ENABLE_TTD
-#define TTDAssert(C, M) { if(!(C)) TTDAbort_unrecoverable_error(M); }
-#else
+// TODO (hanhossain): remove TTD
 #define TTDAssert(C, M)
-#endif
-
-#if ENABLE_TTD
-//A workaround for profile based creation of Native Arrays -- we may or may not want to allow since it differs in record/replay and (currently) asserts in our snap compare
-#define TTD_NATIVE_PROFILE_ARRAY_WORK_AROUND 1
-
-//See also -- Disabled fast path on property enumeration, random number generation, disabled new/eval code cache, and others.
-//            Disabled ActivationObjectEx and others.
-
-//Force debug or notjit mode
-#define TTD_FORCE_DEBUG_MODE 0
-#define TTD_FORCE_NOJIT_MODE 0
-
-//Enable various sanity checking features and asserts
-#define ENABLE_TTD_INTERNAL_DIAGNOSTICS 1
-
-#define TTD_LOG_READER TextFormatReader
-#define TTD_LOG_WRITER TextFormatWriter
-
-//For now always use the (lower performance) text format for snapshots for easier debugging etc.
-#define TTD_SNAP_READER TextFormatReader
-#define TTD_SNAP_WRITER TextFormatWriter
-
-//#if ENABLE_TTD_INTERNAL_DIAGNOSTICS
-//#define TTD_SNAP_READER TextFormatReader
-//#define TTD_SNAP_WRITER TextFormatWriter
-//#else
-//#define TTD_SNAP_READER BinaryFormatReader
-//#define TTD_SNAP_WRITER BinaryFormatWriter
-//#endif
-
-#if ENABLE_TTD_INTERNAL_DIAGNOSTICS
-#define ENABLE_SNAPSHOT_COMPARE 1
-#define ENABLE_OBJECT_SOURCE_TRACKING 0
-#define ENABLE_VALUE_TRACE 0
-#define ENABLE_CROSSSITE_TRACE 0
-#else
-#define ENABLE_SNAPSHOT_COMPARE 0
-#define ENABLE_OBJECT_SOURCE_TRACKING 0
-#define ENABLE_CROSSSITE_TRACE 0
-#endif
-
-#define ENABLE_TTD_DIAGNOSTICS_TRACING (ENABLE_OBJECT_SOURCE_TRACKING)
-
-//End Time Travel flags
-////////
-#endif
 
 //----------------------------------------------------------------------------------------------------
 // Debug only features
