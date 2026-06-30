@@ -119,19 +119,6 @@ public:
     static Var EntryReturn(RecyclableObject* function, CallInfo callInfo, ...);
     static Var EntryThrow(RecyclableObject* function, CallInfo callInfo, ...);
 
-#if ENABLE_TTD
-    static JavascriptGenerator* New(
-        Recycler* recycler,
-        DynamicType* generatorType,
-        Arguments &args,
-        Js::JavascriptGenerator::GeneratorState generatorState);
-
-    virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-    virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-    virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-    // virtual void ProcessCorePaths() override;
-#endif
-
 public:
     struct BailInSymbol {
         uint32_t id;

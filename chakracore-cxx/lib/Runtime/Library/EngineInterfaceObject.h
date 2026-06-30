@@ -84,14 +84,6 @@ namespace Js
 
         static EngineInterfaceObject* New(Recycler * recycler, DynamicType * type);
 
-#if ENABLE_TTD
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-        virtual void ProcessCorePaths() override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
-
         void Initialize();
         bool IsInitialized() const { return commonNativeInterfaces != nullptr; }
 

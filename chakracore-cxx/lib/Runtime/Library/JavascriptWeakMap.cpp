@@ -129,11 +129,6 @@ namespace Js
             });
         }
 
-#if ENABLE_TTD
-        //TODO: right now we always GC before snapshots (assuming we have a weak collection)
-        //      may want to optimize this and use a notify here that we have a weak container -- also update post inflate and post snap
-#endif
-
         return isCtorSuperCall ?
             JavascriptOperators::OrdinaryCreateFromConstructor(VarTo<RecyclableObject>(newTarget), weakMapObject, nullptr, scriptContext) :
             weakMapObject;
@@ -163,20 +158,6 @@ namespace Js
             didDelete = weakMap->Delete(keyObj);
         }
 
-#if ENABLE_TTD
-        if(scriptContext->IsTTDRecordOrReplayModeEnabled())
-        {
-            if(scriptContext->IsTTDRecordModeEnabled())
-            {
-                function->GetScriptContext()->GetThreadContext()->TTDLog->RecordWeakCollectionContainsEvent(didDelete);
-            }
-            else
-            {
-                didDelete = function->GetScriptContext()->GetThreadContext()->TTDLog->ReplayWeakCollectionContainsEvent();
-            }
-        }
-#endif
-
         return scriptContext->GetLibrary()->CreateBoolean(didDelete);
     }
 
@@ -203,20 +184,6 @@ namespace Js
             RecyclableObject* keyObj = VarTo<RecyclableObject>(key);
             loaded = weakMap->Get(keyObj, &value);
         }
-
-#if ENABLE_TTD
-        if(scriptContext->IsTTDRecordOrReplayModeEnabled())
-        {
-            if(scriptContext->IsTTDRecordModeEnabled())
-            {
-                function->GetScriptContext()->GetThreadContext()->TTDLog->RecordWeakCollectionContainsEvent(loaded);
-            }
-            else
-            {
-                loaded = function->GetScriptContext()->GetThreadContext()->TTDLog->ReplayWeakCollectionContainsEvent();
-            }
-        }
-#endif
 
         return loaded ? CrossSite::MarshalVar(scriptContext, value) : scriptContext->GetLibrary()->GetUndefined();
     }
@@ -245,20 +212,6 @@ namespace Js
             hasValue = weakMap->Has(keyObj);
         }
 
-#if ENABLE_TTD
-        if(scriptContext->IsTTDRecordOrReplayModeEnabled())
-        {
-            if(scriptContext->IsTTDRecordModeEnabled())
-            {
-                function->GetScriptContext()->GetThreadContext()->TTDLog->RecordWeakCollectionContainsEvent(hasValue);
-            }
-            else
-            {
-                hasValue = function->GetScriptContext()->GetThreadContext()->TTDLog->ReplayWeakCollectionContainsEvent();
-            }
-        }
-#endif
-
         return scriptContext->GetLibrary()->CreateBoolean(hasValue);
     }
 
@@ -285,14 +238,6 @@ namespace Js
         }
 
         RecyclableObject* keyObj = VarTo<RecyclableObject>(key);
-
-#if ENABLE_TTD
-        //In replay we need to pin the object (and will release at snapshot points) -- in record we don't need to do anything
-        if(scriptContext->IsTTDReplayModeEnabled())
-        {
-            scriptContext->TTDContextInfo->TTDWeakReferencePinSet->AddNew(keyObj);
-        }
-#endif
 
         weakMap->Set(keyObj, value);
 
@@ -376,60 +321,4 @@ namespace Js
         stringBuilder->AppendCppLiteral(u"WeakMap");
         return TRUE;
     }
-
-#if ENABLE_TTD
-    void JavascriptWeakMap::MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor)
-    {
-        //All weak things should be reachable from another root so no need to mark but do need to repopulate the pin sets if in replay mode
-        Js::ScriptContext* scriptContext = this->GetScriptContext();
-        if(scriptContext->IsTTDReplayModeEnabled())
-        {
-            this->Map([&](RecyclableObject* key, Js::Var value)
-            {
-                scriptContext->TTDContextInfo->TTDWeakReferencePinSet->AddNew(key);
-            });
-        }
-
-        //Keys are weak so are always reachable from somewhere else but values are not so we must walk them
-        this->Map([&](RecyclableObject* key, Js::Var value)
-        {
-            extractor->MarkVisitVar(value);
-        });
-    }
-
-    TTD::NSSnapObjects::SnapObjectType JavascriptWeakMap::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapMapObject;
-    }
-
-    void JavascriptWeakMap::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTD::NSSnapObjects::SnapMapInfo* smi = alloc.SlabAllocateStruct<TTD::NSSnapObjects::SnapMapInfo>();
-        uint32_t mapCountEst = this->Size() * 2;
-
-        smi->MapSize = 0;
-        smi->MapKeyValueArray = alloc.SlabReserveArraySpace<TTD::TTDVar>(mapCountEst + 1); //always reserve at least 1 element
-
-        this->Map([&](RecyclableObject* key, Js::Var value)
-        {
-            AssertMsg(smi->MapSize + 1 < mapCountEst, "We are writing junk");
-
-            smi->MapKeyValueArray[smi->MapSize] = key;
-            smi->MapKeyValueArray[smi->MapSize + 1] = value;
-            smi->MapSize += 2;
-        });
-
-        if(smi->MapSize == 0)
-        {
-            smi->MapKeyValueArray = nullptr;
-            alloc.SlabAbortArraySpace<TTD::TTDVar>(mapCountEst + 1);
-        }
-        else
-        {
-            alloc.SlabCommitArraySpace<TTD::TTDVar>(smi->MapSize, mapCountEst + 1);
-        }
-
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<TTD::NSSnapObjects::SnapMapInfo*, TTD::NSSnapObjects::SnapObjectType::SnapMapObject>(objData, smi);
-    }
-#endif
 }

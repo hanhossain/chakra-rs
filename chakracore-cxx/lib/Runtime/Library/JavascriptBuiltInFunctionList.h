@@ -24,13 +24,6 @@ BUILTIN(GlobalObject, Escape, EntryEscape, FunctionInfo::ErrorOnNew)
 BUILTIN(GlobalObject, UnEscape, EntryUnEscape, FunctionInfo::ErrorOnNew)
 BUILTIN(GlobalObject, CollectGarbage, EntryCollectGarbage, FunctionInfo::ErrorOnNew)
 
-#if ENABLE_TTD
-BUILTIN(GlobalObject, TelemetryLog, EntryTelemetryLog, FunctionInfo::ErrorOnNew)
-
-BUILTIN(GlobalObject, EnabledDiagnosticsTrace, EntryEnabledDiagnosticsTrace, FunctionInfo::ErrorOnNew)
-BUILTIN(GlobalObject, EmitTTDLog, EntryEmitTTDLog, FunctionInfo::ErrorOnNew)
-#endif
-
 BUILTIN(GlobalObject, ChWriteTraceEvent, EntryChWriteTraceEvent, FunctionInfo::ErrorOnNew)
 
 #ifdef IR_VIEWER

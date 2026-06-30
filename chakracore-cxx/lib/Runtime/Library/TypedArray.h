@@ -212,12 +212,6 @@ namespace Js
     public:
         static uint32_t GetOffsetOfBuffer()  { return offsetof(TypedArrayBase, buffer); }
         static uint32_t GetOffsetOfLength()  { return offsetof(TypedArrayBase, length); }
-
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> inline bool VarIsImpl<TypedArrayBase>(RecyclableObject* obj)

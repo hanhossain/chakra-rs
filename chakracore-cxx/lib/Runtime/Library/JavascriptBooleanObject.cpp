@@ -48,31 +48,4 @@ namespace Js
         stringBuilder->AppendCppLiteral(u"Boolean, (Object)");
         return TRUE;
     }
-
-#if ENABLE_TTD
-    void JavascriptBooleanObject::SetValue_TTD(Js::Var val)
-    {
-        TTDAssert(val == nullptr || Js::VarIs<Js::JavascriptBoolean>(val), "Only allowable values!");
-
-        this->value = static_cast<Js::JavascriptBoolean*>(val);
-    }
-
-    void JavascriptBooleanObject::MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor)
-    {
-        if(this->value != nullptr)
-        {
-            extractor->MarkVisitVar(this->value);
-        }
-    }
-
-    TTD::NSSnapObjects::SnapObjectType JavascriptBooleanObject::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapBoxedValueObject;
-    }
-
-    void JavascriptBooleanObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<TTD::TTDVar, TTD::NSSnapObjects::SnapObjectType::SnapBoxedValueObject>(objData, this->value);
-    }
-#endif
 } // namespace Js

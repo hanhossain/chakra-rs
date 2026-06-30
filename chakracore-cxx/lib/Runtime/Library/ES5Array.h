@@ -95,14 +95,6 @@ namespace Js
 
         // for SCA
         virtual BOOL IsItemEnumerable(uint32_t index) override;
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     template <> inline bool VarIsImpl<ES5Array>(RecyclableObject* instance)

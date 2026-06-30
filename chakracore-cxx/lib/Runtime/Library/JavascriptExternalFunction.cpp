@@ -196,23 +196,6 @@ namespace Js
 
         externalFunction->PrepareExternalCall(&args);
 
-#if ENABLE_TTD
-        Var result = nullptr;
-
-        if(scriptContext->ShouldPerformRecordOrReplayAction())
-        {
-            result = JavascriptExternalFunction::HandleRecordReplayExternalFunction_Thunk(externalFunction, callInfo, args, scriptContext);
-        }
-        else
-        {
-            BEGIN_LEAVE_SCRIPT_WITH_EXCEPTION(scriptContext)
-            {
-                // Don't do stack probe since BEGIN_LEAVE_SCRIPT_WITH_EXCEPTION does that for us already
-                result = externalFunction->nativeMethod(function, callInfo, args.Values);
-            }
-            END_LEAVE_SCRIPT_WITH_EXCEPTION(scriptContext);
-        }
-#else
         Var result = nullptr;
         BEGIN_LEAVE_SCRIPT_WITH_EXCEPTION(scriptContext)
         {
@@ -220,7 +203,6 @@ namespace Js
             result = externalFunction->nativeMethod(function, callInfo, args.Values);
         }
         END_LEAVE_SCRIPT_WITH_EXCEPTION(scriptContext);
-#endif
 
         if (result == nullptr)
         {
@@ -291,26 +273,11 @@ namespace Js
             args.IsNewCall()
         };
 
-#if ENABLE_TTD
-        if(scriptContext->ShouldPerformRecordOrReplayAction())
-        {
-            result = JavascriptExternalFunction::HandleRecordReplayExternalFunction_StdThunk(function, callInfo, args, scriptContext);
-        }
-        else
-        {
-            BEGIN_LEAVE_SCRIPT(scriptContext)
-            {
-                result = externalFunction->stdCallNativeMethod(function, args.Values, static_cast<unsigned short>(args.Info.Count), &info, externalFunction->callbackState);
-            }
-            END_LEAVE_SCRIPT(scriptContext);
-        }
-#else
         BEGIN_LEAVE_SCRIPT(scriptContext)
         {
             result = externalFunction->stdCallNativeMethod(function, args.Values, static_cast<unsigned short>(args.Info.Count), &info, externalFunction->callbackState);
         }
         END_LEAVE_SCRIPT(scriptContext);
-#endif
 
         if (scriptContext->HasRecordedException())
         {
@@ -355,114 +322,4 @@ namespace Js
             deferredLength = 0;
         }
     }
-
-#if ENABLE_TTD
-    TTD::NSSnapObjects::SnapObjectType JavascriptExternalFunction::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapExternalFunctionObject;
-    }
-
-    void JavascriptExternalFunction::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTD::TTDVar fnameId = TTD_CONVERT_JSVAR_TO_TTDVAR(this->functionNameId);
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<TTD::TTDVar, TTD::NSSnapObjects::SnapObjectType::SnapExternalFunctionObject>(objData, fnameId);
-    }
-
-    Var JavascriptExternalFunction::HandleRecordReplayExternalFunction_Thunk(Js::JavascriptFunction* function, CallInfo& callInfo, Arguments& args, ScriptContext* scriptContext)
-    {
-        JavascriptExternalFunction* externalFunction = static_cast<JavascriptExternalFunction*>(function);
-
-        Var result = nullptr;
-
-        if(scriptContext->ShouldPerformReplayAction())
-        {
-            TTD::TTDNestingDepthAutoAdjuster logPopper(scriptContext->GetThreadContext());
-            scriptContext->GetThreadContext()->TTDLog->ReplayExternalCallEvent(externalFunction, args, &result);
-        }
-        else
-        {
-            TTDAssert(scriptContext->ShouldPerformRecordAction(), "Check either record/replay before calling!!!");
-
-            TTD::EventLog* elog = scriptContext->GetThreadContext()->TTDLog;
-
-            TTD::TTDNestingDepthAutoAdjuster logPopper(scriptContext->GetThreadContext());
-            TTD::NSLogEvents::EventLogEntry* callEvent = elog->RecordExternalCallEvent(externalFunction, scriptContext->GetThreadContext()->TTDRootNestingCount, args, false);
-
-            BEGIN_LEAVE_SCRIPT_WITH_EXCEPTION(scriptContext)
-            {
-                // Don't do stack probe since BEGIN_LEAVE_SCRIPT_WITH_EXCEPTION does that for us already
-                result = externalFunction->nativeMethod(function, callInfo, args.Values);
-            }
-            END_LEAVE_SCRIPT_WITH_EXCEPTION(scriptContext);
-
-            //Exceptions should be prohibited so no need to do extra work
-            elog->RecordExternalCallEvent_Complete(externalFunction, callEvent, result);
-        }
-
-        return result;
-    }
-
-    Var JavascriptExternalFunction::HandleRecordReplayExternalFunction_StdThunk(Js::RecyclableObject* function, CallInfo& callInfo, Arguments& args, ScriptContext* scriptContext)
-    {
-        JavascriptExternalFunction* externalFunction = static_cast<JavascriptExternalFunction*>(function);
-
-        Var result = nullptr;
-
-        if(scriptContext->ShouldPerformReplayAction())
-        {
-            TTD::TTDNestingDepthAutoAdjuster logPopper(scriptContext->GetThreadContext());
-            scriptContext->GetThreadContext()->TTDLog->ReplayExternalCallEvent(externalFunction, args, &result);
-        }
-        else
-        {
-            if (args.Info.Count > USHORT_MAX)
-            {
-                // Due to compat reasons, stdcall external functions expect a ushort count of args.
-                // To support more than this we will need a new API.
-                Js::JavascriptError::ThrowTypeError(scriptContext, JSERR_ArgListTooLarge);
-            }
-
-            TTDAssert(scriptContext->ShouldPerformRecordAction(), "Check either record/replay before calling!!!");
-
-            TTD::EventLog* elog = scriptContext->GetThreadContext()->TTDLog;
-
-            TTD::TTDNestingDepthAutoAdjuster logPopper(scriptContext->GetThreadContext());
-            TTD::NSLogEvents::EventLogEntry* callEvent = elog->RecordExternalCallEvent(externalFunction, scriptContext->GetThreadContext()->TTDRootNestingCount, args, true);
-
-            StdCallJavascriptMethodInfo info = {
-                args[0],
-                args.HasNewTarget() ? args.GetNewTarget() : args.IsNewCall() ? function : scriptContext->GetLibrary()->GetUndefined(),
-                args.IsNewCall()
-            };
-
-            BEGIN_LEAVE_SCRIPT(scriptContext)
-            {
-                result = externalFunction->stdCallNativeMethod(function, args.Values, static_cast<ushort>(args.Info.Count), &info, externalFunction->callbackState);
-            }
-            END_LEAVE_SCRIPT(scriptContext);
-
-            elog->RecordExternalCallEvent_Complete(externalFunction, callEvent, result);
-        }
-
-        return result;
-    }
-
-    Var JavascriptExternalFunction::TTDReplayDummyExternalMethod(Var callee, Var *args, unsigned short cargs, StdCallJavascriptMethodInfo *info, void *callbackState)
-    {
-        JavascriptExternalFunction* externalFunction = static_cast<JavascriptExternalFunction*>(callee);
-
-        ScriptContext* scriptContext = externalFunction->type->GetScriptContext();
-        TTD::EventLog* elog = scriptContext->GetThreadContext()->TTDLog;
-        TTDAssert(elog != nullptr, "How did this get created then???");
-
-        //If this flag is set then this is ok (the debugger may be evaluating this so just return undef -- otherwise this is an error
-        if(!elog->IsDebugModeFlagSet())
-        {
-            TTDAssert(false, "This should never be reached in pure replay mode!!!");
-            return nullptr;
-        }
-
-        return scriptContext->GetLibrary()->GetUndefined();
-    }
-#endif
 }

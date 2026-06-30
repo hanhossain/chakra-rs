@@ -43,18 +43,6 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<Var>::Type* GetArgsForHeapEnum() { return boundArgs;}
         RecyclableObject* GetBoundThis();
 
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-        virtual void ProcessCorePaths() override;
-
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-
-        static BoundFunction* InflateBoundFunction(
-            ScriptContext* ctx, RecyclableObject* function, Var bThis, uint32_t ct, typename WriteBarrierFieldTypeTraits<Var>::Type* args);
-#endif
-
     private:
         static FunctionInfo        functionInfo;
         typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type   targetFunction;

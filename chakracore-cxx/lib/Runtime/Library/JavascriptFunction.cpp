@@ -209,14 +209,7 @@ using namespace Js;
             Assert(functionInfo);
             functionInfo->SetGrfscr(functionInfo->GetGrfscr() | fscrGlobalCode);
 
-#if ENABLE_TTD
-            if(!scriptContext->IsTTDRecordOrReplayModeEnabled())
-            {
-                scriptContext->AddToNewFunctionMap(key, functionInfo->GetFunctionInfo());
-            }
-#else
             scriptContext->AddToNewFunctionMap(key, functionInfo->GetFunctionInfo());
-#endif
         }
         else if (pfuncInfoCache->IsCoroutine())
         {
@@ -226,53 +219,6 @@ using namespace Js;
         {
             pfuncScript = scriptContext->GetLibrary()->CreateScriptFunction(pfuncInfoCache->GetFunctionProxy());
         }
-
-#if ENABLE_TTD
-        //
-        //TODO: We may (probably?) want to use the debugger source rundown functionality here instead
-        //
-        if(pfuncScript != nullptr && (scriptContext->IsTTDRecordModeEnabled() || scriptContext->ShouldPerformReplayAction()))
-        {
-            //Make sure we have the body and text information available
-            FunctionBody* globalBody = TTD::JsSupport::ForceAndGetFunctionBody(pfuncScript->GetParseableFunctionInfo());
-            if(!scriptContext->TTDContextInfo->IsBodyAlreadyLoadedAtTopLevel(globalBody))
-            {
-                uint32_t bodyIdCtr = 0;
-
-                if(scriptContext->IsTTDRecordModeEnabled())
-                {
-                    const TTD::NSSnapValues::TopLevelNewFunctionBodyResolveInfo* tbfi = scriptContext->GetThreadContext()->TTDLog->AddNewFunction(globalBody, moduleID, sourceString, sourceLen);
-
-                    //We always want to register the top-level load but we don't always need to log the event
-                    if(scriptContext->ShouldPerformRecordAction())
-                    {
-                        scriptContext->GetThreadContext()->TTDLog->RecordTopLevelCodeAction(tbfi->TopLevelBase.TopLevelBodyCtr);
-                    }
-
-                    bodyIdCtr = tbfi->TopLevelBase.TopLevelBodyCtr;
-                }
-
-                if(scriptContext->ShouldPerformReplayAction())
-                {
-                    bodyIdCtr = scriptContext->GetThreadContext()->TTDLog->ReplayTopLevelCodeAction();
-                }
-
-                //walk global body to (1) add functions to pin set (2) build parent map
-                scriptContext->TTDContextInfo->ProcessFunctionBodyOnLoad(globalBody, nullptr);
-                scriptContext->TTDContextInfo->RegisterNewScript(globalBody, bodyIdCtr);
-
-                if(scriptContext->ShouldPerformRecordOrReplayAction())
-                {
-                    globalBody->GetUtf8SourceInfo()->SetSourceInfoForDebugReplay_TTD(bodyIdCtr);
-                }
-
-                if(scriptContext->ShouldPerformReplayDebuggerAction())
-                {
-                    scriptContext->GetThreadContext()->TTDExecutionInfo->ProcessScriptLoad(scriptContext, bodyIdCtr, globalBody, globalBody->GetUtf8SourceInfo(), nullptr);
-                }
-            }
-        }
-#endif
 
         if (isGenerator || isAsync)
         {

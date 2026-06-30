@@ -397,31 +397,4 @@ namespace Js
         stringBuilder->AppendCppLiteral(u"String");
         return TRUE;
     }
-
-#if ENABLE_TTD
-    void JavascriptStringObject::SetValue_TTD(Js::Var val)
-    {
-        AssertMsg(val == nullptr || Js::VarIs<Js::JavascriptString>(val), "Only legal values!");
-
-        this->value = static_cast<Js::JavascriptString*>(val);
-    }
-
-    void JavascriptStringObject::MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor)
-    {
-        if(this->value != nullptr)
-        {
-            extractor->MarkVisitVar(this->value);
-        }
-    }
-
-    TTD::NSSnapObjects::SnapObjectType JavascriptStringObject::GetSnapTag_TTD() const
-    {
-        return TTD::NSSnapObjects::SnapObjectType::SnapBoxedValueObject;
-    }
-
-    void JavascriptStringObject::ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc)
-    {
-        TTD::NSSnapObjects::StdExtractSetKindSpecificInfo<TTD::TTDVar, TTD::NSSnapObjects::SnapObjectType::SnapBoxedValueObject>(objData, this->value);
-    }
-#endif
 } // namespace Js

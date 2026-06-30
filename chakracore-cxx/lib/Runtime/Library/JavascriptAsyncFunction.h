@@ -56,11 +56,6 @@ public:
             VirtualTableInfo<CrossSiteObject<JavascriptAsyncFunction>>::HasVirtualTable(obj);
     }
 
-#if ENABLE_TTD
-    virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-    virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
-
     virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
     {
         return VTableValue::VtableJavascriptAsyncFunction;
@@ -104,12 +99,6 @@ public:
     typename WriteBarrierFieldTypeTraits<Var>::Type resolve;
     typename WriteBarrierFieldTypeTraits<bool>::Type isReject;
     typename WriteBarrierFieldTypeTraits<Var>::Type argument;
-
-#if ENABLE_TTD
-    virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-    virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-    virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
 };
 
 template<>

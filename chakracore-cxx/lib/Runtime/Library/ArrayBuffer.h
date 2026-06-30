@@ -49,10 +49,6 @@ namespace Js
 
         bool IsDetached() { return isDetached; }
 
-#if ENABLE_TTD
-        virtual void MarshalCrossSite_TTDInflate() = 0;
-#endif
-
         virtual bool IsArrayBuffer() = 0;
         virtual bool IsSharedArrayBuffer() = 0;
         virtual bool IsWebAssemblyArrayBuffer() { return false; }
@@ -245,13 +241,6 @@ namespace Js
         {
             return this->arrayBuffer;
         }
-
-#if ENABLE_TTD
-    public:
-        virtual void MarkVisitKindSpecificPtrs(TTD::SnapshotExtractor* extractor) override;
-
-        virtual void ProcessCorePaths() override;
-#endif
     };
 
     // Normally we use malloc/free; for ArrayBuffer created from projection we need to use different allocator.
@@ -284,11 +273,6 @@ namespace Js
         JavascriptArrayBuffer(byte* buffer, uint32_t length, DynamicType * type);
         JavascriptArrayBuffer(RefCountedBuffer* buffer, uint32_t length, DynamicType * type);
 
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
 #ifdef ENABLE_WASM
@@ -357,12 +341,6 @@ namespace Js
     protected:
         virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength) override;
         virtual void ReportExternalMemoryFree() override;
-
-#if ENABLE_TTD
-    public:
-        virtual TTD::NSSnapObjects::SnapObjectType GetSnapTag_TTD() const override;
-        virtual void ExtractSnapObjectDataInto(TTD::NSSnapObjects::SnapObject* objData, TTD::SlabAllocator& alloc) override;
-#endif
     };
 
     class ExternalArrayBufferDetachedState : public ArrayBufferDetachedStateBase
