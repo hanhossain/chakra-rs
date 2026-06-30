@@ -32,13 +32,12 @@ class ActiveScriptError;
 class ScriptException
 {
 public:
-    int32_t ichMin;
-    int32_t ichLim;
-    EXCEPINFO ei;
+    int32_t ichMin {};
+    int32_t ichLim {};
+    EXCEPINFO ei {};
 
 public:
-    ScriptException()
-    { memset(this, 0, sizeof(*this)); }
+    ScriptException() = default;
     ~ScriptException(void);
 
 public:
