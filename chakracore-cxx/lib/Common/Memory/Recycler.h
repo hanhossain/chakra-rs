@@ -649,8 +649,10 @@ public:
     class AutoEnterExternalStackSkippingGCMode
     {
     public:
-        AutoEnterExternalStackSkippingGCMode(Recycler* recycler):
-            _recycler(recycler)
+        AutoEnterExternalStackSkippingGCMode(Recycler* recycler)
+#if DBG
+            : _recycler(recycler)
+#endif
         {
             // Setting this in a re-entrant mode is not allowed
             Assert(!recycler->isExternalStackSkippingGC);
@@ -668,7 +670,9 @@ public:
         }
 
     private:
+#if DBG
         Recycler* _recycler;
+#endif
     };
 
 private:

@@ -817,7 +817,11 @@ namespace Js
         {
         public:
             PushPopFrameHelper(InterpreterStackFrame *interpreterFrame, void *returnAddress, void *addressOfReturnAddress)
-                : m_threadContext(interpreterFrame->GetScriptContext()->GetThreadContext()), m_interpreterFrame(interpreterFrame), m_isHiddenFrame(false)
+                : m_threadContext(interpreterFrame->GetScriptContext()->GetThreadContext()),
+#if DBG
+            m_interpreterFrame(interpreterFrame),
+#endif
+            m_isHiddenFrame(false)
             {
                 interpreterFrame->returnAddress = returnAddress; // Ensure these are set before pushing to interpreter frame list
                 interpreterFrame->addressOfReturnAddress = addressOfReturnAddress;
@@ -841,7 +845,9 @@ namespace Js
             }
         private:
             ThreadContext *m_threadContext;
+#if DBG
             InterpreterStackFrame *m_interpreterFrame;
+#endif
             bool m_isHiddenFrame;
         };
 
