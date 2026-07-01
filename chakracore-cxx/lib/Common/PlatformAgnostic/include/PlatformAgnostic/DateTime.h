@@ -64,8 +64,6 @@ namespace DateTime
 
     class DaylightTimeHelper
     {
-        DaylightTimeHelperPlatformData data;
-
     public:
         double UtcToLocal(double utcTime, int &bias, int &offset, bool &isDaylightSavings);
         double LocalToUtc(double time);

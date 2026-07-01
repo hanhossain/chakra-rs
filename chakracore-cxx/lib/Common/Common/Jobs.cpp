@@ -57,13 +57,19 @@ namespace JsUtil
     // -------------------------------------------------------------------------------------------------------------------------
 
     JobManager::JobManager(JobProcessor *const processor)
-        : processor(processor), numJobsAddedToProcessor(0), isWaitable(false)
+        : processor(processor), numJobsAddedToProcessor(0)
+#if DBG || ENABLE_BACKGROUND_JOB_PROCESSOR
+    , isWaitable(false)
+#endif
     {
         Assert(processor);
     }
 
     JobManager::JobManager(JobProcessor *const processor, const bool isWaitable)
-        : processor(processor), numJobsAddedToProcessor(0), isWaitable(isWaitable)
+        : processor(processor), numJobsAddedToProcessor(0)
+#if DBG || ENABLE_BACKGROUND_JOB_PROCESSOR
+    , isWaitable(isWaitable)
+#endif
     {
         Assert(processor);
     }
@@ -116,14 +122,12 @@ namespace JsUtil
     // -------------------------------------------------------------------------------------------------------------------------
 
     WaitableJobManager::WaitableJobManager(JobProcessor *const processor)
-        : JobManager(processor, true),
-        jobBeingWaitedUpon(0),
+        : JobManager(processor, true)
 #if ENABLE_BACKGROUND_JOB_PROCESSOR
+        ,jobBeingWaitedUpon(nullptr),
         jobBeingWaitedUponProcessed(false),
-#endif
-        isWaitingForQueuedJobs(false)
-#if ENABLE_BACKGROUND_JOB_PROCESSOR
-        , queuedJobsProcessed(false)
+        isWaitingForQueuedJobs(false),
+        queuedJobsProcessed(false)
 #endif
     {
     }
