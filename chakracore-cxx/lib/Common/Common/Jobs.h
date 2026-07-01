@@ -215,12 +215,10 @@ namespace JsUtil
 #endif
 
     private:
+#if ENABLE_BACKGROUND_JOB_PROCESSOR
         Job *jobBeingWaitedUpon;
-#if ENABLE_BACKGROUND_JOB_PROCESSOR
         Event jobBeingWaitedUponProcessed;
-#endif
         bool isWaitingForQueuedJobs;
-#if ENABLE_BACKGROUND_JOB_PROCESSOR
         Event queuedJobsProcessed;
 #endif
 

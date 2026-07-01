@@ -21,7 +21,6 @@ namespace JSON
             SpecializedComparer<Js::Var, JSON::StrictEqualsObjectComparer>::TComparerType> DOMObjectStack;
         DOMObjectStack *domObjectStack;
         ArenaAllocator *alloc;
-        Js::ScriptContext *scriptContext;
 
     public:
         JSONStack(ArenaAllocator *allocator, Js::ScriptContext *context);

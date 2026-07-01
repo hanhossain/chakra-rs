@@ -73,13 +73,11 @@ class ChakraHostDeserializerHandle : public HostReadStream
 {
     Js::SCACore::Deserializer *m_deserializer;
     ReadHostObjectFunc readHostObject;
-    GetSharedArrayBufferFromIdFunc getSharedArrayBufferFromId;
     void* callbackState;
 
 public:
     ChakraHostDeserializerHandle(ReadHostObjectFunc readHostObject, GetSharedArrayBufferFromIdFunc getSharedArrayBufferFromId, void* callbackState) :
         readHostObject(readHostObject),
-        getSharedArrayBufferFromId(getSharedArrayBufferFromId),
         callbackState(callbackState),
         m_deserializer(nullptr)
     { }

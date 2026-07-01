@@ -116,14 +116,12 @@ namespace JsUtil
     // -------------------------------------------------------------------------------------------------------------------------
 
     WaitableJobManager::WaitableJobManager(JobProcessor *const processor)
-        : JobManager(processor, true),
-        jobBeingWaitedUpon(0),
+        : JobManager(processor, true)
 #if ENABLE_BACKGROUND_JOB_PROCESSOR
+        ,jobBeingWaitedUpon(nullptr),
         jobBeingWaitedUponProcessed(false),
-#endif
-        isWaitingForQueuedJobs(false)
-#if ENABLE_BACKGROUND_JOB_PROCESSOR
-        , queuedJobsProcessed(false)
+        isWaitingForQueuedJobs(false),
+        queuedJobsProcessed(false)
 #endif
     {
     }
