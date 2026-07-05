@@ -72,13 +72,6 @@ public:
     }
 };
 
-class JITJavascriptNumber : JITRecyclableObject
-{
-private:
-    double value;
-
-};
-
 template <>
 struct DefaultComparer<JITJavascriptString*>
 {
