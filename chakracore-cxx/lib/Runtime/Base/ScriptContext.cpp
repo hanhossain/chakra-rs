@@ -4981,7 +4981,7 @@ ScriptContext::GetJitFuncRangeCache()
         if (PHASE_STATS1(Js::PolymorphicInlineCachePhase))
         {
             Output::Print(u"%s,%s,%s,%s,%s,%s,%s,%s,%s\n", u"Function", u"Property", u"Kind", u"Accesses", u"Misses", u"Miss Rate", u"Collisions", u"Collision Rate", u"Slot Count");
-            cacheDataMap->Map([this](Js::PolymorphicInlineCache const *cache, InlineCacheData *data) {
+            cacheDataMap->Map([](Js::PolymorphicInlineCache const *cache, InlineCacheData *data) {
                 cache->PrintStats(data);
             });
         }

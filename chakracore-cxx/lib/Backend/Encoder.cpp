@@ -702,10 +702,8 @@ Encoder::Encode()
             // Review (jedmiad): Skip zeroing?  This is heap allocated so there shouldn't be any false recycler references.
             Js::TypeGuardTransferEntry* typeGuardTransferRecord = HeapNewPlusZ(typeGuardTransferSize, Js::TypeGuardTransferEntry);
 
-            Func* func = this->m_func;
-
             Js::TypeGuardTransferEntry* dstEntry = typeGuardTransferRecord;
-            this->m_func->propertyGuardsByPropertyId->Map([func, &dstEntry](Js::PropertyId propertyId, Func::IndexedPropertyGuardSet* srcSet) -> void
+            this->m_func->propertyGuardsByPropertyId->Map([&dstEntry](Js::PropertyId propertyId, Func::IndexedPropertyGuardSet* srcSet) -> void
             {
                 dstEntry->propertyId = propertyId;
 
@@ -728,11 +726,10 @@ Encoder::Encode()
         }
         else
         {
-            Func* func = this->m_func;
             this->m_func->GetJITOutput()->GetOutputData()->propertyGuardCount = this->m_func->indexedPropertyGuardCount;
             auto entry = &this->m_func->GetJITOutput()->GetOutputData()->typeGuardEntries;
 
-            this->m_func->propertyGuardsByPropertyId->Map([func, &entry](Js::PropertyId propertyId, Func::IndexedPropertyGuardSet* srcSet) -> void
+            this->m_func->propertyGuardsByPropertyId->Map([&entry](Js::PropertyId propertyId, Func::IndexedPropertyGuardSet* srcSet) -> void
             {
                 auto count = srcSet->Count();
                 size_t size = offsetof(TypeGuardTransferEntryIDL, guardOffsets) + count*sizeof(int);
@@ -782,7 +779,6 @@ Encoder::Encode()
 
         if (m_func->IsOOPJIT())
         {
-            Func* func = this->m_func;
             m_func->GetJITOutput()->GetOutputData()->ctorCachesCount = propertyCount;
             m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries = (CtorCacheTransferEntryIDL**)malloc(propertyCount * sizeof(CtorCacheTransferEntryIDL*));
             if (m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries)
@@ -796,7 +792,7 @@ Encoder::Encode()
             }
 
             uint propIndex = 0;
-            m_func->ctorCachesByPropertyId->Map([func, entries, &propIndex](Js::PropertyId propertyId, Func::CtorCacheSet* srcCacheSet) -> void
+            m_func->ctorCachesByPropertyId->Map([entries, &propIndex](Js::PropertyId propertyId, Func::CtorCacheSet* srcCacheSet) -> void
             {
                 entries[propIndex] = (CtorCacheTransferEntryIDL*)malloc(srcCacheSet->Count() * sizeof(intptr_t) + sizeof(CtorCacheTransferEntryIDL));
                 if (entries[propIndex])
@@ -833,10 +829,8 @@ Encoder::Encode()
             // Review (jedmiad): Skip zeroing?  This is heap allocated so there shouldn't be any false recycler references.
             Js::CtorCacheGuardTransferEntry* ctorCachesTransferRecord = HeapNewPlusZ(ctorCachesTransferSize, Js::CtorCacheGuardTransferEntry);
 
-            Func* func = this->m_func;
-
             Js::CtorCacheGuardTransferEntry* dstEntry = ctorCachesTransferRecord;
-            this->m_func->ctorCachesByPropertyId->Map([func, &dstEntry](Js::PropertyId propertyId, Func::CtorCacheSet* srcCacheSet) -> void
+            this->m_func->ctorCachesByPropertyId->Map([&dstEntry](Js::PropertyId propertyId, Func::CtorCacheSet* srcCacheSet) -> void
             {
                 dstEntry->propertyId = propertyId;
 
