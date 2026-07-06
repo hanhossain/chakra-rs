@@ -593,51 +593,51 @@ HeapInfo::ResetMarks(ResetMarkFlags flags)
 
     if ((flags & ResetMarkFlags_ScanImplicitRoot) != 0)
     {
-        HeapBlockList::ForEach(newLeafHeapBlockList, [flags](SmallLeafHeapBlock * heapBlock)
+        HeapBlockList::ForEach(newLeafHeapBlockList, [](SmallLeafHeapBlock * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });
 
-        HeapBlockList::ForEach(newNormalHeapBlockList, [flags](SmallNormalHeapBlock * heapBlock)
+        HeapBlockList::ForEach(newNormalHeapBlockList, [](SmallNormalHeapBlock * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });
 
-        HeapBlockList::ForEach(newNormalWithBarrierHeapBlockList, [flags](SmallNormalWithBarrierHeapBlock * heapBlock)
+        HeapBlockList::ForEach(newNormalWithBarrierHeapBlockList, [](SmallNormalWithBarrierHeapBlock * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });
 
-        HeapBlockList::ForEach(newFinalizableWithBarrierHeapBlockList, [flags](SmallFinalizableWithBarrierHeapBlock * heapBlock)
+        HeapBlockList::ForEach(newFinalizableWithBarrierHeapBlockList, [](SmallFinalizableWithBarrierHeapBlock * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });
 
-        HeapBlockList::ForEach(newFinalizableHeapBlockList, [flags](SmallNormalHeapBlock * heapBlock)
+        HeapBlockList::ForEach(newFinalizableHeapBlockList, [](SmallNormalHeapBlock * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });
 
-        HeapBlockList::ForEach(newMediumLeafHeapBlockList, [flags](MediumLeafHeapBlock * heapBlock)
+        HeapBlockList::ForEach(newMediumLeafHeapBlockList, [](MediumLeafHeapBlock * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });
 
-        HeapBlockList::ForEach(newMediumNormalHeapBlockList, [flags](MediumNormalHeapBlock * heapBlock)
+        HeapBlockList::ForEach(newMediumNormalHeapBlockList, [](MediumNormalHeapBlock * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });
 
-        HeapBlockList::ForEach(newMediumNormalWithBarrierHeapBlockList, [flags](MediumNormalWithBarrierHeapBlock * heapBlock)
+        HeapBlockList::ForEach(newMediumNormalWithBarrierHeapBlockList, [](MediumNormalWithBarrierHeapBlock * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });
 
-        HeapBlockList::ForEach(newMediumFinalizableWithBarrierHeapBlockList, [flags](MediumFinalizableWithBarrierHeapBlock * heapBlock)
+        HeapBlockList::ForEach(newMediumFinalizableWithBarrierHeapBlockList, [](MediumFinalizableWithBarrierHeapBlock * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });
-        HeapBlockList::ForEach(newMediumFinalizableHeapBlockList, [flags](MediumNormalHeapBlock * heapBlock)
+        HeapBlockList::ForEach(newMediumFinalizableHeapBlockList, [](MediumNormalHeapBlock * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });

@@ -70,7 +70,7 @@ SmallFinalizableHeapBucketBaseT<TBlockType>::ResetMarks(ResetMarkFlags flags)
 
     if ((flags & ResetMarkFlags_ScanImplicitRoot) != 0)
     {
-        HeapBlockList::ForEach(this->pendingDisposeList, [flags](TBlockType * heapBlock)
+        HeapBlockList::ForEach(this->pendingDisposeList, [](TBlockType * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });

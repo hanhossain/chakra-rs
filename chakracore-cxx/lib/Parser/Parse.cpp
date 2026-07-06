@@ -5879,7 +5879,7 @@ void Parser::ParseFncDeclHelper(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, us
             }
             else if (pnodeFnc->HasNonSimpleParameterList() && pnodeFnc->IsBodyAndParamScopeMerged())
             {
-                paramScope->ForEachSymbolUntil([this, paramScope, pnodeFnc](Symbol* sym) {
+                paramScope->ForEachSymbolUntil([pnodeFnc](Symbol* sym) {
                     if (sym->GetPid()->GetTopRef()->GetFuncScopeId() > pnodeFnc->functionId)
                     {
                         // One of the symbol has non local reference. Mark the param scope as we can't merge it with body scope.

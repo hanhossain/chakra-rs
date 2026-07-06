@@ -633,7 +633,7 @@ void ByteCodeGenerator::InitBlockScopedContent(ParseNodeBlock *pnodeBlock, Js::D
 {
     Assert(pnodeBlock->nop == knopBlock);
 
-    auto genBlockInit = [this, debuggerScope, funcInfo](ParseNode *pnode)
+    auto genBlockInit = [this, debuggerScope](ParseNode *pnode)
     {
         // Only check if the scope is valid when let/const vars are in the scope.  If there are no let/const vars,
         // the debugger scope will not be created.

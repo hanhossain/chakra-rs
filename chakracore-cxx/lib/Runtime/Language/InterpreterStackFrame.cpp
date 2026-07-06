@@ -1383,14 +1383,16 @@ namespace Js
             {
 #if ENABLE_PROFILE_INFO
                 Assert(this->executeFunction->HasExecutionDynamicProfileInfo());
-#endif
+
                 FunctionBody* functionBody = this->executeFunction;
-                InitializeParams(newInstance, [functionBody](Var param, ArgSlot index)
+                auto paramInitializer = [functionBody](Var param, ArgSlot index)
                 {
-#if ENABLE_PROFILE_INFO
                     functionBody->GetDynamicProfileInfo()->RecordParameterInfo(functionBody, index - 1, param);
+                };
+#else
+                auto paramInitializer = [](Var param, ArgSlot index){};
 #endif
-                }, &prestDest);
+                InitializeParams(newInstance, paramInitializer, &prestDest);
             }
             else
             {

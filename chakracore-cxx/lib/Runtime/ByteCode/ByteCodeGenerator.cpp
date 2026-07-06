@@ -2784,7 +2784,7 @@ FuncInfo* PostVisitFunction(ParseNodeFnc* pnodeFnc, ByteCodeGenerator* byteCodeG
         if (!top->IsGlobalFunction())
         {
             auto fnProcess =
-                [byteCodeGenerator, top](Symbol *const sym)
+                [byteCodeGenerator](Symbol *const sym)
                 {
                     if (sym->GetHasNonLocalReference() && !sym->GetIsModuleExportStorage())
                     {

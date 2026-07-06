@@ -301,7 +301,7 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPartialReusePages(RecyclerSweep& rec
     TBlockType *& reuseBlocklist, TBlockType *&unusedBlockList, bool allocationsAllowedDuringConcurrentSweep, Fn callback)
 {
     HeapBlockList::ForEachEditing(heapBlockList,
-        [&recyclerSweep, &reuseBlocklist, &unusedBlockList, callback, allocationsAllowedDuringConcurrentSweep, this](TBlockType * heapBlock)
+        [&recyclerSweep, &reuseBlocklist, &unusedBlockList, callback, this](TBlockType * heapBlock)
     {
         uint expectFreeByteCount;
         if (heapBlock->DoPartialReusePage(recyclerSweep, expectFreeByteCount))
@@ -347,7 +347,7 @@ SmallNormalHeapBucketBase<TBlockType>::SweepPartialReusePages(RecyclerSweep& rec
     this->heapBlockList = nullptr;
     SmallNormalHeapBucketBase<TBlockType>::SweepPartialReusePages(recyclerSweep, currentHeapBlockList, this->heapBlockList,
         this->partialHeapBlockList, this->AllocationsStartedDuringConcurrentSweep(),
-        [this](TBlockType * heapBlock, bool isReused) 
+        [](TBlockType * heapBlock, bool isReused)
     {
     });
 
@@ -412,7 +412,7 @@ SmallNormalHeapBucketBase<TBlockType>::FinishPartialCollect(RecyclerSweep * recy
     {
         this->partialSweptHeapBlockList = nullptr;
         TBlockType *  tail = nullptr;
-        HeapBlockList::ForEach(partialSweptList, [this, &tail](TBlockType * heapBlock)
+        HeapBlockList::ForEach(partialSweptList, [&tail](TBlockType * heapBlock)
         {
             heapBlock->FinishPartialCollect();
             Assert(heapBlock->HasFreeObject());
