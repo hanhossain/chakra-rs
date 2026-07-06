@@ -98,8 +98,10 @@ namespace JsUtil
         JobProcessor *const processor;
         unsigned int numJobsAddedToProcessor;
 
+#if DBG || ENABLE_BACKGROUND_JOB_PROCESSOR
         // Only job managers derived from WaitableJobManager support waiting for a job or the job manager's queued jobs
         const bool isWaitable;
+#endif
 
     protected:
         JobManager(JobProcessor *const processor);
@@ -215,12 +217,10 @@ namespace JsUtil
 #endif
 
     private:
+#if ENABLE_BACKGROUND_JOB_PROCESSOR
         Job *jobBeingWaitedUpon;
-#if ENABLE_BACKGROUND_JOB_PROCESSOR
         Event jobBeingWaitedUponProcessed;
-#endif
         bool isWaitingForQueuedJobs;
-#if ENABLE_BACKGROUND_JOB_PROCESSOR
         Event queuedJobsProcessed;
 #endif
 

@@ -164,7 +164,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
 
 # ignore for -Wall
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -Wno-unused-private-field\
     -Wno-reorder-ctor\
     -Wno-unused-but-set-variable\
     -Wno-unused-lambda-capture\

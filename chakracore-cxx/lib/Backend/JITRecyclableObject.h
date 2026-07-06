@@ -8,7 +8,9 @@
 class JITRecyclableObject
 {
 private:
-    intptr_t remoteVTable;
+    // TODO (hanhossain): `remoteVTable` is not explicitly used anywhere, but tests fail when
+    //  probably just required for reinterpret_cast but means it could prob be removed with static_cast?
+    [[maybe_unused]] intptr_t remoteVTable;
     Js::TypeId * typeId;
 public:
     static bool Is(Js::Var var)
@@ -70,13 +72,6 @@ public:
 
         return reinterpret_cast<JITJavascriptString*>(var);
     }
-};
-
-class JITJavascriptNumber : JITRecyclableObject
-{
-private:
-    double value;
-
 };
 
 template <>

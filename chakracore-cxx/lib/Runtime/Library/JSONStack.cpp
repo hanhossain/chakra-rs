@@ -20,7 +20,7 @@ namespace JSON
 
     JSONStack::JSONStack(ArenaAllocator *allocator, Js::ScriptContext *context)
       : jsObjectStack(allocator), domObjectStack(nullptr),
-        alloc(allocator), scriptContext(context)
+        alloc(allocator)
     {
         // most of the time, the size of the stack is 1 object.
         // use direct member instead of expensive Push / Pop / Has

@@ -20,8 +20,6 @@ namespace DateTime
     #define DateTimeTicks_PerNonLeapYear (DateTimeTicks_PerDay * 365)
     #define DateTimeTicks_PerSafeEndOfYear (DateTimeTicks_PerNonLeapYear - DateTimeTicks_PerLargestTZOffset)
 
-    typedef void* DaylightTimeHelperPlatformData;
-
     #define __CC_PA_TIMEZONE_ABVR_NAME_LENGTH 32
     struct UtilityPlatformData
     {

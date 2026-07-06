@@ -9,10 +9,9 @@ class Peeps;
 class PeepsMD
 {
 private:
-    Func *      func;
     Peeps *     peeps;
 public:
-    PeepsMD(Func *func) : func(func) {}
+    PeepsMD(Func *func) {}
 
     void        Init(Peeps *peeps);
     void        ProcessImplicitRegs(IR::Instr *instr);

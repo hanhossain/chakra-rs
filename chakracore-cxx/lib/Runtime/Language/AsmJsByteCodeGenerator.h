@@ -57,7 +57,6 @@ namespace Js
         // Reference to non-asmjs bytecode gen. Needed to bind fields for SIMD.js code
         ByteCodeGenerator* mByteCodeGenerator;
         AsmJsByteCodeWriter mWriter;
-        int mNestedCallCount;
     public:
         AsmJSByteCodeGenerator(AsmJsFunc* func, AsmJsModuleCompiler* compiler);
         static void EmitEmptyByteCode(FuncInfo* funcInfo, ByteCodeGenerator* byteCodeGen, ParseNode* funcNode);
