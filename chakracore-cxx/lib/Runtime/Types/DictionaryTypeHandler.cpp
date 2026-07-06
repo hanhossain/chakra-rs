@@ -1642,15 +1642,21 @@ namespace Js
             scriptContext->InvalidateProtoCaches(propertyId);
         }
 
+#if ENABLE_FIXED_FIELDS
         bool isGetterSet = true;
         bool isSetterSet = true;
+#endif
         if (!getter || getter == library->GetDefaultAccessorFunction())
         {
+#if ENABLE_FIXED_FIELDS
             isGetterSet = false;
+#endif
         }
         if (!setter || setter == library->GetDefaultAccessorFunction())
         {
+#if ENABLE_FIXED_FIELDS
             isSetterSet = false;
+#endif
         }
 
         Assert(propertyId != Constants::NoProperty);
@@ -2417,13 +2423,17 @@ namespace Js
         TraceFixedFieldsBeforeSetIsProto(instance, this, oldType, oldSingletonInstance);
 #endif
 
+#if ENABLE_FIXED_FIELDS
         bool hasNewType = false;
+#endif
         if (ChangeTypeOnProto())
         {
             // Forcing a type transition allows us to fix all fields (even those that were previously marked as non-fixed).
             instance->ChangeType();
             Assert(!instance->HasSharedType());
+#if ENABLE_FIXED_FIELDS
             hasNewType = true;
+#endif
         }
 
         // Currently there is no way to become the prototype if you are a stack instance

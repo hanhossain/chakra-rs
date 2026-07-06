@@ -453,10 +453,14 @@ HeapAllocatorData::LogFree(HeapAllocRecord * record)
 bool
 HeapAllocatorData::CheckLeaks()
 {
+#if !DBG
     bool needPause = false;
+#endif
     if (allocCount != deleteCount)
     {
+#if !DBG
         needPause = true;
+#endif
 
         HeapAllocRecord * current = head;
         while (current != nullptr)
@@ -483,7 +487,9 @@ HeapAllocatorData::CheckLeaks()
     }
     else if (outstandingBytes != 0)
     {
+#if !DBG
         needPause = true;
+#endif
         Output::Print(u"Unbalanced new/delete size: %d\n", outstandingBytes);
     }
 

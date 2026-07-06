@@ -2763,7 +2763,6 @@ namespace Js
         DynamicType* oldType = instance->GetDynamicType();
 
 #if DBG
-        DynamicType * oldCachedType = nullptr;
         char16_t reason[1024];
         swprintf_s(reason, 1024, u"Cache not populated.");
 #endif
@@ -2774,9 +2773,6 @@ namespace Js
 
             if (oldTypeToPromotedTypeMap->TryGetValue(oldType, &cachedDynamicType))
             {
-#if DBG
-                oldCachedType = cachedDynamicType;
-#endif
                 DynamicTypeHandler *const cachedDynamicTypeHandler = cachedDynamicType->GetTypeHandler();
                 if (cachedDynamicTypeHandler->GetOffsetOfInlineSlots() != GetOffsetOfInlineSlots())
                 {

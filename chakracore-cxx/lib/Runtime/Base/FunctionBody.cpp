@@ -3177,7 +3177,6 @@ namespace Js
         // The following adjusts for where the script is within the document
         uint32_t line = this->GetHostStartLine();
         charcount_t column = 0;
-        uint32_t lineCharOffset = 0;
         charcount_t lineByteOffset = 0;
 
         if (startCharOfStatement > 0)
@@ -3209,7 +3208,6 @@ namespace Js
             if (cacheLine > 0)
             {
                 line += cacheLine;
-                lineCharOffset = startCharOfStatement - column;
             }
         }
 

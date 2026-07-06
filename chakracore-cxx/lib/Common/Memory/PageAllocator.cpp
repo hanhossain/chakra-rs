@@ -1829,8 +1829,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
         // This will cause the free page count to be accurate
         if (HasZeroPageQueue())
         {
-            int numZeroPagesFreed = 0;
-
             // There might be queued zero pages.  Drain them first
             bool zeroPageQueueEmpty = false;
             while (true)
@@ -1851,8 +1849,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
                 PAGE_ALLOC_TRACE_AND_STATS_0(u"Freeing page from zero queue");
                 TPageSegment * segment = freePageEntry->segment;
                 uint pageCount = freePageEntry->pageCount;
-
-                numZeroPagesFreed += pageCount;
 
                 DListBase<TPageSegment> * fromSegmentList = GetSegmentList(segment);
                 Assert(fromSegmentList != nullptr);

@@ -59,8 +59,8 @@ std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;
 std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
 unsigned long WScriptJsrt::sourceContext = 0;
 
-#define ERROR_MESSAGE_TO_STRING(errorCode, errorMessage, errorMessageString)        \
-    JsErrorCode errorCode = JsNoError;                                              \
+#define ERROR_MESSAGE_TO_STRING(errorMessage, errorMessageString)        \
+    [[maybe_unused]] JsErrorCode errorCode = JsNoError;                                              \
     do                                                                              \
     {                                                                               \
         const char *outOfMemoryString =                                             \
@@ -255,7 +255,7 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::u16string_vie
             }
             else
             {
-                ERROR_MESSAGE_TO_STRING(errCode, errorMessage.data(), errorMessageString);
+                ERROR_MESSAGE_TO_STRING(errorMessage.data(), errorMessageString);
             }
 
             ChakraRTInterface::JsCreateError(errorMessageString, &errorObject);
@@ -285,7 +285,7 @@ JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall,
     JsErrorCode errorCode = JsNoError;
     std::u16string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
-    int32_t hr = S_OK;
+    [[maybe_unused]] int32_t hr = S_OK;
     JsValueRef *transferVarsArray = nullptr;
     int transferVarsCount = 0;
     if (argumentCount < 2)
@@ -421,7 +421,7 @@ JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsV
     std::u16string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsValueRef * transferables = nullptr;
-    int32_t hr = S_OK;
+    [[maybe_unused]] int32_t hr = S_OK;
     if (argumentCount < 2)
     {
         errorCode = JsErrorInvalidArgument;
@@ -531,7 +531,7 @@ JsValueRef WScriptJsrt::LoadModuleCallback(JsValueRef callee, bool isConstructCa
 
 JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState, bool isSourceModule)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
     std::u16string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -661,7 +661,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char 
 JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
     const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
     std::u16string errorMessage = u"Internal error.";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -805,7 +805,7 @@ JsValueRef WScriptJsrt::MonotonicNowCallback(JsValueRef callee, bool isConstruct
 {
     const std::u16string errorMessage = u"invalid call to WScript.monotonicNow";
     JsErrorCode errorCode = JsNoError;
-    int32_t hr = S_OK;
+    [[maybe_unused]] int32_t hr = S_OK;
     JsValueRef result;
     
     IfJsrtErrorSetGo(ChakraRTInterface::JsDoubleToNumber(static_cast<double>(std::chrono::steady_clock::now().time_since_epoch().count()) / 1e6 /* ns in ms */, &result));
@@ -821,7 +821,7 @@ JsValueRef WScriptJsrt::SetTimeoutCallback(JsValueRef callee, bool isConstructCa
 {
     const std::u16string errorMessage = u"invalid call to WScript.SetTimeout";
     JsErrorCode errorCode = JsNoError;
-    int32_t hr = S_OK;
+    [[maybe_unused]] int32_t hr = S_OK;
 
     JsValueRef function;
     JsValueRef timerId;
@@ -855,7 +855,7 @@ JsValueRef WScriptJsrt::ClearTimeoutCallback(JsValueRef callee, bool isConstruct
 {
     const std::u16string errorMessage = u"invalid call to WScript.ClearTimeout";
     JsErrorCode errorCode = JsNoError;
-    int32_t hr = S_OK;
+    [[maybe_unused]] int32_t hr = S_OK;
 
     if (argumentCount != 2)
     {
@@ -891,7 +891,7 @@ JsValueRef WScriptJsrt::AttachCallback(JsValueRef callee, bool isConstructCall, 
 {
     const std::u16string errorMessage = u"WScript.Attach requires a function, like WScript.Attach(foo);";
     JsErrorCode errorCode = JsNoError;
-    int32_t hr = S_OK;
+    [[maybe_unused]] int32_t hr = S_OK;
     JsValueType argumentType = JsUndefined;
     if (argumentCount != 2)
     {
@@ -922,7 +922,7 @@ JsValueRef WScriptJsrt::DetachCallback(JsValueRef callee, bool isConstructCall, 
 {
     const std::u16string errorMessage = u"WScript.Detach requires a function, like WScript.Detach(foo);";
     JsErrorCode errorCode = JsNoError;
-    int32_t hr = S_OK;
+    [[maybe_unused]] int32_t hr = S_OK;
     JsValueType argumentType = JsUndefined;
     if (argumentCount != 2)
     {
@@ -1219,7 +1219,7 @@ FileNode * SourceMap::root = nullptr;
 JsValueRef WScriptJsrt::RegisterModuleSourceCallback(JsValueRef callee, bool isConstructCall,
     JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
 
@@ -1311,7 +1311,7 @@ int JsFgets(char* buf, int size, FILE* file)
 
 JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
 
@@ -1463,7 +1463,7 @@ Error:
 
 JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
 
@@ -1484,7 +1484,7 @@ Error:
 
 JsValueRef WScriptJsrt::BroadcastCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
 
@@ -1518,7 +1518,7 @@ Error:
 
 JsValueRef WScriptJsrt::ReceiveBroadcastCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
 
@@ -1544,7 +1544,7 @@ Error:
 
 JsValueRef WScriptJsrt::ReportCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
 
@@ -1577,7 +1577,7 @@ Error:
 
 JsValueRef WScriptJsrt::GetReportCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
 
@@ -1606,7 +1606,7 @@ Error:
 
 JsValueRef WScriptJsrt::LeavingCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
 
@@ -1627,7 +1627,7 @@ Error:
 
 JsValueRef WScriptJsrt::SleepCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
 
@@ -1646,7 +1646,7 @@ Error:
 
 JsValueRef WScriptJsrt::GetProxyPropertiesCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsValueRef undefined = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;

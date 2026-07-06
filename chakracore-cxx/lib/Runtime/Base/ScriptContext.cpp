@@ -3838,7 +3838,6 @@ namespace Js
 
     void ScriptContext::CleanSourceListInternal(bool calledDuringMark)
     {
-        bool fCleanupDocRequired = false;
         for (int i = 0; i < sourceList->Count(); i++)
         {
             if (this->sourceList->IsItemValid(i))
@@ -3858,7 +3857,6 @@ namespace Js
                 if (strongRef == nullptr)
                 {
                     this->sourceList->RemoveAt(i);
-                    fCleanupDocRequired = true;
                 }
             }
         }

@@ -1799,7 +1799,6 @@ void SmallHeapBlockT<TBlockAttributes>::FillFreeMemory(__in_bcount(size) void * 
 template <class TBlockAttributes>
 void SmallHeapBlockT<TBlockAttributes>::VerifyBumpAllocated(_In_ char * bumpAllocateAddress)
 {
-    ushort verifyFinalizeCount = 0;
     Recycler * recycler = this->heapBucket->heapInfo->recycler;
     char * memBlock = this->GetAddress();
     for (uint i = 0; i < objectCount; i++)
@@ -1815,7 +1814,6 @@ void SmallHeapBlockT<TBlockAttributes>::VerifyBumpAllocated(_In_ char * bumpAllo
             {
                 if (this->IsAnyFinalizableBlock())
                 {
-                    verifyFinalizeCount++;
                 }
                 else
                 {

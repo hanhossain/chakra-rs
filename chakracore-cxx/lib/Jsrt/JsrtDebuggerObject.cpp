@@ -476,7 +476,7 @@ bool JsrtDebuggerStackFrame::Evaluate(Js::ScriptContext* scriptContext, const ch
     if (this->stackFrame != nullptr)
     {
         Js::ResolvedObject resolvedObject;
-        int32_t hr = S_OK;
+        [[maybe_unused]] int32_t hr = S_OK;
         Js::ScriptContext* frameScriptContext = this->stackFrame->GetScriptContext();
 
         Js::JavascriptExceptionObject *exceptionObject = nullptr;

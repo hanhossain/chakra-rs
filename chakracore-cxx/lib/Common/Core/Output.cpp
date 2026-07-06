@@ -270,8 +270,6 @@ Output::VPrint(const char16_t *form, va_list argptr)
 size_t
 Output::PrintBuffer(const char16_t * buf, size_t size)
 {
-    // Handle custom line prefixing
-    bool internallyAllocatedBuffer = false;
     if (usingCustomAlignAndPrefix)
     {
         if (hasDoneAlignPrefixForThisLine && PAL_wcschr(buf, '\n') == nullptr)
@@ -283,7 +281,6 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
             size_t newbufsize = size + align;
             char16_t* newbuf = (char16_t*)calloc(newbufsize, sizeof(char16_t));
             AssertOrFailFastMsg(newbuf != nullptr, "Ran out of memory while printing output");
-            internallyAllocatedBuffer = true;
             const char16_t* currentReadIndex = buf;
             char16_t* currentWriteIndex = newbuf;
             auto ensureSpace = [&currentWriteIndex, &newbuf, &newbufsize](size_t numCharsWantToWrite)
