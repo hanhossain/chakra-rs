@@ -188,7 +188,7 @@ namespace Js
         // Build an index for printing the histogram in descending order
         HistogramIndex index(&allocator, stringLengthMetrics.Count());
         uint totalStringCount = 0;
-        stringLengthMetrics.Map([this, &index, &totalStringCount](unsigned int len, StringMetrics metrics)
+        stringLengthMetrics.Map([&index, &totalStringCount](unsigned int len, StringMetrics metrics)
         {
             uint lengthTotal = metrics.Total();
             index.Add(len, lengthTotal);

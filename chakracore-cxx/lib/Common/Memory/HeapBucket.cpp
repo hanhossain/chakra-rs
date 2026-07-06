@@ -591,13 +591,13 @@ HeapBucketT<TBlockType>::ResetMarks(ResetMarkFlags flags)
 
     if ((flags & ResetMarkFlags_ScanImplicitRoot) != 0)
     {
-        HeapBlockList::ForEach(fullBlockList, [flags](TBlockType * heapBlock)
+        HeapBlockList::ForEach(fullBlockList, [](TBlockType * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
             Assert(!heapBlock->HasFreeObject());
         });
 
-        HeapBlockList::ForEach(heapBlockList, [flags](TBlockType * heapBlock)
+        HeapBlockList::ForEach(heapBlockList, [](TBlockType * heapBlock)
         {
             heapBlock->MarkImplicitRoots();
         });

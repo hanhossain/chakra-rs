@@ -813,7 +813,7 @@ LargeHeapBucket::FinishPartialCollect(RecyclerSweep * recyclerSweep)
     {
         // Leave it in the partialSweptLargeBlockList if we are processing it in the background
         // ConcurrentTransferSweptObjects will put it back.
-        HeapBlockList::ForEachEditing(partialSweptLargeBlockList, [this, recycler](LargeHeapBlock * heapBlock)
+        HeapBlockList::ForEachEditing(partialSweptLargeBlockList, [recycler](LargeHeapBlock * heapBlock)
         {
             heapBlock->FinishPartialCollect(recycler);
         });

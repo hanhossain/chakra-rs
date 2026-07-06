@@ -2693,7 +2693,7 @@ ThreadContext::ClearInvalidatedUniqueGuards()
     // If a propertyGuard was invalidated, make sure to remove it's entry from unique property guard table of other property records.
     PropertyGuardDictionary &guards = this->recyclableData->propertyGuards;
 
-    guards.Map([this](Js::PropertyRecord const * propertyRecord, PropertyGuardEntry* entry, const RecyclerWeakReference<const Js::PropertyRecord>* weakRef)
+    guards.Map([](Js::PropertyRecord const * propertyRecord, PropertyGuardEntry* entry, const RecyclerWeakReference<const Js::PropertyRecord>* weakRef)
     {
         entry->uniqueGuards.MapAndRemoveIf([=](RecyclerWeakReference<Js::PropertyGuard>* guardWeakRef)
         {
