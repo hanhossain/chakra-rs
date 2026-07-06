@@ -190,7 +190,7 @@ WebAssemblyMemory::GrowInternal(uint32_t deltaPages)
     else
 #endif
     {
-        JavascriptExceptionObject* caughtExceptionObject = nullptr;
+        [[maybe_unused]] JavascriptExceptionObject* caughtExceptionObject = nullptr;
         try
         {
             WebAssemblyArrayBuffer* newBuffer = ((WebAssemblyArrayBuffer*)GetBuffer())->GrowMemory(newBytes);

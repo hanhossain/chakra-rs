@@ -840,7 +840,7 @@ GlobOptBlockData::MergeValueMaps(
     {
         this->globOpt->ProcessValueKillsForLoopHeaderAfterBackEdgeMerge(toBlock, this);
 
-        BasicBlock *lastBlock = nullptr;
+        [[maybe_unused]] BasicBlock *lastBlock = nullptr;
         FOREACH_PREDECESSOR_BLOCK(pred, toBlock)
         {
             Assert(!lastBlock || pred->GetBlockNum() > lastBlock->GetBlockNum());

@@ -7147,7 +7147,7 @@ IRBuilder::EnsureConsumeBranchIsland()
 
         // Read the potentially a branch around
         Js::LayoutSize layoutSize;
-        Js::OpCode opcode = m_jnReader.ReadOp(layoutSize);
+        [[maybe_unused]] Js::OpCode opcode = m_jnReader.ReadOp(layoutSize);
         Assert(opcode == Js::OpCode::Br);
         Assert(layoutSize == Js::SmallLayout);
         const unaligned Js::OpLayoutBr * playout = m_jnReader.Br();

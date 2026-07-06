@@ -10057,8 +10057,7 @@ Lowerer::LowerBrBReturn(IR::Instr * instr, IR::JnHelperMethod helperMethod, bool
     // Branch on the result of the call
     instr->m_opcode = (instr->m_opcode == Js::OpCode::BrOnNotEmpty? Js::OpCode::BrTrue_A : Js::OpCode::BrFalse_A);
     instr->SetSrc1(opndDst);
-    IR::Instr *loweredInstr;
-    loweredInstr = this->LowerCondBranchCheckBailOut(instr->AsBranchInstr(), instrCall, isHelper);
+    [[maybe_unused]] IR::Instr *loweredInstr = this->LowerCondBranchCheckBailOut(instr->AsBranchInstr(), instrCall, isHelper);
 
 #if DBG
     if (isHelper)
