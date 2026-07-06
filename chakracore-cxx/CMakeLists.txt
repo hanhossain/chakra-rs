@@ -136,6 +136,7 @@ add_definitions(
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
     -Wall\
     -Wextra\
+    -Wold-style-cast\
 ")
 
 # ignore in general
