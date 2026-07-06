@@ -219,7 +219,7 @@ namespace Js
         if (this->stackBackTrace == NULL && this->scriptContext != NULL)
         {
             Recycler* recycler = scriptContext->GetThreadContext()->GetRecycler();
-            int32_t hr = NOERROR;
+            [[maybe_unused]] int32_t hr = NOERROR;
             BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
             {
                 this->stackBackTrace = StackBackTrace::Capture(recycler, JavascriptExceptionObject::StackToSkip, JavascriptExceptionObject::StackTraceDepth);

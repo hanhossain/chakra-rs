@@ -1475,7 +1475,6 @@ LowererMD::Legalize(IR::Instr *const instr, bool fPostRegAlloc)
     LegalForms src1Forms = legalInstrForms.src[0];
     LegalForms src2Forms = legalInstrForms.src[1];
 
-    bool hasSwitchCase = true;
     [[maybe_unused]] bool isCustomForm = (dstForms & LF_Custom) != 0;;
     switch(instr->m_opcode)
     {
@@ -1817,7 +1816,6 @@ LegalizeDefault:
             if (isMDOpCode)
             {
                 AssertMsg(!isCustomForm, "Custom legal forms should have a case in the switch statement");
-                hasSwitchCase = false;
 
                 if (EncoderMD::IsOPEQ(instr))
                 {

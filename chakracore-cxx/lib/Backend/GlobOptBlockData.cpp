@@ -836,8 +836,6 @@ GlobOptBlockData::MergeValueMaps(
 
     this->globOpt->ProcessValueKills(toBlock, this);
 
-    bool isLastLoopBackEdge = false;
-
     if (isLoopBackEdge)
     {
         this->globOpt->ProcessValueKillsForLoopHeaderAfterBackEdgeMerge(toBlock, this);
@@ -848,7 +846,6 @@ GlobOptBlockData::MergeValueMaps(
             Assert(!lastBlock || pred->GetBlockNum() > lastBlock->GetBlockNum());
             lastBlock = pred;
         }NEXT_PREDECESSOR_BLOCK;
-        isLastLoopBackEdge = (lastBlock == fromBlock);
     }
 }
 

@@ -3366,10 +3366,9 @@ Lowerer::TryGenerateFastBrEq(IR::Instr * instr)
     // if (src == null || src == undefined)
     if (isConst || (srcReg2 && this->IsNullOrUndefRegOpnd(srcReg2)))
     {
-        IR::BranchInstr *newBranch;
-        newBranch = this->GenerateFastBrConst(instr->AsBranchInstr(),
-            this->LoadLibraryValueOpnd(instr, LibraryValue::ValueNull),
-            true);
+        this->GenerateFastBrConst(instr->AsBranchInstr(),
+                                  this->LoadLibraryValueOpnd(instr, LibraryValue::ValueNull),
+                                  true);
 
         this->GenerateFastBrConst(instr->AsBranchInstr(),
             this->LoadLibraryValueOpnd(instr, LibraryValue::ValueUndefined),
@@ -8637,9 +8636,7 @@ Lowerer::LowerUnaryHelper(IR::Instr *instr, IR::JnHelperMethod helperMethod, IR:
 IR::Instr *
 Lowerer::LowerUnaryHelperMem(IR::Instr *instr, IR::JnHelperMethod helperMethod, IR::Opnd* opndBailoutArg)
 {
-    IR::Instr *instrPrev;
-
-    instrPrev = LoadScriptContext(instr);
+    LoadScriptContext(instr);
 
     return this->LowerUnaryHelper(instr, helperMethod, opndBailoutArg);
 }
@@ -8768,14 +8765,12 @@ Lowerer::LowerBinaryHelper(IR::Instr *instr, IR::JnHelperMethod helperMethod)
 IR::Instr *
 Lowerer::LowerBinaryHelperMem(IR::Instr *instr, IR::JnHelperMethod helperMethod)
 {
-    IR::Instr *instrPrev;
-
     AssertMsg(Js::OpCodeUtil::GetOpCodeLayout(instr->m_opcode) == Js::OpLayoutType::Reg3 ||
               Js::OpCodeUtil::GetOpCodeLayout(instr->m_opcode) == Js::OpLayoutType::Reg2 ||
               Js::OpCodeUtil::GetOpCodeLayout(instr->m_opcode) == Js::OpLayoutType::Reg2Int1 ||
               Js::OpCodeUtil::GetOpCodeLayout(instr->m_opcode) == Js::OpLayoutType::Reg1Unsigned1, "Expected a binary instruction...");
 
-    instrPrev = LoadScriptContext(instr);
+    LoadScriptContext(instr);
 
     return this->LowerBinaryHelper(instr, helperMethod);
 }
@@ -28022,7 +28017,6 @@ Lowerer::LowerConvNum(IR::Instr *instrLoad, bool noMathFastPath)
     bool isNotInt = false;
     IR::RegOpnd *src1 = instrLoad->GetSrc1()->AsRegOpnd();
     IR::LabelInstr *labelDone = NULL;
-    IR::Instr *instr;
 
     if (src1->IsTaggedInt())
     {
@@ -28036,7 +28030,7 @@ Lowerer::LowerConvNum(IR::Instr *instrLoad, bool noMathFastPath)
     {
         //      MOV dst, src1
 
-        instr = Lowerer::InsertMove(instrLoad->GetDst(), src1, instrLoad);
+        Lowerer::InsertMove(instrLoad->GetDst(), src1, instrLoad);
 
         if (!isInt)
         {

@@ -1336,7 +1336,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
 #ifdef DYNAMIC_PROFILE_STORAGE
-                int32_t hr = S_OK;
+                [[maybe_unused]] int32_t hr = S_OK;
                 BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
                 {
                     DynamicProfileInfo::Save(this);
