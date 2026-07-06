@@ -73,7 +73,6 @@ jobs:
           - ubuntu
         build-type:
           - debug
-          - test
         include:
           - os: macos
             # TODO (hanhossain) use macos-latest again
