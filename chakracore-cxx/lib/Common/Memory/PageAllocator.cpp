@@ -1821,7 +1821,9 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
 {
     Assert(!this->HasMultiThreadAccess());
 
+#if DBG_DUMP
     size_t deleteCount = 0;
+#endif
 
     if (CONFIG_FLAG(EnableBGFreeZero))
     {
@@ -1867,7 +1869,9 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
                         LogFreePartiallyDecommittedPageSegment(segment);
                         fromSegmentList->RemoveElement(&NoThrowNoMemProtectHeapAllocator::Instance, segment);
 
+#if DBG_DUMP
                         deleteCount += maxAllocPageCount;
+#endif
 
                         continue;
                     }
@@ -1941,7 +1945,9 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
     PAGE_ALLOC_TRACE_AND_STATS(u"Free page count = %d", this->freePageCount);
     PAGE_ALLOC_TRACE_AND_STATS(u"New free page count = %d", newFreePageCount);
 
+#if DBG_DUMP
     size_t decommitCount = 0;
+#endif
 
 
     // decommit from page that already has other decommitted page already
@@ -1953,14 +1959,18 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
             size_t pageDecommitted = i.Data().DecommitFreePages(pageToDecommit);
             LogDecommitPages(pageDecommitted);
 
+#if DBG_DUMP
             decommitCount += pageDecommitted;
+#endif
 
             if (i.Data().GetDecommitPageCount() == maxAllocPageCount)
             {
                 LogFreePartiallyDecommittedPageSegment(&i.Data());
                 i.RemoveCurrent(&NoThrowNoMemProtectHeapAllocator::Instance);
 
+#if DBG_DUMP
                 deleteCount += maxAllocPageCount;
+#endif
 
             }
             pageToDecommit -= pageDecommitted;
@@ -1985,8 +1995,10 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
 
             pageToDecommit -= maxAllocPageCount;
 
+#if DBG_DUMP
             decommitCount += maxAllocPageCount;
             deleteCount += maxAllocPageCount;
+#endif
 
         }
         else
@@ -1994,7 +2006,9 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
             size_t pageDecommitted = emptySegments.Head().DecommitFreePages(pageToDecommit);
             LogDecommitPages(pageDecommitted);
 
+#if DBG_DUMP
             decommitCount += pageDecommitted;
+#endif
 
             Assert(pageDecommitted == pageToDecommit);
             emptySegments.MoveHeadTo(&decommitSegments);
@@ -2011,7 +2025,9 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
             size_t pageDecommitted = i.Data().DecommitFreePages(pageToDecommit);
             LogDecommitPages(pageDecommitted);
 
+#if DBG_DUMP
             decommitCount += pageDecommitted;
+#endif
 
             Assert(i.Data().GetDecommitPageCount() != 0);
             Assert(i.Data().GetDecommitPageCount() <= maxAllocPageCount);

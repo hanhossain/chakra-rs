@@ -2308,7 +2308,9 @@ namespace UnifiedRegex
             bool fires = true;
             bool allCompact = true;
             bool allSimpleOneChar = true;
+#if DBG
             int numItems = 0;
+#endif
             uint totalChars = 0;
             for (AltNode* curr = this; curr != 0; curr = curr->tail)
             {
@@ -2317,7 +2319,9 @@ namespace UnifiedRegex
                     fires = false;
                     break;
                 }
+#if DBG
                 numItems++;
+#endif
                 if (!curr->head->firstSet->IsCompact())
                 {
                     allCompact = false;

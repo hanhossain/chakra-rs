@@ -130,7 +130,7 @@ namespace Js
 
         this->propertyMap->Remove(propertyKeyToPreserve);
         this->propertyMap->Remove(propertyKeyToReuse);
-        int dictionaryIndex = this->propertyMap->Add(propertyKeyToPreserve, descriptorToPreserve);
+        [[maybe_unused]] int dictionaryIndex = this->propertyMap->Add(propertyKeyToPreserve, descriptorToPreserve);
         Assert(dictionaryIndex == existingPropertyIndex);
         dictionaryIndex = this->propertyMap->Add(propertyKeyToReuse, descriptorToReuse);
         Assert(dictionaryIndex == *propertyIndex);

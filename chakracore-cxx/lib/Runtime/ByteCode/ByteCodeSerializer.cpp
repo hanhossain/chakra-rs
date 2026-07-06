@@ -1771,7 +1771,7 @@ public:
         size += PrependInt32(builder, u"Start SlotArrayDebuggerScopes", magicStartOfDebuggerScopes);
 #endif // BYTE_CODE_MAGIC_CONSTANTS
 
-        uint slotArrayCount = 0;
+        [[maybe_unused]] uint slotArrayCount = 0;
         for (uint i = 0u; i < static_cast<uint>(function->GetScopeObjectChain()->pScopeChain->Count()); ++i)
         {
             DebuggerScope* debuggerScope = function->GetScopeObjectChain()->pScopeChain->Item(i);

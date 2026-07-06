@@ -11962,7 +11962,9 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
         {
             // Defer parse for a single function should just parse that one function - there are no other statements.
             ushort flags = fFncNoFlgs;
+#if DBG
             bool isGenerator = false;
+#endif
             bool isMethod = false;
 
             // The top-level deferred function body was defined by a function expression whose parsing was deferred. We are now
@@ -11991,7 +11993,9 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
                 if (m_grfscr & fscrDeferredFncIsGenerator)
                 {
                     m_grfscr &= ~fscrDeferredFncIsGenerator;
+#if DBG
                     isGenerator = true;
+#endif
                     flags |= fFncGenerator;
                 }
 
