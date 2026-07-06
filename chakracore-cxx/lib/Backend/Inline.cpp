@@ -1210,16 +1210,13 @@ Inline::InlinePolymorphicFunction(IR::Instr *callInstr, const FunctionJITTimeInf
     }
 
     IR::RegOpnd * returnValueOpnd;
-    Js::RegSlot returnRegSlot;
     if (callInstr->GetDst())
     {
         returnValueOpnd = callInstr->UnlinkDst()->AsRegOpnd();
-        returnRegSlot = returnValueOpnd->m_sym->GetByteCodeRegSlot();
     }
     else
     {
         returnValueOpnd = nullptr;
-        returnRegSlot = Js::Constants::NoRegister;
     }
 
     Assert(inlineeCount >= 2);

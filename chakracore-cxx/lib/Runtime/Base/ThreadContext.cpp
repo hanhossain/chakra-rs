@@ -2293,7 +2293,7 @@ ThreadContext::PostSweepRedeferralCallBack()
 {
     if (this->DoTryRedeferral())
     {
-        int32_t hr = S_OK;
+        [[maybe_unused]] int32_t hr = S_OK;
         BEGIN_TRANSLATE_OOM_TO_HRESULT
         {
             this->TryRedeferral();
@@ -2662,7 +2662,6 @@ void
 ThreadContext::ClearInlineCachesWithDeadWeakRefs()
 {
     size_t allocatedSize = 0;
-    size_t preClearFreeListSize = 0;
     size_t freeListSize = 0;
     size_t polyInlineCacheSize = 0;
     uint scriptContextCount = 0;
@@ -2673,7 +2672,6 @@ ThreadContext::ClearInlineCachesWithDeadWeakRefs()
     {
         scriptContextCount++;
         allocatedSize += scriptContext->GetInlineCacheAllocator()->AllocatedSize();
-        preClearFreeListSize += scriptContext->GetInlineCacheAllocator()->FreeListSize();
 
         scriptContext->ClearInlineCachesWithDeadWeakRefs();
 

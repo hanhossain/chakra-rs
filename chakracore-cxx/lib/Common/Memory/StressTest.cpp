@@ -110,7 +110,6 @@ template<class Fn> void TestObject::Visit(Recycler *recycler, TestObject *root, 
     objectList->Add(root);
     objectTracker->Add(root, true);
 
-    int numObjects = 0;
     while (objectList->Count() > 0)
     {
         TestObject *curr = objectList->Item(0);
@@ -126,8 +125,6 @@ template<class Fn> void TestObject::Visit(Recycler *recycler, TestObject *root, 
                 objectList->Add(obj);
             }
         }
-
-        ++numObjects;
     }
 
     objectTracker->Map([&](TestObject * val, bool) {

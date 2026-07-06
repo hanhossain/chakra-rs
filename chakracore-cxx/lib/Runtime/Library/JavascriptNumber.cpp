@@ -550,7 +550,6 @@ namespace Js
             JavascriptError::ThrowTypeError(scriptContext, JSERR_This_NeedNumber, u"Number.prototype.toFixed");
         }
         int fractionDigits = 0;
-        bool isFractionDigitsInfinite = false;
         if(args.Info.Count > 1)
         {
             //use the first arg as the fraction digits, ignore the rest.
@@ -568,9 +567,6 @@ namespace Js
             else
             {
                 double fractionDigitsRaw = JavascriptConversion::ToInteger(aFractionDigits, scriptContext);
-                isFractionDigitsInfinite =
-                    fractionDigitsRaw == JavascriptNumber::NEGATIVE_INFINITY ||
-                    fractionDigitsRaw == JavascriptNumber::POSITIVE_INFINITY;
                 fractionDigits = (int)fractionDigitsRaw;
             }
         }

@@ -1584,13 +1584,10 @@ template<typename EncodingPolicy>
 tokens Scanner<EncodingPolicy>::ScanCore(bool identifyKwds)
 {
     codepoint_t ch;
-    OLECHAR firstChar;
-    OLECHAR secondChar;
     EncodedCharPtr pchT;
     size_t multiUnits = 0;
     EncodedCharPtr p = m_currentCharacter;
     EncodedCharPtr last = m_pchLast;
-    bool seenDelimitedCommentEnd = false;
 
     // store the last token
     m_tokenPrevious = *m_ptoken;
@@ -1607,7 +1604,6 @@ tokens Scanner<EncodingPolicy>::ScanCore(bool identifyKwds)
     tokens token;
     m_fHadEol = FALSE;
     CharTypes chType;
-    charcount_t commentStartLine;
 
     if (m_scanState && *p != 0)
     {
@@ -1993,8 +1989,7 @@ LIdentifier:
                     goto LEof;
                 }
                 ch = *++p;
-                firstChar = (OLECHAR)ch;
-LSkipLineComment:
+            LSkipLineComment:
                 pchT = NULL;
                 for (;;)
                 {
@@ -2058,18 +2053,8 @@ LCommentLineBreak:
 
             case '*':
                 ch = *++p;
-                firstChar = (OLECHAR)ch;
-                if ((p + 1) < last)
-                {
-                    secondChar = (OLECHAR)(*(p + 1));
-                }
-                else
-                {
-                    secondChar = '\0';
-                }
 
                 pchT = p;
-                commentStartLine = m_line;
                 bool containTypeDef;
                 if (tkNone == (token = SkipComment(&pchT, &containTypeDef)))
                 {
@@ -2077,7 +2062,6 @@ LCommentLineBreak:
                     // of deciding whether to defer AST and byte code generation.
                     m_parser->ReduceDeferredScriptLength((uint32_t)(pchT - m_pchMinTok));
                     p = pchT;
-                    seenDelimitedCommentEnd = true;
                     goto LLoop;
                 }
                 p = pchT;
@@ -2124,7 +2108,6 @@ LCommentLineBreak:
                         p = last;
                         goto LEof;
                     }
-                    firstChar = '!';
                     goto LSkipLineComment;
                 }
                 break;

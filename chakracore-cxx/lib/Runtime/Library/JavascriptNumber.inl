@@ -164,14 +164,13 @@ namespace Js
 
         if ((nOut = Js::NumberUtilities::FDblToStr(value, formatType, formatDigits, szBuffer, bufSize)) > bufSize )
         {
-            int nOut1;
             pszToBeFreed = psz = (char16_t *)malloc(nOut * sizeof(char16_t));
             if(0 == psz)
             {
                 Js::JavascriptError::ThrowOutOfMemoryError(scriptContext);
             }
 
-            nOut1 = Js::NumberUtilities::FDblToStr(value, Js::NumberUtilities::FormatFixed, formatDigits, psz, nOut);
+            [[maybe_unused]] int nOut1 = Js::NumberUtilities::FDblToStr(value, Js::NumberUtilities::FormatFixed, formatDigits, psz, nOut);
             Assert(nOut1 == nOut);
         }
 

@@ -97,7 +97,6 @@ namespace Js
         ScriptContext* scriptContext = this->GetScriptContext();
         JavascriptLibrary* lib = scriptContext->GetLibrary();
         *deepClone = SCADeepCloneType::None;
-        bool isObject = true;
 
         if (typeId == SCA_Transferable)
         {
@@ -127,7 +126,6 @@ namespace Js
                 charcount_t len;
                 const char16_t* buf = ReadString(&len);
                 *dst = Js::JavascriptString::NewWithBuffer(buf, len, scriptContext);
-                isObject = false;
             }
             break;
 

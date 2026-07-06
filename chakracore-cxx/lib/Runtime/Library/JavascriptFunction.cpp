@@ -1588,7 +1588,7 @@ using namespace Js;
         InstructionData instrData;
         uint prefixValue = 0;
         ArrayAccessDecoder::RexByteValue rexByteValue;
-        bool isFloat = false;
+        [[maybe_unused]] bool isFloat = false;
         uint  immBytes = 0;
         uint dispBytes = 0;
         bool isImmediate = false;

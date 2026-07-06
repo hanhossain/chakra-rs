@@ -4155,7 +4155,7 @@ namespace Js
         }
 
     #if !DISABLE_JIT
-        bool dontEnforceLimitsForSimpleJitAfterOrFullJitAfter = false;
+        [[maybe_unused]] bool dontEnforceLimitsForSimpleJitAfterOrFullJitAfter = false;
         if((IsEnabled(MinInterpretCountFlag) || IsEnabled(MaxInterpretCountFlag)) &&
             !(IsEnabled(SimpleJitAfterFlag) || IsEnabled(FullJitAfterFlag)))
         {

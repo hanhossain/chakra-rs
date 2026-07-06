@@ -7099,13 +7099,11 @@ Recycler::VerifyMarkArena(ArenaData * alloc)
 void
 Recycler::VerifyMarkBigBlockList(BigBlock * memoryBlocks)
 {
-    size_t scanRootBytes = 0;
     BigBlock *blockp = memoryBlocks;
     while (blockp != NULL)
     {
         void** base=(void**)blockp->GetBytes();
         size_t slotCount = blockp->currentByte / sizeof(void*);
-        scanRootBytes +=  blockp->currentByte;
         for (size_t i=0; i < slotCount; i++)
         {
             VerifyMark(base[i]);
@@ -7117,13 +7115,11 @@ Recycler::VerifyMarkBigBlockList(BigBlock * memoryBlocks)
 void
 Recycler::VerifyMarkArenaMemoryBlockList(ArenaMemoryBlock * memoryBlocks)
 {
-    size_t scanRootBytes = 0;
     ArenaMemoryBlock *blockp = memoryBlocks;
     while (blockp != NULL)
     {
         void** base=(void**)blockp->GetBytes();
         size_t slotCount = blockp->nbytes / sizeof(void*);
-        scanRootBytes += blockp->nbytes;
         for (size_t i=0; i< slotCount; i++)
         {
             VerifyMark(base[i]);

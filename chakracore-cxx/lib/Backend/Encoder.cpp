@@ -996,7 +996,7 @@ void Encoder::ValidateCRCOnFinalBuffer(_In_reads_bytes_(finalCodeSize) uint8_t *
 
     uint finalBufferCRC = initialCrcSeed;
 
-    uint8_t * oldPtr = nullptr;
+    [[maybe_unused]] uint8_t * oldPtr = nullptr;
 
     if (relocList != nullptr)
     {

@@ -11906,8 +11906,6 @@ Case0:
         {
             return;
         }
-        int32_t inspect;
-        double inspectDouble;
         while (seg)
         {
             uint32_t i = 0;
@@ -11919,12 +11917,9 @@ Case0:
                 }
                 if (TaggedInt::Is(seg->elements[i]))
                 {
-                    inspect = TaggedInt::ToInt32(seg->elements[i]);
-
                 }
                 else if (JavascriptNumber::Is_NoTaggedIntCheck(seg->elements[i]))
                 {
-                    inspectDouble = JavascriptNumber::GetValue(seg->elements[i]);
                 }
                 else
                 {

@@ -1378,7 +1378,6 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
         }
     }
 
-    bool fReleaseAlloc = false;
     Js::InterpreterStackFrame* newInstance = nullptr;
     Js::Var* allocation = nullptr;
 
@@ -1421,7 +1420,7 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
         if ((varAllocCount + stackVarAllocCount) > Js::InterpreterStackFrame::LocalsThreshold)
         {
             ArenaAllocator *tmpAlloc = nullptr;
-            fReleaseAlloc = functionScriptContext->EnsureInterpreterArena(&tmpAlloc);
+            functionScriptContext->EnsureInterpreterArena(&tmpAlloc);
             varSizeInBytes = varAllocCount * sizeof(Js::Var);
             allocation = (Js::Var*)tmpAlloc->Alloc(varSizeInBytes);
             if (stackVarAllocCount != 0)

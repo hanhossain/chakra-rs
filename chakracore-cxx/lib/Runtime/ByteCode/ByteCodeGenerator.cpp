@@ -1694,7 +1694,9 @@ void ByteCodeGenerator::PopFuncInfo(char16_t const * location)
 
 Symbol * ByteCodeGenerator::FindSymbol(Symbol **symRef, IdentPtr pid, bool forReference)
 {
+#if DBG_DUMP
     const char16_t *key = nullptr;
+#endif
 
     Symbol *sym = nullptr;
     Assert(symRef);
@@ -1707,7 +1709,9 @@ Symbol * ByteCodeGenerator::FindSymbol(Symbol **symRef, IdentPtr pid, bool forRe
         this->AssignPropertyId(pid);
         return nullptr;
     }
+#if DBG_DUMP
     key = reinterpret_cast<const char16_t*>(sym->GetPid()->Psz());
+#endif
 
     Scope *symScope = sym->GetScope();
     Assert(symScope);
@@ -2094,7 +2098,7 @@ void ByteCodeGenerator::CheckDeferParseHasMaybeEscapedNestedFunc()
 
     // Box the stack nested function if we detected new may be escaped use function.
     SList<FuncInfo *>::Iterator i(this->funcInfoStack);
-    bool succeed = i.Next();
+    [[maybe_unused]] bool succeed = i.Next();
     Assert(succeed);
     Assert(i.Data()->IsGlobalFunction()); // We always leave a glo on type when defer parsing.
     Assert(!i.Data()->IsRestored());

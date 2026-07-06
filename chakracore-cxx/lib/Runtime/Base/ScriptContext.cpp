@@ -1336,7 +1336,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
 #ifdef DYNAMIC_PROFILE_STORAGE
-                int32_t hr = S_OK;
+                [[maybe_unused]] int32_t hr = S_OK;
                 BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
                 {
                     DynamicProfileInfo::Save(this);
@@ -3838,7 +3838,6 @@ namespace Js
 
     void ScriptContext::CleanSourceListInternal(bool calledDuringMark)
     {
-        bool fCleanupDocRequired = false;
         for (int i = 0; i < sourceList->Count(); i++)
         {
             if (this->sourceList->IsItemValid(i))
@@ -3858,7 +3857,6 @@ namespace Js
                 if (strongRef == nullptr)
                 {
                     this->sourceList->RemoveAt(i);
-                    fCleanupDocRequired = true;
                 }
             }
         }

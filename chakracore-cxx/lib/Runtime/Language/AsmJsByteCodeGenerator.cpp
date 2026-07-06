@@ -1025,10 +1025,8 @@ namespace Js
             for(ArgSlot i = 0; i < argCount; i++)
             {
                 // Get i arg node
-                ParseNode* arg = argNode;
                 if( argNode->nop == knopList )
                 {
-                    arg = ParserWrapper::GetBinaryLeft( argNode );
                     argNode = ParserWrapper::GetBinaryRight( argNode );
                 }
                 EmitExpressionInfo argInfo = argArray[i];

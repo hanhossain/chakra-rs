@@ -299,7 +299,7 @@ Func::Codegen(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     Js::ScriptContextProfiler *const codeGenProfiler, const bool isBackgroundJIT)
 {
     bool rejit;
-    int rejitCounter = 0;
+    [[maybe_unused]] int rejitCounter = 0;
     do
     {
         Assert(rejitCounter < 25);

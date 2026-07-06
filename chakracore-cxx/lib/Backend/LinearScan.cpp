@@ -4434,7 +4434,6 @@ LinearScan::InsertAirlock(IR::BranchInstr *branchInstr, IR::LabelInstr *labelIns
 void
 LinearScan::SaveRegContent(IR::Instr *instr)
 {
-    bool isLabelLoopTop = false;
     Lifetime ** regContent = AnewArrayZ(this->tempAlloc, Lifetime *, RegNumCount);
 
     if (instr->IsBranchInstr())
@@ -4446,7 +4445,6 @@ LinearScan::SaveRegContent(IR::Instr *instr)
         Assert(instr->IsLabelInstr());
         Assert(instr->AsLabelInstr()->m_isLoopTop);
         instr->AsLabelInstr()->m_regContent = regContent;
-        isLabelLoopTop = true;
     }
 
     js_memcpy_s(regContent, (RegNumCount * sizeof(Lifetime *)), this->regContent, sizeof(this->regContent));

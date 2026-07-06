@@ -1771,7 +1771,7 @@ public:
         size += PrependInt32(builder, u"Start SlotArrayDebuggerScopes", magicStartOfDebuggerScopes);
 #endif // BYTE_CODE_MAGIC_CONSTANTS
 
-        uint slotArrayCount = 0;
+        [[maybe_unused]] uint slotArrayCount = 0;
         for (uint i = 0u; i < static_cast<uint>(function->GetScopeObjectChain()->pScopeChain->Count()); ++i)
         {
             DebuggerScope* debuggerScope = function->GetScopeObjectChain()->pScopeChain->Item(i);
@@ -3197,7 +3197,6 @@ public:
 
         const char16_t* string;
         uint32_t len;
-        uint32_t rawlen = 0;
 
         for (int i = 0; i < arrayLength; i++)
         {
@@ -3211,7 +3210,6 @@ public:
         for (int i = 0; i < arrayLength; i++)
         {
             current = ReadStringConstant(current, function, &string, &len);
-            rawlen += len;
 
             JavascriptString* str = JavascriptString::NewCopyBuffer(string, len, scriptContext);
             rawArray->SetItemWithAttributes(i, str, PropertyEnumerable);

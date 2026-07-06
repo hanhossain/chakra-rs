@@ -300,7 +300,9 @@ namespace Js
     {
         void *continuation = nullptr;
         JavascriptExceptionObject *exception = nullptr;
+#if ENABLE_NATIVE_CODEGEN
         void * tryHandlerAddrOfReturnAddr = nullptr;
+#endif
         Js::JavascriptExceptionOperators::HasBailedOutPtrStack hasBailedOutPtrStack(scriptContext, (bool*)((char*)localsPtr + hasBailedOutOffset));
 
         PROBE_STACK(scriptContext, Constants::MinStackJitEHBailout + argsSize);
@@ -319,7 +321,9 @@ namespace Js
             catch (const Js::JavascriptException& err)
             {
                 exception = err.GetAndClear();
+#if ENABLE_NATIVE_CODEGEN
                 tryHandlerAddrOfReturnAddr = scriptContext->GetThreadContext()->GetTryHandlerAddrOfReturnAddr();
+#endif
             }
         }
 
@@ -372,7 +376,9 @@ namespace Js
     {
         void                      *tryContinuation            = nullptr;
         JavascriptExceptionObject *exception                  = nullptr;
+#if ENABLE_NATIVE_CODEGEN
         void                      *tryHandlerAddrOfReturnAddr = nullptr;
+#endif
 
         Js::JavascriptExceptionOperators::HasBailedOutPtrStack hasBailedOutPtrStack(scriptContext, (bool*)((char*)localsPtr + hasBailedOutOffset));
 
@@ -391,7 +397,9 @@ namespace Js
             catch (const Js::JavascriptException& err)
             {
                 exception = err.GetAndClear();
+#if ENABLE_NATIVE_CODEGEN
                 tryHandlerAddrOfReturnAddr = scriptContext->GetThreadContext()->GetTryHandlerAddrOfReturnAddr();
+#endif
             }
         }
         if (exception)
@@ -438,7 +446,9 @@ namespace Js
         void                      *tryContinuation = nullptr;
         void                      *finallyContinuation = nullptr;
         JavascriptExceptionObject *exception = nullptr;
+#if ENABLE_NATIVE_CODEGEN
         void                      *tryHandlerAddrOfReturnAddr = nullptr;
+#endif
 
         PROBE_STACK(scriptContext, Constants::MinStackJitEHBailout + argsSize);
         {
@@ -456,7 +466,9 @@ namespace Js
             catch (const Js::JavascriptException& err)
             {
                 exception = err.GetAndClear();
+#if ENABLE_NATIVE_CODEGEN
                 tryHandlerAddrOfReturnAddr = scriptContext->GetThreadContext()->GetTryHandlerAddrOfReturnAddr();
+#endif
             }
         }
         if (exception)
@@ -809,7 +821,7 @@ namespace Js
 
         JavascriptExceptionContext::StackTrace *stackTrace = nullptr;
         // If we take an OOM (JavascriptException for OOM if script is active), just bail early and return what we've got
-        int32_t hr;
+        [[maybe_unused]] int32_t hr;
         BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED
         {
             stackTrace = RecyclerNew(scriptContext.GetRecycler(), JavascriptExceptionContext::StackTrace, scriptContext.GetRecycler());
@@ -1089,7 +1101,7 @@ namespace Js
         JavascriptExceptionContext::StackTrace* stackTraceTrimmed = NULL;
         if (stackTraceLimit > 0)
         {
-            int32_t hr;
+            [[maybe_unused]] int32_t hr;
             BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED
             {
                 stackTraceTrimmed = RecyclerNew(scriptContext.GetRecycler(), JavascriptExceptionContext::StackTrace, scriptContext.GetRecycler());
@@ -1173,7 +1185,7 @@ namespace Js
         stackPropertyDescriptor.SetGetter(accessor);
         stackPropertyDescriptor.SetConfigurable(true);
         stackPropertyDescriptor.SetEnumerable(false);
-        int32_t hr;
+        [[maybe_unused]] int32_t hr;
         BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED
         {
             if (JavascriptOperators::DefineOwnPropertyDescriptor(obj, PropertyIds::stack, stackPropertyDescriptor, false, &scriptContext))
@@ -1250,7 +1262,7 @@ namespace Js
         }
 
         JavascriptString* stringMessage = scriptContext->GetLibrary()->GetEmptyString();
-        int32_t hr;
+        [[maybe_unused]] int32_t hr;
         BEGIN_TRANSLATE_EXCEPTION_AND_ERROROBJECT_TO_HRESULT_NESTED
         {
             Js::JavascriptExceptionContext::StackTrace *stackTrace = NULL;

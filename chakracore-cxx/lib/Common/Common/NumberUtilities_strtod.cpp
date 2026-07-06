@@ -727,7 +727,7 @@ static double AdjustDbl(double dbl, const EncodedChar *prgch, int32_t cch, int32
     int32_t wExp2;
     uint32_t rglu[2];
     uint32_t luT;
-    BOOL f;
+    [[maybe_unused]] BOOL f;
     int32_t clu;
 
     if (!biDec.FInitFromDigits(prgch, cch, &cch))
@@ -911,7 +911,9 @@ double Js::NumberUtilities::StrToDbl(const EncodedChar *psz, const EncodedChar *
 
     // Numeric separator characters exist in the numeric constant and should
     // be ignored.
+#if DBG
     bool hasNumericSeparators = false;
+#endif
 
     // For the mantissa digits. After leaving the state machine, pchMinDig
     // points to the first digit and pchLimDig points just past the last
@@ -1015,7 +1017,9 @@ LGetLeftDig:
             if (cchDig > 0 && Js::NumberUtilities::IsDigit(*(pch - 1))
                 && Js::NumberUtilities::IsDigit(*(pch + 1)))
             {
+#if DBG
                 hasNumericSeparators = true;
+#endif
                 pch++;
                 goto LGetLeftDig;
             }
@@ -1054,7 +1058,9 @@ LGetRightDigit:
             if (cchDig > 0 && Js::NumberUtilities::IsDigit(*(pch - 1)) &&
                 Js::NumberUtilities::IsDigit(*(pch + 1)))
             {
+#if DBG
                 hasNumericSeparators = true;
+#endif
                 pch++;
                 goto LGetRightDigit;
             }

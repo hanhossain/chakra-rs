@@ -1376,7 +1376,7 @@ IR::Instr* LowererMD::SIMD128LowerReplaceLane_4(IR::Instr* instr)
 {
     SList<IR::Opnd*> *args = Simd128GetExtendedArgs(instr);
 
-    int lane = 0, byteWidth = 0;
+    int lane = 0;
 
     IR::Opnd *dst = args->Pop();
     IR::Opnd *src1 = args->Pop();
@@ -1394,10 +1394,8 @@ IR::Instr* LowererMD::SIMD128LowerReplaceLane_4(IR::Instr* instr)
     case Js::OpCode::Simd128_ReplaceLane_I4:
     case Js::OpCode::Simd128_ReplaceLane_U4:
     case Js::OpCode::Simd128_ReplaceLane_B4:
-        byteWidth = TySize[TyInt32];
         break;
     case Js::OpCode::Simd128_ReplaceLane_F4:
-        byteWidth = TySize[TyFloat32];
         break;
     default:
         Assert(UNREACHED);
@@ -2592,12 +2590,11 @@ IR::Instr* LowererMD::Simd128AsmJsLowerLoadElem(IR::Instr *instr)
     // Type-specialized.
     Assert(dst->IsSimd128() && src1->IsSimd128() && src2->GetType() == TyUint32);
 
-    IR::Instr * done;
     if (indexOpnd ||  (((uint32_t)src1->AsIndirOpnd()->GetOffset() + dataWidth) > 0x1000000 /* 16 MB */))
     {
         uint32_t bpe = Simd128GetTypedArrBytesPerElem(arrType);
         // bound check and helper
-        done = this->lowererMDArch.LowerAsmJsLdElemHelper(instr, true, bpe != dataWidth);
+        this->lowererMDArch.LowerAsmJsLdElemHelper(instr, true, bpe != dataWidth);
     }
     else
     {
@@ -2613,7 +2610,6 @@ IR::Instr* LowererMD::Simd128AsmJsLowerLoadElem(IR::Instr *instr)
             instr->Remove();
             return instrPrev;
         }
-        done = instr;
     }
 
     return Simd128ConvertToLoad(dst, src1, dataWidth, instr);
@@ -2749,8 +2745,6 @@ LowererMD::Simd128AsmJsLowerStoreElem(IR::Instr *instr)
     // Type-specialized.
     Assert(dst->IsSimd128() && src1->IsSimd128() && src2->GetType() == TyUint32);
 
-    IR::Instr * done;
-
     if (indexOpnd || ((uint32_t)dst->AsIndirOpnd()->GetOffset() + dataWidth > 0x1000000))
     {
         // CMP indexOpnd, src2(arrSize)
@@ -2763,7 +2757,7 @@ LowererMD::Simd128AsmJsLowerStoreElem(IR::Instr *instr)
         // MOV dst([arrayBuffer + indexOpnd]), src1
         // $done:
         uint32_t bpe = Simd128GetTypedArrBytesPerElem(arrType);
-        done = this->lowererMDArch.LowerAsmJsStElemHelper(instr, true, bpe != dataWidth);
+        this->lowererMDArch.LowerAsmJsStElemHelper(instr, true, bpe != dataWidth);
     }
     else
     {
@@ -2774,7 +2768,6 @@ LowererMD::Simd128AsmJsLowerStoreElem(IR::Instr *instr)
             instr->Remove();
             return instrPrev;
         }
-        done = instr;
     }
 
     return Simd128ConvertToStore(dst, src1, dataWidth, instr);

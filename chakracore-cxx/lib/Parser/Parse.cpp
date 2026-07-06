@@ -3247,7 +3247,6 @@ ParseNodePtr Parser::ParseTerm(BOOL fAllowCall,
     charcount_t ichLim = 0;
     size_t iecpMin = 0;
     size_t iecpLim = 0;
-    size_t iuMin;
     IdentToken term;
     BOOL fInNew = FALSE;
     BOOL fCanAssign = TRUE;
@@ -3383,7 +3382,6 @@ ParseNodePtr Parser::ParseTerm(BOOL fAllowCall,
     case tkLParen:
     {
         ichMin = this->GetScanner()->IchMinTok();
-        iuMin = this->GetScanner()->IecpMinTok();
 
         // If we are undeferring a function which has deferred stubs, we can check to see if the next deferred stub
         // is a lambda at the current character. If it is, we know this LParen is the beginning of a lambda nested
@@ -4658,17 +4656,14 @@ ParseNodeBin * Parser::ParseMemberGetSet(OpCode nop, LPCOLESTR* ppNameHint, size
         break;
     }
 
-    MemberType memberType;
     ushort flags = fFncMethod | fFncNoName;
     if (nop == knopGetMember)
     {
-        memberType = MemberTypeGetter;
         flags |= fFncNoArg;
     }
     else
     {
         Assert(nop == knopSetMember);
-        memberType = MemberTypeSetter;
         flags |= fFncOneArg;
     }
 
@@ -7923,7 +7918,6 @@ ParseNodeClass * Parser::ParseClassDecl(BOOL isDeclaration, LPCOLESTR pNameHint,
         }
 
         ushort fncDeclFlags = fFncNoName | fFncMethod | fFncClassMember;
-        charcount_t ichMin = this->GetScanner()->IchMinTok();
         size_t iecpMin = this->GetScanner()->IecpMinTok();
         ParseNodePtr pnodeMemberName = nullptr;
         IdentPtr pidHint = nullptr;
@@ -7939,7 +7933,6 @@ ParseNodeClass * Parser::ParseClassDecl(BOOL isDeclaration, LPCOLESTR pNameHint,
         {
             RestorePoint parsedAsync;
             this->GetScanner()->Capture(&parsedAsync);
-            ichMin = this->GetScanner()->IchMinTok();
             iecpMin = this->GetScanner()->IecpMinTok();
 
             this->GetScanner()->Scan();
@@ -11969,8 +11962,9 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
         {
             // Defer parse for a single function should just parse that one function - there are no other statements.
             ushort flags = fFncNoFlgs;
-            bool isAsync = false;
+#if DBG
             bool isGenerator = false;
+#endif
             bool isMethod = false;
 
             // The top-level deferred function body was defined by a function expression whose parsing was deferred. We are now
@@ -11999,7 +11993,9 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
                 if (m_grfscr & fscrDeferredFncIsGenerator)
                 {
                     m_grfscr &= ~fscrDeferredFncIsGenerator;
+#if DBG
                     isGenerator = true;
+#endif
                     flags |= fFncGenerator;
                 }
 
@@ -12013,7 +12009,6 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
             if (m_grfscr & fscrDeferredFncIsAsync)
             {
                 m_grfscr &= ~fscrDeferredFncIsAsync;
-                isAsync = true;
                 flags |= fFncAsync;
             }
 

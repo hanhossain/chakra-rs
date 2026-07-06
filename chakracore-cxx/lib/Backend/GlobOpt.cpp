@@ -2232,9 +2232,7 @@ GlobOpt::CollectMemOpInfo(IR::Instr *instrBegin, IR::Instr *instr, Value *src1Va
         {
             if (!isChangedByOne)
             {
-                IR::Opnd *src1, *src2;
-                src1 = instr->GetSrc1();
-                src2 = instr->GetSrc2();
+                IR::Opnd *src2 = instr->GetSrc2();
 
                 if (src2->IsRegOpnd())
                 {
@@ -12467,17 +12465,8 @@ GlobOpt::OptConstFoldBinary(
     int32_t src1IntConstantValue = -1;
     int32_t src2IntConstantValue = -1;
 
-    int32_t src1MaxIntConstantValue = -1;
-    int32_t src2MaxIntConstantValue = -1;
-    int32_t src1MinIntConstantValue = -1;
-    int32_t src2MinIntConstantValue = -1;
-
     if (instr->IsBranchInstr())
     {
-        src1MinIntConstantValue = src1IntConstantBounds.LowerBound();
-        src1MaxIntConstantValue = src1IntConstantBounds.UpperBound();
-        src2MinIntConstantValue = src2IntConstantBounds.LowerBound();
-        src2MaxIntConstantValue = src2IntConstantBounds.UpperBound();
     }
     else if (src1IntConstantBounds.IsConstant() && src2IntConstantBounds.IsConstant())
     {

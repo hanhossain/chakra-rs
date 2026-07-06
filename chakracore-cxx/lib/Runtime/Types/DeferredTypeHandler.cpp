@@ -95,15 +95,13 @@ namespace Js
             break;
         }
 
-        DynamicTypeHandler* newTypeHandler;
-
         if (isSimple)
         {
-            newTypeHandler = ConvertToSimpleDictionaryType(instance, initSlotCapacity, isProto);
+            ConvertToSimpleDictionaryType(instance, initSlotCapacity, isProto);
         }
         else
         {
-            newTypeHandler = ConvertToDictionaryType(instance, initSlotCapacity, isProto);
+            ConvertToDictionaryType(instance, initSlotCapacity, isProto);
         }
 
         AssertMsg(!instance->HasSharedType(), "Expect the instance to have a non-shared type and handler after conversion.");
