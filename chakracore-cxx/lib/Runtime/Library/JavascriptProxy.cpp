@@ -1606,21 +1606,6 @@ namespace Js
         return TRUE;
     }
 
-
-    Var JavascriptProxy::ToString(ScriptContext* scriptContext)
-    {
-        //RecyclableObject* targetObj;
-        if (IsRevoked())
-        {
-            ThreadContext* threadContext = GetScriptContext()->GetThreadContext();
-            // the proxy has been revoked; TypeError.
-            if (!threadContext->RecordImplicitException())
-                return nullptr;
-            JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"toString");
-        }
-        return JavascriptObject::ToStringHelper(target, scriptContext);
-    }
-
     // before recursively calling something on 'target' use this helper in case there is nesting of proxies.
     // the proxies could be deep nested and cause SO when processed recursively.
     const JavascriptProxy* JavascriptProxy::UnwrapNestedProxies(const JavascriptProxy* proxy)

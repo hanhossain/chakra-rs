@@ -145,7 +145,6 @@ namespace Js
         virtual void SetPrototype(RecyclableObject* newPrototype) override;
 
         BOOL SetPrototypeTrap(RecyclableObject* newPrototype, bool showThrow, ScriptContext * requestContext);
-        Var ToString(Js::ScriptContext* scriptContext);
 
         virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
         virtual RecyclableObject* ToObject(ScriptContext * requestContext) override;
