@@ -46,10 +46,15 @@ class EhFrame
     private:
         uint8_t* buffer;   // original buffer head
         uint8_t* cur;      // current output position
+#if DBG
         const size_t size;  // original size of buffer, for debug only
+#endif
 
     public:
-        Writer(uint8_t* buffer, size_t size) : buffer(buffer), cur(buffer), size(size)
+        Writer(uint8_t* buffer, size_t size) : buffer(buffer), cur(buffer)
+#if DBG
+        , size(size)
+#endif
         {}
 
         // Write a value, and advance cur position
