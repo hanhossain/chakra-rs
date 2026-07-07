@@ -886,14 +886,6 @@ CreateFileMappingW(
 #define FILE_MAP_ALL_ACCESS SECTION_ALL_ACCESS
 #define FILE_MAP_COPY       SECTION_QUERY
 
-HANDLE
-OpenFileMappingW(
-          uint32_t dwDesiredAccess,
-          BOOL bInheritHandle,
-          const char16_t* lpName);
-
-#define OpenFileMapping OpenFileMappingW
-
 void *
 MapViewOfFile(
            HANDLE hFileMappingObject,
