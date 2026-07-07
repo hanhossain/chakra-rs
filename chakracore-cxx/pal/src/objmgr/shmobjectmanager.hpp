@@ -150,17 +150,6 @@ namespace CorUnix
             uint32_t dwRightsRequired,
             IPalObject *rgpobjs[]
             );
-
-        virtual
-        PAL_ERROR
-        ReferenceObjectByForeignHandle(
-            CPalThread *pthr,
-            HANDLE hForeignHandle,
-            IPalProcess *pForeignProcess,
-            CAllowedObjectTypes *paot,
-            uint32_t dwRightsRequired,
-            IPalObject **ppobj
-            );
     };
 }
 

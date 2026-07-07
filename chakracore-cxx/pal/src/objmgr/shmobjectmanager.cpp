@@ -955,27 +955,6 @@ Parameters:
   ppobj -- on success, receives a reference to the object instance
 --*/
 
-PAL_ERROR
-CSharedMemoryObjectManager::ReferenceObjectByForeignHandle(
-    CPalThread *pthr,
-    HANDLE hForeignHandle,
-    IPalProcess *pForeignProcess,
-    CAllowedObjectTypes *paot,
-    uint32_t dwRightsRequired,
-    IPalObject **ppobj               // OUT
-    )
-{
-    //
-    // Not implemented for basic shared memory object manager --
-    // requires an IPC channel. (For the shared memory object manager
-    // PAL_LocalHandleToRemote and PAL_RemoteHandleToLocal must still
-    // be used...)
-    //
-
-    ASSERT("ReferenceObjectByForeignHandle not yet supported\n");
-    return ERROR_CALL_NOT_IMPLEMENTED;
-}
-
 /*++
 Function:
   CSharedMemoryObjectManager::ImportSharedObjectIntoProcess

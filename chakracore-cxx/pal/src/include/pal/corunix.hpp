@@ -995,18 +995,6 @@ namespace CorUnix
         //
         // This routine is for cross-process handle duplication.
         //
-
-        virtual
-        PAL_ERROR
-        ReferenceObjectByForeignHandle(
-            CPalThread *pThread,                // IN, OPTIONAL
-            HANDLE hForeignHandle,
-            IPalProcess *pForeignProcess,
-            CAllowedObjectTypes *pAllowedTypes,
-            uint32_t dwRightsRequired,
-            IPalObject **ppObject               // OUT
-            ) = 0;
-
     };
 
     extern IPalObjectManager *g_pObjectManager;
