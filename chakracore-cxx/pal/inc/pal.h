@@ -1024,7 +1024,6 @@ WideCharToMultiByte(
              int cchWideChar,
              char* lpMultiByteStr,
              int cbMultyByte,
-             const char * lpDefaultChar,
              LPBOOL lpUsedDefaultChar);
 
 #define DATE_LONGDATE             0x00000002  // use long date picture

@@ -228,7 +228,7 @@ _wtoi(
     int ret;
     char *tempStr;
 
-    len = WideCharToMultiByte(CP_ACP, 0, string, -1, 0, 0, 0, 0);
+    len = WideCharToMultiByte(CP_ACP, 0, string, -1, 0, 0, 0);
     if (!len)
     {
         ASSERT("WideCharToMultiByte failed.  Error is %d\n",
@@ -242,7 +242,7 @@ _wtoi(
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         return -1;
     }
-    len = WideCharToMultiByte(CP_ACP, 0, string, -1, tempStr, len, 0, 0);
+    len = WideCharToMultiByte(CP_ACP, 0, string, -1, tempStr, len, 0);
     if (!len)
     {
         ASSERT("WideCharToMultiByte failed.  Error is %d\n",
@@ -303,7 +303,7 @@ PAL__wcstoui64(
     unsigned long long res;
     int size;
 
-    size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL, NULL);
+    size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL);
     if (!size)
     {
         ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
@@ -319,7 +319,7 @@ PAL__wcstoui64(
         res = 0;
         goto PAL__wcstoui64Exit;
     }
-    size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, s_nptr, size, NULL, NULL);
+    size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, s_nptr, size, NULL);
     if (!size)
     {
         ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());

@@ -137,7 +137,7 @@ GetEnvironmentVariableW(
     uint32_t size = 0;
 
     inBuffSize = WideCharToMultiByte( CP_ACP, 0, lpName, -1,
-                                      inBuff, 0, NULL, NULL);
+                                      inBuff, 0, NULL);
     if ( 0 == inBuffSize )
     {
         ERROR( "lpName has to be a valid parameter\n" );
@@ -164,7 +164,7 @@ GetEnvironmentVariableW(
     }
 
     if ( 0 == WideCharToMultiByte( CP_ACP, 0, lpName, -1, inBuff, 
-                                   inBuffSize, NULL, NULL ) )
+                                   inBuffSize, NULL ) )
     {
         ASSERT( "WideCharToMultiByte failed!\n" );
         SetLastError( ERROR_INTERNAL_ERROR );

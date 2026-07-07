@@ -168,8 +168,7 @@ OutputDebugStringW(
         goto EXIT;
     }
 
-    if ((strLen = WideCharToMultiByte(CP_ACP, 0, lpOutputString, -1, NULL, 0,
-                                      NULL, NULL))
+    if ((strLen = WideCharToMultiByte(CP_ACP, 0, lpOutputString, -1, NULL, 0, NULL))
         == 0)
     {
         ASSERT("failed to get wide chars length\n");
@@ -186,7 +185,7 @@ OutputDebugStringW(
     }
 
     if(! WideCharToMultiByte(CP_ACP, 0, lpOutputString, -1,
-                             lpOutputStringA, strLen, NULL, NULL))
+                             lpOutputStringA, strLen, NULL))
     {
         ASSERT("failed to convert wide chars to multibytes\n");
         SetLastError(ERROR_INTERNAL_ERROR);

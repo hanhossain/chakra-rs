@@ -477,7 +477,6 @@ WideCharToMultiByte(
          int cchWideChar,
          char* lpMultiByteStr,
          int cbMultiByte,
-         const char * lpDefaultChar,
          LPBOOL lpUsedDefaultChar)
 {
     int32_t retval =0;

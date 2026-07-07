@@ -177,7 +177,7 @@ char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
 
     /* get required buffer length */
     length = WideCharToMultiByte(CP_ACP, 0, lpWideCharStr, cchWideChar, 
-                                 NULL, 0, NULL, NULL);
+                                 NULL, 0, NULL);
     if(0 == length)
     {
         ERROR("WCToMB error; GetLastError returns %#x", GetLastError());
@@ -195,7 +195,7 @@ char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
 
     /* convert into allocated buffer */
     length = WideCharToMultiByte(CP_ACP, 0, lpWideCharStr, cchWideChar, 
-                                 lpMultiByteStr, length, NULL, NULL);
+                                 lpMultiByteStr, length, NULL);
     if(0 == length)
     {
         ASSERT("WCToMB error; GetLastError returns %#x\n", GetLastError());
