@@ -124,7 +124,6 @@ ThreadCleanupRoutine(
 PAL_ERROR
 ThreadInitializationRoutine(
     void *pImmutableData,
-    void *pSharedData,
     void *pProcessLocalData
     );
 
@@ -1995,7 +1994,6 @@ ThreadCleanupRoutine(
 PAL_ERROR
 ThreadInitializationRoutine(
     void *pImmutableData,
-    void *pSharedData,
     void *pProcessLocalData
     )
 {

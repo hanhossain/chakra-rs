@@ -253,7 +253,6 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
     {
         palError = (*m_pot->GetObjectInitRoutine())(
             m_pvImmutableData,
-            m_pvSharedData,
             m_pvLocalData
             );
     }

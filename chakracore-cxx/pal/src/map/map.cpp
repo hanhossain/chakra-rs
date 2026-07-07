@@ -81,7 +81,6 @@ FileMappingCleanupRoutine(
 PAL_ERROR
 FileMappingInitializationRoutine(
     void *pImmutableData,
-    void *pSharedData,
     void *pProcessLocalData
     );
 
@@ -183,7 +182,6 @@ FileMappingCleanupRoutine(
 PAL_ERROR
 FileMappingInitializationRoutine(
     void *pvImmutableData,
-    void *pvSharedData,
     void *pvProcessLocalData
     )
 {
