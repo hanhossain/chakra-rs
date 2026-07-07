@@ -1834,25 +1834,25 @@ CPalThread::RunPostCreateInitializers(
         goto RunPostCreateInitializersExit;
     }
 
-    palError = synchronizationInfo.InitializePostCreate(this, m_threadId, m_dwLwpId);
+    palError = synchronizationInfo.InitializePostCreate(this);
     if (NO_ERROR != palError)
     {
         goto RunPostCreateInitializersExit;
     }
 
-    palError = suspensionInfo.InitializePostCreate(this, m_threadId, m_dwLwpId);
+    palError = suspensionInfo.InitializePostCreate(this);
     if (NO_ERROR != palError)
     {
         goto RunPostCreateInitializersExit;
     }
 
-    palError = apcInfo.InitializePostCreate(this, m_threadId, m_dwLwpId);
+    palError = apcInfo.InitializePostCreate(this);
     if (NO_ERROR != palError)
     {
         goto RunPostCreateInitializersExit;
     }
 
-    palError = crtInfo.InitializePostCreate(this, m_threadId, m_dwLwpId);
+    palError = crtInfo.InitializePostCreate(this);
     if (NO_ERROR != palError)
     {
         goto RunPostCreateInitializersExit;

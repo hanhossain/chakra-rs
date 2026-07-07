@@ -73,17 +73,10 @@ namespace CorUnix
         // InitializePostCreate is called from within the context of the
         // new thread.
         //
-        
-        virtual
-        PAL_ERROR
-        InitializePostCreate(
-            CPalThread *pThread,
-            size_t threadId,
-            uint32_t dwLwpId
-            )
+        virtual PAL_ERROR InitializePostCreate(CPalThread *)
         {
             return NO_ERROR;
-        };
+        }
     };
 }
 

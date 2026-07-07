@@ -3546,10 +3546,7 @@ namespace CorUnix
     Part of CThreadSynchronizationInfo's initialization to be carried out
     after actual thread creation
     --*/
-    PAL_ERROR CThreadSynchronizationInfo::InitializePostCreate(
-        CPalThread *pthrCurrent,
-        size_t threadId,
-        uint32_t dwLwpId)
+    PAL_ERROR CThreadSynchronizationInfo::InitializePostCreate(CPalThread *pthrCurrent)
     {
         PAL_ERROR palErr = NO_ERROR;
 
