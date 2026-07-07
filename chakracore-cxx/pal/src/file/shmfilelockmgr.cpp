@@ -140,34 +140,6 @@ CSharedMemoryFileLockController::GetTransactionLock(
     return palError;
 }
 
-PAL_ERROR
-CSharedMemoryFileLockController::ReleaseFileLock(
-    CPalThread *pThread,                // IN, OPTIONAL
-    uint32_t dwOffsetLow,
-    uint32_t dwOffsetHigh,
-    uint32_t nNumberOfBytesToUnlockLow,
-    uint32_t nNumberOfBytesToUnlockHigh
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    unsigned long unlockRgnStart;
-    unsigned long nbBytesToUnlock;
-
-    unlockRgnStart  = ((unsigned long)dwOffsetHigh) << 32  | dwOffsetLow;
-    nbBytesToUnlock = ((unsigned long)nNumberOfBytesToUnlockHigh) << 32  | 
-                             nNumberOfBytesToUnlockLow;
-
-    palError = FILEUnlockFileRegion(
-        m_shmFileLocks,
-        reinterpret_cast<void *>(this),
-        unlockRgnStart, 
-        nbBytesToUnlock,
-        USER_LOCK_RGN
-        );
-
-    return palError;
-}
-
 void
 CSharedMemoryFileLockController::ReleaseController()
 {

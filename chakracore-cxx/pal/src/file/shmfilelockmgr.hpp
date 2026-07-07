@@ -93,16 +93,6 @@ namespace CorUnix
             ) override;
 
         virtual
-        PAL_ERROR
-        ReleaseFileLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            uint32_t dwOffsetLow,
-            uint32_t dwOffsetHigh,
-            uint32_t nNumberOfBytesToUnlockLow,
-            uint32_t nNumberOfBytesToUnlockHigh
-            );
-
-        virtual
         void
         ReleaseController();
     };

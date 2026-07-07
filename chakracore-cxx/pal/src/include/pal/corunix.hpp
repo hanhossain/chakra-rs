@@ -1232,16 +1232,6 @@ namespace CorUnix
             WaitForLockAcquisition
         };
 
-        virtual
-        PAL_ERROR
-        ReleaseFileLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            uint32_t dwOffsetLow,
-            uint32_t dwOffsetHigh,
-            uint32_t nNumberOfBytesToUnlockLow,
-            uint32_t nNumberOfBytesToUnlockHigh
-            ) = 0;
-
         //
         // ReleaseController should be called from the file object's
         // cleanup routine. It must always be called, even if fShutdown is
