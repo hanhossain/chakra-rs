@@ -1271,24 +1271,6 @@ namespace CorUnix
     class IFileLockManager
     {
     public:
-
-        //
-        // GetLockControllerForFile should be called by CreateFile.
-        // It will fail if the requested access rights and share
-        // mode are not compatible with existing lock controllers
-        // for the file.
-        //
-
-        virtual
-        PAL_ERROR
-        GetLockControllerForFile(
-            CPalThread *pThread,                // IN, OPTIONAL
-            const char * szFileName,
-            uint32_t dwAccessRights,
-            uint32_t dwShareMode,
-            IFileLockController **ppLockController  // OUT
-            ) = 0;
-
         //
         // Gets the share mode for the file
         // (returns SHARE_MODE_NOT_INITIALIZED if file lock controller
