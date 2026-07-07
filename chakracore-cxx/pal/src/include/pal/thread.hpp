@@ -79,10 +79,9 @@ namespace CorUnix
     InternalGetThreadDataFromHandle(
         CPalThread *pThread,
         HANDLE hThread,
-        uint32_t dwRightsRequired,
         CPalThread **ppTargetThread,
         IPalObject **ppobjThread
-        );
+    );
 
     void
     InternalEndCurrentThread(

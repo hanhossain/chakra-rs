@@ -387,10 +387,9 @@ GetThreadContext(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hThread,
-        0, // THREAD_GET_CONTEXT
-        &pTargetThread,
+        &pTargetThread, // THREAD_GET_CONTEXT
         &pobjThread
-        );
+    );
 
     if (NO_ERROR == palError)
     {
@@ -443,10 +442,9 @@ SetThreadContext(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hThread,
-        0, // THREAD_SET_CONTEXT
-        &pTargetThread,
+        &pTargetThread, // THREAD_SET_CONTEXT
         &pobjThread
-        );
+    );
 
     if (NO_ERROR == palError)
     {

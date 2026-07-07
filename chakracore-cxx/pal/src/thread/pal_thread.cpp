@@ -305,9 +305,8 @@ GetThreadId(
         pThread,
         hThread,
         0,
-        0,
         &pobjThread
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -734,10 +733,9 @@ CorUnix::InternalGetThreadPriority(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hThread,
-        0,  // THREAD_QUERY_INFORMATION
-        &pTargetThread,
+        &pTargetThread,  // THREAD_QUERY_INFORMATION
         &pobjThread
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -815,10 +813,9 @@ CorUnix::InternalSetThreadPriority(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hTargetThread,
-        0, // THREAD_SET_INFORMATION
-        &pTargetThread,
+        &pTargetThread, // THREAD_SET_INFORMATION
         &pobjThread
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -984,10 +981,9 @@ CorUnix::GetThreadTimesInternal(
     palError = InternalGetThreadDataFromHandle(
         pthrCurrent,
         hThread,
-        0,
         &pthrTarget,
         &pobjThread
-        );
+    );
 
     if (palError != NO_ERROR)
     {
@@ -1054,10 +1050,9 @@ CorUnix::GetThreadTimesInternal(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hThread,
-        0,
         &pTargetThread,
         &pobjThread
-        );
+    );
     if (palError != NO_ERROR)
     {
         ASSERT("Unable to get thread data from handle %p"
@@ -1137,10 +1132,9 @@ CorUnix::GetThreadTimesInternal(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hThread,
-        0,
         &pTargetThread,
         &pobjThread
-        );
+    );
     if (palError != NO_ERROR)
     {
         ASSERT("Unable to get thread data from handle %p"
@@ -1640,10 +1634,9 @@ PAL_ERROR
 CorUnix::InternalGetThreadDataFromHandle(
     CPalThread *pThread,
     HANDLE hThread,
-    uint32_t dwRightsRequired,
     CPalThread **ppTargetThread,
     IPalObject **ppobjThread
-    )
+)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobj;

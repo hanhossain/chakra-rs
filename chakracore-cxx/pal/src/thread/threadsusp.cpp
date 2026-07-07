@@ -179,10 +179,9 @@ CorUnix::InternalResumeThread(
     palError = InternalGetThreadDataFromHandle(
         pthrResumer,
         hTargetThread,
-        0, // THREAD_SUSPEND_RESUME
-        &pthrTarget,
+        &pthrTarget, // THREAD_SUSPEND_RESUME
         &pobjThread
-        );
+    );
 
     if (NO_ERROR == palError)
     {
