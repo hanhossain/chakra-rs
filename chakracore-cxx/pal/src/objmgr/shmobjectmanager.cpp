@@ -846,9 +846,8 @@ CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
     HANDLE rghHandlesToReference[],
     uint32_t dwHandleCount,
     CAllowedObjectTypes *paot,
-    uint32_t dwRightsRequired,
     IPalObject *rgpobjs[]            // OUT (caller allocated)
-    )
+)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobj = NULL;

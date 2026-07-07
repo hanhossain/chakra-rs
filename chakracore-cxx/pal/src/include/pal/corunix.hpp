@@ -984,13 +984,13 @@ namespace CorUnix
         virtual
         PAL_ERROR
         ReferenceMultipleObjectsByHandleArray(
-            CPalThread *pThread,                // IN, OPTIONAL
+            CPalThread *pThread,
+            // IN, OPTIONAL
             HANDLE rghHandlesToReference[],
             uint32_t dwHandleCount,
             CAllowedObjectTypes *pAllowedTypes,
-            uint32_t dwRightsRequired,
             IPalObject *rgpObjects[]            // OUT
-            ) = 0;
+        ) = 0;
 
         //
         // This routine is for cross-process handle duplication.

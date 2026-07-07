@@ -247,7 +247,6 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
                                                                      (void **)lpHandles,
                                                                      nCount,
                                                                      &sg_aotWaitObject,
-                                                                     SYNCHRONIZE,
                                                                      ppIPalObjs);
     if (NO_ERROR != palErr)
     {
