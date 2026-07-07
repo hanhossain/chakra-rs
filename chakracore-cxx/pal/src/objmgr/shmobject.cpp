@@ -915,7 +915,7 @@ CSharedMemoryObject::GetSharedData(
         if (SharedObject == m_ObjectDomain)
         {
             pDataLock->ReleaseLock(pthr);
-            m_ssmlSharedData.AcquireLock(pthr, &pDataLock);
+            m_ssmlSharedData.AcquireLock(&pDataLock);
         }
     }
     else
@@ -925,7 +925,7 @@ CSharedMemoryObject::GetSharedData(
         // so there's no need to recheck the domain on this path
         //
         
-        m_ssmlSharedData.AcquireLock(pthr, &pDataLock);
+        m_ssmlSharedData.AcquireLock(&pDataLock);
     }
 
     *ppDataLock = pDataLock;

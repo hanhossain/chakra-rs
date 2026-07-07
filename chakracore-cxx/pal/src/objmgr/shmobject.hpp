@@ -37,9 +37,8 @@ namespace CorUnix
 
         void
         AcquireLock(
-            CPalThread *pthr,
             IDataLock **ppDataLock
-            )
+        )
         {
             SHMLock();
             *ppDataLock = static_cast<IDataLock*>(this);
