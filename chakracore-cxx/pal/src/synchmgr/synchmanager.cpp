@@ -983,7 +983,6 @@ namespace CorUnix
     Worker Thread)
     --*/
     void CPalSynchronizationManager::FreeObjectSynchData(
-        CObjectType *potObjectType,
         ObjectDomain odObjectDomain,
         void *pvSynchData)
     {

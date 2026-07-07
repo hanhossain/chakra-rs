@@ -1104,10 +1104,9 @@ namespace CorUnix
         virtual
         void
         FreeObjectSynchData(
-            CObjectType *pObjectType,
             ObjectDomain eObjectDomain,
             void *pvSynchData
-            ) = 0;
+        ) = 0;
 
         virtual
         PAL_ERROR

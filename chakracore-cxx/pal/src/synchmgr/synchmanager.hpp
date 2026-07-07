@@ -457,43 +457,43 @@ namespace CorUnix
         //
         // ISynchWaitController methods
         //
-        virtual PAL_ERROR CanThreadWaitWithoutBlocking(
+        PAL_ERROR CanThreadWaitWithoutBlocking(
             bool * pfCanWaitWithoutBlocking,
-            bool * pfAbandoned);
-        
-        virtual PAL_ERROR ReleaseWaitingThreadWithoutBlocking(void);
-        
-        virtual PAL_ERROR RegisterWaitingThread(
+            bool * pfAbandoned) override;
+
+        PAL_ERROR ReleaseWaitingThreadWithoutBlocking(void) override;
+
+        PAL_ERROR RegisterWaitingThread(
             WaitType wtWaitType,
             uint32_t dwIndex,
-            bool fAlertable);
+            bool fAlertable) override;
 
-        virtual void ReleaseController(void);
+        void ReleaseController(void) override;
 
         CProcProcessLocalData * GetProcessLocalData(void);
 
         void SetProcessLocalData(CProcProcessLocalData * pProcLocalData);
-    };  
+    };
 
-    class CSynchStateController : public CSynchControllerBase, 
+    class CSynchStateController : public CSynchControllerBase,
                                   public ISynchStateController
     {
     public:
         // NB: For perforformance purposes this class is supposed
         //     to have no constructor or destructor
-        
+
         //
         // ISynchStateController methods
         //
-        virtual PAL_ERROR GetSignalCount(int32_t *plSignalCount);
-        virtual PAL_ERROR SetSignalCount(int32_t lNewCount);
-        virtual PAL_ERROR IncrementSignalCount(int32_t lAmountToIncrement);
-        virtual PAL_ERROR DecrementSignalCount(int32_t lAmountToDecrement);
-        virtual PAL_ERROR SetOwner(CPalThread *pNewOwningThread);
-        virtual PAL_ERROR DecrementOwnershipCount(void);
-        virtual void ReleaseController(void);
-    };    
-    
+        PAL_ERROR GetSignalCount(int32_t *plSignalCount) override;
+        PAL_ERROR SetSignalCount(int32_t lNewCount) override;
+        PAL_ERROR IncrementSignalCount(int32_t lAmountToIncrement) override;
+        PAL_ERROR DecrementSignalCount(int32_t lAmountToDecrement) override;
+        PAL_ERROR SetOwner(CPalThread *pNewOwningThread) override;
+        PAL_ERROR DecrementOwnershipCount(void) override;
+        void ReleaseController(void) override;
+    };
+
     class CPalSynchronizationManager : public IPalSynchronizationManager
     {
         friend class CPalSynchMgrController;
@@ -511,17 +511,17 @@ namespace CorUnix
 
     private:
         // types
-        enum InitStatus 
-        { 
-            SynchMgrStatusIdle, 
-            SynchMgrStatusInitializing, 
-            SynchMgrStatusRunning, 
+        enum InitStatus
+        {
+            SynchMgrStatusIdle,
+            SynchMgrStatusInitializing,
+            SynchMgrStatusRunning,
             SynchMgrStatusShuttingDown,
             SynchMgrStatusReadyForProcessShutDown,
-            SynchMgrStatusError 
-        };  
-        enum SynchWorkerCmd 
-        { 
+            SynchMgrStatusError
+        };
+        enum SynchWorkerCmd
+        {
             SynchWorkerCmdNop,
             SynchWorkerCmdRemoteSignal,
             SynchWorkerCmdDelegatedObjectSignaling,
@@ -555,12 +555,12 @@ namespace CorUnix
         static const uint32_t WorkerThreadTerminationTimeout  = 2000; // ms
 
         // static members
-        static CPalSynchronizationManager * s_pObjSynchMgr;        
+        static CPalSynchronizationManager * s_pObjSynchMgr;
         static Volatile<int32_t>               s_lInitStatus;
         static CRITICAL_SECTION             s_csSynchProcessLock;
         static CRITICAL_SECTION             s_csMonitoredProcessesLock;
-        
-        // members        
+
+        // members
         uint32_t                           m_dwWorkerThreadTid;
         IPalObject *                    m_pipoThread;
         CPalThread *                    m_pthrWorker;
@@ -606,32 +606,32 @@ namespace CorUnix
         virtual ~CPalSynchronizationManager();
 
         static CPalSynchronizationManager * GetInstance(void)
-        { 
-            // No need here to check for NULL and in case create the 
-            // singleton, since its creation is enforced by the PAL 
+        {
+            // No need here to check for NULL and in case create the
+            // singleton, since its creation is enforced by the PAL
             // initialization code.
-            return s_pObjSynchMgr; 
+            return s_pObjSynchMgr;
         }
-        
+
         //
         // Inline utility methods
         //
         static void AcquireLocalSynchLock(CPalThread * pthrCurrent)
-        { 
+        {
             _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
-            
+
             if (1 == ++pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount)
             {
                 InternalEnterCriticalSection(pthrCurrent, &s_csSynchProcessLock);
             }
         }
-        static void ReleaseLocalSynchLock(CPalThread * pthrCurrent) 
+        static void ReleaseLocalSynchLock(CPalThread * pthrCurrent)
         {
             _ASSERTE(0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
             if (0 == --pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount)
             {
                 InternalLeaveCriticalSection(pthrCurrent, &s_csSynchProcessLock);
-                
+
                 pthrCurrent->synchronizationInfo.RunDeferredThreadConditionSignalings();
             }
         }
@@ -656,7 +656,7 @@ namespace CorUnix
         }
 
         static void AcquireSharedSynchLock(CPalThread * pthrCurrent)
-        {   
+        {
             _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
             _ASSERT_MSG(0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount,
                 "The local synch lock should be acquired before grabbing the "
@@ -665,8 +665,8 @@ namespace CorUnix
             {
                 SHMLock();
             }
-        } 
-        static void ReleaseSharedSynchLock(CPalThread * pthrCurrent) 
+        }
+        static void ReleaseSharedSynchLock(CPalThread * pthrCurrent)
         {
             _ASSERTE(0 < pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
             if (0 == --pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount)
@@ -674,16 +674,16 @@ namespace CorUnix
                 _ASSERT_MSG(0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount,
                     "Final release of the shared synch lock while not holding the "
                     "local one. Local synch lock should always be acquired first and "
-                    "released last.\n");                
+                    "released last.\n");
                 SHMRelease();
-            }                
+            }
         }
         static int32_t ResetSharedSynchLock(CPalThread * pthrCurrent)
-        {   
+        {
             int32_t lRet = pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount;
 
             _ASSERTE(0 <= lRet);
-            _ASSERTE(0 == lRet || 
+            _ASSERTE(0 == lRet ||
                      0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
             if (0 < lRet)
             {
@@ -695,182 +695,181 @@ namespace CorUnix
         static int32_t GetSharedSynchLockCount(CPalThread * pthrCurrent)
         {
             _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
-            _ASSERTE(0 == pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount || 
+            _ASSERTE(0 == pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount ||
                      0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
             return pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount;
         }
 
         CSynchWaitController * CacheGetWaitCtrlr(CPalThread * pthrCurrent)
-        { 
-            return m_cacheWaitCtrlrs.Get(pthrCurrent); 
+        {
+            return m_cacheWaitCtrlrs.Get(pthrCurrent);
         }
         int CacheGetWaitCtrlr(
-            CPalThread * pthrCurrent, 
-            int n, 
+            CPalThread * pthrCurrent,
+            int n,
             CSynchWaitController * prgCtrlrs[])
-        { 
-            return m_cacheWaitCtrlrs.Get(pthrCurrent, n, prgCtrlrs); 
+        {
+            return m_cacheWaitCtrlrs.Get(pthrCurrent, n, prgCtrlrs);
         }
         void CacheAddWaitCtrlr(
-            CPalThread * pthrCurrent, 
-            CSynchWaitController * pCtrlr) 
-        { 
-            m_cacheWaitCtrlrs.Add(pthrCurrent, pCtrlr); 
-        }            
+            CPalThread * pthrCurrent,
+            CSynchWaitController * pCtrlr)
+        {
+            m_cacheWaitCtrlrs.Add(pthrCurrent, pCtrlr);
+        }
         CSynchStateController * CacheGetStateCtrlr(CPalThread * pthrCurrent)
-        { 
-            return m_cacheStateCtrlrs.Get(pthrCurrent); 
+        {
+            return m_cacheStateCtrlrs.Get(pthrCurrent);
         }
         int CacheGetStateCtrlr(
             CPalThread * pthrCurrent,
-            int n, 
-            CSynchStateController * prgCtrlrs[]) 
-        { 
-            return m_cacheStateCtrlrs.Get(pthrCurrent, n, prgCtrlrs); 
+            int n,
+            CSynchStateController * prgCtrlrs[])
+        {
+            return m_cacheStateCtrlrs.Get(pthrCurrent, n, prgCtrlrs);
         }
         void CacheAddStateCtrlr(
-            CPalThread * pthrCurrent, 
-            CSynchStateController * pCtrlr) 
-        { 
-            m_cacheStateCtrlrs.Add(pthrCurrent, pCtrlr); 
+            CPalThread * pthrCurrent,
+            CSynchStateController * pCtrlr)
+        {
+            m_cacheStateCtrlrs.Add(pthrCurrent, pCtrlr);
         }
 
-        CSynchData * CacheGetLocalSynchData(CPalThread * pthrCurrent)            
-        { 
-            return m_cacheSynchData.Get(pthrCurrent); 
+        CSynchData * CacheGetLocalSynchData(CPalThread * pthrCurrent)
+        {
+            return m_cacheSynchData.Get(pthrCurrent);
         }
         void CacheAddLocalSynchData(
             CPalThread * pthrCurrent,
-            CSynchData * psdSynchData) 
-        { 
-            m_cacheSynchData.Add(pthrCurrent, psdSynchData); 
+            CSynchData * psdSynchData)
+        {
+            m_cacheSynchData.Add(pthrCurrent, psdSynchData);
         }
-        SharedID CacheGetSharedSynchData(CPalThread * pthrCurrent) 
-        { 
-            return m_cacheSHRSynchData.Get(pthrCurrent); 
+        SharedID CacheGetSharedSynchData(CPalThread * pthrCurrent)
+        {
+            return m_cacheSHRSynchData.Get(pthrCurrent);
         }
         void CacheAddSharedSynchData(
             CPalThread * pthrCurrent,
-            SharedID shridSData) 
-        { 
-            m_cacheSHRSynchData.Add(pthrCurrent, shridSData); 
+            SharedID shridSData)
+        {
+            m_cacheSHRSynchData.Add(pthrCurrent, shridSData);
         }
 
         WaitingThreadsListNode * CacheGetLocalWTListNode(
             CPalThread * pthrCurrent)
-        { 
-            return m_cacheWTListNodes.Get(pthrCurrent); 
+        {
+            return m_cacheWTListNodes.Get(pthrCurrent);
         }
         void CacheAddLocalWTListNode(
             CPalThread * pthrCurrent,
             WaitingThreadsListNode * pWTLNode)
-        { 
-            m_cacheWTListNodes.Add(pthrCurrent, pWTLNode); 
+        {
+            m_cacheWTListNodes.Add(pthrCurrent, pWTLNode);
         }
-        SharedID CacheGetSharedWTListNode(CPalThread * pthrCurrent) 
-        { 
-            return m_cacheSHRWTListNodes.Get(pthrCurrent); 
+        SharedID CacheGetSharedWTListNode(CPalThread * pthrCurrent)
+        {
+            return m_cacheSHRWTListNodes.Get(pthrCurrent);
         }
         void CacheAddSharedWTListNode(
             CPalThread * pthrCurrent,
-            SharedID shridWTLNode) 
-        { 
-            m_cacheSHRWTListNodes.Add(pthrCurrent, shridWTLNode); 
+            SharedID shridWTLNode)
+        {
+            m_cacheSHRWTListNodes.Add(pthrCurrent, shridWTLNode);
         }
 
-        ThreadApcInfoNode * CacheGetApcInfoNodes(CPalThread * pthrCurrent) 
-        { 
-            return m_cacheThreadApcInfoNodes.Get(pthrCurrent); 
+        ThreadApcInfoNode * CacheGetApcInfoNodes(CPalThread * pthrCurrent)
+        {
+            return m_cacheThreadApcInfoNodes.Get(pthrCurrent);
         }
         void CacheAddApcInfoNodes(
             CPalThread * pthrCurrent,
-            ThreadApcInfoNode * pNode) 
-        { 
-            m_cacheThreadApcInfoNodes.Add(pthrCurrent, pNode); 
+            ThreadApcInfoNode * pNode)
+        {
+            m_cacheThreadApcInfoNodes.Add(pthrCurrent, pNode);
         }
 
         OwnedObjectsListNode * CacheGetOwnedObjsListNode(
             CPalThread * pthrCurrent)
-        { 
-            return m_cacheOwnedObjectsListNodes.Get(pthrCurrent); 
+        {
+            return m_cacheOwnedObjectsListNodes.Get(pthrCurrent);
         }
         void CacheAddOwnedObjsListNode(
             CPalThread * pthrCurrent,
-            OwnedObjectsListNode * pNode) 
-        { 
-            m_cacheOwnedObjectsListNodes.Add(pthrCurrent, pNode); 
+            OwnedObjectsListNode * pNode)
+        {
+            m_cacheOwnedObjectsListNodes.Add(pthrCurrent, pNode);
         }
 
 
         //
         // IPalSynchronizationManager methods
         //
-        virtual PAL_ERROR BlockThread(
+        PAL_ERROR BlockThread(
             CPalThread *pthrCurrent,
             uint32_t dwTimeout,
             bool fAlertable,
             bool fIsSleep,
             ThreadWakeupReason *ptwrWakeupReason,
-            uint32_t *pdwSignaledObject);
+            uint32_t *pdwSignaledObject) override;
 
-        virtual PAL_ERROR AbandonObjectsOwnedByThread(
+        PAL_ERROR AbandonObjectsOwnedByThread(
             CPalThread *pthrCurrent,
-            CPalThread *pthrTarget);
+            CPalThread *pthrTarget) override;
 
-        virtual PAL_ERROR GetSynchWaitControllersForObjects(
-            CPalThread *pthrCurrent,
-            IPalObject *rgObjects[],
-            uint32_t dwObjectCount,
-            ISynchWaitController *rgControllers[]);
-
-        virtual PAL_ERROR GetSynchStateControllersForObjects(
+        PAL_ERROR GetSynchWaitControllersForObjects(
             CPalThread *pthrCurrent,
             IPalObject *rgObjects[],
             uint32_t dwObjectCount,
-            ISynchStateController *rgControllers[]);
+            ISynchWaitController *rgControllers[]) override;
 
-        virtual PAL_ERROR AllocateObjectSynchData(
+        PAL_ERROR GetSynchStateControllersForObjects(
+            CPalThread *pthrCurrent,
+            IPalObject *rgObjects[],
+            uint32_t dwObjectCount,
+            ISynchStateController *rgControllers[]) override;
+
+        PAL_ERROR AllocateObjectSynchData(
             CObjectType *potObjectType,
             ObjectDomain odObjectDomain,
-            void **ppvSynchData);
+            void **ppvSynchData) override;
 
-        virtual void FreeObjectSynchData(
-            CObjectType *potObjectType,
+        void FreeObjectSynchData(
             ObjectDomain odObjectDomain,
-            void *pvSynchData);
+            void *pvSynchData) override;
 
-        virtual PAL_ERROR PromoteObjectSynchData(
+        PAL_ERROR PromoteObjectSynchData(
             CPalThread *pthrCurrent,
             void *pvLocalSynchData,
-            void **ppvSharedSynchData);
+            void **ppvSharedSynchData) override;
 
-        virtual PAL_ERROR CreateSynchStateController(
+        PAL_ERROR CreateSynchStateController(
             CPalThread *pthrCurrent,
             CObjectType *potObjectType,
             void *pvSynchData,
             ObjectDomain odObjectDomain,
-            ISynchStateController **ppStateController);
+            ISynchStateController **ppStateController) override;
 
-        virtual PAL_ERROR CreateSynchWaitController(
+        PAL_ERROR CreateSynchWaitController(
             CPalThread *pthrCurrent,
             CObjectType *potObjectType,
             void *pvSynchData,
             ObjectDomain odObjectDomain,
-            ISynchWaitController **ppWaitController);
+            ISynchWaitController **ppWaitController) override;
 
-        virtual PAL_ERROR QueueUserAPC(
+        PAL_ERROR QueueUserAPC(
             CPalThread * pthrCurrent,
             CPalThread *pthrTarget,
             PAPCFUNC pfnAPC,
-            size_t uptrData);
+            size_t uptrData) override;
 
-        virtual bool AreAPCsPending(CPalThread * pthrTarget);
+        bool AreAPCsPending(CPalThread * pthrTarget) override;
 
-        virtual PAL_ERROR DispatchPendingAPCs(CPalThread * pthrCurrent);
+        PAL_ERROR DispatchPendingAPCs(CPalThread * pthrCurrent) override;
 
-        virtual void AcquireProcessLock(CPalThread *pthrCurrent);
+        void AcquireProcessLock(CPalThread *pthrCurrent) override;
 
-        virtual void ReleaseProcessLock(CPalThread *pthrCurrent);
+        void ReleaseProcessLock(CPalThread *pthrCurrent) override;
 
         //
         // Static helper methods

@@ -1226,10 +1226,9 @@ CSharedMemoryWaitableObject::~CSharedMemoryWaitableObject()
     if (NULL != m_pvSynchData && m_fDeleteSharedData)
     {
         g_pSynchronizationManager->FreeObjectSynchData(
-            m_pot,
             m_ObjectDomain,
             m_pvSynchData
-            );
+        );
     }
 
     LOGEXIT("CSharedMemoryWaitableObject::~CSharedMemoryWaitableObject\n");
