@@ -376,7 +376,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForIn
         return false;
     }
 
-    if (!FlushInstructionCache(this->processHandle, pBuffer, bufferSize))
+    if (!FlushInstructionCache(pBuffer, bufferSize))
     {
         return false;
     }
@@ -483,7 +483,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
         }
     }
 
-    if (!FlushInstructionCache(this->processHandle, bufferToFlush, sizeToFlush))
+    if (!FlushInstructionCache(bufferToFlush, sizeToFlush))
     {
         return false;
     }

@@ -110,11 +110,7 @@ caches are coherent in hardware. For non-X86 architectures, this call
 usually maps to a kernel API to flush the D-caches on all processors.
 
 --*/
-BOOL
-FlushInstructionCache(
-         HANDLE hProcess,
-         const void * lpBaseAddress,
-         size_t dwSize)
+BOOL FlushInstructionCache(const void * lpBaseAddress, size_t dwSize)
 {
     BOOL Ret;
 

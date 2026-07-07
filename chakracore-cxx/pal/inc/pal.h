@@ -976,11 +976,7 @@ VirtualQueryEx(
           PMEMORY_BASIC_INFORMATION lpBuffer,
           size_t dwLength);
 
-BOOL
-FlushInstructionCache(
-               HANDLE hProcess,
-               const void * lpBaseAddress,
-               size_t dwSize);
+BOOL FlushInstructionCache(const void * lpBaseAddress, size_t dwSize);
 
 #define MAX_LEADBYTES         12
 #define MAX_DEFAULTCHAR       2
