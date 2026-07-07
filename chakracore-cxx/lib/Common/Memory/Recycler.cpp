@@ -4343,10 +4343,9 @@ Recycler::EnableConcurrent(JsUtil::ThreadService *threadService, bool startAllTh
 
         if (startConcurrentThread)
         {
-            auto concurrentThread = PlatformAgnostic::Thread::Create(Recycler::ConcurrentThreadStackSize, 
-                &Recycler::StaticThreadProc, this, 
-                PlatformAgnostic::Thread::ThreadInitStackSizeParamIsAReservation,
-                u"Chakra Background Recycler");
+            auto concurrentThread = PlatformAgnostic::Thread::Create(&Recycler::StaticThreadProc, 
+                                                                     this, PlatformAgnostic::Thread::ThreadInitStackSizeParamIsAReservation, 
+                                                                     u"Chakra Background Recycler");
 
             if (concurrentThread != PlatformAgnostic::Thread::InvalidHandle)
             {
@@ -5601,9 +5600,9 @@ RecyclerParallelThread::EnableConcurrent(bool waitForThread)
         return false;
     }
 
-    auto threadHandle = PlatformAgnostic::Thread::Create(Recycler::ConcurrentThreadStackSize, 
-      &RecyclerParallelThread::StaticThreadProc, this,
-      PlatformAgnostic::Thread::ThreadInitStackSizeParamIsAReservation, u"Chakra Recycler Parallel Thread");
+    auto threadHandle = PlatformAgnostic::Thread::Create(&RecyclerParallelThread::StaticThreadProc, 
+                                                         this, PlatformAgnostic::Thread::ThreadInitStackSizeParamIsAReservation,
+                                                         u"Chakra Recycler Parallel Thread");
 
     if (threadHandle != PlatformAgnostic::Thread::InvalidHandle)
     {

@@ -20,10 +20,10 @@ class Thread
 
     static const uintptr_t InvalidHandle = (uintptr_t)-1;
 
-    static ThreadHandle Create(unsigned int stack_size,
-                               unsigned int ( *start_address )( void * ),
-                               void* arg_list,
-                               ThreadInitFlag init_flag,
-                               const char16_t* description);
+    static ThreadHandle Create(
+        unsigned int ( *start_address )( void * ),
+        void* arg_list,
+        ThreadInitFlag init_flag,
+        const char16_t* description);
 };
 } // namespace PlatformAgnostic
