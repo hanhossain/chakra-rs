@@ -451,9 +451,8 @@ SetThreadContext(
         if (!pTargetThread->IsDummy())
         {
             ret = CONTEXT_SetThreadContext(
-                pTargetThread->GetPThreadSelf(),
                 lpContext
-                );
+            );
         }
         else
         {

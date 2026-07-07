@@ -228,7 +228,7 @@ Parameters :
 Return value :
     TRUE on success, FALSE on failure
 --*/
-BOOL CONTEXT_SetThreadContext(pthread_t self, const CONTEXT *lpContext);
+BOOL CONTEXT_SetThreadContext(const CONTEXT *lpContext);
 
 /*++
 Function :

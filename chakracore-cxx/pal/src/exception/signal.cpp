@@ -420,7 +420,7 @@ Parameters :
 
 (no return value)
 --*/
-static void inject_activation_handler(int code, siginfo_t *siginfo, void *context)
+static void inject_activation_handler([[maybe_unused]] int code, siginfo_t *siginfo, void *context)
 {
     // Only accept activations from the current process
     if (siginfo->si_pid == getpid())
