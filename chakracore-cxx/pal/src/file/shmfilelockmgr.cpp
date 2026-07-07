@@ -141,46 +141,6 @@ CSharedMemoryFileLockController::GetTransactionLock(
 }
 
 PAL_ERROR
-CSharedMemoryFileLockController::CreateFileLock(
-    CPalThread *pThread,                // IN, OPTIONAL
-    uint32_t dwOffsetLow,
-    uint32_t dwOffsetHigh,
-    uint32_t nNumberOfBytesToLockLow,
-    uint32_t nNumberOfBytesToLockHigh,
-    FileLockExclusivity eFileLockExclusivity,
-    FileLockWaitMode eFileLockWaitMode
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    unsigned long lockRgnStart;
-    unsigned long nbBytesToLock;
-
-    if (ExclusiveFileLock != eFileLockExclusivity
-        || FailImmediately != eFileLockWaitMode)
-    {
-        ASSERT("LockFileEx functionality not yet supported");
-        palError = ERROR_NOT_SUPPORTED;
-        goto CreateFileLockExit;
-    }
-
-    lockRgnStart  = ((unsigned long)dwOffsetHigh) << 32  | dwOffsetLow;
-    nbBytesToLock = ((unsigned long)nNumberOfBytesToLockHigh) << 32  | 
-                             nNumberOfBytesToLockLow;
-
-    palError = FILELockFileRegion(
-        m_shmFileLocks,
-        reinterpret_cast<void *>(this),
-        lockRgnStart, 
-        nbBytesToLock,
-        USER_LOCK_RGN
-        );
-
-CreateFileLockExit:
-
-    return palError;
-}
-
-PAL_ERROR
 CSharedMemoryFileLockController::ReleaseFileLock(
     CPalThread *pThread,                // IN, OPTIONAL
     uint32_t dwOffsetLow,

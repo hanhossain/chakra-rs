@@ -1234,18 +1234,6 @@ namespace CorUnix
 
         virtual
         PAL_ERROR
-        CreateFileLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            uint32_t dwOffsetLow,
-            uint32_t dwOffsetHigh,
-            uint32_t nNumberOfBytesToLockLow,
-            uint32_t nNumberOfBytesToLockHigh,
-            FileLockExclusivity eFileLockExclusivity,
-            FileLockWaitMode eFileLockWaitMode
-            ) = 0;
-
-        virtual
-        PAL_ERROR
         ReleaseFileLock(
             CPalThread *pThread,                // IN, OPTIONAL
             uint32_t dwOffsetLow,
