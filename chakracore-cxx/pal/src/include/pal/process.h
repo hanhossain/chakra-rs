@@ -113,7 +113,7 @@ Function:
 
 (no return value)
 --*/
-void PROCCleanupProcess(BOOL bTerminateUnconditionally);
+void PROCCleanupProcess();
 
 #if defined(__APPLE__)
 /*++

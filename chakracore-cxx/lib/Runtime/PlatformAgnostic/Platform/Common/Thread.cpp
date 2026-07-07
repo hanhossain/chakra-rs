@@ -34,6 +34,6 @@ namespace PlatformAgnostic
             Assert(false);
         }
 
-        return reinterpret_cast<ThreadHandle>(CreateThread(0, stack_size, start_address, arg_list, flag, 0));
+        return reinterpret_cast<ThreadHandle>(CreateThread(0, start_address, arg_list, flag, 0));
     }
 } // namespace PlatformAgnostic

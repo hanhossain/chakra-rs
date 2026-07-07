@@ -399,7 +399,7 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
                 "status will only see error 0x%x instead of 0x%x.\n", uExitCode & 0xff, uExitCode);
         }
 
-        TerminateCurrentProcessNoExit(bTerminateUnconditionally);
+        TerminateCurrentProcessNoExit();
 
         LOGEXIT("PROCEndProcess will not return\n");
 
@@ -437,7 +437,7 @@ Function:
 
 (no return value)
 --*/
-void PROCCleanupProcess(BOOL bTerminateUnconditionally)
+void PROCCleanupProcess()
 {
     /* Declare the beginning of shutdown */
     PALSetShutdownIntent();
@@ -882,7 +882,7 @@ Note:
 
 --*/
 void
-CorUnix::TerminateCurrentProcessNoExit(BOOL bTerminateUnconditionally)
+CorUnix::TerminateCurrentProcessNoExit()
 {
     BOOL locked;
     uint32_t old_terminator;
@@ -919,7 +919,7 @@ CorUnix::TerminateCurrentProcessNoExit(BOOL bTerminateUnconditionally)
     locked = PALInitLock();
     if(locked && PALIsInitialized())
     {
-         PROCCleanupProcess(bTerminateUnconditionally);
+         PROCCleanupProcess();
      }
 }
 

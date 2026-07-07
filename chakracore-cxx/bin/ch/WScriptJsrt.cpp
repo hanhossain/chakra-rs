@@ -775,7 +775,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
         // child initial script completion
         ResetEvent(threadData->hevntInitialScriptCompleted);
 
-        child->hThread = ::CreateThread(NULL, NULL, [](void* param) -> uint32_t
+        child->hThread = ::CreateThread(NULL, [](void* param) -> uint32_t
         {
             return ((RuntimeThreadData*)param)->ThreadProc();
         }, (void*)child, NULL, NULL);

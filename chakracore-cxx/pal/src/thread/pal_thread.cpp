@@ -371,12 +371,11 @@ See MSDN doc.
 --*/
 HANDLE
 CreateThread(
-     LPSECURITY_ATTRIBUTES lpThreadAttributes,
-     uint32_t dwStackSize,
-     LPTHREAD_START_ROUTINE lpStartAddress,
-     void * lpParameter,
-     uint32_t dwCreationFlags,
-     uint32_t * lpThreadId)
+    LPSECURITY_ATTRIBUTES lpThreadAttributes,
+    LPTHREAD_START_ROUTINE lpStartAddress,
+    void * lpParameter,
+    uint32_t dwCreationFlags,
+    uint32_t * lpThreadId)
 {
     PAL_ERROR palError;
     CPalThread *pThread;

@@ -70,7 +70,7 @@ namespace CorUnix
     Abstract:
         Terminate Current Process, but leave the caller alive
     --*/
-    void TerminateCurrentProcessNoExit(BOOL bTerminateUnconditionally);
+    void TerminateCurrentProcessNoExit();
 
 }
 
