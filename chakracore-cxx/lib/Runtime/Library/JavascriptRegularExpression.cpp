@@ -1029,7 +1029,7 @@ using namespace Js;
     }
 
 #define DEFINE_FLAG_GETTER(methodName, propertyName, patternMethodName) \
-    Var JavascriptRegExp::##methodName##(RecyclableObject* function, CallInfo callInfo, ...) \
+    Var JavascriptRegExp::methodName(RecyclableObject* function, CallInfo callInfo, ...) \
     { \
         PROBE_STACK(function->GetScriptContext(), Js::Constants::MinStackDefault); \
         ARGUMENTS(args, callInfo); \
@@ -1042,7 +1042,7 @@ using namespace Js;
         }\
         \
         JavascriptRegExp* pRegEx = GetJavascriptRegExp(args, u"RegExp.prototype." _u(#propertyName), scriptContext); \
-        return pRegEx->GetLibrary()->CreateBoolean(pRegEx->GetPattern()->##patternMethodName##()); \
+        return pRegEx->GetLibrary()->CreateBoolean(pRegEx->GetPattern()->patternMethodName()); \
     }
 
     DEFINE_FLAG_GETTER(EntryGetterGlobal, global, IsGlobal)

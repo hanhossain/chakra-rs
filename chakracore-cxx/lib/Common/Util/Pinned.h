@@ -18,7 +18,7 @@ void LeavePinnedScope();
 // These MACROs enforce scoping so LEAVE must be called for each instance of ENTER
 #define ENTER_PINNED_SCOPE(T, var) \
     T * var; \
-    EnterPinnedScope((volatile void**)& ## var); \
+    EnterPinnedScope((volatile void**)&var); \
     {
 
 #define LEAVE_PINNED_SCOPE() \

@@ -5,7 +5,7 @@
 
 #include "RuntimeLanguagePch.h"
 
-#define BASE_VALUE_TYPE(t, b) const ValueType ValueType::##t(b);
+#define BASE_VALUE_TYPE(t, b) const ValueType ValueType::t(b);
 #include "ValueTypes.h"
 #undef BASE_VALUE_TYPE
 

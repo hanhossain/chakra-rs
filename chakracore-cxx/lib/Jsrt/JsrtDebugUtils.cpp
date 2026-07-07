@@ -498,7 +498,7 @@ const char16_t * JsrtDebugUtils::GetDebugPropertyName(JsrtDebugPropertyId proper
 {
     switch (propertyId)
     {
-#define DEBUGOBJECTPROPERTY(name) case JsrtDebugPropertyId::##name: return _u(###name);
+#define DEBUGOBJECTPROPERTY(name) case JsrtDebugPropertyId::name: return _u(###name);
 #include "JsrtDebugPropertiesEnum.h"
     }
 

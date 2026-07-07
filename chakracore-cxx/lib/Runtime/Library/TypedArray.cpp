@@ -2599,7 +2599,7 @@ namespace Js
 
 #define DIRECT_SET_NO_DETACH_CHECK(TypedArrayName, convertFn) \
     template<> \
-    inline BOOL TypedArrayName##::DirectSetItemNoDetachCheck(uint32_t index, Var value) \
+    inline BOOL TypedArrayName::DirectSetItemNoDetachCheck(uint32_t index, Var value) \
     { \
         return BaseTypedDirectSetItemNoDetachCheck(index, value, convertFn); \
     }
@@ -2628,14 +2628,14 @@ namespace Js
 
 #define DIRECT_GET_NO_DETACH_CHECK(TypedArrayName) \
     template<> \
-    inline Var TypedArrayName##::DirectGetItemNoDetachCheck(uint32_t index) \
+    inline Var TypedArrayName::DirectGetItemNoDetachCheck(uint32_t index) \
     { \
         return BaseTypedDirectGetItemNoDetachCheck(index); \
     }
 
 #define DIRECT_GET_VAR_CHECK_NO_DETACH_CHECK(TypedArrayName) \
     template<> \
-    inline Var TypedArrayName##::DirectGetItemNoDetachCheck(uint32_t index) \
+    inline Var TypedArrayName::DirectGetItemNoDetachCheck(uint32_t index) \
     { \
         return DirectGetItemVarCheckNoDetachCheck(index); \
     }
@@ -2670,7 +2670,7 @@ namespace Js
 
 #define TypedArrayStore(TypedArrayName, fnName, convertFn) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(uint32_t accessIndex, Var value) \
+    Var TypedArrayName::Typed##fnName(uint32_t accessIndex, Var value) \
     { \
         TypedArrayBeginStub(TypedArrayName); \
         double retVal = JavascriptConversion::ToInteger(value, scriptContext); \
@@ -2680,7 +2680,7 @@ namespace Js
 
 #define TypedArrayOp1(TypedArrayName, fnName, convertFn) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(uint32_t accessIndex) \
+    Var TypedArrayName::Typed##fnName(uint32_t accessIndex) \
     { \
         TypedArrayBeginStub(TypedArrayName); \
         type result = AtomicsOperations::fnName(buffer); \
@@ -2689,7 +2689,7 @@ namespace Js
 
 #define TypedArrayOp2(TypedArrayName, fnName, convertFn) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(uint32_t accessIndex, Var value) \
+    Var TypedArrayName::Typed##fnName(uint32_t accessIndex, Var value) \
     { \
         TypedArrayBeginStub(TypedArrayName); \
         type result = AtomicsOperations::fnName(buffer, convertFn(value, scriptContext)); \
@@ -2698,7 +2698,7 @@ namespace Js
 
 #define TypedArrayOp3(TypedArrayName, fnName, convertFn) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(uint32_t accessIndex, Var first, Var value) \
+    Var TypedArrayName::Typed##fnName(uint32_t accessIndex, Var first, Var value) \
     { \
         TypedArrayBeginStub(TypedArrayName); \
         type result = AtomicsOperations::fnName(buffer, convertFn(first, scriptContext), convertFn(value, scriptContext)); \
@@ -2707,21 +2707,21 @@ namespace Js
 
 #define GenerateNotSupportedStub1(TypedArrayName, fnName) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(uint32_t accessIndex) \
+    Var TypedArrayName::Typed##fnName(uint32_t accessIndex) \
     { \
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray); \
     }
 
 #define GenerateNotSupportedStub2(TypedArrayName, fnName) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(uint32_t accessIndex, Var value) \
+    Var TypedArrayName::Typed##fnName(uint32_t accessIndex, Var value) \
     { \
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray); \
     }
 
 #define GenerateNotSupportedStub3(TypedArrayName, fnName) \
     template<>\
-    Var TypedArrayName##::Typed##fnName(uint32_t accessIndex, Var first, Var value) \
+    Var TypedArrayName::Typed##fnName(uint32_t accessIndex, Var first, Var value) \
     { \
         JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_InvalidOperationOnTypedArray); \
     }

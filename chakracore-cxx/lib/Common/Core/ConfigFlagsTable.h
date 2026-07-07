@@ -2255,8 +2255,8 @@ namespace Js
 //just use the hard coded default value (if not). All the ...IsEnabled(...) default to false.
 #define CONFIG_ISENABLED(flag)      (Js::Configuration::Global.flags.IsEnabled(flag))
 #define CUSTOM_CONFIG_ISENABLED(flags, flag)      (flags.IsEnabled(flag))
-#define CONFIG_FLAG(flag)           (Js::Configuration::Global.flags.##flag)
-#define CUSTOM_CONFIG_FLAG(flags, flag) (flags.##flag)
+#define CONFIG_FLAG(flag)           (Js::Configuration::Global.flags.flag)
+#define CUSTOM_CONFIG_FLAG(flags, flag) (flags.flag)
 #define CONFIG_FLAG_RELEASE(flag)   CONFIG_FLAG(flag)
 #define CONFIG_FLAG_CONTAINS(flag, func)  (Js::Configuration::Global.flags.##flag.Contains((func)->GetLocalFunctionId()))
 
@@ -2445,7 +2445,7 @@ namespace Js
     }
 
 #ifdef ENABLE_REGEX_CONFIG_OPTIONS
-#define REGEX_CONFIG_FLAG(flag) (Js::Configuration::Global.flags.##flag)
+#define REGEX_CONFIG_FLAG(flag) (Js::Configuration::Global.flags.flag)
 #else
 #define REGEX_CONFIG_FLAG(flag) (DEFAULT_CONFIG_##flag)
 #endif

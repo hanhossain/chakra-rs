@@ -45,7 +45,7 @@ namespace Js {
 
     const static SZS g_rgszs[] =
     {
-#define Szs(sz, val) { _u(sz), _countof(_u(sz)) - 1, ParseStringTokenType::##szst, val }
+#define Szs(sz, val) { _u(sz), _countof(_u(sz)) - 1, ParseStringTokenType::szst, val }
 
         // bc and ad
 #undef szst
