@@ -38,10 +38,8 @@ static
 PAL_ERROR
 CheckObjectTypeAndRights(
     IPalObject *pobj,
-    CAllowedObjectTypes *paot,
-    uint32_t dwRightsGranted,
-    uint32_t dwRightsRequired
-    );
+    CAllowedObjectTypes *paot
+);
 
 /*++
 Function:
@@ -778,7 +776,6 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     CPalThread *pthr,
     HANDLE hHandleToReference,
     CAllowedObjectTypes *paot,
-    uint32_t dwRightsRequired,
     IPalObject **ppobj               // OUT
 )
 {
@@ -801,9 +798,7 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     {
         palError = CheckObjectTypeAndRights(
             pobj,
-            paot,
-            dwRightsGranted,
-            dwRightsRequired
+            paot
         );
 
         if (NO_ERROR == palError)
@@ -881,10 +876,8 @@ CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
         {
             palError = CheckObjectTypeAndRights(
                 pobj,
-                paot,
-                dwRightsGranted,
-                dwRightsRequired
-                );
+                paot
+            );
 
             if (NO_ERROR == palError)
             {
@@ -1244,10 +1237,8 @@ static
 PAL_ERROR
 CheckObjectTypeAndRights(
     IPalObject *pobj,
-    CAllowedObjectTypes *paot,
-    uint32_t dwRightsGranted,
-    uint32_t dwRightsRequired
-    )
+    CAllowedObjectTypes *paot
+)
 {
     PAL_ERROR palError = NO_ERROR;
 

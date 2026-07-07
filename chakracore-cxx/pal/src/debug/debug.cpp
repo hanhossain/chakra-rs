@@ -961,9 +961,8 @@ DBGSetProcessAttached(
         pThread,
         hProcess,
         &aotProcess,
-        0,
         &pobjProcess
-        );
+    );
 
     if (NO_ERROR != palError)
     {

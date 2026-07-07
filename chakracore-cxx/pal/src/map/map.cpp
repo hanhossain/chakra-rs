@@ -388,9 +388,8 @@ CorUnix::InternalCreateFileMapping(
                 pThread,
                 hFile,
                 &aotFile,
-                GENERIC_READ,
                 &pFileObject
-                );
+            );
 
             if (NO_ERROR != palError)
             {
@@ -792,9 +791,8 @@ CorUnix::InternalMapViewOfFile(
         pThread,
         hFileMappingObject,
         &aotFileMapping,
-        dwDesiredAccess,
         &pMappingObject
-        );
+    );
 
     if (NO_ERROR != palError)
     {

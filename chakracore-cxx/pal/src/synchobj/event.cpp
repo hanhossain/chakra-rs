@@ -310,9 +310,8 @@ CorUnix::InternalSetEvent(
         pthr,
         hEvent,
         &aotEvent,
-        0, // Should be EVENT_MODIFY_STATE; currently ignored (no Win32 security)
         &pobjEvent
-        );
+    );
 
     if (NO_ERROR != palError)
     {

@@ -130,15 +130,13 @@ namespace CorUnix
             HANDLE hHandleToRevoke
             );
 
-        virtual
         PAL_ERROR
         ReferenceObjectByHandle(
             CPalThread *pthr,
             HANDLE hHandleToReference,
             CAllowedObjectTypes *paot,
-            uint32_t dwRightsRequired,
             IPalObject **ppobj
-            );
+        ) override;
 
         virtual
         PAL_ERROR

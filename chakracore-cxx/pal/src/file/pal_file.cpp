@@ -274,9 +274,8 @@ CorUnix::InternalWriteFile(
         pThread,
         hFile,
         &aotFile,
-        GENERIC_WRITE,
         &pFileObject
-        );
+    );
 
     if (NO_ERROR != palError)
     {

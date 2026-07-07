@@ -1663,9 +1663,8 @@ CorUnix::InternalGetThreadDataFromHandle(
             pThread,
             hThread,
             &aotThread,
-            dwRightsRequired,
             &pobj
-            );
+        );
 
         if (NO_ERROR == palError)
         {

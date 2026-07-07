@@ -970,12 +970,12 @@ namespace CorUnix
         virtual
         PAL_ERROR
         ReferenceObjectByHandle(
-            CPalThread *pThread,                // IN, OPTIONAL
+            CPalThread *pThread,
+            // IN, OPTIONAL
             HANDLE hHandleToReference,
             CAllowedObjectTypes *pAllowedTypes,
-            uint32_t dwRightsRequired,
             IPalObject **ppObject               // OUT
-            ) = 0;
+        ) = 0;
 
         //
         // This routine is intended for WaitForMultipleObjects[Ex]

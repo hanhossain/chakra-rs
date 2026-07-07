@@ -249,9 +249,8 @@ PrepareStandardHandle(
         pThread,
         hFile,
         &aotFile,
-        0,
         &pobjFile
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -494,9 +493,8 @@ PROCGetProcessIDFromHandle(
         pThread,
         hProcess,
         &aotProcess,
-        0,
         &pobjProcess
-        );
+    );
 
     if (NO_ERROR == palError)
     {
@@ -964,9 +962,8 @@ PROCGetProcessStatus(
         pThread,
         hProcess,
         &aotProcess,
-        0,
         &pobjProcess
-        );
+    );
 
     if (NO_ERROR != palError)
     {
