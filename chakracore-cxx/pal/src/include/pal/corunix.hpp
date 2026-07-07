@@ -120,8 +120,6 @@ namespace CorUnix
     //
 
     typedef PAL_ERROR (*OBJECTINITROUTINE) (
-        CPalThread *,   // pThread
-        CObjectType *,  // pObjectType
         void *,         // pImmutableData
         void *,         // pSharedData
         void *          // pProcessLocalData

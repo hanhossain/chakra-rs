@@ -80,8 +80,6 @@ FileMappingCleanupRoutine(
 
 PAL_ERROR
 FileMappingInitializationRoutine(
-    CPalThread *pThread,
-    CObjectType *pObjectType,
     void *pImmutableData,
     void *pSharedData,
     void *pProcessLocalData
@@ -119,7 +117,6 @@ FileMappingCleanupRoutine(
     CFileMappingImmutableData *pImmutableData = NULL;
     CFileMappingProcessLocalData *pLocalData = NULL;
     IDataLock *pLocalDataLock = NULL;
-    bool fDataChanged = FALSE;
 
     if (TRUE == fCleanupSharedState)
     {
@@ -168,7 +165,6 @@ FileMappingCleanupRoutine(
         {
             close(pLocalData->UnixFd);
             pLocalData->UnixFd = -1;
-            fDataChanged = TRUE;
         }
 
         pLocalDataLock->ReleaseLock(pThread);
@@ -186,8 +182,6 @@ FileMappingCleanupRoutine(
 
 PAL_ERROR
 FileMappingInitializationRoutine(
-    CPalThread *pThread,
-    CObjectType *pObjectType,
     void *pvImmutableData,
     void *pvSharedData,
     void *pvProcessLocalData

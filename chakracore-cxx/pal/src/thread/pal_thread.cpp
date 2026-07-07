@@ -123,8 +123,6 @@ ThreadCleanupRoutine(
 
 PAL_ERROR
 ThreadInitializationRoutine(
-    CPalThread *pThread,
-    CObjectType *pObjectType,
     void *pImmutableData,
     void *pSharedData,
     void *pProcessLocalData
@@ -1996,8 +1994,6 @@ ThreadCleanupRoutine(
 
 PAL_ERROR
 ThreadInitializationRoutine(
-    CPalThread *pThread,
-    CObjectType *pObjectType,
     void *pImmutableData,
     void *pSharedData,
     void *pProcessLocalData
