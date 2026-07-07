@@ -80,10 +80,7 @@ FileMappingCleanupRoutine(
 
 PAL_ERROR
 FileMappingInitializationRoutine(
-    CPalThread *pThread,
-    CObjectType *pObjectType,
     void *pImmutableData,
-    void *pSharedData,
     void *pProcessLocalData
     );
 
@@ -119,7 +116,6 @@ FileMappingCleanupRoutine(
     CFileMappingImmutableData *pImmutableData = NULL;
     CFileMappingProcessLocalData *pLocalData = NULL;
     IDataLock *pLocalDataLock = NULL;
-    bool fDataChanged = FALSE;
 
     if (TRUE == fCleanupSharedState)
     {
@@ -168,10 +164,9 @@ FileMappingCleanupRoutine(
         {
             close(pLocalData->UnixFd);
             pLocalData->UnixFd = -1;
-            fDataChanged = TRUE;
         }
 
-        pLocalDataLock->ReleaseLock(pThread, fDataChanged);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     //
@@ -186,10 +181,7 @@ FileMappingCleanupRoutine(
 
 PAL_ERROR
 FileMappingInitializationRoutine(
-    CPalThread *pThread,
-    CObjectType *pObjectType,
     void *pvImmutableData,
-    void *pvSharedData,
     void *pvProcessLocalData
     )
 {
@@ -396,9 +388,8 @@ CorUnix::InternalCreateFileMapping(
                 pThread,
                 hFile,
                 &aotFile,
-                GENERIC_READ,
                 &pFileObject
-                );
+            );
 
             if (NO_ERROR != palError)
             {
@@ -428,7 +419,7 @@ CorUnix::InternalCreateFileMapping(
                 palError = ERROR_ACCESS_DENIED;
                 if (NULL != pFileLocalDataLock)
                 {
-                    pFileLocalDataLock->ReleaseLock(pThread, FALSE);
+                    pFileLocalDataLock->ReleaseLock(pThread);
                 }
                 goto ExitInternalCreateFileMapping;
             }
@@ -457,7 +448,7 @@ CorUnix::InternalCreateFileMapping(
                 palError = ERROR_INTERNAL_ERROR;
                 if (NULL != pFileLocalDataLock)
                 {
-                    pFileLocalDataLock->ReleaseLock(pThread, FALSE);
+                    pFileLocalDataLock->ReleaseLock(pThread);
                 }
                 goto ExitInternalCreateFileMapping;
             }
@@ -468,14 +459,14 @@ CorUnix::InternalCreateFileMapping(
                 palError = ERROR_INTERNAL_ERROR;
                 if (NULL != pFileLocalDataLock)
                 {
-                    pFileLocalDataLock->ReleaseLock(pThread, FALSE);
+                    pFileLocalDataLock->ReleaseLock(pThread);
                 }
                 goto ExitInternalCreateFileMapping;
             }
 
             if (NULL != pFileLocalDataLock)
             {
-                pFileLocalDataLock->ReleaseLock(pThread, FALSE);
+                pFileLocalDataLock->ReleaseLock(pThread);
             }
         } 
         else 
@@ -555,7 +546,7 @@ CorUnix::InternalCreateFileMapping(
 
     pLocalData->UnixFd = UnixFd;
 
-    pLocalDataLock->ReleaseLock(pThread, TRUE);
+    pLocalDataLock->ReleaseLock(pThread);
     pLocalDataLock = NULL;
 
     palError = g_pObjectManager->RegisterObject(
@@ -584,9 +575,8 @@ ExitInternalCreateFileMapping:
     if (NULL != pLocalDataLock)
     {
         pLocalDataLock->ReleaseLock(
-            pThread,
-            TRUE
-            );
+            pThread
+        );
     }
 
     if (NULL != pMapping)
@@ -617,44 +607,6 @@ ExitInternalCreateFileMapping:
     return palError;
 }
 
-
-/*++
-Function:
-  OpenFileMappingW
-
-See MSDN doc.
---*/
-HANDLE
-OpenFileMappingW(
-          uint32_t dwDesiredAccess,
-          BOOL bInheritHandle,
-          const char16_t* lpName)
-{
-    HANDLE hFileMapping = NULL;
-    PAL_ERROR palError = NO_ERROR;
-    CPalThread *pThread = NULL;
-    
-    pThread = InternalGetCurrentThread();
-
-    /* validate parameters */
-    if (lpName == nullptr)
-    {
-        ERROR("name is NULL\n");
-        palError = ERROR_INVALID_PARAMETER;
-    }
-    else
-    {
-        ASSERT("lpName: Cross-process named objects are not supported in PAL");
-        palError = ERROR_NOT_SUPPORTED;
-    }
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-    LOGEXIT("OpenFileMappingW returning %p.\n", hFileMapping);
-    return hFileMapping;
-}
 
 PAL_ERROR
 CorUnix::InternalOpenFileMapping(
@@ -839,9 +791,8 @@ CorUnix::InternalMapViewOfFile(
         pThread,
         hFileMappingObject,
         &aotFileMapping,
-        dwDesiredAccess,
         &pMappingObject
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -997,7 +948,7 @@ InternalMapViewOfFileExit:
 
     if (NULL != pProcessLocalDataLock)
     {
-        pProcessLocalDataLock->ReleaseLock(pThread, FALSE);
+        pProcessLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pMappingObject)

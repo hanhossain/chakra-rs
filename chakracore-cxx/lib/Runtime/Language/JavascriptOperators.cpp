@@ -9942,7 +9942,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             // We cannot just use the buffer in the specifier string - need to make a copy here.
             size_t length = std::u16string(moduleName).length();
             char16_t* allocatedString = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, length + 1);
-            wmemcpy_s(allocatedString, length + 1, moduleName, length);
+            wmemcpy_s(allocatedString, moduleName, length);
             allocatedString[length] = u'\0';
 
             Js::JavascriptError *error = scriptContext->GetLibrary()->CreateURIError();

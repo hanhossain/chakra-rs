@@ -168,7 +168,6 @@ InstanceBase::OpenSharedMemory(__in_ecount(MAX_OBJECT_NAME_PREFIX) char16_t cons
     GetSharedMemoryObjectName(wszObjectName, pid, guid);
     char16_t wszObjectNameFull[MAX_OBJECT_NAME_PREFIX + OBJECT_NAME_LEN];
     swprintf_s(wszObjectNameFull, u"%s\\%s", wszObjectNamePrefix, wszObjectName);
-    handle = ::OpenFileMapping(FILE_MAP_READ, FALSE, wszObjectNameFull);
     if (handle == NULL)
     {
         return NULL;

@@ -11,11 +11,11 @@
 
 namespace PlatformAgnostic
 {
-    Thread::ThreadHandle Thread::Create(unsigned stack_size,
-                                        unsigned ( *start_address )( void * ),
-                                        void* arg_list,
-                                        ThreadInitFlag init_flag,
-                                        const char16_t* /*name*/)
+    Thread::ThreadHandle Thread::Create(
+        unsigned ( *start_address )( void * ),
+        void* arg_list,
+        ThreadInitFlag init_flag,
+        const char16_t* /*name*/)
     {
         unsigned int flag = 0;
 
@@ -34,6 +34,6 @@ namespace PlatformAgnostic
             Assert(false);
         }
 
-        return reinterpret_cast<ThreadHandle>(CreateThread(0, stack_size, start_address, arg_list, flag, 0));
+        return reinterpret_cast<ThreadHandle>(CreateThread(0, start_address, arg_list, flag, 0));
     }
 } // namespace PlatformAgnostic

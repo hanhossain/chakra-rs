@@ -134,12 +134,8 @@ namespace CorUnix
         // CThreadInfoInitializer methods
         //
         virtual PAL_ERROR InitializePreCreate(void);
-        
-        virtual PAL_ERROR InitializePostCreate(
-            CPalThread *pthrCurrent,
-            size_t threadId,
-            uint32_t dwLwpId
-            );
+
+        PAL_ERROR InitializePostCreate(CPalThread *pthrCurrent) override;
 
         THREAD_STATE GetThreadState(void)
         {

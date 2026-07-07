@@ -59,7 +59,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
     {
         int nsize;
         char* newBuff = 0;
-        nsize = WideCharToMultiByte(CP_ACP, 0,(const char16_t*)buffer, count, 0, 0, 0, 0);
+        nsize = WideCharToMultiByte(CP_ACP, 0,(const char16_t*)buffer, count, 0, 0, 0);
         if (!nsize)
         {
             ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
@@ -72,7 +72,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
             pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
             return -1;
         }
-        nsize = WideCharToMultiByte(CP_ACP, 0, (const char16_t*)buffer, count, newBuff, nsize, 0, 0);
+        nsize = WideCharToMultiByte(CP_ACP, 0, (const char16_t*)buffer, count, newBuff, nsize, 0);
         if (!nsize)
         {
             ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
@@ -1899,7 +1899,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
 
                 TempWStr = va_arg(ap, char16_t*);
                 Length = WideCharToMultiByte(CP_ACP, 0, TempWStr, -1, 0,
-                                             0, 0, 0);
+                                             0, 0);
                 if (!Length)
                 {
                     ASSERT("WideCharToMultiByte failed.  Error is %d\n",
@@ -1924,8 +1924,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                 else if (Precision > 0 && Precision < Length - 1)
                 {
                     Length = WideCharToMultiByte(CP_ACP, 0, TempWStr,
-                                                 Precision, TempStr, Length,
-                                                 0, 0);
+                                                 Precision, TempStr, Length, 0);
                     if (!Length)
                     {
                         ASSERT("WideCharToMultiByte failed.  Error is %d\n",
@@ -1941,7 +1940,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                 else
                 {
                     wctombResult = WideCharToMultiByte(CP_ACP, 0, TempWStr, -1,
-                                                       TempStr, Length, 0, 0);
+                                                       TempStr, Length, 0);
                     if (!wctombResult)
                     {
                         ASSERT("WideCharToMultiByte failed.  Error is %d\n",
@@ -1986,8 +1985,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
 
                 TempWChar = va_arg(ap, int);
                 Length = WideCharToMultiByte(CP_ACP, 0, &TempWChar, 1,
-                                             TempBuffer, sizeof(TempBuffer),
-                                             0, 0);
+                                             TempBuffer, sizeof(TempBuffer), 0);
                 if (!Length)
                 {
                     ASSERT("WideCharToMultiByte failed.  Error is %d\n",

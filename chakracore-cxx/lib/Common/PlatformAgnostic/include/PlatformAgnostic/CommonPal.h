@@ -251,7 +251,7 @@ inline char16_t* wmemset(char16_t* wcs, char16_t wc, size_t n)
     return wcs;
 }
 
-inline errno_t wmemcpy_s(char16_t* dest, size_t destSize, const char16_t* src, size_t count)
+inline errno_t wmemcpy_s(char16_t* dest, const char16_t* src, size_t count)
 {
     memcpy(dest, src, sizeof(char16_t) * count);
     return 0;

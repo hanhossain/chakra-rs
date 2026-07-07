@@ -228,7 +228,7 @@ Parameters :
 Return value :
     TRUE on success, FALSE on failure
 --*/
-BOOL CONTEXT_SetThreadContext(pthread_t self, const CONTEXT *lpContext);
+BOOL CONTEXT_SetThreadContext(const CONTEXT *lpContext);
 
 /*++
 Function :
@@ -330,8 +330,7 @@ Return value :
     The Win32 exception code that corresponds to the signal and context
     information.
 --*/
-uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
-                                       const native_context_t *context);
+uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo);
 
 #endif  // defined(__APPLE__) else
 

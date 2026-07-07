@@ -351,7 +351,7 @@ extern "C"
 void PAL_DispatchException(unsigned long dwRDI, unsigned long dwRSI, unsigned long dwRDX, unsigned long dwRCX, unsigned long dwR8, unsigned long dwR9, PCONTEXT pContext, PEXCEPTION_RECORD pExRecord, MachExceptionInfo *pMachExceptionInfo)
 #elif defined(_ARM64_)
 extern "C"
-void PAL_DispatchException(PCONTEXT pContext, PEXCEPTION_RECORD pExRecord, MachExceptionInfo *pMachExceptionInfo)
+void PAL_DispatchException(PCONTEXT, PEXCEPTION_RECORD, MachExceptionInfo *)
 #endif
 {
     raise(SIGINT);
@@ -590,7 +590,6 @@ static
 void
 HijackFaultingThread(
     mach_port_t thread,             // [in] thread the exception happened on
-    mach_port_t task,               // [in] task the exception happened on
     MachMessage& message)           // [in] exception message
 {
     MachExceptionInfo exceptionInfo(thread, message);
@@ -1029,7 +1028,7 @@ SEHExceptionThread()
             if (!feFound)
             {
                 NONPAL_TRACE("HijackFaultingThread thread %08x\n", thread);
-                HijackFaultingThread(thread, mach_task_self(), sMessage);
+                HijackFaultingThread(thread, sMessage);
 
                 // Send the result of handling the exception back in a reply.
                 NONPAL_TRACE("ReplyToNotification KERN_SUCCESS thread %08x port %08x\n", thread, sMessage.GetRemotePort());

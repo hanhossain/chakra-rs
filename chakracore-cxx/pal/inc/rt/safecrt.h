@@ -65,10 +65,6 @@
 #define _SAFECRT_FILL_BUFFER_PATTERN 0xFD
 #endif
 
-#if !defined(_SAFECRT_INVALID_PARAMETER_DEBUG_INFO)
-#define _SAFECRT_INVALID_PARAMETER_DEBUG_INFO 0
-#endif
-
 #if !defined(_SAFECRT_IMPL) && defined (_SAFECRT_USE_INLINES)
 #define _SAFECRT__INLINE __inline
 #else
@@ -163,14 +159,6 @@ typedef int errno_t; /* standard */
 #endif
 
 /* validation macros */
-#if !defined(_SAFECRT_INVALID_PARAMETER)
-#if _SAFECRT_INVALID_PARAMETER_DEBUG_INFO
-#define _SAFECRT_INVALID_PARAMETER(message) _invalid_parameter(message, __FUNCTIONW__, __FILEW__, __LINE__, 0)
-#else
-#define _SAFECRT_INVALID_PARAMETER(message) _invalid_parameter(nullptr, nullptr, nullptr, 0, 0)
-#endif
-#endif
-
 #if !defined(_SAFECRT__SET_ERRNO)
 #if _SAFECRT_SET_ERRNO
 #define _SAFECRT__SET_ERRNO(_ErrorCode) errno = (_ErrorCode)
@@ -182,7 +170,7 @@ typedef int errno_t; /* standard */
 #if !defined(_SAFECRT__RETURN_ERROR)
 #define _SAFECRT__RETURN_ERROR(_Msg, _Ret) \
     _SAFECRT__SET_ERRNO(EINVAL); \
-    _SAFECRT_INVALID_PARAMETER(_Msg); \
+    _invalid_parameter(); \
     return _Ret
 #endif
 
@@ -191,7 +179,7 @@ typedef int errno_t; /* standard */
     if ((_String) == nullptr || (_Size) == 0) \
     { \
         _SAFECRT__SET_ERRNO(EINVAL); \
-        _SAFECRT_INVALID_PARAMETER(L"String " _SAFECRT__STR2WSTR(#_String) L" is invalid"); \
+        _invalid_parameter(); \
         return _Ret; \
     }
 #endif
@@ -205,7 +193,7 @@ typedef int errno_t; /* standard */
     if ((_Pointer) == nullptr) \
     { \
         _SAFECRT__SET_ERRNO(_ErrorCode); \
-        _SAFECRT_INVALID_PARAMETER(L"Pointer " _SAFECRT__STR2WSTR(#_Pointer) L" is invalid"); \
+        _invalid_parameter(); \
         return _Ret; \
     }
 #endif
@@ -226,7 +214,7 @@ typedef int errno_t; /* standard */
     { \
         _SAFECRT__SET_ERRNO(EINVAL); \
         _SAFECRT__RESET_STRING(_String, _Size); \
-        _SAFECRT_INVALID_PARAMETER(L"Pointer " _SAFECRT__STR2WSTR(#_Pointer) L" is invalid"); \
+        _invalid_parameter(); \
         return _Ret; \
     }
 #endif
@@ -241,7 +229,7 @@ typedef int errno_t; /* standard */
     if (!(_Condition)) \
     { \
         _SAFECRT__SET_ERRNO(_ErrorCode); \
-        _SAFECRT_INVALID_PARAMETER(_SAFECRT__STR2WSTR(#_Condition)); \
+        _invalid_parameter(); \
         return _Ret; \
     }
 #endif
@@ -289,7 +277,7 @@ typedef int errno_t; /* standard */
 #if !defined(_SAFECRT__RETURN_BUFFER_TOO_SMALL_ERROR)
 #define _SAFECRT__RETURN_BUFFER_TOO_SMALL_ERROR(_String, _Size, _Ret) \
     _SAFECRT__SET_ERRNO(ERANGE); \
-    _SAFECRT_INVALID_PARAMETER(L"Buffer " _SAFECRT__STR2WSTR(#_String) L" is too small"); \
+    _invalid_parameter(); \
     return _Ret;
 #endif
 
@@ -301,14 +289,14 @@ typedef int errno_t; /* standard */
 #if !defined(_SAFECRT__RETURN_DEST_NOT_NULL_TERMINATED)
 #define _SAFECRT__RETURN_DEST_NOT_NULL_TERMINATED(_String, _Size) \
     _SAFECRT__SET_ERRNO(EINVAL); \
-    _SAFECRT_INVALID_PARAMETER(L"String " _SAFECRT__STR2WSTR(#_String) L" is not terminated"); \
+    _invalid_parameter(); \
     return EINVAL;
 #endif
 
 #if !defined(_SAFECRT__RETURN_EINVAL)
 #define _SAFECRT__RETURN_EINVAL \
     _SAFECRT__SET_ERRNO(EINVAL); \
-    _SAFECRT_INVALID_PARAMETER(L"Invalid parameter"); \
+    _invalid_parameter(); \
     return EINVAL;
 #endif
 
@@ -324,7 +312,7 @@ typedef int errno_t; /* standard */
 #endif
 
 _SAFECRT__EXTERN_C
-void _invalid_parameter(const char16_t *_Message, const char16_t *_FunctionName, const char16_t *_FileName, unsigned int _LineNumber, uintptr_t _Reserved);
+void _invalid_parameter();
 
 #if (_SAFECRT_USE_INLINES || _SAFECRT_IMPL) && !defined(_SAFECRT_DO_NOT_DEFINE_INVALID_PARAMETER)
 
@@ -333,10 +321,10 @@ void _invalid_parameter(const char16_t *_Message, const char16_t *_FunctionName,
 #endif
 
 _SAFECRT__INLINE
-void _invalid_parameter(const char16_t *_Message, const char16_t *_FunctionName, const char16_t *_FileName, unsigned int _LineNumber, uintptr_t _Reserved)
+void _invalid_parameter()
 {
     /* invoke Watson */
-    RaiseException((uint32_t)STATUS_INVALID_PARAMETER, 0, 0, nullptr);
+    RaiseException((uint32_t)STATUS_INVALID_PARAMETER, 0);
 }
 
 #endif

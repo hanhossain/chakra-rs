@@ -260,7 +260,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::Alloc(size_t bytes, ushort pdataCou
 
 #if defined(DBG)
         MEMORY_BASIC_INFORMATION memBasicInfo;
-        size_t resultBytes = VirtualQueryEx(this->processHandle, page->address, &memBasicInfo, sizeof(memBasicInfo));
+        size_t resultBytes = VirtualQueryEx(page->address, &memBasicInfo, sizeof(memBasicInfo));
         if (resultBytes == 0)
         {
             MemoryOperationLastError::RecordLastError();
@@ -424,7 +424,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
 
 #if defined(DBG)
     MEMORY_BASIC_INFORMATION memBasicInfo;
-    size_t resultBytes = VirtualQueryEx(this->processHandle, address, &memBasicInfo, sizeof(memBasicInfo));
+    size_t resultBytes = VirtualQueryEx(address, &memBasicInfo, sizeof(memBasicInfo));
     if (resultBytes == 0)
     {
         MemoryOperationLastError::RecordLastError();

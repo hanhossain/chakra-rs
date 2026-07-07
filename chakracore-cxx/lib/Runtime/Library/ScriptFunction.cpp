@@ -408,7 +408,7 @@ using namespace Js;
                 Recycler* recycler = scriptContext->GetRecycler();
 
                 char16_t* buffer = RecyclerNewArrayLeaf(recycler, char16_t, decodedCount + 1);
-                wmemcpy_s(buffer, decodedCount, builder.DangerousGetWritableBuffer(), decodedCount);
+                wmemcpy_s(buffer, builder.DangerousGetWritableBuffer(), decodedCount);
                 buffer[decodedCount] = 0;
 
                 cachedSourceString = JavascriptString::NewWithBuffer(buffer, static_cast<charcount_t>(decodedCount), scriptContext);

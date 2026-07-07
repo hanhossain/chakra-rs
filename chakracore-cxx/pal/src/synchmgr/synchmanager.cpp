@@ -821,7 +821,7 @@ namespace CorUnix
                 }
 
                 Ctrlrs.pWaitCtrlrs[uIdx]->SetProcessLocalData(pProcLocData);
-                pDataLock->ReleaseLock(pthrCurrent, false);
+                pDataLock->ReleaseLock(pthrCurrent);
             }
         }
         if (NO_ERROR != palErr)
@@ -983,7 +983,6 @@ namespace CorUnix
     Worker Thread)
     --*/
     void CPalSynchronizationManager::FreeObjectSynchData(
-        CObjectType *potObjectType,
         ObjectDomain odObjectDomain,
         void *pvSynchData)
     {
@@ -2092,8 +2091,7 @@ namespace CorUnix
         _ASSERT_MSG(pbyDst <= rgSendBuf + MsgSize + 1, "Buffer overrun");
 
         // Send the message
-        palErr = SendMsgToRemoteWorker(pWLNode->dwProcessId, rgSendBuf,
-                                       MsgSize);
+        palErr = SendMsgToRemoteWorker();
         if (NO_ERROR != palErr)
         {
             ERROR("Failed sending message to remote worker in process %u\n",
@@ -2175,8 +2173,7 @@ namespace CorUnix
         _ASSERT_MSG(pbyDst <= rgSendBuf + MsgSize + 1, "Buffer overrun");
 
         // Send the message
-        palErr = SendMsgToRemoteWorker(dwTargetProcessId, rgSendBuf,
-                                       MsgSize);
+        palErr = SendMsgToRemoteWorker();
         if (NO_ERROR != palErr)
         {
             TRACE("Failed sending message to remote worker in process %u\n",
@@ -2197,9 +2194,7 @@ namespace CorUnix
     Sends a message (command + data) to a remote process' worker thread.
     --*/
     PAL_ERROR CPalSynchronizationManager::SendMsgToRemoteWorker(
-        uint32_t dwProcessId,
-        uint8_t * pMsg,
-        int iMsgSize)
+    )
     {
         ASSERT("There should never be a reason to send a message to a remote worker\n");
         return ERROR_INTERNAL_ERROR;
@@ -3546,10 +3541,7 @@ namespace CorUnix
     Part of CThreadSynchronizationInfo's initialization to be carried out
     after actual thread creation
     --*/
-    PAL_ERROR CThreadSynchronizationInfo::InitializePostCreate(
-        CPalThread *pthrCurrent,
-        size_t threadId,
-        uint32_t dwLwpId)
+    PAL_ERROR CThreadSynchronizationInfo::InitializePostCreate(CPalThread *pthrCurrent)
     {
         PAL_ERROR palErr = NO_ERROR;
 

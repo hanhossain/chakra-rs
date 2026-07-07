@@ -249,9 +249,8 @@ PrepareStandardHandle(
         pThread,
         hFile,
         &aotFile,
-        0,
         &pobjFile
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -292,7 +291,7 @@ PrepareStandardHandle(
     }
 
     *piFd = pLocalData->unix_fd;
-    pDataLock->ReleaseLock(pThread, FALSE);
+    pDataLock->ReleaseLock(pThread);
     pDataLock = NULL;
 
     //
@@ -306,7 +305,7 @@ PrepareStandardHandleExit:
 
     if (NULL != pDataLock)
     {
-        pDataLock->ReleaseLock(pThread, FALSE);
+        pDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pobjFile)
@@ -400,7 +399,7 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
                 "status will only see error 0x%x instead of 0x%x.\n", uExitCode & 0xff, uExitCode);
         }
 
-        TerminateCurrentProcessNoExit(bTerminateUnconditionally);
+        TerminateCurrentProcessNoExit();
 
         LOGEXIT("PROCEndProcess will not return\n");
 
@@ -438,7 +437,7 @@ Function:
 
 (no return value)
 --*/
-void PROCCleanupProcess(BOOL bTerminateUnconditionally)
+void PROCCleanupProcess()
 {
     /* Declare the beginning of shutdown */
     PALSetShutdownIntent();
@@ -494,9 +493,8 @@ PROCGetProcessIDFromHandle(
         pThread,
         hProcess,
         &aotProcess,
-        0,
         &pobjProcess
-        );
+    );
 
     if (NO_ERROR == palError)
     {
@@ -513,7 +511,7 @@ PROCGetProcessIDFromHandle(
         if (NO_ERROR == palError)
         {
             dwProcessId = pLocalData->dwProcessId;
-            pDataLock->ReleaseLock(pThread, FALSE);
+            pDataLock->ReleaseLock(pThread);
         }
 
         pobjProcess->ReleaseReference(pThread);
@@ -625,7 +623,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
 
     pLocalData->dwProcessId = getpid();
     pLocalData->ps = PS_RUNNING;
-    pDataLock->ReleaseLock(pThread, TRUE);
+    pDataLock->ReleaseLock(pThread);
 
     palError = g_pObjectManager->RegisterObject(
         pThread,
@@ -884,7 +882,7 @@ Note:
 
 --*/
 void
-CorUnix::TerminateCurrentProcessNoExit(BOOL bTerminateUnconditionally)
+CorUnix::TerminateCurrentProcessNoExit()
 {
     BOOL locked;
     uint32_t old_terminator;
@@ -921,7 +919,7 @@ CorUnix::TerminateCurrentProcessNoExit(BOOL bTerminateUnconditionally)
     locked = PALInitLock();
     if(locked && PALIsInitialized())
     {
-         PROCCleanupProcess(bTerminateUnconditionally);
+         PROCCleanupProcess();
      }
 }
 
@@ -964,9 +962,8 @@ PROCGetProcessStatus(
         pThread,
         hProcess,
         &aotProcess,
-        0,
         &pobjProcess
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -989,7 +986,7 @@ PROCGetProcessStatus(
         *pps = pLocalData->ps;
         *pdwExitCode = pLocalData->dwExitCode;
 
-        pDataLock->ReleaseLock(pThread, FALSE);
+        pDataLock->ReleaseLock(pThread);
 
         goto PROCGetProcessStatusExit;
     }
@@ -1098,7 +1095,7 @@ PROCGetProcessStatus(
     TRACE( "State of process 0x%08x : %d (exit code %d)\n",
            pLocalData->dwProcessId, *pps, *pdwExitCode );
 
-    pDataLock->ReleaseLock(pThread, TRUE);
+    pDataLock->ReleaseLock(pThread);
 
 PROCGetProcessStatusExit:
 

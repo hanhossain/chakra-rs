@@ -20,7 +20,7 @@ void
 JSONStringBuilder::AppendBuffer(_In_ const char16_t* buffer, charcount_t length)
 {
     AssertOrFailFast(this->currentLocation + length <= endLocation);
-    wmemcpy_s(this->currentLocation, length, buffer, length);
+    wmemcpy_s(this->currentLocation, buffer, length);
     this->currentLocation += length;
 }
 

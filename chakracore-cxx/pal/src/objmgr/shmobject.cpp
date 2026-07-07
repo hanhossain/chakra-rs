@@ -252,10 +252,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
     if (NULL != m_pot->GetObjectInitRoutine())
     {
         palError = (*m_pot->GetObjectInitRoutine())(
-            pthr,
-            m_pot,
             m_pvImmutableData,
-            m_pvSharedData,
             m_pvLocalData
             );
     }
@@ -552,7 +549,7 @@ EnsureObjectIsSharedExit:
 
     if (NULL != pDataLock)
     {
-        pDataLock->ReleaseLock(pthr, TRUE);
+        pDataLock->ReleaseLock(pthr);
     }
 
     SHMRelease();
@@ -914,8 +911,8 @@ CSharedMemoryObject::GetSharedData(
 
         if (SharedObject == m_ObjectDomain)
         {
-            pDataLock->ReleaseLock(pthr, FALSE);
-            m_ssmlSharedData.AcquireLock(pthr, &pDataLock);
+            pDataLock->ReleaseLock(pthr);
+            m_ssmlSharedData.AcquireLock(&pDataLock);
         }
     }
     else
@@ -925,7 +922,7 @@ CSharedMemoryObject::GetSharedData(
         // so there's no need to recheck the domain on this path
         //
         
-        m_ssmlSharedData.AcquireLock(pthr, &pDataLock);
+        m_ssmlSharedData.AcquireLock(&pDataLock);
     }
 
     *ppDataLock = pDataLock;
@@ -1184,7 +1181,7 @@ EnsureObjectIsSharedExit:
 
     if (NULL != pDataLock)
     {
-        pDataLock->ReleaseLock(pthr, TRUE);
+        pDataLock->ReleaseLock(pthr);
     }
 
     SHMRelease();
@@ -1229,10 +1226,9 @@ CSharedMemoryWaitableObject::~CSharedMemoryWaitableObject()
     if (NULL != m_pvSynchData && m_fDeleteSharedData)
     {
         g_pSynchronizationManager->FreeObjectSynchData(
-            m_pot,
             m_ObjectDomain,
             m_pvSynchData
-            );
+        );
     }
 
     LOGEXIT("CSharedMemoryWaitableObject::~CSharedMemoryWaitableObject\n");

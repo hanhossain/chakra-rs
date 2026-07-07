@@ -82,17 +82,15 @@ namespace CorUnix
         //
         // IPalObjectManager routines
         //
-        
-        virtual
+
         PAL_ERROR
         AllocateObject(
             CPalThread *pthr,
             CObjectType *pot,
             CObjectAttributes *poa,
             IPalObject **ppobjNew
-            );
+            ) override;
 
-        virtual
         PAL_ERROR
         RegisterObject(
             CPalThread *pthr,
@@ -101,19 +99,17 @@ namespace CorUnix
             uint32_t dwRightsRequested,
             HANDLE *pHandle,
             IPalObject **ppobjRegistered
-            );
+            ) override;
 
-        virtual            
         PAL_ERROR
         LocateObject(
             CPalThread *pthr,
             CPalString *psObjectToLocate,
             CAllowedObjectTypes *paot,
             IPalObject **ppobj
-            );
+            ) override;
 
-        virtual
-        PAL_ERROR   
+        PAL_ERROR
         ObtainHandleForObject(
             CPalThread *pthr,
             IPalObject *pobj,
@@ -121,46 +117,30 @@ namespace CorUnix
             bool fInheritHandle,
             IPalProcess *pProcessForHandle,     // IN, OPTIONAL
             HANDLE *pNewHandle
-            );
+            ) override;
 
-        virtual
         PAL_ERROR
         RevokeHandle(
             CPalThread *pthr,
             HANDLE hHandleToRevoke
-            );
+            ) override;
 
-        virtual
         PAL_ERROR
         ReferenceObjectByHandle(
             CPalThread *pthr,
             HANDLE hHandleToReference,
             CAllowedObjectTypes *paot,
-            uint32_t dwRightsRequired,
             IPalObject **ppobj
-            );
+        ) override;
 
-        virtual
         PAL_ERROR
         ReferenceMultipleObjectsByHandleArray(
             CPalThread *pthr,
             HANDLE rghHandlesToReference[],
             uint32_t dwHandleCount,
             CAllowedObjectTypes *paot,
-            uint32_t dwRightsRequired,
             IPalObject *rgpobjs[]
-            );
-
-        virtual
-        PAL_ERROR
-        ReferenceObjectByForeignHandle(
-            CPalThread *pthr,
-            HANDLE hForeignHandle,
-            IPalProcess *pForeignProcess,
-            CAllowedObjectTypes *paot,
-            uint32_t dwRightsRequired,
-            IPalObject **ppobj
-            );
+        ) override;
     };
 }
 

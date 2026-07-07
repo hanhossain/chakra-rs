@@ -38,10 +38,8 @@ static
 PAL_ERROR
 CheckObjectTypeAndRights(
     IPalObject *pobj,
-    CAllowedObjectTypes *paot,
-    uint32_t dwRightsGranted,
-    uint32_t dwRightsRequired
-    );
+    CAllowedObjectTypes *paot
+);
 
 /*++
 Function:
@@ -778,7 +776,6 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     CPalThread *pthr,
     HANDLE hHandleToReference,
     CAllowedObjectTypes *paot,
-    uint32_t dwRightsRequired,
     IPalObject **ppobj               // OUT
 )
 {
@@ -801,9 +798,7 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     {
         palError = CheckObjectTypeAndRights(
             pobj,
-            paot,
-            dwRightsGranted,
-            dwRightsRequired
+            paot
         );
 
         if (NO_ERROR == palError)
@@ -851,9 +846,8 @@ CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
     HANDLE rghHandlesToReference[],
     uint32_t dwHandleCount,
     CAllowedObjectTypes *paot,
-    uint32_t dwRightsRequired,
     IPalObject *rgpobjs[]            // OUT (caller allocated)
-    )
+)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobj = NULL;
@@ -881,10 +875,8 @@ CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
         {
             palError = CheckObjectTypeAndRights(
                 pobj,
-                paot,
-                dwRightsGranted,
-                dwRightsRequired
-                );
+                paot
+            );
 
             if (NO_ERROR == palError)
             {
@@ -954,27 +946,6 @@ Parameters:
     granted; currently ignored
   ppobj -- on success, receives a reference to the object instance
 --*/
-
-PAL_ERROR
-CSharedMemoryObjectManager::ReferenceObjectByForeignHandle(
-    CPalThread *pthr,
-    HANDLE hForeignHandle,
-    IPalProcess *pForeignProcess,
-    CAllowedObjectTypes *paot,
-    uint32_t dwRightsRequired,
-    IPalObject **ppobj               // OUT
-    )
-{
-    //
-    // Not implemented for basic shared memory object manager --
-    // requires an IPC channel. (For the shared memory object manager
-    // PAL_LocalHandleToRemote and PAL_RemoteHandleToLocal must still
-    // be used...)
-    //
-
-    ASSERT("ReferenceObjectByForeignHandle not yet supported\n");
-    return ERROR_CALL_NOT_IMPLEMENTED;
-}
 
 /*++
 Function:
@@ -1265,10 +1236,8 @@ static
 PAL_ERROR
 CheckObjectTypeAndRights(
     IPalObject *pobj,
-    CAllowedObjectTypes *paot,
-    uint32_t dwRightsGranted,
-    uint32_t dwRightsRequired
-    )
+    CAllowedObjectTypes *paot
+)
 {
     PAL_ERROR palError = NO_ERROR;
 

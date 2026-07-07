@@ -113,22 +113,10 @@ PAL_ActivationFunction g_activationFunction = NULL;
 // Function to check if an activation can be safely injected at a specified context
 PAL_SafeActivationCheckFunction g_safeActivationCheckFunction = NULL;
 
-void
-ThreadCleanupRoutine(
-    CPalThread *pThread,
-    IPalObject *pObjectToCleanup,
-    bool fShutdown,
-    bool fCleanupSharedState
-    );
+void ThreadCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool, bool);
 
 PAL_ERROR
-ThreadInitializationRoutine(
-    CPalThread *pThread,
-    CObjectType *pObjectType,
-    void *pImmutableData,
-    void *pSharedData,
-    void *pProcessLocalData
-    );
+ThreadInitializationRoutine(void *, void *);
 
 CObjectType CorUnix::otThread __attribute__((init_priority(200))) (
                 otiThread,
@@ -308,9 +296,8 @@ GetThreadId(
         pThread,
         hThread,
         0,
-        0,
         &pobjThread
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -374,12 +361,11 @@ See MSDN doc.
 --*/
 HANDLE
 CreateThread(
-     LPSECURITY_ATTRIBUTES lpThreadAttributes,
-     uint32_t dwStackSize,
-     LPTHREAD_START_ROUTINE lpStartAddress,
-     void * lpParameter,
-     uint32_t dwCreationFlags,
-     uint32_t * lpThreadId)
+    LPSECURITY_ATTRIBUTES lpThreadAttributes,
+    LPTHREAD_START_ROUTINE lpStartAddress,
+    void * lpParameter,
+    uint32_t dwCreationFlags,
+    uint32_t * lpThreadId)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -391,7 +377,6 @@ CreateThread(
     palError = InternalCreateThread(
         pThread,
         lpThreadAttributes,
-        dwStackSize,
         lpStartAddress,
         lpParameter,
         dwCreationFlags,
@@ -417,7 +402,6 @@ PAL_ERROR
 CorUnix::InternalCreateThread(
     CPalThread *pThread,
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    uint32_t dwStackSize,
     LPTHREAD_START_ROUTINE lpStartAddress,
     void * lpParameter,
     uint32_t dwCreationFlags,
@@ -740,10 +724,9 @@ CorUnix::InternalGetThreadPriority(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hThread,
-        0,  // THREAD_QUERY_INFORMATION
-        &pTargetThread,
+        &pTargetThread,  // THREAD_QUERY_INFORMATION
         &pobjThread
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -821,10 +804,9 @@ CorUnix::InternalSetThreadPriority(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hTargetThread,
-        0, // THREAD_SET_INFORMATION
-        &pTargetThread,
+        &pTargetThread, // THREAD_SET_INFORMATION
         &pobjThread
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -990,10 +972,9 @@ CorUnix::GetThreadTimesInternal(
     palError = InternalGetThreadDataFromHandle(
         pthrCurrent,
         hThread,
-        0,
         &pthrTarget,
         &pobjThread
-        );
+    );
 
     if (palError != NO_ERROR)
     {
@@ -1060,10 +1041,9 @@ CorUnix::GetThreadTimesInternal(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hThread,
-        0,
         &pTargetThread,
         &pobjThread
-        );
+    );
     if (palError != NO_ERROR)
     {
         ASSERT("Unable to get thread data from handle %p"
@@ -1143,10 +1123,9 @@ CorUnix::GetThreadTimesInternal(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hThread,
-        0,
         &pTargetThread,
         &pobjThread
-        );
+    );
     if (palError != NO_ERROR)
     {
         ASSERT("Unable to get thread data from handle %p"
@@ -1453,7 +1432,7 @@ CorUnix::CreateThreadObject(
     }
 
     pLocalData->pThread = pNewThread;
-    pDataLock->ReleaseLock(pThread, TRUE);
+    pDataLock->ReleaseLock(pThread);
     fThreadDataStoredInObject = TRUE;
 
     //
@@ -1587,7 +1566,7 @@ CorUnix::InternalCreateDummyThread(
     }
 
     pLocalData->pThread = pDummyThread;
-    pDataLock->ReleaseLock(pThread, TRUE);
+    pDataLock->ReleaseLock(pThread);
     fThreadDataStoredInObject = TRUE;
 
     palError = g_pObjectManager->RegisterObject(
@@ -1646,10 +1625,9 @@ PAL_ERROR
 CorUnix::InternalGetThreadDataFromHandle(
     CPalThread *pThread,
     HANDLE hThread,
-    uint32_t dwRightsRequired,
     CPalThread **ppTargetThread,
     IPalObject **ppobjThread
-    )
+)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobj;
@@ -1668,9 +1646,8 @@ CorUnix::InternalGetThreadDataFromHandle(
             pThread,
             hThread,
             &aotThread,
-            dwRightsRequired,
             &pobj
-            );
+        );
 
         if (NO_ERROR == palError)
         {
@@ -1684,7 +1661,7 @@ CorUnix::InternalGetThreadDataFromHandle(
             if (NO_ERROR == palError)
             {
                 *ppTargetThread = pData->pThread;
-                pLock->ReleaseLock(pThread, FALSE);
+                pLock->ReleaseLock(pThread);
 
                 //
                 // Transfer object reference to out param
@@ -1834,25 +1811,25 @@ CPalThread::RunPostCreateInitializers(
         goto RunPostCreateInitializersExit;
     }
 
-    palError = synchronizationInfo.InitializePostCreate(this, m_threadId, m_dwLwpId);
+    palError = synchronizationInfo.InitializePostCreate(this);
     if (NO_ERROR != palError)
     {
         goto RunPostCreateInitializersExit;
     }
 
-    palError = suspensionInfo.InitializePostCreate(this, m_threadId, m_dwLwpId);
+    palError = suspensionInfo.InitializePostCreate(this);
     if (NO_ERROR != palError)
     {
         goto RunPostCreateInitializersExit;
     }
 
-    palError = apcInfo.InitializePostCreate(this, m_threadId, m_dwLwpId);
+    palError = apcInfo.InitializePostCreate(this);
     if (NO_ERROR != palError)
     {
         goto RunPostCreateInitializersExit;
     }
 
-    palError = crtInfo.InitializePostCreate(this, m_threadId, m_dwLwpId);
+    palError = crtInfo.InitializePostCreate(this);
     if (NO_ERROR != palError)
     {
         goto RunPostCreateInitializersExit;
@@ -1946,13 +1923,7 @@ CPalThread::WaitForStartStatus(
     return m_fStartStatus;
 }
 
-void
-ThreadCleanupRoutine(
-    CPalThread *pThread,
-    IPalObject *pObjectToCleanup,
-    bool fShutdown,
-    bool fCleanupSharedState
-    )
+void ThreadCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool, bool)
 {
     CThreadProcessLocalData *pThreadData = NULL;
     CPalThread *pThreadToCleanup = NULL;
@@ -1984,7 +1955,7 @@ ThreadCleanupRoutine(
 
         pThreadToCleanup = pThreadData->pThread;
         pThreadData->pThread = NULL;
-        pDataLock->ReleaseLock(pThread, TRUE);
+        pDataLock->ReleaseLock(pThread);
         pThreadToCleanup->ReleaseThreadReference();
     }
     else
@@ -1994,14 +1965,7 @@ ThreadCleanupRoutine(
 
 }
 
-PAL_ERROR
-ThreadInitializationRoutine(
-    CPalThread *pThread,
-    CObjectType *pObjectType,
-    void *pImmutableData,
-    void *pSharedData,
-    void *pProcessLocalData
-    )
+PAL_ERROR ThreadInitializationRoutine(void *, void *)
 {
     return NO_ERROR;
 }

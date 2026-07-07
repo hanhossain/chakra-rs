@@ -406,12 +406,11 @@ Sleep(
 
 HANDLE
 CreateThread(
-          LPSECURITY_ATTRIBUTES lpThreadAttributes,
-          uint32_t dwStackSize,
-          LPTHREAD_START_ROUTINE lpStartAddress,
-          void * lpParameter,
-          uint32_t dwCreationFlags,
-          uint32_t * lpThreadId);
+    LPSECURITY_ATTRIBUTES lpThreadAttributes,
+    LPTHREAD_START_ROUTINE lpStartAddress,
+    void * lpParameter,
+    uint32_t dwCreationFlags,
+    uint32_t * lpThreadId);
 
 __attribute__((noreturn))
 void
@@ -886,14 +885,6 @@ CreateFileMappingW(
 #define FILE_MAP_ALL_ACCESS SECTION_ALL_ACCESS
 #define FILE_MAP_COPY       SECTION_QUERY
 
-HANDLE
-OpenFileMappingW(
-          uint32_t dwDesiredAccess,
-          BOOL bInheritHandle,
-          const char16_t* lpName);
-
-#define OpenFileMapping OpenFileMappingW
-
 void *
 MapViewOfFile(
            HANDLE hFileMappingObject,
@@ -911,14 +902,6 @@ typedef long (*FARPROC)();
 
 void *
 VirtualAlloc(
-          void * lpAddress,
-          size_t dwSize,
-          uint32_t flAllocationType,
-          uint32_t flProtect);
-
-void *
-VirtualAllocEx(
-          HANDLE hProcess,
           void * lpAddress,
           size_t dwSize,
           uint32_t flAllocationType,
@@ -971,16 +954,11 @@ VirtualQuery(
 
 size_t
 VirtualQueryEx(
-          HANDLE hProcess,
-          const void * lpAddress,
-          PMEMORY_BASIC_INFORMATION lpBuffer,
-          size_t dwLength);
+    const void * lpAddress,
+    PMEMORY_BASIC_INFORMATION lpBuffer,
+    size_t dwLength);
 
-BOOL
-FlushInstructionCache(
-               HANDLE hProcess,
-               const void * lpBaseAddress,
-               size_t dwSize);
+BOOL FlushInstructionCache(const void * lpBaseAddress, size_t dwSize);
 
 #define MAX_LEADBYTES         12
 #define MAX_DEFAULTCHAR       2
@@ -1028,7 +1006,6 @@ WideCharToMultiByte(
              int cchWideChar,
              char* lpMultiByteStr,
              int cbMultyByte,
-             const char * lpDefaultChar,
              LPBOOL lpUsedDefaultChar);
 
 #define DATE_LONGDATE             0x00000002  // use long date picture
@@ -1134,12 +1111,7 @@ BOOL
 CloseHandle(
           HANDLE hObject);
 
-void
-RaiseException(
-            uint32_t dwExceptionCode,
-            uint32_t dwExceptionFlags,
-            uint32_t nNumberOfArguments,
-            const size_t *lpArguments);
+void RaiseException(uint32_t dwExceptionCode, uint32_t dwExceptionFlags);
 
 uint32_t
 GetTickCount(

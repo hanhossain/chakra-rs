@@ -61,27 +61,6 @@ namespace CorUnix
         SHMPTR next;
     } SHMFILELOCKRGNS;
     
-    class CSharedMemoryFileLockMgr : public IFileLockManager
-    {
-    public:
-        
-        virtual
-        PAL_ERROR
-        GetLockControllerForFile(
-            CPalThread *pThread,                // IN, OPTIONAL
-            const char * szFileName,
-            uint32_t dwAccessRights,
-            uint32_t dwShareMode,
-            IFileLockController **ppLockController  // OUT
-            );
-
-        virtual
-        PAL_ERROR
-        GetFileShareModeForFile(
-            const char * szFileName,
-            uint32_t* pdwShareMode);
-    };
-
     class CSharedMemoryFileLockController : public IFileLockController
     {
     private:
@@ -104,39 +83,14 @@ namespace CorUnix
         {
         };
 
-        virtual
         PAL_ERROR
         GetTransactionLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            FileTransactionLockType eLockType,
             uint32_t dwOffsetLow,
             uint32_t dwOffsetHigh,
             uint32_t nNumberOfBytesToLockLow,
             uint32_t nNumberOfBytesToLockHigh,
             IFileTransactionLock **ppTransactionLock    // OUT
-            );
-
-        virtual
-        PAL_ERROR
-        CreateFileLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            uint32_t dwOffsetLow,
-            uint32_t dwOffsetHigh,
-            uint32_t nNumberOfBytesToLockLow,
-            uint32_t nNumberOfBytesToLockHigh,
-            FileLockExclusivity eFileLockExclusivity,
-            FileLockWaitMode eFileLockWaitMode
-            );
-
-        virtual
-        PAL_ERROR
-        ReleaseFileLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            uint32_t dwOffsetLow,
-            uint32_t dwOffsetHigh,
-            uint32_t nNumberOfBytesToUnlockLow,
-            uint32_t nNumberOfBytesToUnlockHigh
-            );
+            ) override;
 
         virtual
         void

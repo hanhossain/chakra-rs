@@ -100,3 +100,5 @@ target_include_directories(libwabt PUBLIC
 target_compile_definitions(libwabt PUBLIC
     PAL_STDCPP_COMPAT
 )
+
+target_compile_options(libwabt PRIVATE -Wno-unused-parameter)

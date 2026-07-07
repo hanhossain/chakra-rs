@@ -73,12 +73,10 @@ namespace CorUnix
             *pDataLock = static_cast<IDataLock*>(this);
         };
 
-        virtual
         void
         ReleaseLock(
-            CPalThread *pthr,
-            bool fDataChanged
-            )
+            CPalThread *pthr
+        ) override
         {
             InternalLeaveCriticalSection(pthr, &m_cs);
         };

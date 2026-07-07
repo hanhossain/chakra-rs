@@ -120,10 +120,7 @@ namespace CorUnix
     //
 
     typedef PAL_ERROR (*OBJECTINITROUTINE) (
-        CPalThread *,   // pThread
-        CObjectType *,  // pObjectType
         void *,         // pImmutableData
-        void *,         // pSharedData
         void *          // pProcessLocalData
         );
 
@@ -705,9 +702,8 @@ namespace CorUnix
         virtual
         void
         ReleaseLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            bool fDataChanged
-            ) = 0;
+            CPalThread *pThread
+        ) = 0;
     };
 
     //
@@ -974,12 +970,12 @@ namespace CorUnix
         virtual
         PAL_ERROR
         ReferenceObjectByHandle(
-            CPalThread *pThread,                // IN, OPTIONAL
+            CPalThread *pThread,
+            // IN, OPTIONAL
             HANDLE hHandleToReference,
             CAllowedObjectTypes *pAllowedTypes,
-            uint32_t dwRightsRequired,
             IPalObject **ppObject               // OUT
-            ) = 0;
+        ) = 0;
 
         //
         // This routine is intended for WaitForMultipleObjects[Ex]
@@ -988,29 +984,17 @@ namespace CorUnix
         virtual
         PAL_ERROR
         ReferenceMultipleObjectsByHandleArray(
-            CPalThread *pThread,                // IN, OPTIONAL
+            CPalThread *pThread,
+            // IN, OPTIONAL
             HANDLE rghHandlesToReference[],
             uint32_t dwHandleCount,
             CAllowedObjectTypes *pAllowedTypes,
-            uint32_t dwRightsRequired,
             IPalObject *rgpObjects[]            // OUT
-            ) = 0;
+        ) = 0;
 
         //
         // This routine is for cross-process handle duplication.
         //
-
-        virtual
-        PAL_ERROR
-        ReferenceObjectByForeignHandle(
-            CPalThread *pThread,                // IN, OPTIONAL
-            HANDLE hForeignHandle,
-            IPalProcess *pForeignProcess,
-            CAllowedObjectTypes *pAllowedTypes,
-            uint32_t dwRightsRequired,
-            IPalObject **ppObject               // OUT
-            ) = 0;
-
     };
 
     extern IPalObjectManager *g_pObjectManager;
@@ -1120,10 +1104,9 @@ namespace CorUnix
         virtual
         void
         FreeObjectSynchData(
-            CObjectType *pObjectType,
             ObjectDomain eObjectDomain,
             void *pvSynchData
-            ) = 0;
+        ) = 0;
 
         virtual
         PAL_ERROR
@@ -1214,8 +1197,6 @@ namespace CorUnix
         virtual
         PAL_ERROR
         GetTransactionLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            FileTransactionLockType eLockType,
             uint32_t dwOffsetLow,
             uint32_t dwOffsetHigh,
             uint32_t nNumberOfBytesToLockLow,
@@ -1235,28 +1216,6 @@ namespace CorUnix
             WaitForLockAcquisition
         };
 
-        virtual
-        PAL_ERROR
-        CreateFileLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            uint32_t dwOffsetLow,
-            uint32_t dwOffsetHigh,
-            uint32_t nNumberOfBytesToLockLow,
-            uint32_t nNumberOfBytesToLockHigh,
-            FileLockExclusivity eFileLockExclusivity,
-            FileLockWaitMode eFileLockWaitMode
-            ) = 0;
-
-        virtual
-        PAL_ERROR
-        ReleaseFileLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            uint32_t dwOffsetLow,
-            uint32_t dwOffsetHigh,
-            uint32_t nNumberOfBytesToUnlockLow,
-            uint32_t nNumberOfBytesToUnlockHigh
-            ) = 0;
-
         //
         // ReleaseController should be called from the file object's
         // cleanup routine. It must always be called, even if fShutdown is
@@ -1267,41 +1226,6 @@ namespace CorUnix
         void
         ReleaseController() = 0;
     };
-
-    class IFileLockManager
-    {
-    public:
-
-        //
-        // GetLockControllerForFile should be called by CreateFile.
-        // It will fail if the requested access rights and share
-        // mode are not compatible with existing lock controllers
-        // for the file.
-        //
-
-        virtual
-        PAL_ERROR
-        GetLockControllerForFile(
-            CPalThread *pThread,                // IN, OPTIONAL
-            const char * szFileName,
-            uint32_t dwAccessRights,
-            uint32_t dwShareMode,
-            IFileLockController **ppLockController  // OUT
-            ) = 0;
-
-        //
-        // Gets the share mode for the file
-        // (returns SHARE_MODE_NOT_INITIALIZED if file lock controller
-        // not found)
-        //
-        virtual
-        PAL_ERROR
-        GetFileShareModeForFile(
-            const char * szFileName,
-            uint32_t* pdwShareMode) = 0;
-    };
-
-    extern IFileLockManager *g_pFileLockManager;
 }
 
 #endif // _CORUNIX_H

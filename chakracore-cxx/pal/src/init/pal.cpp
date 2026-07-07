@@ -491,7 +491,7 @@ void
 PAL_Shutdown(
     void)
 {
-    TerminateCurrentProcessNoExit(FALSE /* bTerminateUnconditionally */);
+    TerminateCurrentProcessNoExit();
 }
 
 /*++

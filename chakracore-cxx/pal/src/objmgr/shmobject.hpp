@@ -37,20 +37,14 @@ namespace CorUnix
 
         void
         AcquireLock(
-            CPalThread *pthr,
             IDataLock **ppDataLock
-            )
+        )
         {
             SHMLock();
             *ppDataLock = static_cast<IDataLock*>(this);
         };
 
-        virtual
-        void
-        ReleaseLock(
-            CPalThread *pthr,
-            bool fDataChanged
-            )
+        void ReleaseLock([[maybe_unused]] CPalThread *pthr) override
         {
             SHMRelease();
         };

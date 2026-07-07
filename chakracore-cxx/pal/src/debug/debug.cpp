@@ -110,11 +110,7 @@ caches are coherent in hardware. For non-X86 architectures, this call
 usually maps to a kernel API to flush the D-caches on all processors.
 
 --*/
-BOOL
-FlushInstructionCache(
-         HANDLE hProcess,
-         const void * lpBaseAddress,
-         size_t dwSize)
+BOOL FlushInstructionCache(const void * lpBaseAddress, size_t dwSize)
 {
     BOOL Ret;
 
@@ -172,8 +168,7 @@ OutputDebugStringW(
         goto EXIT;
     }
 
-    if ((strLen = WideCharToMultiByte(CP_ACP, 0, lpOutputString, -1, NULL, 0,
-                                      NULL, NULL))
+    if ((strLen = WideCharToMultiByte(CP_ACP, 0, lpOutputString, -1, NULL, 0, NULL))
         == 0)
     {
         ASSERT("failed to get wide chars length\n");
@@ -190,7 +185,7 @@ OutputDebugStringW(
     }
 
     if(! WideCharToMultiByte(CP_ACP, 0, lpOutputString, -1,
-                             lpOutputStringA, strLen, NULL, NULL))
+                             lpOutputStringA, strLen, NULL))
     {
         ASSERT("failed to convert wide chars to multibytes\n");
         SetLastError(ERROR_INTERNAL_ERROR);
@@ -392,10 +387,9 @@ GetThreadContext(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hThread,
-        0, // THREAD_GET_CONTEXT
-        &pTargetThread,
+        &pTargetThread, // THREAD_GET_CONTEXT
         &pobjThread
-        );
+    );
 
     if (NO_ERROR == palError)
     {
@@ -448,19 +442,17 @@ SetThreadContext(
     palError = InternalGetThreadDataFromHandle(
         pThread,
         hThread,
-        0, // THREAD_SET_CONTEXT
-        &pTargetThread,
+        &pTargetThread, // THREAD_SET_CONTEXT
         &pobjThread
-        );
+    );
 
     if (NO_ERROR == palError)
     {
         if (!pTargetThread->IsDummy())
         {
             ret = CONTEXT_SetThreadContext(
-                pTargetThread->GetPThreadSelf(),
                 lpContext
-                );
+            );
         }
         else
         {
@@ -966,9 +958,8 @@ DBGSetProcessAttached(
         pThread,
         hProcess,
         &aotProcess,
-        0,
         &pobjProcess
-        );
+    );
 
     if (NO_ERROR != palError)
     {
@@ -1009,7 +1000,7 @@ DBGSetProcessAttachedExit:
 
     if (NULL != pDataLock)
     {
-        pDataLock->ReleaseLock(pThread, TRUE);
+        pDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pobjProcess)

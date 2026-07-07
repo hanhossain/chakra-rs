@@ -165,10 +165,9 @@ QueueUserAPC(
     palErr = InternalGetThreadDataFromHandle(
         pCurrentThread,
         hThread,
-        0, // THREAD_SET_CONTEXT
-        &pTargetThread,
+        &pTargetThread, // THREAD_SET_CONTEXT
         &pTargetThreadObject
-        );
+    );
 
     if (NO_ERROR != palErr)
     {
@@ -247,7 +246,6 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
                                                                      (void **)lpHandles,
                                                                      nCount,
                                                                      &sg_aotWaitObject,
-                                                                     SYNCHRONIZE,
                                                                      ppIPalObjs);
     if (NO_ERROR != palErr)
     {

@@ -551,8 +551,8 @@ namespace JsUtil
 
             this->parallelThreadData[i]->processor = this;
             // Make sure to create the thread suspended so the thread handle can be assigned before the thread starts running
-            auto threadHandle = PlatformAgnostic::Thread::Create(0, &StaticThreadProc,
-                this->parallelThreadData[i], PlatformAgnostic::Thread::ThreadInitCreateSuspended, u"Chakra Parallel Worker Thread");
+            auto threadHandle = PlatformAgnostic::Thread::Create(&StaticThreadProc, this->parallelThreadData[i],
+                                                                 PlatformAgnostic::Thread::ThreadInitCreateSuspended, u"Chakra Parallel Worker Thread");
 
             if (threadHandle != PlatformAgnostic::Thread::InvalidHandle)
             {

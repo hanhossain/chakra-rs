@@ -175,8 +175,8 @@ namespace CorUnix
 }
 #endif // _DEBUG
 
-#define ObtainCurrentThreadId(thread) ObtainCurrentThreadIdImpl(thread, __func__)
-static size_t ObtainCurrentThreadIdImpl(CPalThread *pCurrentThread, const char *callingFuncName)
+#define ObtainCurrentThreadId(thread) ObtainCurrentThreadIdImpl(thread)
+static size_t ObtainCurrentThreadIdImpl(CPalThread *pCurrentThread)
 {
     size_t threadId;
     if(pCurrentThread)
@@ -186,7 +186,6 @@ static size_t ObtainCurrentThreadIdImpl(CPalThread *pCurrentThread, const char *
     else
     {
         threadId = GetCurrentThreadId();
-        CS_TRACE("Early %s, no pthread data, getting TID internally\n", callingFuncName);
     }
     _ASSERTE(0 != threadId);
 

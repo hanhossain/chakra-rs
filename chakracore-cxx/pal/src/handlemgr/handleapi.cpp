@@ -190,9 +190,8 @@ CorUnix::InternalDuplicateHandle(
             pThread,
             hSource,
             &aotDuplicateHandle,
-            dwDesiredAccess,
             &pobjSource
-            );
+        );
 
         if (NO_ERROR != palError)
         {
