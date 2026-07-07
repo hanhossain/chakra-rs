@@ -6780,7 +6780,7 @@ GlobOpt::CanProveConditionalBranch(IR::Instr *instr, Value *src1Val, Value *src2
     switch (instr->m_opcode)
     {
 #define BRANCHSIGNED(OPCODE,CMP,TYPE,UNSIGNEDNESS,UNDEFINEDCMP) \
-    case Js::OpCode::##OPCODE: \
+    case Js::OpCode::OPCODE: \
         if (src1Val && src2Val) \
         { \
             if (src1Val->GetValueInfo()->TryGetIntConstantValue(&left, UNSIGNEDNESS) && \
@@ -6820,7 +6820,7 @@ GlobOpt::CanProveConditionalBranch(IR::Instr *instr, Value *src1Val, Value *src2
         BRANCHSIGNED(BrUnLe_I4, <= , unsigned long, true, false)
 #undef BRANCHSIGNED
 #define BRANCH(OPCODE,CMP,VARCMPFUNC,UNDEFINEDCMP) \
-    case Js::OpCode::##OPCODE: \
+    case Js::OpCode::OPCODE: \
         if (src1Val && src2Val && src1Val->GetValueInfo()->TryGetIntConstantValue(&left) && \
             src2Val->GetValueInfo()->TryGetIntConstantValue(&right)) \
         { \

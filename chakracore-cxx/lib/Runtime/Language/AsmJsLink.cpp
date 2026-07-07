@@ -141,7 +141,7 @@ namespace Js{
         switch (arrayLibMethod)
         {
 #define ASMJS_TYPED_ARRAY_NAMES(name, propertyName) case AsmJSTypedArrayBuiltinFunction::AsmJSTypedArrayBuiltin_##name: \
-            return CheckIsBuiltinFunction(scriptContext, stdlib, PropertyIds::##propertyName, propertyName##::EntryInfo::NewInstance);
+            return CheckIsBuiltinFunction(scriptContext, stdlib, PropertyIds::propertyName, propertyName::EntryInfo::NewInstance);
 #include "AsmJsBuiltInNames.h"
         default:
             Assume(UNREACHED);
@@ -154,10 +154,10 @@ namespace Js{
         switch (mathLibMethod)
         {
 #define ASMJS_MATH_FUNC_NAMES(name, propertyName, funcInfo) case AsmJSMathBuiltinFunction::AsmJSMathBuiltin_##name: \
-            return CheckIsBuiltinFunction(scriptContext, asmMathObject, PropertyIds::##propertyName, funcInfo);
+            return CheckIsBuiltinFunction(scriptContext, asmMathObject, PropertyIds::propertyName, funcInfo);
 #include "AsmJsBuiltInNames.h"
 #define ASMJS_MATH_DOUBLE_CONST_NAMES(name, propertyName, value) case AsmJSMathBuiltinFunction::AsmJSMathBuiltin_##name: \
-            return CheckIsBuiltinValue(scriptContext, asmMathObject, PropertyIds::##propertyName, value);
+            return CheckIsBuiltinValue(scriptContext, asmMathObject, PropertyIds::propertyName, value);
 #include "AsmJsBuiltInNames.h"
         default:
             Assume(UNREACHED);

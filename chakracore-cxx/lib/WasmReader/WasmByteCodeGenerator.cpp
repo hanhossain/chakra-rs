@@ -766,12 +766,12 @@ void WasmBytecodeGenerator::EmitExpr(WasmOp op)
 #define WASM_EXTRACTLANE_OPCODE(opname, opcode, sig, asmjsop, ...) \
     case wb##opname: \
         Simd::EnsureSimdIsEnabled();\
-        info = EmitExtractLaneExpr(Js::OpCodeAsmJs::##asmjsop, WasmOpCodeSignatures::sig); \
+        info = EmitExtractLaneExpr(Js::OpCodeAsmJs::asmjsop, WasmOpCodeSignatures::sig); \
         break;
 #define WASM_REPLACELANE_OPCODE(opname, opcode, sig, asmjsop, ...) \
     case wb##opname: \
         Simd::EnsureSimdIsEnabled();\
-        info = EmitReplaceLaneExpr(Js::OpCodeAsmJs::##asmjsop, WasmOpCodeSignatures::sig); \
+        info = EmitReplaceLaneExpr(Js::OpCodeAsmJs::asmjsop, WasmOpCodeSignatures::sig); \
         break;
 #endif
 #define WASM_MEMREAD_OPCODE(opname, opcode, sig, imp, viewtype, wat) \
@@ -797,26 +797,26 @@ void WasmBytecodeGenerator::EmitExpr(WasmOp op)
 #define WASM_SIMD_MEMREAD_OPCODE(opname, opcode, sig, asmjsop, viewtype, dataWidth, ...) \
     case wb##opname: \
         Assert(WasmOpCodeSignatures::n##sig > 0);\
-        info = EmitSimdMemAccess(Js::OpCodeAsmJs::##asmjsop, WasmOpCodeSignatures::sig, viewtype, dataWidth, false); \
+        info = EmitSimdMemAccess(Js::OpCodeAsmJs::asmjsop, WasmOpCodeSignatures::sig, viewtype, dataWidth, false); \
         break;
 #define WASM_SIMD_MEMSTORE_OPCODE(opname, opcode, sig, asmjsop, viewtype, dataWidth, ...) \
     case wb##opname: \
         Assert(WasmOpCodeSignatures::n##sig > 0);\
-        info = EmitSimdMemAccess(Js::OpCodeAsmJs::##asmjsop, WasmOpCodeSignatures::sig, viewtype, dataWidth, true); \
+        info = EmitSimdMemAccess(Js::OpCodeAsmJs::asmjsop, WasmOpCodeSignatures::sig, viewtype, dataWidth, true); \
         break;
 #define WASM_BINARY_OPCODE(opname, opcode, sig, asmjsop, imp, wat) \
     case wb##opname: \
         Assert(WasmOpCodeSignatures::n##sig == 3);\
-        info = EmitBinExpr(Js::OpCodeAsmJs::##asmjsop, WasmOpCodeSignatures::sig); \
+        info = EmitBinExpr(Js::OpCodeAsmJs::asmjsop, WasmOpCodeSignatures::sig); \
         break;
 #define WASM_UNARY__OPCODE(opname, opcode, sig, asmjsop, imp, wat) \
     case wb##opname: \
         Assert(WasmOpCodeSignatures::n##sig == 2);\
-        info = EmitUnaryExpr(Js::OpCodeAsmJs::##asmjsop, WasmOpCodeSignatures::sig); \
+        info = EmitUnaryExpr(Js::OpCodeAsmJs::asmjsop, WasmOpCodeSignatures::sig); \
         break;
 #define WASM_EMPTY__OPCODE(opname, opcode, asmjsop, imp, wat) \
     case wb##opname: \
-        m_writer->EmptyAsm(Js::OpCodeAsmJs::##asmjsop);\
+        m_writer->EmptyAsm(Js::OpCodeAsmJs::asmjsop);\
         break;
 #include "WasmBinaryOpCodes.h"
     default:

@@ -12,7 +12,7 @@
 #define PROCESS_READ_LAYOUT_ASMJS(name, layout, suffix) \
     static_assert(OpCodeInfoAsmJs<OpCodeAsmJs::name>::Layout == OpLayoutTypeAsmJs::layout); \
     [[maybe_unused]] const unaligned OpLayout##layout##suffix * playout = m_reader.layout##suffix(ip); \
-    Assert((playout != nullptr) == (Js::OpLayoutTypeAsmJs::##layout != Js::OpLayoutTypeAsmJs::Empty)); // Make sure playout is used
+    Assert((playout != nullptr) == (Js::OpLayoutTypeAsmJs::layout != Js::OpLayoutTypeAsmJs::Empty)); // Make sure playout is used
 
 #define PROCESS_NOPASMJS_COMMON(name, layout, suffix) \
     case OpCodeAsmJs::name: \

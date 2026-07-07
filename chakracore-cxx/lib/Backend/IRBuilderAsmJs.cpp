@@ -1431,7 +1431,7 @@ IRBuilderAsmJs::InitializeMemAccessTypeInfo(Js::ArrayBufferView::ViewType viewTy
     case Js::ArrayBufferView::TYPE_##name: \
         typeInfo->valueRegType = WAsmJs::FromPrimitiveType<RegType>(); \
         typeInfo->type = Ty##irSuffix;\
-        typeInfo->arrayType = ValueType::GetObject(ObjectType::##irSuffix##Array); \
+        typeInfo->arrayType = ValueType::GetObject(ObjectType::irSuffix##Array); \
         Assert(TySize[Ty##irSuffix] == (1<<align)); \
         break;
 #include "Language/AsmJsArrayBufferViews.h"
@@ -3650,7 +3650,7 @@ void IRBuilderAsmJs::GetSimdTypesFromAsmType(Js::AsmJsType::Which asmType, IRTyp
     ValueType vType = ValueType::Uninitialized;
 
 #define SIMD_TYPE_CHECK(type1, type2) \
-case Js::AsmJsType::Which::##type1: \
+case Js::AsmJsType::Which::type1: \
         irType = type2; \
         vType = ValueType::Simd; \
         break;
@@ -6871,7 +6871,7 @@ IRBuilderAsmJs::BuildAsmSimdTypedArr(Js::OpCodeAsmJs newOpcode, uint32_t offset,
     {
 #define ARRAYBUFFER_VIEW(name, align, RegType, MemType, irSuffix) \
     case Js::ArrayBufferView::TYPE_##name: \
-        arrayType = ValueType::GetObject(ObjectType::##irSuffix##Array); \
+        arrayType = ValueType::GetObject(ObjectType::irSuffix##Array); \
         break;
 #include "Language/AsmJsArrayBufferViews.h"
     default:

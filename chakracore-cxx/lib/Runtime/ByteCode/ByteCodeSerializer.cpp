@@ -913,23 +913,23 @@ public:
             {
 
 #define LAYOUT_TYPE(layout) \
-    case OpLayoutTypeAsmJs::##layout: { \
+    case OpLayoutTypeAsmJs::layout: { \
         Assert(layoutSize == SmallLayout); \
-        reader.##layout(); \
+        reader.layout(); \
         saveBlock(); \
         break; }
 #define LAYOUT_TYPE_WMS(layout) \
-    case OpLayoutTypeAsmJs::##layout: { \
+    case OpLayoutTypeAsmJs::layout: { \
         switch (layoutSize) \
         { \
         case SmallLayout: \
-            reader.##layout##_Small(); \
+            reader.layout##_Small(); \
             break; \
         case MediumLayout: \
-            reader.##layout##_Medium(); \
+            reader.layout##_Medium(); \
             break; \
         case LargeLayout: \
-            reader.##layout##_Large(); \
+            reader.layout##_Large(); \
             break; \
         default: \
             Assume(UNREACHED); \

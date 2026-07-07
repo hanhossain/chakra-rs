@@ -194,17 +194,17 @@ namespace PerfCounter
 
 #define DEFINE_RECYCLER_TRACKER_PERF_COUNTER(type) \
     static PerfCounter::RecyclerTrackerCounterSet::Map RecyclerTrackerCounter##id(&typeid(type), false, \
-        PerfCounter::RecyclerTrackerCounterSetDefinition::##type##CounterIndex, \
-        PerfCounter::RecyclerTrackerCounterSetDefinition::##type##SizeCounterIndex)
+        PerfCounter::RecyclerTrackerCounterSetDefinition::type##CounterIndex, \
+        PerfCounter::RecyclerTrackerCounterSetDefinition::type##SizeCounterIndex)
 
 #define DEFINE_RECYCLER_TRACKER_ARRAY_PERF_COUNTER(type) \
     static PerfCounter::RecyclerTrackerCounterSet::Map RecyclerTrackerArrayCounter##id(&typeid(type), true, \
-        PerfCounter::RecyclerTrackerCounterSetDefinition::##type##ArrayCounterIndex, \
-        PerfCounter::RecyclerTrackerCounterSetDefinition::##type##ArraySizeCounterIndex)
+        PerfCounter::RecyclerTrackerCounterSetDefinition::type##ArrayCounterIndex, \
+        PerfCounter::RecyclerTrackerCounterSetDefinition::type##ArraySizeCounterIndex)
 
 #define DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER(type) \
     static PerfCounter::RecyclerTrackerCounterSet::Map RecyclerTrackerWeakRefCounter##id(&typeid(type), \
-        PerfCounter::RecyclerTrackerCounterSetDefinition::##type##WeakRefCounterIndex);
+        PerfCounter::RecyclerTrackerCounterSetDefinition::type##WeakRefCounterIndex);
 
 #else
 #define DEFINE_RECYCLER_TRACKER_PERF_COUNTER(type)
