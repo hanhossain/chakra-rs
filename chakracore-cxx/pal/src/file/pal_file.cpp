@@ -108,7 +108,7 @@ void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool 
         close(pLocalData->unix_fd);
     }
 
-    pLocalDataLock->ReleaseLock(pThread, FALSE);
+    pLocalDataLock->ReleaseLock(pThread);
 }
 
 typedef enum
@@ -556,7 +556,7 @@ CorUnix::InternalWriteFile(
     // write call
     //
 
-    pLocalDataLock->ReleaseLock(pThread, FALSE);
+    pLocalDataLock->ReleaseLock(pThread);
     pLocalDataLock = NULL;
     pLocalData = NULL;
 
@@ -581,7 +581,7 @@ done:
 
     if (NULL != pLocalDataLock)
     {
-        pLocalDataLock->ReleaseLock(pThread, FALSE);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pFileObject)
@@ -780,7 +780,7 @@ InternalSetEndOfFileExit:
 
     if (NULL != pLocalDataLock)
     {
-        pLocalDataLock->ReleaseLock(pThread, FALSE);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pFileObject)
@@ -1017,7 +1017,7 @@ InternalSetFilePointerExit:
 
     if (NULL != pLocalDataLock)
     {
-        pLocalDataLock->ReleaseLock(pThread, FALSE);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pFileObject)
@@ -1093,7 +1093,7 @@ InternalGetFileSizeExit:
 
     if (NULL != pLocalDataLock)
     {
-        pLocalDataLock->ReleaseLock(pThread, FALSE);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pFileObject)
@@ -1183,7 +1183,7 @@ InternalFlushFileBuffersExit:
 
     if (NULL != pLocalDataLock)
     {
-        pLocalDataLock->ReleaseLock(pThread, FALSE);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pFileObject)
@@ -1278,7 +1278,7 @@ InternalGetFileTypeExit:
 
     if (NULL != pLocalDataLock)
     {
-        pLocalDataLock->ReleaseLock(pThread, FALSE);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pFileObject)
@@ -1456,7 +1456,7 @@ InternalLockFileExit:
 
     if (NULL != pLocalDataLock)
     {
-        pLocalDataLock->ReleaseLock(pThread, FALSE);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pFileObject)
@@ -1538,7 +1538,7 @@ InternalUnlockFileExit:
 
     if (NULL != pLocalDataLock)
     {
-        pLocalDataLock->ReleaseLock(pThread, FALSE);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pFileObject)
@@ -1627,7 +1627,7 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
     // We've finished initializing our local data, so release that lock
     //
 
-    pDataLock->ReleaseLock(pThread, TRUE);
+    pDataLock->ReleaseLock(pThread);
     pDataLock = NULL;
 
     palError = g_pObjectManager->RegisterObject(
@@ -1656,7 +1656,7 @@ done:
 
     if (NULL != pDataLock)
     {
-        pDataLock->ReleaseLock(pThread, TRUE);
+        pDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pFileObject)

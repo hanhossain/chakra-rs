@@ -1004,7 +1004,7 @@ DBGSetProcessAttachedExit:
 
     if (NULL != pDataLock)
     {
-        pDataLock->ReleaseLock(pThread, TRUE);
+        pDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pobjProcess)

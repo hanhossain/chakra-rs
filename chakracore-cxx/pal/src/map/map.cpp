@@ -171,7 +171,7 @@ FileMappingCleanupRoutine(
             fDataChanged = TRUE;
         }
 
-        pLocalDataLock->ReleaseLock(pThread, fDataChanged);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     //
@@ -428,7 +428,7 @@ CorUnix::InternalCreateFileMapping(
                 palError = ERROR_ACCESS_DENIED;
                 if (NULL != pFileLocalDataLock)
                 {
-                    pFileLocalDataLock->ReleaseLock(pThread, FALSE);
+                    pFileLocalDataLock->ReleaseLock(pThread);
                 }
                 goto ExitInternalCreateFileMapping;
             }
@@ -457,7 +457,7 @@ CorUnix::InternalCreateFileMapping(
                 palError = ERROR_INTERNAL_ERROR;
                 if (NULL != pFileLocalDataLock)
                 {
-                    pFileLocalDataLock->ReleaseLock(pThread, FALSE);
+                    pFileLocalDataLock->ReleaseLock(pThread);
                 }
                 goto ExitInternalCreateFileMapping;
             }
@@ -468,14 +468,14 @@ CorUnix::InternalCreateFileMapping(
                 palError = ERROR_INTERNAL_ERROR;
                 if (NULL != pFileLocalDataLock)
                 {
-                    pFileLocalDataLock->ReleaseLock(pThread, FALSE);
+                    pFileLocalDataLock->ReleaseLock(pThread);
                 }
                 goto ExitInternalCreateFileMapping;
             }
 
             if (NULL != pFileLocalDataLock)
             {
-                pFileLocalDataLock->ReleaseLock(pThread, FALSE);
+                pFileLocalDataLock->ReleaseLock(pThread);
             }
         } 
         else 
@@ -555,7 +555,7 @@ CorUnix::InternalCreateFileMapping(
 
     pLocalData->UnixFd = UnixFd;
 
-    pLocalDataLock->ReleaseLock(pThread, TRUE);
+    pLocalDataLock->ReleaseLock(pThread);
     pLocalDataLock = NULL;
 
     palError = g_pObjectManager->RegisterObject(
@@ -584,9 +584,8 @@ ExitInternalCreateFileMapping:
     if (NULL != pLocalDataLock)
     {
         pLocalDataLock->ReleaseLock(
-            pThread,
-            TRUE
-            );
+            pThread
+        );
     }
 
     if (NULL != pMapping)
@@ -997,7 +996,7 @@ InternalMapViewOfFileExit:
 
     if (NULL != pProcessLocalDataLock)
     {
-        pProcessLocalDataLock->ReleaseLock(pThread, FALSE);
+        pProcessLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pMappingObject)

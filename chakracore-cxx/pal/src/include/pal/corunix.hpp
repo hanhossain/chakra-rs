@@ -705,9 +705,8 @@ namespace CorUnix
         virtual
         void
         ReleaseLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            bool fDataChanged
-            ) = 0;
+            CPalThread *pThread
+        ) = 0;
     };
 
     //

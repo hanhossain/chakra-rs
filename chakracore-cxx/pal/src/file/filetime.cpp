@@ -216,7 +216,7 @@ CorUnix::InternalSetFileTime(
 InternalSetFileTimeExit:
     if (NULL != pLocalDataLock)
     {
-        pLocalDataLock->ReleaseLock(pThread, FALSE);
+        pLocalDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pFileObject)

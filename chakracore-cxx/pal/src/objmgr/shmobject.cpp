@@ -552,7 +552,7 @@ EnsureObjectIsSharedExit:
 
     if (NULL != pDataLock)
     {
-        pDataLock->ReleaseLock(pthr, TRUE);
+        pDataLock->ReleaseLock(pthr);
     }
 
     SHMRelease();
@@ -914,7 +914,7 @@ CSharedMemoryObject::GetSharedData(
 
         if (SharedObject == m_ObjectDomain)
         {
-            pDataLock->ReleaseLock(pthr, FALSE);
+            pDataLock->ReleaseLock(pthr);
             m_ssmlSharedData.AcquireLock(pthr, &pDataLock);
         }
     }
@@ -1184,7 +1184,7 @@ EnsureObjectIsSharedExit:
 
     if (NULL != pDataLock)
     {
-        pDataLock->ReleaseLock(pthr, TRUE);
+        pDataLock->ReleaseLock(pthr);
     }
 
     SHMRelease();

@@ -821,7 +821,7 @@ namespace CorUnix
                 }
 
                 Ctrlrs.pWaitCtrlrs[uIdx]->SetProcessLocalData(pProcLocData);
-                pDataLock->ReleaseLock(pthrCurrent, false);
+                pDataLock->ReleaseLock(pthrCurrent);
             }
         }
         if (NO_ERROR != palErr)

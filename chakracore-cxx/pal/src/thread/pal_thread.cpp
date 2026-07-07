@@ -1453,7 +1453,7 @@ CorUnix::CreateThreadObject(
     }
 
     pLocalData->pThread = pNewThread;
-    pDataLock->ReleaseLock(pThread, TRUE);
+    pDataLock->ReleaseLock(pThread);
     fThreadDataStoredInObject = TRUE;
 
     //
@@ -1587,7 +1587,7 @@ CorUnix::InternalCreateDummyThread(
     }
 
     pLocalData->pThread = pDummyThread;
-    pDataLock->ReleaseLock(pThread, TRUE);
+    pDataLock->ReleaseLock(pThread);
     fThreadDataStoredInObject = TRUE;
 
     palError = g_pObjectManager->RegisterObject(
@@ -1684,7 +1684,7 @@ CorUnix::InternalGetThreadDataFromHandle(
             if (NO_ERROR == palError)
             {
                 *ppTargetThread = pData->pThread;
-                pLock->ReleaseLock(pThread, FALSE);
+                pLock->ReleaseLock(pThread);
 
                 //
                 // Transfer object reference to out param
@@ -1984,7 +1984,7 @@ ThreadCleanupRoutine(
 
         pThreadToCleanup = pThreadData->pThread;
         pThreadData->pThread = NULL;
-        pDataLock->ReleaseLock(pThread, TRUE);
+        pDataLock->ReleaseLock(pThread);
         pThreadToCleanup->ReleaseThreadReference();
     }
     else

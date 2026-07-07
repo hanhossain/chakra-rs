@@ -292,7 +292,7 @@ PrepareStandardHandle(
     }
 
     *piFd = pLocalData->unix_fd;
-    pDataLock->ReleaseLock(pThread, FALSE);
+    pDataLock->ReleaseLock(pThread);
     pDataLock = NULL;
 
     //
@@ -306,7 +306,7 @@ PrepareStandardHandleExit:
 
     if (NULL != pDataLock)
     {
-        pDataLock->ReleaseLock(pThread, FALSE);
+        pDataLock->ReleaseLock(pThread);
     }
 
     if (NULL != pobjFile)
@@ -513,7 +513,7 @@ PROCGetProcessIDFromHandle(
         if (NO_ERROR == palError)
         {
             dwProcessId = pLocalData->dwProcessId;
-            pDataLock->ReleaseLock(pThread, FALSE);
+            pDataLock->ReleaseLock(pThread);
         }
 
         pobjProcess->ReleaseReference(pThread);
@@ -625,7 +625,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
 
     pLocalData->dwProcessId = getpid();
     pLocalData->ps = PS_RUNNING;
-    pDataLock->ReleaseLock(pThread, TRUE);
+    pDataLock->ReleaseLock(pThread);
 
     palError = g_pObjectManager->RegisterObject(
         pThread,
@@ -989,7 +989,7 @@ PROCGetProcessStatus(
         *pps = pLocalData->ps;
         *pdwExitCode = pLocalData->dwExitCode;
 
-        pDataLock->ReleaseLock(pThread, FALSE);
+        pDataLock->ReleaseLock(pThread);
 
         goto PROCGetProcessStatusExit;
     }
@@ -1098,7 +1098,7 @@ PROCGetProcessStatus(
     TRACE( "State of process 0x%08x : %d (exit code %d)\n",
            pLocalData->dwProcessId, *pps, *pdwExitCode );
 
-    pDataLock->ReleaseLock(pThread, TRUE);
+    pDataLock->ReleaseLock(pThread);
 
 PROCGetProcessStatusExit:
 
