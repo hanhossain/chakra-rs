@@ -57,13 +57,7 @@ InternalSetFilePointerForUnixFd(
     int32_t * lpNewFilePointerLow
     );
 
-void
-FileCleanupRoutine(
-    CPalThread *pThread,
-    IPalObject *pObjectToCleanup,
-    bool fShutdown,
-    bool fCleanupSharedState
-    );
+void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool fShutdown, bool);
 
 CObjectType CorUnix::otFile __attribute__((init_priority(200))) (
                 otiFile,
@@ -85,13 +79,7 @@ CObjectType CorUnix::otFile __attribute__((init_priority(200))) (
 
 CAllowedObjectTypes CorUnix::aotFile __attribute__((init_priority(200))) (otiFile);
 
-void
-FileCleanupRoutine(
-    CPalThread *pThread,
-    IPalObject *pObjectToCleanup,
-    bool fShutdown,
-    bool fCleanupSharedState
-    )
+void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool fShutdown, bool)
 {
     PAL_ERROR palError;
     CFileProcessLocalData *pLocalData = NULL;
