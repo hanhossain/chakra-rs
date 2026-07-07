@@ -4174,7 +4174,7 @@ public:
 #define DEFINE_FUNCTION_BODY_FIELDS 1
 #define DECLARE_SERIALIZABLE_FIELD(type, name, serializableType) \
             if (definedFields->has_##name == true) { \
-                current = Read##serializableType(current, &(*functionBody)->##name); \
+                current = Read##serializableType(current, &(*functionBody)->name); \
             }
 
 #define DECLARE_SERIALIZABLE_ACCESSOR_FIELD_NO_CHECK(type, name, serializableType) \

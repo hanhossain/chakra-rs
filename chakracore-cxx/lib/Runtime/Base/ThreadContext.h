@@ -256,10 +256,10 @@ public:
 
 #define DEFINE_FLAG(threadFlag, globalFlag) \
     public: \
-        inline bool threadFlag() const { return m_##globalFlag##; } \
+        inline bool threadFlag() const { return m_##globalFlag; } \
     \
     private: \
-        bool m_##globalFlag##;
+        bool m_##globalFlag;
 #define FLAG(threadFlag, globalFlag) DEFINE_FLAG(threadFlag, globalFlag)
 #define FLAG_RELEASE(threadFlag, globalFlag) DEFINE_FLAG(threadFlag, globalFlag)
 #include "ThreadConfigFlagsList.h"
@@ -272,8 +272,8 @@ private:
     {
         std::unique_lock autocs(Js::Configuration::Global.flags.csExperimentalFlags);
 
-#define FLAG(threadFlag, globalFlag) m_##globalFlag## = CONFIG_FLAG(globalFlag);
-#define FLAG_RELEASE(threadFlag, globalFlag) m_##globalFlag## = CONFIG_FLAG_RELEASE(globalFlag);
+#define FLAG(threadFlag, globalFlag) m_##globalFlag = CONFIG_FLAG(globalFlag);
+#define FLAG_RELEASE(threadFlag, globalFlag) m_##globalFlag = CONFIG_FLAG_RELEASE(globalFlag);
 #include "ThreadConfigFlagsList.h"
 #undef FLAG_RELEASE
 #undef FLAG

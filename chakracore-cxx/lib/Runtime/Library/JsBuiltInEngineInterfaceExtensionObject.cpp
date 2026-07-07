@@ -298,8 +298,8 @@ namespace Js
         {
             #define file(class, type, obj) \
             case class##_##type: \
-                isStatic = static_cast<bool>(IsTypeStatic::##type); \
-                installTarget = library->Get##obj##(); \
+                isStatic = static_cast<bool>(IsTypeStatic::type); \
+                installTarget = library->Get##obj(); \
                 classPropString = scriptContext->GetPropertyString(PropertyIds::class); \
                 break;
             JsBuiltIns(file)

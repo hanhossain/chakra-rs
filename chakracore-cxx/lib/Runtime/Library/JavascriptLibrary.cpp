@@ -2418,7 +2418,7 @@ namespace Js
     { \
         typeHandler->Convert(typedarrayPrototype, mode, 2); \
         JavascriptLibrary* library = typedarrayPrototype->GetLibrary(); \
-        library->AddMember(typedarrayPrototype, PropertyIds::constructor, library->##typedArray##Constructor); \
+        library->AddMember(typedarrayPrototype, PropertyIds::constructor, library->typedArray##Constructor); \
         library->AddMember(typedarrayPrototype, PropertyIds::BYTES_PER_ELEMENT, TaggedInt::ToVarUnchecked(sizeof(TypeName)), PropertyNone); \
         typedarrayPrototype->SetHasNoEnumerableProperties(true); \
         return true; \
@@ -2437,11 +2437,11 @@ namespace Js
     // For Microsoft extension typed array, like Int64Array, BoolArray, we don't have constructor as they can only be created from the projection arguments.
     // there is no subarray method either as that's another way to create typed array.
 #define INIT_MSINTERNAL_TYPEDARRAY_PROTOTYPE(typedArray, typedarrayPrototype) \
-    bool JavascriptLibrary::Initialize##typedarrayPrototype##(DynamicObject* typedarrayPrototype, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode)  \
+    bool JavascriptLibrary::Initialize##typedarrayPrototype(DynamicObject* typedarrayPrototype, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode)  \
     {   \
         typeHandler->Convert(typedarrayPrototype, mode, 1); \
         JavascriptLibrary* library = typedarrayPrototype->GetLibrary(); \
-        library->AddFunctionToLibraryObject(typedarrayPrototype, PropertyIds::set, &##typedArray##::EntryInfo::Set, 2); \
+        library->AddFunctionToLibraryObject(typedarrayPrototype, PropertyIds::set, &typedArray::EntryInfo::Set, 2); \
         typedarrayPrototype->SetHasNoEnumerableProperties(true); \
         return true; \
     }   \
@@ -3868,7 +3868,7 @@ namespace Js
 #define LIBRARY_FUNCTION(target, name, argc, flags, EntryInfo) \
         if(localFuncId == EntryInfo.GetLocalFunctionId()) \
         { \
-            return BuiltinFunction::##target##_##name; \
+            return BuiltinFunction::target##_##name; \
         }
 #include "LibraryFunction.h"
 #undef LIBRARY_FUNCTION

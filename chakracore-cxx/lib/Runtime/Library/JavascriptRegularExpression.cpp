@@ -1173,7 +1173,7 @@ using namespace Js;
 #define GET_FLAG(patternMethod) \
         if (!scriptConfig->IsES6RegExPrototypePropertiesEnabled()) \
         { \
-            *value = this->GetLibrary()->CreateBoolean(this->GetPattern()->##patternMethod##()); \
+            *value = this->GetLibrary()->CreateBoolean(this->GetPattern()->patternMethod()); \
             *result = true; \
             return true; \
         } \

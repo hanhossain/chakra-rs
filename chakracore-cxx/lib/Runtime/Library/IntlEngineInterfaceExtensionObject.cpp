@@ -333,7 +333,7 @@ namespace Js
 #undef INTL_ENTRY
 #endif
 #define INTL_ENTRY(id, func) \
-    NoProfileFunctionInfo IntlEngineInterfaceExtensionObject::EntryInfo::Intl_##func##(IntlEngineInterfaceExtensionObject::EntryIntl_##func##, _no_write_barrier_tag());
+    NoProfileFunctionInfo IntlEngineInterfaceExtensionObject::EntryInfo::Intl_##func(IntlEngineInterfaceExtensionObject::EntryIntl_##func, _no_write_barrier_tag());
 #include "IntlExtensionObjectBuiltIns.h"
 #undef INTL_ENTRY
 
@@ -394,7 +394,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         JavascriptLibrary* library = scriptContext->GetLibrary();
 
 // gives each entrypoint a property ID on the intlNativeInterfaces library object
-#define INTL_ENTRY(id, func) library->AddFunctionToLibraryObject(intlNativeInterfaces, Js::PropertyIds::##id, &IntlEngineInterfaceExtensionObject::EntryInfo::Intl_##func, 1);
+#define INTL_ENTRY(id, func) library->AddFunctionToLibraryObject(intlNativeInterfaces, Js::PropertyIds::id, &IntlEngineInterfaceExtensionObject::EntryInfo::Intl_##func, 1);
 #include "IntlExtensionObjectBuiltIns.h"
 #undef INTL_ENTRY
 
@@ -403,11 +403,11 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         DynamicObject * enumObj = nullptr;
 
 // Projects the exact layout of our C++ enums into Intl.js so that we dont have to remember to keep them in sync
-#define ENUM_VALUE(enumName, propId, value) library->AddMember(enumObj, PropertyIds::##propId, JavascriptNumber::ToVar(value, scriptContext));
+#define ENUM_VALUE(enumName, propId, value) library->AddMember(enumObj, PropertyIds::propId, JavascriptNumber::ToVar(value, scriptContext));
 #define PROJECTED_ENUM(ClassName, VALUES) \
     enumObj = library->CreateObject(); \
     VALUES(ENUM_VALUE) \
-    library->AddMember(intlNativeInterfaces, PropertyIds::##ClassName, enumObj); \
+    library->AddMember(intlNativeInterfaces, PropertyIds::ClassName, enumObj); \
 
 PROJECTED_ENUMS(PROJECTED_ENUM)
 
@@ -790,7 +790,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo); \
         INTL_CHECK_ARGS(args.Info.Count == 2 && VarIs<JavascriptString>(args.Values[1])); \
         return scriptContext->GetLibrary()->GetTrueOrFalse( \
-            IsLocaleAvailable<##icuNamespace##_getAvailable, ##icuNamespace##_countAvailable>(UnsafeVarTo<JavascriptString>(args.Values[1])) \
+            IsLocaleAvailable<icuNamespace##_getAvailable, icuNamespace##_countAvailable>(UnsafeVarTo<JavascriptString>(args.Values[1])) \
         ); \
     }
 
