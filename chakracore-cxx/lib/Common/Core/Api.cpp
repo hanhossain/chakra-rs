@@ -27,7 +27,7 @@ void js_wmemcpy_s(__ecount(sizeInWords) char16_t *dst, size_t sizeInWords, __in_
     {
         Js::Throw::FatalInternalError();
     }
-    wmemcpy_s(dst, count, src, count);
+    wmemcpy_s(dst, src, count);
 }
 
 #if defined(_M_X64)

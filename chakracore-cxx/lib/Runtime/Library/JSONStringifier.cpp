@@ -28,7 +28,7 @@ JSONStringifier::SetStringGap(_In_ JavascriptString* spaceString)
     if (this->gapLength != 0)
     {
         this->gap = RecyclerNewArrayLeaf(this->scriptContext->GetRecycler(), char16_t, this->gapLength);
-        wmemcpy_s(gap, this->gapLength, spaceString->GetString(), this->gapLength);
+        wmemcpy_s(gap, spaceString->GetString(), this->gapLength);
     }
 }
 

@@ -1086,7 +1086,7 @@ void DynamicProfileStorage::SaveRecord(__in_z char16_t const * filename, __in_ec
         }
         return;
     }
-    wmemcpy_s(newFilename, len, filename, len);
+    wmemcpy_s(newFilename, filename, len);
 
     StorageInfo newInfo;
     if (useCacheDir)
