@@ -1041,7 +1041,7 @@ using namespace Js;
             return scriptContext->GetLibrary()->GetUndefined(); \
         }\
         \
-        JavascriptRegExp* pRegEx = GetJavascriptRegExp(args, u"RegExp.prototype." _u(#propertyName), scriptContext); \
+        JavascriptRegExp* pRegEx = GetJavascriptRegExp(args, u"RegExp.prototype." u###propertyName, scriptContext); \
         return pRegEx->GetLibrary()->CreateBoolean(pRegEx->GetPattern()->patternMethodName()); \
     }
 

@@ -167,10 +167,10 @@ namespace Js
 
     // Initialize all BuiltIn property records
     const BuiltInPropertyRecord<1> BuiltInPropertyRecords::EMPTY = { PropertyRecord(PropertyIds::_none, 0, false, 0, false), u"" };
-#define ENTRY_INTERNAL_SYMBOL(n) const BuiltInPropertyRecord<ARRAYSIZE(u"<" _u(#n) u">")> BuiltInPropertyRecords::n = { PropertyRecord(PropertyIds::n, (uint)PropertyIds::n, false, (ARRAYSIZE(u"<" _u(#n) u">") - 1) * sizeof(char16_t), true), u"<" _u(#n) u">" };
+#define ENTRY_INTERNAL_SYMBOL(n) const BuiltInPropertyRecord<ARRAYSIZE(u"<" u###n u">")> BuiltInPropertyRecords::n = { PropertyRecord(PropertyIds::n, (uint)PropertyIds::n, false, (ARRAYSIZE(u"<" u###n u">") - 1) * sizeof(char16_t), true), u"<" u###n u">" };
 #define ENTRY_SYMBOL(n, d) const BuiltInPropertyRecord<ARRAYSIZE(d)> BuiltInPropertyRecords::n = { PropertyRecord(PropertyIds::n, 0, false, (ARRAYSIZE(d) - 1) * sizeof(char16_t), true), d };
 #define ENTRY2(n, s) const BuiltInPropertyRecord<ARRAYSIZE(s)> BuiltInPropertyRecords::n = { PropertyRecord(PropertyIds::n, 0, false, (ARRAYSIZE(s) - 1) * sizeof(char16_t), false), s };
-#define ENTRY(n) ENTRY2(n, _u(#n))
+#define ENTRY(n) ENTRY2(n, u###n)
 #include "Base/JnDirectFields.h"
 };
 

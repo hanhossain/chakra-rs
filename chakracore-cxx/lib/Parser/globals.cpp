@@ -10,7 +10,7 @@
     { \
         hashCS, \
         sizeof(#name) - 1, \
-        _u(#name) \
+        u###name \
     }; \
     static_assert(offsetof(StaticSymLen<sizeof(#name)>, luHash) == offsetof(StaticSym, luHash)); \
     static_assert(offsetof(StaticSymLen<sizeof(#name)>, cch) == offsetof(StaticSym, cch)); \

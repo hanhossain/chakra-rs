@@ -30,7 +30,7 @@ int const TyBaseType[] = {
 
 #ifdef DBG
 const char16_t * const TyDumpName[] = {
-#define IRTYPE(ucname, baseType, size, bitSize, enRegOk, dname) _u(#dname),
+#define IRTYPE(ucname, baseType, size, bitSize, enRegOk, dname) u###dname,
 #include "IRTypeList.h"
 #undef IRTYPE
 };

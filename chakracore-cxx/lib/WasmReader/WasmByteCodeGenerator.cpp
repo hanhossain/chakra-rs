@@ -105,7 +105,7 @@ void WasmBytecodeGenerator::PrintOpBegin(WasmOp op)
     {
 #define WASM_OPCODE(opname, ...) \
 case wb##opname: \
-    Output::Print(_u(#opname)); \
+    Output::Print(u###opname); \
     break;
 #include "WasmBinaryOpCodes.h"
     }
@@ -652,7 +652,7 @@ void WasmBytecodeGenerator::EmitExpr(WasmOp op)
     {
 #define WASM_OPCODE(opname, opcode, sig, imp, wat) \
     case opcode: \
-        if (!imp) throw WasmCompilationException(u"Operator %s is Not Yet Implemented", _u(wat)); break;
+        if (!imp) throw WasmCompilationException(u"Operator %s is Not Yet Implemented", u##wat); break;
 #include "WasmBinaryOpCodes.h"
     default:
         break;

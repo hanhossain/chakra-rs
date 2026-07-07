@@ -816,8 +816,8 @@ protected:
 };
 
 #if DBG
-#define LABELNAMESET(label, name) do { label->m_name = _u(name); } while(false)
-#define LABELNAME(label) do { label->m_name = _u(#label); } while(false)
+#define LABELNAMESET(label, name) do { label->m_name = u##name; } while(false)
+#define LABELNAME(label) do { label->m_name = u###label; } while(false)
 #else
 #define LABELNAMESET(label, name)
 #define LABELNAME(label)

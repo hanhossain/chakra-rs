@@ -22,8 +22,6 @@
 #include "rt/no_sal2.h"
 #include "rt/oaidl.h"
 
-#define _u(s) u##s
-
 typedef GUID UUID;
 #define INIT_PRIORITY(x) __attribute__((init_priority(x)))
 

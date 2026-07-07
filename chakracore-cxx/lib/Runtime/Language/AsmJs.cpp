@@ -799,7 +799,7 @@ varDeclEnd:
         ParseNode* objNode = node->AsParseNodeReturn()->pnodeExpr;
         if ( !objNode )
         {
-            return m.Fail( node, _u( "Module return must be an object or 1 function" ) );
+            return m.Fail( node, u"Module return must be an object or 1 function" );
         }
 
         if( objNode->nop != knopObject )

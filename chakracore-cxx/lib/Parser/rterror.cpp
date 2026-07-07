@@ -43,24 +43,24 @@ static _ResourceStr s_resourceStrs[] =
     // Copy from jserr.gen
     //
 #define RT_ERROR_MSG(name, errnum, str1, str2, jst, errorNumSource) \
-    { errnum, _u(str2) },
+    { errnum, u##str2 },
 #define RT_PUBLICERROR_MSG(name, errnum, str1, str2, jst, errorNumSource) \
-    { errnum + RTERROR_PUBLIC_RESOURCEOFFSET, _u(str2) },
+    { errnum + RTERROR_PUBLIC_RESOURCEOFFSET, u##str2 },
 #include <rterrors.h>
 #undef RT_PUBLICERROR_MSG
 #undef RT_ERROR_MSG
 
 #define RT_ERROR_MSG(name, errnum, str1, str2, jst, errorNumSource) \
-    { errnum + RTERROR_STRINGFORMAT_OFFSET, _u(str1) },
+    { errnum + RTERROR_STRINGFORMAT_OFFSET, u##str1 },
 #define RT_PUBLICERROR_MSG(name, errnum, str1, str2, jst, errorNumSource) \
     { errnum + RTERROR_STRINGFORMAT_OFFSET + RTERROR_PUBLIC_RESOURCEOFFSET, \
-      _u(str1) },
+      u##str1 },
 #include <rterrors.h>
 #undef RT_PUBLICERROR_MSG
 #undef RT_ERROR_MSG
 
 #define LSC_ERROR_MSG(errnum, name, str) \
-    { errnum, _u(str) },
+    { errnum, u##str },
 #include <perrors.h>
 #undef LSC_ERROR_MSG
 

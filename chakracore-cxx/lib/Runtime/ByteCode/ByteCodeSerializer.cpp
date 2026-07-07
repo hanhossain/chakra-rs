@@ -2086,11 +2086,11 @@ public:
 #define DECLARE_SERIALIZABLE_FIELD(type, name, serializableType) \
             if (function->name != 0) { \
                 definedFields.has_##name = true; \
-                Prepend##serializableType(builder, _u(#name), function->name); \
+                Prepend##serializableType(builder, u###name, function->name); \
             }
 
 #define DECLARE_SERIALIZABLE_ACCESSOR_FIELD_NO_CHECK(type, name, serializableType) \
-            Prepend##serializableType(builder, _u(#name), function->Get##name());
+            Prepend##serializableType(builder, u###name, function->Get##name());
 
 #define DECLARE_SERIALIZABLE_ACCESSOR_FIELD(type, name, serializableType, defaultValue) \
             if (function->Get##name() != defaultValue) { \
@@ -2365,7 +2365,7 @@ public:
 #define DECLARE_SERIALIZABLE_FIELD(type, name, serializableType) \
         if (function->name != 0) { \
             definedFields.has_##name = true; \
-            Prepend##serializableType(builder, _u(#name), function->name); \
+            Prepend##serializableType(builder, u###name, function->name); \
         }
 
 #include "Library/SerializableFunctionFields.h"

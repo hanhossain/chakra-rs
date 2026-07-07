@@ -2396,7 +2396,7 @@ namespace Js
         ScriptContext* scriptContext = typedArrayConstructor->GetScriptContext(); \
         JavascriptLibrary* library = typedArrayConstructor->GetLibrary(); \
         library->AddMember(typedArrayConstructor, PropertyIds::length, TaggedInt::ToVarUnchecked(3), PropertyConfigurable); \
-        library->AddMember(typedArrayConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u(#typedArray)), PropertyConfigurable); \
+        library->AddMember(typedArrayConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(u###typedArray), PropertyConfigurable); \
         library->AddMember(typedArrayConstructor, PropertyIds::BYTES_PER_ELEMENT, TaggedInt::ToVarUnchecked(sizeof(TypeName)), PropertyNone); \
         library->AddMember(typedArrayConstructor, PropertyIds::prototype, scriptContext->GetLibrary()->typedarrayPrototype, PropertyNone); \
         typedArrayConstructor->SetHasNoEnumerableProperties(true); \
@@ -2500,7 +2500,7 @@ namespace Js
         library->AddMember(constructor, PropertyIds::prototype, library->Get##error##Prototype(), PropertyNone); \
         library->AddMember(constructor, PropertyIds::length, TaggedInt::ToVarUnchecked(ctorLength), PropertyConfigurable); \
         PropertyAttributes prototypeNameMessageAttributes = PropertyConfigurable; \
-        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u(#errorName)), prototypeNameMessageAttributes); \
+        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(u###errorName), prototypeNameMessageAttributes); \
         constructor->SetHasNoEnumerableProperties(true); \
         return true; \
     } \
@@ -2511,7 +2511,7 @@ namespace Js
         library->AddMember(prototype, PropertyIds::constructor, library->Get##error##Constructor()); \
         bool hasNoEnumerableProperties = true; \
         PropertyAttributes prototypeNameMessageAttributes = PropertyConfigurable | PropertyWritable; \
-        library->AddMember(prototype, PropertyIds::name, library->CreateStringFromCppLiteral(_u(#errorName)), prototypeNameMessageAttributes); \
+        library->AddMember(prototype, PropertyIds::name, library->CreateStringFromCppLiteral(u###errorName), prototypeNameMessageAttributes); \
         library->AddMember(prototype, PropertyIds::message, library->GetEmptyString(), prototypeNameMessageAttributes); \
         prototype->SetHasNoEnumerableProperties(hasNoEnumerableProperties); \
         return true; \
@@ -3899,7 +3899,7 @@ namespace Js
     };
 
     char16_t const * const JavascriptLibrary::LibraryFunctionName[] = {
-#define LIBRARY_FUNCTION(obj, name, argc, flags, entry) _u(#obj) u"." _u(#name),
+#define LIBRARY_FUNCTION(obj, name, argc, flags, entry) u###obj u"." u###name,
 #include "LibraryFunction.h"
 #undef LIBRARY_FUNCTION
         0

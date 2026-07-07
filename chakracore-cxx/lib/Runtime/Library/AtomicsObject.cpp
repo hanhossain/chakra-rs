@@ -11,7 +11,7 @@
         Assert(!(callInfo.Flags & CallFlags_New)); \
         if (args.Info.Count <= length) \
         { \
-            JavascriptError::ThrowRangeError(scriptContext, JSERR_WinRTFunction_TooFewArguments, _u(methodName)); \
+            JavascriptError::ThrowRangeError(scriptContext, JSERR_WinRTFunction_TooFewArguments, u##methodName); \
         } \
 
 

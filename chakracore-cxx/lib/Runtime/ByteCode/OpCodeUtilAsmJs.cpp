@@ -9,14 +9,14 @@ namespace Js
 {
     char16_t const * const OpCodeUtilAsmJs::OpCodeAsmJsNames[] =
     {
-#define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
+#define DEF_OP(x, y, ...) u###x,
 #include "OpCodeListAsmJs.h"
 #undef DEF_OP
     };
 
     char16_t const * const OpCodeUtilAsmJs::ExtendedOpCodeAsmJsNames[] =
     {
-#define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
+#define DEF_OP(x, y, ...) u###x,
 #include "ExtendedOpCodeListAsmJs.h"
 #undef DEF_OP
     };
