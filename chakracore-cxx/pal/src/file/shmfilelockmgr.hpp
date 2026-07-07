@@ -83,17 +83,14 @@ namespace CorUnix
         {
         };
 
-        virtual
         PAL_ERROR
         GetTransactionLock(
-            CPalThread *pThread,                // IN, OPTIONAL
-            FileTransactionLockType eLockType,
             uint32_t dwOffsetLow,
             uint32_t dwOffsetHigh,
             uint32_t nNumberOfBytesToLockLow,
             uint32_t nNumberOfBytesToLockHigh,
             IFileTransactionLock **ppTransactionLock    // OUT
-            );
+            ) override;
 
         virtual
         PAL_ERROR

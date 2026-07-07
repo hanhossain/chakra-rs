@@ -95,8 +95,6 @@ FILEGetSHMFileLocks(
 
 PAL_ERROR
 CSharedMemoryFileLockController::GetTransactionLock(
-    CPalThread *pThread,                // IN, OPTIONAL
-    FileTransactionLockType eLockType,
     uint32_t dwOffsetLow,
     uint32_t dwOffsetHigh,
     uint32_t nNumberOfBytesToLockLow,

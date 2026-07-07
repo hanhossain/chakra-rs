@@ -537,8 +537,6 @@ CorUnix::InternalWriteFile(
         }
 
         palError = pLocalData->pLockController->GetTransactionLock(
-            pThread,
-            IFileLockController::WriteLock,
             writeOffsetStartLow,
             writeOffsetStartHigh,
             nNumberOfBytesToWrite,
