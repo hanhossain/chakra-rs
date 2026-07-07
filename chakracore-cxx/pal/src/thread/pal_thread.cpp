@@ -388,7 +388,6 @@ CreateThread(
     palError = InternalCreateThread(
         pThread,
         lpThreadAttributes,
-        dwStackSize,
         lpStartAddress,
         lpParameter,
         dwCreationFlags,
@@ -414,7 +413,6 @@ PAL_ERROR
 CorUnix::InternalCreateThread(
     CPalThread *pThread,
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    uint32_t dwStackSize,
     LPTHREAD_START_ROUTINE lpStartAddress,
     void * lpParameter,
     uint32_t dwCreationFlags,

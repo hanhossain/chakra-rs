@@ -53,7 +53,6 @@ namespace CorUnix
     InternalCreateThread(
         CPalThread *pThread,
         LPSECURITY_ATTRIBUTES lpThreadAttributes,
-        uint32_t dwStackSize,
         LPTHREAD_START_ROUTINE lpStartAddress,
         void * lpParameter,
         uint32_t dwCreationFlags,
@@ -228,7 +227,6 @@ namespace CorUnix
             CorUnix::InternalCreateThread(
                 CPalThread *,
                 LPSECURITY_ATTRIBUTES,
-                uint32_t,
                 LPTHREAD_START_ROUTINE,
                 void *,
                 uint32_t,
