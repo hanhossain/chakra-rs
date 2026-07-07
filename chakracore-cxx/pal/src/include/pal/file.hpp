@@ -87,15 +87,6 @@ namespace CorUnix
         );
 
     PAL_ERROR
-    InternalCreatePipe(
-        CPalThread *pThread,
-        HANDLE *phReadPipe,
-        HANDLE *phWritePipe,
-        LPSECURITY_ATTRIBUTES lpPipeAttributes,
-        uint32_t nSize
-        );
-
-    PAL_ERROR
     InternalLockFile(
         CPalThread *pThread,
         HANDLE hFile,
