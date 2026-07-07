@@ -1817,12 +1817,12 @@ public:
 
     inline void ClearPendingSOError()
     {
-        this->GetPendingSOErrorObject()->ClearError();
+        recyclableData->soErrorObject = Js::JavascriptExceptionObject{true};
     }
 
     inline void ClearPendingOOMError()
     {
-        this->GetPendingOOMErrorObject()->ClearError();
+        recyclableData->oomErrorObject = Js::JavascriptExceptionObject{true};
     }
 
     Js::JavascriptExceptionObject *GetPendingSOErrorObject()

@@ -45,15 +45,15 @@ class SRCINFO
     // In future, when we do make it freeable and will be able to allocate more than one per Module,
     // we can move variables m_isGlobalFunc and m_isEval from FunctionBody.cpp here.
 public:
-    typename WriteBarrierFieldTypeTraits<SourceContextInfo *>::Type sourceContextInfo;
-    typename WriteBarrierFieldTypeTraits<uint32_t>::Type dlnHost;             // Line number passed to ParseScriptText
-    typename WriteBarrierFieldTypeTraits<uint32_t>::Type ulColumnHost;        // Column number on the line where the parse script text started
-    typename WriteBarrierFieldTypeTraits<uint32_t>::Type lnMinHost;           // Line offset of first host-supplied line
-    typename WriteBarrierFieldTypeTraits<uint32_t>::Type ichMinHost;          // Range of host supplied characters
-    typename WriteBarrierFieldTypeTraits<uint32_t>::Type ichLimHost;
-    typename WriteBarrierFieldTypeTraits<uint32_t>::Type ulCharOffset;        // Char offset of the source text relative to the document. (Populated using IActiveScriptContext)
-    typename WriteBarrierFieldTypeTraits<Js::ModuleID>::Type moduleID;
-    typename WriteBarrierFieldTypeTraits<uint32_t>::Type grfsi;
+    WriteBarrierFieldTypeTraits<SourceContextInfo *>::Type sourceContextInfo = nullptr;
+    WriteBarrierFieldTypeTraits<uint32_t>::Type dlnHost = 0;             // Line number passed to ParseScriptText
+    WriteBarrierFieldTypeTraits<uint32_t>::Type ulColumnHost = 0;        // Column number on the line where the parse script text started
+    WriteBarrierFieldTypeTraits<uint32_t>::Type lnMinHost = 0;           // Line offset of first host-supplied line
+    WriteBarrierFieldTypeTraits<uint32_t>::Type ichMinHost = 0;          // Range of host supplied characters
+    WriteBarrierFieldTypeTraits<uint32_t>::Type ichLimHost = 0;
+    WriteBarrierFieldTypeTraits<uint32_t>::Type ulCharOffset = 0;        // Char offset of the source text relative to the document. (Populated using IActiveScriptContext)
+    WriteBarrierFieldTypeTraits<Js::ModuleID>::Type moduleID = 0;
+    WriteBarrierFieldTypeTraits<uint32_t>::Type grfsi = 0;
 
     static SRCINFO* Copy(Recycler* recycler, const SRCINFO* srcInfo)
     {
@@ -61,9 +61,8 @@ public:
         return copySrcInfo;
     }
 
-    SRCINFO()
-    {
-    }
+    SRCINFO() = default;
+
     SRCINFO(const SRCINFO& other)
         :sourceContextInfo(other.sourceContextInfo),
         dlnHost(other.dlnHost),
