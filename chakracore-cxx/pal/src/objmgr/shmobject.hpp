@@ -44,10 +44,7 @@ namespace CorUnix
             *ppDataLock = static_cast<IDataLock*>(this);
         };
 
-        void
-        ReleaseLock(
-            CPalThread *pthr
-        ) override
+        void ReleaseLock([[maybe_unused]] CPalThread *pthr) override
         {
             SHMRelease();
         };

@@ -916,14 +916,6 @@ VirtualAlloc(
           uint32_t flAllocationType,
           uint32_t flProtect);
 
-void *
-VirtualAllocEx(
-          HANDLE hProcess,
-          void * lpAddress,
-          size_t dwSize,
-          uint32_t flAllocationType,
-          uint32_t flProtect);
-
 BOOL
 VirtualFree(
          void * lpAddress,
@@ -971,10 +963,9 @@ VirtualQuery(
 
 size_t
 VirtualQueryEx(
-          HANDLE hProcess,
-          const void * lpAddress,
-          PMEMORY_BASIC_INFORMATION lpBuffer,
-          size_t dwLength);
+    const void * lpAddress,
+    PMEMORY_BASIC_INFORMATION lpBuffer,
+    size_t dwLength);
 
 BOOL FlushInstructionCache(const void * lpBaseAddress, size_t dwSize);
 

@@ -304,7 +304,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::AllocateBuffer(size_t 
 
 #if DBG
     MEMORY_BASIC_INFORMATION memBasicInfo;
-    size_t resultBytes = VirtualQueryEx(this->processHandle, allocation->allocation->address, &memBasicInfo, sizeof(memBasicInfo));
+    size_t resultBytes = VirtualQueryEx(allocation->allocation->address, &memBasicInfo, sizeof(memBasicInfo));
     Assert(resultBytes == 0 || memBasicInfo.Protect == PAGE_EXECUTE_READ);
 #endif
 

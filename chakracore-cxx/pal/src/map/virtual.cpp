@@ -1191,17 +1191,6 @@ done:
 }
 #endif // RESERVE_FROM_BACKING_FILE
 
-void *
-VirtualAllocEx(
-          HANDLE hProcess,
-          void * lpAddress,       /* Region to reserve or commit */
-          size_t dwSize,          /* Size of Region */
-          uint32_t flAllocationType, /* Type of allocation */
-          uint32_t flProtect)        /* Type of access protection */
-{
-    return VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
-}
-
 /*++
 Function:
   VirtualAlloc
@@ -1888,10 +1877,9 @@ static void VM_ALLOCATE_VirtualQuery(const void * lpAddress, PMEMORY_BASIC_INFOR
 
 size_t
 VirtualQueryEx(
-     HANDLE hProcess,
-     const void * lpAddress,
-     PMEMORY_BASIC_INFORMATION lpBuffer,
-     size_t dwLength)
+    const void * lpAddress,
+    PMEMORY_BASIC_INFORMATION lpBuffer,
+    size_t dwLength)
 {
     return VirtualQuery(lpAddress, lpBuffer, dwLength);
 }
