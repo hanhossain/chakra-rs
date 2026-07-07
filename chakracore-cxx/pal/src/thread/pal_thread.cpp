@@ -113,19 +113,10 @@ PAL_ActivationFunction g_activationFunction = NULL;
 // Function to check if an activation can be safely injected at a specified context
 PAL_SafeActivationCheckFunction g_safeActivationCheckFunction = NULL;
 
-void
-ThreadCleanupRoutine(
-    CPalThread *pThread,
-    IPalObject *pObjectToCleanup,
-    bool fShutdown,
-    bool fCleanupSharedState
-    );
+void ThreadCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool, bool);
 
 PAL_ERROR
-ThreadInitializationRoutine(
-    void *pImmutableData,
-    void *pProcessLocalData
-    );
+ThreadInitializationRoutine(void *, void *);
 
 CObjectType CorUnix::otThread __attribute__((init_priority(200))) (
                 otiThread,
@@ -1932,13 +1923,7 @@ CPalThread::WaitForStartStatus(
     return m_fStartStatus;
 }
 
-void
-ThreadCleanupRoutine(
-    CPalThread *pThread,
-    IPalObject *pObjectToCleanup,
-    bool fShutdown,
-    bool fCleanupSharedState
-    )
+void ThreadCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool, bool)
 {
     CThreadProcessLocalData *pThreadData = NULL;
     CPalThread *pThreadToCleanup = NULL;
@@ -1980,11 +1965,7 @@ ThreadCleanupRoutine(
 
 }
 
-PAL_ERROR
-ThreadInitializationRoutine(
-    void *pImmutableData,
-    void *pProcessLocalData
-    )
+PAL_ERROR ThreadInitializationRoutine(void *, void *)
 {
     return NO_ERROR;
 }
