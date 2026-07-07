@@ -94,49 +94,6 @@ FILEGetSHMFileLocks(
          ((LockToTest)->lockType == (lockRgn)->lockType))
 
 PAL_ERROR
-CSharedMemoryFileLockMgr::GetFileShareModeForFile(
-   const char * szFileName,
-   uint32_t* pdwShareMode)
-{
-    PAL_ERROR palError = NO_ERROR;
-    *pdwShareMode = SHARE_MODE_NOT_INITALIZED;
-    SHMPTR shmFileLocks = SHMNULL;
-    SHMFILELOCKS* fileLocks = NULL;
-
-    SHMLock();
-
-    palError = FILEGetSHMFileLocks(szFileName, &shmFileLocks, TRUE);
-    if (NO_ERROR != palError || shmFileLocks == SHMNULL)
-    {
-        goto GetLockControllerForFileExit;
-    }
-
-    if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKS, fileLocks, shmFileLocks) == FALSE)
-    {
-        ASSERT("Unable to get pointer from shm pointer.\n");
-        palError = ERROR_INTERNAL_ERROR;
-        goto GetLockControllerForFileExit;
-    }
-
-    *pdwShareMode = fileLocks->share_mode;
-
-GetLockControllerForFileExit:
-
-    if (SHMNULL != shmFileLocks)
-    {
-      FILECleanUpLockedRgn(
-                shmFileLocks,
-                0,
-                NULL
-                );
-    }
-
-    SHMRelease();
-
-    return palError;
-}
-
-PAL_ERROR
 CSharedMemoryFileLockController::GetTransactionLock(
     CPalThread *pThread,                // IN, OPTIONAL
     FileTransactionLockType eLockType,
