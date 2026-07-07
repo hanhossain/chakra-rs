@@ -351,7 +351,7 @@ extern "C"
 void PAL_DispatchException(unsigned long dwRDI, unsigned long dwRSI, unsigned long dwRDX, unsigned long dwRCX, unsigned long dwR8, unsigned long dwR9, PCONTEXT pContext, PEXCEPTION_RECORD pExRecord, MachExceptionInfo *pMachExceptionInfo)
 #elif defined(_ARM64_)
 extern "C"
-void PAL_DispatchException(PCONTEXT pContext, PEXCEPTION_RECORD pExRecord, MachExceptionInfo *pMachExceptionInfo)
+void PAL_DispatchException(PCONTEXT, PEXCEPTION_RECORD, MachExceptionInfo *)
 #endif
 {
     raise(SIGINT);

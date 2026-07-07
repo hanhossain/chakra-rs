@@ -897,9 +897,7 @@ namespace CorUnix
             SharedID shridSynchData);
 
         static PAL_ERROR SendMsgToRemoteWorker(
-            uint32_t dwProcessId,
-            uint8_t * pMsg,
-            int iMsgSize);
+        );
 
         static ThreadWaitInfo * GetThreadWaitInfo(
             CPalThread * pthrCurrent);
