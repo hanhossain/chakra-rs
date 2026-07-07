@@ -776,8 +776,7 @@ Return value :
 --*/
 #ifdef ILL_ILLOPC
 // If si_code values are available for all signals, use those.
-uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
-                                       const native_context_t *context)
+uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo)
 {
     // IMPORTANT NOTE: This function must not call any signal unsafe functions
     // since it is called from signal handlers.

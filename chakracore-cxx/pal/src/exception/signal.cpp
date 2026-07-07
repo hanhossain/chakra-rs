@@ -187,7 +187,7 @@ static void sigill_handler(int code, siginfo_t *siginfo, void *context)
 
         ucontext = (native_context_t *)context;
 
-        record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo, ucontext);
+        record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
         record.ExceptionRecord = NULL;
         record.ExceptionAddress = GetNativeContextPC(ucontext);
@@ -232,7 +232,7 @@ static void sigfpe_handler(int code, siginfo_t *siginfo, void *context)
 
         ucontext = (native_context_t *)context;
 
-        record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo, ucontext);
+        record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
         record.ExceptionRecord = NULL;
         record.ExceptionAddress = GetNativeContextPC(ucontext);
@@ -277,7 +277,7 @@ static void sigsegv_handler(int code, siginfo_t *siginfo, void *context)
 
         ucontext = (native_context_t *)context;
 
-        record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo, ucontext);
+        record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
         record.ExceptionRecord = NULL;
         record.ExceptionAddress = GetNativeContextPC(ucontext);
@@ -330,7 +330,7 @@ static void sigtrap_handler(int code, siginfo_t *siginfo, void *context)
 
         ucontext = (native_context_t *)context;
 
-        record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo, ucontext);
+        record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
         record.ExceptionRecord = NULL;
         record.ExceptionAddress = GetNativeContextPC(ucontext);
@@ -376,7 +376,7 @@ static void sigbus_handler(int code, siginfo_t *siginfo, void *context)
 
         ucontext = (native_context_t *)context;
 
-        record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo, ucontext);
+        record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
         record.ExceptionRecord = NULL;
         record.ExceptionAddress = GetNativeContextPC(ucontext);
