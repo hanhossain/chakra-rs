@@ -1134,12 +1134,7 @@ BOOL
 CloseHandle(
           HANDLE hObject);
 
-void
-RaiseException(
-            uint32_t dwExceptionCode,
-            uint32_t dwExceptionFlags,
-            uint32_t nNumberOfArguments,
-            const size_t *lpArguments);
+void RaiseException(uint32_t dwExceptionCode, uint32_t dwExceptionFlags);
 
 uint32_t
 GetTickCount(
