@@ -271,7 +271,7 @@ public:
     // accessed without using Load and Store, but it is necessary for passing Volatile<T> to APIs like
     // InterlockedIncrement.
     //
-    inline volatile T* GetPointer() { return (volatile T*)&m_val; }
+    inline volatile T* GetPointer() { return static_cast<volatile T*>(&m_val); }
 
 
     //
