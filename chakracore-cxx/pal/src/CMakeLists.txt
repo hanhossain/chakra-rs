@@ -76,8 +76,7 @@ set(SOURCES
   safecrt/safecrt_winput_s.cpp
   safecrt/safecrt_woutput_s.cpp
         safecrt/strcpy_s.cpp
-  safecrt/strncat_s.cpp
-  safecrt/strncpy_s.cpp
+        safecrt/strncpy_s.cpp
   safecrt/swprintf.cpp
     safecrt/vswprint.cpp
   safecrt/wcscpy_s.cpp

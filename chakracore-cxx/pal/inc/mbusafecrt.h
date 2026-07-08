@@ -48,7 +48,6 @@ typedef void ( *tSafeCRT_AssertFuncPtr )( const char* inExpression, const char* 
 
 extern errno_t wcscat_s( char16_t* ioDest, size_t inDestBufferSize, const char16_t* inSrc );
 
-extern errno_t strncat_s( char* ioDest, size_t inDestBufferSize, const char* inSrc, size_t inCount );
 extern errno_t wcsncat_s( char16_t* ioDest, size_t inDestBufferSize, const char16_t* inSrc, size_t inCount );
 
 extern errno_t strcpy_s( char* outDest, size_t inDestBufferSize, const char* inSrc );

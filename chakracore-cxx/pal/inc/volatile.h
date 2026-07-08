@@ -123,7 +123,7 @@ T VolatileLoad(T const * pt)
 {
     // STATIC_CONTRACT_SUPPORTS_DAC_HOST_ONLY;
 
-    T val = *(T volatile const *)pt;
+    T val = *static_cast<T volatile const*>(pt);
     VOLATILE_MEMORY_BARRIER();
     return val;
 }
@@ -134,7 +134,7 @@ T VolatileLoadWithoutBarrier(T const * pt)
 {
     // STATIC_CONTRACT_SUPPORTS_DAC_HOST_ONLY;
 
-    T val = *(T volatile const *)pt;
+    T val = *static_cast<T volatile const*>(pt);
     return val;
 }
 
@@ -162,7 +162,7 @@ void VolatileStore(T* pt, T val)
     // STATIC_CONTRACT_SUPPORTS_DAC_HOST_ONLY;
 
     VOLATILE_MEMORY_BARRIER();
-    *(T volatile *)pt = val;
+    *static_cast<T volatile*>(pt) = val;
 }
 
 template<typename T>
@@ -171,7 +171,7 @@ void VolatileStoreWithoutBarrier(T* pt, T val)
 {
     // STATIC_CONTRACT_SUPPORTS_DAC_HOST_ONLY;
 
-    *(T volatile *)pt = val;
+    *static_cast<T volatile*>(pt) = val;
 }
 
 //
@@ -215,7 +215,7 @@ public:
     inline Volatile(const T& val) 
     {
         // STATIC_CONTRACT_SUPPORTS_DAC;
-        ((volatile T &)m_val) = val;
+        static_cast<volatile T&>(m_val) = val;
     }
 
     //
@@ -224,7 +224,7 @@ public:
     inline Volatile(const Volatile<T>& other)
     {
         // STATIC_CONTRACT_SUPPORTS_DAC;
-        ((volatile T &)m_val) = other.Load();
+        static_cast<volatile T&>(m_val) = other.Load();
     }
 
     //
@@ -242,7 +242,7 @@ public:
     inline T LoadWithoutBarrier() const
     {
         // STATIC_CONTRACT_SUPPORTS_DAC;
-        return ((volatile T &)m_val);
+        return static_cast<volatile T&>(m_val);
     }
 
     //
@@ -262,7 +262,7 @@ public:
     inline void StoreWithoutBarrier(const T& val) const
     {
         // STATIC_CONTRACT_SUPPORTS_DAC;
-        ((volatile T &)m_val) = val;
+        static_cast<volatile T&>(m_val) = val;
     }
 
 
@@ -390,7 +390,7 @@ public:
     inline operator P() const 
     {
         // STATIC_CONTRACT_SUPPORTS_DAC;
-        return (P)this->Load();
+        return static_cast<P>(this->Load());
     }
 
     //
@@ -399,7 +399,7 @@ public:
     inline P operator->() const 
     {
         // STATIC_CONTRACT_SUPPORTS_DAC;
-        return (P)this->Load();
+        return static_cast<P>(this->Load());
     }
 
     //
@@ -408,7 +408,7 @@ public:
     inline T& operator*() const 
     {
         // STATIC_CONTRACT_SUPPORTS_DAC;
-        return *(P)this->Load();
+        return *static_cast<P>(this->Load());
     }
 
     //
@@ -418,7 +418,7 @@ public:
     inline T& operator[](TIndex index) 
     {
         // STATIC_CONTRACT_SUPPORTS_DAC;
-        return ((P)this->Load())[index];
+        return static_cast<P>(this->Load())[index];
     }
 };
 

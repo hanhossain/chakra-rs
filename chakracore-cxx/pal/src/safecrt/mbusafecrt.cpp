@@ -59,7 +59,7 @@ int _putwc_nolock( char16_t inChar, miniFILE* inStream )
 
     if ( ( inStream->_cnt ) >= 0 )
     {
-        *( ( char16_t* )( inStream->_ptr ) ) = inChar;
+        *reinterpret_cast<char16_t*>(inStream->_ptr) = inChar;
         inStream->_ptr += sizeof( char16_t );
         returnValue = static_cast<int>(inChar);
     }
@@ -96,7 +96,7 @@ int _getwc_nolock( miniFILE* inStream )
     if ( ( inStream->_cnt ) >= static_cast<int>(sizeof(char16_t)) )
     {
         inStream->_cnt -= sizeof( char16_t );
-        returnValue = static_cast<int>(*((char16_t*)(inStream->_ptr)));
+        returnValue = static_cast<int>(*reinterpret_cast<char16_t*>(inStream->_ptr));
         inStream->_ptr += sizeof( char16_t );
     }
 
@@ -115,7 +115,7 @@ int _ungetc_nolock( char inChar, miniFILE* inStream )
     {
         inStream->_cnt += sizeof( char );
         inStream->_ptr -= sizeof( char );
-        return ( int )inChar;
+        return inChar;
     }
 
     return returnValue;
@@ -218,7 +218,7 @@ void _safecrt_wfassign(int flag, void* argument, char16_t* number )
     // we'll assume that the numbers are in the 0-9 range and
     // do a simple conversion.
     
-    char* numberAsChars = ( char* )number;
+    char* numberAsChars = reinterpret_cast<char*>(number);
     int position = 0;
     
     // do the convert
@@ -240,7 +240,7 @@ void _safecrt_wfassign(int flag, void* argument, char16_t* number )
 
 int _minimal_chartowchar( char16_t* outWChar, const char* inChar )
 {
-    *outWChar = static_cast<char16_t>((unsigned short)((unsigned char)(*inChar)));
+    *outWChar = static_cast<char16_t>(static_cast<unsigned short>(static_cast<unsigned char>(*inChar)));
     return 1;
 }
 
