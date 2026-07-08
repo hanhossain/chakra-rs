@@ -6,8 +6,6 @@
 
 #include <limits.h>
 
-#define _u(s) u##s
-
 typedef unsigned int uint;
 typedef unsigned short ushort;
 
@@ -35,7 +33,6 @@ const CharCountOrFlag CharCountFlag = (CharCountOrFlag)-1;
 
 #define QUOTE(s) #s
 #define STRINGIZE(s) QUOTE(s)
-#define STRINGIZEW(s) _u(#s)
 
 namespace Js
 {

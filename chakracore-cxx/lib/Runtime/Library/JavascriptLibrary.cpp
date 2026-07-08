@@ -2396,9 +2396,9 @@ namespace Js
         ScriptContext* scriptContext = typedArrayConstructor->GetScriptContext(); \
         JavascriptLibrary* library = typedArrayConstructor->GetLibrary(); \
         library->AddMember(typedArrayConstructor, PropertyIds::length, TaggedInt::ToVarUnchecked(3), PropertyConfigurable); \
-        library->AddMember(typedArrayConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u(#typedArray)), PropertyConfigurable); \
+        library->AddMember(typedArrayConstructor, PropertyIds::name, library->CreateStringFromCppLiteral(u###typedArray), PropertyConfigurable); \
         library->AddMember(typedArrayConstructor, PropertyIds::BYTES_PER_ELEMENT, TaggedInt::ToVarUnchecked(sizeof(TypeName)), PropertyNone); \
-        library->AddMember(typedArrayConstructor, PropertyIds::prototype, scriptContext->GetLibrary()->##typedarrayPrototype##, PropertyNone); \
+        library->AddMember(typedArrayConstructor, PropertyIds::prototype, scriptContext->GetLibrary()->typedarrayPrototype, PropertyNone); \
         typedArrayConstructor->SetHasNoEnumerableProperties(true); \
         return true; \
     } \
@@ -2414,11 +2414,11 @@ namespace Js
     INIT_TYPEDARRAY_CONSTRUCTOR(Float64Array, Float64ArrayPrototype, double);
 
 #define INIT_TYPEDARRAY_PROTOTYPE(typedArray, typedarrayPrototype, TypeName) \
-    bool JavascriptLibrary::Initialize##typedarrayPrototype##(DynamicObject* typedarrayPrototype, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode) \
+    bool JavascriptLibrary::Initialize##typedarrayPrototype(DynamicObject* typedarrayPrototype, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode) \
     { \
         typeHandler->Convert(typedarrayPrototype, mode, 2); \
         JavascriptLibrary* library = typedarrayPrototype->GetLibrary(); \
-        library->AddMember(typedarrayPrototype, PropertyIds::constructor, library->##typedArray##Constructor); \
+        library->AddMember(typedarrayPrototype, PropertyIds::constructor, library->typedArray##Constructor); \
         library->AddMember(typedarrayPrototype, PropertyIds::BYTES_PER_ELEMENT, TaggedInt::ToVarUnchecked(sizeof(TypeName)), PropertyNone); \
         typedarrayPrototype->SetHasNoEnumerableProperties(true); \
         return true; \
@@ -2437,11 +2437,11 @@ namespace Js
     // For Microsoft extension typed array, like Int64Array, BoolArray, we don't have constructor as they can only be created from the projection arguments.
     // there is no subarray method either as that's another way to create typed array.
 #define INIT_MSINTERNAL_TYPEDARRAY_PROTOTYPE(typedArray, typedarrayPrototype) \
-    bool JavascriptLibrary::Initialize##typedarrayPrototype##(DynamicObject* typedarrayPrototype, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode)  \
+    bool JavascriptLibrary::Initialize##typedarrayPrototype(DynamicObject* typedarrayPrototype, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode)  \
     {   \
         typeHandler->Convert(typedarrayPrototype, mode, 1); \
         JavascriptLibrary* library = typedarrayPrototype->GetLibrary(); \
-        library->AddFunctionToLibraryObject(typedarrayPrototype, PropertyIds::set, &##typedArray##::EntryInfo::Set, 2); \
+        library->AddFunctionToLibraryObject(typedarrayPrototype, PropertyIds::set, &typedArray::EntryInfo::Set, 2); \
         typedarrayPrototype->SetHasNoEnumerableProperties(true); \
         return true; \
     }   \
@@ -2500,7 +2500,7 @@ namespace Js
         library->AddMember(constructor, PropertyIds::prototype, library->Get##error##Prototype(), PropertyNone); \
         library->AddMember(constructor, PropertyIds::length, TaggedInt::ToVarUnchecked(ctorLength), PropertyConfigurable); \
         PropertyAttributes prototypeNameMessageAttributes = PropertyConfigurable; \
-        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(_u(#errorName)), prototypeNameMessageAttributes); \
+        library->AddMember(constructor, PropertyIds::name, library->CreateStringFromCppLiteral(u###errorName), prototypeNameMessageAttributes); \
         constructor->SetHasNoEnumerableProperties(true); \
         return true; \
     } \
@@ -2511,7 +2511,7 @@ namespace Js
         library->AddMember(prototype, PropertyIds::constructor, library->Get##error##Constructor()); \
         bool hasNoEnumerableProperties = true; \
         PropertyAttributes prototypeNameMessageAttributes = PropertyConfigurable | PropertyWritable; \
-        library->AddMember(prototype, PropertyIds::name, library->CreateStringFromCppLiteral(_u(#errorName)), prototypeNameMessageAttributes); \
+        library->AddMember(prototype, PropertyIds::name, library->CreateStringFromCppLiteral(u###errorName), prototypeNameMessageAttributes); \
         library->AddMember(prototype, PropertyIds::message, library->GetEmptyString(), prototypeNameMessageAttributes); \
         prototype->SetHasNoEnumerableProperties(hasNoEnumerableProperties); \
         return true; \
@@ -3868,7 +3868,7 @@ namespace Js
 #define LIBRARY_FUNCTION(target, name, argc, flags, EntryInfo) \
         if(localFuncId == EntryInfo.GetLocalFunctionId()) \
         { \
-            return BuiltinFunction::##target##_##name; \
+            return BuiltinFunction::target##_##name; \
         }
 #include "LibraryFunction.h"
 #undef LIBRARY_FUNCTION
@@ -3899,7 +3899,7 @@ namespace Js
     };
 
     char16_t const * const JavascriptLibrary::LibraryFunctionName[] = {
-#define LIBRARY_FUNCTION(obj, name, argc, flags, entry) _u(#obj) u"." _u(#name),
+#define LIBRARY_FUNCTION(obj, name, argc, flags, entry) u###obj u"." u###name,
 #include "LibraryFunction.h"
 #undef LIBRARY_FUNCTION
         0

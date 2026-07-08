@@ -3923,18 +3923,18 @@ bool Instr::BinaryCalculatorT(T src1Const, T src2Const, long *pResult, bool chec
     T value = 0;
     switch (this->m_opcode)
     {
-#define DO_HANDLER(HANDLER, type) HANDLER(type##src1Const, type##src2Const)
+#define DO_HANDLER(HANDLER, type) HANDLER(static_cast<type>(src1Const), static_cast<type>(src2Const))
 #define BINARY_CASE_CHECK(OPCODE,HANDLER,CHECK_HANDLER,type) \
-    case Js::OpCode::##OPCODE: \
+    case Js::OpCode::OPCODE: \
         if (checkWouldTrap && DO_HANDLER(CHECK_HANDLER,type)) { return false; } \
         value = DO_HANDLER(HANDLER,type); \
         break;
 #define BINARY_CASE(OPCODE,HANDLER,type) \
-    case Js::OpCode::##OPCODE: \
+    case Js::OpCode::OPCODE: \
         value = DO_HANDLER(HANDLER,type); \
         break;
-#define BINARY_U(OPCODE,HANDLER) BINARY_CASE(OPCODE,HANDLER,(typename SignedTypeTraits<T>::UnsignedType))
-#define BINARY(OPCODE,HANDLER)  BINARY_CASE(OPCODE,HANDLER,)
+#define BINARY_U(OPCODE,HANDLER) BINARY_CASE(OPCODE,HANDLER, SignedTypeTraits<T>::UnsignedType)
+#define BINARY(OPCODE,HANDLER)  BINARY_CASE(OPCODE,HANDLER,T)
 
         BINARY(CmEq_I4, Js::AsmJsMath::CmpEq)
         BINARY(CmNeq_I4, Js::AsmJsMath::CmpNe)
@@ -3955,10 +3955,10 @@ bool Instr::BinaryCalculatorT(T src1Const, T src2Const, long *pResult, bool chec
         BINARY(Shl_I4, Wasm::WasmMath::Shl)
         BINARY(Shr_I4, Wasm::WasmMath::Shr)
         BINARY_U(ShrU_I4, Wasm::WasmMath::ShrU)
-        BINARY_CASE_CHECK(DivU_I4, Js::AsmJsMath::DivChecked, Js::AsmJsMath::DivWouldTrap, (typename SignedTypeTraits<T>::UnsignedType))
-        BINARY_CASE_CHECK(Div_I4, Js::AsmJsMath::DivChecked, Js::AsmJsMath::DivWouldTrap, )
-        BINARY_CASE_CHECK(RemU_I4, Js::AsmJsMath::RemChecked, Js::AsmJsMath::RemWouldTrap, (typename SignedTypeTraits<T>::UnsignedType))
-        BINARY_CASE_CHECK(Rem_I4, Js::AsmJsMath::RemChecked, Js::AsmJsMath::RemWouldTrap, )
+        BINARY_CASE_CHECK(DivU_I4, Js::AsmJsMath::DivChecked, Js::AsmJsMath::DivWouldTrap, SignedTypeTraits<T>::UnsignedType)
+        BINARY_CASE_CHECK(Div_I4, Js::AsmJsMath::DivChecked, Js::AsmJsMath::DivWouldTrap, T)
+        BINARY_CASE_CHECK(RemU_I4, Js::AsmJsMath::RemChecked, Js::AsmJsMath::RemWouldTrap, SignedTypeTraits<T>::UnsignedType)
+        BINARY_CASE_CHECK(Rem_I4, Js::AsmJsMath::RemChecked, Js::AsmJsMath::RemWouldTrap, T)
         default:
             return false;
 #undef BINARY

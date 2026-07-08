@@ -208,7 +208,7 @@ intptr_t GetMethodOriginalAddress(ThreadContextInfo * context, JnHelperMethod he
 
 char16_t const * const JnHelperMethodNames[] =
 {
-#define HELPERCALL(Name, Address, Attributes) u"" STRINGIZEW(Name) u"",
+#define HELPERCALL(Name, Address, Attributes) u###Name,
 #include "JnHelperMethodList.h"
     NULL
 };

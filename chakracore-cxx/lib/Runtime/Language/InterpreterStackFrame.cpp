@@ -49,7 +49,7 @@
 #define PROCESS_READ_LAYOUT(name, layout, suffix) \
     static_assert(OpCodeInfo<OpCode::name>::Layout == OpLayoutType::layout); \
     [[maybe_unused]] const unaligned OpLayout##layout##suffix * playout = m_reader.layout##suffix(ip); \
-    Assert((playout != nullptr) == (Js::OpLayoutType::##layout != Js::OpLayoutType::Empty)); // Make sure playout is used
+    Assert((playout != nullptr) == (Js::OpLayoutType::layout != Js::OpLayoutType::Empty)); // Make sure playout is used
 
 
 #define PROCESS_NOP_COMMON(name, layout, suffix) \

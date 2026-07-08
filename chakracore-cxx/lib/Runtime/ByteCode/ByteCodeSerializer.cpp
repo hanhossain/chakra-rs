@@ -913,23 +913,23 @@ public:
             {
 
 #define LAYOUT_TYPE(layout) \
-    case OpLayoutTypeAsmJs::##layout: { \
+    case OpLayoutTypeAsmJs::layout: { \
         Assert(layoutSize == SmallLayout); \
-        reader.##layout(); \
+        reader.layout(); \
         saveBlock(); \
         break; }
 #define LAYOUT_TYPE_WMS(layout) \
-    case OpLayoutTypeAsmJs::##layout: { \
+    case OpLayoutTypeAsmJs::layout: { \
         switch (layoutSize) \
         { \
         case SmallLayout: \
-            reader.##layout##_Small(); \
+            reader.layout##_Small(); \
             break; \
         case MediumLayout: \
-            reader.##layout##_Medium(); \
+            reader.layout##_Medium(); \
             break; \
         case LargeLayout: \
-            reader.##layout##_Large(); \
+            reader.layout##_Large(); \
             break; \
         default: \
             Assume(UNREACHED); \
@@ -1009,23 +1009,23 @@ public:
             {
 
 #define DEFAULT_LAYOUT(op) \
-    case OpLayoutType::##op: { \
+    case OpLayoutType::op: { \
         Assert(layoutSize == SmallLayout); \
-        reader.##op(); \
+        reader.op(); \
         saveBlock(); \
         break; }
 #define DEFAULT_LAYOUT_WITH_ONEBYTE(op) \
-    case OpLayoutType::##op: { \
+    case OpLayoutType::op: { \
         switch (layoutSize) \
         { \
         case SmallLayout: \
-            reader.##op##_Small(); \
+            reader.op##_Small(); \
             break; \
         case MediumLayout: \
-            reader.##op##_Medium(); \
+            reader.op##_Medium(); \
             break; \
         case LargeLayout: \
-            reader.##op##_Large(); \
+            reader.op##_Large(); \
             break; \
         default: \
             Assert(false); \
@@ -1215,25 +1215,25 @@ public:
                     auxRecords.Prepend(record)
 
 #define CALLIEXTENDED_LAYOUT_WITH_ONEBYTE(op) \
-                    case OpLayoutType::##op: \
+                    case OpLayoutType::op: \
                     { \
                         switch (layoutSize) \
                         { \
                         case SmallLayout: \
                         { \
-                            auto layout = reader.##op##_Small(); \
+                            auto layout = reader.op##_Small(); \
                             STORE_SPREAD_AUX_ARGS; \
                             break; \
                         } \
                         case MediumLayout: \
                         { \
-                            auto layout = reader.##op##_Medium(); \
+                            auto layout = reader.op##_Medium(); \
                             STORE_SPREAD_AUX_ARGS; \
                             break; \
                         } \
                         case LargeLayout: \
                         { \
-                            auto layout = reader.##op##_Large(); \
+                            auto layout = reader.op##_Large(); \
                             STORE_SPREAD_AUX_ARGS; \
                             break; \
                         } \
@@ -2084,16 +2084,16 @@ public:
         {
 #define DEFINE_FUNCTION_BODY_FIELDS 1
 #define DECLARE_SERIALIZABLE_FIELD(type, name, serializableType) \
-            if (function->##name != 0) { \
+            if (function->name != 0) { \
                 definedFields.has_##name = true; \
-                Prepend##serializableType(builder, _u(#name), function->##name); \
+                Prepend##serializableType(builder, u###name, function->name); \
             }
 
 #define DECLARE_SERIALIZABLE_ACCESSOR_FIELD_NO_CHECK(type, name, serializableType) \
-            Prepend##serializableType(builder, _u(#name), function->Get##name##());
+            Prepend##serializableType(builder, u###name, function->Get##name());
 
 #define DECLARE_SERIALIZABLE_ACCESSOR_FIELD(type, name, serializableType, defaultValue) \
-            if (function->Get##name##() != defaultValue) { \
+            if (function->Get##name() != defaultValue) { \
                 definedFields.has_##name = true; \
                 DECLARE_SERIALIZABLE_ACCESSOR_FIELD_NO_CHECK(type, name, serializableType); \
             }
@@ -2363,9 +2363,9 @@ public:
 #define DEFINE_FUNCTION_PROXY_FIELDS 1
 #define DEFINE_PARSEABLE_FUNCTION_INFO_FIELDS 1
 #define DECLARE_SERIALIZABLE_FIELD(type, name, serializableType) \
-        if (function->##name != 0) { \
+        if (function->name != 0) { \
             definedFields.has_##name = true; \
-            Prepend##serializableType(builder, _u(#name), function->##name); \
+            Prepend##serializableType(builder, u###name, function->name); \
         }
 
 #include "Library/SerializableFunctionFields.h"
@@ -4161,7 +4161,7 @@ public:
 #define DEFINE_PARSEABLE_FUNCTION_INFO_FIELDS 1
 #define DECLARE_SERIALIZABLE_FIELD(type, name, serializableType) \
         if (definedFields->has_##name == true) { \
-            current = Read##serializableType(current, &(*function)->##name); \
+            current = Read##serializableType(current, &(*function)->name); \
         }
 #include "Library/SerializableFunctionFields.h"
 
@@ -4174,13 +4174,13 @@ public:
 #define DEFINE_FUNCTION_BODY_FIELDS 1
 #define DECLARE_SERIALIZABLE_FIELD(type, name, serializableType) \
             if (definedFields->has_##name == true) { \
-                current = Read##serializableType(current, &(*functionBody)->##name); \
+                current = Read##serializableType(current, &(*functionBody)->name); \
             }
 
 #define DECLARE_SERIALIZABLE_ACCESSOR_FIELD_NO_CHECK(type, name, serializableType) \
             type tmp##name=0; \
             current = Read##serializableType(current, &tmp##name); \
-            (*functionBody)->Set##name##(tmp##name);
+            (*functionBody)->Set##name(tmp##name);
 
 #define DECLARE_SERIALIZABLE_ACCESSOR_FIELD(type, name, serializableType, defaultValue) \
             if (definedFields->has_##name == true) { \

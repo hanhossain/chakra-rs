@@ -38,7 +38,7 @@ namespace Js
 #undef INTL_ENTRY
 #endif
 #define INTL_ENTRY(id, func) \
-    static NoProfileFunctionInfo Intl_##func##;
+    static NoProfileFunctionInfo Intl_##func;
 #include "IntlExtensionObjectBuiltIns.h"
 #undef INTL_ENTRY
         };
@@ -47,7 +47,7 @@ namespace Js
 #undef INTL_ENTRY
 #endif
 #define INTL_ENTRY(id, func) \
-    static Var EntryIntl_##func##(RecyclableObject* function, CallInfo callInfo, ...);
+    static Var EntryIntl_##func(RecyclableObject* function, CallInfo callInfo, ...);
 #include "IntlExtensionObjectBuiltIns.h"
 #undef INTL_ENTRY
 

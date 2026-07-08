@@ -422,7 +422,7 @@ namespace UnifiedRegex
     }
 
 #define PRINT_BYTES(InstType) \
-    Inst::PrintBytes<InstType>(w, (Inst *)this, (InstType *)this, _u(#InstType))
+    Inst::PrintBytes<InstType>(w, (Inst *)this, (InstType *)this, u###InstType)
 
 #define PRINT_BYTES_ANNOTATED(InstType, Annotation) \
     Inst::PrintBytes<InstType>(w, (Inst *)this, (InstType *)this, (Annotation))
@@ -443,7 +443,7 @@ namespace UnifiedRegex
     { \
         w->Print(u"(0x%03x bytes) ", sizeof(*this)); \
     } \
-    w->Print(_u(Name)); \
+    w->Print(u##Name); \
     w->Print(u"(");
 
 #define PRINT_RE_BYTECODE_MID() \
@@ -1957,7 +1957,7 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndContinueInstT<Char2LiteralScannerMixin> aka SyncToChar2LiteralAndContinue");
         PRINT_MIXIN(Char2LiteralScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char2LiteralScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(Char2LiteralScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_RE_BYTECODE_END();
     }
 
@@ -1968,7 +1968,7 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndContinueInstT<ScannerMixin> aka SyncToLiteralAndContinue");
         PRINT_MIXIN(ScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(ScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_RE_BYTECODE_END();
     }
 
@@ -1979,7 +1979,7 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndContinueInstT<ScannerMixin_WithLinearCharMap> aka SyncToLinearLiteralAndContinue");
         PRINT_MIXIN(ScannerMixin_WithLinearCharMap); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin_WithLinearCharMap); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(ScannerMixin_WithLinearCharMap); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_RE_BYTECODE_END();
     }
 
@@ -1990,7 +1990,7 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndContinueInstT<EquivScannerMixin> aka SyncToLiteralEquivAndContinue");
         PRINT_MIXIN(EquivScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(EquivScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_RE_BYTECODE_END();
     }
 
@@ -2001,7 +2001,7 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndContinueInstT<EquivTrivialLastPatCharScannerMixin> aka SyncToLiteralEquivTrivialLastPatCharAndContinue");
         PRINT_MIXIN(EquivTrivialLastPatCharScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivTrivialLastPatCharScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(EquivTrivialLastPatCharScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_RE_BYTECODE_END();
     }
 #endif
@@ -2171,7 +2171,7 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndConsumeInstT<Char2LiteralScannerMixin> aka SyncToChar2LiteralAndConsume");
         PRINT_MIXIN(Char2LiteralScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char2LiteralScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(Char2LiteralScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_RE_BYTECODE_END();
     }
 
@@ -2182,7 +2182,7 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndConsumeInstT<ScannerMixin> aka SyncToLiteralAndConsume");
         PRINT_MIXIN(ScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(ScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_RE_BYTECODE_END();
     }
 
@@ -2193,7 +2193,7 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndConsumeInstT<ScannerMixin_WithLinearCharMap> aka SyncToLinearLiteralAndConsume");
         PRINT_MIXIN(ScannerMixin_WithLinearCharMap); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin_WithLinearCharMap); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(ScannerMixin_WithLinearCharMap); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_RE_BYTECODE_END();
     }
 
@@ -2204,7 +2204,7 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndConsumeInstT<EquivScannerMixin> aka SyncToLiteralEquivAndConsume");
         PRINT_MIXIN(EquivScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(EquivScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_RE_BYTECODE_END();
     }
 
@@ -2215,7 +2215,7 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndConsumeInstT<EquivTrivialLastPatCharScannerMixin> aka SyncToLiteralEquivTrivialLastPatCharAndConsume");
         PRINT_MIXIN(EquivTrivialLastPatCharScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivTrivialLastPatCharScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(EquivTrivialLastPatCharScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_RE_BYTECODE_END();
     }
 #endif
@@ -2436,7 +2436,7 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(Char2LiteralScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_MIXIN(BackupMixin);
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char2LiteralScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(Char2LiteralScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_BYTES(BackupMixin);
         PRINT_RE_BYTECODE_END();
     }
@@ -2449,7 +2449,7 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(ScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_MIXIN(BackupMixin);
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(ScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_BYTES(BackupMixin);
         PRINT_RE_BYTECODE_END();
     }
@@ -2462,7 +2462,7 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(ScannerMixin_WithLinearCharMap); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_MIXIN(BackupMixin);
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin_WithLinearCharMap); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(ScannerMixin_WithLinearCharMap); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_BYTES(BackupMixin);
         PRINT_RE_BYTECODE_END();
     }
@@ -2475,7 +2475,7 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(EquivScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_MIXIN(BackupMixin);
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(EquivScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_BYTES(BackupMixin);
         PRINT_RE_BYTECODE_END();
     }
@@ -2488,7 +2488,7 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(EquivTrivialLastPatCharScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_MIXIN(BackupMixin);
         PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivTrivialLastPatCharScannerMixin); // NOTE: unique because macro expansion and _u(#InstType) happen before template is evaluated (so text would be ScannerT)
+        PRINT_BYTES(EquivTrivialLastPatCharScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
         PRINT_BYTES(BackupMixin);
         PRINT_RE_BYTECODE_END();
     }

@@ -917,10 +917,10 @@ namespace Js
         WAsmJs::TypedSlotInfo* GetTypedSlotInfo(WAsmJs::Types type);
 
 #define TYPED_SLOT_INFO_GETTER(name, type) \
-        int Get##name##ByteOffset() const   { return mTypedSlotInfos[WAsmJs::##type].byteOffset; }\
-        int Get##name##ConstCount() const   { return mTypedSlotInfos[WAsmJs::##type].constCount; }\
-        int Get##name##TmpCount() const     { return mTypedSlotInfos[WAsmJs::##type].tmpCount; }\
-        int Get##name##VarCount() const     { return mTypedSlotInfos[WAsmJs::##type].varCount; }
+        int Get##name##ByteOffset() const   { return mTypedSlotInfos[WAsmJs::type].byteOffset; }\
+        int Get##name##ConstCount() const   { return mTypedSlotInfos[WAsmJs::type].constCount; }\
+        int Get##name##TmpCount() const     { return mTypedSlotInfos[WAsmJs::type].tmpCount; }\
+        int Get##name##VarCount() const     { return mTypedSlotInfos[WAsmJs::type].varCount; }
 
         TYPED_SLOT_INFO_GETTER(Double, FLOAT64);
         TYPED_SLOT_INFO_GETTER(Float, FLOAT32);

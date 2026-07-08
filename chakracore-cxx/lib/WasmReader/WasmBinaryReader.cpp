@@ -208,7 +208,7 @@ void WasmBinaryReader::PrintOps()
         {
 #define WASM_OPCODE(opname, opcode, sig, imp, wat) \
     case opcode: \
-        Output::Print(u"%s: %s\r\n", _u(#opname), _u(wat)); \
+        Output::Print(u"%s: %s\r\n", u###opname, u##wat); \
         break;
 #include "WasmBinaryOpCodes.h"
         }
@@ -352,7 +352,7 @@ WasmOp WasmBinaryReader::ReadOpCode()
     {
 #define WASM_PREFIX(name, value, imp, errorMsg) \
     case prefix##name: \
-        return ReadPrefixedOpCode(op, imp, _u(errorMsg));
+        return ReadPrefixedOpCode(op, imp, u##errorMsg);
 #include "WasmBinaryOpCodes.h"
     }
 

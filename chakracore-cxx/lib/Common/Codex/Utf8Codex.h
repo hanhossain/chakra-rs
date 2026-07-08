@@ -10,8 +10,6 @@
 #include <stdint.h>
 
 // Utf8Codex.h needs to be self contained, so these type defs are duplicated from CommonTypeDefs.h
-#define _u(s) u##s
-
 extern void CodexAssert(bool condition);
 extern void CodexAssertOrFailFast(bool condition);
 

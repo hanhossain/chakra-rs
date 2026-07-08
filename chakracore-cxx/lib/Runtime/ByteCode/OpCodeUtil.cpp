@@ -179,21 +179,21 @@ namespace Js
 
     char16_t const * const OpCodeUtil::OpCodeNames[] =
     {
-#define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
+#define DEF_OP(x, y, ...) u###x,
 #include "OpCodeList.h"
 #undef DEF_OP
     };
 
     char16_t const * const OpCodeUtil::ExtendedOpCodeNames[] =
     {
-#define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
+#define DEF_OP(x, y, ...) u###x,
 #include "ExtendedOpCodeList.h"
 #undef DEF_OP
     };
 
     char16_t const * const OpCodeUtil::BackendOpCodeNames[] =
     {
-#define DEF_OP(x, y, ...) u"" STRINGIZEW(x) u"",
+#define DEF_OP(x, y, ...) u###x,
 #include "BackendOpCodeList.h"
 #undef DEF_OP
     };

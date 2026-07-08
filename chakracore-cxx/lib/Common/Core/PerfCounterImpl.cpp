@@ -271,15 +271,15 @@ GUID const& RecyclerTrackerCounterSetDefinition::GetGuid() { return JS9InternalC
 Provider& RecyclerTrackerCounterSetDefinition::GetProvider() { return Provider::InternalCounter; }
 
 #define DEFINE_RECYCLER_TRACKER_PERF_COUNTER_INDEX(type) \
-    uint const RecyclerTrackerCounterSetDefinition::##type##CounterIndex = JS9InternalCounter_RecyclerTrackerCounterSet_##type##Count; \
-    uint const RecyclerTrackerCounterSetDefinition::##type##SizeCounterIndex = JS9InternalCounter_RecyclerTrackerCounterSet_##type##Size;
+    uint const RecyclerTrackerCounterSetDefinition::type##CounterIndex = JS9InternalCounter_RecyclerTrackerCounterSet_##type##Count; \
+    uint const RecyclerTrackerCounterSetDefinition::type##SizeCounterIndex = JS9InternalCounter_RecyclerTrackerCounterSet_##type##Size;
 
 #define DEFINE_RECYCLER_TRACKER_ARRAY_PERF_COUNTER_INDEX(type) \
-    uint const RecyclerTrackerCounterSetDefinition::##type##ArrayCounterIndex = JS9InternalCounter_RecyclerTrackerCounterSet_##type##ArrayCount; \
-    uint const RecyclerTrackerCounterSetDefinition::##type##ArraySizeCounterIndex = JS9InternalCounter_RecyclerTrackerCounterSet_##type##ArraySize;
+    uint const RecyclerTrackerCounterSetDefinition::type##ArrayCounterIndex = JS9InternalCounter_RecyclerTrackerCounterSet_##type##ArrayCount; \
+    uint const RecyclerTrackerCounterSetDefinition::type##ArraySizeCounterIndex = JS9InternalCounter_RecyclerTrackerCounterSet_##type##ArraySize;
 
 #define DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER_INDEX(type) \
-    uint const RecyclerTrackerCounterSetDefinition::##type##WeakRefCounterIndex = JS9InternalCounter_RecyclerTrackerCounterSet_##type##WeakRefCount;
+    uint const RecyclerTrackerCounterSetDefinition::type##WeakRefCounterIndex = JS9InternalCounter_RecyclerTrackerCounterSet_##type##WeakRefCount;
 
 RECYCLER_TRACKER_PERF_COUNTER_TYPE(DEFINE_RECYCLER_TRACKER_PERF_COUNTER_INDEX);
 RECYCLER_TRACKER_ARRAY_PERF_COUNTER_TYPE(DEFINE_RECYCLER_TRACKER_ARRAY_PERF_COUNTER_INDEX);

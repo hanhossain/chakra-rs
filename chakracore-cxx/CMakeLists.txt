@@ -9,7 +9,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
-option(CMAKE_COMPILE_WARNING_AS_ERROR "" ON)
 
 option(DISABLE_JIT "Disable JIT compilation" OFF)
 option(IN_DOCKER "Running in docker" OFF)
@@ -133,54 +132,45 @@ add_definitions(
 # clang by default sets fvisibility=default
 
 # CXX WARNING FLAGS
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -Wall\
-    -Wextra\
-")
+add_compile_options(-Wall)
+add_compile_options(-Wextra)
 
 # ignore in general
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -Wno-delayed-template-parsing-in-cxx20\
-    -Wno-macro-redefined\
-    -Wno-null-conversion\
-    -Wno-tautological-undefined-compare\
-    -Wno-invalid-token-paste\
-    -Wno-pragmas\
-    -Wno-inconsistent-missing-override\
-    -Wno-int-to-void-pointer-cast\
-    -Wno-undefined-inline\
-    -Wno-switch\
-    -Wno-return-type\
-    -Wno-invalid-offsetof\
-    -Wno-format\
-    -Wno-tautological-constant-out-of-range-compare\
-    -Wno-address-of-temporary\
-    -Wno-null-arithmetic\
-    -Wno-int-to-pointer-cast\
-    -Wno-enum-compare-switch\
-    -Wno-implicit-const-int-float-conversion\
-    -Wno-nontrivial-memaccess\
-")
+add_compile_options(-Wno-delayed-template-parsing-in-cxx20)
+add_compile_options(-Wno-macro-redefined)
+add_compile_options(-Wno-null-conversion)
+add_compile_options(-Wno-tautological-undefined-compare)
+add_compile_options(-Wno-pragmas)
+add_compile_options(-Wno-inconsistent-missing-override)
+add_compile_options(-Wno-int-to-void-pointer-cast)
+add_compile_options(-Wno-undefined-inline)
+add_compile_options(-Wno-switch)
+add_compile_options(-Wno-return-type)
+add_compile_options(-Wno-invalid-offsetof)
+add_compile_options(-Wno-format)
+add_compile_options(-Wno-tautological-constant-out-of-range-compare)
+add_compile_options(-Wno-address-of-temporary)
+add_compile_options(-Wno-null-arithmetic)
+add_compile_options(-Wno-int-to-pointer-cast)
+add_compile_options(-Wno-enum-compare-switch)
+add_compile_options(-Wno-implicit-const-int-float-conversion)
+add_compile_options(-Wno-nontrivial-memaccess)
 
 # ignore for -Wall
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -Wno-reorder-ctor\
-    -Wno-overloaded-virtual\
-    -Wno-tautological-overlap-compare\
-    -Wno-sometimes-uninitialized\
-")
+add_compile_options(-Wno-reorder-ctor)
+add_compile_options(-Wno-overloaded-virtual)
+add_compile_options(-Wno-tautological-overlap-compare)
+add_compile_options(-Wno-sometimes-uninitialized)
 
 # ignore for -Wextra
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -Wno-sign-compare\
-    -Wno-missing-field-initializers\
-    -Wno-ignored-qualifiers\
-    -Wno-cast-function-type-mismatch\
-    -Wno-deprecated-copy-with-user-provided-copy\
-")
+add_compile_options(-Wno-sign-compare)
+add_compile_options(-Wno-missing-field-initializers)
+add_compile_options(-Wno-ignored-qualifiers)
+add_compile_options(-Wno-cast-function-type-mismatch)
+add_compile_options(-Wno-deprecated-copy-with-user-provided-copy)
 
 # this keeps causing issues with the docker build even if paths are correct
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path")
+add_compile_options(-Wno-nonportable-include-path)
 
 # notes..
 # -Wno-address-of-temporary  # vtinfo.h, VirtualTableInfo<T>::RegisterVirtualTable
@@ -196,10 +186,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path")
 # -Wno-unknown-warning-option ... well, some of the new switches are not
 # recognized by older compilers and they fail. So, put this one and not fail
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -fno-omit-frame-pointer \
-    -fdelayed-template-parsing"
-)
+add_compile_options(-fno-omit-frame-pointer)
+add_compile_options(-fdelayed-template-parsing)
 
 # CXX / CC COMPILER FLAGS
 add_compile_options(

@@ -18,7 +18,7 @@ char const * const RegNames[RegNumCount] =
 
 char16_t const * const RegNamesW[RegNumCount] =
 {
-#define REGDAT(Name, ListName, ...) u"" STRINGIZEW(ListName) u"",
+#define REGDAT(Name, ListName, ...) u###ListName,
 #include "RegList.h"
 #undef REGDAT
 };

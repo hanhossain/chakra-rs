@@ -1869,7 +1869,7 @@ namespace Js
                 {
 #define ASMJS_MATH_FUNC_NAMES(name, propertyName, funcInfo) \
             case AsmJSMathBuiltin_##name: \
-                value = JavascriptOperators::OP_GetProperty(asmMathObject, PropertyIds::##propertyName, scriptContext); \
+                value = JavascriptOperators::OP_GetProperty(asmMathObject, PropertyIds::propertyName, scriptContext); \
                 break;
 #include "AsmJsBuiltInNames.h"
                 default:
@@ -1882,7 +1882,7 @@ namespace Js
                 {
 #define ASMJS_TYPED_ARRAY_NAMES(name, propertyName) \
             case AsmJSTypedArrayBuiltin_##name: \
-                value = JavascriptOperators::OP_GetProperty(stdLibObj, PropertyIds::##propertyName, scriptContext); \
+                value = JavascriptOperators::OP_GetProperty(stdLibObj, PropertyIds::propertyName, scriptContext); \
                 break;
 #include "AsmJsBuiltInNames.h"
                 default:

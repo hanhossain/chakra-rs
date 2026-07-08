@@ -7796,7 +7796,7 @@ IRBuilder::AllowNativeArrayProfileInfo()
 
 #if DBG_DUMP || defined(ENABLE_IR_VIEWER)
 #define POINTER_OFFSET(opnd, c, field) \
-    m_irBuilder->BuildIndirOpnd((opnd), c, _u(#c) u"." _u(#field))
+    m_irBuilder->BuildIndirOpnd((opnd), c, u###c u"." u###field)
 #else
 #define POINTER_OFFSET(opnd, c, field) \
     m_irBuilder->BuildIndirOpnd((opnd), c)

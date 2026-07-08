@@ -154,7 +154,7 @@ namespace Js
 
 #define GlobalMathBuiltIn(mathMethod) library->AddFunctionToLibraryObject(commonNativeInterfaces, PropertyIds::builtInMath##mathMethod, &Math::EntryInfo::mathMethod, 1);
 #define GlobalBuiltIn(global, method) library->AddFunctionToLibraryObject(commonNativeInterfaces, PropertyIds::builtIn##global##Entry##method, &global::EntryInfo::method, 1);
-#define GlobalBuiltInConstructor(global) SetPropertyOn(commonNativeInterfaces, PropertyIds::##global##, library->Get##global##Constructor());
+#define GlobalBuiltInConstructor(global) SetPropertyOn(commonNativeInterfaces, PropertyIds::global, library->Get##global##Constructor());
 #define BuiltInRaiseException(exceptionType, exceptionID) library->AddFunctionToLibraryObject(commonNativeInterfaces, PropertyIds::raise##exceptionID, &EngineInterfaceObject::EntryInfo::BuiltIn_raise##exceptionID, 1);
 #define EngineInterfaceBuiltIn2(propId, nativeMethod) library->AddFunctionToLibraryObject(commonNativeInterfaces, PropertyIds::propId, &EngineInterfaceObject::EntryInfo::nativeMethod, 1);
 #include "EngineInterfaceObjectBuiltIns.h"

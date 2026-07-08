@@ -1029,7 +1029,7 @@ using namespace Js;
     }
 
 #define DEFINE_FLAG_GETTER(methodName, propertyName, patternMethodName) \
-    Var JavascriptRegExp::##methodName##(RecyclableObject* function, CallInfo callInfo, ...) \
+    Var JavascriptRegExp::methodName(RecyclableObject* function, CallInfo callInfo, ...) \
     { \
         PROBE_STACK(function->GetScriptContext(), Js::Constants::MinStackDefault); \
         ARGUMENTS(args, callInfo); \
@@ -1041,8 +1041,8 @@ using namespace Js;
             return scriptContext->GetLibrary()->GetUndefined(); \
         }\
         \
-        JavascriptRegExp* pRegEx = GetJavascriptRegExp(args, u"RegExp.prototype." _u(#propertyName), scriptContext); \
-        return pRegEx->GetLibrary()->CreateBoolean(pRegEx->GetPattern()->##patternMethodName##()); \
+        JavascriptRegExp* pRegEx = GetJavascriptRegExp(args, u"RegExp.prototype." u###propertyName, scriptContext); \
+        return pRegEx->GetLibrary()->CreateBoolean(pRegEx->GetPattern()->patternMethodName()); \
     }
 
     DEFINE_FLAG_GETTER(EntryGetterGlobal, global, IsGlobal)
@@ -1173,7 +1173,7 @@ using namespace Js;
 #define GET_FLAG(patternMethod) \
         if (!scriptConfig->IsES6RegExPrototypePropertiesEnabled()) \
         { \
-            *value = this->GetLibrary()->CreateBoolean(this->GetPattern()->##patternMethod##()); \
+            *value = this->GetLibrary()->CreateBoolean(this->GetPattern()->patternMethod()); \
             *result = true; \
             return true; \
         } \

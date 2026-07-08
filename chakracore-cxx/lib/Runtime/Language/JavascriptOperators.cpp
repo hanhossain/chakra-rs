@@ -4776,7 +4776,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         }
 
         BOOL  returnValue = false;
-#define MEMCOPY_TYPED_ARRAY(type, conversion) VarTo< type ## >(dstInstance)->DirectSetItemAtRange( VarTo< type ## >(srcInstance), srcStart, dstStart, length, JavascriptConversion:: ## conversion)
+#define MEMCOPY_TYPED_ARRAY(type, conversion) VarTo<type>(dstInstance)->DirectSetItemAtRange( VarTo<type>(srcInstance), srcStart, dstStart, length, JavascriptConversion::conversion)
         switch (instanceType)
         {
         case TypeIds_Int8Array:
@@ -4888,9 +4888,9 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
 #define MEMSET_TYPED_ARRAY_CASE(type, conversion) \
         case TypeIds_##type: \
         { \
-            type## ::TypedArrayType typedValue = 0; \
-            if (!MemsetConversion<type## ::TypedArrayType, JavascriptConversion:: ##conversion>(value, scriptContext, &typedValue)) return false; \
-            returnValue = VarTo< type## >(instance)->DirectSetItemAtRange(start, length, typedValue); \
+            type::TypedArrayType typedValue = 0; \
+            if (!MemsetConversion<type::TypedArrayType, JavascriptConversion::conversion>(value, scriptContext, &typedValue)) return false; \
+            returnValue = VarTo<type>(instance)->DirectSetItemAtRange(start, length, typedValue); \
             break; \
         }
         switch (instanceType)
