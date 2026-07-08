@@ -762,8 +762,8 @@ inline size_t THREADSilentGetCurrentThreadId() {
     if (threadIdSelf != -1) return threadIdSelf;
     uint64_t tid;
     pthread_threadid_np(pthread_self(), &tid);
-    threadIdSelf = (size_t)tid;
-    return (size_t)tid;
+    threadIdSelf = static_cast<size_t>(tid);
+    return tid;
 }
 #else
 #define THREADSilentGetCurrentThreadId() (size_t)pthread_self()
