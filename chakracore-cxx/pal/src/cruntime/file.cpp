@@ -96,7 +96,7 @@ static char* MapFileOpenModes(char* str)
         return NULL;
     }
 
-    retval = (char*)malloc( ( strlen( str ) + 1 ) * sizeof( char ) );
+    retval = static_cast<char*>(malloc((strlen(str) + 1) * sizeof(char)));
     if (NULL == retval)
     {
         ERROR("Unable to allocate memory.\n");
@@ -171,7 +171,7 @@ PAL_fopen(const char * fileName, const char * mode)
             goto done;
         }
 
-        f = (FILE*)fopen( UnixFileName, supported );
+        f = fopen( UnixFileName, supported );
     }
     else
     {
