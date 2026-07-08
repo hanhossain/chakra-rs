@@ -76,7 +76,6 @@ extern errno_t _i64tow_s( long long inValue, char16_t* outBuffer, size_t inDestB
 extern errno_t _ui64toa_s( unsigned long long inValue, char* outBuffer, size_t inDestBufferSize, int inRadix );
 extern errno_t _ui64tow_s( unsigned long long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
 
-extern errno_t _makepath_s( char* outDest, size_t inDestBufferSize, const char* inDrive, const char* inDirectory, const char* inFilename, const char* inExtension );
 extern errno_t _wmakepath_s( char16_t* outDest, size_t inDestBufferSize, const char16_t* inDrive, const char16_t* inDirectory, const char16_t* inFilename, const char16_t* inExtension );
 
 extern errno_t _wsplitpath_s( const char16_t* inPath, char16_t* outDrive, size_t inDriveSize, char16_t* outDirectory, size_t inDirectorySize, char16_t* outFilename, size_t inFilenameSize, char16_t* outExtension, size_t inExtensionSize );
