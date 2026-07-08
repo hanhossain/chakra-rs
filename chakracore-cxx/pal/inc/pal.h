@@ -1169,7 +1169,7 @@ BitScanForward(
     if (iIndex != 0)
     {
         // Set the Index after deducting unity
-        *Index = (uint32_t)(iIndex - 1);
+        *Index = static_cast<uint32_t>(iIndex - 1);
         bRet = TRUE;
     }
 
@@ -1190,7 +1190,7 @@ BitScanForward64(
     if (iIndex != 0)
     {
         // Set the Index after deducting unity
-        *Index = (uint32_t)(iIndex - 1);
+        *Index = static_cast<uint32_t>(iIndex - 1);
         bRet = TRUE;
     }
 
@@ -1211,7 +1211,7 @@ BitScanReverse(
         static_assert(sizeof(qwMask) <= sizeof(unsigned int),
                       "use correct __builtin_clz??? variant");
         int countLeadingZero = __builtin_clz(qwMask);
-        *Index = (uint32_t)(sizeof(qwMask) * 8 - 1 - countLeadingZero);
+        *Index = static_cast<uint32_t>(sizeof(qwMask) * 8 - 1 - countLeadingZero);
         bRet = TRUE;
     }
 
@@ -1232,7 +1232,7 @@ BitScanReverse64(
         static_assert(sizeof(qwMask) <= sizeof(unsigned long long),
                       "use correct __builtin_clz??? variant");
         int countLeadingZero = __builtin_clzll(qwMask);
-        *Index = (uint32_t)(sizeof(qwMask) * 8 - 1 - countLeadingZero);
+        *Index = static_cast<uint32_t>(sizeof(qwMask) * 8 - 1 - countLeadingZero);
         bRet = TRUE;
     }
 
@@ -1264,7 +1264,7 @@ int32_t
 InterlockedIncrement(
       int32_t volatile *lpAddend)
 {
-    return __sync_add_and_fetch(lpAddend, (int32_t)1);
+    return __sync_add_and_fetch(lpAddend, 1);
 }
 
 EXTERN_C
@@ -1273,7 +1273,7 @@ long
 InterlockedIncrement16(
       short volatile *lpAddend)
 {
-    return __sync_add_and_fetch(lpAddend, (short)1);
+    return __sync_add_and_fetch(lpAddend, 1);
 }
 
 /*++
@@ -1301,7 +1301,7 @@ int32_t
 InterlockedDecrement(
       int32_t volatile *lpAddend)
 {
-    return __sync_sub_and_fetch(lpAddend, (int32_t)1);
+    return __sync_sub_and_fetch(lpAddend, 1);
 }
 
 /*++
@@ -1780,11 +1780,11 @@ int _wtoi(const char16_t *);
 #ifdef __cplusplus
 extern "C++" {
 inline char16_t *PAL_wcschr(char16_t *_S, char16_t _C)
-        {return ((char16_t *)PAL_wcschr((const char16_t *)_S, _C)); }
+        {return const_cast<char16_t*>(PAL_wcschr(static_cast<const char16_t*>(_S), _C)); }
 inline char16_t *PAL_wcsrchr(char16_t *_S, char16_t _C)
-        {return ((char16_t *)PAL_wcsrchr((const char16_t *)_S, _C)); }
+        {return const_cast<char16_t*>(PAL_wcsrchr(static_cast<const char16_t*>(_S), _C)); }
 inline char16_t *PAL_wcsstr(char16_t *_S, const char16_t *_P)
-        {return ((char16_t *)PAL_wcsstr((const char16_t *)_S, _P)); }
+        {return const_cast<char16_t*>(PAL_wcsstr(static_cast<const char16_t*>(_S), _P)); }
 }
 #endif
 
