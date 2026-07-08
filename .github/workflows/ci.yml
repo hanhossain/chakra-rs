@@ -40,7 +40,7 @@ jobs:
       CARGO_TERM_COLOR: always
       RUSTFLAGS: -D warnings
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - name: Install dependencies
         run: ${{ matrix.deps }}
@@ -88,7 +88,7 @@ jobs:
       CMAKE_COLOR_DIAGNOSTICS: ON
       CLICOLOR_FORCE: 1
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install dependencies
         run: ${{ matrix.deps }}
       - if: ${{ runner.os == 'Linux' }}
