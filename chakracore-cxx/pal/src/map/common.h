@@ -21,10 +21,8 @@ Abstract:
 #ifndef __COMMON_H_
 #define __COMMON_H_
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif
 
 /*****
  *
@@ -33,9 +31,7 @@ extern "C"
  */
 int32_t W32toUnixAccessControl(  uint32_t flProtect );
 
-#ifdef __cplusplus
 }
-#endif
 
 #endif /* __COMMON_H_ */
 

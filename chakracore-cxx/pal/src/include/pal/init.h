@@ -25,10 +25,8 @@ Revision History:
 #define _PAL_INIT_H_
 #include "volatile.h"
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 /*++
 Function:
@@ -108,8 +106,6 @@ Return value :
 --*/
 BOOL PALInitLock(void);
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_INIT_H_ */

@@ -59,9 +59,7 @@ typedef __builtin_va_list va_list;
 #define PRINT_ERROR(...) \
     fprintf(stderr, __VA_ARGS__)
 
-#ifdef  __cplusplus
 extern "C" {
-#endif
 
 // This macro is used to standardize the wide character string literals between UNIX and Windows.
 // Unix L"" is UTF32, and on windows it's UTF16.  Because of built-in assumptions on the size
@@ -142,16 +140,8 @@ extern "C" {
 #endif
 
 #ifndef NULL
-#if defined(__cplusplus)
 #define NULL    0
-#else
-#define NULL    ((void *)0)
 #endif
-#endif
-
-#if defined(PAL_STDCPP_COMPAT) && !defined(__cplusplus)
-#define nullptr NULL
-#endif // defined(PAL_STDCPP_COMPAT) && !defined(__cplusplus)
 
 #define C1_UPPER                  0x0001      /* upper case */
 #define C1_LOWER                  0x0002      /* lower case */
@@ -1741,11 +1731,7 @@ GetSystemInfo(
            LPSYSTEM_INFO lpSystemInfo);
 
 #ifndef _CONST_RETURN
-#ifdef  __cplusplus
 #define _CONST_RETURN  const
-#else
-#define _CONST_RETURN
-#endif
 #endif
 
 /* For backwards compatibility */
@@ -1777,7 +1763,6 @@ char16_t * _i64tow(long, char16_t *, int);
 char16_t * _ui64tow(unsigned long, char16_t *, int);
 int _wtoi(const char16_t *);
 
-#ifdef __cplusplus
 extern "C++" {
 inline char16_t *PAL_wcschr(char16_t *_S, char16_t _C)
         {return ((char16_t *)PAL_wcschr((const char16_t *)_S, _C)); }
@@ -1786,7 +1771,6 @@ inline char16_t *PAL_wcsrchr(char16_t *_S, char16_t _C)
 inline char16_t *PAL_wcsstr(char16_t *_S, const char16_t *_P)
         {return ((char16_t *)PAL_wcsstr((const char16_t *)_S, _P)); }
 }
-#endif
 
 #ifndef __has_builtin
 #define __has_builtin(x) 0
@@ -1952,9 +1936,7 @@ FILE * _wfopen(const char16_t *, const char16_t *);
 
 size_t GetCurrentSP();
 
-#ifdef  __cplusplus
 }
 
-#endif
 
 #endif // __PAL_H__

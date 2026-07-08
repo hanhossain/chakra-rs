@@ -577,9 +577,7 @@ typedef struct _iJIT_Method_Update
 #pragma pack(pop)
 
 /** @cond exclude_from_documentation */
-#ifdef __cplusplus
 extern "C" {
-#endif /* __cplusplus */
 /** @endcond */
 
 /**
@@ -617,9 +615,7 @@ iJIT_IsProfilingActiveFlags iJIT_IsProfilingActive(void);
  */
 int iJIT_NotifyEvent(iJIT_JVM_EVENT event_type, void *EventSpecificData);
 
-#ifdef __cplusplus
 }
-#endif /* __cplusplus */
 /** @endcond */
 
 /** @} jitapi group */

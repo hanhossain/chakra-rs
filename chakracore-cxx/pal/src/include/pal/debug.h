@@ -22,10 +22,8 @@ Abstract:
 #ifndef _PAL_DEBUG_H_
 #define _PAL_DEBUG_H_
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 /*++
 Function :
@@ -67,8 +65,6 @@ DBG_FlushInstructionCache(
                        const void * lpBaseAddress,
                        size_t dwSize);
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif //PAL_DEBUG_H_

@@ -24,10 +24,8 @@ Abstract:
 
 #include "pal/palinternal.h"
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 #if !defined(__APPLE__)
 
@@ -63,8 +61,6 @@ BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec);
 
 #endif  /* !defined(__APPLE__) */
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif  /* _UNICODE_DATA_H_ */

@@ -29,10 +29,8 @@ Revision History:
 
 #include "pal/palinternal.h"
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 /* thread ID of thread that has initiated an ExitProcess (or TerminateProcess). 
    this is to make sure only one thread cleans up the PAL, and also to prevent 
@@ -128,9 +126,7 @@ Return
 CorUnix::CPalThread *PROCThreadFromMachPort(mach_port_t hThread);
 #endif // defined(__APPLE__)
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif //PAL_PROCESS_H_
 

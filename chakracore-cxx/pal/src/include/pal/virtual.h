@@ -24,10 +24,8 @@ Abstract:
 #ifndef _PAL_VIRTUAL_H_
 #define _PAL_VIRTUAL_H_
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 typedef struct _CMI {
 
@@ -104,8 +102,6 @@ Function :
 BOOL VIRTUALOwnedRegion(  unsigned long address );
 
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_VIRTUAL_H_ */

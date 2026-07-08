@@ -27,10 +27,8 @@ Revision History:
 #include <sys/types.h>
 #include <dirent.h>
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 typedef struct _find_handle
 {
@@ -91,8 +89,6 @@ Windows behavoir.
 */
 void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode );
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_FILE_H_ */

@@ -157,10 +157,8 @@ Using Debug channels at Run Time
 #include "pal/debug.h"
 #include "pal/thread.hpp"
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 /* Channel identifiers */
 typedef enum
@@ -266,8 +264,6 @@ extern const char16_t* W16_NULLSTRING;
 
 #endif /* defined(_DEBUG) */
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_DBGMSG_H_ */

@@ -24,10 +24,8 @@ Abstract:
 #include <mach/mach_error.h>
 #include <mach/thread_status.h>
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 // List of exception types we will be watching for
 // NOTE: if you change any of these, you need to adapt s_nMachExceptionPortsMax in thread.hpp
@@ -41,8 +39,6 @@ bool SEHInitializeMachExceptions();
 void MachExceptionInitializeDebug(void);
 __attribute__((noreturn)) void MachSetThreadContext(CONTEXT *lpContext);
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _MACHEXCEPTION_H_ */

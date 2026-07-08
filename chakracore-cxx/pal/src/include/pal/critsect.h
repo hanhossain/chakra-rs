@@ -22,10 +22,8 @@ Abstract:
 #ifndef _PAL_CRITSECT_H_
 #define _PAL_CRITSECT_H_
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 void InternalInitializeCriticalSection(CRITICAL_SECTION *pcs);
 void InternalDeleteCriticalSection(CRITICAL_SECTION *pcs);
@@ -38,9 +36,7 @@ void InternalDeleteCriticalSection(CRITICAL_SECTION *pcs);
 void PALCEnterCriticalSection(CRITICAL_SECTION *pcs);
 void PALCLeaveCriticalSection(CRITICAL_SECTION *pcs);
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_CRITSECT_H_ */
 

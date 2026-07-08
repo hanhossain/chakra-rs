@@ -306,11 +306,7 @@ typedef unsigned short char16_t;
     /// <summary>
     ///     An invalid runtime handle.
     /// </summary>
-#ifdef __cplusplus
     const JsRuntimeHandle JS_INVALID_RUNTIME_HANDLE = 0;
-#else
-    #define JS_INVALID_RUNTIME_HANDLE (JsRuntimeHandle)0
-#endif
 
     /// <summary>
     ///     A reference to an object owned by the Chakra garbage collector.
@@ -327,11 +323,7 @@ typedef unsigned short char16_t;
     /// <summary>
     ///     An invalid reference.
     /// </summary>
-#ifdef __cplusplus
     const JsRef JS_INVALID_REFERENCE = 0;
-#else
-    #define JS_INVALID_REFERENCE (JsRef)0
-#endif
 
     /// <summary>
     ///     A reference to a script context.
@@ -366,11 +358,7 @@ typedef unsigned short char16_t;
     /// <summary>
     ///     An empty source context.
     /// </summary>
-#ifdef __cplusplus
     const JsSourceContext JS_SOURCE_CONTEXT_NONE = (JsSourceContext)-1;
-#else
-    #define JS_SOURCE_CONTEXT_NONE (JsSourceContext)-1
-#endif
 
     /// <summary>
     ///     A property identifier.

@@ -193,17 +193,12 @@ typedef enum tagEFaultRepRetVal
 #define STDAPI               EXTERN_C int32_t
 #define STDAPI_(type)        EXTERN_C type
 
-#ifdef __cplusplus
 #define REFGUID const GUID &
-#else
-#define REFGUID const GUID *
-#endif
 
 EXTERN_C const GUID GUID_NULL;
 
 typedef GUID *LPGUID;
 
-#ifdef __cplusplus
 extern "C++" {
 #if !defined _SYS_GUID_OPERATOR_EQ_ && !defined _NO_SYS_GUID_OPERATOR_EQ_
 #define _SYS_GUID_OPERATOR_EQ_
@@ -215,14 +210,9 @@ inline int operator!=(REFGUID guidOne, REFGUID guidOther)
     { return !IsEqualGUID(guidOne,guidOther); }
 #endif
 };
-#endif // __cplusplus
 
 typedef GUID IID;
-#ifdef __cplusplus
 #define REFIID const IID &
-#else
-#define REFIID const IID *
-#endif
 #define IID_NULL GUID_NULL
 #define IsEqualIID(riid1, riid2) IsEqualGUID(riid1, riid2)
 
@@ -230,11 +220,7 @@ typedef GUID IID;
 
 typedef GUID CLSID;
 #define CLSID_DEFINED
-#ifdef __cplusplus
 #define REFCLSID const CLSID &
-#else
-#define REFCLSID const CLSID *
-#endif
 #define CLSID_NULL GUID_NULL
 #define IsEqualCLSID(rclsid1, rclsid2) IsEqualGUID(rclsid1, rclsid2)
 typedef CLSID *LPCLSID;
@@ -584,7 +570,6 @@ STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cc
 #define lstrcmp                 lstrcmpW
 #define wnsprintf               wnsprintfW
 
-#ifdef __cplusplus
 /*
   Safe CRT functions are not available (yet) on all platforms, so we use our own implementations from safecrt.h.
 */
@@ -746,7 +731,7 @@ inline errno_t _fopen_unsafe(FILE * *ff, const char *fileName, const char *mode)
 _SAFECRT__EXTERN_C
 errno_t _itow_s(int _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
 
-#if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
+#if _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
 errno_t _itow_s(int _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
@@ -773,7 +758,7 @@ errno_t _itow_s(int _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 _SAFECRT__EXTERN_C
 errno_t _ltow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
 
-#if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
+#if  _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
 errno_t _ltow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
@@ -801,7 +786,7 @@ errno_t _ltow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 _SAFECRT__EXTERN_C
 errno_t _i64tow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
 
-#if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
+#if _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
 inline
 errno_t _i64tow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
@@ -832,7 +817,7 @@ errno_t _i64tow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 _SAFECRT__EXTERN_C
 errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name);
 
-#if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
+#if _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SzInWords>
 inline
 errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
@@ -864,7 +849,6 @@ errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const ch
 #endif
 
 }
-#endif /* __cplusplus */
 
 
 STDAPI_(BOOL) PathAppendW(char16_t* pszPath, const char16_t* pszMore);
