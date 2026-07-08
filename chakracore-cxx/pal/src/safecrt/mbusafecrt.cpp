@@ -41,7 +41,7 @@ int _putc_nolock( char inChar, miniFILE* inStream )
     {
         *( inStream->_ptr ) = inChar;
         inStream->_ptr += sizeof( char );
-        returnValue = ( int )inChar;
+        returnValue = static_cast<int>(inChar);
     }
 
     return returnValue;
@@ -61,7 +61,7 @@ int _putwc_nolock( char16_t inChar, miniFILE* inStream )
     {
         *( ( char16_t* )( inStream->_ptr ) ) = inChar;
         inStream->_ptr += sizeof( char16_t );
-        returnValue = ( int )inChar;
+        returnValue = static_cast<int>(inChar);
     }
 
     return returnValue;
@@ -75,10 +75,10 @@ int _getc_nolock( miniFILE* inStream )
 {
     int returnValue = EOF;
 
-    if ( ( inStream->_cnt ) >= ( int )( sizeof( char ) ) )
+    if ( ( inStream->_cnt ) >= static_cast<int>(sizeof(char)) )
     {
         inStream->_cnt -= sizeof( char );
-        returnValue = ( int )( *( inStream->_ptr ) );
+        returnValue = static_cast<int>(*(inStream->_ptr));
         inStream->_ptr += sizeof( char );
     }
 
@@ -93,10 +93,10 @@ int _getwc_nolock( miniFILE* inStream )
 {
     int returnValue = EOF;
 
-    if ( ( inStream->_cnt ) >= ( int )( sizeof( char16_t ) ) )
+    if ( ( inStream->_cnt ) >= static_cast<int>(sizeof(char16_t)) )
     {
         inStream->_cnt -= sizeof( char16_t );
-        returnValue = ( int )( *( ( char16_t* )( inStream->_ptr ) ) );
+        returnValue = static_cast<int>(*((char16_t*)(inStream->_ptr)));
         inStream->_ptr += sizeof( char16_t );
     }
 
@@ -111,7 +111,7 @@ int _ungetc_nolock( char inChar, miniFILE* inStream )
 {
     int returnValue = EOF;
 
-    if ( ( size_t )( ( inStream->_ptr ) - ( inStream->_base ) ) >= ( sizeof( char ) ) )
+    if ( static_cast<size_t>((inStream->_ptr) - (inStream->_base)) >= ( sizeof( char ) ) )
     {
         inStream->_cnt += sizeof( char );
         inStream->_ptr -= sizeof( char );
@@ -129,11 +129,11 @@ int _ungetwc_nolock( char16_t inChar, miniFILE* inStream )
 {
     int returnValue = WEOF;
     
-    if ( ( size_t )( ( inStream->_ptr ) - ( inStream->_base ) ) >= ( sizeof( char16_t ) ) )
+    if ( static_cast<size_t>((inStream->_ptr) - (inStream->_base)) >= ( sizeof( char16_t ) ) )
     {
         inStream->_cnt += sizeof( char16_t );
         inStream->_ptr -= sizeof( char16_t );
-        returnValue = ( unsigned short )inChar;
+        returnValue = static_cast<unsigned short>(inChar);
     }
     
     return returnValue;
@@ -170,7 +170,7 @@ errno_t _safecrt_cfltcvt(double *arg, char *buffer, size_t sizeInBytes, int type
     format[formatlen++] = '.';
     _itoa_s(precision, format + formatlen, FORMATSIZE - formatlen, 10);
     formatlen = strlen(format);
-    format[formatlen++] = (char)type;
+    format[formatlen++] = static_cast<char>(type);
     format[formatlen] = 0;
 
     buffer[sizeInBytes - 1] = 0;
@@ -194,13 +194,13 @@ void _safecrt_fassign(int flag, void* argument, char* number )
     {
         double dblValue = 0.0;
         (void)sscanf( number, "%lf", &dblValue );
-        *( ( double* )argument ) = dblValue;
+        *static_cast<double*>(argument) = dblValue;
     }
     else                // float
     {
         float fltValue = 0.0;
         (void)sscanf( number, "%f", &fltValue );
-        *( ( float* )argument ) = fltValue;
+        *static_cast<float*>(argument) = fltValue;
     }
 }
 
@@ -224,10 +224,10 @@ void _safecrt_wfassign(int flag, void* argument, char16_t* number )
     // do the convert
     while ( number[ position ] != 0 )
     {
-        numberAsChars[ position ] = ( char )( number[ position ] & 0x00FF );
+        numberAsChars[ position ] = static_cast<char>(number[position] & 0x00FF);
         position++;
     }
-    numberAsChars[ position ] = ( char )( number[ position ] & 0x00FF );
+    numberAsChars[ position ] = static_cast<char>(number[position] & 0x00FF);
     
     // call the normal char version
     _safecrt_fassign( flag, argument, numberAsChars );
@@ -240,7 +240,7 @@ void _safecrt_wfassign(int flag, void* argument, char16_t* number )
 
 int _minimal_chartowchar( char16_t* outWChar, const char* inChar )
 {
-    *outWChar = ( char16_t )( ( unsigned short )( ( unsigned char )( *inChar ) ) );
+    *outWChar = static_cast<char16_t>((unsigned short)((unsigned char)(*inChar)));
     return 1;
 }
 
