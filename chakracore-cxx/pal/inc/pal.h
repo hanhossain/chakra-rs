@@ -1755,7 +1755,6 @@ GetSystemInfo(
 
 typedef int errno_t;
 
-unsigned char * _mbsdec(const unsigned char *, const unsigned char *);
 int _vsnwprintf(char16_t *, size_t, const char16_t *, va_list);
 char16_t * _itow(int, char16_t *, int);
 char16_t * _ltow(long, char16_t *, int);

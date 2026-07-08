@@ -306,11 +306,6 @@ typedef int errno_t; /* standard */
     _ismbblead(_Character)
 #endif
 
-#if !defined(_SAFECRT__MBSDEC)
-#define _SAFECRT__MBSDEC(_String, _Current) \
-    _mbsdec(_String, _Current)
-#endif
-
 _SAFECRT__EXTERN_C
 void _invalid_parameter();
 

@@ -596,7 +596,6 @@ STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cc
 #define _SAFECRT_DEFINE_TCS_MACROS 1
 /*
 #define _SAFECRT__ISMBBLEAD(_Character) 0
-#define _SAFECRT__MBSDEC(_String, _Current) (_Current - 1)
 */
 #include "safecrt.h"
 #include "specstrings.h"
