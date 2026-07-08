@@ -147,7 +147,7 @@ PAL_fopen(const char * fileName, const char * mode)
 
     if ( *mode == 'r' || *mode == 'w' || *mode == 'a' )
     {
-        supported = MapFileOpenModes( (char*)mode);
+        supported = MapFileOpenModes( const_cast<char*>(mode));
 
         if ( !supported )
         {
