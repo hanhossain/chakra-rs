@@ -24,10 +24,8 @@ Revision History:
 #ifndef _LIST_H_INCLUDED
 #define _LIST_H_INCLUDED
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 typedef struct _LIST_ENTRY {
    struct _LIST_ENTRY *Flink;
@@ -134,9 +132,7 @@ typedef struct _LIST_ENTRY {
                                                   (char *)(address) - \
                                                   (size_t)(&((type *)0)->field)))
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif // _LIST_H_INCLUDED
 

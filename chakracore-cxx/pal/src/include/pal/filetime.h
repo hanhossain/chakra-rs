@@ -24,10 +24,8 @@ Revision History:
 #ifndef _PAL_FILETIME_H_
 #define _PAL_FILETIME_H_
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 /* Provide consistent access to nanosecond fields, if they exist. */
 
@@ -54,9 +52,7 @@ time_t FILEFileTimeToUnixTime( FILETIME FileTime, long *nsec );
 FILETIME FILECFAbsoluteTimeToFileTime( CFAbsoluteTime sec );
 #endif // __APPLE__
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_FILE_H_ */
 

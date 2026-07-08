@@ -14,9 +14,7 @@
 #ifndef __PAL_ASSERT_H__
 #define __PAL_ASSERT_H__
 
-#ifdef  __cplusplus
 extern "C" {
-#endif
 
 #if defined(_DEBUG)
 #include "assert_only.h"
@@ -29,8 +27,6 @@ extern "C" {
 #define assert(e) _ASSERTE(e)
 #endif  // assert
 
-#ifdef  __cplusplus
 }
-#endif
 
 #endif // __PAL_ASSERT_H__

@@ -99,15 +99,9 @@
 #  endif
 #endif
 
-#ifdef __cplusplus
 #  define ITT_EXTERN_C extern "C"
 #  define ITT_EXTERN_C_BEGIN extern "C" {
 #  define ITT_EXTERN_C_END }
-#else
-#  define ITT_EXTERN_C /* nothing */
-#  define ITT_EXTERN_C_BEGIN /* nothing */
-#  define ITT_EXTERN_C_END /* nothing */
-#endif /* __cplusplus */
 
 #define ITT_TO_STR_AUX(x) #x
 #define ITT_TO_STR(x)     ITT_TO_STR_AUX(x)

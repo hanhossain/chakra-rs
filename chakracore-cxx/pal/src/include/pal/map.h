@@ -22,10 +22,8 @@ Abstract:
 #ifndef _PAL_MAP_H_
 #define _PAL_MAP_H_
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 /*++
 Function :
@@ -45,9 +43,7 @@ Function :
 
 BOOL MAPGetRegionInfo(void * lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_MAP_H_ */
 

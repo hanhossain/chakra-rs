@@ -15,24 +15,18 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#ifdef  __cplusplus
 extern "C" {
-#endif
 
 ////////////////////////////////////////////////////////////////////////
 // calling convention stuff
 ////////////////////////////////////////////////////////////////////////
 
 
-#ifdef __cplusplus
 #define EXTERN_C extern "C"
-#else
-#define EXTERN_C
-#endif // __cplusplus
 
 #define CALLBACK
 
-#if defined(_VAC_) && defined(__cplusplus)
+#if defined(_VAC_)
 #define __inline        inline
 #endif
 
@@ -67,10 +61,6 @@ typedef unsigned long ULONG64;
 #define _W64
 
 #define _PTRDIFF_T_DEFINED
-
-#if !defined(__cplusplus)
-typedef unsigned short char16_t;
-#endif // __cplusplus
 
 #define _INTPTR_T_DEFINED
 #define _UINTPTR_T_DEFINED
@@ -137,8 +127,6 @@ typedef struct _FILETIME {
 #define CP_UTF7     65000   /* UTF-7 translation */
 #define CP_UTF8     65001   /* UTF-8 translation */
 
-#ifdef  __cplusplus
 }
-#endif
 
 #endif // __PAL_MSTYPES_H__

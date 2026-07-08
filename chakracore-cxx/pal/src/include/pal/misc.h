@@ -22,10 +22,8 @@ Abstract:
 #ifndef __MISC_H_
 #define __MISC_H_
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 /*++
 Variables :
@@ -114,9 +112,7 @@ does not exist in the environment.
 --*/
 void MiscUnsetenv(const char *name);
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* __MISC_H_ */
 

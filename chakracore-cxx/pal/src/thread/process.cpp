@@ -83,10 +83,6 @@ SET_DEFAULT_DEBUG_CHANNEL(PROCESS); // some headers have code with asserts, so d
 #include <sys/posix_sem.h>
 #include <mach/task.h>
 #include <mach/vm_map.h>
-extern "C"
-{
-#  include <mach/thread_state.h>
-}
 
 #define CHECK_MACH(_msg, machret) do {                                      \
         if (machret != KERN_SUCCESS)                                        \
@@ -110,9 +106,6 @@ extern "C"
 #include <sys/sysctl.h>
 #include <sys/user.h>
 #endif
-
-extern char *g_szCoreCLRPath;
-extern bool g_running_in_exe;
 
 using namespace CorUnix;
 

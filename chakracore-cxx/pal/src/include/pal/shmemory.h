@@ -76,10 +76,8 @@ SHMRelease
 
 #include "volatile.h"
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 /*
 Type for shared memory blocks. use SHMPTR_TO_PTR to get a useable address.
@@ -326,9 +324,7 @@ No return.
 --*/
 void SHMAddNamedObject( SHMPTR shmNewNamedObject );
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_SHMEMORY_H_ */
 

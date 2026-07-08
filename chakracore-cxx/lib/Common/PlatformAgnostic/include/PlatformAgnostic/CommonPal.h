@@ -183,7 +183,6 @@ typedef uint32_t DBGPROP_INFO_FLAGS;
 #define _UNALIGNED
 #endif
 
-#ifdef __cplusplus
 extern "C++"
 {
   template <typename _CountofType, size_t _SizeOfArray>
@@ -191,9 +190,6 @@ extern "C++"
 
 #define __crt_countof(_Array) (sizeof(*__countof_helper(_Array)) + 0)
 }
-#else
-#define __crt_countof(_Array) (sizeof(_Array) / sizeof(_Array[0]))
-#endif
 
 #ifndef _countof
 #define _countof __crt_countof
@@ -296,11 +292,7 @@ extern "C" void * _AddressOfReturnAddress(void);
 // ----- START: Define strsafe related types and defines for non-VC++ compilers -----
 // xplat-todo: figure out why strsafe.h includes stdio etc
 // which prevents me from directly including PAL's strsafe.h
-#ifdef __cplusplus
 #define _STRSAFE_EXTERN_C    extern "C"
-#else
-#define _STRSAFE_EXTERN_C    extern
-#endif
 
 // If you do not want to use these functions inline (and instead want to link w/ strsafe.lib), then
 // #define STRSAFE_LIB before including this header file.

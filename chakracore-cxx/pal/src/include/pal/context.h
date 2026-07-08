@@ -12,10 +12,8 @@ Abstract:
 #ifndef _PAL_CONTEXT_H_
 #define _PAL_CONTEXT_H_
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 #include <signal.h>
 #include <pthread.h>
@@ -334,8 +332,6 @@ uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo);
 
 #endif  // defined(__APPLE__) else
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif // _PAL_CONTEXT_H_

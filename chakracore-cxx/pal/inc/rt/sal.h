@@ -1729,9 +1729,7 @@
 
 #define __specstrings
 
-#ifdef  __cplusplus // [
 extern "C" {
-#endif  /* #ifdef __cplusplus */ // ]
 
 
 /*
@@ -2060,9 +2058,7 @@ __PRIMOP(int, _In_function_class_(__In_impl_ char*);)
 #define _Maybe_raises_SEH_exception_   _Pre_ _SA_annotes1(SAL_inTry,__yes)
 #define _Raises_SEH_exception_         _Group_(_Maybe_raises_SEH_exception_ _Analysis_noreturn_)
 
-#ifdef  __cplusplus // [
 }
-#endif // ]
 
 // Rotor doesn't need concurrency sal.
 // #include <ConcurrencySal.h>

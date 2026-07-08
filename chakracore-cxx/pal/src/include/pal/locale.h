@@ -25,10 +25,8 @@ Revision History:
 #ifndef _PAL_LOCALE_H_
 #define _PAL_LOCALE_H_
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 #define ISO_NAME(region, encoding, part)  region ".ISO" encoding "-" part
 
@@ -59,8 +57,6 @@ struct _CP_MAPPING
     uint8_t    LeadByte[ MAX_LEADBYTES ];  // The lead byte array.
 } CP_MAPPING;
 #endif
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_LOCALE_H_ */

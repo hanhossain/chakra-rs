@@ -22,7 +22,6 @@ Abstract:
 #define _PAL_THREADSUSP_HPP
 
 // Need this ifdef since this header is included by .c files so they can use the diagnostic function.
-#ifdef __cplusplus
 #include <mutex>
 
 // Note: do not include malloc.hpp from this header. The template InternalDelete
@@ -366,6 +365,5 @@ namespace CorUnix
 } //end CorUnix
 
 extern const uint8_t WAKEUPCODE; // use for pipe reads during self suspend.
-#endif // __cplusplus
 
 #endif // _PAL_THREADSUSP_HPP

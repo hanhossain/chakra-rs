@@ -26,11 +26,9 @@ Abstract:
 #include <stdarg.h>
 #include <pthread.h>
 
-#ifdef __cplusplus
 
 extern "C"
 {
-#endif // __cplusplus
 
 typedef enum
 {
@@ -179,8 +177,6 @@ Functio:
 --*/
 BOOL CRTInitStdStreams( void );
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_CRUNTIME_H_ */

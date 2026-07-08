@@ -44,9 +44,7 @@
 #define __SAL_H_FULL_VER 140050727
 #endif
 
-#ifdef  __cplusplus
 extern "C" {
-#endif
 
 /* version specific fixes to bring sal.h upto date */
 #if __SAL_H_FULL_VER <= 140050727
@@ -68,9 +66,7 @@ extern "C" {
 #define __range(lb,ub)                      __inner_range(lb,ub)
 #define __in_range(lb,ub)                   _Pre_ __inner_range(lb,ub)
 
-#ifdef  __cplusplus
 }
-#endif
 
 /*
  If no SAL 2 appears to have been defined (_Outptr_ is a representative choice)

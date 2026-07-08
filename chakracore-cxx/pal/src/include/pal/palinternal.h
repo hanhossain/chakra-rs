@@ -201,10 +201,8 @@ function_name() to call the system's implementation
 
 #define PROCESS_PIPE_NAME_PREFIX ".dotnet-pal-processpipe"
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 typedef enum _TimeConversionConstants
 {
@@ -218,10 +216,8 @@ typedef enum _TimeConversionConstants
     tccMicroSecondsTo100NanoSeconds = 10            // 10^1
 } TimeConversionConstants;
 
-#ifdef __cplusplus
 }
 
-#endif // __cplusplus
 
 #define StackOverflowMessage "Process is terminated due to StackOverflowException.\n"
 

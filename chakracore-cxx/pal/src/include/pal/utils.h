@@ -46,10 +46,8 @@ inline void* ALIGN_UP(void* val, size_t alignment)
     return (void*)ALIGN_UP((size_t)val, alignment);
 }
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 /*++
 Function:
@@ -148,8 +146,6 @@ void UTIL_SetLastErrorFromMach(kern_return_t MachReturn);
 
 #endif //defined(__APPLE__)
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_UTILS_H_ */

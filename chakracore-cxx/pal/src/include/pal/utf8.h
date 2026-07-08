@@ -25,10 +25,8 @@ Revision History:
 
 #include <pal/palinternal.h> /* for char16_t */
 
-#ifdef __cplusplus
 extern "C"
 {
-#endif // __cplusplus
 
 /*++
 Function :
@@ -47,8 +45,6 @@ Function :
 --*/
 int UnicodeToUTF8(const char16_t* lpSrcStr, int cchSrc, char* lpDestStr, int cchDest);
 
-#ifdef __cplusplus
 }
-#endif // __cplusplus
 
 #endif /* _PAL_UTF8_H_ */
