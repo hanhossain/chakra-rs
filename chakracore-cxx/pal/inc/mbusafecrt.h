@@ -46,7 +46,6 @@ typedef int errno_t;
 
 typedef void ( *tSafeCRT_AssertFuncPtr )( const char* inExpression, const char* inComment, const char* inFile, const unsigned long inLineNum );
 
-extern errno_t strcat_s( char* ioDest, size_t inDestBufferSize, const char* inSrc );
 extern errno_t wcscat_s( char16_t* ioDest, size_t inDestBufferSize, const char16_t* inSrc );
 
 extern errno_t strncat_s( char* ioDest, size_t inDestBufferSize, const char* inSrc, size_t inCount );

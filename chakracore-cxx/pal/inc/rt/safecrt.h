@@ -862,64 +862,6 @@ errno_t _mbsncpy_s(unsigned char *_Dst, size_t _SizeInBytes, const unsigned char
 
 #endif /* _SAFECRT_DEFINE_MBS_FUNCTIONS */
 
-/* strcat_s */
-/*
- * strcat_s, wcscat_s append string _Src to _Dst;
- * will call _SAFECRT_INVALID_PARAMETER if there is not enough space in _Dst
- */
-_SAFECRT__EXTERN_C
-errno_t strcat_s(char *_Dst, size_t _SizeInBytes, const char *_Src);
-
-#if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
-template <size_t _SizeInBytes>
-inline
-errno_t strcat_s(char (&_Dst)[_SizeInBytes], const char *_Src)
-{
-    return strcat_s(_Dst, _SizeInBytes, _Src);
-}
-#endif
-
-#if _SAFECRT_USE_INLINES || _SAFECRT_IMPL
-
-_SAFECRT__INLINE
-errno_t strcat_s(char *_Dst, size_t _SizeInBytes, const char *_Src)
-{
-    char *p;
-    size_t available;
-
-    /* validation section */
-    _SAFECRT__VALIDATE_STRING(_Dst, _SizeInBytes);
-    _SAFECRT__VALIDATE_POINTER_RESET_STRING(_Src, _Dst, _SizeInBytes);
-
-    p = _Dst;
-    available = _SizeInBytes;
-    while (available > 0 && *p != 0)
-    {
-        p++;
-        available--;
-    }
-
-    if (available == 0)
-    {
-        _SAFECRT__RESET_STRING(_Dst, _SizeInBytes);
-        _SAFECRT__RETURN_DEST_NOT_NULL_TERMINATED(_Dst, _SizeInBytes);
-    }
-
-    while ((*p++ = *_Src++) != 0 && --available > 0)
-    {
-    }
-
-    if (available == 0)
-    {
-        _SAFECRT__RESET_STRING(_Dst, _SizeInBytes);
-        _SAFECRT__RETURN_BUFFER_TOO_SMALL(_Dst, _SizeInBytes);
-    }
-    _SAFECRT__FILL_STRING(_Dst, _SizeInBytes, _SizeInBytes - available + 1);
-    return 0;
-}
-
-#endif
-
 /* wcscat_s */
 _SAFECRT__EXTERN_C
 errno_t wcscat_s(char16_t *_Dst, size_t _SizeInWords, const char16_t *_Src);
