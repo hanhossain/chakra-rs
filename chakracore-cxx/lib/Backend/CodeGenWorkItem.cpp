@@ -20,11 +20,6 @@ CodeGenWorkItem::CodeGenWorkItem(
     , isAllocationCommitted(false)
     , queuedFullJitWorkItem(nullptr)
     , allocation(nullptr)
-#ifdef IR_VIEWER
-    , isRejitIRViewerFunction(false)
-    , irViewerOutput(nullptr)
-    , irViewerRequestContext(nullptr)
-#endif
 {
     this->jitData = {0};
     // work item data

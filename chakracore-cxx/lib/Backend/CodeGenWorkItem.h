@@ -92,29 +92,6 @@ private:
 
     QueuedFullJitWorkItem *queuedFullJitWorkItem;
     EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> *allocation;
-
-#ifdef IR_VIEWER
-public:
-    bool isRejitIRViewerFunction;               // re-JIT function for IRViewer object generation
-    Js::DynamicObject *irViewerOutput;          // hold results of IRViewer APIs
-    Js::ScriptContext *irViewerRequestContext;  // keep track of the request context
-
-    Js::DynamicObject * GetIRViewerOutput(Js::ScriptContext *scriptContext)
-    {
-        if (!irViewerOutput)
-        {
-            irViewerOutput = scriptContext->GetLibrary()->CreateObject();
-        }
-
-        return irViewerOutput;
-    }
-
-    void SetIRViewerOutput(Js::DynamicObject *output)
-    {
-        irViewerOutput = output;
-    }
-#endif
-private:
     // REVIEW: can we delete this?
     EmitBufferAllocation<VirtualAllocWrapper, PreReservedVirtualAllocWrapper> *GetAllocation() { return allocation; }
 

@@ -227,7 +227,6 @@ enum IRDumpFlags
 #include "Region.h"
 #include "BailOut.h"
 #include "InlineeFrameInfo.h"
-#include "IRViewer.h"
 
 #if DBG
 # include "DbCheckPostLower.h"

@@ -63,8 +63,7 @@ add_library (Chakra.Backend OBJECT
     IRBuilder.cpp
     IRBuilderAsmJs.cpp
     IRType.cpp
-    IRViewer.cpp
-    InductionVariable.cpp
+        InductionVariable.cpp
     Inline.cpp
     InlineeFrameInfo.cpp
     InliningDecider.cpp

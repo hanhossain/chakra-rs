@@ -1535,12 +1535,6 @@ bool (*pfIsEnabledConstructorCacheInvalidationThresholdFlag)();
 int32_t (*pfGetConstructorCacheInvalidationThresholdFlag)(int *flag);
 int32_t (*pfSetConstructorCacheInvalidationThresholdFlag)(int flag);
 
-#ifdef IR_VIEWER
-bool (*pfIsEnabledIRViewerFlag)();
-int32_t (*pfGetIRViewerFlag)(bool *flag);
-int32_t (*pfSetIRViewerFlag)(bool flag);
-#endif /* IR_VIEWER */
-
 bool (*pfIsEnabledGCMemoryThresholdFlag)();
 int32_t (*pfGetGCMemoryThresholdFlag)(int *flag);
 int32_t (*pfSetGCMemoryThresholdFlag)(int flag);

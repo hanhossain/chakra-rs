@@ -6448,23 +6448,6 @@ int32_t SetConstructorCacheInvalidationThresholdFlag(int flag)
     return S_OK;
 }
 
-#ifdef IR_VIEWER
-bool IsEnabledIRViewerFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::IRViewerFlag);
-}
-int32_t GetIRViewerFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.IRViewer;
-    return S_OK;
-}
-int32_t SetIRViewerFlag(bool flag)
-{
-    Js::Configuration::Global.flags.IRViewer = flag;
-    return S_OK;
-}
-#endif /* IR_VIEWER */
-
 bool IsEnabledGCMemoryThresholdFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::GCMemoryThresholdFlag);
@@ -7253,10 +7236,6 @@ IsEnabledPRNGSeed1Flag, GetPRNGSeed1Flag, SetPRNGSeed1Flag,
 IsEnabledClearInlineCachesOnCollectFlag, GetClearInlineCachesOnCollectFlag, SetClearInlineCachesOnCollectFlag,
 IsEnabledInlineCacheInvalidationListCompactionThresholdFlag, GetInlineCacheInvalidationListCompactionThresholdFlag, SetInlineCacheInvalidationListCompactionThresholdFlag,
 IsEnabledConstructorCacheInvalidationThresholdFlag, GetConstructorCacheInvalidationThresholdFlag, SetConstructorCacheInvalidationThresholdFlag,
-
-#ifdef IR_VIEWER
-IsEnabledIRViewerFlag, GetIRViewerFlag, SetIRViewerFlag,
-#endif /* IR_VIEWER */
 
 IsEnabledGCMemoryThresholdFlag, GetGCMemoryThresholdFlag, SetGCMemoryThresholdFlag,
 

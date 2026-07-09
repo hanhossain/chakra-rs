@@ -1346,11 +1346,6 @@ namespace Js
         u"ClearInlineCachesOnCollect",
         u"InlineCacheInvalidationListCompactionThreshold",
         u"ConstructorCacheInvalidationThreshold",
-
-#ifdef IR_VIEWER
-        u"IRViewer",
-#endif /* IR_VIEWER */
-
         u"GCMemoryThreshold",
 
 #if DBG
@@ -2438,10 +2433,6 @@ namespace Js
         u"Clear all inline caches on every garbage collection",
         u"Compact inline cache invalidation lists if their utilization falls below this threshold",
         u"Clear uniquePropertyGuard entries from recyclableData if number of invalidations of constructor caches happened are more than the threshold.",
-
-#ifdef IR_VIEWER
-        u"Enable IRViewer functionality (improved UI for various stages of IR generation)",
-#endif /* IR_VIEWER */
 
         u"Threshold for allocation-based GC initiation (in MB)",
 

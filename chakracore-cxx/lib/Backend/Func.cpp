@@ -411,10 +411,6 @@ Func::TryCodegen()
 
         END_CODEGEN_PHASE(this, Js::IRBuilderPhase);
 
-#ifdef IR_VIEWER
-        IRtoJSObjectBuilder::DumpIRtoGlobalObject(this, Js::IRBuilderPhase);
-#endif /* IR_VIEWER */
-
         BEGIN_CODEGEN_PHASE(this, Js::InlinePhase);
 
         InliningHeuristics heuristics(GetWorkItem()->GetJITTimeInfo(), this->IsLoopBody());
@@ -450,10 +446,6 @@ Func::TryCodegen()
             this->m_fg = nullptr;
         }
 
-#ifdef IR_VIEWER
-        IRtoJSObjectBuilder::DumpIRtoGlobalObject(this, Js::GlobOptPhase);
-#endif /* IR_VIEWER */
-
         ThrowIfScriptClosed();
 
         // Lowering
@@ -461,10 +453,6 @@ Func::TryCodegen()
         BEGIN_CODEGEN_PHASE(this, Js::LowererPhase);
         lowerer.Lower();
         END_CODEGEN_PHASE(this, Js::LowererPhase);
-
-#ifdef IR_VIEWER
-        IRtoJSObjectBuilder::DumpIRtoGlobalObject(this, Js::LowererPhase);
-#endif /* IR_VIEWER */
 
         // Encode constants
 
@@ -488,10 +476,6 @@ Func::TryCodegen()
         linearScan.RegAlloc();
 
         END_CODEGEN_PHASE(this, Js::RegAllocPhase);
-
-#ifdef IR_VIEWER
-        IRtoJSObjectBuilder::DumpIRtoGlobalObject(this, Js::RegAllocPhase);
-#endif /* IR_VIEWER */
 
         ThrowIfScriptClosed();
 
@@ -548,10 +532,6 @@ Func::TryCodegen()
         encoder.Encode();
 
         END_CODEGEN_PHASE_NO_DUMP(this, Js::EncoderPhase);
-
-#ifdef IR_VIEWER
-        IRtoJSObjectBuilder::DumpIRtoGlobalObject(this, Js::EncoderPhase);
-#endif /* IR_VIEWER */
 
     }
 
