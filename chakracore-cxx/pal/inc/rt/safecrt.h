@@ -319,7 +319,7 @@ _SAFECRT__INLINE
 void _invalid_parameter()
 {
     /* invoke Watson */
-    RaiseException((uint32_t)STATUS_INVALID_PARAMETER, 0);
+    RaiseException(static_cast<uint32_t>(STATUS_INVALID_PARAMETER), 0);
 }
 
 #endif
@@ -1365,7 +1365,7 @@ errno_t _strset_s(char *_Dst, size_t _SizeInBytes, int _Value)
     available = _SizeInBytes;
     while (*p != 0 && --available > 0)
     {
-        *p++ = (char)_Value;
+        *p++ = static_cast<char>(_Value);
     }
 
     if (available == 0)
@@ -1553,7 +1553,7 @@ errno_t _strnset_s(char *_Dst, size_t _SizeInBytes, int _Value, size_t _Count)
     available = _SizeInBytes;
     while (*p != 0 && _Count > 0 && --available > 0)
     {
-        *p++ = (char)_Value;
+        *p++ = static_cast<char>(_Value);
         --_Count;
     }
 
@@ -2413,7 +2413,7 @@ errno_t _wsplitpath_s(
          * allowed, whichever is smaller
          */
         if (_Dir != nullptr) {
-            length = (size_t)(last_slash - _Path);
+            length = static_cast<size_t>(last_slash - _Path);
             if (_DirSize <= length)
             {
                 goto error_erange;
@@ -2441,7 +2441,7 @@ errno_t _wsplitpath_s(
         /* found the marker for an extension - copy the file name up to the '.' */
         if (_Filename)
         {
-            length = (size_t)(dot - _Path);
+            length = static_cast<size_t>(dot - _Path);
             if (_FilenameSize <= length)
             {
                 goto error_erange;
@@ -2453,7 +2453,7 @@ errno_t _wsplitpath_s(
          */
         if (_Ext)
         {
-            length = (size_t)(tmp - dot);
+            length = static_cast<size_t>(tmp - dot);
             if (_ExtSize <= length)
             {
                 goto error_erange;
@@ -2468,7 +2468,7 @@ errno_t _wsplitpath_s(
          */
         if (_Filename)
         {
-            length = (size_t)(tmp - _Path);
+            length = static_cast<size_t>(tmp - _Path);
             if (_FilenameSize <= length)
             {
                 goto error_erange;

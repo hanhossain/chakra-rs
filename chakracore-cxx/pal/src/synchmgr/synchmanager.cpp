@@ -180,7 +180,7 @@ namespace CorUnix
 
         _ASSERT_MSG(NULL != pdwWaitState,
                     "Got NULL pdwWaitState from m_shridWaitAwakened=%p\n",
-                    (void *)pthrCurrent->synchronizationInfo.m_shridWaitAwakened);
+                    reinterpret_cast<void*>(pthrCurrent->synchronizationInfo.m_shridWaitAwakened));
 
         if (fIsSleep)
         {
@@ -213,17 +213,17 @@ namespace CorUnix
             if (!fRaceAlerted)
             {
                 // Setting the thread in wait state
-                dwWaitState = (uint32_t)(fAlertable ? TWS_ALERTABLE : TWS_WAITING);
+                dwWaitState = static_cast<uint32_t>(fAlertable ? TWS_ALERTABLE : TWS_WAITING);
 
                 TRACE("Switching my wait state [%p] from TWS_ACTIVE to %u "
                       "[current *pdwWaitState=%u]\n",
                       pdwWaitState, dwWaitState, *pdwWaitState);
 
-                dwWaitState = InterlockedCompareExchange((int32_t *)pdwWaitState,
+                dwWaitState = InterlockedCompareExchange(reinterpret_cast<int32_t*>(pdwWaitState),
                                                          dwWaitState,
                                                          TWS_ACTIVE);
 
-                if((uint32_t)TWS_ACTIVE != dwWaitState)
+                if(static_cast<uint32_t>(TWS_ACTIVE) != dwWaitState)
                 {
                     if (fAlertable)
                     {
@@ -231,7 +231,7 @@ namespace CorUnix
                         ReleaseSharedSynchLock(pthrCurrent);
                         ReleaseLocalSynchLock(pthrCurrent);
                     }
-                    if((uint32_t)TWS_EARLYDEATH == dwWaitState)
+                    if(static_cast<uint32_t>(TWS_EARLYDEATH) == dwWaitState)
                     {
                         // Process is terminating, this thread will soon be
                         // suspended (by SuspendOtherThreads).
@@ -287,15 +287,15 @@ namespace CorUnix
         if (WaitTimeout == twrWakeupReason)
         {
             // timeout reached. set wait state back to 'active'
-            dwWaitState = (uint32_t)(fAlertable ? TWS_ALERTABLE : TWS_WAITING);
+            dwWaitState = static_cast<uint32_t>(fAlertable ? TWS_ALERTABLE : TWS_WAITING);
 
             TRACE("Current thread awakened for timeout: switching wait "
                   "state [%p] from %u to TWS_ACTIVE [current *pdwWaitState=%u]\n",
                    pdwWaitState, dwWaitState, *pdwWaitState);
 
             uint32_t dwOldWaitState = InterlockedCompareExchange(
-                                        (int32_t *)pdwWaitState,
-                                        TWS_ACTIVE, (int32_t)dwWaitState);
+                                        reinterpret_cast<int32_t*>(pdwWaitState),
+                                        TWS_ACTIVE, static_cast<int32_t>(dwWaitState));
 
             switch (dwOldWaitState)
             {
@@ -609,11 +609,11 @@ namespace CorUnix
             pdwWaitState = SharedIDToTypePointer(uint32_t,
                 pthrTarget->synchronizationInfo.m_shridWaitAwakened);
 
-            lTWState = InterlockedExchange((int32_t *)pdwWaitState,
+            lTWState = InterlockedExchange(reinterpret_cast<int32_t*>(pdwWaitState),
                                            TWS_EARLYDEATH);
 
-            if ( (((int32_t)TWS_WAITING == lTWState) ||
-                  ((int32_t)TWS_ALERTABLE == lTWState)) &&
+            if ( ((static_cast<int32_t>(TWS_WAITING) == lTWState) ||
+                  (static_cast<int32_t>(TWS_ALERTABLE) == lTWState)) &&
                  (0 < pSynchInfo->m_twiWaitInfo.lObjCount) )
             {
                 // Unregister the wait
@@ -653,7 +653,7 @@ namespace CorUnix
         return GetSynchControllersForObjects(pthrCurrent,
                                              rgObjects,
                                              dwObjectCount,
-                                             (void **)rgControllers,
+                                             reinterpret_cast<void**>(rgControllers),
                                              CSynchControllerBase::WaitController);
     }
 
@@ -673,7 +673,7 @@ namespace CorUnix
         return GetSynchControllersForObjects(pthrCurrent,
                                              rgObjects,
                                              dwObjectCount,
-                                             (void **)rgControllers,
+                                             reinterpret_cast<void**>(rgControllers),
                                              CSynchControllerBase::StateController);
     }
 
@@ -712,15 +712,15 @@ namespace CorUnix
 
         if (CSynchControllerBase::WaitController == ctCtrlrType)
         {
-            uCount = (unsigned int)m_cacheWaitCtrlrs.Get(pthrCurrent,
-                                                         dwObjectCount,
-                                                         Ctrlrs.pWaitCtrlrs);
+            uCount = static_cast<unsigned int>(m_cacheWaitCtrlrs.Get(pthrCurrent,
+                                                                     dwObjectCount,
+                                                                     Ctrlrs.pWaitCtrlrs));
         }
         else
         {
-            uCount = (unsigned int)m_cacheStateCtrlrs.Get(pthrCurrent,
-                                                          dwObjectCount,
-                                                          Ctrlrs.pStateCtrlrs);
+            uCount = static_cast<unsigned int>(m_cacheStateCtrlrs.Get(pthrCurrent,
+                                                                      dwObjectCount,
+                                                                      Ctrlrs.pStateCtrlrs));
         }
         if (uCount < dwObjectCount)
         {
@@ -764,7 +764,7 @@ namespace CorUnix
             CSynchData * psdSynchData;
             ObjectDomain odObjectDomain = rgObjects[uIdx]->GetObjectDomain();
 
-            palErr = rgObjects[uIdx]->GetObjectSynchData((void **)&pvSData);
+            palErr = rgObjects[uIdx]->GetObjectSynchData(&pvSData);
             if (NO_ERROR != palErr)
             {
                 break;
@@ -808,7 +808,7 @@ namespace CorUnix
                     pthrCurrent,
                     ReadLock,
                     &pDataLock,
-                    (void **)&pProcLocData);
+                    reinterpret_cast<void**>(&pProcLocData));
                 if (NO_ERROR != palErr)
                 {
                     // In case of failure here, bail out of the loop, but
@@ -1049,7 +1049,7 @@ namespace CorUnix
                      wdWaitDomain);
 
         // Succeeded
-        *ppStateController = (ISynchStateController *)pCtrlr;
+        *ppStateController = static_cast<ISynchStateController*>(pCtrlr);
 
     CSSC_exit:
         if ((NO_ERROR != palErr) && (NULL != pCtrlr))
@@ -1098,7 +1098,7 @@ namespace CorUnix
                      wdWaitDomain);
 
         // Succeeded
-        *ppWaitController = (ISynchWaitController *)pCtrlr;
+        *ppWaitController = static_cast<ISynchWaitController*>(pCtrlr);
 
     CSWC_exit:
         if ((NO_ERROR != palErr) && (NULL != pCtrlr))
@@ -1189,9 +1189,9 @@ namespace CorUnix
         TRACE("APC %p with parameter %p added to APC queue\n",
              pfnAPC, uptrData);
 
-        dwWaitState = InterlockedCompareExchange((int32_t *)pdwWaitState,
-                                                 (int32_t)TWS_ACTIVE,
-                                                 (int32_t)TWS_ALERTABLE);
+        dwWaitState = InterlockedCompareExchange(reinterpret_cast<int32_t*>(pdwWaitState),
+                                                 TWS_ACTIVE,
+                                                 TWS_ALERTABLE);
 
         // Release thread lock
         pthrTarget->Unlock(pthrCurrent);
@@ -1368,9 +1368,9 @@ namespace CorUnix
         CPalSynchronizationManager * pSynchManager = NULL;
 
         lInit = InterlockedCompareExchange(&s_lInitStatus,
-                                           (int32_t)SynchMgrStatusInitializing,
-                                           (int32_t)SynchMgrStatusIdle);
-        if ((int32_t)SynchMgrStatusIdle != lInit)
+                                           SynchMgrStatusInitializing,
+                                           SynchMgrStatusIdle);
+        if (static_cast<int32_t>(SynchMgrStatusIdle) != lInit)
         {
             ASSERT("Synchronization Manager already being initialized");
             palErr = ERROR_INTERNAL_ERROR;
@@ -1400,12 +1400,12 @@ namespace CorUnix
         // Initialization was successful
         g_pSynchronizationManager =
             static_cast<IPalSynchronizationManager *>(pSynchManager);
-        s_lInitStatus = (int32_t)SynchMgrStatusRunning;
+        s_lInitStatus = SynchMgrStatusRunning;
 
     I_exit:
         if (NO_ERROR != palErr)
         {
-            s_lInitStatus = (int32_t)SynchMgrStatusError;
+            s_lInitStatus = SynchMgrStatusError;
             if (NULL != pSynchManager)
             {
                 pSynchManager->ShutdownProcessPipe();
@@ -1437,9 +1437,9 @@ namespace CorUnix
         struct timespec tsAbsTmo = { 0, 0 };
 
         lInit = InterlockedCompareExchange(&s_lInitStatus,
-            (int32_t)SynchMgrStatusShuttingDown, (int32_t)SynchMgrStatusRunning);
+            SynchMgrStatusShuttingDown, SynchMgrStatusRunning);
 
-        if ((int32_t)SynchMgrStatusRunning != lInit)
+        if (static_cast<int32_t>(SynchMgrStatusRunning) != lInit)
         {
             ASSERT("Unexpected initialization status found "
                    "in PrepareForShutdown [expected=%d current=%d]\n",
@@ -1588,7 +1588,7 @@ namespace CorUnix
                         "Got %d bytes from process pipe while expecting for %d\n",
                         iRet, sizeof(uint8_t));
 
-            swcWorkerCmd = (SynchWorkerCmd)byVal;
+            swcWorkerCmd = static_cast<SynchWorkerCmd>(byVal);
 
             if(SynchWorkerCmdLast <= swcWorkerCmd)
             {
@@ -1617,7 +1617,7 @@ namespace CorUnix
                   "REMOTE SIGNAL" : "DELEGATED OBJECT SIGNALING" );
 
             iRet = ReadBytesFromProcessPipe(WorkerCmdCompletionTimeout,
-                                            (uint8_t *)&shridMarshaledId,
+                                            reinterpret_cast<uint8_t*>(&shridMarshaledId),
                                             sizeof(shridMarshaledId));
             if (sizeof(shridMarshaledId) != iRet)
             {
@@ -1638,7 +1638,7 @@ namespace CorUnix
             uint32_t dwData;
 
             iRet = ReadBytesFromProcessPipe(WorkerCmdCompletionTimeout,
-                                            (uint8_t *)&dwData,
+                                            reinterpret_cast<uint8_t*>(&dwData),
                                             sizeof(dwData));
             if (sizeof(dwData) != iRet)
             {
@@ -2069,10 +2069,10 @@ namespace CorUnix
         _ASSERT_MSG(NULLSharedID != shridWLNode, "NULL shared identifier\n");
         _ASSERT_MSG(NULL != pWLNode,
                     "Bad shared wait list node identifier (%p)\n",
-                    (void*)shridWLNode);
+                    reinterpret_cast<void*>(shridWLNode));
         _ASSERT_MSG(MsgSize <= PIPE_BUF,
                     "Message too long [MsgSize=%d PIPE_BUF=%d]\n",
-                    MsgSize, (int)PIPE_BUF);
+                    MsgSize, static_cast<int>(PIPE_BUF));
 
         TRACE("Waking up remote thread {pid=%x, tid=%x} by sending "
               "cmd=%u and shridWLNode=%p over process pipe\n",
@@ -2081,10 +2081,10 @@ namespace CorUnix
 
         // Prepare the message
         // Cmd
-        *pbyDst++ = (uint8_t)(SynchWorkerCmdRemoteSignal & 0xFF);
+        *pbyDst++ = static_cast<uint8_t>(SynchWorkerCmdRemoteSignal & 0xFF);
         // WaitingThreadsListNode (not aligned, copy byte by byte)
-        pbySrc = (uint8_t *)&shridWLNode;
-        for (i=0; i<(int)sizeof(SharedID); i++)
+        pbySrc = reinterpret_cast<uint8_t*>(&shridWLNode);
+        for (i=0; i<static_cast<int>(sizeof(SharedID)); i++)
         {
             *pbyDst++ = *pbySrc++;
         }
@@ -2134,10 +2134,10 @@ namespace CorUnix
         _ASSERT_MSG(NULLSharedID != shridSynchData, "NULL shared identifier\n");
         _ASSERT_MSG(NULL != psdSynchData,
                     "Bad shared SynchData identifier (%p)\n",
-                    (void*)shridSynchData);
+                    reinterpret_cast<void*>(shridSynchData));
         _ASSERT_MSG(MsgSize <= PIPE_BUF,
                     "Message too long [MsgSize=%d PIPE_BUF=%d]\n",
-                    MsgSize, (int)PIPE_BUF);
+                    MsgSize, static_cast<int>(PIPE_BUF));
 
         TRACE("Transfering wait all signaling to remote process pid=%x "
               "by sending cmd=%u and shridSynchData=%p over process pipe\n",
@@ -2154,18 +2154,18 @@ namespace CorUnix
         //
 
         // Cmd
-        *pbyDst++ = (uint8_t)(SynchWorkerCmdDelegatedObjectSignaling & 0xFF);
+        *pbyDst++ = static_cast<uint8_t>(SynchWorkerCmdDelegatedObjectSignaling & 0xFF);
 
         // CSynchData (not aligned, copy byte by byte)
-        pbySrc = (uint8_t *)&shridSynchData;
-        for (i=0; i<(int)sizeof(SharedID); i++)
+        pbySrc = reinterpret_cast<uint8_t*>(&shridSynchData);
+        for (i=0; i<static_cast<int>(sizeof(SharedID)); i++)
         {
             *pbyDst++ = *pbySrc++;
         }
 
         // Signal Count (not aligned, copy byte by byte)
-        pbySrc = (uint8_t *)&dwSigCount;
-        for (i=0; i<(int)sizeof(uint32_t); i++)
+        pbySrc = reinterpret_cast<uint8_t*>(&dwSigCount);
+        for (i=0; i<static_cast<int>(sizeof(uint32_t)); i++)
         {
             *pbyDst++ = *pbySrc++;
         }
@@ -2223,7 +2223,7 @@ namespace CorUnix
                     "SynchWorkerCmdNop and SynchWorkerCmdShutdown  "
                     "[received cmd=%d]\n", swcWorkerCmd);
 
-        byCmd = (uint8_t)(swcWorkerCmd & 0xFF);
+        byCmd = static_cast<uint8_t>(swcWorkerCmd & 0xFF);
 
         TRACE("Waking up Synch Worker Thread for %u [byCmd=%u]\n",
                     swcWorkerCmd, (unsigned int)byCmd);
@@ -3472,7 +3472,7 @@ namespace CorUnix
 
         _ASSERT_MSG(NULL != pdwWaitState,
                     "Unable to map shared wait state: bad shrared id"
-                    "[shrid=%p]\n", (void*)m_shridWaitAwakened);
+                    "[shrid=%p]\n", reinterpret_cast<void*>(m_shridWaitAwakened));
 
         VolatileStore<uint32_t>(pdwWaitState, TWS_ACTIVE);
         m_tsThreadState = TS_STARTING;
@@ -3702,7 +3702,7 @@ namespace CorUnix
             /* try to get state of process, using non-blocking call */
             pidWaitRetval = waitpid(dwPid, &iStatus, WNOHANG);
 
-            if ((uint32_t)pidWaitRetval == dwPid)
+            if (static_cast<uint32_t>(pidWaitRetval) == dwPid)
             {
                 /* success; get the exit code */
                 if (WIFEXITED(iStatus))
@@ -3790,7 +3790,7 @@ namespace CorUnix
     {
         uint32_t dwPrevState;
 
-        dwPrevState = InterlockedCompareExchange((int32_t *)pWaitState,
+        dwPrevState = InterlockedCompareExchange(reinterpret_cast<int32_t*>(pWaitState),
                                                  TWS_ACTIVE, TWS_ALERTABLE);
         if(TWS_ALERTABLE != dwPrevState)
         {
@@ -3799,7 +3799,7 @@ namespace CorUnix
                 return false;
             }
 
-            dwPrevState = InterlockedCompareExchange((int32_t *)pWaitState,
+            dwPrevState = InterlockedCompareExchange(reinterpret_cast<int32_t*>(pWaitState),
                                                      TWS_ACTIVE, TWS_WAITING);
             if(TWS_WAITING == dwPrevState)
             {

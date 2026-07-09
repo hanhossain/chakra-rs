@@ -136,14 +136,14 @@ GetCurrentThreadStackLimits(&lowl, &highl);
 #elif defined(USERLIMIT)
     lpSystemInfo->lpMaximumApplicationAddress = (void *) USERLIMIT;
 #elif defined(_M_ARM64)
-    lpSystemInfo->lpMaximumApplicationAddress = (void *) (1ull << 47);
+    lpSystemInfo->lpMaximumApplicationAddress = reinterpret_cast<void*>(1ull << 47);
 #elif defined(USRSTACK64)
     lpSystemInfo->lpMaximumApplicationAddress = (void *) PAL_MAX(highl, USRSTACK64);
 #else
 #error The maximum application address is not known on this platform.
 #endif
 
-    lpSystemInfo->lpMinimumApplicationAddress = (void *) pagesize;
+    lpSystemInfo->lpMinimumApplicationAddress = reinterpret_cast<void*>(pagesize);
 
     lpSystemInfo->dwProcessorType_PAL_Undefined = 0;
 
@@ -189,7 +189,7 @@ GlobalMemoryStatusEx(
 
     // Get the Physical memory size
     physical_memory = sysconf( _SC_PHYS_PAGES ) * sysconf( _SC_PAGE_SIZE );
-    lpBuffer->ullTotalPhys = (unsigned long)physical_memory;
+    lpBuffer->ullTotalPhys = static_cast<unsigned long>(physical_memory);
     fRetVal = TRUE;
 
     // Get the physical memory in use - from it, we can get the physical memory available.
@@ -209,11 +209,11 @@ GlobalMemoryStatusEx(
         count = sizeof(vm_stats) / sizeof(natural_t);
         if (KERN_SUCCESS == host_page_size(mach_port, &page_size))
         {
-            if (KERN_SUCCESS == host_statistics(mach_port, HOST_VM_INFO, (host_info_t)&vm_stats, &count))
+            if (KERN_SUCCESS == host_statistics(mach_port, HOST_VM_INFO, reinterpret_cast<host_info_t>(&vm_stats), &count))
             {
-                lpBuffer->ullAvailPhys = (int64_t)vm_stats.free_count * (int64_t)page_size;
-                int64_t used_memory = ((int64_t)vm_stats.active_count + (int64_t)vm_stats.inactive_count + (int64_t)vm_stats.wire_count) *  (int64_t)page_size;
-                lpBuffer->dwMemoryLoad = (uint32_t)((used_memory * 100) / lpBuffer->ullTotalPhys);
+                lpBuffer->ullAvailPhys = static_cast<int64_t>(vm_stats.free_count) * static_cast<int64_t>(page_size);
+                int64_t used_memory = (static_cast<int64_t>(vm_stats.active_count) + static_cast<int64_t>(vm_stats.inactive_count) + static_cast<int64_t>(vm_stats.wire_count)) *  static_cast<int64_t>(page_size);
+                lpBuffer->dwMemoryLoad = static_cast<uint32_t>((used_memory * 100) / lpBuffer->ullTotalPhys);
             }
         }
         mach_port_deallocate(mach_task_self(), mach_port);

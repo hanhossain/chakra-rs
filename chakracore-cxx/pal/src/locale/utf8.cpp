@@ -67,7 +67,7 @@ int UTF8ToUnicode(
 {
     int nTB = 0;                   // # trail bytes to follow
     int cchWC = 0;                 // # of Unicode code points generated
-    const uint8_t* pUTF8 = (const uint8_t*)lpSrcStr;
+    const uint8_t* pUTF8 = reinterpret_cast<const uint8_t*>(lpSrcStr);
     uint32_t dwUnicodeChar = 0;       // Our character with room for full surrogate char
     BOOL bSurrogatePair = FALSE;   // Indicate we're collecting a surrogate pair
     BOOL bCheckInvalidBytes = (dwFlags & MB_ERR_INVALID_CHARS);
@@ -95,7 +95,7 @@ int UTF8ToUnicode(
                     SetLastError(ERROR_INSUFFICIENT_BUFFER);
                     return (0);
                 }
-                lpDestStr[cchWC] = (char16_t)*pUTF8;
+                lpDestStr[cchWC] = static_cast<char16_t>(*pUTF8);
             }
             nTB = bSurrogatePair = 0;
             cchWC++;
@@ -131,11 +131,9 @@ int UTF8ToUnicode(
                                 return (0);
                             }                                
 
-                            lpDestStr[cchWC]   = (char16_t)
-                                                 (((dwUnicodeChar - 0x10000) >> 10) + HIGH_SURROGATE_START);
+                            lpDestStr[cchWC]   = static_cast<char16_t>(((dwUnicodeChar - 0x10000) >> 10) + HIGH_SURROGATE_START);
 
-                            lpDestStr[cchWC+1] = (char16_t)
-                                                 ((dwUnicodeChar - 0x10000)%0x400 + LOW_SURROGATE_START);
+                            lpDestStr[cchWC+1] = static_cast<char16_t>((dwUnicodeChar - 0x10000) % 0x400 + LOW_SURROGATE_START);
                         }
 
                         //
@@ -156,7 +154,7 @@ int UTF8ToUnicode(
                                 return (0);
                             }
 
-                            lpDestStr[cchWC] = (char16_t)dwUnicodeChar;
+                            lpDestStr[cchWC] = static_cast<char16_t>(dwUnicodeChar);
                         }
 
                         //
@@ -251,7 +249,7 @@ int UTF8ToUnicode(
                         //
                         if (cchSrc >= 3)
                         {
-                            uint16_t word = (((uint16_t)*pUTF8) << 8) | *(pUTF8 + 1);
+                            uint16_t word = (static_cast<uint16_t>(*pUTF8) << 8) | *(pUTF8 + 1);
                             // Look ahead to check for non-shortest form.
                             // 11110XXX 10XXxxxx 10xxxxxx 10xxxxxx                        
                             // Check if the 5 X bits are all zero.
@@ -397,16 +395,16 @@ int UnicodeToUTF8(
                          dwSurrogateChar = (((wchHighSurrogate-0xD800) << 10) + (*lpWC - 0xDC00) + 0x10000);
 
                          lpDestStr[cchU8++] = (UTF8_1ST_OF_4 |
-                                               (unsigned char)(dwSurrogateChar >> 18));           // 3 bits from 1st byte
+                                               static_cast<unsigned char>(dwSurrogateChar >> 18));           // 3 bits from 1st byte
 
                          lpDestStr[cchU8++] =  (UTF8_TRAIL |
-                                                (unsigned char)((dwSurrogateChar >> 12) & 0x3f)); // 6 bits from 2nd byte
+                                                static_cast<unsigned char>((dwSurrogateChar >> 12) & 0x3f)); // 6 bits from 2nd byte
 
                          lpDestStr[cchU8++] = (UTF8_TRAIL |
-                                               (unsigned char)((dwSurrogateChar >> 6) & 0x3f));   // 6 bits from 3rd byte
+                                               static_cast<unsigned char>((dwSurrogateChar >> 6) & 0x3f));   // 6 bits from 3rd byte
 
                          lpDestStr[cchU8++] = (UTF8_TRAIL |
-                                               (unsigned char)(0x3f & dwSurrogateChar));          // 6 bits from 4th byte
+                                               static_cast<unsigned char>(0x3f & dwSurrogateChar));          // 6 bits from 4th byte
                      }
                      else
                      {
@@ -459,7 +457,7 @@ int UnicodeToUTF8(
                 {
                     if (cchU8 < cchDest) 
                     {
-                        lpDestStr[cchU8] = (char)*lpWC;
+                        lpDestStr[cchU8] = static_cast<char>(*lpWC);
                     } 
                     else 
                     {

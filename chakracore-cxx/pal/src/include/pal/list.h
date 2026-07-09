@@ -130,9 +130,9 @@ typedef struct _LIST_ENTRY {
     _EX_ListHead->Flink = (Entry);\
     }
 
-#define CONTAINING_RECORD(address, type, field) ((type *)( \
-                                                  (char *)(address) - \
-                                                  (size_t)(&((type *)0)->field)))
+#define CONTAINING_RECORD(address, type, field) (reinterpret_cast<type *>( \
+                                                  reinterpret_cast<char *>(address) - \
+                                                  reinterpret_cast<size_t>(&(reinterpret_cast<type *>(0))->field)))
 
 #ifdef __cplusplus
 }

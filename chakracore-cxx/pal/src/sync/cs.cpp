@@ -304,7 +304,7 @@ void InternalDeleteCriticalSection(
     {
         size_t tid;
         tid = ObtainCurrentThreadId(pThread);
-        int iWaiterCount = (int)PALCS_GETWCOUNT(pPalCriticalSection->LockCount);
+        int iWaiterCount = PALCS_GETWCOUNT(pPalCriticalSection->LockCount);
 
         if (0 != (PALCS_LOCK_BIT & pPalCriticalSection->LockCount))
         {
@@ -501,18 +501,18 @@ namespace CorUnix
             "smaller than sizeof(PAL_CRITICAL_SECTION)");
 
 #ifdef _DEBUG
-        int32_t lRet = InterlockedCompareExchange((int32_t *)&csssInitState,
-                                               (int32_t)CSSubSysInitializing,
-                                               (int32_t)CSSubSysNotInitialzed);
-        if ((int32_t)CSSubSysNotInitialzed == lRet)
+        int32_t lRet = InterlockedCompareExchange(reinterpret_cast<int32_t volatile*>(&csssInitState),
+                                               CSSubSysInitializing,
+                                               CSSubSysNotInitialzed);
+        if (static_cast<int32_t>(CSSubSysNotInitialzed) == lRet)
         {
             InitializeListHead(&g_PALCSList);
 
             InternalInitializeCriticalSectionAndSpinCount(
                 reinterpret_cast<CRITICAL_SECTION*>(&g_csPALCSsListLock),
                 0, true);
-            InterlockedExchange((int32_t *)&csssInitState,
-                                (int32_t)CSSubSysInitialized);
+            InterlockedExchange(reinterpret_cast<int32_t volatile *>(&csssInitState),
+                                CSSubSysInitialized);
         }
         else
         {
@@ -942,8 +942,8 @@ namespace CorUnix
         threadId = ObtainCurrentThreadId(pThread);
 
         lNewVal = InterlockedCompareExchange (&pPalCriticalSection->LockCount,
-                                             (int32_t)PALCS_LOCK_BIT,
-                                             (int32_t)PALCS_LOCK_INIT);
+                                              PALCS_LOCK_BIT,
+                                              PALCS_LOCK_INIT);
         if (lNewVal == PALCS_LOCK_INIT)
         {
             // CS successfully acquired: setting ownership data
@@ -1003,9 +1003,9 @@ namespace CorUnix
         if (PalCsUserInitialized == lVal)
         {
             int iRet;
-            lNewVal = (int32_t)PalCsFullyInitializing;
+            lNewVal = static_cast<int32_t>(PalCsFullyInitializing);
             lNewVal = InterlockedCompareExchange(
-                (int32_t *)&pPalCriticalSection->cisInitState, lNewVal, lVal);
+                reinterpret_cast<int32_t volatile *>(&pPalCriticalSection->cisInitState), lNewVal, lVal);
             if (lNewVal != lVal)
             {
                 if (PalCsFullyInitialized == lNewVal)
@@ -1356,13 +1356,13 @@ namespace CorUnix
         CPalThread * pThread = InternalGetCurrentThread();
 
         // Take the lock for the global list of CS debug infos
-        InternalEnterCriticalSection(pThread, (CRITICAL_SECTION*)&g_csPALCSsListLock);
+        InternalEnterCriticalSection(pThread, reinterpret_cast<CRITICAL_SECTION*>(&g_csPALCSsListLock));
 
         PLIST_ENTRY pItem = g_PALCSList.Flink;
         while (&g_PALCSList != pItem)
         {
             PCRITICAL_SECTION_DEBUG_INFO pDebugInfo =
-                (PCRITICAL_SECTION_DEBUG_INFO)pItem;
+                reinterpret_cast<PCRITICAL_SECTION_DEBUG_INFO>(pItem);
             PPAL_CRITICAL_SECTION pCS = pDebugInfo->pOwnerCS;
 
             printf("CS @ %p \n"
@@ -1385,8 +1385,8 @@ namespace CorUnix
                    "\tfInternal \t= %d\n"
                    "\teInitState \t= %u\n"
                    "\tpNativeData \t= %p ->\n",
-                   pCS->LockCount.Load(), pCS->RecursionCount, (void *)pCS->OwningThread,
-                   pCS->LockSemaphore, (unsigned)pCS->SpinCount, (int)pCS->fInternal,
+                   pCS->LockCount.Load(), pCS->RecursionCount, reinterpret_cast<void*>(pCS->OwningThread),
+                   pCS->LockSemaphore, static_cast<unsigned>(pCS->SpinCount), static_cast<int>(pCS->fInternal),
                    pCS->cisInitState.Load(), &pCS->csndNativeData);
 
             printf("\t{\n\t\t[mutex]\n\t\t[condition]\n"
@@ -1399,7 +1399,7 @@ namespace CorUnix
         }
 
         // Release the lock for the global list of CS debug infos
-        InternalLeaveCriticalSection(pThread, (CRITICAL_SECTION*)&g_csPALCSsListLock);
+        InternalLeaveCriticalSection(pThread, reinterpret_cast<CRITICAL_SECTION*>(&g_csPALCSsListLock));
     }
 #endif // _DEBUG
 

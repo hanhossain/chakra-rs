@@ -261,9 +261,9 @@ WriteFile(
        uint32_t * lpNumberOfBytesWritten,
        LPOVERLAPPED lpOverlapped);
 
-#define STD_INPUT_HANDLE         ((uint32_t)-10)
-#define STD_OUTPUT_HANDLE        ((uint32_t)-11)
-#define STD_ERROR_HANDLE         ((uint32_t)-12)
+#define STD_INPUT_HANDLE         (static_cast<uint32_t>(-10))
+#define STD_OUTPUT_HANDLE        (static_cast<uint32_t>(-11))
+#define STD_ERROR_HANDLE         (static_cast<uint32_t>(-12))
 
 HANDLE
 GetStdHandle(
@@ -360,7 +360,7 @@ TerminateProcess(
 #define WAIT_OBJECT_0 0
 #define WAIT_ABANDONED_0 0x00000080
 #define WAIT_TIMEOUT 258
-#define WAIT_FAILED ((uint32_t)0xFFFFFFFF)
+#define WAIT_FAILED (static_cast<uint32_t>(0xFFFFFFFF))
 
 #define INFINITE 0xFFFFFFFF // Infinite timeout
 
@@ -1682,7 +1682,7 @@ BitTestAndSet(
     ((void *)InterlockedExchange64((long *)(Target), (long)(Value)))
 
 #define InterlockedCompareExchangePointer(Destination, ExChange, Comperand) \
-    ((void *)InterlockedCompareExchange64((long *)(Destination), (long)(ExChange), (long)(Comperand)))
+    (reinterpret_cast<void *>(InterlockedCompareExchange64(reinterpret_cast<long *>(Destination), reinterpret_cast<long>(ExChange), static_cast<long>(Comperand))))
 
 /*++
 Function:

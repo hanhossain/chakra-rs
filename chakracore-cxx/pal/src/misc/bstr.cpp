@@ -21,10 +21,10 @@ Abstract:
 #include "pal/palinternal.h"
 
 // Redefining here to not have to pull in all of palrt.h in order to get intsafe
-#define S_OK ((int32_t)0x00000000L)
-#define E_INVALIDARG ((int32_t) 0x80070057L)
-#define SUCCEEDED(Status) ((int32_t)(Status) >= 0)
-#define FAILED(Status) ((int32_t)(Status)<0)
+#define S_OK (static_cast<int32_t>(0x00000000L))
+#define E_INVALIDARG (static_cast<int32_t>(0x80070057L))
+#define SUCCEEDED(Status) (static_cast<int32_t>(Status) >= 0)
+#define FAILED(Status) (static_cast<int32_t>(Status)<0)
 #define NULL    0
 
 #include "pal_assert.h"
@@ -89,7 +89,7 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
     if (FAILED(CbSysStringSize(len, FALSE, &cbTotal)))
         return NULL;
 
-    bstr = (OLECHAR *)malloc(cbTotal);
+    bstr = static_cast<OLECHAR*>(malloc(cbTotal));
 
     if(bstr != NULL) {
         memset(bstr, 0, cbTotal);
@@ -97,11 +97,11 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
         // the size of the BSTR. So, in case of 64-bit code,
         // we need to ensure that the BSTR length can be found by
         // looking one uint32_t before the BSTR pointer.
-        *(unsigned long *)bstr = (unsigned long) 0;
-        bstr = (BSTR) ((char *) bstr + sizeof (uint32_t));
-        *(uint32_t *)bstr = (uint32_t)len * sizeof(OLECHAR);
+        *reinterpret_cast<unsigned long*>(bstr) = static_cast<unsigned long>(0);
+        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) + sizeof(uint32_t));
+        *reinterpret_cast<uint32_t*>(bstr) = len * sizeof(OLECHAR);
 
-        bstr = (BSTR) ((char*) bstr + sizeof(uint32_t));
+        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) + sizeof(uint32_t));
 
         if(psz != NULL){
             memcpy(bstr, psz, len * sizeof(OLECHAR));
@@ -129,8 +129,8 @@ extern "C" void SysFreeString(BSTR bstr)
 {
     if (bstr != NULL)
     {
-        bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
-        bstr = (BSTR) ((char*) bstr - sizeof(uint32_t));
+        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) - sizeof(uint32_t));
+        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) - sizeof(uint32_t));
         free(bstr);
     }
 }
@@ -154,7 +154,7 @@ extern "C" uint32_t SysStringLen(BSTR bstr)
         return 0;
     }
 
-    return (uint32_t)((((uint32_t *)bstr)[-1]) / sizeof(OLECHAR));
+    return static_cast<uint32_t>((reinterpret_cast<uint32_t*>(bstr)[-1]) / sizeof(OLECHAR));
 }
 
 /***
@@ -176,5 +176,5 @@ extern "C" BSTR SysAllocString(const OLECHAR* psz)
         return NULL;
     }
 
-    return SysAllocStringLen(psz, (uint32_t)std::u16string(psz).length());
+    return SysAllocStringLen(psz, static_cast<uint32_t>(std::u16string(psz).length()));
 }

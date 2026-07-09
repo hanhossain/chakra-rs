@@ -998,14 +998,14 @@ CONTEXT_GetThreadContextFromPort(
 #error Unexpected architecture.
 #endif
         StateCount = sizeof(State) / sizeof(natural_t);
-        MachRet = thread_get_state(Port, StateFlavor, (thread_state_t)&State, &StateCount);
+        MachRet = thread_get_state(Port, StateFlavor, reinterpret_cast<thread_state_t>(&State), &StateCount);
         if (MachRet != KERN_SUCCESS)
         {
             ASSERT("thread_get_state(THREAD_STATE) failed: %d\n", MachRet);
             goto exit;
         }
 
-        CONTEXT_GetThreadContextFromThreadState(StateFlavor, (thread_state_t)&State, lpContext);
+        CONTEXT_GetThreadContextFromThreadState(StateFlavor, reinterpret_cast<thread_state_t>(&State), lpContext);
     }
 
     if (lpContext->ContextFlags & CONTEXT_ALL_FLOATING & CONTEXT_AREA_MASK)
@@ -1057,7 +1057,7 @@ CONTEXT_GetThreadContextFromPort(
 
         StateFlavor = ARM_NEON_STATE64;
         StateCount = sizeof(arm_neon_state64_t) / sizeof(natural_t);
-        MachRet = thread_get_state(Port, StateFlavor, (thread_state_t)&State, &StateCount);
+        MachRet = thread_get_state(Port, StateFlavor, reinterpret_cast<thread_state_t>(&State), &StateCount);
         if (MachRet != KERN_SUCCESS)
         {
             // We were unable to get any floating point state.
@@ -1067,7 +1067,7 @@ CONTEXT_GetThreadContextFromPort(
 #error Unexpected architecture.
 #endif
 
-        CONTEXT_GetThreadContextFromThreadState(StateFlavor, (thread_state_t)&State, lpContext);
+        CONTEXT_GetThreadContextFromThreadState(StateFlavor, reinterpret_cast<thread_state_t>(&State), lpContext);
     }
 
 exit:
@@ -1176,19 +1176,19 @@ CONTEXT_GetThreadContextFromThreadState(
         case ARM_THREAD_STATE64:
             if (lpContext->ContextFlags & (CONTEXT_CONTROL | CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
             {
-                arm_thread_state64_t *pState = (arm_thread_state64_t*)threadState;
+                arm_thread_state64_t *pState = reinterpret_cast<arm_thread_state64_t*>(threadState);
                 memcpy(&lpContext->X0, &pState->__x[0], 29 * 8);
                 lpContext->Cpsr = pState->__cpsr;
                 lpContext->Fp = arm_thread_state64_get_fp(*pState);
                 lpContext->Sp = arm_thread_state64_get_sp(*pState);
-                lpContext->Lr = (uint64_t)arm_thread_state64_get_lr_fptr(*pState);
-                lpContext->Pc = (uint64_t)arm_thread_state64_get_pc_fptr(*pState);
+                lpContext->Lr = reinterpret_cast<uint64_t>(arm_thread_state64_get_lr_fptr(*pState));
+                lpContext->Pc = reinterpret_cast<uint64_t>(arm_thread_state64_get_pc_fptr(*pState));
             }
             break;
         case ARM_NEON_STATE64:
             if (lpContext->ContextFlags & CONTEXT_FLOATING_POINT & CONTEXT_AREA_MASK)
             {
-                arm_neon_state64_t *pState = (arm_neon_state64_t*)threadState;
+                arm_neon_state64_t *pState = reinterpret_cast<arm_neon_state64_t*>(threadState);
                 memcpy(&lpContext->V[0], &pState->__v, 32 * 16);
                 lpContext->Fpsr = pState->__fpsr;
                 lpContext->Fpcr = pState->__fpcr;
@@ -1332,7 +1332,7 @@ CONTEXT_SetThreadContextOnPort(
         {
             MachRet = thread_set_state(Port,
                                        StateFlavor,
-                                       (thread_state_t)&State,
+                                       reinterpret_cast<thread_state_t>(&State),
                                        StateCount);
         }
         while (MachRet == KERN_ABORTED);
@@ -1391,7 +1391,7 @@ CONTEXT_SetThreadContextOnPort(
         {
             MachRet = thread_set_state(Port,
                                        StateFlavor,
-                                       (thread_state_t)&State,
+                                       reinterpret_cast<thread_state_t>(&State),
                                        StateCount);
         }
         while (MachRet == KERN_ABORTED);
@@ -1480,7 +1480,7 @@ DBG_FlushInstructionCache(
         begin = endOrNextPageBegin;
     }
 #else
-    __builtin___clear_cache((char *)lpBaseAddress, (char *)((long)lpBaseAddress + dwSize));
+    __builtin___clear_cache(const_cast<char*>(static_cast<const char *>(lpBaseAddress)), reinterpret_cast<char*>(reinterpret_cast<long>(lpBaseAddress) + dwSize));
 #endif
     return TRUE;
 }

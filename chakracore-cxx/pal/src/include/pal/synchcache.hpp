@@ -94,7 +94,7 @@ namespace CorUnix
             pNode = m_pHead;
             while (pNode && i < n)
             {
-                ppObjs[i] = (T *)pNode;
+                ppObjs[i] = reinterpret_cast<T*>(pNode);
                 pNode = pNode->next;
                 i++;
             }
@@ -118,7 +118,7 @@ namespace CorUnix
 
             for (j=i;j<n;j++)
             {
-                pvObjRaw = (void *) new USynchCacheStackNode();
+                pvObjRaw = static_cast<void*>(new USynchCacheStackNode());
                 if (NULL == pvObjRaw)
                     break;
 #ifdef _DEBUG
@@ -129,7 +129,7 @@ namespace CorUnix
 
             for (i=0;i<j;i++)
             {
-                new ((void *)ppObjs[i]) T;
+                new (static_cast<void*>(ppObjs[i])) T;
             }
 
             return j;
@@ -161,7 +161,7 @@ namespace CorUnix
             }
             else
             {
-                delete (char *)pNode;
+                delete reinterpret_cast<char*>(pNode);
             }
             Unlock(pthrCurrent);
         }
@@ -271,7 +271,7 @@ namespace CorUnix
             while (pNode && i < n)
             {            
                 shridpObjs[i] = pNode->pointers.shrid;
-                pvObjRaw = (void *)pNode;
+                pvObjRaw = static_cast<void*>(pNode);
                 pNode = pNode->pointers.pNext;
                 i++;
             }

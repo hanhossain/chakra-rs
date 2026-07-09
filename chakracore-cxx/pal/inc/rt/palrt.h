@@ -625,7 +625,7 @@ inline errno_t _wcslwr_unsafe(char16_t *str, size_t sz)
         return 1;
 
     size_t fullSize = sz * sizeof(char16_t);
-    char16_t *copy = (char16_t *)malloc(fullSize);
+    char16_t *copy = static_cast<char16_t*>(malloc(fullSize));
     if(copy == nullptr)
         return 1;
 
@@ -648,7 +648,7 @@ inline int _vscprintf_unsafe(const char *_Format, va_list _ArgList)
 
     for (;;)
     {
-        char *buf = (char *)malloc(guess * sizeof(char));
+        char *buf = static_cast<char*>(malloc(guess * sizeof(char)));
         if(buf == nullptr)
             return 0;
 
@@ -668,7 +668,7 @@ inline int _vscwprintf_unsafe(const char16_t *_Format, va_list _ArgList)
 
     for (;;)
     {
-        char16_t *buf = (char16_t *)malloc(guess * sizeof(char16_t));
+        char16_t *buf = static_cast<char16_t*>(malloc(guess * sizeof(char16_t)));
         if (buf == nullptr)
             return 0;
 

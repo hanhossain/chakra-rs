@@ -829,7 +829,7 @@ CSharedMemoryObject::~CSharedMemoryObject()
 // overridden operator&
 //
 
-#define PAL_safe_offsetof(s,m) ((size_t)((ptrdiff_t)&(char&)(((s *)64)->m))-64)
+#define PAL_safe_offsetof(s,m) (static_cast<size_t>(reinterpret_cast<ptrdiff_t>(&reinterpret_cast<char&>((reinterpret_cast<s *>(64))->m)))-64)
 
 /*++
 Function:

@@ -203,7 +203,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
     uint32_t dwRet = WAIT_FAILED;
     PAL_ERROR palErr = NO_ERROR;
     int i, iSignaledObjCount, iSignaledObjIndex = -1;
-    bool fWAll = (bool)bWaitAll, fNeedToBlock  = false;
+    bool fWAll = static_cast<bool>(bWaitAll), fNeedToBlock  = false;
     bool fAbandoned = false;
     WaitType wtWaitType;
 
@@ -243,7 +243,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
     }
 
     palErr = g_pObjectManager->ReferenceMultipleObjectsByHandleArray(pThread,
-                                                                     (void **)lpHandles,
+                                                                     const_cast<void**>(lpHandles),
                                                                      nCount,
                                                                      &sg_aotWaitObject,
                                                                      ppIPalObjs);
@@ -296,7 +296,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         {
             // If there is any pending APC we need to release the
             // implicit global synch lock before calling into it
-            for (i = 0; (i < (int)nCount) && (NULL != ppISyncWaitCtrlrs[i]); i++)
+            for (i = 0; (i < static_cast<int>(nCount)) && (NULL != ppISyncWaitCtrlrs[i]); i++)
             {
                 ppISyncWaitCtrlrs[i]->ReleaseController();
                 ppISyncWaitCtrlrs[i] = NULL;
@@ -318,7 +318,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
 
     iSignaledObjCount = 0;
     iSignaledObjIndex = -1;
-    for (i=0;i<(int)nCount;i++)
+    for (i=0;i<static_cast<int>(nCount);i++)
     {
         bool fValue;
         palErr = ppISyncWaitCtrlrs[i]->CanThreadWaitWithoutBlocking(&fValue, &fAbandoned);
@@ -338,7 +338,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         }
     }
 
-    fNeedToBlock = (iSignaledObjCount == 0) || (fWAll && (iSignaledObjCount < (int)nCount));
+    fNeedToBlock = (iSignaledObjCount == 0) || (fWAll && (iSignaledObjCount < static_cast<int>(nCount)));
     if (!fNeedToBlock)
     {
         // At least one object signaled, or bWaitAll==TRUE and all object signaled.
@@ -388,7 +388,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
     else
     {
         // Register the thread for waiting on all objects
-        for (i=0;i<(int)nCount;i++)
+        for (i=0;i<static_cast<int>(nCount);i++)
         {
             palErr = ppISyncWaitCtrlrs[i]->RegisterWaitingThread(
                                                         wtWaitType,
@@ -406,7 +406,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
 
 WFMOExIntReleaseControllers:
     // Release all controllers before going to sleep
-    for (i = 0; i < (int)nCount; i++)
+    for (i = 0; i < static_cast<int>(nCount); i++)
     {
         ppISyncWaitCtrlrs[i]->ReleaseController();
         ppISyncWaitCtrlrs[i] = NULL;
@@ -426,7 +426,7 @@ WFMOExIntReleaseControllers:
                                                         (TRUE == bAlertable),
                                                         false,
                                                         &twrWakeupReason,
-                                                        (uint32_t *)&iSignaledObjIndex);
+                                                        reinterpret_cast<uint32_t*>(&iSignaledObjIndex));
         //
         // Awakened
         //
@@ -485,7 +485,7 @@ WFMOExIntReleaseControllers:
     }
 
 WFMOExIntCleanup:
-    for (i = 0; i < (int)nCount; i++)
+    for (i = 0; i < static_cast<int>(nCount); i++)
     {
         ppIPalObjs[i]->ReleaseReference(pThread);
         ppIPalObjs[i] = NULL;
@@ -539,7 +539,7 @@ PAL_ERROR CorUnix::InternalSleepEx (
                                                         (TRUE == bAlertable),
                                                         true,
                                                         &twrWakeupReason,
-                                                        (uint32_t *)&iSignaledObjIndex);
+                                                        reinterpret_cast<uint32_t*>(&iSignaledObjIndex));
         if (NO_ERROR != palErr)
         {
             ERROR("IPalSynchronizationManager::BlockThread failed for thread "

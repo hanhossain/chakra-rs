@@ -168,7 +168,7 @@ OutputDebugStringW(
     }
 
     /* strLen includes the null terminator */
-    if ((lpOutputStringA = (char*) malloc((strLen * sizeof(char)))) == NULL)
+    if ((lpOutputStringA = static_cast<char*>(malloc((strLen * sizeof(char))))) == NULL)
     {
         ERROR("Insufficient memory available !\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
@@ -217,7 +217,7 @@ Function:
 BOOL
 IsInDebugBreak(void *addr)
 {
-    return (addr >= (void *)DBG_DebugBreak) && (addr <= (void *)DBG_DebugBreak_End);
+    return (addr >= reinterpret_cast<void *>(DBG_DebugBreak)) && (addr <= reinterpret_cast<void *>(DBG_DebugBreak_End));
 }
 
 /*++
@@ -403,7 +403,7 @@ WriteProcessMemory(
 
             for (i = 0; i<param.nSize; i++)
             {
-                *((char*)(param.lpBaseAddress)+i) = *((char*)(param.lpBuffer)+i);
+                *(static_cast<char*>(param.lpBaseAddress)+i) = *(const_cast<char*>(static_cast<const char*>(param.lpBuffer))+i);
             }
 
             param.numberOfBytesWritten = param.nSize;
@@ -423,8 +423,8 @@ WriteProcessMemory(
         SetLastError(ERROR_INVALID_HANDLE);
         goto EXIT;
     }
-    result = vm_write(task, (vm_address_t) lpBaseAddress,
-                      (vm_address_t) lpBuffer, nSize);
+    result = vm_write(task, reinterpret_cast<vm_address_t>(lpBaseAddress),
+                      reinterpret_cast<vm_address_t>(lpBuffer), nSize);
     if (result != KERN_SUCCESS)
     {
         ERROR("vm_write failed for %d bytes from %p in %d: %d\n",

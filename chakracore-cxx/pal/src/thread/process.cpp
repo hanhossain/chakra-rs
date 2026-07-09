@@ -1001,7 +1001,7 @@ PROCGetProcessStatus(
         /* try to get state of process, using non-blocking call */
         wait_retval = waitpid(pLocalData->dwProcessId, &status, WNOHANG);
 
-        if ( wait_retval == (pid_t) pLocalData->dwProcessId )
+        if ( wait_retval == static_cast<pid_t>(pLocalData->dwProcessId) )
         {
             /* success; get the exit code */
             if ( WIFEXITED( status ) )

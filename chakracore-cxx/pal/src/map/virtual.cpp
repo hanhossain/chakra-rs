@@ -630,7 +630,7 @@ static BOOL VIRTUALStoreAllocationInfo(
         goto done;
     }
 
-    if ( !(pNewEntry = ( PCMI )malloc( sizeof( *pNewEntry )) ) )
+    if ( !(pNewEntry = static_cast<PCMI>(malloc(sizeof(*pNewEntry))) ) )
     {
         ERROR( "Unable to allocate memory for the structure.\n");
         bRetVal =  FALSE;
@@ -648,8 +648,8 @@ static BOOL VIRTUALStoreAllocationInfo(
         nBufferSize++;
     }
 
-    pNewEntry->pAllocState      = (uint8_t*)malloc( nBufferSize  );
-    pNewEntry->pProtectionState = (uint8_t*)malloc( (memSize / VIRTUAL_PAGE_SIZE)  );
+    pNewEntry->pAllocState      = static_cast<uint8_t*>(malloc(nBufferSize));
+    pNewEntry->pProtectionState = static_cast<uint8_t*>(malloc((memSize / VIRTUAL_PAGE_SIZE)));
 
     if ( pNewEntry->pAllocState && pNewEntry->pProtectionState
       )
@@ -763,8 +763,8 @@ static BOOL VIRTUALUpdateAllocationInfo(
         pExistingEntry->pAllocState = NULL;
     }
 
-    pExistingEntry->pAllocState = (uint8_t*)malloc(nBufferSize);
-    pExistingEntry->pProtectionState = (uint8_t*)malloc((memSize / VIRTUAL_PAGE_SIZE));
+    pExistingEntry->pAllocState = static_cast<uint8_t*>(malloc(nBufferSize));
+    pExistingEntry->pProtectionState = static_cast<uint8_t*>(malloc((memSize / VIRTUAL_PAGE_SIZE)));
 
     if (pExistingEntry->pAllocState && pExistingEntry->pProtectionState
         )
@@ -817,9 +817,9 @@ static void * VIRTUALReserveMemory(
     // First, figure out where we're trying to reserve the memory and
     // how much we need. On most systems, requests to mmap must be
     // page-aligned and at multiples of the page size.
-    StartBoundary = (unsigned long)lpAddress & ~BOUNDARY_64K;
+    StartBoundary = reinterpret_cast<unsigned long>(lpAddress) & ~BOUNDARY_64K;
     /* Add the sizes, and round down to the nearest page boundary. */
-    MemSize = ( ((unsigned long)lpAddress + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
+    MemSize = ( (reinterpret_cast<unsigned long>(lpAddress) + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
                StartBoundary;
 
     if ((flAllocationType & MEM_RESERVE_EXECUTABLE) != 0)
@@ -833,7 +833,7 @@ static void * VIRTUALReserveMemory(
     if (pRetVal == NULL)
     {
         // Try to reserve memory from the OS
-        pRetVal = ReserveVirtualMemory(pthrCurrent, (void *)StartBoundary, MemSize);
+        pRetVal = ReserveVirtualMemory(pthrCurrent, reinterpret_cast<void*>(StartBoundary), MemSize);
     }
 
     if (pRetVal != NULL)
@@ -841,9 +841,9 @@ static void * VIRTUALReserveMemory(
         if ( !lpAddress )
         {
             /* Compute the real values instead of the null values. */
-            StartBoundary = (unsigned long)pRetVal & ~VIRTUAL_PAGE_MASK;
+            StartBoundary = reinterpret_cast<unsigned long>(pRetVal) & ~VIRTUAL_PAGE_MASK;
 
-            MemSize = ( ((unsigned long)pRetVal + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
+            MemSize = ( (reinterpret_cast<unsigned long>(pRetVal) + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
                       StartBoundary;
         }
         if ( !VIRTUALStoreAllocationInfo( StartBoundary, MemSize,
@@ -875,7 +875,7 @@ static void * ReserveVirtualMemory(
 #if !defined(__APPLE__) && !defined(vm_address_t)
 #define vm_address_t unsigned long
 #endif
-    vm_address_t StartBoundary = (vm_address_t)lpAddress;
+    vm_address_t StartBoundary = reinterpret_cast<vm_address_t>(lpAddress);
     size_t MemSize = dwSize;
 #if defined(__APPLE__)
     int result;
@@ -892,7 +892,7 @@ static void * ReserveVirtualMemory(
 #if defined(__APPLE__)
     // Allocate with vm_allocate first, then map at the fixed address.
     result = vm_allocate(mach_task_self(), &StartBoundary, MemSize,
-                          ((void *) StartBoundary != NULL) ? FALSE : TRUE);
+                          (reinterpret_cast<void*>(StartBoundary) != NULL) ? FALSE : TRUE);
     if (result != KERN_SUCCESS) {
         ERROR("vm_allocate failed to allocated the requested region!\n");
         pthrCurrent->SetLastError(ERROR_INVALID_ADDRESS);
@@ -910,12 +910,12 @@ static void * ReserveVirtualMemory(
     mmapFlags |= MAP_ANON | MAP_PRIVATE;
 #endif // RESERVE_FROM_BACKING_FILE
 
-    pRetVal = mmap((void *) StartBoundary, MemSize, PROT_NONE,
+    pRetVal = mmap(reinterpret_cast<void*>(StartBoundary), MemSize, PROT_NONE,
                    mmapFlags, mmapFile, mmapOffset);
 
     /* Check to see if the region is what we asked for. */
     if (pRetVal != MAP_FAILED && lpAddress != NULL &&
-        StartBoundary != (unsigned long) pRetVal)
+        StartBoundary != reinterpret_cast<unsigned long>(pRetVal))
     {
         ERROR("We did not get the region we asked for!\n");
         pthrCurrent->SetLastError(ERROR_INVALID_ADDRESS);
@@ -974,9 +974,9 @@ static void * VIRTUALCommitMemory(
 
     if ( lpAddress )
     {
-        StartBoundary = (unsigned long)lpAddress & ~VIRTUAL_PAGE_MASK;
+        StartBoundary = reinterpret_cast<unsigned long>(lpAddress) & ~VIRTUAL_PAGE_MASK;
         /* Add the sizes, and round down to the nearest page boundary. */
-        MemSize = ( ((unsigned long)lpAddress + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
+        MemSize = ( (reinterpret_cast<unsigned long>(lpAddress) + dwSize + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK ) -
                   StartBoundary;
     }
     else
@@ -1001,8 +1001,8 @@ static void * VIRTUALCommitMemory(
         if ( pReservedMemory )
         {
             /* Re-align the addresses and try again to find the memory. */
-            StartBoundary = (unsigned long)pReservedMemory & ~VIRTUAL_PAGE_MASK;
-            MemSize = ( ((unsigned long)pReservedMemory + dwSize + VIRTUAL_PAGE_MASK)
+            StartBoundary = reinterpret_cast<unsigned long>(pReservedMemory) & ~VIRTUAL_PAGE_MASK;
+            MemSize = ( (reinterpret_cast<unsigned long>(pReservedMemory) + dwSize + VIRTUAL_PAGE_MASK)
                         & ~VIRTUAL_PAGE_MASK ) - StartBoundary;
 
             pInformation = VIRTUALFindRegionInformation( StartBoundary );
@@ -1077,7 +1077,7 @@ static void * VIRTUALCommitMemory(
         {
             // Commit the pages
             void * pRet = MAP_FAILED;
-            pRet = mmap((void *) StartBoundary, MemSize, PROT_WRITE | PROT_READ,
+            pRet = mmap(reinterpret_cast<void*>(StartBoundary), MemSize, PROT_WRITE | PROT_READ,
                      MAP_ANON | MAP_FIXED | MAP_PRIVATE, -1, 0);
             if (pRet != MAP_FAILED)
             {
@@ -1101,7 +1101,7 @@ static void * VIRTUALCommitMemory(
         if (protectionState != vProtect)
         {
             // Change permissions.
-            if (mprotect((void *) StartBoundary, MemSize, nProtect) != -1)
+            if (mprotect(reinterpret_cast<void*>(StartBoundary), MemSize, nProtect) != -1)
             {
                 memset(pInformation->pProtectionState + runStart,
                        vProtect, runLength);
@@ -1119,8 +1119,8 @@ static void * VIRTUALCommitMemory(
         allocationType = curAllocationType;
         protectionState = curProtectionState;
     }
-    pRetVal = (void *) (pInformation->startBoundary +
-                        initialRunStart * VIRTUAL_PAGE_SIZE);
+    pRetVal = reinterpret_cast<void*>(pInformation->startBoundary +
+        initialRunStart * VIRTUAL_PAGE_SIZE);
     goto done;
 
 error:
@@ -1300,12 +1300,12 @@ VirtualFreeEnclosing_(
 
 #ifdef DEBUG
     _ASSERTE(lpActualAlignedStartAddress >= lpRegionStartAddress);
-    _ASSERTE(lpActualAlignedStartAddress < (char*)lpRegionStartAddress + dwSize + dwAlignmentSize);
+    _ASSERTE(lpActualAlignedStartAddress < static_cast<char*>(lpRegionStartAddress) + dwSize + dwAlignmentSize);
 #endif
 
-    char * beforeRegionStart = (char *) lpRegionStartAddress;
-    size_t beforeRegionSize = (char *) lpActualAlignedStartAddress - beforeRegionStart;
-    char * afterRegionStart = (char *) lpActualAlignedStartAddress + dwSize;
+    char * beforeRegionStart = static_cast<char*>(lpRegionStartAddress);
+    size_t beforeRegionSize = static_cast<char*>(lpActualAlignedStartAddress) - beforeRegionStart;
+    char * afterRegionStart = static_cast<char*>(lpActualAlignedStartAddress) + dwSize;
     size_t afterRegionSize = dwAlignmentSize - beforeRegionSize;
 
     bool beforeRegionFreed = false;
@@ -1314,7 +1314,7 @@ VirtualFreeEnclosing_(
 #ifdef DEBUG
     _ASSERTE(dwSize + dwAlignmentSize == beforeRegionSize + dwSize + afterRegionSize);
 
-    size_t alignmentDiff = ((size_t)lpRegionStartAddress % dwAlignmentSize);
+    size_t alignmentDiff = (reinterpret_cast<size_t>(lpRegionStartAddress) % dwAlignmentSize);
     size_t beforeRegionSize2 = dwAlignmentSize - alignmentDiff;
     _ASSERTE(beforeRegionSize == beforeRegionSize2);
 #endif
@@ -1332,7 +1332,7 @@ VirtualFreeEnclosing_(
     InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
 
     PCMI pMemoryToBeReleased =
-        VIRTUALFindRegionInformation((unsigned long)lpRegionStartAddress);
+        VIRTUALFindRegionInformation(reinterpret_cast<unsigned long>(lpRegionStartAddress));
 
     if (!pMemoryToBeReleased)
     {
@@ -1344,7 +1344,7 @@ VirtualFreeEnclosing_(
 
     TRACE("Releasing the following memory %d to %d.\n", beforeRegionStart, beforeRegionSize);
 
-    if (munmap((void *)beforeRegionStart, beforeRegionSize) == 0)
+    if (munmap(beforeRegionStart, beforeRegionSize) == 0)
     {
         beforeRegionFreed = true;
     }
@@ -1360,7 +1360,7 @@ VirtualFreeEnclosing_(
     if (!afterRegionFreed)
     {
         TRACE("Releasing the following memory %d to %d.\n", afterRegionStart, afterRegionSize);
-        if (munmap((void *)afterRegionStart, afterRegionSize) == 0)
+        if (munmap(afterRegionStart, afterRegionSize) == 0)
         {
             afterRegionFreed = true;
         }
@@ -1376,7 +1376,7 @@ VirtualFreeEnclosing_(
 
     if (beforeRegionFreed && afterRegionFreed)
     {
-        bRetVal = VIRTUALUpdateAllocationInfo(pMemoryToBeReleased, (unsigned long)lpActualAlignedStartAddress, dwSize);
+        bRetVal = VIRTUALUpdateAllocationInfo(pMemoryToBeReleased, reinterpret_cast<unsigned long>(lpActualAlignedStartAddress), dwSize);
         goto VirtualFreeEnclosingExit;
     }
 
@@ -1405,7 +1405,7 @@ VirtualAlloc(
 
     if (reserve || commit)
     {
-        char *address = (char*) VirtualAlloc_(nullptr, dwSize, MEM_RESERVE, flProtect);
+        char *address = static_cast<char*>(VirtualAlloc_(nullptr, dwSize, MEM_RESERVE, flProtect));
         if (!address)
         {
             return nullptr;
@@ -1416,7 +1416,7 @@ VirtualAlloc(
             flAllocationType &= ~MEM_RESERVE;
         }
 
-        size_t diff = ((size_t)address % KB64);
+        size_t diff = (reinterpret_cast<size_t>(address) % KB64);
         if (diff != 0)
         {
             // Free the previously allocated address as it's not 64K aligned.
@@ -1424,14 +1424,14 @@ VirtualAlloc(
 
             // looks like ``pushed new address + dwSize`` is not available
             // try on a bigger surface
-            address = (char*)VirtualAlloc_(nullptr, dwSize + KB64, MEM_RESERVE, flProtect);
+            address = static_cast<char*>(VirtualAlloc_(nullptr, dwSize + KB64, MEM_RESERVE, flProtect));
             if (!address)
             {
                 // This is an actual OOM.
                 return nullptr;
             }
 
-            diff = ((size_t)address % KB64);
+            diff = (reinterpret_cast<size_t>(address) % KB64);
             char * addr64 = address + (KB64 - diff);
 
             // Free the regions enclosing the 64K aligned region we intend to use.
@@ -1527,10 +1527,10 @@ VirtualFree(
          * released or decommitted. So round the dwSize up to the next page
          * boundary and round the lpAddress down to the next page boundary.
          */
-        MemSize = (((unsigned long)(dwSize) + ((unsigned long)(lpAddress) & VIRTUAL_PAGE_MASK)
+        MemSize = ((dwSize + (reinterpret_cast<unsigned long>(lpAddress) & VIRTUAL_PAGE_MASK)
                     + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK);
 
-        StartBoundary = (unsigned long)lpAddress & ~VIRTUAL_PAGE_MASK;
+        StartBoundary = reinterpret_cast<unsigned long>(lpAddress) & ~VIRTUAL_PAGE_MASK;
 
         PCMI pUnCommittedMem;
         pUnCommittedMem = VIRTUALFindRegionInformation( StartBoundary );
@@ -1554,7 +1554,7 @@ VirtualFree(
                    (char *) StartBoundary - (char *) gBackingBaseAddress ) !=
              MAP_FAILED )
 #else   // RESERVE_FROM_BACKING_FILE
-        if ( mmap( (void *)StartBoundary, MemSize, PROT_NONE,
+        if ( mmap( reinterpret_cast<void*>(StartBoundary), MemSize, PROT_NONE,
                    MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0 ) != MAP_FAILED )
 #endif  // RESERVE_FROM_BACKING_FILE
         {
@@ -1581,7 +1581,7 @@ VirtualFree(
     if ( dwFreeType & MEM_RELEASE )
     {
         PCMI pMemoryToBeReleased =
-            VIRTUALFindRegionInformation( (unsigned long)lpAddress );
+            VIRTUALFindRegionInformation( reinterpret_cast<unsigned long>(lpAddress) );
 
         if ( !pMemoryToBeReleased )
         {
@@ -1601,7 +1601,7 @@ VirtualFree(
         TRACE( "Releasing the following memory %d to %d.\n",
                pMemoryToBeReleased->startBoundary, pMemoryToBeReleased->memSize );
 
-        if ( munmap( (void *)pMemoryToBeReleased->startBoundary,
+        if ( munmap( reinterpret_cast<void*>(pMemoryToBeReleased->startBoundary),
                      pMemoryToBeReleased->memSize ) == 0 )
         {
             if ( VIRTUALReleaseMemory( pMemoryToBeReleased ) == FALSE )
@@ -1654,8 +1654,8 @@ VirtualProtect(
     pthrCurrent = InternalGetCurrentThread();
     InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
 
-    StartBoundary = (unsigned long)lpAddress & ~VIRTUAL_PAGE_MASK;
-    MemSize = (((unsigned long)(dwSize) + ((unsigned long)(lpAddress) & VIRTUAL_PAGE_MASK)
+    StartBoundary = reinterpret_cast<unsigned long>(lpAddress) & ~VIRTUAL_PAGE_MASK;
+    MemSize = ((dwSize + (reinterpret_cast<unsigned long>(lpAddress) & VIRTUAL_PAGE_MASK)
                 + VIRTUAL_PAGE_MASK) & ~VIRTUAL_PAGE_MASK);
 
 #if DEBUG
@@ -1699,7 +1699,7 @@ VirtualProtect(
         }
     }
 
-    if ( 0 == mprotect( (void *)StartBoundary, MemSize,
+    if ( 0 == mprotect( reinterpret_cast<void*>(StartBoundary), MemSize,
                    W32toUnixAccessControl( flNewProtect ) ) )
     {
         /* Reset the access protection. */
@@ -1822,31 +1822,31 @@ static void VM_ALLOCATE_VirtualQuery(const void * lpAddress, PMEMORY_BASIC_INFOR
     infoCnt = VM_REGION_BASIC_INFO_COUNT_64;
     vm_flavor = VM_REGION_BASIC_INFO_64;
 
-    vm_address = (vm_address_t)lpAddress;
+    vm_address = reinterpret_cast<vm_address_t>(lpAddress);
     MachRet = vm_region_64(
                         mach_task_self(),
                         &vm_address,
                         &vm_size,
                         vm_flavor,
-                        (vm_region_info_t)&info,
+                        reinterpret_cast<vm_region_info_t>(&info),
                         &infoCnt,
                         &object_name);
     if (MachRet != KERN_SUCCESS) {
         return;
     }
 
-    if (vm_address > (vm_address_t)lpAddress) {
+    if (vm_address > reinterpret_cast<vm_address_t>(lpAddress)) {
         /* lpAddress was pointing into a free region */
         lpBuffer->State = MEM_FREE;
         return;
     }
 
-    lpBuffer->BaseAddress = (void *)vm_address;
+    lpBuffer->BaseAddress = reinterpret_cast<void*>(vm_address);
 
     // We don't actually have any information on the Mach kernel which maps to AllocationProtect.
     lpBuffer->AllocationProtect = VM_PROT_NONE;
 
-    lpBuffer->RegionSize = (size_t)vm_size;
+    lpBuffer->RegionSize = vm_size;
 
     if (info.reserved)
     {
@@ -1916,7 +1916,7 @@ VirtualQuery(
         goto ExitVirtualQuery;
     }
 
-    StartBoundary = (unsigned long)lpAddress & ~VIRTUAL_PAGE_MASK;
+    StartBoundary = reinterpret_cast<unsigned long>(lpAddress) & ~VIRTUAL_PAGE_MASK;
 
     /* Find the entry. */
     pEntry = VIRTUALFindRegionInformation( StartBoundary );
@@ -1925,13 +1925,13 @@ VirtualQuery(
     {
         /* Can't find a match, or no list present. */
         /* Next, looking for this region in file maps */
-        if (!MAPGetRegionInfo((void *)StartBoundary, lpBuffer))
+        if (!MAPGetRegionInfo(reinterpret_cast<void*>(StartBoundary), lpBuffer))
         {
             // When all else fails, call vm_region() if it's available.
 
             // Initialize the State to be MEM_FREE, in which case AllocationBase, AllocationProtect,
             // Protect, and Type are all undefined.
-            lpBuffer->BaseAddress = (void *)StartBoundary;
+            lpBuffer->BaseAddress = reinterpret_cast<void*>(StartBoundary);
             lpBuffer->RegionSize = 0;
             lpBuffer->State = MEM_FREE;
 #if defined(__APPLE__)
@@ -1964,7 +1964,7 @@ VirtualQuery(
 
         /* Fill the structure.*/
         lpBuffer->AllocationProtect = pEntry->accessProtection;
-        lpBuffer->BaseAddress = (void *)StartBoundary;
+        lpBuffer->BaseAddress = reinterpret_cast<void*>(StartBoundary);
 
         lpBuffer->Protect = AllocationType == MEM_COMMIT ?
             VIRTUALConvertVirtualFlags( AccessProtection ) : 0;

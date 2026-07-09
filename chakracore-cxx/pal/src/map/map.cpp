@@ -492,7 +492,7 @@ CorUnix::InternalCreateFileMapping(
         }
 
         if ( INVALID_HANDLE_VALUE != hFile && 
-             dwMaximumSizeLow > (uint32_t) UnixFileInformation.st_size &&
+             dwMaximumSizeLow > static_cast<uint32_t>(UnixFileInformation.st_size) &&
              ( PAGE_READONLY == flProtect || PAGE_WRITECOPY == flProtect ) )
         {
             /* In this situation, Windows returns an error, because the
@@ -502,7 +502,7 @@ CorUnix::InternalCreateFileMapping(
             goto ExitInternalCreateFileMapping;
         }
       
-        if ( (uint32_t) UnixFileInformation.st_size < dwMaximumSizeLow )
+        if ( static_cast<uint32_t>(UnixFileInformation.st_size) < dwMaximumSizeLow )
         {
             TRACE( "Growing the size of file on disk to match requested size.\n" );
 
@@ -910,7 +910,7 @@ CorUnix::InternalMapViewOfFile(
         // the global list.
         //
         
-        PMAPPED_VIEW_LIST pNewView = (PMAPPED_VIEW_LIST)malloc(sizeof(*pNewView));
+        PMAPPED_VIEW_LIST pNewView = static_cast<PMAPPED_VIEW_LIST>(malloc(sizeof(*pNewView)));
         if (NULL != pNewView)
         {
             pNewView->lpAddress = pvBaseAddress;
@@ -980,7 +980,7 @@ CorUnix::InternalUnmapViewOfFile(
         goto InternalUnmapViewOfFileExit;
     }
     
-    if (-1 == munmap((void *)lpBaseAddress, pView->NumberOfBytesToMap))
+    if (-1 == munmap(const_cast<void*>(lpBaseAddress), pView->NumberOfBytesToMap))
     {
         ASSERT( "Unable to unmap the memory. Error=%s.\n",
                 strerror( errno ) );
@@ -1180,7 +1180,7 @@ static uint32_t MAPConvertProtectToAccess( uint32_t flProtect )
 
     ASSERT( "Unknown flag for flProtect. This line "
             "should not have been executed.\n " );
-    return (uint32_t) -1;
+    return static_cast<uint32_t>(-1);
 }
 
 /*++
@@ -1212,7 +1212,7 @@ static uint32_t MAPConvertAccessToProtect(uint32_t flAccess)
     }
 
     ASSERT("Unknown flag for flAccess.\n");
-    return (uint32_t) -1;
+    return static_cast<uint32_t>(-1);
 }
 
 /*++
@@ -1279,7 +1279,7 @@ static PAL_ERROR MAPGrowLocalFile( int32_t UnixFD, uint32_t NewSize )
     TruncateRetVal = ftruncate( UnixFD, NewSize );
     fstat( UnixFD, &FileInfo );
 
-    if ( TruncateRetVal != 0 || FileInfo.st_size != (int) NewSize )
+    if ( TruncateRetVal != 0 || FileInfo.st_size != static_cast<int>(NewSize) )
     {
         int32_t OrigSize;
         const uint32_t  BUFFER_SIZE = 128;
@@ -1299,7 +1299,7 @@ static PAL_ERROR MAPGrowLocalFile( int32_t UnixFD, uint32_t NewSize )
             goto done;
         }
 
-        if (NewSize <= (uint32_t) OrigSize)
+        if (NewSize <= static_cast<uint32_t>(OrigSize))
         {
             return TRUE;
         }
@@ -1308,7 +1308,7 @@ static PAL_ERROR MAPGrowLocalFile( int32_t UnixFD, uint32_t NewSize )
 
         for ( x = 0; x < NewSize - OrigSize - BUFFER_SIZE; x += BUFFER_SIZE )
         {
-            if ( write( UnixFD, (void *)buf, BUFFER_SIZE ) == -1 )
+            if ( write( UnixFD, buf, BUFFER_SIZE ) == -1 )
             {
                 ERROR( "Unable to grow the file. Reason=%s\n", strerror( errno ) );
                 if((errno == ENOSPC) || (errno == EDQUOT))
@@ -1325,7 +1325,7 @@ static PAL_ERROR MAPGrowLocalFile( int32_t UnixFD, uint32_t NewSize )
         /* Catch any left overs. */
         if ( x != NewSize )
         {
-            if ( write( UnixFD, (void *)buf, NewSize - OrigSize - x) == -1 )
+            if ( write( UnixFD, buf, NewSize - OrigSize - x) == -1 )
             {
                 ERROR( "Unable to grow the file. Reason=%s\n", strerror( errno ) );
                 if((errno == ENOSPC) || (errno == EDQUOT))
@@ -1461,12 +1461,12 @@ BOOL MAPGetRegionInfo(void * lpAddress,
 
         MappedSize = ((real_map_sz-1) & ~VIRTUAL_PAGE_MASK) + VIRTUAL_PAGE_SIZE; 
         if ( real_map_addr <= lpAddress && 
-             (void *)((unsigned long)real_map_addr+MappedSize) > lpAddress )
+             reinterpret_cast<void*>(reinterpret_cast<unsigned long>(real_map_addr) + MappedSize) > lpAddress )
         {
             if (lpBuffer)
             {
-                size_t regionSize = MappedSize + (unsigned long) real_map_addr - 
-                       ((unsigned long) lpAddress & ~VIRTUAL_PAGE_MASK);
+                size_t regionSize = MappedSize + reinterpret_cast<unsigned long>(real_map_addr) -
+                       (reinterpret_cast<unsigned long>(lpAddress) & ~VIRTUAL_PAGE_MASK);
 
                 lpBuffer->BaseAddress = lpAddress;
                 lpBuffer->AllocationProtect = 0;

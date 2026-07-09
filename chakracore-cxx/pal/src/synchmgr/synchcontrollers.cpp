@@ -386,16 +386,16 @@ namespace CorUnix
             uint32_t dwWaitState;
 
             // Setting the thread in wait state 
-            dwWaitState = (uint32_t)(fAlertable ? TWS_ALERTABLE: TWS_WAITING);
+            dwWaitState = static_cast<uint32_t>(fAlertable ? TWS_ALERTABLE : TWS_WAITING);
 
             TRACE("Switching my wait state [%p] from TWS_ACTIVE to %u \n", 
                   pdwWaitState, dwWaitState);
 
             dwWaitState = InterlockedCompareExchange(
-                (int32_t *)pdwWaitState, (int32_t)dwWaitState, TWS_ACTIVE);
-            if ((uint32_t)TWS_ACTIVE != dwWaitState)
+                reinterpret_cast<int32_t*>(pdwWaitState), static_cast<int32_t>(dwWaitState), TWS_ACTIVE);
+            if (static_cast<uint32_t>(TWS_ACTIVE) != dwWaitState)
             {
-                if ((uint32_t)TWS_EARLYDEATH == dwWaitState)
+                if (static_cast<uint32_t>(TWS_EARLYDEATH) == dwWaitState)
                 {
                     // Process is terminating, this thread will soon be 
                     // suspended (by SuspendOtherThreads).
