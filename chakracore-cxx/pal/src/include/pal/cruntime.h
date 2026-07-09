@@ -98,24 +98,6 @@ typedef enum
 
 /*******************************************************************************
 Function:
-  Internal_AddPaddingA
-
-Parameters:
-  Out
-    - buffer to place padding and given string (In)
-  Count
-    - maximum chars to be copied so as not to overrun given buffer
-  In
-    - string to place into (Out) accompanied with padding
-  Padding
-    - number of padding chars to add
-  Flags
-    - padding style flags (PRINTF_FORMAT_FLAGS)
-*******************************************************************************/
-BOOL Internal_AddPaddingA(char* *Out, int32_t Count, char* In, int32_t Padding, int32_t Flags);
-
-/*******************************************************************************
-Function:
   PAL_printf_arg_remover
 
 Parameters:

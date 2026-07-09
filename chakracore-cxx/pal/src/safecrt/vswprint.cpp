@@ -56,13 +56,6 @@ static int _vscwprintf_helper (WOUTPUTFN outfn, const char16_t *format, va_list 
 *       user's buffer.
 *       We don't expose this function directly in the headers.
 *else
-*       The _vswprintf_c() flavor does the same thing as the _snwprintf
-*       above, but, it also fixes an issue in the return value in the case
-*       when there isn't enough space to write the null terminator
-*       We don't fix this issue in _vsnwprintf because of backward
-*       compatibility. In new code, however, _vsnwprintf is #defined to
-*       _vswprintf_c so users get the fix.
-*
 *endif
 *
 *       Multi-thread: (1) Since there is no stream, this routine must never try

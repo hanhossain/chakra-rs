@@ -1286,9 +1286,5 @@ namespace Js
         int32_t ProfilerRegisterReflect();
         int32_t ProfilerRegisterGenerator();
         int32_t ProfilerRegisterAtomics();
-
-#ifdef IR_VIEWER
-        int32_t ProfilerRegisterIRViewer();
-#endif /* IR_VIEWER */
     };
 }

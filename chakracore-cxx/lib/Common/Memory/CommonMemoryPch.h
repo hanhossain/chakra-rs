@@ -20,7 +20,6 @@
 #include "rterror.h"
 
 // Other Memory headers
-#include "Memory/LeakReport.h"
 #include "Memory/AutoPtr.h"
 
 // Other core headers

@@ -62,9 +62,6 @@ void GenerateLoopBody(NativeCodeGenerator * nativeCodeGen, Js::FunctionBody * fu
 #ifdef ENABLE_PREJIT
 void GenerateAllFunctions(NativeCodeGenerator * nativeCodeGen, Js::FunctionBody * fn);
 #endif
-#ifdef IR_VIEWER
-Js::Var RejitIRViewerFunction(NativeCodeGenerator *nativeCodeGen, Js::FunctionBody *fn, Js::ScriptContext *scriptContext);
-#endif
 #ifdef ALLOW_JIT_REPRO
 int32_t JitFromEncodedWorkItem(NativeCodeGenerator *nativeCodeGen, _In_reads_(bufferSize) const byte* buffer, _In_ uint bufferSize);
 #endif

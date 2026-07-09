@@ -3374,24 +3374,7 @@ int32_t SetJitQueueThresholdFlag(int flag)
     Js::Configuration::Global.flags.JitQueueThreshold = flag;
     return S_OK;
 }
-#ifdef LEAK_REPORT
-bool IsEnabledLeakReportFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag);
-}
 
-int32_t GetLeakReportFlag(BSTR *flag)
-{
-    *flag = SysAllocString(Js::Configuration::Global.flags.LeakReport);
-    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
-}
-
-int32_t SetLeakReportFlag(BSTR flag)
-{
-    Js::Configuration::Global.flags.LeakReport = flag;
-    return S_OK;
-}
-#endif
 bool IsEnabledLoopInlineThresholdFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::LoopInlineThresholdFlag);
@@ -3630,7 +3613,7 @@ int32_t SetTraceEngineRefcountFlag(bool flag)
     Js::Configuration::Global.flags.TraceEngineRefcount = flag;
     return S_OK;
 }
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 bool IsEnabledLeakStackTraceFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::LeakStackTraceFlag);
@@ -4719,38 +4702,7 @@ int32_t SetNormalizeStatsFlag(bool flag)
     Js::Configuration::Global.flags.NormalizeStats = flag;
     return S_OK;
 }
-bool IsEnabledOutputFileFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::OutputFileFlag);
-}
 
-int32_t GetOutputFileFlag(BSTR *flag)
-{
-    *flag = SysAllocString(Js::Configuration::Global.flags.OutputFile);
-    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
-}
-
-int32_t SetOutputFileFlag(BSTR flag)
-{
-    Js::Configuration::Global.flags.OutputFile = flag;
-    return S_OK;
-}
-bool IsEnabledOutputFileOpenModeFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::OutputFileOpenModeFlag);
-}
-
-int32_t GetOutputFileOpenModeFlag(BSTR *flag)
-{
-    *flag = SysAllocString(Js::Configuration::Global.flags.OutputFileOpenMode);
-    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
-}
-
-int32_t SetOutputFileOpenModeFlag(BSTR flag)
-{
-    Js::Configuration::Global.flags.OutputFileOpenMode = flag;
-    return S_OK;
-}
 #ifdef ENABLE_TRACE
 bool IsEnabledInMemoryTraceFlag()
 {
@@ -6465,23 +6417,6 @@ int32_t SetConstructorCacheInvalidationThresholdFlag(int flag)
     return S_OK;
 }
 
-#ifdef IR_VIEWER
-bool IsEnabledIRViewerFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::IRViewerFlag);
-}
-int32_t GetIRViewerFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.IRViewer;
-    return S_OK;
-}
-int32_t SetIRViewerFlag(bool flag)
-{
-    Js::Configuration::Global.flags.IRViewer = flag;
-    return S_OK;
-}
-#endif /* IR_VIEWER */
-
 bool IsEnabledGCMemoryThresholdFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::GCMemoryThresholdFlag);
@@ -6962,9 +6897,7 @@ IsEnabledInlineThresholdAdjustCountInSmallFunctionFlag, GetInlineThresholdAdjust
 IsEnabledAsmJsInlineAdjustFlag, GetAsmJsInlineAdjustFlag, SetAsmJsInlineAdjustFlag,
 IsEnabledInterpretFlag, GetInterpretFlag, SetInterpretFlag,
 IsEnabledJitQueueThresholdFlag, GetJitQueueThresholdFlag, SetJitQueueThresholdFlag,
-#ifdef LEAK_REPORT
-IsEnabledLeakReportFlag, GetLeakReportFlag, SetLeakReportFlag,
-#endif
+
 IsEnabledLoopInlineThresholdFlag, GetLoopInlineThresholdFlag, SetLoopInlineThresholdFlag,
 IsEnabledLeafInlineThresholdFlag, GetLeafInlineThresholdFlag, SetLeafInlineThresholdFlag,
 IsEnabledConstantArgumentInlineThresholdFlag, GetConstantArgumentInlineThresholdFlag, SetConstantArgumentInlineThresholdFlag,
@@ -6981,7 +6914,7 @@ IsEnabledMaxNumberOfInlineesWithLoopFlag, GetMaxNumberOfInlineesWithLoopFlag, Se
 IsEnabledPolymorphicInlineThresholdFlag, GetPolymorphicInlineThresholdFlag, SetPolymorphicInlineThresholdFlag,
 IsEnabledPrimeRecyclerFlag, GetPrimeRecyclerFlag, SetPrimeRecyclerFlag,
 IsEnabledTraceEngineRefcountFlag, GetTraceEngineRefcountFlag, SetTraceEngineRefcountFlag,
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 IsEnabledLeakStackTraceFlag, GetLeakStackTraceFlag, SetLeakStackTraceFlag,
 IsEnabledForceMemoryLeakFlag, GetForceMemoryLeakFlag, SetForceMemoryLeakFlag,
 #endif
@@ -7069,8 +7002,6 @@ IsEnabledNoNativeFlag, GetNoNativeFlag, SetNoNativeFlag,
 IsEnabledNopFrequencyFlag, GetNopFrequencyFlag, SetNopFrequencyFlag,
 IsEnabledNoStrictModeFlag, GetNoStrictModeFlag, SetNoStrictModeFlag,
 IsEnabledNormalizeStatsFlag, GetNormalizeStatsFlag, SetNormalizeStatsFlag,
-IsEnabledOutputFileFlag, GetOutputFileFlag, SetOutputFileFlag,
-IsEnabledOutputFileOpenModeFlag, GetOutputFileOpenModeFlag, SetOutputFileOpenModeFlag,
 #ifdef ENABLE_TRACE
 IsEnabledInMemoryTraceFlag, GetInMemoryTraceFlag, SetInMemoryTraceFlag,
 IsEnabledInMemoryTraceBufferSizeFlag, GetInMemoryTraceBufferSizeFlag, SetInMemoryTraceBufferSizeFlag,
@@ -7272,10 +7203,6 @@ IsEnabledPRNGSeed1Flag, GetPRNGSeed1Flag, SetPRNGSeed1Flag,
 IsEnabledClearInlineCachesOnCollectFlag, GetClearInlineCachesOnCollectFlag, SetClearInlineCachesOnCollectFlag,
 IsEnabledInlineCacheInvalidationListCompactionThresholdFlag, GetInlineCacheInvalidationListCompactionThresholdFlag, SetInlineCacheInvalidationListCompactionThresholdFlag,
 IsEnabledConstructorCacheInvalidationThresholdFlag, GetConstructorCacheInvalidationThresholdFlag, SetConstructorCacheInvalidationThresholdFlag,
-
-#ifdef IR_VIEWER
-IsEnabledIRViewerFlag, GetIRViewerFlag, SetIRViewerFlag,
-#endif /* IR_VIEWER */
 
 IsEnabledGCMemoryThresholdFlag, GetGCMemoryThresholdFlag, SetGCMemoryThresholdFlag,
 

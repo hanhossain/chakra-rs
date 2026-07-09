@@ -2055,13 +2055,6 @@ void ByteCodeGenerator::Generate(ParseNodeProg *pnodeProg, uint32_t grfscr, Byte
             byteCodeGenerator->funcEscapes || pnodeProg->m_UsesArgumentsAtGlobal);
     }
 
-#ifdef IR_VIEWER
-    if (grfscr & fscrIrDumpEnable)
-    {
-        byteCodeGenerator->GetRootFunc()->GetFunctionBody()->SetIRDumpEnabled(true);
-    }
-#endif /* IR_VIEWER */
-
     byteCodeGenerator->CheckDeferParseHasMaybeEscapedNestedFunc();
 
 #ifdef PROFILE_EXEC

@@ -13,8 +13,7 @@ set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
     IdleDecommitPageAllocator.cpp
     LargeHeapBlock.cpp
     LargeHeapBucket.cpp
-    LeakReport.cpp
-    MarkContext.cpp
+        MarkContext.cpp
     MemoryLogger.cpp
     MemoryTracking.cpp
     PageAllocator.cpp

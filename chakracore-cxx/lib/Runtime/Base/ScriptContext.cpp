@@ -276,10 +276,6 @@ namespace Js
 #if DEBUG
         m_iProfileSession = -1;
 #endif
-#ifdef LEAK_REPORT
-        this->urlRecord = nullptr;
-        this->isRootTrackerScriptContext = false;
-#endif
 
         PERF_COUNTER_INC(Basic, ScriptContext);
         PERF_COUNTER_INC(Basic, ScriptContextActive);
@@ -528,12 +524,6 @@ namespace Js
         urlCopy[length - 1] = u'\0';
 
         this->url = urlCopy;
-#ifdef LEAK_REPORT
-        if (Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag))
-        {
-            this->urlRecord = LeakReport::LogUrl(urlCopy, this->globalObject);
-        }
-#endif
     }
 
     uint ScriptContext::GetNextSourceContextId()
@@ -1301,13 +1291,6 @@ namespace Js
 
         SaveStartupProfileAndRelease(true);
         SetIsClosed();
-
-#ifdef LEAK_REPORT
-        if (this->isRootTrackerScriptContext)
-        {
-            this->GetThreadContext()->ClearRootTrackerScriptContext(this);
-        }
-#endif
 
         if (!threadContext->IsInScript())
         {

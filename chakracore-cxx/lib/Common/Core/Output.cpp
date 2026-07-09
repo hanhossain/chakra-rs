@@ -15,7 +15,6 @@
 //  AN MemProtectHeap
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
-//  AR LeakReport
 //  AS JavascriptDispatch/RecyclerObjectDumper
 //  AT HeapAllocator/RecyclerHeuristic
 //  AU RecyclerWriteBarrierManager
@@ -24,7 +23,6 @@
 
 bool                Output::s_useDebuggerWindow = false;
 std::recursive_mutex Output::s_mutex;
-AutoFILE            Output::s_outputFile; // Create a separate output file that is not thread-local.
 #ifdef ENABLE_TRACE
 Js::ILogger*        Output::s_inMemoryLogger = nullptr;
 #ifdef STACK_BACK_TRACE
@@ -382,11 +380,6 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
         {
             PAL_fwprintf(Output::s_file, u"%s", buf);
         }
-
-        if(s_outputFile != nullptr && !Output::s_capture)
-        {
-            PAL_fwprintf(s_outputFile, u"%s", buf);
-        }
     }
 
     Output::Flush();
@@ -399,10 +392,6 @@ void Output::Flush()
     if (s_capture)
     {
         return;
-    }
-    if(s_outputFile != nullptr)
-    {
-        fflush(s_outputFile);
     }
     fflush(NULL);
 }
@@ -466,25 +455,6 @@ Output::SetFile(FILE *file)
     FILE *oldfile = Output::s_file;
     Output::s_file = file;
     return oldfile;
-}
-
-void
-Output::SetOutputFile(FILE* file)
-{
-    if(s_outputFile != nullptr)
-    {
-        AssertMsg(false, "Output file is being set twice.");
-    }
-    else
-    {
-        s_outputFile = file;
-    }
-}
-
-FILE*
-Output::GetOutputFile()
-{
-    return s_outputFile;
 }
 
 #ifdef ENABLE_TRACE

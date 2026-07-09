@@ -209,11 +209,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
 
     PERF_COUNTER_INC(Basic, ThreadContext);
 
-#ifdef LEAK_REPORT
-    this->rootTrackerScriptContext = nullptr;
-    this->threadId = ::GetCurrentThreadId();
-#endif
-
     std::unique_lock autocs(ThreadContext::GetMutex());
     ThreadContext::LinkToBeginning(this, &ThreadContext::globalListFirst, &ThreadContext::globalListLast);
 #if DBG
@@ -336,15 +331,6 @@ ThreadContext::~ThreadContext()
         ThreadContext::Unlink(this, &ThreadContext::globalListFirst, &ThreadContext::globalListLast);
     }
 
-#ifdef LEAK_REPORT
-    if (Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag))
-    {
-        AUTO_LEAK_REPORT_SECTION(Js::Configuration::Global.flags, u"Thread Context (%p): %s (TID: %d)", this,
-            this->GetRecycler()->IsInDllCanUnloadNow()? u"DllCanUnloadNow" :
-            this->GetRecycler()->IsInDetachProcess()? u"DetachProcess" : u"Destructor", this->threadId);
-        LeakReport::DumpUrl(this->threadId);
-    }
-#endif
     if (interruptPoller)
     {
         HeapDelete(interruptPoller);
@@ -418,21 +404,12 @@ ThreadContext::~ThreadContext()
         // Unpin the memory for leak report so we don't report this as a leak.
         recyclableData.Unroot(recycler);
 
-#if defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
+#if defined(CHECK_MEMORY_LEAK)
         for (Js::ScriptContext *scriptContext = scriptContextList; scriptContext; scriptContext = scriptContext->next)
         {
             scriptContext->ClearSourceContextInfoMaps();
             scriptContext->ShutdownClearSourceLists();
         }
-
-#ifdef LEAK_REPORT
-        // heuristically figure out which one is the root tracker script engine
-        // and force close on it
-        if (this->rootTrackerScriptContext != nullptr)
-        {
-            this->rootTrackerScriptContext->Close(false);
-        }
-#endif
 #endif
 #ifdef ENABLE_SCRIPT_DEBUGGING
         Assert(this->debugManager == nullptr);
@@ -4108,17 +4085,12 @@ uint ThreadContext::GetHighestPropertyNameIndex() const
     return propertyMap->GetLastIndex() + 1 + Js::InternalPropertyIds::Count;
 }
 
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 void ThreadContext::ReportAndCheckLeaksOnProcessDetach()
 {
     bool needReportOrCheck = false;
-#ifdef LEAK_REPORT
-    needReportOrCheck = needReportOrCheck || Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag);
-#endif
-#ifdef CHECK_MEMORY_LEAK
     needReportOrCheck = needReportOrCheck ||
         (Js::Configuration::Global.flags.CheckMemoryLeak && MemoryLeakCheck::IsEnableOutput());
-#endif
 
     if (!needReportOrCheck)
     {
@@ -4136,45 +4108,9 @@ void ThreadContext::ReportAndCheckLeaksOnProcessDetach()
         current->pageAllocator.ClearConcurrentThreadId();
 #endif
         Recycler * recycler = current->GetRecycler();
-
-#ifdef LEAK_REPORT
-        if (Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag))
-        {
-            AUTO_LEAK_REPORT_SECTION(Js::Configuration::Global.flags, u"Thread Context (%p): Process Termination (TID: %d)", current, current->threadId);
-            LeakReport::DumpUrl(current->threadId);
-
-            // Heuristically figure out which one is the root tracker script engine
-            // and force close on it
-            if (current->rootTrackerScriptContext != nullptr)
-            {
-                current->rootTrackerScriptContext->Close(false);
-            }
-            recycler->ReportLeaksOnProcessDetach();
-        }
-#endif
-#ifdef CHECK_MEMORY_LEAK
         recycler->CheckLeaksOnProcessDetach(u"Process Termination");
-#endif
         current = current->Next();
     }
-}
-#endif
-
-#ifdef LEAK_REPORT
-void
-ThreadContext::SetRootTrackerScriptContext(Js::ScriptContext * scriptContext)
-{
-    Assert(this->rootTrackerScriptContext == nullptr);
-    this->rootTrackerScriptContext = scriptContext;
-    scriptContext->isRootTrackerScriptContext = true;
-}
-
-void
-ThreadContext::ClearRootTrackerScriptContext(Js::ScriptContext * scriptContext)
-{
-    Assert(this->rootTrackerScriptContext == scriptContext);
-    this->rootTrackerScriptContext->isRootTrackerScriptContext = false;
-    this->rootTrackerScriptContext = nullptr;
 }
 #endif
 

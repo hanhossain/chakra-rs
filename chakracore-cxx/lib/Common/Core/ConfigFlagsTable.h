@@ -356,9 +356,6 @@ namespace Js
         InterpretFlag,
         InstrumentFlag,
         JitQueueThresholdFlag,
-        #ifdef LEAK_REPORT
-        LeakReportFlag,
-        #endif
         LoopInlineThresholdFlag,
         LeafInlineThresholdFlag,
         ConstantArgumentInlineThresholdFlag,
@@ -378,7 +375,7 @@ namespace Js
         PolymorphicInlineThresholdFlag,
         PrimeRecyclerFlag,
         TraceEngineRefcountFlag,
-        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        #if defined(CHECK_MEMORY_LEAK)
         LeakStackTraceFlag,
         ForceMemoryLeakFlag,
         #endif
@@ -469,8 +466,6 @@ namespace Js
         OffFlag,
         OffProfiledByteCodeFlag,
         OnFlag,
-        OutputFileFlag,
-        OutputFileOpenModeFlag,
         #ifdef ENABLE_TRACE
         InMemoryTraceFlag,
         InMemoryTraceBufferSizeFlag,
@@ -682,10 +677,6 @@ namespace Js
         ClearInlineCachesOnCollectFlag,
         InlineCacheInvalidationListCompactionThresholdFlag,
         ConstructorCacheInvalidationThresholdFlag,
-
-        #ifdef IR_VIEWER
-        IRViewerFlag,
-        #endif /* IR_VIEWER */
 
         GCMemoryThresholdFlag,
 
@@ -1835,9 +1826,6 @@ namespace Js
         String Interpret;
         Phases Instrument;
         Number JitQueueThreshold;
-        #ifdef LEAK_REPORT
-            String LeakReport;
-        #endif
         Number LoopInlineThreshold;
         Number LeafInlineThreshold;
         Number ConstantArgumentInlineThreshold;
@@ -1857,7 +1845,7 @@ namespace Js
         Number PolymorphicInlineThreshold;
         Boolean PrimeRecycler;
         Boolean TraceEngineRefcount;
-        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        #if defined(CHECK_MEMORY_LEAK)
             Boolean LeakStackTrace;
             Boolean ForceMemoryLeak;
         #endif
@@ -1948,8 +1936,6 @@ namespace Js
         Phases Off;
         Phases OffProfiledByteCode;
         Phases On;
-        String OutputFile;
-        String OutputFileOpenMode;
         #ifdef ENABLE_TRACE
             Boolean InMemoryTrace;
             Number InMemoryTraceBufferSize;
@@ -2161,10 +2147,6 @@ namespace Js
         Boolean ClearInlineCachesOnCollect;
         Number InlineCacheInvalidationListCompactionThreshold;
         Number ConstructorCacheInvalidationThreshold;
-
-        #ifdef IR_VIEWER
-            Boolean IRViewer;
-        #endif /* IR_VIEWER */
 
         Number GCMemoryThreshold;
 

@@ -577,10 +577,6 @@ namespace Js
         // Even if the function does not require any locals, we must always have "R0" to propagate
         // a return value.  By enabling this here, we avoid unnecessary conditionals during execution.
         //
-#ifdef IR_VIEWER
-        ,m_isIRDumpEnabled(false)
-        ,m_irDumpBaseObject(nullptr)
-#endif /* IR_VIEWER */
         , m_isFromNativeCodeModule(false)
         , hasHotLoop(false)
         , m_isPartialDeserializedFunction(false)
@@ -705,10 +701,6 @@ namespace Js
         // Even if the function does not require any locals, we must always have "R0" to propagate
         // a return value.  By enabling this here, we avoid unnecessary conditionals during execution.
         //
-#ifdef IR_VIEWER
-        ,m_isIRDumpEnabled(false)
-        ,m_irDumpBaseObject(nullptr)
-#endif /* IR_VIEWER */
         , m_isFromNativeCodeModule(false)
         , hasHotLoop(false)
         , m_isPartialDeserializedFunction(false)
@@ -4612,119 +4604,6 @@ namespace Js
 
         return startOffset;
     }
-
-#ifdef IR_VIEWER
-/* BEGIN potentially reusable code */
-
-/*
-    This code could be reused for locating source code in a debugger or to
-    retrieve the text of source statements.
-
-    Currently this code is used to retrieve the text of a source code statement
-    in the IR_VIEWER feature.
-*/
-
-    /**
-     * Given a statement's starting offset in the source code, calculate the beginning and end of a statement,
-     * as well as the line and column number where the statement appears.
-     *
-     * @param startOffset (input) The offset into the source code where this statement begins.
-     * @param sourceBegin (output) The beginning of the statement in the source string.
-     * @param sourceEnd (output) The end of the statement in the source string.
-     * @param line (output) The line number where the statement appeared in the source.
-     * @param col (output) The column number where the statement appeared in the source.
-     */
-    void FunctionBody::GetSourceLineFromStartOffset(const uint startOffset, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-                                                    uint32_t * line, int32_t * col)
-    {
-        //
-        // get source info
-        //
-
-        LPCUTF8 source = GetStartOfDocument(u"IR Viewer FunctionBody::GetSourceLineFromStartOffset");
-        Utf8SourceInfo* sourceInfo = this->GetUtf8SourceInfo();
-        Assert(sourceInfo != nullptr);
-        LPCUTF8 sourceInfoSrc = sourceInfo->GetSource(u"IR Viewer FunctionBody::GetSourceLineFromStartOffset");
-        if (!sourceInfoSrc)
-        {
-            Assert(sourceInfo->GetIsLibraryCode());
-            return;
-        }
-        if (source != sourceInfoSrc)
-        {
-            Output::Print(u"\nDETECTED MISMATCH:\n");
-            Output::Print(u"GetUtf8SourceInfo()->GetSource(): 0x%08X: %.*s ...\n", sourceInfo, 16, sourceInfo);
-            Output::Print(u"GetStartOfDocument():             0x%08X: %.*s ...\n", source, 16, source);
-
-            AssertMsg(false, "Non-matching start of document");
-        }
-
-        //
-        // calculate source line info
-        //
-
-        size_t cbStartOffset = utf8::CharacterIndexToByteIndex(source, sourceInfo->GetCbLength(), (const charcount_t)startOffset, (size_t)this->m_cbStartOffset, (charcount_t)this->m_cchStartOffset);
-        GetLineCharOffsetFromStartChar(startOffset, line, col);
-
-        size_t lastOffset = StartOffset() + LengthInBytes();
-        size_t i = 0;
-        for (i = cbStartOffset; i < lastOffset && source[i] != '\n' && source[i] != '\r'; i++)
-        {
-            // do nothing; scan until end of statement
-        }
-        size_t cbEndOffset = i;
-
-        //
-        // return
-        //
-
-        *sourceBegin = &source[cbStartOffset];
-        *sourceEnd = &source[cbEndOffset];
-    }
-
-    /**
-     * Given a statement index and output parameters, calculate the beginning and end of a statement,
-     * as well as the line and column number where the statement appears.
-     *
-     * @param statementIndex (input) The statement's index (as used by the StatementBoundary pragma).
-     * @param sourceBegin (output) The beginning of the statement in the source string.
-     * @param sourceEnd (output) The end of the statement in the source string.
-     * @param line (output) The line number where the statement appeared in the source.
-     * @param col (output) The column number where the statement appeared in the source.
-     */
-    void FunctionBody::GetStatementSourceInfo(const uint statementIndex, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-        uint32_t * line, int32_t * col)
-    {
-        const size_t startOffset = GetStatementStartOffset(statementIndex);
-
-        // startOffset should only be 0 if statementIndex is 0, otherwise it is EOF and we should return empty string
-        if (startOffset != 0 || statementIndex == 0)
-        {
-            GetSourceLineFromStartOffset(startOffset, sourceBegin, sourceEnd, line, col);
-        }
-        else
-        {
-            *sourceBegin = nullptr;
-            *sourceEnd = nullptr;
-            *line = 0;
-            *col = 0;
-            return;
-        }
-    }
-
-/* END potentially reusable code */
-#endif /* IR_VIEWER */
-
-#ifdef IR_VIEWER
-    Js::DynamicObject * FunctionBody::GetIRDumpBaseObject()
-    {
-        if (!this->m_irDumpBaseObject)
-        {
-            this->m_irDumpBaseObject = this->m_scriptContext->GetLibrary()->CreateObject();
-        }
-        return this->m_irDumpBaseObject;
-    }
-#endif /* IR_VIEWER */
 
 #if ENABLE_NATIVE_CODEGEN
 #ifdef VTUNE_PROFILING

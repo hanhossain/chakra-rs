@@ -128,15 +128,6 @@
 #define RECYCLER_TEST_SUPPORT
 #define ARENA_ALLOCATOR_FREE_LIST_SIZE
 
-// TODO (t-doilij) combine IR_VIEWER and ENABLE_IR_VIEWER
-#if 0
-#if ENABLE_NATIVE_CODEGEN
-#define IR_VIEWER
-#define ENABLE_IR_VIEWER
-#define ENABLE_IR_VIEWER_DBG_DUMP  // TODO (t-doilij) disable this before check-in
-#endif
-#endif
-
 // VTUNE profiling requires ETW trace
 #if defined(_M_X64)
 #define VTUNE_PROFILING
@@ -229,7 +220,6 @@
 
 #define HEAP_TRACK_ALLOC
 #define CHECK_MEMORY_LEAK
-#define LEAK_REPORT
 
 #define ERROR_TRACE
 #define DEBUGGER_TRACE
@@ -286,7 +276,6 @@
 // #define PAGEALLOCATOR_PROTECT_FREEPAGE
 // #define ARENA_MEMORY_VERIFY
 // #define SEPARATE_ARENA
-// #define LEAK_REPORT
 // #define CHECK_MEMORY_LEAK
 // #define INTERNAL_MEM_PROTECT_HEAP_ALLOC
 
@@ -364,13 +353,13 @@
 #define ENABLE_DEBUG_STACK_BACK_TRACE 1
 #endif
 
-#if defined(TRACK_DISPATCH) || defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(TRACK_DISPATCH) || defined(CHECK_MEMORY_LEAK)
 #define TRACK_JS_DISPATCH
 #endif
 
-// LEAK_REPORT and CHECK_MEMORY_LEAK requires RECYCLER_DUMP_OBJECT_GRAPH
+// CHECK_MEMORY_LEAK requires RECYCLER_DUMP_OBJECT_GRAPH
 // HEAP_TRACK_ALLOC and RECYCLER_STATS
-#if defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
+#if defined(CHECK_MEMORY_LEAK)
 #define RECYCLER_DUMP_OBJECT_GRAPH
 #define HEAP_TRACK_ALLOC
 #define RECYCLER_STATS

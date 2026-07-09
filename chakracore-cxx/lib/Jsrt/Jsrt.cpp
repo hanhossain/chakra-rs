@@ -390,15 +390,8 @@ JsErrorCode chakracore::jsrt::JsDisposeRuntime(_In_ JsRuntimeHandle runtimeHandl
         runtime->DeleteJsrtDebugManager();
 #endif
 
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
         bool doFinalGC = false;
-
-#if defined(LEAK_REPORT)
-        if (Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag))
-        {
-            doFinalGC = true;
-        }
-#endif
 
 #if defined(CHECK_MEMORY_LEAK)
         if (Js::Configuration::Global.flags.CheckMemoryLeak)

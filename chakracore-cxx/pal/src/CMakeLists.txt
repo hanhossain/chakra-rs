@@ -65,21 +65,16 @@ set(SOURCES
   cruntime/file.cpp
   cruntime/filecrt.cpp
   cruntime/finite.cpp
-    cruntime/mbstring.cpp
-  cruntime/misc.cpp
-  cruntime/printf.cpp
+        cruntime/printf.cpp
   cruntime/printfcpp.cpp
     cruntime/wchar.cpp
-    safecrt/makepath_s.cpp
-  safecrt/mbusafecrt.cpp
+        safecrt/mbusafecrt.cpp
   safecrt/safecrt_input_s.cpp
   safecrt/safecrt_output_s.cpp
   safecrt/safecrt_winput_s.cpp
   safecrt/safecrt_woutput_s.cpp
-    safecrt/strcat_s.cpp
-  safecrt/strcpy_s.cpp
-  safecrt/strncat_s.cpp
-  safecrt/strncpy_s.cpp
+        safecrt/strcpy_s.cpp
+        safecrt/strncpy_s.cpp
   safecrt/swprintf.cpp
     safecrt/vswprint.cpp
   safecrt/wcscpy_s.cpp

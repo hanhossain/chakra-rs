@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include <string>
 #include "CommonCorePch.h"
-#include <chakracore-sys/src/str_helper.rs.h>
 #include <rust/cxx.h>
 
 #include "Memory/MemoryLogger.h"
@@ -13,6 +12,7 @@
 #include "Core/CmdParser.h"
 #include "Core/ConfigParser.h"
 
+#include <filesystem>
 #include <unistd.h>
 
 ConfigParser ConfigParser::s_moduleConfigParser(Js::Configuration::Global.flags);
@@ -63,44 +63,20 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
     _hasReadConfig = true;
 
     const char16_t* configFileName = strCustomConfigFile;
-    const char16_t* configFileExt = u""; /* in the custom config case,
-                                             ext is expected to be passed
-                                             in as part of the filename */
 
     if (configFileName == nullptr)
     {
         configFileName = _configFileName;
-        configFileExt = u".config";
     }
 
     int err = 0;
 
-    char16_t filename[_MAX_PATH];
-
-    _wmakepath_s(filename, u"", u"", configFileName, configFileExt);
+    const std::filesystem::path filename = configFileName;
 
     FILE* configFile;
-    // Two-pathed for a couple reasons
-    // 1. PAL doesn't like the ccs option passed in.
-    // 2. _wfullpath is not implemented in the PAL.
-    // Instead, on xplat, we'll check the HOME directory to see if there is
-    // a config file there that we can use
-    if (_wfopen_s(&configFile, filename, u"r") != 0 || configFile == nullptr)
+    if (_wfopen_s(&configFile, filename.u16string().c_str(), u"r") != 0 || configFile == nullptr)
     {
-        char16_t homeDir[MAX_PATH];
-
-        if (GetEnvironmentVariable(u"HOME", homeDir, MAX_PATH) == 0)
-        {
-            return;
-        }
-        
-        char16_t configFileFullName[MAX_PATH];
-
-        StringCchPrintf(configFileFullName, MAX_PATH, u"%s/%s%s", homeDir, configFileName, configFileExt);
-        if (_wfopen_s(&configFile, configFileFullName, u"r") != 0 || configFile == nullptr)
-        {
-            return;
-        }
+        return;
     }
 
     char16_t configBuffer[MaxTokenSize];
@@ -121,7 +97,7 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
     {
         CharType curChar = ReadChar(configFile);
 
-        if (this->_flags.rawInputFromConfigFileIndex < sizeof(this->_flags.rawInputFromConfigFile) / sizeof(this->_flags.rawInputFromConfigFile[0]))
+        if (this->_flags.rawInputFromConfigFileIndex < std::size(this->_flags.rawInputFromConfigFile))
         {
             this->_flags.rawInputFromConfigFile[this->_flags.rawInputFromConfigFileIndex++] = curChar;
         }
@@ -177,12 +153,6 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
 void ConfigParser::ProcessConfiguration()
 {
     bool hasOutput = false;
-    if (Js::Configuration::Global.flags.IsEnabled(Js::OutputFileFlag)
-        && Js::Configuration::Global.flags.OutputFile != nullptr)
-    {
-        SetOutputFile(Js::Configuration::Global.flags.OutputFile, Js::Configuration::Global.flags.OutputFileOpenMode);
-        hasOutput = true;
-    }
 
     if (Js::Configuration::Global.flags.DebugWindow)
     {
@@ -243,66 +213,4 @@ void ConfigParser::ProcessConfiguration()
         ArenaMemoryTracking::Activate();
     }
 #endif
-}
-
-int32_t ConfigParser::SetOutputFile(const char16_t* outputFile, const char16_t* openMode)
-{
-    // If present, replace the {PID} token with the process ID
-    const char16_t* pidStr = nullptr;
-    char16_t buffer[_MAX_PATH];
-    if ((pidStr = PAL_wcsstr(outputFile, u"{PID}")) != nullptr)
-    {
-        size_t pidStartPosition = pidStr - outputFile;
-
-        char16_t* pDest = buffer;
-        size_t bufferLen = _MAX_PATH;
-
-        // Copy the filename before the {PID} token
-        wcsncpy_s(pDest, bufferLen, outputFile, pidStartPosition);
-        pDest += pidStartPosition;
-        bufferLen = bufferLen - pidStartPosition;
-
-        // Copy the PID
-        _itow_s(getpid(), pDest, /*bufferSize=*/_MAX_PATH - pidStartPosition, /*radix=*/10);
-#pragma prefast(suppress: 26014, "ultow string length is smaller than 256")
-        pDest += std::u16string(pDest).length();
-        bufferLen = bufferLen - std::u16string(pDest).length();
-
-        // Copy the rest of the string.
-#pragma prefast(suppress: 26014, "Overwriting pDset's null terminator is intentional since the string being copied is null terminated")
-        wcscpy_s(pDest, bufferLen, outputFile + pidStartPosition + /*length of {PID}*/ 5);
-
-        outputFile = buffer;
-    }
-
-    char16_t fileName[_MAX_PATH];
-    char16_t moduleName[_MAX_PATH];
-    PlatformAgnostic::SystemInfo::GetBinaryLocation(moduleName, _MAX_PATH);
-    _wsplitpath_s(moduleName, nullptr, 0, nullptr, 0, fileName, _MAX_PATH, nullptr, 0);
-    const auto rustFileName = chakra_rs::str_helper::to_lowercase(fileName);
-
-    if (rustFileName == chakra_rs::str_helper::to_lowercase("WWAHost") ||
-        rustFileName == chakra_rs::str_helper::to_lowercase("ByteCodeGenerator") ||
-        rustFileName == chakra_rs::str_helper::to_lowercase("spartan") ||
-        rustFileName == chakra_rs::str_helper::to_lowercase("spartan_edge") ||
-        rustFileName == chakra_rs::str_helper::to_lowercase("MicrosoftEdge"))
-    {
-
-        // we need to output to %temp% directory in wwa. we don't have permission otherwise.
-        if (GetEnvironmentVariable(u"temp", fileName, _MAX_PATH) != 0)
-        {
-            wcscat_s(fileName, _MAX_PATH, u"\\");
-            const char16_t * fileNameOnly = PAL_wcsrchr(outputFile, u'\\');
-            // if outputFile is full path we just need filename, discard the path
-            wcscat_s(fileName, _MAX_PATH, fileNameOnly == nullptr ? outputFile : fileNameOnly);
-        }
-        else
-        {
-            AssertMsg(FALSE, "Get temp environment failed");
-        }
-        outputFile = fileName;
-    }
-
-    AssertMsg(false, "Could not open file for logging output.");
-    return E_FAIL;
 }

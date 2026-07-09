@@ -19,7 +19,6 @@
 //  AN MemProtectHeap
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
-//  AR LeakReport
 //  AS JavascriptDispatch/RecyclerObjectDumper
 //  AT HeapAllocator/RecyclerHeuristic
 //  AU RecyclerWriteBarrierManager
@@ -319,26 +318,6 @@ HeapAllocator::~HeapAllocator()
         }
     };
 
-#ifdef LEAK_REPORT
-    // REVIEW: Okay to use global flags?
-    if (Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag))
-    {
-        fakeHeapLeak();
-        LeakReport::StartSection(u"Heap Leaks");
-        LeakReport::StartRedirectOutput();
-        bool leaked = !HeapAllocator::CheckLeaks();
-        LeakReport::EndRedirectOutput();
-        LeakReport::EndSection();
-
-        LeakReport::Print(u"--------------------------------------------------------------------------------\n");
-        if (leaked)
-        {
-            LeakReport::Print(u"Heap Leaked Object: %d bytes (%d objects)\n",
-                data.outstandingBytes, data.allocCount - data.deleteCount);
-        }
-    }
-#endif // LEAK_REPORT
-
 #ifdef CHECK_MEMORY_LEAK
     // REVIEW: Okay to use global flags?
     if (Js::Configuration::Global.flags.CheckMemoryLeak)
@@ -391,7 +370,7 @@ HeapAllocatorData::LogAlloc(HeapAllocRecord * record, size_t requestedBytes, Tra
     outstandingBytes += requestedBytes;
     allocCount++;
 
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
     // REVIEW: Okay to use global flags?
     if (Js::Configuration::Global.flags.LeakStackTrace)
@@ -440,7 +419,7 @@ HeapAllocatorData::LogFree(HeapAllocRecord * record)
 
     deleteCount++;
     outstandingBytes -= record->size;
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
     if (record->stacktrace != nullptr)
     {
@@ -471,7 +450,7 @@ HeapAllocatorData::CheckLeaks()
             Output::Print(u"- %p - %10d bytes\n",
                 ((char*)current) + ::Math::Align<size_t>(sizeof(HeapAllocRecord), MEMORY_ALLOCATION_ALIGNMENT),
                 current->size);
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
             // REVIEW: Okay to use global flags?
             if (Js::Configuration::Global.flags.LeakStackTrace && current->stacktrace)

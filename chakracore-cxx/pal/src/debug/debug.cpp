@@ -63,14 +63,6 @@ const BOOL DBG_DETACH       = FALSE;
 #endif
 static const char PAL_OUTPUTDEBUGSTRING[]    = "PAL_OUTPUTDEBUGSTRING";
 
-#ifdef _DEBUG
-#define ENABLE_RUN_ON_DEBUG_BREAK 1
-#endif // _DEBUG
-
-#ifdef ENABLE_RUN_ON_DEBUG_BREAK
-static const char PAL_RUN_ON_DEBUG_BREAK[]   = "PAL_RUN_ON_DEBUG_BREAK";
-#endif // ENABLE_RUN_ON_DEBUG_BREAK
-
 /* ------------------- Static function prototypes ----------------------------*/
 
 #if !defined(__APPLE__)
@@ -140,8 +132,7 @@ OutputDebugStringA(
 {
     /* as we don't support debug events, we are going to output the debug string
       to stderr instead of generating OUT_DEBUG_STRING_EVENT */
-    if ( (lpOutputString != NULL) &&
-         (NULL != MiscGetenv(PAL_OUTPUTDEBUGSTRING)))
+    if (lpOutputString != nullptr && getenv(PAL_OUTPUTDEBUGSTRING) != nullptr)
     {
         fprintf(stderr, "%s", lpOutputString);
     }
@@ -200,139 +191,6 @@ EXIT:
     LOGEXIT("OutputDebugStringW returns\n");
 }
 
-#ifdef ENABLE_RUN_ON_DEBUG_BREAK
-/*
-   When DebugBreak() is called, if PAL_RUN_ON_DEBUG_BREAK is set,
-   DebugBreak() will execute whatever command is in there.
-
-   PAL_RUN_ON_DEBUG_BREAK must be no longer than 255 characters.
-
-   This command string inherits the current process's environment,
-   with two additions:
-      PAL_EXE_PID  - the process ID of the current process
-      PAL_EXE_NAME - the name of the executable of the current process
-
-   When DebugBreak() runs this string, it periodically polls the child process
-   and blocks until it finishes. If you use this mechanism to start a
-   debugger, you can break this poll loop by setting the "spin" variable in
-   run_debug_command()'s frame to 0, and then the parent process can
-   continue.
-
-   suggested values for PAL_RUN_ON_DEBUG_BREAK:
-     to halt the process for later inspection:
-       'echo stopping $PAL_EXE_PID; kill -STOP $PAL_EXE_PID; sleep 10'
-
-     to print out the stack trace:
-       'pstack $PAL_EXE_PID'
-
-     to invoke the gdb debugger on the process:
-       'set -x; gdb $PAL_EXE_NAME $PAL_EXE_PID'
-
-     to invoke the ddd debugger on the process (requires X11):
-       'set -x; ddd $PAL_EXE_NAME $PAL_EXE_PID'
-*/
-
-static
-int
-run_debug_command (const char *command)
-{
-    int pid;
-    Volatile<int> spin = 1;
-
-    if (!command) {
-        return 1;
-    }
-
-    printf("Spawning command: %s\n", command);
-
-    pid = fork();
-    if (pid == -1) {
-        return -1;
-    }
-    if (pid == 0) {
-        const char *argv[4] = { "sh", "-c", command, 0 };
-        execv("/bin/sh", (char **)argv);
-        exit(127);
-    }
-
-    /* We continue either when the spawned process has stopped, or when
-       an attached debugger sets spin to 0 */
-    while (spin != 0) {
-        int status = 0;
-        int ret = waitpid(pid, &status, WNOHANG);
-        if (ret == 0) {
-            int i;
-            /* I tried to use sleep for this, and that works everywhere except
-               FreeBSD. The problem on FreeBSD is that if the process gets a
-               signal while blocked in sleep(), gdb is confused by the stack */
-            for (i = 0; i < 1000000; i++)
-                ;
-        }
-        else if (ret == -1) {
-            if (errno != EINTR) {
-                return -1;
-            }
-        }
-        else if (WIFEXITED(status)) {
-            return WEXITSTATUS(status);
-        }
-        else {
-            fprintf (stderr, "unexpected return from waitpid\n");
-            return -1;
-        }
-    };
-    return 0;
-}
-#endif // ENABLE_RUN_ON_DEBUG_BREAK
-
-#define PID_TEXT "PAL_EXE_PID="
-#define EXE_TEXT "PAL_EXE_NAME="
-
-static
-int
-DebugBreakCommand()
-{
-#ifdef ENABLE_RUN_ON_DEBUG_BREAK
-    const char *command_string = getenv (PAL_RUN_ON_DEBUG_BREAK);
-    if (command_string) {
-        char pid_buf[sizeof (PID_TEXT) + 32];
-        PathCharString exe_bufString;
-        int libNameLength = 10;
-
-        size_t dwexe_buf = strlen(EXE_TEXT) + libNameLength + 1;
-        char * exe_buf = exe_bufString.OpenStringBuffer(dwexe_buf);
-
-        if (NULL == exe_buf)
-        {
-            goto FAILED;
-        }
-
-        if (snprintf (pid_buf, sizeof (pid_buf), PID_TEXT "%d", getpid()) <= 0) {
-            goto FAILED;
-        }
-
-        exe_bufString.CloseBuffer(dwexe_buf);
-        /* strictly speaking, we might want to only set these environment
-           variables in the child process, but if we do that we can't check
-           for errors. putenv/setenv can fail when out of memory */
-
-        if (!MiscPutenv (pid_buf, FALSE) || !MiscPutenv (exe_buf, FALSE)) {
-            goto FAILED;
-        }
-        if (run_debug_command (command_string)) {
-            goto FAILED;
-        }
-        return 1;
-    }
-    return 0;
-FAILED:
-    fprintf (stderr, "Failed to execute command: '%s'\n", command_string);
-    return -1;
-#else // ENABLE_RUN_ON_DEBUG_BREAK
-    return 0;
-#endif // ENABLE_RUN_ON_DEBUG_BREAK
-}
-
 /*++
 Function:
   DebugBreak
@@ -343,11 +201,8 @@ void
 DebugBreak(
        void)
 {
-    if (DebugBreakCommand() <= 0) {
-        // either didn't do anything, or failed
-        TRACE("Calling DBG_DebugBreak\n");
-        DBG_DebugBreak();
-    }
+    TRACE("Calling DBG_DebugBreak\n");
+    DBG_DebugBreak();
 
     LOGEXIT("DebugBreak returns\n");
 }

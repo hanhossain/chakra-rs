@@ -8,38 +8,6 @@
 #include "ImmutableList.h"
 
 template<int chunkSize>
-void regex::ImmutableStringBuilder<chunkSize>::AppendInt32(int32_t value)
-{
-    char16_t buffer[11]; // -2,147,483,648 w.o ',' + \0
-    int32_t hr = S_OK;
-    hr = StringCchPrintfW(buffer, _countof(buffer), u"%d", value);
-    AssertMsg(SUCCEEDED(hr), "StringCchPrintfW");
-    if (FAILED(hr) )
-    {
-        Js::Throw::OutOfMemory();
-    }
-
-    // append to the stringBuilder string
-    this->AppendWithCopy(buffer);
-}
-
-template<int chunkSize>
-void regex::ImmutableStringBuilder<chunkSize>::AppendUInt64(unsigned long value)
-{
-    char16_t buffer[21]; // 18,446,744,073,709,551,615 w.o ',' + \0
-    int32_t hr = S_OK;
-    hr = StringCchPrintfW(buffer, _countof(buffer), u"%llu", value);
-    AssertMsg(SUCCEEDED(hr), "StringCchPrintfW");
-    if (FAILED(hr) )
-    {
-        Js::Throw::OutOfMemory();
-    }
-
-    // append to the stringBuilder string
-    this->AppendWithCopy(buffer);
-}
-
-template<int chunkSize>
 void regex::ImmutableStringBuilder<chunkSize>::AppendWithCopy(_In_z_ const char16_t* str)
 {
     AssertMsg(str != nullptr, "str != nullptr");
@@ -65,7 +33,3 @@ void regex::ImmutableStringBuilder<chunkSize>::AppendWithCopy(_In_z_ const char1
     // append to the stringBuilder string
     this->Append(buffer);
 }
-
-// template instantiation
-template void regex::ImmutableStringBuilder<8>::AppendInt32(int32_t value);
-template void regex::ImmutableStringBuilder<8>::AppendUInt64(unsigned long value);

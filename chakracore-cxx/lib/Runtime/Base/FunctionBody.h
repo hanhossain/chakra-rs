@@ -2202,12 +2202,6 @@ namespace Js
         WriteBarrierFieldTypeTraits<bool>::Type m_canDoStackNestedFunc : 1;
 #endif
 
-#ifdef IR_VIEWER
-        // whether IR Dump is enabled for this function (used by parseIR)
-        WriteBarrierFieldTypeTraits<bool>::Type m_isIRDumpEnabled : 1;
-        WriteBarrierFieldTypeTraits<Js::DynamicObject*>::Type m_irDumpBaseObject;
-#endif /* IR_VIEWER */
-
         WriteBarrierFieldTypeTraits<uint8_t>::Type bailOnMisingProfileCount;
         WriteBarrierFieldTypeTraits<uint8_t>::Type bailOnMisingProfileRejitCount;
 
@@ -2817,12 +2811,6 @@ namespace Js
         bool IsDeserializedFunction() { return this->m_isDeserializedFunction; }
 #endif
 
-#ifdef IR_VIEWER
-        bool IsIRDumpEnabled() const { return this->m_isIRDumpEnabled; }
-        void SetIRDumpEnabled(bool enabled) { this->m_isIRDumpEnabled = enabled; }
-        Js::DynamicObject * GetIRDumpBaseObject();
-#endif /* IR_VIEWER */
-
 #if ENABLE_NATIVE_CODEGEN
         void SetPolymorphicCallSiteInfoHead(PolymorphicCallSiteInfo *polyCallSiteInfo) { this->SetAuxPtr<AuxPointerType::PolymorphicCallSiteInfoHead>(polyCallSiteInfo); }
         PolymorphicCallSiteInfo * GetPolymorphicCallSiteInfoHead() { return this->GetAuxPtr<AuxPointerType::PolymorphicCallSiteInfoHead>(); }
@@ -3270,13 +3258,6 @@ namespace Js
 #endif
 
         uint GetStatementStartOffset(const uint statementIndex);
-
-#ifdef IR_VIEWER
-        void GetSourceLineFromStartOffset(const uint startOffset, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-            uint32_t * line, int32_t * col);
-        void GetStatementSourceInfo(const uint statementIndex, LPCUTF8 *sourceBegin, LPCUTF8 *sourceEnd,
-            uint32_t * line, int32_t * col);
-#endif
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
         void CheckAndRegisterFuncToDiag(ScriptContext *scriptContext);

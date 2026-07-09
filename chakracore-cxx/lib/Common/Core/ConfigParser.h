@@ -31,7 +31,7 @@ private:
 public:
     static ConfigParser s_moduleConfigParser;
 
-    ConfigParser(Js::ConfigFlagsTable& outputFlags, const char16_t* configFileName = u"jscript") :
+    ConfigParser(Js::ConfigFlagsTable& outputFlags, const char16_t* configFileName = u"jscript.config") :
         _flags(outputFlags),
         _hasReadConfig(false),
         _configFileName(configFileName)
@@ -47,6 +47,5 @@ public:
 
     void ParseConfig(CmdLineArgsParser &parser, const char16_t* strCustomConfigFile = nullptr);
     void ProcessConfiguration();
-    int32_t SetOutputFile(const char16_t* outputFile, const char16_t* openMode);
     bool HasReadConfig() { return _hasReadConfig; }
 };

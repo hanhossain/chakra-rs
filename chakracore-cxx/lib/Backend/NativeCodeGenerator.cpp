@@ -367,36 +367,6 @@ void NativeCodeGenerator::TransitionFromSimpleJit(Js::ScriptFunction *const func
     }
 }
 
-#ifdef IR_VIEWER
-Js::Var
-NativeCodeGenerator::RejitIRViewerFunction(Js::FunctionBody *fn, Js::ScriptContext *requestContext)
-{
-    /* Note: adapted from NativeCodeGenerator::GenerateFunction (NativeCodeGenerator.cpp) */
-
-    Js::ScriptContext *scriptContext = fn->GetScriptContext();
-    PageAllocator *pageAllocator = scriptContext->GetThreadContext()->GetPageAllocator();
-    NativeCodeGenerator *nativeCodeGenerator = scriptContext->GetNativeCodeGenerator();
-
-    AutoRestoreDefaultEntryPoint autoRestore(fn);
-    Js::FunctionEntryPointInfo * entryPoint = fn->GetDefaultFunctionEntryPointInfo();
-
-    JsFunctionCodeGen workitem(this, fn, entryPoint, fn->IsInDebugMode());
-    workitem.isRejitIRViewerFunction = true;
-    workitem.irViewerRequestContext = scriptContext;
-
-    workitem.SetJitMode(ExecutionMode::FullJit);
-
-    entryPoint->SetCodeGenPendingWithStackAllocatedWorkItem();
-    entryPoint->SetCodeGenQueued();
-    const auto recyclableData = GatherCodeGenData(fn, fn, entryPoint, &workitem);
-    workitem.SetRecyclableData(recyclableData);
-
-    nativeCodeGenerator->CodeGen(pageAllocator, &workitem, true);
-
-    return Js::CrossSite::MarshalVar(requestContext, workitem.GetIRViewerOutput(scriptContext));
-}
-#endif /* IR_VIEWER */
-
 #ifdef ALLOW_JIT_REPRO
 int32_t NativeCodeGenerator::JitFromEncodedWorkItem(_In_reads_(bufferSize) const byte* buffer, _In_ uint bufferSize)
 {
@@ -839,13 +809,8 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
         }
     }
 
-    [[maybe_unused]] bool irviewerInstance = false;
-#ifdef IR_VIEWER
-    irviewerInstance = true;
-#endif
     Assert(
         workItem->Type() != JsFunctionType ||
-        irviewerInstance ||
         IsThunk(workItem->GetFunctionBody()->GetDirectEntryPoint(workItem->GetEntryPoint())) ||
         IsAsmJsCodeGenThunk(workItem->GetFunctionBody()->GetDirectEntryPoint(workItem->GetEntryPoint())));
 
