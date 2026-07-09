@@ -128,15 +128,6 @@
 #define RECYCLER_TEST_SUPPORT
 #define ARENA_ALLOCATOR_FREE_LIST_SIZE
 
-// TODO (t-doilij) combine IR_VIEWER and ENABLE_IR_VIEWER
-#if 0
-#if ENABLE_NATIVE_CODEGEN
-#define IR_VIEWER
-#define ENABLE_IR_VIEWER
-#define ENABLE_IR_VIEWER_DBG_DUMP  // TODO (t-doilij) disable this before check-in
-#endif
-#endif
-
 // VTUNE profiling requires ETW trace
 #if defined(_M_X64)
 #define VTUNE_PROFILING

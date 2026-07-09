@@ -680,10 +680,6 @@ namespace Js
         InlineCacheInvalidationListCompactionThresholdFlag,
         ConstructorCacheInvalidationThresholdFlag,
 
-        #ifdef IR_VIEWER
-        IRViewerFlag,
-        #endif /* IR_VIEWER */
-
         GCMemoryThresholdFlag,
 
         #if DBG
@@ -2155,10 +2151,6 @@ namespace Js
         Boolean ClearInlineCachesOnCollect;
         Number InlineCacheInvalidationListCompactionThreshold;
         Number ConstructorCacheInvalidationThreshold;
-
-        #ifdef IR_VIEWER
-            Boolean IRViewer;
-        #endif /* IR_VIEWER */
 
         Number GCMemoryThreshold;
 

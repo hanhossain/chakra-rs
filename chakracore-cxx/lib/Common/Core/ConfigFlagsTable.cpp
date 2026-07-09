@@ -3122,10 +3122,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-#ifdef IR_VIEWER
-        NoParentFlag,
-#endif /* IR_VIEWER */
-
         NoParentFlag,
 
 #if DBG
@@ -3829,10 +3825,6 @@ namespace Js
         ClearInlineCachesOnCollect(false),
         InlineCacheInvalidationListCompactionThreshold(DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold),
         ConstructorCacheInvalidationThreshold(DEFAULT_CONFIG_ConstructorCacheInvalidationThreshold),
-
-#ifdef IR_VIEWER
-        IRViewer(false),
-#endif /* IR_VIEWER */
 
         GCMemoryThreshold(0),
 
@@ -5636,11 +5628,6 @@ namespace Js
         case ConstructorCacheInvalidationThresholdFlag:
             return FlagNumber;
 
-        #ifdef IR_VIEWER
-        case IRViewerFlag:
-            return FlagBoolean;
-        #endif /* IR_VIEWER */
-
         case GCMemoryThresholdFlag:
             return FlagNumber;
 
@@ -6811,11 +6798,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&InlineCacheInvalidationListCompactionThreshold));
         case ConstructorCacheInvalidationThresholdFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&ConstructorCacheInvalidationThreshold));
-
-        #ifdef IR_VIEWER
-        case IRViewerFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&IRViewer));
-        #endif /* IR_VIEWER */
 
         case GCMemoryThresholdFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&GCMemoryThreshold));
@@ -18544,34 +18526,6 @@ if (IsEnabled(ConstructorCacheInvalidationThresholdFlag))
     Output::Print(u"\n");
 }
 
-#ifdef IR_VIEWER
-if (IsEnabled(IRViewerFlag))
-{
-    Output::Print(u"-%s", u"IRViewer");
-    switch (FlagBoolean)
-    {
-    case FlagBoolean:
-        if (!*GetAsBoolean(IRViewerFlag))
-        {
-            Output::Print(u"-");
-        }
-        break;
-    case FlagString:
-        if (GetAsString(IRViewerFlag) != nullptr)
-        {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(IRViewerFlag));
-        }
-        break;
-    case FlagNumber:
-        Output::Print(u":%d", *GetAsNumber(IRViewerFlag));
-        break;
-    default:
-        break;
-    };
-    Output::Print(u"\n");
-}
-#endif /* IR_VIEWER */
-
 if (IsEnabled(GCMemoryThresholdFlag))
 {
     Output::Print(u"-%s", u"GCMemoryThreshold");
@@ -19879,12 +19833,6 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case ClearInlineCachesOnCollectFlag:
             retValue = (Boolean) false;
             break;
-
-        #ifdef IR_VIEWER
-        case IRViewerFlag:
-            retValue = (Boolean) false;
-            break;
-        #endif /* IR_VIEWER */
 
         case StrictWriteBarrierCheckFlag:
             retValue = (Boolean) DEFAULT_CONFIG_StrictWriteBarrierCheck;

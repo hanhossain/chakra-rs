@@ -1489,15 +1489,6 @@ namespace Js
 
         AddFunctionToLibraryObjectWithPropertyName(globalObject, u"chWriteTraceEvent", &GlobalObject::EntryInfo::ChWriteTraceEvent, 1);
 
-#ifdef IR_VIEWER
-        if (Js::Configuration::Global.flags.IsEnabled(Js::IRViewerFlag))
-        {
-            AddFunctionToLibraryObjectWithPropertyName(globalObject, u"parseIR", &GlobalObject::EntryInfo::ParseIR, 1);
-            AddFunctionToLibraryObjectWithPropertyName(globalObject, u"functionList", &GlobalObject::EntryInfo::FunctionList, 1);
-            AddFunctionToLibraryObjectWithPropertyName(globalObject, u"rejitFunction", &GlobalObject::EntryInfo::RejitFunction, 2);
-        }
-#endif /* IR_VIEWER */
-
         DebugOnly(CheckRegisteredBuiltIns(builtinFuncs, scriptContext));
 
         builtInConstructorCache = RecyclerNew(this->GetRecycler(), ConstructorCache);
@@ -6955,19 +6946,4 @@ namespace Js
         }
     }
 #endif
-#ifdef IR_VIEWER
-    int32_t JavascriptLibrary::ProfilerRegisterIRViewer()
-    {
-        int32_t hr = S_OK;
-
-        DEFINE_OBJECT_NAME(IRViewer);
-
-        // TODO (t-doilij) move GlobalObject::EntryParseIR to JavascriptIRViewer::EntryParseIR
-        REG_LIB_FUNC_CORE(pwszObjectName, u"parseIR", scriptContext->GetOrAddPropertyIdTracked(u"parseIR"), GlobalObject::EntryParseIR);
-        REG_LIB_FUNC_CORE(pwszObjectName, u"functionList", scriptContext->GetOrAddPropertyIdTracked(u"functionList"), GlobalObject::EntryFunctionList);
-        REG_LIB_FUNC_CORE(pwszObjectName, u"rejitFunction", scriptContext->GetOrAddPropertyIdTracked(u"rejitFunction"), GlobalObject::EntryRejitFunction);
-
-        return hr;
-    }
-#endif /* IR_VIEWER */
 }

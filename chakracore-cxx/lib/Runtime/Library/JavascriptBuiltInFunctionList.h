@@ -26,12 +26,6 @@ BUILTIN(GlobalObject, CollectGarbage, EntryCollectGarbage, FunctionInfo::ErrorOn
 
 BUILTIN(GlobalObject, ChWriteTraceEvent, EntryChWriteTraceEvent, FunctionInfo::ErrorOnNew)
 
-#ifdef IR_VIEWER
-    BUILTIN(GlobalObject, ParseIR, EntryParseIR, FunctionInfo::ErrorOnNew)
-    BUILTIN(GlobalObject, FunctionList, EntryFunctionList, FunctionInfo::ErrorOnNew)
-    BUILTIN(GlobalObject, RejitFunction, EntryRejitFunction, FunctionInfo::ErrorOnNew)
-#endif /* IR_VIEWER */
-
 BUILTIN(JavascriptArray, NewInstance, NewInstance, FunctionInfo::SkipDefaultNewObject)
 BUILTIN(JavascriptArray, At, EntryAt, FunctionInfo::ErrorOnNew)
 BUILTIN(JavascriptArray, Concat, EntryConcat, FunctionInfo::ErrorOnNew)

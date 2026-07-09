@@ -52,12 +52,6 @@ namespace Js
             static FunctionInfo CollectGarbage;
 
             static FunctionInfo ChWriteTraceEvent;
-
-#ifdef IR_VIEWER
-            static FunctionInfo ParseIR;
-            static FunctionInfo FunctionList;
-            static FunctionInfo RejitFunction;
-#endif /* IR_VIEWER */
         };
 
         static Var EntryEval(RecyclableObject* function, CallInfo callInfo, ...);
@@ -77,29 +71,9 @@ namespace Js
 
         static Var EntryChWriteTraceEvent(RecyclableObject* function, CallInfo callInfo, ...);
 
-#ifdef IR_VIEWER
-        static Var EntryParseIR(RecyclableObject *function, CallInfo callInfo, ...);
-#define _refactor_ /* FIXME (t-doilij) */
-        _refactor_ static Js::PropertyId CreateProperty(Js::ScriptContext *scriptContext, const char16_t *propertyName);
-        _refactor_ static void SetProperty(Js::DynamicObject *obj, const char16_t *propertyName, Js::Var value);
-        _refactor_ static void SetProperty(Js::DynamicObject *obj, Js::PropertyId id, Js::Var value);
-#undef  _refactor_
-        static Var FunctionInfoObjectBuilder(ScriptContext *scriptContext, const char16_t *file,
-            const char16_t *function, uint32_t lineNum, uint32_t colNum,
-            uint funcId, Js::Utf8SourceInfo *utf8SrcInfo, Js::Var source);
-        static Var EntryFunctionList(RecyclableObject *function, CallInfo callInfo, ...);
-        static Var EntryRejitFunction(RecyclableObject *function, CallInfo callInfo, ...);
-#endif /* IR_VIEWER */
-
         static void ValidateSyntax(ScriptContext* scriptContext, const char16_t *source, int sourceLength, bool isGenerator, bool isAsync, void (Parser::*validateSyntax)());
         static void UpdateThisForEval(Var &varThis, ModuleID moduleID, ScriptContext *scriptContext) ;
         static ScriptFunction* DefaultEvalHelper(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode);
-#ifdef IR_VIEWER
-        static Var IRDumpEvalHelper(ScriptContext* scriptContext, const char16_t *source,
-            int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle,
-            BOOL registerDocument, BOOL isIndirect, BOOL strictMode);
-#endif /* IR_VIEWER */
-
         typedef ScriptFunction* (*EvalHelperType)(ScriptContext* scriptContext, const char16_t *source, int sourceLength, ModuleID moduleID, uint32_t grfscr, LPCOLESTR pszTitle, BOOL registerDocument, BOOL isIndirect, BOOL strictMode);
         typename WriteBarrierFieldTypeTraits<EvalHelperType, _no_write_barrier_policy, _no_write_barrier_policy>::Type EvalHelper;
 
