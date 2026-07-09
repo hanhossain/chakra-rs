@@ -567,7 +567,6 @@ STDAPI_(char16_t*) StrRChrW(const char16_t* lpStart, const char16_t* lpEnd, char
 STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cchDestBuffSize);
 
 #define lstrcmpW                PAL_wcscmp
-#define wnsprintfW              _snwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 #define wvnsprintfW             _vsnwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 
 #define StrCpy                  StrCpyW
@@ -582,7 +581,6 @@ STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cc
 #define StrCatBuff              StrCatBuffW
 
 #define lstrcmp                 lstrcmpW
-#define wnsprintf               wnsprintfW
 
 #ifdef __cplusplus
 /*
