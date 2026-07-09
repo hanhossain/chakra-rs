@@ -101,7 +101,7 @@ char16_t* Internal_i64tow(int64_t value, char16_t* string, int radix, BOOL isI64
     }
     if (FALSE == isI64)
     {
-        uval = (uint32_t) uval;
+        uval = static_cast<uint32_t>(uval);
     }
     if (10 == radix && value < 0)
     {
@@ -235,7 +235,7 @@ _wtoi(
               GetLastError());
         return -1;
     }
-    tempStr = (char *) malloc(len);
+    tempStr = static_cast<char*>(malloc(len));
     if (!tempStr)
     {
         ERROR("malloc failed\n");
@@ -311,7 +311,7 @@ PAL__wcstoui64(
         res = 0;
         goto PAL__wcstoui64Exit;
     }
-    s_nptr = (char *)malloc(size);
+    s_nptr = static_cast<char*>(malloc(size));
     if (!s_nptr)
     {
         ERROR("malloc failed\n");
@@ -485,7 +485,7 @@ PAL_wcscpy(
     }
 
     /* add terminating null */
-    *strDestination = char16_t(0);
+    *strDestination = static_cast<char16_t>(0);
 
     LOGEXIT("wcscpy returning char16_t %p (%S)\n", start, start);
     return start;

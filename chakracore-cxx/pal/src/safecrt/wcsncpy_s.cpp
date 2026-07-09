@@ -14,7 +14,7 @@
 *******************************************************************************/
 
 #define _SECURECRT_FILL_BUFFER 1
-#define _SECURECRT_FILL_BUFFER_THRESHOLD ((size_t)8)
+#define _SECURECRT_FILL_BUFFER_THRESHOLD (static_cast<size_t>(8))
 
 #include <string.h>
 #include <errno.h>

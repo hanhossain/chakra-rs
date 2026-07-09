@@ -160,7 +160,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = (char*) malloc(std::u16string(*Fmt).length()+1);
+    TempStrPtr = TempStr = static_cast<char*>(malloc(std::u16string(*Fmt).length() + 1));
     if (!TempStr)
     {
         ERROR("malloc failed\n");
@@ -531,7 +531,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                         GetLastError());
                     return -1;
                 }
-                newBuff = (char*) malloc(size);
+                newBuff = static_cast<char*>(malloc(size));
                 if (!newBuff)
                 {
                     ERROR("malloc failed\n");

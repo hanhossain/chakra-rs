@@ -1909,25 +1909,25 @@ FILE * _wfopen(const char16_t *, const char16_t *);
 #define EXCEPTION_EXECUTE_HANDLER   1
 #define EXCEPTION_CONTINUE_EXECUTION -1
 
-#define DBG_TERMINATE_PROCESS            ((uint32_t   )0x40010004L)
+#define DBG_TERMINATE_PROCESS            (static_cast<uint32_t>(0x40010004L))
 
-#define STATUS_USER_APC                  ((uint32_t   )0x000000C0L)
-#define STATUS_DATATYPE_MISALIGNMENT     ((uint32_t   )0x80000002L)
-#define STATUS_BREAKPOINT                ((uint32_t   )0x80000003L)
-#define STATUS_SINGLE_STEP               ((uint32_t   )0x80000004L)
-#define STATUS_ACCESS_VIOLATION          ((uint32_t   )0xC0000005L)
-#define STATUS_ILLEGAL_INSTRUCTION       ((uint32_t   )0xC000001DL)
-#define STATUS_ARRAY_BOUNDS_EXCEEDED     ((uint32_t   )0xC000008CL)
-#define STATUS_FLOAT_DENORMAL_OPERAND    ((uint32_t   )0xC000008DL)
-#define STATUS_FLOAT_DIVIDE_BY_ZERO      ((uint32_t   )0xC000008EL)
-#define STATUS_FLOAT_INEXACT_RESULT      ((uint32_t   )0xC000008FL)
-#define STATUS_FLOAT_INVALID_OPERATION   ((uint32_t   )0xC0000090L)
-#define STATUS_FLOAT_OVERFLOW            ((uint32_t   )0xC0000091L)
-#define STATUS_FLOAT_UNDERFLOW           ((uint32_t   )0xC0000093L)
-#define STATUS_INTEGER_DIVIDE_BY_ZERO    ((uint32_t   )0xC0000094L)
-#define STATUS_INTEGER_OVERFLOW          ((uint32_t   )0xC0000095L)
-#define STATUS_PRIVILEGED_INSTRUCTION    ((uint32_t   )0xC0000096L)
-#define STATUS_STACK_OVERFLOW            ((uint32_t   )0xC00000FDL)
+#define STATUS_USER_APC                  (static_cast<uint32_t>(0x000000C0L))
+#define STATUS_DATATYPE_MISALIGNMENT     (static_cast<uint32_t>(0x80000002L))
+#define STATUS_BREAKPOINT                (static_cast<uint32_t>(0x80000003L))
+#define STATUS_SINGLE_STEP               (static_cast<uint32_t>(0x80000004L))
+#define STATUS_ACCESS_VIOLATION          (static_cast<uint32_t>(0xC0000005L))
+#define STATUS_ILLEGAL_INSTRUCTION       (static_cast<uint32_t>(0xC000001DL))
+#define STATUS_ARRAY_BOUNDS_EXCEEDED     (static_cast<uint32_t>(0xC000008CL))
+#define STATUS_FLOAT_DENORMAL_OPERAND    (static_cast<uint32_t>(0xC000008DL))
+#define STATUS_FLOAT_DIVIDE_BY_ZERO      (static_cast<uint32_t>(0xC000008EL))
+#define STATUS_FLOAT_INEXACT_RESULT      (static_cast<uint32_t>(0xC000008FL))
+#define STATUS_FLOAT_INVALID_OPERATION   (static_cast<uint32_t>(0xC0000090L))
+#define STATUS_FLOAT_OVERFLOW            (static_cast<uint32_t>(0xC0000091L))
+#define STATUS_FLOAT_UNDERFLOW           (static_cast<uint32_t>(0xC0000093L))
+#define STATUS_INTEGER_DIVIDE_BY_ZERO    (static_cast<uint32_t>(0xC0000094L))
+#define STATUS_INTEGER_OVERFLOW          (static_cast<uint32_t>(0xC0000095L))
+#define STATUS_PRIVILEGED_INSTRUCTION    (static_cast<uint32_t>(0xC0000096L))
+#define STATUS_STACK_OVERFLOW            (static_cast<uint32_t>(0xC00000FDL))
 
 #define WAIT_IO_COMPLETION                  STATUS_USER_APC
 

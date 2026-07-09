@@ -377,7 +377,7 @@ MultiByteToWideChar(
         (lpMultiByteStr == NULL) ||
         ((cchWideChar != 0) &&
         ((lpWideCharStr == NULL) ||
-        (lpMultiByteStr == (char*)lpWideCharStr))) )
+        (lpMultiByteStr == reinterpret_cast<char*>(lpWideCharStr)))) )
     {
         ERROR("Error lpMultiByteStr parameters are invalid\n");
         SetLastError(ERROR_INVALID_PARAMETER);
