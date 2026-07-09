@@ -31,7 +31,7 @@ private:
 public:
     static ConfigParser s_moduleConfigParser;
 
-    ConfigParser(Js::ConfigFlagsTable& outputFlags, const char16_t* configFileName = u"jscript") :
+    ConfigParser(Js::ConfigFlagsTable& outputFlags, const char16_t* configFileName = u"jscript.config") :
         _flags(outputFlags),
         _hasReadConfig(false),
         _configFileName(configFileName)

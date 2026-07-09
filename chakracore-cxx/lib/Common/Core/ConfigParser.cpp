@@ -13,6 +13,7 @@
 #include "Core/CmdParser.h"
 #include "Core/ConfigParser.h"
 
+#include <filesystem>
 #include <unistd.h>
 
 ConfigParser ConfigParser::s_moduleConfigParser(Js::Configuration::Global.flags);
@@ -63,44 +64,20 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
     _hasReadConfig = true;
 
     const char16_t* configFileName = strCustomConfigFile;
-    const char16_t* configFileExt = u""; /* in the custom config case,
-                                             ext is expected to be passed
-                                             in as part of the filename */
 
     if (configFileName == nullptr)
     {
         configFileName = _configFileName;
-        configFileExt = u".config";
     }
 
     int err = 0;
 
-    char16_t filename[_MAX_PATH];
-
-    _wmakepath_s(filename, u"", u"", configFileName, configFileExt);
+    const std::filesystem::path filename = configFileName;
 
     FILE* configFile;
-    // Two-pathed for a couple reasons
-    // 1. PAL doesn't like the ccs option passed in.
-    // 2. _wfullpath is not implemented in the PAL.
-    // Instead, on xplat, we'll check the HOME directory to see if there is
-    // a config file there that we can use
-    if (_wfopen_s(&configFile, filename, u"r") != 0 || configFile == nullptr)
+    if (_wfopen_s(&configFile, filename.u16string().c_str(), u"r") != 0 || configFile == nullptr)
     {
-        char16_t homeDir[MAX_PATH];
-
-        if (GetEnvironmentVariable(u"HOME", homeDir, MAX_PATH) == 0)
-        {
-            return;
-        }
-        
-        char16_t configFileFullName[MAX_PATH];
-
-        StringCchPrintf(configFileFullName, MAX_PATH, u"%s/%s%s", homeDir, configFileName, configFileExt);
-        if (_wfopen_s(&configFile, configFileFullName, u"r") != 0 || configFile == nullptr)
-        {
-            return;
-        }
+        return;
     }
 
     char16_t configBuffer[MaxTokenSize];
@@ -121,7 +98,7 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
     {
         CharType curChar = ReadChar(configFile);
 
-        if (this->_flags.rawInputFromConfigFileIndex < sizeof(this->_flags.rawInputFromConfigFile) / sizeof(this->_flags.rawInputFromConfigFile[0]))
+        if (this->_flags.rawInputFromConfigFileIndex < std::size(this->_flags.rawInputFromConfigFile))
         {
             this->_flags.rawInputFromConfigFile[this->_flags.rawInputFromConfigFileIndex++] = curChar;
         }
