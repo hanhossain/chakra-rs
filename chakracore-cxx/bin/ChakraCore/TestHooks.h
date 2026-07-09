@@ -1093,12 +1093,6 @@ int32_t (*pfSetNoStrictModeFlag)(bool flag);
 bool (*pfIsEnabledNormalizeStatsFlag)();
 int32_t (*pfGetNormalizeStatsFlag)(bool *flag);
 int32_t (*pfSetNormalizeStatsFlag)(bool flag);
-bool (*pfIsEnabledOutputFileFlag)();
-int32_t (*pfGetOutputFileFlag)(BSTR *flag);
-int32_t (*pfSetOutputFileFlag)(BSTR flag);
-bool (*pfIsEnabledOutputFileOpenModeFlag)();
-int32_t (*pfGetOutputFileOpenModeFlag)(BSTR *flag);
-int32_t (*pfSetOutputFileOpenModeFlag)(BSTR flag);
 #ifdef ENABLE_TRACE
 bool (*pfIsEnabledInMemoryTraceFlag)();
 int32_t (*pfGetInMemoryTraceFlag)(bool *flag);

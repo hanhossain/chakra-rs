@@ -110,8 +110,6 @@ public:
     static void     SkipToColumn(size_t column);
     static FILE*    SetFile(FILE *);
     static FILE*    GetFile();
-    static void     SetOutputFile(FILE *);
-    static FILE*    GetOutputFile();
     static void     UseDebuggerWindow() { s_useDebuggerWindow = true; }
     static void     Flush();
 
@@ -125,7 +123,6 @@ public:
 private:
     static void     DirectPrint(const char16_t * string);
 
-    static AutoFILE s_outputFile;
     static bool     s_useDebuggerWindow;
     static std::recursive_mutex s_mutex;
 

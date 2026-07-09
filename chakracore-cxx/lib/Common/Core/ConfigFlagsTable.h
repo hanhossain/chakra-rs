@@ -466,8 +466,6 @@ namespace Js
         OffFlag,
         OffProfiledByteCodeFlag,
         OnFlag,
-        OutputFileFlag,
-        OutputFileOpenModeFlag,
         #ifdef ENABLE_TRACE
         InMemoryTraceFlag,
         InMemoryTraceBufferSizeFlag,
@@ -1938,8 +1936,6 @@ namespace Js
         Phases Off;
         Phases OffProfiledByteCode;
         Phases On;
-        String OutputFile;
-        String OutputFileOpenMode;
         #ifdef ENABLE_TRACE
             Boolean InMemoryTrace;
             Number InMemoryTraceBufferSize;

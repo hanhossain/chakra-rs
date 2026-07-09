@@ -4702,38 +4702,7 @@ int32_t SetNormalizeStatsFlag(bool flag)
     Js::Configuration::Global.flags.NormalizeStats = flag;
     return S_OK;
 }
-bool IsEnabledOutputFileFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::OutputFileFlag);
-}
 
-int32_t GetOutputFileFlag(BSTR *flag)
-{
-    *flag = SysAllocString(Js::Configuration::Global.flags.OutputFile);
-    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
-}
-
-int32_t SetOutputFileFlag(BSTR flag)
-{
-    Js::Configuration::Global.flags.OutputFile = flag;
-    return S_OK;
-}
-bool IsEnabledOutputFileOpenModeFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::OutputFileOpenModeFlag);
-}
-
-int32_t GetOutputFileOpenModeFlag(BSTR *flag)
-{
-    *flag = SysAllocString(Js::Configuration::Global.flags.OutputFileOpenMode);
-    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
-}
-
-int32_t SetOutputFileOpenModeFlag(BSTR flag)
-{
-    Js::Configuration::Global.flags.OutputFileOpenMode = flag;
-    return S_OK;
-}
 #ifdef ENABLE_TRACE
 bool IsEnabledInMemoryTraceFlag()
 {
@@ -7033,8 +7002,6 @@ IsEnabledNoNativeFlag, GetNoNativeFlag, SetNoNativeFlag,
 IsEnabledNopFrequencyFlag, GetNopFrequencyFlag, SetNopFrequencyFlag,
 IsEnabledNoStrictModeFlag, GetNoStrictModeFlag, SetNoStrictModeFlag,
 IsEnabledNormalizeStatsFlag, GetNormalizeStatsFlag, SetNormalizeStatsFlag,
-IsEnabledOutputFileFlag, GetOutputFileFlag, SetOutputFileFlag,
-IsEnabledOutputFileOpenModeFlag, GetOutputFileOpenModeFlag, SetOutputFileOpenModeFlag,
 #ifdef ENABLE_TRACE
 IsEnabledInMemoryTraceFlag, GetInMemoryTraceFlag, SetInMemoryTraceFlag,
 IsEnabledInMemoryTraceBufferSizeFlag, GetInMemoryTraceBufferSizeFlag, SetInMemoryTraceBufferSizeFlag,

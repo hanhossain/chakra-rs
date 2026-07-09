@@ -1132,8 +1132,6 @@ namespace Js
         u"Off",
         u"OffProfiledByteCode",
         u"On",
-        u"OutputFile",
-        u"OutputFileOpenMode",
 #ifdef ENABLE_TRACE
         u"InMemoryTrace",
         u"InMemoryTraceBufferSize",
@@ -2219,8 +2217,6 @@ namespace Js
         u"Turn off specific phases or feature.(Might not work for all phases)",
         u"Turn off specific byte code for phases or feature.(Might not work for all phases)",
         u"Turn on specific phases or feature.(Might not work for all phases)",
-        u"output.log",
-        u"wt",
 #ifdef ENABLE_TRACE
         u"Enable in-memory trace (investigate crash using trace in dump file). Use !jd.dumptrace to print it.",
         u"The size of circular buffer for in-memory trace (the units used is: number of trace calls). ",
@@ -2889,8 +2885,6 @@ namespace Js
 #if DBG
         NoParentFlag,
 #endif
-        NoParentFlag,
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3611,8 +3605,6 @@ namespace Js
         Off(),
         OffProfiledByteCode(),
         On(),
-        OutputFile(u"output.log"),
-        OutputFileOpenMode(u"wt"),
 #ifdef ENABLE_TRACE
         InMemoryTrace(DEFAULT_CONFIG_InMemoryTrace),
         InMemoryTraceBufferSize(DEFAULT_CONFIG_InMemoryTraceBufferSize),
@@ -5286,10 +5278,6 @@ namespace Js
             return FlagPhases;
         case OnFlag:
             return FlagPhases;
-        case OutputFileFlag:
-            return FlagString;
-        case OutputFileOpenModeFlag:
-            return FlagString;
         #ifdef ENABLE_TRACE
         case InMemoryTraceFlag:
             return FlagBoolean;
@@ -6457,10 +6445,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Phases*>(&OffProfiledByteCode));
         case OnFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&On));
-        case OutputFileFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&OutputFile));
-        case OutputFileOpenModeFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&OutputFileOpenMode));
         #ifdef ENABLE_TRACE
         case InMemoryTraceFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&InMemoryTrace));
@@ -15257,56 +15241,6 @@ if (IsEnabled(OnFlag))
         break;
     case FlagNumber:
         Output::Print(u":%d", *GetAsNumber(OnFlag));
-        break;
-    default:
-        break;
-    };
-    Output::Print(u"\n");
-}
-if (IsEnabled(OutputFileFlag))
-{
-    Output::Print(u"-%s", u"OutputFile");
-    switch (FlagString)
-    {
-    case FlagBoolean:
-        if (!*GetAsBoolean(OutputFileFlag))
-        {
-            Output::Print(u"-");
-        }
-        break;
-    case FlagString:
-        if (GetAsString(OutputFileFlag) != nullptr)
-        {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(OutputFileFlag));
-        }
-        break;
-    case FlagNumber:
-        Output::Print(u":%d", *GetAsNumber(OutputFileFlag));
-        break;
-    default:
-        break;
-    };
-    Output::Print(u"\n");
-}
-if (IsEnabled(OutputFileOpenModeFlag))
-{
-    Output::Print(u"-%s", u"OutputFileOpenMode");
-    switch (FlagString)
-    {
-    case FlagBoolean:
-        if (!*GetAsBoolean(OutputFileOpenModeFlag))
-        {
-            Output::Print(u"-");
-        }
-        break;
-    case FlagString:
-        if (GetAsString(OutputFileOpenModeFlag) != nullptr)
-        {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(OutputFileOpenModeFlag));
-        }
-        break;
-    case FlagNumber:
-        Output::Print(u":%d", *GetAsNumber(OutputFileOpenModeFlag));
         break;
     default:
         break;
