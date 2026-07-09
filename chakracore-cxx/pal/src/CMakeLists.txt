@@ -65,8 +65,7 @@ set(SOURCES
   cruntime/file.cpp
   cruntime/filecrt.cpp
   cruntime/finite.cpp
-        cruntime/misc.cpp
-  cruntime/printf.cpp
+        cruntime/printf.cpp
   cruntime/printfcpp.cpp
     cruntime/wchar.cpp
         safecrt/mbusafecrt.cpp

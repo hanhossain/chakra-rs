@@ -92,7 +92,7 @@ GetEnvironmentVariableA(
     }
     else
     {
-        value = MiscGetenv(lpName);
+        value = getenv(lpName);
     }
     
     if (value == NULL)

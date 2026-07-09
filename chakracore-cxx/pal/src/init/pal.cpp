@@ -171,12 +171,6 @@ Initialize()
             goto done;
         }
 
-        // Initialize the environment.
-        if (FALSE == MiscInitialize())
-        {
-            goto done;
-        }
-
 #if _DEBUG
         // Verify that our page size is what we think it is. If it's
         // different, we can't run.
