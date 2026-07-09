@@ -7,7 +7,6 @@
 #include "ScriptContextInfo.h"
 #include "ScriptContextOptimizationOverrideInfo.h"
 #include "ThreadContext.h"
-#include "Memory/LeakReport.h"
 #include "Common/RejitReason.h"
 #include "Core/ProfileInstrument.h"
 
@@ -830,11 +829,6 @@ private:
 
     public:
 
-#ifdef LEAK_REPORT
-        LeakReport::UrlRecord * urlRecord;
-        bool isRootTrackerScriptContext;
-#endif
-
         DateTime::DaylightTimeHelper *GetDaylightTimeHelper() { return &daylightTimeHelper; }
         DateTime::Utility *GetDateUtility() { return &dateTimeUtility; }
 
@@ -975,7 +969,7 @@ private:
         SourceContextInfo * CreateSourceContextInfo(unsigned long hostSourceContext, char16_t const * url, size_t len,
             SimpleDataCacheWrapper* dataCacheWrapper, char16_t const * sourceMapUrl = nullptr, size_t sourceMapUrlLen = 0);
 
-#if defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
+#if defined(CHECK_MEMORY_LEAK)
         void ClearSourceContextInfoMaps()
         {
 #if ENABLE_PROFILE_INFO

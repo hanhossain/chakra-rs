@@ -74,7 +74,7 @@ struct HeapAllocRecord
     size_t            size;
     TrackAllocData    allocData;
     HeapAllocatorData* data;
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
     StackBackTrace * stacktrace;
 #endif

@@ -3374,24 +3374,7 @@ int32_t SetJitQueueThresholdFlag(int flag)
     Js::Configuration::Global.flags.JitQueueThreshold = flag;
     return S_OK;
 }
-#ifdef LEAK_REPORT
-bool IsEnabledLeakReportFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag);
-}
 
-int32_t GetLeakReportFlag(BSTR *flag)
-{
-    *flag = SysAllocString(Js::Configuration::Global.flags.LeakReport);
-    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
-}
-
-int32_t SetLeakReportFlag(BSTR flag)
-{
-    Js::Configuration::Global.flags.LeakReport = flag;
-    return S_OK;
-}
-#endif
 bool IsEnabledLoopInlineThresholdFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::LoopInlineThresholdFlag);
@@ -3630,7 +3613,7 @@ int32_t SetTraceEngineRefcountFlag(bool flag)
     Js::Configuration::Global.flags.TraceEngineRefcount = flag;
     return S_OK;
 }
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 bool IsEnabledLeakStackTraceFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::LeakStackTraceFlag);
@@ -6962,9 +6945,7 @@ IsEnabledInlineThresholdAdjustCountInSmallFunctionFlag, GetInlineThresholdAdjust
 IsEnabledAsmJsInlineAdjustFlag, GetAsmJsInlineAdjustFlag, SetAsmJsInlineAdjustFlag,
 IsEnabledInterpretFlag, GetInterpretFlag, SetInterpretFlag,
 IsEnabledJitQueueThresholdFlag, GetJitQueueThresholdFlag, SetJitQueueThresholdFlag,
-#ifdef LEAK_REPORT
-IsEnabledLeakReportFlag, GetLeakReportFlag, SetLeakReportFlag,
-#endif
+
 IsEnabledLoopInlineThresholdFlag, GetLoopInlineThresholdFlag, SetLoopInlineThresholdFlag,
 IsEnabledLeafInlineThresholdFlag, GetLeafInlineThresholdFlag, SetLeafInlineThresholdFlag,
 IsEnabledConstantArgumentInlineThresholdFlag, GetConstantArgumentInlineThresholdFlag, SetConstantArgumentInlineThresholdFlag,
@@ -6981,7 +6962,7 @@ IsEnabledMaxNumberOfInlineesWithLoopFlag, GetMaxNumberOfInlineesWithLoopFlag, Se
 IsEnabledPolymorphicInlineThresholdFlag, GetPolymorphicInlineThresholdFlag, SetPolymorphicInlineThresholdFlag,
 IsEnabledPrimeRecyclerFlag, GetPrimeRecyclerFlag, SetPrimeRecyclerFlag,
 IsEnabledTraceEngineRefcountFlag, GetTraceEngineRefcountFlag, SetTraceEngineRefcountFlag,
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 IsEnabledLeakStackTraceFlag, GetLeakStackTraceFlag, SetLeakStackTraceFlag,
 IsEnabledForceMemoryLeakFlag, GetForceMemoryLeakFlag, SetForceMemoryLeakFlag,
 #endif

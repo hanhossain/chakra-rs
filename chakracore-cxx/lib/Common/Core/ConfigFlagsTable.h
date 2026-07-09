@@ -356,9 +356,6 @@ namespace Js
         InterpretFlag,
         InstrumentFlag,
         JitQueueThresholdFlag,
-        #ifdef LEAK_REPORT
-        LeakReportFlag,
-        #endif
         LoopInlineThresholdFlag,
         LeafInlineThresholdFlag,
         ConstantArgumentInlineThresholdFlag,
@@ -378,7 +375,7 @@ namespace Js
         PolymorphicInlineThresholdFlag,
         PrimeRecyclerFlag,
         TraceEngineRefcountFlag,
-        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        #if defined(CHECK_MEMORY_LEAK)
         LeakStackTraceFlag,
         ForceMemoryLeakFlag,
         #endif
@@ -1835,9 +1832,6 @@ namespace Js
         String Interpret;
         Phases Instrument;
         Number JitQueueThreshold;
-        #ifdef LEAK_REPORT
-            String LeakReport;
-        #endif
         Number LoopInlineThreshold;
         Number LeafInlineThreshold;
         Number ConstantArgumentInlineThreshold;
@@ -1857,7 +1851,7 @@ namespace Js
         Number PolymorphicInlineThreshold;
         Boolean PrimeRecycler;
         Boolean TraceEngineRefcount;
-        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        #if defined(CHECK_MEMORY_LEAK)
             Boolean LeakStackTrace;
             Boolean ForceMemoryLeak;
         #endif

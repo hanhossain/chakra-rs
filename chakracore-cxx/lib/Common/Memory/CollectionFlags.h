@@ -75,7 +75,7 @@ namespace Memory
         CollectConcurrentPartialStress  = CollectConcurrentStress | CollectPartialStress,
 #endif
 
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
         CollectNowFinalGC                   = CollectNowExhaustive | CollectOverride_ForceInThread | CollectOverride_SkipStack | CollectOverride_Explicit | CollectOverride_AllowDispose,
 #endif
         CollectNowExhaustiveSkipStack   = CollectNowExhaustive | CollectOverride_SkipStack, // Used by test

@@ -20,7 +20,6 @@
 //  AN MemProtectHeap
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
-//  AR LeakReport
 //  AS JavascriptDispatch/RecyclerObjectDumper
 //  AT HeapAllocator/RecyclerHeuristic
 //  AU RecyclerWriteBarrierManager
@@ -1013,9 +1012,6 @@ namespace Js
         u"Interpret",
         u"Instrument",
         u"JitQueueThreshold",
-#ifdef LEAK_REPORT
-        u"LeakReport",
-#endif
         u"LoopInlineThreshold",
         u"LeafInlineThreshold",
         u"ConstantArgumentInlineThreshold",
@@ -1036,7 +1032,7 @@ namespace Js
         u"PolymorphicInlineThreshold",
         u"PrimeRecycler",
         u"TraceEngineRefcount",
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
         u"LeakStackTrace",
         u"ForceMemoryLeak",
 #endif
@@ -2108,9 +2104,6 @@ namespace Js
         u"List of functions to interpret",
         u"Instrument the generated code from the given phase",
         u"Max number of work items/script context in the jit queue",
-#ifdef LEAK_REPORT
-        u"File name for the leak report",
-#endif
         u"Maximum size in bytecodes of an inline candidate with loops or not enough profile data",
         u"Maximum size in bytecodes of an inline candidate with loops or not enough profile data",
         u"Maximum size in bytecodes of an inline candidate with constant argument and the argument being used for a branch",
@@ -2131,7 +2124,7 @@ namespace Js
         u"Maximum size in bytecodes of a polymorphic inline candidate",
         u"Prime the recycler first",
         u"Output traces for ScriptEngine AddRef/Release to debug lifetime management",
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
         u"Include stack trace on leaked pinned object and heap objects",
         u"Fake leak some memory to test leak report and check memory leak",
 #endif
@@ -2803,9 +2796,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#ifdef LEAK_REPORT
-        NoParentFlag,
-#endif
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2826,7 +2816,7 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
         NoParentFlag,
         NoParentFlag,
 #endif
@@ -3514,9 +3504,6 @@ namespace Js
         Interpret(nullptr),
         Instrument(),
         JitQueueThreshold(DEFAULT_CONFIG_JitQueueThreshold),
-#ifdef LEAK_REPORT
-        LeakReport(nullptr),
-#endif
         LoopInlineThreshold(DEFAULT_CONFIG_LoopInlineThreshold),
         LeafInlineThreshold(DEFAULT_CONFIG_LeafInlineThreshold),
         ConstantArgumentInlineThreshold(DEFAULT_CONFIG_ConstantArgumentInlineThreshold),
@@ -3537,7 +3524,7 @@ namespace Js
         PolymorphicInlineThreshold(DEFAULT_CONFIG_PolymorphicInlineThreshold),
         PrimeRecycler(DEFAULT_CONFIG_PrimeRecycler),
         TraceEngineRefcount(false),
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
         LeakStackTrace(false),
         ForceMemoryLeak(false),
 #endif
@@ -5099,10 +5086,6 @@ namespace Js
             return FlagPhases;
         case JitQueueThresholdFlag:
             return FlagNumber;
-        #ifdef LEAK_REPORT
-        case LeakReportFlag:
-            return FlagString;
-        #endif
         case LoopInlineThresholdFlag:
             return FlagNumber;
         case LeafInlineThresholdFlag:
@@ -5141,7 +5124,7 @@ namespace Js
             return FlagBoolean;
         case TraceEngineRefcountFlag:
             return FlagBoolean;
-        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        #if defined(CHECK_MEMORY_LEAK)
         case LeakStackTraceFlag:
             return FlagBoolean;
         case ForceMemoryLeakFlag:
@@ -6279,10 +6262,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Phases*>(&Instrument));
         case JitQueueThresholdFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&JitQueueThreshold));
-        #ifdef LEAK_REPORT
-        case LeakReportFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&LeakReport));
-        #endif
         case LoopInlineThresholdFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&LoopInlineThreshold));
         case LeafInlineThresholdFlag:
@@ -6321,7 +6300,7 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrimeRecycler));
         case TraceEngineRefcountFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceEngineRefcount));
-        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        #if defined(CHECK_MEMORY_LEAK)
         case LeakStackTraceFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&LeakStackTrace));
         case ForceMemoryLeakFlag:
@@ -12863,33 +12842,6 @@ if (IsEnabled(JitQueueThresholdFlag))
     };
     Output::Print(u"\n");
 }
-#ifdef LEAK_REPORT
-if (IsEnabled(LeakReportFlag))
-{
-    Output::Print(u"-%s", u"LeakReport");
-    switch (FlagString)
-    {
-    case FlagBoolean:
-        if (!*GetAsBoolean(LeakReportFlag))
-        {
-            Output::Print(u"-");
-        }
-        break;
-    case FlagString:
-        if (GetAsString(LeakReportFlag) != nullptr)
-        {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LeakReportFlag));
-        }
-        break;
-    case FlagNumber:
-        Output::Print(u":%d", *GetAsNumber(LeakReportFlag));
-        break;
-    default:
-        break;
-    };
-    Output::Print(u"\n");
-}
-#endif
 if (IsEnabled(LoopInlineThresholdFlag))
 {
     Output::Print(u"-%s", u"LoopInlineThreshold");
@@ -13342,7 +13294,7 @@ if (IsEnabled(TraceEngineRefcountFlag))
     };
     Output::Print(u"\n");
 }
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 if (IsEnabled(LeakStackTraceFlag))
 {
     Output::Print(u"-%s", u"LeakStackTrace");
@@ -19544,7 +19496,7 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         case TraceEngineRefcountFlag:
             retValue = (Boolean) false;
             break;
-        #if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+        #if defined(CHECK_MEMORY_LEAK)
         case LeakStackTraceFlag:
             retValue = (Boolean) false;
             break;

@@ -791,11 +791,6 @@ int32_t (*pfSetInterpretFlag)(BSTR flag);
 bool (*pfIsEnabledJitQueueThresholdFlag)();
 int32_t (*pfGetJitQueueThresholdFlag)(int *flag);
 int32_t (*pfSetJitQueueThresholdFlag)(int flag);
-#ifdef LEAK_REPORT
-bool (*pfIsEnabledLeakReportFlag)();
-int32_t (*pfGetLeakReportFlag)(BSTR *flag);
-int32_t (*pfSetLeakReportFlag)(BSTR flag);
-#endif
 bool (*pfIsEnabledLoopInlineThresholdFlag)();
 int32_t (*pfGetLoopInlineThresholdFlag)(int *flag);
 int32_t (*pfSetLoopInlineThresholdFlag)(int flag);
@@ -849,7 +844,7 @@ int32_t (*pfSetPrimeRecyclerFlag)(bool flag);
 bool (*pfIsEnabledTraceEngineRefcountFlag)();
 int32_t (*pfGetTraceEngineRefcountFlag)(bool *flag);
 int32_t (*pfSetTraceEngineRefcountFlag)(bool flag);
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 bool (*pfIsEnabledLeakStackTraceFlag)();
 int32_t (*pfGetLeakStackTraceFlag)(bool *flag);
 int32_t (*pfSetLeakStackTraceFlag)(bool flag);

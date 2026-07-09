@@ -723,7 +723,7 @@ private:
 
     HeapBlockMap heapBlockMap;
 
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
     struct PinRecord
     {
 #ifdef STACK_BACK_TRACE
@@ -759,7 +759,7 @@ private:
     SList<RecyclerWeakReferenceRegion, HeapAllocator> weakReferenceRegionList;
 
     void * transientPinnedObject;
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
     StackBackTrace * transientPinnedObjectStackBackTrace;
 #endif
@@ -1390,10 +1390,6 @@ public:
     bool DumpObjectGraph(RecyclerObjectGraphDumper::Param * param = nullptr);
     void DumpObjectDescription(void *object);
 #endif
-#ifdef LEAK_REPORT
-    void ReportLeaks();
-    void ReportLeaksOnProcessDetach();
-#endif
 #ifdef CHECK_MEMORY_LEAK
     void CheckLeaks(char16_t const * header);
     void CheckLeaksOnProcessDetach(char16_t const * header);
@@ -1861,7 +1857,7 @@ private:
     void BeginNonCollectingMark();
     void EndNonCollectingMark();
 
-#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
+#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(CHECK_MEMORY_LEAK)
 public:
     bool IsInDllCanUnloadNow() const { return inDllCanUnloadNow; }
     bool IsInDetachProcess() const { return inDetachProcess; }
@@ -1872,10 +1868,12 @@ private:
     bool inDetachProcess;
     bool isPrimaryMarkContextInitialized;
 #endif
-#if defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
+#if defined(CHECK_MEMORY_LEAK)
     template <class Fn>
     void ReportOnProcessDetach(Fn fn);
+#ifdef STACK_BACK_TRACE
     void PrintPinnedObjectStackTraces();
+#endif
 #endif
 
 public:

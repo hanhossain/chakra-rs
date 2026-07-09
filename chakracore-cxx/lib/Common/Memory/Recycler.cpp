@@ -163,7 +163,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #ifdef RECYCLER_STRESS
     forcePartialScanStack(false),
 #endif
-#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
+#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(CHECK_MEMORY_LEAK)
     isPrimaryMarkContextInitialized(false),
 #endif
     allowDispose(false),
@@ -260,7 +260,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     allowAllocationDuringHeapEnum = false;
 #endif
     ScheduleNextCollection();
-#if defined(RECYCLER_DUMP_OBJECT_GRAPH) ||  defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
+#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(CHECK_MEMORY_LEAK)
     this->inDllCanUnloadNow = false;
     this->inDetachProcess = false;
 #endif
@@ -378,17 +378,9 @@ Recycler::~Recycler()
     }
 #endif
 
-    AUTO_LEAK_REPORT_SECTION(this->GetRecyclerFlagsTable(), u"Recycler (%p): %s", this, this->IsInDllCanUnloadNow()? u"DllCanUnloadNow" :
-        this->IsInDetachProcess()? u"DetachProcess" : u"Destructor");
-#ifdef LEAK_REPORT
-    ReportLeaks();
-#endif
-
 #ifdef CHECK_MEMORY_LEAK
     CheckLeaks(this->IsInDllCanUnloadNow()? u"DllCanUnloadNow" : this->IsInDetachProcess()? u"DetachProcess" : u"Destructor");
 #endif
-
-    AUTO_LEAK_REPORT_SECTION_0(this->GetRecyclerFlagsTable(), u"Skipped finalizers");
 
     Assert(concurrentThread == nullptr);
 
@@ -477,7 +469,7 @@ Recycler::RootAddRef(void* obj, uint *count)
             this->scanPinnedObjectMap = true;
             RECYCLER_PERF_COUNTER_INC(PinnedObject);
         }
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
         if (GetRecyclerFlagsTable().LeakStackTrace)
         {
@@ -496,7 +488,7 @@ Recycler::RootAddRef(void* obj, uint *count)
 
     transientPinnedObject = obj;
 
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
     if (GetRecyclerFlagsTable().LeakStackTrace)
     {
@@ -521,7 +513,7 @@ Recycler::RootRelease(void* obj, uint *count)
             *count = (refCount != nullptr) ? *refCount : 0;
         }
 
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
         if (GetRecyclerFlagsTable().LeakStackTrace)
         {
@@ -553,7 +545,7 @@ Recycler::RootRelease(void* obj, uint *count)
 
         if (newRefCount != 0)
         {
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
             if (GetRecyclerFlagsTable().LeakStackTrace)
             {
@@ -564,7 +556,7 @@ Recycler::RootRelease(void* obj, uint *count)
 #endif
             return;
         }
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
         StackBackTraceNode::DeleteAll(&NoCheckHeapAllocator::Instance, refCount->stackBackTraces);
         refCount->stackBackTraces = nullptr;
@@ -660,7 +652,7 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
 
     markContext.Init(Recycler::PrimaryMarkStackReservedPageCount);
 
-#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
+#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(CHECK_MEMORY_LEAK)
     isPrimaryMarkContextInitialized = true;
 #endif
 
@@ -1401,9 +1393,6 @@ Recycler::ExpectStackSkip() const
     // Okay to skip the stack scan if we're in leak check mode
     bool expectStackSkip = false;
 
-#ifdef LEAK_REPORT
-    expectStackSkip = expectStackSkip || GetRecyclerFlagsTable().IsEnabled(Js::LeakReportFlag);
-#endif
 #ifdef CHECK_MEMORY_LEAK
     expectStackSkip = expectStackSkip || GetRecyclerFlagsTable().CheckMemoryLeak;
 #endif
@@ -1561,7 +1550,7 @@ size_t Recycler::ScanPinnedObjects()
             {
                 if (refCount == 0)
                 {
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
                     Assert(refCount.stackBackTraces == nullptr);
 #endif
@@ -3022,7 +3011,7 @@ template BOOL Recycler::CollectNow<CollectNowDefault>();
 template BOOL Recycler::CollectNow<CollectOnSuspendCleanup>();
 template BOOL Recycler::CollectNow<CollectNowDefaultLSCleanup>();
 
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 template BOOL Recycler::CollectNow<CollectNowFinalGC>();
 #endif
 
@@ -4174,7 +4163,7 @@ Recycler::CleanupPendingUnroot()
     {
         pinnedObjectMap.MapAndRemoveIf([](void * obj, PinRecord const &refCount)
         {
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
             Assert(refCount != 0 || refCount.stackBackTraces == nullptr);
 #endif
@@ -4220,9 +4209,6 @@ Recycler::FinalizeConcurrent(bool restoreState)
     bool needCleanExitState = restoreState;
 #if defined(RECYCLER_DUMP_OBJECT_GRAPH)
     needCleanExitState = needCleanExitState || GetRecyclerFlagsTable().DumpObjectGraphOnExit;
-#endif
-#ifdef LEAK_REPORT
-    needCleanExitState = needCleanExitState || GetRecyclerFlagsTable().IsEnabled(Js::LeakReportFlag);
 #endif
 #ifdef CHECK_MEMORY_LEAK
     needCleanExitState = needCleanExitState || GetRecyclerFlagsTable().CheckMemoryLeak;
@@ -6716,12 +6702,6 @@ Recycler::DoProfileAllocTracker()
         || Js::Configuration::Global.flags.DumpObjectGraphOnCollect
         || Js::Configuration::Global.flags.DumpObjectGraphOnEnum;
 #endif
-#ifdef LEAK_REPORT
-    if (Js::Configuration::Global.flags.IsEnabled(Js::LeakReportFlag))
-    {
-        doTracker = true;
-    }
-#endif
 #ifdef CHECK_MEMORY_LEAK
     if (Js::Configuration::Global.flags.CheckMemoryLeak)
     {
@@ -7217,68 +7197,6 @@ Recycler::DeleteGuestArena(ArenaAllocator * arenaAllocator)
     this->CollectNow<CollectExhaustiveCandidate>();
 }
 
-#ifdef LEAK_REPORT
-void
-Recycler::ReportLeaks()
-{
-    if (GetRecyclerFlagsTable().IsEnabled(Js::LeakReportFlag))
-    {
-        if (GetRecyclerFlagsTable().ForceMemoryLeak)
-        {
-            AUTO_HANDLED_EXCEPTION_TYPE(ExceptionType_DisableCheck);
-            struct FakeMemory { typename WriteBarrierFieldTypeTraits<int>::Type f; };
-            FakeMemory * f = RecyclerNewStruct(this, FakeMemory);
-            this->RootAddRef(f);
-        }
-
-        LeakReport::StartSection(u"Object Graph");
-        LeakReport::StartRedirectOutput();
-
-        RecyclerObjectGraphDumper::Param param = { 0 };
-        param.skipStack = true;
-        if (!this->DumpObjectGraph(&param))
-        {
-            LeakReport::Print(u"--------------------------------------------------------------------------------\n");
-            LeakReport::Print(u"ERROR: Out of memory generating leak report\n");
-            param.stats.markData.markCount = 0;
-        }
-
-        LeakReport::EndRedirectOutput();
-
-        if (param.stats.markData.markCount != 0)
-        {
-            LeakReport::Print(u"--------------------------------------------------------------------------------\n");
-            LeakReport::Print(u"Recycler Leaked Object: %d bytes (%d objects)\n",
-                param.stats.markData.markBytes, param.stats.markData.markCount);
-
-#ifdef STACK_BACK_TRACE
-            if (GetRecyclerFlagsTable().LeakStackTrace)
-            {
-                LeakReport::StartSection(u"Pinned object stack traces");
-                LeakReport::StartRedirectOutput();
-                this->PrintPinnedObjectStackTraces();
-                LeakReport::EndRedirectOutput();
-                LeakReport::EndSection();
-            }
-#endif
-        }
-        LeakReport::EndSection();
-    }
-}
-
-void
-Recycler::ReportLeaksOnProcessDetach()
-{
-    if (GetRecyclerFlagsTable().IsEnabled(Js::LeakReportFlag))
-    {
-        AUTO_LEAK_REPORT_SECTION(this->GetRecyclerFlagsTable(), u"Recycler (%p): Process Termination", this);
-        LeakReport::StartRedirectOutput();
-        ReportOnProcessDetach([=, this]() { this->ReportLeaks(); });
-        LeakReport::EndRedirectOutput();
-    }
-}
-#endif
-
 #ifdef CHECK_MEMORY_LEAK
 void
 Recycler::CheckLeaks(char16_t const * header)
@@ -7345,7 +7263,7 @@ Recycler::CheckLeaksOnProcessDetach(char16_t const * header)
 }
 #endif
 
-#if defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
+#if defined(CHECK_MEMORY_LEAK)
 template <class Fn>
 void
 Recycler::ReportOnProcessDetach(Fn fn)
@@ -7388,7 +7306,7 @@ Recycler::PrintPinnedObjectStackTraces()
 #endif
 #endif
 
-#if defined(RECYCLER_DUMP_OBJECT_GRAPH) ||  defined(LEAK_REPORT) || defined(CHECK_MEMORY_LEAK)
+#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(CHECK_MEMORY_LEAK)
 void
 Recycler::SetInDllCanUnloadNow()
 {

@@ -2186,17 +2186,8 @@ public:
         }
     }
 
-#if defined(CHECK_MEMORY_LEAK) || defined(LEAK_REPORT)
+#if defined(CHECK_MEMORY_LEAK)
     static void ReportAndCheckLeaksOnProcessDetach();
-#endif
-#ifdef LEAK_REPORT
-    void SetRootTrackerScriptContext(Js::ScriptContext * scriptContext);
-    void ClearRootTrackerScriptContext(Js::ScriptContext * scriptContext);
-
-private:
-    Js::ScriptContext * rootTrackerScriptContext;
-
-    uint32_t threadId;
 #endif
 
 private:

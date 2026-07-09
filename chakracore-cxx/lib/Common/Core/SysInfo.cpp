@@ -17,7 +17,6 @@
 //  AN MemProtectHeap
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
-//  AR LeakReport
 //  AS JavascriptDispatch/RecyclerObjectDumper
 //  AT HeapAllocator/RecyclerHeuristic
 //  AU RecyclerWriteBarrierManager
