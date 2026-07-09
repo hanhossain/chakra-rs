@@ -966,10 +966,6 @@ namespace regex
             }
         }
 
-        void AppendInt32(int32_t value);
-
-        void AppendUInt64(unsigned long value);
-
         void AppendWithCopy(_In_z_ const char16_t* str);
 
         void AppendBool(bool value)
