@@ -108,7 +108,7 @@ AutoNestedHandledExceptionType::~AutoNestedHandledExceptionType()
 AutoFilterExceptionRegion::AutoFilterExceptionRegion(ExceptionType e)
 {
     savedData = ExceptionCheck::Save();
-    ExceptionCheck::SetHandledExceptionType((ExceptionType)(~e & savedData.handledExceptionType));
+    ExceptionCheck::SetHandledExceptionType(static_cast<ExceptionType>(~e & savedData.handledExceptionType));
 }
 AutoFilterExceptionRegion::~AutoFilterExceptionRegion()
 {

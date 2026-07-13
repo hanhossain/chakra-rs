@@ -21,7 +21,7 @@ void ReportFatalException(
         DebugBreak();
     }
 
-    TerminateProcess(GetCurrentProcess(), (uint32_t)DBG_TERMINATE_PROCESS);
+    TerminateProcess(GetCurrentProcess(), DBG_TERMINATE_PROCESS);
 }
 
 // Disable optimization make sure all the frames are still available in Dr. Watson bug reports.

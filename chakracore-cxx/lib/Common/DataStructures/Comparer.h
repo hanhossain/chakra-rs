@@ -20,7 +20,7 @@ struct DefaultComparer
 
     inline static hash_t GetHashCode(const T &i)
     {
-        return (hash_t)i;
+        return static_cast<hash_t>(i);
     }
 };
 
@@ -34,8 +34,8 @@ struct DefaultComparer<double>
 
     inline static hash_t GetHashCode(double d)
     {
-        long i64 = *(long*)&d;
-        return (hash_t)((i64>>32) ^ (uint)i64);
+        long i64 = *reinterpret_cast<long*>(&d);
+        return static_cast<hash_t>((i64 >> 32) ^ static_cast<uint>(i64));
     }
 };
 
@@ -52,7 +52,7 @@ struct DefaultComparer<T *>
         // Shifting helps us eliminate any sameness due to our alignment strategy.
         // TODO: This works for Arena memory only. Recycler memory is 16 byte aligned.
         // Find a good universal hash for pointers.
-        return (hash_t)(((size_t)i) >> ArenaAllocator::ObjectAlignmentBitShift);
+        return static_cast<hash_t>(((size_t)i) >> ArenaAllocator::ObjectAlignmentBitShift);
     }
 };
 
@@ -67,8 +67,8 @@ struct DefaultComparer<size_t>
     inline static hash_t GetHashCode(size_t i)
     {
         // For 64 bits we want all 64 bits of the pointer to be represented in the hash code.
-        uint32_t hi = ((unsigned long) i >> 32);
-        uint32_t lo = (uint32_t)i;
+        uint32_t hi = i >> 32;
+        uint32_t lo = static_cast<uint32_t>(i);
         hash_t hash = hi ^ lo;
         return hash;
     }
@@ -105,7 +105,7 @@ struct RecyclerPointerComparer
         // Shifting helps us eliminate any sameness due to our alignment strategy.
         // TODO: This works for Recycler memory only. Arena memory is 8 byte aligned.
         // Find a good universal hash for pointers.
-        return (hash_t)(((size_t)i) >> HeapConstants::ObjectAllocationShift);
+        return static_cast<hash_t>(((size_t)i) >> HeapConstants::ObjectAllocationShift);
     }
 };
 
@@ -129,11 +129,11 @@ struct DefaultComparer<GUID>
 
      inline static hash_t GetHashCode(GUID const& guid)
      {
-        char* p = (char*)&guid;
+        const char* p = reinterpret_cast<const char*>(&guid);
         hash_t hash = CC_HASH_OFFSET_VALUE;
         for (int i = 0; i < sizeof(GUID); i++)
         {
-            CC_HASH_LOGIC(hash, (uint32_t)(p[i]));
+            CC_HASH_LOGIC(hash, static_cast<uint32_t>(p[i]));
         }
         return hash;
      }

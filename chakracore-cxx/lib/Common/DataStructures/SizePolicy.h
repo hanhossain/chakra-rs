@@ -40,10 +40,10 @@ struct PowerOf2Policy
         // we often deal with keys that differ in higher bits only, so smudge the entropy down a little 
         // we do not need a perfect avalanche here, since this is for a hashtable lookup
         // the following is sufficient and reasonably cheap
-        hashCode ^= (uint)hashCode >> 15;
-        hashCode ^= (uint)hashCode >> 7;
+        hashCode ^= hashCode >> 15;
+        hashCode ^= hashCode >> 7;
 
-        hash_t targetBucket = hashCode & (size-1);
+        hash_t targetBucket = hashCode & size-1;
         return targetBucket;
     }
 

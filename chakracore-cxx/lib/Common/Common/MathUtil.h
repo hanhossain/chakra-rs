@@ -44,10 +44,10 @@ public:
     }
 
     static bool     FitsInDWord(int32_t value) { return true; }
-    static bool     FitsInDWord(size_t value) { return ((size_t)(signed int)(value & 0xFFFFFFFF) == value); }
-    static bool     FitsInDWord(long value) { return ((long)(signed int)(value & 0xFFFFFFFF) == value); }
+    static bool     FitsInDWord(size_t value) { return (static_cast<size_t>(static_cast<signed int>(value & 0xFFFFFFFF)) == value); }
+    static bool     FitsInDWord(long value) { return (static_cast<long>(static_cast<signed int>(value & 0xFFFFFFFF)) == value); }
 
-    static bool     FitsInWord(int32_t value) { return ((int32_t)(int16)(value & 0xFFFF) == value); }
+    static bool     FitsInWord(int32_t value) { return (static_cast<int32_t>(static_cast<int16>(value & 0xFFFF)) == value); }
 
     static unsigned long Rand();
     static bool     IsPow2(int32_t val) { return (val > 0 && ((val-1) & val) == 0); }

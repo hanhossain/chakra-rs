@@ -65,7 +65,7 @@ namespace Js {
 
     void Throw::FatalProjectionError()
     {
-        RaiseException((uint32_t)DBG_TERMINATE_PROCESS, EXCEPTION_NONCONTINUABLE);
+        RaiseException(DBG_TERMINATE_PROCESS, EXCEPTION_NONCONTINUABLE);
     }
 
 #ifdef ENABLE_JS_BUILTINS
