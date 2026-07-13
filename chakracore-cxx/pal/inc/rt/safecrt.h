@@ -123,7 +123,7 @@ typedef int errno_t; /* standard */
 
 /* _TRUNCATE */
 #if !defined(_TRUNCATE)
-#define _TRUNCATE ((size_t)-1)
+#define _TRUNCATE (static_cast<size_t>(-1))
 #endif
 
 /* _SAFECRT_AUTOMATICALLY_REPLACED_CALL */
@@ -245,7 +245,7 @@ typedef int errno_t; /* standard */
 #if !defined(_SAFECRT__FILL_STRING)
 #if _SAFECRT_FILL_BUFFER
 #define _SAFECRT__FILL_STRING(_String, _Size, _Offset) \
-    if ((size_t)(_Offset) < (_Size)) \
+    if (static_cast<size_t>(_Offset) < (_Size)) \
     { \
         memset((_String) + (_Offset), _SAFECRT_FILL_BUFFER_PATTERN, ((_Size) - (_Offset)) * sizeof(*(_String))); \
     }
@@ -312,14 +312,14 @@ void _invalid_parameter();
 #if (_SAFECRT_USE_INLINES || _SAFECRT_IMPL) && !defined(_SAFECRT_DO_NOT_DEFINE_INVALID_PARAMETER)
 
 #ifndef STATUS_INVALID_PARAMETER
-#define STATUS_INVALID_PARAMETER ((int32_t)0xC000000DL)
+#define STATUS_INVALID_PARAMETER 0xC000000DL
 #endif
 
 _SAFECRT__INLINE
 void _invalid_parameter()
 {
     /* invoke Watson */
-    RaiseException(static_cast<uint32_t>(STATUS_INVALID_PARAMETER), 0);
+    RaiseException(STATUS_INVALID_PARAMETER, 0);
 }
 
 #endif
@@ -1407,7 +1407,7 @@ errno_t _wcsset_s(char16_t *_Dst, size_t _SizeInWords, char16_t _Value)
     available = _SizeInWords;
     while (*p != 0 && --available > 0)
     {
-        *p++ = (char16_t)_Value;
+        *p++ = _Value;
     }
 
     if (available == 0)
@@ -1605,7 +1605,7 @@ errno_t _wcsnset_s(char16_t *_Dst, size_t _SizeInWords, char16_t _Value, size_t 
     available = _SizeInWords;
     while (*p != 0 && _Count > 0 && --available > 0)
     {
-        *p++ = (char16_t)_Value;
+        *p++ = _Value;
         --_Count;
     }
 
@@ -1913,7 +1913,7 @@ _SAFECRT__INLINE
 char * strtok_s(char *_String, const char *_Control, char **_Context)
 {
     unsigned char *str;
-    const unsigned char *ctl = (const unsigned char *)_Control;
+    const unsigned char *ctl = reinterpret_cast<const unsigned char*>(_Control);
     unsigned char map[32];
     int count;
 
@@ -1938,11 +1938,11 @@ char * strtok_s(char *_String, const char *_Control, char **_Context)
     * from the last strtok call) */
     if (_String != nullptr)
     {
-        str = (unsigned char *)_String;
+        str = reinterpret_cast<unsigned char*>(_String);
     }
     else
     {
-        str = (unsigned char *)*_Context;
+        str = reinterpret_cast<unsigned char*>(*_Context);
     }
 
     /* Find beginning of token (skip over leading delimiters). Note that
@@ -1953,7 +1953,7 @@ char * strtok_s(char *_String, const char *_Control, char **_Context)
         str++;
     }
 
-    _String = (char *)str;
+    _String = reinterpret_cast<char*>(str);
 
     /* Find the end of the token. If it is not the end of the string,
     * put a null there. */
@@ -1967,10 +1967,10 @@ char * strtok_s(char *_String, const char *_Control, char **_Context)
     }
 
     /* Update context */
-    *_Context = (char *)str;
+    *_Context = reinterpret_cast<char*>(str);
 
     /* Determine if a token has been found. */
-    if (_String == (char *)str)
+    if (_String == reinterpret_cast<char*>(str))
     {
         return nullptr;
     }

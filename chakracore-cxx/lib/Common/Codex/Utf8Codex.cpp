@@ -59,7 +59,7 @@ namespace utf8
         {
             throw InvalidWideCharException();
         }
-        return char16_t(UNICODE_UNKNOWN_CHAR_MARK);
+        return static_cast<char16_t>(UNICODE_UNKNOWN_CHAR_MARK);
     }
 
     BOOL IsValidWideChar(char16_t ch)
@@ -119,8 +119,8 @@ namespace utf8
                     && InRange(c2, 0x80, 0xBF)
                 )
             {
-                ch |= char16_t(c1 & 0x1f) << 6;     // 0x0080 - 0x07ff
-                ch |= char16_t(c2 & 0x3f);
+                ch |= static_cast<char16_t>(c1 & 0x1f) << 6;     // 0x0080 - 0x07ff
+                ch |= static_cast<char16_t>(c2 & 0x3f);
                 if (!IsValidWideChar(ch) && ((options & doAllowInvalidWCHARs) == 0))
                 {
                     ch = GetUnknownCharacter(options);
@@ -185,9 +185,9 @@ namespace utf8
                     )
                 )
             {
-                ch  = char16_t(c1 & 0x0f) << 12;    // 0x0800 - 0xffff
-                ch |= char16_t(c2 & 0x3f) << 6;     // 0x0080 - 0x07ff
-                ch |= char16_t(c3 & 0x3f);
+                ch  = static_cast<char16_t>(c1 & 0x0f) << 12;    // 0x0800 - 0xffff
+                ch |= static_cast<char16_t>(c2 & 0x3f) << 6;     // 0x0080 - 0x07ff
+                ch |= static_cast<char16_t>(c3 & 0x3f);
                 if (!IsValidWideChar(ch) && ((options & (doAllowThreeByteSurrogates | doAllowInvalidWCHARs)) == 0))
                 {
                     ch = GetUnknownCharacter(options);
@@ -262,15 +262,15 @@ LFourByte:
             if ((options & doSecondSurrogatePair) == 0)
             {
                 // Decode high 10 bits of utf-8 20 bit char
-                ch  = char16_t(c1 & 0x07) << 2;
-                ch |= char16_t(c2 & 0x30) >> 4;
+                ch  = static_cast<char16_t>(c1 & 0x07) << 2;
+                ch |= static_cast<char16_t>(c2 & 0x30) >> 4;
                 ch  = (ch - 1) << 6;             // ch == 0000 00ww ww00 0000
-                ch |= char16_t(c2 & 0x0f) << 2;     // ch == 0000 00ww wwzz zz00
-                ch |= char16_t(c3 & 0x30) >> 4;     // ch == 0000 00ww wwzz zzyy
+                ch |= static_cast<char16_t>(c2 & 0x0f) << 2;     // ch == 0000 00ww wwzz zz00
+                ch |= static_cast<char16_t>(c3 & 0x30) >> 4;     // ch == 0000 00ww wwzz zzyy
                 // Encode first word of utf-16 surrogate pair
                 ch += 0xD800;
                 // Remember next call must return second word
-                options = (DecodeOptions)(options | doSecondSurrogatePair);
+                options = options | doSecondSurrogatePair;
                 // Leave ptr on byte 1, this way:
                 //  - callers who test that ptr has been advanced by utf8::Decode will see progress for
                 //    both words of the surrogate pair.
@@ -281,12 +281,12 @@ LFourByte:
             else
             {
                 // Decode low 10 bits of utf-8 20 bit char
-                ch = char16_t(c3 & 0x0f) << 6;     // ch == 0000 00yy yy00 0000
-                ch |= char16_t(c4 & 0x3f);          // ch == 0000 00yy yyxx xxxx
+                ch = static_cast<char16_t>(c3 & 0x0f) << 6;     // ch == 0000 00yy yy00 0000
+                ch |= static_cast<char16_t>(c4 & 0x3f);          // ch == 0000 00yy yyxx xxxx
                 // Encode second word of utf-16 surrogate pair
                 ch += 0xDC00;
                 // We're done with this char
-                options = (DecodeOptions)(options & ~doSecondSurrogatePair);
+                options = options & ~doSecondSurrogatePair;
                 ptr += 3; // remember, got here by subtracting one from ptr in case 1, so effective increment is 2
             }
             break;
@@ -335,10 +335,10 @@ LFourByte:
 LFastPath:
         while (p + 3 < pbEnd)
         {
-            unsigned bytes = *(unsigned *)p;
+            unsigned bytes = *reinterpret_cast<const unsigned *>(p);
             if ((bytes & 0x80808080) != 0) goto LSlowPath;
-            ((uint32_t *)dest)[0] = (char16_t(bytes) & 0x00FF) | ((char16_t(bytes) & 0xFF00) << 8);
-            ((uint32_t *)dest)[1] = (char16_t(bytes >> 16) & 0x00FF) | ((char16_t(bytes >> 16) & 0xFF00) << 8);
+            reinterpret_cast<uint32_t*>(dest)[0] = (static_cast<char16_t>(bytes) & 0x00FF) | ((static_cast<char16_t>(bytes) & 0xFF00) << 8);
+            reinterpret_cast<uint32_t*>(dest)[1] = (static_cast<char16_t>(bytes >> 16) & 0x00FF) | ((static_cast<char16_t>(bytes >> 16) & 0xFF00) << 8);
             p += 4;
             dest += 4;
         }
@@ -414,15 +414,15 @@ LSlowPath:
 LFastPath:
         while (cch >= 4)
         {
-            uint32_t first = ((const uint32_t *)source)[0];
+            uint32_t first = reinterpret_cast<const uint32_t*>(source)[0];
             if ( (first & 0xFF80FF80) != 0) goto LSlowPath;
-            uint32_t second = ((const uint32_t *)source)[1];
+            uint32_t second = reinterpret_cast<const uint32_t*>(source)[1];
             if ( (second & 0xFF80FF80) != 0) goto LSlowPath;
 
             if (!countBytesOnly)
             {
                 CodexAssertOrFailFast(dest + 4 <= bufferEnd);
-                *(uint32_t *)dest = (first & 0x0000007F) | ((first & 0x007F0000) >> 8) | ((second & 0x0000007f) << 16) | ((second & 0x007F0000) << 8);
+                *reinterpret_cast<uint32_t*>(dest) = (first & 0x0000007F) | ((first & 0x007F0000) >> 8) | ((second & 0x0000007f) << 16) | ((second & 0x007F0000) << 8);
             }
             dest += 4;
             source += 4;
