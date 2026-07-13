@@ -78,7 +78,7 @@ struct ArenaMemoryBlock
 
     char * GetBytes() const
     {
-        return ((char *)this) + sizeof(ArenaMemoryBlock);
+        return (reinterpret_cast<char *>(const_cast<ArenaMemoryBlock *>(this))) + sizeof(ArenaMemoryBlock);
     }
 };
 
@@ -90,7 +90,7 @@ public:
 
     char * GetBytes() const
     {
-        return ((char *)this) + sizeof(BigBlock);
+        return const_cast<char*>(reinterpret_cast<const char*>(this)) + sizeof(BigBlock);
     }
 };
 
@@ -481,7 +481,7 @@ public:
             {
                 BVSparseNode *node = bvFreeList;
                 bvFreeList = bvFreeList->next;
-                return (char*)node;
+                return reinterpret_cast<char*>(node);
             }
 
             // If the free list is empty, then do the allocation right away for the BVSparseNode size.
@@ -502,8 +502,8 @@ public:
         if (sizeof(BVSparseNode) == byteSize)
         {
             //FastPath
-            ((BVSparseNode*)buffer)->next = bvFreeList;
-            bvFreeList = (BVSparseNode*)buffer;
+            static_cast<BVSparseNode*>(buffer)->next = bvFreeList;
+            bvFreeList = static_cast<BVSparseNode*>(buffer);
             return;
         }
         return ArenaAllocator::Free(buffer, byteSize);
@@ -796,12 +796,12 @@ protected:
 public:
     uint32_t AddRef(void)
     {
-        return (uint32_t)InterlockedIncrement(&refCount);
+        return static_cast<uint32_t>(InterlockedIncrement(&refCount));
     }
 
     uint32_t Release(void)
     {
-        uint32_t refs = (uint32_t)InterlockedDecrement(&refCount);
+        uint32_t refs = static_cast<uint32_t>(InterlockedDecrement(&refCount));
 
         if (0 == refs)
         {

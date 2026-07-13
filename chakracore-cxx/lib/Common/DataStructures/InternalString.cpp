@@ -30,10 +30,10 @@ namespace Js
     InternalString *InternalString::New(ArenaAllocator* alloc, const char16_t* content, charcount_t length)
     {
         size_t bytelength = sizeof(char16_t) * length;
-        uint32_t* allocbuffer = (uint32_t*)alloc->Alloc(sizeof(uint32_t) + bytelength + sizeof(char16_t));
-        allocbuffer[0] = (uint32_t) bytelength;
+        uint32_t* allocbuffer = reinterpret_cast<uint32_t*>(alloc->Alloc(sizeof(uint32_t) + bytelength + sizeof(char16_t)));
+        allocbuffer[0] = static_cast<uint32_t>(bytelength);
 
-        char16_t* buffer = (char16_t*)(allocbuffer+1);
+        char16_t* buffer = reinterpret_cast<char16_t*>(allocbuffer + 1);
         js_memcpy_s(buffer, bytelength, content, bytelength);
         buffer[length] = u'\0';
         InternalString* newInstance = Anew(alloc, InternalString, buffer, length);
@@ -51,12 +51,12 @@ namespace Js
         // it as thus
         const unsigned char offset = sizeof(uint32_t)/sizeof(char16_t);
         InternalString* newInstance = RecyclerNewPlusLeaf(recycler, bytelength + (sizeof(uint32_t) + sizeof(char16_t)), InternalString, nullptr, length, offset);
-        uint32_t* allocbuffer = (uint32_t*) (newInstance + 1);
-        allocbuffer[0] = (uint32_t) bytelength;
-        char16_t* buffer = (char16_t*)(allocbuffer + 1);
+        uint32_t* allocbuffer = reinterpret_cast<uint32_t*>(newInstance + 1);
+        allocbuffer[0] = static_cast<uint32_t>(bytelength);
+        char16_t* buffer = reinterpret_cast<char16_t*>(allocbuffer + 1);
         js_memcpy_s(buffer, bytelength, content, bytelength);
         buffer[length] = u'\0';
-        newInstance->m_content = (const char16_t*) allocbuffer;
+        newInstance->m_content = reinterpret_cast<const char16_t*>(allocbuffer);
 
         return newInstance;
     }

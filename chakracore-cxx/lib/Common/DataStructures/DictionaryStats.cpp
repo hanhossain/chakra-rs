@@ -164,11 +164,11 @@ void DictionaryStats::OutputStats()
             ComputeStats(instance->collisionCount, collisions, max_collisions);
             if (instance->lookupCount > 0)
             {
-                ComputeStats((double)instance->lookupDepthTotal / (double)instance->lookupCount, avglookupdepth, max_avglookupdepth);
+                ComputeStats(static_cast<double>(instance->lookupDepthTotal) / static_cast<double>(instance->lookupCount), avglookupdepth, max_avglookupdepth);
             }
             if (instance->collisionCount > 0)
             {
-                ComputeStats((double)instance->lookupDepthTotal / (double)instance->collisionCount, avgcollisiondepth, max_avgcollisiondepth);
+                ComputeStats(static_cast<double>(instance->lookupDepthTotal) / static_cast<double>(instance->collisionCount), avgcollisiondepth, max_avgcollisiondepth);
             }
             ComputeStats(instance->maxLookupDepth, maxlookupdepth, max_maxlookupdepth);
 
@@ -178,8 +178,8 @@ void DictionaryStats::OutputStats()
                 double avgcd = 0.0;
                 if (instance->lookupCount > 0)
                 {
-                    avgld = (double)instance->lookupDepthTotal / (double)instance->lookupCount;
-                    avgcd = (double)instance->lookupDepthTotal / (double)instance->collisionCount;
+                    avgld = static_cast<double>(instance->lookupDepthTotal) / static_cast<double>(instance->lookupCount);
+                    avgcd = static_cast<double>(instance->lookupDepthTotal) / static_cast<double>(instance->collisionCount);
                 }
                 Output::Print(u"%8s  %13d  %13d  %13d  %13d  %13d  %13d  %13d  %14d  %14.2f  %13.2f  %13d \n",
                     u"INS:",

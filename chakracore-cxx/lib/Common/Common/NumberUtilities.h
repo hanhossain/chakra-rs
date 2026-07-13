@@ -146,7 +146,7 @@ namespace Js
             const unsigned two31 = static_cast<unsigned>(1) << (sizeof(int) * 8 - 1); // 2^31
 
             ad = (divisor < 0) ? (0 - divisor) : divisor;
-            t = two31 + ((unsigned)divisor >> 31);
+            t = two31 + (static_cast<unsigned>(divisor) >> 31);
 
             anc = t - 1 - t % ad; // abs(nc)
             p = 31;               // init p
