@@ -852,7 +852,7 @@ SHMPTR SHMGetInfo(SHM_INFO_ID element)
 
     /* verify that this thread holds the SHM lock. No race condition: if the
        current thread is here, it can't be in SHMLock or SHMUnlock */
-    if( static_cast<HANDLE>(pthread_self()) != locking_thread )
+    if( reinterpret_cast<HANDLE>(pthread_self()) != locking_thread )
     {
         ASSERT("SHMGetInfo called while thread does not hold the SHM lock!\n");
     }
@@ -894,7 +894,7 @@ BOOL SHMSetInfo(SHM_INFO_ID element, SHMPTR value)
 
     /* verify that this thread holds the SHM lock. No race condition: if the
        current thread is here, it can't be in SHMLock or SHMUnlock */
-    if( static_cast<HANDLE>(pthread_self()) != locking_thread )
+    if( reinterpret_cast<HANDLE>(pthread_self()) != locking_thread )
     {
         ASSERT("SHMGetInfo called while thread does not hold the SHM lock!\n");
     }
