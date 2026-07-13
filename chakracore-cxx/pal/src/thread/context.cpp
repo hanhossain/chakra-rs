@@ -378,6 +378,7 @@ EXIT:
     return ret;
 }
 
+// TODO (hanhossain): if this should only be used for cross-process, can this be removed now?
 /*++
 Function:
   SetThreadContext
@@ -722,7 +723,7 @@ Return value :
 void * GetNativeContextPC(const native_context_t *context)
 {
 #ifdef _AMD64_
-    return (void *)MCREG_Rip(context->uc_mcontext);
+    return reinterpret_cast<void*>(MCREG_Rip(context->uc_mcontext));
 #elif defined(HOST_S390X)
     return (void *) MCREG_PSWAddr(context->uc_mcontext);
 #elif defined(HOST_POWERPC64)
@@ -748,7 +749,7 @@ Return value :
 void * GetNativeContextSP(const native_context_t *context)
 {
 #ifdef _AMD64_
-    return (void *)MCREG_Rsp(context->uc_mcontext);
+    return reinterpret_cast<void*>(MCREG_Rsp(context->uc_mcontext));
 #elif defined(HOST_S390X)
     return (void *) MCREG_R15(context->uc_mcontext);
 #elif defined(HOST_POWERPC64)

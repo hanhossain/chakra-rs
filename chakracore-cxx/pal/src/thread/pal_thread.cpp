@@ -1184,10 +1184,10 @@ CorUnix::GetThreadTimesInternal(
     pTargetThread->Unlock(pThread);
 
     /* Calculate time in nanoseconds and assign to user time */
-    calcTime = (long) ts.tv_sec * SECS_TO_NS;
-    calcTime += (long) ts.tv_nsec;
-    lpUserTime->dwLowDateTime = (uint32_t)calcTime;
-    lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
+    calcTime = ts.tv_sec * SECS_TO_NS;
+    calcTime += ts.tv_nsec;
+    lpUserTime->dwLowDateTime = static_cast<uint32_t>(calcTime);
+    lpUserTime->dwHighDateTime = static_cast<uint32_t>(calcTime >> 32);
 
     /* Set kernel time to zero, for now */
     lpKernelTime->dwLowDateTime = 0;
@@ -1804,7 +1804,7 @@ CPalThread::RunPostCreateInitializers(
     // Call the post-create initializers for embedded classes
     //
 
-    if (pthread_setspecific(thObjKey, reinterpret_cast<void*>(this)))
+    if (pthread_setspecific(thObjKey, this))
     {
         ASSERT("Unable to set the thread object key's value\n");
         palError = ERROR_INTERNAL_ERROR;
@@ -2002,7 +2002,7 @@ CPalThread::GetStackBase()
     status = pthread_attr_destroy(&attr);
     _ASSERT_MSG(status == 0, "pthread_attr_destroy call failed");
 
-    stackBase = (void*)((size_t)stackAddr + stackSize);
+    stackBase = reinterpret_cast<void*>(reinterpret_cast<size_t>(stackAddr) + stackSize);
 #endif
 
     return stackBase;
@@ -2148,12 +2148,12 @@ void GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit)
     status = pthread_attr_getstack(&attr, &stackend, &stacksize);
     _ASSERT_MSG(status == 0, "pthread_attr_getstack call failed");
 
-    void* stackbase = (void*) ((char*) stackend + stacksize);
+    void* stackbase = static_cast<char*>(stackend) + stacksize;
 
     pthread_attr_destroy(&attr);
 
-    *lowLimit = (size_t) stackend;
-    *highLimit = (size_t) stackbase;
+    *lowLimit = reinterpret_cast<size_t>(stackend);
+    *highLimit = reinterpret_cast<size_t>(stackbase);
 #endif
 
     s_cachedLowLimit = *lowLimit;

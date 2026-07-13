@@ -91,16 +91,16 @@ Return value:
 --*/
 static int UnicodeDataComp(const void *pnKey, const void *elem)
 {
-    char16_t uValue = ((UnicodeDataRec*)elem)->nUnicodeValue;
-    uint16_t  rangeValue = ((UnicodeDataRec*)elem)->rangeValue;
+    char16_t uValue = static_cast<const UnicodeDataRec*>(elem)->nUnicodeValue;
+    uint16_t  rangeValue = static_cast<const UnicodeDataRec*>(elem)->rangeValue;
 
-    if (*((int32_t*)pnKey) < uValue)
+    if (*static_cast<const int32_t*>(pnKey) < uValue)
     {
         return -1;
     }
     else
     {
-        if (*((int32_t*)pnKey) > (uValue + rangeValue))
+        if (*static_cast<const int32_t*>(pnKey) > (uValue + rangeValue))
         {
             return 1;
         }
@@ -138,8 +138,8 @@ BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec)
     {
         UnicodeDataRec *dataRec;
         int32_t nNumOfChars = UNICODE_DATA_SIZE;
-        dataRec = (UnicodeDataRec *) bsearch(&nUnicodeValue, UnicodeData, nNumOfChars,
-                       sizeof(UnicodeDataRec), UnicodeDataComp);
+        dataRec = static_cast<UnicodeDataRec*>(bsearch(&nUnicodeValue, UnicodeData, nNumOfChars,
+                                                       sizeof(UnicodeDataRec), UnicodeDataComp));
         if (dataRec == NULL)
         {
             bRet = FALSE;

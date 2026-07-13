@@ -132,7 +132,7 @@ GetCurrentThreadStackLimits(&lowl, &highl);
 #ifdef VM_MAXUSER_ADDRESS
     lpSystemInfo->lpMaximumApplicationAddress = (void *) VM_MAXUSER_ADDRESS;
 #elif defined(__LINUX__)
-    lpSystemInfo->lpMaximumApplicationAddress = (void *) MAX_PROCESS_VA_SPACE_LINUX;
+    lpSystemInfo->lpMaximumApplicationAddress = reinterpret_cast<void*>(MAX_PROCESS_VA_SPACE_LINUX);
 #elif defined(USERLIMIT)
     lpSystemInfo->lpMaximumApplicationAddress = (void *) USERLIMIT;
 #elif defined(_M_ARM64)
@@ -199,7 +199,7 @@ GlobalMemoryStatusEx(
 #if defined(__LINUX__)
         lpBuffer->ullAvailPhys = sysconf(SYSCONF_PAGES) * sysconf(_SC_PAGE_SIZE);
         int64_t used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
-        lpBuffer->dwMemoryLoad = (uint32_t)((used_memory * 100) / lpBuffer->ullTotalPhys);
+        lpBuffer->dwMemoryLoad = static_cast<uint32_t>((used_memory * 100) / lpBuffer->ullTotalPhys);
 #elif defined(__APPLE__)
         vm_size_t page_size;
         mach_port_t mach_port;

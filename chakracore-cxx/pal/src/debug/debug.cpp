@@ -445,22 +445,22 @@ WriteProcessMemory(
     /* Attach the process before calling ptrace otherwise it fails */
     if (DBGAttachProcess(pThread, hProcess, processId))
     {
-        FirstIntOffset = (size_t)lpBaseAddress % sizeof(int);
+        FirstIntOffset = reinterpret_cast<size_t>(lpBaseAddress) % sizeof(int);
         FirstIntMask = -1;
         FirstIntMask <<= (FirstIntOffset * 8);
 
         nbInts = (nSize + FirstIntOffset) / sizeof(int) +
                  (((nSize + FirstIntOffset)%sizeof(int)) ? 1:0);
-        lpBaseAddressAligned = (int*)((char*)lpBaseAddress - FirstIntOffset);
+        lpBaseAddressAligned = reinterpret_cast<int*>(static_cast<char*>(lpBaseAddress) - FirstIntOffset);
 
-        if ((lpTmpBuffer = (int*)malloc((nbInts * sizeof(int)))) == NULL)
+        if ((lpTmpBuffer = static_cast<int*>(malloc((nbInts * sizeof(int))))) == NULL)
         {
             ERROR("Insufficient memory available !\n");
             SetLastError(ERROR_NOT_ENOUGH_MEMORY);
             goto CLEANUP1;
         }
 
-        memcpy((char *)lpTmpBuffer + FirstIntOffset, (char *)lpBuffer, nSize);
+        memcpy(reinterpret_cast<char*>(lpTmpBuffer) + FirstIntOffset, lpBuffer, nSize);
         lpInt = lpTmpBuffer;
 
         LastIntOffset = (nSize + FirstIntOffset) % sizeof(int);
@@ -559,7 +559,7 @@ DBGWriteProcMem_Int( uint32_t processId,
                      int *addr,
                      int data)
 {
-    if (ptrace((PTRACE_POKEDATA), (processId), (void*)(addr), (data)) == -1)
+    if (ptrace((PTRACE_POKEDATA), (processId), static_cast<void*>(addr), (data)) == -1)
     {
         if (errno == EFAULT)
         {
@@ -607,7 +607,7 @@ DBGWriteProcMem_IntWithMask( uint32_t processId,
     if (mask != ~0)
     {
         errno = 0;
-        if (((readInt = ptrace((PTRACE_PEEKDATA), (processId), (void*)(addr), (0))) == -1)
+        if (((readInt = ptrace((PTRACE_PEEKDATA), (processId), static_cast<void*>(addr), (0))) == -1)
              && errno)
         {
             if (errno == EFAULT)
@@ -672,7 +672,7 @@ DBGAttachProcess(
 
     if (attachmentCount == 1)
     {
-        if (ptrace((PTRACE_ATTACH), (processId), (void*)(0), (0)) == -1)
+        if (ptrace((PTRACE_ATTACH), (processId), static_cast<void*>(0), (0)) == -1)
         {
             if (errno != ESRCH)
             {
@@ -696,7 +696,7 @@ DBGAttachProcess(
     return TRUE;
 
 DETACH2:
-    if (ptrace((PTRACE_DETACH), (processId), (void*)(0), (0)) == -1)
+    if (ptrace((PTRACE_DETACH), (processId), static_cast<void*>(0), (0)) == -1)
     {
         ASSERT("ptrace(PT_DETACH, pid:%d) failed. errno:%d (%s)\n", processId,
               errno, strerror(errno));
@@ -756,7 +756,7 @@ DBGDetachProcess(
     /* check if there's no more attachment left on processId */
     if (nbAttachLeft == 0)
     {
-        if (ptrace((PTRACE_DETACH), (processId), (void*)(1), (0)) == -1)
+        if (ptrace((PTRACE_DETACH), (processId), reinterpret_cast<void*>(1), (0)) == -1)
         {
             if (errno == ESRCH)
             {

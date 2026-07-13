@@ -198,7 +198,7 @@ QueryPerformanceCounter(
             break;
         }
         lpPerformanceCount->QuadPart =
-            (long)ts.tv_sec * (long)tccSecondsToNanoSeconds + (long)ts.tv_nsec;
+            ts.tv_sec * static_cast<long>(tccSecondsToNanoSeconds) + ts.tv_nsec;
     }
 #else
     {
