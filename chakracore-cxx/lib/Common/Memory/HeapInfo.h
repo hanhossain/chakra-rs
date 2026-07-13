@@ -50,12 +50,12 @@ public:
             size_t sizeCat = HeapInfo::GetAlignedSizeNoCheck(size);
             if (HeapInfo::IsSmallObject(size))
             {
-                auto& bucket = this->GetBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat);
+                auto& bucket = this->GetBucket<static_cast<ObjectInfoBits>(attributes & GetBlockTypeBitMask)>(sizeCat);
                 return bucket.IsPageHeapEnabled(attributes);
             }
             else if (HeapInfo::IsMediumObject(size))
             {
-                auto& bucket = this->GetMediumBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat);
+                auto& bucket = this->GetMediumBucket<static_cast<ObjectInfoBits>(attributes & GetBlockTypeBitMask)>(sizeCat);
                 return bucket.IsPageHeapEnabled(attributes);
             }
             else
@@ -154,15 +154,15 @@ public:
     static size_t GetMediumObjectAlignedSize(size_t size) { return AllocSizeMath::Align(size, HeapConstants::MediumObjectGranularity); }
     static size_t GetMediumObjectAlignedSizeNoCheck(size_t size) { return Math::Align<size_t>(size, HeapConstants::MediumObjectGranularity); }
 
-    static inline uint GetBucketIndex(size_t sizeCat) { Assert(IsAlignedSmallObjectSize(sizeCat)); return (uint)(sizeCat >> HeapConstants::ObjectAllocationShift) - 1; }
+    static inline uint GetBucketIndex(size_t sizeCat) { Assert(IsAlignedSmallObjectSize(sizeCat)); return static_cast<uint>(sizeCat >> HeapConstants::ObjectAllocationShift) - 1; }
 
     template <typename TBlockAttributes>
     static uint GetObjectSizeForBucketIndex(uint bucketIndex);
 
-    static uint GetMediumBucketIndex(size_t sizeCat) { Assert(IsAlignedMediumObjectSize(sizeCat)); return (uint)((sizeCat - HeapConstants::MaxSmallObjectSize - 1) / HeapConstants::MediumObjectGranularity); }
+    static uint GetMediumBucketIndex(size_t sizeCat) { Assert(IsAlignedMediumObjectSize(sizeCat)); return static_cast<uint>((sizeCat - HeapConstants::MaxSmallObjectSize - 1) / HeapConstants::MediumObjectGranularity); }
 
-    static BOOL IsAlignedAddress(void * address) { return (0 == (((size_t)address) & HeapInfo::ObjectAlignmentMask)); }
-    static void * GetAlignedAddress(void * address) { return (void*)((uintptr_t)address & ~(uintptr_t)HeapInfo::ObjectAlignmentMask); }
+    static BOOL IsAlignedAddress(void * address) { return (0 == (reinterpret_cast<size_t>(address) & HeapInfo::ObjectAlignmentMask)); }
+    static void * GetAlignedAddress(void * address) { return reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(address) & ~static_cast<uintptr_t>(HeapInfo::ObjectAlignmentMask)); }
 private:
     template <ObjectInfoBits attributes>
     typename SmallHeapBlockType<attributes, SmallAllocationBlockAttributes>::BucketType& GetBucket(size_t sizeCat);
@@ -508,7 +508,7 @@ inline char *
 HeapInfo::RealAlloc(Recycler * recycler, size_t sizeCat, size_t size)
 {
     Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
-    auto& bucket = this->GetBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat);
+    auto& bucket = this->GetBucket<static_cast<ObjectInfoBits>(attributes & GetBlockTypeBitMask)>(sizeCat);
     return bucket.template RealAlloc<attributes, nothrow>(recycler, sizeCat, size);
 }
 
@@ -516,7 +516,7 @@ template <ObjectInfoBits attributes, bool nothrow>
 inline char *
 HeapInfo::MediumAlloc(Recycler * recycler, size_t sizeCat, size_t size)
 {
-    auto& bucket = this->GetMediumBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat);
+    auto& bucket = this->GetMediumBucket<static_cast<ObjectInfoBits>(attributes & GetBlockTypeBitMask)>(sizeCat);
     return bucket.template RealAlloc<attributes, nothrow>(recycler, sizeCat, size);
 }
 
@@ -525,7 +525,7 @@ void
 HeapInfo::FreeSmallObject(void* object, size_t sizeCat)
 {
     Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
-    return this->GetBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat).ExplicitFree(object, sizeCat);
+    return this->GetBucket<static_cast<ObjectInfoBits>(attributes & GetBlockTypeBitMask)>(sizeCat).ExplicitFree(object, sizeCat);
 }
 
 template <ObjectInfoBits attributes>
@@ -533,7 +533,7 @@ inline void
 HeapInfo::FreeMediumObject(void* object, size_t sizeCat)
 {
     Assert(HeapInfo::IsAlignedMediumObjectSize(sizeCat));
-    return this->GetMediumBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat).ExplicitFree(object, sizeCat);
+    return this->GetMediumBucket<static_cast<ObjectInfoBits>(attributes & GetBlockTypeBitMask)>(sizeCat).ExplicitFree(object, sizeCat);
 }
 
 template <ObjectInfoBits attributes>
@@ -544,7 +544,7 @@ HeapInfo::IntegrateBlock(char * blockAddress, PageSegment * segment, Recycler * 
     static_assert(attributes == NoBit || attributes == LeafBit);
     Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
 
-    return this->GetBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat).IntegrateBlock(blockAddress, segment, recycler);
+    return this->GetBucket<static_cast<ObjectInfoBits>(attributes & GetBlockTypeBitMask)>(sizeCat).IntegrateBlock(blockAddress, segment, recycler);
 }
 
 template <typename SmallHeapBlockAllocatorType>

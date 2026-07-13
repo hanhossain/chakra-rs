@@ -277,7 +277,7 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
         else
         {
             size_t newbufsize = size + align;
-            char16_t* newbuf = (char16_t*)calloc(newbufsize, sizeof(char16_t));
+            char16_t* newbuf = static_cast<char16_t*>(calloc(newbufsize, sizeof(char16_t)));
             AssertOrFailFastMsg(newbuf != nullptr, "Ran out of memory while printing output");
             const char16_t* currentReadIndex = buf;
             char16_t* currentWriteIndex = newbuf;
@@ -287,7 +287,7 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
                 size_t remaining = newbufsize - charsWritten;
                 if (numCharsWantToWrite + 1 > remaining)
                 {
-                    char16_t* tempbuf = (char16_t*)realloc(newbuf, newbufsize * sizeof(char16_t) * 2);
+                    char16_t* tempbuf = static_cast<char16_t*>(realloc(newbuf, newbufsize * sizeof(char16_t) * 2));
                     AssertOrFailFastMsg(tempbuf != nullptr, "Ran out of memory while printing output");
                     newbuf = tempbuf;
                     newbufsize = newbufsize * 2;
@@ -305,7 +305,7 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
                         unsigned int alignspacesneeded = 1; // always put at least one space
                         if (oldS_Column < align)
                         {
-                            alignspacesneeded = (unsigned int)(align - oldS_Column);
+                            alignspacesneeded = static_cast<unsigned int>(align - oldS_Column);
                         }
                         ensureSpace(alignspacesneeded);
                         for (unsigned int i = 0; i < alignspacesneeded; i++)

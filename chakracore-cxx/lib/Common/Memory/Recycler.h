@@ -1082,7 +1082,7 @@ public:
     uint GetPinnedObjectCount() const { return this->pinnedObjectMap.Count(); }
 
     void Prime();
-    void* GetOwnerContext() { return (void*) this->collectionWrapper; }
+    void* GetOwnerContext() { return this->collectionWrapper; }
     bool NeedOOMRescan() const;
     void SetNeedOOMRescan();
     void ClearNeedOOMRescan();
@@ -1190,7 +1190,7 @@ public:
 #define DEFINE_RECYCLER_ALLOC_TRACE(AllocFunc, AllocWithAttributesFunc, attributes) \
     inline char* AllocFunc##Trace(size_t size) \
     { \
-        return AllocWithAttributesFunc<(ObjectInfoBits)(attributes | TraceBit), /* nothrow = */ false>(size); \
+        return AllocWithAttributesFunc<static_cast<ObjectInfoBits>(attributes | TraceBit), /* nothrow = */ false>(size); \
     }
 #else
 #define DEFINE_RECYCLER_ALLOC_TRACE(AllocFunc, AllocWithAttributeFunc, attributes)
@@ -1282,21 +1282,22 @@ public:
     char* GetAddressOfAllocator(size_t sizeCat)
     {
         Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
-        return (char*)this->GetHeapInfo<attributes>()->template GetBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat).GetAllocator();
+        return reinterpret_cast<char*>(this->GetHeapInfo<attributes>()->template GetBucket<static_cast<ObjectInfoBits>(attributes &
+            GetBlockTypeBitMask)>(sizeCat).GetAllocator());
     }
 
     template <ObjectInfoBits attributes>
     uint32_t GetEndAddressOffset(size_t sizeCat)
     {
         Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
-        return this->GetHeapInfo<attributes>()->template GetBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat).GetAllocator()->GetEndAddressOffset();
+        return this->GetHeapInfo<attributes>()->template GetBucket<static_cast<ObjectInfoBits>(attributes & GetBlockTypeBitMask)>(sizeCat).GetAllocator()->GetEndAddressOffset();
     }
 
     template <ObjectInfoBits attributes>
     uint32_t GetFreeObjectListOffset(size_t sizeCat)
     {
         Assert(HeapInfo::IsAlignedSmallObjectSize(sizeCat));
-        return this->GetHeapInfo<attributes>()->template GetBucket<(ObjectInfoBits)(attributes & GetBlockTypeBitMask)>(sizeCat).GetAllocator()->GetFreeObjectListOffset();
+        return this->GetHeapInfo<attributes>()->template GetBucket<static_cast<ObjectInfoBits>(attributes & GetBlockTypeBitMask)>(sizeCat).GetAllocator()->GetFreeObjectListOffset();
     }
 
     void GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t sizeCat, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation, bool isOOPJIT);
@@ -1424,7 +1425,7 @@ private:
     bool ExpectStackSkip() const;
 #endif
 
-    static size_t const InvalidScanRootBytes = (size_t)-1;
+    static size_t const InvalidScanRootBytes = static_cast<size_t>(-1);
 
     // Small Allocator
     template <typename SmallHeapBlockAllocatorType>
@@ -1544,7 +1545,7 @@ private:
 #endif
 
     // Sweep
-    bool Sweep(size_t rescanRootBytes = (size_t)-1, bool concurrent = false, bool adjustPartialHeuristics = false);
+    bool Sweep(size_t rescanRootBytes = static_cast<size_t>(-1), bool concurrent = false, bool adjustPartialHeuristics = false);
     void SweepWeakReference();
     void SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager);
     void FinishSweep(RecyclerSweepManager& recyclerSweepManager);
@@ -1967,12 +1968,12 @@ public:
 
     bool IsPageHeapAlloc() const
     {
-        return isUsingLargeHeapBlock && ((LargeHeapBlock*)m_heapBlock)->InPageHeapMode();
+        return isUsingLargeHeapBlock && static_cast<LargeHeapBlock*>(m_heapBlock)->InPageHeapMode();
     }
     void PageHeapLockPages() const
     {
         Assert(IsPageHeapAlloc());
-        ((LargeHeapBlock*)m_heapBlock)->PageHeapLockPages();
+        static_cast<LargeHeapBlock*>(m_heapBlock)->PageHeapLockPages();
     }
 
     bool IsLeaf() const
@@ -1998,9 +1999,9 @@ public:
     {
         if (isUsingLargeHeapBlock)
         {
-            return (ObjectInfoBits)m_largeHeapBlockHeader->GetAttributes(m_recycler->Cookie);
+            return static_cast<ObjectInfoBits>(m_largeHeapBlockHeader->GetAttributes(m_recycler->Cookie));
         }
-        return (ObjectInfoBits)*m_attributes;
+        return static_cast<ObjectInfoBits>(*m_attributes);
     }
     size_t GetSize() const;
 
@@ -2035,7 +2036,7 @@ public:
 #ifdef STACK_BACK_TRACE
             if (this->isUsingLargeHeapBlock)
             {
-                LargeHeapBlock* largeHeapBlock = (LargeHeapBlock*)this->m_heapBlock;
+                LargeHeapBlock* largeHeapBlock = static_cast<LargeHeapBlock*>(this->m_heapBlock);
                 if (largeHeapBlock->InPageHeapMode())
                 {
                     largeHeapBlock->CapturePageHeapFreeStack();

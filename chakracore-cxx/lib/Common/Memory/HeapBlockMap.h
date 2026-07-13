@@ -104,7 +104,7 @@ private:
         Assert(id1 < L1Count);
         Assert(id2 < L2Count);
 
-        return (void *)(((id1 * L2Count) + id2) * PageSize);
+        return reinterpret_cast<void*>(((id1 * L2Count) + id2) * PageSize);
     }
 
     struct HeapBlockInfo
@@ -268,12 +268,12 @@ private:
 
     static uint GetNodeIndex(void * address)
     {
-        return GetNodeIndex((ULONG64)address);
+        return GetNodeIndex(reinterpret_cast<ULONG64>(address));
     }
 
     static uint GetNodeIndex(ULONG64 address)
     {
-        return (uint)((ULONG64)address >> 32);
+        return static_cast<uint>(address >> 32);
     }
 
     Node * FindOrInsertNode(void * address);
@@ -295,7 +295,7 @@ public:
 
     static char * GetNodeStartAddress(void * address)
     {
-        return (char *)(((size_t)address) & ~(HeapBlockMap32::TotalSize - 1));
+        return reinterpret_cast<char*>(reinterpret_cast<size_t>(address) & ~(HeapBlockMap32::TotalSize - 1));
     }
 };
 

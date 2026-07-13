@@ -20,7 +20,7 @@ StackBackTrace::StackBackTrace(uint32_t framesToCaptureLater) : requestedFramesT
 StackBackTrace *
 StackBackTrace::Capture(char* buffer, size_t bufSize, uint32_t framesToSkip)
 {
-    return new (buffer) StackBackTrace(framesToSkip, (uint32_t)(bufSize - offsetof(StackBackTrace, stackBackTrace)) / sizeof(void*));
+    return new (buffer) StackBackTrace(framesToSkip, static_cast<uint32_t>(bufSize - offsetof(StackBackTrace, stackBackTrace)) / sizeof(void*));
 }
 
 // This can be called multiple times, together with Create, in which case we will use (overwrite) same buffer.

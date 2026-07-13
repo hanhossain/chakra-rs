@@ -14,18 +14,18 @@ public:
     FreeObject * GetNext() const
     {
         AssertMsg((taggedNext & TaggedBit) == TaggedBit, "Free list corrupted");
-        return (FreeObject *)(taggedNext & ~TaggedBit);
+        return reinterpret_cast<FreeObject*>(taggedNext & ~TaggedBit);
     }
 
     void SetNext(FreeObject * next)
     {
-        Assert(((long)next & TaggedBit) == 0);
-        taggedNext = ((long)next) | TaggedBit;
+        Assert((reinterpret_cast<long>(next) & TaggedBit) == 0);
+        taggedNext = reinterpret_cast<long>(next) | TaggedBit;
     }
     void ZeroNext() { taggedNext = 0; }
 #ifdef RECYCLER_MEMORY_VERIFY
 #pragma warning(suppress:4310)
-    void DebugFillNext() { taggedNext = (long)0xCACACACACACACACA; }
+    void DebugFillNext() { taggedNext = static_cast<long>(0xCACACACACACACACA); }
 #endif
 private:
     long taggedNext;

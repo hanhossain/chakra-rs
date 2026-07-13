@@ -38,7 +38,7 @@ void js_memset_zero_nontemporal(__bcount(sizeInBytes) void *dst, size_t sizeInBy
     {
         size_t writeBytes = 0;
         __m128i simdZero = _mm_setzero_si128();
-        for (__m128i * p = (__m128i *)dst; writeBytes < sizeInBytes; p += 1, writeBytes += sizeof(__m128i))
+        for (__m128i * p = static_cast<__m128i*>(dst); writeBytes < sizeInBytes; p += 1, writeBytes += sizeof(__m128i))
         {
             _mm_stream_si128(p, simdZero);
         }

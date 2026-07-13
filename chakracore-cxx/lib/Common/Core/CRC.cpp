@@ -17,13 +17,13 @@ unsigned int CalculateCRC32(unsigned int bufferCRC, size_t data)
 
 unsigned int CalculateCRC32(const char* in)
 {
-    unsigned int crc = (unsigned int)-1;
+    unsigned int crc = static_cast<unsigned int>(-1);
     while (*in != '\0')
     {
         crc = (crc >> 8) ^ crc_32_tab[(crc ^ *in) & 0xFF];
         in++;
     }
-    return crc ^ (unsigned int)-1;
+    return crc ^ static_cast<unsigned int>(-1);
 }
 
 uint CalculateCRC(uint bufferCRC, size_t data)
@@ -33,7 +33,7 @@ uint CalculateCRC(uint bufferCRC, size_t data)
     if (AutoSystemInfo::Data.SSE4_2Available())
     {
         //CRC32 always returns a 32-bit result
-        return (uint)_mm_crc32_u64(bufferCRC, data);
+        return static_cast<uint>(_mm_crc32_u64(bufferCRC, data));
     }
 #endif
 #endif
@@ -44,7 +44,7 @@ uint CalculateCRC(uint bufferCRC, size_t count, _In_reads_bytes_(count) void * b
 {
     for (uint index = 0; index < count; index++)
     {
-        bufferCRC = CalculateCRC(bufferCRC, *((uint8_t*)buffer + index));
+        bufferCRC = CalculateCRC(bufferCRC, *(static_cast<uint8_t*>(buffer) + index));
     }
     return bufferCRC;
 }

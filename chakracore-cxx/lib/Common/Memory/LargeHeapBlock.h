@@ -231,8 +231,8 @@ private:
     void FillFreeMemory(Recycler * recycler, __in_bcount(size) void * address, size_t size);
     bool IsPartialSweptHeader(LargeObjectHeader * header) const
     {
-        Assert(this->hasPartialFreeObjects || (((size_t)header & PartialFreeBit) != PartialFreeBit));
-        return ((size_t)header & PartialFreeBit) == PartialFreeBit;
+        Assert(this->hasPartialFreeObjects || ((reinterpret_cast<size_t>(header) & PartialFreeBit) != PartialFreeBit));
+        return (reinterpret_cast<size_t>(header) & PartialFreeBit) == PartialFreeBit;
     }
     static const size_t PartialFreeBit = 0x1;
     size_t pageCount;

@@ -307,20 +307,20 @@ namespace Js
             if(node->ChildExistsAt(i))
             {
                 UnitData *data = node->GetChildAt(i)->GetValue();
-                if( int(data->incl * 100 / base->incl) >= Configuration::Global.flags.ProfileThreshold) // threshold
+                if( static_cast<int>(data->incl * 100 / base->incl) >= Configuration::Global.flags.ProfileThreshold) // threshold
                 {
 
                     Output::SkipToColumn(column);
 
                     Output::Print(u"%-*s %7.1f %5d %7.1f %5d %7.1f %7.1f %5d\n",
                             (Profiler::PhaseNameWidth-column), PhaseNames[i],
-                            (double)data->incl / freq ,                    // incl
-                            int(data->incl * 100 / base->incl ),        // incl %
-                            (double)data->excl / freq ,                    // excl
-                            int(data->excl * 100 / base->incl ),        // excl %
-                            (double)data->max  / freq ,                    // max
-                            (double)data->incl / ( freq * data->count ),   // mean
-                            int(data->count)                            // count
+                            static_cast<double>(data->incl) / freq ,                    // incl
+                            static_cast<int>(data->incl * 100 / base->incl),        // incl %
+                            static_cast<double>(data->excl) / freq ,                    // excl
+                            static_cast<int>(data->excl * 100 / base->incl),        // excl %
+                            static_cast<double>(data->max)  / freq ,                    // max
+                            static_cast<double>(data->incl) / ( freq * data->count ),   // mean
+                            static_cast<int>(data->count)                            // count
                            );
                 }
 
@@ -392,13 +392,13 @@ namespace Js
             Output::Print(u"%-*s %7.1f %5d %7.1f %5d %7.1f %7.1f %5d\n",
                     (Profiler::PhaseNameWidth-indent),
                     PhaseNames[baseTag],
-                    (double)data->incl / freq ,                 // incl
-                    int(100),                                   // incl %
-                    (double)data->excl / freq ,                 // excl
-                    int(data->excl * 100 / data->incl ),        // excl %
-                    (double)data->max  / freq ,                 // max
-                    (double)data->incl / ( freq * data->count ),// mean
-                    int(data->count)                            // count
+                    static_cast<double>(data->incl) / freq ,                 // incl
+                    static_cast<int>(100),                                   // incl %
+                    static_cast<double>(data->excl) / freq ,                 // excl
+                    static_cast<int>(data->excl * 100 / data->incl),        // excl %
+                    static_cast<double>(data->max)  / freq ,                 // max
+                    static_cast<double>(data->incl) / ( freq * data->count ),// mean
+                    static_cast<int>(data->count)                            // count
                     );
             indent += Profiler::TabWidth;
 
