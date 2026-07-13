@@ -43,7 +43,7 @@ namespace Js
 #if defined(__BIG_ENDIAN__)
         return ((uint32_t *)&dbl)[0];
 #else //!BIG_ENDIAN
-        return ((uint32_t *)&dbl)[1];
+        return reinterpret_cast<uint32_t*>(&dbl)[1];
 #endif //!BIG_ENDIAN
     }
 
@@ -52,7 +52,7 @@ namespace Js
 #if defined(__BIG_ENDIAN__)
         return ((uint32_t *)&dbl)[1];
 #else //!BIG_ENDIAN
-        return ((uint32_t *)&dbl)[0];
+        return reinterpret_cast<uint32_t*>(&dbl)[0];
 #endif //!BIG_ENDIAN
     }
 

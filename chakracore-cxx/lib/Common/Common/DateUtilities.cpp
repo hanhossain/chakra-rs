@@ -100,8 +100,8 @@ namespace Js
         // But make sure there is no overflow when casting double -> int -- WOOB 1142298.
         if (mon >= 0 && mon <= INT_MAX)
         {
-            year +=  ((int)mon) / 12;
-            mon = ((int)mon) % 12;
+            year +=  static_cast<int>(mon) / 12;
+            mon = static_cast<int>(mon) % 12;
         }
         else
         {
@@ -112,9 +112,9 @@ namespace Js
         day += DayFromYear(year);
 
         AssertMsg(mon >= 0 && mon <= 11, "'mon' must be in the range of [0..11].");
-        day += g_rgday[(int)mon];
+        day += g_rgday[static_cast<int>(mon)];
 
-        if (mon >= 2 && !FLeap((int)year))
+        if (mon >= 2 && !FLeap(static_cast<int>(year)))
         {
             day -= 1;
         }
@@ -150,8 +150,8 @@ namespace Js
 
         if (day > 0)
         {
-            day += ((int)((year + 1) / 4)) - ((int)((year + 69) / 100)) +
-                ((int)((year + 369) / 400));
+            day += static_cast<int>((year + 1) / 4) - static_cast<int>((year + 69) / 100) +
+                static_cast<int>((year + 369) / 400);
         }
         else
         {
@@ -176,11 +176,11 @@ namespace Js
     /*static*/
     int DateUtilities::GetDayMinAndUpdateYear(int day, int &year)
     {
-        int dayMin = (int)DayFromYear(year);
+        int dayMin = static_cast<int>(DayFromYear(year));
         if (day < dayMin)
         {
             year--;
-            dayMin = (int)DayFromYear(year);
+            dayMin = static_cast<int>(DayFromYear(year));
         }
         return dayMin;
     }
@@ -205,26 +205,26 @@ namespace Js
 
         if (tv > 0)
         {
-            day = (int)(tv / 86400000);
-            pymd->time = (int)DblModPos(tv, 86400000);
+            day = static_cast<int>(tv / 86400000);
+            pymd->time = static_cast<int>(DblModPos(tv, 86400000));
             pymd->wday = (day + 4) % 7;
 
-            pymd->year = 1970 + (int)((400 * (double)day + 398) / 146097);
+            pymd->year = 1970 + static_cast<int>((400 * static_cast<double>(day) + 398) / 146097);
             dayMin = GetDayMinAndUpdateYear(day, pymd->year);
-            pymd->yt = (int)((dayMin + 4) % 7);
+            pymd->yt = (dayMin + 4) % 7;
 
         }
         else
         {
-            day = (int)floor(tv / 86400000);
-            pymd->time = (int)DblModPos(tv, 86400000);
-            pymd->wday = (int)DblModPos(day + 4, 7);
+            day = static_cast<int>(floor(tv / 86400000));
+            pymd->time = static_cast<int>(DblModPos(tv, 86400000));
+            pymd->wday = static_cast<int>(DblModPos(day + 4, 7));
 
-            pymd->year = 1970 + (int)floor(((400 * (double)day + 398) / 146097));
+            pymd->year = 1970 + static_cast<int>(floor(((400 * static_cast<double>(day) + 398) / 146097)));
             dayMin = GetDayMinAndUpdateYear(day, pymd->year);
-            pymd->yt = (int)DblModPos(dayMin + 4, 7);
+            pymd->yt = static_cast<int>(DblModPos(dayMin + 4, 7));
         }
-        yday = (int)(day - dayMin);
+        yday = day - dayMin;
 //      Assert(yday >= 0 && (yday < 365 || yday == 365 && FLeap(pymd->year)));
         pymd->yday = yday;
 
@@ -280,18 +280,18 @@ namespace Js
 
         if (tv > 0)
         {
-            day = (int)(tv / 86400000);
-            year = 1970 + (int)((400 * (double)day + 398) / 146097);
+            day = static_cast<int>(tv / 86400000);
+            year = 1970 + static_cast<int>((400 * static_cast<double>(day) + 398) / 146097);
             dayMin = GetDayMinAndUpdateYear(day, year);
-            yearType = (int)((dayMin + 4) % 7);
+            yearType = (dayMin + 4) % 7;
 
         }
         else
         {
-            day = (int)floor(tv / 86400000);
-            year = 1970 + (int)floor(((400 * (double)day + 398) / 146097));
+            day = static_cast<int>(floor(tv / 86400000));
+            year = 1970 + static_cast<int>(floor(((400 * static_cast<double>(day) + 398) / 146097)));
             dayMin = GetDayMinAndUpdateYear(day, year);
-            yearType = (int)DblModPos(dayMin + 4, 7);
+            yearType = static_cast<int>(DblModPos(dayMin + 4, 7));
         }
 
         if (FLeap(year))

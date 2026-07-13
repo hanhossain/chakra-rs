@@ -82,8 +82,7 @@ namespace Js {
         //
         // Create the Tick
         //
-
-        unsigned long luTick = luTime * s_luFreq / ((unsigned long) 1000000);
+        unsigned long luTick = luTime * s_luFreq / static_cast<unsigned long>(1000000);
         return Tick(luTick);
     }
 
@@ -332,8 +331,8 @@ namespace Js {
         // Ensure we can convert losslessly.
         //
 #if DBG
-        const long lnMinTimeDelta = INT64_MIN / ((long) 1000000);
-        const long lnMaxTimeDelta = INT64_MAX / ((long) 1000000);
+        const long lnMinTimeDelta = INT64_MIN / static_cast<long>(1000000);
+        const long lnMaxTimeDelta = INT64_MAX / static_cast<long>(1000000);
         AssertMsg((m_lnDelta <= lnMaxTimeDelta) && (m_lnDelta >= lnMinTimeDelta),
                 "Ensure delta can be converted to microseconds losslessly");
 #endif
@@ -342,8 +341,8 @@ namespace Js {
         // Compute the microseconds.
         //
 
-        const long lnFreq = (long) Tick::s_luFreq;
-        long lnTickDelta = (m_lnDelta * ((long) 1000000)) / lnFreq;
+        const long lnFreq = static_cast<long>(Tick::s_luFreq);
+        long lnTickDelta = (m_lnDelta * static_cast<long>(1000000)) / lnFreq;
         return lnTickDelta;
     }
 
@@ -367,7 +366,7 @@ namespace Js {
         // Ensure that we can convert losslessly.
         //
 
-        long lnFreq = (long) Tick::s_luFreq;
+        long lnFreq = static_cast<long>(Tick::s_luFreq);
 
 #if DBG
         const long lnMinTimeDelta = INT64_MIN / lnFreq;
@@ -381,7 +380,7 @@ namespace Js {
         // Create the TickDelta
         //
 
-        long lnTickDelta = (lnTimeDelta * lnFreq) / ((long) 1000000);
+        long lnTickDelta = (lnTimeDelta * lnFreq) / static_cast<long>(1000000);
         TickDelta td(lnTickDelta);
 
         AssertMsg(td != Infinite(), "Can not create infinite TickDelta");
@@ -404,7 +403,7 @@ namespace Js {
     {
         AssertMsg(nTimeDelta != INT_MAX, "Use Infinite() to create an infinite TickDelta");
 
-        return FromMicroseconds((long) nTimeDelta);
+        return FromMicroseconds(static_cast<long>(nTimeDelta));
     }
 
 
@@ -423,7 +422,7 @@ namespace Js {
     {
         AssertMsg(nTimeDelta != INT_MAX, "Use Infinite() to create an infinite TickDelta");
 
-        return FromMicroseconds(((long) nTimeDelta) * ((long) 1000));
+        return FromMicroseconds(static_cast<long>(nTimeDelta) * static_cast<long>(1000));
     }
 
 
@@ -597,7 +596,7 @@ namespace Js {
     {
         AssertMsg(*this != Infinite(), "Can not combine infinite TickDeltas");
 
-        return TickDelta((long) (((double) m_lnDelta) * ((double) flScale)));
+        return TickDelta(static_cast<long>(static_cast<double>(m_lnDelta) * static_cast<double>(flScale)));
     }
 
 
@@ -637,7 +636,7 @@ namespace Js {
         AssertMsg(*this != Infinite(), "Can not combine infinite TickDeltas");
         AssertMsg(flScale != 0, "Can not scale by 0");
 
-        return TickDelta((long) (((double) m_lnDelta) / ((double) flScale)));
+        return TickDelta(static_cast<long>(static_cast<double>(m_lnDelta) / static_cast<double>(flScale)));
     }
 
 
@@ -785,8 +784,8 @@ namespace Js {
     }
     void Tick::TickStaticInitializer::InitType()
     {
-        /* CheckWin32( */ QueryPerformanceFrequency((LARGE_INTEGER *) &Tick::s_luFreq);
-        /* CheckWin32( */ QueryPerformanceCounter((LARGE_INTEGER *) &Tick::s_luBegin);
+        /* CheckWin32( */ QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&Tick::s_luFreq));
+        /* CheckWin32( */ QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&Tick::s_luBegin));
 
 #if DBG
         s_luBegin += s_DEBUG_luStart;
@@ -811,7 +810,7 @@ namespace Js {
     {
         // Determine our current time
         unsigned long luCurrent = s_luBegin;
-        /* Verify( */ QueryPerformanceCounter((LARGE_INTEGER *) &luCurrent);
+        /* Verify( */ QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&luCurrent));
 
 #if DBG
         luCurrent += s_DEBUG_luStart + s_DEBUG_luSkip;
@@ -829,7 +828,7 @@ namespace Js {
         // this math depends on where the Tick is.
         //
 
-        const unsigned long luOneSecUs = (unsigned long) 1000000;
+        const unsigned long luOneSecUs = 1000000;
         const unsigned long luSafeTick = UINT64_MAX / luOneSecUs;
         if (m_luTick < luSafeTick)
         {
@@ -878,10 +877,10 @@ namespace Js {
             lnRound = -500;
         }
 
-        long lnDelta = (nTickUs + lnRound) / ((long) 1000);
+        long lnDelta = (nTickUs + lnRound) / static_cast<long>(1000);
         AssertMsg((lnDelta <= INT_MAX) && (lnDelta >= INT_MIN), "Ensure no overflow");
 
-        return (int) lnDelta;
+        return static_cast<int>(lnDelta);
     }
 
 }

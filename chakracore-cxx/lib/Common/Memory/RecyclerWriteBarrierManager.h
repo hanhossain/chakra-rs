@@ -80,7 +80,7 @@ public:
     }
     BOOLEAN IsCardTableCommited(_In_ uintptr_t index)
     {
-        return committedSections.Test((BVIndex)(index/ AutoSystemInfo::PageSize));
+        return committedSections.Test(static_cast<BVIndex>(index / AutoSystemInfo::PageSize));
     }
     BOOLEAN IsCardTableCommited(_In_ void* address)
     {

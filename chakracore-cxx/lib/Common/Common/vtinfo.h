@@ -86,9 +86,9 @@ enum VirtualTableInfoCtorEnum
 class VirtualTableInfoBase
 {
 public:
-    static long GetVirtualTable(void * ptr) { return (*(long*)ptr); }
+    static long GetVirtualTable(void * ptr) { return (*static_cast<long*>(ptr)); }
 protected:
-    static void SetVirtualTable(void * ptr, long vt) { *(long*)ptr = vt; }
+    static void SetVirtualTable(void * ptr, long vt) { *static_cast<long*>(ptr) = vt; }
 };
 
 template <typename T>
