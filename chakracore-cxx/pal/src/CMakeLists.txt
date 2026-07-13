@@ -132,7 +132,6 @@ target_compile_options(Chakra.Pal PRIVATE -Wall
     # -Werror
     -Wno-format
     -Wno-vla-cxx-extension
-    -Wold-style-cast
 )
 
 target_include_directories(Chakra.Pal
