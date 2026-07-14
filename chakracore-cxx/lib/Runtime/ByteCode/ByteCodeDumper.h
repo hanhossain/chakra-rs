@@ -31,12 +31,12 @@ namespace Js
         static void DumpProfileId(uint id);
 
 #define LAYOUT_TYPE(layout) \
-    static void Dump##layout(OpCode op, const unaligned OpLayout##layout* data, FunctionBody * dumpFunction, ByteCodeReader& reader);
+    static void Dump##layout(OpCode op, const OpLayout##layout* data, FunctionBody * dumpFunction, ByteCodeReader& reader);
 #define LAYOUT_TYPE_WMS(layout) \
-    template <class T> static void Dump##layout(OpCode op, const unaligned T* data, FunctionBody * dumpFunction, ByteCodeReader& reader);
+    template <class T> static void Dump##layout(OpCode op, const T* data, FunctionBody * dumpFunction, ByteCodeReader& reader);
 #define LAYOUT_TYPE_PROFILED(layout) \
         LAYOUT_TYPE(layout) \
-        static void DumpProfiled##layout(OpCode op, const unaligned OpLayoutProfiled##layout * data, FunctionBody * dumpFunction, ByteCodeReader& reader)  \
+        static void DumpProfiled##layout(OpCode op, const OpLayoutProfiled##layout * data, FunctionBody * dumpFunction, ByteCodeReader& reader)  \
         { \
             Assert(OpCodeUtil::GetOpCodeLayout(op) == OpLayoutType::Profiled##layout); \
             Js::OpCodeUtil::ConvertOpToNonProfiled(op); \
@@ -45,7 +45,7 @@ namespace Js
         }
 #define LAYOUT_TYPE_PROFILED2(layout) \
         LAYOUT_TYPE(layout) \
-        static void DumpProfiled2##layout(OpCode op, const unaligned OpLayoutProfiled2##layout * data, FunctionBody * dumpFunction, ByteCodeReader& reader)  \
+        static void DumpProfiled2##layout(OpCode op, const OpLayoutProfiled2##layout * data, FunctionBody * dumpFunction, ByteCodeReader& reader)  \
         { \
             Assert(OpCodeUtil::GetOpCodeLayout(op) == OpLayoutType::Profiled2##layout); \
             Js::OpCodeUtil::ConvertOpToNonProfiled(op); \
@@ -56,7 +56,7 @@ namespace Js
 #define LAYOUT_TYPE_PROFILED_WMS(layout) \
         LAYOUT_TYPE_WMS(layout) \
         template <class T> \
-        static void DumpProfiled##layout(OpCode op, const unaligned OpLayoutDynamicProfile<T> * data, FunctionBody * dumpFunction, ByteCodeReader& reader)  \
+        static void DumpProfiled##layout(OpCode op, const OpLayoutDynamicProfile<T> * data, FunctionBody * dumpFunction, ByteCodeReader& reader)  \
         { \
             Assert(OpCodeUtil::GetOpCodeLayout(op) == OpLayoutType::Profiled##layout); \
             Js::OpCodeUtil::ConvertOpToNonProfiled(op); \
@@ -66,7 +66,7 @@ namespace Js
 #define LAYOUT_TYPE_PROFILED2_WMS(layout) \
         LAYOUT_TYPE_PROFILED_WMS(layout) \
         template <class T> \
-        static void DumpProfiled2##layout(OpCode op, const unaligned OpLayoutDynamicProfile2<T> * data, FunctionBody * dumpFunction, ByteCodeReader& reader)  \
+        static void DumpProfiled2##layout(OpCode op, const OpLayoutDynamicProfile2<T> * data, FunctionBody * dumpFunction, ByteCodeReader& reader)  \
         { \
             Assert(OpCodeUtil::GetOpCodeLayout(op) == OpLayoutType::Profiled2##layout); \
             Js::OpCodeUtil::ConvertOpToNonProfiled(op); \

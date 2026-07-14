@@ -1873,7 +1873,7 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
 
     if (!instr->HasLazyBailOut())
     {
-        linearScanMD.GenerateBailOut(instr, state.registerSaveSyms, _countof(state.registerSaveSyms));
+        linearScanMD.GenerateBailOut(instr, state.registerSaveSyms, std::size(state.registerSaveSyms));
     }
 
     // generate the constant table

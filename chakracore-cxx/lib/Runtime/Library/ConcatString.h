@@ -204,13 +204,13 @@ namespace Js
         {
             const_cast<ConcatStringWrapping *>(this)->EnsureAllSlots();
 #pragma prefast(suppress: __WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY, "WDGVSO:14980704 The CopyImpl method uses GetLength() to ensure we only access m_charLength elements of buffer.")
-            __super::CopyImpl(buffer, _countof(m_slots), AddressOf(m_slots[0]), nestedStringTreeCopyInfos, recursionDepth);
+            __super::CopyImpl(buffer, std::size(m_slots), AddressOf(m_slots[0]), nestedStringTreeCopyInfos, recursionDepth);
         }
         virtual int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const override
         {
             const_cast<ConcatStringWrapping *>(this)->EnsureAllSlots();
             items = AddressOf(m_slots[0]);
-            return _countof(m_slots);
+            return std::size(m_slots);
         }
     public:
         static ConcatStringWrapping<L, R>* New(JavascriptString* inner);

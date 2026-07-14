@@ -254,8 +254,8 @@ namespace Js
     // function name out of the display name so the user will see just the function name e.g. "Echo" instead of the full display name in debugger.
     const char16_t * VariableWalkerBase::ParseFunctionName(const char16_t * displayNameBuffer, const charcount_t displayNameBufferLength, ScriptContext* scriptContext)
     {
-        const charcount_t funcStringLength = _countof(JS_DISPLAY_STRING_FUNCTION_HEADER) - 1; // discount the ending null character in string literal
-        const charcount_t templateStringLength = funcStringLength + _countof(JS_DISPLAY_STRING_FUNCTION_BODY) - 1; // discount the ending null character in string literal
+        const charcount_t funcStringLength = std::size(JS_DISPLAY_STRING_FUNCTION_HEADER) - 1; // discount the ending null character in string literal
+        const charcount_t templateStringLength = funcStringLength + std::size(JS_DISPLAY_STRING_FUNCTION_BODY) - 1; // discount the ending null character in string literal
         // If the string doesn't meet our expected format; return the original string.
         if (displayNameBufferLength <= templateStringLength || (PAL_wmemcmp(displayNameBuffer, JS_DISPLAY_STRING_FUNCTION_HEADER, funcStringLength) != 0))
         {

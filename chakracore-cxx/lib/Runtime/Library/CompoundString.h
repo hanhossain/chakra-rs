@@ -561,7 +561,7 @@ namespace Js
     template<CharCount MinimumCharCapacity>
     CharCount CompoundString::Builder<MinimumCharCapacity>::LastBlockPointerCapacity() const
     {
-        return _countof(buffer);
+        return std::size(buffer);
     }
 
     template<CharCount MinimumCharCapacity>

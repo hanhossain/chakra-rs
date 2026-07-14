@@ -81,7 +81,7 @@ uint32_t RuntimeThreadData::ThreadProc()
     while (true)
     {
         HANDLE handles[] = { this->hevntReceivedBroadcast, this->hevntShutdown };
-        uint32_t waitRet = WaitForMultipleObjects(_countof(handles), handles, false, INFINITE);
+        uint32_t waitRet = WaitForMultipleObjects(std::size(handles), handles, false, INFINITE);
 
         if (waitRet == WAIT_OBJECT_0)
         {

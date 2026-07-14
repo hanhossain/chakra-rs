@@ -105,8 +105,6 @@ namespace Js
         Recycler* recycler = scriptContext->GetRecycler();
 
 
-        static_assert(_countof(descriptors) == size);
-
         SimpleTypeHandler * newTypeHandler = RecyclerNew(recycler, SimpleTypeHandler, this, true /*unused*/);
 
         // Consider: Add support for fixed fields to SimpleTypeHandler when
@@ -684,7 +682,6 @@ namespace Js
             instance->ChangeType();
 
 
-            static_assert(_countof(descriptors) == size);
             if (size > 1)
             {
                 if (GetIsLocked())

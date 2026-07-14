@@ -318,7 +318,7 @@ void ThreadContext::ClearHeapEnum()
 
 void ThreadContext::GlobalInitialize()
 {
-    for (int i = 0; i < _countof(builtInPropertyRecords); i++)
+    for (int i = 0; i < std::size(builtInPropertyRecords); i++)
     {
         builtInPropertyRecords[i]->SetHash(JsUtil::CharacterBuffer<char16_t>::StaticGetHashCode(builtInPropertyRecords[i]->GetBuffer(), builtInPropertyRecords[i]->GetLength()));
     }
@@ -774,7 +774,7 @@ void ThreadContext::InitializePropertyMaps()
 
 void ThreadContext::UncheckedAddBuiltInPropertyId()
 {
-    for (int i = 0; i < _countof(builtInPropertyRecords); i++)
+    for (int i = 0; i < std::size(builtInPropertyRecords); i++)
     {
         AddPropertyRecordInternal(builtInPropertyRecords[i]);
     }

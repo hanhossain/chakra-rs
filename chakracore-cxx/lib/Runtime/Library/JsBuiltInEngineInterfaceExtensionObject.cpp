@@ -119,7 +119,7 @@ namespace Js
 #endif
 
             Js::Var args[] = { scriptContext->GetLibrary()->GetUndefined(), scriptContext->GetLibrary()->GetEngineInterfaceObject() };
-            Js::CallInfo callInfo(Js::CallFlags_Value, _countof(args));
+            Js::CallInfo callInfo(Js::CallFlags_Value, std::size(args));
 
 #if ENABLE_JS_REENTRANCY_CHECK
             // Create a Reentrancy lock to make sure we correctly restore the lock at the end of BuiltIns initialization

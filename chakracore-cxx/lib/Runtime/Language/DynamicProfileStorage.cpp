@@ -216,7 +216,7 @@ void DynamicProfileStorage::StorageInfo::GetFilename(_Out_writes_z_(_MAX_PATH) c
 {
     char16_t tempFile[_MAX_PATH];
     wcscpy_s(tempFile, u"jsdpcache_file");
-    _itow_s(this->fileId, tempFile + _countof(u"jsdpcache_file") - 1, _countof(tempFile) - _countof(u"jsdpcache_file") + 1, 10);
+    _itow_s(this->fileId, tempFile + std::size(u"jsdpcache_file") - 1, std::size(tempFile) - std::size(u"jsdpcache_file") + 1, 10);
     _wmakepath_s(filename, _MAX_PATH, cacheDrive, cacheDir, tempFile, u".dpd");
 }
 

@@ -93,7 +93,7 @@ namespace Js
             AssertMsg(jumpByteOffset < byteCount - sizeof(T),
                 "Must have valid jump site within byte-code to back-patch");
 
-            unaligned T * pnBackPatch = reinterpret_cast<unaligned T *>(&byteBuffer[jumpByteOffset]);
+            T * pnBackPatch = reinterpret_cast<T *>(&byteBuffer[jumpByteOffset]);
 
             ByteCodeLabel labelID = jumpInfo.labelId;
             CheckLabel(labelID);
@@ -159,7 +159,7 @@ namespace Js
         rootObjectLoadInlineCacheOffsets.Map([=](size_t offset)
         {
             Assert(offset < byteCount - sizeof(int));
-            unaligned uint * pnBackPatch = reinterpret_cast<unaligned uint *>(&byteBuffer[offset]);
+            uint * pnBackPatch = reinterpret_cast<uint *>(&byteBuffer[offset]);
             *pnBackPatch += rootObjectLoadInlineCacheStart;
         });
 
@@ -168,7 +168,7 @@ namespace Js
         rootObjectLoadMethodInlineCacheOffsets.Map([=](size_t offset)
         {
             Assert(offset < byteCount - sizeof(int));
-            unaligned uint * pnBackPatch = reinterpret_cast<unaligned uint *>(&byteBuffer[offset]);
+            uint * pnBackPatch = reinterpret_cast<uint *>(&byteBuffer[offset]);
             *pnBackPatch += rootObjectLoadMethodInlineCacheStart;
         });
 
@@ -177,7 +177,7 @@ namespace Js
         rootObjectStoreInlineCacheOffsets.Map([=](size_t offset)
         {
             Assert(offset < byteCount - sizeof(int));
-            unaligned uint * pnBackPatch = reinterpret_cast<unaligned uint *>(&byteBuffer[offset]);
+            uint * pnBackPatch = reinterpret_cast<uint *>(&byteBuffer[offset]);
             *pnBackPatch += rootObjectStoreInlineCacheStart;
         });
 

@@ -1626,7 +1626,7 @@ namespace Js
         Var regEx = JavascriptOperators::NewObjectCreationHelper_ReentrancySafe(speciesConstructor, isDefaultConstructor, scriptContext->GetThreadContext(), [=]()->Js::Var
         {
             Js::Var args[] = { speciesConstructor, thisObj, flags };
-            Js::CallInfo callInfo(Js::CallFlags_New, _countof(args));
+            Js::CallInfo callInfo(Js::CallFlags_New, std::size(args));
             return JavascriptOperators::NewScObject(
                 speciesConstructor,
                 Js::Arguments(callInfo, args),

@@ -300,7 +300,7 @@ static const byte * ReadVariableInt(const byte * buffer, size_t remainingBytes, 
 
         if (firstByte == TWO_BYTE_SENTINEL)
         {
-            uint16 twoByteValue = *((serialization_alignment uint16*) locationOfValue);
+            uint16 twoByteValue = *((uint16*) locationOfValue);
             Assert(twoByteValue > ONE_BYTE_MAX);
 
             *value = twoByteValue;
@@ -311,7 +311,7 @@ static const byte * ReadVariableInt(const byte * buffer, size_t remainingBytes, 
         {
             Assert(remainingBytes >= sizeof(T));
             Assert(firstByte == FOUR_BYTE_SENTINEL);
-            *value = *((serialization_alignment T*) locationOfValue);
+            *value = *((T*) locationOfValue);
             Assert(*value > TWO_BYTE_MAX || *value <= 0);
 
             PHASE_PRINT_TESTTRACE1(Js::VariableIntEncodingPhase, u"TestTrace: VariableIntEncoding (decode) - 4 bytes, value %u\n", *value);
@@ -442,7 +442,7 @@ public:
           V3(u"V3", 0),
           V4(u"V4", 0),
           architecture(u"Expected Architecture", magicArchitecture),
-          expectedFunctionBodySize(u"Expected Function Body Size", sizeof(unaligned FunctionBody)),
+          expectedFunctionBodySize(u"Expected Function Body Size", sizeof(FunctionBody)),
           expectedBuildInPropertyCount(u"Expected Built-in Properties", builtInPropertyCount),
           expectedOpCodeCount(u"Expected Number of OpCodes",  (int)OpCode::Count),
           originalSourceSize(u"Source Size", sourceSize),
@@ -840,20 +840,20 @@ public:
     }
 
     template<typename TLayout>
-    unaligned TLayout * DuplicateLayout(unaligned const TLayout * in)
+    TLayout * DuplicateLayout(const TLayout * in)
     {
-        auto sizeOfLayout = sizeof(unaligned TLayout);
+        auto sizeOfLayout = sizeof(TLayout);
         auto newLayout = AnewArray(alloc, byte, sizeOfLayout);
         js_memcpy_s(newLayout, sizeOfLayout, in, sizeOfLayout);
-        return (unaligned TLayout * )newLayout;
+        return (TLayout * )newLayout;
     }
 
     template<typename T>
     uint32_t Prepend(BufferBuilderList & builder, const char16_t* clue, T * t)
     {
-        auto block = Anew(alloc, BufferBuilderRaw, clue, sizeof(serialization_alignment T), (const byte*)t);
+        auto block = Anew(alloc, BufferBuilderRaw, clue, sizeof(T), (const byte*)t);
         builder.list = builder.list->Prepend(block, alloc);
-        return sizeof(serialization_alignment T);
+        return sizeof(T);
     }
 
     struct AuxRecord
@@ -1289,7 +1289,7 @@ public:
         definedFields.has_auxiliary = true;
         PrependInt32(builder, u"Auxiliary Structure Count", count);
         auto writeAuxVarArray = [&](uint offset, bool isVarCount, int count, const Var * elements)  {
-            typedef serialization_alignment SerializedVarArray T;
+            typedef SerializedVarArray T;
             T header(offset, isVarCount, count);
             auto block = Anew(alloc, ConstantSizedBufferBuilderOf<T>, u"Var Array", header);
             builder.list = builder.list->Prepend(block, alloc);
@@ -1321,7 +1321,7 @@ public:
             int count = ints->count;
             const int32_t * elements = ints->elements;
 
-            typedef serialization_alignment SerializedIntArray T;
+            typedef SerializedIntArray T;
             T header(offset, count);
             auto block = Anew(alloc, ConstantSizedBufferBuilderOf<T>, u"Int Array", header);
             builder.list = builder.list->Prepend(block, alloc);
@@ -1343,7 +1343,7 @@ public:
             int count = doubles->count;
             const double * elements = doubles->elements;
 
-            typedef serialization_alignment SerializedFloatArray T;
+            typedef SerializedFloatArray T;
             T header(offset, count);
             auto block = Anew(alloc, ConstantSizedBufferBuilderOf<T>, u"Float Array", header);
             builder.list = builder.list->Prepend(block, alloc);
@@ -1363,7 +1363,7 @@ public:
         auto writeAuxPropertyIdArray = [&](uint offset, byte extraSlots) -> BufferBuilder* {
             const PropertyIdArray * propIds = reader.ReadPropertyIdArray(offset, functionBody);
 
-            typedef serialization_alignment SerializedPropertyIdArray T;
+            typedef SerializedPropertyIdArray T;
             T header(offset, propIds->count, extraSlots, propIds->hadDuplicates, propIds->has__proto__);
             auto block = Anew(alloc, ConstantSizedBufferBuilderOf<T>, u"Property Id Array", header);
             builder.list = builder.list->Prepend(block, alloc);
@@ -1389,7 +1389,7 @@ public:
         auto writeAuxFuncInfoArray = [&](uint offset) -> BufferBuilder* {
             const FuncInfoArray * funcInfos = reader.ReadAuxArray<FuncInfoEntry>(offset, functionBody);
 
-            typedef serialization_alignment SerializedFuncInfoArray T;
+            typedef SerializedFuncInfoArray T;
             T header(offset, funcInfos->count);
             auto block = Anew(alloc, ConstantSizedBufferBuilderOf<T>, u"Funcinfo Array", header);
             builder.list = builder.list->Prepend(block, alloc);
@@ -1893,7 +1893,7 @@ public:
         auto entry = Anew(alloc, ConstantSizedBufferBuilderOf<TStructType>, clue, *value);
         builder.list = builder.list->Prepend(entry, alloc);
 
-        return sizeof(serialization_alignment TStructType);
+        return sizeof(TStructType);
     }
 
     uint32_t AddPropertyIdOfFormals(BufferBuilderList & builder, PropertyIdArray * propIds, FunctionBody * function)
@@ -2635,7 +2635,7 @@ public:
     uint scopeInfoCount;
     const byte * string16s;
     int string16Count;
-    const unaligned StringIndexRecord * string16IndexTable;
+    const StringIndexRecord * string16IndexTable;
     const byte * string16Table;
     int lineInfoCacheCount;
     const byte * lineInfoCaches;
@@ -2661,7 +2661,7 @@ public:
         V3(0),
         V4(0),
         architecture(0),
-        expectedFunctionBodySize(sizeof(unaligned FunctionBody)),
+        expectedFunctionBodySize(sizeof(FunctionBody)),
         expectedBuildInPropertyCount(builtInPropertyCount),
         expectedOpCodeCount((int)OpCode::Count),
         firstFunctionId(0),
@@ -2878,10 +2878,10 @@ public:
     }
 
     template <typename TStructType>
-    const byte * ReadStruct(const byte * buffer, serialization_alignment TStructType ** value)
+    const byte * ReadStruct(const byte * buffer, TStructType ** value)
     {
-        *value = (serialization_alignment TStructType*)buffer;
-        return buffer + sizeof(serialization_alignment TStructType);
+        *value = (TStructType*)buffer;
+        return buffer + sizeof(TStructType);
     }
 
     const byte * ReadOffsetAsPointer(const byte * buffer, byte const ** value)
@@ -2925,7 +2925,7 @@ public:
 
         for (uint i = 0; i < countOfAuxiliaryStructure; i++)
         {
-            auto part = (serialization_alignment const SerializedAuxiliary * )current;
+            auto part = (const SerializedAuxiliary * )current;
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
             Assert(part->auxMagic == magicStartOfAux);
 #endif
@@ -2982,7 +2982,7 @@ public:
         {
             Assert(false);
         }
-        const unaligned StringIndexRecord* record = string16IndexTable + (id - this->expectedBuildInPropertyCount);
+        const StringIndexRecord* record = string16IndexTable + (id - this->expectedBuildInPropertyCount);
         if(isPropertyRecord)
         {
             *isPropertyRecord = record->isPropertyRecord;
@@ -3658,10 +3658,10 @@ public:
 
     const byte * ReadFunctionBodyHeader(const byte * functionBytes, int& displayNameId, int& lineNumber, int& columnNumber, unsigned int& bitflags)
     {
-        serialization_alignment SerializedFieldList* definedFields = (serialization_alignment SerializedFieldList*) functionBytes;
+        SerializedFieldList* definedFields = (SerializedFieldList*) functionBytes;
 
         // Basic function body constructor arguments
-        const byte * current = functionBytes + sizeof(serialization_alignment SerializedFieldList);
+        const byte * current = functionBytes + sizeof(SerializedFieldList);
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         int constant;
         current = ReadInt32(current, &constant);
@@ -3800,7 +3800,7 @@ public:
 
         for (int i = WAsmJs::LIMIT - 1; i >= 0; --i)
         {
-            serialization_alignment WAsmJs::TypedSlotInfo* info;
+            WAsmJs::TypedSlotInfo* info;
             current = ReadStruct<WAsmJs::TypedSlotInfo>(current, &info);
             WAsmJs::TypedSlotInfo* typedInfo = funcInfo->GetTypedSlotInfo((WAsmJs::Types)i);
             *typedInfo = *info;
@@ -3877,7 +3877,7 @@ public:
 
         for (int i = 0; i < count; i++)
         {
-            serialization_alignment AsmJsModuleInfo::ModuleVar * modVar;
+            AsmJsModuleInfo::ModuleVar * modVar;
             current = ReadStruct<AsmJsModuleInfo::ModuleVar>(current, &modVar);
             moduleInfo->SetVar(i, *modVar);
         }
@@ -3938,9 +3938,9 @@ public:
             moduleInfo->SetFunctionTable(i, funcTable);
         }
 
-        serialization_alignment AsmJsModuleMemory * modMem = (serialization_alignment AsmJsModuleMemory*)current;
+        AsmJsModuleMemory * modMem = (AsmJsModuleMemory*)current;
         moduleInfo->SetModuleMemory(*modMem);
-        current = current + sizeof(serialization_alignment AsmJsModuleMemory);
+        current = current + sizeof(AsmJsModuleMemory);
 
         current = ReadInt32(current, &count);
         for (int i = 0; i < count; i++)
@@ -3949,8 +3949,8 @@ public:
             current = ReadInt32(current, &id);
             PropertyId key = function->GetByteCodeCache()->LookupPropertyId(id);
 
-            serialization_alignment AsmJsSlot * slot = (serialization_alignment AsmJsSlot*)current;
-            current = current + sizeof(serialization_alignment AsmJsSlot);
+            AsmJsSlot * slot = (AsmJsSlot*)current;
+            current = current + sizeof(AsmJsSlot);
 
             // copy the slot to recycler memory
             AsmJsSlot * recyclerSlot = RecyclerNew(scriptContext->GetRecycler(), AsmJsSlot);
@@ -3958,12 +3958,12 @@ public:
             moduleInfo->GetAsmJsSlotMap()->Add(key, recyclerSlot);
         }
 
-        serialization_alignment BVStatic<ASMMATH_BUILTIN_SIZE> * mathBV = (serialization_alignment BVStatic<ASMMATH_BUILTIN_SIZE>*)current;
-        current = current + sizeof(serialization_alignment BVStatic<ASMMATH_BUILTIN_SIZE>);
+        BVStatic<ASMMATH_BUILTIN_SIZE> * mathBV = (BVStatic<ASMMATH_BUILTIN_SIZE>*)current;
+        current = current + sizeof(BVStatic<ASMMATH_BUILTIN_SIZE>);
         moduleInfo->SetAsmMathBuiltinUsed(*mathBV);
 
-        serialization_alignment BVStatic<ASMARRAY_BUILTIN_SIZE> * arrayBV = (serialization_alignment BVStatic<ASMARRAY_BUILTIN_SIZE>*)current;
-        current = current + sizeof(serialization_alignment BVStatic<ASMARRAY_BUILTIN_SIZE>);
+        BVStatic<ASMARRAY_BUILTIN_SIZE> * arrayBV = (BVStatic<ASMARRAY_BUILTIN_SIZE>*)current;
+        current = current + sizeof(BVStatic<ASMARRAY_BUILTIN_SIZE>);
         moduleInfo->SetAsmArrayBuiltinUsed(*arrayBV);
 
         uint maxAccess;
@@ -3990,7 +3990,7 @@ public:
         unsigned int bitflags;
         const byte * current = this->ReadFunctionBodyHeader(functionBytes, displayNameId, lineNumber, columnNumber, bitflags);
 
-        serialization_alignment SerializedFieldList* definedFields = (serialization_alignment SerializedFieldList*) functionBytes;
+        SerializedFieldList* definedFields = (SerializedFieldList*) functionBytes;
 
         FunctionProxy::SetDisplayNameFlags displayNameFlags = FunctionProxy::SetDisplayNameFlags::SetDisplayNameFlagsDontCopy;
         const char16_t* displayName = nullptr;
@@ -4517,7 +4517,7 @@ public:
             current = ReadUInt32(current, &nestedStub->ichMin);
             current = ReadUInt32(current, (uint*)&nestedStub->fncFlags);
 
-            serialization_alignment RestorePoint* restorePoint;
+            RestorePoint* restorePoint;
             current = ReadStruct<RestorePoint>(current, &restorePoint);
             nestedStub->restorePoint = *restorePoint;
 
@@ -4582,7 +4582,7 @@ public:
     const byte *
     DeserializePropertyIdArray(ScriptContext * scriptContext, const byte * buffer, ByteBlock * deserializeInto, FunctionBody * functionBody)
     {
-        auto serialized = (serialization_alignment const Js::SerializedPropertyIdArray *)buffer;
+        auto serialized = (const Js::SerializedPropertyIdArray *)buffer;
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         Assert(serialized->magic == magicStartOfAuxPropIdArray);
 #endif
@@ -4607,7 +4607,7 @@ public:
             result->elements[propertyCount + i] = elements[propertyCount + i];
         }
         auto current = buffer +
-            sizeof(serialization_alignment const Js::SerializedPropertyIdArray) + (propertyCount + extraSlotCount) * sizeof(PropertyId);
+            sizeof(const Js::SerializedPropertyIdArray) + (propertyCount + extraSlotCount) * sizeof(PropertyId);
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         int magicEnd;
         current = ReadInt32(current, &magicEnd);
@@ -4620,7 +4620,7 @@ public:
     const byte *
     DeserializeFuncInfoArray(ScriptContext * scriptContext, const byte * buffer, ByteBlock * deserializeInto)
     {
-        auto serialized = (serialization_alignment const SerializedFuncInfoArray *)buffer;
+        auto serialized = (const SerializedFuncInfoArray *)buffer;
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         Assert(serialized->magic == magicStartOfAuxFuncInfoArray);
 #endif
@@ -4637,7 +4637,7 @@ public:
             result->elements[i].nestedIndex = elements[i*2];
             result->elements[i].scopeSlot = elements[i*2+1];
         }
-        auto current = buffer + sizeof(serialization_alignment const SerializedFuncInfoArray) + (count * 2 * sizeof(int));
+        auto current = buffer + sizeof(const SerializedFuncInfoArray) + (count * 2 * sizeof(int));
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         int magicEnd;
         current = ReadInt32(current, &magicEnd);
@@ -4650,7 +4650,7 @@ public:
     template<typename T>
     const byte * DeserializeVarArray(ScriptContext * scriptContext, const byte * buffer, ByteBlock * deserializeInto)
     {
-        auto serialized = (serialization_alignment const Js::SerializedVarArray *)buffer;
+        auto serialized = (const Js::SerializedVarArray *)buffer;
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         Assert(serialized->magic == magicStartOfAuxVarArray);
 #endif
@@ -4714,7 +4714,7 @@ public:
 
     const byte * DeserializeIntArray(ScriptContext * scriptContext, const byte * buffer, ByteBlock * deserializeInto)
     {
-        auto serialized = (serialization_alignment const Js::SerializedIntArray *)buffer;
+        auto serialized = (const Js::SerializedIntArray *)buffer;
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         Assert(serialized->magic == magicStartOfAuxIntArray);
 #endif
@@ -4744,7 +4744,7 @@ public:
     const byte *
     DeserializeFloatArray(ScriptContext * scriptContext, const byte * buffer, ByteBlock * deserializeInto)
     {
-        auto serialized = (serialization_alignment const SerializedFloatArray *)buffer;
+        auto serialized = (const SerializedFloatArray *)buffer;
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         Assert(serialized->magic == magicStartOfAuxFltArray);
 #endif

@@ -19,7 +19,7 @@ HeapBlockMap32::HeapBlockMap32(char * startAddress) :
 
 HeapBlockMap32::~HeapBlockMap32()
 {
-    for (uint i = 0; i < _countof(map); i++)
+    for (uint i = 0; i < std::size(map); i++)
     {
         L2MapChunk * chunk = map[i];
         if (chunk)

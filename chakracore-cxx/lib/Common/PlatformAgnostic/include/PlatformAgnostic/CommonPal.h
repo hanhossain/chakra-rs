@@ -176,32 +176,6 @@ typedef uint32_t DBGPROP_INFO_FLAGS;
 
 #define DBGPROP_INFO_ALL ((((((DBGPROP_INFO_NAME | DBGPROP_INFO_TYPE ) | DBGPROP_INFO_VALUE) | DBGPROP_INFO_FULLNAME) | DBGPROP_INFO_ATTRIBUTES) | DBGPROP_INFO_DEBUGPROP))
 
-// _countof
-#if defined _M_X64 || defined _M_ARM || defined _M_ARM64
-#define _UNALIGNED __unaligned
-#else
-#define _UNALIGNED
-#endif
-
-#ifdef __cplusplus
-extern "C++"
-{
-  template <typename _CountofType, size_t _SizeOfArray>
-  char(*__countof_helper(_UNALIGNED _CountofType(&_Array)[_SizeOfArray]))[_SizeOfArray];
-
-#define __crt_countof(_Array) (sizeof(*__countof_helper(_Array)) + 0)
-}
-#else
-#define __crt_countof(_Array) (sizeof(_Array) / sizeof(_Array[0]))
-#endif
-
-#ifndef _countof
-#define _countof __crt_countof
-#endif
-// _countof
-
-#define ARRAYSIZE(A) _countof(A)
-
 template <class T>
 inline T InterlockedExchangeAdd(
       T volatile *Addend,

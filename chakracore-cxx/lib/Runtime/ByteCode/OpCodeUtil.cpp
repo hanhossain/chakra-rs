@@ -202,17 +202,17 @@ namespace Js
     {
         if (op <= Js::OpCode::MaxByteSizedOpcodes)
         {
-            Assert((uint)op < _countof(OpCodeNames));
+            Assert((uint)op < std::size(OpCodeNames));
             return OpCodeNames[(uint)op];
         }
         else if (op < Js::OpCode::ByteCodeLast)
         {
             uint opIndex = op - (Js::OpCode::MaxByteSizedOpcodes + 1);
-            Assert(opIndex < _countof(ExtendedOpCodeNames));
+            Assert(opIndex < std::size(ExtendedOpCodeNames));
             return ExtendedOpCodeNames[opIndex];
         }
         uint opIndex = op - (Js::OpCode::ByteCodeLast + 1);
-        Assert(opIndex < _countof(BackendOpCodeNames));
+        Assert(opIndex < std::size(BackendOpCodeNames));
         return BackendOpCodeNames[opIndex];
     }
 
@@ -237,24 +237,24 @@ namespace Js
     {
         if ((uint)op <= (uint)Js::OpCode::MaxByteSizedOpcodes)
         {
-            AnalysisAssert((uint)op < _countof(OpCodeLayouts));
+            AnalysisAssert((uint)op < std::size(OpCodeLayouts));
             return OpCodeLayouts[(uint)op];
         }
         else if (op < Js::OpCode::ByteCodeLast)
         {
             uint opIndex = op - (Js::OpCode::MaxByteSizedOpcodes + 1);
-            AnalysisAssert(opIndex < _countof(ExtendedOpCodeLayouts));
+            AnalysisAssert(opIndex < std::size(ExtendedOpCodeLayouts));
             return ExtendedOpCodeLayouts[opIndex];
         }
         uint opIndex = op - (Js::OpCode::ByteCodeLast + 1);
-        AnalysisAssert(opIndex < _countof(BackendOpCodeLayouts));
+        AnalysisAssert(opIndex < std::size(BackendOpCodeLayouts));
         return BackendOpCodeLayouts[opIndex];
     }
 
     bool OpCodeUtil::IsValidByteCodeOpcode(OpCode op)
     {
-        static_assert((int)Js::OpCode::MaxByteSizedOpcodes + 1 + _countof(OpCodeUtil::ExtendedOpCodeLayouts) == (int)Js::OpCode::ByteCodeLast);
-        return (uint)op < _countof(OpCodeLayouts)
+        static_assert((int)Js::OpCode::MaxByteSizedOpcodes + 1 + std::size(OpCodeUtil::ExtendedOpCodeLayouts) == (int)Js::OpCode::ByteCodeLast);
+        return (uint)op < std::size(OpCodeLayouts)
             || (op > Js::OpCode::MaxByteSizedOpcodes && op < Js::OpCode::ByteCodeLast);
     }
 

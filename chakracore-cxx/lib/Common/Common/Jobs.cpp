@@ -5,6 +5,8 @@
 #include "CommonCommonPch.h"
 #include "Common/Jobs.h"
 
+#include <iterator>
+
 #include "Exceptions/ExceptionBase.h"
 #include "Exceptions/JavascriptException.h"
 #include "Exceptions/OperationAbortedException.h"
@@ -698,7 +700,7 @@ namespace JsUtil
         const HANDLE handles[] = { jobReady.Handle(), wakeAllBackgroundThreads.Handle() };
 
         //Wait for 1 sec on jobReady and shutdownBackgroundThread events.
-        unsigned int result = WaitForMultipleObjectsEx(_countof(handles), handles, false, 1000, false);
+        unsigned int result = WaitForMultipleObjectsEx(std::size(handles), handles, false, 1000, false);
 
         while (result == WAIT_TIMEOUT)
         {
@@ -710,11 +712,11 @@ namespace JsUtil
                     manager->OnDecommit(threadData);
                 });
 
-                result = WaitForMultipleObjectsEx(_countof(handles), handles, false, INFINITE, false);
+                result = WaitForMultipleObjectsEx(std::size(handles), handles, false, INFINITE, false);
             }
             else
             {
-                result = WaitForMultipleObjectsEx(_countof(handles), handles, false, 1000, false);
+                result = WaitForMultipleObjectsEx(std::size(handles), handles, false, 1000, false);
             }
         }
 

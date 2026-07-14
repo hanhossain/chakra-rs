@@ -39,7 +39,7 @@ JSONStringBuilder::AppendEscapeSequence(_In_ const char16_t character)
     {
         char16_t buf[5];
         // Get hex value
-        _ltow_s(character, buf, _countof(buf), 16);
+        _ltow_s(character, buf, std::size(buf), 16);
 
         // Append leading zeros if necessary before the hex value
         charcount_t count = static_cast<charcount_t>(std::u16string(buf).length());

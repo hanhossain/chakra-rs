@@ -7437,7 +7437,7 @@ BackwardPass::TransferCompoundedAddSubUsesToSrcs(IR::Instr *const instr, const i
     Assert(addSubUses <= MaxCompoundedUsesInAddSubForIgnoringIntOverflow);
 
     IR::Opnd *const srcs[] = { instr->GetSrc1(), instr->GetSrc2() };
-    for(int i = 0; i < _countof(srcs) && srcs[i]; ++i)
+    for(int i = 0; i < std::size(srcs) && srcs[i]; ++i)
     {
         StackSym *const srcSym = IR::RegOpnd::TryGetStackSym(srcs[i]);
         if(!srcSym)

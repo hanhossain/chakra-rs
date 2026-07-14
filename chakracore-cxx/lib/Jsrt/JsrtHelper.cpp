@@ -76,8 +76,8 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
 
     void ChakraBinaryAutoSystemInfoInit(AutoSystemInfo * autoSystemInfo)
     {
-        autoSystemInfo->buildDateHash = JsUtil::CharacterBuffer<char>::StaticGetHashCode(__DATE__, _countof(__DATE__));
-        autoSystemInfo->buildTimeHash = JsUtil::CharacterBuffer<char>::StaticGetHashCode(__TIME__, _countof(__TIME__));
+        autoSystemInfo->buildDateHash = JsUtil::CharacterBuffer<char>::StaticGetHashCode(__DATE__, std::size(__DATE__));
+        autoSystemInfo->buildTimeHash = JsUtil::CharacterBuffer<char>::StaticGetHashCode(__TIME__, std::size(__TIME__));
     }
 
     static pthread_key_t s_threadLocalDummy;

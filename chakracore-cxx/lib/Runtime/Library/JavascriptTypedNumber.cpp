@@ -36,7 +36,7 @@ namespace Js
         char16_t szBuffer[22];
         long val = VarTo<JavascriptTypedNumber<long>>(value)->GetValue();
         int pos = TaggedInt::SignedToString(val, szBuffer, 22);
-        return JavascriptString::NewCopyBuffer(szBuffer + pos, (_countof(szBuffer) - 1) - pos, scriptContext);
+        return JavascriptString::NewCopyBuffer(szBuffer + pos, (std::size(szBuffer) - 1) - pos, scriptContext);
     }
 
     template <>
@@ -45,7 +45,7 @@ namespace Js
         char16_t szBuffer[22];
         unsigned long val = VarTo<JavascriptUInt64Number>(value)->GetValue();
         int pos = TaggedInt::UnsignedToString(val, szBuffer, 22);
-        return JavascriptString::NewCopyBuffer(szBuffer + pos, (_countof(szBuffer) - 1) - pos, scriptContext);
+        return JavascriptString::NewCopyBuffer(szBuffer + pos, (std::size(szBuffer) - 1) - pos, scriptContext);
     }
 
     template <typename T>

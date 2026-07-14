@@ -2145,9 +2145,9 @@ Func::GetVtableName(long address)
     const char * name = vtableMap->Lookup(address, nullptr);
     if (name)
     {
-         if (strncmp(name, "class ", _countof("class ") - 1) == 0)
+         if (strncmp(name, "class ", std::size("class ") - 1) == 0)
          {
-             name += _countof("class ") - 1;
+             name += std::size("class ") - 1;
          }
     }
     return name;

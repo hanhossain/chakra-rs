@@ -1314,7 +1314,7 @@ void ValueType::InitializeTypeIdToBitsMap()
 
 long ValueType::GetVirtualTypedArrayVtable(const Js::TypeId typeId)
 {
-    if (typeId < _countof(TypeIdToVtable))
+    if (typeId < std::size(TypeIdToVtable))
     {
         return TypeIdToVtable[typeId];
     }
@@ -1323,7 +1323,7 @@ long ValueType::GetVirtualTypedArrayVtable(const Js::TypeId typeId)
 
 ValueType ValueType::FromTypeId(const Js::TypeId typeId, bool useVirtual)
 {
-    if(typeId < _countof(TypeIdToBits))
+    if(typeId < std::size(TypeIdToBits))
     {
         if (useVirtual)
         {
@@ -1346,7 +1346,7 @@ ValueType ValueType::FromObject(Js::RecyclableObject *const recyclableObject)
     using namespace Js;
     Assert(recyclableObject);
     const TypeId typeId = recyclableObject->GetTypeId();
-    if (typeId < _countof(TypeIdToBits))
+    if (typeId < std::size(TypeIdToBits))
     {
         const Bits bits = TypeIdToBits[typeId];
         if (!!bits)

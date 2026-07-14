@@ -550,7 +550,7 @@ namespace Js
     // Returns the number of special non-enumerable properties this type has.
     uint JavascriptRegExpConstructor::GetSpecialNonEnumerablePropertyCount() const
     {
-        return _countof(specialnonEnumPropertyIds);
+        return std::size(specialnonEnumPropertyIds);
     }
 
     // Returns the list of special properties for the type.
@@ -579,7 +579,7 @@ namespace Js
     // Returns the number of special non-enumerable properties this type has.
     uint JavascriptRegExpConstructor::GetSpecialEnumerablePropertyCount() const
     {
-        return _countof(specialEnumPropertyIds);
+        return std::size(specialEnumPropertyIds);
     }
 
     // Returns the list of special properties for the type.
@@ -590,7 +590,7 @@ namespace Js
 
     uint JavascriptRegExpConstructor::GetSpecialPropertyCount() const
     {
-        return _countof(specialPropertyIds);
+        return std::size(specialPropertyIds);
     }
 
     BOOL JavascriptRegExpConstructor::GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext)

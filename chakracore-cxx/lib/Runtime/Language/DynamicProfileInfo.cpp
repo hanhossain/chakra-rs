@@ -73,7 +73,7 @@ namespace Js
             { (uint)offsetof(DynamicProfileInfo, loopFlags), functionBody->GetLoopCount() ? BVFixed::GetAllocSize(functionBody->GetLoopCount() * LoopFlags::COUNT) : 0 }
         };
 
-        for (uint i = 0; i < _countof(batch); i++)
+        for (uint i = 0; i < std::size(batch); i++)
         {
             totalAlloc += batch[i].size;
         }
@@ -106,7 +106,7 @@ namespace Js
         }
         uint8_t* current = (uint8_t*)info + sizeof(DynamicProfileInfo);
 
-        for (uint i = 0; i < _countof(batch); i++)
+        for (uint i = 0; i < std::size(batch); i++)
         {
             if (batch[i].size > 0)
             {

@@ -6390,7 +6390,7 @@ Case0:
                     JavascriptOperators::NewObjectCreationHelper_ReentrancySafe(constructor, isDefaultConstructor, scriptContext->GetThreadContext(), [=]()->Js::Var
                     {
                         Js::Var constructorArgs[] = { constructor, JavascriptNumber::ToVar(newLenT, scriptContext) };
-                        Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
+                        Js::CallInfo constructorCallInfo(Js::CallFlags_New, std::size(constructorArgs));
                         return TypedArrayBase::TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), (uint32_t)newLenT, scriptContext);
                     }));
             );
@@ -9642,7 +9642,7 @@ Case0:
                     JavascriptOperators::NewObjectCreationHelper_ReentrancySafe(constructor, isDefaultConstructor, scriptContext->GetThreadContext(), [=]()->Js::Var
                     {
                         Js::Var constructorArgs[] = {constructor, JavascriptNumber::ToVar(length, scriptContext) };
-                        Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
+                        Js::CallInfo constructorCallInfo(Js::CallFlags_New, std::size(constructorArgs));
                         return TypedArrayBase::TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), (uint32_t)length, scriptContext);
                     }));
             )
@@ -10418,7 +10418,7 @@ Case0:
             if (constructor)
             {
                 Js::Var constructorArgs[] = { constructor };
-                Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
+                Js::CallInfo constructorCallInfo(Js::CallFlags_New, std::size(constructorArgs));
                 Js::Arguments arguments(constructorCallInfo, constructorArgs);
                 bool isDefaultConstructor = constructor == scriptContext->GetLibrary()->GetArrayConstructor();
                 JS_REENTRANT(jsReentLock,
@@ -10479,7 +10479,7 @@ Case0:
             if (constructor)
             {
                 Js::Var constructorArgs[] = { constructor, JavascriptNumber::ToVar(len, scriptContext) };
-                Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
+                Js::CallInfo constructorCallInfo(Js::CallFlags_New, std::size(constructorArgs));
                 Js::Arguments arguments(constructorCallInfo, constructorArgs);
                 bool isDefaultConstructor = constructor == scriptContext->GetLibrary()->GetArrayConstructor();
                 JS_REENTRANT(jsReentLock,
@@ -10609,7 +10609,7 @@ Case0:
                 newObj = JavascriptOperators::NewObjectCreationHelper_ReentrancySafe(constructor, isBuiltinArrayCtor || isBuiltInTypedArrayCtor, scriptContext->GetThreadContext(), [=]()->Js::Var
                 {
                     Js::Var constructorArgs[] = { constructor, JavascriptNumber::ToVar(len, scriptContext) };
-                    Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
+                    Js::CallInfo constructorCallInfo(Js::CallFlags_New, std::size(constructorArgs));
                     if (isTypedArrayEntryPoint)
                     {
                         return TypedArrayBase::TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), len, scriptContext);
@@ -12296,7 +12296,7 @@ Case0:
         }
 
         Js::Var constructorArgs[] = { constructor, JavascriptNumber::ToVar(length, scriptContext) };
-        Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
+        Js::CallInfo constructorCallInfo(Js::CallFlags_New, std::size(constructorArgs));
 
         AssertOrFailFast(Js::VarIs<Js::RecyclableObject>(constructor));
         ThreadContext* threadContext = scriptContext->GetThreadContext();
@@ -12581,7 +12581,7 @@ Case0:
     // Returns the number of special non-enumerable properties this type has.
     uint JavascriptArray::GetSpecialPropertyCount() const
     {
-        return _countof(specialPropertyIds);
+        return std::size(specialPropertyIds);
     }
 
     // Returns the list of special non-enumerable properties for the type.

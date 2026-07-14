@@ -2687,7 +2687,7 @@ IRBuilder::BuildW1(Js::OpCode newOpcode, uint32_t offset)
 
     unsigned short           C1;
 
-    const unaligned Js::OpLayoutW1 *regLayout = m_jnReader.W1();
+    const Js::OpLayoutW1 *regLayout = m_jnReader.W1();
     C1 = regLayout->C1;
 
     IR::Instr *     instr;
@@ -5124,7 +5124,7 @@ IRBuilder::BuildAuxNoReg(Js::OpCode newOpcode, uint32_t offset)
     Assert(!OpCodeAttr::HasMultiSizeLayout(newOpcode));
 
     IR::Instr * instr;
-    const unaligned Js::OpLayoutAuxNoReg *auxInsn = m_jnReader.AuxNoReg();
+    const Js::OpLayoutAuxNoReg *auxInsn = m_jnReader.AuxNoReg();
 
     switch (newOpcode)
     {
@@ -5170,7 +5170,7 @@ IRBuilder::BuildAuxiliary(Js::OpCode newOpcode, uint32_t offset)
 {
     Assert(!OpCodeAttr::HasMultiSizeLayout(newOpcode));
 
-    const unaligned Js::OpLayoutAuxiliary *auxInsn = m_jnReader.Auxiliary();
+    const Js::OpLayoutAuxiliary *auxInsn = m_jnReader.Auxiliary();
 
     if (!PHASE_OFF(Js::ClosureRegCheckPhase, m_func))
     {
@@ -5332,7 +5332,7 @@ IRBuilder::BuildProfiledAuxiliary(Js::OpCode newOpcode, uint32_t offset)
 {
     Assert(!OpCodeAttr::HasMultiSizeLayout(newOpcode));
 
-    const unaligned Js::OpLayoutDynamicProfile<Js::OpLayoutAuxiliary> *auxInsn = m_jnReader.ProfiledAuxiliary();
+    const Js::OpLayoutDynamicProfile<Js::OpLayoutAuxiliary> *auxInsn = m_jnReader.ProfiledAuxiliary();
 
     if (!PHASE_OFF(Js::ClosureRegCheckPhase, m_func))
     {
@@ -5530,7 +5530,7 @@ IRBuilder::BuildReg2Aux(Js::OpCode newOpcode, uint32_t offset)
 {
     Assert(!OpCodeAttr::HasMultiSizeLayout(newOpcode));
 
-    const unaligned Js::OpLayoutReg2Aux *auxInsn = m_jnReader.Reg2Aux();
+    const Js::OpLayoutReg2Aux *auxInsn = m_jnReader.Reg2Aux();
 
     if (!PHASE_OFF(Js::ClosureRegCheckPhase, m_func))
     {
@@ -6080,7 +6080,7 @@ IRBuilder::BuildStartCall(Js::OpCode newOpcode, uint32_t offset)
 {
     Assert(newOpcode == Js::OpCode::StartCall);
 
-    const unaligned Js::OpLayoutStartCall * regLayout = m_jnReader.StartCall();
+    const Js::OpLayoutStartCall * regLayout = m_jnReader.StartCall();
     Js::ArgSlot ArgCount = regLayout->ArgCount;
 
     IR::Instr *     instr;
@@ -7150,7 +7150,7 @@ IRBuilder::EnsureConsumeBranchIsland()
         [[maybe_unused]] Js::OpCode opcode = m_jnReader.ReadOp(layoutSize);
         Assert(opcode == Js::OpCode::Br);
         Assert(layoutSize == Js::SmallLayout);
-        const unaligned Js::OpLayoutBr * playout = m_jnReader.Br();
+        const Js::OpLayoutBr * playout = m_jnReader.Br();
         unsigned int      targetOffset = m_jnReader.GetCurrentOffset() + playout->RelativeJumpOffset;
 
         uint branchIslandOffset = m_jnReader.GetCurrentOffset();
@@ -7218,7 +7218,7 @@ IRBuilder::BuildBrLong(Js::OpCode newOpcode, uint32_t offset)
     Assert(!OpCodeAttr::HasMultiSizeLayout(newOpcode));
     Assert(offset != Js::Constants::NoByteCodeOffset);
 
-    const unaligned   Js::OpLayoutBrLong *branchInsn = m_jnReader.BrLong();
+    const Js::OpLayoutBrLong *branchInsn = m_jnReader.BrLong();
     unsigned int      targetOffset = m_jnReader.GetCurrentOffset() + branchInsn->RelativeJumpOffset;
 
     Assert(offset < m_offsetToInstructionCount);
@@ -7283,7 +7283,7 @@ IRBuilder::BuildBr(Js::OpCode newOpcode, uint32_t offset)
     Assert(!OpCodeAttr::HasMultiSizeLayout(newOpcode));
 
     IR::BranchInstr * branchInstr;
-    const unaligned   Js::OpLayoutBr *branchInsn = m_jnReader.Br();
+    const Js::OpLayoutBr *branchInsn = m_jnReader.Br();
     unsigned int      targetOffset = m_jnReader.GetCurrentOffset() + branchInsn->RelativeJumpOffset;
     bool isLongBranchIsland = (m_jnReader.PeekOp() == Js::OpCode::BrLong);
     if (isLongBranchIsland)
@@ -7347,7 +7347,7 @@ IRBuilder::BuildBrS(Js::OpCode newOpcode, uint32_t offset)
     Assert(!OpCodeAttr::HasMultiSizeLayout(newOpcode));
 
     IR::BranchInstr * branchInstr;
-    const unaligned   Js::OpLayoutBrS *branchInsn = m_jnReader.BrS();
+    const Js::OpLayoutBrS *branchInsn = m_jnReader.BrS();
 
     unsigned int      targetOffset = m_jnReader.GetCurrentOffset() + branchInsn->RelativeJumpOffset;
 
@@ -7372,7 +7372,7 @@ IRBuilder::BuildBrProperty(Js::OpCode newOpcode, uint32_t offset)
 {
     Assert(!OpCodeAttr::HasMultiSizeLayout(newOpcode));
 
-    const unaligned   Js::OpLayoutBrProperty *branchInsn = m_jnReader.BrProperty();
+    const Js::OpLayoutBrProperty *branchInsn = m_jnReader.BrProperty();
 
     if (!PHASE_OFF(Js::ClosureRegCheckPhase, m_func))
     {
@@ -7395,7 +7395,7 @@ IRBuilder::BuildBrLocalProperty(Js::OpCode newOpcode, uint32_t offset)
     Assert(!OpCodeAttr::HasMultiSizeLayout(newOpcode));
     Assert(newOpcode == Js::OpCode::BrOnHasLocalProperty);
 
-    const unaligned   Js::OpLayoutBrLocalProperty *branchInsn = m_jnReader.BrLocalProperty();
+    const Js::OpLayoutBrLocalProperty *branchInsn = m_jnReader.BrLocalProperty();
 
     if (m_func->GetLocalClosureSym()->HasByteCodeRegSlot())
     {
@@ -7419,7 +7419,7 @@ IRBuilder::BuildBrEnvProperty(Js::OpCode newOpcode, uint32_t offset)
 {
     Assert(!OpCodeAttr::HasMultiSizeLayout(newOpcode));
 
-    const unaligned   Js::OpLayoutBrEnvProperty *branchInsn = m_jnReader.BrEnvProperty();
+    const Js::OpLayoutBrEnvProperty *branchInsn = m_jnReader.BrEnvProperty();
     IR::Instr *instr;
     IR::BranchInstr * branchInstr;
     IR::RegOpnd *regOpnd;

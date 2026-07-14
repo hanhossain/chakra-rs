@@ -1113,10 +1113,10 @@ AsmJsCompilationError:
         char16_t buf[2048];
         size_t size;
 
-        size = _vsnwprintf_s(buf, _countof(buf), _TRUNCATE, message, argptr);
+        size = _vsnwprintf_s(buf, std::size(buf), _TRUNCATE, message, argptr);
         if (size == -1)
         {
-            size = _countof(buf) - 1;  // characters written, excluding the terminating null
+            size = std::size(buf) - 1;  // characters written, excluding the terminating null
         }
 #ifdef ENABLE_SCRIPT_DEBUGGING
         scriptContext->RaiseMessageToDebugger(messageType, buf, scriptContext->GetUrl());

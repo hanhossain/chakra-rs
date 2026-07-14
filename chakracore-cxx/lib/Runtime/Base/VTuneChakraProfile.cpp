@@ -128,7 +128,7 @@ void VTuneChakraProfile::LogLoopBodyLoadEvent(Js::FunctionBody* body, Js::LoopEn
         size_t methodLength = std::u16string(methodName).length();
         charcount_t ccMethodLength = static_cast<charcount_t>(methodLength);
         ccMethodLength = min(ccMethodLength, UINT_MAX); // Just truncate if it is too big
-        constexpr size_t sizeToAdd = /* spaces */ 2 + _countof(LoopStr) + /* size of loop number */ 10 + /*NULL*/ 1;
+        constexpr size_t sizeToAdd = /* spaces */ 2 + std::size(LoopStr) + /* size of loop number */ 10 + /*NULL*/ 1;
         size_t cbUtf8MethodName = UInt32Math::MulAdd<3, sizeToAdd>(ccMethodLength);
         utf8char_t* utf8MethodName = HeapNewNoThrowArray(utf8char_t, cbUtf8MethodName);
         if(utf8MethodName)

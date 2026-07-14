@@ -209,7 +209,7 @@ namespace Js
         template<int type, bool toJs> //type is int to avoid including Wasm headers
         void OP_InvalidWasmTypeConversion(...);
         void OP_WasmPrintFunc(int index);
-        template <class T> void OP_WasmPrintFunc(const unaligned T* playout) { OP_WasmPrintFunc((int)playout->I1);  }
+        template <class T> void OP_WasmPrintFunc(const T* playout) { OP_WasmPrintFunc((int)playout->I1);  }
 
         void SetOut(ArgSlot outRegisterID, Var bValue);
         void SetOut(ArgSlot_OneByte outRegisterID, Var bValue);
@@ -253,24 +253,24 @@ namespace Js
         template <typename RegSlotType> AsmJsSIMDValue GetRegRawSimd(RegSlotType localRegisterID) const;
         template <typename RegSlotType> void           SetRegRawSimd(RegSlotType localRegisterID, AsmJsSIMDValue bValue);
 
-        template <class T> void OP_SimdLdArrGeneric(const unaligned T* playout);
-        template <class T> void OP_SimdLdArrConstIndex(const unaligned T* playout);
-        template <class T> void OP_SimdStArrGeneric(const unaligned T* playout);
-        template <class T> void OP_SimdStArrConstIndex(const unaligned T* playout);
+        template <class T> void OP_SimdLdArrGeneric(const T* playout);
+        template <class T> void OP_SimdLdArrConstIndex(const T* playout);
+        template <class T> void OP_SimdStArrGeneric(const T* playout);
+        template <class T> void OP_SimdStArrConstIndex(const T* playout);
         bool SIMDAnyNaN(AsmJsSIMDValue& input);
-        template <class T> void OP_SimdInt32x4FromFloat32x4(const unaligned T* playout);
-        template <class T> void OP_SimdUint32x4FromFloat32x4(const unaligned T* playout);
-        template <class T> void OP_WasmSimdConst(const unaligned T* playout);
-        template <class T> void OP_SimdShuffleV8X16(const unaligned T* playout);
+        template <class T> void OP_SimdInt32x4FromFloat32x4(const T* playout);
+        template <class T> void OP_SimdUint32x4FromFloat32x4(const T* playout);
+        template <class T> void OP_WasmSimdConst(const T* playout);
+        template <class T> void OP_SimdShuffleV8X16(const T* playout);
 
-        template <class T> void OP_SimdInt16x8(const unaligned T* playout);
-        template <class T> void OP_SimdInt8x16(const unaligned T* playout);
-        template <class T> void OP_SimdUint32x4(const unaligned T* playout);
-        template <class T> void OP_SimdUint16x8(const unaligned T* playout);
-        template <class T> void OP_SimdUint8x16(const unaligned T* playout);
-        template <class T> void OP_SimdBool32x4(const unaligned T* playout);
-        template <class T> void OP_SimdBool16x8(const unaligned T* playout);
-        template <class T> void OP_SimdBool8x16(const unaligned T* playout);
+        template <class T> void OP_SimdInt16x8(const T* playout);
+        template <class T> void OP_SimdInt8x16(const T* playout);
+        template <class T> void OP_SimdUint32x4(const T* playout);
+        template <class T> void OP_SimdUint16x8(const T* playout);
+        template <class T> void OP_SimdUint8x16(const T* playout);
+        template <class T> void OP_SimdBool32x4(const T* playout);
+        template <class T> void OP_SimdBool16x8(const T* playout);
+        template <class T> void OP_SimdBool8x16(const T* playout);
 
         template <typename RegSlotType>
         Var GetRegAllowStackVarEnableOnly(RegSlotType localRegisterID) const;
@@ -428,11 +428,11 @@ namespace Js
         void ResetOut();
 
         Var OP_ArgIn0();
-        template <class T> void OP_ArgOut_Env(const unaligned T* playout);
-        template <class T> void OP_ArgOut_A(const unaligned T* playout);
-        template <class T> void OP_ProfiledArgOut_A(const unaligned T * playout);
+        template <class T> void OP_ArgOut_Env(const T* playout);
+        template <class T> void OP_ArgOut_A(const T* playout);
+        template <class T> void OP_ProfiledArgOut_A(const T * playout);
 #if DBG
-        template <class T> void OP_ArgOut_ANonVar(const unaligned T* playout);
+        template <class T> void OP_ArgOut_ANonVar(const T* playout);
 #endif
         FrameDisplay * GetEnvForEvalCode();
 
@@ -451,183 +451,183 @@ namespace Js
 
         RecyclableObject * OP_CallGetFunc(Var target);
 
-        template <class T> const byte * OP_Br(const unaligned T * playout);
-        void OP_AsmStartCall(const unaligned OpLayoutStartCall * playout);
-        void OP_StartCall( const unaligned OpLayoutStartCall * playout );
+        template <class T> const byte * OP_Br(const T * playout);
+        void OP_AsmStartCall(const OpLayoutStartCall * playout);
+        void OP_StartCall( const OpLayoutStartCall * playout );
         void OP_StartCall(uint outParamCount);
-        template <class T> void OP_CallCommon(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
+        template <class T> void OP_CallCommon(const T *playout, RecyclableObject * aFunc, unsigned flags, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
         void OP_CallAsmInternalCommon(ScriptFunction* function, RegSlot returnReg);
         void OP_CallAsmInternal(RegSlot funcReg, RegSlot returnReg);
-        template <class T> void OP_I_AsmCall(const unaligned T* playout) { OP_CallAsmInternal(playout->Function, playout->Return); }
+        template <class T> void OP_I_AsmCall(const T* playout) { OP_CallAsmInternal(playout->Function, playout->Return); }
         void OP_ProfiledCallAsmInternal(RegSlot funcReg, RegSlot returnReg, ProfileId profileId);
-        template <class T> void OP_ProfiledI_AsmCall(const unaligned T* playout) { OP_ProfiledCallAsmInternal(playout->Function, playout->Return, playout->profileId); }
+        template <class T> void OP_ProfiledI_AsmCall(const T* playout) { OP_ProfiledCallAsmInternal(playout->Function, playout->Return, playout->profileId); }
 
-        template <class T> void OP_CallCommonI(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags);
-        template <class T> void OP_ProfileCallCommon(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags, ProfileId profileId, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
-        template <class T> void OP_ProfileReturnTypeCallCommon(const unaligned T *playout, RecyclableObject * aFunc, unsigned flags, ProfileId profileId, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
+        template <class T> void OP_CallCommonI(const T *playout, RecyclableObject * aFunc, unsigned flags);
+        template <class T> void OP_ProfileCallCommon(const T *playout, RecyclableObject * aFunc, unsigned flags, ProfileId profileId, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
+        template <class T> void OP_ProfileReturnTypeCallCommon(const T *playout, RecyclableObject * aFunc, unsigned flags, ProfileId profileId, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
 
-        template <class T> void OP_AsmCall(const unaligned T* playout);
-        template <class T> void OP_EnsureHeapAttached(const unaligned T* playout);
+        template <class T> void OP_AsmCall(const T* playout);
+        template <class T> void OP_EnsureHeapAttached(const T* playout);
 
-        template <class T> void OP_CallI(const unaligned T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None); }
-        template <class T> void OP_CallIFlags(const unaligned T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags); }
-        template <class T> void OP_CallIExtended(const unaligned T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
-        template <class T> void OP_CallIExtendedFlags(const unaligned T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_CallI(const T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None); }
+        template <class T> void OP_CallIFlags(const T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags); }
+        template <class T> void OP_CallIExtended(const T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_CallIExtendedFlags(const T* playout) { OP_CallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
 
-        template <class T> void OP_ProfiledCallI(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId); }
-        template <class T> void OP_ProfiledCallIFlags(const unaligned T* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId); }
-        template <class T> void OP_ProfiledCallIExtended(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, Js::Constants::NoInlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
-        template <class T> void OP_ProfiledCallIExtendedFlags(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)),  playout->callFlags, playout->profileId, Js::Constants::NoInlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledCallI(const OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId); }
+        template <class T> void OP_ProfiledCallIFlags(const T* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId); }
+        template <class T> void OP_ProfiledCallIExtended(const OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, Js::Constants::NoInlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledCallIExtendedFlags(const OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)),  playout->callFlags, playout->profileId, Js::Constants::NoInlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
 
-        template <class T> void OP_ProfiledCallIWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, playout->inlineCacheIndex); }
-        template <class T> void OP_ProfiledCallIFlagsWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId, playout->inlineCacheIndex); }
-        template <class T> void OP_ProfiledCallIExtendedWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, playout->inlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
-        template <class T> void OP_ProfiledCallIExtendedFlagsWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId, playout->inlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledCallIWithICIndex(const OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, playout->inlineCacheIndex); }
+        template <class T> void OP_ProfiledCallIFlagsWithICIndex(const OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId, playout->inlineCacheIndex); }
+        template <class T> void OP_ProfiledCallIExtendedWithICIndex(const OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, playout->inlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledCallIExtendedFlagsWithICIndex(const OpLayoutDynamicProfile<T>* playout) { OP_ProfileCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId, playout->inlineCacheIndex, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
 
-        template <class T> void OP_ProfiledReturnTypeCallI(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId); }
-        template <class T> void OP_ProfiledReturnTypeCallIFlags(const unaligned T* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId); }
-        template <class T> void OP_ProfiledReturnTypeCallIExtended(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
-        template <class T> void OP_ProfiledReturnTypeCallIExtendedFlags(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)),  playout->callFlags, playout->profileId, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledReturnTypeCallI(const OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId); }
+        template <class T> void OP_ProfiledReturnTypeCallIFlags(const T* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), playout->callFlags, playout->profileId); }
+        template <class T> void OP_ProfiledReturnTypeCallIExtended(const OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)), Js::CallFlags_None, playout->profileId, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
+        template <class T> void OP_ProfiledReturnTypeCallIExtendedFlags(const OpLayoutDynamicProfile<T>* playout) { OP_ProfileReturnTypeCallCommon(playout, OP_CallGetFunc(GetRegAllowStackVar(playout->Function)),  playout->callFlags, playout->profileId, (playout->Options & CallIExtended_SpreadArgs) ? m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody()) : nullptr); }
 
         // Patching Fastpath Operations
-        template <class T> void OP_GetRootProperty(unaligned T* playout);
-        template <class T> void OP_GetRootPropertyForTypeOf(unaligned T* playout);
-        template <class T> void OP_GetRootProperty_NoFastPath(unaligned T* playout);
-        template <class T, bool Root, bool Method, bool CallApplyTarget> void ProfiledGetProperty(unaligned T* playout, const Var instance);
-        template <class T> void OP_ProfiledGetRootProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledGetRootPropertyForTypeOf(unaligned T* playout);
-        template <class T> void OP_GetProperty(Var instance, unaligned T* playout);
-        template <class T> void OP_GetProperty(unaligned T* playout);
-        template <class T> void OP_GetLocalProperty(unaligned T* playout);
-        template <class T> void OP_GetSuperProperty(unaligned T* playout);
-        template <class T> void OP_GetPropertyForTypeOf(unaligned T* playout);
-        template <class T> void OP_GetProperty_NoFastPath(Var instance, unaligned T* playout);
-        template <class T> void OP_ProfiledGetProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledGetLocalProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledGetSuperProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledGetPropertyForTypeOf(unaligned T* playout);
-        template <class T> void OP_ProfiledGetPropertyCallApplyTarget(unaligned T* playout);
-        template <class T> void OP_GetRootMethodProperty(unaligned T* playout);
-        template <class T> void OP_GetRootMethodProperty_NoFastPath(unaligned T* playout);
-        template <class T> void OP_ProfiledGetRootMethodProperty(unaligned T* playout);
-        template <class T> void OP_GetMethodProperty(unaligned T* playout);
-        template <class T> void OP_GetLocalMethodProperty(unaligned T* playout);
-        template <class T> void OP_GetMethodProperty(Var varInstance, unaligned T* playout);
-        template <class T> void OP_GetMethodProperty_NoFastPath(Var varInstance, unaligned T* playout);
-        template <class T> void OP_ProfiledGetMethodProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledGetLocalMethodProperty(unaligned T* playout);
-        template <typename T> void OP_GetPropertyScoped(const unaligned OpLayoutT_ElementP<T>* playout);
-        template <typename T> void OP_GetPropertyForTypeOfScoped(const unaligned OpLayoutT_ElementP<T>* playout);
-        template <typename T> void OP_GetPropertyScoped_NoFastPath(const unaligned OpLayoutT_ElementP<T>* playout);
-        template <class T> void OP_GetMethodPropertyScoped(unaligned T* playout);
-        template <class T> void OP_GetMethodPropertyScoped_NoFastPath(unaligned T* playout);
+        template <class T> void OP_GetRootProperty(T* playout);
+        template <class T> void OP_GetRootPropertyForTypeOf(T* playout);
+        template <class T> void OP_GetRootProperty_NoFastPath(T* playout);
+        template <class T, bool Root, bool Method, bool CallApplyTarget> void ProfiledGetProperty(T* playout, const Var instance);
+        template <class T> void OP_ProfiledGetRootProperty(T* playout);
+        template <class T> void OP_ProfiledGetRootPropertyForTypeOf(T* playout);
+        template <class T> void OP_GetProperty(Var instance, T* playout);
+        template <class T> void OP_GetProperty(T* playout);
+        template <class T> void OP_GetLocalProperty(T* playout);
+        template <class T> void OP_GetSuperProperty(T* playout);
+        template <class T> void OP_GetPropertyForTypeOf(T* playout);
+        template <class T> void OP_GetProperty_NoFastPath(Var instance, T* playout);
+        template <class T> void OP_ProfiledGetProperty(T* playout);
+        template <class T> void OP_ProfiledGetLocalProperty(T* playout);
+        template <class T> void OP_ProfiledGetSuperProperty(T* playout);
+        template <class T> void OP_ProfiledGetPropertyForTypeOf(T* playout);
+        template <class T> void OP_ProfiledGetPropertyCallApplyTarget(T* playout);
+        template <class T> void OP_GetRootMethodProperty(T* playout);
+        template <class T> void OP_GetRootMethodProperty_NoFastPath(T* playout);
+        template <class T> void OP_ProfiledGetRootMethodProperty(T* playout);
+        template <class T> void OP_GetMethodProperty(T* playout);
+        template <class T> void OP_GetLocalMethodProperty(T* playout);
+        template <class T> void OP_GetMethodProperty(Var varInstance, T* playout);
+        template <class T> void OP_GetMethodProperty_NoFastPath(Var varInstance, T* playout);
+        template <class T> void OP_ProfiledGetMethodProperty(T* playout);
+        template <class T> void OP_ProfiledGetLocalMethodProperty(T* playout);
+        template <typename T> void OP_GetPropertyScoped(const OpLayoutT_ElementP<T>* playout);
+        template <typename T> void OP_GetPropertyForTypeOfScoped(const OpLayoutT_ElementP<T>* playout);
+        template <typename T> void OP_GetPropertyScoped_NoFastPath(const OpLayoutT_ElementP<T>* playout);
+        template <class T> void OP_GetMethodPropertyScoped(T* playout);
+        template <class T> void OP_GetMethodPropertyScoped_NoFastPath(T* playout);
 
 #if ENABLE_PROFILE_INFO
-        template <class T> void UpdateFldInfoFlagsForGetSetInlineCandidate(unaligned T* playout, FldInfoFlags& fldInfoFlags, CacheType cacheType,
+        template <class T> void UpdateFldInfoFlagsForGetSetInlineCandidate(T* playout, FldInfoFlags& fldInfoFlags, CacheType cacheType,
                                                 DynamicProfileInfo * dynamicProfileInfo, uint inlineCacheIndex, RecyclableObject * obj);
 
-        template <class T> void UpdateFldInfoFlagsForCallApplyInlineCandidate(unaligned T* playout, FldInfoFlags& fldInfoFlags, CacheType cacheType,
+        template <class T> void UpdateFldInfoFlagsForCallApplyInlineCandidate(T* playout, FldInfoFlags& fldInfoFlags, CacheType cacheType,
                                                 DynamicProfileInfo * dynamicProfileInfo, uint inlineCacheIndex, RecyclableObject * obj);
 #endif
 
-        template <class T> void OP_SetProperty(unaligned T* playout);
-        template <class T> void OP_SetLocalProperty(unaligned T* playout);
-        template <class T> void OP_SetSuperProperty(unaligned T* playout);
-        template <class T> void OP_SetSuperPropertyStrict(unaligned T* playout);
-        template <class T> void OP_ProfiledSetProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledSetLocalProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledSetSuperProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledSetSuperPropertyStrict(unaligned T* playout);
-        template <class T> void OP_SetRootProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledSetRootProperty(unaligned T* playout);
-        template <class T> void OP_SetPropertyStrict(unaligned T* playout);
-        template <class T> void OP_ProfiledSetPropertyStrict(unaligned T* playout);
-        template <class T> void OP_SetRootPropertyStrict(unaligned T* playout);
-        template <class T> void OP_ProfiledSetRootPropertyStrict(unaligned T* playout);
-        template <class T> void OP_SetPropertyScoped(unaligned T* playout, PropertyOperationFlags flags = PropertyOperation_None);
-        template <class T> void OP_SetPropertyScoped_NoFastPath(unaligned T* playout, PropertyOperationFlags flags);
-        template <class T> void OP_SetPropertyScopedStrict(unaligned T* playout);
-        template <class T> void OP_ConsoleSetPropertyScoped(unaligned T* playout);
-        template <class T> void OP_ConsoleSetPropertyScopedStrict(unaligned T* playout);
+        template <class T> void OP_SetProperty(T* playout);
+        template <class T> void OP_SetLocalProperty(T* playout);
+        template <class T> void OP_SetSuperProperty(T* playout);
+        template <class T> void OP_SetSuperPropertyStrict(T* playout);
+        template <class T> void OP_ProfiledSetProperty(T* playout);
+        template <class T> void OP_ProfiledSetLocalProperty(T* playout);
+        template <class T> void OP_ProfiledSetSuperProperty(T* playout);
+        template <class T> void OP_ProfiledSetSuperPropertyStrict(T* playout);
+        template <class T> void OP_SetRootProperty(T* playout);
+        template <class T> void OP_ProfiledSetRootProperty(T* playout);
+        template <class T> void OP_SetPropertyStrict(T* playout);
+        template <class T> void OP_ProfiledSetPropertyStrict(T* playout);
+        template <class T> void OP_SetRootPropertyStrict(T* playout);
+        template <class T> void OP_ProfiledSetRootPropertyStrict(T* playout);
+        template <class T> void OP_SetPropertyScoped(T* playout, PropertyOperationFlags flags = PropertyOperation_None);
+        template <class T> void OP_SetPropertyScoped_NoFastPath(T* playout, PropertyOperationFlags flags);
+        template <class T> void OP_SetPropertyScopedStrict(T* playout);
+        template <class T> void OP_ConsoleSetPropertyScoped(T* playout);
+        template <class T> void OP_ConsoleSetPropertyScopedStrict(T* playout);
 
-        template <class T> void DoSetProperty(unaligned T* playout, Var instance, PropertyOperationFlags flags);
-        template <class T> void DoSetSuperProperty(unaligned T* playout, Var instance, PropertyOperationFlags flags);
-        template <class T> void DoSetProperty_NoFastPath(unaligned T* playout, Var instance, PropertyOperationFlags flags);
-        template <class T> void DoSetSuperProperty_NoFastPath(unaligned T* playout, Var instance, PropertyOperationFlags flags);
-        template <class T, bool Root> void ProfiledSetProperty(unaligned T* playout, Var instance, PropertyOperationFlags flags);
-        template <class T, bool Root> void ProfiledSetSuperProperty(unaligned T* playout, Var instance, Var thisInstance, PropertyOperationFlags flags);
+        template <class T> void DoSetProperty(T* playout, Var instance, PropertyOperationFlags flags);
+        template <class T> void DoSetSuperProperty(T* playout, Var instance, PropertyOperationFlags flags);
+        template <class T> void DoSetProperty_NoFastPath(T* playout, Var instance, PropertyOperationFlags flags);
+        template <class T> void DoSetSuperProperty_NoFastPath(T* playout, Var instance, PropertyOperationFlags flags);
+        template <class T, bool Root> void ProfiledSetProperty(T* playout, Var instance, PropertyOperationFlags flags);
+        template <class T, bool Root> void ProfiledSetSuperProperty(T* playout, Var instance, Var thisInstance, PropertyOperationFlags flags);
 
-        template <class T> void OP_InitProperty(unaligned T* playout);
-        template <class T> void OP_InitLocalProperty(unaligned T* playout);
-        template <class T> void OP_InitRootProperty(unaligned T* playout);
-        template <class T> void OP_InitUndeclLetProperty(unaligned T* playout);
-        template <class T> void OP_InitUndeclLocalLetProperty(unaligned T* playout);
+        template <class T> void OP_InitProperty(T* playout);
+        template <class T> void OP_InitLocalProperty(T* playout);
+        template <class T> void OP_InitRootProperty(T* playout);
+        template <class T> void OP_InitUndeclLetProperty(T* playout);
+        template <class T> void OP_InitUndeclLocalLetProperty(T* playout);
         void OP_InitUndeclRootLetProperty(uint propertyIdIndex);
-        template <class T> void OP_InitUndeclConstProperty(unaligned T* playout);
-        template <class T> void OP_InitUndeclLocalConstProperty(unaligned T* playout);
+        template <class T> void OP_InitUndeclConstProperty(T* playout);
+        template <class T> void OP_InitUndeclLocalConstProperty(T* playout);
         void OP_InitUndeclRootConstProperty(uint propertyIdIndex);
-        template <class T> void OP_InitUndeclConsoleLetProperty(unaligned T* playout);
-        template <class T> void OP_InitUndeclConsoleConstProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledInitProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledInitLocalProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledInitRootProperty(unaligned T* playout);
-        template <class T> void OP_ProfiledInitUndeclProperty(unaligned T* playout);
+        template <class T> void OP_InitUndeclConsoleLetProperty(T* playout);
+        template <class T> void OP_InitUndeclConsoleConstProperty(T* playout);
+        template <class T> void OP_ProfiledInitProperty(T* playout);
+        template <class T> void OP_ProfiledInitLocalProperty(T* playout);
+        template <class T> void OP_ProfiledInitRootProperty(T* playout);
+        template <class T> void OP_ProfiledInitUndeclProperty(T* playout);
 
-        template <class T> void DoInitProperty(unaligned T* playout, Var instance);
-        template <class T> void DoInitProperty_NoFastPath(unaligned T* playout, Var instance);
-        template <class T> void ProfiledInitProperty(unaligned T* playout, Var instance);
+        template <class T> void DoInitProperty(T* playout, Var instance);
+        template <class T> void DoInitProperty_NoFastPath(T* playout, Var instance);
+        template <class T> void ProfiledInitProperty(T* playout, Var instance);
 
-        template <class T> bool TrySetPropertyLocalFastPath(unaligned T* playout, PropertyId pid, RecyclableObject* instance, InlineCache*& inlineCache, PropertyOperationFlags flags = PropertyOperation_None);
+        template <class T> bool TrySetPropertyLocalFastPath(T* playout, PropertyId pid, RecyclableObject* instance, InlineCache*& inlineCache, PropertyOperationFlags flags = PropertyOperation_None);
 
         template <bool doProfile> Var ProfiledDivide(Var aLeft, Var aRight, ScriptContext* scriptContext, ProfileId profileId);
         template <bool doProfile> Var ProfileModulus(Var aLeft, Var aRight, ScriptContext* scriptContext, ProfileId profileId);
         template <bool doProfile> Var ProfiledSwitch(Var exp, ProfileId profileId);
 
         // Non-patching Fastpath operations
-        template <typename T> void OP_GetElementI(const unaligned T* playout);
-        template <typename T> void OP_ProfiledGetElementI(const unaligned OpLayoutDynamicProfile<T>* playout);
+        template <typename T> void OP_GetElementI(const T* playout);
+        template <typename T> void OP_ProfiledGetElementI(const OpLayoutDynamicProfile<T>* playout);
 
-        template <typename T> void OP_SetElementI(const unaligned T* playout, PropertyOperationFlags flags = PropertyOperation_None);
-        template <typename T> void OP_ProfiledSetElementI(const unaligned OpLayoutDynamicProfile<T>* playout, PropertyOperationFlags flags = PropertyOperation_None);
-        template <typename T> void OP_SetElementIStrict(const unaligned T* playout);
-        template <typename T> void OP_ProfiledSetElementIStrict(const unaligned OpLayoutDynamicProfile<T>* playout);
+        template <typename T> void OP_SetElementI(const T* playout, PropertyOperationFlags flags = PropertyOperation_None);
+        template <typename T> void OP_ProfiledSetElementI(const OpLayoutDynamicProfile<T>* playout, PropertyOperationFlags flags = PropertyOperation_None);
+        template <typename T> void OP_SetElementIStrict(const T* playout);
+        template <typename T> void OP_ProfiledSetElementIStrict(const OpLayoutDynamicProfile<T>* playout);
 
-        template<class T> void OP_LdLen(const unaligned T *const playout);
-        template<class T> void OP_ProfiledLdLen(const unaligned OpLayoutDynamicProfile<T> *const playout);
+        template<class T> void OP_LdLen(const T *const playout);
+        template<class T> void OP_ProfiledLdLen(const OpLayoutDynamicProfile<T> *const playout);
 
         template <bool doProfile> Var ProfiledIsIn(Var argProperty, Var instance, ScriptContext* scriptContext, ProfileId profileId);
 
         Var OP_ProfiledLdThis(Var thisVar, int moduleID, ScriptContext* scriptContext);
         Var OP_ProfiledStrictLdThis(Var thisVar, ScriptContext* scriptContext);
 
-        template <class T> void OP_SetArrayItemI_CI4(const unaligned T* playout);
-        template <class T> void OP_SetArrayItemC_CI4(const unaligned T* playout);
-        template <class T> void OP_SetArraySegmentItem_CI4(const unaligned T* playout);
+        template <class T> void OP_SetArrayItemI_CI4(const T* playout);
+        template <class T> void OP_SetArrayItemC_CI4(const T* playout);
+        template <class T> void OP_SetArraySegmentItem_CI4(const T* playout);
         template <class T> void SetArrayLiteralItem(JavascriptArray *arr, uint32_t index, T value);
-        void OP_SetArraySegmentVars(const unaligned OpLayoutAuxiliary * playout);
+        void OP_SetArraySegmentVars(const OpLayoutAuxiliary * playout);
 
-        template <class T> void OP_NewScArray(const unaligned T * playout);
-        template <bool Profiled, class T> void ProfiledNewScArray(const unaligned OpLayoutDynamicProfile<T> * playout);
-        template <class T> void OP_ProfiledNewScArray(const unaligned OpLayoutDynamicProfile<T> * playout) { ProfiledNewScArray<true, T>(playout); }
-        template <class T> void OP_ProfiledNewScArray_NoProfile(const unaligned OpLayoutDynamicProfile<T> * playout)  { ProfiledNewScArray<false, T>(playout); }
-        void OP_NewScIntArray(const unaligned OpLayoutAuxiliary * playout);
-        void OP_NewScFltArray(const unaligned OpLayoutAuxiliary * playout);
-        template <bool Profiled> void ProfiledNewScIntArray(const unaligned OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout);
-        template <bool Profiled> void ProfiledNewScFltArray(const unaligned OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout);
-        void OP_ProfiledNewScIntArray(const unaligned OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout) { ProfiledNewScIntArray<true>(playout); }
-        void OP_ProfiledNewScFltArray(const unaligned OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout) { ProfiledNewScFltArray<true>(playout); }
+        template <class T> void OP_NewScArray(const T * playout);
+        template <bool Profiled, class T> void ProfiledNewScArray(const OpLayoutDynamicProfile<T> * playout);
+        template <class T> void OP_ProfiledNewScArray(const OpLayoutDynamicProfile<T> * playout) { ProfiledNewScArray<true, T>(playout); }
+        template <class T> void OP_ProfiledNewScArray_NoProfile(const OpLayoutDynamicProfile<T> * playout)  { ProfiledNewScArray<false, T>(playout); }
+        void OP_NewScIntArray(const OpLayoutAuxiliary * playout);
+        void OP_NewScFltArray(const OpLayoutAuxiliary * playout);
+        template <bool Profiled> void ProfiledNewScIntArray(const OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout);
+        template <bool Profiled> void ProfiledNewScFltArray(const OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout);
+        void OP_ProfiledNewScIntArray(const OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout) { ProfiledNewScIntArray<true>(playout); }
+        void OP_ProfiledNewScFltArray(const OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout) { ProfiledNewScFltArray<true>(playout); }
 
-        template <class T> void OP_LdArrayHeadSegment(const unaligned T* playout);
+        template <class T> void OP_LdArrayHeadSegment(const T* playout);
 
         inline JavascriptFunction* GetFunctionExpression();
 
-        template <class T> inline void OP_LdFunctionExpression(const unaligned T* playout);
-        template <class T> inline void OP_StFunctionExpression(const unaligned T* playout);
-        template <class T> inline void OP_StLocalFunctionExpression(const unaligned T* playout);
+        template <class T> inline void OP_LdFunctionExpression(const T* playout);
+        template <class T> inline void OP_StFunctionExpression(const T* playout);
+        template <class T> inline void OP_StLocalFunctionExpression(const T* playout);
         void OP_StFunctionExpression(Var instance, Var value, PropertyIdIndexType index);
 
-        template <class T> inline void OP_LdNewTarget(const unaligned T* playout);
-        template <class T> inline void OP_LdImportMeta(const unaligned T* playout);
+        template <class T> inline void OP_LdNewTarget(const T* playout);
+        template <class T> inline void OP_LdImportMeta(const T* playout);
 
         inline Var OP_Ld_A(Var aValue);
         inline Var OP_LdLocalObj();
@@ -641,57 +641,57 @@ namespace Js
         void OP_ScopedEnsureNoRedeclProperty(Var aValue, uint propertyIdIndex, Var aValue2);
         Var OP_InitUndecl();
         void OP_InitUndeclSlot(Var aValue, int32_t slot);
-        template <class T> inline void OP_InitInnerFld(const unaligned T * playout);
-        template <class T> inline void OP_InitLetFld(const unaligned T * playout);
-        template <class T> inline void OP_InitLocalLetFld(const unaligned T* playout);
-        template <class T> inline void OP_InitInnerLetFld(const unaligned T * playout);
-        template <class T> inline void OP_InitRootLetFld(const unaligned T * playout);
-        template <class T> inline void OP_InitConstFld(const unaligned T * playout);
-        template <class T> inline void OP_InitRootConstFld(const unaligned T * playout);
-        template <class T> inline void DoInitLetFld(const unaligned T * playout, Var instance, PropertyOperationFlags flags = PropertyOperation_None);
-        template <class T> inline void DoInitConstFld(const unaligned T * playout, Var instance, PropertyOperationFlags flags = PropertyOperation_None);
-        template <class T> inline void OP_InitClassMember(const unaligned T * playout);
-        template <class T> inline void OP_InitClassMemberComputedName(const unaligned T * playout);
-        template <class T> inline void OP_InitClassMemberGet(const unaligned T * playout);
-        template <class T> inline void OP_InitClassMemberSet(const unaligned T * playout);
-        template <class T> inline void OP_InitClassMemberGetComputedName(const unaligned T * playout);
-        template <class T> inline void OP_InitClassMemberSetComputedName(const unaligned T * playout);
+        template <class T> inline void OP_InitInnerFld(const T * playout);
+        template <class T> inline void OP_InitLetFld(const T * playout);
+        template <class T> inline void OP_InitLocalLetFld(const T* playout);
+        template <class T> inline void OP_InitInnerLetFld(const T * playout);
+        template <class T> inline void OP_InitRootLetFld(const T * playout);
+        template <class T> inline void OP_InitConstFld(const T * playout);
+        template <class T> inline void OP_InitRootConstFld(const T * playout);
+        template <class T> inline void DoInitLetFld(const T * playout, Var instance, PropertyOperationFlags flags = PropertyOperation_None);
+        template <class T> inline void DoInitConstFld(const T * playout, Var instance, PropertyOperationFlags flags = PropertyOperation_None);
+        template <class T> inline void OP_InitClassMember(const T * playout);
+        template <class T> inline void OP_InitClassMemberComputedName(const T * playout);
+        template <class T> inline void OP_InitClassMemberGet(const T * playout);
+        template <class T> inline void OP_InitClassMemberSet(const T * playout);
+        template <class T> inline void OP_InitClassMemberGetComputedName(const T * playout);
+        template <class T> inline void OP_InitClassMemberSetComputedName(const T * playout);
         template <typename ArrayType, typename RegType = ArrayType> inline void OP_LdArr(  uint32_t index, RegSlot value  );
-        template <class T> inline void OP_LdArrFunc(const unaligned T* playout);
-        template <class T> inline void OP_LdArrWasmFunc(const unaligned T* playout);
-        template <class T> inline void OP_CheckSignature(const unaligned T* playout);
+        template <class T> inline void OP_LdArrFunc(const T* playout);
+        template <class T> inline void OP_LdArrWasmFunc(const T* playout);
+        template <class T> inline void OP_CheckSignature(const T* playout);
         template<typename T> T GetArrayViewOverflowVal();
         template <typename ArrayType, typename RegType = ArrayType> inline void OP_StArr( uint32_t index, RegSlot value );
-        template <class T> inline void OP_LdAsmJsSlot(const unaligned T* playout );
-        template <class T, typename T2> inline void OP_StSlotPrimitive(const unaligned T* playout);
-        template <class T, typename T2> inline void OP_LdSlotPrimitive( const unaligned T* playout );
-        template <class T> inline void OP_LdArrGeneric   ( const unaligned T* playout );
-        template <class T> inline void OP_LdArrWasm      ( const unaligned T* playout );
-        template <class T> inline void OP_LdArrConstIndex( const unaligned T* playout );
-        template <class T> inline void OP_StArrGeneric   ( const unaligned T* playout );
-        template <class T> inline void OP_StArrWasm      ( const unaligned T* playout );
-        template <class T> inline void OP_StArrConstIndex( const unaligned T* playout );
-        template <class T> inline void OP_LdArrAtomic    ( const unaligned T* playout );
-        template <class T> inline void OP_StArrAtomic    ( const unaligned T* playout );
+        template <class T> inline void OP_LdAsmJsSlot(const T* playout );
+        template <class T, typename T2> inline void OP_StSlotPrimitive(const T* playout);
+        template <class T, typename T2> inline void OP_LdSlotPrimitive( const T* playout );
+        template <class T> inline void OP_LdArrGeneric   ( const T* playout );
+        template <class T> inline void OP_LdArrWasm      ( const T* playout );
+        template <class T> inline void OP_LdArrConstIndex( const T* playout );
+        template <class T> inline void OP_StArrGeneric   ( const T* playout );
+        template <class T> inline void OP_StArrWasm      ( const T* playout );
+        template <class T> inline void OP_StArrConstIndex( const T* playout );
+        template <class T> inline void OP_LdArrAtomic    ( const T* playout );
+        template <class T> inline void OP_StArrAtomic    ( const T* playout );
         template<typename MemType> void WasmArrayBoundsCheck(unsigned long index, uint32_t byteLength);
         template<typename MemType> MemType* WasmAtomicsArrayBoundsCheck(byte* buffer, unsigned long index, uint32_t byteLength);
         inline Var OP_LdSlot(Var instance, int32_t slotIndex);
         inline Var OP_LdObjSlot(Var instance, int32_t slotIndex);
         inline Var OP_LdFrameDisplaySlot(Var instance, int32_t slotIndex);
-        template <class T> inline Var OP_LdSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_ProfiledLdSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_LdInnerSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_ProfiledLdInnerSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_LdInnerObjSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_ProfiledLdInnerObjSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_LdEnvSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_ProfiledLdEnvSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_LdEnvObj(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_LdObjSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_ProfiledLdObjSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_LdEnvObjSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_ProfiledLdEnvObjSlot(Var instance, const unaligned T* playout);
-        template <class T> inline Var OP_LdModuleSlot(Var instance, const unaligned T* playout);
+        template <class T> inline Var OP_LdSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_ProfiledLdSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_LdInnerSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_ProfiledLdInnerSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_LdInnerObjSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_ProfiledLdInnerObjSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_LdEnvSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_ProfiledLdEnvSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_LdEnvObj(Var instance, const T* playout);
+        template <class T> inline Var OP_LdObjSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_ProfiledLdObjSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_LdEnvObjSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_ProfiledLdEnvObjSlot(Var instance, const T* playout);
+        template <class T> inline Var OP_LdModuleSlot(Var instance, const T* playout);
         inline void OP_StModuleSlot(Var instance, uint32_t slotIndex1, uint32_t slotIndex2, Var value);
         inline void OP_StSlot(Var instance, int32_t slotIndex, Var value);
         inline void OP_StSlotChkUndecl(Var instance, int32_t slotIndex, Var value);
@@ -710,64 +710,64 @@ namespace Js
         inline Var OP_LdStackArgPtr();
         inline Var OP_LdArgumentsFromFrame();
         Var OP_NewScObjectSimple();
-        void OP_NewScObjectLiteral(const unaligned OpLayoutAuxiliary * playout);
-        void OP_NewScObjectLiteral_LS(const unaligned OpLayoutAuxiliary * playout, RegSlot& target);
-        void OP_LdPropIds(const unaligned OpLayoutAuxiliary * playout);
+        void OP_NewScObjectLiteral(const OpLayoutAuxiliary * playout);
+        void OP_NewScObjectLiteral_LS(const OpLayoutAuxiliary * playout, RegSlot& target);
+        void OP_LdPropIds(const OpLayoutAuxiliary * playout);
         template <bool Profile, bool JITLoopBody> void LoopBodyStart(uint32_t loopNumber, LayoutSize layoutSize, bool isFirstIteration);
         LoopHeader const * DoLoopBodyStart(uint32_t loopNumber, LayoutSize layoutSize, const bool doProfileLoopCheck, bool isFirstIteration);
         template <bool Profile, bool JITLoopBody> void ProfiledLoopBodyStart(uint32_t loopNumber, LayoutSize layoutSize, bool isFirstIteration);
         void OP_RecordImplicitCall(uint loopNumber);
-        template <class T, bool Profiled, bool ICIndex> void OP_NewScObject_Impl(const unaligned T* playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
-        template <class T, bool Profiled, bool ICIndex> void OP_ProfiledNewScObject_Impl(const unaligned T* playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr) { OP_NewScObject_Impl<T, Profiled, ICIndex>(playout, inlineCacheIndex, spreadIndices); }
-        template <class T, bool Profiled> void OP_NewScObjArray_Impl(const unaligned T* playout, const Js::AuxArray<uint32_t> *spreadIndices = nullptr) { OP_NewScObject_Impl<T, Profiled, false>(playout, Js::Constants::NoInlineCacheIndex, spreadIndices); }
-        template <class T, bool Profiled> void OP_ProfiledNewScObjArray_Impl(const unaligned T* playout, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
-        template <class T> void OP_NewScObject(const unaligned T* playout) { OP_NewScObject_Impl<T, false, false>(playout); }
-        template <class T> void OP_NewScObjectNoCtorFull(const unaligned T* playout);
-        template <class T> void OP_NewScObjectSpread(const unaligned T* playout) { OP_NewScObject_Impl<T, false, false>(playout, Js::Constants::NoInlineCacheIndex, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
-        template <class T> void OP_NewScObjArray(const unaligned T* playout) { OP_NewScObjArray_Impl<T, false>(playout); }
-        template <class T> void OP_NewScObjArraySpread(const unaligned T* playout) { OP_NewScObjArray_Impl<T, false>(playout, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
-        template <class T> void OP_ProfiledNewScObject(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfiledNewScObject_Impl<T, true, false>(playout); }
-        template <class T> void OP_ProfiledNewScObjectSpread(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfiledNewScObject_Impl<T, true, false>(playout, Js::Constants::NoInlineCacheIndex, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
-        template <class T> void OP_ProfiledNewScObjectWithICIndex(const unaligned OpLayoutDynamicProfile<T>* playout) { OP_ProfiledNewScObject_Impl<T, true, true>(playout, playout->inlineCacheIndex); }
-        template <class T> void OP_ProfiledNewScObjArray(const unaligned OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, true>(playout); }
-        template <class T> void OP_ProfiledNewScObjArray_NoProfile(const unaligned OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, false>(playout); }
-        template <class T> void OP_ProfiledNewScObjArraySpread(const unaligned OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, true>(playout, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
-        template <class T> void OP_ProfiledNewScObjArraySpread_NoProfile(const unaligned OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, false>(playout, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
+        template <class T, bool Profiled, bool ICIndex> void OP_NewScObject_Impl(const T* playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
+        template <class T, bool Profiled, bool ICIndex> void OP_ProfiledNewScObject_Impl(const T* playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr) { OP_NewScObject_Impl<T, Profiled, ICIndex>(playout, inlineCacheIndex, spreadIndices); }
+        template <class T, bool Profiled> void OP_NewScObjArray_Impl(const T* playout, const Js::AuxArray<uint32_t> *spreadIndices = nullptr) { OP_NewScObject_Impl<T, Profiled, false>(playout, Js::Constants::NoInlineCacheIndex, spreadIndices); }
+        template <class T, bool Profiled> void OP_ProfiledNewScObjArray_Impl(const T* playout, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
+        template <class T> void OP_NewScObject(const T* playout) { OP_NewScObject_Impl<T, false, false>(playout); }
+        template <class T> void OP_NewScObjectNoCtorFull(const T* playout);
+        template <class T> void OP_NewScObjectSpread(const T* playout) { OP_NewScObject_Impl<T, false, false>(playout, Js::Constants::NoInlineCacheIndex, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
+        template <class T> void OP_NewScObjArray(const T* playout) { OP_NewScObjArray_Impl<T, false>(playout); }
+        template <class T> void OP_NewScObjArraySpread(const T* playout) { OP_NewScObjArray_Impl<T, false>(playout, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
+        template <class T> void OP_ProfiledNewScObject(const OpLayoutDynamicProfile<T>* playout) { OP_ProfiledNewScObject_Impl<T, true, false>(playout); }
+        template <class T> void OP_ProfiledNewScObjectSpread(const OpLayoutDynamicProfile<T>* playout) { OP_ProfiledNewScObject_Impl<T, true, false>(playout, Js::Constants::NoInlineCacheIndex, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
+        template <class T> void OP_ProfiledNewScObjectWithICIndex(const OpLayoutDynamicProfile<T>* playout) { OP_ProfiledNewScObject_Impl<T, true, true>(playout, playout->inlineCacheIndex); }
+        template <class T> void OP_ProfiledNewScObjArray(const OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, true>(playout); }
+        template <class T> void OP_ProfiledNewScObjArray_NoProfile(const OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, false>(playout); }
+        template <class T> void OP_ProfiledNewScObjArraySpread(const OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, true>(playout, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
+        template <class T> void OP_ProfiledNewScObjArraySpread_NoProfile(const OpLayoutDynamicProfile2<T>* playout) { OP_ProfiledNewScObjArray_Impl<T, false>(playout, m_reader.ReadAuxArray<uint32_t>(playout->SpreadAuxOffset, this->GetFunctionBody())); }
         Var NewScObject_Helper(Var target, ArgSlot ArgCount, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
         Var ProfiledNewScObject_Helper(Var target, ArgSlot ArgCount, ProfileId profileId, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices = nullptr);
-        template <class T, bool Profiled, bool ICIndex> Var OP_NewScObjectNoArg_Impl(const unaligned T *playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex);
-        void OP_NewScObject_A_Impl(const unaligned OpLayoutAuxiliary * playout, RegSlot *target = nullptr);
-        void OP_NewScObject_A(const unaligned OpLayoutAuxiliary * playout) { return OP_NewScObject_A_Impl(playout); }
-        void OP_InitCachedFuncs(const unaligned OpLayoutAuxNoReg * playout);
+        template <class T, bool Profiled, bool ICIndex> Var OP_NewScObjectNoArg_Impl(const T *playout, InlineCacheIndex inlineCacheIndex = Js::Constants::NoInlineCacheIndex);
+        void OP_NewScObject_A_Impl(const OpLayoutAuxiliary * playout, RegSlot *target = nullptr);
+        void OP_NewScObject_A(const OpLayoutAuxiliary * playout) { return OP_NewScObject_A_Impl(playout); }
+        void OP_InitCachedFuncs(const OpLayoutAuxNoReg * playout);
         Var OP_GetCachedFunc(Var instance, int32_t index);
         void OP_CommitScope();
         void OP_CommitScopeHelper(const PropertyIdArray *propIds);
-        void OP_TryCatch(const unaligned OpLayoutBr* playout);
+        void OP_TryCatch(const OpLayoutBr* playout);
         void ProcessCatch();
         int ProcessFinally();
         void ProcessTryHandlerBailout(EHBailoutData * innermostEHBailoutData, uint32_t tryNestingDepth);
-        void OP_TryFinally(const unaligned OpLayoutBr* playout);
+        void OP_TryFinally(const OpLayoutBr* playout);
         void OP_TryFinallyWithYield(const byte* ip, Js::JumpOffset jumpOffset, Js::RegSlot regException, Js::RegSlot regOffset);
         void OP_ResumeCatch();
         void OP_ResumeFinally(const byte* ip, Js::JumpOffset jumpOffset, RegSlot exceptionRegSlot, RegSlot offsetRegSlot);
-        template <typename T> void OP_IsInst(const unaligned T * playout);
+        template <typename T> void OP_IsInst(const T * playout);
         Var OP_InitBaseClass(FrameDisplay *environment, FunctionInfoPtrPtr infoRef, RegSlot protoReg);
         Var OP_InitClass(FrameDisplay *environment, FunctionInfoPtrPtr infoRef, Var ctorParent, Var protoParent, RegSlot protoReg);
         Var InitClassHelper(FrameDisplay *environment, FunctionInfoPtrPtr infoRef, RecyclableObject *protoParent, RecyclableObject *constructorParent, RegSlot protoReg);
         Var OP_LdBaseFncProto();
         inline Var OP_LdHomeObj(ScriptContext * scriptContext);
         inline Var OP_LdFuncObj(ScriptContext * scriptContext);
-        template <typename T> void OP_LdElementUndefined(const unaligned OpLayoutT_ElementU<T>* playout);
-        template <typename T> void OP_LdLocalElementUndefined(const unaligned OpLayoutT_ElementRootU<T>* playout);
-        template <typename T> void OP_LdElementUndefinedScoped(const unaligned OpLayoutT_ElementScopedU<T>* playout);
-        void OP_SpreadArrayLiteral(const unaligned OpLayoutReg2Aux * playout);
+        template <typename T> void OP_LdElementUndefined(const OpLayoutT_ElementU<T>* playout);
+        template <typename T> void OP_LdLocalElementUndefined(const OpLayoutT_ElementRootU<T>* playout);
+        template <typename T> void OP_LdElementUndefinedScoped(const OpLayoutT_ElementScopedU<T>* playout);
+        void OP_SpreadArrayLiteral(const OpLayoutReg2Aux * playout);
         template <LayoutSize layoutSize,bool profiled> const byte * OP_ProfiledLoopStart(const byte *ip);
         template <LayoutSize layoutSize,bool profiled> const byte * OP_ProfiledLoopEnd(const byte *ip);
         template <LayoutSize layoutSize, bool profiled> const byte * OP_ProfiledLoopBodyStart(const byte *ip);
         template <LayoutSize layoutSize, bool profiled> const byte * OP_ProfiledWasmLoopBodyStart(const byte *ip);
         template <LayoutSize layoutSize, bool profiled> const byte * OP_ProfiledLoopBodyStart(uint loopId);
-        template <typename T> void OP_ApplyArgs(const unaligned OpLayoutT_Reg5<T> * playout);
-        template <class T> void OP_EmitTmpRegCount(const unaligned OpLayoutT_Unsigned1<T> * ip);
+        template <typename T> void OP_ApplyArgs(const OpLayoutT_Reg5<T> * playout);
+        template <class T> void OP_EmitTmpRegCount(const OpLayoutT_Unsigned1<T> * ip);
         Var OP_ImportCall(Var specifier, ScriptContext *scriptContext);
 
         HeapArgumentsObject * CreateEmptyHeapArgumentsObject(ScriptContext* scriptContext);
@@ -775,8 +775,8 @@ namespace Js
         Var InnerScopeFromIndex(uint32_t index) const;
         void SetInnerScopeFromIndex(uint32_t index, Var scope);
         void OP_NewInnerScopeSlots(uint index, uint count, int scopeIndex, ScriptContext *scriptContext, FunctionBody *functionBody);
-        template <typename T> void OP_CloneInnerScopeSlots(const unaligned OpLayoutT_Unsigned1<T> *playout);
-        template <typename T> void OP_CloneBlockScope(const unaligned OpLayoutT_Unsigned1<T> *playout);
+        template <typename T> void OP_CloneInnerScopeSlots(const OpLayoutT_Unsigned1<T> *playout);
+        template <typename T> void OP_CloneBlockScope(const OpLayoutT_Unsigned1<T> *playout);
         FrameDisplay * OP_LdFrameDisplay(void *argHead, void *argEnv, ScriptContext *scriptContext);
         FrameDisplay * OP_LdFrameDisplaySetLocal(void *argHead, void *argEnv, ScriptContext *scriptContext);
         template <bool innerFD> FrameDisplay * OP_LdFrameDisplayNoParent(void *argHead, ScriptContext *scriptContext);
@@ -784,24 +784,24 @@ namespace Js
         FrameDisplay * OP_LdInnerFrameDisplay(void *argHead, void *argEnv, ScriptContext *scriptContext);
         FrameDisplay * OP_LdInnerFrameDisplayNoParent(void *argHead, ScriptContext *scriptContext);
 
-        template <class T> void OP_NewStackScFunc(const unaligned T * playout);
-        template <class T> void OP_NewInnerStackScFunc(const unaligned T * playout);
-        template <class T> void OP_DeleteFld(const unaligned T * playout);
-        template <class T> void OP_DeleteLocalFld(const unaligned T * playout);
-        template <class T> void OP_DeleteRootFld(const unaligned T * playout);
-        template <class T> void OP_DeleteFldStrict(const unaligned T * playout);
-        template <class T> void OP_DeleteRootFldStrict(const unaligned T * playout);
-        template <typename T> void OP_ScopedDeleteFld(const unaligned OpLayoutT_ElementScopedC<T> * playout);
-        template <typename T> void OP_ScopedDeleteFldStrict(const unaligned OpLayoutT_ElementScopedC<T> * playout);
-        template <class T> void OP_ScopedLdInst(const unaligned T * playout);
-        template <typename T> void OP_ScopedInitFunc(const unaligned OpLayoutT_ElementScopedC<T> * playout);
-        template <class T> void OP_ClearAttributes(const unaligned T * playout);
-        template <class T> void OP_InitGetFld(const unaligned T * playout);
-        template <class T> void OP_InitSetFld(const unaligned T * playout);
-        template <class T> void OP_InitSetElemI(const unaligned T * playout);
-        template <class T> void OP_InitGetElemI(const unaligned T * playout);
-        template <class T> void OP_InitComputedProperty(const unaligned T * playout);
-        template <class T> void OP_InitProto(const unaligned T * playout);
+        template <class T> void OP_NewStackScFunc(const T * playout);
+        template <class T> void OP_NewInnerStackScFunc(const T * playout);
+        template <class T> void OP_DeleteFld(const T * playout);
+        template <class T> void OP_DeleteLocalFld(const T * playout);
+        template <class T> void OP_DeleteRootFld(const T * playout);
+        template <class T> void OP_DeleteFldStrict(const T * playout);
+        template <class T> void OP_DeleteRootFldStrict(const T * playout);
+        template <typename T> void OP_ScopedDeleteFld(const OpLayoutT_ElementScopedC<T> * playout);
+        template <typename T> void OP_ScopedDeleteFldStrict(const OpLayoutT_ElementScopedC<T> * playout);
+        template <class T> void OP_ScopedLdInst(const T * playout);
+        template <typename T> void OP_ScopedInitFunc(const OpLayoutT_ElementScopedC<T> * playout);
+        template <class T> void OP_ClearAttributes(const T * playout);
+        template <class T> void OP_InitGetFld(const T * playout);
+        template <class T> void OP_InitSetFld(const T * playout);
+        template <class T> void OP_InitSetElemI(const T * playout);
+        template <class T> void OP_InitGetElemI(const T * playout);
+        template <class T> void OP_InitComputedProperty(const T * playout);
+        template <class T> void OP_InitProto(const T * playout);
         void OP_BeginBodyScope();
 
         void OP_InitForInEnumerator(Var object, uint forInLoopLevel);

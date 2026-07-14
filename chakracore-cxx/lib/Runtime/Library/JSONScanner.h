@@ -27,7 +27,7 @@ namespace JSON
         void ThrowSyntaxError(int wErr)
         {
             char16_t scanPos[16];
-            ::_itow_s(GetScanPosition(), scanPos, _countof(scanPos), 10);
+            ::_itow_s(GetScanPosition(), scanPos, std::size(scanPos), 10);
             Js::JavascriptError::ThrowSyntaxError(scriptContext, wErr, scanPos);
         }
 

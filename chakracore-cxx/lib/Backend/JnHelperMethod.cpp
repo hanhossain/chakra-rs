@@ -73,7 +73,7 @@ GetMethodAddress(ThreadContextInfo * context, IR::HelperCallOpnd* opnd)
 #define LowererMDFinal LowererMDArch
 #endif
 
-    static_assert(_countof(helperMethodWrappers) == LowererMDFinal::MaxArgumentsToHelper + 1);
+    static_assert(std::size(helperMethodWrappers) == LowererMDFinal::MaxArgumentsToHelper + 1);
 
     if (opnd->IsDiagHelperCallOpnd())
     {

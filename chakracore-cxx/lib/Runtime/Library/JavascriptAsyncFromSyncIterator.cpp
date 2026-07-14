@@ -188,7 +188,7 @@ namespace Js
             result = scriptContext->GetThreadContext()->ExecuteImplicitCall(callable, ImplicitCall_Accessor, [=]() -> Var
             {
                 Js::Var args[] = { syncIteratorRecord, value };
-                Js::CallInfo callInfo(Js::CallFlags_Value, _countof(args) + (value == nullptr ? -1 : 0));
+                Js::CallInfo callInfo(Js::CallFlags_Value, std::size(args) + (value == nullptr ? -1 : 0));
                 return JavascriptFunction::CallFunction<true>(callable, callable->GetEntryPoint(), Arguments(callInfo, args));
             });
         }
@@ -282,7 +282,7 @@ namespace Js
             result = scriptContext->GetThreadContext()->ExecuteImplicitCall(callable, ImplicitCall_Accessor, [=]() -> Var
             {
                 Js::Var args[] = { syncIteratorRecord, value };
-                Js::CallInfo callInfo(Js::CallFlags_Value, _countof(args) + (value == nullptr ? -1 : 0));
+                Js::CallInfo callInfo(Js::CallFlags_Value, std::size(args) + (value == nullptr ? -1 : 0));
                 return JavascriptFunction::CallFunction<true>(callable, callable->GetEntryPoint(), Arguments(callInfo, args));
             });
         }

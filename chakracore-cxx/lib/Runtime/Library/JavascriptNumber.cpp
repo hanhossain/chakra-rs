@@ -840,7 +840,7 @@ namespace Js
     JavascriptString* JavascriptNumber::ToString(double value, ScriptContext* scriptContext)
     {
         char16_t szBuffer[bufSize];
-        int cchWritten = swprintf_s(szBuffer, _countof(szBuffer), u"%g", value);
+        int cchWritten = swprintf_s(szBuffer, std::size(szBuffer), u"%g", value);
 
         return JavascriptString::NewCopyBuffer(szBuffer, cchWritten, scriptContext);
     }
@@ -897,7 +897,7 @@ namespace Js
 
         char16_t szBuffer[bufSize];
 
-        if (!Js::NumberUtilities::FNonZeroFiniteDblToStr(value, radix, szBuffer, _countof(szBuffer)))
+        if (!Js::NumberUtilities::FNonZeroFiniteDblToStr(value, radix, szBuffer, std::size(szBuffer)))
         {
             Js::JavascriptError::ThrowOutOfMemoryError(scriptContext);
         }

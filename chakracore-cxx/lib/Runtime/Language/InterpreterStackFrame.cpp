@@ -48,7 +48,7 @@
 
 #define PROCESS_READ_LAYOUT(name, layout, suffix) \
     static_assert(OpCodeInfo<OpCode::name>::Layout == OpLayoutType::layout); \
-    [[maybe_unused]] const unaligned OpLayout##layout##suffix * playout = m_reader.layout##suffix(ip); \
+    [[maybe_unused]] const OpLayout##layout##suffix * playout = m_reader.layout##suffix(ip); \
     Assert((playout != nullptr) == (Js::OpLayoutType::layout != Js::OpLayoutType::Empty)); // Make sure playout is used
 
 
@@ -3105,20 +3105,20 @@ namespace Js
 
 
     template <class T>
-    void InterpreterStackFrame::OP_GetMethodProperty(unaligned T *playout)
+    void InterpreterStackFrame::OP_GetMethodProperty(T *playout)
     {
         Var varInstance = GetReg(playout->Instance);
         OP_GetMethodProperty(varInstance, playout);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetLocalMethodProperty(unaligned T *playout)
+    void InterpreterStackFrame::OP_GetLocalMethodProperty(T *playout)
     {
         OP_GetMethodProperty(this->localClosure, playout);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetMethodProperty(Var varInstance, unaligned T *playout)
+    void InterpreterStackFrame::OP_GetMethodProperty(Var varInstance, T *playout)
     {
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(varInstance);
@@ -3157,7 +3157,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetMethodProperty_NoFastPath(Var instance, unaligned T *playout)
+    void InterpreterStackFrame::OP_GetMethodProperty_NoFastPath(Var instance, T *playout)
     {
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
 
@@ -3181,7 +3181,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetRootMethodProperty(unaligned T *playout)
+    void InterpreterStackFrame::OP_GetRootMethodProperty(T *playout)
     {
         Assert(playout->inlineCacheIndex >= this->m_functionBody->GetRootObjectLoadInlineCacheStart());
         Js::Var instance = this->GetRootObject();
@@ -3203,7 +3203,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetRootMethodProperty_NoFastPath(unaligned T *playout)
+    void InterpreterStackFrame::OP_GetRootMethodProperty_NoFastPath(T *playout)
     {
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
 
@@ -3229,7 +3229,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetMethodPropertyScoped(unaligned T *playout)
+    void InterpreterStackFrame::OP_GetMethodPropertyScoped(T *playout)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
@@ -3267,7 +3267,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetMethodPropertyScoped_NoFastPath(unaligned T *playout)
+    void InterpreterStackFrame::OP_GetMethodPropertyScoped_NoFastPath(T *playout)
     {
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
         Js::Var instance = GetReg(playout->Instance);
@@ -3293,19 +3293,19 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetMethodProperty(unaligned T *playout)
+    void InterpreterStackFrame::OP_ProfiledGetMethodProperty(T *playout)
     {
         ProfiledGetProperty<T, false, true, false>(playout, GetReg(playout->Instance));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetLocalMethodProperty(unaligned T *playout)
+    void InterpreterStackFrame::OP_ProfiledGetLocalMethodProperty(T *playout)
     {
         ProfiledGetProperty<T, false, true, false>(playout, this->localClosure);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetRootMethodProperty(unaligned T *playout)
+    void InterpreterStackFrame::OP_ProfiledGetRootMethodProperty(T *playout)
     {
         ProfiledGetProperty<T, true, true, false>(playout, GetRootObject());
     }
@@ -3316,13 +3316,13 @@ namespace Js
         return JavascriptOperators::GetCallableObjectOrThrow(target, GetScriptContext());
     }
 
-    void InterpreterStackFrame::OP_AsmStartCall(const unaligned OpLayoutStartCall * playout)
+    void InterpreterStackFrame::OP_AsmStartCall(const OpLayoutStartCall * playout)
     {
         OP_StartCall(playout->ArgCount / sizeof(Var));
         m_outParams[0] = scriptContext->GetLibrary()->GetUndefined();
     }
 
-    void InterpreterStackFrame::OP_StartCall(const unaligned OpLayoutStartCall * playout)
+    void InterpreterStackFrame::OP_StartCall(const OpLayoutStartCall * playout)
     {
         OP_StartCall(playout->ArgCount);
     }
@@ -3418,7 +3418,7 @@ namespace Js
 #endif
 
     template <class T>
-    void InterpreterStackFrame::OP_AsmCall(const unaligned T* playout)
+    void InterpreterStackFrame::OP_AsmCall(const T* playout)
     {
         Var target = GetRegRawPtr(playout->Function);
 
@@ -3452,13 +3452,13 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_EnsureHeapAttached(const unaligned T* playout)
+    void InterpreterStackFrame::OP_EnsureHeapAttached(const T* playout)
     {
         AsmJsModuleInfo::EnsureHeapAttached(this->function);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_CallCommon(const unaligned T * playout, RecyclableObject * function, unsigned flags, const Js::AuxArray<uint32_t> *spreadIndices)
+    void InterpreterStackFrame::OP_CallCommon(const T * playout, RecyclableObject * function, unsigned flags, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         // Always save and restore implicit call flags when calling out
         // REVIEW: Can we avoid it if we don't collect dynamic profile info?
@@ -3514,14 +3514,14 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_CallCommonI(const unaligned T * playout, RecyclableObject * function, unsigned flags)
+    void InterpreterStackFrame::OP_CallCommonI(const T * playout, RecyclableObject * function, unsigned flags)
     {
         OP_CallCommon(playout, function, flags); // CallCommon doesn't do anything with Member
     }
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    void InterpreterStackFrame::OP_ProfileCallCommon(const unaligned T * playout, RecyclableObject * function, unsigned flags, ProfileId profileId, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices)
+    void InterpreterStackFrame::OP_ProfileCallCommon(const T * playout, RecyclableObject * function, unsigned flags, ProfileId profileId, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         JavascriptFunction * targetFunction = VarIs<JavascriptFunction>(m_outParams[0]) ? UnsafeVarTo<JavascriptFunction>(m_outParams[0]) : nullptr;
         FunctionBody* functionBody = this->m_functionBody;
@@ -3565,7 +3565,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfileReturnTypeCallCommon(const unaligned T * playout, RecyclableObject * function, unsigned flags, ProfileId profileId, const Js::AuxArray<uint32_t> *spreadIndices)
+    void InterpreterStackFrame::OP_ProfileReturnTypeCallCommon(const T * playout, RecyclableObject * function, unsigned flags, ProfileId profileId, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         OP_CallCommon<T>(playout, function, flags, spreadIndices);
         FunctionBody* functionBody = this->m_functionBody;
@@ -3578,7 +3578,7 @@ namespace Js
 #endif
 
     template <class T>
-    void InterpreterStackFrame::OP_GetRootProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_GetRootProperty(T* playout)
     {
         // Same fast path as in the backend.
         Assert(playout->inlineCacheIndex >= this->m_functionBody->GetRootObjectLoadInlineCacheStart());
@@ -3603,7 +3603,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetRootPropertyForTypeOf(unaligned T* playout)
+    void InterpreterStackFrame::OP_GetRootPropertyForTypeOf(T* playout)
     {
         Var rootInstance = GetRootObject();
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
@@ -3628,7 +3628,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetRootProperty_NoFastPath(unaligned T* playout)
+    void InterpreterStackFrame::OP_GetRootProperty_NoFastPath(T* playout)
     {
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
         Var rootInstance = this->GetRootObject();
@@ -3654,7 +3654,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    void InterpreterStackFrame::UpdateFldInfoFlagsForGetSetInlineCandidate(unaligned T* playout, FldInfoFlags& fldInfoFlags, CacheType cacheType,
+    void InterpreterStackFrame::UpdateFldInfoFlagsForGetSetInlineCandidate(T* playout, FldInfoFlags& fldInfoFlags, CacheType cacheType,
         DynamicProfileInfo * dynamicProfileInfo, uint inlineCacheIndex, RecyclableObject * obj)
     {
         RecyclableObject *callee = nullptr;
@@ -3672,7 +3672,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::UpdateFldInfoFlagsForCallApplyInlineCandidate(unaligned T* playout, FldInfoFlags& fldInfoFlags, CacheType cacheType,
+    void InterpreterStackFrame::UpdateFldInfoFlagsForCallApplyInlineCandidate(T* playout, FldInfoFlags& fldInfoFlags, CacheType cacheType,
         DynamicProfileInfo * dynamicProfileInfo, uint inlineCacheIndex, RecyclableObject * obj)
     {
         RecyclableObject *callee = nullptr;
@@ -3689,7 +3689,7 @@ namespace Js
     }
 
     template <class T, bool Root, bool Method, bool CallApplyTarget>
-    void InterpreterStackFrame::ProfiledGetProperty(unaligned T* playout, const Var instance)
+    void InterpreterStackFrame::ProfiledGetProperty(T* playout, const Var instance)
     {
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
         Var value = ProfilingHelpers::ProfiledLdFld<Root, Method, CallApplyTarget>(
@@ -3712,13 +3712,13 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetRootProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledGetRootProperty(T* playout)
     {
         ProfiledGetProperty<T, true, false, false>(playout, GetRootObject());
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetRootPropertyForTypeOf(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledGetRootPropertyForTypeOf(T* playout)
     {
         Var rootInstance = GetRootObject();
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
@@ -3742,7 +3742,7 @@ namespace Js
 #endif
 
     template <class T>
-    void InterpreterStackFrame::OP_GetPropertyForTypeOf(unaligned T* playout)
+    void InterpreterStackFrame::OP_GetPropertyForTypeOf(T* playout)
     {
         Var instance = GetReg(playout->Instance);
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
@@ -3766,7 +3766,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_GetProperty(T* playout)
     {
         // Same fast path as in the backend.
         Var instance = GetReg(playout->Instance);
@@ -3774,7 +3774,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetLocalProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_GetLocalProperty(T* playout)
     {
         // Same fast path as in the backend.
         Var instance = this->localClosure;
@@ -3782,7 +3782,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetProperty(Var instance, unaligned T* playout)
+    void InterpreterStackFrame::OP_GetProperty(Var instance, T* playout)
     {
         InlineCache *inlineCache = GetInlineCache(playout->inlineCacheIndex);
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
@@ -3804,7 +3804,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetSuperProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_GetSuperProperty(T* playout)
     {
         // Same fast path as in the backend.
         Var instance = GetReg(playout->Instance);
@@ -3838,7 +3838,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_GetProperty_NoFastPath(Var instance, unaligned T* playout)
+    void InterpreterStackFrame::OP_GetProperty_NoFastPath(Var instance, T* playout)
     {
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
 
@@ -3863,19 +3863,19 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledGetProperty(T* playout)
     {
         ProfiledGetProperty<T, false, false, false>(playout, GetReg(playout->Instance));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetLocalProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledGetLocalProperty(T* playout)
     {
         ProfiledGetProperty<T, false, false, false>(playout, this->localClosure);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetSuperProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledGetSuperProperty(T* playout)
     {
         SetReg(
             playout->Value,
@@ -3890,7 +3890,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetPropertyForTypeOf(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledGetPropertyForTypeOf(T* playout)
     {
         Var instance = GetReg(playout->Instance);
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
@@ -3914,14 +3914,14 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetPropertyCallApplyTarget(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledGetPropertyCallApplyTarget(T* playout)
     {
         ProfiledGetProperty<T, false, false, true>(playout, GetReg(playout->Instance));
     }
 #endif
 
     template <typename T>
-    void InterpreterStackFrame::OP_GetPropertyScoped(const unaligned OpLayoutT_ElementP<T>* playout)
+    void InterpreterStackFrame::OP_GetPropertyScoped(const OpLayoutT_ElementP<T>* playout)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
@@ -3958,7 +3958,7 @@ namespace Js
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_GetPropertyForTypeOfScoped(const unaligned OpLayoutT_ElementP<T>* playout)
+    void InterpreterStackFrame::OP_GetPropertyForTypeOfScoped(const OpLayoutT_ElementP<T>* playout)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
@@ -4004,7 +4004,7 @@ namespace Js
 
 
     template <typename T>
-    void InterpreterStackFrame::OP_GetPropertyScoped_NoFastPath(const unaligned OpLayoutT_ElementP<T>* playout)
+    void InterpreterStackFrame::OP_GetPropertyScoped_NoFastPath(const OpLayoutT_ElementP<T>* playout)
     {
         // Implicit root object as default instance
         Var defaultInstance = GetReg(Js::FunctionBody::RootObjectRegSlot);
@@ -4022,7 +4022,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetPropertyScoped(unaligned T* playout, PropertyOperationFlags flags)
+    void InterpreterStackFrame::OP_SetPropertyScoped(T* playout, PropertyOperationFlags flags)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
@@ -4058,7 +4058,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetPropertyScoped_NoFastPath(unaligned T* playout, PropertyOperationFlags flags)
+    void InterpreterStackFrame::OP_SetPropertyScoped_NoFastPath(T* playout, PropertyOperationFlags flags)
     {
         // Implicit root object as default instance
         Var defaultInstance = GetReg(Js::FunctionBody::RootObjectRegSlot);
@@ -4076,25 +4076,25 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetPropertyScopedStrict(unaligned T* playout)
+    void InterpreterStackFrame::OP_SetPropertyScopedStrict(T* playout)
     {
         OP_SetPropertyScoped(playout, PropertyOperation_StrictMode);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ConsoleSetPropertyScoped(unaligned T* playout)
+    void InterpreterStackFrame::OP_ConsoleSetPropertyScoped(T* playout)
     {
         OP_SetPropertyScoped(playout, PropertyOperation_AllowUndeclInConsoleScope);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ConsoleSetPropertyScopedStrict(unaligned T* playout)
+    void InterpreterStackFrame::OP_ConsoleSetPropertyScopedStrict(T* playout)
     {
         OP_SetPropertyScoped(playout, (PropertyOperationFlags)(PropertyOperation_StrictMode | PropertyOperation_AllowUndeclInConsoleScope));
     }
 
     template <class T>
-    inline bool InterpreterStackFrame::TrySetPropertyLocalFastPath(unaligned T* playout, PropertyId pid, RecyclableObject* instance, InlineCache*& inlineCache, PropertyOperationFlags flags)
+    inline bool InterpreterStackFrame::TrySetPropertyLocalFastPath(T* playout, PropertyId pid, RecyclableObject* instance, InlineCache*& inlineCache, PropertyOperationFlags flags)
     {
         inlineCache = this->GetInlineCache(playout->inlineCacheIndex);
 
@@ -4113,7 +4113,7 @@ namespace Js
     }
 
     template <class T>
-    inline void InterpreterStackFrame::DoSetProperty(unaligned T* playout, Var instance, PropertyOperationFlags flags)
+    inline void InterpreterStackFrame::DoSetProperty(T* playout, Var instance, PropertyOperationFlags flags)
     {
         // Same fast path as in the backend.
 
@@ -4140,14 +4140,14 @@ namespace Js
 
 
     template <class T>
-    inline void InterpreterStackFrame::DoSetSuperProperty(unaligned T* playout, Var instance, PropertyOperationFlags flags)
+    inline void InterpreterStackFrame::DoSetSuperProperty(T* playout, Var instance, PropertyOperationFlags flags)
     {
         DoSetSuperProperty_NoFastPath(playout, instance, m_functionBody->GetIsStrictMode() ?
             (PropertyOperationFlags)(flags | PropertyOperation_StrictMode) : flags);
     }
 
     template <class T>
-    void InterpreterStackFrame::DoSetProperty_NoFastPath(unaligned T* playout, Var instance, PropertyOperationFlags flags)
+    void InterpreterStackFrame::DoSetProperty_NoFastPath(T* playout, Var instance, PropertyOperationFlags flags)
     {
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(instance);
@@ -4178,7 +4178,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::DoSetSuperProperty_NoFastPath(unaligned T* playout, Var instance, PropertyOperationFlags flags)
+    void InterpreterStackFrame::DoSetSuperProperty_NoFastPath(T* playout, Var instance, PropertyOperationFlags flags)
     {
 #if ENABLE_COPYONACCESS_ARRAY
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray<Var>(instance);
@@ -4208,7 +4208,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <class T, bool Root>
-    void InterpreterStackFrame::ProfiledSetProperty(unaligned T* playout, Var instance, PropertyOperationFlags flags)
+    void InterpreterStackFrame::ProfiledSetProperty(T* playout, Var instance, PropertyOperationFlags flags)
     {
         Assert(!Root || flags & PropertyOperation_Root);
 
@@ -4224,7 +4224,7 @@ namespace Js
     }
 
     template <class T, bool Root>
-    void InterpreterStackFrame::ProfiledSetSuperProperty(unaligned T* playout, Var instance, Var thisInstance, PropertyOperationFlags flags)
+    void InterpreterStackFrame::ProfiledSetSuperProperty(T* playout, Var instance, Var thisInstance, PropertyOperationFlags flags)
     {
         Assert(!Root || flags & PropertyOperation_Root);
 
@@ -4241,85 +4241,85 @@ namespace Js
 #endif
 
     template <class T>
-    void InterpreterStackFrame::OP_SetProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_SetProperty(T* playout)
     {
         DoSetProperty(playout, GetReg(playout->Instance), PropertyOperation_None);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetLocalProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_SetLocalProperty(T* playout)
     {
         DoSetProperty(playout, this->localClosure, PropertyOperation_None);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetSuperProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_SetSuperProperty(T* playout)
     {
         DoSetSuperProperty(playout, GetReg(playout->Instance), PropertyOperation_None);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetSuperPropertyStrict(unaligned T* playout)
+    void InterpreterStackFrame::OP_SetSuperPropertyStrict(T* playout)
     {
         DoSetSuperProperty(playout, GetReg(playout->Instance), PropertyOperation_StrictMode);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledSetProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledSetProperty(T* playout)
     {
         ProfiledSetProperty<T, false>(playout, GetReg(playout->Instance), PropertyOperation_None);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledSetLocalProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledSetLocalProperty(T* playout)
     {
         ProfiledSetProperty<T, false>(playout, this->localClosure, PropertyOperation_None);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledSetSuperProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledSetSuperProperty(T* playout)
     {
         ProfiledSetSuperProperty<T, false>(playout, GetReg(playout->Instance), GetReg(playout->Value2), PropertyOperation_None);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledSetSuperPropertyStrict(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledSetSuperPropertyStrict(T* playout)
     {
         ProfiledSetSuperProperty<T, false>(playout, GetReg(playout->Instance), GetReg(playout->Value2), PropertyOperation_StrictMode);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetRootProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_SetRootProperty(T* playout)
     {
         DoSetProperty(playout, this->GetRootObject(), PropertyOperation_Root);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledSetRootProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledSetRootProperty(T* playout)
     {
         ProfiledSetProperty<T, true>(playout, this->GetRootObject(), PropertyOperation_Root);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetPropertyStrict(unaligned T* playout)
+    void InterpreterStackFrame::OP_SetPropertyStrict(T* playout)
     {
         DoSetProperty(playout, GetReg(playout->Instance), PropertyOperation_StrictMode);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledSetPropertyStrict(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledSetPropertyStrict(T* playout)
     {
         ProfiledSetProperty<T, false>(playout, GetReg(playout->Instance), PropertyOperation_StrictMode);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetRootPropertyStrict(unaligned T* playout)
+    void InterpreterStackFrame::OP_SetRootPropertyStrict(T* playout)
     {
         DoSetProperty(playout, this->GetRootObject(), PropertyOperation_StrictModeRoot);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledSetRootPropertyStrict(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledSetRootPropertyStrict(T* playout)
     {
         ProfiledSetProperty<T, true>(playout, this->GetRootObject(), PropertyOperation_StrictModeRoot);
     }
@@ -4401,7 +4401,7 @@ namespace Js
 #endif
 
     template <class T>
-    void InterpreterStackFrame::DoInitProperty(unaligned T* playout, Var instance)
+    void InterpreterStackFrame::DoInitProperty(T* playout, Var instance)
     {
         // Same fast path as in the backend.
 
@@ -4418,7 +4418,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::DoInitProperty_NoFastPath(unaligned T* playout, Var instance)
+    void InterpreterStackFrame::DoInitProperty_NoFastPath(T* playout, Var instance)
     {
         JavascriptOperators::PatchInitValue<false>(
             GetFunctionBody(),
@@ -4430,7 +4430,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitClassMember(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitClassMember(const T * playout)
     {
         uint inlineCacheIndex = playout->inlineCacheIndex;
         InlineCache * inlineCache = this->GetInlineCache(inlineCacheIndex);
@@ -4446,7 +4446,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitClassMemberGet(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitClassMemberGet(const T * playout)
     {
         JavascriptOperators::OP_InitClassMemberGet(
             GetReg(playout->Instance),
@@ -4455,7 +4455,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitClassMemberSet(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitClassMemberSet(const T * playout)
     {
         JavascriptOperators::OP_InitClassMemberSet(
             GetReg(playout->Instance),
@@ -4464,7 +4464,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitClassMemberSetComputedName(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitClassMemberSetComputedName(const T * playout)
     {
         JavascriptOperators::OP_InitClassMemberSetComputedName(
             GetReg(playout->Instance),
@@ -4474,7 +4474,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitClassMemberGetComputedName(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitClassMemberGetComputedName(const T * playout)
     {
         JavascriptOperators::OP_InitClassMemberGetComputedName(
             GetReg(playout->Instance),
@@ -4484,7 +4484,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitClassMemberComputedName(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitClassMemberComputedName(const T * playout)
     {
         JavascriptOperators::OP_InitClassMemberComputedName(
             GetReg(playout->Instance),
@@ -4494,7 +4494,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::DoInitLetFld(const unaligned T * playout, Var instance, PropertyOperationFlags flags)
+    void InterpreterStackFrame::DoInitLetFld(const T * playout, Var instance, PropertyOperationFlags flags)
     {
         uint inlineCacheIndex = playout->inlineCacheIndex;
         InlineCache * inlineCache = this->GetInlineCache(inlineCacheIndex);
@@ -4508,7 +4508,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::DoInitConstFld(const unaligned T * playout, Var instance, PropertyOperationFlags flags)
+    void InterpreterStackFrame::DoInitConstFld(const T * playout, Var instance, PropertyOperationFlags flags)
     {
         uint inlineCacheIndex = playout->inlineCacheIndex;
         InlineCache * inlineCache = this->GetInlineCache(inlineCacheIndex);
@@ -4522,49 +4522,49 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_InitProperty(T* playout)
     {
         DoInitProperty(playout, GetReg(playout->Instance));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitLocalProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_InitLocalProperty(T* playout)
     {
         DoInitProperty(playout, this->localClosure);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitInnerFld(const unaligned T* playout)
+    void InterpreterStackFrame::OP_InitInnerFld(const T* playout)
     {
         DoInitProperty(playout, InnerScopeFromIndex(playout->scopeIndex));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitLetFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitLetFld(const T * playout)
     {
         DoInitLetFld(playout, GetReg(playout->Instance));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitInnerLetFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitInnerLetFld(const T * playout)
     {
         DoInitLetFld(playout, InnerScopeFromIndex(playout->scopeIndex));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitLocalLetFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitLocalLetFld(const T * playout)
     {
         DoInitLetFld(playout, this->localClosure);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitConstFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitConstFld(const T * playout)
     {
         DoInitConstFld(playout, GetReg(playout->Instance));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitRootProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_InitRootProperty(T* playout)
     {
         Assert(playout->inlineCacheIndex >= this->m_functionBody->GetRootObjectLoadInlineCacheStart());
 
@@ -4572,7 +4572,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitRootLetFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitRootLetFld(const T * playout)
     {
         Assert(playout->inlineCacheIndex >= this->m_functionBody->GetRootObjectLoadInlineCacheStart());
 
@@ -4580,7 +4580,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitRootConstFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitRootConstFld(const T * playout)
     {
         Assert(playout->inlineCacheIndex >= this->m_functionBody->GetRootObjectLoadInlineCacheStart());
 
@@ -4588,7 +4588,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitUndeclLetProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_InitUndeclLetProperty(T* playout)
     {
         Var instance = InnerScopeFromIndex(playout->scopeIndex);
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
@@ -4596,7 +4596,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitUndeclLocalLetProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_InitUndeclLocalLetProperty(T* playout)
     {
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
         JavascriptOperators::OP_InitLetProperty(this->localClosure, propertyId, this->scriptContext->GetLibrary()->GetUndeclBlockVar());
@@ -4610,7 +4610,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitUndeclConstProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_InitUndeclConstProperty(T* playout)
     {
         Var instance = InnerScopeFromIndex(playout->scopeIndex);
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
@@ -4618,7 +4618,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitUndeclLocalConstProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_InitUndeclLocalConstProperty(T* playout)
     {
         PropertyId propertyId = GetPropertyIdFromCacheId(playout->inlineCacheIndex);
         JavascriptOperators::OP_InitConstProperty(this->localClosure, propertyId, this->scriptContext->GetLibrary()->GetUndeclBlockVar());
@@ -4632,7 +4632,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitUndeclConsoleLetProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_InitUndeclConsoleLetProperty(T* playout)
     {
         FrameDisplay* pScope = (FrameDisplay*)this->LdEnv();
         AssertMsg(VarIs<ConsoleScopeActivationObject>((DynamicObject*)pScope->GetItem(pScope->GetLength() - 1)), "How come we got this opcode without ConsoleScopeActivationObject?");
@@ -4641,7 +4641,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitUndeclConsoleConstProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_InitUndeclConsoleConstProperty(T* playout)
     {
         FrameDisplay* pScope = (FrameDisplay*)this->LdEnv();
         AssertMsg(VarIs<ConsoleScopeActivationObject>((DynamicObject*)pScope->GetItem(pScope->GetLength() - 1)), "How come we got this opcode without ConsoleScopeActivationObject?");
@@ -4651,7 +4651,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    void InterpreterStackFrame::ProfiledInitProperty(unaligned T* playout, Var instance)
+    void InterpreterStackFrame::ProfiledInitProperty(T* playout, Var instance)
     {
         ProfilingHelpers::ProfiledInitFld(
             VarTo<RecyclableObject>(instance),
@@ -4663,25 +4663,25 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledInitProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledInitProperty(T* playout)
     {
         ProfiledInitProperty(playout, GetReg(playout->Instance));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledInitLocalProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledInitLocalProperty(T* playout)
     {
         ProfiledInitProperty(playout, this->localClosure);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledInitRootProperty(unaligned T* playout)
+    void InterpreterStackFrame::OP_ProfiledInitRootProperty(T* playout)
     {
         ProfiledInitProperty(playout, this->GetRootObject());
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledGetElementI(const unaligned OpLayoutDynamicProfile<T>* playout)
+    void InterpreterStackFrame::OP_ProfiledGetElementI(const OpLayoutDynamicProfile<T>* playout)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
@@ -4705,7 +4705,7 @@ namespace Js
 #endif
 
     template <typename T>
-    void InterpreterStackFrame::OP_GetElementI(const unaligned T* playout)
+    void InterpreterStackFrame::OP_GetElementI(const T* playout)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
@@ -4741,7 +4741,7 @@ namespace Js
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_SetElementI(const unaligned T* playout, PropertyOperationFlags flags)
+    void InterpreterStackFrame::OP_SetElementI(const T* playout, PropertyOperationFlags flags)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
@@ -4781,7 +4781,7 @@ namespace Js
 #if ENABLE_PROFILE_INFO
     template <typename T>
     void InterpreterStackFrame::OP_ProfiledSetElementI(
-        const unaligned OpLayoutDynamicProfile<T>* playout,
+        const OpLayoutDynamicProfile<T>* playout,
         PropertyOperationFlags flags)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
@@ -4806,7 +4806,7 @@ namespace Js
 #endif
 
     template <typename T>
-    void InterpreterStackFrame::OP_SetElementIStrict(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SetElementIStrict(const T* playout)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
@@ -4820,7 +4820,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <typename T>
-    void InterpreterStackFrame::OP_ProfiledSetElementIStrict(const unaligned OpLayoutDynamicProfile<T>* playout)
+    void InterpreterStackFrame::OP_ProfiledSetElementIStrict(const OpLayoutDynamicProfile<T>* playout)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
@@ -4834,7 +4834,7 @@ namespace Js
 #endif
 
     template <class T>
-    void InterpreterStackFrame::OP_LdArrayHeadSegment(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdArrayHeadSegment(const T* playout)
     {
         JavascriptArray* array = JavascriptArray::FromAnyArray(GetReg(playout->R1));
 
@@ -4845,7 +4845,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetArraySegmentItem_CI4(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SetArraySegmentItem_CI4(const T* playout)
     {
         SparseArraySegment<Var> * segment = (SparseArraySegment<Var> *)GetNonVarReg(playout->Instance);
 
@@ -4859,7 +4859,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_NewScArray(const unaligned T * playout)
+    void InterpreterStackFrame::OP_NewScArray(const T * playout)
     {
         JavascriptArray *arr;
         arr = scriptContext->GetLibrary()->CreateArrayLiteral(playout->C1);
@@ -4871,7 +4871,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <bool Profiled, class T>
-    void InterpreterStackFrame::ProfiledNewScArray(const unaligned OpLayoutDynamicProfile<T> * playout)
+    void InterpreterStackFrame::ProfiledNewScArray(const OpLayoutDynamicProfile<T> * playout)
     {
         if (!Profiled && !isAutoProfiling)
         {
@@ -4888,14 +4888,14 @@ namespace Js
     }
 #else
     template <bool Profiled, class T>
-    void InterpreterStackFrame::ProfiledNewScArray(const unaligned OpLayoutDynamicProfile<T> * playout)
+    void InterpreterStackFrame::ProfiledNewScArray(const OpLayoutDynamicProfile<T> * playout)
     {
         Assert(!Profiled);
         OP_NewScArray(playout);
     }
 #endif
 
-    void InterpreterStackFrame::OP_NewScIntArray(const unaligned OpLayoutAuxiliary * playout)
+    void InterpreterStackFrame::OP_NewScIntArray(const OpLayoutAuxiliary * playout)
     {
         const Js::AuxArray<int32_t> *ints = Js::ByteCodeReader::ReadAuxArray<int32_t>(playout->Offset, this->GetFunctionBody());
 
@@ -4912,7 +4912,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <bool Profiled>
-    void InterpreterStackFrame::ProfiledNewScIntArray(const unaligned OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout)
+    void InterpreterStackFrame::ProfiledNewScIntArray(const OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout)
     {
         if (!Profiled && !isAutoProfiling)
         {
@@ -4979,13 +4979,13 @@ namespace Js
     }
 #else
     template <bool Profiled>
-    void InterpreterStackFrame::ProfiledNewScIntArray(const unaligned OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout)
+    void InterpreterStackFrame::ProfiledNewScIntArray(const OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout)
     {
         OP_NewScIntArray(playout);
     }
 #endif
 
-    void InterpreterStackFrame::OP_NewScFltArray(const unaligned OpLayoutAuxiliary * playout)
+    void InterpreterStackFrame::OP_NewScFltArray(const OpLayoutAuxiliary * playout)
     {
         const Js::AuxArray<double> *doubles = Js::ByteCodeReader::ReadAuxArray<double>(playout->Offset, this->GetFunctionBody());
 
@@ -5002,7 +5002,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <bool Profiled>
-    void InterpreterStackFrame::ProfiledNewScFltArray(const unaligned OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout)
+    void InterpreterStackFrame::ProfiledNewScFltArray(const OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout)
     {
         if (!Profiled && !isAutoProfiling)
         {
@@ -5045,13 +5045,13 @@ namespace Js
     }
 #else
     template <bool Profiled>
-    void InterpreterStackFrame::ProfiledNewScFltArray(const unaligned OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout)
+    void InterpreterStackFrame::ProfiledNewScFltArray(const OpLayoutDynamicProfile<OpLayoutAuxiliary> * playout)
     {
         OP_NewScFltArray(playout);
     }
 #endif
 
-    void InterpreterStackFrame::OP_SetArraySegmentVars(const unaligned OpLayoutAuxiliary * playout)
+    void InterpreterStackFrame::OP_SetArraySegmentVars(const OpLayoutAuxiliary * playout)
     {
         const Js::VarArray *vars = Js::ByteCodeReader::ReadAuxArray<Var>(playout->Offset, this->GetFunctionBody());
 
@@ -5061,7 +5061,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetArrayItemC_CI4(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SetArrayItemC_CI4(const T* playout)
     {
         JavascriptArray* array = JavascriptArray::FromAnyArray(GetReg(playout->Instance));
         uint32_t index = playout->Element;
@@ -5089,7 +5089,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SetArrayItemI_CI4(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SetArrayItemI_CI4(const T* playout)
     {
         // Note that this code assumes that we only get here when we see an array literal,
         // so we know that the instance is truly an array, and the index is a uint32_t.
@@ -5166,7 +5166,7 @@ namespace Js
     }
 #endif
 
-    void InterpreterStackFrame::OP_InitCachedFuncs(const unaligned OpLayoutAuxNoReg * playout)
+    void InterpreterStackFrame::OP_InitCachedFuncs(const OpLayoutAuxNoReg * playout)
     {
         const FuncInfoArray *info = Js::ByteCodeReader::ReadAuxArray<FuncInfoEntry>(playout->Offset, this->GetFunctionBody());
         JavascriptOperators::OP_InitCachedFuncs(this->localClosure, GetLocalFrameDisplay(), info, GetScriptContext());
@@ -5217,7 +5217,7 @@ namespace Js
         return object;
     }
 
-    void InterpreterStackFrame::OP_NewScObjectLiteral(const unaligned OpLayoutAuxiliary * playout)
+    void InterpreterStackFrame::OP_NewScObjectLiteral(const OpLayoutAuxiliary * playout)
     {
         const Js::PropertyIdArray *propIds = Js::ByteCodeReader::ReadPropertyIdArray(playout->Offset, this->GetFunctionBody());
 
@@ -5227,7 +5227,7 @@ namespace Js
         SetReg(playout->R0, newObj);
     }
 
-    void InterpreterStackFrame::OP_NewScObjectLiteral_LS(const unaligned OpLayoutAuxiliary * playout, RegSlot& target)
+    void InterpreterStackFrame::OP_NewScObjectLiteral_LS(const OpLayoutAuxiliary * playout, RegSlot& target)
     {
         const Js::PropertyIdArray *propIds = Js::ByteCodeReader::ReadPropertyIdArray(playout->Offset, this->GetFunctionBody());
 
@@ -5241,7 +5241,7 @@ namespace Js
         target = Js::Constants::NoRegister;
     }
 
-    void InterpreterStackFrame::OP_LdPropIds(const unaligned OpLayoutAuxiliary * playout)
+    void InterpreterStackFrame::OP_LdPropIds(const OpLayoutAuxiliary * playout)
     {
         const Js::PropertyIdArray *propIds = Js::ByteCodeReader::ReadPropertyIdArray(playout->Offset, this->GetFunctionBody());
         SetNonVarReg(playout->R0, (Var)propIds);
@@ -5846,7 +5846,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_NewScObjectNoCtorFull(const unaligned T* playout)
+    void InterpreterStackFrame::OP_NewScObjectNoCtorFull(const T* playout)
     {
         Var function = GetReg(playout->R1);
         Var newObj = JavascriptOperators::NewScObjectNoCtorFull(function, GetScriptContext());
@@ -5888,7 +5888,7 @@ namespace Js
     ///
     ///----------------------------------------------------------------------------
     template <class T, bool Profiled, bool ICIndex>
-    void InterpreterStackFrame::OP_NewScObject_Impl(const unaligned T* playout, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices)
+    void InterpreterStackFrame::OP_NewScObject_Impl(const T* playout, InlineCacheIndex inlineCacheIndex, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         if (ICIndex)
         {
@@ -5900,7 +5900,7 @@ namespace Js
             ProfiledNewScObject_Helper(
                 GetReg(playout->Function),
                 playout->ArgCount,
-                static_cast<const unaligned OpLayoutDynamicProfile<T> *>(playout)->profileId,
+                static_cast<const OpLayoutDynamicProfile<T> *>(playout)->profileId,
                 inlineCacheIndex,
                 spreadIndices) :
 #endif
@@ -5909,7 +5909,7 @@ namespace Js
     }
 
     template <class T, bool Profiled>
-    void InterpreterStackFrame::OP_ProfiledNewScObjArray_Impl(const unaligned T* playout, const Js::AuxArray<uint32_t> *spreadIndices)
+    void InterpreterStackFrame::OP_ProfiledNewScObjArray_Impl(const T* playout, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         // Always profile this operation when auto-profiling so that array type changes are tracked
 #if ENABLE_PROFILE_INFO
@@ -5957,8 +5957,8 @@ namespace Js
                     GetReg(playout->Function),
                     outArgs,
                     function,
-                    static_cast<const unaligned OpLayoutDynamicProfile2<T> *>(playout)->profileId,
-                    static_cast<const unaligned OpLayoutDynamicProfile2<T> *>(playout)->profileId2));
+                    static_cast<const OpLayoutDynamicProfile2<T> *>(playout)->profileId,
+                    static_cast<const OpLayoutDynamicProfile2<T> *>(playout)->profileId2));
         }
         else
         {
@@ -5968,14 +5968,14 @@ namespace Js
                     GetReg(playout->Function),
                     args,
                     function,
-                    static_cast<const unaligned OpLayoutDynamicProfile2<T> *>(playout)->profileId,
-                    static_cast<const unaligned OpLayoutDynamicProfile2<T> *>(playout)->profileId2));
+                    static_cast<const OpLayoutDynamicProfile2<T> *>(playout)->profileId,
+                    static_cast<const OpLayoutDynamicProfile2<T> *>(playout)->profileId2));
         }
         PopOut(playout->ArgCount);
 #endif
     }
 
-    void InterpreterStackFrame::OP_NewScObject_A_Impl(const unaligned OpLayoutAuxiliary * playout, RegSlot *target)
+    void InterpreterStackFrame::OP_NewScObject_A_Impl(const OpLayoutAuxiliary * playout, RegSlot *target)
     {
         const Js::VarArrayVarCount * vars = Js::ByteCodeReader::ReadVarArrayVarCount(playout->Offset, this->GetFunctionBody());
 
@@ -6048,7 +6048,7 @@ namespace Js
 #endif
 
     template <typename T>
-    void InterpreterStackFrame::OP_LdElementUndefined(const unaligned OpLayoutT_ElementU<T>* playout)
+    void InterpreterStackFrame::OP_LdElementUndefined(const OpLayoutT_ElementU<T>* playout)
     {
         if (this->m_functionBody->IsEval())
         {
@@ -6063,7 +6063,7 @@ namespace Js
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_LdLocalElementUndefined(const unaligned OpLayoutT_ElementRootU<T>* playout)
+    void InterpreterStackFrame::OP_LdLocalElementUndefined(const OpLayoutT_ElementRootU<T>* playout)
     {
         if (this->m_functionBody->IsEval())
         {
@@ -6078,7 +6078,7 @@ namespace Js
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_LdElementUndefinedScoped(const unaligned OpLayoutT_ElementScopedU<T>* playout)
+    void InterpreterStackFrame::OP_LdElementUndefinedScoped(const OpLayoutT_ElementScopedU<T>* playout)
     {
         // Implicit root object as default instance
         JavascriptOperators::OP_LoadUndefinedToElementScoped(GetEnvForEvalCode(),
@@ -6135,7 +6135,7 @@ namespace Js
         this->OP_StSlot(aValue, slot, this->scriptContext->GetLibrary()->GetUndeclBlockVar());
     }
 
-    void InterpreterStackFrame::OP_TryCatch(const unaligned OpLayoutBr* playout)
+    void InterpreterStackFrame::OP_TryCatch(const OpLayoutBr* playout)
     {
         Js::JavascriptExceptionObject* exception = NULL;
         try
@@ -6672,7 +6672,7 @@ namespace Js
         }
     }
 
-    void InterpreterStackFrame::OP_TryFinally(const unaligned OpLayoutBr* playout)
+    void InterpreterStackFrame::OP_TryFinally(const OpLayoutBr* playout)
     {
         ProcessTryFinally((const byte*)(playout + 1), playout->RelativeJumpOffset);
     }
@@ -6723,7 +6723,7 @@ namespace Js
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_IsInst(const unaligned T* playout)
+    void InterpreterStackFrame::OP_IsInst(const T* playout)
     {
         Var instance = GetReg(playout->R1);
         Var function = GetReg(playout->R2);
@@ -6736,7 +6736,7 @@ namespace Js
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_ApplyArgs(const unaligned OpLayoutT_Reg5<T> * playout)
+    void InterpreterStackFrame::OP_ApplyArgs(const OpLayoutT_Reg5<T> * playout)
     {
         // Always save and restore implicit call flags when calling out
         // REVIEW: Can we avoid it if we don't collect dynamic profile info?
@@ -6749,7 +6749,7 @@ namespace Js
         threadContext->SetImplicitCallFlags(savedImplicitCallFlags);
     }
 
-    void InterpreterStackFrame::OP_SpreadArrayLiteral(const unaligned OpLayoutReg2Aux * playout)
+    void InterpreterStackFrame::OP_SpreadArrayLiteral(const OpLayoutReg2Aux * playout)
     {
         ThreadContext* threadContext = this->GetScriptContext()->GetThreadContext();
         ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
@@ -6929,7 +6929,7 @@ namespace Js
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_CloneInnerScopeSlots(const unaligned OpLayoutT_Unsigned1<T> *playout)
+    void InterpreterStackFrame::OP_CloneInnerScopeSlots(const OpLayoutT_Unsigned1<T> *playout)
     {
         uint innerScopeIndex = playout->C1;
         typename WriteBarrierFieldTypeTraits<Var>::Type * slotArray;
@@ -6940,7 +6940,7 @@ namespace Js
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_CloneBlockScope(const unaligned OpLayoutT_Unsigned1<T> *playout)
+    void InterpreterStackFrame::OP_CloneBlockScope(const OpLayoutT_Unsigned1<T> *playout)
     {
         uint innerScopeIndex = playout->C1;
         Var scope = this->InnerScopeFromIndex(innerScopeIndex);
@@ -7022,7 +7022,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_NewStackScFunc(const unaligned T * playout)
+    void InterpreterStackFrame::OP_NewStackScFunc(const T * playout)
     {
         uint funcIndex = playout->SlotIndex;
         FrameDisplay *frameDisplay = this->GetFrameDisplayForNestedFunc();
@@ -7033,7 +7033,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_NewInnerStackScFunc(const unaligned T * playout)
+    void InterpreterStackFrame::OP_NewInnerStackScFunc(const T * playout)
     {
         uint funcIndex = playout->SlotIndex;
         FrameDisplay *frameDisplay = (FrameDisplay*)GetNonVarReg(playout->Instance);
@@ -7044,42 +7044,42 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_DeleteFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_DeleteFld(const T * playout)
     {
         Var result = JavascriptOperators::OP_DeleteProperty(GetReg(playout->Instance), m_functionBody->GetReferencedPropertyId(playout->PropertyIdIndex), GetScriptContext());
         SetReg(playout->Value, result);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_DeleteLocalFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_DeleteLocalFld(const T * playout)
     {
         Var result = JavascriptOperators::OP_DeleteProperty(this->localClosure, m_functionBody->GetReferencedPropertyId(playout->PropertyIdIndex), GetScriptContext());
         SetReg(playout->Instance, result);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_DeleteRootFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_DeleteRootFld(const T * playout)
     {
         Var result = JavascriptOperators::OP_DeleteRootProperty(GetReg(playout->Instance), m_functionBody->GetReferencedPropertyId(playout->PropertyIdIndex), GetScriptContext());
         SetReg(playout->Value, result);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_DeleteFldStrict(const unaligned T * playout)
+    void InterpreterStackFrame::OP_DeleteFldStrict(const T * playout)
     {
         Var result = JavascriptOperators::OP_DeleteProperty(GetReg(playout->Instance), m_functionBody->GetReferencedPropertyId(playout->PropertyIdIndex), GetScriptContext(), PropertyOperation_StrictMode);
         SetReg(playout->Value, result);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_DeleteRootFldStrict(const unaligned T * playout)
+    void InterpreterStackFrame::OP_DeleteRootFldStrict(const T * playout)
     {
         Var result = JavascriptOperators::OP_DeleteRootProperty(GetReg(playout->Instance), m_functionBody->GetReferencedPropertyId(playout->PropertyIdIndex), GetScriptContext(), PropertyOperation_StrictMode);
         SetReg(playout->Value, result);
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_ScopedDeleteFld(const unaligned OpLayoutT_ElementScopedC<T> * playout)
+    void InterpreterStackFrame::OP_ScopedDeleteFld(const OpLayoutT_ElementScopedC<T> * playout)
     {
         // Implicit root object as default instance
         Var result = JavascriptOperators::OP_DeletePropertyScoped(GetEnvForEvalCode(),
@@ -7089,7 +7089,7 @@ namespace Js
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_ScopedDeleteFldStrict(const unaligned OpLayoutT_ElementScopedC<T> * playout)
+    void InterpreterStackFrame::OP_ScopedDeleteFldStrict(const OpLayoutT_ElementScopedC<T> * playout)
     {
         // Implicit root object as default instance
         Var result = JavascriptOperators::OP_DeletePropertyScoped(GetEnvForEvalCode(),
@@ -7099,7 +7099,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ScopedLdInst(const unaligned T * playout)
+    void InterpreterStackFrame::OP_ScopedLdInst(const T * playout)
     {
         Var thisVar = nullptr;
         Var rootObject = GetFunctionBody()->GetRootObject();
@@ -7110,7 +7110,7 @@ namespace Js
     }
 
     template <typename T>
-    void InterpreterStackFrame::OP_ScopedInitFunc(const unaligned OpLayoutT_ElementScopedC<T> * playout)
+    void InterpreterStackFrame::OP_ScopedInitFunc(const OpLayoutT_ElementScopedC<T> * playout)
     {
         JavascriptOperators::OP_InitFuncScoped(GetEnvForEvalCode(),
             m_functionBody->GetReferencedPropertyId(playout->PropertyIdIndex),
@@ -7118,25 +7118,25 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_ClearAttributes(const unaligned T * playout)
+    void InterpreterStackFrame::OP_ClearAttributes(const T * playout)
     {
         JavascriptOperators::OP_ClearAttributes(GetReg(playout->Instance), m_functionBody->GetReferencedPropertyId(playout->PropertyIdIndex));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitGetFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitGetFld(const T * playout)
     {
         JavascriptOperators::OP_InitGetter(GetReg(playout->Instance), m_functionBody->GetReferencedPropertyId(playout->PropertyIdIndex), GetReg(playout->Value));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitSetFld(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitSetFld(const T * playout)
     {
         JavascriptOperators::OP_InitSetter(GetReg(playout->Instance), m_functionBody->GetReferencedPropertyId(playout->PropertyIdIndex), GetReg(playout->Value));
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitSetElemI(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitSetElemI(const T * playout)
     {
         JavascriptOperators::OP_InitElemSetter(
             GetReg(playout->Instance),
@@ -7147,7 +7147,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitGetElemI(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitGetElemI(const T * playout)
     {
         JavascriptOperators::OP_InitElemGetter(
             GetReg(playout->Instance),
@@ -7158,7 +7158,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitComputedProperty(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitComputedProperty(const T * playout)
     {
         JavascriptOperators::OP_InitComputedProperty(
             GetReg(playout->Instance),
@@ -7169,7 +7169,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_InitProto(const unaligned T * playout)
+    void InterpreterStackFrame::OP_InitProto(const T * playout)
     {
         JavascriptOperators::OP_InitProto(GetReg(playout->Instance), m_functionBody->GetReferencedPropertyId(playout->PropertyIdIndex), GetReg(playout->Value));
     }
@@ -7222,7 +7222,7 @@ namespace Js
     }
 
     template <class T>
-    const byte * InterpreterStackFrame::OP_Br(const unaligned T * playout)
+    const byte * InterpreterStackFrame::OP_Br(const T * playout)
     {
         return m_reader.SetCurrentRelativeOffset((const byte *)(playout + 1), playout->RelativeJumpOffset);
     }
@@ -7263,7 +7263,7 @@ namespace Js
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
     template <class T>
-    void InterpreterStackFrame::OP_EmitTmpRegCount(const unaligned OpLayoutT_Unsigned1<T> * playout)
+    void InterpreterStackFrame::OP_EmitTmpRegCount(const OpLayoutT_Unsigned1<T> * playout)
     {
         this->scriptContext->GetDebugContext()->GetProbeContainer()->SetCurrentTmpRegCount(playout->C1);
     }
@@ -7587,7 +7587,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdLdArrGeneric(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdLdArrGeneric(const T* playout)
     {
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
 
@@ -7619,7 +7619,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdLdArrConstIndex(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdLdArrConstIndex(const T* playout)
     {
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
         const unsigned long index = (uint32_t)playout->SlotIndex;
@@ -7640,7 +7640,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdStArrGeneric(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdStArrGeneric(const T* playout)
     {
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
 
@@ -7671,7 +7671,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdStArrConstIndex(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdStArrConstIndex(const T* playout)
     {
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
         const unsigned long index = (uint32_t)playout->SlotIndex;
@@ -7704,7 +7704,7 @@ namespace Js
 
     // handler for SIMD.Int32x4.FromFloat32x4
     template <class T>
-    void InterpreterStackFrame::OP_SimdInt32x4FromFloat32x4(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdInt32x4FromFloat32x4(const T* playout)
     {
         bool throws = false;
         AsmJsSIMDValue input = GetRegRawSimd(playout->F4_1);
@@ -7727,7 +7727,7 @@ namespace Js
     }
     // handler for SIMD.Uint32x4.FromFloat32x4
     template <class T>
-    void InterpreterStackFrame::OP_SimdUint32x4FromFloat32x4(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdUint32x4FromFloat32x4(const T* playout)
     {
         bool throws = false;
         AsmJsSIMDValue input = GetRegRawSimd(playout->F4_1);
@@ -7749,14 +7749,14 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_WasmSimdConst(const unaligned T* playout)
+    void InterpreterStackFrame::OP_WasmSimdConst(const T* playout)
     {
         AsmJsSIMDValue result{ {{playout->C1, playout->C2, playout->C3, playout->C4}} };
         SetRegRawSimd(playout->F4_0, result);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdShuffleV8X16(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdShuffleV8X16(const T* playout)
     {
         uint32_t lanes[Wasm::Simd::MAX_LANES];
         for (uint32_t i = 0; i < Wasm::Simd::MAX_LANES; i++)
@@ -7768,7 +7768,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdInt16x8(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdInt16x8(const T* playout)
     {
         int16 values[8];
         values[0] = (int16)GetRegRawInt(playout->I1);
@@ -7785,7 +7785,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdInt8x16(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdInt8x16(const T* playout)
     {
         int8_t values[16];
         values[0] = (int8_t)GetRegRawInt(playout->I1);
@@ -7810,7 +7810,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdUint16x8(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdUint16x8(const T* playout)
     {
 
         uint16 values[8];
@@ -7828,7 +7828,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdUint8x16(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdUint8x16(const T* playout)
     {
         uint8_t values[16];
         values[0] = (uint8_t)GetRegRawInt(playout->I1);
@@ -7854,7 +7854,7 @@ namespace Js
 
     // Bool constructors
     template <class T>
-    void InterpreterStackFrame::OP_SimdBool32x4(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdBool32x4(const T* playout)
     {
         bool arg1 = GetRegRawInt(playout->I1) ? true : false;
         bool arg2 = GetRegRawInt(playout->I2) ? true : false;
@@ -7866,7 +7866,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdBool16x8(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdBool16x8(const T* playout)
     {
         bool values[8];
         values[0] = GetRegRawInt(playout->I1) ? true : false;
@@ -7883,7 +7883,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_SimdBool8x16(const unaligned T* playout)
+    void InterpreterStackFrame::OP_SimdBool8x16(const T* playout)
     {
         bool values[16];
         values[0] = GetRegRawInt(playout->I1) ? true : false;
@@ -7932,7 +7932,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    void InterpreterStackFrame::OP_ProfiledArgOut_A(const unaligned T * playout)
+    void InterpreterStackFrame::OP_ProfiledArgOut_A(const T * playout)
     {
         FunctionBody* functionBody = this->m_functionBody;
         DynamicProfileInfo * dynamicProfileInfo = functionBody->GetDynamicProfileInfo();
@@ -7945,20 +7945,20 @@ namespace Js
 #endif
 
     template <class T>
-    void InterpreterStackFrame::OP_ArgOut_A(const unaligned T * playout)
+    void InterpreterStackFrame::OP_ArgOut_A(const T * playout)
     {
         SetOut(playout->Arg, GetReg(playout->Reg));
     }
 #if DBG
     template <class T>
-    void InterpreterStackFrame::OP_ArgOut_ANonVar(const unaligned T * playout)
+    void InterpreterStackFrame::OP_ArgOut_ANonVar(const T * playout)
     {
         SetOut(playout->Arg, GetNonVarReg(playout->Reg));
     }
 #endif
 
     template <class T>
-    void InterpreterStackFrame::OP_ArgOut_Env(const unaligned T * playout)
+    void InterpreterStackFrame::OP_ArgOut_Env(const T * playout)
     {
         Var argEnv;
         if (this->m_functionBody->GetLocalFrameDisplayRegister() != Constants::NoRegister)
@@ -8042,7 +8042,7 @@ namespace Js
     }
 
     template<class T>
-    void InterpreterStackFrame::OP_LdLen(const unaligned T * const playout)
+    void InterpreterStackFrame::OP_LdLen(const T * const playout)
     {
         Assert(playout);
 
@@ -8061,7 +8061,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template<class T>
-    void InterpreterStackFrame::OP_ProfiledLdLen(const unaligned OpLayoutDynamicProfile<T> *const playout)
+    void InterpreterStackFrame::OP_ProfiledLdLen(const OpLayoutDynamicProfile<T> *const playout)
     {
         Assert(playout);
         FunctionBody * functionBody = m_functionBody;
@@ -8142,19 +8142,19 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_LdFunctionExpression(const unaligned T * playout)
+    void InterpreterStackFrame::OP_LdFunctionExpression(const T * playout)
     {
         SetRegAllowStackVar(playout->R0, this->GetFunctionExpression());
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_StFunctionExpression(const unaligned T * playout)
+    void InterpreterStackFrame::OP_StFunctionExpression(const T * playout)
     {
         OP_StFunctionExpression(GetReg(playout->Instance), GetReg(playout->Value), playout->PropertyIdIndex);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_StLocalFunctionExpression(const unaligned T * playout)
+    void InterpreterStackFrame::OP_StLocalFunctionExpression(const T * playout)
     {
         OP_StFunctionExpression(this->localClosure, GetReg(playout->Instance), playout->PropertyIdIndex);
     }
@@ -8166,7 +8166,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_LdNewTarget(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdNewTarget(const T* playout)
     {
         if (Js::CallInfo::HasNewTarget(this->m_callFlags))
         {
@@ -8183,7 +8183,7 @@ namespace Js
     }
 
     template <class T> 
-    void InterpreterStackFrame::OP_LdImportMeta(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdImportMeta(const T* playout)
     {
         SetReg(playout->R0, JavascriptOperators::OP_LdImportMeta(playout->C1, scriptContext));
     }
@@ -8252,7 +8252,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_LdArrFunc(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdArrFunc(const T* playout)
     {
         Var* arr = (Var*)GetRegRawPtr(playout->Instance);
         const uint32_t index = (uint32_t)GetRegRawInt(playout->SlotIndex);
@@ -8260,7 +8260,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_LdArrWasmFunc(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdArrWasmFunc(const T* playout)
     {
 #ifdef ENABLE_WASM
         WebAssemblyTable * table = VarTo<WebAssemblyTable>(GetRegRawPtr(playout->Instance));
@@ -8279,7 +8279,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_CheckSignature(const unaligned T* playout)
+    void InterpreterStackFrame::OP_CheckSignature(const T* playout)
     {
 #ifdef ENABLE_WASM
         ScriptFunction * func = VarTo<ScriptFunction>(GetRegRawPtr(playout->R0));
@@ -8315,21 +8315,21 @@ namespace Js
 #endif
 
     template <class T, typename T2>
-    void InterpreterStackFrame::OP_StSlotPrimitive(const unaligned T* playout)
+    void InterpreterStackFrame::OP_StSlotPrimitive(const T* playout)
     {
         T2* buffer = (T2*)GetNonVarReg(playout->Instance);
         buffer[playout->SlotIndex] = GetRegRaw<T2>(playout->Value);
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_LdAsmJsSlot(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdAsmJsSlot(const T* playout)
     {
         Var * slotArray = (Var*)GetNonVarReg(playout->Instance);
         SetRegRawPtr(playout->Value, slotArray[playout->SlotIndex]);
     }
 
     template <class T, typename T2>
-    void InterpreterStackFrame::OP_LdSlotPrimitive(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdSlotPrimitive(const T* playout)
     {
         T2* buffer = (T2*)GetNonVarReg(playout->Instance);
         SetRegRaw<T2>(playout->Value, buffer[playout->SlotIndex]);
@@ -8337,7 +8337,7 @@ namespace Js
 
 #ifndef TEMP_DISABLE_ASMJS
     template <class T>
-    void InterpreterStackFrame::OP_LdArrGeneric(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdArrGeneric(const T* playout)
     {
         const uint32_t index = (uint32_t)GetRegRawInt(playout->SlotIndex);
         switch (playout->ViewType)
@@ -8374,7 +8374,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_LdArrWasm(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdArrWasm(const T* playout)
     {
 #ifdef ENABLE_WASM
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
@@ -8399,7 +8399,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_LdArrAtomic(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdArrAtomic(const T* playout)
     {
 #ifdef ENABLE_WASM
         Assert(Wasm::Threads::IsEnabled());
@@ -8427,7 +8427,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_StArrAtomic(const unaligned T* playout)
+    void InterpreterStackFrame::OP_StArrAtomic(const T* playout)
     {
 #ifdef ENABLE_WASM
         Assert(Wasm::Threads::IsEnabled());
@@ -8456,7 +8456,7 @@ namespace Js
     }
 
     template <class T>
-    void InterpreterStackFrame::OP_LdArrConstIndex(const unaligned T* playout)
+    void InterpreterStackFrame::OP_LdArrConstIndex(const T* playout)
     {
         switch (playout->ViewType)
         {
@@ -8469,7 +8469,7 @@ namespace Js
         }
     }
     template <class T>
-    void InterpreterStackFrame::OP_StArrGeneric(const unaligned T* playout)
+    void InterpreterStackFrame::OP_StArrGeneric(const T* playout)
     {
         const uint32_t index = (uint32_t)GetRegRawInt(playout->SlotIndex);
         switch (playout->ViewType)
@@ -8483,7 +8483,7 @@ namespace Js
         }
     }
     template <class T>
-    void InterpreterStackFrame::OP_StArrWasm(const unaligned T* playout)
+    void InterpreterStackFrame::OP_StArrWasm(const T* playout)
     {
 #ifdef ENABLE_WASM
         Assert(playout->ViewType < Js::ArrayBufferView::TYPE_COUNT);
@@ -8515,7 +8515,7 @@ namespace Js
 #endif
     }
     template <class T>
-    void InterpreterStackFrame::OP_StArrConstIndex(const unaligned T* playout)
+    void InterpreterStackFrame::OP_StArrConstIndex(const T* playout)
     {
         switch (playout->ViewType)
         {
@@ -8542,14 +8542,14 @@ namespace Js
     }
 
     template <class T>
-    Var InterpreterStackFrame::OP_LdSlot(Var instance, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_LdSlot(Var instance, const T* playout)
     {
         return OP_LdSlot(instance, playout->SlotIndex);
     }
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    Var InterpreterStackFrame::OP_ProfiledLdSlot(Var instance, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_ProfiledLdSlot(Var instance, const T* playout)
     {
         Var value = OP_LdSlot(instance, playout->SlotIndex);
         ProfilingHelpers::ProfileLdSlot(value, GetFunctionBody(), playout->profileId);
@@ -8558,14 +8558,14 @@ namespace Js
 #endif
 
     template <class T>
-    Var InterpreterStackFrame::OP_LdInnerSlot(Var slotArray, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_LdInnerSlot(Var slotArray, const T* playout)
     {
         return OP_LdSlot(slotArray, playout->SlotIndex2);
     }
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    Var InterpreterStackFrame::OP_ProfiledLdInnerSlot(Var slotArray, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_ProfiledLdInnerSlot(Var slotArray, const T* playout)
     {
         Var value = OP_LdInnerSlot(slotArray, playout);
         ProfilingHelpers::ProfileLdSlot(value, GetFunctionBody(), playout->profileId);
@@ -8574,14 +8574,14 @@ namespace Js
 #endif
 
     template <class T>
-    Var InterpreterStackFrame::OP_LdInnerObjSlot(Var slotArray, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_LdInnerObjSlot(Var slotArray, const T* playout)
     {
         return OP_LdObjSlot(slotArray, playout->SlotIndex2);
     }
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    Var InterpreterStackFrame::OP_ProfiledLdInnerObjSlot(Var slotArray, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_ProfiledLdInnerObjSlot(Var slotArray, const T* playout)
     {
         Var value = OP_LdInnerObjSlot(slotArray, playout);
         ProfilingHelpers::ProfileLdSlot(value, GetFunctionBody(), playout->profileId);
@@ -8602,13 +8602,13 @@ namespace Js
     }
 
     template <class T>
-    Var InterpreterStackFrame::OP_LdEnvObj(Var instance, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_LdEnvObj(Var instance, const T* playout)
     {
         return OP_LdFrameDisplaySlot(instance, playout->SlotIndex);
     }
 
     template <class T>
-    Var InterpreterStackFrame::OP_LdEnvSlot(Var instance, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_LdEnvSlot(Var instance, const T* playout)
     {
         Var slotArray = OP_LdFrameDisplaySlot(instance, playout->SlotIndex1);
         return OP_LdSlot(slotArray, playout->SlotIndex2);
@@ -8616,7 +8616,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    Var InterpreterStackFrame::OP_ProfiledLdEnvSlot(Var instance, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_ProfiledLdEnvSlot(Var instance, const T* playout)
     {
         Var value = OP_LdEnvSlot(instance, playout);
         ProfilingHelpers::ProfileLdSlot(value, GetFunctionBody(), playout->profileId);
@@ -8631,14 +8631,14 @@ namespace Js
     }
 
     template <class T>
-    Var InterpreterStackFrame::OP_LdObjSlot(Var instance, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_LdObjSlot(Var instance, const T* playout)
     {
         return OP_LdObjSlot(instance, playout->SlotIndex);
     }
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    Var InterpreterStackFrame::OP_ProfiledLdObjSlot(Var instance, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_ProfiledLdObjSlot(Var instance, const T* playout)
     {
         Var value = OP_LdObjSlot(instance, playout->SlotIndex);
         ProfilingHelpers::ProfileLdSlot(value, GetFunctionBody(), playout->profileId);
@@ -8647,14 +8647,14 @@ namespace Js
 #endif
 
     template <class T>
-    Var InterpreterStackFrame::OP_LdEnvObjSlot(Var instance, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_LdEnvObjSlot(Var instance, const T* playout)
     {
         Var slotArray = OP_LdFrameDisplaySlot(instance, playout->SlotIndex1);
         return OP_LdObjSlot(slotArray, playout->SlotIndex2);
     }
 
     template <class T>
-    Var InterpreterStackFrame::OP_LdModuleSlot(Var instance, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_LdModuleSlot(Var instance, const T* playout)
     {
         return JavascriptOperators::OP_LdModuleSlot(playout->SlotIndex1, playout->SlotIndex2, scriptContext);
     }
@@ -8666,7 +8666,7 @@ namespace Js
 
 #if ENABLE_PROFILE_INFO
     template <class T>
-    Var InterpreterStackFrame::OP_ProfiledLdEnvObjSlot(Var instance, const unaligned T* playout)
+    Var InterpreterStackFrame::OP_ProfiledLdEnvObjSlot(Var instance, const T* playout)
     {
         Var value = OP_LdEnvObjSlot(instance, playout);
         ProfilingHelpers::ProfileLdSlot(value, GetFunctionBody(), playout->profileId);

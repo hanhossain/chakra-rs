@@ -78,17 +78,17 @@ static const int GetOpCodeAttributes(Js::OpCode op)
 {
     if (op <= Js::OpCode::MaxByteSizedOpcodes)
     {
-        AnalysisAssert(op < _countof(OpcodeAttributes));
+        AnalysisAssert(op < std::size(OpcodeAttributes));
         return OpcodeAttributes[(int)op];
     }
     else if (op < Js::OpCode::ByteCodeLast)
     {
         uint opIndex = op - (Js::OpCode::MaxByteSizedOpcodes + 1);
-        AnalysisAssert(opIndex < _countof(ExtendedOpcodeAttributes));
+        AnalysisAssert(opIndex < std::size(ExtendedOpcodeAttributes));
         return ExtendedOpcodeAttributes[opIndex];
     }
     uint opIndex = op - (Js::OpCode::ByteCodeLast + 1);
-    AnalysisAssert(opIndex < _countof(BackendOpCodeAttributes));
+    AnalysisAssert(opIndex < std::size(BackendOpCodeAttributes));
     return BackendOpCodeAttributes[opIndex];
 }
 
@@ -257,17 +257,17 @@ static const int GetOpCodeDebugAttributes(Js::OpCode op)
 {
     if (op <= Js::OpCode::MaxByteSizedOpcodes)
     {
-        AnalysisAssert(op < _countof(OpcodeDebugAttributes));
+        AnalysisAssert(op < std::size(OpcodeDebugAttributes));
         return OpcodeDebugAttributes[(int)op];
     }
     else if (op < Js::OpCode::ByteCodeLast)
     {
         uint opIndex = op - (Js::OpCode::MaxByteSizedOpcodes + 1);
-        AnalysisAssert(opIndex < _countof(ExtendedOpcodeDebugAttributes));
+        AnalysisAssert(opIndex < std::size(ExtendedOpcodeDebugAttributes));
         return ExtendedOpcodeDebugAttributes[opIndex];
     }
     uint opIndex = op - (Js::OpCode::ByteCodeLast + 1);
-    AnalysisAssert(opIndex < _countof(BackendOpCodeDebugAttributes));
+    AnalysisAssert(opIndex < std::size(BackendOpCodeDebugAttributes));
     return BackendOpCodeDebugAttributes[opIndex];
 }
 

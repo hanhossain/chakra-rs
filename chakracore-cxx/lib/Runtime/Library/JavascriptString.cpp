@@ -2944,7 +2944,7 @@ case_2:
             }
         }
 
-        Assert(radix <= _countof(maxUintStringLengthTable));
+        Assert(radix <= std::size(maxUintStringLengthTable));
         Assert(pchEnd >= pch);
         size_t length = pchEnd - pch;
         const char16_t *const pchMin = pch;
@@ -2956,7 +2956,7 @@ case_2:
             {
                 char16_t ch = *pch;
 
-                if(ch >= _countof(stringToIntegerMap) || (ch = stringToIntegerMap[ch]) >= radix)
+                if(ch >= std::size(stringToIntegerMap) || (ch = stringToIntegerMap[ch]) >= radix)
                 {
                     break;
                 }
@@ -2989,7 +2989,7 @@ case_2:
         {
             char16_t ch = *pch;
 
-            if(ch >= _countof(stringToIntegerMap) || (ch = stringToIntegerMap[ch]) >= radix)
+            if(ch >= std::size(stringToIntegerMap) || (ch = stringToIntegerMap[ch]) >= radix)
             {
                 break;
             }
@@ -3181,7 +3181,7 @@ case_2:
         const char16_t * propertyValueStr = nullptr;
         uint quotesCount = 0;
         const char16_t quotStr[] = u"&quot;";
-        const charcount_t quotStrLen = _countof(quotStr) - 1;
+        const charcount_t quotStrLen = std::size(quotStr) - 1;
         bool ES6FixesEnabled = scriptContext->GetConfig()->IsES6StringPrototypeFixEnabled();
 
         // Assemble the component pieces of a string tag function (ex: String.prototype.link).

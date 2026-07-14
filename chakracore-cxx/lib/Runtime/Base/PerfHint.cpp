@@ -14,7 +14,7 @@ const PerfHintItem s_perfHintContainer[] =
 void WritePerfHint(PerfHints hint, Js::FunctionBody * functionBody, uint byteCodeOffset /*= Js::Constants::NoByteCodeOffset*/)
 {
     Assert(functionBody);
-    Assert(((uint)hint) < _countof(s_perfHintContainer));
+    Assert(((uint)hint) < std::size(s_perfHintContainer));
 
     PerfHintItem item = s_perfHintContainer[(uint)hint];
 
