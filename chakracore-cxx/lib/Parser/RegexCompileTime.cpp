@@ -21,7 +21,7 @@ namespace UnifiedRegex
         if (instLen - instNext < size)
         {
             CharCount newLen = max(instLen, initInstBufSize);
-            CharCount instLenPlus = (CharCount)(instLen + size - 1);
+            CharCount instLenPlus = static_cast<CharCount>(instLen + size - 1);
 
             // check for overflow
             if (instLenPlus < instLen || instLenPlus * 2 < instLenPlus)
@@ -34,11 +34,11 @@ namespace UnifiedRegex
                 newLen *= 2;
             }
 
-            instBuf = (uint8_t*)ctAllocator->Realloc(instBuf, instLen, newLen);
+            instBuf = reinterpret_cast<uint8_t*>(ctAllocator->Realloc(instBuf, instLen, newLen));
             instLen = newLen;
         }
         uint8_t* inst = instBuf + instNext;
-        instNext += (CharCount)size;
+        instNext += static_cast<CharCount>(size);
         return inst;
     }
 
@@ -162,7 +162,7 @@ namespace UnifiedRegex
         if (tag != Node::MatchChar)
             return false;
 
-        const MatchCharNode* node = (const MatchCharNode*)this;
+        const MatchCharNode* node = static_cast<const MatchCharNode*>(this);
         if (node->isEquivClass)
             return false;
 
@@ -175,7 +175,7 @@ namespace UnifiedRegex
         if (tag != Node::Concat)
             return false;
 
-        const ConcatNode* concatNode = (const ConcatNode *)this;
+        const ConcatNode* concatNode = static_cast<const ConcatNode*>(this);
         if (concatNode->head->tag != Node::WordBoundary ||
             concatNode->tail == 0 ||
             concatNode->tail->head->tag != Node::Loop ||
@@ -184,9 +184,9 @@ namespace UnifiedRegex
             concatNode->tail->tail->tail != 0)
             return false;
 
-        const WordBoundaryNode* enter = (const WordBoundaryNode*)concatNode->head;
-        const LoopNode* loop = (const LoopNode*)concatNode->tail->head;
-        const WordBoundaryNode* leave = (const WordBoundaryNode*)concatNode->tail->tail->head;
+        const WordBoundaryNode* enter = static_cast<const WordBoundaryNode*>(concatNode->head);
+        const LoopNode* loop = static_cast<const LoopNode*>(concatNode->tail->head);
+        const WordBoundaryNode* leave = static_cast<const WordBoundaryNode*>(concatNode->tail->tail->head);
 
         if (enter->isNegation ||
             !loop->isGreedy ||
@@ -196,7 +196,7 @@ namespace UnifiedRegex
             leave->isNegation)
             return false;
 
-        const MatchSetNode* wordSet = (const MatchSetNode*)loop->body;
+        const MatchSetNode* wordSet = static_cast<const MatchSetNode*>(loop->body);
 
         if (wordSet->isNegation)
             return false;
@@ -208,14 +208,14 @@ namespace UnifiedRegex
     {
         if (tag != Node::Concat)
             return false;
-        const ConcatNode* concatNode = (const ConcatNode *)this;
+        const ConcatNode* concatNode = static_cast<const ConcatNode*>(this);
         if ((compiler.program->flags & (IgnoreCaseRegexFlag | MultilineRegexFlag)) != 0 ||
             concatNode->head->tag != Node::BOL ||
             concatNode->tail == nullptr ||
             concatNode->tail->head->tag != Node::MatchLiteral ||
             concatNode->tail->tail != nullptr ||
-            ((MatchLiteralNode *)concatNode->tail->head)->isEquivClass ||
-            ((MatchLiteralNode *)concatNode->tail->head)->length != 2)
+            static_cast<MatchLiteralNode*>(concatNode->tail->head)->isEquivClass ||
+            static_cast<MatchLiteralNode*>(concatNode->tail->head)->length != 2)
         {
             return false;
         }

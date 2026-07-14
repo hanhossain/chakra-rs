@@ -223,7 +223,7 @@ namespace UnifiedRegex
     CharSetNode* CharSetFull::Clone(ArenaAllocator* allocator) const
     {
         // Always shared
-        return (CharSetNode*)this;
+        return const_cast<CharSetFull*>(this);
     }
 
     CharSetNode* CharSetFull::Set(ArenaAllocator* allocator, uint level, uint l, uint h)
@@ -326,7 +326,7 @@ namespace UnifiedRegex
         Assert(searchCharStart < this->Count(level));
 
         *outLowerChar = searchCharStart;
-        *outHigherChar = (Char)this->Count(level) - 1;
+        *outHigherChar = static_cast<Char>(this->Count(level)) - 1;
 
         return true;
     }
@@ -503,7 +503,7 @@ namespace UnifiedRegex
     {
         Assert(level > 0);
         Assert(other != nullptr && other != CharSetFull::TheFullNode && !other->IsLeaf());
-        CharSetInner* otherInner = (CharSetInner*)other;
+        CharSetInner* otherInner = const_cast<CharSetInner*>(static_cast<const CharSetInner*>(other));
         level--;
         bool isFull = true;
         for (uint i = 0; i < branchingPerInnerLevel; i++)
@@ -600,7 +600,7 @@ namespace UnifiedRegex
         if (other == CharSetFull::TheFullNode)
             return true;
         level--;
-        const CharSetInner* otherInner = (CharSetInner*)other;
+        const CharSetInner* otherInner = static_cast<const CharSetInner*>(other);
         for (uint i = 0; i < branchingPerInnerLevel; i++)
         {
             if (children[i] != nullptr)
@@ -621,7 +621,7 @@ namespace UnifiedRegex
         if (other == CharSetFull::TheFullNode)
             return false;
         level--;
-        const CharSetInner* otherInner = (CharSetInner*)other;
+        const CharSetInner* otherInner = static_cast<const CharSetInner*>(other);
         for (uint i = 0; i < branchingPerInnerLevel; i++)
         {
             if (children[i] != 0)
@@ -658,14 +658,14 @@ namespace UnifiedRegex
 
         for (; innerIndex < branchingPerInnerLevel; innerIndex++)
         {
-            if (children[innerIndex] != nullptr && children[innerIndex]->GetNextRange(level, (Char)remain(level, searchCharStart), &currentLowChar, &currentHighChar))
+            if (children[innerIndex] != nullptr && children[innerIndex]->GetNextRange(level, static_cast<Char>(remain(level, searchCharStart)), &currentLowChar, &currentHighChar))
             {
                 break;
             }
 
             if (innerIndex < branchingPerInnerLevel - 1)
             {
-                searchCharStart = (Char)indexToValue(level + 1, innerIndex + 1, 0);
+                searchCharStart = static_cast<Char>(indexToValue(level + 1, innerIndex + 1, 0));
             }
         }
 
@@ -674,8 +674,8 @@ namespace UnifiedRegex
             return false;
         }
 
-        currentLowChar = (Char)indexToValue(level + 1, innerIndex, currentLowChar);
-        currentHighChar = (Char)indexToValue(level + 1, innerIndex, currentHighChar);
+        currentLowChar = static_cast<Char>(indexToValue(level + 1, innerIndex, currentLowChar));
+        currentHighChar = static_cast<Char>(indexToValue(level + 1, innerIndex, currentHighChar));
 
         innerIndex += 1;
 
@@ -687,7 +687,7 @@ namespace UnifiedRegex
                 break;
             }
 
-            currentHighChar = (Char)indexToValue(level + 1, innerIndex, tempHigher);
+            currentHighChar = static_cast<Char>(indexToValue(level + 1, innerIndex, tempHigher));
         }
 
         *outLowerChar = currentLowChar;
@@ -760,7 +760,7 @@ namespace UnifiedRegex
     {
         Assert(level == 0);
         Assert(other != nullptr && other->IsLeaf());
-        CharSetLeaf* otherLeaf = (CharSetLeaf*)other;
+        const CharSetLeaf* otherLeaf = static_cast<const CharSetLeaf*>(other);
         if (vec.UnionInPlaceFullCheck(otherLeaf->vec))
         {
             FreeSelf(allocator);

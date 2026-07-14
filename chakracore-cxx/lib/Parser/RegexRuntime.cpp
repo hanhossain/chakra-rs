@@ -13,7 +13,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
     void CountDomain::Print(DebugWriter* w) const
     {
-        if (upper != CharCountFlag && lower == (CharCount)upper)
+        if (upper != CharCountFlag && lower == static_cast<CharCount>(upper))
         {
             w->Print(u"[%u]", lower);
         }
@@ -23,7 +23,7 @@ namespace UnifiedRegex
             if (upper == CharCountFlag)
                 w->Print(u"inf]");
             else
-                w->Print(u"%u]", (CharCount)upper);
+                w->Print(u"%u]", static_cast<CharCount>(upper));
         }
     }
 #endif
@@ -212,7 +212,7 @@ namespace UnifiedRegex
 #if ENABLE_REGEX_CONFIG_OPTIONS
         if (w != 0)
         {
-            w->PrintEOL(u"POP TO %llu", (unsigned long long)info->contStackPosition);
+            w->PrintEOL(u"POP TO %llu", static_cast<unsigned long long>(info->contStackPosition));
         }
 #endif
         contStack.PopTo(info->contStackPosition);
@@ -371,7 +371,7 @@ namespace UnifiedRegex
 
     Label Inst::GetPrintLabel(Label label)
     {
-        return IsBaselineMode() ? (Label)0xFFFF : label;
+        return IsBaselineMode() ? static_cast<Label>(0xFFFF) : label;
     }
 
     template <typename T>
@@ -400,13 +400,13 @@ namespace UnifiedRegex
     template <>
     void Inst::PrintBytes(DebugWriter *w, Inst *inst, Inst *that, const char16_t *annotation) const
     {
-        Inst *start = (Inst *)that;
+        Inst *start = that;
 
-        size_t baseSize = sizeof(*(Inst *)that);
-        ptrdiff_t offsetToData = (byte *)&(start->tag) - ((byte *)start);
+        size_t baseSize = sizeof(*that);
+        ptrdiff_t offsetToData = reinterpret_cast<byte*>(&(start->tag)) - reinterpret_cast<byte*>(start);
         size_t size = baseSize - offsetToData;
 
-        byte *startByte = (byte *)(&(start->tag));
+        byte *startByte = reinterpret_cast<byte*>(&(start->tag));
         byte *endByte = startByte + size;
         byte *currentByte = startByte;
         w->Print(u"0x%p[+0x%03x](0x%03x) [%s]:", startByte, offsetToData, size, annotation);
@@ -589,7 +589,7 @@ namespace UnifiedRegex
                 const uint c0 = Chars<char16_t>::CTU(*currentInput);
                 if (c0 == matchC0)
                 {
-                    inputOffset = (CharCount)(currentInput - input);
+                    inputOffset = static_cast<CharCount>(currentInput - input);
                     return true;
                 }
                 if (matchC0 == matchC1)
@@ -614,7 +614,7 @@ namespace UnifiedRegex
                 const uint c1 = Chars<char16_t>::CTU(currentInput[1]);
                 if (c1 == matchC1)
                 {
-                    inputOffset = (CharCount)(currentInput - input);
+                    inputOffset = static_cast<CharCount>(currentInput - input);
                     return true;
                 }
                 if (c1 != matchC0)
@@ -5761,7 +5761,7 @@ namespace UnifiedRegex
             litbufLen = this->rep.insts.litbufLen;
             for (size_t i = 0; i < litbufLen; ++i)
             {
-                const char16_t c = (char16_t)litbuf[i];
+                const char16_t c = litbuf[i];
                 w->PrintEscapedChar(c);
             }
             w->PrintEOL(u"");

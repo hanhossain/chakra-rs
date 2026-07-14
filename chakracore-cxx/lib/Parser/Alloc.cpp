@@ -62,7 +62,7 @@ void * NoReleaseAllocator::Alloc(int32_t cb)
             }
 
             // create a chunk just for this allocation
-            pblk = (NraBlock *)malloc(cbAlloc);
+            pblk = static_cast<NraBlock*>(malloc(cbAlloc));
             if (NULL == pblk)
                 return NULL;
 #if DEBUG
@@ -88,8 +88,8 @@ void * NoReleaseAllocator::Alloc(int32_t cb)
                 pblk->pblkNext = m_pblkList;
                 m_pblkList = pblk;
             }
-            DEBUG_TRASHMEM((byte *)pblk + kcbHead, cb);
-            return (byte *)pblk + kcbHead;
+            DEBUG_TRASHMEM(reinterpret_cast<byte*>(pblk) + kcbHead, cb);
+            return reinterpret_cast<byte*>(pblk) + kcbHead;
         }
 
         cbBlock = cb;                 // requested size
@@ -115,7 +115,7 @@ void * NoReleaseAllocator::Alloc(int32_t cb)
         }
 
         // allocate a new block
-        pblk = (NraBlock *)malloc(cbAlloc);
+        pblk = static_cast<NraBlock*>(malloc(cbAlloc));
 #ifdef MEM_TRACK
         RegisterAlloc((char*)pblk,cbAlloc);
 #endif
@@ -136,9 +136,9 @@ void * NoReleaseAllocator::Alloc(int32_t cb)
     m_cbTotRequested += cb;
     m_cpvSmall++;
 #endif //DEBUG
-    pv = (byte *)m_pblkList + kcbHead + m_ibCur;
+    pv = reinterpret_cast<byte*>(m_pblkList) + kcbHead + m_ibCur;
     DEBUG_TRASHMEM(pv, cb);
-    m_ibCur += (int32_t)AlignFull(cb);
+    m_ibCur += static_cast<int32_t>(AlignFull(cb));
     Assert(m_ibCur >= 0);
     return pv;
 }

@@ -207,7 +207,7 @@ CharTypes Js::CharClassifier::GetBigCharTypeES5(codepoint_t codepoint, const Js:
         return _C_NWL;
     }
 
-    auto charType = GetLegacyCharacterClassificationType((char16_t)codepoint);
+    auto charType = GetLegacyCharacterClassificationType(static_cast<char16_t>(codepoint));
     if (charType == CharacterClassificationType::Letter)
     {
         return CharTypes::_C_LET;
@@ -235,7 +235,7 @@ PlatformAgnostic::UnicodeText::CharacterTypeFlags Js::CharClassifier::GetBigChar
         return UnknownChar;
     }
 
-    return PlatformAgnostic::UnicodeText::GetLegacyCharacterTypeFlags((char16_t)ch);
+    return PlatformAgnostic::UnicodeText::GetLegacyCharacterTypeFlags(static_cast<char16_t>(ch));
 }
 
 
