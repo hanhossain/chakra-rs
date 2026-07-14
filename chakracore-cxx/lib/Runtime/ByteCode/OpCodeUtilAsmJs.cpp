@@ -25,13 +25,13 @@ namespace Js
     {
         if (op <= Js::OpCodeAsmJs::MaxByteSizedOpcodes)
         {
-            Assert(op < _countof(OpCodeAsmJsNames));
+            Assert(op < std::size(OpCodeAsmJsNames));
             return OpCodeAsmJsNames[(int)op];
         }
         else if (op < Js::OpCodeAsmJs::ByteCodeLast)
         {
             uint opIndex = op - (Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1);
-            Assert(opIndex < _countof(ExtendedOpCodeAsmJsNames));
+            Assert(opIndex < std::size(ExtendedOpCodeAsmJsNames));
             return ExtendedOpCodeAsmJsNames[opIndex];
         }
         return u"<NotAvail>";
@@ -54,12 +54,12 @@ namespace Js
     {
         if ((uint)op <= (uint)Js::OpCodeAsmJs::MaxByteSizedOpcodes)
         {
-            Assert(op < _countof(OpCodeAsmJsLayouts));
+            Assert(op < std::size(OpCodeAsmJsLayouts));
             return OpCodeAsmJsLayouts[(uint)op];
         }
 
         uint opIndex = op - (Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1);
-        Assert(opIndex < _countof(ExtendedOpCodeAsmJsLayouts));
+        Assert(opIndex < std::size(ExtendedOpCodeAsmJsLayouts));
         return ExtendedOpCodeAsmJsLayouts[opIndex];
     }
 
@@ -76,8 +76,8 @@ namespace Js
         static_assert((uint)OpCodeAsmJs::Nop                        == (uint)OpCode::Nop);
         static_assert((uint)OpCodeAsmJs::InvalidOpCode              == (uint)OpCode::InvalidOpCode);
 
-        static_assert((int)Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1 + _countof(OpCodeUtilAsmJs::ExtendedOpCodeAsmJsLayouts) == (int)Js::OpCodeAsmJs::ByteCodeLast);
-        return op < _countof(OpCodeAsmJsLayouts)
+        static_assert((int)Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1 + std::size(OpCodeUtilAsmJs::ExtendedOpCodeAsmJsLayouts) == (int)Js::OpCodeAsmJs::ByteCodeLast);
+        return op < std::size(OpCodeAsmJsLayouts)
             || (op > Js::OpCodeAsmJs::MaxByteSizedOpcodes && op < Js::OpCodeAsmJs::ByteCodeLast);
     }
 

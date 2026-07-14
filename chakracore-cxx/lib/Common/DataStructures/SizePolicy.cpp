@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonDataStructuresPch.h"
 #include "DataStructures/SizePolicy.h"
+#include <iterator>
 
 static const uint primes[] = {
     3, 7, 11, 17, 23, 29, 37, 47, 59, 71, 89, 107, 131, 163, 197, 239, 293, 353, 431, 521, 631, 761, 919,
@@ -15,7 +16,7 @@ static const uint primes[] = {
 
 // If we know the modulo number at compile time, the compiler can optimize instructions.
 // These macros let the compiler do these optimizations for modulus optimizations of known primes
-static_assert(_countof(primes) == UNKNOWN_MOD_INDEX, "Adding / removing prime numbers ?");
+static_assert(std::size(primes) == UNKNOWN_MOD_INDEX, "Adding / removing prime numbers ?");
 
 #define MOD_FNC_(x) static uint mod##x(const uint k, const uint) { return k % x##llu; }
 #define MOD_FNC__(a,b,c,d,e) MOD_FNC_(a) MOD_FNC_(b) MOD_FNC_(c) MOD_FNC_(d) MOD_FNC_(e)

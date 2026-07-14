@@ -1351,7 +1351,7 @@ namespace Js
         newTypedArray = VarTo<RecyclableObject>(JavascriptOperators::NewObjectCreationHelper_ReentrancySafe(constructor, isDefaultConstructor, scriptContext->GetThreadContext(), [=]()->Js::Var
         {
             Js::Var constructorArgs[] = { constructor, buffer, JavascriptNumber::ToVar(beginByteOffset, scriptContext), JavascriptNumber::ToVar(newLength, scriptContext) };
-            Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
+            Js::CallInfo constructorCallInfo(Js::CallFlags_New, std::size(constructorArgs));
             return TypedArrayBase::TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), newLength, scriptContext);
         }));
 
@@ -1434,7 +1434,7 @@ namespace Js
                 newObj = JavascriptOperators::NewObjectCreationHelper_ReentrancySafe(constructor, isDefaultConstructor, scriptContext->GetThreadContext(), [=]()->Js::Var
                 {
                     Js::Var constructorArgs[] = { constructor, JavascriptNumber::ToVar(len, scriptContext) };
-                    Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
+                    Js::CallInfo constructorCallInfo(Js::CallFlags_New, std::size(constructorArgs));
                     return TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), len, scriptContext);
                 });
 
@@ -1495,7 +1495,7 @@ namespace Js
             newObj = JavascriptOperators::NewObjectCreationHelper_ReentrancySafe(constructor, isDefaultConstructor, scriptContext->GetThreadContext(), [=]()->Js::Var
             {
                 Js::Var constructorArgs[] = { constructor, JavascriptNumber::ToVar(len, scriptContext) };
-                Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
+                Js::CallInfo constructorCallInfo(Js::CallFlags_New, std::size(constructorArgs));
                 return TypedArrayBase::TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), len, scriptContext);
             });
 
@@ -1748,7 +1748,7 @@ namespace Js
             newObj = VarTo<RecyclableObject>(JavascriptOperators::NewObjectCreationHelper_ReentrancySafe(constructor, isDefaultConstructor, scriptContext->GetThreadContext(), [=]()->Js::Var
             {
                 Js::Var constructorArgs[] = { constructor, JavascriptNumber::ToVar(captured, scriptContext) };
-                Js::CallInfo constructorCallInfo(Js::CallFlags_New, _countof(constructorArgs));
+                Js::CallInfo constructorCallInfo(Js::CallFlags_New, std::size(constructorArgs));
                 return TypedArrayBase::TypedArrayCreate(constructor, &Js::Arguments(constructorCallInfo, constructorArgs), captured, scriptContext);
             }));
 

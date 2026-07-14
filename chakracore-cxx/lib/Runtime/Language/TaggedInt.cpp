@@ -465,17 +465,17 @@ namespace Js
     JavascriptString* TaggedInt::ToString(int value, ScriptContext* scriptContext)
     {
         char16_t szBuffer[22];
-        int pos = ToBuffer(value, szBuffer, _countof(szBuffer));
+        int pos = ToBuffer(value, szBuffer, std::size(szBuffer));
 
-        return JavascriptString::NewCopyBuffer(szBuffer + pos, (_countof(szBuffer) - 1) - pos, scriptContext);
+        return JavascriptString::NewCopyBuffer(szBuffer + pos, (std::size(szBuffer) - 1) - pos, scriptContext);
     }
 
     JavascriptString* TaggedInt::ToString(uint value, ScriptContext* scriptContext)
     {
         char16_t szBuffer[22];
-        int pos = ToBuffer(value, szBuffer, _countof(szBuffer));
+        int pos = ToBuffer(value, szBuffer, std::size(szBuffer));
 
-        return JavascriptString::NewCopyBuffer(szBuffer + pos, (_countof(szBuffer) - 1) - pos, scriptContext);
+        return JavascriptString::NewCopyBuffer(szBuffer + pos, (std::size(szBuffer) - 1) - pos, scriptContext);
     }
 
     Var TaggedInt::NegateUnchecked(Var aValue)

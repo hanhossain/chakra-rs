@@ -110,7 +110,7 @@ InstanceBase::IsEnabled() const
 
 static const size_t GUID_LEN = 37;   // includes null
 static const char16_t s_wszObjectNamePrefix[] = u"jscript9_perf_counter_";
-static const size_t OBJECT_NAME_LEN = GUID_LEN + _countof(s_wszObjectNamePrefix) + 11;
+static const size_t OBJECT_NAME_LEN = GUID_LEN + std::size(s_wszObjectNamePrefix) + 11;
 
 static
 void GetSharedMemoryObjectName(__inout_ecount(OBJECT_NAME_LEN) char16_t wszObjectName[OBJECT_NAME_LEN], uint32_t pid, GUID const& guid)

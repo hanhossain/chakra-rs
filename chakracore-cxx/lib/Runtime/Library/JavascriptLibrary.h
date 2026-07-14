@@ -1062,12 +1062,12 @@ namespace Js
         static bool IsFltBuiltInConst(PropertyId id);
         static size_t GetArgCForBuiltIn(BuiltinFunction index)
         {
-            Assert(index < _countof(JavascriptLibrary::LibraryFunctionArgC));
+            Assert(index < std::size(JavascriptLibrary::LibraryFunctionArgC));
             return JavascriptLibrary::LibraryFunctionArgC[index];
         }
         static BuiltInFlags GetFlagsForBuiltIn(BuiltinFunction index)
         {
-            Assert(index < _countof(JavascriptLibrary::LibraryFunctionFlags));
+            Assert(index < std::size(JavascriptLibrary::LibraryFunctionFlags));
             return (BuiltInFlags)JavascriptLibrary::LibraryFunctionFlags[index];
         }
         static BuiltinFunction GetBuiltInInlineCandidateId(Js::OpCode opCode);
@@ -1078,7 +1078,7 @@ namespace Js
         }
         static char16_t const * GetNameForBuiltIn(BuiltinFunction index)
         {
-            Assert(index < _countof(JavascriptLibrary::LibraryFunctionName));
+            Assert(index < std::size(JavascriptLibrary::LibraryFunctionName));
             return JavascriptLibrary::LibraryFunctionName[index];
         }
 

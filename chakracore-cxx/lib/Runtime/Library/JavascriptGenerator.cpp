@@ -182,7 +182,7 @@ Var JavascriptGenerator::CallGenerator(Var data, ResumeYieldKind resumeKind)
 
     {
         Var thunkArgs[] = {this, this->resumeYieldObject};
-        Arguments arguments(_countof(thunkArgs), thunkArgs);
+        Arguments arguments(std::size(thunkArgs), thunkArgs);
         GeneratorStateHelper helper(this);
 
         try

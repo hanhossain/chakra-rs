@@ -9,6 +9,7 @@
 #elif defined(__linux__)
 #include <unistd.h> // sysconf
 #endif
+#include <iterator>
 // Initialization order
 //  AB AutoSystemInfo
 //  AD PerfCounter
@@ -84,7 +85,7 @@ AutoSystemInfo::Initialize()
 #endif
 
     char16_t DisableDebugScopeCaptureFlag[MAX_PATH];
-    if (::GetEnvironmentVariable(u"JS_DEBUG_SCOPE", DisableDebugScopeCaptureFlag, _countof(DisableDebugScopeCaptureFlag)) != 0)
+    if (::GetEnvironmentVariable(u"JS_DEBUG_SCOPE", DisableDebugScopeCaptureFlag, std::size(DisableDebugScopeCaptureFlag)) != 0)
     {
         disableDebugScopeCapture = true;
     }

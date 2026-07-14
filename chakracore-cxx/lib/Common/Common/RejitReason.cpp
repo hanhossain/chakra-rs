@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "CommonCommonPch.h"
 #include "RejitReason.h"
+#include <iterator>
 
 const char *const RejitReasonNames[] =
 {
@@ -18,4 +19,4 @@ const char* const GetRejitReasonName(RejitReason reason)
     return RejitReasonNames[reasonIndex];
 }
 
-const uint NumRejitReasons = _countof(RejitReasonNames);
+const uint NumRejitReasons = std::size(RejitReasonNames);

@@ -558,7 +558,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 #endif
 
             Js::Var args[] = { scriptContext->GetLibrary()->GetUndefined(), scriptContext->GetLibrary()->GetEngineInterfaceObject(), initType };
-            Js::CallInfo callInfo(Js::CallFlags_Value, _countof(args));
+            Js::CallInfo callInfo(Js::CallFlags_Value, std::size(args));
 
             Js::Arguments arguments(callInfo, args);
             scriptContext->GetThreadContext()->ExecuteImplicitCall(function, Js::ImplicitCall_Accessor, [=]()->Js::Var
@@ -1063,11 +1063,11 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         char defaultLangtag[ULOC_FULLNAME_CAPACITY] = { 0 };
         char defaultLocaleID[ULOC_FULLNAME_CAPACITY] = { 0 };
 
-        int localeIDActual = uloc_getName(nullptr, defaultLocaleID, _countof(defaultLocaleID), &status);
-        ICU_ASSERT(status, localeIDActual > 0 && localeIDActual < _countof(defaultLocaleID));
+        int localeIDActual = uloc_getName(nullptr, defaultLocaleID, std::size(defaultLocaleID), &status);
+        ICU_ASSERT(status, localeIDActual > 0 && localeIDActual < std::size(defaultLocaleID));
 
-        int langtagActual = uloc_toLanguageTag(defaultLocaleID, defaultLangtag, _countof(defaultLangtag), true, &status);
-        ICU_ASSERT(status, langtagActual > 0 && langtagActual < _countof(defaultLangtag));
+        int langtagActual = uloc_toLanguageTag(defaultLocaleID, defaultLangtag, std::size(defaultLangtag), true, &status);
+        ICU_ASSERT(status, langtagActual > 0 && langtagActual < std::size(defaultLangtag));
 
         char16_t *defaultLangtag16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, langtagActual + 1);
         charcount_t defaultLangtag16Actual = 0;
@@ -1248,9 +1248,9 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             LangtagToLocaleID(langtag, localeID);
 
             const char16_t searchString[] = u"search";
-            if (usage->BufferEquals(searchString, _countof(searchString) - 1)) // minus the null terminator
+            if (usage->BufferEquals(searchString, std::size(searchString) - 1)) // minus the null terminator
             {
-                uloc_setKeywordValue("collation", "search", localeID, _countof(localeID), &status);
+                uloc_setKeywordValue("collation", "search", localeID, std::size(localeID), &status);
                 ICU_ASSERT(status, true);
             }
 
@@ -1871,7 +1871,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         // 23: Let dataLocaleData be localeData.[[<dataLocale>]].
         // 24: Let formats be dataLocaleData.[[formats]].
         char baseLocaleID[ULOC_FULLNAME_CAPACITY] = { 0 };
-        int baseLocaleIDLength = uloc_getBaseName(localeID, baseLocaleID, _countof(baseLocaleID), &status);
+        int baseLocaleIDLength = uloc_getBaseName(localeID, baseLocaleID, std::size(baseLocaleID), &status);
         ICU_ASSERT(status, baseLocaleIDLength > 0 && baseLocaleIDLength < ULOC_FULLNAME_CAPACITY);
 
         INTL_TRACE("Converted input langtag '%s' to base locale ID '%S' for pattern generation", langtag->GetSz(), baseLocaleID);
@@ -1941,7 +1941,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             AssertOrFailFast(curLen > 0);
             if (chakra_rs::str_helper::to_lowercase(cur) == chakra_rs::str_helper::to_lowercase(tz->GetSz()))
             {
-                ucal_getCanonicalTimeZoneID(cur, curLen, match, _countof(match), nullptr, &status);
+                ucal_getCanonicalTimeZoneID(cur, curLen, match, std::size(match), nullptr, &status);
                 ICU_ASSERT(status, true);
                 size_t len = std::u16string(reinterpret_cast<const char16_t *>(match)).length();
                 AssertMsg(len < MaxCharCount, "Returned canonicalized timezone is far too long");

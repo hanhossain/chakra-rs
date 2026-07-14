@@ -38,7 +38,7 @@ void RecyclerObjectGraphDumper::BeginDumpObject(char16_t const * name, void * ad
 {
     Assert(dumpObjectName == nullptr);
     Assert(dumpObject == nullptr);
-    swprintf_s(tempObjectName, _countof(tempObjectName), u"%s %p", name, address);
+    swprintf_s(tempObjectName, std::size(tempObjectName), u"%s %p", name, address);
     dumpObjectName = tempObjectName;
 }
 

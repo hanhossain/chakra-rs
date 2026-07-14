@@ -331,9 +331,9 @@ namespace Js
     {
         const char16_t* description = propertyRecord->GetBuffer();
         uint len = propertyRecord->GetLength();
-        CompoundString* str = CompoundString::NewWithCharCapacity(len + _countof(u"Symbol()"), requestContext->GetLibrary());
+        CompoundString* str = CompoundString::NewWithCharCapacity(len + std::size(u"Symbol()"), requestContext->GetLibrary());
 
-        str->AppendChars(u"Symbol(", _countof(u"Symbol(") - 1);
+        str->AppendChars(u"Symbol(", std::size(u"Symbol(") - 1);
         str->AppendChars(description, len);
         str->AppendChars(u')');
 

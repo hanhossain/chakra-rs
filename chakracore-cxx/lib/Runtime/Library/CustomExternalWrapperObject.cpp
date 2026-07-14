@@ -286,9 +286,9 @@ Js::Var CustomExternalWrapperObject::GetValueFromDescriptor(Js::Var instance, Js
 void CustomExternalWrapperObject::PropertyIdFromInt(uint32_t index, Js::PropertyRecord const** propertyRecord)
 {
     char16_t buffer[22];
-    int pos = Js::TaggedInt::ToBuffer(index, buffer, _countof(buffer));
+    int pos = Js::TaggedInt::ToBuffer(index, buffer, std::size(buffer));
 
-    GetScriptContext()->GetOrAddPropertyRecord((const char16_t*)buffer + pos, (_countof(buffer) - 1) - pos, propertyRecord);
+    GetScriptContext()->GetOrAddPropertyRecord((const char16_t*)buffer + pos, (std::size(buffer) - 1) - pos, propertyRecord);
 }
 
 Js::Var CustomExternalWrapperObject::GetName(Js::ScriptContext* requestContext, Js::PropertyId propertyId, Var * isPropertyNameNumeric, Var * propertyNameNumericValue)

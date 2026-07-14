@@ -487,12 +487,12 @@ JavascriptString* JavascriptObject::ToStringTagHelper(Var thisArg, ScriptContext
         JavascriptString *tagStr = VarTo<JavascriptString>(tag);
         const char16_t objectStartString[9] = u"[object ";
         const char16_t objectEndString[1] = { u']' };
-        CompoundString *const cs = CompoundString::NewWithCharCapacity(_countof(objectStartString)
-            + _countof(objectEndString) + tagStr->GetLength(), scriptContext->GetLibrary());
+        CompoundString *const cs = CompoundString::NewWithCharCapacity(std::size(objectStartString)
+            + std::size(objectEndString) + tagStr->GetLength(), scriptContext->GetLibrary());
 
-        cs->AppendChars(objectStartString, _countof(objectStartString) - 1 /* ditch \0 */);
+        cs->AppendChars(objectStartString, std::size(objectStartString) - 1 /* ditch \0 */);
         cs->AppendChars(tagStr);
-        cs->AppendChars(objectEndString, _countof(objectEndString));
+        cs->AppendChars(objectEndString, std::size(objectEndString));
 
         return cs;
     };

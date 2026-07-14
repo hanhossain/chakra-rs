@@ -619,7 +619,7 @@ public:
         {
             m_pscanner = nullptr;
             m_prgch = (OLECHAR*)m_rgbInit;
-            m_cchMax = _countof(m_rgbInit) / sizeof(OLECHAR);
+            m_cchMax = std::size(m_rgbInit) / sizeof(OLECHAR);
             m_ichCur = 0;
         }
         
@@ -642,7 +642,7 @@ public:
             {
                 free(m_prgch);
                 m_prgch = (OLECHAR*)m_rgbInit;
-                m_cchMax = _countof(m_rgbInit) / sizeof(OLECHAR);
+                m_cchMax = std::size(m_rgbInit) / sizeof(OLECHAR);
             }
             Reset();
         }

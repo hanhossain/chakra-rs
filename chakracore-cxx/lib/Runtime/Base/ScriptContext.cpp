@@ -1747,8 +1747,8 @@ namespace Js
             {
                 char16_t stringBuffer[22];
 
-                int pos = TaggedInt::ToBuffer(value, stringBuffer, _countof(stringBuffer));
-                string = JavascriptString::NewCopyBuffer(stringBuffer + pos, (_countof(stringBuffer) - 1) - pos, this);
+                int pos = TaggedInt::ToBuffer(value, stringBuffer, std::size(stringBuffer));
+                string = JavascriptString::NewCopyBuffer(stringBuffer + pos, (std::size(stringBuffer) - 1) - pos, this);
                 integerStringMap->AddNew(value, string);
             }
         }
@@ -4743,7 +4743,7 @@ ScriptContext::GetJitFuncRangeCache()
                     body->MapLoopHeaders([&](uint loopNumber, LoopHeader* header)
                     {
                         char16_t loopBodyName[256];
-                        body->GetLoopBodyName(loopNumber, loopBodyName, _countof(loopBodyName));
+                        body->GetLoopBodyName(loopNumber, loopBodyName, std::size(loopBodyName));
                         header->MapEntryPoints([&](int index, LoopEntryPointInfo * entryPoint)
                         {
                             if (entryPoint->IsNativeCode())
@@ -4780,14 +4780,14 @@ ScriptContext::GetJitFuncRangeCache()
             Output::Print(u"** %-24s : %-10s %-10s %-10s %-10s %-10s\n", u"InterpretedCounts", u"Total", u"NativeCode", u"Used", u"Usage", u"Rejits");
             uint low = 0;
             uint high = 0;
-            for (uint i = 0; i < _countof(totalBuckets); i++)
+            for (uint i = 0; i < std::size(totalBuckets); i++)
             {
                 low = high;
                 if (i <= size1CutOffbucketId)
                 {
                     high = low + bucketSize1;
                 }
-                else if (i < (_countof(totalBuckets) - 1))
+                else if (i < (std::size(totalBuckets) - 1))
                 {
                     high = low + bucketSize2;               }
                 else

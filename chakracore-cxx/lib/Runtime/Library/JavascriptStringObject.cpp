@@ -201,7 +201,7 @@ namespace Js
     // Returns the number of special non-enumerable properties this type has.
     uint JavascriptStringObject::GetSpecialPropertyCount() const
     {
-        return _countof(specialPropertyIds);
+        return std::size(specialPropertyIds);
     }
 
     // Returns the list of special non-enumerable properties for the type.

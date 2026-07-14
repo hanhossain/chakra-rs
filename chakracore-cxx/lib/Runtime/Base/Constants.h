@@ -152,18 +152,18 @@ namespace Js
         static const  char16_t StringReplace[];
         static const  char16_t StringMatch[];
 
-        static const charcount_t AnonymousFunctionLength = _countof(u"Anonymous function") - 1;
-        static const charcount_t AnonymousLength         = _countof(u"anonymous") - 1;
-        static const charcount_t AnonymousClassLength    = _countof(u"Anonymous class") - 1;
-        static const charcount_t FunctionCodeLength      = _countof(u"Function code") - 1;
-        static const charcount_t GlobalFunctionLength    = _countof(u"glo") - 1;
-        static const charcount_t GlobalCodeLength        = _countof(u"Global code") - 1;
-        static const charcount_t ModuleCodeLength        = _countof(u"Module code") - 1;
-        static const charcount_t EvalCodeLength          = _countof(u"eval code") - 1;
-        static const charcount_t UnknownScriptCodeLength = _countof(u"Unknown script code") - 1;
-        static const charcount_t NullStringLength        = _countof(u"Null") - 1;
-        static const charcount_t TrueStringLength        = _countof(u"True") - 1;
-        static const charcount_t FalseStringLength       = _countof(u"False") - 1;
+        static const charcount_t AnonymousFunctionLength = std::size(u"Anonymous function") - 1;
+        static const charcount_t AnonymousLength         = std::size(u"anonymous") - 1;
+        static const charcount_t AnonymousClassLength    = std::size(u"Anonymous class") - 1;
+        static const charcount_t FunctionCodeLength      = std::size(u"Function code") - 1;
+        static const charcount_t GlobalFunctionLength    = std::size(u"glo") - 1;
+        static const charcount_t GlobalCodeLength        = std::size(u"Global code") - 1;
+        static const charcount_t ModuleCodeLength        = std::size(u"Module code") - 1;
+        static const charcount_t EvalCodeLength          = std::size(u"eval code") - 1;
+        static const charcount_t UnknownScriptCodeLength = std::size(u"Unknown script code") - 1;
+        static const charcount_t NullStringLength        = std::size(u"Null") - 1;
+        static const charcount_t TrueStringLength        = std::size(u"True") - 1;
+        static const charcount_t FalseStringLength       = std::size(u"False") - 1;
     };
 
     extern const FrameDisplay NullFrameDisplay;

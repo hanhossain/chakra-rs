@@ -105,7 +105,7 @@ Output::TraceWithPrefix(Js::Phase phase, const char16_t prefix[], const char16_t
         va_list argptr;
         va_start(argptr, form);
         char16_t prefixValue[512];
-        _snwprintf_s(prefixValue, _countof(prefixValue), _TRUNCATE, u"%s: %s: ", Js::PhaseNames[static_cast<int>(phase)], prefix);
+        _snwprintf_s(prefixValue, std::size(prefixValue), _TRUNCATE, u"%s: %s: ", Js::PhaseNames[static_cast<int>(phase)], prefix);
         retValue += Output::VTrace(u"%s", prefixValue, form, argptr);
         va_end(argptr);
     }
@@ -166,13 +166,13 @@ Output::VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const 
         {
             // Trace just addresses of functions, avoid symbol info as it takes too much memory.
             // One line for whole stack trace for easier parsing on the jd side.
-            const size_t c_msgCharCount = _countof(callStackPrefix) + (1 + sizeof(void*) * 2) * c_frameCount; // 2 hexadecimal digits per byte + 1 for space.
+            const size_t c_msgCharCount = std::size(callStackPrefix) + (1 + sizeof(void*) * 2) * c_frameCount; // 2 hexadecimal digits per byte + 1 for space.
             char16_t callStackMsg[c_msgCharCount];
             void* frames[c_frameCount];
             size_t start = 0;
             size_t temp;
 
-            temp = _snwprintf_s(callStackMsg, _countof(callStackMsg), _TRUNCATE, u"%s", callStackPrefix);
+            temp = _snwprintf_s(callStackMsg, std::size(callStackMsg), _TRUNCATE, u"%s", callStackPrefix);
             Assert(temp != -1);
             start += temp;
 
@@ -180,8 +180,8 @@ Output::VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const 
             Assert(framesObtained <= c_frameCount);
             for (uint32_t i = 0; i < framesObtained && i < c_frameCount; ++i)
             {
-                Assert(_countof(callStackMsg) >= start);
-                temp = _snwprintf_s(callStackMsg + start, _countof(callStackMsg) - start, _TRUNCATE, u" %p", frames[i]);
+                Assert(std::size(callStackMsg) >= start);
+                temp = _snwprintf_s(callStackMsg + start, std::size(callStackMsg) - start, _TRUNCATE, u" %p", frames[i]);
                 Assert(temp != -1);
                 start += temp;
             }
@@ -253,10 +253,10 @@ Output::VPrint(const char16_t *form, va_list argptr)
     char16_t buf[2048];
     size_t size;
 
-    size = _vsnwprintf_s(buf, _countof(buf), _TRUNCATE, form, argptr);
+    size = _vsnwprintf_s(buf, std::size(buf), _TRUNCATE, form, argptr);
     if(size == -1)
     {
-        size = _countof(buf) - 1;  // characters written, excluding the terminating null
+        size = std::size(buf) - 1;  // characters written, excluding the terminating null
     }
     return Output::PrintBuffer(buf, size);
 }

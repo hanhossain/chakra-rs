@@ -96,8 +96,8 @@ using namespace Js;
             {
                 char16_t stringBuffer[22];
 
-                int pos = TaggedInt::ToBuffer(indexInt, stringBuffer, _countof(stringBuffer));
-                charcount_t length = (_countof(stringBuffer) - 1) - pos;
+                int pos = TaggedInt::ToBuffer(indexInt, stringBuffer, std::size(stringBuffer));
+                charcount_t length = (std::size(stringBuffer) - 1) - pos;
                 if (createIfNotFound || preferJavascriptStringOverPropertyRecord)
                 {
                     // When preferring JavascriptString objects, just return a PropertyRecord instead
@@ -10772,7 +10772,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 scriptContext->GetThreadContext()->ExecuteImplicitCall(callable, ImplicitCall_Accessor, [=]()->Var
                 {
                     Js::Var args[] = { iterator };
-                    Js::CallInfo callInfo(Js::CallFlags_Value, _countof(args));
+                    Js::CallInfo callInfo(Js::CallFlags_Value, std::size(args));
                     return JavascriptFunction::CallFunction<true>(callable, callable->GetEntryPoint(), Js::Arguments(callInfo, args));
                 });
             }
@@ -10809,7 +10809,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         Var result = threadContext->ExecuteImplicitCall(nextFunc, ImplicitCall_Accessor, [=]() -> Var
             {
                 Js::Var args[] = { iterator, value };
-                Js::CallInfo callInfo(Js::CallFlags_Value, _countof(args) + (value == nullptr ? -1 : 0));
+                Js::CallInfo callInfo(Js::CallFlags_Value, std::size(args) + (value == nullptr ? -1 : 0));
                 return JavascriptFunction::CallFunction<true>(nextFunc, nextFunc->GetEntryPoint(), Arguments(callInfo, args));
             });
 

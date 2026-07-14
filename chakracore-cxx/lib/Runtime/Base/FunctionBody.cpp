@@ -9089,7 +9089,7 @@ namespace Js
     size_t FunctionBody::GetLoopBodyName(uint loopNumber, _Out_writes_opt_z_(sizeInChars) char16_t* displayName, _In_ size_t sizeInChars)
     {
         const char16_t* functionName = this->GetExternalDisplayName();
-        size_t length = std::u16string(functionName).length() + /*length of largest int32_t*/ 10 + _countof(LoopWStr) + /*null*/ 1;
+        size_t length = std::u16string(functionName).length() + /*length of largest int32_t*/ 10 + std::size(LoopWStr) + /*null*/ 1;
         if (sizeInChars < length || displayName == nullptr)
         {
             return length;

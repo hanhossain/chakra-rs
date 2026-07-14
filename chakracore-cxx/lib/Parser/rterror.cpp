@@ -86,14 +86,14 @@ const char16_t* LoadResourceStr(uint32_t id)
     if (!s_resourceStrsSorted)
     {
         qsort(s_resourceStrs,
-            _countof(s_resourceStrs), sizeof(s_resourceStrs[0]),
+            std::size(s_resourceStrs), sizeof(s_resourceStrs[0]),
             compare_ResourceStr);
         s_resourceStrsSorted = true;
     }
 
     _ResourceStr key = { id, nullptr };
     const void* p = bsearch(&key,
-        s_resourceStrs, _countof(s_resourceStrs), sizeof(s_resourceStrs[0]),
+        s_resourceStrs, std::size(s_resourceStrs), sizeof(s_resourceStrs[0]),
         compare_ResourceStr);
 
     return p ? reinterpret_cast<const _ResourceStr*>(p)->str : nullptr;

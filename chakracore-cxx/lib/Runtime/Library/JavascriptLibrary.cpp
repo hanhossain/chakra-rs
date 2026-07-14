@@ -473,7 +473,7 @@ namespace Js
 
         // Initialize Array/Argument types
         heapArgumentsType = DynamicType::New(scriptContext, TypeIds_Arguments, objectPrototype, nullptr,
-            SimpleDictionaryTypeHandler::New(scriptContext, HeapArgumentsPropertyDescriptors, _countof(HeapArgumentsPropertyDescriptors), 0, 0, true, true), true, true);
+            SimpleDictionaryTypeHandler::New(scriptContext, HeapArgumentsPropertyDescriptors, std::size(HeapArgumentsPropertyDescriptors), 0, 0, true, true), true, true);
 
         classPrototypeTypeHandler = 
 #if ENABLE_FIXED_FIELDS
@@ -481,7 +481,7 @@ namespace Js
 #else
             SimpleDictionaryTypeHandler::New
 #endif
-                (scriptContext, ClassPrototypePropertyDescriptors, _countof(ClassPrototypePropertyDescriptors), 0, 0, true, true);
+                (scriptContext, ClassPrototypePropertyDescriptors, std::size(ClassPrototypePropertyDescriptors), 0, 0, true, true);
 
         TypePath *const strictHeapArgumentsTypePath = TypePath::New(recycler);
         strictHeapArgumentsTypePath->Add(BuiltInPropertyRecords::callee);
@@ -1308,7 +1308,7 @@ namespace Js
         Assert(!functionInfo->HasBody());
         return DynamicType::New(scriptContext, TypeIds_Function, prototype,
             this->inProfileMode? ProfileEntryThunk : functionInfo->GetOriginalEntryPoint(),
-            SimpleDictionaryTypeHandler::New(scriptContext, FunctionWithLengthAndPrototypeTypeDescriptors, _countof(FunctionWithLengthAndPrototypeTypeDescriptors), 0, 0));
+            SimpleDictionaryTypeHandler::New(scriptContext, FunctionWithLengthAndPrototypeTypeDescriptors, std::size(FunctionWithLengthAndPrototypeTypeDescriptors), 0, 0));
     }
 
     void JavascriptLibrary::InitializeProperties(ThreadContext * threadContext)

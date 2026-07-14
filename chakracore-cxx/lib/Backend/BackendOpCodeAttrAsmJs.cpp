@@ -36,11 +36,11 @@ namespace OpCodeAttrAsmJs
         uint opIndex = (uint)op;
         if (opIndex <= (uint)Js::OpCodeAsmJs::MaxByteSizedOpcodes)
         {
-            AnalysisAssert(opIndex < _countof(OpcodeAttributesAsmJs));
+            AnalysisAssert(opIndex < std::size(OpcodeAttributesAsmJs));
             return OpcodeAttributesAsmJs[opIndex];
         }
         opIndex -= ( Js::OpCodeAsmJs::MaxByteSizedOpcodes + 1 );
-        AnalysisAssert(opIndex < _countof(ExtendedOpcodeAttributesAsmJs));
+        AnalysisAssert(opIndex < std::size(ExtendedOpcodeAttributesAsmJs));
         return ExtendedOpcodeAttributesAsmJs[opIndex];
     }
 

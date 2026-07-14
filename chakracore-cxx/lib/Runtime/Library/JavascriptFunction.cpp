@@ -2296,7 +2296,7 @@ using namespace Js;
     // Returns the number of special non-enumerable properties this type has.
     uint JavascriptFunction::GetSpecialPropertyCount() const
     {
-        return this->HasRestrictedProperties() ? _countof(specialPropertyIds) : 0;
+        return this->HasRestrictedProperties() ? std::size(specialPropertyIds) : 0;
     }
 
     // Returns the list of special non-enumerable properties for the type.
