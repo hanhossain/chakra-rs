@@ -175,8 +175,8 @@ GetExceptionMask()
         const char * exceptionSettings = getenv(PAL_MACH_EXCEPTION_MODE);
         if (exceptionSettings)
         {
-            exMode = (MachExceptionMode)atoi(exceptionSettings);
-            free((void*)exceptionSettings);
+            exMode = static_cast<MachExceptionMode>(atoi(exceptionSettings));
+            free(const_cast<char*>(exceptionSettings));
         }
         else
         {
@@ -610,12 +610,12 @@ HijackFaultingThread(
     void **targetSP = (void **)threadContext.Rsp;
 #elif defined(_ARM64_)
     threadContext.ContextFlags = CONTEXT_FLOATING_POINT;
-    CONTEXT_GetThreadContextFromThreadState(ARM_NEON_STATE64, (thread_state_t)&exceptionInfo.FloatState, &threadContext);
+    CONTEXT_GetThreadContextFromThreadState(ARM_NEON_STATE64, reinterpret_cast<thread_state_t>(&exceptionInfo.FloatState), &threadContext);
 
     threadContext.ContextFlags |= CONTEXT_CONTROL | CONTEXT_INTEGER;
-    CONTEXT_GetThreadContextFromThreadState(ARM_THREAD_STATE64, (thread_state_t)&exceptionInfo.ThreadState, &threadContext);
+    CONTEXT_GetThreadContextFromThreadState(ARM_THREAD_STATE64, reinterpret_cast<thread_state_t>(&exceptionInfo.ThreadState), &threadContext);
 
-    void **targetSP = (void **)threadContext.Sp;
+    void **targetSP = reinterpret_cast<void**>(threadContext.Sp);
 #else
 #error Unexpected architecture
 #endif
@@ -672,8 +672,8 @@ HijackFaultingThread(
     {
         // Calculate the page base addresses for the fault and the faulting thread's SP.
         int cbPage = getpagesize();
-        char *pFaultPage = (char*)(exceptionRecord.ExceptionInformation[1] & ~(cbPage - 1));
-        char *pStackTopPage = (char*)((size_t)targetSP & ~(cbPage - 1));
+        char *pFaultPage = reinterpret_cast<char*>(exceptionRecord.ExceptionInformation[1] & ~(cbPage - 1));
+        char *pStackTopPage = reinterpret_cast<char*>(reinterpret_cast<size_t>(targetSP) & ~(cbPage - 1));
 
         if (pFaultPage == pStackTopPage || pFaultPage == (pStackTopPage - cbPage))
         {
@@ -693,22 +693,22 @@ HijackFaultingThread(
             vm_flavor = VM_REGION_BASIC_INFO_64;
             mach_port_t object_name;
 
-            vm_address = (vm_address_t)(pFaultPage + cbPage);
+            vm_address = reinterpret_cast<vm_address_t>(pFaultPage + cbPage);
 
             machret = vm_region_64(
                 mach_task_self(),
                 &vm_address,
                 &vm_size,
                 vm_flavor,
-                (vm_region_info_t)&info,
+                reinterpret_cast<vm_region_info_t>(&info),
                 &infoCnt,
                 &object_name);
             CHECK_MACH("vm_region_64", machret);
 
             // If vm_region updated the address we gave it then that address was not part of a region at all
             // (and so this cannot be an SO). Otherwise check that the ESP lies in the region returned.
-            char *pRegionStart = (char*)vm_address;
-            char *pRegionEnd = (char*)vm_address + vm_size;
+            char *pRegionStart = reinterpret_cast<char*>(vm_address);
+            char *pRegionEnd = reinterpret_cast<char*>(vm_address) + vm_size;
             if (pRegionStart == (pFaultPage + cbPage) && pStackTopPage < pRegionEnd)
                 fIsStackOverflow = true;
         }
@@ -717,12 +717,12 @@ HijackFaultingThread(
         {
             // Check if we can read pointer sizeD bytes below the target thread's stack pointer.
             // If we are unable to, then it implies we have run into SO.
-            vm_address_t targetAddr = (mach_vm_address_t)(targetSP);
+            vm_address_t targetAddr = reinterpret_cast<mach_vm_address_t>(targetSP);
             targetAddr -= sizeof(void *);
             vm_size_t vm_size = sizeof(void *);
             char arr[8];
             vm_size_t data_count = 8;
-            machret = vm_read_overwrite(mach_task_self(), targetAddr, vm_size, (pointer_t)arr, &data_count);
+            machret = vm_read_overwrite(mach_task_self(), targetAddr, vm_size, reinterpret_cast<pointer_t>(arr), &data_count);
             if (machret == KERN_INVALID_ADDRESS)
             {
                 fIsStackOverflow = true;
@@ -759,9 +759,9 @@ HijackFaultingThread(
     // the state if the exception is forwarded.
     arm_thread_state64_t ts64 = exceptionInfo.ThreadState;
 
-    exceptionRecord.ExceptionAddress = (void *)arm_thread_state64_get_pc_fptr(ts64);
+    exceptionRecord.ExceptionAddress = arm_thread_state64_get_pc_fptr(ts64);
 
-    void **FramePointer = (void **)arm_thread_state64_get_sp(ts64);
+    void **FramePointer = reinterpret_cast<void**>(arm_thread_state64_get_sp(ts64));
 #else
 #error Unexpected architecture
 #endif
@@ -774,14 +774,14 @@ HijackFaultingThread(
         stackOverflowStackSize = ALIGN_UP(stackOverflowStackSize, VIRTUAL_PAGE_SIZE) + VIRTUAL_PAGE_SIZE;
         void* stackOverflowHandlerStack = mmap(NULL, stackOverflowStackSize, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 
-        if ((stackOverflowHandlerStack == MAP_FAILED) || mprotect((void*)stackOverflowHandlerStack, VIRTUAL_PAGE_SIZE, PROT_NONE) != 0)
+        if ((stackOverflowHandlerStack == MAP_FAILED) || mprotect(stackOverflowHandlerStack, VIRTUAL_PAGE_SIZE, PROT_NONE) != 0)
         {
             // We are out of memory or we've failed to protect the guard page, so resort to just printing a stack overflow message and abort
             write(STDERR_FILENO, StackOverflowMessage, sizeof(StackOverflowMessage) - 1);
             abort();
         }
 
-        FramePointer = (void**)((size_t)stackOverflowHandlerStack + stackOverflowStackSize);
+        FramePointer = reinterpret_cast<void**>(reinterpret_cast<size_t>(stackOverflowHandlerStack) + stackOverflowStackSize);
     }
 
     // Construct a stack frame for a pretend activation of the function
@@ -796,8 +796,8 @@ HijackFaultingThread(
 
     ts64.__rbp = (size_t)FramePointer;
 #elif defined(_ARM64_)
-    *--FramePointer = (void *)arm_thread_state64_get_pc_fptr(ts64);
-    *--FramePointer = (void *)arm_thread_state64_get_fp(ts64);
+    *--FramePointer = arm_thread_state64_get_pc_fptr(ts64);
+    *--FramePointer = reinterpret_cast<void*>(arm_thread_state64_get_fp(ts64));
 
     arm_thread_state64_set_fp(ts64, FramePointer);
 #else
@@ -805,19 +805,19 @@ HijackFaultingThread(
 #endif
 
     // Put the context on the stack
-    FramePointer = (void **)((size_t)FramePointer - sizeof(CONTEXT));
+    FramePointer = reinterpret_cast<void**>(reinterpret_cast<size_t>(FramePointer) - sizeof(CONTEXT));
     // Make sure it's aligned - CONTEXT has 16-byte alignment
-    FramePointer = (void **)((size_t)FramePointer - ((size_t)FramePointer % 16));
-    CONTEXT *pContext = (CONTEXT *)FramePointer;
+    FramePointer = reinterpret_cast<void**>(reinterpret_cast<size_t>(FramePointer) - (reinterpret_cast<size_t>(FramePointer) % 16));
+    CONTEXT *pContext = reinterpret_cast<CONTEXT*>(FramePointer);
     *pContext = threadContext;
 
     // Put the exception record on the stack
-    FramePointer = (void **)((size_t)FramePointer - sizeof(EXCEPTION_RECORD));
-    EXCEPTION_RECORD *pExceptionRecord = (EXCEPTION_RECORD *)FramePointer;
+    FramePointer = reinterpret_cast<void**>(reinterpret_cast<size_t>(FramePointer) - sizeof(EXCEPTION_RECORD));
+    EXCEPTION_RECORD *pExceptionRecord = reinterpret_cast<EXCEPTION_RECORD*>(FramePointer);
     *pExceptionRecord = exceptionRecord;
 
-    FramePointer = (void **)((size_t)FramePointer - sizeof(MachExceptionInfo));
-    MachExceptionInfo *pMachExceptionInfo = (MachExceptionInfo *)FramePointer;
+    FramePointer = reinterpret_cast<void**>(reinterpret_cast<size_t>(FramePointer) - sizeof(MachExceptionInfo));
+    MachExceptionInfo *pMachExceptionInfo = reinterpret_cast<MachExceptionInfo*>(FramePointer);
     *pMachExceptionInfo = exceptionInfo;
 
 #if defined(__amd64__)
@@ -842,20 +842,20 @@ HijackFaultingThread(
     CHECK_MACH("thread_set_state(thread)", machret);
 #elif defined(_ARM64_)
     // Setup arguments to PAL_DispatchException
-    ts64.__x[0] = (uint64_t)pContext;
-    ts64.__x[1] = (uint64_t)pExceptionRecord;
-    ts64.__x[2] = (uint64_t)pMachExceptionInfo;
+    ts64.__x[0] = reinterpret_cast<uint64_t>(pContext);
+    ts64.__x[1] = reinterpret_cast<uint64_t>(pExceptionRecord);
+    ts64.__x[2] = reinterpret_cast<uint64_t>(pMachExceptionInfo);
 
     // Make sure it's aligned - SP has 16-byte alignment
-    FramePointer = (void **)((size_t)FramePointer - ((size_t)FramePointer % 16));
+    FramePointer = reinterpret_cast<void**>(reinterpret_cast<size_t>(FramePointer) - (reinterpret_cast<size_t>(FramePointer) % 16));
     arm_thread_state64_set_sp(ts64, FramePointer);
 
     // Make the call to DispatchException
-    arm_thread_state64_set_lr_fptr(ts64, (uint64_t)PAL_DispatchExceptionWrapper + PAL_DispatchExceptionReturnOffset);
+    arm_thread_state64_set_lr_fptr(ts64, reinterpret_cast<uint64_t>(PAL_DispatchExceptionWrapper) + PAL_DispatchExceptionReturnOffset);
     arm_thread_state64_set_pc_fptr(ts64, PAL_DispatchException);
 
     // Now set the thread state for the faulting thread so that PAL_DispatchException executes next
-    machret = thread_set_state(thread, ARM_THREAD_STATE64, (thread_state_t)&ts64, ARM_THREAD_STATE64_COUNT);
+    machret = thread_set_state(thread, ARM_THREAD_STATE64, reinterpret_cast<thread_state_t>(&ts64), ARM_THREAD_STATE64_COUNT);
     CHECK_MACH("thread_set_state(thread)", machret);
 #else
 #error Unexpected architecture
@@ -1050,7 +1050,7 @@ SEHExceptionThread()
             pExceptionInfo->RestoreState(thread);
 
             // Allocate an forwarded exception entry
-            ForwardedException *pfe = (ForwardedException *)malloc(sizeof(ForwardedException));
+            ForwardedException *pfe = static_cast<ForwardedException*>(malloc(sizeof(ForwardedException)));
             if (pfe == NULL)
             {
                 NONPAL_RETAIL_ASSERT("Exception thread ran out of memory to track forwarded exception notifications");
@@ -1113,15 +1113,15 @@ MachExceptionInfo::MachExceptionInfo(mach_port_t thread, MachMessage& message)
     CHECK_MACH("thread_get_state(debug)", machret);
 #elif defined(_ARM64_)
     mach_msg_type_number_t count = ARM_THREAD_STATE64_COUNT;
-    machret = thread_get_state(thread, ARM_THREAD_STATE64, (thread_state_t)&ThreadState, &count);
+    machret = thread_get_state(thread, ARM_THREAD_STATE64, reinterpret_cast<thread_state_t>(&ThreadState), &count);
     CHECK_MACH("thread_get_state", machret);
 
     count = ARM_NEON_STATE64_COUNT;
-    machret = thread_get_state(thread, ARM_NEON_STATE64, (thread_state_t)&FloatState, &count);
+    machret = thread_get_state(thread, ARM_NEON_STATE64, reinterpret_cast<thread_state_t>(&FloatState), &count);
     CHECK_MACH("thread_get_state(float)", machret);
 
     count = ARM_DEBUG_STATE64_COUNT;
-    machret = thread_get_state(thread, ARM_DEBUG_STATE64, (thread_state_t)&DebugState, &count);
+    machret = thread_get_state(thread, ARM_DEBUG_STATE64, reinterpret_cast<thread_state_t>(&DebugState), &count);
     CHECK_MACH("thread_get_state(debug)", machret);
 #else
 #error Unexpected architecture
@@ -1161,13 +1161,13 @@ void MachExceptionInfo::RestoreState(mach_port_t thread)
     machret = thread_set_state(thread, x86_DEBUG_STATE, (thread_state_t)&DebugState, x86_DEBUG_STATE_COUNT);
     CHECK_MACH("thread_set_state(debug)", machret);
 #elif defined(_ARM64_)
-    kern_return_t machret = thread_set_state(thread, ARM_THREAD_STATE64, (thread_state_t)&ThreadState, ARM_THREAD_STATE64_COUNT);
+    kern_return_t machret = thread_set_state(thread, ARM_THREAD_STATE64, reinterpret_cast<thread_state_t>(&ThreadState), ARM_THREAD_STATE64_COUNT);
     CHECK_MACH("thread_set_state(thread)", machret);
 
-    machret = thread_set_state(thread, ARM_NEON_STATE64, (thread_state_t)&FloatState, ARM_NEON_STATE64_COUNT);
+    machret = thread_set_state(thread, ARM_NEON_STATE64, reinterpret_cast<thread_state_t>(&FloatState), ARM_NEON_STATE64_COUNT);
     CHECK_MACH("thread_set_state(float)", machret);
 
-    machret = thread_set_state(thread, ARM_DEBUG_STATE64, (thread_state_t)&DebugState, ARM_DEBUG_STATE64_COUNT);
+    machret = thread_set_state(thread, ARM_DEBUG_STATE64, reinterpret_cast<thread_state_t>(&DebugState), ARM_DEBUG_STATE64_COUNT);
     CHECK_MACH("thread_set_state(debug)", machret);
 #else
 #error Unexpected architecture

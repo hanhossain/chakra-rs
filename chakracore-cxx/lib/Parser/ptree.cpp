@@ -437,7 +437,7 @@ ParseNodeFnc::ParseNodeFnc(OpCode nop, charcount_t ichMin, charcount_t ichLim)
     this->funcInfo = nullptr;
     this->scope = nullptr;
     this->nestedCount = 0;
-    this->nestedIndex = (uint)-1;
+    this->nestedIndex = static_cast<uint>(-1);
     this->firstDefaultArg = 0;
 
     this->astSize = 0;

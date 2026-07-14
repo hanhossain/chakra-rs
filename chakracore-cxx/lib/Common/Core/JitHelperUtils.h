@@ -56,7 +56,7 @@ struct JitHelperUtils
     // This will cause Linker error if JIT_HELPER_END is not used
 #define HELPERCALLCHK(Name, Address, Attributes) \
     static const bool helper##Name##_implemented;\
-    static constexpr HelperMethodAttribute helper##Name##_attributes = (HelperMethodAttribute)(Attributes);
+    static constexpr HelperMethodAttribute helper##Name##_attributes = static_cast<HelperMethodAttribute>(Attributes);
 #include "JnHelperMethodList.h"
 };
 

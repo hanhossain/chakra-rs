@@ -298,7 +298,7 @@ public:
 
             auto freeFunc = TypeAllocatorFunc<TAllocator, TData>::GetFreeFunc();
 
-            AllocatorFree(allocator, freeFunc, (Node *)current, sizeof(Node));
+            AllocatorFree(allocator, freeFunc, static_cast<Node*>(current), sizeof(Node));
             current = next;
         }
 

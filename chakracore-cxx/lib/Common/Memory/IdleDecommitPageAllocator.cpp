@@ -118,7 +118,7 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
             }
             else
             {
-                int timeDiff = (int)decommitTime - ::GetTickCount();
+                int timeDiff = static_cast<int>(decommitTime) - ::GetTickCount();
                 if (timeDiff < 20)
                 {
                     idleDecommitSignal = IdleDecommitSignal_NeedSignal;
@@ -202,10 +202,10 @@ IdleDecommitPageAllocator::IdleDecommit()
     if (hasDecommitTimer)
     {
         Assert(this->maxFreePageCount == maxIdleDecommitFreePageCount);
-        int timediff = (int)(decommitTime - ::GetTickCount());
+        int timediff = static_cast<int>(decommitTime - ::GetTickCount());
         if (timediff >= 20)   // Ignore time diff is it is < 20 since the system timer doesn't have that high of precision anyways
         {
-            waitTime = (uint32_t)timediff;
+            waitTime = static_cast<uint32_t>(timediff);
         }
         else
         {

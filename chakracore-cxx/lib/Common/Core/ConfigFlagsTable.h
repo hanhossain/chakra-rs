@@ -1202,7 +1202,7 @@ namespace Js
     {
     public:
         NumberPair(uint32_t x, uint32_t y) : x(x), y(y) {}
-        NumberPair() : x((uint32_t)-1), y((uint32_t)-1) {}
+        NumberPair() : x(static_cast<uint32_t>(-1)), y(static_cast<uint32_t>(-1)) {}
 
         operator hash_t() const { return (x << 16) + y; }
         bool operator ==(const NumberPair &other) const { return x == other.x && y == other.y; }
@@ -1226,7 +1226,7 @@ namespace Js
     {
     public:
         NumberTrio(uint32_t x, uint32_t y, uint32_t z) : x(x), y(y), z(z) {}
-        NumberTrio() : x((uint32_t)-1), y((uint32_t)-1) {}
+        NumberTrio() : x(static_cast<uint32_t>(-1)), y(static_cast<uint32_t>(-1)) {}
 
         operator hash_t() const { return (x << 20) + (y << 10) + z; }
         bool operator ==(const NumberTrio &other) const { return x == other.x && y == other.y && z == other.z; }

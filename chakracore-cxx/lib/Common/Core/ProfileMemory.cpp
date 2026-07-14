@@ -101,10 +101,10 @@ MemoryProfiler::Begin(const char16_t* name)
     AUTO_NESTED_HANDLED_EXCEPTION_TYPE(ExceptionType_DisableCheck);
     MemoryProfiler * memoryProfiler = EnsureMemoryProfiler();
     ArenaMemoryDataSummary * arenaTotalMemoryData;
-    if (!memoryProfiler->arenaDataMap.TryGetValue((char16_t*)name, &arenaTotalMemoryData))
+    if (!memoryProfiler->arenaDataMap.TryGetValue(const_cast<char16_t*>(name), &arenaTotalMemoryData))
     {
         arenaTotalMemoryData = AnewStructZ(&memoryProfiler->alloc, ArenaMemoryDataSummary);
-        memoryProfiler->arenaDataMap.Add((char16_t*)name, arenaTotalMemoryData);
+        memoryProfiler->arenaDataMap.Add(const_cast<char16_t*>(name), arenaTotalMemoryData);
     }
     arenaTotalMemoryData->arenaCount++;
 
@@ -128,7 +128,7 @@ MemoryProfiler::Reset(const char16_t* name, ArenaMemoryData * memoryData)
 {
     MemoryProfiler * memoryProfiler = memoryData->profiler;
     ArenaMemoryDataSummary * arenaMemoryDataSummary;
-    bool hasItem = memoryProfiler->arenaDataMap.TryGetValue((char16_t*)name, &arenaMemoryDataSummary);
+    bool hasItem = memoryProfiler->arenaDataMap.TryGetValue(const_cast<char16_t*>(name), &arenaMemoryDataSummary);
     Assert(hasItem);
 
 
@@ -149,7 +149,7 @@ MemoryProfiler::End(const char16_t* name, ArenaMemoryData * memoryData)
 {
     MemoryProfiler * memoryProfiler = memoryData->profiler;
     ArenaMemoryDataSummary * arenaMemoryDataSummary;
-    bool hasItem = memoryProfiler->arenaDataMap.TryGetValue((char16_t*)name, &arenaMemoryDataSummary);
+    bool hasItem = memoryProfiler->arenaDataMap.TryGetValue(const_cast<char16_t*>(name), &arenaMemoryDataSummary);
     Assert(hasItem);
 
     if (memoryData->next != nullptr)
@@ -306,7 +306,11 @@ int MemoryProfiler::CreateArenaUsageSummary(ArenaAllocator * alloc, bool liveOnl
         name[i++] = key;
     });
 
-    qsort_s(name, count, sizeof(char16_t*), [](void*, const void* a, const void* b) { return DefaultComparer<char16_t*>::Compare(*(char16_t**)a, *(char16_t**)b); }, nullptr);
+    qsort_s(name, count, sizeof(char16_t*), [](void *, const void *a, const void *b)
+    {
+        return DefaultComparer<char16_t*>::Compare(*static_cast<char16_t**>(const_cast<void*>(a)),
+                                                   *static_cast<char16_t**>(const_cast<void*>(b)));
+    }, nullptr);
 
     summaries = AnewArray(alloc, ArenaMemoryDataSummary *, count);
 

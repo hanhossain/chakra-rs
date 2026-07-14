@@ -86,7 +86,7 @@ namespace Js
         if (this->CanBeTransferred(typeId) && this->GetEngine()->TryGetTransferredOrShared(src, &transferredIndex))
         {
             WriteTypeId(SCA_Transferable);
-            m_writer->Write((uint32_t)transferredIndex);
+            m_writer->Write(static_cast<uint32_t>(transferredIndex));
         }
         else if (JavascriptOperators::IsObjectDetached(src))
         {
@@ -196,7 +196,7 @@ namespace Js
                     sharedContents->AddRef();
                     this->m_sharedContentsrList->Add(sharedContents);
                     WriteTypeId(SCA_SharedArrayBuffer);
-                    m_writer->Write((intptr_t)sharedContents);
+                    m_writer->Write(reinterpret_cast<intptr_t>(sharedContents));
                 }
                 break;
 
@@ -230,14 +230,14 @@ namespace Js
                 Write(wasmMem->GetInitialLength());
                 Write(wasmMem->GetMaximumLength());
 #ifdef ENABLE_WASM_THREADS
-                Write((uint32_t)wasmMem->IsSharedMemory());
+                Write(wasmMem->IsSharedMemory());
                 if (wasmMem->IsSharedMemory())
                 {
                     WebAssemblySharedArrayBuffer* buf = VarTo<WebAssemblySharedArrayBuffer>(buffer);
                     SharedContents* sharedContents = buf->GetSharedContents();
                     sharedContents->AddRef();
                     this->m_sharedContentsrList->Add(sharedContents);
-                    m_writer->Write((intptr_t)sharedContents);
+                    m_writer->Write(reinterpret_cast<intptr_t>(sharedContents));
                 }
                 else
 #endif
@@ -278,7 +278,7 @@ namespace Js
         WriteTypeId(SCA_FirstHostObject);
 
         // Ask host to fill rest of the properties
-        m_writer->WriteHostObject((void*)src);
+        m_writer->WriteHostObject(static_cast<void*>(src));
     }
 
     template <class Writer>
@@ -324,7 +324,7 @@ namespace Js
     {
         JavascriptMap* map = VarTo<JavascriptMap>(src);
 
-        Write((int32_t)(map->Size()));
+        Write(map->Size());
 
         JavascriptMap::MapDataList::Iterator iter = map->GetIterator();
         while (iter.Next())
@@ -340,7 +340,7 @@ namespace Js
     {
         JavascriptSet* set = VarTo<JavascriptSet>(src);
 
-        Write((int32_t)(set->Size()));
+        Write(set->Size());
 
         JavascriptSet::SetDataList::Iterator iter = set->GetIterator();
         while (iter.Next())

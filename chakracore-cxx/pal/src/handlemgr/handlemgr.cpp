@@ -32,10 +32,10 @@ SET_DEFAULT_DEBUG_CHANNEL(HANDLE);
 /* Constants */
 /* Special handles */
 /* Pseudo handles constant for current thread and process */
-const HANDLE hPseudoCurrentProcess = (HANDLE) 0xFFFFFF01;
-const HANDLE hPseudoCurrentThread  = (HANDLE) 0xFFFFFF03;
+const HANDLE hPseudoCurrentProcess = reinterpret_cast<HANDLE>(0xFFFFFF01);
+const HANDLE hPseudoCurrentThread  = reinterpret_cast<HANDLE>(0xFFFFFF03);
 /* Pseudo handle constant for the global IO Completion port */
-const HANDLE hPseudoGlobalIOCP  = (HANDLE) 0xFFFFFF05;
+const HANDLE hPseudoGlobalIOCP  = reinterpret_cast<HANDLE>(0xFFFFFF05);
 
 PAL_ERROR
 CSimpleHandleManager::Initialize(
@@ -67,7 +67,7 @@ CSimpleHandleManager::Initialize(
         m_rghteHandleTable[i].fEntryAllocated = FALSE;
     }
 
-    m_rghteHandleTable[m_dwTableSize - 1].u.hiNextIndex = (HANDLE_INDEX)-1;
+    m_rghteHandleTable[m_dwTableSize - 1].u.hiNextIndex = static_cast<HANDLE_INDEX>(-1);
     
     m_hiFreeListStart = 0;
     m_hiFreeListEnd = m_dwTableSize - 1;
@@ -137,7 +137,7 @@ CSimpleHandleManager::AllocateHandle(
 
         m_hiFreeListStart = m_dwTableSize;
         m_dwTableSize += m_dwTableGrowthRate;
-        m_rghteHandleTable[m_dwTableSize - 1].u.hiNextIndex = (HANDLE_INDEX)-1;
+        m_rghteHandleTable[m_dwTableSize - 1].u.hiNextIndex = static_cast<HANDLE_INDEX>(-1);
         m_hiFreeListEnd = m_dwTableSize - 1;
         
     }

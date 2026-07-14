@@ -271,7 +271,7 @@ namespace Js
             }
 
             int offsetOfPointedTo = pointsTo->offset;
-            *(int*)(buffer + this->offset) = offsetOfPointedTo + additionalOffset;
+            *reinterpret_cast<int*>(buffer + this->offset) = offsetOfPointedTo + additionalOffset;
             DebugOnly(TraceOutput(buffer, sizeof(int)));
         }
     };

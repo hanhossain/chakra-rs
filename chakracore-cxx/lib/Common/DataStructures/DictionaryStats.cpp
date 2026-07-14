@@ -6,6 +6,8 @@
 #if PROFILE_DICTIONARY
 #include "Interface/DictionaryStats.h"
 
+#include <iterator>
+
 DictionaryType* DictionaryStats::dictionaryTypes = NULL;
 std::recursive_mutex DictionaryStats::dictionaryTypesCriticalSection;
 
@@ -55,7 +57,7 @@ DictionaryStats::DictionaryStats(const char* name, uint bucketCount)
     DictionaryType* current = dictionaryTypes;
     while(current)
     {
-        if (strncmp(name, current->name, _countof(current->name)-1) == 0)
+        if (strncmp(name, current->name, std::size(current->name)-1) == 0)
         {
             type = current;
             break;
@@ -70,7 +72,7 @@ DictionaryStats::DictionaryStats(const char* name, uint bucketCount)
         type->pNext = dictionaryTypes;
         dictionaryTypes = type;
         type->instancesCount = 0;
-        strncpy_s(type->name, name, _countof(type->name)-1);
+        strncpy(type->name, name, std::size(type->name)-1);
         type->name[sizeof(type->name)-1]='\0';
     }
     dictionaryTypesCriticalSection.unlock();
@@ -162,11 +164,11 @@ void DictionaryStats::OutputStats()
             ComputeStats(instance->collisionCount, collisions, max_collisions);
             if (instance->lookupCount > 0)
             {
-                ComputeStats((double)instance->lookupDepthTotal / (double)instance->lookupCount, avglookupdepth, max_avglookupdepth);
+                ComputeStats(static_cast<double>(instance->lookupDepthTotal) / static_cast<double>(instance->lookupCount), avglookupdepth, max_avglookupdepth);
             }
             if (instance->collisionCount > 0)
             {
-                ComputeStats((double)instance->lookupDepthTotal / (double)instance->collisionCount, avgcollisiondepth, max_avgcollisiondepth);
+                ComputeStats(static_cast<double>(instance->lookupDepthTotal) / static_cast<double>(instance->collisionCount), avgcollisiondepth, max_avgcollisiondepth);
             }
             ComputeStats(instance->maxLookupDepth, maxlookupdepth, max_maxlookupdepth);
 
@@ -176,8 +178,8 @@ void DictionaryStats::OutputStats()
                 double avgcd = 0.0;
                 if (instance->lookupCount > 0)
                 {
-                    avgld = (double)instance->lookupDepthTotal / (double)instance->lookupCount;
-                    avgcd = (double)instance->lookupDepthTotal / (double)instance->collisionCount;
+                    avgld = static_cast<double>(instance->lookupDepthTotal) / static_cast<double>(instance->lookupCount);
+                    avgcd = static_cast<double>(instance->lookupDepthTotal) / static_cast<double>(instance->collisionCount);
                 }
                 Output::Print(u"%8s  %13d  %13d  %13d  %13d  %13d  %13d  %13d  %14d  %14.2f  %13.2f  %13d \n",
                     u"INS:",

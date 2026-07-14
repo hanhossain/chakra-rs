@@ -149,7 +149,7 @@ public:
 };
 
 template <>
-class SmallHeapBlockType<(ObjectInfoBits)(WithBarrierBit|LeafBit), SmallAllocationBlockAttributes>
+class SmallHeapBlockType<static_cast<ObjectInfoBits>(WithBarrierBit | LeafBit), SmallAllocationBlockAttributes>
 {
 public:
     typedef SmallLeafHeapBlock BlockType;
@@ -223,7 +223,7 @@ public:
 };
 
 template <>
-class SmallHeapBlockType<(ObjectInfoBits)(WithBarrierBit | LeafBit), MediumAllocationBlockAttributes>
+class SmallHeapBlockType<static_cast<ObjectInfoBits>(WithBarrierBit | LeafBit), MediumAllocationBlockAttributes>
 {
 public:
     typedef MediumLeafHeapBlock BlockType;
@@ -276,10 +276,10 @@ class HeapBucketGroup
     };
 
     template <>
-    class BucketGetter<(ObjectInfoBits)(FinalizeBit | LeafBit)>
+    class BucketGetter<static_cast<ObjectInfoBits>(FinalizeBit | LeafBit)>
     {
     public:
-        typedef typename SmallHeapBlockType<(ObjectInfoBits)(FinalizeBit | LeafBit), TBlockAttributes>::BucketType BucketType;
+        typedef typename SmallHeapBlockType<static_cast<ObjectInfoBits>(FinalizeBit | LeafBit), TBlockAttributes>::BucketType BucketType;
         static BucketType& GetBucket(HeapBucketGroup<TBlockAttributes> * heapBucketGroup)
         {
             // TODO: SWB implemente finalizable leaf bucket
@@ -334,10 +334,10 @@ class HeapBucketGroup
     };
 
     template <>
-    class BucketGetter<(ObjectInfoBits)(WithBarrierBit | LeafBit)>
+    class BucketGetter<static_cast<ObjectInfoBits>(WithBarrierBit | LeafBit)>
     {
     public:
-        typedef typename SmallHeapBlockType<(ObjectInfoBits)(WithBarrierBit | LeafBit), TBlockAttributes>::BucketType BucketType;
+        typedef typename SmallHeapBlockType<static_cast<ObjectInfoBits>(WithBarrierBit | LeafBit), TBlockAttributes>::BucketType BucketType;
         static BucketType& GetBucket(HeapBucketGroup<TBlockAttributes> * heapBucketGroup)
         {
             // WithBarrierBit | LeafBit combination should not exist, this is only for compilation purpose

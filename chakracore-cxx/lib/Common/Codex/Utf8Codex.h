@@ -49,17 +49,6 @@ extern "C++" {
 
 }
 
-#define DEFINE_ENUM_FLAG_OPERATORS(ENUMTYPE) \
-extern "C++" { \
-inline ENUMTYPE operator | (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) | ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-inline ENUMTYPE &operator |= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) |= ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-inline ENUMTYPE operator & (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) & ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-inline ENUMTYPE &operator &= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) &= ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-inline ENUMTYPE operator ~ (ENUMTYPE a) { return ENUMTYPE(~((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a)); } \
-inline ENUMTYPE operator ^ (ENUMTYPE a, ENUMTYPE b) { return ENUMTYPE(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)a) ^ ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-inline ENUMTYPE &operator ^= (ENUMTYPE &a, ENUMTYPE b) { return (ENUMTYPE &)(((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type &)a) ^= ((_ENUM_FLAG_SIZED_INTEGER<ENUMTYPE>::type)b)); } \
-}
-
 // charcount_t represents a count of characters in a String
 // It is unsigned and the maximum value is (INT_MAX-1)
 typedef uint32_t charcount_t;
@@ -121,18 +110,65 @@ namespace utf8
         doAllowInvalidWCHARs        = 0x08, // Don't replace invalid wide chars with 0xFFFD
         doThrowOnInvalidWCHARs      = 0x10, // throw InvalidWideCharException if an invalid wide char is seen. Incompatible with doAllowInvalidWCHARs
     };
-    DEFINE_ENUM_FLAG_OPERATORS(DecodeOptions);
+
+    extern "C++" {
+    inline DecodeOptions operator |(DecodeOptions a, DecodeOptions b)
+    {
+        return static_cast<DecodeOptions>(static_cast<_ENUM_FLAG_SIZED_INTEGER<DecodeOptions>::type>(a) | static_cast<
+            _ENUM_FLAG_SIZED_INTEGER<DecodeOptions>::type>(b));
+    }
+
+    inline DecodeOptions& operator |=(DecodeOptions& a, DecodeOptions b)
+    {
+        return reinterpret_cast<DecodeOptions&>(reinterpret_cast<_ENUM_FLAG_SIZED_INTEGER<DecodeOptions>::type&>(a) |=
+            static_cast<
+                _ENUM_FLAG_SIZED_INTEGER<
+                    DecodeOptions>::type>(b));
+    }
+
+    inline DecodeOptions operator &(DecodeOptions a, DecodeOptions b)
+    {
+        return static_cast<DecodeOptions>(static_cast<_ENUM_FLAG_SIZED_INTEGER<DecodeOptions>::type>(a) & static_cast<
+            _ENUM_FLAG_SIZED_INTEGER<DecodeOptions>::type>(b));
+    }
+
+    inline DecodeOptions& operator &=(DecodeOptions& a, DecodeOptions b)
+    {
+        return reinterpret_cast<DecodeOptions&>(reinterpret_cast<_ENUM_FLAG_SIZED_INTEGER<DecodeOptions>::type&>(a) &=
+            static_cast<
+                _ENUM_FLAG_SIZED_INTEGER<
+                    DecodeOptions>::type>(b));
+    }
+
+    inline DecodeOptions operator ~(DecodeOptions a)
+    {
+        return static_cast<DecodeOptions>(~static_cast<_ENUM_FLAG_SIZED_INTEGER<DecodeOptions>::type>(a));
+    }
+
+    inline DecodeOptions operator ^(DecodeOptions a, DecodeOptions b)
+    {
+        return static_cast<DecodeOptions>(static_cast<_ENUM_FLAG_SIZED_INTEGER<DecodeOptions>::type>(a) ^ static_cast<
+            _ENUM_FLAG_SIZED_INTEGER<
+                DecodeOptions>::type>(b));
+    }
+
+    inline DecodeOptions& operator ^=(DecodeOptions& a, DecodeOptions b)
+    {
+        return reinterpret_cast<DecodeOptions&>(reinterpret_cast<_ENUM_FLAG_SIZED_INTEGER<DecodeOptions>::type&>(a) ^=
+            static_cast<_ENUM_FLAG_SIZED_INTEGER<DecodeOptions>::type>(b));
+    }
+    };
 
     BOOL IsValidWideChar(char16_t ch);
 
-    const char16_t WCH_UTF16_HIGH_FIRST = char16_t(0xd800);
-    const char16_t WCH_UTF16_HIGH_LAST = char16_t(0xdbff);
-    const char16_t WCH_UTF16_LOW_FIRST = char16_t(0xdc00);
-    const char16_t WCH_UTF16_LOW_LAST = char16_t(0xdfff);
+    const char16_t WCH_UTF16_HIGH_FIRST = static_cast<char16_t>(0xd800);
+    const char16_t WCH_UTF16_HIGH_LAST = static_cast<char16_t>(0xdbff);
+    const char16_t WCH_UTF16_LOW_FIRST = static_cast<char16_t>(0xdc00);
+    const char16_t WCH_UTF16_LOW_LAST = static_cast<char16_t>(0xdfff);
 
     inline BOOL InRange(const char16_t ch, const char16_t chMin, const char16_t chMax)
     {
-        return (unsigned)(ch - chMin) <= (unsigned)(chMax - chMin);
+        return static_cast<unsigned>(ch - chMin) <= static_cast<unsigned>(chMax - chMin);
     }
 
     inline BOOL IsHighSurrogateChar(char16_t ch)

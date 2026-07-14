@@ -133,7 +133,7 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
             // The expectation is that non-ANSI characters
             // are not used in the config- otherwise it will
             // be interpreted incorrectly here
-            configBuffer[index++] = (char16_t) curChar;
+            configBuffer[index++] = static_cast<char16_t>(curChar);
         }
     }
 

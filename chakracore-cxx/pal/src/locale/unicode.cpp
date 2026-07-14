@@ -91,16 +91,16 @@ Return value:
 --*/
 static int UnicodeDataComp(const void *pnKey, const void *elem)
 {
-    char16_t uValue = ((UnicodeDataRec*)elem)->nUnicodeValue;
-    uint16_t  rangeValue = ((UnicodeDataRec*)elem)->rangeValue;
+    char16_t uValue = static_cast<const UnicodeDataRec*>(elem)->nUnicodeValue;
+    uint16_t  rangeValue = static_cast<const UnicodeDataRec*>(elem)->rangeValue;
 
-    if (*((int32_t*)pnKey) < uValue)
+    if (*static_cast<const int32_t*>(pnKey) < uValue)
     {
         return -1;
     }
     else
     {
-        if (*((int32_t*)pnKey) > (uValue + rangeValue))
+        if (*static_cast<const int32_t*>(pnKey) > (uValue + rangeValue))
         {
             return 1;
         }
@@ -138,8 +138,8 @@ BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec)
     {
         UnicodeDataRec *dataRec;
         int32_t nNumOfChars = UNICODE_DATA_SIZE;
-        dataRec = (UnicodeDataRec *) bsearch(&nUnicodeValue, UnicodeData, nNumOfChars,
-                       sizeof(UnicodeDataRec), UnicodeDataComp);
+        dataRec = static_cast<UnicodeDataRec*>(bsearch(&nUnicodeValue, UnicodeData, nNumOfChars,
+                                                       sizeof(UnicodeDataRec), UnicodeDataComp));
         if (dataRec == NULL)
         {
             bRet = FALSE;
@@ -377,7 +377,7 @@ MultiByteToWideChar(
         (lpMultiByteStr == NULL) ||
         ((cchWideChar != 0) &&
         ((lpWideCharStr == NULL) ||
-        (lpMultiByteStr == (char*)lpWideCharStr))) )
+        (lpMultiByteStr == reinterpret_cast<char*>(lpWideCharStr)))) )
     {
         ERROR("Error lpMultiByteStr parameters are invalid\n");
         SetLastError(ERROR_INVALID_PARAMETER);
@@ -418,7 +418,7 @@ MultiByteToWideChar(
         goto EXIT;
     }
 
-    cfString = CFStringCreateWithBytes(kCFAllocatorDefault, (UInt8*)lpMultiByteStr,
+    cfString = CFStringCreateWithBytes(kCFAllocatorDefault, reinterpret_cast<UInt8*>(const_cast<char*>(lpMultiByteStr)),
                      bytesToConvert, cfEncoding, TRUE);
     if (cfString == NULL)
     {
@@ -439,7 +439,7 @@ MultiByteToWideChar(
             goto ReleaseString;
         }
         CFStringGetCharacters(cfString, CFRangeMake(0, length),
-                (UniChar*)lpWideCharStr);
+                reinterpret_cast<UniChar*>(lpWideCharStr));
         retval = length;
     }
     else
@@ -506,7 +506,7 @@ WideCharToMultiByte(
         (lpWideCharStr == NULL) ||
         ((cbMultiByte != 0) &&
         ((lpMultiByteStr == NULL) ||
-        (lpWideCharStr == (char16_t*)lpMultiByteStr))) )
+        (lpWideCharStr == reinterpret_cast<char16_t*>(lpMultiByteStr)))) )
     {
         ERROR("Error lpWideCharStr parameters are invalid\n");
         SetLastError(ERROR_INVALID_PARAMETER);
@@ -548,7 +548,7 @@ WideCharToMultiByte(
     }
 
     cfString = CFStringCreateWithCharacters(kCFAllocatorDefault,
-                      (const UniChar*)lpWideCharStr, charsToConvert);
+                      reinterpret_cast<const UniChar*>(lpWideCharStr), charsToConvert);
     if (cfString == NULL)
     {
         ERROR("CFString creation failed.\n");
@@ -562,7 +562,7 @@ WideCharToMultiByte(
     }
     charsConverted = CFStringGetBytes(cfString,
                     CFRangeMake(0, charsToConvert),
-                    cfEncoding, '?', TRUE, (UInt8*)lpMultiByteStr,
+                    cfEncoding, '?', TRUE, reinterpret_cast<UInt8*>(lpMultiByteStr),
                     cbMultiByte, &bytesConverted);
     if (charsConverted != charsToConvert)
     {

@@ -43,7 +43,7 @@ inline size_t ALIGN_UP(size_t val, size_t alignment)
 
 inline void* ALIGN_UP(void* val, size_t alignment)
 {
-    return (void*)ALIGN_UP((size_t)val, alignment);
+    return reinterpret_cast<void*>(ALIGN_UP(reinterpret_cast<size_t>(val), alignment));
 }
 
 #ifdef __cplusplus

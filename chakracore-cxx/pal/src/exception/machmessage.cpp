@@ -43,7 +43,7 @@ void MachMessage::Receive(mach_port_t hPort)
     ResetMessage();
 
     // Pull the next Mach message into the buffer.
-    machret = mach_msg((mach_msg_header_t*)m_rgMessageBuffer,
+    machret = mach_msg(reinterpret_cast<mach_msg_header_t*>(m_rgMessageBuffer),
                        MACH_RCV_MSG | MACH_RCV_LARGE | MACH_RCV_NOTIFY,
                        0,
                        kcbMaxMessageSize,
@@ -121,7 +121,7 @@ bool MachMessage::IsExceptionReply()
 // Returns the type code for a received message.
 MachMessage::MessageType MachMessage::GetMessageType()
 {
-    return (MessageType)m_pMessage->header.msgh_id;
+    return static_cast<MessageType>(m_pMessage->header.msgh_id);
 }
 
 // Returns a textual form of the type of a received message. Useful for logging.
@@ -391,7 +391,7 @@ mach_msg_type_number_t MachMessage::GetThreadState(thread_state_flavor_t eFlavor
     // No state in the message or the flavor didn't match. Get the requested flavor of state directly from the
     // thread instead.
     count = THREAD_STATE_MAX;
-    machret = thread_get_state(thread ? thread : GetThread(), eFlavor, (thread_state_t)pState, &count);
+    machret = thread_get_state(thread ? thread : GetThread(), eFlavor, pState, &count);
     CHECK_MACH("thread_get_state()", machret);
 
     return count;
@@ -442,7 +442,7 @@ void MachMessage::SendSetThread(mach_port_t hServerPort, CONTEXT *pContext)
     InitMessageSize();
 
     // Send the formatted message.
-    machret = mach_msg((mach_msg_header_t*)m_pMessage,
+    machret = mach_msg(reinterpret_cast<mach_msg_header_t*>(m_pMessage),
                        MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
                        m_pMessage->header.msgh_size,
                        0,
@@ -481,7 +481,7 @@ void MachMessage::SendForwardException(mach_port_t hServerPort, MachExceptionInf
     InitMessageSize();
 
     // Send the formatted message.
-    machret = mach_msg((mach_msg_header_t*)m_pMessage,
+    machret = mach_msg(reinterpret_cast<mach_msg_header_t*>(m_pMessage),
                        MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
                        m_pMessage->header.msgh_size,
                        0,
@@ -539,8 +539,8 @@ void MachMessage::ForwardNotification(MachExceptionHandler *pHandler, MachMessag
     if (pHandler->m_flavor != THREAD_STATE_NONE)
     {
         thread_state_data_t threadState;
-        mach_msg_type_number_t count = message.GetThreadState(pHandler->m_flavor, (thread_state_t)&threadState);
-        SetThreadState(pHandler->m_flavor, (thread_state_t)&threadState, count);
+        mach_msg_type_number_t count = message.GetThreadState(pHandler->m_flavor, reinterpret_cast<thread_state_t>(&threadState));
+        SetThreadState(pHandler->m_flavor, reinterpret_cast<thread_state_t>(&threadState), count);
     }
 
     // Initialize header fields.
@@ -553,7 +553,7 @@ void MachMessage::ForwardNotification(MachExceptionHandler *pHandler, MachMessag
     InitMessageSize();
 
     // Send the formatted message.
-    machret = mach_msg((mach_msg_header_t*)m_pMessage,
+    machret = mach_msg(reinterpret_cast<mach_msg_header_t*>(m_pMessage),
                        MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
                        m_pMessage->header.msgh_size,
                        0,
@@ -590,9 +590,9 @@ void MachMessage::ReplyToNotification(MachMessage& message, kern_return_t eResul
         // notification message (handling the exception is likely to have changed the thread state).
         thread_state_data_t threadState;
         mach_msg_type_number_t count = THREAD_STATE_MAX;
-        machret = thread_get_state(message.GetThread(), eNotificationFlavor, (thread_state_t)&threadState, &count);
+        machret = thread_get_state(message.GetThread(), eNotificationFlavor, reinterpret_cast<thread_state_t>(&threadState), &count);
 
-        SetThreadState(eNotificationFlavor, (thread_state_t)&threadState, count);
+        SetThreadState(eNotificationFlavor, reinterpret_cast<thread_state_t>(&threadState), count);
     }
 
     // Initialize header fields.
@@ -605,7 +605,7 @@ void MachMessage::ReplyToNotification(MachMessage& message, kern_return_t eResul
     InitMessageSize();
 
     // Send the formatted message.
-    machret = mach_msg((mach_msg_header_t*)m_pMessage,
+    machret = mach_msg(reinterpret_cast<mach_msg_header_t*>(m_pMessage),
                        MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
                        m_pMessage->header.msgh_size,
                        0,
@@ -644,7 +644,7 @@ void MachMessage::ResetMessage()
     memset(this, 0xcc, sizeof(*this));
 #endif
 
-    m_pMessage = (mach_message_t*)m_rgMessageBuffer;
+    m_pMessage = reinterpret_cast<mach_message_t*>(m_rgMessageBuffer);
     m_hThread = MACH_PORT_NULL;
     m_hTask = MACH_PORT_NULL;
     m_fPortsOwned = false;
@@ -792,7 +792,7 @@ thread_act_t MachMessage::GetThreadFromState(thread_state_flavor_t eFlavor, thre
         break;
 #elif defined(_ARM64_)
     case ARM_THREAD_STATE64:
-        targetSP = arm_thread_state64_get_sp(*(arm_thread_state64_t*)pState);
+        targetSP = arm_thread_state64_get_sp(*reinterpret_cast<arm_thread_state64_t*>(pState));
         break;
 #else
 #error Unexpected architecture.
@@ -819,7 +819,7 @@ thread_act_t MachMessage::GetThreadFromState(thread_state_flavor_t eFlavor, thre
 #elif defined(_ARM64_)
         arm_thread_state64_t threadState;
         mach_msg_type_number_t count = ARM_THREAD_STATE64_COUNT;
-        machret = thread_get_state(pThreads[i], ARM_THREAD_STATE64, (thread_state_t)&threadState, &count);
+        machret = thread_get_state(pThreads[i], ARM_THREAD_STATE64, reinterpret_cast<thread_state_t>(&threadState), &count);
 #else
 #error Unexpected architecture
 #endif
@@ -849,7 +849,7 @@ thread_act_t MachMessage::GetThreadFromState(thread_state_flavor_t eFlavor, thre
                     machret = mach_port_deallocate(mach_task_self(), pThreads[j]);
                     CHECK_MACH("mach_port_deallocate()", machret);
                 }
-                machret = vm_deallocate(mach_task_self(), (vm_address_t)pThreads, cThreads * sizeof(thread_act_t));
+                machret = vm_deallocate(mach_task_self(), reinterpret_cast<vm_address_t>(pThreads), cThreads * sizeof(thread_act_t));
                 CHECK_MACH("vm_deallocate()", machret);
 
                 // Return the thread we found.
@@ -865,7 +865,7 @@ thread_act_t MachMessage::GetThreadFromState(thread_state_flavor_t eFlavor, thre
 // Transform an exception handler behavior type into the corresponding Mach message ID for the notification.
 mach_msg_id_t MachMessage::MapBehaviorToNotificationType(exception_behavior_t eBehavior)
 {
-    switch ((uint)eBehavior)
+    switch (static_cast<uint>(eBehavior))
     {
     case MACH_EXCEPTION_CODES|EXCEPTION_DEFAULT:
         return EXCEPTION_RAISE_64_MESSAGE_ID;

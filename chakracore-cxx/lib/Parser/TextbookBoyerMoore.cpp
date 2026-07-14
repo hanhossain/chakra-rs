@@ -232,7 +232,7 @@ namespace UnifiedRegex
                     }
                     continue;
                 }
-                Assert((int)lastPatCharIndex - lastOcc >= localGoodSuffix[lastPatCharIndex]);
+                Assert(static_cast<int>(lastPatCharIndex) - lastOcc >= localGoodSuffix[lastPatCharIndex]);
                 offset += lastPatCharIndex - lastOcc;
                 if (offset >= endOffset)
                 {
@@ -258,7 +258,7 @@ namespace UnifiedRegex
                 uint inputChar = Chars<Char>::CTU(input[offset + j]);
                 if (!MatchPatternAt<equivClassSize, equivClassSize>(inputChar, pat, j))
                 {
-                    const int32_t e = j - localLastOccurrence->Get((Char)inputChar);
+                    const int32_t e = j - localLastOccurrence->Get(static_cast<Char>(inputChar));
                     offset += e > localGoodSuffix[j] ? e : localGoodSuffix[j];
                     break;
                 }
@@ -368,7 +368,7 @@ namespace UnifiedRegex
                 {
                     lastOcc = localLastOccurrence->GetLastOcc(1);
                 }
-                Assert((int)lastPatCharIndex - lastOcc >= localGoodSuffix[lastPatCharIndex]);
+                Assert(static_cast<int>(lastPatCharIndex) - lastOcc >= localGoodSuffix[lastPatCharIndex]);
                 offset += lastPatCharIndex - lastOcc;
                 if (offset >= endOffset)
                 {
@@ -397,7 +397,7 @@ namespace UnifiedRegex
                 {
                     int goodSuffix = localGoodSuffix[j];
                     Assert(patLen <= MaxCharCount);
-                    if (goodSuffix == (int)patLen)
+                    if (goodSuffix == static_cast<int>(patLen))
                     {
                         offset += patLen;
                     }

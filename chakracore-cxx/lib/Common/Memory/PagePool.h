@@ -22,7 +22,7 @@ public:
     static PagePoolPage * New(PageAllocator * pageAllocator, bool isReserved = false)
     {
         PageSegment * pageSegment;
-        PagePoolPage * newPage = (PagePoolPage *)pageAllocator->AllocPages(1, &pageSegment);
+        PagePoolPage * newPage = reinterpret_cast<PagePoolPage*>(pageAllocator->AllocPages(1, &pageSegment));
         if (newPage == nullptr)
         {
             return nullptr;
@@ -128,7 +128,7 @@ public:
 
     void FreePage(PagePoolPage * page)
     {
-        PagePoolFreePage * freePage = (PagePoolFreePage *)page;
+        PagePoolFreePage * freePage = static_cast<PagePoolFreePage*>(page);
         if (freePage->IsReserved())
         {
             return FreeReservedPage(page);
@@ -163,7 +163,7 @@ private:
     void FreeReservedPage(PagePoolPage * page)
     {
         Assert(page->IsReserved());
-        PagePoolFreePage * freePage = (PagePoolFreePage *)page;
+        PagePoolFreePage * freePage = static_cast<PagePoolFreePage*>(page);
 
         freePage->nextFreePage = reservedPageList;
         reservedPageList = freePage;

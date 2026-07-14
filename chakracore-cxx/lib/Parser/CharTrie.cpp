@@ -72,7 +72,8 @@ namespace UnifiedRegex
             if (capacity <= count)
             {
                 int newCapacity = max(capacity * 2, initCapacity);
-                children = (CharTrieEntry*)allocator->Realloc(children, capacity * sizeof(CharTrieEntry), newCapacity * sizeof(CharTrieEntry));
+                children = reinterpret_cast<CharTrieEntry*>(allocator->Realloc(children, capacity * sizeof(CharTrieEntry),
+                                                                               newCapacity * sizeof(CharTrieEntry)));
                 capacity = newCapacity;
             }
 

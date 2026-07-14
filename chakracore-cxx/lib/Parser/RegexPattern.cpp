@@ -156,7 +156,7 @@ namespace UnifiedRegex
     /* static */
     uint RegexPattern::GetTestCacheIndex(Js::JavascriptString* str)
     {
-        return (uint)(((uintptr_t)str) >> PolymorphicInlineCacheShift) & (TestCacheSize - 1);
+        return static_cast<uint>(reinterpret_cast<uintptr_t>(str) >> PolymorphicInlineCacheShift) & (TestCacheSize - 1);
     }
 
 #if ENABLE_REGEX_CONFIG_OPTIONS

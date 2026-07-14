@@ -11,7 +11,7 @@
 template <bool enabled>
 class SmartFPUControlT
 {
-    static const uint INVALID_FPUCONTROL = (uint)-1;
+    static const uint INVALID_FPUCONTROL = -1u;
 
 public:
 

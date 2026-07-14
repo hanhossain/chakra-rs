@@ -90,7 +90,7 @@ SmallHeapBlockT<TBlockTypeAttributes>::SweepObject<SweepMode_InThread>(Recycler 
         // Call prepare finalize to do clean up that needs to be done immediately
         // (e.g. Clear the ITrackable alias reference, so it can't be revived during
         // other finalizers or concurrent sweep)
-        ((FinalizableObject *)addr)->Finalize(false);
+        static_cast<FinalizableObject*>(addr)->Finalize(false);
 
         // Set ObjectInfo to indicate a pending dispose object
 

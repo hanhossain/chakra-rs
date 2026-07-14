@@ -82,8 +82,8 @@ SmallNormalHeapBucketBase<TBlockType>::RescanObjectsOnPage(TBlockType * block, c
         *anyObjectRescanned = false;
     }
 
-    Assert((char*)pageAddress - blockStartAddress < TBlockAttributes::PageCount * AutoSystemInfo::PageSize);
-    const uint pageByteOffset = static_cast<uint>((char*)pageAddress - blockStartAddress);
+    Assert(pageAddress - blockStartAddress < TBlockAttributes::PageCount * AutoSystemInfo::PageSize);
+    const uint pageByteOffset = static_cast<uint>(pageAddress - blockStartAddress);
     uint firstObjectOnPageIndex = pageByteOffset / localObjectSize;
 
     // This is not necessarily the address on the first object that starts on the page

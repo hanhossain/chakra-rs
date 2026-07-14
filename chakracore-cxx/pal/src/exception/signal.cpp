@@ -185,7 +185,7 @@ static void sigill_handler(int code, siginfo_t *siginfo, void *context)
         EXCEPTION_POINTERS pointers;
         native_context_t *ucontext;
 
-        ucontext = (native_context_t *)context;
+        ucontext = static_cast<native_context_t*>(context);
 
         record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
@@ -230,7 +230,7 @@ static void sigfpe_handler(int code, siginfo_t *siginfo, void *context)
         EXCEPTION_POINTERS pointers;
         native_context_t *ucontext;
 
-        ucontext = (native_context_t *)context;
+        ucontext = static_cast<native_context_t*>(context);
 
         record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
@@ -273,9 +273,8 @@ static void sigsegv_handler(int code, siginfo_t *siginfo, void *context)
     {
         EXCEPTION_RECORD record;
         EXCEPTION_POINTERS pointers;
-        native_context_t *ucontext;
 
-        ucontext = (native_context_t *)context;
+        native_context_t *ucontext = static_cast<native_context_t*>(context);
 
         record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
@@ -289,7 +288,7 @@ static void sigsegv_handler(int code, siginfo_t *siginfo, void *context)
         record.ExceptionInformation[0] = 0;
 
         // Second parameter is the address that caused the fault.
-        record.ExceptionInformation[1] = (size_t)siginfo->si_addr;
+        record.ExceptionInformation[1] = reinterpret_cast<size_t>(siginfo->si_addr);
 
         pointers.ExceptionRecord = &record;
 
@@ -328,7 +327,7 @@ static void sigtrap_handler(int code, siginfo_t *siginfo, void *context)
         EXCEPTION_POINTERS pointers;
         native_context_t *ucontext;
 
-        ucontext = (native_context_t *)context;
+        ucontext = static_cast<native_context_t*>(context);
 
         record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
@@ -374,7 +373,7 @@ static void sigbus_handler(int code, siginfo_t *siginfo, void *context)
         EXCEPTION_POINTERS pointers;
         native_context_t *ucontext;
 
-        ucontext = (native_context_t *)context;
+        ucontext = static_cast<native_context_t*>(context);
 
         record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
@@ -388,7 +387,7 @@ static void sigbus_handler(int code, siginfo_t *siginfo, void *context)
         record.ExceptionInformation[0] = 0;
 
         // Second parameter is the address that caused the fault.
-        record.ExceptionInformation[1] = (size_t)siginfo->si_addr;
+        record.ExceptionInformation[1] = reinterpret_cast<size_t>(siginfo->si_addr);
 
         pointers.ExceptionRecord = &record;
 
@@ -429,7 +428,7 @@ static void inject_activation_handler([[maybe_unused]] int code, siginfo_t *sigi
         {
             _ASSERTE(g_safeActivationCheckFunction != NULL);
 
-            native_context_t *ucontext = (native_context_t *)context;
+            native_context_t *ucontext = static_cast<native_context_t*>(context);
 
             CONTEXT winContext;
             CONTEXTFromNativeContext(

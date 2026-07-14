@@ -14,8 +14,8 @@ SmallNormalHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallNormalHeapBlockT<T
     Assert(bucket->sizeCat <= TBlockAttributes::MaxObjectSize);
     Assert((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / bucket->sizeCat <= USHRT_MAX);
 
-    ushort objectSize = (ushort)bucket->sizeCat;
-    ushort objectCount = (ushort)((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / objectSize);
+    ushort objectSize = static_cast<ushort>(bucket->sizeCat);
+    ushort objectCount = static_cast<ushort>((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / objectSize);
 
     HeapBlockType blockType = (TBlockAttributes::IsSmallBlock ? HeapBlock::SmallNormalBlockType : HeapBlock::MediumNormalBlockType);
     return NoMemProtectHeapNewNoThrowPlusPrefixZ(Base::GetAllocPlusSize(objectCount), SmallNormalHeapBlockT<TBlockAttributes>, bucket, objectSize, objectCount, blockType);
@@ -29,8 +29,8 @@ SmallNormalWithBarrierHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallNormalW
     Assert(bucket->sizeCat <= TBlockAttributes::MaxObjectSize);
     Assert((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / bucket->sizeCat <= USHRT_MAX);
 
-    ushort objectSize = (ushort)bucket->sizeCat;
-    ushort objectCount = (ushort)((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / objectSize);
+    ushort objectSize = static_cast<ushort>(bucket->sizeCat);
+    ushort objectCount = static_cast<ushort>((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / objectSize);
 
     HeapBlockType blockType = (TBlockAttributes::IsSmallBlock ? HeapBlock::SmallNormalBlockWithBarrierType : HeapBlock::MediumNormalBlockWithBarrierType);
     return NoMemProtectHeapNewNoThrowPlusPrefixZ(Base::GetAllocPlusSize(objectCount), SmallNormalWithBarrierHeapBlockT<TBlockAttributes>, bucket, objectSize, objectCount, blockType);
@@ -87,7 +87,7 @@ SmallNormalHeapBlockT<TBlockAttributes>::ScanInitialImplicitRoots(Recycler * rec
         )
     {
         // TODO: only interior?
-        recycler->ScanObjectInlineInterior((void **)this->GetAddress(), localObjectSize * localObjectCount);
+        recycler->ScanObjectInlineInterior(reinterpret_cast<void**>(this->GetAddress()), localObjectSize * localObjectCount);
     }
     else if (this->markCount != 0)
     {
@@ -97,7 +97,7 @@ SmallNormalHeapBlockT<TBlockAttributes>::ScanInitialImplicitRoots(Recycler * rec
             if (this->GetMarkedBitVector()->Test(i * localObjectBitDelta))
             {
                 // TODO: only interior?
-                void ** address = (void **)(this->GetAddress() + i * localObjectSize);
+                void ** address = reinterpret_cast<void**>(this->GetAddress() + i * localObjectSize);
                 DUMP_IMPLICIT_ROOT(recycler, address);
                 recycler->ScanObjectInlineInterior(address, localObjectSize);
             }
@@ -113,7 +113,7 @@ SmallNormalHeapBlockT<TBlockAttributes>::ScanNewImplicitRoots(Recycler * recycle
     __super::ScanNewImplicitRootsBase([recycler](void * objectAddress, size_t objectSize)
     {
         // TODO: only interior?
-        recycler->ScanObjectInlineInterior((void **)objectAddress, objectSize);
+        recycler->ScanObjectInlineInterior(static_cast<void**>(objectAddress), objectSize);
     });
 }
 

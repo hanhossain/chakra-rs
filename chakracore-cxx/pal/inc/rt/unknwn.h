@@ -32,7 +32,7 @@ struct IUnknown
    
     QueryInterface(Q** pp)
     {
-        return QueryInterface(__uuidof(Q), (void **)pp);
+        return QueryInterface(__uuidof(Q), static_cast<void**>(pp));
     }
 };
 

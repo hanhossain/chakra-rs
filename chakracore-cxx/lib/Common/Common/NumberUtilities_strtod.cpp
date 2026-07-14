@@ -27,7 +27,7 @@ static const double g_rgdblTens[] =
 static inline char16_t ToDigit(int32_t wVal)
 {
     //return reinterpret_cast<char16_t>((wVal < 10) ? '0' + (ushort) wVal : 'a' - 10 + (ushort) wVal);
-    return (ushort)((wVal < 10) ? '0' + (ushort) wVal : 'a' - 10 + (ushort) wVal);
+    return static_cast<ushort>((wVal < 10) ? '0' + static_cast<ushort>(wVal) : 'a' - 10 + static_cast<ushort>(wVal));
 }
 
 /***************************************************************************
@@ -130,7 +130,7 @@ struct BIGNUM
         uint32_t luT = (m_luError + 1) >> 1;
 
         if (luT &&
-            !Js::NumberUtilities::AddLu(&m_lu0, (uint32_t)-(int32_t)luT) &&
+            !Js::NumberUtilities::AddLu(&m_lu0, static_cast<uint32_t>(-static_cast<int32_t>(luT))) &&
             !Js::NumberUtilities::AddLu(&m_lu1, 0xFFFFFFFF))
         {
             Js::NumberUtilities::AddLu(&m_lu2, 0xFFFFFFFF);
@@ -309,12 +309,12 @@ void BIGNUM::MulTenAdd(byte bAdd, uint32_t *pluExtra)
                 Assert(ilu < 4);
                 rglu[ilu + 1] = bAdd >> ibit;
                 if (ibit > 0)
-                    rglu[ilu] = (uint32_t)bAdd << (32 - ibit);
+                    rglu[ilu] = static_cast<uint32_t>(bAdd) << (32 - ibit);
             }
             else
             {
                 Assert(ilu < 5);
-                rglu[ilu] = (uint32_t)bAdd << (32 - ibit);
+                rglu[ilu] = static_cast<uint32_t>(bAdd) << (32 - ibit);
             }
         }
     }
@@ -356,7 +356,7 @@ void BIGNUM::SetFromRgchExp(const EncodedChar *prgch, int32_t cch, int32_t lwExp
 
     // Record the first digit
     Assert(FNzDigit(prgch[0]));
-    m_lu2 = (uint32_t)(prgch[0] - '0') << 28;
+    m_lu2 = static_cast<uint32_t>(prgch[0] - '0') << 28;
     m_lu1 = 0;
     m_lu0 = 0;
     m_wExp = 4;
@@ -369,7 +369,7 @@ void BIGNUM::SetFromRgchExp(const EncodedChar *prgch, int32_t cch, int32_t lwExp
         if (*prgch == '.' || *prgch == '_')
             continue;
         Assert(Js::NumberUtilities::IsDigit(*prgch));
-        MulTenAdd((byte) (*prgch - '0'), &luExtra);
+        MulTenAdd(static_cast<byte>(*prgch - '0'), &luExtra);
         lwExp--;
         if (0 != luExtra)
         {
@@ -398,11 +398,11 @@ void BIGNUM::SetFromRgchExp(const EncodedChar *prgch, int32_t cch, int32_t lwExp
         prgnum = g_rgnumPos;
 
     Assert(lwExp > 0 && lwExp < 512);
-    wT = (int)lwExp & 0x1F;
+    wT = lwExp & 0x1F;
     if (wT > 0)
         Mul(&prgnum[wT - 1]);
 
-    wT = ((int)lwExp >> 5) & 0x0F;
+    wT = (lwExp >> 5) & 0x0F;
     if (wT > 0)
         Mul(&prgnum[wT + 30]);
 }
@@ -645,7 +645,7 @@ double BIGNUM::GetDbl(void)
     if (wExp > 0)
     {
         // Normalized.
-        Js::NumberUtilities::LuHiDbl(dbl) = ((uint32_t)wExp << 20) | ((m_lu2 & 0x7FFFFFFF) >> 11);
+        Js::NumberUtilities::LuHiDbl(dbl) = (static_cast<uint32_t>(wExp) << 20) | ((m_lu2 & 0x7FFFFFFF) >> 11);
         Js::NumberUtilities::LuLoDbl(dbl) = m_lu2 << 21 | m_lu1 >> 11;
         luEx = m_lu1 << 21 | (m_lu0 != 0);
     }
@@ -685,7 +685,7 @@ double BIGNUM::GetDbl(void)
         luEx = m_lu2 | (m_lu1 != 0) | (m_lu0 != 0);
     }
     else
-        return (double)0;
+        return 0;
 
     // Handle rounding
     if ((luEx & 0x80000000) && ((luEx & 0x7FFFFFFF) || (Js::NumberUtilities::LuLoDbl(dbl) & 1)))
@@ -1277,7 +1277,7 @@ LEnd:
 
     // Convert to a big number.
     Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= INT_MAX);
-    num.SetFromRgchExp(pchMinDig, (int32_t)(pchLimDig - pchMinDig), lwExp);
+    num.SetFromRgchExp(pchMinDig, static_cast<int32_t>(pchLimDig - pchMinDig), lwExp);
 
     // If there is no error in the big number, just convert it to a double.
     if (0 == num.m_luError)
@@ -1285,7 +1285,7 @@ LEnd:
         dbl = num.GetDbl();
 #if DBG
         Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= INT_MAX);
-        dblLo = AdjustDbl(dbl, pchMinDig, (int32_t)(pchLimDig - pchMinDig), lwExp);
+        dblLo = AdjustDbl(dbl, pchMinDig, static_cast<int32_t>(pchLimDig - pchMinDig), lwExp);
         Assert(dbl == dblLo);
 #endif //DBG
         goto LDone;
@@ -1306,7 +1306,7 @@ LEnd:
 #if DBG
         Assert(dbl == num.GetDbl());
         Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= INT_MAX);
-        dblLo = AdjustDbl(dbl, pchMinDig, (int32_t)(pchLimDig - pchMinDig), lwExp);
+        dblLo = AdjustDbl(dbl, pchMinDig, static_cast<int32_t>(pchLimDig - pchMinDig), lwExp);
         Assert(dbl == dblLo || Js::NumberUtilities::IsNan(dblLo));
 #endif //DBG
         goto LDone;
@@ -1318,7 +1318,7 @@ LEnd:
     // x = 1.2345678901234568347913049445e+200;
     //
     Assert(pchLimDig - pchMinDig >= 0 && pchLimDig - pchMinDig <= INT_MAX);
-    dbl = AdjustDbl(num.GetDbl(), pchMinDig, (int32_t)(pchLimDig - pchMinDig), lwExp);
+    dbl = AdjustDbl(num.GetDbl(), pchMinDig, static_cast<int32_t>(pchLimDig - pchMinDig), lwExp);
 
 LDone:
     // This assert was removed because it would fire on VERY rare occasions. Not
@@ -1372,7 +1372,7 @@ static BOOL FDblToRgbPrecise(double dbl, __out_ecount(kcbMaxRgb) byte *prgb, int
     AssertVerify(biDen.FInitFromRglu(rglu, 1));
     AssertVerify(biHi.FInitFromRglu(rglu, 1));
 
-    wExp2 = (int)(((Js::NumberUtilities::LuHiDbl(dbl) & 0x7FF00000) >> 20) - 1075);
+    wExp2 = static_cast<int>(((Js::NumberUtilities::LuHiDbl(dbl) & 0x7FF00000) >> 20) - 1075);
     rglu[1] = Js::NumberUtilities::LuHiDbl(dbl) & 0x000FFFFF;
     rglu[0] = Js::NumberUtilities::LuLoDbl(dbl);
     clu = 2;
@@ -1392,7 +1392,7 @@ static BOOL FDblToRgbPrecise(double dbl, __out_ecount(kcbMaxRgb) byte *prgb, int
         Assert(0 != (Js::NumberUtilities::LuHiDbl(dblT) & 0x7FF00000));
 
         // This is the power of 2.
-        w1 = (int)((Js::NumberUtilities::LuHiDbl(dblT) & 0x7FF00000) >> 20) - (256 + 1023);
+        w1 = static_cast<int>((Js::NumberUtilities::LuHiDbl(dblT) & 0x7FF00000) >> 20) - (256 + 1023);
 
         Js::NumberUtilities::LuHiDbl(dblT) &= 0x000FFFFF;
         Js::NumberUtilities::LuHiDbl(dblT) |= 0x3FF00000;
@@ -1432,7 +1432,7 @@ static BOOL FDblToRgbPrecise(double dbl, __out_ecount(kcbMaxRgb) byte *prgb, int
     Assert(1 <= dblT && dblT < 2);
     dblT = (dblT - 1.5) * 0.289529654602168 + 0.1760912590558 +
         w1 * 0.301029995663981;
-    wExp10 = (int)dblT;
+    wExp10 = static_cast<int>(dblT);
     if (dblT < 0 && dblT != wExp10)
         wExp10--;
 
@@ -1541,7 +1541,7 @@ static BOOL FDblToRgbPrecise(double dbl, __out_ecount(kcbMaxRgb) byte *prgb, int
 
     for (ib = 0; ib < kcbMaxRgb; )
     {
-        bT = (byte)biNum.DivRem(&biDen);
+        bT = static_cast<byte>(biNum.DivRem(&biDen));
         if (ib == 0 && bT == 0)
         {
             // Our estimate of wExp10 was too big. Oh well.
@@ -1605,7 +1605,7 @@ static BOOL FDblToRgbPrecise(double dbl, __out_ecount(kcbMaxRgb) byte *prgb, int
                 // Do not always push to higherBound
                 // See Js::NumberUtilities::FDblToStr for the exception
                 // i.e. we shouldn't push digits beyond interest to higherBound
-                prgb[ib] = bT + (byte)(nDigits == -1 || ib < nDigits ? 1 : 0);
+                prgb[ib] = bT + static_cast<byte>(nDigits == -1 || ib < nDigits ? 1 : 0);
                 ++ib;
                 break;
             }
@@ -1673,7 +1673,7 @@ static BOOL FDblToRgbFast(double dbl, _Out_writes_to_(kcbMaxRgb, (*ppbLim - prgb
     // Get numHH and numLL such that numLL < dbl < numHH and the
     // difference between adjacent values is half the distance to the next
     // representable value (in a double).
-    wExp2 = (int)((Js::NumberUtilities::LuHiDbl(dbl) >> 20) & 0x07FF);
+    wExp2 = static_cast<int>((Js::NumberUtilities::LuHiDbl(dbl) >> 20) & 0x07FF);
     if (wExp2 > 0)
     {
         // See if dbl is a small integer.
@@ -1832,9 +1832,9 @@ static BOOL FDblToRgbFast(double dbl, _Out_writes_to_(kcbMaxRgb, (*ppbLim - prgb
     for (ib = 0; ib < kcbMaxRgb; )
     {
         Assert(luLL <= luHH);
-        bHH = (byte)(luHH / luScale);
+        bHH = static_cast<byte>(luHH / luScale);
         luHH %= luScale;
-        bLL = (byte)(luLL / luScale);
+        bLL = static_cast<byte>(luLL / luScale);
         luLL %= luScale;
 
         if (bHH != bLL)
@@ -1871,9 +1871,9 @@ static BOOL FDblToRgbFast(double dbl, _Out_writes_to_(kcbMaxRgb, (*ppbLim - prgb
 
     // LL and HH diverged. Get the digit values for LH and HL.
     Assert(0 <= bLL && bLL < bHH && bHH <= 9);
-    bLH = (byte)((luLH / luScale) % 10);
+    bLH = static_cast<byte>((luLH / luScale) % 10);
     luLH %= luScale;
-    bHL = (byte)((luHL / luScale) % 10);
+    bHL = static_cast<byte>((luHL / luScale) % 10);
     luHL %= luScale;
 
     if (bLH >= bHL)
@@ -1953,7 +1953,7 @@ LSmallInt:
     for (ib = 0; 0 != dbl && ib < kcbMaxRgb && 0 <= iT; iT--)
     {
         Assert(iT >= 0);
-        bHH = (byte)(dbl / g_rgdblTens[iT]);
+        bHH = static_cast<byte>(dbl / g_rgdblTens[iT]);
         dbl -= bHH * g_rgdblTens[iT];
         Assert(dbl == floor(dbl) && 0 <= dbl && dbl < g_rgdblTens[iT]);
         prgb[ib++] = bHH;
@@ -1992,7 +1992,7 @@ static BOOL FormatDigits(_In_reads_(pbLim - pbSrc) byte *pbSrc, byte *pbLim, int
         nCount = (pbLim - pbSrc) + 3 + abs(wExp10);
     else
         nCount = (pbLim - pbSrc) + 1 + wExp10;
-    if ((int)nCount >= cchDst)
+    if (static_cast<int>(nCount) >= cchDst)
     {
         Assert(0);
         return FALSE;
@@ -2026,18 +2026,18 @@ static BOOL FormatDigits(_In_reads_(pbLim - pbSrc) byte *pbSrc, byte *pbLim, int
         Assert(wExp10 < 1000);
         if (wExp10 >= 100)
         {
-            *pchDst++ = (char16_t)('0' + wExp10 / 100);
+            *pchDst++ = static_cast<char16_t>('0' + wExp10 / 100);
             wExp10 %= 100;
-            *pchDst++ = (char16_t)('0' + wExp10 / 10);
+            *pchDst++ = static_cast<char16_t>('0' + wExp10 / 10);
             wExp10 %= 10;
         }
         else if (wExp10 >= 10)
         {
-            *pchDst++ = (char16_t)('0' + wExp10 / 10);
+            *pchDst++ = static_cast<char16_t>('0' + wExp10 / 10);
             wExp10 %= 10;
         }
 #pragma prefast(suppress:26014, "We have calculate the check the buffer size above already")
-        *pchDst++ = (char16_t)('0' + wExp10);
+        *pchDst++ = static_cast<char16_t>('0' + wExp10);
         *pchDst = 0;
     }
     else if (wExp10 <= 0)
@@ -2086,7 +2086,7 @@ static int FormatDigitsFixed(byte *pbSrc, byte *pbLim, int wExp10, int nFraction
         {
             // Set nFractionDigits such that we get all the significant digits and no trailing zeros
             AnalysisAssert(pbLim - pbSrc < INT_MAX);
-            nFractionDigits = -wExp10 + (int)(pbLim - pbSrc);
+            nFractionDigits = -wExp10 + static_cast<int>(pbLim - pbSrc);
         }
 
         n++; // for '0'
@@ -2118,7 +2118,7 @@ static int FormatDigitsFixed(byte *pbSrc, byte *pbLim, int wExp10, int nFraction
         if( nFractionDigits < 0 )
         {
             // Set nFractionDigits such that we get all the significant digits and no trailing zeros
-            nFractionDigits = (pbLim - pbSrc <= wExp10) ? 0 : (int)(pbLim - pbSrc) - wExp10;
+            nFractionDigits = (pbLim - pbSrc <= wExp10) ? 0 : static_cast<int>(pbLim - pbSrc) - wExp10;
         }
         if( nFractionDigits > 0)
             n += nFractionDigits + 1;
@@ -2177,7 +2177,7 @@ static int FormatDigitsExponential(
 
     if (nFractionDigits < 0) // output as many fractional digits as we can
     {
-        int cch = (int)(pbLim - (1 + pbSrc)); // 1 == first digit
+        int cch = static_cast<int>(pbLim - (1 + pbSrc)); // 1 == first digit
         if (cch > 0)
         {
             n += (1 + cch); // 1 == '.'
@@ -2252,17 +2252,17 @@ static int FormatDigitsExponential(
     // Exponent Digits
     if (wExp10 >= 100)
     {
-        *pchDst++ = (char16_t)('0' + wExp10 / 100);
+        *pchDst++ = static_cast<char16_t>('0' + wExp10 / 100);
         wExp10 %= 100;
-        *pchDst++ = (char16_t)('0' + wExp10 / 10);
+        *pchDst++ = static_cast<char16_t>('0' + wExp10 / 10);
         wExp10 %= 10;
     }
     else if (wExp10 >= 10)
     {
-        *pchDst++ = (char16_t)('0' + wExp10 / 10);
+        *pchDst++ = static_cast<char16_t>('0' + wExp10 / 10);
         wExp10 %= 10;
     }
-    *pchDst++ = (char16_t)('0' + wExp10);
+    *pchDst++ = static_cast<char16_t>('0' + wExp10);
 
     *pchDst = 0;
     Assert(1 + pchDst - pchDstStart == n);
@@ -2571,7 +2571,7 @@ static const int g_rgcchSig[] =
 };
 
 //
-// Convert a non-Nan, non-Zero, non-Infinite double value to string representation 
+// Convert a non-Nan, non-Zero, non-Infinite double value to string representation
 // with given radix. (Moved from JavascriptNumber.cpp, back compat port of FDblToStrRadix()).
 //
 _Success_(return)
@@ -2624,12 +2624,12 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
 
         if (0 != cbitDigit)
         {
-            int wExp2 = (int)((Js::NumberUtilities::LuHiDbl(dbl) & 0x7FF00000) >> 20) - 0x03FF;
+            int wExp2 = static_cast<int>((Js::NumberUtilities::LuHiDbl(dbl) & 0x7FF00000) >> 20) - 0x03FF;
 
             int wExp = wExp2 / cbitDigit;
             wExp2 = wExp * cbitDigit;
 
-            Js::NumberUtilities::LuHiDbl(valueDen) = (uint32_t)(0x03FF + wExp2) << 20;
+            Js::NumberUtilities::LuHiDbl(valueDen) = static_cast<uint32_t>(0x03FF + wExp2) << 20;
             Js::NumberUtilities::LuLoDbl(valueDen) = 0;
             cchSig = abs(wExp) + 1;
         }
@@ -2651,7 +2651,7 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
         len -= cchSig;
         for (cch = 0; cch < cchSig; cch++)
         {
-            wDig = (int)(dbl / valueDen);
+            wDig = static_cast<int>(dbl / valueDen);
             if (wDig >= radix)
             {
                 wDig = radix - 1;
@@ -2686,7 +2686,7 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
         do
         {
             dbl *= radix;
-            wDig = (int)dbl;
+            wDig = static_cast<int>(dbl);
             if (wDig >= radix)
             {
                 wDig = radix - 1;
@@ -2704,7 +2704,7 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
             // Should we replace equivalent of decimal "0.599999999" with "0.56"?
             if (cchSig == maxOutDigits - 1)
             {
-                const int nextDig = (int)(dbl*radix);
+                const int nextDig = static_cast<int>(dbl * radix);
                 if (nextDig >= radix / 2 && wDig < radix - 1)
                     wDig++;
             }
@@ -2718,7 +2718,7 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
 
         } while (0 != dbl && cchSig < maxOutDigits);
 
-        // Trim trailing zeros, this would trim "0.0" to "0." 
+        // Trim trailing zeros, this would trim "0.0" to "0."
         // but "0.0" should have been treated as integer above.
         while (*(ppsz - 1) == '0')
         {
@@ -2738,22 +2738,22 @@ BOOL Js::NumberUtilities::FNonZeroFiniteDblToStr(double dbl, _In_range_(2, 36) i
 
 
 static const long ci64_2to64 = 0x43F0000000000000;
-static const double cdbl_2to64 = *(double*)&ci64_2to64;
+static const double cdbl_2to64 = *reinterpret_cast<const double*>(&ci64_2to64);
 double Js::NumberUtilities::DblFromDecimal(DECIMAL * pdecIn)
 {
     double dblRet;
 
     Assert(pdecIn->scale >= 0 && pdecIn->scale < 29);
-    if ((int32_t)pdecIn->Mid32 < 0)
+    if (static_cast<int32_t>(pdecIn->Mid32) < 0)
     {
 
-        dblRet = (cdbl_2to64 + (double)(long)pdecIn->Lo64 +
-            (double)pdecIn->Hi32 * cdbl_2to64) / g_rgdblTens[pdecIn->scale];
+        dblRet = (cdbl_2to64 + static_cast<double>(static_cast<long>(pdecIn->Lo64)) +
+            static_cast<double>(pdecIn->Hi32) * cdbl_2to64) / g_rgdblTens[pdecIn->scale];
     }
     else
     {
-        dblRet = ((double)(long)pdecIn->Lo64 +
-            (double)pdecIn->Hi32 * cdbl_2to64) / g_rgdblTens[pdecIn->scale];
+        dblRet = (static_cast<double>(static_cast<long>(pdecIn->Lo64)) +
+            static_cast<double>(pdecIn->Hi32) * cdbl_2to64) / g_rgdblTens[pdecIn->scale];
     }
 
     if (pdecIn->sign != 0)
@@ -2767,8 +2767,8 @@ void Js::NumberUtilities::CodePointAsSurrogatePair(codepoint_t codePointValue, c
     AssertMsg(first != nullptr && second != nullptr, "Null ptr's passed in for out.");
     AssertMsg(IsInSupplementaryPlane(codePointValue), "Code point is not a surrogate pair.");
     codePointValue -= 0x10000;
-    *first = (char16_t)(codePointValue >> 10) + 0xD800;
-    *second = (char16_t)(codePointValue & 0x3FF /* This is same as cpv % 0x400 */) + 0xDC00;
+    *first = static_cast<char16_t>(codePointValue >> 10) + 0xD800;
+    *second = static_cast<char16_t>(codePointValue & 0x3FF /* This is same as cpv % 0x400 */) + 0xDC00;
 }
 
 codepoint_t Js::NumberUtilities::SurrogatePairAsCodePoint(codepoint_t first, codepoint_t second)

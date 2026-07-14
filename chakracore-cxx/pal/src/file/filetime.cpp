@@ -119,10 +119,10 @@ FILETIME FILECFAbsoluteTimeToFileTime( CFAbsoluteTime sec )
     long Result;
     FILETIME Ret;
     
-    Result = ((long)sec + SECS_BETWEEN_1601_AND_2001_EPOCHS) * SECS_TO_100NS;
+    Result = (static_cast<long>(sec) + SECS_BETWEEN_1601_AND_2001_EPOCHS) * SECS_TO_100NS;
 
-    Ret.dwLowDateTime = (uint32_t)Result;
-    Ret.dwHighDateTime = (uint32_t)(Result >> 32);
+    Ret.dwLowDateTime = static_cast<uint32_t>(Result);
+    Ret.dwHighDateTime = static_cast<uint32_t>(Result >> 32);
 
     TRACE("CFAbsoluteTime = [%9f] converts to Win32 FILETIME = [%#x:%#x]\n", 
           sec, Ret.dwHighDateTime, Ret.dwLowDateTime);
@@ -147,11 +147,11 @@ FILETIME FILEUnixTimeToFileTime( time_t sec, long nsec )
     long Result;
     FILETIME Ret;
 
-    Result = ((long)sec + SECS_BETWEEN_1601_AND_1970_EPOCHS) * SECS_TO_100NS +
+    Result = (sec + SECS_BETWEEN_1601_AND_1970_EPOCHS) * SECS_TO_100NS +
         (nsec / 100);
 
-    Ret.dwLowDateTime = (uint32_t)Result;
-    Ret.dwHighDateTime = (uint32_t)(Result >> 32);
+    Ret.dwLowDateTime = static_cast<uint32_t>(Result);
+    Ret.dwHighDateTime = static_cast<uint32_t>(Result >> 32);
 
     TRACE("Unix time = [%ld.%09ld] converts to Win32 FILETIME = [%#x:%#x]\n", 
           sec, nsec, Ret.dwHighDateTime, Ret.dwLowDateTime);
@@ -181,7 +181,7 @@ time_t FILEFileTimeToUnixTime( FILETIME FileTime, long *nsec )
     long UnixTime;
 
     /* get the full win32 value, in 100ns */
-    UnixTime = ((long)FileTime.dwHighDateTime << 32) + 
+    UnixTime = (static_cast<long>(FileTime.dwHighDateTime) << 32) +
         FileTime.dwLowDateTime;
 
     /* convert to the Unix epoch */
@@ -197,16 +197,11 @@ time_t FILEFileTimeToUnixTime( FILETIME FileTime, long *nsec )
 
     UnixTime /= SECS_TO_100NS; /* now convert to seconds */
 
-    if ( (time_t)UnixTime != UnixTime )
-    {
-        WARN("Resulting value is too big for a time_t value\n");
-    }
-
-    TRACE("Win32 FILETIME = [%#x:%#x] converts to Unix time = [%ld.%09ld]\n", 
+    TRACE("Win32 FILETIME = [%#x:%#x] converts to Unix time = [%ld.%09ld]\n",
           FileTime.dwHighDateTime, FileTime.dwLowDateTime ,(long) UnixTime,
           nsec?*nsec:0L);
 
-    return (time_t)UnixTime;
+    return UnixTime;
 }
 
 

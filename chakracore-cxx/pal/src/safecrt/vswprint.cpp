@@ -97,7 +97,7 @@ int _vswprintf_helper (
         _VALIDATE_RETURN( (count == 0) || (string != NULL), EINVAL, -1 );
 
         outfile->_flag = _IOWRT|_IOSTRG;
-        outfile->_ptr = outfile->_base = (char *) string;
+        outfile->_ptr = outfile->_base = reinterpret_cast<char*>(string);
 
         if(count>(INT_MAX/sizeof(char16_t)))
         {
@@ -106,7 +106,7 @@ int _vswprintf_helper (
         }
         else
         {
-            outfile->_cnt = (int)(count*sizeof(char16_t));
+            outfile->_cnt = static_cast<int>(count * sizeof(char16_t));
         }
 
         retval = woutfn(outfile, format, ap );

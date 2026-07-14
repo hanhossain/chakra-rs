@@ -37,9 +37,9 @@
  * For now we'll key this off the debug flag.
  */
 #ifdef _DEBUG
-    #define _CrtGetCheckCount()                 ((int)1)
+    #define _CrtGetCheckCount()                 (static_cast<int>(1))
 #else
-    #define _CrtGetCheckCount()                 ((int)0)
+    #define _CrtGetCheckCount()                 (static_cast<int>(0))
 #endif
 
 /* Assert message and Invalid parameter */
@@ -64,7 +64,7 @@
 
 /* _TRUNCATE */
 #if !defined (_TRUNCATE)
-#define _TRUNCATE ((size_t)-1)
+#define _TRUNCATE (static_cast<size_t>(-1))
 #endif  /* !defined (_TRUNCATE) */
 
 /* #include <internal.h> */
@@ -144,20 +144,20 @@
 
 #if !defined (_SECURECRT_FILL_BUFFER_THRESHOLD)
 #ifdef _DEBUG
-#define _SECURECRT_FILL_BUFFER_THRESHOLD ((size_t)8)
+#define _SECURECRT_FILL_BUFFER_THRESHOLD (static_cast<size_t>(8))
 #else  /* _DEBUG */
-#define _SECURECRT_FILL_BUFFER_THRESHOLD ((size_t)0)
+#define _SECURECRT_FILL_BUFFER_THRESHOLD (static_cast<size_t>(0))
 #endif  /* _DEBUG */
 #endif  /* !defined (_SECURECRT_FILL_BUFFER_THRESHOLD) */
 
 #if _SECURECRT_FILL_BUFFER
 #define _SECURECRT__FILL_STRING(_String, _Size, _Offset)                            \
-    if ((_Size) != ((size_t)-1) && (_Size) != INT_MAX &&                            \
-        ((size_t)(_Offset)) < (_Size))                                              \
+    if ((_Size) != (static_cast<size_t>(-1)) && (_Size) != INT_MAX &&                            \
+        (static_cast<size_t>(_Offset)) < (_Size))                                              \
     {                                                                               \
         memset((_String) + (_Offset),                                               \
             _SECURECRT_FILL_BUFFER_PATTERN,                                         \
-            (_SECURECRT_FILL_BUFFER_THRESHOLD < ((size_t)((_Size) - (_Offset))) ?   \
+            (_SECURECRT_FILL_BUFFER_THRESHOLD < (static_cast<size_t>((_Size) - (_Offset))) ?   \
                 _SECURECRT_FILL_BUFFER_THRESHOLD :                                  \
                 ((_Size) - (_Offset))) * sizeof(*(_String)));                       \
     }

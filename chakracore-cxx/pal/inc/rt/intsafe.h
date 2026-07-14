@@ -16,7 +16,7 @@
 
 #include <limits.h>
 
-#define INTSAFE_E_ARITHMETIC_OVERFLOW       ((int32_t)0x80070216L)  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
+#define INTSAFE_E_ARITHMETIC_OVERFLOW       (static_cast<int32_t>(0x80070216L))  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
 
 //
 // We make some assumptions about the sizes of various types. Let's be
@@ -40,7 +40,7 @@ UIntToInt(
 
     if (uOperand <= INT_MAX)
     {
-        *piResult = (int32_t)uOperand;
+        *piResult = static_cast<int32_t>(uOperand);
         hr = S_OK;
     }
 
@@ -58,7 +58,7 @@ ULongToLong(
 {
     if (Operand <= INT_MAX)
     {
-        *Result = (int32_t)Operand;
+        *Result = static_cast<int32_t>(Operand);
         return S_OK;
     }
     else
@@ -79,7 +79,7 @@ ULongLongToInt(
 {
     if (ullOperand <= INT_MAX)
     {
-        *piResult = (int32_t)ullOperand;
+        *piResult = static_cast<int32_t>(ullOperand);
         return S_OK;
     }
     else
@@ -103,7 +103,7 @@ ULongLongToULong(
 
     if (ullOperand <= UINT_MAX)
     {
-        *pulResult = (uint32_t)ullOperand;
+        *pulResult = static_cast<uint32_t>(ullOperand);
         hr = S_OK;
     }
 
@@ -124,7 +124,7 @@ ULongLongToUInt(
 
     if (ullOperand <= 0xffffffff)
     {
-        *puResult = (uint32_t)ullOperand;
+        *puResult = static_cast<uint32_t>(ullOperand);
         hr = S_OK;
     }
 
@@ -207,7 +207,7 @@ UIntMult(
      uint32_t uMultiplier,
      uint32_t* puResult)
 {
-    unsigned long ull64Result = ((unsigned long)uMultiplicand * (unsigned long)uMultiplier);
+    unsigned long ull64Result = (static_cast<unsigned long>(uMultiplicand) * static_cast<unsigned long>(uMultiplier));
     return ULongLongToUInt(ull64Result, puResult);
 }
 
@@ -221,7 +221,7 @@ ULongMult(
      uint32_t ulMultiplier,
      uint32_t* pulResult)
 {
-    unsigned long ull64Result = ((unsigned long)ulMultiplicand * (unsigned long)ulMultiplier);
+    unsigned long ull64Result = (static_cast<unsigned long>(ulMultiplicand) * static_cast<unsigned long>(ulMultiplier));
     return ULongLongToULong(ull64Result, pulResult);
 }
 

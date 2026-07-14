@@ -43,18 +43,18 @@ namespace CorUnix
         enum { c_MaxIndex = 0x3FFFFFFE };
 
         typedef unsigned long HANDLE_INDEX;
-        static const HANDLE_INDEX c_hiInvalid = (HANDLE_INDEX) -1;
+        static const HANDLE_INDEX c_hiInvalid = static_cast<HANDLE_INDEX>(-1);
 
         HANDLE
         HandleIndexToHandle(HANDLE_INDEX hi)
         {
-            return (HANDLE) ((hi + 1) << 2);
+            return reinterpret_cast<HANDLE>((hi + 1) << 2);
         };
 
         HANDLE_INDEX
         HandleToHandleIndex(HANDLE h)
         {
-            return (HANDLE_INDEX) (((unsigned long) h) >> 2) - 1;
+            return (reinterpret_cast<unsigned long>(h) >> 2) - 1;
         };
 
         typedef struct _HANDLE_TABLE_ENTRY

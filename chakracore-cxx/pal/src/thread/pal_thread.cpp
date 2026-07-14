@@ -151,7 +151,7 @@ Function:
 */
 static void InternalEndCurrentThreadWrapper(void *arg)
 {
-    CPalThread *pThread = (CPalThread *) arg;
+    CPalThread *pThread = static_cast<CPalThread*>(arg);
 
     // When pthread_exit calls us, it has already removed the PAL thread
     // from TLS.  Since InternalEndCurrentThread calls functions that assert
@@ -239,7 +239,7 @@ static void FreeTHREAD(CPalThread *pThread)
 #ifdef _DEBUG
     // Fill value so we can find code re-using threads after they're dead. We
     // check against pThread->dwGuard when getting the current thread's data.
-    memset((void*)pThread, 0xcc, sizeof(*pThread));
+    memset(static_cast<void*>(pThread), 0xcc, sizeof(*pThread));
 #endif
 
     // We SHOULD be doing the following, but it causes massive problems. See the
@@ -301,7 +301,7 @@ GetThreadId(
 
     if (NO_ERROR != palError)
     {
-        dwThreadId = (uint32_t)pThread->GetThreadId();
+        dwThreadId = static_cast<uint32_t>(pThread->GetThreadId());
     }
 
     if (NULL != pobjThread)
@@ -326,7 +326,7 @@ GetCurrentThreadId(
 {
     uint32_t dwThreadId;
 
-    dwThreadId = (uint32_t)THREADSilentGetCurrentThreadId();
+    dwThreadId = static_cast<uint32_t>(THREADSilentGetCurrentThreadId());
 
     LOGEXIT("GetCurrentThreadId returns DWORD %#x\n", dwThreadId);
 
@@ -346,7 +346,7 @@ PAL_GetCurrentThread(
     LOGEXIT("GetCurrentThread returns HANDLE %p\n", hPseudoCurrentThread);
 
     /* return a pseudo handle */
-    return (HANDLE) hPseudoCurrentThread;
+    return hPseudoCurrentThread;
 }
 
 /*++
@@ -917,7 +917,7 @@ CorUnix::InternalSetThreadPriority(
     posix_priority *= (max_priority-min_priority);
     posix_priority += min_priority;
 
-    schedParam.sched_priority = (int)posix_priority;
+    schedParam.sched_priority = static_cast<int>(posix_priority);
 
     TRACE("PAL priority %d is mapped to pthread priority %d\n",
           iNewPriority, schedParam.sched_priority);
@@ -926,7 +926,7 @@ CorUnix::InternalSetThreadPriority(
     st = pthread_setschedparam(pTargetThread->GetPThreadSelf(), policy, &schedParam);
     if (st != 0)
     {
-        ASSERT("Unable to set thread priority to %d (error %d)\n", (int)posix_priority, st);
+        ASSERT("Unable to set thread priority to %d (error %d)\n", static_cast<int>(posix_priority), st);
         palError = ERROR_INTERNAL_ERROR;
         goto InternalSetThreadPriorityExit;
     }
@@ -993,7 +993,7 @@ CorUnix::GetThreadTimesInternal(
     status = thread_info(
         mhThread,
         THREAD_BASIC_INFO,
-        (thread_info_t)&resUsage,
+        reinterpret_cast<thread_info_t>(&resUsage),
         &resUsage_count);
 
     pthrTarget->Unlock(pthrCurrent);
@@ -1007,18 +1007,18 @@ CorUnix::GetThreadTimesInternal(
     }
 
     /* Get the time of user mode execution, in nanoseconds */
-    calcTime = (long)resUsage.user_time.seconds * SECS_TO_NS;
-    calcTime += (long)resUsage.user_time.microseconds * USECS_TO_NS;
+    calcTime = static_cast<long>(resUsage.user_time.seconds) * SECS_TO_NS;
+    calcTime += static_cast<long>(resUsage.user_time.microseconds) * USECS_TO_NS;
     /* Assign the time into lpUserTime */
-    lpUserTime->dwLowDateTime = (uint32_t)calcTime;
-    lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
+    lpUserTime->dwLowDateTime = static_cast<uint32_t>(calcTime);
+    lpUserTime->dwHighDateTime = static_cast<uint32_t>(calcTime >> 32);
 
     /* Get the time of kernel mode execution, in nanoseconds */
-    calcTime = (long)resUsage.system_time.seconds * SECS_TO_NS;
-    calcTime += (long)resUsage.system_time.microseconds * USECS_TO_NS;
+    calcTime = static_cast<long>(resUsage.system_time.seconds) * SECS_TO_NS;
+    calcTime += static_cast<long>(resUsage.system_time.microseconds) * USECS_TO_NS;
     /* Assign the time into lpKernelTime */
-    lpKernelTime->dwLowDateTime = (uint32_t)calcTime;
-    lpKernelTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
+    lpKernelTime->dwLowDateTime = static_cast<uint32_t>(calcTime);
+    lpKernelTime->dwHighDateTime = static_cast<uint32_t>(calcTime >> 32);
 
     retval = TRUE;
 
@@ -1184,10 +1184,10 @@ CorUnix::GetThreadTimesInternal(
     pTargetThread->Unlock(pThread);
 
     /* Calculate time in nanoseconds and assign to user time */
-    calcTime = (long) ts.tv_sec * SECS_TO_NS;
-    calcTime += (long) ts.tv_nsec;
-    lpUserTime->dwLowDateTime = (uint32_t)calcTime;
-    lpUserTime->dwHighDateTime = (uint32_t)(calcTime >> 32);
+    calcTime = ts.tv_sec * SECS_TO_NS;
+    calcTime += ts.tv_nsec;
+    lpUserTime->dwLowDateTime = static_cast<uint32_t>(calcTime);
+    lpUserTime->dwHighDateTime = static_cast<uint32_t>(calcTime >> 32);
 
     /* Set kernel time to zero, for now */
     lpKernelTime->dwLowDateTime = 0;
@@ -1804,7 +1804,7 @@ CPalThread::RunPostCreateInitializers(
     // Call the post-create initializers for embedded classes
     //
 
-    if (pthread_setspecific(thObjKey, reinterpret_cast<void*>(this)))
+    if (pthread_setspecific(thObjKey, this))
     {
         ASSERT("Unable to set the thread object key's value\n");
         palError = ERROR_INTERNAL_ERROR;
@@ -2002,7 +2002,7 @@ CPalThread::GetStackBase()
     status = pthread_attr_destroy(&attr);
     _ASSERT_MSG(status == 0, "pthread_attr_destroy call failed");
 
-    stackBase = (void*)((size_t)stackAddr + stackSize);
+    stackBase = reinterpret_cast<void*>(reinterpret_cast<size_t>(stackAddr) + stackSize);
 #endif
 
     return stackBase;
@@ -2015,7 +2015,7 @@ CPalThread::GetStackLimit()
     void* stackLimit;
 #ifdef __APPLE__
     // This is a Mac specific method
-    stackLimit = ((uint8_t *)pthread_get_stackaddr_np(pthread_self()) -
+    stackLimit = (static_cast<uint8_t*>(pthread_get_stackaddr_np(pthread_self())) -
                    pthread_get_stacksize_np(pthread_self()));
 #else
     pthread_attr_t attr;
@@ -2109,7 +2109,7 @@ static void GetInternalStackLimit(pthread_t thread, size_t *highLimit, size_t *l
         stack = std::max(static_cast<size_t>(8 * 1024 * 1024), stack);
     }
 
-    *highLimit = (size_t)pthread_get_stackaddr_np(thread);
+    *highLimit = reinterpret_cast<size_t>(pthread_get_stackaddr_np(thread));
     stack = *highLimit - stack;
 
     *lowLimit = ((stack + (EXPECTED_ALIGNMENT - 1)) & ~(EXPECTED_ALIGNMENT - 1));
@@ -2148,12 +2148,12 @@ void GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit)
     status = pthread_attr_getstack(&attr, &stackend, &stacksize);
     _ASSERT_MSG(status == 0, "pthread_attr_getstack call failed");
 
-    void* stackbase = (void*) ((char*) stackend + stacksize);
+    void* stackbase = static_cast<char*>(stackend) + stacksize;
 
     pthread_attr_destroy(&attr);
 
-    *lowLimit = (size_t) stackend;
-    *highLimit = (size_t) stackbase;
+    *lowLimit = reinterpret_cast<size_t>(stackend);
+    *highLimit = reinterpret_cast<size_t>(stackbase);
 #endif
 
     s_cachedLowLimit = *lowLimit;

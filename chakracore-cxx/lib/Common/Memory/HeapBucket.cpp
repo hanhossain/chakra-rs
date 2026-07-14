@@ -156,12 +156,12 @@ HeapBucketT<TBlockType>::ClearAllocators()
 
     while (freeObject)
     {
-        HeapBlock* heapBlock = this->GetRecycler()->FindHeapBlock((void*)freeObject);
+        HeapBlock* heapBlock = this->GetRecycler()->FindHeapBlock(static_cast<void*>(freeObject));
         Assert(heapBlock != nullptr);
         Assert(!heapBlock->IsLargeHeapBlock());
-        TBlockType* smallBlock = (TBlockType*)heapBlock;
+        TBlockType* smallBlock = static_cast<TBlockType*>(heapBlock);
 
-        smallBlock->ClearExplicitFreeBitForObject((void*)freeObject);
+        smallBlock->ClearExplicitFreeBitForObject(static_cast<void*>(freeObject));
         freeObject = freeObject->GetNext();
     }
 #endif
@@ -290,7 +290,7 @@ bool
 HeapBucketT<TBlockType>::HasPendingDisposeHeapBlocks() const
 {
     return (IsFinalizableBucket || IsFinalizableWriteBarrierBucket) &&
-    ((SmallFinalizableHeapBucketT<typename TBlockType::HeapBlockAttributes> *)this)->pendingDisposeList != nullptr;
+    reinterpret_cast<const SmallFinalizableHeapBucketT<typename TBlockType::HeapBlockAttributes>*>(this)->pendingDisposeList != nullptr;
 }
 
 #endif
@@ -453,7 +453,7 @@ HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * a
     if (!collected)
     {
         // wait for background sweeping finish if there are too many pages allocated during background sweeping
-        if (recycler->IsConcurrentSweepExecutingState() && recycler->autoHeap.uncollectedNewPageCount > (uint)CONFIG_FLAG(NewPagesCapDuringBGSweeping))
+        if (recycler->IsConcurrentSweepExecutingState() && recycler->autoHeap.uncollectedNewPageCount > static_cast<uint>(CONFIG_FLAG(NewPagesCapDuringBGSweeping)))
         {
             recycler->FinishConcurrent<ForceFinishCollection>();
             memBlock = this->TryAlloc(recycler, allocator, sizeCat, attributes);
@@ -833,7 +833,7 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
             // concurrent collection, so we only need to queue up the blocks that have
             // finalizable objects, so that we can go through and call the dispose, and then
             // transfer the finalizable object back to the free list.
-            SmallFinalizableHeapBucketT<typename TBlockType::HeapBlockAttributes> * finalizableHeapBucket = (SmallFinalizableHeapBucketT<typename TBlockType::HeapBlockAttributes>*)this;
+            SmallFinalizableHeapBucketT<typename TBlockType::HeapBlockAttributes> * finalizableHeapBucket = reinterpret_cast<SmallFinalizableHeapBucketT<typename TBlockType::HeapBlockAttributes>*>(this);
             DebugOnly(this->AssertCheckHeapBlockNotInAnyList(heapBlock));
             //AssertMsg(!HeapBlockList::Contains(heapBlock, finalizableHeapBucket->pendingDisposeList), "The heap block already exists in the pendingDisposeList.");
             heapBlock->template AsFinalizableBlock<typename TBlockType::HeapBlockAttributes>()->SetNextBlock(finalizableHeapBucket->pendingDisposeList);
@@ -944,11 +944,11 @@ HeapBucketT<TBlockType>::SweepBucket(RecyclerSweep& recyclerSweep)
 #if DBG
     if (TBlockType::HeapBlockAttributes::IsSmallBlock)
     {
-        recyclerSweep.SetupVerifyListConsistencyDataForSmallBlock((SmallHeapBlock*) savedNextAllocableBlockHead, true, false);
+        recyclerSweep.SetupVerifyListConsistencyDataForSmallBlock(reinterpret_cast<SmallHeapBlock*>(savedNextAllocableBlockHead), true, false);
     }
     else if (TBlockType::HeapBlockAttributes::IsMediumBlock)
     {
-        recyclerSweep.SetupVerifyListConsistencyDataForMediumBlock((MediumHeapBlock*) savedNextAllocableBlockHead, true, false);
+        recyclerSweep.SetupVerifyListConsistencyDataForMediumBlock(reinterpret_cast<MediumHeapBlock*>(savedNextAllocableBlockHead), true, false);
     }
     else
     {
@@ -1181,11 +1181,11 @@ HeapBucketT<TBlockType>::Verify()
 
     if (TBlockType::HeapBlockAttributes::IsSmallBlock)
     {
-        recyclerVerifyListConsistencyData.smallBlockVerifyListConsistencyData.SetupVerifyListConsistencyData((SmallHeapBlock*) nullptr, true, false);
+        recyclerVerifyListConsistencyData.smallBlockVerifyListConsistencyData.SetupVerifyListConsistencyData(static_cast<SmallHeapBlock*>(nullptr), true, false);
     }
     else if (TBlockType::HeapBlockAttributes::IsMediumBlock)
     {
-        recyclerVerifyListConsistencyData.mediumBlockVerifyListConsistencyData.SetupVerifyListConsistencyData((MediumHeapBlock*) nullptr, true, false);
+        recyclerVerifyListConsistencyData.mediumBlockVerifyListConsistencyData.SetupVerifyListConsistencyData(static_cast<MediumHeapBlock*>(nullptr), true, false);
     }
     else
     {
@@ -1203,11 +1203,11 @@ HeapBucketT<TBlockType>::Verify()
 #if DBG
     if (TBlockType::HeapBlockAttributes::IsSmallBlock)
     {
-        recyclerVerifyListConsistencyData.smallBlockVerifyListConsistencyData.SetupVerifyListConsistencyData((SmallHeapBlock*) this->nextAllocableBlockHead, true, false);
+        recyclerVerifyListConsistencyData.smallBlockVerifyListConsistencyData.SetupVerifyListConsistencyData(reinterpret_cast<SmallHeapBlock*>(this->nextAllocableBlockHead), true, false);
     }
     else if (TBlockType::HeapBlockAttributes::IsMediumBlock)
     {
-        recyclerVerifyListConsistencyData.mediumBlockVerifyListConsistencyData.SetupVerifyListConsistencyData((MediumHeapBlock*) this->nextAllocableBlockHead, true, false);
+        recyclerVerifyListConsistencyData.mediumBlockVerifyListConsistencyData.SetupVerifyListConsistencyData(reinterpret_cast<MediumHeapBlock*>(this->nextAllocableBlockHead), true, false);
     }
     else
     {
@@ -1224,7 +1224,7 @@ HeapBucketT<TBlockType>::Verify()
             if (allocator->GetHeapBlock() == heapBlock && allocator->GetEndAddress() != nullptr)
             {
                 Assert(bumpAllocateAddress == nullptr);
-                bumpAllocateAddress = (char *)allocator->GetFreeObjectList();
+                bumpAllocateAddress = reinterpret_cast<char*>(allocator->GetFreeObjectList());
             }
         });
         if (bumpAllocateAddress != nullptr)

@@ -133,7 +133,7 @@ ResumeThread(
 {
     PAL_ERROR palError;
     CPalThread *pthrResumer;
-    uint32_t dwSuspendCount = (uint32_t)-1;
+    uint32_t dwSuspendCount = static_cast<uint32_t>(-1);
 
     pthrResumer = InternalGetCurrentThread();
     palError = InternalResumeThread(
@@ -145,7 +145,7 @@ ResumeThread(
     if (NO_ERROR != palError)
     {
         pthrResumer->SetLastError(palError);
-        dwSuspendCount = (uint32_t) -1;
+        dwSuspendCount = static_cast<uint32_t>(-1);
     }
     else
     {

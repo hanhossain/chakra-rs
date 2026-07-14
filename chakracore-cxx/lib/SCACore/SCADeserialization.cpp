@@ -217,7 +217,7 @@ namespace Js
         case SCA_SharedArrayBuffer:
             {
                 SharedContents * sharedContents;
-                m_reader->Read((intptr_t*)&sharedContents);
+                m_reader->Read(reinterpret_cast<intptr_t*>(&sharedContents));
 
                 SharedArrayBuffer* arrayBuffer = lib->CreateSharedArrayBuffer(sharedContents);
                 Assert(arrayBuffer->IsWebAssemblyArrayBuffer() == sharedContents->IsWebAssembly());

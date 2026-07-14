@@ -510,11 +510,11 @@ InternalSetFilePointerForUnixFd(
     if ( lpDistanceToMoveHigh )
     {
         /* set the high 32 bits of the offset */
-        seek_offset = ((long)*lpDistanceToMoveHigh << 32);
+        seek_offset = (static_cast<long>(*lpDistanceToMoveHigh) << 32);
         
         /* set the low 32 bits */
         /* cast to unsigned long to avoid sign extension */
-        seek_offset |= (uint32_t) lDistanceToMove;
+        seek_offset |= static_cast<uint32_t>(lDistanceToMove);
     }
     else
     {
@@ -567,9 +567,9 @@ InternalSetFilePointerForUnixFd(
         }
     }
 
-    seek_res = (long)lseek( iUnixFd,
-                               seek_offset,
-                               seek_whence );
+    seek_res = static_cast<long>(lseek(iUnixFd,
+                                       seek_offset,
+                                       seek_whence));
     if ( seek_res < 0 )
     {
         /* lseek() returns -1 on error, but also can seek to negative
@@ -584,10 +584,10 @@ InternalSetFilePointerForUnixFd(
     {
         /* store high-order uint32_t */
         if ( lpDistanceToMoveHigh )
-            *lpDistanceToMoveHigh = (uint32_t)(seek_res >> 32);
+            *lpDistanceToMoveHigh = static_cast<uint32_t>(seek_res >> 32);
     
         /* return low-order uint32_t of seek result */
-        *lpNewFilePointerLow = (uint32_t)seek_res;
+        *lpNewFilePointerLow = static_cast<uint32_t>(seek_res);
     }
 
 done:

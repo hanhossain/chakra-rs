@@ -174,7 +174,7 @@ GetTickCount(
     uint32_t retval = 0;
 
     // Get the 64-bit count from GetTickCount64 and truncate the results.
-    retval = (uint32_t) GetTickCount64();
+    retval = static_cast<uint32_t>(GetTickCount64());
 
     LOGEXIT("GetTickCount returns DWORD %u\n", retval);
     return retval;
@@ -198,11 +198,11 @@ QueryPerformanceCounter(
             break;
         }
         lpPerformanceCount->QuadPart =
-            (long)ts.tv_sec * (long)tccSecondsToNanoSeconds + (long)ts.tv_nsec;
+            ts.tv_sec * static_cast<long>(tccSecondsToNanoSeconds) + ts.tv_nsec;
     }
 #else
     {
-        lpPerformanceCount->QuadPart = (long)mach_absolute_time();
+        lpPerformanceCount->QuadPart = static_cast<long>(mach_absolute_time());
     }
 #endif // defined(__linux__)
     while (false);
@@ -218,7 +218,7 @@ QueryPerformanceFrequency(
 {
     BOOL retval = TRUE;
 
-    lpFrequency->QuadPart = (long)(tccSecondsToNanoSeconds);
+    lpFrequency->QuadPart = static_cast<long>(tccSecondsToNanoSeconds);
 
     LOGEXIT("QueryPerformanceFrequency\n");
     return retval;
@@ -251,10 +251,10 @@ QueryThreadCycleTime(
         goto EXIT;
     }
 
-    calcTime = ((ULONG64)kernelTime.dwHighDateTime << 32);
-    calcTime += (ULONG64)kernelTime.dwLowDateTime;
-    calcTime += ((ULONG64)userTime.dwHighDateTime << 32);
-    calcTime += (ULONG64)userTime.dwLowDateTime;
+    calcTime = (static_cast<ULONG64>(kernelTime.dwHighDateTime) << 32);
+    calcTime += static_cast<ULONG64>(kernelTime.dwLowDateTime);
+    calcTime += (static_cast<ULONG64>(userTime.dwHighDateTime) << 32);
+    calcTime += static_cast<ULONG64>(userTime.dwLowDateTime);
     *CycleTime = calcTime;
 
 EXIT:

@@ -103,7 +103,7 @@ int _swoutput_s(char16_t *_Dst, size_t _Size, const char16_t *_Format, va_list _
     else
     {
         _VALIDATE_RETURN(_Size <= INT_MAX, EINVAL, -1);
-        outfile->_cnt = (int)_Size;
+        outfile->_cnt = static_cast<int>(_Size);
     }
     outfile->_ptr = outfile->_base = _Dst;
 #else  /* _UNICODE */
@@ -119,9 +119,9 @@ int _swoutput_s(char16_t *_Dst, size_t _Size, const char16_t *_Format, va_list _
     }
     else
     {
-        outfile->_cnt = (int)(_Size*sizeof(char16_t));
+        outfile->_cnt = static_cast<int>(_Size * sizeof(char16_t));
     }
-    outfile->_ptr = outfile->_base = (char*)_Dst;
+    outfile->_ptr = outfile->_base = reinterpret_cast<char*>(_Dst);
 #endif  /* _UNICODE */
     outfile->_flag = _IOWRT | _IOSTRG;
 
@@ -481,10 +481,10 @@ static const unsigned char __lookuptable_s[] = {
         ((c) < _T(' ') || (c) > _T('x') ? \
             CH_OTHER            \
             :               \
-        (enum CHARTYPE)(lookuptbl[(c)-_T(' ')] & 0xF))
+        static_cast<enum CHARTYPE>(lookuptbl[(c)-_T(' ')] & 0xF))
 
 #define FIND_NEXT_STATE(lookuptbl, class, state)   \
-        (enum STATE)(lookuptbl[(class) * NUMSTATES + (state)] >> 4)
+        static_cast<enum STATE>(lookuptbl[(class) * NUMSTATES + (state)] >> 4)
 
 /*
  * Note: CPRFLAG and _UNICODE cases are currently mutually exclusive.
@@ -808,13 +808,13 @@ int _output (
                 /* print a single character specified by int argument */
 #ifdef _UNICODE
                 bufferiswide = 1;
-                wchar = (char16_t) get_int_arg(&argptr);
+                wchar = static_cast<char16_t>(get_int_arg(&argptr));
                 if (flags & FL_SHORT) {
                     /* format multibyte character */
                     /* this is an extension of ANSI */
                     char tempchar[2];
                     {
-                        tempchar[0] = (char)(wchar & 0x00ff);
+                        tempchar[0] = static_cast<char>(wchar & 0x00ff);
                         tempchar[1] = '\0';
                     }
 
@@ -830,16 +830,16 @@ int _output (
                 textlen = 1;    /* print just a single character */
 #else  /* _UNICODE */
                 if (flags & (FL_LONG|FL_WIDECHAR)) {
-                    wchar = (char16_t) get_int_arg(&argptr);
+                    wchar = static_cast<char16_t>(get_int_arg(&argptr));
                     no_output = 1;
                 } else {
                     /* format multibyte character */
                     /* this is an extension of ANSI */
                     unsigned short temp;
-                    wchar = (char16_t)get_int_arg(&argptr);
-                    temp = (unsigned short)wchar;
+                    wchar = static_cast<char16_t>(get_int_arg(&argptr));
+                    temp = static_cast<unsigned short>(wchar);
                     {
-                        buffer.sz[0] = (char) temp;
+                        buffer.sz[0] = static_cast<char>(temp);
                         textlen = 1;
                     }
                 }
@@ -856,15 +856,15 @@ int _output (
                     char *Buffer;
                 } *pstr;
 
-                pstr = (struct _count_string *)get_ptr_arg(&argptr);
+                pstr = static_cast<struct _count_string*>(get_ptr_arg(&argptr));
                 if (pstr == NULL || pstr->Buffer == NULL) {
                     /* null ptr passed, use special string */
                     text.sz = __nullstring;
-                    textlen = (int)strlen(text.sz);
+                    textlen = static_cast<int>(strlen(text.sz));
                 } else {
                     if (flags & FL_WIDECHAR) {
-                        text.wz = (char16_t *)pstr->Buffer;
-                        textlen = pstr->Length / (int)sizeof(char16_t);
+                        text.wz = reinterpret_cast<char16_t*>(pstr->Buffer);
+                        textlen = pstr->Length / static_cast<int>(sizeof(char16_t));
                         bufferiswide = 1;
                     } else {
                         bufferiswide = 0;
@@ -901,7 +901,7 @@ int _output (
                 /* at all.  Thus, we must do our own scan.           */
 
                 i = (precision == -1) ? INT_MAX : precision;
-                text.sz = (char *)get_ptr_arg(&argptr);
+                text.sz = static_cast<char*>(get_ptr_arg(&argptr));
 
                 /* scan for null upto i characters */
 #ifdef _UNICODE
@@ -920,7 +920,7 @@ int _output (
                     pwch = text.wz;
                     while (i-- && *pwch)
                         ++pwch;
-                    textlen = (int)(pwch - text.wz);       /* in char16_ts */
+                    textlen = static_cast<int>(pwch - text.wz);       /* in char16_ts */
                     /* textlen now contains length in wide chars */
                 }
 #else  /* _UNICODE */
@@ -931,7 +931,7 @@ int _output (
                     pwch = text.wz;
                     while ( i-- && *pwch )
                         ++pwch;
-                    textlen = (int)(pwch - text.wz);
+                    textlen = static_cast<int>(pwch - text.wz);
                     /* textlen now contains length in wide chars */
                 } else {
                     if (text.sz == NULL) /* NULL passed, use special string */
@@ -939,7 +939,7 @@ int _output (
                     p = text.sz;
                     while (i-- && *p)
                         ++p;
-                    textlen = (int)(p - text.sz);    /* length of the string */
+                    textlen = static_cast<int>(p - text.sz);    /* length of the string */
                 }
 
 #endif  /* _UNICODE */
@@ -962,16 +962,16 @@ int _output (
                 /* store chars out into short/long/int depending on flags */
 #if !LONG_IS_INT
                 if (flags & FL_LONG)
-                    *(long *)p = charsout;
+                    *static_cast<long*>(p) = charsout;
                 else
 #endif  /* !LONG_IS_INT */
 
 #if !SHORT_IS_INT
                 if (flags & FL_SHORT)
-                    *(short *)p = (short) charsout;
+                    *static_cast<short*>(p) = static_cast<short>(charsout);
                 else
 #endif  /* !SHORT_IS_INT */
-                    *(int *)p = charsout;
+                    *static_cast<int*>(p) = charsout;
 
                 no_output = 1;              /* force no output */
             }
@@ -1016,7 +1016,7 @@ int _output (
                 tmp=va_arg(argptr, _CRT_DOUBLE);
                 /* Note: assumes ch is in ASCII range */
                 /* In safecrt, we provide a special version of _cfltcvt which internally calls printf (see safecrt_output_s.c) */
-                _CFLTCVT(&tmp, buffer.sz, buffersize, (char)ch, precision, capexp);
+                _CFLTCVT(&tmp, buffer.sz, buffersize, static_cast<char>(ch), precision, capexp);
 
                 /* check if result was negative, save '-' for later */
                 /* and point to positive part (this is for '0' padding) */
@@ -1025,7 +1025,7 @@ int _output (
                     ++text.sz;
                 }
 
-                textlen = (int)strlen(text.sz);     /* compute length of text */
+                textlen = static_cast<int>(strlen(text.sz));     /* compute length of text */
             }
             break;
 
@@ -1068,7 +1068,7 @@ int _output (
                 if (flags & FL_ALTERNATE) {
                     /* alternate form means '0x' prefix */
                     prefix[0] = _T('0');
-                    prefix[1] = (TCHAR)(_T('x') - _T('a') + _T('9') + 1 + hexadd);  /* 'x' or 'X' */
+                    prefix[1] = static_cast<CRTTCHAR>((_T('x') - _T('a') + _T('9') + 1 + hexadd));  /* 'x' or 'X' */
                     prefixlen = 2;
                 }
                 goto COMMON_INT;
@@ -1120,9 +1120,9 @@ int _output (
 #if !SHORT_IS_INT
                 if (flags & FL_SHORT) {
                     if (flags & FL_SIGNED)
-                        l = (short) get_int_arg(&argptr); /* sign extend */
+                        l = static_cast<short>(get_int_arg(&argptr)); /* sign extend */
                     else
-                        l = (unsigned short) get_int_arg(&argptr);    /* zero-extend*/
+                        l = static_cast<unsigned short>(get_int_arg(&argptr));    /* zero-extend*/
 
                 } else
 #endif  /* !SHORT_IS_INT */
@@ -1130,7 +1130,7 @@ int _output (
                     if (flags & FL_SIGNED)
                         l = get_int_arg(&argptr); /* sign extend */
                     else
-                        l = (unsigned int) get_int_arg(&argptr);    /* zero-extend*/
+                        l = static_cast<unsigned int>(get_int_arg(&argptr));    /* zero-extend*/
                 }
 
                 /* 2. check for negative; copy into number */
@@ -1173,16 +1173,16 @@ int _output (
                 sz = &buffer.sz[BUFFERSIZE-1];    /* last digit at end of buffer */
 
                 while (precision-- > 0 || number != 0) {
-                    digit = (int)(number % radix) + '0';
+                    digit = static_cast<int>(number % radix) + '0';
                     number /= radix;                /* reduce number */
                     if (digit > '9') {
                         /* a hex digit, make it a letter */
                         digit += hexadd;
                     }
-                    *sz-- = (char)digit;       /* store the digit */
+                    *sz-- = static_cast<char>(digit);       /* store the digit */
                 }
 
-                textlen = (int)((char *)&buffer.sz[BUFFERSIZE-1] - sz); /* compute length of number */
+                textlen = static_cast<int>(&buffer.sz[BUFFERSIZE - 1] - sz); /* compute length of number */
                 ++sz;          /* text points to first digit now */
 
 

@@ -32,39 +32,39 @@ Revision History:
 
 /******************* HRESULTs *********************************************/
 
-#define S_OK                             ((int32_t)0x00000000L)
-#define S_FALSE                          ((int32_t)0x00000001L)
+#define S_OK                             (0x00000000)
+#define S_FALSE                          (0x00000001)
 
-#define E_NOTIMPL                        ((int32_t)0x80004001L)
-#define E_NOINTERFACE                    ((int32_t)0x80004002L)
-#define E_UNEXPECTED                     ((int32_t)0x8000FFFFL)
-#define E_OUTOFMEMORY                    ((int32_t)0x8007000EL)
-#define E_INVALIDARG                     ((int32_t)0x80070057L)
-#define E_POINTER                        ((int32_t)0x80004003L)
-#define E_HANDLE                         ((int32_t)0x80070006L)
-#define E_ABORT                          ((int32_t)0x80004004L)
-#define E_FAIL                           ((int32_t)0x80004005L)
-#define E_ACCESSDENIED                   ((int32_t)0x80070005L)
-#define E_PENDING                        ((int32_t)0x8000000AL)
+#define E_NOTIMPL                        (0x80004001)
+#define E_NOINTERFACE                    (0x80004002)
+#define E_UNEXPECTED                     (0x8000FFFF)
+#define E_OUTOFMEMORY                    (static_cast<int32_t>(0x8007000E))
+#define E_INVALIDARG                     (0x80070057)
+#define E_POINTER                        (0x80004003)
+#define E_HANDLE                         (0x80070006)
+#define E_ABORT                          (static_cast<int32_t>(0x80004004))
+#define E_FAIL                           (0x80004005)
+#define E_ACCESSDENIED                   (0x80070005)
+#define E_PENDING                        (0x8000000A)
 
-#define DISP_E_PARAMNOTFOUND             ((int32_t)0x80020004L)
-#define DISP_E_TYPEMISMATCH              ((int32_t)0x80020005L)
-#define DISP_E_BADVARTYPE                ((int32_t)0x80020008L)
-#define DISP_E_OVERFLOW                  ((int32_t)0x8002000AL)
-#define DISP_E_DIVBYZERO                 ((int32_t)0x80020012L)
+#define DISP_E_PARAMNOTFOUND             (0x80020004)
+#define DISP_E_TYPEMISMATCH              (0x80020005)
+#define DISP_E_BADVARTYPE                (0x80020008)
+#define DISP_E_OVERFLOW                  (0x8002000A)
+#define DISP_E_DIVBYZERO                 (0x80020012)
 
-#define CO_E_CLASSSTRING                 ((int32_t)0x800401F3L)
+#define CO_E_CLASSSTRING                 (0x800401F3)
 
-#define URL_E_INVALID_SYNTAX             ((int32_t)0x80041001L)
-#define MK_E_SYNTAX                      ((int32_t)0x800401E4L)
+#define URL_E_INVALID_SYNTAX             (0x80041001)
+#define MK_E_SYNTAX                      (0x800401E4)
 
-#define STG_E_FILENOTFOUND               ((int32_t)0x80030002L)
-#define STG_E_PATHNOTFOUND               ((int32_t)0x80030003L)
-#define STG_E_WRITEFAULT                 ((int32_t)0x8003001DL)
-#define STG_E_FILEALREADYEXISTS          ((int32_t)0x80030050L)
+#define STG_E_FILENOTFOUND               (0x80030002)
+#define STG_E_PATHNOTFOUND               (0x80030003)
+#define STG_E_WRITEFAULT                 (0x8003001D)
+#define STG_E_FILEALREADYEXISTS          (0x80030050)
 
-#define NTE_BAD_HASH                     ((int32_t)0x80090002L)
-#define NTE_BAD_KEY                      ((int32_t)0x80090003L)
+#define NTE_BAD_HASH                     (0x80090002)
+#define NTE_BAD_KEY                      (0x80090003)
 
 #define STD_CTL_SCODE(n) MAKE_SCODE(SEVERITY_ERROR, FACILITY_CONTROL, n)
 /********************** errorrep.h ****************************************/
@@ -625,7 +625,7 @@ inline errno_t _wcslwr_unsafe(char16_t *str, size_t sz)
         return 1;
 
     size_t fullSize = sz * sizeof(char16_t);
-    char16_t *copy = (char16_t *)malloc(fullSize);
+    char16_t *copy = static_cast<char16_t*>(malloc(fullSize));
     if(copy == nullptr)
         return 1;
 
@@ -648,7 +648,7 @@ inline int _vscprintf_unsafe(const char *_Format, va_list _ArgList)
 
     for (;;)
     {
-        char *buf = (char *)malloc(guess * sizeof(char));
+        char *buf = static_cast<char*>(malloc(guess * sizeof(char)));
         if(buf == nullptr)
             return 0;
 
@@ -668,7 +668,7 @@ inline int _vscwprintf_unsafe(const char16_t *_Format, va_list _ArgList)
 
     for (;;)
     {
-        char16_t *buf = (char16_t *)malloc(guess * sizeof(char16_t));
+        char16_t *buf = static_cast<char16_t*>(malloc(guess * sizeof(char16_t)));
         if (buf == nullptr)
             return 0;
 

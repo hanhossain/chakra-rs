@@ -42,7 +42,7 @@ typedef ucontext_t native_context_t;
 #define MCREG_Rax(mc)       ((mc).gregs[REG_RAX])
 #define MCREG_Rip(mc)       ((mc).gregs[REG_RIP])
 #define MCREG_Rsp(mc)       ((mc).gregs[REG_RSP])
-#define MCREG_SegCs(mc)     (*(uint16_t*)&((mc).gregs[REG_CSGSFS]))
+#define MCREG_SegCs(mc)     (*const_cast<uint16_t*>(reinterpret_cast<const uint16_t*>(&((mc).gregs[REG_CSGSFS]))))
 #define MCREG_R8(mc)        ((mc).gregs[REG_R8])
 #define MCREG_R9(mc)        ((mc).gregs[REG_R9])
 #define MCREG_R10(mc)       ((mc).gregs[REG_R10])
@@ -53,17 +53,17 @@ typedef ucontext_t native_context_t;
 #define MCREG_R15(mc)       ((mc).gregs[REG_R15])
 
 #define FPREG_Fpstate(uc) ((uc)->uc_mcontext.fpregs)
-#define FPREG_Xmm(uc, index) *(M128A*)&(FPREG_Fpstate(uc)->_xmm[index])
+#define FPREG_Xmm(uc, index) *reinterpret_cast<M128A*>(&(FPREG_Fpstate(uc)->_xmm[index]))
 
-#define FPREG_St(uc, index) *(M128A*)&(FPREG_Fpstate(uc)->_st[index])
+#define FPREG_St(uc, index) *reinterpret_cast<M128A*>(&(FPREG_Fpstate(uc)->_st[index]))
 
 #define FPREG_ControlWord(uc) (FPREG_Fpstate(uc)->cwd)
 #define FPREG_StatusWord(uc) (FPREG_Fpstate(uc)->swd)
 #define FPREG_TagWord(uc) (FPREG_Fpstate(uc)->ftw)
-#define FPREG_ErrorOffset(uc) *(uint32_t*)&(FPREG_Fpstate(uc)->rip)
-#define FPREG_ErrorSelector(uc) *(((uint16_t*)&(FPREG_Fpstate(uc)->rip)) + 2)
-#define FPREG_DataOffset(uc) *(uint32_t*)&(FPREG_Fpstate(uc)->rdp)
-#define FPREG_DataSelector(uc) *(((uint16_t*)&(FPREG_Fpstate(uc)->rdp)) + 2)
+#define FPREG_ErrorOffset(uc) *reinterpret_cast<uint32_t*>(&(FPREG_Fpstate(uc)->rip))
+#define FPREG_ErrorSelector(uc) *((reinterpret_cast<uint16_t*>(&(FPREG_Fpstate(uc)->rip))) + 2)
+#define FPREG_DataOffset(uc) *reinterpret_cast<uint32_t*>(&(FPREG_Fpstate(uc)->rdp))
+#define FPREG_DataSelector(uc) *((reinterpret_cast<uint16_t*>(&(FPREG_Fpstate(uc)->rdp))) + 2)
 #define FPREG_MxCsr(uc) (FPREG_Fpstate(uc)->mxcsr)
 #define FPREG_MxCsr_Mask(uc) (FPREG_Fpstate(uc)->mxcr_mask)
 

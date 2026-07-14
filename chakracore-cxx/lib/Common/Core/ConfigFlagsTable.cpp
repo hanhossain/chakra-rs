@@ -123,7 +123,7 @@ namespace Js
     template <>
     bool RangeUnitContains<SourceFunctionNode>(RangeUnit<SourceFunctionNode> unit, SourceFunctionNode n)
     {
-        Assert(n.functionId != (uint32_t)-1);
+        Assert(n.functionId != static_cast<uint32_t>(-1));
 
         if ((n.sourceContextId >= unit.i.sourceContextId) &&
             (n.sourceContextId <= unit.j.sourceContextId)
@@ -162,7 +162,7 @@ namespace Js
         unit.i.sourceContextId = 0;
         unit.j.sourceContextId = UINT_MAX;
         unit.i.functionId = 0;
-        unit.j.functionId = (uint)-3;
+        unit.j.functionId = static_cast<uint>(-3);
         return unit;
     }
 
@@ -201,40 +201,40 @@ namespace Js
     bool
     Phases::IsEnabled(Phase phase)
     {
-        return this->phaseList[(int)phase].valid;
+        return this->phaseList[static_cast<int>(phase)].valid;
     }
 
     bool
     Phases::IsEnabled(Phase phase, uint sourceContextId, Js::LocalFunctionId functionId)
     {
-        return  this->phaseList[(int)phase].valid &&
-                this->phaseList[(int)phase].range.InRange(SourceFunctionNode(sourceContextId, functionId));
+        return  this->phaseList[static_cast<int>(phase)].valid &&
+                this->phaseList[static_cast<int>(phase)].range.InRange(SourceFunctionNode(sourceContextId, functionId));
     }
 
     bool
     Phases::IsEnabledForAll(Phase phase)
     {
-        return  this->phaseList[(int)phase].valid &&
-                this->phaseList[(int)phase].range.ContainsAll();
+        return  this->phaseList[static_cast<int>(phase)].valid &&
+                this->phaseList[static_cast<int>(phase)].range.ContainsAll();
     }
 
     Range *
     Phases::GetRange(Phase phase)
     {
-        return &this->phaseList[(int)phase].range;
+        return &this->phaseList[static_cast<int>(phase)].range;
     }
 
     void
     Phases::Enable(Phase phase)
     {
-        this->phaseList[(int)phase].valid = true;
+        this->phaseList[static_cast<int>(phase)].valid = true;
     }
 
     void
     Phases::Disable(Phase phase)
     {
-        this->phaseList[(int)phase].valid = false;
-        this->phaseList[(int)phase].range.Clear();
+        this->phaseList[static_cast<int>(phase)].valid = false;
+        this->phaseList[static_cast<int>(phase)].range.Clear();
     }
 
     Phase
@@ -248,7 +248,7 @@ namespace Js
                 return InvalidPhase;
             }
         }
-        return Phase(i);
+        return static_cast<Phase>(i);
     }
 
 
@@ -390,10 +390,10 @@ namespace Js
 #define DEFAULT_CONFIG_PoisonStringStore (true)
 #define DEFAULT_CONFIG_PoisonObjectsForStores (true)
 
-#define DEFAULT_CONFIG_PageHeap             ((Js::Number) PageHeapMode::PageHeapModeOff)
+#define DEFAULT_CONFIG_PageHeap             (static_cast<Js::Number>(PageHeapMode::PageHeapModeOff))
 #define DEFAULT_CONFIG_PageHeapAllocStack   (false)
 #define DEFAULT_CONFIG_PageHeapFreeStack    (false)
-#define DEFAULT_CONFIG_PageHeapBlockType    ((Js::Number) PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll)
+#define DEFAULT_CONFIG_PageHeapBlockType    (static_cast<Js::Number>(PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll))
 
 #define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
 #define DEFAULT_CONFIG_NewPagesCapDuringBGSweeping    (15000 * 4)
@@ -3841,10 +3841,10 @@ namespace Js
 
         // set mark for parent flags
         memset((this->flagIsParent),0,(sizeof(this->flagIsParent)));
-        if ((int)NoParentFlag < FlagCount) this->flagIsParent[(int)NoParentFlag] = true;
-        if ((int)WasmExperimentalFlag < FlagCount) this->flagIsParent[(int) WasmExperimentalFlag] = true;
-        if ((int)ES6Flag < FlagCount) this->flagIsParent[(int)ES6Flag] = true;
-        if ((int)MitigateSpectreFlag < FlagCount) this->flagIsParent[(int)MitigateSpectreFlag] = true;
+        if (static_cast<int>(NoParentFlag) < FlagCount) this->flagIsParent[static_cast<int>(NoParentFlag)] = true;
+        if (static_cast<int>(WasmExperimentalFlag) < FlagCount) this->flagIsParent[static_cast<int>(WasmExperimentalFlag)] = true;
+        if (static_cast<int>(ES6Flag) < FlagCount) this->flagIsParent[static_cast<int>(ES6Flag)] = true;
+        if (static_cast<int>(MitigateSpectreFlag) < FlagCount) this->flagIsParent[static_cast<int>(MitigateSpectreFlag)] = true;
 
         // set all parent flags to their default (setting all child flags to their right values)
         this->SetAllParentFlagsAsDefaultValue();
@@ -3951,7 +3951,7 @@ namespace Js
     {
         for (int i = 0; i < FlagCount; i++)
         {
-            Flag currentFlag = (Flag) i;
+            Flag currentFlag = static_cast<Flag>(i);
             if (this->IsParentFlag(currentFlag))
             {
                 // only supporting Boolean for now
@@ -4411,7 +4411,7 @@ namespace Js
         {
             if (flagStr == chakra_rs::str_helper::to_lowercase(FlagNames[i]))
             {
-                return Flag(i);
+                return static_cast<Flag>(i);
             }
         }
         return InvalidFlag;
@@ -4434,7 +4434,7 @@ namespace Js
         {
             if (phaseStr == chakra_rs::str_helper::to_lowercase(PhaseNames[i]))
             {
-                return Phase(i);
+                return static_cast<Phase>(i);
             }
         }
         return InvalidPhase;
@@ -4457,7 +4457,7 @@ namespace Js
         for(int i = 0; i < FlagCount; i++)
         {
             Output::Print(u"%60ls ", FlagNames[i]);
-            switch(GetFlagType(Flag(i)))
+            switch(GetFlagType(static_cast<Flag>(i)))
             {
             case InvalidFlagType:
                 break;
@@ -6847,7 +6847,7 @@ if (IsEnabled(ArrayValidateFlag))
     case FlagString:
         if (GetAsString(ArrayValidateFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ArrayValidateFlag));
+            Output::Print(u":%s", static_cast<const char16_t*>(*GetAsString(ArrayValidateFlag)));
         }
         break;
     case FlagNumber:
@@ -6872,7 +6872,7 @@ if (IsEnabled(MemOpMissingValueValidateFlag))
     case FlagString:
         if (GetAsString(MemOpMissingValueValidateFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MemOpMissingValueValidateFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MemOpMissingValueValidateFlag)));
         }
         break;
     case FlagNumber:
@@ -6897,7 +6897,7 @@ if (IsEnabled(OOPJITFixupValidateFlag))
     case FlagString:
         if (GetAsString(OOPJITFixupValidateFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(OOPJITFixupValidateFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(OOPJITFixupValidateFlag)));
         }
         break;
     case FlagNumber:
@@ -6924,7 +6924,7 @@ if (IsEnabled(ArenaNoFreeListFlag))
     case FlagString:
         if (GetAsString(ArenaNoFreeListFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ArenaNoFreeListFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ArenaNoFreeListFlag)));
         }
         break;
     case FlagNumber:
@@ -6949,7 +6949,7 @@ if (IsEnabled(ArenaNoPageReuseFlag))
     case FlagString:
         if (GetAsString(ArenaNoPageReuseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ArenaNoPageReuseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ArenaNoPageReuseFlag)));
         }
         break;
     case FlagNumber:
@@ -6974,7 +6974,7 @@ if (IsEnabled(ArenaUseHeapAllocFlag))
     case FlagString:
         if (GetAsString(ArenaUseHeapAllocFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ArenaUseHeapAllocFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ArenaUseHeapAllocFlag)));
         }
         break;
     case FlagNumber:
@@ -7000,7 +7000,7 @@ if (IsEnabled(ValidateInlineStackFlag))
     case FlagString:
         if (GetAsString(ValidateInlineStackFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ValidateInlineStackFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ValidateInlineStackFlag)));
         }
         break;
     case FlagNumber:
@@ -7025,7 +7025,7 @@ if (IsEnabled(AsmDiffFlag))
     case FlagString:
         if (GetAsString(AsmDiffFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AsmDiffFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AsmDiffFlag)));
         }
         break;
     case FlagNumber:
@@ -7050,7 +7050,7 @@ if (IsEnabled(AsmDumpModeFlag))
     case FlagString:
         if (GetAsString(AsmDumpModeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AsmDumpModeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AsmDumpModeFlag)));
         }
         break;
     case FlagNumber:
@@ -7075,7 +7075,7 @@ if (IsEnabled(AsmJsFlag))
     case FlagString:
         if (GetAsString(AsmJsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AsmJsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AsmJsFlag)));
         }
         break;
     case FlagNumber:
@@ -7100,7 +7100,7 @@ if (IsEnabled(AsmJsStopOnErrorFlag))
     case FlagString:
         if (GetAsString(AsmJsStopOnErrorFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AsmJsStopOnErrorFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AsmJsStopOnErrorFlag)));
         }
         break;
     case FlagNumber:
@@ -7125,7 +7125,7 @@ if (IsEnabled(AsmJsEdgeFlag))
     case FlagString:
         if (GetAsString(AsmJsEdgeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AsmJsEdgeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AsmJsEdgeFlag)));
         }
         break;
     case FlagNumber:
@@ -7150,7 +7150,7 @@ if (IsEnabled(WasmFlag))
     case FlagString:
         if (GetAsString(WasmFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmFlag)));
         }
         break;
     case FlagNumber:
@@ -7175,7 +7175,7 @@ if (IsEnabled(WasmI64Flag))
     case FlagString:
         if (GetAsString(WasmI64Flag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmI64Flag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmI64Flag)));
         }
         break;
     case FlagNumber:
@@ -7200,7 +7200,7 @@ if (IsEnabled(WasmFastArrayFlag))
     case FlagString:
         if (GetAsString(WasmFastArrayFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmFastArrayFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmFastArrayFlag)));
         }
         break;
     case FlagNumber:
@@ -7225,7 +7225,7 @@ if (IsEnabled(WasmSharedArrayVirtualBufferFlag))
     case FlagString:
         if (GetAsString(WasmSharedArrayVirtualBufferFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmSharedArrayVirtualBufferFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmSharedArrayVirtualBufferFlag)));
         }
         break;
     case FlagNumber:
@@ -7250,7 +7250,7 @@ if (IsEnabled(WasmMathExFilterFlag))
     case FlagString:
         if (GetAsString(WasmMathExFilterFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmMathExFilterFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmMathExFilterFlag)));
         }
         break;
     case FlagNumber:
@@ -7275,7 +7275,7 @@ if (IsEnabled(WasmCheckVersionFlag))
     case FlagString:
         if (GetAsString(WasmCheckVersionFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmCheckVersionFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmCheckVersionFlag)));
         }
         break;
     case FlagNumber:
@@ -7300,7 +7300,7 @@ if (IsEnabled(WasmAssignModuleIDFlag))
     case FlagString:
         if (GetAsString(WasmAssignModuleIDFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmAssignModuleIDFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmAssignModuleIDFlag)));
         }
         break;
     case FlagNumber:
@@ -7325,7 +7325,7 @@ if (IsEnabled(WasmIgnoreLimitsFlag))
     case FlagString:
         if (GetAsString(WasmIgnoreLimitsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmIgnoreLimitsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmIgnoreLimitsFlag)));
         }
         break;
     case FlagNumber:
@@ -7350,7 +7350,7 @@ if (IsEnabled(WasmFoldFlag))
     case FlagString:
         if (GetAsString(WasmFoldFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmFoldFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmFoldFlag)));
         }
         break;
     case FlagNumber:
@@ -7375,7 +7375,7 @@ if (IsEnabled(WasmIgnoreResponseFlag))
     case FlagString:
         if (GetAsString(WasmIgnoreResponseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmIgnoreResponseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmIgnoreResponseFlag)));
         }
         break;
     case FlagNumber:
@@ -7400,7 +7400,7 @@ if (IsEnabled(WasmMaxTableSizeFlag))
     case FlagString:
         if (GetAsString(WasmMaxTableSizeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmMaxTableSizeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmMaxTableSizeFlag)));
         }
         break;
     case FlagNumber:
@@ -7425,7 +7425,7 @@ if (IsEnabled(WasmThreadsFlag))
     case FlagString:
         if (GetAsString(WasmThreadsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmThreadsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmThreadsFlag)));
         }
         break;
     case FlagNumber:
@@ -7450,7 +7450,7 @@ if (IsEnabled(WasmMultiValueFlag))
     case FlagString:
         if (GetAsString(WasmMultiValueFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmMultiValueFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmMultiValueFlag)));
         }
         break;
     case FlagNumber:
@@ -7475,7 +7475,7 @@ if (IsEnabled(WasmSignExtendsFlag))
     case FlagString:
         if (GetAsString(WasmSignExtendsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmSignExtendsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmSignExtendsFlag)));
         }
         break;
     case FlagNumber:
@@ -7500,7 +7500,7 @@ if (IsEnabled(WasmNontrappingFlag))
     case FlagString:
         if (GetAsString(WasmNontrappingFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmNontrappingFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmNontrappingFlag)));
         }
         break;
     case FlagNumber:
@@ -7528,7 +7528,7 @@ if (IsEnabled(WasmExperimentalFlag))
     case FlagString:
         if (GetAsString(WasmExperimentalFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmExperimentalFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmExperimentalFlag)));
         }
         break;
     case FlagNumber:
@@ -7558,7 +7558,7 @@ if (IsEnabled(WasmSimdFlag))
     case FlagString:
         if (GetAsString(WasmSimdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WasmSimdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WasmSimdFlag)));
         }
         break;
     case FlagNumber:
@@ -7584,7 +7584,7 @@ if (IsEnabled(AssertBreakFlag))
     case FlagString:
         if (GetAsString(AssertBreakFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AssertBreakFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AssertBreakFlag)));
         }
         break;
     case FlagNumber:
@@ -7609,7 +7609,7 @@ if (IsEnabled(AssertPopUpFlag))
     case FlagString:
         if (GetAsString(AssertPopUpFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AssertPopUpFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AssertPopUpFlag)));
         }
         break;
     case FlagNumber:
@@ -7634,7 +7634,7 @@ if (IsEnabled(AssertIgnoreFlag))
     case FlagString:
         if (GetAsString(AssertIgnoreFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AssertIgnoreFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AssertIgnoreFlag)));
         }
         break;
     case FlagNumber:
@@ -7659,7 +7659,7 @@ if (IsEnabled(AsyncDebuggingFlag))
     case FlagString:
         if (GetAsString(AsyncDebuggingFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AsyncDebuggingFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AsyncDebuggingFlag)));
         }
         break;
     case FlagNumber:
@@ -7684,7 +7684,7 @@ if (IsEnabled(BailOnNoProfileLimitFlag))
     case FlagString:
         if (GetAsString(BailOnNoProfileLimitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BailOnNoProfileLimitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BailOnNoProfileLimitFlag)));
         }
         break;
     case FlagNumber:
@@ -7709,7 +7709,7 @@ if (IsEnabled(BailOnNoProfileRejitLimitFlag))
     case FlagString:
         if (GetAsString(BailOnNoProfileRejitLimitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BailOnNoProfileRejitLimitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BailOnNoProfileRejitLimitFlag)));
         }
         break;
     case FlagNumber:
@@ -7734,7 +7734,7 @@ if (IsEnabled(BaselineModeFlag))
     case FlagString:
         if (GetAsString(BaselineModeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BaselineModeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BaselineModeFlag)));
         }
         break;
     case FlagNumber:
@@ -7759,7 +7759,7 @@ if (IsEnabled(DumpOnCrashFlag))
     case FlagString:
         if (GetAsString(DumpOnCrashFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpOnCrashFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpOnCrashFlag)));
         }
         break;
     case FlagNumber:
@@ -7784,7 +7784,7 @@ if (IsEnabled(FullMemoryDumpFlag))
     case FlagString:
         if (GetAsString(FullMemoryDumpFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(FullMemoryDumpFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(FullMemoryDumpFlag)));
         }
         break;
     case FlagNumber:
@@ -7809,7 +7809,7 @@ if (IsEnabled(BailOutFlag))
     case FlagString:
         if (GetAsString(BailOutFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BailOutFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BailOutFlag)));
         }
         break;
     case FlagNumber:
@@ -7834,7 +7834,7 @@ if (IsEnabled(BailOutAtEveryLineFlag))
     case FlagString:
         if (GetAsString(BailOutAtEveryLineFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BailOutAtEveryLineFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BailOutAtEveryLineFlag)));
         }
         break;
     case FlagNumber:
@@ -7859,7 +7859,7 @@ if (IsEnabled(BailOutAtEveryByteCodeFlag))
     case FlagString:
         if (GetAsString(BailOutAtEveryByteCodeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BailOutAtEveryByteCodeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BailOutAtEveryByteCodeFlag)));
         }
         break;
     case FlagNumber:
@@ -7884,7 +7884,7 @@ if (IsEnabled(BailOutAtEveryImplicitCallFlag))
     case FlagString:
         if (GetAsString(BailOutAtEveryImplicitCallFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BailOutAtEveryImplicitCallFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BailOutAtEveryImplicitCallFlag)));
         }
         break;
     case FlagNumber:
@@ -7909,7 +7909,7 @@ if (IsEnabled(BailOutByteCodeFlag))
     case FlagString:
         if (GetAsString(BailOutByteCodeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BailOutByteCodeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BailOutByteCodeFlag)));
         }
         break;
     case FlagNumber:
@@ -7934,7 +7934,7 @@ if (IsEnabled(BenchmarkFlag))
     case FlagString:
         if (GetAsString(BenchmarkFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BenchmarkFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BenchmarkFlag)));
         }
         break;
     case FlagNumber:
@@ -7959,7 +7959,7 @@ if (IsEnabled(BgJitFlag))
     case FlagString:
         if (GetAsString(BgJitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BgJitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BgJitFlag)));
         }
         break;
     case FlagNumber:
@@ -7984,7 +7984,7 @@ if (IsEnabled(BgParseFlag))
     case FlagString:
         if (GetAsString(BgParseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BgParseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BgParseFlag)));
         }
         break;
     case FlagNumber:
@@ -8009,7 +8009,7 @@ if (IsEnabled(BgJitDelayFlag))
     case FlagString:
         if (GetAsString(BgJitDelayFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BgJitDelayFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BgJitDelayFlag)));
         }
         break;
     case FlagNumber:
@@ -8034,7 +8034,7 @@ if (IsEnabled(BgJitDelayFgBufferFlag))
     case FlagString:
         if (GetAsString(BgJitDelayFgBufferFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BgJitDelayFgBufferFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BgJitDelayFgBufferFlag)));
         }
         break;
     case FlagNumber:
@@ -8059,7 +8059,7 @@ if (IsEnabled(BgJitPendingFuncCapFlag))
     case FlagString:
         if (GetAsString(BgJitPendingFuncCapFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BgJitPendingFuncCapFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BgJitPendingFuncCapFlag)));
         }
         break;
     case FlagNumber:
@@ -8085,7 +8085,7 @@ if (IsEnabled(CreateFunctionProxyFlag))
     case FlagString:
         if (GetAsString(CreateFunctionProxyFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CreateFunctionProxyFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CreateFunctionProxyFlag)));
         }
         break;
     case FlagNumber:
@@ -8110,7 +8110,7 @@ if (IsEnabled(HybridFgJitFlag))
     case FlagString:
         if (GetAsString(HybridFgJitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(HybridFgJitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(HybridFgJitFlag)));
         }
         break;
     case FlagNumber:
@@ -8135,7 +8135,7 @@ if (IsEnabled(HybridFgJitBgQueueLengthThresholdFlag))
     case FlagString:
         if (GetAsString(HybridFgJitBgQueueLengthThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(HybridFgJitBgQueueLengthThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(HybridFgJitBgQueueLengthThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -8160,7 +8160,7 @@ if (IsEnabled(BytecodeHistFlag))
     case FlagString:
         if (GetAsString(BytecodeHistFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BytecodeHistFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BytecodeHistFlag)));
         }
         break;
     case FlagNumber:
@@ -8185,7 +8185,7 @@ if (IsEnabled(CurrentSourceInfoFlag))
     case FlagString:
         if (GetAsString(CurrentSourceInfoFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CurrentSourceInfoFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CurrentSourceInfoFlag)));
         }
         break;
     case FlagNumber:
@@ -8210,7 +8210,7 @@ if (IsEnabled(CFGLogFlag))
     case FlagString:
         if (GetAsString(CFGLogFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CFGLogFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CFGLogFlag)));
         }
         break;
     case FlagNumber:
@@ -8235,7 +8235,7 @@ if (IsEnabled(CheckAlignmentFlag))
     case FlagString:
         if (GetAsString(CheckAlignmentFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CheckAlignmentFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CheckAlignmentFlag)));
         }
         break;
     case FlagNumber:
@@ -8260,7 +8260,7 @@ if (IsEnabled(CheckEmitBufferPermissionsFlag))
     case FlagString:
         if (GetAsString(CheckEmitBufferPermissionsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CheckEmitBufferPermissionsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CheckEmitBufferPermissionsFlag)));
         }
         break;
     case FlagNumber:
@@ -8286,7 +8286,7 @@ if (IsEnabled(CheckMemoryLeakFlag))
     case FlagString:
         if (GetAsString(CheckMemoryLeakFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CheckMemoryLeakFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CheckMemoryLeakFlag)));
         }
         break;
     case FlagNumber:
@@ -8311,7 +8311,7 @@ if (IsEnabled(DumpOnLeakFlag))
     case FlagString:
         if (GetAsString(DumpOnLeakFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpOnLeakFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpOnLeakFlag)));
         }
         break;
     case FlagNumber:
@@ -8337,7 +8337,7 @@ if (IsEnabled(CheckOpHelpersFlag))
     case FlagString:
         if (GetAsString(CheckOpHelpersFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CheckOpHelpersFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CheckOpHelpersFlag)));
         }
         break;
     case FlagNumber:
@@ -8362,7 +8362,7 @@ if (IsEnabled(CloneInlinedPolymorphicCachesFlag))
     case FlagString:
         if (GetAsString(CloneInlinedPolymorphicCachesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CloneInlinedPolymorphicCachesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CloneInlinedPolymorphicCachesFlag)));
         }
         break;
     case FlagNumber:
@@ -8387,7 +8387,7 @@ if (IsEnabled(ConcurrentRuntimeFlag))
     case FlagString:
         if (GetAsString(ConcurrentRuntimeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ConcurrentRuntimeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ConcurrentRuntimeFlag)));
         }
         break;
     case FlagNumber:
@@ -8412,7 +8412,7 @@ if (IsEnabled(ConstructorInlineThresholdFlag))
     case FlagString:
         if (GetAsString(ConstructorInlineThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ConstructorInlineThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ConstructorInlineThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -8437,7 +8437,7 @@ if (IsEnabled(ConstructorCallsRequiredToFinalizeCachedTypeFlag))
     case FlagString:
         if (GetAsString(ConstructorCallsRequiredToFinalizeCachedTypeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ConstructorCallsRequiredToFinalizeCachedTypeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ConstructorCallsRequiredToFinalizeCachedTypeFlag)));
         }
         break;
     case FlagNumber:
@@ -8462,7 +8462,7 @@ if (IsEnabled(PropertyCacheMissPenaltyFlag))
     case FlagString:
         if (GetAsString(PropertyCacheMissPenaltyFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PropertyCacheMissPenaltyFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PropertyCacheMissPenaltyFlag)));
         }
         break;
     case FlagNumber:
@@ -8487,7 +8487,7 @@ if (IsEnabled(PropertyCacheMissThresholdFlag))
     case FlagString:
         if (GetAsString(PropertyCacheMissThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PropertyCacheMissThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PropertyCacheMissThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -8512,7 +8512,7 @@ if (IsEnabled(PropertyCacheMissResetFlag))
     case FlagString:
         if (GetAsString(PropertyCacheMissResetFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PropertyCacheMissResetFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PropertyCacheMissResetFlag)));
         }
         break;
     case FlagNumber:
@@ -8537,7 +8537,7 @@ if (IsEnabled(DebugFlag))
     case FlagString:
         if (GetAsString(DebugFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DebugFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DebugFlag)));
         }
         break;
     case FlagNumber:
@@ -8562,7 +8562,7 @@ if (IsEnabled(DebugBreakFlag))
     case FlagString:
         if (GetAsString(DebugBreakFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DebugBreakFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DebugBreakFlag)));
         }
         break;
     case FlagNumber:
@@ -8587,7 +8587,7 @@ if (IsEnabled(StatementDebugBreakFlag))
     case FlagString:
         if (GetAsString(StatementDebugBreakFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(StatementDebugBreakFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(StatementDebugBreakFlag)));
         }
         break;
     case FlagNumber:
@@ -8612,7 +8612,7 @@ if (IsEnabled(DebugBreakOnPhaseBeginFlag))
     case FlagString:
         if (GetAsString(DebugBreakOnPhaseBeginFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DebugBreakOnPhaseBeginFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DebugBreakOnPhaseBeginFlag)));
         }
         break;
     case FlagNumber:
@@ -8638,7 +8638,7 @@ if (IsEnabled(DebugWindowFlag))
     case FlagString:
         if (GetAsString(DebugWindowFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DebugWindowFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DebugWindowFlag)));
         }
         break;
     case FlagNumber:
@@ -8663,7 +8663,7 @@ if (IsEnabled(ParserStateCacheFlag))
     case FlagString:
         if (GetAsString(ParserStateCacheFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ParserStateCacheFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ParserStateCacheFlag)));
         }
         break;
     case FlagNumber:
@@ -8688,7 +8688,7 @@ if (IsEnabled(CompressParserStateCacheFlag))
     case FlagString:
         if (GetAsString(CompressParserStateCacheFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CompressParserStateCacheFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CompressParserStateCacheFlag)));
         }
         break;
     case FlagNumber:
@@ -8713,7 +8713,7 @@ if (IsEnabled(DeferTopLevelTillFirstCallFlag))
     case FlagString:
         if (GetAsString(DeferTopLevelTillFirstCallFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DeferTopLevelTillFirstCallFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DeferTopLevelTillFirstCallFlag)));
         }
         break;
     case FlagNumber:
@@ -8738,7 +8738,7 @@ if (IsEnabled(DeferParseFlag))
     case FlagString:
         if (GetAsString(DeferParseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DeferParseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DeferParseFlag)));
         }
         break;
     case FlagNumber:
@@ -8763,7 +8763,7 @@ if (IsEnabled(DirectCallTelemetryStatsFlag))
     case FlagString:
         if (GetAsString(DirectCallTelemetryStatsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DirectCallTelemetryStatsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DirectCallTelemetryStatsFlag)));
         }
         break;
     case FlagNumber:
@@ -8788,7 +8788,7 @@ if (IsEnabled(DisableArrayBTreeFlag))
     case FlagString:
         if (GetAsString(DisableArrayBTreeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DisableArrayBTreeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DisableArrayBTreeFlag)));
         }
         break;
     case FlagNumber:
@@ -8813,7 +8813,7 @@ if (IsEnabled(DisableRentalThreadingFlag))
     case FlagString:
         if (GetAsString(DisableRentalThreadingFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DisableRentalThreadingFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DisableRentalThreadingFlag)));
         }
         break;
     case FlagNumber:
@@ -8838,7 +8838,7 @@ if (IsEnabled(DisableVTuneSourceLineInfoFlag))
     case FlagString:
         if (GetAsString(DisableVTuneSourceLineInfoFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DisableVTuneSourceLineInfoFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DisableVTuneSourceLineInfoFlag)));
         }
         break;
     case FlagNumber:
@@ -8863,7 +8863,7 @@ if (IsEnabled(DisplayMemStatsFlag))
     case FlagString:
         if (GetAsString(DisplayMemStatsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DisplayMemStatsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DisplayMemStatsFlag)));
         }
         break;
     case FlagNumber:
@@ -8888,7 +8888,7 @@ if (IsEnabled(DumpFlag))
     case FlagString:
         if (GetAsString(DumpFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpFlag)));
         }
         break;
     case FlagNumber:
@@ -8914,7 +8914,7 @@ if (IsEnabled(DumpFragmentationStatsFlag))
     case FlagString:
         if (GetAsString(DumpFragmentationStatsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpFragmentationStatsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpFragmentationStatsFlag)));
         }
         break;
     case FlagNumber:
@@ -8940,7 +8940,7 @@ if (IsEnabled(DumpIRAddressesFlag))
     case FlagString:
         if (GetAsString(DumpIRAddressesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpIRAddressesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpIRAddressesFlag)));
         }
         break;
     case FlagNumber:
@@ -8965,7 +8965,7 @@ if (IsEnabled(DumpLineNoInColorFlag))
     case FlagString:
         if (GetAsString(DumpLineNoInColorFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpLineNoInColorFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpLineNoInColorFlag)));
         }
         break;
     case FlagNumber:
@@ -8991,7 +8991,7 @@ if (IsEnabled(DumpObjectGraphOnExitFlag))
     case FlagString:
         if (GetAsString(DumpObjectGraphOnExitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpObjectGraphOnExitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpObjectGraphOnExitFlag)));
         }
         break;
     case FlagNumber:
@@ -9016,7 +9016,7 @@ if (IsEnabled(DumpObjectGraphOnCollectFlag))
     case FlagString:
         if (GetAsString(DumpObjectGraphOnCollectFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpObjectGraphOnCollectFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpObjectGraphOnCollectFlag)));
         }
         break;
     case FlagNumber:
@@ -9042,7 +9042,7 @@ if (IsEnabled(DumpEvalStringOnRemovalFlag))
     case FlagString:
         if (GetAsString(DumpEvalStringOnRemovalFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpEvalStringOnRemovalFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpEvalStringOnRemovalFlag)));
         }
         break;
     case FlagNumber:
@@ -9067,7 +9067,7 @@ if (IsEnabled(DumpObjectGraphOnEnumFlag))
     case FlagString:
         if (GetAsString(DumpObjectGraphOnEnumFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpObjectGraphOnEnumFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpObjectGraphOnEnumFlag)));
         }
         break;
     case FlagNumber:
@@ -9093,7 +9093,7 @@ if (IsEnabled(DynamicProfileCacheFlag))
     case FlagString:
         if (GetAsString(DynamicProfileCacheFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DynamicProfileCacheFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DynamicProfileCacheFlag)));
         }
         break;
     case FlagNumber:
@@ -9118,7 +9118,7 @@ if (IsEnabled(DpcFlag))
     case FlagString:
         if (GetAsString(DpcFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DpcFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DpcFlag)));
         }
         break;
     case FlagNumber:
@@ -9143,7 +9143,7 @@ if (IsEnabled(DynamicProfileCacheDirFlag))
     case FlagString:
         if (GetAsString(DynamicProfileCacheDirFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DynamicProfileCacheDirFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DynamicProfileCacheDirFlag)));
         }
         break;
     case FlagNumber:
@@ -9168,7 +9168,7 @@ if (IsEnabled(DynamicProfileInputFlag))
     case FlagString:
         if (GetAsString(DynamicProfileInputFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DynamicProfileInputFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DynamicProfileInputFlag)));
         }
         break;
     case FlagNumber:
@@ -9193,7 +9193,7 @@ if (IsEnabled(DpiFlag))
     case FlagString:
         if (GetAsString(DpiFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DpiFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DpiFlag)));
         }
         break;
     case FlagNumber:
@@ -9220,7 +9220,7 @@ if (IsEnabled(EditTestFlag))
     case FlagString:
         if (GetAsString(EditTestFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EditTestFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EditTestFlag)));
         }
         break;
     case FlagNumber:
@@ -9246,7 +9246,7 @@ if (IsEnabled(WininetProfileCacheFlag))
     case FlagString:
         if (GetAsString(WininetProfileCacheFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WininetProfileCacheFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WininetProfileCacheFlag)));
         }
         break;
     case FlagNumber:
@@ -9271,7 +9271,7 @@ if (IsEnabled(NoDynamicProfileInMemoryCacheFlag))
     case FlagString:
         if (GetAsString(NoDynamicProfileInMemoryCacheFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(NoDynamicProfileInMemoryCacheFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(NoDynamicProfileInMemoryCacheFlag)));
         }
         break;
     case FlagNumber:
@@ -9296,7 +9296,7 @@ if (IsEnabled(ProfileBasedSpeculativeJitFlag))
     case FlagString:
         if (GetAsString(ProfileBasedSpeculativeJitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileBasedSpeculativeJitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileBasedSpeculativeJitFlag)));
         }
         break;
     case FlagNumber:
@@ -9321,7 +9321,7 @@ if (IsEnabled(ProfileBasedSpeculationCapFlag))
     case FlagString:
         if (GetAsString(ProfileBasedSpeculationCapFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileBasedSpeculationCapFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileBasedSpeculationCapFlag)));
         }
         break;
     case FlagNumber:
@@ -9346,7 +9346,7 @@ if (IsEnabled(ExecuteByteCodeBufferReturnsInvalidByteCodeFlag))
     case FlagString:
         if (GetAsString(ExecuteByteCodeBufferReturnsInvalidByteCodeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ExecuteByteCodeBufferReturnsInvalidByteCodeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ExecuteByteCodeBufferReturnsInvalidByteCodeFlag)));
         }
         break;
     case FlagNumber:
@@ -9371,7 +9371,7 @@ if (IsEnabled(ExpirableCollectionGCCountFlag))
     case FlagString:
         if (GetAsString(ExpirableCollectionGCCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ExpirableCollectionGCCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ExpirableCollectionGCCountFlag)));
         }
         break;
     case FlagNumber:
@@ -9396,7 +9396,7 @@ if (IsEnabled(ExpirableCollectionTriggerThresholdFlag))
     case FlagString:
         if (GetAsString(ExpirableCollectionTriggerThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ExpirableCollectionTriggerThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ExpirableCollectionTriggerThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -9421,7 +9421,7 @@ if (IsEnabled(SkipSplitOnNoResultFlag))
     case FlagString:
         if (GetAsString(SkipSplitOnNoResultFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(SkipSplitOnNoResultFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(SkipSplitOnNoResultFlag)));
         }
         break;
     case FlagNumber:
@@ -9446,7 +9446,7 @@ if (IsEnabled(Force32BitByteCodeFlag))
     case FlagString:
         if (GetAsString(Force32BitByteCodeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(Force32BitByteCodeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(Force32BitByteCodeFlag)));
         }
         break;
     case FlagNumber:
@@ -9472,7 +9472,7 @@ if (IsEnabled(CollectGarbageFlag))
     case FlagString:
         if (GetAsString(CollectGarbageFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CollectGarbageFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CollectGarbageFlag)));
         }
         break;
     case FlagNumber:
@@ -9498,7 +9498,7 @@ if (IsEnabled(IntlFlag))
     case FlagString:
         if (GetAsString(IntlFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(IntlFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(IntlFlag)));
         }
         break;
     case FlagNumber:
@@ -9523,7 +9523,7 @@ if (IsEnabled(IntlBuiltInsFlag))
     case FlagString:
         if (GetAsString(IntlBuiltInsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(IntlBuiltInsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(IntlBuiltInsFlag)));
         }
         break;
     case FlagNumber:
@@ -9548,7 +9548,7 @@ if (IsEnabled(IntlPlatformFlag))
     case FlagString:
         if (GetAsString(IntlPlatformFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(IntlPlatformFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(IntlPlatformFlag)));
         }
         break;
     case FlagNumber:
@@ -9574,7 +9574,7 @@ if (IsEnabled(JsBuiltInFlag))
     case FlagString:
         if (GetAsString(JsBuiltInFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(JsBuiltInFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(JsBuiltInFlag)));
         }
         break;
     case FlagNumber:
@@ -9599,7 +9599,7 @@ if (IsEnabled(JitReproFlag))
     case FlagString:
         if (GetAsString(JitReproFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(JitReproFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(JitReproFlag)));
         }
         break;
     case FlagNumber:
@@ -9624,7 +9624,7 @@ if (IsEnabled(EntryPointInfoRpcDataFlag))
     case FlagString:
         if (GetAsString(EntryPointInfoRpcDataFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EntryPointInfoRpcDataFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EntryPointInfoRpcDataFlag)));
         }
         break;
     case FlagNumber:
@@ -9650,7 +9650,7 @@ if (IsEnabled(LdChakraLibFlag))
     case FlagString:
         if (GetAsString(LdChakraLibFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LdChakraLibFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LdChakraLibFlag)));
         }
         break;
     case FlagNumber:
@@ -9675,7 +9675,7 @@ if (IsEnabled(TestChakraLibFlag))
     case FlagString:
         if (GetAsString(TestChakraLibFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TestChakraLibFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TestChakraLibFlag)));
         }
         break;
     case FlagNumber:
@@ -9704,7 +9704,7 @@ if (IsEnabled(ES6Flag))
     case FlagString:
         if (GetAsString(ES6Flag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6Flag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6Flag)));
         }
         break;
     case FlagNumber:
@@ -9731,7 +9731,7 @@ if (IsEnabled(ES6AllFlag))
     case FlagString:
         if (GetAsString(ES6AllFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6AllFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6AllFlag)));
         }
         break;
     case FlagNumber:
@@ -9758,7 +9758,7 @@ if (IsEnabled(ES6ExperimentalFlag))
     case FlagString:
         if (GetAsString(ES6ExperimentalFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6ExperimentalFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6ExperimentalFlag)));
         }
         break;
     case FlagNumber:
@@ -9786,7 +9786,7 @@ if (IsEnabled(ES7AsyncAwaitFlag))
     case FlagString:
         if (GetAsString(ES7AsyncAwaitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES7AsyncAwaitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES7AsyncAwaitFlag)));
         }
         break;
     case FlagNumber:
@@ -9811,7 +9811,7 @@ if (IsEnabled(ES6DateParseFixFlag))
     case FlagString:
         if (GetAsString(ES6DateParseFixFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6DateParseFixFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6DateParseFixFlag)));
         }
         break;
     case FlagNumber:
@@ -9836,7 +9836,7 @@ if (IsEnabled(ES6FunctionNameFullFlag))
     case FlagString:
         if (GetAsString(ES6FunctionNameFullFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6FunctionNameFullFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6FunctionNameFullFlag)));
         }
         break;
     case FlagNumber:
@@ -9861,7 +9861,7 @@ if (IsEnabled(ES6GeneratorsFlag))
     case FlagString:
         if (GetAsString(ES6GeneratorsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6GeneratorsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6GeneratorsFlag)));
         }
         break;
     case FlagNumber:
@@ -9886,7 +9886,7 @@ if (IsEnabled(ES7ExponentiationOperatorFlag))
     case FlagString:
         if (GetAsString(ES7ExponentiationOperatorFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES7ExponentiationOperatorFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES7ExponentiationOperatorFlag)));
         }
         break;
     case FlagNumber:
@@ -9912,7 +9912,7 @@ if (IsEnabled(ES7ValuesEntriesFlag))
     case FlagString:
         if (GetAsString(ES7ValuesEntriesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES7ValuesEntriesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES7ValuesEntriesFlag)));
         }
         break;
     case FlagNumber:
@@ -9937,7 +9937,7 @@ if (IsEnabled(ES7TrailingCommaFlag))
     case FlagString:
         if (GetAsString(ES7TrailingCommaFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES7TrailingCommaFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES7TrailingCommaFlag)));
         }
         break;
     case FlagNumber:
@@ -9962,7 +9962,7 @@ if (IsEnabled(ES6IsConcatSpreadableFlag))
     case FlagString:
         if (GetAsString(ES6IsConcatSpreadableFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6IsConcatSpreadableFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6IsConcatSpreadableFlag)));
         }
         break;
     case FlagNumber:
@@ -9987,7 +9987,7 @@ if (IsEnabled(ES6MathFlag))
     case FlagString:
         if (GetAsString(ES6MathFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6MathFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6MathFlag)));
         }
         break;
     case FlagNumber:
@@ -10016,7 +10016,7 @@ if (IsEnabled(ESDynamicImportFlag))
     case FlagString:
         if (GetAsString(ESDynamicImportFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESDynamicImportFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESDynamicImportFlag)));
         }
         break;
     case FlagNumber:
@@ -10042,7 +10042,7 @@ if (IsEnabled(ES6ModuleFlag))
     case FlagString:
         if (GetAsString(ES6ModuleFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6ModuleFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6ModuleFlag)));
         }
         break;
     case FlagNumber:
@@ -10067,7 +10067,7 @@ if (IsEnabled(ES6ObjectFlag))
     case FlagString:
         if (GetAsString(ES6ObjectFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6ObjectFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6ObjectFlag)));
         }
         break;
     case FlagNumber:
@@ -10092,7 +10092,7 @@ if (IsEnabled(ES6NumberFlag))
     case FlagString:
         if (GetAsString(ES6NumberFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6NumberFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6NumberFlag)));
         }
         break;
     case FlagNumber:
@@ -10117,7 +10117,7 @@ if (IsEnabled(ES6ObjectLiteralsFlag))
     case FlagString:
         if (GetAsString(ES6ObjectLiteralsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6ObjectLiteralsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6ObjectLiteralsFlag)));
         }
         break;
     case FlagNumber:
@@ -10142,7 +10142,7 @@ if (IsEnabled(ES6ProxyFlag))
     case FlagString:
         if (GetAsString(ES6ProxyFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6ProxyFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6ProxyFlag)));
         }
         break;
     case FlagNumber:
@@ -10167,7 +10167,7 @@ if (IsEnabled(ES6RestFlag))
     case FlagString:
         if (GetAsString(ES6RestFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6RestFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6RestFlag)));
         }
         break;
     case FlagNumber:
@@ -10192,7 +10192,7 @@ if (IsEnabled(ES6SpreadFlag))
     case FlagString:
         if (GetAsString(ES6SpreadFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6SpreadFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6SpreadFlag)));
         }
         break;
     case FlagNumber:
@@ -10217,7 +10217,7 @@ if (IsEnabled(ES6StringFlag))
     case FlagString:
         if (GetAsString(ES6StringFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6StringFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6StringFlag)));
         }
         break;
     case FlagNumber:
@@ -10242,7 +10242,7 @@ if (IsEnabled(ES6StringPrototypeFixesFlag))
     case FlagString:
         if (GetAsString(ES6StringPrototypeFixesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6StringPrototypeFixesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6StringPrototypeFixesFlag)));
         }
         break;
     case FlagNumber:
@@ -10267,7 +10267,7 @@ if (IsEnabled(ES2018ObjectRestSpreadFlag))
     case FlagString:
         if (GetAsString(ES2018ObjectRestSpreadFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES2018ObjectRestSpreadFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES2018ObjectRestSpreadFlag)));
         }
         break;
     case FlagNumber:
@@ -10293,7 +10293,7 @@ if (IsEnabled(ES6PrototypeChainFlag))
     case FlagString:
         if (GetAsString(ES6PrototypeChainFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6PrototypeChainFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6PrototypeChainFlag)));
         }
         break;
     case FlagNumber:
@@ -10318,7 +10318,7 @@ if (IsEnabled(ES6ToPrimitiveFlag))
     case FlagString:
         if (GetAsString(ES6ToPrimitiveFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6ToPrimitiveFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6ToPrimitiveFlag)));
         }
         break;
     case FlagNumber:
@@ -10343,7 +10343,7 @@ if (IsEnabled(ES6ToLengthFlag))
     case FlagString:
         if (GetAsString(ES6ToLengthFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6ToLengthFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6ToLengthFlag)));
         }
         break;
     case FlagNumber:
@@ -10368,7 +10368,7 @@ if (IsEnabled(ES6ToStringTagFlag))
     case FlagString:
         if (GetAsString(ES6ToStringTagFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6ToStringTagFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6ToStringTagFlag)));
         }
         break;
     case FlagNumber:
@@ -10393,7 +10393,7 @@ if (IsEnabled(ES6UnicodeFlag))
     case FlagString:
         if (GetAsString(ES6UnicodeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6UnicodeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6UnicodeFlag)));
         }
         break;
     case FlagNumber:
@@ -10418,7 +10418,7 @@ if (IsEnabled(ES6UnicodeVerboseFlag))
     case FlagString:
         if (GetAsString(ES6UnicodeVerboseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6UnicodeVerboseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6UnicodeVerboseFlag)));
         }
         break;
     case FlagNumber:
@@ -10443,7 +10443,7 @@ if (IsEnabled(ES6UnscopablesFlag))
     case FlagString:
         if (GetAsString(ES6UnscopablesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6UnscopablesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6UnscopablesFlag)));
         }
         break;
     case FlagNumber:
@@ -10468,7 +10468,7 @@ if (IsEnabled(ES6RegExStickyFlag))
     case FlagString:
         if (GetAsString(ES6RegExStickyFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6RegExStickyFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6RegExStickyFlag)));
         }
         break;
     case FlagNumber:
@@ -10493,7 +10493,7 @@ if (IsEnabled(ES2018RegExDotAllFlag))
     case FlagString:
         if (GetAsString(ES2018RegExDotAllFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES2018RegExDotAllFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES2018RegExDotAllFlag)));
         }
         break;
     case FlagNumber:
@@ -10518,7 +10518,7 @@ if (IsEnabled(ESExportNsAsFlag))
     case FlagString:
         if (GetAsString(ESExportNsAsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESExportNsAsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESExportNsAsFlag)));
         }
         break;
     case FlagNumber:
@@ -10543,7 +10543,7 @@ if (IsEnabled(ES2018AsyncIterationFlag))
     case FlagString:
         if (GetAsString(ES2018AsyncIterationFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES2018AsyncIterationFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES2018AsyncIterationFlag)));
         }
         break;
     case FlagNumber:
@@ -10568,7 +10568,7 @@ if (IsEnabled(ESTopLevelAwaitFlag))
     case FlagString:
         if (GetAsString(ESTopLevelAwaitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESTopLevelAwaitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESTopLevelAwaitFlag)));
         }
         break;
     case FlagNumber:
@@ -10597,7 +10597,7 @@ if (IsEnabled(ES6RegExPrototypePropertiesFlag))
     case FlagString:
         if (GetAsString(ES6RegExPrototypePropertiesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6RegExPrototypePropertiesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6RegExPrototypePropertiesFlag)));
         }
         break;
     case FlagNumber:
@@ -10630,7 +10630,7 @@ if (IsEnabled(ES6RegExSymbolsFlag))
     case FlagString:
         if (GetAsString(ES6RegExSymbolsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6RegExSymbolsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6RegExSymbolsFlag)));
         }
         break;
     case FlagNumber:
@@ -10656,7 +10656,7 @@ if (IsEnabled(ES6VerboseFlag))
     case FlagString:
         if (GetAsString(ES6VerboseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ES6VerboseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ES6VerboseFlag)));
         }
         break;
     case FlagNumber:
@@ -10681,7 +10681,7 @@ if (IsEnabled(ESObjectGetOwnPropertyDescriptorsFlag))
     case FlagString:
         if (GetAsString(ESObjectGetOwnPropertyDescriptorsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESObjectGetOwnPropertyDescriptorsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESObjectGetOwnPropertyDescriptorsFlag)));
         }
         break;
     case FlagNumber:
@@ -10711,7 +10711,7 @@ if (IsEnabled(ESSharedArrayBufferFlag))
     case FlagString:
         if (GetAsString(ESSharedArrayBufferFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESSharedArrayBufferFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESSharedArrayBufferFlag)));
         }
         break;
     case FlagNumber:
@@ -10740,7 +10740,7 @@ if (IsEnabled(ESBigIntFlag))
     case FlagString:
         if (GetAsString(ESBigIntFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESBigIntFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESBigIntFlag)));
         }
         break;
     case FlagNumber:
@@ -10767,7 +10767,7 @@ if (IsEnabled(ESNumericSeparatorFlag))
     case FlagString:
         if (GetAsString(ESNumericSeparatorFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESNumericSeparatorFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESNumericSeparatorFlag)));
         }
         break;
     case FlagNumber:
@@ -10794,7 +10794,7 @@ if (IsEnabled(ESNullishCoalescingOperatorFlag))
     case FlagString:
         if (GetAsString(ESNullishCoalescingOperatorFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESNullishCoalescingOperatorFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESNullishCoalescingOperatorFlag)));
         }
         break;
     case FlagNumber:
@@ -10821,7 +10821,7 @@ if (IsEnabled(ESHashbangFlag))
     case FlagString:
         if (GetAsString(ESHashbangFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESHashbangFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESHashbangFlag)));
         }
         break;
     case FlagNumber:
@@ -10848,7 +10848,7 @@ if (IsEnabled(ESSymbolDescriptionFlag))
     case FlagString:
         if (GetAsString(ESSymbolDescriptionFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESSymbolDescriptionFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESSymbolDescriptionFlag)));
         }
         break;
     case FlagNumber:
@@ -10874,7 +10874,7 @@ if (IsEnabled(ESArrayFindFromLastFlag))
     case FlagString:
         if (GetAsString(ESArrayFindFromLastFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESArrayFindFromLastFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESArrayFindFromLastFlag)));
         }
         break;
     case FlagNumber:
@@ -10901,7 +10901,7 @@ if (IsEnabled(ESPromiseAnyFlag))
     case FlagString:
         if (GetAsString(ESPromiseAnyFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESPromiseAnyFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESPromiseAnyFlag)));
         }
         break;
     case FlagNumber:
@@ -10928,7 +10928,7 @@ if (IsEnabled(ESImportMetaFlag))
     case FlagString:
         if (GetAsString(ESImportMetaFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESImportMetaFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESImportMetaFlag)));
         }
         break;
     case FlagNumber:
@@ -10955,7 +10955,7 @@ if (IsEnabled(ESGlobalThisFlag))
     case FlagString:
         if (GetAsString(ESGlobalThisFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ESGlobalThisFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ESGlobalThisFlag)));
         }
         break;
     case FlagNumber:
@@ -10982,7 +10982,7 @@ if (IsEnabled(JitES6GeneratorsFlag))
     case FlagString:
         if (GetAsString(JitES6GeneratorsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(JitES6GeneratorsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(JitES6GeneratorsFlag)));
         }
         break;
     case FlagNumber:
@@ -11008,7 +11008,7 @@ if (IsEnabled(FastLineColumnCalculationFlag))
     case FlagString:
         if (GetAsString(FastLineColumnCalculationFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(FastLineColumnCalculationFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(FastLineColumnCalculationFlag)));
         }
         break;
     case FlagNumber:
@@ -11033,7 +11033,7 @@ if (IsEnabled(FilenameFlag))
     case FlagString:
         if (GetAsString(FilenameFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(FilenameFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(FilenameFlag)));
         }
         break;
     case FlagNumber:
@@ -11058,7 +11058,7 @@ if (IsEnabled(FreeRejittedCodeFlag))
     case FlagString:
         if (GetAsString(FreeRejittedCodeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(FreeRejittedCodeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(FreeRejittedCodeFlag)));
         }
         break;
     case FlagNumber:
@@ -11083,7 +11083,7 @@ if (IsEnabled(ForceGuardPagesFlag))
     case FlagString:
         if (GetAsString(ForceGuardPagesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceGuardPagesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceGuardPagesFlag)));
         }
         break;
     case FlagNumber:
@@ -11108,7 +11108,7 @@ if (IsEnabled(PrintGuardPageBoundsFlag))
     case FlagString:
         if (GetAsString(PrintGuardPageBoundsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PrintGuardPageBoundsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PrintGuardPageBoundsFlag)));
         }
         break;
     case FlagNumber:
@@ -11133,7 +11133,7 @@ if (IsEnabled(ForceLegacyEngineFlag))
     case FlagString:
         if (GetAsString(ForceLegacyEngineFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceLegacyEngineFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceLegacyEngineFlag)));
         }
         break;
     case FlagNumber:
@@ -11158,7 +11158,7 @@ if (IsEnabled(ForceFlag))
     case FlagString:
         if (GetAsString(ForceFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceFlag)));
         }
         break;
     case FlagNumber:
@@ -11183,7 +11183,7 @@ if (IsEnabled(StressFlag))
     case FlagString:
         if (GetAsString(StressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(StressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(StressFlag)));
         }
         break;
     case FlagNumber:
@@ -11208,7 +11208,7 @@ if (IsEnabled(ForceArrayBTreeFlag))
     case FlagString:
         if (GetAsString(ForceArrayBTreeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceArrayBTreeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceArrayBTreeFlag)));
         }
         break;
     case FlagNumber:
@@ -11233,7 +11233,7 @@ if (IsEnabled(StrongArraySortFlag))
     case FlagString:
         if (GetAsString(StrongArraySortFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(StrongArraySortFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(StrongArraySortFlag)));
         }
         break;
     case FlagNumber:
@@ -11258,7 +11258,7 @@ if (IsEnabled(ForceCleanPropertyOnCollectFlag))
     case FlagString:
         if (GetAsString(ForceCleanPropertyOnCollectFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceCleanPropertyOnCollectFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceCleanPropertyOnCollectFlag)));
         }
         break;
     case FlagNumber:
@@ -11283,7 +11283,7 @@ if (IsEnabled(ForceCleanCacheOnCollectFlag))
     case FlagString:
         if (GetAsString(ForceCleanCacheOnCollectFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceCleanCacheOnCollectFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceCleanCacheOnCollectFlag)));
         }
         break;
     case FlagNumber:
@@ -11308,7 +11308,7 @@ if (IsEnabled(ForceGCAfterJSONParseFlag))
     case FlagString:
         if (GetAsString(ForceGCAfterJSONParseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceGCAfterJSONParseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceGCAfterJSONParseFlag)));
         }
         break;
     case FlagNumber:
@@ -11333,7 +11333,7 @@ if (IsEnabled(ForceDecommitOnCollectFlag))
     case FlagString:
         if (GetAsString(ForceDecommitOnCollectFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceDecommitOnCollectFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceDecommitOnCollectFlag)));
         }
         break;
     case FlagNumber:
@@ -11358,7 +11358,7 @@ if (IsEnabled(ForceDeferParseFlag))
     case FlagString:
         if (GetAsString(ForceDeferParseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceDeferParseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceDeferParseFlag)));
         }
         break;
     case FlagNumber:
@@ -11383,7 +11383,7 @@ if (IsEnabled(ForceDiagnosticsModeFlag))
     case FlagString:
         if (GetAsString(ForceDiagnosticsModeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceDiagnosticsModeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceDiagnosticsModeFlag)));
         }
         break;
     case FlagNumber:
@@ -11408,7 +11408,7 @@ if (IsEnabled(ForceGetWriteWatchOOMFlag))
     case FlagString:
         if (GetAsString(ForceGetWriteWatchOOMFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceGetWriteWatchOOMFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceGetWriteWatchOOMFlag)));
         }
         break;
     case FlagNumber:
@@ -11433,7 +11433,7 @@ if (IsEnabled(ForcePostLowerGlobOptInstrStringFlag))
     case FlagString:
         if (GetAsString(ForcePostLowerGlobOptInstrStringFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForcePostLowerGlobOptInstrStringFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForcePostLowerGlobOptInstrStringFlag)));
         }
         break;
     case FlagNumber:
@@ -11458,7 +11458,7 @@ if (IsEnabled(ForceSplitScopeFlag))
     case FlagString:
         if (GetAsString(ForceSplitScopeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceSplitScopeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceSplitScopeFlag)));
         }
         break;
     case FlagNumber:
@@ -11483,7 +11483,7 @@ if (IsEnabled(EnumerateSpecialPropertiesInDebuggerFlag))
     case FlagString:
         if (GetAsString(EnumerateSpecialPropertiesInDebuggerFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EnumerateSpecialPropertiesInDebuggerFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EnumerateSpecialPropertiesInDebuggerFlag)));
         }
         break;
     case FlagNumber:
@@ -11508,7 +11508,7 @@ if (IsEnabled(EnableContinueAfterExceptionWrappersForHelpersFlag))
     case FlagString:
         if (GetAsString(EnableContinueAfterExceptionWrappersForHelpersFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EnableContinueAfterExceptionWrappersForHelpersFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EnableContinueAfterExceptionWrappersForHelpersFlag)));
         }
         break;
     case FlagNumber:
@@ -11533,7 +11533,7 @@ if (IsEnabled(EnableContinueAfterExceptionWrappersForBuiltInsFlag))
     case FlagString:
         if (GetAsString(EnableContinueAfterExceptionWrappersForBuiltInsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EnableContinueAfterExceptionWrappersForBuiltInsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EnableContinueAfterExceptionWrappersForBuiltInsFlag)));
         }
         break;
     case FlagNumber:
@@ -11558,7 +11558,7 @@ if (IsEnabled(EnableFunctionSourceReportForHeapEnumFlag))
     case FlagString:
         if (GetAsString(EnableFunctionSourceReportForHeapEnumFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EnableFunctionSourceReportForHeapEnumFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EnableFunctionSourceReportForHeapEnumFlag)));
         }
         break;
     case FlagNumber:
@@ -11583,7 +11583,7 @@ if (IsEnabled(ForceFragmentAddressSpaceFlag))
     case FlagString:
         if (GetAsString(ForceFragmentAddressSpaceFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceFragmentAddressSpaceFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceFragmentAddressSpaceFlag)));
         }
         break;
     case FlagNumber:
@@ -11608,7 +11608,7 @@ if (IsEnabled(ForceOOMOnEBCommitFlag))
     case FlagString:
         if (GetAsString(ForceOOMOnEBCommitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceOOMOnEBCommitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceOOMOnEBCommitFlag)));
         }
         break;
     case FlagNumber:
@@ -11633,7 +11633,7 @@ if (IsEnabled(ForceDynamicProfileFlag))
     case FlagString:
         if (GetAsString(ForceDynamicProfileFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceDynamicProfileFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceDynamicProfileFlag)));
         }
         break;
     case FlagNumber:
@@ -11658,7 +11658,7 @@ if (IsEnabled(ForceES5ArrayFlag))
     case FlagString:
         if (GetAsString(ForceES5ArrayFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceES5ArrayFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceES5ArrayFlag)));
         }
         break;
     case FlagNumber:
@@ -11683,7 +11683,7 @@ if (IsEnabled(ForceAsmJsLinkFailFlag))
     case FlagString:
         if (GetAsString(ForceAsmJsLinkFailFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceAsmJsLinkFailFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceAsmJsLinkFailFlag)));
         }
         break;
     case FlagNumber:
@@ -11708,7 +11708,7 @@ if (IsEnabled(ForceExpireOnNonCacheCollectFlag))
     case FlagString:
         if (GetAsString(ForceExpireOnNonCacheCollectFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceExpireOnNonCacheCollectFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceExpireOnNonCacheCollectFlag)));
         }
         break;
     case FlagNumber:
@@ -11733,7 +11733,7 @@ if (IsEnabled(ForceFastPathFlag))
     case FlagString:
         if (GetAsString(ForceFastPathFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceFastPathFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceFastPathFlag)));
         }
         break;
     case FlagNumber:
@@ -11758,7 +11758,7 @@ if (IsEnabled(ForceFloatPrefFlag))
     case FlagString:
         if (GetAsString(ForceFloatPrefFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceFloatPrefFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceFloatPrefFlag)));
         }
         break;
     case FlagNumber:
@@ -11783,7 +11783,7 @@ if (IsEnabled(ForceJITLoopBodyFlag))
     case FlagString:
         if (GetAsString(ForceJITLoopBodyFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceJITLoopBodyFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceJITLoopBodyFlag)));
         }
         break;
     case FlagNumber:
@@ -11808,7 +11808,7 @@ if (IsEnabled(ForceStaticInterpreterThunkFlag))
     case FlagString:
         if (GetAsString(ForceStaticInterpreterThunkFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceStaticInterpreterThunkFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceStaticInterpreterThunkFlag)));
         }
         break;
     case FlagNumber:
@@ -11833,7 +11833,7 @@ if (IsEnabled(DumpCommentsFromReferencedFilesFlag))
     case FlagString:
         if (GetAsString(DumpCommentsFromReferencedFilesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpCommentsFromReferencedFilesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpCommentsFromReferencedFilesFlag)));
         }
         break;
     case FlagNumber:
@@ -11858,7 +11858,7 @@ if (IsEnabled(DelayFullJITSmallFuncFlag))
     case FlagString:
         if (GetAsString(DelayFullJITSmallFuncFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DelayFullJITSmallFuncFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DelayFullJITSmallFuncFlag)));
         }
         break;
     case FlagNumber:
@@ -11883,7 +11883,7 @@ if (IsEnabled(EnableFatalErrorOnOOMFlag))
     case FlagString:
         if (GetAsString(EnableFatalErrorOnOOMFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EnableFatalErrorOnOOMFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EnableFatalErrorOnOOMFlag)));
         }
         break;
     case FlagNumber:
@@ -11910,7 +11910,7 @@ if (IsEnabled(ForceLocalsPtrFlag))
     case FlagString:
         if (GetAsString(ForceLocalsPtrFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceLocalsPtrFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceLocalsPtrFlag)));
         }
         break;
     case FlagNumber:
@@ -11936,7 +11936,7 @@ if (IsEnabled(DeferLoadingAvailableSourceFlag))
     case FlagString:
         if (GetAsString(DeferLoadingAvailableSourceFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DeferLoadingAvailableSourceFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DeferLoadingAvailableSourceFlag)));
         }
         break;
     case FlagNumber:
@@ -11961,7 +11961,7 @@ if (IsEnabled(ForceNativeFlag))
     case FlagString:
         if (GetAsString(ForceNativeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceNativeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceNativeFlag)));
         }
         break;
     case FlagNumber:
@@ -11986,7 +11986,7 @@ if (IsEnabled(ForceSerializedFlag))
     case FlagString:
         if (GetAsString(ForceSerializedFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceSerializedFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceSerializedFlag)));
         }
         break;
     case FlagNumber:
@@ -12011,7 +12011,7 @@ if (IsEnabled(ForceSerializedBytecodeMajorVersionFlag))
     case FlagString:
         if (GetAsString(ForceSerializedBytecodeMajorVersionFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceSerializedBytecodeMajorVersionFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceSerializedBytecodeMajorVersionFlag)));
         }
         break;
     case FlagNumber:
@@ -12036,7 +12036,7 @@ if (IsEnabled(ForceSerializedBytecodeVersionSchemaFlag))
     case FlagString:
         if (GetAsString(ForceSerializedBytecodeVersionSchemaFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceSerializedBytecodeVersionSchemaFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceSerializedBytecodeVersionSchemaFlag)));
         }
         break;
     case FlagNumber:
@@ -12061,7 +12061,7 @@ if (IsEnabled(ForceStrictModeFlag))
     case FlagString:
         if (GetAsString(ForceStrictModeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceStrictModeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceStrictModeFlag)));
         }
         break;
     case FlagNumber:
@@ -12086,7 +12086,7 @@ if (IsEnabled(ForceUndoDeferFlag))
     case FlagString:
         if (GetAsString(ForceUndoDeferFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceUndoDeferFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceUndoDeferFlag)));
         }
         break;
     case FlagNumber:
@@ -12111,7 +12111,7 @@ if (IsEnabled(ForceBlockingConcurrentCollectFlag))
     case FlagString:
         if (GetAsString(ForceBlockingConcurrentCollectFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceBlockingConcurrentCollectFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceBlockingConcurrentCollectFlag)));
         }
         break;
     case FlagNumber:
@@ -12136,7 +12136,7 @@ if (IsEnabled(FreTestDiagModeFlag))
     case FlagString:
         if (GetAsString(FreTestDiagModeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(FreTestDiagModeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(FreTestDiagModeFlag)));
         }
         break;
     case FlagNumber:
@@ -12162,7 +12162,7 @@ if (IsEnabled(ByteCodeBranchLimitFlag))
     case FlagString:
         if (GetAsString(ByteCodeBranchLimitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ByteCodeBranchLimitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ByteCodeBranchLimitFlag)));
         }
         break;
     case FlagNumber:
@@ -12187,7 +12187,7 @@ if (IsEnabled(MediumByteCodeLayoutFlag))
     case FlagString:
         if (GetAsString(MediumByteCodeLayoutFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MediumByteCodeLayoutFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MediumByteCodeLayoutFlag)));
         }
         break;
     case FlagNumber:
@@ -12212,7 +12212,7 @@ if (IsEnabled(LargeByteCodeLayoutFlag))
     case FlagString:
         if (GetAsString(LargeByteCodeLayoutFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LargeByteCodeLayoutFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LargeByteCodeLayoutFlag)));
         }
         break;
     case FlagNumber:
@@ -12238,7 +12238,7 @@ if (IsEnabled(InduceCodeGenFailureFlag))
     case FlagString:
         if (GetAsString(InduceCodeGenFailureFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InduceCodeGenFailureFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InduceCodeGenFailureFlag)));
         }
         break;
     case FlagNumber:
@@ -12263,7 +12263,7 @@ if (IsEnabled(InduceCodeGenFailureSeedFlag))
     case FlagString:
         if (GetAsString(InduceCodeGenFailureSeedFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InduceCodeGenFailureSeedFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InduceCodeGenFailureSeedFlag)));
         }
         break;
     case FlagNumber:
@@ -12288,7 +12288,7 @@ if (IsEnabled(InjectPartiallyInitializedInterpreterFrameErrorFlag))
     case FlagString:
         if (GetAsString(InjectPartiallyInitializedInterpreterFrameErrorFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InjectPartiallyInitializedInterpreterFrameErrorFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InjectPartiallyInitializedInterpreterFrameErrorFlag)));
         }
         break;
     case FlagNumber:
@@ -12313,7 +12313,7 @@ if (IsEnabled(InjectPartiallyInitializedInterpreterFrameErrorTypeFlag))
     case FlagString:
         if (GetAsString(InjectPartiallyInitializedInterpreterFrameErrorTypeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InjectPartiallyInitializedInterpreterFrameErrorTypeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InjectPartiallyInitializedInterpreterFrameErrorTypeFlag)));
         }
         break;
     case FlagNumber:
@@ -12338,7 +12338,7 @@ if (IsEnabled(GenerateByteCodeBufferReturnsCantGenerateFlag))
     case FlagString:
         if (GetAsString(GenerateByteCodeBufferReturnsCantGenerateFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(GenerateByteCodeBufferReturnsCantGenerateFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(GenerateByteCodeBufferReturnsCantGenerateFlag)));
         }
         break;
     case FlagNumber:
@@ -12363,7 +12363,7 @@ if (IsEnabled(GoptCleanupThresholdFlag))
     case FlagString:
         if (GetAsString(GoptCleanupThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(GoptCleanupThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(GoptCleanupThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -12388,7 +12388,7 @@ if (IsEnabled(AsmGoptCleanupThresholdFlag))
     case FlagString:
         if (GetAsString(AsmGoptCleanupThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AsmGoptCleanupThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AsmGoptCleanupThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -12413,7 +12413,7 @@ if (IsEnabled(HighPrecisionDateFlag))
     case FlagString:
         if (GetAsString(HighPrecisionDateFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(HighPrecisionDateFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(HighPrecisionDateFlag)));
         }
         break;
     case FlagNumber:
@@ -12438,7 +12438,7 @@ if (IsEnabled(InlineCountMaxFlag))
     case FlagString:
         if (GetAsString(InlineCountMaxFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InlineCountMaxFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InlineCountMaxFlag)));
         }
         break;
     case FlagNumber:
@@ -12463,7 +12463,7 @@ if (IsEnabled(InlineCountMaxInLoopBodiesFlag))
     case FlagString:
         if (GetAsString(InlineCountMaxInLoopBodiesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InlineCountMaxInLoopBodiesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InlineCountMaxInLoopBodiesFlag)));
         }
         break;
     case FlagNumber:
@@ -12488,7 +12488,7 @@ if (IsEnabled(icminlbFlag))
     case FlagString:
         if (GetAsString(icminlbFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(icminlbFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(icminlbFlag)));
         }
         break;
     case FlagNumber:
@@ -12513,7 +12513,7 @@ if (IsEnabled(InlineInLoopBodyScaleDownFactorFlag))
     case FlagString:
         if (GetAsString(InlineInLoopBodyScaleDownFactorFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InlineInLoopBodyScaleDownFactorFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InlineInLoopBodyScaleDownFactorFlag)));
         }
         break;
     case FlagNumber:
@@ -12538,7 +12538,7 @@ if (IsEnabled(iilbsdfFlag))
     case FlagString:
         if (GetAsString(iilbsdfFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(iilbsdfFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(iilbsdfFlag)));
         }
         break;
     case FlagNumber:
@@ -12563,7 +12563,7 @@ if (IsEnabled(InlineThresholdFlag))
     case FlagString:
         if (GetAsString(InlineThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InlineThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InlineThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -12588,7 +12588,7 @@ if (IsEnabled(AggressiveInlineCountMaxFlag))
     case FlagString:
         if (GetAsString(AggressiveInlineCountMaxFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AggressiveInlineCountMaxFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AggressiveInlineCountMaxFlag)));
         }
         break;
     case FlagNumber:
@@ -12613,7 +12613,7 @@ if (IsEnabled(AggressiveInlineThresholdFlag))
     case FlagString:
         if (GetAsString(AggressiveInlineThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AggressiveInlineThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AggressiveInlineThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -12638,7 +12638,7 @@ if (IsEnabled(InlineThresholdAdjustCountInLargeFunctionFlag))
     case FlagString:
         if (GetAsString(InlineThresholdAdjustCountInLargeFunctionFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InlineThresholdAdjustCountInLargeFunctionFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InlineThresholdAdjustCountInLargeFunctionFlag)));
         }
         break;
     case FlagNumber:
@@ -12663,7 +12663,7 @@ if (IsEnabled(InlineThresholdAdjustCountInMediumSizedFunctionFlag))
     case FlagString:
         if (GetAsString(InlineThresholdAdjustCountInMediumSizedFunctionFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InlineThresholdAdjustCountInMediumSizedFunctionFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InlineThresholdAdjustCountInMediumSizedFunctionFlag)));
         }
         break;
     case FlagNumber:
@@ -12688,7 +12688,7 @@ if (IsEnabled(InlineThresholdAdjustCountInSmallFunctionFlag))
     case FlagString:
         if (GetAsString(InlineThresholdAdjustCountInSmallFunctionFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InlineThresholdAdjustCountInSmallFunctionFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InlineThresholdAdjustCountInSmallFunctionFlag)));
         }
         break;
     case FlagNumber:
@@ -12713,7 +12713,7 @@ if (IsEnabled(AsmJsInlineAdjustFlag))
     case FlagString:
         if (GetAsString(AsmJsInlineAdjustFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AsmJsInlineAdjustFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AsmJsInlineAdjustFlag)));
         }
         break;
     case FlagNumber:
@@ -12738,7 +12738,7 @@ if (IsEnabled(InterpretFlag))
     case FlagString:
         if (GetAsString(InterpretFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InterpretFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InterpretFlag)));
         }
         break;
     case FlagNumber:
@@ -12763,7 +12763,7 @@ if (IsEnabled(InstrumentFlag))
     case FlagString:
         if (GetAsString(InstrumentFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InstrumentFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InstrumentFlag)));
         }
         break;
     case FlagNumber:
@@ -12788,7 +12788,7 @@ if (IsEnabled(JitQueueThresholdFlag))
     case FlagString:
         if (GetAsString(JitQueueThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(JitQueueThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(JitQueueThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -12813,7 +12813,7 @@ if (IsEnabled(LoopInlineThresholdFlag))
     case FlagString:
         if (GetAsString(LoopInlineThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LoopInlineThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LoopInlineThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -12838,7 +12838,7 @@ if (IsEnabled(LeafInlineThresholdFlag))
     case FlagString:
         if (GetAsString(LeafInlineThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LeafInlineThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LeafInlineThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -12863,7 +12863,7 @@ if (IsEnabled(ConstantArgumentInlineThresholdFlag))
     case FlagString:
         if (GetAsString(ConstantArgumentInlineThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ConstantArgumentInlineThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ConstantArgumentInlineThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -12888,7 +12888,7 @@ if (IsEnabled(RecursiveInlineThresholdFlag))
     case FlagString:
         if (GetAsString(RecursiveInlineThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecursiveInlineThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecursiveInlineThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -12913,7 +12913,7 @@ if (IsEnabled(RecursiveInlineDepthMaxFlag))
     case FlagString:
         if (GetAsString(RecursiveInlineDepthMaxFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecursiveInlineDepthMaxFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecursiveInlineDepthMaxFlag)));
         }
         break;
     case FlagNumber:
@@ -12938,7 +12938,7 @@ if (IsEnabled(RecursiveInlineDepthMinFlag))
     case FlagString:
         if (GetAsString(RecursiveInlineDepthMinFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecursiveInlineDepthMinFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecursiveInlineDepthMinFlag)));
         }
         break;
     case FlagNumber:
@@ -12963,7 +12963,7 @@ if (IsEnabled(RedeferralCapFlag))
     case FlagString:
         if (GetAsString(RedeferralCapFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RedeferralCapFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RedeferralCapFlag)));
         }
         break;
     case FlagNumber:
@@ -12988,7 +12988,7 @@ if (IsEnabled(LoopFlag))
     case FlagString:
         if (GetAsString(LoopFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LoopFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LoopFlag)));
         }
         break;
     case FlagNumber:
@@ -13013,7 +13013,7 @@ if (IsEnabled(LoopInterpretCountFlag))
     case FlagString:
         if (GetAsString(LoopInterpretCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LoopInterpretCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LoopInterpretCountFlag)));
         }
         break;
     case FlagNumber:
@@ -13038,7 +13038,7 @@ if (IsEnabled(licFlag))
     case FlagString:
         if (GetAsString(licFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(licFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(licFlag)));
         }
         break;
     case FlagNumber:
@@ -13063,7 +13063,7 @@ if (IsEnabled(LoopProfileIterationsFlag))
     case FlagString:
         if (GetAsString(LoopProfileIterationsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LoopProfileIterationsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LoopProfileIterationsFlag)));
         }
         break;
     case FlagNumber:
@@ -13088,7 +13088,7 @@ if (IsEnabled(OutsideLoopInlineThresholdFlag))
     case FlagString:
         if (GetAsString(OutsideLoopInlineThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(OutsideLoopInlineThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(OutsideLoopInlineThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -13113,7 +13113,7 @@ if (IsEnabled(MaxFuncInlineDepthFlag))
     case FlagString:
         if (GetAsString(MaxFuncInlineDepthFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxFuncInlineDepthFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxFuncInlineDepthFlag)));
         }
         break;
     case FlagNumber:
@@ -13138,7 +13138,7 @@ if (IsEnabled(MaxNumberOfInlineesWithLoopFlag))
     case FlagString:
         if (GetAsString(MaxNumberOfInlineesWithLoopFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxNumberOfInlineesWithLoopFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxNumberOfInlineesWithLoopFlag)));
         }
         break;
     case FlagNumber:
@@ -13164,7 +13164,7 @@ if (IsEnabled(MemspectFlag))
     case FlagString:
         if (GetAsString(MemspectFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MemspectFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MemspectFlag)));
         }
         break;
     case FlagNumber:
@@ -13190,7 +13190,7 @@ if (IsEnabled(PolymorphicInlineThresholdFlag))
     case FlagString:
         if (GetAsString(PolymorphicInlineThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PolymorphicInlineThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PolymorphicInlineThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -13215,7 +13215,7 @@ if (IsEnabled(PrimeRecyclerFlag))
     case FlagString:
         if (GetAsString(PrimeRecyclerFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PrimeRecyclerFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PrimeRecyclerFlag)));
         }
         break;
     case FlagNumber:
@@ -13240,7 +13240,7 @@ if (IsEnabled(TraceEngineRefcountFlag))
     case FlagString:
         if (GetAsString(TraceEngineRefcountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TraceEngineRefcountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TraceEngineRefcountFlag)));
         }
         break;
     case FlagNumber:
@@ -13266,7 +13266,7 @@ if (IsEnabled(LeakStackTraceFlag))
     case FlagString:
         if (GetAsString(LeakStackTraceFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LeakStackTraceFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LeakStackTraceFlag)));
         }
         break;
     case FlagNumber:
@@ -13291,7 +13291,7 @@ if (IsEnabled(ForceMemoryLeakFlag))
     case FlagString:
         if (GetAsString(ForceMemoryLeakFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceMemoryLeakFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceMemoryLeakFlag)));
         }
         break;
     case FlagNumber:
@@ -13317,7 +13317,7 @@ if (IsEnabled(DumpAfterFinalGCFlag))
     case FlagString:
         if (GetAsString(DumpAfterFinalGCFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpAfterFinalGCFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpAfterFinalGCFlag)));
         }
         break;
     case FlagNumber:
@@ -13342,7 +13342,7 @@ if (IsEnabled(ForceOldDateAPIFlag))
     case FlagString:
         if (GetAsString(ForceOldDateAPIFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceOldDateAPIFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceOldDateAPIFlag)));
         }
         break;
     case FlagNumber:
@@ -13368,7 +13368,7 @@ if (IsEnabled(JitLoopBodyHotLoopThresholdFlag))
     case FlagString:
         if (GetAsString(JitLoopBodyHotLoopThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(JitLoopBodyHotLoopThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(JitLoopBodyHotLoopThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -13393,7 +13393,7 @@ if (IsEnabled(LoopBodySizeThresholdToDisableOptsFlag))
     case FlagString:
         if (GetAsString(LoopBodySizeThresholdToDisableOptsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LoopBodySizeThresholdToDisableOptsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LoopBodySizeThresholdToDisableOptsFlag)));
         }
         break;
     case FlagNumber:
@@ -13419,7 +13419,7 @@ if (IsEnabled(MaxJitThreadCountFlag))
     case FlagString:
         if (GetAsString(MaxJitThreadCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxJitThreadCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxJitThreadCountFlag)));
         }
         break;
     case FlagNumber:
@@ -13444,7 +13444,7 @@ if (IsEnabled(ForceMaxJitThreadCountFlag))
     case FlagString:
         if (GetAsString(ForceMaxJitThreadCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceMaxJitThreadCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceMaxJitThreadCountFlag)));
         }
         break;
     case FlagNumber:
@@ -13470,7 +13470,7 @@ if (IsEnabled(MitigateSpectreFlag))
     case FlagString:
         if (GetAsString(MitigateSpectreFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MitigateSpectreFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MitigateSpectreFlag)));
         }
         break;
     case FlagNumber:
@@ -13496,7 +13496,7 @@ if (IsEnabled(AddMaskingBlocksFlag))
     case FlagString:
         if (GetAsString(AddMaskingBlocksFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AddMaskingBlocksFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AddMaskingBlocksFlag)));
         }
         break;
     case FlagNumber:
@@ -13522,7 +13522,7 @@ if (IsEnabled(PoisonVarArrayLoadFlag))
     case FlagString:
         if (GetAsString(PoisonVarArrayLoadFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonVarArrayLoadFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonVarArrayLoadFlag)));
         }
         break;
     case FlagNumber:
@@ -13547,7 +13547,7 @@ if (IsEnabled(PoisonIntArrayLoadFlag))
     case FlagString:
         if (GetAsString(PoisonIntArrayLoadFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonIntArrayLoadFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonIntArrayLoadFlag)));
         }
         break;
     case FlagNumber:
@@ -13572,7 +13572,7 @@ if (IsEnabled(PoisonFloatArrayLoadFlag))
     case FlagString:
         if (GetAsString(PoisonFloatArrayLoadFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonFloatArrayLoadFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonFloatArrayLoadFlag)));
         }
         break;
     case FlagNumber:
@@ -13597,7 +13597,7 @@ if (IsEnabled(PoisonTypedArrayLoadFlag))
     case FlagString:
         if (GetAsString(PoisonTypedArrayLoadFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonTypedArrayLoadFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonTypedArrayLoadFlag)));
         }
         break;
     case FlagNumber:
@@ -13622,7 +13622,7 @@ if (IsEnabled(PoisonStringLoadFlag))
     case FlagString:
         if (GetAsString(PoisonStringLoadFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonStringLoadFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonStringLoadFlag)));
         }
         break;
     case FlagNumber:
@@ -13647,7 +13647,7 @@ if (IsEnabled(PoisonObjectsForLoadsFlag))
     case FlagString:
         if (GetAsString(PoisonObjectsForLoadsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonObjectsForLoadsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonObjectsForLoadsFlag)));
         }
         break;
     case FlagNumber:
@@ -13673,7 +13673,7 @@ if (IsEnabled(PoisonVarArrayStoreFlag))
     case FlagString:
         if (GetAsString(PoisonVarArrayStoreFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonVarArrayStoreFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonVarArrayStoreFlag)));
         }
         break;
     case FlagNumber:
@@ -13698,7 +13698,7 @@ if (IsEnabled(PoisonIntArrayStoreFlag))
     case FlagString:
         if (GetAsString(PoisonIntArrayStoreFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonIntArrayStoreFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonIntArrayStoreFlag)));
         }
         break;
     case FlagNumber:
@@ -13723,7 +13723,7 @@ if (IsEnabled(PoisonFloatArrayStoreFlag))
     case FlagString:
         if (GetAsString(PoisonFloatArrayStoreFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonFloatArrayStoreFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonFloatArrayStoreFlag)));
         }
         break;
     case FlagNumber:
@@ -13748,7 +13748,7 @@ if (IsEnabled(PoisonTypedArrayStoreFlag))
     case FlagString:
         if (GetAsString(PoisonTypedArrayStoreFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonTypedArrayStoreFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonTypedArrayStoreFlag)));
         }
         break;
     case FlagNumber:
@@ -13773,7 +13773,7 @@ if (IsEnabled(PoisonStringStoreFlag))
     case FlagString:
         if (GetAsString(PoisonStringStoreFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonStringStoreFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonStringStoreFlag)));
         }
         break;
     case FlagNumber:
@@ -13798,7 +13798,7 @@ if (IsEnabled(PoisonObjectsForStoresFlag))
     case FlagString:
         if (GetAsString(PoisonObjectsForStoresFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PoisonObjectsForStoresFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PoisonObjectsForStoresFlag)));
         }
         break;
     case FlagNumber:
@@ -13824,7 +13824,7 @@ if (IsEnabled(MinInterpretCountFlag))
     case FlagString:
         if (GetAsString(MinInterpretCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinInterpretCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinInterpretCountFlag)));
         }
         break;
     case FlagNumber:
@@ -13849,7 +13849,7 @@ if (IsEnabled(MinSimpleJitRunCountFlag))
     case FlagString:
         if (GetAsString(MinSimpleJitRunCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinSimpleJitRunCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinSimpleJitRunCountFlag)));
         }
         break;
     case FlagNumber:
@@ -13874,7 +13874,7 @@ if (IsEnabled(MaxInterpretCountFlag))
     case FlagString:
         if (GetAsString(MaxInterpretCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxInterpretCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxInterpretCountFlag)));
         }
         break;
     case FlagNumber:
@@ -13899,7 +13899,7 @@ if (IsEnabled(MicFlag))
     case FlagString:
         if (GetAsString(MicFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MicFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MicFlag)));
         }
         break;
     case FlagNumber:
@@ -13924,7 +13924,7 @@ if (IsEnabled(MaxSimpleJitRunCountFlag))
     case FlagString:
         if (GetAsString(MaxSimpleJitRunCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxSimpleJitRunCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxSimpleJitRunCountFlag)));
         }
         break;
     case FlagNumber:
@@ -13949,7 +13949,7 @@ if (IsEnabled(MsjrcFlag))
     case FlagString:
         if (GetAsString(MsjrcFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MsjrcFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MsjrcFlag)));
         }
         break;
     case FlagNumber:
@@ -13974,7 +13974,7 @@ if (IsEnabled(MinMemOpCountFlag))
     case FlagString:
         if (GetAsString(MinMemOpCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinMemOpCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinMemOpCountFlag)));
         }
         break;
     case FlagNumber:
@@ -13999,7 +13999,7 @@ if (IsEnabled(MmocFlag))
     case FlagString:
         if (GetAsString(MmocFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MmocFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MmocFlag)));
         }
         break;
     case FlagNumber:
@@ -14026,7 +14026,7 @@ if (IsEnabled(MaxCopyOnAccessArrayLengthFlag))
     case FlagString:
         if (GetAsString(MaxCopyOnAccessArrayLengthFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxCopyOnAccessArrayLengthFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxCopyOnAccessArrayLengthFlag)));
         }
         break;
     case FlagNumber:
@@ -14051,7 +14051,7 @@ if (IsEnabled(MinCopyOnAccessArrayLengthFlag))
     case FlagString:
         if (GetAsString(MinCopyOnAccessArrayLengthFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinCopyOnAccessArrayLengthFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinCopyOnAccessArrayLengthFlag)));
         }
         break;
     case FlagNumber:
@@ -14076,7 +14076,7 @@ if (IsEnabled(CopyOnAccessArraySegmentCacheSizeFlag))
     case FlagString:
         if (GetAsString(CopyOnAccessArraySegmentCacheSizeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CopyOnAccessArraySegmentCacheSizeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CopyOnAccessArraySegmentCacheSizeFlag)));
         }
         break;
     case FlagNumber:
@@ -14103,7 +14103,7 @@ if (IsEnabled(MinTemplatizedJitRunCountFlag))
     case FlagString:
         if (GetAsString(MinTemplatizedJitRunCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinTemplatizedJitRunCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinTemplatizedJitRunCountFlag)));
         }
         break;
     case FlagNumber:
@@ -14128,7 +14128,7 @@ if (IsEnabled(MinAsmJsInterpreterRunCountFlag))
     case FlagString:
         if (GetAsString(MinAsmJsInterpreterRunCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinAsmJsInterpreterRunCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinAsmJsInterpreterRunCountFlag)));
         }
         break;
     case FlagNumber:
@@ -14154,7 +14154,7 @@ if (IsEnabled(MinTemplatizedJitLoopRunCountFlag))
     case FlagString:
         if (GetAsString(MinTemplatizedJitLoopRunCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinTemplatizedJitLoopRunCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinTemplatizedJitLoopRunCountFlag)));
         }
         break;
     case FlagNumber:
@@ -14179,7 +14179,7 @@ if (IsEnabled(MaxTemplatizedJitRunCountFlag))
     case FlagString:
         if (GetAsString(MaxTemplatizedJitRunCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxTemplatizedJitRunCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxTemplatizedJitRunCountFlag)));
         }
         break;
     case FlagNumber:
@@ -14204,7 +14204,7 @@ if (IsEnabled(MtjrcFlag))
     case FlagString:
         if (GetAsString(MtjrcFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MtjrcFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MtjrcFlag)));
         }
         break;
     case FlagNumber:
@@ -14229,7 +14229,7 @@ if (IsEnabled(MaxAsmJsInterpreterRunCountFlag))
     case FlagString:
         if (GetAsString(MaxAsmJsInterpreterRunCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxAsmJsInterpreterRunCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxAsmJsInterpreterRunCountFlag)));
         }
         break;
     case FlagNumber:
@@ -14254,7 +14254,7 @@ if (IsEnabled(MaicFlag))
     case FlagString:
         if (GetAsString(MaicFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaicFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaicFlag)));
         }
         break;
     case FlagNumber:
@@ -14280,7 +14280,7 @@ if (IsEnabled(AutoProfilingInterpreter0LimitFlag))
     case FlagString:
         if (GetAsString(AutoProfilingInterpreter0LimitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AutoProfilingInterpreter0LimitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AutoProfilingInterpreter0LimitFlag)));
         }
         break;
     case FlagNumber:
@@ -14305,7 +14305,7 @@ if (IsEnabled(ProfilingInterpreter0LimitFlag))
     case FlagString:
         if (GetAsString(ProfilingInterpreter0LimitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfilingInterpreter0LimitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfilingInterpreter0LimitFlag)));
         }
         break;
     case FlagNumber:
@@ -14330,7 +14330,7 @@ if (IsEnabled(AutoProfilingInterpreter1LimitFlag))
     case FlagString:
         if (GetAsString(AutoProfilingInterpreter1LimitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AutoProfilingInterpreter1LimitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AutoProfilingInterpreter1LimitFlag)));
         }
         break;
     case FlagNumber:
@@ -14355,7 +14355,7 @@ if (IsEnabled(SimpleJitLimitFlag))
     case FlagString:
         if (GetAsString(SimpleJitLimitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(SimpleJitLimitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(SimpleJitLimitFlag)));
         }
         break;
     case FlagNumber:
@@ -14380,7 +14380,7 @@ if (IsEnabled(ProfilingInterpreter1LimitFlag))
     case FlagString:
         if (GetAsString(ProfilingInterpreter1LimitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfilingInterpreter1LimitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfilingInterpreter1LimitFlag)));
         }
         break;
     case FlagNumber:
@@ -14406,7 +14406,7 @@ if (IsEnabled(ExecutionModeLimitsFlag))
     case FlagString:
         if (GetAsString(ExecutionModeLimitsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ExecutionModeLimitsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ExecutionModeLimitsFlag)));
         }
         break;
     case FlagNumber:
@@ -14431,7 +14431,7 @@ if (IsEnabled(EmlFlag))
     case FlagString:
         if (GetAsString(EmlFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EmlFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EmlFlag)));
         }
         break;
     case FlagNumber:
@@ -14456,7 +14456,7 @@ if (IsEnabled(EnforceExecutionModeLimitsFlag))
     case FlagString:
         if (GetAsString(EnforceExecutionModeLimitsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EnforceExecutionModeLimitsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EnforceExecutionModeLimitsFlag)));
         }
         break;
     case FlagNumber:
@@ -14481,7 +14481,7 @@ if (IsEnabled(EemlFlag))
     case FlagString:
         if (GetAsString(EemlFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EemlFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EemlFlag)));
         }
         break;
     case FlagNumber:
@@ -14507,7 +14507,7 @@ if (IsEnabled(SimpleJitAfterFlag))
     case FlagString:
         if (GetAsString(SimpleJitAfterFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(SimpleJitAfterFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(SimpleJitAfterFlag)));
         }
         break;
     case FlagNumber:
@@ -14532,7 +14532,7 @@ if (IsEnabled(SjaFlag))
     case FlagString:
         if (GetAsString(SjaFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(SjaFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(SjaFlag)));
         }
         break;
     case FlagNumber:
@@ -14557,7 +14557,7 @@ if (IsEnabled(FullJitAfterFlag))
     case FlagString:
         if (GetAsString(FullJitAfterFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(FullJitAfterFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(FullJitAfterFlag)));
         }
         break;
     case FlagNumber:
@@ -14582,7 +14582,7 @@ if (IsEnabled(FjaFlag))
     case FlagString:
         if (GetAsString(FjaFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(FjaFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(FjaFlag)));
         }
         break;
     case FlagNumber:
@@ -14608,7 +14608,7 @@ if (IsEnabled(NewSimpleJitFlag))
     case FlagString:
         if (GetAsString(NewSimpleJitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(NewSimpleJitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(NewSimpleJitFlag)));
         }
         break;
     case FlagNumber:
@@ -14634,7 +14634,7 @@ if (IsEnabled(MaxLinearIntCaseCountFlag))
     case FlagString:
         if (GetAsString(MaxLinearIntCaseCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxLinearIntCaseCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxLinearIntCaseCountFlag)));
         }
         break;
     case FlagNumber:
@@ -14659,7 +14659,7 @@ if (IsEnabled(MaxSingleCharStrJumpTableSizeFlag))
     case FlagString:
         if (GetAsString(MaxSingleCharStrJumpTableSizeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxSingleCharStrJumpTableSizeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxSingleCharStrJumpTableSizeFlag)));
         }
         break;
     case FlagNumber:
@@ -14684,7 +14684,7 @@ if (IsEnabled(MaxSingleCharStrJumpTableRatioFlag))
     case FlagString:
         if (GetAsString(MaxSingleCharStrJumpTableRatioFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxSingleCharStrJumpTableRatioFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxSingleCharStrJumpTableRatioFlag)));
         }
         break;
     case FlagNumber:
@@ -14709,7 +14709,7 @@ if (IsEnabled(MinSwitchJumpTableSizeFlag))
     case FlagString:
         if (GetAsString(MinSwitchJumpTableSizeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinSwitchJumpTableSizeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinSwitchJumpTableSizeFlag)));
         }
         break;
     case FlagNumber:
@@ -14734,7 +14734,7 @@ if (IsEnabled(MaxLinearStringCaseCountFlag))
     case FlagString:
         if (GetAsString(MaxLinearStringCaseCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxLinearStringCaseCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxLinearStringCaseCountFlag)));
         }
         break;
     case FlagNumber:
@@ -14759,7 +14759,7 @@ if (IsEnabled(MinDeferredFuncTokenCountFlag))
     case FlagString:
         if (GetAsString(MinDeferredFuncTokenCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinDeferredFuncTokenCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinDeferredFuncTokenCountFlag)));
         }
         break;
     case FlagNumber:
@@ -14785,7 +14785,7 @@ if (IsEnabled(SkipFuncCountForBailOnNoProfileFlag))
     case FlagString:
         if (GetAsString(SkipFuncCountForBailOnNoProfileFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(SkipFuncCountForBailOnNoProfileFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(SkipFuncCountForBailOnNoProfileFlag)));
         }
         break;
     case FlagNumber:
@@ -14811,7 +14811,7 @@ if (IsEnabled(MaxJITFunctionBytecodeByteLengthFlag))
     case FlagString:
         if (GetAsString(MaxJITFunctionBytecodeByteLengthFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxJITFunctionBytecodeByteLengthFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxJITFunctionBytecodeByteLengthFlag)));
         }
         break;
     case FlagNumber:
@@ -14836,7 +14836,7 @@ if (IsEnabled(MaxJITFunctionBytecodeCountFlag))
     case FlagString:
         if (GetAsString(MaxJITFunctionBytecodeCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxJITFunctionBytecodeCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxJITFunctionBytecodeCountFlag)));
         }
         break;
     case FlagNumber:
@@ -14861,7 +14861,7 @@ if (IsEnabled(MaxLoopsPerFunctionFlag))
     case FlagString:
         if (GetAsString(MaxLoopsPerFunctionFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxLoopsPerFunctionFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxLoopsPerFunctionFlag)));
         }
         break;
     case FlagNumber:
@@ -14886,7 +14886,7 @@ if (IsEnabled(FuncObjectInlineCacheThresholdFlag))
     case FlagString:
         if (GetAsString(FuncObjectInlineCacheThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(FuncObjectInlineCacheThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(FuncObjectInlineCacheThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -14911,7 +14911,7 @@ if (IsEnabled(NoDeferParseFlag))
     case FlagString:
         if (GetAsString(NoDeferParseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(NoDeferParseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(NoDeferParseFlag)));
         }
         break;
     case FlagNumber:
@@ -14936,7 +14936,7 @@ if (IsEnabled(NoLogoFlag))
     case FlagString:
         if (GetAsString(NoLogoFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(NoLogoFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(NoLogoFlag)));
         }
         break;
     case FlagNumber:
@@ -14961,7 +14961,7 @@ if (IsEnabled(OOPJITMissingOptsFlag))
     case FlagString:
         if (GetAsString(OOPJITMissingOptsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(OOPJITMissingOptsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(OOPJITMissingOptsFlag)));
         }
         break;
     case FlagNumber:
@@ -14986,7 +14986,7 @@ if (IsEnabled(CrashOnOOPJITFailureFlag))
     case FlagString:
         if (GetAsString(CrashOnOOPJITFailureFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CrashOnOOPJITFailureFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CrashOnOOPJITFailureFlag)));
         }
         break;
     case FlagNumber:
@@ -15011,7 +15011,7 @@ if (IsEnabled(OOPCFGRegistrationFlag))
     case FlagString:
         if (GetAsString(OOPCFGRegistrationFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(OOPCFGRegistrationFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(OOPCFGRegistrationFlag)));
         }
         break;
     case FlagNumber:
@@ -15036,7 +15036,7 @@ if (IsEnabled(ForceJITCFGCheckFlag))
     case FlagString:
         if (GetAsString(ForceJITCFGCheckFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceJITCFGCheckFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceJITCFGCheckFlag)));
         }
         break;
     case FlagNumber:
@@ -15061,7 +15061,7 @@ if (IsEnabled(UseJITTrampolineFlag))
     case FlagString:
         if (GetAsString(UseJITTrampolineFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(UseJITTrampolineFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(UseJITTrampolineFlag)));
         }
         break;
     case FlagNumber:
@@ -15086,7 +15086,7 @@ if (IsEnabled(NoNativeFlag))
     case FlagString:
         if (GetAsString(NoNativeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(NoNativeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(NoNativeFlag)));
         }
         break;
     case FlagNumber:
@@ -15111,7 +15111,7 @@ if (IsEnabled(NopFrequencyFlag))
     case FlagString:
         if (GetAsString(NopFrequencyFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(NopFrequencyFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(NopFrequencyFlag)));
         }
         break;
     case FlagNumber:
@@ -15136,7 +15136,7 @@ if (IsEnabled(NoStrictModeFlag))
     case FlagString:
         if (GetAsString(NoStrictModeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(NoStrictModeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(NoStrictModeFlag)));
         }
         break;
     case FlagNumber:
@@ -15161,7 +15161,7 @@ if (IsEnabled(NormalizeStatsFlag))
     case FlagString:
         if (GetAsString(NormalizeStatsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(NormalizeStatsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(NormalizeStatsFlag)));
         }
         break;
     case FlagNumber:
@@ -15186,7 +15186,7 @@ if (IsEnabled(OffFlag))
     case FlagString:
         if (GetAsString(OffFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(OffFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(OffFlag)));
         }
         break;
     case FlagNumber:
@@ -15211,7 +15211,7 @@ if (IsEnabled(OffProfiledByteCodeFlag))
     case FlagString:
         if (GetAsString(OffProfiledByteCodeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(OffProfiledByteCodeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(OffProfiledByteCodeFlag)));
         }
         break;
     case FlagNumber:
@@ -15236,7 +15236,7 @@ if (IsEnabled(OnFlag))
     case FlagString:
         if (GetAsString(OnFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(OnFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(OnFlag)));
         }
         break;
     case FlagNumber:
@@ -15262,7 +15262,7 @@ if (IsEnabled(InMemoryTraceFlag))
     case FlagString:
         if (GetAsString(InMemoryTraceFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InMemoryTraceFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InMemoryTraceFlag)));
         }
         break;
     case FlagNumber:
@@ -15287,7 +15287,7 @@ if (IsEnabled(InMemoryTraceBufferSizeFlag))
     case FlagString:
         if (GetAsString(InMemoryTraceBufferSizeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InMemoryTraceBufferSizeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InMemoryTraceBufferSizeFlag)));
         }
         break;
     case FlagNumber:
@@ -15313,7 +15313,7 @@ if (IsEnabled(TraceWithStackFlag))
     case FlagString:
         if (GetAsString(TraceWithStackFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TraceWithStackFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TraceWithStackFlag)));
         }
         break;
     case FlagNumber:
@@ -15340,7 +15340,7 @@ if (IsEnabled(PrintRunTimeDataCollectionTraceFlag))
     case FlagString:
         if (GetAsString(PrintRunTimeDataCollectionTraceFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PrintRunTimeDataCollectionTraceFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PrintRunTimeDataCollectionTraceFlag)));
         }
         break;
     case FlagNumber:
@@ -15366,7 +15366,7 @@ if (IsEnabled(PrejitFlag))
     case FlagString:
         if (GetAsString(PrejitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PrejitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PrejitFlag)));
         }
         break;
     case FlagNumber:
@@ -15392,7 +15392,7 @@ if (IsEnabled(PrintSrcInDumpFlag))
     case FlagString:
         if (GetAsString(PrintSrcInDumpFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PrintSrcInDumpFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PrintSrcInDumpFlag)));
         }
         break;
     case FlagNumber:
@@ -15418,7 +15418,7 @@ if (IsEnabled(ProfileDictionaryFlag))
     case FlagString:
         if (GetAsString(ProfileDictionaryFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileDictionaryFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileDictionaryFlag)));
         }
         break;
     case FlagNumber:
@@ -15445,7 +15445,7 @@ if (IsEnabled(ProfileFlag))
     case FlagString:
         if (GetAsString(ProfileFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileFlag)));
         }
         break;
     case FlagNumber:
@@ -15470,7 +15470,7 @@ if (IsEnabled(ProfileThresholdFlag))
     case FlagString:
         if (GetAsString(ProfileThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -15497,7 +15497,7 @@ if (IsEnabled(ProfileObjectLiteralFlag))
     case FlagString:
         if (GetAsString(ProfileObjectLiteralFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileObjectLiteralFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileObjectLiteralFlag)));
         }
         break;
     case FlagNumber:
@@ -15524,7 +15524,7 @@ if (IsEnabled(ProfileMemoryFlag))
     case FlagString:
         if (GetAsString(ProfileMemoryFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileMemoryFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileMemoryFlag)));
         }
         break;
     case FlagNumber:
@@ -15551,7 +15551,7 @@ if (IsEnabled(ProfileStringsFlag))
     case FlagString:
         if (GetAsString(ProfileStringsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileStringsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileStringsFlag)));
         }
         break;
     case FlagNumber:
@@ -15578,7 +15578,7 @@ if (IsEnabled(ProfileTypesFlag))
     case FlagString:
         if (GetAsString(ProfileTypesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileTypesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileTypesFlag)));
         }
         break;
     case FlagNumber:
@@ -15605,7 +15605,7 @@ if (IsEnabled(ProfileEvalMapFlag))
     case FlagString:
         if (GetAsString(ProfileEvalMapFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileEvalMapFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileEvalMapFlag)));
         }
         break;
     case FlagNumber:
@@ -15633,7 +15633,7 @@ if (IsEnabled(ProfileBailOutRecordMemoryFlag))
     case FlagString:
         if (GetAsString(ProfileBailOutRecordMemoryFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ProfileBailOutRecordMemoryFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ProfileBailOutRecordMemoryFlag)));
         }
         break;
     case FlagNumber:
@@ -15661,7 +15661,7 @@ if (IsEnabled(ValidateIntRangesFlag))
     case FlagString:
         if (GetAsString(ValidateIntRangesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ValidateIntRangesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ValidateIntRangesFlag)));
         }
         break;
     case FlagNumber:
@@ -15687,7 +15687,7 @@ if (IsEnabled(RejitMaxBailOutCountFlag))
     case FlagString:
         if (GetAsString(RejitMaxBailOutCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RejitMaxBailOutCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RejitMaxBailOutCountFlag)));
         }
         break;
     case FlagNumber:
@@ -15712,7 +15712,7 @@ if (IsEnabled(CallsToBailoutsRatioForRejitFlag))
     case FlagString:
         if (GetAsString(CallsToBailoutsRatioForRejitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(CallsToBailoutsRatioForRejitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(CallsToBailoutsRatioForRejitFlag)));
         }
         break;
     case FlagNumber:
@@ -15737,7 +15737,7 @@ if (IsEnabled(LoopIterationsToBailoutsRatioForRejitFlag))
     case FlagString:
         if (GetAsString(LoopIterationsToBailoutsRatioForRejitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LoopIterationsToBailoutsRatioForRejitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LoopIterationsToBailoutsRatioForRejitFlag)));
         }
         break;
     case FlagNumber:
@@ -15762,7 +15762,7 @@ if (IsEnabled(MinBailOutsBeforeRejitFlag))
     case FlagString:
         if (GetAsString(MinBailOutsBeforeRejitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinBailOutsBeforeRejitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinBailOutsBeforeRejitFlag)));
         }
         break;
     case FlagNumber:
@@ -15787,7 +15787,7 @@ if (IsEnabled(MinBailOutsBeforeRejitForLoopsFlag))
     case FlagString:
         if (GetAsString(MinBailOutsBeforeRejitForLoopsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinBailOutsBeforeRejitForLoopsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinBailOutsBeforeRejitForLoopsFlag)));
         }
         break;
     case FlagNumber:
@@ -15812,7 +15812,7 @@ if (IsEnabled(LibraryStackFrameFlag))
     case FlagString:
         if (GetAsString(LibraryStackFrameFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LibraryStackFrameFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LibraryStackFrameFlag)));
         }
         break;
     case FlagNumber:
@@ -15837,7 +15837,7 @@ if (IsEnabled(LibraryStackFrameDebuggerFlag))
     case FlagString:
         if (GetAsString(LibraryStackFrameDebuggerFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LibraryStackFrameDebuggerFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LibraryStackFrameDebuggerFlag)));
         }
         break;
     case FlagNumber:
@@ -15863,7 +15863,7 @@ if (IsEnabled(RecyclerStressFlag))
     case FlagString:
         if (GetAsString(RecyclerStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerStressFlag)));
         }
         break;
     case FlagNumber:
@@ -15888,7 +15888,7 @@ if (IsEnabled(RecyclerBackgroundStressFlag))
     case FlagString:
         if (GetAsString(RecyclerBackgroundStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerBackgroundStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerBackgroundStressFlag)));
         }
         break;
     case FlagNumber:
@@ -15913,7 +15913,7 @@ if (IsEnabled(RecyclerConcurrentStressFlag))
     case FlagString:
         if (GetAsString(RecyclerConcurrentStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerConcurrentStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerConcurrentStressFlag)));
         }
         break;
     case FlagNumber:
@@ -15938,7 +15938,7 @@ if (IsEnabled(RecyclerConcurrentRepeatStressFlag))
     case FlagString:
         if (GetAsString(RecyclerConcurrentRepeatStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerConcurrentRepeatStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerConcurrentRepeatStressFlag)));
         }
         break;
     case FlagNumber:
@@ -15963,7 +15963,7 @@ if (IsEnabled(RecyclerPartialStressFlag))
     case FlagString:
         if (GetAsString(RecyclerPartialStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerPartialStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerPartialStressFlag)));
         }
         break;
     case FlagNumber:
@@ -15988,7 +15988,7 @@ if (IsEnabled(RecyclerTrackStressFlag))
     case FlagString:
         if (GetAsString(RecyclerTrackStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerTrackStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerTrackStressFlag)));
         }
         break;
     case FlagNumber:
@@ -16013,7 +16013,7 @@ if (IsEnabled(RecyclerInduceFalsePositivesFlag))
     case FlagString:
         if (GetAsString(RecyclerInduceFalsePositivesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerInduceFalsePositivesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerInduceFalsePositivesFlag)));
         }
         break;
     case FlagNumber:
@@ -16039,7 +16039,7 @@ if (IsEnabled(RecyclerForceMarkInteriorFlag))
     case FlagString:
         if (GetAsString(RecyclerForceMarkInteriorFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerForceMarkInteriorFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerForceMarkInteriorFlag)));
         }
         break;
     case FlagNumber:
@@ -16064,7 +16064,7 @@ if (IsEnabled(RecyclerPriorityBoostTimeoutFlag))
     case FlagString:
         if (GetAsString(RecyclerPriorityBoostTimeoutFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerPriorityBoostTimeoutFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerPriorityBoostTimeoutFlag)));
         }
         break;
     case FlagNumber:
@@ -16089,7 +16089,7 @@ if (IsEnabled(RecyclerThreadCollectTimeoutFlag))
     case FlagString:
         if (GetAsString(RecyclerThreadCollectTimeoutFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerThreadCollectTimeoutFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerThreadCollectTimeoutFlag)));
         }
         break;
     case FlagNumber:
@@ -16114,7 +16114,7 @@ if (IsEnabled(EnableConcurrentSweepAllocFlag))
     case FlagString:
         if (GetAsString(EnableConcurrentSweepAllocFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EnableConcurrentSweepAllocFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EnableConcurrentSweepAllocFlag)));
         }
         break;
     case FlagNumber:
@@ -16139,7 +16139,7 @@ if (IsEnabled(ecsaFlag))
     case FlagString:
         if (GetAsString(ecsaFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ecsaFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ecsaFlag)));
         }
         break;
     case FlagNumber:
@@ -16164,7 +16164,7 @@ if (IsEnabled(PageHeapFlag))
     case FlagString:
         if (GetAsString(PageHeapFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PageHeapFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PageHeapFlag)));
         }
         break;
     case FlagNumber:
@@ -16189,7 +16189,7 @@ if (IsEnabled(PageHeapAllocStackFlag))
     case FlagString:
         if (GetAsString(PageHeapAllocStackFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PageHeapAllocStackFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PageHeapAllocStackFlag)));
         }
         break;
     case FlagNumber:
@@ -16214,7 +16214,7 @@ if (IsEnabled(PageHeapFreeStackFlag))
     case FlagString:
         if (GetAsString(PageHeapFreeStackFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PageHeapFreeStackFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PageHeapFreeStackFlag)));
         }
         break;
     case FlagNumber:
@@ -16239,7 +16239,7 @@ if (IsEnabled(PageHeapBucketNumberFlag))
     case FlagString:
         if (GetAsString(PageHeapBucketNumberFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PageHeapBucketNumberFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PageHeapBucketNumberFlag)));
         }
         break;
     case FlagNumber:
@@ -16264,7 +16264,7 @@ if (IsEnabled(PageHeapBlockTypeFlag))
     case FlagString:
         if (GetAsString(PageHeapBlockTypeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PageHeapBlockTypeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PageHeapBlockTypeFlag)));
         }
         break;
     case FlagNumber:
@@ -16289,7 +16289,7 @@ if (IsEnabled(PageHeapDecommitGuardPageFlag))
     case FlagString:
         if (GetAsString(PageHeapDecommitGuardPageFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PageHeapDecommitGuardPageFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PageHeapDecommitGuardPageFlag)));
         }
         break;
     case FlagNumber:
@@ -16315,7 +16315,7 @@ if (IsEnabled(RecyclerNoPageReuseFlag))
     case FlagString:
         if (GetAsString(RecyclerNoPageReuseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerNoPageReuseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerNoPageReuseFlag)));
         }
         break;
     case FlagNumber:
@@ -16342,7 +16342,7 @@ if (IsEnabled(RecyclerVerifyFlag))
     case FlagString:
         if (GetAsString(RecyclerVerifyFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerVerifyFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerVerifyFlag)));
         }
         break;
     case FlagNumber:
@@ -16367,7 +16367,7 @@ if (IsEnabled(RecyclerVerifyPadSizeFlag))
     case FlagString:
         if (GetAsString(RecyclerVerifyPadSizeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerVerifyPadSizeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerVerifyPadSizeFlag)));
         }
         break;
     case FlagNumber:
@@ -16393,7 +16393,7 @@ if (IsEnabled(RecyclerTestFlag))
     case FlagString:
         if (GetAsString(RecyclerTestFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerTestFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerTestFlag)));
         }
         break;
     case FlagNumber:
@@ -16418,7 +16418,7 @@ if (IsEnabled(RecyclerProtectPagesOnRescanFlag))
     case FlagString:
         if (GetAsString(RecyclerProtectPagesOnRescanFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerProtectPagesOnRescanFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerProtectPagesOnRescanFlag)));
         }
         break;
     case FlagNumber:
@@ -16444,7 +16444,7 @@ if (IsEnabled(RecyclerVerifyMarkFlag))
     case FlagString:
         if (GetAsString(RecyclerVerifyMarkFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RecyclerVerifyMarkFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RecyclerVerifyMarkFlag)));
         }
         break;
     case FlagNumber:
@@ -16470,7 +16470,7 @@ if (IsEnabled(LowMemoryCapFlag))
     case FlagString:
         if (GetAsString(LowMemoryCapFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LowMemoryCapFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LowMemoryCapFlag)));
         }
         break;
     case FlagNumber:
@@ -16495,7 +16495,7 @@ if (IsEnabled(NewPagesCapDuringBGSweepingFlag))
     case FlagString:
         if (GetAsString(NewPagesCapDuringBGSweepingFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(NewPagesCapDuringBGSweepingFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(NewPagesCapDuringBGSweepingFlag)));
         }
         break;
     case FlagNumber:
@@ -16520,7 +16520,7 @@ if (IsEnabled(AllocPolicyLimitFlag))
     case FlagString:
         if (GetAsString(AllocPolicyLimitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(AllocPolicyLimitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(AllocPolicyLimitFlag)));
         }
         break;
     case FlagNumber:
@@ -16545,7 +16545,7 @@ if (IsEnabled(RuntimeDataOutputFileFlag))
     case FlagString:
         if (GetAsString(RuntimeDataOutputFileFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RuntimeDataOutputFileFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RuntimeDataOutputFileFlag)));
         }
         break;
     case FlagNumber:
@@ -16570,7 +16570,7 @@ if (IsEnabled(SpeculationCapFlag))
     case FlagString:
         if (GetAsString(SpeculationCapFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(SpeculationCapFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(SpeculationCapFlag)));
         }
         break;
     case FlagNumber:
@@ -16596,7 +16596,7 @@ if (IsEnabled(StatsFlag))
     case FlagString:
         if (GetAsString(StatsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(StatsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(StatsFlag)));
         }
         break;
     case FlagNumber:
@@ -16623,7 +16623,7 @@ if (IsEnabled(SwallowExceptionsFlag))
     case FlagString:
         if (GetAsString(SwallowExceptionsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(SwallowExceptionsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(SwallowExceptionsFlag)));
         }
         break;
     case FlagNumber:
@@ -16649,7 +16649,7 @@ if (IsEnabled(PrintSystemExceptionFlag))
     case FlagString:
         if (GetAsString(PrintSystemExceptionFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PrintSystemExceptionFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PrintSystemExceptionFlag)));
         }
         break;
     case FlagNumber:
@@ -16674,7 +16674,7 @@ if (IsEnabled(SwitchOptHolesThresholdFlag))
     case FlagString:
         if (GetAsString(SwitchOptHolesThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(SwitchOptHolesThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(SwitchOptHolesThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -16699,7 +16699,7 @@ if (IsEnabled(TempMinFlag))
     case FlagString:
         if (GetAsString(TempMinFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TempMinFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TempMinFlag)));
         }
         break;
     case FlagNumber:
@@ -16724,7 +16724,7 @@ if (IsEnabled(TempMaxFlag))
     case FlagString:
         if (GetAsString(TempMaxFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TempMaxFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TempMaxFlag)));
         }
         break;
     case FlagNumber:
@@ -16749,7 +16749,7 @@ if (IsEnabled(TraceFlag))
     case FlagString:
         if (GetAsString(TraceFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TraceFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TraceFlag)));
         }
         break;
     case FlagNumber:
@@ -16776,7 +16776,7 @@ if (IsEnabled(LoopAlignNopLimitFlag))
     case FlagString:
         if (GetAsString(LoopAlignNopLimitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(LoopAlignNopLimitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(LoopAlignNopLimitFlag)));
         }
         break;
     case FlagNumber:
@@ -16804,7 +16804,7 @@ if (IsEnabled(TraceMemoryFlag))
     case FlagString:
         if (GetAsString(TraceMemoryFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TraceMemoryFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TraceMemoryFlag)));
         }
         break;
     case FlagNumber:
@@ -16837,7 +16837,7 @@ if (IsEnabled(TraceMetaDataParsingFlag))
     case FlagString:
         if (GetAsString(TraceMetaDataParsingFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TraceMetaDataParsingFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TraceMetaDataParsingFlag)));
         }
         break;
     case FlagNumber:
@@ -16862,7 +16862,7 @@ if (IsEnabled(TraceWin8AllocationsFlag))
     case FlagString:
         if (GetAsString(TraceWin8AllocationsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TraceWin8AllocationsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TraceWin8AllocationsFlag)));
         }
         break;
     case FlagNumber:
@@ -16887,7 +16887,7 @@ if (IsEnabled(TraceWin8DeallocationsImmediateFlag))
     case FlagString:
         if (GetAsString(TraceWin8DeallocationsImmediateFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TraceWin8DeallocationsImmediateFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TraceWin8DeallocationsImmediateFlag)));
         }
         break;
     case FlagNumber:
@@ -16912,7 +16912,7 @@ if (IsEnabled(PrintWin8StatsDetailedFlag))
     case FlagString:
         if (GetAsString(PrintWin8StatsDetailedFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PrintWin8StatsDetailedFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PrintWin8StatsDetailedFlag)));
         }
         break;
     case FlagNumber:
@@ -16937,7 +16937,7 @@ if (IsEnabled(TraceProtectPagesFlag))
     case FlagString:
         if (GetAsString(TraceProtectPagesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TraceProtectPagesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TraceProtectPagesFlag)));
         }
         break;
     case FlagNumber:
@@ -16963,7 +16963,7 @@ if (IsEnabled(TraceAsyncDebugCallsFlag))
     case FlagString:
         if (GetAsString(TraceAsyncDebugCallsFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TraceAsyncDebugCallsFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TraceAsyncDebugCallsFlag)));
         }
         break;
     case FlagNumber:
@@ -16989,7 +16989,7 @@ if (IsEnabled(TrackDispatchFlag))
     case FlagString:
         if (GetAsString(TrackDispatchFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TrackDispatchFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TrackDispatchFlag)));
         }
         break;
     case FlagNumber:
@@ -17015,7 +17015,7 @@ if (IsEnabled(VerboseFlag))
     case FlagString:
         if (GetAsString(VerboseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(VerboseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(VerboseFlag)));
         }
         break;
     case FlagNumber:
@@ -17040,7 +17040,7 @@ if (IsEnabled(UseFullNameFlag))
     case FlagString:
         if (GetAsString(UseFullNameFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(UseFullNameFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(UseFullNameFlag)));
         }
         break;
     case FlagNumber:
@@ -17065,7 +17065,7 @@ if (IsEnabled(Utf8Flag))
     case FlagString:
         if (GetAsString(Utf8Flag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(Utf8Flag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(Utf8Flag)));
         }
         break;
     case FlagNumber:
@@ -17090,7 +17090,7 @@ if (IsEnabled(VersionFlag))
     case FlagString:
         if (GetAsString(VersionFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(VersionFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(VersionFlag)));
         }
         break;
     case FlagNumber:
@@ -17115,7 +17115,7 @@ if (IsEnabled(WERExceptionSupportFlag))
     case FlagString:
         if (GetAsString(WERExceptionSupportFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WERExceptionSupportFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WERExceptionSupportFlag)));
         }
         break;
     case FlagNumber:
@@ -17140,7 +17140,7 @@ if (IsEnabled(ExtendedErrorStackForTestHostFlag))
     case FlagString:
         if (GetAsString(ExtendedErrorStackForTestHostFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ExtendedErrorStackForTestHostFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ExtendedErrorStackForTestHostFlag)));
         }
         break;
     case FlagNumber:
@@ -17165,7 +17165,7 @@ if (IsEnabled(errorStackTraceFlag))
     case FlagString:
         if (GetAsString(errorStackTraceFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(errorStackTraceFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(errorStackTraceFlag)));
         }
         break;
     case FlagNumber:
@@ -17190,7 +17190,7 @@ if (IsEnabled(DoHeapEnumOnEngineShutdownFlag))
     case FlagString:
         if (GetAsString(DoHeapEnumOnEngineShutdownFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DoHeapEnumOnEngineShutdownFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DoHeapEnumOnEngineShutdownFlag)));
         }
         break;
     case FlagNumber:
@@ -17216,7 +17216,7 @@ if (IsEnabled(ValidateHeapEnumFlag))
     case FlagString:
         if (GetAsString(ValidateHeapEnumFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ValidateHeapEnumFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ValidateHeapEnumFlag)));
         }
         break;
     case FlagNumber:
@@ -17247,7 +17247,7 @@ if (IsEnabled(RegexTracingFlag))
     case FlagString:
         if (GetAsString(RegexTracingFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RegexTracingFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RegexTracingFlag)));
         }
         break;
     case FlagNumber:
@@ -17272,7 +17272,7 @@ if (IsEnabled(RegexProfileFlag))
     case FlagString:
         if (GetAsString(RegexProfileFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RegexProfileFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RegexProfileFlag)));
         }
         break;
     case FlagNumber:
@@ -17297,7 +17297,7 @@ if (IsEnabled(RegexDebugFlag))
     case FlagString:
         if (GetAsString(RegexDebugFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RegexDebugFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RegexDebugFlag)));
         }
         break;
     case FlagNumber:
@@ -17322,7 +17322,7 @@ if (IsEnabled(RegexDebugASTFlag))
     case FlagString:
         if (GetAsString(RegexDebugASTFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RegexDebugASTFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RegexDebugASTFlag)));
         }
         break;
     case FlagNumber:
@@ -17347,7 +17347,7 @@ if (IsEnabled(RegexDebugAnnotatedASTFlag))
     case FlagString:
         if (GetAsString(RegexDebugAnnotatedASTFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RegexDebugAnnotatedASTFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RegexDebugAnnotatedASTFlag)));
         }
         break;
     case FlagNumber:
@@ -17372,7 +17372,7 @@ if (IsEnabled(RegexBytecodeDebugFlag))
     case FlagString:
         if (GetAsString(RegexBytecodeDebugFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RegexBytecodeDebugFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RegexBytecodeDebugFlag)));
         }
         break;
     case FlagNumber:
@@ -17397,7 +17397,7 @@ if (IsEnabled(RegexOptimizeFlag))
     case FlagString:
         if (GetAsString(RegexOptimizeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RegexOptimizeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RegexOptimizeFlag)));
         }
         break;
     case FlagNumber:
@@ -17422,7 +17422,7 @@ if (IsEnabled(DynamicRegexMruListSizeFlag))
     case FlagString:
         if (GetAsString(DynamicRegexMruListSizeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DynamicRegexMruListSizeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DynamicRegexMruListSizeFlag)));
         }
         break;
     case FlagNumber:
@@ -17449,7 +17449,7 @@ if (IsEnabled(OptimizeForManyInstancesFlag))
     case FlagString:
         if (GetAsString(OptimizeForManyInstancesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(OptimizeForManyInstancesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(OptimizeForManyInstancesFlag)));
         }
         break;
     case FlagNumber:
@@ -17474,7 +17474,7 @@ if (IsEnabled(EnableArrayTypeMutationFlag))
     case FlagString:
         if (GetAsString(EnableArrayTypeMutationFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EnableArrayTypeMutationFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EnableArrayTypeMutationFlag)));
         }
         break;
     case FlagNumber:
@@ -17499,7 +17499,7 @@ if (IsEnabled(ArrayMutationTestSeedFlag))
     case FlagString:
         if (GetAsString(ArrayMutationTestSeedFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ArrayMutationTestSeedFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ArrayMutationTestSeedFlag)));
         }
         break;
     case FlagNumber:
@@ -17524,7 +17524,7 @@ if (IsEnabled(TestTraceFlag))
     case FlagString:
         if (GetAsString(TestTraceFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TestTraceFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TestTraceFlag)));
         }
         break;
     case FlagNumber:
@@ -17549,7 +17549,7 @@ if (IsEnabled(EnableEvalMapCleanupFlag))
     case FlagString:
         if (GetAsString(EnableEvalMapCleanupFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EnableEvalMapCleanupFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EnableEvalMapCleanupFlag)));
         }
         break;
     case FlagNumber:
@@ -17575,7 +17575,7 @@ if (IsEnabled(TraceObjectAllocationFlag))
     case FlagString:
         if (GetAsString(TraceObjectAllocationFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TraceObjectAllocationFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TraceObjectAllocationFlag)));
         }
         break;
     case FlagNumber:
@@ -17601,7 +17601,7 @@ if (IsEnabled(SseFlag))
     case FlagString:
         if (GetAsString(SseFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(SseFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(SseFlag)));
         }
         break;
     case FlagNumber:
@@ -17626,7 +17626,7 @@ if (IsEnabled(DeletedPropertyReuseThresholdFlag))
     case FlagString:
         if (GetAsString(DeletedPropertyReuseThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DeletedPropertyReuseThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DeletedPropertyReuseThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -17651,7 +17651,7 @@ if (IsEnabled(ForceStringKeyedSimpleDictionaryTypeHandlerFlag))
     case FlagString:
         if (GetAsString(ForceStringKeyedSimpleDictionaryTypeHandlerFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceStringKeyedSimpleDictionaryTypeHandlerFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceStringKeyedSimpleDictionaryTypeHandlerFlag)));
         }
         break;
     case FlagNumber:
@@ -17676,7 +17676,7 @@ if (IsEnabled(BigDictionaryTypeHandlerThresholdFlag))
     case FlagString:
         if (GetAsString(BigDictionaryTypeHandlerThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BigDictionaryTypeHandlerThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BigDictionaryTypeHandlerThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -17701,7 +17701,7 @@ if (IsEnabled(TypeSnapshotEnumerationFlag))
     case FlagString:
         if (GetAsString(TypeSnapshotEnumerationFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(TypeSnapshotEnumerationFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(TypeSnapshotEnumerationFlag)));
         }
         break;
     case FlagNumber:
@@ -17726,7 +17726,7 @@ if (IsEnabled(IsolatePrototypesFlag))
     case FlagString:
         if (GetAsString(IsolatePrototypesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(IsolatePrototypesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(IsolatePrototypesFlag)));
         }
         break;
     case FlagNumber:
@@ -17751,7 +17751,7 @@ if (IsEnabled(ChangeTypeOnProtoFlag))
     case FlagString:
         if (GetAsString(ChangeTypeOnProtoFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ChangeTypeOnProtoFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ChangeTypeOnProtoFlag)));
         }
         break;
     case FlagNumber:
@@ -17776,7 +17776,7 @@ if (IsEnabled(ShareInlineCachesFlag))
     case FlagString:
         if (GetAsString(ShareInlineCachesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ShareInlineCachesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ShareInlineCachesFlag)));
         }
         break;
     case FlagNumber:
@@ -17801,7 +17801,7 @@ if (IsEnabled(DisableDebugObjectFlag))
     case FlagString:
         if (GetAsString(DisableDebugObjectFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DisableDebugObjectFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DisableDebugObjectFlag)));
         }
         break;
     case FlagNumber:
@@ -17826,7 +17826,7 @@ if (IsEnabled(DumpHeapFlag))
     case FlagString:
         if (GetAsString(DumpHeapFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(DumpHeapFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(DumpHeapFlag)));
         }
         break;
     case FlagNumber:
@@ -17851,7 +17851,7 @@ if (IsEnabled(autoProxyFlag))
     case FlagString:
         if (GetAsString(autoProxyFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(autoProxyFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(autoProxyFlag)));
         }
         break;
     case FlagNumber:
@@ -17876,7 +17876,7 @@ if (IsEnabled(PerfHintLevelFlag))
     case FlagString:
         if (GetAsString(PerfHintLevelFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PerfHintLevelFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PerfHintLevelFlag)));
         }
         break;
     case FlagNumber:
@@ -17902,7 +17902,7 @@ if (IsEnabled(MemProtectHeapFlag))
     case FlagString:
         if (GetAsString(MemProtectHeapFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MemProtectHeapFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MemProtectHeapFlag)));
         }
         break;
     case FlagNumber:
@@ -17929,7 +17929,7 @@ if (IsEnabled(MemProtectHeapStressFlag))
     case FlagString:
         if (GetAsString(MemProtectHeapStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MemProtectHeapStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MemProtectHeapStressFlag)));
         }
         break;
     case FlagNumber:
@@ -17954,7 +17954,7 @@ if (IsEnabled(MemProtectHeapBackgroundStressFlag))
     case FlagString:
         if (GetAsString(MemProtectHeapBackgroundStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MemProtectHeapBackgroundStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MemProtectHeapBackgroundStressFlag)));
         }
         break;
     case FlagNumber:
@@ -17979,7 +17979,7 @@ if (IsEnabled(MemProtectHeapConcurrentStressFlag))
     case FlagString:
         if (GetAsString(MemProtectHeapConcurrentStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MemProtectHeapConcurrentStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MemProtectHeapConcurrentStressFlag)));
         }
         break;
     case FlagNumber:
@@ -18004,7 +18004,7 @@ if (IsEnabled(MemProtectHeapConcurrentRepeatStressFlag))
     case FlagString:
         if (GetAsString(MemProtectHeapConcurrentRepeatStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MemProtectHeapConcurrentRepeatStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MemProtectHeapConcurrentRepeatStressFlag)));
         }
         break;
     case FlagNumber:
@@ -18029,7 +18029,7 @@ if (IsEnabled(MemProtectHeapPartialStressFlag))
     case FlagString:
         if (GetAsString(MemProtectHeapPartialStressFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MemProtectHeapPartialStressFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MemProtectHeapPartialStressFlag)));
         }
         break;
     case FlagNumber:
@@ -18056,7 +18056,7 @@ if (IsEnabled(FixPropsOnPathTypesFlag))
     case FlagString:
         if (GetAsString(FixPropsOnPathTypesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(FixPropsOnPathTypesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(FixPropsOnPathTypesFlag)));
         }
         break;
     case FlagNumber:
@@ -18082,7 +18082,7 @@ if (IsEnabled(BailoutTraceFilterFlag))
     case FlagString:
         if (GetAsString(BailoutTraceFilterFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BailoutTraceFilterFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BailoutTraceFilterFlag)));
         }
         break;
     case FlagNumber:
@@ -18107,7 +18107,7 @@ if (IsEnabled(RejitTraceFilterFlag))
     case FlagString:
         if (GetAsString(RejitTraceFilterFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(RejitTraceFilterFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(RejitTraceFilterFlag)));
         }
         break;
     case FlagNumber:
@@ -18134,7 +18134,7 @@ if (IsEnabled(MaxBackgroundFinishMarkCountFlag))
     case FlagString:
         if (GetAsString(MaxBackgroundFinishMarkCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxBackgroundFinishMarkCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxBackgroundFinishMarkCountFlag)));
         }
         break;
     case FlagNumber:
@@ -18159,7 +18159,7 @@ if (IsEnabled(BackgroundFinishMarkWaitTimeFlag))
     case FlagString:
         if (GetAsString(BackgroundFinishMarkWaitTimeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(BackgroundFinishMarkWaitTimeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(BackgroundFinishMarkWaitTimeFlag)));
         }
         break;
     case FlagNumber:
@@ -18184,7 +18184,7 @@ if (IsEnabled(MinBackgroundRepeatMarkRescanBytesFlag))
     case FlagString:
         if (GetAsString(MinBackgroundRepeatMarkRescanBytesFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MinBackgroundRepeatMarkRescanBytesFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MinBackgroundRepeatMarkRescanBytesFlag)));
         }
         break;
     case FlagNumber:
@@ -18211,7 +18211,7 @@ if (IsEnabled(ZeroMemoryWithNonTemporalStoreFlag))
     case FlagString:
         if (GetAsString(ZeroMemoryWithNonTemporalStoreFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ZeroMemoryWithNonTemporalStoreFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ZeroMemoryWithNonTemporalStoreFlag)));
         }
         break;
     case FlagNumber:
@@ -18239,7 +18239,7 @@ if (IsEnabled(MaxMarkStackPageCountFlag))
     case FlagString:
         if (GetAsString(MaxMarkStackPageCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxMarkStackPageCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxMarkStackPageCountFlag)));
         }
         break;
     case FlagNumber:
@@ -18264,7 +18264,7 @@ if (IsEnabled(MaxTrackedObjectListCountFlag))
     case FlagString:
         if (GetAsString(MaxTrackedObjectListCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxTrackedObjectListCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxTrackedObjectListCountFlag)));
         }
         break;
     case FlagNumber:
@@ -18291,7 +18291,7 @@ if (IsEnabled(NumberAllocPlusSizeFlag))
     case FlagString:
         if (GetAsString(NumberAllocPlusSizeFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(NumberAllocPlusSizeFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(NumberAllocPlusSizeFlag)));
         }
         break;
     case FlagNumber:
@@ -18318,7 +18318,7 @@ if (IsEnabled(InitializeInterpreterSlotsWithInvalidStackVarFlag))
     case FlagString:
         if (GetAsString(InitializeInterpreterSlotsWithInvalidStackVarFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InitializeInterpreterSlotsWithInvalidStackVarFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InitializeInterpreterSlotsWithInvalidStackVarFlag)));
         }
         break;
     case FlagNumber:
@@ -18346,7 +18346,7 @@ if (IsEnabled(PRNGSeed0Flag))
     case FlagString:
         if (GetAsString(PRNGSeed0Flag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PRNGSeed0Flag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PRNGSeed0Flag)));
         }
         break;
     case FlagNumber:
@@ -18371,7 +18371,7 @@ if (IsEnabled(PRNGSeed1Flag))
     case FlagString:
         if (GetAsString(PRNGSeed1Flag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(PRNGSeed1Flag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(PRNGSeed1Flag)));
         }
         break;
     case FlagNumber:
@@ -18398,7 +18398,7 @@ if (IsEnabled(ClearInlineCachesOnCollectFlag))
     case FlagString:
         if (GetAsString(ClearInlineCachesOnCollectFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ClearInlineCachesOnCollectFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ClearInlineCachesOnCollectFlag)));
         }
         break;
     case FlagNumber:
@@ -18423,7 +18423,7 @@ if (IsEnabled(InlineCacheInvalidationListCompactionThresholdFlag))
     case FlagString:
         if (GetAsString(InlineCacheInvalidationListCompactionThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(InlineCacheInvalidationListCompactionThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(InlineCacheInvalidationListCompactionThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -18448,7 +18448,7 @@ if (IsEnabled(ConstructorCacheInvalidationThresholdFlag))
     case FlagString:
         if (GetAsString(ConstructorCacheInvalidationThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ConstructorCacheInvalidationThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ConstructorCacheInvalidationThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -18474,7 +18474,7 @@ if (IsEnabled(GCMemoryThresholdFlag))
     case FlagString:
         if (GetAsString(GCMemoryThresholdFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(GCMemoryThresholdFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(GCMemoryThresholdFlag)));
         }
         break;
     case FlagNumber:
@@ -18501,7 +18501,7 @@ if (IsEnabled(GCMemoryThresholdFlag))
     case FlagString:
         if (GetAsString(SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag)));
         }
         break;
     case FlagNumber:
@@ -18528,7 +18528,7 @@ if (IsEnabled(JITServerIdleTimeoutFlag))
     case FlagString:
         if (GetAsString(JITServerIdleTimeoutFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(JITServerIdleTimeoutFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(JITServerIdleTimeoutFlag)));
         }
         break;
     case FlagNumber:
@@ -18553,7 +18553,7 @@ if (IsEnabled(JITServerMaxInactivePageAllocatorCountFlag))
     case FlagString:
         if (GetAsString(JITServerMaxInactivePageAllocatorCountFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(JITServerMaxInactivePageAllocatorCountFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(JITServerMaxInactivePageAllocatorCountFlag)));
         }
         break;
     case FlagNumber:
@@ -18579,7 +18579,7 @@ if (IsEnabled(StrictWriteBarrierCheckFlag))
     case FlagString:
         if (GetAsString(StrictWriteBarrierCheckFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(StrictWriteBarrierCheckFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(StrictWriteBarrierCheckFlag)));
         }
         break;
     case FlagNumber:
@@ -18604,7 +18604,7 @@ if (IsEnabled(WriteBarrierTestFlag))
     case FlagString:
         if (GetAsString(WriteBarrierTestFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(WriteBarrierTestFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(WriteBarrierTestFlag)));
         }
         break;
     case FlagNumber:
@@ -18629,7 +18629,7 @@ if (IsEnabled(ForceSoftwareWriteBarrierFlag))
     case FlagString:
         if (GetAsString(ForceSoftwareWriteBarrierFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(ForceSoftwareWriteBarrierFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(ForceSoftwareWriteBarrierFlag)));
         }
         break;
     case FlagNumber:
@@ -18654,7 +18654,7 @@ if (IsEnabled(VerifyBarrierBitFlag))
     case FlagString:
         if (GetAsString(VerifyBarrierBitFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(VerifyBarrierBitFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(VerifyBarrierBitFlag)));
         }
         break;
     case FlagNumber:
@@ -18679,7 +18679,7 @@ if (IsEnabled(EnableBGFreeZeroFlag))
     case FlagString:
         if (GetAsString(EnableBGFreeZeroFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(EnableBGFreeZeroFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(EnableBGFreeZeroFlag)));
         }
         break;
     case FlagNumber:
@@ -18704,7 +18704,7 @@ if (IsEnabled(KeepRecyclerTrackDataFlag))
     case FlagString:
         if (GetAsString(KeepRecyclerTrackDataFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(KeepRecyclerTrackDataFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(KeepRecyclerTrackDataFlag)));
         }
         break;
     case FlagNumber:
@@ -18730,7 +18730,7 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
     case FlagString:
         if (GetAsString(MaxSingleAllocSizeInMBFlag) != nullptr)
         {
-            Output::Print(u":%s", (const char16_t*)*GetAsString(MaxSingleAllocSizeInMBFlag));
+            Output::Print(u":%s", static_cast<const char16_t *>(*GetAsString(MaxSingleAllocSizeInMBFlag)));
         }
         break;
     case FlagNumber:
@@ -18760,88 +18760,88 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         {
         #if DBG
         case ArrayValidateFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case MemOpMissingValueValidateFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case OOPJITFixupValidateFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         #ifdef ARENA_MEMORY_VERIFY
         case ArenaNoFreeListFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ArenaNoPageReuseFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ArenaUseHeapAllocFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case ValidateInlineStackFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case AsmDiffFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case AsmJsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_AsmJs;
+            retValue = DEFAULT_CONFIG_AsmJs;
             break;
         case AsmJsStopOnErrorFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_AsmJsStopOnError;
+            retValue = DEFAULT_CONFIG_AsmJsStopOnError;
             break;
         case AsmJsEdgeFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_AsmJsEdge;
+            retValue = DEFAULT_CONFIG_AsmJsEdge;
             break;
         case WasmFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_Wasm;
+            retValue = DEFAULT_CONFIG_Wasm;
             break;
         case WasmI64Flag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmI64;
+            retValue = DEFAULT_CONFIG_WasmI64;
             break;
         case WasmFastArrayFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmFastArray;
+            retValue = DEFAULT_CONFIG_WasmFastArray;
             break;
         case WasmSharedArrayVirtualBufferFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmSharedArrayVirtualBuffer;
+            retValue = DEFAULT_CONFIG_WasmSharedArrayVirtualBuffer;
             break;
         case WasmMathExFilterFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmMathExFilter;
+            retValue = DEFAULT_CONFIG_WasmMathExFilter;
             break;
         case WasmCheckVersionFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmCheckVersion;
+            retValue = DEFAULT_CONFIG_WasmCheckVersion;
             break;
         case WasmAssignModuleIDFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmAssignModuleID;
+            retValue = DEFAULT_CONFIG_WasmAssignModuleID;
             break;
         case WasmIgnoreLimitsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmIgnoreLimits;
+            retValue = DEFAULT_CONFIG_WasmIgnoreLimits;
             break;
         case WasmFoldFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmFold;
+            retValue = DEFAULT_CONFIG_WasmFold;
             break;
         case WasmIgnoreResponseFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmIgnoreResponse;
+            retValue = DEFAULT_CONFIG_WasmIgnoreResponse;
             break;
         case WasmThreadsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmThreads;
+            retValue = DEFAULT_CONFIG_WasmThreads;
             break;
         case WasmMultiValueFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmMultiValue;
+            retValue = DEFAULT_CONFIG_WasmMultiValue;
             break;
         case WasmSignExtendsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmSignExtends;
+            retValue = DEFAULT_CONFIG_WasmSignExtends;
             break;
         case WasmNontrappingFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmNontrapping;
+            retValue = DEFAULT_CONFIG_WasmNontrapping;
             break;
 
         // WebAssembly Experimental Features
         // Master WasmExperimental flag to activate WebAssembly experimental features
         case WasmExperimentalFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WasmExperimental;
+            retValue = DEFAULT_CONFIG_WasmExperimental;
             break;
 
         // The default value of the experimental features will be off because the parent is off
@@ -18849,317 +18849,317 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         // In Edge, we manually turn on the individual child flags
         // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         case WasmSimdFlag:
-            retValue = (Boolean) true;
+            retValue = true;
             break;
 
         case AssertBreakFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case AssertPopUpFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case AssertIgnoreFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case AsyncDebuggingFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_AsyncDebugging;
+            retValue = DEFAULT_CONFIG_AsyncDebugging;
             break;
         case BaselineModeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case BailOutAtEveryLineFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case BailOutAtEveryByteCodeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case BailOutAtEveryImplicitCallFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case BenchmarkFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case BgJitFlag:
-            retValue = (Boolean) true;
+            retValue = true;
             break;
         case BgParseFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_BgParse;
+            retValue = DEFAULT_CONFIG_BgParse;
             break;
 
         case CreateFunctionProxyFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_CreateFunctionProxy;
+            retValue = DEFAULT_CONFIG_CreateFunctionProxy;
             break;
         case HybridFgJitFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_HybridFgJit;
+            retValue = DEFAULT_CONFIG_HybridFgJit;
             break;
         case BytecodeHistFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case CurrentSourceInfoFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_CurrentSourceInfo;
+            retValue = DEFAULT_CONFIG_CurrentSourceInfo;
             break;
         case CFGLogFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case CheckAlignmentFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case CheckEmitBufferPermissionsFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #ifdef CHECK_MEMORY_LEAK
         case CheckMemoryLeakFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case CheckOpHelpersFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case CloneInlinedPolymorphicCachesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_CloneInlinedPolymorphicCaches;
+            retValue = DEFAULT_CONFIG_CloneInlinedPolymorphicCaches;
             break;
         case ConcurrentRuntimeFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ConcurrentRuntime;
+            retValue = DEFAULT_CONFIG_ConcurrentRuntime;
             break;
         case DebugFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
 
         case DebugWindowFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ParserStateCacheFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ParserStateCache;
+            retValue = DEFAULT_CONFIG_ParserStateCache;
             break;
         case CompressParserStateCacheFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_CompressParserStateCache;
+            retValue = DEFAULT_CONFIG_CompressParserStateCache;
             break;
         case DeferTopLevelTillFirstCallFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_DeferTopLevelTillFirstCall;
+            retValue = DEFAULT_CONFIG_DeferTopLevelTillFirstCall;
             break;
         case DirectCallTelemetryStatsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_DirectCallTelemetryStats;
+            retValue = DEFAULT_CONFIG_DirectCallTelemetryStats;
             break;
         case DisableArrayBTreeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case DisableRentalThreadingFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_DisableRentalThreading;
+            retValue = DEFAULT_CONFIG_DisableRentalThreading;
             break;
         case DisableVTuneSourceLineInfoFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case DisplayMemStatsFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #ifdef DUMP_FRAGMENTATION_STATS
         case DumpFragmentationStatsFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case DumpIRAddressesFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case DumpLineNoInColorFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #ifdef RECYCLER_DUMP_OBJECT_GRAPH
         case DumpObjectGraphOnExitFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case DumpObjectGraphOnCollectFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case DumpEvalStringOnRemovalFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case DumpObjectGraphOnEnumFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #ifdef EDIT_AND_CONTINUE
         case EditTestFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case WininetProfileCacheFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WininetProfileCache;
+            retValue = DEFAULT_CONFIG_WininetProfileCache;
             break;
         case NoDynamicProfileInMemoryCacheFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ProfileBasedSpeculativeJitFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ProfileBasedSpeculativeJit;
+            retValue = DEFAULT_CONFIG_ProfileBasedSpeculativeJit;
             break;
         case ExecuteByteCodeBufferReturnsInvalidByteCodeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case SkipSplitOnNoResultFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_SkipSplitWhenResultIgnored;
+            retValue = DEFAULT_CONFIG_SkipSplitWhenResultIgnored;
             break;
         case Force32BitByteCodeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
 
         case CollectGarbageFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_CollectGarbage;
+            retValue = DEFAULT_CONFIG_CollectGarbage;
             break;
 
         case IntlFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_Intl;
+            retValue = DEFAULT_CONFIG_Intl;
             break;
         case IntlBuiltInsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_IntlBuiltIns;
+            retValue = DEFAULT_CONFIG_IntlBuiltIns;
             break;
         case IntlPlatformFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_IntlPlatform;
+            retValue = DEFAULT_CONFIG_IntlPlatform;
             break;
 
         case JsBuiltInFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_JsBuiltIn;
+            retValue = DEFAULT_CONFIG_JsBuiltIn;
             break;
         case JitReproFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_JitRepro;
+            retValue = DEFAULT_CONFIG_JitRepro;
             break;
         case EntryPointInfoRpcDataFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_EntryPointInfoRpcData;
+            retValue = DEFAULT_CONFIG_EntryPointInfoRpcData;
             break;
 
         case LdChakraLibFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_LdChakraLib;
+            retValue = DEFAULT_CONFIG_LdChakraLib;
             break;
         case TestChakraLibFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_TestChakraLib;
+            retValue = DEFAULT_CONFIG_TestChakraLib;
             break;
 
         // ES6 (BLUE+1) features/flags
 
         // Master ES6 flag to enable STABLE ES6 features/flags
         case ES6Flag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6;
+            retValue = DEFAULT_CONFIG_ES6;
             break;
 
         // Master ES6 flag to enable ALL sub ES6 features/flags
         case ES6AllFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6All;
+            retValue = DEFAULT_CONFIG_ES6All;
             break;
 
         // Master ES6 flag to enable Threshold ES6 features/flags
         case ES6ExperimentalFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6All;
+            retValue = DEFAULT_CONFIG_ES6All;
             break;
 
         // Per ES6 feature/flag
 
         case ES7AsyncAwaitFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES7AsyncAwait;
+            retValue = DEFAULT_CONFIG_ES7AsyncAwait;
             break;
         case ES6DateParseFixFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6DateParseFix;
+            retValue = DEFAULT_CONFIG_ES6DateParseFix;
             break;
         case ES6FunctionNameFullFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6FunctionNameFull;
+            retValue = DEFAULT_CONFIG_ES6FunctionNameFull;
             break;
         case ES6GeneratorsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Generators;
+            retValue = DEFAULT_CONFIG_ES6Generators;
             break;
         case ES7ExponentiationOperatorFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES7ExponentionOperator;
+            retValue = DEFAULT_CONFIG_ES7ExponentionOperator;
             break;
 
         case ES7ValuesEntriesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES7ValuesEntries;
+            retValue = DEFAULT_CONFIG_ES7ValuesEntries;
             break;
         case ES7TrailingCommaFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES7TrailingComma;
+            retValue = DEFAULT_CONFIG_ES7TrailingComma;
             break;
         case ES6IsConcatSpreadableFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6IsConcatSpreadable;
+            retValue = DEFAULT_CONFIG_ES6IsConcatSpreadable;
             break;
         case ES6MathFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Math;
+            retValue = DEFAULT_CONFIG_ES6Math;
             break;
 
         #ifndef COMPILE_DISABLE_ESDynamicImport
         #define COMPILE_DISABLE_ESDynamicImport 0
         #endif
         case ESDynamicImportFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESDynamicImport;
+            retValue = DEFAULT_CONFIG_ESDynamicImport;
             break;
 
         case ES6ModuleFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Module;
+            retValue = DEFAULT_CONFIG_ES6Module;
             break;
         case ES6ObjectFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Object;
+            retValue = DEFAULT_CONFIG_ES6Object;
             break;
         case ES6NumberFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Number;
+            retValue = DEFAULT_CONFIG_ES6Number;
             break;
         case ES6ObjectLiteralsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6ObjectLiterals;
+            retValue = DEFAULT_CONFIG_ES6ObjectLiterals;
             break;
         case ES6ProxyFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Proxy;
+            retValue = DEFAULT_CONFIG_ES6Proxy;
             break;
         case ES6RestFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Rest;
+            retValue = DEFAULT_CONFIG_ES6Rest;
             break;
         case ES6SpreadFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Spread;
+            retValue = DEFAULT_CONFIG_ES6Spread;
             break;
         case ES6StringFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6String;
+            retValue = DEFAULT_CONFIG_ES6String;
             break;
         case ES6StringPrototypeFixesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6StringPrototypeFixes;
+            retValue = DEFAULT_CONFIG_ES6StringPrototypeFixes;
             break;
         case ES2018ObjectRestSpreadFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES2018ObjectRestSpread;
+            retValue = DEFAULT_CONFIG_ES2018ObjectRestSpread;
             break;
 
         case ES6PrototypeChainFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6PrototypeChain;
+            retValue = DEFAULT_CONFIG_ES6PrototypeChain;
             break;
         case ES6ToPrimitiveFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6ToPrimitive;
+            retValue = DEFAULT_CONFIG_ES6ToPrimitive;
             break;
         case ES6ToLengthFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6ToLength;
+            retValue = DEFAULT_CONFIG_ES6ToLength;
             break;
         case ES6ToStringTagFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6ToStringTag;
+            retValue = DEFAULT_CONFIG_ES6ToStringTag;
             break;
         case ES6UnicodeFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Unicode;
+            retValue = DEFAULT_CONFIG_ES6Unicode;
             break;
         case ES6UnicodeVerboseFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6UnicodeVerbose;
+            retValue = DEFAULT_CONFIG_ES6UnicodeVerbose;
             break;
         case ES6UnscopablesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Unscopables;
+            retValue = DEFAULT_CONFIG_ES6Unscopables;
             break;
         case ES6RegExStickyFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6RegExSticky;
+            retValue = DEFAULT_CONFIG_ES6RegExSticky;
             break;
         case ES2018RegExDotAllFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES2018RegExDotAll;
+            retValue = DEFAULT_CONFIG_ES2018RegExDotAll;
             break;
         case ESExportNsAsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESExportNsAs;
+            retValue = DEFAULT_CONFIG_ESExportNsAs;
             break;
         case ES2018AsyncIterationFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES2018AsyncIteration;
+            retValue = DEFAULT_CONFIG_ES2018AsyncIteration;
             break;
         case ESTopLevelAwaitFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESTopLevelAwait;
+            retValue = DEFAULT_CONFIG_ESTopLevelAwait;
             break;
 
         #ifndef COMPILE_DISABLE_ES6RegExPrototypeProperties
             #define COMPILE_DISABLE_ES6RegExPrototypeProperties 0
         #endif
         case ES6RegExPrototypePropertiesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6RegExPrototypeProperties;
+            retValue = DEFAULT_CONFIG_ES6RegExPrototypeProperties;
             break;
 
         #ifndef COMPILE_DISABLE_ES6RegExSymbols
@@ -19170,14 +19170,14 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         // sets implicit call flag before calling into script
         // Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
         case ES6RegExSymbolsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6RegExSymbols;
+            retValue = DEFAULT_CONFIG_ES6RegExSymbols;
             break;
 
         case ES6VerboseFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ES6Verbose;
+            retValue = DEFAULT_CONFIG_ES6Verbose;
             break;
         case ESObjectGetOwnPropertyDescriptorsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESObjectGetOwnPropertyDescriptors;
+            retValue = DEFAULT_CONFIG_ESObjectGetOwnPropertyDescriptors;
             break;
 
         #ifndef COMPILE_DISABLE_ESSharedArrayBuffer
@@ -19185,425 +19185,425 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         #endif
 
         case ESSharedArrayBufferFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESSharedArrayBuffer;
+            retValue = DEFAULT_CONFIG_ESSharedArrayBuffer;
             break;
 
         // ES BigInt flag
         case ESBigIntFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESBigInt;
+            retValue = DEFAULT_CONFIG_ESBigInt;
             break;
 
         // ES Numeric Separator support for numeric constants
         case ESNumericSeparatorFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESNumericSeparator;
+            retValue = DEFAULT_CONFIG_ESNumericSeparator;
             break;
 
         // ES Nullish coalescing operator support (??)
         case ESNullishCoalescingOperatorFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESNullishCoalescingOperator;
+            retValue = DEFAULT_CONFIG_ESNullishCoalescingOperator;
             break;
 
         // ES Hashbang support for interpreter directive syntax
         case ESHashbangFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESHashbang;
+            retValue = DEFAULT_CONFIG_ESHashbang;
             break;
 
         // ES Symbol.prototype.description flag
         case ESSymbolDescriptionFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESSymbolDescription;
+            retValue = DEFAULT_CONFIG_ESSymbolDescription;
             break;
 
         case ESArrayFindFromLastFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESArrayFindFromLast;
+            retValue = DEFAULT_CONFIG_ESArrayFindFromLast;
             break;
 
         // ES Promise.any and AggregateError flag
         case ESPromiseAnyFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESPromiseAny;
+            retValue = DEFAULT_CONFIG_ESPromiseAny;
             break;
 
         // ES import.meta keyword meta-property
         case ESImportMetaFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESImportMeta;
+            retValue = DEFAULT_CONFIG_ESImportMeta;
             break;
 
         //ES globalThis flag
         case ESGlobalThisFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ESGlobalThis;
+            retValue = DEFAULT_CONFIG_ESGlobalThis;
             break;
 
         // This flag to be removed once JITing generator functions is stable
         case JitES6GeneratorsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_JitES6Generators;
+            retValue = DEFAULT_CONFIG_JitES6Generators;
             break;
 
         case FastLineColumnCalculationFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_FastLineColumnCalculation;
+            retValue = DEFAULT_CONFIG_FastLineColumnCalculation;
             break;
         case FreeRejittedCodeFlag:
-            retValue = (Boolean) true;
+            retValue = true;
             break;
         case ForceGuardPagesFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case PrintGuardPageBoundsFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ForceLegacyEngineFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ForceArrayBTreeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case StrongArraySortFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_StrongArraySort;
+            retValue = DEFAULT_CONFIG_StrongArraySort;
             break;
         case ForceCleanPropertyOnCollectFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceCleanPropertyOnCollect;
+            retValue = DEFAULT_CONFIG_ForceCleanPropertyOnCollect;
             break;
         case ForceCleanCacheOnCollectFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceCleanCacheOnCollect;
+            retValue = DEFAULT_CONFIG_ForceCleanCacheOnCollect;
             break;
         case ForceGCAfterJSONParseFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceGCAfterJSONParse;
+            retValue = DEFAULT_CONFIG_ForceGCAfterJSONParse;
             break;
         case ForceDecommitOnCollectFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceDecommitOnCollect;
+            retValue = DEFAULT_CONFIG_ForceDecommitOnCollect;
             break;
         case ForceDeferParseFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceDeferParse;
+            retValue = DEFAULT_CONFIG_ForceDeferParse;
             break;
         case ForceDiagnosticsModeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ForceGetWriteWatchOOMFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ForcePostLowerGlobOptInstrStringFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForcePostLowerGlobOptInstrString;
+            retValue = DEFAULT_CONFIG_ForcePostLowerGlobOptInstrString;
             break;
         case ForceSplitScopeFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceSplitScope;
+            retValue = DEFAULT_CONFIG_ForceSplitScope;
             break;
         case EnumerateSpecialPropertiesInDebuggerFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_EnumerateSpecialPropertiesInDebugger;
+            retValue = DEFAULT_CONFIG_EnumerateSpecialPropertiesInDebugger;
             break;
         case EnableContinueAfterExceptionWrappersForHelpersFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForHelpers;
+            retValue = DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForHelpers;
             break;
         case EnableContinueAfterExceptionWrappersForBuiltInsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForBuiltIns;
+            retValue = DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForBuiltIns;
             break;
         case EnableFunctionSourceReportForHeapEnumFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_EnableFunctionSourceReportForHeapEnum;
+            retValue = DEFAULT_CONFIG_EnableFunctionSourceReportForHeapEnum;
             break;
         case ForceDynamicProfileFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceDynamicProfile;
+            retValue = DEFAULT_CONFIG_ForceDynamicProfile;
             break;
         case ForceES5ArrayFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceES5Array;
+            retValue = DEFAULT_CONFIG_ForceES5Array;
             break;
         case ForceAsmJsLinkFailFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceAsmJsLinkFail;
+            retValue = DEFAULT_CONFIG_ForceAsmJsLinkFail;
             break;
         case ForceExpireOnNonCacheCollectFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceExpireOnNonCacheCollect;
+            retValue = DEFAULT_CONFIG_ForceExpireOnNonCacheCollect;
             break;
         case ForceFastPathFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceFastPath;
+            retValue = DEFAULT_CONFIG_ForceFastPath;
             break;
         case ForceFloatPrefFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ForceJITLoopBodyFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceJITLoopBody;
+            retValue = DEFAULT_CONFIG_ForceJITLoopBody;
             break;
         case ForceStaticInterpreterThunkFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceStaticInterpreterThunk;
+            retValue = DEFAULT_CONFIG_ForceStaticInterpreterThunk;
             break;
         case DumpCommentsFromReferencedFilesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_DumpCommentsFromReferencedFiles;
+            retValue = DEFAULT_CONFIG_DumpCommentsFromReferencedFiles;
             break;
         case EnableFatalErrorOnOOMFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_EnableFatalErrorOnOOM;
+            retValue = DEFAULT_CONFIG_EnableFatalErrorOnOOM;
             break;
 
         #if defined(_M_ARM32_OR_ARM64)
         case ForceLocalsPtrFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case DeferLoadingAvailableSourceFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_DeferLoadingAvailableSource;
+            retValue = DEFAULT_CONFIG_DeferLoadingAvailableSource;
             break;
         case ForceNativeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ForceSerializedFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceSerialized;
+            retValue = DEFAULT_CONFIG_ForceSerialized;
             break;
         case ForceStrictModeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ForceUndoDeferFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ForceBlockingConcurrentCollectFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case FreTestDiagModeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #ifdef BYTECODE_TESTING
         case MediumByteCodeLayoutFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case LargeByteCodeLayoutFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case GenerateByteCodeBufferReturnsCantGenerateFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case HighPrecisionDateFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_HighPrecisionDate;
+            retValue = DEFAULT_CONFIG_HighPrecisionDate;
             break;
 
         case PrimeRecyclerFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PrimeRecycler;
+            retValue = DEFAULT_CONFIG_PrimeRecycler;
             break;
         case TraceEngineRefcountFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #if defined(CHECK_MEMORY_LEAK)
         case LeakStackTraceFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ForceMemoryLeakFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case DumpAfterFinalGCFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ForceOldDateAPIFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceOldDateAPI;
+            retValue = DEFAULT_CONFIG_ForceOldDateAPI;
             break;
 
         case ForceMaxJitThreadCountFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceMaxJitThreadCount;
+            retValue = DEFAULT_CONFIG_ForceMaxJitThreadCount;
             break;
 
         case MitigateSpectreFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_MitigateSpectre;
+            retValue = DEFAULT_CONFIG_MitigateSpectre;
             break;
 
         case AddMaskingBlocksFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_AddMaskingBlocks;
+            retValue = DEFAULT_CONFIG_AddMaskingBlocks;
             break;
 
         case PoisonVarArrayLoadFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonVarArrayLoad;
+            retValue = DEFAULT_CONFIG_PoisonVarArrayLoad;
             break;
         case PoisonIntArrayLoadFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonIntArrayLoad;
+            retValue = DEFAULT_CONFIG_PoisonIntArrayLoad;
             break;
         case PoisonFloatArrayLoadFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonFloatArrayLoad;
+            retValue = DEFAULT_CONFIG_PoisonFloatArrayLoad;
             break;
         case PoisonTypedArrayLoadFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonTypedArrayLoad;
+            retValue = DEFAULT_CONFIG_PoisonTypedArrayLoad;
             break;
         case PoisonStringLoadFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonStringLoad;
+            retValue = DEFAULT_CONFIG_PoisonStringLoad;
             break;
         case PoisonObjectsForLoadsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonObjectsForLoads;
+            retValue = DEFAULT_CONFIG_PoisonObjectsForLoads;
             break;
 
         case PoisonVarArrayStoreFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonVarArrayStore;
+            retValue = DEFAULT_CONFIG_PoisonVarArrayStore;
             break;
         case PoisonIntArrayStoreFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonIntArrayStore;
+            retValue = DEFAULT_CONFIG_PoisonIntArrayStore;
             break;
         case PoisonFloatArrayStoreFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonFloatArrayStore;
+            retValue = DEFAULT_CONFIG_PoisonFloatArrayStore;
             break;
         case PoisonTypedArrayStoreFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonTypedArrayStore;
+            retValue = DEFAULT_CONFIG_PoisonTypedArrayStore;
             break;
         case PoisonStringStoreFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonStringStore;
+            retValue = DEFAULT_CONFIG_PoisonStringStore;
             break;
         case PoisonObjectsForStoresFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PoisonObjectsForStores;
+            retValue = DEFAULT_CONFIG_PoisonObjectsForStores;
             break;
 
         case EnforceExecutionModeLimitsFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case EemlFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
 
         case NewSimpleJitFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_NewSimpleJit;
+            retValue = DEFAULT_CONFIG_NewSimpleJit;
             break;
 
         case NoDeferParseFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case NoLogoFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case OOPJITMissingOptsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_OOPJITMissingOpts;
+            retValue = DEFAULT_CONFIG_OOPJITMissingOpts;
             break;
         case CrashOnOOPJITFailureFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_CrashOnOOPJITFailure;
+            retValue = DEFAULT_CONFIG_CrashOnOOPJITFailure;
             break;
         case OOPCFGRegistrationFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_OOPCFGRegistration;
+            retValue = DEFAULT_CONFIG_OOPCFGRegistration;
             break;
         case ForceJITCFGCheckFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceJITCFGCheck;
+            retValue = DEFAULT_CONFIG_ForceJITCFGCheck;
             break;
         case UseJITTrampolineFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_UseJITTrampoline;
+            retValue = DEFAULT_CONFIG_UseJITTrampoline;
             break;
         case NoNativeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case NoStrictModeFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case NormalizeStatsFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #ifdef ENABLE_TRACE
         case InMemoryTraceFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_InMemoryTrace;
+            retValue = DEFAULT_CONFIG_InMemoryTrace;
             break;
         #ifdef STACK_BACK_TRACE
         case TraceWithStackFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_TraceWithStack;
+            retValue = DEFAULT_CONFIG_TraceWithStack;
             break;
         #endif // STACK_BACK_TRACE
         #endif // ENABLE_TRACE
         case PrintRunTimeDataCollectionTraceFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #ifdef ENABLE_PREJIT
         case PrejitFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_Prejit;
+            retValue = DEFAULT_CONFIG_Prejit;
             break;
         #endif
         case PrintSrcInDumpFlag:
-            retValue = (Boolean) true;
+            retValue = true;
             break;
         #ifdef PROFILE_OBJECT_LITERALS
         case ProfileObjectLiteralFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         #ifdef PROFILE_STRINGS
         case ProfileStringsFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         #ifdef PROFILE_TYPES
         case ProfileTypesFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         #ifdef PROFILE_EVALMAP
         case ProfileEvalMapFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
 
         #ifdef PROFILE_BAILOUT_RECORD_MEMORY
         case ProfileBailOutRecordMemoryFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
 
         #if DBG
         case ValidateIntRangesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ValidateIntRanges;
+            retValue = DEFAULT_CONFIG_ValidateIntRanges;
             break;
         #endif
         case LibraryStackFrameFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_LibraryStackFrame;
+            retValue = DEFAULT_CONFIG_LibraryStackFrame;
             break;
         case LibraryStackFrameDebuggerFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_LibraryStackFrameDebugger;
+            retValue = DEFAULT_CONFIG_LibraryStackFrameDebugger;
             break;
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case RecyclerBackgroundStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case RecyclerConcurrentStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case RecyclerConcurrentRepeatStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case RecyclerPartialStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case RecyclerTrackStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case RecyclerInduceFalsePositivesFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif // RECYCLER_STRESS
         case RecyclerForceMarkInteriorFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_RecyclerForceMarkInterior;
+            retValue = DEFAULT_CONFIG_RecyclerForceMarkInterior;
             break;
         case EnableConcurrentSweepAllocFlag:
-            retValue = (Boolean) true;
+            retValue = true;
             break;
         case ecsaFlag:
-            retValue = (Boolean) true;
+            retValue = true;
             break;
         case PageHeapAllocStackFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PageHeapAllocStack;
+            retValue = DEFAULT_CONFIG_PageHeapAllocStack;
             break;
         case PageHeapFreeStackFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_PageHeapFreeStack;
+            retValue = DEFAULT_CONFIG_PageHeapFreeStack;
             break;
         case PageHeapDecommitGuardPageFlag:
-            retValue = (Boolean) true;
+            retValue = true;
             break;
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case RecyclerTestFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case RecyclerProtectPagesOnRescanFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #ifdef RECYCLER_VERIFY_MARK
         case RecyclerVerifyMarkFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         #if EXCEPTION_RECOVERY
         case SwallowExceptionsFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case PrintSystemExceptionFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
 
 
@@ -19615,50 +19615,50 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         //    Level 4 = interfaces and properties
         //    Level 5 (default) = ALL
         case TraceWin8AllocationsFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case TraceWin8DeallocationsImmediateFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case PrintWin8StatsDetailedFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case TraceProtectPagesFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case TraceAsyncDebugCallsFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_TraceAsyncDebugCalls;
+            retValue = DEFAULT_CONFIG_TraceAsyncDebugCalls;
             break;
         #ifdef TRACK_DISPATCH
         case TrackDispatchFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case VerboseFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_Verbose;
+            retValue = DEFAULT_CONFIG_Verbose;
             break;
         case UseFullNameFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_UseFullName;
+            retValue = DEFAULT_CONFIG_UseFullName;
             break;
         case Utf8Flag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case WERExceptionSupportFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case ExtendedErrorStackForTestHostFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ExtendedErrorStackForTestHost;
+            retValue = DEFAULT_CONFIG_ExtendedErrorStackForTestHost;
             break;
         case errorStackTraceFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_errorStackTrace;
+            retValue = DEFAULT_CONFIG_errorStackTrace;
             break;
         case DoHeapEnumOnEngineShutdownFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #ifdef HEAP_ENUMERATION_VALIDATION
         case ValidateHeapEnumFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
 
@@ -19667,62 +19667,62 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         // Regex flags
         //
         case RegexTracingFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_RegexTracing;
+            retValue = DEFAULT_CONFIG_RegexTracing;
             break;
         case RegexProfileFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_RegexProfile;
+            retValue = DEFAULT_CONFIG_RegexProfile;
             break;
         case RegexDebugFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_RegexDebug;
+            retValue = DEFAULT_CONFIG_RegexDebug;
             break;
         case RegexDebugASTFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_RegexDebugAST;
+            retValue = DEFAULT_CONFIG_RegexDebugAST;
             break;
         case RegexDebugAnnotatedASTFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_RegexDebugAnnotatedAST;
+            retValue = DEFAULT_CONFIG_RegexDebugAnnotatedAST;
             break;
         case RegexBytecodeDebugFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_RegexBytecodeDebug;
+            retValue = DEFAULT_CONFIG_RegexBytecodeDebug;
             break;
         case RegexOptimizeFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_RegexOptimize;
+            retValue = DEFAULT_CONFIG_RegexOptimize;
             break;
         #endif
 
         case OptimizeForManyInstancesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_OptimizeForManyInstances;
+            retValue = DEFAULT_CONFIG_OptimizeForManyInstances;
             break;
         case EnableArrayTypeMutationFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_EnableArrayTypeMutation;
+            retValue = DEFAULT_CONFIG_EnableArrayTypeMutation;
             break;
         case EnableEvalMapCleanupFlag:
-            retValue = (Boolean) true;
+            retValue = true;
             break;
         #ifdef PROFILE_MEM
         case TraceObjectAllocationFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler;
+            retValue = DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler;
             break;
         case TypeSnapshotEnumerationFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_TypeSnapshotEnumeration;
+            retValue = DEFAULT_CONFIG_TypeSnapshotEnumeration;
             break;
         case IsolatePrototypesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_IsolatePrototypes;
+            retValue = DEFAULT_CONFIG_IsolatePrototypes;
             break;
         case ChangeTypeOnProtoFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ChangeTypeOnProto;
+            retValue = DEFAULT_CONFIG_ChangeTypeOnProto;
             break;
         case ShareInlineCachesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ShareInlineCaches;
+            retValue = DEFAULT_CONFIG_ShareInlineCaches;
             break;
         case DisableDebugObjectFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_DisableDebugObject;
+            retValue = DEFAULT_CONFIG_DisableDebugObject;
             break;
         case DumpHeapFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_DumpHeap;
+            retValue = DEFAULT_CONFIG_DumpHeap;
             break;
         #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
         case MemProtectHeapFlag:
@@ -19731,60 +19731,60 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         #endif
         #ifdef RECYCLER_STRESS
         case MemProtectHeapStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case MemProtectHeapBackgroundStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case MemProtectHeapConcurrentStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case MemProtectHeapConcurrentRepeatStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         case MemProtectHeapPartialStressFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
         #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         case FixPropsOnPathTypesFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_FixPropsOnPathTypes;
+            retValue = DEFAULT_CONFIG_FixPropsOnPathTypes;
             break;
         #endif
 
         #if defined(_M_X64)
         case ZeroMemoryWithNonTemporalStoreFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore;
+            retValue = DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore;
             break;
         #endif
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
         #endif
 
         case ClearInlineCachesOnCollectFlag:
-            retValue = (Boolean) false;
+            retValue = false;
             break;
 
         case StrictWriteBarrierCheckFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_StrictWriteBarrierCheck;
+            retValue = DEFAULT_CONFIG_StrictWriteBarrierCheck;
             break;
         case WriteBarrierTestFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_WriteBarrierTest;
+            retValue = DEFAULT_CONFIG_WriteBarrierTest;
             break;
         case ForceSoftwareWriteBarrierFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_ForceSoftwareWriteBarrier;
+            retValue = DEFAULT_CONFIG_ForceSoftwareWriteBarrier;
             break;
         case VerifyBarrierBitFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_VerifyBarrierBit;
+            retValue = DEFAULT_CONFIG_VerifyBarrierBit;
             break;
         case EnableBGFreeZeroFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_EnableBGFreeZero;
+            retValue = DEFAULT_CONFIG_EnableBGFreeZero;
             break;
         case KeepRecyclerTrackDataFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_KeepRecyclerTrackData;
+            retValue = DEFAULT_CONFIG_KeepRecyclerTrackData;
             break;
 
         default:
@@ -19811,7 +19811,7 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
         Boolean* settingAsBoolean = this->GetAsBoolean(flag);
         Assert(settingAsBoolean != nullptr);
 
-        Output::VerboseNote(u"FLAG %s = %d\n", FlagNames[(int) flag], value);
+        Output::VerboseNote(u"FLAG %s = %d\n", FlagNames[static_cast<int>(flag)], value);
         *settingAsBoolean = value;
 
         // check if parent flag
@@ -19827,7 +19827,7 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
                 // if the parent flag is FALSE, the children flag values are FALSE (always - as disabled)
                 Boolean childValue = value == TRUE ? childDefaultValue : FALSE;
 
-                Output::VerboseNote(u"FLAG %s = %d - setting child flag %s = %d\n", FlagNames[(int) flag], value, FlagNames[(int) childFlag], childValue);
+                Output::VerboseNote(u"FLAG %s = %d - setting child flag %s = %d\n", FlagNames[static_cast<int>(flag)], value, FlagNames[static_cast<int>(childFlag)], childValue);
                 this->SetAsBoolean(childFlag, childValue);
 
                 // get next child flag
@@ -19858,7 +19858,7 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
     Flag
     ConfigFlagsTable::GetParentFlag(Flag flag) const
     {
-        Flag parentFlag = FlagParents[(int)flag];
+        Flag parentFlag = FlagParents[static_cast<int>(flag)];
 
         return parentFlag;
     }
@@ -19875,7 +19875,7 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
     ConfigFlagsTable::GetNextChildFlag(Flag parentFlag, Flag currentChildFlag)  const
     {
         // start at the current+1
-        int startIndex = (int)currentChildFlag + 1;
+        int startIndex = static_cast<int>(currentChildFlag) + 1;
 
         // otherwise start from beginning
         if (currentChildFlag == InvalidFlag || currentChildFlag == NoParentFlag)
@@ -19886,7 +19886,7 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
 
         for(int i=startIndex; i < FlagCount; i++)
         {
-            Flag currentFlag = (Flag)i;
+            Flag currentFlag = static_cast<Flag>(i);
             Flag parentFlagForCurrentFlag = GetParentFlag(currentFlag);
 
             if(parentFlagForCurrentFlag == parentFlag)
@@ -19918,7 +19918,7 @@ if (IsEnabled(MaxSingleAllocSizeInMBFlag))
             {
                 Boolean childValue = value;
 
-                Output::VerboseNote(u"FLAG %s = %d - setting child flag %s = %d\n", FlagNames[(int) parentFlag], value, FlagNames[(int) childFlag], childValue);
+                Output::VerboseNote(u"FLAG %s = %d - setting child flag %s = %d\n", FlagNames[static_cast<int>(parentFlag)], value, FlagNames[static_cast<int>(childFlag)], childValue);
                 this->SetAsBoolean(childFlag, childValue);
             }
 

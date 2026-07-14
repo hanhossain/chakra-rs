@@ -285,7 +285,7 @@ AutoSystemInfo::IsWin8Point1OrLater()
 
 const char16_t* AutoSystemInfo::GetJscriptDllFileName()
 {
-    return (const char16_t*)Data.binaryName;
+    return Data.binaryName;
 }
 
 bool AutoSystemInfo::IsLowMemoryProcess()
@@ -311,7 +311,7 @@ BOOL AutoSystemInfo::GetAvailableCommit(ULONG64 *pCommit)
 
 void AutoSystemInfo::SetAvailableCommit(ULONG64 commit)
 {
-    ::InterlockedCompareExchange64((volatile long *)&this->availableCommit, commit, 0);
+    ::InterlockedCompareExchange64(reinterpret_cast<volatile long*>(&this->availableCommit), commit, 0);
 }
 
 //

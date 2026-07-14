@@ -42,12 +42,12 @@ bool
 Int32Math::Mul(int32_t left, int32_t right, int32_t *pResult, int32_t* pOverflowValue)
 {
     bool fOverflow;
-    long result64 = (long)left * (long)right;
+    long result64 = static_cast<long>(left) * static_cast<long>(right);
 
-    *pResult = (int32_t)result64;
-    *pOverflowValue = (int32_t)(result64 >> 32);
+    *pResult = static_cast<int32_t>(result64);
+    *pOverflowValue = static_cast<int32_t>(result64 >> 32);
 
-    fOverflow = (result64 != (long)(*pResult));
+    fOverflow = (result64 != static_cast<long>(*pResult));
 
     return fOverflow;
 }
@@ -56,7 +56,7 @@ bool
 Int32Math::Shl(int32_t left, int32_t right, int32_t *pResult)
 {
     *pResult = left << (right & 0x1F);
-    return (left != (int32_t)((uint32_t)*pResult >> right));
+    return (left != static_cast<int32_t>(static_cast<uint32_t>(*pResult) >> right));
 }
 
 bool
@@ -69,7 +69,7 @@ Int32Math::Shr(int32_t left, int32_t right, int32_t *pResult)
 bool
 Int32Math::ShrU(int32_t left, int32_t right, int32_t *pResult)
 {
-    uint32_t uResult = ((uint32_t)left) >> (right & 0x1F);
+    uint32_t uResult = static_cast<uint32_t>(left) >> (right & 0x1F);
     *pResult = uResult;
     return false;
 }

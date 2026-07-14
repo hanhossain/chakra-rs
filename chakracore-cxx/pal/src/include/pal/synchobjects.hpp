@@ -32,7 +32,7 @@ Abstract:
 #define SharedID SHMPTR
 #define SharedPoolId size_t
 #define DefaultSharedPool ((size_t)0)
-#define NULLSharedID ((SHMPTR)NULL)
+#define NULLSharedID (static_cast<SHMPTR>(NULL))
 #define SharedIDToPointer(shID) SHMPTR_TO_TYPED_PTR(void *, shID)
 #define SharedIDToTypePointer(TYPE,shID) SHMPTR_TO_TYPED_PTR(TYPE, shID)
 #define RawSharedObjectAlloc(szSize, shPoolId) SHMalloc(szSize)

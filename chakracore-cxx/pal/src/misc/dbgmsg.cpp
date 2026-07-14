@@ -60,7 +60,7 @@ static const char FOPEN_FLAGS[] = "wt";
 
 /* global and static variables */
 
-const char16_t* W16_NULLSTRING = (const char16_t*) "N\0U\0L\0L\0\0";
+const char16_t* W16_NULLSTRING = reinterpret_cast<const char16_t*>("N\0U\0L\0L\0\0");
 
 /* we must use stdio functions directly rather that rely on PAL functions for
   output, because those functions do tracing and we need to avoid recursion */

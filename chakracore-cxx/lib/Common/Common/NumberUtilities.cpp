@@ -52,16 +52,16 @@ using namespace Js;
     const uint32_t NumberConstants::k_Float32NegTwoTo31;
     const uint32_t NumberConstants::k_Float32TwoTo32;
 
-    const double NumberConstants::MAX_VALUE = *(double*)(&NumberConstants::k_PosMax);
-    const double NumberConstants::MIN_VALUE = *(double*)(&NumberConstants::k_PosMin);
-    const double NumberConstants::NaN = *(double*)(&NumberConstants::k_Nan);
-    const double NumberConstants::NegativeNaN = *(double*)(&NumberConstants::k_NegativeNan);
-    const double NumberConstants::NEGATIVE_INFINITY= *(double*)(&NumberConstants::k_NegInf);
-    const double NumberConstants::POSITIVE_INFINITY= *(double*)(&NumberConstants::k_PosInf );
-    const double NumberConstants::NEG_ZERO= *(double*)(&NumberConstants::k_NegZero );
-    const double NumberConstants::ONE_POINT_ZERO = *(double*)(&NumberConstants::k_OnePointZero);
-    const double NumberConstants::DOUBLE_INT_MIN = (double)(INT_MIN);
-    const double NumberConstants::DOUBLE_TWO_TO_31 = (double) 0x80000000;
+    const double NumberConstants::MAX_VALUE = *reinterpret_cast<const double *>(&NumberConstants::k_PosMax);
+    const double NumberConstants::MIN_VALUE = *reinterpret_cast<const double *>(&NumberConstants::k_PosMin);
+    const double NumberConstants::NaN = *reinterpret_cast<const double *>(&NumberConstants::k_Nan);
+    const double NumberConstants::NegativeNaN = *reinterpret_cast<const double *>(&NumberConstants::k_NegativeNan);
+    const double NumberConstants::NEGATIVE_INFINITY= *reinterpret_cast<const double *>(&NumberConstants::k_NegInf);
+    const double NumberConstants::POSITIVE_INFINITY= *reinterpret_cast<const double *>(&NumberConstants::k_PosInf );
+    const double NumberConstants::NEG_ZERO= *reinterpret_cast<const double *>(&NumberConstants::k_NegZero );
+    const double NumberConstants::ONE_POINT_ZERO = *reinterpret_cast<const double *>(&NumberConstants::k_OnePointZero);
+    const double NumberConstants::DOUBLE_INT_MIN = INT_MIN;
+    const double NumberConstants::DOUBLE_TWO_TO_31 = 0x80000000;
 
     // These are used in 128-bit operations in the JIT and inline asm
     const uint8_t NumberConstants::AbsDoubleCst[] =
@@ -117,10 +117,10 @@ using namespace Js;
 #pragma warning(disable:4035)   // Turn off warning that there is no return value
     uint32_t NumberUtilities::MulLu(uint32_t lu1, uint32_t lu2, uint32_t *pluHi)
     {
-        uint64_t llu = (uint64_t)lu1 * (uint64_t)lu2;
+        uint64_t llu = static_cast<uint64_t>(lu1) * static_cast<uint64_t>(lu2);
 
-        *pluHi = (uint32_t)(llu >> 32);
-        return (uint32_t)llu;
+        *pluHi = static_cast<uint32_t>(llu >> 32);
+        return static_cast<uint32_t>(llu);
     }
 #pragma warning(pop)
 
@@ -284,7 +284,7 @@ using namespace Js;
         {
             if (str[0] >= u'0' && str[0] <= u'9')
             {
-                *intVal = (uint32_t)(str[0] - u'0');
+                *intVal = static_cast<uint32_t>(str[0] - u'0');
                 return true;
             }
             else
@@ -296,7 +296,7 @@ using namespace Js;
         {
             return false;
         }
-        uint32_t val = (uint32_t)(str[0] - u'0');
+        uint32_t val = static_cast<uint32_t>(str[0] - u'0');
         int calcLen = min(length, 9);
         for (int i = 1; i < calcLen; i++)
         {
@@ -304,14 +304,14 @@ using namespace Js;
             {
                 return false;
             }
-            val = (val * 10) + (uint32_t)(str[i] - u'0');
+            val = (val * 10) + static_cast<uint32_t>(str[i] - u'0');
         }
         if (length == 10)
         {
             // check for overflow 4294967295
             if (str[9] < u'0' || str[9] > u'9' ||
                 UInt32Math::Mul(val, 10, &val) ||
-                UInt32Math::Add(val, (uint32_t)(str[9] - u'0'), &val))
+                UInt32Math::Add(val, static_cast<uint32_t>(str[9] - u'0'), &val))
             {
                 return false;
             }
@@ -359,20 +359,20 @@ using namespace Js;
             return 0;
         if (dbl > 0x7FFFFFFFL)
             return 0x7FFFFFFFL;
-        if (dbl < (int32_t)0x80000000L)
-            return (int32_t)0x80000000L;
-        return (int32_t)dbl;
+        if (dbl < static_cast<int32_t>(0x80000000L))
+            return static_cast<int32_t>(0x80000000L);
+        return static_cast<int32_t>(dbl);
     }
 
     uint32_t NumberUtilities::LuFromDblNearest(double dbl)
     {
         if (Js::NumberUtilities::IsNan(dbl))
             return 0;
-        if (dbl >(uint32_t)0xFFFFFFFFUL)
-            return (uint32_t)0xFFFFFFFFUL;
+        if (dbl >static_cast<uint32_t>(0xFFFFFFFFUL))
+            return 0xFFFFFFFFUL;
         if (dbl < 0)
             return 0;
-        return (uint32_t)dbl;
+        return static_cast<uint32_t>(dbl);
     }
 
     BOOL NumberUtilities::FDblIsInt32(double dbl, int32_t *plw)
@@ -380,8 +380,8 @@ using namespace Js;
         Assert(plw);
         double dblT;
 
-        *plw = (int32_t)dbl;
-        dblT = (double)*plw;
+        *plw = static_cast<int32_t>(dbl);
+        dblT = static_cast<double>(*plw);
         return Js::NumberUtilities::LuHiDbl(dblT) == Js::NumberUtilities::LuHiDbl(dbl) && Js::NumberUtilities::LuLoDbl(dblT) == Js::NumberUtilities::LuLoDbl(dbl);
     }
 
@@ -429,17 +429,17 @@ LSkipZeroes:
         if (uT & 0x08)
         {
             cbit = 4;
-            Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)(uT & 0x07) << 17;
+            Js::NumberUtilities::LuHiDbl(dbl) |= (uT & 0x07) << 17;
         }
         else if (uT & 0x04)
         {
             cbit = 3;
-            Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)(uT & 0x03) << 18;
+            Js::NumberUtilities::LuHiDbl(dbl) |= (uT & 0x03) << 18;
         }
         else if (uT & 0x02)
         {
             cbit = 2;
-            Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)(uT & 0x01) << 19;
+            Js::NumberUtilities::LuHiDbl(dbl) |= (uT & 0x01) << 19;
         }
         else
         {
@@ -467,18 +467,18 @@ LSkipZeroes:
             }
 
             if (cbit <= 17)
-                Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)uT << (17 - cbit);
+                Js::NumberUtilities::LuHiDbl(dbl) |= uT << (17 - cbit);
             else if (cbit < 21)
             {
-                Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)uT >> (cbit - 17);
-                Js::NumberUtilities::LuLoDbl(dbl) |= (uint32_t)uT << (49 - cbit);
+                Js::NumberUtilities::LuHiDbl(dbl) |= uT >> (cbit - 17);
+                Js::NumberUtilities::LuLoDbl(dbl) |= uT << (49 - cbit);
             }
             else if (cbit <= 49)
-                Js::NumberUtilities::LuLoDbl(dbl) |= (uint32_t)uT << (49 - cbit);
+                Js::NumberUtilities::LuLoDbl(dbl) |= uT << (49 - cbit);
             else if (cbit <= 53)
             {
-                Js::NumberUtilities::LuLoDbl(dbl) |= (uint32_t)uT >> (cbit - 49);
-                bExtra = (byte)(uT << (57 - cbit));
+                Js::NumberUtilities::LuLoDbl(dbl) |= uT >> (cbit - 49);
+                bExtra = static_cast<byte>(uT << (57 - cbit));
             }
             else if (0 != uT)
                 bExtra |= 1;
@@ -497,7 +497,7 @@ LSkipZeroes:
             Js::NumberUtilities::LuLoDbl(dbl) = 0;
             return dbl;
         }
-        Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)cbit << 20;
+        Js::NumberUtilities::LuHiDbl(dbl) |= static_cast<uint32_t>(cbit) << 20;
 
         // Use bExtra to round.
         if ((bExtra & 0x80) && ((bExtra & 0x7F) || (Js::NumberUtilities::LuLoDbl(dbl) & 1)))
@@ -568,16 +568,16 @@ LGetBinaryDigit:
         {
             if (cbit <= rightShiftValue)
             {
-                Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)uT << (rightShiftValue - cbit);
+                Js::NumberUtilities::LuHiDbl(dbl) |= uT << (rightShiftValue - cbit);
             }
             else if (cbit <= leftShiftValue)
             {
-                Js::NumberUtilities::LuLoDbl(dbl) |= (uint32_t)uT << (leftShiftValue - cbit);
+                Js::NumberUtilities::LuLoDbl(dbl) |= uT << (leftShiftValue - cbit);
             }
             else if (cbit == leftShiftValue + 1)//53 bits
             {
-                Js::NumberUtilities::LuLoDbl(dbl) |= (uint32_t)uT >> (cbit - leftShiftValue);
-                bExtra = (byte)(uT << (60 - cbit));
+                Js::NumberUtilities::LuLoDbl(dbl) |= uT >> (cbit - leftShiftValue);
+                bExtra = static_cast<byte>(uT << (60 - cbit));
             }
             else if (0 != uT)
             {
@@ -608,7 +608,7 @@ LGetBinaryDigit:
             return dbl;
         }
 
-        Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)cbit << 20;
+        Js::NumberUtilities::LuHiDbl(dbl) |= static_cast<uint32_t>(cbit) << 20;
 
         // Use bExtra to round.
         if ((bExtra & 0x80) && ((bExtra & 0x7F) || (Js::NumberUtilities::LuLoDbl(dbl) & 1)))
@@ -657,12 +657,12 @@ LSkipZeroes:
         if (uT & 0x04)//is the 3rd bit set
         {
             cbit = 3;
-            Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)(uT & 0x03) << 18;
+            Js::NumberUtilities::LuHiDbl(dbl) |= (uT & 0x03) << 18;
         }
         else if (uT & 0x02)//is the 2nd bit set
         {
             cbit = 2;
-            Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)(uT & 0x01) << 19;
+            Js::NumberUtilities::LuHiDbl(dbl) |= (uT & 0x01) << 19;
         }
         else// then is the first bit set
         {
@@ -676,18 +676,18 @@ LGetOctalDigit:
         if (uT <= 7)
         {
             if (cbit <= 18)
-                Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)uT << (18 - cbit);
+                Js::NumberUtilities::LuHiDbl(dbl) |= uT << (18 - cbit);
             else if (cbit < 21)
             {
-                Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)uT >> (cbit - 18);
-                Js::NumberUtilities::LuLoDbl(dbl) |= (uint32_t)uT << (50 - cbit);
+                Js::NumberUtilities::LuHiDbl(dbl) |= uT >> (cbit - 18);
+                Js::NumberUtilities::LuLoDbl(dbl) |= uT << (50 - cbit);
             }
             else if (cbit <= 50)
-                Js::NumberUtilities::LuLoDbl(dbl) |= (uint32_t)uT << (50 - cbit);
+                Js::NumberUtilities::LuLoDbl(dbl) |= uT << (50 - cbit);
             else if (cbit <= 53)
             {
-                Js::NumberUtilities::LuLoDbl(dbl) |= (uint32_t)uT >> (cbit - 50);
-                bExtra = (byte)(uT << (58 - cbit));
+                Js::NumberUtilities::LuLoDbl(dbl) |= uT >> (cbit - 50);
+                bExtra = static_cast<byte>(uT << (58 - cbit));
             }
             else if (0 != uT)
                 bExtra |= 1;
@@ -717,7 +717,7 @@ LGetOctalDigit:
             return dbl;
 
         }
-        Js::NumberUtilities::LuHiDbl(dbl) |= (uint32_t)cbit << 20;
+        Js::NumberUtilities::LuHiDbl(dbl) |= static_cast<uint32_t>(cbit) << 20;
 
         // Use bExtra to round.
         if ((bExtra & 0x80) && ((bExtra & 0x7F) || (Js::NumberUtilities::LuLoDbl(dbl) & 1)))

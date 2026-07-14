@@ -14,8 +14,8 @@ SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallFi
     Assert(bucket->sizeCat <= TBlockAttributes::MaxObjectSize);
     Assert((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / bucket->sizeCat <= USHRT_MAX);
 
-    ushort objectSize = (ushort)bucket->sizeCat;
-    ushort objectCount = (ushort)((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / objectSize);
+    ushort objectSize = static_cast<ushort>(bucket->sizeCat);
+    ushort objectCount = static_cast<ushort>((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / objectSize);
     return NoMemProtectHeapNewNoThrowPlusPrefixZ(Base::GetAllocPlusSize(objectCount), SmallFinalizableWithBarrierHeapBlockT<TBlockAttributes>, bucket, objectSize, objectCount);
 }
 
@@ -61,8 +61,8 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::New(HeapBucketT<SmallFinalizableHe
     Assert(bucket->sizeCat <= TBlockAttributes::MaxObjectSize);
     Assert((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / bucket->sizeCat <= USHRT_MAX);
 
-    ushort objectSize = (ushort)bucket->sizeCat;
-    ushort objectCount = (ushort)((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / objectSize);
+    ushort objectSize = static_cast<ushort>(bucket->sizeCat);
+    ushort objectCount = static_cast<ushort>((TBlockAttributes::PageCount * AutoSystemInfo::PageSize) / objectSize);
     return NoMemProtectHeapNewNoThrowPlusPrefixZ(Base::GetAllocPlusSize(objectCount), SmallFinalizableHeapBlockT<TBlockAttributes>, bucket, objectSize, objectCount);
 }
 
@@ -367,7 +367,7 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::RescanObject(SmallFinalizableHeapB
     // try to process those again here.
     if ((attributes & (TrackBit | NewTrackBit)) == (TrackBit | NewTrackBit))
     {
-        if (!block->RescanTrackedObject((FinalizableObject*) objectAddress, objectIndex, recycler))
+        if (!block->RescanTrackedObject(reinterpret_cast<FinalizableObject*>(objectAddress), objectIndex, recycler))
         {
             // Failed to add to the mark stack due to OOM.
             return false;
@@ -459,7 +459,7 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::DisposeObjects()
         // The object we're disposing is still considered PendingDispose until the Dispose call completes.
         // So in case we call CheckFreeBitVector or similar, we should still see correct state re this object.
 
-        ((FinalizableObject *)objectAddress)->Dispose(false);
+        static_cast<FinalizableObject*>(objectAddress)->Dispose(false);
 
         Assert(finalizeCount != 0);
         finalizeCount--;
@@ -547,7 +547,7 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::FinalizeAllObjects()
         DebugOnly(uint processedCount = 0);
         this->ForEachAllocatedObject(FinalizeBit, [&](uint index, void * objectAddress)
         {
-            FinalizableObject * finalizableObject = ((FinalizableObject *)objectAddress);
+            FinalizableObject * finalizableObject = static_cast<FinalizableObject*>(objectAddress);
 
             finalizableObject->Finalize(true);
             finalizableObject->Dispose(true);
@@ -559,7 +559,7 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::FinalizeAllObjects()
 
         this->ForEachPendingDisposeObject([&] (uint index) {
             void * objectAddress = this->address + (this->objectSize * index);
-            ((FinalizableObject *)objectAddress)->Dispose(true);
+            static_cast<FinalizableObject*>(objectAddress)->Dispose(true);
 #ifdef RECYCLER_FINALIZE_CHECK
             this->heapBucket->heapInfo->liveFinalizableObjectCount--;
             this->heapBucket->heapInfo->pendingDisposableObjectCount--;

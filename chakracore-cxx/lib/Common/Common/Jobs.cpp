@@ -1271,7 +1271,7 @@ namespace JsUtil
 
     void BackgroundJobProcessor::ThreadServiceCallback(void * callbackData)
     {
-        BackgroundJobProcessor * jobProcessor = (BackgroundJobProcessor *)callbackData;
+        BackgroundJobProcessor * jobProcessor = static_cast<BackgroundJobProcessor*>(callbackData);
 
         Assert(jobProcessor->threadCount == 1);
 #if DBG

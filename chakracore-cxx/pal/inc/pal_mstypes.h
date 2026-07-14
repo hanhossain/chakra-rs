@@ -90,7 +90,7 @@ typedef HANDLE HWND;
 typedef struct __PAL_RemoteHandle__ { HANDLE h; } *RHANDLE;
 typedef HANDLE *PHANDLE;
 typedef HANDLE *LPHANDLE;
-#define INVALID_HANDLE_VALUE ((void *)(-1))
+#define INVALID_HANDLE_VALUE (reinterpret_cast<void *>(-1))
 #define INVALID_FILE_SIZE ((uint32_t)0xFFFFFFFF)
 #define INVALID_FILE_ATTRIBUTES ((uint32_t) -1)
 typedef HANDLE HMODULE;

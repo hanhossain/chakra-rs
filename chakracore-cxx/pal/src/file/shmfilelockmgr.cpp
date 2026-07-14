@@ -106,8 +106,8 @@ CSharedMemoryFileLockController::GetTransactionLock(
     unsigned long lockRgnStart;
     unsigned long nbBytesToLock;
 
-    lockRgnStart  = ((unsigned long)dwOffsetHigh) << 32  | dwOffsetLow;
-    nbBytesToLock = ((unsigned long)nNumberOfBytesToLockHigh) << 32  | 
+    lockRgnStart  = static_cast<unsigned long>(dwOffsetHigh) << 32  | dwOffsetLow;
+    nbBytesToLock = static_cast<unsigned long>(nNumberOfBytesToLockHigh) << 32  |
                              nNumberOfBytesToLockLow;
 
     palError = FILELockFileRegion(

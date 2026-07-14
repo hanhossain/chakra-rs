@@ -174,7 +174,7 @@ namespace UnifiedRegex
     {
         CharCount nextOffset = Chars<EncodedChar>::OSB(next, input);
         Assert(nextOffset >= this->m_cMultiUnits);
-        return nextOffset - (CharCount) this->m_cMultiUnits;
+        return nextOffset - static_cast<CharCount>(this->m_cMultiUnits);
     }
 
     template <typename P, const bool IsLiteral>
@@ -328,7 +328,7 @@ namespace UnifiedRegex
             if(Js::NumberUtilities::IsSurrogateUpperPart(codePoint) && this->tempLocationOfSurrogatePair != nullptr)
             {
                 Assert(Js::NumberUtilities::IsSurrogateLowerPart(codePointAtTempLocation));
-                consumptionLength = (uint32_t)(location - this->tempLocationOfSurrogatePair) + consumptionLength;
+                consumptionLength = static_cast<uint32_t>(location - this->tempLocationOfSurrogatePair) + consumptionLength;
                 codePoint = Js::NumberUtilities::SurrogatePairAsCodePoint(codePointAtTempLocation, codePoint);
                 location = this->tempLocationOfSurrogatePair;
             }
@@ -432,7 +432,7 @@ namespace UnifiedRegex
 
             MatchCharNode* lowerCharNode = Anew(ctAllocator, MatchCharNode, lowerMinorCodeUnit);
             MatchSetNode* setNode = Anew(ctAllocator, MatchSetNode, false, false);
-            setNode->set.SetRange(ctAllocator, (Char)upperMinorCodeUnit, (Char)upperMajorCodeUnit);
+            setNode->set.SetRange(ctAllocator, upperMinorCodeUnit, upperMajorCodeUnit);
             ConcatNode* concatNode = Anew(ctAllocator, ConcatNode, lowerCharNode, Anew(ctAllocator, ConcatNode, setNode, nullptr));
 
             tailToAdd = Anew(ctAllocator, AltNode, concatNode, nullptr);
@@ -451,9 +451,9 @@ namespace UnifiedRegex
             else if (minorCodePoint != minorBoundary - 0x400u) // Minor range isn't full
             {
                 Assert(minorBoundary - minorCodePoint < 0x400u);
-                MatchCharNode* lowerCharNode = Anew(ctAllocator, MatchCharNode, (Char)lowerMinorCodeUnit);
+                MatchCharNode* lowerCharNode = Anew(ctAllocator, MatchCharNode, lowerMinorCodeUnit);
                 MatchSetNode* upperSetNode = Anew(ctAllocator, MatchSetNode, false);
-                upperSetNode->set.SetRange(ctAllocator, (Char)upperMinorCodeUnit, (Char)0xDFFFu);
+                upperSetNode->set.SetRange(ctAllocator, upperMinorCodeUnit, 0xDFFFu);
                 prefixNode = Anew(ctAllocator, ConcatNode, lowerCharNode, Anew(ctAllocator, ConcatNode, upperSetNode, nullptr));
             }
             else // Full minor range
@@ -470,9 +470,9 @@ namespace UnifiedRegex
             else if (majorBoundary + 0x3FFu != majorCodePoint) // Major range isn't full
             {
                 Assert(majorCodePoint - majorBoundary < 0x3FFu);
-                MatchCharNode* lowerCharNode = Anew(ctAllocator, MatchCharNode, (Char)lowerMajorCodeUnit);
+                MatchCharNode* lowerCharNode = Anew(ctAllocator, MatchCharNode, lowerMajorCodeUnit);
                 MatchSetNode* upperSetNode = Anew(ctAllocator, MatchSetNode, false, false);
-                upperSetNode->set.SetRange(ctAllocator, (Char)0xDC00u, (Char)upperMajorCodeUnit);
+                upperSetNode->set.SetRange(ctAllocator, 0xDC00u, upperMajorCodeUnit);
                 suffixNode = Anew(ctAllocator, ConcatNode, lowerCharNode, Anew(ctAllocator, ConcatNode, upperSetNode, nullptr));
                 majorBoundary -= 0x400u;
             }
@@ -505,18 +505,18 @@ namespace UnifiedRegex
                 if (singleFullRange)
                 {
                     // The lower part of the full range is simple a surrogate lower char
-                    lowerOfFullRange = Anew(ctAllocator, MatchCharNode, (Char)lowerMinorBoundary);
+                    lowerOfFullRange = Anew(ctAllocator, MatchCharNode, lowerMinorBoundary);
                 }
                 else
                 {
 
                     Js::NumberUtilities::CodePointAsSurrogatePair(majorBoundary, &lowerMajorBoundary, &ignore);
                     MatchSetNode* setNode = Anew(ctAllocator, MatchSetNode, false, false);
-                    setNode->set.SetRange(ctAllocator, (Char)lowerMinorBoundary, (Char)lowerMajorBoundary);
+                    setNode->set.SetRange(ctAllocator, lowerMinorBoundary, lowerMajorBoundary);
                     lowerOfFullRange = setNode;
                 }
                 MatchSetNode* fullUpperRange = Anew(ctAllocator, MatchSetNode, false, false);
-                fullUpperRange->set.SetRange(ctAllocator, (Char)0xDC00u, (Char)0xDFFFu);
+                fullUpperRange->set.SetRange(ctAllocator, 0xDC00u, 0xDFFFu);
 
                 // These are added in the following order [full] [prefix][suffix]
                 // This is doing by prepending, so in reverse.
@@ -635,10 +635,10 @@ namespace UnifiedRegex
     {
         if (prev->tag == Node::MatchChar)
         {
-            MatchCharNode* prevChar = (MatchCharNode*)prev;
+            MatchCharNode* prevChar = static_cast<MatchCharNode*>(prev);
             if (curr->tag == Node::MatchChar)
             {
-                MatchCharNode* currChar = (MatchCharNode*)curr;
+                MatchCharNode* currChar = static_cast<MatchCharNode*>(curr);
                 if (prevChar->cs[0] == currChar->cs[0])
                     // Just ignore current node
                     return prevChar;
@@ -653,7 +653,7 @@ namespace UnifiedRegex
             }
             else if (curr->tag == Node::MatchSet)
             {
-                MatchSetNode* currSet = (MatchSetNode*)curr;
+                MatchSetNode* currSet = static_cast<MatchSetNode*>(curr);
                 if (currSet->isNegation)
                     // Can't merge
                     return 0;
@@ -672,20 +672,20 @@ namespace UnifiedRegex
         }
         else if (prev->tag == Node::MatchSet)
         {
-            MatchSetNode* prevSet = (MatchSetNode*)prev;
+            MatchSetNode* prevSet = static_cast<MatchSetNode*>(prev);
             if (prevSet->isNegation)
                 // Can't merge
                 return 0;
             else if (curr->tag == Node::MatchChar)
             {
-                MatchCharNode* currChar = (MatchCharNode*)curr;
+                MatchCharNode* currChar = static_cast<MatchCharNode*>(curr);
                 // Include char in prev set
                 prevSet->set.Set(ctAllocator, currChar->cs[0]);
                 return prevSet;
             }
             else if (curr->tag == Node::MatchSet)
             {
-                MatchSetNode* currSet = (MatchSetNode*)curr;
+                MatchSetNode* currSet = static_cast<MatchSetNode*>(curr);
                 if (currSet->isNegation)
                     // Can't merge
                     return 0;
@@ -732,7 +732,7 @@ namespace UnifiedRegex
         // First node may be an alternative
         if (node->tag == Node::Alt)
         {
-            last = (AltNode*)node;
+            last = static_cast<AltNode*>(node);
             while (last->tail != 0)
                 last = last->tail;
         }
@@ -755,7 +755,7 @@ namespace UnifiedRegex
             }
             else if (next->tag == Node::Alt)
             {
-                AltNode* nextList = (AltNode*)next;
+                AltNode* nextList = static_cast<AltNode*>(next);
                 // Since we just had to dereference next to get here, we know that nextList
                 // can't be nullptr in this case.
                 AnalysisAssert(nextList != nullptr);
@@ -808,7 +808,7 @@ namespace UnifiedRegex
             CharCount newLen = max(litbufLen, initLitbufSize);
             while (newLen < litbufNext + size)
                 newLen *= 2;
-            litbuf = (Char*)ctAllocator->Realloc(litbuf, litbufLen * sizeof(Char), newLen * sizeof(Char));
+            litbuf = reinterpret_cast<Char*>(ctAllocator->Realloc(litbuf, litbufLen * sizeof(Char), newLen * sizeof(Char)));
             litbufLen = newLen;
         }
     }
@@ -836,7 +836,7 @@ namespace UnifiedRegex
             deferredLiteralNode->length += addLen;
 
         }
-        else if (charOrLiteralNode->tag == Node::MatchLiteral && deferredLiteralNode->offset + deferredLiteralNode->length == ((MatchLiteralNode*)charOrLiteralNode)->offset)
+        else if (charOrLiteralNode->tag == Node::MatchLiteral && deferredLiteralNode->offset + deferredLiteralNode->length == static_cast<MatchLiteralNode*>(charOrLiteralNode)->offset)
         {
             // Absorb next literal into current literal since they are adjacent
             deferredLiteralNode->length += addLen;
@@ -907,7 +907,7 @@ namespace UnifiedRegex
         // First node may be a concat
         if (node->tag == Node::Concat)
         {
-            last = (ConcatNode*)node;
+            last = static_cast<ConcatNode*>(node);
             while (last->tail != 0)
                 last = last->tail;
         }
@@ -965,7 +965,7 @@ namespace UnifiedRegex
             else if (next->tag == Node::Concat)
             {
                 // Append this list to accumulated list
-                ConcatNode* nextList = (ConcatNode*)next;
+                ConcatNode* nextList = static_cast<ConcatNode*>(next);
                 if (nextList->head->LiteralLength() > 0 &&
                     ((last == 0 && node == &deferredLiteralNode) ||
                      (last != 0 && last->head == &deferredLiteralNode)))
@@ -1249,7 +1249,7 @@ namespace UnifiedRegex
                 Char c = NextChar();
                 if (scriptContext->GetConfig()->IsES6UnicodeExtensionsEnabled())
                 {
-                    TrackIfSurrogatePair(c, current, (uint32_t)(next - current));
+                    TrackIfSurrogatePair(c, current, static_cast<uint32_t>(next - current));
                 }
                 // Closing '/' in literals should be caught explicitly
                 Assert(!IsLiteral || c != '/');
@@ -1616,7 +1616,7 @@ namespace UnifiedRegex
                 CharCount digits = 0;
                 do
                 {
-                    n = n * 10 + (int)standardEncodedChars->DigitValue(ECLookahead(digits));
+                    n = n * 10 + static_cast<int>(standardEncodedChars->DigitValue(ECLookahead(digits)));
                     digits++;
                 }
                 while (digits < 5 && ECCanConsume(digits + 1) && standardEncodedChars->IsDigit(ECLookahead(digits)));
@@ -1659,7 +1659,7 @@ namespace UnifiedRegex
             }
             while (digits < 3 && standardEncodedChars->IsOctal(ECLookahead())); // terminating 0 is not an octal
 
-            deferredCharNode->cs[0] = UTC((UChar)n);
+            deferredCharNode->cs[0] = UTC(static_cast<UChar>(n));
             node = deferredCharNode;
             return false; // not an assertion
         }
@@ -1856,7 +1856,7 @@ namespace UnifiedRegex
                         }
                         else
                         {
-                            equivNode[indexForNextNode] = Anew(ctAllocator, MatchCharNode, (Char)equivClass[i]);
+                            equivNode[indexForNextNode] = Anew(ctAllocator, MatchCharNode, static_cast<Char>(equivClass[i]));
                         }
                         indexForNextNode ++;
                     }
@@ -2011,7 +2011,7 @@ namespace UnifiedRegex
 
                 if (scriptContext->GetConfig()->IsES6UnicodeExtensionsEnabled())
                 {
-                    TrackIfSurrogatePair(lastCodepoint, current, (uint32_t)(next - current));
+                    TrackIfSurrogatePair(lastCodepoint, current, static_cast<uint32_t>(next - current));
                 }
             }
 
@@ -2060,7 +2060,7 @@ namespace UnifiedRegex
                     }
                     else
                     {
-                        leftSingleChar = (char16_t)pendingRangeStart;
+                        leftSingleChar = static_cast<char16_t>(pendingRangeStart);
                     }
 
                     if (pendingRangeEnd >= 0x10000)
@@ -2069,7 +2069,7 @@ namespace UnifiedRegex
                     }
                     else
                     {
-                        rightSingleChar = (char16_t)pendingRangeEnd;
+                        rightSingleChar = static_cast<char16_t>(pendingRangeEnd);
                     }
 
                     // Here it is a bit tricky, we don't know if we have a unicode option specified.
@@ -2299,7 +2299,7 @@ namespace UnifiedRegex
 
             if (singleton < 0x10000)
             {
-                toReturn = Anew(ctAllocator, MatchCharNode, (char16_t)singleton);
+                toReturn = Anew(ctAllocator, MatchCharNode, static_cast<char16_t>(singleton));
             }
             else
             {
@@ -2454,7 +2454,7 @@ namespace UnifiedRegex
                 digits++;
             }
             while (digits < 3 && standardEncodedChars->IsOctal(ECLookahead())); // terminating 0 is not octal
-            singleton = UTC((UChar)n);
+            singleton = UTC(static_cast<UChar>(n));
             // Clear possible pair
             this->tempLocationOfSurrogatePair = nullptr;
             return true;
@@ -2580,7 +2580,7 @@ namespace UnifiedRegex
                 digits++;
             }
             while (digits < 3 && standardEncodedChars->IsOctal(ECLookahead())); // terminating 0 is not octal
-            deferredCharNode->cs[0] = UTC((UChar)n);
+            deferredCharNode->cs[0] = UTC(static_cast<UChar>(n));
             return deferredCharNode;
         }
         else
@@ -2734,21 +2734,21 @@ namespace UnifiedRegex
                 {
                     Fail(JSERR_RegExpSyntax);
                 }
-                flags = (RegexFlags)(flags | IgnoreCaseRegexFlag);
+                flags = static_cast<RegexFlags>(flags | IgnoreCaseRegexFlag);
                 break;
             case 'g':
                 if ((flags & GlobalRegexFlag) != 0)
                 {
                     Fail(JSERR_RegExpSyntax);
                 }
-                flags = (RegexFlags)(flags | GlobalRegexFlag);
+                flags = static_cast<RegexFlags>(flags | GlobalRegexFlag);
                 break;
             case 'm':
                 if ((flags & MultilineRegexFlag) != 0)
                 {
                     Fail(JSERR_RegExpSyntax);
                 }
-                flags = (RegexFlags)(flags | MultilineRegexFlag);
+                flags = static_cast<RegexFlags>(flags | MultilineRegexFlag);
                 break;
             case 's':
                 if (scriptContext->GetConfig()->IsES2018RegExDotAllEnabled())
@@ -2757,7 +2757,7 @@ namespace UnifiedRegex
                     {
                         Fail(JSERR_RegExpSyntax);
                     }
-                    flags = (RegexFlags)(flags | DotAllRegexFlag);
+                    flags = static_cast<RegexFlags>(flags | DotAllRegexFlag);
                     break;
                 }
             case 'u':
@@ -2768,7 +2768,7 @@ namespace UnifiedRegex
                     {
                         Fail(JSERR_RegExpSyntax);
                     }
-                    flags = (RegexFlags)(flags | UnicodeRegexFlag);
+                    flags = static_cast<RegexFlags>(flags | UnicodeRegexFlag);
                     break;
                 }
             case 'y':
@@ -2778,7 +2778,7 @@ namespace UnifiedRegex
                     {
                         Fail(JSERR_RegExpSyntax);
                     }
-                    flags = (RegexFlags)(flags | StickyRegexFlag);
+                    flags = static_cast<RegexFlags>(flags | StickyRegexFlag);
                     break;
                 }
             default:
@@ -3090,9 +3090,9 @@ namespace UnifiedRegex
         if (this->scriptContext->GetConfig()->IsES6UnicodeExtensionsEnabled() && this->unicodeFlagPresent)
         {
             MatchSetNode *lowerRangeNode = Anew(ctAllocator, MatchSetNode, false, false);
-            lowerRangeNode->set.SetRange(ctAllocator, (Char)0xD800, (Char)0xDBFF);
+            lowerRangeNode->set.SetRange(ctAllocator, 0xD800, 0xDBFF);
             MatchSetNode *upperRangeNode = Anew(ctAllocator, MatchSetNode, false, false);
-            upperRangeNode->set.SetRange(ctAllocator, (Char)0xDC00, (Char)0xDFFF);
+            upperRangeNode->set.SetRange(ctAllocator, 0xDC00, 0xDFFF);
 
             ConcatNode* surrogateRangePairNode = Anew(ctAllocator, ConcatNode, lowerRangeNode, Anew(ctAllocator, ConcatNode, upperRangeNode, nullptr));
 
@@ -3131,10 +3131,10 @@ namespace UnifiedRegex
                 AssertMsg(false, "");
             }
 
-            partialPrefixSetNode->set.SubtractRange(ctAllocator, (Char)0xD800u, (Char)0xDBFFu);
+            partialPrefixSetNode->set.SubtractRange(ctAllocator, 0xD800u, 0xDBFFu);
 
             MatchSetNode* partialSuffixSetNode = Anew(ctAllocator, MatchSetNode, false, false);
-            partialSuffixSetNode->set.SetRange(ctAllocator, (Char)0xD800u, (Char)0xDBFFu);
+            partialSuffixSetNode->set.SetRange(ctAllocator, 0xD800u, 0xDBFFu);
 
             AltNode* altNode = Anew(ctAllocator, AltNode, partialPrefixSetNode, Anew(ctAllocator, AltNode, surrogateRangePairNode, Anew(ctAllocator, AltNode, partialSuffixSetNode, nullptr)));
             nodeToReturn = altNode;

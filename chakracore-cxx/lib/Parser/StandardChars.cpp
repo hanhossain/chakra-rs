@@ -330,7 +330,7 @@ END {
         if (surrogateUpperRange == 0)
         {
             surrogateUpperRange = Anew(allocator, UnicodeCharSet);
-            surrogateUpperRange->SetRange(allocator, (char16_t)0xDC00u, (char16_t)0xDFFFu);
+            surrogateUpperRange->SetRange(allocator, 0xDC00u, 0xDFFFu);
         }
         return surrogateUpperRange;
     }

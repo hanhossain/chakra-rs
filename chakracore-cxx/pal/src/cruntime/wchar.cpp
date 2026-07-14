@@ -101,7 +101,7 @@ char16_t* Internal_i64tow(int64_t value, char16_t* string, int radix, BOOL isI64
     }
     if (FALSE == isI64)
     {
-        uval = (uint32_t) uval;
+        uval = static_cast<uint32_t>(uval);
     }
     if (10 == radix && value < 0)
     {
@@ -235,7 +235,7 @@ _wtoi(
               GetLastError());
         return -1;
     }
-    tempStr = (char *) malloc(len);
+    tempStr = static_cast<char*>(malloc(len));
     if (!tempStr)
     {
         ERROR("malloc failed\n");
@@ -311,7 +311,7 @@ PAL__wcstoui64(
         res = 0;
         goto PAL__wcstoui64Exit;
     }
-    s_nptr = (char *)malloc(size);
+    s_nptr = static_cast<char*>(malloc(size));
     if (!s_nptr)
     {
         ERROR("malloc failed\n");
@@ -336,7 +336,7 @@ PAL__wcstoui64(
     if( endptr )
     {
         size = s_endptr - s_nptr;
-        *endptr = (char16_t *)&nptr[size];
+        *endptr = const_cast<char16_t*>(&nptr[size]);
     }
 
 PAL__wcstoui64Exit:
@@ -379,7 +379,7 @@ PAL_towlower( char16_t c )
                                                 kCFAllocatorDefault, 1);
             if (cfString != NULL)
             {
-                CFStringAppendCharacters(cfString, (const UniChar*)&c, 1);
+                CFStringAppendCharacters(cfString, reinterpret_cast<const UniChar*>(&c), 1);
                 CFStringLowercase(cfString, NULL);
                 c = CFStringGetCharacterAtIndex(cfString, 0);
                 CFRelease(cfString);
@@ -485,7 +485,7 @@ PAL_wcscpy(
     }
 
     /* add terminating null */
-    *strDestination = char16_t(0);
+    *strDestination = static_cast<char16_t>(0);
 
     LOGEXIT("wcscpy returning char16_t %p (%S)\n", start, start);
     return start;
@@ -509,8 +509,8 @@ PAL_wmemcmp(
     if (string1 == string2) return diff;
 
     constexpr size_t blockSize = sizeof(size_t) / sizeof(char16_t);
-    const     size_t *num1     = (const size_t*)(string1);
-    const     size_t *num2     = (const size_t*)(string2);
+    const     size_t *num1     = reinterpret_cast<const size_t*>(string1);
+    const     size_t *num2     = reinterpret_cast<const size_t*>(string2);
 
     while( (count > blockSize * (wi + 1)) && num1[wi] == num2[wi] ) ++wi;
 
@@ -598,14 +598,14 @@ PAL_wcschr(
         if (*string == c)
         {
             LOGEXIT("wcschr returning char16_t %p (%S)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING);
-            return (char16_t *) string;
+            return const_cast<char16_t*>(string);
         }
         string++;
     }
 
     // Check if the comparand was \000
     if (*string == c)
-        return (char16_t *) string;
+        return const_cast<char16_t*>(string);
 
     LOGEXIT("wcschr returning char16_t NULL\n");
     return NULL;
@@ -630,13 +630,13 @@ PAL_wcsrchr(
     {
         if (*string == c)
         {
-            last = (char16_t *) string;
+            last = const_cast<char16_t*>(string);
         }
         string++;
     }
 
     LOGEXIT("wcsrchr returning char16_t %p (%S)\n", last?last:W16_NULLSTRING, last?last:W16_NULLSTRING);
-    return (char16_t *)last;
+    return last;
 }
 
 /*++
@@ -667,7 +667,7 @@ PAL_wcsstr(
 
     if (*strCharSet == 0)
     {
-        ret = (char16_t *)string;
+        ret = const_cast<char16_t*>(string);
         goto leave;
     }
 
@@ -678,7 +678,7 @@ PAL_wcsstr(
         {
             if (*(strCharSet + i) == 0)
             {
-                ret = (char16_t *) string;
+                ret = const_cast<char16_t*>(string);
                 goto leave;
             }
             else if (*(string + i) == 0)

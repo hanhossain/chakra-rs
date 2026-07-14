@@ -200,7 +200,7 @@ Low bytes are offset in the segment
     ((shmptr)&0x00FFFFFF)
 
 #define MAKE_SHMPTR(segment,offset) \
-    ((SHMPTR)((((segment)&0xFF)<<24)|((offset)&0x00FFFFFF)))
+    (static_cast<SHMPTR>((((segment)&0xFF)<<24)|((offset)&0x00FFFFFF)))
 
 /*#define MAX_SEGMENTS 256*//*definition is now in shmemory.h*/
 
@@ -378,12 +378,12 @@ BOOL SHMInitialize(void)
         TRACE("Mapped first SHM segment at %p\n",shm_segment_bases[0].Load());
 
         /* Initialize first segment's header */
-        header = (SHM_FIRST_HEADER *)shm_segment_bases[0].Load();
+        header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
 
-        InterlockedExchange((int32_t *)&header->spinlock, 0);
+        InterlockedExchange(&header->spinlock, 0);
 
         /* SHM information array starts with NULLs */
-        memset((void *)header->shm_info, 0, SIID_LAST*sizeof(SHMPTR));
+        memset(header->shm_info, 0, SIID_LAST*sizeof(SHMPTR));
 
         /* Initialize memory pools */
 
@@ -397,7 +397,7 @@ BOOL SHMInitialize(void)
              sps = static_cast<SHM_POOL_SIZES>(sps + 1))
         {
             pool_end = SHMInitPool(pool_start, block_sizes[sps], size,
-                                   (SHM_POOL_INFO *)&header->pools[sps]);
+                                   &header->pools[sps]);
 
             if(pool_end ==0)
             {
@@ -453,7 +453,7 @@ void SHMCleanup(void)
     /* We should not be holding the spinlock at this point. If we are, release
        the spinlock. by setting it to 0 */
     my_pid = getpid();
-    header = (SHM_FIRST_HEADER *)shm_segment_bases[0].Load();
+    header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
 
     _ASSERT_MSG(header->spinlock != my_pid,
             "SHMCleanup called while the current process still owns the lock "
@@ -533,7 +533,7 @@ SHMPTR SHMalloc(size_t size)
     log_waste(sps, block_sizes[sps]-size);
 
     SHMLock();
-    header = (SHM_FIRST_HEADER *)shm_segment_bases[0].Load();
+    header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
 
     /* If there are no free items of the specified size left, it's time to
        allocate a new shared memory segment.*/
@@ -632,7 +632,7 @@ void SHMfree(SHMPTR shmptr)
 
     /* note : SHMPTR_TO_PTR has already validated the segment/offset pair */
     segment = SHMPTR_SEGMENT(shmptr);
-    header = (SHM_SEGMENT_HEADER *)shm_segment_bases[segment].Load();
+    header = static_cast<SHM_SEGMENT_HEADER*>(shm_segment_bases[segment].Load());
 
     /* Find out the size of this block. Each segment tells where are its first
        and last blocks for each block size, so we simply need to check in which
@@ -674,7 +674,7 @@ void SHMfree(SHMPTR shmptr)
     }
 
     /* Put the SHMPTR back in its pool. */
-    first_header = (SHM_FIRST_HEADER *)shm_segment_bases[0].Load();
+    first_header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
 
     /* first_free is the head of a linked list of free SHMPTRs. All we need to
        do is make shmptr point to first_free, and set shmptr as the new head
@@ -852,12 +852,12 @@ SHMPTR SHMGetInfo(SHM_INFO_ID element)
 
     /* verify that this thread holds the SHM lock. No race condition: if the
        current thread is here, it can't be in SHMLock or SHMUnlock */
-    if( (HANDLE)pthread_self() != locking_thread )
+    if( reinterpret_cast<HANDLE>(pthread_self()) != locking_thread )
     {
         ASSERT("SHMGetInfo called while thread does not hold the SHM lock!\n");
     }
 
-    header = (SHM_FIRST_HEADER *)shm_segment_bases[0].Load();
+    header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
 
     retval = header->shm_info[element];
 
@@ -894,12 +894,12 @@ BOOL SHMSetInfo(SHM_INFO_ID element, SHMPTR value)
 
     /* verify that this thread holds the SHM lock. No race condition: if the
        current thread is here, it can't be in SHMLock or SHMUnlock */
-    if( (HANDLE)pthread_self() != locking_thread )
+    if( reinterpret_cast<HANDLE>(pthread_self()) != locking_thread )
     {
         ASSERT("SHMGetInfo called while thread does not hold the SHM lock!\n");
     }
 
-    header = (SHM_FIRST_HEADER*)shm_segment_bases[0].Load();
+    header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
 
     TRACE("Setting SHM info element %d to %08x; used to be %08x\n",
           element, value, header->shm_info[element].Load() );
@@ -989,9 +989,8 @@ static SHMPTR SHMLinkPool(SHMPTR first, int block_size, int num_blocks)
     TRACE("Linking %d blocks of %d bytes, starting at 0x%08x\n",
           num_blocks, block_size, first);
 
-    item_ptr = static_cast<uint8_t *>(
-        static_cast<uint8_t *>(shm_segment_bases[SHMPTR_SEGMENT(first)].Load()) +
-            (SHMPTR_OFFSET(first)));
+    item_ptr = static_cast<uint8_t *>(shm_segment_bases[SHMPTR_SEGMENT(first)].Load()) +
+        (SHMPTR_OFFSET(first));
     next_shmptr = first/*+block_size*/;
 
     /* Link blocks together */
@@ -1001,14 +1000,14 @@ static SHMPTR SHMLinkPool(SHMPTR first, int block_size, int num_blocks)
 
         /* item_ptr is char * (so we can increment with +=blocksize), we cast
            it to a SHMPTR * and set its content to the next SHMPTR in the list*/
-        shmptr_ptr = (SHMPTR *)item_ptr;
+        shmptr_ptr = reinterpret_cast<SHMPTR*>(item_ptr);
         *shmptr_ptr = next_shmptr;
 
         item_ptr+=block_size;
     }
     /* Last SHMPTR in the list must point to NULL */
     item_ptr-=block_size;
-    shmptr_ptr = (SHMPTR *)item_ptr;
+    shmptr_ptr = reinterpret_cast<SHMPTR*>(item_ptr);
     *shmptr_ptr = 0;
 
     /* Return SHMPTR of last element in the list */
@@ -1093,14 +1092,14 @@ static BOOL SHMAddSegment(void)
 
     /* Save name (well, suffix) of new segment in the header of the old last
        segment, so that other processes know where it is. */
-    header = (SHM_SEGMENT_HEADER *)shm_segment_bases[shm_numsegments-1].Load();
+    header = static_cast<SHM_SEGMENT_HEADER*>(shm_segment_bases[shm_numsegments - 1].Load());
 
     /* Indicate that the new segment is the last one */
-    header = (SHM_SEGMENT_HEADER *)segment_base;
+    header = static_cast<SHM_SEGMENT_HEADER*>(segment_base);
 
     /* We're now ready to update our memory pools */
 
-    first_header = (SHM_FIRST_HEADER *)shm_segment_bases[0].Load();
+    first_header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
 
     /* Calculate total amount of used memory (in bytes) */
     used_size = 0;
@@ -1153,7 +1152,7 @@ static BOOL SHMAddSegment(void)
 
         /* amount of memory we want to add to the pool for this block size :
            amount used by this pool/total amount used * new segment's size */
-        new_pool_size = (((long)used_pool_size)*new_size)/used_size;
+        new_pool_size = (static_cast<long>(used_pool_size)*new_size)/used_size;
 
         DBGOUT("Allocating %d bytes of %d to %d-byte pool\n",
                new_pool_size, new_size, block_sizes[sps]);
@@ -1327,7 +1326,7 @@ SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oi
 
     while ( shmNamedObject )
     {
-        pNamedObject = (PSHM_NAMED_OBJECTS)SHMPTR_TO_PTR( shmNamedObject );
+        pNamedObject = static_cast<PSHM_NAMED_OBJECTS>(SHMPTR_TO_PTR(shmNamedObject));
         if(NULL == pNamedObject)
         {
             ASSERT("Got invalid SHMPTR value; list of named objects is "
@@ -1337,7 +1336,7 @@ SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oi
 
         if ( pNamedObject->ShmObjectName )
         {
-            object_name = (char16_t*)SHMPTR_TO_PTR( pNamedObject->ShmObjectName );
+            object_name = static_cast<char16_t*>(SHMPTR_TO_PTR(pNamedObject->ShmObjectName));
         }
 
         if ( object_name &&
@@ -1384,7 +1383,7 @@ void SHMRemoveNamedObject( SHMPTR shmNamedObject )
     SHMLock();
 
     pshmCurrent =
-        (PSHM_NAMED_OBJECTS)SHMPTR_TO_PTR( SHMGetInfo( SIID_NAMED_OBJECTS ) );
+        static_cast<PSHM_NAMED_OBJECTS>(SHMPTR_TO_PTR(SHMGetInfo( SIID_NAMED_OBJECTS )));
     pshmLast = pshmCurrent;
 
     while ( pshmCurrent )
@@ -1399,7 +1398,7 @@ void SHMRemoveNamedObject( SHMPTR shmNamedObject )
                 /* Either the first element or no elements left. */
                 SHMSetInfo( SIID_NAMED_OBJECTS, pshmCurrent->ShmNext );
             }
-            else if ( (PSHM_NAMED_OBJECTS)SHMPTR_TO_PTR( pshmCurrent->ShmNext ) )
+            else if ( static_cast<PSHM_NAMED_OBJECTS>(SHMPTR_TO_PTR(pshmCurrent->ShmNext)) )
             {
                 pshmLast->ShmNext = pshmCurrent->ShmNext;
             }
@@ -1414,7 +1413,7 @@ void SHMRemoveNamedObject( SHMPTR shmNamedObject )
         else
         {
             pshmLast = pshmCurrent;
-            pshmCurrent = (PSHM_NAMED_OBJECTS)SHMPTR_TO_PTR( pshmCurrent->ShmNext );
+            pshmCurrent = static_cast<PSHM_NAMED_OBJECTS>(SHMPTR_TO_PTR(pshmCurrent->ShmNext));
         }
     }
 
@@ -1432,7 +1431,7 @@ void SHMAddNamedObject( SHMPTR shmNewNamedObject )
 {
     PSHM_NAMED_OBJECTS pshmNew = 0;
 
-    pshmNew = (PSHM_NAMED_OBJECTS)SHMPTR_TO_PTR( shmNewNamedObject );
+    pshmNew = static_cast<PSHM_NAMED_OBJECTS>(SHMPTR_TO_PTR(shmNewNamedObject));
 
     if ( pshmNew == NULL )
     {

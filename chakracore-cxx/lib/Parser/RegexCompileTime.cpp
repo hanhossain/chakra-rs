@@ -21,7 +21,7 @@ namespace UnifiedRegex
         if (instLen - instNext < size)
         {
             CharCount newLen = max(instLen, initInstBufSize);
-            CharCount instLenPlus = (CharCount)(instLen + size - 1);
+            CharCount instLenPlus = static_cast<CharCount>(instLen + size - 1);
 
             // check for overflow
             if (instLenPlus < instLen || instLenPlus * 2 < instLenPlus)
@@ -34,11 +34,11 @@ namespace UnifiedRegex
                 newLen *= 2;
             }
 
-            instBuf = (uint8_t*)ctAllocator->Realloc(instBuf, instLen, newLen);
+            instBuf = reinterpret_cast<uint8_t*>(ctAllocator->Realloc(instBuf, instLen, newLen));
             instLen = newLen;
         }
         uint8_t* inst = instBuf + instNext;
-        instNext += (CharCount)size;
+        instNext += static_cast<CharCount>(size);
         return inst;
     }
 
@@ -162,7 +162,7 @@ namespace UnifiedRegex
         if (tag != Node::MatchChar)
             return false;
 
-        const MatchCharNode* node = (const MatchCharNode*)this;
+        const MatchCharNode* node = static_cast<const MatchCharNode*>(this);
         if (node->isEquivClass)
             return false;
 
@@ -175,7 +175,7 @@ namespace UnifiedRegex
         if (tag != Node::Concat)
             return false;
 
-        const ConcatNode* concatNode = (const ConcatNode *)this;
+        const ConcatNode* concatNode = static_cast<const ConcatNode*>(this);
         if (concatNode->head->tag != Node::WordBoundary ||
             concatNode->tail == 0 ||
             concatNode->tail->head->tag != Node::Loop ||
@@ -184,9 +184,9 @@ namespace UnifiedRegex
             concatNode->tail->tail->tail != 0)
             return false;
 
-        const WordBoundaryNode* enter = (const WordBoundaryNode*)concatNode->head;
-        const LoopNode* loop = (const LoopNode*)concatNode->tail->head;
-        const WordBoundaryNode* leave = (const WordBoundaryNode*)concatNode->tail->tail->head;
+        const WordBoundaryNode* enter = static_cast<const WordBoundaryNode*>(concatNode->head);
+        const LoopNode* loop = static_cast<const LoopNode*>(concatNode->tail->head);
+        const WordBoundaryNode* leave = static_cast<const WordBoundaryNode*>(concatNode->tail->tail->head);
 
         if (enter->isNegation ||
             !loop->isGreedy ||
@@ -196,7 +196,7 @@ namespace UnifiedRegex
             leave->isNegation)
             return false;
 
-        const MatchSetNode* wordSet = (const MatchSetNode*)loop->body;
+        const MatchSetNode* wordSet = static_cast<const MatchSetNode*>(loop->body);
 
         if (wordSet->isNegation)
             return false;
@@ -208,14 +208,14 @@ namespace UnifiedRegex
     {
         if (tag != Node::Concat)
             return false;
-        const ConcatNode* concatNode = (const ConcatNode *)this;
+        const ConcatNode* concatNode = static_cast<const ConcatNode*>(this);
         if ((compiler.program->flags & (IgnoreCaseRegexFlag | MultilineRegexFlag)) != 0 ||
             concatNode->head->tag != Node::BOL ||
             concatNode->tail == nullptr ||
             concatNode->tail->head->tag != Node::MatchLiteral ||
             concatNode->tail->tail != nullptr ||
-            ((MatchLiteralNode *)concatNode->tail->head)->isEquivClass ||
-            ((MatchLiteralNode *)concatNode->tail->head)->length != 2)
+            static_cast<MatchLiteralNode*>(concatNode->tail->head)->isEquivClass ||
+            static_cast<MatchLiteralNode*>(concatNode->tail->head)->length != 2)
         {
             return false;
         }
@@ -231,15 +231,15 @@ namespace UnifiedRegex
         if (compiler.program->flags & MultilineRegexFlag)
             return false;
 
-        const AltNode* altNode = (const AltNode*)this;
+        const AltNode* altNode = static_cast<const AltNode*>(this);
         if (altNode->head->tag != Node::Concat ||
             altNode->tail == 0 ||
             altNode->tail->head->tag != Node::Concat ||
             altNode->tail->tail != 0)
             return false;
 
-        const ConcatNode* left = (const ConcatNode*)altNode->head;
-        const ConcatNode* right = (const ConcatNode*)altNode->tail->head;
+        const ConcatNode* left = static_cast<const ConcatNode*>(altNode->head);
+        const ConcatNode* right = static_cast<const ConcatNode*>(altNode->tail->head);
 
         if (left->head->tag != Node::BOL ||
             left->tail == 0 ||
@@ -253,8 +253,8 @@ namespace UnifiedRegex
             right->tail->tail != 0)
             return false;
 
-        const LoopNode* leftLoop = (const LoopNode*)left->tail->head;
-        const LoopNode* rightLoop = (const LoopNode*)right->head;
+        const LoopNode* leftLoop = static_cast<const LoopNode*>(left->tail->head);
+        const LoopNode* rightLoop = static_cast<const LoopNode*>(right->head);
 
         if (!leftLoop->isGreedy ||
             leftLoop->repeats.upper != CharCountFlag ||
@@ -264,8 +264,8 @@ namespace UnifiedRegex
             rightLoop->body->tag != Node::MatchSet)
             return false;
 
-        const MatchSetNode* leftSet = (const MatchSetNode*)leftLoop->body;
-        const MatchSetNode* rightSet = (const MatchSetNode*)rightLoop->body;
+        const MatchSetNode* leftSet = static_cast<const MatchSetNode*>(leftLoop->body);
+        const MatchSetNode* rightSet = static_cast<const MatchSetNode*>(rightLoop->body);
 
         if (leftSet->isNegation ||
             rightSet->isNegation)
@@ -1202,7 +1202,7 @@ namespace UnifiedRegex
             // to be just the first character (known to exist). This can
             // hopefully be optimized to just initialize to cs[0] by the
             // compiler.
-            Char equivs[CaseInsensitive::EquivClassSize] = { (Char)-1 };
+            Char equivs[CaseInsensitive::EquivClassSize] = { static_cast<Char>(-1) };
             for (int i = 0; i < CaseInsensitive::EquivClassSize; i++)
             {
                 equivs[i] = cs[0];
@@ -1318,7 +1318,7 @@ namespace UnifiedRegex
             // to be just the first character (known to exist). This can
             // hopefully be optimized to just initialize to cs[0] by the
             // compiler.
-            Char uniqueEquivs[CaseInsensitive::EquivClassSize] = { (Char)-1 };
+            Char uniqueEquivs[CaseInsensitive::EquivClassSize] = { static_cast<Char>(-1) };
             for (int i = 0; i < CaseInsensitive::EquivClassSize; i++)
             {
                 uniqueEquivs[i] = cs[0];
@@ -1836,12 +1836,12 @@ namespace UnifiedRegex
             {
                 if (curr->head->tag == WordBoundary && prev->isWord)
                 {
-                    WordBoundaryNode* wb = (WordBoundaryNode*)curr->head;
+                    WordBoundaryNode* wb = static_cast<WordBoundaryNode*>(curr->head);
                     wb->mustIncludeLeaving = true;
                 }
                 else if (prev->tag == WordBoundary && curr->head->isWord)
                 {
-                    WordBoundaryNode* wb = (WordBoundaryNode*)prev;
+                    WordBoundaryNode* wb = static_cast<WordBoundaryNode*>(prev);
                     wb->mustIncludeEntering = true;
                 }
             }
@@ -3743,7 +3743,7 @@ namespace UnifiedRegex
         // then consume up to upper number of characters in FIRST and fail if number consumed is not >= lower.
         //
 
-        if (body->IsSimpleOneChar() || (body->tag == DefineGroup && ((DefineGroupNode*)body)->body->IsSimpleOneChar()))
+        if (body->IsSimpleOneChar() || (body->tag == DefineGroup && static_cast<DefineGroupNode*>(body)->body->IsSimpleOneChar()))
         {
             if (!followConsumes.CouldMatchEmpty())
             {
@@ -3820,7 +3820,7 @@ namespace UnifiedRegex
         {
             if (body->tag == DefineGroup)
             {
-                DefineGroupNode* bodyGroup = (DefineGroupNode*)body;
+                DefineGroupNode* bodyGroup = static_cast<DefineGroupNode*>(body);
                 if (!bodyGroup->body->ContainsDefineGroup())
                 {
                     // **COMMIT**
@@ -3982,7 +3982,7 @@ namespace UnifiedRegex
                 //   ChompSetGroup
                 //
                 Assert(body->tag == DefineGroup);
-                DefineGroupNode* bodyGroup = (DefineGroupNode*)body;
+                DefineGroupNode* bodyGroup = static_cast<DefineGroupNode*>(body);
                 EMIT(compiler, ChompSetBoundedGroupLastCharInst, repeats, bodyGroup->groupId, noNeedToSave)->set.CloneFrom(compiler.rtAllocator, *body->firstSet);
                 break;
             }
@@ -4071,7 +4071,7 @@ namespace UnifiedRegex
                 //   Lexit:
                 //
                 Assert(body->tag == DefineGroup);
-                DefineGroupNode* bodyGroup = (DefineGroupNode*)body;
+                DefineGroupNode* bodyGroup = static_cast<DefineGroupNode*>(body);
                 Assert(body->thisConsumes.IsFixed());
                 Assert(body->thisConsumes.lower > 0);
                 Assert(body->isDeterministic);
@@ -4555,7 +4555,7 @@ namespace UnifiedRegex
 
     void Compiler::EmitAndCaptureSuccInst(Recycler* recycler, Program* program)
     {
-        program->rep.insts.insts = (uint8_t*)RecyclerNewLeaf(recycler, SuccInst);
+        program->rep.insts.insts = reinterpret_cast<uint8_t*>(RecyclerNewLeaf(recycler, SuccInst));
         program->rep.insts.instsLen = sizeof(SuccInst);
         program->numLoops = 0;
     }
@@ -4664,7 +4664,7 @@ namespace UnifiedRegex
                 OctoquadIdentifier oi(numCodes, *codeToChar, *charToCode);
                 // We haven't captured literals yet: temporarily set the program's litbuf to be the parser's litbuf
                 Assert(program->rep.insts.litbuf == nullptr);
-                program->rep.insts.litbuf = (Char*)litbuf;
+                program->rep.insts.litbuf = const_cast<Char*>(litbuf);
                 if (root->IsOctoquad(compiler, &oi) && oi.IsOctoquad())
                 {
                     program->rep.insts.litbuf = nullptr;
@@ -4704,7 +4704,7 @@ namespace UnifiedRegex
                 else if (root->IsBOILiteral2(compiler))
                 {
                     program->tag = Program::ProgramTag::BOILiteral2Tag;
-                    program->rep.boiLiteral2.literal = *(uint32_t *)litbuf;
+                    program->rep.boiLiteral2.literal = *reinterpret_cast<const uint32_t*>(litbuf);
                 }
                 else
                 {

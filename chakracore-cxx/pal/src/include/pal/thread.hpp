@@ -755,7 +755,7 @@ Abstract:
 
 --*/
 #if defined(__LINUX__)
-#define THREADSilentGetCurrentThreadId() (size_t)syscall(SYS_gettid)
+#define THREADSilentGetCurrentThreadId() static_cast<size_t>(syscall(SYS_gettid))
 #elif defined(__APPLE__)
 inline size_t THREADSilentGetCurrentThreadId() {
     static thread_local size_t threadIdSelf = -1;

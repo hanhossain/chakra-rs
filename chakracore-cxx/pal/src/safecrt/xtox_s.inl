@@ -89,7 +89,7 @@ errno_t xtox_s
         _VALIDATE_RETURN_ERRCODE(buf != NULL, EINVAL);
         _VALIDATE_RETURN_ERRCODE(sizeInTChars > 0, EINVAL);
         _RESET_STRING(buf, sizeInTChars);
-        _VALIDATE_RETURN_ERRCODE(sizeInTChars > (size_t)(is_neg ? 2 : 1), ERANGE);
+        _VALIDATE_RETURN_ERRCODE(sizeInTChars > static_cast<size_t>(is_neg ? 2 : 1), ERANGE);
         _VALIDATE_RETURN_ERRCODE(2 <= radix && radix <= 36, EINVAL);
         length = 0;
         p = buf;
@@ -98,20 +98,20 @@ errno_t xtox_s
             /* negative, so output '-' and negate */
             *p++ = _T('-');
             length++;
-            val = (unsigned long)(-(long)val);
+            val = static_cast<unsigned long>(-static_cast<long>(val));
         }
 
         firstdig = p;           /* save pointer to first digit */
 
         do {
-            digval = (unsigned) (val % radix);
+            digval = static_cast<unsigned>(val % radix);
             val /= radix;       /* get next digit */
 
             /* convert to ascii and store */
             if (digval > 9)
-                *p++ = (TCHAR) (digval - 10 + _T('a'));  /* a letter */
+                *p++ = static_cast<char>(digval - 10 + _T('a'));  /* a letter */
             else
-                *p++ = (TCHAR) (digval + _T('0'));       /* a digit */
+                *p++ = static_cast<char>(digval + _T('0'));       /* a digit */
             length++;
         } while (val > 0 && length < sizeInTChars);
 
@@ -149,9 +149,9 @@ errno_t _itox_s (
         errno_t e = 0;
 
         if (radix == 10 && val < 0)
-            e = xtox_s((unsigned long)val, buf, sizeInTChars, radix, 1);
+            e = xtox_s(static_cast<unsigned long>(val), buf, sizeInTChars, radix, 1);
         else
-            e = xtox_s((unsigned long)(unsigned int)val, buf, sizeInTChars, radix, 0);
+            e = xtox_s(static_cast<unsigned int>(val), buf, sizeInTChars, radix, 0);
 
         return e;
 }
@@ -163,7 +163,7 @@ errno_t _ltox_s (
         int radix
         )
 {
-        return xtox_s((unsigned long)val, buf, sizeInTChars, radix, (radix == 10 && val < 0));
+        return xtox_s(static_cast<unsigned long>(val), buf, sizeInTChars, radix, (radix == 10 && val < 0));
 }
 
 errno_t _ultox_s (
@@ -219,7 +219,7 @@ errno_t x64tox_s
         _VALIDATE_RETURN_ERRCODE(buf != NULL, EINVAL);
         _VALIDATE_RETURN_ERRCODE(sizeInTChars > 0, EINVAL);
         _RESET_STRING(buf, sizeInTChars);
-        _VALIDATE_RETURN_ERRCODE(sizeInTChars > (size_t)(is_neg ? 2 : 1), ERANGE);
+        _VALIDATE_RETURN_ERRCODE(sizeInTChars > static_cast<size_t>(is_neg ? 2 : 1), ERANGE);
         _VALIDATE_RETURN_ERRCODE(2 <= radix && radix <= 36, EINVAL);
         length = 0;
         p = buf;
@@ -228,20 +228,20 @@ errno_t x64tox_s
         {
             *p++ = _T('-');         /* negative, so output '-' and negate */
             length++;
-            val = (unsigned long)(-(long)val);
+            val = static_cast<unsigned long>(-static_cast<long>(val));
         }
 
         firstdig = p;           /* save pointer to first digit */
 
         do {
-            digval = (unsigned) (val % radix);
+            digval = static_cast<unsigned>(val % radix);
             val /= radix;       /* get next digit */
 
             /* convert to ascii and store */
             if (digval > 9)
-                *p++ = (TCHAR) (digval - 10 + _T('a'));  /* a letter */
+                *p++ = static_cast<char>(digval - 10 + _T('a'));  /* a letter */
             else
-                *p++ = (TCHAR) (digval + _T('0'));       /* a digit */
+                *p++ = static_cast<char>(digval + _T('0'));       /* a digit */
 
             length++;
         } while (val > 0 && length < sizeInTChars);
@@ -278,7 +278,7 @@ errno_t _i64tox_s (
         int radix
         )
 {
-        return x64tox_s((unsigned long)val, buf, sizeInTChars, radix, (radix == 10 && val < 0));
+        return x64tox_s(val, buf, sizeInTChars, radix, (radix == 10 && val < 0));
 }
 
 errno_t _ui64tox_s (

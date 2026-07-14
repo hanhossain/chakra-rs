@@ -118,13 +118,13 @@ CmdLineArgsParser::ParseSourceFunctionIds()
     if ('*' == CurChar())
     {
         sourceId = 1;
-        functionId = (uint)-2;
+        functionId = static_cast<uint>(-2);
         NextChar();
     }
     else if ('+' == CurChar())
     {
         sourceId = 1;
-        functionId = (uint)-1;
+        functionId = static_cast<uint>(-1);
         NextChar();
     }
     else
@@ -136,12 +136,12 @@ CmdLineArgsParser::ParseSourceFunctionIds()
             NextChar();
             if ('*' == CurChar())
             {
-                functionId = (uint)-2;
+                functionId = static_cast<uint>(-2);
                 NextChar();
             }
             else if ('+' == CurChar())
             {
-                functionId = (uint)-1;
+                functionId = static_cast<uint>(-1);
                 NextChar();
             }
             else
@@ -195,23 +195,23 @@ CmdLineArgsParser::ParseInteger()
 
     while(IsDigit() || (base == 16 && IsHexDigit()))
     {
-        int currentDigit = (int)(CurChar() - '0');
+        int currentDigit = CurChar() - '0';
         if (currentDigit > 9)
         {
             Assert(base == 16);
             if (CurChar() < 'F')
             {
-                currentDigit = 10 + (int)(CurChar() - 'A');
+                currentDigit = 10 + (CurChar() - 'A');
             }
             else
             {
-                currentDigit = 10 + (int)(CurChar() - 'a');
+                currentDigit = 10 + (CurChar() - 'a');
             }
 
             Assert(currentDigit < 16);
         }
 
-        result = result * base + (int)(CurChar() - '0');
+        result = result * base + (CurChar() - '0');
         if(result < 0)
         {
             // overflow or underflow in case sign = -1
@@ -677,7 +677,7 @@ int CmdLineArgsParser::Parse(char16_t* oneArg) throw()
     }
     catch(Exception &exp)
     {
-        Output::Print(u"%s : %s\n", (const char16_t*)exp, oneArg);
+        Output::Print(u"%s : %s\n", exp, oneArg);
         err = -1;
     }
     return err;

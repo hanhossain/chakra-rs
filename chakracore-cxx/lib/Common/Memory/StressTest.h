@@ -47,7 +47,7 @@ struct TestObject
     // Retrieves a pointer
     TestObject* Get(int index);
 
-    TestObject** GetDataPointer() { return reinterpret_cast<TestObject**>(AlignPtr((char*)this + sizeof(TestObject), OBJALIGN)); }
+    TestObject** GetDataPointer() { return reinterpret_cast<TestObject**>(AlignPtr(reinterpret_cast<char*>(this) + sizeof(TestObject), OBJALIGN)); }
 
     static void Visit(Recycler *recycler, TestObject *root);
     template<class Fn> static void Visit(Recycler *recycler, TestObject *root, Fn fn);

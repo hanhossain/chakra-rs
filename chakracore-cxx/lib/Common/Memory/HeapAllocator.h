@@ -290,7 +290,7 @@ public:
     static const bool FakeZeroLengthArray = false;
     char * Alloc(size_t byteSize)
     {
-        char *buffer = (char *)malloc(byteSize);
+        char *buffer = static_cast<char*>(malloc(byteSize));
         if (buffer != nullptr)
         {
             memset(buffer, 0, byteSize);
@@ -395,13 +395,13 @@ typedef NoThrowHeapAllocator NoThrowNoMemProtectHeapAllocator;
 inline void
 operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*AllocFunc)(size_t))
 {
-    alloc->Free(obj, (size_t)-1);
+    alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 inline void
 operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
-    alloc->Free(obj, (size_t)-1);
+    alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 //----------------------------------------
@@ -431,13 +431,13 @@ operator new(size_t byteSize, NoThrowHeapAllocator * alloc, char * (NoThrowHeapA
 inline void
 operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t))
 {
-    alloc->Free(obj, (size_t)-1);
+    alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 inline void
 operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
-    alloc->Free(obj, (size_t)-1);
+    alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 
@@ -472,13 +472,13 @@ operator new[](size_t byteSize, NoCheckHeapAllocator * alloc, char * (NoCheckHea
 inline void
 operator delete(void * obj, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t))
 {
-    alloc->Free(obj, (size_t)-1);
+    alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 inline void
 operator delete(void * obj, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
 {
-    alloc->Free(obj, (size_t)-1);
+    alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 // Free routine where we don't care about following C++ semantics (e.g. calling the destructor)

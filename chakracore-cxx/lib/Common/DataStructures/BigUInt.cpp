@@ -64,12 +64,12 @@ namespace Js
         clu += clu;
         if (m_prglu == m_rgluInit)
         {
-            if ((INT_MAX / sizeof(uint32_t) < clu) || (NULL == (prglu = (uint32_t *)malloc(clu * sizeof(uint32_t)))))
+            if ((INT_MAX / sizeof(uint32_t) < clu) || (NULL == (prglu = static_cast<uint32_t*>(malloc(clu * sizeof(uint32_t))))))
                 return false;
             if (0 < m_clu)
                 js_memcpy_s(prglu, clu * sizeof(uint32_t), m_prglu, m_clu * sizeof(uint32_t));
         }
-        else if (NULL == (prglu = (uint32_t *)realloc(m_prglu, clu * sizeof(uint32_t))))
+        else if (NULL == (prglu = static_cast<uint32_t*>(realloc(m_prglu, clu * sizeof(uint32_t)))))
             return false;
 
         m_prglu = prglu;
@@ -461,7 +461,7 @@ LNegative:
             return 0;
 
         // Get a lower bound on the quotient.
-        wQuo = (int)(m_prglu[clu - 1] / (pbi->m_prglu[clu - 1] + 1));
+        wQuo = static_cast<int>(m_prglu[clu - 1] / (pbi->m_prglu[clu - 1] + 1));
         Assert(wQuo >= 0 && wQuo <= 9);
 
         // Handle 0 and 1 as special cases.

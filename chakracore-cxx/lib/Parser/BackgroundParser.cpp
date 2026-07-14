@@ -161,7 +161,7 @@ bool BackgroundParser::ParseBackgroundItem(Parser *parser, ParseNodeFnc *parseNo
     ASSERT_THREAD();
 
     AutoPtr<BackgroundParseItem> workItemAutoPtr(this->NewBackgroundParseItem(parser, parseNode, isDeferred));
-    if ((BackgroundParseItem*) workItemAutoPtr == nullptr)
+    if (static_cast<BackgroundParseItem*>(workItemAutoPtr) == nullptr)
     {
         // OOM, just skip this work item and return.
         // TODO: Raise an OOM parse-time exception.
@@ -262,7 +262,7 @@ BackgroundParseItem *BackgroundParser::GetNextUnprocessedItem() const
 
 BackgroundParseItem::BackgroundParseItem(JsUtil::JobManager *const manager, Parser *const parser, ParseNodeFnc *parseNode, bool defer)
     : JsUtil::Job(manager),
-      maxBlockId((uint)-1),
+      maxBlockId(static_cast<uint>(-1)),
       strictMode(parser->IsStrictMode()),
       parseNode(parseNode),
       parser(nullptr),

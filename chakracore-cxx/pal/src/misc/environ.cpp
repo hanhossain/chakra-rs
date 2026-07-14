@@ -145,7 +145,7 @@ GetEnvironmentVariableW(
         goto done;
     }
 
-    inBuff = (char *)malloc(inBuffSize);
+    inBuff = static_cast<char*>(malloc(inBuffSize));
     if (inBuff == NULL)
     {
         ERROR("malloc failed\n");
@@ -154,7 +154,7 @@ GetEnvironmentVariableW(
     }
     
     if (nSize) {
-        outBuff = (char *)malloc(nSize*2);
+        outBuff = static_cast<char*>(malloc(nSize * 2));
         if (outBuff == NULL)
         {
             ERROR("malloc failed\n");
