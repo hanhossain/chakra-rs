@@ -12,12 +12,6 @@
 
 #pragma once
 
-#if _M_X64 || defined(_M_ARM32_OR_ARM64)
-#define serialization_alignment __unaligned
-#else
-#error Must define alignment capabilities for processor
-#endif
-
 struct _SIMDValue;
 typedef _SIMDValue SIMDValue;
 
@@ -62,7 +56,7 @@ namespace Js
     template<typename T, bool useVariableIntEncoding>
     struct BufferBuilderOf : BufferBuilder
     {
-        typedef serialization_alignment T value_type;
+        typedef T value_type;
         value_type value;
 
         BufferBuilderOf(const char16_t* clue, const T & value)
@@ -88,18 +82,18 @@ namespace Js
             {
                 if (UseOneByte())
                 {
-                    return this->offset + sizeof(serialization_alignment byte);
+                    return this->offset + sizeof(byte);
                 }
                 else if (UseTwoBytes())
                 {
-                    return this->offset + sizeof(serialization_alignment uint16) + SENTINEL_BYTE_COUNT;
+                    return this->offset + sizeof(uint16) + SENTINEL_BYTE_COUNT;
                 }
 
-                return this->offset + sizeof(serialization_alignment T) + SENTINEL_BYTE_COUNT;
+                return this->offset + sizeof(T) + SENTINEL_BYTE_COUNT;
             }
             else
             {
-                return this->offset + sizeof(serialization_alignment T);
+                return this->offset + sizeof(T);
             }
         }
 
@@ -130,31 +124,31 @@ namespace Js
             {
                 if (UseOneByte())
                 {
-                    if (bufferSize - this->offset < sizeof(serialization_alignment byte))
+                    if (bufferSize - this->offset < sizeof(byte))
                     {
                         Throw::FatalInternalError();
                     }
                     DebugOnly(size = sizeof(byte));
-                    *(serialization_alignment byte*)(buffer + this->offset) = (byte) value;
+                    *(byte*)(buffer + this->offset) = (byte) value;
                 }
                 else if (UseTwoBytes())
                 {
-                    if (bufferSize - this->offset < sizeof(serialization_alignment uint16) + sizeof(serialization_alignment byte))
+                    if (bufferSize - this->offset < sizeof(uint16) + sizeof(byte))
                     {
                         Throw::FatalInternalError();
                     }
                     DebugOnly(size = sizeof(uint16) + 1);
-                    *(serialization_alignment byte*)(buffer + this->offset) = TWO_BYTE_SENTINEL;
-                    *(serialization_alignment uint16*)(buffer + this->offset + SENTINEL_BYTE_COUNT) = (uint16) this->value;
+                    *(byte*)(buffer + this->offset) = TWO_BYTE_SENTINEL;
+                    *(uint16*)(buffer + this->offset + SENTINEL_BYTE_COUNT) = (uint16) this->value;
                 }
                 else
                 {
-                    if (bufferSize - this->offset < sizeof(serialization_alignment T) + sizeof(serialization_alignment byte))
+                    if (bufferSize - this->offset < sizeof(T) + sizeof(byte))
                     {
                         Throw::FatalInternalError();
                     }
-                    *(serialization_alignment byte*)(buffer + this->offset) = FOUR_BYTE_SENTINEL;
-                    *(serialization_alignment T*)(buffer + this->offset + SENTINEL_BYTE_COUNT) = this->value;
+                    *(byte*)(buffer + this->offset) = FOUR_BYTE_SENTINEL;
+                    *(T*)(buffer + this->offset + SENTINEL_BYTE_COUNT) = this->value;
                     DebugOnly(size = sizeof(T) + 1);
 #if INSTRUMENT_BUFFER_INTS
                     Output::Print(u"[BCGENSTATS] %d, %d\n", value, sizeof(T));
@@ -163,11 +157,11 @@ namespace Js
             }
             else
             {
-                if (bufferSize - this->offset<sizeof(serialization_alignment T))
+                if (bufferSize - this->offset<sizeof(T))
                 {
                     Throw::FatalInternalError();
                 }
-                *(serialization_alignment T*)(buffer + this->offset) = value;
+                *(T*)(buffer + this->offset) = value;
             }
             DebugOnly(TraceOutput(buffer, size));
         }
@@ -176,7 +170,7 @@ namespace Js
     template<typename T>
     struct BufferBuilderOf<T, false>: BufferBuilder
     {
-        typedef serialization_alignment T value_type;
+        typedef T value_type;
         value_type value;
 
         BufferBuilderOf(const char16_t* clue, const T & value)
@@ -187,17 +181,17 @@ namespace Js
         {
             this->offset = offset;
 
-            return this->offset + sizeof(serialization_alignment T);
+            return this->offset + sizeof(T);
         }
 
         void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
         {
-            if (bufferSize - this->offset<sizeof(serialization_alignment T))
+            if (bufferSize - this->offset<sizeof(T))
             {
                 Throw::FatalInternalError();
             }
 
-            *(serialization_alignment T*)(buffer + this->offset) = value;
+            *(T*)(buffer + this->offset) = value;
             DebugOnly(TraceOutput(buffer, sizeof(T)));
         }
     };
