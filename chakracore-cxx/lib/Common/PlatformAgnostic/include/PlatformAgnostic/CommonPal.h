@@ -182,19 +182,6 @@ typedef uint32_t DBGPROP_INFO_FLAGS;
 #define _UNALIGNED
 #endif
 
-// TODO (hanhossain): remove
-#ifdef __cplusplus
-extern "C++"
-{
-  template <typename _CountofType, size_t _SizeOfArray>
-  char(*__countof_helper(_UNALIGNED _CountofType(&_Array)[_SizeOfArray]))[_SizeOfArray];
-
-#define __crt_countof(_Array) (sizeof(*__countof_helper(_Array)) + 0)
-}
-#else
-#define __crt_countof(_Array) (sizeof(_Array) / sizeof(_Array[0]))
-#endif
-
 template <class T>
 inline T InterlockedExchangeAdd(
       T volatile *Addend,
