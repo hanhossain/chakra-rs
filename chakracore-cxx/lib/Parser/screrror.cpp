@@ -253,14 +253,14 @@ int32_t  CompileScriptException::ProcessError(IScanner * pScan, int32_t hr, Pars
         BstrGetResourceString(HRESULT_CODE(ei.scode))))
     {
         OLECHAR szT[50];
-        _snwprintf_s(szT, ARRAYSIZE(szT), ARRAYSIZE(szT)-1, u"error %d", ei.scode);
+        _snwprintf_s(szT, std::size(szT), std::size(szT)-1, u"error %d", ei.scode);
         if (nullptr == (ei.bstrDescription = SysAllocString(szT)))
             ei.scode = E_OUTOFMEMORY;
     }
     else if (std::u16string(stringOne).length() > 0)
     {
         OLECHAR szT[128];
-        _snwprintf_s(szT, ARRAYSIZE(szT), ARRAYSIZE(szT)-1, ei.bstrDescription, stringOne, stringTwo);
+        _snwprintf_s(szT, std::size(szT), std::size(szT)-1, ei.bstrDescription, stringOne, stringTwo);
         SysFreeString(ei.bstrDescription);
         ei.bstrDescription = SysAllocString(szT);
     }

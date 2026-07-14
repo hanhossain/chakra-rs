@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <iterator>
+
 #include "DataStructures/InternalStringNoCaseComparer.h"
 
 #ifdef PROPERTY_RECORD_TRACE
@@ -177,10 +179,10 @@ namespace Js
     {
     public:
         const static BuiltInPropertyRecord<1> EMPTY;
-#define ENTRY_INTERNAL_SYMBOL(n) const static BuiltInPropertyRecord<ARRAYSIZE(u"<" u###n u">")> n;
-#define ENTRY_SYMBOL(n, d) const static BuiltInPropertyRecord<ARRAYSIZE(d)> n;
-#define ENTRY(n) const static BuiltInPropertyRecord<ARRAYSIZE(u###n)> n;
-#define ENTRY2(n, s) const static BuiltInPropertyRecord<ARRAYSIZE(s)> n;
+#define ENTRY_INTERNAL_SYMBOL(n) const static BuiltInPropertyRecord<std::size(u"<" u###n u">")> n;
+#define ENTRY_SYMBOL(n, d) const static BuiltInPropertyRecord<std::size(d)> n;
+#define ENTRY(n) const static BuiltInPropertyRecord<std::size(u###n)> n;
+#define ENTRY2(n, s) const static BuiltInPropertyRecord<std::size(s)> n;
 #include "Base/JnDirectFields.h"
     };
 

@@ -176,13 +176,13 @@ typedef uint32_t DBGPROP_INFO_FLAGS;
 
 #define DBGPROP_INFO_ALL ((((((DBGPROP_INFO_NAME | DBGPROP_INFO_TYPE ) | DBGPROP_INFO_VALUE) | DBGPROP_INFO_FULLNAME) | DBGPROP_INFO_ATTRIBUTES) | DBGPROP_INFO_DEBUGPROP))
 
-// _countof
 #if defined _M_X64 || defined _M_ARM || defined _M_ARM64
 #define _UNALIGNED __unaligned
 #else
 #define _UNALIGNED
 #endif
 
+// TODO (hanhossain): remove
 #ifdef __cplusplus
 extern "C++"
 {
@@ -194,13 +194,6 @@ extern "C++"
 #else
 #define __crt_countof(_Array) (sizeof(_Array) / sizeof(_Array[0]))
 #endif
-
-#ifndef _countof
-#define _countof __crt_countof
-#endif
-// _countof
-
-#define ARRAYSIZE(A) _countof(A)
 
 template <class T>
 inline T InterlockedExchangeAdd(
