@@ -325,7 +325,7 @@ namespace Js
         Output::Print(u" <%d> ", id);
     }
 
-    void ByteCodeDumper::DumpEmpty(OpCode op, const unaligned OpLayoutEmpty * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpEmpty(OpCode op, const OpLayoutEmpty * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -350,7 +350,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpCallI(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpCallI(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         if (data->Return != Constants::NoRegister)
         {
@@ -361,7 +361,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpCallIExtended(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpCallIExtended(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpCallI(op, data, dumpFunction, reader);
         if (data->Options & Js::CallIExtended_SpreadArgs)
@@ -386,14 +386,14 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpCallIFlags(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpCallIFlags(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpCallI(op, data, dumpFunction, reader);
         Output::Print(u" <%04x> ", data->callFlags);
     }
 
     template <class T>
-    void ByteCodeDumper::DumpCallIExtendedFlags(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpCallIExtendedFlags(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpCallIFlags(op, data, dumpFunction, reader);
         if (data->Options & Js::CallIExtended_SpreadArgs)
@@ -418,7 +418,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpCallIExtendedFlagsWithICIndex(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpCallIExtendedFlagsWithICIndex(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpCallIFlags(op, data, dumpFunction, reader);
         DumpCallIWithICIndex(op, data, dumpFunction, reader);
@@ -444,14 +444,14 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpCallIWithICIndex(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpCallIWithICIndex(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpCallI(op, data, dumpFunction, reader);
         Output::Print(u" <%d> ", data->inlineCacheIndex);
     }
 
     template <class T>
-    void ByteCodeDumper::DumpCallIFlagsWithICIndex(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpCallIFlagsWithICIndex(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpCallI(op, data, dumpFunction, reader);
         Output::Print(u" <%d> ", data->inlineCacheIndex);
@@ -459,7 +459,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpCallIExtendedWithICIndex(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpCallIExtendedWithICIndex(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpCallIWithICIndex(op, data, dumpFunction, reader);
         if (data->Options & Js::CallIExtended_SpreadArgs)
@@ -484,7 +484,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementI(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementI(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -525,7 +525,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpReg2Int1(OpCode op, const unaligned T* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpReg2Int1(OpCode op, const T* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
          switch (op)
         {
@@ -551,7 +551,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementScopedU(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementScopedU(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyRecord const * pPropertyName = scriptContext->GetPropertyName(
@@ -578,7 +578,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementU(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementU(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyRecord const * pPropertyName = scriptContext->GetPropertyName(
@@ -622,7 +622,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementRootU(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementRootU(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyRecord const * pPropertyName = scriptContext->GetPropertyName(
@@ -656,7 +656,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementScopedC(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementScopedC(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyRecord const * pPropertyName = scriptContext->GetPropertyName(
@@ -685,7 +685,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementC(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementC(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyRecord const * pPropertyName = scriptContext->GetPropertyName(
@@ -726,7 +726,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementScopedC2(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementScopedC2(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyRecord const * pPropertyName = scriptContext->GetPropertyName(
@@ -747,7 +747,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementC2(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementC2(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyRecord const * pPropertyName = scriptContext->GetPropertyName(
@@ -791,7 +791,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpReg1Unsigned1(OpCode op, const unaligned T* data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpReg1Unsigned1(OpCode op, const T* data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -833,7 +833,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementSlot(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementSlot(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -879,7 +879,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementSlotI1(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementSlotI1(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -919,7 +919,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementSlotI2(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementSlotI2(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -950,7 +950,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementSlotI3(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementSlotI3(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -972,7 +972,7 @@ namespace Js
 
 
     template <class T>
-    void ByteCodeDumper::DumpElementP(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementP(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyId propertyId = dumpFunction->GetPropertyIdFromCacheId(data->inlineCacheIndex);
@@ -1027,7 +1027,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementPIndexed(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementPIndexed(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyId propertyId = dumpFunction->GetPropertyIdFromCacheId(data->inlineCacheIndex);
@@ -1050,7 +1050,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementCP(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementCP(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyId propertyId = dumpFunction->GetPropertyIdFromCacheId(data->inlineCacheIndex);
@@ -1109,7 +1109,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementRootCP(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementRootCP(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
         PropertyId propertyId = dumpFunction->GetPropertyIdFromCacheId(data->inlineCacheIndex);
@@ -1161,7 +1161,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpElementUnsigned1(OpCode op, const unaligned T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpElementUnsigned1(OpCode op, const T * data, Js::FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1180,7 +1180,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpArg(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpArg(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1201,7 +1201,7 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpArgNoSrc(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpArgNoSrc(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1219,33 +1219,33 @@ namespace Js
     }
 
     void
-    ByteCodeDumper::DumpStartCall(OpCode op, const unaligned OpLayoutStartCall * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpStartCall(OpCode op, const OpLayoutStartCall * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         Assert(op == OpCode::StartCall );
         Output::Print(u" ArgCount: %d", data->ArgCount);
     }
 
     template <class T> void
-    ByteCodeDumper::DumpUnsigned1(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpUnsigned1(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpU4(data->C1);
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg1(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg1(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg2(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg2(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg3(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg3(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1262,7 +1262,7 @@ namespace Js
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg3C(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg3C(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1276,7 +1276,7 @@ namespace Js
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg4(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg4(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -1285,7 +1285,7 @@ namespace Js
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg2U(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg2U(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1304,7 +1304,7 @@ namespace Js
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg2B1(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg2B1(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -1312,7 +1312,7 @@ namespace Js
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg3B1(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg3B1(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -1321,7 +1321,7 @@ namespace Js
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg3U(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg3U(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1339,7 +1339,7 @@ namespace Js
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg4U(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg4U(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1358,7 +1358,7 @@ namespace Js
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg5(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg5(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -1368,7 +1368,7 @@ namespace Js
     }
 
     template <class T> void
-    ByteCodeDumper::DumpReg5U(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg5U(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1387,13 +1387,13 @@ namespace Js
     }
 
     void
-    ByteCodeDumper::DumpW1(OpCode op, const unaligned OpLayoutW1 * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpW1(OpCode op, const OpLayoutW1 * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpU2(data->C1);
     }
 
     void
-    ByteCodeDumper::DumpAuxNoReg(OpCode op, const unaligned OpLayoutAuxNoReg * playout, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpAuxNoReg(OpCode op, const OpLayoutAuxNoReg * playout, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1420,7 +1420,7 @@ namespace Js
     }
 
     void
-    ByteCodeDumper::DumpAuxiliary(OpCode op, const unaligned OpLayoutAuxiliary * playout, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpAuxiliary(OpCode op, const OpLayoutAuxiliary * playout, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1548,7 +1548,7 @@ namespace Js
     }
 
     void
-    ByteCodeDumper::DumpReg2Aux(OpCode op, const unaligned OpLayoutReg2Aux * playout, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    ByteCodeDumper::DumpReg2Aux(OpCode op, const OpLayoutReg2Aux * playout, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -1578,31 +1578,31 @@ namespace Js
         }
     }
 
-    void ByteCodeDumper::DumpBrLong(OpCode op, const unaligned OpLayoutBrLong* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpBrLong(OpCode op, const OpLayoutBrLong* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
     }
 
-    void ByteCodeDumper::DumpBr(OpCode op, const unaligned OpLayoutBr * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpBr(OpCode op, const OpLayoutBr * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
     }
 
-    void ByteCodeDumper::DumpBrS(OpCode op, const unaligned OpLayoutBrS * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpBrS(OpCode op, const OpLayoutBrS * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
         DumpI4(data->val);
     }
 
     template <class T>
-    void ByteCodeDumper::DumpBrReg1(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpBrReg1(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
         DumpReg(data->R1);
     }
 
     template <class T>
-    void ByteCodeDumper::DumpBrReg1Unsigned1(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpBrReg1Unsigned1(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
         DumpReg(data->R1);
@@ -1610,14 +1610,14 @@ namespace Js
     }
 
     template <class T>
-    void ByteCodeDumper::DumpBrReg2(OpCode op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpBrReg2(OpCode op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
         DumpReg(data->R1);
         DumpReg(data->R2);
     }
 
-    void ByteCodeDumper::DumpBrProperty(OpCode op, const unaligned OpLayoutBrProperty * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpBrProperty(OpCode op, const OpLayoutBrProperty * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
@@ -1626,7 +1626,7 @@ namespace Js
         Output::Print(u"R%d.%s", data->Instance, pPropertyName->GetBuffer());
     }
 
-    void ByteCodeDumper::DumpBrLocalProperty(OpCode op, const unaligned OpLayoutBrLocalProperty * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpBrLocalProperty(OpCode op, const OpLayoutBrLocalProperty * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();
@@ -1635,7 +1635,7 @@ namespace Js
         Output::Print(u"%s", pPropertyName->GetBuffer());
     }
 
-    void ByteCodeDumper::DumpBrEnvProperty(OpCode op, const unaligned OpLayoutBrEnvProperty * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void ByteCodeDumper::DumpBrEnvProperty(OpCode op, const OpLayoutBrEnvProperty * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
         ScriptContext* scriptContext = dumpFunction->GetScriptContext();

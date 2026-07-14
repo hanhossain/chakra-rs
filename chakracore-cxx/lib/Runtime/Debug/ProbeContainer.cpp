@@ -803,19 +803,19 @@ namespace Js
             {
             case Js::SmallLayout:
             {
-                const unaligned Js::OpLayoutReg1_Small * playout = reader->Reg1_Small();
+                const Js::OpLayoutReg1_Small * playout = reader->Reg1_Small();
                 *pTmpRegCount = (uint32_t)playout->R0;
             }
                 break;
             case Js::MediumLayout:
             {
-                const unaligned Js::OpLayoutReg1_Medium * playout = reader->Reg1_Medium();
+                const Js::OpLayoutReg1_Medium * playout = reader->Reg1_Medium();
                 *pTmpRegCount = (uint32_t)playout->R0;
             }
                 break;
             case Js::LargeLayout:
             {
-                const unaligned Js::OpLayoutReg1_Large * playout = reader->Reg1_Large();
+                const Js::OpLayoutReg1_Large * playout = reader->Reg1_Large();
                 *pTmpRegCount = (uint32_t)playout->R0;
             }
                 break;

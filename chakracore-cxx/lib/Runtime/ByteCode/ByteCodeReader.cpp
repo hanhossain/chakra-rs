@@ -50,7 +50,7 @@ namespace Js
     }
 
     template<typename LayoutType>
-    const unaligned LayoutType * ByteCodeReader::GetLayout(const byte*& ip)
+    const LayoutType * ByteCodeReader::GetLayout(const byte*& ip)
     {
         size_t layoutSize = sizeof(LayoutType);
 
@@ -62,11 +62,11 @@ namespace Js
 
         Assert(m_currentLocation <= m_endLocation);
 
-        return reinterpret_cast<const unaligned LayoutType *>(layoutData);
+        return reinterpret_cast<const LayoutType *>(layoutData);
     }
 
     template<>
-    const unaligned OpLayoutEmpty * ByteCodeReader::GetLayout<OpLayoutEmpty>(const byte*& ip)
+    const OpLayoutEmpty * ByteCodeReader::GetLayout<OpLayoutEmpty>(const byte*& ip)
     {
         m_currentLocation = ip;
         return nullptr;
@@ -179,22 +179,22 @@ namespace Js
 
     // Define reading functions
 #define LAYOUT_TYPE(layout) \
-    const unaligned OpLayout##layout * ByteCodeReader::layout() \
+    const OpLayout##layout * ByteCodeReader::layout() \
     { \
         return GetLayout<OpLayout##layout>(); \
     } \
-    const unaligned OpLayout##layout * ByteCodeReader::layout(const byte*& ip) \
+    const OpLayout##layout * ByteCodeReader::layout(const byte*& ip) \
     { \
         return GetLayout<OpLayout##layout>(ip); \
     }
 #include "LayoutTypes.h"
     // Define reading functions
 #define LAYOUT_TYPE(layout) \
-    const unaligned OpLayout##layout * ByteCodeReader::layout() \
+    const OpLayout##layout * ByteCodeReader::layout() \
     { \
         return GetLayout<OpLayout##layout>(); \
     } \
-    const unaligned OpLayout##layout * ByteCodeReader::layout(const byte*& ip) \
+    const OpLayout##layout * ByteCodeReader::layout(const byte*& ip) \
     { \
         return GetLayout<OpLayout##layout>(ip); \
     }
@@ -252,13 +252,13 @@ namespace Js
     template AuxArray<uint32_t> const * ByteCodeReader::ReadAuxArrayWithLock<uint32_t>(uint offset, FunctionBody * functionBody);
     template AuxArray<double> const * ByteCodeReader::ReadAuxArrayWithLock<double>(uint offset, FunctionBody * functionBody);
     template AuxArray<FuncInfoEntry> const * ByteCodeReader::ReadAuxArrayWithLock<FuncInfoEntry>(uint offset, FunctionBody * functionBody);
-    template const unaligned Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)0> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)0> > >(const byte*&);
-    template const unaligned Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)1> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)1> > >(const byte*&);
-    template const unaligned Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)2> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)2> > >(const byte*&);
+    template const Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)0> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)0> > >(const byte*&);
+    template const Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)1> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)1> > >(const byte*&);
+    template const Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)2> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)2> > >(const byte*&);
 #ifdef ASMJS_PLAT
-    template const unaligned Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)0> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)0> > >(const byte*&);
-    template const unaligned Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)1> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)1> > >(const byte*&);
-    template const unaligned Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)2> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)2> > >(const byte*&);
+    template const Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)0> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)0> > >(const byte*&);
+    template const Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)1> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)1> > >(const byte*&);
+    template const Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)2> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)2> > >(const byte*&);
 #endif
 
     const Js::PropertyIdArray * ByteCodeReader::ReadPropertyIdArray(uint offset, FunctionBody * functionBody)

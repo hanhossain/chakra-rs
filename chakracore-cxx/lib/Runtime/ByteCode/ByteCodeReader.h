@@ -35,8 +35,8 @@ namespace Js
         const byte * SetCurrentOffset(int byteOffset);
         const byte * SetCurrentRelativeOffset(const byte * ip, int byteOffset);
 
-        template<typename LayoutType> inline const unaligned LayoutType * GetLayout();
-        template<typename LayoutType> inline const unaligned LayoutType * GetLayout(const byte*& ip);
+        template<typename LayoutType> inline const LayoutType * GetLayout();
+        template<typename LayoutType> inline const LayoutType * GetLayout(const byte*& ip);
 
         // Read*Op advance the IP,
         // Peek*Op doesn't move the IP
@@ -60,14 +60,14 @@ namespace Js
 
         // Declare reading functions
 #define LAYOUT_TYPE(layout) \
-        const unaligned OpLayout##layout* layout(); \
-        const unaligned OpLayout##layout* layout(const byte*& ip);
+        const OpLayout##layout* layout(); \
+        const OpLayout##layout* layout(const byte*& ip);
 #include "LayoutTypes.h"
 
 #ifdef ASMJS_PLAT
 #define LAYOUT_TYPE(layout) \
-        const unaligned OpLayout##layout* layout(); \
-        const unaligned OpLayout##layout* layout(const byte*& ip);
+        const OpLayout##layout* layout(); \
+        const OpLayout##layout* layout(const byte*& ip);
 #define EXCLUDE_DUP_LAYOUT
 #include "LayoutTypesAsmJs.h"
 #endif
@@ -84,7 +84,7 @@ namespace Js
         const byte* GetIP();
         void SetIP(const byte *const ip);
 
-        template<class T> const unaligned T* AuxiliaryContext(const byte*& ip, const byte ** content);
+        template<class T> const T* AuxiliaryContext(const byte*& ip, const byte ** content);
 
 #if DBG_DUMP
         byte GetRawByte(int i);
@@ -92,7 +92,7 @@ namespace Js
     };
 
     template<typename LayoutType>
-    inline const unaligned LayoutType * ByteCodeReader::GetLayout()
+    inline const LayoutType * ByteCodeReader::GetLayout()
     {
         size_t layoutSize = sizeof(LayoutType);
 
@@ -103,11 +103,11 @@ namespace Js
 
         Assert(m_currentLocation <= m_endLocation);
 
-        return reinterpret_cast<const unaligned LayoutType *>(layoutData);
+        return reinterpret_cast<const LayoutType *>(layoutData);
     }
 
     template<>
-    inline const unaligned OpLayoutEmpty * ByteCodeReader::GetLayout<OpLayoutEmpty>()
+    inline const OpLayoutEmpty * ByteCodeReader::GetLayout<OpLayoutEmpty>()
     {
         return nullptr;
     }

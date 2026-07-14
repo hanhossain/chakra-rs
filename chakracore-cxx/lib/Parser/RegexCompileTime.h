@@ -621,7 +621,7 @@ namespace UnifiedRegex
         // The instruction buffer may move, so we need to remember label fixup's relative to the instruction base
         // rather than as machine addresses.
         // NOTE: pLabel is declared unaligned because Inst structs are unaligned in the inst buffer (thanks to #pragma pack(1)).
-        inline Label GetFixup(unaligned Label* pLabel)
+        inline Label GetFixup(Label* pLabel)
         {
             Assert((uint8_t*)pLabel >= instBuf && (uint8_t*)pLabel < instBuf + instNext);
             return (Label)((uint8_t*)pLabel - instBuf);

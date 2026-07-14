@@ -43,9 +43,9 @@ namespace Js {
         static void DumpDoubleConstReg(double val) { DumpR8(val); }
 
 #define LAYOUT_TYPE(layout) \
-    static void Dump##layout(OpCodeAsmJs op, const unaligned OpLayout##layout* data, FunctionBody * dumpFunction, ByteCodeReader& reader);
+    static void Dump##layout(OpCodeAsmJs op, const OpLayout##layout* data, FunctionBody * dumpFunction, ByteCodeReader& reader);
 #define LAYOUT_TYPE_WMS(layout) \
-    template <class T> static void Dump##layout(OpCodeAsmJs op, const unaligned T* data, FunctionBody * dumpFunction, ByteCodeReader& reader);
+    template <class T> static void Dump##layout(OpCodeAsmJs op, const T* data, FunctionBody * dumpFunction, ByteCodeReader& reader);
 #include "LayoutTypesAsmJs.h"
 
     private:

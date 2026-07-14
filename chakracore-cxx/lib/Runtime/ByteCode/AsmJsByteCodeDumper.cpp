@@ -379,7 +379,7 @@ namespace Js
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpElementSlot(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpElementSlot(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         switch (op)
         {
@@ -553,7 +553,7 @@ namespace Js
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmTypedArr(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmTypedArr(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         WAsmJsMemTag tag;
         InitializeWAsmJsMemTag(data->ViewType, &tag);
@@ -573,7 +573,7 @@ namespace Js
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpWasmMemAccess(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpWasmMemAccess(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         WAsmJsMemTag tag;
         InitializeWAsmJsMemTag(data->ViewType, &tag);
@@ -590,14 +590,14 @@ namespace Js
         }
     }
 
-    void AsmJsByteCodeDumper::DumpStartCall(OpCodeAsmJs op, const unaligned OpLayoutStartCall* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpStartCall(OpCodeAsmJs op, const OpLayoutStartCall* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         Assert(op == OpCodeAsmJs::StartCall || op == OpCodeAsmJs::I_StartCall);
         Output::Print(u" ArgSize: %d", data->ArgCount);
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmCall(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmCall(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         if (data->Return != Constants::NoRegister)
         {
@@ -608,7 +608,7 @@ namespace Js
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpProfiledAsmCall(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpProfiledAsmCall(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         if (data->Return != Constants::NoRegister)
         {
@@ -619,47 +619,47 @@ namespace Js
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmUnsigned1(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmUnsigned1(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpU4(data->C1);
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpWasmLoopStart(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpWasmLoopStart(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpU4(data->loopId);
     }
 
-    void AsmJsByteCodeDumper::DumpEmpty(OpCodeAsmJs op, const unaligned OpLayoutEmpty* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpEmpty(OpCodeAsmJs op, const OpLayoutEmpty* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         // empty
     }
 
-    void AsmJsByteCodeDumper::DumpAsmBr(OpCodeAsmJs op, const unaligned OpLayoutAsmBr* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmBr(OpCodeAsmJs op, const OpLayoutAsmBr* data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg1(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg1(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg2(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg2(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg3(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg3(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
         DumpReg(data->R2);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg4(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg4(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -667,7 +667,7 @@ namespace Js
         DumpReg(data->R3);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg5(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg5(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -676,7 +676,7 @@ namespace Js
         DumpReg(data->R4);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg6(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg6(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -686,7 +686,7 @@ namespace Js
         DumpReg(data->R5);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg7(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg7(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -697,7 +697,7 @@ namespace Js
         DumpReg(data->R6);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg9(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg9(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -710,7 +710,7 @@ namespace Js
         DumpReg(data->R8);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg10(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg10(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -724,7 +724,7 @@ namespace Js
         DumpReg(data->R9);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg11(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg11(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -739,7 +739,7 @@ namespace Js
         DumpReg(data->R10);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg17(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg17(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -760,7 +760,7 @@ namespace Js
         DumpReg(data->R16);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg18(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg18(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -782,7 +782,7 @@ namespace Js
         DumpReg(data->R17);
     }
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmReg19(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmReg19(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpReg(data->R0);
         DumpReg(data->R1);
@@ -805,20 +805,20 @@ namespace Js
         DumpReg(data->R18);
     }
 #define LAYOUT_TYPE_WMS_REG2(layout, t0, t1) \
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
     }
 #define LAYOUT_TYPE_WMS_REG3(layout, t0, t1, t2) \
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
         Dump##t2##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t2(), 2));\
     }
 #define LAYOUT_TYPE_WMS_REG4(layout, t0, t1, t2, t3)\
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
@@ -826,7 +826,7 @@ namespace Js
         Dump##t3##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t3(), 3));\
     };
 #define LAYOUT_TYPE_WMS_REG5(layout, t0, t1, t2, t3, t4)\
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
@@ -835,7 +835,7 @@ namespace Js
         Dump##t4##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t4(), 4));\
     };
 #define LAYOUT_TYPE_WMS_REG6(layout, t0, t1, t2, t3, t4, t5)\
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
@@ -845,7 +845,7 @@ namespace Js
         Dump##t5##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t5(), 5));\
     };
 #define LAYOUT_TYPE_WMS_REG7(layout, t0, t1, t2, t3, t4, t5, t6)\
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
@@ -856,7 +856,7 @@ namespace Js
         Dump##t6##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t6(), 6));\
     };
 #define LAYOUT_TYPE_WMS_REG9(layout, t0, t1, t2, t3, t4, t5, t6, t7, t8)\
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
@@ -869,7 +869,7 @@ namespace Js
         Dump##t8##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t8(), 8));\
     };
 #define LAYOUT_TYPE_WMS_REG10(layout, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9)\
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
@@ -883,7 +883,7 @@ namespace Js
         Dump##t9##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t9(), 9));\
     };
 #define LAYOUT_TYPE_WMS_REG11(layout, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10)\
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
@@ -898,7 +898,7 @@ namespace Js
         Dump##t10##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t10(), 10));\
     };
 #define LAYOUT_TYPE_WMS_REG17(layout, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16)\
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
@@ -919,7 +919,7 @@ namespace Js
         Dump##t16##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t16(), 16));\
     };
 #define LAYOUT_TYPE_WMS_REG18(layout, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17)\
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
@@ -941,7 +941,7 @@ namespace Js
         Dump##t17##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t17(), 17));\
     };
 #define LAYOUT_TYPE_WMS_REG19(layout, t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18)\
-    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
+    template <class T> void AsmJsByteCodeDumper::Dump##layout(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)\
     {\
         Dump##t0##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t0(), 0));\
         Dump##t1##Reg(data->LAYOUT_FIELDS_DEF(LAYOUT_PREFIX_##t1(), 1));\
@@ -968,14 +968,14 @@ namespace Js
 
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpBrInt1(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpBrInt1(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
         DumpIntReg(data->I1);
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpBrInt2(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpBrInt2(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
         DumpIntReg(data->I1);
@@ -983,7 +983,7 @@ namespace Js
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpBrInt1Const1(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpBrInt1Const1(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpOffset(data->RelativeJumpOffset, reader);
         DumpIntReg(data->I1);
@@ -991,7 +991,7 @@ namespace Js
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmShuffle(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmShuffle(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         DumpFloat32x4Reg(data->R0);
         DumpFloat32x4Reg(data->R1);
@@ -1004,7 +1004,7 @@ namespace Js
     }
 
     template <class T>
-    void AsmJsByteCodeDumper::DumpAsmSimdTypedArr(OpCodeAsmJs op, const unaligned T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
+    void AsmJsByteCodeDumper::DumpAsmSimdTypedArr(OpCodeAsmJs op, const T * data, FunctionBody * dumpFunction, ByteCodeReader& reader)
     {
         const char16_t* heapTag = nullptr;
 

@@ -442,7 +442,7 @@ public:
           V3(u"V3", 0),
           V4(u"V4", 0),
           architecture(u"Expected Architecture", magicArchitecture),
-          expectedFunctionBodySize(u"Expected Function Body Size", sizeof(unaligned FunctionBody)),
+          expectedFunctionBodySize(u"Expected Function Body Size", sizeof(FunctionBody)),
           expectedBuildInPropertyCount(u"Expected Built-in Properties", builtInPropertyCount),
           expectedOpCodeCount(u"Expected Number of OpCodes",  (int)OpCode::Count),
           originalSourceSize(u"Source Size", sourceSize),
@@ -840,12 +840,12 @@ public:
     }
 
     template<typename TLayout>
-    unaligned TLayout * DuplicateLayout(unaligned const TLayout * in)
+    TLayout * DuplicateLayout(const TLayout * in)
     {
-        auto sizeOfLayout = sizeof(unaligned TLayout);
+        auto sizeOfLayout = sizeof(TLayout);
         auto newLayout = AnewArray(alloc, byte, sizeOfLayout);
         js_memcpy_s(newLayout, sizeOfLayout, in, sizeOfLayout);
-        return (unaligned TLayout * )newLayout;
+        return (TLayout * )newLayout;
     }
 
     template<typename T>
@@ -2635,7 +2635,7 @@ public:
     uint scopeInfoCount;
     const byte * string16s;
     int string16Count;
-    const unaligned StringIndexRecord * string16IndexTable;
+    const StringIndexRecord * string16IndexTable;
     const byte * string16Table;
     int lineInfoCacheCount;
     const byte * lineInfoCaches;
@@ -2661,7 +2661,7 @@ public:
         V3(0),
         V4(0),
         architecture(0),
-        expectedFunctionBodySize(sizeof(unaligned FunctionBody)),
+        expectedFunctionBodySize(sizeof(FunctionBody)),
         expectedBuildInPropertyCount(builtInPropertyCount),
         expectedOpCodeCount((int)OpCode::Count),
         firstFunctionId(0),
@@ -2982,7 +2982,7 @@ public:
         {
             Assert(false);
         }
-        const unaligned StringIndexRecord* record = string16IndexTable + (id - this->expectedBuildInPropertyCount);
+        const StringIndexRecord* record = string16IndexTable + (id - this->expectedBuildInPropertyCount);
         if(isPropertyRecord)
         {
             *isPropertyRecord = record->isPropertyRecord;

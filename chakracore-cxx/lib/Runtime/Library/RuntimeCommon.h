@@ -21,12 +21,6 @@ namespace Js
     struct FrameDisplay;
     class TypedArrayBase;
 
-#if _M_X64 || _M_ARM || _M_ARM64
-#define unaligned __unaligned
-#else
-#error Must define alignment capabilities for processor
-#endif
-
     typedef uint32_t RegSlot;
     typedef uint16 ArgSlot;
     typedef uint16 PropertyIndex;

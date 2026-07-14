@@ -1369,7 +1369,7 @@ IRBuilderAsmJs::BuildStartCall(Js::OpCodeAsmJs newOpcode, uint32_t offset)
 {
     Assert(!OpCodeAttrAsmJs::HasMultiSizeLayout(newOpcode));
 
-    const unaligned Js::OpLayoutStartCall * layout = m_jnReader.StartCall();
+    const Js::OpLayoutStartCall * layout = m_jnReader.StartCall();
     IR::RegOpnd * dstOpnd = IR::RegOpnd::New(TyMachReg, m_func);
 
     IR::Instr * instr = nullptr;
@@ -1860,7 +1860,7 @@ IRBuilderAsmJs::BuildAsmBr(Js::OpCodeAsmJs newOpcode, uint32_t offset)
 {
     Assert(!OpCodeAttrAsmJs::HasMultiSizeLayout(newOpcode));
 
-    const unaligned Js::OpLayoutAsmBr * branchInsn = m_jnReader.AsmBr();
+    const Js::OpLayoutAsmBr * branchInsn = m_jnReader.AsmBr();
     uint targetOffset = m_jnReader.GetCurrentOffset() + branchInsn->RelativeJumpOffset;
 
     if (newOpcode == Js::OpCodeAsmJs::EndSwitch_Int)
