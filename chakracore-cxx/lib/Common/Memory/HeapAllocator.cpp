@@ -68,7 +68,7 @@ char * HeapAllocator::AllocT(size_t byteSize)
     else
 #endif
     {
-        buffer = (char *)malloc(byteSize);
+        buffer = static_cast<char*>(malloc(byteSize));
     }
 
     if (!noThrow && buffer == nullptr)
@@ -81,7 +81,7 @@ char * HeapAllocator::AllocT(size_t byteSize)
     {
 #ifdef HEAP_TRACK_ALLOC
         cs.lock();
-        data.LogAlloc((HeapAllocRecord *)buffer, requestedBytes, allocData);
+        data.LogAlloc(reinterpret_cast<HeapAllocRecord*>(buffer), requestedBytes, allocData);
         cs.unlock();
         buffer += ::Math::Align<size_t>(sizeof(HeapAllocRecord), MEMORY_ALLOCATION_ALIGNMENT);
 #else
@@ -105,8 +105,9 @@ void HeapAllocator::Free(void * buffer, size_t byteSize)
 #ifdef HEAP_TRACK_ALLOC
     if (buffer != nullptr)
     {
-        HeapAllocRecord * record = (HeapAllocRecord *)(((char *)buffer) - ::Math::Align<size_t>(sizeof(HeapAllocRecord), MEMORY_ALLOCATION_ALIGNMENT));
-        Assert(byteSize == (size_t)-1 || record->size == byteSize);
+        HeapAllocRecord * record = reinterpret_cast<HeapAllocRecord*>(static_cast<char*>(buffer) - ::Math::Align<size_t>(
+            sizeof(HeapAllocRecord), MEMORY_ALLOCATION_ALIGNMENT));
+        Assert(byteSize == static_cast<size_t>(-1) || record->size == byteSize);
 
         HEAP_PERF_COUNTER_DEC(LiveObject);
         HEAP_PERF_COUNTER_SUB(LiveObjectSize, record->size);
@@ -445,10 +446,10 @@ HeapAllocatorData::CheckLeaks()
         while (current != nullptr)
         {
             Output::Print(u"%S%s", current->allocData.GetTypeInfo()->name(),
-                current->allocData.GetCount() == (size_t)-1? u"" : u"[]");
+                current->allocData.GetCount() == static_cast<size_t>(-1)? u"" : u"[]");
             Output::SkipToColumn(50);
             Output::Print(u"- %p - %10d bytes\n",
-                ((char*)current) + ::Math::Align<size_t>(sizeof(HeapAllocRecord), MEMORY_ALLOCATION_ALIGNMENT),
+                reinterpret_cast<char*>(current) + ::Math::Align<size_t>(sizeof(HeapAllocRecord), MEMORY_ALLOCATION_ALIGNMENT),
                 current->size);
 #if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
@@ -514,7 +515,7 @@ MemoryLeakCheck::~MemoryLeakCheck()
             }
             LeakRecord * prev = current;
             current = current->next;
-            free((void *)prev->dump);
+            free(const_cast<void*>(static_cast<const void*>(prev->dump)));
             NoCheckHeapDelete(prev);
         }
         while (current != nullptr);

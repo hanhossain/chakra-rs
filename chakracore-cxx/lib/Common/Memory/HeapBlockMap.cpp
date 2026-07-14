@@ -14,7 +14,7 @@ HeapBlockMap32::HeapBlockMap32(char * startAddress) :
 {
     memset(map, 0, sizeof(map));
 
-    Assert(((size_t)startAddress) % TotalSize == 0);
+    Assert(reinterpret_cast<size_t>(startAddress) % TotalSize == 0);
 }
 
 HeapBlockMap32::~HeapBlockMap32()
@@ -503,11 +503,11 @@ HeapBlockMap32::InduceFalsePositives(Recycler * recycler)
             {
                 // Unallocated block.  Try to mark the first offset, in case
                 // we are simultaneously allocating this block on the main thread.
-                recycler->TryMarkNonInterior((void *)GetAddressFromIds(i, j), nullptr);
+                recycler->TryMarkNonInterior(GetAddressFromIds(i, j), nullptr);
             }
             else if (!block->IsLargeHeapBlock())
             {
-                ((SmallHeapBlock *)block)->InduceFalsePositive(recycler);
+                static_cast<SmallHeapBlock*>(block)->InduceFalsePositive(recycler);
             }
         }
     }
@@ -563,7 +563,7 @@ HeapBlockMap32::ForEachSegment(Recycler * recycler, Fn func)
             char * segmentStart = currentSegment->GetAddress();
             size_t segmentLength = currentSegment->GetPageCount() * PageSize;
 
-            PageAllocator* segmentPageAllocator = (PageAllocator*)currentSegment->GetAllocator();
+            PageAllocator* segmentPageAllocator = currentSegment->GetAllocator();
 
             Assert(segmentPageAllocator == block->GetPageAllocator(block->GetHeapInfo()));
             // On 64 bit, the segment may span multiple HeapBlockMap32 structures.
@@ -571,7 +571,7 @@ HeapBlockMap32::ForEachSegment(Recycler * recycler, Fn func)
             // We'll process other portions when we visit the other HeapBlockMap32 structures.
             if (segmentStart < this->startAddress)
             {
-                Assert(segmentLength > (size_t)(this->startAddress - segmentStart));
+                Assert(segmentLength > static_cast<size_t>(this->startAddress - segmentStart));
                 segmentLength -= (this->startAddress - segmentStart);
                 segmentStart = this->startAddress;
             }
@@ -656,7 +656,7 @@ bool
 HeapBlockMap32::RescanHeapBlock(void * dirtyPage, HeapBlock::HeapBlockType blockType, L2MapChunk* chunk, uint id2, bool* anyObjectsMarkedOnPage, Recycler * recycler)
 {
     Assert(chunk != nullptr);
-    char* heapBlockPageAddress = TBlockType::GetBlockStartAddress((char*) dirtyPage);
+    char* heapBlockPageAddress = TBlockType::GetBlockStartAddress(static_cast<char*>(dirtyPage));
 
     typedef typename TBlockType::HeapBlockAttributes TBlockAttributes;
 
@@ -672,10 +672,10 @@ HeapBlockMap32::RescanHeapBlock(void * dirtyPage, HeapBlock::HeapBlockType block
         TBlockType* block = GetHeapBlockForRescan<TBlockType>(chunk, id2);
         uint bucketIndex = chunk->blockInfo[id2].bucketIndex;
         if (!SmallNormalHeapBucketBase<TBlockType>::RescanObjectsOnPage(block,
-            (char *)dirtyPage, heapBlockPageAddress, markBits, HeapInfo::GetObjectSizeForBucketIndex<TBlockAttributes>(bucketIndex), bucketIndex, anyObjectsMarkedOnPage, recycler))
+            static_cast<char*>(dirtyPage), heapBlockPageAddress, markBits, HeapInfo::GetObjectSizeForBucketIndex<TBlockAttributes>(bucketIndex), bucketIndex, anyObjectsMarkedOnPage, recycler))
         {
             // Failed due to OOM
-            ((TBlockType*) chunk->map[id2])->SetNeedOOMRescan(recycler);
+            static_cast<TBlockType*>(chunk->map[id2])->SetNeedOOMRescan(recycler);
             return false;
         }
 
@@ -697,14 +697,14 @@ template <>
 SmallFinalizableHeapBlock*
 HeapBlockMap32::GetHeapBlockForRescan(HeapBlockMap32::L2MapChunk* chunk, uint id2) const
 {
-    return (SmallFinalizableHeapBlock*) chunk->map[id2];
+    return static_cast<SmallFinalizableHeapBlock*>(chunk->map[id2]);
 }
 
 template <>
 MediumFinalizableHeapBlock*
 HeapBlockMap32::GetHeapBlockForRescan(HeapBlockMap32::L2MapChunk* chunk, uint id2) const
 {
-    return (MediumFinalizableHeapBlock*)chunk->map[id2];
+    return static_cast<MediumFinalizableHeapBlock*>(chunk->map[id2]);
 }
 
 #ifdef RECYCLER_VISITED_HOST
@@ -748,7 +748,7 @@ HeapBlockMap32::ChangeProtectionLevel(Recycler* recycler, uint32_t protectFlags,
             && !recycler->autoHeap.IsRecyclerLargeBlockPageAllocator(segmentPageAllocator))
         {
             Assert(currentSegment->IsPageSegment());
-            ((PageSegment*)currentSegment)->ChangeSegmentProtection(protectFlags, expectedOldFlags);
+            static_cast<PageSegment*>(currentSegment)->ChangeSegmentProtection(protectFlags, expectedOldFlags);
         }
     });
 }
@@ -771,7 +771,7 @@ HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
             for (size_t i = 0; i < pageCount; i++)
             {
                 char * pageAddress = segmentStart + (i * AutoSystemInfo::PageSize);
-                Assert((size_t)(pageAddress - segmentStart) < segmentLength);
+                Assert(static_cast<size_t>(pageAddress - segmentStart)< segmentLength);
                 Assert(HeapBlockMap64::GetNodeStartAddress(pageAddress) == this->startAddress);
 
                 // TODO: We are not resetting the write barrier here when RescanFlags_ResetWriteWatch is passed.
@@ -826,7 +826,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
             for (size_t i = 0; i < pageCount; i++)
             {
                 char * pageAddress = segmentStart + (i * AutoSystemInfo::PageSize);
-                Assert((size_t)(pageAddress - segmentStart) < segmentLength);
+                Assert(static_cast<size_t>(pageAddress - segmentStart)< segmentLength);
                 Assert(HeapBlockMap64::GetNodeStartAddress(pageAddress) == this->startAddress);
                 uint id1 = GetLevel1Id(pageAddress);
                 L2MapChunk * chunk = map[id1];
@@ -852,7 +852,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
 
                             case HeapBlock::HeapBlockType::SmallNormalBlockType:
                             case HeapBlock::HeapBlockType::SmallNormalBlockWithBarrierType:
-                                if (!RescanHeapBlockOnOOM<SmallNormalHeapBlock>((SmallNormalHeapBlock*)heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
+                                if (!RescanHeapBlockOnOOM<SmallNormalHeapBlock>(static_cast<SmallNormalHeapBlock*>(heapBlock), pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
                                 }
@@ -860,7 +860,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
 
                             case HeapBlock::HeapBlockType::SmallFinalizableBlockType:
                             case HeapBlock::HeapBlockType::SmallFinalizableBlockWithBarrierType:
-                                if (!RescanHeapBlockOnOOM<SmallFinalizableHeapBlock>((SmallFinalizableHeapBlock*) heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
+                                if (!RescanHeapBlockOnOOM<SmallFinalizableHeapBlock>(static_cast<SmallFinalizableHeapBlock*>(heapBlock), pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
                                 }
@@ -876,7 +876,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
 
                             case HeapBlock::HeapBlockType::MediumNormalBlockType:
                             case HeapBlock::HeapBlockType::MediumNormalBlockWithBarrierType:
-                                if (!RescanHeapBlockOnOOM<MediumNormalHeapBlock>((MediumNormalHeapBlock*)heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
+                                if (!RescanHeapBlockOnOOM<MediumNormalHeapBlock>(static_cast<MediumNormalHeapBlock*>(heapBlock), pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
                                 }
@@ -884,7 +884,7 @@ HeapBlockMap32::OOMRescan(Recycler * recycler)
 
                             case HeapBlock::HeapBlockType::MediumFinalizableBlockType:
                             case HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType:
-                                if (!RescanHeapBlockOnOOM<MediumFinalizableHeapBlock>((MediumFinalizableHeapBlock*) heapBlock, pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
+                                if (!RescanHeapBlockOnOOM<MediumFinalizableHeapBlock>(static_cast<MediumFinalizableHeapBlock*>(heapBlock), pageAddress, blockType, chunk->blockInfo[id2].bucketIndex, chunk, recycler))
                                 {
                                     return;
                                 }
@@ -951,7 +951,7 @@ HeapBlockMap32::RescanHeapBlockOnOOM(TBlockType* heapBlock, char* pageAddress, H
             pageAddressToScan, blockStartAddress, markBits, HeapInfo::template GetObjectSizeForBucketIndex<typename TBlockType::HeapBlockAttributes>(bucketIndex), bucketIndex, nullptr, recycler))
         {
             // Failed due to OOM
-            ((TBlockType*)heapBlock)->SetNeedOOMRescan(recycler);
+            static_cast<TBlockType*>(heapBlock)->SetNeedOOMRescan(recycler);
         }
 
         if (recycler->NeedOOMRescan())
@@ -1011,7 +1011,7 @@ HeapBlockMap64::EnsureHeapBlock(void * address, size_t pageCount)
     uint nodePages = HeapBlockMap64::PagesPer4GB - lowerBitsAddress / AutoSystemInfo::PageSize;
     if (pageCountLeft < nodePages)
     {
-        nodePages = (uint)pageCountLeft;
+        nodePages = static_cast<uint>(pageCountLeft);
     }
 
     do
@@ -1027,11 +1027,11 @@ HeapBlockMap64::EnsureHeapBlock(void * address, size_t pageCount)
         {
             return true;
         }
-        address = (void *)((size_t)address + ((size_t)nodePages * AutoSystemInfo::PageSize));
+        address = reinterpret_cast<void*>(reinterpret_cast<size_t>(address) + (static_cast<size_t>(nodePages) * AutoSystemInfo::PageSize));
         nodePages = HeapBlockMap64::PagesPer4GB;
         if (pageCountLeft < HeapBlockMap64::PagesPer4GB)
         {
-            nodePages = (uint)pageCountLeft;
+            nodePages = static_cast<uint>(pageCountLeft);
         }
     }
     while (true);
@@ -1077,7 +1077,7 @@ void HeapBlockMap64::ForEachNodeInAddressRange(void * address, size_t pageCount,
 
     if (pageCount < nodePages)
     {
-        nodePages = (uint)pageCount;
+        nodePages = static_cast<uint>(pageCount);
     }
 
     // TODO: the loop is no longer needed as we are limiting the recycler object to be less than 2GB
@@ -1092,11 +1092,11 @@ void HeapBlockMap64::ForEachNodeInAddressRange(void * address, size_t pageCount,
         {
             break;
         }
-        address = (void *)((size_t)address + ((size_t)nodePages * AutoSystemInfo::PageSize));
+        address = reinterpret_cast<void*>(reinterpret_cast<size_t>(address) + (static_cast<size_t>(nodePages) * AutoSystemInfo::PageSize));
         nodePages = HeapBlockMap64::PagesPer4GB;
         if (pageCount < HeapBlockMap64::PagesPer4GB)
         {
-            nodePages = (uint)pageCount;
+            nodePages = static_cast<uint>(pageCount);
         }
     } while (true);
 }

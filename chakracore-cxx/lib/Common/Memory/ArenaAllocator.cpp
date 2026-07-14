@@ -150,7 +150,7 @@ Size(BigBlock * blockList)
     while (memoryBlock != NULL)
     {
         totalBytes += memoryBlock->currentByte;
-        memoryBlock = (BigBlock *)memoryBlock->next;
+        memoryBlock = static_cast<BigBlock*>(memoryBlock->next);
     }
     return totalBytes;
 }
@@ -179,7 +179,7 @@ RealAllocInlined(size_t nbytes)
 
     Assert(cacheBlockEnd >= cacheBlockCurrent);
     char * p = cacheBlockCurrent;
-    if ((size_t)(cacheBlockEnd - p) >= nbytes)
+    if (static_cast<size_t>(cacheBlockEnd - p) >= nbytes)
     {
         Assert(cacheBlockEnd == bigBlocks->GetBytes() + bigBlocks->nbytes);
         Assert(bigBlocks->GetBytes() <= cacheBlockCurrent && cacheBlockCurrent <= cacheBlockEnd);
@@ -205,7 +205,7 @@ SetCacheBlock(BigBlock * newCacheBlock)
         Assert(bigBlocks->GetBytes() <= cacheBlockCurrent && cacheBlockCurrent <= cacheBlockEnd);
 
         bigBlocks->currentByte = (cacheBlockCurrent - bigBlocks->GetBytes());
-        uint cacheBlockRemainBytes = (uint)(cacheBlockEnd - cacheBlockCurrent);
+        uint cacheBlockRemainBytes = static_cast<uint>(cacheBlockEnd - cacheBlockCurrent);
         if (cacheBlockRemainBytes < ObjectAlignment && !lockBlockList)
         {
             BigBlock * cacheBlock = bigBlocks;
@@ -327,7 +327,7 @@ AllocFromHeap(size_t requestBytes)
         }
     }
 
-    ArenaMemoryBlock * memoryBlock = (ArenaMemoryBlock *)buffer;
+    ArenaMemoryBlock * memoryBlock = reinterpret_cast<ArenaMemoryBlock*>(buffer);
     memoryBlock->nbytes = requestBytes;
     memoryBlock->next = this->mallocBlocks;
     this->mallocBlocks = memoryBlock;
@@ -361,7 +361,7 @@ AddBigBlock(size_t requestBytes)
             return nullptr;
         }
     }
-    BigBlock * blockp = (BigBlock *)allocation->GetAddress();
+    BigBlock * blockp = reinterpret_cast<BigBlock*>(allocation->GetAddress());
     blockp->allocation = allocation;
     blockp->nbytes = allocation->GetSize() - sizeof(BigBlock);
     blockp->currentByte = 0;
@@ -448,7 +448,7 @@ ReleaseHeapMemory()
     while (memoryBlock != nullptr)
     {
         ArenaMemoryBlock * next = memoryBlock->next;
-        HeapDeleteArray(memoryBlock->nbytes + sizeof(ArenaMemoryBlock), (char *)memoryBlock);
+        HeapDeleteArray(memoryBlock->nbytes + sizeof(ArenaMemoryBlock), reinterpret_cast<char*>(memoryBlock));
         memoryBlock = next;
     }
 }
@@ -502,7 +502,7 @@ AllocInternal(size_t requestedBytes)
             LogReuse(nbytes);
 #endif
             ArenaMemoryTracking::ReportAllocation(this, freeObject, nbytes);
-            return (char *)freeObject;
+            return static_cast<char*>(freeObject);
         }
     }
     else
@@ -551,7 +551,7 @@ Free(void * buffer, size_t byteSize)
 #ifdef PROFILE_MEM
         LogFree(byteSize);
 #endif
-        cacheBlockCurrent = (char *)buffer;
+        cacheBlockCurrent = static_cast<char*>(buffer);
         return;
     }
     else if (this->pageAllocator->IsClosed())
@@ -630,15 +630,15 @@ Realloc(void* buffer, size_t existingBytes, size_t requestedBytes)
 
     if (nbytes == nbytesExisting)
     {
-        return (char *)buffer;
+        return static_cast<char*>(buffer);
     }
 
     if (nbytes < nbytesExisting)
     {
         ArenaMemoryTracking::ReportReallocation(this, buffer, nbytesExisting, nbytes);
 
-        Free(((char *)buffer) + nbytes, nbytesExisting - nbytes);
-        return (char *)buffer;
+        Free(static_cast<char*>(buffer) + nbytes, nbytesExisting - nbytes);
+        return static_cast<char*>(buffer);
     }
 
     char* replacementBuf = nullptr;
@@ -952,8 +952,8 @@ StandAloneFreeListPolicy * StandAloneFreeListPolicy::NewInternal(uint entries)
     if (NULL != _this)
     {
         _this->allocated = entries;
-        _this->freeObjectLists = (uint *)(_this + 1);
-        _this->entries = (FreeObjectListEntry *)(_this->freeObjectLists + buckets);
+        _this->freeObjectLists = reinterpret_cast<uint*>(_this + 1);
+        _this->entries = reinterpret_cast<FreeObjectListEntry*>(_this->freeObjectLists + buckets);
     }
 
     return _this;
@@ -1102,10 +1102,10 @@ void InlineCacheAllocator::CheckIsAllZero(bool lockdown)
     {
         Assert(memoryBlock->nbytes % sizeof(CacheLayout) == 0);
         ArenaMemoryBlock * next = memoryBlock->next;
-        CacheLayout* endPtr = (CacheLayout*)(memoryBlock->GetBytes() + memoryBlock->nbytes);
-        for (CacheLayout* cache = (CacheLayout*)memoryBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(memoryBlock->GetBytes() + memoryBlock->nbytes);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(memoryBlock->GetBytes()); cache < endPtr; cache++)
         {
-            unsigned char* weakRefBytes = (unsigned char *)cache->weakRefs;
+            unsigned char* weakRefBytes = reinterpret_cast<unsigned char*>(cache->weakRefs);
 #ifdef ARENA_MEMORY_VERIFY
             Assert(IsAll(weakRefBytes, sizeof(cache->weakRefs), 0)
                 || IsAll(weakRefBytes, sizeof(cache->weakRefs), InlineCacheFreeListPolicy::DbgFreeMemFill));
@@ -1130,10 +1130,10 @@ void InlineCacheAllocator::CheckIsAllZero(bool lockdown)
     while (bigBlock != NULL)
     {
         Assert(bigBlock->currentByte % sizeof(CacheLayout) == 0);
-        CacheLayout* endPtr = (CacheLayout*)(bigBlock->GetBytes() + bigBlock->currentByte);
-        for (CacheLayout* cache = (CacheLayout*)bigBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes() + bigBlock->currentByte);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes()); cache < endPtr; cache++)
         {
-            unsigned char* weakRefBytes = (unsigned char *)cache->weakRefs;
+            unsigned char* weakRefBytes = reinterpret_cast<unsigned char*>(cache->weakRefs);
             // If we're verifying arena memory (in debug builds) caches on the free list
             // will be debug pattern filled (specifically, at least their weak reference slots).
             // All other caches must be zeroed out (again, at least their weak reference slots).
@@ -1158,14 +1158,14 @@ void InlineCacheAllocator::CheckIsAllZero(bool lockdown)
     while (bigBlock != NULL)
     {
         Assert(bigBlock->currentByte % sizeof(CacheLayout) == 0);
-        CacheLayout* endPtr = (CacheLayout*)(bigBlock->GetBytes() + bigBlock->currentByte);
-        for (CacheLayout* cache = (CacheLayout*)bigBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes() + bigBlock->currentByte);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes()); cache < endPtr; cache++)
         {
-            char* weakRefBytes = (char *)cache->weakRefs;
+            char* weakRefBytes = reinterpret_cast<char*>(cache->weakRefs);
 
 #ifdef ARENA_MEMORY_VERIFY
-            Assert(IsAll((byte*)weakRefBytes, sizeof(cache->weakRefs), 0)
-                || IsAll((byte*)weakRefBytes, sizeof(cache->weakRefs), InlineCacheFreeListPolicy::DbgFreeMemFill));
+            Assert(IsAll(reinterpret_cast<byte*>(weakRefBytes), sizeof(cache->weakRefs), 0)
+                || IsAll(reinterpret_cast<byte*>(weakRefBytes), sizeof(cache->weakRefs), InlineCacheFreeListPolicy::DbgFreeMemFill));
 #else
             Assert(IsAll(weakRefBytes, sizeof(cache->weakRefs), 0));
 #endif
@@ -1231,8 +1231,8 @@ void InlineCacheAllocator::ZeroAll()
     while (bigBlock != NULL)
     {
         Assert(bigBlock->currentByte % sizeof(CacheLayout) == 0);
-        CacheLayout* endPtr = (CacheLayout*)(bigBlock->GetBytes() + bigBlock->currentByte);
-        for (CacheLayout* cache = (CacheLayout*)bigBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes() + bigBlock->currentByte);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes()); cache < endPtr; cache++)
         {
             memset(cache->weakRefs, 0, sizeof(cache->weakRefs));
             // We want to preserve the free list, whose next pointers are tagged with InlineCacheFreeListTag.
@@ -1250,8 +1250,8 @@ void InlineCacheAllocator::ZeroAll()
     while (bigBlock != NULL)
     {
         Assert(bigBlock->currentByte % sizeof(CacheLayout) == 0);
-        CacheLayout* endPtr = (CacheLayout*)(bigBlock->GetBytes() + bigBlock->currentByte);
-        for (CacheLayout* cache = (CacheLayout*)bigBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes() + bigBlock->currentByte);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes()); cache < endPtr; cache++)
         {
             memset(cache->weakRefs, 0, sizeof(cache->weakRefs));
             // We want to preserve the free list, whose next pointers are tagged with InlineCacheFreeListTag.
@@ -1270,8 +1270,8 @@ void InlineCacheAllocator::ZeroAll()
     {
         Assert(memoryBlock->nbytes % sizeof(CacheLayout) == 0);
         ArenaMemoryBlock * next = memoryBlock->next;
-        CacheLayout* endPtr = (CacheLayout*)(memoryBlock->GetBytes() + memoryBlock->nbytes);
-        for (CacheLayout* cache = (CacheLayout*)memoryBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(memoryBlock->GetBytes() + memoryBlock->nbytes);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(memoryBlock->GetBytes()); cache < endPtr; cache++)
         {
             memset(cache->weakRefs, 0, sizeof(cache->weakRefs));
             // We want to preserve the free list, whose next pointers are tagged with InlineCacheFreeListTag.
@@ -1302,7 +1302,7 @@ bool InlineCacheAllocator::CacheHasDeadWeakRefs(Recycler* recycler, CacheLayout*
             continue;
         }
 
-        curWeakRef &= ~(intptr_t)InlineCacheAuxSlotTypeTag;
+        curWeakRef &= ~static_cast<intptr_t>(InlineCacheAuxSlotTypeTag);
 
         if ((curWeakRef & (HeapConstants::ObjectGranularity - 1)) != 0)
         {
@@ -1310,7 +1310,7 @@ bool InlineCacheAllocator::CacheHasDeadWeakRefs(Recycler* recycler, CacheLayout*
         }
 
 
-        if (!recycler->IsObjectMarked((void*)curWeakRef))
+        if (!recycler->IsObjectMarked(reinterpret_cast<void*>(curWeakRef)))
         {
             return true;
         }
@@ -1327,8 +1327,8 @@ bool InlineCacheAllocator::HasNoDeadWeakRefs(Recycler* recycler)
     while (bigBlock != NULL)
     {
         Assert(bigBlock->currentByte % sizeof(CacheLayout) == 0);
-        CacheLayout* endPtr = (CacheLayout*)(bigBlock->GetBytes() + bigBlock->currentByte);
-        for (CacheLayout* cache = (CacheLayout*)bigBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes() + bigBlock->currentByte);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes()); cache < endPtr; cache++)
         {
             if (CacheHasDeadWeakRefs(recycler, cache))
             {
@@ -1341,8 +1341,8 @@ bool InlineCacheAllocator::HasNoDeadWeakRefs(Recycler* recycler)
     while (bigBlock != NULL)
     {
         Assert(bigBlock->currentByte % sizeof(CacheLayout) == 0);
-        CacheLayout* endPtr = (CacheLayout*)(bigBlock->GetBytes() + bigBlock->currentByte);
-        for (CacheLayout* cache = (CacheLayout*)bigBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes() + bigBlock->currentByte);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes()); cache < endPtr; cache++)
         {
             if (CacheHasDeadWeakRefs(recycler, cache))
             {
@@ -1357,8 +1357,8 @@ bool InlineCacheAllocator::HasNoDeadWeakRefs(Recycler* recycler)
     {
         Assert(memoryBlock->nbytes % sizeof(CacheLayout) == 0);
         ArenaMemoryBlock * next = memoryBlock->next;
-        CacheLayout* endPtr = (CacheLayout*)(memoryBlock->GetBytes() + memoryBlock->nbytes);
-        for (CacheLayout* cache = (CacheLayout*)memoryBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(memoryBlock->GetBytes() + memoryBlock->nbytes);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(memoryBlock->GetBytes()); cache < endPtr; cache++)
         {
             if (CacheHasDeadWeakRefs(recycler, cache))
             {
@@ -1382,14 +1382,14 @@ void InlineCacheAllocator::ClearCacheIfHasDeadWeakRefs(Recycler* recycler, Cache
             continue;
         }
 
-        curWeakRef &= ~(intptr_t)InlineCacheAuxSlotTypeTag;
+        curWeakRef &= ~static_cast<intptr_t>(InlineCacheAuxSlotTypeTag);
 
         if ((curWeakRef & (HeapConstants::ObjectGranularity - 1)) != 0)
         {
             continue;
         }
 
-        if (!recycler->IsObjectMarked((void*)curWeakRef))
+        if (!recycler->IsObjectMarked(reinterpret_cast<void*>(curWeakRef)))
         {
             cache->weakRefs[0] = 0;
             cache->weakRefs[1] = 0;
@@ -1407,8 +1407,8 @@ void InlineCacheAllocator::ClearCachesWithDeadWeakRefs(Recycler* recycler)
     while (bigBlock != NULL)
     {
         Assert(bigBlock->currentByte % sizeof(CacheLayout) == 0);
-        CacheLayout* endPtr = (CacheLayout*)(bigBlock->GetBytes() + bigBlock->currentByte);
-        for (CacheLayout* cache = (CacheLayout*)bigBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes() + bigBlock->currentByte);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes()); cache < endPtr; cache++)
         {
             ClearCacheIfHasDeadWeakRefs(recycler, cache);
         }
@@ -1418,8 +1418,8 @@ void InlineCacheAllocator::ClearCachesWithDeadWeakRefs(Recycler* recycler)
     while (bigBlock != NULL)
     {
         Assert(bigBlock->currentByte % sizeof(CacheLayout) == 0);
-        CacheLayout* endPtr = (CacheLayout*)(bigBlock->GetBytes() + bigBlock->currentByte);
-        for (CacheLayout* cache = (CacheLayout*)bigBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes() + bigBlock->currentByte);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(bigBlock->GetBytes()); cache < endPtr; cache++)
         {
             ClearCacheIfHasDeadWeakRefs(recycler, cache);
         }
@@ -1431,8 +1431,8 @@ void InlineCacheAllocator::ClearCachesWithDeadWeakRefs(Recycler* recycler)
     {
         Assert(memoryBlock->nbytes % sizeof(CacheLayout) == 0);
         ArenaMemoryBlock * next = memoryBlock->next;
-        CacheLayout* endPtr = (CacheLayout*)(memoryBlock->GetBytes() + memoryBlock->nbytes);
-        for (CacheLayout* cache = (CacheLayout*)memoryBlock->GetBytes(); cache < endPtr; cache++)
+        CacheLayout* endPtr = reinterpret_cast<CacheLayout*>(memoryBlock->GetBytes() + memoryBlock->nbytes);
+        for (CacheLayout* cache = reinterpret_cast<CacheLayout*>(memoryBlock->GetBytes()); cache < endPtr; cache++)
         {
             ClearCacheIfHasDeadWeakRefs(recycler, cache);
         }
@@ -1446,7 +1446,7 @@ void CacheAllocator::CheckIsAllZero(bool lockdown)
     ArenaMemoryBlock * memoryBlock = this->mallocBlocks;
     while (memoryBlock != nullptr)
     {
-        Assert(IsAll((byte*)memoryBlock->GetBytes(), memoryBlock->nbytes, 0));
+        Assert(IsAll(reinterpret_cast<byte*>(memoryBlock->GetBytes()), memoryBlock->nbytes, 0));
         memoryBlock = memoryBlock->next;
     }
 
@@ -1458,7 +1458,7 @@ void CacheAllocator::CheckIsAllZero(bool lockdown)
     BigBlock *blockp = this->bigBlocks;
     while (blockp != NULL)
     {
-        Assert(IsAll((byte*)blockp->GetBytes(), blockp->currentByte, 0));
+        Assert(IsAll(reinterpret_cast<byte*>(blockp->GetBytes()), blockp->currentByte, 0));
         if (lockdown)
         {
             uint32_t oldProtect;
@@ -1470,7 +1470,7 @@ void CacheAllocator::CheckIsAllZero(bool lockdown)
     blockp = this->fullBlocks;
     while (blockp != NULL)
     {
-        Assert(IsAll((byte*)blockp->GetBytes(), blockp->currentByte, 0));
+        Assert(IsAll(reinterpret_cast<byte*>(blockp->GetBytes()), blockp->currentByte, 0));
         if (lockdown)
         {
             uint32_t oldProtect;

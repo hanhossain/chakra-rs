@@ -131,7 +131,7 @@ PreReservedVirtualAllocWrapper::GetPreReservedEndAddress()
 void *
 PreReservedVirtualAllocWrapper::GetPreReservedEndAddress(void * regionStart)
 {
-    return (char*)regionStart + (PreReservedAllocationSegmentCount * AutoSystemInfo::Data.GetAllocationGranularityPageCount() * AutoSystemInfo::PageSize);
+    return static_cast<char*>(regionStart) + (PreReservedAllocationSegmentCount * AutoSystemInfo::Data.GetAllocationGranularityPageCount() * AutoSystemInfo::PageSize);
 }
 
 
@@ -222,7 +222,7 @@ void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageC
             } while (!freeSegments.TestRange(freeSegmentsBVIndex, static_cast<uint>(requestedNumOfSegments)));
 
             uint offset = freeSegmentsBVIndex * AutoSystemInfo::Data.GetAllocationGranularityPageSize();
-            addressToReserve = (char*) preReservedStartAddress + offset;
+            addressToReserve = static_cast<char*>(preReservedStartAddress) + offset;
 
             //Check if the region is not already in MEM_COMMIT state.
             MEMORY_BASIC_INFORMATION memBasicInfo;
@@ -235,18 +235,19 @@ void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageC
                 || memBasicInfo.RegionSize < requestedNumOfSegments * AutoSystemInfo::Data.GetAllocationGranularityPageSize()
                 || memBasicInfo.State == MEM_COMMIT)
             {
-                CustomHeap_BadPageState_unrecoverable_error((size_t)this);
+                CustomHeap_BadPageState_unrecoverable_error(reinterpret_cast<size_t>(this));
             }
         }
         else
         {
             //Check If the lpAddress is within the range of the preReserved Memory Region
-            Assert(((char*) lpAddress) >= (char*) preReservedStartAddress || ((char*) lpAddress + dwSize) < GetPreReservedEndAddress());
+            Assert(static_cast<char*>(lpAddress) >= static_cast<char*>(preReservedStartAddress) || (static_cast<char*>(lpAddress) + dwSize) < GetPreReservedEndAddress());
 
-            addressToReserve = (char*) lpAddress;
-            freeSegmentsBVIndex = (uint) ((addressToReserve - (char*) preReservedStartAddress) / AutoSystemInfo::Data.GetAllocationGranularityPageSize());
+            addressToReserve = static_cast<char*>(lpAddress);
+            freeSegmentsBVIndex = static_cast<uint>((addressToReserve - static_cast<char*>(preReservedStartAddress)) / AutoSystemInfo::Data.
+                GetAllocationGranularityPageSize());
 #if DBG
-            uint numOfSegments = (uint)ceil((double)dwSize / (double)AutoSystemInfo::Data.GetAllocationGranularityPageSize());
+            uint numOfSegments = static_cast<uint>(ceil(static_cast<double>(dwSize) / static_cast<double>(AutoSystemInfo::Data.GetAllocationGranularityPageSize())));
             Assert(numOfSegments != 0);
             Assert(freeSegmentsBVIndex + numOfSegments - 1 < freeSegments.Length());
             Assert(!freeSegments.TestRange(freeSegmentsBVIndex, numOfSegments));
@@ -262,7 +263,7 @@ void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageC
         if ((allocationType & MEM_COMMIT) != 0)
         {
             {
-                allocatedAddress = (char *)VirtualAlloc(addressToReserve, dwSize, MEM_COMMIT, protectFlags);
+                allocatedAddress = static_cast<char*>(VirtualAlloc(addressToReserve, dwSize, MEM_COMMIT, protectFlags));
                 if (allocatedAddress == nullptr)
                 {
                     MemoryOperationLastError::RecordLastError();
@@ -331,12 +332,13 @@ PreReservedVirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t d
 
         if (success && (dwFreeType & MEM_RELEASE) != 0)
         {
-            Assert((uintptr_t) lpAddress >= (uintptr_t) preReservedStartAddress);
-            AssertMsg(((uintptr_t)lpAddress & (AutoSystemInfo::Data.GetAllocationGranularityPageCount() - 1)) == 0, "Not aligned with Allocation Granularity?");
+            Assert(reinterpret_cast<uintptr_t>(lpAddress) >= reinterpret_cast<uintptr_t>(preReservedStartAddress));
+            AssertMsg((reinterpret_cast<uintptr_t>(lpAddress) & (AutoSystemInfo::Data.GetAllocationGranularityPageCount() - 1)) == 0, "Not aligned with Allocation Granularity?");
             AssertMsg(dwSize % AutoSystemInfo::Data.GetAllocationGranularityPageSize() == 0, "Release size should match the allocation granularity size");
             Assert(requestedNumOfSegments != 0);
 
-            BVIndex freeSegmentsBVIndex = (BVIndex) (((uintptr_t) lpAddress - (uintptr_t) preReservedStartAddress) / AutoSystemInfo::Data.GetAllocationGranularityPageSize());
+            BVIndex freeSegmentsBVIndex = static_cast<BVIndex>((reinterpret_cast<uintptr_t>(lpAddress) - reinterpret_cast<uintptr_t>(preReservedStartAddress)) / AutoSystemInfo::Data.
+                GetAllocationGranularityPageSize());
             AssertMsg(freeSegmentsBVIndex < PreReservedAllocationSegmentCount, "Invalid Index ?");
             freeSegments.SetRange(freeSegmentsBVIndex, static_cast<uint>(requestedNumOfSegments));
             PreReservedHeapTrace(u"MEM_RELEASE: Address: 0x%p of size: 0x%x * 0x%x bytes\n", lpAddress, requestedNumOfSegments, AutoSystemInfo::Data.GetAllocationGranularityPageSize());

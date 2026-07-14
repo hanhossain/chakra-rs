@@ -49,14 +49,14 @@ X64WriteBarrierCardTableManager::OnThreadInit()
     ::GetCurrentThreadStackLimits(&stackEnd, &stackBase);
 
 #ifdef X64_WB_DIAG
-    this->_stackbase = (char*)stackBase;
-    this->_stacklimit = (char*)stackEnd;
+    this->_stackbase = reinterpret_cast<char*>(stackBase);
+    this->_stacklimit = reinterpret_cast<char*>(stackEnd);
 #endif
 
     size_t numPages = (stackBase - stackEnd) / AutoSystemInfo::PageSize;
     // stackEnd is the lower boundary
-    bool ret = OnSegmentAlloc((char*) stackEnd, numPages);
-    RecyclerWriteBarrierManager::ToggleBarrier((char*)stackEnd, (stackBase - stackEnd), true);
+    bool ret = OnSegmentAlloc(reinterpret_cast<char*>(stackEnd), numPages);
+    RecyclerWriteBarrierManager::ToggleBarrier(reinterpret_cast<char*>(stackEnd), (stackBase - stackEnd), true);
     return ret;
 }
 
@@ -81,7 +81,7 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
     // First, check if the pages for this segment have already been committed
     // If they have, there is nothing for us to do here.
     void*   segmentEndAddress = segmentAddress + (numPages * pageSize);
-    void*   segmentLastWritableAddress = (char*)segmentEndAddress - 1;
+    void*   segmentLastWritableAddress = static_cast<char*>(segmentEndAddress) - 1;
     BVIndex sectionStartIndex = GetSectionIndex(segmentAddress);
     BVIndex sectionLastIndex = GetSectionIndex(segmentLastWritableAddress);
 
@@ -121,8 +121,8 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
 
     // Section Start is the card table's starting entry aligned *down* to the page boundary
     // Section End is the card table's ending entry aligned *up* to the page boundary
-    uint8_t* sectionStart = (uint8_t*) (((uintptr_t) &_cardTable[startIndex]) & ~(pageSize - 1));
-    uint8_t* sectionEnd   = (uint8_t*) Math::Align<uintptr_t>((uintptr_t)&_cardTable[endIndex], pageSize);
+    uint8_t* sectionStart = reinterpret_cast<uint8_t*>(reinterpret_cast<uintptr_t>(&_cardTable[startIndex]) & ~(pageSize - 1));
+    uint8_t* sectionEnd   = reinterpret_cast<uint8_t*>(Math::Align<uintptr_t>(reinterpret_cast<uintptr_t>(&_cardTable[endIndex]), pageSize));
     size_t commitSize  = (sectionEnd - sectionStart);
 
 #ifdef X64_WB_DIAG
@@ -134,7 +134,7 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
     Assert(commitSize % pageSize == 0);
     Assert(commitSize / pageSize == sectionLastIndex - sectionStartIndex + 1);
 
-    void * ret = ::VirtualAlloc((void *) sectionStart, commitSize, MEM_COMMIT, PAGE_READWRITE);
+    void * ret = ::VirtualAlloc(sectionStart, commitSize, MEM_COMMIT, PAGE_READWRITE);
     if (!ret)
     {
         // If this is the error that occurred while trying to commit the page, this likely means
@@ -176,7 +176,7 @@ X64WriteBarrierCardTableManager::OnSegmentAlloc(_In_ char* segmentAddress, size_
         }
 
 #pragma prefast(suppress:6250, "This method decommits memory")
-        [[maybe_unused]] BOOL result = ::VirtualFree((void *)sectionStart, commitSize, MEM_DECOMMIT);
+        [[maybe_unused]] BOOL result = ::VirtualFree(sectionStart, commitSize, MEM_DECOMMIT);
         Assert(result != 0);
         return false;
     }
@@ -206,7 +206,7 @@ X64WriteBarrierCardTableManager::GetSectionIndex(void* address)
     size_t pageSize = AutoSystemInfo::PageSize;
     size_t sectionSize = (pageSize * pageSize);
 
-    BVIndex sectionIndex = (BVIndex)(((uintptr_t)address) / sectionSize);
+    BVIndex sectionIndex = static_cast<BVIndex>(reinterpret_cast<uintptr_t>(address) / sectionSize);
     return sectionIndex;
 }
 
@@ -230,14 +230,14 @@ X64WriteBarrierCardTableManager::Initialize()
         size_t memoryLimit;
         if (!PlatformAgnostic::SystemInfo::GetMaxVirtualMemory(&memoryLimit))
         {
-            memoryLimit = (size_t) AutoSystemInfo::Data.lpMaximumApplicationAddress; // try upper limit
+            memoryLimit = reinterpret_cast<size_t>(AutoSystemInfo::Data.lpMaximumApplicationAddress); // try upper limit
         }
         else
         {
             // Safest option : Max RSS can be beyond what we can allocate, aim the smaller one
-            memoryLimit = min(memoryLimit, (size_t) AutoSystemInfo::Data.lpMaximumApplicationAddress);
+            memoryLimit = min(memoryLimit, reinterpret_cast<size_t>(AutoSystemInfo::Data.lpMaximumApplicationAddress));
         }
-        const unsigned long maxUmProcessAddressSpace = (long) memoryLimit;
+        const unsigned long maxUmProcessAddressSpace = static_cast<long>(memoryLimit);
 
         _cardTableNumEntries = Math::Align<size_t>(maxUmProcessAddressSpace / AutoSystemInfo::PageSize,
             AutoSystemInfo::PageSize) /* s_writeBarrierPageSize */;
@@ -249,7 +249,7 @@ X64WriteBarrierCardTableManager::Initialize()
             abort();
         }
 
-        _cardTable = (uint8_t*) cardTableSpace;
+        _cardTable = static_cast<uint8_t*>(cardTableSpace);
     }
 
     OnThreadInit();
@@ -317,7 +317,8 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
     VerifyIsBarrierAddress(address, bytes);
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
     uintptr_t startIndex = GetCardTableIndex(address);
-    char * endAddress = (char *)Math::Align<long>((long)((char *)address + bytes), s_WriteBarrierPageSize);
+    char * endAddress = reinterpret_cast<char*>(Math::Align<long>(reinterpret_cast<long>(static_cast<char*>(address) + bytes),
+                                                                  s_WriteBarrierPageSize));
     uintptr_t endIndex = GetCardTableIndex(endAddress);
     Assert(startIndex <= endIndex);
     memset(cardTable + startIndex, WRITE_BARRIER_PAGE_BIT | DIRTYBIT, endIndex - startIndex);
@@ -356,7 +357,8 @@ RecyclerWriteBarrierManager::ToggleBarrier(void * address, size_t bytes, bool en
     if (CONFIG_FLAG(StrictWriteBarrierCheck))
     {
         uintptr_t startIndex = GetCardTableIndex(address);
-        char * endAddress = (char *)Math::Align<long>((long)((char *)address + bytes), s_WriteBarrierPageSize);
+        char * endAddress = reinterpret_cast<char*>(Math::Align<long>(reinterpret_cast<long>(static_cast<char*>(address) + bytes),
+                                                                      s_WriteBarrierPageSize));
         uintptr_t endIndex = GetCardTableIndex(endAddress);
         if (enable)
         {
@@ -413,7 +415,8 @@ RecyclerWriteBarrierManager::VerifyIsBarrierAddress(void * address, size_t bytes
     if (CONFIG_FLAG(StrictWriteBarrierCheck))
     {
         uintptr_t startIndex = GetCardTableIndex(address);
-        char * endAddress = (char *)Math::Align<long>((long)((char *)address + bytes), s_WriteBarrierPageSize);
+        char * endAddress = reinterpret_cast<char*>(Math::Align<long>(reinterpret_cast<long>(static_cast<char*>(address) + bytes),
+                                                                      s_WriteBarrierPageSize));
         uintptr_t endIndex = GetCardTableIndex(endAddress);
         do
         {
@@ -432,7 +435,8 @@ RecyclerWriteBarrierManager::VerifyIsNotBarrierAddress(void * address, size_t by
     if (CONFIG_FLAG(StrictWriteBarrierCheck))
     {
         uintptr_t startIndex = GetCardTableIndex(address);
-        char * endAddress = (char *)Math::Align<long>((long)((char *)address + bytes), s_WriteBarrierPageSize);
+        char * endAddress = reinterpret_cast<char*>(Math::Align<long>(reinterpret_cast<long>(static_cast<char*>(address) + bytes),
+                                                                      s_WriteBarrierPageSize));
         uintptr_t endIndex = GetCardTableIndex(endAddress);
         do
         {
@@ -458,7 +462,7 @@ RecyclerWriteBarrierManager::Initialize()
 uintptr_t
 RecyclerWriteBarrierManager::GetCardTableIndex(void *address)
 {
-    return ((uintptr_t)address) / s_BytesPerCard;
+    return reinterpret_cast<uintptr_t>(address) / s_BytesPerCard;
 }
 
 void

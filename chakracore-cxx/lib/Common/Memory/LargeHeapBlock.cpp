@@ -10,11 +10,11 @@ static_assert(
     sizeof(LargeObjectHeader) == HeapConstants::ObjectGranularity * 2);
 
 #ifdef STACK_BACK_TRACE
-const StackBackTrace* PageHeapData::s_StackTraceAllocFailed = (StackBackTrace*)1;
+const StackBackTrace* PageHeapData::s_StackTraceAllocFailed = reinterpret_cast<StackBackTrace*>(1);
 #endif
 
 void *
-LargeObjectHeader::GetAddress() { return ((char *)this) + sizeof(LargeObjectHeader); }
+LargeObjectHeader::GetAddress() { return reinterpret_cast<char*>(this) + sizeof(LargeObjectHeader); }
 
 // decodedNext = decoded next field
 // decodedAttributes = decoded attributes part of attributesAndChecksum
@@ -25,7 +25,7 @@ unsigned char
 LargeObjectHeader::CalculateCheckSum(LargeObjectHeader* decodedNext, unsigned char decodedAttributes)
 {
     unsigned char checksum = 0;
-    byte *nextField = (byte *)&decodedNext;
+    byte *nextField = reinterpret_cast<byte*>(&decodedNext);
 
     checksum = nextField[0] ^ nextField[1] ^ nextField[2] ^ nextField[3] ^ decodedAttributes;
     return checksum;
@@ -34,13 +34,13 @@ LargeObjectHeader::CalculateCheckSum(LargeObjectHeader* decodedNext, unsigned ch
 LargeObjectHeader*
 LargeObjectHeader::EncodeNext(uint cookie, LargeObjectHeader* next)
 {
-    return (LargeObjectHeader *)((uintptr_t)next ^ cookie);
+    return reinterpret_cast<LargeObjectHeader*>(reinterpret_cast<uintptr_t>(next) ^ cookie);
 }
 
 ushort
 LargeObjectHeader::EncodeAttributesAndChecksum(uint cookie, ushort attributesAndChecksum)
 {
-    return attributesAndChecksum ^ (ushort)cookie;
+    return attributesAndChecksum ^ static_cast<ushort>(cookie);
 }
 
 LargeObjectHeader*
@@ -56,7 +56,7 @@ LargeObjectHeader::SetNext(uint cookie, LargeObjectHeader* next)
     ushort decodedAttributesAndChecksum = this->DecodeAttributesAndChecksum(cookie);
 
     // Calculate the checksum value with new next
-    unsigned char newCheckSumValue = this->CalculateCheckSum(next, (unsigned char)(decodedAttributesAndChecksum >> 8));
+    unsigned char newCheckSumValue = this->CalculateCheckSum(next, static_cast<unsigned char>(decodedAttributesAndChecksum >> 8));
     // pack the (attribute + checksum)
     ushort newAttributeWithCheckSum = (decodedAttributesAndChecksum & 0xFF00) | newCheckSumValue;
 
@@ -71,11 +71,11 @@ LargeObjectHeader::GetNext(uint cookie)
     LargeObjectHeader *decodedNext = this->DecodeNext(cookie, this->next);
     ushort decodedAttributesAndChecksum = this->DecodeAttributesAndChecksum(cookie);
 
-    unsigned char checkSum = (unsigned char)(decodedAttributesAndChecksum & 0xFF);
-    unsigned char calculatedCheckSumField = this->CalculateCheckSum(decodedNext, (unsigned char)(decodedAttributesAndChecksum >> 8));
+    unsigned char checkSum = static_cast<unsigned char>(decodedAttributesAndChecksum & 0xFF);
+    unsigned char calculatedCheckSumField = this->CalculateCheckSum(decodedNext, static_cast<unsigned char>(decodedAttributesAndChecksum >> 8));
     if (checkSum != calculatedCheckSumField)
     {
-        LargeHeapBlock_Metadata_Corrupted((size_t)this, calculatedCheckSumField);
+        LargeHeapBlock_Metadata_Corrupted(reinterpret_cast<size_t>(this), calculatedCheckSumField);
     }
     // If checksum matches return the up-to-date next (in case other thread changed it from last time
     // we read it in this method.
@@ -90,7 +90,7 @@ LargeObjectHeader::SetAttributes(uint cookie, unsigned char attributes)
     // Calculate the checksum value with new attribute
     unsigned char newCheckSumValue = this->CalculateCheckSum(decodedNext, attributes);
     // pack the (attribute + checksum)
-    ushort newAttributeWithCheckSum = ((ushort)attributes << 8) | newCheckSumValue;
+    ushort newAttributeWithCheckSum = (static_cast<ushort>(attributes) << 8) | newCheckSumValue;
     // encode the packed (attribute + checksum) and set it
     this->attributesAndChecksum = this->EncodeAttributesAndChecksum(cookie, newAttributeWithCheckSum);
 }
@@ -101,11 +101,11 @@ LargeObjectHeader::GetAttributes(uint cookie)
     LargeObjectHeader *decodedNext = this->DecodeNext(cookie, this->next);
     ushort decodedAttributesAndChecksum = this->DecodeAttributesAndChecksum(cookie);
 
-    unsigned char checkSum = (unsigned char)(decodedAttributesAndChecksum & 0xFF);
-    unsigned char calculatedCheckSumField = this->CalculateCheckSum(decodedNext, (unsigned char)(decodedAttributesAndChecksum >> 8));
+    unsigned char checkSum = static_cast<unsigned char>(decodedAttributesAndChecksum & 0xFF);
+    unsigned char calculatedCheckSumField = this->CalculateCheckSum(decodedNext, static_cast<unsigned char>(decodedAttributesAndChecksum >> 8));
     if (checkSum != calculatedCheckSumField)
     {
-        LargeHeapBlock_Metadata_Corrupted((size_t)this, calculatedCheckSumField);
+        LargeHeapBlock_Metadata_Corrupted(reinterpret_cast<size_t>(this), calculatedCheckSumField);
     }
 
     // If checksum matches return the up-to-date attributes (in case other thread changed it from last time
@@ -210,7 +210,7 @@ LargeObjectHeader **
 LargeHeapBlock::HeaderList() const
 {
     // See LargeHeapBlock::GetAllocPlusSize for layout description
-    return (LargeObjectHeader **)(((byte *)this) + sizeof(LargeHeapBlock));
+    return reinterpret_cast<LargeObjectHeader**>(const_cast<byte *>(reinterpret_cast<const byte*>(this)) + sizeof(LargeHeapBlock));
 }
 
 void
@@ -227,7 +227,7 @@ LargeHeapBlock::FinalizeAllObjects()
                 continue;
             }
 
-            FinalizableObject * finalizableObject = ((FinalizableObject *)header->GetAddress());
+            FinalizableObject * finalizableObject = static_cast<FinalizableObject*>(header->GetAddress());
 
             finalizableObject->Finalize(true);
             finalizableObject->Dispose(true);
@@ -245,7 +245,7 @@ LargeHeapBlock::FinalizeAllObjects()
             Assert(this->HeaderList()[header->objectIndex] == nullptr);
 
             void * objectAddress = header->GetAddress();
-            ((FinalizableObject *)objectAddress)->Dispose(true);
+            static_cast<FinalizableObject*>(objectAddress)->Dispose(true);
 #ifdef RECYCLER_FINALIZE_CHECK
             this->heapInfo->liveFinalizableObjectCount--;
             this->heapInfo->pendingDisposableObjectCount--;
@@ -279,13 +279,13 @@ LargeHeapBlock::ReleasePagesSweep(Recycler * recycler)
 
 void LargeHeapBlock::VerifyPageHeapPattern()
 {
-    if (!IsAll((byte*)pageHeapData->objectPageAddr, pageHeapData->paddingBytes, PageHeapMemFill))
+    if (!IsAll(reinterpret_cast<byte*>(pageHeapData->objectPageAddr), pageHeapData->paddingBytes, PageHeapMemFill))
     {
         Assert(false);
         ReportFatalException(NULL, E_FAIL, Fatal_Recycler_MemoryCorruption, 2);
     }
 
-    if (!IsAll((byte*)pageHeapData->objectEndAddr, pageHeapData->unusedBytes, PageHeapMemFill))
+    if (!IsAll(reinterpret_cast<byte*>(pageHeapData->objectEndAddr), pageHeapData->unusedBytes, PageHeapMemFill))
     {
         Assert(false);
         ReportFatalException(NULL, E_FAIL, Fatal_Recycler_MemoryCorruption, 2);
@@ -322,7 +322,7 @@ LargeHeapBlock::ReleasePages(Recycler * recycler)
                 )
             {
 #pragma prefast(suppress:6250, "Calling 'VirtualFree' without the MEM_RELEASE flag might free memory but not address descriptors (VADs).")
-                VirtualFree((char*)pageHeapData->objectPageAddr, this->pageCount* AutoSystemInfo::PageSize, MEM_DECOMMIT);
+                VirtualFree(pageHeapData->objectPageAddr, this->pageCount* AutoSystemInfo::PageSize, MEM_DECOMMIT);
                 RECYCLER_PERF_COUNTER_SUB(LargeHeapBlockPageSize, pageCount * AutoSystemInfo::PageSize);
                 this->segment = nullptr;
                 return;
@@ -355,7 +355,7 @@ BOOL
 LargeHeapBlock::IsValidObject(void* objectAddress)
 {
     LargeObjectHeader * header = GetHeader(objectAddress);
-    return ((char *)header >= this->address && header->objectIndex < this->allocCount && this->HeaderList()[header->objectIndex] == header);
+    return (reinterpret_cast<char*>(header) >= this->address && header->objectIndex < this->allocCount && this->HeaderList()[header->objectIndex] == header);
 }
 
 #if DBG
@@ -369,7 +369,7 @@ BOOL
 LargeHeapBlock::IsFreeObject(void * objectAddress)
 {
     LargeObjectHeader * header = GetHeader(objectAddress);
-    return ((char *)header >= this->address && header->objectIndex < this->allocCount && this->GetHeaderByIndex(header->objectIndex) == nullptr);
+    return (reinterpret_cast<char*>(header) >= this->address && header->objectIndex < this->allocCount && this->GetHeaderByIndex(header->objectIndex) == nullptr);
 }
 #endif
 
@@ -382,7 +382,7 @@ LargeHeapBlock::TryGetAttributes(void* objectAddress, unsigned char * pAttr)
 bool
 LargeHeapBlock::TryGetAttributes(LargeObjectHeader * header, unsigned char * pAttr)
 {
-    if ((char *)header < this->address)
+    if (reinterpret_cast<char*>(header) < this->address)
     {
         return false;
     }
@@ -415,7 +415,7 @@ LargeHeapBlock::GetPagesNeeded(size_t size, bool multiplyRequest)
 
     uint pageSize = AutoSystemInfo::PageSize;
     size = AllocSizeMath::Add(size, sizeof(LargeObjectHeader) + (pageSize - 1));
-    if (size == (size_t)-1)
+    if (size == static_cast<size_t>(-1))
     {
         return 0;
     }
@@ -479,9 +479,9 @@ LargeHeapBlock::AllocFreeListEntry(size_t size, ObjectInfoBits attributes, Large
     uint headerIndex = entry->headerIndex;
     size_t originalSize = entry->objectSize;
 
-    LargeObjectHeader * header = (LargeObjectHeader *) entry;
+    LargeObjectHeader * header = reinterpret_cast<LargeObjectHeader*>(entry);
 
-    char * allocObject = ((char*) entry) + sizeof(LargeObjectHeader);       // shouldn't overflow
+    char * allocObject = reinterpret_cast<char*>(entry) + sizeof(LargeObjectHeader);       // shouldn't overflow
     char * newAllocAddressEnd = allocObject + size;
     char * originalAllocEnd = allocObject + originalSize;
     if (newAllocAddressEnd > addressEnd || newAllocAddressEnd < allocObject || (originalAllocEnd < newAllocAddressEnd))
@@ -520,7 +520,7 @@ LargeHeapBlock::AllocFreeListEntry(size_t size, ObjectInfoBits attributes, Large
     if ((attributes & (FinalizeBit | TrackBit)) != 0)
     {
         // Make sure a valid vtable is installed as once the attributes have been set this allocation may be traced by background marking
-        allocObject = (char *)new (allocObject) DummyVTableObject();
+        allocObject = reinterpret_cast<char*>(new(allocObject) DummyVTableObject());
 #if defined(_M_ARM32_OR_ARM64)
         // On ARM, make sure the v-table write is performed before setting the attributes
         MemoryBarrier();
@@ -556,7 +556,7 @@ LargeHeapBlock::Alloc(size_t size, ObjectInfoBits attributes)
     AssertMsg((attributes & TrackBit) == 0, "Large tracked object collection not implemented");
 #endif
 
-    LargeObjectHeader * header = (LargeObjectHeader *)allocAddressEnd;
+    LargeObjectHeader * header = reinterpret_cast<LargeObjectHeader*>(allocAddressEnd);
     Assert(!IsPartialSweptHeader(header));
     char * allocObject = allocAddressEnd + sizeof(LargeObjectHeader);       // shouldn't overflow
     char * newAllocAddressEnd = allocObject + size;
@@ -588,7 +588,7 @@ LargeHeapBlock::Alloc(size_t size, ObjectInfoBits attributes)
     if ((attributes & (FinalizeBit | TrackBit)) != 0)
     {
         // Make sure a valid vtable is installed as once the attributes have been set this allocation may be traced by background marking
-        allocObject = (char *)new (allocObject) DummyVTableObject();
+        allocObject = reinterpret_cast<char*>(new(allocObject) DummyVTableObject());
 #if defined(_M_ARM32_OR_ARM64)
         // On ARM, make sure the v-table write is performed before setting the attributes
         MemoryBarrier();
@@ -638,7 +638,7 @@ LargeHeapBlock::Mark(void* objectAddress, MarkContext * markContext)
             return;
         }
 #if DBG
-        this->pageHeapData->lastMarkedBy = markContext->parentRef ? (char*)markContext->parentRef : "root";
+        this->pageHeapData->lastMarkedBy = markContext->parentRef ? static_cast<char*>(markContext->parentRef) : "root";
 #endif
     }
 
@@ -810,7 +810,7 @@ LargeHeapBlock::GetObjectHeader(void* objectAddress, LargeObjectHeader** ppHeade
     (*ppHeader) = nullptr;
 
     LargeObjectHeader * header = GetHeader(objectAddress);
-    if ((char *)header < this->address)
+    if (reinterpret_cast<char*>(header) < this->address)
     {
         return false;
     }
@@ -867,8 +867,8 @@ LargeHeapBlock::GetHeader(void * objectAddress) const
     LargeObjectHeader * header = nullptr;
     if (this->InPageHeapMode())
     {
-        header = (LargeObjectHeader*)this->address;
-        if ((char*)objectAddress - (char*)header != sizeof(LargeObjectHeader))
+        header = reinterpret_cast<LargeObjectHeader*>(this->address);
+        if (static_cast<char*>(objectAddress) - reinterpret_cast<char*>(header) != sizeof(LargeObjectHeader))
         {
             header = nullptr;
         }
@@ -884,7 +884,7 @@ LargeHeapBlock::GetHeader(void * objectAddress) const
 LargeObjectHeader *
 LargeHeapBlock::GetHeaderFromAddress(void * objectAddress)
 {
-    return (LargeObjectHeader*)(((char *)objectAddress) - sizeof(LargeObjectHeader));
+    return reinterpret_cast<LargeObjectHeader*>(static_cast<char*>(objectAddress) - sizeof(LargeObjectHeader));
 }
 
 byte *
@@ -897,7 +897,7 @@ LargeHeapBlock::GetRealAddressFromInterior(void * interiorAddress)
         if (header != nullptr && !IsPartialSweptHeader(header))
         {
             Assert(header->objectIndex == i);
-            byte * startAddress = (byte *)header->GetAddress();
+            byte * startAddress = static_cast<byte*>(header->GetAddress());
             if (startAddress <= interiorAddress && (startAddress + header->objectSize > interiorAddress))
             {
                 return startAddress;
@@ -924,7 +924,7 @@ LargeHeapBlock::VerifyMark()
             continue;
         }
 
-        char * objectAddress = (char *)header->GetAddress();
+        char * objectAddress = static_cast<char*>(header->GetAddress());
         if (!recycler->heapBlockMap.IsMarked(objectAddress))
         {
             continue;
@@ -945,7 +945,7 @@ LargeHeapBlock::VerifyMark()
 
         while (objectAddress + sizeof(void *) <= objectAddressEnd)
         {
-            void* target = *(void **)objectAddress;
+            void* target = *reinterpret_cast<void**>(objectAddress);
 
             if (recycler->VerifyMark(objectAddress, target))
             {
@@ -967,7 +967,7 @@ LargeHeapBlock::VerifyMark(void * objectAddress, void* target)
 {
     LargeObjectHeader * header = GetHeader(target);
 
-    if ((char *)header < this->address)
+    if (reinterpret_cast<char*>(header) < this->address)
     {
         return false;
     }
@@ -991,7 +991,7 @@ LargeHeapBlock::VerifyMark(void * objectAddress, void* target)
 #if DBG
     if (!isMarked)
     {
-        PrintVerifyMarkFailure(this->GetRecycler(), (char*)objectAddress, (char*)target);
+        PrintVerifyMarkFailure(this->GetRecycler(), static_cast<char*>(objectAddress), static_cast<char*>(target));
     }
 #else
     if (!isMarked)
@@ -1025,7 +1025,7 @@ LargeHeapBlock::ScanInitialImplicitRoots(Recycler * recycler)
             continue;
         }
 
-        char * objectAddress = (char *)header->GetAddress();
+        char * objectAddress = static_cast<char*>(header->GetAddress());
 
         // it is not marked, don't scan implicit root
         if (!heapBlockMap.IsMarked(objectAddress))
@@ -1043,12 +1043,12 @@ LargeHeapBlock::ScanInitialImplicitRoots(Recycler * recycler)
             objectSize = HeapInfo::RoundObjectSize(objectSize);
             if (objectSize > 0) // otherwise the object total size is less than a pointer size
             {
-                recycler->ScanObjectInlineInterior((void **)objectAddress, objectSize);
+                recycler->ScanObjectInlineInterior(reinterpret_cast<void**>(objectAddress), objectSize);
             }
         }
         else
         {
-            recycler->ScanObjectInlineInterior((void **)objectAddress, header->objectSize);
+            recycler->ScanObjectInlineInterior(reinterpret_cast<void**>(objectAddress), header->objectSize);
         }
     }
 }
@@ -1078,7 +1078,7 @@ LargeHeapBlock::ScanNewImplicitRoots(Recycler * recycler)
             continue;
         }
 
-        char * objectAddress = (char *)header->GetAddress();
+        char * objectAddress = static_cast<char*>(header->GetAddress());
 
         bool marked = heapBlockMap.TestAndSetMark(objectAddress);
         if (!marked)
@@ -1098,13 +1098,13 @@ LargeHeapBlock::ScanNewImplicitRoots(Recycler * recycler)
                 objectSize = HeapInfo::RoundObjectSize(objectSize);
                 if (objectSize > 0) // otherwise the object total size is less than a pointer size
                 {
-                    recycler->ScanObjectInlineInterior((void **)objectAddress, objectSize);
+                    recycler->ScanObjectInlineInterior(reinterpret_cast<void**>(objectAddress), objectSize);
                 }
             }
             else
             {
                 // TODO: Assume scan interior
-                recycler->ScanObjectInlineInterior((void **)objectAddress, header->objectSize);
+                recycler->ScanObjectInlineInterior(reinterpret_cast<void**>(objectAddress), header->objectSize);
             }
         }
     }
@@ -1174,7 +1174,7 @@ LargeHeapBlock::RescanOnePage(Recycler * recycler, RescanFlags flags)
             continue;
         }
 
-        char * objectAddress = (char *)header->GetAddress();
+        char * objectAddress = static_cast<char*>(header->GetAddress());
 
         // it is not marked, don't rescan
         if (!recycler->heapBlockMap.IsMarked(objectAddress))
@@ -1290,7 +1290,7 @@ LargeHeapBlock::RescanMultiPage(Recycler * recycler, RescanFlags flags)
             continue;
         }
 
-        char * objectAddress = (char *)header->GetAddress();
+        char * objectAddress = static_cast<char*>(header->GetAddress());
 
         // it is not marked, don't rescan
         if (!heapBlockMap.IsMarked(objectAddress))
@@ -1395,7 +1395,7 @@ LargeHeapBlock::RescanMultiPage(Recycler * recycler, RescanFlags flags)
 #endif
             do
             {
-                char * pageStart = (char *)(((size_t)objectAddress) & ~(size_t)(AutoSystemInfo::PageSize - 1));
+                char * pageStart = reinterpret_cast<char*>(reinterpret_cast<size_t>(objectAddress) & ~static_cast<size_t>(AutoSystemInfo::PageSize - 1));
 
                 /*
                 * The rescan logic for large conservatively scanned object is as follows:
@@ -1539,7 +1539,7 @@ LargeHeapBlock::Sweep(RecyclerSweep& recyclerSweep, bool queuePendingSweep)
 
     RECYCLER_STATS_ADD(recycler, largeHeapBlockTotalByteCount, this->pageCount * AutoSystemInfo::PageSize);
     RECYCLER_STATS_ADD(recycler, heapBlockFreeByteCount[HeapBlock::LargeBlockType],
-        addressEnd - allocAddressEnd <= HeapConstants::MaxSmallObjectSize? 0 : (size_t)(addressEnd - allocAddressEnd));
+        addressEnd - allocAddressEnd <= HeapConstants::MaxSmallObjectSize? 0 : static_cast<size_t>(addressEnd - allocAddressEnd));
 
     // If the number of objects marked is not equal to the number of objects
     // that have been allocated by this large heap block, that means that there
@@ -1618,13 +1618,13 @@ LargeHeapBlock::TrimObject(Recycler* recycler, LargeObjectHeader* header, size_t
         // The end address is (baseAddress + objectSize) & ~(4k - 1)
         // The number of pages to free is (freePageEnd - freePageStart) / pageSize
 
-        char* objectAddress = (char*) header;
+        char* objectAddress = reinterpret_cast<char*>(header);
         char* objectEndAddress = objectAddress + sizeof(LargeObjectHeader) + header->objectSize;
 
-        uintptr_t alignmentMask = ~((uintptr_t) (AutoSystemInfo::PageSize - 1));
+        uintptr_t alignmentMask = ~static_cast<uintptr_t>(AutoSystemInfo::PageSize - 1);
 
-        uintptr_t objectFreeAddress = (uintptr_t) objectAddress;
-        uintptr_t objectFreeEndAddress = ((uintptr_t) objectEndAddress) & alignmentMask;
+        uintptr_t objectFreeAddress = reinterpret_cast<uintptr_t>(objectAddress);
+        uintptr_t objectFreeEndAddress = reinterpret_cast<uintptr_t>(objectEndAddress) & alignmentMask;
 
         size_t bytesToFree = (objectFreeEndAddress - objectFreeAddress);
 
@@ -1636,9 +1636,9 @@ LargeHeapBlock::TrimObject(Recycler* recycler, LargeObjectHeader* header, size_t
         // The exception is if the original object's size + header size is a multiple of the page size
         Assert(objectAddress == this->address);
         Assert(header->objectIndex == 0);
-        Assert(objectFreeEndAddress <= (uintptr_t) objectEndAddress);
+        Assert(objectFreeEndAddress <= reinterpret_cast<uintptr_t>(objectEndAddress));
         Assert(objectFreeAddress <= objectFreeEndAddress);
-        Assert(bytesToFree < sizeOfObject + sizeof(LargeObjectHeader) || (uintptr_t) objectEndAddress == objectFreeEndAddress);
+        Assert(bytesToFree < sizeOfObject + sizeof(LargeObjectHeader) || reinterpret_cast<uintptr_t>(objectEndAddress) == objectFreeEndAddress);
 
         // If we actually have something to free, release those pages
         // Move the heap block to start from the new start address
@@ -1658,7 +1658,7 @@ LargeHeapBlock::TrimObject(Recycler* recycler, LargeObjectHeader* header, size_t
             pageAllocator->SuspendIdleDecommit();
         }
 
-        pageAllocator->Release((char*) objectFreeAddress, freePageCount, this->GetSegment());
+        pageAllocator->Release(reinterpret_cast<char*>(objectFreeAddress), freePageCount, this->GetSegment());
 
         if (inDispose)
         {
@@ -1670,10 +1670,10 @@ LargeHeapBlock::TrimObject(Recycler* recycler, LargeObjectHeader* header, size_t
         // and update the page count
         recycler->heapBlockMap.ClearHeapBlock(this->address, freePageCount);
 
-        this->address = (char*) objectFreeEndAddress;
+        this->address = reinterpret_cast<char*>(objectFreeEndAddress);
         this->pageCount -= freePageCount;
 
-        FillFreeMemory(recycler, (void*) objectFreeEndAddress, (size_t) (objectEndAddress - objectFreeEndAddress));
+        FillFreeMemory(recycler, reinterpret_cast<void*>(objectFreeEndAddress), reinterpret_cast<size_t>(objectEndAddress - objectFreeEndAddress));
 
 #if DBG
         this->hadTrimmed = true;
@@ -1728,7 +1728,7 @@ LargeHeapBlock::FinalizeObject(Recycler* recycler, LargeObjectHeader* header)
     // (e.g. Clear the ITrackable alias reference, so it can't be revived during
     // other finalizers or concurrent sweep)
     // Call it only if it hasn't already been finalized
-    ((FinalizableObject *)header->GetAddress())->Finalize(false);
+    static_cast<FinalizableObject*>(header->GetAddress())->Finalize(false);
     header->SetNext(this->heapInfo->recycler->Cookie, this->pendingDisposeObject);
     this->pendingDisposeObject = header;
 
@@ -1761,7 +1761,7 @@ LargeHeapBlock::SweepObject<SweepMode_ConcurrentPartial>(Recycler * recycler, La
 {
     Assert(!(header->GetAttributes(this->heapInfo->recycler->Cookie) & FinalizeBit));
     Assert(this->HeaderList()[header->objectIndex] == header);
-    this->HeaderList()[header->objectIndex] = (LargeObjectHeader *)((size_t)header | PartialFreeBit);
+    this->HeaderList()[header->objectIndex] = reinterpret_cast<LargeObjectHeader*>(reinterpret_cast<size_t>(header) | PartialFreeBit);
     DebugOnly(this->hasPartialFreeObjects = true);
 }
 
@@ -1799,7 +1799,7 @@ void LargeHeapBlock::FinalizeObjects(Recycler* recycler)
 
         if ((header->GetAttributes(this->heapInfo->recycler->Cookie) & FinalizeBit) == FinalizeBit)
         {
-            recycler->NotifyFree((char *)header->GetAddress(), header->objectSize);
+            recycler->NotifyFree(static_cast<char*>(header->GetAddress()), header->objectSize);
             FinalizeObject(recycler, header);
         }
     }
@@ -1852,7 +1852,7 @@ LargeHeapBlock::SweepObjects(Recycler * recycler)
         }
 
         size_t objectSize = header->objectSize;
-        recycler->NotifyFree((char *)header->GetAddress(), objectSize);
+        recycler->NotifyFree(static_cast<char*>(header->GetAddress()), objectSize);
 
         SweepObject<mode>(recycler, header);
 
@@ -1863,7 +1863,7 @@ LargeHeapBlock::SweepObjects(Recycler * recycler)
             )
         {
             LargeHeapBlockFreeListEntry* head = this->freeList.entries;
-            LargeHeapBlockFreeListEntry* entry = (LargeHeapBlockFreeListEntry*) header;
+            LargeHeapBlockFreeListEntry* entry = reinterpret_cast<LargeHeapBlockFreeListEntry*>(header);
             entry->headerIndex = i;
             entry->heapBlock = this;
             entry->next = head;
@@ -1904,7 +1904,7 @@ LargeHeapBlock::DisposeObjects(Recycler * recycler)
         Assert(this->HeaderList()[header->objectIndex] == nullptr);
 
         void * objectAddress = header->GetAddress();
-        ((FinalizableObject *)objectAddress)->Dispose(false);
+        static_cast<FinalizableObject*>(objectAddress)->Dispose(false);
 
         Assert(finalizeCount != 0);
         finalizeCount--;
@@ -1949,7 +1949,7 @@ LargeHeapBlock::FinishPartialCollect(Recycler * recycler)
 
         if (header != nullptr && IsPartialSweptHeader(header))
         {
-            header = (LargeObjectHeader *)((size_t)header & ~PartialFreeBit);
+            header = reinterpret_cast<LargeObjectHeader*>(reinterpret_cast<size_t>(header) & ~PartialFreeBit);
             Assert(header->objectIndex == i);
             this->HeaderList()[i] = nullptr;
             FillFreeMemory(recycler, header, sizeof(LargeObjectHeader) + header->objectSize);
@@ -2007,7 +2007,7 @@ LargeHeapBlock::GetMaxLargeObjectCount(size_t pageCount, size_t firstAllocationS
     Assert(freeSize < AutoSystemInfo::Data.dwAllocationGranularity);
     size_t objectCount = (freeSize / HeapConstants::MaxSmallObjectSize) + 1;
     Assert(objectCount <= UINT_MAX);
-    return (uint)objectCount;
+    return static_cast<uint>(objectCount);
 }
 
 #ifdef RECYCLER_SLOW_CHECK_ENABLED
@@ -2021,7 +2021,7 @@ LargeHeapBlock::Check(bool expectFull, bool expectPending)
         {
             continue;
         }
-        header = (LargeObjectHeader *)((size_t)header & ~PartialFreeBit);
+        header = reinterpret_cast<LargeObjectHeader*>(reinterpret_cast<size_t>(header) & ~PartialFreeBit);
         Assert(this->hasPartialFreeObjects || header == this->HeaderList()[i]);
         Assert(header->objectIndex == i);
     }
@@ -2073,7 +2073,7 @@ size_t LargeHeapBlock::GetObjectSize(void* objectAddress) const
 {
     LargeObjectHeader * header = GetHeader(objectAddress);
 
-    Assert((char *)header >= this->address);
+    Assert(reinterpret_cast<char*>(header) >= this->address);
 
     return header->objectSize;
 }
@@ -2100,12 +2100,12 @@ LargeHeapBlock::Verify(Recycler * recycler)
                 // Verify the free listed object
                 if (current->headerIndex == i)
                 {
-                    uint8_t* objectAddress = (uint8_t *)current + sizeof(LargeObjectHeader);
+                    uint8_t* objectAddress = reinterpret_cast<uint8_t*>(current) + sizeof(LargeObjectHeader);
                     Recycler::VerifyCheck(current->heapBlock == this, "Invalid heap block", this, current->heapBlock);
-                    Recycler::VerifyCheck((char *)current >= lastAddress, "LargeHeapBlock invalid object header order", this->address, current);
-                    Recycler::VerifyCheckFill(lastAddress, (char *)current - lastAddress);
+                    Recycler::VerifyCheck(reinterpret_cast<char*>(current) >= lastAddress, "LargeHeapBlock invalid object header order", this->address, current);
+                    Recycler::VerifyCheckFill(lastAddress, reinterpret_cast<char*>(current) - lastAddress);
                     recycler->VerifyCheckPad(objectAddress, current->objectSize);
-                    lastAddress = (char *) objectAddress + current->objectSize;
+                    lastAddress = reinterpret_cast<char*>(objectAddress) + current->objectSize;
                     break;
                 }
 
@@ -2115,13 +2115,13 @@ LargeHeapBlock::Verify(Recycler * recycler)
             continue;
         }
 
-        Recycler::VerifyCheck((char *)header >= lastAddress, "LargeHeapBlock invalid object header order", this->address, header);
-        Recycler::VerifyCheckFill(lastAddress, (char *)header - lastAddress);
+        Recycler::VerifyCheck(reinterpret_cast<char*>(header) >= lastAddress, "LargeHeapBlock invalid object header order", this->address, header);
+        Recycler::VerifyCheckFill(lastAddress, reinterpret_cast<char*>(header) - lastAddress);
         Recycler::VerifyCheck(header->objectIndex == i, "LargeHeapBlock object index mismatch", this->address, &header->objectIndex);
-        recycler->VerifyCheckPad((uint8_t *)header->GetAddress(), header->objectSize);
+        recycler->VerifyCheckPad(header->GetAddress(), header->objectSize);
 
         verifyFinalizeCount += ((header->GetAttributes(this->heapInfo->recycler->Cookie) & FinalizeBit) != 0);
-        lastAddress = (char *)header->GetAddress() + header->objectSize;
+        lastAddress = static_cast<char*>(header->GetAddress()) + header->objectSize;
     }
 
     Recycler::VerifyCheck(verifyFinalizeCount == this->finalizeCount, "LargeHeapBlock finalize object count mismatch", this->address, &this->finalizeCount);
@@ -2180,7 +2180,7 @@ LargeHeapBlock::GetTrackerData(void * address)
 {
     Assert(Recycler::DoProfileAllocTracker());
     LargeObjectHeader * header = GetHeader(address);
-    Assert((char *)header >= this->address);
+    Assert(reinterpret_cast<char*>(header) >= this->address);
     uint index = header->objectIndex;
     Assert(index < this->allocCount);
     Assert(this->HeaderList()[index] == header);
@@ -2192,7 +2192,7 @@ LargeHeapBlock::SetTrackerData(void * address, void * data)
 {
     Assert(Recycler::DoProfileAllocTracker());
     LargeObjectHeader * header = GetHeader(address);
-    Assert((char *)header >= this->address);
+    Assert(reinterpret_cast<char*>(header) >= this->address);
     uint index = header->objectIndex;
     Assert(index < this->allocCount);
     Assert(this->HeaderList()[index] == header);
@@ -2203,7 +2203,8 @@ void **
 LargeHeapBlock::GetTrackerDataArray()
 {
     // See LargeHeapBlock::GetAllocPlusSize for layout description
-    return (void **)((char *)(this + 1) + LargeHeapBlock::GetAllocPlusSize(this->objectCount) - this->objectCount * sizeof(void *));
+    return reinterpret_cast<void**>(reinterpret_cast<char*>(this + 1) + LargeHeapBlock::GetAllocPlusSize(this->objectCount) - this
+        ->objectCount * sizeof(void*));
 }
 #endif
 
@@ -2304,7 +2305,7 @@ LargeHeapBlock::CapturePageHeapFreeStack()
 std::recursive_mutex LargeHeapBlock::wbVerifyBitsLock;
 void LargeHeapBlock::WBSetBit(char* addr)
 {
-    uint index = (uint)(addr - this->address) / sizeof(void*);
+    uint index = static_cast<uint>(addr - this->address) / sizeof(void*);
     try
     {
         AUTO_NESTED_HANDLED_EXCEPTION_TYPE(static_cast<ExceptionType>(ExceptionType_DisableCheck));
@@ -2317,7 +2318,7 @@ void LargeHeapBlock::WBSetBit(char* addr)
 }
 void LargeHeapBlock::WBSetBitRange(char* addr, uint count)
 {
-    uint index = (uint)(addr - this->address) / sizeof(void*);
+    uint index = static_cast<uint>(addr - this->address) / sizeof(void*);
     try
     {
         AUTO_NESTED_HANDLED_EXCEPTION_TYPE(static_cast<ExceptionType>(ExceptionType_DisableCheck));
@@ -2333,24 +2334,24 @@ void LargeHeapBlock::WBSetBitRange(char* addr, uint count)
 }
 void LargeHeapBlock::WBClearBit(char* addr)
 {
-    uint index = (uint)(addr - this->address) / sizeof(void*);
+    uint index = static_cast<uint>(addr - this->address) / sizeof(void*);
     std::unique_lock autoCs(wbVerifyBitsLock);
     wbVerifyBits.Clear(index);
 }
 void LargeHeapBlock::WBVerifyBitIsSet(char* addr)
 {
-    uint index = (uint)(addr - this->address) / sizeof(void*);
+    uint index = static_cast<uint>(addr - this->address) / sizeof(void*);
     if (!wbVerifyBits.Test(index))
     {
-        PrintVerifyMarkFailure(this->GetRecycler(), addr, *(char**)addr);
+        PrintVerifyMarkFailure(this->GetRecycler(), addr, *reinterpret_cast<char**>(addr));
     }
 }
 void LargeHeapBlock::WBClearObject(char* addr)
 {
-    uint index = (uint)(addr - this->address) / sizeof(void*);
+    uint index = static_cast<uint>(addr - this->address) / sizeof(void*);
     size_t objectSize = this->GetHeader(addr)->objectSize;
     std::unique_lock autoCs(wbVerifyBitsLock);
-    for (uint i = 0; i < (uint)objectSize / sizeof(void*); i++)
+    for (uint i = 0; i < static_cast<uint>(objectSize) / sizeof(void*); i++)
     {
         wbVerifyBits.Clear(index + i);
     }

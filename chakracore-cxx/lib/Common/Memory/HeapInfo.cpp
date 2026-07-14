@@ -67,15 +67,15 @@ ushort ValidPointers<TBlockAttributes>::CalculateAddressIndex(uint index, uint i
     Assert(index < TBlockAttributes::MaxSmallObjectCount);
     if (index >= maxObjectIndex)
     {
-        return (ushort)-1;
+        return static_cast<ushort>(-1);
     }
     uint addressIndex = index / indexPerObject;
     Assert(addressIndex < USHRT_MAX);
     if (addressIndex * indexPerObject != index)
     {
-        return (ushort)-1;
+        return static_cast<ushort>(-1);
     }
-    return (ushort)addressIndex;
+    return static_cast<ushort>(addressIndex);
 }
 
 template <class TBlockAttributes>
@@ -84,11 +84,11 @@ ushort ValidPointers<TBlockAttributes>::CalculateInteriorAddressIndex(uint index
     Assert(index < TBlockAttributes::MaxSmallObjectCount);
     if (index >= maxObjectIndex)
     {
-        return (ushort)-1;
+        return static_cast<ushort>(-1);
     }
     uint addressIndex = index / indexPerObject;
     Assert(addressIndex < USHRT_MAX);
-    return (ushort)addressIndex;
+    return static_cast<ushort>(addressIndex);
 }
 #endif
 
@@ -142,7 +142,7 @@ void HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMap(Vali
 
             uintptr_t objectAddress = j * bucketSize;
             Assert(objectAddress / AutoSystemInfo::PageSize < USHRT_MAX);
-            ushort pageIndex = (ushort)(objectAddress / AutoSystemInfo::PageSize);
+            ushort pageIndex = static_cast<ushort>(objectAddress / AutoSystemInfo::PageSize);
 
             (*blockInfoRow)[pageIndex].pageObjectCount++;
             (*blockInfoRow)[pageIndex].lastObjectIndexOnPage = max(j, (*blockInfoRow)[pageIndex].lastObjectIndexOnPage);
@@ -178,9 +178,9 @@ int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateVali
 
     // Use heap to allocate the table so we don't bloat the stack (~64k). We only use this function
     // to generate headers as part of testing.
-    ValidPointersMapTable *valid = (ValidPointersMapTable *)malloc(sizeof(ValidPointersMapTable));
-    InvalidBitsTable *invalid = (InvalidBitsTable *)malloc(sizeof(InvalidBitsTable));
-    BlockInfoMapTable *blockMap = (BlockInfoMapTable*)malloc(sizeof(BlockInfoMapTable));
+    ValidPointersMapTable *valid = static_cast<ValidPointersMapTable*>(malloc(sizeof(ValidPointersMapTable)));
+    InvalidBitsTable *invalid = static_cast<InvalidBitsTable*>(malloc(sizeof(InvalidBitsTable)));
+    BlockInfoMapTable *blockMap = static_cast<BlockInfoMapTable*>(malloc(sizeof(BlockInfoMapTable)));
 
     if (valid == nullptr || invalid == nullptr || blockMap == nullptr)
     {
@@ -227,7 +227,7 @@ int32_t HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::GenerateVali
         "const SmallHeapBlockT<SmallAllocationBlockAttributes>::BlockInfo  HeapInfo::ValidPointersMap<SmallAllocationBlockAttributes>::blockInfoBuffer[SmallAllocationBlockAttributes::BucketCount][SmallAllocationBlockAttributes::PageCount] = {{");
     for (unsigned i = 0; i < HeapConstants::BucketCount; ++i)
     {
-        std::println(file, "    // Bucket: {}, Size: {}", i, (int) (HeapConstants::ObjectGranularity + (i * SmallAllocationBlockAttributes::BucketGranularity)));
+        std::println(file, "    // Bucket: {}, Size: {}", i, static_cast<int>(HeapConstants::ObjectGranularity + (i * SmallAllocationBlockAttributes::BucketGranularity)));
         std::println(file, "    {{");
 
         for (unsigned j = 0; j < SmallAllocationBlockAttributes::PageCount; ++j)
@@ -259,9 +259,9 @@ int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateVal
 
     // Use heap to allocate the table so we don't bloat the stack (~64k). We only use this function
     // to generate headers as part of testing.
-    ValidPointersMapTable *valid = (ValidPointersMapTable *)malloc(sizeof(ValidPointersMapTable));
-    InvalidBitsTable *invalid = (InvalidBitsTable *)malloc(sizeof(InvalidBitsTable));
-    BlockInfoMapTable *blockMap = (BlockInfoMapTable *)malloc(sizeof(BlockInfoMapTable));
+    ValidPointersMapTable *valid = static_cast<ValidPointersMapTable*>(malloc(sizeof(ValidPointersMapTable)));
+    InvalidBitsTable *invalid = static_cast<InvalidBitsTable*>(malloc(sizeof(InvalidBitsTable)));
+    BlockInfoMapTable *blockMap = static_cast<BlockInfoMapTable*>(malloc(sizeof(BlockInfoMapTable)));
 
     if (valid == nullptr || invalid == nullptr || blockMap == nullptr)
     {
@@ -309,7 +309,7 @@ int32_t HeapInfo::ValidPointersMap<MediumAllocationBlockAttributes>::GenerateVal
 
     for (unsigned i = 0; i < HeapConstants::MediumBucketCount; ++i)
     {
-        std::println(file, "    // Bucket: {}, Size: {}", i, (int)(HeapConstants::MaxSmallObjectSize + ((i + 1) * MediumAllocationBlockAttributes::BucketGranularity)));
+        std::println(file, "    // Bucket: {}, Size: {}", i, static_cast<int>(HeapConstants::MaxSmallObjectSize + ((i + 1) * MediumAllocationBlockAttributes::BucketGranularity)));
         std::println(file, "    {{");
 
         for (unsigned j = 0; j < MediumAllocationBlockAttributes::PageCount; ++j)
@@ -463,8 +463,8 @@ HeapInfo::Initialize(Recycler * recycler
     if (pageheapmode == PageHeapMode::PageHeapModeOff)
     {
         isPageHeapEnabled = recycler->GetRecyclerFlagsTable().PageHeap != PageHeapMode::PageHeapModeOff;
-        pageheapmode = (PageHeapMode)recycler->GetRecyclerFlagsTable().PageHeap;
-        blockTypeFilter = (PageHeapBlockTypeFilter)recycler->GetRecyclerFlagsTable().PageHeapBlockType;
+        pageheapmode = static_cast<PageHeapMode>(recycler->GetRecyclerFlagsTable().PageHeap);
+        blockTypeFilter = static_cast<PageHeapBlockTypeFilter>(recycler->GetRecyclerFlagsTable().PageHeapBlockType);
         pBucketNumberRange = &recycler->GetRecyclerFlagsTable().PageHeapBucketNumber;
 
     }
@@ -571,7 +571,7 @@ bool HeapInfo::IsPageHeapEnabledForBlock(const size_t objectSize)
         }
         else
         {
-            return ((byte)this->pageHeapBlockType & (byte)PageHeapBlockTypeFilter::PageHeapBlockTypeFilterLarge) != 0;
+            return (static_cast<byte>(this->pageHeapBlockType) & static_cast<byte>(PageHeapBlockTypeFilter::PageHeapBlockTypeFilterLarge)) != 0;
         }
     }
     return false;

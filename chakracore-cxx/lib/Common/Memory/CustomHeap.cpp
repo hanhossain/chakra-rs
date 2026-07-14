@@ -76,7 +76,7 @@ void Heap<TAlloc, TPreReservedAlloc>::Free(Allocation* object)
         return;
     }
 
-    BucketId bucket = (BucketId) GetBucketForSize(object->size);
+    BucketId bucket = GetBucketForSize(object->size);
 
     if (bucket == BucketId::LargeObjectList)
     {
@@ -225,7 +225,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::Alloc(size_t bytes, ushort pdataCou
     // Round up to power of two to allocate, and figure out which bucket to allocate in
     int _;
     size_t bytesToAllocate = PowerOf2Policy::GetSize(bytes, &_ /* modFunctionIndex */);
-    BucketId bucket = (BucketId) GetBucketForSize(bytesToAllocate);
+    BucketId bucket = GetBucketForSize(bytesToAllocate);
 
     if (bucket == BucketId::LargeObjectList)
     {
@@ -401,7 +401,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
         {
             return nullptr;
         }
-        FillDebugBreak((uint8_t*)localAddr, pages*AutoSystemInfo::PageSize);
+        FillDebugBreak(reinterpret_cast<uint8_t*>(localAddr), pages*AutoSystemInfo::PageSize);
         this->codePageAllocators->FreeLocal(localAddr, segment);
 
         if (this->processHandle == GetCurrentProcess())
@@ -413,7 +413,7 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
 #if PDATA_ENABLED
         if(pdataCount > 0)
         {
-            if (!this->codePageAllocators->AllocSecondary(segment, (size_t) address, bytes, pdataCount, xdataSize, &xdata))
+            if (!this->codePageAllocators->AllocSecondary(segment, reinterpret_cast<size_t>(address), bytes, pdataCount, xdataSize, &xdata))
             {
                 this->codePageAllocators->Release(address, pages, segment);
                 return nullptr;
@@ -543,13 +543,13 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
         return true;
     }
 
-    Assert(Math::IsPow2((int32_t)bytes));
+    Assert(Math::IsPow2(static_cast<int32_t>(bytes)));
 
     uint length = GetChunkSizeForBytes(bytes);
     BVIndex index = GetFreeIndexForPage(page, bytes);
     if (index == BVInvalidIndex)
     {
-        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
+        CustomHeap_BadPageState_unrecoverable_error(reinterpret_cast<size_t>(this));
         return false;
     }
     char* address = page->address + Page::Alignment * index;
@@ -572,7 +572,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
             return false;
         }
 
-        if (!this->codePageAllocators->AllocSecondary(page->segment, (size_t)address, bytes, pdataCount, xdataSize, &xdata))
+        if (!this->codePageAllocators->AllocSecondary(page->segment, reinterpret_cast<size_t>(address), bytes, pdataCount, xdataSize, &xdata))
         {
             Adelete(this->auxiliaryAllocator, allocation);
             return true;
@@ -598,14 +598,14 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
     //Section of the Page should already be freed.
     if (!page->freeBitVector.TestRange(index, length))
     {
-        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
+        CustomHeap_BadPageState_unrecoverable_error(reinterpret_cast<size_t>(this));
         return false;
     }
 
     //Section of the Page should already be freed.
     if (!page->freeBitVector.TestRange(index, length))
     {
-        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
+        CustomHeap_BadPageState_unrecoverable_error(reinterpret_cast<size_t>(this));
         return false;
     }
 
@@ -656,7 +656,7 @@ Page* Heap<TAlloc, TPreReservedAlloc>::AllocNewPage(BucketId bucket, bool canAll
     {
         return nullptr;
     }
-    FillDebugBreak((uint8_t*)localAddr, AutoSystemInfo::PageSize);
+    FillDebugBreak(reinterpret_cast<uint8_t*>(localAddr), AutoSystemInfo::PageSize);
     this->codePageAllocators->FreeLocal(localAddr, pageSegment);
 
     uint32_t protectFlags = 0;
@@ -726,7 +726,7 @@ Page* Heap<TAlloc, TPreReservedAlloc>::AddPageToBucket(Page* page, BucketId buck
 template<typename TAlloc, typename TPreReservedAlloc>
 Page* Heap<TAlloc, TPreReservedAlloc>::FindPageToSplit(BucketId targetBucket, bool findPreReservedHeapPages)
 {
-    for (BucketId b = (BucketId)(targetBucket + 1); b < BucketId::NumBuckets; b = (BucketId) (b + 1))
+    for (BucketId b = static_cast<BucketId>(targetBucket + 1); b < BucketId::NumBuckets; b = static_cast<BucketId>(b + 1))
     {
         #pragma prefast(suppress: __WARNING_UNCHECKED_LOWER_BOUND_FOR_ENUMINDEX, "targetBucket is always in range >= SmallObjectList, but an __in_range doesn't fix the warning.");
         FOREACH_DLISTBASE_ENTRY_EDITING(Page, pageInBucket, &this->buckets[b], bucketIter)
@@ -760,7 +760,7 @@ BVIndex Heap<TAlloc, TPreReservedAlloc>::GetIndexInPage(Page* page, char* addres
 {
     Assert(page->address <= address && address < page->address + AutoSystemInfo::PageSize);
 
-    return (BVIndex) ((address - page->address) / Page::Alignment);
+    return static_cast<BVIndex>((address - page->address) / Page::Alignment);
 }
 
 #pragma endregion
@@ -784,7 +784,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
     // Make sure that the section under interest or the whole page has not already been freed
     if (page->IsEmpty() || page->freeBitVector.TestAnyInRange(index, length))
     {
-        CustomHeap_BadPageState_unrecoverable_error((size_t)this);
+        CustomHeap_BadPageState_unrecoverable_error(reinterpret_cast<size_t>(this));
         return false;
     }
 
@@ -809,7 +809,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
                 MemoryOperationLastError::RecordError(JSERR_FatalMemoryExhaustion);
                 return false;
             }
-            FillDebugBreak((uint8_t*)localAddr, object->size);
+            FillDebugBreak(reinterpret_cast<uint8_t*>(localAddr), object->size);
             this->codePageAllocators->FreeLocal(localAddr, page->segment);
 
             void* pageAddress = page->address;
@@ -868,7 +868,7 @@ void Heap<TAlloc, TPreReservedAlloc>::FreeAllocationHelper(Allocation* object, B
     char* localAddr = this->codePageAllocators->AllocLocal(object->address, object->size, page->segment);
     if (localAddr)
     {
-        FillDebugBreak((uint8_t*)localAddr, object->size);
+        FillDebugBreak(reinterpret_cast<uint8_t*>(localAddr), object->size);
         this->codePageAllocators->FreeLocal(localAddr, page->segment);
     }
     else
@@ -1061,7 +1061,7 @@ inline BucketId GetBucketForSize(size_t bytes)
         return BucketId::LargeObjectList;
     }
 
-    BucketId bucket = (BucketId) (log2(bytes / Page::sizePerBit));
+    BucketId bucket = static_cast<BucketId>(log2(bytes / Page::sizePerBit));
     Assert(bucket < BucketId::LargeObjectList);
     Assert(bucket >= BucketId::SmallObjectList);
 

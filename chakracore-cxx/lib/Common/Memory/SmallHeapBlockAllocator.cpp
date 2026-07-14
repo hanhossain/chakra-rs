@@ -65,9 +65,9 @@ SmallHeapBlockAllocator<TBlockType>::Clear()
 #endif
 #ifdef PROFILE_RECYCLER_ALLOC
             // Need to tell the tracker
-            this->bucket->heapInfo->recycler->TrackUnallocated((char *)this->freeObjectList, this->endAddress, this->bucket->sizeCat);
+            this->bucket->heapInfo->recycler->TrackUnallocated(reinterpret_cast<char*>(this->freeObjectList), this->endAddress, this->bucket->sizeCat);
 #endif
-            RecyclerMemoryTracking::ReportUnallocated(this->heapBlock->heapBucket->heapInfo->recycler, (char *)this->freeObjectList, this->endAddress, heapBlock->heapBucket->sizeCat);
+            RecyclerMemoryTracking::ReportUnallocated(this->heapBlock->heapBucket->heapInfo->recycler, reinterpret_cast<char*>(this->freeObjectList), this->endAddress, heapBlock->heapBucket->sizeCat);
 #ifdef RECYCLER_PERF_COUNTERS
             size_t unallocatedObjects = heapBlock->objectCount - ((char *)this->freeObjectList - heapBlock->address) / heapBlock->objectSize;
             size_t unallocatedObjectBytes = unallocatedObjects * heapBlock->GetObjectSize();
@@ -124,12 +124,12 @@ SmallHeapBlockAllocator<TBlockType>::Clear()
 
         while (freeObject)
         {
-            HeapBlock* heapBlockVerify = this->bucket->GetRecycler()->FindHeapBlock((void*) freeObject);
+            HeapBlock* heapBlockVerify = this->bucket->GetRecycler()->FindHeapBlock(static_cast<void*>(freeObject));
             Assert(heapBlockVerify != nullptr);
             Assert(!heapBlockVerify->IsLargeHeapBlock());
-            TBlockType* smallBlock = (TBlockType*)heapBlockVerify;
+            TBlockType* smallBlock = static_cast<TBlockType*>(heapBlockVerify);
 
-            smallBlock->ClearExplicitFreeBitForObject((void*) freeObject);
+            smallBlock->ClearExplicitFreeBitForObject(static_cast<void*>(freeObject));
             freeObject = freeObject->GetNext();
         }
 #endif
@@ -153,7 +153,7 @@ SmallHeapBlockAllocator<TBlockType>::SetNew(BlockType * heapBlock)
     heapBlock->isInAllocator = true;
 
     this->heapBlock = heapBlock;
-    this->freeObjectList = (FreeObject *)heapBlock->GetAddress();
+    this->freeObjectList = reinterpret_cast<FreeObject*>(heapBlock->GetAddress());
     this->endAddress = heapBlock->GetEndAddress();
 }
 
@@ -204,21 +204,21 @@ SmallHeapBlockAllocator<TBlockType>::TrackNativeAllocatedObjects()
 
     if (lastNonNativeBumpAllocatedBlock == nullptr)
     {
-        Assert((char *)this->freeObjectList == this->heapBlock->GetAddress());
+        Assert(reinterpret_cast<char*>(this->freeObjectList) == this->heapBlock->GetAddress());
         return;
     }
 
     Recycler * recycler = this->heapBlock->heapBucket->heapInfo->recycler;
     size_t sizeCat = this->heapBlock->heapBucket->sizeCat;
     char * curr = lastNonNativeBumpAllocatedBlock + sizeCat;
-    Assert(curr <= (char *)this->freeObjectList);
+    Assert(curr <= reinterpret_cast<char*>(this->freeObjectList));
 
 #if DBG_DUMP
     AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"TrackNativeAllocatedObjects: recycler = 0x%p, sizeCat = %u, lastRuntimeAllocatedBlock = 0x%p, freeObjectList = 0x%p, nativeAllocatedObjectCount = %u\n",
-        recycler, sizeCat, this->lastNonNativeBumpAllocatedBlock, this->freeObjectList, ((char *)this->freeObjectList - curr) / sizeCat);
+        recycler, sizeCat, this->lastNonNativeBumpAllocatedBlock, this->freeObjectList, (reinterpret_cast<char*>(this->freeObjectList) - curr) / sizeCat);
 #endif
 
-    while (curr < (char *)this->freeObjectList)
+    while (curr < reinterpret_cast<char*>(this->freeObjectList))
     {
         pfnTrackNativeAllocatedObjectCallBack(recycler, curr, sizeCat);
         curr += sizeCat;

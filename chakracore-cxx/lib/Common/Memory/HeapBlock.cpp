@@ -129,7 +129,7 @@ SmallHeapBlockT<TBlockAttributes>::SmallHeapBlockT(HeapBucket * bucket, ushort o
 
 template <>
 SmallHeapBlockT<MediumAllocationBlockAttributes>::SmallHeapBlockT(HeapBucket * bucket, ushort objectSize, ushort objectCount, HeapBlockType heapBlockType)
-    : HeapBlock((HeapBlockType)(heapBlockType)),
+    : HeapBlock(heapBlockType),
     bucketIndex(HeapInfo::GetMediumBucketIndex(objectSize)),
     validPointers(HeapInfo::mediumAllocValidPointersMap.GetValidPointersForIndex(HeapInfo::GetMediumBucketIndex(objectSize))),
     objectSize(objectSize), objectCount(objectCount)
@@ -202,7 +202,7 @@ SmallHeapBlockT<MediumAllocationBlockAttributes>::RestoreUnusablePages()
     size_t count = this->GetUnusablePageCount();
     if (count > 0)
     {
-        char* startPage = (char*)this->address + (MediumAllocationBlockAttributes::PageCount - count) * AutoSystemInfo::PageSize;
+        char* startPage = this->address + (MediumAllocationBlockAttributes::PageCount - count) * AutoSystemInfo::PageSize;
         uint32_t oldProtect;
         [[maybe_unused]] BOOL ret = ::VirtualProtect(startPage, count * AutoSystemInfo::PageSize, PAGE_READWRITE, &oldProtect);
 
@@ -226,7 +226,7 @@ SmallHeapBlockT<TBlockAttributes>::ClearObjectInfoList()
 {
     ushort count = this->objectCount;
     // the object info list is prefix to the object
-    memset(((byte *)this) - count, 0, count);
+    memset(reinterpret_cast<byte*>(this) - count, 0, count);
 }
 
 template <class TBlockAttributes>
@@ -236,7 +236,7 @@ SmallHeapBlockT<TBlockAttributes>::ObjectInfo(uint index)
     // See SmallHeapBlockT<TBlockAttributes>::GetAllocPlusSize for layout description
     // the object info list is prefix to the object and in reverse index order
     Assert(index < this->objectCount);
-    return *(((byte *)this) - index - 1);
+    return *(reinterpret_cast<byte*>(this) - index - 1);
 }
 
 template <class TBlockAttributes>
@@ -351,7 +351,7 @@ SmallHeapBlockT<TBlockAttributes>::SetPage(__in_ecount_pagesize char * baseAddre
 
     // We use the block type directly here, without the getter so that we can tell on the heap block map,
     // whether the block is a medium block or not
-    if (!recycler->heapBlockMap.SetHeapBlock(this->address, this->GetPageCount() - this->GetUnusablePageCount(), this, this->heapBlockType, (byte)this->bucketIndex))
+    if (!recycler->heapBlockMap.SetHeapBlock(this->address, this->GetPageCount() - this->GetUnusablePageCount(), this, this->heapBlockType, static_cast<byte>(this->bucketIndex)))
     {
         return FALSE;
     }
@@ -500,7 +500,7 @@ SmallHeapBlockT<TBlockAttributes>::GetAddressIndex(void * objectAddress)
     Assert(HeapInfo::IsAlignedAddress(objectAddress));
     Assert(HeapInfo::IsAlignedAddress(address));
 
-    unsigned int offset = (unsigned int)((char*)objectAddress - address);
+    unsigned int offset = static_cast<unsigned int>(static_cast<char*>(objectAddress) - address);
     offset = offset >> HeapConstants::ObjectAllocationShift;
 
     ushort index = validPointers.GetAddressIndex(offset);
@@ -530,7 +530,7 @@ SmallHeapBlockT<TBlockAttributes>::GetInteriorAddressIndex(void * interiorAddres
     Assert(interiorAddress >= address && interiorAddress < this->GetEndAddress());
     Assert(HeapInfo::IsAlignedAddress(address));
 
-    unsigned int offset = (unsigned int)((char*)interiorAddress - address);
+    unsigned int offset = static_cast<unsigned int>(static_cast<char*>(interiorAddress) - address);
     offset = offset >> HeapConstants::ObjectAllocationShift;
 
     ushort index = validPointers.GetInteriorAddressIndex(offset);
@@ -563,7 +563,7 @@ SmallHeapBlockT<TBlockAttributes>::FindHeapObjectImpl(void* objectAddress, Recyc
 {
     if (flags & FindHeapObjectFlags_AllowInterior)
     {
-        objectAddress = (void*) this->GetRealAddressFromInterior(objectAddress);
+        objectAddress = static_cast<void*>(this->GetRealAddressFromInterior(objectAddress));
         if (objectAddress == nullptr)
         {
             return false;
@@ -596,11 +596,11 @@ SmallHeapBlockT<TBlockAttributes>::FindHeapObjectImpl(void* objectAddress, Recyc
             if (flags & FindHeapObjectFlags_ClearedAllocators)
             {
                 // Heap enum has some case where it allocates, so we can't assert
-                Assert(((HeapBucketT<TBlockType> *)this->heapBucket)->AllocatorsAreEmpty() || recycler->isHeapEnumInProgress);
+                Assert(static_cast<HeapBucketT<TBlockType>*>(this->heapBucket)->AllocatorsAreEmpty() || recycler->isHeapEnumInProgress);
             }
             else if (this->IsInAllocator())
             {
-                ((HeapBucketT<TBlockType> *)this->heapBucket)->UpdateAllocators();
+                static_cast<HeapBucketT<TBlockType>*>(this->heapBucket)->UpdateAllocators();
             }
 
             // REVIEW allocation heuristics
@@ -723,7 +723,7 @@ SmallHeapBlockT<TBlockAttributes>::GetRealAddressFromInterior(void * interiorAdd
     ushort index = GetInteriorAddressIndex(interiorAddress);
     if (index != SmallHeapBlockT<TBlockAttributes>::InvalidAddressBit)
     {
-        return (byte *)this->address + index * this->GetObjectSize();
+        return reinterpret_cast<byte*>(this->address) + index * this->GetObjectSize();
     }
     return nullptr;
 }
@@ -814,11 +814,11 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
 
     if (targetBlock->IsLargeHeapBlock())
     {
-        targetOffset = (uint)(target - (char*)((LargeHeapBlock*)targetBlock)->GetRealAddressFromInterior(target));
+        targetOffset = static_cast<uint>(target - reinterpret_cast<char*>(static_cast<LargeHeapBlock*>(targetBlock)->GetRealAddressFromInterior(target)));
     }
     else
     {
-        targetOffset = (uint)(target - targetBlock->GetAddress()) % targetBlock->GetObjectSize(nullptr);
+        targetOffset = static_cast<uint>(target - targetBlock->GetAddress()) % targetBlock->GetObjectSize(nullptr);
     }
 
     if (targetOffset != 0)
@@ -841,7 +841,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
             {
                 Output::Print(u"Demangle failed: result=%d, buflen=%d\n", status, buflen);
             }
-            char* demangledName = (char*)malloc(buflen);
+            char* demangledName = static_cast<char*>(malloc(buflen));
             memcpy(demangledName, name, buflen);
             return demangledName;
         };
@@ -854,14 +854,14 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
 
         if (block->IsLargeHeapBlock())
         {
-            offset = (uint)(objectAddress - (char*)((LargeHeapBlock*)block)->GetRealAddressFromInterior(objectAddress));
+            offset = static_cast<uint>(objectAddress - reinterpret_cast<char*>(static_cast<LargeHeapBlock*>(block)->GetRealAddressFromInterior(objectAddress)));
         }
         else
         {
-            offset = (uint)(objectAddress - block->address) % block->GetObjectSize(objectAddress);
+            offset = static_cast<uint>(objectAddress - block->address) % block->GetObjectSize(objectAddress);
         }
         objectStartAddress = objectAddress - offset;
-        trackerData = (Recycler::TrackerData*)block->GetTrackerData(objectStartAddress);
+        trackerData = static_cast<Recycler::TrackerData*>(block->GetTrackerData(objectStartAddress));
         if (trackerData)
         {
             typeName = getDemangledName(trackerData->typeinfo);
@@ -872,7 +872,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
                 if (CONFIG_FLAG(KeepRecyclerTrackData))
                 {
                     Output::Print(u"Allocation stack:\n");
-                    ((StackBackTrace*)(trackerData + 1))->Print();
+                    reinterpret_cast<StackBackTrace*>(trackerData + 1)->Print();
                 }
 #endif
             }
@@ -899,7 +899,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
 
 
         targetStartAddress = target - targetOffset;
-        targetTrackerData = (Recycler::TrackerData*)targetBlock->GetTrackerData(targetStartAddress);
+        targetTrackerData = static_cast<Recycler::TrackerData*>(targetBlock->GetTrackerData(targetStartAddress));
 
 
         if (targetTrackerData)
@@ -912,7 +912,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
                 if (CONFIG_FLAG(KeepRecyclerTrackData))
                 {
                     Output::Print(u"Allocation stack:\n");
-                    ((StackBackTrace*)(targetTrackerData + 1))->Print();
+                    reinterpret_cast<StackBackTrace*>(targetTrackerData + 1)->Print();
                 }
 #endif
             }
@@ -954,7 +954,7 @@ SmallHeapBlockT<TBlockAttributes>::VerifyMark()
         if (!free->Test(bitIndex) && !invalid->Test(bitIndex))
         {
             Assert(IsValidBitIndex(bitIndex));
-            uint objectIndex = GetObjectIndexFromBitIndex((ushort)bitIndex);
+            uint objectIndex = GetObjectIndexFromBitIndex(static_cast<ushort>(bitIndex));
 
             Assert((this->ObjectInfo(objectIndex) & NewTrackBit) == 0);
 
@@ -973,7 +973,7 @@ SmallHeapBlockT<TBlockAttributes>::VerifyMark()
                     char * objectAddress = this->address + objectIndex * objectSize;
                     for (uint i = 0; i < objectWordCount; i++)
                     {
-                        void* target = *(void**) objectAddress;
+                        void* target = *reinterpret_cast<void**>(objectAddress);
                         if (recycler->VerifyMark(objectAddress, target))
                         {
 #if DBG
@@ -1011,7 +1011,7 @@ SmallHeapBlockT<TBlockAttributes>::VerifyMark(void * objectAddress, void * targe
 #if DBG
     if (!isMarked)
     {
-        PrintVerifyMarkFailure(this->GetRecycler(), (char*)objectAddress, (char*)target);
+        PrintVerifyMarkFailure(this->GetRecycler(), static_cast<char*>(objectAddress), static_cast<char*>(target));
     }
 #else
     if (!isMarked)
@@ -1169,7 +1169,7 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
     {
         // This block has been allocated from since the last GC.
         // We need to update its free bit vector so we can use it below.
-        DebugOnly(ushort currentFreeCount = (ushort)this->GetFreeBitVector()->Count());
+        DebugOnly(ushort currentFreeCount = static_cast<ushort>(this->GetFreeBitVector()->Count()));
         Assert(freeCount == currentFreeCount);
         Assert(this->lastFreeCount == 0 || this->oldFreeCount == this->lastFreeCount);
 
@@ -1186,7 +1186,7 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
     RECYCLER_SLOW_CHECK(CheckFreeBitVector(true));
 
     const uint localMarkCount = this->GetMarkCountForSweep();
-    this->markCount = (ushort)localMarkCount;
+    this->markCount = static_cast<ushort>(localMarkCount);
     Assert(markCount <= objectCount - this->freeCount);
 
     const uint expectFreeCount = objectCount - localMarkCount;
@@ -1351,14 +1351,14 @@ SmallHeapBlockT<TBlockAttributes>::SweepObjects(Recycler * recycler)
             if (!this->GetFreeBitVector()->Test(bitIndex))
             {
                 Assert((this->ObjectInfo(objectIndex) & ImplicitRootBit) == 0);
-                FreeObject* addr = (FreeObject*)objectAddress;
+                FreeObject* addr = const_cast<FreeObject *>(reinterpret_cast<const FreeObject*>(objectAddress));
 
                 if (mode != SweepMode_ConcurrentPartial)
                 {
                     // Don't call NotifyFree if we are doing a partial sweep.
                     // Since we are not actually collecting the object, we will do the NotifyFree later
                     // when the object is actually collected in a future Sweep.
-                    recycler->NotifyFree((char *)addr, this->objectSize);
+                    recycler->NotifyFree(reinterpret_cast<char*>(addr), this->objectSize);
                 }
 #if DBG
                 sweepCount++;
@@ -1433,14 +1433,14 @@ SmallHeapBlockT<TBlockAttributes>::EnqueueProcessedObject(FreeObject ** list, vo
 #endif
     FillFreeMemory(objectAddress, objectSize);
 
-    FreeObject * freeObject = (FreeObject *)objectAddress;
+    FreeObject * freeObject = static_cast<FreeObject*>(objectAddress);
     freeObject->SetNext(*list);
     *list = freeObject;
 
 #if DBG
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(RecyclerVerifyMark))
     {
-        this->WBClearObject((char*)objectAddress);
+        this->WBClearObject(static_cast<char*>(objectAddress));
     }
 #endif
 
@@ -1455,7 +1455,7 @@ SmallHeapBlockT<TBlockAttributes>::EnqueueProcessedObject(FreeObject ** list, Fr
     if (*tail == nullptr)
     {
         Assert(*list == nullptr);
-        *tail = (FreeObject *)objectAddress;
+        *tail = static_cast<FreeObject*>(objectAddress);
     }
     EnqueueProcessedObject(list, objectAddress, index);
 }
@@ -1539,7 +1539,7 @@ SmallHeapBlockT<TBlockAttributes>::GetFreeObjectListOnAllocatorImpl(FreeObject *
 {
     // not during collection, the allocator has the current info
     SmallHeapBlockAllocator<TBlockType> * head =
-        &((HeapBucketT<TBlockType> *)this->heapBucket)->allocatorHead;
+        &static_cast<HeapBucketT<TBlockType>*>(this->heapBucket)->allocatorHead;
     SmallHeapBlockAllocator<TBlockType> * current = head;
     do
     {
@@ -1630,7 +1630,7 @@ SmallHeapBlockT<TBlockAttributes>::CheckFreeBitVector(bool isCollecting)
 
         // Include pending dispose objects
         finalizableBlock->ForEachPendingDisposeObject([&] (uint index) {
-            uint bitIndex = ((uint)index) * this->GetObjectBitDelta();
+            uint bitIndex = index * this->GetObjectBitDelta();
             Assert(IsValidBitIndex(bitIndex));
             Assert(!this->GetDebugFreeBitVector()->Test(bitIndex));
             Assert(free->Test(bitIndex));
@@ -1694,7 +1694,7 @@ SmallHeapBlockT<TBlockAttributes>::BuildFreeBitVector(SmallHeapBlockBitVector * 
 
         // Include pending dispose objects
         finalizableBlock->ForEachPendingDisposeObject([&] (uint index) {
-            uint bitIndex = ((uint)index) * this->GetObjectBitDelta();
+            uint bitIndex = index * this->GetObjectBitDelta();
             Assert(IsValidBitIndex(bitIndex));
             Assert(!this->GetDebugFreeBitVector()->Test(bitIndex));
             free->Set(bitIndex);
@@ -1748,7 +1748,7 @@ SmallHeapBlockT<TBlockAttributes>::MarkImplicitRoots()
         }
     }
     Assert(mark->Count() == localMarkCount);
-    this->markCount = (ushort)localMarkCount;
+    this->markCount = static_cast<ushort>(localMarkCount);
 #if DBG
     HeapBlockMap& map = this->GetRecycler()->heapBlockMap;
 
@@ -1838,7 +1838,7 @@ void SmallHeapBlockT<TBlockAttributes>::Verify(bool pendingDispose)
     uint objectBitDelta = this->GetObjectBitDelta();
     Recycler::VerifyCheck(!pendingDispose || this->IsAnyFinalizableBlock(),
         "Non-finalizable block shouldn't be disposing. May have corrupted block type.",
-        this->GetAddress(), (void *)&this->heapBlockType);
+        this->GetAddress(), const_cast<void*>(static_cast<const void*>(&this->heapBlockType)));
 
     if (HasPendingDisposeObjects())
     {
@@ -1847,7 +1847,7 @@ void SmallHeapBlockT<TBlockAttributes>::Verify(bool pendingDispose)
         // Pending object are not free yet, they don't have memory cleared.
         this->AsFinalizableBlock<TBlockAttributes>()->ForEachPendingDisposeObject([&](uint index) {
 
-            uint bitIndex = ((uint)index) * this->GetObjectBitDelta();
+            uint bitIndex = index * this->GetObjectBitDelta();
             Assert(IsValidBitIndex(bitIndex));
             Assert(!this->GetDebugFreeBitVector()->Test(bitIndex));
             Assert(free->Test(bitIndex));
@@ -1866,7 +1866,7 @@ void SmallHeapBlockT<TBlockAttributes>::Verify(bool pendingDispose)
         {
             if (!tempPending.Test(i * objectBitDelta))
             {
-                char * nextFree = (char *)((FreeObject *)memBlock)->GetNext();
+                char * nextFree = reinterpret_cast<char*>(reinterpret_cast<FreeObject*>(memBlock)->GetNext());
                 Recycler::VerifyCheck(nextFree == nullptr
                     || (nextFree >= address && nextFree < this->GetEndAddress()
                     && free->Test(GetAddressBitIndex(nextFree))),
@@ -1878,7 +1878,7 @@ void SmallHeapBlockT<TBlockAttributes>::Verify(bool pendingDispose)
         {
             if (explicitFreeBits.Test(i * objectBitDelta))
             {
-                char * nextFree = (char *)((FreeObject *)memBlock)->GetNext();
+                char * nextFree = reinterpret_cast<char*>(reinterpret_cast<FreeObject*>(memBlock)->GetNext());
 
                 HeapBlock* nextFreeHeapBlock = this;
 
@@ -2038,7 +2038,7 @@ void **
 SmallHeapBlockT<TBlockAttributes>::GetTrackerDataArray()
 {
     // See SmallHeapBlockT<TBlockAttributes>::GetAllocPlusSize for layout description
-    return (void **)((char *)this - SmallHeapBlockT<TBlockAttributes>::GetAllocPlusSize(this->objectCount));
+    return reinterpret_cast<void**>(reinterpret_cast<char*>(this) - SmallHeapBlockT<TBlockAttributes>::GetAllocPlusSize(this->objectCount));
 }
 #endif
 

@@ -120,7 +120,7 @@ LargeHeapBucket::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size,
 
     if (size < sizeof(void*))
     {
-        attributes = (ObjectInfoBits)(attributes | LeafBit);
+        attributes = static_cast<ObjectInfoBits>(attributes | LeafBit);
     }
 
 #ifdef RECYCLER_MEMORY_VERIFY
@@ -137,7 +137,7 @@ LargeHeapBucket::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size,
     auto pageAllocator = heapInfo->GetRecyclerLargeBlockPageAllocator();
     Segment * segment;
     char * baseAddress = pageAllocator->Alloc(&actualPageCount, &segment);
-    Assert((size_t)baseAddress%AutoSystemInfo::PageSize == 0);
+    Assert(reinterpret_cast<size_t>(baseAddress)%AutoSystemInfo::PageSize == 0);
     if (baseAddress == nullptr)
     {
         NoMemProtectHeapDelete(pageHeapData);
@@ -162,7 +162,8 @@ LargeHeapBucket::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size,
     else if (pageHeapData->pageHeapMode == PageHeapMode::PageHeapModeBlockEnd)
     {
         pageHeapData->unusedBytes = (HeapConstants::ObjectGranularity - (sizeWithHeader%HeapConstants::ObjectGranularity)) % HeapConstants::ObjectGranularity;
-        pageHeapData->paddingBytes = (ushort)((AutoSystemInfo::PageSize - pageHeapData->unusedBytes - sizeWithHeader%AutoSystemInfo::PageSize) % AutoSystemInfo::PageSize);
+        pageHeapData->paddingBytes = static_cast<ushort>((AutoSystemInfo::PageSize - pageHeapData->unusedBytes - sizeWithHeader % AutoSystemInfo::PageSize) %
+            AutoSystemInfo::PageSize);
         Assert(pageHeapData->paddingBytes%HeapConstants::ObjectGranularity == 0);
 
         headerAddress = baseAddress + pageHeapData->paddingBytes;
@@ -196,7 +197,7 @@ LargeHeapBucket::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size,
         heapBlock->addressEnd = baseAddress + AutoSystemInfo::PageSize * pageCount;
     }
 
-    pageHeapData->actualPageCount = (uint)actualPageCount;
+    pageHeapData->actualPageCount = static_cast<uint>(actualPageCount);
     pageHeapData->guardPageAddress = guardPageAddress;
 
     heapBlock->heapInfo = this->heapInfo;
@@ -386,7 +387,7 @@ LargeHeapBucket::TryAllocFromExplicitFreeList(Recycler * recycler, size_t sizeCa
     FreeObject * prevFreeObject = nullptr;
     while (currFreeObject != nullptr)
     {
-        char * memBlock = (char *)currFreeObject;
+        char * memBlock = reinterpret_cast<char*>(currFreeObject);
         LargeObjectHeader * header = LargeHeapBlock::GetHeaderFromAddress(memBlock);
         Assert(header->isExplicitFreed);
         Assert(HeapInfo::GetMediumObjectAlignedSizeNoCheck(header->objectSize) == this->sizeCat);
@@ -411,12 +412,12 @@ LargeHeapBucket::TryAllocFromExplicitFreeList(Recycler * recycler, size_t sizeCa
         HeapBlock* heapBlockVerify = recycler->FindHeapBlock(memBlock);
         Assert(heapBlockVerify != nullptr);
         Assert(heapBlockVerify->IsLargeHeapBlock());
-        LargeHeapBlock * largeHeapBlock = (LargeHeapBlock *)heapBlockVerify;
+        LargeHeapBlock * largeHeapBlock = static_cast<LargeHeapBlock*>(heapBlockVerify);
         LargeObjectHeader * dbgHeader;
         Assert(largeHeapBlock->GetObjectHeader(memBlock, &dbgHeader));
         Assert(dbgHeader == header);
 
-        ((FreeObject *)memBlock)->DebugFillNext();
+        reinterpret_cast<FreeObject*>(memBlock)->DebugFillNext();
 #endif
 #ifdef RECYCLER_ZERO_MEM_CHECK
         // TODO: large heap block doesn't separate leaf object on to different page allocator.
@@ -427,7 +428,7 @@ LargeHeapBucket::TryAllocFromExplicitFreeList(Recycler * recycler, size_t sizeCa
 
         if ((attributes & ObjectInfoBits::FinalizeBit) != 0)
         {
-            LargeHeapBlock* heapBlock = (LargeHeapBlock *)recycler->FindHeapBlock(memBlock);
+            LargeHeapBlock* heapBlock = static_cast<LargeHeapBlock*>(recycler->FindHeapBlock(memBlock));
             heapBlock->finalizeCount++;
 #ifdef RECYCLER_FINALIZE_CHECK
             heapInfo->liveFinalizableObjectCount++;
@@ -457,13 +458,13 @@ LargeHeapBucket::ExplicitFree(void * object, size_t sizeCat)
     Assert(heapBlock != nullptr);
     Assert(heapBlock->IsLargeHeapBlock());
 
-    LargeHeapBlock * largeHeapBlock = (LargeHeapBlock *)heapBlock;
+    LargeHeapBlock * largeHeapBlock = static_cast<LargeHeapBlock*>(heapBlock);
     LargeObjectHeader * dbgHeader;
     Assert(largeHeapBlock->GetObjectHeader(object, &dbgHeader));
     Assert(dbgHeader == header);
 #endif
 
-    FreeObject * freeObject = (FreeObject *)object;
+    FreeObject * freeObject = static_cast<FreeObject*>(object);
     freeObject->SetNext(this->explicitFreeList);
     this->explicitFreeList = freeObject;
     header->SetAttributes(this->heapInfo->recycler->Cookie, ObjectInfoBits::LeafBit);       // We can stop scanning it now.

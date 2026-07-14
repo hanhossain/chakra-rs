@@ -353,7 +353,7 @@ RecyclerSweepManager::AdjustPartialHeuristics()
     Assert(this->InPartialCollect() || recycler->autoHeap.unusedPartialCollectFreeBytes == 0);
 
     // DoPartialCollectMode should have rejected these already
-    Assert(this->rescanRootBytes <= (size_t)MaxPartialCollectRescanRootBytes);
+    Assert(this->rescanRootBytes <= static_cast<size_t>(MaxPartialCollectRescanRootBytes));
     Assert(recycler->autoHeap.unusedPartialCollectFreeBytes <= MaxUnusedPartialCollectFreeBytes);
 
     // Page reuse Heuristics
@@ -370,7 +370,7 @@ RecyclerSweepManager::AdjustPartialHeuristics()
         const size_t freedBytes = this->GetNewObjectFreeBytes();
         Assert(freedBytes <= allocBytes);
 
-        collectEfficacy = (double)freedBytes / (double)allocBytes;
+        collectEfficacy = static_cast<double>(freedBytes) / static_cast<double>(allocBytes);
 
         // If we collected less then 10% of the memory, let's not do partial GC.
         // CONSIDER: It may be good to do partial with low efficacy once we have concurrent partial
@@ -386,7 +386,7 @@ RecyclerSweepManager::AdjustPartialHeuristics()
         collectEfficacy = (collectEfficacy - MinPartialCollectEfficacy) / (1.0 - MinPartialCollectEfficacy);
 
         Assert(collectEfficacy <= 1.0);
-        this->partialCollectSmallHeapBlockReuseMinFreeBytes = (size_t)(AutoSystemInfo::PageSize * collectEfficacy);
+        this->partialCollectSmallHeapBlockReuseMinFreeBytes = static_cast<size_t>(AutoSystemInfo::PageSize * collectEfficacy);
     }
 #ifdef RECYCLER_STATS
     recycler->collectionStats.collectEfficacy = collectEfficacy;
@@ -395,7 +395,7 @@ RecyclerSweepManager::AdjustPartialHeuristics()
 
     // Blocks which are being reused are likely to be touched again from allocation and contribute to Rescan cost.
     // If there are many of these, adjust rescanRootBytes to account for this.
-    const size_t estimatedPartialReuseBlocks = (size_t)((double)this->reuseHeapBlockCount * (1.0 - collectEfficacy));
+    const size_t estimatedPartialReuseBlocks = static_cast<size_t>(static_cast<double>(this->reuseHeapBlockCount) * (1.0 - collectEfficacy));
     const size_t estimatedPartialReuseBytes = estimatedPartialReuseBlocks * AutoSystemInfo::PageSize;
 
     const size_t newRescanRootBytes = max(this->rescanRootBytes, estimatedPartialReuseBytes);
@@ -408,7 +408,7 @@ RecyclerSweepManager::AdjustPartialHeuristics()
         return false;
     }
 
-    double collectCost = (double)newRescanRootBytes / MaxPartialCollectRescanRootBytes;
+    double collectCost = static_cast<double>(newRescanRootBytes) / MaxPartialCollectRescanRootBytes;
 
     RECYCLER_STATS_SET(recycler, collectCost, collectCost);
 
@@ -429,9 +429,9 @@ RecyclerSweepManager::AdjustPartialHeuristics()
         // account for the amount of uncollected bytes and unused bytes to increase
         // pressure to do a full GC by rising the partial GC new page heuristic
 
-        double uncollectedBytesPressure = (double)this->nextPartialUncollectedAllocBytes / (double)RecyclerHeuristic::Instance.MaxUncollectedAllocBytesPartialCollect;
+        double uncollectedBytesPressure = static_cast<double>(this->nextPartialUncollectedAllocBytes) / static_cast<double>(RecyclerHeuristic::Instance.MaxUncollectedAllocBytesPartialCollect);
         double collectFullCollectPressure =
-            (double)recycler->autoHeap.unusedPartialCollectFreeBytes / (double)MaxUnusedPartialCollectFreeBytes
+            static_cast<double>(recycler->autoHeap.unusedPartialCollectFreeBytes) / static_cast<double>(MaxUnusedPartialCollectFreeBytes)
             * (1.0 - uncollectedBytesPressure) + uncollectedBytesPressure;
 
         ratio = ratio * (1.0 - collectFullCollectPressure) + collectFullCollectPressure;
@@ -440,7 +440,8 @@ RecyclerSweepManager::AdjustPartialHeuristics()
 
     // Linear scale the partial GC new page heuristic using the ratio calculated
     recycler->uncollectedNewPageCountPartialCollect = MinPartialUncollectedNewPageCount
-        + (size_t)((double)(RecyclerHeuristic::Instance.MaxPartialUncollectedNewPageCount - MinPartialUncollectedNewPageCount) * ratio);
+        + static_cast<size_t>(static_cast<double>(RecyclerHeuristic::Instance.MaxPartialUncollectedNewPageCount -
+            MinPartialUncollectedNewPageCount) * ratio);
 
     Assert(recycler->uncollectedNewPageCountPartialCollect >= MinPartialUncollectedNewPageCount &&
         recycler->uncollectedNewPageCountPartialCollect <= RecyclerHeuristic::Instance.MaxPartialUncollectedNewPageCount);
@@ -448,7 +449,7 @@ RecyclerSweepManager::AdjustPartialHeuristics()
     // If the number of new page to reach the partial heuristics plus the existing uncollectedAllocBytes
     // and the memory we are going to reuse (assume we use it all) is greater then the full GC max size heuristic
     // (with 1M fudge factor), we trigger a full GC anyways, so let's not get into partial GC
-    const size_t estimatedPartialReusedFreeByteCount = (size_t)((double)this->reuseByteCount * reuseRatio);
+    const size_t estimatedPartialReusedFreeByteCount = static_cast<size_t>(static_cast<double>(this->reuseByteCount) * reuseRatio);
     if (recycler->uncollectedNewPageCountPartialCollect * AutoSystemInfo::PageSize
         + this->nextPartialUncollectedAllocBytes + estimatedPartialReusedFreeByteCount >= RecyclerHeuristic::Instance.MaxUncollectedAllocBytesPartialCollect)
     {

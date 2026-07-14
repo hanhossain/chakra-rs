@@ -158,7 +158,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     inPartialCollectMode(false),
     scanPinnedObjectMap(false),
     partialUncollectedAllocBytes(0),
-    uncollectedNewPageCountPartialCollect((size_t)-1),
+    uncollectedNewPageCountPartialCollect(static_cast<size_t>(-1)),
     partialConcurrentNextCollection(false),
 #ifdef RECYCLER_STRESS
     forcePartialScanStack(false),
@@ -529,7 +529,7 @@ Recycler::RootRelease(void* obj, uint *count)
         {
             if (count != nullptr)
             {
-                *count = (uint)-1;
+                *count = static_cast<uint>(-1);
             }
             // REVIEW: throw if not found
             Assert(false);
@@ -679,7 +679,7 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
 #endif
 
     // Default to non-concurrent
-    uint numProcs = (uint)AutoSystemInfo::Data.GetNumberOfPhysicalProcessors();
+    uint numProcs = AutoSystemInfo::Data.GetNumberOfPhysicalProcessors();
     this->maxParallelism = (numProcs > 4) || CUSTOM_PHASE_FORCE1(GetRecyclerFlagsTable(), Js::ParallelMarkPhase) ? 4 : numProcs;
 
     if (forceInThread)
@@ -952,7 +952,7 @@ void Recycler::SetExplicitFreeBitOnSmallBlock(HeapBlock* heapBlock, size_t sizeC
 {
     Assert(!heapBlock->IsLargeHeapBlock());
     Assert(heapBlock->GetObjectSize(buffer) == sizeCat);
-    [[maybe_unused]] SmallHeapBlockT<TBlockAttributes>* smallBlock = (SmallHeapBlockT<TBlockAttributes>*)heapBlock;
+    [[maybe_unused]] SmallHeapBlockT<TBlockAttributes>* smallBlock = static_cast<SmallHeapBlockT<TBlockAttributes>*>(heapBlock);
     if ((attributes & ObjectInfoBits::LeafBit) == LeafBit)
     {
         Assert(smallBlock->IsLeafBlock());
@@ -1035,7 +1035,7 @@ bool Recycler::ExplicitFreeInternal(void* buffer, size_t size, size_t sizeCat)
         {
             if (heapBlock->IsLargeHeapBlock())
             {
-                LargeHeapBlock* largeHeapBlock = (LargeHeapBlock*)heapBlock;
+                LargeHeapBlock* largeHeapBlock = static_cast<LargeHeapBlock*>(heapBlock);
                 if (largeHeapBlock->InPageHeapMode())
                 {
                     largeHeapBlock->CapturePageHeapFreeStack();
@@ -1072,7 +1072,7 @@ bool Recycler::ExplicitFreeInternal(void* buffer, size_t size, size_t sizeCat)
         }
 #endif
 
-        memset(((char*)buffer) + sizeof(FreeObject), expectedFill, fillSize);
+        memset(static_cast<char*>(buffer) + sizeof(FreeObject), expectedFill, fillSize);
     }
 
 #ifdef PROFILE_RECYCLER_ALLOC
@@ -1133,7 +1133,7 @@ Recycler::TryLargeAlloc(HeapInfo * heap, size_t size, ObjectInfoBits attributes,
     {
         if (heap->largeObjectBucket.IsPageHeapEnabled(attributes))
         {
-            memBlock = heap->largeObjectBucket.PageHeapAlloc(this, sizeCat, size, (ObjectInfoBits)attributes, heap->pageHeapMode, nothrow);
+            memBlock = heap->largeObjectBucket.PageHeapAlloc(this, sizeCat, size, attributes, heap->pageHeapMode, nothrow);
             if (memBlock != nullptr)
             {
 #ifdef RECYCLER_ZERO_MEM_CHECK
@@ -1163,7 +1163,7 @@ Recycler::LargeAlloc(HeapInfo* heap, size_t size, ObjectInfoBits attributes)
 {
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
 
-    size_t limit = (size_t)GetRecyclerFlagsTable().MaxSingleAllocSizeInMB * 1024 * 1024;
+    size_t limit = static_cast<size_t>(GetRecyclerFlagsTable().MaxSingleAllocSizeInMB) * 1024 * 1024;
 
     if (size >= limit)
     {
@@ -1225,7 +1225,7 @@ Recycler::OutOfMemory()
 void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(void* recyclerAddr, size_t allocSize, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation, bool isOOPJIT)
 {
     Assert(recyclerAddr);
-    return ((Recycler*)recyclerAddr)->GetNormalHeapBlockAllocatorInfoForNativeAllocation(allocSize, allocatorAddress, endAddressOffset, freeListOffset, allowBumpAllocation, isOOPJIT);
+    return static_cast<Recycler*>(recyclerAddr)->GetNormalHeapBlockAllocatorInfoForNativeAllocation(allocSize, allocatorAddress, endAddressOffset, freeListOffset, allowBumpAllocation, isOOPJIT);
 }
 
 void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t allocSize, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation, bool isOOPJIT)
@@ -1233,10 +1233,10 @@ void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t allocSi
     Assert(HeapInfo::IsAlignedSize(allocSize));
     Assert(HeapInfo::IsSmallObject(allocSize));
 
-    allocatorAddress = (char*)this + offsetof(Recycler, autoHeap)
+    allocatorAddress = reinterpret_cast<char*>(this) + offsetof(Recycler, autoHeap)
         + offsetof(HeapInfoManager, defaultHeap)
         + offsetof(HeapInfo, heapBuckets)
-        + sizeof(HeapBucketGroup<SmallAllocationBlockAttributes>)*((uint)(allocSize >> HeapConstants::ObjectAllocationShift) - 1)
+        + sizeof(HeapBucketGroup<SmallAllocationBlockAttributes>)*(static_cast<uint>(allocSize >> HeapConstants::ObjectAllocationShift) - 1)
         + HeapBucketGroup<SmallAllocationBlockAttributes>::GetHeapBucketOffset()
         + HeapBucketT<SmallNormalHeapBlockT<SmallAllocationBlockAttributes>>::GetAllocatorHeadOffset();
 
@@ -1312,7 +1312,7 @@ static void* GetStackBase()
     size_t highLimit = 0;
     size_t lowLimit = 0;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
-    return (void*) highLimit;
+    return reinterpret_cast<void*>(highLimit);
 }
 
 #if _M_ARM
@@ -1435,18 +1435,18 @@ Recycler::ScanStack()
 
     void * stackStart = GetStackBase();
     Assert(stackStart > stackTop);
-    size_t stackScanned = (size_t)((char *)stackStart - (char *)stackTop);
+    size_t stackScanned = static_cast<size_t>(static_cast<char*>(stackStart) - static_cast<char*>(stackTop));
 
 #if DBG_DUMP
     if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::MarkPhase)
         || GetRecyclerFlagsTable().Trace.IsEnabled(Js::ScanStackPhase))
     {
         this->forceTraceMark = true;
-        Output::Print(u"Scanning Stack %p(%8d): ", stackTop, (char *)stackStart - (char *)stackTop);
+        Output::Print(u"Scanning Stack %p(%8d): ", stackTop, static_cast<char*>(stackStart) - static_cast<char*>(stackTop));
     }
 #endif
 
-    collectionWrapper->OnScanStackCallback((void**)stackTop, stackScanned, this->savedThreadContext.GetRegisters(), sizeof(void*) * SavedRegisterState::NumRegistersToSave);
+    collectionWrapper->OnScanStackCallback(static_cast<void**>(stackTop), stackScanned, this->savedThreadContext.GetRegisters(), sizeof(void*) * SavedRegisterState::NumRegistersToSave);
 
     bool doSpecialMark = collectionWrapper->DoSpecialMarkOnScanStack();
 
@@ -1491,12 +1491,12 @@ Recycler::ScanStack()
     {
         if (doSpecialMark)
         {
-            ScanMemoryInline<true>((void**) stackTop, stackScanned
+            ScanMemoryInline<true>(static_cast<void**>(stackTop), stackScanned
                 ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
         }
         else
         {
-            ScanMemoryInline<false>((void**) stackTop, stackScanned
+            ScanMemoryInline<false>(static_cast<void**>(stackTop), stackScanned
                 ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
         }
     }
@@ -1507,12 +1507,12 @@ Recycler::ScanStack()
         // GC while running a script or when we have a host who allocates objects on the Chakra heap.
         if (doSpecialMark)
         {
-            ScanMemoryInline<true, true /* forceInterior */>((void**)stackTop, stackScanned
+            ScanMemoryInline<true, true /* forceInterior */>(static_cast<void**>(stackTop), stackScanned
                 ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
         }
         else
         {
-            ScanMemoryInline<false, true /* forceInterior */>((void**)stackTop, stackScanned
+            ScanMemoryInline<false, true /* forceInterior */>(static_cast<void**>(stackTop), stackScanned
                 ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
         }
     }
@@ -1713,7 +1713,7 @@ Recycler::TryMarkArenaMemoryBlockList(ArenaMemoryBlock * memoryBlocks)
     ArenaMemoryBlock *blockp = memoryBlocks;
     while (blockp != NULL)
     {
-        void** base=(void**)blockp->GetBytes();
+        void** base=reinterpret_cast<void**>(blockp->GetBytes());
         size_t byteCount = blockp->nbytes;
         scanRootBytes += byteCount;
         this->ScanMemory<false>(base, byteCount);
@@ -1765,7 +1765,7 @@ Recycler::TryMarkBigBlockList(BigBlock * memoryBlocks)
     BigBlock *blockp = memoryBlocks;
     while (blockp != NULL)
     {
-        void** base = (void**)blockp->GetBytes();
+        void** base = reinterpret_cast<void**>(blockp->GetBytes());
         size_t byteCount = blockp->currentByte;
         scanRootBytes +=  byteCount;
         this->ScanMemory<false>(base, byteCount);
@@ -2561,15 +2561,15 @@ Recycler::FindImplicitRootObject(void* candidate, RecyclerHeapObjectInfo& heapOb
 
     if (heapBlock->GetHeapBlockType() < HeapBlock::HeapBlockType::SmallAllocBlockTypeCount)
     {
-        return ((SmallHeapBlock*)heapBlock)->FindImplicitRootObject(candidate, this, heapObject);
+        return static_cast<SmallHeapBlock*>(heapBlock)->FindImplicitRootObject(candidate, this, heapObject);
     }
     else if (!heapBlock->IsLargeHeapBlock())
     {
-        return ((MediumHeapBlock*)heapBlock)->FindImplicitRootObject(candidate, this, heapObject);
+        return static_cast<MediumHeapBlock*>(heapBlock)->FindImplicitRootObject(candidate, this, heapObject);
     }
     else
     {
-        return ((LargeHeapBlock*)heapBlock)->FindImplicitRootObject(candidate, this, heapObject);
+        return static_cast<LargeHeapBlock*>(heapBlock)->FindImplicitRootObject(candidate, this, heapObject);
     }
 }
 
@@ -2722,10 +2722,10 @@ Recycler::SweepWeakReference()
                 continue;
             }
 
-            if (((uintptr_t)ref.heapBlock & 0x1) == 0x1)
+            if ((reinterpret_cast<uintptr_t>(ref.heapBlock) & 0x1) == 0x1)
             {
                 // Background thread marked this ref. Unmark it, and keep it
-                ref.heapBlock = (HeapBlock*)((uintptr_t)ref.heapBlock & ~0x1);
+                ref.heapBlock = reinterpret_cast<HeapBlock*>(reinterpret_cast<uintptr_t>(ref.heapBlock) & ~0x1);
                 continue;
             }
 
@@ -2949,9 +2949,9 @@ Recycler::FinishDisposeObjectsWrapped()
             if (!this->CollectionInProgress() && NeedExhaustiveRepeatCollect() && ((flags & CollectOverride_NoExhaustiveCollect) != CollectOverride_NoExhaustiveCollect))
             {
 #ifdef RECYCLER_TRACE
-                CaptureCollectionParam((CollectionFlags)(flags & ~CollectMode_Partial), true);
+                CaptureCollectionParam(static_cast<CollectionFlags>(flags & ~CollectMode_Partial), true);
 #endif
-                DoCollectWrapped((CollectionFlags)(flags & ~CollectMode_Partial));
+                DoCollectWrapped(static_cast<CollectionFlags>(flags & ~CollectMode_Partial));
             }
 
             this->inDisposeWrapper = false;
@@ -3166,7 +3166,7 @@ Recycler::CollectWithHeuristic()
 #ifdef RECYCLER_TRACE
             collectionParam.timeDiff = currentTickCount - tickCountNextCollection;
 #endif
-            if ((int)(tickCountNextCollection - currentTickCount) >= 0)
+            if (static_cast<int>(tickCountNextCollection - currentTickCount) >= 0)
             {
                 return FinishDisposeObjectsWrapped<flags>();
             }
@@ -3181,7 +3181,7 @@ Recycler::CollectWithHeuristic()
     }
 
     // Passed all the heuristic, do some GC work, maybe
-    return Collect<(CollectionFlags)(flags & ~CollectMode_Partial)>();
+    return Collect<static_cast<CollectionFlags>(flags & ~CollectMode_Partial)>();
 }
 
 template <CollectionFlags flags>
@@ -3208,7 +3208,7 @@ Recycler::Collect()
     CollectionFlags finalFlags = flags;
     if (!partial)
     {
-        finalFlags = (CollectionFlags)(flags & ~CollectMode_Partial);
+        finalFlags = static_cast<CollectionFlags>(flags & ~CollectMode_Partial);
     }
 
     // ExecuteRecyclerCollectionFunction may cause exception. In which case, we may trigger the assert
@@ -3584,7 +3584,7 @@ Recycler::ClearPartialCollect()
     this->autoHeap.unusedPartialCollectFreeBytes = 0;
     this->partialUncollectedAllocBytes = 0;
     this->clientTrackedObjectList.Clear(&this->clientTrackedObjectAllocator);
-    this->uncollectedNewPageCountPartialCollect = (size_t)-1;
+    this->uncollectedNewPageCountPartialCollect = static_cast<size_t>(-1);
 }
 
 void
@@ -4329,8 +4329,8 @@ Recycler::EnableConcurrent(JsUtil::ThreadService *threadService, bool startAllTh
 
         if (startConcurrentThread)
         {
-            auto concurrentThread = PlatformAgnostic::Thread::Create(&Recycler::StaticThreadProc, 
-                                                                     this, PlatformAgnostic::Thread::ThreadInitStackSizeParamIsAReservation, 
+            auto concurrentThread = PlatformAgnostic::Thread::Create(&Recycler::StaticThreadProc,
+                                                                     this, PlatformAgnostic::Thread::ThreadInitStackSizeParamIsAReservation,
                                                                      u"Chakra Background Recycler");
 
             if (concurrentThread != PlatformAgnostic::Thread::InvalidHandle)
@@ -4576,7 +4576,7 @@ char* Recycler::GetScriptThreadStackTop()
     // We should have already checked if the recycler is thread bound or not
     Assert(mainThreadHandle != NULL);
 
-    return (char*) savedThreadContext.GetStackTop();
+    return static_cast<char*>(savedThreadContext.GetStackTop());
 }
 
 size_t
@@ -4601,8 +4601,8 @@ Recycler::BackgroundScanStack()
 
     if (stackTop != nullptr)
     {
-        size_t size = (char *)stackBase - stackTop;
-        ScanMemoryInline<false>((void **)stackTop, size
+        size_t size = static_cast<char*>(stackBase) - stackTop;
+        ScanMemoryInline<false>(reinterpret_cast<void**>(stackTop), size
             ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
         return size;
     }
@@ -4674,7 +4674,7 @@ Recycler::BackgroundMarkWeakRefs()
                 continue;
             }
 
-            if (((uintptr_t)item.heapBlock & 0x1) == 0x1)
+            if ((reinterpret_cast<uintptr_t>(item.heapBlock) & 0x1) == 0x1)
             {
                 // This weak reference is already marked
                 continue;
@@ -4692,7 +4692,7 @@ Recycler::BackgroundMarkWeakRefs()
 
             if (item.heapBlock->TestObjectMarkedBit(item.ptr))
             {
-                item.heapBlock = (HeapBlock*) ((uintptr_t)item.heapBlock | 0x1);
+                item.heapBlock = reinterpret_cast<HeapBlock*>(reinterpret_cast<uintptr_t>(item.heapBlock) | 0x1);
             }
         }
     }
@@ -5029,7 +5029,7 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
     {
         if (NeedExhaustiveRepeatCollect())
         {
-            DoCollect((CollectionFlags)(flags & ~CollectMode_Partial));
+            DoCollect(static_cast<CollectionFlags>(flags & ~CollectMode_Partial));
         }
         else
         {
@@ -5073,8 +5073,8 @@ Recycler::FinishTransferSwept(CollectionFlags flags)
 unsigned int
 Recycler::StaticThreadProc(void * lpParameter)
 {
-    uint32_t ret = (uint32_t)-1;
-        Recycler * recycler = (Recycler *)lpParameter;
+    uint32_t ret = static_cast<uint32_t>(-1);
+        Recycler * recycler = static_cast<Recycler*>(lpParameter);
 
 #if DBG
         recycler->concurrentThreadExited = false;
@@ -5086,7 +5086,7 @@ Recycler::StaticThreadProc(void * lpParameter)
 void
 Recycler::StaticBackgroundWorkCallback(void * callbackData)
 {
-    Recycler * recycler = (Recycler *) callbackData;
+    Recycler * recycler = static_cast<Recycler*>(callbackData);
     recycler->DoBackgroundWork(true);
 }
 
@@ -5400,7 +5400,7 @@ Recycler::Realloc(void* buffer, size_t existingBytes, size_t requestedBytes, boo
 
     if (nbytes == nbytesExisting)
     {
-        return (char *)buffer;
+        return static_cast<char*>(buffer);
     }
 
     char* replacementBuf = this->Alloc(requestedBytes);
@@ -5586,7 +5586,7 @@ RecyclerParallelThread::EnableConcurrent(bool waitForThread)
         return false;
     }
 
-    auto threadHandle = PlatformAgnostic::Thread::Create(&RecyclerParallelThread::StaticThreadProc, 
+    auto threadHandle = PlatformAgnostic::Thread::Create(&RecyclerParallelThread::StaticThreadProc,
                                                          this, PlatformAgnostic::Thread::ThreadInitStackSizeParamIsAReservation,
                                                          u"Chakra Recycler Parallel Thread");
 
@@ -5701,8 +5701,8 @@ RecyclerParallelThread::Shutdown()
 unsigned int
 RecyclerParallelThread::StaticThreadProc(void * lpParameter)
 {
-    uint32_t ret = (uint32_t)-1;
-        RecyclerParallelThread * parallelThread = (RecyclerParallelThread *)lpParameter;
+    uint32_t ret = static_cast<uint32_t>(-1);
+        RecyclerParallelThread * parallelThread = static_cast<RecyclerParallelThread*>(lpParameter);
         Recycler * recycler = parallelThread->recycler;
         RecyclerParallelThread::WorkFunc workFunc = parallelThread->workFunc;
 
@@ -5749,7 +5749,7 @@ RecyclerParallelThread::StaticThreadProc(void * lpParameter)
 void
 RecyclerParallelThread::StaticBackgroundWorkCallback(void * callbackData)
 {
-    RecyclerParallelThread * parallelThread = (RecyclerParallelThread *)callbackData;
+    RecyclerParallelThread * parallelThread = static_cast<RecyclerParallelThread*>(callbackData);
     Recycler * recycler = parallelThread->recycler;
     RecyclerParallelThread::WorkFunc workFunc = parallelThread->workFunc;
 
@@ -5922,15 +5922,15 @@ Recycler::PrintHeapBlockStats(char16_t const * name, HeapBlock::HeapBlockType ty
 
     Output::Print(u" %6s : %5d %5d %5d %5.1f", name,
         liveCount, collectionStats.heapBlockFreeCount[type], collectionStats.heapBlockCount[type],
-        (double)collectionStats.heapBlockFreeCount[type] / (double)collectionStats.heapBlockCount[type] * 100);
+        static_cast<double>(collectionStats.heapBlockFreeCount[type]) / static_cast<double>(collectionStats.heapBlockCount[type]) * 100);
 
     if (type < HeapBlock::SmallBlockTypeCount)
     {
         Output::Print(u" : %5d %6.1f : %5d %6.1f",
             collectionStats.heapBlockSweptCount[type],
-            (double)collectionStats.heapBlockSweptCount[type] / (double)liveCount * 100,
+            static_cast<double>(collectionStats.heapBlockSweptCount[type]) / static_cast<double>(liveCount) * 100,
             collectionStats.heapBlockConcurrentSweptCount[type],
-            (double)collectionStats.heapBlockConcurrentSweptCount[type] / (double)collectionStats.heapBlockSweptCount[type] * 100);
+            static_cast<double>(collectionStats.heapBlockConcurrentSweptCount[type]) / static_cast<double>(collectionStats.heapBlockSweptCount[type]) * 100);
     }
 }
 
@@ -5970,7 +5970,7 @@ Recycler::PrintHeapBlockMemoryStats(char16_t const * name, HeapBlock::HeapBlockT
     }
 
     Output::Print(u" %10d %6.1f", totalByteCount,
-        (double)allocableFreeByteCount / (double)totalByteCount * 100);
+        static_cast<double>(allocableFreeByteCount) / static_cast<double>(totalByteCount) * 100);
 
     if (this->enablePartialCollect &&
         (type == HeapBlock::HeapBlockType::SmallNormalBlockType
@@ -5983,7 +5983,7 @@ Recycler::PrintHeapBlockMemoryStats(char16_t const * name, HeapBlock::HeapBlockT
         || type == HeapBlock::HeapBlockType::MediumFinalizableBlockWithBarrierType
         ))
     {
-        Output::Print(u" %6.1f", (double)partialUnusedBytes / (double)totalByteCount * 100);
+        Output::Print(u" %6.1f", static_cast<double>(partialUnusedBytes) / static_cast<double>(totalByteCount) * 100);
     }
 }
 
@@ -6040,25 +6040,25 @@ Recycler::PrintMarkCollectionStats()
     Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
     Output::Print(u" TryMark    :%9d       %10d | Null      : %9d %5.1f | Scan    :%9d %5.1f\n",
         collectionStats.tryMarkCount, collectionStats.tryMarkCount * sizeof(void *),
-        collectionStats.tryMarkNullCount, (double)collectionStats.tryMarkNullCount / (double)nonMark * 100,
-        collectionStats.scanCount, (double)collectionStats.scanCount / (double)collectionStats.markData.markCount * 100);
+        collectionStats.tryMarkNullCount, static_cast<double>(collectionStats.tryMarkNullCount) / static_cast<double>(nonMark) * 100,
+        collectionStats.scanCount, static_cast<double>(collectionStats.scanCount) / static_cast<double>(collectionStats.markData.markCount) * 100);
     Output::Print(u"   Non-Mark :%9d %5.1f            | Unaligned : %9d %5.1f | Leaf    :%9d %5.1f\n",
-        nonMark, (double)nonMark / (double)collectionStats.tryMarkCount * 100,
-        collectionStats.tryMarkUnalignedCount, (double)collectionStats.tryMarkUnalignedCount / (double)nonMark * 100,
-        leafCount, (double)leafCount / (double)collectionStats.markData.markCount * 100);
+        nonMark, static_cast<double>(nonMark) / static_cast<double>(collectionStats.tryMarkCount) * 100,
+        collectionStats.tryMarkUnalignedCount, static_cast<double>(collectionStats.tryMarkUnalignedCount) / static_cast<double>(nonMark) * 100,
+        leafCount, static_cast<double>(leafCount) / static_cast<double>(collectionStats.markData.markCount) * 100);
     Output::Print(u"   Mark     :%9d %5.1f %10d | Non GC    : %9d %5.1f | Track   :%9d\n",
-        collectionStats.markData.markCount, (double)collectionStats.markData.markCount / (double)collectionStats.tryMarkCount * 100, collectionStats.markData.markBytes,
-        collectionStats.tryMarkNonRecyclerMemoryCount, (double)collectionStats.tryMarkNonRecyclerMemoryCount / (double)nonMark * 100,
+        collectionStats.markData.markCount, static_cast<double>(collectionStats.markData.markCount) / static_cast<double>(collectionStats.tryMarkCount) * 100, collectionStats.markData.markBytes,
+        collectionStats.tryMarkNonRecyclerMemoryCount, static_cast<double>(collectionStats.tryMarkNonRecyclerMemoryCount) / static_cast<double>(nonMark) * 100,
         collectionStats.trackCount);
     Output::Print(u"   Remark   :%9d %5.1f            | Invalid   : %9d %5.1f \n",
-        collectionStats.remarkCount, (double)collectionStats.remarkCount / (double)collectionStats.tryMarkCount * 100,
-        invalidCount, (double)invalidCount / (double)nonMark * 100);
+        collectionStats.remarkCount, static_cast<double>(collectionStats.remarkCount) / static_cast<double>(collectionStats.tryMarkCount) * 100,
+        invalidCount, static_cast<double>(invalidCount) / static_cast<double>(nonMark) * 100);
     Output::Print(u" TryMark Int:%9d       %10d | Null Int  : %9d %5.1f | Root    :%9d | New     :%9d\n",
         collectionStats.tryMarkInteriorCount, collectionStats.tryMarkInteriorCount * sizeof(void *),
-        collectionStats.tryMarkInteriorNullCount, (double)collectionStats.tryMarkInteriorNullCount / (double)nonMark * 100,
+        collectionStats.tryMarkInteriorNullCount, static_cast<double>(collectionStats.tryMarkInteriorNullCount) / static_cast<double>(nonMark) * 100,
         collectionStats.rootCount, collectionStats.markThruNewObjCount);
     Output::Print(u"                                        | Non GC Int: %9d %5.1f | Stack   :%9d | NewFalse:%9d\n",
-        collectionStats.tryMarkInteriorNonRecyclerMemoryCount, (double)collectionStats.tryMarkInteriorNonRecyclerMemoryCount / (double)nonMark * 100,
+        collectionStats.tryMarkInteriorNonRecyclerMemoryCount, static_cast<double>(collectionStats.tryMarkInteriorNonRecyclerMemoryCount) / static_cast<double>(nonMark) * 100,
         collectionStats.stackCount, collectionStats.markThruFalseNewObjCount);
 }
 
@@ -6073,7 +6073,7 @@ Recycler::PrintBackgroundCollectionStat(RecyclerCollectionStats::MarkData const&
         markData.rescanLargeObjectCount,
         markData.rescanLargeByteCount,
         markData.markCount);
-    double markRatio = (double)markData.markCount / (double)collectionStats.markData.markCount * 100;
+    double markRatio = static_cast<double>(markData.markCount) / static_cast<double>(collectionStats.markData.markCount) * 100;
     if (markRatio == 100.0)
     {
         Output::Print(u" 100");
@@ -6145,8 +6145,8 @@ Recycler::PrintMemoryStats()
         collectionStats.heapBlockFreeByteCount[HeapBlock::LargeBlockType],
         largeHeapBlockUnusedByteCount,
         collectionStats.largeHeapBlockTotalByteCount,
-        (double)collectionStats.heapBlockFreeByteCount[HeapBlock::LargeBlockType] / (double)collectionStats.largeHeapBlockTotalByteCount * 100,
-        (double)largeHeapBlockUnusedByteCount / (double)collectionStats.largeHeapBlockTotalByteCount * 100);
+        static_cast<double>(collectionStats.heapBlockFreeByteCount[HeapBlock::LargeBlockType]) / static_cast<double>(collectionStats.largeHeapBlockTotalByteCount) * 100,
+        static_cast<double>(largeHeapBlockUnusedByteCount) / static_cast<double>(collectionStats.largeHeapBlockTotalByteCount) * 100);
 
     Output::Print(u"\nSmall heap block zeroing stats since last GC\n");
     Output::Print(u"Number of blocks with sweep state empty: normal=%d finalizable=%d leaf=%d\nNumber of blocks zeroed: %d\n",
@@ -6184,7 +6184,7 @@ Recycler::PrintCollectStats()
     Output::Print(u"Process : %5d | ", collectionStats.trackedObjectCount);
     Output::Print(u" Scan     : %7d |  Free     : %6d %5.1f %10d\n",
         collectionStats.objectSweepScanCount,
-        freeCount, (double)freeCount / (double) collectionStats.objectSweptCount * 100, freeBytes);
+        freeCount, static_cast<double>(freeCount) / static_cast<double>(collectionStats.objectSweptCount) * 100, freeBytes);
 
     Output::Print(u"  Large : ");
     Output::Print(u"%5d %6d %10d | ",
@@ -6192,7 +6192,7 @@ Recycler::PrintCollectStats()
     Output::Print(u"Client  : %5d | ", collectionStats.clientTrackedObjectCount);
     Output::Print(u" Finalize : %7d |  Free List: %6d %5.1f %10d\n",
         collectionStats.finalizeSweepCount,
-        collectionStats.objectSweptFreeListCount, (double)collectionStats.objectSweptFreeListCount / (double) collectionStats.objectSweptCount * 100, collectionStats.objectSweptFreeListBytes);
+        collectionStats.objectSweptFreeListCount, static_cast<double>(collectionStats.objectSweptFreeListCount) / static_cast<double>(collectionStats.objectSweptCount) * 100, collectionStats.objectSweptFreeListBytes);
 
     Output::Print(u"---------------------------------------------------------------------------------------------------------------\n");
     Output::Print(u"SweptBlk:  Live  Free Total Free%% : Swept Swept%% : CSwpt CSwpt%%");
@@ -6338,7 +6338,7 @@ void Recycler::VerifyPageHeapFillAfterAlloc(char* memBlock, size_t size, ObjectI
         Assert(heapBlock);
         if (heapBlock->IsLargeHeapBlock())
         {
-            LargeHeapBlock* largeHeapBlock = (LargeHeapBlock*)heapBlock;
+            LargeHeapBlock* largeHeapBlock = static_cast<LargeHeapBlock*>(heapBlock);
             if (largeHeapBlock->InPageHeapMode()
 #ifdef RECYCLER_NO_PAGE_REUSE
                 && !largeHeapBlock->GetPageAllocator(largeHeapBlock->heapInfo)->IsPageReuseDisabled()
@@ -6363,7 +6363,7 @@ Recycler::VerifyZeroFill(void * address, size_t size)
     }
 #endif
 
-    Assert(IsAll((byte *)address, size, expectedFill));
+    Assert(IsAll(static_cast<byte*>(address), size, expectedFill));
 }
 
 void
@@ -6376,9 +6376,9 @@ Recycler::VerifyLargeAllocZeroFill(void * address, size_t size, ObjectInfoBits a
     {
         // Verify that it really is the dummy v-table before skipping it.
         DummyVTableObject dummy;
-        Assert((*(void**)(&dummy)) == *((void**)address));
+        Assert((*reinterpret_cast<void**>(&dummy)) == *static_cast<void**>(address));
 
-        address = ((char*)address) + sizeof(DummyVTableObject);
+        address = static_cast<char*>(address) + sizeof(DummyVTableObject);
         size -= sizeof(DummyVTableObject);
     }
     VerifyZeroFill(address, size);
@@ -6397,7 +6397,7 @@ Recycler::FillCheckPad(void * address, size_t size, size_t alignedAllocSize, boo
 
         if (objectAlreadyInitialized)
         {
-            addressToVerify = ((char*) address + size);
+            addressToVerify = (static_cast<char*>(address) + size);
             sizeToVerify = (alignedAllocSize - size);
         }
         else
@@ -6409,9 +6409,9 @@ Recycler::FillCheckPad(void * address, size_t size, size_t alignedAllocSize, boo
             // prevents overwriting of the vtable.
             static_assert(sizeof(DummyVTableObject) == sizeof(void*), "Incorrect size for a DummyVTableObject - it must contain a single v-table pointer");
             DummyVTableObject dummy;
-            if ((*(void**)(&dummy)) == *((void**)address))
+            if (*reinterpret_cast<void**>(&dummy) == *static_cast<void**>(address))
             {
-                addressToVerify = (char*)address + sizeof(DummyVTableObject);
+                addressToVerify = static_cast<char*>(address) + sizeof(DummyVTableObject);
                 sizeToVerify = alignedAllocSize - sizeof(DummyVTableObject);
             }
         }
@@ -6429,11 +6429,11 @@ Recycler::FillPadNoCheck(void * address, size_t size, size_t alignedAllocSize, b
     // Ignore the first word
     if (!objectAlreadyInitialized && size > sizeof(FreeObject))
     {
-        memset((char *)address + sizeof(FreeObject), 0, size - sizeof(FreeObject));
+        memset(static_cast<char*>(address) + sizeof(FreeObject), 0, size - sizeof(FreeObject));
     }
 
     // write the pad size at the end;
-    *(size_t *)((char *)address + alignedAllocSize - sizeof(size_t)) = alignedAllocSize - size;
+    *reinterpret_cast<size_t*>(static_cast<char*>(address) + alignedAllocSize - sizeof(size_t)) = alignedAllocSize - size;
 }
 
 void Recycler::Verify(Js::Phase phase)
@@ -6458,37 +6458,37 @@ void Recycler::VerifyCheck(bool cond, std::string_view msg, void * address, void
 
 void Recycler::VerifyCheckFill(void * address, size_t size)
 {
-    Assert(IsAll((byte*)address, size, Recycler::VerifyMemFill));
+    Assert(IsAll(static_cast<byte*>(address), size, Recycler::VerifyMemFill));
 }
 
 void Recycler::VerifyCheckPadExplicitFreeList(void * address, size_t size)
 {
-    size_t * paddingAddress = (size_t *)((byte *)address + size - sizeof(size_t));
+    size_t * paddingAddress = reinterpret_cast<size_t*>(static_cast<byte*>(address) + size - sizeof(size_t));
     size_t padding = *paddingAddress;
 
 #pragma warning(suppress:4310)
-    Assert(padding != (size_t)0xCACACACACACACACA);  // Explicit free objects have to have been initialized at some point before they were freed
+    Assert(padding != 0xCACACACACACACACA);  // Explicit free objects have to have been initialized at some point before they were freed
 
     Recycler::VerifyCheck(padding >= verifyPad + sizeof(size_t) &&  padding < size, "Invalid padding size", address, paddingAddress);
-    for (byte * i = (byte *)address + size - padding; i < (byte *)paddingAddress; i++)
+    for (byte * i = static_cast<byte*>(address) + size - padding; i < reinterpret_cast<byte*>(paddingAddress); i++)
     {
         Recycler::VerifyCheck(*i == Recycler::VerifyMemFill, "buffer overflow", address, i);
     }
 }
 void Recycler::VerifyCheckPad(void * address, size_t size)
 {
-    size_t * paddingAddress = (size_t *)((byte *)address + size - sizeof(size_t));
+    size_t * paddingAddress = reinterpret_cast<size_t*>(static_cast<byte*>(address) + size - sizeof(size_t));
     size_t padding = *paddingAddress;
 
 #pragma warning(suppress:4310)
-    if (padding == (size_t)0xCACACACACACACACA)
+    if (padding == 0xCACACACACACACACA)
     {
         // Nascent block have objects that are not initialized with pad size
         Recycler::VerifyCheckFill(address, size);
         return;
     }
     Recycler::VerifyCheck(padding >= verifyPad + sizeof(size_t) &&  padding < size, "Invalid padding size", address, paddingAddress);
-    for (byte * i = (byte *)address + size - padding; i < (byte *)paddingAddress; i++)
+    for (byte * i = static_cast<byte*>(address) + size - padding; i < reinterpret_cast<byte*>(paddingAddress); i++)
     {
         Recycler::VerifyCheck(*i == Recycler::VerifyMemFill, "buffer overflow", address, i);
     }
@@ -6733,7 +6733,7 @@ Recycler::TrackAllocCore(void * object, size_t size, const TrackAllocData& track
     auto&& typeInfo = trackAllocData.GetTypeInfo();
     if (CONFIG_FLAG(KeepRecyclerTrackData))
     {
-        TrackFree((char*)object, size);
+        TrackFree(static_cast<char*>(object), size);
     }
 
     Assert(GetTrackerData(object) == nullptr || GetTrackerData(object) == &TrackerData::ExplicitFreeListObjectData);
@@ -6742,7 +6742,7 @@ Recycler::TrackAllocCore(void * object, size_t size, const TrackAllocData& track
     size_t allocCount = trackAllocData.GetCount();
     size_t itemSize = (size - trackAllocData.GetPlusSize());
     bool isArray;
-    if (allocCount != (size_t)-1)
+    if (allocCount != static_cast<size_t>(-1))
     {
         isArray = true;
         itemSize = itemSize / allocCount;
@@ -6760,7 +6760,7 @@ Recycler::TrackAllocCore(void * object, size_t size, const TrackAllocData& track
         {
             size_t stackTraceSize = 16 * sizeof(void*);
             item = NoCheckHeapNewPlus(stackTraceSize, TrackerItem, typeInfo);
-            StackBackTrace::Capture((char*)&item[1], stackTraceSize, 7);
+            StackBackTrace::Capture(reinterpret_cast<char*>(&item[1]), stackTraceSize, 7);
         }
         else
 #endif
@@ -6833,7 +6833,7 @@ BOOL Recycler::TrackFree(const char* address, size_t size)
     if (this->trackerDictionary != nullptr)
     {
         std::unique_lock lock(trackerCriticalSection);
-        TrackerData * data = GetTrackerData((char *)address);
+        TrackerData * data = GetTrackerData(const_cast<char*>(address));
         if (data != nullptr)
         {
             if (data != &TrackerData::EmptyData)
@@ -6844,7 +6844,7 @@ BOOL Recycler::TrackFree(const char* address, size_t size)
 #endif
                 if (data->typeinfo == &typeid(RecyclerWeakReferenceBase))
                 {
-                    TrackFreeWeakRef((RecyclerWeakReferenceBase *)address);
+                    TrackFreeWeakRef(const_cast<RecyclerWeakReferenceBase*>(reinterpret_cast<const RecyclerWeakReferenceBase*>(address)));
                 }
                 data->FreeSize += size;
                 data->FreeCount++;
@@ -6855,7 +6855,7 @@ BOOL Recycler::TrackFree(const char* address, size_t size)
                 }
 #endif
             }
-            SetTrackerData((char *)address, nullptr);
+            SetTrackerData(const_cast<char*>(address), nullptr);
         }
         else
         {
@@ -6874,7 +6874,7 @@ Recycler::GetTrackerData(void * address)
 {
     HeapBlock * heapBlock = this->FindHeapBlock(address);
     Assert(heapBlock != nullptr);
-    return (Recycler::TrackerData *)heapBlock->GetTrackerData(address);
+    return static_cast<Recycler::TrackerData*>(heapBlock->GetTrackerData(address));
 }
 
 void
@@ -7081,7 +7081,7 @@ Recycler::VerifyMarkBigBlockList(BigBlock * memoryBlocks)
     BigBlock *blockp = memoryBlocks;
     while (blockp != NULL)
     {
-        void** base=(void**)blockp->GetBytes();
+        void** base=reinterpret_cast<void**>(blockp->GetBytes());
         size_t slotCount = blockp->currentByte / sizeof(void*);
         for (size_t i=0; i < slotCount; i++)
         {
@@ -7097,7 +7097,7 @@ Recycler::VerifyMarkArenaMemoryBlockList(ArenaMemoryBlock * memoryBlocks)
     ArenaMemoryBlock *blockp = memoryBlocks;
     while (blockp != NULL)
     {
-        void** base=(void**)blockp->GetBytes();
+        void** base=reinterpret_cast<void**>(blockp->GetBytes());
         size_t slotCount = blockp->nbytes / sizeof(void*);
         for (size_t i=0; i< slotCount; i++)
         {
@@ -7111,7 +7111,7 @@ void
 Recycler::VerifyMarkStack()
 {
     SAVE_THREAD_CONTEXT();
-    void ** stackTop = (void**) this->savedThreadContext.GetStackTop();
+    void ** stackTop = static_cast<void**>(this->savedThreadContext.GetStackTop());
 
     void * stackStart = GetStackBase();
     Assert(stackStart > stackTop);
@@ -7567,7 +7567,7 @@ Recycler::RegisterPendingWriteBarrierBlock(void* address, size_t bytes)
     if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
     {
 #if DBG
-        WBSetBitRange((char*)address, (uint)bytes/sizeof(void*));
+        WBSetBitRange(static_cast<char*>(address), static_cast<uint>(bytes)/sizeof(void*));
 #endif
         pendingWriteBarrierBlockMap.Item(address, bytes);
         RecyclerWriteBarrierManager::WriteBarrier(address, bytes);
@@ -7590,7 +7590,7 @@ Recycler::WBVerifyBitIsSet(char* addr, char* target)
     Recycler* recycler = Recycler::recyclerList;
     while (recycler)
     {
-        auto heapBlock = recycler->FindHeapBlock((void*)((unsigned long)addr&~HeapInfo::ObjectAlignmentMask));
+        auto heapBlock = recycler->FindHeapBlock(reinterpret_cast<void*>(reinterpret_cast<unsigned long>(addr) & ~HeapInfo::ObjectAlignmentMask));
         if (heapBlock)
         {
             heapBlock->WBVerifyBitIsSet(addr);
@@ -7608,7 +7608,7 @@ Recycler::WBSetBit(char* addr)
         Recycler* recycler = Recycler::recyclerList;
         while (recycler)
         {
-            auto heapBlock = recycler->FindHeapBlock((void*)((unsigned long)addr&~HeapInfo::ObjectAlignmentMask));
+            auto heapBlock = recycler->FindHeapBlock(reinterpret_cast<void*>(reinterpret_cast<unsigned long>(addr) & ~HeapInfo::ObjectAlignmentMask));
             if (heapBlock)
             {
                 heapBlock->WBSetBit(addr);
@@ -7627,7 +7627,7 @@ Recycler::WBSetBitRange(char* addr, uint count)
         Recycler* recycler = Recycler::recyclerList;
         while (recycler)
         {
-            auto heapBlock = recycler->FindHeapBlock((void*)((unsigned long)addr&~HeapInfo::ObjectAlignmentMask));
+            auto heapBlock = recycler->FindHeapBlock(reinterpret_cast<void*>(reinterpret_cast<unsigned long>(addr) & ~HeapInfo::ObjectAlignmentMask));
             if (heapBlock)
             {
                 heapBlock->WBSetBitRange(addr, count);
@@ -7644,7 +7644,7 @@ Recycler::WBCheckIsRecyclerAddress(char* addr)
     Recycler* recycler = Recycler::recyclerList;
     while (recycler)
     {
-        auto heapBlock = recycler->FindHeapBlock((void*)((unsigned long)addr&~HeapInfo::ObjectAlignmentMask));
+        auto heapBlock = recycler->FindHeapBlock(reinterpret_cast<void*>(reinterpret_cast<unsigned long>(addr) & ~HeapInfo::ObjectAlignmentMask));
         if (heapBlock)
         {
             return true;
@@ -7687,19 +7687,19 @@ RecyclerHeapObjectInfo::GetSize() const
     else
     {
         // All small heap block types have the same layout for the object size field.
-        size = ((SmallHeapBlock*)m_heapBlock)->GetObjectSize();
+        size = static_cast<SmallHeapBlock*>(m_heapBlock)->GetObjectSize();
     }
 
 #ifdef RECYCLER_MEMORY_VERIFY
     if (m_recycler->VerifyEnabled())
     {
-        size -= *(size_t *)(((char *)m_address) + size - sizeof(size_t));
+        size -= *reinterpret_cast<size_t*>(static_cast<char*>(m_address) + size - sizeof(size_t));
     }
 #endif
     return size;
 }
 
-template char* Recycler::AllocWithAttributesInlined<(Memory::ObjectInfoBits)32, false>(size_t);
+template char* Recycler::AllocWithAttributesInlined<static_cast<Memory::ObjectInfoBits>(32), false>(size_t);
 #ifdef RECYCLER_VISITED_HOST
 template char* Recycler::AllocZeroWithAttributesInlined<RecyclerVisitedHostTracedFinalizableBits, /* nothrow = */true>(size_t);
 template char* Recycler::AllocZeroWithAttributesInlined<RecyclerVisitedHostFinalizableBits, /* nothrow = */true>(size_t);

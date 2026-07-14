@@ -112,11 +112,11 @@ struct Allocation
         XDataAllocator* allocator;
         if (!this->IsLargeAllocation())
         {
-            allocator = static_cast<XDataAllocator*>(((Segment*)(this->page->segment))->GetSecondaryAllocator());
+            allocator = static_cast<XDataAllocator*>(static_cast<Segment*>(this->page->segment)->GetSecondaryAllocator());
         }
         else
         {
-            allocator = static_cast<XDataAllocator*>(((Segment*) (largeObjectAllocation.segment))->GetSecondaryAllocator());
+            allocator = static_cast<XDataAllocator*>(static_cast<Segment*>(largeObjectAllocation.segment)->GetSecondaryAllocator());
         }
         return allocator;
     }
@@ -164,7 +164,7 @@ public:
         char* address = nullptr;
         if (canAllocInPreReservedHeapPageSegment)
         {
-            address = this->preReservedHeapAllocator.Alloc(pages, (SegmentBase<TPreReservedAlloc>**)(segment));
+            address = this->preReservedHeapAllocator.Alloc(pages, reinterpret_cast<SegmentBase<TPreReservedAlloc>**>(segment));
         }
 
         if (address == nullptr)
@@ -173,7 +173,7 @@ public:
             {
                 *isAllJITCodeInPreReservedRegion = false;
             }
-            address = this->pageAllocator.Alloc(pages, (SegmentBase<TAlloc>**)segment);
+            address = this->pageAllocator.Alloc(pages, reinterpret_cast<SegmentBase<TAlloc>**>(segment));
         }
         return address;
     }
@@ -186,7 +186,7 @@ public:
         char * address = nullptr;
         if (canAllocInPreReservedHeapPageSegment)
         {
-            address = this->preReservedHeapAllocator.AllocPages(pages, (PageSegmentBase<TPreReservedAlloc>**)pageSegment);
+            address = this->preReservedHeapAllocator.AllocPages(pages, reinterpret_cast<PageSegmentBase<TPreReservedAlloc>**>(pageSegment));
 
             if (address == nullptr)
             {
@@ -200,7 +200,7 @@ public:
             {
                 *isAllJITCodeInPreReservedRegion = false;
             }
-            address = this->pageAllocator.AllocPages(pages, (PageSegmentBase<TAlloc>**)pageSegment);
+            address = this->pageAllocator.AllocPages(pages, reinterpret_cast<PageSegmentBase<TAlloc>**>(pageSegment));
         }
         else
         {
@@ -256,11 +256,11 @@ public:
         Assert(segment);
         if (IsPreReservedSegment(segment))
         {
-            secondaryAllocStateChangedCount += (uint)this->GetPreReservedPageAllocator(segment)->ReleaseSecondary(allocation, segment);
+            secondaryAllocStateChangedCount += static_cast<uint>(this->GetPreReservedPageAllocator(segment)->ReleaseSecondary(allocation, segment));
         }
         else
         {
-            secondaryAllocStateChangedCount += (uint)this->GetPageAllocator(segment)->ReleaseSecondary(allocation, segment);
+            secondaryAllocStateChangedCount += static_cast<uint>(this->GetPageAllocator(segment)->ReleaseSecondary(allocation, segment));
         }
     }
 
@@ -341,18 +341,18 @@ private:
 
     HeapPageAllocator<TAlloc>* GetPageAllocator(void * segmentParam)
     {
-        SegmentBase<TAlloc> * segment = (SegmentBase<TAlloc>*)segmentParam;
+        SegmentBase<TAlloc> * segment = static_cast<SegmentBase<TAlloc>*>(segmentParam);
         AssertMsg(segment, "Why is segment null?");
-        Assert((HeapPageAllocator<TAlloc>*)(segment->GetAllocator()) == &this->pageAllocator);
-        return (HeapPageAllocator<TAlloc> *)(segment->GetAllocator());
+        Assert(static_cast<HeapPageAllocator<TAlloc>*>(segment->GetAllocator()) == &this->pageAllocator);
+        return static_cast<HeapPageAllocator<TAlloc>*>(segment->GetAllocator());
     }
 
     HeapPageAllocator<TPreReservedAlloc>* GetPreReservedPageAllocator(void * segmentParam)
     {
-        SegmentBase<TPreReservedAlloc> * segment = (SegmentBase<TPreReservedAlloc>*)segmentParam;
+        SegmentBase<TPreReservedAlloc> * segment = static_cast<SegmentBase<TPreReservedAlloc>*>(segmentParam);
         AssertMsg(segment, "Why is segment null?");
-        Assert((HeapPageAllocator<TPreReservedAlloc>*)(segment->GetAllocator()) == &this->preReservedHeapAllocator);
-        return (HeapPageAllocator<TPreReservedAlloc> *)(segment->GetAllocator());
+        Assert(static_cast<HeapPageAllocator<TPreReservedAlloc>*>(segment->GetAllocator()) == &this->preReservedHeapAllocator);
+        return static_cast<HeapPageAllocator<TPreReservedAlloc>*>(segment->GetAllocator());
     }
 
     HeapPageAllocator<TAlloc>               pageAllocator;
@@ -394,7 +394,7 @@ public:
     // 2. Parent segment cannot allocate any more XDATA
     bool ShouldBeInFullList(Page* page)
     {
-        return page->HasNoSpace() || (codePageAllocators->AllocXdata() && !((Segment*)(page->segment))->CanAllocSecondary());
+        return page->HasNoSpace() || (codePageAllocators->AllocXdata() && !static_cast<Segment*>(page->segment)->CanAllocSecondary());
     }
 
     BOOL ProtectAllocation(Allocation* allocation, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag, __in_opt char* addressInPage = nullptr);
@@ -424,7 +424,7 @@ private:
     {
         size_t allocSize = AllocSizeMath::Add(bytes, AutoSystemInfo::PageSize);
 
-        if (allocSize == (size_t) -1)
+        if (allocSize == static_cast<size_t>(-1))
         {
             return 0;
         }
