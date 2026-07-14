@@ -176,12 +176,6 @@ typedef uint32_t DBGPROP_INFO_FLAGS;
 
 #define DBGPROP_INFO_ALL ((((((DBGPROP_INFO_NAME | DBGPROP_INFO_TYPE ) | DBGPROP_INFO_VALUE) | DBGPROP_INFO_FULLNAME) | DBGPROP_INFO_ATTRIBUTES) | DBGPROP_INFO_DEBUGPROP))
 
-#if defined _M_X64 || defined _M_ARM || defined _M_ARM64
-#define _UNALIGNED __unaligned
-#else
-#define _UNALIGNED
-#endif
-
 template <class T>
 inline T InterlockedExchangeAdd(
       T volatile *Addend,
