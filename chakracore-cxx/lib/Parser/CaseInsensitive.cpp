@@ -40,14 +40,14 @@ namespace UnifiedRegex
             {
                 Assert(c >= lo && c <= hi);
 
-                outEquiv[0] = Chars<Char>::UTC((lo + 1) % skipCountOfRange == c % skipCountOfRange ? (int)c + delta0 : c);
+                outEquiv[0] = Chars<Char>::UTC((lo + 1) % skipCountOfRange == c % skipCountOfRange ? static_cast<int>(c) + delta0 : c);
 
                 static_assert(CaseInsensitive::EquivClassSize == 4);
                 if (lo  % skipCountOfRange == c % skipCountOfRange)
                 {
-                    outEquiv[1] = Chars<Char>::ITC((int)c + delta1);
-                    outEquiv[2] = Chars<Char>::ITC((int)c + delta2);
-                    outEquiv[3] = Chars<Char>::ITC((int)c + delta3);
+                    outEquiv[1] = Chars<Char>::ITC(static_cast<int>(c) + delta1);
+                    outEquiv[2] = Chars<Char>::ITC(static_cast<int>(c) + delta2);
+                    outEquiv[3] = Chars<Char>::ITC(static_cast<int>(c) + delta3);
                 }
                 else
                 {

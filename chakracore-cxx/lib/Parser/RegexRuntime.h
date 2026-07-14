@@ -721,7 +721,7 @@ namespace UnifiedRegex
         static Label GetPrintLabel(Label label);
 
         template <typename T>
-        void PrintBytes(DebugWriter *w, Inst *inst, T *that, const char16_t *annotation) const;
+        void PrintBytes(DebugWriter *w, const Inst *inst, const T *that, const char16_t *annotation) const;
 #endif
     };
 

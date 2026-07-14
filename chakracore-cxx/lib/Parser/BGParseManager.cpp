@@ -83,13 +83,13 @@ BGParseManager::~BGParseManager()
     Assert(this->workitemsProcessing.IsEmpty());
 
     // Now, free all remaining processed jobs
-    BGParseWorkItem *item = (BGParseWorkItem*)this->workitemsProcessed.Head();
+    BGParseWorkItem *item = this->workitemsProcessed.Head();
     while (item != nullptr)
     {
         // Get the next item first so that the current item
         // can be safely removed and freed
         BGParseWorkItem* temp = item;
-        item = (BGParseWorkItem*)item->Next();
+        item = static_cast<BGParseWorkItem*>(item->Next());
 
         this->workitemsProcessed.Unlink(temp);
         HeapDelete(temp);
@@ -109,7 +109,7 @@ BGParseWorkItem* BGParseManager::FindJob(uint32_t dwCookie, bool waitForResults,
     BGParseWorkItem* matchedWorkitem = nullptr;
 
     // First, look among processed jobs
-    for (BGParseWorkItem *item = this->workitemsProcessed.Head(); item != nullptr && matchedWorkitem == nullptr; item = (BGParseWorkItem*)item->Next())
+    for (BGParseWorkItem *item = this->workitemsProcessed.Head(); item != nullptr && matchedWorkitem == nullptr; item = static_cast<BGParseWorkItem*>(item->Next()))
     {
         if (item->GetCookie() == dwCookie)
         {
@@ -124,7 +124,7 @@ BGParseWorkItem* BGParseManager::FindJob(uint32_t dwCookie, bool waitForResults,
     if (matchedWorkitem == nullptr)
     {
         // Then, look among processing jobs
-        for (BGParseWorkItem *item = this->workitemsProcessing.Head(); item != nullptr && matchedWorkitem == nullptr; item = (BGParseWorkItem*)item->Next())
+        for (BGParseWorkItem *item = this->workitemsProcessing.Head(); item != nullptr && matchedWorkitem == nullptr; item = static_cast<BGParseWorkItem*>(item->Next()))
         {
             if (item->GetCookie() == dwCookie)
             {
@@ -145,7 +145,7 @@ BGParseWorkItem* BGParseManager::FindJob(uint32_t dwCookie, bool waitForResults,
             Processor()->ForEachJob([&](JsUtil::Job * job) {
                 if (job->Manager() == this)
                 {
-                    BGParseWorkItem* workitem = (BGParseWorkItem*)job;
+                    BGParseWorkItem* workitem = static_cast<BGParseWorkItem*>(job);
                     if (workitem->GetCookie() == dwCookie)
                     {
                         matchedWorkitem = workitem;
@@ -183,7 +183,7 @@ int32_t BGParseManager::QueueBackgroundParse(LPCUTF8 pszSrc, size_t cbLength, ch
         BGParseWorkItem* workitem;
         {
             AUTO_NESTED_HANDLED_EXCEPTION_TYPE(ExceptionType_DisableCheck);
-            workitem = HeapNew(BGParseWorkItem, this, (const byte *)pszSrc, cbLength, fullPath);
+            workitem = HeapNew(BGParseWorkItem, this, pszSrc, cbLength, fullPath);
         }
 
         // Add the job to the processor
@@ -362,7 +362,7 @@ bool BGParseManager::Process(JsUtil::Job *const job, JsUtil::ParallelThreadData 
     }
     
     // Parse the workitem's data
-    BGParseWorkItem* workItem = (BGParseWorkItem*)job;
+    BGParseWorkItem* workItem = static_cast<BGParseWorkItem*>(job);
     workItem->ParseUTF8Core(threadData->scriptContextBG);
 
     return true;
@@ -378,7 +378,7 @@ void BGParseManager::JobProcessing(JsUtil::Job* job)
 {
     Assert(job->Manager() == this);
 
-    this->workitemsProcessing.LinkToEnd((BGParseWorkItem*)job);
+    this->workitemsProcessing.LinkToEnd(static_cast<BGParseWorkItem*>(job));
 }
 
 // Callback after the provided job was processed. succeeded is true if the job
@@ -388,7 +388,7 @@ void BGParseManager::JobProcessed(JsUtil::Job *const job, const bool succeeded)
 {
     Assert(job->Manager() == this);
 
-    BGParseWorkItem* workItem = (BGParseWorkItem*)job;
+    BGParseWorkItem* workItem = static_cast<BGParseWorkItem*>(job);
     if (succeeded)
     {
         Assert(!this->workitemsProcessed.Contains(workItem));
@@ -474,7 +474,7 @@ BGParseWorkItem::~BGParseWorkItem()
     {
         // When this workitem has been discarded, this is the last reference
         // to the script source, so free it now during destruction.
-        if (this->script) { free((void*)this->script); }
+        if (this->script) { free(const_cast<void*>(static_cast<const void*>(this->script))); }
     }
 }
 
@@ -518,9 +518,8 @@ void BGParseWorkItem::ParseUTF8Core(Js::ScriptContext* scriptContext)
         kmodGlobal, // mod
         0 // grfsi
     };
-
     ENTER_PINNED_SCOPE(Js::Utf8SourceInfo, sourceInfo);
-    sourceInfo = Js::Utf8SourceInfo::NewWithNoCopy(scriptContext, (LPUTF8)this->script, (int32_t)this->cb, static_cast<int32_t>(this->cb), &si, false);    
+    sourceInfo = Js::Utf8SourceInfo::NewWithNoCopy(scriptContext, this->script, static_cast<int32_t>(this->cb), static_cast<int32_t>(this->cb), &si, false);
 
     charcount_t cchLength = 0;
     uint sourceIndex = 0;
@@ -551,7 +550,7 @@ void BGParseWorkItem::ParseUTF8Core(Js::ScriptContext* scriptContext)
         this->parseHR = Js::ByteCodeSerializer::SerializeToBuffer(
             scriptContext,
             tempAllocator,
-            (uint32_t)this->cb,
+            static_cast<uint32_t>(this->cb),
             this->script,
             functionBody,
             functionBody->GetHostSrcInfo(),
@@ -599,14 +598,14 @@ int32_t BGParseWorkItem::DeserializeParseResults(
         }
 
         srcLength = this->parseSourceLength;
-        sourceIndex = scriptContextUI->SaveSourceNoCopy(utf8SourceInfo, (int)srcLength, false /*isCesu8*/);
+        sourceIndex = scriptContextUI->SaveSourceNoCopy(utf8SourceInfo, static_cast<int>(srcLength), false /*isCesu8*/);
         Assert(sourceIndex != Js::Constants::InvalidSourceIndex);
 
         typename WriteBarrierFieldTypeTraits<Js::FunctionBody*>::Type functionBody = nullptr;
         hr = Js::ByteCodeSerializer::DeserializeFromBuffer(
             scriptContextUI,
             BGPARSE_FLAGS,
-            (const byte *)pszSrc,
+            pszSrc,
             pSrcInfo,
             this->bufferReturn,
             nullptr, // nativeModule

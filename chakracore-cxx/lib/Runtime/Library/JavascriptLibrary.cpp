@@ -5812,7 +5812,7 @@ namespace Js
 
     JavascriptSymbol* JavascriptLibrary::CreateSymbol(const char16_t* description, int descriptionLength)
     {
-        ENTER_PINNED_SCOPE(const Js::PropertyRecord, propertyRecord);
+        ENTER_PINNED_SCOPE_CONST(Js::PropertyRecord, propertyRecord);
 
         propertyRecord = this->scriptContext->GetThreadContext()->UncheckedAddPropertyId(description, descriptionLength, /*bind*/false, /*isSymbol*/true);
 

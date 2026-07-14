@@ -22,7 +22,7 @@ uint32_t CaseSensitiveComputeHash(LPCOLESTR prgch, LPCOLESTR end)
 
     while (prgch < end)
     {
-        luHash = 17 * luHash + *(char16_t *)prgch++;
+        luHash = 17 * luHash + *const_cast<char16_t*>(prgch++);
     }
     return luHash;
 }
@@ -55,7 +55,7 @@ uint32_t CaseInsensitiveComputeHash(LPCOLESTR posz)
 {
     uint32_t luHash = 0;
     char16_t ch;
-    while (0 != (ch = *(char16_t *)posz++))
+    while (0 != (ch = *const_cast<char16_t*>(posz++)))
     {
         if (ch <= 'Z' && ch >= 'A')
             ch += 'a' - 'A';

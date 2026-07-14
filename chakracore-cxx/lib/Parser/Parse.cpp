@@ -784,7 +784,7 @@ LabelId* Parser::CreateLabelId(IdentPtr pid)
 {
     LabelId* pLabelId;
 
-    pLabelId = (LabelId*)m_nodeAllocator.Alloc(sizeof(LabelId));
+    pLabelId = reinterpret_cast<LabelId*>(m_nodeAllocator.Alloc(sizeof(LabelId)));
     if (NULL == pLabelId)
         Error(ERRnoMemory);
     pLabelId->pid = pid;
@@ -1418,7 +1418,7 @@ Symbol* Parser::AddDeclForPid(ParseNodeVar * pnodeVar, IdentPtr pid, SymbolType 
 
         if (!sym)
         {
-            const char16_t *name = reinterpret_cast<const char16_t*>(pid->Psz());
+            const char16_t *name = pid->Psz();
             int nameLength = pid->Cch();
             SymbolName const symName(name, nameLength);
 
@@ -1918,7 +1918,7 @@ void Parser::BindPidRefsInScope(IdentPtr pid, Symbol *sym, int blockId, uint max
         Assert(!ref->GetSym() || ref->GetSym() == sym);
         nextRef = ref->prev;
         Assert(ref->GetScopeId() >= 0);
-        if ((uint)ref->GetScopeId() > maxBlockId)
+        if (static_cast<uint>(ref->GetScopeId()) > maxBlockId)
         {
             lastRef = ref;
             continue;
@@ -2037,7 +2037,7 @@ void Parser::PopStmt(StmtNest *pStmt)
 
 BlockInfoStack *Parser::PushBlockInfo(ParseNodeBlock * pnodeBlock)
 {
-    BlockInfoStack *newBlockInfo = (BlockInfoStack *)m_nodeAllocator.Alloc(sizeof(BlockInfoStack));
+    BlockInfoStack *newBlockInfo = reinterpret_cast<BlockInfoStack*>(m_nodeAllocator.Alloc(sizeof(BlockInfoStack)));
     Assert(nullptr != newBlockInfo);
 
     newBlockInfo->pnodeBlock = pnodeBlock;
@@ -2073,7 +2073,7 @@ void Parser::PushDynamicBlock()
     {
         return;
     }
-    BlockIdsStack *info = (BlockIdsStack *)m_nodeAllocator.Alloc(sizeof(BlockIdsStack));
+    BlockIdsStack *info = reinterpret_cast<BlockIdsStack*>(m_nodeAllocator.Alloc(sizeof(BlockIdsStack)));
     if (nullptr == info)
     {
         Error(ERRnoMemory);
@@ -4504,7 +4504,7 @@ ParseNodePtr Parser::ParseArrayList(bool *pArrayOfTaggedInts, bool *pArrayOfInts
                 }
                 else
                 {
-                    if (Js::SparseArraySegment<int32_t>::IsMissingItem((int32_t*)&pnodeArg->AsParseNodeInt()->lw))
+                    if (Js::SparseArraySegment<int32_t>::IsMissingItem(&pnodeArg->AsParseNodeInt()->lw))
                     {
                         arrayOfInts = false;
                     }
@@ -6256,7 +6256,7 @@ void Parser::ParseTopLevelDeferredFunc(ParseNodeFnc * pnodeFnc, ParseNodeFnc * p
 
         pnodeFnc->nestedCount = stub->nestedCount;
         pnodeFnc->deferredStub = stub->deferredStubs;
-        pnodeFnc->fncFlags = (FncFlags)(pnodeFnc->fncFlags | stub->fncFlags);
+        pnodeFnc->fncFlags = static_cast<FncFlags>(pnodeFnc->fncFlags | stub->fncFlags);
     }
     else
     {
@@ -6418,7 +6418,7 @@ bool Parser::FastScanFormalsAndBody()
             }
             if (curlyDepth < maxRestorePointDepth)
             {
-                lastSColonAtCurlyDepth[curlyDepth].restorePoint.m_ichMinTok = (uint)-1;
+                lastSColonAtCurlyDepth[curlyDepth].restorePoint.m_ichMinTok = static_cast<uint>(-1);
             }
             curlyDepth--;
             if (strTmplDepth > 0)
@@ -6477,7 +6477,7 @@ bool Parser::FastScanFormalsAndBody()
                 else if (!memcmp(this->GetScanner()->PchMinTok(), "class", 5))
                 {
                     Int32Math::Inc(m_nextBlockId, &m_nextBlockId);
-                    Int32Math::Inc(*this->m_nextFunctionId, (int*)this->m_nextFunctionId);
+                    Int32Math::Inc(*this->m_nextFunctionId, reinterpret_cast<int*>(this->m_nextFunctionId));
                 }
                 break;
             case 8:
@@ -6485,7 +6485,7 @@ bool Parser::FastScanFormalsAndBody()
                 {
                     // Account for the possible func expr scope or dummy block for missing {}'s around a declaration
                     Int32Math::Inc(m_nextBlockId, &m_nextBlockId);
-                    Int32Math::Inc(*this->m_nextFunctionId, (int*)this->m_nextFunctionId);
+                    Int32Math::Inc(*this->m_nextFunctionId, reinterpret_cast<int*>(this->m_nextFunctionId));
                 }
                 break;
             }
@@ -6494,7 +6494,7 @@ bool Parser::FastScanFormalsAndBody()
 
         case tkDArrow:
             Int32Math::Inc(m_nextBlockId, &m_nextBlockId);
-            Int32Math::Inc(*this->m_nextFunctionId, (int*)this->m_nextFunctionId);
+            Int32Math::Inc(*this->m_nextFunctionId, reinterpret_cast<int*>(this->m_nextFunctionId));
             break;
 
         case tkDiv:
@@ -6520,7 +6520,7 @@ bool Parser::FastScanFormalsAndBody()
                 break;
             }
             uint tempCurlyDepth = curlyDepth < maxRestorePointDepth ? curlyDepth : maxRestorePointDepth - 1;
-            for (; tempCurlyDepth != (uint)-1; tempCurlyDepth--)
+            for (; tempCurlyDepth != static_cast<uint>(-1); tempCurlyDepth--)
             {
                 // We don't know whether we've got a RegExp or a divide. Rewind to the last safe ";"
                 // if we can and parse statements until we pass this point.
@@ -6529,7 +6529,7 @@ bool Parser::FastScanFormalsAndBody()
                     break;
                 }
             }
-            if (tempCurlyDepth != (uint)-1)
+            if (tempCurlyDepth != static_cast<uint>(-1))
             {
                 ParseNodeFnc * pnodeFncSave = m_currentNodeFunc;
                 int32_t *pastSizeSave = m_pCurrentAstSize;
@@ -7768,7 +7768,7 @@ LPCOLESTR Parser::ConstructFinalHintNode(IdentPtr pClassName, IdentPtr pMemberNa
     }
 
     LPCOLESTR pFinalName = isComputedName ? pMemberNameHint : pMemberName->Psz();
-    uint32_t fullNameHintLength = (uint32_t)std::u16string(pFinalName).length();
+    uint32_t fullNameHintLength = static_cast<uint32_t>(std::u16string(pFinalName).length());
     uint32_t shortNameOffset = 0;
     if (!isStatic)
     {
@@ -8495,22 +8495,22 @@ LPCOLESTR Parser::AppendNameHints(LPCOLESTR leftStr, uint32_t leftLen, LPCOLESTR
 
     if (ignoreAddDotWithSpace)
     {
-        finalName[leftLen++] = (OLECHAR)u' ';
+        finalName[leftLen++] = u' ';
     }
     // mutually exclusive from ignoreAddDotWithSpace which is used for getters/setters
 
     else if (wrapInBrackets)
     {
-        finalName[leftLen++] = (OLECHAR)u'[';
-        finalName[totalLength - 2] = (OLECHAR)u']';
+        finalName[leftLen++] = u'[';
+        finalName[totalLength - 2] = u']';
     }
     else if (!ignoreDot)
     {
-        finalName[leftLen++] = (OLECHAR)u'.';
+        finalName[leftLen++] = u'.';
     }
     //ignore case falls through
     js_wmemcpy_s(finalName + leftLen, rightLen, rightStr, rightLen);
-    finalName[totalLength - 1] = (OLECHAR)u'\0';
+    finalName[totalLength - 1] = static_cast<OLECHAR>(u'\0');
 
     if (pNameLength != nullptr)
     {
@@ -8532,7 +8532,7 @@ char16_t * Parser::AllocateStringOfLength(uint32_t length)
     {
         Error(ERRnoMemory);
     }
-    char16_t* finalName = (char16_t*)this->GetHashTbl()->GetAllocator()->Alloc(totalBytes);
+    char16_t* finalName = static_cast<char16_t*>(this->GetHashTbl()->GetAllocator()->Alloc(totalBytes));
     if (finalName == nullptr)
     {
         Error(ERRnoMemory);
@@ -8578,7 +8578,7 @@ LPCOLESTR Parser::AppendNameHints(IdentPtr left, IdentPtr right, uint32_t *pName
 
 LPCOLESTR Parser::AppendNameHints(IdentPtr left, LPCOLESTR right, uint32_t *pNameLength, uint32_t *pShortNameOffset, bool ignoreAddDotWithSpace, bool wrapInBrackets)
 {
-    uint32_t rightLen = (right == nullptr) ? 0 : (uint32_t)std::u16string(right).length();
+    uint32_t rightLen = (right == nullptr) ? 0 : static_cast<uint32_t>(std::u16string(right).length());
 
     if (pShortNameOffset != nullptr)
     {
@@ -8613,7 +8613,7 @@ LPCOLESTR Parser::AppendNameHints(IdentPtr left, LPCOLESTR right, uint32_t *pNam
 
 LPCOLESTR Parser::AppendNameHints(LPCOLESTR left, IdentPtr right, uint32_t *pNameLength, uint32_t *pShortNameOffset, bool ignoreAddDotWithSpace, bool wrapInBrackets)
 {
-    uint32_t leftLen = (left == nullptr) ? 0 : (uint32_t)std::u16string(left).length();
+    uint32_t leftLen = (left == nullptr) ? 0 : static_cast<uint32_t>(std::u16string(left).length());
 
     if (pShortNameOffset != nullptr)
     {
@@ -8645,8 +8645,8 @@ LPCOLESTR Parser::AppendNameHints(LPCOLESTR left, IdentPtr right, uint32_t *pNam
 
 LPCOLESTR Parser::AppendNameHints(LPCOLESTR left, LPCOLESTR right, uint32_t *pNameLength, uint32_t *pShortNameOffset, bool ignoreAddDotWithSpace, bool wrapInBrackets)
 {
-    uint32_t leftLen = (left == nullptr) ? 0 : (uint32_t)std::u16string(left).length();
-    uint32_t rightLen = (right == nullptr) ? 0 : (uint32_t)std::u16string(right).length();
+    uint32_t leftLen = (left == nullptr) ? 0 : static_cast<uint32_t>(std::u16string(left).length());
+    uint32_t rightLen = (right == nullptr) ? 0 : static_cast<uint32_t>(std::u16string(right).length());
     if (pShortNameOffset != nullptr)
     {
         *pShortNameOffset = 0;
@@ -9935,7 +9935,7 @@ ParseNodeCatch * Parser::ParseCatch()
             ParseNodeName * pnodeParam = CreateNameNode(pidCatch);
             pnodeParam->SetSymRef(ref);
 
-            const char16_t *name = reinterpret_cast<const char16_t*>(pidCatch->Psz());
+            const char16_t *name = pidCatch->Psz();
             int nameLength = pidCatch->Cch();
             SymbolName const symName(name, nameLength);
             Symbol *sym = Anew(&m_nodeAllocator, Symbol, symName, pnodeParam, STVariable);
@@ -14446,8 +14446,8 @@ void DumpCapturedNames(ParseNodeFnc* pnodeFnc, IdentPtrSet* capturedNames, Arena
     });
 
     sortedNames->Sort([](void* context, const void* left, const void* right) -> int {
-        const IdentPtr leftIdentPtr = *(const IdentPtr*)(left);
-        const IdentPtr rightIdentPtr = *(const IdentPtr*)(right);
+        const IdentPtr leftIdentPtr = *static_cast<const IdentPtr*>(left);
+        const IdentPtr rightIdentPtr = *static_cast<const IdentPtr*>(right);
         return ::PAL_wcscmp(leftIdentPtr->Psz(), rightIdentPtr->Psz());
     }, nullptr);
 

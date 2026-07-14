@@ -4972,7 +4972,7 @@ int32_t ByteCodeSerializer::DeserializeFromBufferInternal(ScriptContext * script
     }
 
     ENTER_PINNED_SCOPE(Js::Utf8SourceInfo, sourceInfo);
-    ENTER_PINNED_SCOPE(SRCINFO const, pinnedSrcInfo);
+    ENTER_PINNED_SCOPE_CONST(SRCINFO, pinnedSrcInfo);
     pinnedSrcInfo = srcInfo;
 
     if(sourceIndex == Js::Constants::InvalidSourceIndex)

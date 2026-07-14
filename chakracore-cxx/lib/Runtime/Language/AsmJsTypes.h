@@ -70,7 +70,7 @@ namespace Js
 #include "AsmJsArrayBufferViews.h"
         };
 
-#define ARRAYBUFFER_VIEW_MASK(align) ((uint32_t)~((1 << align) - 1))
+#define ARRAYBUFFER_VIEW_MASK(align) (static_cast<uint32_t>(~((1 << align) - 1)))
         const uint32_t ViewMask[] =
         {
 #define ARRAYBUFFER_VIEW(name, align, ...) ARRAYBUFFER_VIEW_MASK(align),
@@ -520,14 +520,14 @@ namespace Js
     {
         inline static bool Equals(float x, float y)
         {
-            int32_t i32x = *(int32_t*)&x;
-            int32_t i32y = *(int32_t*)&y;
+            int32_t i32x = *reinterpret_cast<int32_t*>(&x);
+            int32_t i32y = *reinterpret_cast<int32_t*>(&y);
             return i32x == i32y;
         }
 
         inline static hash_t GetHashCode(float i)
         {
-            return (hash_t)i;
+            return static_cast<hash_t>(i);
         }
     };
 
@@ -536,15 +536,15 @@ namespace Js
     {
         inline static bool Equals(double x, double y)
         {
-            long i64x = *(long*)&x;
-            long i64y = *(long*)&y;
+            long i64x = *reinterpret_cast<long*>(&x);
+            long i64y = *reinterpret_cast<long*>(&y);
             return i64x == i64y;
         }
 
         inline static hash_t GetHashCode(double d)
         {
-            long i64 = *(long*)&d;
-            return (uint)((i64 >> 32) ^ (uint)i64);
+            long i64 = *reinterpret_cast<long*>(&d);
+            return static_cast<uint>((i64 >> 32) ^ static_cast<uint>(i64));
         }
     };
 
@@ -786,7 +786,7 @@ namespace Js
         inline void SetDeferred() { mDeferred = true; }
         inline bool IsDeferred()const { return mDeferred; }
         template<typename T> inline AsmJsRegisterSpace<T>& GetRegisterSpace() {
-            return *(AsmJsRegisterSpace<T>*)mTypedRegisterAllocator.GetRegisterSpace(WAsmJs::FromPrimitiveType<T>());
+            return *static_cast<AsmJsRegisterSpace<T>*>(mTypedRegisterAllocator.GetRegisterSpace(WAsmJs::FromPrimitiveType<T>()));
         }
         const WAsmJs::TypedRegisterAllocator& GetTypedRegisterAllocator() const { return mTypedRegisterAllocator; }
 

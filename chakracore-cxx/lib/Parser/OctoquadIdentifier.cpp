@@ -37,7 +37,7 @@ namespace UnifiedRegex
             }
             else {
                 // number of trigram
-                trigramMap[i]=(char)((t1<<4)+(t2<<2)+t3);
+                trigramMap[i]=static_cast<char>((t1 << 4) + (t2 << 2) + t3);
             }
         }
 
@@ -277,7 +277,7 @@ namespace UnifiedRegex
     OctoquadMatcher::OctoquadMatcher(const StandardChars<Char>* standardChars, CaseInsensitive::MappingSource mappingSource, OctoquadIdentifier* identifier)
     {
         for (int i = 0; i < TrigramAlphabet::AlphaCount; i++)
-            codeToChar[i] = (Char)identifier->codeToChar[i];
+            codeToChar[i] = static_cast<Char>(identifier->codeToChar[i]);
 
         for (int i = 0; i < TrigramAlphabet::AsciiTableSize; i++)
             charToBits[i] = 0;
@@ -299,7 +299,7 @@ namespace UnifiedRegex
             for (int j = 0; j < TrigramInfo::PatternLength; j++)
             {
                 patterns[i] <<= 4;
-                patterns[i] |= (uint32_t)identifier->patternBits[i][j];
+                patterns[i] |= static_cast<uint32_t>(identifier->patternBits[i][j]);
             }
         }
     }

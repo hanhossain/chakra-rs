@@ -22,7 +22,7 @@ static BOOL FGetStringFromLibrary(HMODULE hlib, int istring, __out_ecount(cchMax
 
 BOOL FGetResourceString(int32_t isz, __out_ecount(cchMax) OLECHAR *psz, int cchMax)
 {
-    return FGetStringFromLibrary((HINSTANCE)g_hInstance, isz, psz, cchMax);
+    return FGetStringFromLibrary(g_hInstance, isz, psz, cchMax);
 }
 
 // Get a bstr version of the error string
@@ -33,7 +33,7 @@ BSTR BstrGetResourceString(int32_t isz)
 
     const char16_t* LoadResourceStr(uint32_t id);
 
-    uint32_t id = (uint16_t)isz;
+    uint32_t id = static_cast<uint16_t>(isz);
     const char16_t* szT = LoadResourceStr(id);
     if (!szT || !szT[0])
     {

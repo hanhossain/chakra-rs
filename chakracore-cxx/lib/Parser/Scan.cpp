@@ -125,8 +125,8 @@ void Scanner<EncodingPolicy>::ClearStates()
     m_startLine = 0;
     m_pchStartLine = NULL;
 
-    m_iecpLimTokPrevious = (size_t)-1;
-    m_ichLimTokPrevious = (charcount_t)-1;
+    m_iecpLimTokPrevious = static_cast<size_t>(-1);
+    m_ichLimTokPrevious = static_cast<charcount_t>(-1);
 }
 
 template <typename EncodingPolicy>
@@ -182,8 +182,8 @@ void Scanner<EncodingPolicy>::SetText(EncodedCharPtr pszSrc, size_t offset, size
 template <typename EncodingPolicy>
 void Scanner<EncodingPolicy>::PrepareForBackgroundParse(Js::ScriptContext *scriptContext)
 {
-    scriptContext->GetThreadContext()->GetStandardChars((EncodedChar*)0);
-    scriptContext->GetThreadContext()->GetStandardChars((char16_t*)0);
+    scriptContext->GetThreadContext()->GetStandardChars(static_cast<EncodedChar*>(0));
+    scriptContext->GetThreadContext()->GetStandardChars(static_cast<char16_t*>(0));
 }
 #endif
 
@@ -515,7 +515,7 @@ tokens Scanner<EncodingPolicy>::ScanIdentifierContinue(bool identifyKwds, bool f
         DebugOnly(tokens tk = Ident::TkFromNameLen(m_tempChBuf.m_prgch, cch, IsStrictMode()));
         Assert(tk == tkID || (tk == tkYIELD && !this->YieldIsKeyword()) || (tk == tkAWAIT && !this->AwaitIsKeyword()));
 
-        m_ptoken->SetIdentifier(reinterpret_cast<const char *>(pchMin), (int32_t)(p - pchMin));
+        m_ptoken->SetIdentifier(reinterpret_cast<const char *>(pchMin), static_cast<int32_t>(p - pchMin));
         return tkID;
     }
 
@@ -557,7 +557,7 @@ uint32_t Scanner<EncodingPolicy>::UnescapeToTempBuf(EncodedCharPtr p, EncodedCha
         Assert(codePoint < 0x110000);
         if (codePoint < 0x10000)
         {
-            m_tempChBuf.AppendCh((OLECHAR)codePoint);
+            m_tempChBuf.AppendCh(static_cast<OLECHAR>(codePoint));
         }
         else
         {
@@ -590,12 +590,12 @@ IdentPtr Scanner<EncodingPolicy>::PidOfIdentiferAt(EncodedCharPtr p, EncodedChar
     else if (EncodingPolicy::MultiUnitEncoding)
     {
         Assert(sizeof(EncodedChar) == 1);
-        return this->GetHashTbl()->PidHashNameLen(reinterpret_cast<const char *>(p), reinterpret_cast<const char *>(last), (int32_t)(last - p));
+        return this->GetHashTbl()->PidHashNameLen(reinterpret_cast<const char *>(p), reinterpret_cast<const char *>(last), static_cast<int32_t>(last - p));
     }
     else
     {
         Assert(sizeof(EncodedChar) == 2);
-        return this->GetHashTbl()->PidHashNameLen(reinterpret_cast< const char16_t * >(p), (int32_t)(last - p));
+        return this->GetHashTbl()->PidHashNameLen(reinterpret_cast< const char16_t * >(p), static_cast<int32_t>(last - p));
     }
 }
 
@@ -698,9 +698,9 @@ LIdCheck:
     // If a base was speficied, use the first character denoting the constant. In this case, pchT is pointing to the base specifier.
     EncodedCharPtr startingLocation = baseSpecified ? pchT + 1 : pchT;
     codepoint_t outChar = *startingLocation;
-    if (this->IsMultiUnitChar((OLECHAR)outChar))
+    if (this->IsMultiUnitChar(static_cast<OLECHAR>(outChar)))
     {
-        outChar = this->template ReadRest<true>((OLECHAR)outChar, startingLocation, last);
+        outChar = this->template ReadRest<true>(static_cast<OLECHAR>(outChar), startingLocation, last);
     }
     if (this->charClassifier->IsIdStart(outChar))
     {
@@ -858,8 +858,8 @@ tokens Scanner<EncodingPolicy>::ScanRegExpConstant(ArenaAllocator* alloc)
     m_scriptContext->ProfileBegin(Js::RegexCompilePhase);
 #endif
     ArenaAllocator* ctAllocator = alloc;
-    UnifiedRegex::StandardChars<EncodedChar>* standardEncodedChars = m_scriptContext->GetThreadContext()->GetStandardChars((EncodedChar*)0);
-    UnifiedRegex::StandardChars<char16_t>* standardChars = m_scriptContext->GetThreadContext()->GetStandardChars((char16_t*)0);
+    UnifiedRegex::StandardChars<EncodedChar>* standardEncodedChars = m_scriptContext->GetThreadContext()->GetStandardChars(static_cast<EncodedChar*>(0));
+    UnifiedRegex::StandardChars<char16_t>* standardChars = m_scriptContext->GetThreadContext()->GetStandardChars(static_cast<char16_t*>(0));
 #if ENABLE_REGEX_CONFIG_OPTIONS
     UnifiedRegex::DebugWriter *w = 0;
     if (REGEX_CONFIG_FLAG(RegexDebug))
@@ -915,8 +915,8 @@ tokens Scanner<EncodingPolicy>::ScanRegExpConstantNoAST(ArenaAllocator* alloc)
     PROBE_STACK_NO_DISPOSE(m_scriptContext, Js::Constants::MinStackRegex);
 
     ThreadContext *threadContext = m_scriptContext->GetThreadContext();
-    UnifiedRegex::StandardChars<EncodedChar>* standardEncodedChars = threadContext->GetStandardChars((EncodedChar*)0);
-    UnifiedRegex::StandardChars<char16_t>* standardChars = threadContext->GetStandardChars((char16_t*)0);
+    UnifiedRegex::StandardChars<EncodedChar>* standardEncodedChars = threadContext->GetStandardChars(static_cast<EncodedChar*>(0));
+    UnifiedRegex::StandardChars<char16_t>* standardChars = threadContext->GetStandardChars(static_cast<char16_t*>(0));
     charcount_t totalLen = 0, bodyChars = 0, totalChars = 0, bodyLen = 0;
     UnifiedRegex::Parser<EncodingPolicy, true> parser
             ( m_scriptContext
@@ -1139,7 +1139,7 @@ LMainDefault:
             // In raw mode, we append the raw char itself and not the escaped value so save the char.
             rawch = ch = this->ReadFirst(p, last);
             codepoint_t codePoint = 0;
-            uint errorType = (uint)ERRbadHexDigit;
+            uint errorType = static_cast<uint>(ERRbadHexDigit);
             switch (ch)
             {
             case 'b':
@@ -1199,14 +1199,14 @@ LMainDefault:
 
                     if (codePoint > 0x10FFFF)
                     {
-                        errorType = (uint)ERRInvalidCodePoint;
+                        errorType = static_cast<uint>(ERRInvalidCodePoint);
                         goto ReturnScanError;
                     }
                 }
 
                 if (c != '}')
                 {
-                    errorType = (uint)ERRMissingCurlyBrace;
+                    errorType = static_cast<uint>(ERRMissingCurlyBrace);
                     goto ReturnScanError;
                 }
 
@@ -1220,7 +1220,7 @@ LMainDefault:
                 }
                 else
                 {
-                    ch = (char16_t)codePoint;
+                    ch = static_cast<char16_t>(codePoint);
                 }
 
                 // In raw mode we want the last hex character or the closing curly. c should hold one or the other.
@@ -1284,16 +1284,16 @@ LTwoHex:
                     c = this->PeekFirst(p, last);
                     if (ch != 0 || (c >= '0' && c <= '7'))
                     {
-                        errorType = (uint)ERRES5NoOctal;
+                        errorType = static_cast<uint>(ERRES5NoOctal);
                         goto ReturnScanError;
                     }
                     break;
                 }
 
                 wT = (c = this->ReadFirst(p, last)) - '0';
-                if ((char16_t)wT > 7)
+                if (static_cast<char16_t>(wT) > 7)
                 {
-                    if (ch != 0 || ((char16_t)wT <= 9))
+                    if (ch != 0 || (static_cast<char16_t>(wT) <= 9))
                     {
                         m_OctOrLeadingZeroOnLastTKNumber = true;
                     }
@@ -1313,7 +1313,7 @@ LTwoHex:
                 // Octal escape sequences are not allowed inside string template literals
                 if (stringTemplateMode)
                 {
-                    errorType = (uint)ERRES5NoOctal;
+                    errorType = static_cast<uint>(ERRES5NoOctal);
                     goto ReturnScanError;
                 }
 
@@ -1323,7 +1323,7 @@ LTwoHex:
 
 LOneOctal:
                 wT = (c = this->ReadFirst(p, last)) - '0';
-                if ((char16_t)wT > 7)
+                if (static_cast<char16_t>(wT) > 7)
                 {
                     p--;
                     break;
@@ -1371,7 +1371,7 @@ LEcmaEscapeLineBreak:
             case 0:
                 if (p >= last)
                 {
-                    errorType = (uint)ERRnoStrEnd;
+                    errorType = static_cast<uint>(ERRnoStrEnd);
 
 ReturnScanError:
                     m_currentCharacter = p - 1;
@@ -1629,7 +1629,7 @@ LLoop:
         m_cMinTokMultiUnits = this->m_cMultiUnits;
         ch = this->ReadFirst(p, last);
 #if DEBUG
-        chType = this->charClassifier->GetCharType((OLECHAR)ch);
+        chType = this->charClassifier->GetCharType(static_cast<OLECHAR>(ch));
 #endif
         switch (ch)
         {
@@ -1641,10 +1641,10 @@ LDefault:
                 goto LNewLine;
             }
             {
-                BOOL isMultiUnit = this->IsMultiUnitChar((OLECHAR)ch);
+                BOOL isMultiUnit = this->IsMultiUnitChar(static_cast<OLECHAR>(ch));
                 if (isMultiUnit)
                 {
-                    ch = this->template ReadRest<true>((OLECHAR)ch, p, last);
+                    ch = this->template ReadRest<true>(static_cast<OLECHAR>(ch), p, last);
                 }
 
                 if (es6UnicodeMode && Js::NumberUtilities::IsSurrogateLowerPart(ch))
@@ -1655,7 +1655,7 @@ LDefault:
                     {
                         // Consume the rest of the utf8 bytes for the codepoint
                         [[maybe_unused]] OLECHAR decodedUpper = this->ReadSurrogatePairUpper(p, last);
-                        Assert(decodedUpper == (OLECHAR) upper);
+                        Assert(decodedUpper == static_cast<OLECHAR>(upper));
                         ch = Js::NumberUtilities::SurrogatePairAsCodePoint(ch, upper);
                     }
                 }
@@ -1740,7 +1740,7 @@ LEof:
                     Assert(m_scriptContext->GetConfig()->IsESBigIntEnabled());
                     AssertOrFailFast(pchT - p < UINT_MAX);
                     token = tkBigIntCon;
-                    m_ptoken->SetBigInt(this->GetHashTbl()->PidHashNameLen(p, pchT, (uint32_t) (pchT - p)));
+                    m_ptoken->SetBigInt(this->GetHashTbl()->PidHashNameLen(p, pchT, static_cast<uint32_t>(pchT - p)));
                     p = pchT;
                     break;
                 }
@@ -1836,7 +1836,7 @@ LTarget:
         case '$': case '_':
 LIdentifier:
             Assert(this->charClassifier->IsIdStart(ch));
-            Assert(ch < 0x10000 && !this->IsMultiUnitChar((OLECHAR)ch));
+            Assert(ch < 0x10000 && !this->IsMultiUnitChar(static_cast<OLECHAR>(ch)));
             token = ScanIdentifierContinue(identifyKwds, false, false, m_pchMinTok, p, &p);
             break;
 
@@ -2018,7 +2018,7 @@ LEcmaCommentLineBreak:
 LCommentLineBreak:
                         // Subtract the comment length from the total char count for the purpose
                         // of deciding whether to defer AST and byte code generation.
-                        m_parser->ReduceDeferredScriptLength((uint32_t)(p - m_pchMinTok));
+                        m_parser->ReduceDeferredScriptLength(static_cast<uint32_t>(p - m_pchMinTok));
                         break;
                     case kchNUL:
                         // Because we used ReadFirst, we have advanced p. The character that we are looking at is actually is p - 1.
@@ -2032,11 +2032,11 @@ LCommentLineBreak:
                         continue;
 
                     default:
-                        if (this->IsMultiUnitChar((OLECHAR)ch))
+                        if (this->IsMultiUnitChar(static_cast<OLECHAR>(ch)))
                         {
                             pchT = p - 1;
                             multiUnits = this->m_cMultiUnits;
-                            switch (ch = this->template ReadRest<true>((OLECHAR)ch, p, last))
+                            switch (ch = this->template ReadRest<true>(static_cast<OLECHAR>(ch), p, last))
                             {
                                 case kchLS:
                                 case kchPS:
@@ -2060,7 +2060,7 @@ LCommentLineBreak:
                 {
                     // Subtract the comment length from the total char count for the purpose
                     // of deciding whether to defer AST and byte code generation.
-                    m_parser->ReduceDeferredScriptLength((uint32_t)(pchT - m_pchMinTok));
+                    m_parser->ReduceDeferredScriptLength(static_cast<uint32_t>(pchT - m_pchMinTok));
                     p = pchT;
                     goto LLoop;
                 }
@@ -2187,7 +2187,7 @@ LCommentLineBreak:
         case '"':
             Assert(chType == _C_QUO || chType == _C_APO);
             pchT = p;
-            token = this->ScanStringConstant((OLECHAR)ch, &pchT);
+            token = this->ScanStringConstant(static_cast<OLECHAR>(ch), &pchT);
             p = pchT;
             break;
         }

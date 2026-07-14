@@ -14,7 +14,7 @@ static_assert(JSERR_CantExecute == 0x800A1393);
 // verify HR matches between public SDK and private (.h) files
 static_assert(JSCRIPT_E_CANTEXECUTE == JSPUBLICERR_CantExecute);
 // verify the HR value (as MAKE_HRESULT(SEVERITY_ERROR, FACILITY_JSCRIPT, 0x0001))
-static_assert(JSPUBLICERR_CantExecute == ((int32_t)0x89020001L));
+static_assert(JSPUBLICERR_CantExecute == static_cast<int32_t>(0x89020001L));
 
 // /PUBLIC ERROR codes
 

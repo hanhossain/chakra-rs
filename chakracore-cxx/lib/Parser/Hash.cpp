@@ -46,7 +46,7 @@ BOOL HashTbl::Init(uint cidHash)
         return FALSE;
 
     cb = cbTemp;
-    if (nullptr == (m_prgpidName = (Ident **)m_noReleaseAllocator.Alloc(cb)))
+    if (nullptr == (m_prgpidName = static_cast<Ident**>(m_noReleaseAllocator.Alloc(cb))))
         return FALSE;
     memset(m_prgpidName, 0, cb);
 
@@ -73,7 +73,7 @@ void HashTbl::Grow()
     int32_t cb = cbTemp;
     uint n_luMask = n_cidHash - 1;
 
-    IdentPtr *n_prgpidName = (IdentPtr *)m_noReleaseAllocator.Alloc(cb);
+    IdentPtr *n_prgpidName = static_cast<IdentPtr*>(m_noReleaseAllocator.Alloc(cb));
     if (n_prgpidName == nullptr)
         // It is fine to exit early here, we will just have a potentially densely populated hash table
         return;
@@ -171,7 +171,7 @@ tokens Ident::TkFromNameLen(_In_reads_(cch) LPCOLESTR prgch, uint32_t cch, bool 
 
 tokens Ident::Tk(bool isStrictMode)
 {
-    const tokens token = (tokens)m_tk;
+    const tokens token = static_cast<tokens>(m_tk);
     if (token == tkLim)
     {
         m_tk = tkNone;
@@ -196,7 +196,7 @@ void Ident::SetTk(tokens token, ushort grfid)
     Assert(token != tkNone && token < tkID);
     if (m_tk == tkLim)
     {
-        m_tk = (ushort)token;
+        m_tk = static_cast<ushort>(token);
         m_grfid |= grfid;
     }
     else
@@ -319,7 +319,7 @@ IdentPtr HashTbl::PidHashNameLenWithHash(_In_reads_(cch) CharType const * prgch,
     }
 
 
-    if (nullptr == (pid = (IdentPtr)m_noReleaseAllocator.Alloc(cb)))
+    if (nullptr == (pid = static_cast<IdentPtr>(m_noReleaseAllocator.Alloc(cb))))
         OutOfMemory();
 
     /* Insert the identifier into the hash list */
@@ -364,7 +364,7 @@ IdentPtr HashTbl::FindExistingPid(
     IdentPtr *ppid = &m_prgpidName[luHash & m_luMask];
     for (bucketCount = 0; nullptr != (pid = *ppid); ppid = &pid->m_pidNext, bucketCount++)
     {
-        if (pid->m_luHash == luHash && (int)pid->m_cch == cch &&
+        if (pid->m_luHash == luHash && static_cast<int>(pid->m_cch) == cch &&
             HashTbl::CharsAreEqual(pid->m_sz, prgch, end))
         {
             return pid;
@@ -411,7 +411,7 @@ bool HashTbl::Contains(_In_reads_(cch) LPCOLESTR prgch, int32_t cch)
 
     for (auto pid = m_prgpidName[luHash & m_luMask]; pid; pid = pid->m_pidNext)
     {
-        if (pid->m_luHash == luHash && (int)pid->m_cch == cch &&
+        if (pid->m_luHash == luHash && static_cast<int>(pid->m_cch) == cch &&
             HashTbl::CharsAreEqual(pid->m_sz, prgch + cch, prgch))
         {
             return true;
