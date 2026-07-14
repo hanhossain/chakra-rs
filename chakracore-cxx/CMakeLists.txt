@@ -134,7 +134,7 @@ add_definitions(
 # CXX WARNING FLAGS
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
-add_compile_options(-Wold-style-cast)
+#add_compile_options(-Wold-style-cast)
 
 # ignore in general
 add_compile_options(-Wno-delayed-template-parsing-in-cxx20)
