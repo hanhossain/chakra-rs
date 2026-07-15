@@ -22,14 +22,14 @@ typedef uint32_t charcount_t;
 
 //A Unicode code point
 typedef uint32_t codepoint_t;
-const codepoint_t INVALID_CODEPOINT = (codepoint_t)-1;
+const codepoint_t INVALID_CODEPOINT = static_cast<codepoint_t>(-1);
 
 // Synonym for above, 2^31-1 is used as the limit to protect against addition overflow
 typedef uint32_t CharCount;
 const CharCount MaxCharCount = INT_MAX-1;
 // As above, but 2^32-1 is used to signal a 'flag' condition (e.g. undefined)
 typedef uint32_t CharCountOrFlag;
-const CharCountOrFlag CharCountFlag = (CharCountOrFlag)-1;
+const CharCountOrFlag CharCountFlag = static_cast<CharCountOrFlag>(-1);
 
 #define QUOTE(s) #s
 #define STRINGIZE(s) QUOTE(s)

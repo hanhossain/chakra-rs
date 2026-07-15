@@ -18,7 +18,7 @@ class Thread
 
     typedef uintptr_t ThreadHandle;
 
-    static const uintptr_t InvalidHandle = (uintptr_t)-1;
+    static const uintptr_t InvalidHandle = static_cast<uintptr_t>(-1);
 
     static ThreadHandle Create(
         unsigned int ( *start_address )( void * ),

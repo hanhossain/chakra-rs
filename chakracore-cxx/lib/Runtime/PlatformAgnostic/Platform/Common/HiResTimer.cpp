@@ -71,7 +71,7 @@ namespace DateTime
             // in case the system time wasn't updated backwards, and cache is still beyond...
             if (currentTime >= data.cacheSysTime && currentTime < data.cacheSysTime + INTERVAL_FOR_TICK_BACKUP)
             {
-                data.previousDifference = (unsigned long) -1; // Make sure next request won't use cache
+                data.previousDifference = static_cast<unsigned long>(-1); // Make sure next request won't use cache
                 return data.cacheSysTime + INTERVAL_FOR_TICK_BACKUP; // wait for real time
             }
 
@@ -84,7 +84,7 @@ namespace DateTime
 
         // tick count is circular. So, make sure tick wasn't cycled since the last request
         data.previousDifference = diff;
-        return data.cacheSysTime + (double)diff;
+        return data.cacheSysTime + static_cast<double>(diff);
     }
 #undef INTERVAL_FOR_TICK_BACKUP
 
