@@ -273,7 +273,7 @@ typedef union _ULARGE_INTEGER {
 #define SEVERITY_ERROR      1
 
 #define SUCCEEDED(Status) ((int32_t)(Status) >= 0)
-#define FAILED(Status) ((int32_t)(Status)<0)
+#define FAILED(Status) (static_cast<int32_t>(Status)<0)
 #define IS_ERROR(Status) ((uint32_t)(Status) >> 31 == SEVERITY_ERROR) // diff from win32
 #define HRESULT_CODE(hr)    ((hr) & 0xFFFF)
 #define SCODE_CODE(sc)      ((sc) & 0xFFFF)
