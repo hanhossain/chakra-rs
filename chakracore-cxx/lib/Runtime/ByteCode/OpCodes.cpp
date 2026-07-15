@@ -5,12 +5,12 @@
 #include "RuntimeByteCodePch.h"
 
 // Make sure all basic opcode with no one byte layout fits in a byte.
-#define MACRO(opcode, layout, attr) static_assert((uint)Js::OpCode::opcode <= BYTE_MAX);
-#define MACRO_WMS(opcode, layout, attr) static_assert((uint)Js::OpCode::opcode <= BYTE_MAX);
+#define MACRO(opcode, layout, attr) static_assert(static_cast<uint>(Js::OpCode::opcode) <= BYTE_MAX);
+#define MACRO_WMS(opcode, layout, attr) static_assert(static_cast<uint>(Js::OpCode::opcode) <= BYTE_MAX);
 
 // Make sure all extended opcode needs two bytes.
-#define MACRO_EXTEND(opcode, layout, attr) static_assert((uint)Js::OpCode::opcode > BYTE_MAX);
-#define MACRO_EXTEND_WMS(opcode, layout, attr)  static_assert((uint)Js::OpCode::opcode > BYTE_MAX);
+#define MACRO_EXTEND(opcode, layout, attr) static_assert(static_cast<uint>(Js::OpCode::opcode) > BYTE_MAX);
+#define MACRO_EXTEND_WMS(opcode, layout, attr)  static_assert(static_cast<uint>(Js::OpCode::opcode) > BYTE_MAX);
 
 #include "OpCodes.h"
 

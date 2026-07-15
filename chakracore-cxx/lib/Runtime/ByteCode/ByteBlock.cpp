@@ -91,8 +91,8 @@ namespace Js
             // Clone vars to the requestContext
             //
 
-            Var *src = (Var*)initialContent;
-            Var *dst = (Var*)(byte*)newBlock->m_content;
+            Var *src = reinterpret_cast<Var*>(const_cast<byte*>(initialContent));
+            Var *dst = reinterpret_cast<Var*>(static_cast<byte*>(newBlock->m_content));
             size_t count = initialContentSize / sizeof(Var);
 
             for (size_t i = 0; i < count; i++)

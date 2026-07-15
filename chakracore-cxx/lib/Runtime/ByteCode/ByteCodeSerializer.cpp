@@ -24,7 +24,7 @@ void ChakraBinaryBuildDateTimeHash(uint32_t * buildDateHash, uint32_t * buildTim
 
 namespace Js
 {
-    const int magicConstant = *(int*)"ChBc";
+    const int magicConstant = *reinterpret_cast<const int*>("ChBc");
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
     // These magic constants can be enabled to bracket and check different sections of the serialization
@@ -273,13 +273,13 @@ enum ConstantType : byte
 // Try to convert from size_t to uint32_t. May overflow (and return false) on 64-bit.
 bool TryConvertToUInt32(size_t size, uint32_t * out)
 {
-    *out = (uint32_t)size;
+    *out = static_cast<uint32_t>(size);
     if (sizeof(size) == sizeof(uint32_t))
     {
         return true;
     }
     Assert(sizeof(size_t) == sizeof(unsigned long));
-    if((unsigned long)(*out) == size)
+    if(static_cast<unsigned long>(*out) == size)
     {
         return true;
     }
@@ -291,7 +291,7 @@ template <typename T>
 static const byte * ReadVariableInt(const byte * buffer, size_t remainingBytes, T * value)
 {
     Assert(remainingBytes >= sizeof(byte));
-    byte firstByte = *(byte*) buffer;
+    byte firstByte = *const_cast<byte*>(buffer);
 
     if (firstByte >= MIN_SENTINEL)
     {
@@ -300,7 +300,7 @@ static const byte * ReadVariableInt(const byte * buffer, size_t remainingBytes, 
 
         if (firstByte == TWO_BYTE_SENTINEL)
         {
-            uint16 twoByteValue = *((uint16*) locationOfValue);
+            uint16 twoByteValue = *reinterpret_cast<const uint16*>(locationOfValue);
             Assert(twoByteValue > ONE_BYTE_MAX);
 
             *value = twoByteValue;
@@ -311,7 +311,7 @@ static const byte * ReadVariableInt(const byte * buffer, size_t remainingBytes, 
         {
             Assert(remainingBytes >= sizeof(T));
             Assert(firstByte == FOUR_BYTE_SENTINEL);
-            *value = *((T*) locationOfValue);
+            *value = *reinterpret_cast<const T*>(locationOfValue);
             Assert(*value > TWO_BYTE_MAX || *value <= 0);
 
             PHASE_PRINT_TESTTRACE1(Js::VariableIntEncodingPhase, u"TestTrace: VariableIntEncoding (decode) - 4 bytes, value %u\n", *value);
@@ -320,7 +320,7 @@ static const byte * ReadVariableInt(const byte * buffer, size_t remainingBytes, 
     }
     else
     {
-        *value = (T) firstByte;
+        *value = static_cast<T>(firstByte);
         PHASE_PRINT_TESTTRACE1(Js::VariableIntEncodingPhase, u"TestTrace: VariableIntEncoding (decode) - 1 byte, value %u\n", *value);
         return buffer + sizeof(byte);
     }
@@ -444,7 +444,7 @@ public:
           architecture(u"Expected Architecture", magicArchitecture),
           expectedFunctionBodySize(u"Expected Function Body Size", sizeof(FunctionBody)),
           expectedBuildInPropertyCount(u"Expected Built-in Properties", builtInPropertyCount),
-          expectedOpCodeCount(u"Expected Number of OpCodes",  (int)OpCode::Count),
+          expectedOpCodeCount(u"Expected Number of OpCodes",  static_cast<int>(OpCode::Count)),
           originalSourceSize(u"Source Size", sourceSize),
           originalCharLength(u"Source Char Length", sourceCharLength),
           string16sOffset(u"Offset of String16s", &string16Count),
@@ -456,9 +456,9 @@ public:
           string16Table(u"String16 Table"),
           alignedString16Table(u"Alignment for String16 Table", &string16Table, sizeof(char16_t)),
           lineInfoCacheCount(u"Line Info Cache", sourceInfo->GetLineOffsetCache()->GetLineCount()),
-          lineCharacterOffsetCacheBuffer(u"Line Info Character Cache", lineInfoCacheCount.value * sizeof(charcount_t), (byte *)sourceInfo->GetLineOffsetCache()->GetLineCharacterOffsetBuffer()),
+          lineCharacterOffsetCacheBuffer(u"Line Info Character Cache", lineInfoCacheCount.value * sizeof(charcount_t), reinterpret_cast<const byte*>(sourceInfo->GetLineOffsetCache()->GetLineCharacterOffsetBuffer())),
           lineInfoHasByteCache(u"Line Info Has Byte Cache", sourceInfo->GetLineOffsetCache()->GetLineByteOffsetBuffer() != nullptr),
-          lineByteOffsetCacheBuffer(u"Line Info Byte Cache", lineInfoCacheCount.value * sizeof(charcount_t), (byte *)sourceInfo->GetLineOffsetCache()->GetLineByteOffsetBuffer()),
+          lineByteOffsetCacheBuffer(u"Line Info Byte Cache", lineInfoCacheCount.value * sizeof(charcount_t), reinterpret_cast<const byte*>(sourceInfo->GetLineOffsetCache()->GetLineByteOffsetBuffer())),
           functionsTable(u"Functions"),
           scopeInfoOffset(u"Offset of ScopeInfos", &scopeInfoCount),
           scopeInfoCount(u"ScopeInfo Count", 0),
@@ -487,7 +487,7 @@ public:
         byte actualFileVersionScheme = GenerateLibraryByteCode() ? LibraryByteCodeVersioningScheme : CurrentFileVersionScheme;
         if (Js::Configuration::Global.flags.ForceSerializedBytecodeVersionSchema)
         {
-            actualFileVersionScheme = (byte)Js::Configuration::Global.flags.ForceSerializedBytecodeVersionSchema;
+            actualFileVersionScheme = static_cast<byte>(Js::Configuration::Global.flags.ForceSerializedBytecodeVersionSchema);
         }
 
         fileVersionKind.value = actualFileVersionScheme;
@@ -508,7 +508,7 @@ public:
         case ReleaseVersioningScheme:
             {
                 Assert(!GenerateLibraryByteCode());
-                auto guidDWORDs = (uint32_t*)(&byteCodeCacheReleaseFileVersion);
+                auto guidDWORDs = reinterpret_cast<const uint32_t*>(&byteCodeCacheReleaseFileVersion);
                 V1.value = guidDWORDs[0];
                 V2.value = guidDWORDs[1];
                 V3.value = guidDWORDs[2];
@@ -606,7 +606,7 @@ public:
             else
             {
                 Assert(ShouldAllocWithCoTaskMem());
-                *buffer = (byte*)CoTaskMemAlloc(*bufferBytes);
+                *buffer = static_cast<byte*>(CoTaskMemAlloc(*bufferBytes));
             }
 
             if (*buffer == nullptr)
@@ -662,14 +662,14 @@ public:
         if (!string16ToId->TryGetValue(bb, &indexEntry))
         {
             auto sizeInBytes = bb->byteCount;
-            auto stringEntry = Anew(alloc, BufferBuilderRaw, u"String16", sizeInBytes, (const byte *)bb->pv); // Writing the terminator even though it is computable so that this memory can be used as-is when deserialized
+            auto stringEntry = Anew(alloc, BufferBuilderRaw, u"String16", sizeInBytes, static_cast<const byte*>(bb->pv)); // Writing the terminator even though it is computable so that this memory can be used as-is when deserialized
             string16Table.list = string16Table.list->Prepend(stringEntry, alloc);
             if (string16IndexTable.list == nullptr)
             {
                 // First item in the list is the first string.
                 auto stringIndexEntry = Anew(alloc, BufferBuilderRelativeOffset, u"First String16 Index", stringEntry);
                 string16IndexTable.list = regex::ImmutableList<Js::BufferBuilder*>::OfSingle(stringIndexEntry, alloc);
-                PrependByte(string16IndexTable, u"isPropertyRecord", (uint8_t)isPropertyRecord);
+                PrependByte(string16IndexTable, u"isPropertyRecord", isPropertyRecord);
             }
 
             // Get a pointer to the previous entry of isPropertyRecord
@@ -680,7 +680,7 @@ public:
             string16IndexTable.list = string16IndexTable.list->Prepend(stringIndexEntry, alloc);
 
             // By default, mark the next string to be not a property record.
-            PrependByte(string16IndexTable, u"isPropertyRecord", (uint8_t)false);
+            PrependByte(string16IndexTable, u"isPropertyRecord", false);
 
             indexEntry.id = nextString16Id;
             string16ToId->Add(bb, indexEntry);
@@ -766,12 +766,12 @@ public:
 
     uint32_t PrependFunctionBodyFlags(BufferBuilderList & builder, const char16_t* clue, FunctionBody::FunctionBodyFlags value)
     {
-        return PrependByte(builder, clue, (byte) value);
+        return PrependByte(builder, clue, value);
     }
 
     uint32_t PrependBool(BufferBuilderList & builder, const char16_t* clue, bool value)
     {
-        return PrependByte(builder, clue, (byte) value);
+        return PrependByte(builder, clue, value);
     }
 
     uint32_t PrependFloat(BufferBuilderList & builder, const char16_t* clue, float value)
@@ -799,7 +799,7 @@ public:
     {
         if (sz != nullptr)
         {
-            auto bb = Anew(alloc, ByteBuffer, byteLength, (void*)sz); // Includes trailing null
+            auto bb = Anew(alloc, ByteBuffer, byteLength, const_cast<char16_t*>(sz)); // Includes trailing null
             return PrependInt32(builder, clue, GetString16Id(bb));
         }
         else
@@ -816,14 +816,14 @@ public:
 
     int GetIdOfString(__in_bcount_opt(byteLength) const char16_t* sz, uint32_t byteLength)
     {
-        auto bb = Anew(alloc, ByteBuffer, byteLength, (void*)sz); // Includes trailing null
+        auto bb = Anew(alloc, ByteBuffer, byteLength, const_cast<char16_t*>(sz)); // Includes trailing null
         return GetString16Id(bb);
     }
 
     int GetIdOfPropertyRecord(const PropertyRecord * propertyRecord)
     {
         AssertMsg(!propertyRecord->IsSymbol(), "bytecode serializer does not currently handle non-built-in symbol PropertyRecords");
-        size_t byteCount = ((size_t)propertyRecord->GetLength() + 1) * sizeof(char16_t);
+        size_t byteCount = (static_cast<size_t>(propertyRecord->GetLength()) + 1) * sizeof(char16_t);
         if (byteCount > UINT_MAX)
         {
             // We should never see property record that big
@@ -835,7 +835,7 @@ public:
         scriptContext->FindPropertyRecord(buffer, propertyRecord->GetLength(), &propertyRecordCheck);
         Assert(propertyRecordCheck == propertyRecord);
 #endif
-        auto bb = Anew(alloc, ByteBuffer, (uint32_t)byteCount, (void*)buffer);
+        auto bb = Anew(alloc, ByteBuffer, static_cast<uint32_t>(byteCount), const_cast<char16_t*>(buffer));
         return GetString16Id(bb, /*isPropertyRecord=*/ true);
     }
 
@@ -845,13 +845,13 @@ public:
         auto sizeOfLayout = sizeof(TLayout);
         auto newLayout = AnewArray(alloc, byte, sizeOfLayout);
         js_memcpy_s(newLayout, sizeOfLayout, in, sizeOfLayout);
-        return (TLayout * )newLayout;
+        return static_cast<TLayout*>(newLayout);
     }
 
     template<typename T>
     uint32_t Prepend(BufferBuilderList & builder, const char16_t* clue, T * t)
     {
-        auto block = Anew(alloc, BufferBuilderRaw, clue, sizeof(T), (const byte*)t);
+        auto block = Anew(alloc, BufferBuilderRaw, clue, sizeof(T), static_cast<const byte*>(t));
         builder.list = builder.list->Prepend(block, alloc);
         return sizeof(T);
     }
@@ -981,7 +981,7 @@ public:
             {
                 if (!GenerateByteCodeForNative())
                 {
-                    auto block = Anew(alloc, BufferBuilderRaw, clue, byteCount, (const byte*) opStart);
+                    auto block = Anew(alloc, BufferBuilderRaw, clue, byteCount, opStart);
                     builder.list = builder.list->Prepend(block, alloc);
                     size += byteCount;
                 }
@@ -1455,7 +1455,7 @@ public:
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         size += PrependInt32(builder, u"Start String Constant", magicStartStringConstant);
 #endif
-        auto bb = Anew(alloc, ByteBuffer, (str->GetLength() + 1) * sizeof(char16_t), (void*)str->GetSz());
+        auto bb = Anew(alloc, ByteBuffer, (str->GetLength() + 1) * sizeof(char16_t), const_cast<char16_t*>(str->GetSz()));
         size += PrependByteBuffer(builder, u"String Constant 16 Value", bb);
 
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
@@ -1469,7 +1469,7 @@ public:
     {
         ES5Array* callsite = VarTo<ES5Array>(var);
         Var element = nullptr;
-        auto size = PrependInt32(builder, u"String Template Callsite Constant String Count", (int)callsite->GetLength());
+        auto size = PrependInt32(builder, u"String Template Callsite Constant String Count", static_cast<int>(callsite->GetLength()));
 
         for (uint32_t i = 0; i < callsite->GetLength(); i++)
         {
@@ -1491,11 +1491,11 @@ public:
 
     uint32_t PrependVarConstant(BufferBuilderList & builder, Var var)
     {
-        if (var == (Js::Var)&Js::NullFrameDisplay)
+        if (var == static_cast<Js::Var>(const_cast<Js::FrameDisplay*>(&Js::NullFrameDisplay)))
         {
             return PrependByte(builder, u"Null Frame Display", ctNullDisplay);
         }
-        else if (var == (Js::Var)&Js::StrictNullFrameDisplay)
+        else if (var == static_cast<Js::Var>(const_cast<Js::FrameDisplay*>(&Js::StrictNullFrameDisplay)))
         {
             return PrependByte(builder, u"Strict Null Frame Display", ctStrictNullDisplay);
         }
@@ -1521,15 +1521,15 @@ public:
         case TypeIds_Integer:
         {
             int32_t value = TaggedInt::ToInt32(var);
-            if ((int8_t)value == value)
+            if (static_cast<int8_t>(value) == value)
             {
                 auto size = PrependByte(builder, u"Integer Constant", ctInt8);
-                return size + PrependByte(builder, u"Integer Constant Value", (byte)value);
+                return size + PrependByte(builder, u"Integer Constant Value", static_cast<byte>(value));
             }
-            else if ((int16)value == value)
+            else if (static_cast<int16>(value) == value)
             {
                 auto size = PrependByte(builder, u"Integer Constant", ctInt16);
-                return size + PrependConstantInt16(builder, u"Integer Constant Value", (int16)value);
+                return size + PrependConstantInt16(builder, u"Integer Constant Value", static_cast<int16>(value));
             }
             else
             {
@@ -1737,7 +1737,7 @@ public:
 
         AssertMsg(debuggerScope->HasProperties(), "Properties should exist.");
         Assert(debuggerScope->scopeProperties->Count() >= 0);
-        AssertMsg((uint)debuggerScope->scopeProperties->Count() == propertiesCount, "Property counts should match.");
+        AssertMsg(static_cast<uint>(debuggerScope->scopeProperties->Count()) == propertiesCount, "Property counts should match.");
         for (uint i = 0u; i < propertiesCount; ++i)
         {
             DebuggerScopeProperty scopeProperty = debuggerScope->scopeProperties->Item(i);
@@ -2442,14 +2442,13 @@ public:
         }
         PrependUInt32(builder, u"ScopeInfo FunctionInfo relative id", relativeFunctionId);
 
-        ScopeInfoFlags scopeInfoFlags = (ScopeInfoFlags)
-            ((scopeInfo->isDynamic ? sifIsDynamic : sifNone)
-                | (scopeInfo->isObject ? sifIsObject : sifNone)
-                | (scopeInfo->mustInstantiate ? sifMustInstantiate : sifNone)
-                | (scopeInfo->isCached ? sifIsCached : sifNone)
-                | (scopeInfo->hasLocalInClosure ? sifHasLocalInClosure : sifNone)
-                | (scopeInfo->isGeneratorFunctionBody ? sifIsGeneratorFunctionBody : sifNone)
-                | (scopeInfo->isAsyncFunctionBody ? sifIsAsyncFunctionBody : sifNone));
+        ScopeInfoFlags scopeInfoFlags = static_cast<ScopeInfoFlags>((scopeInfo->isDynamic ? sifIsDynamic : sifNone)
+            | (scopeInfo->isObject ? sifIsObject : sifNone)
+            | (scopeInfo->mustInstantiate ? sifMustInstantiate : sifNone)
+            | (scopeInfo->isCached ? sifIsCached : sifNone)
+            | (scopeInfo->hasLocalInClosure ? sifHasLocalInClosure : sifNone)
+            | (scopeInfo->isGeneratorFunctionBody ? sifIsGeneratorFunctionBody : sifNone)
+            | (scopeInfo->isAsyncFunctionBody ? sifIsAsyncFunctionBody : sifNone));
 
         PrependByte(builder, u"ScopeInfo flags", scopeInfoFlags);
         PrependInt32(builder, u"ScopeInfo scope type", scopeInfo->scopeType);
@@ -2461,16 +2460,15 @@ public:
         {
             ScopeInfo::SymbolInfo* sym = scopeInfo->symbols + i;
 
-            SymbolInfoFlags symbolInfoFlags = (SymbolInfoFlags)
-                ((sym->hasFuncAssignment ? syifHasFuncAssignment : syifNone)
-                    | (sym->isBlockVariable ? syifIsBlockVariable : syifNone)
-                    | (sym->isConst ? syifIsConst : syifNone)
-                    | (sym->isFuncExpr ? syifIsFuncExpr : syifNone)
-                    | (sym->isModuleExportStorage ? syifIsModuleExportStorage : syifNone)
-                    | (sym->isModuleImport ? syifIsModuleImport : syifNone));
+            SymbolInfoFlags symbolInfoFlags = static_cast<SymbolInfoFlags>((sym->hasFuncAssignment ? syifHasFuncAssignment : syifNone)
+                | (sym->isBlockVariable ? syifIsBlockVariable : syifNone)
+                | (sym->isConst ? syifIsConst : syifNone)
+                | (sym->isFuncExpr ? syifIsFuncExpr : syifNone)
+                | (sym->isModuleExportStorage ? syifIsModuleExportStorage : syifNone)
+                | (sym->isModuleImport ? syifIsModuleImport : syifNone));
 
             PrependByte(builder, u"SymbolInfo flags", symbolInfoFlags);
-            PrependByte(builder, u"SymbolInfo symbol type", (uint8_t)sym->symbolType);
+            PrependByte(builder, u"SymbolInfo symbol type", sym->symbolType);
 
             PropertyId symPropertyId = sym->propertyId;
             if (scopeInfo->areNamesCached)
@@ -2663,7 +2661,7 @@ public:
         architecture(0),
         expectedFunctionBodySize(sizeof(FunctionBody)),
         expectedBuildInPropertyCount(builtInPropertyCount),
-        expectedOpCodeCount((int)OpCode::Count),
+        expectedOpCodeCount(static_cast<int>(OpCode::Count)),
         firstFunctionId(0),
         functionCount(0),
         scopeInfoCount(0),
@@ -2694,7 +2692,7 @@ public:
     static const byte* ReadFunctionBodyFlags(const byte * buffer, size_t remainingBytes, FunctionBody::FunctionBodyFlags * value)
     {
         Assert(remainingBytes >= sizeof(FunctionBody::FunctionBodyFlags));
-        *value = *(FunctionBody::FunctionBodyFlags*) buffer;
+        *value = *reinterpret_cast<const FunctionBody::FunctionBodyFlags*>(buffer);
         return buffer + sizeof(FunctionBody::FunctionBodyFlags);
     }
 
@@ -2715,7 +2713,7 @@ public:
     static const byte * ReadByte(const byte * buffer, size_t remainingBytes, byte * value)
     {
         Assert(remainingBytes>=sizeof(byte));
-        *value = *(byte*)buffer;
+        *value = *const_cast<byte*>(buffer);
         return buffer + sizeof(byte);
     }
 
@@ -2728,7 +2726,7 @@ public:
     static const byte * ReadConstantSizedInt16(const byte * buffer, size_t remainingBytes, int16 * value)
     {
         Assert(remainingBytes >= sizeof(int16));
-        *value = *(int16 *)buffer;
+        *value = *reinterpret_cast<const int16*>(buffer);
         return buffer + sizeof(int16);
     }
 
@@ -2752,7 +2750,7 @@ public:
     static const byte * ReadConstantSizedInt64(const byte * buffer, size_t remainingBytes, long * value)
     {
         Assert(remainingBytes >= sizeof(long));
-        *value = *(long *)buffer;
+        *value = *reinterpret_cast<const long*>(buffer);
         return buffer + sizeof(long);
     }
 
@@ -2765,7 +2763,7 @@ public:
     static const byte * ReadConstantSizedInt32(const byte * buffer, size_t remainingBytes, int * value)
     {
         Assert(remainingBytes >= sizeof(int));
-        *value = *(int *) buffer;
+        *value = *reinterpret_cast<const int*>(buffer);
         return buffer + sizeof(int);
     }
 
@@ -2777,7 +2775,7 @@ public:
 
     const byte * ReadConstantSizedUInt32(const byte * buffer, uint * value)
     {
-        return ReadConstantSizedInt32(buffer, (int *)value);
+        return ReadConstantSizedInt32(buffer, reinterpret_cast<int*>(value));
     }
 
     static const byte * ReadInt32(const byte * buffer, size_t remainingBytes, int * value)
@@ -2805,7 +2803,7 @@ public:
     static const byte * ReadFloat(const byte * buffer, size_t remainingBytes, float * value)
     {
         Assert(remainingBytes >= sizeof(float));
-        *value = *(float *)buffer;
+        *value = *reinterpret_cast<const float*>(buffer);
         return buffer + sizeof(float);
     }
 
@@ -2818,7 +2816,7 @@ public:
     static const byte * ReadDouble(const byte * buffer, size_t remainingBytes, double * value)
     {
         Assert(remainingBytes>=sizeof(double));
-        *value = *(double *)buffer;
+        *value = *reinterpret_cast<const double*>(buffer);
         return buffer + sizeof(double);
     }
 
@@ -2831,7 +2829,7 @@ public:
     static const byte * ReadSIMDValue(const byte * buffer, size_t remainingBytes, SIMDValue * value)
     {
         Assert(remainingBytes >= sizeof(SIMDValue));
-        *value = *(SIMDValue *)buffer;
+        *value = *reinterpret_cast<const SIMDValue*>(buffer);
         return buffer + sizeof(SIMDValue);
     }
 
@@ -2844,43 +2842,43 @@ public:
     const byte * ReadUInt16(const byte * buffer, uint16 * value)
     {
         auto remainingBytes = (raw + totalSize) - buffer;
-        return ReadInt16(buffer, remainingBytes, (int16*)value);
+        return ReadInt16(buffer, remainingBytes, reinterpret_cast<int16*>(value));
     }
 
     const byte * ReadUInt32(const byte * buffer, unsigned int * value)
     {
         auto remainingBytes = (raw + totalSize) - buffer;
-        return ReadInt32(buffer, remainingBytes, (int*)value);
+        return ReadInt32(buffer, remainingBytes, reinterpret_cast<int*>(value));
     }
 
     const byte * ReadULong(const byte * buffer, uint32_t * value)
     {
         auto remainingBytes = (raw + totalSize) - buffer;
-        return ReadInt32(buffer, remainingBytes, (int*)value);
+        return ReadInt32(buffer, remainingBytes, reinterpret_cast<int*>(value));
     }
 
     const byte * ReadRegSlot(const byte * buffer, RegSlot * value)
     {
         auto remainingBytes = (raw + totalSize) - buffer;
-        return ReadInt32(buffer, remainingBytes, (int*)value);
+        return ReadInt32(buffer, remainingBytes, reinterpret_cast<int*>(value));
     }
 
     const byte * ReadArgSlot(const byte * buffer, ArgSlot * value)
     {
         auto remainingBytes = (raw + totalSize) - buffer;
-        return ReadInt32(buffer, remainingBytes, (int*)value);
+        return ReadInt32(buffer, remainingBytes, reinterpret_cast<int*>(value));
     }
 
     const byte * ReadConstantSizedInt32NoSize(const byte * buffer, int * value)
     {
-        *value = *(int *)buffer;
+        *value = *reinterpret_cast<const int*>(buffer);
         return buffer + sizeof(int);
     }
 
     template <typename TStructType>
     const byte * ReadStruct(const byte * buffer, TStructType ** value)
     {
-        *value = (TStructType*)buffer;
+        *value = const_cast<TStructType *>(reinterpret_cast<const TStructType*>(buffer));
         return buffer + sizeof(TStructType);
     }
 
@@ -2925,7 +2923,7 @@ public:
 
         for (uint i = 0; i < countOfAuxiliaryStructure; i++)
         {
-            auto part = (const SerializedAuxiliary * )current;
+            auto part = reinterpret_cast<const SerializedAuxiliary*>(current);
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
             Assert(part->auxMagic == magicStartOfAux);
 #endif
@@ -2989,7 +2987,7 @@ public:
         }
         auto offset = record->offset;
         auto addressOfString = raw + offset;
-        return (const char16_t*)addressOfString;
+        return reinterpret_cast<const char16_t*>(addressOfString);
     }
 
     uint32_t GetString16LengthById(int id)
@@ -3002,7 +3000,7 @@ public:
         const char16_t* s2 = GetString16ById(id + 1);
         auto result = s2 - s1 - 1;
         Assert(result <= UINT_MAX);
-        return (uint32_t)result;
+        return static_cast<uint32_t>(result);
     }
 
     int32_t ReadHeader()
@@ -3019,7 +3017,7 @@ public:
         byte expectedFileVersionScheme = isLibraryCode? LibraryByteCodeVersioningScheme : CurrentFileVersionScheme;
         if (Js::Configuration::Global.flags.ForceSerializedBytecodeVersionSchema)
         {
-            expectedFileVersionScheme = (byte)Js::Configuration::Global.flags.ForceSerializedBytecodeVersionSchema;
+            expectedFileVersionScheme = static_cast<byte>(Js::Configuration::Global.flags.ForceSerializedBytecodeVersionSchema);
         }
         // Ignore the version scheme check if it is library code
         if (!isLibraryCode && fileVersionScheme != expectedFileVersionScheme)
@@ -3045,7 +3043,7 @@ public:
         case ReleaseVersioningScheme:
             {
                 Js::VerifyCatastrophic(!isLibraryCode);
-                auto guidDWORDs = (uint32_t*)(&byteCodeCacheReleaseFileVersion);
+                auto guidDWORDs = reinterpret_cast<const uint32_t*>(&byteCodeCacheReleaseFileVersion);
                 expectedV1 = guidDWORDs[0];
                 expectedV2 = guidDWORDs[1];
                 expectedV3 = guidDWORDs[2];
@@ -3078,7 +3076,7 @@ public:
             expectedV4 = 0;
         }
         current = ReadConstantSizedInt32(current, &V1);
-        if ((uint32_t)V1!=expectedV1)
+        if (static_cast<uint32_t>(V1)!=expectedV1)
         {
             // Incompatible major version
             return ByteCodeSerializer::InvalidByteCode;
@@ -3087,19 +3085,19 @@ public:
         // on the build timestamp hash. Also want to share the generated bytecode between x86/ARM and debug/release, so skip the extra
         // checking. Will rework this validation entirely under TFS 555060
         current = ReadConstantSizedInt32(current, &V2);
-        if ((uint32_t)V2 != expectedV2)
+        if (static_cast<uint32_t>(V2) != expectedV2)
         {
             // Incompatible minor version
             return ByteCodeSerializer::InvalidByteCode;
         }
         current = ReadConstantSizedInt32(current, &V3);
-        if ((uint32_t)V3 != expectedV3)
+        if (static_cast<uint32_t>(V3) != expectedV3)
         {
             // Incompatible 3rd version part
             return ByteCodeSerializer::InvalidByteCode;
         }
         current = ReadConstantSizedInt32(current, &V4);
-        if ((uint32_t)V4 != expectedV4)
+        if (static_cast<uint32_t>(V4) != expectedV4)
         {
             // Incompatible 4th version part
             return ByteCodeSerializer::InvalidByteCode;
@@ -3139,24 +3137,24 @@ public:
         current = ReadOffsetAsPointer(current, &scopeInfoRelativeOffsets);
 
         // Read strings header
-        string16IndexTable = (StringIndexRecord*)ReadInt32(string16s, &string16Count);
-        lineCharacterOffsetCacheBuffer = (charcount_t *)ReadInt32(lineInfoCaches, &lineInfoCacheCount);
+        string16IndexTable = reinterpret_cast<const StringIndexRecord*>(ReadInt32(string16s, &string16Count));
+        lineCharacterOffsetCacheBuffer = reinterpret_cast<const charcount_t*>(ReadInt32(lineInfoCaches, &lineInfoCacheCount));
         byte haslineByteOffsetCacheBuffer;
-        current = ReadByte((byte*)lineCharacterOffsetCacheBuffer + sizeof(charcount_t) * lineInfoCacheCount, &haslineByteOffsetCacheBuffer);
+        current = ReadByte(reinterpret_cast<const byte*>(lineCharacterOffsetCacheBuffer) + sizeof(charcount_t) * lineInfoCacheCount, &haslineByteOffsetCacheBuffer);
         if (haslineByteOffsetCacheBuffer)
         {
-            lineByteOffsetCacheBuffer = (charcount_t *)current;
+            lineByteOffsetCacheBuffer = reinterpret_cast<const charcount_t*>(current);
         }
         else
         {
             lineByteOffsetCacheBuffer = nullptr;
         }
 
-        string16Table = (byte*)(string16IndexTable + string16Count + 1);
+        string16Table = reinterpret_cast<const byte*>(string16IndexTable + string16Count + 1);
 
         // string16Table is aligned to 2-bytes
-        uint32_t string16TableOffset = (uint32_t)(string16Table - raw);
-        string16TableOffset = ::Math::Align(string16TableOffset, (uint32_t)sizeof(char16_t));
+        uint32_t string16TableOffset = static_cast<uint32_t>(string16Table - raw);
+        string16TableOffset = ::Math::Align(string16TableOffset, static_cast<uint32_t>(sizeof(char16_t)));
         string16Table = raw + string16TableOffset;
 
         // Consume ScopeInfo count and advance to the relative offsets
@@ -3344,7 +3342,7 @@ public:
             case ctInt8:
                 {
                     int8_t value;
-                    current = ReadByte(current, (byte *)&value);
+                    current = ReadByte(current, reinterpret_cast<byte*>(&value));
                     function->RecordIntConstant(reg, value);
                     break;
                 }
@@ -3442,7 +3440,7 @@ public:
 
         return current;
     }
-    
+
 #if ENABLE_NATIVE_CODEGEN
     const byte * ReadCallSiteToCallApplyCallSiteArray(const byte * current, FunctionBody * functionBody)
     {
@@ -3658,7 +3656,7 @@ public:
 
     const byte * ReadFunctionBodyHeader(const byte * functionBytes, int& displayNameId, int& lineNumber, int& columnNumber, unsigned int& bitflags)
     {
-        SerializedFieldList* definedFields = (SerializedFieldList*) functionBytes;
+        SerializedFieldList* definedFields = reinterpret_cast<SerializedFieldList*>(const_cast<byte*>(functionBytes));
 
         // Basic function body constructor arguments
         const byte * current = functionBytes + sizeof(SerializedFieldList);
@@ -3990,7 +3988,7 @@ public:
         unsigned int bitflags;
         const byte * current = this->ReadFunctionBodyHeader(functionBytes, displayNameId, lineNumber, columnNumber, bitflags);
 
-        SerializedFieldList* definedFields = (SerializedFieldList*) functionBytes;
+        SerializedFieldList* definedFields = reinterpret_cast<SerializedFieldList*>(const_cast<byte*>(functionBytes));
 
         FunctionProxy::SetDisplayNameFlags displayNameFlags = FunctionProxy::SetDisplayNameFlags::SetDisplayNameFlagsDontCopy;
         const char16_t* displayName = nullptr;
@@ -4005,7 +4003,8 @@ public:
                 displayName = deferDeserializeFunctionInfo->GetDisplayName();
                 if (deferDeserializeFunctionInfo->GetDisplayNameIsRecyclerAllocated())
                 {
-                    displayNameFlags = (FunctionProxy::SetDisplayNameFlags)(displayNameFlags | FunctionProxy::SetDisplayNameFlags::SetDisplayNameFlagsRecyclerAllocated);
+                    displayNameFlags = static_cast<FunctionProxy::SetDisplayNameFlags>(displayNameFlags |
+                        FunctionProxy::SetDisplayNameFlags::SetDisplayNameFlagsRecyclerAllocated);
                 }
             }
             else
@@ -4065,7 +4064,7 @@ public:
         {
             Assert(sourceInfo->GetSrcInfo()->moduleID == kmodGlobal);
             Assert(!deserializeNested);
-            *functionProxy = DeferDeserializeFunctionInfo::New(this->scriptContext, nestedCount, functionId, cache, functionBytes, sourceInfo, displayName, displayNameLength, displayShortNameOffset, nativeModule, (FunctionInfo::Attributes)attributes);
+            *functionProxy = DeferDeserializeFunctionInfo::New(this->scriptContext, nestedCount, functionId, cache, functionBytes, sourceInfo, displayName, displayNameLength, displayShortNameOffset, nativeModule, static_cast<FunctionInfo::Attributes>(attributes));
 
             if (deferDeserializeFunctionInfo == nullptr && !this->isLibraryCode)
             {
@@ -4075,7 +4074,7 @@ public:
             return S_OK;
         }
 
-        ParseableFunctionInfo **function = (ParseableFunctionInfo **) functionProxy;
+        ParseableFunctionInfo **function = reinterpret_cast<ParseableFunctionInfo**>(functionProxy);
         uint functionNumber;
 
         if (deferDeserializeFunctionInfo)
@@ -4089,13 +4088,13 @@ public:
 
         if (definedFields->has_ConstantCount)
         {
-            FunctionBody **functionBody = (FunctionBody **) function;
+            FunctionBody **functionBody = reinterpret_cast<FunctionBody**>(function);
 
             *functionBody = FunctionBody::NewFromRecycler(this->scriptContext, nullptr /*displayName*/, 0 /*displayNameLength*/, 0 /*displayShortNameOffset*/, nestedCount,
                 sourceInfo,
                 functionNumber,
                 sourceInfo->GetSrcInfo()->sourceContextInfo->sourceContextId,
-                firstFunctionId + functionId, (FunctionInfo::Attributes)attributes,
+                firstFunctionId + functionId, static_cast<FunctionInfo::Attributes>(attributes),
                 Js::FunctionBody::FunctionBodyFlags::Flags_None  // bytecode serializer will initialize
 #ifdef PERF_COUNTERS
                 , (deferDeserializeFunctionInfo != nullptr)
@@ -4111,7 +4110,7 @@ public:
         }
         else
         {
-            *function = ParseableFunctionInfo::New(this->scriptContext, nestedCount, firstFunctionId + functionId, utf8SourceInfo, displayName, displayNameLength, displayShortNameOffset, (FunctionInfo::Attributes)attributes,
+            *function = ParseableFunctionInfo::New(this->scriptContext, nestedCount, firstFunctionId + functionId, utf8SourceInfo, displayName, displayNameLength, displayShortNameOffset, static_cast<FunctionInfo::Attributes>(attributes),
                 Js::FunctionBody::FunctionBodyFlags::Flags_None);
 
             if (deferredStubs != nullptr)
@@ -4169,7 +4168,7 @@ public:
 
         if (definedFields->has_ConstantCount)
         {
-            FunctionBody **functionBody = (FunctionBody **)function;
+            FunctionBody **functionBody = reinterpret_cast<FunctionBody**>(function);
 
 #define DEFINE_FUNCTION_BODY_FIELDS 1
 #define DECLARE_SERIALIZABLE_FIELD(type, name, serializableType) \
@@ -4199,7 +4198,7 @@ public:
             }
             else
             {
-                (*function)->flags = (FunctionBody::FunctionBodyFlags)((*function)->flags & ~FunctionBody::Flags_StackNestedFunc);
+                (*function)->flags = static_cast<FunctionBody::FunctionBodyFlags>((*function)->flags & ~FunctionBody::Flags_StackNestedFunc);
             }
 
             if (definedFields->has_m_envDepth == false)
@@ -4281,7 +4280,7 @@ public:
                 else
                 {
                     // TODO: Abstract this out to ByteBlock::New
-                    (*functionBody)->byteCodeBlock = RecyclerNewLeaf(scriptContext->GetRecycler(), ByteBlock, contentLength, (byte*)buffer);
+                    (*functionBody)->byteCodeBlock = RecyclerNewLeaf(scriptContext->GetRecycler(), ByteBlock, contentLength, const_cast<byte*>(buffer));
                 }
             });
 
@@ -4395,7 +4394,7 @@ public:
 #endif
         if (definedFields->has_ConstantCount)
         {
-            FunctionBody **functionBody = (FunctionBody **) function;
+            FunctionBody **functionBody = reinterpret_cast<FunctionBody**>(function);
 #if DBG
             if (PHASE_DUMP(Js::DebuggerScopePhase, (*functionBody)))
             {
@@ -4428,7 +4427,7 @@ public:
         current = ReadInt32(current, &symbolCount);
 
         Js::LocalFunctionId relativeFunctionId = 0;
-        current = ReadUInt32(current, (uint*)&relativeFunctionId);
+        current = ReadUInt32(current, &relativeFunctionId);
         FunctionInfo* functionInfo =  cache->LookupFunctionInfo(this->scriptContext, relativeFunctionId);
 
         Assert(functionInfo != nullptr);
@@ -4436,7 +4435,7 @@ public:
         *scopeInfo = RecyclerNewPlusZ(scriptContext->GetRecycler(), symbolCount * sizeof(ScopeInfo::SymbolInfo), ScopeInfo, functionInfo, symbolCount);
 
         ScopeInfoFlags scopeInfoFlags;
-        current = ReadByte(current, (byte*)&scopeInfoFlags);
+        current = ReadByte(current, reinterpret_cast<byte*>(&scopeInfoFlags));
         (*scopeInfo)->isDynamic = (scopeInfoFlags & sifIsDynamic) != 0;
         (*scopeInfo)->isObject = (scopeInfoFlags & sifIsObject) != 0;
         (*scopeInfo)->mustInstantiate = (scopeInfoFlags & sifMustInstantiate) != 0;
@@ -4448,7 +4447,7 @@ public:
 
         int scopeType;
         current = ReadInt32(current, &scopeType);
-        (*scopeInfo)->scopeType = (::ScopeType)scopeType;
+        (*scopeInfo)->scopeType = static_cast<::ScopeType>(scopeType);
 
         current = ReadInt32(current, &(*scopeInfo)->scopeId);
 
@@ -4459,7 +4458,7 @@ public:
             ScopeInfo::SymbolInfo* sym = (*scopeInfo)->symbols + i;
 
             SymbolInfoFlags symbolInfoFlags;
-            current = ReadByte(current, (byte*)&symbolInfoFlags);
+            current = ReadByte(current, reinterpret_cast<byte*>(&symbolInfoFlags));
             sym->hasFuncAssignment = (symbolInfoFlags & syifHasFuncAssignment) != 0;
             sym->isBlockVariable = (symbolInfoFlags & syifIsBlockVariable) != 0;
             sym->isConst = (symbolInfoFlags & syifIsConst) != 0;
@@ -4467,10 +4466,10 @@ public:
             sym->isModuleExportStorage = (symbolInfoFlags & syifIsModuleExportStorage) != 0;
             sym->isModuleImport = (symbolInfoFlags & syifIsModuleImport) != 0;
 
-            current = ReadByte(current, (uint8_t*)&sym->symbolType);
+            current = ReadByte(current, reinterpret_cast<uint8_t*>(&sym->symbolType));
 
             PropertyId obscuredPropertyId;
-            current = ReadInt32(current, (int*)&obscuredPropertyId);
+            current = ReadInt32(current, &obscuredPropertyId);
             sym->propertyId = cache->LookupPropertyId(obscuredPropertyId);
 
             OUTPUT_VERBOSE_TRACE(Js::ByteCodeSerializationPhase, u"\t\tSymbolInfo. Flags: %u. Type: %d. PropertyId: %u\n", symbolInfoFlags, sym->symbolType, sym->propertyId);
@@ -4492,7 +4491,7 @@ public:
     const byte* ReadScopeInfo(const byte* current, ByteCodeCache* cache, ScopeInfo** scopeInfo)
     {
         LocalScopeInfoId localScopeInfoId;
-        current = ReadUInt32(current, (uint*)&localScopeInfoId);
+        current = ReadUInt32(current, &localScopeInfoId);
 
         *scopeInfo = cache->LookupScopeInfo(this->scriptContext, localScopeInfoId);
 
@@ -4515,7 +4514,7 @@ public:
             nestedStub->byteCodeCache = cache;
 
             current = ReadUInt32(current, &nestedStub->ichMin);
-            current = ReadUInt32(current, (uint*)&nestedStub->fncFlags);
+            current = ReadUInt32(current, reinterpret_cast<uint*>(&nestedStub->fncFlags));
 
             RestorePoint* restorePoint;
             current = ReadStruct<RestorePoint>(current, &restorePoint);
@@ -4560,7 +4559,7 @@ public:
 #endif
 
         FunctionBody* functionBody = NULL;
-        hr = ReadFunctionBody(topFunction, (FunctionProxy **)&functionBody, sourceInfo, cache, nativeModule, true, !allowDefer /* don't deserialize nested if defer is allowed */);
+        hr = ReadFunctionBody(topFunction, reinterpret_cast<FunctionProxy**>(&functionBody), sourceInfo, cache, nativeModule, true, !allowDefer /* don't deserialize nested if defer is allowed */);
 
         (*function) = functionBody;
 
@@ -4582,7 +4581,7 @@ public:
     const byte *
     DeserializePropertyIdArray(ScriptContext * scriptContext, const byte * buffer, ByteBlock * deserializeInto, FunctionBody * functionBody)
     {
-        auto serialized = (const Js::SerializedPropertyIdArray *)buffer;
+        auto serialized = reinterpret_cast<const Js::SerializedPropertyIdArray*>(buffer);
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         Assert(serialized->magic == magicStartOfAuxPropIdArray);
 #endif
@@ -4590,14 +4589,14 @@ public:
         auto extraSlotCount = serialized->extraSlots;
 
         Assert(serialized->offset + sizeof(PropertyIdArray) <= deserializeInto->GetLength());
-        auto result = (PropertyIdArray *)(deserializeInto->GetBuffer() + serialized->offset);
+        auto result = reinterpret_cast<PropertyIdArray*>(deserializeInto->GetBuffer() + serialized->offset);
         result->count = propertyCount;
         result->extraSlots = extraSlotCount;
         Assert(serialized->offset + result->GetDataSize() <= deserializeInto->GetLength());
         result->hadDuplicates = serialized->hadDuplicates;
         result->has__proto__ = serialized->has__proto__;
 
-        auto elements = (PropertyId*)(serialized + 1);
+        auto elements = reinterpret_cast<const PropertyId*>(serialized + 1);
         for(int i=0;i<propertyCount;++i)
         {
             result->elements[i] = functionBody->GetByteCodeCache()->LookupPropertyId(elements[i]);
@@ -4620,18 +4619,18 @@ public:
     const byte *
     DeserializeFuncInfoArray(ScriptContext * scriptContext, const byte * buffer, ByteBlock * deserializeInto)
     {
-        auto serialized = (const SerializedFuncInfoArray *)buffer;
+        auto serialized = reinterpret_cast<const SerializedFuncInfoArray*>(buffer);
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         Assert(serialized->magic == magicStartOfAuxFuncInfoArray);
 #endif
         auto count = serialized->count;
 
         Assert(serialized->offset + sizeof(AuxArray<FuncInfoEntry>) < deserializeInto->GetLength());
-        auto result = (AuxArray<FuncInfoEntry> *)(deserializeInto->GetBuffer() + serialized->offset);
+        auto result = reinterpret_cast<AuxArray<FuncInfoEntry>*>(deserializeInto->GetBuffer() + serialized->offset);
         result->count = count;
         Assert(serialized->offset + result->GetDataSize() <= deserializeInto->GetLength());
 
-        auto elements = (int*)(serialized+1);
+        auto elements = reinterpret_cast<const int*>(serialized + 1);
         for(int i=0;i<count;++i)
         {
             result->elements[i].nestedIndex = elements[i*2];
@@ -4650,17 +4649,17 @@ public:
     template<typename T>
     const byte * DeserializeVarArray(ScriptContext * scriptContext, const byte * buffer, ByteBlock * deserializeInto)
     {
-        auto serialized = (const Js::SerializedVarArray *)buffer;
+        auto serialized = reinterpret_cast<const Js::SerializedVarArray*>(buffer);
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         Assert(serialized->magic == magicStartOfAuxVarArray);
 #endif
         Assert(serialized->offset + sizeof(T) < deserializeInto->GetLength());
-        auto result = (T *)(deserializeInto->GetBuffer() + serialized->offset);
+        auto result = reinterpret_cast<T*>(deserializeInto->GetBuffer() + serialized->offset);
         uint count = serialized->varCount;
         result->SetCount(count);
         Assert(serialized->offset + result->GetDataSize() <= deserializeInto->GetLength());
 
-        auto content = (const byte*)(serialized + 1);
+        auto content = reinterpret_cast<const byte*>(serialized + 1);
         auto current = content;
         for (uint index = 0; index < count; index++)
         {
@@ -4685,7 +4684,7 @@ public:
                 case ctInt8:
                     {
                         int8_t value;
-                        current = ReadByte(current, (byte *)&value);
+                        current = ReadByte(current, reinterpret_cast<byte*>(&value));
                         result->elements[index] = Js::TaggedInt::ToVarUnchecked(value);
                         break;
                     }
@@ -4714,17 +4713,17 @@ public:
 
     const byte * DeserializeIntArray(ScriptContext * scriptContext, const byte * buffer, ByteBlock * deserializeInto)
     {
-        auto serialized = (const Js::SerializedIntArray *)buffer;
+        auto serialized = reinterpret_cast<const Js::SerializedIntArray*>(buffer);
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         Assert(serialized->magic == magicStartOfAuxIntArray);
 #endif
         Assert(serialized->offset + sizeof(AuxArray<int>) < deserializeInto->GetLength());
-        auto result = (AuxArray<int> *)(deserializeInto->GetBuffer() + serialized->offset);
+        auto result = reinterpret_cast<AuxArray<int>*>(deserializeInto->GetBuffer() + serialized->offset);
         uint count = serialized->intCount;
         result->count = count;
         Assert(serialized->offset + result->GetDataSize() <= deserializeInto->GetLength());
 
-        auto content = (const byte*)(serialized + 1);
+        auto content = reinterpret_cast<const byte*>(serialized + 1);
         auto current = content;
         for (uint index = 0; index < count; index++)
         {
@@ -4744,17 +4743,17 @@ public:
     const byte *
     DeserializeFloatArray(ScriptContext * scriptContext, const byte * buffer, ByteBlock * deserializeInto)
     {
-        auto serialized = (const SerializedFloatArray *)buffer;
+        auto serialized = reinterpret_cast<const SerializedFloatArray*>(buffer);
 #ifdef BYTE_CODE_MAGIC_CONSTANTS
         Assert(serialized->magic == magicStartOfAuxFltArray);
 #endif
         Assert(serialized->offset + sizeof(AuxArray<double>) < deserializeInto->GetLength());
-        auto result = (AuxArray<double> *)(deserializeInto->GetBuffer() + serialized->offset);
+        auto result = reinterpret_cast<AuxArray<double>*>(deserializeInto->GetBuffer() + serialized->offset);
         uint count = serialized->floatCount;
         result->count = count;
         Assert(serialized->offset + result->GetDataSize() <= deserializeInto->GetLength());
 
-        auto content = (const byte*)(serialized + 1);
+        auto content = reinterpret_cast<const byte*>(serialized + 1);
         auto current = content;
         for (uint index = 0; index < count; index++)
         {
@@ -5028,7 +5027,7 @@ FunctionBody* ByteCodeSerializer::DeserializeFunction(ScriptContext* scriptConte
     FunctionBody* deserializedFunctionBody = nullptr;
     ByteCodeCache* cache = deferredFunction->m_cache;
     ByteCodeBufferReader* reader = cache->GetReader();
-    int32_t hr = reader->ReadFunctionBody(deferredFunction->m_functionBytes, (FunctionProxy **)&deserializedFunctionBody, deferredFunction->GetUtf8SourceInfo(), cache, deferredFunction->m_nativeModule, true /* deserialize this */, false /* deserialize nested functions */, deferredFunction);
+    int32_t hr = reader->ReadFunctionBody(deferredFunction->m_functionBytes, reinterpret_cast<FunctionProxy**>(&deserializedFunctionBody), deferredFunction->GetUtf8SourceInfo(), cache, deferredFunction->m_nativeModule, true /* deserialize this */, false /* deserialize nested functions */, deferredFunction);
     if (FAILED(hr))
     {
         // This should never happen as the code is currently

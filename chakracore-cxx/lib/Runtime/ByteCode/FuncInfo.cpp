@@ -33,7 +33,7 @@ FuncInfo::FuncInfo(
     outArgsMaxDepth(0),
     outArgsCurrentExpr(0),
     innerScopeCount(0),
-    currentInnerScopeIndex((uint)-1),
+    currentInnerScopeIndex(static_cast<uint>(-1)),
 #if DBG
     outArgsDepth(0),
 #endif
@@ -125,7 +125,7 @@ FuncInfo::FuncInfo(
         // byte code gen is done.
         this->canDefer = !!(byteCodeFunction->GetAttributes() & Js::FunctionInfo::Attributes::CanDefer);
         byteCodeGenerator->AddFuncInfoToFinalizationSet(this);
-        byteCodeFunction->SetAttributes((Js::FunctionInfo::Attributes)(byteCodeFunction->GetAttributes() & ~Js::FunctionInfo::Attributes::CanDefer));
+        byteCodeFunction->SetAttributes(static_cast<Js::FunctionInfo::Attributes>(byteCodeFunction->GetAttributes() & ~Js::FunctionInfo::Attributes::CanDefer));
     }
 }
 
@@ -518,14 +518,14 @@ void FuncInfo::SetHasMaybeEscapedNestedFunc(DebugOnly(char16_t const * reason))
 uint FuncInfo::AcquireInnerScopeIndex()
 {
     uint index = this->currentInnerScopeIndex;
-    if (index == (uint)-1)
+    if (index == static_cast<uint>(-1))
     {
         index = 0;
     }
     else
     {
         index++;
-        if (index == (uint)-1)
+        if (index == static_cast<uint>(-1))
         {
             Js::Throw::OutOfMemory();
         }
@@ -541,11 +541,11 @@ uint FuncInfo::AcquireInnerScopeIndex()
 void FuncInfo::ReleaseInnerScopeIndex()
 {
     uint index = this->currentInnerScopeIndex;
-    Assert(index != (uint)-1);
+    Assert(index != static_cast<uint>(-1));
 
     if (index == 0)
     {
-        index = (uint)-1;
+        index = static_cast<uint>(-1);
     }
     else
     {

@@ -131,11 +131,11 @@ namespace Js
         OpCode newOpcode = Js::OpCode::InvalidOpCode;
         if (IsProfiledCallOp(op))
         {
-            newOpcode = (OpCode)(op - Js::OpCode::ProfiledCallI + Js::OpCode::CallI);
+            newOpcode = op - Js::OpCode::ProfiledCallI + Js::OpCode::CallI;
         }
         else if (IsProfiledCallOpWithICIndex(op))
         {
-            newOpcode = (OpCode)(op - Js::OpCode::ProfiledCallIWithICIndex + Js::OpCode::CallI);
+            newOpcode = op - Js::OpCode::ProfiledCallIWithICIndex + Js::OpCode::CallI;
         }
         else
         {
@@ -150,7 +150,7 @@ namespace Js
         OpCode newOpcode = Js::OpCode::InvalidOpCode;
         if (IsProfiledReturnTypeCallOp(op))
         {
-            newOpcode = (OpCode)(op - Js::OpCode::ProfiledReturnTypeCallI + Js::OpCode::CallI);
+            newOpcode = op - Js::OpCode::ProfiledReturnTypeCallI + Js::OpCode::CallI;
         }
         else
         {
@@ -164,18 +164,18 @@ namespace Js
     OpCode OpCodeUtil::ConvertCallOpToProfiled(OpCode op, bool withICIndex)
     {
         return (!withICIndex) ?
-            (OpCode)(op - OpCode::CallI + OpCode::ProfiledCallI) :
-            (OpCode)(op - OpCode::CallI + OpCode::ProfiledCallIWithICIndex);
+            op - OpCode::CallI + OpCode::ProfiledCallI :
+            op - OpCode::CallI + OpCode::ProfiledCallIWithICIndex;
     }
 
     OpCode OpCodeUtil::ConvertCallOpToProfiledReturnType(OpCode op)
     {
-        return (OpCode)(op - OpCode::CallI + OpCode::ProfiledReturnTypeCallI);
+        return op - OpCode::CallI + OpCode::ProfiledReturnTypeCallI;
     }
 
-    static_assert(((int)Js::OpCode::CallIExtendedFlags - (int)Js::OpCode::CallI) == ((int)Js::OpCode::ProfiledCallIExtendedFlags - (int)Js::OpCode::ProfiledCallI));
-    static_assert(((int)Js::OpCode::CallIExtendedFlags - (int)Js::OpCode::CallI) == ((int)Js::OpCode::ProfiledReturnTypeCallIExtendedFlags - (int)Js::OpCode::ProfiledReturnTypeCallI));
-    static_assert(((int)Js::OpCode::CallIExtendedFlags - (int)Js::OpCode::CallI) == ((int)Js::OpCode::ProfiledCallIExtendedFlagsWithICIndex - (int)Js::OpCode::ProfiledCallIWithICIndex));
+    static_assert((static_cast<int>(Js::OpCode::CallIExtendedFlags) - static_cast<int>(Js::OpCode::CallI)) == (static_cast<int>(Js::OpCode::ProfiledCallIExtendedFlags) - static_cast<int>(Js::OpCode::ProfiledCallI)));
+    static_assert((static_cast<int>(Js::OpCode::CallIExtendedFlags) - static_cast<int>(Js::OpCode::CallI)) == (static_cast<int>(Js::OpCode::ProfiledReturnTypeCallIExtendedFlags) - static_cast<int>(Js::OpCode::ProfiledReturnTypeCallI)));
+    static_assert((static_cast<int>(Js::OpCode::CallIExtendedFlags) - static_cast<int>(Js::OpCode::CallI)) == (static_cast<int>(Js::OpCode::ProfiledCallIExtendedFlagsWithICIndex) - static_cast<int>(Js::OpCode::ProfiledCallIWithICIndex)));
 
     char16_t const * const OpCodeUtil::OpCodeNames[] =
     {
@@ -202,8 +202,8 @@ namespace Js
     {
         if (op <= Js::OpCode::MaxByteSizedOpcodes)
         {
-            Assert((uint)op < std::size(OpCodeNames));
-            return OpCodeNames[(uint)op];
+            Assert(static_cast<uint>(op) < std::size(OpCodeNames));
+            return OpCodeNames[static_cast<uint>(op)];
         }
         else if (op < Js::OpCode::ByteCodeLast)
         {
@@ -235,10 +235,10 @@ namespace Js
 
     OpLayoutType OpCodeUtil::GetOpCodeLayout(OpCode op)
     {
-        if ((uint)op <= (uint)Js::OpCode::MaxByteSizedOpcodes)
+        if (static_cast<uint>(op) <= static_cast<uint>(Js::OpCode::MaxByteSizedOpcodes))
         {
-            AnalysisAssert((uint)op < std::size(OpCodeLayouts));
-            return OpCodeLayouts[(uint)op];
+            AnalysisAssert(static_cast<uint>(op) < std::size(OpCodeLayouts));
+            return OpCodeLayouts[static_cast<uint>(op)];
         }
         else if (op < Js::OpCode::ByteCodeLast)
         {
@@ -253,8 +253,8 @@ namespace Js
 
     bool OpCodeUtil::IsValidByteCodeOpcode(OpCode op)
     {
-        static_assert((int)Js::OpCode::MaxByteSizedOpcodes + 1 + std::size(OpCodeUtil::ExtendedOpCodeLayouts) == (int)Js::OpCode::ByteCodeLast);
-        return (uint)op < std::size(OpCodeLayouts)
+        static_assert(static_cast<int>(Js::OpCode::MaxByteSizedOpcodes) + 1 + std::size(OpCodeUtil::ExtendedOpCodeLayouts) == static_cast<int>(Js::OpCode::ByteCodeLast));
+        return static_cast<uint>(op) < std::size(OpCodeLayouts)
             || (op > Js::OpCode::MaxByteSizedOpcodes && op < Js::OpCode::ByteCodeLast);
     }
 

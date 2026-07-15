@@ -111,8 +111,8 @@ namespace Js
 
             int relativeJumpOffset = labelByteOffset - jumpByteOffset - offsetToEndOfLayoutByteSize;
             Assert(!useBranchIsland || (jumpOffset != m_jumpOffsets || (relativeJumpOffset < GetBranchLimit() && relativeJumpOffset >= -GetBranchLimit())));
-            Assert((T)relativeJumpOffset == relativeJumpOffset);
-            *pnBackPatch = (T)relativeJumpOffset;
+            Assert(static_cast<T>(relativeJumpOffset) == relativeJumpOffset);
+            *pnBackPatch = static_cast<T>(relativeJumpOffset);
         });
     }
 
@@ -2657,7 +2657,7 @@ StoreCommon:
         //   the byte-code, this will be updated.
         //
 
-        return (ByteCodeLabel)m_labelOffsets->Add(UINT_MAX);
+        return m_labelOffsets->Add(UINT_MAX);
     }
 
     void ByteCodeWriter::MarkLabel(ByteCodeLabel labelID)
@@ -2706,7 +2706,7 @@ StoreCommon:
                     m_jumpOffsets->Add(jumpInfo);
 
                     // Emit the jump around (if necessary)
-                    ByteCodeLabel jumpAroundLabel = (ByteCodeLabel)-1;
+                    ByteCodeLabel jumpAroundLabel = -1;
                     if (OpCodeAttr::HasFallThrough(op))
                     {
                         // emit jump around.
@@ -2718,7 +2718,7 @@ StoreCommon:
                     this->MarkLabel(longJumpLabel);
                     this->BrLong(Js::OpCode::BrLong, labelId);
 
-                    if (jumpAroundLabel != (ByteCodeLabel)-1)
+                    if (jumpAroundLabel != -1)
                     {
                         this->MarkLabel(jumpAroundLabel);
                     }
@@ -2822,7 +2822,7 @@ StoreCommon:
             return;
         }
 
-        ByteCodeLabel branchAroundLabel = (Js::ByteCodeLabel)-1;
+        ByteCodeLabel branchAroundLabel = -1;
         bool foundUnknown = m_jumpOffsets->MapUntilFrom(firstUnknownJumpInfo,
             [=, this, &branchAroundLabel, &currentOffset](int index, JumpInfo& jumpInfo)
         {
@@ -2842,8 +2842,8 @@ StoreCommon:
             {
                 // If a label is already defined, then it should be short
                 // (otherwise we should have emitted a branch island for it already).
-                Assert((int)labelByteOffset - (int)jumpByteOffset < GetBranchLimit()
-                    && (int)labelByteOffset - (int)jumpByteOffset >= -GetBranchLimit());
+                Assert(static_cast<int>(labelByteOffset) - static_cast<int>(jumpByteOffset) < GetBranchLimit()
+                    && static_cast<int>(labelByteOffset) - static_cast<int>(jumpByteOffset) >= -GetBranchLimit());
                 return false;
             }
 
@@ -2879,7 +2879,7 @@ StoreCommon:
             jumpInfo.labelId = longBranchLabel;
 
             // Emit the branch around if it hasn't been emitted already
-            if (branchAroundLabel == (Js::ByteCodeLabel)-1 && needBranchAround)
+            if (branchAroundLabel == -1 && needBranchAround)
             {
                 branchAroundLabel = this->DefineLabel();
                 this->Br(Js::OpCode::Br, branchAroundLabel);
@@ -2908,7 +2908,7 @@ StoreCommon:
             this->UpdateNextBranchIslandOffset(this->m_jumpOffsets->Count(), currentOffset);
         }
 
-        if (branchAroundLabel != (Js::ByteCodeLabel)-1)
+        if (branchAroundLabel != -1)
         {
             // Make the branch around label if we needed one
             this->MarkLabel(branchAroundLabel);
@@ -3194,7 +3194,7 @@ StoreCommon:
         }
 
         uint loopId = m_functionWrite->IncrLoopCount();
-        Assert((uint)m_loopHeaders->Count() == loopId);
+        Assert(static_cast<uint>(m_loopHeaders->Count()) == loopId);
 
         m_loopHeaders->Add(LoopHeaderData(m_byteCodeData.GetCurrentOffset(), 0, m_loopNest > 0, false));
         m_loopNest++;
@@ -3330,18 +3330,18 @@ StoreCommon:
         ByteCodeWriter* writer)
     {
         DebugOnly(const uint offset = currentOffset);
-        if (op <= (uint16)Js::OpCode::MaxByteSizedOpcodes)
+        if (op <= static_cast<uint16>(Js::OpCode::MaxByteSizedOpcodes))
         {
-            byte byteop = (byte)op;
+            byte byteop = static_cast<byte>(op);
             Write(&byteop, sizeof(byte));
         }
         else
         {
-            byte byteop = (byte)Js::OpCode::ExtendedOpcodePrefix;
+            byte byteop = static_cast<byte>(Js::OpCode::ExtendedOpcodePrefix);
             Write(&byteop, sizeof(byte));
             Write(&op, sizeof(uint16));
         }
-        Assert(OpCodeUtil::EncodedSize((Js::OpCode)op, SmallLayout)
+        Assert(OpCodeUtil::EncodedSize(static_cast<Js::OpCode>(op), SmallLayout)
                == (currentOffset - offset));
     }
 
@@ -3351,20 +3351,22 @@ StoreCommon:
         static_assert(layoutSize != SmallLayout);
         DebugOnly(const uint offset = currentOffset);
 
-        if (op <= (uint16)Js::OpCode::MaxByteSizedOpcodes)
+        if (op <= static_cast<uint16>(Js::OpCode::MaxByteSizedOpcodes))
         {
-            const byte exop = (byte)(layoutSize == LargeLayout ? Js::OpCode::LargeLayoutPrefix : Js::OpCode::MediumLayoutPrefix);
+            const byte exop = static_cast<byte>(layoutSize == LargeLayout ? Js::OpCode::LargeLayoutPrefix : Js::OpCode::MediumLayoutPrefix);
             Write(&exop, sizeof(byte));
-            byte byteop = (byte)op;
+            byte byteop = static_cast<byte>(op);
             Write(&byteop, sizeof(byte));
         }
         else
         {
-            const byte exop = (byte)(layoutSize == LargeLayout ? Js::OpCode::ExtendedLargeLayoutPrefix : Js::OpCode::ExtendedMediumLayoutPrefix);
+            const byte exop = static_cast<byte>(layoutSize == LargeLayout
+                                                    ? Js::OpCode::ExtendedLargeLayoutPrefix
+                                                    : Js::OpCode::ExtendedMediumLayoutPrefix);
             Write(&exop, sizeof(byte));
             Write(&op, sizeof(uint16));
         }
-        Assert(OpCodeUtil::EncodedSize((Js::OpCode)op, layoutSize) == (currentOffset - offset));
+        Assert(OpCodeUtil::EncodedSize(static_cast<Js::OpCode>(op), layoutSize) == (currentOffset - offset));
     }
 
     template <LayoutSize layoutSize>
@@ -3380,7 +3382,7 @@ StoreCommon:
         Assert(layoutSize == SmallLayout || OpCodeAttr::HasMultiSizeLayout(op));
         // Capture offset before encoding the opcode
         uint offset = GetCurrentOffset();
-        EncodeOpCode<layoutSize>((uint16)op, writer);
+        EncodeOpCode<layoutSize>(static_cast<uint16>(op), writer);
 
         if (op != Js::OpCode::Ld_A)
         {
@@ -3427,7 +3429,7 @@ StoreCommon:
     {
         AssertMsg(byteSize > current->RemainingBytes(), "We should not need an extension if there is enough space in the current chunk");
         uint bytesLeftToWrite = byteSize;
-        byte* dataToBeWritten = (byte*)data;
+        const byte* dataToBeWritten = static_cast<const byte*>(data);
         // the next chunk may already be created in the case that we are patching bytecode.
         // If so, we want to move the pointer to the beginning of the buffer
         if (current->nextChunk)
