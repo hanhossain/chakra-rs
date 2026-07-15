@@ -42,7 +42,7 @@ namespace utf8
             return E_OUTOFMEMORY;
         }
 
-        utf8char_t* destString = (utf8char_t*)allocator(cbDestString);
+        utf8char_t* destString = static_cast<utf8char_t*>(allocator(cbDestString));
         if (destString == nullptr)
         {
             return E_OUTOFMEMORY;
@@ -51,7 +51,7 @@ namespace utf8
         size_t cbEncoded = utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::TrueUtf8>(destString, cbDestString, sourceString, static_cast<charcount_t>(cchSourceString));
         Assert(cbEncoded <= cbDestString);
         static_assert(sizeof(utf8char_t) == sizeof(char), "Needs to be valid for cast");
-        *destStringPtr = (char*)destString;
+        *destStringPtr = reinterpret_cast<char*>(destString);
         *destCount = cbEncoded;
         if (allocateCount != nullptr)
         {
@@ -85,11 +85,11 @@ namespace utf8
         size_t cbEncoded = 0;
         if (destString == nullptr)
         {
-            cbEncoded = utf8::CountTrueUtf8(sourceString, (charcount_t)cchSourceString);
+            cbEncoded = utf8::CountTrueUtf8(sourceString, static_cast<charcount_t>(cchSourceString));
         }
         else
         {
-            cbEncoded = utf8::EncodeInto<utf8::Utf8EncodingKind::TrueUtf8>((utf8char_t*)destString, destCount, sourceString, static_cast<charcount_t>(cchSourceString));
+            cbEncoded = utf8::EncodeInto<utf8::Utf8EncodingKind::TrueUtf8>(reinterpret_cast<utf8char_t*>(destString), destCount, sourceString, static_cast<charcount_t>(cchSourceString));
             Assert(cbEncoded <= destCount);
         }
 
@@ -139,7 +139,7 @@ namespace utf8
                 sourceStart -= fallback;
                 break;
             }
-            destString[sourceStart] = (char16_t) ch;
+            destString[sourceStart] = static_cast<char16_t>(ch);
         }
 
         if (sourceStart == sourceCount)
@@ -149,11 +149,11 @@ namespace utf8
         }
         else
         {
-            LPCUTF8 remSourceString = (LPCUTF8)sourceString + sourceStart;
+            LPCUTF8 remSourceString = reinterpret_cast<LPCUTF8>(sourceString) + sourceStart;
             char16_t *remDestString = destString + sourceStart;
 
             charcount_t cchDestString = utf8::ByteIndexIntoCharacterIndex(remSourceString, cbSourceString - sourceStart);
-            cchDestString += (charcount_t)sourceStart;
+            cchDestString += static_cast<charcount_t>(sourceStart);
             if (cchDestString > sourceCount)
             {
                 return E_OUTOFMEMORY;
@@ -162,7 +162,7 @@ namespace utf8
             // Some node tests depend on the utf8 decoder not swallowing invalid unicode characters
             // instead of replacing them with the "replacement" chracter. Pass a flag to our
             // decoder to require such behavior
-            utf8::DecodeUnitsIntoAndNullTerminateNoAdvance(remDestString, remSourceString, (LPCUTF8) sourceString + cbSourceString, DecodeOptions::doAllowInvalidWCHARs);
+            utf8::DecodeUnitsIntoAndNullTerminateNoAdvance(remDestString, remSourceString, reinterpret_cast<LPCUTF8>(sourceString) + cbSourceString, DecodeOptions::doAllowInvalidWCHARs);
 
             static_assert(sizeof(utf8char_t) == sizeof(char), "Needs to be valid for cast");
             *destCount = cchDestString;
@@ -189,7 +189,7 @@ namespace utf8
             return E_OUTOFMEMORY;
         }
 
-        char16_t* destString = (char16_t*)allocator(cbDestString);
+        char16_t* destString = static_cast<char16_t*>(allocator(cbDestString));
         if (destString == nullptr)
         {
             return E_OUTOFMEMORY;

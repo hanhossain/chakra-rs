@@ -329,7 +329,7 @@ namespace Js
         static bool IsBrLong(OpCode op, const byte * ip)
         {
             static_assert(Js::OpCodeInfo<Js::OpCode::BrLong>::IsExtendedOpcode);
-            return (op == OpCode::ExtendedOpcodePrefix) && ((OpCode)(ByteCodeReader::PeekExtOp(ip)) == OpCode::BrLong);
+            return (op == OpCode::ExtendedOpcodePrefix) && (ByteCodeReader::PeekExtOp(ip) == OpCode::BrLong);
         }
 
         unsigned long GetStackAddress() const;

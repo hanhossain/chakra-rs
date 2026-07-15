@@ -286,7 +286,7 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
             {
                 throw WasmCompilationException(u"Invalid Section %s", sectionHeader.name);
             }
-            nextExpectedSection = SectionCode(sectionCode + 1);
+            nextExpectedSection = static_cast<SectionCode>(sectionCode + 1);
         }
 
         if (!GetReader()->ProcessCurrentSection())
@@ -328,7 +328,7 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
 
     if (firstThunk)
     {
-        int sourceId = (int)firstThunk->GetBody()->GetSourceContextId();
+        int sourceId = static_cast<int>(firstThunk->GetBody()->GetSourceContextId());
         char16_t range[64];
         swprintf_s(range, 64, u"%d.%d-%d.%d",
                    sourceId, firstThunk->GetBody()->GetLocalFunctionId(),
@@ -1044,7 +1044,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitLoop()
 
     // Save the first tmp (per type) of this loop to discern a yield outside the loop in jitloopbody scenario
     Js::RegSlot curRegs[WAsmJs::LIMIT];
-    for (WAsmJs::Types type = WAsmJs::Types(0); type != WAsmJs::LIMIT; type = WAsmJs::Types(type + 1))
+    for (WAsmJs::Types type = static_cast<WAsmJs::Types>(0); type != WAsmJs::LIMIT; type = static_cast<WAsmJs::Types>(type + 1))
     {
         uint32_t minYield = 0;
         if (!mTypedRegisterAllocator.IsTypeExcluded(type))
@@ -1146,9 +1146,9 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
 
     // copy args into a list so they could be generated in the right order (FIFO)
     EmitInfo* argsList = AnewArray(&m_alloc, EmitInfo, nArgs);
-    for (int i = int(nArgs) - 1; i >= 0; --i)
+    for (int i = static_cast<int>(nArgs) - 1; i >= 0; --i)
     {
-        EmitInfo info = PopEvalStack(calleeSignature->GetParam((Js::ArgSlot)i), u"Call argument does not match formal type");
+        EmitInfo info = PopEvalStack(calleeSignature->GetParam(static_cast<Js::ArgSlot>(i)), u"Call argument does not match formal type");
         // We can release the location of the arguments now, because we won't create new temps between start/call
         argsList[i] = info;
     }
@@ -1311,7 +1311,7 @@ PolymorphicEmitInfo WasmBytecodeGenerator::EmitCall()
         }
 
         EmitInfo singleResultInfo = retInfo.Count() > 0 ? retInfo.GetInfo(0) : EmitInfo(WasmTypes::Void);
-        args = (Js::ArgSlot)(::ceil((double)(argSize / sizeof(Js::Var))));
+        args = static_cast<Js::ArgSlot>(::ceil(static_cast<double>(argSize / sizeof(Js::Var))));
         // todo:: add bytecode to call and set aside multi results
         m_writer->AsmCall(Js::OpCodeAsmJs::I_Call, singleResultInfo.location, funcReg, args, WasmToAsmJs::GetAsmJsReturnType(singleResultInfo.type), profileId);
     }
@@ -1922,7 +1922,7 @@ BlockInfo* WasmBytecodeGenerator::PushLabel(WasmBlock blockData, Js::ByteCodeLab
                 // Pop the params in reverse order
                 for (int i = paramCount - 1; i >= 0; --i)
                 {
-                    Js::ArgSlot iArg = (Js::ArgSlot)i;
+                    Js::ArgSlot iArg = static_cast<Js::ArgSlot>(i);
                     EmitInfo param = PopEvalStack(signature->GetParam(iArg));
                     ReleaseLocation(&param);
                     inParams.SetInfo(param, iArg);
@@ -1957,7 +1957,7 @@ BlockInfo* WasmBytecodeGenerator::PushLabel(WasmBlock blockData, Js::ByteCodeLab
                 // Move in params to new location in reverse order
                 for (int i = paramCount - 1; i >= 0; --i)
                 {
-                    Js::ArgSlot iArg = (Js::ArgSlot)i;
+                    Js::ArgSlot iArg = static_cast<Js::ArgSlot>(i);
                     EmitInfo info = inParams.GetInfo(iArg);
                     EmitInfo newInfo = blockInfo->paramInfo.GetInfo(iArg);
                     m_writer->AsmReg2(GetLoadOp(newInfo.type), newInfo.location, info.location);
@@ -1995,7 +1995,7 @@ void WasmBytecodeGenerator::YieldToBlock(BlockInfo* blockInfo, PolymorphicEmitIn
 
 BlockInfo* WasmBytecodeGenerator::GetBlockInfo(uint32_t relativeDepth) const
 {
-    if (relativeDepth >= (uint32_t)m_blockInfos.Count())
+    if (relativeDepth >= static_cast<uint32_t>(m_blockInfos.Count()))
     {
         throw WasmCompilationException(u"Invalid branch target");
     }
