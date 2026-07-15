@@ -16,7 +16,7 @@ namespace DateTime
     int GetTZ(double tv, char16_t* dst_name, bool* is_dst, int* offset)
     {
         struct tm tm_local, *tm_result;
-        time_t time_noms = (time_t) (tv / 1000 /* drop ms */);
+        time_t time_noms = static_cast<time_t>(tv / 1000 /* drop ms */);
         tm_result = localtime_r(&time_noms, &tm_local);
         if (!tm_result)
         {
@@ -24,13 +24,13 @@ namespace DateTime
             *offset = 0;
             if (dst_name != nullptr)
             {
-                dst_name[0] = (char16_t) 0;
+                dst_name[0] = static_cast<char16_t>(0);
             }
             return 0;
         }
 
         *is_dst = tm_result->tm_isdst > 0;
-        *offset = (int) tm_result->tm_gmtoff;
+        *offset = static_cast<int>(tm_result->tm_gmtoff);
 
         if (dst_name != nullptr)
         {
@@ -44,7 +44,7 @@ namespace DateTime
             for (; length < __CC_PA_TIMEZONE_ABVR_NAME_LENGTH
                 && tm_result->tm_zone[length] != 0; length++)
             {
-                dst_name[length] = (char16_t) tm_result->tm_zone[length];
+                dst_name[length] = static_cast<char16_t>(tm_result->tm_zone[length]);
             }
 
             if (length >= __CC_PA_TIMEZONE_ABVR_NAME_LENGTH)
@@ -52,7 +52,7 @@ namespace DateTime
                 length = __CC_PA_TIMEZONE_ABVR_NAME_LENGTH - 1;
             }
 
-            dst_name[length] = (char16_t)0;
+            dst_name[length] = static_cast<char16_t>(0);
             return length;
         }
         else

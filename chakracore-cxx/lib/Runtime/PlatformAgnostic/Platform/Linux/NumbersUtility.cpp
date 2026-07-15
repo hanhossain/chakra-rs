@@ -52,13 +52,13 @@ namespace Numbers
         struct lconv *locale_format = localeconv();
         if (locale_format != NULL)
         {
-            localeThousands = (char16_t) *(locale_format->thousands_sep);
-            localeDecimal = (char16_t) *(locale_format->decimal_point);
+            localeThousands = static_cast<char16_t>(*(locale_format->thousands_sep));
+            localeDecimal = static_cast<char16_t>(*(locale_format->decimal_point));
         }
         else // default to en_US
         {
-            localeThousands = (char16_t) ',';
-            localeDecimal = (char16_t) '.';
+            localeThousands = static_cast<char16_t>(',');
+            localeDecimal = static_cast<char16_t>('.');
         }
 
         if (old_locale != NULL)
@@ -85,7 +85,7 @@ namespace Numbers
         int minimum_pos = is_negative ? 1 : 0;
 
         // find decimal position
-        for(int pos = (int)length; pos >= minimum_pos; pos--)
+        for(int pos = static_cast<int>(length); pos >= minimum_pos; pos--)
         {
             char16_t num = number_string[pos];
 
@@ -218,7 +218,7 @@ namespace Numbers
 
         int thousand_counter = 0;
         const bool hasLocaleThousands = numbersLocale.HasLocaleThousands();
-        for (int pos = (int)decimal_pos - 1; pos >= minimum_pos; pos--)
+        for (int pos = static_cast<int>(decimal_pos) - 1; pos >= minimum_pos; pos--)
         {
             char16_t num = number_string[pos];
 

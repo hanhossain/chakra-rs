@@ -18,7 +18,7 @@
 #else // ifdef WINDOWS10_ICU
 // Normalize ICU_VERSION for non-Kit ICU
 #ifndef ICU_VERSION
-#include "unicode/uvernum.h"
+#include <unicode/uvernum.h>
 #define ICU_VERSION U_ICU_VERSION_MAJOR_NUM
 #endif
 
@@ -33,17 +33,17 @@
 #define U_HIDE_OBSOLETE_API 1
 #define U_HIDE_INTERNAL_API 1
 
-#include "unicode/ucal.h"
-#include "unicode/uclean.h"
-#include "unicode/ucol.h"
-#include "unicode/udat.h"
-#include "unicode/udatpg.h"
-#include "unicode/uloc.h"
-#include "unicode/ulocdata.h"
-#include "unicode/unumsys.h"
-#include "unicode/ustring.h"
-#include "unicode/unorm2.h"
-#include "unicode/upluralrules.h"
+#include <unicode/ucal.h>
+#include <unicode/uclean.h>
+#include <unicode/ucol.h>
+#include <unicode/udat.h>
+#include <unicode/udatpg.h>
+#include <unicode/uloc.h>
+#include <unicode/ulocdata.h>
+#include <unicode/unumsys.h>
+#include <unicode/ustring.h>
+#include <unicode/unorm2.h>
+#include <unicode/upluralrules.h>
 #endif // ifdef WINDOWS10_ICU
 
 // Different assertion code is used in ChakraFull that enforces that messages are char literals

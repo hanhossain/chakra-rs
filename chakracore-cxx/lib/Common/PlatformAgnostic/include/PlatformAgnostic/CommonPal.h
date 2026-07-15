@@ -294,9 +294,9 @@ STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_
 
 // STRSAFE error return codes
 //
-#define STRSAFE_E_INSUFFICIENT_BUFFER       ((int32_t)0x8007007AL)  // 0x7A = 122L = ERROR_INSUFFICIENT_BUFFER
-#define STRSAFE_E_INVALID_PARAMETER         ((int32_t)0x80070057L)  // 0x57 =  87L = ERROR_INVALID_PARAMETER
-#define STRSAFE_E_END_OF_FILE               ((int32_t)0x80070026L)  // 0x26 =  38L = ERROR_HANDLE_EOF
+#define STRSAFE_E_INSUFFICIENT_BUFFER       (static_cast<int32_t>(0x8007007AL))  // 0x7A = 122L = ERROR_INSUFFICIENT_BUFFER
+#define STRSAFE_E_INVALID_PARAMETER         (static_cast<int32_t>(0x80070057L))  // 0x57 =  87L = ERROR_INVALID_PARAMETER
+#define STRSAFE_E_END_OF_FILE               (static_cast<int32_t>(0x80070026L))  // 0x26 =  38L = ERROR_HANDLE_EOF
 // ----- END: Define strsafe related types and defines for non-VC++ compilers -----
 
 // Provide the definitions for non-windows platforms
@@ -320,7 +320,7 @@ STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_
         iRet = _vsnwprintf(pszDest, cchMax, pszFormat, argList);
         // ASSERT((iRet < 0) || (((size_t)iRet) <= cchMax));
 
-        if ((iRet < 0) || (((size_t)iRet) > cchMax))
+        if ((iRet < 0) || (static_cast<size_t>(iRet) > cchMax))
         {
             // need to null terminate the string
             pszDest += cchMax;
@@ -329,7 +329,7 @@ STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_
             // we have truncated pszDest
             hr = STRSAFE_E_INSUFFICIENT_BUFFER;
         }
-        else if (((size_t)iRet) == cchMax)
+        else if (static_cast<size_t>(iRet) == cchMax)
         {
             // need to null terminate the string
             pszDest += cchMax;
@@ -461,7 +461,7 @@ namespace PlatformAgnostic
         );
         return retval;
 #else
-        return _interlockedbittestandreset(_BitBase, (long)_BitPos);
+        return _interlockedbittestandreset(_BitBase, static_cast<long>(_BitPos));
 #endif
     }
 };

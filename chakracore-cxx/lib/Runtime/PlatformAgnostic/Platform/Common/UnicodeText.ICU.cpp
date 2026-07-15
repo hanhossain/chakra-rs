@@ -178,7 +178,7 @@ namespace PlatformAgnostic
             // Note that Windows returns this failure only if the dest buffer
             // is passed in, not in the estimation case
             size_t invalidIndex = 0;
-            if (destString != nullptr && !IsUtf16StringValid((const UChar*) sourceString, sourceLength, &invalidIndex))
+            if (destString != nullptr && !IsUtf16StringValid(sourceString, sourceLength, &invalidIndex))
             {
                 *pErrorOut = InvalidUnicodeText;
                 return -1 * static_cast<int32_t>(invalidIndex); // mimicking the behavior of Win32 NormalizeString
@@ -199,13 +199,13 @@ namespace PlatformAgnostic
             Assert(testString != nullptr);
             if (testStringLength < 0)
             {
-                testStringLength = u_strlen((const UChar*) testString);
+                testStringLength = u_strlen(testString);
             }
 
             // On Windows, IsNormalizedString returns failure if the string
             // is a malformed utf16 string. Maintain the same behavior here.
             size_t invalidIndex = 0;
-            if (!IsUtf16StringValid((const UChar*) testString, testStringLength, &invalidIndex))
+            if (!IsUtf16StringValid(testString, testStringLength, &invalidIndex))
             {
                 return false;
             }
@@ -240,13 +240,13 @@ namespace PlatformAgnostic
 
             if (toUpper)
             {
-                resultStringLength = u_strToUpper((UChar*) destString, destLength,
-                    (UChar*) sourceString, sourceLength, locale, &errorCode);
+                resultStringLength = u_strToUpper(destString, destLength,
+                    sourceString, sourceLength, locale, &errorCode);
             }
             else
             {
-                resultStringLength = u_strToLower((UChar*) destString, destLength,
-                    (UChar*) sourceString, sourceLength, locale, &errorCode);
+                resultStringLength = u_strToLower(destString, destLength,
+                    sourceString, sourceLength, locale, &errorCode);
             }
 
             *pErrorOut = TranslateUErrorCode(errorCode);

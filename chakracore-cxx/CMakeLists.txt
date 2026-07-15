@@ -244,10 +244,8 @@ if (CC_TARGETS_ARM64)
     endif ()
 endif ()
 
-include_directories(
-    ${ICU_INCLUDE_PATH}
-    ${CMAKE_SOURCE_DIR}/target/cxxbridge
-)
+include_directories(${CMAKE_SOURCE_DIR}/target/cxxbridge)
+include_directories(SYSTEM ${ICU_INCLUDE_PATH})
 
 if (IN_DOCKER)
     include_directories(${CMAKE_SOURCE_DIR}/target/docker)
