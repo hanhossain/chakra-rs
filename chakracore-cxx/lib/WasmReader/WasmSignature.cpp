@@ -193,7 +193,7 @@ void WasmSignature::FinalizeSignature()
     static_assert(Local::Limit - 1 <= (1 << nBitsForArgs));
 
     ::Math::RecordOverflowPolicy sigOverflow;
-    const uint32_t bitsRequiredForSig = UInt32Math::MulAdd<nBitsForArgs, nBitsForResult>((uint32_t)paramCount, sigOverflow);
+    const uint32_t bitsRequiredForSig = UInt32Math::MulAdd<nBitsForArgs, nBitsForResult>(paramCount, sigOverflow);
     if (sigOverflow.HasOverflowed())
     {
         return;

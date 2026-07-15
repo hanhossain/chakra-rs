@@ -45,7 +45,7 @@ namespace Js
             inline uint GetCurrentOffset()
             {
                 Assert(currentByte >= buffer);
-                return (uint) (currentByte - buffer);
+                return static_cast<uint>(currentByte - buffer);
             }
             inline void SetCurrentOffset(uint offset)
             {
@@ -358,7 +358,7 @@ namespace Js
         void EndSubexpression(ParseNode* node);
         void RecordFrameDisplayRegister(RegSlot slot);
         void RecordObjectRegister(RegSlot slot);
-        uint GetCurrentOffset() const { return (uint)m_byteCodeData.GetCurrentOffset(); }
+        uint GetCurrentOffset() const { return m_byteCodeData.GetCurrentOffset(); }
         DataChunk * GetCurrentChunk() const { return m_byteCodeData.GetCurrentChunk(); }
         void SetCurrent(uint offset, DataChunk * chunk) { m_byteCodeData.SetCurrent(offset, chunk); }
         bool ShouldIncrementCallSiteId(OpCode op);
