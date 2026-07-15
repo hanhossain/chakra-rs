@@ -14,14 +14,14 @@ const PerfHintItem s_perfHintContainer[] =
 void WritePerfHint(PerfHints hint, Js::FunctionBody * functionBody, uint byteCodeOffset /*= Js::Constants::NoByteCodeOffset*/)
 {
     Assert(functionBody);
-    Assert(((uint)hint) < std::size(s_perfHintContainer));
+    Assert(static_cast<uint>(hint) < std::size(s_perfHintContainer));
 
-    PerfHintItem item = s_perfHintContainer[(uint)hint];
+    PerfHintItem item = s_perfHintContainer[static_cast<uint>(hint)];
 
     int level = CONFIG_FLAG(PerfHintLevel);
-    Assert(level <= (int)PerfHintLevels::VERBOSE);
+    Assert(level <= static_cast<int>(PerfHintLevels::VERBOSE));
 
-    if ((int)item.level <= level)
+    if (static_cast<int>(item.level) <= level)
     {
         uint32_t lineNumber = functionBody->GetLineNumber();
         int32_t columnNumber = functionBody->GetColumnNumber();

@@ -6,7 +6,7 @@
 
 namespace Js
 {
-    LPCUTF8 const ISourceHolder::emptyString = (LPCUTF8)"\0";
+    LPCUTF8 const ISourceHolder::emptyString = reinterpret_cast<LPCUTF8>("\0");
     SimpleSourceHolder const ISourceHolder::emptySourceHolder(emptyString, _no_write_barrier_tag(), 0, true);
 
     void HeapSourceHolder::Dispose(bool fShutdown)
@@ -20,7 +20,7 @@ namespace Js
         {
             // REVIEW: Where is the inc for this guy?
             //PERF_COUNTER_DEC(Basic, ScriptCodeBufferCount);
-            if (this->originalSourceBuffer) { free((void*)this->originalSourceBuffer); }
+            if (this->originalSourceBuffer) { free(this->originalSourceBuffer); }
 
             this->source = nullptr;
             this->originalSourceBuffer = nullptr;

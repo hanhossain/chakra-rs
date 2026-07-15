@@ -10,7 +10,7 @@ struct InlinedFrameLayout
 
     Js::Var* GetArguments()
     {
-        return (Js::Var*)(this + 1);
+        return reinterpret_cast<Js::Var*>(this + 1);
     }
 
     template<class Fn>
@@ -25,7 +25,7 @@ struct InlinedFrameLayout
 
     InlinedFrameLayout* Next()
     {
-        InlinedFrameLayout *next = (InlinedFrameLayout *)(this->GetArguments() + this->callInfo.Count);
+        InlinedFrameLayout *next = reinterpret_cast<InlinedFrameLayout*>(this->GetArguments() + this->callInfo.Count);
         return next;
     }
 };

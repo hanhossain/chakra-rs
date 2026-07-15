@@ -29,16 +29,16 @@ void ExpirableObject::Dispose(bool isShutdown)
 
 void * ExpirableObject::GetRegistrationHandle()
 {
-    return (void *)(registrationHandle & ~1);
+    return reinterpret_cast<void*>(registrationHandle & ~1);
 }
 
 void 
 ExpirableObject::SetRegistrationHandle(void * registrationHandle)
 {
     Assert(this->GetRegistrationHandle() == nullptr);
-    Assert(((intptr_t)registrationHandle & 1) == 0);
+    Assert((reinterpret_cast<intptr_t>(registrationHandle) & 1) == 0);
     Assert(registrationHandle != nullptr);
-    this->registrationHandle |= (intptr_t)registrationHandle;
+    this->registrationHandle |= reinterpret_cast<intptr_t>(registrationHandle);
 }
 
 void

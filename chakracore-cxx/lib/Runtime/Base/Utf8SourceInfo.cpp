@@ -262,7 +262,7 @@ namespace Js
             long byteStartOffset = (sourceAfterBOM - sourceStart);
 
             Recycler* recycler = this->m_scriptContext->GetRecycler();
-            this->m_lineOffsetCache = RecyclerNew(recycler, LineOffsetCache, recycler, sourceAfterBOM, sourceEnd, startChar, (int)byteStartOffset);
+            this->m_lineOffsetCache = RecyclerNew(recycler, LineOffsetCache, recycler, sourceAfterBOM, sourceEnd, startChar, static_cast<int>(byteStartOffset));
         }
     }
 
@@ -299,7 +299,7 @@ namespace Js
             LPCUTF8 sourceAfterBOM = sourceStart;
             lineCharOffset = FunctionBody::SkipByteOrderMark(sourceAfterBOM /* byref */);
             Assert((sourceAfterBOM - sourceStart) < MAXUINT32);
-            charcount_t byteStartOffset = (charcount_t)(sourceAfterBOM - sourceStart);
+            charcount_t byteStartOffset = static_cast<charcount_t>(sourceAfterBOM - sourceStart);
 
             line = LineOffsetCache::FindLineForCharacterOffset(sourceAfterBOM, sourceEnd, lineCharOffset, byteStartOffset, charPosition);
 

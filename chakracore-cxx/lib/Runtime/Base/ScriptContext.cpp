@@ -838,11 +838,11 @@ namespace Js
                 // WOOB 1137798: JavascriptArray::GetIndex does not handle embedded NULLs. So if we have a property
                 // name "1234\0", JavascriptArray::GetIndex would incorrectly accepts it as an array index property
                 // name.
-                Assert((size_t)(name->GetLength()) != std::u16string(name->GetBuffer()).length());
+                Assert(static_cast<size_t>(name->GetLength()) != std::u16string(name->GetBuffer()).length());
             }
             else if (isNumericPropertyId)
             {
-                Assert((uint32_t)*value == index);
+                Assert(*value == index);
             }
         }
 #endif
@@ -1694,7 +1694,7 @@ namespace Js
     {
         if (value <= INT_MAX)
         {
-            return this->GetIntegerString((int)value);
+            return this->GetIntegerString(static_cast<int>(value));
         }
         return TaggedInt::ToString(value, this);
     }
@@ -1825,7 +1825,7 @@ namespace Js
 
             utf8Script = RecyclerNewArrayLeafTrace(this->GetRecycler(), utf8char_t, cbUtf8Buffer);
 
-            cbNeeded = utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::Cesu8>(utf8Script, cbUtf8Buffer, (const char16_t*)script, ccLength);
+            cbNeeded = utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::Cesu8>(utf8Script, cbUtf8Buffer, reinterpret_cast<const char16_t*>(script), ccLength);
 
 #if DBG_DUMP && defined(PROFILE_MEM)
             if (Js::Configuration::Global.flags.TraceMemory.IsEnabled(Js::ParsePhase) && Configuration::Global.flags.Verbose)
@@ -1839,7 +1839,7 @@ namespace Js
 
             // Free unused bytes
             Assert(cbNeeded + 1 <= cbUtf8Buffer);
-            *ppSourceInfo = Utf8SourceInfo::New(this, utf8Script, (int)length,
+            *ppSourceInfo = Utf8SourceInfo::New(this, utf8Script, static_cast<int>(length),
                 cbNeeded, pSrcInfo, isLibraryCode);
         }
         else
@@ -1848,7 +1848,7 @@ namespace Js
             if (loadScriptFlag & LoadScriptFlag_ExternalArrayBuffer)
             {
                 *ppSourceInfo = Utf8SourceInfo::NewWithNoCopy(this,
-                    script, (int)length, cb, pSrcInfo, isLibraryCode,
+                    script, static_cast<int>(length), cb, pSrcInfo, isLibraryCode,
                     scriptSource);
             }
             else
@@ -1856,7 +1856,7 @@ namespace Js
                 // The 'length' here is not correct (we will get the length from the parser) however parser isn't done yet.
                 // Once the parser is done we will update the utf8sourceinfo's length correctly
                 *ppSourceInfo = Utf8SourceInfo::New(this, script,
-                    (int)length, cb, pSrcInfo, isLibraryCode);
+                    static_cast<int>(length), cb, pSrcInfo, isLibraryCode);
             }
         }
     }
@@ -2056,7 +2056,7 @@ namespace Js
 
         if (fUseParserStateCache)
         {
-            computedSourceCRC = CalculateCRC(0, cbLength, (void*)pszSrc);
+            computedSourceCRC = CalculateCRC(0, cbLength, const_cast<LPUTF8>(pszSrc));
             hr = TryDeserializeParserState(grfscr, computedSourceCRC, cchLength, srcInfo, utf8SourceInfo, sourceIndex, isCesu8, nullptr, func, &parserStateCacheBuffer, &parserStateCacheByteCount, pDataCache);
         }
 
@@ -2126,7 +2126,7 @@ namespace Js
 
         try
         {
-            AUTO_NESTED_HANDLED_EXCEPTION_TYPE((ExceptionType)(ExceptionType_OutOfMemory | ExceptionType_StackOverflow));
+            AUTO_NESTED_HANDLED_EXCEPTION_TYPE(static_cast<ExceptionType>(ExceptionType_OutOfMemory | ExceptionType_StackOverflow));
             Js::AutoDynamicCodeReference dynamicFunctionReference(this);
             Parser parser(this);
             *function = LoadScriptInternal(&parser, script, cb, pSrcInfo, pse, ppSourceInfo, rootDisplayName, loadScriptFlag, scriptSource);
@@ -2187,7 +2187,7 @@ namespace Js
                 // If we registered source, we should remove it or we will register another source info
                 this->RemoveSource(sourceIndex);
             }
-            loadScriptFlag = (LoadScriptFlag)(loadScriptFlag | LoadScriptFlag_disableAsmJs);
+            loadScriptFlag = static_cast<LoadScriptFlag>(loadScriptFlag | LoadScriptFlag_disableAsmJs);
             return LoadScript(script, cb, pSrcInfo, pse, ppSourceInfo,
                 rootDisplayName, loadScriptFlag, scriptSource);
         }
@@ -2205,7 +2205,7 @@ namespace Js
         int32_t hr = NOERROR;
         try
         {
-            AUTO_NESTED_HANDLED_EXCEPTION_TYPE((ExceptionType)(ExceptionType_OutOfMemory | ExceptionType_StackOverflow));
+            AUTO_NESTED_HANDLED_EXCEPTION_TYPE(static_cast<ExceptionType>(ExceptionType_OutOfMemory | ExceptionType_StackOverflow));
             Js::AutoDynamicCodeReference dynamicFunctionReference(this);
             Parser parser(this);
             return LoadScriptInternal(&parser, script, cb, pSrcInfo, pse, ppSourceInfo, rootDisplayName, loadScriptFlag, scriptSource);
@@ -3303,7 +3303,7 @@ namespace Js
     /*static*/
     void ScriptContext::RecyclerFunctionCallbackForDebugger(void *address, size_t size)
     {
-        JavascriptFunction *pFunction = (JavascriptFunction *)address;
+        JavascriptFunction *pFunction = static_cast<JavascriptFunction*>(address);
 
         ScriptContext* scriptContext = pFunction->GetScriptContext();
         if (scriptContext == nullptr || scriptContext->IsClosed())
@@ -3402,7 +3402,7 @@ namespace Js
     {
         // TODO: we are assuming its function because for now we are enumerating only on functions
         // In future if the RecyclerNewEnumClass is used of Recyclable objects or Dynamic object, we would need a check if it is function
-        JavascriptFunction *pFunction = (JavascriptFunction *)address;
+        JavascriptFunction *pFunction = static_cast<JavascriptFunction*>(address);
 
         ScriptContext* scriptContext = pFunction->GetScriptContext();
         if (scriptContext == nullptr || scriptContext->IsClosed())
@@ -3438,7 +3438,7 @@ namespace Js
             if (!IsIntermediateCodeGenThunk(entryPoint) && entryPoint != DynamicProfileInfo::EnsureDynamicProfileInfoThunk)
 #endif
             {
-                OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\t\tJs::ScriptContext::GetProfileModeThunk : 0x%08X\n", (unsigned long)Js::ScriptContext::GetProfileModeThunk(entryPoint));
+                OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\t\tJs::ScriptContext::GetProfileModeThunk : 0x%08X\n", reinterpret_cast<unsigned long>(Js::ScriptContext::GetProfileModeThunk(entryPoint)));
 
                 ScriptFunction * scriptFunction = VarTo<ScriptFunction>(pFunction);
                 scriptFunction->ChangeEntryPoint(proxy->GetDefaultEntryPointInfo(), Js::ScriptContext::GetProfileModeThunk(entryPoint));
@@ -4131,92 +4131,92 @@ ScriptContext::GetJitFuncRangeCache()
 
     intptr_t ScriptContext::GetNullAddr() const
     {
-        return (intptr_t)GetLibrary()->GetNull();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetNull());
     }
 
     intptr_t ScriptContext::GetUndefinedAddr() const
     {
-        return (intptr_t)GetLibrary()->GetUndefined();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetUndefined());
     }
 
     intptr_t ScriptContext::GetTrueAddr() const
     {
-        return (intptr_t)GetLibrary()->GetTrue();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetTrue());
     }
 
     intptr_t ScriptContext::GetFalseAddr() const
     {
-        return (intptr_t)GetLibrary()->GetFalse();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetFalse());
     }
 
     intptr_t ScriptContext::GetUndeclBlockVarAddr() const
     {
-        return (intptr_t)GetLibrary()->GetUndeclBlockVar();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetUndeclBlockVar());
     }
 
     intptr_t ScriptContext::GetEmptyStringAddr() const
     {
-        return (intptr_t)GetLibrary()->GetEmptyString();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetEmptyString());
     }
 
     intptr_t ScriptContext::GetNegativeZeroAddr() const
     {
-        return (intptr_t)GetLibrary()->GetNegativeZero();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetNegativeZero());
     }
 
     intptr_t ScriptContext::GetNumberTypeStaticAddr() const
     {
-        return (intptr_t)GetLibrary()->GetNumberTypeStatic();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetNumberTypeStatic());
     }
 
     intptr_t ScriptContext::GetStringTypeStaticAddr() const
     {
-        return (intptr_t)GetLibrary()->GetStringTypeStatic();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetStringTypeStatic());
     }
 
     intptr_t ScriptContext::GetSymbolTypeStaticAddr() const
     {
-        return (intptr_t)GetLibrary()->GetSymbolTypeStatic();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetSymbolTypeStatic());
     }
 
     intptr_t ScriptContext::GetObjectTypeAddr() const
     {
-        return (intptr_t)GetLibrary()->GetObjectType();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetObjectType());
     }
 
     intptr_t ScriptContext::GetObjectHeaderInlinedTypeAddr() const
     {
-        return (intptr_t)GetLibrary()->GetObjectHeaderInlinedType();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetObjectHeaderInlinedType());
     }
 
     intptr_t ScriptContext::GetRegexTypeAddr() const
     {
-        return (intptr_t)GetLibrary()->GetRegexType();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetRegexType());
     }
 
     intptr_t ScriptContext::GetArrayTypeAddr() const
     {
-        return (intptr_t)GetLibrary()->GetArrayType();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetArrayType());
     }
 
     intptr_t ScriptContext::GetNativeIntArrayTypeAddr() const
     {
-        return (intptr_t)GetLibrary()->GetNativeIntArrayType();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetNativeIntArrayType());
     }
 
     intptr_t ScriptContext::GetNativeFloatArrayTypeAddr() const
     {
-        return (intptr_t)GetLibrary()->GetNativeFloatArrayType();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetNativeFloatArrayType());
     }
 
     intptr_t ScriptContext::GetArrayConstructorAddr() const
     {
-        return (intptr_t)GetLibrary()->GetArrayConstructor();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetArrayConstructor());
     }
 
     intptr_t ScriptContext::GetCharStringCacheAddr() const
     {
-        return (intptr_t)&GetLibrary()->GetCharStringCache();
+        return reinterpret_cast<intptr_t>(&GetLibrary()->GetCharStringCache());
     }
 
     intptr_t ScriptContext::GetSideEffectsAddr() const
@@ -4241,42 +4241,42 @@ ScriptContext::GetJitFuncRangeCache()
 
     intptr_t ScriptContext::GetBuiltinFunctionsBaseAddr() const
     {
-        return (intptr_t)GetLibrary()->GetBuiltinFunctions();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetBuiltinFunctions());
     }
 
     intptr_t ScriptContext::GetLibraryAddr() const
     {
-        return (intptr_t)GetLibrary();
+        return reinterpret_cast<intptr_t>(GetLibrary());
     }
 
     intptr_t ScriptContext::GetGlobalObjectAddr() const
     {
-        return (intptr_t)GetLibrary()->GetGlobalObject();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetGlobalObject());
     }
 
     intptr_t ScriptContext::GetGlobalObjectThisAddr() const
     {
-        return (intptr_t)GetLibrary()->GetGlobalObject()->ToThis();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetGlobalObject()->ToThis());
     }
 
     intptr_t ScriptContext::GetObjectPrototypeAddr() const
     {
-        return (intptr_t)GetLibrary()->GetObjectPrototype();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetObjectPrototype());
     }
 
     intptr_t ScriptContext::GetFunctionPrototypeAddr() const
     {
-        return (intptr_t)GetLibrary()->GetFunctionPrototype();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetFunctionPrototype());
     }
 
     intptr_t ScriptContext::GetNumberAllocatorAddr() const
     {
-        return (intptr_t)&numberAllocator;
+        return reinterpret_cast<intptr_t>(&numberAllocator);
     }
 
     intptr_t ScriptContext::GetRecyclerAddr() const
     {
-        return (intptr_t)GetRecycler();
+        return reinterpret_cast<intptr_t>(GetRecycler());
     }
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
@@ -4287,23 +4287,23 @@ ScriptContext::GetJitFuncRangeCache()
 
     intptr_t ScriptContext::GetDebugStepTypeAddr() const
     {
-        return (intptr_t)this->threadContext->GetDebugManager()->stepController.GetAddressOfStepType();
+        return reinterpret_cast<intptr_t>(this->threadContext->GetDebugManager()->stepController.GetAddressOfStepType());
     }
 
     intptr_t ScriptContext::GetDebugFrameAddressAddr() const
     {
-        return (intptr_t)this->threadContext->GetDebugManager()->stepController.GetAddressOfFrameAddress();
+        return reinterpret_cast<intptr_t>(this->threadContext->GetDebugManager()->stepController.GetAddressOfFrameAddress());
     }
 
     intptr_t ScriptContext::GetDebugScriptIdWhenSetAddr() const
     {
-        return (intptr_t)this->threadContext->GetDebugManager()->stepController.GetAddressOfScriptIdWhenSet();
+        return reinterpret_cast<intptr_t>(this->threadContext->GetDebugManager()->stepController.GetAddressOfScriptIdWhenSet());
     }
 #endif
 
     intptr_t Js::ScriptContext::GetChakraLibAddr() const
     {
-        return (intptr_t)GetLibrary()->GetChakraLib();
+        return reinterpret_cast<intptr_t>(GetLibrary()->GetChakraLib());
     }
 
     bool ScriptContext::GetRecyclerAllowNativeCodeBumpAllocation() const
@@ -4318,7 +4318,7 @@ ScriptContext::GetJitFuncRangeCache()
 
     intptr_t ScriptContext::GetAddr() const
     {
-        return (intptr_t)this;
+        return reinterpret_cast<intptr_t>(this);
     }
 
     intptr_t ScriptContext::GetVTableAddress(VTableValue vtableType) const
@@ -4524,7 +4524,7 @@ ScriptContext::GetJitFuncRangeCache()
         dest.str = src.str;
         dest.strict = src.strict;
         dest.moduleID = src.moduleID;
-        dest.hash = TAGHASH((hash_t)dest.str);
+        dest.hash = TAGHASH(static_cast<hash_t>(dest.str));
     }
 
     void ScriptContext::PrintStats()
@@ -4590,7 +4590,7 @@ ScriptContext::GetJitFuncRangeCache()
 
             uint total = 0;
             uint unique = 0;
-            for (int j = 0; j < (int)OpCode::ByteCodeLast; j++)
+            for (int j = 0; j < static_cast<int>(OpCode::ByteCodeLast); j++)
             {
                 total += byteCodeHistogram[j];
                 if (byteCodeHistogram[j] > 0)
@@ -4608,9 +4608,9 @@ ScriptContext::GetJitFuncRangeCache()
             {
                 uint upper = 0;
                 int index = -1;
-                for (int j = 0; j < (int)OpCode::ByteCodeLast; j++)
+                for (int j = 0; j < static_cast<int>(OpCode::ByteCodeLast); j++)
                 {
-                    if (OpCodeUtil::IsValidOpcode((OpCode)j) && byteCodeHistogram[j] > upper && byteCodeHistogram[j] < max)
+                    if (OpCodeUtil::IsValidOpcode(static_cast<OpCode>(j)) && byteCodeHistogram[j] > upper && byteCodeHistogram[j] < max)
                     {
                         index = j;
                         upper = byteCodeHistogram[j];
@@ -4624,11 +4624,11 @@ ScriptContext::GetJitFuncRangeCache()
 
                 max = byteCodeHistogram[index];
 
-                for (OpCode j = (OpCode)0; j < OpCode::ByteCodeLast; j++)
+                for (OpCode j = static_cast<OpCode>(0); j < OpCode::ByteCodeLast; j++)
                 {
-                    if (OpCodeUtil::IsValidOpcode(j) && max == byteCodeHistogram[(int)j])
+                    if (OpCodeUtil::IsValidOpcode(j) && max == byteCodeHistogram[static_cast<int>(j)])
                     {
-                        double pct = ((double)max) / total;
+                        double pct = static_cast<double>(max) / total;
                         pctcume += pct;
 
                         Output::Print(u"%9u  %5.1lf  %5.1lf  %04x %s\n", max, pct * 100, pctcume * 100, j, OpCodeUtil::GetOpCodeName(j));
