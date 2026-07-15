@@ -137,7 +137,7 @@ public:
 
     BVUnit* GetData() const
     {
-        return (BVUnit*)data;
+        return const_cast<BVUnit*>(data);
     }
 #if DBG_DUMP
     void            Dump() const;

@@ -2436,7 +2436,7 @@ template<typename T>
 void
 HeapPageAllocator<T>::DecommitPages(char* address, size_t pageCount /* = 1 */)
 {
-    Assert(pageCount <= MAXUINT32);
+    Assert(pageCount <= std::numeric_limits<uint32_t>::max());
 #pragma prefast(suppress:__WARNING_WIN32UNRELEASEDVADS, "The remainder of the clean-up is done later.");
     this->GetVirtualAllocator()->Free(address, pageCount * AutoSystemInfo::PageSize, MEM_DECOMMIT);
     this->LogFreePages(pageCount);
@@ -2462,7 +2462,7 @@ HeapPageAllocator<T>::ProtectPages(char* address, size_t pageCount, void* segmen
     if (this->IsPageSegment(segment))
     {
         PageSegmentBase<T> * pageSegment = static_cast<PageSegmentBase<T>*>(segment);
-        AssertMsg(pageCount <= MAXUINT32, "PageSegment should always be smaller than 4G pages");
+        AssertMsg(pageCount <= std::numeric_limits<uint32_t>::max(), "PageSegment should always be smaller than 4G pages");
         Assert(!pageSegment->IsFreeOrDecommitted(address, static_cast<uint>(pageCount)));
     }
 #endif

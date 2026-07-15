@@ -291,7 +291,7 @@ public:
 
     bool AllocSecondary(void* segment, size_t functionStart, size_t functionSize_t, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation)
     {
-        Assert(functionSize_t <= MAXUINT32);
+        Assert(functionSize_t <= std::numeric_limits<uint32_t>::max());
         uint32_t functionSize = static_cast<uint32_t>(functionSize_t);
         Assert(segment);
         if (IsPreReservedSegment(segment))

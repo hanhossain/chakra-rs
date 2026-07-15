@@ -233,7 +233,7 @@ public:
     uint GetAvailablePageCount() const
     {
         size_t availablePageCount = Base::GetAvailablePageCount();
-        Assert(availablePageCount < MAXUINT32);
+        Assert(availablePageCount < std::numeric_limits<uint32_t>::max());
         return static_cast<uint>(availablePageCount);
     }
 
@@ -356,7 +356,7 @@ class HeapPageAllocator;
 class PageAllocation
 {
 public:
-    char * GetAddress() const { return ((char *)this) + sizeof(PageAllocation); }
+    char * GetAddress() const { return const_cast<char *>(reinterpret_cast<const char *>(this)) + sizeof(PageAllocation); }
     size_t GetSize() const { return pageCount * AutoSystemInfo::PageSize - sizeof(PageAllocation); }
     size_t GetPageCount() const { return pageCount; }
     void* GetSegment() const { return segment; }

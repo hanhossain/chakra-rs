@@ -476,7 +476,7 @@ enum FncFlags : uint
     kFunctionIsAsync                            = 1 << 28, // function is async
     kFunctionHasDirectSuper                     = 1 << 29, // super()
     kFunctionIsDefaultModuleExport              = 1 << 30, // function is the default export of a module
-    kFunctionHasAnyWriteToFormals               = (uint)1 << 31  // To Track if there are any writes to formals.
+    kFunctionHasAnyWriteToFormals               = static_cast<uint>(1) << 31  // To Track if there are any writes to formals.
 };
 
 struct RestorePoint;
@@ -549,11 +549,11 @@ private:
     {
         if (set)
         {
-            fncFlags = (FncFlags)(fncFlags | flags);
+            fncFlags = static_cast<FncFlags>(fncFlags | flags);
         }
         else
         {
-            fncFlags = (FncFlags)(fncFlags & ~flags);
+            fncFlags = static_cast<FncFlags>(fncFlags & ~flags);
         }
     }
 
@@ -587,7 +587,7 @@ public:
     void SetHasDefaultArguments(bool set = true) { SetFlags(kFunctionHasDefaultArguments, set); }
     void SetHasDestructuredParams(bool set = true) { SetFlags(kFunctionHasDestructuredParams, set); }
     void SetHasHeapArguments(bool set = true) { SetFlags(kFunctionHasHeapArguments, set); }
-    void SetHasAnyWriteToFormals(bool set = true) { SetFlags((uint)kFunctionHasAnyWriteToFormals, set); }
+    void SetHasAnyWriteToFormals(bool set = true) { SetFlags(kFunctionHasAnyWriteToFormals, set); }
     void SetHasNonSimpleParameterList(bool set = true) { SetFlags(kFunctionHasNonSimpleParameterList, set); }
     void SetHasNonThisStmt(bool set = true) { SetFlags(kFunctionHasNonThisStmt, set); }
     void SetHasReferenceableBuiltInArguments(bool set = true) { SetFlags(kFunctionHasReferenceableBuiltInArguments, set); }
@@ -625,7 +625,7 @@ public:
     bool HasDefaultArguments() const { return HasFlags(kFunctionHasDefaultArguments); }
     bool HasDestructuredParams() const { return HasFlags(kFunctionHasDestructuredParams); }
     bool HasHeapArguments() const { return true; /* HasFlags(kFunctionHasHeapArguments); Disabling stack arguments. Always return HeapArguments as True */ }
-    bool HasAnyWriteToFormals() const { return HasFlags((uint)kFunctionHasAnyWriteToFormals); }
+    bool HasAnyWriteToFormals() const { return HasFlags(kFunctionHasAnyWriteToFormals); }
     bool HasOnlyThisStmts() const { return !HasFlags(kFunctionHasNonThisStmt); }
     bool HasReferenceableBuiltInArguments() const { return HasFlags(kFunctionHasReferenceableBuiltInArguments); }
     bool HasSuperReference() const { return HasFlags(kFunctionHasSuperReference); }

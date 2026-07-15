@@ -75,7 +75,7 @@ namespace Js
 
         virtual hash_t GetHashCode() override
         {
-            Assert(byteLength < MAXUINT32);
+            Assert(byteLength < std::numeric_limits<uint32_t>::max());
             return JsUtil::CharacterBuffer<utf8char_t>::StaticGetHashCode(source, (charcount_t)byteLength);
         }
 

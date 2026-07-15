@@ -28,7 +28,7 @@ namespace utf8
     {
         size_t cchSourceString = sourceCount;
 
-        if (cchSourceString >= MAXUINT32)
+        if (cchSourceString >= std::numeric_limits<uint32_t>::max())
         {
             return E_OUTOFMEMORY;
         }
@@ -75,7 +75,7 @@ namespace utf8
     {
         size_t cchSourceString = sourceCount;
 
-        if (cchSourceString >= MAXUINT32)
+        if (cchSourceString >= std::numeric_limits<uint32_t>::max())
         {
             return E_OUTOFMEMORY;
         }
@@ -113,7 +113,7 @@ namespace utf8
         size_t sourceStart = 0;
         size_t cbSourceString = sourceCount;
 
-        if (sourceCount >= MAXUINT32)
+        if (sourceCount >= std::numeric_limits<uint32_t>::max())
         {
             destString[0] = char16_t(0);
             return E_OUTOFMEMORY;

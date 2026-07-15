@@ -37,7 +37,7 @@ private:
 
 public:
     AllocationPolicyManager(bool needConcurrencySupport) :
-        memoryLimit((size_t)-1),
+        memoryLimit(static_cast<size_t>(-1)),
         currentMemory(0),
         supportConcurrency(needConcurrencySupport),
         context(NULL),
@@ -46,7 +46,7 @@ public:
         Js::Number limitMB = Js::Configuration::Global.flags.AllocPolicyLimit;
         if (limitMB > 0)
         {
-            memoryLimit = (size_t)limitMB * 1024 * 1024;
+            memoryLimit = static_cast<size_t>(limitMB) * 1024 * 1024;
         }
     }
 

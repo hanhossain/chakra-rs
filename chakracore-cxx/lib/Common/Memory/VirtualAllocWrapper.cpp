@@ -202,7 +202,7 @@ void * PreReservedVirtualAllocWrapper::AllocPages(void * lpAddress, size_t pageC
 
         uint freeSegmentsBVIndex = BVInvalidIndex;
         size_t requestedNumOfSegments = dwSize / (AutoSystemInfo::Data.GetAllocationGranularityPageSize());
-        Assert(requestedNumOfSegments <= MAXUINT32);
+        Assert(requestedNumOfSegments <= std::numeric_limits<uint32_t>::max());
 
         if (lpAddress == nullptr)
         {
@@ -323,7 +323,7 @@ PreReservedVirtualAllocWrapper::Free(void * lpAddress, size_t dwSize, uint32_t d
 #pragma warning(suppress: 28160) // Calling VirtualFreeEx without the MEM_RELEASE flag frees memory but not address descriptors (VADs)
         BOOL success = VirtualFree(lpAddress, dwSize, MEM_DECOMMIT);
         size_t requestedNumOfSegments = dwSize / AutoSystemInfo::Data.GetAllocationGranularityPageSize();
-        Assert(requestedNumOfSegments <= MAXUINT32);
+        Assert(requestedNumOfSegments <= std::numeric_limits<uint32_t>::max());
 
         if (success)
         {

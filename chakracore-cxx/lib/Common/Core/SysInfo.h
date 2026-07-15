@@ -93,7 +93,7 @@ private:
     uint32_t buildTimeHash;
     static int32_t GetVersionInfo(const char16_t* pszPath, uint32_t* majorVersion, uint32_t* minorVersion);
 
-    static const uint32_t INVALID_VERSION = (uint32_t)-1;
+    static const uint32_t INVALID_VERSION = static_cast<uint32_t>(-1);
 
     ULONG64 availableCommit;
     bool shouldQCMoreFrequently;

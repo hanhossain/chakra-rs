@@ -298,7 +298,7 @@ namespace Js
 
             LPCUTF8 sourceAfterBOM = sourceStart;
             lineCharOffset = FunctionBody::SkipByteOrderMark(sourceAfterBOM /* byref */);
-            Assert((sourceAfterBOM - sourceStart) < MAXUINT32);
+            Assert((sourceAfterBOM - sourceStart) < std::numeric_limits<uint32_t>::max());
             charcount_t byteStartOffset = static_cast<charcount_t>(sourceAfterBOM - sourceStart);
 
             line = LineOffsetCache::FindLineForCharacterOffset(sourceAfterBOM, sourceEnd, lineCharOffset, byteStartOffset, charPosition);
