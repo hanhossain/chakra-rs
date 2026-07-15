@@ -113,7 +113,7 @@ namespace Js
                     }
                 }
 
-                Output::Print(u"%02x", (byte)op);
+                Output::Print(u"%02x", op);
                 for (int i = layoutStart; i < endByteOffset; i++)
                 {
                     Output::Print(u" %02x", reader.GetRawByte(i));
@@ -148,7 +148,7 @@ namespace Js
 #endif
                 DumpI4(TaggedInt::ToInt32(varConst));
             }
-            else if (varConst == (Js::Var)&Js::NullFrameDisplay)
+            else if (varConst == static_cast<Js::Var>(const_cast<FrameDisplay*>(&Js::NullFrameDisplay)))
             {
 #if ENABLE_NATIVE_CODEGEN
                 Output::Print(u"%-10s", OpCodeUtil::GetOpCodeName(OpCode::LdNullDisplay));
@@ -157,7 +157,7 @@ namespace Js
                 Output::Print(u" (NullDisplay)");
 #endif
             }
-            else if (varConst == (Js::Var)&Js::StrictNullFrameDisplay)
+            else if (varConst == static_cast<Js::Var>(const_cast<FrameDisplay*>(&Js::StrictNullFrameDisplay)))
             {
 #if ENABLE_NATIVE_CODEGEN
                 Output::Print(u"%-10s", OpCodeUtil::GetOpCodeName(OpCode::LdStrictNullDisplay));
@@ -247,7 +247,7 @@ namespace Js
         for (RegSlot reg = 1;
             reg < dumpFunction->GetInParamsCount(); reg++)
         {
-            DumpReg((RegSlot)(reg + dumpFunction->GetConstantCount() - 1));
+            DumpReg(reg + dumpFunction->GetConstantCount() - 1);
             // DisableJIT-TODO: Should this entire function be ifdefed?
 #if ENABLE_NATIVE_CODEGEN
             Output::Print(u"%-11s", OpCodeUtil::GetOpCodeName(Js::OpCode::ArgIn_A));
@@ -307,17 +307,17 @@ namespace Js
 
     void ByteCodeDumper::DumpReg(RegSlot registerID)
     {
-        Output::Print(u" R%d ", (int) registerID);
+        Output::Print(u" R%d ", static_cast<int>(registerID));
     }
 
     void ByteCodeDumper::DumpReg(RegSlot_TwoByte registerID)
     {
-        Output::Print(u" R%d ", (int) registerID);
+        Output::Print(u" R%d ", registerID);
     }
 
     void ByteCodeDumper::DumpReg(RegSlot_OneByte registerID)
     {
-        Output::Print(u" R%d ", (int) registerID);
+        Output::Print(u" R%d ", registerID);
     }
 
     void ByteCodeDumper::DumpProfileId(uint id)
@@ -354,7 +354,7 @@ namespace Js
     {
         if (data->Return != Constants::NoRegister)
         {
-            DumpReg((RegSlot)data->Return);
+            DumpReg(static_cast<RegSlot>(data->Return));
             Output::Print(u"=");
         }
         Output::Print(u" R%d(ArgCount: %d)", data->Function, data->ArgCount);
@@ -841,7 +841,7 @@ namespace Js
             case OpCode::NewInnerScFunc:
             case OpCode::NewInnerScGenFunc:
             {
-                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy((uint)data->SlotIndex);
+                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy(static_cast<uint>(data->SlotIndex));
                 Output::Print(u" R%d = env:R%d, %s()", data->Value, data->Instance,
                         pfuncActual->EnsureDeserialized()->GetDisplayName());
                 break;
@@ -849,7 +849,7 @@ namespace Js
             case OpCode::NewScFuncHomeObj:
             case OpCode::NewScGenFuncHomeObj:
             {
-                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy((uint)data->SlotIndex);
+                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy(static_cast<uint>(data->SlotIndex));
                 Output::Print(u" R%d = hmo:R%d, %s()", data->Value, data->Instance,
                     pfuncActual->EnsureDeserialized()->GetDisplayName());
                 break;
@@ -905,7 +905,7 @@ namespace Js
             case OpCode::NewStackScFunc:
             case OpCode::NewScGenFunc:
             {
-                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy((uint)data->SlotIndex);
+                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy(static_cast<uint>(data->SlotIndex));
                 Output::Print(u" R%d = %s()", data->Value,
                         pfuncActual->EnsureDeserialized()->GetDisplayName());
                 break;
@@ -957,7 +957,7 @@ namespace Js
         case OpCode::NewInnerScFuncHomeObj:
         case OpCode::NewInnerScGenFuncHomeObj:
         {
-            FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy((uint)data->SlotIndex);
+            FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy(static_cast<uint>(data->SlotIndex));
             Output::Print(u" R%d = env:R%d hmo: R%d, %s()", data->Value, data->Instance, data->HomeObj,
                 pfuncActual->EnsureDeserialized()->GetDisplayName());
             break;
@@ -1188,7 +1188,7 @@ namespace Js
             case OpCode::ArgOut_A:
             case OpCode::ArgOut_ANonVar:
             {
-                Output::Print(u" Out%d =", (int) data->Arg);
+                Output::Print(u" Out%d =", static_cast<int>(data->Arg));
                 DumpReg(data->Reg);
                 break;
             }
@@ -1207,7 +1207,7 @@ namespace Js
         {
             case Js::OpCode::ArgOut_Env:
             {
-                Output::Print(u" Out%d ", (int) data->Arg);
+                Output::Print(u" Out%d ", static_cast<int>(data->Arg));
                 break;
             }
             default:
@@ -1291,7 +1291,7 @@ namespace Js
         {
             case Js::OpCode::InitBaseClass:
             {
-                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy((uint)data->SlotIndex);
+                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy(static_cast<uint>(data->SlotIndex));
                 Output::Print(u" R%d, R%d = %s()", data->R0, data->R1, pfuncActual->EnsureDeserialized()->GetDisplayName());
                 break;
             }
@@ -1327,7 +1327,7 @@ namespace Js
         {
             case Js::OpCode::InitInnerBaseClass:
             {
-                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy((uint)data->SlotIndex);
+                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy(static_cast<uint>(data->SlotIndex));
                 Output::Print(u" R%d, R%d = %s(), env:R%d", data->R0, data->R1, pfuncActual->EnsureDeserialized()->GetDisplayName(), data->R2);
                 break;
             }
@@ -1345,7 +1345,7 @@ namespace Js
         {
             case Js::OpCode::InitClass:
             {
-                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy((uint)data->SlotIndex);
+                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy(static_cast<uint>(data->SlotIndex));
                 Output::Print(u" R%d, R%d = R%d, R%d, %s()", data->R0, data->R1, data->R2, data->R3,
                     pfuncActual->EnsureDeserialized()->GetDisplayName());
                 break;
@@ -1374,7 +1374,7 @@ namespace Js
         {
             case Js::OpCode::InitInnerClass:
             {
-                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy((uint)data->SlotIndex);
+                FunctionProxy* pfuncActual = dumpFunction->GetNestedFunctionProxy(static_cast<uint>(data->SlotIndex));
                 Output::Print(u" R%d, R%d = R%d, R%d, %s(), env:R%d", data->R0, data->R1, data->R2, data->R3,
                     pfuncActual->EnsureDeserialized()->GetDisplayName(), data->R4);
                 break;

@@ -79,7 +79,7 @@ static const int GetOpCodeAttributes(Js::OpCode op)
     if (op <= Js::OpCode::MaxByteSizedOpcodes)
     {
         AnalysisAssert(op < std::size(OpcodeAttributes));
-        return OpcodeAttributes[(int)op];
+        return OpcodeAttributes[static_cast<int>(op)];
     }
     else if (op < Js::OpCode::ByteCodeLast)
     {
@@ -258,7 +258,7 @@ static const int GetOpCodeDebugAttributes(Js::OpCode op)
     if (op <= Js::OpCode::MaxByteSizedOpcodes)
     {
         AnalysisAssert(op < std::size(OpcodeDebugAttributes));
-        return OpcodeDebugAttributes[(int)op];
+        return OpcodeDebugAttributes[static_cast<int>(op)];
     }
     else if (op < Js::OpCode::ByteCodeLast)
     {

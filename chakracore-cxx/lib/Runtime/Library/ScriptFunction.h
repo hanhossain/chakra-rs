@@ -91,7 +91,7 @@ namespace Js
             Assert(this->GetFunctionProxy()->IsDeferred() == FALSE);
             ProxyEntryPointInfo* result = this->GetEntryPointInfo();
             Assert(result->IsFunctionEntryPointInfo());
-            return (FunctionEntryPointInfo*)result;
+            return static_cast<FunctionEntryPointInfo*>(result);
         }
 
         FunctionProxy * GetFunctionProxy() const;

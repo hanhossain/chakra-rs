@@ -1067,7 +1067,7 @@ void ByteCodeGenerator::DefineCachedFunctions(FuncInfo *funcInfoParent)
     {
         Js::Throw::OutOfMemory();
     }
-    int extraBytes = (int)extraBytesActual;
+    int extraBytes = static_cast<int>(extraBytesActual);
 
     Js::FuncInfoArray *info = AnewPlus(alloc, extraBytes, Js::FuncInfoArray, slotCount);
 
@@ -1251,7 +1251,7 @@ Js::RegSlot ByteCodeGenerator::DefineOneFunction(ParseNodeFnc *pnodeFnc, FuncInf
     // AssertMsg(funcInfo->nonLocalSymbols == 0 || regEnv != funcInfoParent->nullConstantRegister,
     // "We need a closure for the nested function");
 
-    Assert(pnodeFnc->nestedIndex != (uint)-1);
+    Assert(pnodeFnc->nestedIndex != static_cast<uint>(-1));
 
     // If we are in a parameter scope and it is not merged with body scope then we have to create the child function as an inner function
     if (regEnv == funcInfoParent->frameDisplayRegister || regEnv == funcInfoParent->GetEnvRegister())
@@ -1842,7 +1842,7 @@ void ByteCodeGenerator::InitScopeSlotArray(FuncInfo * funcInfo)
             [scopeSlotCount, propertyIdsForScopeSlotArray]
             (Js::PropertyId slot, Js::PropertyId propId)
         {
-            if (slot < 0 || (uint)slot >= scopeSlotCount)
+            if (slot < 0 || static_cast<uint>(slot) >= scopeSlotCount)
             {
                 Js::Throw::FatalInternalError();
             }
@@ -1952,7 +1952,7 @@ void ByteCodeGenerator::LoadAllConstants(FuncInfo *funcInfo)
     if (funcInfo->funcExprScope && funcInfo->funcExprScope->GetIsObject())
     {
         byteCodeFunction->MapAndSetFuncExprScopeRegister(funcInfo->funcExprScope->GetLocation());
-        byteCodeFunction->SetEnvDepth((uint16)-1);
+        byteCodeFunction->SetEnvDepth(static_cast<uint16>(-1));
     }
 
     bool thisLoadedFromParams = false;
@@ -3888,7 +3888,7 @@ bool ByteCodeGenerator::EnsureSymbolModuleSlots(Symbol* sym, FuncInfo* funcInfo)
         AnalysisAssert(moduleNameRecord != nullptr);
         Assert(moduleNameRecord->module->IsSourceTextModuleRecord());
         Js::SourceTextModuleRecord* resolvedModuleRecord =
-            (Js::SourceTextModuleRecord*)PointerValue(moduleNameRecord->module);
+            static_cast<Js::SourceTextModuleRecord*>(PointerValue(moduleNameRecord->module));
 
         moduleIndex = resolvedModuleRecord->GetModuleId();
         moduleSlotIndex = resolvedModuleRecord->GetLocalExportSlotIndexByLocalName(moduleNameRecord->bindingName);
@@ -7573,7 +7573,7 @@ Js::ArgSlot EmitArgListEnd(
     static const size_t maxExtraArgSlot = 4;  // max(extraEvalArg, extraArg), where extraEvalArg==2 (moduleRoot,env), extraArg==4 (this, eval, evalInModule, newTarget)
     AssertOrFailFastMsg(argIndex < Js::Constants::UShortMaxValue - maxExtraArgSlot, "Number of allowed arguments are already capped at parser level");
 
-    Js::ArgSlot argSlotIndex = (Js::ArgSlot) argIndex;
+    Js::ArgSlot argSlotIndex = static_cast<Js::ArgSlot>(argIndex);
     Js::ArgSlot evalIndex;
 
     if (fIsEval && argSlotIndex > 0)
@@ -7621,7 +7621,7 @@ Js::ArgSlot EmitArgListEnd(
         byteCodeGenerator->Writer()->ArgOut<true>(argSlotIndex + 1, newTargetLocation, callSiteId, false /*emitProfiledArgout*/);
     }
 
-    Js::ArgSlot argIntCount = argSlotIndex + 1 + (Js::ArgSlot)fIsEval + (Js::ArgSlot)fEvalInModule + (Js::ArgSlot)fHasNewTarget;
+    Js::ArgSlot argIntCount = argSlotIndex + 1 + static_cast<Js::ArgSlot>(fIsEval) + static_cast<Js::ArgSlot>(fEvalInModule) + static_cast<Js::ArgSlot>(fHasNewTarget);
 
     // eval and no args passed, return 1 as argument count
     if (fIsEval && pnode == nullptr)
@@ -7768,7 +7768,7 @@ void EmitConstantArgsToFltArray(ByteCodeGenerator *byteCodeGenerator, __out_ecou
         OpCode nop = args->AsParseNodeBin()->pnode1->nop;
         if (nop == knopInt)
         {
-            vars[index++] = (double)args->AsParseNodeBin()->pnode1->AsParseNodeInt()->lw;
+            vars[index++] = static_cast<double>(args->AsParseNodeBin()->pnode1->AsParseNodeInt()->lw);
         }
         else
         {
@@ -7786,7 +7786,7 @@ void EmitConstantArgsToFltArray(ByteCodeGenerator *byteCodeGenerator, __out_ecou
 
     if (args->nop == knopInt)
     {
-        vars[index++] = (double)args->AsParseNodeInt()->lw;
+        vars[index++] = static_cast<double>(args->AsParseNodeInt()->lw);
     }
     else
     {
@@ -8195,10 +8195,10 @@ void EmitCallI(
     uint spreadExtraAlloc = 0;
     bool isSuperCall = pnodeCall->isSuperCall;
 
-    Js::ArgSlot actualArgSlotCount = (Js::ArgSlot) actualArgCount;
+    Js::ArgSlot actualArgSlotCount = static_cast<Js::ArgSlot>(actualArgCount);
 
     // check for integer overflow
-    if ((size_t)actualArgSlotCount != actualArgCount)
+    if (static_cast<size_t>(actualArgSlotCount) != actualArgCount)
     {
         Js::Throw::OutOfMemory();
     }
@@ -8229,7 +8229,7 @@ void EmitCallI(
         }
         if (fHasNewTarget)
         {
-            callFlags = (Js::CallFlags) (callFlags | Js::CallFlags::CallFlags_ExtraArg | Js::CallFlags::CallFlags_NewTarget);
+            callFlags = callFlags | Js::CallFlags::CallFlags_ExtraArg | Js::CallFlags::CallFlags_NewTarget;
         }
 
         if (pnodeCall->spreadArgCount > 0)
@@ -8457,13 +8457,13 @@ void EmitNew(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* f
                 uint spreadExtraAlloc = UInt32Math::Mul(spreadIndices->count, sizeof(uint32_t));
                 uint spreadIndicesSize = UInt32Math::Add(sizeof(*spreadIndices), spreadExtraAlloc);
                 byteCodeGenerator->Writer()->CallIExtended(op, funcInfo->AcquireLoc(pnode), pnode->AsParseNodeCall()->pnodeTarget->location,
-                    (uint16)actualArgCount, Js::CallIExtended_SpreadArgs,
+                    static_cast<uint16>(actualArgCount), Js::CallIExtended_SpreadArgs,
                     spreadIndices, spreadIndicesSize, callSiteId);
             }
             else
             {
                 byteCodeGenerator->Writer()->CallI(op, funcInfo->AcquireLoc(pnode), pnode->AsParseNodeCall()->pnodeTarget->location,
-                    (uint16)actualArgCount, callSiteId);
+                    static_cast<uint16>(actualArgCount), callSiteId);
             }
         }
 
@@ -8506,7 +8506,7 @@ void EmitCall(
     unsigned int argCount = CountArguments(pnodeArgs, &fSideEffectArgs);
 
     BOOL fIsEval = pnodeCall->isEvalCall;
-    Js::ArgSlot argSlotCount = (Js::ArgSlot)argCount;
+    Js::ArgSlot argSlotCount = static_cast<Js::ArgSlot>(argCount);
 
     if (fIsEval)
     {
@@ -8534,7 +8534,7 @@ void EmitCall(
 
     // argCount indicates the total arguments count including the extra arguments.
     // argSlotCount indicates the actual arguments count. So argCount should always never be les sthan argSlotCount.
-    if (argCount < (unsigned int)argSlotCount)
+    if (argCount < static_cast<unsigned int>(argSlotCount))
     {
         Js::Throw::OutOfMemory();
     }
@@ -8588,7 +8588,7 @@ void EmitCall(
     // Emit argouts at end for generators so that we don't need to restore them when bailing in
     bool emitArgOutsAtEnd = pnodeCall->hasDestructuring || (funcInfo->byteCodeFunction->IsCoroutine() && pnodeCall->pnodeArgs != nullptr);
     Js::AuxArray<uint32_t> *spreadIndices;
-    EmitArgList(pnodeArgs, thisLocation, newTargetLocation, fIsEval, fEvaluateComponents, byteCodeGenerator, funcInfo, callSiteId, (Js::ArgSlot)argCount, emitArgOutsAtEnd, emitProfiledArgouts, spreadArgCount, &spreadIndices);
+    EmitArgList(pnodeArgs, thisLocation, newTargetLocation, fIsEval, fEvaluateComponents, byteCodeGenerator, funcInfo, callSiteId, static_cast<Js::ArgSlot>(argCount), emitArgOutsAtEnd, emitProfiledArgouts, spreadArgCount, &spreadIndices);
 
     if (!fEvaluateComponents)
     {
@@ -8600,7 +8600,7 @@ void EmitCall(
     }
 
     // End call, pop param space
-    funcInfo->EndRecordingOutArgs((Js::ArgSlot)argCount);
+    funcInfo->EndRecordingOutArgs(static_cast<Js::ArgSlot>(argCount));
 }
 
 void EmitInvoke(
@@ -8727,7 +8727,7 @@ void EmitMemberNode(ParseNode *memberNode, Js::RegSlot objectLocation, ByteCodeG
         return;
     }
 
-    Js::OpCode stFldOpCode = (Js::OpCode)0;
+    Js::OpCode stFldOpCode = static_cast<Js::OpCode>(0);
     if (useStore)
     {
         stFldOpCode = ByteCodeGenerator::GetStFldOpCode(funcInfo, false, false, false, isClassMember);
@@ -10326,7 +10326,7 @@ void EmitAdd(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator, FuncInfo *f
                 funcInfo->AcquireLoc(pnode);
 
                 // CONSIDER: this may cause the backend not able CSE repeating pattern within the concat.
-                EmitNewConcatStrMulti(pnode, (uint8_t)concatCount, pnode1, pnode2, byteCodeGenerator, funcInfo);
+                EmitNewConcatStrMulti(pnode, static_cast<uint8_t>(concatCount), pnode1, pnode2, byteCodeGenerator, funcInfo);
 
                 uint i = 2;
                 do
@@ -10340,7 +10340,7 @@ void EmitAdd(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator, FuncInfo *f
                     funcInfo->ReleaseLoc(currNode2);
                     funcInfo->ReleaseLoc(currNode);
                     byteCodeGenerator->Writer()->Reg3B1(
-                        Js::OpCode::SetConcatStrMultiItem2, pnode->location, currNode->location, currNode2->location, (uint8_t)i);
+                        Js::OpCode::SetConcatStrMultiItem2, pnode->location, currNode->location, currNode2->location, static_cast<uint8_t>(i));
                     i += 2;
                 } while (concatOpnds.Count() > 1);
 
@@ -10350,7 +10350,7 @@ void EmitAdd(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator, FuncInfo *f
                     Emit(currNode, byteCodeGenerator, funcInfo, false);
                     funcInfo->ReleaseLoc(currNode);
                     byteCodeGenerator->Writer()->Reg2B1(
-                        Js::OpCode::SetConcatStrMultiItem, pnode->location, currNode->location, (uint8_t)i);
+                        Js::OpCode::SetConcatStrMultiItem, pnode->location, currNode->location, static_cast<uint8_t>(i));
                     i++;
                 }
 
@@ -10485,7 +10485,7 @@ void EmitYieldAndResume(
         funcInfo);
 
     Js::RegSlot normalConst = funcInfo->constantToRegister.Lookup(
-        (uint)Js::ResumeYieldKind::Normal,
+        static_cast<uint>(Js::ResumeYieldKind::Normal),
         Js::Constants::NoRegister);
 
     Assert(normalConst != Js::Constants::NoRegister);
@@ -10496,7 +10496,7 @@ void EmitYieldAndResume(
     if (resumeThrowLabel != Js::Constants::NoByteCodeLabel)
     {
         Js::RegSlot throwConst = funcInfo->constantToRegister.Lookup(
-            (uint)Js::ResumeYieldKind::Throw,
+            static_cast<uint>(Js::ResumeYieldKind::Throw),
             Js::Constants::NoRegister);
 
         Assert(throwConst != Js::Constants::NoRegister);
@@ -12320,7 +12320,7 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
 
     case knopTryCatch:
     {
-        Js::ByteCodeLabel catchLabel = (Js::ByteCodeLabel) - 1;
+        Js::ByteCodeLabel catchLabel = - 1;
 
         ParseNodeTryCatch * pnodeTryCatch = pnode->AsParseNodeTryCatch();
         ParseNodeTry *pnodeTry = pnodeTryCatch->pnodeTry;
@@ -12508,7 +12508,7 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
 
     case knopTryFinally:
     {
-        Js::ByteCodeLabel finallyLabel = (Js::ByteCodeLabel) - 1;
+        Js::ByteCodeLabel finallyLabel = - 1;
 
         ParseNodeTryFinally * pnodeTryFinally = pnode->AsParseNodeTryFinally();
         ParseNodeTry *pnodeTry = pnodeTryFinally->pnodeTry;

@@ -77,7 +77,7 @@ namespace Js
         // Return current location and advance past data.
 
         Assert(ip < m_endLocation);
-        OpCode op = (OpCode)*ip++;
+        OpCode op = static_cast<OpCode>(*ip++);
 
         if (!OpCodeUtil::IsPrefixOpcode(op))
         {
@@ -91,23 +91,23 @@ namespace Js
     OpCode ByteCodeReader::ReadPrefixedOp(const byte *&ip, LayoutSize& layoutSize, OpCode prefix) const
     {
         Assert(ip < m_endLocation);
-        const uint16 nPrefixes = (uint16)Js::OpCode::Nop / LayoutCount;
+        const uint16 nPrefixes = static_cast<uint16>(Js::OpCode::Nop) / LayoutCount;
 
         // Make sure the assumption made for the order of the prefix are right
-        static_assert((uint16)Js::OpCode::ExtendedOpcodePrefix / nPrefixes == SmallLayout);
-        static_assert((uint16)Js::OpCode::MediumLayoutPrefix / nPrefixes == MediumLayout);
-        static_assert((uint16)Js::OpCode::ExtendedMediumLayoutPrefix / nPrefixes == MediumLayout);
-        static_assert((uint16)Js::OpCode::LargeLayoutPrefix / nPrefixes == LargeLayout);
-        static_assert((uint16)Js::OpCode::ExtendedLargeLayoutPrefix / nPrefixes == LargeLayout);
+        static_assert(static_cast<uint16>(Js::OpCode::ExtendedOpcodePrefix) / nPrefixes == SmallLayout);
+        static_assert(static_cast<uint16>(Js::OpCode::MediumLayoutPrefix) / nPrefixes == MediumLayout);
+        static_assert(static_cast<uint16>(Js::OpCode::ExtendedMediumLayoutPrefix) / nPrefixes == MediumLayout);
+        static_assert(static_cast<uint16>(Js::OpCode::LargeLayoutPrefix) / nPrefixes == LargeLayout);
+        static_assert(static_cast<uint16>(Js::OpCode::ExtendedLargeLayoutPrefix) / nPrefixes == LargeLayout);
 
-        static_assert((uint16)Js::OpCode::MediumLayoutPrefix % nPrefixes == 0);
-        static_assert((uint16)Js::OpCode::LargeLayoutPrefix % nPrefixes == 0);
-        static_assert((uint16)Js::OpCode::ExtendedOpcodePrefix % nPrefixes == 1);
-        static_assert((uint16)Js::OpCode::ExtendedMediumLayoutPrefix % nPrefixes == 1);
-        static_assert((uint16)Js::OpCode::ExtendedLargeLayoutPrefix % nPrefixes == 1);
+        static_assert(static_cast<uint16>(Js::OpCode::MediumLayoutPrefix) % nPrefixes == 0);
+        static_assert(static_cast<uint16>(Js::OpCode::LargeLayoutPrefix) % nPrefixes == 0);
+        static_assert(static_cast<uint16>(Js::OpCode::ExtendedOpcodePrefix) % nPrefixes == 1);
+        static_assert(static_cast<uint16>(Js::OpCode::ExtendedMediumLayoutPrefix) % nPrefixes == 1);
+        static_assert(static_cast<uint16>(Js::OpCode::ExtendedLargeLayoutPrefix) % nPrefixes == 1);
 
-        uint16 shortPrefix = (uint16)prefix;
-        layoutSize = (LayoutSize)(shortPrefix / nPrefixes);
+        uint16 shortPrefix = static_cast<uint16>(prefix);
+        layoutSize = static_cast<LayoutSize>(shortPrefix / nPrefixes);
         return shortPrefix & 1 ? ReadExtOp(ip) : ReadByteOp(ip);
     }
 
@@ -124,7 +124,7 @@ namespace Js
     {
         OpCode op = ReadOp(m_currentLocation, layoutSize);
 
-        return (OpCodeAsmJs)op;
+        return static_cast<OpCodeAsmJs>(op);
     }
 
     OpCode ByteCodeReader::ReadPrefixedOp(LayoutSize& layoutSize, OpCode prefix)
@@ -145,7 +145,7 @@ namespace Js
 
     OpCode ByteCodeReader::ReadByteOp(const byte*& ip)
     {
-        return (OpCode)*ip++;
+        return static_cast<OpCode>(*ip++);
     }
 
     OpCode ByteCodeReader::PeekByteOp(const byte * ip)
@@ -155,8 +155,8 @@ namespace Js
 
     OpCode ByteCodeReader::ReadExtOp(const byte*& ip)
     {
-        uint16*& extIp = (uint16*&)ip;
-        return (OpCode)*extIp++;
+        const uint16*& extIp = reinterpret_cast<const uint16*&>(ip);
+        return static_cast<OpCode>(*extIp++);
     }
 
     OpCode ByteCodeReader::PeekExtOp(const byte * ip)
@@ -205,7 +205,7 @@ namespace Js
     {
         Assert(m_currentLocation >= m_startLocation);
         Assert(m_currentLocation - m_startLocation <= UINT_MAX);
-        return (uint)(m_currentLocation - m_startLocation);
+        return static_cast<uint>(m_currentLocation - m_startLocation);
     }
 
     const byte * ByteCodeReader::SetCurrentOffset(int byteOffset)
@@ -228,7 +228,7 @@ namespace Js
     template <typename T>
     AuxArray<T> const * ByteCodeReader::ReadAuxArray(uint offset, FunctionBody * functionBody)
     {
-        Js::AuxArray<T> const * auxArray = (Js::AuxArray<T> const *)(functionBody->GetAuxiliaryData()->GetBuffer() + offset);
+        Js::AuxArray<T> const * auxArray = reinterpret_cast<Js::AuxArray<T> const*>(functionBody->GetAuxiliaryData()->GetBuffer() + offset);
         Assert(offset + auxArray->GetDataSize() <= functionBody->GetAuxiliaryData()->GetLength());
         return auxArray;
     }
@@ -236,7 +236,7 @@ namespace Js
     template <typename T>
     AuxArray<T> const * ByteCodeReader::ReadAuxArrayWithLock(uint offset, FunctionBody * functionBody)
     {
-        Js::AuxArray<T> const * auxArray = (Js::AuxArray<T> const *)(functionBody->GetAuxiliaryDataWithLock()->GetBuffer() + offset);
+        Js::AuxArray<T> const * auxArray = reinterpret_cast<Js::AuxArray<T> const*>(functionBody->GetAuxiliaryDataWithLock()->GetBuffer() + offset);
         Assert(offset + auxArray->GetDataSize() <= functionBody->GetAuxiliaryDataWithLock()->GetLength());
         return auxArray;
     }
@@ -252,9 +252,9 @@ namespace Js
     template AuxArray<uint32_t> const * ByteCodeReader::ReadAuxArrayWithLock<uint32_t>(uint offset, FunctionBody * functionBody);
     template AuxArray<double> const * ByteCodeReader::ReadAuxArrayWithLock<double>(uint offset, FunctionBody * functionBody);
     template AuxArray<FuncInfoEntry> const * ByteCodeReader::ReadAuxArrayWithLock<FuncInfoEntry>(uint offset, FunctionBody * functionBody);
-    template const Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)0> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)0> > >(const byte*&);
-    template const Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)1> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)1> > >(const byte*&);
-    template const Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)2> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<(Js::LayoutSize)2> > >(const byte*&);
+    template const Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<static_cast<Js::LayoutSize>(0)> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<static_cast<Js::LayoutSize>(0)> > >(const byte*&);
+    template const Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<static_cast<Js::LayoutSize>(1)> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<static_cast<Js::LayoutSize>(1)> > >(const byte*&);
+    template const Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<static_cast<Js::LayoutSize>(2)> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_Unsigned1<Js::LayoutSizePolicy<static_cast<Js::LayoutSize>(2)> > >(const byte*&);
 #ifdef ASMJS_PLAT
     template const Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)0> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)0> > >(const byte*&);
     template const Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)1> >* Js::ByteCodeReader::GetLayout<Js::OpLayoutT_WasmLoopStart<Js::LayoutSizePolicy<(Js::LayoutSize)1> > >(const byte*&);
@@ -263,14 +263,14 @@ namespace Js
 
     const Js::PropertyIdArray * ByteCodeReader::ReadPropertyIdArray(uint offset, FunctionBody * functionBody)
     {
-        Js::PropertyIdArray const * propIds = (Js::PropertyIdArray const *)(functionBody->GetAuxiliaryData()->GetBuffer() + offset);
+        Js::PropertyIdArray const * propIds = reinterpret_cast<Js::PropertyIdArray const*>(functionBody->GetAuxiliaryData()->GetBuffer() + offset);
         Assert(offset + propIds->GetDataSize() <= functionBody->GetAuxiliaryData()->GetLength());
         return propIds;
     }
 
     const Js::PropertyIdArray * ByteCodeReader::ReadPropertyIdArrayWithLock(uint offset, FunctionBody * functionBody)
     {
-        Js::PropertyIdArray const * propIds = (Js::PropertyIdArray const *)(functionBody->GetAuxiliaryDataWithLock()->GetBuffer() + offset);
+        Js::PropertyIdArray const * propIds = reinterpret_cast<Js::PropertyIdArray const*>(functionBody->GetAuxiliaryDataWithLock()->GetBuffer() + offset);
         Assert(offset + propIds->GetDataSize() <= functionBody->GetAuxiliaryDataWithLock()->GetLength());
         return propIds;
     }
@@ -288,7 +288,7 @@ namespace Js
     const Js::VarArrayVarCount * ByteCodeReader::ReadVarArrayVarCount(uint offset, FunctionBody * functionBody)
     {
         Js::ByteBlock* auxiliaryContextData = functionBody->GetAuxiliaryContextData();
-        Js::VarArrayVarCount const * varArray = (Js::VarArrayVarCount const *)(auxiliaryContextData->GetBuffer() + offset);
+        Js::VarArrayVarCount const * varArray = reinterpret_cast<Js::VarArrayVarCount const*>(auxiliaryContextData->GetBuffer() + offset);
         Assert(offset + varArray->GetDataSize() <= auxiliaryContextData->GetLength());
         return varArray;
     }
@@ -296,7 +296,7 @@ namespace Js
     const Js::VarArrayVarCount * ByteCodeReader::ReadVarArrayVarCountWithLock(uint offset, FunctionBody * functionBody)
     {
         Js::ByteBlock* auxiliaryContextData = functionBody->GetAuxiliaryContextDataWithLock();
-        Js::VarArrayVarCount const * varArray = (Js::VarArrayVarCount const *)(auxiliaryContextData->GetBuffer() + offset);
+        Js::VarArrayVarCount const * varArray = reinterpret_cast<Js::VarArrayVarCount const*>(auxiliaryContextData->GetBuffer() + offset);
         Assert(offset + varArray->GetDataSize() <= auxiliaryContextData->GetLength());
         return varArray;
     }

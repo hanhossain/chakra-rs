@@ -753,7 +753,8 @@ void ByteCodeGenerator::FinalizeFuncInfos()
     {
         if (funcInfo->canDefer)
         {
-            funcInfo->byteCodeFunction->SetAttributes((Js::FunctionInfo::Attributes)(funcInfo->byteCodeFunction->GetAttributes() | Js::FunctionInfo::Attributes::CanDefer));
+            funcInfo->byteCodeFunction->SetAttributes(static_cast<Js::FunctionInfo::Attributes>(funcInfo->byteCodeFunction->GetAttributes() |
+                Js::FunctionInfo::Attributes::CanDefer));
         }
     }
     NEXT_SLIST_ENTRY;
@@ -1231,9 +1232,7 @@ ParseNode* VisitBlock(ParseNode *pnode, ByteCodeGenerator* byteCodeGenerator, Pr
 
 #ifdef DBG
 // Attributes that should be consistent between defer parse and full parse.
-static const Js::FunctionInfo::Attributes StableFunctionInfoAttributesMask = (Js::FunctionInfo::Attributes)
-(
-    Js::FunctionInfo::Attributes::ErrorOnNew |
+static const Js::FunctionInfo::Attributes StableFunctionInfoAttributesMask = static_cast<Js::FunctionInfo::Attributes>(Js::FunctionInfo::Attributes::ErrorOnNew |
     Js::FunctionInfo::Attributes::Async |
     Js::FunctionInfo::Attributes::Lambda |
     Js::FunctionInfo::Attributes::SuperReference |
@@ -1245,8 +1244,7 @@ static const Js::FunctionInfo::Attributes StableFunctionInfoAttributesMask = (Js
     Js::FunctionInfo::Attributes::Module |
     Js::FunctionInfo::Attributes::ComputedName |
     Js::FunctionInfo::Attributes::HomeObj |
-    Js::FunctionInfo::Attributes::GeneratorWithComplexParams
-);
+    Js::FunctionInfo::Attributes::GeneratorWithComplexParams);
 #endif
 
 static Js::FunctionInfo::Attributes GetFunctionInfoAttributes(ParseNodeFnc * pnodeFnc)
@@ -1254,71 +1252,74 @@ static Js::FunctionInfo::Attributes GetFunctionInfoAttributes(ParseNodeFnc * pno
     Js::FunctionInfo::Attributes attributes = Js::FunctionInfo::Attributes::None;
     if (pnodeFnc->IsAsync())
     {
-        attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::ErrorOnNew | Js::FunctionInfo::Attributes::Async);
+        attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::ErrorOnNew |
+            Js::FunctionInfo::Attributes::Async);
     }
     if (pnodeFnc->IsLambda())
     {
-        attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::ErrorOnNew | Js::FunctionInfo::Attributes::Lambda);
+        attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::ErrorOnNew |
+            Js::FunctionInfo::Attributes::Lambda);
     }
     if (pnodeFnc->HasSuperReference())
     {
-        attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::SuperReference);
+        attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::SuperReference);
     }
     if (pnodeFnc->IsClassMember())
     {
         if (pnodeFnc->IsClassConstructor())
         {
-            attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::ClassConstructor);
+            attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::ClassConstructor);
 
             if (pnodeFnc->IsBaseClassConstructor())
             {
-                attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::BaseConstructorKind);
+                attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::BaseConstructorKind);
             }
         }
         else
         {
-            attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::ErrorOnNew | Js::FunctionInfo::Attributes::ClassMethod);
+            attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::ErrorOnNew |
+                Js::FunctionInfo::Attributes::ClassMethod);
         }
     }
     if (pnodeFnc->IsMethod())
     {
-        attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::Method);
+        attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::Method);
 
         // #sec-runtime-semantics-classdefinitionevaluation calls #sec-makeconstructor. #sec-makeconstructor
         // creates a prototype. Thus a method that is a class constructor has a prototype and should not
         // throw an error when new is called on the method.
         if (!pnodeFnc->IsClassConstructor())
         {
-            attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::ErrorOnNew);
+            attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::ErrorOnNew);
         }
     }
     if (pnodeFnc->IsGenerator())
     {
-        attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::Generator);
+        attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::Generator);
         if (pnodeFnc->HasNonSimpleParameterList())
         {
-            attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::GeneratorWithComplexParams);
+            attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::GeneratorWithComplexParams);
         }
     }
     if (pnodeFnc->IsAccessor())
     {
-        attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::ErrorOnNew);
+        attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::ErrorOnNew);
     }
     if (pnodeFnc->IsModule())
     {
-        attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::Module);
+        attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::Module);
     }
     if (pnodeFnc->CanBeDeferred())
     {
-        attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::CanDefer);
+        attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::CanDefer);
     }
     if (pnodeFnc->HasComputedName() && pnodeFnc->pnodeName == nullptr)
     {
-        attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::ComputedName);
+        attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::ComputedName);
     }
     if (pnodeFnc->HasHomeObj())
     {
-        attributes = (Js::FunctionInfo::Attributes)(attributes | Js::FunctionInfo::Attributes::HomeObj);
+        attributes = static_cast<Js::FunctionInfo::Attributes>(attributes | Js::FunctionInfo::Attributes::HomeObj);
     }
     return attributes;
 }
@@ -1347,7 +1348,7 @@ FuncInfo * ByteCodeGenerator::StartBindFunction(const char16_t *name, uint nameL
         if (!pnodeFnc->CanBeDeferred())
         {
             parsedFunctionBody->SetAttributes(
-                (Js::FunctionInfo::Attributes)(parsedFunctionBody->GetAttributes() & ~Js::FunctionInfo::Attributes::CanDefer));
+                static_cast<Js::FunctionInfo::Attributes>(parsedFunctionBody->GetAttributes() & ~Js::FunctionInfo::Attributes::CanDefer));
         }
         funcExprWithName =
             !(parsedFunctionBody->GetIsDeclaration() || pnodeFnc->IsMethod()) &&
@@ -1639,7 +1640,7 @@ void ByteCodeGenerator::PopScope()
     if (this->trackEnvDepth && currentScope->GetMustInstantiate())
     {
         this->envDepth--;
-        Assert(this->envDepth != (uint16)-1);
+        Assert(this->envDepth != static_cast<uint16>(-1));
     }
     if (currentScope->GetIsDynamic())
     {
@@ -2163,7 +2164,7 @@ void ByteCodeGenerator::CheckDeferParseHasMaybeEscapedNestedFunc()
             }
             catch (Js::OutOfMemoryException)
             {
-                FailedToBox_OOM_unrecoverable_error((size_t)functionBody);
+                FailedToBox_OOM_unrecoverable_error(reinterpret_cast<size_t>(functionBody));
             }
 
             return;
@@ -2475,7 +2476,7 @@ FuncInfo* PreVisitFunction(ParseNodeFnc* pnodeFnc, ByteCodeGenerator* byteCodeGe
         funcName = reinterpret_cast<const char16_t*>(pnodeFnc->hint);
         funcNameLength = pnodeFnc->hintLength;
         functionNameOffset = pnodeFnc->hintOffset;
-        Assert(funcNameLength != 0 || funcNameLength == (int)std::u16string(funcName).length());
+        Assert(funcNameLength != 0 || funcNameLength == static_cast<int>(std::u16string(funcName).length()));
     }
     if (pnodeFnc->IsDeclaration() || pnodeFnc->IsMethod())
     {
@@ -4732,15 +4733,15 @@ void AssignYieldResumeRegisters(ByteCodeGenerator* byteCodeGenerator)
 {
     // On resuming from a yield, we branch based on the ResumeYieldKind
     // integer value
-    byteCodeGenerator->EnregisterConstant((uint)Js::ResumeYieldKind::Normal);
-    byteCodeGenerator->EnregisterConstant((uint)Js::ResumeYieldKind::Throw);
+    byteCodeGenerator->EnregisterConstant(static_cast<uint>(Js::ResumeYieldKind::Normal));
+    byteCodeGenerator->EnregisterConstant(static_cast<uint>(Js::ResumeYieldKind::Throw));
 }
 
 void AssignAwaitRegisters(ByteCodeGenerator* byteCodeGenerator)
 {
     // On resuming from an await, we branch based on whether the ResumeYieldKind
     // is normal or throw
-    byteCodeGenerator->EnregisterConstant((uint)Js::ResumeYieldKind::Normal);
+    byteCodeGenerator->EnregisterConstant(static_cast<uint>(Js::ResumeYieldKind::Normal));
 }
 
 // Assign permanent (non-temp) registers for the function.

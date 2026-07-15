@@ -40,8 +40,8 @@ namespace Js
 #define VARIABLE_INT_BYTE_MASK ~((byte) VARIABLE_INT_BYTE_MAX)
 #define SENTINEL_BYTE_COUNT 1
 
-#define ONE_BYTE_MAX ((byte) 0xfd)
-#define TWO_BYTE_MAX ((uint16) 0xffff)
+#define ONE_BYTE_MAX (static_cast<byte>(0xfd))
+#define TWO_BYTE_MAX (static_cast<uint16>(0xffff))
 
 #define TWO_BYTE_SENTINEL   ONE_BYTE_MAX + 1
 #define FOUR_BYTE_SENTINEL  ONE_BYTE_MAX + 2
@@ -129,7 +129,7 @@ namespace Js
                         Throw::FatalInternalError();
                     }
                     DebugOnly(size = sizeof(byte));
-                    *(byte*)(buffer + this->offset) = (byte) value;
+                    *static_cast<byte*>(buffer + this->offset) = static_cast<byte>(value);
                 }
                 else if (UseTwoBytes())
                 {
@@ -138,8 +138,8 @@ namespace Js
                         Throw::FatalInternalError();
                     }
                     DebugOnly(size = sizeof(uint16) + 1);
-                    *(byte*)(buffer + this->offset) = TWO_BYTE_SENTINEL;
-                    *(uint16*)(buffer + this->offset + SENTINEL_BYTE_COUNT) = (uint16) this->value;
+                    *static_cast<byte*>(buffer + this->offset) = TWO_BYTE_SENTINEL;
+                    *reinterpret_cast<uint16*>(buffer + this->offset + SENTINEL_BYTE_COUNT) = static_cast<uint16>(this->value);
                 }
                 else
                 {
@@ -147,8 +147,8 @@ namespace Js
                     {
                         Throw::FatalInternalError();
                     }
-                    *(byte*)(buffer + this->offset) = FOUR_BYTE_SENTINEL;
-                    *(T*)(buffer + this->offset + SENTINEL_BYTE_COUNT) = this->value;
+                    *static_cast<byte*>(buffer + this->offset) = FOUR_BYTE_SENTINEL;
+                    *reinterpret_cast<T*>(buffer + this->offset + SENTINEL_BYTE_COUNT) = this->value;
                     DebugOnly(size = sizeof(T) + 1);
 #if INSTRUMENT_BUFFER_INTS
                     Output::Print(u"[BCGENSTATS] %d, %d\n", value, sizeof(T));
@@ -161,7 +161,7 @@ namespace Js
                 {
                     Throw::FatalInternalError();
                 }
-                *(T*)(buffer + this->offset) = value;
+                *reinterpret_cast<T*>(buffer + this->offset) = value;
             }
             DebugOnly(TraceOutput(buffer, size));
         }
@@ -191,7 +191,7 @@ namespace Js
                 Throw::FatalInternalError();
             }
 
-            *(T*)(buffer + this->offset) = value;
+            *reinterpret_cast<T*>(buffer + this->offset) = value;
             DebugOnly(TraceOutput(buffer, sizeof(T)));
         }
     };
