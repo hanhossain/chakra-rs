@@ -287,12 +287,12 @@ namespace Js
         }
         uint8_t** GetCurrentAddresOfReturnAddress() const
         {
-            return (uint8_t**)this->currentFrame.GetAddressOfReturnAddress();
+            return static_cast<uint8_t**>(this->currentFrame.GetAddressOfReturnAddress());
         }
 
         uint8_t** GetCurrentAddressOfInstructionPointer() const
         {
-            return (uint8_t**)this->currentFrame.GetAddressOfInstructionPointer();
+            return static_cast<uint8_t**>(this->currentFrame.GetAddressOfInstructionPointer());
         }
 
         void* GetInstructionPointer() const

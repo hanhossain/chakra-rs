@@ -143,7 +143,7 @@ namespace Js
             newDisplay->SetItem(i, value);
         }
 
-        return (Var)newDisplay;
+        return newDisplay;
     }
 
     // static
@@ -497,11 +497,11 @@ namespace Js
 
         TryFinally([&]()
         {
-            hr = callerHostScriptContext->GetDispatchExCaller((void**)&sourceCaller);
+            hr = callerHostScriptContext->GetDispatchExCaller(reinterpret_cast<void**>(&sourceCaller));
 
             if (SUCCEEDED(hr))
             {
-                hr = calleeHostScriptContext->SetCaller((IUnknown*)sourceCaller, (IUnknown**)&previousSourceCaller);
+                hr = calleeHostScriptContext->SetCaller(sourceCaller, &previousSourceCaller);
             }
 
             if (SUCCEEDED(hr))

@@ -41,10 +41,10 @@ namespace Js
         _In_reads_opt_(numberOfLines) const charcount_t *lineByteOffsets,
         int numberOfLines)
     {
-        this->lineCharacterOffsetCacheList = LineOffsetCacheReadOnlyList::New(allocator, (charcount_t *)lineCharacterOffsets, numberOfLines);
+        this->lineCharacterOffsetCacheList = LineOffsetCacheReadOnlyList::New(allocator, const_cast<charcount_t*>(lineCharacterOffsets), numberOfLines);
         if (lineByteOffsets)
         {
-            this->lineByteOffsetCacheList = LineOffsetCacheReadOnlyList::New(allocator, (charcount_t *)lineByteOffsets, numberOfLines);
+            this->lineByteOffsetCacheList = LineOffsetCacheReadOnlyList::New(allocator, const_cast<charcount_t*>(lineByteOffsets), numberOfLines);
         }
         else
         {
@@ -216,8 +216,8 @@ namespace Js
     // Tracks a new line offset in the cache.
     void LineOffsetCache::AddLine(Recycler * allocator, charcount_t characterOffset, charcount_t byteOffset)
     {
-        LineOffsetCacheList * characterOffsetList = (LineOffsetCacheList *)(LineOffsetCacheReadOnlyList*)this->lineCharacterOffsetCacheList;
-        LineOffsetCacheList * byteOffsetList = (LineOffsetCacheList *)(LineOffsetCacheReadOnlyList*)this->lineByteOffsetCacheList;
+        LineOffsetCacheList * characterOffsetList = static_cast<LineOffsetCacheList*>(static_cast<LineOffsetCacheReadOnlyList*>(this->lineCharacterOffsetCacheList));
+        LineOffsetCacheList * byteOffsetList = static_cast<LineOffsetCacheList*>(static_cast<LineOffsetCacheReadOnlyList*>(this->lineByteOffsetCacheList));
         if (characterOffset != byteOffset && byteOffsetList == nullptr)
         {
                 byteOffsetList = RecyclerNew(allocator, LineOffsetCacheList, allocator);

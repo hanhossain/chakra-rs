@@ -110,7 +110,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     numExpirableObjects(0),
     disableExpiration(false),
     callRootLevel(0),
-    nextTypeId((Js::TypeId)Js::Constants::ReservedTypeIds),
+    nextTypeId(static_cast<Js::TypeId>(Js::Constants::ReservedTypeIds)),
     entryExitRecord(nullptr),
     leafInterpreterFrame(nullptr),
     threadServiceWrapper(nullptr),
@@ -215,11 +215,11 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     // Since we created our page allocator while we were constructing this thread context
     // it will pick up the thread context id that is current on the thread. We need to update
     // that now.
-    pageAllocator.UpdateThreadContextHandle((ThreadContextId)this);
+    pageAllocator.UpdateThreadContextHandle(static_cast<ThreadContextId>(this));
 #endif
 
 #if DBG
-    arrayMutationSeed = (Js::Configuration::Global.flags.ArrayMutationTestSeed != 0) ? (uint)Js::Configuration::Global.flags.ArrayMutationTestSeed : (uint)time(NULL);
+    arrayMutationSeed = (Js::Configuration::Global.flags.ArrayMutationTestSeed != 0) ? static_cast<uint>(Js::Configuration::Global.flags.ArrayMutationTestSeed) : static_cast<uint>(time(NULL));
     srand(arrayMutationSeed);
 #endif
 
@@ -235,7 +235,7 @@ void ThreadContext::InitAvailableCommit()
     BOOL success = AutoSystemInfo::Data.GetAvailableCommit(&commit);
     if (!success)
     {
-        commit = (ULONG64)-1;
+        commit = static_cast<ULONG64>(-1);
         AutoSystemInfo::Data.SetAvailableCommit(commit);
     }
 }
@@ -264,7 +264,7 @@ ThreadContext::GetProcessHandle() const
 intptr_t
 ThreadContext::GetThreadStackLimitAddr() const
 {
-    return (intptr_t)GetAddressOfStackLimitForCurrentThread();
+    return reinterpret_cast<intptr_t>(GetAddressOfStackLimitForCurrentThread());
 }
 
 #if ENABLE_NATIVE_CODEGEN && defined(ENABLE_WASM_SIMD)
@@ -278,13 +278,13 @@ ThreadContext::GetSimdTempAreaAddr(uint8_t tempIndex) const
 intptr_t
 ThreadContext::GetDisableImplicitFlagsAddr() const
 {
-    return (intptr_t)&disableImplicitFlags;
+    return reinterpret_cast<intptr_t>(&disableImplicitFlags);
 }
 
 intptr_t
 ThreadContext::GetImplicitCallFlagsAddr() const
 {
-    return (intptr_t)&implicitCallFlags;
+    return reinterpret_cast<intptr_t>(&implicitCallFlags);
 }
 
 ptrdiff_t
@@ -631,7 +631,7 @@ Js::PropertyRecord const *
 ThreadContext::GetPropertyName(Js::PropertyId propertyId)
 {
     // This API should only be use on the main thread
-    Assert(GetCurrentThreadContextId() == (ThreadContextId)this);
+    Assert(GetCurrentThreadContextId() == static_cast<ThreadContextId>(this));
     return this->GetPropertyNameImpl<false>(propertyId);
 }
 
@@ -691,7 +691,7 @@ ThreadContext::FindPropertyRecord(Js::JavascriptString *pstName, Js::PropertyRec
 void
 ThreadContext::FindPropertyRecord(const char16_t * propertyName, int propertyNameLength, Js::PropertyRecord const ** propertyRecord)
 {
-    EnterPinnedScope((volatile void **)propertyRecord);
+    EnterPinnedScope(const_cast<volatile void**>(reinterpret_cast<void const**>(propertyRecord)));
     *propertyRecord = FindPropertyRecord(propertyName, propertyNameLength);
     LeavePinnedScope();
 }
@@ -957,7 +957,7 @@ void ThreadContext::GetOrAddPropertyId(_In_ const char16_t* propertyName, _In_ i
 
 void ThreadContext::GetOrAddPropertyId(_In_ JsUtil::CharacterBuffer<char16_t> const& propertyName, _Out_ Js::PropertyRecord const ** propRecord)
 {
-    EnterPinnedScope((volatile void **)propRecord);
+    EnterPinnedScope(const_cast<volatile void**>(reinterpret_cast<void const**>(propRecord)));
     *propRecord = GetOrAddPropertyRecord(propertyName);
     LeavePinnedScope();
 }
@@ -1350,7 +1350,7 @@ ThreadContext::IsOnStack(void const *ptr)
 #elif defined(_M_ARM64)
     ULONG64 lowLimit, highLimit;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
-    bool isOnStack = (void*)lowLimit <= ptr && ptr < (void*)highLimit;
+    bool isOnStack = reinterpret_cast<void*>(lowLimit) <= ptr && ptr < reinterpret_cast<void*>(highLimit);
     return isOnStack;
 #else
     return ::IsAddressOnStack((size_t) ptr);
@@ -1376,12 +1376,12 @@ ThreadContext::SetStackLimitForCurrentThread(size_t limit)
 bool
 ThreadContext::IsStackAvailable(size_t size, bool* isInterrupt)
 {
-    size_t sp = (size_t)_AddressOfReturnAddress();
+    size_t sp = reinterpret_cast<size_t>(_AddressOfReturnAddress());
     size_t stackLimit = this->GetStackLimitForCurrentThread();
     bool stackAvailable = (sp > size && (sp - size) > stackLimit);
 
     // Verify that JIT'd frames didn't mess up the ABI stack alignment
-    Assert(((uintptr_t)sp & (AutoSystemInfo::StackAlign - 1)) == (sizeof(void*) & (AutoSystemInfo::StackAlign - 1)));
+    Assert((sp & (AutoSystemInfo::StackAlign - 1)) == (sizeof(void*) & (AutoSystemInfo::StackAlign - 1)));
 
 #if DBG
     this->GetStackProber()->AdjustKnownStackLimit(sp, size);
@@ -1416,7 +1416,7 @@ ThreadContext::IsStackAvailable(size_t size, bool* isInterrupt)
 bool
 ThreadContext::IsStackAvailableNoThrow(size_t size)
 {
-    size_t sp = (size_t)_AddressOfReturnAddress();
+    size_t sp = reinterpret_cast<size_t>(_AddressOfReturnAddress());
     size_t stackLimit = this->GetStackLimitForCurrentThread();
     bool stackAvailable = (sp > stackLimit) && (sp > size) && ((sp - size) > stackLimit);
 
@@ -1617,11 +1617,11 @@ ThreadContext::LeaveScriptEnd(void * frameAddress)
     Js::ImplicitCallFlags savedImplicitCallFlags = entryExitRecord->savedImplicitCallFlags;
     if (leaveForHost)
     {
-        savedImplicitCallFlags = (Js::ImplicitCallFlags)(savedImplicitCallFlags | Js::ImplicitCall_External);
+        savedImplicitCallFlags = static_cast<Js::ImplicitCallFlags>(savedImplicitCallFlags | Js::ImplicitCall_External);
     }
     else if (entryExitRecord->hasReentered)
     {
-        savedImplicitCallFlags = (Js::ImplicitCallFlags)(savedImplicitCallFlags | Js::ImplicitCall_AsyncHostOperation);
+        savedImplicitCallFlags = static_cast<Js::ImplicitCallFlags>(savedImplicitCallFlags | Js::ImplicitCall_AsyncHostOperation);
     }
     // Restore the implicit call flags
     this->SetImplicitCallFlags(savedImplicitCallFlags);
@@ -1816,7 +1816,7 @@ ThreadContext::PushEntryExitRecord(Js::ScriptEntryExitRecord * record)
 #if defined(JSRT_VERIFY_RUNTIME_STATE) || defined(DEBUG)
             !IsOnStack(lastRecord) ||
 #endif
-            ((uintptr_t)record >= (uintptr_t)lastRecord
+            (reinterpret_cast<uintptr_t>(record) >= reinterpret_cast<uintptr_t>(lastRecord)
                 && !IS_ASAN_FAKE_STACK_ADDR(record)
                 && !IS_ASAN_FAKE_STACK_ADDR(lastRecord)))
         {
@@ -1838,7 +1838,7 @@ void ThreadContext::PopEntryExitRecord(Js::ScriptEntryExitRecord * record)
 #if defined(JSRT_VERIFY_RUNTIME_STATE) || defined(DEBUG)
         !IsOnStack(next) ||
 #endif
-        ((uintptr_t)this->entryExitRecord >= (uintptr_t)next
+        (reinterpret_cast<uintptr_t>(this->entryExitRecord) >= reinterpret_cast<uintptr_t>(next)
             && !IS_ASAN_FAKE_STACK_ADDR(this->entryExitRecord)
             && !IS_ASAN_FAKE_STACK_ADDR(next))))
     {
@@ -1852,7 +1852,7 @@ BOOL ThreadContext::ReserveStaticTypeIds(int first, int last)
 {
     if ( nextTypeId <= first )
     {
-        nextTypeId = (Js::TypeId) last;
+        nextTypeId = static_cast<Js::TypeId>(last);
         return TRUE;
     }
     else
@@ -1864,13 +1864,13 @@ BOOL ThreadContext::ReserveStaticTypeIds(int first, int last)
 Js::TypeId ThreadContext::ReserveTypeIds(int count)
 {
     Js::TypeId firstTypeId = nextTypeId;
-    nextTypeId = (Js::TypeId)(nextTypeId + count);
+    nextTypeId = static_cast<Js::TypeId>(nextTypeId + count);
     return firstTypeId;
 }
 
 Js::TypeId ThreadContext::CreateTypeId()
 {
-    return nextTypeId = (Js::TypeId)(nextTypeId + 1);
+    return nextTypeId = static_cast<Js::TypeId>(nextTypeId + 1);
 }
 
 void ThreadContext::SetWellKnownHostTypeId(WellKnownHostType wellKnownType, Js::TypeId typeId)
@@ -2158,8 +2158,8 @@ ThreadContext::PreCollectionCallBack(CollectionFlags flags)
     const BOOL concurrent = flags & CollectMode_Concurrent;
     const BOOL partial = flags & CollectMode_Partial;
 
-    RecyclerCollectCallBackFlags callBackFlags = (RecyclerCollectCallBackFlags)
-        ((concurrent ? Collect_Begin_Concurrent : Collect_Begin) | (partial? Collect_Begin_Partial : Collect_Begin));
+    RecyclerCollectCallBackFlags callBackFlags = static_cast<RecyclerCollectCallBackFlags>((concurrent ? Collect_Begin_Concurrent : Collect_Begin) | (
+        partial ? Collect_Begin_Partial : Collect_Begin));
     CollectionCallBack(callBackFlags);
 }
 
@@ -2206,7 +2206,7 @@ ThreadContext::DoExpirableCollectModeStackWalk()
         {
             if (javascriptFunction != nullptr && Js::ScriptFunction::Test(javascriptFunction))
             {
-                Js::ScriptFunction* scriptFunction = (Js::ScriptFunction*) javascriptFunction;
+                Js::ScriptFunction* scriptFunction = static_cast<Js::ScriptFunction*>(javascriptFunction);
 
                 scriptFunction->GetFunctionBody()->MapEntryPoints([](int index, Js::FunctionEntryPointInfo* entryPoint){
                     entryPoint->SetIsObjectUsed();
@@ -2216,7 +2216,7 @@ ThreadContext::DoExpirableCollectModeStackWalk()
                 [[maybe_unused]] Js::ProxyEntryPointInfo* entryPointInfo = scriptFunction->GetEntryPointInfo();
                 Assert(entryPointInfo == nullptr
                     || !entryPointInfo->IsFunctionEntryPointInfo()
-                    || ((Js::FunctionEntryPointInfo*)entryPointInfo)->IsObjectUsed());
+                    || entryPointInfo->IsObjectUsed());
             }
         }
     }
@@ -2371,7 +2371,7 @@ ThreadContext::GetRedeferralCollectionInterval() const
 
         default:
             Assert(0);
-            return (uint)-1;
+            return static_cast<uint>(-1);
     }
 }
 
@@ -2391,7 +2391,7 @@ ThreadContext::GetRedeferralInactiveThreshold() const
 
         default:
             Assert(0);
-            return (uint)-1;
+            return static_cast<uint>(-1);
     }
 }
 
@@ -2574,7 +2574,7 @@ ThreadContext::TryEnterExpirableCollectMode()
 
     double entryPointCollectionThreshold = Js::Configuration::Global.flags.ExpirableCollectionTriggerThreshold / 100.0;
 
-    double currentThreadNativeCodeRatio = ((double) GetCodeSize()) / Js::Constants::MaxThreadJITCodeHeapSize;
+    double currentThreadNativeCodeRatio = static_cast<double>(GetCodeSize()) / Js::Constants::MaxThreadJITCodeHeapSize;
 
     OUTPUT_TRACE(Js::ExpirableCollectPhase, u"Current native code ratio: %f\n", currentThreadNativeCodeRatio);
     if (currentThreadNativeCodeRatio > entryPointCollectionThreshold)
@@ -2603,7 +2603,7 @@ ThreadContext::RegisterExpirableObject(ExpirableObject* object)
 
     ExpirableObject** registrationData = this->expirableObjectList->PrependNode();
     (*registrationData) = object;
-    object->SetRegistrationHandle((void*) registrationData);
+    object->SetRegistrationHandle(static_cast<void*>(registrationData));
     OUTPUT_VERBOSE_TRACE(Js::ExpirableCollectPhase, u"Registered 0x%p\n", object);
 
     numExpirableObjects++;
@@ -2615,7 +2615,7 @@ ThreadContext::UnregisterExpirableObject(ExpirableObject* object)
     Assert(this->expirableObjectList);
     Assert(object->GetRegistrationHandle() != nullptr);
 
-    ExpirableObject** registrationData = (ExpirableObject**)PointerValue(object->GetRegistrationHandle());
+    ExpirableObject** registrationData = static_cast<ExpirableObject**>(PointerValue(object->GetRegistrationHandle()));
     Assert(*registrationData == object);
 
     this->expirableObjectList->MoveElementTo(registrationData, this->expirableObjectDisposeList);
@@ -2849,7 +2849,7 @@ void ThreadContext::NotifyInlineCacheBatchUnregistered(uint count)
     this->unregisteredInlineCacheCount += count;
     // Negative or 0 InlineCacheInvalidationListCompactionThreshold forces compaction all the time.
     if (CONFIG_FLAG(InlineCacheInvalidationListCompactionThreshold) <= 0 ||
-        this->registeredInlineCacheCount / this->unregisteredInlineCacheCount < (uint)CONFIG_FLAG(InlineCacheInvalidationListCompactionThreshold))
+        this->registeredInlineCacheCount / this->unregisteredInlineCacheCount < static_cast<uint>(CONFIG_FLAG(InlineCacheInvalidationListCompactionThreshold)))
     {
         CompactInlineCacheInvalidationLists();
     }
@@ -3605,7 +3605,7 @@ ThreadContext::AsyncHostOperationStart(void * suspendRecord)
             lastRecord->leaveForAsyncHostOperation = true;
 #endif
 #ifdef PROFILE_EXEC
-            lastRecord->scriptContext->ProfileSuspend(Js::RunPhase, (Js::Profiler::SuspendRecord *)suspendRecord);
+            lastRecord->scriptContext->ProfileSuspend(Js::RunPhase, static_cast<Js::Profiler::SuspendRecord*>(suspendRecord));
 #endif
         }
         else
@@ -3630,7 +3630,7 @@ ThreadContext::AsyncHostOperationEnd(bool wasInAsync, void * suspendRecord)
             lastRecord->leaveForAsyncHostOperation = wasInAsync;
 #endif
 #ifdef PROFILE_EXEC
-            lastRecord->scriptContext->ProfileResume((Js::Profiler::SuspendRecord *)suspendRecord);
+            lastRecord->scriptContext->ProfileResume(static_cast<Js::Profiler::SuspendRecord*>(suspendRecord));
 #endif
         }
         else
@@ -3848,12 +3848,12 @@ void ThreadContext::ClearImplicitCallFlags()
 void ThreadContext::ClearImplicitCallFlags(Js::ImplicitCallFlags flags)
 {
     Assert((flags & Js::ImplicitCall_None) == 0);
-    SetImplicitCallFlags((Js::ImplicitCallFlags)(implicitCallFlags & ~flags));
+    SetImplicitCallFlags(static_cast<Js::ImplicitCallFlags>(implicitCallFlags & ~flags));
 }
 
 void ThreadContext::CheckAndResetImplicitCallAccessorFlag()
 {
-    Js::ImplicitCallFlags accessorCallFlag = (Js::ImplicitCallFlags)(Js::ImplicitCall_Accessor & ~Js::ImplicitCall_None);
+    Js::ImplicitCallFlags accessorCallFlag = static_cast<Js::ImplicitCallFlags>(Js::ImplicitCall_Accessor & ~Js::ImplicitCall_None);
     if ((GetImplicitCallFlags() & accessorCallFlag) != 0)
     {
         ClearImplicitCallFlags(accessorCallFlag);
@@ -4034,9 +4034,9 @@ void InterruptPoller::GetStatementCount(uint32_t *pluHi, uint32_t *pluLo)
 
     elapsed = pollTick - resetTick;
 
-    unsigned long statements = (unsigned long)elapsed * InterruptPoller::TicksToStatements;
-    *pluLo = (uint32_t)statements;
-    *pluHi = (uint32_t)(statements >> 32);
+    unsigned long statements = static_cast<unsigned long>(elapsed) * InterruptPoller::TicksToStatements;
+    *pluLo = static_cast<uint32_t>(statements);
+    *pluHi = static_cast<uint32_t>(statements >> 32);
 }
 
 void ThreadContext::DisableExecution()
@@ -4070,12 +4070,12 @@ bool ThreadContext::TestThreadContextFlag(ThreadContextFlags contextFlag) const
 
 void ThreadContext::SetThreadContextFlag(ThreadContextFlags contextFlag)
 {
-    this->threadContextFlags = (ThreadContextFlags)(this->threadContextFlags | contextFlag);
+    this->threadContextFlags = static_cast<ThreadContextFlags>(this->threadContextFlags | contextFlag);
 }
 
 void ThreadContext::ClearThreadContextFlag(ThreadContextFlags contextFlag)
 {
-    this->threadContextFlags = (ThreadContextFlags)(this->threadContextFlags & ~contextFlag);
+    this->threadContextFlags = static_cast<ThreadContextFlags>(this->threadContextFlags & ~contextFlag);
 }
 
 // Despite the name, callers expect this to return the highest propid + 1.

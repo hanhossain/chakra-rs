@@ -139,7 +139,7 @@ namespace Js
     {
         // (#%u.%u), #%u --> (source file Id . function Id) , function Number
         [[maybe_unused]] int len = swprintf_s(bufferToWriteTo, MAX_FUNCTION_BODY_DEBUG_STRING_SIZE, u" (#%d.%u), #%u",
-            (int)this->GetSourceContextId(), this->GetLocalFunctionId(), this->GetFunctionNumber());
+            static_cast<int>(this->GetSourceContextId()), this->GetLocalFunctionId(), this->GetFunctionNumber());
         Assert(len > 8);
         return bufferToWriteTo;
     }
@@ -521,7 +521,7 @@ namespace Js
         m_pendingLoopHeaderRelease(false),
         hasCachedScopePropIds(false),
         m_argUsedForBranch(0),
-        m_envDepth((uint16)-1),
+        m_envDepth(static_cast<uint16>(-1)),
         loopInterpreterLimit(CONFIG_FLAG(LoopInterpretCount)),
         savedPolymorphicCacheState(0),
         debuggerScopeIndex(0),
@@ -599,7 +599,7 @@ namespace Js
     {
         SetCountField(CounterFields::ConstantCount, 1);
 
-        this->SetDefaultFunctionEntryPointInfo((FunctionEntryPointInfo*) this->GetDefaultEntryPointInfo(), DefaultEntryThunk);
+        this->SetDefaultFunctionEntryPointInfo(static_cast<FunctionEntryPointInfo*>(this->GetDefaultEntryPointInfo()), DefaultEntryThunk);
         this->m_hasBeenParsed = true;
 
 #ifdef PERF_COUNTERS
@@ -645,7 +645,7 @@ namespace Js
         m_pendingLoopHeaderRelease(false),
         hasCachedScopePropIds(false),
         m_argUsedForBranch(0),
-        m_envDepth((uint16)-1),
+        m_envDepth(static_cast<uint16>(-1)),
         loopInterpreterLimit(CONFIG_FLAG(LoopInterpretCount)),
         savedPolymorphicCacheState(0),
         debuggerScopeIndex(0),
@@ -730,7 +730,7 @@ namespace Js
         this->m_defaultEntryPointInfo = RecyclerNewFinalized(scriptContext->GetRecycler(),
             FunctionEntryPointInfo, this, scriptContext->CurrentThunk, scriptContext->GetThreadContext());
 
-        this->SetDefaultFunctionEntryPointInfo((FunctionEntryPointInfo*) this->GetDefaultEntryPointInfo(), DefaultEntryThunk);
+        this->SetDefaultFunctionEntryPointInfo(static_cast<FunctionEntryPointInfo*>(this->GetDefaultEntryPointInfo()), DefaultEntryThunk);
         this->m_hasBeenParsed = true;
 
         Assert(!proxy->GetUtf8SourceInfo() || m_uScriptId == proxy->GetUtf8SourceInfo()->GetSrcInfo()->sourceContextInfo->sourceContextId);
@@ -862,7 +862,7 @@ namespace Js
         if (!PHASE_FORCE(Js::RedeferralPhase, this) && !PHASE_STRESS(Js::RedeferralPhase, this))
         {
             uint compileCount = this->GetCompileCount();
-            if (compileCount >= (uint)CONFIG_FLAG(RedeferralCap))
+            if (compileCount >= static_cast<uint>(CONFIG_FLAG(RedeferralCap)))
             {
                 return false;
             }
@@ -964,7 +964,7 @@ namespace Js
 
         // New allocation is done at this point, so update existing structures
         // Adjust functionInfo attributes, point to new proxy
-        functionInfo->SetAttributes((FunctionInfo::Attributes)(functionInfo->GetAttributes() | FunctionInfo::Attributes::DeferredParse));
+        functionInfo->SetAttributes(static_cast<FunctionInfo::Attributes>(functionInfo->GetAttributes() | FunctionInfo::Attributes::DeferredParse));
         functionInfo->SetFunctionProxy(parseableFunctionInfo);
         functionInfo->SetOriginalEntryPoint(DefaultEntryThunk);
     }
@@ -991,7 +991,7 @@ namespace Js
         Assert(entryPointInfo);
 
         // Need to set twice since ProxyEntryPointInfo cast points to an interior pointer
-        this->m_defaultEntryPointInfo = (ProxyEntryPointInfo*) entryPointInfo;
+        this->m_defaultEntryPointInfo = entryPointInfo;
         this->defaultFunctionEntryPointInfo = entryPointInfo;
         SetOriginalEntryPoint(originalEntryPoint);
     }
@@ -1433,7 +1433,7 @@ namespace Js
         span.sourceBegin = GetDiff(data->sourceBegin, iter.accumulatedSourceBegin);
         span.bytecodeBegin = GetDiff(data->bytecodeBegin, iter.accumulatedBytecodeBegin);
 
-        this->pStatementBuffer->Add((uint32_t)span);
+        this->pStatementBuffer->Add(span);
 
         // Update iterator for the next set
 
@@ -1560,7 +1560,7 @@ namespace Js
         m_displayNameLength(0),
         m_nativeModule(nativeModule)
     {
-        this->functionInfo = RecyclerNew(scriptContext->GetRecycler(), FunctionInfo, DefaultDeferredDeserializeThunk, (FunctionInfo::Attributes)(attributes | FunctionInfo::Attributes::DeferredDeserialize), functionId, this);
+        this->functionInfo = RecyclerNew(scriptContext->GetRecycler(), FunctionInfo, DefaultDeferredDeserializeThunk, static_cast<FunctionInfo::Attributes>(attributes | FunctionInfo::Attributes::DeferredDeserialize), functionId, this);
         this->m_defaultEntryPointInfo = RecyclerNew(scriptContext->GetRecycler(), ProxyEntryPointInfo, DefaultDeferredDeserializeThunk);
         PERF_COUNTER_INC(Code, DeferDeserializeFunctionProxy);
 
@@ -1740,7 +1740,7 @@ namespace Js
             displayName,
             displayNameLength,
             displayShortNameOffset,
-            (FunctionInfo::Attributes)(attributes | FunctionInfo::Attributes::DeferredParse),
+            static_cast<FunctionInfo::Attributes>(attributes | FunctionInfo::Attributes::DeferredParse),
             flags);
     }
 
@@ -1887,7 +1887,7 @@ namespace Js
     FunctionEntryPointInfo*
     FunctionBody::GetDefaultFunctionEntryPointInfo() const
     {
-        Assert(((ProxyEntryPointInfo*) this->defaultFunctionEntryPointInfo) == this->m_defaultEntryPointInfo);
+        Assert(static_cast<ProxyEntryPointInfo*>(this->defaultFunctionEntryPointInfo) == this->m_defaultEntryPointInfo);
         return this->defaultFunctionEntryPointInfo;
     }
 
@@ -2025,7 +2025,8 @@ namespace Js
         Assert(!this->IsFunctionBody() || body == this);
         functionInfo->SetFunctionProxy(body);
         body->SetFunctionInfo(functionInfo);
-        body->SetAttributes((FunctionInfo::Attributes)(functionInfo->GetAttributes() & ~(FunctionInfo::Attributes::DeferredParse | FunctionInfo::Attributes::DeferredDeserialize)));
+        body->SetAttributes(static_cast<FunctionInfo::Attributes>(functionInfo->GetAttributes() & ~(FunctionInfo::Attributes::DeferredParse |
+            FunctionInfo::Attributes::DeferredDeserialize)));
     }
 
     //
@@ -2045,13 +2046,13 @@ namespace Js
             // Bigger problem is the script engine might have released bytecode file mapping and we can't deserialize.
             Assert(!m_scriptContext->IsClosed());
 
-            executionFunctionBody = ((DeferDeserializeFunctionInfo*) this)->Deserialize();
+            executionFunctionBody = static_cast<DeferDeserializeFunctionInfo*>(this)->Deserialize();
             this->GetFunctionInfo()->SetFunctionProxy(executionFunctionBody);
             Assert(executionFunctionBody->GetFunctionInfo()->HasBody());
             Assert(executionFunctionBody != this);
         }
 
-        return (ParseableFunctionInfo *)executionFunctionBody;
+        return static_cast<ParseableFunctionInfo*>(executionFunctionBody);
     }
 
     ScriptFunctionType * FunctionProxy::GetDeferredPrototypeType() const
@@ -2155,7 +2156,7 @@ namespace Js
             // Can't support display name that big
             Js::Throw::OutOfMemory();
         }
-        SetDisplayName(displayName, (uint)len, 0);
+        SetDisplayName(displayName, static_cast<uint>(len), 0);
     }
 
     void DeferDeserializeFunctionInfo::SetDisplayName(const char16_t* pszDisplayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags /* default to None */)
@@ -2773,8 +2774,8 @@ namespace Js
             Assert((flags & SetDisplayNameFlagsDontCopy) == 0);
 
             *destName = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, numCharacters);
-            js_wmemcpy_s((char16_t *)*destName, numCharacters, srcName, numCharacters);
-            ((char16_t *)(*destName))[numCharacters - 1] = u'\0';
+            js_wmemcpy_s(const_cast<char16_t*>(*destName), numCharacters, srcName, numCharacters);
+            const_cast<char16_t*>(*destName)[numCharacters - 1] = u'\0';
 
             return true;
         }
@@ -2803,7 +2804,7 @@ namespace Js
             // Can't support display name that big
             Js::Throw::OutOfMemory();
         }
-        SetDisplayName(pszDisplayName, (uint)len, 0);
+        SetDisplayName(pszDisplayName, static_cast<uint>(len), 0);
     }
     void ParseableFunctionInfo::SetDisplayName(const char16_t* pszDisplayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags /* default to None */)
     {
@@ -2874,14 +2875,14 @@ namespace Js
                 Js::Throw::OutOfMemory();
             }
             Assert(node->cbStringMin <= node->cbMin);
-            this->m_cbStartOffset = (uint)cbMin;
-            this->m_cbLength = (uint)lengthInBytes;
+            this->m_cbStartOffset = static_cast<uint>(cbMin);
+            this->m_cbLength = static_cast<uint>(lengthInBytes);
 
             if (node->cbStringMin != node->cbMin)
             {
                 PrintOffsets* printOffsets = RecyclerNewLeaf(this->m_scriptContext->GetRecycler(), PrintOffsets);
-                printOffsets->cbStartPrintOffset = (uint)node->cbStringMin;
-                printOffsets->cbEndPrintOffset = (uint)node->cbStringLim;
+                printOffsets->cbStartPrintOffset = static_cast<uint>(node->cbStringMin);
+                printOffsets->cbEndPrintOffset = static_cast<uint>(node->cbStringLim);
                 this->SetPrintOffsets(printOffsets);
             }
 
@@ -3220,7 +3221,7 @@ namespace Js
             // If we are at the beginning of the host code, adjust the offset based on the host provided offset
             if (this->GetHostSrcInfo()->dlnHost == line)
             {
-                *_charOffset += (int32_t)this->GetHostStartColumn();
+                *_charOffset += static_cast<int32_t>(this->GetHostStartColumn());
             }
         }
 
@@ -3273,7 +3274,8 @@ namespace Js
     {
         // Safe to be used by the JIT thread
         Assert(this->GetConstTable() != nullptr);
-        return (Js::RootObjectBase *)PointerValue(this->GetConstTable()[Js::FunctionBody::RootObjectRegSlot - FunctionBody::FirstRegSlot]);
+        return static_cast<Js::RootObjectBase*>(PointerValue(
+            this->GetConstTable()[Js::FunctionBody::RootObjectRegSlot - FunctionBody::FirstRegSlot]));
     }
 
     Js::RootObjectBase * FunctionBody::LoadRootObject() const
@@ -3995,7 +3997,7 @@ namespace Js
     {
         LoopHeader* loopHeaderArray = this->GetLoopHeaderArray();
         Assert(loopHeader >= loopHeaderArray);
-        uint loopNum = (uint)(loopHeader - loopHeaderArray);
+        uint loopNum = static_cast<uint>(loopHeader - loopHeaderArray);
         Assert(loopNum < GetLoopCount());
         return loopNum;
     }
@@ -4004,7 +4006,7 @@ namespace Js
     {
         LoopHeader* loopHeaderArray = this->GetLoopHeaderArrayWithLock();
         Assert(loopHeader >= loopHeaderArray);
-        uint loopNum = (uint)(loopHeader - loopHeaderArray);
+        uint loopNum = static_cast<uint>(loopHeader - loopHeaderArray);
         Assert(loopNum < GetLoopCount());
         return loopNum;
     }
@@ -4012,7 +4014,7 @@ namespace Js
 #ifdef ENABLE_SCRIPT_DEBUGGING
     bool FunctionBody::InstallProbe(int offset)
     {
-        if (offset < 0 || ((uint)offset + 1) >= byteCodeBlock->GetLength())
+        if (offset < 0 || (static_cast<uint>(offset) + 1) >= byteCodeBlock->GetLength())
         {
             return false;
         }
@@ -4035,7 +4037,7 @@ namespace Js
 #if ENABLE_NATIVE_CODEGEN
         Assert(!OpCodeAttr::HasMultiSizeLayout(OpCode::Break));
 #endif
-        *(byte *)(pbyteCodeBlockBuffer + offset) = (byte)OpCode::Break;
+        *(pbyteCodeBlockBuffer + offset) = static_cast<byte>(OpCode::Break);
 
         ++m_sourceInfo.m_probeCount;
 
@@ -4044,14 +4046,14 @@ namespace Js
 
     bool FunctionBody::UninstallProbe(int offset)
     {
-        if (offset < 0 || ((uint)offset + 1) >= byteCodeBlock->GetLength())
+        if (offset < 0 || (static_cast<uint>(offset) + 1) >= byteCodeBlock->GetLength())
         {
             return false;
         }
         byte* pbyteCodeBlockBuffer = byteCodeBlock->GetBuffer();
 
         Js::OpCode originalOpCode = ByteCodeReader::PeekByteOp(GetProbeBackingBlock()->GetBuffer() + offset);
-        *(pbyteCodeBlockBuffer + offset) = (byte)originalOpCode;
+        *(pbyteCodeBlockBuffer + offset) = static_cast<byte>(originalOpCode);
 
         --m_sourceInfo.m_probeCount;
         AssertMsg(m_sourceInfo.m_probeCount >= 0, "Probe (Break Point) count became negative!");
@@ -4066,7 +4068,7 @@ namespace Js
             return false;
         }
 
-        if (offset < 0 || ((uint)offset + 1) >= this->byteCodeBlock->GetLength())
+        if (offset < 0 || (static_cast<uint>(offset) + 1) >= this->byteCodeBlock->GetLength())
         {
             AssertMsg(false, "ProbeAtOffset called with out of bounds offset");
             return false;
@@ -4226,7 +4228,7 @@ namespace Js
 
     PropertyId FunctionBody::GetReferencedPropertyId(uint index)
     {
-        if (index < (uint)TotalNumberOfBuiltInProperties)
+        if (index < static_cast<uint>(TotalNumberOfBuiltInProperties))
         {
             return index;
         }
@@ -4236,7 +4238,7 @@ namespace Js
 
     PropertyId FunctionBody::GetReferencedPropertyIdWithLock(uint index)
     {
-        if (index < (uint)TotalNumberOfBuiltInProperties)
+        if (index < static_cast<uint>(TotalNumberOfBuiltInProperties))
         {
             return index;
         }
@@ -4329,8 +4331,8 @@ namespace Js
     {
         ScriptContext *scriptContext = this->GetScriptContext();
         Var intConst = scriptContext->GetConfig()->Force32BitByteCode() ?
-            JavascriptNumber::ToVarFor32BitBytecode((int32_t)val, scriptContext) :
-            JavascriptNumber::ToVar((int32_t)val, scriptContext);
+            JavascriptNumber::ToVarFor32BitBytecode(static_cast<int32_t>(val), scriptContext) :
+            JavascriptNumber::ToVar(static_cast<int32_t>(val), scriptContext);
         this->RecordConstant(location, intConst);
     }
 
@@ -4377,12 +4379,12 @@ namespace Js
 
     void FunctionBody::RecordNullDisplayConstant(RegSlot location)
     {
-        this->RecordConstant(location, (Js::Var)&Js::NullFrameDisplay);
+        this->RecordConstant(location, Js::Var(&Js::NullFrameDisplay));
     }
 
     void FunctionBody::RecordStrictNullDisplayConstant(RegSlot location)
     {
-        this->RecordConstant(location, (Js::Var)&Js::StrictNullFrameDisplay);
+        this->RecordConstant(location, Js::Var(&Js::StrictNullFrameDisplay));
     }
 
     void FunctionBody::InitConstantSlots(Var *dstSlots)
@@ -4826,7 +4828,7 @@ namespace Js
         this->profiledSlotCount = 0;
         this->SetLoopCount(0);
 
-        this->m_envDepth = (uint16)-1;
+        this->m_envDepth = static_cast<uint16>(-1);
 
         this->SetByteCodeCount(0);
         this->SetByteCodeWithoutLDACount(0);
@@ -4970,7 +4972,7 @@ namespace Js
             }
 
             this->SetOriginalEntryPoint(DefaultDeferredParsingThunk);
-            this->SetAttributes((FunctionInfo::Attributes) (this->GetAttributes() | FunctionInfo::Attributes::DeferredParse));
+            this->SetAttributes(static_cast<FunctionInfo::Attributes>(this->GetAttributes() | FunctionInfo::Attributes::DeferredParse));
         }
 
         // Set other state back to before parse as well
@@ -5048,12 +5050,12 @@ namespace Js
 
     void FunctionBody::AddDeferParseAttribute()
     {
-        this->SetAttributes((FunctionInfo::Attributes) (this->GetAttributes() | FunctionInfo::Attributes::DeferredParse));
+        this->SetAttributes(static_cast<FunctionInfo::Attributes>(this->GetAttributes() | FunctionInfo::Attributes::DeferredParse));
     }
 
     void FunctionBody::RemoveDeferParseAttribute()
     {
-        this->SetAttributes((FunctionInfo::Attributes) (this->GetAttributes() & (~FunctionInfo::Attributes::DeferredParse)));
+        this->SetAttributes(static_cast<FunctionInfo::Attributes>(this->GetAttributes() & (~FunctionInfo::Attributes::DeferredParse)));
     }
 
     Js::DebuggerScope * FunctionBody::GetDiagCatchScopeObjectAt(int byteCodeOffset)
@@ -5091,31 +5093,31 @@ namespace Js
             this->pActualOffsetList->Add(current);
         }
 
-        return (ushort)diff;
+        return static_cast<ushort>(diff);
     }
 
     // Get Values of the beginning of the statement at particular index.
     BOOL SmallSpanSequence::GetRangeAt(int index, SmallSpanSequenceIter &iter, int * pCountOfMissed, StatementData & data)
     {
-        Assert((uint32_t)index < pStatementBuffer->Count());
+        Assert(static_cast<uint32_t>(index) < pStatementBuffer->Count());
 
-        SmallSpan span(pStatementBuffer->ItemInBuffer((uint32_t)index));
+        SmallSpan span(pStatementBuffer->ItemInBuffer(static_cast<uint32_t>(index)));
 
         int countOfMissed = 0;
 
-        if ((short)span.sourceBegin == SHRT_MAX)
+        if (static_cast<short>(span.sourceBegin) == SHRT_MAX)
         {
             // Look in ActualOffset store
             Assert(this->pActualOffsetList);
             Assert(this->pActualOffsetList->Count() > 0);
-            Assert(this->pActualOffsetList->Count() > (uint32_t)iter.indexOfActualOffset);
+            Assert(this->pActualOffsetList->Count() > static_cast<uint32_t>(iter.indexOfActualOffset));
 
-            data.sourceBegin = this->pActualOffsetList->ItemInBuffer((uint32_t)iter.indexOfActualOffset);
+            data.sourceBegin = this->pActualOffsetList->ItemInBuffer(static_cast<uint32_t>(iter.indexOfActualOffset));
             countOfMissed++;
         }
         else
         {
-            data.sourceBegin = iter.accumulatedSourceBegin + (short)span.sourceBegin;
+            data.sourceBegin = iter.accumulatedSourceBegin + static_cast<short>(span.sourceBegin);
         }
 
         if (span.bytecodeBegin == SHRT_MAX)
@@ -5123,9 +5125,9 @@ namespace Js
             // Look in ActualOffset store
             Assert(this->pActualOffsetList);
             Assert(this->pActualOffsetList->Count() > 0);
-            Assert(this->pActualOffsetList->Count() > (uint32_t)(iter.indexOfActualOffset + countOfMissed));
+            Assert(this->pActualOffsetList->Count() > static_cast<uint32_t>(iter.indexOfActualOffset + countOfMissed));
 
-            data.bytecodeBegin = this->pActualOffsetList->ItemInBuffer((uint32_t)iter.indexOfActualOffset + countOfMissed);
+            data.bytecodeBegin = this->pActualOffsetList->ItemInBuffer(static_cast<uint32_t>(iter.indexOfActualOffset) + countOfMissed);
             countOfMissed++;
         }
         else
@@ -5155,13 +5157,13 @@ namespace Js
         {
             // Support only in forward direction
             if (bytecode < iter.accumulatedBytecodeBegin
-                || iter.accumulatedIndex <= 0 || (uint32_t)iter.accumulatedIndex >= Count())
+                || iter.accumulatedIndex <= 0 || static_cast<uint32_t>(iter.accumulatedIndex) >= Count())
             {
                 // re-initialize the accumulators
                 Reset(iter);
             }
 
-            while ((uint32_t)iter.accumulatedIndex < Count())
+            while (static_cast<uint32_t>(iter.accumulatedIndex) < Count())
             {
                 int countOfMissed = 0;
                 if (!GetRangeAt(iter.accumulatedIndex, iter, &countOfMissed, data))
@@ -5208,7 +5210,7 @@ namespace Js
 
     BOOL SmallSpanSequence::Item(int index, SmallSpanSequenceIter &iter, StatementData & data)
     {
-        if (!pStatementBuffer || (uint32_t)index >= pStatementBuffer->Count())
+        if (!pStatementBuffer || static_cast<uint32_t>(index) >= pStatementBuffer->Count())
         {
             return FALSE;
         }
@@ -5220,7 +5222,7 @@ namespace Js
 
         while (iter.accumulatedIndex <= index)
         {
-            Assert((uint32_t)iter.accumulatedIndex < pStatementBuffer->Count());
+            Assert(static_cast<uint32_t>(iter.accumulatedIndex) < pStatementBuffer->Count());
 
             int countOfMissed = 0;
             if (!GetRangeAt(iter.accumulatedIndex, iter, &countOfMissed, data))
@@ -5992,12 +5994,12 @@ namespace Js
         // Since we don't know the size of the top function, check against the maximum possible inline threshold
         // Negative inline byte code size threshold will disable inline cache on function object.
         const int byteCodeSizeThreshold = CONFIG_FLAG(InlineThreshold) + CONFIG_FLAG(InlineThresholdAdjustCountInSmallFunction);
-        if (byteCodeSizeThreshold < 0 || this->GetByteCodeWithoutLDACount() > (uint)byteCodeSizeThreshold)
+        if (byteCodeSizeThreshold < 0 || this->GetByteCodeWithoutLDACount() > static_cast<uint>(byteCodeSizeThreshold))
         {
             return false;
         }
         // Negative FuncObjectInlineCacheThreshold will disable inline cache on function object.
-        if (CONFIG_FLAG(FuncObjectInlineCacheThreshold) < 0 || totalCacheCount > (uint)CONFIG_FLAG(FuncObjectInlineCacheThreshold) || totalCacheCount == 0)
+        if (CONFIG_FLAG(FuncObjectInlineCacheThreshold) < 0 || totalCacheCount > static_cast<uint>(CONFIG_FLAG(FuncObjectInlineCacheThreshold)) || totalCacheCount == 0)
         {
             return false;
         }
@@ -7070,7 +7072,7 @@ namespace Js
             {
                 if (nullptr != this->inlineCaches[i])
                 {
-                    InlineCache* inlineCache = (InlineCache*)this->inlineCaches[i];
+                    InlineCache* inlineCache = static_cast<InlineCache*>(this->inlineCaches[i]);
                     if (IsScriptContextShutdown)
                     {
                         inlineCache->Clear();
@@ -7094,7 +7096,7 @@ namespace Js
                 {
                     if (IsScriptContextShutdown)
                     {
-                        ((InlineCache*)this->inlineCaches[i])->Clear();
+                        static_cast<InlineCache*>(this->inlineCaches[i])->Clear();
                     }
                     else
                     {
@@ -7114,7 +7116,7 @@ namespace Js
                 {
                     if (IsScriptContextShutdown)
                     {
-                        ((InlineCache*)this->inlineCaches[i])->Clear();
+                        static_cast<InlineCache*>(this->inlineCaches[i])->Clear();
                     }
                     else
                     {
@@ -7134,7 +7136,7 @@ namespace Js
                 {
                     if (IsScriptContextShutdown)
                     {
-                        ((InlineCache*)this->inlineCaches[i])->Clear();
+                        static_cast<InlineCache*>(this->inlineCaches[i])->Clear();
                     }
                     else
                     {
@@ -7152,7 +7154,7 @@ namespace Js
             {
                 if (nullptr != this->inlineCaches[i])
                 {
-                    IsInstInlineCache* inlineCache = (IsInstInlineCache*)this->inlineCaches[i];
+                    IsInstInlineCache* inlineCache = static_cast<IsInstInlineCache*>(this->inlineCaches[i]);
                     if (IsScriptContextShutdown)
                     {
                         inlineCache->Clear();
@@ -7673,7 +7675,7 @@ namespace Js
     }
 
     FunctionBody::StatementAdjustmentRecord::StatementAdjustmentRecord() :
-        m_byteCodeOffset((uint)Constants::InvalidOffset), m_adjustmentType(SAT_None)
+        m_byteCodeOffset(static_cast<uint>(Constants::InvalidOffset)), m_adjustmentType(SAT_None)
     {
     }
 
@@ -7701,7 +7703,7 @@ namespace Js
     }
 
     FunctionBody::CrossFrameEntryExitRecord::CrossFrameEntryExitRecord() :
-        m_byteCodeOffset((uint)Constants::InvalidOffset), m_isEnterBlock(false)
+        m_byteCodeOffset(static_cast<uint>(Constants::InvalidOffset)), m_isEnterBlock(false)
     {
     }
 
@@ -9059,15 +9061,15 @@ namespace Js
     {
         uint recursiveInlineSpan = this->GetNumberOfRecursiveCallSites();
 
-        uint minRecursiveInlineDepth = (uint)CONFIG_FLAG(RecursiveInlineDepthMin);
+        uint minRecursiveInlineDepth = static_cast<uint>(CONFIG_FLAG(RecursiveInlineDepthMin));
 
         if (recursiveInlineSpan != this->GetProfiledCallSiteCount() || tryAggressive == false)
         {
             return depth < minRecursiveInlineDepth;
         }
 
-        uint maxRecursiveInlineDepth = (uint)CONFIG_FLAG(RecursiveInlineDepthMax);
-        uint maxRecursiveBytecodeBudget = (uint)CONFIG_FLAG(RecursiveInlineThreshold);
+        uint maxRecursiveInlineDepth = static_cast<uint>(CONFIG_FLAG(RecursiveInlineDepthMax));
+        uint maxRecursiveBytecodeBudget = static_cast<uint>(CONFIG_FLAG(RecursiveInlineThreshold));
         uint numberOfAllowedFuncs = maxRecursiveBytecodeBudget / this->GetByteCodeWithoutLDACount();
         uint maxDepth;
 
@@ -9077,7 +9079,7 @@ namespace Js
         }
         else
         {
-            maxDepth = (uint)ceil(log((double)((double)numberOfAllowedFuncs) / log((double)recursiveInlineSpan)));
+            maxDepth = static_cast<uint>(ceil(log(static_cast<double>(numberOfAllowedFuncs) / log(static_cast<double>(recursiveInlineSpan)))));
         }
         maxDepth = maxDepth < minRecursiveInlineDepth ? minRecursiveInlineDepth : maxDepth;
         maxDepth = maxDepth < maxRecursiveInlineDepth ? maxDepth : maxRecursiveInlineDepth;

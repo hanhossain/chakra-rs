@@ -55,7 +55,7 @@ namespace Js
         void *GetAddressOfInstructionPointer() { Assert(addressOfCodeAddr != nullptr); return addressOfCodeAddr; }
         void *GetAddressOfReturnAddress(bool isCurrentContextNative = false, bool shouldCheckForNativeAddr = true);
         bool SkipToFrame(void * returnAddress);
-        void *GetFrame() { return (void *)frame;};
+        void *GetFrame() { return frame;};
         size_t GetStackCheckCodeHeight() { return this->stackCheckCodeHeight; }
         static bool IsInStackCheckCode(void *entry, void *codeAddr, size_t stackCheckCodeHeight);
 

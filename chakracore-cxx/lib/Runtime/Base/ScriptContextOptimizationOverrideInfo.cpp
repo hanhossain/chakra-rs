@@ -158,7 +158,7 @@ ScriptContextOptimizationOverrideInfo::Update(ScriptContextOptimizationOverrideI
         this->DisableArraySetElementFastPath();
     }
 
-    this->sideEffects = (SideEffects)(this->sideEffects | info->sideEffects);
+    this->sideEffects = static_cast<SideEffects>(this->sideEffects | info->sideEffects);
 }
 
 void
@@ -166,14 +166,14 @@ ScriptContextOptimizationOverrideInfo::SetSideEffects(SideEffects se)
 {
     if (this->crossSiteRoot == nullptr)
     {
-        sideEffects = (SideEffects)(sideEffects | se);
+        sideEffects = static_cast<SideEffects>(sideEffects | se);
     }
     else if ((sideEffects & se) != se)
     {
         ForEachCrossSiteInfo([se](ScriptContextOptimizationOverrideInfo * info)
         {
             Assert((info->sideEffects & se) != se);
-            info->sideEffects = (SideEffects)(info->sideEffects | se);
+            info->sideEffects = static_cast<SideEffects>(info->sideEffects | se);
         });
     }
 }
@@ -214,19 +214,19 @@ ScriptContextOptimizationOverrideInfo::GetArraySetElementFastPathVtable() const
 long
 ScriptContextOptimizationOverrideInfo::GetArraySetElementFastPathVtableAddr() const
 {
-    return (long)&arraySetElementFastPathVtable;
+    return reinterpret_cast<long>(&arraySetElementFastPathVtable);
 }
 
 long
 ScriptContextOptimizationOverrideInfo::GetIntArraySetElementFastPathVtableAddr() const
 {
-    return (long)&intArraySetElementFastPathVtable;
+    return reinterpret_cast<long>(&intArraySetElementFastPathVtable);
 }
 
 long
 ScriptContextOptimizationOverrideInfo::GetFloatArraySetElementFastPathVtableAddr() const
 {
-    return (long)&floatArraySetElementFastPathVtable;
+    return reinterpret_cast<long>(&floatArraySetElementFastPathVtable);
 }
 
 void *

@@ -18,7 +18,7 @@ using namespace Js;
     {
         AssertMsg(JavascriptString::IsASCII7BitChar(c), "GetStringForCharA must be called with ASCII 7bit chars only");
 
-        PropertyString * str = charStringCacheA[(int)c];
+        PropertyString * str = charStringCacheA[static_cast<int>(c)];
         if (str == nullptr)
         {
             PropertyRecord const * propertyRecord;
@@ -26,7 +26,7 @@ using namespace Js;
             JavascriptLibrary * javascriptLibrary = JavascriptLibrary::FromCharStringCache(this);
             javascriptLibrary->GetScriptContext()->GetOrAddPropertyRecord(&wc, 1, &propertyRecord);
             str = javascriptLibrary->CreatePropertyString(propertyRecord);
-            charStringCacheA[(int)c] = str;
+            charStringCacheA[static_cast<int>(c)] = str;
         }
 
         return str;

@@ -26,7 +26,7 @@ namespace Js
     {
         Assert(length >= 0 && buffer != nullptr);
 
-        char16_t* target = (char16_t*)((PropertyRecord*)this + 1);
+        char16_t* target = reinterpret_cast<char16_t*>(this + 1);
         isNumeric = (isSymbol || length > 10 || length <= 0) ? false : true;
         hash = CC_HASH_OFFSET_VALUE;
 
@@ -50,7 +50,7 @@ namespace Js
             isNumeric = Js::PropertyRecord::IsPropertyNameNumeric(this->GetBuffer(), this->GetLength(), &numericValue);
             if (isNumeric)
             {
-                *(uint32_t *)(this->GetBuffer() + this->GetLength() + 1) = numericValue;
+                *const_cast<uint32_t*>(reinterpret_cast<const uint32_t*>(this->GetBuffer() + this->GetLength() + 1)) = numericValue;
                 Assert(GetNumericValue() == numericValue);
             }
         }
@@ -96,12 +96,12 @@ namespace Js
     uint32_t PropertyRecord::GetNumericValue() const
     {
         Assert(IsNumeric());
-        return *(uint32_t *)(this->GetBuffer() + this->GetLength() + 1);
+        return *reinterpret_cast<const uint32_t*>(this->GetBuffer() + this->GetLength() + 1);
     }
 
     // Initialize all Internal property records
 #define INTERNALPROPERTY(name) \
-    const BuiltInPropertyRecord<1> InternalPropertyRecords::name = { PropertyRecord((PropertyId)InternalPropertyIds::name, (uint)InternalPropertyIds::name, false, 0, false), u"" };
+    const BuiltInPropertyRecord<1> InternalPropertyRecords::name = { PropertyRecord(static_cast<PropertyId>(InternalPropertyIds::name), static_cast<uint>(InternalPropertyIds::name), false, 0, false), u"" };
 #include "Library/InternalPropertyList.h"
 
     const PropertyRecord* InternalPropertyRecords::GetInternalPropertyName(PropertyId propertyId)

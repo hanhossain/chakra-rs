@@ -282,14 +282,14 @@ namespace UnifiedRegex
             Node* curr = root;
             for (int level = levels - 1; level > 0; level--)
             {
-                Inner* inner = (Inner*)curr;
+                Inner* inner = static_cast<Inner*>(curr);
                 uint i = innerIdx(level, k);
                 if (inner->children[i] == 0)
                     return false;
                 else
                     curr = inner->children[i];
             }
-            Leaf* leaf = (Leaf*)curr;
+            Leaf* leaf = static_cast<Leaf*>(curr);
             lastOcc = leaf->values[leafIdx(k)];
             return true;
         }

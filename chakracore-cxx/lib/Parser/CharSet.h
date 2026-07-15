@@ -19,7 +19,7 @@ namespace UnifiedRegex
     private:
         static const int wordSize = sizeof(uint32_t) * 8;
         static const int vecSize = Size / wordSize;
-        static const uint32_t ones = (uint32_t)-1;
+        static const uint32_t ones = static_cast<uint32_t>(-1);
 
         static const uint8_t oneBits[Size];
 
@@ -266,7 +266,7 @@ namespace UnifiedRegex
         inline static uint indexToValue(uint level, uint index, uint offset)
         {
             Assert((index & innerMask) == index);
-            Assert((uint)(1 << ((level + 1) * bitsPerInnerLevel)) > offset);
+            Assert(static_cast<uint>(1 << ((level + 1) * bitsPerInnerLevel))> offset);
 
             return (index << ((level + 1) * bitsPerInnerLevel)) + offset;
         }
@@ -395,7 +395,7 @@ namespace UnifiedRegex
     public:
         static const uint MaxCompact = 4;
 
-        static const uint emptySlot = (uint)-1;
+        static const uint emptySlot = static_cast<uint>(-1);
 
         struct CompactRep
         {
@@ -487,7 +487,7 @@ namespace UnifiedRegex
         inline uint GetCompactLength() const
         {
             Assert(IsCompact());
-            return (uint)(rep.compact.countPlusOne - 1u);
+            return static_cast<uint>(rep.compact.countPlusOne - 1u);
         }
 
         inline void SetCompactLength(size_t length)
@@ -505,7 +505,7 @@ namespace UnifiedRegex
 
         inline Char GetCompactChar(uint index) const
         {
-            return (Char)(GetCompactCharU(index));
+            return static_cast<Char>(GetCompactCharU(index));
         }
 
         //Replaces an existing character with a new value
@@ -538,7 +538,7 @@ namespace UnifiedRegex
         // Increments count.
         inline void AddCompactChar(Char value)
         {
-            AddCompactCharU((Char)(value));
+            AddCompactCharU(value);
         }
 
         // This performs a check to see if the index is the last char, if so sets it to emptySlot
@@ -554,7 +554,7 @@ namespace UnifiedRegex
             }
             else
             {
-                this->ReplaceCompactCharU(index, this->GetCompactCharU((uint)this->GetCompactLength() - 1));
+                this->ReplaceCompactCharU(index, this->GetCompactCharU(this->GetCompactLength() - 1));
             }
 
             rep.compact.countPlusOne -= 1;
@@ -576,7 +576,7 @@ namespace UnifiedRegex
         {
             if (IsCompact())
             {
-                return (uint)rep.compact.countPlusOne - 1;
+                return static_cast<uint>(rep.compact.countPlusOne) - 1;
             }
             else if (rep.full.root == 0)
             {
@@ -613,14 +613,14 @@ namespace UnifiedRegex
         inline int CharToIndex(Char c) const
         {
             Assert(c <= Chars<codepoint_t>::MaxUChar);
-            return (int)(CTU(c) / (Chars<char16_t>::MaxUChar + 1));
+            return static_cast<int>(CTU(c) / (Chars<char16_t>::MaxUChar + 1));
         }
 
         // Takes a character, and removes the offset to make it < 0x10000
         inline char16_t RemoveOffset(Char c) const
         {
             Assert(c <= Chars<codepoint_t>::MaxUChar);
-            return (char16_t)(CTU(c) % 0x10000);
+            return static_cast<char16_t>(CTU(c) % 0x10000);
         }
 
         // Takes a character, and removes the offset to make it < 0x10000
@@ -629,7 +629,7 @@ namespace UnifiedRegex
             Assert(c <= Chars<char16_t>::MaxUChar);
             Assert(index >= 0);
             Assert(index < NumberOfPlanes);
-            return ((Char)c) + 0x10000 * index;
+            return static_cast<Char>(c) + 0x10000 * index;
         }
 
     public:

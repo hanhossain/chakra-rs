@@ -41,7 +41,7 @@ Js::Var ScriptMemoryDumper::Dump()
         size_t sizeCat = (i + 1) * HeapConstants::ObjectGranularity;
         DumpHeapBucket(i, &heapInfo->GetBucket<LeafBit>(sizeCat));
         DumpHeapBucket(i, &heapInfo->GetBucket<NoBit>(sizeCat));
-        DumpHeapBucket(i, (SmallFinalizableHeapBucket *)&heapInfo->GetBucket<FinalizeBit>(sizeCat));
+        DumpHeapBucket(i, &heapInfo->GetBucket<FinalizeBit>(sizeCat));
         SaveCurrentAtIndex(i);
         MergeCurrentStats();
     }
@@ -53,7 +53,7 @@ Js::Var ScriptMemoryDumper::Dump()
 
         DumpHeapBucket(i, &heapInfo->GetMediumBucket<LeafBit>(sizeCat));
         DumpHeapBucket(i, &heapInfo->GetMediumBucket<NoBit>(sizeCat));
-        DumpHeapBucket(i, (MediumFinalizableHeapBucket *)&heapInfo->GetMediumBucket<FinalizeBit>(sizeCat));
+        DumpHeapBucket(i, &heapInfo->GetMediumBucket<FinalizeBit>(sizeCat));
         SaveCurrentAtIndex(i + HeapConstants::BucketCount);
         MergeCurrentStats();
     }
@@ -92,7 +92,7 @@ void ScriptMemoryDumper::DumpHeapBucket(uint index, SmallNormalHeapBucketBase<TB
 template <typename TBlockAttributes>
 void ScriptMemoryDumper::DumpHeapBucket(uint index, SmallFinalizableHeapBucketT<TBlockAttributes>* heapBucket)
 {
-    DumpHeapBucket(index, (SmallNormalHeapBucketBase<SmallFinalizableHeapBlockT<TBlockAttributes>> *)heapBucket);
+    DumpHeapBucket(index, static_cast<SmallNormalHeapBucketBase<SmallFinalizableHeapBlockT<TBlockAttributes>>*>(heapBucket));
     DumpSmallHeapBlockList(heapBucket->pendingDisposeList);
 }
 

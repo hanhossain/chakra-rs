@@ -488,7 +488,7 @@ namespace UnifiedRegex
         inline JumpMixin()
         {
 #if DBG
-            targetLabel = (Label)-1;
+            targetLabel = static_cast<Label>(-1);
 #endif
         }
 
@@ -534,7 +534,7 @@ namespace UnifiedRegex
             : BeginLoopBasicsMixin(loopId, repeats, hasOuterLoops), hasInnerNondet(hasInnerNondet)
         {
 #if DBG
-            exitLabel = (Label)-1;
+            exitLabel = static_cast<Label>(-1);
 #endif
         }
 
@@ -585,7 +585,7 @@ namespace UnifiedRegex
         inline TryMixin()
         {
 #if DBG
-            failLabel = (Label)-1;
+            failLabel = static_cast<Label>(-1);
 #endif
         }
 
@@ -613,7 +613,7 @@ namespace UnifiedRegex
         inline NextLabelMixin()
         {
 #if DBG
-            nextLabel = (Label)-1;
+            nextLabel = static_cast<Label>(-1);
 #endif
         }
 
@@ -680,8 +680,8 @@ namespace UnifiedRegex
 #if DBG
             for (uint8_t i = 0; i < MaxCases; i++)
             {
-                cases[i].c = (char16_t)-1;
-                cases[i].targetLabel = (Label)-1;
+                cases[i].c = static_cast<char16_t>(-1);
+                cases[i].targetLabel = static_cast<Label>(-1);
             }
 #endif
         }
@@ -1546,7 +1546,7 @@ namespace UnifiedRegex
         //This constructor will only be called by a cross-site marshalling and thus we shouldn't clear offset and length
         GroupInfo(VirtualTableInfoCtorEnum) { }
         inline bool IsUndefined() const { return length == CharCountFlag; }
-        inline CharCount EndOffset() const { Assert(length != CharCountFlag); return offset + (CharCount)length; }
+        inline CharCount EndOffset() const { Assert(length != CharCountFlag); return offset + static_cast<CharCount>(length); }
 
         inline void Reset()
         {
@@ -1896,7 +1896,7 @@ namespace UnifiedRegex
         inline Label InstPointerToLabel(const uint8_t* inst) const
         {
             Assert(inst >= program->rep.insts.insts && inst < program->rep.insts.insts + program->rep.insts.instsLen);
-            return (Label)((uint8_t*)inst - program->rep.insts.insts);
+            return static_cast<Label>(const_cast<uint8_t*>(inst) - program->rep.insts.insts);
         }
 
         inline uint8_t* LabelToInstPointer(Label label) const

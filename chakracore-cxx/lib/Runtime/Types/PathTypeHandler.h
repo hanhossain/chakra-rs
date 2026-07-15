@@ -7,7 +7,7 @@
 namespace Js
 {
     typedef uint8_t PathTypeSetterSlotIndex;
-    static const PathTypeSetterSlotIndex NoSetterSlot = (PathTypeSetterSlotIndex)-1;
+    static const PathTypeSetterSlotIndex NoSetterSlot = static_cast<PathTypeSetterSlotIndex>(-1);
 
     class PathTypeSuccessorKey
     {
@@ -133,7 +133,7 @@ namespace Js
         void ReplaceSuccessor(DynamicType * type, PathTypeSuccessorKey key, RecyclerWeakReference<DynamicType> * typeWeakRef) { return successorInfo->ReplaceSuccessor(type, key, typeWeakRef); }
 
         static PropertyAttributes ObjectSlotAttributesToPropertyAttributes(const ObjectSlotAttributes attr) { return attr & ObjectSlotAttr_PropertyAttributesMask; }
-        static ObjectSlotAttributes PropertyAttributesToObjectSlotAttributes(const PropertyAttributes attr) { return (ObjectSlotAttributes)(attr & ObjectSlotAttr_PropertyAttributesMask); }
+        static ObjectSlotAttributes PropertyAttributesToObjectSlotAttributes(const PropertyAttributes attr) { return static_cast<ObjectSlotAttributes>(attr & ObjectSlotAttr_PropertyAttributesMask); }
         static bool ObjectSlotAttributesContains(const PropertyAttributes attr) { return attr == (attr & ObjectSlotAttr_PropertyAttributesMask); }
         static bool UsePathTypeHandlerForObjectLiteral(const PropertyIdArray *const propIds, bool *const check__proto__Ref = nullptr);
         static DynamicType* CreateTypeForNewScObject(ScriptContext* scriptContext, DynamicType* type, const Js::PropertyIdArray *propIds, bool shareType);

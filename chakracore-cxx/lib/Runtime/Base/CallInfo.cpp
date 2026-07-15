@@ -15,7 +15,7 @@ namespace Js
     ArgSlot CallInfo::GetArgCountWithExtraArgs(CallFlags flags, uint count)
     {
         AssertOrFailFastMsg(count < Constants::UShortMaxValue - 1, "ArgList too large");
-        ArgSlot argSlotCount = (ArgSlot)count;
+        ArgSlot argSlotCount = static_cast<ArgSlot>(count);
         if (CallInfo::HasExtraArg(flags))
         {
             argSlotCount++;

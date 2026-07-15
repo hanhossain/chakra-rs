@@ -146,7 +146,7 @@ namespace Js
             const uint loopPercentage = owner->GetByteCodeInLoopCount() * 100 / max(1u, owner->GetByteCodeCount());
             const int byteCodeSizeThresholdForInlineCandidate = CONFIG_FLAG(LoopInlineThreshold);
             bool delayFullJITThisFunc =
-                (CONFIG_FLAG(DelayFullJITSmallFunc) > 0) && (owner->GetByteCodeWithoutLDACount() <= (uint)byteCodeSizeThresholdForInlineCandidate);
+                (CONFIG_FLAG(DelayFullJITSmallFunc) > 0) && (owner->GetByteCodeWithoutLDACount() <= static_cast<uint>(byteCodeSizeThresholdForInlineCandidate));
 
             if (loopPercentage <= 50 || delayFullJITThisFunc)
             {
@@ -367,7 +367,7 @@ namespace Js
                 if (owner->GetDefaultFunctionEntryPointInfo() == simpleJitEntryPointInfo)
                 {
                     Assert(GetExecutionMode() == ExecutionMode::SimpleJit);
-                    const int newSimpleJitCallCount = max(0, (int)simpleJitEntryPointInfo->callsCount + limitScale);
+                    const int newSimpleJitCallCount = max(0, static_cast<int>(simpleJitEntryPointInfo->callsCount) + limitScale);
                     Assert(static_cast<int>(static_cast<uint16>(newSimpleJitCallCount)) == newSimpleJitCallCount);
                     SetSimpleJitCallCount(static_cast<uint16>(newSimpleJitCallCount));
                 }
