@@ -112,7 +112,7 @@ namespace Js
         {
             LPCUTF8 source = GetSource(u"Hash Code Calculation");
             size_t byteLength = GetByteLength(u"Hash Code Calculation");
-            Assert(byteLength < MAXUINT32);
+            Assert(byteLength < std::numeric_limits<uint32_t>::max());
             return JsUtil::CharacterBuffer<utf8char_t>::StaticGetHashCode(source, (charcount_t)byteLength);
         }
 

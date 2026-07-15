@@ -284,9 +284,9 @@ typedef union _ULARGE_INTEGER {
 
 // both macros diff from Win32
 #define MAKE_HRESULT(sev,fac,code) \
-    ((int32_t) (((uint32_t)(sev)<<31) | ((uint32_t)(fac)<<16) | ((uint32_t)(code))) )
+    (static_cast<int32_t>((static_cast<uint32_t>(sev)<<31) | (static_cast<uint32_t>(fac)<<16) | (static_cast<uint32_t>(code))) )
 #define MAKE_SCODE(sev,fac,code) \
-    ((SCODE) (((uint32_t)(sev)<<31) | ((uint32_t)(fac)<<16) | ((int32_t)(code))) )
+    (static_cast<SCODE>((static_cast<uint32_t>(sev)<<31) | (static_cast<uint32_t>(fac)<<16) | ((int32_t)(code))) )
 
 #define FACILITY_NT_BIT                 0x10000000
 #define HRESULT_FROM_WIN32(x) ((int32_t)(x) <= 0 ? ((int32_t)(x)) : ((int32_t) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))

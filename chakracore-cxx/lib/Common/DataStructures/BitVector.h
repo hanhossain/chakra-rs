@@ -7,7 +7,7 @@
 
 
 typedef uint             BVIndex;
-const BVIndex BVInvalidIndex = (uint)-1;
+const BVIndex BVInvalidIndex = static_cast<uint>(-1);
 
 const int               MachBits = 8;
 

@@ -290,7 +290,7 @@ bool Scanner<EncodingPolicy>::TryReadEscape(EncodedCharPtr& startingLocation, En
     uint i = 0;
     OLECHAR ch = 0;
     int hexValue = 0;
-    uint maxHexDigits = (expectCurly ? MAXUINT32 : 4u);
+    uint maxHexDigits = (expectCurly ? std::numeric_limits<uint32_t>::max() : 4u);
 
     for(; i < maxHexDigits && currentLocation < endOfSource; i++)
     {

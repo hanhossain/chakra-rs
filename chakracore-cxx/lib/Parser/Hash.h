@@ -49,11 +49,11 @@ class Span
     charcount_t m_ichLim;
 
 public:
-    Span(): m_ichMin((charcount_t)-1), m_ichLim((charcount_t)-1) { }
+    Span(): m_ichMin(static_cast<charcount_t>(-1)), m_ichLim(static_cast<charcount_t>(-1)) { }
     Span(charcount_t ichMin, charcount_t ichLim): m_ichMin(ichMin), m_ichLim(ichLim) { }
 
     charcount_t GetIchMin() { return m_ichMin; }
-    charcount_t GetIchLim() { Assert(m_ichMin != (charcount_t)-1); return m_ichLim; }
+    charcount_t GetIchLim() { Assert(m_ichMin != static_cast<charcount_t>(-1)); return m_ichLim; }
     void Set(charcount_t ichMin, charcount_t ichLim)
     {
         m_ichMin = ichMin;
@@ -141,7 +141,7 @@ public:
     PidRefStack *GetTopRef(uint maxBlockId) const
     {
         PidRefStack *ref;
-        for (ref = m_pidRefStack; ref && (uint)ref->id > maxBlockId; ref = ref->prev)
+        for (ref = m_pidRefStack; ref && static_cast<uint>(ref->id) > maxBlockId; ref = ref->prev)
         {
             ; // nothing
         }
