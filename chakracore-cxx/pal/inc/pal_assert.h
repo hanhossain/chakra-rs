@@ -3,30 +3,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
-/*++
-
-
-
-
-
---*/
-
 #ifndef __PAL_ASSERT_H__
 #define __PAL_ASSERT_H__
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
+#include <cassert>
 
-#if defined(_DEBUG)
-#include "assert_only.h"
-#define _ASSERTE(e) Assert(e)
-#else // !DEBUG
-#define _ASSERTE(e) ((void)0)
-#endif
-
-#ifdef  __cplusplus
-}
-#endif
+#define _ASSERTE(e) assert(e)
 
 #endif // __PAL_ASSERT_H__
