@@ -39,27 +39,26 @@ Abstract:
 #include <cstdio>
 
 #ifdef PAL_STDCPP_COMPAT
+#include <ctype.h>
+#include <errno.h>
+#include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
-#include <errno.h>
-#include <ctype.h>
 #endif
 
-#include <stdint.h>
 #include <limits.h>
+#include <stdint.h>
 
 #if defined(__APPLE__)
 #include "TargetConditionals.h"
 #endif // __APPLE__ ?
 
 typedef __builtin_va_list va_list;
-#define PRINT_ERROR(...) \
-    fprintf(stderr, __VA_ARGS__)
+#define PRINT_ERROR(...) fprintf(stderr, __VA_ARGS__)
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -67,7 +66,7 @@ extern "C" {
 // Unix L"" is UTF32, and on windows it's UTF16.  Because of built-in assumptions on the size
 // of string literals, it's important to match behaviour between Unix and Windows.  Unix will be defined
 // as u"" (char16_t)
-#define W(str)  u##str
+#define W(str) u##str
 
 // Undefine the QUOTE_MACRO_L helper and redefine it in terms of u.
 // The reason that we do this is that quote macro is defined in ndp\common\inc,
@@ -122,10 +121,10 @@ extern "C" {
 
 #define MAX_PATH 260
 #define _MAX_PATH 260
-#define _MAX_DRIVE  3   /* max. length of drive component */
-#define _MAX_DIR    256 /* max. length of path component */
-#define _MAX_FNAME  256 /* max. length of file name component */
-#define _MAX_EXT    256 /* max. length of extension component */
+#define _MAX_DRIVE 3 /* max. length of drive component */
+#define _MAX_DIR 256 /* max. length of path component */
+#define _MAX_FNAME 256 /* max. length of file name component */
+#define _MAX_EXT 256 /* max. length of extension component */
 
 // In some Win32 APIs MAX_PATH is used for file names (even though 256 is the normal file system limit)
 // use _MAX_PATH_FNAME to indicate these cases
@@ -143,9 +142,9 @@ extern "C" {
 
 #ifndef NULL
 #if defined(__cplusplus)
-#define NULL    0
+#define NULL 0
 #else
-#define NULL    ((void *)0)
+#define NULL ((void *)0)
 #endif
 #endif
 
@@ -153,79 +152,78 @@ extern "C" {
 #define nullptr NULL
 #endif // defined(PAL_STDCPP_COMPAT) && !defined(__cplusplus)
 
-#define C1_UPPER                  0x0001      /* upper case */
-#define C1_LOWER                  0x0002      /* lower case */
-#define C1_DIGIT                  0x0004      /* decimal digits */
+#define C1_UPPER 0x0001 /* upper case */
+#define C1_LOWER 0x0002 /* lower case */
+#define C1_DIGIT 0x0004 /* decimal digits */
 
 #define DLL_PROCESS_ATTACH 1
-#define DLL_THREAD_ATTACH  2
-#define DLL_THREAD_DETACH  3
+#define DLL_THREAD_ATTACH 2
+#define DLL_THREAD_DETACH 3
 #define DLL_PROCESS_DETACH 0
 
-typedef uint32_t (*PTHREAD_START_ROUTINE)(void * lpThreadParameter);
+typedef uint32_t (*PTHREAD_START_ROUTINE)(void *lpThreadParameter);
 typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
 
 /******************* PAL-Specific Entrypoints *****************************/
 
-int
-PAL_InitializeChakraCore();
+int PAL_InitializeChakraCore();
 
 /// <summary>
 /// This function shuts down PAL WITHOUT exiting the current process.
 /// </summary>
-void
-PAL_Shutdown(
-    void);
+void PAL_Shutdown(void);
 
 /******************* winuser.h Entrypoints *******************************/
 
 typedef int errno_t;
-extern errno_t _ultow_s(unsigned long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
-extern errno_t _ui64tow_s(unsigned long long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
+extern errno_t _ultow_s(unsigned long inValue, char16_t *outBuffer, size_t inDestBufferSize, int inRadix);
+extern errno_t _ui64tow_s(unsigned long long inValue, char16_t *outBuffer, size_t inDestBufferSize, int inRadix);
 
 /******************* winbase.h Entrypoints and defines ************************/
 
-typedef struct _SECURITY_ATTRIBUTES {
-            uint32_t nLength;
-            void * lpSecurityDescriptor;
-            BOOL bInheritHandle;
+typedef struct _SECURITY_ATTRIBUTES
+{
+    uint32_t nLength;
+    void *lpSecurityDescriptor;
+    BOOL bInheritHandle;
 } SECURITY_ATTRIBUTES, *LPSECURITY_ATTRIBUTES;
 
-#define _SH_DENYWR      0x20    /* deny write mode */
+#define _SH_DENYWR 0x20 /* deny write mode */
 
-#define GENERIC_READ               (0x80000000L)
-#define GENERIC_WRITE              (0x40000000L)
+#define GENERIC_READ (0x80000000L)
+#define GENERIC_WRITE (0x40000000L)
 
-#define FILE_SHARE_READ            0x00000001
-#define FILE_SHARE_WRITE           0x00000002
-#define FILE_SHARE_DELETE          0x00000004
+#define FILE_SHARE_READ 0x00000001
+#define FILE_SHARE_WRITE 0x00000002
+#define FILE_SHARE_DELETE 0x00000004
 
-#define CREATE_NEW                 1
-#define CREATE_ALWAYS              2
-#define OPEN_EXISTING              3
-#define OPEN_ALWAYS                4
-#define TRUNCATE_EXISTING          5
+#define CREATE_NEW 1
+#define CREATE_ALWAYS 2
+#define OPEN_EXISTING 3
+#define OPEN_ALWAYS 4
+#define TRUNCATE_EXISTING 5
 
-#define FILE_ATTRIBUTE_READONLY                 0x00000001
-#define FILE_ATTRIBUTE_DIRECTORY                0x00000010
-#define FILE_ATTRIBUTE_NORMAL                   0x00000080
+#define FILE_ATTRIBUTE_READONLY 0x00000001
+#define FILE_ATTRIBUTE_DIRECTORY 0x00000010
+#define FILE_ATTRIBUTE_NORMAL 0x00000080
 
-#define FILE_FLAG_WRITE_THROUGH    0x80000000
-#define FILE_FLAG_NO_BUFFERING     0x20000000
-#define FILE_FLAG_RANDOM_ACCESS    0x10000000
-#define FILE_FLAG_SEQUENTIAL_SCAN  0x08000000
+#define FILE_FLAG_WRITE_THROUGH 0x80000000
+#define FILE_FLAG_NO_BUFFERING 0x20000000
+#define FILE_FLAG_RANDOM_ACCESS 0x10000000
+#define FILE_FLAG_SEQUENTIAL_SCAN 0x08000000
 #define FILE_FLAG_BACKUP_SEMANTICS 0x02000000
 
-#define FILE_BEGIN                 0
-#define FILE_CURRENT               1
-#define FILE_END                   2
+#define FILE_BEGIN 0
+#define FILE_CURRENT 1
+#define FILE_END 2
 
 #define STILL_ACTIVE (0x00000103L)
 
-#define MOVEFILE_REPLACE_EXISTING      0x00000001
-#define MOVEFILE_COPY_ALLOWED          0x00000002
+#define MOVEFILE_REPLACE_EXISTING 0x00000001
+#define MOVEFILE_COPY_ALLOWED 0x00000002
 
-typedef struct _WIN32_FIND_DATAW {
+typedef struct _WIN32_FIND_DATAW
+{
     uint32_t dwFileAttributes;
     FILETIME ftCreationTime;
     FILETIME ftLastAccessTime;
@@ -234,42 +232,39 @@ typedef struct _WIN32_FIND_DATAW {
     uint32_t nFileSizeLow;
     uint32_t dwReserved0;
     uint32_t dwReserved1;
-    char16_t cFileName[ MAX_PATH_FNAME ];
-    char16_t cAlternateFileName[ 14 ];
+    char16_t cFileName[MAX_PATH_FNAME];
+    char16_t cAlternateFileName[14];
 } WIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
 
-typedef enum _GET_FILEEX_INFO_LEVELS {
-  GetFileExInfoStandard
+typedef enum _GET_FILEEX_INFO_LEVELS
+{
+    GetFileExInfoStandard
 } GET_FILEEX_INFO_LEVELS;
 
-typedef struct _WIN32_FILE_ATTRIBUTE_DATA {
-    uint32_t      dwFileAttributes;
-    FILETIME   ftCreationTime;
-    FILETIME   ftLastAccessTime;
-    FILETIME   ftLastWriteTime;
-    uint32_t      nFileSizeHigh;
-    uint32_t      nFileSizeLow;
+typedef struct _WIN32_FILE_ATTRIBUTE_DATA
+{
+    uint32_t dwFileAttributes;
+    FILETIME ftCreationTime;
+    FILETIME ftLastAccessTime;
+    FILETIME ftLastWriteTime;
+    uint32_t nFileSizeHigh;
+    uint32_t nFileSizeLow;
 } *LPWIN32_FILE_ATTRIBUTE_DATA;
 
-typedef void * LPOVERLAPPED;  // diff from winbase.h
+typedef void *LPOVERLAPPED; // diff from winbase.h
 
-BOOL
-WriteFile(
-       HANDLE hFile,
-       const void * lpBuffer,
-       uint32_t nNumberOfBytesToWrite,
-       uint32_t * lpNumberOfBytesWritten,
-       LPOVERLAPPED lpOverlapped);
+BOOL WriteFile(HANDLE hFile, const void *lpBuffer, uint32_t nNumberOfBytesToWrite, uint32_t *lpNumberOfBytesWritten,
+               LPOVERLAPPED lpOverlapped);
 
-#define STD_INPUT_HANDLE         (static_cast<uint32_t>(-10))
-#define STD_OUTPUT_HANDLE        (static_cast<uint32_t>(-11))
-#define STD_ERROR_HANDLE         (static_cast<uint32_t>(-12))
+#define STD_INPUT_HANDLE (static_cast<uint32_t>(-10))
+#define STD_OUTPUT_HANDLE (static_cast<uint32_t>(-11))
+#define STD_ERROR_HANDLE (static_cast<uint32_t>(-12))
 
 HANDLE
-GetStdHandle(
-          uint32_t nStdHandle);
+GetStdHandle(uint32_t nStdHandle);
 
-typedef struct _SYSTEMTIME {
+typedef struct _SYSTEMTIME
+{
     uint16_t wYear;
     uint16_t wMonth;
     uint16_t wDayOfWeek;
@@ -280,52 +275,39 @@ typedef struct _SYSTEMTIME {
     uint16_t wMilliseconds;
 } SYSTEMTIME, *LPSYSTEMTIME;
 
-#define FILE_TYPE_UNKNOWN         0x0000
-#define FILE_TYPE_DISK            0x0001
-#define FILE_TYPE_CHAR            0x0002
-#define FILE_TYPE_PIPE            0x0003
+#define FILE_TYPE_UNKNOWN 0x0000
+#define FILE_TYPE_DISK 0x0001
+#define FILE_TYPE_CHAR 0x0002
+#define FILE_TYPE_PIPE 0x0003
 
 HANDLE
-CreateEventW(
-          LPSECURITY_ATTRIBUTES lpEventAttributes,
-          BOOL bManualReset,
-          BOOL bInitialState,
-          const char16_t* lpName);
+CreateEventW(LPSECURITY_ATTRIBUTES lpEventAttributes, BOOL bManualReset, BOOL bInitialState, const char16_t *lpName);
 
 #define CreateEvent CreateEventW
 
-BOOL
-SetEvent(
-      HANDLE hEvent);
+BOOL SetEvent(HANDLE hEvent);
 
-BOOL
-ResetEvent(
-        HANDLE hEvent);
+BOOL ResetEvent(HANDLE hEvent);
 
 HANDLE
-GetCurrentProcess(
-          void);
+GetCurrentProcess(void);
 
-uint32_t
-GetCurrentThreadId(
-           void);
+uint32_t GetCurrentThreadId(void);
 
-uint32_t
-GetThreadId(
-    HANDLE hThread);
+uint32_t GetThreadId(HANDLE hThread);
 
 HANDLE
-PAL_GetCurrentThread(
-         void);
+PAL_GetCurrentThread(void);
 
 
-#define STARTF_USESTDHANDLES       0x00000100
+#define STARTF_USESTDHANDLES 0x00000100
 
-typedef struct _STARTUPINFOW {
+typedef struct _STARTUPINFOW
+{
     uint32_t cb;
-    char16_t* lpReserved_PAL_Undefined;
-    char16_t* lpDesktop_PAL_Undefined;
-    char16_t* lpTitle_PAL_Undefined;
+    char16_t *lpReserved_PAL_Undefined;
+    char16_t *lpDesktop_PAL_Undefined;
+    char16_t *lpTitle_PAL_Undefined;
     uint32_t dwX_PAL_Undefined;
     uint32_t dwY_PAL_Undefined;
     uint32_t dwXSize_PAL_Undefined;
@@ -336,27 +318,25 @@ typedef struct _STARTUPINFOW {
     uint32_t dwFlags;
     uint16_t wShowWindow_PAL_Undefined;
     uint16_t cbReserved2_PAL_Undefined;
-    uint8_t * lpReserved2_PAL_Undefined;
+    uint8_t *lpReserved2_PAL_Undefined;
     HANDLE hStdInput;
     HANDLE hStdOutput;
     HANDLE hStdError;
 } STARTUPINFOW, *LPSTARTUPINFOW;
 
-#define CREATE_NEW_CONSOLE          0x00000010
+#define CREATE_NEW_CONSOLE 0x00000010
 
-typedef struct _PROCESS_INFORMATION {
+typedef struct _PROCESS_INFORMATION
+{
     HANDLE hProcess;
     HANDLE hThread;
     uint32_t dwProcessId;
     uint32_t dwThreadId_PAL_Undefined;
 } *LPPROCESS_INFORMATION;
 
-BOOL
-TerminateProcess(
-          HANDLE hProcess,
-          uint32_t uExitCode);
+BOOL TerminateProcess(HANDLE hProcess, uint32_t uExitCode);
 
-#define MAXIMUM_WAIT_OBJECTS  64
+#define MAXIMUM_WAIT_OBJECTS 64
 #define WAIT_OBJECT_0 0
 #define WAIT_ABANDONED_0 0x00000080
 #define WAIT_TIMEOUT 258
@@ -364,86 +344,52 @@ TerminateProcess(
 
 #define INFINITE 0xFFFFFFFF // Infinite timeout
 
-uint32_t
-WaitForSingleObject(
-             HANDLE hHandle,
-             uint32_t dwMilliseconds);
+uint32_t WaitForSingleObject(HANDLE hHandle, uint32_t dwMilliseconds);
 
-uint32_t
-WaitForMultipleObjects(
-                uint32_t nCount,
-                const HANDLE *lpHandles,
-                BOOL bWaitAll,
-                uint32_t dwMilliseconds);
+uint32_t WaitForMultipleObjects(uint32_t nCount, const HANDLE *lpHandles, BOOL bWaitAll, uint32_t dwMilliseconds);
 
-uint32_t
-WaitForMultipleObjectsEx(
-              uint32_t nCount,
-              const HANDLE *lpHandles,
-              BOOL bWaitAll,
-              uint32_t dwMilliseconds,
-              BOOL bAlertable);
+uint32_t WaitForMultipleObjectsEx(uint32_t nCount, const HANDLE *lpHandles, BOOL bWaitAll, uint32_t dwMilliseconds,
+                                  BOOL bAlertable);
 
-#define DUPLICATE_CLOSE_SOURCE      0x00000001
-#define DUPLICATE_SAME_ACCESS       0x00000002
+#define DUPLICATE_CLOSE_SOURCE 0x00000001
+#define DUPLICATE_SAME_ACCESS 0x00000002
 
-BOOL
-DuplicateHandle(
-         HANDLE hSourceProcessHandle,
-         HANDLE hSourceHandle,
-         HANDLE hTargetProcessHandle,
-         LPHANDLE lpTargetHandle,
-         uint32_t dwDesiredAccess,
-         BOOL bInheritHandle,
-         uint32_t dwOptions);
+BOOL DuplicateHandle(HANDLE hSourceProcessHandle, HANDLE hSourceHandle, HANDLE hTargetProcessHandle,
+                     LPHANDLE lpTargetHandle, uint32_t dwDesiredAccess, BOOL bInheritHandle, uint32_t dwOptions);
 
-void
-Sleep(
-       uint32_t dwMilliseconds);
+void Sleep(uint32_t dwMilliseconds);
 
-#define CREATE_SUSPENDED                  0x00000004
+#define CREATE_SUSPENDED 0x00000004
 #define STACK_SIZE_PARAM_IS_A_RESERVATION 0x00010000
 
 HANDLE
-CreateThread(
-    LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    LPTHREAD_START_ROUTINE lpStartAddress,
-    void * lpParameter,
-    uint32_t dwCreationFlags,
-    uint32_t * lpThreadId);
+CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttributes, LPTHREAD_START_ROUTINE lpStartAddress, void *lpParameter,
+             uint32_t dwCreationFlags, uint32_t *lpThreadId);
 
-__attribute__((noreturn))
-void
-ExitThread(
-        uint32_t dwExitCode);
+__attribute__((noreturn)) void ExitThread(uint32_t dwExitCode);
 
-uint32_t
-ResumeThread(
-          HANDLE hThread);
+uint32_t ResumeThread(HANDLE hThread);
 
 typedef void (*PAPCFUNC)(size_t dwParam);
 
-uint32_t
-QueueUserAPC(
-          PAPCFUNC pfnAPC,
-          HANDLE hThread,
-          size_t dwData);
+uint32_t QueueUserAPC(PAPCFUNC pfnAPC, HANDLE hThread, size_t dwData);
 
 #if defined(_AMD64_)
 
-#define CONTEXT_AMD64   0x100000
+#define CONTEXT_AMD64 0x100000
 
 #define CONTEXT_CONTROL (CONTEXT_AMD64 | 0x1L)
 #define CONTEXT_INTEGER (CONTEXT_AMD64 | 0x2L)
 #define CONTEXT_SEGMENTS (CONTEXT_AMD64 | 0x4L)
-#define CONTEXT_FLOATING_POINT  (CONTEXT_AMD64 | 0x8L)
+#define CONTEXT_FLOATING_POINT (CONTEXT_AMD64 | 0x8L)
 #define CONTEXT_DEBUG_REGISTERS (CONTEXT_AMD64 | 0x10L)
 
 #define CONTEXT_FULL (CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_POINT)
 
 #define CONTEXT_XSTATE (CONTEXT_AMD64 | 0x40L)
 
-typedef struct _M128U {
+typedef struct _M128U
+{
     unsigned long Low;
     long High;
 } M128U, *PM128U;
@@ -452,23 +398,24 @@ typedef struct _M128U {
 typedef M128U M128A;
 typedef M128A *PM128A;
 
-typedef struct _XMM_SAVE_AREA32 {
-    uint16_t   ControlWord;
-    uint16_t   StatusWord;
-    uint8_t  TagWord;
-    uint8_t  Reserved1;
-    uint16_t   ErrorOpcode;
+typedef struct _XMM_SAVE_AREA32
+{
+    uint16_t ControlWord;
+    uint16_t StatusWord;
+    uint8_t TagWord;
+    uint8_t Reserved1;
+    uint16_t ErrorOpcode;
     uint32_t ErrorOffset;
-    uint16_t   ErrorSelector;
-    uint16_t   Reserved2;
+    uint16_t ErrorSelector;
+    uint16_t Reserved2;
     uint32_t DataOffset;
-    uint16_t   DataSelector;
-    uint16_t   Reserved3;
+    uint16_t DataSelector;
+    uint16_t Reserved3;
     uint32_t MxCsr;
     uint32_t MxCsr_Mask;
     M128A FloatRegisters[8];
     M128A XmmRegisters[16];
-    uint8_t  Reserved4[96];
+    uint8_t Reserved4[96];
 } XMM_SAVE_AREA32;
 
 //
@@ -504,7 +451,8 @@ typedef struct _XMM_SAVE_AREA32 {
 //     Mm0/St0-Mm7/St7 and Xmm0-Xmm15).
 //
 
-typedef struct _CONTEXT {
+typedef struct _CONTEXT
+{
 
     //
     // Register parameter home addresses.
@@ -531,12 +479,12 @@ typedef struct _CONTEXT {
     // Segment Registers and processor flags.
     //
 
-    uint16_t   SegCs;
-    uint16_t   SegDs;
-    uint16_t   SegEs;
-    uint16_t   SegFs;
-    uint16_t   SegGs;
-    uint16_t   SegSs;
+    uint16_t SegCs;
+    uint16_t SegDs;
+    uint16_t SegEs;
+    uint16_t SegFs;
+    uint16_t SegGs;
+    uint16_t SegSs;
     uint32_t EFlags;
 
     //
@@ -581,9 +529,11 @@ typedef struct _CONTEXT {
     // Floating point state.
     //
 
-    union {
+    union
+    {
         XMM_SAVE_AREA32 FltSave;
-        struct {
+        struct
+        {
             M128A Header[2];
             M128A Legacy[8];
             M128A Xmm0;
@@ -625,12 +575,12 @@ typedef struct _CONTEXT {
 
 #elif defined(_ARM64_)
 
-#define CONTEXT_ARM64   0x00400000L
+#define CONTEXT_ARM64 0x00400000L
 
 #define CONTEXT_CONTROL (CONTEXT_ARM64 | 0x1L)
 #define CONTEXT_INTEGER (CONTEXT_ARM64 | 0x2L)
 #define CONTEXT_SEGMENTS (CONTEXT_ARM64 | 0x4L)
-#define CONTEXT_FLOATING_POINT  (CONTEXT_ARM64 | 0x4L)
+#define CONTEXT_FLOATING_POINT (CONTEXT_ARM64 | 0x4L)
 #define CONTEXT_DEBUG_REGISTERS (CONTEXT_ARM64 | 0x8L)
 
 #define CONTEXT_FULL (CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_POINT)
@@ -643,8 +593,8 @@ typedef struct _CONTEXT {
 // however, almost no one implements more than 4 of each.
 //
 
-#define ARM64_MAX_BREAKPOINTS     8
-#define ARM64_MAX_WATCHPOINTS     2
+#define ARM64_MAX_BREAKPOINTS 8
+#define ARM64_MAX_WATCHPOINTS 2
 
 //
 // Context Frame
@@ -677,12 +627,14 @@ typedef struct _CONTEXT {
 //      DBGWCR.
 //
 
-typedef struct _NEON128 {
+typedef struct _NEON128
+{
     unsigned long Low;
     long High;
 } NEON128, *PNEON128;
 
-typedef struct _CONTEXT {
+typedef struct _CONTEXT
+{
 
     //
     // Control flags.
@@ -694,41 +646,43 @@ typedef struct _CONTEXT {
     // Integer registers
     //
 
-    /* +0x004 */ uint32_t Cpsr;       // NZVF + DAIF + CurrentEL + SPSel
-    /* +0x008 */ union {
-                    struct {
-                        unsigned long X0;
-                        unsigned long X1;
-                        unsigned long X2;
-                        unsigned long X3;
-                        unsigned long X4;
-                        unsigned long X5;
-                        unsigned long X6;
-                        unsigned long X7;
-                        unsigned long X8;
-                        unsigned long X9;
-                        unsigned long X10;
-                        unsigned long X11;
-                        unsigned long X12;
-                        unsigned long X13;
-                        unsigned long X14;
-                        unsigned long X15;
-                        unsigned long X16;
-                        unsigned long X17;
-                        unsigned long X18;
-                        unsigned long X19;
-                        unsigned long X20;
-                        unsigned long X21;
-                        unsigned long X22;
-                        unsigned long X23;
-                        unsigned long X24;
-                        unsigned long X25;
-                        unsigned long X26;
-                        unsigned long X27;
-                        unsigned long X28;
-                    };
-                    unsigned long X[29];
-                };
+    /* +0x004 */ uint32_t Cpsr; // NZVF + DAIF + CurrentEL + SPSel
+    /* +0x008 */ union
+    {
+        struct
+        {
+            unsigned long X0;
+            unsigned long X1;
+            unsigned long X2;
+            unsigned long X3;
+            unsigned long X4;
+            unsigned long X5;
+            unsigned long X6;
+            unsigned long X7;
+            unsigned long X8;
+            unsigned long X9;
+            unsigned long X10;
+            unsigned long X11;
+            unsigned long X12;
+            unsigned long X13;
+            unsigned long X14;
+            unsigned long X15;
+            unsigned long X16;
+            unsigned long X17;
+            unsigned long X18;
+            unsigned long X19;
+            unsigned long X20;
+            unsigned long X21;
+            unsigned long X22;
+            unsigned long X23;
+            unsigned long X24;
+            unsigned long X25;
+            unsigned long X26;
+            unsigned long X27;
+            unsigned long X28;
+        };
+        unsigned long X[29];
+    };
     /* +0x0f0 */ unsigned long Fp;
     /* +0x0f8 */ unsigned long Lr;
     /* +0x100 */ unsigned long Sp;
@@ -759,38 +713,27 @@ typedef struct _CONTEXT {
 #endif
 
 
-BOOL
-GetThreadContext(
-          HANDLE hThread,
-           LPCONTEXT lpContext);
+BOOL GetThreadContext(HANDLE hThread, LPCONTEXT lpContext);
 
-BOOL
-SetThreadContext(
-          HANDLE hThread,
-          const CONTEXT *lpContext);
+BOOL SetThreadContext(HANDLE hThread, const CONTEXT *lpContext);
 
-#define THREAD_BASE_PRIORITY_LOWRT    15
-#define THREAD_BASE_PRIORITY_MAX      2
-#define THREAD_BASE_PRIORITY_MIN      (-2)
-#define THREAD_BASE_PRIORITY_IDLE     (-15)
+#define THREAD_BASE_PRIORITY_LOWRT 15
+#define THREAD_BASE_PRIORITY_MAX 2
+#define THREAD_BASE_PRIORITY_MIN (-2)
+#define THREAD_BASE_PRIORITY_IDLE (-15)
 
-#define THREAD_PRIORITY_LOWEST        THREAD_BASE_PRIORITY_MIN
-#define THREAD_PRIORITY_BELOW_NORMAL  (THREAD_PRIORITY_LOWEST+1)
-#define THREAD_PRIORITY_NORMAL        0
-#define THREAD_PRIORITY_HIGHEST       THREAD_BASE_PRIORITY_MAX
-#define THREAD_PRIORITY_ABOVE_NORMAL  (THREAD_PRIORITY_HIGHEST-1)
+#define THREAD_PRIORITY_LOWEST THREAD_BASE_PRIORITY_MIN
+#define THREAD_PRIORITY_BELOW_NORMAL (THREAD_PRIORITY_LOWEST + 1)
+#define THREAD_PRIORITY_NORMAL 0
+#define THREAD_PRIORITY_HIGHEST THREAD_BASE_PRIORITY_MAX
+#define THREAD_PRIORITY_ABOVE_NORMAL (THREAD_PRIORITY_HIGHEST - 1)
 
 #define THREAD_PRIORITY_TIME_CRITICAL THREAD_BASE_PRIORITY_LOWRT
-#define THREAD_PRIORITY_IDLE          THREAD_BASE_PRIORITY_IDLE
+#define THREAD_PRIORITY_IDLE THREAD_BASE_PRIORITY_IDLE
 
-int
-GetThreadPriority(
-           HANDLE hThread);
+int GetThreadPriority(HANDLE hThread);
 
-BOOL
-SetThreadPriority(
-           HANDLE hThread,
-           int nPriority);
+BOOL SetThreadPriority(HANDLE hThread, int nPriority);
 
 typedef BOOL (*ReadMemoryWordCallback)(size_t address, size_t *value);
 
@@ -798,7 +741,7 @@ typedef BOOL (*ReadMemoryWordCallback)(size_t address, size_t *value);
 #define PAL_CS_NATIVE_DATA_SIZE 24
 #elif defined(__sun__)
 #define PAL_CS_NATIVE_DATA_SIZE 48
-#elif defined(__hpux__) && (defined(__hppa__) || defined (__ia64__))
+#elif defined(__hpux__) && (defined(__hppa__) || defined(__ia64__))
 #define PAL_CS_NATIVE_DATA_SIZE 148
 #elif defined(_AIX)
 #define PAL_CS_NATIVE_DATA_SIZE 100
@@ -818,12 +761,13 @@ typedef BOOL (*ReadMemoryWordCallback)(size_t address, size_t *value);
 #define PAL_CS_NATIVE_DATA_SIZE 116
 #else
 #warning
-#error  PAL_CS_NATIVE_DATA_SIZE is not defined for this architecture
+#error PAL_CS_NATIVE_DATA_SIZE is not defined for this architecture
 #endif
 
 //
-typedef struct _CRITICAL_SECTION {
-    void * DebugInfo;
+typedef struct _CRITICAL_SECTION
+{
+    void *DebugInfo;
     int32_t LockCount;
     int32_t RecursionCount;
     HANDLE OwningThread;
@@ -835,110 +779,84 @@ typedef struct _CRITICAL_SECTION {
     union CSNativeDataStorage
     {
         uint8_t rgNativeDataStorage[PAL_CS_NATIVE_DATA_SIZE];
-        void * pvAlign; // make sure the storage is machine-pointer-size aligned
+        void *pvAlign; // make sure the storage is machine-pointer-size aligned
     } csnds;
 } CRITICAL_SECTION, *PCRITICAL_SECTION, *LPCRITICAL_SECTION;
 
-void EnterCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
-void LeaveCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
-void InitializeCriticalSection( LPCRITICAL_SECTION lpCriticalSection);
+void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
+void LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
+void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 BOOL InitializeCriticalSectionAndSpinCount(LPCRITICAL_SECTION lpCriticalSection, uint32_t dwSpinCount);
-void DeleteCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
+void DeleteCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 
-#define PAGE_NOACCESS                   0x01
-#define PAGE_READONLY                   0x02
-#define PAGE_READWRITE                  0x04
-#define PAGE_WRITECOPY                  0x08
-#define PAGE_EXECUTE                    0x10
-#define PAGE_EXECUTE_READ               0x20
-#define PAGE_EXECUTE_READWRITE          0x40
-#define PAGE_EXECUTE_WRITECOPY          0x80
-#define MEM_COMMIT                      0x1000
-#define MEM_RESERVE                     0x2000
-#define MEM_DECOMMIT                    0x4000
-#define MEM_RELEASE                     0x8000
-#define MEM_FREE                        0x10000
-#define MEM_PRIVATE                     0x20000
-#define MEM_MAPPED                      0x40000
-#define MEM_TOP_DOWN                    0x100000
-#define MEM_WRITE_WATCH                 0x200000
-#define MEM_RESERVE_EXECUTABLE          0x40000000 // reserve memory using executable memory allocator
+#define PAGE_NOACCESS 0x01
+#define PAGE_READONLY 0x02
+#define PAGE_READWRITE 0x04
+#define PAGE_WRITECOPY 0x08
+#define PAGE_EXECUTE 0x10
+#define PAGE_EXECUTE_READ 0x20
+#define PAGE_EXECUTE_READWRITE 0x40
+#define PAGE_EXECUTE_WRITECOPY 0x80
+#define MEM_COMMIT 0x1000
+#define MEM_RESERVE 0x2000
+#define MEM_DECOMMIT 0x4000
+#define MEM_RELEASE 0x8000
+#define MEM_FREE 0x10000
+#define MEM_PRIVATE 0x20000
+#define MEM_MAPPED 0x40000
+#define MEM_TOP_DOWN 0x100000
+#define MEM_WRITE_WATCH 0x200000
+#define MEM_RESERVE_EXECUTABLE 0x40000000 // reserve memory using executable memory allocator
 
 HANDLE
-CreateFileMappingW(
-            HANDLE hFile,
-            LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-            uint32_t flProtect,
-            uint32_t dwMaxmimumSizeHigh,
-            uint32_t dwMaximumSizeLow,
-            const char16_t* lpName);
+CreateFileMappingW(HANDLE hFile, LPSECURITY_ATTRIBUTES lpFileMappingAttributes, uint32_t flProtect,
+                   uint32_t dwMaxmimumSizeHigh, uint32_t dwMaximumSizeLow, const char16_t *lpName);
 
 #define CreateFileMapping CreateFileMappingW
 
-#define SECTION_QUERY       0x0001
-#define SECTION_MAP_WRITE   0x0002
-#define SECTION_MAP_READ    0x0004
-#define SECTION_ALL_ACCESS  (SECTION_MAP_READ | SECTION_MAP_WRITE) // diff from winnt.h
+#define SECTION_QUERY 0x0001
+#define SECTION_MAP_WRITE 0x0002
+#define SECTION_MAP_READ 0x0004
+#define SECTION_ALL_ACCESS (SECTION_MAP_READ | SECTION_MAP_WRITE) // diff from winnt.h
 
-#define FILE_MAP_WRITE      SECTION_MAP_WRITE
-#define FILE_MAP_READ       SECTION_MAP_READ
+#define FILE_MAP_WRITE SECTION_MAP_WRITE
+#define FILE_MAP_READ SECTION_MAP_READ
 #define FILE_MAP_ALL_ACCESS SECTION_ALL_ACCESS
-#define FILE_MAP_COPY       SECTION_QUERY
+#define FILE_MAP_COPY SECTION_QUERY
 
-void *
-MapViewOfFile(
-           HANDLE hFileMappingObject,
-           uint32_t dwDesiredAccess,
-           uint32_t dwFileOffsetHigh,
-           uint32_t dwFileOffsetLow,
-           size_t dwNumberOfBytesToMap);
+void *MapViewOfFile(HANDLE hFileMappingObject, uint32_t dwDesiredAccess, uint32_t dwFileOffsetHigh,
+                    uint32_t dwFileOffsetLow, size_t dwNumberOfBytesToMap);
 
-BOOL
-UnmapViewOfFile(
-         const void * lpBaseAddress);
+BOOL UnmapViewOfFile(const void *lpBaseAddress);
 
 typedef long (*FARPROC)();
 
 
-void *
-VirtualAlloc(
-          void * lpAddress,
-          size_t dwSize,
-          uint32_t flAllocationType,
-          uint32_t flProtect);
+void *VirtualAlloc(void *lpAddress, size_t dwSize, uint32_t flAllocationType, uint32_t flProtect);
 
-BOOL
-VirtualFree(
-         void * lpAddress,
-         size_t dwSize,
-         uint32_t dwFreeType);
+BOOL VirtualFree(void *lpAddress, size_t dwSize, uint32_t dwFreeType);
 
-BOOL
-VirtualProtect(
-            void * lpAddress,
-            size_t dwSize,
-            uint32_t flNewProtect,
-            uint32_t * lpflOldProtect);
+BOOL VirtualProtect(void *lpAddress, size_t dwSize, uint32_t flNewProtect, uint32_t *lpflOldProtect);
 
-typedef struct _MEMORYSTATUSEX {
-  uint32_t     dwLength;
-  uint32_t     dwMemoryLoad;
-  unsigned long ullTotalPhys;
-  unsigned long ullAvailPhys;
-  unsigned long ullTotalPageFile;
-  unsigned long ullAvailPageFile;
-  unsigned long ullTotalVirtual;
-  unsigned long ullAvailVirtual;
-  unsigned long ullAvailExtendedVirtual;
+typedef struct _MEMORYSTATUSEX
+{
+    uint32_t dwLength;
+    uint32_t dwMemoryLoad;
+    unsigned long ullTotalPhys;
+    unsigned long ullAvailPhys;
+    unsigned long ullTotalPageFile;
+    unsigned long ullAvailPageFile;
+    unsigned long ullTotalVirtual;
+    unsigned long ullAvailVirtual;
+    unsigned long ullAvailExtendedVirtual;
 } MEMORYSTATUSEX, *LPMEMORYSTATUSEX;
 
-BOOL
-GlobalMemoryStatusEx(
-              LPMEMORYSTATUSEX lpBuffer);
+BOOL GlobalMemoryStatusEx(LPMEMORYSTATUSEX lpBuffer);
 
-typedef struct _MEMORY_BASIC_INFORMATION {
-    void * BaseAddress;
-    void * AllocationBase_PAL_Undefined;
+typedef struct _MEMORY_BASIC_INFORMATION
+{
+    void *BaseAddress;
+    void *AllocationBase_PAL_Undefined;
     uint32_t AllocationProtect;
     size_t RegionSize;
     uint32_t State;
@@ -946,69 +864,41 @@ typedef struct _MEMORY_BASIC_INFORMATION {
     uint32_t Type;
 } MEMORY_BASIC_INFORMATION, *PMEMORY_BASIC_INFORMATION;
 
-size_t
-VirtualQuery(
-          const void * lpAddress,
-          PMEMORY_BASIC_INFORMATION lpBuffer,
-          size_t dwLength);
+size_t VirtualQuery(const void *lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer, size_t dwLength);
 
-size_t
-VirtualQueryEx(
-    const void * lpAddress,
-    PMEMORY_BASIC_INFORMATION lpBuffer,
-    size_t dwLength);
+size_t VirtualQueryEx(const void *lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer, size_t dwLength);
 
-BOOL FlushInstructionCache(const void * lpBaseAddress, size_t dwSize);
+BOOL FlushInstructionCache(const void *lpBaseAddress, size_t dwSize);
 
-#define MAX_LEADBYTES         12
-#define MAX_DEFAULTCHAR       2
+#define MAX_LEADBYTES 12
+#define MAX_DEFAULTCHAR 2
 
-typedef struct _cpinfo {
+typedef struct _cpinfo
+{
     uint32_t MaxCharSize;
     uint8_t DefaultChar[MAX_DEFAULTCHAR];
     uint8_t LeadByte[MAX_LEADBYTES];
 } CPINFO, *LPCPINFO;
 
-BOOL
-GetCPInfo(
-       uint32_t CodePage,
-       LPCPINFO lpCPInfo);
+BOOL GetCPInfo(uint32_t CodePage, LPCPINFO lpCPInfo);
 
-BOOL
-IsDBCSLeadByteEx(
-          uint32_t CodePage,
-          uint8_t TestChar);
+BOOL IsDBCSLeadByteEx(uint32_t CodePage, uint8_t TestChar);
 
-BOOL
-IsValidCodePage(
-         uint32_t CodePage);
+BOOL IsValidCodePage(uint32_t CodePage);
 
 
-#define MB_PRECOMPOSED            0x00000001
-#define MB_ERR_INVALID_CHARS      0x00000008
+#define MB_PRECOMPOSED 0x00000001
+#define MB_ERR_INVALID_CHARS 0x00000008
 
-int
-MultiByteToWideChar(
-             uint32_t CodePage,
-             uint32_t dwFlags,
-             const char * lpMultiByteStr,
-             int cbMultiByte,
-             char16_t* lpWideCharStr,
-             int cchWideChar);
+int MultiByteToWideChar(uint32_t CodePage, uint32_t dwFlags, const char *lpMultiByteStr, int cbMultiByte,
+                        char16_t *lpWideCharStr, int cchWideChar);
 
-#define WC_NO_BEST_FIT_CHARS      0x00000400
+#define WC_NO_BEST_FIT_CHARS 0x00000400
 
-int
-WideCharToMultiByte(
-             uint32_t CodePage,
-             uint32_t dwFlags,
-             const char16_t* lpWideCharStr,
-             int cchWideChar,
-             char* lpMultiByteStr,
-             int cbMultyByte,
-             LPBOOL lpUsedDefaultChar);
+int WideCharToMultiByte(uint32_t CodePage, uint32_t dwFlags, const char16_t *lpWideCharStr, int cchWideChar,
+                        char *lpMultiByteStr, int cbMultyByte, LPBOOL lpUsedDefaultChar);
 
-#define DATE_LONGDATE             0x00000002  // use long date picture
+#define DATE_LONGDATE 0x00000002 // use long date picture
 
 #define EXCEPTION_NONCONTINUABLE 0x1
 
@@ -1016,16 +906,18 @@ WideCharToMultiByte(
 
 #define EXCEPTION_MAXIMUM_PARAMETERS 15
 
-typedef struct _EXCEPTION_RECORD {
+typedef struct _EXCEPTION_RECORD
+{
     uint32_t ExceptionCode;
     uint32_t ExceptionFlags;
     struct _EXCEPTION_RECORD *ExceptionRecord;
-    void * ExceptionAddress;
+    void *ExceptionAddress;
     uint32_t NumberParameters;
     size_t ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS];
 } EXCEPTION_RECORD, *PEXCEPTION_RECORD;
 
-typedef struct _EXCEPTION_POINTERS {
+typedef struct _EXCEPTION_POINTERS
+{
     PEXCEPTION_RECORD ExceptionRecord;
     PCONTEXT ContextRecord;
 } EXCEPTION_POINTERS, *PEXCEPTION_POINTERS, *LPEXCEPTION_POINTERS;
@@ -1040,106 +932,74 @@ typedef int32_t EXCEPTION_DISPOSITION;
 // A function table entry is generated for each frame function.
 //
 #ifdef _M_ARM64
-typedef struct _RUNTIME_FUNCTION {
+typedef struct _RUNTIME_FUNCTION
+{
     uint32_t BeginAddress;
-    union {
+    union
+    {
         uint32_t UnwindData;
-        struct {
-            uint32_t Flag           : 2;
+        struct
+        {
+            uint32_t Flag : 2;
             uint32_t FunctionLength : 11;
-            uint32_t RegF           : 3;
-            uint32_t RegI           : 4;
-            uint32_t H              : 1;
-            uint32_t CR             : 2;
-            uint32_t FrameSize      : 9;
+            uint32_t RegF : 3;
+            uint32_t RegI : 4;
+            uint32_t H : 1;
+            uint32_t CR : 2;
+            uint32_t FrameSize : 9;
         };
     };
 } RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
 #else
-typedef struct _RUNTIME_FUNCTION {
+typedef struct _RUNTIME_FUNCTION
+{
     uint32_t BeginAddress;
     uint32_t EndAddress;
     uint32_t UnwindData;
 } RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
 #endif
 
-BOOL
-WriteProcessMemory( HANDLE hProcess,
-                    void * lpBaseAddress,
-                    const void * lpBuffer,
-                    size_t nSize,
-                    size_t * lpNumberOfBytesWritten);
+BOOL WriteProcessMemory(HANDLE hProcess, void *lpBaseAddress, const void *lpBuffer, size_t nSize,
+                        size_t *lpNumberOfBytesWritten);
 
-#define STANDARD_RIGHTS_REQUIRED  (0x000F0000L)
-#define SYNCHRONIZE               (0x00100000L)
+#define STANDARD_RIGHTS_REQUIRED (0x000F0000L)
+#define SYNCHRONIZE (0x00100000L)
 
-#define EVENT_ALL_ACCESS          (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
-                                   0x3)
+#define EVENT_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0x3)
 
-#define PROCESS_ALL_ACCESS        (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | \
-                                   0xFFF)
+#define PROCESS_ALL_ACCESS (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0xFFF)
 
-void
-OutputDebugStringA(
-     const char * lpOutputString);
+void OutputDebugStringA(const char *lpOutputString);
 
-void
-OutputDebugStringW(
-     const char16_t* lpOutputStrig);
+void OutputDebugStringW(const char16_t *lpOutputStrig);
 
 #define OutputDebugString OutputDebugStringW
 
-void
-DebugBreak(
-       void);
+void DebugBreak(void);
 
-uint32_t
-GetEnvironmentVariableA(
-             const char * lpName,
-             char* lpBuffer,
-             uint32_t nSize);
+uint32_t GetEnvironmentVariableA(const char *lpName, char *lpBuffer, uint32_t nSize);
 
-uint32_t
-GetEnvironmentVariableW(
-             const char16_t* lpName,
-             char16_t* lpBuffer,
-             uint32_t nSize);
+uint32_t GetEnvironmentVariableW(const char16_t *lpName, char16_t *lpBuffer, uint32_t nSize);
 
 #define GetEnvironmentVariable GetEnvironmentVariableW
 
-BOOL
-CloseHandle(
-          HANDLE hObject);
+BOOL CloseHandle(HANDLE hObject);
 
 void RaiseException(uint32_t dwExceptionCode, uint32_t dwExceptionFlags);
 
-uint32_t
-GetTickCount(
-         void);
+uint32_t GetTickCount(void);
 
-unsigned long
-GetTickCount64();
+unsigned long GetTickCount64();
 
-BOOL
-QueryPerformanceCounter(
-     LARGE_INTEGER *lpPerformanceCount
-    );
+BOOL QueryPerformanceCounter(LARGE_INTEGER *lpPerformanceCount);
 
-BOOL
-QueryPerformanceFrequency(
-     LARGE_INTEGER *lpFrequency
-    );
+BOOL QueryPerformanceFrequency(LARGE_INTEGER *lpFrequency);
 
-BOOL
-QueryThreadCycleTime(
-     HANDLE ThreadHandle,
-     unsigned long * CycleTime);
+BOOL QueryThreadCycleTime(HANDLE ThreadHandle, unsigned long *CycleTime);
 
 #ifndef FEATURE_PAL_SXS
 
-int32_t
-UnhandledExceptionFilter(
-                 struct _EXCEPTION_POINTERS *ExceptionInfo);
+int32_t UnhandledExceptionFilter(struct _EXCEPTION_POINTERS *ExceptionInfo);
 
 LPEXCEPTION_POINTERS
 GetExceptionInformation();
@@ -1156,15 +1016,10 @@ GetExceptionInformation();
 //
 // The same is true for BitScanForward, except that the GCC function is __builtin_ffs.
 EXTERN_C
-inline
-unsigned char
-BitScanForward(
-      uint32_t * Index,
-     uint32_t qwMask)
+inline unsigned char BitScanForward(uint32_t *Index, uint32_t qwMask)
 {
     unsigned char bRet = FALSE;
-    static_assert(sizeof(qwMask) <= sizeof(int),
-                  "use correct __builtin_ffs??? variant");
+    static_assert(sizeof(qwMask) <= sizeof(int), "use correct __builtin_ffs??? variant");
     int iIndex = __builtin_ffs(qwMask);
     if (iIndex != 0)
     {
@@ -1177,15 +1032,10 @@ BitScanForward(
 }
 
 EXTERN_C
-inline
-unsigned char
-BitScanForward64(
-      uint32_t * Index,
-     unsigned long qwMask)
+inline unsigned char BitScanForward64(uint32_t *Index, unsigned long qwMask)
 {
     unsigned char bRet = FALSE;
-    static_assert(sizeof(qwMask) <= sizeof(long long),
-                  "use correct __builtin_ffs??? variant");
+    static_assert(sizeof(qwMask) <= sizeof(long long), "use correct __builtin_ffs??? variant");
     int iIndex = __builtin_ffsll(qwMask);
     if (iIndex != 0)
     {
@@ -1199,17 +1049,12 @@ BitScanForward64(
 
 // xplat-todo: review this implementation
 EXTERN_C
-inline
-unsigned char
-BitScanReverse(
-      uint32_t * Index,
-     uint32_t qwMask)
+inline unsigned char BitScanReverse(uint32_t *Index, uint32_t qwMask)
 {
     unsigned char bRet = FALSE;
     if (qwMask != 0)
     {
-        static_assert(sizeof(qwMask) <= sizeof(unsigned int),
-                      "use correct __builtin_clz??? variant");
+        static_assert(sizeof(qwMask) <= sizeof(unsigned int), "use correct __builtin_clz??? variant");
         int countLeadingZero = __builtin_clz(qwMask);
         *Index = static_cast<uint32_t>(sizeof(qwMask) * 8 - 1 - countLeadingZero);
         bRet = TRUE;
@@ -1220,17 +1065,12 @@ BitScanReverse(
 
 // xplat-todo: review this implementation
 EXTERN_C
-inline
-unsigned char
-BitScanReverse64(
-      uint32_t * Index,
-     unsigned long qwMask)
+inline unsigned char BitScanReverse64(uint32_t *Index, unsigned long qwMask)
 {
     unsigned char bRet = FALSE;
     if (qwMask != 0)
     {
-        static_assert(sizeof(qwMask) <= sizeof(unsigned long long),
-                      "use correct __builtin_clz??? variant");
+        static_assert(sizeof(qwMask) <= sizeof(unsigned long long), "use correct __builtin_clz??? variant");
         int countLeadingZero = __builtin_clzll(qwMask);
         *Index = static_cast<uint32_t>(sizeof(qwMask) * 8 - 1 - countLeadingZero);
         bRet = TRUE;
@@ -1259,22 +1099,10 @@ The return value is the resulting incremented value.
 
 --*/
 EXTERN_C
-inline
-int32_t
-InterlockedIncrement(
-      int32_t volatile *lpAddend)
-{
-    return __sync_add_and_fetch(lpAddend, 1);
-}
+inline int32_t InterlockedIncrement(int32_t volatile *lpAddend) { return __sync_add_and_fetch(lpAddend, 1); }
 
 EXTERN_C
-inline
-long
-InterlockedIncrement16(
-      short volatile *lpAddend)
-{
-    return __sync_add_and_fetch(lpAddend, 1);
-}
+inline long InterlockedIncrement16(short volatile *lpAddend) { return __sync_add_and_fetch(lpAddend, 1); }
 
 /*++
 Function:
@@ -1296,13 +1124,7 @@ The return value is the resulting decremented value.
 
 --*/
 EXTERN_C
-inline
-int32_t
-InterlockedDecrement(
-      int32_t volatile *lpAddend)
-{
-    return __sync_sub_and_fetch(lpAddend, 1);
-}
+inline int32_t InterlockedDecrement(int32_t volatile *lpAddend) { return __sync_sub_and_fetch(lpAddend, 1); }
 
 /*++
 Function:
@@ -1326,44 +1148,16 @@ The function returns the initial value pointed to by Target.
 
 --*/
 EXTERN_C
-inline
-char
-InterlockedExchange8(
-      char volatile *Target,
-     char Value)
-{
-    return __sync_swap(Target, Value);
-}
+inline char InterlockedExchange8(char volatile *Target, char Value) { return __sync_swap(Target, Value); }
 
 EXTERN_C
-inline
-short
-InterlockedExchange16(
-      short volatile *Target,
-     short Value)
-{
-    return __sync_swap(Target, Value);
-}
+inline short InterlockedExchange16(short volatile *Target, short Value) { return __sync_swap(Target, Value); }
 
 EXTERN_C
-inline
-int32_t
-InterlockedExchange(
-      int32_t volatile *Target,
-     int32_t Value)
-{
-    return __sync_swap(Target, Value);
-}
+inline int32_t InterlockedExchange(int32_t volatile *Target, int32_t Value) { return __sync_swap(Target, Value); }
 
 EXTERN_C
-inline
-long
-InterlockedExchange64(
-      long volatile *Target,
-     long Value)
-{
-    return __sync_swap(Target, Value);
-}
+inline long InterlockedExchange64(long volatile *Target, long Value) { return __sync_swap(Target, Value); }
 
 /*++
 Function:
@@ -1389,60 +1183,36 @@ The return value is the initial value of the destination.
 
 --*/
 EXTERN_C
-inline
-char
-InterlockedCompareExchange8(
-      char volatile *Destination,
-     char Exchange,
-     char Comperand)
+inline char InterlockedCompareExchange8(char volatile *Destination, char Exchange, char Comperand)
 {
-    return __sync_val_compare_and_swap(
-        Destination, /* The pointer to a variable whose value is to be compared with. */
-        Comperand, /* The value to be compared */
-        Exchange /* The value to be stored */);
+    return __sync_val_compare_and_swap(Destination, /* The pointer to a variable whose value is to be compared with. */
+                                       Comperand, /* The value to be compared */
+                                       Exchange /* The value to be stored */);
 }
 
 EXTERN_C
-inline
-short
-InterlockedCompareExchange16(
-      short volatile *Destination,
-     short Exchange,
-     short Comperand)
+inline short InterlockedCompareExchange16(short volatile *Destination, short Exchange, short Comperand)
 {
-    return __sync_val_compare_and_swap(
-        Destination, /* The pointer to a variable whose value is to be compared with. */
-        Comperand, /* The value to be compared */
-        Exchange /* The value to be stored */);
+    return __sync_val_compare_and_swap(Destination, /* The pointer to a variable whose value is to be compared with. */
+                                       Comperand, /* The value to be compared */
+                                       Exchange /* The value to be stored */);
 }
 
 EXTERN_C
-inline
-int32_t
-InterlockedCompareExchange(
-      int32_t volatile *Destination,
-     int32_t Exchange,
-     int32_t Comperand)
+inline int32_t InterlockedCompareExchange(int32_t volatile *Destination, int32_t Exchange, int32_t Comperand)
 {
-    return __sync_val_compare_and_swap(
-        Destination, /* The pointer to a variable whose value is to be compared with. */
-        Comperand, /* The value to be compared */
-        Exchange /* The value to be stored */);
+    return __sync_val_compare_and_swap(Destination, /* The pointer to a variable whose value is to be compared with. */
+                                       Comperand, /* The value to be compared */
+                                       Exchange /* The value to be stored */);
 }
 
 // See the 32-bit variant in interlock2.s
 EXTERN_C
-inline
-long
-InterlockedCompareExchange64(
-      long volatile *Destination,
-     long Exchange,
-     long Comperand)
+inline long InterlockedCompareExchange64(long volatile *Destination, long Exchange, long Comperand)
 {
-    return __sync_val_compare_and_swap(
-        Destination, /* The pointer to a variable whose value is to be compared with. */
-        Comperand, /* The value to be compared */
-        Exchange /* The value to be stored */);
+    return __sync_val_compare_and_swap(Destination, /* The pointer to a variable whose value is to be compared with. */
+                                       Comperand, /* The value to be compared */
+                                       Exchange /* The value to be stored */);
 }
 
 /*++
@@ -1463,171 +1233,85 @@ The return value is the original value that 'Addend' pointed to.
 
 --*/
 EXTERN_C
-inline
-char
-InterlockedExchangeAdd8(
-      char volatile *Addend,
-     char Value)
+inline char InterlockedExchangeAdd8(char volatile *Addend, char Value) { return __sync_fetch_and_add(Addend, Value); }
+
+EXTERN_C
+inline short InterlockedExchangeAdd16(short volatile *Addend, short Value)
 {
     return __sync_fetch_and_add(Addend, Value);
 }
 
 EXTERN_C
-inline
-short
-InterlockedExchangeAdd16(
-      short volatile *Addend,
-     short Value)
+inline int32_t InterlockedExchangeAdd(int32_t volatile *Addend, int32_t Value)
 {
     return __sync_fetch_and_add(Addend, Value);
 }
 
 EXTERN_C
-inline
-int32_t
-InterlockedExchangeAdd(
-      int32_t volatile *Addend,
-     int32_t Value)
-{
-    return __sync_fetch_and_add(Addend, Value);
-}
-
-EXTERN_C
-inline
-int32_t
-InterlockedAdd(
-      int32_t volatile *Addend,
-     int32_t Value)
+inline int32_t InterlockedAdd(int32_t volatile *Addend, int32_t Value)
 {
     return InterlockedExchangeAdd(Addend, Value) + Value;
 }
 
 EXTERN_C
-inline
-long
-InterlockedExchangeAdd64(
-      long volatile *Addend,
-     long Value)
-{
-    return __sync_fetch_and_add(Addend, Value);
-}
+inline long InterlockedExchangeAdd64(long volatile *Addend, long Value) { return __sync_fetch_and_add(Addend, Value); }
 
 EXTERN_C
-inline
-char
-InterlockedAnd8(
-      char volatile *Destination,
-     char Value)
+inline char InterlockedAnd8(char volatile *Destination, char Value) { return __sync_fetch_and_and(Destination, Value); }
+
+EXTERN_C
+inline short InterlockedAnd16(short volatile *Destination, short Value)
 {
     return __sync_fetch_and_and(Destination, Value);
 }
 
 EXTERN_C
-inline
-short
-InterlockedAnd16(
-      short volatile *Destination,
-     short Value)
+inline int32_t InterlockedAnd(int32_t volatile *Destination, int32_t Value)
 {
     return __sync_fetch_and_and(Destination, Value);
 }
 
 EXTERN_C
-inline
-int32_t
-InterlockedAnd(
-      int32_t volatile *Destination,
-     int32_t Value)
+inline long InterlockedAnd64(long volatile *Destination, long Value)
 {
     return __sync_fetch_and_and(Destination, Value);
 }
 
 EXTERN_C
-inline
-long
-InterlockedAnd64(
-      long volatile *Destination,
-     long Value)
-{
-    return __sync_fetch_and_and(Destination, Value);
-}
+inline char InterlockedOr8(char volatile *Destination, char Value) { return __sync_fetch_and_or(Destination, Value); }
 
 EXTERN_C
-inline
-char
-InterlockedOr8(
-      char volatile *Destination,
-     char Value)
+inline short InterlockedOr16(short volatile *Destination, short Value)
 {
     return __sync_fetch_and_or(Destination, Value);
 }
 
 EXTERN_C
-inline
-short
-InterlockedOr16(
-      short volatile *Destination,
-     short Value)
+inline int32_t InterlockedOr(int32_t volatile *Destination, int32_t Value)
 {
     return __sync_fetch_and_or(Destination, Value);
 }
 
 EXTERN_C
-inline
-int32_t
-InterlockedOr(
-      int32_t volatile *Destination,
-     int32_t Value)
-{
-    return __sync_fetch_and_or(Destination, Value);
-}
+inline long InterlockedOr64(long volatile *Destination, long Value) { return __sync_fetch_and_or(Destination, Value); }
 
 EXTERN_C
-inline
-long
-InterlockedOr64(
-      long volatile *Destination,
-     long Value)
-{
-    return __sync_fetch_and_or(Destination, Value);
-}
+inline char InterlockedXor8(char volatile *Destination, char Value) { return __sync_fetch_and_xor(Destination, Value); }
 
 EXTERN_C
-inline
-char
-InterlockedXor8(
-      char volatile *Destination,
-     char Value)
+inline short InterlockedXor16(short volatile *Destination, short Value)
 {
     return __sync_fetch_and_xor(Destination, Value);
 }
 
 EXTERN_C
-inline
-short
-InterlockedXor16(
-      short volatile *Destination,
-     short Value)
+inline int32_t InterlockedXor(int32_t volatile *Destination, int32_t Value)
 {
     return __sync_fetch_and_xor(Destination, Value);
 }
 
 EXTERN_C
-inline
-int32_t
-InterlockedXor(
-      int32_t volatile *Destination,
-     int32_t Value)
-{
-    return __sync_fetch_and_xor(Destination, Value);
-}
-
-EXTERN_C
-inline
-long
-InterlockedXor64(
-      long volatile *Destination,
-     long Value)
+inline long InterlockedXor64(long volatile *Destination, long Value)
 {
     return __sync_fetch_and_xor(Destination, Value);
 }
@@ -1636,40 +1320,28 @@ InterlockedXor64(
 #define BITS_IN_LONG (sizeof(int32_t) * BITS_IN_BYTE)
 
 EXTERN_C
-inline
-unsigned char
-InterlockedBitTestAndSet(
-      int32_t volatile *Base,
-     int32_t Bit)
+inline unsigned char InterlockedBitTestAndSet(int32_t volatile *Base, int32_t Bit)
 {
-    volatile int32_t* longToTest = Base + (Bit / BITS_IN_LONG);
-    int32_t bitToTest  = Bit % BITS_IN_LONG;
+    volatile int32_t *longToTest = Base + (Bit / BITS_IN_LONG);
+    int32_t bitToTest = Bit % BITS_IN_LONG;
     return (InterlockedOr(longToTest, (1 << bitToTest)) & (1 << bitToTest)) != 0;
 }
 
 EXTERN_C
-inline
-unsigned char
-BitTest(
-     int32_t *Base,
-     int32_t Bit)
+inline unsigned char BitTest(int32_t *Base, int32_t Bit)
 {
-    int32_t* longToTest = Base + (Bit / BITS_IN_LONG);
-    int32_t bitToTest  = Bit % BITS_IN_LONG;
+    int32_t *longToTest = Base + (Bit / BITS_IN_LONG);
+    int32_t bitToTest = Bit % BITS_IN_LONG;
     return ((*longToTest) & (1 << bitToTest)) != 0;
 }
 
 EXTERN_C
-inline
-unsigned char
-BitTestAndSet(
-      int32_t *Base,
-     int32_t Bit)
+inline unsigned char BitTestAndSet(int32_t *Base, int32_t Bit)
 {
     // xplat-todo: Benchmark whether this is better than
     // using the inline assembler to generate a bts instruction
-    int32_t* longToTest = Base + (Bit / BITS_IN_LONG);
-    int32_t bitToTest  = Bit % BITS_IN_LONG;
+    int32_t *longToTest = Base + (Bit / BITS_IN_LONG);
+    int32_t bitToTest = Bit % BITS_IN_LONG;
 
     // Save whether the bit was set or not. Then, unconditionally set the
     // bit. Return whether the bit was set or not.
@@ -1678,11 +1350,11 @@ BitTestAndSet(
     return wasBitSet;
 }
 
-#define InterlockedExchangePointer(Target, Value) \
-    ((void *)InterlockedExchange64((long *)(Target), (long)(Value)))
+#define InterlockedExchangePointer(Target, Value) ((void *)InterlockedExchange64((long *)(Target), (long)(Value)))
 
-#define InterlockedCompareExchangePointer(Destination, ExChange, Comperand) \
-    (reinterpret_cast<void *>(InterlockedCompareExchange64(reinterpret_cast<long *>(Destination), reinterpret_cast<long>(ExChange), static_cast<long>(Comperand))))
+#define InterlockedCompareExchangePointer(Destination, ExChange, Comperand)                                            \
+    (reinterpret_cast<void *>(InterlockedCompareExchange64(                                                            \
+        reinterpret_cast<long *>(Destination), reinterpret_cast<long>(ExChange), static_cast<long>(Comperand))))
 
 /*++
 Function:
@@ -1692,42 +1364,26 @@ The MemoryBarrier function creates a full memory barrier.
 
 --*/
 EXTERN_C
-inline
-void
-MemoryBarrier(
-    void)
-{
-    __sync_synchronize();
-}
+inline void MemoryBarrier(void) { __sync_synchronize(); }
 
-uint32_t
-GetLastError(
-         void);
+uint32_t GetLastError(void);
 
-void
-SetLastError(
-          uint32_t dwErrCode);
+void SetLastError(uint32_t dwErrCode);
 
-void
-RtlRestoreContext(
-   PCONTEXT ContextRecord,
-   PEXCEPTION_RECORD ExceptionRecord
-);
+void RtlRestoreContext(PCONTEXT ContextRecord, PEXCEPTION_RECORD ExceptionRecord);
 
-void
-RtlCaptureContext(
-   PCONTEXT ContextRecord
-);
+void RtlCaptureContext(PCONTEXT ContextRecord);
 
 typedef void (*PAL_ActivationFunction)(CONTEXT *context);
 typedef BOOL (*PAL_SafeActivationCheckFunction)(size_t ip, BOOL checkingCurrentThread);
 
-typedef struct _SYSTEM_INFO {
+typedef struct _SYSTEM_INFO
+{
     uint16_t wProcessorArchitecture_PAL_Undefined;
     uint16_t wReserved_PAL_Undefined; // NOTE: diff from winbase.h - no obsolete dwOemId union
     uint32_t dwPageSize;
-    void * lpMinimumApplicationAddress;
-    void * lpMaximumApplicationAddress;
+    void *lpMinimumApplicationAddress;
+    void *lpMaximumApplicationAddress;
     unsigned long dwActiveProcessorMask_PAL_Undefined;
     uint32_t dwNumberOfProcessors;
     uint32_t dwProcessorType_PAL_Undefined;
@@ -1736,13 +1392,11 @@ typedef struct _SYSTEM_INFO {
     uint16_t wProcessorRevision_PAL_Undefined;
 } SYSTEM_INFO, *LPSYSTEM_INFO;
 
-void
-GetSystemInfo(
-           LPSYSTEM_INFO lpSystemInfo);
+void GetSystemInfo(LPSYSTEM_INFO lpSystemInfo);
 
 #ifndef _CONST_RETURN
-#ifdef  __cplusplus
-#define _CONST_RETURN  const
+#ifdef __cplusplus
+#define _CONST_RETURN const
 #else
 #define _CONST_RETURN
 #endif
@@ -1751,38 +1405,44 @@ GetSystemInfo(
 /* For backwards compatibility */
 #define _WConst_return _CONST_RETURN
 
-#define EOF     (-1)
+#define EOF (-1)
 
 typedef int errno_t;
 
 int _vsnwprintf(char16_t *, size_t, const char16_t *, va_list);
-char16_t * _itow(int, char16_t *, int);
-char16_t * _ltow(long, char16_t *, int);
+char16_t *_itow(int, char16_t *, int);
+char16_t *_ltow(long, char16_t *, int);
 
-int PAL_wcscmp(const char16_t*, const char16_t*);
+int PAL_wcscmp(const char16_t *, const char16_t *);
 int PAL_wmemcmp(const char16_t *, const char16_t *, size_t);
 int PAL_wcsncmp(const char16_t *, const char16_t *, size_t);
-char16_t * PAL_wcscpy(char16_t *, const char16_t *);
-const char16_t * PAL_wcschr(const char16_t *, char16_t);
-const char16_t * PAL_wcsrchr(const char16_t *, char16_t);
-char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
+char16_t *PAL_wcscpy(char16_t *, const char16_t *);
+const char16_t *PAL_wcschr(const char16_t *, char16_t);
+const char16_t *PAL_wcsrchr(const char16_t *, char16_t);
+char16_t _WConst_return *PAL_wcsstr(const char16_t *, const char16_t *);
 int PAL_swscanf(const char16_t *, const char16_t *, ...);
 char16_t PAL_towlower(char16_t);
 
-char16_t * _wcslwr(char16_t *);
+char16_t *_wcslwr(char16_t *);
 unsigned long PAL__wcstoui64(const char16_t *, char16_t **, int);
-char16_t * _i64tow(long, char16_t *, int);
-char16_t * _ui64tow(unsigned long, char16_t *, int);
+char16_t *_i64tow(long, char16_t *, int);
+char16_t *_ui64tow(unsigned long, char16_t *, int);
 int _wtoi(const char16_t *);
 
 #ifdef __cplusplus
 extern "C++" {
 inline char16_t *PAL_wcschr(char16_t *_S, char16_t _C)
-        {return const_cast<char16_t*>(PAL_wcschr(static_cast<const char16_t*>(_S), _C)); }
+{
+    return const_cast<char16_t *>(PAL_wcschr(static_cast<const char16_t *>(_S), _C));
+}
 inline char16_t *PAL_wcsrchr(char16_t *_S, char16_t _C)
-        {return const_cast<char16_t*>(PAL_wcsrchr(static_cast<const char16_t*>(_S), _C)); }
+{
+    return const_cast<char16_t *>(PAL_wcsrchr(static_cast<const char16_t *>(_S), _C));
+}
 inline char16_t *PAL_wcsstr(char16_t *_S, const char16_t *_P)
-        {return const_cast<char16_t*>(PAL_wcsstr(static_cast<const char16_t*>(_S), _P)); }
+{
+    return const_cast<char16_t *>(PAL_wcsstr(static_cast<const char16_t *>(_S), _P));
+}
 }
 #endif
 
@@ -1798,8 +1458,7 @@ _rotl
 See MSDN doc.
 --*/
 EXTERN_C
-inline
-unsigned int _rotl(unsigned int value, int shift)
+inline unsigned int _rotl(unsigned int value, int shift)
 {
     unsigned int retval = 0;
 
@@ -1817,8 +1476,7 @@ _rotl64
 See MSDN doc.
 --*/
 EXTERN_C
-inline
-unsigned long long _rotl64(unsigned long long value, int shift)
+inline unsigned long long _rotl64(unsigned long long value, int shift)
 {
     unsigned long long retval = 0;
 
@@ -1836,8 +1494,7 @@ _rotr
 See MSDN doc.
 --*/
 EXTERN_C
-inline
-unsigned int _rotr(unsigned int value, int shift)
+inline unsigned int _rotr(unsigned int value, int shift)
 {
     unsigned int retval;
 
@@ -1855,8 +1512,7 @@ _rotr64
 See MSDN doc.
 --*/
 EXTERN_C
-inline
-unsigned long long _rotr64(unsigned long long value, int shift)
+inline unsigned long long _rotr64(unsigned long long value, int shift)
 {
     unsigned long long retval;
 
@@ -1872,68 +1528,68 @@ unsigned long long _rotr64(unsigned long long value, int shift)
 
 #ifndef PAL_STDCPP_COMPAT
 
-#define SEEK_SET    0
-#define SEEK_CUR    1
-#define SEEK_END    2
+#define SEEK_SET 0
+#define SEEK_CUR 1
+#define SEEK_END 2
 
-#define _IOFBF  0       /* setvbuf should set fully buffered */
-#define _IOLBF  1       /* setvbuf should set line buffered */
-#define _IONBF  2       /* setvbuf should set unbuffered */
+#define _IOFBF 0 /* setvbuf should set fully buffered */
+#define _IOLBF 1 /* setvbuf should set line buffered */
+#define _IONBF 2 /* setvbuf should set unbuffered */
 
 #endif // PAL_STDCPP_COMPAT
 
-FILE * PAL_fopen(const char *, const char *);
+FILE *PAL_fopen(const char *, const char *);
 int PAL_fwprintf(FILE *, const char16_t *, ...);
 int PAL_vfwprintf(FILE *, const char16_t *, va_list);
 
-FILE * _wfopen(const char16_t *, const char16_t *);
+FILE *_wfopen(const char16_t *, const char16_t *);
 
-#define EXCEPTION_CONTINUE_SEARCH   0
-#define EXCEPTION_EXECUTE_HANDLER   1
+#define EXCEPTION_CONTINUE_SEARCH 0
+#define EXCEPTION_EXECUTE_HANDLER 1
 #define EXCEPTION_CONTINUE_EXECUTION -1
 
-#define DBG_TERMINATE_PROCESS            (static_cast<uint32_t>(0x40010004L))
+#define DBG_TERMINATE_PROCESS (static_cast<uint32_t>(0x40010004L))
 
-#define STATUS_USER_APC                  (static_cast<uint32_t>(0x000000C0L))
-#define STATUS_DATATYPE_MISALIGNMENT     (static_cast<uint32_t>(0x80000002L))
-#define STATUS_BREAKPOINT                (static_cast<uint32_t>(0x80000003L))
-#define STATUS_SINGLE_STEP               (static_cast<uint32_t>(0x80000004L))
-#define STATUS_ACCESS_VIOLATION          (static_cast<uint32_t>(0xC0000005L))
-#define STATUS_ILLEGAL_INSTRUCTION       (static_cast<uint32_t>(0xC000001DL))
-#define STATUS_ARRAY_BOUNDS_EXCEEDED     (static_cast<uint32_t>(0xC000008CL))
-#define STATUS_FLOAT_DENORMAL_OPERAND    (static_cast<uint32_t>(0xC000008DL))
-#define STATUS_FLOAT_DIVIDE_BY_ZERO      (static_cast<uint32_t>(0xC000008EL))
-#define STATUS_FLOAT_INEXACT_RESULT      (static_cast<uint32_t>(0xC000008FL))
-#define STATUS_FLOAT_INVALID_OPERATION   (static_cast<uint32_t>(0xC0000090L))
-#define STATUS_FLOAT_OVERFLOW            (static_cast<uint32_t>(0xC0000091L))
-#define STATUS_FLOAT_UNDERFLOW           (static_cast<uint32_t>(0xC0000093L))
-#define STATUS_INTEGER_DIVIDE_BY_ZERO    (static_cast<uint32_t>(0xC0000094L))
-#define STATUS_INTEGER_OVERFLOW          (static_cast<uint32_t>(0xC0000095L))
-#define STATUS_PRIVILEGED_INSTRUCTION    (static_cast<uint32_t>(0xC0000096L))
-#define STATUS_STACK_OVERFLOW            (static_cast<uint32_t>(0xC00000FDL))
+#define STATUS_USER_APC (static_cast<uint32_t>(0x000000C0L))
+#define STATUS_DATATYPE_MISALIGNMENT (static_cast<uint32_t>(0x80000002L))
+#define STATUS_BREAKPOINT (static_cast<uint32_t>(0x80000003L))
+#define STATUS_SINGLE_STEP (static_cast<uint32_t>(0x80000004L))
+#define STATUS_ACCESS_VIOLATION (static_cast<uint32_t>(0xC0000005L))
+#define STATUS_ILLEGAL_INSTRUCTION (static_cast<uint32_t>(0xC000001DL))
+#define STATUS_ARRAY_BOUNDS_EXCEEDED (static_cast<uint32_t>(0xC000008CL))
+#define STATUS_FLOAT_DENORMAL_OPERAND (static_cast<uint32_t>(0xC000008DL))
+#define STATUS_FLOAT_DIVIDE_BY_ZERO (static_cast<uint32_t>(0xC000008EL))
+#define STATUS_FLOAT_INEXACT_RESULT (static_cast<uint32_t>(0xC000008FL))
+#define STATUS_FLOAT_INVALID_OPERATION (static_cast<uint32_t>(0xC0000090L))
+#define STATUS_FLOAT_OVERFLOW (static_cast<uint32_t>(0xC0000091L))
+#define STATUS_FLOAT_UNDERFLOW (static_cast<uint32_t>(0xC0000093L))
+#define STATUS_INTEGER_DIVIDE_BY_ZERO (static_cast<uint32_t>(0xC0000094L))
+#define STATUS_INTEGER_OVERFLOW (static_cast<uint32_t>(0xC0000095L))
+#define STATUS_PRIVILEGED_INSTRUCTION (static_cast<uint32_t>(0xC0000096L))
+#define STATUS_STACK_OVERFLOW (static_cast<uint32_t>(0xC00000FDL))
 
-#define WAIT_IO_COMPLETION                  STATUS_USER_APC
+#define WAIT_IO_COMPLETION STATUS_USER_APC
 
-#define EXCEPTION_ACCESS_VIOLATION          STATUS_ACCESS_VIOLATION
-#define EXCEPTION_DATATYPE_MISALIGNMENT     STATUS_DATATYPE_MISALIGNMENT
-#define EXCEPTION_BREAKPOINT                STATUS_BREAKPOINT
-#define EXCEPTION_SINGLE_STEP               STATUS_SINGLE_STEP
-#define EXCEPTION_ARRAY_BOUNDS_EXCEEDED     STATUS_ARRAY_BOUNDS_EXCEEDED
-#define EXCEPTION_FLT_DENORMAL_OPERAND      STATUS_FLOAT_DENORMAL_OPERAND
-#define EXCEPTION_FLT_DIVIDE_BY_ZERO        STATUS_FLOAT_DIVIDE_BY_ZERO
-#define EXCEPTION_FLT_INEXACT_RESULT        STATUS_FLOAT_INEXACT_RESULT
-#define EXCEPTION_FLT_INVALID_OPERATION     STATUS_FLOAT_INVALID_OPERATION
-#define EXCEPTION_FLT_OVERFLOW              STATUS_FLOAT_OVERFLOW
-#define EXCEPTION_FLT_UNDERFLOW             STATUS_FLOAT_UNDERFLOW
-#define EXCEPTION_INT_DIVIDE_BY_ZERO        STATUS_INTEGER_DIVIDE_BY_ZERO
-#define EXCEPTION_INT_OVERFLOW              STATUS_INTEGER_OVERFLOW
-#define EXCEPTION_PRIV_INSTRUCTION          STATUS_PRIVILEGED_INSTRUCTION
-#define EXCEPTION_ILLEGAL_INSTRUCTION       STATUS_ILLEGAL_INSTRUCTION
-#define EXCEPTION_STACK_OVERFLOW            STATUS_STACK_OVERFLOW
+#define EXCEPTION_ACCESS_VIOLATION STATUS_ACCESS_VIOLATION
+#define EXCEPTION_DATATYPE_MISALIGNMENT STATUS_DATATYPE_MISALIGNMENT
+#define EXCEPTION_BREAKPOINT STATUS_BREAKPOINT
+#define EXCEPTION_SINGLE_STEP STATUS_SINGLE_STEP
+#define EXCEPTION_ARRAY_BOUNDS_EXCEEDED STATUS_ARRAY_BOUNDS_EXCEEDED
+#define EXCEPTION_FLT_DENORMAL_OPERAND STATUS_FLOAT_DENORMAL_OPERAND
+#define EXCEPTION_FLT_DIVIDE_BY_ZERO STATUS_FLOAT_DIVIDE_BY_ZERO
+#define EXCEPTION_FLT_INEXACT_RESULT STATUS_FLOAT_INEXACT_RESULT
+#define EXCEPTION_FLT_INVALID_OPERATION STATUS_FLOAT_INVALID_OPERATION
+#define EXCEPTION_FLT_OVERFLOW STATUS_FLOAT_OVERFLOW
+#define EXCEPTION_FLT_UNDERFLOW STATUS_FLOAT_UNDERFLOW
+#define EXCEPTION_INT_DIVIDE_BY_ZERO STATUS_INTEGER_DIVIDE_BY_ZERO
+#define EXCEPTION_INT_OVERFLOW STATUS_INTEGER_OVERFLOW
+#define EXCEPTION_PRIV_INSTRUCTION STATUS_PRIVILEGED_INSTRUCTION
+#define EXCEPTION_ILLEGAL_INSTRUCTION STATUS_ILLEGAL_INSTRUCTION
+#define EXCEPTION_STACK_OVERFLOW STATUS_STACK_OVERFLOW
 
 size_t GetCurrentSP();
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 
 #endif

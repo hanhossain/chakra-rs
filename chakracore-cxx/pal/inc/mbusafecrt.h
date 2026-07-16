@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /***
@@ -21,69 +21,73 @@
 #ifndef MBUSAFECRT_H
 #define MBUSAFECRT_H
 
-//#include <wchar.h>
+// #include <wchar.h>
 
 /* MacOS does not define a specifc type for errnos, but SafeCRT does */
 typedef int errno_t;
 
 /* errno value that specific to SafeCRT */
-#define STRUNCATE       80
+#define STRUNCATE 80
 
-// define the return value for success 
+// define the return value for success
 #define SAFECRT_SUCCESS 0
 
 /*
  * Sizes for buffers used by the _makepath() and _splitpath() functions.
  * note that the sizes include space for 0-terminator
  */
-//#define _MAX_PATH   260 /* max. length of full pathname */
-//#define _MAX_DRIVE  3   /* max. length of drive component */
-//#define _MAX_DIR    256 /* max. length of path component */
-//#define _MAX_FNAME  256 /* max. length of file name component */
-//#define _MAX_EXT    256 /* max. length of extension component */
+// #define _MAX_PATH   260 /* max. length of full pathname */
+// #define _MAX_DRIVE  3   /* max. length of drive component */
+// #define _MAX_DIR    256 /* max. length of path component */
+// #define _MAX_FNAME  256 /* max. length of file name component */
+// #define _MAX_EXT    256 /* max. length of extension component */
 
-    extern "C" {
+extern "C" {
 
-typedef void ( *tSafeCRT_AssertFuncPtr )( const char* inExpression, const char* inComment, const char* inFile, const unsigned long inLineNum );
+typedef void (*tSafeCRT_AssertFuncPtr)(const char *inExpression, const char *inComment, const char *inFile,
+                                       const unsigned long inLineNum);
 
-extern errno_t wcscat_s( char16_t* ioDest, size_t inDestBufferSize, const char16_t* inSrc );
+extern errno_t wcscat_s(char16_t *ioDest, size_t inDestBufferSize, const char16_t *inSrc);
 
-extern errno_t wcsncat_s( char16_t* ioDest, size_t inDestBufferSize, const char16_t* inSrc, size_t inCount );
+extern errno_t wcsncat_s(char16_t *ioDest, size_t inDestBufferSize, const char16_t *inSrc, size_t inCount);
 
-extern errno_t strcpy_s( char* outDest, size_t inDestBufferSize, const char* inSrc );
-extern errno_t wcscpy_s( char16_t* outDest, size_t inDestBufferSize, const char16_t* inSrc );
+extern errno_t strcpy_s(char *outDest, size_t inDestBufferSize, const char *inSrc);
+extern errno_t wcscpy_s(char16_t *outDest, size_t inDestBufferSize, const char16_t *inSrc);
 
-extern errno_t strncpy_s( char* outDest, size_t inDestBufferSize, const char* inSrc, size_t inCount );
-extern errno_t wcsncpy_s( char16_t* outDest, size_t inDestBufferSize, const char16_t* inSrc, size_t inCount );
+extern errno_t strncpy_s(char *outDest, size_t inDestBufferSize, const char *inSrc, size_t inCount);
+extern errno_t wcsncpy_s(char16_t *outDest, size_t inDestBufferSize, const char16_t *inSrc, size_t inCount);
 
-extern char* strtok_s( char* inString, const char* inControl, char** ioContext );
-extern char16_t* wcstok_s( char16_t* inString, const char16_t* inControl, char16_t** ioContext );
+extern char *strtok_s(char *inString, const char *inControl, char **ioContext);
+extern char16_t *wcstok_s(char16_t *inString, const char16_t *inControl, char16_t **ioContext);
 
-extern errno_t _itoa_s( int inValue, char* outBuffer, size_t inDestBufferSize, int inRadix );
-extern errno_t _itow_s( int inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
+extern errno_t _itoa_s(int inValue, char *outBuffer, size_t inDestBufferSize, int inRadix);
+extern errno_t _itow_s(int inValue, char16_t *outBuffer, size_t inDestBufferSize, int inRadix);
 
-extern errno_t _ltoa_s( long inValue, char* outBuffer, size_t inDestBufferSize, int inRadix );
-extern errno_t _ltow_s( long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
+extern errno_t _ltoa_s(long inValue, char *outBuffer, size_t inDestBufferSize, int inRadix);
+extern errno_t _ltow_s(long inValue, char16_t *outBuffer, size_t inDestBufferSize, int inRadix);
 
-extern errno_t _ultoa_s( unsigned long inValue, char* outBuffer, size_t inDestBufferSize, int inRadix );
-extern errno_t _ultow_s( unsigned long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
+extern errno_t _ultoa_s(unsigned long inValue, char *outBuffer, size_t inDestBufferSize, int inRadix);
+extern errno_t _ultow_s(unsigned long inValue, char16_t *outBuffer, size_t inDestBufferSize, int inRadix);
 
-extern errno_t _i64toa_s( long long inValue, char* outBuffer, size_t inDestBufferSize, int inRadix );
-extern errno_t _i64tow_s( long long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
+extern errno_t _i64toa_s(long long inValue, char *outBuffer, size_t inDestBufferSize, int inRadix);
+extern errno_t _i64tow_s(long long inValue, char16_t *outBuffer, size_t inDestBufferSize, int inRadix);
 
-extern errno_t _ui64toa_s( unsigned long long inValue, char* outBuffer, size_t inDestBufferSize, int inRadix );
-extern errno_t _ui64tow_s( unsigned long long inValue, char16_t* outBuffer, size_t inDestBufferSize, int inRadix );
+extern errno_t _ui64toa_s(unsigned long long inValue, char *outBuffer, size_t inDestBufferSize, int inRadix);
+extern errno_t _ui64tow_s(unsigned long long inValue, char16_t *outBuffer, size_t inDestBufferSize, int inRadix);
 
-extern errno_t _wmakepath_s( char16_t* outDest, size_t inDestBufferSize, const char16_t* inDrive, const char16_t* inDirectory, const char16_t* inFilename, const char16_t* inExtension );
+extern errno_t _wmakepath_s(char16_t *outDest, size_t inDestBufferSize, const char16_t *inDrive,
+                            const char16_t *inDirectory, const char16_t *inFilename, const char16_t *inExtension);
 
-extern errno_t _wsplitpath_s( const char16_t* inPath, char16_t* outDrive, size_t inDriveSize, char16_t* outDirectory, size_t inDirectorySize, char16_t* outFilename, size_t inFilenameSize, char16_t* outExtension, size_t inExtensionSize );
+extern errno_t _wsplitpath_s(const char16_t *inPath, char16_t *outDrive, size_t inDriveSize, char16_t *outDirectory,
+                             size_t inDirectorySize, char16_t *outFilename, size_t inFilenameSize,
+                             char16_t *outExtension, size_t inExtensionSize);
 
-extern int swprintf_s( char16_t *string, size_t sizeInWords, const char16_t *format, ... );
+extern int swprintf_s(char16_t *string, size_t sizeInWords, const char16_t *format, ...);
 
-extern int _snwprintf_s( char16_t *string, size_t sizeInWords, size_t count, const char16_t *format, ... );
+extern int _snwprintf_s(char16_t *string, size_t sizeInWords, size_t count, const char16_t *format, ...);
 
-extern int _vswprintf_s( char16_t* string, size_t sizeInWords, const char16_t* format, va_list arglist );
-extern int _vsnwprintf_s( char16_t* string, size_t sizeInWords, size_t count, const char16_t* format, va_list arglist );
-    }
+extern int _vswprintf_s(char16_t *string, size_t sizeInWords, const char16_t *format, va_list arglist);
+extern int _vsnwprintf_s(char16_t *string, size_t sizeInWords, size_t count, const char16_t *format, va_list arglist);
+}
 
-#endif	/* MBUSAFECRT_H */
+#endif /* MBUSAFECRT_H */
