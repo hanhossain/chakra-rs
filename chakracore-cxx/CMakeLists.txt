@@ -134,8 +134,10 @@ add_definitions(
 # clang by default sets fvisibility=default
 
 # CXX WARNING FLAGS
-add_compile_options(-Wall)
-add_compile_options(-Wextra)
+if (CMAKE_BUILD_TYPE STREQUAL Debug)
+    add_compile_options(-Wall)
+    add_compile_options(-Wextra)
+endif()
 #add_compile_options(-Wold-style-cast)
 
 # ignore in general
