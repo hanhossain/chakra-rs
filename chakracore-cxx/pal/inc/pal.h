@@ -1876,14 +1876,6 @@ unsigned long long _rotr64(unsigned long long value, int shift)
 #define SEEK_CUR    1
 #define SEEK_END    2
 
-/* Locale categories */
-#define LC_ALL          0
-#define LC_COLLATE      1
-#define LC_CTYPE        2
-#define LC_MONETARY     3
-#define LC_NUMERIC      4
-#define LC_TIME         5
-
 #define _IOFBF  0       /* setvbuf should set fully buffered */
 #define _IOLBF  1       /* setvbuf should set line buffered */
 #define _IONBF  2       /* setvbuf should set unbuffered */
