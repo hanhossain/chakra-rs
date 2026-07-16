@@ -499,14 +499,12 @@
 #define _Prepost_z_          _Pre_z_ _Post_z_
 #undef _Pre_null_
 #define _Pre_null_           _Pre_ _Null_
-#undef _Pre_maybenull_
-#define _Pre_maybenull_      _Pre_ _Maybenull_
 #undef _Pre_notnull_
 #define _Pre_notnull_        _Pre_ _Notnull_
 #undef _Pre_valid_
 #define _Pre_valid_          _Pre_notnull_ _Pre_ _Valid_
 #undef _Pre_opt_valid_
-#define _Pre_opt_valid_      _Pre_maybenull_ _Pre_ _Valid_
+#define _Pre_opt_valid_      _Pre_ _Valid_
 #undef _Post_valid_
 #define _Post_valid_         _Post_ _Valid_
 #undef _Post_invalid_
