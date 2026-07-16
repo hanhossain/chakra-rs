@@ -131,7 +131,7 @@ Initialize()
         {
             rl.rlim_cur = maxStackSize;
             err = setrlimit(RLIMIT_STACK, &rl);
-            _ASSERTE(err == 0 && "Well, the environment has a strange stack limit \
+            assert(err == 0 && "Well, the environment has a strange stack limit \
               and setrlimit call failed to fix that");
         }
     }
@@ -359,7 +359,7 @@ done:
 
     if (fFirstTimeInit && 0 == retval)
     {
-        _ASSERTE(NULL != pThread);
+        assert(NULL != pThread);
     }
 
     if (retval != 0 && GetLastError() == ERROR_SUCCESS)

@@ -24,7 +24,7 @@ namespace CorUnix
 
     bool CAllowedObjectTypes::IsTypeAllowed(PalObjectTypeId eTypeId)
     {
-        _ASSERTE(eTypeId != ObjectTypeIdCount);
+        assert(eTypeId != ObjectTypeIdCount);
         return m_rgfAllowedTypes[eTypeId];
     };
 
@@ -36,7 +36,7 @@ namespace CorUnix
         memset((m_rgfAllowedTypes),0,(sizeof(m_rgfAllowedTypes)));
         for (uint32_t dw = 0; dw < dwAllowedTypeCount; dw += 1)
         {
-            _ASSERTE(rgAllowedTypes[dw] != ObjectTypeIdCount);
+            assert(rgAllowedTypes[dw] != ObjectTypeIdCount);
             m_rgfAllowedTypes[rgAllowedTypes[dw]] = TRUE;
         }
     };
@@ -47,7 +47,7 @@ namespace CorUnix
     {
         memset((m_rgfAllowedTypes),0,(sizeof(m_rgfAllowedTypes)));
 
-        _ASSERTE(eAllowedType != ObjectTypeIdCount);
+        assert(eAllowedType != ObjectTypeIdCount);
         m_rgfAllowedTypes[eAllowedType] = TRUE;
     };
 }

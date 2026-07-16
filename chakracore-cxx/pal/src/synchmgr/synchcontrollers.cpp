@@ -56,7 +56,7 @@ namespace CorUnix
     {
         VALIDATEOBJECT(psdSynchData);
 
-        _ASSERTE(InternalGetCurrentThread() == pthrCurrent);
+        assert(InternalGetCurrentThread() == pthrCurrent);
 
         // Initialize internal controller data
         m_pthrOwner      = pthrCurrent;
@@ -97,8 +97,8 @@ namespace CorUnix
         CPalSynchronizationManager * pSynchManager = 
             CPalSynchronizationManager::GetInstance();
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
-        _ASSERTE(ptwiWaitInfo->pthrOwner == m_pthrOwner);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
+        assert(ptwiWaitInfo->pthrOwner == m_pthrOwner);
 
         // Release reference to target synch data
         m_psdSynchData->Release(m_pthrOwner);
@@ -150,9 +150,9 @@ namespace CorUnix
 
         bool fRetVal = false;
         
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
-        _ASSERTE(NULL != pfCanWaitWithoutBlocking);
-        _ASSERTE(NULL != pfAbandoned);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
+        assert(NULL != pfCanWaitWithoutBlocking);
+        assert(NULL != pfAbandoned);
 
         fRetVal = m_psdSynchData->CanWaiterWaitWithoutBlocking(m_pthrOwner, pfAbandoned);
 
@@ -236,7 +236,7 @@ namespace CorUnix
 
         PAL_ERROR palErr = NO_ERROR;        
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
 
         palErr = m_psdSynchData->ReleaseWaiterWithoutBlocking(m_pthrOwner, m_pthrOwner);
 
@@ -274,12 +274,12 @@ namespace CorUnix
         CPalSynchronizationManager * pSynchManager = 
             CPalSynchronizationManager::GetInstance();
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
         
         ptwiWaitInfo = CPalSynchronizationManager::GetThreadWaitInfo(
             m_pthrOwner);
 
-        _ASSERTE(ptwiWaitInfo->pthrOwner == m_pthrOwner);
+        assert(ptwiWaitInfo->pthrOwner == m_pthrOwner);
         
         pdwWaitState = SharedIDToTypePointer(uint32_t,
                 m_pthrOwner->synchronizationInfo.m_shridWaitAwakened);
@@ -456,7 +456,7 @@ namespace CorUnix
                 [[maybe_unused]] int32_t lSharedSynchLockCount = CPalSynchronizationManager::ResetSharedSynchLock(m_pthrOwner);
                 [[maybe_unused]] int32_t lLocalSynchLockCount = CPalSynchronizationManager::ResetLocalSynchLock(m_pthrOwner);
 
-                _ASSERTE(0 < lLocalSynchLockCount);
+                assert(0 < lLocalSynchLockCount);
 
                 // Sleep for ever                
                 CPalSynchronizationManager::ThreadPrepareForShutdown();
@@ -482,7 +482,7 @@ namespace CorUnix
     {
         VALIDATEOBJECT(m_psdSynchData);
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
         
         Release();
     }
@@ -497,7 +497,7 @@ namespace CorUnix
     {
         VALIDATEOBJECT(m_psdSynchData);
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
         _ASSERT_MSG(NULL != m_pProcLocalData,
                     "Pointer to process local data not yet initialized\n");
 
@@ -514,7 +514,7 @@ namespace CorUnix
     {   
         VALIDATEOBJECT(m_psdSynchData);
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
         m_pProcLocalData = pProcLocalData;
     }
 
@@ -537,8 +537,8 @@ namespace CorUnix
         PAL_ERROR palErr = NO_ERROR;        
         int32_t lCount = m_psdSynchData->GetSignalCount();
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
-        _ASSERTE(NULL != plSignalCount);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
+        assert(NULL != plSignalCount);
         _ASSERT_MSG(0 <= lCount,
                     "Internal error: negative signal count [signal count=%d]",
                     lCount);
@@ -558,8 +558,8 @@ namespace CorUnix
     {
         VALIDATEOBJECT(m_psdSynchData);
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
-        _ASSERTE(lNewCount >= 0);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
+        assert(lNewCount >= 0);
                     
         m_psdSynchData->Signal(m_pthrOwner, lNewCount, false);
         
@@ -578,8 +578,8 @@ namespace CorUnix
     {
         VALIDATEOBJECT(m_psdSynchData);
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
-        _ASSERTE(lAmountToIncrement > 0);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
+        assert(lAmountToIncrement > 0);
 
         int32_t lOldCount = m_psdSynchData->GetSignalCount();
         int32_t lNewCount = lOldCount + lAmountToIncrement;
@@ -604,12 +604,12 @@ namespace CorUnix
     {
         VALIDATEOBJECT(m_psdSynchData);
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
-        _ASSERTE(lAmountToDecrement > 0);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
+        assert(lAmountToDecrement > 0);
         
         PAL_ERROR palErr = NO_ERROR;
         int32_t lCount = m_psdSynchData->GetSignalCount();
-        _ASSERTE(lAmountToDecrement <= lCount);
+        assert(lAmountToDecrement <= lCount);
 
         m_psdSynchData->SetSignalCount(lCount - lAmountToDecrement);
         
@@ -629,8 +629,8 @@ namespace CorUnix
         
         PAL_ERROR palErr = NO_ERROR;
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
-        _ASSERTE(NULL != pNewOwningThread);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
+        assert(NULL != pNewOwningThread);
         _ASSERT_MSG(CObjectType::OwnershipTracked == 
                     m_potObjectType->GetOwnershipSemantics(),
                     "SetOwner called on an object without OwnershipTracked "
@@ -671,7 +671,7 @@ namespace CorUnix
         PAL_ERROR palErr = NO_ERROR;
         int32_t lOwnershipCount = m_psdSynchData->GetOwnershipCount();
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
         _ASSERT_MSG(CObjectType::OwnershipTracked == 
                     m_potObjectType->GetOwnershipSemantics(),
                     "Trying to decrement ownership count on an object with "
@@ -737,7 +737,7 @@ namespace CorUnix
     {
         VALIDATEOBJECT(m_psdSynchData);
 
-        _ASSERTE(InternalGetCurrentThread() == m_pthrOwner);
+        assert(InternalGetCurrentThread() == m_pthrOwner);
         
         Release();
     }
@@ -1004,7 +1004,7 @@ namespace CorUnix
             (CObjectType::ThreadReleaseAltersSignalCount ==
                 GetObjectType()->GetThreadReleaseSemantics());
 
-        _ASSERTE(0 <= lSignalCount);
+        assert(0 <= lSignalCount);
 
         // Preset the signal count to the new value, so that it can be used
         // by ReleaseFirstWaiter when delegating signaling to another process
@@ -1138,7 +1138,7 @@ namespace CorUnix
                 // it can only be a wait performed by a thread in the current 
                 // process, therefore pwtlnItem->ptwiWaitInfo is valid.
 
-                _ASSERTE(fSharedObject || pwtlnItem->dwProcessId == getpid());
+                assert(fSharedObject || pwtlnItem->dwProcessId == getpid());
                 
                 if (!fSharedSynchLock && !fSharedObject && 
                     LocalWait != pwtlnItem->ptwiWaitInfo->wdWaitDomain)
@@ -1429,7 +1429,7 @@ namespace CorUnix
 
             // See note in similar spot in ReleaseFirstWaiter
             
-            _ASSERTE(fSharedObject || pwtlnItem->dwProcessId == getpid());
+            assert(fSharedObject || pwtlnItem->dwProcessId == getpid());
 
             if (!fSharedSynchLock && !fSharedObject && 
                 LocalWait != pwtlnItem->ptwiWaitInfo->wdWaitDomain)

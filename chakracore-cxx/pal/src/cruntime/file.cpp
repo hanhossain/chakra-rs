@@ -142,8 +142,8 @@ PAL_fopen(const char * fileName, const char * mode)
     char* UnixFileName = NULL;
     struct stat stat_data;
 
-    _ASSERTE(fileName != NULL);
-    _ASSERTE(mode != NULL);
+    assert(fileName != NULL);
+    assert(mode != NULL);
 
     if ( *mode == 'r' || *mode == 'w' || *mode == 'a' )
     {
@@ -203,8 +203,8 @@ _wfopen(
     char mbMode[ 10 ];
     FILE * filePtr = NULL;
 
-    _ASSERTE(fileName != NULL);
-    _ASSERTE(mode != NULL);
+    assert(fileName != NULL);
+    assert(mode != NULL);
 
     /* Convert the parameters to ASCII and defer to PAL_fopen */
     if ( WideCharToMultiByte( CP_ACP, 0, fileName, -1, mbFileName,

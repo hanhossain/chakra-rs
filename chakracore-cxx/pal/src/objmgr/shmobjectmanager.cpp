@@ -91,7 +91,7 @@ CSharedMemoryObjectManager::Shutdown(
     PLIST_ENTRY ple;
     CSharedMemoryObject *pshmobj;
 
-    _ASSERTE(NULL != pthr);
+    assert(NULL != pthr);
     
     InternalEnterCriticalSection(pthr, &m_csListLock);
     SHMLock();
@@ -142,10 +142,10 @@ CSharedMemoryObjectManager::AllocateObject(
     PAL_ERROR palError = NO_ERROR;
     CSharedMemoryObject *pshmobj = NULL;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != pot);
-    _ASSERTE(NULL != poa);
-    _ASSERTE(NULL != ppobjNew);
+    assert(NULL != pthr);
+    assert(NULL != pot);
+    assert(NULL != poa);
+    assert(NULL != ppobjNew);
 
     if (CObjectType::WaitableObject == pot->GetSynchronizationSupport())
     {
@@ -218,14 +218,14 @@ CSharedMemoryObjectManager::RegisterObject(
     BOOL fInherit = FALSE;
     BOOL fShared = FALSE;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != pobjToRegister);
-    _ASSERTE(NULL != paot);
-    _ASSERTE(NULL != pHandle);
-    _ASSERTE(NULL != ppobjRegistered);
+    assert(NULL != pthr);
+    assert(NULL != pobjToRegister);
+    assert(NULL != paot);
+    assert(NULL != pHandle);
+    assert(NULL != ppobjRegistered);
 
     poa = pobjToRegister->GetObjectAttributes();
-    _ASSERTE(NULL != poa);
+    assert(NULL != poa);
 
     if (NULL != poa->pSecurityAttributes)
     {
@@ -255,7 +255,7 @@ CSharedMemoryObjectManager::RegisterObject(
         // The object must be shared
         //
 
-        _ASSERTE(fShared);
+        assert(fShared);
         
         //
         // Check if an object by this name already exists
@@ -482,10 +482,10 @@ CSharedMemoryObjectManager::LocateObject(
     SHMObjData *psmod = NULL;
     char16_t* pwsz = NULL;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != psObjectToLocate);
-    _ASSERTE(psObjectToLocate->GetString().length() == psObjectToLocate->GetStringLength());
-    _ASSERTE(NULL != ppobj);
+    assert(NULL != pthr);
+    assert(NULL != psObjectToLocate);
+    assert(psObjectToLocate->GetString().length() == psObjectToLocate->GetStringLength());
+    assert(NULL != ppobj);
 
     TRACE("Searching for object name %S\n", psObjectToLocate->GetString());
 
@@ -504,7 +504,7 @@ CSharedMemoryObjectManager::LocateObject(
             CSharedMemoryObject::GetObjectFromListLink(ple);
 
         poa = pshmobj->GetObjectAttributes();
-        _ASSERTE(NULL != poa);
+        assert(NULL != poa);
 
         if (poa->sObjectName.GetStringLength() != psObjectToLocate->GetStringLength())
         {
@@ -700,9 +700,9 @@ CSharedMemoryObjectManager::ObtainHandleForObject(
 {
     PAL_ERROR palError = NO_ERROR;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != pobj);
-    _ASSERTE(NULL != pNewHandle);
+    assert(NULL != pthr);
+    assert(NULL != pobj);
+    assert(NULL != pNewHandle);
 
     if (NULL != pProcessForHandle)
     {
@@ -747,7 +747,7 @@ CSharedMemoryObjectManager::RevokeHandle(
 {
     PAL_ERROR palError = NO_ERROR;
 
-    _ASSERTE(NULL != pthr);
+    assert(NULL != pthr);
 
     palError = m_HandleManager.FreeHandle(pthr, hHandleToRevoke);
 
@@ -783,9 +783,9 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     uint32_t dwRightsGranted;
     IPalObject *pobj;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != paot);
-    _ASSERTE(NULL != ppobj);
+    assert(NULL != pthr);
+    assert(NULL != paot);
+    assert(NULL != ppobj);
 
     palError = m_HandleManager.GetObjectFromHandle(
         pthr,
@@ -854,11 +854,11 @@ CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
     uint32_t dwRightsGranted;
     uint32_t dw;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != rghHandlesToReference);
-    _ASSERTE(0 < dwHandleCount);
-    _ASSERTE(NULL != paot);
-    _ASSERTE(NULL != rgpobjs);
+    assert(NULL != pthr);
+    assert(NULL != rghHandlesToReference);
+    assert(0 < dwHandleCount);
+    assert(NULL != paot);
+    assert(NULL != rgpobjs);
 
     m_HandleManager.Lock(pthr);
 
@@ -983,12 +983,12 @@ CSharedMemoryObjectManager::ImportSharedObjectIntoProcess(
     CSharedMemoryObject *pshmobj;
     PLIST_ENTRY pleObjectList;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != pot);
-    _ASSERTE(NULL != poa);
-    _ASSERTE(SHMNULL != shmSharedObjectData);
-    _ASSERTE(NULL != psmod);
-    _ASSERTE(NULL != ppshmobj);
+    assert(NULL != pthr);
+    assert(NULL != pot);
+    assert(NULL != poa);
+    assert(SHMNULL != shmSharedObjectData);
+    assert(NULL != psmod);
+    assert(NULL != ppshmobj);
 
     if (CObjectType::WaitableObject == pot->GetSynchronizationSupport())
     {
@@ -1078,8 +1078,8 @@ CSharedMemoryObjectManager::ConvertRemoteHandleToLocal(
     CSharedMemoryObject *pshmobj = NULL;
     PLIST_ENTRY pleObjectList;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != phLocal);
+    assert(NULL != pthr);
+    assert(NULL != phLocal);
 
     if (rhRemote == NULL || rhRemote == INVALID_HANDLE_VALUE)
     {
@@ -1135,7 +1135,7 @@ CSharedMemoryObjectManager::ConvertRemoteHandleToLocal(
             //
 
             psmod->lProcessRefCount -= 1;
-            _ASSERTE(0 < psmod->lProcessRefCount);
+            assert(0 < psmod->lProcessRefCount);
 
             //
             // We also need to add a reference to the object (since ReleaseReference
@@ -1241,8 +1241,8 @@ CheckObjectTypeAndRights(
 {
     PAL_ERROR palError = NO_ERROR;
 
-    _ASSERTE(NULL != pobj);
-    _ASSERTE(NULL != paot);
+    assert(NULL != pobj);
+    assert(NULL != paot);
 
     if (paot->IsTypeAllowed(pobj->GetObjectType()->GetId()))
     {

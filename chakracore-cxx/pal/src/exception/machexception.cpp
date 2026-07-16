@@ -273,7 +273,7 @@ PAL_ERROR CorUnix::CPalThread::EnableMachExceptions()
         NONPAL_TRACE("EnableMachExceptions: THREAD PORT count %d\n", pSavedHandlers->m_nPorts);
         for (mach_msg_type_number_t i = 0; i < pSavedHandlers->m_nPorts; i++)
         {
-            _ASSERTE(pSavedHandlers->m_handlers[i] != s_ExceptionPort);
+            assert(pSavedHandlers->m_handlers[i] != s_ExceptionPort);
             NONPAL_TRACE("EnableMachExceptions: THREAD PORT mask %08x handler: %08x behavior %08x flavor %u\n",
                 pSavedHandlers->m_masks[i],
                 pSavedHandlers->m_handlers[i],

@@ -534,7 +534,7 @@ void CONTEXTToNativeContext(const CONTEXT *lpContext, native_context_t *native)
 #if defined(_AMD64_) && defined(XSTATE_SUPPORTED)
     if ((lpContext->ContextFlags & CONTEXT_XSTATE) == CONTEXT_XSTATE)
     {
-        _ASSERTE(FPREG_HasYmmRegisters(native));
+        assert(FPREG_HasYmmRegisters(native));
         memcpy(FPREG_Xstate_Ymmh(native), lpContext->VectorRegister, sizeof(M128A) * 16);
     }
 #endif //_AMD64_ && XSTATE_SUPPORTED

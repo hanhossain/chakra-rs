@@ -14,20 +14,6 @@
 
 #include <debugmacrosext.h>
 
-#ifndef _ASSERTE_SAFEMATH
-#ifdef _ASSERTE
-// Use _ASSERTE if we have it (should always be the case in the CLR)
-#define _ASSERTE_SAFEMATH _ASSERTE
-#else
-// Otherwise (eg. we're being used from a tool like SOS) there isn't much
-// we can rely on that is both available everywhere and rotor-safe.  In
-// several other tools we just take the recourse of disabling asserts,
-// we'll do the same here.
-// Ideally we'd have a collection of common utilities available evererywhere.
-#define _ASSERTE_SAFEMATH(a)
-#endif
-#endif
-
 #if !defined(OSX_SDK_TR1) && defined(__APPLE__)
 #include <AvailabilityMacros.h>
 #if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ < MAC_OS_X_VERSION_10_9

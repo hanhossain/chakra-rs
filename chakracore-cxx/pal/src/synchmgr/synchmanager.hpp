@@ -270,18 +270,18 @@ namespace CorUnix
         // Object signal count accessor methods
         int32_t GetSignalCount(void)
         {
-            _ASSERTE(m_lSignalCount >= 0);
+            assert(m_lSignalCount >= 0);
             return m_lSignalCount; 
         }
         void SetSignalCount(int32_t lSignalCount)
         { 
-            _ASSERTE(m_lSignalCount >= 0);
-            _ASSERTE(lSignalCount >= 0);
+            assert(m_lSignalCount >= 0);
+            assert(lSignalCount >= 0);
             m_lSignalCount = lSignalCount; 
         }
         int32_t DecrementSignalCount(void)
         {
-            _ASSERTE(m_lSignalCount > 0);
+            assert(m_lSignalCount > 0);
             return --m_lSignalCount; 
         }
 
@@ -618,7 +618,7 @@ namespace CorUnix
         //
         static void AcquireLocalSynchLock(CPalThread * pthrCurrent)
         {
-            _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
+            assert(0 <= pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
 
             if (1 == ++pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount)
             {
@@ -627,7 +627,7 @@ namespace CorUnix
         }
         static void ReleaseLocalSynchLock(CPalThread * pthrCurrent)
         {
-            _ASSERTE(0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
+            assert(0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
             if (0 == --pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount)
             {
                 InternalLeaveCriticalSection(pthrCurrent, &s_csSynchProcessLock);
@@ -639,7 +639,7 @@ namespace CorUnix
         {
             int32_t lRet = pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount;
 
-            _ASSERTE(0 <= lRet);
+            assert(0 <= lRet);
             if (0 < lRet)
             {
                 pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount = 0;
@@ -651,13 +651,13 @@ namespace CorUnix
         }
         static int32_t GetLocalSynchLockCount(CPalThread * pthrCurrent)
         {
-            _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
+            assert(0 <= pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
             return pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount;
         }
 
         static void AcquireSharedSynchLock(CPalThread * pthrCurrent)
         {
-            _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
+            assert(0 <= pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
             _ASSERT_MSG(0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount,
                 "The local synch lock should be acquired before grabbing the "
                 "shared one.\n");
@@ -668,7 +668,7 @@ namespace CorUnix
         }
         static void ReleaseSharedSynchLock(CPalThread * pthrCurrent)
         {
-            _ASSERTE(0 < pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
+            assert(0 < pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
             if (0 == --pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount)
             {
                 _ASSERT_MSG(0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount,
@@ -682,8 +682,8 @@ namespace CorUnix
         {
             int32_t lRet = pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount;
 
-            _ASSERTE(0 <= lRet);
-            _ASSERTE(0 == lRet ||
+            assert(0 <= lRet);
+            assert(0 == lRet ||
                      0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
             if (0 < lRet)
             {
@@ -694,8 +694,8 @@ namespace CorUnix
         }
         static int32_t GetSharedSynchLockCount(CPalThread * pthrCurrent)
         {
-            _ASSERTE(0 <= pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
-            _ASSERTE(0 == pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount ||
+            assert(0 <= pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount);
+            assert(0 == pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount ||
                      0 < pthrCurrent->synchronizationInfo.m_lLocalSynchLockCount);
             return pthrCurrent->synchronizationInfo.m_lSharedSynchLockCount;
         }

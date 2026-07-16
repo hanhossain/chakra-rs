@@ -86,7 +86,7 @@ typedef enum tagEFaultRepRetVal
 
 #include "pal.h"
 
-#include <pal_assert.h>
+#include <cassert>
 
 #if defined(_DEBUG)
 #define ROTOR_PAL_CTOR_TEST_BODY(TESTNAME)                              \
@@ -95,14 +95,14 @@ typedef enum tagEFaultRepRetVal
         class HelperClass {                                             \
         public:                                                         \
             HelperClass(const char *String) {                           \
-                _ASSERTE (m_s == NULL);                                 \
+                assert (m_s == NULL);                                 \
                 m_s = String;                                           \
             }                                                           \
                                                                         \
             void Validate (const char *String) {                        \
-                _ASSERTE (m_s);                                         \
-                _ASSERTE (m_s == String);                               \
-                _ASSERTE (!strncmp (                                    \
+                assert (m_s);                                         \
+                assert (m_s == String);                               \
+                assert (!strncmp (                                    \
                               m_s,                                      \
                               String,                                   \
                               1000));                                   \
@@ -113,12 +113,12 @@ typedef enum tagEFaultRepRetVal
         };                                                              \
                                                                         \
         TESTNAME ## _CTOR_TEST() {                                      \
-            _ASSERTE (m_This == NULL);                                  \
+            assert (m_This == NULL);                                  \
             m_This = this;                                              \
         }                                                               \
                                                                         \
         void Validate () {                                              \
-            _ASSERTE (m_This == this);                                  \
+            assert (m_This == this);                                  \
             m_String.Validate(#TESTNAME "_CTOR_TEST");                  \
         }                                                               \
                                                                         \
@@ -1003,7 +1003,7 @@ typedef void (*WAITORTIMERCALLBACK)(void *, BOOLEAN);
 #else
 // Ports in progress - run-time asserts only
 #define PORTABILITY_WARNING(message)
-#define PORTABILITY_ASSERT(message)     _ASSERTE(false && message)
+#define PORTABILITY_ASSERT(message)     assert(false && message)
 #endif
 
 #define UNREFERENCED_PARAMETER(P)          (void)(P)

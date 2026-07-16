@@ -426,7 +426,7 @@ static void inject_activation_handler([[maybe_unused]] int code, siginfo_t *sigi
     {
         if (g_activationFunction != NULL)
         {
-            _ASSERTE(g_safeActivationCheckFunction != NULL);
+            assert(g_safeActivationCheckFunction != NULL);
 
             native_context_t *ucontext = static_cast<native_context_t*>(context);
 

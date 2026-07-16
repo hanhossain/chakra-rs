@@ -24,20 +24,19 @@ Abstract:
 #ifndef _PAL_UTILS_H_
 #define _PAL_UTILS_H_
 
+#include <cassert>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
-#include <pal_assert.h>
 
 // Alignment helpers (copied for PAL use from stdmacros.h)
 
 inline size_t ALIGN_UP(size_t val, size_t alignment)
 {
     // alignment must be a power of 2 for this implementation to work (need modulo otherwise)
-    _ASSERTE(0 == (alignment & (alignment - 1)));
+    assert(0 == (alignment & (alignment - 1)));
     size_t result = (val + (alignment - 1)) & ~(alignment - 1);
-    _ASSERTE(result >= val);      // check for overflow
+    assert(result >= val);      // check for overflow
     return result;
 }
 
