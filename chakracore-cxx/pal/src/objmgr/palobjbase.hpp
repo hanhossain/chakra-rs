@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -26,21 +26,15 @@ Abstract:
 #include "pal/thread.hpp"
 
 namespace CorUnix
-{   
+{
     class CSimpleDataLock : IDataLock
     {
     private:
-
         CRITICAL_SECTION m_cs;
         bool m_fInitialized;
 
     public:
-
-        CSimpleDataLock()
-            :
-            m_fInitialized(FALSE)
-        {
-        };
+        CSimpleDataLock() : m_fInitialized(FALSE) {};
 
         virtual ~CSimpleDataLock()
         {
@@ -51,9 +45,7 @@ namespace CorUnix
         };
 
         PAL_ERROR
-        Initialize(
-            void
-            )
+        Initialize(void)
         {
             PAL_ERROR palError = NO_ERROR;
 
@@ -63,30 +55,18 @@ namespace CorUnix
             return palError;
         };
 
-        void
-        AcquireLock(
-            CPalThread *pthr,
-            IDataLock **pDataLock
-            )
+        void AcquireLock(CPalThread *pthr, IDataLock **pDataLock)
         {
             InternalEnterCriticalSection(pthr, &m_cs);
-            *pDataLock = static_cast<IDataLock*>(this);
+            *pDataLock = static_cast<IDataLock *>(this);
         };
 
-        void
-        ReleaseLock(
-            CPalThread *pthr
-        ) override
-        {
-            InternalLeaveCriticalSection(pthr, &m_cs);
-        };
-        
+        void ReleaseLock(CPalThread *pthr) override { InternalLeaveCriticalSection(pthr, &m_cs); };
     };
-    
-    class CPalObjectBase : public IPalObject
-    { 
-    protected:
 
+    class CPalObjectBase : public IPalObject
+    {
+    protected:
         int32_t m_lRefCount;
 
         void *m_pvImmutableData;
@@ -105,84 +85,37 @@ namespace CorUnix
 
         virtual ~CPalObjectBase();
 
-        virtual
-        void
-        AcquireObjectDestructionLock(
-            CPalThread *pthr
-            ) = 0;
+        virtual void AcquireObjectDestructionLock(CPalThread *pthr) = 0;
 
-        virtual
-        bool
-        ReleaseObjectDestructionLock(
-            CPalThread *pthr,
-            bool fDestructionPending
-            ) = 0;
+        virtual bool ReleaseObjectDestructionLock(CPalThread *pthr, bool fDestructionPending) = 0;
 
     public:
+        CPalObjectBase(CObjectType *pot) :
+            m_lRefCount(1), m_pvImmutableData(NULL), m_pvLocalData(NULL), m_pot(pot), m_pthrCleanup(NULL) {};
 
-        CPalObjectBase(
-            CObjectType *pot
-            )
-            :
-            m_lRefCount(1),
-            m_pvImmutableData(NULL),
-            m_pvLocalData(NULL),
-            m_pot(pot),
-            m_pthrCleanup(NULL)
-        {
-        };
-
-        virtual
-        PAL_ERROR
-        Initialize(
-            CPalThread *pthr,
-            CObjectAttributes *poa
-            );
+        virtual PAL_ERROR Initialize(CPalThread *pthr, CObjectAttributes *poa);
 
         //
         // IPalObject routines
         //
-        
-        virtual
-        CObjectType *
-        GetObjectType(
-            void
-            );
 
-        virtual
-        CObjectAttributes *
-        GetObjectAttributes(
-            void
-            );
+        virtual CObjectType *GetObjectType(void);
 
-        virtual
-        PAL_ERROR
-        GetImmutableData(
-            void **ppvImmutableData             // OUT
-            );
+        virtual CObjectAttributes *GetObjectAttributes(void);
 
-        virtual
-        PAL_ERROR
-        GetProcessLocalData(
-            CPalThread *pthr,                // IN, OPTIONAL
-            LockType eLockRequest,
-            IDataLock **ppDataLock,             // OUT
-            void **ppvProcessLocalData          // OUT
-            );
+        virtual PAL_ERROR GetImmutableData(void **ppvImmutableData // OUT
+        );
 
-        virtual
-        uint32_t
-        AddReference(
-            void
-            );
+        virtual PAL_ERROR GetProcessLocalData(CPalThread *pthr, // IN, OPTIONAL
+                                              LockType eLockRequest,
+                                              IDataLock **ppDataLock, // OUT
+                                              void **ppvProcessLocalData // OUT
+        );
 
-        virtual
-        uint32_t
-        ReleaseReference(
-            CPalThread *pthr
-            );
+        virtual uint32_t AddReference(void);
+
+        virtual uint32_t ReleaseReference(CPalThread *pthr);
     };
-}
+} // namespace CorUnix
 
 #endif // _PALOBJBASE_HPP_
-

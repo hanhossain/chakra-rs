@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -26,7 +26,7 @@ SET_DEFAULT_DEBUG_CHANNEL(PAL);
 
 using namespace CorUnix;
 
-CObjectType* CObjectType::s_rgotIdMapping[ObjectTypeIdCount];
+CObjectType *CObjectType::s_rgotIdMapping[ObjectTypeIdCount];
 
 /*++
 Function:
@@ -41,10 +41,7 @@ Parameters:
 --*/
 
 PAL_ERROR
-CPalObjectBase::Initialize(
-    CPalThread *pthr,
-    CObjectAttributes *poa
-    )
+CPalObjectBase::Initialize(CPalThread *pthr, CObjectAttributes *poa)
 {
     PAL_ERROR palError = NO_ERROR;
 
@@ -56,7 +53,7 @@ CPalObjectBase::Initialize(
         m_pvImmutableData = malloc(m_pot->GetImmutableDataSize());
         if (NULL != m_pvImmutableData)
         {
-            memset((m_pvImmutableData),0,(m_pot->GetImmutableDataSize()));
+            memset((m_pvImmutableData), 0, (m_pot->GetImmutableDataSize()));
         }
         else
         {
@@ -74,11 +71,11 @@ CPalObjectBase::Initialize(
             ERROR("Unable to initialize local data lock!\n");
             goto IntializeExit;
         }
-        
+
         m_pvLocalData = malloc(m_pot->GetProcessLocalDataSize());
         if (NULL != m_pvLocalData)
         {
-            memset((m_pvLocalData),0,(m_pot->GetProcessLocalDataSize()));
+            memset((m_pvLocalData), 0, (m_pot->GetProcessLocalDataSize()));
         }
         else
         {
@@ -107,13 +104,10 @@ Function:
   Returns the type of the object
 --*/
 
-CObjectType *
-CPalObjectBase::GetObjectType(
-    void
-    )
+CObjectType *CPalObjectBase::GetObjectType(void)
 {
     LOGEXIT("CPalObjectBase::GetObjectType returns %p\n", m_pot);
-    
+
     return m_pot;
 }
 
@@ -124,13 +118,10 @@ Function:
   Returns the attributes of the object
 --*/
 
-CObjectAttributes *
-CPalObjectBase::GetObjectAttributes(
-    void
-    )
+CObjectAttributes *CPalObjectBase::GetObjectAttributes(void)
 {
     LOGEXIT("CPalObjectBase::GetObjectAttributes returns %p\n", &m_oa);
-    
+
     return &m_oa;
 }
 
@@ -146,12 +137,11 @@ Parameters:
 --*/
 
 PAL_ERROR
-CPalObjectBase::GetImmutableData(
-    void **ppvImmutableData             // OUT
-    )
+CPalObjectBase::GetImmutableData(void **ppvImmutableData // OUT
+)
 {
     assert(NULL != ppvImmutableData);
-    
+
     assert(0 < m_pot->GetImmutableDataSize());
 
     *ppvImmutableData = m_pvImmutableData;
@@ -177,25 +167,23 @@ Parameters:
 --*/
 
 PAL_ERROR
-CPalObjectBase::GetProcessLocalData(
-    CPalThread *pthr,
-    LockType eLockRequest,
-    IDataLock **ppDataLock,             // OUT
-    void **ppvProcessLocalData          // OUT
-    )
+CPalObjectBase::GetProcessLocalData(CPalThread *pthr, LockType eLockRequest,
+                                    IDataLock **ppDataLock, // OUT
+                                    void **ppvProcessLocalData // OUT
+)
 {
     assert(NULL != pthr);
     assert(ReadLock == eLockRequest || WriteLock == eLockRequest);
     assert(NULL != ppDataLock);
     assert(NULL != ppvProcessLocalData);
-    
+
     assert(0 < m_pot->GetProcessLocalDataSize());
 
     m_sdlLocalData.AcquireLock(pthr, ppDataLock);
     *ppvProcessLocalData = m_pvLocalData;
 
     LOGEXIT("CPalObjectBase::GetProcessLocalData returns %d\n", NO_ERROR);
-    
+
     return NO_ERROR;
 }
 
@@ -207,10 +195,7 @@ Function:
   for diagnostic purposes only
 --*/
 
-uint32_t
-CPalObjectBase::AddReference(
-    void
-    )
+uint32_t CPalObjectBase::AddReference(void)
 {
     int32_t lRefCount;
 
@@ -233,10 +218,7 @@ Parameters:
   pthr -- thread data for calling thread
 --*/
 
-uint32_t
-CPalObjectBase::ReleaseReference(
-    CPalThread *pthr
-    )
+uint32_t CPalObjectBase::ReleaseReference(CPalThread *pthr)
 {
     int32_t lRefCount;
 
@@ -274,12 +256,7 @@ CPalObjectBase::ReleaseReference(
 
         if (NULL != m_pot->GetObjectCleanupRoutine())
         {
-            (*m_pot->GetObjectCleanupRoutine())(
-                pthr,
-                static_cast<IPalObject*>(this),
-                FALSE,
-                fCleanupSharedState
-                );
+            (*m_pot->GetObjectCleanupRoutine())(pthr, static_cast<IPalObject *>(this), FALSE, fCleanupSharedState);
         }
 
         delete this;
@@ -287,7 +264,7 @@ CPalObjectBase::ReleaseReference(
         pthr->ReleaseThreadReference();
     }
     else
-    {       
+    {
         ReleaseObjectDestructionLock(pthr, FALSE);
     }
 
@@ -317,4 +294,3 @@ CPalObjectBase::~CPalObjectBase()
 
     LOGEXIT("CPalObjectBase::~CPalObjectBase\n");
 }
-

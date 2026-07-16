@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -21,11 +21,10 @@ Abstract:
 #ifndef _PAL_SHMOBJECT_HPP
 #define _PAL_SHMOBJECT_HPP
 
-#include "palobjbase.hpp"
 #include "pal/shm.hpp"
+#include "palobjbase.hpp"
 
-extern "C"
-{
+extern "C" {
 #include "pal/list.h"
 }
 
@@ -34,20 +33,13 @@ namespace CorUnix
     class CSimpleSharedMemoryLock : public IDataLock
     {
     public:
-
-        void
-        AcquireLock(
-            IDataLock **ppDataLock
-        )
+        void AcquireLock(IDataLock **ppDataLock)
         {
             SHMLock();
-            *ppDataLock = static_cast<IDataLock*>(this);
+            *ppDataLock = static_cast<IDataLock *>(this);
         };
 
-        void ReleaseLock([[maybe_unused]] CPalThread *pthr) override
-        {
-            SHMRelease();
-        };
+        void ReleaseLock([[maybe_unused]] CPalThread *pthr) override { SHMRelease(); };
     };
 
     typedef struct _SHMObjData
@@ -55,7 +47,7 @@ namespace CorUnix
         SHMPTR shmPrevObj;
         SHMPTR shmNextObj;
         BOOL fAddedToList;
-        
+
         SHMPTR shmObjName;
         SHMPTR shmObjImmutableData;
         SHMPTR shmObjSharedData;
@@ -65,13 +57,12 @@ namespace CorUnix
 
         PalObjectTypeId eTypeId;
 
-        void * pvSynchData;
+        void *pvSynchData;
     } SHMObjData;
 
     class CSharedMemoryObject : public CPalObjectBase
     {
     protected:
-
         //
         // Entry on the process's named or anonymous object list
         //
@@ -88,7 +79,7 @@ namespace CorUnix
         // The SHMObjData for this object, protected by the
         // shared memory lock.
         //
-        
+
         SHMPTR m_shmod;
 
         //
@@ -100,14 +91,14 @@ namespace CorUnix
         //
 
         void *m_pvSharedData;
-        
+
         CSimpleSharedMemoryLock m_ssmlSharedData;
         CSimpleDataLock m_sdlSharedData;
 
         //
         // Is this object process local or shared?
         //
-        
+
         ObjectDomain m_ObjectDomain;
 
         //
@@ -123,59 +114,28 @@ namespace CorUnix
         int32_t m_fDeleteSharedData;
 
         PAL_ERROR
-        AllocateSharedDataItems(
-            SHMPTR *pshmObjData,
-            SHMObjData **ppsmod
-            );
+        AllocateSharedDataItems(SHMPTR *pshmObjData, SHMObjData **ppsmod);
 
-        static
-        void
-        FreeSharedDataAreas(
-            SHMPTR shmObjData
-            );
+        static void FreeSharedDataAreas(SHMPTR shmObjData);
 
-        void
-        PromoteSharedData(
-            SHMPTR shmObjData,
-            SHMObjData *psmod
-            );
+        void PromoteSharedData(SHMPTR shmObjData, SHMObjData *psmod);
 
-        bool
-        DereferenceSharedData();
+        bool DereferenceSharedData();
 
-        virtual
-        void
-        AcquireObjectDestructionLock(
-            CPalThread *pthr
-            );
+        virtual void AcquireObjectDestructionLock(CPalThread *pthr);
 
-        virtual
-        bool
-        ReleaseObjectDestructionLock(
-            CPalThread *pthr,
-            bool fDestructionPending
-            );
-        
+        virtual bool ReleaseObjectDestructionLock(CPalThread *pthr, bool fDestructionPending);
+
         virtual ~CSharedMemoryObject();
 
     public:
-
         //
         // Constructor used for new object
         //
 
-        CSharedMemoryObject(
-            CObjectType *pot,
-            CRITICAL_SECTION *pcsObjListLock
-            )
-            :
-            CPalObjectBase(pot),
-            m_pcsObjListLock(pcsObjListLock),
-            m_shmod(SHMNULL),
-            m_pvSharedData(NULL),
-            m_ObjectDomain(ProcessLocalObject),
-            m_fSharedDataDereferenced(FALSE),
-            m_fDeleteSharedData(FALSE)
+        CSharedMemoryObject(CObjectType *pot, CRITICAL_SECTION *pcsObjListLock) :
+            CPalObjectBase(pot), m_pcsObjListLock(pcsObjListLock), m_shmod(SHMNULL), m_pvSharedData(NULL),
+            m_ObjectDomain(ProcessLocalObject), m_fSharedDataDereferenced(FALSE), m_fDeleteSharedData(FALSE)
         {
             InitializeListHead(&m_le);
         };
@@ -185,21 +145,10 @@ namespace CorUnix
         // shared memory lock must be held when calling this contstructor
         //
 
-        CSharedMemoryObject(
-            CObjectType *pot,
-            CRITICAL_SECTION *pcsObjListLock,
-            SHMPTR shmSharedObjectData,
-            SHMObjData *psmod,
-            bool fAddRefSharedData
-            )
-            :
-            CPalObjectBase(pot),
-            m_pcsObjListLock(pcsObjListLock),
-            m_shmod(shmSharedObjectData),
-            m_pvSharedData(NULL),
-            m_ObjectDomain(SharedObject),
-            m_fSharedDataDereferenced(FALSE),
-            m_fDeleteSharedData(FALSE)
+        CSharedMemoryObject(CObjectType *pot, CRITICAL_SECTION *pcsObjListLock, SHMPTR shmSharedObjectData,
+                            SHMObjData *psmod, bool fAddRefSharedData) :
+            CPalObjectBase(pot), m_pcsObjListLock(pcsObjListLock), m_shmod(shmSharedObjectData), m_pvSharedData(NULL),
+            m_ObjectDomain(SharedObject), m_fSharedDataDereferenced(FALSE), m_fDeleteSharedData(FALSE)
         {
             InitializeListHead(&m_le);
             if (fAddRefSharedData)
@@ -208,46 +157,19 @@ namespace CorUnix
             }
         };
 
-        virtual
-        PAL_ERROR
-        Initialize(
-            CPalThread *pthr,
-            CObjectAttributes *poa
-            );
+        virtual PAL_ERROR Initialize(CPalThread *pthr, CObjectAttributes *poa);
 
-        virtual
-        PAL_ERROR
-        InitializeFromExistingSharedData(
-            CPalThread *pthr,
-            CObjectAttributes *poa
-            );
+        virtual PAL_ERROR InitializeFromExistingSharedData(CPalThread *pthr, CObjectAttributes *poa);
 
-        virtual
-        PAL_ERROR
-        EnsureObjectIsShared(
-            CPalThread *pthr
-            );
+        virtual PAL_ERROR EnsureObjectIsShared(CPalThread *pthr);
 
-        void
-        CleanupForProcessShutdown(
-            CPalThread *pthr
-            );
+        void CleanupForProcessShutdown(CPalThread *pthr);
 
         SHMPTR
-        GetShmObjData(
-            void
-            )
-        {
-            return m_shmod;
-        };
+        GetShmObjData(void) { return m_shmod; };
 
         PLIST_ENTRY
-        GetObjectListLink(
-            void
-            )
-        {
-            return &m_le;
-        }
+        GetObjectListLink(void) { return &m_le; }
 
         //
         // Clients of this object -- in particular, CSharedMemoryObjectManager
@@ -255,128 +177,60 @@ namespace CorUnix
         // access to m_Link.
         //
 
-        static
-        CSharedMemoryObject*
-        GetObjectFromListLink(PLIST_ENTRY pLink);
+        static CSharedMemoryObject *GetObjectFromListLink(PLIST_ENTRY pLink);
 
         //
         // IPalObject routines
         //
-        
-        virtual
-        PAL_ERROR
-        GetSharedData(
-            CPalThread *pthr,
-            LockType eLockRequest,
-            IDataLock **ppDataLock,
-            void **ppvSharedData
-            );
 
-        virtual
-        PAL_ERROR
-        GetSynchStateController(
-            CPalThread *pthr,
-            ISynchStateController **ppStateController
-            );
+        virtual PAL_ERROR GetSharedData(CPalThread *pthr, LockType eLockRequest, IDataLock **ppDataLock,
+                                        void **ppvSharedData);
 
-        virtual
-        PAL_ERROR
-        GetSynchWaitController(
-            CPalThread *pthr,
-            ISynchWaitController **ppWaitController
-            );
+        virtual PAL_ERROR GetSynchStateController(CPalThread *pthr, ISynchStateController **ppStateController);
 
-        virtual
-        ObjectDomain
-        GetObjectDomain(
-            void
-            );
+        virtual PAL_ERROR GetSynchWaitController(CPalThread *pthr, ISynchWaitController **ppWaitController);
 
-        virtual
-        PAL_ERROR
-        GetObjectSynchData(
-            void **ppvSynchData
-            );
+        virtual ObjectDomain GetObjectDomain(void);
 
+        virtual PAL_ERROR GetObjectSynchData(void **ppvSynchData);
     };
 
     class CSharedMemoryWaitableObject : public CSharedMemoryObject
     {
     protected:
-
         void *m_pvSynchData;
 
         virtual ~CSharedMemoryWaitableObject();
-        
-    public:
 
-        CSharedMemoryWaitableObject(
-            CObjectType *pot,
-            CRITICAL_SECTION *pcsObjListLock
-            )
-            :
-            CSharedMemoryObject(pot, pcsObjListLock),
-            m_pvSynchData(NULL)
-        {
-        };
+    public:
+        CSharedMemoryWaitableObject(CObjectType *pot, CRITICAL_SECTION *pcsObjListLock) :
+            CSharedMemoryObject(pot, pcsObjListLock), m_pvSynchData(NULL) {};
 
         //
         // Constructor used to import a shared object into this process. The
         // shared memory lock must be held when calling this contstructor
         //
 
-        CSharedMemoryWaitableObject(
-            CObjectType *pot,
-            CRITICAL_SECTION *pcsObjListLock,
-            SHMPTR shmSharedObjectData,
-            SHMObjData *psmod,
-            bool fAddRefSharedData
-            )
-            :
+        CSharedMemoryWaitableObject(CObjectType *pot, CRITICAL_SECTION *pcsObjListLock, SHMPTR shmSharedObjectData,
+                                    SHMObjData *psmod, bool fAddRefSharedData) :
             CSharedMemoryObject(pot, pcsObjListLock, shmSharedObjectData, psmod, fAddRefSharedData),
-            m_pvSynchData(psmod->pvSynchData)
-        {
-        };
+            m_pvSynchData(psmod->pvSynchData) {};
 
-        virtual
-        PAL_ERROR
-        Initialize(
-            CPalThread *pthr,
-            CObjectAttributes *poa
-            );
+        virtual PAL_ERROR Initialize(CPalThread *pthr, CObjectAttributes *poa);
 
-        virtual
-        PAL_ERROR
-        EnsureObjectIsShared(
-            CPalThread *pthr
-            );
+        virtual PAL_ERROR EnsureObjectIsShared(CPalThread *pthr);
 
         //
         // IPalObject routines
         //
 
-        virtual
-        PAL_ERROR
-        GetSynchStateController(
-            CPalThread *pthr,
-            ISynchStateController **ppStateController
-            );
+        virtual PAL_ERROR GetSynchStateController(CPalThread *pthr, ISynchStateController **ppStateController);
 
-        virtual
-        PAL_ERROR
-        GetSynchWaitController(
-            CPalThread *pthr,
-            ISynchWaitController **ppWaitController
-            );
+        virtual PAL_ERROR GetSynchWaitController(CPalThread *pthr, ISynchWaitController **ppWaitController);
 
-        virtual
-        PAL_ERROR
-        GetObjectSynchData(
-            void **ppvSynchData
-            );
+        virtual PAL_ERROR GetObjectSynchData(void **ppvSynchData);
     };
 
-}
+} // namespace CorUnix
 
 #endif // _PAL_SHMOBJECT_HPP
-
