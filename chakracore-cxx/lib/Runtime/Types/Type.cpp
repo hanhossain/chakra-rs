@@ -8,22 +8,19 @@ namespace Js
 {
     DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER(Type);
 
-    InternalString Type::ObjectTypeNameString    = InternalString(u"object", _no_write_barrier_tag(), 6);
+    InternalString Type::ObjectTypeNameString = InternalString(u"object", _no_write_barrier_tag(), 6);
     InternalString Type::UndefinedTypeNameString = InternalString(u"undefined", _no_write_barrier_tag(), 9);
-    InternalString Type::BooleanTypeNameString   = InternalString(u"boolean", _no_write_barrier_tag(), 7);
-    InternalString Type::StringTypeNameString    = InternalString(u"string", _no_write_barrier_tag(), 6);
-    InternalString Type::NumberTypeNameString    = InternalString(u"number", _no_write_barrier_tag(), 6);
-    InternalString Type::FunctionTypeNameString  = InternalString(u"function", _no_write_barrier_tag(), 8);
+    InternalString Type::BooleanTypeNameString = InternalString(u"boolean", _no_write_barrier_tag(), 7);
+    InternalString Type::StringTypeNameString = InternalString(u"string", _no_write_barrier_tag(), 6);
+    InternalString Type::NumberTypeNameString = InternalString(u"number", _no_write_barrier_tag(), 6);
+    InternalString Type::FunctionTypeNameString = InternalString(u"function", _no_write_barrier_tag(), 8);
 
-    Type::Type(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint) :
-        javascriptLibrary(scriptContext->GetLibrary()),
-        typeId(typeId),
-        prototype(prototype),
-        propertyCache(nullptr),
+    Type::Type(ScriptContext *scriptContext, TypeId typeId, RecyclableObject *prototype, JavascriptMethod entryPoint) :
+        javascriptLibrary(scriptContext->GetLibrary()), typeId(typeId), prototype(prototype), propertyCache(nullptr),
         flags(TypeFlagMask_None)
     {
 #ifdef PROFILE_TYPES
-        if (typeId < sizeof(scriptContext->typeCount)/sizeof(int))
+        if (typeId < sizeof(scriptContext->typeCount) / sizeof(int))
         {
             scriptContext->typeCount[typeId]++;
         }
@@ -31,63 +28,49 @@ namespace Js
         this->entryPoint = entryPoint != nullptr ? entryPoint : RecyclableObject::DefaultEntryPoint;
         if (prototype)
         {
-            Assert(! CrossSite::NeedMarshalVar(prototype,scriptContext));
+            Assert(!CrossSite::NeedMarshalVar(prototype, scriptContext));
             prototype->SetIsPrototype();
         }
     }
 
-    Type::Type(Type * type) :
-        typeId(type->typeId),
-        javascriptLibrary(type->javascriptLibrary),
-        prototype(type->prototype),
-        entryPoint(type->entryPoint),
-        flags(type->flags),
-        propertyCache(nullptr)
+    Type::Type(Type *type) :
+        typeId(type->typeId), javascriptLibrary(type->javascriptLibrary), prototype(type->prototype),
+        entryPoint(type->entryPoint), flags(type->flags), propertyCache(nullptr)
     {
 #ifdef PROFILE_TYPES
-        if (typeId < sizeof(javascriptLibrary->GetScriptContext()->typeCount)/sizeof(int))
+        if (typeId < sizeof(javascriptLibrary->GetScriptContext()->typeCount) / sizeof(int))
         {
             javascriptLibrary->GetScriptContext()->typeCount[typeId]++;
         }
 #endif
         flags = flags & TypeFlagMask(~TypeFlagMask_HasBeenCached);
-        Assert(! (prototype && CrossSite::NeedMarshalVar(prototype, javascriptLibrary->GetScriptContext())));
+        Assert(!(prototype && CrossSite::NeedMarshalVar(prototype, javascriptLibrary->GetScriptContext())));
 
-        // If the type property cache is copied over to this new type, then if a property ID caused the type to be changed for
-        // the purpose of invalidating caches due to the property being deleted or its attributes being changed, then the cache
-        // for that property ID must be cleared on this new type after the type property cache is copied. Also, types are not
-        // changed consistently to use this copy constructor, so those would need to be fixed as well.
+        // If the type property cache is copied over to this new type, then if a property ID caused the type to be
+        // changed for the purpose of invalidating caches due to the property being deleted or its attributes being
+        // changed, then the cache for that property ID must be cleared on this new type after the type property cache
+        // is copied. Also, types are not changed consistently to use this copy constructor, so those would need to be
+        // fixed as well.
 
         if (type->AreThisAndPrototypesEnsuredToHaveOnlyWritableDataProperties())
         {
             SetAreThisAndPrototypesEnsuredToHaveOnlyWritableDataProperties(true);
         }
-        if(type->ThisAndPrototypesHaveNoSpecialProperties())
+        if (type->ThisAndPrototypesHaveNoSpecialProperties())
         {
             SetThisAndPrototypesHaveNoSpecialProperties(true);
         }
-        if(type->IsFalsy())
+        if (type->IsFalsy())
         {
             SetIsFalsy(true);
         }
     }
 
-    ScriptContext *
-    Type::GetScriptContext() const
-    {
-        return GetLibrary()->GetScriptContext();
-    }
+    ScriptContext *Type::GetScriptContext() const { return GetLibrary()->GetScriptContext(); }
 
-    Recycler *
-    Type::GetRecycler() const
-    {
-        return GetLibrary()->GetRecycler();
-    }
+    Recycler *Type::GetRecycler() const { return GetLibrary()->GetRecycler(); }
 
-    TypePropertyCache *Type::GetPropertyCache()
-    {
-        return propertyCache;
-    }
+    TypePropertyCache *Type::GetPropertyCache() { return propertyCache; }
 
     TypePropertyCache *Type::CreatePropertyCache()
     {
@@ -103,8 +86,8 @@ namespace Js
         {
             if (GetScriptContext()->IsClosed())
             {
-                // The cache is disabled after the script context is closed, to avoid issues between being closed and being deleted,
-                // where the cache of these types in JavascriptLibrary may be reclaimed at any point
+                // The cache is disabled after the script context is closed, to avoid issues between being closed and
+                // being deleted, where the cache of these types in JavascriptLibrary may be reclaimed at any point
                 return;
             }
 
@@ -128,8 +111,8 @@ namespace Js
         {
             if (GetScriptContext()->IsClosed())
             {
-                // The cache is disabled after the script context is closed, to avoid issues between being closed and being deleted,
-                // where the cache of these types in JavascriptLibrary may be reclaimed at any point
+                // The cache is disabled after the script context is closed, to avoid issues between being closed and
+                // being deleted, where the cache of these types in JavascriptLibrary may be reclaimed at any point
                 return;
             }
 
@@ -172,28 +155,16 @@ namespace Js
         }
     }
 
-    uint32_t Type::GetOffsetOfTypeId()
-    {
-        return offsetof(Type, typeId);
-    }
+    uint32_t Type::GetOffsetOfTypeId() { return offsetof(Type, typeId); }
 
-    uint32_t Type::GetOffsetOfFlags()
-    {
-        return offsetof(Type, flags);
-    }
+    uint32_t Type::GetOffsetOfFlags() { return offsetof(Type, flags); }
 
-    uint32_t Type::GetOffsetOfEntryPoint()
-    {
-        return offsetof(Type, entryPoint);
-    }
+    uint32_t Type::GetOffsetOfEntryPoint() { return offsetof(Type, entryPoint); }
 
-    uint32_t Type::GetOffsetOfPrototype()
-    {
-        return offsetof(Type, prototype);
-    }
+    uint32_t Type::GetOffsetOfPrototype() { return offsetof(Type, prototype); }
 
 #if defined(PROFILE_RECYCLER_ALLOC) && defined(RECYCLER_DUMP_OBJECT_GRAPH)
-    bool Type::DumpObjectFunction(type_info const * typeinfo, bool isArray, void * objectAddress)
+    bool Type::DumpObjectFunction(type_info const *typeinfo, bool isArray, void *objectAddress)
     {
         if (isArray)
         {
@@ -205,4 +176,4 @@ namespace Js
         return true;
     }
 #endif
-}
+} // namespace Js

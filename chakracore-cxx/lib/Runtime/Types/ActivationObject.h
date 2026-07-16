@@ -17,25 +17,33 @@ namespace Js
     protected:
         DEFINE_VTABLE_CTOR(ActivationObject, DynamicObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ActivationObject);
+
     public:
-        ActivationObject(DynamicType * type) : DynamicObject(type)
-        {}
+        ActivationObject(DynamicType *type) : DynamicObject(type) {}
 
         virtual BOOL HasOwnPropertyCheckNoRedecl(PropertyId propertyId) override;
-        virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetInternalProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags,
+                                 PropertyValueInfo *info) override;
+        virtual BOOL SetProperty(JavascriptString *propertyNameString, Var value, PropertyOperationFlags flags,
+                                 PropertyValueInfo *info) override;
+        virtual BOOL SetInternalProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags,
+                                         PropertyValueInfo *info) override;
         virtual BOOL EnsureProperty(PropertyId propertyId) override;
         virtual BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
-        virtual BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = NULL) override;
+        virtual BOOL InitProperty(PropertyId propertyId, Var value,
+                                  PropertyOperationFlags flags = PropertyOperation_None,
+                                  PropertyValueInfo *info = NULL) override;
         virtual BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
         virtual BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
         virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator> *stringBuilder,
+                                        ScriptContext *requestContext) override;
+        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator> *stringBuilder,
+                                       ScriptContext *requestContext) override;
     };
 
-    template <> bool VarIsImpl<ActivationObject>(RecyclableObject* instance);
+    template <>
+    bool VarIsImpl<ActivationObject>(RecyclableObject *instance);
 
     // A block-ActivationObject is a scope for an ES6 block that should only receive block-scoped inits,
     // including function, let, and const.
@@ -44,18 +52,20 @@ namespace Js
     private:
         DEFINE_VTABLE_CTOR(BlockActivationObject, ActivationObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(BlockActivationObject);
+
     public:
-        BlockActivationObject(DynamicType * type) : ActivationObject(type) {}
+        BlockActivationObject(DynamicType *type) : ActivationObject(type) {}
 
         virtual BOOL EnsureProperty(PropertyId propertyId) override;
         virtual BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
         virtual BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
         virtual BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
 
-        BlockActivationObject* Clone(ScriptContext *scriptContext);
+        BlockActivationObject *Clone(ScriptContext *scriptContext);
     };
 
-    template <> bool VarIsImpl<BlockActivationObject>(RecyclableObject* instance);
+    template <>
+    bool VarIsImpl<BlockActivationObject>(RecyclableObject *instance);
 
     // A pseudo-ActivationObject is a scope like a "catch" scope that shouldn't receive var inits.
     class PseudoActivationObject : public ActivationObject
@@ -63,8 +73,9 @@ namespace Js
     private:
         DEFINE_VTABLE_CTOR(PseudoActivationObject, ActivationObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(PseudoActivationObject);
+
     public:
-        PseudoActivationObject(DynamicType * type) : ActivationObject(type) {}
+        PseudoActivationObject(DynamicType *type) : ActivationObject(type) {}
 
         virtual BOOL EnsureProperty(PropertyId propertyId) override;
         virtual BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
@@ -72,15 +83,17 @@ namespace Js
         virtual BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
     };
 
-    template <> bool VarIsImpl<PseudoActivationObject>(RecyclableObject* instance);
+    template <>
+    bool VarIsImpl<PseudoActivationObject>(RecyclableObject *instance);
 
     class ConsoleScopeActivationObject : public ActivationObject
     {
     private:
         DEFINE_VTABLE_CTOR(ConsoleScopeActivationObject, ActivationObject);
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ConsoleScopeActivationObject);
+
     public:
-        ConsoleScopeActivationObject(DynamicType * type) : ActivationObject(type) {}
+        ConsoleScopeActivationObject(DynamicType *type) : ActivationObject(type) {}
 
         // A dummy function to have a different vtable
         virtual void DummyVirtualFunc(void)
@@ -89,7 +102,8 @@ namespace Js
         }
     };
 
-    template <> bool VarIsImpl<ConsoleScopeActivationObject>(RecyclableObject* instance);
+    template <>
+    bool VarIsImpl<ConsoleScopeActivationObject>(RecyclableObject *instance);
 
     class ActivationObjectEx : public ActivationObject
     {
@@ -98,15 +112,12 @@ namespace Js
         DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ActivationObjectEx);
 
         void GetPropertyCore(PropertyValueInfo *info, ScriptContext *requestContext);
+
     public:
-        ActivationObjectEx(
-            DynamicType * type, ScriptFunction *func, uint cachedFuncCount, uint firstFuncSlot, uint lastFuncSlot)
-            : ActivationObject(type),
-              parentFunc(func),
-              cachedFuncCount(cachedFuncCount),
-              firstFuncSlot(firstFuncSlot),
-              lastFuncSlot(lastFuncSlot),
-              committed(false)
+        ActivationObjectEx(DynamicType *type, ScriptFunction *func, uint cachedFuncCount, uint firstFuncSlot,
+                           uint lastFuncSlot) :
+            ActivationObject(type), parentFunc(func), cachedFuncCount(cachedFuncCount), firstFuncSlot(firstFuncSlot),
+            lastFuncSlot(lastFuncSlot), committed(false)
         {
             if (cachedFuncCount != 0)
             {
@@ -114,9 +125,14 @@ namespace Js
             }
         }
 
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var *value, PropertyValueInfo *info, ScriptContext *requestContext) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var *value, PropertyValueInfo *info, ScriptContext *requestContext) override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var *value, PropertyValueInfo *info, ScriptContext *requestContext) override;
+        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var *value,
+                                                    PropertyValueInfo *info, ScriptContext *requestContext) override;
+        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString *propertyNameString,
+                                                    Var *value, PropertyValueInfo *info,
+                                                    ScriptContext *requestContext) override;
+        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var *value,
+                                                             PropertyValueInfo *info,
+                                                             ScriptContext *requestContext) override;
         virtual void InvalidateCachedScope() override;
 
         bool IsCommitted() const { return committed; }
@@ -181,5 +197,6 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<FuncCacheEntry>::Type cache[1];
     };
 
-    template <> bool VarIsImpl<ActivationObjectEx>(RecyclableObject* instance);
-};
+    template <>
+    bool VarIsImpl<ActivationObjectEx>(RecyclableObject *instance);
+}; // namespace Js

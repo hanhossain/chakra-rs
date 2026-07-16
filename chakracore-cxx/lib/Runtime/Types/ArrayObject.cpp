@@ -10,18 +10,18 @@
 
 namespace Js
 {
-    ArrayObject::ArrayObject(ArrayObject * instance, bool deepCopy)
-        : DynamicObject(instance, deepCopy),
-        length(instance->length)
+    ArrayObject::ArrayObject(ArrayObject *instance, bool deepCopy) :
+        DynamicObject(instance, deepCopy), length(instance->length)
     {
     }
 
     void ArrayObject::ThrowItemNotConfigurableError(PropertyId propId /*= Constants::NoProperty*/)
     {
-        ScriptContext* scriptContext = GetScriptContext();
+        ScriptContext *scriptContext = GetScriptContext();
         JavascriptError::ThrowTypeError(scriptContext, JSERR_DefineProperty_NotConfigurable,
-            propId != Constants::NoProperty ?
-                scriptContext->GetThreadContext()->GetPropertyName(propId)->GetBuffer() : nullptr);
+                                        propId != Constants::NoProperty
+                                            ? scriptContext->GetThreadContext()->GetPropertyName(propId)->GetBuffer()
+                                            : nullptr);
     }
 
     void ArrayObject::VerifySetItemAttributes(PropertyId propId, PropertyAttributes attributes)
@@ -38,13 +38,7 @@ namespace Js
         return TRUE;
     }
 
-    BOOL ArrayObject::SetItemAccessors(uint32_t index, Var getter, Var setter)
-    {
-        ThrowItemNotConfigurableError();
-    }
+    BOOL ArrayObject::SetItemAccessors(uint32_t index, Var getter, Var setter) { ThrowItemNotConfigurableError(); }
 
-    BOOL ArrayObject::IsObjectArrayFrozen()
-    {
-        return this->IsFrozen();
-    }
+    BOOL ArrayObject::IsObjectArrayFrozen() { return this->IsFrozen(); }
 } // namespace Js

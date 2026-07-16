@@ -6,62 +6,68 @@
 
 namespace Js
 {
-    void MissingPropertyTypeHandler::SetUndefinedPropertySlot(DynamicObject* instance)
+    void MissingPropertyTypeHandler::SetUndefinedPropertySlot(DynamicObject *instance)
     {
-        typename WriteBarrierFieldTypeTraits<Var>::Type* slots = reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type*>(reinterpret_cast<size_t>(instance) + sizeof(DynamicObject));
+        typename WriteBarrierFieldTypeTraits<Var>::Type *slots =
+            reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type *>(reinterpret_cast<size_t>(instance) +
+                                                                                sizeof(DynamicObject));
         slots[0] = instance->GetLibrary()->GetUndefined();
     }
 
-    MissingPropertyTypeHandler::MissingPropertyTypeHandler() :
-        DynamicTypeHandler(1, 1, (uint16)sizeof(DynamicObject)) {}
+    MissingPropertyTypeHandler::MissingPropertyTypeHandler() : DynamicTypeHandler(1, 1, (uint16)sizeof(DynamicObject))
+    {
+    }
 
-    DynamicTypeHandler * MissingPropertyTypeHandler::Clone(Recycler * recycler)
+    DynamicTypeHandler *MissingPropertyTypeHandler::Clone(Recycler *recycler)
     {
         return RecyclerNew(recycler, MissingPropertyTypeHandler);
     }
 
-    PropertyId MissingPropertyTypeHandler::GetPropertyId(ScriptContext* scriptContext, PropertyIndex index)
+    PropertyId MissingPropertyTypeHandler::GetPropertyId(ScriptContext *scriptContext, PropertyIndex index)
     {
         return Constants::NoProperty;
     }
 
-    PropertyId MissingPropertyTypeHandler::GetPropertyId(ScriptContext* scriptContext, BigPropertyIndex index)
+    PropertyId MissingPropertyTypeHandler::GetPropertyId(ScriptContext *scriptContext, BigPropertyIndex index)
     {
         return Constants::NoProperty;
     }
 
-    BOOL MissingPropertyTypeHandler::FindNextProperty(ScriptContext* scriptContext, PropertyIndex& index, JavascriptString** propertyStringName,
-        PropertyId* propertyId, PropertyAttributes* attributes, Type* type, DynamicType *typeToEnumerate, EnumeratorFlags flags, DynamicObject* instance, PropertyValueInfo* info)
+    BOOL MissingPropertyTypeHandler::FindNextProperty(ScriptContext *scriptContext, PropertyIndex &index,
+                                                      JavascriptString **propertyStringName, PropertyId *propertyId,
+                                                      PropertyAttributes *attributes, Type *type,
+                                                      DynamicType *typeToEnumerate, EnumeratorFlags flags,
+                                                      DynamicObject *instance, PropertyValueInfo *info)
     {
         return FALSE;
     }
 
-    PropertyIndex MissingPropertyTypeHandler::GetPropertyIndex(PropertyRecord const* propertyRecord)
-    {
-        return 0;
-    }
+    PropertyIndex MissingPropertyTypeHandler::GetPropertyIndex(PropertyRecord const *propertyRecord) { return 0; }
 
 #if ENABLE_NATIVE_CODEGEN
-    bool MissingPropertyTypeHandler::GetPropertyEquivalenceInfo(PropertyRecord const* propertyRecord, PropertyEquivalenceInfo& info)
+    bool MissingPropertyTypeHandler::GetPropertyEquivalenceInfo(PropertyRecord const *propertyRecord,
+                                                                PropertyEquivalenceInfo &info)
     {
         info.slotIndex = Constants::NoSlot;
         info.isWritable = false;
         return false;
     }
 
-    bool MissingPropertyTypeHandler::IsObjTypeSpecEquivalent(const Type* type, const TypeEquivalenceRecord& record, uint& failedPropertyIndex)
+    bool MissingPropertyTypeHandler::IsObjTypeSpecEquivalent(const Type *type, const TypeEquivalenceRecord &record,
+                                                             uint &failedPropertyIndex)
     {
         failedPropertyIndex = 0;
         return false;
     }
 
-    bool MissingPropertyTypeHandler::IsObjTypeSpecEquivalent(const Type* type, const EquivalentPropertyEntry *entry)
+    bool MissingPropertyTypeHandler::IsObjTypeSpecEquivalent(const Type *type, const EquivalentPropertyEntry *entry)
     {
         return false;
     }
 #endif
 
-    BOOL MissingPropertyTypeHandler::HasProperty(DynamicObject* instance, PropertyId propertyId, __out_opt bool *noRedecl, _Inout_opt_ PropertyValueInfo* info)
+    BOOL MissingPropertyTypeHandler::HasProperty(DynamicObject *instance, PropertyId propertyId,
+                                                 __out_opt bool *noRedecl, _Inout_opt_ PropertyValueInfo *info)
     {
         if (noRedecl != nullptr)
         {
@@ -72,77 +78,87 @@ namespace Js
     }
 
 
-    BOOL MissingPropertyTypeHandler::HasProperty(DynamicObject* instance, JavascriptString* propertyNameString)
+    BOOL MissingPropertyTypeHandler::HasProperty(DynamicObject *instance, JavascriptString *propertyNameString)
     {
         return false;
     }
 
-    BOOL MissingPropertyTypeHandler::GetProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    BOOL MissingPropertyTypeHandler::GetProperty(DynamicObject *instance, Var originalInstance, PropertyId propertyId,
+                                                 Var *value, PropertyValueInfo *info, ScriptContext *requestContext)
     {
         *value = requestContext->GetMissingPropertyResult();
         return false;
     }
 
-    BOOL MissingPropertyTypeHandler::GetProperty(DynamicObject* instance, Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    BOOL MissingPropertyTypeHandler::GetProperty(DynamicObject *instance, Var originalInstance,
+                                                 JavascriptString *propertyNameString, Var *value,
+                                                 PropertyValueInfo *info, ScriptContext *requestContext)
     {
         *value = requestContext->GetMissingPropertyResult();
         return false;
     }
 
-    BOOL MissingPropertyTypeHandler::SetProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL MissingPropertyTypeHandler::SetProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                 PropertyOperationFlags flags, PropertyValueInfo *info)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::SetProperty(DynamicObject* instance, JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL MissingPropertyTypeHandler::SetProperty(DynamicObject *instance, JavascriptString *propertyNameString,
+                                                 Var value, PropertyOperationFlags flags, PropertyValueInfo *info)
     {
         Throw::FatalInternalError();
     }
 
-    DescriptorFlags MissingPropertyTypeHandler::GetSetter(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
+    DescriptorFlags MissingPropertyTypeHandler::GetSetter(DynamicObject *instance, PropertyId propertyId,
+                                                          Var *setterValue, PropertyValueInfo *info,
+                                                          ScriptContext *requestContext)
     {
         PropertyValueInfo::SetNoCache(info, instance);
         return None;
     }
 
-    DescriptorFlags MissingPropertyTypeHandler::GetSetter(DynamicObject* instance, JavascriptString* propertyNameString, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
+    DescriptorFlags MissingPropertyTypeHandler::GetSetter(DynamicObject *instance, JavascriptString *propertyNameString,
+                                                          Var *setterValue, PropertyValueInfo *info,
+                                                          ScriptContext *requestContext)
     {
         PropertyValueInfo::SetNoCache(info, instance);
         return None;
     }
 
-    BOOL MissingPropertyTypeHandler::DeleteProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags propertyOperationFlags)
+    BOOL MissingPropertyTypeHandler::DeleteProperty(DynamicObject *instance, PropertyId propertyId,
+                                                    PropertyOperationFlags propertyOperationFlags)
     {
         Throw::FatalInternalError();
     }
 
 
-    BOOL MissingPropertyTypeHandler::IsEnumerable(DynamicObject* instance, PropertyId propertyId)
+    BOOL MissingPropertyTypeHandler::IsEnumerable(DynamicObject *instance, PropertyId propertyId)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::IsWritable(DynamicObject* instance, PropertyId propertyId)
+    BOOL MissingPropertyTypeHandler::IsWritable(DynamicObject *instance, PropertyId propertyId)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::IsConfigurable(DynamicObject* instance, PropertyId propertyId)
+    BOOL MissingPropertyTypeHandler::IsConfigurable(DynamicObject *instance, PropertyId propertyId)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::SetEnumerable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    BOOL MissingPropertyTypeHandler::SetEnumerable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::SetWritable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    BOOL MissingPropertyTypeHandler::SetWritable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::SetConfigurable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    BOOL MissingPropertyTypeHandler::SetConfigurable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
         Throw::FatalInternalError();
     }
@@ -150,7 +166,7 @@ namespace Js
     //
     // Set an attribute bit. Return true if change is made.
     //
-    BOOL MissingPropertyTypeHandler::SetAttribute(DynamicObject* instance, int index, PropertyAttributes attribute)
+    BOOL MissingPropertyTypeHandler::SetAttribute(DynamicObject *instance, int index, PropertyAttributes attribute)
     {
         Throw::FatalInternalError();
     }
@@ -158,73 +174,76 @@ namespace Js
     //
     // Clear an attribute bit. Return true if change is made.
     //
-    BOOL MissingPropertyTypeHandler::ClearAttribute(DynamicObject* instance, int index, PropertyAttributes attribute)
+    BOOL MissingPropertyTypeHandler::ClearAttribute(DynamicObject *instance, int index, PropertyAttributes attribute)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::SetAccessors(DynamicObject* instance, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
+    BOOL MissingPropertyTypeHandler::SetAccessors(DynamicObject *instance, PropertyId propertyId, Var getter,
+                                                  Var setter, PropertyOperationFlags flags)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::PreventExtensions(DynamicObject* instance)
+    BOOL MissingPropertyTypeHandler::PreventExtensions(DynamicObject *instance) { Throw::FatalInternalError(); }
+
+    BOOL MissingPropertyTypeHandler::Seal(DynamicObject *instance) { Throw::FatalInternalError(); }
+
+    BOOL MissingPropertyTypeHandler::FreezeImpl(DynamicObject *instance, bool isConvertedType)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::Seal(DynamicObject* instance)
+    BOOL MissingPropertyTypeHandler::SetPropertyWithAttributes(DynamicObject *instance, PropertyId propertyId,
+                                                               Var value, PropertyAttributes attributes,
+                                                               PropertyValueInfo *info, PropertyOperationFlags flags,
+                                                               SideEffects possibleSideEffects)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::FreezeImpl(DynamicObject* instance, bool isConvertedType)
+    BOOL MissingPropertyTypeHandler::SetAttributes(DynamicObject *instance, PropertyId propertyId,
+                                                   PropertyAttributes attributes)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::SetPropertyWithAttributes(DynamicObject* instance, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
+    BOOL MissingPropertyTypeHandler::GetAttributesWithPropertyIndex(DynamicObject *instance, PropertyId propertyId,
+                                                                    BigPropertyIndex index,
+                                                                    PropertyAttributes *attributes)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::SetAttributes(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attributes)
+    BOOL MissingPropertyTypeHandler::AddProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                 PropertyAttributes attributes, PropertyValueInfo *info,
+                                                 PropertyOperationFlags flags, SideEffects possibleSideEffects)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::GetAttributesWithPropertyIndex(DynamicObject * instance, PropertyId propertyId, BigPropertyIndex index, PropertyAttributes * attributes)
+    void MissingPropertyTypeHandler::SetAllPropertiesToUndefined(DynamicObject *instance, bool invalidateFixedFields)
     {
         Throw::FatalInternalError();
     }
 
-    BOOL MissingPropertyTypeHandler::AddProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
+    void MissingPropertyTypeHandler::MarshalAllPropertiesToScriptContext(DynamicObject *instance,
+                                                                         ScriptContext *targetScriptContext,
+                                                                         bool invalidateFixedFields)
     {
         Throw::FatalInternalError();
     }
 
-    void MissingPropertyTypeHandler::SetAllPropertiesToUndefined(DynamicObject* instance, bool invalidateFixedFields)
+    DynamicTypeHandler *MissingPropertyTypeHandler::ConvertToTypeWithItemAttributes(DynamicObject *instance)
     {
         Throw::FatalInternalError();
     }
 
-    void MissingPropertyTypeHandler::MarshalAllPropertiesToScriptContext(DynamicObject* instance, ScriptContext* targetScriptContext, bool invalidateFixedFields)
-    {
-        Throw::FatalInternalError();
-    }
-
-    DynamicTypeHandler* MissingPropertyTypeHandler::ConvertToTypeWithItemAttributes(DynamicObject* instance)
-    {
-        Throw::FatalInternalError();
-    }
-
-    void MissingPropertyTypeHandler::SetIsPrototype(DynamicObject* instance)
-    {
-        Throw::FatalInternalError();
-    }
+    void MissingPropertyTypeHandler::SetIsPrototype(DynamicObject *instance) { Throw::FatalInternalError(); }
 
 #if DBG
-    bool MissingPropertyTypeHandler::CanStorePropertyValueDirectly(const DynamicObject* instance, PropertyId propertyId, bool allowLetConst)
+    bool MissingPropertyTypeHandler::CanStorePropertyValueDirectly(const DynamicObject *instance, PropertyId propertyId,
+                                                                   bool allowLetConst)
     {
         Throw::FatalInternalError();
     }
@@ -236,4 +255,4 @@ namespace Js
         Output::Print(u"%*sMissingPropertyTypeHandler (0x%p): Dump unimplemented\n", indent, u"", this);
     }
 #endif
-}
+} // namespace Js

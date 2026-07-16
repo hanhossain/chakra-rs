@@ -9,12 +9,20 @@ namespace Js
 {
 #ifdef RECYCLER_STRESS
     // Only enable RecyclerTrackStress on DynamicObject
-    template <class T> bool IsRecyclerTrackStressType() { return false; }
-    template <> inline bool IsRecyclerTrackStressType<DynamicObject>() { return true; }
+    template <class T>
+    bool IsRecyclerTrackStressType()
+    {
+        return false;
+    }
+    template <>
+    inline bool IsRecyclerTrackStressType<DynamicObject>()
+    {
+        return true;
+    }
 #endif
 
     template <class T>
-    inline T * DynamicObject::NewObject(Recycler * recycler, DynamicType * type)
+    inline T *DynamicObject::NewObject(Recycler *recycler, DynamicType *type)
     {
         size_t inlineSlotsSize = type->GetTypeHandler()->GetInlineSlotsSize();
         if (inlineSlotsSize)
@@ -38,4 +46,4 @@ namespace Js
             return RecyclerNew(recycler, T, type);
         }
     }
-}
+} // namespace Js

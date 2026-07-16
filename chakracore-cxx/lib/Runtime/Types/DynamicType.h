@@ -34,15 +34,16 @@ namespace Js
 #endif
 
     protected:
-        DynamicType(DynamicType * type) : Type(type), typeHandler(type->typeHandler), isLocked(false), isShared(false) {}
-        DynamicType(DynamicType * type, DynamicTypeHandler *typeHandler, bool isLocked, bool isShared);
-        DynamicType(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint, DynamicTypeHandler * typeHandler, bool isLocked, bool isShared);
+        DynamicType(DynamicType *type) : Type(type), typeHandler(type->typeHandler), isLocked(false), isShared(false) {}
+        DynamicType(DynamicType *type, DynamicTypeHandler *typeHandler, bool isLocked, bool isShared);
+        DynamicType(ScriptContext *scriptContext, TypeId typeId, RecyclableObject *prototype,
+                    JavascriptMethod entryPoint, DynamicTypeHandler *typeHandler, bool isLocked, bool isShared);
 
     public:
-        DynamicTypeHandler * GetTypeHandler() const { return typeHandler; }
-        DynamicTypeHandler * DuplicateTypeHandler();
+        DynamicTypeHandler *GetTypeHandler() const { return typeHandler; }
+        DynamicTypeHandler *DuplicateTypeHandler();
 
-        void SetPrototype(RecyclableObject* newPrototype) { this->prototype = newPrototype; }
+        void SetPrototype(RecyclableObject *newPrototype) { this->prototype = newPrototype; }
         bool GetIsLocked() const { return this->isLocked; }
         bool GetIsShared() const { return this->isShared; }
 #if DBG
@@ -63,15 +64,32 @@ namespace Js
 
         static bool Is(TypeId typeId);
         static bool Is(const Type *type) { return DynamicType::Is(type->GetTypeId()); }
-        static DynamicType * New(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint, DynamicTypeHandler * typeHandler, bool isLocked = false, bool isShared = false);
+        static DynamicType *New(ScriptContext *scriptContext, TypeId typeId, RecyclableObject *prototype,
+                                JavascriptMethod entryPoint, DynamicTypeHandler *typeHandler, bool isLocked = false,
+                                bool isShared = false);
 
         static uint32_t GetOffsetOfTypeHandler() { return offsetof(DynamicType, typeHandler); }
         static uint32_t GetOffsetOfIsShared() { return offsetof(DynamicType, isShared); }
-        static uint32_t GetOffsetOfHasNoEnumerableProperties() { return offsetof(DynamicType, hasNoEnumerableProperties); }
-    private:
-        void SetIsLocked() { Assert(this->GetTypeHandler()->GetIsLocked()); this->isLocked = true; }
-        void SetIsShared() { Assert(this->GetIsLocked() && this->GetTypeHandler()->GetIsShared()); this->isShared = true; }
-        void SetIsLockedAndShared() { SetIsLocked(); SetIsShared(); }
+        static uint32_t GetOffsetOfHasNoEnumerableProperties()
+        {
+            return offsetof(DynamicType, hasNoEnumerableProperties);
+        }
 
+    private:
+        void SetIsLocked()
+        {
+            Assert(this->GetTypeHandler()->GetIsLocked());
+            this->isLocked = true;
+        }
+        void SetIsShared()
+        {
+            Assert(this->GetIsLocked() && this->GetTypeHandler()->GetIsShared());
+            this->isShared = true;
+        }
+        void SetIsLockedAndShared()
+        {
+            SetIsLocked();
+            SetIsShared();
+        }
     };
-};
+}; // namespace Js

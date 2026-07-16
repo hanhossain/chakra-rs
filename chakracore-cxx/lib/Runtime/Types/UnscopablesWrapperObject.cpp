@@ -6,15 +6,17 @@
 
 namespace Js
 {
-    RecyclableObject * UnscopablesWrapperObject::GetThisAndUnwrappedInstance(Var* thisVar) const
+    RecyclableObject *UnscopablesWrapperObject::GetThisAndUnwrappedInstance(Var *thisVar) const
     {
         *thisVar = this->GetWrappedObject();
         return this->GetWrappedObject();
     }
 
-    PropertyQueryFlags UnscopablesWrapperObject::HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info)
+    PropertyQueryFlags UnscopablesWrapperObject::HasPropertyQuery(PropertyId propertyId,
+                                                                  _Inout_opt_ PropertyValueInfo *info)
     {
-        return JavascriptConversion::BooleanToPropertyQueryFlags(JavascriptOperators::HasPropertyUnscopables(wrappedObject, propertyId));
+        return JavascriptConversion::BooleanToPropertyQueryFlags(
+            JavascriptOperators::HasPropertyUnscopables(wrappedObject, propertyId));
     }
 
     BOOL UnscopablesWrapperObject::HasOwnProperty(PropertyId propertyId)
@@ -23,14 +25,19 @@ namespace Js
         return HasProperty(propertyId);
     }
 
-    BOOL UnscopablesWrapperObject::SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL UnscopablesWrapperObject::SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags,
+                                               PropertyValueInfo *info)
     {
-        return JavascriptOperators::SetPropertyUnscopable(wrappedObject, wrappedObject, propertyId, value, info, wrappedObject->GetScriptContext());
+        return JavascriptOperators::SetPropertyUnscopable(wrappedObject, wrappedObject, propertyId, value, info,
+                                                          wrappedObject->GetScriptContext());
     }
 
-    PropertyQueryFlags UnscopablesWrapperObject::GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    PropertyQueryFlags UnscopablesWrapperObject::GetPropertyQuery(Var originalInstance, PropertyId propertyId,
+                                                                  Var *value, PropertyValueInfo *info,
+                                                                  ScriptContext *requestContext)
     {
-        return JavascriptConversion::BooleanToPropertyQueryFlags(JavascriptOperators::GetPropertyUnscopable(wrappedObject, wrappedObject, propertyId, value, requestContext, info));
+        return JavascriptConversion::BooleanToPropertyQueryFlags(JavascriptOperators::GetPropertyUnscopable(
+            wrappedObject, wrappedObject, propertyId, value, requestContext, info));
     }
 
 
@@ -39,15 +46,20 @@ namespace Js
         return JavascriptOperators::DeletePropertyUnscopables(wrappedObject, propertyId, flags);
     }
 
-    DescriptorFlags UnscopablesWrapperObject::GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
+    DescriptorFlags UnscopablesWrapperObject::GetSetter(PropertyId propertyId, Var *setterValue,
+                                                        PropertyValueInfo *info, ScriptContext *requestContext)
     {
-        return JavascriptOperators::GetterSetterUnscopable(wrappedObject, propertyId, setterValue, info, requestContext);
+        return JavascriptOperators::GetterSetterUnscopable(wrappedObject, propertyId, setterValue, info,
+                                                           requestContext);
     }
 
-    PropertyQueryFlags UnscopablesWrapperObject::GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    PropertyQueryFlags UnscopablesWrapperObject::GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId,
+                                                                           Var *value, PropertyValueInfo *info,
+                                                                           ScriptContext *requestContext)
     {
-        RecyclableObject* copyState = wrappedObject;
-        return JavascriptConversion::BooleanToPropertyQueryFlags(JavascriptOperators::PropertyReferenceWalkUnscopable(wrappedObject, &copyState, propertyId, value, info, requestContext));
+        RecyclableObject *copyState = wrappedObject;
+        return JavascriptConversion::BooleanToPropertyQueryFlags(JavascriptOperators::PropertyReferenceWalkUnscopable(
+            wrappedObject, &copyState, propertyId, value, info, requestContext));
     }
 
 } // namespace Js

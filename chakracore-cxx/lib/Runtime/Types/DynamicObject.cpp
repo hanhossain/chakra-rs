@@ -9,10 +9,8 @@ namespace Js
     DEFINE_RECYCLER_TRACKER_PERF_COUNTER(DynamicObject);
     DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER(DynamicObject);
 
-    DynamicObject::DynamicObject(DynamicType * type, const bool initSlots) :
-        RecyclableObject(type),
-        auxSlots(nullptr),
-        objectArray(nullptr)
+    DynamicObject::DynamicObject(DynamicType *type, const bool initSlots) :
+        RecyclableObject(type), auxSlots(nullptr), objectArray(nullptr)
     {
         Assert(!UsesObjectArrayOrFlagsAsFlags());
         if (initSlots)
@@ -29,14 +27,13 @@ namespace Js
 #endif
     }
 
-    DynamicObject::DynamicObject(DynamicType * type, ScriptContext * scriptContext) :
+    DynamicObject::DynamicObject(DynamicType *type, ScriptContext *scriptContext) :
 #if DBG || defined(PROFILE_TYPES)
         RecyclableObject(type, scriptContext),
 #else
         RecyclableObject(type),
 #endif
-        auxSlots(nullptr),
-        objectArray(nullptr)
+        auxSlots(nullptr), objectArray(nullptr)
     {
         Assert(!UsesObjectArrayOrFlagsAsFlags());
         InitSlots(this, scriptContext);
@@ -46,10 +43,10 @@ namespace Js
 #endif
     }
 
-    DynamicObject::DynamicObject(DynamicObject * instance, bool deepCopy) :
-        RecyclableObject(instance->type),
-        auxSlots(instance->auxSlots),
-        objectArray(instance->objectArray)  // copying the array should copy the array flags and array call site index as well
+    DynamicObject::DynamicObject(DynamicObject *instance, bool deepCopy) :
+        RecyclableObject(instance->type), auxSlots(instance->auxSlots),
+        objectArray(
+            instance->objectArray) // copying the array should copy the array flags and array call site index as well
     {
         if (deepCopy)
         {
@@ -59,15 +56,15 @@ namespace Js
             }
         }
 
-        DynamicTypeHandler * typeHandler = this->GetTypeHandler();
+        DynamicTypeHandler *typeHandler = this->GetTypeHandler();
 
         // TODO: stack allocate aux Slots
         Assert(typeHandler->IsObjectHeaderInlinedTypeHandler() || !ThreadContext::IsOnStack(this->auxSlots));
         int propertyCount = typeHandler->GetPropertyCount();
         int inlineSlotCapacity = GetTypeHandler()->GetInlineSlotCapacity();
         int inlineSlotCount = min(inlineSlotCapacity, propertyCount);
-        typename WriteBarrierFieldTypeTraits<Var>::Type* srcSlots = instance->GetInlineSlots();
-        typename WriteBarrierFieldTypeTraits<Var>::Type* dstSlots = this->GetInlineSlots();
+        typename WriteBarrierFieldTypeTraits<Var>::Type *srcSlots = instance->GetInlineSlots();
+        typename WriteBarrierFieldTypeTraits<Var>::Type *dstSlots = this->GetInlineSlots();
         // Copy the inline slot data from the source instance. Deep copy is implicit because
         // the inline slot allocation is already accounted for with the allocation of the object.
         for (int i = 0; i < inlineSlotCount; i++)
@@ -113,10 +110,9 @@ namespace Js
             // While the objectArray can be any array type, a DynamicObject that is created on the
             // stack will only have one of these three types (as these are also the only array types
             // that can be allocated on the stack).
-            Assert(Js::JavascriptArray::IsNonES5Array(instance->GetObjectArrayOrFlagsAsArray())
-                || Js::VarIs<Js::JavascriptNativeIntArray>(instance->GetObjectArrayOrFlagsAsArray())
-                || Js::VarIs<Js::JavascriptNativeFloatArray>(instance->GetObjectArrayOrFlagsAsArray())
-            );
+            Assert(Js::JavascriptArray::IsNonES5Array(instance->GetObjectArrayOrFlagsAsArray()) ||
+                   Js::VarIs<Js::JavascriptNativeIntArray>(instance->GetObjectArrayOrFlagsAsArray()) ||
+                   Js::VarIs<Js::JavascriptNativeFloatArray>(instance->GetObjectArrayOrFlagsAsArray()));
 
             // Since a deep copy was requested for this DynamicObject, deep copy the object array as well
             SetObjectArray(JavascriptArray::DeepCopyInstance(instance->GetObjectArrayOrFlagsAsArray()));
@@ -128,10 +124,9 @@ namespace Js
             // - an object array, but no deep copy needed
             // - data in the objectArray member, but it is inline slot data
             // - data in the objectArray member, but it is array flags
-            Assert(
-                (instance->GetObjectArrayOrFlagsAsArray() == nullptr) ||
-                (!deepCopy || typeHandler->IsObjectHeaderInlinedTypeHandler() || instance->UsesObjectArrayOrFlagsAsFlags())
-            );
+            Assert((instance->GetObjectArrayOrFlagsAsArray() == nullptr) ||
+                   (!deepCopy || typeHandler->IsObjectHeaderInlinedTypeHandler() ||
+                    instance->UsesObjectArrayOrFlagsAsFlags()));
         }
 
 #if ENABLE_OBJECT_SOURCE_TRACKING
@@ -139,41 +134,44 @@ namespace Js
 #endif
     }
 
-    DynamicObject * DynamicObject::New(Recycler * recycler, DynamicType * type)
+    DynamicObject *DynamicObject::New(Recycler *recycler, DynamicType *type)
     {
         return NewObject<DynamicObject>(recycler, type);
     }
 
     bool DynamicObject::IsBaseDynamicObject(Var aValue)
     {
-        return VarIs<RecyclableObject>(aValue) && (UnsafeVarTo<RecyclableObject>(aValue)->GetTypeId() == TypeIds_Object);
+        return VarIs<RecyclableObject>(aValue) &&
+            (UnsafeVarTo<RecyclableObject>(aValue)->GetTypeId() == TypeIds_Object);
     }
 
-    DynamicObject* DynamicObject::TryVarToBaseDynamicObject(Var aValue)
+    DynamicObject *DynamicObject::TryVarToBaseDynamicObject(Var aValue)
     {
         return IsBaseDynamicObject(aValue) ? UnsafeVarTo<DynamicObject>(aValue) : nullptr;
     }
 
-    template <> bool VarIsImpl<DynamicObject>(RecyclableObject* obj)
+    template <>
+    bool VarIsImpl<DynamicObject>(RecyclableObject *obj)
     {
         bool result = DynamicType::Is(obj->GetTypeId());
         Assert(result == obj->DbgIsDynamicObject());
         return result;
     }
 
-    ArrayObject* DynamicObject::EnsureObjectArray()
+    ArrayObject *DynamicObject::EnsureObjectArray()
     {
         if (!HasObjectArray())
         {
-            ScriptContext* scriptContext = GetScriptContext();
-            ArrayObject* objArray = scriptContext->GetLibrary()->CreateArray(0, SparseArraySegmentBase::SMALL_CHUNK_SIZE);
+            ScriptContext *scriptContext = GetScriptContext();
+            ArrayObject *objArray =
+                scriptContext->GetLibrary()->CreateArray(0, SparseArraySegmentBase::SMALL_CHUNK_SIZE);
             SetObjectArray(objArray);
         }
         Assert(HasObjectArray());
         return GetObjectArrayOrFlagsAsArray();
     }
 
-    void DynamicObject::SetObjectArray(ArrayObject* objArray)
+    void DynamicObject::SetObjectArray(ArrayObject *objArray)
     {
         Assert(!IsAnyArray(this));
 
@@ -218,10 +216,7 @@ namespace Js
         return IsAnyArrayTypeId(JavascriptOperators::GetTypeId(aValue));
     }
 
-    bool DynamicObject::IsAnyArray(DynamicObject* obj)
-    {
-        return IsAnyArrayTypeId(JavascriptOperators::GetTypeId(obj));
-    }
+    bool DynamicObject::IsAnyArray(DynamicObject *obj) { return IsAnyArrayTypeId(JavascriptOperators::GetTypeId(obj)); }
 
     BOOL DynamicObject::HasObjectArrayItem(uint32_t index)
     {
@@ -237,15 +232,19 @@ namespace Js
         return true;
     }
 
-    BOOL DynamicObject::GetObjectArrayItem(Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext)
+    BOOL DynamicObject::GetObjectArrayItem(Var originalInstance, uint32_t index, Var *value,
+                                           ScriptContext *requestContext)
     {
         *value = requestContext->GetMissingItemResult();
-        return HasObjectArray() && GetObjectArrayOrFlagsAsArray()->GetItem(originalInstance, index, value, requestContext);
+        return HasObjectArray() &&
+            GetObjectArrayOrFlagsAsArray()->GetItem(originalInstance, index, value, requestContext);
     }
 
-    DescriptorFlags DynamicObject::GetObjectArrayItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext)
+    DescriptorFlags DynamicObject::GetObjectArrayItemSetter(uint32_t index, Var *setterValue,
+                                                            ScriptContext *requestContext)
     {
-        return HasObjectArray() ? GetObjectArrayOrFlagsAsArray()->GetItemSetter(index, setterValue, requestContext) : None;
+        return HasObjectArray() ? GetObjectArrayOrFlagsAsArray()->GetItemSetter(index, setterValue, requestContext)
+                                : None;
     }
 
     BOOL DynamicObject::SetObjectArrayItem(uint32_t index, Var value, PropertyOperationFlags flags)
@@ -254,7 +253,7 @@ namespace Js
 
         // We don't track non-enumerable items in object arrays.  Any object with an object array reports having
         // enumerable properties.  See comment in DynamicObject::GetHasNoEnumerableProperties.
-        //SetHasNoEnumerableProperties(false);
+        // SetHasNoEnumerableProperties(false);
 
         return result;
     }
@@ -265,7 +264,7 @@ namespace Js
 
         // We don't track non-enumerable items in object arrays.  Any object with an object array reports having
         // enumerable properties.  See comment in DynamicObject::GetHasNoEnumerableProperties.
-        //if (attributes & PropertyEnumerable)
+        // if (attributes & PropertyEnumerable)
         //{
         //    SetHasNoEnumerableProperties(false);
         //}
@@ -283,7 +282,7 @@ namespace Js
 
         // We don't track non-enumerable items in object arrays.  Any object with an object array reports having
         // enumerable properties.  See comment in DynamicObject::GetHasNoEnumerableProperties.
-        //if (attributes & PropertyEnumerable)
+        // if (attributes & PropertyEnumerable)
         //{
         //    SetHasNoEnumerableProperties(false);
         //}
@@ -322,101 +321,81 @@ namespace Js
             // No need to invalidate store field caches for non-writable properties here.  We're dealing
             // with numeric properties only, and we never cache these in add property inline caches.
 
-            // If this object is used as a prototype, the has-only-writable-data-properties-in-prototype-chain cache needs to be
-            // invalidated here since the type handler of 'objectArray' is not marked as being used as a prototype
+            // If this object is used as a prototype, the has-only-writable-data-properties-in-prototype-chain cache
+            // needs to be invalidated here since the type handler of 'objectArray' is not marked as being used as a
+            // prototype
             GetType()->GetLibrary()->GetTypesWithOnlyWritablePropertyProtoChainCache()->Clear();
         }
     }
 
-    bool DynamicObject::HasLockedType() const
-    {
-        return this->GetDynamicType()->GetIsLocked();
-    }
+    bool DynamicObject::HasLockedType() const { return this->GetDynamicType()->GetIsLocked(); }
 
-    bool DynamicObject::HasSharedType() const
-    {
-        return this->GetDynamicType()->GetIsShared();
-    }
+    bool DynamicObject::HasSharedType() const { return this->GetDynamicType()->GetIsShared(); }
 
-    bool DynamicObject::HasSharedTypeHandler() const
-    {
-        return this->GetTypeHandler()->GetIsShared();
-    }
+    bool DynamicObject::HasSharedTypeHandler() const { return this->GetTypeHandler()->GetIsShared(); }
 
-    void DynamicObject::ReplaceType(DynamicType * type)
+    void DynamicObject::ReplaceType(DynamicType *type)
     {
         Assert(!type->isLocked || type->GetTypeHandler()->GetIsLocked());
         Assert(!type->isShared || type->GetTypeHandler()->GetIsShared());
 
         // For now, i have added only Aux Slot -> so new inlineSlotCapacity should be 2.
-        AssertMsg(DynamicObject::IsTypeHandlerCompatibleForObjectHeaderInlining(this->GetTypeHandler(), type->GetTypeHandler()),
-            "Object is ObjectHeaderInlined and should have compatible TypeHandlers for proper transition");
+        AssertMsg(DynamicObject::IsTypeHandlerCompatibleForObjectHeaderInlining(this->GetTypeHandler(),
+                                                                                type->GetTypeHandler()),
+                  "Object is ObjectHeaderInlined and should have compatible TypeHandlers for proper transition");
 
         AssertMsg(!JavascriptObject::IsPrototypeOfStopAtProxy(this, type->GetPrototype(), GetScriptContext()),
-            "Replacing the type should not create a cycle in the prototype chain");
+                  "Replacing the type should not create a cycle in the prototype chain");
 
         this->type = type;
     }
 
-    void DynamicObject::ReplaceTypeWithPredecessorType(DynamicType * predecessorType)
+    void DynamicObject::ReplaceTypeWithPredecessorType(DynamicType *predecessorType)
     {
         Assert(this->GetTypeHandler()->IsPathTypeHandler());
-        Assert(((PathTypeHandlerBase*)this->GetTypeHandler())->GetPredecessorType()->GetTypeHandler()->IsPathTypeHandler());
+        Assert(((PathTypeHandlerBase *)this->GetTypeHandler())
+                   ->GetPredecessorType()
+                   ->GetTypeHandler()
+                   ->IsPathTypeHandler());
 
-        Assert(((PathTypeHandlerBase*)this->GetTypeHandler())->GetPredecessorType() == predecessorType);
+        Assert(((PathTypeHandlerBase *)this->GetTypeHandler())->GetPredecessorType() == predecessorType);
 
         Assert(!predecessorType->GetIsLocked() || predecessorType->GetTypeHandler()->GetIsLocked());
         Assert(!predecessorType->GetIsShared() || predecessorType->GetTypeHandler()->GetIsShared());
 
         Assert(this->GetType()->GetPrototype() == predecessorType->GetPrototype());
 
-        [[maybe_unused]] PathTypeHandlerBase* currentPathTypeHandler = (PathTypeHandlerBase*)this->GetTypeHandler();
-        [[maybe_unused]] PathTypeHandlerBase* predecessorPathTypeHandler = (PathTypeHandlerBase*)predecessorType->GetTypeHandler();
+        [[maybe_unused]] PathTypeHandlerBase *currentPathTypeHandler = (PathTypeHandlerBase *)this->GetTypeHandler();
+        [[maybe_unused]] PathTypeHandlerBase *predecessorPathTypeHandler =
+            (PathTypeHandlerBase *)predecessorType->GetTypeHandler();
 
         Assert(predecessorPathTypeHandler->GetInlineSlotCapacity() >= currentPathTypeHandler->GetInlineSlotCapacity());
 
         this->type = predecessorType;
     }
 
-    uint32_t DynamicObject::GetOffsetOfAuxSlots()
-    {
-        return offsetof(DynamicObject, auxSlots);
-    }
+    uint32_t DynamicObject::GetOffsetOfAuxSlots() { return offsetof(DynamicObject, auxSlots); }
 
-    uint32_t DynamicObject::GetOffsetOfObjectArray()
-    {
-        return offsetof(DynamicObject, objectArray);
-    }
+    uint32_t DynamicObject::GetOffsetOfObjectArray() { return offsetof(DynamicObject, objectArray); }
 
-    uint32_t DynamicObject::GetOffsetOfType()
-    {
-        return offsetof(DynamicObject, type);
-    }
+    uint32_t DynamicObject::GetOffsetOfType() { return offsetof(DynamicObject, type); }
 
-    void DynamicObject::EnsureSlots(int oldCount, int newCount, ScriptContext * scriptContext, DynamicTypeHandler * newTypeHandler)
+    void DynamicObject::EnsureSlots(int oldCount, int newCount, ScriptContext *scriptContext,
+                                    DynamicTypeHandler *newTypeHandler)
     {
         this->GetTypeHandler()->EnsureSlots(this, oldCount, newCount, scriptContext, newTypeHandler);
     }
 
-    void DynamicObject::EnsureSlots(int newCount, ScriptContext * scriptContext)
+    void DynamicObject::EnsureSlots(int newCount, ScriptContext *scriptContext)
     {
         EnsureSlots(GetTypeHandler()->GetSlotCapacity(), newCount, scriptContext);
     }
 
-    Var DynamicObject::GetSlot(int index)
-    {
-        return this->GetTypeHandler()->GetSlot(this, index);
-    }
+    Var DynamicObject::GetSlot(int index) { return this->GetTypeHandler()->GetSlot(this, index); }
 
-    Var DynamicObject::GetInlineSlot(int index)
-    {
-        return this->GetTypeHandler()->GetInlineSlot(this, index);
-    }
+    Var DynamicObject::GetInlineSlot(int index) { return this->GetTypeHandler()->GetInlineSlot(this, index); }
 
-    Var DynamicObject::GetAuxSlot(int index)
-    {
-        return this->GetTypeHandler()->GetAuxSlot(this, index);
-    }
+    Var DynamicObject::GetAuxSlot(int index) { return this->GetTypeHandler()->GetAuxSlot(this, index); }
 
 #if DBG
     void DynamicObject::SetSlot(PropertyId propertyId, bool allowLetConst, int index, Var value)
@@ -434,58 +413,44 @@ namespace Js
         this->GetTypeHandler()->SetAuxSlot(this, propertyId, allowLetConst, index, value);
     }
 #else
-    void DynamicObject::SetSlot(int index, Var value)
-    {
-        this->GetTypeHandler()->SetSlot(this, index, value);
-    }
+    void DynamicObject::SetSlot(int index, Var value) { this->GetTypeHandler()->SetSlot(this, index, value); }
 
     void DynamicObject::SetInlineSlot(int index, Var value)
     {
         this->GetTypeHandler()->SetInlineSlot(this, index, value);
     }
 
-    void DynamicObject::SetAuxSlot(int index, Var value)
-    {
-        this->GetTypeHandler()->SetAuxSlot(this, index, value);
-    }
+    void DynamicObject::SetAuxSlot(int index, Var value) { this->GetTypeHandler()->SetAuxSlot(this, index, value); }
 #endif
 
-    bool
-    DynamicObject::GetIsExtensible() const
+    bool DynamicObject::GetIsExtensible() const
     {
         return this->GetTypeHandler()->GetFlags() & DynamicTypeHandler::IsExtensibleFlag;
     }
 
-    BOOL
-    DynamicObject::FindNextProperty(BigPropertyIndex& index, JavascriptString** propertyString, PropertyId* propertyId, PropertyAttributes* attributes,
-        DynamicType *typeToEnumerate, EnumeratorFlags flags, ScriptContext * requestContext, PropertyValueInfo * info)
+    BOOL DynamicObject::FindNextProperty(BigPropertyIndex &index, JavascriptString **propertyString,
+                                         PropertyId *propertyId, PropertyAttributes *attributes,
+                                         DynamicType *typeToEnumerate, EnumeratorFlags flags,
+                                         ScriptContext *requestContext, PropertyValueInfo *info)
     {
-        if(index == Constants::NoBigSlot)
+        if (index == Constants::NoBigSlot)
         {
             return FALSE;
         }
-        return this->GetTypeHandler()->FindNextProperty(requestContext, index, propertyString, propertyId, attributes, this->GetType(), typeToEnumerate, flags, this, info);
+        return this->GetTypeHandler()->FindNextProperty(requestContext, index, propertyString, propertyId, attributes,
+                                                        this->GetType(), typeToEnumerate, flags, this, info);
     }
 
-    BOOL
-    DynamicObject::HasDeferredTypeHandler() const
-    {
-        return this->GetTypeHandler()->IsDeferredTypeHandler();
-    }
+    BOOL DynamicObject::HasDeferredTypeHandler() const { return this->GetTypeHandler()->IsDeferredTypeHandler(); }
 
-    DynamicTypeHandler *
-    DynamicObject::GetTypeHandler() const
-    {
-        return this->GetDynamicType()->GetTypeHandler();
-    }
+    DynamicTypeHandler *DynamicObject::GetTypeHandler() const { return this->GetDynamicType()->GetTypeHandler(); }
 
     uint16 DynamicObject::GetOffsetOfInlineSlots() const
     {
         return this->GetDynamicType()->GetTypeHandler()->GetOffsetOfInlineSlots();
     }
 
-    void
-    DynamicObject::SetTypeHandler(DynamicTypeHandler * typeHandler, bool hasChanged)
+    void DynamicObject::SetTypeHandler(DynamicTypeHandler *typeHandler, bool hasChanged)
     {
         if (hasChanged && this->HasLockedType())
         {
@@ -494,14 +459,14 @@ namespace Js
         this->GetDynamicType()->typeHandler = typeHandler;
     }
 
-    DynamicType* DynamicObject::DuplicateType()
+    DynamicType *DynamicObject::DuplicateType()
     {
         return RecyclerNew(GetRecycler(), DynamicType, this->GetDynamicType());
     }
 
-    DynamicType* DynamicObject::DuplicateTypeAndTypeHandler()
+    DynamicType *DynamicObject::DuplicateTypeAndTypeHandler()
     {
-        DynamicType * newType = DuplicateType();
+        DynamicType *newType = DuplicateType();
         newType->typeHandler = newType->DuplicateTypeHandler();
         return newType;
     }
@@ -512,21 +477,19 @@ namespace Js
     }
 
     /*
-    *   DynamicObject::IsTypeHandlerCompatibleForObjectHeaderInlining
-    *   -   Checks if the TypeHandlers are compatible for transition from oldTypeHandler to newTypeHandler
-    */
-    bool DynamicObject::IsTypeHandlerCompatibleForObjectHeaderInlining(DynamicTypeHandler * oldTypeHandler, DynamicTypeHandler * newTypeHandler)
+     *   DynamicObject::IsTypeHandlerCompatibleForObjectHeaderInlining
+     *   -   Checks if the TypeHandlers are compatible for transition from oldTypeHandler to newTypeHandler
+     */
+    bool DynamicObject::IsTypeHandlerCompatibleForObjectHeaderInlining(DynamicTypeHandler *oldTypeHandler,
+                                                                       DynamicTypeHandler *newTypeHandler)
     {
         Assert(oldTypeHandler);
         Assert(newTypeHandler);
 
-        return
-            oldTypeHandler->GetInlineSlotCapacity() == newTypeHandler->GetInlineSlotCapacity() ||
-            (
-                oldTypeHandler->IsObjectHeaderInlinedTypeHandler() &&
-                newTypeHandler->GetInlineSlotCapacity() ==
-                    oldTypeHandler->GetInlineSlotCapacity() - DynamicTypeHandler::GetObjectHeaderInlinableSlotCapacity()
-            );
+        return oldTypeHandler->GetInlineSlotCapacity() == newTypeHandler->GetInlineSlotCapacity() ||
+            (oldTypeHandler->IsObjectHeaderInlinedTypeHandler() &&
+             newTypeHandler->GetInlineSlotCapacity() ==
+                 oldTypeHandler->GetInlineSlotCapacity() - DynamicTypeHandler::GetObjectHeaderInlinableSlotCapacity());
     }
 
     bool DynamicObject::IsObjectHeaderInlinedTypeHandlerUnchecked() const
@@ -541,7 +504,7 @@ namespace Js
 
     bool DynamicObject::DeoptimizeObjectHeaderInlining()
     {
-        if(!IsObjectHeaderInlinedTypeHandler())
+        if (!IsObjectHeaderInlinedTypeHandler())
         {
             return false;
         }
@@ -556,10 +519,8 @@ namespace Js
         PathTypeHandlerBase *const newTypeHandler = oldTypeHandler->DeoptimizeObjectHeaderInlining(GetLibrary());
 
         const PropertyIndex newInlineSlotCapacity = newTypeHandler->GetInlineSlotCapacity();
-        DynamicTypeHandler::AdjustSlots(
-            this,
-            newInlineSlotCapacity,
-            newTypeHandler->GetSlotCapacity() - newInlineSlotCapacity);
+        DynamicTypeHandler::AdjustSlots(this, newInlineSlotCapacity,
+                                        newTypeHandler->GetSlotCapacity() - newInlineSlotCapacity);
 
         DynamicType *const newType = DuplicateType();
         newType->typeHandler = newTypeHandler;
@@ -578,7 +539,7 @@ namespace Js
         autoDisableInterrupt.Completed();
     }
 
-    void DynamicObject::ChangeTypeIf(const Type* oldType)
+    void DynamicObject::ChangeTypeIf(const Type *oldType)
     {
         if (this->type == oldType)
         {
@@ -631,20 +592,24 @@ namespace Js
 
     void DynamicObject::SetIsPrototype()
     {
-        DynamicTypeHandler* currentTypeHandler = this->GetTypeHandler();
-        Js::DynamicType* oldType = this->GetDynamicType();
+        DynamicTypeHandler *currentTypeHandler = this->GetTypeHandler();
+        Js::DynamicType *oldType = this->GetDynamicType();
 
 #if DBG
         bool wasShared = currentTypeHandler->GetIsShared();
         bool wasPrototype = (currentTypeHandler->GetFlags() & DynamicTypeHandler::IsPrototypeFlag) != 0;
-        Assert(!DynamicTypeHandler::IsolatePrototypes() || !currentTypeHandler->RespectsIsolatePrototypes() || !currentTypeHandler->GetIsOrMayBecomeShared() || !wasPrototype);
+        Assert(!DynamicTypeHandler::IsolatePrototypes() || !currentTypeHandler->RespectsIsolatePrototypes() ||
+               !currentTypeHandler->GetIsOrMayBecomeShared() || !wasPrototype);
 #endif
 
         // If this handler is not shared and it already has a prototype flag then we must have taken the required
         // type transition (if any) earlier when the singleton object first became a prototype.
-        if ((currentTypeHandler->GetFlags() & (DynamicTypeHandler::IsSharedFlag | DynamicTypeHandler::IsPrototypeFlag)) == DynamicTypeHandler::IsPrototypeFlag)
+        if ((currentTypeHandler->GetFlags() &
+             (DynamicTypeHandler::IsSharedFlag | DynamicTypeHandler::IsPrototypeFlag)) ==
+            DynamicTypeHandler::IsPrototypeFlag)
         {
-            Assert(this->GetObjectArray() == nullptr || (this->GetObjectArray()->GetTypeHandler()->GetFlags() & DynamicTypeHandler::IsPrototypeFlag) != 0);
+            Assert(this->GetObjectArray() == nullptr ||
+                   (this->GetObjectArray()->GetTypeHandler()->GetFlags() & DynamicTypeHandler::IsPrototypeFlag) != 0);
             return;
         }
 
@@ -652,8 +617,9 @@ namespace Js
         // Get type handler again, in case it got changed by SetIsPrototype.
         currentTypeHandler = this->GetTypeHandler();
 
-        // Set the object array as a prototype as well, so if it is an ES5 array, we will disable the array set element fast path
-        ArrayObject * objectArray = this->GetObjectArray();
+        // Set the object array as a prototype as well, so if it is an ES5 array, we will disable the array set element
+        // fast path
+        ArrayObject *objectArray = this->GetObjectArray();
         if (objectArray)
         {
             objectArray->SetIsPrototype();
@@ -661,8 +627,10 @@ namespace Js
 
 #if DBG
         Assert(currentTypeHandler->SupportsPrototypeInstances());
-        Assert(!DynamicTypeHandler::IsolatePrototypes() || !currentTypeHandler->RespectsIsolatePrototypes() || !currentTypeHandler->GetIsOrMayBecomeShared());
-        Assert((wasPrototype && !wasShared) || !DynamicTypeHandler::ChangeTypeOnProto() || !currentTypeHandler->RespectsChangeTypeOnProto() || this->GetDynamicType() != oldType);
+        Assert(!DynamicTypeHandler::IsolatePrototypes() || !currentTypeHandler->RespectsIsolatePrototypes() ||
+               !currentTypeHandler->GetIsOrMayBecomeShared());
+        Assert((wasPrototype && !wasShared) || !DynamicTypeHandler::ChangeTypeOnProto() ||
+               !currentTypeHandler->RespectsChangeTypeOnProto() || this->GetDynamicType() != oldType);
 #endif
 
         // If we haven't changed type we must explicitly invalidate store field inline caches to avoid properties
@@ -673,39 +641,31 @@ namespace Js
         }
     }
 
-    bool
-    DynamicObject::LockType()
-    {
-        return this->GetDynamicType()->LockType();
-    }
+    bool DynamicObject::LockType() { return this->GetDynamicType()->LockType(); }
 
-    bool
-    DynamicObject::ShareType()
-    {
-        return this->GetDynamicType()->ShareType();
-    }
+    bool DynamicObject::ShareType() { return this->GetDynamicType()->ShareType(); }
 
-    void
-    DynamicObject::ResetObject(DynamicType* newType, BOOL keepProperties)
+    void DynamicObject::ResetObject(DynamicType *newType, BOOL keepProperties)
     {
         Assert(newType != NULL);
-        Assert(!keepProperties || (!newType->GetTypeHandler()->IsDeferredTypeHandler() && newType->GetTypeHandler()->GetPropertyCount() == 0));
+        Assert(!keepProperties ||
+               (!newType->GetTypeHandler()->IsDeferredTypeHandler() &&
+                newType->GetTypeHandler()->GetPropertyCount() == 0));
 
         // This is what's going on here.  The newType comes from the (potentially) new script context, but the object is
-        // described by the old type handler, so we want to keep that type handler.  We set the new type on the object, but
-        // then re-set the type handler of that type back to the old type handler.  In the process, we may actually change
-        // the type of the object again (if the new type was locked) via DuplicateType; the newer type will then also be
-        // from the new script context.
-        DynamicType * oldType = this->GetDynamicType();
-        DynamicTypeHandler* oldTypeHandler = oldType->GetTypeHandler();
+        // described by the old type handler, so we want to keep that type handler.  We set the new type on the object,
+        // but then re-set the type handler of that type back to the old type handler.  In the process, we may actually
+        // change the type of the object again (if the new type was locked) via DuplicateType; the newer type will then
+        // also be from the new script context.
+        DynamicType *oldType = this->GetDynamicType();
+        DynamicTypeHandler *oldTypeHandler = oldType->GetTypeHandler();
 
 #if ENABLE_FIXED_FIELDS
-        // Consider: Because we've disabled fixed properties on DOM objects, we don't need to rely on a type change here to
-        // invalidate fixed properties.  Under some circumstances (with F12 tools enabled) an object which
-        // is already in the new context can be reset and newType == oldType. If we re-enable fixed properties on DOM objects
-        // we'll have to investigate and address this issue.
-        // Assert(newType != oldType);
-        // We only expect DOM objects to ever be reset and we explicitly disable fixed properties on DOM objects.
+        // Consider: Because we've disabled fixed properties on DOM objects, we don't need to rely on a type change here
+        // to invalidate fixed properties.  Under some circumstances (with F12 tools enabled) an object which is already
+        // in the new context can be reset and newType == oldType. If we re-enable fixed properties on DOM objects we'll
+        // have to investigate and address this issue. Assert(newType != oldType); We only expect DOM objects to ever be
+        // reset and we explicitly disable fixed properties on DOM objects.
         Assert(!oldTypeHandler->HasAnyFixedProperties());
 #endif
 
@@ -737,18 +697,21 @@ namespace Js
         //     of being wrapped in CrossSite<>.
 
         Var stackTraceValue = nullptr;
-        if (this->GetInternalProperty(this, InternalPropertyIds::StackTrace, &stackTraceValue, nullptr, this->GetScriptContext()))
+        if (this->GetInternalProperty(this, InternalPropertyIds::StackTrace, &stackTraceValue, nullptr,
+                                      this->GetScriptContext()))
         {
             this->SetInternalProperty(InternalPropertyIds::StackTrace, nullptr, PropertyOperation_None, nullptr);
         }
         else
         {
-            // Above GetInternalProperty fails - which means the stackTraceValue is filed with Missing result. Reset to null so that we will not restore it back below.
+            // Above GetInternalProperty fails - which means the stackTraceValue is filed with Missing result. Reset to
+            // null so that we will not restore it back below.
             stackTraceValue = nullptr;
         }
 
         Var weakMapKeyMapValue = nullptr;
-        if (this->GetInternalProperty(this, InternalPropertyIds::WeakMapKeyMap, &weakMapKeyMapValue, nullptr, this->GetScriptContext()))
+        if (this->GetInternalProperty(this, InternalPropertyIds::WeakMapKeyMap, &weakMapKeyMapValue, nullptr,
+                                      this->GetScriptContext()))
         {
             this->SetInternalProperty(InternalPropertyIds::WeakMapKeyMap, nullptr, PropertyOperation_Force, nullptr);
         }
@@ -758,7 +721,8 @@ namespace Js
         }
 
         Var mutationBpValue = nullptr;
-        if (this->GetInternalProperty(this, InternalPropertyIds::MutationBp, &mutationBpValue, nullptr, this->GetScriptContext()))
+        if (this->GetInternalProperty(this, InternalPropertyIds::MutationBp, &mutationBpValue, nullptr,
+                                      this->GetScriptContext()))
         {
             this->SetInternalProperty(InternalPropertyIds::MutationBp, nullptr, PropertyOperation_Force, nullptr);
         }
@@ -768,20 +732,24 @@ namespace Js
         }
 
         Var embedderData = nullptr;
-        if (this->GetInternalProperty(this, InternalPropertyIds::EmbedderData,  &embedderData, nullptr, this->GetScriptContext()))
+        if (this->GetInternalProperty(this, InternalPropertyIds::EmbedderData, &embedderData, nullptr,
+                                      this->GetScriptContext()))
         {
-          this->SetInternalProperty(InternalPropertyIds::EmbedderData, nullptr, PropertyOperation_Force, nullptr);
+            this->SetInternalProperty(InternalPropertyIds::EmbedderData, nullptr, PropertyOperation_Force, nullptr);
         }
         else
         {
-          embedderData = nullptr;
+            embedderData = nullptr;
         }
 
-        // If value of TypeOfPrototypeObjectDictionary was set undefined above, reset it to nullptr so we don't type cast it wrongly to TypeTransitionMap* or we don't marshal the non-Var dictionary below
+        // If value of TypeOfPrototypeObjectDictionary was set undefined above, reset it to nullptr so we don't type
+        // cast it wrongly to TypeTransitionMap* or we don't marshal the non-Var dictionary below
         Var typeTransitionMap = nullptr;
-        if (this->GetInternalProperty(this, InternalPropertyIds::TypeOfPrototypeObjectDictionary, &typeTransitionMap, nullptr, this->GetScriptContext()))
+        if (this->GetInternalProperty(this, InternalPropertyIds::TypeOfPrototypeObjectDictionary, &typeTransitionMap,
+                                      nullptr, this->GetScriptContext()))
         {
-            this->SetInternalProperty(InternalPropertyIds::TypeOfPrototypeObjectDictionary, nullptr, PropertyOperation_Force, nullptr);
+            this->SetInternalProperty(InternalPropertyIds::TypeOfPrototypeObjectDictionary, nullptr,
+                                      PropertyOperation_Force, nullptr);
         }
 
         if (keepProperties)
@@ -790,37 +758,42 @@ namespace Js
 
             if (stackTraceValue)
             {
-                this->SetInternalProperty(InternalPropertyIds::StackTrace, stackTraceValue, PropertyOperation_None, nullptr);
+                this->SetInternalProperty(InternalPropertyIds::StackTrace, stackTraceValue, PropertyOperation_None,
+                                          nullptr);
             }
             if (weakMapKeyMapValue)
             {
-                this->SetInternalProperty(InternalPropertyIds::WeakMapKeyMap, weakMapKeyMapValue, PropertyOperation_Force, nullptr);
+                this->SetInternalProperty(InternalPropertyIds::WeakMapKeyMap, weakMapKeyMapValue,
+                                          PropertyOperation_Force, nullptr);
             }
             if (mutationBpValue)
             {
-                this->SetInternalProperty(InternalPropertyIds::MutationBp, mutationBpValue, PropertyOperation_Force, nullptr);
+                this->SetInternalProperty(InternalPropertyIds::MutationBp, mutationBpValue, PropertyOperation_Force,
+                                          nullptr);
             }
             if (embedderData)
             {
-              this->SetInternalProperty(InternalPropertyIds::EmbedderData, embedderData, PropertyOperation_Force, nullptr);
+                this->SetInternalProperty(InternalPropertyIds::EmbedderData, embedderData, PropertyOperation_Force,
+                                          nullptr);
             }
         }
     }
 
-    typename WriteBarrierFieldTypeTraits<Var>::Type* DynamicObject::GetInlineSlots() const
+    typename WriteBarrierFieldTypeTraits<Var>::Type *DynamicObject::GetInlineSlots() const
     {
-        return reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type*>(reinterpret_cast<size_t>(this) + this->GetOffsetOfInlineSlots());
+        return reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type *>(reinterpret_cast<size_t>(this) +
+                                                                                   this->GetOffsetOfInlineSlots());
     }
 
-    bool DynamicObject::IsCompatibleForCopy(DynamicObject* from) const
+    bool DynamicObject::IsCompatibleForCopy(DynamicObject *from) const
     {
         if (this->GetTypeHandler()->GetInlineSlotCapacity() != from->GetTypeHandler()->GetInlineSlotCapacity())
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
                 Output::Print(u"ObjectCopy: Can't copy: inline slot capacity doesn't match, from: %u, to: %u\n",
-                    from->GetTypeHandler()->GetInlineSlotCapacity(),
-                    this->GetTypeHandler()->GetInlineSlotCapacity());
+                              from->GetTypeHandler()->GetInlineSlotCapacity(),
+                              this->GetTypeHandler()->GetInlineSlotCapacity());
             }
             return false;
         }
@@ -876,7 +849,7 @@ namespace Js
         return true;
     }
 
-    bool DynamicObject::TryCopy(DynamicObject* from)
+    bool DynamicObject::TryCopy(DynamicObject *from)
     {
         if (PHASE_OFF1(ObjectCopyPhase))
         {
@@ -911,8 +884,8 @@ namespace Js
         }
         if (inlineSlotCapacity != 0)
         {
-            typename WriteBarrierFieldTypeTraits<Var>::Type* thisInlineSlots = this->GetInlineSlots();
-            typename WriteBarrierFieldTypeTraits<Var>::Type* fromInlineSlots = from->GetInlineSlots();
+            typename WriteBarrierFieldTypeTraits<Var>::Type *thisInlineSlots = this->GetInlineSlots();
+            typename WriteBarrierFieldTypeTraits<Var>::Type *fromInlineSlots = from->GetInlineSlots();
 
             CopyArray(thisInlineSlots, inlineSlotCapacity, fromInlineSlots, inlineSlotCapacity);
         }
@@ -930,8 +903,7 @@ namespace Js
         return true;
     }
 
-    bool
-    DynamicObject::GetHasNoEnumerableProperties()
+    bool DynamicObject::GetHasNoEnumerableProperties()
     {
         if (!this->GetTypeHandler()->EnsureObjectReady(this))
         {
@@ -942,45 +914,42 @@ namespace Js
         {
             return false;
         }
-        if (HasObjectArray() || (JavascriptArray::IsNonES5Array(this) && VarTo<JavascriptArray>(this)->GetLength() != 0))
+        if (HasObjectArray() ||
+            (JavascriptArray::IsNonES5Array(this) && VarTo<JavascriptArray>(this)->GetLength() != 0))
         {
             return false;
         }
         return true;
     }
 
-    bool
-    DynamicObject::SetHasNoEnumerableProperties(bool value)
+    bool DynamicObject::SetHasNoEnumerableProperties(bool value)
     {
         return this->GetDynamicType()->SetHasNoEnumerableProperties(value);
     }
 
-    BigPropertyIndex
-    DynamicObject::GetPropertyIndexFromInlineSlotIndex(uint inlineSlotIndex)
+    BigPropertyIndex DynamicObject::GetPropertyIndexFromInlineSlotIndex(uint inlineSlotIndex)
     {
         return this->GetTypeHandler()->GetPropertyIndexFromInlineSlotIndex(inlineSlotIndex);
     }
 
-    BigPropertyIndex
-    DynamicObject::GetPropertyIndexFromAuxSlotIndex(uint auxIndex)
+    BigPropertyIndex DynamicObject::GetPropertyIndexFromAuxSlotIndex(uint auxIndex)
     {
         return this->GetTypeHandler()->GetPropertyIndexFromAuxSlotIndex(auxIndex);
     }
 
-    BOOL
-    DynamicObject::GetAttributesWithPropertyIndex(PropertyId propertyId, BigPropertyIndex index, PropertyAttributes * attributes)
+    BOOL DynamicObject::GetAttributesWithPropertyIndex(PropertyId propertyId, BigPropertyIndex index,
+                                                       PropertyAttributes *attributes)
     {
         return this->GetTypeHandler()->GetAttributesWithPropertyIndex(this, propertyId, index, attributes);
     }
 
-    RecyclerWeakReference<DynamicObject>* DynamicObject::CreateWeakReferenceToSelf()
+    RecyclerWeakReference<DynamicObject> *DynamicObject::CreateWeakReferenceToSelf()
     {
         Assert(!ThreadContext::IsOnStack(this));
         return GetRecycler()->CreateWeakReferenceHandle(this);
     }
 
-    DynamicObject *
-    DynamicObject::Copy(bool deepCopy)
+    DynamicObject *DynamicObject::Copy(bool deepCopy)
     {
         size_t inlineSlotsSize = this->GetTypeHandler()->GetInlineSlotsSize();
         if (inlineSlotsSize)
@@ -993,13 +962,12 @@ namespace Js
         }
     }
 
-    DynamicObject *
-    DynamicObject::BoxStackInstance(DynamicObject * instance, bool deepCopy)
+    DynamicObject *DynamicObject::BoxStackInstance(DynamicObject *instance, bool deepCopy)
     {
         Assert(ThreadContext::IsOnStack(instance));
         // On the stack, the we reserved a pointer before the object as to store the boxed value
-        DynamicObject ** boxedInstanceRef = ((DynamicObject **)instance) - 1;
-        DynamicObject * boxedInstance = *boxedInstanceRef;
+        DynamicObject **boxedInstanceRef = ((DynamicObject **)instance) - 1;
+        DynamicObject *boxedInstance = *boxedInstanceRef;
         if (boxedInstance)
         {
             return boxedInstance;
@@ -1045,14 +1013,15 @@ namespace Js
         {
             size_t inlineSlotsSize = this->GetDynamicType()->GetTypeHandler()->GetInlineSlotsSize();
             size_t objectSize = sizeof(DynamicObject) + inlineSlotsSize;
-            void ** obj = (void **)this;
-            void ** objEnd = obj + (objectSize / sizeof(void *));
+            void **obj = (void **)this;
+            void **objEnd = obj + (objectSize / sizeof(void *));
 
             do
             {
                 recycler->TryMarkNonInterior(*obj, nullptr);
                 obj++;
-            } while (obj != objEnd);
+            }
+            while (obj != objEnd);
 
             return;
         }

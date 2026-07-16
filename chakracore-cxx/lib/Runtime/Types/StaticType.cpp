@@ -6,24 +6,21 @@
 
 namespace Js
 {
-    StaticType *
-    StaticType::New(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint)
+    StaticType *StaticType::New(ScriptContext *scriptContext, TypeId typeId, RecyclableObject *prototype,
+                                JavascriptMethod entryPoint)
     {
         return RecyclerNew(scriptContext->GetRecycler(), StaticType, scriptContext, typeId, prototype, entryPoint);
     }
 
-    bool
-    StaticType::Is(TypeId typeId)
-    {
-        return typeId <= TypeIds_LastStaticType;
-    }
+    bool StaticType::Is(TypeId typeId) { return typeId <= TypeIds_LastStaticType; }
 
-    BOOL RecyclableObject::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
+    BOOL RecyclableObject::GetDiagValueString(StringBuilder<ArenaAllocator> *stringBuilder,
+                                              ScriptContext *requestContext)
     {
         ENTER_PINNED_SCOPE(JavascriptString, valueStr);
         ScriptContext *scriptContext = GetScriptContext();
 
-        switch(GetTypeId())
+        switch (GetTypeId())
         {
         case TypeIds_Undefined:
             valueStr = GetLibrary()->GetUndefinedDisplayString();
@@ -35,9 +32,8 @@ namespace Js
             valueStr = scriptContext->GetIntegerString(this);
             break;
         case TypeIds_Boolean:
-            valueStr = VarTo<JavascriptBoolean>(this)->GetValue() ?
-                           GetLibrary()->GetTrueDisplayString()
-                         : GetLibrary()->GetFalseDisplayString();
+            valueStr = VarTo<JavascriptBoolean>(this)->GetValue() ? GetLibrary()->GetTrueDisplayString()
+                                                                  : GetLibrary()->GetFalseDisplayString();
             break;
         case TypeIds_Number:
             valueStr = JavascriptNumber::ToStringRadix10(JavascriptNumber::GetValue(this), scriptContext);
@@ -56,9 +52,10 @@ namespace Js
         return TRUE;
     }
 
-    BOOL RecyclableObject::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
+    BOOL RecyclableObject::GetDiagTypeString(StringBuilder<ArenaAllocator> *stringBuilder,
+                                             ScriptContext *requestContext)
     {
-        switch(GetTypeId())
+        switch (GetTypeId())
         {
         case TypeIds_Undefined:
             stringBuilder->AppendCppLiteral(u"Undefined");
@@ -83,4 +80,4 @@ namespace Js
 
         return TRUE;
     }
-}
+} // namespace Js

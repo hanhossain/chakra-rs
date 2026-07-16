@@ -21,18 +21,15 @@ namespace Js
     protected:
         DEFINE_VTABLE_CTOR_ABSTRACT(ArrayObject, DynamicObject);
 
-        ArrayObject(DynamicType * type, bool initSlots = true, uint32_t length = 0)
-            : DynamicObject(type, initSlots), length(length)
+        ArrayObject(DynamicType *type, bool initSlots = true, uint32_t length = 0) :
+            DynamicObject(type, initSlots), length(length)
         {
         }
 
-        ArrayObject(DynamicType * type, ScriptContext * scriptContext)
-            : DynamicObject(type, scriptContext), length(0)
-        {
-        }
+        ArrayObject(DynamicType *type, ScriptContext *scriptContext) : DynamicObject(type, scriptContext), length(0) {}
 
         // For boxing stack instance
-        ArrayObject(ArrayObject * instance, bool deepCopy);
+        ArrayObject(ArrayObject *instance, bool deepCopy);
 
         void ThrowItemNotConfigurableError(PropertyId propId = Constants::NoProperty);
         void VerifySetItemAttributes(PropertyId propId, PropertyAttributes attributes);
@@ -46,7 +43,7 @@ namespace Js
         virtual BOOL SetItemAttributes(uint32_t index, PropertyAttributes attributes);
         virtual BOOL SetItemAccessors(uint32_t index, Var getter, Var setter);
         virtual BOOL IsObjectArrayFrozen();
-        virtual JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext* requestContext) = 0;
+        virtual JavascriptEnumerator *GetIndexEnumerator(EnumeratorFlags flags, ScriptContext *requestContext) = 0;
     };
 
 #pragma pack(pop)

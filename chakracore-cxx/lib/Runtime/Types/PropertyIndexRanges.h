@@ -31,4 +31,4 @@ namespace Js
         static const BigPropertyIndex MaxValue = 0x3FFFFFFF;
         static const BigPropertyIndex NoSlots = Constants::NoBigSlot;
     };
-};
+}; // namespace Js

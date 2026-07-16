@@ -6,45 +6,44 @@
 
 namespace Js
 {
-    ScriptFunctionType::ScriptFunctionType(ScriptFunctionType * type)
-        : DynamicType(type), entryPointInfo(type->GetEntryPointInfo())
-    {}
-
-    ScriptFunctionType::ScriptFunctionType(ScriptContext* scriptContext, RecyclableObject* prototype,
-        JavascriptMethod entryPoint, ProxyEntryPointInfo * entryPointInfo, DynamicTypeHandler * typeHandler,
-        bool isLocked, bool isShared)
-        : DynamicType(scriptContext, TypeIds_Function, prototype, entryPoint, typeHandler, isLocked, isShared),
-        entryPointInfo(entryPointInfo)
+    ScriptFunctionType::ScriptFunctionType(ScriptFunctionType *type) :
+        DynamicType(type), entryPointInfo(type->GetEntryPointInfo())
     {
-
     }
 
-    ScriptFunctionType * ScriptFunctionType::New(FunctionProxy * proxy, bool isShared)
+    ScriptFunctionType::ScriptFunctionType(ScriptContext *scriptContext, RecyclableObject *prototype,
+                                           JavascriptMethod entryPoint, ProxyEntryPointInfo *entryPointInfo,
+                                           DynamicTypeHandler *typeHandler, bool isLocked, bool isShared) :
+        DynamicType(scriptContext, TypeIds_Function, prototype, entryPoint, typeHandler, isLocked, isShared),
+        entryPointInfo(entryPointInfo)
     {
-        ScriptContext * scriptContext = proxy->GetScriptContext();
-        JavascriptLibrary * library = scriptContext->GetLibrary();
-        DynamicObject * functionPrototype = proxy->IsAsync() ? library->GetAsyncFunctionPrototype() : library->GetFunctionPrototype();
-        DynamicTypeHandler * typeHandler = library->ScriptFunctionTypeHandler(!proxy->IsConstructor(), proxy->GetIsAnonymousFunction());
+    }
+
+    ScriptFunctionType *ScriptFunctionType::New(FunctionProxy *proxy, bool isShared)
+    {
+        ScriptContext *scriptContext = proxy->GetScriptContext();
+        JavascriptLibrary *library = scriptContext->GetLibrary();
+        DynamicObject *functionPrototype =
+            proxy->IsAsync() ? library->GetAsyncFunctionPrototype() : library->GetFunctionPrototype();
+        DynamicTypeHandler *typeHandler =
+            library->ScriptFunctionTypeHandler(!proxy->IsConstructor(), proxy->GetIsAnonymousFunction());
 
         return New(proxy, typeHandler, functionPrototype, isShared);
     }
 
-    ScriptFunctionType * ScriptFunctionType::New(FunctionProxy * proxy, DynamicTypeHandler * typeHandler, RecyclableObject * prototype, bool isShared)
+    ScriptFunctionType *ScriptFunctionType::New(FunctionProxy *proxy, DynamicTypeHandler *typeHandler,
+                                                RecyclableObject *prototype, bool isShared)
     {
         Assert(proxy->GetFunctionInfo()->GetFunctionProxy() == proxy);
-        ScriptContext * scriptContext = proxy->GetScriptContext();
+        ScriptContext *scriptContext = proxy->GetScriptContext();
 
-        return RecyclerNew(scriptContext->GetRecycler(), ScriptFunctionType,
-            scriptContext, 
-            prototype,
-            proxy->GetDefaultEntryPointInfo()->jsMethod,
-            proxy->GetDefaultEntryPointInfo(),
-            typeHandler,
-            isShared, 
-            isShared);
+        return RecyclerNew(scriptContext->GetRecycler(), ScriptFunctionType, scriptContext, prototype,
+                           proxy->GetDefaultEntryPointInfo()->jsMethod, proxy->GetDefaultEntryPointInfo(), typeHandler,
+                           isShared, isShared);
     }
 
-    void ScriptFunctionType::ChangeEntryPoint(ProxyEntryPointInfo * entryPointInfo, JavascriptMethod entryPoint, bool isAsmJS)
+    void ScriptFunctionType::ChangeEntryPoint(ProxyEntryPointInfo *entryPointInfo, JavascriptMethod entryPoint,
+                                              bool isAsmJS)
     {
         Assert(entryPoint != nullptr);
         Assert(entryPointInfo != nullptr);
@@ -68,9 +67,9 @@ namespace Js
             entryPointInfo->jsMethod = entryPoint;
         }
 
-        ProxyEntryPointInfo* oldEntryPointInfo = this->GetEntryPointInfo();
+        ProxyEntryPointInfo *oldEntryPointInfo = this->GetEntryPointInfo();
         ScriptFunction::CopyEntryPointInfoToThreadContextIfNecessary(oldEntryPointInfo, entryPointInfo);
 
         this->SetEntryPointInfo(entryPointInfo);
     }
-};
+}; // namespace Js

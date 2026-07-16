@@ -9,10 +9,11 @@
 
 namespace Js
 {
-    template<size_t size>
-    SimpleTypeHandler<size>::SimpleTypeHandler(SimpleTypeHandler<size> * typeHandler, bool unused)
-        : DynamicTypeHandler(sizeof(descriptors) / sizeof(SimplePropertyDescriptor),
-            typeHandler->GetInlineSlotCapacity(), typeHandler->GetOffsetOfInlineSlots()), propertyCount(typeHandler->propertyCount)
+    template <size_t size>
+    SimpleTypeHandler<size>::SimpleTypeHandler(SimpleTypeHandler<size> *typeHandler, bool unused) :
+        DynamicTypeHandler(sizeof(descriptors) / sizeof(SimplePropertyDescriptor), typeHandler->GetInlineSlotCapacity(),
+                           typeHandler->GetOffsetOfInlineSlots()),
+        propertyCount(typeHandler->propertyCount)
     {
         Assert(typeHandler->GetIsInlineSlotCapacityLocked());
         SetIsInlineSlotCapacityLocked();
@@ -22,9 +23,8 @@ namespace Js
         }
     }
 
-    template<size_t size>
-    SimpleTypeHandler<size>::SimpleTypeHandler(SimpleTypeHandler<size> * typeHandler) :
-        DynamicTypeHandler(typeHandler)
+    template <size_t size>
+    SimpleTypeHandler<size>::SimpleTypeHandler(SimpleTypeHandler<size> *typeHandler) : DynamicTypeHandler(typeHandler)
     {
         Assert(typeHandler->GetIsInlineSlotCapacityLocked());
         SetIsInlineSlotCapacityLocked();
@@ -34,55 +34,63 @@ namespace Js
         }
     }
 
-    template<size_t size>
-    SimpleTypeHandler<size>::SimpleTypeHandler(Recycler*) :
-         DynamicTypeHandler(sizeof(descriptors) / sizeof(SimplePropertyDescriptor)),
-         propertyCount(0)
+    template <size_t size>
+    SimpleTypeHandler<size>::SimpleTypeHandler(Recycler *) :
+        DynamicTypeHandler(sizeof(descriptors) / sizeof(SimplePropertyDescriptor)), propertyCount(0)
     {
         SetIsInlineSlotCapacityLocked();
     }
 
-    template<size_t size>
-    SimpleTypeHandler<size>::SimpleTypeHandler(const PropertyRecord* id, _no_write_barrier_tag, PropertyAttributes attributes, PropertyTypes propertyTypes, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots) :
-        DynamicTypeHandler(sizeof(descriptors) / sizeof(SimplePropertyDescriptor),
-        inlineSlotCapacity, offsetOfInlineSlots, DefaultFlags | IsLockedFlag | MayBecomeSharedFlag | IsSharedFlag), propertyCount(1)
+    template <size_t size>
+    SimpleTypeHandler<size>::SimpleTypeHandler(const PropertyRecord *id, _no_write_barrier_tag,
+                                               PropertyAttributes attributes, PropertyTypes propertyTypes,
+                                               uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots) :
+        DynamicTypeHandler(sizeof(descriptors) / sizeof(SimplePropertyDescriptor), inlineSlotCapacity,
+                           offsetOfInlineSlots, DefaultFlags | IsLockedFlag | MayBecomeSharedFlag | IsSharedFlag),
+        propertyCount(1)
     {
         Assert((attributes & PropertyDeleted) == 0);
         NoWriteBarrierSet(descriptors[0].Id, id); // Used to init from global static BuiltInPropertyId
         descriptors[0].Attributes = attributes;
 
-        Assert((propertyTypes & (PropertyTypesAll & ~(PropertyTypesWritableDataOnly | PropertyTypesHasSpecialProperties))) == 0);
+        Assert((propertyTypes &
+                (PropertyTypesAll & ~(PropertyTypesWritableDataOnly | PropertyTypesHasSpecialProperties))) == 0);
         SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesHasSpecialProperties, propertyTypes);
         SetIsInlineSlotCapacityLocked();
     }
 
-    template<size_t size>
-    SimpleTypeHandler<size>::SimpleTypeHandler(SimplePropertyDescriptor const (&SharedFunctionPropertyDescriptors)[size], _no_write_barrier_tag, PropertyTypes propertyTypes, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots) :
-         DynamicTypeHandler(sizeof(descriptors) / sizeof(SimplePropertyDescriptor),
-         inlineSlotCapacity, offsetOfInlineSlots, DefaultFlags | IsLockedFlag | MayBecomeSharedFlag | IsSharedFlag), propertyCount(size)
+    template <size_t size>
+    SimpleTypeHandler<size>::SimpleTypeHandler(
+        SimplePropertyDescriptor const (&SharedFunctionPropertyDescriptors)[size], _no_write_barrier_tag,
+        PropertyTypes propertyTypes, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots) :
+        DynamicTypeHandler(sizeof(descriptors) / sizeof(SimplePropertyDescriptor), inlineSlotCapacity,
+                           offsetOfInlineSlots, DefaultFlags | IsLockedFlag | MayBecomeSharedFlag | IsSharedFlag),
+        propertyCount(size)
     {
         for (size_t i = 0; i < size; i++)
         {
             Assert((SharedFunctionPropertyDescriptors[i].Attributes & PropertyDeleted) == 0);
-             // Used to init from global static BuiltInPropertyId
+            // Used to init from global static BuiltInPropertyId
             NoWriteBarrierSet(descriptors[i].Id, SharedFunctionPropertyDescriptors[i].Id);
             descriptors[i].Attributes = SharedFunctionPropertyDescriptors[i].Attributes;
         }
-        Assert((propertyTypes & (PropertyTypesAll & ~(PropertyTypesWritableDataOnly | PropertyTypesHasSpecialProperties))) == 0);
+        Assert((propertyTypes &
+                (PropertyTypesAll & ~(PropertyTypesWritableDataOnly | PropertyTypesHasSpecialProperties))) == 0);
         SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesHasSpecialProperties, propertyTypes);
         SetIsInlineSlotCapacityLocked();
     }
 
-    template<size_t size>
-    DynamicTypeHandler * SimpleTypeHandler<size>::Clone(Recycler * recycler)
+    template <size_t size>
+    DynamicTypeHandler *SimpleTypeHandler<size>::Clone(Recycler *recycler)
     {
         return RecyclerNew(recycler, SimpleTypeHandler<size>, this);
     }
 
-    template<size_t size>
-    bool SimpleTypeHandler<size>::DoConvertToPathType(DynamicType* type)
+    template <size_t size>
+    bool SimpleTypeHandler<size>::DoConvertToPathType(DynamicType *type)
     {
-        if ((PHASE_ON1(ShareCrossSiteFuncTypesPhase) && CrossSite::IsThunk(type->GetEntryPoint())) || type->GetTypeHandler()->GetIsPrototype())
+        if ((PHASE_ON1(ShareCrossSiteFuncTypesPhase) && CrossSite::IsThunk(type->GetEntryPoint())) ||
+            type->GetTypeHandler()->GetIsPrototype())
         {
             return false;
         }
@@ -98,14 +106,14 @@ namespace Js
         return true;
     }
 
-    template<size_t size>
-    SimpleTypeHandler<size> * SimpleTypeHandler<size>::ConvertToNonSharedSimpleType(DynamicObject* instance)
+    template <size_t size>
+    SimpleTypeHandler<size> *SimpleTypeHandler<size>::ConvertToNonSharedSimpleType(DynamicObject *instance)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        Recycler* recycler = scriptContext->GetRecycler();
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        Recycler *recycler = scriptContext->GetRecycler();
 
 
-        SimpleTypeHandler * newTypeHandler = RecyclerNew(recycler, SimpleTypeHandler, this, true /*unused*/);
+        SimpleTypeHandler *newTypeHandler = RecyclerNew(recycler, SimpleTypeHandler, this, true /*unused*/);
 
         // Consider: Add support for fixed fields to SimpleTypeHandler when
         // non-shared.  Here we could set the instance as the singleton instance on the newly
@@ -113,24 +121,27 @@ namespace Js
 
         newTypeHandler->SetFlags(IsPrototypeFlag | HasKnownSlot0Flag, this->GetFlags());
         Assert(newTypeHandler->GetIsInlineSlotCapacityLocked());
-        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection | PropertyTypesHasSpecialProperties, this->GetPropertyTypes());
+        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection |
+                                             PropertyTypesHasSpecialProperties,
+                                         this->GetPropertyTypes());
         newTypeHandler->SetInstanceTypeHandler(instance);
 
         return newTypeHandler;
     }
 
-    template<size_t size>
+    template <size_t size>
     template <typename T>
-    T* SimpleTypeHandler<size>::ConvertToTypeHandler(DynamicObject* instance)
+    T *SimpleTypeHandler<size>::ConvertToTypeHandler(DynamicObject *instance)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        Recycler* recycler = scriptContext->GetRecycler();
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        Recycler *recycler = scriptContext->GetRecycler();
 
 #if ENABLE_FIXED_FIELDS && DBG
-        DynamicType* oldType = instance->GetDynamicType();
+        DynamicType *oldType = instance->GetDynamicType();
 #endif
 
-        T* newTypeHandler = RecyclerNew(recycler, T, recycler, SimpleTypeHandler<size>::GetSlotCapacity(), GetInlineSlotCapacity(), GetOffsetOfInlineSlots());
+        T *newTypeHandler = RecyclerNew(recycler, T, recycler, SimpleTypeHandler<size>::GetSlotCapacity(),
+                                        GetInlineSlotCapacity(), GetOffsetOfInlineSlots());
 #if ENABLE_FIXED_FIELDS
         Assert(HasSingletonInstanceOnlyIfNeeded());
 
@@ -151,15 +162,19 @@ namespace Js
 #else
             bool markAsFixed = false;
 #endif
-            newTypeHandler->Add(PointerValue(descriptors[i].Id), descriptors[i].Attributes, true, markAsFixed, false, scriptContext);
+            newTypeHandler->Add(PointerValue(descriptors[i].Id), descriptors[i].Attributes, true, markAsFixed, false,
+                                scriptContext);
         }
 
         newTypeHandler->SetFlags(IsPrototypeFlag | HasKnownSlot0Flag, this->GetFlags());
-        // We don't expect to convert to a PathTypeHandler.  If we change this later we need to review if we want the new type handler to have locked
-        // inline slot capacity, or if we want to allow shrinking of the SimpleTypeHandler's inline slot capacity.
+        // We don't expect to convert to a PathTypeHandler.  If we change this later we need to review if we want the
+        // new type handler to have locked inline slot capacity, or if we want to allow shrinking of the
+        // SimpleTypeHandler's inline slot capacity.
         Assert(!newTypeHandler->IsPathTypeHandler());
         Assert(newTypeHandler->GetIsInlineSlotCapacityLocked());
-        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection | PropertyTypesHasSpecialProperties, this->GetPropertyTypes());
+        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection |
+                                             PropertyTypesHasSpecialProperties,
+                                         this->GetPropertyTypes());
         newTypeHandler->SetInstanceTypeHandler(instance);
 
 #if ENABLE_FIXED_FIELDS && DBG
@@ -170,20 +185,14 @@ namespace Js
         return newTypeHandler;
     }
 
-    template<size_t size>
-    PathTypeHandlerBase* SimpleTypeHandler<size>::ConvertToPathType(DynamicObject* instance)
+    template <size_t size>
+    PathTypeHandlerBase *SimpleTypeHandler<size>::ConvertToPathType(DynamicObject *instance)
     {
         ScriptContext *scriptContext = instance->GetScriptContext();
-        PathTypeHandlerBase* newTypeHandler =
-            PathTypeHandlerNoAttr::New(
-                scriptContext,
-                scriptContext->GetLibrary()->GetRootPath(),
-                0,
-                static_cast<PropertyIndex>(this->GetSlotCapacity()),
-                this->GetInlineSlotCapacity(),
-                this->GetOffsetOfInlineSlots(),
-                true,
-                false);
+        PathTypeHandlerBase *newTypeHandler =
+            PathTypeHandlerNoAttr::New(scriptContext, scriptContext->GetLibrary()->GetRootPath(), 0,
+                                       static_cast<PropertyIndex>(this->GetSlotCapacity()),
+                                       this->GetInlineSlotCapacity(), this->GetOffsetOfInlineSlots(), true, false);
         newTypeHandler->SetMayBecomeShared();
 
 #if ENABLE_FIXED_FIELDS
@@ -198,7 +207,9 @@ namespace Js
 #endif
 
         DynamicType *existingType = instance->GetDynamicType();
-        DynamicType *currentType = DynamicType::New(scriptContext, existingType->GetTypeId(), existingType->GetPrototype(), nullptr, newTypeHandler, false, false);
+        DynamicType *currentType =
+            DynamicType::New(scriptContext, existingType->GetTypeId(), existingType->GetPrototype(), nullptr,
+                             newTypeHandler, false, false);
         PropertyId propertyId = Constants::NoProperty;
         ObjectSlotAttributes attr = ObjectSlotAttr_None;
         for (PropertyIndex i = 0; i < propertyCount; i++)
@@ -206,14 +217,16 @@ namespace Js
             propertyId = descriptors[i].Id->GetPropertyId();
             attr = PathTypeHandlerBase::PropertyAttributesToObjectSlotAttributes(descriptors[i].Attributes);
             PropertyIndex index;
-            currentType = newTypeHandler->PromoteType<false>(currentType, PathTypeSuccessorKey(propertyId, attr), false, scriptContext, instance, &index);
+            currentType = newTypeHandler->PromoteType<false>(currentType, PathTypeSuccessorKey(propertyId, attr), false,
+                                                             scriptContext, instance, &index);
             newTypeHandler = PathTypeHandlerBase::FromTypeHandler(currentType->GetTypeHandler());
 #if ENABLE_FIXED_FIELDS
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
             Var value = instance->GetSlot(i);
             bool markAsFixed = allowFixedFields && !IsInternalPropertyId(propertyId) && value != nullptr &&
                 (VarIs<JavascriptFunction>(value) ? ShouldFixMethodProperties() : false);
-            newTypeHandler->InitializePath(instance, i, newTypeHandler->GetPathLength(), scriptContext, [=]() { return markAsFixed; });
+            newTypeHandler->InitializePath(instance, i, newTypeHandler->GetPathLength(), scriptContext,
+                                           [=]() { return markAsFixed; });
 #endif
 #endif
         }
@@ -227,21 +240,26 @@ namespace Js
             newTypeHandler->ShareTypeHandler(scriptContext);
         }
         newTypeHandler->SetFlags(IsPrototypeFlag | HasKnownSlot0Flag, this->GetFlags());
-        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection | PropertyTypesHasSpecialProperties, this->GetPropertyTypes());
+        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection |
+                                             PropertyTypesHasSpecialProperties,
+                                         this->GetPropertyTypes());
         newTypeHandler->SetInstanceTypeHandler(instance, false);
         if (newTypeHandler->GetPredecessorType())
         {
-            PathTypeHandlerBase *predTypeHandler = PathTypeHandlerBase::FromTypeHandler(newTypeHandler->GetPredecessorType()->GetTypeHandler());
-            predTypeHandler->ReplaceSuccessor(newTypeHandler->GetPredecessorType(), PathTypeSuccessorKey(propertyId, attr), scriptContext->GetRecycler()->CreateWeakReferenceHandle<DynamicType>(existingType));
+            PathTypeHandlerBase *predTypeHandler =
+                PathTypeHandlerBase::FromTypeHandler(newTypeHandler->GetPredecessorType()->GetTypeHandler());
+            predTypeHandler->ReplaceSuccessor(
+                newTypeHandler->GetPredecessorType(), PathTypeSuccessorKey(propertyId, attr),
+                scriptContext->GetRecycler()->CreateWeakReferenceHandle<DynamicType>(existingType));
         }
 
         return newTypeHandler;
     }
 
-    template<size_t size>
-    DictionaryTypeHandler* SimpleTypeHandler<size>::ConvertToDictionaryType(DynamicObject* instance)
+    template <size_t size>
+    DictionaryTypeHandler *SimpleTypeHandler<size>::ConvertToDictionaryType(DynamicObject *instance)
     {
-        DictionaryTypeHandler* newTypeHandler = ConvertToTypeHandler<DictionaryTypeHandler>(instance);
+        DictionaryTypeHandler *newTypeHandler = ConvertToTypeHandler<DictionaryTypeHandler>(instance);
 
 #ifdef PROFILE_TYPES
         instance->GetScriptContext()->convertSimpleToDictionaryCount++;
@@ -249,10 +267,10 @@ namespace Js
         return newTypeHandler;
     }
 
-    template<size_t size>
-    SimpleDictionaryTypeHandler* SimpleTypeHandler<size>::ConvertToSimpleDictionaryType(DynamicObject* instance)
+    template <size_t size>
+    SimpleDictionaryTypeHandler *SimpleTypeHandler<size>::ConvertToSimpleDictionaryType(DynamicObject *instance)
     {
-        SimpleDictionaryTypeHandler* newTypeHandler = ConvertToTypeHandler<SimpleDictionaryTypeHandler >(instance);
+        SimpleDictionaryTypeHandler *newTypeHandler = ConvertToTypeHandler<SimpleDictionaryTypeHandler>(instance);
 
 #ifdef PROFILE_TYPES
         instance->GetScriptContext()->convertSimpleToSimpleDictionaryCount++;
@@ -260,10 +278,10 @@ namespace Js
         return newTypeHandler;
     }
 
-    template<size_t size>
-    ES5ArrayTypeHandler* SimpleTypeHandler<size>::ConvertToES5ArrayType(DynamicObject* instance)
+    template <size_t size>
+    ES5ArrayTypeHandler *SimpleTypeHandler<size>::ConvertToES5ArrayType(DynamicObject *instance)
     {
-        ES5ArrayTypeHandler* newTypeHandler = ConvertToTypeHandler<ES5ArrayTypeHandler>(instance);
+        ES5ArrayTypeHandler *newTypeHandler = ConvertToTypeHandler<ES5ArrayTypeHandler>(instance);
 
 #ifdef PROFILE_TYPES
         instance->GetScriptContext()->convertSimpleToDictionaryCount++;
@@ -271,14 +289,14 @@ namespace Js
         return newTypeHandler;
     }
 
-    template<size_t size>
+    template <size_t size>
     int SimpleTypeHandler<size>::GetPropertyCount()
     {
         return propertyCount;
     }
 
-    template<size_t size>
-    PropertyId SimpleTypeHandler<size>::GetPropertyId(ScriptContext* scriptContext, PropertyIndex index)
+    template <size_t size>
+    PropertyId SimpleTypeHandler<size>::GetPropertyId(ScriptContext *scriptContext, PropertyIndex index)
     {
         if (index < propertyCount && !(descriptors[index].Attributes & PropertyDeleted))
         {
@@ -290,8 +308,8 @@ namespace Js
         }
     }
 
-    template<size_t size>
-    PropertyId SimpleTypeHandler<size>::GetPropertyId(ScriptContext* scriptContext, BigPropertyIndex index)
+    template <size_t size>
+    PropertyId SimpleTypeHandler<size>::GetPropertyId(ScriptContext *scriptContext, BigPropertyIndex index)
     {
         if (index < propertyCount && !(descriptors[index].Attributes & PropertyDeleted))
         {
@@ -303,20 +321,24 @@ namespace Js
         }
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::FindNextProperty(ScriptContext* scriptContext, PropertyIndex& index, JavascriptString** propertyStringName,
-        PropertyId* propertyId, PropertyAttributes* attributes, Type* type, DynamicType *typeToEnumerate, EnumeratorFlags flags, DynamicObject* instance, PropertyValueInfo* info)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::FindNextProperty(ScriptContext *scriptContext, PropertyIndex &index,
+                                                   JavascriptString **propertyStringName, PropertyId *propertyId,
+                                                   PropertyAttributes *attributes, Type *type,
+                                                   DynamicType *typeToEnumerate, EnumeratorFlags flags,
+                                                   DynamicObject *instance, PropertyValueInfo *info)
     {
         Assert(propertyStringName);
         Assert(propertyId);
         Assert(type);
 
-        for( ; index < propertyCount; ++index )
+        for (; index < propertyCount; ++index)
         {
             PropertyAttributes attribs = descriptors[index].Attributes;
-            if( !(attribs & PropertyDeleted) && (!!(flags & EnumeratorFlags::EnumNonEnumerable) || (attribs & PropertyEnumerable)))
+            if (!(attribs & PropertyDeleted) &&
+                (!!(flags & EnumeratorFlags::EnumNonEnumerable) || (attribs & PropertyEnumerable)))
             {
-                const PropertyRecord* propertyRecord = descriptors[index].Id;
+                const PropertyRecord *propertyRecord = descriptors[index].Id;
 
                 // Skip this property if it is a symbol and we are not including symbol properties
                 if (!(flags & EnumeratorFlags::EnumSymbols) && propertyRecord->IsSymbol())
@@ -330,7 +352,7 @@ namespace Js
                 }
 
                 *propertyId = propertyRecord->GetPropertyId();
-                PropertyString * propStr = scriptContext->GetPropertyString(*propertyId);
+                PropertyString *propStr = scriptContext->GetPropertyString(*propertyId);
                 *propertyStringName = propStr;
 
                 PropertyValueInfo::SetCacheInfo(info, propStr, propStr->GetLdElemInlineCache(), false);
@@ -350,11 +372,12 @@ namespace Js
         return FALSE;
     }
 
-    template<size_t size>
-    PropertyIndex SimpleTypeHandler<size>::GetPropertyIndex(PropertyRecord const* propertyRecord)
+    template <size_t size>
+    PropertyIndex SimpleTypeHandler<size>::GetPropertyIndex(PropertyRecord const *propertyRecord)
     {
         PropertyIndex index;
-        if (GetDescriptor(propertyRecord->GetPropertyId(), &index) && !(descriptors[index].Attributes & PropertyDeleted))
+        if (GetDescriptor(propertyRecord->GetPropertyId(), &index) &&
+            !(descriptors[index].Attributes & PropertyDeleted))
         {
             return (PropertyIndex)index;
         }
@@ -362,11 +385,13 @@ namespace Js
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    template<size_t size>
-    bool SimpleTypeHandler<size>::GetPropertyEquivalenceInfo(PropertyRecord const* propertyRecord, PropertyEquivalenceInfo& info)
+    template <size_t size>
+    bool SimpleTypeHandler<size>::GetPropertyEquivalenceInfo(PropertyRecord const *propertyRecord,
+                                                             PropertyEquivalenceInfo &info)
     {
         PropertyIndex index;
-        if (GetDescriptor(propertyRecord->GetPropertyId(), &index) && !(descriptors[index].Attributes & PropertyDeleted))
+        if (GetDescriptor(propertyRecord->GetPropertyId(), &index) &&
+            !(descriptors[index].Attributes & PropertyDeleted))
         {
             info.slotIndex = AdjustSlotIndexForInlineSlots((PropertyIndex)index);
             info.isWritable = !!(descriptors[index].Attributes & PropertyWritable);
@@ -380,13 +405,14 @@ namespace Js
         }
     }
 
-    template<size_t size>
-    bool SimpleTypeHandler<size>::IsObjTypeSpecEquivalent(const Type* type, const TypeEquivalenceRecord& record, uint& failedPropertyIndex)
+    template <size_t size>
+    bool SimpleTypeHandler<size>::IsObjTypeSpecEquivalent(const Type *type, const TypeEquivalenceRecord &record,
+                                                          uint &failedPropertyIndex)
     {
-        Js::EquivalentPropertyEntry* properties = record.properties;
+        Js::EquivalentPropertyEntry *properties = record.properties;
         for (uint pi = 0; pi < record.propertyCount; pi++)
         {
-            const EquivalentPropertyEntry* refInfo = &properties[pi];
+            const EquivalentPropertyEntry *refInfo = &properties[pi];
             if (!this->SimpleTypeHandler<size>::IsObjTypeSpecEquivalent(type, refInfo))
             {
                 failedPropertyIndex = pi;
@@ -397,21 +423,20 @@ namespace Js
         return true;
     }
 
-    template<size_t size>
-    bool SimpleTypeHandler<size>::IsObjTypeSpecEquivalent(const Type* type, const EquivalentPropertyEntry *entry)
+    template <size_t size>
+    bool SimpleTypeHandler<size>::IsObjTypeSpecEquivalent(const Type *type, const EquivalentPropertyEntry *entry)
     {
         if (this->propertyCount > 0)
         {
             for (int i = 0; i < this->propertyCount; i++)
             {
-                SimplePropertyDescriptor* descriptor = &this->descriptors[i];
+                SimplePropertyDescriptor *descriptor = &this->descriptors[i];
                 Js::PropertyId propertyId = descriptor->Id->GetPropertyId();
 
                 if (entry->propertyId == propertyId && !(descriptor->Attributes & PropertyDeleted))
                 {
                     Js::PropertyIndex relSlotIndex = AdjustValidSlotIndexForInlineSlots(static_cast<PropertyIndex>(0));
-                    if (relSlotIndex != entry->slotIndex ||
-                        entry->isAuxSlot != (GetInlineSlotCapacity() == 0) ||
+                    if (relSlotIndex != entry->slotIndex || entry->isAuxSlot != (GetInlineSlotCapacity() == 0) ||
                         (entry->mustBeWritable && !(descriptor->Attributes & PropertyWritable)))
                     {
                         return false;
@@ -438,8 +463,9 @@ namespace Js
     }
 #endif
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::HasProperty(DynamicObject* instance, PropertyId propertyId, __out_opt bool *noRedecl, _Inout_opt_ PropertyValueInfo* info)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::HasProperty(DynamicObject *instance, PropertyId propertyId, __out_opt bool *noRedecl,
+                                              _Inout_opt_ PropertyValueInfo *info)
     {
         if (noRedecl != nullptr)
         {
@@ -469,7 +495,7 @@ namespace Js
 
         // Check numeric propertyId only if objectArray available
         uint32_t indexVal;
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             return SimpleTypeHandler<size>::HasItem(instance, indexVal);
@@ -478,13 +504,15 @@ namespace Js
         return false;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::HasProperty(DynamicObject* instance, JavascriptString* propertyNameString)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::HasProperty(DynamicObject *instance, JavascriptString *propertyNameString)
     {
-        AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
+        AssertMsg(
+            !PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* before calling GetSetter");
 
-        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(),
+                                                       propertyNameString->GetLength());
         for (int i = 0; i < propertyCount; i++)
         {
             if (descriptors[i].Id->Equals(propertyName))
@@ -496,8 +524,9 @@ namespace Js
         return false;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::GetProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::GetProperty(DynamicObject *instance, Var originalInstance, PropertyId propertyId,
+                                              Var *value, PropertyValueInfo *info, ScriptContext *requestContext)
     {
         for (int i = 0; i < propertyCount; i++)
         {
@@ -516,7 +545,7 @@ namespace Js
 
         // Check numeric propertyId only if objectArray available
         uint32_t indexVal;
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             return SimpleTypeHandler<size>::GetItem(instance, originalInstance, indexVal, value, scriptContext);
@@ -526,13 +555,17 @@ namespace Js
         return false;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::GetProperty(DynamicObject* instance, Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::GetProperty(DynamicObject *instance, Var originalInstance,
+                                              JavascriptString *propertyNameString, Var *value, PropertyValueInfo *info,
+                                              ScriptContext *requestContext)
     {
-        AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
+        AssertMsg(
+            !PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* before calling GetSetter");
 
-        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(),
+                                                       propertyNameString->GetLength());
         for (int i = 0; i < propertyCount; i++)
         {
             if (descriptors[i].Id->Equals(propertyName))
@@ -552,10 +585,11 @@ namespace Js
         return false;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::SetProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::SetProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                              PropertyOperationFlags flags, PropertyValueInfo *info)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         PropertyIndex index;
 
         JavascriptLibrary::CheckAndInvalidateIsConcatSpreadableCache(propertyId, scriptContext);
@@ -573,7 +607,9 @@ namespace Js
             {
                 JavascriptError::ThrowCantAssignIfStrictMode(flags, scriptContext);
 
-                PropertyValueInfo::Set(info, instance, static_cast<PropertyIndex>(index), descriptors[index].Attributes); // Try to cache property info even if not writable
+                PropertyValueInfo::Set(
+                    info, instance, static_cast<PropertyIndex>(index),
+                    descriptors[index].Attributes); // Try to cache property info even if not writable
                 return false;
             }
 
@@ -590,22 +626,25 @@ namespace Js
             return SimpleTypeHandler<size>::SetItem(instance, indexVal, value, flags);
         }
 
-        return this->AddProperty(instance, propertyId, value, PropertyDynamicTypeDefaults, info, flags, SideEffects_Any);
+        return this->AddProperty(instance, propertyId, value, PropertyDynamicTypeDefaults, info, flags,
+                                 SideEffects_Any);
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::SetProperty(DynamicObject* instance, JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::SetProperty(DynamicObject *instance, JavascriptString *propertyNameString, Var value,
+                                              PropertyOperationFlags flags, PropertyValueInfo *info)
     {
         // Either the property exists in the dictionary, in which case a PropertyRecord for it exists,
         // or we have to add it to the dictionary, in which case we need to get or create a PropertyRecord.
         // Thus, just get or create one and call the PropertyId overload of SetProperty.
-        PropertyRecord const* propertyRecord;
+        PropertyRecord const *propertyRecord;
         instance->GetScriptContext()->GetOrAddPropertyRecord(propertyNameString, &propertyRecord);
         return SimpleTypeHandler<size>::SetProperty(instance, propertyRecord->GetPropertyId(), value, flags, info);
     }
 
-    template<size_t size>
-    DescriptorFlags SimpleTypeHandler<size>::GetSetter(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
+    template <size_t size>
+    DescriptorFlags SimpleTypeHandler<size>::GetSetter(DynamicObject *instance, PropertyId propertyId, Var *setterValue,
+                                                       PropertyValueInfo *info, ScriptContext *requestContext)
     {
         PropertyIndex index;
         PropertyValueInfo::SetNoCache(info, instance);
@@ -627,13 +666,17 @@ namespace Js
         return None;
     }
 
-    template<size_t size>
-    DescriptorFlags SimpleTypeHandler<size>::GetSetter(DynamicObject* instance, JavascriptString* propertyNameString, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
+    template <size_t size>
+    DescriptorFlags SimpleTypeHandler<size>::GetSetter(DynamicObject *instance, JavascriptString *propertyNameString,
+                                                       Var *setterValue, PropertyValueInfo *info,
+                                                       ScriptContext *requestContext)
     {
-        AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
+        AssertMsg(
+            !PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* before calling GetSetter");
 
-        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(),
+                                                       propertyNameString->GetLength());
         for (int i = 0; i < propertyCount; i++)
         {
             if (descriptors[i].Id->Equals(propertyName))
@@ -649,10 +692,11 @@ namespace Js
         return None;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::DeleteProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags propertyOperationFlags)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::DeleteProperty(DynamicObject *instance, PropertyId propertyId,
+                                                 PropertyOperationFlags propertyOperationFlags)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         PropertyIndex index;
         if (GetDescriptor(propertyId, &index))
         {
@@ -670,8 +714,8 @@ namespace Js
                 return false;
             }
 
-            if ((this->GetFlags() & IsPrototypeFlag)
-                || JavascriptOperators::HasProxyOrPrototypeInlineCacheProperty(instance, propertyId))
+            if ((this->GetFlags() & IsPrototypeFlag) ||
+                JavascriptOperators::HasProxyOrPrototypeInlineCacheProperty(instance, propertyId))
             {
                 // We don't evolve dictionary types when deleting a field, so we need to invalidate prototype caches.
                 // We only have to do this though if the current type is used as a prototype, or the current property
@@ -686,7 +730,8 @@ namespace Js
             {
                 if (GetIsLocked())
                 {
-                    // Prevent conversion to path type and then dictionary. Remove this when path types support deleted properties.
+                    // Prevent conversion to path type and then dictionary. Remove this when path types support deleted
+                    // properties.
                     this->ConvertToNonSharedSimpleType(instance)->SetAttribute(instance, index, PropertyDeleted);
                 }
                 else
@@ -698,8 +743,9 @@ namespace Js
             {
                 SetSlotUnchecked(instance, index, nullptr);
 
-                NullTypeHandlerBase* nullTypeHandler = ((this->GetFlags() & IsPrototypeFlag) != 0) ?
-                    (NullTypeHandlerBase*)NullTypeHandler<true>::GetDefaultInstance() : (NullTypeHandlerBase*)NullTypeHandler<false>::GetDefaultInstance();
+                NullTypeHandlerBase *nullTypeHandler = ((this->GetFlags() & IsPrototypeFlag) != 0)
+                    ? (NullTypeHandlerBase *)NullTypeHandler<true>::GetDefaultInstance()
+                    : (NullTypeHandlerBase *)NullTypeHandler<false>::GetDefaultInstance();
                 if (instance->HasReadOnlyPropertiesInvisibleToTypeHandler())
                 {
                     nullTypeHandler->ClearHasOnlyWritableDataProperties();
@@ -720,8 +766,8 @@ namespace Js
         return true;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::IsEnumerable(DynamicObject* instance, PropertyId propertyId)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::IsEnumerable(DynamicObject *instance, PropertyId propertyId)
     {
         PropertyIndex index;
         if (!GetDescriptor(propertyId, &index))
@@ -731,8 +777,8 @@ namespace Js
         return descriptors[index].Attributes & PropertyEnumerable;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::IsWritable(DynamicObject* instance, PropertyId propertyId)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::IsWritable(DynamicObject *instance, PropertyId propertyId)
     {
         PropertyIndex index;
         if (!GetDescriptor(propertyId, &index))
@@ -742,8 +788,8 @@ namespace Js
         return descriptors[index].Attributes & PropertyWritable;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::IsConfigurable(DynamicObject* instance, PropertyId propertyId)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::IsConfigurable(DynamicObject *instance, PropertyId propertyId)
     {
         PropertyIndex index;
         if (!GetDescriptor(propertyId, &index))
@@ -753,20 +799,20 @@ namespace Js
         return descriptors[index].Attributes & PropertyConfigurable;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::SetEnumerable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::SetEnumerable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
         PropertyIndex index;
         if (!GetDescriptor(propertyId, &index))
         {
             // Upgrade type handler if set objectArray item attribute.
             // Only check numeric propertyId if objectArray available.
-            ScriptContext* scriptContext = instance->GetScriptContext();
+            ScriptContext *scriptContext = instance->GetScriptContext();
             uint32_t indexVal;
             if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
             {
-                return SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(instance)
-                    ->SetEnumerable(instance, propertyId, value);
+                return SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(instance)->SetEnumerable(
+                    instance, propertyId, value);
             }
             return true;
         }
@@ -785,25 +831,25 @@ namespace Js
         return true;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::SetWritable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::SetWritable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
         PropertyIndex index;
         if (!GetDescriptor(propertyId, &index))
         {
             // Upgrade type handler if set objectArray item attribute.
             // Only check numeric propertyId if objectArray available.
-            ScriptContext* scriptContext = instance->GetScriptContext();
+            ScriptContext *scriptContext = instance->GetScriptContext();
             uint32_t indexVal;
             if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
             {
-                return SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(instance)
-                    ->SetWritable(instance, propertyId, value);
+                return SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(instance)->SetWritable(
+                    instance, propertyId, value);
             }
             return true;
         }
 
-        const Type* oldType = instance->GetType();
+        const Type *oldType = instance->GetType();
         if (value)
         {
             if (SetAttribute(instance, index, PropertyWritable))
@@ -819,28 +865,29 @@ namespace Js
 
                 // Clearing the attribute may have changed the type handler, so make sure
                 // we access the current one.
-                DynamicTypeHandler* const typeHandler = GetCurrentTypeHandler(instance);
-                JavascriptLibrary * library = instance->GetLibrary();
-                library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(typeHandler, PropertyNone, propertyId, library->GetScriptContext());
+                DynamicTypeHandler *const typeHandler = GetCurrentTypeHandler(instance);
+                JavascriptLibrary *library = instance->GetLibrary();
+                library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(
+                    typeHandler, PropertyNone, propertyId, library->GetScriptContext());
             }
         }
         return true;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::SetConfigurable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::SetConfigurable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
         PropertyIndex index;
         if (!GetDescriptor(propertyId, &index))
         {
             // Upgrade type handler if set objectArray item attribute.
             // Only check numeric propertyId if objectArray available.
-            ScriptContext* scriptContext = instance->GetScriptContext();
+            ScriptContext *scriptContext = instance->GetScriptContext();
             uint32_t indexVal;
             if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
             {
-                return SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(instance)
-                    ->SetConfigurable(instance, propertyId, value);
+                return SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(instance)->SetConfigurable(
+                    instance, propertyId, value);
             }
             return true;
         }
@@ -856,8 +903,8 @@ namespace Js
         return true;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::GetDescriptor(PropertyId propertyId, PropertyIndex * index)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::GetDescriptor(PropertyId propertyId, PropertyIndex *index)
     {
         for (PropertyIndex i = 0; i < propertyCount; i++)
         {
@@ -873,8 +920,9 @@ namespace Js
     //
     // Set an attribute bit. Return true if change is made.
     //
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::SetAttribute(DynamicObject* instance, PropertyIndex index, PropertyAttributes attribute)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::SetAttribute(DynamicObject *instance, PropertyIndex index,
+                                               PropertyAttributes attribute)
     {
         if (descriptors[index].Attributes & PropertyDeleted)
         {
@@ -894,12 +942,13 @@ namespace Js
         // caches used in snapshot enumeration.
         if (GetIsLocked())
         {
-            DynamicType* oldType = instance->GetDynamicType();
+            DynamicType *oldType = instance->GetDynamicType();
 
             // This changes TypeHandler, but not necessarily Type.
             if (DoConvertToPathType(oldType))
             {
-                this->ConvertToPathType(instance)->SetAttributesAtIndex(instance, descriptors[index].Id->GetPropertyId(), index, attributes);
+                this->ConvertToPathType(instance)->SetAttributesAtIndex(
+                    instance, descriptors[index].Id->GetPropertyId(), index, attributes);
             }
             else
             {
@@ -918,8 +967,9 @@ namespace Js
     //
     // Clear an attribute bit. Return true if change is made.
     //
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::ClearAttribute(DynamicObject* instance, PropertyIndex index, PropertyAttributes attribute)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::ClearAttribute(DynamicObject *instance, PropertyIndex index,
+                                                 PropertyAttributes attribute)
     {
         if (descriptors[index].Attributes & PropertyDeleted)
         {
@@ -939,12 +989,13 @@ namespace Js
         // caches used in snapshot enumeration.
         if (GetIsLocked())
         {
-            DynamicType* oldType = instance->GetDynamicType();
+            DynamicType *oldType = instance->GetDynamicType();
 
             // This changes TypeHandler, but not necessarily Type.
             if (DoConvertToPathType(oldType))
             {
-                this->ConvertToPathType(instance)->SetAttributesAtIndex(instance, descriptors[index].Id->GetPropertyId(), index, attributes);
+                this->ConvertToPathType(instance)->SetAttributesAtIndex(
+                    instance, descriptors[index].Id->GetPropertyId(), index, attributes);
             }
             else
             {
@@ -960,8 +1011,9 @@ namespace Js
         return true;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::SetAccessors(DynamicObject* instance, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::SetAccessors(DynamicObject *instance, PropertyId propertyId, Var getter, Var setter,
+                                               PropertyOperationFlags flags)
     {
         if (DoConvertToPathType(instance->GetDynamicType()))
         {
@@ -974,39 +1026,43 @@ namespace Js
         }
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::PreventExtensions(DynamicObject* instance)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::PreventExtensions(DynamicObject *instance)
     {
         return ConvertToDictionaryType(instance)->PreventExtensions(instance);
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::Seal(DynamicObject* instance)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::Seal(DynamicObject *instance)
     {
         return ConvertToDictionaryType(instance)->Seal(instance);
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::FreezeImpl(DynamicObject* instance, bool isConvertedType)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::FreezeImpl(DynamicObject *instance, bool isConvertedType)
     {
         return ConvertToDictionaryType(instance)->Freeze(instance, true);
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::SetPropertyWithAttributes(DynamicObject* instance, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::SetPropertyWithAttributes(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                            PropertyAttributes attributes, PropertyValueInfo *info,
+                                                            PropertyOperationFlags flags,
+                                                            SideEffects possibleSideEffects)
     {
         PropertyIndex index;
         if (GetDescriptor(propertyId, &index))
         {
             if (descriptors[index].Attributes != attributes)
             {
-                SimpleTypeHandler * typeHandler = this;
+                SimpleTypeHandler *typeHandler = this;
                 if (GetIsLocked())
                 {
-                    DynamicType* oldType = instance->GetDynamicType();
+                    DynamicType *oldType = instance->GetDynamicType();
                     if (DoConvertToPathType(oldType))
                     {
-                        return this->ConvertToPathType(instance)->SetPropertyWithAttributes(instance, propertyId, value, attributes, info, flags, possibleSideEffects);
+                        return this->ConvertToPathType(instance)->SetPropertyWithAttributes(
+                            instance, propertyId, value, attributes, info, flags, possibleSideEffects);
                     }
                     else
                     {
@@ -1024,8 +1080,9 @@ namespace Js
                 {
                     instance->SetHasNoEnumerableProperties(false);
                 }
-                JavascriptLibrary * library = instance->GetLibrary();
-                library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(typeHandler, attributes, propertyId, library->GetScriptContext());
+                JavascriptLibrary *library = instance->GetLibrary();
+                library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(
+                    typeHandler, attributes, propertyId, library->GetScriptContext());
             }
             SetSlotUnchecked(instance, index, value);
             PropertyValueInfo::Set(info, instance, static_cast<PropertyIndex>(index), descriptors[index].Attributes);
@@ -1034,7 +1091,7 @@ namespace Js
         }
 
         // Always check numeric propertyId. May create objectArray.
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         uint32_t indexVal;
         if (scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
@@ -1044,8 +1101,9 @@ namespace Js
         return this->AddProperty(instance, propertyId, value, attributes, info, flags, possibleSideEffects);
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::SetAttributes(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attributes)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::SetAttributes(DynamicObject *instance, PropertyId propertyId,
+                                                PropertyAttributes attributes)
     {
         for (int i = 0; i < propertyCount; i++)
         {
@@ -1056,19 +1114,21 @@ namespace Js
                     return true;
                 }
 
-                descriptors[i].Attributes = (descriptors[i].Attributes & ~PropertyDynamicTypeDefaults) | (attributes & PropertyDynamicTypeDefaults);
+                descriptors[i].Attributes = (descriptors[i].Attributes & ~PropertyDynamicTypeDefaults) |
+                    (attributes & PropertyDynamicTypeDefaults);
                 if (descriptors[i].Attributes & PropertyEnumerable)
                 {
                     instance->SetHasNoEnumerableProperties(false);
                 }
-                JavascriptLibrary * library = instance->GetLibrary();
-                library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, descriptors[i].Attributes, propertyId, library->GetScriptContext());
+                JavascriptLibrary *library = instance->GetLibrary();
+                library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(
+                    this, descriptors[i].Attributes, propertyId, library->GetScriptContext());
                 return true;
             }
         }
 
         // Check numeric propertyId only if objectArray available
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         uint32_t indexVal;
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
@@ -1078,10 +1138,14 @@ namespace Js
         return true;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::GetAttributesWithPropertyIndex(DynamicObject * instance, PropertyId propertyId, BigPropertyIndex index, PropertyAttributes * attributes)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::GetAttributesWithPropertyIndex(DynamicObject *instance, PropertyId propertyId,
+                                                                 BigPropertyIndex index, PropertyAttributes *attributes)
     {
-        if (index >= propertyCount) { return false; }
+        if (index >= propertyCount)
+        {
+            return false;
+        }
         Assert(descriptors[index].Id->GetPropertyId() == propertyId);
         if (descriptors[index].Attributes & PropertyDeleted)
         {
@@ -1091,11 +1155,13 @@ namespace Js
         return true;
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::AddProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::AddProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                              PropertyAttributes attributes, PropertyValueInfo *info,
+                                              PropertyOperationFlags flags, SideEffects possibleSideEffects)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        JavascriptLibrary* library = scriptContext->GetLibrary();
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        JavascriptLibrary *library = scriptContext->GetLibrary();
 #if DBG
         PropertyIndex index;
         uint32_t indexVal;
@@ -1103,17 +1169,19 @@ namespace Js
         Assert(!scriptContext->IsNumericPropertyId(propertyId, &indexVal));
 #endif
 
-        if (propertyCount >= sizeof(descriptors)/sizeof(SimplePropertyDescriptor))
+        if (propertyCount >= sizeof(descriptors) / sizeof(SimplePropertyDescriptor))
         {
             Assert(propertyId != Constants::NoProperty);
             if (DoConvertToPathType(instance->GetDynamicType()))
             {
-                return ConvertToPathType(instance)->SetPropertyWithAttributes(instance, propertyId, value, attributes, info, flags);
+                return ConvertToPathType(instance)->SetPropertyWithAttributes(instance, propertyId, value, attributes,
+                                                                              info, flags);
             }
             else
             {
-                PropertyRecord const* propertyRecord = scriptContext->GetPropertyName(propertyId);
-                return ConvertToSimpleDictionaryType(instance)->AddProperty(instance, propertyRecord, value, attributes, info, flags, possibleSideEffects);
+                PropertyRecord const *propertyRecord = scriptContext->GetPropertyName(propertyId);
+                return ConvertToSimpleDictionaryType(instance)->AddProperty(instance, propertyRecord, value, attributes,
+                                                                            info, flags, possibleSideEffects);
             }
         }
 
@@ -1124,15 +1192,17 @@ namespace Js
             instance->SetHasNoEnumerableProperties(false);
         }
 
-        library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, attributes, propertyId, scriptContext);
-        library->GetTypesWithNoSpecialPropertyProtoChainCache()->ProcessProperty(this, attributes, propertyId, scriptContext);
+        library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, attributes, propertyId,
+                                                                                    scriptContext);
+        library->GetTypesWithNoSpecialPropertyProtoChainCache()->ProcessProperty(this, attributes, propertyId,
+                                                                                 scriptContext);
 
         SetSlotUnchecked(instance, propertyCount, value);
         PropertyValueInfo::Set(info, instance, static_cast<PropertyIndex>(propertyCount), attributes);
         propertyCount++;
 
-        if ((this->GetFlags() && IsPrototypeFlag)
-            || JavascriptOperators::HasProxyOrPrototypeInlineCacheProperty(instance, propertyId))
+        if ((this->GetFlags() && IsPrototypeFlag) ||
+            JavascriptOperators::HasProxyOrPrototypeInlineCacheProperty(instance, propertyId))
         {
             scriptContext->InvalidateProtoCaches(propertyId);
         }
@@ -1140,46 +1210,51 @@ namespace Js
         return true;
     }
 
-    template<size_t size>
-    void SimpleTypeHandler<size>::SetAllPropertiesToUndefined(DynamicObject* instance, bool invalidateFixedFields)
+    template <size_t size>
+    void SimpleTypeHandler<size>::SetAllPropertiesToUndefined(DynamicObject *instance, bool invalidateFixedFields)
     {
         // Note: This method is currently only called from ResetObject, which in turn only applies to external objects.
-        // Before using for other purposes, make sure the assumptions made here make sense in the new context.  In particular,
-        // the invalidateFixedFields == false is only correct if a) the object is known not to have any, or b) the type of the
-        // object has changed and/or property guards have already been invalidated through some other means.
+        // Before using for other purposes, make sure the assumptions made here make sense in the new context.  In
+        // particular, the invalidateFixedFields == false is only correct if a) the object is known not to have any, or
+        // b) the type of the object has changed and/or property guards have already been invalidated through some other
+        // means.
 
         // We can ignore invalidateFixedFields, because SimpleTypeHandler doesn't support fixed fields at this point.
-        Js::RecyclableObject* undefined = instance->GetLibrary()->GetUndefined();
+        Js::RecyclableObject *undefined = instance->GetLibrary()->GetUndefined();
         for (int propertyIndex = 0; propertyIndex < this->propertyCount; propertyIndex++)
         {
             SetSlotUnchecked(instance, propertyIndex, undefined);
         }
     }
 
-    template<size_t size>
-    void SimpleTypeHandler<size>::MarshalAllPropertiesToScriptContext(DynamicObject* instance, ScriptContext* targetScriptContext, bool invalidateFixedFields)
+    template <size_t size>
+    void SimpleTypeHandler<size>::MarshalAllPropertiesToScriptContext(DynamicObject *instance,
+                                                                      ScriptContext *targetScriptContext,
+                                                                      bool invalidateFixedFields)
     {
         // Note: This method is currently only called from ResetObject, which in turn only applies to external objects.
-        // Before using for other purposes, make sure the assumptions made here make sense in the new context.  In particular,
-        // the invalidateFixedFields == false is only correct if a) the object is known not to have any, or b) the type of the
-        // object has changed and/or property guards have already been invalidated through some other means.
+        // Before using for other purposes, make sure the assumptions made here make sense in the new context.  In
+        // particular, the invalidateFixedFields == false is only correct if a) the object is known not to have any, or
+        // b) the type of the object has changed and/or property guards have already been invalidated through some other
+        // means.
 
         // We can ignore invalidateFixedFields, because SimpleTypeHandler doesn't support fixed fields at this point.
         for (int propertyIndex = 0; propertyIndex < this->propertyCount; propertyIndex++)
         {
-            SetSlotUnchecked(instance, propertyIndex, CrossSite::MarshalVar(targetScriptContext, GetSlot(instance, propertyIndex)));
+            SetSlotUnchecked(instance, propertyIndex,
+                             CrossSite::MarshalVar(targetScriptContext, GetSlot(instance, propertyIndex)));
         }
     }
 
-    template<size_t size>
-    DynamicTypeHandler* SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(DynamicObject* instance)
+    template <size_t size>
+    DynamicTypeHandler *SimpleTypeHandler<size>::ConvertToTypeWithItemAttributes(DynamicObject *instance)
     {
-        return JavascriptArray::IsNonES5Array(instance) ?
-            ConvertToES5ArrayType(instance) : ConvertToDictionaryType(instance);
+        return JavascriptArray::IsNonES5Array(instance) ? ConvertToES5ArrayType(instance)
+                                                        : ConvertToDictionaryType(instance);
     }
 
-    template<size_t size>
-    void SimpleTypeHandler<size>::SetIsPrototype(DynamicObject* instance)
+    template <size_t size>
+    void SimpleTypeHandler<size>::SetIsPrototype(DynamicObject *instance)
     {
         // Don't return if IsPrototypeFlag is set, because we may still need to do a type transition and
         // set fixed bits.  If this handler is shared, this instance may not even be a prototype yet.
@@ -1192,15 +1267,17 @@ namespace Js
         ConvertToSimpleDictionaryType(instance)->SetIsPrototype(instance);
     }
 
-    template<size_t size>
-    BOOL SimpleTypeHandler<size>::SetInternalProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags)
+    template <size_t size>
+    BOOL SimpleTypeHandler<size>::SetInternalProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                      PropertyOperationFlags flags)
     {
         return SetPropertyWithAttributes(instance, propertyId, value, PropertyInternalDefaults, nullptr, flags);
     }
 
 #if DBG
-    template<size_t size>
-    bool SimpleTypeHandler<size>::CanStorePropertyValueDirectly(const DynamicObject* instance, PropertyId propertyId, bool allowLetConst)
+    template <size_t size>
+    bool SimpleTypeHandler<size>::CanStorePropertyValueDirectly(const DynamicObject *instance, PropertyId propertyId,
+                                                                bool allowLetConst)
     {
         Assert(!allowLetConst);
         PropertyIndex index;
@@ -1217,7 +1294,7 @@ namespace Js
 #endif
 
 #if DBG_DUMP
-    template<size_t size>
+    template <size_t size>
     void SimpleTypeHandler<size>::Dump(unsigned indent) const
     {
         Output::Print(u"%*sSimpleTypeHandler<%u> (0x%p): Dump unimplemented\n", indent, u"", size, this);
@@ -1229,4 +1306,4 @@ namespace Js
     template class SimpleTypeHandler<3>;
     template class SimpleTypeHandler<6>;
 
-}
+} // namespace Js

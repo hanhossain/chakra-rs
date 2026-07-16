@@ -2,14 +2,14 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "RuntimeTypePch.h"
 #include "Library/JavascriptSymbolObject.h"
+#include "RuntimeTypePch.h"
 
 DEFINE_VALIDATE_HAS_VTABLE_CTOR(Js::RecyclableObject);
 
 namespace Js
 {
-    void PropertyValueInfo::SetCacheInfo(PropertyValueInfo* info, InlineCache *const inlineCache)
+    void PropertyValueInfo::SetCacheInfo(PropertyValueInfo *info, InlineCache *const inlineCache)
     {
         Assert(info);
         Assert(inlineCache);
@@ -21,20 +21,18 @@ namespace Js
         info->allowResizingPolymorphicInlineCache = false;
     }
 
-    void PropertyValueInfo::SetCacheInfo(
-        _Out_ PropertyValueInfo* info,
-        _In_opt_ RecyclableObject * prop,
-        _In_opt_ PropertyRecordUsageCache *const propertyRecordUsageCache,
-        _In_ PolymorphicInlineCache *const polymorphicInlineCache,
-        bool allowResizing)
+    void PropertyValueInfo::SetCacheInfo(_Out_ PropertyValueInfo *info, _In_opt_ RecyclableObject *prop,
+                                         _In_opt_ PropertyRecordUsageCache *const propertyRecordUsageCache,
+                                         _In_ PolymorphicInlineCache *const polymorphicInlineCache, bool allowResizing)
     {
         Assert(info);
 
         // Make sure the given prop and usage cache match
-        Assert(
-            prop == nullptr && propertyRecordUsageCache == nullptr ||
-            VarIs<JavascriptSymbol>(prop) && UnsafeVarTo<JavascriptSymbol>(prop)->GetPropertyRecordUsageCache() == propertyRecordUsageCache ||
-            VarIs<PropertyString>(prop) && UnsafeVarTo<PropertyString>(prop)->GetPropertyRecordUsageCache() == propertyRecordUsageCache);
+        Assert(prop == nullptr && propertyRecordUsageCache == nullptr ||
+               VarIs<JavascriptSymbol>(prop) &&
+                   UnsafeVarTo<JavascriptSymbol>(prop)->GetPropertyRecordUsageCache() == propertyRecordUsageCache ||
+               VarIs<PropertyString>(prop) &&
+                   UnsafeVarTo<PropertyString>(prop)->GetPropertyRecordUsageCache() == propertyRecordUsageCache);
 
         info->prop = prop;
         info->propertyRecordUsageCache = propertyRecordUsageCache;
@@ -45,7 +43,8 @@ namespace Js
         }
     }
 
-    void PropertyValueInfo::SetCacheInfo(_Out_ PropertyValueInfo* info, _In_ PolymorphicInlineCache *const polymorphicInlineCache, bool allowResizing)
+    void PropertyValueInfo::SetCacheInfo(_Out_ PropertyValueInfo *info,
+                                         _In_ PolymorphicInlineCache *const polymorphicInlineCache, bool allowResizing)
     {
         Assert(info);
         Assert(polymorphicInlineCache);
@@ -57,12 +56,9 @@ namespace Js
         info->allowResizingPolymorphicInlineCache = allowResizing;
     }
 
-    void PropertyValueInfo::SetCacheInfo(
-        PropertyValueInfo* info,
-        FunctionBody *const functionBody,
-        InlineCache *const inlineCache,
-        const InlineCacheIndex inlineCacheIndex,
-        const bool allowResizingPolymorphicInlineCache)
+    void PropertyValueInfo::SetCacheInfo(PropertyValueInfo *info, FunctionBody *const functionBody,
+                                         InlineCache *const inlineCache, const InlineCacheIndex inlineCacheIndex,
+                                         const bool allowResizingPolymorphicInlineCache)
     {
         Assert(info);
         Assert(functionBody);
@@ -76,12 +72,10 @@ namespace Js
         info->allowResizingPolymorphicInlineCache = allowResizingPolymorphicInlineCache;
     }
 
-    void PropertyValueInfo::SetCacheInfo(
-        PropertyValueInfo* info,
-        FunctionBody *const functionBody,
-        PolymorphicInlineCache *const polymorphicInlineCache,
-        const InlineCacheIndex inlineCacheIndex,
-        const bool allowResizingPolymorphicInlineCache)
+    void PropertyValueInfo::SetCacheInfo(PropertyValueInfo *info, FunctionBody *const functionBody,
+                                         PolymorphicInlineCache *const polymorphicInlineCache,
+                                         const InlineCacheIndex inlineCacheIndex,
+                                         const bool allowResizingPolymorphicInlineCache)
     {
         Assert(info);
         Assert(functionBody);
@@ -95,7 +89,7 @@ namespace Js
         info->allowResizingPolymorphicInlineCache = allowResizingPolymorphicInlineCache;
     }
 
-    void PropertyValueInfo::ClearCacheInfo(PropertyValueInfo* info)
+    void PropertyValueInfo::ClearCacheInfo(PropertyValueInfo *info)
     {
         if (info != NULL)
         {
@@ -112,7 +106,7 @@ namespace Js
 #if DBG || defined(PROFILE_TYPES)
     // Used only by the GlobalObject, because it's typeHandler can't be fully initialized
     // with the globalobject which is currently being created.
-    RecyclableObject::RecyclableObject(DynamicType * type, ScriptContext * scriptContext) : type(type)
+    RecyclableObject::RecyclableObject(DynamicType *type, ScriptContext *scriptContext) : type(type)
     {
 #if DBG_EXTRAFIELD
         dtorCalled = false;
@@ -124,11 +118,11 @@ namespace Js
         RecordAllocation(scriptContext);
     }
 
-    void RecyclableObject::RecordAllocation(ScriptContext * scriptContext)
+    void RecyclableObject::RecordAllocation(ScriptContext *scriptContext)
     {
 #ifdef PROFILE_TYPES
         TypeId typeId = this->GetType()->GetTypeId();
-        if (typeId < sizeof(scriptContext->instanceCount)/sizeof(int))
+        if (typeId < sizeof(scriptContext->instanceCount) / sizeof(int))
         {
             scriptContext->instanceCount[typeId]++;
         }
@@ -136,7 +130,7 @@ namespace Js
     }
 #endif
 
-    RecyclableObject::RecyclableObject(Type * type) : type(type)
+    RecyclableObject::RecyclableObject(Type *type) : type(type)
     {
 #if DBG_EXTRAFIELD
         dtorCalled = false;
@@ -154,38 +148,32 @@ namespace Js
 #endif
     }
 
-    RecyclableObject* RecyclableObject::GetPrototype() const
+    RecyclableObject *RecyclableObject::GetPrototype() const
     {
-        Type* type = GetType();
+        Type *type = GetType();
         if (!type->HasSpecialPrototype())
         {
             return type->GetPrototype();
         }
-        return const_cast<RecyclableObject*>(this)->GetPrototypeSpecial();
+        return const_cast<RecyclableObject *>(this)->GetPrototypeSpecial();
     }
 
-    RecyclableObject* RecyclableObject::GetPrototypeSpecial()
+    RecyclableObject *RecyclableObject::GetPrototypeSpecial()
     {
         AssertMsg(GetType()->GetTypeId() == TypeIds_Null, "Do not use this function.");
         return nullptr;
     }
 
-    JavascriptMethod RecyclableObject::GetEntryPoint() const
-    {
-        return this->GetType()->GetEntryPoint();
-    }
+    JavascriptMethod RecyclableObject::GetEntryPoint() const { return this->GetType()->GetEntryPoint(); }
 
-    Recycler* RecyclableObject::GetRecycler() const
-    {
-        return this->GetLibrary()->GetRecycler();
-    }
+    Recycler *RecyclableObject::GetRecycler() const { return this->GetLibrary()->GetRecycler(); }
 
     void RecyclableObject::SetIsPrototype()
     {
         if (DynamicType::Is(this->GetTypeId()))
         {
-            DynamicObject* dynamicThis = UnsafeVarTo<DynamicObject>(this);
-            dynamicThis->SetIsPrototype();      // Call the DynamicObject::SetIsPrototype
+            DynamicObject *dynamicThis = UnsafeVarTo<DynamicObject>(this);
+            dynamicThis->SetIsPrototype(); // Call the DynamicObject::SetIsPrototype
         }
     }
 
@@ -193,11 +181,11 @@ namespace Js
     {
         if (DynamicType::Is(this->GetTypeId()))
         {
-            DynamicObject* obj = UnsafeVarTo<DynamicObject>(this);
+            DynamicObject *obj = UnsafeVarTo<DynamicObject>(this);
             return obj->GetTypeHandler()->GetHasOnlyWritableDataProperties() &&
-                (!obj->HasObjectArray() || obj->GetObjectArrayOrFlagsAsArray()->HasOnlyWritableDataProperties())
-                && (!VarIs<CustomExternalWrapperObject>(obj) || UnsafeVarTo<CustomExternalWrapperObject>(obj)->IsInitialized())
-                ;
+                (!obj->HasObjectArray() || obj->GetObjectArrayOrFlagsAsArray()->HasOnlyWritableDataProperties()) &&
+                (!VarIs<CustomExternalWrapperObject>(obj) ||
+                 UnsafeVarTo<CustomExternalWrapperObject>(obj)->IsInitialized());
         }
 
         return true;
@@ -207,11 +195,11 @@ namespace Js
     {
         if (DynamicType::Is(this->GetTypeId()))
         {
-            DynamicObject* obj = UnsafeVarTo<DynamicObject>(this);
+            DynamicObject *obj = UnsafeVarTo<DynamicObject>(this);
             return obj->GetTypeHandler()->GetHasSpecialProperties() ||
-                (obj->HasObjectArray() && obj->GetObjectArrayOrFlagsAsArray()->HasAnySpecialProperties())
-                || (VarIs<CustomExternalWrapperObject>(obj) && !UnsafeVarTo<CustomExternalWrapperObject>(obj)->IsInitialized())
-                ;
+                (obj->HasObjectArray() && obj->GetObjectArrayOrFlagsAsArray()->HasAnySpecialProperties()) ||
+                (VarIs<CustomExternalWrapperObject>(obj) &&
+                 !UnsafeVarTo<CustomExternalWrapperObject>(obj)->IsInitialized());
         }
 
         return true;
@@ -221,7 +209,7 @@ namespace Js
     {
         if (DynamicType::Is(this->GetTypeId()))
         {
-            DynamicObject* obj = UnsafeVarTo<DynamicObject>(this);
+            DynamicObject *obj = UnsafeVarTo<DynamicObject>(this);
             obj->GetTypeHandler()->ClearWritableDataOnlyDetectionBit();
             if (obj->HasObjectArray())
             {
@@ -234,7 +222,7 @@ namespace Js
     {
         if (DynamicType::Is(this->GetTypeId()))
         {
-            DynamicObject* obj = UnsafeVarTo<DynamicObject>(this);
+            DynamicObject *obj = UnsafeVarTo<DynamicObject>(this);
             return obj->GetTypeHandler()->IsWritableDataOnlyDetectionBitSet() ||
                 (obj->HasObjectArray() && obj->GetObjectArrayOrFlagsAsArray()->IsWritableDataOnlyDetectionBitSet());
         }
@@ -242,7 +230,7 @@ namespace Js
         return false;
     }
 
-    RecyclableObject* RecyclableObject::GetProxiedObjectForHeapEnum()
+    RecyclableObject *RecyclableObject::GetProxiedObjectForHeapEnum()
     {
         Assert(this->GetScriptContext()->IsHeapEnumInProgress());
         return NULL;
@@ -254,7 +242,7 @@ namespace Js
         return this->GetType()->SkipsPrototype();
     }
 
-    RecyclableObject * RecyclableObject::CloneToScriptContext(ScriptContext* requestContext)
+    RecyclableObject *RecyclableObject::CloneToScriptContext(ScriptContext *requestContext)
     {
         switch (JavascriptOperators::GetTypeId(this))
         {
@@ -271,7 +259,7 @@ namespace Js
     }
 
 #if defined(PROFILE_RECYCLER_ALLOC) && defined(RECYCLER_DUMP_OBJECT_GRAPH)
-    bool RecyclableObject::DumpObjectFunction(type_info const * typeinfo, bool isArray, void * objectAddress)
+    bool RecyclableObject::DumpObjectFunction(type_info const *typeinfo, bool isArray, void *objectAddress)
     {
         if (isArray)
         {
@@ -284,11 +272,13 @@ namespace Js
     }
 #endif
 
-    BOOL RecyclableObject::SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
+    BOOL RecyclableObject::SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes,
+                                                     PropertyValueInfo *info, PropertyOperationFlags flags,
+                                                     SideEffects possibleSideEffects)
     {
-        // TODO: It appears as though this is never called. Some types (such as JavascriptNumber) don't override this, but they
-        // also don't expect properties to be set on them. Need to review this and see if we can make this pure virtual or
-        // Assert(false) here. In any case, this should be SetProperty, not InitProperty.
+        // TODO: It appears as though this is never called. Some types (such as JavascriptNumber) don't override this,
+        // but they also don't expect properties to be set on them. Need to review this and see if we can make this pure
+        // virtual or Assert(false) here. In any case, this should be SetProperty, not InitProperty.
         Assert(false);
 
         bool isForce = (flags & PropertyOperation_Force) != 0;
@@ -299,12 +289,10 @@ namespace Js
             Assert(!throwIfNotExtensible);
         }
 
-        return
-            this->InitProperty(propertyId, value, flags) &&
-            this->SetAttributes(propertyId, attributes);
+        return this->InitProperty(propertyId, value, flags) && this->SetAttributes(propertyId, attributes);
     }
 
-    void RecyclableObject::ThrowIfCannotDefineProperty(PropertyId propId, const PropertyDescriptor& descriptor)
+    void RecyclableObject::ThrowIfCannotDefineProperty(PropertyId propId, const PropertyDescriptor &descriptor)
     {
         // Do nothing
     }
@@ -315,7 +303,7 @@ namespace Js
         return E_NOINTERFACE;
     }
 
-    RecyclableObject* RecyclableObject::GetUnwrappedObject()
+    RecyclableObject *RecyclableObject::GetUnwrappedObject()
     {
         if (VarIs<UnscopablesWrapperObject>(this))
         {
@@ -324,108 +312,98 @@ namespace Js
         return this;
     }
 
-    RecyclableObject* RecyclableObject::GetThisAndUnwrappedInstance(Var* thisVar) const
+    RecyclableObject *RecyclableObject::GetThisAndUnwrappedInstance(Var *thisVar) const
     {
-         *thisVar = this->GetLibrary()->GetUndefined();
-        return (RecyclableObject*)this;
+        *thisVar = this->GetLibrary()->GetUndefined();
+        return (RecyclableObject *)this;
     }
 
     // In order to avoid a branch, every object has an entry point if it gets called like a
     // function - however, if it can't be called like a function, it's set to DefaultEntryPoint
     // which will emit an error.
-    Var RecyclableObject::DefaultEntryPoint(RecyclableObject* function, CallInfo callInfo, ...)
+    Var RecyclableObject::DefaultEntryPoint(RecyclableObject *function, CallInfo callInfo, ...)
     {
         ARGUMENTS(args, callInfo);
         TypeId typeId = function->GetTypeId();
         rtErrors err = typeId == TypeIds_Undefined || typeId == TypeIds_Null ? JSERR_NeedObject : JSERR_NeedFunction;
         JavascriptError::ThrowTypeError(function->GetScriptContext(), err
-            /* TODO-ERROR: args.Info.Count > 0? args[0] : nullptr); */);
+                                        /* TODO-ERROR: args.Info.Count > 0? args[0] : nullptr); */);
     }
 
-    PropertyQueryFlags RecyclableObject::HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info)
+    PropertyQueryFlags RecyclableObject::HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo *info)
     {
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    BOOL RecyclableObject::HasOwnProperty(PropertyId propertyId)
-    {
-        return false;
-    }
+    BOOL RecyclableObject::HasOwnProperty(PropertyId propertyId) { return false; }
 
-    BOOL RecyclableObject::HasOwnPropertyNoHostObject(PropertyId propertyId)
-    {
-        return HasOwnProperty(propertyId);
-    }
+    BOOL RecyclableObject::HasOwnPropertyNoHostObject(PropertyId propertyId) { return HasOwnProperty(propertyId); }
 
-    PropertyQueryFlags RecyclableObject::GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    PropertyQueryFlags RecyclableObject::GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var *value,
+                                                          PropertyValueInfo *info, ScriptContext *requestContext)
     {
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    PropertyQueryFlags RecyclableObject::GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    PropertyQueryFlags RecyclableObject::GetPropertyQuery(Var originalInstance, JavascriptString *propertyNameString,
+                                                          Var *value, PropertyValueInfo *info,
+                                                          ScriptContext *requestContext)
     {
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    BOOL RecyclableObject::GetInternalProperty(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    BOOL RecyclableObject::GetInternalProperty(Var originalInstance, PropertyId propertyId, Var *value,
+                                               PropertyValueInfo *info, ScriptContext *requestContext)
     {
         return false;
     }
 
-    PropertyQueryFlags RecyclableObject::GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    PropertyQueryFlags RecyclableObject::GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId,
+                                                                   Var *value, PropertyValueInfo *info,
+                                                                   ScriptContext *requestContext)
     {
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    BOOL RecyclableObject::SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL RecyclableObject::SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags,
+                                       PropertyValueInfo *info)
     {
         return false;
     }
 
-    BOOL RecyclableObject::SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL RecyclableObject::SetProperty(JavascriptString *propertyNameString, Var value, PropertyOperationFlags flags,
+                                       PropertyValueInfo *info)
     {
         return false;
     }
 
-    BOOL RecyclableObject::SetInternalProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL RecyclableObject::SetInternalProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags,
+                                               PropertyValueInfo *info)
     {
         return false;
     }
 
-    BOOL RecyclableObject::InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL RecyclableObject::InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags,
+                                        PropertyValueInfo *info)
     {
         return false;
     }
 
-    BOOL RecyclableObject::InitPropertyInEval(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL RecyclableObject::InitPropertyInEval(PropertyId propertyId, Var value, PropertyOperationFlags flags,
+                                              PropertyValueInfo *info)
     {
         return false;
     }
 
-    BOOL RecyclableObject::InitPropertyScoped(PropertyId propertyId, Var value)
-    {
-        return false;
-    }
+    BOOL RecyclableObject::InitPropertyScoped(PropertyId propertyId, Var value) { return false; }
 
-    BOOL RecyclableObject::InitFuncScoped(PropertyId propertyId, Var value)
-    {
-        return false;
-    }
+    BOOL RecyclableObject::InitFuncScoped(PropertyId propertyId, Var value) { return false; }
 
-    BOOL RecyclableObject::EnsureProperty(PropertyId propertyId)
-    {
-        return false;
-    }
+    BOOL RecyclableObject::EnsureProperty(PropertyId propertyId) { return false; }
 
-    BOOL RecyclableObject::EnsureNoRedeclProperty(PropertyId propertyId)
-    {
-        return false;
-    }
+    BOOL RecyclableObject::EnsureNoRedeclProperty(PropertyId propertyId) { return false; }
 
-    BOOL RecyclableObject::DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags)
-    {
-        return true;
-    }
+    BOOL RecyclableObject::DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) { return true; }
 
     BOOL RecyclableObject::DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags)
     {
@@ -433,48 +411,36 @@ namespace Js
     }
 
 #if ENABLE_FIXED_FIELDS
-    BOOL RecyclableObject::IsFixedProperty(PropertyId propertyId)
-    {
-        return false;
-    }
+    BOOL RecyclableObject::IsFixedProperty(PropertyId propertyId) { return false; }
 #endif
 
-    PropertyQueryFlags RecyclableObject::HasItemQuery(uint32_t index)
+    PropertyQueryFlags RecyclableObject::HasItemQuery(uint32_t index) { return PropertyQueryFlags::Property_NotFound; }
+
+    BOOL RecyclableObject::HasOwnItem(uint32_t index) { return false; }
+
+    PropertyQueryFlags RecyclableObject::GetItemQuery(Var originalInstance, uint32_t index, Var *value,
+                                                      ScriptContext *requestContext)
     {
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    BOOL RecyclableObject::HasOwnItem(uint32_t index)
-    {
-        return false;
-    }
-
-    PropertyQueryFlags RecyclableObject::GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
+    PropertyQueryFlags RecyclableObject::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var *value,
+                                                               ScriptContext *requestContext)
     {
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    PropertyQueryFlags RecyclableObject::GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
-    {
-        return PropertyQueryFlags::Property_NotFound;
-    }
+    BOOL RecyclableObject::SetItem(uint32_t index, Var value, PropertyOperationFlags flags) { return false; }
 
-    BOOL RecyclableObject::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)
-    {
-        return false;
-    }
+    BOOL RecyclableObject::DeleteItem(uint32_t index, PropertyOperationFlags flags) { return true; }
 
-    BOOL RecyclableObject::DeleteItem(uint32_t index, PropertyOperationFlags flags)
-    {
-        return true;
-    }
-
-    BOOL RecyclableObject::GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache)
+    BOOL RecyclableObject::GetEnumerator(JavascriptStaticEnumerator *enumerator, EnumeratorFlags flags,
+                                         ScriptContext *requestContext, EnumeratorCache *enumeratorCache)
     {
         return false;
     }
 
-    BOOL RecyclableObject::ToPrimitive(JavascriptHint hint, Var* value, ScriptContext * scriptContext)
+    BOOL RecyclableObject::ToPrimitive(JavascriptHint hint, Var *value, ScriptContext *scriptContext)
     {
         *value = NULL;
         return false;
@@ -485,20 +451,23 @@ namespace Js
         return false;
     }
 
-    _Check_return_ _Success_(return) BOOL RecyclableObject::GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext * requestContext)
+    _Check_return_ _Success_(return) BOOL RecyclableObject::GetAccessors(PropertyId propertyId,
+                                                                         _Outptr_result_maybenull_ Var *getter,
+                                                                         _Outptr_result_maybenull_ Var *setter,
+                                                                         ScriptContext *requestContext)
     {
         return false;
     }
 
-    BOOL RecyclableObject::StrictEquals(Var aRight, BOOL* value, ScriptContext * requestContext)
+    BOOL RecyclableObject::StrictEquals(Var aRight, BOOL *value, ScriptContext *requestContext)
     {
         *value = false;
-        //StrictEquals is handled in JavascriptOperators::StrictEqual
+        // StrictEquals is handled in JavascriptOperators::StrictEqual
         Throw::InternalError();
     }
 
-#pragma fenv_access (on)
-    BOOL RecyclableObject::Equals(Var aRight, BOOL* value, ScriptContext * requestContext)
+#pragma fenv_access(on)
+    BOOL RecyclableObject::Equals(Var aRight, BOOL *value, ScriptContext *requestContext)
     {
         Var aLeft = this;
         if (aLeft == aRight)
@@ -544,26 +513,29 @@ namespace Js
             case TypeIds_Symbol:
                 goto ReturnFalse;
             case TypeIds_Integer:
-                // We already did a check to see if aLeft == aRight above, but we need to check again in case there was a redo.
+                // We already did a check to see if aLeft == aRight above, but we need to check again in case there was
+                // a redo.
                 *value = aLeft == aRight;
                 return TRUE;
             case TypeIds_Int64Number:
-            {
-                int leftValue = TaggedInt::ToInt32(aLeft);
-                long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
-                *value = leftValue == rightValue;
-                Assert(!(*value));  // currently it cannot be true. more for future extension if we allow arithmetic calculation
-                return TRUE;
-            }
+                {
+                    int leftValue = TaggedInt::ToInt32(aLeft);
+                    long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
+                    *value = leftValue == rightValue;
+                    Assert(!(*value)); // currently it cannot be true. more for future extension if we allow arithmetic
+                                       // calculation
+                    return TRUE;
+                }
             case TypeIds_UInt64Number:
-            {
-                long leftValue = TaggedInt::ToInt32(aLeft);
-                unsigned long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
-                // TODO: yongqu to review whether we need to check for neg value
-                *value = (/*leftValue >= 0 && */(unsigned long)leftValue == rightValue);
-                Assert(!(*value));  // currently it cannot be true. more for future extension if we allow arithmetic calculation
-                return TRUE;
-            }
+                {
+                    long leftValue = TaggedInt::ToInt32(aLeft);
+                    unsigned long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
+                    // TODO: yongqu to review whether we need to check for neg value
+                    *value = (/*leftValue >= 0 && */ (unsigned long)leftValue == rightValue);
+                    Assert(!(*value)); // currently it cannot be true. more for future extension if we allow arithmetic
+                                       // calculation
+                    return TRUE;
+                }
             case TypeIds_Number:
                 dblLeft = TaggedInt::ToDouble(aLeft);
                 dblRight = JavascriptNumber::GetValue(aRight);
@@ -581,65 +553,67 @@ namespace Js
             switch (rightType)
             {
             case TypeIds_Integer:
-            {
-                long leftValue = VarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                int rightValue = TaggedInt::ToInt32(aRight);
-                *value = leftValue == rightValue;
-                Assert(!(*value));  // currently it cannot be true. more for future extension if we allow arithmetic calculation
-                return TRUE;
-            }
+                {
+                    long leftValue = VarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                    int rightValue = TaggedInt::ToInt32(aRight);
+                    *value = leftValue == rightValue;
+                    Assert(!(*value)); // currently it cannot be true. more for future extension if we allow arithmetic
+                                       // calculation
+                    return TRUE;
+                }
             case TypeIds_Number:
                 dblLeft = (double)VarTo<JavascriptInt64Number>(aLeft)->GetValue();
                 dblRight = JavascriptNumber::GetValue(aRight);
                 goto CompareDoubles;
             case TypeIds_Int64Number:
-            {
-                long leftValue = VarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
-                *value = leftValue == rightValue;
-                return TRUE;
-            }
+                {
+                    long leftValue = VarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                    long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
+                    *value = leftValue == rightValue;
+                    return TRUE;
+                }
             case TypeIds_UInt64Number:
-            {
-                long leftValue = VarTo<JavascriptInt64Number>(aLeft)->GetValue();
-                unsigned long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
-                // TODO: yongqu to review whether we need to check for neg value
-                *value = (/* leftValue >= 0 && */(unsigned long)leftValue == rightValue);
-                return TRUE;
-            }
+                {
+                    long leftValue = VarTo<JavascriptInt64Number>(aLeft)->GetValue();
+                    unsigned long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
+                    // TODO: yongqu to review whether we need to check for neg value
+                    *value = (/* leftValue >= 0 && */ (unsigned long)leftValue == rightValue);
+                    return TRUE;
+                }
             }
             break;
         case TypeIds_UInt64Number:
             switch (rightType)
             {
             case TypeIds_Integer:
-            {
-                unsigned long leftValue = VarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                long rightValue = TaggedInt::ToInt32(aRight);
-                // TODO: yongqu to review whether we need to check for neg value
-                *value = rightValue >= 0 && leftValue == (unsigned long)rightValue;
-                Assert(!(*value));  // currently it cannot be true. more for future extension if we allow arithmetic calculation
-                return TRUE;
-            }
+                {
+                    unsigned long leftValue = VarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                    long rightValue = TaggedInt::ToInt32(aRight);
+                    // TODO: yongqu to review whether we need to check for neg value
+                    *value = rightValue >= 0 && leftValue == (unsigned long)rightValue;
+                    Assert(!(*value)); // currently it cannot be true. more for future extension if we allow arithmetic
+                                       // calculation
+                    return TRUE;
+                }
             case TypeIds_Number:
                 dblLeft = (double)VarTo<JavascriptUInt64Number>(aLeft)->GetValue();
                 dblRight = JavascriptNumber::GetValue(aRight);
                 goto CompareDoubles;
             case TypeIds_Int64Number:
-            {
-                unsigned long leftValue = VarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
-                // TODO: yongqu to review whether we need to check for neg value
-                *value = (/* rightValue >= 0 && */leftValue == (unsigned long)rightValue);
-                return TRUE;
-            }
+                {
+                    unsigned long leftValue = VarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                    long rightValue = VarTo<JavascriptInt64Number>(aRight)->GetValue();
+                    // TODO: yongqu to review whether we need to check for neg value
+                    *value = (/* rightValue >= 0 && */ leftValue == (unsigned long)rightValue);
+                    return TRUE;
+                }
             case TypeIds_UInt64Number:
-            {
-                unsigned long leftValue = VarTo<JavascriptUInt64Number>(aLeft)->GetValue();
-                unsigned long rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
-                *value = leftValue == rightValue;
-                return TRUE;
-            }
+                {
+                    unsigned long leftValue = VarTo<JavascriptUInt64Number>(aLeft)->GetValue();
+                    unsigned long rightValue = VarTo<JavascriptUInt64Number>(aRight)->GetValue();
+                    *value = leftValue == rightValue;
+                    return TRUE;
+                }
             }
             break;
         case TypeIds_Number:
@@ -674,7 +648,8 @@ namespace Js
             case TypeIds_Symbol:
                 goto ReturnFalse;
             case TypeIds_String:
-                *value = JavascriptString::Equals(UnsafeVarTo<JavascriptString>(aLeft), UnsafeVarTo<JavascriptString>(aRight));
+                *value = JavascriptString::Equals(UnsafeVarTo<JavascriptString>(aLeft),
+                                                  UnsafeVarTo<JavascriptString>(aRight));
                 return TRUE;
             case TypeIds_Number:
             case TypeIds_Integer:
@@ -718,11 +693,13 @@ namespace Js
                 goto ReturnFalse;
             case TypeIds_Symbol:
                 *value = (aLeft == aRight);
-                Assert((UnsafeVarTo<JavascriptSymbol>(aLeft)->GetValue() == UnsafeVarTo<JavascriptSymbol>(aRight)->GetValue()) == *value);
+                Assert((UnsafeVarTo<JavascriptSymbol>(aLeft)->GetValue() ==
+                        UnsafeVarTo<JavascriptSymbol>(aRight)->GetValue()) == *value);
                 return TRUE;
             case TypeIds_SymbolObject:
                 *value = (aLeft == UnsafeVarTo<JavascriptSymbolObject>(aRight)->Unwrap());
-                Assert((UnsafeVarTo<JavascriptSymbol>(aLeft)->GetValue() == UnsafeVarTo<JavascriptSymbolObject>(aRight)->GetValue()) == *value);
+                Assert((UnsafeVarTo<JavascriptSymbol>(aLeft)->GetValue() ==
+                        UnsafeVarTo<JavascriptSymbolObject>(aRight)->GetValue()) == *value);
                 return TRUE;
             default:
                 goto RedoRight;
@@ -775,27 +752,21 @@ namespace Js
         return TRUE;
     }
 
-    RecyclableObject* RecyclableObject::ToObject(ScriptContext * requestContext)
+    RecyclableObject *RecyclableObject::ToObject(ScriptContext *requestContext)
     {
         AssertMsg(JavascriptOperators::IsObject(this), "bad type object in conversion ToObject");
         Assert(!CrossSite::NeedMarshalVar(this, requestContext));
         return this;
     }
 
-    Var RecyclableObject::GetTypeOfString(ScriptContext * requestContext)
+    Var RecyclableObject::GetTypeOfString(ScriptContext *requestContext)
     {
         return requestContext->GetLibrary()->GetUnknownDisplayString();
     }
 
-    BOOL RecyclableObject::GetRemoteTypeId(TypeId * typeId)
-    {
-        return FALSE;
-    }
+    BOOL RecyclableObject::GetRemoteTypeId(TypeId *typeId) { return FALSE; }
 
-    DynamicObject* RecyclableObject::GetRemoteObject()
-    {
-        return NULL;
-    }
+    DynamicObject *RecyclableObject::GetRemoteObject() { return NULL; }
 
     Var RecyclableObject::GetHostDispatchVar()
     {
@@ -803,15 +774,16 @@ namespace Js
         return this->GetLibrary()->GetUndefined();
     }
 
-    JavascriptString* RecyclableObject::GetClassName(ScriptContext * requestContext)
+    JavascriptString *RecyclableObject::GetClassName(ScriptContext *requestContext)
     {
         // we don't need this when not handling fastDOM.
         Assert(0);
         return NULL;
     }
 
-    BOOL RecyclableObject::HasInstance(Var instance, ScriptContext* scriptContext, IsInstInlineCache* inlineCache)
+    BOOL RecyclableObject::HasInstance(Var instance, ScriptContext *scriptContext, IsInstInlineCache *inlineCache)
     {
-        JavascriptError::ThrowTypeError(scriptContext, JSERR_Operand_Invalid_NeedFunction, u"instanceof" /* TODO-ERROR: get arg name - aClass */);
+        JavascriptError::ThrowTypeError(scriptContext, JSERR_Operand_Invalid_NeedFunction,
+                                        u"instanceof" /* TODO-ERROR: get arg name - aClass */);
     }
 } // namespace Js

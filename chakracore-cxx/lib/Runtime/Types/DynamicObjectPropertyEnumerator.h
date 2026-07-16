@@ -11,7 +11,7 @@ namespace Js
     private:
         typename WriteBarrierFieldTypeTraits<ScriptContext *>::Type scriptContext;
         typename WriteBarrierFieldTypeTraits<DynamicObject *>::Type object;
-        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type initialType;              // for snapshot enumeration
+        typename WriteBarrierFieldTypeTraits<DynamicType *>::Type initialType; // for snapshot enumeration
         typename WriteBarrierFieldTypeTraits<BigPropertyIndex>::Type objectIndex;
         typename WriteBarrierFieldTypeTraits<BigPropertyIndex>::Type initialPropertyCount;
         typename WriteBarrierFieldTypeTraits<int>::Type enumeratedCount;
@@ -21,7 +21,8 @@ namespace Js
         struct CachedData
         {
             typename WriteBarrierFieldTypeTraits<ScriptContext *>::Type scriptContext;
-            typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<PropertyString*>::Type*>::Type strings;
+            typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<PropertyString *>::Type *>::Type
+                strings;
             typename WriteBarrierFieldTypeTraits<BigPropertyIndex *>::Type indexes;
             typename WriteBarrierFieldTypeTraits<PropertyAttributes *>::Type attributes;
             typename WriteBarrierFieldTypeTraits<int>::Type cachedCount;
@@ -32,37 +33,47 @@ namespace Js
         };
         typename WriteBarrierFieldTypeTraits<CachedData *>::Type cachedData;
 
-        DynamicType * GetTypeToEnumerate() const;
-        JavascriptString * MoveAndGetNextWithCache(PropertyId& propertyId, PropertyAttributes* attributes);
-        JavascriptString * MoveAndGetNextNoCache(PropertyId& propertyId, PropertyAttributes * attributes);
+        DynamicType *GetTypeToEnumerate() const;
+        JavascriptString *MoveAndGetNextWithCache(PropertyId &propertyId, PropertyAttributes *attributes);
+        JavascriptString *MoveAndGetNextNoCache(PropertyId &propertyId, PropertyAttributes *attributes);
 
-        void Initialize(DynamicType * type, CachedData * data, Js::BigPropertyIndex initialPropertyCount);
-        BigPropertyIndex PropertyIndexToPropertyEnumeration(BigPropertyIndex index) const { return object->GetTypeHandler()->PropertyIndexToPropertyEnumeration(index); }
+        void Initialize(DynamicType *type, CachedData *data, Js::BigPropertyIndex initialPropertyCount);
+        BigPropertyIndex PropertyIndexToPropertyEnumeration(BigPropertyIndex index) const
+        {
+            return object->GetTypeHandler()->PropertyIndexToPropertyEnumeration(index);
+        }
+
     public:
-        DynamicObject * GetObject() const { return object; }
+        DynamicObject *GetObject() const { return object; }
         EnumeratorFlags GetFlags() const { return flags; }
         bool GetEnumNonEnumerable() const;
         bool GetEnumSymbols() const;
         bool GetSnapShotSemantics() const;
         bool GetUseCache() const;
-        ScriptContext * GetScriptContext() const { return scriptContext; }
+        ScriptContext *GetScriptContext() const { return scriptContext; }
 
-        bool Initialize(DynamicObject * object, EnumeratorFlags flags, ScriptContext * requestContext, EnumeratorCache * enumeratorCache);
+        bool Initialize(DynamicObject *object, EnumeratorFlags flags, ScriptContext *requestContext,
+                        EnumeratorCache *enumeratorCache);
         bool IsNullEnumerator() const;
         void Reset();
-        void Clear(EnumeratorFlags flags, ScriptContext * requestContext);
-        JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes * attributes);
+        void Clear(EnumeratorFlags flags, ScriptContext *requestContext);
+        JavascriptString *MoveAndGetNext(PropertyId &propertyId, PropertyAttributes *attributes);
 
         bool CanUseJITFastPath() const;
         static uint32_t GetOffsetOfScriptContext() { return offsetof(DynamicObjectPropertyEnumerator, scriptContext); }
         static uint32_t GetOffsetOfInitialType() { return offsetof(DynamicObjectPropertyEnumerator, initialType); }
         static uint32_t GetOffsetOfObject() { return offsetof(DynamicObjectPropertyEnumerator, object); }
         static uint32_t GetOffsetOfObjectIndex() { return offsetof(DynamicObjectPropertyEnumerator, objectIndex); }
-        static uint32_t GetOffsetOfInitialPropertyCount() { return offsetof(DynamicObjectPropertyEnumerator, initialPropertyCount); }
-        static uint32_t GetOffsetOfEnumeratedCount() { return offsetof(DynamicObjectPropertyEnumerator, enumeratedCount); }
-        static uint32_t GetOffsetOfCachedData() { return offsetof(DynamicObjectPropertyEnumerator, cachedData); }
-        static uint32_t GetOffsetOfFlags() { return offsetof(DynamicObjectPropertyEnumerator, flags);
+        static uint32_t GetOffsetOfInitialPropertyCount()
+        {
+            return offsetof(DynamicObjectPropertyEnumerator, initialPropertyCount);
         }
+        static uint32_t GetOffsetOfEnumeratedCount()
+        {
+            return offsetof(DynamicObjectPropertyEnumerator, enumeratedCount);
+        }
+        static uint32_t GetOffsetOfCachedData() { return offsetof(DynamicObjectPropertyEnumerator, cachedData); }
+        static uint32_t GetOffsetOfFlags() { return offsetof(DynamicObjectPropertyEnumerator, flags); }
         static uint32_t GetOffsetOfCachedDataStrings() { return offsetof(CachedData, strings); }
         static uint32_t GetOffsetOfCachedDataIndexes() { return offsetof(CachedData, indexes); }
         static uint32_t GetOffsetOfCachedDataPropertyCount() { return offsetof(CachedData, propertyCount); }
@@ -71,4 +82,4 @@ namespace Js
         static uint32_t GetOffsetOfCachedDataCompleted() { return offsetof(CachedData, completed); }
         static uint32_t GetOffsetOfCachedDataEnumNonEnumerable() { return offsetof(CachedData, enumNonEnumerable); }
     };
-};
+}; // namespace Js

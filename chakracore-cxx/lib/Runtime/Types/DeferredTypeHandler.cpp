@@ -8,7 +8,7 @@
 
 namespace Js
 {
-    void DeferredTypeHandlerBase::ConvertFunction(JavascriptFunction * instance, DynamicTypeHandler * typeHandler)
+    void DeferredTypeHandlerBase::ConvertFunction(JavascriptFunction *instance, DynamicTypeHandler *typeHandler)
     {
         Assert(instance->GetDynamicType()->GetTypeHandler() == this);
         Assert(this->inlineSlotCapacity == typeHandler->inlineSlotCapacity);
@@ -21,20 +21,22 @@ namespace Js
         // properties unknown to the type handler.
 
         bool isProto = this->GetIsPrototype();
-        bool isCrossSite = CrossSite::IsThunk(instance->GetType()->GetEntryPoint()); 
+        bool isCrossSite = CrossSite::IsThunk(instance->GetType()->GetEntryPoint());
 
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         instance->EnsureSlots(0, typeHandler->GetSlotCapacity(), scriptContext, typeHandler);
 
-        FunctionProxy * functionProxy = instance->GetFunctionProxy();
+        FunctionProxy *functionProxy = instance->GetFunctionProxy();
 
-        ScriptFunctionType * undeferredFunctionType = nullptr;
+        ScriptFunctionType *undeferredFunctionType = nullptr;
         if (functionProxy)
         {
-            undeferredFunctionType = isCrossSite ? functionProxy->GetCrossSiteUndeferredFunctionType() : functionProxy->GetUndeferredFunctionType();
+            undeferredFunctionType = isCrossSite ? functionProxy->GetCrossSiteUndeferredFunctionType()
+                                                 : functionProxy->GetUndeferredFunctionType();
         }
 
-        if (undeferredFunctionType && !isProto && (undeferredFunctionType->GetPrototype() == instance->GetType()->GetPrototype()))
+        if (undeferredFunctionType && !isProto &&
+            (undeferredFunctionType->GetPrototype() == instance->GetType()->GetPrototype()))
         {
             Assert(undeferredFunctionType->GetIsShared());
             instance->ReplaceType(undeferredFunctionType);
@@ -47,7 +49,8 @@ namespace Js
                 ScriptFunctionType *newType = UnsafeVarTo<ScriptFunction>(instance)->GetScriptFunctionType();
                 if (isCrossSite)
                 {
-                    if (functionProxy->HasParseableInfo() && !functionProxy->GetParseableFunctionInfo()->GetCrossSiteUndeferredFunctionType())
+                    if (functionProxy->HasParseableInfo() &&
+                        !functionProxy->GetParseableFunctionInfo()->GetCrossSiteUndeferredFunctionType())
                     {
                         functionProxy->GetParseableFunctionInfo()->SetCrossSiteUndeferredFunctionType(newType);
                     }
@@ -64,7 +67,7 @@ namespace Js
         const Var undefined = scriptContext->GetLibrary()->GetUndefined();
         const BigPropertyIndex propertyCount = typeHandler->GetPropertyCount();
         Assert(propertyCount <= typeHandler->GetSlotCapacity());
-        for(BigPropertyIndex i = 0; i < propertyCount; ++i)
+        for (BigPropertyIndex i = 0; i < propertyCount; ++i)
         {
             typeHandler->SetSlotUnchecked(instance, i, undefined);
         }
@@ -75,7 +78,8 @@ namespace Js
         }
     }
 
-    void DeferredTypeHandlerBase::Convert(DynamicObject * instance, DeferredInitializeMode mode, int initSlotCapacity, BOOL hasAccessor)
+    void DeferredTypeHandlerBase::Convert(DynamicObject *instance, DeferredInitializeMode mode, int initSlotCapacity,
+                                          BOOL hasAccessor)
     {
         Assert(instance->GetDynamicType()->GetTypeHandler() == this);
 
@@ -104,24 +108,27 @@ namespace Js
             ConvertToDictionaryType(instance, initSlotCapacity, isProto);
         }
 
-        AssertMsg(!instance->HasSharedType(), "Expect the instance to have a non-shared type and handler after conversion.");
+        AssertMsg(!instance->HasSharedType(),
+                  "Expect the instance to have a non-shared type and handler after conversion.");
     }
 
     template <typename T>
-    T* DeferredTypeHandlerBase::ConvertToTypeHandler(DynamicObject* instance, int initSlotCapacity, BOOL isProto)
+    T *DeferredTypeHandlerBase::ConvertToTypeHandler(DynamicObject *instance, int initSlotCapacity, BOOL isProto)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        Recycler* recycler = scriptContext->GetRecycler();
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        Recycler *recycler = scriptContext->GetRecycler();
 
         // Create new type handler, allowing slotCapacity round up here. We'll allocate instance slots below.
-        T* newTypeHandler = T::New(recycler, initSlotCapacity, GetInlineSlotCapacity(), GetOffsetOfInlineSlots());
+        T *newTypeHandler = T::New(recycler, initSlotCapacity, GetInlineSlotCapacity(), GetOffsetOfInlineSlots());
 #if ENABLE_FIXED_FIELDS
         newTypeHandler->SetSingletonInstanceIfNeeded(instance);
 #endif
         // EnsureSlots before updating the type handler and instance, as EnsureSlots allocates and may throw.
         instance->EnsureSlots(0, newTypeHandler->GetSlotCapacity(), scriptContext, newTypeHandler);
         newTypeHandler->SetFlags(IsPrototypeFlag, this->GetFlags());
-        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection | PropertyTypesInlineSlotCapacityLocked | PropertyTypesHasSpecialProperties, this->GetPropertyTypes());
+        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection |
+                                             PropertyTypesInlineSlotCapacityLocked | PropertyTypesHasSpecialProperties,
+                                         this->GetPropertyTypes());
         if (instance->HasReadOnlyPropertiesInvisibleToTypeHandler())
         {
             newTypeHandler->ClearHasOnlyWritableDataProperties();
@@ -133,48 +140,52 @@ namespace Js
         }
 
         newTypeHandler->SetInstanceTypeHandler(instance);
-        AssertMsg(!isProto || instance->GetDynamicType()->GetTypeHandler() == newTypeHandler, "Why did SetIsPrototype force a type handler change on a non-shared type handler?");
+        AssertMsg(!isProto || instance->GetDynamicType()->GetTypeHandler() == newTypeHandler,
+                  "Why did SetIsPrototype force a type handler change on a non-shared type handler?");
 
         return newTypeHandler;
     }
 
-    SimpleDictionaryTypeHandler* DeferredTypeHandlerBase::ConvertToSimpleDictionaryType(DynamicObject* instance, int initSlotCapacity, BOOL isProto)
+    SimpleDictionaryTypeHandler *
+    DeferredTypeHandlerBase::ConvertToSimpleDictionaryType(DynamicObject *instance, int initSlotCapacity, BOOL isProto)
     {
         // DeferredTypeHandler is only used internally by the type system. "initSlotCapacity" should be a tiny number.
         Assert(initSlotCapacity <= SimpleDictionaryTypeHandler::MaxPropertyIndexSize);
 
-        SimpleDictionaryTypeHandler* newTypeHandler = ConvertToTypeHandler<SimpleDictionaryTypeHandler>(instance, initSlotCapacity, isProto);
+        SimpleDictionaryTypeHandler *newTypeHandler =
+            ConvertToTypeHandler<SimpleDictionaryTypeHandler>(instance, initSlotCapacity, isProto);
 
-    #ifdef PROFILE_TYPES
+#ifdef PROFILE_TYPES
         instance->GetScriptContext()->convertDeferredToSimpleDictionaryCount++;
-    #endif
+#endif
         return newTypeHandler;
     }
 
-    DictionaryTypeHandler* DeferredTypeHandlerBase::ConvertToDictionaryType(DynamicObject* instance, int initSlotCapacity, BOOL isProto)
+    DictionaryTypeHandler *DeferredTypeHandlerBase::ConvertToDictionaryType(DynamicObject *instance,
+                                                                            int initSlotCapacity, BOOL isProto)
     {
         // DeferredTypeHandler is only used internally by the type system. "initSlotCapacity" should be a tiny number.
         Assert(initSlotCapacity <= DictionaryTypeHandler::MaxPropertyIndexSize);
 
-        DictionaryTypeHandler* newTypeHandler = ConvertToTypeHandler<DictionaryTypeHandler>(instance, initSlotCapacity, isProto);
+        DictionaryTypeHandler *newTypeHandler =
+            ConvertToTypeHandler<DictionaryTypeHandler>(instance, initSlotCapacity, isProto);
 
-    #ifdef PROFILE_TYPES
+#ifdef PROFILE_TYPES
         instance->GetScriptContext()->convertDeferredToDictionaryCount++;
-    #endif
+#endif
         return newTypeHandler;
     }
 
-    ES5ArrayTypeHandler* DeferredTypeHandlerBase::ConvertToES5ArrayType(DynamicObject* instance, int initSlotCapacity)
+    ES5ArrayTypeHandler *DeferredTypeHandlerBase::ConvertToES5ArrayType(DynamicObject *instance, int initSlotCapacity)
     {
         // DeferredTypeHandler is only used internally by the type system. "initSlotCapacity" should be a tiny number.
         Assert(initSlotCapacity <= ES5ArrayTypeHandler::MaxPropertyIndexSize);
 
-        ES5ArrayTypeHandler* newTypeHandler = ConvertToTypeHandler<ES5ArrayTypeHandler>(instance, initSlotCapacity);
+        ES5ArrayTypeHandler *newTypeHandler = ConvertToTypeHandler<ES5ArrayTypeHandler>(instance, initSlotCapacity);
 
-    #ifdef PROFILE_TYPES
+#ifdef PROFILE_TYPES
         instance->GetScriptContext()->convertDeferredToDictionaryCount++;
-    #endif
+#endif
         return newTypeHandler;
     }
-};
-
+}; // namespace Js

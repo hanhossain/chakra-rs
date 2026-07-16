@@ -12,21 +12,22 @@ namespace Js
         static const int BUCKETS_DWORDS = PowerOf2_BUCKETS / sizeof(uint32_t);
         static const byte NIL = 0xff;
 
-        typename WriteBarrierFieldTypeTraits<uint32_t>::Type bucketsData[BUCKETS_DWORDS];  // use DWORDs to enforce alignment
+        typename WriteBarrierFieldTypeTraits<uint32_t>::Type
+            bucketsData[BUCKETS_DWORDS]; // use DWORDs to enforce alignment
         typename WriteBarrierFieldTypeTraits<byte>::Type next[0];
 
-public:
+    public:
         TinyDictionary()
         {
             static_assert(BUCKETS_DWORDS * sizeof(uint32_t) == PowerOf2_BUCKETS);
             static_assert(BUCKETS_DWORDS == 4);
-            uint32_t* init = bucketsData;
-            init[0] = init[1] = init[2] = init[3] =0xffffffff;
+            uint32_t *init = bucketsData;
+            init[0] = init[1] = init[2] = init[3] = 0xffffffff;
         }
 
         uint32_t ReduceKeyToIndex(PropertyId key)
         {
-            // we use 4-bit bucket index, but we often have keys that are larger. 
+            // we use 4-bit bucket index, but we often have keys that are larger.
             // use Fibonacci hash to reduce the possibility of collisions
             return (key * 11400714819323198485llu) >> 60;
         }
@@ -35,14 +36,15 @@ public:
         {
             Assert(value < 128);
 
-            byte* buckets = reinterpret_cast<byte*>(bucketsData);
+            byte *buckets = reinterpret_cast<byte *>(bucketsData);
             uint32_t bucketIndex = ReduceKeyToIndex(key);
 
             byte i = buckets[bucketIndex];
 
             // if the bucket was empty (NIL), put a tagged value to indicate the end of the chain.
-            // NB: [OS:17745531] In extreme rare cases 127th pid to insert hashes into a a bucket still unused by the previous 126 values.
-            //     We cannot tag 127 since it would become NIL and we would lose the value. 
+            // NB: [OS:17745531] In extreme rare cases 127th pid to insert hashes into a a bucket still unused by the
+            // previous 126 values.
+            //     We cannot tag 127 since it would become NIL and we would lose the value.
             //     We can however chain 127 --> NIL, since it is the same as having two 127 in the bucket, which is ok.
             if ((i == NIL) & (value != 127))
             {
@@ -58,16 +60,16 @@ public:
 
         // Template shared with diagnostics
         template <class Data>
-        inline bool TryGetValue(PropertyId key, PropertyIndex* index, const Data& data)
+        inline bool TryGetValue(PropertyId key, PropertyIndex *index, const Data &data)
         {
-            byte* buckets = reinterpret_cast<byte*>(bucketsData);
+            byte *buckets = reinterpret_cast<byte *>(bucketsData);
             uint32_t bucketIndex = ReduceKeyToIndex(key);
 
             byte i = buckets[bucketIndex];
             if (i != NIL)
             {
-                for(;;)
-                {                    
+                for (;;)
+                {
                     byte idx = i & 127; // strip the sentinel bit
 
                     if (data[idx]->GetPropertyId() == key)
@@ -98,13 +100,14 @@ public:
         friend class PathTypeHandlerWithAttr;
 
     public:
-        // This is the space between the end of the TypePath and the allocation granularity that can be used for assignments too.
+        // This is the space between the end of the TypePath and the allocation granularity that can be used for
+        // assignments too.
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
 #define TYPE_PATH_ALLOC_GRANULARITY_GAP 0
 #else
 #define TYPE_PATH_ALLOC_GRANULARITY_GAP 1
 #endif
-        // Although we can allocate 2 more, 
+        // Although we can allocate 2 more,
         // TinyDictionary can hold only up to 128 items (see TinyDictionary::Add),
         // Besides 128+ would put struct Data into another bucket.
         // Just waste some slot in that case for 32-bit
@@ -114,11 +117,14 @@ public:
     private:
         struct Data
         {
-            Data(uint8_t pathSize) : pathSize(pathSize), pathLength(0)
+            Data(uint8_t pathSize) :
+                pathSize(pathSize), pathLength(0)
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-                , maxInitializedLength(0)
+                ,
+                maxInitializedLength(0)
 #endif
-            {}
+            {
+            }
 
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
             typename WriteBarrierFieldTypeTraits<BVStatic<MaxPathTypeHandlerLength>>::Type fixedFields;
@@ -130,14 +136,15 @@ public:
             // TypePath.
             typename WriteBarrierFieldTypeTraits<uint8_t>::Type maxInitializedLength;
 #endif
-            typename WriteBarrierFieldTypeTraits<uint8_t>::Type pathLength;      // Entries in use
-            typename WriteBarrierFieldTypeTraits<uint8_t>::Type pathSize;        // Allocated entries
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type pathLength; // Entries in use
+            typename WriteBarrierFieldTypeTraits<uint8_t>::Type pathSize; // Allocated entries
 
             // This map has to be at the end, because TinyDictionary has a zero size array
             typename WriteBarrierFieldTypeTraits<TinyDictionary>::Type map;
 
-            template<bool addNewId>
-            int Add(const PropertyRecord* propId, typename WriteBarrierFieldTypeTraits<const PropertyRecord *>::Type* assignments)
+            template <bool addNewId>
+            int Add(const PropertyRecord *propId,
+                    typename WriteBarrierFieldTypeTraits<const PropertyRecord *>::Type *assignments)
             {
                 uint currentPathLength = this->pathLength;
                 Assert(currentPathLength < this->pathSize);
@@ -162,10 +169,10 @@ public:
                 return currentPathLength;
             }
         };
-        typename WriteBarrierFieldTypeTraits<Data*>::Type data;
+        typename WriteBarrierFieldTypeTraits<Data *>::Type data;
 
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        typename WriteBarrierFieldTypeTraits<RecyclerWeakReference<DynamicObject>*>::Type singletonInstance;
+        typename WriteBarrierFieldTypeTraits<RecyclerWeakReference<DynamicObject> *>::Type singletonInstance;
 #endif
 
         // PropertyRecord assignments are allocated off the end of the structure
@@ -180,19 +187,21 @@ public:
         {
         }
 
-        Data * GetData() { return data; }
-    public:
-        static TypePath* New(Recycler* recycler, uint size = InitialTypePathSize);
+        Data *GetData() { return data; }
 
-        template<bool checkAttributes>
-        TypePath * Branch(Recycler * recycler, int pathLength, bool couldSeeProto, ObjectSlotAttributes * attributes = nullptr)
+    public:
+        static TypePath *New(Recycler *recycler, uint size = InitialTypePathSize);
+
+        template <bool checkAttributes>
+        TypePath *Branch(Recycler *recycler, int pathLength, bool couldSeeProto,
+                         ObjectSlotAttributes *attributes = nullptr)
         {
             AssertMsg(pathLength < this->GetPathLength(), "Why are we branching at the tip of the type path?");
             Assert(checkAttributes == (attributes != nullptr));
 
             // Ensure there is at least one free entry in the new path, so we can extend it.
             // TypePath::New will take care of aligning this appropriately.
-            TypePath * branchedPath = TypePath::New(recycler, pathLength + 1);
+            TypePath *branchedPath = TypePath::New(recycler, pathLength + 1);
 
             for (PropertyIndex i = 0; i < pathLength; i++)
             {
@@ -212,27 +221,27 @@ public:
                     {
                         // We must conservatively copy all used as fixed bits if some prototype instance could also take
                         // this transition.  See comment in PathTypeHandlerBase::ConvertToSimpleDictionaryType.
-                        // Yes, we could devise a more efficient way of copying bits 1 through pathLength, if performance of this
-                        // code path proves important enough.
+                        // Yes, we could devise a more efficient way of copying bits 1 through pathLength, if
+                        // performance of this code path proves important enough.
                         branchedPath->GetData()->usedFixedFields.Set(i);
                     }
                     else if (this->GetData()->fixedFields.Test(i))
                     {
-                        // We must clear any fixed fields that are not also used as fixed if some prototype instance could also take
-                        // this transition.  See comment in PathTypeHandlerBase::ConvertToSimpleDictionaryType.
+                        // We must clear any fixed fields that are not also used as fixed if some prototype instance
+                        // could also take this transition.  See comment in
+                        // PathTypeHandlerBase::ConvertToSimpleDictionaryType.
                         this->GetData()->fixedFields.Clear(i);
                     }
                 }
 #endif
-
             }
 
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-            // When branching, we must ensure that fixed field values on the prefix shared by the two branches are always
-            // consistent.  Hence, we can't leave any of them uninitialized, because they could later get initialized to
-            // different values, by two different instances (one on the old branch and one on the new branch).  If that happened
-            // and the instance from the old branch later switched to the new branch, it would magically gain a different set
-            // of fixed properties!
+            // When branching, we must ensure that fixed field values on the prefix shared by the two branches are
+            // always consistent.  Hence, we can't leave any of them uninitialized, because they could later get
+            // initialized to different values, by two different instances (one on the old branch and one on the new
+            // branch).  If that happened and the instance from the old branch later switched to the new branch, it
+            // would magically gain a different set of fixed properties!
             if (this->GetMaxInitializedLength() < pathLength)
             {
                 this->SetMaxInitializedLength(pathLength);
@@ -243,15 +252,15 @@ public:
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
             if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
             {
-                Output::Print(u"FixedFields: TypePath::Branch: singleton: 0x%p(0x%p)\n", PointerValue(this->singletonInstance), this->singletonInstance->Get());
+                Output::Print(u"FixedFields: TypePath::Branch: singleton: 0x%p(0x%p)\n",
+                              PointerValue(this->singletonInstance), this->singletonInstance->Get());
                 Output::Print(u"   fixed fields:");
 
                 for (PropertyIndex i = 0; i < GetPathLength(); i++)
                 {
-                    Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
-                        i < GetMaxInitializedLength() ? 1 : 0,
-                        GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
-                        GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
+                    Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(), i < GetMaxInitializedLength() ? 1 : 0,
+                                  GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
+                                  GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
                 }
 
                 Output::Print(u"\n");
@@ -261,15 +270,15 @@ public:
             return branchedPath;
         }
 
-        TypePath * Grow(Recycler * alloc);
+        TypePath *Grow(Recycler *alloc);
 
-        const PropertyRecord* GetPropertyIdUnchecked(int index)
+        const PropertyRecord *GetPropertyIdUnchecked(int index)
         {
             Assert(((uint)index) < ((uint)this->GetPathLength()));
             return assignments[index];
         }
 
-        const PropertyRecord* GetPropertyId(int index)
+        const PropertyRecord *GetPropertyId(int index)
         {
             if (((uint)index) < ((uint)this->GetPathLength()))
                 return GetPropertyIdUnchecked(index);
@@ -277,8 +286,8 @@ public:
                 return nullptr;
         }
 
-        template<bool isSetter = false>
-        int Add(const PropertyRecord * propertyRecord)
+        template <bool isSetter = false>
+        int Add(const PropertyRecord *propertyRecord)
         {
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
             Assert(this->GetPathLength() == this->GetMaxInitializedLength());
@@ -290,36 +299,36 @@ public:
         uint8_t GetPathLength() { return this->GetData()->pathLength; }
         uint8_t GetPathSize() { return this->GetData()->pathSize; }
 
-        PropertyIndex Lookup(PropertyId propId,int typePathLength);
-        PropertyIndex LookupInline(PropertyId propId,int typePathLength);
+        PropertyIndex Lookup(PropertyId propId, int typePathLength);
+        PropertyIndex LookupInline(PropertyId propId, int typePathLength);
 
     private:
-    template<bool addNewId>
-    int AddInternal(const PropertyRecord * propId)
-    {
-        int propertyIndex = this->GetData()->Add<addNewId>(propId, assignments);
+        template <bool addNewId>
+        int AddInternal(const PropertyRecord *propId)
+        {
+            int propertyIndex = this->GetData()->Add<addNewId>(propId, assignments);
 
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"FixedFields: TypePath::AddInternal: singleton = 0x%p(0x%p)\n",
-                PointerValue(this->singletonInstance), this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
-            Output::Print(u"   fixed fields:");
-
-            for (PropertyIndex i = 0; i < GetPathLength(); i++)
+            if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
             {
-                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
-                    i < GetMaxInitializedLength() ? 1 : 0,
-                    GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
-                    GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
-            }
+                Output::Print(u"FixedFields: TypePath::AddInternal: singleton = 0x%p(0x%p)\n",
+                              PointerValue(this->singletonInstance),
+                              this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
+                Output::Print(u"   fixed fields:");
 
-            Output::Print(u"\n");
-        }
+                for (PropertyIndex i = 0; i < GetPathLength(); i++)
+                {
+                    Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(), i < GetMaxInitializedLength() ? 1 : 0,
+                                  GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
+                                  GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
+                }
+
+                Output::Print(u"\n");
+            }
 #endif
 
-        return propertyIndex;
-    }
+            return propertyIndex;
+        }
 
 #if ENABLE_FIXED_FIELDS
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
@@ -332,31 +341,22 @@ public:
             this->GetData()->maxInitializedLength = (uint8_t)newMaxInitializedLength;
         }
 
-        Var GetSingletonFixedFieldAt(PropertyIndex index, int typePathLength, ScriptContext * requestContext);
+        Var GetSingletonFixedFieldAt(PropertyIndex index, int typePathLength, ScriptContext *requestContext);
 
-        bool HasSingletonInstance() const
-        {
-            return this->singletonInstance != nullptr;
-        }
+        bool HasSingletonInstance() const { return this->singletonInstance != nullptr; }
 
-        RecyclerWeakReference<DynamicObject>* GetSingletonInstance() const
-        {
-            return this->singletonInstance;
-        }
+        RecyclerWeakReference<DynamicObject> *GetSingletonInstance() const { return this->singletonInstance; }
 
-        void SetSingletonInstance(RecyclerWeakReference<DynamicObject>* instance, int typePathLength)
+        void SetSingletonInstance(RecyclerWeakReference<DynamicObject> *instance, int typePathLength)
         {
             Assert(this->singletonInstance == nullptr && instance != nullptr);
             Assert(typePathLength >= this->GetMaxInitializedLength());
             this->singletonInstance = instance;
         }
 
-        void ClearSingletonInstance()
-        {
-            this->singletonInstance = nullptr;
-        }
+        void ClearSingletonInstance() { this->singletonInstance = nullptr; }
 
-        void ClearSingletonInstanceIfSame(DynamicObject* instance)
+        void ClearSingletonInstanceIfSame(DynamicObject *instance)
         {
             if (this->singletonInstance != nullptr && this->singletonInstance->Get() == instance)
             {
@@ -364,7 +364,7 @@ public:
             }
         }
 
-        void ClearSingletonInstanceIfDifferent(DynamicObject* instance)
+        void ClearSingletonInstanceIfDifferent(DynamicObject *instance)
         {
             if (this->singletonInstance != nullptr && this->singletonInstance->Get() != instance)
             {
@@ -416,7 +416,8 @@ public:
 
         void AddBlankFieldAt(PropertyIndex index, int typePathLength);
 
-        void AddSingletonInstanceFieldAt(DynamicObject* instance, PropertyIndex index, bool isFixed, int typePathLength);
+        void AddSingletonInstanceFieldAt(DynamicObject *instance, PropertyIndex index, bool isFixed,
+                                         int typePathLength);
 
         void AddSingletonInstanceFieldAt(PropertyIndex index, int typePathLength);
 
@@ -425,24 +426,51 @@ public:
 #endif
 
 #else
-        int GetMaxInitializedLength() { Assert(false); return this->GetPathLength(); }
+        int GetMaxInitializedLength()
+        {
+            Assert(false);
+            return this->GetPathLength();
+        }
 
-        Var GetSingletonFixedFieldAt(PropertyIndex index, int typePathLength, ScriptContext * requestContext);
+        Var GetSingletonFixedFieldAt(PropertyIndex index, int typePathLength, ScriptContext *requestContext);
 
-        bool HasSingletonInstance() const { Assert(false); return false; }
-        RecyclerWeakReference<DynamicObject>* GetSingletonInstance() const { Assert(false); return nullptr; }
-        void SetSingletonInstance(RecyclerWeakReference<DynamicObject>* instance, int typePathLength) { Assert(false); }
+        bool HasSingletonInstance() const
+        {
+            Assert(false);
+            return false;
+        }
+        RecyclerWeakReference<DynamicObject> *GetSingletonInstance() const
+        {
+            Assert(false);
+            return nullptr;
+        }
+        void SetSingletonInstance(RecyclerWeakReference<DynamicObject> *instance, int typePathLength) { Assert(false); }
         void ClearSingletonInstance() { Assert(false); }
-        void ClearSingletonInstanceIfSame(DynamicObject* instance) { Assert(false); }
-        void ClearSingletonInstanceIfDifferent(DynamicObject* instance) { Assert(false); }
+        void ClearSingletonInstanceIfSame(DynamicObject *instance) { Assert(false); }
+        void ClearSingletonInstanceIfDifferent(DynamicObject *instance) { Assert(false); }
 
-        bool GetIsFixedFieldAt(PropertyIndex index, int typePathLength) { Assert(false); return false; }
-        bool GetIsUsedFixedFieldAt(PropertyIndex index, int typePathLength) { Assert(false); return false; }
+        bool GetIsFixedFieldAt(PropertyIndex index, int typePathLength)
+        {
+            Assert(false);
+            return false;
+        }
+        bool GetIsUsedFixedFieldAt(PropertyIndex index, int typePathLength)
+        {
+            Assert(false);
+            return false;
+        }
         void SetIsUsedFixedFieldAt(PropertyIndex index, int typePathLength) { Assert(false); }
         void ClearIsFixedFieldAt(PropertyIndex index, int typePathLength) { Assert(false); }
-        bool CanHaveFixedFields(int typePathLength) { Assert(false); return false; }
+        bool CanHaveFixedFields(int typePathLength)
+        {
+            Assert(false);
+            return false;
+        }
         void AddBlankFieldAt(PropertyIndex index, int typePathLength) { Assert(false); }
-        void AddSingletonInstanceFieldAt(DynamicObject* instance, PropertyIndex index, bool isFixed, int typePathLength) { Assert(false); }
+        void AddSingletonInstanceFieldAt(DynamicObject *instance, PropertyIndex index, bool isFixed, int typePathLength)
+        {
+            Assert(false);
+        }
         void AddSingletonInstanceFieldAt(PropertyIndex index, int typePathLength) { Assert(false); }
 #if DBG
         bool HasSingletonInstanceOnlyIfNeeded();
@@ -450,6 +478,8 @@ public:
 #endif
 #endif
     };
-}
+} // namespace Js
 
-static_assert((sizeof(Js::TypePath) % HeapConstants::ObjectGranularity) == (HeapConstants::ObjectGranularity - TYPE_PATH_ALLOC_GRANULARITY_GAP * sizeof(void *)) % HeapConstants::ObjectGranularity);
+static_assert((sizeof(Js::TypePath) % HeapConstants::ObjectGranularity) ==
+              (HeapConstants::ObjectGranularity - TYPE_PATH_ALLOC_GRANULARITY_GAP * sizeof(void *)) %
+                  HeapConstants::ObjectGranularity);

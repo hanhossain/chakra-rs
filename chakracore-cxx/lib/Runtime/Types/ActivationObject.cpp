@@ -2,14 +2,15 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "RuntimeTypePch.h"
-#include "cmperr.h"
 #include "Language/JavascriptStackWalker.h"
 #include "Library/ScriptFunction.h"
+#include "RuntimeTypePch.h"
+#include "cmperr.h"
 
 namespace Js
 {
-    template <> bool VarIsImpl<ActivationObject>(RecyclableObject* instance)
+    template <>
+    bool VarIsImpl<ActivationObject>(RecyclableObject *instance)
     {
         return VirtualTableInfo<ActivationObject>::HasVirtualTable(instance) ||
             VirtualTableInfo<CrossSiteObject<ActivationObject>>::HasVirtualTable(instance) ||
@@ -37,24 +38,33 @@ namespace Js
         return TRUE;
     }
 
-    BOOL ActivationObject::SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL ActivationObject::SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags,
+                                       PropertyValueInfo *info)
     {
-        return DynamicObject::SetProperty(propertyId, value, (PropertyOperationFlags)(flags | PropertyOperation_NonFixedValue), info);
+        return DynamicObject::SetProperty(propertyId, value,
+                                          (PropertyOperationFlags)(flags | PropertyOperation_NonFixedValue), info);
     }
 
-    BOOL ActivationObject::SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL ActivationObject::SetProperty(JavascriptString *propertyNameString, Var value, PropertyOperationFlags flags,
+                                       PropertyValueInfo *info)
     {
-        return DynamicObject::SetProperty(propertyNameString, value, (PropertyOperationFlags)(flags | PropertyOperation_NonFixedValue), info);
+        return DynamicObject::SetProperty(propertyNameString, value,
+                                          (PropertyOperationFlags)(flags | PropertyOperation_NonFixedValue), info);
     }
 
-    BOOL ActivationObject::SetInternalProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL ActivationObject::SetInternalProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags,
+                                               PropertyValueInfo *info)
     {
-        return DynamicObject::SetProperty(propertyId, value, (PropertyOperationFlags)(flags | PropertyOperation_NonFixedValue), info);
+        return DynamicObject::SetProperty(propertyId, value,
+                                          (PropertyOperationFlags)(flags | PropertyOperation_NonFixedValue), info);
     }
 
-    BOOL ActivationObject::InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL ActivationObject::InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags,
+                                        PropertyValueInfo *info)
     {
-        return DynamicObject::SetPropertyWithAttributes(propertyId, value, PropertyWritable|PropertyEnumerable, info, (PropertyOperationFlags)(flags | PropertyOperation_NonFixedValue));
+        return DynamicObject::SetPropertyWithAttributes(
+            propertyId, value, PropertyWritable | PropertyEnumerable, info,
+            (PropertyOperationFlags)(flags | PropertyOperation_NonFixedValue));
     }
 
     BOOL ActivationObject::InitPropertyScoped(PropertyId propertyId, Var value)
@@ -80,7 +90,9 @@ namespace Js
     {
         if (!DynamicObject::HasOwnProperty(propertyId))
         {
-            DynamicObject::SetPropertyWithAttributes(propertyId, this->GetLibrary()->GetUndefined(), PropertyDynamicTypeDefaults, nullptr, PropertyOperation_NonFixedValue);
+            DynamicObject::SetPropertyWithAttributes(propertyId, this->GetLibrary()->GetUndefined(),
+                                                     PropertyDynamicTypeDefaults, nullptr,
+                                                     PropertyOperation_NonFixedValue);
         }
         return true;
     }
@@ -91,18 +103,17 @@ namespace Js
         return true;
     }
 
-    BOOL ActivationObject::DeleteItem(uint32_t index, PropertyOperationFlags flags)
-    {
-        return false;
-    }
+    BOOL ActivationObject::DeleteItem(uint32_t index, PropertyOperationFlags flags) { return false; }
 
-    BOOL ActivationObject::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
+    BOOL ActivationObject::GetDiagValueString(StringBuilder<ArenaAllocator> *stringBuilder,
+                                              ScriptContext *requestContext)
     {
         stringBuilder->AppendCppLiteral(u"{ActivationObject}");
         return TRUE;
     }
 
-    BOOL ActivationObject::GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)
+    BOOL ActivationObject::GetDiagTypeString(StringBuilder<ArenaAllocator> *stringBuilder,
+                                             ScriptContext *requestContext)
     {
         stringBuilder->AppendCppLiteral(u"Object, (ActivationObject)");
         return TRUE;
@@ -132,14 +143,15 @@ namespace Js
         return false;
     }
 
-    BlockActivationObject* BlockActivationObject::Clone(ScriptContext *scriptContext)
+    BlockActivationObject *BlockActivationObject::Clone(ScriptContext *scriptContext)
     {
-        DynamicType* type = this->GetDynamicType();
+        DynamicType *type = this->GetDynamicType();
 #if ENABLE_FIXED_FIELDS
-        type->GetTypeHandler()->ClearSingletonInstance(); //We are going to share the type.
+        type->GetTypeHandler()->ClearSingletonInstance(); // We are going to share the type.
 #endif
 
-        BlockActivationObject* blockScopeClone = DynamicObject::NewObject<BlockActivationObject>(scriptContext->GetRecycler(), type);
+        BlockActivationObject *blockScopeClone =
+            DynamicObject::NewObject<BlockActivationObject>(scriptContext->GetRecycler(), type);
         int slotCapacity = this->GetTypeHandler()->GetSlotCapacity();
 
         for (int i = 0; i < slotCapacity; i += 1)
@@ -152,7 +164,8 @@ namespace Js
         return blockScopeClone;
     }
 
-    template <> bool VarIsImpl<BlockActivationObject>(RecyclableObject* instance)
+    template <>
+    bool VarIsImpl<BlockActivationObject>(RecyclableObject *instance)
     {
         return VirtualTableInfo<Js::BlockActivationObject>::HasVirtualTable(instance) ||
             VirtualTableInfo<CrossSiteObject<BlockActivationObject>>::HasVirtualTable(instance);
@@ -170,36 +183,34 @@ namespace Js
         return false;
     }
 
-    BOOL PseudoActivationObject::EnsureProperty(PropertyId propertyId)
-    {
-        return false;
-    }
+    BOOL PseudoActivationObject::EnsureProperty(PropertyId propertyId) { return false; }
 
-    BOOL PseudoActivationObject::EnsureNoRedeclProperty(PropertyId propertyId)
-    {
-        return false;
-    }
+    BOOL PseudoActivationObject::EnsureNoRedeclProperty(PropertyId propertyId) { return false; }
 
-    template <> bool VarIsImpl<PseudoActivationObject>(RecyclableObject* instance)
+    template <>
+    bool VarIsImpl<PseudoActivationObject>(RecyclableObject *instance)
     {
         return VirtualTableInfo<Js::PseudoActivationObject>::HasVirtualTable(instance) ||
             VirtualTableInfo<CrossSiteObject<PseudoActivationObject>>::HasVirtualTable(instance);
     }
 
-    template <> bool VarIsImpl<ConsoleScopeActivationObject>(RecyclableObject* instance)
+    template <>
+    bool VarIsImpl<ConsoleScopeActivationObject>(RecyclableObject *instance)
     {
-        return VirtualTableInfo<ConsoleScopeActivationObject>::HasVirtualTable(instance)
-            || VirtualTableInfo<CrossSiteObject<ConsoleScopeActivationObject>>::HasVirtualTable(instance);
+        return VirtualTableInfo<ConsoleScopeActivationObject>::HasVirtualTable(instance) ||
+            VirtualTableInfo<CrossSiteObject<ConsoleScopeActivationObject>>::HasVirtualTable(instance);
     }
 
     /* static */
-    const PropertyId * ActivationObjectEx::GetCachedScopeInfo(const PropertyIdArray *propIds)
+    const PropertyId *ActivationObjectEx::GetCachedScopeInfo(const PropertyIdArray *propIds)
     {
         // Cached scope info is appended to the "normal" prop ID array elements.
         return &propIds->elements[propIds->count];
     }
 
-    PropertyQueryFlags ActivationObjectEx::GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var *value, PropertyValueInfo *info, ScriptContext *requestContext)
+    PropertyQueryFlags ActivationObjectEx::GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId,
+                                                                     Var *value, PropertyValueInfo *info,
+                                                                     ScriptContext *requestContext)
     {
         // No need to invalidate the cached scope even if the property is a cached function object.
         // The caller won't be using the object itself.
@@ -225,7 +236,7 @@ namespace Js
                 {
                     if (walker.IsEvalCaller())
                     {
-                        //We are walking the stack, so the function body must have been deserialized by this point.
+                        // We are walking the stack, so the function body must have been deserialized by this point.
                         currentFunc->GetFunctionBody()->SetFuncEscapes(true);
                         break;
                     }
@@ -234,9 +245,11 @@ namespace Js
         }
     }
 
-    PropertyQueryFlags ActivationObjectEx::GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var *value, PropertyValueInfo *info, ScriptContext *requestContext)
+    PropertyQueryFlags ActivationObjectEx::GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var *value,
+                                                            PropertyValueInfo *info, ScriptContext *requestContext)
     {
-        if (JavascriptConversion::PropertyQueryFlagsToBoolean(__super::GetPropertyQuery(originalInstance, propertyId, value, info, requestContext)))
+        if (JavascriptConversion::PropertyQueryFlagsToBoolean(
+                __super::GetPropertyQuery(originalInstance, propertyId, value, info, requestContext)))
         {
             GetPropertyCore(info, requestContext);
             return PropertyQueryFlags::Property_Found;
@@ -244,9 +257,12 @@ namespace Js
         return PropertyQueryFlags::Property_NotFound;
     }
 
-    PropertyQueryFlags ActivationObjectEx::GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var *value, PropertyValueInfo *info, ScriptContext *requestContext)
+    PropertyQueryFlags ActivationObjectEx::GetPropertyQuery(Var originalInstance, JavascriptString *propertyNameString,
+                                                            Var *value, PropertyValueInfo *info,
+                                                            ScriptContext *requestContext)
     {
-        if (JavascriptConversion::PropertyQueryFlagsToBoolean(__super::GetPropertyQuery(originalInstance, propertyNameString, value, info, requestContext)))
+        if (JavascriptConversion::PropertyQueryFlagsToBoolean(
+                __super::GetPropertyQuery(originalInstance, propertyNameString, value, info, requestContext)))
         {
             GetPropertyCore(info, requestContext);
             return PropertyQueryFlags::Property_Found;
@@ -270,12 +286,13 @@ namespace Js
     {
         Assert(i < cachedFuncCount);
         cache[i].func = func;
-        cache[i].type = (DynamicType*)func->GetType();
+        cache[i].type = (DynamicType *)func->GetType();
     }
 
-    template <> bool VarIsImpl<ActivationObjectEx>(RecyclableObject* instance)
+    template <>
+    bool VarIsImpl<ActivationObjectEx>(RecyclableObject *instance)
     {
         return VirtualTableInfo<ActivationObjectEx>::HasVirtualTable(instance) ||
             VirtualTableInfo<CrossSiteObject<ActivationObjectEx>>::HasVirtualTable(instance);
     }
-};
+}; // namespace Js

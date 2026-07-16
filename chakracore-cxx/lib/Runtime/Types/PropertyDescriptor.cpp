@@ -7,20 +7,9 @@
 namespace Js
 {
     PropertyDescriptor::PropertyDescriptor() :
-        writableSpecified(false),
-        enumerableSpecified(false),
-        configurableSpecified(false),
-        valueSpecified(false),
-        getterSpecified(false),
-        setterSpecified(false),
-        Writable(false),
-        Enumerable(false),
-        Configurable(false),
-        Value(nullptr),
-        Getter(nullptr),
-        Setter(nullptr),
-        originalVar(nullptr),
-        fromProxy(false)
+        writableSpecified(false), enumerableSpecified(false), configurableSpecified(false), valueSpecified(false),
+        getterSpecified(false), setterSpecified(false), Writable(false), Enumerable(false), Configurable(false),
+        Value(nullptr), Getter(nullptr), Setter(nullptr), originalVar(nullptr), fromProxy(false)
     {
     }
 
@@ -96,7 +85,7 @@ namespace Js
         }
     }
 
-    void PropertyDescriptor::MergeFrom(const PropertyDescriptor& descriptor)
+    void PropertyDescriptor::MergeFrom(const PropertyDescriptor &descriptor)
     {
         if (descriptor.configurableSpecified)
         {
@@ -124,4 +113,4 @@ namespace Js
             this->SetSetter(descriptor.Setter);
         }
     }
-}
+} // namespace Js

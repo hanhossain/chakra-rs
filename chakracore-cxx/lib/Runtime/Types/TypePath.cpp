@@ -4,10 +4,11 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeTypePch.h"
 
-namespace Js {
+namespace Js
+{
     const uint TypePath::InitialTypePathSize;
 
-    TypePath* TypePath::New(Recycler* recycler, uint size)
+    TypePath *TypePath::New(Recycler *recycler, uint size)
     {
         Assert(size <= MaxPathTypeHandlerLength);
         size = max(size, InitialTypePathSize);
@@ -29,28 +30,27 @@ namespace Js {
 
         Assert(size <= MaxPathTypeHandlerLength);
 
-        TypePath * newTypePath = RecyclerNewPlusZ(recycler, sizeof(PropertyRecord *) * size, TypePath);
+        TypePath *newTypePath = RecyclerNewPlusZ(recycler, sizeof(PropertyRecord *) * size, TypePath);
         // Allocate enough space for the "next" for the TinyDictionary;
         newTypePath->data = RecyclerNewPlusLeafZ(recycler, size, TypePath::Data, (uint8_t)size);
 
         return newTypePath;
     }
 
-    PropertyIndex TypePath::Lookup(PropertyId propId,int typePathLength)
+    PropertyIndex TypePath::Lookup(PropertyId propId, int typePathLength)
     {
-        return LookupInline(propId,typePathLength);
+        return LookupInline(propId, typePathLength);
     }
 
-    PropertyIndex TypePath::LookupInline(PropertyId propId,int typePathLength)
+    PropertyIndex TypePath::LookupInline(PropertyId propId, int typePathLength)
     {
         if (propId == Constants::NoProperty)
         {
-           return Constants::NoSlot;
+            return Constants::NoSlot;
         }
 
         PropertyIndex propIndex = Constants::NoSlot;
-        if (this->GetData()->map.TryGetValue(propId, &propIndex, assignments) &&
-            propIndex < typePathLength)
+        if (this->GetData()->map.TryGetValue(propId, &propIndex, assignments) && propIndex < typePathLength)
         {
             return propIndex;
         }
@@ -58,14 +58,14 @@ namespace Js {
         return Constants::NoSlot;
     }
 
-    TypePath * TypePath::Grow(Recycler * recycler)
+    TypePath *TypePath::Grow(Recycler *recycler)
     {
         uint currentPathLength = this->GetPathLength();
         AssertMsg(this->GetPathSize() == currentPathLength, "Why are we growing the type path?");
 
         // Ensure there is at least one free entry in the new path, so we can extend it.
         // TypePath::New will take care of aligning this appropriately.
-        TypePath * clonedPath = TypePath::New(recycler, currentPathLength + 1);
+        TypePath *clonedPath = TypePath::New(recycler, currentPathLength + 1);
 
         clonedPath->GetData()->pathLength = (uint8_t)currentPathLength;
         memcpy(&clonedPath->GetData()->map, &this->GetData()->map, sizeof(TinyDictionary) + currentPathLength);
@@ -94,7 +94,7 @@ namespace Js {
     }
 #endif
 
-    Var TypePath::GetSingletonFixedFieldAt(PropertyIndex index, int typePathLength, ScriptContext * requestContext)
+    Var TypePath::GetSingletonFixedFieldAt(PropertyIndex index, int typePathLength, ScriptContext *requestContext)
     {
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         Assert(index < this->GetPathLength());
@@ -106,13 +106,15 @@ namespace Js {
             return nullptr;
         }
 
-        DynamicObject* localSingletonInstance = this->singletonInstance->Get();
+        DynamicObject *localSingletonInstance = this->singletonInstance->Get();
 
-        return localSingletonInstance != nullptr && localSingletonInstance->GetScriptContext() == requestContext && this->GetData()->fixedFields.Test(index) ? localSingletonInstance->GetSlot(index) : nullptr;
+        return localSingletonInstance != nullptr && localSingletonInstance->GetScriptContext() == requestContext &&
+                this->GetData()->fixedFields.Test(index)
+            ? localSingletonInstance->GetSlot(index)
+            : nullptr;
 #else
         return nullptr;
 #endif
-
     }
 #endif
 
@@ -125,27 +127,29 @@ namespace Js {
         if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
         {
             Output::Print(u"FixedFields: TypePath::AddBlankFieldAt: singleton = 0x%p(0x%p)\n",
-                PointerValue(this->singletonInstance), this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
+                          PointerValue(this->singletonInstance),
+                          this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
             Output::Print(u"   fixed fields:");
 
             for (PropertyIndex i = 0; i < GetPathLength(); i++)
             {
-                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
-                    i < GetMaxInitializedLength() ? 1 : 0,
-                    GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
-                    GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
+                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(), i < GetMaxInitializedLength() ? 1 : 0,
+                              GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
+                              GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
             }
 
             Output::Print(u"\n");
         }
     }
 
-    void TypePath::AddSingletonInstanceFieldAt(DynamicObject* instance, PropertyIndex index, bool isFixed, int typePathLength)
+    void TypePath::AddSingletonInstanceFieldAt(DynamicObject *instance, PropertyIndex index, bool isFixed,
+                                               int typePathLength)
     {
         Assert(index < this->GetPathLength());
         Assert(typePathLength >= this->GetMaxInitializedLength());
         Assert(index >= this->GetMaxInitializedLength());
-        // This invariant is predicated on the properties getting initialized in the order of indexes in the type handler.
+        // This invariant is predicated on the properties getting initialized in the order of indexes in the type
+        // handler.
         Assert(instance != nullptr);
         Assert(this->singletonInstance == nullptr || this->singletonInstance->Get() == instance);
         Assert(!this->GetData()->fixedFields.Test(index) && !this->GetData()->usedFixedFields.Test(index));
@@ -165,15 +169,15 @@ namespace Js {
         if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
         {
             Output::Print(u"FixedFields: TypePath::AddSingletonInstanceFieldAt: singleton = 0x%p(0x%p)\n",
-                PointerValue(this->singletonInstance), this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
+                          PointerValue(this->singletonInstance),
+                          this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
             Output::Print(u"   fixed fields:");
 
             for (PropertyIndex i = 0; i < GetPathLength(); i++)
             {
-                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
-                    i < GetMaxInitializedLength() ? 1 : 0,
-                    GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
-                    GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
+                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(), i < GetMaxInitializedLength() ? 1 : 0,
+                              GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
+                              GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
             }
 
             Output::Print(u"\n");
@@ -192,15 +196,15 @@ namespace Js {
         if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
         {
             Output::Print(u"FixedFields: TypePath::AddSingletonInstanceFieldAt: singleton = 0x%p(0x%p)\n",
-                PointerValue(this->singletonInstance), this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
+                          PointerValue(this->singletonInstance),
+                          this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
             Output::Print(u"   fixed fields:");
 
             for (PropertyIndex i = 0; i < GetPathLength(); i++)
             {
-                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
-                    i < GetMaxInitializedLength() ? 1 : 0,
-                    GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
-                    GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
+                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(), i < GetMaxInitializedLength() ? 1 : 0,
+                              GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
+                              GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
             }
 
             Output::Print(u"\n");
@@ -208,4 +212,4 @@ namespace Js {
     }
 #endif
 
-}
+} // namespace Js

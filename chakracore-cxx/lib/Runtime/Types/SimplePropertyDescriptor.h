@@ -9,21 +9,35 @@ namespace Js
     class SimplePropertyDescriptor
     {
     public:
-        SimplePropertyDescriptor() : Id(nullptr), preventFalseReference(nullptr) { Attributes = PropertyDynamicTypeDefaults; }
-        SimplePropertyDescriptor(const PropertyRecord* id) : Id(id), preventFalseReference(NULL) { Attributes = PropertyDynamicTypeDefaults; }
-        SimplePropertyDescriptor(const PropertyRecord* id, PropertyAttributes attributes) : Id(id), preventFalseReference(NULL) { Attributes = attributes; }
+        SimplePropertyDescriptor() : Id(nullptr), preventFalseReference(nullptr)
+        {
+            Attributes = PropertyDynamicTypeDefaults;
+        }
+        SimplePropertyDescriptor(const PropertyRecord *id) : Id(id), preventFalseReference(NULL)
+        {
+            Attributes = PropertyDynamicTypeDefaults;
+        }
+        SimplePropertyDescriptor(const PropertyRecord *id, PropertyAttributes attributes) :
+            Id(id), preventFalseReference(NULL)
+        {
+            Attributes = attributes;
+        }
 
-        SimplePropertyDescriptor(const PropertyRecord* id, _no_write_barrier_tag, PropertyAttributes attributes)
-            : Id(id, _no_write_barrier_tag()), preventFalseReference(NULL)
-        { Attributes = attributes; }
+        SimplePropertyDescriptor(const PropertyRecord *id, _no_write_barrier_tag, PropertyAttributes attributes) :
+            Id(id, _no_write_barrier_tag()), preventFalseReference(NULL)
+        {
+            Attributes = attributes;
+        }
 
-        typename WriteBarrierFieldTypeTraits<const PropertyRecord*>::Type Id;
+        typename WriteBarrierFieldTypeTraits<const PropertyRecord *>::Type Id;
         union
         {
             typename WriteBarrierFieldTypeTraits<PropertyAttributes>::Type Attributes;
-            typename WriteBarrierFieldTypeTraits<void*, _no_write_barrier_policy, _no_write_barrier_policy>::Type preventFalseReference; // SimplePropertyDescriptor can be declared on stack. Always zero out to avoid this becoming a memory address reference.
+            typename WriteBarrierFieldTypeTraits<void *, _no_write_barrier_policy, _no_write_barrier_policy>::Type
+                preventFalseReference; // SimplePropertyDescriptor can be declared on stack. Always zero out to avoid
+                                       // this becoming a memory address reference.
         };
     };
 
     static_assert(sizeof(SimplePropertyDescriptor) == 2 * sizeof(Var));
-}
+} // namespace Js
