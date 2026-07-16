@@ -565,7 +565,6 @@
 #define _Pre_readable_size_(size)         _SAL2_Source_(_Pre_readable_size_, (size), _Pre1_impl_(__count_impl(size))      _Pre_valid_impl_)
 #define _Pre_writable_size_(size)         _SAL2_Source_(_Pre_writable_size_, (size), _Pre1_impl_(__cap_impl(size)))
 #define _Pre_readable_byte_size_(size)    _SAL2_Source_(_Pre_readable_byte_size_, (size), _Pre1_impl_(__bytecount_impl(size))  _Pre_valid_impl_)
-#define _Pre_writable_byte_size_(size)    _SAL2_Source_(_Pre_writable_byte_size_, (size), _Pre1_impl_(__bytecap_impl(size)))
 
 #define _Post_readable_size_(size)        _SAL2_Source_(_Post_readable_size_, (size), _Post1_impl_(__count_impl(size))     _Post_valid_impl_)
 #define _Post_writable_size_(size)        _SAL2_Source_(_Post_writable_size_, (size), _Post1_impl_(__cap_impl(size)))
