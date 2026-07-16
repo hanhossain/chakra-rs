@@ -254,8 +254,6 @@ uint32_t CharUpperBuffW(const char16_t* lpsz, uint32_t  cchLength);
 // `typename QualifiedName` declarations outside of template code not supported before MSVC 2015 update 1
 #define _TYPENAME typename
 
-#define _NOEXCEPT_ noexcept
-
 #if !__has_builtin(_AddressOfReturnAddress)
 inline void * _AddressOfReturnAddress()
 {
