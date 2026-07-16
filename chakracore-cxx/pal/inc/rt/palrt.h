@@ -180,8 +180,6 @@ typedef enum tagEFaultRepRetVal
 #define ARGUMENT_PRESENT(ArgumentPointer)    (\
     (char *)(ArgumentPointer) != (char *)(NULL) )
 
-#define MAX_NATURAL_ALIGNMENT sizeof(uint64_t)
-
 #define DECLARE_HANDLE(name) struct name##__ { int unused; }; typedef struct name##__ *name
 
 #ifndef COM_NO_WINDOWS_H
