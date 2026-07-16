@@ -25,6 +25,7 @@ Revision History:
 
 #include <dirent.h>
 #include <sys/types.h>
+#include "pal.h"
 #include "pal/shmemory.h"
 
 #ifdef __cplusplus

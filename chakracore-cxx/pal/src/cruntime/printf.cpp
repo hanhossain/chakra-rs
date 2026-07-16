@@ -22,18 +22,18 @@ Revision History:
 --*/
 
 #include <string>
-#include "pal/palinternal.h"
-#include "pal/dbgmsg.h"
 #include "pal/cruntime.h"
+#include "pal/dbgmsg.h"
+#include "pal/palinternal.h"
+#include "pal/printfcpp.hpp"
 #include "pal/thread.hpp"
 #include "pal/threadsusp.hpp"
-#include "pal/printfcpp.hpp"
 
 /* <stdarg.h> needs to be included after "palinternal.h" to avoid name
    collision for va_start and va_end */
 #include <cstdio>
-#include <stdarg.h>
 #include <errno.h>
+#include <stdarg.h>
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
@@ -55,17 +55,15 @@ Parameters:
   Prefix
     - the prefix for the current format option
 *******************************************************************************/
-__attribute__((no_instrument_function))
-void PAL_printf_arg_remover(va_list *ap, int32_t Width, int32_t Precision, int32_t Type, int32_t Prefix)
+__attribute__((no_instrument_function)) void PAL_printf_arg_remover(va_list *ap, int32_t Width, int32_t Precision,
+                                                                    int32_t Type, int32_t Prefix)
 {
     /* remove arg and precision if needed */
-    if (PRECISION_STAR == Precision ||
-        PRECISION_INVALID == Precision)
+    if (PRECISION_STAR == Precision || PRECISION_INVALID == Precision)
     {
         (void)va_arg(*ap, int);
     }
-    if (WIDTH_STAR == Width ||
-        WIDTH_INVALID == Width)
+    if (WIDTH_STAR == Width || WIDTH_INVALID == Width)
     {
         (void)va_arg(*ap, int);
     }
@@ -93,18 +91,13 @@ Function:
 
 See MSDN doc.
 --*/
-__attribute__((no_instrument_function))
-int
-PAL_fwprintf(
-     FILE *stream,
-     const char16_t *format,
-     ...)
+__attribute__((no_instrument_function)) int PAL_fwprintf(FILE *stream, const char16_t *format, ...)
 {
     int32_t Length;
     va_list ap;
 
     va_start(ap, format);
-    Length = PAL_vfwprintf( stream, format, ap);
+    Length = PAL_vfwprintf(stream, format, ap);
     va_end(ap);
 
     LOGEXIT("PAL_fwprintf returns int %d\n", Length);
@@ -137,13 +130,14 @@ Parameters:
 Notes:
   - I'm also handling the undocumented %ws, %wc, %w...
 *******************************************************************************/
-__attribute__((no_instrument_function))
-static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iOutSize, LPBOOL Store,
-                                         int32_t * Width, int32_t * Prefix, int32_t * Type)
+__attribute__((no_instrument_function)) static BOOL Internal_ScanfExtractFormatW(const char16_t **Fmt, char *Out,
+                                                                                 int iOutSize, LPBOOL Store,
+                                                                                 int32_t *Width, int32_t *Prefix,
+                                                                                 int32_t *Type)
 {
     BOOL Result = FALSE;
-    char* TempStr;
-    char* TempStrPtr;
+    char *TempStr;
+    char *TempStrPtr;
 
     *Width = -1;
     *Store = TRUE;
@@ -160,7 +154,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
     }
 
     /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = static_cast<char*>(malloc(std::u16string(*Fmt).length() + 1));
+    TempStrPtr = TempStr = static_cast<char *>(malloc(std::u16string(*Fmt).length() + 1));
     if (!TempStr)
     {
         ERROR("malloc failed\n");
@@ -265,8 +259,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
         Result = TRUE;
     }
     /* grab int types */
-    else if (**Fmt == 'd' || **Fmt == 'i' || **Fmt == 'o' ||
-             **Fmt == 'u' || **Fmt == 'x' || **Fmt == 'X' ||
+    else if (**Fmt == 'd' || **Fmt == 'i' || **Fmt == 'o' || **Fmt == 'u' || **Fmt == 'x' || **Fmt == 'X' ||
              **Fmt == 'p')
     {
         *Type = SCANF_TYPE_INT;
@@ -292,14 +285,13 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
         *Out++ = *(*Fmt)++;
         Result = TRUE;
     }
-    else if (**Fmt == 'e' || **Fmt == 'E' || **Fmt == 'f' ||
-             **Fmt == 'g' || **Fmt == 'G')
+    else if (**Fmt == 'e' || **Fmt == 'E' || **Fmt == 'f' || **Fmt == 'g' || **Fmt == 'G')
     {
         /* we can safely ignore the prefixes and only add the type*/
         *Type = SCANF_TYPE_FLOAT;
         /* this gets rid of %E/%G since they're they're the
            same when scanning */
-        *Out++ = tolower( *(*Fmt)++ );
+        *Out++ = tolower(*(*Fmt)++);
         Result = TRUE;
     }
     else if (**Fmt == 'n')
@@ -324,7 +316,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
         (*Fmt)++;
 
         /* step 2 : copy a leading ^, if present */
-        if( '^' == **Fmt )
+        if ('^' == **Fmt)
         {
             *Out++ = '^';
             (*Fmt)++;
@@ -333,7 +325,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
         /* step 3 : copy a leading ], if present; a ] immediately after the
            leading [ (or [^) does *not* end the sequence, it is part of the
            characters to match */
-        if( ']' == **Fmt )
+        if (']' == **Fmt)
         {
             *Out++ = ']';
             (*Fmt)++;
@@ -341,25 +333,25 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
 
         /* step 4 : if the next character is already a '-', it's not part of an
            interval specifier, so just copy it */
-        if('-' == **Fmt )
+        if ('-' == **Fmt)
         {
             *Out++ = '-';
             (*Fmt)++;
         }
 
         /* ok then, process the rest of it */
-        while( '\0' != **Fmt )
+        while ('\0' != **Fmt)
         {
-            if(']' == **Fmt)
+            if (']' == **Fmt)
             {
                 /* ']' marks end of the format specifier; we're done */
                 *Out++ = ']';
                 (*Fmt)++;
                 break;
             }
-            if('-' == **Fmt)
+            if ('-' == **Fmt)
             {
-                if( ']' == (*Fmt)[1] )
+                if (']' == (*Fmt)[1])
                 {
                     /* got a '-', next character is the terminating ']';
                        copy '-' literally */
@@ -377,7 +369,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
 
                     /* if boundaries were inverted, replace the already-copied
                        low boundary by the 'real' low boundary */
-                    if( prev > next )
+                    if (prev > next)
                     {
                         Out[-1] = next;
 
@@ -391,7 +383,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
 
                     /* skip over the '-' and the next character, which we
                        already copied */
-                    (*Fmt)+=2;
+                    (*Fmt) += 2;
                 }
             }
             else
@@ -414,7 +406,7 @@ static BOOL Internal_ScanfExtractFormatW(const char16_t* *Fmt, char* Out, int iO
     *Out++ = '%';
     *Out++ = 'n';
 
-    *Out = 0;  /* end the string */
+    *Out = 0; /* end the string */
     free(TempStr);
     return Result;
 }
@@ -431,12 +423,11 @@ Parameters:
   ap
     - stdarg parameter list
 *******************************************************************************/
-__attribute__((no_instrument_function))
-int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
+__attribute__((no_instrument_function)) int PAL_wvsscanf(const char16_t *Buffer, const char16_t *Format, va_list ap)
 {
     int32_t Length = 0;
-    const char16_t* Buff = Buffer;
-    const char16_t* Fmt = Format;
+    const char16_t *Buff = Buffer;
+    const char16_t *Fmt = Format;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     BOOL Store;
     int32_t Width;
@@ -460,11 +451,9 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
             ++Fmt;
         }
         else if (*Fmt == '%' &&
-                 Internal_ScanfExtractFormatW(&Fmt, TempBuff, sizeof(TempBuff), &Store,
-                                              &Width, &Prefix, &Type))
+                 Internal_ScanfExtractFormatW(&Fmt, TempBuff, sizeof(TempBuff), &Store, &Width, &Prefix, &Type))
         {
-            if (Prefix == SCANF_PREFIX_LONG &&
-                (Type == SCANF_TYPE_STRING || Type == SCANF_TYPE_CHAR))
+            if (Prefix == SCANF_PREFIX_LONG && (Type == SCANF_TYPE_STRING || Type == SCANF_TYPE_CHAR))
             {
                 int len = 0;
                 char16_t *charPtr = 0;
@@ -521,29 +510,26 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                 int ret;
                 int n;
                 int size;
-                char* newBuff = 0;
-                void * voidPtr = NULL;
+                char *newBuff = 0;
+                void *voidPtr = NULL;
 
                 size = WideCharToMultiByte(CP_ACP, 0, Buff, -1, 0, 0, 0);
                 if (!size)
                 {
-                    ASSERT("WideCharToMultiByte failed.  Error is %d\n",
-                        GetLastError());
+                    ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
                     return -1;
                 }
-                newBuff = static_cast<char*>(malloc(size));
+                newBuff = static_cast<char *>(malloc(size));
                 if (!newBuff)
                 {
                     ERROR("malloc failed\n");
                     SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                     return -1;
                 }
-                size = WideCharToMultiByte(CP_ACP, 0, Buff, size,
-                                           newBuff, size, 0);
+                size = WideCharToMultiByte(CP_ACP, 0, Buff, size, newBuff, size, 0);
                 if (!size)
                 {
-                    ASSERT("WideCharToMultiByte failed.  Error is %d\n",
-                        GetLastError());
+                    ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
                     free(newBuff);
                     return -1;
                 }
@@ -573,7 +559,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                            it's still 0 afterwards, we know the call failed */
                         n = 0;
                         sscanf(newBuff, TempBuff, &n);
-                        if(0 == n)
+                        if (0 == n)
                         {
                             /* sscanf failed, nothing matched. set ret to 0,
                                so we know we have to break */
@@ -637,7 +623,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                 }
                 Buff += n;
             }
-       }
+        }
         else
         {
             /* grab, but not store */
@@ -663,12 +649,7 @@ Function:
 
 See MSDN doc.
 --*/
-__attribute__((no_instrument_function))
-int
-PAL_swscanf(
-          const char16_t *buffer,
-          const char16_t *format,
-          ...)
+__attribute__((no_instrument_function)) int PAL_swscanf(const char16_t *buffer, const char16_t *format, ...)
 {
     int Length;
     va_list ap;
@@ -687,12 +668,8 @@ Function:
 
 See MSDN doc.
 --*/
-__attribute__((no_instrument_function))
-int
-_vsnwprintf(char16_t *buffer,
-            size_t count,
-            const char16_t *format,
-            va_list argptr)
+__attribute__((no_instrument_function)) int _vsnwprintf(char16_t *buffer, size_t count, const char16_t *format,
+                                                        va_list argptr)
 {
     int32_t Length;
 

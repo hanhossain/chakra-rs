@@ -25,6 +25,7 @@ Abstract:
 #include <pthread.h>
 #include <stdarg.h>
 #include <string.h>
+#include "pal_mstypes.h"
 
 #ifdef __cplusplus
 
