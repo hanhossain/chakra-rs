@@ -18,10 +18,10 @@ Abstract:
 
 --*/
 
-#include "pal/dbgmsg.h"
-#include <new>
-#include "pal/thread.hpp"
 #include "machmessage.h"
+#include <new>
+#include "pal/dbgmsg.h"
+#include "pal/thread.hpp"
 
 #if defined(__APPLE__)
 
@@ -43,13 +43,9 @@ void MachMessage::Receive(mach_port_t hPort)
     ResetMessage();
 
     // Pull the next Mach message into the buffer.
-    machret = mach_msg(reinterpret_cast<mach_msg_header_t*>(m_rgMessageBuffer),
-                       MACH_RCV_MSG | MACH_RCV_LARGE | MACH_RCV_NOTIFY,
-                       0,
-                       kcbMaxMessageSize,
-                       hPort,
-                       MACH_MSG_TIMEOUT_NONE,
-                       MACH_PORT_NULL);
+    machret = mach_msg(reinterpret_cast<mach_msg_header_t *>(m_rgMessageBuffer),
+                       MACH_RCV_MSG | MACH_RCV_LARGE | MACH_RCV_NOTIFY, 0, kcbMaxMessageSize, hPort,
+                       MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
     CHECK_MACH("mach_msg()", machret);
 
     // Check it's one of the messages we're expecting.
@@ -73,22 +69,13 @@ void MachMessage::Receive(mach_port_t hPort)
 }
 
 // Indicates whether the message is a request to set the context of a thread.
-bool MachMessage::IsSetThreadRequest()
-{
-    return m_pMessage->header.msgh_id == SET_THREAD_MESSAGE_ID;
-}
+bool MachMessage::IsSetThreadRequest() { return m_pMessage->header.msgh_id == SET_THREAD_MESSAGE_ID; }
 
 // Indicates whether the message is a request to forward the exception
-bool MachMessage::IsForwardExceptionRequest()
-{
-    return m_pMessage->header.msgh_id == FORWARD_EXCEPTION_MESSAGE_ID;
-}
+bool MachMessage::IsForwardExceptionRequest() { return m_pMessage->header.msgh_id == FORWARD_EXCEPTION_MESSAGE_ID; }
 
 // Indicates whether the message is a notification that a send-once message was destroyed by the receiver.
-bool MachMessage::IsSendOnceDestroyedNotify()
-{
-    return m_pMessage->header.msgh_id == NOTIFY_SEND_ONCE_MESSAGE_ID;
-}
+bool MachMessage::IsSendOnceDestroyedNotify() { return m_pMessage->header.msgh_id == NOTIFY_SEND_ONCE_MESSAGE_ID; }
 
 // Indicates whether the message is a notification of an exception.
 bool MachMessage::IsExceptionNotification()
@@ -119,10 +106,7 @@ bool MachMessage::IsExceptionReply()
 }
 
 // Returns the type code for a received message.
-MachMessage::MessageType MachMessage::GetMessageType()
-{
-    return static_cast<MessageType>(m_pMessage->header.msgh_id);
-}
+MachMessage::MessageType MachMessage::GetMessageType() { return static_cast<MessageType>(m_pMessage->header.msgh_id); }
 
 // Returns a textual form of the type of a received message. Useful for logging.
 const char *MachMessage::GetMessageTypeName()
@@ -153,17 +137,11 @@ const char *MachMessage::GetMessageTypeName()
 }
 
 // Returns the destination port (i.e. the port we listened on to receive this message).
-mach_port_t MachMessage::GetLocalPort()
-{
-    return m_pMessage->header.msgh_local_port;
-}
+mach_port_t MachMessage::GetLocalPort() { return m_pMessage->header.msgh_local_port; }
 
 // Returns the source port (the port sending the message) unless no reply is expected, in which case
 // MACH_PORT_NULL is returned instead.
-mach_port_t MachMessage::GetRemotePort()
-{
-    return m_pMessage->header.msgh_remote_port;
-}
+mach_port_t MachMessage::GetRemotePort() { return m_pMessage->header.msgh_remote_port; }
 
 // Do the work of getting ports from the message.
 //  * fCalculate -- calculate the thread port if the message did not contain it.
@@ -189,8 +167,8 @@ void MachMessage::GetPorts(bool fCalculate, bool fValidThread)
         if (fCalculate && m_hThread == MACH_PORT_NULL)
         {
             // This is a tricky case since the message itself doesn't contain the target thread.
-            m_hThread = GetThreadFromState(m_pMessage->data.raise_state_64.flavor,
-                                           m_pMessage->data.raise_state_64.old_state);
+            m_hThread =
+                GetThreadFromState(m_pMessage->data.raise_state_64.flavor, m_pMessage->data.raise_state_64.old_state);
         }
         break;
 
@@ -320,7 +298,8 @@ thread_state_flavor_t MachMessage::GetThreadStateFlavor()
 // doesn't contain a thread state or the flavor of the state in the message doesn't match, the state will be
 // fetched directly from the target thread instead (which can be computed implicitly for exception messages or
 // passed explicitly for reply messages).
-mach_msg_type_number_t MachMessage::GetThreadState(thread_state_flavor_t eFlavor, thread_state_t pState, thread_act_t thread)
+mach_msg_type_number_t MachMessage::GetThreadState(thread_state_flavor_t eFlavor, thread_state_t pState,
+                                                   thread_act_t thread)
 {
     mach_msg_type_number_t count;
     kern_return_t machret;
@@ -333,56 +312,56 @@ mach_msg_type_number_t MachMessage::GetThreadState(thread_state_flavor_t eFlavor
         break;
 
     case EXCEPTION_RAISE_STATE_64_MESSAGE_ID:
-    {
-        // There's a state in the message, but we need to check that the flavor matches what the caller's
-        // after (if not we'll fall through and get the correct flavor below).
-        if (m_pMessage->data.raise_state_64.flavor == eFlavor)
         {
-            count = m_pMessage->data.raise_state_64.old_state_count;
-            memcpy(pState, m_pMessage->data.raise_state_64.old_state, count * sizeof(natural_t));
-            return count;
+            // There's a state in the message, but we need to check that the flavor matches what the caller's
+            // after (if not we'll fall through and get the correct flavor below).
+            if (m_pMessage->data.raise_state_64.flavor == eFlavor)
+            {
+                count = m_pMessage->data.raise_state_64.old_state_count;
+                memcpy(pState, m_pMessage->data.raise_state_64.old_state, count * sizeof(natural_t));
+                return count;
+            }
+            break;
         }
-        break;
-    }
 
     case EXCEPTION_RAISE_STATE_IDENTITY_64_MESSAGE_ID:
-    {
-        // There's a state in the message, but we need to check that the flavor matches what the caller's
-        // after (if not we'll fall through and get the correct flavor below).
-        if (m_pMessage->data.raise_state_identity_64.flavor == eFlavor)
         {
-            count = m_pMessage->data.raise_state_identity_64.old_state_count;
-            memcpy(pState, m_pMessage->data.raise_state_identity_64.old_state, count * sizeof(natural_t));
-            return count;
+            // There's a state in the message, but we need to check that the flavor matches what the caller's
+            // after (if not we'll fall through and get the correct flavor below).
+            if (m_pMessage->data.raise_state_identity_64.flavor == eFlavor)
+            {
+                count = m_pMessage->data.raise_state_identity_64.old_state_count;
+                memcpy(pState, m_pMessage->data.raise_state_identity_64.old_state, count * sizeof(natural_t));
+                return count;
+            }
+            break;
         }
-        break;
-    }
 
     case EXCEPTION_RAISE_STATE_REPLY_64_MESSAGE_ID:
-    {
-        // There's a state in the message, but we need to check that the flavor matches what the caller's
-        // after (if not we'll fall through and get the correct flavor below).
-        if (m_pMessage->data.raise_state_reply_64.flavor == eFlavor)
         {
-            count = m_pMessage->data.raise_state_reply_64.new_state_count;
-            memcpy(pState, m_pMessage->data.raise_state_reply_64.new_state, count * sizeof(natural_t));
-            return count;
+            // There's a state in the message, but we need to check that the flavor matches what the caller's
+            // after (if not we'll fall through and get the correct flavor below).
+            if (m_pMessage->data.raise_state_reply_64.flavor == eFlavor)
+            {
+                count = m_pMessage->data.raise_state_reply_64.new_state_count;
+                memcpy(pState, m_pMessage->data.raise_state_reply_64.new_state, count * sizeof(natural_t));
+                return count;
+            }
+            break;
         }
-        break;
-    }
 
     case EXCEPTION_RAISE_STATE_IDENTITY_REPLY_64_MESSAGE_ID:
-    {
-        // There's a state in the message, but we need to check that the flavor matches what the caller's
-        // after (if not we'll fall through and get the correct flavor below).
-        if (m_pMessage->data.raise_state_identity_reply_64.flavor == eFlavor)
         {
-            count = m_pMessage->data.raise_state_identity_reply_64.new_state_count;
-            memcpy(pState, m_pMessage->data.raise_state_identity_reply_64.new_state, count * sizeof(natural_t));
-            return count;
+            // There's a state in the message, but we need to check that the flavor matches what the caller's
+            // after (if not we'll fall through and get the correct flavor below).
+            if (m_pMessage->data.raise_state_identity_reply_64.flavor == eFlavor)
+            {
+                count = m_pMessage->data.raise_state_identity_reply_64.new_state_count;
+                memcpy(pState, m_pMessage->data.raise_state_identity_reply_64.new_state, count * sizeof(natural_t));
+                return count;
+            }
+            break;
         }
-        break;
-    }
 
     default:
         NONPAL_RETAIL_ASSERT("Unsupported message type for requesting thread state.");
@@ -434,28 +413,24 @@ void MachMessage::SendSetThread(mach_port_t hServerPort, CONTEXT *pContext)
 
     // Initialize header fields.
     m_pMessage->header.msgh_bits = MACH_MSGH_BITS(MACH_MSG_TYPE_COPY_SEND, 0);
-    m_pMessage->header.msgh_remote_port = hServerPort;      // Destination port
-    m_pMessage->header.msgh_local_port = MACH_PORT_NULL;    // We expect no reply
+    m_pMessage->header.msgh_remote_port = hServerPort; // Destination port
+    m_pMessage->header.msgh_local_port = MACH_PORT_NULL; // We expect no reply
 
     // Set the message header size field based on the contents of the message (call this function after all
     // other fields have been initialized).
     InitMessageSize();
 
     // Send the formatted message.
-    machret = mach_msg(reinterpret_cast<mach_msg_header_t*>(m_pMessage),
-                       MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
-                       m_pMessage->header.msgh_size,
-                       0,
-                       MACH_PORT_NULL,
-                       MACH_MSG_TIMEOUT_NONE,
-                       MACH_PORT_NULL);
+    machret = mach_msg(reinterpret_cast<mach_msg_header_t *>(m_pMessage), MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
+                       m_pMessage->header.msgh_size, 0, MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
     CHECK_MACH("mach_msg()", machret);
 
     // Erase any stale data. (This may not finish executing; nothing is needed to be freed here.)
     ResetMessage();
 }
 
-void MachMessage::SendForwardException(mach_port_t hServerPort, MachExceptionInfo *pExceptionInfo, CPalThread *ppalThread)
+void MachMessage::SendForwardException(mach_port_t hServerPort, MachExceptionInfo *pExceptionInfo,
+                                       CPalThread *ppalThread)
 {
     kern_return_t machret;
 
@@ -473,21 +448,16 @@ void MachMessage::SendForwardException(mach_port_t hServerPort, MachExceptionInf
 
     // Initialize header fields.
     m_pMessage->header.msgh_bits = MACH_MSGH_BITS(MACH_MSG_TYPE_COPY_SEND, 0);
-    m_pMessage->header.msgh_remote_port = hServerPort;      // Destination port
-    m_pMessage->header.msgh_local_port = MACH_PORT_NULL;    // We expect no reply
+    m_pMessage->header.msgh_remote_port = hServerPort; // Destination port
+    m_pMessage->header.msgh_local_port = MACH_PORT_NULL; // We expect no reply
 
     // Set the message header size field based on the contents of the message (call this function after all
     // other fields have been initialized).
     InitMessageSize();
 
     // Send the formatted message.
-    machret = mach_msg(reinterpret_cast<mach_msg_header_t*>(m_pMessage),
-                       MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
-                       m_pMessage->header.msgh_size,
-                       0,
-                       MACH_PORT_NULL,
-                       MACH_MSG_TIMEOUT_NONE,
-                       MACH_PORT_NULL);
+    machret = mach_msg(reinterpret_cast<mach_msg_header_t *>(m_pMessage), MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
+                       m_pMessage->header.msgh_size, 0, MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
     CHECK_MACH("mach_msg()", machret);
 
     // Erase any stale data.
@@ -512,7 +482,7 @@ MachExceptionInfo *MachMessage::GetExceptionInfo()
 // The new message takes account of the fact that the target handler may not have requested the same notification
 // behavior or flavor as our handler. A new Mach port is created to receive the reply, and this port is returned
 // to the caller. Clean up the message afterwards.
-void MachMessage::ForwardNotification(MachExceptionHandler *pHandler, MachMessage& message)
+void MachMessage::ForwardNotification(MachExceptionHandler *pHandler, MachMessage &message)
 {
     kern_return_t machret;
 
@@ -539,27 +509,23 @@ void MachMessage::ForwardNotification(MachExceptionHandler *pHandler, MachMessag
     if (pHandler->m_flavor != THREAD_STATE_NONE)
     {
         thread_state_data_t threadState;
-        mach_msg_type_number_t count = message.GetThreadState(pHandler->m_flavor, reinterpret_cast<thread_state_t>(&threadState));
+        mach_msg_type_number_t count =
+            message.GetThreadState(pHandler->m_flavor, reinterpret_cast<thread_state_t>(&threadState));
         SetThreadState(pHandler->m_flavor, reinterpret_cast<thread_state_t>(&threadState), count);
     }
 
     // Initialize header fields.
     m_pMessage->header.msgh_bits = MACH_MSGH_BITS(MACH_MSG_TYPE_COPY_SEND, MACH_MSG_TYPE_MOVE_SEND_ONCE);
-    m_pMessage->header.msgh_remote_port = pHandler->m_handler;          // Forward to here
-    m_pMessage->header.msgh_local_port = message.GetRemotePort();       // The reply will come here
+    m_pMessage->header.msgh_remote_port = pHandler->m_handler; // Forward to here
+    m_pMessage->header.msgh_local_port = message.GetRemotePort(); // The reply will come here
 
     // Set the message header size field based on the contents of the message (call this function after all
     // other fields have been initialized).
     InitMessageSize();
 
     // Send the formatted message.
-    machret = mach_msg(reinterpret_cast<mach_msg_header_t*>(m_pMessage),
-                       MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
-                       m_pMessage->header.msgh_size,
-                       0,
-                       MACH_PORT_NULL,
-                       MACH_MSG_TIMEOUT_NONE,
-                       MACH_PORT_NULL);
+    machret = mach_msg(reinterpret_cast<mach_msg_header_t *>(m_pMessage), MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
+                       m_pMessage->header.msgh_size, 0, MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
     CHECK_MACH("mach_msg()", machret);
 
     // Erase any stale data.
@@ -570,7 +536,7 @@ void MachMessage::ForwardNotification(MachExceptionHandler *pHandler, MachMessag
 // and send that reply back to the original sender of the notification. This is used when
 // our handler handles the exception rather than forwarding it to a chain-back handler.
 // Clean up the message afterwards.
-void MachMessage::ReplyToNotification(MachMessage& message, kern_return_t eResult)
+void MachMessage::ReplyToNotification(MachMessage &message, kern_return_t eResult)
 {
     kern_return_t machret;
 
@@ -590,28 +556,24 @@ void MachMessage::ReplyToNotification(MachMessage& message, kern_return_t eResul
         // notification message (handling the exception is likely to have changed the thread state).
         thread_state_data_t threadState;
         mach_msg_type_number_t count = THREAD_STATE_MAX;
-        machret = thread_get_state(message.GetThread(), eNotificationFlavor, reinterpret_cast<thread_state_t>(&threadState), &count);
+        machret = thread_get_state(message.GetThread(), eNotificationFlavor,
+                                   reinterpret_cast<thread_state_t>(&threadState), &count);
 
         SetThreadState(eNotificationFlavor, reinterpret_cast<thread_state_t>(&threadState), count);
     }
 
     // Initialize header fields.
     m_pMessage->header.msgh_bits = MACH_MSGH_BITS(MACH_MSG_TYPE_MOVE_SEND_ONCE, 0);
-    m_pMessage->header.msgh_remote_port = message.GetRemotePort();     // Reply goes back to sender
-    m_pMessage->header.msgh_local_port = 0;                                 // No reply to this expected
+    m_pMessage->header.msgh_remote_port = message.GetRemotePort(); // Reply goes back to sender
+    m_pMessage->header.msgh_local_port = 0; // No reply to this expected
 
     // Set the message header size field based on the contents of the message (call this function after all
     // other fields have been initialized).
     InitMessageSize();
 
     // Send the formatted message.
-    machret = mach_msg(reinterpret_cast<mach_msg_header_t*>(m_pMessage),
-                       MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
-                       m_pMessage->header.msgh_size,
-                       0,
-                       MACH_PORT_NULL,
-                       MACH_MSG_TIMEOUT_NONE,
-                       MACH_PORT_NULL);
+    machret = mach_msg(reinterpret_cast<mach_msg_header_t *>(m_pMessage), MACH_SEND_MSG | MACH_MSG_OPTION_NONE,
+                       m_pMessage->header.msgh_size, 0, MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
     CHECK_MACH("mach_msg()", machret);
 
     // Erase any stale data.
@@ -644,7 +606,7 @@ void MachMessage::ResetMessage()
     memset(this, 0xcc, sizeof(*this));
 #endif
 
-    m_pMessage = reinterpret_cast<mach_message_t*>(m_rgMessageBuffer);
+    m_pMessage = reinterpret_cast<mach_message_t *>(m_rgMessageBuffer);
     m_hThread = MACH_PORT_NULL;
     m_hTask = MACH_PORT_NULL;
     m_fPortsOwned = false;
@@ -784,15 +746,15 @@ thread_act_t MachMessage::GetThreadFromState(thread_state_flavor_t eFlavor, thre
     {
 #if defined(_AMD64_)
     case x86_THREAD_STATE:
-        targetSP = ((x86_thread_state_t*)pState)->uts.ts64.__rsp;
+        targetSP = ((x86_thread_state_t *)pState)->uts.ts64.__rsp;
         break;
 
     case x86_THREAD_STATE64:
-        targetSP = ((x86_thread_state64_t*)pState)->__rsp;
+        targetSP = ((x86_thread_state64_t *)pState)->__rsp;
         break;
 #elif defined(_ARM64_)
     case ARM_THREAD_STATE64:
-        targetSP = arm_thread_state64_get_sp(*reinterpret_cast<arm_thread_state64_t*>(pState));
+        targetSP = arm_thread_state64_get_sp(*reinterpret_cast<arm_thread_state64_t *>(pState));
         break;
 #else
 #error Unexpected architecture.
@@ -819,7 +781,8 @@ thread_act_t MachMessage::GetThreadFromState(thread_state_flavor_t eFlavor, thre
 #elif defined(_ARM64_)
         arm_thread_state64_t threadState;
         mach_msg_type_number_t count = ARM_THREAD_STATE64_COUNT;
-        machret = thread_get_state(pThreads[i], ARM_THREAD_STATE64, reinterpret_cast<thread_state_t>(&threadState), &count);
+        machret =
+            thread_get_state(pThreads[i], ARM_THREAD_STATE64, reinterpret_cast<thread_state_t>(&threadState), &count);
 #else
 #error Unexpected architecture
 #endif
@@ -849,7 +812,8 @@ thread_act_t MachMessage::GetThreadFromState(thread_state_flavor_t eFlavor, thre
                     machret = mach_port_deallocate(mach_task_self(), pThreads[j]);
                     CHECK_MACH("mach_port_deallocate()", machret);
                 }
-                machret = vm_deallocate(mach_task_self(), reinterpret_cast<vm_address_t>(pThreads), cThreads * sizeof(thread_act_t));
+                machret = vm_deallocate(mach_task_self(), reinterpret_cast<vm_address_t>(pThreads),
+                                        cThreads * sizeof(thread_act_t));
                 CHECK_MACH("vm_deallocate()", machret);
 
                 // Return the thread we found.
@@ -867,11 +831,11 @@ mach_msg_id_t MachMessage::MapBehaviorToNotificationType(exception_behavior_t eB
 {
     switch (static_cast<uint>(eBehavior))
     {
-    case MACH_EXCEPTION_CODES|EXCEPTION_DEFAULT:
+    case MACH_EXCEPTION_CODES | EXCEPTION_DEFAULT:
         return EXCEPTION_RAISE_64_MESSAGE_ID;
-    case MACH_EXCEPTION_CODES|EXCEPTION_STATE:
+    case MACH_EXCEPTION_CODES | EXCEPTION_STATE:
         return EXCEPTION_RAISE_STATE_64_MESSAGE_ID;
-    case MACH_EXCEPTION_CODES|EXCEPTION_STATE_IDENTITY:
+    case MACH_EXCEPTION_CODES | EXCEPTION_STATE_IDENTITY:
         return EXCEPTION_RAISE_STATE_IDENTITY_64_MESSAGE_ID;
     default:
         NONPAL_RETAIL_ASSERT("Unsupported exception behavior type: %u", eBehavior);
