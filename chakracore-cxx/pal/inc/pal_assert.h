@@ -25,10 +25,6 @@ extern "C" {
 #define _ASSERTE(e) ((void)0)
 #endif
 
-#ifndef assert
-#define assert(e) _ASSERTE(e)
-#endif  // assert
-
 #ifdef  __cplusplus
 }
 #endif

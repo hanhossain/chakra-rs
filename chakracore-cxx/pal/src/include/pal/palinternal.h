@@ -196,9 +196,6 @@ function_name() to call the system's implementation
 #define OffsetOf(s, f) (int32_t)(size_t)&(((s*)0)->f)
 #endif /* __GNUC__ version check*/
 
-#undef assert
-#define assert (Use__ASSERTE_instead_of_assert) assert
-
 #define PROCESS_PIPE_NAME_PREFIX ".dotnet-pal-processpipe"
 
 #ifdef __cplusplus
