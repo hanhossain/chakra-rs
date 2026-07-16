@@ -599,7 +599,6 @@
 
 // used with allocated but not yet initialized objects
 #define _Pre_notnull_                     _SAL2_Source_(_Pre_notnull_, (), _Pre1_impl_(__notnull_impl_notref))
-#define _Pre_maybenull_                   _SAL2_Source_(_Pre_maybenull_, (), _Pre1_impl_(__maybenull_impl_notref))
 #define _Pre_null_                        _SAL2_Source_(_Pre_null_, (), _Pre1_impl_(__null_impl_notref))
 
 //
