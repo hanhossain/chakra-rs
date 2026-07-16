@@ -109,7 +109,7 @@ public:
     }
 
     template <typename T, class Func>
-    static T AlignOverflowCheck(T size, T alignment, __inout Func& overflowFn)
+    static T AlignOverflowCheck(T size, T alignment, Func& overflowFn)
     {
         Assert(size >= 0);
         T alignSize = Align(size, alignment);

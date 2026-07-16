@@ -1998,7 +1998,7 @@ bool ByteCodeGenerator::DoJitLoopBodies(FuncInfo *funcInfo) const
 }
 
 void ByteCodeGenerator::Generate(ParseNodeProg *pnodeProg, uint32_t grfscr, ByteCodeGenerator* byteCodeGenerator,
-    __inout Js::ParseableFunctionInfo ** ppRootFunc, uint sourceIndex,
+    Js::ParseableFunctionInfo ** ppRootFunc, uint sourceIndex,
     bool forceNoNative, Parser* parser, Js::ScriptFunction **functionRef)
 {
 #if DBG
@@ -2204,7 +2204,7 @@ void ByteCodeGenerator::Begin(
     this->jumpCleanupList = Anew(alloc, JumpCleanupList, alloc);
 }
 
-int32_t GenerateByteCode(ParseNodeProg *pnode, uint32_t grfscr, Js::ScriptContext* scriptContext, __inout Js::ParseableFunctionInfo ** ppRootFunc,
+int32_t GenerateByteCode(ParseNodeProg *pnode, uint32_t grfscr, Js::ScriptContext* scriptContext, Js::ParseableFunctionInfo ** ppRootFunc,
                          uint sourceIndex, bool forceNoNative, Parser* parser, CompileScriptException *pse, Js::ScopeInfo* parentScopeInfo,
                         Js::ScriptFunction ** functionRef)
 {

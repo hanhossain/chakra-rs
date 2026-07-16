@@ -8,7 +8,7 @@ class UInt32Math
 {
 public:
     template< class Func >
-    static uint32_t Add(uint32_t lhs, uint32_t rhs, __inout Func& overflowFn)
+    static uint32_t Add(uint32_t lhs, uint32_t rhs, Func& overflowFn)
     {
         uint32_t result = lhs + rhs;
 
@@ -22,7 +22,7 @@ public:
     }
 
     template< class Func >
-    static void Inc(uint32_t& lhs, __inout Func& overflowFn)
+    static void Inc(uint32_t& lhs, Func& overflowFn)
     {
         ++lhs;
 
@@ -34,7 +34,7 @@ public:
     }
 
     template< class Func >
-    static uint32_t Mul(uint32_t lhs, uint32_t rhs, __inout Func& overflowFn)
+    static uint32_t Mul(uint32_t lhs, uint32_t rhs, Func& overflowFn)
     {
         // Do the multiplication using 64-bit unsigned math.
         unsigned long result = static_cast<unsigned long>(lhs) * static_cast<unsigned long>(rhs);
@@ -49,7 +49,7 @@ public:
     }
 
     template<uint32_t mul, class Func >
-    static uint32_t Mul(uint32_t left, __inout Func& overflowFn)
+    static uint32_t Mul(uint32_t left, Func& overflowFn)
     {
         static_assert(mul != 0);
 
@@ -64,7 +64,7 @@ public:
 
     // Using 0 for mul will result in compile-time divide by zero error (which is desired behavior)
     template< uint32_t add, uint32_t mul, class Func >
-    static uint32_t AddMul(uint32_t left, __inout Func& overflowFn)
+    static uint32_t AddMul(uint32_t left, Func& overflowFn)
     {
         //
         // The result will overflow if (left+add)*mul > UINT_MAX
@@ -87,7 +87,7 @@ public:
 
     // Using 0 for mul will result in compile-time divide by zero error (which is desired behavior)
     template< uint32_t mul, uint32_t add, class Func >
-    static uint32_t MulAdd(uint32_t left, __inout Func& overflowFn)
+    static uint32_t MulAdd(uint32_t left, Func& overflowFn)
     {
         //
         // The result will overflow if (left*mul)+add > UINT_MAX

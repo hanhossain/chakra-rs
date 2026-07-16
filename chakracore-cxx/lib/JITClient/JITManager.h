@@ -43,7 +43,7 @@ public:
         { Assert(false); return E_FAIL; }
 
     int32_t CleanupThreadContext(
-        __inout PPTHREADCONTEXT_HANDLE threadContextInfoAddress)
+        PPTHREADCONTEXT_HANDLE threadContextInfoAddress)
         { Assert(false); return E_FAIL; }
 
     int32_t UpdatePropertyRecordMap(
@@ -69,7 +69,7 @@ public:
         { Assert(false); return E_FAIL; }
 
     int32_t CleanupScriptContext(
-        __inout PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
+        PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
         { Assert(false); return E_FAIL; }
 
     int32_t CloseScriptContext(
