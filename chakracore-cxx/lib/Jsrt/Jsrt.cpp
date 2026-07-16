@@ -3111,7 +3111,7 @@ JsErrorCode chakracore::jsrt::JsGetSymbolFromPropertyId(_In_ JsPropertyIdRef pro
 }
 
 #pragma prefast(suppress:6101, "Prefast doesn't see through the lambda")
-JsErrorCode JsGetPropertyNameFromId(_In_ JsPropertyIdRef propertyId, _Outptr_result_z_ const char16_t **name)
+JsErrorCode JsGetPropertyNameFromId(_In_ JsPropertyIdRef propertyId, const char16_t **name)
 {
     return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
         VALIDATE_INCOMING_PROPERTYID(propertyId);
