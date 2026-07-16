@@ -24,7 +24,7 @@ Abstract:
 #define S_OK (static_cast<int32_t>(0x00000000L))
 #define E_INVALIDARG (static_cast<int32_t>(0x80070057L))
 #define SUCCEEDED(Status) (static_cast<int32_t>(Status) >= 0)
-#define FAILED(Status) (static_cast<int32_t>(Status)<0)
+#define FAILED(Status) (static_cast<int32_t>(Status) < 0)
 
 #include <cassert>
 #include "rt/intsafe.h"
@@ -54,8 +54,7 @@ inline int32_t CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *resul
     else
     {
         uint32_t temp = 0; // should not use in-place addition in ULongAdd
-        if (SUCCEEDED(ULongMult(cchSize, sizeof(char16_t), &temp)) &&
-            SUCCEEDED(ULongAdd(temp, constant, result)))
+        if (SUCCEEDED(ULongMult(cchSize, sizeof(char16_t), &temp)) && SUCCEEDED(ULongAdd(temp, constant, result)))
         {
             *result = *result & ~WIN32_ALLOC_ALIGN;
             return NOERROR;
@@ -63,7 +62,6 @@ inline int32_t CbSysStringSize(uint32_t cchSize, BOOL isByteLen, uint32_t *resul
     }
     return INTSAFE_E_ARITHMETIC_OVERFLOW;
 }
-
 
 
 /***
@@ -88,21 +86,23 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
     if (FAILED(CbSysStringSize(len, FALSE, &cbTotal)))
         return nullptr;
 
-    bstr = static_cast<OLECHAR*>(malloc(cbTotal));
+    bstr = static_cast<OLECHAR *>(malloc(cbTotal));
 
-    if(bstr != nullptr) {
+    if (bstr != nullptr)
+    {
         memset(bstr, 0, cbTotal);
         // NOTE: There are some apps which peek back 4 bytes to look at
         // the size of the BSTR. So, in case of 64-bit code,
         // we need to ensure that the BSTR length can be found by
         // looking one uint32_t before the BSTR pointer.
-        *reinterpret_cast<unsigned long*>(bstr) = static_cast<unsigned long>(0);
-        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) + sizeof(uint32_t));
-        *reinterpret_cast<uint32_t*>(bstr) = len * sizeof(OLECHAR);
+        *reinterpret_cast<unsigned long *>(bstr) = static_cast<unsigned long>(0);
+        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char *>(bstr) + sizeof(uint32_t));
+        *reinterpret_cast<uint32_t *>(bstr) = len * sizeof(OLECHAR);
 
-        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) + sizeof(uint32_t));
+        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char *>(bstr) + sizeof(uint32_t));
 
-        if(psz != nullptr){
+        if (psz != nullptr)
+        {
             memcpy(bstr, psz, len * sizeof(OLECHAR));
         }
 
@@ -128,8 +128,8 @@ extern "C" void SysFreeString(BSTR bstr)
 {
     if (bstr != nullptr)
     {
-        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) - sizeof(uint32_t));
-        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) - sizeof(uint32_t));
+        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char *>(bstr) - sizeof(uint32_t));
+        bstr = reinterpret_cast<BSTR>(reinterpret_cast<char *>(bstr) - sizeof(uint32_t));
         free(bstr);
     }
 }
@@ -153,7 +153,7 @@ extern "C" uint32_t SysStringLen(BSTR bstr)
         return 0;
     }
 
-    return static_cast<uint32_t>((reinterpret_cast<uint32_t*>(bstr)[-1]) / sizeof(OLECHAR));
+    return static_cast<uint32_t>((reinterpret_cast<uint32_t *>(bstr)[-1]) / sizeof(OLECHAR));
 }
 
 /***
@@ -168,9 +168,9 @@ extern "C" uint32_t SysStringLen(BSTR bstr)
  *  return value = BSTR, NULL if allocation failed
  *
  ***********************************************************************/
-extern "C" BSTR SysAllocString(const OLECHAR* psz)
+extern "C" BSTR SysAllocString(const OLECHAR *psz)
 {
-    if(psz == nullptr)
+    if (psz == nullptr)
     {
         return nullptr;
     }

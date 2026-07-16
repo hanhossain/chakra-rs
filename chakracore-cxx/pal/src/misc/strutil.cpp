@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -18,10 +18,10 @@ Abstract:
 
 --*/
 
-#include "pal/corunix.hpp"
-#include "pal/thread.hpp"
 #include <new>
+#include "pal/corunix.hpp"
 #include "pal/dbgmsg.h"
+#include "pal/thread.hpp"
 
 SET_DEFAULT_DEBUG_CHANNEL(PAL);
 
@@ -39,9 +39,7 @@ Parameters:
 --*/
 
 PAL_ERROR
-CPalString::CopyString(
-    CPalString *psSource
-    )
+CPalString::CopyString(CPalString *psSource)
 {
     PAL_ERROR palError = NO_ERROR;
 

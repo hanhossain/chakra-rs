@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -22,11 +22,11 @@ Abstract:
 #include "pal/palinternal.h"
 #if defined(__APPLE__)
 #include <mach/message.h>
-#endif //defined(__APPLE__)
+#endif // defined(__APPLE__)
 
-#include "pal/utils.h"
 #include "pal/dbgmsg.h"
 #include "pal/file.h"
+#include "pal/utils.h"
 
 #include <errno.h>
 #include <string.h>
@@ -43,55 +43,55 @@ SET_DEFAULT_DEBUG_CHANNEL(MISC);
 Function:
   UTIL_inverse_wcspbrk
 
-  Opposite of wcspbrk : searches a string for the first character NOT in the 
+  Opposite of wcspbrk : searches a string for the first character NOT in the
   given set
 
 Parameters :
     char16_t* lpwstr :   string to search
     const char16_t* charset : list of characters to search for
-                                      
+
 Return value :
     pointer to first character of lpwstr that isn't in the set
-    NULL if all characters are in the set                                                                 
+    NULL if all characters are in the set
 --*/
-char16_t* UTIL_inverse_wcspbrk(char16_t* lpwstr, const char16_t* charset)
+char16_t *UTIL_inverse_wcspbrk(char16_t *lpwstr, const char16_t *charset)
 {
-    while(*lpwstr)
+    while (*lpwstr)
     {
-        if(NULL == PAL_wcschr(charset,*lpwstr))
+        if (NULL == PAL_wcschr(charset, *lpwstr))
         {
             return lpwstr;
         }
         lpwstr++;
-    }                     
+    }
     return NULL;
 }
 
 
 /*++
-Function : 
+Function :
     UTIL_IsReadOnlyBitsSet
-    
+
     Takes a struct stat *
     Returns true if the file is read only,
 --*/
-BOOL UTIL_IsReadOnlyBitsSet( struct stat * stat_data )
+BOOL UTIL_IsReadOnlyBitsSet(struct stat *stat_data)
 {
     BOOL bRetVal = FALSE;
 
     /* Check for read permissions. */
-    if ( stat_data->st_uid == geteuid() )
+    if (stat_data->st_uid == geteuid())
     {
         /* The process owner is the file owner as well. */
-        if ( ( stat_data->st_mode & S_IRUSR ) && !( stat_data->st_mode & S_IWUSR ) )
+        if ((stat_data->st_mode & S_IRUSR) && !(stat_data->st_mode & S_IWUSR))
         {
             bRetVal = TRUE;
         }
     }
-    else if ( stat_data->st_gid == getegid() )
+    else if (stat_data->st_gid == getegid())
     {
         /* The process's owner is in the same group as the file's owner. */
-        if ( ( stat_data->st_mode & S_IRGRP ) && !( stat_data->st_mode & S_IWGRP ) )
+        if ((stat_data->st_mode & S_IRGRP) && !(stat_data->st_mode & S_IWGRP))
         {
             bRetVal = TRUE;
         }
@@ -99,7 +99,7 @@ BOOL UTIL_IsReadOnlyBitsSet( struct stat * stat_data )
     else
     {
         /* Check the other bits to see who can access the file. */
-        if ( ( stat_data->st_mode & S_IROTH ) && !( stat_data->st_mode & S_IWOTH ) )
+        if ((stat_data->st_mode & S_IROTH) && !(stat_data->st_mode & S_IWOTH))
         {
             bRetVal = TRUE;
         }
@@ -109,34 +109,34 @@ BOOL UTIL_IsReadOnlyBitsSet( struct stat * stat_data )
 }
 
 /*++
-Function : 
+Function :
     UTIL_IsExecuteBitsSet
-    
+
     Takes a struct stat *
     Returns true if the file is executable,
 --*/
-BOOL UTIL_IsExecuteBitsSet( struct stat * stat_data )
+BOOL UTIL_IsExecuteBitsSet(struct stat *stat_data)
 {
     BOOL bRetVal = FALSE;
 
-    if ( (stat_data->st_mode & S_IFMT) == S_IFDIR )
+    if ((stat_data->st_mode & S_IFMT) == S_IFDIR)
     {
         return FALSE;
     }
-    
+
     /* Check for read permissions. */
-    if ( stat_data->st_uid == geteuid() )
+    if (stat_data->st_uid == geteuid())
     {
         /* The process owner is the file owner as well. */
-        if ( ( stat_data->st_mode & S_IXUSR ) )
+        if ((stat_data->st_mode & S_IXUSR))
         {
             bRetVal = TRUE;
         }
     }
-    else if ( stat_data->st_gid == getegid() )
+    else if (stat_data->st_gid == getegid())
     {
         /* The process's owner is in the same group as the file's owner. */
-        if ( ( stat_data->st_mode & S_IXGRP ) )
+        if ((stat_data->st_mode & S_IXGRP))
         {
             bRetVal = TRUE;
         }
@@ -144,7 +144,7 @@ BOOL UTIL_IsExecuteBitsSet( struct stat * stat_data )
     else
     {
         /* Check the other bits to see who can access the file. */
-        if ( ( stat_data->st_mode & S_IXOTH ) )
+        if ((stat_data->st_mode & S_IXOTH))
         {
             bRetVal = TRUE;
         }
@@ -154,49 +154,47 @@ BOOL UTIL_IsExecuteBitsSet( struct stat * stat_data )
 }
 
 /*++
-Function : 
+Function :
     UTIL_WCToMB_Alloc
-    
+
     Converts a wide string to a multibyte string, allocating the required buffer
-    
+
 Parameters :
     const char16_t* lpWideCharStr : string to convert
     int cchWideChar : number of wide characters to convert
                       (-1 to convert a complete null-termnated string)
-    
+
 Return Value :
-    newly allocated buffer containing the converted string. Conversion is 
-    performed using CP_ACP. Buffer is allocated with malloc(), release it 
+    newly allocated buffer containing the converted string. Conversion is
+    performed using CP_ACP. Buffer is allocated with malloc(), release it
     with free().
     In case if failure, LastError will be set.
 --*/
-char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
+char *UTIL_WCToMB_Alloc(const char16_t *lpWideCharStr, int cchWideChar)
 {
     int length;
-    char* lpMultiByteStr;
+    char *lpMultiByteStr;
 
     /* get required buffer length */
-    length = WideCharToMultiByte(CP_ACP, 0, lpWideCharStr, cchWideChar, 
-                                 NULL, 0, NULL);
-    if(0 == length)
+    length = WideCharToMultiByte(CP_ACP, 0, lpWideCharStr, cchWideChar, NULL, 0, NULL);
+    if (0 == length)
     {
         ERROR("WCToMB error; GetLastError returns %#x", GetLastError());
         return NULL;
     }
 
     /* allocate required buffer */
-    lpMultiByteStr = static_cast<char*>(malloc(length));
-    if(NULL == lpMultiByteStr)
+    lpMultiByteStr = static_cast<char *>(malloc(length));
+    if (NULL == lpMultiByteStr)
     {
-        ERROR("malloc() failed! errno is %d (%s)\n", errno,strerror(errno));
+        ERROR("malloc() failed! errno is %d (%s)\n", errno, strerror(errno));
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         return NULL;
     }
 
     /* convert into allocated buffer */
-    length = WideCharToMultiByte(CP_ACP, 0, lpWideCharStr, cchWideChar, 
-                                 lpMultiByteStr, length, NULL);
-    if(0 == length)
+    length = WideCharToMultiByte(CP_ACP, 0, lpWideCharStr, cchWideChar, lpMultiByteStr, length, NULL);
+    if (0 == length)
     {
         ASSERT("WCToMB error; GetLastError returns %#x\n", GetLastError());
         free(lpMultiByteStr);
@@ -206,31 +204,30 @@ char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
 }
 
 /*++
-Function : 
+Function :
     UTIL_MBToWC_Alloc
-    
+
     Converts a multibyte string to a wide string, allocating the required buffer
-    
+
 Parameters :
     const char * lpMultiByteStr : string to convert
     int cbMultiByte : number of bytes to convert
                       (-1 to convert a complete null-termnated string)
-    
+
 Return Value :
-    newly allocated buffer containing the converted string. Conversion is 
-    performed using CP_ACP. Buffer is allocated with malloc(), release it 
+    newly allocated buffer containing the converted string. Conversion is
+    performed using CP_ACP. Buffer is allocated with malloc(), release it
     with free().
     In case if failure, LastError will be set.
 --*/
-char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte)
+char16_t *UTIL_MBToWC_Alloc(const char *lpMultiByteStr, int cbMultiByte)
 {
     int length;
-    char16_t* lpWideCharStr;
+    char16_t *lpWideCharStr;
 
     /* get required buffer length */
-    length = MultiByteToWideChar(CP_ACP, 0, lpMultiByteStr, cbMultiByte,
-                                      NULL, 0);
-    if(0 == length)
+    length = MultiByteToWideChar(CP_ACP, 0, lpMultiByteStr, cbMultiByte, NULL, 0);
+    if (0 == length)
     {
         ERROR("MBToWC error; GetLastError returns %#x", GetLastError());
         return NULL;
@@ -238,25 +235,24 @@ char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte)
 
     if (length >= (INT_MAX / sizeof(char16_t)))
     {
-        ERROR("integer overflow! length = %d , sizeof(char16_t) = (%d)\n", length,sizeof(char16_t) );
+        ERROR("integer overflow! length = %d , sizeof(char16_t) = (%d)\n", length, sizeof(char16_t));
         SetLastError(ERROR_ARITHMETIC_OVERFLOW);
         return NULL;
     }
 
     /* allocate required buffer */
     size_t fullsize = length * sizeof(char16_t);
-    lpWideCharStr = static_cast<char16_t*>(malloc(fullsize));
-    if(NULL == lpWideCharStr)
+    lpWideCharStr = static_cast<char16_t *>(malloc(fullsize));
+    if (NULL == lpWideCharStr)
     {
-        ERROR("malloc() failed! errno is %d (%s)\n", errno,strerror(errno));
+        ERROR("malloc() failed! errno is %d (%s)\n", errno, strerror(errno));
         SetLastError(FILEGetLastErrorFromErrno());
         return NULL;
     }
 
     /* convert into allocated buffer */
-    length = MultiByteToWideChar(CP_ACP, 0, lpMultiByteStr, cbMultiByte, 
-                                      lpWideCharStr, length);
-    if(0 >= length)
+    length = MultiByteToWideChar(CP_ACP, 0, lpMultiByteStr, cbMultiByte, lpWideCharStr, length);
+    if (0 >= length)
     {
         ASSERT("MCToMB error; GetLastError returns %#x\n", GetLastError());
         free(lpWideCharStr);
@@ -317,4 +313,4 @@ void UTIL_SetLastErrorFromMach(kern_return_t MachReturn)
         SetLastError(palError);
     }
 }
-#endif //defined(__APPLE__)
+#endif // defined(__APPLE__)

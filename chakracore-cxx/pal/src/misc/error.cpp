@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -21,8 +21,8 @@ Revision History:
 
 --*/
 
-#include "pal/thread.hpp"
 #include "pal/dbgmsg.h"
+#include "pal/thread.hpp"
 
 using namespace CorUnix;
 
@@ -51,13 +51,7 @@ function. The Return Value section of each reference page notes the
 conditions under which the function sets the last-error code.
 
 --*/
-uint32_t
-GetLastError(
-         void)
-{
-    return CPalThread::GetLastError();
-}
-
+uint32_t GetLastError(void) { return CPalThread::GetLastError(); }
 
 
 /*++
@@ -78,10 +72,4 @@ Return Values
 This function does not return a value.
 
 --*/
-void
-SetLastError(
-          uint32_t dwErrCode)
-{
-    CPalThread::SetLastError(dwErrCode);
-}
-
+void SetLastError(uint32_t dwErrCode) { CPalThread::SetLastError(dwErrCode); }

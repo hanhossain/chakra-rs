@@ -22,15 +22,15 @@ Abstract:
 
 --*/
 
-#include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/misc.h"
+#include "pal/palinternal.h"
 
-#include <time.h>
-#include <sys/time.h>
 #include <errno.h>
-#include <string.h>
 #include <sched.h>
+#include <string.h>
+#include <sys/time.h>
+#include <time.h>
 
 #if defined(__APPLE__)
 #include <mach/mach_time.h>
@@ -86,9 +86,7 @@ Return Values
 This function does not return a value.
 
 --*/
-void
-GetSystemTime(
-           LPSYSTEMTIME lpSystemTime)
+void GetSystemTime(LPSYSTEMTIME lpSystemTime)
 {
     time_t tt;
     struct tm ut;
@@ -100,7 +98,7 @@ GetSystemTime(
 
     /* We can't get millisecond resolution from time(), so we get it from
        gettimeofday() */
-    timeofday_retval = gettimeofday(&timeval,NULL);
+    timeofday_retval = gettimeofday(&timeval, NULL);
 
     utPtr = &ut;
     if (gmtime_r(&tt, utPtr) == NULL)
@@ -117,10 +115,9 @@ GetSystemTime(
     lpSystemTime->wMinute = utPtr->tm_min;
     lpSystemTime->wSecond = utPtr->tm_sec;
 
-    if(-1 == timeofday_retval)
+    if (-1 == timeofday_retval)
     {
-        ASSERT("gettimeofday() failed; errno is %d (%s)\n",
-               errno, strerror(errno));
+        ASSERT("gettimeofday() failed; errno is %d (%s)\n", errno, strerror(errno));
         lpSystemTime->wMilliseconds = 0;
     }
     else
@@ -128,14 +125,14 @@ GetSystemTime(
         int old_seconds;
         int new_seconds;
 
-        lpSystemTime->wMilliseconds = timeval.tv_usec/tccMillieSecondsToMicroSeconds;
+        lpSystemTime->wMilliseconds = timeval.tv_usec / tccMillieSecondsToMicroSeconds;
 
         old_seconds = utPtr->tm_sec;
-        new_seconds = timeval.tv_sec%60;
+        new_seconds = timeval.tv_sec % 60;
 
         /* just in case we reached the next second in the interval between
            time() and gettimeofday() */
-        if( old_seconds!=new_seconds )
+        if (old_seconds != new_seconds)
         {
             TRACE("crossed seconds boundary; setting milliseconds to 999\n");
             lpSystemTime->wMilliseconds = 999;
@@ -167,9 +164,7 @@ In the ROTOR implementation the return value is the elapsed time since
 the start of the epoch.
 
 --*/
-uint32_t
-GetTickCount(
-         void)
+uint32_t GetTickCount(void)
 {
     uint32_t retval = 0;
 
@@ -180,10 +175,7 @@ GetTickCount(
     return retval;
 }
 
-BOOL
-QueryPerformanceCounter(
-     LARGE_INTEGER *lpPerformanceCount
-    )
+BOOL QueryPerformanceCounter(LARGE_INTEGER *lpPerformanceCount)
 {
     BOOL retval = TRUE;
 
@@ -197,8 +189,7 @@ QueryPerformanceCounter(
             retval = FALSE;
             break;
         }
-        lpPerformanceCount->QuadPart =
-            ts.tv_sec * static_cast<long>(tccSecondsToNanoSeconds) + ts.tv_nsec;
+        lpPerformanceCount->QuadPart = ts.tv_sec * static_cast<long>(tccSecondsToNanoSeconds) + ts.tv_nsec;
     }
 #else
     {
@@ -211,10 +202,7 @@ QueryPerformanceCounter(
     return retval;
 }
 
-BOOL
-QueryPerformanceFrequency(
-     LARGE_INTEGER *lpFrequency
-    )
+BOOL QueryPerformanceFrequency(LARGE_INTEGER *lpFrequency)
 {
     BOOL retval = TRUE;
 
@@ -233,18 +221,14 @@ pointed to by CycleTime. ThreadHandle must refer to the current thread. Returns 
 failure.
 --*/
 
-BOOL
-QueryThreadCycleTime(
-     HANDLE ThreadHandle,
-     unsigned long * CycleTime
-    )
+BOOL QueryThreadCycleTime(HANDLE ThreadHandle, unsigned long *CycleTime)
 {
 
     ULONG64 calcTime;
     FILETIME kernelTime, userTime;
     BOOL retval = TRUE;
 
-    if(!GetThreadTimesInternal(ThreadHandle, &kernelTime, &userTime))
+    if (!GetThreadTimesInternal(ThreadHandle, &kernelTime, &userTime))
     {
         ASSERT("Could not get cycle time for current thread");
         retval = FALSE;
@@ -261,8 +245,7 @@ EXIT:
     return retval;
 }
 
-static unsigned long
-GetTickCount64Fallback()
+static unsigned long GetTickCount64Fallback()
 {
     unsigned long retval = 0;
 
@@ -271,15 +254,14 @@ GetTickCount64Fallback()
     // break backward compatibility.
 #if !defined(__APPLE__)
     {
-        clockid_t clockType =
-            CLOCK_MONOTONIC_COARSE; // good enough resolution, fastest speed
+        clockid_t clockType = CLOCK_MONOTONIC_COARSE; // good enough resolution, fastest speed
         struct timespec ts;
         if (clock_gettime(clockType, &ts) != 0)
         {
             ASSERT("clock_gettime(CLOCK_MONOTONIC*) failed; errno is %d (%s)\n", errno, strerror(errno));
             goto EXIT;
         }
-        retval = (ts.tv_sec * tccSecondsToMillieSeconds)+(ts.tv_nsec / tccMillieSecondsToNanoSeconds);
+        retval = (ts.tv_sec * tccSecondsToMillieSeconds) + (ts.tv_nsec / tccMillieSecondsToNanoSeconds);
     }
 #else
     {
@@ -300,7 +282,7 @@ EXIT:
 inline unsigned long rdtsc()
 {
     unsigned long H, L;
-    __asm volatile ("rdtsc":"=a"(L), "=d"(H));
+    __asm volatile("rdtsc" : "=a"(L), "=d"(H));
     return (H << 32) | L;
 }
 
@@ -320,19 +302,16 @@ static double CPUFreq()
     end = rdtsc();
     gettimeofday(&tend, &tzone);
 
-    unsigned long usec = ((tend.tv_sec - tstart.tv_sec)*1e6)
-                + (tend.tv_usec - tstart.tv_usec);
+    unsigned long usec = ((tend.tv_sec - tstart.tv_sec) * 1e6) + (tend.tv_usec - tstart.tv_usec);
 
-    if (!usec) return 0;
+    if (!usec)
+        return 0;
     return (end - start) / usec;
 }
 
 static unsigned long cpu_speed = CPUFreq() * 1e3; // 1000 * 1e6 => ns to ms
 typedef unsigned long (*GetTickCount64FallbackCB)(void);
-inline unsigned long FastTickCount()
-{
-  return rdtsc() / cpu_speed;
-}
+inline unsigned long FastTickCount() { return rdtsc() / cpu_speed; }
 static GetTickCount64FallbackCB getTickCount64FallbackCB = cpu_speed ? FastTickCount : GetTickCount64Fallback;
 #endif
 
@@ -345,8 +324,7 @@ to return monotonically increasing counts and avoid being affected by changes
 to the system clock (either due to drift or due to explicit changes to system
 time).
 --*/
-unsigned long
-GetTickCount64()
+unsigned long GetTickCount64()
 {
 #if defined(__AMD64__) || defined(__x86_64__)
     return getTickCount64FallbackCB();
