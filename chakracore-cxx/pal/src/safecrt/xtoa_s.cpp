@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /***
@@ -14,17 +14,17 @@
 *
 *******************************************************************************/
 
-#include <string.h>
 #include <errno.h>
 #include <limits.h>
+#include <string.h>
 #include "internal_securecrt.h"
 
 #include "mbusafecrt_internal.h"
 
-//#define long long long
+// #define long long long
 
 #define _SECURE_ITOA
 
 #define TCHAR char
-#define _T(x)       x
+#define _T(x) x
 #include "xtox_s.inl"

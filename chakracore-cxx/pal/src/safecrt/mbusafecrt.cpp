@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /***
@@ -13,10 +13,10 @@
 *       data for MBUSafeCRT declared in mbusafecrt.h and mbusafecrt_internal.h.
 ****/
 
-#include "pal/palinternal.h"
-#include <string.h>
 #include <errno.h>
 #include <limits.h>
+#include <string.h>
+#include "pal/palinternal.h"
 
 #include "mbusafecrt_internal.h"
 
@@ -24,23 +24,23 @@
 tSafeCRT_AssertFuncPtr sMBUSafeCRTAssertFunc = NULL;
 
 /***
-*   MBUSafeCRTSetAssertFunc - Set the function called when an assert fails.
-****/
+ *   MBUSafeCRTSetAssertFunc - Set the function called when an assert fails.
+ ****/
 
 /***
-*   _putc_nolock - putc for the miniFILE stream.
-****/
+ *   _putc_nolock - putc for the miniFILE stream.
+ ****/
 
-int _putc_nolock( char inChar, miniFILE* inStream )
+int _putc_nolock(char inChar, miniFILE *inStream)
 {
     int returnValue = EOF;
 
-        inStream->_cnt -= sizeof( char );
+    inStream->_cnt -= sizeof(char);
 
-    if ( ( inStream->_cnt ) >= 0 )
+    if ((inStream->_cnt) >= 0)
     {
-        *( inStream->_ptr ) = inChar;
-        inStream->_ptr += sizeof( char );
+        *(inStream->_ptr) = inChar;
+        inStream->_ptr += sizeof(char);
         returnValue = static_cast<int>(inChar);
     }
 
@@ -48,19 +48,19 @@ int _putc_nolock( char inChar, miniFILE* inStream )
 }
 
 /***
-*   _putwc_nolock - putwc for the miniFILE stream.
-****/
+ *   _putwc_nolock - putwc for the miniFILE stream.
+ ****/
 
-int _putwc_nolock( char16_t inChar, miniFILE* inStream )
+int _putwc_nolock(char16_t inChar, miniFILE *inStream)
 {
     int returnValue = WEOF;
 
-        inStream->_cnt -= sizeof( char16_t );
+    inStream->_cnt -= sizeof(char16_t);
 
-    if ( ( inStream->_cnt ) >= 0 )
+    if ((inStream->_cnt) >= 0)
     {
-        *reinterpret_cast<char16_t*>(inStream->_ptr) = inChar;
-        inStream->_ptr += sizeof( char16_t );
+        *reinterpret_cast<char16_t *>(inStream->_ptr) = inChar;
+        inStream->_ptr += sizeof(char16_t);
         returnValue = static_cast<int>(inChar);
     }
 
@@ -68,53 +68,53 @@ int _putwc_nolock( char16_t inChar, miniFILE* inStream )
 }
 
 /***
-*   _getc_nolock - getc for the miniFILE stream.
-****/
+ *   _getc_nolock - getc for the miniFILE stream.
+ ****/
 
-int _getc_nolock( miniFILE* inStream )
+int _getc_nolock(miniFILE *inStream)
 {
     int returnValue = EOF;
 
-    if ( ( inStream->_cnt ) >= static_cast<int>(sizeof(char)) )
+    if ((inStream->_cnt) >= static_cast<int>(sizeof(char)))
     {
-        inStream->_cnt -= sizeof( char );
+        inStream->_cnt -= sizeof(char);
         returnValue = static_cast<int>(*(inStream->_ptr));
-        inStream->_ptr += sizeof( char );
+        inStream->_ptr += sizeof(char);
     }
 
     return returnValue;
 }
 
 /***
-*   _getwc_nolock - getc for the miniFILE stream.
-****/
+ *   _getwc_nolock - getc for the miniFILE stream.
+ ****/
 
-int _getwc_nolock( miniFILE* inStream )
+int _getwc_nolock(miniFILE *inStream)
 {
     int returnValue = EOF;
 
-    if ( ( inStream->_cnt ) >= static_cast<int>(sizeof(char16_t)) )
+    if ((inStream->_cnt) >= static_cast<int>(sizeof(char16_t)))
     {
-        inStream->_cnt -= sizeof( char16_t );
-        returnValue = static_cast<int>(*reinterpret_cast<char16_t*>(inStream->_ptr));
-        inStream->_ptr += sizeof( char16_t );
+        inStream->_cnt -= sizeof(char16_t);
+        returnValue = static_cast<int>(*reinterpret_cast<char16_t *>(inStream->_ptr));
+        inStream->_ptr += sizeof(char16_t);
     }
 
     return returnValue;
 }
 
 /***
-*   _ungetc_nolock - ungetc for the miniFILE stream.
-****/
+ *   _ungetc_nolock - ungetc for the miniFILE stream.
+ ****/
 
-int _ungetc_nolock( char inChar, miniFILE* inStream )
+int _ungetc_nolock(char inChar, miniFILE *inStream)
 {
     int returnValue = EOF;
 
-    if ( static_cast<size_t>((inStream->_ptr) - (inStream->_base)) >= ( sizeof( char ) ) )
+    if (static_cast<size_t>((inStream->_ptr) - (inStream->_base)) >= (sizeof(char)))
     {
-        inStream->_cnt += sizeof( char );
-        inStream->_ptr -= sizeof( char );
+        inStream->_cnt += sizeof(char);
+        inStream->_ptr -= sizeof(char);
         return inChar;
     }
 
@@ -122,34 +122,34 @@ int _ungetc_nolock( char inChar, miniFILE* inStream )
 }
 
 /***
-*   _ungetwc_nolock - ungetwc for the miniFILE stream.
-****/
+ *   _ungetwc_nolock - ungetwc for the miniFILE stream.
+ ****/
 
-int _ungetwc_nolock( char16_t inChar, miniFILE* inStream )
+int _ungetwc_nolock(char16_t inChar, miniFILE *inStream)
 {
     int returnValue = WEOF;
-    
-    if ( static_cast<size_t>((inStream->_ptr) - (inStream->_base)) >= ( sizeof( char16_t ) ) )
+
+    if (static_cast<size_t>((inStream->_ptr) - (inStream->_base)) >= (sizeof(char16_t)))
     {
-        inStream->_cnt += sizeof( char16_t );
-        inStream->_ptr -= sizeof( char16_t );
+        inStream->_cnt += sizeof(char16_t);
+        inStream->_ptr -= sizeof(char16_t);
         returnValue = static_cast<unsigned short>(inChar);
     }
-    
+
     return returnValue;
 }
 
 
 /***
-*   _safecrt_cfltcvt - convert a float to an ascii string.
-*       Uses sprintf - this usage is OK.
-****/
+ *   _safecrt_cfltcvt - convert a float to an ascii string.
+ *       Uses sprintf - this usage is OK.
+ ****/
 
 /* routine used for floating-point output */
 #define FORMATSIZE 30
 
 // taken from output.inl
-#define FL_ALTERNATE  0x00080   /* alternate form requested */
+#define FL_ALTERNATE 0x00080 /* alternate form requested */
 
 errno_t _safecrt_cfltcvt(double *arg, char *buffer, size_t sizeInBytes, int type, int precision, int flags)
 {
@@ -185,31 +185,31 @@ errno_t _safecrt_cfltcvt(double *arg, char *buffer, size_t sizeInBytes, int type
 
 
 /***
-*   _safecrt_fassign - convert a string into a float or double.
-****/
+ *   _safecrt_fassign - convert a string into a float or double.
+ ****/
 
-void _safecrt_fassign(int flag, void* argument, char* number )
+void _safecrt_fassign(int flag, void *argument, char *number)
 {
-    if ( flag != 0 )    // double
+    if (flag != 0) // double
     {
         double dblValue = 0.0;
-        (void)sscanf( number, "%lf", &dblValue );
-        *static_cast<double*>(argument) = dblValue;
+        (void)sscanf(number, "%lf", &dblValue);
+        *static_cast<double *>(argument) = dblValue;
     }
-    else                // float
+    else // float
     {
         float fltValue = 0.0;
-        (void)sscanf( number, "%f", &fltValue );
-        *static_cast<float*>(argument) = fltValue;
+        (void)sscanf(number, "%f", &fltValue);
+        *static_cast<float *>(argument) = fltValue;
     }
 }
 
 
 /***
-*   _safecrt_wfassign - convert a char16_t string into a float or double.
-****/
+ *   _safecrt_wfassign - convert a char16_t string into a float or double.
+ ****/
 
-void _safecrt_wfassign(int flag, void* argument, char16_t* number )
+void _safecrt_wfassign(int flag, void *argument, char16_t *number)
 {
     // We cannot use system functions for this - they
     // assume that char16_t is four bytes, while we assume
@@ -217,31 +217,29 @@ void _safecrt_wfassign(int flag, void* argument, char16_t* number )
     // without using any system functions. To do this,
     // we'll assume that the numbers are in the 0-9 range and
     // do a simple conversion.
-    
-    char* numberAsChars = reinterpret_cast<char*>(number);
+
+    char *numberAsChars = reinterpret_cast<char *>(number);
     int position = 0;
-    
+
     // do the convert
-    while ( number[ position ] != 0 )
+    while (number[position] != 0)
     {
-        numberAsChars[ position ] = static_cast<char>(number[position] & 0x00FF);
+        numberAsChars[position] = static_cast<char>(number[position] & 0x00FF);
         position++;
     }
-    numberAsChars[ position ] = static_cast<char>(number[position] & 0x00FF);
-    
+    numberAsChars[position] = static_cast<char>(number[position] & 0x00FF);
+
     // call the normal char version
-    _safecrt_fassign( flag, argument, numberAsChars );
+    _safecrt_fassign(flag, argument, numberAsChars);
 }
 
 
 /***
-*   _minimal_chartowchar - do a simple char to wchar conversion.
-****/
+ *   _minimal_chartowchar - do a simple char to wchar conversion.
+ ****/
 
-int _minimal_chartowchar( char16_t* outWChar, const char* inChar )
+int _minimal_chartowchar(char16_t *outWChar, const char *inChar)
 {
     *outWChar = static_cast<char16_t>(static_cast<unsigned short>(static_cast<unsigned char>(*inChar)));
     return 1;
 }
-
-

@@ -29,15 +29,15 @@
 #endif
 #define WEOF -1
 
-#define CASSERT(p) extern int sanity_check_dummy[1+((!(p))*(-2))];
+#define CASSERT(p) extern int sanity_check_dummy[1 + ((!(p)) * (-2))];
 
 extern tSafeCRT_AssertFuncPtr sMBUSafeCRTAssertFunc;
 
 typedef struct miniFILE_struct
 {
-    char* _ptr;
+    char *_ptr;
     int _cnt;
-    char* _base;
+    char *_base;
     int _flag;
 } miniFILE;
 
@@ -46,26 +46,26 @@ typedef struct miniFILE_struct
 #define _IOREAD 4
 #define _IOMYBUF 8
 extern "C" {
-int _putc_nolock( char inChar, miniFILE* inStream );
-int _putwc_nolock( char16_t inChar, miniFILE* inStream );
-int _getc_nolock( miniFILE* inStream );
-int _getwc_nolock( miniFILE* inStream );
-int _ungetc_nolock( char inChar, miniFILE* inStream );
-int _ungetwc_nolock( char16_t inChar, miniFILE* inStream );
+int _putc_nolock(char inChar, miniFILE *inStream);
+int _putwc_nolock(char16_t inChar, miniFILE *inStream);
+int _getc_nolock(miniFILE *inStream);
+int _getwc_nolock(miniFILE *inStream);
+int _ungetc_nolock(char inChar, miniFILE *inStream);
+int _ungetwc_nolock(char16_t inChar, miniFILE *inStream);
 
 errno_t _safecrt_cfltcvt(double *arg, char *buffer, size_t sizeInBytes, int type, int precision, int flags);
 
-void _safecrt_fassign(int flag, void* argument, char * number );
-void _safecrt_wfassign(int flag, void* argument, char16_t * number );
+void _safecrt_fassign(int flag, void *argument, char *number);
+void _safecrt_wfassign(int flag, void *argument, char16_t *number);
 
-int _minimal_chartowchar( char16_t* outWChar, const char* inChar );
+int _minimal_chartowchar(char16_t *outWChar, const char *inChar);
 
-int _output_s( miniFILE* outfile, const char* _Format, va_list _ArgList);
-int _woutput_s( miniFILE* outfile, const char16_t* _Format, va_list _ArgList);
-int _output( miniFILE *outfile, const char* _Format, va_list _ArgList);
+int _output_s(miniFILE *outfile, const char *_Format, va_list _ArgList);
+int _woutput_s(miniFILE *outfile, const char16_t *_Format, va_list _ArgList);
+int _output(miniFILE *outfile, const char *_Format, va_list _ArgList);
 
-int _soutput_s( char *_Dst, size_t _Size, const char *_Format, va_list _ArgList );
-int _swoutput_s( char16_t *_Dst, size_t _Size, const char16_t *_Format, va_list _ArgList );
+int _soutput_s(char *_Dst, size_t _Size, const char *_Format, va_list _ArgList);
+int _swoutput_s(char16_t *_Dst, size_t _Size, const char16_t *_Format, va_list _ArgList);
 }
 
-#endif  /* MBUSAFECRT_INTERNAL_H */
+#endif /* MBUSAFECRT_INTERNAL_H */
