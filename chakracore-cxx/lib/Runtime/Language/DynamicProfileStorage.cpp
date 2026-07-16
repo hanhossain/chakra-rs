@@ -38,7 +38,7 @@ public:
     template <typename T>
     bool ReadArray(T * t, size_t len);
 
-    _Success_(return) bool ReadUtf8String(__deref_out_z char16_t ** str, uint32_t * len);
+    _Success_(return) bool ReadUtf8String(char16_t ** str, uint32_t * len);
 
     template <typename T>
     bool Write(T const& t);
@@ -103,7 +103,7 @@ bool DynamicProfileStorageReaderWriter::ReadArray(T * t, size_t len)
     return true;
 }
 
-_Success_(return) bool DynamicProfileStorageReaderWriter::ReadUtf8String(__deref_out_z char16_t ** str, uint32_t * len)
+_Success_(return) bool DynamicProfileStorageReaderWriter::ReadUtf8String(char16_t ** str, uint32_t * len)
 {
     uint32_t urllen;
     if (!Read(&urllen))

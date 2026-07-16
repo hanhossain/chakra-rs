@@ -31,7 +31,6 @@
 #define _Outptr_result_buffer_(byteLength)
 #define _Outptr_result_bytebuffer_(byteLength)
 #define _Outptr_result_maybenull_
-#define _Outptr_result_z_
 #define _Ret_maybenull_
 #define _Out_writes_(size)
 #define _Out_writes_to_opt_(byteLength, byteLength2)

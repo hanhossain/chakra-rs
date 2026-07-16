@@ -352,7 +352,6 @@
 
 // Annotations for _Outptr_ parameters returning pointers to null terminated strings.
 
-#define _Outptr_result_z_                _SAL2_Source_(_Outptr_result_z_, (),               _Out_impl_     _Deref_post_z_)
 #define _Outptr_opt_result_z_            _SAL2_Source_(_Outptr_opt_result_z_, (),           _Out_opt_impl_ _Deref_post_z_)
 #define _Outptr_result_maybenull_z_      _SAL2_Source_(_Outptr_result_maybenull_z_, (),     _Out_impl_     _Deref_post_opt_z_)
 #define _Outptr_opt_result_maybenull_z_  _SAL2_Source_(_Outptr_opt_result_maybenull_z_, (), _Out_opt_impl_ _Deref_post_opt_z_)
@@ -1884,7 +1883,6 @@ buffer, use the table in the buffer annotations section.
 #define __deref_out_bcount_part(size,length)                     _SAL1_Source_(__deref_out_bcount_part, (size,length), _Outptr_result_bytebuffer_to_(size,length))
 #define __deref_out_ecount_full(size)                            _SAL1_Source_(__deref_out_ecount_full, (size), __deref_out_ecount_part(size,size))
 #define __deref_out_bcount_full(size)                            _SAL1_Source_(__deref_out_bcount_full, (size), __deref_out_bcount_part(size,size))
-#define __deref_out_z                                            _SAL1_Source_(__deref_out_z, (), _Outptr_result_z_)
 #define __deref_out_ecount_z(size)                               _SAL1_Source_(__deref_out_ecount_z, (size), __deref_out_ecount(size) __post __deref __nullterminated)
 #define __deref_out_bcount_z(size)                               _SAL1_Source_(__deref_out_bcount_z, (size), __deref_out_bcount(size) __post __deref __nullterminated)
 #define __deref_out_nz                                           _SAL1_Source_(__deref_out_nz, (), __deref_out)
