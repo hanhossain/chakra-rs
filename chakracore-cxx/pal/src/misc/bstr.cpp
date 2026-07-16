@@ -25,7 +25,6 @@ Abstract:
 #define E_INVALIDARG (static_cast<int32_t>(0x80070057L))
 #define SUCCEEDED(Status) (static_cast<int32_t>(Status) >= 0)
 #define FAILED(Status) (static_cast<int32_t>(Status)<0)
-#define NULL    0
 
 #include <cassert>
 #include "rt/intsafe.h"
@@ -87,11 +86,11 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
     uint32_t cbTotal = 0;
 
     if (FAILED(CbSysStringSize(len, FALSE, &cbTotal)))
-        return NULL;
+        return nullptr;
 
     bstr = static_cast<OLECHAR*>(malloc(cbTotal));
 
-    if(bstr != NULL) {
+    if(bstr != nullptr) {
         memset(bstr, 0, cbTotal);
         // NOTE: There are some apps which peek back 4 bytes to look at
         // the size of the BSTR. So, in case of 64-bit code,
@@ -103,7 +102,7 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
 
         bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) + sizeof(uint32_t));
 
-        if(psz != NULL){
+        if(psz != nullptr){
             memcpy(bstr, psz, len * sizeof(OLECHAR));
         }
 
@@ -127,7 +126,7 @@ extern "C" BSTR SysAllocStringLen(const OLECHAR *psz, uint32_t len)
  ***********************************************************************/
 extern "C" void SysFreeString(BSTR bstr)
 {
-    if (bstr != NULL)
+    if (bstr != nullptr)
     {
         bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) - sizeof(uint32_t));
         bstr = reinterpret_cast<BSTR>(reinterpret_cast<char*>(bstr) - sizeof(uint32_t));
@@ -149,7 +148,7 @@ extern "C" void SysFreeString(BSTR bstr)
  ***********************************************************************/
 extern "C" uint32_t SysStringLen(BSTR bstr)
 {
-    if (bstr == NULL)
+    if (bstr == nullptr)
     {
         return 0;
     }
@@ -171,9 +170,9 @@ extern "C" uint32_t SysStringLen(BSTR bstr)
  ***********************************************************************/
 extern "C" BSTR SysAllocString(const OLECHAR* psz)
 {
-    if(psz == NULL)
+    if(psz == nullptr)
     {
-        return NULL;
+        return nullptr;
     }
 
     return SysAllocStringLen(psz, static_cast<uint32_t>(std::u16string(psz).length()));
