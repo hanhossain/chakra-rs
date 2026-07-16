@@ -28,9 +28,9 @@ public:
 
     std::string initialSource;
 
-    RuntimeThreadData* parent;
-    
-    std::list<RuntimeThreadData*> children;
+    RuntimeThreadData *parent;
+
+    std::list<RuntimeThreadData *> children;
 
     CRITICAL_SECTION csReportQ;
     std::list<std::string> reportQ;
@@ -39,16 +39,15 @@ public:
 
 
     uint32_t ThreadProc();
-
 };
 
 struct RuntimeThreadLocalData
 {
     // can't use ctor/dtor because it's not supported in VS2012
-    // error C2483: 'threadLocalData' : object with constructor or destructor cannot be declared 'thread' 
-    void Initialize(RuntimeThreadData* threadData);
+    // error C2483: 'threadLocalData' : object with constructor or destructor cannot be declared 'thread'
+    void Initialize(RuntimeThreadData *threadData);
     void Uninitialize();
-    RuntimeThreadData* threadData;
+    RuntimeThreadData *threadData;
 };
 
-RuntimeThreadLocalData& GetRuntimeThreadLocalData();
+RuntimeThreadLocalData &GetRuntimeThreadLocalData();

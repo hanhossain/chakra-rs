@@ -2,40 +2,43 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "stdafx.h"
 #include <filesystem>
 #include <iostream>
-#include <print>
 #include <limits>
+#include <print>
 #include <sys/stat.h>
+#include "stdafx.h"
 
 #define MAX_URI_LENGTH 512
 
 namespace fs = std::filesystem;
 
-JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
+JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char *path, bool isWrite)
 {
     return (JsTTDStreamHandle)PAL_fopen(path, isWrite ? "w+b" : "r+b");
 }
 
-#define TTDHostRead(buff, size, handle) std::fread(buff, 1, size, (FILE*)handle)
-#define TTDHostWrite(buff, size, handle) std::fwrite(buff, 1, size, (FILE*)handle)
+#define TTDHostRead(buff, size, handle) std::fread(buff, 1, size, (FILE *)handle)
+#define TTDHostWrite(buff, size, handle) std::fwrite(buff, 1, size, (FILE *)handle)
 
-int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& contents, uint32_t* lengthBytesOut /*= nullptr*/, const std::optional<std::filesystem::path> &fullPath, bool shouldMute /*=false */)
+int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&contents,
+                                    uint32_t *lengthBytesOut /*= nullptr*/,
+                                    const std::optional<std::filesystem::path> &fullPath, bool shouldMute /*=false */)
 {
     static fs::path sHostApplicationPath;
 
     int32_t hr = S_OK;
-    uint8_t * pRawBytes = nullptr;
-    uint8_t * pRawBytesFromMap = nullptr;
+    uint8_t *pRawBytes = nullptr;
+    uint8_t *pRawBytesFromMap = nullptr;
     uint32_t lengthBytes = 0;
     contents = nullptr;
-    FILE * file = NULL;
+    FILE *file = NULL;
     size_t bufferLength = 0;
 
     fs::path filenamePath = fullPath.value_or(filenameToLoad);
 
-    // TODO (hanhossain): this just caches the current_dir and converts filenamePath to an absolute path relative to the host
+    // TODO (hanhossain): this just caches the current_dir and converts filenamePath to an absolute path relative to the
+    // host
     if (sHostApplicationPath.empty())
     {
         sHostApplicationPath = filenamePath.parent_path();
@@ -47,11 +50,10 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
     // check if have it registered
     AutoString *data;
-    if (SourceMap::Find(filenameToLoad, strlen(filenameToLoad), &data) ||
-        SourceMap::Find(filenamePath, &data))
+    if (SourceMap::Find(filenameToLoad, strlen(filenameToLoad), &data) || SourceMap::Find(filenamePath, &data))
     {
-        pRawBytesFromMap = (uint8_t*) data->GetString();
-        lengthBytes = (uint32_t) data->GetLength();
+        pRawBytesFromMap = (uint8_t *)data->GetString();
+        lengthBytes = (uint32_t)data->GetLength();
     }
     else
     {
@@ -129,17 +131,15 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 #pragma warning(push)
         // suppressing prefast warning that "readable size is bufferLength
         // bytes but 2 may be read" as bufferLength is clearly > 2 in the code that follows
-#pragma warning(disable:6385)
+#pragma warning(disable : 6385)
         static_assert(sizeof(char16_t) == 2);
         if (bufferLength > 2)
         {
 #pragma prefast(push)
-#pragma prefast(disable:6385, "PREfast incorrectly reports this as an out-of-bound access.");
-            if ((pRawBytes[0] == 0xFE && pRawBytes[1] == 0xFF) ||
-                (pRawBytes[0] == 0xFF && pRawBytes[1] == 0xFE) ||
+#pragma prefast(disable : 6385, "PREfast incorrectly reports this as an out-of-bound access.");
+            if ((pRawBytes[0] == 0xFE && pRawBytes[1] == 0xFF) || (pRawBytes[0] == 0xFF && pRawBytes[1] == 0xFE) ||
                 (bufferLength > 4 && pRawBytes[0] == 0x00 && pRawBytes[1] == 0x00 &&
-                    ((pRawBytes[2] == 0xFE && pRawBytes[3] == 0xFF) ||
-                    (pRawBytes[2] == 0xFF && pRawBytes[3] == 0xFE))))
+                 ((pRawBytes[2] == 0xFE && pRawBytes[3] == 0xFF) || (pRawBytes[2] == 0xFF && pRawBytes[3] == 0xFE))))
 
             {
                 // unicode unsupported
@@ -175,7 +175,7 @@ Error:
     return hr;
 }
 
-const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
+const char *Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
 {
     bool hasException = false;
     ChakraRTInterface::JsHasException(&hasException);
@@ -186,56 +186,101 @@ const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
 
     switch (jsErrorCode)
     {
-    case JsNoError:                            return "JsNoError";
+    case JsNoError:
+        return "JsNoError";
     // JsErrorCategoryUsage
-    case JsErrorCategoryUsage:                 return "JsErrorCategoryUsage";
-    case JsErrorInvalidArgument:               return "JsErrorInvalidArgument";
-    case JsErrorNullArgument:                  return "JsErrorNullArgument";
-    case JsErrorNoCurrentContext:              return "JsErrorNoCurrentContext";
-    case JsErrorInExceptionState:              return "JsErrorInExceptionState";
-    case JsErrorNotImplemented:                return "JsErrorNotImplemented";
-    case JsErrorWrongThread:                   return "JsErrorWrongThread";
-    case JsErrorRuntimeInUse:                  return "JsErrorRuntimeInUse";
-    case JsErrorBadSerializedScript:           return "JsErrorBadSerializedScript";
-    case JsErrorInDisabledState:               return "JsErrorInDisabledState";
-    case JsErrorCannotDisableExecution:        return "JsErrorCannotDisableExecution";
-    case JsErrorHeapEnumInProgress:            return "JsErrorHeapEnumInProgress";
-    case JsErrorArgumentNotObject:             return "JsErrorArgumentNotObject";
-    case JsErrorInProfileCallback:             return "JsErrorInProfileCallback";
-    case JsErrorInThreadServiceCallback:       return "JsErrorInThreadServiceCallback";
-    case JsErrorCannotSerializeDebugScript:    return "JsErrorCannotSerializeDebugScript";
-    case JsErrorAlreadyDebuggingContext:       return "JsErrorAlreadyDebuggingContext";
-    case JsErrorAlreadyProfilingContext:       return "JsErrorAlreadyProfilingContext";
-    case JsErrorIdleNotEnabled:                return "JsErrorIdleNotEnabled";
-    case JsErrorInObjectBeforeCollectCallback: return "JsErrorInObjectBeforeCollectCallback";
-    case JsErrorObjectNotInspectable:          return "JsErrorObjectNotInspectable";
-    case JsErrorPropertyNotSymbol:             return "JsErrorPropertyNotSymbol";
-    case JsErrorPropertyNotString:             return "JsErrorPropertyNotString";
-    case JsErrorInvalidContext:                return "JsErrorInvalidContext";
-    case JsInvalidModuleHostInfoKind:          return "JsInvalidModuleHostInfoKind";
-    case JsErrorModuleParsed:                  return "JsErrorModuleParsed";
+    case JsErrorCategoryUsage:
+        return "JsErrorCategoryUsage";
+    case JsErrorInvalidArgument:
+        return "JsErrorInvalidArgument";
+    case JsErrorNullArgument:
+        return "JsErrorNullArgument";
+    case JsErrorNoCurrentContext:
+        return "JsErrorNoCurrentContext";
+    case JsErrorInExceptionState:
+        return "JsErrorInExceptionState";
+    case JsErrorNotImplemented:
+        return "JsErrorNotImplemented";
+    case JsErrorWrongThread:
+        return "JsErrorWrongThread";
+    case JsErrorRuntimeInUse:
+        return "JsErrorRuntimeInUse";
+    case JsErrorBadSerializedScript:
+        return "JsErrorBadSerializedScript";
+    case JsErrorInDisabledState:
+        return "JsErrorInDisabledState";
+    case JsErrorCannotDisableExecution:
+        return "JsErrorCannotDisableExecution";
+    case JsErrorHeapEnumInProgress:
+        return "JsErrorHeapEnumInProgress";
+    case JsErrorArgumentNotObject:
+        return "JsErrorArgumentNotObject";
+    case JsErrorInProfileCallback:
+        return "JsErrorInProfileCallback";
+    case JsErrorInThreadServiceCallback:
+        return "JsErrorInThreadServiceCallback";
+    case JsErrorCannotSerializeDebugScript:
+        return "JsErrorCannotSerializeDebugScript";
+    case JsErrorAlreadyDebuggingContext:
+        return "JsErrorAlreadyDebuggingContext";
+    case JsErrorAlreadyProfilingContext:
+        return "JsErrorAlreadyProfilingContext";
+    case JsErrorIdleNotEnabled:
+        return "JsErrorIdleNotEnabled";
+    case JsErrorInObjectBeforeCollectCallback:
+        return "JsErrorInObjectBeforeCollectCallback";
+    case JsErrorObjectNotInspectable:
+        return "JsErrorObjectNotInspectable";
+    case JsErrorPropertyNotSymbol:
+        return "JsErrorPropertyNotSymbol";
+    case JsErrorPropertyNotString:
+        return "JsErrorPropertyNotString";
+    case JsErrorInvalidContext:
+        return "JsErrorInvalidContext";
+    case JsInvalidModuleHostInfoKind:
+        return "JsInvalidModuleHostInfoKind";
+    case JsErrorModuleParsed:
+        return "JsErrorModuleParsed";
     // JsErrorCategoryEngine
-    case JsErrorCategoryEngine:                return "JsErrorCategoryEngine";
-    case JsErrorOutOfMemory:                   return "JsErrorOutOfMemory";
-    case JsErrorBadFPUState:                   return "JsErrorBadFPUState";
+    case JsErrorCategoryEngine:
+        return "JsErrorCategoryEngine";
+    case JsErrorOutOfMemory:
+        return "JsErrorOutOfMemory";
+    case JsErrorBadFPUState:
+        return "JsErrorBadFPUState";
     // JsErrorCategoryScript
-    case JsErrorCategoryScript:                return "JsErrorCategoryScript";
-    case JsErrorScriptException:               return "JsErrorScriptException";
-    case JsErrorScriptCompile:                 return "JsErrorScriptCompile";
-    case JsErrorScriptTerminated:              return "JsErrorScriptTerminated";
-    case JsErrorScriptEvalDisabled:            return "JsErrorScriptEvalDisabled";
+    case JsErrorCategoryScript:
+        return "JsErrorCategoryScript";
+    case JsErrorScriptException:
+        return "JsErrorScriptException";
+    case JsErrorScriptCompile:
+        return "JsErrorScriptCompile";
+    case JsErrorScriptTerminated:
+        return "JsErrorScriptTerminated";
+    case JsErrorScriptEvalDisabled:
+        return "JsErrorScriptEvalDisabled";
     // JsErrorCategoryFatal
-    case JsErrorCategoryFatal:                 return "JsErrorCategoryFatal";
-    case JsErrorFatal:                         return "JsErrorFatal";
-    case JsErrorWrongRuntime:                  return "JsErrorWrongRuntime";
+    case JsErrorCategoryFatal:
+        return "JsErrorCategoryFatal";
+    case JsErrorFatal:
+        return "JsErrorFatal";
+    case JsErrorWrongRuntime:
+        return "JsErrorWrongRuntime";
     // JsErrorCategoryDiagError
-    case JsErrorCategoryDiagError:             return "JsErrorCategoryDiagError";
-    case JsErrorDiagAlreadyInDebugMode:        return "JsErrorDiagAlreadyInDebugMode";
-    case JsErrorDiagNotInDebugMode:            return "JsErrorDiagNotInDebugMode";
-    case JsErrorDiagNotAtBreak:                return "JsErrorDiagNotAtBreak";
-    case JsErrorDiagInvalidHandle:             return "JsErrorDiagInvalidHandle";
-    case JsErrorDiagObjectNotFound:            return "JsErrorDiagObjectNotFound";
-    case JsErrorDiagUnableToPerformAction:     return "JsErrorDiagUnableToPerformAction";
+    case JsErrorCategoryDiagError:
+        return "JsErrorCategoryDiagError";
+    case JsErrorDiagAlreadyInDebugMode:
+        return "JsErrorDiagAlreadyInDebugMode";
+    case JsErrorDiagNotInDebugMode:
+        return "JsErrorDiagNotInDebugMode";
+    case JsErrorDiagNotAtBreak:
+        return "JsErrorDiagNotAtBreak";
+    case JsErrorDiagInvalidHandle:
+        return "JsErrorDiagInvalidHandle";
+    case JsErrorDiagObjectNotFound:
+        return "JsErrorDiagObjectNotFound";
+    case JsErrorDiagUnableToPerformAction:
+        return "JsErrorDiagUnableToPerformAction";
     default:
         return "<unknown>";
         break;
@@ -253,13 +298,14 @@ void Helpers::LogError(__nullterminated const char16_t *msg, ...)
     va_end(args);
 }
 
-int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, uint32_t& lengthBytes, bool printFileOpenError)
+int32_t Helpers::LoadBinaryFile(const char *filename, const char *&contents, uint32_t &lengthBytes,
+                                bool printFileOpenError)
 {
     int32_t hr = S_OK;
     contents = nullptr;
     lengthBytes = 0;
     size_t result;
-    FILE * file;
+    FILE *file;
 
     //
     // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
@@ -295,7 +341,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     //
     // Read the entire content as a binary block.
     //
-    result = std::fread((void*)contents, sizeof(char), lengthBytes, file);
+    result = std::fread((void *)contents, sizeof(char), lengthBytes, file);
     if (result != lengthBytes)
     {
         std::print(stderr, "Read error");
@@ -306,16 +352,16 @@ Error:
     fclose(file);
     if (contents && FAILED(hr))
     {
-        free((void*)contents);
+        free((void *)contents);
         contents = nullptr;
     }
 
     return hr;
 }
 
-void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
+void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char *msg)
 {
-    if(!ok)
+    if (!ok)
     {
         fprintf(stderr, "Error is: %i %s\n", errno, strerror(errno));
         fprintf(stderr, "Message is: %s\n", msg);
@@ -325,11 +371,12 @@ void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
     }
 }
 
-JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, const char* uri, size_t asciiNameLength, const char* asciiName, bool read, bool write)
+JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, const char *uri, size_t asciiNameLength,
+                                                           const char *asciiName, bool read, bool write)
 {
     AssertMsg((read | write) & (!read | !write), "Read/Write streams not supported yet -- defaulting to read only");
 
-    if(uriLength + asciiNameLength + 1 > MAX_URI_LENGTH)
+    if (uriLength + asciiNameLength + 1 > MAX_URI_LENGTH)
     {
         std::print("We assume bounded MAX_URI_LENGTH for simplicity.");
         exit(1);
@@ -342,7 +389,7 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
     memcpy(path + uriLength, asciiName, asciiNameLength);
 
     JsTTDStreamHandle res = TTDHostOpen(uriLength + asciiNameLength, path, write);
-    if(res == nullptr)
+    if (res == nullptr)
     {
         fprintf(stderr, "Failed to open file: %s\n", path);
     }
@@ -351,18 +398,19 @@ JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, con
     return res;
 }
 
-bool CALLBACK Helpers::TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, byte* buff, size_t size, size_t* readCount)
+bool CALLBACK Helpers::TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, byte *buff, size_t size,
+                                                     size_t *readCount)
 {
     AssertMsg(handle != nullptr, "Bad file handle.");
 
-    if(size > std::numeric_limits<uint32_t>::max())
+    if (size > std::numeric_limits<uint32_t>::max())
     {
         *readCount = 0;
         return false;
     }
 
     BOOL ok = FALSE;
-    *readCount = TTDHostRead(buff, size, (FILE*)handle);
+    *readCount = TTDHostRead(buff, size, (FILE *)handle);
     ok = (*readCount != 0);
 
     Helpers::TTReportLastIOErrorAsNeeded(ok, "Failed Read!!!");
@@ -370,18 +418,19 @@ bool CALLBACK Helpers::TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, b
     return ok ? true : false;
 }
 
-bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, const byte* buff, size_t size, size_t* writtenCount)
+bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, const byte *buff, size_t size,
+                                                    size_t *writtenCount)
 {
     AssertMsg(handle != nullptr, "Bad file handle.");
 
-    if(size > std::numeric_limits<uint32_t>::max())
+    if (size > std::numeric_limits<uint32_t>::max())
     {
         *writtenCount = 0;
         return false;
     }
 
     BOOL ok = FALSE;
-    *writtenCount = TTDHostWrite(buff, size, (FILE*)handle);
+    *writtenCount = TTDHostWrite(buff, size, (FILE *)handle);
     ok = (*writtenCount == size);
 
     Helpers::TTReportLastIOErrorAsNeeded(ok, "Failed Read!!!");
@@ -391,6 +440,6 @@ bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, co
 
 void CALLBACK Helpers::TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, bool read, bool write)
 {
-    fflush((FILE*)handle);
-    fclose((FILE*)handle);
+    fflush((FILE *)handle);
+    fclose((FILE *)handle);
 }

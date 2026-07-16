@@ -8,26 +8,114 @@
 
 #if DBG
 #else // DBG
-#pragma warning(disable: 4189)  // initialized but unused variable (e.g. variable that may only used by assert)
+#pragma warning(disable : 4189) // initialized but unused variable (e.g. variable that may only used by assert)
 #endif
 
-#define IfFailedReturn(EXPR) do { hr = (EXPR); if (FAILED(hr)) { return hr; }} while(FALSE)
-#define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
+#define IfFailedReturn(EXPR)                                                                                           \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        hr = (EXPR);                                                                                                   \
+        if (FAILED(hr))                                                                                                \
+        {                                                                                                              \
+            return hr;                                                                                                 \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (FALSE)
+#define IfFailedGoLabel(expr, label)                                                                                   \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        hr = (expr);                                                                                                   \
+        if (FAILED(hr))                                                                                                \
+        {                                                                                                              \
+            goto label;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-#define IfJsrtErrorFail(expr, ret) do { if ((expr) != JsNoError) return ret; } while (0)
-#define IfJsrtErrorHR(expr) do { if((expr) != JsNoError) { hr = E_FAIL; goto Error; } } while(0)
-#define IfJsrtErrorHRLabel(expr, label) do { if((expr) != JsNoError) { hr = E_FAIL; goto label; } } while(0)
-#define IfJsrtError(expr) do { if((expr) != JsNoError) { goto Error; } } while(0)
-#define IfJsrtErrorSetGo(expr) do { errorCode = (expr); if(errorCode != JsNoError) { hr = E_FAIL; goto Error; } } while(0)
-#define IfJsrtErrorSetGoLabel(expr, label) do { errorCode = (expr); if(errorCode != JsNoError) { hr = E_FAIL; goto label; } } while(0)
-#define IfFalseGo(expr) do { if(!(expr)) { hr = E_FAIL; goto Error; } } while(0)
-#define IfFalseGoLabel(expr, label) do { if(!(expr)) { hr = E_FAIL; goto label; } } while(0)
+#define IfJsrtErrorFail(expr, ret)                                                                                     \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if ((expr) != JsNoError)                                                                                       \
+            return ret;                                                                                                \
+    }                                                                                                                  \
+    while (0)
+#define IfJsrtErrorHR(expr)                                                                                            \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if ((expr) != JsNoError)                                                                                       \
+        {                                                                                                              \
+            hr = E_FAIL;                                                                                               \
+            goto Error;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
+#define IfJsrtErrorHRLabel(expr, label)                                                                                \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if ((expr) != JsNoError)                                                                                       \
+        {                                                                                                              \
+            hr = E_FAIL;                                                                                               \
+            goto label;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
+#define IfJsrtError(expr)                                                                                              \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if ((expr) != JsNoError)                                                                                       \
+        {                                                                                                              \
+            goto Error;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
+#define IfJsrtErrorSetGo(expr)                                                                                         \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        errorCode = (expr);                                                                                            \
+        if (errorCode != JsNoError)                                                                                    \
+        {                                                                                                              \
+            hr = E_FAIL;                                                                                               \
+            goto Error;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
+#define IfJsrtErrorSetGoLabel(expr, label)                                                                             \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        errorCode = (expr);                                                                                            \
+        if (errorCode != JsNoError)                                                                                    \
+        {                                                                                                              \
+            hr = E_FAIL;                                                                                               \
+            goto label;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
+#define IfFalseGo(expr)                                                                                                \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (!(expr))                                                                                                   \
+        {                                                                                                              \
+            hr = E_FAIL;                                                                                               \
+            goto Error;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
+#define IfFalseGoLabel(expr, label)                                                                                    \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (!(expr))                                                                                                   \
+        {                                                                                                              \
+            hr = E_FAIL;                                                                                               \
+            goto label;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
 
-#include "Interface/CommonDefines.h"
 #include <map>
-#include <string>
 #include <print>
+#include <string>
+#include "Interface/CommonDefines.h"
 
 #include "PlatformAgnostic/CommonPal.h"
 
@@ -58,26 +146,29 @@
 #define CHAKRACORE_STRINGIZE(x) CHAKRACORE_STRINGIZE_IMPL(x)
 #endif
 
-#define AssertMsg(exp, comment)   \
-do { \
-if (!(exp)) \
-{ \
-    fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, CHAKRACORE_STRINGIZE(exp), comment); \
-    fflush(stderr); \
-    DebugBreak(); \
-} \
-} while (0)
+#define AssertMsg(exp, comment)                                                                                        \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (!(exp))                                                                                                    \
+        {                                                                                                              \
+            fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, CHAKRACORE_STRINGIZE(exp),          \
+                    comment);                                                                                          \
+            fflush(stderr);                                                                                            \
+            DebugBreak();                                                                                              \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
 #else
 #define AssertMsg(exp, comment) ((void)0)
-#endif //defined(DBG)
+#endif // defined(DBG)
 
-#define Assert(exp)             AssertMsg(exp, #exp)
+#define Assert(exp) AssertMsg(exp, #exp)
 #define _JSRT_
 #include "ChakraCore.h"
 #include "PlatformAgnostic/CommonTypedefs.h"
 #include "TestHooksRt.h"
 
-typedef void * Var;
+typedef void *Var;
 
 #include "Codex/Utf8Helper.h"
 using utf8::NarrowStringToWideDynamic;
@@ -90,95 +181,117 @@ using utf8::WideStringToNarrowDynamic;
 #endif
 
 // TODO (hanhossain): do we still need this to fflush(stderr)?
-#define IfJsErrorFailLog(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
-        goto Error; \
-    } \
-} while (0)
+#define IfJsErrorFailLog(expr)                                                                                         \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        JsErrorCode jsErrorCode = expr;                                                                                \
+        if ((jsErrorCode) != JsNoError)                                                                                \
+        {                                                                                                              \
+            std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode),    \
+                         Helpers::JsErrorCodeToString(jsErrorCode));                                                   \
+            fflush(stderr);                                                                                            \
+            goto Error;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
 
-#define IfJsErrorFailLogAndHR(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        hr = E_FAIL; \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
-        goto Error; \
-    } \
-} while (0)
+#define IfJsErrorFailLogAndHR(expr)                                                                                    \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        JsErrorCode jsErrorCode = expr;                                                                                \
+        if ((jsErrorCode) != JsNoError)                                                                                \
+        {                                                                                                              \
+            hr = E_FAIL;                                                                                               \
+            std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode),    \
+                         Helpers::JsErrorCodeToString(jsErrorCode));                                                   \
+            fflush(stderr);                                                                                            \
+            goto Error;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
 
-#define IfJsErrorFailLogLabel(expr, label) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
-        goto label; \
-    } \
-} while (0)
+#define IfJsErrorFailLogLabel(expr, label)                                                                             \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        JsErrorCode jsErrorCode = expr;                                                                                \
+        if ((jsErrorCode) != JsNoError)                                                                                \
+        {                                                                                                              \
+            std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode),    \
+                         Helpers::JsErrorCodeToString(jsErrorCode));                                                   \
+            fflush(stderr);                                                                                            \
+            goto label;                                                                                                \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
 
-#define IfJsErrorFailLogAndRet(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
-        return JS_INVALID_REFERENCE; \
-    } \
-} while (0)
+#define IfJsErrorFailLogAndRet(expr)                                                                                   \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        JsErrorCode jsErrorCode = expr;                                                                                \
+        if ((jsErrorCode) != JsNoError)                                                                                \
+        {                                                                                                              \
+            std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode),    \
+                         Helpers::JsErrorCodeToString(jsErrorCode));                                                   \
+            fflush(stderr);                                                                                            \
+            return JS_INVALID_REFERENCE;                                                                               \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
 
-#define IfJsrtErrorFailLogAndRetFalse(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
-        return false; \
-    } \
-} while (0)
+#define IfJsrtErrorFailLogAndRetFalse(expr)                                                                            \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        JsErrorCode jsErrorCode = expr;                                                                                \
+        if ((jsErrorCode) != JsNoError)                                                                                \
+        {                                                                                                              \
+            std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode),    \
+                         Helpers::JsErrorCodeToString(jsErrorCode));                                                   \
+            fflush(stderr);                                                                                            \
+            return false;                                                                                              \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
 
-#define IfJsrtErrorFailLogAndRetErrorCode(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
-        return (jsErrorCode); \
-    } \
-} while (0)
+#define IfJsrtErrorFailLogAndRetErrorCode(expr)                                                                        \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        JsErrorCode jsErrorCode = expr;                                                                                \
+        if ((jsErrorCode) != JsNoError)                                                                                \
+        {                                                                                                              \
+            std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode),    \
+                         Helpers::JsErrorCodeToString(jsErrorCode));                                                   \
+            fflush(stderr);                                                                                            \
+            return (jsErrorCode);                                                                                      \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
 
-#include "TestHooks.h"
 #include "ChakraRtInterface.h"
 #include "HostConfigFlags.h"
 #include "MessageQueue.h"
 #include "RuntimeThreadData.h"
+#include "TestHooks.h"
 #include "WScriptJsrt.h"
 
 class AutoString
 {
     size_t length;
-    char* data;
-    char16_t* data_wide;
+    char *data;
+    char16_t *data_wide;
     JsErrorCode errorCode;
     bool dontFree;
-public:
-    AutoString():length(0), data(nullptr),
-        data_wide(nullptr), errorCode(JsNoError), dontFree(false)
-    { }
 
-    AutoString(AutoString &autoString):length(autoString.length),
-        data(autoString.data), data_wide(autoString.data_wide),
-        errorCode(JsNoError), dontFree(false)
+public:
+    AutoString() : length(0), data(nullptr), data_wide(nullptr), errorCode(JsNoError), dontFree(false) {}
+
+    AutoString(AutoString &autoString) :
+        length(autoString.length), data(autoString.data), data_wide(autoString.data_wide), errorCode(JsNoError),
+        dontFree(false)
     {
         autoString.dontFree = true; // take over the ownership
     }
 
-    AutoString(JsValueRef value):length(0), data(nullptr),
-        data_wide(nullptr), errorCode(JsNoError), dontFree(false)
+    AutoString(JsValueRef value) : length(0), data(nullptr), data_wide(nullptr), errorCode(JsNoError), dontFree(false)
     {
         Initialize(value);
     }
@@ -203,7 +316,7 @@ public:
             errorCode = ChakraRTInterface::JsCopyString(strValue, nullptr, 0, &length);
             if (errorCode == JsNoError)
             {
-                data = (char*)malloc((length + 1) * sizeof(char));
+                data = (char *)malloc((length + 1) * sizeof(char));
                 size_t writtenLength = 0;
                 errorCode = ChakraRTInterface::JsCopyString(strValue, data, length, &writtenLength);
                 if (errorCode == JsNoError)
@@ -220,19 +333,13 @@ public:
         return errorCode;
     }
 
-    void MakePersistent()
-    {
-        dontFree = true;
-    }
+    void MakePersistent() { dontFree = true; }
 
-    const char * GetString()
-    {
-        return data;
-    }
+    const char *GetString() { return data; }
 
-    char16_t* GetWideString(charcount_t* destCount = nullptr)
+    char16_t *GetWideString(charcount_t *destCount = nullptr)
     {
-        if(data_wide || !data)
+        if (data_wide || !data)
         {
             return data_wide;
         }
@@ -246,20 +353,11 @@ public:
         return data_wide;
     }
 
-    bool HasError()
-    {
-        return errorCode != JsNoError;
-    }
+    bool HasError() { return errorCode != JsNoError; }
 
-    JsErrorCode GetError()
-    {
-        return errorCode;
-    }
+    JsErrorCode GetError() { return errorCode; }
 
-    size_t GetLength()
-    {
-        return length;
-    }
+    size_t GetLength() { return length; }
 
     ~AutoString()
     {
@@ -281,16 +379,16 @@ public:
         }
     }
 
-    char* operator*() { return data; }
+    char *operator*() { return data; }
 };
 
 struct FileNode
 {
     AutoString data;
     AutoString path;
-    FileNode * next;
-    FileNode(AutoString &path_, AutoString &data_):
-        path(path_), data(data_), next(nullptr) {
+    FileNode *next;
+    FileNode(AutoString &path_, AutoString &data_) : path(path_), data(data_), next(nullptr)
+    {
         path_.MakePersistent();
         data_.MakePersistent();
     }
@@ -298,12 +396,13 @@ struct FileNode
 
 class SourceMap
 {
-    static FileNode * root;
+    static FileNode *root;
+
 public:
     static void Add(AutoString &path, AutoString &data)
     {
         // SourceMap lifetime == process lifetime
-        FileNode * node = new FileNode(path, data);
+        FileNode *node = new FileNode(path, data);
         if (root != nullptr)
         {
             node->next = root;
@@ -311,15 +410,12 @@ public:
         root = node;
     }
 
-    static bool Find(AutoString &path, AutoString ** out)
-    {
-        return Find(path.GetString(), path.GetLength(), out);
-    }
+    static bool Find(AutoString &path, AutoString **out) { return Find(path.GetString(), path.GetLength(), out); }
 
-    static bool Find(const char * path, size_t pathLength, AutoString ** out)
+    static bool Find(const char *path, size_t pathLength, AutoString **out)
     {
-        FileNode * node = root;
-        while(node != nullptr)
+        FileNode *node = root;
+        while (node != nullptr)
         {
             if (strncmp(node->path.GetString(), path, pathLength) == 0)
             {
@@ -347,7 +443,7 @@ public:
     }
 };
 
-inline JsErrorCode CreatePropertyIdFromString(const char* str, JsPropertyIdRef *Id)
+inline JsErrorCode CreatePropertyIdFromString(const char *str, JsPropertyIdRef *Id)
 {
     return ChakraRTInterface::JsCreatePropertyId(str, strlen(str), Id);
 }

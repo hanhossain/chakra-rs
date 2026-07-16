@@ -8,16 +8,22 @@
 
 class Helpers
 {
-public :
-    static int32_t LoadScriptFromFile(const char * filename, const char *& contents, uint32_t* lengthBytesOut = nullptr, const std::optional<std::filesystem::path> &fullPath = std::nullopt, bool shouldMute = false);
-    static const char* JsErrorCodeToString(JsErrorCode jsErrorCode);
+public:
+    static int32_t LoadScriptFromFile(const char *filename, const char *&contents, uint32_t *lengthBytesOut = nullptr,
+                                      const std::optional<std::filesystem::path> &fullPath = std::nullopt,
+                                      bool shouldMute = false);
+    static const char *JsErrorCodeToString(JsErrorCode jsErrorCode);
     static void LogError(__nullterminated const char16_t *msg, ...);
-    static int32_t LoadBinaryFile(const char * filename, const char *& contents, uint32_t& lengthBytes, bool printFileOpenError = true);
+    static int32_t LoadBinaryFile(const char *filename, const char *&contents, uint32_t &lengthBytes,
+                                  bool printFileOpenError = true);
 
-    static void TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg);
+    static void TTReportLastIOErrorAsNeeded(BOOL ok, const char *msg);
 
-    static JsTTDStreamHandle CALLBACK TTCreateStreamCallback(size_t uriLength, const char* uri, size_t asciiNameLength, const char* asciiName, bool read, bool write);
-    static bool CALLBACK TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, byte* buff, size_t size, size_t* readCount);
-    static bool CALLBACK TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, const byte* buff, size_t size, size_t* writtenCount);
+    static JsTTDStreamHandle CALLBACK TTCreateStreamCallback(size_t uriLength, const char *uri, size_t asciiNameLength,
+                                                             const char *asciiName, bool read, bool write);
+    static bool CALLBACK TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, byte *buff, size_t size,
+                                                       size_t *readCount);
+    static bool CALLBACK TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, const byte *buff, size_t size,
+                                                      size_t *writtenCount);
     static void CALLBACK TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, bool read, bool write);
 };
