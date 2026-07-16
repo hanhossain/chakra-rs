@@ -7,7 +7,7 @@
 //
 // ===========================================================================
 // File:  poppack.h
-// 
+//
 // ===========================================================================
 /*
 Abstract:
@@ -26,10 +26,10 @@ Abstract:
 
 */
 
-#if ! (defined(lint))
+#if !(defined(lint))
 #if defined(_PUSHPOP_SUPPORTED)
-#pragma warning(disable:4103)
-#if !(defined( MIDL_PASS )) || defined( __midl )
+#pragma warning(disable : 4103)
+#if !(defined(MIDL_PASS)) || defined(__midl)
 #pragma pack(pop)
 #else
 #pragma pack()

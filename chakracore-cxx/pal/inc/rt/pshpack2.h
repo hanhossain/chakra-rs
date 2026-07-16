@@ -7,7 +7,7 @@
 //
 // ===========================================================================
 // File: pshpack2.h
-// 
+//
 // ===========================================================================
 /*++
 
@@ -24,11 +24,11 @@ Abstract:
 
 --*/
 
-#if ! (defined(lint))
+#if !(defined(lint))
 #if defined(_PUSHPOP_SUPPORTED)
-#pragma warning(disable:4103)
-#if !(defined( MIDL_PASS )) || defined( __midl )
-#pragma pack(push,2)
+#pragma warning(disable : 4103)
+#if !(defined(MIDL_PASS)) || defined(__midl)
+#pragma pack(push, 2)
 #else
 #pragma pack(2)
 #endif

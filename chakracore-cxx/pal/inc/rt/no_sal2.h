@@ -1,9 +1,9 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
-    
+
 /***
 *       no_sal2.h - renders the SAL annotations for documenting APIs harmless.
 *
@@ -28,11 +28,11 @@
 #undef __notnull
 #define __notnull
 #undef _When_
-#define _When_(c,a)
+#define _When_(c, a)
 #undef _At_
-#define _At_(t,a)
+#define _At_(t, a)
 #undef _At_buffer_
-#define _At_buffer_(t,i,c,a)
+#define _At_buffer_(t, i, c, a)
 #undef _Group_
 #define _Group_(a)
 #undef _Pre_
@@ -104,7 +104,7 @@
 #undef _Interlocked_
 #define _Interlocked_
 #undef _Post_same_lock_
-#define _Post_same_lock_(e1,e2)
+#define _Post_same_lock_(e1, e2)
 #undef _Benign_race_begin_
 #define _Benign_race_begin_
 #undef _Benign_race_end_
@@ -134,7 +134,7 @@
 #undef _Has_lock_level_
 #define _Has_lock_level_(n)
 #undef _Lock_level_order_
-#define _Lock_level_order_(n1,n2)
+#define _Lock_level_order_(n1, n2)
 #undef _Analysis_assume_lock_acquired_
 #define _Analysis_assume_lock_acquired_(e)
 #undef _Analysis_assume_lock_released_
@@ -176,17 +176,17 @@
 #undef _Inout_updates_z_
 #define _Inout_updates_z_(s)
 #undef _Out_writes_to_
-#define _Out_writes_to_(s,c)
+#define _Out_writes_to_(s, c)
 #undef _Out_writes_bytes_to_
-#define _Out_writes_bytes_to_(s,c)
+#define _Out_writes_bytes_to_(s, c)
 #undef _Out_writes_all_
 #define _Out_writes_all_(s)
 #undef _Out_writes_bytes_all_
 #define _Out_writes_bytes_all_(s)
 #undef _Inout_updates_to_
-#define _Inout_updates_to_(s,c)
+#define _Inout_updates_to_(s, c)
 #undef _Inout_updates_bytes_to_
-#define _Inout_updates_bytes_to_(s,c)
+#define _Inout_updates_bytes_to_(s, c)
 #undef _Inout_updates_all_
 #define _Inout_updates_all_(s)
 #undef _Inout_updates_bytes_all_
@@ -226,17 +226,17 @@
 #undef _Inout_updates_opt_z_
 #define _Inout_updates_opt_z_(s)
 #undef _Out_writes_to_opt_
-#define _Out_writes_to_opt_(s,c)
+#define _Out_writes_to_opt_(s, c)
 #undef _Out_writes_bytes_to_opt_
-#define _Out_writes_bytes_to_opt_(s,c)
+#define _Out_writes_bytes_to_opt_(s, c)
 #undef _Out_writes_all_opt_
 #define _Out_writes_all_opt_(s)
 #undef _Out_writes_bytes_all_opt_
 #define _Out_writes_bytes_all_opt_(s)
 #undef _Inout_updates_to_opt_
-#define _Inout_updates_to_opt_(s,c)
+#define _Inout_updates_to_opt_(s, c)
 #undef _Inout_updates_bytes_to_opt_
-#define _Inout_updates_bytes_to_opt_(s,c)
+#define _Inout_updates_bytes_to_opt_(s, c)
 #undef _Inout_updates_all_opt_
 #define _Inout_updates_all_opt_(s)
 #undef _Inout_updates_bytes_all_opt_
@@ -282,13 +282,13 @@
 #undef _Outptr_opt_result_bytebuffer_
 #define _Outptr_opt_result_bytebuffer_(s)
 #undef _Outptr_result_buffer_to_
-#define _Outptr_result_buffer_to_(s,c)
+#define _Outptr_result_buffer_to_(s, c)
 #undef _Outptr_result_bytebuffer_to_
-#define _Outptr_result_bytebuffer_to_(s,c)
+#define _Outptr_result_bytebuffer_to_(s, c)
 #undef _Outptr_opt_result_buffer_to_
-#define _Outptr_opt_result_buffer_to_(s,c)
+#define _Outptr_opt_result_buffer_to_(s, c)
 #undef _Outptr_opt_result_bytebuffer_to_
-#define _Outptr_opt_result_bytebuffer_to_(s,c)
+#define _Outptr_opt_result_bytebuffer_to_(s, c)
 #undef _Ret_
 #define _Ret_
 #undef _Ret_valid_
@@ -302,17 +302,17 @@
 #undef _Ret_writes_z_
 #define _Ret_writes_z_(s)
 #undef _Ret_writes_to_
-#define _Ret_writes_to_(s,c)
+#define _Ret_writes_to_(s, c)
 #undef _Ret_writes_bytes_to_
-#define _Ret_writes_bytes_to_(s,c)
+#define _Ret_writes_bytes_to_(s, c)
 #undef _Ret_writes_maybenull_
 #define _Ret_writes_maybenull_(s)
 #undef _Ret_writes_bytes_maybenull_
 #define _Ret_writes_bytes_maybenull_(s)
 #undef _Ret_writes_to_maybenull_
-#define _Ret_writes_to_maybenull_(s,c)
+#define _Ret_writes_to_maybenull_(s, c)
 #undef _Ret_writes_bytes_to_maybenull_
-#define _Ret_writes_bytes_to_maybenull_(s,c)
+#define _Ret_writes_bytes_to_maybenull_(s, c)
 #undef _Ret_writes_maybenull_z_
 #define _Ret_writes_maybenull_z_(s)
 #undef _Ret_maybenull_
@@ -328,13 +328,13 @@
 #undef _Field_size_bytes_opt_
 #define _Field_size_bytes_opt_(s)
 #undef _Field_size_part_
-#define _Field_size_part_(s,c)
+#define _Field_size_part_(s, c)
 #undef _Field_size_part_opt_
-#define _Field_size_part_opt_(s,c)
+#define _Field_size_part_opt_(s, c)
 #undef _Field_size_bytes_part_
-#define _Field_size_bytes_part_(s,c)
+#define _Field_size_bytes_part_(s, c)
 #undef _Field_size_bytes_part_opt_
-#define _Field_size_bytes_part_opt_(s,c)
+#define _Field_size_bytes_part_opt_(s, c)
 #undef _Field_size_full_
 #define _Field_size_full_(s)
 #undef _Field_size_full_opt_
@@ -356,19 +356,19 @@
 #undef _Scanf_s_format_string_params_
 #define _Scanf_s_format_string_params_(x)
 #undef _In_range_
-#define _In_range_(l,h)
+#define _In_range_(l, h)
 #undef _Out_range_
-#define _Out_range_(l,h)
+#define _Out_range_(l, h)
 #undef _Ret_range_
-#define _Ret_range_(l,h)
+#define _Ret_range_(l, h)
 #undef _Deref_in_range_
-#define _Deref_in_range_(l,h)
+#define _Deref_in_range_(l, h)
 #undef _Deref_out_range_
-#define _Deref_out_range_(l,h)
+#define _Deref_out_range_(l, h)
 #undef _Deref_inout_range_
-#define _Deref_inout_range_(l,h)
+#define _Deref_inout_range_(l, h)
 #undef _Field_range_
-#define _Field_range_(l,h)
+#define _Field_range_(l, h)
 #undef _Pre_equal_to_
 #define _Pre_equal_to_(e)
 #undef _Post_equal_to_
@@ -408,11 +408,11 @@
 #undef _IRQL_saves_
 #define _IRQL_saves_
 #undef _IRQL_saves_global_
-#define _IRQL_saves_global_(k,s)
+#define _IRQL_saves_global_(k, s)
 #undef _IRQL_restores_
 #define _IRQL_restores_
 #undef _IRQL_restores_global_
-#define _IRQL_restores_global_(k,s)
+#define _IRQL_restores_global_(k, s)
 #undef _IRQL_always_function_min_
 #define _IRQL_always_function_min_(i)
 #undef _IRQL_always_function_max_
@@ -450,9 +450,9 @@
 #undef _Outref_result_bytebuffer_
 #define _Outref_result_bytebuffer_(s)
 #undef _Outref_result_buffer_to_
-#define _Outref_result_buffer_to_(s,c)
+#define _Outref_result_buffer_to_(s, c)
 #undef _Outref_result_bytebuffer_to_
-#define _Outref_result_bytebuffer_to_(s,c)
+#define _Outref_result_bytebuffer_to_(s, c)
 #undef _Outref_result_buffer_all_
 #define _Outref_result_buffer_all_(s)
 #undef _Outref_result_bytebuffer_all_
@@ -462,9 +462,9 @@
 #undef _Outref_result_bytebuffer_maybenull_
 #define _Outref_result_bytebuffer_maybenull_(s)
 #undef _Outref_result_buffer_to_maybenull_
-#define _Outref_result_buffer_to_maybenull_(s,c)
+#define _Outref_result_buffer_to_maybenull_(s, c)
 #undef _Outref_result_bytebuffer_to_maybenull_
-#define _Outref_result_bytebuffer_to_maybenull_(s,c)
+#define _Outref_result_bytebuffer_to_maybenull_(s, c)
 #undef _Outref_result_buffer_all_maybenull_
 #define _Outref_result_buffer_all_maybenull_(s)
 #undef _Outref_result_bytebuffer_all_maybenull_
@@ -490,39 +490,47 @@
 #undef _Releases_nonreentrant_lock_
 #define _Releases_nonreentrant_lock_(e)
 #undef _Reserved_
-#define _Reserved_           _Pre_equal_to_(0) _Pre_ _Null_
+#define _Reserved_ _Pre_equal_to_(0) _Pre_ _Null_
 #undef _Pre_z_
-#define _Pre_z_              _Pre_ _Null_terminated_
+#define _Pre_z_ _Pre_ _Null_terminated_
 #undef _Post_z_
-#define _Post_z_             _Post_ _Null_terminated_
+#define _Post_z_ _Post_ _Null_terminated_
 #undef _Prepost_z_
-#define _Prepost_z_          _Pre_z_ _Post_z_
+#define _Prepost_z_ _Pre_z_ _Post_z_
 #undef _Pre_null_
-#define _Pre_null_           _Pre_ _Null_
+#define _Pre_null_ _Pre_ _Null_
 #undef _Pre_notnull_
-#define _Pre_notnull_        _Pre_ _Notnull_
+#define _Pre_notnull_ _Pre_ _Notnull_
 #undef _Pre_valid_
-#define _Pre_valid_          _Pre_notnull_ _Pre_ _Valid_
+#define _Pre_valid_ _Pre_notnull_ _Pre_ _Valid_
 #undef _Pre_opt_valid_
-#define _Pre_opt_valid_      _Pre_ _Valid_
+#define _Pre_opt_valid_ _Pre_ _Valid_
 #undef _Post_valid_
-#define _Post_valid_         _Post_ _Valid_
+#define _Post_valid_ _Post_ _Valid_
 #undef _Post_invalid_
-#define _Post_invalid_       _Post_ _Deref_ _Notvalid_
+#define _Post_invalid_ _Post_ _Deref_ _Notvalid_
 #undef _Post_ptr_invalid_
-#define _Post_ptr_invalid_   _Post_ _Notvalid_
+#define _Post_ptr_invalid_ _Post_ _Notvalid_
 #undef _Pre_readable_size_
-#define _Pre_readable_size_(s)      _Pre_ _Readable_elements_(s) _Pre_ _Valid_
+#define _Pre_readable_size_(s)                                                                                         \
+    _Pre_ _Readable_elements_(s)                                                                                       \
+    _Pre_ _Valid_
 #undef _Pre_writable_size_
-#define _Pre_writable_size_(s)      _Pre_ _Writable_elements_(s)
+#define _Pre_writable_size_(s) _Pre_ _Writable_elements_(s)
 #undef _Pre_readable_byte_size_
-#define _Pre_readable_byte_size_(s) _Pre_ _Readable_bytes_(s) _Pre_ _Valid_
+#define _Pre_readable_byte_size_(s)                                                                                    \
+    _Pre_ _Readable_bytes_(s)                                                                                          \
+    _Pre_ _Valid_
 #undef _Post_readable_size_
-#define _Post_readable_size_(s)     _Post_ _Readable_elements_(s) _Post_ _Valid_
+#define _Post_readable_size_(s)                                                                                        \
+    _Post_ _Readable_elements_(s)                                                                                      \
+    _Post_ _Valid_
 #undef _Post_writable_size_
-#define _Post_writable_size_(s)     _Post_ _Writable_elements_(s)
+#define _Post_writable_size_(s) _Post_ _Writable_elements_(s)
 #undef _Post_readable_byte_size_
-#define _Post_readable_byte_size_(s) _Post_ _Readable_bytes_(s) _Post_ _Valid_
+#define _Post_readable_byte_size_(s)                                                                                   \
+    _Post_ _Readable_bytes_(s)                                                                                         \
+    _Post_ _Valid_
 #undef _Post_writable_byte_size_
 #define _Post_writable_byte_size_(s) _Post_ _Writable_bytes_(s)
 

@@ -32,39 +32,39 @@ Revision History:
 
 /******************* HRESULTs *********************************************/
 
-#define S_OK                             (0x00000000)
-#define S_FALSE                          (0x00000001)
+#define S_OK (0x00000000)
+#define S_FALSE (0x00000001)
 
-#define E_NOTIMPL                        (0x80004001)
-#define E_NOINTERFACE                    (0x80004002)
-#define E_UNEXPECTED                     (0x8000FFFF)
-#define E_OUTOFMEMORY                    (static_cast<int32_t>(0x8007000E))
-#define E_INVALIDARG                     (0x80070057)
-#define E_POINTER                        (0x80004003)
-#define E_HANDLE                         (0x80070006)
-#define E_ABORT                          (static_cast<int32_t>(0x80004004))
-#define E_FAIL                           (0x80004005)
-#define E_ACCESSDENIED                   (0x80070005)
-#define E_PENDING                        (0x8000000A)
+#define E_NOTIMPL (0x80004001)
+#define E_NOINTERFACE (0x80004002)
+#define E_UNEXPECTED (0x8000FFFF)
+#define E_OUTOFMEMORY (static_cast<int32_t>(0x8007000E))
+#define E_INVALIDARG (0x80070057)
+#define E_POINTER (0x80004003)
+#define E_HANDLE (0x80070006)
+#define E_ABORT (static_cast<int32_t>(0x80004004))
+#define E_FAIL (0x80004005)
+#define E_ACCESSDENIED (0x80070005)
+#define E_PENDING (0x8000000A)
 
-#define DISP_E_PARAMNOTFOUND             (0x80020004)
-#define DISP_E_TYPEMISMATCH              (0x80020005)
-#define DISP_E_BADVARTYPE                (0x80020008)
-#define DISP_E_OVERFLOW                  (0x8002000A)
-#define DISP_E_DIVBYZERO                 (0x80020012)
+#define DISP_E_PARAMNOTFOUND (0x80020004)
+#define DISP_E_TYPEMISMATCH (0x80020005)
+#define DISP_E_BADVARTYPE (0x80020008)
+#define DISP_E_OVERFLOW (0x8002000A)
+#define DISP_E_DIVBYZERO (0x80020012)
 
-#define CO_E_CLASSSTRING                 (0x800401F3)
+#define CO_E_CLASSSTRING (0x800401F3)
 
-#define URL_E_INVALID_SYNTAX             (0x80041001)
-#define MK_E_SYNTAX                      (0x800401E4)
+#define URL_E_INVALID_SYNTAX (0x80041001)
+#define MK_E_SYNTAX (0x800401E4)
 
-#define STG_E_FILENOTFOUND               (0x80030002)
-#define STG_E_PATHNOTFOUND               (0x80030003)
-#define STG_E_WRITEFAULT                 (0x8003001D)
-#define STG_E_FILEALREADYEXISTS          (0x80030050)
+#define STG_E_FILENOTFOUND (0x80030002)
+#define STG_E_PATHNOTFOUND (0x80030003)
+#define STG_E_WRITEFAULT (0x8003001D)
+#define STG_E_FILEALREADYEXISTS (0x80030050)
 
-#define NTE_BAD_HASH                     (0x80090002)
-#define NTE_BAD_KEY                      (0x80090003)
+#define NTE_BAD_HASH (0x80090002)
+#define NTE_BAD_KEY (0x80090003)
 
 #define STD_CTL_SCODE(n) MAKE_SCODE(SEVERITY_ERROR, FACILITY_CONTROL, n)
 /********************** errorrep.h ****************************************/
@@ -89,56 +89,60 @@ typedef enum tagEFaultRepRetVal
 #include <cassert>
 
 #if defined(_DEBUG)
-#define ROTOR_PAL_CTOR_TEST_BODY(TESTNAME)                              \
-    class TESTNAME ## _CTOR_TEST {                                      \
-    public:                                                             \
-        class HelperClass {                                             \
-        public:                                                         \
-            HelperClass(const char *String) {                           \
-                assert (m_s == NULL);                                 \
-                m_s = String;                                           \
-            }                                                           \
-                                                                        \
-            void Validate (const char *String) {                        \
-                assert (m_s);                                         \
-                assert (m_s == String);                               \
-                assert (!strncmp (                                    \
-                              m_s,                                      \
-                              String,                                   \
-                              1000));                                   \
-            }                                                           \
-                                                                        \
-        private:                                                        \
-            const char *m_s;                                            \
-        };                                                              \
-                                                                        \
-        TESTNAME ## _CTOR_TEST() {                                      \
-            assert (m_This == NULL);                                  \
-            m_This = this;                                              \
-        }                                                               \
-                                                                        \
-        void Validate () {                                              \
-            assert (m_This == this);                                  \
-            m_String.Validate(#TESTNAME "_CTOR_TEST");                  \
-        }                                                               \
-                                                                        \
-    private:                                                            \
-        void              *m_This;                                      \
-        static HelperClass m_String;                                    \
-    };                                                                  \
-                                                                        \
-    static TESTNAME ## _CTOR_TEST                                       \
-      g_ ## TESTNAME ## _CTOR_TEST;                                     \
-    TESTNAME ## _CTOR_TEST::HelperClass                                 \
-      TESTNAME ## _CTOR_TEST::m_String(#TESTNAME "_CTOR_TEST");
+#define ROTOR_PAL_CTOR_TEST_BODY(TESTNAME)                                                                             \
+    class TESTNAME##_CTOR_TEST                                                                                         \
+    {                                                                                                                  \
+    public:                                                                                                            \
+        class HelperClass                                                                                              \
+        {                                                                                                              \
+        public:                                                                                                        \
+            HelperClass(const char *String)                                                                            \
+            {                                                                                                          \
+                assert(m_s == NULL);                                                                                   \
+                m_s = String;                                                                                          \
+            }                                                                                                          \
+                                                                                                                       \
+            void Validate(const char *String)                                                                          \
+            {                                                                                                          \
+                assert(m_s);                                                                                           \
+                assert(m_s == String);                                                                                 \
+                assert(!strncmp(m_s, String, 1000));                                                                   \
+            }                                                                                                          \
+                                                                                                                       \
+        private:                                                                                                       \
+            const char *m_s;                                                                                           \
+        };                                                                                                             \
+                                                                                                                       \
+        TESTNAME##_CTOR_TEST()                                                                                         \
+        {                                                                                                              \
+            assert(m_This == NULL);                                                                                    \
+            m_This = this;                                                                                             \
+        }                                                                                                              \
+                                                                                                                       \
+        void Validate()                                                                                                \
+        {                                                                                                              \
+            assert(m_This == this);                                                                                    \
+            m_String.Validate(#TESTNAME "_CTOR_TEST");                                                                 \
+        }                                                                                                              \
+                                                                                                                       \
+    private:                                                                                                           \
+        void *m_This;                                                                                                  \
+        static HelperClass m_String;                                                                                   \
+    };                                                                                                                 \
+                                                                                                                       \
+    static TESTNAME##_CTOR_TEST g_##TESTNAME##_CTOR_TEST;                                                              \
+    TESTNAME##_CTOR_TEST::HelperClass TESTNAME##_CTOR_TEST::m_String(#TESTNAME "_CTOR_TEST");
 
-#define ROTOR_PAL_CTOR_TEST_RUN(TESTNAME)                               \
-    g_ ## TESTNAME ##_CTOR_TEST.Validate()
+#define ROTOR_PAL_CTOR_TEST_RUN(TESTNAME) g_##TESTNAME##_CTOR_TEST.Validate()
 
 #else // DEBUG
 
 #define ROTOR_PAL_CTOR_TEST_BODY(TESTNAME)
-#define ROTOR_PAL_CTOR_TEST_RUN(TESTNAME)  do {} while (0)
+#define ROTOR_PAL_CTOR_TEST_RUN(TESTNAME)                                                                              \
+    do                                                                                                                 \
+    {                                                                                                                  \
+    }                                                                                                                  \
+    while (0)
 
 #endif // DEBUG
 
@@ -169,18 +173,21 @@ typedef enum tagEFaultRepRetVal
 #else
 #define FIELD_OFFSET(type, field) (((int32_t)(ptrdiff_t)&(((type *)64)->field)) - 64)
 #ifndef offsetof
-#define offsetof(s,m)          ((size_t)((ptrdiff_t)&(((s *)64)->m)) - 64)
+#define offsetof(s, m) ((size_t)((ptrdiff_t)&(((s *)64)->m)) - 64)
 #endif
-#define PAL_safe_offsetof(s,m) ((size_t)((ptrdiff_t)&(char&)(((s *)64)->m))-64)
+#define PAL_safe_offsetof(s, m) ((size_t)((ptrdiff_t)&(char &)(((s *)64)->m)) - 64)
 #endif
 
-#define CONTAINING_RECORD(address, type, field) \
-    ((type *)((ptrdiff_t)(address) - FIELD_OFFSET(type, field)))
+#define CONTAINING_RECORD(address, type, field) ((type *)((ptrdiff_t)(address) - FIELD_OFFSET(type, field)))
 
-#define ARGUMENT_PRESENT(ArgumentPointer)    (\
-    (char *)(ArgumentPointer) != (char *)(NULL) )
+#define ARGUMENT_PRESENT(ArgumentPointer) ((char *)(ArgumentPointer) != (char *)(NULL))
 
-#define DECLARE_HANDLE(name) struct name##__ { int unused; }; typedef struct name##__ *name
+#define DECLARE_HANDLE(name)                                                                                           \
+    struct name##__                                                                                                    \
+    {                                                                                                                  \
+        int unused;                                                                                                    \
+    };                                                                                                                 \
+    typedef struct name##__ *name
 
 #ifndef COM_NO_WINDOWS_H
 #define COM_NO_WINDOWS_H
@@ -188,8 +195,8 @@ typedef enum tagEFaultRepRetVal
 
 #define interface struct
 
-#define STDAPI               EXTERN_C int32_t
-#define STDAPI_(type)        EXTERN_C type
+#define STDAPI EXTERN_C int32_t
+#define STDAPI_(type) EXTERN_C type
 
 #ifdef __cplusplus
 #define REFGUID const GUID &
@@ -205,12 +212,9 @@ typedef GUID *LPGUID;
 extern "C++" {
 #if !defined _SYS_GUID_OPERATOR_EQ_ && !defined _NO_SYS_GUID_OPERATOR_EQ_
 #define _SYS_GUID_OPERATOR_EQ_
-inline int IsEqualGUID(REFGUID rguid1, REFGUID rguid2)
-    { return !memcmp(&rguid1, &rguid2, sizeof(GUID)); }
-inline int operator==(REFGUID guidOne, REFGUID guidOther)
-    { return IsEqualGUID(guidOne,guidOther); }
-inline int operator!=(REFGUID guidOne, REFGUID guidOther)
-    { return !IsEqualGUID(guidOne,guidOther); }
+inline int IsEqualGUID(REFGUID rguid1, REFGUID rguid2) { return !memcmp(&rguid1, &rguid2, sizeof(GUID)); }
+inline int operator==(REFGUID guidOne, REFGUID guidOther) { return IsEqualGUID(guidOne, guidOther); }
+inline int operator!=(REFGUID guidOne, REFGUID guidOther) { return !IsEqualGUID(guidOne, guidOther); }
 #endif
 };
 #endif // __cplusplus
@@ -243,72 +247,76 @@ typedef ptrdiff_t LRESULT;
 typedef int32_t SCODE;
 
 
-typedef union _ULARGE_INTEGER {
-    struct {
+typedef union _ULARGE_INTEGER
+{
+    struct
+    {
         uint32_t LowPart;
         uint32_t HighPart;
     }
 #ifndef PAL_STDCPP_COMPAT
     u
 #endif // PAL_STDCPP_COMPAT
-     ;
+        ;
     unsigned long QuadPart;
 } ULARGE_INTEGER, *PULARGE_INTEGER;
 
 /******************* int32_t types ****************************************/
 
-#define FACILITY_WINDOWS                 8
-#define FACILITY_STORAGE                 3
-#define FACILITY_WIN32                   7
-#define FACILITY_CONTROL                 10
-#define FACILITY_NULL                    0
-#define FACILITY_ITF                     4
-#define FACILITY_DISPATCH                2
+#define FACILITY_WINDOWS 8
+#define FACILITY_STORAGE 3
+#define FACILITY_WIN32 7
+#define FACILITY_CONTROL 10
+#define FACILITY_NULL 0
+#define FACILITY_ITF 4
+#define FACILITY_DISPATCH 2
 
 #define NO_ERROR 0L
 
-#define SEVERITY_SUCCESS    0
-#define SEVERITY_ERROR      1
+#define SEVERITY_SUCCESS 0
+#define SEVERITY_ERROR 1
 
 #define SUCCEEDED(Status) ((int32_t)(Status) >= 0)
-#define FAILED(Status) (static_cast<int32_t>(Status)<0)
+#define FAILED(Status) (static_cast<int32_t>(Status) < 0)
 #define IS_ERROR(Status) ((uint32_t)(Status) >> 31 == SEVERITY_ERROR) // diff from win32
-#define HRESULT_CODE(hr)    ((hr) & 0xFFFF)
-#define SCODE_CODE(sc)      ((sc) & 0xFFFF)
-#define HRESULT_FACILITY(hr)  (((hr) >> 16) & 0x1fff)
-#define SCODE_FACILITY(sc)    (((sc) >> 16) & 0x1fff)
-#define HRESULT_SEVERITY(hr)  (((hr) >> 31) & 0x1)
-#define SCODE_SEVERITY(sc)    (((sc) >> 31) & 0x1)
+#define HRESULT_CODE(hr) ((hr) & 0xFFFF)
+#define SCODE_CODE(sc) ((sc) & 0xFFFF)
+#define HRESULT_FACILITY(hr) (((hr) >> 16) & 0x1fff)
+#define SCODE_FACILITY(sc) (((sc) >> 16) & 0x1fff)
+#define HRESULT_SEVERITY(hr) (((hr) >> 31) & 0x1)
+#define SCODE_SEVERITY(sc) (((sc) >> 31) & 0x1)
 
 // both macros diff from Win32
-#define MAKE_HRESULT(sev,fac,code) \
-    (static_cast<int32_t>((static_cast<uint32_t>(sev)<<31) | (static_cast<uint32_t>(fac)<<16) | (static_cast<uint32_t>(code))) )
-#define MAKE_SCODE(sev,fac,code) \
-    (static_cast<SCODE>((static_cast<uint32_t>(sev)<<31) | (static_cast<uint32_t>(fac)<<16) | ((int32_t)(code))) )
+#define MAKE_HRESULT(sev, fac, code)                                                                                   \
+    (static_cast<int32_t>((static_cast<uint32_t>(sev) << 31) | (static_cast<uint32_t>(fac) << 16) |                    \
+                          (static_cast<uint32_t>(code))))
+#define MAKE_SCODE(sev, fac, code)                                                                                     \
+    (static_cast<SCODE>((static_cast<uint32_t>(sev) << 31) | (static_cast<uint32_t>(fac) << 16) | ((int32_t)(code))))
 
-#define FACILITY_NT_BIT                 0x10000000
-#define HRESULT_FROM_WIN32(x) ((int32_t)(x) <= 0 ? ((int32_t)(x)) : ((int32_t) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))
+#define FACILITY_NT_BIT 0x10000000
+#define HRESULT_FROM_WIN32(x)                                                                                          \
+    ((int32_t)(x) <= 0 ? ((int32_t)(x)) : ((int32_t)(((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)))
 #define __HRESULT_FROM_WIN32(x) HRESULT_FROM_WIN32(x)
 
-#define HRESULT_FROM_NT(x)      ((int32_t) ((x) | FACILITY_NT_BIT))
+#define HRESULT_FROM_NT(x) ((int32_t)((x) | FACILITY_NT_BIT))
 
 /******************* OLE, BSTR, VARIANT *************************/
 
 STDAPI_(void *) CoTaskMemAlloc(size_t cb);
-STDAPI_(void) CoTaskMemFree(void * pv);
+STDAPI_(void) CoTaskMemFree(void *pv);
 
 typedef short VARIANT_BOOL;
-#define VARIANT_TRUE ((VARIANT_BOOL)-1)
+#define VARIANT_TRUE ((VARIANT_BOOL) - 1)
 #define VARIANT_FALSE ((VARIANT_BOOL)0)
 
 typedef char16_t OLECHAR;
-typedef OLECHAR* LPOLESTR;
-typedef const OLECHAR* LPCOLESTR;
+typedef OLECHAR *LPOLESTR;
+typedef const OLECHAR *LPCOLESTR;
 
 typedef char16_t *BSTR;
 
-STDAPI_(BSTR) SysAllocString(const OLECHAR*);
-STDAPI_(BSTR) SysAllocStringLen(const OLECHAR*, uint32_t);
+STDAPI_(BSTR) SysAllocString(const OLECHAR *);
+STDAPI_(BSTR) SysAllocStringLen(const OLECHAR *, uint32_t);
 STDAPI_(BSTR) SysAllocStringByteLen(const char *, uint32_t);
 STDAPI_(void) SysFreeString(BSTR);
 STDAPI_(uint32_t) SysStringLen(BSTR);
@@ -316,32 +324,39 @@ STDAPI_(uint32_t) SysStringByteLen(BSTR);
 
 typedef double DATE;
 
-typedef union tagCY {
-    struct {
-        uint32_t   Lo;
-        int32_t    Hi;
+typedef union tagCY
+{
+    struct
+    {
+        uint32_t Lo;
+        int32_t Hi;
     } u;
     long int64;
 } CY, *LPCY;
 
 typedef CY CURRENCY;
 
-typedef struct tagDEC {
+typedef struct tagDEC
+{
     // Decimal.cs treats the first two shorts as one long
     // And they seriable the data so we need to little endian
     // seriliazation
     // The wReserved overlaps with Variant's vt member
     unsigned short wReserved;
-    union {
-        struct {
+    union
+    {
+        struct
+        {
             uint8_t scale;
             uint8_t sign;
         };
         unsigned short signscale;
     };
     uint32_t Hi32;
-    union {
-        struct {
+    union
+    {
+        struct
+        {
             uint32_t Lo32;
             uint32_t Mid32;
         };
@@ -349,7 +364,8 @@ typedef struct tagDEC {
     };
 } DECIMAL, *LPDECIMAL;
 
-typedef struct tagBLOB {
+typedef struct tagBLOB
+{
     uint32_t cbSize;
     uint8_t *pBlobData;
 } BLOB, *LPBLOB;
@@ -359,175 +375,176 @@ interface IRecordInfo;
 
 typedef unsigned short VARTYPE;
 
-enum VARENUM {
-    VT_EMPTY    = 0,
+enum VARENUM
+{
+    VT_EMPTY = 0,
     VT_NULL = 1,
-    VT_I2   = 2,
-    VT_I4   = 3,
-    VT_R4   = 4,
-    VT_R8   = 5,
-    VT_CY   = 6,
+    VT_I2 = 2,
+    VT_I4 = 3,
+    VT_R4 = 4,
+    VT_R8 = 5,
+    VT_CY = 6,
     VT_DATE = 7,
     VT_BSTR = 8,
     VT_DISPATCH = 9,
-    VT_ERROR    = 10,
+    VT_ERROR = 10,
     VT_BOOL = 11,
-    VT_VARIANT  = 12,
-    VT_UNKNOWN  = 13,
-    VT_DECIMAL  = 14,
-    VT_I1   = 16,
-    VT_UI1  = 17,
-    VT_UI2  = 18,
-    VT_UI4  = 19,
-    VT_I8   = 20,
-    VT_UI8  = 21,
-    VT_INT  = 22,
+    VT_VARIANT = 12,
+    VT_UNKNOWN = 13,
+    VT_DECIMAL = 14,
+    VT_I1 = 16,
+    VT_UI1 = 17,
+    VT_UI2 = 18,
+    VT_UI4 = 19,
+    VT_I8 = 20,
+    VT_UI8 = 21,
+    VT_INT = 22,
     VT_UINT = 23,
     VT_VOID = 24,
-    VT_HRESULT  = 25,
-    VT_PTR  = 26,
-    VT_SAFEARRAY    = 27,
-    VT_CARRAY   = 28,
-    VT_USERDEFINED  = 29,
-    VT_LPSTR    = 30,
-    VT_LPWSTR   = 31,
-    VT_RECORD   = 36,
-    VT_INT_PTR	= 37,
-    VT_UINT_PTR	= 38,
+    VT_HRESULT = 25,
+    VT_PTR = 26,
+    VT_SAFEARRAY = 27,
+    VT_CARRAY = 28,
+    VT_USERDEFINED = 29,
+    VT_LPSTR = 30,
+    VT_LPWSTR = 31,
+    VT_RECORD = 36,
+    VT_INT_PTR = 37,
+    VT_UINT_PTR = 38,
 
-    VT_FILETIME        = 64,
-    VT_BLOB            = 65,
-    VT_STREAM          = 66,
-    VT_STORAGE         = 67,
+    VT_FILETIME = 64,
+    VT_BLOB = 65,
+    VT_STREAM = 66,
+    VT_STORAGE = 67,
     VT_STREAMED_OBJECT = 68,
-    VT_STORED_OBJECT   = 69,
-    VT_BLOB_OBJECT     = 70,
-    VT_CF              = 71,
-    VT_CLSID           = 72,
+    VT_STORED_OBJECT = 69,
+    VT_BLOB_OBJECT = 70,
+    VT_CF = 71,
+    VT_CLSID = 72,
 
-    VT_VECTOR   = 0x1000,
-    VT_ARRAY    = 0x2000,
-    VT_BYREF    = 0x4000,
+    VT_VECTOR = 0x1000,
+    VT_ARRAY = 0x2000,
+    VT_BYREF = 0x4000,
     VT_TYPEMASK = 0xfff,
 };
 
-#define V_UNION(X, Y)   ((X)->n1.n2.n3.Y)
+#define V_UNION(X, Y) ((X)->n1.n2.n3.Y)
 #define V_RECORDINFO(X) ((X)->n1.n2.n3.brecVal.pRecInfo)
-#define V_RECORD(X)     ((X)->n1.n2.n3.brecVal.pvRecord)
+#define V_RECORD(X) ((X)->n1.n2.n3.brecVal.pvRecord)
 
-#define V_UI1(X)         V_UNION(X, bVal)
-#define V_UI1REF(X)      V_UNION(X, pbVal)
-#define V_I2(X)          V_UNION(X, iVal)
-#define V_I2REF(X)       V_UNION(X, piVal)
-#define V_I4(X)          V_UNION(X, lVal)
-#define V_I4REF(X)       V_UNION(X, plVal)
-#define V_I8(X)          V_UNION(X, llVal)
-#define V_I8REF(X)       V_UNION(X, pllVal)
-#define V_R4(X)          V_UNION(X, fltVal)
-#define V_R4REF(X)       V_UNION(X, pfltVal)
-#define V_R8(X)          V_UNION(X, dblVal)
-#define V_R8REF(X)       V_UNION(X, pdblVal)
-#define V_I1(X)          V_UNION(X, cVal)
-#define V_I1REF(X)       V_UNION(X, pcVal)
-#define V_UI2(X)         V_UNION(X, uiVal)
-#define V_UI2REF(X)      V_UNION(X, puiVal)
-#define V_UI4(X)         V_UNION(X, ulVal)
-#define V_UI4REF(X)      V_UNION(X, pulVal)
-#define V_UI8(X)         V_UNION(X, ullVal)
-#define V_UI8REF(X)      V_UNION(X, pullVal)
-#define V_INT(X)         V_UNION(X, intVal)
-#define V_INTREF(X)      V_UNION(X, pintVal)
-#define V_UINT(X)        V_UNION(X, uintVal)
-#define V_UINTREF(X)     V_UNION(X, puintVal)
-#define V_ARRAY(X)       V_UNION(X, parray)
+#define V_UI1(X) V_UNION(X, bVal)
+#define V_UI1REF(X) V_UNION(X, pbVal)
+#define V_I2(X) V_UNION(X, iVal)
+#define V_I2REF(X) V_UNION(X, piVal)
+#define V_I4(X) V_UNION(X, lVal)
+#define V_I4REF(X) V_UNION(X, plVal)
+#define V_I8(X) V_UNION(X, llVal)
+#define V_I8REF(X) V_UNION(X, pllVal)
+#define V_R4(X) V_UNION(X, fltVal)
+#define V_R4REF(X) V_UNION(X, pfltVal)
+#define V_R8(X) V_UNION(X, dblVal)
+#define V_R8REF(X) V_UNION(X, pdblVal)
+#define V_I1(X) V_UNION(X, cVal)
+#define V_I1REF(X) V_UNION(X, pcVal)
+#define V_UI2(X) V_UNION(X, uiVal)
+#define V_UI2REF(X) V_UNION(X, puiVal)
+#define V_UI4(X) V_UNION(X, ulVal)
+#define V_UI4REF(X) V_UNION(X, pulVal)
+#define V_UI8(X) V_UNION(X, ullVal)
+#define V_UI8REF(X) V_UNION(X, pullVal)
+#define V_INT(X) V_UNION(X, intVal)
+#define V_INTREF(X) V_UNION(X, pintVal)
+#define V_UINT(X) V_UNION(X, uintVal)
+#define V_UINTREF(X) V_UNION(X, puintVal)
+#define V_ARRAY(X) V_UNION(X, parray)
 
-#define V_INT_PTR(X)        V_UNION(X, llVal)
-#define V_UINT_PTR(X)       V_UNION(X, ullVal)
-#define V_INT_PTRREF(X)     V_UNION(X, pllVal)
-#define V_UINT_PTRREF(X)    V_UNION(X, pullVal)
+#define V_INT_PTR(X) V_UNION(X, llVal)
+#define V_UINT_PTR(X) V_UNION(X, ullVal)
+#define V_INT_PTRREF(X) V_UNION(X, pllVal)
+#define V_UINT_PTRREF(X) V_UNION(X, pullVal)
 
-#define V_CY(X)          V_UNION(X, cyVal)
-#define V_CYREF(X)       V_UNION(X, pcyVal)
-#define V_DATE(X)        V_UNION(X, date)
-#define V_DATEREF(X)     V_UNION(X, pdate)
-#define V_BSTR(X)        V_UNION(X, bstrVal)
-#define V_BSTRREF(X)     V_UNION(X, pbstrVal)
-#define V_UNKNOWN(X)     V_UNION(X, punkVal)
-#define V_UNKNOWNREF(X)  V_UNION(X, ppunkVal)
-#define V_VARIANTREF(X)  V_UNION(X, pvarVal)
-#define V_DISPATCH(X)    V_UNION(X, pdispVal)
-#define V_ERROR(X)       V_UNION(X, scode)
-#define V_ERRORREF(X)    V_UNION(X, pscode)
-#define V_BOOL(X)        V_UNION(X, boolVal)
-#define V_BOOLREF(X)     V_UNION(X, pboolVal)
-#define V_BYREF(X)       V_UNION(X, byref)
+#define V_CY(X) V_UNION(X, cyVal)
+#define V_CYREF(X) V_UNION(X, pcyVal)
+#define V_DATE(X) V_UNION(X, date)
+#define V_DATEREF(X) V_UNION(X, pdate)
+#define V_BSTR(X) V_UNION(X, bstrVal)
+#define V_BSTRREF(X) V_UNION(X, pbstrVal)
+#define V_UNKNOWN(X) V_UNION(X, punkVal)
+#define V_UNKNOWNREF(X) V_UNION(X, ppunkVal)
+#define V_VARIANTREF(X) V_UNION(X, pvarVal)
+#define V_DISPATCH(X) V_UNION(X, pdispVal)
+#define V_ERROR(X) V_UNION(X, scode)
+#define V_ERRORREF(X) V_UNION(X, pscode)
+#define V_BOOL(X) V_UNION(X, boolVal)
+#define V_BOOLREF(X) V_UNION(X, pboolVal)
+#define V_BYREF(X) V_UNION(X, byref)
 
-#define V_DECIMAL(X)     ((X)->n1.decVal)
-#define V_DECIMALREF(X)    V_UNION(X, pdecVal)
+#define V_DECIMAL(X) ((X)->n1.decVal)
+#define V_DECIMALREF(X) V_UNION(X, pdecVal)
 
-#define V_ISBYREF(X)     (V_VT(X)&VT_BYREF)
+#define V_ISBYREF(X) (V_VT(X) & VT_BYREF)
 
-STDAPI CreateStreamOnHGlobal(void * hGlobal, BOOL fDeleteOnRelease, interface IStream** ppstm);
+STDAPI CreateStreamOnHGlobal(void *hGlobal, BOOL fDeleteOnRelease, interface IStream **ppstm);
 
-STDAPI IIDFromString(LPOLESTR lpsz, IID* lpiid);
+STDAPI IIDFromString(LPOLESTR lpsz, IID *lpiid);
 STDAPI_(int) StringFromGUID2(REFGUID rguid, LPOLESTR lpsz, int cchMax);
 
 /******************* CRYPT **************************************/
 
-#define PUBLICKEYBLOB           0x6
+#define PUBLICKEYBLOB 0x6
 
 //
 // Algorithm IDs and Flags
 //
-#define GET_ALG_CLASS(x)        (x & (7 << 13))
-#define GET_ALG_TYPE(x)         (x & (15 << 9))
-#define GET_ALG_SID(x)          (x & (511))
+#define GET_ALG_CLASS(x) (x & (7 << 13))
+#define GET_ALG_TYPE(x) (x & (15 << 9))
+#define GET_ALG_SID(x) (x & (511))
 
 typedef unsigned int ALG_ID;
 
 // Algorithm classes
-#define ALG_CLASS_SIGNATURE     (1 << 13)
-#define ALG_CLASS_HASH          (4 << 13)
+#define ALG_CLASS_SIGNATURE (1 << 13)
+#define ALG_CLASS_HASH (4 << 13)
 
 // Algorithm types
-#define ALG_TYPE_ANY            (0)
+#define ALG_TYPE_ANY (0)
 
 // Hash sub ids
-#define ALG_SID_SHA1            4
+#define ALG_SID_SHA1 4
 
 // algorithm identifier definitions
-#define CALG_SHA1               (ALG_CLASS_HASH | ALG_TYPE_ANY | ALG_SID_SHA1)
+#define CALG_SHA1 (ALG_CLASS_HASH | ALG_TYPE_ANY | ALG_SID_SHA1)
 
 /******************* NLS ****************************************/
 
-typedef
-enum tagMIMECONTF {
-    MIMECONTF_MAILNEWS  = 0x1,
-    MIMECONTF_BROWSER   = 0x2,
-    MIMECONTF_MINIMAL   = 0x4,
-    MIMECONTF_IMPORT    = 0x8,
-    MIMECONTF_SAVABLE_MAILNEWS  = 0x100,
-    MIMECONTF_SAVABLE_BROWSER   = 0x200,
-    MIMECONTF_EXPORT    = 0x400,
+typedef enum tagMIMECONTF
+{
+    MIMECONTF_MAILNEWS = 0x1,
+    MIMECONTF_BROWSER = 0x2,
+    MIMECONTF_MINIMAL = 0x4,
+    MIMECONTF_IMPORT = 0x8,
+    MIMECONTF_SAVABLE_MAILNEWS = 0x100,
+    MIMECONTF_SAVABLE_BROWSER = 0x200,
+    MIMECONTF_EXPORT = 0x400,
     MIMECONTF_PRIVCONVERTER = 0x10000,
     MIMECONTF_VALID = 0x20000,
     MIMECONTF_VALID_NLS = 0x40000,
-    MIMECONTF_MIME_IE4  = 0x10000000,
-    MIMECONTF_MIME_LATEST   = 0x20000000,
+    MIMECONTF_MIME_IE4 = 0x10000000,
+    MIMECONTF_MIME_LATEST = 0x20000000,
     MIMECONTF_MIME_REGISTRY = 0x40000000
-    }   MIMECONTF;
+} MIMECONTF;
 
-#define LCMAP_LOWERCASE           0x00000100
-#define LCMAP_UPPERCASE           0x00000200
-#define LCMAP_SORTKEY             0x00000400
-#define LCMAP_BYTEREV             0x00000800
+#define LCMAP_LOWERCASE 0x00000100
+#define LCMAP_UPPERCASE 0x00000200
+#define LCMAP_SORTKEY 0x00000400
+#define LCMAP_BYTEREV 0x00000800
 
-#define LCMAP_HIRAGANA            0x00100000
-#define LCMAP_KATAKANA            0x00200000
-#define LCMAP_HALFWIDTH           0x00400000
-#define LCMAP_FULLWIDTH           0x00800000
+#define LCMAP_HIRAGANA 0x00100000
+#define LCMAP_KATAKANA 0x00200000
+#define LCMAP_HALFWIDTH 0x00400000
+#define LCMAP_FULLWIDTH 0x00800000
 
-#define LCMAP_LINGUISTIC_CASING   0x01000000
+#define LCMAP_LINGUISTIC_CASING 0x01000000
 
 // 8 characters for language
 // 8 characters for region
@@ -535,50 +552,50 @@ enum tagMIMECONTF {
 // 2 characters for '-' separators
 // 2 characters for prefix like "i-" or "x-"
 // 1 null termination
-#define LOCALE_NAME_MAX_LENGTH   85
+#define LOCALE_NAME_MAX_LENGTH 85
 
-#define LOCALE_SCOUNTRY           0x00000006
-#define LOCALE_SENGCOUNTRY        0x00001002
+#define LOCALE_SCOUNTRY 0x00000006
+#define LOCALE_SENGCOUNTRY 0x00001002
 
-#define LOCALE_SLANGUAGE          0x00000002
-#define LOCALE_SENGLANGUAGE       0x00001001
+#define LOCALE_SLANGUAGE 0x00000002
+#define LOCALE_SENGLANGUAGE 0x00001001
 
-#define LOCALE_SDATE              0x0000001D
-#define LOCALE_STIME              0x0000001E
+#define LOCALE_SDATE 0x0000001D
+#define LOCALE_STIME 0x0000001E
 
-#define NORM_IGNORENONSPACE       0x00000002
+#define NORM_IGNORENONSPACE 0x00000002
 
-#define WC_COMPOSITECHECK         0x00000000 // NOTE: diff from winnls.h
+#define WC_COMPOSITECHECK 0x00000000 // NOTE: diff from winnls.h
 
 /******************* shlwapi ************************************/
 
 // note: diff in NULL handing and calling convetion
-#define StrCpyW                 PAL_wcscpy
-#define StrChrW                 (char16_t*)PAL_wcschr
-#define StrCmpW                 PAL_wcscmp
-#define StrCmpNW                PAL_wcsncmp
+#define StrCpyW PAL_wcscpy
+#define StrChrW (char16_t *)PAL_wcschr
+#define StrCmpW PAL_wcscmp
+#define StrCmpNW PAL_wcsncmp
 
-STDAPI_(char16_t*) StrNCatW(char16_t* lpFront, const char16_t* lpBack, int cchMax);
-STDAPI_(int) StrToIntW(const char16_t* lpSrc);
-STDAPI_(char16_t*) StrStrIW(const char16_t* lpFirst, const char16_t* lpSrch);
-STDAPI_(char16_t*) StrRChrW(const char16_t* lpStart, const char16_t* lpEnd, char16_t wMatch);
-STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cchDestBuffSize);
+STDAPI_(char16_t *) StrNCatW(char16_t *lpFront, const char16_t *lpBack, int cchMax);
+STDAPI_(int) StrToIntW(const char16_t *lpSrc);
+STDAPI_(char16_t *) StrStrIW(const char16_t *lpFirst, const char16_t *lpSrch);
+STDAPI_(char16_t *) StrRChrW(const char16_t *lpStart, const char16_t *lpEnd, char16_t wMatch);
+STDAPI_(char16_t *) StrCatBuffW(char16_t *pszDest, const char16_t *pszSrc, int cchDestBuffSize);
 
-#define lstrcmpW                PAL_wcscmp
-#define wvnsprintfW             _vsnwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
+#define lstrcmpW PAL_wcscmp
+#define wvnsprintfW _vsnwprintf // note: not 100% compatible (wsprintf should be subset of sprintf...)
 
-#define StrCpy                  StrCpyW
-#define StrNCat                 StrNCatW
-#define StrChr                  StrChrW
-#define StrCmp                  StrCmpW
-#define StrCmpN                 StrCmpNW
+#define StrCpy StrCpyW
+#define StrNCat StrNCatW
+#define StrChr StrChrW
+#define StrCmp StrCmpW
+#define StrCmpN StrCmpNW
 
-#define StrToInt                StrToIntW
-#define StrStrI                 StrStrIW
-#define StrRChr                 StrRChrW
-#define StrCatBuff              StrCatBuffW
+#define StrToInt StrToIntW
+#define StrStrI StrStrIW
+#define StrRChr StrRChrW
+#define StrCatBuff StrCatBuffW
 
-#define lstrcmp                 lstrcmpW
+#define lstrcmp lstrcmpW
 
 #ifdef __cplusplus
 /*
@@ -593,9 +610,9 @@ STDAPI_(char16_t*) StrCatBuffW(char16_t* pszDest, const char16_t* pszSrc, int cc
 /*
 #define _SAFECRT__ISMBBLEAD(_Character) 0
 */
+#include <limits.h>
 #include "safecrt.h"
 #include "specstrings.h"
-#include <limits.h>
 
 /*
 The wrappers below are simple implementations that may not be as robust as complete functions in the Secure CRT library.
@@ -623,12 +640,13 @@ inline errno_t _wcslwr_unsafe(char16_t *str, size_t sz)
         return 1;
 
     size_t fullSize = sz * sizeof(char16_t);
-    char16_t *copy = static_cast<char16_t*>(malloc(fullSize));
-    if(copy == nullptr)
+    char16_t *copy = static_cast<char16_t *>(malloc(fullSize));
+    if (copy == nullptr)
         return 1;
 
     errno_t retCode = wcscpy_s(copy, sz, str);
-    if(retCode) {
+    if (retCode)
+    {
         free(copy);
         return 1;
     }
@@ -646,8 +664,8 @@ inline int _vscprintf_unsafe(const char *_Format, va_list _ArgList)
 
     for (;;)
     {
-        char *buf = static_cast<char*>(malloc(guess * sizeof(char)));
-        if(buf == nullptr)
+        char *buf = static_cast<char *>(malloc(guess * sizeof(char)));
+        if (buf == nullptr)
             return 0;
 
         int ret = vsnprintf(buf, guess, _Format, _ArgList);
@@ -666,7 +684,7 @@ inline int _vscwprintf_unsafe(const char16_t *_Format, va_list _ArgList)
 
     for (;;)
     {
-        char16_t *buf = static_cast<char16_t*>(malloc(guess * sizeof(char16_t)));
+        char16_t *buf = static_cast<char16_t *>(malloc(guess * sizeof(char16_t)));
         if (buf == nullptr)
             return 0;
 
@@ -693,9 +711,11 @@ inline int _scwprintf_unsafe(const char16_t *_Format, ...)
     return ret;
 }
 
-inline int _vsnwprintf_unsafe(char16_t *_Dst, size_t _SizeInWords, size_t _Count, const char16_t *_Format, va_list _ArgList)
+inline int _vsnwprintf_unsafe(char16_t *_Dst, size_t _SizeInWords, size_t _Count, const char16_t *_Format,
+                              va_list _ArgList)
 {
-    if (_Count == _TRUNCATE) _Count = _SizeInWords;
+    if (_Count == _TRUNCATE)
+        _Count = _SizeInWords;
     int ret = _vsnwprintf(_Dst, _Count, _Format, _ArgList);
     _Dst[_SizeInWords - 1] = L'\0';
     if (ret < 0 && errno == 0)
@@ -715,26 +735,32 @@ inline int _snwprintf_unsafe(char16_t *_Dst, size_t _SizeInWords, size_t _Count,
     return ret;
 }
 
-inline errno_t _wfopen_unsafe(FILE * *ff, const char16_t *fileName, const char16_t *mode)
+inline errno_t _wfopen_unsafe(FILE **ff, const char16_t *fileName, const char16_t *mode)
 {
     FILE *result = _wfopen(fileName, mode);
-    if(result == 0) {
+    if (result == 0)
+    {
         return 1;
-    } else {
+    }
+    else
+    {
         *ff = result;
         return 0;
     }
 }
 
-inline errno_t _fopen_unsafe(FILE * *ff, const char *fileName, const char *mode)
+inline errno_t _fopen_unsafe(FILE **ff, const char *fileName, const char *mode)
 {
-  FILE *result = PAL_fopen(fileName, mode);
-  if(result == 0) {
-    return 1;
-  } else {
-    *ff = result;
-    return 0;
-  }
+    FILE *result = PAL_fopen(fileName, mode);
+    if (result == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        *ff = result;
+        return 0;
+    }
 }
 
 /* _itow_s */
@@ -743,8 +769,7 @@ errno_t _itow_s(int _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
-inline
-errno_t _itow_s(int _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
+inline errno_t _itow_s(int _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 {
     return _itow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -752,8 +777,7 @@ errno_t _itow_s(int _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 
 #if _SAFECRT_USE_INLINES
 
-__inline
-errno_t _itow_s(int _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
+__inline errno_t _itow_s(int _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -770,8 +794,7 @@ errno_t _ltow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
-inline
-errno_t _ltow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
+inline errno_t _ltow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 {
     return _ltow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -779,8 +802,7 @@ errno_t _ltow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 
 #if _SAFECRT_USE_INLINES
 
-__inline
-errno_t _ltow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
+__inline errno_t _ltow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -798,8 +820,7 @@ errno_t _i64tow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix);
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SizeInWords>
-inline
-errno_t _i64tow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
+inline errno_t _i64tow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 {
     return _i64tow_s(_Value, _Dst, _SizeInWords, _Radix);
 }
@@ -807,8 +828,7 @@ errno_t _i64tow_s(long _Value, char16_t (&_Dst)[_SizeInWords], int _Radix)
 
 #if _SAFECRT_USE_INLINES
 
-__inline
-errno_t _i64tow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
+__inline errno_t _i64tow_s(long _Value, char16_t *_Dst, size_t _SizeInWords, int _Radix)
 {
     /* validation section */
     _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
@@ -829,8 +849,7 @@ errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const ch
 
 #if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
 template <size_t _SzInWords>
-inline
-errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
+inline errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
 {
     return getenv_s(_ReturnValue, _Dst, _SizeInWords, _Name);
 }
@@ -838,8 +857,7 @@ errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const ch
 
 #if _SAFECRT_USE_INLINES
 
-__inline
-errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
+__inline errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const char *_Name)
 {
     char *szFound;
 
@@ -857,75 +875,80 @@ errno_t getenv_s(size_t *_ReturnValue, char *_Dst, size_t _SizeInWords, const ch
 }
 
 #endif
-
 }
 #endif /* __cplusplus */
 
 
-STDAPI_(BOOL) PathAppendW(char16_t* pszPath, const char16_t* pszMore);
-STDAPI_(int) PathCommonPrefixW(const char16_t* pszFile1, const char16_t* pszFile2, char16_t*  pszPath);
-STDAPI_(int) PathGetDriveNumberW(const char16_t* lpsz);
-STDAPI_(BOOL) PathIsRelativeW(const char16_t* lpszPath);
-STDAPI_(BOOL) PathIsUNCW(const char16_t* pszPath);
-STDAPI_(char16_t*) PathAddBackslashW(char16_t* lpszPath);
-STDAPI_(char16_t*) PathRemoveBackslashW(char16_t* lpszPath);
-STDAPI_(void) PathRemoveExtensionW(char16_t* pszPath);
-STDAPI_(char16_t*) PathCombineW(char16_t* lpszDest, const char16_t* lpszDir, const char16_t* lpszFile);
-STDAPI_(BOOL) PathCanonicalizeW(char16_t* lpszDst, const char16_t* lpszSrc);
-STDAPI_(BOOL) PathRelativePathToW(char16_t* pszPath, const char16_t* pszFrom, uint32_t dwAttrFrom, const char16_t* pszTo, uint32_t dwAttrTo);
-STDAPI_(BOOL) PathRenameExtensionW(char16_t* pszPath, const char16_t* pszExt);
-STDAPI_(BOOL) PathRemoveFileSpecW(char16_t* pFile);
-STDAPI_(void) PathStripPathW (char16_t* pszPath);
+STDAPI_(BOOL) PathAppendW(char16_t *pszPath, const char16_t *pszMore);
+STDAPI_(int) PathCommonPrefixW(const char16_t *pszFile1, const char16_t *pszFile2, char16_t *pszPath);
+STDAPI_(int) PathGetDriveNumberW(const char16_t *lpsz);
+STDAPI_(BOOL) PathIsRelativeW(const char16_t *lpszPath);
+STDAPI_(BOOL) PathIsUNCW(const char16_t *pszPath);
+STDAPI_(char16_t *) PathAddBackslashW(char16_t *lpszPath);
+STDAPI_(char16_t *) PathRemoveBackslashW(char16_t *lpszPath);
+STDAPI_(void) PathRemoveExtensionW(char16_t *pszPath);
+STDAPI_(char16_t *) PathCombineW(char16_t *lpszDest, const char16_t *lpszDir, const char16_t *lpszFile);
+STDAPI_(BOOL) PathCanonicalizeW(char16_t *lpszDst, const char16_t *lpszSrc);
+STDAPI_(BOOL)
+PathRelativePathToW(char16_t *pszPath, const char16_t *pszFrom, uint32_t dwAttrFrom, const char16_t *pszTo,
+                    uint32_t dwAttrTo);
+STDAPI_(BOOL) PathRenameExtensionW(char16_t *pszPath, const char16_t *pszExt);
+STDAPI_(BOOL) PathRemoveFileSpecW(char16_t *pFile);
+STDAPI_(void) PathStripPathW(char16_t *pszPath);
 
-STDAPI PathCreateFromUrlW(const char16_t* pszUrl, char16_t* pszPath, uint32_t * pcchPath, uint32_t dwFlags);
-STDAPI_(BOOL) PathIsURLW(const char16_t* pszPath);
+STDAPI PathCreateFromUrlW(const char16_t *pszUrl, char16_t *pszPath, uint32_t *pcchPath, uint32_t dwFlags);
+STDAPI_(BOOL) PathIsURLW(const char16_t *pszPath);
 
 
-#define URL_UNESCAPE                    0x10000000
-#define URL_ESCAPE_PERCENT              0x00001000
+#define URL_UNESCAPE 0x10000000
+#define URL_ESCAPE_PERCENT 0x00001000
 
-typedef enum {
+typedef enum
+{
     URLIS_FILEURL = 3,
 } URLIS;
 
-typedef enum {
-    URL_PART_SCHEME     = 1,
-    URL_PART_HOSTNAME   = 2,
+typedef enum
+{
+    URL_PART_SCHEME = 1,
+    URL_PART_HOSTNAME = 2,
 } URL_PART;
 
-STDAPI UrlCanonicalizeW(const char16_t* pszUrl, char16_t* pszCanonicalized, uint32_t * pcchCanonicalized, uint32_t dwFlags);
-STDAPI UrlCombineW(const char16_t* pszBase, const char16_t* pszRelative, char16_t* pszCombined, uint32_t * pcchCombined, uint32_t dwFlags);
-STDAPI UrlEscapeW(const char16_t* pszUrl, char16_t* pszEscaped, uint32_t * pcchEscaped, uint32_t dwFlags);
-STDAPI UrlUnescapeW(char16_t* pszURL, char16_t* pszUnescaped, uint32_t * pcchUnescaped, uint32_t dwFlags);
-STDAPI_(BOOL) UrlIsW(const char16_t* pszUrl, URLIS dwUrlIs);
-STDAPI UrlGetPartW(const char16_t* pszIn, char16_t* pszOut, uint32_t * pcchOut, uint32_t dwPart, uint32_t dwFlags);
+STDAPI UrlCanonicalizeW(const char16_t *pszUrl, char16_t *pszCanonicalized, uint32_t *pcchCanonicalized,
+                        uint32_t dwFlags);
+STDAPI UrlCombineW(const char16_t *pszBase, const char16_t *pszRelative, char16_t *pszCombined, uint32_t *pcchCombined,
+                   uint32_t dwFlags);
+STDAPI UrlEscapeW(const char16_t *pszUrl, char16_t *pszEscaped, uint32_t *pcchEscaped, uint32_t dwFlags);
+STDAPI UrlUnescapeW(char16_t *pszURL, char16_t *pszUnescaped, uint32_t *pcchUnescaped, uint32_t dwFlags);
+STDAPI_(BOOL) UrlIsW(const char16_t *pszUrl, URLIS dwUrlIs);
+STDAPI UrlGetPartW(const char16_t *pszIn, char16_t *pszOut, uint32_t *pcchOut, uint32_t dwPart, uint32_t dwFlags);
 
-#define PathAppend          PathAppendW
-#define PathCommonPrefix    PathCommonPrefixW
-#define PathIsRelative      PathIsRelativeW
-#define PathGetDriveNumber  PathGetDriveNumberW
-#define PathIsUNC           PathIsUNCW
-#define PathAddBackslash    PathAddBackslashW
+#define PathAppend PathAppendW
+#define PathCommonPrefix PathCommonPrefixW
+#define PathIsRelative PathIsRelativeW
+#define PathGetDriveNumber PathGetDriveNumberW
+#define PathIsUNC PathIsUNCW
+#define PathAddBackslash PathAddBackslashW
 #define PathRemoveBackslash PathRemoveBackslashW
 #define PathRemoveExtension PathRemoveExtensionW
-#define PathCombine         PathCombineW
-#define PathSkipRoot        PathSkipRootW
-#define PathFindExtension   PathFindExtensionW
-#define PathCanonicalize    PathCanonicalizeW
-#define PathRelativePathTo  PathRelativePathToW
-#define PathRemoveFileSpec  PathRemoveFileSpecW
+#define PathCombine PathCombineW
+#define PathSkipRoot PathSkipRootW
+#define PathFindExtension PathFindExtensionW
+#define PathCanonicalize PathCanonicalizeW
+#define PathRelativePathTo PathRelativePathToW
+#define PathRemoveFileSpec PathRemoveFileSpecW
 #define PathRenameExtension PathRenameExtensionW
-#define PathStripPath       PathStripPathW
+#define PathStripPath PathStripPathW
 
-#define PathCreateFromUrl   PathCreateFromUrlW
-#define PathIsURL           PathIsURLW
+#define PathCreateFromUrl PathCreateFromUrlW
+#define PathIsURL PathIsURLW
 
-#define UrlCanonicalize     UrlCanonicalizeW
-#define UrlCombine          UrlCombineW
-#define UrlEscape           UrlEscapeW
-#define UrlUnescape         UrlUnescapeW
-#define UrlIs               UrlIsW
-#define UrlGetPart          UrlGetPartW
+#define UrlCanonicalize UrlCanonicalizeW
+#define UrlCombine UrlCombineW
+#define UrlEscape UrlEscapeW
+#define UrlUnescape UrlUnescapeW
+#define UrlIs UrlIsW
+#define UrlGetPart UrlGetPartW
 
 /******************* misc ***************************************/
 
@@ -942,20 +965,21 @@ STDAPI UrlGetPartW(const char16_t* pszIn, char16_t* pszOut, uint32_t * pcchOut, 
 
 typedef uint32_t OLE_COLOR;
 
-#define PF_COMPARE_EXCHANGE_DOUBLE          2
+#define PF_COMPARE_EXCHANGE_DOUBLE 2
 
-typedef void (NTAPI * WAITORTIMERCALLBACKFUNC) (void *, BOOLEAN );
+typedef void(NTAPI *WAITORTIMERCALLBACKFUNC)(void *, BOOLEAN);
 
 typedef HANDLE HWND;
 
-#define IS_TEXT_UNICODE_SIGNATURE             0x0008
-#define IS_TEXT_UNICODE_UNICODE_MASK          0x000F
+#define IS_TEXT_UNICODE_SIGNATURE 0x0008
+#define IS_TEXT_UNICODE_UNICODE_MASK 0x000F
 
-BOOL IsTextUnicode(const void* lpv, int iSize, int32_t * lpiResult);
+BOOL IsTextUnicode(const void *lpv, int iSize, int32_t *lpiResult);
 
-typedef struct _LIST_ENTRY {
-   struct _LIST_ENTRY *Flink;
-   struct _LIST_ENTRY *Blink;
+typedef struct _LIST_ENTRY
+{
+    struct _LIST_ENTRY *Flink;
+    struct _LIST_ENTRY *Blink;
 } LIST_ENTRY, *PLIST_ENTRY;
 
 typedef void (*WAITORTIMERCALLBACK)(void *, BOOLEAN);
@@ -996,14 +1020,14 @@ typedef void (*WAITORTIMERCALLBACK)(void *, BOOLEAN);
 
 #if defined(_TARGET_X86_)
 // Finished ports - compile-time errors
-#define PORTABILITY_WARNING(message)    NEED_TO_PORT_THIS_ONE(NEED_TO_PORT_THIS_ONE)
-#define PORTABILITY_ASSERT(message)     NEED_TO_PORT_THIS_ONE(NEED_TO_PORT_THIS_ONE)
+#define PORTABILITY_WARNING(message) NEED_TO_PORT_THIS_ONE(NEED_TO_PORT_THIS_ONE)
+#define PORTABILITY_ASSERT(message) NEED_TO_PORT_THIS_ONE(NEED_TO_PORT_THIS_ONE)
 #else
 // Ports in progress - run-time asserts only
 #define PORTABILITY_WARNING(message)
-#define PORTABILITY_ASSERT(message)     assert(false && message)
+#define PORTABILITY_ASSERT(message) assert(false && message)
 #endif
 
-#define UNREFERENCED_PARAMETER(P)          (void)(P)
+#define UNREFERENCED_PARAMETER(P) (void)(P)
 
 #endif // __PALRT_H__
