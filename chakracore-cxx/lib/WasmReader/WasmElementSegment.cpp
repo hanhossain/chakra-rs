@@ -9,15 +9,12 @@
 
 namespace Wasm
 {
-    WasmElementSegment::WasmElementSegment(ArenaAllocator* alloc, const uint32_t index, const WasmNode initExpr, const uint32_t numElem) :
-        m_alloc(alloc),
-        m_index(index),
-        m_offsetExpr(initExpr),
-        m_numElem(numElem),
-        m_offset(0),
-        m_elemIdx(0),
+    WasmElementSegment::WasmElementSegment(ArenaAllocator *alloc, const uint32_t index, const WasmNode initExpr,
+                                           const uint32_t numElem) :
+        m_alloc(alloc), m_index(index), m_offsetExpr(initExpr), m_numElem(numElem), m_offset(0), m_elemIdx(0),
         m_elems(nullptr)
-    {}
+    {
+    }
 
     void WasmElementSegment::Init()
     {

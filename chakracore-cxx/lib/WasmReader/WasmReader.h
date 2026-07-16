@@ -9,9 +9,9 @@
 #ifdef ENABLE_WASM
 
 // These are the WasmReader related structures that are needed outside of Chakra.WasmReader lib
-#include "WasmParseTree.h"
-#include "WasmSignature.h"
 #include "WasmFunctionInfo.h"
+#include "WasmParseTree.h"
 #include "WasmReaderInfo.h"
+#include "WasmSignature.h"
 
 #endif // ENABLE_WASM

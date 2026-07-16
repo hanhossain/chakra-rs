@@ -9,47 +9,39 @@
 namespace Wasm
 {
 
-WasmCustomReader::WasmCustomReader(ArenaAllocator* alloc) : m_nodes(alloc)
-{
+    WasmCustomReader::WasmCustomReader(ArenaAllocator *alloc) : m_nodes(alloc) {}
 
-}
-
-void WasmCustomReader::SeekToFunctionBody(class WasmFunctionInfo* funcInfo)
-{
-    Assert(funcInfo->GetCustomReader() == this);
-    m_state = 0;
-}
-
-bool WasmCustomReader::IsCurrentFunctionCompleted() const
-{
-    return m_state >= static_cast<uint32_t>(m_nodes.Count());
-}
-
-WasmOp WasmCustomReader::ReadExpr()
-{
-    if (m_state < static_cast<uint32_t>(m_nodes.Count()))
+    void WasmCustomReader::SeekToFunctionBody(class WasmFunctionInfo *funcInfo)
     {
-        m_currentNode = m_nodes.Item(m_state++);
-        return m_currentNode.op;
+        Assert(funcInfo->GetCustomReader() == this);
+        m_state = 0;
     }
-    return wbEnd;
-}
 
-void WasmCustomReader::FunctionEnd()
-{
-}
+    bool WasmCustomReader::IsCurrentFunctionCompleted() const
+    {
+        return m_state >= static_cast<uint32_t>(m_nodes.Count());
+    }
 
-void WasmCustomReader::AddNode(WasmNode node)
-{
-    m_nodes.Add(node);
-}
+    WasmOp WasmCustomReader::ReadExpr()
+    {
+        if (m_state < static_cast<uint32_t>(m_nodes.Count()))
+        {
+            m_currentNode = m_nodes.Item(m_state++);
+            return m_currentNode.op;
+        }
+        return wbEnd;
+    }
 
-uint32_t WasmCustomReader::EstimateCurrentFunctionBytecodeSize() const
-{
-    uint32_t count = min(static_cast<uint32_t>(m_nodes.Count()), static_cast<uint32_t>(AutoSystemInfo::PageSize));
-    // On average each node takes between 3 - 7 bytes to encode
-    return count * 5;
-}
+    void WasmCustomReader::FunctionEnd() {}
 
-};
+    void WasmCustomReader::AddNode(WasmNode node) { m_nodes.Add(node); }
+
+    uint32_t WasmCustomReader::EstimateCurrentFunctionBytecodeSize() const
+    {
+        uint32_t count = min(static_cast<uint32_t>(m_nodes.Count()), static_cast<uint32_t>(AutoSystemInfo::PageSize));
+        // On average each node takes between 3 - 7 bytes to encode
+        return count * 5;
+    }
+
+}; // namespace Wasm
 #endif

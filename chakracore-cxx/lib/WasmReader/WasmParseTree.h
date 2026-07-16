@@ -8,13 +8,14 @@
 namespace Wasm
 {
     const uint16 EXTENDED_OFFSET = 256;
-    namespace Simd {
+    namespace Simd
+    {
         const size_t VEC_WIDTH = 4;
-        typedef uint32_t simdvec [VEC_WIDTH]; //TODO: maybe we should pull in SIMDValue?
+        typedef uint32_t simdvec[VEC_WIDTH]; // TODO: maybe we should pull in SIMDValue?
         const size_t MAX_LANES = 16;
         void EnsureSimdIsEnabled();
         bool IsEnabled();
-    }
+    } // namespace Simd
 
     namespace Threads
     {
@@ -49,11 +50,7 @@ namespace Wasm
             Any,
 
             FirstLocalType = I32,
-            AllLocalTypes = 
-                  1 << I32
-                | 1 << I64
-                | 1 << F32
-                | 1 << F64
+            AllLocalTypes = 1 << I32 | 1 << I64 | 1 << F32 | 1 << F64
 #ifdef ENABLE_WASM_SIMD
                 | 1 << V128
 #endif
@@ -61,27 +58,27 @@ namespace Wasm
 
         namespace SwitchCaseChecks
         {
-            template<WasmType... T>
+            template <WasmType... T>
             struct bv;
 
-            template<>
+            template <>
             struct bv<>
             {
                 static constexpr uint value = 0;
             };
 
-            template<WasmType... K>
+            template <WasmType... K>
             struct bv<Limit, K...>
             {
                 static constexpr uint value = bv<K...>::value;
             };
 
-            template<WasmType K1, WasmType... K>
+            template <WasmType K1, WasmType... K>
             struct bv<K1, K...>
             {
                 static constexpr uint value = (1 << K1) | bv<K...>::value;
             };
-        }
+        } // namespace SwitchCaseChecks
 
 #ifdef ENABLE_WASM_SIMD
 #define WASM_V128_CHECK_TYPE Wasm::WasmTypes::V128
@@ -89,29 +86,29 @@ namespace Wasm
 #define WASM_V128_CHECK_TYPE Wasm::WasmTypes::Limit
 #endif
 
-        template<WasmType... T>
+        template <WasmType... T>
         void CompileAssertCases()
         {
             static_assert(SwitchCaseChecks::bv<T...>::value == AllLocalTypes, "WasmTypes missing in switch-case");
             AssertOrFailFastMsg(UNREACHED, "The WasmType case should have been handled");
         }
 
-        template<WasmType... T>
+        template <WasmType... T>
         void CompileAssertCasesNoFailFast()
         {
             static_assert(SwitchCaseChecks::bv<T...>::value == AllLocalTypes, "WasmTypes missing in switch-case");
             AssertMsg(UNREACHED, "The WasmType case should have been handled");
         }
 
-        extern const char16_t* const strIds[Limit];
+        extern const char16_t *const strIds[Limit];
 
         bool IsLocalType(WasmTypes::WasmType type);
         uint32_t GetTypeByteSize(WasmType type);
-        const char16_t* GetTypeName(WasmType type);
-    }
+        const char16_t *GetTypeName(WasmType type);
+    } // namespace WasmTypes
     typedef WasmTypes::WasmType Local;
 
-    enum class ExternalKinds: uint8_t
+    enum class ExternalKinds : uint8_t
     {
         Function = 0,
         Table = 1,
@@ -130,19 +127,24 @@ namespace Wasm
             Import
         };
         bool CanBeExported(Type funcType);
-    }
+    } // namespace FunctionIndexTypes
 
     namespace GlobalReferenceTypes
     {
         enum Type
         {
-            Invalid, Const, LocalReference, ImportedReference
+            Invalid,
+            Const,
+            LocalReference,
+            ImportedReference
         };
     }
 
     struct WasmOpCodeSignatures
     {
-#define WASM_SIGNATURE(id, nTypes, ...) static const WasmTypes::WasmType id[nTypes]; DebugOnly(static const int n##id = nTypes;)
+#define WASM_SIGNATURE(id, nTypes, ...)                                                                                \
+    static const WasmTypes::WasmType id[nTypes];                                                                       \
+    DebugOnly(static const int n##id = nTypes;)
 #include "WasmBinaryOpCodes.h"
     };
 
@@ -152,6 +154,8 @@ namespace Wasm
 // Add prefix to the enum to get a compiler error if there is a collision between operators and prefixes
 #define WASM_PREFIX(name, value, ...) prefix##name = value,
 #include "WasmBinaryOpCodes.h"
+
+
     };
 
     struct WasmConstLitNode
@@ -195,7 +199,7 @@ namespace Wasm
     struct WasmBrTableNode
     {
         uint32_t numTargets;
-        uint32_t* targetTable;
+        uint32_t *targetTable;
         uint32_t defaultTarget;
     };
 
@@ -214,6 +218,7 @@ namespace Wasm
             WasmTypes::WasmType singleResult;
             uint32_t signatureId;
         };
+
     public:
         bool IsSingleResult() const { return isSingleResult; }
         void SetSignatureId(uint32_t id)
@@ -221,7 +226,7 @@ namespace Wasm
             isSingleResult = false;
             signatureId = id;
         }
-        uint32_t GetSignatureId() const 
+        uint32_t GetSignatureId() const
         {
             Assert(!isSingleResult);
             return signatureId;
@@ -259,7 +264,7 @@ namespace Wasm
     {
         uint32_t index;
         uint32_t nameLength;
-        const char16_t* name;
+        const char16_t *name;
         ExternalKinds kind;
     };
 
@@ -267,16 +272,16 @@ namespace Wasm
     {
         ExternalKinds kind;
         uint32_t modNameLen;
-        const char16_t* modName;
+        const char16_t *modName;
         uint32_t importNameLen;
-        const char16_t* importName;
+        const char16_t *importName;
     };
 
     struct CustomSection
     {
-        const char16_t* name;
+        const char16_t *name;
         charcount_t nameLength;
-        const byte* payload;
+        const byte *payload;
         uint32_t payloadSize;
     };
-}
+} // namespace Wasm

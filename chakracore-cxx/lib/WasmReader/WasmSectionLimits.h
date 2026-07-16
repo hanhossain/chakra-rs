@@ -7,28 +7,28 @@
 #ifdef ENABLE_WASM
 namespace Wasm
 {
-struct SectionLimits
-{
-    enum Flags : uint32_t
+    struct SectionLimits
     {
-        HAS_MAXIMUM = 1 << 0,
-        IS_SHARED = 1 << 1,
+        enum Flags : uint32_t
+        {
+            HAS_MAXIMUM = 1 << 0,
+            IS_SHARED = 1 << 1,
+        };
+        bool HasMaximum() const { return (flags & HAS_MAXIMUM) != 0; }
+
+        Flags flags;
+        uint32_t initial;
+        uint32_t maximum;
     };
-    bool HasMaximum() const { return (flags & HAS_MAXIMUM) != 0; }
 
-    Flags flags;
-    uint32_t initial;
-    uint32_t maximum;
-};
+    struct MemorySectionLimits : public SectionLimits
+    {
+        bool IsShared() const { return (flags & IS_SHARED) != 0; }
+    };
 
-struct MemorySectionLimits : public SectionLimits
-{
-    bool IsShared() const { return (flags & IS_SHARED) != 0; }
-};
-
-struct TableSectionLimits : public SectionLimits
-{
-    // Nothing specific to table section yet
-};
-}
+    struct TableSectionLimits : public SectionLimits
+    {
+        // Nothing specific to table section yet
+    };
+} // namespace Wasm
 #endif

@@ -10,62 +10,45 @@
 namespace Wasm
 {
 
-WasmFunctionInfo::WasmFunctionInfo(ArenaAllocator* alloc, WasmSignature* signature, uint32_t number) : 
-    m_alloc(alloc),
-    m_signature(signature),
-    m_body(nullptr),
-    m_name(nullptr),
-    m_customReader(nullptr),
-    m_nameLength(0),
-    m_number(number),
-    m_locals(alloc, signature->GetParamCount())
+    WasmFunctionInfo::WasmFunctionInfo(ArenaAllocator *alloc, WasmSignature *signature, uint32_t number) :
+        m_alloc(alloc), m_signature(signature), m_body(nullptr), m_name(nullptr), m_customReader(nullptr),
+        m_nameLength(0), m_number(number), m_locals(alloc, signature->GetParamCount())
 #if DBG_DUMP
-    , importedFunctionReference(nullptr)
+        ,
+        importedFunctionReference(nullptr)
 #endif
-{
-    for (Js::ArgSlot i = 0; i < signature->GetParamCount(); ++i)
     {
-        m_locals.Add(signature->GetParam(i));
+        for (Js::ArgSlot i = 0; i < signature->GetParamCount(); ++i)
+        {
+            m_locals.Add(signature->GetParam(i));
+        }
     }
-}
 
-void WasmFunctionInfo::AddLocal(WasmTypes::WasmType type, uint32_t count)
-{
-    for (uint32_t i = 0; i < count; ++i)
+    void WasmFunctionInfo::AddLocal(WasmTypes::WasmType type, uint32_t count)
     {
-        m_locals.Add(Wasm::Local(type));
+        for (uint32_t i = 0; i < count; ++i)
+        {
+            m_locals.Add(Wasm::Local(type));
+        }
     }
-}
 
-Local WasmFunctionInfo::GetLocal(uint32_t index) const
-{
-    if (index < GetLocalCount())
+    Local WasmFunctionInfo::GetLocal(uint32_t index) const
     {
-        return m_locals.ItemInBuffer(index);
+        if (index < GetLocalCount())
+        {
+            return m_locals.ItemInBuffer(index);
+        }
+        return WasmTypes::Limit;
     }
-    return WasmTypes::Limit;
-}
 
 
-uint32_t WasmFunctionInfo::GetResultCount() const
-{
-    return m_signature->GetResultCount();
-}
+    uint32_t WasmFunctionInfo::GetResultCount() const { return m_signature->GetResultCount(); }
 
-Local WasmFunctionInfo::GetResult(uint32_t index) const
-{
-    return m_signature->GetResult(index);
-}
+    Local WasmFunctionInfo::GetResult(uint32_t index) const { return m_signature->GetResult(index); }
 
-uint32_t WasmFunctionInfo::GetLocalCount() const
-{
-    return m_locals.Count();
-}
+    uint32_t WasmFunctionInfo::GetLocalCount() const { return m_locals.Count(); }
 
-Js::ArgSlot WasmFunctionInfo::GetParamCount() const
-{
-    return m_signature->GetParamCount();
-}
+    Js::ArgSlot WasmFunctionInfo::GetParamCount() const { return m_signature->GetParamCount(); }
 
 } // namespace Wasm
 #endif // ENABLE_WASM

@@ -10,23 +10,14 @@
 namespace Wasm
 {
 
-WasmDataSegment::WasmDataSegment(ArenaAllocator* alloc, WasmNode ie, uint32_t _source_size, const byte* _data) :
-    m_alloc(alloc),
-    m_initExpr(ie),
-    m_sourceSize(_source_size),
-    m_data(_data)
-{
-}
+    WasmDataSegment::WasmDataSegment(ArenaAllocator *alloc, WasmNode ie, uint32_t _source_size, const byte *_data) :
+        m_alloc(alloc), m_initExpr(ie), m_sourceSize(_source_size), m_data(_data)
+    {
+    }
 
-uint32_t WasmDataSegment::GetSourceSize() const
-{
-    return m_sourceSize;
-}
+    uint32_t WasmDataSegment::GetSourceSize() const { return m_sourceSize; }
 
-const byte* WasmDataSegment::GetData() const
-{
-    return m_data;
-}
+    const byte *WasmDataSegment::GetData() const { return m_data; }
 
 } // namespace Wasm
 
