@@ -28,7 +28,6 @@
 #define _Out_
 #define _Out_opt_
 #define _In_reads_(x)
-#define _Pre_writable_byte_size_(byteLength)
 #define _Outptr_result_buffer_(byteLength)
 #define _Outptr_result_bytebuffer_(byteLength)
 #define _Outptr_result_maybenull_
@@ -1925,7 +1924,7 @@ namespace chakracore::jsrt
     /// </returns>
     JsErrorCode
         JsCreateExternalArrayBuffer(
-            _Pre_writable_byte_size_(byteLength) void *data,
+            void *data,
             _In_ unsigned int byteLength,
             _In_opt_ JsFinalizeCallback finalizeCallback,
             _In_opt_ void *callbackState,

@@ -517,8 +517,6 @@
 #define _Pre_writable_size_(s)      _Pre_ _Writable_elements_(s)
 #undef _Pre_readable_byte_size_
 #define _Pre_readable_byte_size_(s) _Pre_ _Readable_bytes_(s) _Pre_ _Valid_
-#undef _Pre_writable_byte_size_
-#define _Pre_writable_byte_size_(s) _Pre_ _Writable_bytes_(s)
 #undef _Post_readable_size_
 #define _Post_readable_size_(s)     _Post_ _Readable_elements_(s) _Post_ _Valid_
 #undef _Post_writable_size_

@@ -1811,7 +1811,7 @@ JsErrorCode chakracore::jsrt::JsCreateArrayBuffer(_In_ unsigned int byteLength, 
     });
 }
 
-JsErrorCode chakracore::jsrt::JsCreateExternalArrayBuffer(_Pre_writable_byte_size_(byteLength) void *data, _In_ unsigned int byteLength,
+JsErrorCode chakracore::jsrt::JsCreateExternalArrayBuffer(void *data, _In_ unsigned int byteLength,
     _In_opt_ JsFinalizeCallback finalizeCallback, _In_opt_ void *callbackState, _Out_ JsValueRef *result)
 {
     return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
