@@ -22,9 +22,9 @@ Abstract:
 #include "pal/dbgmsg.h"
 SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do this first
 
-#include "pal/palinternal.h"
 #include "pal/context.h"
 #include "pal/debug.h"
+#include "pal/palinternal.h"
 #include "pal/thread.hpp"
 #include "pal/utils.h"
 #include "pal/virtual.h"
@@ -44,135 +44,135 @@ typedef int __ptrace_request;
 
 #if HAVE_MACHINE_REG_H
 #include <machine/reg.h>
-#endif  // HAVE_MACHINE_REG_H
+#endif // HAVE_MACHINE_REG_H
 #if HAVE_MACHINE_NPX_H
 #include <machine/npx.h>
-#endif  // HAVE_MACHINE_NPX_H
+#endif // HAVE_MACHINE_NPX_H
 
 #include <asm/ptrace.h>
 
 #endif // !defined(__APPLE__)
 
 #ifdef _AMD64_
-#define ASSIGN_CONTROL_REGS \
-    ASSIGN_REG(Rbp)     \
-    ASSIGN_REG(Rip)     \
-    ASSIGN_REG(SegCs)   \
-    ASSIGN_REG(EFlags)  \
-    ASSIGN_REG(Rsp)     \
+#define ASSIGN_CONTROL_REGS                                                                                            \
+    ASSIGN_REG(Rbp)                                                                                                    \
+    ASSIGN_REG(Rip)                                                                                                    \
+    ASSIGN_REG(SegCs)                                                                                                  \
+    ASSIGN_REG(EFlags)                                                                                                 \
+    ASSIGN_REG(Rsp)
 
-#define ASSIGN_INTEGER_REGS \
-    ASSIGN_REG(Rdi)     \
-    ASSIGN_REG(Rsi)     \
-    ASSIGN_REG(Rbx)     \
-    ASSIGN_REG(Rdx)     \
-    ASSIGN_REG(Rcx)     \
-    ASSIGN_REG(Rax)     \
-    ASSIGN_REG(R8)     \
-    ASSIGN_REG(R9)     \
-    ASSIGN_REG(R10)     \
-    ASSIGN_REG(R11)     \
-    ASSIGN_REG(R12)     \
-    ASSIGN_REG(R13)     \
-    ASSIGN_REG(R14)     \
-    ASSIGN_REG(R15)     \
+#define ASSIGN_INTEGER_REGS                                                                                            \
+    ASSIGN_REG(Rdi)                                                                                                    \
+    ASSIGN_REG(Rsi)                                                                                                    \
+    ASSIGN_REG(Rbx)                                                                                                    \
+    ASSIGN_REG(Rdx)                                                                                                    \
+    ASSIGN_REG(Rcx)                                                                                                    \
+    ASSIGN_REG(Rax)                                                                                                    \
+    ASSIGN_REG(R8)                                                                                                     \
+    ASSIGN_REG(R9)                                                                                                     \
+    ASSIGN_REG(R10)                                                                                                    \
+    ASSIGN_REG(R11)                                                                                                    \
+    ASSIGN_REG(R12)                                                                                                    \
+    ASSIGN_REG(R13)                                                                                                    \
+    ASSIGN_REG(R14)                                                                                                    \
+    ASSIGN_REG(R15)
 
 #elif defined(_ARM_)
-#define ASSIGN_CONTROL_REGS \
-    ASSIGN_REG(Sp)     \
-    ASSIGN_REG(Lr)     \
-    ASSIGN_REG(Pc)   \
-    ASSIGN_REG(Cpsr)  \
+#define ASSIGN_CONTROL_REGS                                                                                            \
+    ASSIGN_REG(Sp)                                                                                                     \
+    ASSIGN_REG(Lr)                                                                                                     \
+    ASSIGN_REG(Pc)                                                                                                     \
+    ASSIGN_REG(Cpsr)
 
-#define ASSIGN_INTEGER_REGS \
-    ASSIGN_REG(R0)     \
-    ASSIGN_REG(R1)     \
-    ASSIGN_REG(R2)     \
-    ASSIGN_REG(R3)     \
-    ASSIGN_REG(R4)     \
-    ASSIGN_REG(R5)     \
-    ASSIGN_REG(R6)     \
-    ASSIGN_REG(R7)     \
-    ASSIGN_REG(R8)     \
-    ASSIGN_REG(R9)     \
-    ASSIGN_REG(R10)     \
-    ASSIGN_REG(R11)     \
+#define ASSIGN_INTEGER_REGS                                                                                            \
+    ASSIGN_REG(R0)                                                                                                     \
+    ASSIGN_REG(R1)                                                                                                     \
+    ASSIGN_REG(R2)                                                                                                     \
+    ASSIGN_REG(R3)                                                                                                     \
+    ASSIGN_REG(R4)                                                                                                     \
+    ASSIGN_REG(R5)                                                                                                     \
+    ASSIGN_REG(R6)                                                                                                     \
+    ASSIGN_REG(R7)                                                                                                     \
+    ASSIGN_REG(R8)                                                                                                     \
+    ASSIGN_REG(R9)                                                                                                     \
+    ASSIGN_REG(R10)                                                                                                    \
+    ASSIGN_REG(R11)                                                                                                    \
     ASSIGN_REG(R12)
 #elif defined(_ARM64_)
-#define ASSIGN_CONTROL_REGS \
-    ASSIGN_REG(Cpsr)    \
-    ASSIGN_REG(Fp)      \
-    ASSIGN_REG(Sp)      \
-    ASSIGN_REG(Lr)      \
+#define ASSIGN_CONTROL_REGS                                                                                            \
+    ASSIGN_REG(Cpsr)                                                                                                   \
+    ASSIGN_REG(Fp)                                                                                                     \
+    ASSIGN_REG(Sp)                                                                                                     \
+    ASSIGN_REG(Lr)                                                                                                     \
     ASSIGN_REG(Pc)
 
-#define ASSIGN_INTEGER_REGS \
-    ASSIGN_REG(X0)      \
-    ASSIGN_REG(X1)      \
-    ASSIGN_REG(X2)      \
-    ASSIGN_REG(X3)      \
-    ASSIGN_REG(X4)      \
-    ASSIGN_REG(X5)      \
-    ASSIGN_REG(X6)      \
-    ASSIGN_REG(X7)      \
-    ASSIGN_REG(X8)      \
-    ASSIGN_REG(X9)      \
-    ASSIGN_REG(X10)     \
-    ASSIGN_REG(X11)     \
-    ASSIGN_REG(X12)     \
-    ASSIGN_REG(X13)     \
-    ASSIGN_REG(X14)     \
-    ASSIGN_REG(X15)     \
-    ASSIGN_REG(X16)     \
-    ASSIGN_REG(X17)     \
-    ASSIGN_REG(X18)     \
-    ASSIGN_REG(X19)     \
-    ASSIGN_REG(X20)     \
-    ASSIGN_REG(X21)     \
-    ASSIGN_REG(X22)     \
-    ASSIGN_REG(X23)     \
-    ASSIGN_REG(X24)     \
-    ASSIGN_REG(X25)     \
-    ASSIGN_REG(X26)     \
-    ASSIGN_REG(X27)     \
+#define ASSIGN_INTEGER_REGS                                                                                            \
+    ASSIGN_REG(X0)                                                                                                     \
+    ASSIGN_REG(X1)                                                                                                     \
+    ASSIGN_REG(X2)                                                                                                     \
+    ASSIGN_REG(X3)                                                                                                     \
+    ASSIGN_REG(X4)                                                                                                     \
+    ASSIGN_REG(X5)                                                                                                     \
+    ASSIGN_REG(X6)                                                                                                     \
+    ASSIGN_REG(X7)                                                                                                     \
+    ASSIGN_REG(X8)                                                                                                     \
+    ASSIGN_REG(X9)                                                                                                     \
+    ASSIGN_REG(X10)                                                                                                    \
+    ASSIGN_REG(X11)                                                                                                    \
+    ASSIGN_REG(X12)                                                                                                    \
+    ASSIGN_REG(X13)                                                                                                    \
+    ASSIGN_REG(X14)                                                                                                    \
+    ASSIGN_REG(X15)                                                                                                    \
+    ASSIGN_REG(X16)                                                                                                    \
+    ASSIGN_REG(X17)                                                                                                    \
+    ASSIGN_REG(X18)                                                                                                    \
+    ASSIGN_REG(X19)                                                                                                    \
+    ASSIGN_REG(X20)                                                                                                    \
+    ASSIGN_REG(X21)                                                                                                    \
+    ASSIGN_REG(X22)                                                                                                    \
+    ASSIGN_REG(X23)                                                                                                    \
+    ASSIGN_REG(X24)                                                                                                    \
+    ASSIGN_REG(X25)                                                                                                    \
+    ASSIGN_REG(X26)                                                                                                    \
+    ASSIGN_REG(X27)                                                                                                    \
     ASSIGN_REG(X28)
 
 #elif defined(HOST_LOONGARCH64)
-#define ASSIGN_CONTROL_REGS  \
-    ASSIGN_REG(Fp)      \
-    ASSIGN_REG(Sp)      \
-    ASSIGN_REG(Ra)      \
+#define ASSIGN_CONTROL_REGS                                                                                            \
+    ASSIGN_REG(Fp)                                                                                                     \
+    ASSIGN_REG(Sp)                                                                                                     \
+    ASSIGN_REG(Ra)                                                                                                     \
     ASSIGN_REG(Pc)
 
-#define ASSIGN_INTEGER_REGS \
-    ASSIGN_REG(R0)     \
-    ASSIGN_REG(Tp)     \
-    ASSIGN_REG(A0)     \
-    ASSIGN_REG(A1)     \
-    ASSIGN_REG(A2)     \
-    ASSIGN_REG(A3)     \
-    ASSIGN_REG(A4)     \
-    ASSIGN_REG(A5)     \
-    ASSIGN_REG(A6)     \
-    ASSIGN_REG(A7)     \
-    ASSIGN_REG(T0)     \
-    ASSIGN_REG(T1)     \
-    ASSIGN_REG(T2)     \
-    ASSIGN_REG(T3)     \
-    ASSIGN_REG(T4)     \
-    ASSIGN_REG(T5)     \
-    ASSIGN_REG(T6)     \
-    ASSIGN_REG(T7)     \
-    ASSIGN_REG(T8)     \
-    ASSIGN_REG(S0)     \
-    ASSIGN_REG(S1)     \
-    ASSIGN_REG(S2)     \
-    ASSIGN_REG(S3)     \
-    ASSIGN_REG(S4)     \
-    ASSIGN_REG(S5)     \
-    ASSIGN_REG(S6)     \
-    ASSIGN_REG(S7)     \
-    ASSIGN_REG(S8)     \
+#define ASSIGN_INTEGER_REGS                                                                                            \
+    ASSIGN_REG(R0)                                                                                                     \
+    ASSIGN_REG(Tp)                                                                                                     \
+    ASSIGN_REG(A0)                                                                                                     \
+    ASSIGN_REG(A1)                                                                                                     \
+    ASSIGN_REG(A2)                                                                                                     \
+    ASSIGN_REG(A3)                                                                                                     \
+    ASSIGN_REG(A4)                                                                                                     \
+    ASSIGN_REG(A5)                                                                                                     \
+    ASSIGN_REG(A6)                                                                                                     \
+    ASSIGN_REG(A7)                                                                                                     \
+    ASSIGN_REG(T0)                                                                                                     \
+    ASSIGN_REG(T1)                                                                                                     \
+    ASSIGN_REG(T2)                                                                                                     \
+    ASSIGN_REG(T3)                                                                                                     \
+    ASSIGN_REG(T4)                                                                                                     \
+    ASSIGN_REG(T5)                                                                                                     \
+    ASSIGN_REG(T6)                                                                                                     \
+    ASSIGN_REG(T7)                                                                                                     \
+    ASSIGN_REG(T8)                                                                                                     \
+    ASSIGN_REG(S0)                                                                                                     \
+    ASSIGN_REG(S1)                                                                                                     \
+    ASSIGN_REG(S2)                                                                                                     \
+    ASSIGN_REG(S3)                                                                                                     \
+    ASSIGN_REG(S4)                                                                                                     \
+    ASSIGN_REG(S5)                                                                                                     \
+    ASSIGN_REG(S6)                                                                                                     \
+    ASSIGN_REG(S7)                                                                                                     \
+    ASSIGN_REG(S8)                                                                                                     \
     ASSIGN_REG(X0)
 
 #elif defined(HOST_RISCV64)
@@ -181,118 +181,118 @@ typedef int __ptrace_request;
 
 // https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/2d865a2964fe06bfc569ab00c74e152b582ed764/riscv-cc.adoc
 
-#define ASSIGN_CONTROL_REGS  \
-    ASSIGN_REG(Ra)      \
-    ASSIGN_REG(Sp)      \
-    ASSIGN_REG(Sp)      \
-    ASSIGN_REG(Gp)      \
-    ASSIGN_REG(Tp)      \
+#define ASSIGN_CONTROL_REGS                                                                                            \
+    ASSIGN_REG(Ra)                                                                                                     \
+    ASSIGN_REG(Sp)                                                                                                     \
+    ASSIGN_REG(Sp)                                                                                                     \
+    ASSIGN_REG(Gp)                                                                                                     \
+    ASSIGN_REG(Tp)                                                                                                     \
     ASSIGN_REG(Pc)
 
-#define ASSIGN_INTEGER_REGS \
-    ASSIGN_REG(T0)     \
-    ASSIGN_REG(T1)     \
-    ASSIGN_REG(T2)     \
-    ASSIGN_REG(S0)     \
-    ASSIGN_REG(S1)     \
-    ASSIGN_REG(A0)     \
-    ASSIGN_REG(A1)     \
-    ASSIGN_REG(A2)     \
-    ASSIGN_REG(A3)     \
-    ASSIGN_REG(A4)     \
-    ASSIGN_REG(A5)     \
-    ASSIGN_REG(A6)     \
-    ASSIGN_REG(A7)     \
-    ASSIGN_REG(S2)     \
-    ASSIGN_REG(S3)     \
-    ASSIGN_REG(S4)     \
-    ASSIGN_REG(S5)     \
-    ASSIGN_REG(S6)     \
-    ASSIGN_REG(S7)     \
-    ASSIGN_REG(S8)     \
-    ASSIGN_REG(S9)     \
-    ASSIGN_REG(S10)    \
-    ASSIGN_REG(S11)    \
-    ASSIGN_REG(T3)     \
-    ASSIGN_REG(T4)     \
-    ASSIGN_REG(T5)     \
+#define ASSIGN_INTEGER_REGS                                                                                            \
+    ASSIGN_REG(T0)                                                                                                     \
+    ASSIGN_REG(T1)                                                                                                     \
+    ASSIGN_REG(T2)                                                                                                     \
+    ASSIGN_REG(S0)                                                                                                     \
+    ASSIGN_REG(S1)                                                                                                     \
+    ASSIGN_REG(A0)                                                                                                     \
+    ASSIGN_REG(A1)                                                                                                     \
+    ASSIGN_REG(A2)                                                                                                     \
+    ASSIGN_REG(A3)                                                                                                     \
+    ASSIGN_REG(A4)                                                                                                     \
+    ASSIGN_REG(A5)                                                                                                     \
+    ASSIGN_REG(A6)                                                                                                     \
+    ASSIGN_REG(A7)                                                                                                     \
+    ASSIGN_REG(S2)                                                                                                     \
+    ASSIGN_REG(S3)                                                                                                     \
+    ASSIGN_REG(S4)                                                                                                     \
+    ASSIGN_REG(S5)                                                                                                     \
+    ASSIGN_REG(S6)                                                                                                     \
+    ASSIGN_REG(S7)                                                                                                     \
+    ASSIGN_REG(S8)                                                                                                     \
+    ASSIGN_REG(S9)                                                                                                     \
+    ASSIGN_REG(S10)                                                                                                    \
+    ASSIGN_REG(S11)                                                                                                    \
+    ASSIGN_REG(T3)                                                                                                     \
+    ASSIGN_REG(T4)                                                                                                     \
+    ASSIGN_REG(T5)                                                                                                     \
     ASSIGN_REG(T6)
 
 #elif defined(HOST_S390X)
-#define ASSIGN_CONTROL_REGS \
-    ASSIGN_REG(PSWMask) \
-    ASSIGN_REG(PSWAddr) \
-    ASSIGN_REG(R15)     \
+#define ASSIGN_CONTROL_REGS                                                                                            \
+    ASSIGN_REG(PSWMask)                                                                                                \
+    ASSIGN_REG(PSWAddr)                                                                                                \
+    ASSIGN_REG(R15)
 
-#define ASSIGN_INTEGER_REGS \
-    ASSIGN_REG(R0)      \
-    ASSIGN_REG(R1)      \
-    ASSIGN_REG(R2)      \
-    ASSIGN_REG(R3)      \
-    ASSIGN_REG(R4)      \
-    ASSIGN_REG(R5)      \
-    ASSIGN_REG(R5)      \
-    ASSIGN_REG(R6)      \
-    ASSIGN_REG(R7)      \
-    ASSIGN_REG(R8)      \
-    ASSIGN_REG(R9)      \
-    ASSIGN_REG(R10)     \
-    ASSIGN_REG(R11)     \
-    ASSIGN_REG(R12)     \
-    ASSIGN_REG(R13)     \
+#define ASSIGN_INTEGER_REGS                                                                                            \
+    ASSIGN_REG(R0)                                                                                                     \
+    ASSIGN_REG(R1)                                                                                                     \
+    ASSIGN_REG(R2)                                                                                                     \
+    ASSIGN_REG(R3)                                                                                                     \
+    ASSIGN_REG(R4)                                                                                                     \
+    ASSIGN_REG(R5)                                                                                                     \
+    ASSIGN_REG(R5)                                                                                                     \
+    ASSIGN_REG(R6)                                                                                                     \
+    ASSIGN_REG(R7)                                                                                                     \
+    ASSIGN_REG(R8)                                                                                                     \
+    ASSIGN_REG(R9)                                                                                                     \
+    ASSIGN_REG(R10)                                                                                                    \
+    ASSIGN_REG(R11)                                                                                                    \
+    ASSIGN_REG(R12)                                                                                                    \
+    ASSIGN_REG(R13)                                                                                                    \
     ASSIGN_REG(R14)
 
 #elif defined(HOST_POWERPC64)
-#define ASSIGN_CONTROL_REGS \
-    ASSIGN_REG(Nip) \
-    ASSIGN_REG(Msr) \
-    ASSIGN_REG(Ctr) \
-    ASSIGN_REG(Link) \
-    ASSIGN_REG(Xer) \
-    ASSIGN_REG(Ccr) \
-    ASSIGN_REG(R31) \
+#define ASSIGN_CONTROL_REGS                                                                                            \
+    ASSIGN_REG(Nip)                                                                                                    \
+    ASSIGN_REG(Msr)                                                                                                    \
+    ASSIGN_REG(Ctr)                                                                                                    \
+    ASSIGN_REG(Link)                                                                                                   \
+    ASSIGN_REG(Xer)                                                                                                    \
+    ASSIGN_REG(Ccr)                                                                                                    \
+    ASSIGN_REG(R31)
 
-#define ASSIGN_INTEGER_REGS \
-    ASSIGN_REG(R0)      \
-    ASSIGN_REG(R1)      \
-    ASSIGN_REG(R2)      \
-    ASSIGN_REG(R3)      \
-    ASSIGN_REG(R4)      \
-    ASSIGN_REG(R5)      \
-    ASSIGN_REG(R5)      \
-    ASSIGN_REG(R6)      \
-    ASSIGN_REG(R7)      \
-    ASSIGN_REG(R8)      \
-    ASSIGN_REG(R9)      \
-    ASSIGN_REG(R10)     \
-    ASSIGN_REG(R11)     \
-    ASSIGN_REG(R12)     \
-    ASSIGN_REG(R13)     \
-    ASSIGN_REG(R14)     \
-    ASSIGN_REG(R15)     \
-    ASSIGN_REG(R16)     \
-    ASSIGN_REG(R17)     \
-    ASSIGN_REG(R18)     \
-    ASSIGN_REG(R19)     \
-    ASSIGN_REG(R20)     \
-    ASSIGN_REG(R21)     \
-    ASSIGN_REG(R22)     \
-    ASSIGN_REG(R23)     \
-    ASSIGN_REG(R24)     \
-    ASSIGN_REG(R25)     \
-    ASSIGN_REG(R26)     \
-    ASSIGN_REG(R27)     \
-    ASSIGN_REG(R28)     \
-    ASSIGN_REG(R29)     \
+#define ASSIGN_INTEGER_REGS                                                                                            \
+    ASSIGN_REG(R0)                                                                                                     \
+    ASSIGN_REG(R1)                                                                                                     \
+    ASSIGN_REG(R2)                                                                                                     \
+    ASSIGN_REG(R3)                                                                                                     \
+    ASSIGN_REG(R4)                                                                                                     \
+    ASSIGN_REG(R5)                                                                                                     \
+    ASSIGN_REG(R5)                                                                                                     \
+    ASSIGN_REG(R6)                                                                                                     \
+    ASSIGN_REG(R7)                                                                                                     \
+    ASSIGN_REG(R8)                                                                                                     \
+    ASSIGN_REG(R9)                                                                                                     \
+    ASSIGN_REG(R10)                                                                                                    \
+    ASSIGN_REG(R11)                                                                                                    \
+    ASSIGN_REG(R12)                                                                                                    \
+    ASSIGN_REG(R13)                                                                                                    \
+    ASSIGN_REG(R14)                                                                                                    \
+    ASSIGN_REG(R15)                                                                                                    \
+    ASSIGN_REG(R16)                                                                                                    \
+    ASSIGN_REG(R17)                                                                                                    \
+    ASSIGN_REG(R18)                                                                                                    \
+    ASSIGN_REG(R19)                                                                                                    \
+    ASSIGN_REG(R20)                                                                                                    \
+    ASSIGN_REG(R21)                                                                                                    \
+    ASSIGN_REG(R22)                                                                                                    \
+    ASSIGN_REG(R23)                                                                                                    \
+    ASSIGN_REG(R24)                                                                                                    \
+    ASSIGN_REG(R25)                                                                                                    \
+    ASSIGN_REG(R26)                                                                                                    \
+    ASSIGN_REG(R27)                                                                                                    \
+    ASSIGN_REG(R28)                                                                                                    \
+    ASSIGN_REG(R29)                                                                                                    \
     ASSIGN_REG(R30)
 
 #else
 #error "Don't know how to assign registers on this architecture"
 #endif
 
-#define ASSIGN_ALL_REGS     \
-        ASSIGN_CONTROL_REGS \
-        ASSIGN_INTEGER_REGS \
+#define ASSIGN_ALL_REGS                                                                                                \
+    ASSIGN_CONTROL_REGS                                                                                                \
+    ASSIGN_INTEGER_REGS
 
 #if !defined(__APPLE__)
 
@@ -362,8 +362,7 @@ BOOL CONTEXT_GetThreadContext(pthread_t self, LPCONTEXT lpContext)
         goto EXIT;
     }
 
-    if (lpContext->ContextFlags &
-        (CONTEXT_CONTROL | CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
+    if (lpContext->ContextFlags & (CONTEXT_CONTROL | CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
     {
         if (CONTEXT_GetRegisters(lpContext) == FALSE)
         {
@@ -407,8 +406,8 @@ BOOL CONTEXT_SetThreadContext(const CONTEXT *lpContext)
 
     ASSERT("SetThreadContext should be called for cross-process only.\n");
     SetLastError(ERROR_INVALID_PARAMETER);
-   EXIT:
-     return ret;
+EXIT:
+    return ret;
 }
 
 /*++
@@ -440,7 +439,8 @@ void CONTEXTToNativeContext(const CONTEXT *lpContext, native_context_t *native)
 #undef ASSIGN_REG
 
 #if !HAVE_FPREGS_WITH_CW
-#if (defined(__linux__)) && !defined(HOST_S390X) && !defined(HOST_LOONGARCH64) && !defined(HOST_RISCV64) && !defined(HOST_POWERPC64)
+#if (defined(__linux__)) && !defined(HOST_S390X) && !defined(HOST_LOONGARCH64) && !defined(HOST_RISCV64) &&            \
+    !defined(HOST_POWERPC64)
 #if defined(__linux__)
     if (native->uc_mcontext.fpregs == nullptr)
 #endif // defined(__linux__)
@@ -482,27 +482,27 @@ void CONTEXTToNativeContext(const CONTEXT *lpContext, native_context_t *native)
         }
 #elif defined(_ARM64_)
 #ifdef __APPLE__
-        _STRUCT_ARM_NEON_STATE64* fp = GetNativeSigSimdContext(native);
+        _STRUCT_ARM_NEON_STATE64 *fp = GetNativeSigSimdContext(native);
         fp->__fpsr = lpContext->Fpsr;
         fp->__fpcr = lpContext->Fpcr;
         for (int i = 0; i < 32; i++)
         {
-            *(NEON128*) &fp->__v[i] = lpContext->V[i];
+            *(NEON128 *)&fp->__v[i] = lpContext->V[i];
         }
 #else // __APPLE__
-        fpsimd_context* fp = GetNativeSigSimdContext(native);
+        fpsimd_context *fp = GetNativeSigSimdContext(native);
         if (fp)
         {
             fp->fpsr = lpContext->Fpsr;
             fp->fpcr = lpContext->Fpcr;
             for (int i = 0; i < 32; i++)
             {
-                *(NEON128*) &fp->vregs[i] = lpContext->V[i];
+                *(NEON128 *)&fp->vregs[i] = lpContext->V[i];
             }
         }
 #endif // __APPLE__
 #elif defined(_ARM_)
-        VfpSigFrame* fp = GetNativeSigSimdContext(native);
+        VfpSigFrame *fp = GetNativeSigSimdContext(native);
         if (fp)
         {
             fp->Fpscr = lpContext->Fpscr;
@@ -556,8 +556,7 @@ Return value :
     None
 
 --*/
-void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContext,
-                              uint32_t contextFlags)
+void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContext, uint32_t contextFlags)
 {
     lpContext->ContextFlags = contextFlags;
 
@@ -580,7 +579,8 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
 #undef ASSIGN_REG
 
 #if !HAVE_FPREGS_WITH_CW
-#if (defined(__linux__)) && !defined(HOST_S390X) && !defined(HOST_LOONGARCH64) && !defined(HOST_RISCV64) && !defined(HOST_POWERPC64)
+#if (defined(__linux__)) && !defined(HOST_S390X) && !defined(HOST_LOONGARCH64) && !defined(HOST_RISCV64) &&            \
+    !defined(HOST_POWERPC64)
 #if defined(__linux__)
     if (native->uc_mcontext.fpregs == nullptr)
 #endif // defined(__linux__)
@@ -600,7 +600,8 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
         // Bail out regardless of whether the caller wanted CONTEXT_FLOATING_POINT or CONTEXT_XSTATE
         return;
     }
-#endif // (defined(__linux__)) && !HOST_S390X && !HOST_LOONGARCH64 && !HOST_RISCV64 && !HOST_POWERPC64 && !HOST_POWERPC64
+#endif // (defined(__linux__)) && !HOST_S390X && !HOST_LOONGARCH64 && !HOST_RISCV64 && !HOST_POWERPC64 &&
+       // !HOST_POWERPC64
 #endif // !HAVE_FPREGS_WITH_CW
 
     if ((contextFlags & CONTEXT_FLOATING_POINT) == CONTEXT_FLOATING_POINT)
@@ -631,27 +632,27 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
         }
 #elif defined(_ARM64_)
 #ifdef __APPLE__
-        const _STRUCT_ARM_NEON_STATE64* fp = GetConstNativeSigSimdContext(native);
+        const _STRUCT_ARM_NEON_STATE64 *fp = GetConstNativeSigSimdContext(native);
         lpContext->Fpsr = fp->__fpsr;
         lpContext->Fpcr = fp->__fpcr;
         for (int i = 0; i < 32; i++)
         {
-            lpContext->V[i] = *(NEON128*) &fp->__v[i];
+            lpContext->V[i] = *(NEON128 *)&fp->__v[i];
         }
 #else // __APPLE__
-        const fpsimd_context* fp = GetConstNativeSigSimdContext(native);
+        const fpsimd_context *fp = GetConstNativeSigSimdContext(native);
         if (fp)
         {
             lpContext->Fpsr = fp->fpsr;
             lpContext->Fpcr = fp->fpcr;
             for (int i = 0; i < 32; i++)
             {
-                lpContext->V[i] = *(NEON128*) &fp->vregs[i];
+                lpContext->V[i] = *(NEON128 *)&fp->vregs[i];
             }
         }
 #endif // __APPLE__
 #elif defined(_ARM_)
-        const VfpSigFrame* fp = GetConstNativeSigSimdContext(native);
+        const VfpSigFrame *fp = GetConstNativeSigSimdContext(native);
         if (fp)
         {
             lpContext->Fpscr = fp->Fpscr;
@@ -688,7 +689,7 @@ void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContex
 #ifdef _AMD64_
     if ((contextFlags & CONTEXT_XSTATE) == CONTEXT_XSTATE)
     {
-    // TODO: Enable for all Unix systems
+        // TODO: Enable for all Unix systems
 #if XSTATE_SUPPORTED
         if (FPREG_HasYmmRegisters(native))
         {
@@ -720,16 +721,16 @@ Return value :
     The program counter from the native context.
 
 --*/
-void * GetNativeContextPC(const native_context_t *context)
+void *GetNativeContextPC(const native_context_t *context)
 {
 #ifdef _AMD64_
-    return reinterpret_cast<void*>(MCREG_Rip(context->uc_mcontext));
+    return reinterpret_cast<void *>(MCREG_Rip(context->uc_mcontext));
 #elif defined(HOST_S390X)
-    return (void *) MCREG_PSWAddr(context->uc_mcontext);
+    return (void *)MCREG_PSWAddr(context->uc_mcontext);
 #elif defined(HOST_POWERPC64)
-    return (void *) MCREG_Nip(context->uc_mcontext);
+    return (void *)MCREG_Nip(context->uc_mcontext);
 #else
-    return (void *) MCREG_Pc(context->uc_mcontext);
+    return (void *)MCREG_Pc(context->uc_mcontext);
 #endif
 }
 
@@ -746,16 +747,16 @@ Return value :
     The stack pointer from the native context.
 
 --*/
-void * GetNativeContextSP(const native_context_t *context)
+void *GetNativeContextSP(const native_context_t *context)
 {
 #ifdef _AMD64_
-    return reinterpret_cast<void*>(MCREG_Rsp(context->uc_mcontext));
+    return reinterpret_cast<void *>(MCREG_Rsp(context->uc_mcontext));
 #elif defined(HOST_S390X)
-    return (void *) MCREG_R15(context->uc_mcontext);
+    return (void *)MCREG_R15(context->uc_mcontext);
 #elif defined(HOST_POWERPC64)
-    return (void *) MCREG_R31(context->uc_mcontext);
+    return (void *)MCREG_R31(context->uc_mcontext);
 #else
-    return (void *) MCREG_Sp(context->uc_mcontext);
+    return (void *)MCREG_Sp(context->uc_mcontext);
 #endif
 }
 
@@ -785,93 +786,92 @@ uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo)
 
     switch (siginfo->si_signo)
     {
-        case SIGILL:
-            switch (siginfo->si_code)
-            {
-                case ILL_ILLOPC:    // Illegal opcode
-                case ILL_ILLOPN:    // Illegal operand
-                case ILL_ILLADR:    // Illegal addressing mode
-                case ILL_ILLTRP:    // Illegal trap
-                case ILL_COPROC:    // Co-processor error
-                    return EXCEPTION_ILLEGAL_INSTRUCTION;
-                case ILL_PRVOPC:    // Privileged opcode
-                case ILL_PRVREG:    // Privileged register
-                    return EXCEPTION_PRIV_INSTRUCTION;
-                case ILL_BADSTK:    // Internal stack error
-                    return EXCEPTION_STACK_OVERFLOW;
-                default:
-                    break;
-            }
-            break;
-        case SIGFPE:
-            switch (siginfo->si_code)
-            {
-                case FPE_INTDIV:
-                    return EXCEPTION_INT_DIVIDE_BY_ZERO;
-                case FPE_INTOVF:
-                    return EXCEPTION_INT_OVERFLOW;
-                case FPE_FLTDIV:
-                    return EXCEPTION_FLT_DIVIDE_BY_ZERO;
-                case FPE_FLTOVF:
-                    return EXCEPTION_FLT_OVERFLOW;
-                case FPE_FLTUND:
-                    return EXCEPTION_FLT_UNDERFLOW;
-                case FPE_FLTRES:
-                    return EXCEPTION_FLT_INEXACT_RESULT;
-                case FPE_FLTINV:
-                    return EXCEPTION_FLT_INVALID_OPERATION;
-                case FPE_FLTSUB:
-                    return EXCEPTION_FLT_INVALID_OPERATION;
-                default:
-                    break;
-            }
-            break;
-        case SIGSEGV:
-            switch (siginfo->si_code)
-            {
-                case SI_USER:       // User-generated signal, sometimes sent
-                                    // for SIGSEGV under normal circumstances
-                case SEGV_MAPERR:   // Address not mapped to object
-                case SEGV_ACCERR:   // Invalid permissions for mapped object
-                    return EXCEPTION_ACCESS_VIOLATION;
-                default:
-                    break;
-            }
-            break;
-        case SIGBUS:
-            switch (siginfo->si_code)
-            {
-                case BUS_ADRALN:    // Invalid address alignment
-                    return EXCEPTION_DATATYPE_MISALIGNMENT;
-                case BUS_ADRERR:    // Non-existent physical address
-                    return EXCEPTION_ACCESS_VIOLATION;
-                case BUS_OBJERR:    // Object-specific hardware error
-                default:
-                    break;
-            }
-            break;
-        case SIGTRAP:
-            switch (siginfo->si_code)
-            {
-                case SI_USER:
-                case TRAP_BRKPT:    // Process breakpoint
-                    return EXCEPTION_BREAKPOINT;
-                case TRAP_TRACE:    // Process trace trap
-                    return EXCEPTION_SINGLE_STEP;
-                default:
-                    // Got unknown SIGTRAP signal with code siginfo->si_code;
-                    return EXCEPTION_ILLEGAL_INSTRUCTION;
-            }
+    case SIGILL:
+        switch (siginfo->si_code)
+        {
+        case ILL_ILLOPC: // Illegal opcode
+        case ILL_ILLOPN: // Illegal operand
+        case ILL_ILLADR: // Illegal addressing mode
+        case ILL_ILLTRP: // Illegal trap
+        case ILL_COPROC: // Co-processor error
+            return EXCEPTION_ILLEGAL_INSTRUCTION;
+        case ILL_PRVOPC: // Privileged opcode
+        case ILL_PRVREG: // Privileged register
+            return EXCEPTION_PRIV_INSTRUCTION;
+        case ILL_BADSTK: // Internal stack error
+            return EXCEPTION_STACK_OVERFLOW;
         default:
             break;
+        }
+        break;
+    case SIGFPE:
+        switch (siginfo->si_code)
+        {
+        case FPE_INTDIV:
+            return EXCEPTION_INT_DIVIDE_BY_ZERO;
+        case FPE_INTOVF:
+            return EXCEPTION_INT_OVERFLOW;
+        case FPE_FLTDIV:
+            return EXCEPTION_FLT_DIVIDE_BY_ZERO;
+        case FPE_FLTOVF:
+            return EXCEPTION_FLT_OVERFLOW;
+        case FPE_FLTUND:
+            return EXCEPTION_FLT_UNDERFLOW;
+        case FPE_FLTRES:
+            return EXCEPTION_FLT_INEXACT_RESULT;
+        case FPE_FLTINV:
+            return EXCEPTION_FLT_INVALID_OPERATION;
+        case FPE_FLTSUB:
+            return EXCEPTION_FLT_INVALID_OPERATION;
+        default:
+            break;
+        }
+        break;
+    case SIGSEGV:
+        switch (siginfo->si_code)
+        {
+        case SI_USER: // User-generated signal, sometimes sent
+                      // for SIGSEGV under normal circumstances
+        case SEGV_MAPERR: // Address not mapped to object
+        case SEGV_ACCERR: // Invalid permissions for mapped object
+            return EXCEPTION_ACCESS_VIOLATION;
+        default:
+            break;
+        }
+        break;
+    case SIGBUS:
+        switch (siginfo->si_code)
+        {
+        case BUS_ADRALN: // Invalid address alignment
+            return EXCEPTION_DATATYPE_MISALIGNMENT;
+        case BUS_ADRERR: // Non-existent physical address
+            return EXCEPTION_ACCESS_VIOLATION;
+        case BUS_OBJERR: // Object-specific hardware error
+        default:
+            break;
+        }
+        break;
+    case SIGTRAP:
+        switch (siginfo->si_code)
+        {
+        case SI_USER:
+        case TRAP_BRKPT: // Process breakpoint
+            return EXCEPTION_BREAKPOINT;
+        case TRAP_TRACE: // Process trace trap
+            return EXCEPTION_SINGLE_STEP;
+        default:
+            // Got unknown SIGTRAP signal with code siginfo->si_code;
+            return EXCEPTION_ILLEGAL_INSTRUCTION;
+        }
+    default:
+        break;
     }
 
     // Got unknown signal number siginfo->si_signo with code siginfo->si_code;
     return EXCEPTION_ILLEGAL_INSTRUCTION;
 }
-#else   // ILL_ILLOPC
-uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
-                                       const native_context_t *context)
+#else // ILL_ILLOPC
+uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo, const native_context_t *context)
 {
     // IMPORTANT NOTE: This function must not call any signal unsafe functions
     // since it is called from signal handlers.
@@ -884,83 +884,83 @@ uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo,
         // Floating point exceptions are mapped by their si_code.
         switch (siginfo->si_code)
         {
-            case FPE_INTDIV :
-                return EXCEPTION_INT_DIVIDE_BY_ZERO;
-            case FPE_INTOVF :
-                return EXCEPTION_INT_OVERFLOW;
-            case FPE_FLTDIV :
-                return EXCEPTION_FLT_DIVIDE_BY_ZERO;
-            case FPE_FLTOVF :
-                return EXCEPTION_FLT_OVERFLOW;
-            case FPE_FLTUND :
-                return EXCEPTION_FLT_UNDERFLOW;
-            case FPE_FLTRES :
-                return EXCEPTION_FLT_INEXACT_RESULT;
-            case FPE_FLTINV :
-                return EXCEPTION_FLT_INVALID_OPERATION;
-            case FPE_FLTSUB :/* subscript out of range */
-                return EXCEPTION_FLT_INVALID_OPERATION;
-            default:
-                // Got unknown signal code siginfo->si_code;
-                return 0;
+        case FPE_INTDIV:
+            return EXCEPTION_INT_DIVIDE_BY_ZERO;
+        case FPE_INTOVF:
+            return EXCEPTION_INT_OVERFLOW;
+        case FPE_FLTDIV:
+            return EXCEPTION_FLT_DIVIDE_BY_ZERO;
+        case FPE_FLTOVF:
+            return EXCEPTION_FLT_OVERFLOW;
+        case FPE_FLTUND:
+            return EXCEPTION_FLT_UNDERFLOW;
+        case FPE_FLTRES:
+            return EXCEPTION_FLT_INEXACT_RESULT;
+        case FPE_FLTINV:
+            return EXCEPTION_FLT_INVALID_OPERATION;
+        case FPE_FLTSUB: /* subscript out of range */
+            return EXCEPTION_FLT_INVALID_OPERATION;
+        default:
+            // Got unknown signal code siginfo->si_code;
+            return 0;
         }
     }
 
     trap = context->uc_mcontext.mc_trapno;
     switch (trap)
     {
-        case T_PRIVINFLT : /* privileged instruction */
-            return EXCEPTION_PRIV_INSTRUCTION;
-        case T_BPTFLT :    /* breakpoint instruction */
-            return EXCEPTION_BREAKPOINT;
-        case T_ARITHTRAP : /* arithmetic trap */
-            return 0;      /* let the caller pick an exception code */
+    case T_PRIVINFLT: /* privileged instruction */
+        return EXCEPTION_PRIV_INSTRUCTION;
+    case T_BPTFLT: /* breakpoint instruction */
+        return EXCEPTION_BREAKPOINT;
+    case T_ARITHTRAP: /* arithmetic trap */
+        return 0; /* let the caller pick an exception code */
 #ifdef T_ASTFLT
-        case T_ASTFLT :    /* system forced exception : ^C, ^\. SIGINT signal
-                              handler shouldn't be calling this function, since
-                              it doesn't need an exception code */
-            // Trap code T_ASTFLT received, shouldn't get here;
-            return 0;
-#endif  // T_ASTFLT
-        case T_PROTFLT :   /* protection fault */
-            return EXCEPTION_ACCESS_VIOLATION;
-        case T_TRCTRAP :   /* debug exception (sic) */
-            return EXCEPTION_SINGLE_STEP;
-        case T_PAGEFLT :   /* page fault */
-            return EXCEPTION_ACCESS_VIOLATION;
-        case T_ALIGNFLT :  /* alignment fault */
-            return EXCEPTION_DATATYPE_MISALIGNMENT;
-        case T_DIVIDE :
-            return EXCEPTION_INT_DIVIDE_BY_ZERO;
-        case T_NMI :       /* non-maskable trap */
-            return EXCEPTION_ILLEGAL_INSTRUCTION;
-        case T_OFLOW :
-            return EXCEPTION_INT_OVERFLOW;
-        case T_BOUND :     /* bound instruction fault */
-            return EXCEPTION_ARRAY_BOUNDS_EXCEEDED;
-        case T_DNA :       /* device not available fault */
-            return EXCEPTION_ILLEGAL_INSTRUCTION;
-        case T_DOUBLEFLT : /* double fault */
-            return EXCEPTION_ILLEGAL_INSTRUCTION;
-        case T_FPOPFLT :   /* fp coprocessor operand fetch fault */
-            return EXCEPTION_FLT_INVALID_OPERATION;
-        case T_TSSFLT :    /* invalid tss fault */
-            return EXCEPTION_ILLEGAL_INSTRUCTION;
-        case T_SEGNPFLT :  /* segment not present fault */
-            return EXCEPTION_ACCESS_VIOLATION;
-        case T_STKFLT :    /* stack fault */
-            return EXCEPTION_STACK_OVERFLOW;
-        case T_MCHK :      /* machine check trap */
-            return EXCEPTION_ILLEGAL_INSTRUCTION;
-        case T_RESERVED :  /* reserved (unknown) */
-            return EXCEPTION_ILLEGAL_INSTRUCTION;
-        default:
-            // Got unknown trap code trap;
-            break;
+    case T_ASTFLT: /* system forced exception : ^C, ^\. SIGINT signal
+                      handler shouldn't be calling this function, since
+                      it doesn't need an exception code */
+        // Trap code T_ASTFLT received, shouldn't get here;
+        return 0;
+#endif // T_ASTFLT
+    case T_PROTFLT: /* protection fault */
+        return EXCEPTION_ACCESS_VIOLATION;
+    case T_TRCTRAP: /* debug exception (sic) */
+        return EXCEPTION_SINGLE_STEP;
+    case T_PAGEFLT: /* page fault */
+        return EXCEPTION_ACCESS_VIOLATION;
+    case T_ALIGNFLT: /* alignment fault */
+        return EXCEPTION_DATATYPE_MISALIGNMENT;
+    case T_DIVIDE:
+        return EXCEPTION_INT_DIVIDE_BY_ZERO;
+    case T_NMI: /* non-maskable trap */
+        return EXCEPTION_ILLEGAL_INSTRUCTION;
+    case T_OFLOW:
+        return EXCEPTION_INT_OVERFLOW;
+    case T_BOUND: /* bound instruction fault */
+        return EXCEPTION_ARRAY_BOUNDS_EXCEEDED;
+    case T_DNA: /* device not available fault */
+        return EXCEPTION_ILLEGAL_INSTRUCTION;
+    case T_DOUBLEFLT: /* double fault */
+        return EXCEPTION_ILLEGAL_INSTRUCTION;
+    case T_FPOPFLT: /* fp coprocessor operand fetch fault */
+        return EXCEPTION_FLT_INVALID_OPERATION;
+    case T_TSSFLT: /* invalid tss fault */
+        return EXCEPTION_ILLEGAL_INSTRUCTION;
+    case T_SEGNPFLT: /* segment not present fault */
+        return EXCEPTION_ACCESS_VIOLATION;
+    case T_STKFLT: /* stack fault */
+        return EXCEPTION_STACK_OVERFLOW;
+    case T_MCHK: /* machine check trap */
+        return EXCEPTION_ILLEGAL_INSTRUCTION;
+    case T_RESERVED: /* reserved (unknown) */
+        return EXCEPTION_ILLEGAL_INSTRUCTION;
+    default:
+        // Got unknown trap code trap;
+        break;
     }
     return EXCEPTION_ILLEGAL_INSTRUCTION;
 }
-#endif  // ILL_ILLOPC
+#endif // ILL_ILLOPC
 
 #else // !defined(__APPLE__)
 
@@ -974,10 +974,7 @@ Function:
 
   Helper for GetThreadContext that uses a mach_port
 --*/
-kern_return_t
-CONTEXT_GetThreadContextFromPort(
-    mach_port_t Port,
-    LPCONTEXT lpContext)
+kern_return_t CONTEXT_GetThreadContextFromPort(mach_port_t Port, LPCONTEXT lpContext)
 {
     // Extract the CONTEXT from the Mach thread.
 
@@ -1012,14 +1009,14 @@ CONTEXT_GetThreadContextFromPort(
     if (lpContext->ContextFlags & CONTEXT_ALL_FLOATING & CONTEXT_AREA_MASK)
     {
 #if defined(_AMD64_)
-        // The thread_get_state for floating point state can fail for some flavors when the processor is not
-        // in the right mode at the time we are taking the state. So we will try to get the AVX state first and
-        // if it fails, get the FLOAT state and if that fails, take AVX512 state. Both AVX and AVX512 states
-        // are supersets of the FLOAT state.
-        // Check a few fields to make sure the assumption is correct.
-        #ifndef static_assert_no_msg
-        #define static_assert_no_msg(x) static_assert(x, "")
-        #endif
+// The thread_get_state for floating point state can fail for some flavors when the processor is not
+// in the right mode at the time we are taking the state. So we will try to get the AVX state first and
+// if it fails, get the FLOAT state and if that fails, take AVX512 state. Both AVX and AVX512 states
+// are supersets of the FLOAT state.
+// Check a few fields to make sure the assumption is correct.
+#ifndef static_assert_no_msg
+#define static_assert_no_msg(x) static_assert(x, "")
+#endif
         static_assert_no_msg(sizeof(x86_avx_state64_t) > sizeof(x86_float_state64_t));
         static_assert_no_msg(sizeof(x86_avx512_state64_t) > sizeof(x86_avx_state64_t));
         static_assert_no_msg(offsetof(x86_avx_state64_t, __fpu_fcw) == offsetof(x86_float_state64_t, __fpu_fcw));
@@ -1048,7 +1045,8 @@ CONTEXT_GetThreadContextFromPort(
                 MachRet = thread_get_state(Port, StateFlavor, (thread_state_t)&State, &StateCount);
                 if (MachRet != KERN_SUCCESS)
                 {
-                    // We were unable to get any floating point state. This case was observed on OSX with AVX512 capable processors.
+                    // We were unable to get any floating point state. This case was observed on OSX with AVX512 capable
+                    // processors.
                     lpContext->ContextFlags &= ~((CONTEXT_XSTATE | CONTEXT_ALL_FLOATING) & CONTEXT_AREA_MASK);
                 }
             }
@@ -1062,7 +1060,7 @@ CONTEXT_GetThreadContextFromPort(
         if (MachRet != KERN_SUCCESS)
         {
             // We were unable to get any floating point state.
-            lpContext->ContextFlags &= ~((CONTEXT_ALL_FLOATING) & CONTEXT_AREA_MASK);
+            lpContext->ContextFlags &= ~((CONTEXT_ALL_FLOATING)&CONTEXT_AREA_MASK);
         }
 #else
 #error Unexpected architecture.
@@ -1080,128 +1078,127 @@ Function:
   CONTEXT_GetThreadContextFromThreadState
 
 --*/
-void
-CONTEXT_GetThreadContextFromThreadState(
-    thread_state_flavor_t threadStateFlavor,
-    thread_state_t threadState,
-    LPCONTEXT lpContext)
+void CONTEXT_GetThreadContextFromThreadState(thread_state_flavor_t threadStateFlavor, thread_state_t threadState,
+                                             LPCONTEXT lpContext)
 {
     switch (threadStateFlavor)
     {
-#if defined (_AMD64_)
-        case x86_THREAD_STATE64:
-            if (lpContext->ContextFlags & (CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_SEGMENTS) & CONTEXT_AREA_MASK)
-            {
-                x86_thread_state64_t *pState = (x86_thread_state64_t *)threadState;
-
-                lpContext->Rax = pState->__rax;
-                lpContext->Rbx = pState->__rbx;
-                lpContext->Rcx = pState->__rcx;
-                lpContext->Rdx = pState->__rdx;
-                lpContext->Rdi = pState->__rdi;
-                lpContext->Rsi = pState->__rsi;
-                lpContext->Rbp = pState->__rbp;
-                lpContext->Rsp = pState->__rsp;
-                lpContext->R8 = pState->__r8;
-                lpContext->R9 = pState->__r9;
-                lpContext->R10 = pState->__r10;
-                lpContext->R11 = pState->__r11;
-                lpContext->R12 = pState->__r12;
-                lpContext->R13 = pState->__r13;
-                lpContext->R14 = pState->__r14;
-                lpContext->R15 = pState->__r15;
-                lpContext->EFlags = pState->__rflags;
-                lpContext->Rip = pState->__rip;
-                lpContext->SegCs = pState->__cs;
-                // RtlRestoreContext uses the actual ss instead of this one
-                // to build the iret frame so just set it zero.
-                lpContext->SegSs = 0;
-                lpContext->SegDs = 0;
-                lpContext->SegEs = 0;
-                lpContext->SegFs = pState->__fs;
-                lpContext->SegGs = pState->__gs;
-            }
-            break;
-
-        case x86_AVX_STATE64:
-        case x86_AVX512_STATE64:
-            if (lpContext->ContextFlags & CONTEXT_XSTATE & CONTEXT_AREA_MASK)
-            {
-                x86_avx_state64_t *pState = (x86_avx_state64_t *)threadState;
-                memcpy(&lpContext->VectorRegister, &pState->__fpu_ymmh0, 16 * 16);
-            }
-
-            // Intentional fall-through, the AVX states are supersets of the FLOAT state
-            // FALLTHROUGH;
-
-        case x86_FLOAT_STATE64:
-            if (lpContext->ContextFlags & CONTEXT_FLOATING_POINT & CONTEXT_AREA_MASK)
-            {
-                x86_float_state64_t *pState = (x86_float_state64_t *)threadState;
-
-                lpContext->FltSave.ControlWord = *(uint32_t*)&pState->__fpu_fcw;
-                lpContext->FltSave.StatusWord = *(uint32_t*)&pState->__fpu_fsw;
-                lpContext->FltSave.TagWord = pState->__fpu_ftw;
-                lpContext->FltSave.ErrorOffset = pState->__fpu_ip;
-                lpContext->FltSave.ErrorSelector = pState->__fpu_cs;
-                lpContext->FltSave.DataOffset = pState->__fpu_dp;
-                lpContext->FltSave.DataSelector = pState->__fpu_ds;
-                lpContext->FltSave.MxCsr = pState->__fpu_mxcsr;
-                lpContext->FltSave.MxCsr_Mask = pState->__fpu_mxcsrmask; // note: we don't save the mask for x86
-
-                // Windows stores the floating point registers in a packed layout (each 10-byte register end to end
-                // for a total of 80 bytes). But Mach returns each register in an 16-bit structure (presumably for
-                // alignment purposes). So we can't just memcpy the registers over in a single block, we need to copy
-                // them individually.
-                for (int i = 0; i < 8; i++)
-                    memcpy(&lpContext->FltSave.FloatRegisters[i], (&pState->__fpu_stmm0)[i].__mmst_reg, 10);
-
-                // AMD64's FLOATING_POINT includes the xmm registers.
-                memcpy(&lpContext->Xmm0, &pState->__fpu_xmm0, 16 * 16);
-            }
-            break;
-        case x86_THREAD_STATE:
+#if defined(_AMD64_)
+    case x86_THREAD_STATE64:
+        if (lpContext->ContextFlags & (CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_SEGMENTS) & CONTEXT_AREA_MASK)
         {
-            x86_thread_state_t *pState = (x86_thread_state_t *)threadState;
-            CONTEXT_GetThreadContextFromThreadState((thread_state_flavor_t)pState->tsh.flavor, (thread_state_t)&pState->uts, lpContext);
+            x86_thread_state64_t *pState = (x86_thread_state64_t *)threadState;
+
+            lpContext->Rax = pState->__rax;
+            lpContext->Rbx = pState->__rbx;
+            lpContext->Rcx = pState->__rcx;
+            lpContext->Rdx = pState->__rdx;
+            lpContext->Rdi = pState->__rdi;
+            lpContext->Rsi = pState->__rsi;
+            lpContext->Rbp = pState->__rbp;
+            lpContext->Rsp = pState->__rsp;
+            lpContext->R8 = pState->__r8;
+            lpContext->R9 = pState->__r9;
+            lpContext->R10 = pState->__r10;
+            lpContext->R11 = pState->__r11;
+            lpContext->R12 = pState->__r12;
+            lpContext->R13 = pState->__r13;
+            lpContext->R14 = pState->__r14;
+            lpContext->R15 = pState->__r15;
+            lpContext->EFlags = pState->__rflags;
+            lpContext->Rip = pState->__rip;
+            lpContext->SegCs = pState->__cs;
+            // RtlRestoreContext uses the actual ss instead of this one
+            // to build the iret frame so just set it zero.
+            lpContext->SegSs = 0;
+            lpContext->SegDs = 0;
+            lpContext->SegEs = 0;
+            lpContext->SegFs = pState->__fs;
+            lpContext->SegGs = pState->__gs;
         }
         break;
 
-        case x86_FLOAT_STATE:
+    case x86_AVX_STATE64:
+    case x86_AVX512_STATE64:
+        if (lpContext->ContextFlags & CONTEXT_XSTATE & CONTEXT_AREA_MASK)
+        {
+            x86_avx_state64_t *pState = (x86_avx_state64_t *)threadState;
+            memcpy(&lpContext->VectorRegister, &pState->__fpu_ymmh0, 16 * 16);
+        }
+
+        // Intentional fall-through, the AVX states are supersets of the FLOAT state
+        // FALLTHROUGH;
+
+    case x86_FLOAT_STATE64:
+        if (lpContext->ContextFlags & CONTEXT_FLOATING_POINT & CONTEXT_AREA_MASK)
+        {
+            x86_float_state64_t *pState = (x86_float_state64_t *)threadState;
+
+            lpContext->FltSave.ControlWord = *(uint32_t *)&pState->__fpu_fcw;
+            lpContext->FltSave.StatusWord = *(uint32_t *)&pState->__fpu_fsw;
+            lpContext->FltSave.TagWord = pState->__fpu_ftw;
+            lpContext->FltSave.ErrorOffset = pState->__fpu_ip;
+            lpContext->FltSave.ErrorSelector = pState->__fpu_cs;
+            lpContext->FltSave.DataOffset = pState->__fpu_dp;
+            lpContext->FltSave.DataSelector = pState->__fpu_ds;
+            lpContext->FltSave.MxCsr = pState->__fpu_mxcsr;
+            lpContext->FltSave.MxCsr_Mask = pState->__fpu_mxcsrmask; // note: we don't save the mask for x86
+
+            // Windows stores the floating point registers in a packed layout (each 10-byte register end to end
+            // for a total of 80 bytes). But Mach returns each register in an 16-bit structure (presumably for
+            // alignment purposes). So we can't just memcpy the registers over in a single block, we need to copy
+            // them individually.
+            for (int i = 0; i < 8; i++)
+                memcpy(&lpContext->FltSave.FloatRegisters[i], (&pState->__fpu_stmm0)[i].__mmst_reg, 10);
+
+            // AMD64's FLOATING_POINT includes the xmm registers.
+            memcpy(&lpContext->Xmm0, &pState->__fpu_xmm0, 16 * 16);
+        }
+        break;
+    case x86_THREAD_STATE:
+        {
+            x86_thread_state_t *pState = (x86_thread_state_t *)threadState;
+            CONTEXT_GetThreadContextFromThreadState((thread_state_flavor_t)pState->tsh.flavor,
+                                                    (thread_state_t)&pState->uts, lpContext);
+        }
+        break;
+
+    case x86_FLOAT_STATE:
         {
             x86_float_state_t *pState = (x86_float_state_t *)threadState;
-            CONTEXT_GetThreadContextFromThreadState((thread_state_flavor_t)pState->fsh.flavor, (thread_state_t)&pState->ufs, lpContext);
+            CONTEXT_GetThreadContextFromThreadState((thread_state_flavor_t)pState->fsh.flavor,
+                                                    (thread_state_t)&pState->ufs, lpContext);
         }
         break;
 #elif defined(_ARM64_)
-        case ARM_THREAD_STATE64:
-            if (lpContext->ContextFlags & (CONTEXT_CONTROL | CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
-            {
-                arm_thread_state64_t *pState = reinterpret_cast<arm_thread_state64_t*>(threadState);
-                memcpy(&lpContext->X0, &pState->__x[0], 29 * 8);
-                lpContext->Cpsr = pState->__cpsr;
-                lpContext->Fp = arm_thread_state64_get_fp(*pState);
-                lpContext->Sp = arm_thread_state64_get_sp(*pState);
-                lpContext->Lr = reinterpret_cast<uint64_t>(arm_thread_state64_get_lr_fptr(*pState));
-                lpContext->Pc = reinterpret_cast<uint64_t>(arm_thread_state64_get_pc_fptr(*pState));
-            }
-            break;
-        case ARM_NEON_STATE64:
-            if (lpContext->ContextFlags & CONTEXT_FLOATING_POINT & CONTEXT_AREA_MASK)
-            {
-                arm_neon_state64_t *pState = reinterpret_cast<arm_neon_state64_t*>(threadState);
-                memcpy(&lpContext->V[0], &pState->__v, 32 * 16);
-                lpContext->Fpsr = pState->__fpsr;
-                lpContext->Fpcr = pState->__fpcr;
-            }
-            break;
+    case ARM_THREAD_STATE64:
+        if (lpContext->ContextFlags & (CONTEXT_CONTROL | CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
+        {
+            arm_thread_state64_t *pState = reinterpret_cast<arm_thread_state64_t *>(threadState);
+            memcpy(&lpContext->X0, &pState->__x[0], 29 * 8);
+            lpContext->Cpsr = pState->__cpsr;
+            lpContext->Fp = arm_thread_state64_get_fp(*pState);
+            lpContext->Sp = arm_thread_state64_get_sp(*pState);
+            lpContext->Lr = reinterpret_cast<uint64_t>(arm_thread_state64_get_lr_fptr(*pState));
+            lpContext->Pc = reinterpret_cast<uint64_t>(arm_thread_state64_get_pc_fptr(*pState));
+        }
+        break;
+    case ARM_NEON_STATE64:
+        if (lpContext->ContextFlags & CONTEXT_FLOATING_POINT & CONTEXT_AREA_MASK)
+        {
+            arm_neon_state64_t *pState = reinterpret_cast<arm_neon_state64_t *>(threadState);
+            memcpy(&lpContext->V[0], &pState->__v, 32 * 16);
+            lpContext->Fpsr = pState->__fpsr;
+            lpContext->Fpcr = pState->__fpcr;
+        }
+        break;
 #else
 #error Unexpected architecture.
 #endif
 
-        default:
-            ASSERT("Invalid thread state flavor %d\n", threadStateFlavor);
-            break;
+    default:
+        ASSERT("Invalid thread state flavor %d\n", threadStateFlavor);
+        break;
     }
 }
 
@@ -1247,10 +1244,7 @@ Function:
 
   Helper for CONTEXT_SetThreadContext
 --*/
-kern_return_t
-CONTEXT_SetThreadContextOnPort(
-           mach_port_t Port,
-            const CONTEXT *lpContext)
+kern_return_t CONTEXT_SetThreadContextOnPort(mach_port_t Port, const CONTEXT *lpContext)
 {
     kern_return_t MachRet = KERN_SUCCESS;
     mach_msg_type_number_t StateCount;
@@ -1295,8 +1289,8 @@ CONTEXT_SetThreadContextOnPort(
         if (lpContext->ContextFlags & CONTEXT_FLOATING_POINT & CONTEXT_AREA_MASK)
         {
 #ifdef _AMD64_
-            *(uint32_t*)&State.__fpu_fcw = lpContext->FltSave.ControlWord;
-            *(uint32_t*)&State.__fpu_fsw = lpContext->FltSave.StatusWord;
+            *(uint32_t *)&State.__fpu_fcw = lpContext->FltSave.ControlWord;
+            *(uint32_t *)&State.__fpu_fsw = lpContext->FltSave.StatusWord;
             State.__fpu_ftw = lpContext->FltSave.TagWord;
             State.__fpu_ip = lpContext->FltSave.ErrorOffset;
             State.__fpu_cs = lpContext->FltSave.ErrorSelector;
@@ -1331,10 +1325,7 @@ CONTEXT_SetThreadContextOnPort(
 
         do
         {
-            MachRet = thread_set_state(Port,
-                                       StateFlavor,
-                                       reinterpret_cast<thread_state_t>(&State),
-                                       StateCount);
+            MachRet = thread_set_state(Port, StateFlavor, reinterpret_cast<thread_state_t>(&State), StateCount);
         }
         while (MachRet == KERN_ABORTED);
 
@@ -1345,7 +1336,7 @@ CONTEXT_SetThreadContextOnPort(
         }
     }
 
-    if (lpContext->ContextFlags & (CONTEXT_CONTROL|CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
+    if (lpContext->ContextFlags & (CONTEXT_CONTROL | CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
     {
 #ifdef _AMD64_
         x86_thread_state64_t State;
@@ -1390,10 +1381,7 @@ CONTEXT_SetThreadContextOnPort(
 
         do
         {
-            MachRet = thread_set_state(Port,
-                                       StateFlavor,
-                                       reinterpret_cast<thread_state_t>(&State),
-                                       StateCount);
+            MachRet = thread_set_state(Port, StateFlavor, reinterpret_cast<thread_state_t>(&State), StateCount);
         }
         while (MachRet == KERN_ABORTED);
 
@@ -1455,15 +1443,13 @@ Function:
 
 See MSDN doc.
 --*/
-BOOL
-DBG_FlushInstructionCache(
-                           const void * lpBaseAddress,
-                           size_t dwSize)
+BOOL DBG_FlushInstructionCache(const void *lpBaseAddress, size_t dwSize)
 {
 #if defined(__linux__) && defined(_ARM_)
     // On Linux/arm (at least on 3.10) we found that there is a problem with __do_cache_op (arch/arm/kernel/traps.c)
-    // implementing cacheflush syscall. cacheflush flushes only the first page in range [lpBaseAddress, lpBaseAddress + dwSize)
-    // and leaves other pages in undefined state which causes random tests failures (often due to SIGSEGV) with no particular pattern.
+    // implementing cacheflush syscall. cacheflush flushes only the first page in range [lpBaseAddress, lpBaseAddress +
+    // dwSize) and leaves other pages in undefined state which causes random tests failures (often due to SIGSEGV) with
+    // no particular pattern.
     //
     // As a workaround, we call __builtin___clear_cache on each page separately.
 
@@ -1481,7 +1467,8 @@ DBG_FlushInstructionCache(
         begin = endOrNextPageBegin;
     }
 #else
-    __builtin___clear_cache(const_cast<char*>(static_cast<const char *>(lpBaseAddress)), reinterpret_cast<char*>(reinterpret_cast<long>(lpBaseAddress) + dwSize));
+    __builtin___clear_cache(const_cast<char *>(static_cast<const char *>(lpBaseAddress)),
+                            reinterpret_cast<char *>(reinterpret_cast<long>(lpBaseAddress) + dwSize));
 #endif
     return TRUE;
 }

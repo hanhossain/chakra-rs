@@ -22,10 +22,10 @@ Revision History:
 
 --*/
 
-#include "pal/thread.hpp"
-#include "pal/synchobjects.hpp"
 #include <new>
 #include "pal/dbgmsg.h"
+#include "pal/synchobjects.hpp"
+#include "pal/thread.hpp"
 
 SET_DEFAULT_DEBUG_CHANNEL(SYNC);
 
@@ -33,17 +33,10 @@ SET_DEFAULT_DEBUG_CHANNEL(SYNC);
 
 using namespace CorUnix;
 
-static PalObjectTypeId sg_rgWaitObjectsIds[] =
-    {
-        otiAutoResetEvent,
-        otiManualResetEvent,
-        otiMutex,
-        otiSemaphore,
-        otiProcess,
-        otiThread
-    };
+static PalObjectTypeId sg_rgWaitObjectsIds[] = {otiAutoResetEvent, otiManualResetEvent, otiMutex,
+                                                otiSemaphore,      otiProcess,          otiThread};
 static CAllowedObjectTypes sg_aotWaitObject(sg_rgWaitObjectsIds,
-    sizeof(sg_rgWaitObjectsIds)/sizeof(sg_rgWaitObjectsIds[0]));
+                                            sizeof(sg_rgWaitObjectsIds) / sizeof(sg_rgWaitObjectsIds[0]));
 
 /*++
 Function:
@@ -51,16 +44,13 @@ Function:
 
 See MSDN doc.
 --*/
-uint32_t
-WaitForSingleObject( HANDLE hHandle,
-                     uint32_t dwMilliseconds)
+uint32_t WaitForSingleObject(HANDLE hHandle, uint32_t dwMilliseconds)
 {
     uint32_t dwRet;
 
-    CPalThread * pThread = InternalGetCurrentThread();
+    CPalThread *pThread = InternalGetCurrentThread();
 
-    dwRet = InternalWaitForMultipleObjectsEx(pThread, 1, &hHandle, FALSE,
-                                             dwMilliseconds, FALSE);
+    dwRet = InternalWaitForMultipleObjectsEx(pThread, 1, &hHandle, FALSE, dwMilliseconds, FALSE);
 
     LOGEXIT("WaitForSingleObject returns DWORD %u\n", dwRet);
     return dwRet;
@@ -73,18 +63,13 @@ Function:
 See MSDN doc.
 
 --*/
-uint32_t
-WaitForMultipleObjects( uint32_t nCount,
-                        const HANDLE *lpHandles,
-                        BOOL bWaitAll,
-                        uint32_t dwMilliseconds)
+uint32_t WaitForMultipleObjects(uint32_t nCount, const HANDLE *lpHandles, BOOL bWaitAll, uint32_t dwMilliseconds)
 {
     uint32_t dwRet;
 
-    CPalThread * pThread = InternalGetCurrentThread();
+    CPalThread *pThread = InternalGetCurrentThread();
 
-    dwRet = InternalWaitForMultipleObjectsEx(pThread, nCount, lpHandles,
-                                             bWaitAll, dwMilliseconds, FALSE);
+    dwRet = InternalWaitForMultipleObjectsEx(pThread, nCount, lpHandles, bWaitAll, dwMilliseconds, FALSE);
 
     LOGEXIT("WaitForMultipleObjects returns DWORD %u\n", dwRet);
     return dwRet;
@@ -96,19 +81,14 @@ Function:
 
 See MSDN doc for info about this function.
 --*/
-uint32_t
-WaitForMultipleObjectsEx( uint32_t nCount,
-                          const HANDLE *lpHandles,
-                          BOOL bWaitAll,
-                          uint32_t dwMilliseconds,
-                          BOOL bAlertable)
+uint32_t WaitForMultipleObjectsEx(uint32_t nCount, const HANDLE *lpHandles, BOOL bWaitAll, uint32_t dwMilliseconds,
+                                  BOOL bAlertable)
 {
     uint32_t dwRet;
 
-    CPalThread * pThread = InternalGetCurrentThread();
+    CPalThread *pThread = InternalGetCurrentThread();
 
-    dwRet = InternalWaitForMultipleObjectsEx(pThread, nCount, lpHandles, bWaitAll,
-                                             dwMilliseconds, bAlertable);
+    dwRet = InternalWaitForMultipleObjectsEx(pThread, nCount, lpHandles, bWaitAll, dwMilliseconds, bAlertable);
 
     LOGEXIT("WaitForMultipleObjectsEx returns DWORD %u\n", dwRet);
     return dwRet;
@@ -120,17 +100,15 @@ Function:
 
 See MSDN doc.
 --*/
-void
-Sleep( uint32_t dwMilliseconds)
+void Sleep(uint32_t dwMilliseconds)
 {
-    CPalThread * pThread = InternalGetCurrentThread();
+    CPalThread *pThread = InternalGetCurrentThread();
 
     PAL_ERROR palErr = InternalSleepEx(pThread, dwMilliseconds, FALSE);
 
     if (NO_ERROR != palErr)
     {
-        ERROR("Sleep(dwMilliseconds=%u) failed [error=%u]\n",
-              dwMilliseconds, palErr);
+        ERROR("Sleep(dwMilliseconds=%u) failed [error=%u]\n", dwMilliseconds, palErr);
         pThread->SetLastError(palErr);
     }
 
@@ -144,15 +122,11 @@ Function:
 
 See MSDN doc.
 --*/
-uint32_t
-QueueUserAPC(
-    PAPCFUNC pfnAPC,
-    HANDLE hThread,
-    size_t dwData)
+uint32_t QueueUserAPC(PAPCFUNC pfnAPC, HANDLE hThread, size_t dwData)
 {
-    CPalThread * pCurrentThread = NULL;
-    CPalThread * pTargetThread = NULL;
-    IPalObject * pTargetThreadObject = NULL;
+    CPalThread *pCurrentThread = NULL;
+    CPalThread *pTargetThread = NULL;
+    IPalObject *pTargetThreadObject = NULL;
     PAL_ERROR palErr;
     uint32_t dwRet;
 
@@ -162,23 +136,18 @@ QueueUserAPC(
 
     pCurrentThread = InternalGetCurrentThread();
 
-    palErr = InternalGetThreadDataFromHandle(
-        pCurrentThread,
-        hThread,
-        &pTargetThread, // THREAD_SET_CONTEXT
-        &pTargetThreadObject
-    );
+    palErr = InternalGetThreadDataFromHandle(pCurrentThread, hThread,
+                                             &pTargetThread, // THREAD_SET_CONTEXT
+                                             &pTargetThreadObject);
 
     if (NO_ERROR != palErr)
     {
-        ERROR("Unable to obtain thread data for handle %p (error %x)!\n",
-                hThread, palErr);
+        ERROR("Unable to obtain thread data for handle %p (error %x)!\n", hThread, palErr);
         goto QueueUserAPC_exit;
     }
 
 
-    palErr = g_pSynchronizationManager->QueueUserAPC(pCurrentThread, pTargetThread,
-                                                     pfnAPC, dwData);
+    palErr = g_pSynchronizationManager->QueueUserAPC(pCurrentThread, pTargetThread, pfnAPC, dwData);
 
 QueueUserAPC_exit:
     if (pTargetThreadObject)
@@ -192,38 +161,32 @@ QueueUserAPC_exit:
     return dwRet;
 }
 
-uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
-    CPalThread * pThread,
-    uint32_t nCount,
-    const HANDLE *lpHandles,
-    BOOL bWaitAll,
-    uint32_t dwMilliseconds,
-    BOOL bAlertable)
+uint32_t CorUnix::InternalWaitForMultipleObjectsEx(CPalThread *pThread, uint32_t nCount, const HANDLE *lpHandles,
+                                                   BOOL bWaitAll, uint32_t dwMilliseconds, BOOL bAlertable)
 {
     uint32_t dwRet = WAIT_FAILED;
     PAL_ERROR palErr = NO_ERROR;
     int i, iSignaledObjCount, iSignaledObjIndex = -1;
-    bool fWAll = static_cast<bool>(bWaitAll), fNeedToBlock  = false;
+    bool fWAll = static_cast<bool>(bWaitAll), fNeedToBlock = false;
     bool fAbandoned = false;
     WaitType wtWaitType;
 
-    IPalObject            * pIPalObjStackArray[MAXIMUM_STACK_WAITOBJ_ARRAY_SIZE] = { NULL };
-    ISynchWaitController  * pISyncStackArray[MAXIMUM_STACK_WAITOBJ_ARRAY_SIZE] = { NULL };
-    IPalObject           ** ppIPalObjs = pIPalObjStackArray;
-    ISynchWaitController ** ppISyncWaitCtrlrs = pISyncStackArray;
+    IPalObject *pIPalObjStackArray[MAXIMUM_STACK_WAITOBJ_ARRAY_SIZE] = {NULL};
+    ISynchWaitController *pISyncStackArray[MAXIMUM_STACK_WAITOBJ_ARRAY_SIZE] = {NULL};
+    IPalObject **ppIPalObjs = pIPalObjStackArray;
+    ISynchWaitController **ppISyncWaitCtrlrs = pISyncStackArray;
 
     if ((nCount == 0) || (nCount > MAXIMUM_WAIT_OBJECTS))
     {
-        ppIPalObjs = NULL;        // make delete at the end safe
+        ppIPalObjs = NULL; // make delete at the end safe
         ppISyncWaitCtrlrs = NULL; // make delete at the end safe
-        ERROR("Invalid object count=%d [range: 1 to %d]\n",
-               nCount, MAXIMUM_WAIT_OBJECTS);
+        ERROR("Invalid object count=%d [range: 1 to %d]\n", nCount, MAXIMUM_WAIT_OBJECTS);
         pThread->SetLastError(ERROR_INVALID_PARAMETER);
         goto WFMOExIntExit;
     }
     else if (nCount == 1)
     {
-        fWAll = false;  // makes no difference when nCount is 1
+        fWAll = false; // makes no difference when nCount is 1
         wtWaitType = SingleObject;
     }
     else
@@ -231,8 +194,8 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         wtWaitType = fWAll ? MultipleObjectsWaitAll : MultipleObjectsWaitOne;
         if (nCount > MAXIMUM_STACK_WAITOBJ_ARRAY_SIZE)
         {
-            ppIPalObjs = new IPalObject*[nCount];
-            ppISyncWaitCtrlrs = new ISynchWaitController*[nCount];
+            ppIPalObjs = new IPalObject *[nCount];
+            ppISyncWaitCtrlrs = new ISynchWaitController *[nCount];
             if ((NULL == ppIPalObjs) || (NULL == ppISyncWaitCtrlrs))
             {
                 ERROR("Out of memory allocating internal structures\n");
@@ -242,15 +205,11 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         }
     }
 
-    palErr = g_pObjectManager->ReferenceMultipleObjectsByHandleArray(pThread,
-                                                                     const_cast<void**>(lpHandles),
-                                                                     nCount,
-                                                                     &sg_aotWaitObject,
-                                                                     ppIPalObjs);
+    palErr = g_pObjectManager->ReferenceMultipleObjectsByHandleArray(pThread, const_cast<void **>(lpHandles), nCount,
+                                                                     &sg_aotWaitObject, ppIPalObjs);
     if (NO_ERROR != palErr)
     {
-        ERROR("Unable to obtain object for some or all of the handles [error=%u]\n",
-              palErr);
+        ERROR("Unable to obtain object for some or all of the handles [error=%u]\n", palErr);
         if (palErr == ERROR_INVALID_HANDLE)
             pThread->SetLastError(ERROR_INVALID_HANDLE);
         else
@@ -261,8 +220,8 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
     if (fWAll)
     {
         // For a wait-all operation, check for duplicate wait objects in the array. This just uses a brute-force O(n^2)
-        // algorithm, but since MAXIMUM_WAIT_OBJECTS is small, the worst case is not so bad, and the average case would involve
-        // significantly fewer items.
+        // algorithm, but since MAXIMUM_WAIT_OBJECTS is small, the worst case is not so bad, and the average case would
+        // involve significantly fewer items.
         for (uint32_t i = 0; i < nCount - 1; ++i)
         {
             IPalObject *const objectToCheck = ppIPalObjs[i];
@@ -278,12 +237,13 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         }
     }
 
-    palErr = g_pSynchronizationManager->GetSynchWaitControllersForObjects(
-        pThread, ppIPalObjs, nCount, ppISyncWaitCtrlrs);
+    palErr =
+        g_pSynchronizationManager->GetSynchWaitControllersForObjects(pThread, ppIPalObjs, nCount, ppISyncWaitCtrlrs);
     if (NO_ERROR != palErr)
     {
         ERROR("Unable to obtain ISynchWaitController interface for some or all "
-              "of the objects [error=%u]\n", palErr);
+              "of the objects [error=%u]\n",
+              palErr);
         pThread->SetLastError(ERROR_INTERNAL_ERROR);
         goto WFMOExIntCleanup;
     }
@@ -318,14 +278,15 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
 
     iSignaledObjCount = 0;
     iSignaledObjIndex = -1;
-    for (i=0;i<static_cast<int>(nCount);i++)
+    for (i = 0; i < static_cast<int>(nCount); i++)
     {
         bool fValue;
         palErr = ppISyncWaitCtrlrs[i]->CanThreadWaitWithoutBlocking(&fValue, &fAbandoned);
         if (NO_ERROR != palErr)
         {
             ERROR("ISynchWaitController::CanThreadWaitWithoutBlocking() failed for "
-                  "%d-th object [handle=%p error=%u]\n", i, lpHandles[i], palErr);
+                  "%d-th object [handle=%p error=%u]\n",
+                  i, lpHandles[i], palErr);
             pThread->SetLastError(ERROR_INTERNAL_ERROR);
             goto WFMOExIntReleaseControllers;
         }
@@ -357,7 +318,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         }
 
         // Unsignal objects
-        if( iStartIdx < 0 )
+        if (iStartIdx < 0)
         {
             ERROR("Buffer underflow due to iStartIdx < 0");
             pThread->SetLastError(ERROR_INTERNAL_ERROR);
@@ -388,16 +349,14 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
     else
     {
         // Register the thread for waiting on all objects
-        for (i=0;i<static_cast<int>(nCount);i++)
+        for (i = 0; i < static_cast<int>(nCount); i++)
         {
-            palErr = ppISyncWaitCtrlrs[i]->RegisterWaitingThread(
-                                                        wtWaitType,
-                                                        i,
-                                                        (TRUE == bAlertable));
+            palErr = ppISyncWaitCtrlrs[i]->RegisterWaitingThread(wtWaitType, i, (TRUE == bAlertable));
             if (NO_ERROR != palErr)
             {
                 ERROR("RegisterWaitingThread() failed for %d-th object "
-                      "[handle=%p error=%u]\n", i, lpHandles[i], palErr);
+                      "[handle=%p error=%u]\n",
+                      i, lpHandles[i], palErr);
                 pThread->SetLastError(palErr);
                 goto WFMOExIntReleaseControllers;
             }
@@ -421,19 +380,17 @@ WFMOExIntReleaseControllers:
         //
         // Going to sleep
         //
-        palErr = g_pSynchronizationManager->BlockThread(pThread,
-                                                        dwMilliseconds,
-                                                        (TRUE == bAlertable),
-                                                        false,
-                                                        &twrWakeupReason,
-                                                        reinterpret_cast<uint32_t*>(&iSignaledObjIndex));
+        palErr =
+            g_pSynchronizationManager->BlockThread(pThread, dwMilliseconds, (TRUE == bAlertable), false,
+                                                   &twrWakeupReason, reinterpret_cast<uint32_t *>(&iSignaledObjIndex));
         //
         // Awakened
         //
         if (NO_ERROR != palErr)
         {
             ERROR("IPalSynchronizationManager::BlockThread failed for thread "
-                  "pThread=%p [error=%u]\n", pThread, palErr);
+                  "pThread=%p [error=%u]\n",
+                  pThread, palErr);
             pThread->SetLastError(palErr);
             goto WFMOExIntCleanup;
         }
@@ -443,20 +400,18 @@ WFMOExIntReleaseControllers:
             dwRet = WAIT_OBJECT_0; // offset added later
             break;
         case MutexAbondoned:
-            dwRet =  WAIT_ABANDONED_0; // offset added later
+            dwRet = WAIT_ABANDONED_0; // offset added later
             break;
         case WaitTimeout:
             dwRet = WAIT_TIMEOUT;
             break;
         case Alerted:
-            _ASSERT_MSG(bAlertable,
-                        "Awakened for APC from a non-alertable wait\n");
+            _ASSERT_MSG(bAlertable, "Awakened for APC from a non-alertable wait\n");
 
             dwRet = WAIT_IO_COMPLETION;
             palErr = g_pSynchronizationManager->DispatchPendingAPCs(pThread);
 
-            _ASSERT_MSG(NO_ERROR == palErr,
-                        "Awakened for APC, but no APC is pending\n");
+            _ASSERT_MSG(NO_ERROR == palErr, "Awakened for APC, but no APC is pending\n");
             break;
         case WaitFailed:
         default:
@@ -468,8 +423,7 @@ WFMOExIntReleaseControllers:
 
     if (!fWAll && ((WAIT_OBJECT_0 == dwRet) || (WAIT_ABANDONED_0 == dwRet)))
     {
-        _ASSERT_MSG(0 <= iSignaledObjIndex,
-                    "Failed to identify signaled/abandoned object\n");
+        _ASSERT_MSG(0 <= iSignaledObjIndex, "Failed to identify signaled/abandoned object\n");
         _ASSERT_MSG(iSignaledObjIndex >= 0 && nCount > static_cast<uint32_t>(iSignaledObjIndex),
                     "SignaledObjIndex object out of range "
                     "[index=%d obj_count=%u\n",
@@ -501,10 +455,7 @@ WFMOExIntExit:
     return dwRet;
 }
 
-PAL_ERROR CorUnix::InternalSleepEx (
-    CPalThread * pThread,
-    uint32_t dwMilliseconds,
-    BOOL bAlertable)
+PAL_ERROR CorUnix::InternalSleepEx(CPalThread *pThread, uint32_t dwMilliseconds, BOOL bAlertable)
 {
     PAL_ERROR palErr = NO_ERROR;
     uint32_t dwRet = WAIT_FAILED;
@@ -534,16 +485,14 @@ PAL_ERROR CorUnix::InternalSleepEx (
     {
         ThreadWakeupReason twrWakeupReason;
 
-        palErr = g_pSynchronizationManager->BlockThread(pThread,
-                                                        dwMilliseconds,
-                                                        (TRUE == bAlertable),
-                                                        true,
-                                                        &twrWakeupReason,
-                                                        reinterpret_cast<uint32_t*>(&iSignaledObjIndex));
+        palErr =
+            g_pSynchronizationManager->BlockThread(pThread, dwMilliseconds, (TRUE == bAlertable), true,
+                                                   &twrWakeupReason, reinterpret_cast<uint32_t *>(&iSignaledObjIndex));
         if (NO_ERROR != palErr)
         {
             ERROR("IPalSynchronizationManager::BlockThread failed for thread "
-                  "pThread=%p [error=%u]\n", pThread, palErr);
+                  "pThread=%p [error=%u]\n",
+                  pThread, palErr);
             goto InternalSleepExExit;
         }
 
@@ -554,18 +503,17 @@ PAL_ERROR CorUnix::InternalSleepEx (
             dwRet = 0;
             break;
         case Alerted:
-            _ASSERT_MSG(bAlertable,
-                        "Awakened for APC from a non-alertable wait\n");
+            _ASSERT_MSG(bAlertable, "Awakened for APC from a non-alertable wait\n");
 
             dwRet = WAIT_IO_COMPLETION;
             palErr = g_pSynchronizationManager->DispatchPendingAPCs(pThread);
 
-            _ASSERT_MSG(NO_ERROR == palErr,
-                        "Awakened for APC, but no APC is pending\n");
+            _ASSERT_MSG(NO_ERROR == palErr, "Awakened for APC, but no APC is pending\n");
             break;
         case MutexAbondoned:
             ASSERT("Thread %p awakened with reason=MutexAbondoned from a "
-                   "SleepEx\n", pThread);
+                   "SleepEx\n",
+                   pThread);
             palErr = ERROR_INTERNAL_ERROR;
             break;
         case WaitFailed:
