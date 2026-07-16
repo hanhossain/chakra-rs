@@ -12,18 +12,18 @@ namespace Js
     // DeserializationCloner helps clone a Var from a stream location.
     //
     template <class Reader>
-    class DeserializationCloner:
-        public ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader> >
+    class DeserializationCloner : public ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader>>
     {
     public:
-        using typename ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader> >::Dst;
-        using typename ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader> >::Src;
-        using typename ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader> >::SrcTypeId;
+        using typename ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader>>::Dst;
+        using typename ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader>>::Src;
+        using typename ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader>>::SrcTypeId;
+
     private:
-        //AutoCOMPtr<ISCAHost> m_pSCAHost;
-        //AutoCOMPtr<ISCAContext> m_pSCAContext;
-        Reader* m_reader;
-        mutable char16_t* m_buffer;
+        // AutoCOMPtr<ISCAHost> m_pSCAHost;
+        // AutoCOMPtr<ISCAContext> m_pSCAContext;
+        Reader *m_reader;
+        mutable char16_t *m_buffer;
         mutable charcount_t m_bufferLength;
 
 
@@ -35,22 +35,19 @@ namespace Js
             return static_cast<SCATypeId>(typeId);
         }
 
-        void Read(uint32_t* value) const
-        {
-            m_reader->Read(value);
-        }
+        void Read(uint32_t *value) const { m_reader->Read(value); }
 
-        const char16_t* TryReadString(charcount_t* len, bool reuseBuffer) const;
-        const char16_t* ReadString(charcount_t* len) const;
-        void Read(uint8_t* buf, uint32_t len) const;
+        const char16_t *TryReadString(charcount_t *len, bool reuseBuffer) const;
+        const char16_t *ReadString(charcount_t *len) const;
+        void Read(uint8_t *buf, uint32_t len) const;
 
         //
         // Read a TypedArray or DataView.
         //
         template <class T, bool clamped>
-        void ReadTypedArray(Dst* dst) const
+        void ReadTypedArray(Dst *dst) const
         {
-            typedef TypedArrayTrace<T,clamped> trace_type;
+            typedef TypedArrayTrace<T, clamped> trace_type;
 
             Dst arrayBuffer;
             this->GetEngine()->Clone(m_reader->GetPosition(), &arrayBuffer);
@@ -62,29 +59,29 @@ namespace Js
             uint32_t byteOffset, length;
             Read(&byteOffset);
             Read(&length);
-            *dst = trace_type::CreateTypedArray(
-                VarTo<ArrayBufferBase>(arrayBuffer), byteOffset, length, this->GetScriptContext());
+            *dst = trace_type::CreateTypedArray(VarTo<ArrayBufferBase>(arrayBuffer), byteOffset, length,
+                                                this->GetScriptContext());
         }
 
-        void ReadTypedArray(SrcTypeId typeId, Dst* dst) const;
+        void ReadTypedArray(SrcTypeId typeId, Dst *dst) const;
 
         //
         // Read a SCAProperties section: {SCAPropertyName SCAValue} SCAPropertiesTerminator
         //
-        void ReadObjectPropertiesIntoObject(RecyclableObject* m_obj)
+        void ReadObjectPropertiesIntoObject(RecyclableObject *m_obj)
         {
-            ScriptContext* scriptContext = this->GetScriptContext();
+            ScriptContext *scriptContext = this->GetScriptContext();
 
-            for(;;)
+            for (;;)
             {
                 charcount_t len = 0;
-                const char16_t* name = TryReadString(&len, /*reuseBuffer*/ true);
+                const char16_t *name = TryReadString(&len, /*reuseBuffer*/ true);
                 if (!name)
                 {
                     break;
                 }
 
-                Js::PropertyRecord const * propertyRecord;
+                Js::PropertyRecord const *propertyRecord;
                 scriptContext->GetOrAddPropertyRecord(name, len, &propertyRecord);
 
                 // NOTE: 'Clone' may reenter here and use the buffer that backs the 'name'.
@@ -98,17 +95,18 @@ namespace Js
                     this->ThrowSCADataCorrupt();
                 }
 
-                m_obj->SetProperty(propertyRecord->GetPropertyId(), value, PropertyOperation_None, NULL); //Note: no prototype check
+                m_obj->SetProperty(propertyRecord->GetPropertyId(), value, PropertyOperation_None,
+                                   NULL); // Note: no prototype check
             }
         }
 
-        void ReadObjectPropertiesIntoBag(SCAPropBag* m_propbag)
+        void ReadObjectPropertiesIntoBag(SCAPropBag *m_propbag)
         {
             for (;;)
             {
                 charcount_t len = 0;
                 // NOTE: we will not reuse buffer here since the propbag may retain the string.
-                const char16_t* name = TryReadString(&len, /*reuseBuffer*/ false);
+                const char16_t *name = TryReadString(&len, /*reuseBuffer*/ false);
                 if (!name)
                 {
                     break;
@@ -127,9 +125,9 @@ namespace Js
         }
 
     public:
-        DeserializationCloner(ScriptContext* scriptContext, Reader* reader)
-            : ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader> >(scriptContext), m_reader(reader), 
-                         m_buffer(nullptr), m_bufferLength(0)
+        DeserializationCloner(ScriptContext *scriptContext, Reader *reader) :
+            ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader>>(scriptContext), m_reader(reader),
+            m_buffer(nullptr), m_bufferLength(0)
         {
         }
 
@@ -152,8 +150,8 @@ namespace Js
             this->ThrowSCADataCorrupt();
         }
 
-        bool TryClonePrimitive(SrcTypeId typeId, Src src, Dst* dst);
-        bool TryCloneObject(SrcTypeId typeId, Src src, Dst* dst, SCADeepCloneType* deepClone);
+        bool TryClonePrimitive(SrcTypeId typeId, Src src, Dst *dst);
+        bool TryCloneObject(SrcTypeId typeId, Src src, Dst *dst, SCADeepCloneType *deepClone);
         void CloneProperties(SrcTypeId typeId, Src src, Dst dst);
         void CloneHostObjectProperties(SrcTypeId typeId, Src src, Dst dst);
         void CloneMap(Src src, Dst dst);
@@ -166,6 +164,6 @@ namespace Js
         typedef DeserializationCloner<StreamReader> StreamDeserializationCloner;
 
     public:
-        static Var Deserialize(StreamReader* reader, Var* transferableVars, size_t cTransferableVars);
+        static Var Deserialize(StreamReader *reader, Var *transferableVars, size_t cTransferableVars);
     };
-}
+} // namespace Js

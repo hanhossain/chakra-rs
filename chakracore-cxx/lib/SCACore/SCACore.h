@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 
 #pragma once
+#include "StreamReader.h"
+#include "StreamWriter.h"
 
 namespace Js
 {
@@ -12,30 +14,27 @@ namespace Js
         class Serializer
         {
         public:
-            Serializer(ScriptContext *scriptContext, HostStream *stream)
-                : m_streamWriter(scriptContext, stream)
-            {
-            }
+            Serializer(ScriptContext *scriptContext, HostStream *stream) : m_streamWriter(scriptContext, stream) {}
 
             int32_t SetTransferableVars(Var *vars, size_t count);
 
-            void WriteRawBytes(const void* source, size_t length);
+            void WriteRawBytes(const void *source, size_t length);
             bool WriteValue(Var rootObject);
             bool DetachArrayBuffer();
 
-            bool Release(byte** data, size_t *dataLength);
+            bool Release(byte **data, size_t *dataLength);
 
         private:
             StreamWriter m_streamWriter;
-            Var* m_transferableVars = nullptr;
+            Var *m_transferableVars = nullptr;
             size_t m_cTransferableVars = 0;
         };
 
         class Deserializer
         {
         public:
-            Deserializer(void *data, size_t length, ScriptContext *scriptContext, HostReadStream *stream)
-                : m_streamReader(scriptContext, (byte*)data, length, stream)
+            Deserializer(void *data, size_t length, ScriptContext *scriptContext, HostReadStream *stream) :
+                m_streamReader(scriptContext, (byte *)data, length, stream)
             {
             }
 
@@ -47,10 +46,9 @@ namespace Js
 
         private:
             StreamReader m_streamReader;
-            Var* m_transferableVars = nullptr;
+            Var *m_transferableVars = nullptr;
             size_t m_cTransferableVars = 0;
         };
-    }
+    } // namespace SCACore
 
-}
-
+} // namespace Js

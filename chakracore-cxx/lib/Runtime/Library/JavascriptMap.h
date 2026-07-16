@@ -4,16 +4,22 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Library/MapOrSetDataList.h"
+#include "Library/SameValueComparer.h"
+
 namespace Js
 {
     class JavascriptMap : public DynamicObject
     {
     public:
-        typedef JsUtil::KeyValuePair<typename WriteBarrierFieldTypeTraits<Var>::Type, typename WriteBarrierFieldTypeTraits<Var>::Type> MapDataKeyValuePair;
+        typedef JsUtil::KeyValuePair<typename WriteBarrierFieldTypeTraits<Var>::Type,
+                                     typename WriteBarrierFieldTypeTraits<Var>::Type>
+            MapDataKeyValuePair;
         typedef MapOrSetDataNode<MapDataKeyValuePair> MapDataNode;
         typedef MapOrSetDataList<MapDataKeyValuePair> MapDataList;
-        typedef JsUtil::BaseDictionary<Var, MapDataNode*, Recycler> SimpleVarDataMap;
-        typedef JsUtil::BaseDictionary<Var, MapDataNode*, Recycler, PowerOf2SizePolicy, SameValueZeroComparer> ComplexVarDataMap;
+        typedef JsUtil::BaseDictionary<Var, MapDataNode *, Recycler> SimpleVarDataMap;
+        typedef JsUtil::BaseDictionary<Var, MapDataNode *, Recycler, PowerOf2SizePolicy, SameValueZeroComparer>
+            ComplexVarDataMap;
 
     private:
         enum class MapKind : uint8_t
@@ -23,7 +29,8 @@ namespace Js
             // A SimpleVarMap is a map containing only Vars which are comparable by pointer, and don't require
             // value comparison
             //
-            // Addition of a Var that is not comparable by pointer value causes the set to be promoted to a ComplexVarSet
+            // Addition of a Var that is not comparable by pointer value causes the set to be promoted to a
+            // ComplexVarSet
             SimpleVarMap,
             // A ComplexVarMap is a map containing Vars for which we must inspect the values to do a comparison
             // This includes Strings and (sometimes) JavascriptNumbers
@@ -34,8 +41,8 @@ namespace Js
 
         union MapUnion
         {
-            typename WriteBarrierFieldTypeTraits<SimpleVarDataMap*>::Type simpleVarMap;
-            typename WriteBarrierFieldTypeTraits<ComplexVarDataMap*>::Type complexVarMap;
+            typename WriteBarrierFieldTypeTraits<SimpleVarDataMap *>::Type simpleVarMap;
+            typename WriteBarrierFieldTypeTraits<ComplexVarDataMap *>::Type complexVarMap;
             MapUnion() {}
         };
 
@@ -55,16 +62,17 @@ namespace Js
         void SetOnComplexVarMap(Var key, Var value);
 
         void PromoteToComplexVarMap();
-    public:
-        JavascriptMap(DynamicType* type);
 
-        static JavascriptMap* New(ScriptContext* scriptContext);
+    public:
+        JavascriptMap(DynamicType *type);
+
+        static JavascriptMap *New(ScriptContext *scriptContext);
 
         void Clear();
 
         bool Delete(Var key);
 
-        bool Get(Var key, Var* value);
+        bool Get(Var key, Var *value);
         bool Has(Var key);
 
         void Set(Var key, Var value);
@@ -73,7 +81,8 @@ namespace Js
 
         MapDataList::Iterator GetIterator();
 
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator> *stringBuilder,
+                                       ScriptContext *requestContext) override;
 
         class EntryInfo
         {
@@ -91,22 +100,23 @@ namespace Js
             static FunctionInfo Values;
             static FunctionInfo GetterSymbolSpecies;
         };
-        static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntryClear(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntryDelete(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntryForEach(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntryGet(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntryHas(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntrySet(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntrySizeGetter(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntryEntries(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntryKeys(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntryValues(RecyclableObject* function, CallInfo callInfo, ...);
-        static Var EntryGetterSymbolSpecies(RecyclableObject* function, CallInfo callInfo, ...);
+        static Var NewInstance(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntryClear(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntryDelete(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntryForEach(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntryGet(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntryHas(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntrySet(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntrySizeGetter(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntryEntries(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntryKeys(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntryValues(RecyclableObject *function, CallInfo callInfo, ...);
+        static Var EntryGetterSymbolSpecies(RecyclableObject *function, CallInfo callInfo, ...);
     };
 
-    template <> inline bool VarIsImpl<JavascriptMap>(RecyclableObject* obj)
+    template <>
+    inline bool VarIsImpl<JavascriptMap>(RecyclableObject *obj)
     {
         return JavascriptOperators::GetTypeId(obj) == TypeIds_Map;
     }
-}
+} // namespace Js

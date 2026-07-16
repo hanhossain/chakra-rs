@@ -7,17 +7,15 @@
 
 namespace Js
 {
-    void StreamWriter::Write(const void* pv, size_t cb)
+    void StreamWriter::Write(const void *pv, size_t cb)
     {
-        ScriptContext* scriptContext = GetScriptContext();
+        ScriptContext *scriptContext = GetScriptContext();
         uint32_t newSize = UInt32Math::Add(static_cast<uint32_t>(m_current), static_cast<uint32_t>(cb));
         if (newSize >= m_capacity)
         {
-            size_t newCapacity = UInt32Math::Add(max(newSize, UInt32Math::Mul(static_cast<uint32_t>(m_capacity), 2)), 100);
-            BEGIN_LEAVE_SCRIPT(scriptContext)
-            {
-                m_buffer = m_stream->ExtendBuffer(m_buffer, newCapacity, &m_capacity);
-            }
+            size_t newCapacity =
+                UInt32Math::Add(max(newSize, UInt32Math::Mul(static_cast<uint32_t>(m_capacity), 2)), 100);
+            BEGIN_LEAVE_SCRIPT(scriptContext) { m_buffer = m_stream->ExtendBuffer(m_buffer, newCapacity, &m_capacity); }
             END_LEAVE_SCRIPT(scriptContext);
         }
 
@@ -26,13 +24,10 @@ namespace Js
         m_current += cb;
     }
 
-    void StreamWriter::WriteHostObject(void* data)
+    void StreamWriter::WriteHostObject(void *data)
     {
-        ScriptContext* scriptContext = GetScriptContext();
-        BEGIN_LEAVE_SCRIPT(scriptContext)
-        {
-            m_stream->WriteHostObject(data);
-        }
+        ScriptContext *scriptContext = GetScriptContext();
+        BEGIN_LEAVE_SCRIPT(scriptContext) { m_stream->WriteHostObject(data); }
         END_LEAVE_SCRIPT(scriptContext);
     }
 
@@ -44,4 +39,4 @@ namespace Js
         // If this overflows, we will throw during Flush/RealWrite. So skip checking here.
         return static_cast<scaposition_t>(m_current);
     }
-}
+} // namespace Js

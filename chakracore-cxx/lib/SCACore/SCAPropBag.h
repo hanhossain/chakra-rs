@@ -9,32 +9,31 @@ namespace Js
     //
     // Implements ISCAPropBag.
     //
-    class SCAPropBag :
-        public ScriptContextHolder,
-        public IUnknown
+    class SCAPropBag : public ScriptContextHolder, public IUnknown
     {
         typedef JsUtil::BaseDictionary<InternalString, Var, RecyclerNonLeafAllocator, PowerOf2SizePolicy,
-            DefaultComparer, JsUtil::DictionaryEntry> PropertyDictionary;
+                                       DefaultComparer, JsUtil::DictionaryEntry>
+            PropertyDictionary;
 
     private:
         RecyclerRootPtr<PropertyDictionary> m_properties;
         uint32_t m_refCount;
 
-        SCAPropBag(ScriptContext* scriptContext);
-        int32_t InternalAdd(const char16_t* name, charcount_t len, Var value);
+        SCAPropBag(ScriptContext *scriptContext);
+        int32_t InternalAdd(const char16_t *name, charcount_t len, Var value);
 
     public:
         ~SCAPropBag();
-        static void CreateInstance(ScriptContext* scriptContext, SCAPropBag** ppInstance);
+        static void CreateInstance(ScriptContext *scriptContext, SCAPropBag **ppInstance);
 
         uint32_t AddRef();
         uint32_t Release();
-        int32_t QueryInterface(REFIID riid, void** ppv);
+        int32_t QueryInterface(REFIID riid, void **ppv);
 
-        int32_t Add(const char16_t* name, Var value);
-        int32_t Get(const char16_t* name, Var* pValue);
+        int32_t Add(const char16_t *name, Var value);
+        int32_t Get(const char16_t *name, Var *pValue);
 
-        int32_t InternalAddNoCopy(const char16_t* name, charcount_t len, Var value);
+        int32_t InternalAddNoCopy(const char16_t *name, charcount_t len, Var value);
 
         //
         // PropBag property enumerator for WriteObjectProperties.
@@ -42,31 +41,19 @@ namespace Js
         class PropBagEnumerator
         {
         private:
-            PropertyDictionary* m_properties;
+            PropertyDictionary *m_properties;
             int m_curIndex;
 
         public:
-            PropBagEnumerator(SCAPropBag* propBag)
-                : m_properties(propBag->m_properties), m_curIndex(-1)
-            {
-            }
+            PropBagEnumerator(SCAPropBag *propBag) : m_properties(propBag->m_properties), m_curIndex(-1) {}
 
             bool MoveNext();
 
-            const char16_t* GetNameString() const
-            {
-                return m_properties->GetKeyAt(m_curIndex).GetBuffer();
-            }
+            const char16_t *GetNameString() const { return m_properties->GetKeyAt(m_curIndex).GetBuffer(); }
 
-            charcount_t GetNameLength() const
-            {
-                return m_properties->GetKeyAt(m_curIndex).GetLength();
-            }
+            charcount_t GetNameLength() const { return m_properties->GetKeyAt(m_curIndex).GetLength(); }
 
-            Var GetValue() const
-            {
-                return m_properties->GetValueAt(m_curIndex);
-            }
+            Var GetValue() const { return m_properties->GetValueAt(m_curIndex); }
         };
     };
-}
+} // namespace Js

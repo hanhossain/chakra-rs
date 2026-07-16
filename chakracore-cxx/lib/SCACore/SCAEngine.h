@@ -27,25 +27,22 @@ namespace Js
         // non leaf allocator because the map contains Vars.
         typedef JsUtil::BaseDictionary<Src, Dst, RecyclerNonLeafAllocator> ClonedObjectDictionary;
 
-        Cloner* m_cloner;
-        ClonedObjectDictionary* m_clonedObjects;
-        Var* m_transferableVars;
+        Cloner *m_cloner;
+        ClonedObjectDictionary *m_clonedObjects;
+        Var *m_transferableVars;
         size_t m_cTransferableVars;
 
     private:
-        SCAEngine(Cloner* cloner, Var* m_transferableVars, size_t cTransferableVars)
-            : m_cloner(cloner),
-            m_transferableVars(m_transferableVars),
-            m_cTransferableVars(cTransferableVars)
+        SCAEngine(Cloner *cloner, Var *m_transferableVars, size_t cTransferableVars) :
+            m_cloner(cloner), m_transferableVars(m_transferableVars), m_cTransferableVars(cTransferableVars)
         {
-            Recycler* recycler = cloner->GetScriptContext()->GetRecycler();
+            Recycler *recycler = cloner->GetScriptContext()->GetRecycler();
             m_clonedObjects = RecyclerNew(recycler, ClonedObjectDictionary, recycler);
             m_cloner->SetEngine(this);
         }
 
     public:
-
-        void Clone(Src src, Dst* dst)
+        void Clone(Src src, Dst *dst)
         {
             PROBE_STACK(m_cloner->GetScriptContext(), Constants::MinStackDefault);
 
@@ -103,12 +100,9 @@ namespace Js
             Clone(src, &unused);
         }
 
-        bool TryGetClonedObject(Src src, Dst* dst) const
-        {
-            return m_clonedObjects->TryGetValue(src, dst);
-        }
+        bool TryGetClonedObject(Src src, Dst *dst) const { return m_clonedObjects->TryGetValue(src, dst); }
 
-        bool TryGetTransferredOrShared(Var source, size_t* outDestination)
+        bool TryGetTransferredOrShared(Var source, size_t *outDestination)
         {
             if (m_transferableVars == nullptr)
             {
@@ -131,7 +125,7 @@ namespace Js
             return false;
         }
 
-        Dst ClaimTransferable(size_t index, JavascriptLibrary* library)
+        Dst ClaimTransferable(size_t index, JavascriptLibrary *library)
         {
             AssertMsg(index < this->m_cTransferableVars, "Index out of range.");
             ArrayBuffer *ab = VarTo<ArrayBuffer>(m_transferableVars[index]);
@@ -139,7 +133,7 @@ namespace Js
             return ab;
         }
 
-        static Dst Clone(Src root, Cloner* cloner, Var* transferableVars, size_t cTransferableVars)
+        static Dst Clone(Src root, Cloner *cloner, Var *transferableVars, size_t cTransferableVars)
         {
             SCAEngine<Src, Dst, Cloner> engine(cloner, transferableVars, cTransferableVars);
             Dst dst;
@@ -154,18 +148,12 @@ namespace Js
     class ScriptContextHolder
     {
     private:
-        ScriptContext* m_scriptContext;
+        ScriptContext *m_scriptContext;
 
     public:
-        ScriptContextHolder(ScriptContext* scriptContext)
-            : m_scriptContext(scriptContext)
-        {
-        }
+        ScriptContextHolder(ScriptContext *scriptContext) : m_scriptContext(scriptContext) {}
 
-        ScriptContext* GetScriptContext() const
-        {
-            return m_scriptContext;
-        }
+        ScriptContext *GetScriptContext() const { return m_scriptContext; }
 
         void ThrowIfFailed(int32_t hr) const;
 
@@ -207,26 +195,22 @@ namespace Js
         typedef SCAEngine<Src, Dst, Cloner> Engine;
 
     private:
-        Engine* m_engine;
+        Engine *m_engine;
 
     public:
-        ClonerBase(ScriptContext* scriptContext)
-            : ScriptContextHolder(scriptContext),
-            m_engine(NULL)
-        {
-        }
+        ClonerBase(ScriptContext *scriptContext) : ScriptContextHolder(scriptContext), m_engine(NULL) {}
 
-        Engine* GetEngine() const
+        Engine *GetEngine() const
         {
             Assert(m_engine); // Must have been set
             return m_engine;
         }
 
-        void SetEngine(Engine* engine)
+        void SetEngine(Engine *engine)
         {
             Assert(!m_engine); // Can only be set once
             m_engine = engine;
         }
     };
 
-}
+} // namespace Js
