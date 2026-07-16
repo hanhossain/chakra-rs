@@ -4,8 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "PlatformAgnostic/CommonTypedefs.h"
 #include "ChakraICU.h"
+#include "PlatformAgnostic/CommonTypedefs.h"
 #include "sal.h"
 
 namespace PlatformAgnostic
@@ -53,8 +53,8 @@ namespace PlatformAgnostic
         // ICU does not have an explicit "other", but the static_asserts
         // in UnicodeText.ICU.cpp ensure that Other is different from C/D/KC/KD
 
-        static const char * const ICU_NORMALIZATION_NFC = "nfc";
-        static const char * const ICU_NORMALIZATION_NFKC = "nfkc";
+        static const char *const ICU_NORMALIZATION_NFC = "nfc";
+        static const char *const ICU_NORMALIZATION_NFKC = "nfkc";
         enum NormalizationForm
         {
             C = UNORM2_COMPOSE,
@@ -127,16 +127,18 @@ namespace PlatformAgnostic
         // Params:
         //   normalizationForm: the Unicode Normalization Form
         //   sourceString: The string to normalize
-        //   sourceLength: The number of characters in the source string. This must be provided, the function does not assume null-termination etc. Length should be greater than 0.
-        //   destString:   Optional pointer to the destination string buffer. It can be null if destLength is 0.
-        //   destLength:   Size in characters of the destination buffer, or 0 if the function shuld just return the required character count for the dest buffer.
-        //   pErrorOut:    Set to NoError, or the actual error if one occurred.
+        //   sourceLength: The number of characters in the source string. This must be provided, the function does not
+        //   assume null-termination etc. Length should be greater than 0. destString:   Optional pointer to the
+        //   destination string buffer. It can be null if destLength is 0. destLength:   Size in characters of the
+        //   destination buffer, or 0 if the function shuld just return the required character count for the dest
+        //   buffer. pErrorOut:    Set to NoError, or the actual error if one occurred.
         //
         // Return Value:
         //   length of the normalized string in the destination buffer
         //   If the return value is less than or equal to 0, then see the value of pErrorOut to understand the error
         //
-        int32_t NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32_t sourceLength, char16_t* destString, int32_t destLength, ApiError* pErrorOut);
+        int32_t NormalizeString(NormalizationForm normalizationForm, const char16_t *sourceString,
+                                uint32_t sourceLength, char16_t *destString, int32_t destLength, ApiError *pErrorOut);
 
         //
         // This method verifies that a given UTF16 string is normalized according to the rules of Unicode 4.0 TR#15.
@@ -144,13 +146,15 @@ namespace PlatformAgnostic
         // Params:
         //   normalizationForm: the Unicode Normalization Form
         //   testString: The string to test
-        //   testStringLength: The number of characters in the test string. If the string is null-terminated, and the API should calculate the length, set testStringLength to 0.
+        //   testStringLength: The number of characters in the test string. If the string is null-terminated, and the
+        //   API should calculate the length, set testStringLength to 0.
         //
         // Return Value:
         //   true if the input string is already normalized, false if it isn't
         //   No error codes are returned since they're not used by the caller.
         //
-        bool IsNormalizedString(NormalizationForm normalizatingForm, const char16_t* testString, int32_t testStringLength);
+        bool IsNormalizedString(NormalizationForm normalizatingForm, const char16_t *testString,
+                                int32_t testStringLength);
 
         //
         // This method lets the caller know if an external Unicode helper library is being used by the PAL
@@ -189,16 +193,21 @@ namespace PlatformAgnostic
         // Change the case of a string using linguistic rules
         // Params:
         //   sourceString: The string to convert
-        //   sourceLength: The number of characters in the source string. This must be provided, the function does not assume null-termination. Length should be greater than 0.
-        //   destString:   Optional pointer to the destination string buffer. It can be null if destLength is 0, if you want the required buffer size
-        //   destLength:   Size in characters of the destination buffer, or 0 if the function shuld just return the required character count for the dest buffer.
-        //   pErrorOut:    Set to NoError, or the actual error if one occurred.
+        //   sourceLength: The number of characters in the source string. This must be provided, the function does not
+        //   assume null-termination. Length should be greater than 0. destString:   Optional pointer to the destination
+        //   string buffer. It can be null if destLength is 0, if you want the required buffer size destLength:   Size
+        //   in characters of the destination buffer, or 0 if the function shuld just return the required character
+        //   count for the dest buffer. pErrorOut:    Set to NoError, or the actual error if one occurred.
         //
         // Return Value:
-        //   The length required to convert sourceString to the given case, even if destString was not large enough to hold it, including the null terminator
+        //   The length required to convert sourceString to the given case, even if destString was not large enough to
+        //   hold it, including the null terminator
         //
-        template<bool toUpper, bool useInvariant>
-        charcount_t ChangeStringLinguisticCase(_In_count_(sourceLength) const char16_t* sourceString, _In_ charcount_t sourceLength, _Out_writes_(destLength) char16_t* destString, _In_ charcount_t destLength, _Out_ ApiError* pErrorOut);
+        template <bool toUpper, bool useInvariant>
+        charcount_t ChangeStringLinguisticCase(_In_count_(sourceLength) const char16_t *sourceString,
+                                               _In_ charcount_t sourceLength,
+                                               _Out_writes_(destLength) char16_t *destString,
+                                               _In_ charcount_t destLength, _Out_ ApiError *pErrorOut);
 
         //
         // Return the classification type of the character using Unicode 2.0 rules
@@ -222,6 +231,6 @@ namespace PlatformAgnostic
         //     -1 - string1 is greater than string2
         //     +1 - string1 is lesser than string2
         //
-        int LogicalStringCompare(const char16_t* string1, int str1size, const char16_t* string2, int str2size);
-    };
-};
+        int LogicalStringCompare(const char16_t *string1, int str1size, const char16_t *string2, int str2size);
+    }; // namespace UnicodeText
+}; // namespace PlatformAgnostic

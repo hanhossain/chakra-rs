@@ -5,69 +5,70 @@
 #pragma once
 
 #include "PlatformAgnostic/DateTimeInternal.h"
+#include "pal.h"
 
 namespace PlatformAgnostic
 {
-namespace DateTime
-{
-
-    class HiResTimer
+    namespace DateTime
     {
-    private:
-        HiresTimerPlatformData data;
 
-    public:
-        double Now();
-        double GetSystemTime();
-
-        void Reset() { data.Reset(); }
-    };
-
-    class Utility
-    {
-        UtilityPlatformData data;
-    public:
-        const char16_t *GetStandardName(size_t *nameLength,
-                                     // xplat implementation needs an actual
-                                     // date for the zone abbr.
-                                     const DateTime::YMD *ymd = NULL);
-        const char16_t *GetDaylightName(size_t *nameLength,
-                                     const DateTime::YMD *ymd = NULL);
-    };
-
-    // Decomposed date (Year-Month-Date).
-    struct YMD
-    {
-        int                 year; // year
-        int                 yt;   // year type: wkd of Jan 1 (plus 7 if a leap year).
-        int                 mon;  // month (0 to 11)
-        int                 mday; // day in month (0 to 30)
-        int                 yday; // day in year (0 to 365)
-        int                 wday; // week day (0 to 6)
-        int                 time; // time of day (in milliseconds: 0 to 86399999)
-
-        void ToSystemTime(SYSTEMTIME *sys)
+        class HiResTimer
         {
-            sys->wYear = static_cast<uint16_t>(year);
-            sys->wMonth = static_cast<uint16_t>(mon + 1);
-            sys->wDay =static_cast<uint16_t>(mday + 1);
-            int t = time;
-            sys->wMilliseconds = static_cast<uint16_t>(t % 1000);
-            t /= 1000;
-            sys->wSecond = static_cast<uint16_t>(t % 60);
-            t /= 60;
-            sys->wMinute = static_cast<uint16_t>(t % 60);
-            t /= 60;
-            sys->wHour = static_cast<uint16_t>(t);
-        }
-    };
+        private:
+            HiresTimerPlatformData data;
 
-    class DaylightTimeHelper
-    {
-    public:
-        double UtcToLocal(double utcTime, int &bias, int &offset, bool &isDaylightSavings);
-        double LocalToUtc(double time);
-    };
+        public:
+            double Now();
+            double GetSystemTime();
 
-} // namespace DateTime
+            void Reset() { data.Reset(); }
+        };
+
+        class Utility
+        {
+            UtilityPlatformData data;
+
+        public:
+            const char16_t *GetStandardName(size_t *nameLength,
+                                            // xplat implementation needs an actual
+                                            // date for the zone abbr.
+                                            const DateTime::YMD *ymd = NULL);
+            const char16_t *GetDaylightName(size_t *nameLength, const DateTime::YMD *ymd = NULL);
+        };
+
+        // Decomposed date (Year-Month-Date).
+        struct YMD
+        {
+            int year; // year
+            int yt; // year type: wkd of Jan 1 (plus 7 if a leap year).
+            int mon; // month (0 to 11)
+            int mday; // day in month (0 to 30)
+            int yday; // day in year (0 to 365)
+            int wday; // week day (0 to 6)
+            int time; // time of day (in milliseconds: 0 to 86399999)
+
+            void ToSystemTime(SYSTEMTIME *sys)
+            {
+                sys->wYear = static_cast<uint16_t>(year);
+                sys->wMonth = static_cast<uint16_t>(mon + 1);
+                sys->wDay = static_cast<uint16_t>(mday + 1);
+                int t = time;
+                sys->wMilliseconds = static_cast<uint16_t>(t % 1000);
+                t /= 1000;
+                sys->wSecond = static_cast<uint16_t>(t % 60);
+                t /= 60;
+                sys->wMinute = static_cast<uint16_t>(t % 60);
+                t /= 60;
+                sys->wHour = static_cast<uint16_t>(t);
+            }
+        };
+
+        class DaylightTimeHelper
+        {
+        public:
+            double UtcToLocal(double utcTime, int &bias, int &offset, bool &isDaylightSavings);
+            double LocalToUtc(double time);
+        };
+
+    } // namespace DateTime
 } // namespace PlatformAgnostic

@@ -40,10 +40,10 @@
 #include <unicode/udatpg.h>
 #include <unicode/uloc.h>
 #include <unicode/ulocdata.h>
-#include <unicode/unumsys.h>
-#include <unicode/ustring.h>
 #include <unicode/unorm2.h>
+#include <unicode/unumsys.h>
 #include <unicode/upluralrules.h>
+#include <unicode/ustring.h>
 #endif // ifdef WINDOWS10_ICU
 
 // Different assertion code is used in ChakraFull that enforces that messages are char literals
@@ -56,16 +56,14 @@ namespace PlatformAgnostic
 {
     namespace ICUHelpers
     {
-        template<typename TObject, void(* CloseFunction)(TObject)>
+        template <typename TObject, void (*CloseFunction)(TObject)>
         class ScopedICUObject
         {
         private:
             TObject object;
-        public:
-            explicit ScopedICUObject(TObject object) : object(object)
-            {
 
-            }
+        public:
+            explicit ScopedICUObject(TObject object) : object(object) {}
             ScopedICUObject(const ScopedICUObject &other) = delete;
             ScopedICUObject(ScopedICUObject &&other) = delete;
             ScopedICUObject &operator=(const ScopedICUObject &other) = delete;
@@ -78,10 +76,7 @@ namespace PlatformAgnostic
                 }
             }
 
-            operator TObject()
-            {
-                return object;
-            }
+            operator TObject() { return object; }
         };
 
         typedef ScopedICUObject<UEnumeration *, uenum_close> ScopedUEnumeration;
@@ -94,10 +89,10 @@ namespace PlatformAgnostic
 
         inline int GetICUMajorVersion()
         {
-            UVersionInfo version = { 0 };
+            UVersionInfo version = {0};
             u_getVersion(version);
             return version[0];
         }
-    }
-}
+    } // namespace ICUHelpers
+} // namespace PlatformAgnostic
 #endif // ifdef HAS_ICU

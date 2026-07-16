@@ -3,9 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "Common/Common.h"
-#include "ChakraPlatform.h"
 #include <sys/resource.h>
+#include "ChakraPlatform.h"
+#include "Common/Common.h"
 
 namespace PlatformAgnostic
 {
@@ -19,4 +19,4 @@ namespace PlatformAgnostic
         *totalAS = limit.rlim_cur;
         return true;
     }
-}
+} // namespace PlatformAgnostic

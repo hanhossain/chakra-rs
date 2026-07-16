@@ -3,58 +3,58 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "Common/Common.h"
-#include "ChakraPlatform.h"
 #include <locale.h>
+#include "ChakraPlatform.h"
+#include "Common/Common.h"
 
 namespace PlatformAgnostic
 {
-namespace Arrays
-{
-
-    static char16_t commaSeparator = u',';
-    static char16_t semicolonSeparator = u';';
-
-    ArrayLocalization::ArrayLocalization()
+    namespace Arrays
     {
-        char buffer[BufSize];
-        char *old_locale = setlocale(LC_NUMERIC, NULL);
 
-        if (old_locale != NULL)
+        static char16_t commaSeparator = u',';
+        static char16_t semicolonSeparator = u';';
+
+        ArrayLocalization::ArrayLocalization()
         {
-            memcpy(buffer, old_locale, BufSize);
+            char buffer[BufSize];
+            char *old_locale = setlocale(LC_NUMERIC, NULL);
 
-            setlocale(LC_NUMERIC, "");
-        }
-
-        struct lconv *locale_format = localeconv();
-        if (locale_format != NULL)
-        {
-            // No specific list separator on Linux/macOS
-            // Use this pattern to determine the list separator
-            if (*locale_format->decimal_point == commaSeparator)
+            if (old_locale != NULL)
             {
-                localeSeparator = semicolonSeparator;
+                memcpy(buffer, old_locale, BufSize);
+
+                setlocale(LC_NUMERIC, "");
             }
-            else
+
+            struct lconv *locale_format = localeconv();
+            if (locale_format != NULL)
             {
-                localeSeparator = commaSeparator;
+                // No specific list separator on Linux/macOS
+                // Use this pattern to determine the list separator
+                if (*locale_format->decimal_point == commaSeparator)
+                {
+                    localeSeparator = semicolonSeparator;
+                }
+                else
+                {
+                    localeSeparator = commaSeparator;
+                }
+            }
+
+            if (old_locale != NULL)
+            {
+                setlocale(LC_NUMERIC, buffer);
             }
         }
 
-        if (old_locale != NULL)
+        bool GetLocaleSeparator(char16_t *szSeparator, uint32_t *sepOutSize, uint32_t sepBufSize)
         {
-            setlocale(LC_NUMERIC, buffer);
+            ArrayLocalization arrayLocalization;
+            szSeparator[*sepOutSize] = arrayLocalization.GetLocaleSeparator();
+            szSeparator[++(*sepOutSize)] = '\0';
+            return true;
         }
-    }
 
-    bool GetLocaleSeparator(char16_t* szSeparator, uint32_t* sepOutSize, uint32_t sepBufSize)
-    {
-        ArrayLocalization arrayLocalization;
-        szSeparator[*sepOutSize] = arrayLocalization.GetLocaleSeparator();
-        szSeparator[++(*sepOutSize)] = '\0';
-        return true;
-    }
-
-} // namespace Arrays
+    } // namespace Arrays
 } // namespace PlatformAgnostic

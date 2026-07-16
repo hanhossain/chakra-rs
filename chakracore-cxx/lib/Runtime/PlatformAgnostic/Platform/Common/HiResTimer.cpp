@@ -3,95 +3,91 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "Common/Common.h"
-#include <time.h>
 #include <sys/time.h>
+#include <time.h>
 #include "ChakraPlatform.h"
+#include "Common/Common.h"
 #include "Common/DateUtilities.h"
 #include "Core/Assertions.h"
 #include "Exceptions/Throw.h"
 
 namespace PlatformAgnostic
 {
-namespace DateTime
-{
-    // This method is expected to return UTC time (See MSDN GetSystemTime)
-    inline static double GetSystemTimeREAL()
+    namespace DateTime
     {
-        // in case of clock_gettime fails we use the implementation below
-        struct tm utc_tm;
-        struct timeval timeval;
-        time_t time_now = time(NULL);
-
-        // gettimeofday return value needs to be converted to UTC time
-        // see call below for gmtime_r
-        int timeofday_retval = gettimeofday(&timeval,NULL);
-
-        if (gmtime_r(&time_now, &utc_tm) == NULL)
+        // This method is expected to return UTC time (See MSDN GetSystemTime)
+        inline static double GetSystemTimeREAL()
         {
-            AssertMsg(false, "gmtime() failed");
-        }
+            // in case of clock_gettime fails we use the implementation below
+            struct tm utc_tm;
+            struct timeval timeval;
+            time_t time_now = time(NULL);
 
-        size_t milliseconds = 0;
-        if(timeofday_retval != -1)
-        {
-            milliseconds = timeval.tv_usec / DateTimeTicks_PerSecond;
+            // gettimeofday return value needs to be converted to UTC time
+            // see call below for gmtime_r
+            int timeofday_retval = gettimeofday(&timeval, NULL);
 
-            int old_sec = utc_tm.tm_sec;
-            int new_sec = timeval.tv_sec % 60; // C99 0-60 (1sec leap)
-
-            // just in case we reached the next
-            // second in the interval between time() and gettimeofday()
-            if(old_sec != new_sec)
+            if (gmtime_r(&time_now, &utc_tm) == NULL)
             {
-                milliseconds = 999;
+                AssertMsg(false, "gmtime() failed");
             }
+
+            size_t milliseconds = 0;
+            if (timeofday_retval != -1)
+            {
+                milliseconds = timeval.tv_usec / DateTimeTicks_PerSecond;
+
+                int old_sec = utc_tm.tm_sec;
+                int new_sec = timeval.tv_sec % 60; // C99 0-60 (1sec leap)
+
+                // just in case we reached the next
+                // second in the interval between time() and gettimeofday()
+                if (old_sec != new_sec)
+                {
+                    milliseconds = 999;
+                }
+            }
+
+            milliseconds = (utc_tm.tm_hour * DateTimeTicks_PerHour) + (utc_tm.tm_min * DateTimeTicks_PerMinute) +
+                (utc_tm.tm_sec * DateTimeTicks_PerSecond) + milliseconds;
+
+            return Js::DateUtilities::TvFromDate(1900 + utc_tm.tm_year, utc_tm.tm_mon, utc_tm.tm_mday - 1,
+                                                 milliseconds);
         }
-
-        milliseconds = (utc_tm.tm_hour * DateTimeTicks_PerHour)
-                        + (utc_tm.tm_min * DateTimeTicks_PerMinute)
-                        + (utc_tm.tm_sec * DateTimeTicks_PerSecond)
-                        + milliseconds;
-
-        return Js::DateUtilities::TvFromDate(1900 + utc_tm.tm_year, utc_tm.tm_mon,
-                                            utc_tm.tm_mday - 1, milliseconds);
-    }
 
 // Important! When you update 5ms below to any other number, also update test/Date/xplatInterval.js 0->5 range
 #define INTERVAL_FOR_TICK_BACKUP 5
-    double HiResTimer::GetSystemTime()
-    {
-        unsigned long current = GetTickCount64();
-        unsigned long diff = current - data.cacheTick;
-
-        if (diff <= data.previousDifference || diff >= INTERVAL_FOR_TICK_BACKUP) // max *ms to respond system time changes
+        double HiResTimer::GetSystemTime()
         {
-            double currentTime = GetSystemTimeREAL();
+            unsigned long current = GetTickCount64();
+            unsigned long diff = current - data.cacheTick;
 
-            // in case the system time wasn't updated backwards, and cache is still beyond...
-            if (currentTime >= data.cacheSysTime && currentTime < data.cacheSysTime + INTERVAL_FOR_TICK_BACKUP)
+            if (diff <= data.previousDifference ||
+                diff >= INTERVAL_FOR_TICK_BACKUP) // max *ms to respond system time changes
             {
-                data.previousDifference = static_cast<unsigned long>(-1); // Make sure next request won't use cache
-                return data.cacheSysTime + INTERVAL_FOR_TICK_BACKUP; // wait for real time
+                double currentTime = GetSystemTimeREAL();
+
+                // in case the system time wasn't updated backwards, and cache is still beyond...
+                if (currentTime >= data.cacheSysTime && currentTime < data.cacheSysTime + INTERVAL_FOR_TICK_BACKUP)
+                {
+                    data.previousDifference = static_cast<unsigned long>(-1); // Make sure next request won't use cache
+                    return data.cacheSysTime + INTERVAL_FOR_TICK_BACKUP; // wait for real time
+                }
+
+                data.previousDifference = 0;
+                data.cacheSysTime = currentTime;
+                data.cacheTick = current;
+
+                return currentTime;
             }
 
-            data.previousDifference = 0;
-            data.cacheSysTime = currentTime;
-            data.cacheTick = current;
-
-            return currentTime;
+            // tick count is circular. So, make sure tick wasn't cycled since the last request
+            data.previousDifference = diff;
+            return data.cacheSysTime + static_cast<double>(diff);
         }
-
-        // tick count is circular. So, make sure tick wasn't cycled since the last request
-        data.previousDifference = diff;
-        return data.cacheSysTime + static_cast<double>(diff);
-    }
 #undef INTERVAL_FOR_TICK_BACKUP
 
-    double HiResTimer::Now()
-    {
-        return GetSystemTime();
-    }
+        double HiResTimer::Now() { return GetSystemTime(); }
 
-} // namespace DateTime
+    } // namespace DateTime
 } // namespace PlatformAgnostic

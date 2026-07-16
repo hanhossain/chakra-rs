@@ -3,9 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimePlatformAgnosticPch.h"
 #include "UnicodeText.h"
 #include <ctype.h>
+#include "RuntimePlatformAgnosticPch.h"
 
 namespace PlatformAgnostic
 {
@@ -50,7 +50,7 @@ namespace PlatformAgnostic
             }
 
             template <typename CharType>
-            int readNumber(CharType* &str)
+            int readNumber(CharType *&str)
             {
                 int num = 0;
 
@@ -90,20 +90,20 @@ namespace PlatformAgnostic
             ///     Count the leading zeroes in both strings and skip over them
             ///     Read the two numbers
             ///     If they're not the same, return accordingly
-            ///     If they are the same, but the leading zeroes are different, return whichever has fewer zeroes as "larger"
-            ///     Otherwise, they're the same to continue scanning
+            ///     If they are the same, but the leading zeroes are different, return whichever has fewer zeroes as
+            ///     "larger" Otherwise, they're the same to continue scanning
             ///  else they're both not numbers:
             ///     Compare lexically till we find a number
             ///  if either of the strings current character is a null character continue scanning
             /// The algorithm treats the characters in a case-insensitive manner
             ///
-            int LogicalStringCompareImpl(const char16_t* p1, int p1size, const char16_t* p2, int p2size)
+            int LogicalStringCompareImpl(const char16_t *p1, int p1size, const char16_t *p2, int p2size)
             {
                 Assert(p1 != nullptr);
                 Assert(p2 != nullptr);
 
-                const char16_t* str1End = p1 + p1size;
-                const char16_t* str2End = p2 + p2size;
+                const char16_t *str1End = p1 + p1size;
+                const char16_t *str2End = p2 + p2size;
 
                 while (p1 < str1End && p2 < str2End)
                 {
@@ -134,12 +134,14 @@ namespace PlatformAgnostic
                         // Count leading zeroes on each string
                         while (*p1 == '0')
                         {
-                            p1++; numZero1++;
+                            p1++;
+                            numZero1++;
                         }
 
                         while (*p2 == '0')
                         {
-                            p2++; numZero2++;
+                            p2++;
+                            numZero2++;
                         }
 
                         int num1 = readNumber(p1);
@@ -177,7 +179,8 @@ namespace PlatformAgnostic
                                 return 1;
                             }
 
-                            p1++; p2++;
+                            p1++;
+                            p2++;
                         }
                     }
 
@@ -192,10 +195,11 @@ namespace PlatformAgnostic
                     }
                 }
 
-                if (*p1 == *p2) return 0;
+                if (*p1 == *p2)
+                    return 0;
 
                 return ((*p1 > *p2) ? 1 : -1);
             }
-        }; // Internal
-    }; // UnicodeText
-}; // PlatformAgnostic
+        }; // namespace Internal
+    }; // namespace UnicodeText
+}; // namespace PlatformAgnostic
