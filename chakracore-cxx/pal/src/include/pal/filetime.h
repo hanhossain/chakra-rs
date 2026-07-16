@@ -24,6 +24,9 @@ Revision History:
 #ifndef _PAL_FILETIME_H_
 #define _PAL_FILETIME_H_
 
+#include <ctime>
+#include "pal_mstypes.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
@@ -44,7 +47,7 @@ extern "C" {
 
 #endif /* defined(__APPLE__) */
 
-FILETIME FILEUnixTimeToFileTime(time_t sec, long nsec);
+FILETIME FILEUnixTimeToFileTime(std::time_t sec, long nsec);
 time_t FILEFileTimeToUnixTime(FILETIME FileTime, long *nsec);
 
 #ifdef __APPLE__

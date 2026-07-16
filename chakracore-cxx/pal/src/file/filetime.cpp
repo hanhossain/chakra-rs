@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -52,16 +52,16 @@ file status.
 
 --*/
 
+#include "pal/filetime.h"
 #include "pal/corunix.hpp"
 #include "pal/dbgmsg.h"
-#include "pal/filetime.h"
-#include "pal/thread.hpp"
 #include "pal/file.hpp"
+#include "pal/thread.hpp"
 
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <utime.h>
+#include <sys/types.h>
 #include <time.h>
+#include <utime.h>
 
 #include <sys/time.h>
 
@@ -83,11 +83,11 @@ SET_DEFAULT_DEBUG_CHANNEL(FILE);
    89 * 366 + 280 * 365 = 134744 days between epochs. Of course
    60 * 60 * 24 = 86400 seconds per day, so 134744 * 86400 =
    11644473600 = SECS_BETWEEN_1601_AND_1970_EPOCHS.
-   
+
    To 2001:
    Again, both epochs are Gregorian. 2001 - 1601 = 400. Assuming a leap
    year every four years, 400 / 4 = 100. However, 1700, 1800, and 1900
-   were NOT leap years (2000 was because it was divisible by 400), so 
+   were NOT leap years (2000 was because it was divisible by 400), so
    97 leap years, 303 non-leap years.
    97 * 366 + 303 * 365 = 146097 days between epochs. 146097 * 86400 =
    12622780800 = SECS_BETWEEN_1601_AND_2001_EPOCHS.
@@ -111,23 +111,23 @@ Function:
 Convert a CFAbsoluteTime value to a win32 FILETIME structure, as described
 in MSDN documentation. CFAbsoluteTime is the number of seconds elapsed since
 00:00 01 January 2001 UTC (Mac OS X epoch), while FILETIME represents a
-64-bit number of 100-nanosecond intervals that have passed since 00:00 
+64-bit number of 100-nanosecond intervals that have passed since 00:00
 01 January 1601 UTC (win32 epoch).
 --*/
-FILETIME FILECFAbsoluteTimeToFileTime( CFAbsoluteTime sec )
+FILETIME FILECFAbsoluteTimeToFileTime(CFAbsoluteTime sec)
 {
     long Result;
     FILETIME Ret;
-    
+
     Result = (static_cast<long>(sec) + SECS_BETWEEN_1601_AND_2001_EPOCHS) * SECS_TO_100NS;
 
     Ret.dwLowDateTime = static_cast<uint32_t>(Result);
     Ret.dwHighDateTime = static_cast<uint32_t>(Result >> 32);
 
-    TRACE("CFAbsoluteTime = [%9f] converts to Win32 FILETIME = [%#x:%#x]\n", 
-          sec, Ret.dwHighDateTime, Ret.dwLowDateTime);
+    TRACE("CFAbsoluteTime = [%9f] converts to Win32 FILETIME = [%#x:%#x]\n", sec, Ret.dwHighDateTime,
+          Ret.dwLowDateTime);
 
-    return Ret;    
+    return Ret;
 }
 #endif // __APPLE__
 
@@ -137,24 +137,23 @@ Function:
   FILEUnixTimeToFileTime
 
 Convert a time_t value to a win32 FILETIME structure, as described in
-MSDN documentation. time_t is the number of seconds elapsed since 
-00:00 01 January 1970 UTC (Unix epoch), while FILETIME represents a 
-64-bit number of 100-nanosecond intervals that have passed since 00:00 
+MSDN documentation. time_t is the number of seconds elapsed since
+00:00 01 January 1970 UTC (Unix epoch), while FILETIME represents a
+64-bit number of 100-nanosecond intervals that have passed since 00:00
 01 January 1601 UTC (win32 epoch).
 --*/
-FILETIME FILEUnixTimeToFileTime( time_t sec, long nsec )
+FILETIME FILEUnixTimeToFileTime(time_t sec, long nsec)
 {
     long Result;
     FILETIME Ret;
 
-    Result = (sec + SECS_BETWEEN_1601_AND_1970_EPOCHS) * SECS_TO_100NS +
-        (nsec / 100);
+    Result = (sec + SECS_BETWEEN_1601_AND_1970_EPOCHS) * SECS_TO_100NS + (nsec / 100);
 
     Ret.dwLowDateTime = static_cast<uint32_t>(Result);
     Ret.dwHighDateTime = static_cast<uint32_t>(Result >> 32);
 
-    TRACE("Unix time = [%ld.%09ld] converts to Win32 FILETIME = [%#x:%#x]\n", 
-          sec, nsec, Ret.dwHighDateTime, Ret.dwLowDateTime);
+    TRACE("Unix time = [%ld.%09ld] converts to Win32 FILETIME = [%#x:%#x]\n", sec, nsec, Ret.dwHighDateTime,
+          Ret.dwLowDateTime);
 
     return Ret;
 }
@@ -176,20 +175,19 @@ number of seconds (positive or negative) since the Unix epoch, however if
 this value is outside of the range of 32-bit numbers, the result will be
 truncated on systems with a 32-bit time_t.
 --*/
-time_t FILEFileTimeToUnixTime( FILETIME FileTime, long *nsec )
+time_t FILEFileTimeToUnixTime(FILETIME FileTime, long *nsec)
 {
     long UnixTime;
 
     /* get the full win32 value, in 100ns */
-    UnixTime = (static_cast<long>(FileTime.dwHighDateTime) << 32) +
-        FileTime.dwLowDateTime;
+    UnixTime = (static_cast<long>(FileTime.dwHighDateTime) << 32) + FileTime.dwLowDateTime;
 
     /* convert to the Unix epoch */
     UnixTime -= (SECS_BETWEEN_1601_AND_1970_EPOCHS * SECS_TO_100NS);
 
     TRACE("nsec=%p\n", nsec);
 
-    if ( nsec )
+    if (nsec)
     {
         /* get the number of 100ns, convert to ns */
         *nsec = (UnixTime % SECS_TO_100NS) * 100;
@@ -197,12 +195,8 @@ time_t FILEFileTimeToUnixTime( FILETIME FileTime, long *nsec )
 
     UnixTime /= SECS_TO_100NS; /* now convert to seconds */
 
-    TRACE("Win32 FILETIME = [%#x:%#x] converts to Unix time = [%ld.%09ld]\n",
-          FileTime.dwHighDateTime, FileTime.dwLowDateTime ,(long) UnixTime,
-          nsec?*nsec:0L);
+    TRACE("Win32 FILETIME = [%#x:%#x] converts to Unix time = [%ld.%09ld]\n", FileTime.dwHighDateTime,
+          FileTime.dwLowDateTime, (long)UnixTime, nsec ? *nsec : 0L);
 
     return UnixTime;
 }
-
-
-

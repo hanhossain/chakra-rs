@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -20,22 +20,20 @@ Abstract:
 --*/
 
 #include "pal/handleapi.hpp"
-#include "pal/handlemgr.hpp"
-#include "pal/thread.hpp"
-#include "pal/procobj.hpp"
 #include "pal/dbgmsg.h"
+#include "pal/handlemgr.hpp"
 #include "pal/process.h"
+#include "pal/procobj.hpp"
+#include "pal/thread.hpp"
 
 using namespace CorUnix;
 
 SET_DEFAULT_DEBUG_CHANNEL(HANDLE);
 
-CAllowedObjectTypes aotDuplicateHandle __attribute__((init_priority(200)))(TRUE);
+CAllowedObjectTypes aotDuplicateHandle __attribute__((init_priority(200))) (TRUE);
 
 PAL_ERROR
-CloseSpecialHandle(
-    HANDLE hObject
-    );
+CloseSpecialHandle(HANDLE hObject);
 
 /*++
 Function:
@@ -52,31 +50,16 @@ PAL-specific behavior :
                DUPLICATE_CLOSE_SOURCE
 
 --*/
-BOOL
-DuplicateHandle(
-         HANDLE hSourceProcessHandle,
-         HANDLE hSourceHandle,
-         HANDLE hTargetProcessHandle,
-         LPHANDLE lpTargetHandle,
-         uint32_t dwDesiredAccess,
-         BOOL bInheritHandle,
-         uint32_t dwOptions)
+BOOL DuplicateHandle(HANDLE hSourceProcessHandle, HANDLE hSourceHandle, HANDLE hTargetProcessHandle,
+                     LPHANDLE lpTargetHandle, uint32_t dwDesiredAccess, BOOL bInheritHandle, uint32_t dwOptions)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
-    
+
     pThread = InternalGetCurrentThread();
 
-    palError = InternalDuplicateHandle(
-        pThread,
-        hSourceProcessHandle,
-        hSourceHandle,
-        hTargetProcessHandle,
-        lpTargetHandle,
-        dwDesiredAccess,
-        bInheritHandle,
-        dwOptions
-        );
+    palError = InternalDuplicateHandle(pThread, hSourceProcessHandle, hSourceHandle, hTargetProcessHandle,
+                                       lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
 
     if (NO_ERROR != palError)
     {
@@ -88,20 +71,13 @@ DuplicateHandle(
 }
 
 PAL_ERROR
-CorUnix::InternalDuplicateHandle(
-    CPalThread *pThread,
-    HANDLE hSourceProcess,
-    HANDLE hSource,
-    HANDLE hTargetProcess,
-    LPHANDLE phDuplicate,
-    uint32_t dwDesiredAccess,
-    BOOL bInheritHandle,
-    uint32_t dwOptions
-    )
+CorUnix::InternalDuplicateHandle(CPalThread *pThread, HANDLE hSourceProcess, HANDLE hSource, HANDLE hTargetProcess,
+                                 LPHANDLE phDuplicate, uint32_t dwDesiredAccess, BOOL bInheritHandle,
+                                 uint32_t dwOptions)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjSource = NULL;
-    
+
     uint32_t source_process_id;
     uint32_t target_process_id;
     uint32_t cur_process_id;
@@ -119,8 +95,7 @@ CorUnix::InternalDuplicateHandle(
     }
 
     /* At least source or target process should be the current process. */
-    if (source_process_id != cur_process_id
-        && target_process_id != cur_process_id)
+    if (source_process_id != cur_process_id && target_process_id != cur_process_id)
     {
         ASSERT("Can't duplicate handle : neither source or destination"
                "processes are from current process");
@@ -137,23 +112,19 @@ CorUnix::InternalDuplicateHandle(
 
     if (dwOptions & ~(DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE))
     {
-        ASSERT(
-            "Can't duplicate handle : dwOptions is %#x which is not "
-            "a subset of (DUPLICATE_SAME_ACCESS|DUPLICATE_CLOSE_SOURCE) "
-            "(%#x).\n",
-            dwOptions,
-            DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE);
+        ASSERT("Can't duplicate handle : dwOptions is %#x which is not "
+               "a subset of (DUPLICATE_SAME_ACCESS|DUPLICATE_CLOSE_SOURCE) "
+               "(%#x).\n",
+               dwOptions, DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE);
         palError = ERROR_INVALID_PARAMETER;
         goto InternalDuplicateHandleExit;
     }
-    
+
     if (0 == (dwOptions & DUPLICATE_SAME_ACCESS))
     {
-        ASSERT(
-            "Can't duplicate handle : dwOptions is %#x which does not "
-            "include DUPLICATE_SAME_ACCESS (%#x).\n",
-            dwOptions,
-            DUPLICATE_SAME_ACCESS);
+        ASSERT("Can't duplicate handle : dwOptions is %#x which does not "
+               "include DUPLICATE_SAME_ACCESS (%#x).\n",
+               dwOptions, DUPLICATE_SAME_ACCESS);
         palError = ERROR_INVALID_PARAMETER;
         goto InternalDuplicateHandleExit;
     }
@@ -172,8 +143,7 @@ CorUnix::InternalDuplicateHandle(
        hTargetProcessHandle is from another process but both aren't
        ( handled above ) return hSourceHandle.
     */
-    if (source_process_id != cur_process_id
-        || target_process_id != cur_process_id)
+    if (source_process_id != cur_process_id || target_process_id != cur_process_id)
     {
         *phDuplicate = hSource;
         palError = NO_ERROR;
@@ -186,18 +156,13 @@ CorUnix::InternalDuplicateHandle(
 
     if (!HandleIsSpecial(hSource))
     {
-        palError = g_pObjectManager->ReferenceObjectByHandle(
-            pThread,
-            hSource,
-            &aotDuplicateHandle,
-            &pobjSource
-        );
+        palError = g_pObjectManager->ReferenceObjectByHandle(pThread, hSource, &aotDuplicateHandle, &pobjSource);
 
         if (NO_ERROR != palError)
         {
             ERROR("Unable to get object for source handle %p (%i)\n", hSource, palError);
             goto InternalDuplicateHandleExit;
-        }            
+        }
     }
     else if (hPseudoCurrentProcess == hSource)
     {
@@ -220,14 +185,8 @@ CorUnix::InternalDuplicateHandle(
         goto InternalDuplicateHandleExit;
     }
 
-    palError = g_pObjectManager->ObtainHandleForObject(
-        pThread,
-        pobjSource,
-        dwDesiredAccess,
-        bInheritHandle,
-        NULL,
-        phDuplicate
-        );
+    palError = g_pObjectManager->ObtainHandleForObject(pThread, pobjSource, dwDesiredAccess, bInheritHandle, NULL,
+                                                       phDuplicate);
 
 InternalDuplicateHandleExit:
 
@@ -243,7 +202,7 @@ InternalDuplicateHandleExit:
         // MUST be closed, even if an error occurred during the duplication
         // process
         //
-        
+
         TRACE("DuplicateHandle closing source handle %p\n", hSource);
         InternalCloseHandle(pThread, hSource);
     }
@@ -262,19 +221,14 @@ according to MSDN, closing an invalid handle raises an exception when running a
 debugger [or, alternately, if a special registry key is set]. This behavior is
 not required in the PAL, so we'll always return FALSE.
 --*/
-BOOL
-CloseHandle(
-          HANDLE hObject)
+BOOL CloseHandle(HANDLE hObject)
 {
     CPalThread *pThread;
     PAL_ERROR palError;
 
     pThread = InternalGetCurrentThread();
 
-    palError = InternalCloseHandle(
-        pThread,
-        hObject
-        );
+    palError = InternalCloseHandle(pThread, hObject);
 
     if (NO_ERROR != palError)
     {
@@ -286,19 +240,13 @@ CloseHandle(
 }
 
 PAL_ERROR
-CorUnix::InternalCloseHandle(
-    CPalThread * pThread,
-    HANDLE hObject
-    )
+CorUnix::InternalCloseHandle(CPalThread *pThread, HANDLE hObject)
 {
     PAL_ERROR palError = NO_ERROR;
 
     if (!HandleIsSpecial(hObject))
     {
-        palError = g_pObjectManager->RevokeHandle(
-            pThread,
-            hObject
-            );
+        palError = g_pObjectManager->RevokeHandle(pThread, hObject);
     }
     else
     {
@@ -309,16 +257,12 @@ CorUnix::InternalCloseHandle(
 }
 
 PAL_ERROR
-CloseSpecialHandle(
-    HANDLE hObject
-    )
+CloseSpecialHandle(HANDLE hObject)
 {
-    if ((hObject == hPseudoCurrentThread) ||
-        (hObject == hPseudoCurrentProcess))
+    if ((hObject == hPseudoCurrentThread) || (hObject == hPseudoCurrentProcess))
     {
         return NO_ERROR;
     }
 
     return ERROR_INVALID_HANDLE;
 }
-
