@@ -405,7 +405,7 @@ public:
 
     bool DoJitLoopBodies(FuncInfo *funcInfo) const;
 
-    static void Generate(ParseNodeProg *pnode, uint32_t grfscr, ByteCodeGenerator* byteCodeGenerator, __inout Js::ParseableFunctionInfo ** ppRootFunc, uint sourceIndex, bool forceNoNative, Parser* parser, Js::ScriptFunction ** functionRef);
+    static void Generate(ParseNodeProg *pnode, uint32_t grfscr, ByteCodeGenerator* byteCodeGenerator, Js::ParseableFunctionInfo ** ppRootFunc, uint sourceIndex, bool forceNoNative, Parser* parser, Js::ScriptFunction ** functionRef);
     void Begin(
         ArenaAllocator *alloc,
         uint32_t grfscr,

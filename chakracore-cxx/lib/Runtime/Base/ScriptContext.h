@@ -1107,7 +1107,7 @@ private:
             size_t cbLength,
             uint32_t grfscr,
             CompileScriptException *pse,
-            __inout charcount_t& cchLength,
+            charcount_t& cchLength,
             size_t& srcLength,
             uint& sourceIndex,
             __deref_out Js::ParseableFunctionInfo ** func,

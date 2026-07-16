@@ -9,7 +9,7 @@ class UInt16Math
 {
 public:
     template< class Func >
-    static uint16 Add(uint16 lhs, uint16 rhs, __inout Func& overflowFn)
+    static uint16 Add(uint16 lhs, uint16 rhs, Func& overflowFn)
     {
         uint16 result = lhs + rhs;
 
@@ -23,7 +23,7 @@ public:
     }
 
     template< class Func >
-    static void Inc(uint16& lhs, __inout Func& overflowFn)
+    static void Inc(uint16& lhs, Func& overflowFn)
     {
         ++lhs;
 

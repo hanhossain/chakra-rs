@@ -50,7 +50,7 @@ namespace PlatformAgnostic
             }
 
             template <typename CharType>
-            int readNumber(__inout CharType* &str)
+            int readNumber(CharType* &str)
             {
                 int num = 0;
 
