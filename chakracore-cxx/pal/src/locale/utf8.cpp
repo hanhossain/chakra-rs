@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -28,25 +28,25 @@ Revision History:
 //  Constant Declarations.
 //
 
-#define ASCII                 0x007f
+#define ASCII 0x007f
 
-#define UTF8_2_MAX            0x07ff  // max UTF8 2-byte sequence (32 * 64 = 2048)
-#define UTF8_1ST_OF_2         0xc0    // 110x xxxx
-#define UTF8_1ST_OF_3         0xe0    // 1110 xxxx
-#define UTF8_1ST_OF_4         0xf0    // 1111 xxxx
-#define UTF8_TRAIL            0x80    // 10xx xxxx
+#define UTF8_2_MAX 0x07ff // max UTF8 2-byte sequence (32 * 64 = 2048)
+#define UTF8_1ST_OF_2 0xc0 // 110x xxxx
+#define UTF8_1ST_OF_3 0xe0 // 1110 xxxx
+#define UTF8_1ST_OF_4 0xf0 // 1111 xxxx
+#define UTF8_TRAIL 0x80 // 10xx xxxx
 
-#define HIGHER_6_BIT(u)       ((u) >> 12)
-#define MIDDLE_6_BIT(u)       (((u) & 0x0fc0) >> 6)
-#define LOWER_6_BIT(u)        ((u) & 0x003f)
+#define HIGHER_6_BIT(u) ((u) >> 12)
+#define MIDDLE_6_BIT(u) (((u) & 0x0fc0) >> 6)
+#define LOWER_6_BIT(u) ((u) & 0x003f)
 
-#define BIT7(a)               ((a) & 0x80)
-#define BIT6(a)               ((a) & 0x40)
+#define BIT7(a) ((a) & 0x80)
+#define BIT6(a) ((a) & 0x40)
 
-#define HIGH_SURROGATE_START  0xd800
-#define HIGH_SURROGATE_END    0xdbff
-#define LOW_SURROGATE_START   0xdc00
-#define LOW_SURROGATE_END     0xdfff
+#define HIGH_SURROGATE_START 0xd800
+#define HIGH_SURROGATE_END 0xdbff
+#define LOW_SURROGATE_START 0xdc00
+#define LOW_SURROGATE_END 0xdfff
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -57,19 +57,13 @@ Revision History:
 //
 ////////////////////////////////////////////////////////////////////////////
 
-int UTF8ToUnicode(
-    const char * lpSrcStr,
-    int cchSrc,
-    char16_t* lpDestStr,
-    int cchDest,
-    uint32_t dwFlags
-    )
+int UTF8ToUnicode(const char *lpSrcStr, int cchSrc, char16_t *lpDestStr, int cchDest, uint32_t dwFlags)
 {
-    int nTB = 0;                   // # trail bytes to follow
-    int cchWC = 0;                 // # of Unicode code points generated
-    const uint8_t* pUTF8 = reinterpret_cast<const uint8_t*>(lpSrcStr);
-    uint32_t dwUnicodeChar = 0;       // Our character with room for full surrogate char
-    BOOL bSurrogatePair = FALSE;   // Indicate we're collecting a surrogate pair
+    int nTB = 0; // # trail bytes to follow
+    int cchWC = 0; // # of Unicode code points generated
+    const uint8_t *pUTF8 = reinterpret_cast<const uint8_t *>(lpSrcStr);
+    uint32_t dwUnicodeChar = 0; // Our character with room for full surrogate char
+    BOOL bSurrogatePair = FALSE; // Indicate we're collecting a surrogate pair
     BOOL bCheckInvalidBytes = (dwFlags & MB_ERR_INVALID_CHARS);
     uint8_t UTF8;
 
@@ -129,11 +123,13 @@ int UTF8ToUnicode(
                                 // Error: Buffer too small, we didn't process this character
                                 SetLastError(ERROR_INSUFFICIENT_BUFFER);
                                 return (0);
-                            }                                
+                            }
 
-                            lpDestStr[cchWC]   = static_cast<char16_t>(((dwUnicodeChar - 0x10000) >> 10) + HIGH_SURROGATE_START);
+                            lpDestStr[cchWC] =
+                                static_cast<char16_t>(((dwUnicodeChar - 0x10000) >> 10) + HIGH_SURROGATE_START);
 
-                            lpDestStr[cchWC+1] = static_cast<char16_t>((dwUnicodeChar - 0x10000) % 0x400 + LOW_SURROGATE_START);
+                            lpDestStr[cchWC + 1] =
+                                static_cast<char16_t>((dwUnicodeChar - 0x10000) % 0x400 + LOW_SURROGATE_START);
                         }
 
                         //
@@ -146,7 +142,7 @@ int UTF8ToUnicode(
                     {
                         if (cchDest)
                         {
-                            
+
                             if (cchWC >= cchDest)
                             {
                                 // Error: Buffer too small, we didn't process this character
@@ -162,18 +158,16 @@ int UTF8ToUnicode(
                         //
                         cchWC++;
                     }
-                      
                 }
-
             }
             else
             {
-                if (bCheckInvalidBytes) 
+                if (bCheckInvalidBytes)
                 {
                     SetLastError(ERROR_NO_UNICODE_TRANSLATION);
                     return (0);
                 }
-                
+
                 // error - not expecting a trail byte. That is, there is a trailing byte without leading byte.
                 bSurrogatePair = FALSE;
             }
@@ -186,7 +180,7 @@ int UTF8ToUnicode(
             if (nTB > 0)
             {
                 // error - A leading byte before the previous sequence is completed.
-                if (bCheckInvalidBytes) 
+                if (bCheckInvalidBytes)
                 {
                     SetLastError(ERROR_NO_UNICODE_TRANSLATION);
                     return (0);
@@ -218,76 +212,75 @@ int UTF8ToUnicode(
 
                 //
                 // Check for non-shortest form.
-                // 
+                //
                 switch (nTB)
                 {
-                    case 1:
+                case 1:
+                    nTB = 0;
+                    break;
+                case 2:
+                    // Make sure that bit 8 ~ bit 11 is not all zero.
+                    // 110XXXXx 10xxxxxx
+                    if ((*pUTF8 & 0x1e) == 0)
+                    {
                         nTB = 0;
-                        break;
-                    case 2:
-                        // Make sure that bit 8 ~ bit 11 is not all zero.
-                        // 110XXXXx 10xxxxxx
-                        if ((*pUTF8 & 0x1e) == 0)
+                    }
+                    break;
+                case 3:
+                    // Look ahead to check for non-shortest form.
+                    // 1110XXXX 10Xxxxxx 10xxxxxx
+                    if (cchSrc >= 2)
+                    {
+                        if (((*pUTF8 & 0x0f) == 0) && (*(pUTF8 + 1) & 0x20) == 0)
                         {
                             nTB = 0;
                         }
-                        break;
-                    case 3:
+                    }
+                    break;
+                case 4:
+                    //
+                    // This is a surrogate unicode pair
+                    //
+                    if (cchSrc >= 3)
+                    {
+                        uint16_t word = (static_cast<uint16_t>(*pUTF8) << 8) | *(pUTF8 + 1);
                         // Look ahead to check for non-shortest form.
-                        // 1110XXXX 10Xxxxxx 10xxxxxx
-                        if (cchSrc >= 2)
+                        // 11110XXX 10XXxxxx 10xxxxxx 10xxxxxx
+                        // Check if the 5 X bits are all zero.
+                        // 0x0730 == 00000111 00110000
+                        if ((word & 0x0730) == 0 ||
+                            // If the 21st bit is 1, we have extra work
+                            ((word & 0x0400) == 0x0400 &&
+                             // The 21st bit is 1.
+                             // Make sure that the resulting Unicode is within the valid surrogate range.
+                             // The 4 byte code sequence can hold up to 21 bits, and the maximum valid code point range
+                             // that Unicode (with surrogate) could represent are from U+000000 ~ U+10FFFF.
+                             // Therefore, if the 21 bit (the most significant bit) is 1, we should verify that the 17 ~
+                             // 20 bit are all zero. I.e., in 11110XXX 10XXxxxx 10xxxxxx 10xxxxxx,
+                             // XXXXX can only be 10000.
+                             // 0x0330 = 0000 0011 0011 0000
+                             (word & 0x0330) != 0))
                         {
-                            if (((*pUTF8 & 0x0f) == 0) && (*(pUTF8 + 1) & 0x20) == 0)
-                            {
-                                nTB = 0;
-                            }
+                            // Not shortest form
+                            nTB = 0;
                         }
-                        break;
-                    case 4:                    
-                        //
-                        // This is a surrogate unicode pair
-                        //
-                        if (cchSrc >= 3)
+                        else
                         {
-                            uint16_t word = (static_cast<uint16_t>(*pUTF8) << 8) | *(pUTF8 + 1);
-                            // Look ahead to check for non-shortest form.
-                            // 11110XXX 10XXxxxx 10xxxxxx 10xxxxxx                        
-                            // Check if the 5 X bits are all zero.
-                            // 0x0730 == 00000111 00110000
-                            if ( (word & 0x0730) == 0 ||
-                                  // If the 21st bit is 1, we have extra work
-                                  ( (word & 0x0400) == 0x0400 &&
-                                     // The 21st bit is 1.
-                                     // Make sure that the resulting Unicode is within the valid surrogate range.
-                                     // The 4 byte code sequence can hold up to 21 bits, and the maximum valid code point range
-                                     // that Unicode (with surrogate) could represent are from U+000000 ~ U+10FFFF.
-                                     // Therefore, if the 21 bit (the most significant bit) is 1, we should verify that the 17 ~ 20
-                                     // bit are all zero.
-                                     // I.e., in 11110XXX 10XXxxxx 10xxxxxx 10xxxxxx,
-                                     // XXXXX can only be 10000.    
-                                     // 0x0330 = 0000 0011 0011 0000
-                                    (word & 0x0330) != 0 ) )
-                            {
-                                // Not shortest form
-                                nTB = 0;
-                            }                              
-                            else
-                            { 
-                                // A real surrogate pair
-                                bSurrogatePair = TRUE;
-                            }
-                        }                        
-                        break;
-                    default:                    
-                        // 
-                        // If the bits is greater than 4, this is an invalid
-                        // UTF8 lead byte.
-                        //
-                        nTB = 0;
-                        break;
+                            // A real surrogate pair
+                            bSurrogatePair = TRUE;
+                        }
+                    }
+                    break;
+                default:
+                    //
+                    // If the bits is greater than 4, this is an invalid
+                    // UTF8 lead byte.
+                    //
+                    nTB = 0;
+                    break;
                 }
 
-                if (nTB != 0) 
+                if (nTB != 0)
                 {
                     //
                     //  Store the value from the first byte and decrement
@@ -295,9 +288,10 @@ int UTF8ToUnicode(
                     //
                     dwUnicodeChar = UTF8;
                     nTB--;
-                } else 
+                }
+                else
                 {
-                    if (bCheckInvalidBytes) 
+                    if (bCheckInvalidBytes)
                     {
                         SetLastError(ERROR_NO_UNICODE_TRANSLATION);
                         return (0);
@@ -308,7 +302,7 @@ int UTF8ToUnicode(
         pUTF8++;
     }
 
-    if ((bCheckInvalidBytes && nTB != 0) || (cchWC == 0)) 
+    if ((bCheckInvalidBytes && nTB != 0) || (cchWC == 0))
     {
         // About (cchWC == 0):
         // Because we now throw away non-shortest form, it is possible that we generate 0 chars.
@@ -332,17 +326,13 @@ int UTF8ToUnicode(
 //
 ////////////////////////////////////////////////////////////////////////////
 
-int UnicodeToUTF8(
-    const char16_t* lpSrcStr,
-    int cchSrc,
-    char* lpDestStr,
-    int cchDest)
+int UnicodeToUTF8(const char16_t *lpSrcStr, int cchSrc, char *lpDestStr, int cchDest)
 {
-    const char16_t* lpWC = lpSrcStr;
-    int     cchU8 = 0;                // # of UTF8 chars generated
-    uint32_t   dwSurrogateChar;
-    char16_t   wchHighSurrogate = 0;
-    BOOL    bHandled;
+    const char16_t *lpWC = lpSrcStr;
+    int cchU8 = 0; // # of UTF8 chars generated
+    uint32_t dwSurrogateChar;
+    char16_t wchHighSurrogate = 0;
+    BOOL bHandled;
 
 
     while ((cchSrc--) && ((cchDest == 0) || (cchU8 < cchDest)))
@@ -363,8 +353,8 @@ int UnicodeToUTF8(
                     if ((cchU8 + 2) < cchDest)
                     {
                         lpDestStr[cchU8++] = UTF8_1ST_OF_3 | HIGHER_6_BIT(wchHighSurrogate);
-                        lpDestStr[cchU8++] = UTF8_TRAIL    | MIDDLE_6_BIT(wchHighSurrogate);
-                        lpDestStr[cchU8++] = UTF8_TRAIL    | LOWER_6_BIT(wchHighSurrogate);
+                        lpDestStr[cchU8++] = UTF8_TRAIL | MIDDLE_6_BIT(wchHighSurrogate);
+                        lpDestStr[cchU8++] = UTF8_TRAIL | LOWER_6_BIT(wchHighSurrogate);
                     }
                     else
                     {
@@ -386,61 +376,63 @@ int UnicodeToUTF8(
         {
             if ((*lpWC >= LOW_SURROGATE_START) && (*lpWC <= LOW_SURROGATE_END))
             {
-                 // wheee, valid surrogate pairs
+                // wheee, valid surrogate pairs
 
-                 if (cchDest)
-                 {
-                     if ((cchU8 + 3) < cchDest)
-                     {
-                         dwSurrogateChar = (((wchHighSurrogate-0xD800) << 10) + (*lpWC - 0xDC00) + 0x10000);
+                if (cchDest)
+                {
+                    if ((cchU8 + 3) < cchDest)
+                    {
+                        dwSurrogateChar = (((wchHighSurrogate - 0xD800) << 10) + (*lpWC - 0xDC00) + 0x10000);
 
-                         lpDestStr[cchU8++] = (UTF8_1ST_OF_4 |
-                                               static_cast<unsigned char>(dwSurrogateChar >> 18));           // 3 bits from 1st byte
+                        lpDestStr[cchU8++] =
+                            (UTF8_1ST_OF_4 | static_cast<unsigned char>(dwSurrogateChar >> 18)); // 3 bits from 1st byte
 
-                         lpDestStr[cchU8++] =  (UTF8_TRAIL |
-                                                static_cast<unsigned char>((dwSurrogateChar >> 12) & 0x3f)); // 6 bits from 2nd byte
+                        lpDestStr[cchU8++] =
+                            (UTF8_TRAIL |
+                             static_cast<unsigned char>((dwSurrogateChar >> 12) & 0x3f)); // 6 bits from 2nd byte
 
-                         lpDestStr[cchU8++] = (UTF8_TRAIL |
-                                               static_cast<unsigned char>((dwSurrogateChar >> 6) & 0x3f));   // 6 bits from 3rd byte
+                        lpDestStr[cchU8++] =
+                            (UTF8_TRAIL |
+                             static_cast<unsigned char>((dwSurrogateChar >> 6) & 0x3f)); // 6 bits from 3rd byte
 
-                         lpDestStr[cchU8++] = (UTF8_TRAIL |
-                                               static_cast<unsigned char>(0x3f & dwSurrogateChar));          // 6 bits from 4th byte
-                     }
-                     else
-                     {
+                        lpDestStr[cchU8++] =
+                            (UTF8_TRAIL | static_cast<unsigned char>(0x3f & dwSurrogateChar)); // 6 bits from 4th byte
+                    }
+                    else
+                    {
                         // not enough buffer
                         cchSrc++;
                         break;
-                     }
-                 }
-                 else
-                 {
-                     // we already counted 3 previously (in high surrogate)
-                     cchU8 ++;
-                 }
+                    }
+                }
+                else
+                {
+                    // we already counted 3 previously (in high surrogate)
+                    cchU8++;
+                }
 
-                 bHandled = TRUE;
+                bHandled = TRUE;
             }
             else
             {
-                 // Bad Surrogate pair : ERROR
-                 // Just process wchHighSurrogate , and the code below will
-                 // process the current code point
-                 if (cchDest)
-                 {
-                     if ((cchU8 + 2) < cchDest)
-                     {
+                // Bad Surrogate pair : ERROR
+                // Just process wchHighSurrogate , and the code below will
+                // process the current code point
+                if (cchDest)
+                {
+                    if ((cchU8 + 2) < cchDest)
+                    {
                         lpDestStr[cchU8++] = UTF8_1ST_OF_3 | HIGHER_6_BIT(wchHighSurrogate);
-                        lpDestStr[cchU8++] = UTF8_TRAIL    | MIDDLE_6_BIT(wchHighSurrogate);
-                        lpDestStr[cchU8++] = UTF8_TRAIL    | LOWER_6_BIT(wchHighSurrogate);
-                     }
-                     else
-                     {
+                        lpDestStr[cchU8++] = UTF8_TRAIL | MIDDLE_6_BIT(wchHighSurrogate);
+                        lpDestStr[cchU8++] = UTF8_TRAIL | LOWER_6_BIT(wchHighSurrogate);
+                    }
+                    else
+                    {
                         // not enough buffer
                         cchSrc++;
                         break;
-                     }
-                 }
+                    }
+                }
             }
 
             wchHighSurrogate = 0;
@@ -455,11 +447,11 @@ int UnicodeToUTF8(
                 //
                 if (cchDest)
                 {
-                    if (cchU8 < cchDest) 
+                    if (cchU8 < cchDest)
                     {
                         lpDestStr[cchU8] = static_cast<char>(*lpWC);
-                    } 
-                    else 
+                    }
+                    else
                     {
                         //
                         //  Error - buffer too small.
@@ -484,7 +476,7 @@ int UnicodeToUTF8(
                         //  Use lower 6 bits in second byte.
                         //
                         lpDestStr[cchU8++] = UTF8_1ST_OF_2 | (*lpWC >> 6);
-                        lpDestStr[cchU8++] = UTF8_TRAIL    | LOWER_6_BIT(*lpWC);
+                        lpDestStr[cchU8++] = UTF8_TRAIL | LOWER_6_BIT(*lpWC);
                     }
                     else
                     {
@@ -515,8 +507,8 @@ int UnicodeToUTF8(
                         //  Use lower  6 bits in third byte.
                         //
                         lpDestStr[cchU8++] = UTF8_1ST_OF_3 | HIGHER_6_BIT(*lpWC);
-                        lpDestStr[cchU8++] = UTF8_TRAIL    | MIDDLE_6_BIT(*lpWC);
-                        lpDestStr[cchU8++] = UTF8_TRAIL    | LOWER_6_BIT(*lpWC);
+                        lpDestStr[cchU8++] = UTF8_TRAIL | MIDDLE_6_BIT(*lpWC);
+                        lpDestStr[cchU8++] = UTF8_TRAIL | LOWER_6_BIT(*lpWC);
                     }
                     else
                     {
@@ -548,8 +540,8 @@ int UnicodeToUTF8(
             if ((cchU8 + 2) < cchDest)
             {
                 lpDestStr[cchU8++] = UTF8_1ST_OF_3 | HIGHER_6_BIT(wchHighSurrogate);
-                lpDestStr[cchU8++] = UTF8_TRAIL    | MIDDLE_6_BIT(wchHighSurrogate);
-                lpDestStr[cchU8++] = UTF8_TRAIL    | LOWER_6_BIT(wchHighSurrogate);
+                lpDestStr[cchU8++] = UTF8_TRAIL | MIDDLE_6_BIT(wchHighSurrogate);
+                lpDestStr[cchU8++] = UTF8_TRAIL | LOWER_6_BIT(wchHighSurrogate);
             }
             else
             {
