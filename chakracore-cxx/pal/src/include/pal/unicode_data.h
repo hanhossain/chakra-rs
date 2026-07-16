@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -25,18 +25,17 @@ Abstract:
 #include "pal/palinternal.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 #if !defined(__APPLE__)
 
 typedef struct
 {
-  char16_t nUnicodeValue;
-  uint16_t  C1_TYPE_FLAGS;
-  char16_t nOpposingCase;             /* 0 if no opposing case. */
-  uint16_t  rangeValue;
+    char16_t nUnicodeValue;
+    uint16_t C1_TYPE_FLAGS;
+    char16_t nOpposingCase; /* 0 if no opposing case. */
+    uint16_t rangeValue;
 } UnicodeDataRec;
 
 /* Global variables. */
@@ -61,10 +60,10 @@ Return value:
 --*/
 BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec);
 
-#endif  /* !defined(__APPLE__) */
+#endif /* !defined(__APPLE__) */
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
 
-#endif  /* _UNICODE_DATA_H_ */
+#endif /* _UNICODE_DATA_H_ */

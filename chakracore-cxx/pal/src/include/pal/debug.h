@@ -22,9 +22,10 @@ Abstract:
 #ifndef _PAL_DEBUG_H_
 #define _PAL_DEBUG_H_
 
+#include "pal_mstypes.h"
+
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 /*++
@@ -35,8 +36,7 @@ Function :
 
 (no parameters, no return value)
 --*/
-extern "C" void
-DBG_DebugBreak();
+extern "C" void DBG_DebugBreak();
 
 /*++
 Function:
@@ -45,8 +45,7 @@ Function:
   Returns true if the address is in DBG_DebugBreak.
 
 --*/
-BOOL
-IsInDebugBreak(void *addr);
+BOOL IsInDebugBreak(void *addr);
 
 /*++
 Function :
@@ -62,13 +61,10 @@ Return value :
     TRUE on success, FALSE on failure
 
 --*/
-BOOL
-DBG_FlushInstructionCache(
-                       const void * lpBaseAddress,
-                       size_t dwSize);
+BOOL DBG_FlushInstructionCache(const void *lpBaseAddress, size_t dwSize);
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
 
-#endif //PAL_DEBUG_H_
+#endif // PAL_DEBUG_H_

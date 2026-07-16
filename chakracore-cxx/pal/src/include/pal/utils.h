@@ -25,9 +25,9 @@ Abstract:
 #define _PAL_UTILS_H_
 
 #include <cassert>
-#include <unistd.h>
-#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 // Alignment helpers (copied for PAL use from stdmacros.h)
 
@@ -36,93 +36,92 @@ inline size_t ALIGN_UP(size_t val, size_t alignment)
     // alignment must be a power of 2 for this implementation to work (need modulo otherwise)
     assert(0 == (alignment & (alignment - 1)));
     size_t result = (val + (alignment - 1)) & ~(alignment - 1);
-    assert(result >= val);      // check for overflow
+    assert(result >= val); // check for overflow
     return result;
 }
 
-inline void* ALIGN_UP(void* val, size_t alignment)
+inline void *ALIGN_UP(void *val, size_t alignment)
 {
-    return reinterpret_cast<void*>(ALIGN_UP(reinterpret_cast<size_t>(val), alignment));
+    return reinterpret_cast<void *>(ALIGN_UP(reinterpret_cast<size_t>(val), alignment));
 }
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 /*++
 Function:
   UTIL_inverse_wcspbrk
 
-  Opposite of wcspbrk : searches a string for the first character NOT in the 
+  Opposite of wcspbrk : searches a string for the first character NOT in the
   given set
 
 Parameters :
     char16_t* lpwstr :   string to search
     const char16_t* charset : list of characters to search for
-                                      
+
 Return value :
     pointer to first character of lpwstr that isn't in the set
-    NULL if all characters are in the set                                                                 
+    NULL if all characters are in the set
 --*/
-char16_t* UTIL_inverse_wcspbrk(char16_t* lpwstr, const char16_t* charset);
+char16_t *UTIL_inverse_wcspbrk(char16_t *lpwstr, const char16_t *charset);
 
 /*++
-Function : 
+Function :
     UTIL_IsReadOnlyBitsSet
-    
+
     Takes a struct stat *
     Returns true if the file is read only,
 --*/
-BOOL UTIL_IsReadOnlyBitsSet( struct stat * stat_data );
+BOOL UTIL_IsReadOnlyBitsSet(struct stat *stat_data);
 
 /*++
-Function : 
+Function :
     UTIL_IsExecuteBitsSet
-    
+
     Takes a struct stat *
     Returns true if the file is executable.
 --*/
-BOOL UTIL_IsExecuteBitsSet( struct stat * stat_data );
+BOOL UTIL_IsExecuteBitsSet(struct stat *stat_data);
 
 
 /*++
-Function : 
+Function :
     UTIL_WCToMB_Alloc
-    
+
     Converts a wide string to a multibyte string, allocating the required buffer
-    
+
 Parameters :
     const char16_t* lpWideCharStr : string to convert
     int cchWideChar : number of wide characters to convert
                       (-1 to convert a complete null-termnated string)
-    
+
 Return Value :
-    newly allocated buffer containing the converted string. Conversion is 
-    performed using CP_ACP. Buffer is allocated with malloc(), release it 
+    newly allocated buffer containing the converted string. Conversion is
+    performed using CP_ACP. Buffer is allocated with malloc(), release it
     with free().
     In case if failure, LastError will be set.
 --*/
-char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar);
+char *UTIL_WCToMB_Alloc(const char16_t *lpWideCharStr, int cchWideChar);
 
 /*++
-Function : 
+Function :
     UTIL_MBToWC_Alloc
-    
+
     Converts a multibyte string to a wide string, allocating the required buffer
-    
+
 Parameters :
     const char * lpMultiByteStr : string to convert
-    int cbMultiByte : number of bytes to convert 
+    int cbMultiByte : number of bytes to convert
                       (-1 to convert a complete null-termnated string)
-    
+
 Return Value :
-    newly allocated buffer containing the converted string. Conversion is 
-    performed using CP_ACP. Buffer is allocated with malloc(), release it 
+    newly allocated buffer containing the converted string. Conversion is
+    performed using CP_ACP. Buffer is allocated with malloc(), release it
     with free().
     In case if failure, LastError will be set.
 --*/
-char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte);
+char16_t *UTIL_MBToWC_Alloc(const char *lpMultiByteStr, int cbMultiByte);
 
 #if defined(__APPLE__)
 #include <mach/kern_return.h>
@@ -145,7 +144,7 @@ Function:
 --*/
 void UTIL_SetLastErrorFromMach(kern_return_t MachReturn);
 
-#endif //defined(__APPLE__)
+#endif // defined(__APPLE__)
 
 #ifdef __cplusplus
 }

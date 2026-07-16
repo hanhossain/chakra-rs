@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -41,7 +41,7 @@ namespace CorUnix
     struct ProcessModules
     {
         ProcessModules *Next;
-        void * BaseAddress;
+        void *BaseAddress;
         char Name[0];
     };
 
@@ -67,18 +67,10 @@ namespace CorUnix
     class CProcProcessLocalData
     {
     public:
-        CProcProcessLocalData() 
-            : 
-            dwProcessId(0), 
-            ps(PS_IDLE),
-            dwExitCode(0), 
-            lAttachCount(0),
-            pProcessModules(NULL)
-        {
-        };
+        CProcProcessLocalData() : dwProcessId(0), ps(PS_IDLE), dwExitCode(0), lAttachCount(0), pProcessModules(NULL) {};
 
         ~CProcProcessLocalData();
-        
+
         uint32_t dwProcessId;
         PROCESS_STATE ps;
         uint32_t dwExitCode;
@@ -93,17 +85,12 @@ namespace CorUnix
     };
 
     PAL_ERROR
-    InitializeProcessData(
-        void
-        );
+    InitializeProcessData(void);
 
     PAL_ERROR
-    CreateInitialProcessAndThreadObjects(
-        CPalThread *pThread
-        );
+    CreateInitialProcessAndThreadObjects(CPalThread *pThread);
 
     extern IPalObject *g_pobjProcess;
-}
+} // namespace CorUnix
 
 #endif // _PAL_PROCOBJ_HPP_
-

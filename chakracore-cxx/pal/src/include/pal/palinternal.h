@@ -169,12 +169,12 @@ function_name() to call the system's implementation
 #include <ctype.h>
 
 #define _WITH_GETLINE
+#include <fcntl.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pwd.h>
 #include <unistd.h>
-#include <fcntl.h>
 
 #ifdef __APPLE__
 
@@ -188,31 +188,30 @@ function_name() to call the system's implementation
    we'll catch any definition conflicts */
 #include <sys/socket.h>
 
-#define INFTIM  -1
+#define INFTIM -1
 
 #if (__GNUC__ >= 4)
 #define OffsetOf(TYPE, MEMBER) __builtin_offsetof(TYPE, MEMBER)
 #else
-#define OffsetOf(s, f) (int32_t)(size_t)&(((s*)0)->f)
+#define OffsetOf(s, f) (int32_t)(size_t)&(((s *)0)->f)
 #endif /* __GNUC__ version check*/
 
 #define PROCESS_PIPE_NAME_PREFIX ".dotnet-pal-processpipe"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 typedef enum _TimeConversionConstants
 {
-    tccSecondsToMillieSeconds       = 1000,         // 10^3
-    tccSecondsToMicroSeconds        = 1000000,      // 10^6
-    tccSecondsToNanoSeconds         = 1000000000,   // 10^9
-    tccMillieSecondsToMicroSeconds  = 1000,         // 10^3
-    tccMillieSecondsToNanoSeconds   = 1000000,      // 10^6
-    tccMicroSecondsToNanoSeconds    = 1000,         // 10^3
-    tccSecondsTo100NanoSeconds      = 10000000,     // 10^7
-    tccMicroSecondsTo100NanoSeconds = 10            // 10^1
+    tccSecondsToMillieSeconds = 1000, // 10^3
+    tccSecondsToMicroSeconds = 1000000, // 10^6
+    tccSecondsToNanoSeconds = 1000000000, // 10^9
+    tccMillieSecondsToMicroSeconds = 1000, // 10^3
+    tccMillieSecondsToNanoSeconds = 1000000, // 10^6
+    tccMicroSecondsToNanoSeconds = 1000, // 10^3
+    tccSecondsTo100NanoSeconds = 10000000, // 10^7
+    tccMicroSecondsTo100NanoSeconds = 10 // 10^1
 } TimeConversionConstants;
 
 #ifdef __cplusplus
@@ -222,7 +221,7 @@ typedef enum _TimeConversionConstants
 
 #define StackOverflowMessage "Process is terminated due to StackOverflowException.\n"
 
-#define MAX_LONGPATH   1024  /* max. length of full pathname */
+#define MAX_LONGPATH 1024 /* max. length of full pathname */
 
 BOOL PAL_IsDebuggerPresent();
 

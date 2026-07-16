@@ -30,18 +30,17 @@ Revision History:
 #include "pal/palinternal.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
-/* thread ID of thread that has initiated an ExitProcess (or TerminateProcess). 
-   this is to make sure only one thread cleans up the PAL, and also to prevent 
-   calls to CreateThread from succeeding once shutdown has started 
+/* thread ID of thread that has initiated an ExitProcess (or TerminateProcess).
+   this is to make sure only one thread cleans up the PAL, and also to prevent
+   calls to CreateThread from succeeding once shutdown has started
    [defined in process.c]
 */
 extern Volatile<int32_t> terminator;
 
-extern char16_t* pAppDir;
+extern char16_t *pAppDir;
 
 /*++
 Function:
@@ -70,7 +69,7 @@ Return
 Notes :
     This function takes ownership of lpwstrCmdLine, but not of lpwstrFullPath
 --*/
-BOOL  PROCCreateInitialProcess(char16_t* lpwstrCmdLine, char16_t* lpwstrFullPath);
+BOOL PROCCreateInitialProcess(char16_t *lpwstrCmdLine, char16_t *lpwstrFullPath);
 
 #if USE_SYSV_SEMAPHORES
 /*++
@@ -107,7 +106,7 @@ void PROCProcessUnlock(void);
 /*++
 Function:
   PROCCleanupProcess
-  
+
   Do all cleanup work for TerminateProcess, but don't terminate the process.
   If bTerminateUnconditionally is TRUE, we exit as quickly as possible.
 
@@ -119,7 +118,7 @@ void PROCCleanupProcess();
 /*++
 Function:
   PROCThreadFromMachPort
-  
+
   Given a Mach thread port, return the CPalThread associated with it.
 
 Return
@@ -132,5 +131,4 @@ CorUnix::CPalThread *PROCThreadFromMachPort(mach_port_t hThread);
 }
 #endif // __cplusplus
 
-#endif //PAL_PROCESS_H_
-
+#endif // PAL_PROCESS_H_

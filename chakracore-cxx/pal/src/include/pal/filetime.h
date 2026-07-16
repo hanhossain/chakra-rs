@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -25,8 +25,7 @@ Revision History:
 #define _PAL_FILETIME_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 /* Provide consistent access to nanosecond fields, if they exist. */
@@ -45,13 +44,13 @@ extern "C"
 
 #endif /* defined(__APPLE__) */
 
-FILETIME FILEUnixTimeToFileTime( time_t sec, long nsec );
-time_t FILEFileTimeToUnixTime( FILETIME FileTime, long *nsec );
+FILETIME FILEUnixTimeToFileTime(time_t sec, long nsec);
+time_t FILEFileTimeToUnixTime(FILETIME FileTime, long *nsec);
 
 #ifdef __APPLE__
 #include <CoreFoundation/CFDate.h>
 
-FILETIME FILECFAbsoluteTimeToFileTime( CFAbsoluteTime sec );
+FILETIME FILECFAbsoluteTimeToFileTime(CFAbsoluteTime sec);
 #endif // __APPLE__
 
 #ifdef __cplusplus
@@ -59,14 +58,3 @@ FILETIME FILECFAbsoluteTimeToFileTime( CFAbsoluteTime sec );
 #endif // __cplusplus
 
 #endif /* _PAL_FILE_H_ */
-
-
-
-
-
-
-
-
-
-
-

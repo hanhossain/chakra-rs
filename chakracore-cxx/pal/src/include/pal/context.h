@@ -13,12 +13,11 @@ Abstract:
 #define _PAL_CONTEXT_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
-#include <signal.h>
 #include <pthread.h>
+#include <signal.h>
 
 #if !defined(__APPLE__)
 /* A type to wrap the native context type, which is ucontext_t on some
@@ -33,120 +32,120 @@ typedef ucontext_t native_context_t;
 
 #if defined(__linux__)
 
-#define MCREG_Rbx(mc)       ((mc).gregs[REG_RBX])
-#define MCREG_Rcx(mc)       ((mc).gregs[REG_RCX])
-#define MCREG_Rdx(mc)       ((mc).gregs[REG_RDX])
-#define MCREG_Rsi(mc)       ((mc).gregs[REG_RSI])
-#define MCREG_Rdi(mc)       ((mc).gregs[REG_RDI])
-#define MCREG_Rbp(mc)       ((mc).gregs[REG_RBP])
-#define MCREG_Rax(mc)       ((mc).gregs[REG_RAX])
-#define MCREG_Rip(mc)       ((mc).gregs[REG_RIP])
-#define MCREG_Rsp(mc)       ((mc).gregs[REG_RSP])
-#define MCREG_SegCs(mc)     (*const_cast<uint16_t*>(reinterpret_cast<const uint16_t*>(&((mc).gregs[REG_CSGSFS]))))
-#define MCREG_R8(mc)        ((mc).gregs[REG_R8])
-#define MCREG_R9(mc)        ((mc).gregs[REG_R9])
-#define MCREG_R10(mc)       ((mc).gregs[REG_R10])
-#define MCREG_R11(mc)       ((mc).gregs[REG_R11])
-#define MCREG_R12(mc)       ((mc).gregs[REG_R12])
-#define MCREG_R13(mc)       ((mc).gregs[REG_R13])
-#define MCREG_R14(mc)       ((mc).gregs[REG_R14])
-#define MCREG_R15(mc)       ((mc).gregs[REG_R15])
+#define MCREG_Rbx(mc) ((mc).gregs[REG_RBX])
+#define MCREG_Rcx(mc) ((mc).gregs[REG_RCX])
+#define MCREG_Rdx(mc) ((mc).gregs[REG_RDX])
+#define MCREG_Rsi(mc) ((mc).gregs[REG_RSI])
+#define MCREG_Rdi(mc) ((mc).gregs[REG_RDI])
+#define MCREG_Rbp(mc) ((mc).gregs[REG_RBP])
+#define MCREG_Rax(mc) ((mc).gregs[REG_RAX])
+#define MCREG_Rip(mc) ((mc).gregs[REG_RIP])
+#define MCREG_Rsp(mc) ((mc).gregs[REG_RSP])
+#define MCREG_SegCs(mc) (*const_cast<uint16_t *>(reinterpret_cast<const uint16_t *>(&((mc).gregs[REG_CSGSFS]))))
+#define MCREG_R8(mc) ((mc).gregs[REG_R8])
+#define MCREG_R9(mc) ((mc).gregs[REG_R9])
+#define MCREG_R10(mc) ((mc).gregs[REG_R10])
+#define MCREG_R11(mc) ((mc).gregs[REG_R11])
+#define MCREG_R12(mc) ((mc).gregs[REG_R12])
+#define MCREG_R13(mc) ((mc).gregs[REG_R13])
+#define MCREG_R14(mc) ((mc).gregs[REG_R14])
+#define MCREG_R15(mc) ((mc).gregs[REG_R15])
 
 #define FPREG_Fpstate(uc) ((uc)->uc_mcontext.fpregs)
-#define FPREG_Xmm(uc, index) *reinterpret_cast<M128A*>(&(FPREG_Fpstate(uc)->_xmm[index]))
+#define FPREG_Xmm(uc, index) *reinterpret_cast<M128A *>(&(FPREG_Fpstate(uc)->_xmm[index]))
 
-#define FPREG_St(uc, index) *reinterpret_cast<M128A*>(&(FPREG_Fpstate(uc)->_st[index]))
+#define FPREG_St(uc, index) *reinterpret_cast<M128A *>(&(FPREG_Fpstate(uc)->_st[index]))
 
 #define FPREG_ControlWord(uc) (FPREG_Fpstate(uc)->cwd)
 #define FPREG_StatusWord(uc) (FPREG_Fpstate(uc)->swd)
 #define FPREG_TagWord(uc) (FPREG_Fpstate(uc)->ftw)
-#define FPREG_ErrorOffset(uc) *reinterpret_cast<uint32_t*>(&(FPREG_Fpstate(uc)->rip))
-#define FPREG_ErrorSelector(uc) *((reinterpret_cast<uint16_t*>(&(FPREG_Fpstate(uc)->rip))) + 2)
-#define FPREG_DataOffset(uc) *reinterpret_cast<uint32_t*>(&(FPREG_Fpstate(uc)->rdp))
-#define FPREG_DataSelector(uc) *((reinterpret_cast<uint16_t*>(&(FPREG_Fpstate(uc)->rdp))) + 2)
+#define FPREG_ErrorOffset(uc) *reinterpret_cast<uint32_t *>(&(FPREG_Fpstate(uc)->rip))
+#define FPREG_ErrorSelector(uc) *((reinterpret_cast<uint16_t *>(&(FPREG_Fpstate(uc)->rip))) + 2)
+#define FPREG_DataOffset(uc) *reinterpret_cast<uint32_t *>(&(FPREG_Fpstate(uc)->rdp))
+#define FPREG_DataSelector(uc) *((reinterpret_cast<uint16_t *>(&(FPREG_Fpstate(uc)->rdp))) + 2)
 #define FPREG_MxCsr(uc) (FPREG_Fpstate(uc)->mxcsr)
 #define FPREG_MxCsr_Mask(uc) (FPREG_Fpstate(uc)->mxcr_mask)
 
 /////////////////////
 
 
-#define MCREG_EFlags(mc)    ((mc).gregs[REG_EFL])
+#define MCREG_EFlags(mc) ((mc).gregs[REG_EFL])
 
 #else // defined(__linux__)
 
 #if defined(_ARM64_)
-#define MCREG_X0(mc)      ((mc).regs[0])
-#define MCREG_X1(mc)      ((mc).regs[1])
-#define MCREG_X2(mc)      ((mc).regs[2])
-#define MCREG_X3(mc)      ((mc).regs[3])
-#define MCREG_X4(mc)      ((mc).regs[4])
-#define MCREG_X5(mc)      ((mc).regs[5])
-#define MCREG_X6(mc)      ((mc).regs[6])
-#define MCREG_X7(mc)      ((mc).regs[7])
-#define MCREG_X8(mc)      ((mc).regs[8])
-#define MCREG_X9(mc)      ((mc).regs[9])
-#define MCREG_X10(mc)     ((mc).regs[10])
-#define MCREG_X11(mc)     ((mc).regs[11])
-#define MCREG_X12(mc)     ((mc).regs[12])
-#define MCREG_X13(mc)     ((mc).regs[13])
-#define MCREG_X14(mc)     ((mc).regs[14])
-#define MCREG_X15(mc)     ((mc).regs[15])
-#define MCREG_X16(mc)     ((mc).regs[16])
-#define MCREG_X17(mc)     ((mc).regs[17])
-#define MCREG_X18(mc)     ((mc).regs[18])
-#define MCREG_X19(mc)     ((mc).regs[19])
-#define MCREG_X20(mc)     ((mc).regs[20])
-#define MCREG_X21(mc)     ((mc).regs[21])
-#define MCREG_X22(mc)     ((mc).regs[22])
-#define MCREG_X23(mc)     ((mc).regs[23])
-#define MCREG_X24(mc)     ((mc).regs[24])
-#define MCREG_X25(mc)     ((mc).regs[25])
-#define MCREG_X26(mc)     ((mc).regs[26])
-#define MCREG_X27(mc)     ((mc).regs[27])
-#define MCREG_X28(mc)     ((mc).regs[28])
-#define MCREG_Fp(mc)      ((mc).regs[29])
-#define MCREG_Lr(mc)      ((mc).regs[30])
+#define MCREG_X0(mc) ((mc).regs[0])
+#define MCREG_X1(mc) ((mc).regs[1])
+#define MCREG_X2(mc) ((mc).regs[2])
+#define MCREG_X3(mc) ((mc).regs[3])
+#define MCREG_X4(mc) ((mc).regs[4])
+#define MCREG_X5(mc) ((mc).regs[5])
+#define MCREG_X6(mc) ((mc).regs[6])
+#define MCREG_X7(mc) ((mc).regs[7])
+#define MCREG_X8(mc) ((mc).regs[8])
+#define MCREG_X9(mc) ((mc).regs[9])
+#define MCREG_X10(mc) ((mc).regs[10])
+#define MCREG_X11(mc) ((mc).regs[11])
+#define MCREG_X12(mc) ((mc).regs[12])
+#define MCREG_X13(mc) ((mc).regs[13])
+#define MCREG_X14(mc) ((mc).regs[14])
+#define MCREG_X15(mc) ((mc).regs[15])
+#define MCREG_X16(mc) ((mc).regs[16])
+#define MCREG_X17(mc) ((mc).regs[17])
+#define MCREG_X18(mc) ((mc).regs[18])
+#define MCREG_X19(mc) ((mc).regs[19])
+#define MCREG_X20(mc) ((mc).regs[20])
+#define MCREG_X21(mc) ((mc).regs[21])
+#define MCREG_X22(mc) ((mc).regs[22])
+#define MCREG_X23(mc) ((mc).regs[23])
+#define MCREG_X24(mc) ((mc).regs[24])
+#define MCREG_X25(mc) ((mc).regs[25])
+#define MCREG_X26(mc) ((mc).regs[26])
+#define MCREG_X27(mc) ((mc).regs[27])
+#define MCREG_X28(mc) ((mc).regs[28])
+#define MCREG_Fp(mc) ((mc).regs[29])
+#define MCREG_Lr(mc) ((mc).regs[30])
 
-#define MCREG_Sp(mc)      ((mc).sp)
-#define MCREG_Pc(mc)      ((mc).pc)
-#define MCREG_PState(mc)  ((mc).pstate)
-#define MCREG_Cpsr(mc)    ((mc).cpsr)
+#define MCREG_Sp(mc) ((mc).sp)
+#define MCREG_Pc(mc) ((mc).pc)
+#define MCREG_PState(mc) ((mc).pstate)
+#define MCREG_Cpsr(mc) ((mc).cpsr)
 #else
-    // For FreeBSD, as found in x86/ucontext.h
-#define MCREG_Rbp(mc)	    ((mc).mc_rbp)
-#define MCREG_Rip(mc)	    ((mc).mc_rip)
-#define MCREG_Rsp(mc)	    ((mc).mc_rsp)
-#define MCREG_Rsi(mc)       ((mc).mc_rsi)
-#define MCREG_Rdi(mc)	    ((mc).mc_rdi)
-#define MCREG_Rbx(mc)	    ((mc).mc_rbx)
-#define MCREG_Rdx(mc)	    ((mc).mc_rdx)
-#define MCREG_Rcx(mc)	    ((mc).mc_rcx)
-#define MCREG_Rax(mc)	    ((mc).mc_rax)
-#define MCREG_R8(mc)	    ((mc).mc_r8)
-#define MCREG_R9(mc)	    ((mc).mc_r9)
-#define MCREG_R10(mc)	    ((mc).mc_r10)
-#define MCREG_R11(mc)	    ((mc).mc_r11)
-#define MCREG_R12(mc)	    ((mc).mc_r12)
-#define MCREG_R13(mc)	    ((mc).mc_r13)
-#define MCREG_R14(mc)	    ((mc).mc_r14)
-#define MCREG_R15(mc)	    ((mc).mc_r15)
-#define MCREG_EFlags(mc)    ((mc).mc_rflags)
-#define MCREG_SegCs(mc)     ((mc).mc_cs)
+// For FreeBSD, as found in x86/ucontext.h
+#define MCREG_Rbp(mc) ((mc).mc_rbp)
+#define MCREG_Rip(mc) ((mc).mc_rip)
+#define MCREG_Rsp(mc) ((mc).mc_rsp)
+#define MCREG_Rsi(mc) ((mc).mc_rsi)
+#define MCREG_Rdi(mc) ((mc).mc_rdi)
+#define MCREG_Rbx(mc) ((mc).mc_rbx)
+#define MCREG_Rdx(mc) ((mc).mc_rdx)
+#define MCREG_Rcx(mc) ((mc).mc_rcx)
+#define MCREG_Rax(mc) ((mc).mc_rax)
+#define MCREG_R8(mc) ((mc).mc_r8)
+#define MCREG_R9(mc) ((mc).mc_r9)
+#define MCREG_R10(mc) ((mc).mc_r10)
+#define MCREG_R11(mc) ((mc).mc_r11)
+#define MCREG_R12(mc) ((mc).mc_r12)
+#define MCREG_R13(mc) ((mc).mc_r13)
+#define MCREG_R14(mc) ((mc).mc_r14)
+#define MCREG_R15(mc) ((mc).mc_r15)
+#define MCREG_EFlags(mc) ((mc).mc_rflags)
+#define MCREG_SegCs(mc) ((mc).mc_cs)
 
-  // from x86/fpu.h: struct __envxmm64
-#define FPSTATE(uc)             ((savefpu*)((uc)->uc_mcontext.mc_fpstate))
-#define FPREG_ControlWord(uc)   FPSTATE(uc)->sv_env.en_cw
-#define FPREG_StatusWord(uc)    FPSTATE(uc)->sv_env.en_sw
-#define FPREG_TagWord(uc)       FPSTATE(uc)->sv_env.en_tw
-#define FPREG_MxCsr(uc)         FPSTATE(uc)->sv_env.en_mxcsr
-#define FPREG_MxCsr_Mask(uc)    FPSTATE(uc)->sv_env.en_mxcsr_mask
-#define FPREG_ErrorOffset(uc)   *(uint32_t*) &(FPSTATE(uc)->sv_env.en_rip)
-#define FPREG_ErrorSelector(uc) *((uint16_t*) &(FPSTATE(uc)->sv_env.en_rip) + 2)
-#define FPREG_DataOffset(uc)    *(uint32_t*) &(FPSTATE(uc)->sv_env.en_rdp)
-#define FPREG_DataSelector(uc)  *((uint16_t*) &(FPSTATE(uc)->sv_env.en_rdp) + 2)
+// from x86/fpu.h: struct __envxmm64
+#define FPSTATE(uc) ((savefpu *)((uc)->uc_mcontext.mc_fpstate))
+#define FPREG_ControlWord(uc) FPSTATE(uc)->sv_env.en_cw
+#define FPREG_StatusWord(uc) FPSTATE(uc)->sv_env.en_sw
+#define FPREG_TagWord(uc) FPSTATE(uc)->sv_env.en_tw
+#define FPREG_MxCsr(uc) FPSTATE(uc)->sv_env.en_mxcsr
+#define FPREG_MxCsr_Mask(uc) FPSTATE(uc)->sv_env.en_mxcsr_mask
+#define FPREG_ErrorOffset(uc) *(uint32_t *)&(FPSTATE(uc)->sv_env.en_rip)
+#define FPREG_ErrorSelector(uc) *((uint16_t *)&(FPSTATE(uc)->sv_env.en_rip) + 2)
+#define FPREG_DataOffset(uc) *(uint32_t *)&(FPSTATE(uc)->sv_env.en_rdp)
+#define FPREG_DataSelector(uc) *((uint16_t *)&(FPSTATE(uc)->sv_env.en_rdp) + 2)
 
-#define FPREG_Xmm(uc, index)    *(M128A*) &(FPSTATE(uc)->sv_xmm[index])
-#define FPREG_St(uc, index)     *(M128A*) &(FPSTATE(uc)->sv_fp[index].fp_acc)
+#define FPREG_Xmm(uc, index) *(M128A *)&(FPSTATE(uc)->sv_xmm[index])
+#define FPREG_St(uc, index) *(M128A *)&(FPSTATE(uc)->sv_fp[index].fp_acc)
 #endif
 
 #endif // defined(__linux__)
@@ -154,32 +153,30 @@ typedef ucontext_t native_context_t;
 
 #if defined(__linux__)
 
-#define PTREG_Rbx(ptreg)    ((ptreg).rbx)
-#define PTREG_Rcx(ptreg)    ((ptreg).rcx)
-#define PTREG_Rdx(ptreg)    ((ptreg).rdx)
-#define PTREG_Rsi(ptreg)    ((ptreg).rsi)
-#define PTREG_Rdi(ptreg)    ((ptreg).rdi)
-#define PTREG_Rbp(ptreg)    ((ptreg).rbp)
-#define PTREG_Rax(ptreg)    ((ptreg).rax)
-#define PTREG_Rip(ptreg)    ((ptreg).rip)
-#define PTREG_SegCs(ptreg)  ((ptreg).cs)
-#define PTREG_SegSs(ptreg)  ((ptreg).ss)
-#define PTREG_Rsp(ptreg)    ((ptreg).rsp)
-#define PTREG_R8(ptreg)     ((ptreg).r8)
-#define PTREG_R9(ptreg)     ((ptreg).r9)
-#define PTREG_R10(ptreg)    ((ptreg).r10)
-#define PTREG_R11(ptreg)    ((ptreg).r11)
-#define PTREG_R12(ptreg)    ((ptreg).r12)
-#define PTREG_R13(ptreg)    ((ptreg).r13)
-#define PTREG_R14(ptreg)    ((ptreg).r14)
-#define PTREG_R15(ptreg)    ((ptreg).r15)
-
+#define PTREG_Rbx(ptreg) ((ptreg).rbx)
+#define PTREG_Rcx(ptreg) ((ptreg).rcx)
+#define PTREG_Rdx(ptreg) ((ptreg).rdx)
+#define PTREG_Rsi(ptreg) ((ptreg).rsi)
+#define PTREG_Rdi(ptreg) ((ptreg).rdi)
+#define PTREG_Rbp(ptreg) ((ptreg).rbp)
+#define PTREG_Rax(ptreg) ((ptreg).rax)
+#define PTREG_Rip(ptreg) ((ptreg).rip)
+#define PTREG_SegCs(ptreg) ((ptreg).cs)
+#define PTREG_SegSs(ptreg) ((ptreg).ss)
+#define PTREG_Rsp(ptreg) ((ptreg).rsp)
+#define PTREG_R8(ptreg) ((ptreg).r8)
+#define PTREG_R9(ptreg) ((ptreg).r9)
+#define PTREG_R10(ptreg) ((ptreg).r10)
+#define PTREG_R11(ptreg) ((ptreg).r11)
+#define PTREG_R12(ptreg) ((ptreg).r12)
+#define PTREG_R13(ptreg) ((ptreg).r13)
+#define PTREG_R14(ptreg) ((ptreg).r14)
+#define PTREG_R15(ptreg) ((ptreg).r15)
 
 
 #define PTREG_EFlags(ptreg) ((ptreg).eflags)
 
 #endif // defined(__linux__)
-
 
 
 inline static unsigned long CONTEXTGetPC(LPCONTEXT pContext)
@@ -213,10 +210,7 @@ Function :
 Parameters :
     LPCONTEXT lpContext : new context
 --*/
-void
-CONTEXT_CaptureContext(
-    LPCONTEXT lpContext
-    );
+void CONTEXT_CaptureContext(LPCONTEXT lpContext);
 
 /*++
 Function :
@@ -248,31 +242,22 @@ Function:
   CONTEXT_GetThreadContextFromPort
   Helper for GetThreadContext that uses a mach_port
 --*/
-kern_return_t
-CONTEXT_GetThreadContextFromPort(
-    mach_port_t Port,
-    LPCONTEXT lpContext);
+kern_return_t CONTEXT_GetThreadContextFromPort(mach_port_t Port, LPCONTEXT lpContext);
 
 /*++
 Function:
   SetThreadContextOnPort
   Helper for CONTEXT_SetThreadContext
 --*/
-kern_return_t
-CONTEXT_SetThreadContextOnPort(
-   mach_port_t Port,
-    const CONTEXT *lpContext);
+kern_return_t CONTEXT_SetThreadContextOnPort(mach_port_t Port, const CONTEXT *lpContext);
 
 /*++
 Function:
   GetThreadContextFromThreadState
   Helper for mach exception support
 --*/
-void
-CONTEXT_GetThreadContextFromThreadState(
-    thread_state_flavor_t stateFlavor,
-    thread_state_t threadState,
-    LPCONTEXT lpContext);
+void CONTEXT_GetThreadContextFromThreadState(thread_state_flavor_t stateFlavor, thread_state_t threadState,
+                                             LPCONTEXT lpContext);
 
 #else // defined(__APPLE__)
 /*++
@@ -303,8 +288,7 @@ Parameters :
 Return value :
     None
 --*/
-void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContext,
-                              uint32_t contextFlags);
+void CONTEXTFromNativeContext(const native_context_t *native, LPCONTEXT lpContext, uint32_t contextFlags);
 
 /*++
 Function :
@@ -316,7 +300,7 @@ Parameters :
 Return value :
     The program counter from the native context.
 --*/
-void * GetNativeContextPC(const native_context_t *context);
+void *GetNativeContextPC(const native_context_t *context);
 
 /*++
 Function :
@@ -332,7 +316,7 @@ Return value :
 --*/
 uint32_t CONTEXTGetExceptionCodeForSignal(const siginfo_t *siginfo);
 
-#endif  // defined(__APPLE__) else
+#endif // defined(__APPLE__) else
 
 #ifdef __cplusplus
 }

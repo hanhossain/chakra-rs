@@ -51,18 +51,13 @@ namespace CorUnix
     {
     private:
         std::u16string pwsz_;
+
     public:
         CPalString() = default;
 
-        CPalString(const char16_t *pwsz)
-            : pwsz_(pwsz)
-        {
-        }
+        CPalString(const char16_t *pwsz) : pwsz_(pwsz) {}
 
-        void SetString(const char16_t *pwsz)
-        {
-            pwsz_ = pwsz;
-        }
+        void SetString(const char16_t *pwsz) { pwsz_ = pwsz; }
 
         void SetStringWithLength(const char16_t *pwsz, const uint32_t dwStringLength)
         {
@@ -71,15 +66,9 @@ namespace CorUnix
 
         PAL_ERROR CopyString(CPalString *psSource);
 
-        [[nodiscard]] const std::u16string& GetString() const
-        {
-            return pwsz_;
-        }
+        [[nodiscard]] const std::u16string &GetString() const { return pwsz_; }
 
-        [[nodiscard]] uint32_t GetStringLength() const
-        {
-            return pwsz_.size();
-        }
+        [[nodiscard]] uint32_t GetStringLength() const { return pwsz_.size(); }
     };
 
     //
@@ -103,12 +92,11 @@ namespace CorUnix
     // in this situation.
     //
 
-    typedef void (*OBJECTCLEANUPROUTINE) (
-        CPalThread *,   // pThread
-        IPalObject *,   // pObjectToCleanup
-        bool,           // fShutdown
-        bool            // fCleanupSharedState
-        );
+    typedef void (*OBJECTCLEANUPROUTINE)(CPalThread *, // pThread
+                                         IPalObject *, // pObjectToCleanup
+                                         bool, // fShutdown
+                                         bool // fCleanupSharedState
+    );
 
     //
     // Signature of the initialization routine that is to be called
@@ -119,10 +107,9 @@ namespace CorUnix
     // called on holds an implicit read lock on the shared data.
     //
 
-    typedef PAL_ERROR (*OBJECTINITROUTINE) (
-        void *,         // pImmutableData
-        void *          // pProcessLocalData
-        );
+    typedef PAL_ERROR (*OBJECTINITROUTINE)(void *, // pImmutableData
+                                           void * // pProcessLocalData
+    );
 
     enum PalObjectTypeId
     {
@@ -136,7 +123,7 @@ namespace CorUnix
         otiProcess,
         otiThread,
         otiIOCompletionPort,
-        ObjectTypeIdCount    // This entry must come last in the enumeration
+        ObjectTypeIdCount // This entry must come last in the enumeration
     };
 
     //
@@ -200,7 +187,6 @@ namespace CorUnix
     class CObjectType
     {
     public:
-
         enum SecuritySupport
         {
             SecuritySupported,
@@ -253,13 +239,12 @@ namespace CorUnix
         };
 
     private:
-
         //
         // Array that maps object type IDs to the corresponding
         // CObjectType instance
         //
 
-        static CObjectType* s_rgotIdMapping[];
+        static CObjectType *s_rgotIdMapping[];
 
         PalObjectTypeId m_eTypeId;
         OBJECTCLEANUPROUTINE m_pCleanupRoutine;
@@ -279,211 +264,86 @@ namespace CorUnix
         OwnershipSemantics m_eOwnershipSemantics;
 
     public:
-
-        CObjectType(
-            PalObjectTypeId eTypeId,
-            OBJECTCLEANUPROUTINE pCleanupRoutine,
-            OBJECTINITROUTINE pInitRoutine,
-            uint32_t dwImmutableDataSize,
-            uint32_t dwProcessLocalDataSize,
-            uint32_t dwSharedDataSize,
-            uint32_t dwSupportedAccessRights,
-            SecuritySupport eSecuritySupport,
-            SecurityPersistence eSecurityPersistence,
-            ObjectNameSupport eObjectNameSupport,
-            HandleDuplicationSupport eHandleDuplicationSupport,
-            SynchronizationSupport eSynchronizationSupport,
-            SignalingSemantics eSignalingSemantics,
-            ThreadReleaseSemantics eThreadReleaseSemantics,
-            OwnershipSemantics eOwnershipSemantics
-            )
-            :
-            m_eTypeId(eTypeId),
-            m_pCleanupRoutine(pCleanupRoutine),
-            m_pInitRoutine(pInitRoutine),
-            m_dwImmutableDataSize(dwImmutableDataSize),
-            m_dwProcessLocalDataSize(dwProcessLocalDataSize),
-            m_dwSharedDataSize(dwSharedDataSize),
-            m_dwSupportedAccessRights(dwSupportedAccessRights),
-            m_eSecuritySupport(eSecuritySupport),
-            m_eSecurityPersistence(eSecurityPersistence),
-            m_eObjectNameSupport(eObjectNameSupport),
-            m_eHandleDuplicationSupport(eHandleDuplicationSupport),
-            m_eSynchronizationSupport(eSynchronizationSupport),
-            m_eSignalingSemantics(eSignalingSemantics),
-            m_eThreadReleaseSemantics(eThreadReleaseSemantics),
-            m_eOwnershipSemantics(eOwnershipSemantics)
+        CObjectType(PalObjectTypeId eTypeId, OBJECTCLEANUPROUTINE pCleanupRoutine, OBJECTINITROUTINE pInitRoutine,
+                    uint32_t dwImmutableDataSize, uint32_t dwProcessLocalDataSize, uint32_t dwSharedDataSize,
+                    uint32_t dwSupportedAccessRights, SecuritySupport eSecuritySupport,
+                    SecurityPersistence eSecurityPersistence, ObjectNameSupport eObjectNameSupport,
+                    HandleDuplicationSupport eHandleDuplicationSupport, SynchronizationSupport eSynchronizationSupport,
+                    SignalingSemantics eSignalingSemantics, ThreadReleaseSemantics eThreadReleaseSemantics,
+                    OwnershipSemantics eOwnershipSemantics) :
+            m_eTypeId(eTypeId), m_pCleanupRoutine(pCleanupRoutine), m_pInitRoutine(pInitRoutine),
+            m_dwImmutableDataSize(dwImmutableDataSize), m_dwProcessLocalDataSize(dwProcessLocalDataSize),
+            m_dwSharedDataSize(dwSharedDataSize), m_dwSupportedAccessRights(dwSupportedAccessRights),
+            m_eSecuritySupport(eSecuritySupport), m_eSecurityPersistence(eSecurityPersistence),
+            m_eObjectNameSupport(eObjectNameSupport), m_eHandleDuplicationSupport(eHandleDuplicationSupport),
+            m_eSynchronizationSupport(eSynchronizationSupport), m_eSignalingSemantics(eSignalingSemantics),
+            m_eThreadReleaseSemantics(eThreadReleaseSemantics), m_eOwnershipSemantics(eOwnershipSemantics)
         {
             s_rgotIdMapping[eTypeId] = this;
         };
 
-        static
-        CObjectType *
-        GetObjectTypeById(
-            PalObjectTypeId otid
-            )
-        {
-            return s_rgotIdMapping[otid];
-        };
+        static CObjectType *GetObjectTypeById(PalObjectTypeId otid) { return s_rgotIdMapping[otid]; };
 
-        PalObjectTypeId
-        GetId(
-            void
-            )
-        {
-            return m_eTypeId;
-        };
+        PalObjectTypeId GetId(void) { return m_eTypeId; };
 
         OBJECTCLEANUPROUTINE
-        GetObjectCleanupRoutine(
-            void
-            )
-        {
-            return m_pCleanupRoutine;
-        };
+        GetObjectCleanupRoutine(void) { return m_pCleanupRoutine; };
 
         OBJECTINITROUTINE
-        GetObjectInitRoutine(
-            void
-            )
-        {
-            return  m_pInitRoutine;
-        };
+        GetObjectInitRoutine(void) { return m_pInitRoutine; };
 
-        uint32_t
-        GetImmutableDataSize(
-            void
-            )
-        {
-            return  m_dwImmutableDataSize;
-        };
+        uint32_t GetImmutableDataSize(void) { return m_dwImmutableDataSize; };
 
-        uint32_t
-        GetProcessLocalDataSize(
-            void
-            )
-        {
-            return m_dwProcessLocalDataSize;
-        };
+        uint32_t GetProcessLocalDataSize(void) { return m_dwProcessLocalDataSize; };
 
-        uint32_t
-        GetSharedDataSize(
-            void
-            )
-        {
-            return m_dwSharedDataSize;
-        };
+        uint32_t GetSharedDataSize(void) { return m_dwSharedDataSize; };
 
-        uint32_t
-        GetSupportedAccessRights(
-            void
-            )
-        {
-            return m_dwSupportedAccessRights;
-        };
+        uint32_t GetSupportedAccessRights(void) { return m_dwSupportedAccessRights; };
 
         // Generic access rights mapping
 
-        SecuritySupport
-        GetSecuritySupport(
-            void
-            )
-        {
-            return  m_eSecuritySupport;
-        };
+        SecuritySupport GetSecuritySupport(void) { return m_eSecuritySupport; };
 
-        SecurityPersistence
-        GetSecurityPersistence(
-            void
-            )
-        {
-            return  m_eSecurityPersistence;
-        };
+        SecurityPersistence GetSecurityPersistence(void) { return m_eSecurityPersistence; };
 
-        ObjectNameSupport
-        GetObjectNameSupport(
-            void
-            )
-        {
-            return  m_eObjectNameSupport;
-        };
+        ObjectNameSupport GetObjectNameSupport(void) { return m_eObjectNameSupport; };
 
-        HandleDuplicationSupport
-        GetHandleDuplicationSupport(
-            void
-            )
-        {
-            return  m_eHandleDuplicationSupport;
-        };
+        HandleDuplicationSupport GetHandleDuplicationSupport(void) { return m_eHandleDuplicationSupport; };
 
-        SynchronizationSupport
-        GetSynchronizationSupport(
-            void
-            )
-        {
-            return  m_eSynchronizationSupport;
-        };
+        SynchronizationSupport GetSynchronizationSupport(void) { return m_eSynchronizationSupport; };
 
-        SignalingSemantics
-        GetSignalingSemantics(
-            void
-            )
-        {
-            return  m_eSignalingSemantics;
-        };
+        SignalingSemantics GetSignalingSemantics(void) { return m_eSignalingSemantics; };
 
-        ThreadReleaseSemantics
-        GetThreadReleaseSemantics(
-            void
-            )
-        {
-            return  m_eThreadReleaseSemantics;
-        };
+        ThreadReleaseSemantics GetThreadReleaseSemantics(void) { return m_eThreadReleaseSemantics; };
 
-        OwnershipSemantics
-        GetOwnershipSemantics(
-            void
-            )
-        {
-            return  m_eOwnershipSemantics;
-        };
+        OwnershipSemantics GetOwnershipSemantics(void) { return m_eOwnershipSemantics; };
     };
 
     class CAllowedObjectTypes
     {
     private:
-
         bool m_rgfAllowedTypes[ObjectTypeIdCount];
 
     public:
-
-        bool
-        IsTypeAllowed(PalObjectTypeId eTypeId);
+        bool IsTypeAllowed(PalObjectTypeId eTypeId);
 
         //
         // Constructor for multiple allowed types
         //
 
-        CAllowedObjectTypes(
-            PalObjectTypeId rgAllowedTypes[],
-            uint32_t dwAllowedTypeCount
-            );
+        CAllowedObjectTypes(PalObjectTypeId rgAllowedTypes[], uint32_t dwAllowedTypeCount);
 
         //
         // Single allowed type constructor
         //
 
-        CAllowedObjectTypes(
-            PalObjectTypeId eAllowedType
-            );
+        CAllowedObjectTypes(PalObjectTypeId eAllowedType);
 
         //
         // Allow all types or no types constructor
         //
 
-        CAllowedObjectTypes(
-            bool fAllowAllObjectTypes
-            )
+        CAllowedObjectTypes(bool fAllowAllObjectTypes)
         {
             for (uint32_t dw = 0; dw < ObjectTypeIdCount; dw += 1)
             {
@@ -491,9 +351,7 @@ namespace CorUnix
             }
         };
 
-        ~CAllowedObjectTypes()
-        {
-        };
+        ~CAllowedObjectTypes() {};
     };
 
     //
@@ -506,15 +364,10 @@ namespace CorUnix
     class CObjectAttributes
     {
     public:
-
         CPalString sObjectName;
         LPSECURITY_ATTRIBUTES pSecurityAttributes;
 
-        CObjectAttributes(
-            const char16_t *pwszObjectName,
-            LPSECURITY_ATTRIBUTES pSecurityAttributes_
-            )
-            :
+        CObjectAttributes(const char16_t *pwszObjectName, LPSECURITY_ATTRIBUTES pSecurityAttributes_) :
             pSecurityAttributes(pSecurityAttributes_)
         {
             if (NULL != pwszObjectName)
@@ -523,11 +376,7 @@ namespace CorUnix
             }
         };
 
-        CObjectAttributes()
-            :
-            pSecurityAttributes(NULL)
-        {
-        };
+        CObjectAttributes() : pSecurityAttributes(NULL) {};
     };
 
     //
@@ -545,30 +394,13 @@ namespace CorUnix
     class ISynchStateController
     {
     public:
+        virtual PAL_ERROR GetSignalCount(int32_t *plSignalCount) = 0;
 
-        virtual
-        PAL_ERROR
-        GetSignalCount(
-            int32_t *plSignalCount
-            ) = 0;
+        virtual PAL_ERROR SetSignalCount(int32_t lNewCount) = 0;
 
-        virtual
-        PAL_ERROR
-        SetSignalCount(
-            int32_t lNewCount
-            ) = 0;
+        virtual PAL_ERROR IncrementSignalCount(int32_t lAmountToIncrement) = 0;
 
-        virtual
-        PAL_ERROR
-        IncrementSignalCount(
-            int32_t lAmountToIncrement
-            ) = 0;
-
-        virtual
-        PAL_ERROR
-        DecrementSignalCount(
-            int32_t lAmountToDecrement
-            ) = 0;
+        virtual PAL_ERROR DecrementSignalCount(int32_t lAmountToDecrement) = 0;
 
         //
         // The following two routines may only be used for object types
@@ -582,11 +414,7 @@ namespace CorUnix
         // handle manager. Any other call to this method is an error.
         //
 
-        virtual
-        PAL_ERROR
-        SetOwner(
-            CPalThread *pNewOwningThread
-            ) = 0;
+        virtual PAL_ERROR SetOwner(CPalThread *pNewOwningThread) = 0;
 
         //
         // DecrementOwnershipCount returns an error if the object
@@ -594,17 +422,9 @@ namespace CorUnix
         // is not the owner of the object.
         //
 
-        virtual
-        PAL_ERROR
-        DecrementOwnershipCount(
-            void
-            ) = 0;
+        virtual PAL_ERROR DecrementOwnershipCount(void) = 0;
 
-        virtual
-        void
-        ReleaseController(
-            void
-            ) = 0;
+        virtual void ReleaseController(void) = 0;
     };
 
     //
@@ -633,7 +453,6 @@ namespace CorUnix
     class ISynchWaitController
     {
     public:
-
         //
         // CanThreadWaitWithoutBlocking informs the caller if a wait
         // operation may succeed immediately, but does not actually
@@ -642,17 +461,10 @@ namespace CorUnix
         // not possible for the wait to be immediately satisfied.
         //
 
-        virtual
-        PAL_ERROR
-        CanThreadWaitWithoutBlocking(
-            bool *pfCanWaitWithoutBlocking,     // OUT
-            bool *pfAbandoned
-            ) = 0;
+        virtual PAL_ERROR CanThreadWaitWithoutBlocking(bool *pfCanWaitWithoutBlocking, // OUT
+                                                       bool *pfAbandoned) = 0;
 
-        virtual
-        PAL_ERROR
-        ReleaseWaitingThreadWithoutBlocking(
-            ) = 0;
+        virtual PAL_ERROR ReleaseWaitingThreadWithoutBlocking() = 0;
 
         //
         // dwIndex is intended for MultipleObjectsWaitOne situations. The
@@ -660,13 +472,7 @@ namespace CorUnix
         // wait will be returned in the call to BlockThread.
         //
 
-        virtual
-        PAL_ERROR
-        RegisterWaitingThread(
-            WaitType eWaitType,
-            uint32_t dwIndex,
-            bool fAltertable
-            ) = 0;
+        virtual PAL_ERROR RegisterWaitingThread(WaitType eWaitType, uint32_t dwIndex, bool fAltertable) = 0;
 
         //
         // Why is there no unregister waiting thread routine? Unregistration
@@ -675,11 +481,7 @@ namespace CorUnix
         // that this isn't the best approach, though...)
         //
 
-        virtual
-        void
-        ReleaseController(
-            void
-            ) = 0;
+        virtual void ReleaseController(void) = 0;
     };
 
     enum LockType
@@ -691,7 +493,6 @@ namespace CorUnix
     class IDataLock
     {
     public:
-
         //
         // If a thread obtains a write lock but does not actually
         // modify any data it should set fDataChanged to FALSE. If
@@ -699,11 +500,7 @@ namespace CorUnix
         // data it should be taken out back and shot.
         //
 
-        virtual
-        void
-        ReleaseLock(
-            CPalThread *pThread
-        ) = 0;
+        virtual void ReleaseLock(CPalThread *pThread) = 0;
     };
 
     //
@@ -719,32 +516,20 @@ namespace CorUnix
 
     enum WaitDomain
     {
-        LocalWait,      // All objects in the wait set are local to this process
-        MixedWait,      // Some objects are local; some are shared
-        SharedWait      // All objects in the wait set are shared
+        LocalWait, // All objects in the wait set are local to this process
+        MixedWait, // Some objects are local; some are shared
+        SharedWait // All objects in the wait set are shared
     };
 
     class IPalObject
     {
     public:
+        virtual CObjectType *GetObjectType(void) = 0;
 
-        virtual
-        CObjectType *
-        GetObjectType(
-            void
-            ) = 0;
+        virtual CObjectAttributes *GetObjectAttributes(void) = 0;
 
-        virtual
-        CObjectAttributes *
-        GetObjectAttributes(
-            void
-            ) = 0;
-
-        virtual
-        PAL_ERROR
-        GetImmutableData(
-            void **ppvImmutableData             // OUT
-            ) = 0;
+        virtual PAL_ERROR GetImmutableData(void **ppvImmutableData // OUT
+                                           ) = 0;
 
         //
         // The following two routines obtain either a read or write
@@ -754,23 +539,17 @@ namespace CorUnix
         // on two different objects at the same time.
         //
 
-        virtual
-        PAL_ERROR
-        GetProcessLocalData(
-            CPalThread *pThread,                // IN, OPTIONAL
-            LockType eLockRequest,
-            IDataLock **ppDataLock,             // OUT
-            void **ppvProcessLocalData          // OUT
-            ) = 0;
+        virtual PAL_ERROR GetProcessLocalData(CPalThread *pThread, // IN, OPTIONAL
+                                              LockType eLockRequest,
+                                              IDataLock **ppDataLock, // OUT
+                                              void **ppvProcessLocalData // OUT
+                                              ) = 0;
 
-        virtual
-        PAL_ERROR
-        GetSharedData(
-            CPalThread *pThread,                // IN, OPTIONAL
-            LockType eLockRequest,
-            IDataLock **ppDataLock,             // OUT
-            void **ppvSharedData                // OUT
-            ) = 0;
+        virtual PAL_ERROR GetSharedData(CPalThread *pThread, // IN, OPTIONAL
+                                        LockType eLockRequest,
+                                        IDataLock **ppDataLock, // OUT
+                                        void **ppvSharedData // OUT
+                                        ) = 0;
 
         //
         // The following two routines obtain the global dispatcher lock.
@@ -793,31 +572,17 @@ namespace CorUnix
         // currently no places where doing so would be necessary.
         //
 
-        virtual
-        PAL_ERROR
-        GetSynchStateController(
-            CPalThread *pThread,                // IN, OPTIONAL
-            ISynchStateController **ppStateController   // OUT
-            ) = 0;
+        virtual PAL_ERROR GetSynchStateController(CPalThread *pThread, // IN, OPTIONAL
+                                                  ISynchStateController **ppStateController // OUT
+                                                  ) = 0;
 
-        virtual
-        PAL_ERROR
-        GetSynchWaitController(
-            CPalThread *pThread,                // IN, OPTIONAL
-            ISynchWaitController **ppWaitController   // OUT
-            ) = 0;
+        virtual PAL_ERROR GetSynchWaitController(CPalThread *pThread, // IN, OPTIONAL
+                                                 ISynchWaitController **ppWaitController // OUT
+                                                 ) = 0;
 
-        virtual
-        uint32_t
-        AddReference(
-            void
-            ) = 0;
+        virtual uint32_t AddReference(void) = 0;
 
-        virtual
-        uint32_t
-        ReleaseReference(
-            CPalThread *pThread
-            ) = 0;
+        virtual uint32_t ReleaseReference(CPalThread *pThread) = 0;
 
         //
         // This routine is mainly intended for the synchronization
@@ -825,11 +590,7 @@ namespace CorUnix
         // before calling this routine.
         //
 
-        virtual
-        ObjectDomain
-        GetObjectDomain(
-            void
-            ) = 0;
+        virtual ObjectDomain GetObjectDomain(void) = 0;
 
         //
         // This routine is only for use by the synchronization manager
@@ -838,28 +599,19 @@ namespace CorUnix
         // (whatever exactly that must be) before calling this routine.
         //
 
-        virtual
-        PAL_ERROR
-        GetObjectSynchData(
-            void **ppvSynchData             // OUT
-            ) = 0;
-
+        virtual PAL_ERROR GetObjectSynchData(void **ppvSynchData // OUT
+                                             ) = 0;
     };
 
     class IPalProcess
     {
     public:
-        virtual
-        uint32_t
-        GetProcessID(
-            void
-            ) = 0;
+        virtual uint32_t GetProcessID(void) = 0;
     };
 
     class IPalObjectManager
     {
     public:
-
         //
         // Object creation (e.g., what is done by CreateEvent) is a two step
         // process. First, the new object is allocated and the initial
@@ -877,14 +629,10 @@ namespace CorUnix
         // a much longer period of time, impacting the entire system.)
         //
 
-        virtual
-        PAL_ERROR
-        AllocateObject(
-            CPalThread *pThread,                // IN, OPTIONAL
-            CObjectType *pType,
-            CObjectAttributes *pAttributes,
-            IPalObject **ppNewObject            // OUT
-            ) = 0;
+        virtual PAL_ERROR AllocateObject(CPalThread *pThread, // IN, OPTIONAL
+                                         CObjectType *pType, CObjectAttributes *pAttributes,
+                                         IPalObject **ppNewObject // OUT
+                                         ) = 0;
 
         //
         // After calling RegisterObject pObjectToRegister is no
@@ -902,30 +650,22 @@ namespace CorUnix
         // must include the type of pObjectToRegister.
         //
 
-        virtual
-        PAL_ERROR
-        RegisterObject(
-            CPalThread *pThread,                // IN, OPTIONAL
-            IPalObject *pObjectToRegister,
-            CAllowedObjectTypes *pAllowedTypes,
-            uint32_t dwRightsRequested,
-            HANDLE *pHandle,                    // OUT
-            IPalObject **ppRegisteredObject     // OUT
-            ) = 0;
+        virtual PAL_ERROR RegisterObject(CPalThread *pThread, // IN, OPTIONAL
+                                         IPalObject *pObjectToRegister, CAllowedObjectTypes *pAllowedTypes,
+                                         uint32_t dwRightsRequested,
+                                         HANDLE *pHandle, // OUT
+                                         IPalObject **ppRegisteredObject // OUT
+                                         ) = 0;
 
         //
         // LocateObject is used for OpenXXX routines. ObtainHandleForObject
         // is needed for the OpenXXX routines and DuplicateHandle.
         //
 
-        virtual
-        PAL_ERROR
-        LocateObject(
-            CPalThread *pThread,                // IN, OPTIONAL
-            CPalString *psObjectToLocate,
-            CAllowedObjectTypes *pAllowedTypes,
-            IPalObject **ppObject               // OUT
-            ) = 0;
+        virtual PAL_ERROR LocateObject(CPalThread *pThread, // IN, OPTIONAL
+                                       CPalString *psObjectToLocate, CAllowedObjectTypes *pAllowedTypes,
+                                       IPalObject **ppObject // OUT
+                                       ) = 0;
 
         //
         // pProcessForHandle is to support cross-process handle
@@ -935,23 +675,14 @@ namespace CorUnix
         // process.
         //
 
-        virtual
-        PAL_ERROR
-        ObtainHandleForObject(
-            CPalThread *pThread,                // IN, OPTIONAL
-            IPalObject *pObject,
-            uint32_t dwRightsRequested,
-            bool fInheritHandle,
-            IPalProcess *pProcessForHandle,     // IN, OPTIONAL
-            HANDLE *pNewHandle                  // OUT
-            ) = 0;
+        virtual PAL_ERROR ObtainHandleForObject(CPalThread *pThread, // IN, OPTIONAL
+                                                IPalObject *pObject, uint32_t dwRightsRequested, bool fInheritHandle,
+                                                IPalProcess *pProcessForHandle, // IN, OPTIONAL
+                                                HANDLE *pNewHandle // OUT
+                                                ) = 0;
 
-        virtual
-        PAL_ERROR
-        RevokeHandle(
-            CPalThread *pThread,                // IN, OPTIONAL
-            HANDLE hHandleToRevoke
-            ) = 0;
+        virtual PAL_ERROR RevokeHandle(CPalThread *pThread, // IN, OPTIONAL
+                                       HANDLE hHandleToRevoke) = 0;
 
         //
         // The Reference routines are called to obtain the
@@ -967,30 +698,22 @@ namespace CorUnix
         // when appropriate.
         //
 
-        virtual
-        PAL_ERROR
-        ReferenceObjectByHandle(
-            CPalThread *pThread,
-            // IN, OPTIONAL
-            HANDLE hHandleToReference,
-            CAllowedObjectTypes *pAllowedTypes,
-            IPalObject **ppObject               // OUT
-        ) = 0;
+        virtual PAL_ERROR ReferenceObjectByHandle(CPalThread *pThread,
+                                                  // IN, OPTIONAL
+                                                  HANDLE hHandleToReference, CAllowedObjectTypes *pAllowedTypes,
+                                                  IPalObject **ppObject // OUT
+                                                  ) = 0;
 
         //
         // This routine is intended for WaitForMultipleObjects[Ex]
         //
 
-        virtual
-        PAL_ERROR
-        ReferenceMultipleObjectsByHandleArray(
-            CPalThread *pThread,
-            // IN, OPTIONAL
-            HANDLE rghHandlesToReference[],
-            uint32_t dwHandleCount,
-            CAllowedObjectTypes *pAllowedTypes,
-            IPalObject *rgpObjects[]            // OUT
-        ) = 0;
+        virtual PAL_ERROR ReferenceMultipleObjectsByHandleArray(CPalThread *pThread,
+                                                                // IN, OPTIONAL
+                                                                HANDLE rghHandlesToReference[], uint32_t dwHandleCount,
+                                                                CAllowedObjectTypes *pAllowedTypes,
+                                                                IPalObject *rgpObjects[] // OUT
+                                                                ) = 0;
 
         //
         // This routine is for cross-process handle duplication.
@@ -1011,7 +734,6 @@ namespace CorUnix
     class IPalSynchronizationManager
     {
     public:
-
         //
         // A thread calls BlockThread to put itself to sleep after it has
         // registered itself with the objects it is to wait on. A thread
@@ -1023,44 +745,19 @@ namespace CorUnix
         // synchronization controller) when it calls this method.
         //
 
-        virtual
-        PAL_ERROR
-        BlockThread(
-            CPalThread *pCurrentThread,
-            uint32_t dwTimeout,
-            bool fAlertable,
-            bool fIsSleep,
-            ThreadWakeupReason *peWakeupReason, // OUT
-            uint32_t *pdwSignaledObject       // OUT
-            ) = 0;
+        virtual PAL_ERROR BlockThread(CPalThread *pCurrentThread, uint32_t dwTimeout, bool fAlertable, bool fIsSleep,
+                                      ThreadWakeupReason *peWakeupReason, // OUT
+                                      uint32_t *pdwSignaledObject // OUT
+                                      ) = 0;
 
-        virtual
-        PAL_ERROR
-        AbandonObjectsOwnedByThread(
-            CPalThread *pCallingThread,
-            CPalThread *pTargetThread
-            ) = 0;
+        virtual PAL_ERROR AbandonObjectsOwnedByThread(CPalThread *pCallingThread, CPalThread *pTargetThread) = 0;
 
-        virtual
-        PAL_ERROR
-        QueueUserAPC(
-            CPalThread *pThread,
-            CPalThread *pTargetThread,
-            PAPCFUNC pfnAPC,
-            size_t dwData
-            ) = 0;
+        virtual PAL_ERROR QueueUserAPC(CPalThread *pThread, CPalThread *pTargetThread, PAPCFUNC pfnAPC,
+                                       size_t dwData) = 0;
 
-        virtual
-        bool
-        AreAPCsPending(
-            CPalThread *pThread
-            ) = 0;
+        virtual bool AreAPCsPending(CPalThread *pThread) = 0;
 
-        virtual
-        PAL_ERROR
-        DispatchPendingAPCs(
-            CPalThread *pThread
-            ) = 0;
+        virtual PAL_ERROR DispatchPendingAPCs(CPalThread *pThread) = 0;
 
         //
         // This routine is primarily meant for use by WaitForMultipleObjects[Ex].
@@ -1068,23 +765,13 @@ namespace CorUnix
         // interfaces.
         //
 
-        virtual
-        PAL_ERROR
-        GetSynchWaitControllersForObjects(
-            CPalThread *pThread,
-            IPalObject *rgObjects[],
-            uint32_t dwObjectCount,
-            ISynchWaitController *rgControllers[]
-            ) = 0;
+        virtual PAL_ERROR GetSynchWaitControllersForObjects(CPalThread *pThread, IPalObject *rgObjects[],
+                                                            uint32_t dwObjectCount,
+                                                            ISynchWaitController *rgControllers[]) = 0;
 
-        virtual
-        PAL_ERROR
-        GetSynchStateControllersForObjects(
-            CPalThread *pThread,
-            IPalObject *rgObjects[],
-            uint32_t dwObjectCount,
-            ISynchStateController *rgControllers[]
-            ) = 0;
+        virtual PAL_ERROR GetSynchStateControllersForObjects(CPalThread *pThread, IPalObject *rgObjects[],
+                                                             uint32_t dwObjectCount,
+                                                             ISynchStateController *rgControllers[]) = 0;
 
         //
         // These following routines are meant for use only by IPalObject
@@ -1093,70 +780,41 @@ namespace CorUnix
         // is called during object promotion.
         //
 
-        virtual
-        PAL_ERROR
-        AllocateObjectSynchData(
-            CObjectType *pObjectType,
-            ObjectDomain eObjectDomain,
-            void **ppvSynchData                 // OUT
-            ) = 0;
+        virtual PAL_ERROR AllocateObjectSynchData(CObjectType *pObjectType, ObjectDomain eObjectDomain,
+                                                  void **ppvSynchData // OUT
+                                                  ) = 0;
 
-        virtual
-        void
-        FreeObjectSynchData(
-            ObjectDomain eObjectDomain,
-            void *pvSynchData
-        ) = 0;
+        virtual void FreeObjectSynchData(ObjectDomain eObjectDomain, void *pvSynchData) = 0;
 
-        virtual
-        PAL_ERROR
-        PromoteObjectSynchData(
-            CPalThread *pThread,
-            void *pvLocalSynchData,
-            void **ppvSharedSynchData           // OUT
-            ) = 0;
+        virtual PAL_ERROR PromoteObjectSynchData(CPalThread *pThread, void *pvLocalSynchData,
+                                                 void **ppvSharedSynchData // OUT
+                                                 ) = 0;
 
         //
         // The next two routines provide access to the process-wide
         // synchronization lock
         //
 
-        virtual
-        void
-        AcquireProcessLock(
-            CPalThread *pThread
-            ) = 0;
+        virtual void AcquireProcessLock(CPalThread *pThread) = 0;
 
-        virtual
-        void
-        ReleaseProcessLock(
-            CPalThread *pThread
-            ) = 0;
+        virtual void ReleaseProcessLock(CPalThread *pThread) = 0;
 
         //
         // The final routines are used by IPalObject::GetSynchStateController
         // and IPalObject::GetSynchWaitController
         //
 
-        virtual
-        PAL_ERROR
-        CreateSynchStateController(
-            CPalThread *pThread,                // IN, OPTIONAL
-            CObjectType *pObjectType,
-            void *pvSynchData,
-            ObjectDomain eObjectDomain,
-            ISynchStateController **ppStateController       // OUT
-            ) = 0;
+        virtual PAL_ERROR CreateSynchStateController(CPalThread *pThread, // IN, OPTIONAL
+                                                     CObjectType *pObjectType, void *pvSynchData,
+                                                     ObjectDomain eObjectDomain,
+                                                     ISynchStateController **ppStateController // OUT
+                                                     ) = 0;
 
-        virtual
-        PAL_ERROR
-        CreateSynchWaitController(
-            CPalThread *pThread,                // IN, OPTIONAL
-            CObjectType *pObjectType,
-            void *pvSynchData,
-            ObjectDomain eObjectDomain,
-            ISynchWaitController **ppWaitController       // OUT
-            ) = 0;
+        virtual PAL_ERROR CreateSynchWaitController(CPalThread *pThread, // IN, OPTIONAL
+                                                    CObjectType *pObjectType, void *pvSynchData,
+                                                    ObjectDomain eObjectDomain,
+                                                    ISynchWaitController **ppWaitController // OUT
+                                                    ) = 0;
     };
 
     extern IPalSynchronizationManager *g_pSynchronizationManager;
@@ -1164,22 +822,18 @@ namespace CorUnix
     class IFileTransactionLock
     {
     public:
-
         //
         // Called when the transaction completes (which includes
         // error completions, or the outright failure to queue
         // the transaction).
         //
 
-        virtual
-        void
-        ReleaseLock() = 0;
+        virtual void ReleaseLock() = 0;
     };
 
     class IFileLockController
     {
     public:
-
         //
         // A transaction lock is acquired before a read or write
         // operation, and released when that operation completes.
@@ -1194,15 +848,10 @@ namespace CorUnix
             WriteLock
         };
 
-        virtual
-        PAL_ERROR
-        GetTransactionLock(
-            uint32_t dwOffsetLow,
-            uint32_t dwOffsetHigh,
-            uint32_t nNumberOfBytesToLockLow,
-            uint32_t nNumberOfBytesToLockHigh,
-            IFileTransactionLock **ppTransactionLock    // OUT
-            ) = 0;
+        virtual PAL_ERROR GetTransactionLock(uint32_t dwOffsetLow, uint32_t dwOffsetHigh,
+                                             uint32_t nNumberOfBytesToLockLow, uint32_t nNumberOfBytesToLockHigh,
+                                             IFileTransactionLock **ppTransactionLock // OUT
+                                             ) = 0;
 
         enum FileLockExclusivity
         {
@@ -1222,10 +871,8 @@ namespace CorUnix
         // TRUE or fCleanupSharedState is FALSE.
         //
 
-        virtual
-        void
-        ReleaseController() = 0;
+        virtual void ReleaseController() = 0;
     };
-}
+} // namespace CorUnix
 
 #endif // _CORUNIX_H

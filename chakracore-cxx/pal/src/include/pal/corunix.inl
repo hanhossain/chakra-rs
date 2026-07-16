@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -28,12 +28,9 @@ namespace CorUnix
         return m_rgfAllowedTypes[eTypeId];
     };
 
-    CAllowedObjectTypes::CAllowedObjectTypes(
-        PalObjectTypeId rgAllowedTypes[],
-        uint32_t dwAllowedTypeCount
-    )
+    CAllowedObjectTypes::CAllowedObjectTypes(PalObjectTypeId rgAllowedTypes[], uint32_t dwAllowedTypeCount)
     {
-        memset((m_rgfAllowedTypes),0,(sizeof(m_rgfAllowedTypes)));
+        memset((m_rgfAllowedTypes), 0, (sizeof(m_rgfAllowedTypes)));
         for (uint32_t dw = 0; dw < dwAllowedTypeCount; dw += 1)
         {
             assert(rgAllowedTypes[dw] != ObjectTypeIdCount);
@@ -41,16 +38,13 @@ namespace CorUnix
         }
     };
 
-    CAllowedObjectTypes::CAllowedObjectTypes(
-       PalObjectTypeId eAllowedType
-       )
+    CAllowedObjectTypes::CAllowedObjectTypes(PalObjectTypeId eAllowedType)
     {
-        memset((m_rgfAllowedTypes),0,(sizeof(m_rgfAllowedTypes)));
+        memset((m_rgfAllowedTypes), 0, (sizeof(m_rgfAllowedTypes)));
 
         assert(eAllowedType != ObjectTypeIdCount);
         m_rgfAllowedTypes[eAllowedType] = TRUE;
     };
-}
+} // namespace CorUnix
 
 #endif // _CORUNIX_H
-

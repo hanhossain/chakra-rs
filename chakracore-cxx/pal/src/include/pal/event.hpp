@@ -29,31 +29,11 @@ namespace CorUnix
     extern CObjectType otAutoResetEvent;
 
     PAL_ERROR
-    InternalCreateEvent(
-        CPalThread *pThread,
-        LPSECURITY_ATTRIBUTES lpEventAttributes,
-        BOOL bManualReset,
-        BOOL bInitialState,
-        const char16_t* lpName,
-        HANDLE *phEvent
-        );
+    InternalCreateEvent(CPalThread *pThread, LPSECURITY_ATTRIBUTES lpEventAttributes, BOOL bManualReset,
+                        BOOL bInitialState, const char16_t *lpName, HANDLE *phEvent);
 
     PAL_ERROR
-    InternalSetEvent(
-        CPalThread *pThread,
-        HANDLE hEvent,
-        BOOL fSetEvent
-        );
-}
+    InternalSetEvent(CPalThread *pThread, HANDLE hEvent, BOOL fSetEvent);
+} // namespace CorUnix
 
-#endif //PAL_EVENT_H_
-
-
-
-
-
-
-
-
-
-
+#endif // PAL_EVENT_H_

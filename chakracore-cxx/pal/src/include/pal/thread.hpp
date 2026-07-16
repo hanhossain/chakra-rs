@@ -25,8 +25,8 @@ Abstract:
 #define _PAL_THREAD_HPP_
 
 #include "corunix.hpp"
-#include "shm.hpp"
 #include "cs.hpp"
+#include "shm.hpp"
 
 #include <pthread.h>
 #include <sys/syscall.h>
@@ -34,9 +34,9 @@ Abstract:
 #include <mach/mach.h>
 #endif // defined(__APPLE__)
 
-#include "threadsusp.hpp"
-#include "synchobjects.hpp"
 #include <errno.h>
+#include "synchobjects.hpp"
+#include "threadsusp.hpp"
 
 namespace CorUnix
 {
@@ -50,69 +50,33 @@ namespace CorUnix
     };
 
     PAL_ERROR
-    InternalCreateThread(
-        CPalThread *pThread,
-        LPSECURITY_ATTRIBUTES lpThreadAttributes,
-        LPTHREAD_START_ROUTINE lpStartAddress,
-        void * lpParameter,
-        uint32_t dwCreationFlags,
-        PalThreadType eThreadType,
-        size_t* pThreadId,
-        HANDLE *phThread
-        );
+    InternalCreateThread(CPalThread *pThread, LPSECURITY_ATTRIBUTES lpThreadAttributes,
+                         LPTHREAD_START_ROUTINE lpStartAddress, void *lpParameter, uint32_t dwCreationFlags,
+                         PalThreadType eThreadType, size_t *pThreadId, HANDLE *phThread);
 
     PAL_ERROR
-    InternalGetThreadPriority(
-        CPalThread *pThread,
-        HANDLE hTargetThread,
-        int *piNewPriority
-        );
+    InternalGetThreadPriority(CPalThread *pThread, HANDLE hTargetThread, int *piNewPriority);
 
     PAL_ERROR
-    InternalSetThreadPriority(
-        CPalThread *pThread,
-        HANDLE hTargetThread,
-        int iNewPriority
-        );
+    InternalSetThreadPriority(CPalThread *pThread, HANDLE hTargetThread, int iNewPriority);
 
     PAL_ERROR
-    InternalGetThreadDataFromHandle(
-        CPalThread *pThread,
-        HANDLE hThread,
-        CPalThread **ppTargetThread,
-        IPalObject **ppobjThread
-    );
+    InternalGetThreadDataFromHandle(CPalThread *pThread, HANDLE hThread, CPalThread **ppTargetThread,
+                                    IPalObject **ppobjThread);
 
-    void
-    InternalEndCurrentThread(
-        CPalThread *pThread
-        );
+    void InternalEndCurrentThread(CPalThread *pThread);
 
     PAL_ERROR
-    InternalCreateDummyThread(
-        CPalThread *pThread,
-        LPSECURITY_ATTRIBUTES lpThreadAttributes,
-        CPalThread **ppDummyThread,
-        HANDLE *phThread
-        );
+    InternalCreateDummyThread(CPalThread *pThread, LPSECURITY_ATTRIBUTES lpThreadAttributes, CPalThread **ppDummyThread,
+                              HANDLE *phThread);
 
     PAL_ERROR
-    CreateThreadData(
-        CPalThread **ppThread
-        );
+    CreateThreadData(CPalThread **ppThread);
 
     PAL_ERROR
-    CreateThreadObject(
-        CPalThread *pThread,
-        CPalThread *pNewThread,
-        HANDLE *phThread
-        );
+    CreateThreadObject(CPalThread *pThread, CPalThread *pNewThread, HANDLE *phThread);
 
-    BOOL
-    GetThreadTimesInternal(
-         HANDLE hThread,
-         LPFILETIME lpKernelTime,
-         LPFILETIME lpUserTime);
+    BOOL GetThreadTimesInternal(HANDLE hThread, LPFILETIME lpKernelTime, LPFILETIME lpUserTime);
 
 #ifdef FEATURE_PAL_SXS
 #if defined(__APPLE__)
@@ -160,10 +124,7 @@ namespace CorUnix
         exception_behavior_t m_behaviors[s_nPortsMax];
         thread_state_flavor_t m_flavors[s_nPortsMax];
 
-        CThreadMachExceptionHandlers() :
-            m_nPorts(-1)
-        {
-        }
+        CThreadMachExceptionHandlers() : m_nPorts(-1) {}
 
         // Get handler details for a given type of exception. If successful the structure pointed at by
         // pHandler is filled in and true is returned. Otherwise false is returned.
@@ -185,9 +146,7 @@ namespace CorUnix
         int signal_code;
 #endif // !HAVE_MACH_EXCEPTIONSG
 
-        CThreadSEHInfo()
-        {
-        };
+        CThreadSEHInfo() {};
     };
 
     /* In the windows CRT there is a constant defined for the max width
@@ -203,70 +162,35 @@ namespace CorUnix
     class CThreadCRTInfo : public CThreadInfoInitializer
     {
     public:
-        char *       strtokContext; // Context for strtok function
-        char16_t *      wcstokContext; // Context for wcstok function
+        char *strtokContext; // Context for strtok function
+        char16_t *wcstokContext; // Context for wcstok function
         struct tm localtimeBuffer; // Buffer for localtime function
-        char         ctimeBuffer[ STR_TIME_SIZE ]; // Buffer for ctime function
-        char         ECVTBuffer[ ECVT_MAX_BUFFER_SIZE ]; // Buffer for _ecvt function.
+        char ctimeBuffer[STR_TIME_SIZE]; // Buffer for ctime function
+        char ECVTBuffer[ECVT_MAX_BUFFER_SIZE]; // Buffer for _ecvt function.
 
-        CThreadCRTInfo() :
-            strtokContext(NULL),
-            wcstokContext(NULL)
+        CThreadCRTInfo() : strtokContext(NULL), wcstokContext(NULL)
         {
-            memset((&localtimeBuffer),0,(sizeof(localtimeBuffer)));
-            memset((ctimeBuffer),0,(sizeof(ctimeBuffer)));
-            memset((ECVTBuffer),0,(sizeof(ECVTBuffer)));
+            memset((&localtimeBuffer), 0, (sizeof(localtimeBuffer)));
+            memset((ctimeBuffer), 0, (sizeof(ctimeBuffer)));
+            memset((ECVTBuffer), 0, (sizeof(ECVTBuffer)));
         };
     };
 
     class CPalThread
     {
-        friend
-            PAL_ERROR
-            CorUnix::InternalCreateThread(
-                CPalThread *,
-                LPSECURITY_ATTRIBUTES,
-                LPTHREAD_START_ROUTINE,
-                void *,
-                uint32_t,
-                PalThreadType,
-                size_t*,
-                HANDLE*
-                );
+        friend PAL_ERROR CorUnix::InternalCreateThread(CPalThread *, LPSECURITY_ATTRIBUTES, LPTHREAD_START_ROUTINE,
+                                                       void *, uint32_t, PalThreadType, size_t *, HANDLE *);
 
-        friend
-            PAL_ERROR
-            InternalCreateDummyThread(
-                CPalThread *pThread,
-                LPSECURITY_ATTRIBUTES lpThreadAttributes,
-                CPalThread **ppDummyThread,
-                HANDLE *phThread
-                );
+        friend PAL_ERROR InternalCreateDummyThread(CPalThread *pThread, LPSECURITY_ATTRIBUTES lpThreadAttributes,
+                                                   CPalThread **ppDummyThread, HANDLE *phThread);
 
-        friend
-            PAL_ERROR
-            InternalSetThreadPriority(
-                CPalThread *,
-                HANDLE,
-                int
-                );
+        friend PAL_ERROR InternalSetThreadPriority(CPalThread *, HANDLE, int);
 
-        friend
-            PAL_ERROR
-            CreateThreadData(
-                CPalThread **ppThread
-                );
+        friend PAL_ERROR CreateThreadData(CPalThread **ppThread);
 
-        friend
-            PAL_ERROR
-            CreateThreadObject(
-                CPalThread *pThread,
-                CPalThread *pNewThread,
-                HANDLE *phThread
-                );
+        friend PAL_ERROR CreateThreadObject(CPalThread *pThread, CPalThread *pNewThread, HANDLE *phThread);
 
     private:
-
         CPalThread *m_pNext;
         uint32_t m_dwExitCode;
         BOOL m_fExitCodeSet;
@@ -316,7 +240,7 @@ namespace CorUnix
         //
 
         LPTHREAD_START_ROUTINE m_lpStartAddress;
-        void * m_lpStartParameter;
+        void *m_lpStartParameter;
         BOOL m_bCreateSuspended;
 
         int m_iThreadPriority;
@@ -346,7 +270,7 @@ namespace CorUnix
         // The thread entry routine (called from InternalCreateThread)
         //
 
-        static void* ThreadEntry(CPalThread *pThread);
+        static void *ThreadEntry(CPalThread *pThread);
 
 #ifdef FEATURE_PAL_SXS
         //
@@ -354,7 +278,6 @@ namespace CorUnix
         //
 
     private:
-
 #if defined(__APPLE__)
         // Record of Mach exception handlers that were already registered when we register our own CoreCLR
         // specific handlers.
@@ -363,7 +286,6 @@ namespace CorUnix
 #endif // FEATURE_PAL_SXS
 
     public:
-
         //
         // Embedded information for areas owned by other subsystems
         //
@@ -374,39 +296,22 @@ namespace CorUnix
         CThreadApcInfo apcInfo;
         CThreadCRTInfo crtInfo;
 
-        CPalThread()
-            :
-            m_pNext(NULL),
-            m_dwExitCode(STILL_ACTIVE),
-            m_fExitCodeSet(FALSE),
-            m_fLockInitialized(FALSE),
-            m_fIsDummy(FALSE),
-            m_lRefCount(1),
-            m_pThreadObject(NULL),
-            m_threadId(0),
-            m_dwLwpId(0),
-            m_pthreadSelf(0),
+        CPalThread() :
+            m_pNext(NULL), m_dwExitCode(STILL_ACTIVE), m_fExitCodeSet(FALSE), m_fLockInitialized(FALSE),
+            m_fIsDummy(FALSE), m_lRefCount(1), m_pThreadObject(NULL), m_threadId(0), m_dwLwpId(0), m_pthreadSelf(0),
 #if defined(__APPLE__)
             m_machPortSelf(0),
 #endif
-            m_hardwareExceptionHolderCount(0),
-            m_lpStartAddress(NULL),
-            m_lpStartParameter(NULL),
-            m_bCreateSuspended(FALSE),
-            m_iThreadPriority(THREAD_PRIORITY_NORMAL),
-            m_eThreadType(UserCreatedThread),
-            m_fStartItemsInitialized(FALSE),
-            m_fStartStatus(FALSE),
-            m_fStartStatusSet(FALSE)
+            m_hardwareExceptionHolderCount(0), m_lpStartAddress(NULL), m_lpStartParameter(NULL),
+            m_bCreateSuspended(FALSE), m_iThreadPriority(THREAD_PRIORITY_NORMAL), m_eThreadType(UserCreatedThread),
+            m_fStartItemsInitialized(FALSE), m_fStartStatus(FALSE), m_fStartStatusSet(FALSE)
         {
         }
 
         virtual ~CPalThread();
 
         PAL_ERROR
-        RunPreCreateInitializers(
-            void
-            );
+        RunPreCreateInitializers(void);
 
         //
         // m_threadId and m_dwLwpId must be set before calling
@@ -414,9 +319,7 @@ namespace CorUnix
         //
 
         PAL_ERROR
-        RunPostCreateInitializers(
-            void
-            );
+        RunPostCreateInitializers(void);
 
         //
         // SetStartStatus is called by THREADEntry or InternalSuspendNewThread
@@ -426,232 +329,91 @@ namespace CorUnix
         // the info is available).
         //
 
-        void
-        SetStartStatus(
-            bool fStartSucceeded
-            );
+        void SetStartStatus(bool fStartSucceeded);
 
-        bool
-        WaitForStartStatus(
-            void
-            );
+        bool WaitForStartStatus(void);
 
-        void
-        Lock(
-            CPalThread *pThread
-            )
-        {
-            InternalEnterCriticalSection(pThread, &m_csLock);
-        };
+        void Lock(CPalThread *pThread) { InternalEnterCriticalSection(pThread, &m_csLock); };
 
-        void
-        Unlock(
-            CPalThread *pThread
-            )
-        {
-            InternalLeaveCriticalSection(pThread, &m_csLock);
-        };
+        void Unlock(CPalThread *pThread) { InternalLeaveCriticalSection(pThread, &m_csLock); };
 
         //
         // The following three methods provide access to the
         // native lock used to protect thread native wait data.
         //
 
-        void
-        AcquireNativeWaitLock(
-            void
-            )
-        {
-            synchronizationInfo.AcquireNativeWaitLock();
-        }
+        void AcquireNativeWaitLock(void) { synchronizationInfo.AcquireNativeWaitLock(); }
 
-        void
-        ReleaseNativeWaitLock(
-            void
-            )
-        {
-            synchronizationInfo.ReleaseNativeWaitLock();
-        }
+        void ReleaseNativeWaitLock(void) { synchronizationInfo.ReleaseNativeWaitLock(); }
 
-        bool
-        TryAcquireNativeWaitLock(
-            void
-            )
-        {
-            return synchronizationInfo.TryAcquireNativeWaitLock();
-        }
+        bool TryAcquireNativeWaitLock(void) { return synchronizationInfo.TryAcquireNativeWaitLock(); }
 
-        static void
-        SetLastError(
-            uint32_t dwLastError
-            )
+        static void SetLastError(uint32_t dwLastError)
         {
             // Reuse errno to store last error
             errno = dwLastError;
         };
 
-        static uint32_t
-        GetLastError(
-            void
-            )
+        static uint32_t GetLastError(void)
         {
             // Reuse errno to store last error
             return errno;
         };
 
-        void
-        SetExitCode(
-            uint32_t dwExitCode
-            )
+        void SetExitCode(uint32_t dwExitCode)
         {
             m_dwExitCode = dwExitCode;
             m_fExitCodeSet = TRUE;
         };
 
-        BOOL
-        GetExitCode(
-            uint32_t *pdwExitCode
-            )
+        BOOL GetExitCode(uint32_t *pdwExitCode)
         {
             *pdwExitCode = m_dwExitCode;
             return m_fExitCodeSet;
         };
 
-        size_t
-        GetThreadId(
-            void
-            )
-        {
-            return m_threadId;
-        };
+        size_t GetThreadId(void) { return m_threadId; };
 
-        uint32_t
-        GetLwpId(
-            void
-            )
-        {
-            return m_dwLwpId;
-        };
+        uint32_t GetLwpId(void) { return m_dwLwpId; };
 
-        pthread_t
-        GetPThreadSelf(
-            void
-            )
-        {
-            return m_pthreadSelf;
-        };
+        pthread_t GetPThreadSelf(void) { return m_pthreadSelf; };
 
 #if defined(__APPLE__)
-        mach_port_t
-        GetMachPortSelf(
-            void
-            )
-        {
-            return m_machPortSelf;
-        };
+        mach_port_t GetMachPortSelf(void) { return m_machPortSelf; };
 #endif
 
-        bool
-        IsHardwareExceptionsEnabled()
-        {
-            return m_hardwareExceptionHolderCount > 0;
-        }
+        bool IsHardwareExceptionsEnabled() { return m_hardwareExceptionHolderCount > 0; }
 
         LPTHREAD_START_ROUTINE
-        GetStartAddress(
-            void
-            )
-        {
-            return m_lpStartAddress;
-        };
+        GetStartAddress(void) { return m_lpStartAddress; };
 
-        void *
-        GetStartParameter(
-            void
-            )
-        {
-            return m_lpStartParameter;
-        };
+        void *GetStartParameter(void) { return m_lpStartParameter; };
 
-        BOOL
-        GetCreateSuspended(
-            void
-            )
-        {
-            return m_bCreateSuspended;
-        };
+        BOOL GetCreateSuspended(void) { return m_bCreateSuspended; };
 
-        PalThreadType
-        GetThreadType(
-            void
-            )
-        {
-            return m_eThreadType;
-        };
+        PalThreadType GetThreadType(void) { return m_eThreadType; };
 
-        int
-        GetThreadPriority(
-            void
-            )
-        {
-            return m_iThreadPriority;
-        };
+        int GetThreadPriority(void) { return m_iThreadPriority; };
 
-        IPalObject *
-        GetThreadObject(
-            void
-            )
-        {
-            return m_pThreadObject;
-        }
+        IPalObject *GetThreadObject(void) { return m_pThreadObject; }
 
-        BOOL
-        IsDummy(
-            void
-            )
-        {
-            return m_fIsDummy;
-        };
+        BOOL IsDummy(void) { return m_fIsDummy; };
 
-        CPalThread*
-        GetNext(
-            void
-            )
-        {
-            return m_pNext;
-        };
+        CPalThread *GetNext(void) { return m_pNext; };
 
-        void
-        SetNext(
-            CPalThread *pNext
-            )
-        {
-            m_pNext = pNext;
-        };
+        void SetNext(CPalThread *pNext) { m_pNext = pNext; };
 
-        void
-        AddThreadReference(
-            void
-            );
+        void AddThreadReference(void);
 
-        void
-        ReleaseThreadReference(
-            void
-            );
+        void ReleaseThreadReference(void);
 
         // Get base address of this thread's stack
         // Can be called only for the current thread.
-        void *
-        GetStackBase(
-            void
-            );
+        void *GetStackBase(void);
 
         // Get limit address of this thread's stack
         // Can be called only for the current thread.
-        void *
-        GetStackLimit(
-            void
-            );
+        void *GetStackLimit(void);
 
 #ifdef FEATURE_PAL_SXS
         //
@@ -676,10 +438,7 @@ namespace CorUnix
         // The exception handling thread needs to be able to get at the list of handlers that installing our
         // own handler on a thread has displaced (in case we need to forward an exception that we don't want
         // to handle).
-        CThreadMachExceptionHandlers *GetSavedMachHandlers()
-        {
-            return &m_sMachExceptionHandlers;
-        }
+        CThreadMachExceptionHandlers *GetSavedMachHandlers() { return &m_sMachExceptionHandlers; }
 #endif // defined(__APPLE__)
 #endif // FEATURE_PAL_SXS
     };
@@ -688,10 +447,7 @@ namespace CorUnix
     extern "C" CPalThread *CreateCurrentThreadData();
 #endif // FEATURE_PAL_SXS
 
-    inline CPalThread *GetCurrentPalThread()
-    {
-        return reinterpret_cast<CPalThread*>(pthread_getspecific(thObjKey));
-    }
+    inline CPalThread *GetCurrentPalThread() { return reinterpret_cast<CPalThread *>(pthread_getspecific(thObjKey)); }
 
     inline CPalThread *InternalGetCurrentThread()
     {
@@ -701,23 +457,23 @@ namespace CorUnix
         return pThread;
     }
 
-/***
+    /***
 
-    $$TODO: These are needed only to support cross-process thread duplication
+        $$TODO: These are needed only to support cross-process thread duplication
 
-    class CThreadImmutableData
-    {
-    public:
-        uint32_t dwProcessId;
-    };
+        class CThreadImmutableData
+        {
+        public:
+            uint32_t dwProcessId;
+        };
 
-    class CThreadSharedData
-    {
-    public:
-        uint32_t dwThreadId;
-        uint32_t dwExitCode;
-    };
-***/
+        class CThreadSharedData
+        {
+        public:
+            uint32_t dwThreadId;
+            uint32_t dwExitCode;
+        };
+    ***/
 
     //
     // The process local information for a thread is just a pointer
@@ -731,12 +487,9 @@ namespace CorUnix
     };
 
     extern CObjectType otThread;
-}
+} // namespace CorUnix
 
-BOOL
-TLSInitialize(
-    void
-    );
+BOOL TLSInitialize(void);
 
 extern PAL_ActivationFunction g_activationFunction;
 extern PAL_SafeActivationCheckFunction g_safeActivationCheckFunction;
@@ -757,9 +510,11 @@ Abstract:
 #if defined(__LINUX__)
 #define THREADSilentGetCurrentThreadId() static_cast<size_t>(syscall(SYS_gettid))
 #elif defined(__APPLE__)
-inline size_t THREADSilentGetCurrentThreadId() {
+inline size_t THREADSilentGetCurrentThreadId()
+{
     static thread_local size_t threadIdSelf = -1;
-    if (threadIdSelf != -1) return threadIdSelf;
+    if (threadIdSelf != -1)
+        return threadIdSelf;
     uint64_t tid;
     pthread_threadid_np(pthread_self(), &tid);
     threadIdSelf = static_cast<size_t>(tid);

@@ -31,20 +31,10 @@ typedef __builtin_va_list va_list;
 
 #ifdef __cplusplus
 
-extern "C"
-{
-int
-    PAL__wvsnprintf(
-        char16_t* Buffer,
-        size_t Count,
-        const char16_t* Format,
-        va_list ap);
+extern "C" {
+int PAL__wvsnprintf(char16_t *Buffer, size_t Count, const char16_t *Format, va_list ap);
 
-    int
-    PAL_vfwprintf(
-        FILE *stream,
-        const char16_t *format,
-        va_list ap);
+int PAL_vfwprintf(FILE *stream, const char16_t *format, va_list ap);
 }
 
 namespace CorUnix
@@ -52,18 +42,9 @@ namespace CorUnix
 }
 #else // __cplusplus
 
-    int
-    PAL__wvsnprintf(
-        char16_t* Buffer,
-        size_t Count,
-        const char16_t* Format,
-        va_list ap);
+int PAL__wvsnprintf(char16_t *Buffer, size_t Count, const char16_t *Format, va_list ap);
 
-    int
-    PAL_vfwprintf(
-        FILE *stream,
-        const char16_t *format,
-        va_list ap);
+int PAL_vfwprintf(FILE *stream, const char16_t *format, va_list ap);
 
 #endif // __cplusplus
 

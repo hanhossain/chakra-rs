@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -33,22 +33,18 @@ Abstract:
 
 #ifndef _DEBUG
 
-inline
-void *
-ShmPtrToPtrFast(SHMPTR shmptr)
+inline void *ShmPtrToPtrFast(SHMPTR shmptr)
 {
     void *pv = NULL;
-    
+
     if (SHMNULL != shmptr)
     {
         int segment = shmptr >> 24;
 
         if (segment < shm_numsegments)
         {
-            pv = reinterpret_cast<void*>(
-                reinterpret_cast<unsigned long>(shm_segment_bases[(uint)segment].Load())
-                + (shmptr & 0x00FFFFFF)
-                );
+            pv = reinterpret_cast<void *>(reinterpret_cast<unsigned long>(shm_segment_bases[(uint)segment].Load()) +
+                                          (shmptr & 0x00FFFFFF));
         }
         else
         {
@@ -63,22 +59,19 @@ ShmPtrToPtrFast(SHMPTR shmptr)
 // We could use a function template here to avoid the cast / macro
 //
 
-#define SHMPTR_TO_TYPED_PTR(type, shmptr) reinterpret_cast<type*>(ShmPtrToPtrFast((shmptr)))
+#define SHMPTR_TO_TYPED_PTR(type, shmptr) reinterpret_cast<type *>(ShmPtrToPtrFast((shmptr)))
 
 #else
 
-#define SHMPTR_TO_TYPED_PTR(type, shmptr) reinterpret_cast<type*>(SHMPtrToPtr((shmptr)))
+#define SHMPTR_TO_TYPED_PTR(type, shmptr) reinterpret_cast<type *>(SHMPtrToPtr((shmptr)))
 
 #endif
 
-/* Set ptr to NULL if shmPtr == 0, else set ptr to SHMPTR_TO_TYPED_PTR(type, shmptr) 
-   return FALSE if SHMPTR_TO_TYPED_PTR returns NULL ptr from non null shmptr, 
+/* Set ptr to NULL if shmPtr == 0, else set ptr to SHMPTR_TO_TYPED_PTR(type, shmptr)
+   return FALSE if SHMPTR_TO_TYPED_PTR returns NULL ptr from non null shmptr,
    TRUE otherwise */
-#define SHMPTR_TO_TYPED_PTR_BOOL(type, ptr, shmptr) \
+#define SHMPTR_TO_TYPED_PTR_BOOL(type, ptr, shmptr)                                                                    \
     ((shmptr != 0) ? ((ptr = SHMPTR_TO_TYPED_PTR(type, shmptr)) != NULL) : ((ptr = NULL) == NULL))
 
 
-
-
 #endif // _SHM_HPP_
-

@@ -26,8 +26,7 @@ Revision History:
 #include "volatile.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 /*++
@@ -37,7 +36,7 @@ Function:
 Utility function to force PAL to shutdown state
 
 --*/
-void PALShutdown( void );
+void PALShutdown(void);
 
 /*++
 Function:
@@ -72,8 +71,7 @@ Function:
 
 Returns TRUE if startup has reached a point where thread data is available
 --*/
-BOOL
-PALIsThreadDataInitialized();
+BOOL PALIsThreadDataInitialized();
 
 /*++
 Function:
@@ -81,8 +79,7 @@ Function:
 
 Returns TRUE if the some thread has declared intent to shutdown
 --*/
-BOOL
-PALIsShuttingDown();
+BOOL PALIsShuttingDown();
 
 /*++
 Function:
@@ -90,8 +87,7 @@ Function:
 
 Delcares intent to shutdown
 --*/
-void
-PALSetShutdownIntent();
+void PALSetShutdownIntent();
 
 /*++
 Function:
