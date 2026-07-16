@@ -187,7 +187,7 @@ static size_t ObtainCurrentThreadIdImpl(CPalThread *pCurrentThread)
     {
         threadId = GetCurrentThreadId();
     }
-    _ASSERTE(0 != threadId);
+    assert(0 != threadId);
 
     return threadId;
 }
@@ -543,11 +543,11 @@ namespace CorUnix
 
 #ifndef PALCS_TRANSFER_OWNERSHIP_ON_RELEASE
         // Make sure bits are defined in a usable way
-        _ASSERTE(PALCS_LOCK_AWAKENED_WAITER * 2 == PALCS_LOCK_WAITER_INC);
+        assert(PALCS_LOCK_AWAKENED_WAITER * 2 == PALCS_LOCK_WAITER_INC);
 #endif // !PALCS_TRANSFER_OWNERSHIP_ON_RELEASE
 
         // Make sure structure sizes are compatible
-        _ASSERTE(sizeof(CRITICAL_SECTION) >= sizeof(PAL_CRITICAL_SECTION));
+        assert(sizeof(CRITICAL_SECTION) >= sizeof(PAL_CRITICAL_SECTION));
 
 #ifdef _DEBUG
         if (sizeof(CRITICAL_SECTION) > sizeof(PAL_CRITICAL_SECTION))
@@ -609,7 +609,7 @@ namespace CorUnix
         do
         {
             fInit = PALCS_FullyInitialize(pPalCriticalSection);
-            _ASSERTE(fInit);
+            assert(fInit);
         } while (!fInit && 0 == sched_yield());
 
         if (fInit)
@@ -641,7 +641,7 @@ namespace CorUnix
         PalCsWaiterReturnState cwrs;
         size_t threadId;
 
-        _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
+        assert(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 
         threadId = ObtainCurrentThreadId(pThread);
 
@@ -678,11 +678,11 @@ namespace CorUnix
         {
             // Either this is an incoming thread, and therefore lBitsToChange
             // is just PALCS_LOCK_BIT, or this is an awakened waiter
-            _ASSERTE(PALCS_LOCK_BIT == lBitsToChange ||
+            assert(PALCS_LOCK_BIT == lBitsToChange ||
                      (PALCS_LOCK_BIT | PALCS_LOCK_AWAKENED_WAITER) == lBitsToChange);
 
             // Make sure the waiter increment is in a valid range
-            _ASSERTE(PALCS_LOCK_WAITER_INC == lWaitInc ||
+            assert(PALCS_LOCK_WAITER_INC == lWaitInc ||
                      PALCS_LOCK_AWAKENED_WAITER == lWaitInc);
 
             do {
@@ -694,13 +694,13 @@ namespace CorUnix
 
                     // Make sure that whether we are an incoming thread
                     // or the PALCS_LOCK_AWAKENED_WAITER bit is set
-                    _ASSERTE((PALCS_LOCK_BIT == lBitsToChange) ||
+                    assert((PALCS_LOCK_BIT == lBitsToChange) ||
                              (PALCS_LOCK_AWAKENED_WAITER & lVal));
 
                     lNewVal = lVal ^ lBitsToChange;
 
                     // Make sure we are actually trying to lock
-                    _ASSERTE(lNewVal & PALCS_LOCK_BIT);
+                    assert(lNewVal & PALCS_LOCK_BIT);
 
                     CS_TRACE("[ECS %p] Switching from {%d, %d, %d} to "
                         "{%d, %d, %d} ==>\n", pPalCriticalSection,
@@ -746,7 +746,7 @@ namespace CorUnix
                 //
                 // In the fair lock case, when a waiter wakes up the CS
                 // must be locked (i.e. ownership passed on to the waiter)
-                _ASSERTE(0 != (PALCS_LOCK_BIT & pPalCriticalSection->LockCount));
+                assert(0 != (PALCS_LOCK_BIT & pPalCriticalSection->LockCount));
 
                 // CS successfully acquired
                 goto IECS_set_ownership;
@@ -755,7 +755,7 @@ namespace CorUnix
                 //
                 // Unfair Critical Sections
                 //
-                _ASSERTE(PALCS_LOCK_AWAKENED_WAITER & pPalCriticalSection->LockCount);
+                assert(PALCS_LOCK_AWAKENED_WAITER & pPalCriticalSection->LockCount);
 
                 lBitsToChange = PALCS_LOCK_BIT | PALCS_LOCK_AWAKENED_WAITER;
                 lWaitInc = PALCS_LOCK_AWAKENED_WAITER;
@@ -795,10 +795,10 @@ namespace CorUnix
 #ifdef _DEBUG
         size_t threadId;
 
-        _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
+        assert(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 
         threadId = ObtainCurrentThreadId(pThread);
-        _ASSERTE(threadId == pPalCriticalSection->OwningThread);
+        assert(threadId == pPalCriticalSection->OwningThread);
 #endif // _DEBUG
 
         _ASSERT_MSG(PALCS_LOCK_BIT & pPalCriticalSection->LockCount,
@@ -937,7 +937,7 @@ namespace CorUnix
         size_t threadId;
         bool fRet = true;
 
-        _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
+        assert(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 
         threadId = ObtainCurrentThreadId(pThread);
 
@@ -1106,7 +1106,7 @@ namespace CorUnix
         }
 
         // Make sure we have a valid waiter increment
-        _ASSERTE(PALCS_LOCK_WAITER_INC == lInc ||
+        assert(PALCS_LOCK_WAITER_INC == lInc ||
                  PALCS_LOCK_AWAKENED_WAITER == lInc);
 
         do {
@@ -1114,7 +1114,7 @@ namespace CorUnix
 
             // Make sure the waiter increment is compatible with the
             // awakened waiter bit value
-            _ASSERTE(PALCS_LOCK_WAITER_INC == lInc ||
+            assert(PALCS_LOCK_WAITER_INC == lInc ||
                      PALCS_LOCK_AWAKENED_WAITER & lVal);
 
             if (0 == (lVal & PALCS_LOCK_BIT))
@@ -1428,20 +1428,20 @@ namespace CorUnix
         int iRet;
         size_t threadId;
 
-        _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
+        assert(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 
         threadId = ObtainCurrentThreadId(pThread);
 
         /* check if the current thread already owns the criticalSection */
         if (pPalCriticalSection->OwningThread == threadId)
         {
-            _ASSERTE(0 < pPalCriticalSection->RecursionCount);
+            assert(0 < pPalCriticalSection->RecursionCount);
             pPalCriticalSection->RecursionCount += 1;
             return;
         }
 
         iRet = pthread_mutex_lock(&pPalCriticalSection->csndNativeData.mutex);
-        _ASSERTE(0 == iRet);
+        assert(0 == iRet);
 
         pPalCriticalSection->OwningThread = threadId;
         pPalCriticalSection->RecursionCount = 1;
@@ -1470,15 +1470,15 @@ namespace CorUnix
 #ifdef _DEBUG
         size_t threadId;
 
-        _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
+        assert(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 
         threadId = ObtainCurrentThreadId(pThread);
-        _ASSERTE(threadId == pPalCriticalSection->OwningThread);
+        assert(threadId == pPalCriticalSection->OwningThread);
 
         if (0 >= pPalCriticalSection->RecursionCount)
             DebugBreak();
 
-        _ASSERTE(0 < pPalCriticalSection->RecursionCount);
+        assert(0 < pPalCriticalSection->RecursionCount);
 #endif // _DEBUG
 
         if (0 < --pPalCriticalSection->RecursionCount)
@@ -1487,7 +1487,7 @@ namespace CorUnix
         pPalCriticalSection->OwningThread = 0;
 
         iRet = pthread_mutex_unlock(&pPalCriticalSection->csndNativeData.mutex);
-        _ASSERTE(0 == iRet);
+        assert(0 == iRet);
     }
 
     /*++
@@ -1512,7 +1512,7 @@ namespace CorUnix
         bool fRet;
         size_t threadId;
 
-        _ASSERTE(PalCsNotInitialized != pPalCriticalSection->cisInitState);
+        assert(PalCsNotInitialized != pPalCriticalSection->cisInitState);
 
         threadId = ObtainCurrentThreadId(pThread);
 

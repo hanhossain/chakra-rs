@@ -149,8 +149,8 @@ CorUnix::InternalCreateEvent(
     IPalObject *pobjEvent = NULL;
     IPalObject *pobjRegisteredEvent = NULL;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != phEvent);
+    assert(NULL != pthr);
+    assert(NULL != phEvent);
 
     if (lpName != nullptr)
     {
@@ -304,7 +304,7 @@ CorUnix::InternalSetEvent(
     IPalObject *pobjEvent = NULL;
     ISynchStateController *pssc = NULL;
 
-    _ASSERTE(NULL != pthr);
+    assert(NULL != pthr);
 
     palError = g_pObjectManager->ReferenceObjectByHandle(
         pthr,

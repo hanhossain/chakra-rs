@@ -1764,10 +1764,10 @@ CPalThread::~CPalThread()
         [[maybe_unused]] int iError;
 
         iError = pthread_cond_destroy(&m_startCond);
-        _ASSERTE(0 == iError);
+        assert(0 == iError);
 
         iError = pthread_mutex_destroy(&m_startMutex);
-        _ASSERTE(0 == iError);
+        assert(0 == iError);
     }
 }
 
@@ -2078,7 +2078,7 @@ int CorUnix::CThreadMachExceptionHandlers::GetIndexOfHandler(exception_mask_t bm
         // Entry covers this exception type and the handler isn't null
         if (m_masks[i] & bmExceptionMask && m_handlers[i] != MACH_PORT_NULL)
         {
-            _ASSERTE(m_handlers[i] != s_ExceptionPort);
+            assert(m_handlers[i] != s_ExceptionPort);
 
             // One more check; has the target handler port become dead?
             mach_port_type_t ePortType;

@@ -1568,9 +1568,9 @@ namespace CorUnix
         uint8_t byVal;
         SynchWorkerCmd swcWorkerCmd = SynchWorkerCmdNop;
 
-        _ASSERTE(NULL != pswcWorkerCmd);
-        _ASSERTE(NULL != pshridMarshaledData);
-        _ASSERTE(NULL != pdwData);
+        assert(NULL != pswcWorkerCmd);
+        assert(NULL != pshridMarshaledData);
+        assert(NULL != pdwData);
 
         iRet = ReadBytesFromProcessPipe(iPollTimeout, &byVal, sizeof(uint8_t));
 
@@ -1688,7 +1688,7 @@ namespace CorUnix
         int iNChanges;
 #endif // defined(__APPLE__)
 
-        _ASSERTE(0 <= iBytes);
+        assert(0 <= iBytes);
 
         do
         {
@@ -1737,8 +1737,8 @@ namespace CorUnix
 
                     if (0 < iRet)
                     {
-                        _ASSERTE(1 == iRet);
-                        _ASSERTE(EVFILT_READ == m_keProcessPipeEvent.filter);
+                        assert(1 == iRet);
+                        assert(EVFILT_READ == m_keProcessPipeEvent.filter);
 
                         if (EV_ERROR & m_keProcessPipeEvent.flags)
                         {
@@ -1882,7 +1882,7 @@ namespace CorUnix
 #if defined(__APPLE__)
                 // Update available data count
                 m_keProcessPipeEvent.data -= iRet;
-                _ASSERTE(0 <= m_keProcessPipeEvent.data);
+                assert(0 <= m_keProcessPipeEvent.data);
 #endif // defined(__APPLE__)
             }
         } while(iBytesRead < iBytes);
@@ -1946,7 +1946,7 @@ namespace CorUnix
         PAL_ERROR palErr = NO_ERROR;
         int32_t lCount = pthrCurrent->synchronizationInfo.m_lPendingSignalingCount;
 
-        _ASSERTE(pthrTarget != pthrCurrent);
+        assert(pthrTarget != pthrCurrent);
 
         if (CThreadSynchronizationInfo::PendingSignalingsArraySize > lCount)
         {
@@ -3132,10 +3132,10 @@ namespace CorUnix
         CObjectType *pot = NULL;
         uint32_t ulcWaitingThreads;
 
-        _ASSERTE(NULL != pthrCurrent);
-        _ASSERTE(NULL != pvLocalSynchData);
-        _ASSERTE(NULL != ppvSharedSynchData);
-        _ASSERTE(ProcessLocalObject == psdLocal->GetObjectDomain());
+        assert(NULL != pthrCurrent);
+        assert(NULL != pvLocalSynchData);
+        assert(NULL != ppvSharedSynchData);
+        assert(ProcessLocalObject == psdLocal->GetObjectDomain());
 
 #if _DEBUG
 
@@ -3157,7 +3157,7 @@ namespace CorUnix
         }
 
         psdShared = SharedIDToTypePointer(CSynchData, shridSynchData);
-        _ASSERTE(NULL != psdShared);
+        assert(NULL != psdShared);
 
         //
         // Allocate shared memory WaitingThreadListNodes if there are
@@ -3200,7 +3200,7 @@ namespace CorUnix
         //
 
         pot = psdLocal->GetObjectType();
-        _ASSERTE(NULL != pot);
+        assert(NULL != pot);
 
         if (otiProcess == pot->GetId())
         {
@@ -3245,7 +3245,7 @@ namespace CorUnix
                     rgshridWTLNodes[i]
                     );
 
-                _ASSERTE(NULL != pwtlnNew);
+                assert(NULL != pwtlnNew);
 
                 pwtlnNew->shridSHRThis = rgshridWTLNodes[i];
                 pwtlnNew->ptrOwnerObjSynchData.shrid = shridSynchData;
@@ -3260,7 +3260,7 @@ namespace CorUnix
                 psdShared->SharedWaiterEnqueue(rgshridWTLNodes[i]);
                 psdShared->AddRef();
 
-                _ASSERTE(pwtlnOld = pwtlnOld->ptwiWaitInfo->rgpWTLNodes[pwtlnOld->dwObjIndex]);
+                assert(pwtlnOld = pwtlnOld->ptwiWaitInfo->rgpWTLNodes[pwtlnOld->dwObjIndex]);
                 pwtlnNew->ptwiWaitInfo->rgpWTLNodes[pwtlnNew->dwObjIndex] = pwtlnNew;
 
                 pwtlnNew->ptwiWaitInfo->lSharedObjCount += 1;
@@ -3271,14 +3271,14 @@ namespace CorUnix
                 }
                 else
                 {
-                    _ASSERTE(pwtlnNew->ptwiWaitInfo->lSharedObjCount
+                    assert(pwtlnNew->ptwiWaitInfo->lSharedObjCount
                         < pwtlnNew->ptwiWaitInfo->lObjCount);
 
                     pwtlnNew->ptwiWaitInfo->wdWaitDomain = MixedWait;
                 }
             }
 
-            _ASSERTE(psdShared->GetWaitingThreadCount() == ulcWaitingThreads);
+            assert(psdShared->GetWaitingThreadCount() == ulcWaitingThreads);
         }
 
         //
@@ -3304,12 +3304,12 @@ namespace CorUnix
 
                 psdShared->SetOwner(psdLocal->GetOwnerThread());
                 psdShared->SetOwnershipCount(psdLocal->GetOwnershipCount());
-                _ASSERTE(!psdShared->IsAbandoned());
+                assert(!psdShared->IsAbandoned());
             }
             else
             {
-                _ASSERTE(0 == psdLocal->GetOwnershipCount());
-                _ASSERTE(0 == psdShared->GetOwnershipCount());
+                assert(0 == psdLocal->GetOwnershipCount());
+                assert(0 == psdShared->GetOwnershipCount());
                 psdShared->SetAbandoned(psdLocal->IsAbandoned());
             }
         }
@@ -3613,7 +3613,7 @@ namespace CorUnix
     {
         PAL_ERROR palErr = NO_ERROR;
 
-        _ASSERTE(0 <= m_lPendingSignalingCount);
+        assert(0 <= m_lPendingSignalingCount);
 
         if (0 < m_lPendingSignalingCount)
         {
@@ -3670,7 +3670,7 @@ namespace CorUnix
                     lIdx += 1;
                 }
 
-                _ASSERTE(lIdx == m_lPendingSignalingCount);
+                assert(lIdx == m_lPendingSignalingCount);
             }
 
             // Reset the counter of pending signalings for this thread

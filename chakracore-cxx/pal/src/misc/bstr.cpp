@@ -27,7 +27,7 @@ Abstract:
 #define FAILED(Status) (static_cast<int32_t>(Status)<0)
 #define NULL    0
 
-#include "pal_assert.h"
+#include <cassert>
 #include "rt/intsafe.h"
 
 #define WIN32_ALLOC_ALIGN (16 - 1)

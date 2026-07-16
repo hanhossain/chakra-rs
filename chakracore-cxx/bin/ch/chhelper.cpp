@@ -616,10 +616,8 @@ int main_internal(int argc, char** c_argv, uint32_t snapInterval, uint32_t snapH
     argInfo = { vargs, chakra_rs::chhelper::print_usage, {} };
     success = ChakraRTInterface::LoadChakraDll(&argInfo);
 
-#if !defined(NDEBUG)
     // handle command line flags
     OnChakraCoreLoaded();
-#endif
 
     if (argInfo.filename_.empty())
     {

@@ -50,8 +50,8 @@ CSharedMemoryObject::Initialize(
     PAL_ERROR palError = NO_ERROR;
     SHMObjData *psmod = NULL;
 
-    _ASSERTE(NULL != pthr); 
-    _ASSERTE(NULL != poa);
+    assert(NULL != pthr);
+    assert(NULL != poa);
 
     palError = CPalObjectBase::Initialize(pthr, poa);
     if (NO_ERROR != palError)
@@ -158,8 +158,8 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
     PAL_ERROR palError = NO_ERROR;
     SHMObjData *psmod = NULL;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != poa);
+    assert(NULL != pthr);
+    assert(NULL != poa);
 
     //
     // This object is obviously shared...
@@ -167,7 +167,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
 
     m_ObjectDomain = SharedObject;
 
-    _ASSERTE(SHMNULL != m_shmod);
+    assert(SHMNULL != m_shmod);
 
     psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, m_shmod);
     if (NULL == psmod)
@@ -212,8 +212,8 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
         //
 
         wsz = SHMPTR_TO_TYPED_PTR(char16_t, psmod->shmObjName);
-        _ASSERTE(NULL != wsz);
-        _ASSERTE(wsz == poa->sObjectName.GetString());
+        assert(NULL != wsz);
+        assert(wsz == poa->sObjectName.GetString());
     }
 #endif // debug
 
@@ -288,8 +288,8 @@ CSharedMemoryObject::AllocateSharedDataItems(
     SHMPTR shmod = SHMNULL;
     SHMObjData *psmod = NULL;
 
-    _ASSERTE(NULL != pshmObjData);
-    _ASSERTE(NULL != ppsmod);
+    assert(NULL != pshmObjData);
+    assert(NULL != ppsmod);
 
     //
     // We're about to make a number of shared memory allocations,
@@ -307,7 +307,7 @@ CSharedMemoryObject::AllocateSharedDataItems(
     }
 
     psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, shmod);
-    _ASSERTE(NULL != psmod);
+    assert(NULL != psmod);
 
     memset((psmod),0,(sizeof(*psmod)));
 
@@ -389,12 +389,12 @@ CSharedMemoryObject::FreeSharedDataAreas(
 {
     SHMObjData *psmod;
 
-    _ASSERTE(SHMNULL != shmObjData);
+    assert(SHMNULL != shmObjData);
 
     SHMLock();
         
     psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, shmObjData);
-    _ASSERTE(NULL != psmod);
+    assert(NULL != psmod);
     
     if (SHMNULL != psmod->shmObjImmutableData)
     {
@@ -435,8 +435,8 @@ CSharedMemoryObject::PromoteSharedData(
     SHMObjData *psmod
     )
 {
-    _ASSERTE(SHMNULL != shmObjData);
-    _ASSERTE(NULL != psmod);
+    assert(SHMNULL != shmObjData);
+    assert(NULL != psmod);
     
     //
     // psmod has been zero-inited, so we don't need to worry about
@@ -452,7 +452,7 @@ CSharedMemoryObject::PromoteSharedData(
         void *pvImmutableData;
 
         pvImmutableData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjImmutableData);
-        _ASSERTE(NULL != pvImmutableData);
+        assert(NULL != pvImmutableData);
 
         memcpy(
             pvImmutableData,
@@ -466,7 +466,7 @@ CSharedMemoryObject::PromoteSharedData(
         void *pvSharedData;
 
         pvSharedData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjSharedData);
-        _ASSERTE(NULL != pvSharedData);
+        assert(NULL != pvSharedData);
 
         memcpy(
             pvSharedData,
@@ -505,7 +505,7 @@ CSharedMemoryObject::EnsureObjectIsShared(
     SHMPTR shmObjData;
     SHMObjData *psmod;
 
-    _ASSERTE(NULL != pthr);
+    assert(NULL != pthr);
 
     //
     // Grab the shared memory lock and check if the object is already
@@ -576,7 +576,7 @@ CSharedMemoryObject::CleanupForProcessShutdown(
 {
     bool fCleanupSharedState;
 
-    _ASSERTE(NULL != pthr);
+    assert(NULL != pthr);
     
     fCleanupSharedState = DereferenceSharedData();
 
@@ -628,7 +628,7 @@ CSharedMemoryObject::AcquireObjectDestructionLock(
     CPalThread *pthr
     )
 {
-    _ASSERTE(NULL != pthr);
+    assert(NULL != pthr);
     
     InternalEnterCriticalSection(pthr, m_pcsObjListLock);
 
@@ -656,7 +656,7 @@ CSharedMemoryObject::ReleaseObjectDestructionLock(
 {
     bool fCleanupSharedState = FALSE;
 
-    _ASSERTE(NULL != pthr);
+    assert(NULL != pthr);
 
     if (fDestructionPending)
     {
@@ -706,7 +706,7 @@ CSharedMemoryObject::DereferenceSharedData()
             SHMLock();
 
             psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, m_shmod);
-            _ASSERTE(NULL != psmod);
+            assert(NULL != psmod);
             
             psmod->lProcessRefCount -= 1;
             if (0 == psmod->lProcessRefCount)
@@ -726,12 +726,12 @@ CSharedMemoryObject::DereferenceSharedData()
                     // This object better have a name...
                     //
 
-                    _ASSERTE(0 != psmod->dwNameLength);
+                    assert(0 != psmod->dwNameLength);
 
                     if (SHMNULL != psmod->shmPrevObj)
                     {
                         SHMObjData *psmodPrevious = SHMPTR_TO_TYPED_PTR(SHMObjData, psmod->shmPrevObj);
-                        _ASSERTE(NULL != psmodPrevious);
+                        assert(NULL != psmodPrevious);
 
                         psmodPrevious->shmNextObj = psmod->shmNextObj;
                     }
@@ -751,7 +751,7 @@ CSharedMemoryObject::DereferenceSharedData()
                     if (SHMNULL != psmod->shmNextObj)
                     {
                         SHMObjData *psmodNext = SHMPTR_TO_TYPED_PTR(SHMObjData, psmod->shmNextObj);
-                        _ASSERTE(NULL != psmodNext);
+                        assert(NULL != psmodNext);
                         
                         psmodNext->shmPrevObj = psmod->shmPrevObj;
                     }
@@ -759,8 +759,8 @@ CSharedMemoryObject::DereferenceSharedData()
 #if _DEBUG                
                 else
                 {
-                    _ASSERTE(SHMNULL == psmod->shmPrevObj);
-                    _ASSERTE(SHMNULL == psmod->shmNextObj);
+                    assert(SHMNULL == psmod->shmPrevObj);
+                    assert(SHMNULL == psmod->shmNextObj);
                 }
 #endif                
             }
@@ -848,7 +848,7 @@ CSharedMemoryObject::GetObjectFromListLink(PLIST_ENTRY ple)
 {
     CSharedMemoryObject *pshmo;
 
-    _ASSERTE(NULL != ple);
+    assert(NULL != ple);
 
     //
     // Ideally we'd use CONTAINING_RECORD here, but it uses offsetof (see above
@@ -859,7 +859,7 @@ CSharedMemoryObject::GetObjectFromListLink(PLIST_ENTRY ple)
         reinterpret_cast<size_t>(ple) - PAL_safe_offsetof(CSharedMemoryObject, m_le)
         );
 
-    _ASSERTE(ple == &pshmo->m_le);
+    assert(ple == &pshmo->m_le);
 
     LOGEXIT("CSharedMemoryObject::GetObjectFromListLink returns %p\n", pshmo);
 
@@ -891,12 +891,12 @@ CSharedMemoryObject::GetSharedData(
 {
     IDataLock *pDataLock;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(ReadLock == eLockRequest || WriteLock == eLockRequest);
-    _ASSERTE(NULL != ppDataLock);
-    _ASSERTE(NULL != ppvSharedData);
+    assert(NULL != pthr);
+    assert(ReadLock == eLockRequest || WriteLock == eLockRequest);
+    assert(NULL != ppDataLock);
+    assert(NULL != ppvSharedData);
 
-    _ASSERTE(0 < m_pot->GetSharedDataSize());
+    assert(0 < m_pot->GetSharedDataSize());
     
     if (ProcessLocalObject == m_ObjectDomain)
     {
@@ -952,8 +952,8 @@ CSharedMemoryObject::GetSynchStateController(
     ISynchStateController **ppStateController    // OUT
     )
 {
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != ppStateController);
+    assert(NULL != pthr);
+    assert(NULL != ppStateController);
     
     //
     // This is not a waitable object!
@@ -982,8 +982,8 @@ CSharedMemoryObject::GetSynchWaitController(
     ISynchWaitController **ppWaitController    // OUT
     )
 {
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != ppWaitController);
+    assert(NULL != pthr);
+    assert(NULL != ppWaitController);
     
     //
     // This is not a waitable object!!!
@@ -1028,7 +1028,7 @@ CSharedMemoryObject::GetObjectSynchData(
     void **ppvSynchData             // OUT
     )
 {
-    _ASSERTE(NULL != ppvSynchData);
+    assert(NULL != ppvSynchData);
     
     //
     // This is not a waitable object!!!
@@ -1058,8 +1058,8 @@ CSharedMemoryWaitableObject::Initialize(
 {
     PAL_ERROR palError = NO_ERROR;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != poa);
+    assert(NULL != pthr);
+    assert(NULL != poa);
 
     palError = CSharedMemoryObject::Initialize(pthr, poa);
     if (NO_ERROR != palError)
@@ -1071,7 +1071,7 @@ CSharedMemoryWaitableObject::Initialize(
     // Sanity check the passed in object type
     //
 
-    _ASSERTE(CObjectType::WaitableObject == m_pot->GetSynchronizationSupport());
+    assert(CObjectType::WaitableObject == m_pot->GetSynchronizationSupport());
 
     palError = g_pSynchronizationManager->AllocateObjectSynchData(
         m_pot,
@@ -1082,7 +1082,7 @@ CSharedMemoryWaitableObject::Initialize(
     if (NO_ERROR == palError && SharedObject == m_ObjectDomain)
     {        
         SHMObjData *pshmod = SHMPTR_TO_TYPED_PTR(SHMObjData, m_shmod);
-        _ASSERTE(NULL != pshmod);
+        assert(NULL != pshmod);
 
         pshmod->pvSynchData = m_pvSynchData;
     }
@@ -1117,7 +1117,7 @@ CSharedMemoryWaitableObject::EnsureObjectIsShared(
     SHMObjData *psmod;
     void *pvSharedSynchData;
 
-    _ASSERTE(NULL != pthr);
+    assert(NULL != pthr);
 
     //
     // First, grab the process synchronization lock and check
@@ -1254,8 +1254,8 @@ CSharedMemoryWaitableObject::GetSynchStateController(
 {
     PAL_ERROR palError = NO_ERROR;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != ppStateController);
+    assert(NULL != pthr);
+    assert(NULL != ppStateController);
 
     //
     // We need to grab the local synch lock before creating the controller
@@ -1301,8 +1301,8 @@ CSharedMemoryWaitableObject::GetSynchWaitController(
 {
     PAL_ERROR palError = NO_ERROR;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != ppWaitController);
+    assert(NULL != pthr);
+    assert(NULL != ppWaitController);
 
     //
     // We need to grab the local synch lock before creating the controller
@@ -1344,7 +1344,7 @@ CSharedMemoryWaitableObject::GetObjectSynchData(
     void **ppvSynchData             // OUT
     )
 {
-    _ASSERTE(NULL != ppvSynchData);
+    assert(NULL != ppvSynchData);
     
     *ppvSynchData = m_pvSynchData;
 

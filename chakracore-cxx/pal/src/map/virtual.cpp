@@ -1299,8 +1299,8 @@ VirtualFreeEnclosing_(
     BOOL bRetVal = TRUE;
 
 #ifdef DEBUG
-    _ASSERTE(lpActualAlignedStartAddress >= lpRegionStartAddress);
-    _ASSERTE(lpActualAlignedStartAddress < static_cast<char*>(lpRegionStartAddress) + dwSize + dwAlignmentSize);
+    assert(lpActualAlignedStartAddress >= lpRegionStartAddress);
+    assert(lpActualAlignedStartAddress < static_cast<char*>(lpRegionStartAddress) + dwSize + dwAlignmentSize);
 #endif
 
     char * beforeRegionStart = static_cast<char*>(lpRegionStartAddress);
@@ -1312,11 +1312,11 @@ VirtualFreeEnclosing_(
     bool afterRegionFreed = (afterRegionSize == 0);
 
 #ifdef DEBUG
-    _ASSERTE(dwSize + dwAlignmentSize == beforeRegionSize + dwSize + afterRegionSize);
+    assert(dwSize + dwAlignmentSize == beforeRegionSize + dwSize + afterRegionSize);
 
     size_t alignmentDiff = (reinterpret_cast<size_t>(lpRegionStartAddress) % dwAlignmentSize);
     size_t beforeRegionSize2 = dwAlignmentSize - alignmentDiff;
-    _ASSERTE(beforeRegionSize == beforeRegionSize2);
+    assert(beforeRegionSize == beforeRegionSize2);
 #endif
 
     CPalThread *pthrCurrent;

@@ -48,8 +48,8 @@ CPalObjectBase::Initialize(
 {
     PAL_ERROR palError = NO_ERROR;
 
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(NULL != poa);
+    assert(NULL != pthr);
+    assert(NULL != poa);
 
     if (0 != m_pot->GetImmutableDataSize())
     {
@@ -150,9 +150,9 @@ CPalObjectBase::GetImmutableData(
     void **ppvImmutableData             // OUT
     )
 {
-    _ASSERTE(NULL != ppvImmutableData);
+    assert(NULL != ppvImmutableData);
     
-    _ASSERTE(0 < m_pot->GetImmutableDataSize());
+    assert(0 < m_pot->GetImmutableDataSize());
 
     *ppvImmutableData = m_pvImmutableData;
 
@@ -184,12 +184,12 @@ CPalObjectBase::GetProcessLocalData(
     void **ppvProcessLocalData          // OUT
     )
 {
-    _ASSERTE(NULL != pthr);
-    _ASSERTE(ReadLock == eLockRequest || WriteLock == eLockRequest);
-    _ASSERTE(NULL != ppDataLock);
-    _ASSERTE(NULL != ppvProcessLocalData);
+    assert(NULL != pthr);
+    assert(ReadLock == eLockRequest || WriteLock == eLockRequest);
+    assert(NULL != ppDataLock);
+    assert(NULL != ppvProcessLocalData);
     
-    _ASSERTE(0 < m_pot->GetProcessLocalDataSize());
+    assert(0 < m_pot->GetProcessLocalDataSize());
 
     m_sdlLocalData.AcquireLock(pthr, ppDataLock);
     *ppvProcessLocalData = m_pvLocalData;
@@ -214,7 +214,7 @@ CPalObjectBase::AddReference(
 {
     int32_t lRefCount;
 
-    _ASSERTE(m_lRefCount > 0);
+    assert(m_lRefCount > 0);
     lRefCount = InterlockedIncrement(&m_lRefCount);
 
     LOGEXIT("CPalObjectBase::AddReference returns %d\n", lRefCount);
@@ -240,11 +240,11 @@ CPalObjectBase::ReleaseReference(
 {
     int32_t lRefCount;
 
-    _ASSERTE(NULL != pthr);
+    assert(NULL != pthr);
 
     AcquireObjectDestructionLock(pthr);
 
-    _ASSERTE(m_lRefCount > 0); 
+    assert(m_lRefCount > 0);
 
     //
     // Even though object destruction takes place under a lock

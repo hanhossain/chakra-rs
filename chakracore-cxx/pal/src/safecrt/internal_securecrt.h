@@ -24,6 +24,8 @@
 #ifndef _INC_INTERNAL_SECURECRT
 #define _INC_INTERNAL_SECURECRT
 
+#include <cassert>
+
 /* more VS specific goodness */
 #define __out_ecount_z( x )
 #define __out_ecount( x )
@@ -55,11 +57,9 @@
             }                                                                   \
         }
     #define _INVALID_PARAMETER( exp )   _ASSERT_EXPR( 0, exp )
-    #define _ASSERTE( exp ) _ASSERT_EXPR( exp, exp )
 #else
     #define _ASSERT_EXPR( val, expr )
     #define _INVALID_PARAMETER( exp )
-    #define _ASSERTE( exp )
 #endif
 
 /* _TRUNCATE */

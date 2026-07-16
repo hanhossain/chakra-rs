@@ -157,6 +157,8 @@ Using Debug channels at Run Time
 #include "pal/debug.h"
 #include "pal/thread.hpp"
 
+#include <cassert>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -242,7 +244,6 @@ extern const char16_t* W16_NULLSTRING;
 
 #define ASSERT(args...)
 #define _ASSERT(expr)
-#define _ASSERTE(expr)
 #define _ASSERT_MSG(args...)
 
 #else /* defined(_DEBUG) */
@@ -254,8 +255,7 @@ extern const char16_t* W16_NULLSTRING;
     PRINT_ERROR(__VA_ARGS__);\
 }
 
-#define _ASSERTE(expr) do { if (!(expr)) { ASSERT("Expression: " #expr "\n"); } } while(0)
-#define _ASSERT _ASSERTE
+#define _ASSERT assert
 #define _ASSERT_MSG(expr, args...) \
     do { \
         if (!(expr)) \

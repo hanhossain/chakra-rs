@@ -34,7 +34,7 @@ Abstract:
 
 SET_DEFAULT_DEBUG_CHANNEL(MISC);
 
-// In safemath.h, Template SafeInt uses macro _ASSERTE, which need to use variable
+// In safemath.h, Template SafeInt uses macro assert, which need to use variable
 // defdbgchan defined by SET_DEFAULT_DEBUG_CHANNEL. Therefore, the include statement
 // should be placed after the SET_DEFAULT_DEBUG_CHANNEL(MISC)
 #include <safemath.h>
