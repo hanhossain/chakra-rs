@@ -8,19 +8,19 @@
 namespace Wasm
 {
 
-class WasmDataSegment
-{
-public:
-    WasmDataSegment(ArenaAllocator* alloc, WasmNode initExpr, uint32_t _source_size, const byte* _data);
-    WasmNode GetOffsetExpr() const { return m_initExpr; }
-    uint32_t GetSourceSize() const;
-    const byte* GetData() const;
+    class WasmDataSegment
+    {
+    public:
+        WasmDataSegment(ArenaAllocator *alloc, WasmNode initExpr, uint32_t _source_size, const byte *_data);
+        WasmNode GetOffsetExpr() const { return m_initExpr; }
+        uint32_t GetSourceSize() const;
+        const byte *GetData() const;
 
-private:
-    ArenaAllocator* m_alloc;
-    WasmNode m_initExpr;
-    uint32_t m_sourceSize;
-    const byte* m_data;
-};
+    private:
+        ArenaAllocator *m_alloc;
+        WasmNode m_initExpr;
+        uint32_t m_sourceSize;
+        const byte *m_data;
+    };
 
 } // namespace Wasm

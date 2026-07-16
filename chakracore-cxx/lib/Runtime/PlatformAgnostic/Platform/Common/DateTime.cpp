@@ -3,119 +3,116 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "Common/Common.h"
 #include "ChakraPlatform.h"
+#include "Common/Common.h"
 #include "Common/DateUtilities.h"
 #include "Core/Assertions.h"
 #include "Exceptions/Throw.h"
 
 namespace PlatformAgnostic
 {
-namespace DateTime
-{
-    int GetTZ(double tv, char16_t* dst_name, bool* is_dst, int* offset)
+    namespace DateTime
     {
-        struct tm tm_local, *tm_result;
-        time_t time_noms = static_cast<time_t>(tv / 1000 /* drop ms */);
-        tm_result = localtime_r(&time_noms, &tm_local);
-        if (!tm_result)
+        int GetTZ(double tv, char16_t *dst_name, bool *is_dst, int *offset)
         {
-            *is_dst = false;
-            *offset = 0;
-            if (dst_name != nullptr)
+            struct tm tm_local, *tm_result;
+            time_t time_noms = static_cast<time_t>(tv / 1000 /* drop ms */);
+            tm_result = localtime_r(&time_noms, &tm_local);
+            if (!tm_result)
             {
-                dst_name[0] = static_cast<char16_t>(0);
-            }
-            return 0;
-        }
-
-        *is_dst = tm_result->tm_isdst > 0;
-        *offset = static_cast<int>(tm_result->tm_gmtoff);
-
-        if (dst_name != nullptr)
-        {
-            if (!tm_result->tm_zone)
-            {
-                dst_name[0] = 0;
+                *is_dst = false;
+                *offset = 0;
+                if (dst_name != nullptr)
+                {
+                    dst_name[0] = static_cast<char16_t>(0);
+                }
                 return 0;
             }
 
-            uint32_t length = 0;
-            for (; length < __CC_PA_TIMEZONE_ABVR_NAME_LENGTH
-                && tm_result->tm_zone[length] != 0; length++)
-            {
-                dst_name[length] = static_cast<char16_t>(tm_result->tm_zone[length]);
-            }
+            *is_dst = tm_result->tm_isdst > 0;
+            *offset = static_cast<int>(tm_result->tm_gmtoff);
 
-            if (length >= __CC_PA_TIMEZONE_ABVR_NAME_LENGTH)
+            if (dst_name != nullptr)
             {
-                length = __CC_PA_TIMEZONE_ABVR_NAME_LENGTH - 1;
-            }
+                if (!tm_result->tm_zone)
+                {
+                    dst_name[0] = 0;
+                    return 0;
+                }
 
-            dst_name[length] = static_cast<char16_t>(0);
-            return length;
+                uint32_t length = 0;
+                for (; length < __CC_PA_TIMEZONE_ABVR_NAME_LENGTH && tm_result->tm_zone[length] != 0; length++)
+                {
+                    dst_name[length] = static_cast<char16_t>(tm_result->tm_zone[length]);
+                }
+
+                if (length >= __CC_PA_TIMEZONE_ABVR_NAME_LENGTH)
+                {
+                    length = __CC_PA_TIMEZONE_ABVR_NAME_LENGTH - 1;
+                }
+
+                dst_name[length] = static_cast<char16_t>(0);
+                return length;
+            }
+            else
+            {
+                return 0;
+            }
         }
-        else
+
+        const char16_t *Utility::GetStandardName(size_t *nameLength, const DateTime::YMD *ymd)
         {
-            return 0;
+            AssertMsg(ymd != NULL, "xplat needs DateTime::YMD is defined for this call");
+            double tv = Js::DateUtilities::TvFromDate(ymd->year, ymd->mon, ymd->mday, ymd->time);
+            bool isDST;
+            int mOffset;
+            data.standardNameLength = GetTZ(tv, data.standardName, &isDST, &mOffset);
+            *nameLength = data.standardNameLength;
+            return data.standardName;
         }
-    }
 
-    const char16_t *Utility::GetStandardName(size_t *nameLength, const DateTime::YMD *ymd)
-    {
-        AssertMsg(ymd != NULL, "xplat needs DateTime::YMD is defined for this call");
-        double tv = Js::DateUtilities::TvFromDate(ymd->year, ymd->mon, ymd->mday, ymd->time);
-        bool isDST;
-        int mOffset;
-        data.standardNameLength = GetTZ(tv, data.standardName, &isDST, &mOffset);
-        *nameLength = data.standardNameLength;
-        return data.standardName;
-    }
+        const char16_t *Utility::GetDaylightName(size_t *nameLength, const DateTime::YMD *ymd)
+        {
+            // xplat only gets the actual zone name for the given date
+            return GetStandardName(nameLength, ymd);
+        }
 
-    const char16_t *Utility::GetDaylightName(size_t *nameLength, const DateTime::YMD *ymd)
-    {
-        // xplat only gets the actual zone name for the given date
-        return GetStandardName(nameLength, ymd);
-    }
+        static void YMDLocalToUtc(double localtv, YMD *utc)
+        {
+            int mOffset = 0;
+            bool isDST;
+            GetTZ(localtv, nullptr, &isDST, &mOffset);
+            localtv -= DateTimeTicks_PerSecond * mOffset;
+            Js::DateUtilities::GetYmdFromTv(localtv, utc);
+        }
 
-    static void YMDLocalToUtc(double localtv, YMD *utc)
-    {
-        int mOffset = 0;
-        bool isDST;
-        GetTZ(localtv, nullptr, &isDST, &mOffset);
-        localtv -= DateTimeTicks_PerSecond * mOffset;
-        Js::DateUtilities::GetYmdFromTv(localtv, utc);
-    }
+        static void YMDUtcToLocal(double utctv, YMD *local, int &bias, int &offset, bool &isDaylightSavings)
+        {
+            int mOffset = 0;
+            bool isDST;
+            GetTZ(utctv, nullptr, &isDST, &mOffset);
+            utctv += DateTimeTicks_PerSecond * mOffset;
+            Js::DateUtilities::GetYmdFromTv(utctv, local);
+            isDaylightSavings = isDST;
+            bias = mOffset / 60;
+            offset = bias;
+        }
 
-    static void YMDUtcToLocal(double utctv, YMD *local,
-                          int &bias, int &offset, bool &isDaylightSavings)
-    {
-        int mOffset = 0;
-        bool isDST;
-        GetTZ(utctv, nullptr, &isDST, &mOffset);
-        utctv += DateTimeTicks_PerSecond * mOffset;
-        Js::DateUtilities::GetYmdFromTv(utctv, local);
-        isDaylightSavings = isDST;
-        bias = mOffset / 60;
-        offset = bias;
-    }
+        // DaylightTimeHelper ******
+        double DaylightTimeHelper::UtcToLocal(double utcTime, int &bias, int &offset, bool &isDaylightSavings)
+        {
+            YMD local;
+            YMDUtcToLocal(utcTime, &local, bias, offset, isDaylightSavings);
 
-    // DaylightTimeHelper ******
-    double DaylightTimeHelper::UtcToLocal(double utcTime, int &bias,
-                                          int &offset, bool &isDaylightSavings)
-    {
-        YMD local;
-        YMDUtcToLocal(utcTime, &local, bias, offset, isDaylightSavings);
+            return Js::DateUtilities::TvFromDate(local.year, local.mon, local.mday, local.time);
+        }
 
-        return Js::DateUtilities::TvFromDate(local.year, local.mon, local.mday, local.time);
-    }
+        double DaylightTimeHelper::LocalToUtc(double localTime)
+        {
+            YMD utc;
+            YMDLocalToUtc(localTime, &utc);
 
-    double DaylightTimeHelper::LocalToUtc(double localTime)
-    {
-        YMD utc;
-        YMDLocalToUtc(localTime, &utc);
-
-        return Js::DateUtilities::TvFromDate(utc.year, utc.mon, utc.mday, utc.time);
-    }
-} // namespace DateTime
+            return Js::DateUtilities::TvFromDate(utc.year, utc.mon, utc.mday, utc.time);
+        }
+    } // namespace DateTime
 } // namespace PlatformAgnostic

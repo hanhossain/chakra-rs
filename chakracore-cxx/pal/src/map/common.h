@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -22,8 +22,7 @@ Abstract:
 #define __COMMON_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /*****
@@ -31,14 +30,10 @@ extern "C"
  * W32toUnixAccessControl( uint32_t ) - Maps Win32 to Unix memory access controls .
  *
  */
-int32_t W32toUnixAccessControl(  uint32_t flProtect );
+int32_t W32toUnixAccessControl(uint32_t flProtect);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* __COMMON_H_ */
-
-
-
-

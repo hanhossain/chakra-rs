@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -14,7 +14,7 @@ Module Name:
 Abstract:
 
     Private process structures and routines
-    
+
 Revision History:
 
 
@@ -72,8 +72,6 @@ namespace CorUnix
     --*/
     void TerminateCurrentProcessNoExit();
 
-}
+} // namespace CorUnix
 
 #endif //_PAL_PROCPRIVATE_HPP_
-
-

@@ -9,29 +9,44 @@
 class HostConfigFlags : public ICustomConfigFlags
 {
 public:
-    BSTR GenerateLibraryByteCodeHeader; bool GenerateLibraryByteCodeHeaderIsEnabled;
-    bool GenerateParserStateCache; bool GenerateParserStateCacheIsEnabled;
-    bool UseParserStateCache; bool UseParserStateCacheIsEnabled;
-    int InspectMaxStringLength; bool InspectMaxStringLengthIsEnabled;
-    BSTR Serialized; bool SerializedIsEnabled;
-    bool OOPJIT; bool OOPJITIsEnabled;
-    bool EnsureCloseJITServer; bool EnsureCloseJITServerIsEnabled;
-    bool IgnoreScriptErrorCode; bool IgnoreScriptErrorCodeIsEnabled;
-    bool MuteHostErrorMsg; bool MuteHostErrorMsgIsEnabled;
-    bool TraceHostCallback; bool TraceHostCallbackIsEnabled;
-    bool Test262; bool Test262IsEnabled;
-    bool Module; bool ModuleIsEnabled;
-    bool TrackRejectedPromises; bool TrackRejectedPromisesIsEnabled;
-    BSTR CustomConfigFile; bool CustomConfigFileIsEnabled;
-    bool ExecuteWithBgParse; bool ExecuteWithBgParseIsEnabled;
+    BSTR GenerateLibraryByteCodeHeader;
+    bool GenerateLibraryByteCodeHeaderIsEnabled;
+    bool GenerateParserStateCache;
+    bool GenerateParserStateCacheIsEnabled;
+    bool UseParserStateCache;
+    bool UseParserStateCacheIsEnabled;
+    int InspectMaxStringLength;
+    bool InspectMaxStringLengthIsEnabled;
+    BSTR Serialized;
+    bool SerializedIsEnabled;
+    bool OOPJIT;
+    bool OOPJITIsEnabled;
+    bool EnsureCloseJITServer;
+    bool EnsureCloseJITServerIsEnabled;
+    bool IgnoreScriptErrorCode;
+    bool IgnoreScriptErrorCodeIsEnabled;
+    bool MuteHostErrorMsg;
+    bool MuteHostErrorMsgIsEnabled;
+    bool TraceHostCallback;
+    bool TraceHostCallbackIsEnabled;
+    bool Test262;
+    bool Test262IsEnabled;
+    bool Module;
+    bool ModuleIsEnabled;
+    bool TrackRejectedPromises;
+    bool TrackRejectedPromisesIsEnabled;
+    BSTR CustomConfigFile;
+    bool CustomConfigFileIsEnabled;
+    bool ExecuteWithBgParse;
+    bool ExecuteWithBgParseIsEnabled;
 
     static HostConfigFlags flags;
     static std::vector<std::u16string> vargsVal;
-    static void(*pfnPrintUsage)();
+    static void (*pfnPrintUsage)();
 
     static void HandleArgsFlag(std::vector<std::u16string> &vargs);
 
-    virtual bool ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser) override;
+    virtual bool ParseFlag(const char16_t *flagsString, ICmdLineArgsParser *parser) override;
     virtual void PrintUsage() override;
     static void PrintUsageString();
 
@@ -40,5 +55,5 @@ private:
     HostConfigFlags();
 
     template <typename T>
-    void Parse(ICmdLineArgsParser * parser, T * value);
+    void Parse(ICmdLineArgsParser *parser, T *value);
 };

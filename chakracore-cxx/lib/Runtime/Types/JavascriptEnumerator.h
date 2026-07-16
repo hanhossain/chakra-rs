@@ -3,20 +3,22 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-namespace Js {
+namespace Js
+{
     class JavascriptEnumerator : public RecyclableObject
     {
         friend class CrossSite;
         friend class ExternalObject;
+
     protected:
         DEFINE_VTABLE_CTOR_ABSTRACT(JavascriptEnumerator, RecyclableObject);
 
     public:
-        JavascriptEnumerator(ScriptContext* scriptContext);
+        JavascriptEnumerator(ScriptContext *scriptContext);
 
         //
         // Returns item index for all nonnamed Enumerators
-        //optional override
+        // optional override
         //
         virtual uint32_t GetCurrentItemIndex() { return Constants::InvalidSourceIndex; }
 
@@ -36,8 +38,9 @@ namespace Js {
         // If that code is added in this base class use JavaScriptRegExpEnumerator.h/cpp
         // as a reference and then remove it. If you have already made the edits before
         // seeing this comment please just consolidate the changes.
-        virtual JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) = 0;
+        virtual JavascriptString *MoveAndGetNext(PropertyId &propertyId, PropertyAttributes *attributes = nullptr) = 0;
     };
 
-    template <> bool VarIsImpl<JavascriptEnumerator>(RecyclableObject* obj);
-}
+    template <>
+    bool VarIsImpl<JavascriptEnumerator>(RecyclableObject *obj);
+} // namespace Js

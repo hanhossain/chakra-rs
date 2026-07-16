@@ -6,7 +6,7 @@
 //
 // ===========================================================================
 // File: oaidl.h
-// 
+//
 // ===========================================================================
 
 #ifndef __OAIDL_H__
@@ -14,79 +14,76 @@
 
 #include "unknwn.h"
 
-typedef struct tagEXCEPINFO {
+typedef struct tagEXCEPINFO
+{
     uint16_t wCode;
     uint16_t wReserved;
     BSTR bstrSource;
     BSTR bstrDescription;
     BSTR bstrHelpFile;
     uint32_t dwHelpContext;
-    void * pvReserved;
+    void *pvReserved;
     int32_t (*pfnDeferredFillIn)(struct tagEXCEPINFO *);
     SCODE scode;
-} EXCEPINFO, * LPEXCEPINFO;
+} EXCEPINFO, *LPEXCEPINFO;
 
 typedef interface IErrorInfo IErrorInfo;
 typedef /* [unique] */ IErrorInfo *LPERRORINFO;
 
 EXTERN_C const IID IID_IErrorInfo;
 
-    interface
-    IErrorInfo : public IUnknown
-    {
-    public:
-        virtual int32_t GetGUID( 
-            /* [out] */ GUID *pGUID) = 0;
-        
-        virtual int32_t GetSource( 
-            /* [out] */ BSTR *pBstrSource) = 0;
-        
-        virtual int32_t GetDescription( 
-            /* [out] */ BSTR *pBstrDescription) = 0;
-        
-        virtual int32_t GetHelpFile( 
-            /* [out] */ BSTR *pBstrHelpFile) = 0;
-        
-        virtual int32_t GetHelpContext( 
-            /* [out] */ uint32_t *pdwHelpContext) = 0;
-        
-    };
-    
+interface IErrorInfo : public IUnknown
+{
+public:
+    virtual int32_t GetGUID(
+        /* [out] */ GUID * pGUID) = 0;
+
+    virtual int32_t GetSource(
+        /* [out] */ BSTR * pBstrSource) = 0;
+
+    virtual int32_t GetDescription(
+        /* [out] */ BSTR * pBstrDescription) = 0;
+
+    virtual int32_t GetHelpFile(
+        /* [out] */ BSTR * pBstrHelpFile) = 0;
+
+    virtual int32_t GetHelpContext(
+        /* [out] */ uint32_t *pdwHelpContext) = 0;
+};
+
 typedef interface ICreateErrorInfo ICreateErrorInfo;
 
 EXTERN_C const IID IID_ICreateErrorInfo;
 
 typedef /* [unique] */ ICreateErrorInfo *LPCREATEERRORINFO;
 
-    interface
-    ICreateErrorInfo : public IUnknown
-    {
-    public:
-        virtual int32_t SetGUID( 
-            /* [in] */ REFGUID rguid) = 0;
-        
-        virtual int32_t SetSource( 
-            /* [in] */ LPOLESTR szSource) = 0;
-        
-        virtual int32_t SetDescription( 
-            /* [in] */ LPOLESTR szDescription) = 0;
-        
-        virtual int32_t SetHelpFile( 
-            /* [in] */ LPOLESTR szHelpFile) = 0;
-        
-        virtual int32_t SetHelpContext( 
-            /* [in] */ uint32_t dwHelpContext) = 0;
-        
-    };
-    
-STDAPI
-SetErrorInfo(uint32_t dwReserved, IErrorInfo * perrinfo);
+interface ICreateErrorInfo : public IUnknown
+{
+public:
+    virtual int32_t SetGUID(
+        /* [in] */ REFGUID rguid) = 0;
+
+    virtual int32_t SetSource(
+        /* [in] */ LPOLESTR szSource) = 0;
+
+    virtual int32_t SetDescription(
+        /* [in] */ LPOLESTR szDescription) = 0;
+
+    virtual int32_t SetHelpFile(
+        /* [in] */ LPOLESTR szHelpFile) = 0;
+
+    virtual int32_t SetHelpContext(
+        /* [in] */ uint32_t dwHelpContext) = 0;
+};
 
 STDAPI
-GetErrorInfo(uint32_t dwReserved, IErrorInfo * * pperrinfo);
+SetErrorInfo(uint32_t dwReserved, IErrorInfo *perrinfo);
 
 STDAPI
-CreateErrorInfo(ICreateErrorInfo * * pperrinfo);
+GetErrorInfo(uint32_t dwReserved, IErrorInfo **pperrinfo);
+
+STDAPI
+CreateErrorInfo(ICreateErrorInfo **pperrinfo);
 
 
 typedef interface ISupportErrorInfo ISupportErrorInfo;
@@ -95,14 +92,12 @@ typedef /* [unique] */ ISupportErrorInfo *LPSUPPORTERRORINFO;
 
 EXTERN_C const IID IID_ISupportErrorInfo;
 
-    
-    interface
-    ISupportErrorInfo : public IUnknown
-    {
-    public:
-        virtual int32_t InterfaceSupportsErrorInfo( 
-            /* [in] */ REFIID riid) = 0;
-        
-    };
+
+interface ISupportErrorInfo : public IUnknown
+{
+public:
+    virtual int32_t InterfaceSupportsErrorInfo(
+        /* [in] */ REFIID riid) = 0;
+};
 
 #endif //__OAIDL_H__

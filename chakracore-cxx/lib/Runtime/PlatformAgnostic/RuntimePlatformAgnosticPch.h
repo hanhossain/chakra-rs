@@ -24,13 +24,13 @@
 
 namespace Js
 {
-class Throw
-{
-public:
-    static bool ReportAssert(const char* fileName, unsigned int lineNumber, const char* error, const char* message);
-    static void LogAssert();
-    static void FatalInternalError();
-};
-}
+    class Throw
+    {
+    public:
+        static bool ReportAssert(const char *fileName, unsigned int lineNumber, const char *error, const char *message);
+        static void LogAssert();
+        static void FatalInternalError();
+    };
+} // namespace Js
 
 #include <Core/Assertions.h>

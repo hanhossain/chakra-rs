@@ -9,21 +9,23 @@ namespace Js
     class ScriptFunctionType : public DynamicType
     {
     public:
-        static ScriptFunctionType * New(FunctionProxy * proxy, bool isShared);
-        static ScriptFunctionType * New(FunctionProxy * proxy, DynamicTypeHandler * typeHandler, RecyclableObject * prototype, bool isShared);
+        static ScriptFunctionType *New(FunctionProxy *proxy, bool isShared);
+        static ScriptFunctionType *New(FunctionProxy *proxy, DynamicTypeHandler *typeHandler,
+                                       RecyclableObject *prototype, bool isShared);
         static uint32_t GetEntryPointInfoOffset() { return offsetof(ScriptFunctionType, entryPointInfo); }
-        ProxyEntryPointInfo * GetEntryPointInfo() const { return entryPointInfo; }
-        void SetEntryPointInfo(ProxyEntryPointInfo * entryPointInfo) { this->entryPointInfo = entryPointInfo; }
-        void ChangeEntryPoint(ProxyEntryPointInfo * entryPointInfo, JavascriptMethod entryPoint, bool isAsmJS);
+        ProxyEntryPointInfo *GetEntryPointInfo() const { return entryPointInfo; }
+        void SetEntryPointInfo(ProxyEntryPointInfo *entryPointInfo) { this->entryPointInfo = entryPointInfo; }
+        void ChangeEntryPoint(ProxyEntryPointInfo *entryPointInfo, JavascriptMethod entryPoint, bool isAsmJS);
+
     private:
-        ScriptFunctionType(ScriptFunctionType * type);
-        ScriptFunctionType(ScriptContext* scriptContext, RecyclableObject* prototype,
-            JavascriptMethod entryPoint, ProxyEntryPointInfo * entryPointInfo, DynamicTypeHandler * typeHandler,
-            bool isLocked, bool isShared);
+        ScriptFunctionType(ScriptFunctionType *type);
+        ScriptFunctionType(ScriptContext *scriptContext, RecyclableObject *prototype, JavascriptMethod entryPoint,
+                           ProxyEntryPointInfo *entryPointInfo, DynamicTypeHandler *typeHandler, bool isLocked,
+                           bool isShared);
 
         typename WriteBarrierFieldTypeTraits<ProxyEntryPointInfo *>::Type entryPointInfo;
 
         friend class ScriptFunction;
         friend class JavascriptLibrary;
     };
-};
+}; // namespace Js

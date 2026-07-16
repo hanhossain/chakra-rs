@@ -10,6 +10,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -g")
 
+set(CMAKE_COLOR_DIAGNOSTICS ON)
+
 option(DISABLE_JIT "Disable JIT compilation" OFF)
 option(IN_DOCKER "Running in docker" OFF)
 
@@ -132,8 +134,10 @@ add_definitions(
 # clang by default sets fvisibility=default
 
 # CXX WARNING FLAGS
-add_compile_options(-Wall)
-add_compile_options(-Wextra)
+if (CMAKE_BUILD_TYPE STREQUAL Debug)
+    add_compile_options(-Wall)
+    add_compile_options(-Wextra)
+endif()
 #add_compile_options(-Wold-style-cast)
 
 # ignore in general

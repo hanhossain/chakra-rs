@@ -23,22 +23,22 @@ Revision History:
 #ifndef _PAL_FILE_H_
 #define _PAL_FILE_H_
 
-#include "pal/shmemory.h"
-#include <sys/types.h>
 #include <dirent.h>
+#include <sys/types.h>
+#include "pal.h"
+#include "pal/shmemory.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 typedef struct _find_handle
 {
     struct _find_handle *self_addr; /* for pointer verification */
 
-    char   dir[_MAX_DIR];
-    char   fname[MAX_PATH_FNAME]; /* includes extension */
-    char   **next;
+    char dir[_MAX_DIR];
+    char fname[MAX_PATH_FNAME]; /* includes extension */
+    char **next;
 } find_obj;
 
 /*++
@@ -47,7 +47,7 @@ Function:
 
 Convert errno into the appropriate win32 error and return it.
 --*/
-uint32_t FILEGetLastErrorFromErrno( void );
+uint32_t FILEGetLastErrorFromErrno(void);
 
 /*++
 Function:
@@ -55,7 +55,7 @@ Function:
 
 Convert errno into the appropriate win32 error and return it.
 --*/
-uint32_t DIRGetLastErrorFromErrno( void );
+uint32_t DIRGetLastErrorFromErrno(void);
 
 /*++
 FILEInitStdHandles
@@ -89,7 +89,7 @@ Windows behavoir.
     IN char* lpPath - The path to check.
     uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode );
+void FILEGetProperNotFoundError(char *lpPath, uint32_t *lpErrorCode);
 
 #ifdef __cplusplus
 }

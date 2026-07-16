@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -23,15 +23,14 @@ Abstract:
 #define _PAL_MAP_H_
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 /*++
 Function :
     MAPGetRegionInfo
 
-    Parameters: 
+    Parameters:
     lpAddress: pointer to the starting memory location, not necessary
                to be rounded to the page location
 
@@ -39,15 +38,14 @@ Function :
               the information is stored in this struct
 
     Note: This function is to be used in virtual.c
-          
+
     Returns TRUE if this function finds information about the specified address
 --*/
 
-BOOL MAPGetRegionInfo(void * lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
+BOOL MAPGetRegionInfo(void *lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
 
 #endif /* _PAL_MAP_H_ */
-

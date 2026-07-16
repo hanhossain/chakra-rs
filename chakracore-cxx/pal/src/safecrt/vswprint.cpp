@@ -1,139 +1,128 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /***
-*vswprint.c - print formatted data into a string from var arg list
-*
-*Purpose:
-*       defines vswprintf(), _vswprintf_c and _vsnwprintf() - print formatted output to
-*       a string, get the data from an argument ptr instead of explicit
-*       arguments.
-*
-*******************************************************************************/
+ *vswprint.c - print formatted data into a string from var arg list
+ *
+ *Purpose:
+ *       defines vswprintf(), _vswprintf_c and _vsnwprintf() - print formatted output to
+ *       a string, get the data from an argument ptr instead of explicit
+ *       arguments.
+ *
+ *******************************************************************************/
 
 
-#include <string.h>
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
+#include <string.h>
 #include "internal_securecrt.h"
 
 #include "mbusafecrt_internal.h"
 
 typedef int (*WOUTPUTFN)(miniFILE *, const char16_t *, va_list);
 
-static int _vswprintf_helper( WOUTPUTFN outfn, char16_t *string, size_t count, const char16_t *format, va_list ap );
-static int _vscwprintf_helper (WOUTPUTFN outfn, const char16_t *format, va_list ap );
+static int _vswprintf_helper(WOUTPUTFN outfn, char16_t *string, size_t count, const char16_t *format, va_list ap);
+static int _vscwprintf_helper(WOUTPUTFN outfn, const char16_t *format, va_list ap);
 
 /***
-*ifndef _COUNT_
-*int _vswprintf(string, format, ap) - print formatted data to string from arg ptr
-*else
-*ifndef _SWPRINTFS_ERROR_RETURN_FIX
-*int _vsnwprintf(string, cnt, format, ap) - print formatted data to string from arg ptr
-*else
-*int _vswprintf_c(string, cnt, format, ...) - print formatted data to string
-*endif
-*endif
-*
-*Purpose:
-*       Prints formatted data, but to a string and gets data from an argument
-*       pointer.
-*       Sets up a FILE so file i/o operations can be used, make string look
-*       like a huge buffer to it, but _flsbuf will refuse to flush it if it
-*       fills up. Appends '\0' to make it a true string.
-*
-*       Allocate the 'fake' _iob[] entryit statically instead of on
-*       the stack so that other routines can assume that _iob[] entries are in
-*       are in DGROUP and, thus, are near.
-*
-*ifdef _COUNT_
-*ifndef _SWPRINTFS_ERROR_RETURN_FIX
-*       The _vsnwprintf() flavor takes a count argument that is
-*       the max number of bytes that should be written to the
-*       user's buffer.
-*       We don't expose this function directly in the headers.
-*else
-*endif
-*
-*       Multi-thread: (1) Since there is no stream, this routine must never try
-*       to get the stream lock (i.e., there is no stream lock either).  (2)
-*       Also, since there is only one statically allocated 'fake' iob, we must
-*       lock/unlock to prevent collisions.
-*
-*Entry:
-*       char16_t *string - place to put destination string
-*ifdef _COUNT_
-*       size_t count - max number of bytes to put in buffer
-*endif
-*       char16_t *format - format string, describes format of data
-*       va_list ap - varargs argument pointer
-*
-*Exit:
-*       returns number of wide characters in string
-*       returns -2 if the string has been truncated (only in _vsnprintf_helper)
-*       returns -1 in other error cases
-*
-*Exceptions:
-*
-*******************************************************************************/
+ *ifndef _COUNT_
+ *int _vswprintf(string, format, ap) - print formatted data to string from arg ptr
+ *else
+ *ifndef _SWPRINTFS_ERROR_RETURN_FIX
+ *int _vsnwprintf(string, cnt, format, ap) - print formatted data to string from arg ptr
+ *else
+ *int _vswprintf_c(string, cnt, format, ...) - print formatted data to string
+ *endif
+ *endif
+ *
+ *Purpose:
+ *       Prints formatted data, but to a string and gets data from an argument
+ *       pointer.
+ *       Sets up a FILE so file i/o operations can be used, make string look
+ *       like a huge buffer to it, but _flsbuf will refuse to flush it if it
+ *       fills up. Appends '\0' to make it a true string.
+ *
+ *       Allocate the 'fake' _iob[] entryit statically instead of on
+ *       the stack so that other routines can assume that _iob[] entries are in
+ *       are in DGROUP and, thus, are near.
+ *
+ *ifdef _COUNT_
+ *ifndef _SWPRINTFS_ERROR_RETURN_FIX
+ *       The _vsnwprintf() flavor takes a count argument that is
+ *       the max number of bytes that should be written to the
+ *       user's buffer.
+ *       We don't expose this function directly in the headers.
+ *else
+ *endif
+ *
+ *       Multi-thread: (1) Since there is no stream, this routine must never try
+ *       to get the stream lock (i.e., there is no stream lock either).  (2)
+ *       Also, since there is only one statically allocated 'fake' iob, we must
+ *       lock/unlock to prevent collisions.
+ *
+ *Entry:
+ *       char16_t *string - place to put destination string
+ *ifdef _COUNT_
+ *       size_t count - max number of bytes to put in buffer
+ *endif
+ *       char16_t *format - format string, describes format of data
+ *       va_list ap - varargs argument pointer
+ *
+ *Exit:
+ *       returns number of wide characters in string
+ *       returns -2 if the string has been truncated (only in _vsnprintf_helper)
+ *       returns -1 in other error cases
+ *
+ *Exceptions:
+ *
+ *******************************************************************************/
 
-int _vswprintf_helper (
-        WOUTPUTFN woutfn,
-        char16_t *string,
-        size_t count,
-        const char16_t *format,
-        va_list ap
-        )
+int _vswprintf_helper(WOUTPUTFN woutfn, char16_t *string, size_t count, const char16_t *format, va_list ap)
 {
-        miniFILE str;
-        miniFILE *outfile = &str;
-        int retval;
+    miniFILE str;
+    miniFILE *outfile = &str;
+    int retval;
 
-        _VALIDATE_RETURN( (format != NULL), EINVAL, -1);
+    _VALIDATE_RETURN((format != NULL), EINVAL, -1);
 
-        _VALIDATE_RETURN( (count == 0) || (string != NULL), EINVAL, -1 );
+    _VALIDATE_RETURN((count == 0) || (string != NULL), EINVAL, -1);
 
-        outfile->_flag = _IOWRT|_IOSTRG;
-        outfile->_ptr = outfile->_base = reinterpret_cast<char*>(string);
+    outfile->_flag = _IOWRT | _IOSTRG;
+    outfile->_ptr = outfile->_base = reinterpret_cast<char *>(string);
 
-        if(count>(INT_MAX/sizeof(char16_t)))
-        {
-           /* old-style functions allow any large value to mean unbounded */
-           outfile->_cnt = INT_MAX;
-        }
-        else
-        {
-            outfile->_cnt = static_cast<int>(count * sizeof(char16_t));
-        }
+    if (count > (INT_MAX / sizeof(char16_t)))
+    {
+        /* old-style functions allow any large value to mean unbounded */
+        outfile->_cnt = INT_MAX;
+    }
+    else
+    {
+        outfile->_cnt = static_cast<int>(count * sizeof(char16_t));
+    }
 
-        retval = woutfn(outfile, format, ap );
+    retval = woutfn(outfile, format, ap);
 
-        if(string==NULL)
-        {
-            return retval;
-        }
+    if (string == NULL)
+    {
+        return retval;
+    }
 
-        if((retval >= 0) && (_putc_nolock('\0',outfile) != EOF) && (_putc_nolock('\0',outfile) != EOF))
-            return(retval);
+    if ((retval >= 0) && (_putc_nolock('\0', outfile) != EOF) && (_putc_nolock('\0', outfile) != EOF))
+        return (retval);
 
-        string[count - 1] = 0;
-        if (outfile->_cnt < 0)
-        {
-            /* the buffer was too small; we return -2 to indicate truncation */
-            return -2;
-        }
-        return -1;
+    string[count - 1] = 0;
+    if (outfile->_cnt < 0)
+    {
+        /* the buffer was too small; we return -2 to indicate truncation */
+        return -2;
+    }
+    return -1;
 }
 
-int _vswprintf_s (
-        char16_t *string,
-        size_t sizeInWords,
-        const char16_t *format,
-        va_list ap
-        )
+int _vswprintf_s(char16_t *string, size_t sizeInWords, const char16_t *format, va_list ap)
 {
     int retvalue = -1;
 
@@ -159,23 +148,12 @@ int _vswprintf_s (
     return retvalue;
 }
 
-extern "C" int vswprintf_s (
-        char16_t *string,
-        size_t sizeInWords,
-        const char16_t *format,
-        va_list ap
-        )
+extern "C" int vswprintf_s(char16_t *string, size_t sizeInWords, const char16_t *format, va_list ap)
 {
     return _vswprintf_s(string, sizeInWords, format, ap);
 }
 
-int _vsnwprintf_s (
-        char16_t *string,
-        size_t sizeInWords,
-        size_t count,
-        const char16_t *format,
-        va_list ap
-        )
+int _vsnwprintf_s(char16_t *string, size_t sizeInWords, size_t count, const char16_t *format, va_list ap)
 {
     int retvalue = -1;
     errno_t save_errno = 0;
@@ -237,51 +215,41 @@ int _vsnwprintf_s (
 }
 
 /***
-* _vscwprintf() - counts the number of character needed to print the formatted
-* data
-*
-*Purpose:
-*       Counts the number of characters in the formatted data.
-*
-*Entry:
-*       char16_t *format - format string, describes format of data
-*       va_list ap - varargs argument pointer
-*
-*Exit:
-*       returns number of characters needed to print formatted data.
-*
-*Exceptions:
-*
-*******************************************************************************/
+ * _vscwprintf() - counts the number of character needed to print the formatted
+ * data
+ *
+ *Purpose:
+ *       Counts the number of characters in the formatted data.
+ *
+ *Entry:
+ *       char16_t *format - format string, describes format of data
+ *       va_list ap - varargs argument pointer
+ *
+ *Exit:
+ *       returns number of characters needed to print formatted data.
+ *
+ *Exceptions:
+ *
+ *******************************************************************************/
 
 #ifndef _COUNT_
 
-int _vscwprintf_helper (
-        WOUTPUTFN woutfn,
-        const char16_t *format,
-        va_list ap
-        )
+int _vscwprintf_helper(WOUTPUTFN woutfn, const char16_t *format, va_list ap)
 {
-        miniFILE str;
-        miniFILE *outfile = &str;
-        int retval;
+    miniFILE str;
+    miniFILE *outfile = &str;
+    int retval;
 
-        _VALIDATE_RETURN( (format != NULL), EINVAL, -1);
+    _VALIDATE_RETURN((format != NULL), EINVAL, -1);
 
-        outfile->_cnt = INT_MAX; //MAXSTR;
-        outfile->_flag = _IOWRT|_IOSTRG;
-        outfile->_ptr = outfile->_base = NULL;
+    outfile->_cnt = INT_MAX; // MAXSTR;
+    outfile->_flag = _IOWRT | _IOSTRG;
+    outfile->_ptr = outfile->_base = NULL;
 
-        retval = woutfn(outfile, format, ap);
-        return(retval);
+    retval = woutfn(outfile, format, ap);
+    return (retval);
 }
 
-int _vscwprintf (
-        const char16_t *format,
-        va_list ap
-        )
-{
-        return _vscwprintf_helper(_woutput_s, format, ap);
-}
+int _vscwprintf(const char16_t *format, va_list ap) { return _vscwprintf_helper(_woutput_s, format, ap); }
 
-#endif  /* _COUNT_ */
+#endif /* _COUNT_ */

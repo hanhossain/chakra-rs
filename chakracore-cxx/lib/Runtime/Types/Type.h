@@ -6,17 +6,17 @@
 
 enum TypeFlagMask : uint8_t
 {
-    TypeFlagMask_None                                                              = 0x00,
-    TypeFlagMask_AreThisAndPrototypesEnsuredToHaveOnlyWritableDataProperties       = 0x01,
-    TypeFlagMask_IsFalsy                                                           = 0x02,
-    TypeFlagMask_HasSpecialPrototype                                               = 0x04,
-    TypeFlagMask_EngineExternal                                                    = 0x08,
-    TypeFlagMask_SkipsPrototype                                                    = 0x10,
+    TypeFlagMask_None = 0x00,
+    TypeFlagMask_AreThisAndPrototypesEnsuredToHaveOnlyWritableDataProperties = 0x01,
+    TypeFlagMask_IsFalsy = 0x02,
+    TypeFlagMask_HasSpecialPrototype = 0x04,
+    TypeFlagMask_EngineExternal = 0x08,
+    TypeFlagMask_SkipsPrototype = 0x10,
     // Indicates that no @@toStringTag, @@toPrimitive, toString, or valueOf properties are set
     // (except for the default values on Object.prototype)
-    TypeFlagMask_ThisAndPrototypesHaveNoSpecialProperties                          = 0x20,
-    TypeFlagMask_JsrtExternal                                                      = 0x40,
-    TypeFlagMask_HasBeenCached                                                     = 0x80
+    TypeFlagMask_ThisAndPrototypesHaveNoSpecialProperties = 0x20,
+    TypeFlagMask_JsrtExternal = 0x40,
+    TypeFlagMask_HasBeenCached = 0x80
 };
 ENUM_CLASS_HELPERS(TypeFlagMask, uint8_t);
 
@@ -33,32 +33,39 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<TypeId>::Type typeId;
         typename WriteBarrierFieldTypeTraits<TypeFlagMask>::Type flags;
 
-        typename WriteBarrierFieldTypeTraits<JavascriptLibrary*>::Type javascriptLibrary;
+        typename WriteBarrierFieldTypeTraits<JavascriptLibrary *>::Type javascriptLibrary;
 
-        typename WriteBarrierFieldTypeTraits<RecyclableObject*>::Type prototype;
-        typename WriteBarrierFieldTypeTraits<JavascriptMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type entryPoint;
+        typename WriteBarrierFieldTypeTraits<RecyclableObject *>::Type prototype;
+        typename WriteBarrierFieldTypeTraits<JavascriptMethod, _no_write_barrier_policy, _no_write_barrier_policy>::Type
+            entryPoint;
+
     private:
         typename WriteBarrierFieldTypeTraits<TypePropertyCache *>::Type propertyCache;
+
     protected:
-        Type(Type * type);
-        Type(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint);
+        Type(Type *type);
+        Type(ScriptContext *scriptContext, TypeId typeId, RecyclableObject *prototype, JavascriptMethod entryPoint);
 
     public:
         static uint32_t GetJavascriptLibraryOffset() { return offsetof(Type, javascriptLibrary); }
         inline TypeId GetTypeId() const { return typeId; }
         void SetTypeId(TypeId typeId) { this->typeId = typeId; }
-        RecyclableObject* GetPrototype() const { return prototype; }
+        RecyclableObject *GetPrototype() const { return prototype; }
         JavascriptMethod GetEntryPoint() const { return entryPoint; }
-        JavascriptLibrary* GetLibrary() const { return javascriptLibrary; }
-        ScriptContext * GetScriptContext() const;
-        Recycler * GetRecycler() const;
+        JavascriptLibrary *GetLibrary() const { return javascriptLibrary; }
+        ScriptContext *GetScriptContext() const;
+        Recycler *GetRecycler() const;
         TypePropertyCache *GetPropertyCache();
         TypePropertyCache *CreatePropertyCache();
-        BOOL HasSpecialPrototype() const { return (flags & TypeFlagMask_HasSpecialPrototype) == TypeFlagMask_HasSpecialPrototype; }
+        BOOL HasSpecialPrototype() const
+        {
+            return (flags & TypeFlagMask_HasSpecialPrototype) == TypeFlagMask_HasSpecialPrototype;
+        }
 
-        // This function has a different meaning from RecyclableObject::HasOnlyWritableDataProperties. If this function returns
-        // true, then it's implied that RecyclableObject::HasOnlyWritableDataProperties would return true for an object of this
-        // type and all of its prototypes. However, if this function returns false, it does not imply the converse.
+        // This function has a different meaning from RecyclableObject::HasOnlyWritableDataProperties. If this function
+        // returns true, then it's implied that RecyclableObject::HasOnlyWritableDataProperties would return true for an
+        // object of this type and all of its prototypes. However, if this function returns false, it does not imply the
+        // converse.
         BOOL AreThisAndPrototypesEnsuredToHaveOnlyWritableDataProperties() const;
         void SetAreThisAndPrototypesEnsuredToHaveOnlyWritableDataProperties(const bool truth);
 
@@ -71,7 +78,7 @@ namespace Js
             return false;
         }
         inline BOOL IsJsrtExternal() const { return (this->flags & TypeFlagMask_JsrtExternal) != 0; }
-        inline BOOL SkipsPrototype() const { return (this->flags & TypeFlagMask_SkipsPrototype) != 0 ; }
+        inline BOOL SkipsPrototype() const { return (this->flags & TypeFlagMask_SkipsPrototype) != 0; }
         inline BOOL IsFalsy() const { return flags & TypeFlagMask_IsFalsy; }
         inline BOOL HasBeenCached() const { return flags & TypeFlagMask_HasBeenCached; }
         inline void SetHasBeenCached()
@@ -85,10 +92,7 @@ namespace Js
 
         // This is for static lib verification use only.
         static uint32_t GetTypeIdFieldOffset() { return offsetof(Type, typeId); }
-        static size_t OffsetOfWritablePropertiesFlag()
-        {
-            return offsetof(Type, flags);
-        }
+        static size_t OffsetOfWritablePropertiesFlag() { return offsetof(Type, flags); }
 
         static uint32_t GetOffsetOfTypeId();
         static uint32_t GetOffsetOfFlags();
@@ -103,7 +107,7 @@ namespace Js
         static InternalString FunctionTypeNameString;
 
 #if defined(PROFILE_RECYCLER_ALLOC) && defined(RECYCLER_DUMP_OBJECT_GRAPH)
-        static bool DumpObjectFunction(type_info const * typeinfo, bool isArray, void * objectAddress);
+        static bool DumpObjectFunction(type_info const *typeinfo, bool isArray, void *objectAddress);
 #endif
     };
-};
+}; // namespace Js

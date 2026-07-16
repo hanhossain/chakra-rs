@@ -24,34 +24,36 @@ Abstract:
 #ifndef _PAL_VIRTUAL_H_
 #define _PAL_VIRTUAL_H_
 
+#include "pal_mstypes.h"
+
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
-typedef struct _CMI {
+typedef struct _CMI
+{
 
-    struct _CMI * pNext;        /* Link to the next entry. */
-    struct _CMI * pLast;        /* Link to the previous entry. */
+    struct _CMI *pNext; /* Link to the next entry. */
+    struct _CMI *pLast; /* Link to the previous entry. */
 
-    unsigned long   startBoundary;   /* Starting location of the region. */
-    size_t   memSize;         /* Size of the entire region.. */
+    unsigned long startBoundary; /* Starting location of the region. */
+    size_t memSize; /* Size of the entire region.. */
 
-    uint32_t  accessProtection;    /* Initial allocation access protection. */
-    uint32_t  allocationType;      /* Initial allocation type. */
+    uint32_t accessProtection; /* Initial allocation access protection. */
+    uint32_t allocationType; /* Initial allocation type. */
 
-    uint8_t * pAllocState;         /* Individual allocation type tracking for each */
-                                /* page in the region. */
+    uint8_t *pAllocState; /* Individual allocation type tracking for each */
+    /* page in the region. */
 
-    uint8_t * pProtectionState;    /* Individual allocation type tracking for each */
-                                /* page in the region. */
-}CMI, * PCMI;
+    uint8_t *pProtectionState; /* Individual allocation type tracking for each */
+    /* page in the region. */
+} CMI, *PCMI;
 
 enum VIRTUAL_CONSTANTS
 {
     /* Allocation type. */
-    VIRTUAL_COMMIT_ALL_BITS     = 0xFF,
-    VIRTUAL_RESERVE_ALL_BITS    = 0x0,
+    VIRTUAL_COMMIT_ALL_BITS = 0xFF,
+    VIRTUAL_RESERVE_ALL_BITS = 0x0,
 
     /* Protection Type. */
     VIRTUAL_READONLY,
@@ -61,16 +63,16 @@ enum VIRTUAL_CONSTANTS
     VIRTUAL_EXECUTE,
     VIRTUAL_EXECUTE_READ,
 
-    /* Page manipulation constants. */
+/* Page manipulation constants. */
 #if defined(__APPLE__) && defined(_ARM64_)
-    VIRTUAL_PAGE_SIZE       = 0x4000,
+    VIRTUAL_PAGE_SIZE = 0x4000,
 #elif __sparc__
-    VIRTUAL_PAGE_SIZE       = 0x2000,
-#else   // __sparc__
-    VIRTUAL_PAGE_SIZE       = 0x1000,
-#endif  // __sparc__
-    VIRTUAL_PAGE_MASK       = VIRTUAL_PAGE_SIZE - 1,
-    BOUNDARY_64K    = 0xffff
+    VIRTUAL_PAGE_SIZE = 0x2000,
+#else // __sparc__
+    VIRTUAL_PAGE_SIZE = 0x1000,
+#endif // __sparc__
+    VIRTUAL_PAGE_MASK = VIRTUAL_PAGE_SIZE - 1,
+    BOUNDARY_64K = 0xffff
 };
 
 /*++
@@ -83,7 +85,7 @@ Return value:
     TRUE  if initialization succeeded
     FALSE otherwise.
 --*/
-BOOL VIRTUALInitialize( void );
+BOOL VIRTUALInitialize(void);
 
 /*++
 Function :
@@ -92,7 +94,7 @@ Function :
     Deletes the critical sections.
 
 --*/
-void VIRTUALCleanup( void );
+void VIRTUALCleanup(void);
 
 /*++
 Function :
@@ -101,7 +103,7 @@ Function :
     Returns whether the space in question is owned the VIRTUAL system.
 
 --*/
-BOOL VIRTUALOwnedRegion(  unsigned long address );
+BOOL VIRTUALOwnedRegion(unsigned long address);
 
 
 #ifdef __cplusplus

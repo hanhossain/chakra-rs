@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -19,28 +19,28 @@ Abstract:
 
 --*/
 
-#include <string>
-#include "pal/thread.hpp"
-#include "pal/file.hpp"
-#include "shmfilelockmgr.hpp"
 #include <new>
+#include <string>
+#include "pal/file.hpp"
 #include "pal/stackstring.hpp"
+#include "pal/thread.hpp"
+#include "shmfilelockmgr.hpp"
 
-#include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/file.h"
 #include "pal/filetime.h"
+#include "pal/palinternal.h"
 #include "pal/utils.h"
 
-#include <time.h>
-#include <stdio.h>
-#include <sys/file.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/param.h>
-#include <sys/mount.h>
 #include <errno.h>
 #include <limits.h>
+#include <stdio.h>
+#include <sys/file.h>
+#include <sys/mount.h>
+#include <sys/param.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <time.h>
 
 using namespace CorUnix;
 
@@ -49,33 +49,22 @@ SET_DEFAULT_DEBUG_CHANNEL(FILE);
 int MaxWCharToAcpLengthFactor = 3;
 
 PAL_ERROR
-InternalSetFilePointerForUnixFd(
-    int iUnixFd,
-    int32_t lDistanceToMove,
-    int32_t * lpDistanceToMoveHigh,
-    uint32_t dwMoveMethod,
-    int32_t * lpNewFilePointerLow
-    );
+InternalSetFilePointerForUnixFd(int iUnixFd, int32_t lDistanceToMove, int32_t *lpDistanceToMoveHigh,
+                                uint32_t dwMoveMethod, int32_t *lpNewFilePointerLow);
 
 void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool fShutdown, bool);
 
-CObjectType CorUnix::otFile __attribute__((init_priority(200))) (
-                otiFile,
-                FileCleanupRoutine,
-                NULL,   // No initialization routine
-                0,      // No immutable data
-                sizeof(CFileProcessLocalData),
-                0,      // No shared data
-                GENERIC_READ|GENERIC_WRITE,  // Ignored -- no Win32 object security support
-                CObjectType::SecuritySupported,
-                CObjectType::OSPersistedSecurityInfo,
-                CObjectType::UnnamedObject,
-                CObjectType::LocalDuplicationOnly,
-                CObjectType::UnwaitableObject,
-                CObjectType::SignalingNotApplicable,
-                CObjectType::ThreadReleaseNotApplicable,
-                CObjectType::OwnershipNotApplicable
-                );
+CObjectType CorUnix::otFile
+    __attribute__((init_priority(200))) (otiFile, FileCleanupRoutine,
+                                         NULL, // No initialization routine
+                                         0, // No immutable data
+                                         sizeof(CFileProcessLocalData),
+                                         0, // No shared data
+                                         GENERIC_READ | GENERIC_WRITE, // Ignored -- no Win32 object security support
+                                         CObjectType::SecuritySupported, CObjectType::OSPersistedSecurityInfo,
+                                         CObjectType::UnnamedObject, CObjectType::LocalDuplicationOnly,
+                                         CObjectType::UnwaitableObject, CObjectType::SignalingNotApplicable,
+                                         CObjectType::ThreadReleaseNotApplicable, CObjectType::OwnershipNotApplicable);
 
 CAllowedObjectTypes CorUnix::aotFile __attribute__((init_priority(200))) (otiFile);
 
@@ -85,12 +74,8 @@ void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool 
     CFileProcessLocalData *pLocalData = NULL;
     IDataLock *pLocalDataLock = NULL;
 
-    palError = pObjectToCleanup->GetProcessLocalData(
-        pThread, 
-        ReadLock,
-        &pLocalDataLock,
-        reinterpret_cast<void**>(&pLocalData)
-        );
+    palError = pObjectToCleanup->GetProcessLocalData(pThread, ReadLock, &pLocalDataLock,
+                                                     reinterpret_cast<void **>(&pLocalData));
 
     if (NO_ERROR != palError)
     {
@@ -113,100 +98,95 @@ void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool 
 
 typedef enum
 {
-  PIID_STDIN_HANDLE, 
-  PIID_STDOUT_HANDLE,
-  PIID_STDERR_HANDLE
-} PROCINFO_ID; 
+    PIID_STDIN_HANDLE,
+    PIID_STDOUT_HANDLE,
+    PIID_STDERR_HANDLE
+} PROCINFO_ID;
 
-#define PAL_LEGAL_FLAGS_ATTRIBS (FILE_ATTRIBUTE_NORMAL| \
-                                 FILE_FLAG_SEQUENTIAL_SCAN| \
-                                 FILE_FLAG_WRITE_THROUGH| \
-                                 FILE_FLAG_NO_BUFFERING| \
-                                 FILE_FLAG_RANDOM_ACCESS| \
-                                 FILE_FLAG_BACKUP_SEMANTICS)
+#define PAL_LEGAL_FLAGS_ATTRIBS                                                                                        \
+    (FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN | FILE_FLAG_WRITE_THROUGH | FILE_FLAG_NO_BUFFERING |            \
+     FILE_FLAG_RANDOM_ACCESS | FILE_FLAG_BACKUP_SEMANTICS)
 
 /* Static global. The init function must be called
-before any other functions and if it is not successful, 
+before any other functions and if it is not successful,
 no other functions should be done. */
 static HANDLE pStdIn;
 static HANDLE pStdOut;
 static HANDLE pStdErr;
 
 /*++
-Function : 
+Function :
     FILEGetProperNotFoundError
-    
+
 Returns the proper error code, based on the
 Windows behavior.
 
     IN char* lpPath - The path to check.
     uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode )
+void FILEGetProperNotFoundError(char *lpPath, uint32_t *lpErrorCode)
 {
     struct stat stat_data;
-    char* lpDupedPath = NULL;
-    char* lpLastPathSeparator = NULL;
+    char *lpDupedPath = NULL;
+    char *lpLastPathSeparator = NULL;
 
-    TRACE( "FILEGetProperNotFoundError( %s )\n", lpPath?lpPath:"(null)" );
+    TRACE("FILEGetProperNotFoundError( %s )\n", lpPath ? lpPath : "(null)");
 
-    if ( !lpErrorCode )
+    if (!lpErrorCode)
     {
-        ASSERT( "lpErrorCode has to be valid\n" );
+        ASSERT("lpErrorCode has to be valid\n");
         return;
     }
 
-    if ( NULL == ( lpDupedPath = strdup( lpPath ) ) )
+    if (NULL == (lpDupedPath = strdup(lpPath)))
     {
-        ERROR( "strdup() failed!\n" );
+        ERROR("strdup() failed!\n");
         *lpErrorCode = ERROR_NOT_ENOUGH_MEMORY;
         return;
     }
 
     /* Determine whether it's a file not found or path not found. */
-    lpLastPathSeparator = strrchr( lpDupedPath, '/');
-    if ( lpLastPathSeparator != NULL )
+    lpLastPathSeparator = strrchr(lpDupedPath, '/');
+    if (lpLastPathSeparator != NULL)
     {
         *lpLastPathSeparator = '\0';
-        
+
         /* If the last path component is a directory,
            we return file not found. If it's a file or
            doesn't exist, we return path not found. */
-        if ( '\0' == *lpDupedPath || 
-             ( stat( lpDupedPath, &stat_data ) == 0 && 
-             ( stat_data.st_mode & S_IFMT ) == S_IFDIR ) )
+        if ('\0' == *lpDupedPath || (stat(lpDupedPath, &stat_data) == 0 && (stat_data.st_mode & S_IFMT) == S_IFDIR))
         {
-            TRACE( "ERROR_FILE_NOT_FOUND\n" );
+            TRACE("ERROR_FILE_NOT_FOUND\n");
             *lpErrorCode = ERROR_FILE_NOT_FOUND;
         }
         else
         {
-            TRACE( "ERROR_PATH_NOT_FOUND\n" );
+            TRACE("ERROR_PATH_NOT_FOUND\n");
             *lpErrorCode = ERROR_PATH_NOT_FOUND;
         }
     }
     else
     {
-        TRACE( "ERROR_FILE_NOT_FOUND\n" );
+        TRACE("ERROR_FILE_NOT_FOUND\n");
         *lpErrorCode = ERROR_FILE_NOT_FOUND;
     }
-    
+
     free(lpDupedPath);
     lpDupedPath = NULL;
-    TRACE( "FILEGetProperNotFoundError returning TRUE\n" );
+    TRACE("FILEGetProperNotFoundError returning TRUE\n");
     return;
 }
 
 /*++
-Function : 
+Function :
     FILEGetLastErrorFromErrnoAndFilename
-    
+
 Returns the proper error code for errno, or, if errno is ENOENT,
 based on the Windows behavior for nonexistent filenames.
 
     IN char* lpPath - The path to check.
 */
-PAL_ERROR FILEGetLastErrorFromErrnoAndFilename(char* lpPath)
+PAL_ERROR FILEGetLastErrorFromErrnoAndFilename(char *lpPath)
 {
     PAL_ERROR palError;
     if (ENOENT == errno)
@@ -222,14 +202,8 @@ PAL_ERROR FILEGetLastErrorFromErrnoAndFilename(char* lpPath)
 
 
 PAL_ERROR
-CorUnix::InternalWriteFile(
-    CPalThread *pThread,
-    HANDLE hFile,
-    const void * lpBuffer,
-    uint32_t nNumberOfBytesToWrite,
-    uint32_t * lpNumberOfBytesWritten,
-    LPOVERLAPPED lpOverlapped
-    )
+CorUnix::InternalWriteFile(CPalThread *pThread, HANDLE hFile, const void *lpBuffer, uint32_t nNumberOfBytesToWrite,
+                           uint32_t *lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped)
 {
     PAL_ERROR palError = 0;
     IPalObject *pFileObject = NULL;
@@ -252,7 +226,7 @@ CorUnix::InternalWriteFile(
     }
     else
     {
-        ASSERT( "lpNumberOfBytesWritten is NULL\n" );
+        ASSERT("lpNumberOfBytesWritten is NULL\n");
         palError = ERROR_INVALID_PARAMETER;
         goto done;
     }
@@ -263,31 +237,22 @@ CorUnix::InternalWriteFile(
         palError = ERROR_INVALID_HANDLE;
         goto done;
     }
-    else if ( lpOverlapped )
+    else if (lpOverlapped)
     {
-        ASSERT( "lpOverlapped is not NULL, as it should be.\n" );
+        ASSERT("lpOverlapped is not NULL, as it should be.\n");
         palError = ERROR_INVALID_PARAMETER;
         goto done;
     }
 
-    palError = g_pObjectManager->ReferenceObjectByHandle(
-        pThread,
-        hFile,
-        &aotFile,
-        &pFileObject
-    );
+    palError = g_pObjectManager->ReferenceObjectByHandle(pThread, hFile, &aotFile, &pFileObject);
 
     if (NO_ERROR != palError)
     {
         goto done;
     }
-    
-    palError = pFileObject->GetProcessLocalData(
-        pThread,
-        ReadLock, 
-        &pLocalDataLock,
-        reinterpret_cast<void**>(&pLocalData)
-        );
+
+    palError =
+        pFileObject->GetProcessLocalData(pThread, ReadLock, &pLocalDataLock, reinterpret_cast<void **>(&pLocalData));
 
     if (NO_ERROR != palError)
     {
@@ -307,17 +272,11 @@ CorUnix::InternalWriteFile(
     // Inform the lock controller for this file (if any) of our intention
     // to perform a write. (Note that pipes don't have lock controllers.)
     //
-    
+
     if (NULL != pLocalData->pLockController)
     {
         /* Get the current file position to calculate the region to lock */
-        palError = InternalSetFilePointerForUnixFd(
-            ifd,
-            0,
-            &writeOffsetStartHigh,
-            FILE_CURRENT,
-            &writeOffsetStartLow
-            );
+        palError = InternalSetFilePointerForUnixFd(ifd, 0, &writeOffsetStartHigh, FILE_CURRENT, &writeOffsetStartLow);
 
         if (NO_ERROR != palError)
         {
@@ -326,13 +285,8 @@ CorUnix::InternalWriteFile(
             goto done;
         }
 
-        palError = pLocalData->pLockController->GetTransactionLock(
-            writeOffsetStartLow,
-            writeOffsetStartHigh,
-            nNumberOfBytesToWrite,
-            0,
-            &pTransactionLock
-            );
+        palError = pLocalData->pLockController->GetTransactionLock(writeOffsetStartLow, writeOffsetStartHigh,
+                                                                   nNumberOfBytesToWrite, 0, &pTransactionLock);
 
         if (NO_ERROR != palError)
         {
@@ -350,10 +304,10 @@ CorUnix::InternalWriteFile(
     pLocalDataLock = NULL;
     pLocalData = NULL;
 
-    res = write( ifd, lpBuffer, nNumberOfBytesToWrite );
+    res = write(ifd, lpBuffer, nNumberOfBytesToWrite);
     TRACE("write() returns %d\n", res);
 
-    if ( res >= 0 )
+    if (res >= 0)
     {
         *lpNumberOfBytesWritten = res;
     }
@@ -361,9 +315,9 @@ CorUnix::InternalWriteFile(
     {
         palError = FILEGetLastErrorFromErrno();
     }
-    
+
 done:
-    
+
     if (NULL != pTransactionLock)
     {
         pTransactionLock->ReleaseLock();
@@ -392,27 +346,15 @@ Note:
 
 See MSDN doc.
 --*/
-BOOL
-WriteFile(
-       HANDLE hFile,
-       const void * lpBuffer,
-       uint32_t nNumberOfBytesToWrite,
-       uint32_t * lpNumberOfBytesWritten,
-       LPOVERLAPPED lpOverlapped)
+BOOL WriteFile(HANDLE hFile, const void *lpBuffer, uint32_t nNumberOfBytesToWrite, uint32_t *lpNumberOfBytesWritten,
+               LPOVERLAPPED lpOverlapped)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
-    
+
     pThread = InternalGetCurrentThread();
 
-    palError = InternalWriteFile(
-        pThread,
-        hFile,
-        lpBuffer,
-        nNumberOfBytesToWrite,
-        lpNumberOfBytesWritten,
-        lpOverlapped
-        );
+    palError = InternalWriteFile(pThread, hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
 
     if (NO_ERROR != palError)
     {
@@ -430,14 +372,13 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-GetStdHandle(
-          uint32_t nStdHandle)
+GetStdHandle(uint32_t nStdHandle)
 {
     CPalThread *pThread;
     HANDLE hRet = INVALID_HANDLE_VALUE;
 
     pThread = InternalGetCurrentThread();
-    switch( nStdHandle )
+    switch (nStdHandle)
     {
     case STD_INPUT_HANDLE:
         hRet = pStdIn;
@@ -446,7 +387,7 @@ GetStdHandle(
         hRet = pStdOut;
         break;
     case STD_ERROR_HANDLE:
-        hRet = pStdErr; 
+        hRet = pStdErr;
         break;
     default:
         ERROR("nStdHandle is invalid\n");
@@ -470,30 +411,25 @@ GetStdHandle(
 //
 
 PAL_ERROR
-InternalSetFilePointerForUnixFd(
-    int iUnixFd,
-    int32_t lDistanceToMove,
-    int32_t * lpDistanceToMoveHigh,
-    uint32_t dwMoveMethod,
-    int32_t * lpNewFilePointerLow
-    )
+InternalSetFilePointerForUnixFd(int iUnixFd, int32_t lDistanceToMove, int32_t *lpDistanceToMoveHigh,
+                                uint32_t dwMoveMethod, int32_t *lpNewFilePointerLow)
 {
     PAL_ERROR palError = NO_ERROR;
-    int     seek_whence = 0;
+    int seek_whence = 0;
     long seek_offset = 0LL;
     long seek_res = 0LL;
     off_t old_offset;
 
-    switch( dwMoveMethod )
+    switch (dwMoveMethod)
     {
     case FILE_BEGIN:
-        seek_whence = SEEK_SET; 
+        seek_whence = SEEK_SET;
         break;
     case FILE_CURRENT:
-        seek_whence = SEEK_CUR; 
+        seek_whence = SEEK_CUR;
         break;
     case FILE_END:
-        seek_whence = SEEK_END; 
+        seek_whence = SEEK_END;
         break;
     default:
         ERROR("dwMoveMethod = %d is invalid\n", dwMoveMethod);
@@ -502,16 +438,16 @@ InternalSetFilePointerForUnixFd(
     }
 
     //
-    // According to MSDN, if lpDistanceToMoveHigh is not null, 
-    // lDistanceToMove is treated as unsigned; 
+    // According to MSDN, if lpDistanceToMoveHigh is not null,
+    // lDistanceToMove is treated as unsigned;
     // it is treated as signed otherwise
     //
-    
-    if ( lpDistanceToMoveHigh )
+
+    if (lpDistanceToMoveHigh)
     {
         /* set the high 32 bits of the offset */
         seek_offset = (static_cast<long>(*lpDistanceToMoveHigh) << 32);
-        
+
         /* set the low 32 bits */
         /* cast to unsigned long to avoid sign extension */
         seek_offset |= static_cast<uint32_t>(lDistanceToMove);
@@ -526,17 +462,15 @@ InternalSetFilePointerForUnixFd(
     old_offset = lseek(iUnixFd, 0, SEEK_CUR);
     if (old_offset == -1)
     {
-        ERROR("lseek(fd,0,SEEK_CUR) failed errno:%d (%s)\n", 
-              errno, strerror(errno));
+        ERROR("lseek(fd,0,SEEK_CUR) failed errno:%d (%s)\n", errno, strerror(errno));
         palError = ERROR_ACCESS_DENIED;
         goto done;
     }
-    
+
     // Check to see if we're going to seek to a negative offset.
     // If we're seeking from the beginning or the current mark,
     // this is simple.
-    if ((seek_whence == SEEK_SET && seek_offset < 0) ||
-        (seek_whence == SEEK_CUR && seek_offset + old_offset < 0))
+    if ((seek_whence == SEEK_SET && seek_offset < 0) || (seek_whence == SEEK_CUR && seek_offset + old_offset < 0))
     {
         palError = ERROR_NEGATIVE_SEEK;
         goto done;
@@ -549,7 +483,7 @@ InternalSetFilePointerForUnixFd(
         // do that.
         struct stat fileData;
         int result;
-        
+
         result = fstat(iUnixFd, &fileData);
         if (result == -1)
         {
@@ -567,10 +501,8 @@ InternalSetFilePointerForUnixFd(
         }
     }
 
-    seek_res = static_cast<long>(lseek(iUnixFd,
-                                       seek_offset,
-                                       seek_whence));
-    if ( seek_res < 0 )
+    seek_res = static_cast<long>(lseek(iUnixFd, seek_offset, seek_whence));
+    if (seek_res < 0)
     {
         /* lseek() returns -1 on error, but also can seek to negative
            file offsets, so -1 can also indicate a successful seek to offset
@@ -583,9 +515,9 @@ InternalSetFilePointerForUnixFd(
     else
     {
         /* store high-order uint32_t */
-        if ( lpDistanceToMoveHigh )
+        if (lpDistanceToMoveHigh)
             *lpDistanceToMoveHigh = static_cast<uint32_t>(seek_res >> 32);
-    
+
         /* return low-order uint32_t of seek result */
         *lpNewFilePointerLow = static_cast<uint32_t>(seek_res);
     }
@@ -596,10 +528,10 @@ done:
 }
 
 
-#define ENSURE_UNIQUE_NOT_ZERO \
-    if ( uUniqueSeed == 0 ) \
-    {\
-        uUniqueSeed++;\
+#define ENSURE_UNIQUE_NOT_ZERO                                                                                         \
+    if (uUniqueSeed == 0)                                                                                              \
+    {                                                                                                                  \
+        uUniqueSeed++;                                                                                                 \
     }
 
 /*++
@@ -608,44 +540,44 @@ Function:
 
 Convert errno into the appropriate win32 error and return it.
 --*/
-uint32_t FILEGetLastErrorFromErrno( void )
+uint32_t FILEGetLastErrorFromErrno(void)
 {
     uint32_t dwRet;
 
-    switch(errno)
+    switch (errno)
     {
     case 0:
-        dwRet = ERROR_SUCCESS; 
+        dwRet = ERROR_SUCCESS;
         break;
     case ENAMETOOLONG:
         dwRet = ERROR_FILENAME_EXCED_RANGE;
         break;
     case ENOTDIR:
-        dwRet = ERROR_PATH_NOT_FOUND; 
+        dwRet = ERROR_PATH_NOT_FOUND;
         break;
     case ENOENT:
-        dwRet = ERROR_FILE_NOT_FOUND; 
+        dwRet = ERROR_FILE_NOT_FOUND;
         break;
     case EACCES:
     case EPERM:
     case EROFS:
     case EISDIR:
-        dwRet = ERROR_ACCESS_DENIED; 
+        dwRet = ERROR_ACCESS_DENIED;
         break;
     case EEXIST:
-        dwRet = ERROR_ALREADY_EXISTS; 
+        dwRet = ERROR_ALREADY_EXISTS;
         break;
 #if !defined(_AIX)
     // ENOTEMPTY is the same as EEXIST on AIX. Meaningful when involving directory operations
     case ENOTEMPTY:
-        dwRet = ERROR_DIR_NOT_EMPTY; 
+        dwRet = ERROR_DIR_NOT_EMPTY;
         break;
 #endif
     case EBADF:
-        dwRet = ERROR_INVALID_HANDLE; 
+        dwRet = ERROR_INVALID_HANDLE;
         break;
     case ENOMEM:
-        dwRet = ERROR_NOT_ENOUGH_MEMORY; 
+        dwRet = ERROR_NOT_ENOUGH_MEMORY;
         break;
     case EBUSY:
         dwRet = ERROR_BUSY;
@@ -664,8 +596,7 @@ uint32_t FILEGetLastErrorFromErrno( void )
         dwRet = ERROR_BAD_PATHNAME;
         break;
     default:
-        ERROR("unexpected errno %d (%s); returning ERROR_GEN_FAILURE\n",
-              errno, strerror(errno));
+        ERROR("unexpected errno %d (%s); returning ERROR_GEN_FAILURE\n", errno, strerror(errno));
         dwRet = ERROR_GEN_FAILURE;
     }
 
@@ -680,7 +611,7 @@ Function:
 
 Convert errno into the appropriate win32 error and return it.
 --*/
-uint32_t DIRGetLastErrorFromErrno( void )
+uint32_t DIRGetLastErrorFromErrno(void)
 {
     if (errno == ENOENT)
         return ERROR_PATH_NOT_FOUND;
@@ -692,7 +623,7 @@ uint32_t DIRGetLastErrorFromErrno( void )
 /*++
 init_std_handle [static]
 
-utility function for FILEInitStdHandles. do the work that is common to all 
+utility function for FILEInitStdHandles. do the work that is common to all
 three standard handles
 
 Parameters:
@@ -702,7 +633,7 @@ Parameters:
 Return value:
     handle for specified stream, or INVALID_HANDLE_VALUE on failure
 --*/
-static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
+static HANDLE init_std_handle(HANDLE *pStd, FILE *stream)
 {
     CPalThread *pThread = InternalGetCurrentThread();
     PAL_ERROR palError = NO_ERROR;
@@ -719,30 +650,20 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
     /* duplicate the FILE *, so that we can fclose() in FILECloseHandle without
        closing the original */
     new_fd = dup(fileno(stream));
-    if(-1 == new_fd)
+    if (-1 == new_fd)
     {
         ERROR("dup() failed; errno is %d (%s)\n", errno, strerror(errno));
         goto done;
     }
 
-    palError = g_pObjectManager->AllocateObject(
-        pThread,
-        &otFile,
-        &oa,
-        &pFileObject
-        );
+    palError = g_pObjectManager->AllocateObject(pThread, &otFile, &oa, &pFileObject);
 
     if (NO_ERROR != palError)
     {
         goto done;
     }
 
-    palError = pFileObject->GetProcessLocalData(
-        pThread,
-        WriteLock,
-        &pDataLock,
-        reinterpret_cast<void**>(&pLocalData)
-        );
+    palError = pFileObject->GetProcessLocalData(pThread, WriteLock, &pDataLock, reinterpret_cast<void **>(&pLocalData));
 
     if (NO_ERROR != palError)
     {
@@ -770,14 +691,7 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
     pDataLock->ReleaseLock(pThread);
     pDataLock = NULL;
 
-    palError = g_pObjectManager->RegisterObject(
-        pThread,
-        pFileObject,
-        &aotFile, 
-        0,
-        &hFile,
-        &pRegisteredFile
-        );
+    palError = g_pObjectManager->RegisterObject(pThread, pFileObject, &aotFile, 0, &hFile, &pRegisteredFile);
 
     //
     // pFileObject is invalidated by the call to RegisterObject, so NULL it
@@ -841,14 +755,14 @@ BOOL FILEInitStdHandles(void)
     TRACE("creating handle objects for stdin, stdout, stderr\n");
 
     stdin_handle = init_std_handle(&pStdIn, stdin);
-    if(INVALID_HANDLE_VALUE == stdin_handle)
+    if (INVALID_HANDLE_VALUE == stdin_handle)
     {
         ERROR("failed to create stdin handle\n");
         goto fail;
     }
 
     stdout_handle = init_std_handle(&pStdOut, stdout);
-    if(INVALID_HANDLE_VALUE == stdout_handle)
+    if (INVALID_HANDLE_VALUE == stdout_handle)
     {
         ERROR("failed to create stdout handle\n");
         CloseHandle(stdin_handle);
@@ -856,7 +770,7 @@ BOOL FILEInitStdHandles(void)
     }
 
     stderr_handle = init_std_handle(&pStdErr, stderr);
-    if(INVALID_HANDLE_VALUE == stderr_handle)
+    if (INVALID_HANDLE_VALUE == stderr_handle)
     {
         ERROR("failed to create stderr handle\n");
         CloseHandle(stdin_handle);

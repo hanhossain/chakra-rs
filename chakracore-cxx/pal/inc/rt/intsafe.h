@@ -3,20 +3,20 @@
 // See the LICENSE file in the project root for more information.
 
 /******************************************************************
-*                                                                 *
-*  intsafe.h -- This module defines helper functions to prevent   *
-*               integer overflow issues.                          *
-*                                                                 *
-*                                                                 *
-******************************************************************/
+ *                                                                 *
+ *  intsafe.h -- This module defines helper functions to prevent   *
+ *               integer overflow issues.                          *
+ *                                                                 *
+ *                                                                 *
+ ******************************************************************/
 #ifndef _INTSAFE_H_INCLUDED_
 #define _INTSAFE_H_INCLUDED_
 
-#include "specstrings.h"    // for IN, etc.
+#include "specstrings.h" // for IN, etc.
 
 #include <limits.h>
 
-#define INTSAFE_E_ARITHMETIC_OVERFLOW       (static_cast<int32_t>(0x80070216L))  // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
+#define INTSAFE_E_ARITHMETIC_OVERFLOW (static_cast<int32_t>(0x80070216L)) // 0x216 = 534 = ERROR_ARITHMETIC_OVERFLOW
 
 //
 // We make some assumptions about the sizes of various types. Let's be
@@ -29,11 +29,7 @@ static_assert(sizeof(uint32_t) == 4);
 //
 // uint32_t -> INT conversion
 //
-__inline
-int32_t
-UIntToInt(
-     uint32_t uOperand,
-     int32_t* piResult)
+__inline int32_t UIntToInt(uint32_t uOperand, int32_t *piResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *piResult = -1;
@@ -50,11 +46,7 @@ UIntToInt(
 //
 // uint32_t -> int32_t conversion
 //
-__inline
-int32_t
-ULongToLong(
-     uint32_t Operand,
-     int32_t* Result)
+__inline int32_t ULongToLong(uint32_t Operand, int32_t *Result)
 {
     if (Operand <= INT_MAX)
     {
@@ -71,11 +63,7 @@ ULongToLong(
 //
 // unsigned long -> INT conversion
 //
-__inline
-int32_t
-ULongLongToInt(
-     unsigned long ullOperand,
-     int32_t* piResult)
+__inline int32_t ULongLongToInt(unsigned long ullOperand, int32_t *piResult)
 {
     if (ullOperand <= INT_MAX)
     {
@@ -92,11 +80,7 @@ ULongLongToInt(
 //
 // unsigned long -> uint32_t conversion
 //
-__inline
-int32_t
-ULongLongToULong(
-     unsigned long ullOperand,
-     uint32_t* pulResult)
+__inline int32_t ULongLongToULong(unsigned long ullOperand, uint32_t *pulResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = 0xffffffffUL;
@@ -113,11 +97,7 @@ ULongLongToULong(
 //
 // unsigned long -> uint32_t conversion
 //
-__inline
-int32_t
-ULongLongToUInt(
-     unsigned long ullOperand,
-     uint32_t* puResult)
+__inline int32_t ULongLongToUInt(unsigned long ullOperand, uint32_t *puResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *puResult = 0xffffffff;
@@ -134,12 +114,7 @@ ULongLongToUInt(
 //
 // uint32_t addition
 //
-__inline
-int32_t
-UIntAdd(
-     uint32_t uAugend,
-     uint32_t uAddend,
-     uint32_t* puResult)
+__inline int32_t UIntAdd(uint32_t uAugend, uint32_t uAddend, uint32_t *puResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *puResult = 0xffffffff;
@@ -156,12 +131,7 @@ UIntAdd(
 //
 // uint32_t addition
 //
-__inline
-int32_t
-ULongAdd(
-     uint32_t ulAugend,
-     uint32_t ulAddend,
-     uint32_t* pulResult)
+__inline int32_t ULongAdd(uint32_t ulAugend, uint32_t ulAddend, uint32_t *pulResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pulResult = 0xffffffffUL;
@@ -178,12 +148,7 @@ ULongAdd(
 //
 // size_t addition
 //
-__inline
-int32_t
-SizeTAdd(
-     size_t Augend,
-     size_t Addend,
-     size_t* pResult)
+__inline int32_t SizeTAdd(size_t Augend, size_t Addend, size_t *pResult)
 {
     int32_t hr = INTSAFE_E_ARITHMETIC_OVERFLOW;
     *pResult = 0xffffffffffffffffULL;
@@ -200,12 +165,7 @@ SizeTAdd(
 //
 // uint32_t multiplication
 //
-__inline
-int32_t
-UIntMult(
-     uint32_t uMultiplicand,
-     uint32_t uMultiplier,
-     uint32_t* puResult)
+__inline int32_t UIntMult(uint32_t uMultiplicand, uint32_t uMultiplier, uint32_t *puResult)
 {
     unsigned long ull64Result = (static_cast<unsigned long>(uMultiplicand) * static_cast<unsigned long>(uMultiplier));
     return ULongLongToUInt(ull64Result, puResult);
@@ -214,12 +174,7 @@ UIntMult(
 //
 // uint32_t multiplication
 //
-__inline
-int32_t
-ULongMult(
-     uint32_t ulMultiplicand,
-     uint32_t ulMultiplier,
-     uint32_t* pulResult)
+__inline int32_t ULongMult(uint32_t ulMultiplicand, uint32_t ulMultiplier, uint32_t *pulResult)
 {
     unsigned long ull64Result = (static_cast<unsigned long>(ulMultiplicand) * static_cast<unsigned long>(ulMultiplier));
     return ULongLongToULong(ull64Result, pulResult);

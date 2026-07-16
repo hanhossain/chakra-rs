@@ -23,25 +23,25 @@ Revision History:
 --*/
 
 #include "pal/corunix.hpp"
-#include "pal/thread.hpp"
-#include "pal/init.h"
 #include "pal/dbgmsg.h"
+#include "pal/init.h"
+#include "pal/thread.hpp"
 
-#include <pthread.h>
-#include <unistd.h>
+#include <debugmacrosext.h>
 #include <errno.h>
+#include <limits.h>
+#include <pthread.h>
 #include <stddef.h>
 #include <sys/stat.h>
-#include <limits.h>
-#include <debugmacrosext.h>
+#include <unistd.h>
 
 #if defined(_AIX)
 // AIX requires explicit definition of the union semun (see semctl man page)
 union semun
 {
     int val;
-    struct semid_ds * buf;
-    unsigned short * array;
+    struct semid_ds *buf;
+    unsigned short *array;
 };
 #endif
 
@@ -52,7 +52,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD);
 
 /* This code is written to the blocking pipe of a thread that was created
    in suspended state in order to resume it. */
-const uint8_t WAKEUPCODE=0x2A;
+const uint8_t WAKEUPCODE = 0x2A;
 
 /*++
 Function:
@@ -64,9 +64,7 @@ Function:
 
 --*/
 PAL_ERROR
-CThreadSuspensionInfo::InternalSuspendNewThreadFromData(
-    CPalThread *pThread
-    )
+CThreadSuspensionInfo::InternalSuspendNewThreadFromData(CPalThread *pThread)
 {
     PAL_ERROR palError = NO_ERROR;
 
@@ -126,21 +124,14 @@ Function:
 
 See MSDN doc.
 --*/
-uint32_t
-ResumeThread(
-          HANDLE hThread
-         )
+uint32_t ResumeThread(HANDLE hThread)
 {
     PAL_ERROR palError;
     CPalThread *pthrResumer;
     uint32_t dwSuspendCount = static_cast<uint32_t>(-1);
 
     pthrResumer = InternalGetCurrentThread();
-    palError = InternalResumeThread(
-        pthrResumer,
-        hThread,
-        &dwSuspendCount
-        );
+    palError = InternalResumeThread(pthrResumer, hThread, &dwSuspendCount);
 
     if (NO_ERROR != palError)
     {
@@ -149,7 +140,8 @@ ResumeThread(
     }
     else
     {
-        _ASSERT_MSG(dwSuspendCount != static_cast<uint32_t>(-1), "InternalResumeThread returned success but dwSuspendCount did not change.\n");
+        _ASSERT_MSG(dwSuspendCount != static_cast<uint32_t>(-1),
+                    "InternalResumeThread returned success but dwSuspendCount did not change.\n");
     }
 
     LOGEXIT("ResumeThread returns DWORD %u\n", dwSuspendCount);
@@ -166,30 +158,19 @@ to InternalResumeThreadFromData. A reference to the suspend count from
 the resumption attempt is passed back to the caller of this function.
 --*/
 PAL_ERROR
-CorUnix::InternalResumeThread(
-    CPalThread *pthrResumer,
-    HANDLE hTargetThread,
-    uint32_t *pdwSuspendCount
-    )
+CorUnix::InternalResumeThread(CPalThread *pthrResumer, HANDLE hTargetThread, uint32_t *pdwSuspendCount)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthrTarget = NULL;
     IPalObject *pobjThread = NULL;
 
-    palError = InternalGetThreadDataFromHandle(
-        pthrResumer,
-        hTargetThread,
-        &pthrTarget, // THREAD_SUSPEND_RESUME
-        &pobjThread
-    );
+    palError = InternalGetThreadDataFromHandle(pthrResumer, hTargetThread,
+                                               &pthrTarget, // THREAD_SUSPEND_RESUME
+                                               &pobjThread);
 
     if (NO_ERROR == palError)
     {
-        palError = pthrResumer->suspensionInfo.InternalResumeThreadFromData(
-            pthrResumer,
-            pthrTarget,
-            pdwSuspendCount
-            );
+        palError = pthrResumer->suspensionInfo.InternalResumeThreadFromData(pthrResumer, pthrTarget, pdwSuspendCount);
     }
 
     if (NULL != pobjThread)
@@ -217,11 +198,8 @@ this may change since it would be preferable to perform cleanup. Thus, calls
 to release suspension locks remain in the error paths.
 --*/
 PAL_ERROR
-CThreadSuspensionInfo::InternalResumeThreadFromData(
-    CPalThread *pthrResumer,
-    CPalThread *pthrTarget,
-    uint32_t *pdwSuspendCount
-    )
+CThreadSuspensionInfo::InternalResumeThreadFromData(CPalThread *pthrResumer, CPalThread *pthrTarget,
+                                                    uint32_t *pdwSuspendCount)
 {
     PAL_ERROR palError = NO_ERROR;
 
@@ -261,10 +239,10 @@ CThreadSuspensionInfo::InternalResumeThreadFromData(
     // If there is a blocking pipe on this thread, resume it by writing the wake up code to that pipe.
     if (-1 != pthrTarget->suspensionInfo.GetBlockingPipe())
     {
-        // If write() is interrupted by a signal before writing data,
-        // it returns -1 and sets errno to EINTR. In this case, we
-        // attempt the write() again.
-        writeAgain:
+    // If write() is interrupted by a signal before writing data,
+    // it returns -1 and sets errno to EINTR. In this case, we
+    // attempt the write() again.
+    writeAgain:
         nWrittenBytes = write(pthrTarget->suspensionInfo.GetBlockingPipe(), &WAKEUPCODE, sizeof(WAKEUPCODE));
 
         // The size of WAKEUPCODE is 1 byte. If write returns 0, we'll treat it as an error.
@@ -328,22 +306,19 @@ no sense to do so. A thread holding the global lock is the only thread that
 can perform suspend or resume operations so it doesn't need to acquire
 a second lock.
 --*/
-BOOL
-CThreadSuspensionInfo::TryAcquireSuspensionLock(
-    CPalThread* pthrTarget
-    )
+BOOL CThreadSuspensionInfo::TryAcquireSuspensionLock(CPalThread *pthrTarget)
 {
 #if defined(__APPLE__)
-{
-    return pthrTarget->suspensionInfo.GetSuspensionSpinlock().try_lock();
-}
+    {
+        return pthrTarget->suspensionInfo.GetSuspensionSpinlock().try_lock();
+    }
 #else // defined(__APPLE__)
-{
-    int iPthreadRet = pthread_mutex_trylock(pthrTarget->suspensionInfo.GetSuspensionMutex());
-    _ASSERT_MSG(iPthreadRet == 0 || iPthreadRet == EBUSY, "pthread_mutex_trylock returned %d\n", iPthreadRet);
-    // If iPthreadRet is 0, lock acquisition was successful. Otherwise, it failed.
-    return (iPthreadRet == 0);
-}
+    {
+        int iPthreadRet = pthread_mutex_trylock(pthrTarget->suspensionInfo.GetSuspensionMutex());
+        _ASSERT_MSG(iPthreadRet == 0 || iPthreadRet == EBUSY, "pthread_mutex_trylock returned %d\n", iPthreadRet);
+        // If iPthreadRet is 0, lock acquisition was successful. Otherwise, it failed.
+        return (iPthreadRet == 0);
+    }
 #endif // defined(__APPLE__)
 }
 
@@ -355,24 +330,21 @@ AcquireSuspensionLock acquires a thread's suspension mutex or spinlock.
 A thread in this function blocks until it acquires
 its lock, unlike in TryAcquireSuspensionLock.
 --*/
-void
-CThreadSuspensionInfo::AcquireSuspensionLock(
-    CPalThread* pthrCurrent
-    )
+void CThreadSuspensionInfo::AcquireSuspensionLock(CPalThread *pthrCurrent)
 {
-{
-    #if defined(__APPLE__)
     {
-        pthrCurrent->suspensionInfo.m_nSpinlock.lock();
+#if defined(__APPLE__)
+        {
+            pthrCurrent->suspensionInfo.m_nSpinlock.lock();
+        }
+#else // defined(__APPLE__)
+        {
+            INDEBUG(int iPthreadError =)
+            pthread_mutex_lock(&pthrCurrent->suspensionInfo.m_ptmSuspmutex);
+            _ASSERT_MSG(iPthreadError == 0, "pthread_mutex_lock returned %d\n", iPthreadError);
+        }
+#endif // defined(__APPLE__)
     }
-    #else // defined(__APPLE__)
-    {
-        INDEBUG(int iPthreadError = )
-        pthread_mutex_lock(&pthrCurrent->suspensionInfo.m_ptmSuspmutex);
-        _ASSERT_MSG(iPthreadError == 0, "pthread_mutex_lock returned %d\n", iPthreadError);
-    }
-    #endif // defined(__APPLE__)
-}
 }
 
 /*++
@@ -382,24 +354,21 @@ Function:
 ReleaseSuspensionLock is a function that releases a thread's suspension mutex
 or spinlock.
 --*/
-void
-CThreadSuspensionInfo::ReleaseSuspensionLock(
-    CPalThread* pthrCurrent
-    )
+void CThreadSuspensionInfo::ReleaseSuspensionLock(CPalThread *pthrCurrent)
 {
-{
-    #if defined(__APPLE__)
     {
-        pthrCurrent->suspensionInfo.m_nSpinlock.unlock();
+#if defined(__APPLE__)
+        {
+            pthrCurrent->suspensionInfo.m_nSpinlock.unlock();
+        }
+#else // defined(__APPLE__)
+        {
+            INDEBUG(int iPthreadError =)
+            pthread_mutex_unlock(&pthrCurrent->suspensionInfo.m_ptmSuspmutex);
+            _ASSERT_MSG(iPthreadError == 0, "pthread_mutex_unlock returned %d\n", iPthreadError);
+        }
+#endif // defined(__APPLE__)
     }
-    #else // defined(__APPLE__)
-    {
-        INDEBUG(int iPthreadError = )
-        pthread_mutex_unlock(&pthrCurrent->suspensionInfo.m_ptmSuspmutex);
-        _ASSERT_MSG(iPthreadError == 0, "pthread_mutex_unlock returned %d\n", iPthreadError);
-    }
-    #endif // defined(__APPLE__)
-}
 }
 
 /*++
@@ -433,11 +402,7 @@ target's mutex. Then, attempt to acquire the target's mutex. If the mutex
 cannot be acquired, release your own and try again. This all or nothing
 approach is the safest and avoids nasty race conditions.
 --*/
-void
-CThreadSuspensionInfo::AcquireSuspensionLocks(
-    CPalThread *pthrSuspender,
-    CPalThread *pthrTarget
-    )
+void CThreadSuspensionInfo::AcquireSuspensionLocks(CPalThread *pthrSuspender, CPalThread *pthrTarget)
 {
     BOOL fReacquire = FALSE;
 
@@ -452,7 +417,8 @@ CThreadSuspensionInfo::AcquireSuspensionLocks(
             fReacquire = TRUE;
             sched_yield();
         }
-    } while (fReacquire);
+    }
+    while (fReacquire);
 
     // Whenever the native implementation for the wait subsystem's thread
     // blocking requires a lock as protection (as pthread conditions do with
@@ -489,11 +455,7 @@ Note that the locks are released in the opposite order they're acquired.
 This prevents a suspending or resuming thread from being suspended
 while holding the target's lock.
 --*/
-void
-CThreadSuspensionInfo::ReleaseSuspensionLocks(
-    CPalThread *pthrSuspender,
-    CPalThread *pthrTarget
-    )
+void CThreadSuspensionInfo::ReleaseSuspensionLocks(CPalThread *pthrSuspender, CPalThread *pthrTarget)
 {
     // See comment in AcquireSuspensionLocks
     pthrTarget->ReleaseNativeWaitLock();
@@ -509,8 +471,7 @@ Function:
 PostOnSuspendSemaphore is a utility function for a thread
 to post on its POSIX or SysV suspension semaphore.
 --*/
-void
-CThreadSuspensionInfo::PostOnSuspendSemaphore()
+void CThreadSuspensionInfo::PostOnSuspendSemaphore()
 {
 #if USE_POSIX_SEMAPHORES
     if (sem_post(&m_semSusp) == -1)
@@ -565,8 +526,7 @@ Function:
 WaitOnSuspendSemaphore is a utility function for a thread
 to wait on its POSIX or SysV suspension semaphore.
 --*/
-void
-CThreadSuspensionInfo::WaitOnSuspendSemaphore()
+void CThreadSuspensionInfo::WaitOnSuspendSemaphore()
 {
 #if USE_POSIX_SEMAPHORES
     while (sem_wait(&m_semSusp) == -1)
@@ -619,8 +579,7 @@ Function:
 PostOnResumeSemaphore is a utility function for a thread
 to post on its POSIX or SysV resume semaphore.
 --*/
-void
-CThreadSuspensionInfo::PostOnResumeSemaphore()
+void CThreadSuspensionInfo::PostOnResumeSemaphore()
 {
 #if USE_POSIX_SEMAPHORES
     if (sem_post(&m_semResume) == -1)
@@ -675,8 +634,7 @@ Function:
 WaitOnResumeSemaphore is a utility function for a thread
 to wait on its POSIX or SysV resume semaphore.
 --*/
-void
-CThreadSuspensionInfo::WaitOnResumeSemaphore()
+void CThreadSuspensionInfo::WaitOnResumeSemaphore()
 {
 #if USE_POSIX_SEMAPHORES
     while (sem_wait(&m_semResume) == -1)
@@ -730,12 +688,11 @@ InitializeSuspensionLock initializes a thread's suspension spinlock
 or suspension mutex. It is called from the CThreadSuspensionInfo
 constructor.
 --*/
-void
-CThreadSuspensionInfo::InitializeSuspensionLock()
+void CThreadSuspensionInfo::InitializeSuspensionLock()
 {
 #if !defined(__APPLE__)
     int iError = pthread_mutex_init(&m_ptmSuspmutex, NULL);
-    if (0 != iError )
+    if (0 != iError)
     {
         ASSERT("pthread_mutex_init(&suspmutex) returned %d\n", iError);
         return;
@@ -763,7 +720,7 @@ CThreadSuspensionInfo::InitializePreCreate()
     // initialize suspension semaphore
     iError = sem_init(&m_semSusp, 0, 0);
 
-    if (0 != iError )
+    if (0 != iError)
     {
         ASSERT("sem_init(&suspsem) returned %d\n", iError);
         goto InitializePreCreateExit;
@@ -772,7 +729,7 @@ CThreadSuspensionInfo::InitializePreCreate()
     // initialize resume semaphore
     iError = sem_init(&m_semResume, 0, 0);
 
-    if (0 != iError )
+    if (0 != iError)
     {
         ASSERT("sem_init(&suspsem) returned %d\n", iError);
         sem_destroy(&m_semSusp);
@@ -870,13 +827,13 @@ InitializePreCreateExit:
     {
         switch (iError)
         {
-            case ENOMEM:
-            case EAGAIN:
+        case ENOMEM:
+        case EAGAIN:
             {
                 palError = ERROR_OUTOFMEMORY;
                 break;
             }
-            default:
+        default:
             {
                 ASSERT("A pthrSuspender init call returned %d (%s)\n", iError, strerror(iError));
                 palError = ERROR_INTERNAL_ERROR;
@@ -892,7 +849,7 @@ CThreadSuspensionInfo::~CThreadSuspensionInfo()
 #if !defined(__APPLE__)
     if (m_fSuspmutexInitialized)
     {
-        INDEBUG(int iError = )
+        INDEBUG(int iError =)
         pthread_mutex_destroy(&m_ptmSuspmutex);
         _ASSERT_MSG(0 == iError, "pthread_mutex_destroy returned %d (%s)\n", iError, strerror(iError));
     }
@@ -928,7 +885,7 @@ CThreadSuspensionInfo::~CThreadSuspensionInfo()
         iError = pthread_mutex_destroy(&m_mutexResume);
         _ASSERT_MSG(0 == iError, "pthread_mutex_destroy failed with %d (%s)\n", iError, strerror(iError));
     }
-#endif  // USE_POSIX_SEMAPHORES
+#endif // USE_POSIX_SEMAPHORES
 }
 
 #if USE_SYSV_SEMAPHORES
@@ -942,8 +899,7 @@ during shutdown, its destructor will be invoked and the semaphore ids destroyed.
 In assert or exceptions situations that are suspension unsafe,
 PROCCleanupThreadSemIds is called, which uses DestroySemaphoreIds.
 --*/
-void
-CThreadSuspensionInfo::DestroySemaphoreIds()
+void CThreadSuspensionInfo::DestroySemaphoreIds()
 {
     union semun semunData;
     if (m_nSemsuspid != 0)

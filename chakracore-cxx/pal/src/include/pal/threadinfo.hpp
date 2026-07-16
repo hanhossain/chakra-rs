@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -52,7 +52,6 @@ namespace CorUnix
     class CThreadInfoInitializer
     {
     public:
-
         //
         // InitializePreCreate is called before the new thread is started.
         // Any allocations or other initializations that may fail that do
@@ -60,24 +59,14 @@ namespace CorUnix
         // new thread's ID) should take place in this routine.
         //
 
-        virtual
-        PAL_ERROR
-        InitializePreCreate(
-            void
-            )
-        {
-            return NO_ERROR;
-        };
+        virtual PAL_ERROR InitializePreCreate(void) { return NO_ERROR; };
 
         //
         // InitializePostCreate is called from within the context of the
         // new thread.
         //
-        virtual PAL_ERROR InitializePostCreate(CPalThread *)
-        {
-            return NO_ERROR;
-        }
+        virtual PAL_ERROR InitializePostCreate(CPalThread *) { return NO_ERROR; }
     };
-}
+} // namespace CorUnix
 
 #endif // _PAL_THREADINFO_H_

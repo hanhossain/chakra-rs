@@ -10,13 +10,9 @@ namespace Wasm
     class WasmGlobal
     {
     public:
-        WasmGlobal(GlobalReferenceTypes::Type refType, uint32_t offset, WasmTypes::WasmType type, bool isMutable, WasmNode init) :
-            m_rType(refType),
-            m_offset(offset),
-            m_type(type),
-            m_isMutable(isMutable),
-            m_init(init)
-        {};
+        WasmGlobal(GlobalReferenceTypes::Type refType, uint32_t offset, WasmTypes::WasmType type, bool isMutable,
+                   WasmNode init) :
+            m_rType(refType), m_offset(offset), m_type(type), m_isMutable(isMutable), m_init(init) {};
         WasmTypes::WasmType GetType() const { return m_type; }
         bool IsMutable() const { return m_isMutable; }
         uint32_t GetOffset() const { return m_offset; }
@@ -24,6 +20,7 @@ namespace Wasm
 
         WasmConstLitNode GetConstInit() const;
         uint32_t GetGlobalIndexInit() const;
+
     private:
         GlobalReferenceTypes::Type m_rType;
         WasmTypes::WasmType m_type;

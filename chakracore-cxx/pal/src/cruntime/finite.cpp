@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -19,8 +19,8 @@ Abstract:
 
 --*/
 
-#include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
+#include "pal/palinternal.h"
 
 #ifdef min
 #define TEMP_MIN min
@@ -49,5 +49,3 @@ Abstract:
 #define PAL_NEGINF log(0.0)
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
-
-

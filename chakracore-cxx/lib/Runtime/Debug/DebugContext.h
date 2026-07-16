@@ -3,22 +3,28 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Debug/DiagObjectModel.h"
+#include "Debug/ProbeContainer.h"
 
 class HostDebugContext
 {
 public:
-    HostDebugContext(Js::ScriptContext* inScriptContext) { this->scriptContext = inScriptContext; }
+    HostDebugContext(Js::ScriptContext *inScriptContext) { this->scriptContext = inScriptContext; }
     virtual void Delete() = 0;
-    virtual unsigned long GetHostSourceContext(Js::Utf8SourceInfo * sourceInfo) = 0;
-    virtual int32_t SetThreadDescription(const char16_t* url) = 0;
-    virtual int32_t DbgRegisterFunction(Js::ScriptContext * scriptContext, Js::FunctionBody * functionBody, unsigned long dwDebugSourceContext, const char16_t* title) = 0;
-    virtual void ReParentToCaller(Js::Utf8SourceInfo* sourceInfo) = 0;
-    virtual void SortMembersList(JsUtil::List<Js::DebuggerPropertyDisplayInfo *, ArenaAllocator> * pMembersList, Js::ScriptContext* scriptContext) {/*Do nothing*/}
+    virtual unsigned long GetHostSourceContext(Js::Utf8SourceInfo *sourceInfo) = 0;
+    virtual int32_t SetThreadDescription(const char16_t *url) = 0;
+    virtual int32_t DbgRegisterFunction(Js::ScriptContext *scriptContext, Js::FunctionBody *functionBody,
+                                        unsigned long dwDebugSourceContext, const char16_t *title) = 0;
+    virtual void ReParentToCaller(Js::Utf8SourceInfo *sourceInfo) = 0;
+    virtual void SortMembersList(JsUtil::List<Js::DebuggerPropertyDisplayInfo *, ArenaAllocator> *pMembersList,
+                                 Js::ScriptContext *scriptContext)
+    { /*Do nothing*/
+    }
 
-    Js::ScriptContext* GetScriptContext() { return scriptContext; }
+    Js::ScriptContext *GetScriptContext() { return scriptContext; }
 
 private:
-    Js::ScriptContext* scriptContext;
+    Js::ScriptContext *scriptContext;
 };
 
 namespace Js
@@ -42,15 +48,15 @@ namespace Js
     class DebugContext
     {
     public:
-        DebugContext(Js::ScriptContext * scriptContext);
+        DebugContext(Js::ScriptContext *scriptContext);
         ~DebugContext();
         void Initialize();
         int32_t RundownSourcesAndReparse(bool shouldPerformSourceRundown, bool shouldReparseFunctions);
-        void RegisterFunction(Js::ParseableFunctionInfo * func, const char16_t* title);
+        void RegisterFunction(Js::ParseableFunctionInfo *func, const char16_t *title);
         bool IsClosed() const { return this->isClosed; };
         bool IsSelfOrScriptContextClosed() const;
         void Close();
-        void SetHostDebugContext(HostDebugContext * hostDebugContext);
+        void SetHostDebugContext(HostDebugContext *hostDebugContext);
 
         void SetDebuggerMode(DebuggerMode mode);
 #if DBG
@@ -60,32 +66,39 @@ namespace Js
         bool IsDebugContextInNonDebugMode() const { return this->debuggerMode == DebuggerMode::NotDebugging; }
         bool IsDebugContextInDebugMode() const { return this->debuggerMode == DebuggerMode::Debugging; }
         bool IsDebugContextInSourceRundownMode() const { return this->debuggerMode == DebuggerMode::SourceRundown; }
-        bool IsDebugContextInSourceRundownOrDebugMode() const { return IsDebugContextInSourceRundownMode() || IsDebugContextInDebugMode(); }
+        bool IsDebugContextInSourceRundownOrDebugMode() const
+        {
+            return IsDebugContextInSourceRundownMode() || IsDebugContextInDebugMode();
+        }
 
         bool IsDebuggerRecording() const { return this->isDebuggerRecording; }
         void SetIsDebuggerRecording(bool isDebuggerRecording) { this->isDebuggerRecording = isDebuggerRecording; }
 
-        ProbeContainer* GetProbeContainer() const { return this->diagProbesContainer; }
-        HostDebugContext * GetHostDebugContext() const { return this->hostDebugContext; }
+        ProbeContainer *GetProbeContainer() const { return this->diagProbesContainer; }
+        HostDebugContext *GetHostDebugContext() const { return this->hostDebugContext; }
 
         bool GetIsReparsingSource() const { return this->isReparsingSource; }
 
     private:
-        ScriptContext * scriptContext;
-        HostDebugContext* hostDebugContext;
-        ProbeContainer* diagProbesContainer;
+        ScriptContext *scriptContext;
+        HostDebugContext *hostDebugContext;
+        ProbeContainer *diagProbesContainer;
         DebuggerMode debuggerMode;
         bool isClosed : 1;
         bool isReparsingSource : 1;
         bool isDebuggerRecording : 1;
 
         // Private Functions
-        void WalkAndAddUtf8SourceInfo(Js::Utf8SourceInfo* sourceInfo, JsUtil::List<Js::Utf8SourceInfo *, Recycler, false, Js::CopyRemovePolicy, RecyclerPointerComparer> *utf8SourceInfoList);
+        void WalkAndAddUtf8SourceInfo(Js::Utf8SourceInfo *sourceInfo,
+                                      JsUtil::List<Js::Utf8SourceInfo *, Recycler, false, Js::CopyRemovePolicy,
+                                                   RecyclerPointerComparer> *utf8SourceInfoList);
         bool CanRegisterFunction() const;
-        void RegisterFunction(Js::ParseableFunctionInfo * func, unsigned long dwDebugSourceContext, const char16_t* title);
-        void RegisterFunction(Js::FunctionBody * functionBody, unsigned long dwDebugSourceContext, const char16_t* title);
+        void RegisterFunction(Js::ParseableFunctionInfo *func, unsigned long dwDebugSourceContext,
+                              const char16_t *title);
+        void RegisterFunction(Js::FunctionBody *functionBody, unsigned long dwDebugSourceContext,
+                              const char16_t *title);
 
-        template<class TMapFunction>
+        template <class TMapFunction>
         void MapUTF8SourceInfoUntil(TMapFunction map);
     };
-}
+} // namespace Js

@@ -6,13 +6,15 @@
 
 namespace Js
 {
-    JavascriptEnumerator::JavascriptEnumerator(ScriptContext* scriptContext) : RecyclableObject(scriptContext->GetLibrary()->GetEnumeratorType())
+    JavascriptEnumerator::JavascriptEnumerator(ScriptContext *scriptContext) :
+        RecyclableObject(scriptContext->GetLibrary()->GetEnumeratorType())
     {
         Assert(scriptContext != NULL);
     }
 
-    template <> bool VarIsImpl<JavascriptEnumerator>(RecyclableObject* obj)
+    template <>
+    bool VarIsImpl<JavascriptEnumerator>(RecyclableObject *obj)
     {
         return JavascriptOperators::GetTypeId(obj) == TypeIds_Enumerator;
     }
-}
+} // namespace Js

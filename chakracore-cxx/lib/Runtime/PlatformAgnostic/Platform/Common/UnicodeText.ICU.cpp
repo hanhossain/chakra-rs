@@ -3,41 +3,35 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimePlatformAgnosticPch.h"
 #include "UnicodeText.h"
-#include "UnicodeTextInternal.h"
 #include "ChakraICU.h"
+#include "RuntimePlatformAgnosticPch.h"
+#include "UnicodeTextInternal.h"
 
 namespace PlatformAgnostic
 {
     namespace UnicodeText
     {
-        static_assert(
-            sizeof(char16_t) == sizeof(UChar),
-            "This implementation depends on ICU char size matching char16_t's size"
-        );
+        static_assert(sizeof(char16_t) == sizeof(UChar),
+                      "This implementation depends on ICU char size matching char16_t's size");
 
         // Returns a UNormalizer2 for a given NormalizationForm
         // IMPORTANT: unorm2_getInstance is used, which *explicitly* states to not call
         // unorm2_close on the returned value!
         static const UNormalizer2 *StaticUNormalizerFactory(NormalizationForm nf)
         {
-            static_assert(
-                static_cast<int>(NormalizationForm::C) == static_cast<int>(UNORM2_COMPOSE) &&
-                static_cast<int>(NormalizationForm::D) == static_cast<int>(UNORM2_DECOMPOSE) &&
-                // Deciding between ICU_NORMALIZATION_NFC and ICU_NORMALIZATION_NFKC
-                // Depends on ::KC and ::KD being INT_MIN + their non-K forms
-                // We can't just make them negative of their non-K forms because UNORM2_COMPOSE == 0
-                static_cast<int>(NormalizationForm::KC) == INT_MIN + static_cast<int>(UNORM2_COMPOSE) &&
-                static_cast<int>(NormalizationForm::KD) == INT_MIN + static_cast<int>(UNORM2_DECOMPOSE) &&
-                (
-                    static_cast<int>(NormalizationForm::Other) != static_cast<int>(NormalizationForm::C) &&
-                    static_cast<int>(NormalizationForm::Other) != static_cast<int>(NormalizationForm::D) &&
-                    static_cast<int>(NormalizationForm::Other) != static_cast<int>(NormalizationForm::KC) &&
-                    static_cast<int>(NormalizationForm::Other) != static_cast<int>(NormalizationForm::KD)
-                ),
-                "Invalid NormalizationForm enum configuration"
-            );
+            static_assert(static_cast<int>(NormalizationForm::C) == static_cast<int>(UNORM2_COMPOSE) &&
+                              static_cast<int>(NormalizationForm::D) == static_cast<int>(UNORM2_DECOMPOSE) &&
+                              // Deciding between ICU_NORMALIZATION_NFC and ICU_NORMALIZATION_NFKC
+                              // Depends on ::KC and ::KD being INT_MIN + their non-K forms
+                              // We can't just make them negative of their non-K forms because UNORM2_COMPOSE == 0
+                              static_cast<int>(NormalizationForm::KC) == INT_MIN + static_cast<int>(UNORM2_COMPOSE) &&
+                              static_cast<int>(NormalizationForm::KD) == INT_MIN + static_cast<int>(UNORM2_DECOMPOSE) &&
+                              (static_cast<int>(NormalizationForm::Other) != static_cast<int>(NormalizationForm::C) &&
+                               static_cast<int>(NormalizationForm::Other) != static_cast<int>(NormalizationForm::D) &&
+                               static_cast<int>(NormalizationForm::Other) != static_cast<int>(NormalizationForm::KC) &&
+                               static_cast<int>(NormalizationForm::Other) != static_cast<int>(NormalizationForm::KD)),
+                          "Invalid NormalizationForm enum configuration");
             UNormalization2Mode mode = static_cast<UNormalization2Mode>(nf);
             const char *name = ICU_NORMALIZATION_NFC;
             if (nf < 0)
@@ -62,7 +56,7 @@ namespace PlatformAgnostic
         // Otherwise, we treat the char before as the invalid one and return index - 1
         // This function has defined behavior only for null-terminated strings.
         // If the string is not null terminated, the behavior is undefined (likely hang)
-        static bool IsUtf16StringValid(const UChar* str, size_t length, size_t* invalidIndex)
+        static bool IsUtf16StringValid(const UChar *str, size_t length, size_t *invalidIndex)
         {
             Assert(invalidIndex != nullptr);
             *invalidIndex = static_cast<size_t>(-1);
@@ -128,7 +122,7 @@ namespace PlatformAgnostic
             }
         }
 
-// Platform\Windows\UnicodeText.cpp has a more accurate version of this function for Windows
+        // Platform\Windows\UnicodeText.cpp has a more accurate version of this function for Windows
         CharacterClassificationType GetLegacyCharacterClassificationType(char16_t character)
         {
             auto charTypeMask = U_GET_GC_MASK(character);
@@ -148,9 +142,7 @@ namespace PlatformAgnostic
             //  * C1_BLANK corresponds to a hardcoded list thats ill-defined.
             // We'll skip that compatibility here and just check for Zs.
             // We explicitly check for 0xFEFF to satisfy the unit test in es5/Lex_u3.js
-            if ((charTypeMask & U_GC_ZS_MASK) != 0 ||
-                character == 0xFEFF ||
-                character == 0xFFFE)
+            if ((charTypeMask & U_GC_ZS_MASK) != 0 || character == 0xFEFF || character == 0xFFFE)
             {
                 return CharacterClassificationType::Whitespace;
             }
@@ -159,7 +151,8 @@ namespace PlatformAgnostic
         }
 
         // ICU implementation of platform-agnostic Unicode interface
-        int32_t NormalizeString(NormalizationForm normalizationForm, const char16_t* sourceString, uint32_t sourceLength, char16_t* destString, int32_t destLength, ApiError* pErrorOut)
+        int32_t NormalizeString(NormalizationForm normalizationForm, const char16_t *sourceString,
+                                uint32_t sourceLength, char16_t *destString, int32_t destLength, ApiError *pErrorOut)
         {
             // Assert pointers
             Assert(sourceString != nullptr);
@@ -188,13 +181,15 @@ namespace PlatformAgnostic
             Assert(normalizer != nullptr);
 
             UErrorCode status = U_ZERO_ERROR;
-            int required = unorm2_normalize(normalizer, reinterpret_cast<const UChar *>(sourceString), sourceLength, reinterpret_cast<UChar *>(destString), destLength, &status);
+            int required = unorm2_normalize(normalizer, reinterpret_cast<const UChar *>(sourceString), sourceLength,
+                                            reinterpret_cast<UChar *>(destString), destLength, &status);
             *pErrorOut = TranslateUErrorCode(status);
 
             return required;
         }
 
-        bool IsNormalizedString(NormalizationForm normalizationForm, const char16_t* testString, int32_t testStringLength)
+        bool IsNormalizedString(NormalizationForm normalizationForm, const char16_t *testString,
+                                int32_t testStringLength)
         {
             Assert(testString != nullptr);
             if (testStringLength < 0)
@@ -214,19 +209,18 @@ namespace PlatformAgnostic
             Assert(normalizer != nullptr);
 
             UErrorCode status = U_ZERO_ERROR;
-            bool isNormalized = unorm2_isNormalized(normalizer, reinterpret_cast<const UChar *>(testString), testStringLength, &status);
+            bool isNormalized =
+                unorm2_isNormalized(normalizer, reinterpret_cast<const UChar *>(testString), testStringLength, &status);
             AssertMsg(U_SUCCESS(status), ICU_ERRORMESSAGE(status));
 
             return isNormalized;
         }
 
-        bool IsWhitespace(codepoint_t ch)
-        {
-            return u_hasBinaryProperty(ch, UCHAR_WHITE_SPACE);
-        }
+        bool IsWhitespace(codepoint_t ch) { return u_hasBinaryProperty(ch, UCHAR_WHITE_SPACE); }
 
-        template<bool toUpper, bool useInvariant>
-        charcount_t ChangeStringLinguisticCase(const char16_t* sourceString, charcount_t sourceLength, char16_t* destString, charcount_t destLength, ApiError* pErrorOut)
+        template <bool toUpper, bool useInvariant>
+        charcount_t ChangeStringLinguisticCase(const char16_t *sourceString, charcount_t sourceLength,
+                                               char16_t *destString, charcount_t destLength, ApiError *pErrorOut)
         {
             Assert(sourceString != nullptr && sourceLength > 0);
             Assert(destString != nullptr || destLength == 0);
@@ -236,17 +230,17 @@ namespace PlatformAgnostic
             *pErrorOut = ApiError::NoError;
 
             // u_strTo treats nullptr as the system default locale and "" as root
-            const char* locale = useInvariant ? "" : nullptr;
+            const char *locale = useInvariant ? "" : nullptr;
 
             if (toUpper)
             {
-                resultStringLength = u_strToUpper(destString, destLength,
-                    sourceString, sourceLength, locale, &errorCode);
+                resultStringLength =
+                    u_strToUpper(destString, destLength, sourceString, sourceLength, locale, &errorCode);
             }
             else
             {
-                resultStringLength = u_strToLower(destString, destLength,
-                    sourceString, sourceLength, locale, &errorCode);
+                resultStringLength =
+                    u_strToLower(destString, destLength, sourceString, sourceLength, locale, &errorCode);
             }
 
             *pErrorOut = TranslateUErrorCode(errorCode);
@@ -254,36 +248,24 @@ namespace PlatformAgnostic
             return static_cast<charcount_t>(resultStringLength);
         }
 
-        bool IsIdStart(codepoint_t ch)
+        bool IsIdStart(codepoint_t ch) { return u_hasBinaryProperty(ch, UCHAR_ID_START); }
+
+        bool IsIdContinue(codepoint_t ch) { return u_hasBinaryProperty(ch, UCHAR_ID_CONTINUE); }
+
+        int LogicalStringCompare(const char16_t *string1, int str1size, const char16_t *string2, int str2size)
         {
-            return u_hasBinaryProperty(ch, UCHAR_ID_START);
+            return PlatformAgnostic::UnicodeText::Internal::LogicalStringCompareImpl(string1, str1size, string2,
+                                                                                     str2size);
         }
 
-        bool IsIdContinue(codepoint_t ch)
-        {
-            return u_hasBinaryProperty(ch, UCHAR_ID_CONTINUE);
-        }
-
-        int LogicalStringCompare(const char16_t* string1, int str1size, const char16_t* string2, int str2size)
-        {
-            return PlatformAgnostic::UnicodeText::Internal::LogicalStringCompareImpl(string1, str1size, string2, str2size);
-        }
-
-        bool IsExternalUnicodeLibraryAvailable()
-        {
-            return true;
-        }
+        bool IsExternalUnicodeLibraryAvailable() { return true; }
 
         UnicodeGeneralCategoryClass GetGeneralCategoryClass(codepoint_t ch)
         {
             int8_t charType = u_charType(ch);
 
-            if (charType == U_LOWERCASE_LETTER ||
-                charType == U_UPPERCASE_LETTER ||
-                charType == U_TITLECASE_LETTER ||
-                charType == U_MODIFIER_LETTER ||
-                charType == U_OTHER_LETTER ||
-                charType == U_LETTER_NUMBER)
+            if (charType == U_LOWERCASE_LETTER || charType == U_UPPERCASE_LETTER || charType == U_TITLECASE_LETTER ||
+                charType == U_MODIFIER_LETTER || charType == U_OTHER_LETTER || charType == U_LETTER_NUMBER)
             {
                 return UnicodeGeneralCategoryClass::CategoryClassLetter;
             }
@@ -325,5 +307,5 @@ namespace PlatformAgnostic
 
             return UnicodeGeneralCategoryClass::CategoryClassOther;
         }
-    }
-};
+    } // namespace UnicodeText
+}; // namespace PlatformAgnostic

@@ -21,25 +21,25 @@ Abstract:
 
 /* PAL headers */
 
-#include "pal/thread.hpp"
 #include <new>
 #include "pal/file.hpp"
+#include "pal/thread.hpp"
 
-#include "pal/dbgmsg.h"
-#include "pal/cruntime.h"
 #include "pal/critsect.h"
+#include "pal/cruntime.h"
+#include "pal/dbgmsg.h"
 #include "pal/file.h"
 #include "pal/misc.h"
 
 /* standard headers */
 
+#include <dirent.h>
+#include <dlfcn.h>
+#include <errno.h>
+#include <pthread.h> /* for pthread_self */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pthread.h> /* for pthread_self */
-#include <errno.h>
-#include <dirent.h>
-#include <dlfcn.h>
 
 /* <stdarg.h> needs to be included after "palinternal.h" to avoid name
    collision for va_start and va_end */
@@ -60,7 +60,7 @@ static const char FOPEN_FLAGS[] = "wt";
 
 /* global and static variables */
 
-const char16_t* W16_NULLSTRING = reinterpret_cast<const char16_t*>("N\0U\0L\0L\0\0");
+const char16_t *W16_NULLSTRING = reinterpret_cast<const char16_t *>("N\0U\0L\0L\0\0");
 
 /* we must use stdio functions directly rather that rely on PAL functions for
   output, because those functions do tracing and we need to avoid recursion */

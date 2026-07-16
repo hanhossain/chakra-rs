@@ -5,8 +5,8 @@
 
 #include "SCACorePch.h"
 #ifdef ENABLE_SCRIPT_DEBUGGING
-#include "Debug/ProbeContainer.h"
 #include "Debug/DebugContext.h"
+#include "Debug/ProbeContainer.h"
 #endif
 
 namespace Js
@@ -20,4 +20,4 @@ namespace Js
             // No debugger support yet.
         }
     }
-};
+}; // namespace Js

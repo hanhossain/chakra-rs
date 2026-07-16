@@ -6,7 +6,7 @@
 //
 // ===========================================================================
 // File: unknwn.h
-// 
+//
 // ===========================================================================
 // simplified unknwn.h for PAL
 
@@ -19,20 +19,18 @@ typedef /* [unique] */ IUnknown *LPUNKNOWN;
 
 struct IUnknown
 {
-    virtual int32_t QueryInterface( 
-        REFIID riid,
-        void **ppvObject) = 0;
-        
-    virtual uint32_t AddRef( void) = 0;
-        
-    virtual uint32_t Release( void) = 0;
+    virtual int32_t QueryInterface(REFIID riid, void **ppvObject) = 0;
 
-    template<class Q>
+    virtual uint32_t AddRef(void) = 0;
+
+    virtual uint32_t Release(void) = 0;
+
+    template <class Q>
     int32_t
-   
-    QueryInterface(Q** pp)
+
+    QueryInterface(Q **pp)
     {
-        return QueryInterface(__uuidof(Q), static_cast<void**>(pp));
+        return QueryInterface(__uuidof(Q), static_cast<void **>(pp));
     }
 };
 
@@ -43,13 +41,9 @@ struct IUnknown
 
 struct IClassFactory : public IUnknown
 {
-    virtual int32_t CreateInstance( 
-        IUnknown *pUnkOuter,
-        REFIID riid,
-        void **ppvObject) = 0;
-    
-    virtual int32_t LockServer( 
-        BOOL fLock) = 0;
+    virtual int32_t CreateInstance(IUnknown *pUnkOuter, REFIID riid, void **ppvObject) = 0;
+
+    virtual int32_t LockServer(BOOL fLock) = 0;
 };
 
 #endif // __IClassFactory_INTERFACE_DEFINED__

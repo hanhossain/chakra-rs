@@ -21,6 +21,8 @@ Abstract:
 #include <mach/mach.h>
 #include <mach/mach_error.h>
 #include <mach/thread_status.h>
+#include "pal/corunix.hpp"
+#include "pal/thread.hpp"
 
 using namespace CorUnix;
 
@@ -30,40 +32,52 @@ using namespace CorUnix;
 // these methods (principally because we're handling hardware exceptions in the context of a single dedicated
 // handler thread). The following macro encapsulates checking the return code from Mach methods and emitting
 // some useful data and aborting the process on failure.
-#define CHECK_MACH(_msg, machret) do {                                      \
-        if (machret != KERN_SUCCESS)                                        \
-        {                                                                   \
-            char _szError[1024];                                            \
-            mach_error(_szError, machret);                                  \
-            abort();                                                        \
-        }                                                                   \
-    } while (false)
+#define CHECK_MACH(_msg, machret)                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (machret != KERN_SUCCESS)                                                                                   \
+        {                                                                                                              \
+            char _szError[1024];                                                                                       \
+            mach_error(_szError, machret);                                                                             \
+            abort();                                                                                                   \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (false)
 
 // This macro terminates the process with some useful debug info as above, but for the general failure points
 // that have nothing to do with Mach.
-#define NONPAL_RETAIL_ASSERT(_msg, ...) do {                                    \
-        fprintf(stdout, "%s: %u: " _msg "\n", __FUNCTION__, __LINE__, ## __VA_ARGS__);   \
-        fflush(stdout);                                                         \
-        abort();                                                                \
-    } while (false)
+#define NONPAL_RETAIL_ASSERT(_msg, ...)                                                                                \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        fprintf(stdout, "%s: %u: " _msg "\n", __FUNCTION__, __LINE__, ##__VA_ARGS__);                                  \
+        fflush(stdout);                                                                                                \
+        abort();                                                                                                       \
+    }                                                                                                                  \
+    while (false)
 
-#define NONPAL_RETAIL_ASSERTE(_expr) do {                    \
-        if (!(_expr))                                        \
-            NONPAL_RETAIL_ASSERT("ASSERT: %s\n", #_expr);    \
-    } while (false)
+#define NONPAL_RETAIL_ASSERTE(_expr)                                                                                   \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (!(_expr))                                                                                                  \
+            NONPAL_RETAIL_ASSERT("ASSERT: %s\n", #_expr);                                                              \
+    }                                                                                                                  \
+    while (false)
 
 #ifdef _DEBUG
 
 #define NONPAL_ASSERT(_msg, ...) NONPAL_RETAIL_ASSERT(_msg, __VA_ARGS__)
 
 // Assert macro that doesn't rely on the PAL.
-#define NONPAL_ASSERTE(_expr) do {                           \
-        if (!(_expr))                                        \
-            NONPAL_RETAIL_ASSERT("ASSERT: %s\n", #_expr);    \
-    } while (false)
+#define NONPAL_ASSERTE(_expr)                                                                                          \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (!(_expr))                                                                                                  \
+            NONPAL_RETAIL_ASSERT("ASSERT: %s\n", #_expr);                                                              \
+    }                                                                                                                  \
+    while (false)
 
 // Debug-only output with printf-style formatting.
-#define NONPAL_TRACE(_format, ...) 
+#define NONPAL_TRACE(_format, ...)
 
 #else // _DEBUG
 
@@ -92,7 +106,7 @@ struct MachExceptionInfo
 #else
 #error Unexpected architecture
 #endif
-    MachExceptionInfo(mach_port_t thread, MachMessage& message);
+    MachExceptionInfo(mach_port_t thread, MachMessage &message);
     void RestoreState(mach_port_t thread);
 };
 
@@ -125,17 +139,18 @@ public:
     void Receive(mach_port_t hPort);
 
     // Indicate whether a received message belongs to a particular semantic class.
-    bool IsSetThreadRequest();          // Message is a request to set the context of a particular thread
-    bool IsForwardExceptionRequest();   // Message is a request to forward the exception
-    bool IsSendOnceDestroyedNotify();   // Message is a notification that a send-once message was destroyed by the receiver
-    bool IsExceptionNotification();     // Message is a notification of an exception
-    bool IsExceptionReply();            // Message is a reply to the notification of an exception
+    bool IsSetThreadRequest(); // Message is a request to set the context of a particular thread
+    bool IsForwardExceptionRequest(); // Message is a request to forward the exception
+    bool
+    IsSendOnceDestroyedNotify(); // Message is a notification that a send-once message was destroyed by the receiver
+    bool IsExceptionNotification(); // Message is a notification of an exception
+    bool IsExceptionReply(); // Message is a reply to the notification of an exception
 
     // Get properties of a received message header.
-    MessageType GetMessageType();       // The message type
-    const char *GetMessageTypeName();   // An ASCII representation of the message type for logging purposes
-    mach_port_t GetLocalPort();         // The destination port the message was sent to
-    mach_port_t GetRemotePort();        // The source port the message came from (if a reply is expected)
+    MessageType GetMessageType(); // The message type
+    const char *GetMessageTypeName(); // An ASCII representation of the message type for logging purposes
+    mach_port_t GetLocalPort(); // The destination port the message was sent to
+    mach_port_t GetRemotePort(); // The source port the message came from (if a reply is expected)
 
     // Get the properties of a set thread request. Fills in the provided context structure with the context
     // from the message and returns the target thread to which the context should be applied.
@@ -149,10 +164,10 @@ public:
 
     // Get properties of the type-specific portion of the message. The following properties are supported by
     // exception notification messages only.
-    thread_act_t GetThread();           // Get the faulting thread
-    exception_type_t GetException();    // Get the exception type (e.g. EXC_BAD_ACCESS)
-    int GetExceptionCodeCount();        // Get the number of exception sub-codes
-    mach_exception_data_type_t GetExceptionCode(int iIndex);   // Get the exception sub-code at the given index
+    thread_act_t GetThread(); // Get the faulting thread
+    exception_type_t GetException(); // Get the exception type (e.g. EXC_BAD_ACCESS)
+    int GetExceptionCodeCount(); // Get the number of exception sub-codes
+    mach_exception_data_type_t GetExceptionCode(int iIndex); // Get the exception sub-code at the given index
 
     // Fetch the thread state flavor from a notification or reply message (return THREAD_STATE_NONE for the
     // messages that don't contain a thread state).
@@ -162,7 +177,8 @@ public:
     // message doesn't contain a thread state or the flavor of the state in the message doesn't match, the
     // state will be fetched directly from the target thread instead (which can be computed implicitly for
     // exception messages or passed explicitly for reply messages).
-    mach_msg_type_number_t GetThreadState(thread_state_flavor_t eFlavor, thread_state_t pState, thread_act_t thread = NULL);
+    mach_msg_type_number_t GetThreadState(thread_state_flavor_t eFlavor, thread_state_t pState,
+                                          thread_act_t thread = NULL);
 
     // Fetch the return code from a reply type message.
     kern_return_t GetReturnCode();
@@ -177,12 +193,12 @@ public:
     // exception notification message and send that message to the chain-back handler previously registered
     // for the exception type being notified. The new message takes account of the fact that the target
     // handler may not have requested the same notification behavior or flavor as our handler.
-    void ForwardNotification(MachExceptionHandler *pHandler, MachMessage& message);
+    void ForwardNotification(MachExceptionHandler *pHandler, MachMessage &message);
 
     // Initialize the message (overwriting any previous content) to represent a reply to the given exception
     // notification and send that reply back to the original sender of the notification. This is used when our
     // handler handles the exception rather than forwarding it to a chain-back handler.
-    void ReplyToNotification(MachMessage& message, kern_return_t eResult);
+    void ReplyToNotification(MachMessage &message, kern_return_t eResult);
 
 private:
     // The maximum size in bytes of any Mach message we can send or receive. Calculating an exact size for
@@ -283,19 +299,20 @@ private:
     // message formats.
     struct mach_message_t
     {
-        mach_msg_header_t       header;
+        mach_msg_header_t header;
         union
         {
-            set_thread_request_t                                set_thread;
-            forward_exception_request_t                         forward_exception;
-            exception_raise_notification_64_t                   raise_64;
-            exception_raise_state_notification_64_t             raise_state_64;
-            exception_raise_state_identity_notification_64_t    raise_state_identity_64;
-            exception_raise_reply_64_t                          raise_reply_64;
-            exception_raise_state_reply_64_t                    raise_state_reply_64;
-            exception_raise_state_identity_reply_64_t           raise_state_identity_reply_64;
+            set_thread_request_t set_thread;
+            forward_exception_request_t forward_exception;
+            exception_raise_notification_64_t raise_64;
+            exception_raise_state_notification_64_t raise_state_64;
+            exception_raise_state_identity_notification_64_t raise_state_identity_64;
+            exception_raise_reply_64_t raise_reply_64;
+            exception_raise_state_reply_64_t raise_state_reply_64;
+            exception_raise_state_identity_reply_64_t raise_state_identity_reply_64;
         } data;
-    } __attribute__((packed));;
+    } __attribute__((packed));
+    ;
 
     // Re-initializes this data structure (to the same state as default construction, containing no message).
     void ResetMessage();
@@ -343,17 +360,17 @@ private:
     void SetThreadState(thread_state_flavor_t eFlavor, thread_state_t pState, mach_msg_type_number_t count);
 
     // Maximally sized buffer for the message to be received into or transmitted out of this class.
-    unsigned char   m_rgMessageBuffer[kcbMaxMessageSize];
+    unsigned char m_rgMessageBuffer[kcbMaxMessageSize];
 
     // Initialized by ResetMessage() to point to the buffer above. Gives a typed view of the encapsulated Mach
     // message.
     mach_message_t *m_pMessage;
 
     // Cached value of GetThread() or MACH_PORT_NULL if that has not been computed yet.
-    thread_act_t    m_hThread;
+    thread_act_t m_hThread;
 
     // Cached value of the task port or MACH_PORT_NULL if the message doesn't have one.
-    mach_port_t     m_hTask;
+    mach_port_t m_hTask;
 
     // Considered whether we are responsible for the deallocation of the ports in
     // this message. It is true for messages we receive, and false for messages we send.

@@ -10,29 +10,20 @@ namespace Js
     {
     public:
         PropertyDescriptor();
-        PropertyDescriptor(const PropertyDescriptor& other)
-            :Value(other.Value),
-            Getter(other.Getter),
-            Setter(other.Setter),
-            originalVar(other.originalVar),
-            writableSpecified(other.writableSpecified),
-            enumerableSpecified(other.enumerableSpecified),
-            configurableSpecified(other.configurableSpecified),
-            valueSpecified(other.valueSpecified),
-            getterSpecified(other.getterSpecified),
-            setterSpecified(other.setterSpecified),
-            Writable(other.Writable),
-            Enumerable(other.Enumerable),
-            Configurable(other.Configurable),
-            fromProxy(other.fromProxy)
+        PropertyDescriptor(const PropertyDescriptor &other) :
+            Value(other.Value), Getter(other.Getter), Setter(other.Setter), originalVar(other.originalVar),
+            writableSpecified(other.writableSpecified), enumerableSpecified(other.enumerableSpecified),
+            configurableSpecified(other.configurableSpecified), valueSpecified(other.valueSpecified),
+            getterSpecified(other.getterSpecified), setterSpecified(other.setterSpecified), Writable(other.Writable),
+            Enumerable(other.Enumerable), Configurable(other.Configurable), fromProxy(other.fromProxy)
         {
         }
 
     private:
-        typename WriteBarrierFieldTypeTraits<Var>::Type  Value;
-        typename WriteBarrierFieldTypeTraits<Var>::Type  Getter;
-        typename WriteBarrierFieldTypeTraits<Var>::Type  Setter;
-        typename WriteBarrierFieldTypeTraits<Var>::Type  originalVar;
+        typename WriteBarrierFieldTypeTraits<Var>::Type Value;
+        typename WriteBarrierFieldTypeTraits<Var>::Type Getter;
+        typename WriteBarrierFieldTypeTraits<Var>::Type Setter;
+        typename WriteBarrierFieldTypeTraits<Var>::Type originalVar;
 
         typename WriteBarrierFieldTypeTraits<bool>::Type writableSpecified;
         typename WriteBarrierFieldTypeTraits<bool>::Type enumerableSpecified;
@@ -47,8 +38,8 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<bool>::Type fromProxy;
 
     public:
-        bool IsDataDescriptor() const { return writableSpecified | valueSpecified;}
-        bool IsAccessorDescriptor() const { return getterSpecified | setterSpecified;}
+        bool IsDataDescriptor() const { return writableSpecified | valueSpecified; }
+        bool IsAccessorDescriptor() const { return getterSpecified | setterSpecified; }
         bool IsGenericDescriptor() const { return !IsAccessorDescriptor() && !IsDataDescriptor(); }
         void SetEnumerable(bool value);
         void SetWritable(bool value);
@@ -58,9 +49,17 @@ namespace Js
         Var GetValue() const { return Value; }
 
         void SetGetter(Var getter);
-        Var GetGetter() const { Assert(getterSpecified || Getter == nullptr);  return Getter; }
+        Var GetGetter() const
+        {
+            Assert(getterSpecified || Getter == nullptr);
+            return Getter;
+        }
         void SetSetter(Var setter);
-        Var GetSetter() const { Assert(setterSpecified || Setter == nullptr); return Setter; }
+        Var GetSetter() const
+        {
+            Assert(setterSpecified || Setter == nullptr);
+            return Setter;
+        }
 
         PropertyAttributes GetAttributes() const;
 
@@ -77,9 +76,21 @@ namespace Js
         bool GetterSpecified() const { return getterSpecified; }
         bool SetterSpecified() const { return setterSpecified; }
 
-        bool IsWritable() const { Assert(writableSpecified);  return Writable; }
-        bool IsEnumerable() const { Assert(enumerableSpecified); return Enumerable; }
-        bool IsConfigurable() const { Assert(configurableSpecified);  return Configurable; }
+        bool IsWritable() const
+        {
+            Assert(writableSpecified);
+            return Writable;
+        }
+        bool IsEnumerable() const
+        {
+            Assert(enumerableSpecified);
+            return Enumerable;
+        }
+        bool IsConfigurable() const
+        {
+            Assert(configurableSpecified);
+            return Configurable;
+        }
 
         // Set configurable/enumerable/writable.
         // attributes: attribute values.
@@ -87,6 +98,6 @@ namespace Js
         void SetAttributes(PropertyAttributes attributes, PropertyAttributes mask = ~PropertyNone);
 
         // Merge from descriptor parameter into this but only fields specified by descriptor parameter.
-        void MergeFrom(const PropertyDescriptor& descriptor);
+        void MergeFrom(const PropertyDescriptor &descriptor);
     };
-}
+} // namespace Js

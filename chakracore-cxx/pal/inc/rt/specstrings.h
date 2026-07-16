@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 
@@ -18,23 +18,23 @@
 
 #if !defined(_SAL_VERSION_SAL2)
 
- #if defined(__BUILDMACHINE__) || defined(_USE_SAL2_ONLY)
-  #define _SAL_VERSION_SAL2(_A) SAL_2_Clean_Violation_using ## _A
- #else
-  #define _SAL_VERSION_SAL2(_A)
- #endif
+#if defined(__BUILDMACHINE__) || defined(_USE_SAL2_ONLY)
+#define _SAL_VERSION_SAL2(_A) SAL_2_Clean_Violation_using##_A
+#else
+#define _SAL_VERSION_SAL2(_A)
+#endif
 
- #ifdef _USE_SAL2_ONLY
-  #define _SAL2_STRICT
-  #define _SAL_VERSION_CHECK(_A) _SAL_VERSION_SAL2(_A)
- #else
-  #define _SAL_VERSION_CHECK(_A)
- #endif
+#ifdef _USE_SAL2_ONLY
+#define _SAL2_STRICT
+#define _SAL_VERSION_CHECK(_A) _SAL_VERSION_SAL2(_A)
+#else
+#define _SAL_VERSION_CHECK(_A)
+#endif
 
- #ifndef SAL_VERSION_CHECK
-  #define SAL_VERSION_CHECK(_A) _SAL_VERSION_CHECK(_A)
-  #define SAL_VERSION_SAL2(_A) _SAL_VERSION_SAL2(_A)
- #endif
+#ifndef SAL_VERSION_CHECK
+#define SAL_VERSION_CHECK(_A) _SAL_VERSION_CHECK(_A)
+#define SAL_VERSION_SAL2(_A) _SAL_VERSION_SAL2(_A)
+#endif
 
 #endif
 
@@ -44,31 +44,31 @@
 #define __SAL_H_FULL_VER 140050727
 #endif
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
 /* version specific fixes to bring sal.h upto date */
 #if __SAL_H_FULL_VER <= 140050727
 
-#define __inner_range(lb,ub)
+#define __inner_range(lb, ub)
 
-#define __xcount(size)                                          __notnull __inexpressible_writableTo(size)
-#define __in_xcount(size)                                       _Pre_ __inexpressible_readableTo(size)
-#define __out_xcount(size)                                      __xcount(size) _Post_ __refparam
-#define __inout_xcount(size)                                    __out_xcount(size) _Pre_
+#define __xcount(size) __notnull __inexpressible_writableTo(size)
+#define __in_xcount(size) _Pre_ __inexpressible_readableTo(size)
+#define __out_xcount(size) __xcount(size) _Post_ __refparam
+#define __inout_xcount(size) __out_xcount(size) _Pre_
 
-#endif  //__SAL_H_FULL_VER <= 140050727
+#endif //__SAL_H_FULL_VER <= 140050727
 
 /************************************************************************
  New extensions to sal.h follow here.
 *************************************************************************/
 
 /* integer related macros */
-#define __range(lb,ub)                      __inner_range(lb,ub)
-#define __in_range(lb,ub)                   _Pre_ __inner_range(lb,ub)
+#define __range(lb, ub) __inner_range(lb, ub)
+#define __in_range(lb, ub) _Pre_ __inner_range(lb, ub)
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 
@@ -96,10 +96,8 @@ extern "C" {
  as VS11 is the minimum required for SAL 2 support.
 
  If we are in a downlevel environment, we can go ahead and include no_sal2.h
- to make all of SAL 2 no-ops to ensure no build failures. 
+ to make all of SAL 2 no-ops to ensure no build failures.
 */
 #include "no_sal2.h"
 
 #endif /* #ifndef SPECSTRINGS_H */
-
-

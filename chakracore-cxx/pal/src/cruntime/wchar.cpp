@@ -20,9 +20,9 @@ Abstract:
 --*/
 
 #include <string>
-#include "pal/palinternal.h"
 #include "pal/cruntime.h"
 #include "pal/dbgmsg.h"
+#include "pal/palinternal.h"
 #include "pal/unicode_data.h"
 
 #include "pal/thread.hpp"
@@ -33,7 +33,7 @@ Abstract:
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
-char16_t *PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count );
+char16_t *PAL_wcsncat(char16_t *strDest, const char16_t *strSource, size_t count);
 
 
 /*--
@@ -43,25 +43,22 @@ Function:
 16-bit wide character version of the ANSI tolower() function.
 
   --*/
-static
-char16_t
-wtolower(char16_t c)
+static char16_t wtolower(char16_t c)
 {
     /* Note: Surrogate pairs unicode character are not supported */
 
 #if HAVE_TOWLOWER
 
     char16_t w;
-    w = (char16_t) c;
+    w = (char16_t)c;
     w = towlower(w);
-    return (char16_t) w;
+    return (char16_t)w;
 
 #else
 
     return PAL_towlower(c);
 
 #endif
-
 }
 
 /*******************************************************************************
@@ -82,20 +79,20 @@ Note:
   - only a radix of ten (and value < 0) will result in a negative
     sign in the output buffer
 *******************************************************************************/
-char16_t* Internal_i64tow(int64_t value, char16_t* string, int radix, BOOL isI64)
+char16_t *Internal_i64tow(int64_t value, char16_t *string, int radix, BOOL isI64)
 {
     int length = 0;
     int n;
     int r;
     unsigned long uval = value;
-    char16_t* stringPtr = string;
+    char16_t *stringPtr = string;
     int start = 0;
     int end;
     char16_t tempCh;
 
     if (radix < 2 || radix > 36)
     {
-        ASSERT( "Invalid radix, radix must be between 2 and 36\n" );
+        ASSERT("Invalid radix, radix must be between 2 and 36\n");
         SetLastError(ERROR_INVALID_PARAMETER);
         return string;
     }
@@ -107,26 +104,27 @@ char16_t* Internal_i64tow(int64_t value, char16_t* string, int radix, BOOL isI64
     {
         uval = value * -1;
     }
-    if(0 == uval)
+    if (0 == uval)
     {
         ++length;
         *stringPtr++ = '0';
     }
-    else while (uval > 0)
-    {
-        ++length;
-        n = uval / radix;
-        r = uval - (n * radix);
-        uval /= radix;
-        if (r > 9)
+    else
+        while (uval > 0)
         {
-            *stringPtr++ = r + 87;
+            ++length;
+            n = uval / radix;
+            r = uval - (n * radix);
+            uval /= radix;
+            if (r > 9)
+            {
+                *stringPtr++ = r + 87;
+            }
+            else
+            {
+                *stringPtr++ = r + 48;
+            }
         }
-        else
-        {
-            *stringPtr++ = r + 48;
-        }
-    }
     if (10 == radix && value < 0)
     {
         *stringPtr++ = '-';
@@ -155,11 +153,7 @@ Function:
 16-bit wide character version of the ANSI tolower() function.
 
   --*/
-char16_t *
-_itow(
-    int value,
-    char16_t *string,
-    int radix)
+char16_t *_itow(int value, char16_t *string, int radix)
 {
     char16_t *ret;
 
@@ -177,11 +171,7 @@ Function:
 16-bit wide character version of the ANSI ltow() function.
 
   --*/
-char16_t *
-_ltow(
-    long value,
-    char16_t *string,
-    int radix)
+char16_t *_ltow(long value, char16_t *string, int radix)
 {
     char16_t *ret;
 
@@ -198,11 +188,7 @@ Function:
 
 See MSDN doc
 --*/
-char16_t *
- _i64tow(
-    long value,
-    char16_t *string,
-    int radix)
+char16_t *_i64tow(long value, char16_t *string, int radix)
 {
     char16_t *ret;
 
@@ -220,9 +206,7 @@ Function:
 
 See MSDN doc
 --*/
-int
-_wtoi(
-    const char16_t *string)
+int _wtoi(const char16_t *string)
 {
     int len;
     int ret;
@@ -231,11 +215,10 @@ _wtoi(
     len = WideCharToMultiByte(CP_ACP, 0, string, -1, 0, 0, 0);
     if (!len)
     {
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n",
-              GetLastError());
+        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         return -1;
     }
-    tempStr = static_cast<char*>(malloc(len));
+    tempStr = static_cast<char *>(malloc(len));
     if (!tempStr)
     {
         ERROR("malloc failed\n");
@@ -245,8 +228,7 @@ _wtoi(
     len = WideCharToMultiByte(CP_ACP, 0, string, -1, tempStr, len, 0);
     if (!len)
     {
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n",
-              GetLastError());
+        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         free(tempStr);
         return -1;
     }
@@ -277,26 +259,20 @@ string   Null-terminated string to convert to lowercase
 Remarks
 
 --*/
-char16_t *
-_wcslwr(
-        char16_t *string)
+char16_t *_wcslwr(char16_t *string)
 {
     int i;
 
-    for (i=0 ; string[i] != 0; i++)
+    for (i = 0; string[i] != 0; i++)
     {
         string[i] = wtolower(string[i]);
     }
 
-    LOGEXIT("_wcslwr returning char16_t %p (%S)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING);
+    LOGEXIT("_wcslwr returning char16_t %p (%S)\n", string ? string : W16_NULLSTRING, string ? string : W16_NULLSTRING);
     return string;
 }
 
-unsigned long
-PAL__wcstoui64(
-        const char16_t *nptr,
-        char16_t **endptr,
-        int base)
+unsigned long PAL__wcstoui64(const char16_t *nptr, char16_t **endptr, int base)
 {
     char *s_nptr = 0;
     char *s_endptr = 0;
@@ -311,7 +287,7 @@ PAL__wcstoui64(
         res = 0;
         goto PAL__wcstoui64Exit;
     }
-    s_nptr = static_cast<char*>(malloc(size));
+    s_nptr = static_cast<char *>(malloc(size));
     if (!s_nptr)
     {
         ERROR("malloc failed\n");
@@ -333,10 +309,10 @@ PAL__wcstoui64(
     /* only ASCII characters will be accepted by strtoull, and those always get
        mapped to single-byte characters, so the first rejected character will
        have the same index in the multibyte and widechar strings */
-    if( endptr )
+    if (endptr)
     {
         size = s_endptr - s_nptr;
-        *endptr = const_cast<char16_t*>(&nptr[size]);
+        *endptr = const_cast<char16_t *>(&nptr[size]);
     }
 
 PAL__wcstoui64Exit:
@@ -353,61 +329,59 @@ Function:
 See MSDN
 
 --*/
-char16_t
-PAL_towlower( char16_t c )
+char16_t PAL_towlower(char16_t c)
 {
-    if(c < 128)
-    {//fast path for ascii characters
-        if(c >= 'A' && c <= 'Z')
+    if (c < 128)
+    { // fast path for ascii characters
+        if (c >= 'A' && c <= 'Z')
         {
             c += ('a' - 'A');
-            LOGEXIT("towlower returns int %d\n", c );
+            LOGEXIT("towlower returns int %d\n", c);
             return c;
         }
         else
         {
-            LOGEXIT("towlower returns int %d\n", c );
+            LOGEXIT("towlower returns int %d\n", c);
             return c;
         }
     }
     else
     {
-    #if defined(__APPLE__)
+#if defined(__APPLE__)
         if (!PAL_iswlower(c))
         {
-            CFMutableStringRef cfString = CFStringCreateMutable(
-                                                kCFAllocatorDefault, 1);
+            CFMutableStringRef cfString = CFStringCreateMutable(kCFAllocatorDefault, 1);
             if (cfString != NULL)
             {
-                CFStringAppendCharacters(cfString, reinterpret_cast<const UniChar*>(&c), 1);
+                CFStringAppendCharacters(cfString, reinterpret_cast<const UniChar *>(&c), 1);
                 CFStringLowercase(cfString, NULL);
                 c = CFStringGetCharacterAtIndex(cfString, 0);
                 CFRelease(cfString);
             }
         }
-        LOGEXIT("towlower returns int %d\n", c );
+        LOGEXIT("towlower returns int %d\n", c);
         return c;
-    #else   /* defined(__APPLE__) */
+#else /* defined(__APPLE__) */
         UnicodeDataRec dataRec;
 
         if (!GetUnicodeData(c, &dataRec))
         {
-            TRACE( "Unable to retrieve unicode data for the character %c.\n", c );
-            LOGEXIT("towlower returns int %d\n", c );
+            TRACE("Unable to retrieve unicode data for the character %c.\n", c);
+            LOGEXIT("towlower returns int %d\n", c);
             return c;
         }
 
-        if ( (dataRec.C1_TYPE_FLAGS & C1_LOWER) || (dataRec.nOpposingCase ==  0 ))
+        if ((dataRec.C1_TYPE_FLAGS & C1_LOWER) || (dataRec.nOpposingCase == 0))
         {
-            LOGEXIT("towlower returns int %d\n", c );
+            LOGEXIT("towlower returns int %d\n", c);
             return c;
         }
         else
         {
-            LOGEXIT("towlower returns int %d\n", dataRec.nOpposingCase );
+            LOGEXIT("towlower returns int %d\n", dataRec.nOpposingCase);
             return dataRec.nOpposingCase;
         }
-    #endif  /* defined(__APPLE__) */
+#endif /* defined(__APPLE__) */
     }
 }
 
@@ -418,8 +392,7 @@ Function:
 See MSDN
 
 --*/
-int
-PAL_iswlower( char16_t c )
+int PAL_iswlower(char16_t c)
 {
     BOOL bRetVal = FALSE;
 #if defined(__APPLE__)
@@ -427,16 +400,15 @@ PAL_iswlower( char16_t c )
 
     if (sLowercaseSet == NULL)
     {
-        sLowercaseSet = CFCharacterSetGetPredefined(
-                                        kCFCharacterSetLowercaseLetter);
+        sLowercaseSet = CFCharacterSetGetPredefined(kCFCharacterSetLowercaseLetter);
     }
     bRetVal = CFCharacterSetIsCharacterMember(sLowercaseSet, c);
-#else   /* defined(__APPLE__) */
+#else /* defined(__APPLE__) */
     UnicodeDataRec dataRec;
 
     if (!GetUnicodeData(c, &dataRec))
     {
-        TRACE( "Unable to retrieve unicode data for the character %c.\n", c );
+        TRACE("Unable to retrieve unicode data for the character %c.\n", c);
         goto exit;
     }
 
@@ -445,7 +417,7 @@ PAL_iswlower( char16_t c )
         bRetVal = TRUE;
     }
 exit:
-#endif  /* defined(__APPLE__) */
+#endif /* defined(__APPLE__) */
     LOGEXIT("PAL_iswlower returns %s.\n", bRetVal == TRUE ? "TRUE" : "FALSE");
     return bRetVal;
 }
@@ -457,10 +429,7 @@ Function:
 See MSDN or the man page for mcscpy.
 
 --*/
-char16_t *
-PAL_wcscpy(
-        char16_t *strDestination,
-        const char16_t *strSource)
+char16_t *PAL_wcscpy(char16_t *strDestination, const char16_t *strSource)
 {
     char16_t *start = strDestination;
 
@@ -479,7 +448,7 @@ PAL_wcscpy(
     }
 
     /* copy source string to destination string */
-    while(*strSource)
+    while (*strSource)
     {
         *strDestination++ = *strSource++;
     }
@@ -497,22 +466,20 @@ Function:
 
 See MSDN or the man page for wmemcmp.
 --*/
-int
-PAL_wmemcmp(
-        const char16_t *string1,
-        const char16_t *string2,
-        size_t count)
+int PAL_wmemcmp(const char16_t *string1, const char16_t *string2, size_t count)
 {
     size_t i, wi = 0;
     int diff = 0;
 
-    if (string1 == string2) return diff;
+    if (string1 == string2)
+        return diff;
 
     constexpr size_t blockSize = sizeof(size_t) / sizeof(char16_t);
-    const     size_t *num1     = reinterpret_cast<const size_t*>(string1);
-    const     size_t *num2     = reinterpret_cast<const size_t*>(string2);
+    const size_t *num1 = reinterpret_cast<const size_t *>(string1);
+    const size_t *num2 = reinterpret_cast<const size_t *>(string2);
 
-    while( (count > blockSize * (wi + 1)) && num1[wi] == num2[wi] ) ++wi;
+    while ((count > blockSize * (wi + 1)) && num1[wi] == num2[wi])
+        ++wi;
 
     for (i = blockSize * wi; i < count; ++i)
     {
@@ -533,16 +500,13 @@ Function:
 
 See MSDN or the man page for wcsncmp.
 --*/
-int
-PAL_wcsncmp(
-        const char16_t *string1,
-        const char16_t *string2,
-        size_t count)
+int PAL_wcsncmp(const char16_t *string1, const char16_t *string2, size_t count)
 {
     size_t i;
     int diff = 0;
 
-    if (string1 == string2) return diff;
+    if (string1 == string2)
+        return diff;
 
     for (i = 0; i < count; i++)
     {
@@ -553,7 +517,7 @@ PAL_wcsncmp(
         }
 
         /* stop if we reach the end of the string */
-        if(string1[i]==0)
+        if (string1[i] == 0)
         {
             break;
         }
@@ -568,10 +532,7 @@ Function:
 
 See MSDN or the man page for wcscmp.
 --*/
-int
-PAL_wcscmp(
-        const char16_t *string1,
-        const char16_t *string2)
+int PAL_wcscmp(const char16_t *string1, const char16_t *string2)
 {
     int ret;
 
@@ -588,24 +549,22 @@ Function:
 See MSDN or man page for wcschr.
 
 --*/
-char16_t _WConst_return *
-PAL_wcschr(
-        const char16_t * string,
-        char16_t c)
+char16_t _WConst_return *PAL_wcschr(const char16_t *string, char16_t c)
 {
     while (*string)
     {
         if (*string == c)
         {
-            LOGEXIT("wcschr returning char16_t %p (%S)\n", string?string:W16_NULLSTRING, string?string:W16_NULLSTRING);
-            return const_cast<char16_t*>(string);
+            LOGEXIT("wcschr returning char16_t %p (%S)\n", string ? string : W16_NULLSTRING,
+                    string ? string : W16_NULLSTRING);
+            return const_cast<char16_t *>(string);
         }
         string++;
     }
 
     // Check if the comparand was \000
     if (*string == c)
-        return const_cast<char16_t*>(string);
+        return const_cast<char16_t *>(string);
 
     LOGEXIT("wcschr returning char16_t NULL\n");
     return NULL;
@@ -619,10 +578,7 @@ Function:
 See MSDN or man page for wcsrchr.
 
 --*/
-char16_t _WConst_return *
-PAL_wcsrchr(
-        const char16_t * string,
-        char16_t c)
+char16_t _WConst_return *PAL_wcsrchr(const char16_t *string, char16_t c)
 {
     char16_t *last = NULL;
 
@@ -630,12 +586,12 @@ PAL_wcsrchr(
     {
         if (*string == c)
         {
-            last = const_cast<char16_t*>(string);
+            last = const_cast<char16_t *>(string);
         }
         string++;
     }
 
-    LOGEXIT("wcsrchr returning char16_t %p (%S)\n", last?last:W16_NULLSTRING, last?last:W16_NULLSTRING);
+    LOGEXIT("wcsrchr returning char16_t %p (%S)\n", last ? last : W16_NULLSTRING, last ? last : W16_NULLSTRING);
     return last;
 }
 
@@ -645,10 +601,7 @@ Function:
 
 See MSDN or man page for wcsstr.
 --*/
-const char16_t *
-PAL_wcsstr(
-        const char16_t *string,
-        const char16_t *strCharSet)
+const char16_t *PAL_wcsstr(const char16_t *string, const char16_t *strCharSet)
 {
     char16_t *ret = NULL;
     int i;
@@ -667,7 +620,7 @@ PAL_wcsstr(
 
     if (*strCharSet == 0)
     {
-        ret = const_cast<char16_t*>(string);
+        ret = const_cast<char16_t *>(string);
         goto leave;
     }
 
@@ -678,7 +631,7 @@ PAL_wcsstr(
         {
             if (*(strCharSet + i) == 0)
             {
-                ret = const_cast<char16_t*>(string);
+                ret = const_cast<char16_t *>(string);
                 goto leave;
             }
             else if (*(string + i) == 0)
@@ -696,8 +649,8 @@ PAL_wcsstr(
         string++;
     }
 
- leave:
-    LOGEXIT("wcsstr returning char16_t %p (%S)\n", ret?ret:W16_NULLSTRING, ret?ret:W16_NULLSTRING);
+leave:
+    LOGEXIT("wcsstr returning char16_t %p (%S)\n", ret ? ret : W16_NULLSTRING, ret ? ret : W16_NULLSTRING);
     return ret;
 }
 
@@ -708,21 +661,20 @@ Function :
 
 see msdn doc.
 --*/
-char16_t *
-PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
+char16_t *PAL_wcsncat(char16_t *strDest, const char16_t *strSource, size_t count)
 {
     char16_t *start = strDest;
     uint32_t LoopCount = 0;
     uint32_t StrSourceLength = 0;
 
-    if ( strDest == NULL )
+    if (strDest == NULL)
     {
         ERROR("invalid strDest argument\n");
         LOGEXIT("wcsncat returning char16_t NULL\n");
         return NULL;
     }
 
-    if ( strSource == NULL )
+    if (strSource == NULL)
     {
         ERROR("invalid strSource argument\n");
         LOGEXIT("wcsncat returning char16_t NULL\n");
@@ -730,22 +682,22 @@ PAL_wcsncat( char16_t * strDest, const char16_t *strSource, size_t count )
     }
 
     /* find end of source string */
-    while ( *strDest )
+    while (*strDest)
     {
         strDest++;
     }
 
-    StrSourceLength = std::u16string( strSource ).length();
-    if ( StrSourceLength < count )
+    StrSourceLength = std::u16string(strSource).length();
+    if (StrSourceLength < count)
     {
         count = StrSourceLength;
     }
 
     /* concatenate new string */
-    while( *strSource && LoopCount < count )
+    while (*strSource && LoopCount < count)
     {
-      *strDest++ = *strSource++;
-      LoopCount++;
+        *strDest++ = *strSource++;
+        LoopCount++;
     }
 
     /* add terminating null */
@@ -762,58 +714,58 @@ Function :
 
 See MSDN for more details.
 --*/
-char16_t *
-_ui64tow( unsigned long value , char16_t * string , int radix )
+char16_t *_ui64tow(unsigned long value, char16_t *string, int radix)
 {
     uint32_t ReversedIndex = 0;
-    char16_t ReversedString[ 65 ];
-    char16_t* lpString = string;
+    char16_t ReversedString[65];
+    char16_t *lpString = string;
     uint32_t Index = 0;
 
-    if ( !string )
+    if (!string)
     {
-        ERROR( "string has to be a valid pointer.\n" );
-        LOGEXIT( "_ui64tow returning NULL.\n" );
+        ERROR("string has to be a valid pointer.\n");
+        LOGEXIT("_ui64tow returning NULL.\n");
         return NULL;
     }
-    if ( radix < 2 || radix > 36 )
+    if (radix < 2 || radix > 36)
     {
-        ERROR( "radix has to be between 2 and 36.\n" );
-        LOGEXIT( "_ui64tow returning NULL.\n" );
+        ERROR("radix has to be between 2 and 36.\n");
+        LOGEXIT("_ui64tow returning NULL.\n");
         return NULL;
     }
 
-    if(0 == value)
+    if (0 == value)
     {
         ReversedString[0] = '0';
         Index++;
     }
-    else while ( value )
-    {
-        int temp = value % radix;
-        value /= radix;
+    else
+        while (value)
+        {
+            int temp = value % radix;
+            value /= radix;
 
-        if ( temp < 10 )
-        {
-            ReversedString[ Index ] = temp + '0';
-            Index++;
+            if (temp < 10)
+            {
+                ReversedString[Index] = temp + '0';
+                Index++;
+            }
+            else
+            {
+                ReversedString[Index] = temp - 10 + 'a';
+                Index++;
+            }
         }
-        else
-        {
-            ReversedString[ Index ] = temp - 10 + 'a';
-            Index++;
-        }
-    }
 
     /* Reverse the string. */
     ReversedIndex = Index;
-    for ( Index = 0; ReversedIndex > 0; ReversedIndex--, Index++ )
+    for (Index = 0; ReversedIndex > 0; ReversedIndex--, Index++)
     {
-        string[ Index ] = ReversedString[ ReversedIndex - 1 ];
+        string[Index] = ReversedString[ReversedIndex - 1];
     }
 
-    string[ Index ] = '\0';
-    LOGEXIT( "_ui64tow returning %p (%S).\n", lpString , lpString );
+    string[Index] = '\0';
+    LOGEXIT("_ui64tow returning %p (%S).\n", lpString, lpString);
     return lpString;
 }
 
@@ -824,36 +776,34 @@ Function:
 
 Returns TRUE if c is a Win32 "blank" character.
 --*/
-int
-PAL_iswblank(char16_t c)
+int PAL_iswblank(char16_t c)
 {
     int ret;
     static CFCharacterSetRef sSpaceAndNewlineSet;
 
     if (sSpaceAndNewlineSet == NULL)
     {
-        sSpaceAndNewlineSet = CFCharacterSetGetPredefined(
-                                            kCFCharacterSetWhitespaceAndNewline);
+        sSpaceAndNewlineSet = CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline);
     }
     switch (c)
     {
-        case 0x0085:
-        case 0x1680:
-        case 0x202f:
-        case 0xfeff:
-            // These are blank characters on Windows, but are not part
-            // of the SpaceAndNewline character set in Core Foundation.
-            ret = TRUE;
-            break;
-        case 0x2028:
-        case 0x2029:
-            // These are not blank characters on Windows, but are part
-            // of the SpaceAndNewline character set in Core Foundation.
-            ret = FALSE;
-            break;
-        default:
-            ret = CFCharacterSetIsCharacterMember(sSpaceAndNewlineSet, c);
-            break;
+    case 0x0085:
+    case 0x1680:
+    case 0x202f:
+    case 0xfeff:
+        // These are blank characters on Windows, but are not part
+        // of the SpaceAndNewline character set in Core Foundation.
+        ret = TRUE;
+        break;
+    case 0x2028:
+    case 0x2029:
+        // These are not blank characters on Windows, but are part
+        // of the SpaceAndNewline character set in Core Foundation.
+        ret = FALSE;
+        break;
+    default:
+        ret = CFCharacterSetIsCharacterMember(sSpaceAndNewlineSet, c);
+        break;
     }
     return ret;
 }
@@ -864,8 +814,7 @@ Function:
 
 Returns TRUE if c is a control character.
 --*/
-int
-PAL_iswcntrl(char16_t c)
+int PAL_iswcntrl(char16_t c)
 {
     int ret;
     static CFCharacterSetRef sControlSet;
@@ -884,8 +833,7 @@ Function:
 
 Returns TRUE if c is a punctuation character.
 --*/
-int
-PAL_iswpunct(char16_t c)
+int PAL_iswpunct(char16_t c)
 {
     int ret;
     static CFCharacterSetRef sPunctuationSet = NULL;
@@ -899,8 +847,7 @@ PAL_iswpunct(char16_t c)
     {
         sSymbolSet = CFCharacterSetGetPredefined(kCFCharacterSetSymbol);
     }
-    ret = CFCharacterSetIsCharacterMember(sPunctuationSet, c) ||
-          CFCharacterSetIsCharacterMember(sSymbolSet, c);
+    ret = CFCharacterSetIsCharacterMember(sPunctuationSet, c) || CFCharacterSetIsCharacterMember(sSymbolSet, c);
     return ret;
 }
-#endif  // defined(__APPLE__)
+#endif // defined(__APPLE__)

@@ -14,9 +14,9 @@
 
 --*/
 
+#include "../thread/procprivate.hpp"
 #include "pal/dbgmsg.h"
 #include "pal/thread.hpp"
-#include "../thread/procprivate.hpp"
 
 using namespace CorUnix;
 
@@ -40,12 +40,12 @@ Abstract:
 Warning:
   If the allocation fails, this function asserts and exits the process.
 --*/
-extern "C" CPalThread *
-CreateCurrentThreadData()
+extern "C" CPalThread *CreateCurrentThreadData()
 {
     CPalThread *pThread = NULL;
 
-    if (PALIsThreadDataInitialized()) {
+    if (PALIsThreadDataInitialized())
+    {
         PAL_ERROR palError = AllocatePalThread(&pThread);
         if (NO_ERROR != palError)
         {

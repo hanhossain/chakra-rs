@@ -2,23 +2,23 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "stdafx.h"
+#include <chakracore-sys/src/str_helper.rs.h>
 #include <print>
 #include <rust/cxx.h>
-#include <chakracore-sys/src/str_helper.rs.h>
+#include "stdafx.h"
 
 HostConfigFlags HostConfigFlags::flags;
 std::vector<std::u16string> HostConfigFlags::vargsVal;
-void(*HostConfigFlags::pfnPrintUsage)();
+void (*HostConfigFlags::pfnPrintUsage)();
 
 template <>
-void HostConfigFlags::Parse<bool>(ICmdLineArgsParser * parser, bool * value)
+void HostConfigFlags::Parse<bool>(ICmdLineArgsParser *parser, bool *value)
 {
     *value = parser->GetCurrentBoolean();
 }
 
 template <>
-void HostConfigFlags::Parse<int>(ICmdLineArgsParser * parser, int* value)
+void HostConfigFlags::Parse<int>(ICmdLineArgsParser *parser, int *value)
 {
     try
     {
@@ -31,7 +31,7 @@ void HostConfigFlags::Parse<int>(ICmdLineArgsParser * parser, int* value)
 }
 
 template <>
-void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
+void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser *parser, BSTR *bstr)
 {
     if (*bstr != NULL)
     {
@@ -46,25 +46,18 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 
 HostConfigFlags::HostConfigFlags() :
     GenerateLibraryByteCodeHeader(nullptr), GenerateLibraryByteCodeHeaderIsEnabled(false),
-    GenerateParserStateCache(false), GenerateParserStateCacheIsEnabled(false),
-    UseParserStateCache(false), UseParserStateCacheIsEnabled(false),
-    InspectMaxStringLength(16), InspectMaxStringLengthIsEnabled(false),
-    Serialized(nullptr), SerializedIsEnabled(false),
-    OOPJIT(false), OOPJITIsEnabled(false),
-    EnsureCloseJITServer(true), EnsureCloseJITServerIsEnabled(false),
-    IgnoreScriptErrorCode(false), IgnoreScriptErrorCodeIsEnabled(false),
-    MuteHostErrorMsg(false), MuteHostErrorMsgIsEnabled(false),
-    TraceHostCallback(false), TraceHostCallbackIsEnabled(false),
-    Test262(false), Test262IsEnabled(false),
-    Module(false), ModuleIsEnabled(false),
-    TrackRejectedPromises(false), TrackRejectedPromisesIsEnabled(false),
-    CustomConfigFile(nullptr), CustomConfigFileIsEnabled(false),
-    ExecuteWithBgParse(false), ExecuteWithBgParseIsEnabled(false),
-    nDummy(0)
+    GenerateParserStateCache(false), GenerateParserStateCacheIsEnabled(false), UseParserStateCache(false),
+    UseParserStateCacheIsEnabled(false), InspectMaxStringLength(16), InspectMaxStringLengthIsEnabled(false),
+    Serialized(nullptr), SerializedIsEnabled(false), OOPJIT(false), OOPJITIsEnabled(false), EnsureCloseJITServer(true),
+    EnsureCloseJITServerIsEnabled(false), IgnoreScriptErrorCode(false), IgnoreScriptErrorCodeIsEnabled(false),
+    MuteHostErrorMsg(false), MuteHostErrorMsgIsEnabled(false), TraceHostCallback(false),
+    TraceHostCallbackIsEnabled(false), Test262(false), Test262IsEnabled(false), Module(false), ModuleIsEnabled(false),
+    TrackRejectedPromises(false), TrackRejectedPromisesIsEnabled(false), CustomConfigFile(nullptr),
+    CustomConfigFileIsEnabled(false), ExecuteWithBgParse(false), ExecuteWithBgParseIsEnabled(false), nDummy(0)
 {
 }
 
-bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
+bool HostConfigFlags::ParseFlag(const char16_t *flagsString, ICmdLineArgsParser *parser)
 {
     const auto flagStringsNormalized = chakra_rs::str_helper::to_lowercase(flagsString);
     if (chakra_rs::str_helper::to_lowercase("GenerateLibraryByteCodeHeader") == flagStringsNormalized)
@@ -162,21 +155,29 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
 
 void HostConfigFlags::PrintUsageString()
 {
-    std::println("{:>20}          \t{}", "GenerateLibraryByteCodeHeader", "\"Generate bytecode header file from library code\"");
-    std::println("{:>20}          \t{}", "GenerateParserStateCache", "\"Parse source file to create parser state cache and write it to file or console\"");
-    std::println("{:>20}          \t{}", "UseParserStateCache", "\"Create parser state cache while parsing and use it during script execution\"");
-    std::println("{:>20}          \t{}", "InspectMaxStringLength", "\"Max string length to dump in locals inspection\"");
+    std::println("{:>20}          \t{}", "GenerateLibraryByteCodeHeader",
+                 "\"Generate bytecode header file from library code\"");
+    std::println("{:>20}          \t{}", "GenerateParserStateCache",
+                 "\"Parse source file to create parser state cache and write it to file or console\"");
+    std::println("{:>20}          \t{}", "UseParserStateCache",
+                 "\"Create parser state cache while parsing and use it during script execution\"");
+    std::println("{:>20}          \t{}", "InspectMaxStringLength",
+                 "\"Max string length to dump in locals inspection\"");
     std::println("{:>20}          \t{}", "Serialized", "\"If source is UTF8, deserializes from bytecode file\"");
     std::println("{:>20}          \t{}", "OOPJIT", "\"Run JIT in a separate process\"");
-    std::println("{:>20}          \t{}", "EnsureCloseJITServer", "\"JIT process will be force closed when ch is terminated\"");
+    std::println("{:>20}          \t{}", "EnsureCloseJITServer",
+                 "\"JIT process will be force closed when ch is terminated\"");
     std::println("{:>20}          \t{}", "IgnoreScriptErrorCode", "\"Don't return error code on script error\"");
     std::println("{:>20}          \t{}", "MuteHostErrorMsg", "\"Mute host error output, e.g. module load failures\"");
     std::println("{:>20}          \t{}", "TraceHostCallback", "\"Output traces for host callbacks\"");
     std::println("{:>20}          \t{}", "Test262", "\"load Test262 harness\"");
     std::println("{:>20}          \t{}", "Module", "\"load the script as a module\"");
-    std::println("{:>20}          \t{}", "TrackRejectedPromises", "\"Enable tracking of unhandled promise rejections\"");
-    std::println("{:>20}          \t{}", "CustomConfigFile", "\"Custom config file to be used to pass in additional flags to Chakra\"");
-    std::println("{:>20}          \t{}", "ExecuteWithBgParse", "\"Load script with bgparse (note: requires bgparse and parserstatecache be on as well)\"");
+    std::println("{:>20}          \t{}", "TrackRejectedPromises",
+                 "\"Enable tracking of unhandled promise rejections\"");
+    std::println("{:>20}          \t{}", "CustomConfigFile",
+                 "\"Custom config file to be used to pass in additional flags to Chakra\"");
+    std::println("{:>20}          \t{}", "ExecuteWithBgParse",
+                 "\"Load script with bgparse (note: requires bgparse and parserstatecache be on as well)\"");
 }
 
 void HostConfigFlags::PrintUsage()
@@ -202,9 +203,7 @@ void HostConfigFlags::HandleArgsFlag(std::vector<std::u16string> &vargs)
     }
 
     const auto end = std::ranges::find_if(start, std::ranges::end(vargs), [](const std::u16string &s)
-    {
-        return chakra_rs::str_helper::to_lowercase(s.c_str()) == u"-endargs";
-    });
+                                          { return chakra_rs::str_helper::to_lowercase(s.c_str()) == u"-endargs"; });
     if (end == std::ranges::end(vargs))
     {
         return;

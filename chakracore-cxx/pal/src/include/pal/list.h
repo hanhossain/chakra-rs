@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -25,13 +25,13 @@ Revision History:
 #define _LIST_H_INCLUDED
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
-typedef struct _LIST_ENTRY {
-   struct _LIST_ENTRY *Flink;
-   struct _LIST_ENTRY *Blink;
+typedef struct _LIST_ENTRY
+{
+    struct _LIST_ENTRY *Flink;
+    struct _LIST_ENTRY *Blink;
 } LIST_ENTRY, *PLIST_ENTRY;
 
 //
@@ -41,8 +41,7 @@ typedef struct _LIST_ENTRY {
 //      );
 //
 
-#define InitializeListHead(ListHead) (\
-    (ListHead)->Flink = (ListHead)->Blink = (ListHead))
+#define InitializeListHead(ListHead) ((ListHead)->Flink = (ListHead)->Blink = (ListHead))
 
 //
 //  BOOLEAN
@@ -51,8 +50,7 @@ typedef struct _LIST_ENTRY {
 //      );
 //
 
-#define IsListEmpty(ListHead) \
-    ((ListHead)->Flink == (ListHead))
+#define IsListEmpty(ListHead) ((ListHead)->Flink == (ListHead))
 
 //
 //  PLIST_ENTRY
@@ -61,8 +59,8 @@ typedef struct _LIST_ENTRY {
 //      );
 //
 
-#define RemoveHeadList(ListHead) \
-    (ListHead)->Flink;\
+#define RemoveHeadList(ListHead)                                                                                       \
+    (ListHead)->Flink;                                                                                                 \
     {RemoveEntryList((ListHead)->Flink)}
 
 //
@@ -72,8 +70,8 @@ typedef struct _LIST_ENTRY {
 //      );
 //
 
-#define RemoveTailList(ListHead) \
-    (ListHead)->Blink;\
+#define RemoveTailList(ListHead)                                                                                       \
+    (ListHead)->Blink;                                                                                                 \
     {RemoveEntryList((ListHead)->Blink)}
 
 //
@@ -83,13 +81,14 @@ typedef struct _LIST_ENTRY {
 //      );
 //
 
-#define RemoveEntryList(Entry) {\
-    PLIST_ENTRY _EX_Blink;\
-    PLIST_ENTRY _EX_Flink;\
-    _EX_Flink = (Entry)->Flink;\
-    _EX_Blink = (Entry)->Blink;\
-    _EX_Blink->Flink = _EX_Flink;\
-    _EX_Flink->Blink = _EX_Blink;\
+#define RemoveEntryList(Entry)                                                                                         \
+    {                                                                                                                  \
+        PLIST_ENTRY _EX_Blink;                                                                                         \
+        PLIST_ENTRY _EX_Flink;                                                                                         \
+        _EX_Flink = (Entry)->Flink;                                                                                    \
+        _EX_Blink = (Entry)->Blink;                                                                                    \
+        _EX_Blink->Flink = _EX_Flink;                                                                                  \
+        _EX_Flink->Blink = _EX_Blink;                                                                                  \
     }
 
 //
@@ -100,15 +99,16 @@ typedef struct _LIST_ENTRY {
 //      );
 //
 
-#define InsertTailList(ListHead,Entry) {\
-    PLIST_ENTRY _EX_Blink;\
-    PLIST_ENTRY _EX_ListHead;\
-    _EX_ListHead = (ListHead);\
-    _EX_Blink = _EX_ListHead->Blink;\
-    (Entry)->Flink = _EX_ListHead;\
-    (Entry)->Blink = _EX_Blink;\
-    _EX_Blink->Flink = (Entry);\
-    _EX_ListHead->Blink = (Entry);\
+#define InsertTailList(ListHead, Entry)                                                                                \
+    {                                                                                                                  \
+        PLIST_ENTRY _EX_Blink;                                                                                         \
+        PLIST_ENTRY _EX_ListHead;                                                                                      \
+        _EX_ListHead = (ListHead);                                                                                     \
+        _EX_Blink = _EX_ListHead->Blink;                                                                               \
+        (Entry)->Flink = _EX_ListHead;                                                                                 \
+        (Entry)->Blink = _EX_Blink;                                                                                    \
+        _EX_Blink->Flink = (Entry);                                                                                    \
+        _EX_ListHead->Blink = (Entry);                                                                                 \
     }
 
 //
@@ -119,24 +119,24 @@ typedef struct _LIST_ENTRY {
 //      );
 //
 
-#define InsertHeadList(ListHead,Entry) {\
-    PLIST_ENTRY _EX_Flink;\
-    PLIST_ENTRY _EX_ListHead;\
-    _EX_ListHead = (ListHead);\
-    _EX_Flink = _EX_ListHead->Flink;\
-    (Entry)->Flink = _EX_Flink;\
-    (Entry)->Blink = _EX_ListHead;\
-    _EX_Flink->Blink = (Entry);\
-    _EX_ListHead->Flink = (Entry);\
+#define InsertHeadList(ListHead, Entry)                                                                                \
+    {                                                                                                                  \
+        PLIST_ENTRY _EX_Flink;                                                                                         \
+        PLIST_ENTRY _EX_ListHead;                                                                                      \
+        _EX_ListHead = (ListHead);                                                                                     \
+        _EX_Flink = _EX_ListHead->Flink;                                                                               \
+        (Entry)->Flink = _EX_Flink;                                                                                    \
+        (Entry)->Blink = _EX_ListHead;                                                                                 \
+        _EX_Flink->Blink = (Entry);                                                                                    \
+        _EX_ListHead->Flink = (Entry);                                                                                 \
     }
 
-#define CONTAINING_RECORD(address, type, field) (reinterpret_cast<type *>( \
-                                                  reinterpret_cast<char *>(address) - \
-                                                  reinterpret_cast<size_t>(&(reinterpret_cast<type *>(0))->field)))
+#define CONTAINING_RECORD(address, type, field)                                                                        \
+    (reinterpret_cast<type *>(reinterpret_cast<char *>(address) -                                                      \
+                              reinterpret_cast<size_t>(&(reinterpret_cast<type *>(0))->field)))
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
 
 #endif // _LIST_H_INCLUDED
-

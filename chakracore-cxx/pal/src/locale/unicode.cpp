@@ -24,17 +24,17 @@ Revision History:
 #include <string>
 #include "pal/thread.hpp"
 
-#include "pal/palinternal.h"
-#include "pal/unicode_data.h"
+#include "pal/cruntime.h"
 #include "pal/dbgmsg.h"
 #include "pal/file.h"
-#include "pal/utf8.h"
 #include "pal/locale.h"
-#include "pal/cruntime.h"
+#include "pal/palinternal.h"
 #include "pal/stackstring.hpp"
+#include "pal/unicode_data.h"
+#include "pal/utf8.h"
 
-#include <pthread.h>
 #include <locale.h>
+#include <pthread.h>
 #if !defined(__APPLE__)
 #include <libintl.h>
 #endif // __APPLE__
@@ -52,22 +52,19 @@ SET_DEFAULT_DEBUG_CHANNEL(UNICODE);
 #if defined(__APPLE__)
 
 static CP_MAPPING CP_TO_NATIVE_TABLE[] = {
-    { 65001, kCFStringEncodingUTF8, 4, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 1252, kCFStringEncodingWindowsLatin1, 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 1251, kCFStringEncodingWindowsCyrillic, 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 1253, kCFStringEncodingWindowsGreek, 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 1254, kCFStringEncodingWindowsLatin5, 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 1258, kCFStringEncodingWindowsVietnamese, 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 932, kCFStringEncodingDOSJapanese, 2, { 129, 159, 224, 252, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 949, kCFStringEncodingDOSKorean, 2, { 129, 254, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 950, kCFStringEncodingDOSChineseTrad, 2, { 129, 254, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
-};
+    {65001, kCFStringEncodingUTF8, 4, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+    {1252, kCFStringEncodingWindowsLatin1, 1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+    {1251, kCFStringEncodingWindowsCyrillic, 1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+    {1253, kCFStringEncodingWindowsGreek, 1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+    {1254, kCFStringEncodingWindowsLatin5, 1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+    {1258, kCFStringEncodingWindowsVietnamese, 1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+    {932, kCFStringEncodingDOSJapanese, 2, {129, 159, 224, 252, 0, 0, 0, 0, 0, 0, 0, 0}},
+    {949, kCFStringEncodingDOSKorean, 2, {129, 254, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}},
+    {950, kCFStringEncodingDOSChineseTrad, 2, {129, 254, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}};
 
 #else // defined(__APPLE__)
 
-static const CP_MAPPING CP_TO_NATIVE_TABLE[] = {
-    { 65001, "utf8", 4, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
-};
+static const CP_MAPPING CP_TO_NATIVE_TABLE[] = {{65001, "utf8", 4, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}};
 
 #endif // defined(__APPLE__)
 
@@ -91,16 +88,16 @@ Return value:
 --*/
 static int UnicodeDataComp(const void *pnKey, const void *elem)
 {
-    char16_t uValue = static_cast<const UnicodeDataRec*>(elem)->nUnicodeValue;
-    uint16_t  rangeValue = static_cast<const UnicodeDataRec*>(elem)->rangeValue;
+    char16_t uValue = static_cast<const UnicodeDataRec *>(elem)->nUnicodeValue;
+    uint16_t rangeValue = static_cast<const UnicodeDataRec *>(elem)->rangeValue;
 
-    if (*static_cast<const int32_t*>(pnKey) < uValue)
+    if (*static_cast<const int32_t *>(pnKey) < uValue)
     {
         return -1;
     }
     else
     {
-        if (*static_cast<const int32_t*>(pnKey) > (uValue + rangeValue))
+        if (*static_cast<const int32_t *>(pnKey) > (uValue + rangeValue))
         {
             return 1;
         }
@@ -138,8 +135,8 @@ BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec)
     {
         UnicodeDataRec *dataRec;
         int32_t nNumOfChars = UNICODE_DATA_SIZE;
-        dataRec = static_cast<UnicodeDataRec*>(bsearch(&nUnicodeValue, UnicodeData, nNumOfChars,
-                                                       sizeof(UnicodeDataRec), UnicodeDataComp));
+        dataRec = static_cast<UnicodeDataRec *>(
+            bsearch(&nUnicodeValue, UnicodeData, nNumOfChars, sizeof(UnicodeDataRec), UnicodeDataComp));
         if (dataRec == NULL)
         {
             bRet = FALSE;
@@ -163,13 +160,12 @@ CODEPAGEGetData
 
     Returns a pointer to structure, NULL otherwise.
 --*/
-const CP_MAPPING *
-CODEPAGEGetData(  uint32_t CodePage )
+const CP_MAPPING *CODEPAGEGetData(uint32_t CodePage)
 {
-    uint32_t nSize = sizeof( CP_TO_NATIVE_TABLE ) / sizeof( CP_TO_NATIVE_TABLE[ 0 ] );
+    uint32_t nSize = sizeof(CP_TO_NATIVE_TABLE) / sizeof(CP_TO_NATIVE_TABLE[0]);
     uint32_t nIndex = 0;
 
-    if ( CP_ACP == CodePage )
+    if (CP_ACP == CodePage)
     {
         CodePage = CP_UTF8;
     }
@@ -177,9 +173,9 @@ CODEPAGEGetData(  uint32_t CodePage )
     /* checking if the CodePage is ACP and returning true if so */
     while (nIndex < nSize)
     {
-        if ( ( CP_TO_NATIVE_TABLE[ nIndex ] ).nCodePage == CodePage )
+        if ((CP_TO_NATIVE_TABLE[nIndex]).nCodePage == CodePage)
         {
-            return &(CP_TO_NATIVE_TABLE[ nIndex ]);
+            return &(CP_TO_NATIVE_TABLE[nIndex]);
         }
         nIndex++;
     }
@@ -221,17 +217,15 @@ CP_UTF7 and CP_UTF8, however, *are* considered valid code pages, even though
 MSDN fails to mention them in the IsValidCodePage entry.
 Note : CP_UTF7 support isn't required for Rotor
 --*/
-BOOL
-IsValidCodePage(
-     uint32_t CodePage)
+BOOL IsValidCodePage(uint32_t CodePage)
 {
     BOOL retval = FALSE;
 
-    switch(CodePage)
+    switch (CodePage)
     {
-    case CP_ACP       : /* fall through */
-    case CP_OEMCP      : /* fall through */
-    case CP_MACCP      : /* fall through */
+    case CP_ACP: /* fall through */
+    case CP_OEMCP: /* fall through */
+    case CP_MACCP: /* fall through */
     case CP_THREAD_ACP:
         /* 'pseudo code pages' : not valid */
         retval = FALSE;
@@ -245,11 +239,11 @@ IsValidCodePage(
         retval = TRUE;
         break;
     default:
-        retval = (NULL != CODEPAGEGetData( CodePage ));
+        retval = (NULL != CODEPAGEGetData(CodePage));
         break;
     }
 
-    LOGEXIT("IsValidCodePage returns BOOL %d\n",retval);
+    LOGEXIT("IsValidCodePage returns BOOL %d\n", retval);
     return retval;
 }
 
@@ -259,45 +253,43 @@ GetCPInfo
 
 See MSDN doc.
 --*/
-BOOL
-GetCPInfo(
-   uint32_t CodePage,
-   LPCPINFO lpCPInfo)
+BOOL GetCPInfo(uint32_t CodePage, LPCPINFO lpCPInfo)
 {
-    const CP_MAPPING * lpStruct = NULL;
+    const CP_MAPPING *lpStruct = NULL;
     BOOL bRet = FALSE;
 
     /*check if the input code page is valid*/
-    if( CP_ACP != CodePage && !IsValidCodePage( CodePage ) )
+    if (CP_ACP != CodePage && !IsValidCodePage(CodePage))
     {
         /* error, invalid argument */
-        ERROR("CodePage(%d) parameter is invalid\n",CodePage);
-        SetLastError( ERROR_INVALID_PARAMETER );
+        ERROR("CodePage(%d) parameter is invalid\n", CodePage);
+        SetLastError(ERROR_INVALID_PARAMETER);
         goto done;
     }
 
     /*check if the lpCPInfo parameter is valid. */
-    if( !lpCPInfo )
+    if (!lpCPInfo)
     {
         /* error, invalid argument */
-        ERROR("lpCPInfo cannot be NULL\n" );
-        SetLastError( ERROR_INVALID_PARAMETER );
+        ERROR("lpCPInfo cannot be NULL\n");
+        SetLastError(ERROR_INVALID_PARAMETER);
         goto done;
     }
 
-    if ( NULL != ( lpStruct = CODEPAGEGetData( CodePage ) ) )
+    if (NULL != (lpStruct = CODEPAGEGetData(CodePage)))
     {
-        lpCPInfo->MaxCharSize = lpStruct->nMaxByteSize;;
-        memcpy( lpCPInfo->LeadByte, lpStruct->LeadByte , MAX_LEADBYTES );
+        lpCPInfo->MaxCharSize = lpStruct->nMaxByteSize;
+        ;
+        memcpy(lpCPInfo->LeadByte, lpStruct->LeadByte, MAX_LEADBYTES);
 
         /* Don't need to be set, according to the spec. */
-        memset( lpCPInfo->DefaultChar, '?', MAX_DEFAULTCHAR );
+        memset(lpCPInfo->DefaultChar, '?', MAX_DEFAULTCHAR);
 
         bRet = TRUE;
     }
 
 done:
-    LOGEXIT("GetCPInfo returns BOOL %d \n",bRet);
+    LOGEXIT("GetCPInfo returns BOOL %d \n", bRet);
     return bRet;
 }
 
@@ -307,39 +299,36 @@ IsDBCSLeadByteEx
 
 See MSDN doc.
 --*/
-BOOL
-IsDBCSLeadByteEx(
-      uint32_t CodePage,
-      uint8_t TestChar)
+BOOL IsDBCSLeadByteEx(uint32_t CodePage, uint8_t TestChar)
 {
     CPINFO cpinfo;
     size_t i;
     BOOL bRet = FALSE;
 
     /* Get the lead byte info with respect to the given codepage*/
-    if( !GetCPInfo( CodePage, &cpinfo ) )
+    if (!GetCPInfo(CodePage, &cpinfo))
     {
-        ERROR("Error CodePage(%#x) parameter is invalid\n", CodePage );
-        SetLastError( ERROR_INVALID_PARAMETER );
+        ERROR("Error CodePage(%#x) parameter is invalid\n", CodePage);
+        SetLastError(ERROR_INVALID_PARAMETER);
         goto done;
     }
 
-    for( i=0; i < sizeof(cpinfo.LeadByte)/sizeof(cpinfo.LeadByte[0]); i += 2 )
+    for (i = 0; i < sizeof(cpinfo.LeadByte) / sizeof(cpinfo.LeadByte[0]); i += 2)
     {
-        if( 0 == cpinfo.LeadByte[ i ] )
+        if (0 == cpinfo.LeadByte[i])
         {
             goto done;
         }
 
         /*check if the given char is in one of the lead byte ranges*/
-        if( cpinfo.LeadByte[i] <= TestChar && TestChar<= cpinfo.LeadByte[i+1] )
+        if (cpinfo.LeadByte[i] <= TestChar && TestChar <= cpinfo.LeadByte[i + 1])
         {
             bRet = TRUE;
             goto done;
         }
     }
 done:
-    LOGEXIT("IsDBCSLeadByteEx returns BOOL %d\n",bRet);
+    LOGEXIT("IsDBCSLeadByteEx returns BOOL %d\n", bRet);
     return bRet;
 }
 
@@ -350,16 +339,10 @@ MultiByteToWideChar
 See MSDN doc.
 
 --*/
-int
-MultiByteToWideChar(
-         uint32_t CodePage,
-         uint32_t dwFlags,
-         const char * lpMultiByteStr,
-         int cbMultiByte,
-         char16_t* lpWideCharStr,
-         int cchWideChar)
+int MultiByteToWideChar(uint32_t CodePage, uint32_t dwFlags, const char *lpMultiByteStr, int cbMultiByte,
+                        char16_t *lpWideCharStr, int cchWideChar)
 {
-    int32_t retval =0;
+    int32_t retval = 0;
 #if defined(__APPLE__)
     CFStringRef cfString = NULL;
     CFStringEncoding cfEncoding;
@@ -373,11 +356,9 @@ MultiByteToWideChar(
         goto EXIT;
     }
 
-    if ( (cbMultiByte == 0) || (cchWideChar < 0) ||
-        (lpMultiByteStr == NULL) ||
+    if ((cbMultiByte == 0) || (cchWideChar < 0) || (lpMultiByteStr == NULL) ||
         ((cchWideChar != 0) &&
-        ((lpWideCharStr == NULL) ||
-        (lpMultiByteStr == reinterpret_cast<char*>(lpWideCharStr)))) )
+         ((lpWideCharStr == NULL) || (lpMultiByteStr == reinterpret_cast<char *>(lpWideCharStr)))))
     {
         ERROR("Error lpMultiByteStr parameters are invalid\n");
         SetLastError(ERROR_INVALID_PARAMETER);
@@ -390,7 +371,7 @@ MultiByteToWideChar(
     {
         if (cbMultiByte <= -1)
         {
-        cbMultiByte = strlen(lpMultiByteStr) + 1;
+            cbMultiByte = strlen(lpMultiByteStr) + 1;
         }
 
         retval = UTF8ToUnicode(lpMultiByteStr, cbMultiByte, lpWideCharStr, cchWideChar, dwFlags);
@@ -398,32 +379,33 @@ MultiByteToWideChar(
     }
 
 #if !defined(__APPLE__)
-    ERROR( "This code page is not in the system.\n" );
-    SetLastError( ERROR_INVALID_PARAMETER );
+    ERROR("This code page is not in the system.\n");
+    SetLastError(ERROR_INVALID_PARAMETER);
     goto EXIT;
 #else /* !defined(__APPLE__) */
     bytesToConvert = cbMultiByte;
     if (bytesToConvert == -1)
     {
         /* Plus one for the trailing '\0', which will end up
-        * in the CFString. */
+         * in the CFString. */
         bytesToConvert = strlen(lpMultiByteStr) + 1;
     }
 
     cfEncoding = CODEPAGECPToCFStringEncoding(CodePage);
     if (cfEncoding == kCFStringEncodingInvalidId)
     {
-        ERROR( "This code page is not in the system.\n" );
-        SetLastError( ERROR_INVALID_PARAMETER );
+        ERROR("This code page is not in the system.\n");
+        SetLastError(ERROR_INVALID_PARAMETER);
         goto EXIT;
     }
 
-    cfString = CFStringCreateWithBytes(kCFAllocatorDefault, reinterpret_cast<UInt8*>(const_cast<char*>(lpMultiByteStr)),
-                     bytesToConvert, cfEncoding, TRUE);
+    cfString =
+        CFStringCreateWithBytes(kCFAllocatorDefault, reinterpret_cast<UInt8 *>(const_cast<char *>(lpMultiByteStr)),
+                                bytesToConvert, cfEncoding, TRUE);
     if (cfString == NULL)
     {
-        ERROR( "Failed to convert the string to the specified encoding.\n" );
-        SetLastError( ERROR_NO_UNICODE_TRANSLATION );
+        ERROR("Failed to convert the string to the specified encoding.\n");
+        SetLastError(ERROR_NO_UNICODE_TRANSLATION);
         goto EXIT;
     }
 
@@ -438,8 +420,7 @@ MultiByteToWideChar(
             retval = 0;
             goto ReleaseString;
         }
-        CFStringGetCharacters(cfString, CFRangeMake(0, length),
-                reinterpret_cast<UniChar*>(lpWideCharStr));
+        CFStringGetCharacters(cfString, CFRangeMake(0, length), reinterpret_cast<UniChar *>(lpWideCharStr));
         retval = length;
     }
     else
@@ -457,7 +438,7 @@ ReleaseString:
 
 EXIT:
 
-    LOGEXIT("MultiByteToWideChar returns %d.\n",retval);
+    LOGEXIT("MultiByteToWideChar returns %d.\n", retval);
     return retval;
 }
 
@@ -469,17 +450,10 @@ WideCharToMultiByte
 See MSDN doc.
 
 --*/
-int
-WideCharToMultiByte(
-         uint32_t CodePage,
-         uint32_t dwFlags,
-         const char16_t* lpWideCharStr,
-         int cchWideChar,
-         char* lpMultiByteStr,
-         int cbMultiByte,
-         LPBOOL lpUsedDefaultChar)
+int WideCharToMultiByte(uint32_t CodePage, uint32_t dwFlags, const char16_t *lpWideCharStr, int cchWideChar,
+                        char *lpMultiByteStr, int cbMultiByte, LPBOOL lpUsedDefaultChar)
 {
-    int32_t retval =0;
+    int32_t retval = 0;
     BOOL usedDefaultChar = FALSE;
 #if defined(__APPLE__)
     CFStringRef cfString = NULL;
@@ -502,11 +476,9 @@ WideCharToMultiByte(
     // code page. The best fit functionality is not available in wctomb on Unix
     // and is better left unimplemented for security reasons anyway.
 
-    if ((cchWideChar < -1) || (cbMultiByte < 0) ||
-        (lpWideCharStr == NULL) ||
+    if ((cchWideChar < -1) || (cbMultiByte < 0) || (lpWideCharStr == NULL) ||
         ((cbMultiByte != 0) &&
-        ((lpMultiByteStr == NULL) ||
-        (lpWideCharStr == reinterpret_cast<char16_t*>(lpMultiByteStr)))) )
+         ((lpMultiByteStr == NULL) || (lpWideCharStr == reinterpret_cast<char16_t *>(lpMultiByteStr)))))
     {
         ERROR("Error lpWideCharStr parameters are invalid\n");
         SetLastError(ERROR_INVALID_PARAMETER);
@@ -529,26 +501,26 @@ WideCharToMultiByte(
     charsToConvert = cchWideChar;
     if (charsToConvert == -1)
     {
-        const char16_t* ptr = lpWideCharStr;
+        const char16_t *ptr = lpWideCharStr;
 
         charsToConvert = 0;
-        while(*ptr++ != 0)
+        while (*ptr++ != 0)
         {
             charsToConvert++;
         }
-        charsToConvert++;   /* For the terminating '\0' */
+        charsToConvert++; /* For the terminating '\0' */
     }
 
     cfEncoding = CODEPAGECPToCFStringEncoding(CodePage);
     if (cfEncoding == kCFStringEncodingInvalidId)
     {
-        ERROR( "This code page is not in the system.\n" );
+        ERROR("This code page is not in the system.\n");
         SetLastError(ERROR_INVALID_PARAMETER);
         goto EXIT;
     }
 
-    cfString = CFStringCreateWithCharacters(kCFAllocatorDefault,
-                      reinterpret_cast<const UniChar*>(lpWideCharStr), charsToConvert);
+    cfString = CFStringCreateWithCharacters(kCFAllocatorDefault, reinterpret_cast<const UniChar *>(lpWideCharStr),
+                                            charsToConvert);
     if (cfString == NULL)
     {
         ERROR("CFString creation failed.\n");
@@ -560,20 +532,16 @@ WideCharToMultiByte(
     {
         lpMultiByteStr = NULL;
     }
-    charsConverted = CFStringGetBytes(cfString,
-                    CFRangeMake(0, charsToConvert),
-                    cfEncoding, '?', TRUE, reinterpret_cast<UInt8*>(lpMultiByteStr),
-                    cbMultiByte, &bytesConverted);
+    charsConverted = CFStringGetBytes(cfString, CFRangeMake(0, charsToConvert), cfEncoding, '?', TRUE,
+                                      reinterpret_cast<UInt8 *>(lpMultiByteStr), cbMultiByte, &bytesConverted);
     if (charsConverted != charsToConvert)
     {
         if (lpMultiByteStr != NULL)
         {
             // CFStringGetBytes can fail due to an insufficient buffer or for
             // other reasons. We need to check if we're out of buffer space.
-            charsConverted = CFStringGetBytes(cfString,
-                        CFRangeMake(0, charsToConvert),
-                        cfEncoding, '?', TRUE, NULL,
-                        0, &bytesConverted);
+            charsConverted = CFStringGetBytes(cfString, CFRangeMake(0, charsToConvert), cfEncoding, '?', TRUE, NULL, 0,
+                                              &bytesConverted);
             if (cbMultiByte < bytesConverted)
             {
                 ERROR("Insufficient buffer for CFStringGetBytes.\n");
@@ -596,7 +564,7 @@ ReleaseString:
 
 EXIT:
 
-    if ( lpUsedDefaultChar != NULL )
+    if (lpUsedDefaultChar != NULL)
     {
         *lpUsedDefaultChar = usedDefaultChar;
     }
@@ -608,9 +576,9 @@ EXIT:
      * a security risk.
      */
     _ASSERT_MSG((dwFlags & WC_NO_BEST_FIT_CHARS) || !usedDefaultChar,
-          "WideCharToMultiByte found a string which doesn't round trip: (%p)%S "
-          "and WC_NO_BEST_FIT_CHARS was not specified\n",
-          lpWideCharStr, lpWideCharStr);
+                "WideCharToMultiByte found a string which doesn't round trip: (%p)%S "
+                "and WC_NO_BEST_FIT_CHARS was not specified\n",
+                lpWideCharStr, lpWideCharStr);
 
     LOGEXIT("WideCharToMultiByte returns INT %d\n", retval);
     return retval;

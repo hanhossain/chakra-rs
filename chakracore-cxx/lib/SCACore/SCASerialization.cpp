@@ -3,27 +3,27 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "SCACorePch.h"
 #include "Common/ByteSwap.h"
+#include "Library/DataView.h"
+#include "Library/DateImplementation.h"
+#include "Library/ES5Array.h"
+#include "Library/JavascriptBooleanObject.h"
+#include "Library/JavascriptDate.h"
 #include "Library/JavascriptNumberObject.h"
 #include "Library/JavascriptStringObject.h"
-#include "Library/JavascriptBooleanObject.h"
-#include "Library/DateImplementation.h"
-#include "Library/JavascriptDate.h"
-#include "Library/DataView.h"
-#include "Library/ES5Array.h"
+#include "SCACorePch.h"
 
-#include "Types/PropertyIndexRanges.h"
+#include "Library/ES5ArrayIndexStaticEnumerator.h"
+#include "Library/JavascriptArrayIndexStaticEnumerator.h"
 #include "Types/DictionaryPropertyDescriptor.h"
 #include "Types/DictionaryTypeHandler.h"
 #include "Types/ES5ArrayTypeHandler.h"
-#include "Library/JavascriptArrayIndexStaticEnumerator.h"
-#include "Library/ES5ArrayIndexStaticEnumerator.h"
+#include "Types/PropertyIndexRanges.h"
 
 namespace Js
 {
     template <class Writer>
-    bool SerializationCloner<Writer>::TryClonePrimitive(SrcTypeId typeId, Src src, Dst* dst)
+    bool SerializationCloner<Writer>::TryClonePrimitive(SrcTypeId typeId, Src src, Dst *dst)
     {
         switch (typeId)
         {
@@ -36,8 +36,7 @@ namespace Js
             break;
 
         case TypeIds_Boolean:
-            WriteTypeId(
-                VarTo<JavascriptBoolean>(src)->GetValue() ? SCA_TrueValue : SCA_FalseValue);
+            WriteTypeId(VarTo<JavascriptBoolean>(src)->GetValue() ? SCA_TrueValue : SCA_FalseValue);
             break;
 
         case TypeIds_Integer:
@@ -76,9 +75,9 @@ namespace Js
     }
 
     template <class Writer>
-    bool SerializationCloner<Writer>::TryCloneObject(SrcTypeId typeId, Src src, Dst* dst, SCADeepCloneType* deepClone)
+    bool SerializationCloner<Writer>::TryCloneObject(SrcTypeId typeId, Src src, Dst *dst, SCADeepCloneType *deepClone)
     {
-        RecyclableObject* obj = VarTo<RecyclableObject>(src);
+        RecyclableObject *obj = VarTo<RecyclableObject>(src);
         scaposition_t beginPos = m_writer->GetPosition();
         *deepClone = SCADeepCloneType::None;
 
@@ -90,7 +89,7 @@ namespace Js
         }
         else if (JavascriptOperators::IsObjectDetached(src))
         {
-            //Object is detached, throw error
+            // Object is detached, throw error
             this->ThrowSCAObjectDetached();
         }
         else
@@ -99,7 +98,7 @@ namespace Js
             {
             case TypeIds_String: // Clone string value as object type to resolve multiple references
                 {
-                    JavascriptString* str = VarTo<JavascriptString>(obj);
+                    JavascriptString *str = VarTo<JavascriptString>(obj);
                     WriteTypeId(SCA_StringValue);
                     Write(str->GetString(), str->GetLength());
                 }
@@ -114,9 +113,9 @@ namespace Js
 
             case TypeIds_Proxy:
                 {
-                // Currently SCA algorithm does not support proxy. We'll see 
-                // if the spec will be updated. I don't support QueryObjectInterface in proxy
-                // so we don't want to go through the default code path.
+                    // Currently SCA algorithm does not support proxy. We'll see
+                    // if the spec will be updated. I don't support QueryObjectInterface in proxy
+                    // so we don't want to go through the default code path.
                     return false;
                 }
             case TypeIds_Array:
@@ -138,7 +137,7 @@ namespace Js
 
             case TypeIds_RegEx:
                 {
-                    JavascriptRegExp* regex = VarTo<JavascriptRegExp>(src);
+                    JavascriptRegExp *regex = VarTo<JavascriptRegExp>(src);
                     InternalString str = regex->GetSource();
                     uint32_t flags = static_cast<uint32_t>(regex->GetFlags());
                     WriteTypeId(SCA_RegExpObject);
@@ -148,8 +147,8 @@ namespace Js
                 break;
 
             case TypeIds_BooleanObject:
-                WriteTypeId(VarTo<JavascriptBooleanObject>(src)->GetValue() ?
-                    SCA_BooleanTrueObject : SCA_BooleanFalseObject);
+                WriteTypeId(VarTo<JavascriptBooleanObject>(src)->GetValue() ? SCA_BooleanTrueObject
+                                                                            : SCA_BooleanFalseObject);
                 break;
 
             case TypeIds_NumberObject:
@@ -161,7 +160,7 @@ namespace Js
 
             case TypeIds_StringObject:
                 {
-                    JavascriptString* str = VarTo<JavascriptStringObject>(src)->Unwrap();
+                    JavascriptString *str = VarTo<JavascriptStringObject>(src)->Unwrap();
                     WriteTypeId(SCA_StringObject);
                     Write(str->GetString(), str->GetLength());
                 }
@@ -169,7 +168,7 @@ namespace Js
 
             case TypeIds_ArrayBuffer:
                 {
-                    ArrayBuffer* buf = VarTo<ArrayBuffer>(src);
+                    ArrayBuffer *buf = VarTo<ArrayBuffer>(src);
                     WriteTypeId(SCA_ArrayBuffer);
                     Write(buf->GetBuffer(), buf->GetByteLength());
                 }
@@ -179,19 +178,19 @@ namespace Js
                 {
                     // TBD
 
-                    //SCAContextType contextType;
-                    //if (FAILED(this->m_pSCAContext->GetContext(&contextType)))
+                    // SCAContextType contextType;
+                    // if (FAILED(this->m_pSCAContext->GetContext(&contextType)))
                     //{
-                    //    return false;
-                    //}
+                    //     return false;
+                    // }
                     //
-                    //if(contextType == SCAContext_CrossProcess || contextType == SCAContext_Persist)
+                    // if(contextType == SCAContext_CrossProcess || contextType == SCAContext_Persist)
                     //{
-                    //    return false;
-                    //}
+                    //     return false;
+                    // }
 
-                    SharedArrayBuffer* buf = VarTo<SharedArrayBuffer>(src);
-                    SharedContents* sharedContents = buf->GetSharedContents();
+                    SharedArrayBuffer *buf = VarTo<SharedArrayBuffer>(src);
+                    SharedContents *sharedContents = buf->GetSharedContents();
                     Assert(buf->IsWebAssemblyArrayBuffer() == sharedContents->IsWebAssembly());
                     sharedContents->AddRef();
                     this->m_sharedContentsrList->Add(sharedContents);
@@ -217,35 +216,35 @@ namespace Js
 #ifdef ENABLE_WASM
             case TypeIds_WebAssemblyModule:
                 {
-                    WebAssemblyModule* wasmModule = VarTo<WebAssemblyModule>(src);
+                    WebAssemblyModule *wasmModule = VarTo<WebAssemblyModule>(src);
                     WriteTypeId(SCA_WebAssemblyModule);
                     Write(wasmModule->GetBinaryBuffer(), wasmModule->GetBinaryBufferLength());
                 }
                 break;
             case TypeIds_WebAssemblyMemory:
-            {
-                WebAssemblyMemory* wasmMem = VarTo<WebAssemblyMemory>(src);
-                ArrayBufferBase* buffer = wasmMem->GetBuffer();
-                WriteTypeId(SCA_WebAssemblyMemory);
-                Write(wasmMem->GetInitialLength());
-                Write(wasmMem->GetMaximumLength());
+                {
+                    WebAssemblyMemory *wasmMem = VarTo<WebAssemblyMemory>(src);
+                    ArrayBufferBase *buffer = wasmMem->GetBuffer();
+                    WriteTypeId(SCA_WebAssemblyMemory);
+                    Write(wasmMem->GetInitialLength());
+                    Write(wasmMem->GetMaximumLength());
 #ifdef ENABLE_WASM_THREADS
-                Write(wasmMem->IsSharedMemory());
-                if (wasmMem->IsSharedMemory())
-                {
-                    WebAssemblySharedArrayBuffer* buf = VarTo<WebAssemblySharedArrayBuffer>(buffer);
-                    SharedContents* sharedContents = buf->GetSharedContents();
-                    sharedContents->AddRef();
-                    this->m_sharedContentsrList->Add(sharedContents);
-                    m_writer->Write(reinterpret_cast<intptr_t>(sharedContents));
-                }
-                else
+                    Write(wasmMem->IsSharedMemory());
+                    if (wasmMem->IsSharedMemory())
+                    {
+                        WebAssemblySharedArrayBuffer *buf = VarTo<WebAssemblySharedArrayBuffer>(buffer);
+                        SharedContents *sharedContents = buf->GetSharedContents();
+                        sharedContents->AddRef();
+                        this->m_sharedContentsrList->Add(sharedContents);
+                        m_writer->Write(reinterpret_cast<intptr_t>(sharedContents));
+                    }
+                    else
 #endif
-                {
-                    Write(buffer->GetBuffer(), buffer->GetByteLength());
+                    {
+                        Write(buffer->GetBuffer(), buffer->GetByteLength());
+                    }
+                    break;
                 }
-                break;
-            }
 #endif
 
 #if ENABLE_COPYONACCESS_ARRAY
@@ -278,19 +277,19 @@ namespace Js
         WriteTypeId(SCA_FirstHostObject);
 
         // Ask host to fill rest of the properties
-        m_writer->WriteHostObject(static_cast<void*>(src));
+        m_writer->WriteHostObject(static_cast<void *>(src));
     }
 
     template <class Writer>
     void SerializationCloner<Writer>::CloneProperties(SrcTypeId srcTypeId, Src src, Dst dst)
     {
-        RecyclableObject* obj = VarTo<RecyclableObject>(src);
+        RecyclableObject *obj = VarTo<RecyclableObject>(src);
         // allocate the JavascriptStaticEnumerator on the heap to avoid blowing the stack
         JavascriptStaticEnumerator enumerator;
-        ScriptContext* scriptContext = this->GetScriptContext();
+        ScriptContext *scriptContext = this->GetScriptContext();
         if (DynamicObject::IsAnyArrayTypeId(srcTypeId))
         {
-            JavascriptArray* arr = JavascriptArray::FromAnyArray(src);
+            JavascriptArray *arr = JavascriptArray::FromAnyArray(src);
             bool isSparseArray = IsSparseArray(arr);
 
             WriteTypeId(isSparseArray ? SCA_SparseArray : SCA_DenseArray);
@@ -322,14 +321,14 @@ namespace Js
     template <class Writer>
     void SerializationCloner<Writer>::CloneMap(Src src, Dst dst)
     {
-        JavascriptMap* map = VarTo<JavascriptMap>(src);
+        JavascriptMap *map = VarTo<JavascriptMap>(src);
 
         Write(map->Size());
 
         JavascriptMap::MapDataList::Iterator iter = map->GetIterator();
         while (iter.Next())
         {
-            const JavascriptMap::MapDataKeyValuePair& entry = iter.Current();
+            const JavascriptMap::MapDataKeyValuePair &entry = iter.Current();
             this->GetEngine()->Clone(entry.Key());
             this->GetEngine()->Clone(entry.Value());
         }
@@ -338,7 +337,7 @@ namespace Js
     template <class Writer>
     void SerializationCloner<Writer>::CloneSet(Src src, Dst dst)
     {
-        JavascriptSet* set = VarTo<JavascriptSet>(src);
+        JavascriptSet *set = VarTo<JavascriptSet>(src);
 
         Write(set->Size());
 
@@ -360,7 +359,7 @@ namespace Js
     // Write layout: [byteLen] [string content] [padding]
     //
     template <class Writer>
-    void SerializationCloner<Writer>::Write(const char16_t* str, charcount_t len) const
+    void SerializationCloner<Writer>::Write(const char16_t *str, charcount_t len) const
     {
         uint32_t byteLen = static_cast<uint32_t>(sizeof(char16_t) * len);
         m_writer->Write(byteLen);
@@ -377,7 +376,7 @@ namespace Js
     // Write layout: [byteLen] [byte data] [padding]
     //
     template <class Writer>
-    void SerializationCloner<Writer>::Write(const uint8_t* bytes, uint32_t len) const
+    void SerializationCloner<Writer>::Write(const uint8_t *bytes, uint32_t len) const
     {
         m_writer->Write(len);
         m_writer->Write(bytes, len);
@@ -395,8 +394,7 @@ namespace Js
     template <class Writer>
     bool SerializationCloner<Writer>::IsTypedArray(SrcTypeId typeId)
     {
-        return (typeId >= TypeIds_TypedArraySCAMin && typeId <= TypeIds_TypedArraySCAMax)
-            || typeId == TypeIds_DataView;
+        return (typeId >= TypeIds_TypedArraySCAMin && typeId <= TypeIds_TypedArraySCAMax) || typeId == TypeIds_DataView;
     }
 
     //
@@ -519,16 +517,16 @@ namespace Js
     // Do an arbitrary test to determine serializing a JavascriptArray as sparse array or not.
     //
     template <class Writer>
-    bool SerializationCloner<Writer>::IsSparseArray(JavascriptArray* arr)
+    bool SerializationCloner<Writer>::IsSparseArray(JavascriptArray *arr)
     {
         uint32_t length = arr->GetLength();
         if (length > SparseArraySegmentBase::HEAD_CHUNK_SIZE)
         {
             // Consider it a sparse array if the array size is non-trivial, and there
             // are empty slots found by some arbitrary sampling.
-            return !JavascriptOperators::HasOwnItem(arr, length / 4)
-                || !JavascriptOperators::HasOwnItem(arr, length / 2)
-                || !JavascriptOperators::HasOwnItem(arr, length / 2 + length / 4);
+            return !JavascriptOperators::HasOwnItem(arr, length / 4) ||
+                !JavascriptOperators::HasOwnItem(arr, length / 2) ||
+                !JavascriptOperators::HasOwnItem(arr, length / 2 + length / 4);
         }
 
         return false;
@@ -538,7 +536,7 @@ namespace Js
     // Write dense array index named properties.
     //
     template <class Writer>
-    void SerializationCloner<Writer>::WriteDenseArrayIndexProperties(JavascriptArray* arr)
+    void SerializationCloner<Writer>::WriteDenseArrayIndexProperties(JavascriptArray *arr)
     {
         if (JavascriptArray::IsNonES5Array(arr))
         {
@@ -561,19 +559,18 @@ namespace Js
     // Write sparse array index named properties.
     //
     template <class Writer>
-    void SerializationCloner<Writer>::WriteSparseArrayIndexProperties(JavascriptArray* arr)
+    void SerializationCloner<Writer>::WriteSparseArrayIndexProperties(JavascriptArray *arr)
     {
         if (JavascriptArray::IsNonES5Array(arr))
         {
             if (!arr->IsCrossSiteObject())
             {
-                WriteSparseArrayIndexProperties<
-                    JavascriptArrayIndexStaticEnumerator, JavascriptArrayDirectItemAccessor>(arr);
+                WriteSparseArrayIndexProperties<JavascriptArrayIndexStaticEnumerator,
+                                                JavascriptArrayDirectItemAccessor>(arr);
             }
             else
             {
-                WriteSparseArrayIndexProperties<
-                    JavascriptArrayIndexStaticEnumerator, JavascriptArrayItemAccessor>(arr);
+                WriteSparseArrayIndexProperties<JavascriptArrayIndexStaticEnumerator, JavascriptArrayItemAccessor>(arr);
             }
         }
         else
@@ -581,8 +578,8 @@ namespace Js
             // We don't need JavascriptArrayEnumerableItemAccessor to check enumberable since we'll
             // enumerate enumerable index named properties through ES5ArrayIndexEnumerator. Just use
             // JavascriptArrayItemAccessor.
-            WriteSparseArrayIndexProperties<
-                ES5ArrayIndexStaticEnumerator<>, JavascriptArrayItemAccessor>(VarTo<ES5Array>(arr));
+            WriteSparseArrayIndexProperties<ES5ArrayIndexStaticEnumerator<>, JavascriptArrayItemAccessor>(
+                VarTo<ES5Array>(arr));
         }
     }
 
@@ -592,14 +589,15 @@ namespace Js
     {
         if (m_innerEnumerator)
         {
-            ScriptContext* scriptContext = this->GetScriptContext();
+            ScriptContext *scriptContext = this->GetScriptContext();
             Var undefined = scriptContext->GetLibrary()->GetUndefined();
             Var propertyName;
             PropertyId propertyId;
 
             while ((propertyName = m_innerEnumerator->MoveAndGetNext(propertyId)) != NULL)
             {
-                if (propertyName != undefined) //There are some code paths in which GetCurrentIndex can return undefined
+                if (propertyName != undefined) // There are some code paths in which GetCurrentIndex can return
+                                               // undefined
                 {
                     m_name = VarTo<JavascriptString>(propertyName);
 
@@ -623,15 +621,17 @@ namespace Js
         return false;
     }
 
-    void SCASerializationEngine::Serialize(Var root, StreamWriter* writer, Var* transferableVars, size_t cTransferableVars,
-        JsUtil::List<Js::SharedContents*, HeapAllocator>* sharedContentsList)
+    void SCASerializationEngine::Serialize(Var root, StreamWriter *writer, Var *transferableVars,
+                                           size_t cTransferableVars,
+                                           JsUtil::List<Js::SharedContents *, HeapAllocator> *sharedContentsList)
     {
-        ScriptContext* scriptContext = writer->GetScriptContext();
+        ScriptContext *scriptContext = writer->GetScriptContext();
 
         // Write version
         writer->Write(static_cast<uint32_t>(SCA_FORMAT_VERSION));
 
         StreamSerializationCloner cloner(scriptContext, writer, sharedContentsList);
-        SCAEngine<Var, scaposition_t, StreamSerializationCloner>::Clone(root, &cloner, transferableVars, cTransferableVars);
+        SCAEngine<Var, scaposition_t, StreamSerializationCloner>::Clone(root, &cloner, transferableVars,
+                                                                        cTransferableVars);
     }
-}
+} // namespace Js

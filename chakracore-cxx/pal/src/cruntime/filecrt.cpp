@@ -20,18 +20,18 @@ Abstract:
 
 --*/
 
-#include "pal/thread.hpp"
 #include "pal/file.hpp"
+#include "pal/thread.hpp"
 
-#include "pal/palinternal.h"
+#include "pal/cruntime.h"
 #include "pal/dbgmsg.h"
 #include "pal/file.h"
-#include "pal/cruntime.h"
+#include "pal/palinternal.h"
 
-#include <stdarg.h>
-#include <unistd.h>
 #include <errno.h>
+#include <stdarg.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #ifdef __APPLE__
 #include <sys/syscall.h>
@@ -56,12 +56,7 @@ mode = file permission settings that are used only when a file is created
 Return value:
     File descriptor on success, -1 on failure
 --*/
-int
-CorUnix::InternalOpen(
-    const char *szPath,
-    int nFlags,
-    ...
-    )
+int CorUnix::InternalOpen(const char *szPath, int nFlags, ...)
 {
     int nRet = -1;
     int mode = 0;
@@ -75,6 +70,6 @@ CorUnix::InternalOpen(
         va_end(ap);
     }
 
-        nRet = open(szPath, nFlags, mode);
+    nRet = open(szPath, nFlags, mode);
     return nRet;
 }

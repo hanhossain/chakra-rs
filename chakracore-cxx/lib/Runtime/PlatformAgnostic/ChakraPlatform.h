@@ -6,8 +6,8 @@
 
 #include "UnicodeText.h"
 
-#include "PlatformAgnostic/DateTime.h"
 #include "PlatformAgnostic/AssemblyCommon.h"
+#include "PlatformAgnostic/DateTime.h"
 
 #if defined(DEBUG)
 #include <signal.h> // raise(SIGINT)

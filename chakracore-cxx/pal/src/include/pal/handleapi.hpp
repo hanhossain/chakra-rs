@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -27,23 +27,11 @@ Abstract:
 namespace CorUnix
 {
     PAL_ERROR
-    InternalDuplicateHandle(
-        CPalThread *pThread,
-        HANDLE hSourceProcess,
-        HANDLE hSource,
-        HANDLE hTargetProcess,
-        LPHANDLE phDuplicate,
-        uint32_t dwDesiredAccess,
-        BOOL bInheritHandle,
-        uint32_t dwOptions
-        );
+    InternalDuplicateHandle(CPalThread *pThread, HANDLE hSourceProcess, HANDLE hSource, HANDLE hTargetProcess,
+                            LPHANDLE phDuplicate, uint32_t dwDesiredAccess, BOOL bInheritHandle, uint32_t dwOptions);
 
     PAL_ERROR
-    InternalCloseHandle(
-        CPalThread *pThread,
-        HANDLE hObject
-        );
-}
+    InternalCloseHandle(CPalThread *pThread, HANDLE hObject);
+} // namespace CorUnix
 
 #endif // _HANDLEAPI_HPP
-

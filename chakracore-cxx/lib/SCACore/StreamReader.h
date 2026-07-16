@@ -4,12 +4,14 @@
 //-------------------------------------------------------------------------------------------------------
 
 #pragma once
+#include "SCAEngine.h"
+#include "SCATypes.h"
 namespace Js
 {
     //
     // A simple stream reader that hides low level stream details.
     //
-    class StreamReader: public ScriptContextHolder
+    class StreamReader : public ScriptContextHolder
     {
     private:
         HostReadStream *m_stream;
@@ -20,27 +22,20 @@ namespace Js
         //
         // Get number of bytes left for read in the buffer.
         //
-        size_t GetBytesInBuffer() const
-        {
-            return m_length - m_current;
-        }
+        size_t GetBytesInBuffer() const { return m_length - m_current; }
 
         // uint32_t RealRead(void* pv, uint32_t cb);
 
     public:
-        StreamReader(ScriptContext* scriptContext, byte* buffer, size_t length, HostReadStream *stream)
-            : ScriptContextHolder(scriptContext),
-            m_stream(stream),
-            m_buffer(buffer),
-            m_current(0),
-            m_length(length)
+        StreamReader(ScriptContext *scriptContext, byte *buffer, size_t length, HostReadStream *stream) :
+            ScriptContextHolder(scriptContext), m_stream(stream), m_buffer(buffer), m_current(0), m_length(length)
         {
         }
 
         Var ReadHostObject();
-        void Read(void* pv, size_t cb);
+        void Read(void *pv, size_t cb);
 
-        void ReadRawBytes(void** pv, size_t cb)
+        void ReadRawBytes(void **pv, size_t cb)
         {
             Assert(cb < m_length);
             *pv = (m_buffer + m_current);
@@ -48,11 +43,11 @@ namespace Js
         }
 
         template <typename T>
-        void Read(T* value)
+        void Read(T *value)
         {
             if (GetBytesInBuffer() >= sizeof(T))
             {
-                *value = *(T*)(m_buffer + m_current);
+                *value = *(T *)(m_buffer + m_current);
                 m_current += sizeof(T);
             }
             else
@@ -64,4 +59,4 @@ namespace Js
         scaposition_t GetPosition() const;
     };
 
-}
+} // namespace Js

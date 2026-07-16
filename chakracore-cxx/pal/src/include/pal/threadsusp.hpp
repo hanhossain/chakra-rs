@@ -33,15 +33,15 @@ Abstract:
 // be further broken by making the InternalDelete's CPalThread argument a
 // templatized argument, so that type checking on it takes place only at
 // instantiation time.
-#include "pal/threadinfo.hpp"
-#include "pal/thread.hpp"
-#include "pal/printfcpp.hpp"
 #include "pal/init.h"
+#include "pal/printfcpp.hpp"
+#include "pal/thread.hpp"
+#include "pal/threadinfo.hpp"
 #if !defined(__APPLE__)
 #include <signal.h>
 #endif // !defined(__APPLE__)
-#include <semaphore.h>
 #include <sched.h>
+#include <semaphore.h>
 
 // We have a variety of options for synchronizing thread suspensions and resumptions between the requestor and
 // target threads. Analyze the various capabilities given to us by configure and define one of three macros
@@ -80,290 +80,160 @@ Abstract:
 namespace CorUnix
 {
     PAL_ERROR
-    InternalResumeThread(
-        CPalThread *pthrResumer,
-        HANDLE hTarget,
-        uint32_t *pdwSuspendCount
-    );
+    InternalResumeThread(CPalThread *pthrResumer, HANDLE hTarget, uint32_t *pdwSuspendCount);
 
     class CThreadSuspensionInfo : public CThreadInfoInitializer
     {
-        private:
-            BOOL m_fPending; // TRUE if a suspension is pending on a thread (because the thread is in an unsafe region)
-            BOOL m_fSelfsusp; // TRUE if thread is self suspending and while thread is self suspended
-            BOOL m_fSuspendedForShutdown; // TRUE once the thread is suspended during PAL cleanup
-            int m_nBlockingPipe; // blocking pipe used for a process that was created suspended
+    private:
+        BOOL m_fPending; // TRUE if a suspension is pending on a thread (because the thread is in an unsafe region)
+        BOOL m_fSelfsusp; // TRUE if thread is self suspending and while thread is self suspended
+        BOOL m_fSuspendedForShutdown; // TRUE once the thread is suspended during PAL cleanup
+        int m_nBlockingPipe; // blocking pipe used for a process that was created suspended
 #ifdef _DEBUG
-            Volatile<int32_t> m_lNumThreadsSuspendedByThisThread; // number of threads that this thread has suspended; used for suspension diagnostics
+        Volatile<int32_t> m_lNumThreadsSuspendedByThisThread; // number of threads that this thread has suspended; used
+                                                              // for suspension diagnostics
 #endif
 #if defined(__APPLE__)
-            std::mutex m_nSpinlock; // thread's suspension spinlock, which is used to synchronize suspension and resumption attempts
+        std::mutex m_nSpinlock; // thread's suspension spinlock, which is used to synchronize suspension and resumption
+                                // attempts
 #else // defined(__APPLE__)
-            pthread_mutex_t m_ptmSuspmutex; // thread's suspension mutex, which is used to synchronize suspension and resumption attempts
-            BOOL m_fSuspmutexInitialized;
+        pthread_mutex_t m_ptmSuspmutex; // thread's suspension mutex, which is used to synchronize suspension and
+                                        // resumption attempts
+        BOOL m_fSuspmutexInitialized;
 #endif // defined(__APPLE__)
 #if USE_POSIX_SEMAPHORES
-            sem_t m_semSusp; // suspension semaphore
-            sem_t m_semResume; // resumption semaphore
-            BOOL m_fSemaphoresInitialized;
+        sem_t m_semSusp; // suspension semaphore
+        sem_t m_semResume; // resumption semaphore
+        BOOL m_fSemaphoresInitialized;
 #elif USE_SYSV_SEMAPHORES
-            // necessary id's and sembuf structures for SysV semaphores
-            int m_nSemsuspid; // id for the suspend semaphore
-            int m_nSemrespid; // id for the resume semaphore
-            struct sembuf m_sbSemwait; // struct representing a wait operation
-            struct sembuf m_sbSempost; // struct representing a post operation
+        // necessary id's and sembuf structures for SysV semaphores
+        int m_nSemsuspid; // id for the suspend semaphore
+        int m_nSemrespid; // id for the resume semaphore
+        struct sembuf m_sbSemwait; // struct representing a wait operation
+        struct sembuf m_sbSempost; // struct representing a post operation
 #elif USE_PTHREAD_CONDVARS
-            pthread_cond_t m_condSusp; // suspension condition variable
-            pthread_mutex_t m_mutexSusp; // mutex associated with the condition above
-            BOOL m_fSuspended; // set to true once the suspend has been acknowledged
+        pthread_cond_t m_condSusp; // suspension condition variable
+        pthread_mutex_t m_mutexSusp; // mutex associated with the condition above
+        BOOL m_fSuspended; // set to true once the suspend has been acknowledged
 
-            pthread_cond_t m_condResume; // resumption condition variable
-            pthread_mutex_t m_mutexResume; // mutex associated with the condition above
-            BOOL m_fResumed; // set to true once the resume has been acknowledged
+        pthread_cond_t m_condResume; // resumption condition variable
+        pthread_mutex_t m_mutexResume; // mutex associated with the condition above
+        BOOL m_fResumed; // set to true once the resume has been acknowledged
 
-            BOOL m_fSemaphoresInitialized;
+        BOOL m_fSemaphoresInitialized;
 #endif // USE_POSIX_SEMAPHORES
 
-            /* Most of the variables above are either accessed by a thread
-            holding the appropriate suspension mutex(es) or are only
-            accessed by their own threads (and thus don't require
-            synchronization).
+        /* Most of the variables above are either accessed by a thread
+        holding the appropriate suspension mutex(es) or are only
+        accessed by their own threads (and thus don't require
+        synchronization).
 
-            m_fPending, m_fSuspendedForShutdown,
-            m_fSuspendSignalSent, and m_fResumeSignalSent
-            may be set by a different thread than the owner and thus
-            require synchronization.
+        m_fPending, m_fSuspendedForShutdown,
+        m_fSuspendSignalSent, and m_fResumeSignalSent
+        may be set by a different thread than the owner and thus
+        require synchronization.
 
-            m_fSelfsusp is set to TRUE only by its own thread but may be later
-            accessed by other threads.
+        m_fSelfsusp is set to TRUE only by its own thread but may be later
+        accessed by other threads.
 
-            m_lNumThreadsSuspendedByThisThread is accessed by its owning
-            thread and therefore does not require synchronization. */
+        m_lNumThreadsSuspendedByThisThread is accessed by its owning
+        thread and therefore does not require synchronization. */
 
 #ifdef _DEBUG
-            void
-            IncrNumThreadsSuspendedByThisThread(
-                )
-            {
-                InterlockedIncrement(&m_lNumThreadsSuspendedByThisThread);
-            };
+        void IncrNumThreadsSuspendedByThisThread() { InterlockedIncrement(&m_lNumThreadsSuspendedByThisThread); };
 
-            void
-            DecrNumThreadsSuspendedByThisThread(
-                )
-            {
-                InterlockedDecrement(&m_lNumThreadsSuspendedByThisThread);
-            };
+        void DecrNumThreadsSuspendedByThisThread() { InterlockedDecrement(&m_lNumThreadsSuspendedByThisThread); };
 #endif
 
-            void
-            AcquireSuspensionLocks(
-                CPalThread *pthrSuspender,
-                CPalThread *pthrTarget
-            );
+        void AcquireSuspensionLocks(CPalThread *pthrSuspender, CPalThread *pthrTarget);
 
-            void
-            ReleaseSuspensionLocks(
-                CPalThread *pthrSuspender,
-                CPalThread *pthrTarget
-            );
+        void ReleaseSuspensionLocks(CPalThread *pthrSuspender, CPalThread *pthrTarget);
 
 #if USE_POSIX_SEMAPHORES
-            sem_t*
-            GetSuspendSemaphore(
-                void
-                )
-            {
-                return &m_semSusp;
-            };
+        sem_t *GetSuspendSemaphore(void) { return &m_semSusp; };
 
-            sem_t*
-            GetResumeSemaphore(
-                void
-                )
-            {
-                return &m_semResume;
-            };
+        sem_t *GetResumeSemaphore(void) { return &m_semResume; };
 #elif USE_SYSV_SEMAPHORES
-            int
-            GetSuspendSemaphoreId(
-                void
-                )
-            {
-                return m_nSemsuspid;
-            };
+        int GetSuspendSemaphoreId(void) { return m_nSemsuspid; };
 
-            sembuf*
-            GetSemaphorePostBuffer(
-                void
-                )
-            {
-                return &m_sbSempost;
-            };
+        sembuf *GetSemaphorePostBuffer(void) { return &m_sbSempost; };
 #endif // USE_POSIX_SEMAPHORES
 
 #if defined(__APPLE__)
-            std::mutex&
-            GetSuspensionSpinlock(
-                void
-                )
-            {
-                return m_nSpinlock;
-            }
+        std::mutex &GetSuspensionSpinlock(void) { return m_nSpinlock; }
 #else // defined(__APPLE__)
-            pthread_mutex_t*
-            GetSuspensionMutex(
-                void
-                )
-            {
-                return &m_ptmSuspmutex;
-            }
+        pthread_mutex_t *GetSuspensionMutex(void) { return &m_ptmSuspmutex; }
 #endif // defined(__APPLE__)
 
-            void
-            SetSuspPending(
-                BOOL fPending
-                )
-            {
-                m_fPending = fPending;
-            };
+        void SetSuspPending(BOOL fPending) { m_fPending = fPending; };
 
-            BOOL
-            GetSuspPending(
-                void
-                )
-            {
-                return m_fPending;
-            };
+        BOOL GetSuspPending(void) { return m_fPending; };
 
-            void
-            SetSelfSusp(
-                BOOL fSelfsusp
-                )
-            {
-                m_fSelfsusp = fSelfsusp;
-            };
+        void SetSelfSusp(BOOL fSelfsusp) { m_fSelfsusp = fSelfsusp; };
 
-            BOOL
-            GetSelfSusp(
-                void
-                )
-            {
-                return m_fSelfsusp;
-            };
+        BOOL GetSelfSusp(void) { return m_fSelfsusp; };
 
-            void
-            PostOnSuspendSemaphore();
+        void PostOnSuspendSemaphore();
 
-            void
-            WaitOnSuspendSemaphore();
+        void WaitOnSuspendSemaphore();
 
-            void
-            PostOnResumeSemaphore();
+        void PostOnResumeSemaphore();
 
-            void
-            WaitOnResumeSemaphore();
+        void WaitOnResumeSemaphore();
 
-            static
-            BOOL
-            TryAcquireSuspensionLock(
-                CPalThread* pthrTarget
-            );
+        static BOOL TryAcquireSuspensionLock(CPalThread *pthrTarget);
 
-            int GetBlockingPipe(
-                void
-                )
-            {
-                return m_nBlockingPipe;
-            };
+        int GetBlockingPipe(void) { return m_nBlockingPipe; };
 
-        public:
-            virtual PAL_ERROR InitializePreCreate();
+    public:
+        virtual PAL_ERROR InitializePreCreate();
 
-            CThreadSuspensionInfo()
-                : m_fPending(FALSE)
-                , m_fSelfsusp(FALSE)
-                , m_fSuspendedForShutdown(FALSE)
-                , m_nBlockingPipe(-1)
+        CThreadSuspensionInfo() :
+            m_fPending(FALSE), m_fSelfsusp(FALSE), m_fSuspendedForShutdown(FALSE), m_nBlockingPipe(-1)
 #ifdef _DEBUG
-                , m_lNumThreadsSuspendedByThisThread(0)
+            ,
+            m_lNumThreadsSuspendedByThisThread(0)
 #endif // _DEBUG
 #if !defined(__APPLE__)
-                , m_fSuspmutexInitialized(FALSE)
+            ,
+            m_fSuspmutexInitialized(FALSE)
 #endif
 #if USE_POSIX_SEMAPHORES || USE_PTHREAD_CONDVARS
-                , m_fSemaphoresInitialized(FALSE)
+            ,
+            m_fSemaphoresInitialized(FALSE)
 #endif
-            {
-                InitializeSuspensionLock();
-            };
+        {
+            InitializeSuspensionLock();
+        };
 
-            virtual ~CThreadSuspensionInfo();
+        virtual ~CThreadSuspensionInfo();
 
 #ifdef _DEBUG
-            int32_t
-            GetNumThreadsSuspendedByThisThread(
-                void
-                )
-            {
-                return m_lNumThreadsSuspendedByThisThread;
-            };
+        int32_t GetNumThreadsSuspendedByThisThread(void) { return m_lNumThreadsSuspendedByThisThread; };
 #endif // _DEBUG
 
 #if USE_SYSV_SEMAPHORES
-            void
-            DestroySemaphoreIds(
-                void
-            );
+        void DestroySemaphoreIds(void);
 #endif
-            void
-            SetSuspendedForShutdown(
-                BOOL fSuspendedForShutdown
-                )
-            {
-                m_fSuspendedForShutdown = fSuspendedForShutdown;
-            };
+        void SetSuspendedForShutdown(BOOL fSuspendedForShutdown) { m_fSuspendedForShutdown = fSuspendedForShutdown; };
 
-            BOOL
-            GetSuspendedForShutdown(
-                void
-                )
-            {
-                return m_fSuspendedForShutdown;
-            };
+        BOOL GetSuspendedForShutdown(void) { return m_fSuspendedForShutdown; };
 
-            void
-            AcquireSuspensionLock(
-                CPalThread *pthrCurrent
-            );
+        void AcquireSuspensionLock(CPalThread *pthrCurrent);
 
-            void
-            ReleaseSuspensionLock(
-                CPalThread *pthrCurrent
-            );
+        void ReleaseSuspensionLock(CPalThread *pthrCurrent);
 
-            PAL_ERROR
-            InternalSuspendNewThreadFromData(
-                CPalThread *pThread
-            );
+        PAL_ERROR
+        InternalSuspendNewThreadFromData(CPalThread *pThread);
 
-            PAL_ERROR
-            InternalResumeThreadFromData(
-                CPalThread *pthrResumer,
-                CPalThread *pthrTarget,
-                uint32_t *pdwSuspendCount
-            );
+        PAL_ERROR
+        InternalResumeThreadFromData(CPalThread *pthrResumer, CPalThread *pthrTarget, uint32_t *pdwSuspendCount);
 
-            void InitializeSuspensionLock();
+        void InitializeSuspensionLock();
 
-            void SetBlockingPipe(
-                int nBlockingPipe
-                )
-            {
-                m_nBlockingPipe = nBlockingPipe;
-            };
+        void SetBlockingPipe(int nBlockingPipe) { m_nBlockingPipe = nBlockingPipe; };
     };
-} //end CorUnix
+} // namespace CorUnix
 
 extern const uint8_t WAKEUPCODE; // use for pipe reads during self suspend.
 #endif // __cplusplus

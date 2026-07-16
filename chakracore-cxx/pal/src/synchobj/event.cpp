@@ -12,7 +12,7 @@ Module Name:
 
 Abstract:
 
-    Implementation of event synchronization object as described in 
+    Implementation of event synchronization object as described in
     the WIN32 API
 
 Revision History:
@@ -22,52 +22,40 @@ Revision History:
 --*/
 
 #include "pal/event.hpp"
-#include "pal/thread.hpp"
 #include "pal/dbgmsg.h"
+#include "pal/thread.hpp"
 
 using namespace CorUnix;
 
 /* ------------------- Definitions ------------------------------*/
 SET_DEFAULT_DEBUG_CHANNEL(SYNC);
 
-CObjectType CorUnix::otManualResetEvent(
-                otiManualResetEvent,
-                NULL,   // No cleanup routine
-                NULL,   // No initialization routine
-                0,      // No immutable data
-                0,      // No process local data
-                0,      // No shared data
-                EVENT_ALL_ACCESS, // Currently ignored (no Win32 security)
-                CObjectType::SecuritySupported,
-                CObjectType::SecurityInfoNotPersisted,
-                CObjectType::UnnamedObject,
-                CObjectType::LocalDuplicationOnly,
-                CObjectType::WaitableObject,
-                CObjectType::ObjectCanBeUnsignaled,
-                CObjectType::ThreadReleaseHasNoSideEffects,
-                CObjectType::NoOwner
-                );
+CObjectType CorUnix::otManualResetEvent(otiManualResetEvent,
+                                        NULL, // No cleanup routine
+                                        NULL, // No initialization routine
+                                        0, // No immutable data
+                                        0, // No process local data
+                                        0, // No shared data
+                                        EVENT_ALL_ACCESS, // Currently ignored (no Win32 security)
+                                        CObjectType::SecuritySupported, CObjectType::SecurityInfoNotPersisted,
+                                        CObjectType::UnnamedObject, CObjectType::LocalDuplicationOnly,
+                                        CObjectType::WaitableObject, CObjectType::ObjectCanBeUnsignaled,
+                                        CObjectType::ThreadReleaseHasNoSideEffects, CObjectType::NoOwner);
 
-CObjectType CorUnix::otAutoResetEvent(
-                otiAutoResetEvent,
-                NULL,   // No cleanup routine
-                NULL,   // No initialization routine
-                0,      // No immutable data
-                0,      // No process local data
-                0,      // No shared data
-                EVENT_ALL_ACCESS, // Currently ignored (no Win32 security)
-                CObjectType::SecuritySupported,
-                CObjectType::SecurityInfoNotPersisted,
-                CObjectType::UnnamedObject,
-                CObjectType::LocalDuplicationOnly,
-                CObjectType::WaitableObject,
-                CObjectType::ObjectCanBeUnsignaled,
-                CObjectType::ThreadReleaseAltersSignalCount,
-                CObjectType::NoOwner
-                );
+CObjectType CorUnix::otAutoResetEvent(otiAutoResetEvent,
+                                      NULL, // No cleanup routine
+                                      NULL, // No initialization routine
+                                      0, // No immutable data
+                                      0, // No process local data
+                                      0, // No shared data
+                                      EVENT_ALL_ACCESS, // Currently ignored (no Win32 security)
+                                      CObjectType::SecuritySupported, CObjectType::SecurityInfoNotPersisted,
+                                      CObjectType::UnnamedObject, CObjectType::LocalDuplicationOnly,
+                                      CObjectType::WaitableObject, CObjectType::ObjectCanBeUnsignaled,
+                                      CObjectType::ThreadReleaseAltersSignalCount, CObjectType::NoOwner);
 
 PalObjectTypeId rgEventIds[] = {otiManualResetEvent, otiAutoResetEvent};
-CAllowedObjectTypes aotEvent(rgEventIds, sizeof(rgEventIds)/sizeof(rgEventIds[0]));
+CAllowedObjectTypes aotEvent(rgEventIds, sizeof(rgEventIds) / sizeof(rgEventIds[0]));
 
 
 /*++
@@ -79,16 +67,12 @@ Note:
   -- Win32 object security not supported
   -- handles to event objects are not inheritable
 
-Parameters:  
+Parameters:
   See MSDN doc.
 --*/
 
 HANDLE
-CreateEventW(
-          LPSECURITY_ATTRIBUTES lpEventAttributes,
-          BOOL bManualReset,
-          BOOL bInitialState,
-          const char16_t* lpName)
+CreateEventW(LPSECURITY_ATTRIBUTES lpEventAttributes, BOOL bManualReset, BOOL bInitialState, const char16_t *lpName)
 {
     HANDLE hEvent = NULL;
     PAL_ERROR palError;
@@ -96,14 +80,7 @@ CreateEventW(
 
     pthr = InternalGetCurrentThread();
 
-    palError = InternalCreateEvent(
-        pthr,
-        lpEventAttributes, 
-        bManualReset,
-        bInitialState,
-        lpName,
-        &hEvent
-        );
+    palError = InternalCreateEvent(pthr, lpEventAttributes, bManualReset, bInitialState, lpName, &hEvent);
 
     //
     // We always need to set last error, even on success:
@@ -135,14 +112,8 @@ Parameters:
 --*/
 
 PAL_ERROR
-CorUnix::InternalCreateEvent(
-    CPalThread *pthr,
-    LPSECURITY_ATTRIBUTES lpEventAttributes,
-    BOOL bManualReset,
-    BOOL bInitialState,
-    const char16_t* lpName,
-    HANDLE *phEvent
-    )
+CorUnix::InternalCreateEvent(CPalThread *pthr, LPSECURITY_ATTRIBUTES lpEventAttributes, BOOL bManualReset,
+                             BOOL bInitialState, const char16_t *lpName, HANDLE *phEvent)
 {
     CObjectAttributes oa(lpName, lpEventAttributes);
     PAL_ERROR palError = NO_ERROR;
@@ -159,12 +130,8 @@ CorUnix::InternalCreateEvent(
         goto InternalCreateEventExit;
     }
 
-    palError = g_pObjectManager->AllocateObject(
-        pthr,
-        bManualReset ? &otManualResetEvent : &otAutoResetEvent,
-        &oa,
-        &pobjEvent
-        );
+    palError =
+        g_pObjectManager->AllocateObject(pthr, bManualReset ? &otManualResetEvent : &otAutoResetEvent, &oa, &pobjEvent);
 
     if (NO_ERROR != palError)
     {
@@ -175,10 +142,7 @@ CorUnix::InternalCreateEvent(
     {
         ISynchStateController *pssc;
 
-        palError = pobjEvent->GetSynchStateController(
-            pthr,
-            &pssc
-            );
+        palError = pobjEvent->GetSynchStateController(pthr, &pssc);
 
         if (NO_ERROR == palError)
         {
@@ -193,21 +157,16 @@ CorUnix::InternalCreateEvent(
         }
     }
 
-    palError = g_pObjectManager->RegisterObject(
-        pthr,
-        pobjEvent,
-        &aotEvent, 
-        EVENT_ALL_ACCESS, // Currently ignored (no Win32 security)
-        phEvent,
-        &pobjRegisteredEvent
-        );
+    palError = g_pObjectManager->RegisterObject(pthr, pobjEvent, &aotEvent,
+                                                EVENT_ALL_ACCESS, // Currently ignored (no Win32 security)
+                                                phEvent, &pobjRegisteredEvent);
 
     //
     // pobjEvent is invalidated by the call to RegisterObject, so NULL it
     // out here to ensure that we don't try to release a reference on
     // it down the line.
     //
-    
+
     pobjEvent = NULL;
 
 InternalCreateEventExit:
@@ -235,22 +194,20 @@ Function:
 See MSDN doc.
 --*/
 
-BOOL
-SetEvent(
-      HANDLE hEvent)
+BOOL SetEvent(HANDLE hEvent)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
 
     pthr = InternalGetCurrentThread();
-    
+
     palError = InternalSetEvent(pthr, hEvent, TRUE);
 
     if (NO_ERROR != palError)
     {
         pthr->SetLastError(palError);
     }
-    
+
     LOGEXIT("SetEvent returns BOOL %d\n", (NO_ERROR == palError));
     return (NO_ERROR == palError);
 }
@@ -263,9 +220,7 @@ Function:
 See MSDN doc.
 --*/
 
-BOOL
-ResetEvent(
-        HANDLE hEvent)
+BOOL ResetEvent(HANDLE hEvent)
 {
     PAL_ERROR palError = NO_ERROR;
     CPalThread *pthr = NULL;
@@ -278,7 +233,7 @@ ResetEvent(
     {
         pthr->SetLastError(palError);
     }
-    
+
     LOGEXIT("ResetEvent returns BOOL %d\n", (NO_ERROR == palError));
     return (NO_ERROR == palError);
 }
@@ -294,11 +249,7 @@ Parameters:
 --*/
 
 PAL_ERROR
-CorUnix::InternalSetEvent(
-    CPalThread *pthr,
-    HANDLE hEvent,
-    BOOL fSetEvent
-    )
+CorUnix::InternalSetEvent(CPalThread *pthr, HANDLE hEvent, BOOL fSetEvent)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjEvent = NULL;
@@ -306,12 +257,7 @@ CorUnix::InternalSetEvent(
 
     assert(NULL != pthr);
 
-    palError = g_pObjectManager->ReferenceObjectByHandle(
-        pthr,
-        hEvent,
-        &aotEvent,
-        &pobjEvent
-    );
+    palError = g_pObjectManager->ReferenceObjectByHandle(pthr, hEvent, &aotEvent, &pobjEvent);
 
     if (NO_ERROR != palError)
     {
@@ -319,10 +265,7 @@ CorUnix::InternalSetEvent(
         goto InternalSetEventExit;
     }
 
-    palError = pobjEvent->GetSynchStateController(
-        pthr,
-        &pssc
-        );
+    palError = pobjEvent->GetSynchStateController(pthr, &pssc);
 
     if (NO_ERROR != palError)
     {

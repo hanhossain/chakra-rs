@@ -10,14 +10,15 @@ namespace Wasm
     class WasmCustomReader : public WasmReaderBase
     {
     public:
-        WasmCustomReader(ArenaAllocator* alloc);
-        virtual void SeekToFunctionBody(class WasmFunctionInfo* funcInfo) override;
+        WasmCustomReader(ArenaAllocator *alloc);
+        virtual void SeekToFunctionBody(class WasmFunctionInfo *funcInfo) override;
         virtual bool IsCurrentFunctionCompleted() const override;
         virtual WasmOp ReadExpr() override;
         virtual void FunctionEnd() override;
         virtual uint32_t EstimateCurrentFunctionBytecodeSize() const override;
 
         void AddNode(WasmNode node);
+
     private:
         JsUtil::List<WasmNode, ArenaAllocator> m_nodes;
         uint32_t m_state = 0;

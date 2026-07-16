@@ -7,15 +7,15 @@
 
 namespace Js
 {
-class WebAssemblyModule;
+    class WebAssemblyModule;
 }
 
 namespace Wasm
 {
-class WasmFunctionInfo;
-struct WasmReaderInfo
-{
-    typename WriteBarrierFieldTypeTraits<WasmFunctionInfo*>::Type m_funcInfo;
-    typename WriteBarrierFieldTypeTraits<Js::WebAssemblyModule*>::Type m_module;
-};
-}
+    class WasmFunctionInfo;
+    struct WasmReaderInfo
+    {
+        typename WriteBarrierFieldTypeTraits<WasmFunctionInfo *>::Type m_funcInfo;
+        typename WriteBarrierFieldTypeTraits<Js::WebAssemblyModule *>::Type m_module;
+    };
+} // namespace Wasm

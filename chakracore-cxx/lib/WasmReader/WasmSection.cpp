@@ -8,16 +8,15 @@
 #ifdef ENABLE_WASM
 namespace Wasm
 {
-    SectionInfo::SectionInfo(
-        SectionFlag flag,
-        SectionCode precedent,
-        const char16_t* name,
-        const uint32_t nameLength
-    ): flag(flag), precedent(precedent), name(name), nameLength(nameLength) {}
+    SectionInfo::SectionInfo(SectionFlag flag, SectionCode precedent, const char16_t *name, const uint32_t nameLength) :
+        flag(flag), precedent(precedent), name(name), nameLength(nameLength)
+    {
+    }
 
     SectionInfo SectionInfo::All[bSectLimit] = {
-#define WASM_SECTION(_, id, flag, precedent) {flag, bSect ## precedent, static_cast<const char16_t*>(u##id), sizeof(id)},
+#define WASM_SECTION(_, id, flag, precedent) {flag, bSect##precedent, static_cast<const char16_t *>(u##id), sizeof(id)},
 #include "WasmSections.h"
+
     };
-}
+} // namespace Wasm
 #endif

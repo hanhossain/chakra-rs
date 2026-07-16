@@ -26,18 +26,18 @@ Revision History:
 
 #include "pal/palinternal.h"
 
-#include <sched.h>
 #include <errno.h>
-#include <unistd.h>
+#include <sched.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include <sys/param.h>
 
 #if defined(__APPLE__)
-#include <mach/vm_statistics.h>
-#include <mach/mach_types.h>
-#include <mach/mach_init.h>
 #include <mach/mach_host.h>
+#include <mach/mach_init.h>
+#include <mach/mach_types.h>
+#include <mach/vm_statistics.h>
 #endif // defined(__APPLE__)
 
 #include <sys/user.h>
@@ -47,7 +47,7 @@ Revision History:
 
 SET_DEFAULT_DEBUG_CHANNEL(MISC);
 
-#if defined(__hppa__) || ( defined (_IA64_) && defined (_HPUX_) )
+#if defined(__hppa__) || (defined(_IA64_) && defined(_HPUX_))
 #include <sys/pstat.h>
 #include <sys/vmparam.h>
 #endif
@@ -95,11 +95,9 @@ Others are set to zero.
 
 --*/
 
-int GetCurrentThreadStackLimits(size_t* lowLimit, size_t* highLimit);
+int GetCurrentThreadStackLimits(size_t *lowLimit, size_t *highLimit);
 
-void
-GetSystemInfo(
-           LPSYSTEM_INFO lpSystemInfo)
+void GetSystemInfo(LPSYSTEM_INFO lpSystemInfo)
 {
     int nrcpus = 0;
     long pagesize;
@@ -122,28 +120,28 @@ GetSystemInfo(
 
 // TODO: (BSD) is it a good idea to take maxOf(GetCurrentThreadStackLimits, USRSTACKXX) ?
 #ifdef __APPLE__ // defined(USRSTACK64) || defined(USRSTACK)
-size_t lowl, highl;
-GetCurrentThreadStackLimits(&lowl, &highl);
+    size_t lowl, highl;
+    GetCurrentThreadStackLimits(&lowl, &highl);
 #ifndef PAL_MAX
 #define PAL_MAX(a, b) ((a > b) ? (a) : (b))
 #endif
 #endif
 
 #ifdef VM_MAXUSER_ADDRESS
-    lpSystemInfo->lpMaximumApplicationAddress = (void *) VM_MAXUSER_ADDRESS;
+    lpSystemInfo->lpMaximumApplicationAddress = (void *)VM_MAXUSER_ADDRESS;
 #elif defined(__LINUX__)
-    lpSystemInfo->lpMaximumApplicationAddress = reinterpret_cast<void*>(MAX_PROCESS_VA_SPACE_LINUX);
+    lpSystemInfo->lpMaximumApplicationAddress = reinterpret_cast<void *>(MAX_PROCESS_VA_SPACE_LINUX);
 #elif defined(USERLIMIT)
-    lpSystemInfo->lpMaximumApplicationAddress = (void *) USERLIMIT;
+    lpSystemInfo->lpMaximumApplicationAddress = (void *)USERLIMIT;
 #elif defined(_M_ARM64)
-    lpSystemInfo->lpMaximumApplicationAddress = reinterpret_cast<void*>(1ull << 47);
+    lpSystemInfo->lpMaximumApplicationAddress = reinterpret_cast<void *>(1ull << 47);
 #elif defined(USRSTACK64)
-    lpSystemInfo->lpMaximumApplicationAddress = (void *) PAL_MAX(highl, USRSTACK64);
+    lpSystemInfo->lpMaximumApplicationAddress = (void *)PAL_MAX(highl, USRSTACK64);
 #else
 #error The maximum application address is not known on this platform.
 #endif
 
-    lpSystemInfo->lpMinimumApplicationAddress = reinterpret_cast<void*>(pagesize);
+    lpSystemInfo->lpMinimumApplicationAddress = reinterpret_cast<void *>(pagesize);
 
     lpSystemInfo->dwProcessorType_PAL_Undefined = 0;
 
@@ -168,9 +166,7 @@ Return Values
 This function returns a BOOL to indicate its success status.
 
 --*/
-BOOL
-GlobalMemoryStatusEx(
-              LPMEMORYSTATUSEX lpBuffer)
+BOOL GlobalMemoryStatusEx(LPMEMORYSTATUSEX lpBuffer)
 {
 
     lpBuffer->dwMemoryLoad = 0;
@@ -188,7 +184,7 @@ GlobalMemoryStatusEx(
     int64_t physical_memory;
 
     // Get the Physical memory size
-    physical_memory = sysconf( _SC_PHYS_PAGES ) * sysconf( _SC_PAGE_SIZE );
+    physical_memory = sysconf(_SC_PHYS_PAGES) * sysconf(_SC_PAGE_SIZE);
     lpBuffer->ullTotalPhys = static_cast<unsigned long>(physical_memory);
     fRetVal = TRUE;
 
@@ -209,10 +205,14 @@ GlobalMemoryStatusEx(
         count = sizeof(vm_stats) / sizeof(natural_t);
         if (KERN_SUCCESS == host_page_size(mach_port, &page_size))
         {
-            if (KERN_SUCCESS == host_statistics(mach_port, HOST_VM_INFO, reinterpret_cast<host_info_t>(&vm_stats), &count))
+            if (KERN_SUCCESS ==
+                host_statistics(mach_port, HOST_VM_INFO, reinterpret_cast<host_info_t>(&vm_stats), &count))
             {
                 lpBuffer->ullAvailPhys = static_cast<int64_t>(vm_stats.free_count) * static_cast<int64_t>(page_size);
-                int64_t used_memory = (static_cast<int64_t>(vm_stats.active_count) + static_cast<int64_t>(vm_stats.inactive_count) + static_cast<int64_t>(vm_stats.wire_count)) *  static_cast<int64_t>(page_size);
+                int64_t used_memory =
+                    (static_cast<int64_t>(vm_stats.active_count) + static_cast<int64_t>(vm_stats.inactive_count) +
+                     static_cast<int64_t>(vm_stats.wire_count)) *
+                    static_cast<int64_t>(page_size);
                 lpBuffer->dwMemoryLoad = static_cast<uint32_t>((used_memory * 100) / lpBuffer->ullTotalPhys);
             }
         }
@@ -233,4 +233,3 @@ GlobalMemoryStatusEx(
 
     return fRetVal;
 }
-

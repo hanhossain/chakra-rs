@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -25,9 +25,9 @@ Revision History:
 
 #include "corunix.hpp"
 
-#include <sys/types.h>
-#include <sys/param.h>
 #include <dirent.h>
+#include <sys/param.h>
+#include <sys/types.h>
 
 
 namespace CorUnix
@@ -40,39 +40,27 @@ namespace CorUnix
     public:
         IFileLockController *pLockController;
 
-        int  unix_fd;
+        int unix_fd;
         uint32_t dwDesiredAccess; /* Unix assumes files are always opened for reading.
                                   In Windows we can open a file for writing only */
-        int  open_flags;       /* stores Unix file creation flags */
+        int open_flags; /* stores Unix file creation flags */
         BOOL open_flags_deviceaccessonly;
         char unix_filename[MAXPATHLEN];
         BOOL inheritable;
     };
 
     PAL_ERROR
-    InternalWriteFile(
-        CPalThread *pThread,
-        HANDLE hFile,
-        const void * lpBuffer,
-        uint32_t nNumberOfBytesToWrite,
-        uint32_t * lpNumberOfBytesWritten,
-        LPOVERLAPPED lpOverlapped
-        );
+    InternalWriteFile(CPalThread *pThread, HANDLE hFile, const void *lpBuffer, uint32_t nNumberOfBytesToWrite,
+                      uint32_t *lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped);
 
     /*++
     InternalOpen
     Wraps open
     --*/
-    int
-    InternalOpen(
-        const char *szFilename,
-        int nFlags,
-        ...
-        );
-}
+    int InternalOpen(const char *szFilename, int nFlags, ...);
+} // namespace CorUnix
 
-extern "C"
-{
+extern "C" {
 
 //
 // These routines should all be separated out into something along the lines
@@ -84,10 +72,10 @@ extern "C"
 /*++
 Function:
   FILEGetLastErrorFromErrno
-  
+
 Convert errno into the appropriate win32 error and return it.
 --*/
-uint32_t FILEGetLastErrorFromErrno( void );
+uint32_t FILEGetLastErrorFromErrno(void);
 
 /*++
 FILEInitStdHandles
@@ -112,18 +100,16 @@ void FILECleanupStdHandles(void);
 
 /*++
 
-Function : 
+Function :
     FILEGetProperNotFoundError
-    
-Returns the proper error code, based on the 
+
+Returns the proper error code, based on the
 Windows behavoir.
 
     IN char* lpPath - The path to check.
     uint32_t * lpErrorCode - The error to set.
 */
-void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode );
-
+void FILEGetProperNotFoundError(char *lpPath, uint32_t *lpErrorCode);
 }
 
 #endif /* _PAL_FILE_HPP_ */
-

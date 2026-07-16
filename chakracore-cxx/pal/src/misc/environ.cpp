@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -21,10 +21,10 @@ Revision History:
 
 --*/
 
-#include "pal/palinternal.h"
 #include "pal/critsect.h"
 #include "pal/dbgmsg.h"
 #include "pal/misc.h"
+#include "pal/palinternal.h"
 
 #include <stdlib.h>
 
@@ -41,12 +41,12 @@ characters.
 
 Parameters
 
-lpName 
-       [in] Pointer to a null-terminated string that specifies the environment variable. 
-lpBuffer 
-       [out] Pointer to a buffer to receive the value of the specified environment variable. 
-nSize 
-       [in] Specifies the size, in TCHARs, of the buffer pointed to by the lpBuffer parameter. 
+lpName
+       [in] Pointer to a null-terminated string that specifies the environment variable.
+lpBuffer
+       [out] Pointer to a buffer to receive the value of the specified environment variable.
+nSize
+       [in] Specifies the size, in TCHARs, of the buffer pointed to by the lpBuffer parameter.
 
 Return Values
 
@@ -62,13 +62,9 @@ value is the buffer size, in TCHARs, required to hold the value string
 and its terminating null character.
 
 --*/
-uint32_t
-GetEnvironmentVariableA(
-             const char * lpName,
-             char* lpBuffer,
-             uint32_t nSize)
+uint32_t GetEnvironmentVariableA(const char *lpName, char *lpBuffer, uint32_t nSize)
 {
-    char  *value;
+    char *value;
     uint32_t dwRet = 0;
 
     if (lpName == NULL)
@@ -84,7 +80,7 @@ GetEnvironmentVariableA(
         SetLastError(ERROR_ENVVAR_NOT_FOUND);
         goto done;
     }
-    
+
     if (strchr(lpName, '=') != NULL)
     {
         // GetEnvironmentVariable doesn't permit '=' in variable names.
@@ -94,7 +90,7 @@ GetEnvironmentVariableA(
     {
         value = getenv(lpName);
     }
-    
+
     if (value == NULL)
     {
         TRACE("%s is not found\n", lpName);
@@ -106,10 +102,10 @@ GetEnvironmentVariableA(
     {
         strcpy_s(lpBuffer, nSize, value);
         dwRet = strlen(value);
-    } 
-    else 
+    }
+    else
     {
-        dwRet = strlen(value)+1;
+        dwRet = strlen(value) + 1;
     }
     SetLastError(ERROR_SUCCESS);
 
@@ -125,36 +121,32 @@ Function:
 
 See MSDN doc.
 --*/
-uint32_t
-GetEnvironmentVariableW(
-             const char16_t* lpName,
-             char16_t* lpBuffer,
-             uint32_t nSize)
+uint32_t GetEnvironmentVariableW(const char16_t *lpName, char16_t *lpBuffer, uint32_t nSize)
 {
     char *inBuff = NULL;
     char *outBuff = NULL;
     int32_t inBuffSize;
     uint32_t size = 0;
 
-    inBuffSize = WideCharToMultiByte( CP_ACP, 0, lpName, -1,
-                                      inBuff, 0, NULL);
-    if ( 0 == inBuffSize )
+    inBuffSize = WideCharToMultiByte(CP_ACP, 0, lpName, -1, inBuff, 0, NULL);
+    if (0 == inBuffSize)
     {
-        ERROR( "lpName has to be a valid parameter\n" );
-        SetLastError( ERROR_INVALID_PARAMETER );
+        ERROR("lpName has to be a valid parameter\n");
+        SetLastError(ERROR_INVALID_PARAMETER);
         goto done;
     }
 
-    inBuff = static_cast<char*>(malloc(inBuffSize));
+    inBuff = static_cast<char *>(malloc(inBuffSize));
     if (inBuff == NULL)
     {
         ERROR("malloc failed\n");
         SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         goto done;
     }
-    
-    if (nSize) {
-        outBuff = static_cast<char*>(malloc(nSize * 2));
+
+    if (nSize)
+    {
+        outBuff = static_cast<char *>(malloc(nSize * 2));
         if (outBuff == NULL)
         {
             ERROR("malloc failed\n");
@@ -163,11 +155,10 @@ GetEnvironmentVariableW(
         }
     }
 
-    if ( 0 == WideCharToMultiByte( CP_ACP, 0, lpName, -1, inBuff, 
-                                   inBuffSize, NULL ) )
+    if (0 == WideCharToMultiByte(CP_ACP, 0, lpName, -1, inBuff, inBuffSize, NULL))
     {
-        ASSERT( "WideCharToMultiByte failed!\n" );
-        SetLastError( ERROR_INTERNAL_ERROR );
+        ASSERT("WideCharToMultiByte failed!\n");
+        SetLastError(ERROR_INTERNAL_ERROR);
         goto done;
     }
     size = GetEnvironmentVariableA(inBuff, outBuff, nSize);
@@ -175,22 +166,22 @@ GetEnvironmentVariableW(
     {
         TRACE("Insufficient buffer\n");
     }
-    else if ( size == 0 )
+    else if (size == 0)
     {
         /* error handle in GetEnvironmentVariableA */
     }
     else
     {
         size = MultiByteToWideChar(CP_ACP, 0, outBuff, -1, lpBuffer, nSize);
-        if ( 0 != size )
+        if (0 != size)
         {
             /* Not including the NULL. */
             size--;
         }
         else
         {
-            ASSERT( "MultiByteToWideChar failed!\n" );
-            SetLastError( ERROR_INTERNAL_ERROR );
+            ASSERT("MultiByteToWideChar failed!\n");
+            SetLastError(ERROR_INTERNAL_ERROR);
             size = 0;
             *lpBuffer = '\0';
         }
@@ -203,5 +194,3 @@ done:
     LOGEXIT("GetEnvironmentVariableW returns DWORD 0x%x\n", size);
     return size;
 }
-
-

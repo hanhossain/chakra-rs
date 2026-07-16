@@ -55,10 +55,11 @@ namespace Js
             ScriptContext *scriptContext = m_streamWriter.GetScriptContext();
             BEGIN_JS_RUNTIME_CALL(scriptContext)
             {
-                Js::SCASerializationEngine::Serialize(rootObject, &m_streamWriter, m_transferableVars, m_cTransferableVars, nullptr /*TBD*/);
+                Js::SCASerializationEngine::Serialize(rootObject, &m_streamWriter, m_transferableVars,
+                                                      m_cTransferableVars, nullptr /*TBD*/);
             }
             END_JS_RUNTIME_CALL(scriptContext)
-                return true;
+            return true;
         }
 
         bool Serializer::DetachArrayBuffer()
@@ -67,17 +68,14 @@ namespace Js
             return true;
         }
 
-        void Serializer::WriteRawBytes(const void* source, size_t length)
+        void Serializer::WriteRawBytes(const void *source, size_t length)
         {
             ScriptContext *scriptContext = m_streamWriter.GetScriptContext();
-            BEGIN_JS_RUNTIME_CALL(scriptContext)
-            {
-                m_streamWriter.Write(source, length);
-            }
+            BEGIN_JS_RUNTIME_CALL(scriptContext) { m_streamWriter.Write(source, length); }
             END_JS_RUNTIME_CALL(scriptContext)
         }
 
-        bool Serializer::Release(byte** data, size_t *dataLength)
+        bool Serializer::Release(byte **data, size_t *dataLength)
         {
             *data = m_streamWriter.GetBuffer();
             *dataLength = m_streamWriter.GetLength();
@@ -102,10 +100,11 @@ namespace Js
             ScriptContext *scriptContext = m_streamReader.GetScriptContext();
             BEGIN_JS_RUNTIME_CALL(scriptContext)
             {
-                returnedValue = Js::SCADeserializationEngine::Deserialize(&m_streamReader, m_transferableVars, m_cTransferableVars);
+                returnedValue =
+                    Js::SCADeserializationEngine::Deserialize(&m_streamReader, m_transferableVars, m_cTransferableVars);
             }
             END_JS_RUNTIME_CALL(scriptContext)
-                return returnedValue;
+            return returnedValue;
         }
 
         int32_t Deserializer::SetTransferableVars(Var *vars, size_t count)
@@ -128,8 +127,6 @@ namespace Js
             return S_OK;
         }
 
-    }
+    } // namespace SCACore
 
-}
-
-
+} // namespace Js

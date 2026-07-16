@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -16,17 +16,17 @@ Abstract:
     Simple handle table manager class
 
 
-    
+
 --*/
 
 #ifndef _PAL_HANDLEMGR_H_
 #define _PAL_HANDLEMGR_H_
 
 
+#include <new>
 #include "corunix.hpp"
 #include "cs.hpp"
 #include "pal/thread.hpp"
-#include <new>
 
 
 /* Pseudo handles constant for current thread and process */
@@ -39,23 +39,23 @@ namespace CorUnix
     class CSimpleHandleManager
     {
     private:
-        enum { c_BasicGrowthRate = 1024 };
-        enum { c_MaxIndex = 0x3FFFFFFE };
+        enum
+        {
+            c_BasicGrowthRate = 1024
+        };
+        enum
+        {
+            c_MaxIndex = 0x3FFFFFFE
+        };
 
         typedef unsigned long HANDLE_INDEX;
         static const HANDLE_INDEX c_hiInvalid = static_cast<HANDLE_INDEX>(-1);
 
         HANDLE
-        HandleIndexToHandle(HANDLE_INDEX hi)
-        {
-            return reinterpret_cast<HANDLE>((hi + 1) << 2);
-        };
+        HandleIndexToHandle(HANDLE_INDEX hi) { return reinterpret_cast<HANDLE>((hi + 1) << 2); };
 
         HANDLE_INDEX
-        HandleToHandleIndex(HANDLE h)
-        {
-            return (reinterpret_cast<unsigned long>(h) >> 2) - 1;
-        };
+        HandleToHandleIndex(HANDLE h) { return (reinterpret_cast<unsigned long>(h) >> 2) - 1; };
 
         typedef struct _HANDLE_TABLE_ENTRY
         {
@@ -64,19 +64,19 @@ namespace CorUnix
                 IPalObject *pObject;
                 HANDLE_INDEX hiNextIndex;
             } u;
-            
+
             uint32_t dwAccessRights;
             bool fInheritable;
-            
+
             bool fEntryAllocated;
         } HANDLE_TABLE_ENTRY;
 
         HANDLE_INDEX m_hiFreeListStart;
         HANDLE_INDEX m_hiFreeListEnd;
-        
+
         uint32_t m_dwTableSize;
         uint32_t m_dwTableGrowthRate;
-        HANDLE_TABLE_ENTRY* m_rghteHandleTable;
+        HANDLE_TABLE_ENTRY *m_rghteHandleTable;
 
         CRITICAL_SECTION m_csLock;
         bool m_fLockInitialized;
@@ -84,20 +84,11 @@ namespace CorUnix
         bool ValidateHandle(HANDLE h);
 
     public:
+        CSimpleHandleManager() :
+            m_hiFreeListStart(c_hiInvalid), m_hiFreeListEnd(c_hiInvalid), m_dwTableSize(0),
+            m_dwTableGrowthRate(c_BasicGrowthRate), m_rghteHandleTable(NULL), m_fLockInitialized(FALSE) {};
 
-        CSimpleHandleManager()
-            :
-            m_hiFreeListStart(c_hiInvalid),
-            m_hiFreeListEnd(c_hiInvalid),
-            m_dwTableSize(0),
-            m_dwTableGrowthRate(c_BasicGrowthRate),
-            m_rghteHandleTable(NULL),
-            m_fLockInitialized(FALSE)
-        {
-        };
-
-        virtual
-        ~CSimpleHandleManager()
+        virtual ~CSimpleHandleManager()
         {
             if (m_fLockInitialized)
             {
@@ -111,71 +102,28 @@ namespace CorUnix
         }
 
         PAL_ERROR
-        Initialize(
-            void
-            );
+        Initialize(void);
 
         PAL_ERROR
-        AllocateHandle(
-            CPalThread *pThread,
-            IPalObject *pObject,
-            uint32_t dwAccessRights,
-            bool fInheritable,
-            HANDLE *ph
-            );
+        AllocateHandle(CPalThread *pThread, IPalObject *pObject, uint32_t dwAccessRights, bool fInheritable,
+                       HANDLE *ph);
 
         //
         // On success this will add a reference to the returned object.
         //
 
         PAL_ERROR
-        GetObjectFromHandle(
-            CPalThread *pThread,
-            HANDLE h,
-            uint32_t *pdwRightsGranted,
-            IPalObject **ppObject
-            );
+        GetObjectFromHandle(CPalThread *pThread, HANDLE h, uint32_t *pdwRightsGranted, IPalObject **ppObject);
 
         PAL_ERROR
-        FreeHandle(
-            CPalThread *pThread,
-            HANDLE h
-            );
+        FreeHandle(CPalThread *pThread, HANDLE h);
 
-        void
-        Lock(
-            CPalThread *pThread
-            )
-        {
-            InternalEnterCriticalSection(pThread, &m_csLock);
-        };
+        void Lock(CPalThread *pThread) { InternalEnterCriticalSection(pThread, &m_csLock); };
 
-        void
-        Unlock(
-            CPalThread *pThread
-            )
-        {
-            InternalLeaveCriticalSection(pThread, &m_csLock);
-        };
+        void Unlock(CPalThread *pThread) { InternalLeaveCriticalSection(pThread, &m_csLock); };
     };
 
-    bool
-    HandleIsSpecial(
-        HANDLE h
-        );
-}
+    bool HandleIsSpecial(HANDLE h);
+} // namespace CorUnix
 
 #endif // _PAL_HANDLEMGR_H_
-
-
-
-
-
-
-
-
-
-
-
-
-

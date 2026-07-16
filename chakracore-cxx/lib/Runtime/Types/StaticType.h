@@ -9,18 +9,25 @@ namespace Js
     class StaticType : public Type
     {
     public:
-        StaticType(StaticType * type) : Type(type) {}
-        StaticType(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint) :
-            Type(scriptContext, typeId, prototype, entryPoint)
+        StaticType(StaticType *type) : Type(type) {}
+        StaticType(ScriptContext *scriptContext, TypeId typeId, RecyclableObject *prototype,
+                   JavascriptMethod entryPoint) : Type(scriptContext, typeId, prototype, entryPoint)
         {
             Assert(StaticType::Is(typeId));
 #ifdef HEAP_ENUMERATION_VALIDATION
-            if (prototype) prototype->SetHeapEnumValidationCookie(HEAP_ENUMERATION_LIBRARY_OBJECT_COOKIE);
+            if (prototype)
+                prototype->SetHeapEnumValidationCookie(HEAP_ENUMERATION_LIBRARY_OBJECT_COOKIE);
 #endif
         }
-        void SetDispatchInvoke(JavascriptMethod method) { Assert(typeId == TypeIds_HostDispatch); entryPoint = method; }
+        void SetDispatchInvoke(JavascriptMethod method)
+        {
+            Assert(typeId == TypeIds_HostDispatch);
+            entryPoint = method;
+        }
+
     public:
         static bool Is(TypeId typeId);
-        static StaticType * New(ScriptContext* scriptContext, TypeId typeId, RecyclableObject* prototype, JavascriptMethod entryPoint);
+        static StaticType *New(ScriptContext *scriptContext, TypeId typeId, RecyclableObject *prototype,
+                               JavascriptMethod entryPoint);
     };
-};
+}; // namespace Js

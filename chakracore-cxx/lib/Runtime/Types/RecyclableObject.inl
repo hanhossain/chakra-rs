@@ -8,20 +8,11 @@ namespace Js
 {
     // These function needs to be in INL file for static lib
 
-    inline TypeId RecyclableObject::GetTypeId() const
-    {
-        return this->GetType()->GetTypeId();
-    }
+    inline TypeId RecyclableObject::GetTypeId() const { return this->GetType()->GetTypeId(); }
 
-    inline JavascriptLibrary* RecyclableObject::GetLibrary() const
-    {
-        return this->GetType()->GetLibrary();
-    }
+    inline JavascriptLibrary *RecyclableObject::GetLibrary() const { return this->GetType()->GetLibrary(); }
 
-    inline ScriptContext* RecyclableObject::GetScriptContext() const
-    {
-        return this->GetLibrary()->GetScriptContext();
-    }
+    inline ScriptContext *RecyclableObject::GetScriptContext() const { return this->GetLibrary()->GetScriptContext(); }
 
     inline BOOL RecyclableObject::IsExternal() const
     {
@@ -39,28 +30,38 @@ namespace Js
         return JavascriptConversion::PropertyQueryFlagsToBoolean(HasPropertyQuery(propertyId, nullptr /*info*/));
     }
 
-    inline BOOL RecyclableObject::GetProperty(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    inline BOOL RecyclableObject::GetProperty(Var originalInstance, PropertyId propertyId, Var *value,
+                                              PropertyValueInfo *info, ScriptContext *requestContext)
     {
-        return JavascriptConversion::PropertyQueryFlagsToBoolean(GetPropertyQuery(originalInstance, propertyId, value, info, requestContext));
+        return JavascriptConversion::PropertyQueryFlagsToBoolean(
+            GetPropertyQuery(originalInstance, propertyId, value, info, requestContext));
     }
 
-    inline BOOL RecyclableObject::GetProperty(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    inline BOOL RecyclableObject::GetProperty(Var originalInstance, JavascriptString *propertyNameString, Var *value,
+                                              PropertyValueInfo *info, ScriptContext *requestContext)
     {
-        return JavascriptConversion::PropertyQueryFlagsToBoolean(GetPropertyQuery(originalInstance, propertyNameString, value, info, requestContext));
+        return JavascriptConversion::PropertyQueryFlagsToBoolean(
+            GetPropertyQuery(originalInstance, propertyNameString, value, info, requestContext));
     }
 
-    inline BOOL RecyclableObject::GetPropertyReference(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    inline BOOL RecyclableObject::GetPropertyReference(Var originalInstance, PropertyId propertyId, Var *value,
+                                                       PropertyValueInfo *info, ScriptContext *requestContext)
     {
-        return JavascriptConversion::PropertyQueryFlagsToBoolean(GetPropertyReferenceQuery(originalInstance, propertyId, value, info, requestContext));
+        return JavascriptConversion::PropertyQueryFlagsToBoolean(
+            GetPropertyReferenceQuery(originalInstance, propertyId, value, info, requestContext));
     }
 
-    inline BOOL RecyclableObject::GetItem(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
+    inline BOOL RecyclableObject::GetItem(Var originalInstance, uint32_t index, Var *value,
+                                          ScriptContext *requestContext)
     {
-        return JavascriptConversion::PropertyQueryFlagsToBoolean(GetItemQuery(originalInstance, index, value, requestContext));
+        return JavascriptConversion::PropertyQueryFlagsToBoolean(
+            GetItemQuery(originalInstance, index, value, requestContext));
     }
 
-    inline BOOL RecyclableObject::GetItemReference(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext)
+    inline BOOL RecyclableObject::GetItemReference(Var originalInstance, uint32_t index, Var *value,
+                                                   ScriptContext *requestContext)
     {
-        return JavascriptConversion::PropertyQueryFlagsToBoolean(GetItemReferenceQuery(originalInstance, index, value, requestContext));
+        return JavascriptConversion::PropertyQueryFlagsToBoolean(
+            GetItemReferenceQuery(originalInstance, index, value, requestContext));
     }
-};
+}; // namespace Js

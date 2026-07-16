@@ -21,24 +21,24 @@ Abstract:
 
 --*/
 
-#include "pal/thread.hpp"
-#include "pal/synchobjects.hpp"
-#include "pal/procobj.hpp"
-#include "pal/cs.hpp"
-#include "pal/file.hpp"
-#include "pal/map.hpp"
 #include "../objmgr/shmobjectmanager.hpp"
-#include "pal/palinternal.h"
-#include "pal/dbgmsg.h"
-#include "pal/shmemory.h"
-#include "pal/process.h"
 #include "../thread/procprivate.hpp"
-#include "pal/virtual.h"
-#include "pal/misc.h"
-#include "pal/utils.h"
+#include "pal/cs.hpp"
+#include "pal/dbgmsg.h"
 #include "pal/debug.h"
-#include "pal/locale.h"
+#include "pal/file.hpp"
 #include "pal/init.h"
+#include "pal/locale.h"
+#include "pal/map.hpp"
+#include "pal/misc.h"
+#include "pal/palinternal.h"
+#include "pal/process.h"
+#include "pal/procobj.hpp"
+#include "pal/shmemory.h"
+#include "pal/synchobjects.hpp"
+#include "pal/thread.hpp"
+#include "pal/utils.h"
+#include "pal/virtual.h"
 
 #if defined(__APPLE__)
 #include "../exception/machexception.h"
@@ -46,17 +46,17 @@ Abstract:
 #include "../exception/signal.hpp"
 #endif
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <pwd.h>
 #include <errno.h>
-#include <sys/types.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <pwd.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/param.h>
 #include <sys/resource.h>
 #include <sys/stat.h>
-#include <limits.h>
-#include <string.h>
-#include <fcntl.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #if defined(__APPLE__)
 #include <sys/sysctl.h>
@@ -74,7 +74,7 @@ using namespace CorUnix;
 // necessary prototype here
 //
 
-extern "C" BOOL CRTInitStdStreams( void );
+extern "C" BOOL CRTInitStdStreams(void);
 
 
 SET_DEFAULT_DEBUG_CHANNEL(PAL);
@@ -105,8 +105,7 @@ Return:
   -1 if it failed
 
 --*/
-static int
-Initialize()
+static int Initialize()
 {
     PAL_ERROR palError = ERROR_GEN_FAILURE;
     CPalThread *pThread = NULL;
@@ -118,10 +117,10 @@ Initialize()
     SetLastError(ERROR_GEN_FAILURE);
 
     // prevent un-reasonable stack limits. (otherwise affects mmap calls later)
-#if defined (_AMD64_) || defined (_M_ARM64)
-    const rlim_t maxStackSize = 8 * 1024 * 1024;   // CC Max stack size
+#if defined(_AMD64_) || defined(_M_ARM64)
+    const rlim_t maxStackSize = 8 * 1024 * 1024; // CC Max stack size
 #else
-    const rlim_t maxStackSize = 2 * 1024 * 1024;   // CC Max stack size
+    const rlim_t maxStackSize = 2 * 1024 * 1024; // CC Max stack size
 #endif
     struct rlimit rl;
     int err = getrlimit(RLIMIT_STACK, &rl);
@@ -137,18 +136,18 @@ Initialize()
     }
     CriticalSectionSubSysInitialize();
 
-    if(NULL == init_critsec)
+    if (NULL == init_critsec)
     {
         pthread_mutex_lock(&init_critsec_mutex); // prevents race condition of two threads
                                                  // initializing the critical section.
-        if(NULL == init_critsec)
+        if (NULL == init_critsec)
         {
             static CRITICAL_SECTION temp_critsec;
 
             // Want this critical section to NOT be internal to avoid the use of unsafe region markers.
             InternalInitializeCriticalSectionAndSpinCount(&temp_critsec, 0, false);
 
-            if(NULL != InterlockedCompareExchangePointer(&init_critsec, &temp_critsec, NULL))
+            if (NULL != InterlockedCompareExchangePointer(&init_critsec, &temp_critsec, NULL))
             {
                 // Another thread got in before us! shouldn't happen, if the PAL
                 // isn't initialized there shouldn't be any other threads
@@ -177,10 +176,11 @@ Initialize()
         if (VIRTUAL_PAGE_SIZE != getpagesize())
         {
             ASSERT("VIRTUAL_PAGE_SIZE is incorrect for this system!\n"
-                "Change include/pal/virtual.h and clr/src/inc/stdmacros.h "
-                "to reflect the correct page size of %d.\n", getpagesize());
+                   "Change include/pal/virtual.h and clr/src/inc/stdmacros.h "
+                   "to reflect the correct page size of %d.\n",
+                   getpagesize());
         }
-#endif  // _DEBUG
+#endif // _DEBUG
 
         /* initialize the shared memory infrastructure */
         if (!SHMInitialize())
@@ -251,8 +251,7 @@ Initialize()
         //
         // Initialize the synchronization manager
         //
-        g_pSynchronizationManager =
-            CPalSynchMgrController::CreatePalSynchronizationManager();
+        g_pSynchronizationManager = CPalSynchMgrController::CreatePalSynchronizationManager();
 
         if (NULL == g_pSynchronizationManager)
         {
@@ -281,7 +280,7 @@ Initialize()
         }
 
 #if !defined(__APPLE__)
-        if(!SEHInitializeSignals())
+        if (!SEHInitializeSignals())
         {
             goto CLEANUP5;
         }
@@ -303,7 +302,7 @@ Initialize()
         }
 
         /* create file objects for standard handles */
-        if(!FILEInitStdHandles())
+        if (!FILEInitStdHandles())
         {
             ERROR("Unable to initialize standard file handles\n");
             goto CLEANUP13;
@@ -392,12 +391,12 @@ Return:
 bool PAL_InitializeChakraCoreCalled = false;
 #endif
 
-int
-PAL_InitializeChakraCore()
+int PAL_InitializeChakraCore()
 {
     // this is not thread safe but PAL_InitializeChakraCore is per process
     // besides, calling Jsrt initializer function is thread safe
-    if (init_count > 0) return ERROR_SUCCESS;
+    if (init_count > 0)
+        return ERROR_SUCCESS;
 #if defined(DEBUG)
     PAL_InitializeChakraCoreCalled = true;
 #endif
@@ -429,8 +428,7 @@ PAL_IsDebuggerPresent
 Abstract:
 This function should be used to determine if a debugger is attached to the process.
 --*/
-BOOL
-PAL_IsDebuggerPresent()
+BOOL PAL_IsDebuggerPresent()
 {
 #if defined(__LINUX__)
     BOOL debugger_present = FALSE;
@@ -462,8 +460,8 @@ PAL_IsDebuggerPresent()
 #elif defined(__APPLE__)
     struct kinfo_proc info = {};
     size_t size = sizeof(info);
-    int mib[4] = { CTL_KERN, KERN_PROC, KERN_PROC_PID, getpid() };
-    int ret = sysctl(mib, sizeof(mib)/sizeof(*mib), &info, &size, NULL, 0);
+    int mib[4] = {CTL_KERN, KERN_PROC, KERN_PROC_PID, getpid()};
+    int ret = sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, NULL, 0);
 
     if (ret == 0)
         return ((info.kp_proc.p_flag & P_TRACED) != 0);
@@ -481,12 +479,7 @@ Function:
 Abstract:
   This function shuts down the PAL WITHOUT exiting the current process.
 --*/
-void
-PAL_Shutdown(
-    void)
-{
-    TerminateCurrentProcessNoExit();
-}
+void PAL_Shutdown(void) { TerminateCurrentProcessNoExit(); }
 
 /*++
 Function:
@@ -494,10 +487,7 @@ Function:
 
 Returns TRUE if startup has reached a point where thread data is available
 --*/
-BOOL PALIsThreadDataInitialized()
-{
-    return g_fThreadDataAvailable;
-}
+BOOL PALIsThreadDataInitialized() { return g_fThreadDataAvailable; }
 
 /*++
 Function:
@@ -506,8 +496,7 @@ Function:
 Utility function to prepare for shutdown.
 
 --*/
-void
-PALCommonCleanup()
+void PALCommonCleanup()
 {
     static bool cleanupDone = false;
 
@@ -539,10 +528,7 @@ Function:
 
 (no parameters, no retun vale)
 --*/
-void PALShutdown()
-{
-    init_count = 0;
-}
+void PALShutdown() { init_count = 0; }
 
 BOOL PALIsShuttingDown()
 {
@@ -577,13 +563,12 @@ Return value :
 --*/
 BOOL PALInitLock(void)
 {
-    if(!init_critsec)
+    if (!init_critsec)
     {
         return FALSE;
     }
 
-    CPalThread * pThread =
-        (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
+    CPalThread *pThread = (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
 
     InternalEnterCriticalSection(pThread, init_critsec);
     return TRUE;

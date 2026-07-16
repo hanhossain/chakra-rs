@@ -4,31 +4,17 @@
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
 
-void RuntimeThreadLocalData::Initialize(RuntimeThreadData* threadData)
-{
-    this->threadData = threadData;
-}
+void RuntimeThreadLocalData::Initialize(RuntimeThreadData *threadData) { this->threadData = threadData; }
 
-void RuntimeThreadLocalData::Uninitialize()
-{
-}
+void RuntimeThreadLocalData::Uninitialize() {}
 
 thread_local RuntimeThreadLocalData threadLocalData;
 
-RuntimeThreadLocalData& GetRuntimeThreadLocalData()
-{
-    return threadLocalData;
-}
+RuntimeThreadLocalData &GetRuntimeThreadLocalData() { return threadLocalData; }
 
 RuntimeThreadData::RuntimeThreadData() :
-    semaphore(std::nullopt),
-    hThread(nullptr),
-    sharedContent(nullptr),
-    receiveBroadcastCallbackFunc(nullptr),
-    runtime(nullptr),
-    context(nullptr),
-    parent(nullptr),
-    leaving(false)
+    semaphore(std::nullopt), hThread(nullptr), sharedContent(nullptr), receiveBroadcastCallbackFunc(nullptr),
+    runtime(nullptr), context(nullptr), parent(nullptr), leaving(false)
 {
     this->hevntInitialScriptCompleted = CreateEvent(NULL, TRUE, FALSE, NULL);
     this->hevntReceivedBroadcast = CreateEvent(NULL, FALSE, FALSE, NULL);
@@ -50,7 +36,7 @@ uint32_t RuntimeThreadData::ThreadProc()
 {
     JsValueRef scriptSource;
     JsValueRef fname;
-    const char* fullPath = "agent source";
+    const char *fullPath = "agent source";
     int32_t hr = S_OK;
 
     threadLocalData.Initialize(this);
@@ -66,13 +52,15 @@ uint32_t RuntimeThreadData::ThreadProc()
     }
 
 
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer((void*)this->initialSource.c_str(),
-        (unsigned int)this->initialSource.size(), nullptr, nullptr, &scriptSource));
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer((void *)this->initialSource.c_str(),
+                                                                    (unsigned int)this->initialSource.size(), nullptr,
+                                                                    nullptr, &scriptSource));
 
 
     ChakraRTInterface::JsCreateString(fullPath, strlen(fullPath), &fname);
 
-    ChakraRTInterface::JsRun(scriptSource, WScriptJsrt::GetNextSourceContext(), fname, JsParseScriptAttributeNone, nullptr);
+    ChakraRTInterface::JsRun(scriptSource, WScriptJsrt::GetNextSourceContext(), fname, JsParseScriptAttributeNone,
+                             nullptr);
 
     SetEvent(this->parent->hevntInitialScriptCompleted);
 
@@ -80,7 +68,7 @@ uint32_t RuntimeThreadData::ThreadProc()
 
     while (true)
     {
-        HANDLE handles[] = { this->hevntReceivedBroadcast, this->hevntShutdown };
+        HANDLE handles[] = {this->hevntReceivedBroadcast, this->hevntShutdown};
         uint32_t waitRet = WaitForMultipleObjects(std::size(handles), handles, false, INFINITE);
 
         if (waitRet == WAIT_OBJECT_0)

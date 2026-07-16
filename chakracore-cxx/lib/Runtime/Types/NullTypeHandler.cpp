@@ -9,25 +9,24 @@
 
 namespace Js
 {
-    int NullTypeHandlerBase::GetPropertyCount()
-    {
-        return 0;
-    }
+    int NullTypeHandlerBase::GetPropertyCount() { return 0; }
 
 
-    PropertyId NullTypeHandlerBase::GetPropertyId(ScriptContext* scriptContext, PropertyIndex index)
+    PropertyId NullTypeHandlerBase::GetPropertyId(ScriptContext *scriptContext, PropertyIndex index)
     {
         return Constants::NoProperty;
     }
 
-    PropertyId NullTypeHandlerBase::GetPropertyId(ScriptContext* scriptContext, BigPropertyIndex index)
+    PropertyId NullTypeHandlerBase::GetPropertyId(ScriptContext *scriptContext, BigPropertyIndex index)
     {
         return Constants::NoProperty;
     }
 
 
-    BOOL NullTypeHandlerBase::FindNextProperty(ScriptContext* scriptContext, PropertyIndex& index, JavascriptString** propertyString, PropertyId* propertyId,
-        PropertyAttributes* attributes, Type* type, DynamicType *typeToEnumerate, EnumeratorFlags flags, DynamicObject* instance, PropertyValueInfo* info)
+    BOOL NullTypeHandlerBase::FindNextProperty(ScriptContext *scriptContext, PropertyIndex &index,
+                                               JavascriptString **propertyString, PropertyId *propertyId,
+                                               PropertyAttributes *attributes, Type *type, DynamicType *typeToEnumerate,
+                                               EnumeratorFlags flags, DynamicObject *instance, PropertyValueInfo *info)
     {
         Assert(propertyString);
         Assert(propertyId);
@@ -36,13 +35,14 @@ namespace Js
     }
 
 
-    PropertyIndex NullTypeHandlerBase::GetPropertyIndex(PropertyRecord const* propertyRecord)
+    PropertyIndex NullTypeHandlerBase::GetPropertyIndex(PropertyRecord const *propertyRecord)
     {
         return Constants::NoSlot;
     }
 
 #if ENABLE_NATIVE_CODEGEN
-    bool NullTypeHandlerBase::GetPropertyEquivalenceInfo(PropertyRecord const* propertyRecord, PropertyEquivalenceInfo& info)
+    bool NullTypeHandlerBase::GetPropertyEquivalenceInfo(PropertyRecord const *propertyRecord,
+                                                         PropertyEquivalenceInfo &info)
     {
         info.slotIndex = Constants::NoSlot;
         info.isAuxSlot = false;
@@ -50,13 +50,14 @@ namespace Js
         return false;
     }
 
-    bool NullTypeHandlerBase::IsObjTypeSpecEquivalent(const Type* type, const TypeEquivalenceRecord& record, uint& failedPropertyIndex)
+    bool NullTypeHandlerBase::IsObjTypeSpecEquivalent(const Type *type, const TypeEquivalenceRecord &record,
+                                                      uint &failedPropertyIndex)
     {
         uint propertyCount = record.propertyCount;
-        EquivalentPropertyEntry* properties = record.properties;
+        EquivalentPropertyEntry *properties = record.properties;
         for (uint pi = 0; pi < propertyCount; pi++)
         {
-            const EquivalentPropertyEntry* refInfo = &properties[pi];
+            const EquivalentPropertyEntry *refInfo = &properties[pi];
             if (!this->NullTypeHandlerBase::IsObjTypeSpecEquivalent(type, refInfo))
             {
                 failedPropertyIndex = pi;
@@ -66,17 +67,18 @@ namespace Js
         return true;
     }
 
-    bool NullTypeHandlerBase::IsObjTypeSpecEquivalent(const Type* type, const EquivalentPropertyEntry *entry)
+    bool NullTypeHandlerBase::IsObjTypeSpecEquivalent(const Type *type, const EquivalentPropertyEntry *entry)
     {
         return entry->slotIndex == Constants::NoSlot && !entry->mustBeWritable;
     }
 #endif
 
-    BOOL NullTypeHandlerBase::HasProperty(DynamicObject* instance, PropertyId propertyId, __out_opt bool *noRedecl, _Inout_opt_ PropertyValueInfo* info)
+    BOOL NullTypeHandlerBase::HasProperty(DynamicObject *instance, PropertyId propertyId, __out_opt bool *noRedecl,
+                                          _Inout_opt_ PropertyValueInfo *info)
     {
         // Check numeric propertyId only if objectArray is available
         uint32_t indexVal;
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
 
         if (noRedecl != nullptr)
         {
@@ -92,19 +94,20 @@ namespace Js
     }
 
 
-    BOOL NullTypeHandlerBase::HasProperty(DynamicObject* instance, JavascriptString* propertyNameString)
+    BOOL NullTypeHandlerBase::HasProperty(DynamicObject *instance, JavascriptString *propertyNameString)
     {
-        PropertyRecord const* propertyRecord;
+        PropertyRecord const *propertyRecord;
         instance->GetScriptContext()->GetOrAddPropertyRecord(propertyNameString, &propertyRecord);
         return NullTypeHandlerBase::HasProperty(instance, propertyRecord->GetPropertyId());
     }
 
 
-    BOOL NullTypeHandlerBase::GetProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    BOOL NullTypeHandlerBase::GetProperty(DynamicObject *instance, Var originalInstance, PropertyId propertyId,
+                                          Var *value, PropertyValueInfo *info, ScriptContext *requestContext)
     {
         // Check numeric propertyId only if objectArray is available
         uint32_t indexVal;
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
             return DynamicTypeHandler::GetItem(instance, originalInstance, indexVal, value, requestContext);
@@ -115,47 +118,59 @@ namespace Js
     }
 
 
-    BOOL NullTypeHandlerBase::GetProperty(DynamicObject* instance, Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    BOOL NullTypeHandlerBase::GetProperty(DynamicObject *instance, Var originalInstance,
+                                          JavascriptString *propertyNameString, Var *value, PropertyValueInfo *info,
+                                          ScriptContext *requestContext)
     {
-        PropertyRecord const* propertyRecord;
+        PropertyRecord const *propertyRecord;
         instance->GetScriptContext()->GetOrAddPropertyRecord(propertyNameString, &propertyRecord);
-        return NullTypeHandlerBase::GetProperty(instance, originalInstance, propertyRecord->GetPropertyId(), value, info, requestContext);
+        return NullTypeHandlerBase::GetProperty(instance, originalInstance, propertyRecord->GetPropertyId(), value,
+                                                info, requestContext);
     }
 
 
-    BOOL NullTypeHandlerBase::SetProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL NullTypeHandlerBase::SetProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                          PropertyOperationFlags flags, PropertyValueInfo *info)
     {
         return ConvertToSimpleType(instance)->SetProperty(instance, propertyId, value, flags, info);
     }
 
 
-    BOOL NullTypeHandlerBase::SetProperty(DynamicObject* instance, JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL NullTypeHandlerBase::SetProperty(DynamicObject *instance, JavascriptString *propertyNameString, Var value,
+                                          PropertyOperationFlags flags, PropertyValueInfo *info)
     {
         return ConvertToSimpleType(instance)->SetProperty(instance, propertyNameString, value, flags, info);
     }
 
-    BOOL NullTypeHandlerBase::SetInternalProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags)
+    BOOL NullTypeHandlerBase::SetInternalProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                  PropertyOperationFlags flags)
     {
         return SetPropertyWithAttributes(instance, propertyId, value, PropertyInternalDefaults, nullptr, flags);
     }
 
-    BOOL NullTypeHandlerBase::AddProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
+    BOOL NullTypeHandlerBase::AddProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                          PropertyAttributes attributes, PropertyValueInfo *info,
+                                          PropertyOperationFlags flags, SideEffects possibleSideEffects)
     {
         if (this->isPrototype && (ChangeTypeOnProto() || (GetIsShared() && IsolatePrototypes())))
         {
-            ScriptContext* scriptContext = instance->GetScriptContext();
-            return ConvertToSimpleDictionaryType(instance)->AddProperty(instance, scriptContext->GetPropertyName(propertyId), value, attributes, info, flags, possibleSideEffects);
+            ScriptContext *scriptContext = instance->GetScriptContext();
+            return ConvertToSimpleDictionaryType(instance)->AddProperty(
+                instance, scriptContext->GetPropertyName(propertyId), value, attributes, info, flags,
+                possibleSideEffects);
         }
         else
         {
-            return ConvertToSimpleType(instance)->AddProperty(instance, propertyId, value, attributes, info, flags, possibleSideEffects);
+            return ConvertToSimpleType(instance)->AddProperty(instance, propertyId, value, attributes, info, flags,
+                                                              possibleSideEffects);
         }
     }
 
-    BOOL NullTypeHandlerBase::DeleteProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags flags)
+    BOOL NullTypeHandlerBase::DeleteProperty(DynamicObject *instance, PropertyId propertyId,
+                                             PropertyOperationFlags flags)
     {
         // Check numeric propertyId only if objectArray is available
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         uint32_t indexVal;
         if (instance->HasObjectArray() && scriptContext->IsNumericPropertyId(propertyId, &indexVal))
         {
@@ -166,78 +181,69 @@ namespace Js
     }
 
 
-    BOOL NullTypeHandlerBase::IsEnumerable(DynamicObject* instance, PropertyId propertyId)
-    {
-        return true;
-    }
+    BOOL NullTypeHandlerBase::IsEnumerable(DynamicObject *instance, PropertyId propertyId) { return true; }
 
 
-    BOOL NullTypeHandlerBase::IsWritable(DynamicObject* instance, PropertyId propertyId)
-    {
-        return true;
-    }
+    BOOL NullTypeHandlerBase::IsWritable(DynamicObject *instance, PropertyId propertyId) { return true; }
 
 
-    BOOL NullTypeHandlerBase::IsConfigurable(DynamicObject* instance, PropertyId propertyId)
-    {
-        return true;
-    }
+    BOOL NullTypeHandlerBase::IsConfigurable(DynamicObject *instance, PropertyId propertyId) { return true; }
 
 
-    BOOL NullTypeHandlerBase::SetEnumerable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    BOOL NullTypeHandlerBase::SetEnumerable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
         return false;
     }
 
 
-    BOOL NullTypeHandlerBase::SetWritable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    BOOL NullTypeHandlerBase::SetWritable(DynamicObject *instance, PropertyId propertyId, BOOL value) { return false; }
+
+
+    BOOL NullTypeHandlerBase::SetConfigurable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
         return false;
     }
 
 
-    BOOL NullTypeHandlerBase::SetConfigurable(DynamicObject* instance, PropertyId propertyId, BOOL value)
-    {
-        return false;
-    }
-
-
-    BOOL NullTypeHandlerBase::SetAccessors(DynamicObject* instance, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
+    BOOL NullTypeHandlerBase::SetAccessors(DynamicObject *instance, PropertyId propertyId, Var getter, Var setter,
+                                           PropertyOperationFlags flags)
     {
         return ConvertToDictionaryType(instance)->SetAccessors(instance, propertyId, getter, setter, flags);
     }
 
 
-    BOOL NullTypeHandlerBase::PreventExtensions(DynamicObject* instance)
+    BOOL NullTypeHandlerBase::PreventExtensions(DynamicObject *instance)
     {
         return ConvertToDictionaryType(instance)->PreventExtensions(instance);
     }
 
 
-    BOOL NullTypeHandlerBase::Seal(DynamicObject* instance)
+    BOOL NullTypeHandlerBase::Seal(DynamicObject *instance)
     {
         return ConvertToDictionaryType(instance)->Seal(instance);
     }
 
 
-    BOOL NullTypeHandlerBase::FreezeImpl(DynamicObject* instance, bool isConvertedType)
+    BOOL NullTypeHandlerBase::FreezeImpl(DynamicObject *instance, bool isConvertedType)
     {
         return ConvertToDictionaryType(instance)->Freeze(instance, true);
     }
 
     template <typename T>
-    T* NullTypeHandlerBase::ConvertToTypeHandler(DynamicObject* instance)
+    T *NullTypeHandlerBase::ConvertToTypeHandler(DynamicObject *instance)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        Recycler* recycler = scriptContext->GetRecycler();
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        Recycler *recycler = scriptContext->GetRecycler();
 
-        T * newTypeHandler = RecyclerNew(recycler, T, recycler);
+        T *newTypeHandler = RecyclerNew(recycler, T, recycler);
         Assert((newTypeHandler->GetFlags() & IsPrototypeFlag) == 0);
         // EnsureSlots before updating the type handler and instance, as EnsureSlots allocates and may throw.
         instance->EnsureSlots(0, newTypeHandler->GetSlotCapacity(), scriptContext, newTypeHandler);
         Assert(((this->GetFlags() & IsPrototypeFlag) != 0) == this->isPrototype);
         newTypeHandler->SetFlags(IsPrototypeFlag, this->GetFlags());
-        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection | PropertyTypesInlineSlotCapacityLocked | PropertyTypesHasSpecialProperties, this->GetPropertyTypes());
+        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection |
+                                             PropertyTypesInlineSlotCapacityLocked | PropertyTypesHasSpecialProperties,
+                                         this->GetPropertyTypes());
         if (instance->HasReadOnlyPropertiesInvisibleToTypeHandler())
         {
             newTypeHandler->ClearHasOnlyWritableDataProperties();
@@ -247,9 +253,9 @@ namespace Js
         return newTypeHandler;
     }
 
-    SimpleTypeHandler<1>* NullTypeHandlerBase::ConvertToSimpleType(DynamicObject* instance)
+    SimpleTypeHandler<1> *NullTypeHandlerBase::ConvertToSimpleType(DynamicObject *instance)
     {
-        SimpleTypeHandler<1>* newTypeHandler = ConvertToTypeHandler<SimpleTypeHandler<1>>(instance);
+        SimpleTypeHandler<1> *newTypeHandler = ConvertToTypeHandler<SimpleTypeHandler<1>>(instance);
 
 #ifdef PROFILE_TYPES
         instance->GetScriptContext()->convertNullToSimpleCount++;
@@ -258,9 +264,9 @@ namespace Js
     }
 
 
-    SimpleDictionaryTypeHandler * NullTypeHandlerBase::ConvertToSimpleDictionaryType(DynamicObject * instance)
+    SimpleDictionaryTypeHandler *NullTypeHandlerBase::ConvertToSimpleDictionaryType(DynamicObject *instance)
     {
-        SimpleDictionaryTypeHandler* newTypeHandler = ConvertToTypeHandler<SimpleDictionaryTypeHandler>(instance);
+        SimpleDictionaryTypeHandler *newTypeHandler = ConvertToTypeHandler<SimpleDictionaryTypeHandler>(instance);
 
 #ifdef PROFILE_TYPES
         instance->GetScriptContext()->convertNullToSimpleDictionaryCount++;
@@ -269,9 +275,9 @@ namespace Js
     }
 
 
-    DictionaryTypeHandler * NullTypeHandlerBase::ConvertToDictionaryType(DynamicObject * instance)
+    DictionaryTypeHandler *NullTypeHandlerBase::ConvertToDictionaryType(DynamicObject *instance)
     {
-        DictionaryTypeHandler* newTypeHandler = ConvertToTypeHandler<DictionaryTypeHandler>(instance);
+        DictionaryTypeHandler *newTypeHandler = ConvertToTypeHandler<DictionaryTypeHandler>(instance);
 
 #ifdef PROFILE_TYPES
         instance->GetScriptContext()->convertNullToDictionaryCount++;
@@ -280,9 +286,9 @@ namespace Js
     }
 
 
-    ES5ArrayTypeHandler* NullTypeHandlerBase::ConvertToES5ArrayType(DynamicObject * instance)
+    ES5ArrayTypeHandler *NullTypeHandlerBase::ConvertToES5ArrayType(DynamicObject *instance)
     {
-        ES5ArrayTypeHandler* newTypeHandler = ConvertToTypeHandler<ES5ArrayTypeHandler>(instance);
+        ES5ArrayTypeHandler *newTypeHandler = ConvertToTypeHandler<ES5ArrayTypeHandler>(instance);
 
 #ifdef PROFILE_TYPES
         instance->GetScriptContext()->convertNullToDictionaryCount++;
@@ -291,7 +297,9 @@ namespace Js
     }
 
 
-    BOOL NullTypeHandlerBase::SetPropertyWithAttributes(DynamicObject* instance, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
+    BOOL NullTypeHandlerBase::SetPropertyWithAttributes(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                        PropertyAttributes attributes, PropertyValueInfo *info,
+                                                        PropertyOperationFlags flags, SideEffects possibleSideEffects)
     {
         // Always check numeric propertyId. May create objectArray.
         uint32_t indexVal;
@@ -304,59 +312,69 @@ namespace Js
     }
 
 
-    BOOL NullTypeHandlerBase::SetAttributes(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attributes)
+    BOOL NullTypeHandlerBase::SetAttributes(DynamicObject *instance, PropertyId propertyId,
+                                            PropertyAttributes attributes)
     {
         return false;
     }
 
 
-    BOOL NullTypeHandlerBase::GetAttributesWithPropertyIndex(DynamicObject * instance, PropertyId propertyId, BigPropertyIndex index, PropertyAttributes * attributes)
+    BOOL NullTypeHandlerBase::GetAttributesWithPropertyIndex(DynamicObject *instance, PropertyId propertyId,
+                                                             BigPropertyIndex index, PropertyAttributes *attributes)
     {
         return false;
     }
 
 
-    DynamicTypeHandler* NullTypeHandlerBase::ConvertToTypeWithItemAttributes(DynamicObject* instance)
+    DynamicTypeHandler *NullTypeHandlerBase::ConvertToTypeWithItemAttributes(DynamicObject *instance)
     {
-        return JavascriptArray::IsNonES5Array(instance) ?
-            ConvertToES5ArrayType(instance) : ConvertToDictionaryType(instance);
+        return JavascriptArray::IsNonES5Array(instance) ? ConvertToES5ArrayType(instance)
+                                                        : ConvertToDictionaryType(instance);
     }
 
-    void NullTypeHandlerBase::SetIsPrototype(DynamicObject* instance)
+    void NullTypeHandlerBase::SetIsPrototype(DynamicObject *instance)
     {
         if (!this->isPrototype)
         {
-            // We don't force a type transition even when ChangeTypeOnProto() == true, because objects with NullTypeHandlers don't
-            // have any properties, so there is nothing to invalidate.  Types with NullTypeHandlers also aren't cached in typeWithoutProperty
-            // caches, so there will be no fast property add path that could skip prototype cache invalidation.
-            NullTypeHandler<true>* protoTypeHandler = NullTypeHandler<true>::GetDefaultInstance();
-            AssertMsg(protoTypeHandler->GetFlags() == (GetFlags() | IsPrototypeFlag), "Why did we change the flags of a NullTypeHandler?");
+            // We don't force a type transition even when ChangeTypeOnProto() == true, because objects with
+            // NullTypeHandlers don't have any properties, so there is nothing to invalidate.  Types with
+            // NullTypeHandlers also aren't cached in typeWithoutProperty caches, so there will be no fast property add
+            // path that could skip prototype cache invalidation.
+            NullTypeHandler<true> *protoTypeHandler = NullTypeHandler<true>::GetDefaultInstance();
+            AssertMsg(protoTypeHandler->GetFlags() == (GetFlags() | IsPrototypeFlag),
+                      "Why did we change the flags of a NullTypeHandler?");
             Assert(this->GetIsInlineSlotCapacityLocked() == protoTypeHandler->GetIsInlineSlotCapacityLocked());
-            protoTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection | PropertyTypesHasSpecialProperties, GetPropertyTypes());
+            protoTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection |
+                                                   PropertyTypesHasSpecialProperties,
+                                               GetPropertyTypes());
             SetInstanceTypeHandler(instance, protoTypeHandler);
         }
     }
 
-    template<bool IsPrototypeTemplate>
+    template <bool IsPrototypeTemplate>
     NullTypeHandler<IsPrototypeTemplate> NullTypeHandler<IsPrototypeTemplate>::defaultInstance;
 
-    template<bool IsPrototypeTemplate>
-    NullTypeHandler<IsPrototypeTemplate> * NullTypeHandler<IsPrototypeTemplate>::GetDefaultInstance() { return &defaultInstance; }
+    template <bool IsPrototypeTemplate>
+    NullTypeHandler<IsPrototypeTemplate> *NullTypeHandler<IsPrototypeTemplate>::GetDefaultInstance()
+    {
+        return &defaultInstance;
+    }
 
-    template<bool IsPrototypeTemplate>
-    DynamicTypeHandler * NullTypeHandler<IsPrototypeTemplate>::Clone(Recycler * recycler)
+    template <bool IsPrototypeTemplate>
+    DynamicTypeHandler *NullTypeHandler<IsPrototypeTemplate>::Clone(Recycler *recycler)
     {
         return RecyclerNew(recycler, NullTypeHandler, this);
     }
 
 #if DBG_DUMP
-    template<bool IsPrototypeTemplate>
+    template <bool IsPrototypeTemplate>
     void NullTypeHandler<IsPrototypeTemplate>::Dump(unsigned indent) const
     {
-        Output::Print(u"%*sNullTypeHandler<%d> (0x%p): Dump unimplemented\n", indent, u"", static_cast<int>(IsPrototypeTemplate), this);
+        Output::Print(u"%*sNullTypeHandler<%d> (0x%p): Dump unimplemented\n", indent, u"",
+                      static_cast<int>(IsPrototypeTemplate), this);
     }
 #endif
 
     template class NullTypeHandler<false>;
     template class NullTypeHandler<true>;
-}
+} // namespace Js

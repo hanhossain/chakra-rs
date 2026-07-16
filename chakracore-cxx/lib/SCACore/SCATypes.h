@@ -5,17 +5,13 @@
 
 #pragma once
 
-#define SCA_FORMAT_MAJOR  1
-#define SCA_FORMAT_MINOR  0
+#define SCA_FORMAT_MAJOR 1
+#define SCA_FORMAT_MINOR 0
 #define SCA_FORMAT_VERSION (MAKELONG(0, MAKEWORD(SCA_FORMAT_MINOR, SCA_FORMAT_MAJOR)))
 
-inline uint8_t GetSCAMajor(uint32_t x)
-{
-    return x >> 24;
-}
+inline uint8_t GetSCAMajor(uint32_t x) { return x >> 24; }
 
-typedef
-enum SCATypeId
+typedef enum SCATypeId
 {
     SCA_None = 0,
     SCA_Reference = 1,
@@ -67,17 +63,18 @@ enum SCATypeId
     SCA_WebCryptoKeyObject = 106,
     SCA_MessagePort = 107,
     SCA_Last = (SCA_MessagePort + 1)
-}   SCATypeId;
+} SCATypeId;
 
 typedef unsigned int scaposition_t;
 
 #define SCA_PROPERTY_TERMINATOR 0xFFFFFFFF
 #define IsSCAPrimitive(scaTypeId) ((scaTypeId) <= SCA_LastPrimitive)
 #define IsSCAHostObject(scaTypeId) ((scaTypeId) >= SCA_FirstHostObject)
-#define IsSCATypedArray(scaTypeId) ((scaTypeId) == SCA_Uint8ClampedArray || ((scaTypeId) >= SCA_TypedArrayMin && (scaTypeId) <= SCA_TypedArrayMax))
-#define FACILITY_SCA            FACILITY_ITF
-#define E_SCA_UNSUPPORTED       MAKE_HRESULT(SEVERITY_ERROR, FACILITY_SCA, 0x1000)
-#define E_SCA_NEWVERSION        MAKE_HRESULT(SEVERITY_ERROR, FACILITY_SCA, 0x1001)
-#define E_SCA_DATACORRUPT       MAKE_HRESULT(SEVERITY_ERROR, FACILITY_SCA, 0x1002)
-#define E_SCA_TRANSFERABLE_UNSUPPORTED       MAKE_HRESULT(SEVERITY_ERROR, FACILITY_SCA, 0x1003)
-#define E_SCA_TRANSFERABLE_NEUTERED       MAKE_HRESULT(SEVERITY_ERROR, FACILITY_SCA, 0x1004)
+#define IsSCATypedArray(scaTypeId)                                                                                     \
+    ((scaTypeId) == SCA_Uint8ClampedArray || ((scaTypeId) >= SCA_TypedArrayMin && (scaTypeId) <= SCA_TypedArrayMax))
+#define FACILITY_SCA FACILITY_ITF
+#define E_SCA_UNSUPPORTED MAKE_HRESULT(SEVERITY_ERROR, FACILITY_SCA, 0x1000)
+#define E_SCA_NEWVERSION MAKE_HRESULT(SEVERITY_ERROR, FACILITY_SCA, 0x1001)
+#define E_SCA_DATACORRUPT MAKE_HRESULT(SEVERITY_ERROR, FACILITY_SCA, 0x1002)
+#define E_SCA_TRANSFERABLE_UNSUPPORTED MAKE_HRESULT(SEVERITY_ERROR, FACILITY_SCA, 0x1003)
+#define E_SCA_TRANSFERABLE_NEUTERED MAKE_HRESULT(SEVERITY_ERROR, FACILITY_SCA, 0x1004)

@@ -7,152 +7,171 @@
 
 namespace Wasm
 {
-namespace Simd
-{
-bool IsEnabled()
-{
-#ifdef ENABLE_WASM_SIMD
-    return CONFIG_FLAG_RELEASE(WasmSimd);
-#else
-    return false;
-#endif
-}
-
-}
-
-namespace Threads
-{
-bool IsEnabled()
-{
-#ifdef ENABLE_WASM
-    return CONFIG_FLAG(WasmThreads) && CONFIG_FLAG(ESSharedArrayBuffer);
-#else
-    return false;
-#endif
-}
-}
-
-namespace WasmNontrapping
-{
-    bool IsEnabled()
+    namespace Simd
     {
-#ifdef ENABLE_WASM
-        return CONFIG_FLAG(WasmNontrapping);
+        bool IsEnabled()
+        {
+#ifdef ENABLE_WASM_SIMD
+            return CONFIG_FLAG_RELEASE(WasmSimd);
 #else
-        return false;
+            return false;
 #endif
-    }
-}
+        }
 
-namespace SignExtends
-{
-bool IsEnabled()
-{
+    } // namespace Simd
+
+    namespace Threads
+    {
+        bool IsEnabled()
+        {
 #ifdef ENABLE_WASM
-    return CONFIG_FLAG(WasmSignExtends);
+            return CONFIG_FLAG(WasmThreads) && CONFIG_FLAG(ESSharedArrayBuffer);
 #else
-    return false;
+            return false;
 #endif
-}
-}
+        }
+    } // namespace Threads
 
-}
+    namespace WasmNontrapping
+    {
+        bool IsEnabled()
+        {
+#ifdef ENABLE_WASM
+            return CONFIG_FLAG(WasmNontrapping);
+#else
+            return false;
+#endif
+        }
+    } // namespace WasmNontrapping
+
+    namespace SignExtends
+    {
+        bool IsEnabled()
+        {
+#ifdef ENABLE_WASM
+            return CONFIG_FLAG(WasmSignExtends);
+#else
+            return false;
+#endif
+        }
+    } // namespace SignExtends
+
+} // namespace Wasm
 
 
 #ifdef ENABLE_WASM
 
 namespace Wasm
 {
-namespace Simd
-{
-void EnsureSimdIsEnabled()
-{
-    if (!Wasm::Simd::IsEnabled())
+    namespace Simd
     {
-        throw WasmCompilationException(u"Wasm.Simd support is not enabled");
-    }
-}
-}
+        void EnsureSimdIsEnabled()
+        {
+            if (!Wasm::Simd::IsEnabled())
+            {
+                throw WasmCompilationException(u"Wasm.Simd support is not enabled");
+            }
+        }
+    } // namespace Simd
 
-namespace WasmTypes
-{
-
-bool IsLocalType(WasmTypes::WasmType type)
-{
-    // Check if type in range ]Void,Limit[
-#ifdef ENABLE_WASM_SIMD
-    if (type == WasmTypes::V128 && !Simd::IsEnabled())
+    namespace WasmTypes
     {
-        return false;
-    }
-#endif
-    return type >= WasmTypes::FirstLocalType && type < WasmTypes::Limit;
-}
 
-uint32_t GetTypeByteSize(WasmType type)
-{
-    switch (type)
+        bool IsLocalType(WasmTypes::WasmType type)
+        {
+            // Check if type in range ]Void,Limit[
+#ifdef ENABLE_WASM_SIMD
+            if (type == WasmTypes::V128 && !Simd::IsEnabled())
+            {
+                return false;
+            }
+#endif
+            return type >= WasmTypes::FirstLocalType && type < WasmTypes::Limit;
+        }
+
+        uint32_t GetTypeByteSize(WasmType type)
+        {
+            switch (type)
+            {
+            case Void:
+                return sizeof(Js::Var);
+            case I32:
+                return sizeof(int32_t);
+            case I64:
+                return sizeof(long);
+            case F32:
+                return sizeof(float);
+            case F64:
+                return sizeof(double);
+#ifdef ENABLE_WASM_SIMD
+            case V128:
+                Simd::EnsureSimdIsEnabled();
+                static_assert(sizeof(Simd::simdvec) == 16);
+                return sizeof(Simd::simdvec);
+#endif
+            case Ptr:
+                return sizeof(void *);
+            default:
+                Js::Throw::InternalError();
+            }
+        }
+
+        const char16_t *GetTypeName(WasmType type)
+        {
+            switch (type)
+            {
+            case WasmTypes::WasmType::Void:
+                return u"void";
+            case WasmTypes::WasmType::I32:
+                return u"i32";
+            case WasmTypes::WasmType::I64:
+                return u"i64";
+            case WasmTypes::WasmType::F32:
+                return u"f32";
+            case WasmTypes::WasmType::F64:
+                return u"f64";
+#ifdef ENABLE_WASM_SIMD
+            case WasmTypes::WasmType::V128:
+                Simd::EnsureSimdIsEnabled();
+                return u"m128";
+#endif
+            case WasmTypes::WasmType::Any:
+                return u"any";
+            default:
+                Assert(UNREACHED);
+                break;
+            }
+            return u"unknown";
+        }
+
+    } // namespace WasmTypes
+
+    WasmTypes::WasmType LanguageTypes::ToWasmType(int8_t binType)
     {
-    case Void: return sizeof(Js::Var);
-    case I32: return sizeof(int32_t);
-    case I64: return sizeof(long);
-    case F32: return sizeof(float);
-    case F64: return sizeof(double);
+        switch (binType)
+        {
+        case LanguageTypes::i32:
+            return WasmTypes::I32;
+        case LanguageTypes::i64:
+            return WasmTypes::I64;
+        case LanguageTypes::f32:
+            return WasmTypes::F32;
+        case LanguageTypes::f64:
+            return WasmTypes::F64;
 #ifdef ENABLE_WASM_SIMD
-    case V128:
-        Simd::EnsureSimdIsEnabled();
-        static_assert(sizeof(Simd::simdvec) == 16);
-        return sizeof(Simd::simdvec);
+        case LanguageTypes::v128:
+            Simd::EnsureSimdIsEnabled();
+            return WasmTypes::V128;
 #endif
-    case Ptr: return sizeof(void*);
-    default:
-        Js::Throw::InternalError();
+        default:
+            throw WasmCompilationException(u"Invalid binary type %d", binType);
+        }
     }
-}
 
-const char16_t * GetTypeName(WasmType type)
-{
-    switch (type) {
-    case WasmTypes::WasmType::Void: return u"void";
-    case WasmTypes::WasmType::I32: return u"i32";
-    case WasmTypes::WasmType::I64: return u"i64";
-    case WasmTypes::WasmType::F32: return u"f32";
-    case WasmTypes::WasmType::F64: return u"f64";
-#ifdef ENABLE_WASM_SIMD
-    case WasmTypes::WasmType::V128: 
-        Simd::EnsureSimdIsEnabled();
-        return u"m128";
-#endif
-    case WasmTypes::WasmType::Any: return u"any";
-    default: Assert(UNREACHED); break;
-    }
-    return u"unknown";
-}
-
-} // namespace WasmTypes
-
-WasmTypes::WasmType LanguageTypes::ToWasmType(int8_t binType)
-{
-    switch (binType)
+    bool FunctionIndexTypes::CanBeExported(FunctionIndexTypes::Type funcType)
     {
-    case LanguageTypes::i32: return WasmTypes::I32;
-    case LanguageTypes::i64: return WasmTypes::I64;
-    case LanguageTypes::f32: return WasmTypes::F32;
-    case LanguageTypes::f64: return WasmTypes::F64;
-#ifdef ENABLE_WASM_SIMD
-    case LanguageTypes::v128:
-        Simd::EnsureSimdIsEnabled();
-        return WasmTypes::V128;
-#endif
-    default:
-        throw WasmCompilationException(u"Invalid binary type %d", binType);
+        return funcType == FunctionIndexTypes::Function || funcType == FunctionIndexTypes::ImportThunk;
     }
-}
-
-bool FunctionIndexTypes::CanBeExported(FunctionIndexTypes::Type funcType)
-{
-    return funcType == FunctionIndexTypes::Function || funcType == FunctionIndexTypes::ImportThunk;
-}
 
 } // namespace Wasm
 #endif // ENABLE_WASM

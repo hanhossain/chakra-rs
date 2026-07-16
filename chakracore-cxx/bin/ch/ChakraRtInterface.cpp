@@ -12,11 +12,11 @@ bool ChakraRTInterface::m_testHooksSetup = false;
 bool ChakraRTInterface::m_testHooksInitialized = false;
 bool ChakraRTInterface::m_usageStringPrinted = false;
 
-ChakraRTInterface::ArgInfo* ChakraRTInterface::m_argInfo = nullptr;
-TestHooks ChakraRTInterface::m_testHooks = { 0 };
+ChakraRTInterface::ArgInfo *ChakraRTInterface::m_argInfo = nullptr;
+TestHooks ChakraRTInterface::m_testHooks = {0};
 
 /*static*/
-bool ChakraRTInterface::LoadChakraDll(ArgInfo* argInfo)
+bool ChakraRTInterface::LoadChakraDll(ArgInfo *argInfo)
 {
     m_argInfo = argInfo;
     return true;
@@ -47,7 +47,7 @@ int32_t ChakraRTInterface::ParseConfigFlags()
         m_argInfo->filename_.clear();
         Assert(m_testHooks.pfGetFilenameFlag != nullptr);
 
-        char16_t* fileNameWide = nullptr;
+        char16_t *fileNameWide = nullptr;
         hr = GetFileNameFlag(&fileNameWide);
 
         if (hr != S_OK)
@@ -73,7 +73,7 @@ int32_t ChakraRTInterface::ParseConfigFlags()
 }
 
 /*static*/
-int32_t ChakraRTInterface::InitializeTestHooks(TestHooks& testHooks)
+int32_t ChakraRTInterface::InitializeTestHooks(TestHooks &testHooks)
 {
     if (!m_testHooksInitialized)
     {

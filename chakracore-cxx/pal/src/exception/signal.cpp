@@ -31,12 +31,12 @@ Abstract:
 #include "pal/palinternal.h"
 
 #include "pal/dbgmsg.h"
+#include "pal/debug.h"
 #include "pal/init.h"
 #include "pal/process.h"
-#include "pal/debug.h"
 
-#include <signal.h>
 #include <errno.h>
+#include <signal.h>
 #include <string.h>
 #include <sys/ucontext.h>
 #include <sys/utsname.h>
@@ -68,8 +68,7 @@ static void sigsegv_handler(int code, siginfo_t *siginfo, void *context);
 static void sigtrap_handler(int code, siginfo_t *siginfo, void *context);
 static void sigbus_handler(int code, siginfo_t *siginfo, void *context);
 
-static void common_signal_handler(PEXCEPTION_POINTERS pointers, int code,
-                                  native_context_t *ucontext);
+static void common_signal_handler(PEXCEPTION_POINTERS pointers, int code, native_context_t *ucontext);
 
 static void inject_activation_handler(int code, siginfo_t *siginfo, void *context);
 
@@ -185,7 +184,7 @@ static void sigill_handler(int code, siginfo_t *siginfo, void *context)
         EXCEPTION_POINTERS pointers;
         native_context_t *ucontext;
 
-        ucontext = static_cast<native_context_t*>(context);
+        ucontext = static_cast<native_context_t *>(context);
 
         record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
@@ -230,7 +229,7 @@ static void sigfpe_handler(int code, siginfo_t *siginfo, void *context)
         EXCEPTION_POINTERS pointers;
         native_context_t *ucontext;
 
-        ucontext = static_cast<native_context_t*>(context);
+        ucontext = static_cast<native_context_t *>(context);
 
         record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
@@ -274,7 +273,7 @@ static void sigsegv_handler(int code, siginfo_t *siginfo, void *context)
         EXCEPTION_RECORD record;
         EXCEPTION_POINTERS pointers;
 
-        native_context_t *ucontext = static_cast<native_context_t*>(context);
+        native_context_t *ucontext = static_cast<native_context_t *>(context);
 
         record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
@@ -327,7 +326,7 @@ static void sigtrap_handler(int code, siginfo_t *siginfo, void *context)
         EXCEPTION_POINTERS pointers;
         native_context_t *ucontext;
 
-        ucontext = static_cast<native_context_t*>(context);
+        ucontext = static_cast<native_context_t *>(context);
 
         record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
@@ -373,7 +372,7 @@ static void sigbus_handler(int code, siginfo_t *siginfo, void *context)
         EXCEPTION_POINTERS pointers;
         native_context_t *ucontext;
 
-        ucontext = static_cast<native_context_t*>(context);
+        ucontext = static_cast<native_context_t *>(context);
 
         record.ExceptionCode = CONTEXTGetExceptionCodeForSignal(siginfo);
         record.ExceptionFlags = EXCEPTION_IS_SIGNAL;
@@ -428,13 +427,10 @@ static void inject_activation_handler([[maybe_unused]] int code, siginfo_t *sigi
         {
             assert(g_safeActivationCheckFunction != NULL);
 
-            native_context_t *ucontext = static_cast<native_context_t*>(context);
+            native_context_t *ucontext = static_cast<native_context_t *>(context);
 
             CONTEXT winContext;
-            CONTEXTFromNativeContext(
-                ucontext,
-                &winContext,
-                CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_POINT);
+            CONTEXTFromNativeContext(ucontext, &winContext, CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_POINT);
 
             if (g_safeActivationCheckFunction(CONTEXTGetPC(&winContext), true))
             {
@@ -463,7 +459,7 @@ void SEHSetSafeState(CPalThread *pthrCurrent, BOOL state)
 {
     if (NULL == pthrCurrent)
     {
-        ASSERT( "Unable to get the thread object.\n" );
+        ASSERT("Unable to get the thread object.\n");
         return;
     }
     pthrCurrent->sehInfo.safe_state = state;
@@ -485,7 +481,7 @@ BOOL SEHGetSafeState(CPalThread *pthrCurrent)
 {
     if (NULL == pthrCurrent)
     {
-        ASSERT( "Unable to get the thread object.\n" );
+        ASSERT("Unable to get the thread object.\n");
         return FALSE;
     }
     return pthrCurrent->sehInfo.safe_state;
@@ -507,8 +503,7 @@ Note:
     the "pointers" parameter should contain a valid exception record pointer,
     but the contextrecord pointer will be overwritten.
 --*/
-static void common_signal_handler(PEXCEPTION_POINTERS pointers, int code,
-                                  native_context_t *ucontext)
+static void common_signal_handler(PEXCEPTION_POINTERS pointers, int code, native_context_t *ucontext)
 {
     sigset_t signal_set;
     CONTEXT context;
@@ -527,7 +522,7 @@ static void common_signal_handler(PEXCEPTION_POINTERS pointers, int code,
     /* Unmask signal so we can receive it again */
     sigemptyset(&signal_set);
     sigaddset(&signal_set, code);
-    if(-1 == sigprocmask(SIG_UNBLOCK, &signal_set, NULL))
+    if (-1 == sigprocmask(SIG_UNBLOCK, &signal_set, NULL))
     {
         ASSERT("sigprocmask failed; error is %d (%s)\n", errno, strerror(errno));
     }
@@ -564,8 +559,7 @@ void handle_signal(int signal_id, SIGFUNC sigfunc, struct sigaction *previousAct
 
     if (-1 == sigaction(signal_id, &newAction, previousAction))
     {
-        ASSERT("handle_signal: sigaction() call failed with error code %d (%s)\n",
-            errno, strerror(errno));
+        ASSERT("handle_signal: sigaction() call failed with error code %d (%s)\n", errno, strerror(errno));
     }
 }
 
@@ -585,8 +579,7 @@ void restore_signal(int signal_id, struct sigaction *previousAction)
 {
     if (-1 == sigaction(signal_id, previousAction, NULL))
     {
-        ASSERT("restore_signal: sigaction() call failed with error code %d (%s)\n",
-            errno, strerror(errno));
+        ASSERT("restore_signal: sigaction() call failed with error code %d (%s)\n", errno, strerror(errno));
     }
 }
 

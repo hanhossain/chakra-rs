@@ -13,42 +13,35 @@ private:
 
     static unsigned int s_messageCount;
 
-    MessageBase(const MessageBase&);
+    MessageBase(const MessageBase &);
 
 public:
-    MessageBase(unsigned int time) : m_time(time), m_id(s_messageCount++) { }
-    virtual ~MessageBase() { }
+    MessageBase(unsigned int time) : m_time(time), m_id(s_messageCount++) {}
+    virtual ~MessageBase() {}
 
     void BeginTimer() { m_time += GetTickCount(); };
     unsigned int GetTime() { return m_time; };
     unsigned int GetId() { return m_id; };
 
-    virtual int32_t Call(const char * fileName) = 0;
+    virtual int32_t Call(const char *fileName) = 0;
 };
 
 template <typename T>
-class SortedList 
+class SortedList
 {
     template <typename U>
     struct DListNode
     {
         U data;
-        DListNode<U>* prev;
-        DListNode<U>* next;
+        DListNode<U> *prev;
+        DListNode<U> *next;
 
     public:
-        DListNode(const U& data) :
-            data(data),
-            prev(nullptr),
-            next(nullptr)
-        { }
+        DListNode(const U &data) : data(data), prev(nullptr), next(nullptr) {}
     };
 
 public:
-    SortedList():
-        head(nullptr)
-    {
-    }
+    SortedList() : head(nullptr) {}
 
     ~SortedList()
     {
@@ -61,11 +54,11 @@ public:
     // Scan through the sorted list
     // Insert before the first node that satisfies the LessThan function
     // This function maintains the invariant that the list is always sorted
-    void Insert(const T& data)
+    void Insert(const T &data)
     {
-        DListNode<T>* curr = head;
-        DListNode<T>* node = new DListNode<T>(data);
-        DListNode<T>* prev = nullptr; 
+        DListNode<T> *curr = head;
+        DListNode<T> *node = new DListNode<T>(data);
+        DListNode<T> *prev = nullptr;
 
         // Now, if we have to insert, we have to insert *after* some node
         while (curr != nullptr)
@@ -91,7 +84,7 @@ public:
     template <typename PredicateFn>
     void Remove(PredicateFn fn)
     {
-        DListNode<T>* node = head;
+        DListNode<T> *node = head;
 
         while (node != nullptr)
         {
@@ -113,13 +106,10 @@ public:
         }
     }
 
-    bool IsEmpty()
-    {
-        return head == nullptr;
-    }
+    bool IsEmpty() { return head == nullptr; }
 
 private:
-    void Remove(DListNode<T>* node)
+    void Remove(DListNode<T> *node)
     {
         if (node->prev == nullptr)
         {
@@ -138,7 +128,7 @@ private:
         delete node;
     }
 
-    void InsertAfter(DListNode<T>* newNode, DListNode<T>* node)
+    void InsertAfter(DListNode<T> *newNode, DListNode<T> *node)
     {
         // If the list is empty, just set head to newNode
         if (head == nullptr)
@@ -169,7 +159,7 @@ private:
         node->next = newNode;
     }
 
-    DListNode<T>* head;
+    DListNode<T> *head;
 };
 
 class MessageQueue
@@ -177,17 +167,11 @@ class MessageQueue
     struct ListEntry
     {
         unsigned int time;
-        MessageBase* message;
+        MessageBase *message;
 
-        ListEntry(unsigned int time, MessageBase* message):
-            time(time),
-            message(message)
-        { }
+        ListEntry(unsigned int time, MessageBase *message) : time(time), message(message) {}
 
-        static bool LessThan(const ListEntry& first, const ListEntry& second)
-        {
-            return first.time < second.time;
-        }
+        static bool LessThan(const ListEntry &first, const ListEntry &second) { return first.time < second.time; }
     };
 
     SortedList<ListEntry> m_queue;
@@ -200,7 +184,7 @@ public:
         m_queue.Insert(ListEntry(time, message));
     }
 
-    MessageBase* PopAndWait()
+    MessageBase *PopAndWait()
     {
         Assert(!m_queue.IsEmpty());
 
@@ -208,7 +192,7 @@ public:
         MessageBase *tmp = entry.message;
 
         int waitTime = tmp->GetTime() - GetTickCount();
-        if(waitTime > 0)
+        if (waitTime > 0)
         {
             Sleep(waitTime);
         }
@@ -216,39 +200,39 @@ public:
         return tmp;
     }
 
-    bool IsEmpty()
-    {
-        return m_queue.IsEmpty();
-    }
+    bool IsEmpty() { return m_queue.IsEmpty(); }
 
     void RemoveById(unsigned int id)
     {
         // Search for the message with the correct id, and delete it. Can be updated
         // to a hash to improve speed, if necessary.
-        m_queue.Remove([id](const ListEntry& entry) 
-        {
-            MessageBase *msg = entry.message;
-            if(msg->GetId() == id)
+        m_queue.Remove(
+            [id](const ListEntry &entry)
             {
-                delete msg;
-                return true;
-            }
+                MessageBase *msg = entry.message;
+                if (msg->GetId() == id)
+                {
+                    delete msg;
+                    return true;
+                }
 
-            return false;
-        });
+                return false;
+            });
     }
 
     void RemoveAll()
     {
-        m_queue.RemoveAll([](const ListEntry& entry) { 
-            MessageBase* msg = entry.message;
-            delete msg;
-        });
+        m_queue.RemoveAll(
+            [](const ListEntry &entry)
+            {
+                MessageBase *msg = entry.message;
+                delete msg;
+            });
     }
 
-    int32_t ProcessAll(const char * fileName)
+    int32_t ProcessAll(const char *fileName)
     {
-        while(!IsEmpty())
+        while (!IsEmpty())
         {
             MessageBase *msg = PopAndWait();
 
@@ -272,12 +256,9 @@ private:
     Func m_func;
 
 public:
-    CustomMessage(unsigned int time, JsValueRef customArg, const Func& func) :
-        CustomBase(time, customArg), m_func(func)
-    {}
-
-    virtual int32_t Call(const char * fileName) override
+    CustomMessage(unsigned int time, JsValueRef customArg, const Func &func) : CustomBase(time, customArg), m_func(func)
     {
-        return m_func(*this);
     }
+
+    virtual int32_t Call(const char *fileName) override { return m_func(*this); }
 };

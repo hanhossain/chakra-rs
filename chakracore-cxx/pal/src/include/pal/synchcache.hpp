@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -12,7 +12,7 @@ Module Name:
     include/pal/synchcache.hpp
 
 Abstract:
-    Simple look-aside cache for unused objects with default 
+    Simple look-aside cache for unused objects with default
     constructor or no constructor
 
 
@@ -22,22 +22,23 @@ Abstract:
 #ifndef _SYNCH_CACHE_H_
 #define _SYNCH_CACHE_H_
 
-#include "pal/thread.hpp"
 #include <new>
+#include "pal/thread.hpp"
 
 namespace CorUnix
-{    
-    template <typename T> class CSynchCache
+{
+    template <typename T>
+    class CSynchCache
     {
         typedef union _USynchCacheStackNode
         {
-            union _USynchCacheStackNode * next;
+            union _USynchCacheStackNode *next;
             uint8_t objraw[sizeof(T)];
-        } USynchCacheStackNode;    
+        } USynchCacheStackNode;
 
         static const int MaxDepth = 256;
-                
-        Volatile<USynchCacheStackNode*> m_pHead;
+
+        Volatile<USynchCacheStackNode *> m_pHead;
         CRITICAL_SECTION m_cs;
         Volatile<int> m_iDepth;
         int m_iMaxDepth;
@@ -45,20 +46,17 @@ namespace CorUnix
         int m_iMaxTrackedDepth;
 #endif
 
-        void Lock(CPalThread * pthrCurrent) 
-            { InternalEnterCriticalSection(pthrCurrent, &m_cs); }
-        void Unlock(CPalThread * pthrCurrent) 
-            { InternalLeaveCriticalSection(pthrCurrent, &m_cs); }
-        
-     public:    
-        CSynchCache(int iMaxDepth = MaxDepth) :             
-            m_pHead(NULL),
-            m_iDepth(0),
-            m_iMaxDepth(iMaxDepth)
+        void Lock(CPalThread *pthrCurrent) { InternalEnterCriticalSection(pthrCurrent, &m_cs); }
+        void Unlock(CPalThread *pthrCurrent) { InternalLeaveCriticalSection(pthrCurrent, &m_cs); }
+
+    public:
+        CSynchCache(int iMaxDepth = MaxDepth) :
+            m_pHead(NULL), m_iDepth(0), m_iMaxDepth(iMaxDepth)
 #ifdef _DEBUG
-            ,m_iMaxTrackedDepth(0)
+            ,
+            m_iMaxTrackedDepth(0)
 #endif
-        { 
+        {
             InternalInitializeCriticalSection(&m_cs);
             if (m_iMaxDepth < 0)
             {
@@ -67,34 +65,34 @@ namespace CorUnix
         }
 
         ~CSynchCache()
-        {        
+        {
             Flush(NULL, true);
-            InternalDeleteCriticalSection(&m_cs); 
+            InternalDeleteCriticalSection(&m_cs);
         }
-           
+
 #ifdef _DEBUG
         int GetMaxTrackedDepth() { return m_iMaxTrackedDepth; }
 #endif
 
-        T * Get(CPalThread * pthrCurrent)
-        {          
-            T * pObj = NULL;
+        T *Get(CPalThread *pthrCurrent)
+        {
+            T *pObj = NULL;
 
             Get(pthrCurrent, 1, &pObj);
             return pObj;
         }
 
-        int Get(CPalThread * pthrCurrent, int n, T ** ppObjs)
+        int Get(CPalThread *pthrCurrent, int n, T **ppObjs)
         {
-            void * pvObjRaw;
-            USynchCacheStackNode * pNode;
-            int i = 0,j;
+            void *pvObjRaw;
+            USynchCacheStackNode *pNode;
+            int i = 0, j;
 
             Lock(pthrCurrent);
             pNode = m_pHead;
             while (pNode && i < n)
             {
-                ppObjs[i] = reinterpret_cast<T*>(pNode);
+                ppObjs[i] = reinterpret_cast<T *>(pNode);
                 pNode = pNode->next;
                 i++;
             }
@@ -109,35 +107,35 @@ namespace CorUnix
                 // which causes template instatiation in the header
                 // where the DEBUG CHANNEL is not defined and cannot
                 // be defined
-                fprintf(stderr,"SYNCCACHE: Invalid cache depth value");
+                fprintf(stderr, "SYNCCACHE: Invalid cache depth value");
                 DebugBreak();
             }
 #endif // _DEBUG
 
             Unlock(pthrCurrent);
 
-            for (j=i;j<n;j++)
+            for (j = i; j < n; j++)
             {
-                pvObjRaw = static_cast<void*>(new USynchCacheStackNode());
+                pvObjRaw = static_cast<void *>(new USynchCacheStackNode());
                 if (NULL == pvObjRaw)
                     break;
 #ifdef _DEBUG
                 memset(pvObjRaw, 0, sizeof(USynchCacheStackNode));
 #endif
-                ppObjs[j] = reinterpret_cast<T*>(pvObjRaw);
+                ppObjs[j] = reinterpret_cast<T *>(pvObjRaw);
             }
 
-            for (i=0;i<j;i++)
+            for (i = 0; i < j; i++)
             {
-                new (static_cast<void*>(ppObjs[i])) T;
+                new (static_cast<void *>(ppObjs[i])) T;
             }
 
             return j;
         }
 
-        void Add(CPalThread * pthrCurrent, T * pobj)
+        void Add(CPalThread *pthrCurrent, T *pobj)
         {
-            USynchCacheStackNode * pNode = reinterpret_cast<USynchCacheStackNode *>(pobj);
+            USynchCacheStackNode *pNode = reinterpret_cast<USynchCacheStackNode *>(pobj);
 
             if (NULL == pobj)
             {
@@ -145,7 +143,7 @@ namespace CorUnix
             }
 
             pobj->T::~T();
-            
+
             Lock(pthrCurrent);
             if (m_iDepth < m_iMaxDepth)
             {
@@ -161,14 +159,14 @@ namespace CorUnix
             }
             else
             {
-                delete reinterpret_cast<char*>(pNode);
+                delete reinterpret_cast<char *>(pNode);
             }
             Unlock(pthrCurrent);
         }
 
-        void Flush(CPalThread * pthrCurrent, bool fDontLock = false)
+        void Flush(CPalThread *pthrCurrent, bool fDontLock = false)
         {
-            USynchCacheStackNode * pNode, * pTemp;
+            USynchCacheStackNode *pNode, *pTemp;
 
             if (!fDontLock)
             {
@@ -191,28 +189,29 @@ namespace CorUnix
         }
     };
 
-    template <typename T> class CSHRSynchCache
+    template <typename T>
+    class CSHRSynchCache
     {
         union _USHRSynchCacheStackNode; // fwd declaration
         typedef struct _SHRCachePTRs
         {
-            union _USHRSynchCacheStackNode * pNext;
+            union _USHRSynchCacheStackNode *pNext;
             SharedID shrid;
-        } SHRCachePTRs;        
+        } SHRCachePTRs;
         typedef union _USHRSynchCacheStackNode
         {
-            SHRCachePTRs  pointers;
+            SHRCachePTRs pointers;
             uint8_t objraw[sizeof(T)];
-        } USHRSynchCacheStackNode;    
+        } USHRSynchCacheStackNode;
 
-        static const int MaxDepth       = 256;
-        static const int PreAllocFactor = 10; // Everytime a Get finds no available 
-                                              // cached raw intances, it preallocates  
-                                              // MaxDepth/PreAllocFactor new raw 
-                                              // instances and store them into the 
+        static const int MaxDepth = 256;
+        static const int PreAllocFactor = 10; // Everytime a Get finds no available
+                                              // cached raw intances, it preallocates
+                                              // MaxDepth/PreAllocFactor new raw
+                                              // instances and store them into the
                                               // cache before continuing
-        
-        Volatile<USHRSynchCacheStackNode*> m_pHead;
+
+        Volatile<USHRSynchCacheStackNode *> m_pHead;
         CRITICAL_SECTION m_cs;
         Volatile<int> m_iDepth;
         int m_iMaxDepth;
@@ -220,38 +219,35 @@ namespace CorUnix
         int m_iMaxTrackedDepth;
 #endif
 
-        void Lock(CPalThread * pthrCurrent) 
-            { InternalEnterCriticalSection(pthrCurrent, &m_cs); }
-        void Unlock(CPalThread * pthrCurrent) 
-            { InternalLeaveCriticalSection(pthrCurrent, &m_cs); }
-        
-     public:    
-        CSHRSynchCache(int iMaxDepth = MaxDepth) : 
-            m_pHead(NULL),
-            m_iDepth(0),
-            m_iMaxDepth(iMaxDepth)
+        void Lock(CPalThread *pthrCurrent) { InternalEnterCriticalSection(pthrCurrent, &m_cs); }
+        void Unlock(CPalThread *pthrCurrent) { InternalLeaveCriticalSection(pthrCurrent, &m_cs); }
+
+    public:
+        CSHRSynchCache(int iMaxDepth = MaxDepth) :
+            m_pHead(NULL), m_iDepth(0), m_iMaxDepth(iMaxDepth)
 #ifdef _DEBUG
-            ,m_iMaxTrackedDepth(0)
+            ,
+            m_iMaxTrackedDepth(0)
 #endif
-        { 
+        {
             InternalInitializeCriticalSection(&m_cs);
             if (m_iMaxDepth < 0)
             {
                 m_iMaxDepth = 0;
-            }            
+            }
         }
 
         ~CSHRSynchCache()
-        {        
+        {
             Flush(NULL, true);
-            InternalDeleteCriticalSection(&m_cs); 
+            InternalDeleteCriticalSection(&m_cs);
         }
 
 #ifdef _DEBUG
         int GetMaxTrackedDepth() { return m_iMaxTrackedDepth; }
 #endif
 
-        SharedID Get(CPalThread * pthrCurrent)
+        SharedID Get(CPalThread *pthrCurrent)
         {
             SharedID shridObj = NULLSharedID;
 
@@ -259,19 +255,19 @@ namespace CorUnix
             return shridObj;
         }
 
-        int Get(CPalThread * pthrCurrent, int n, SharedID * shridpObjs)
+        int Get(CPalThread *pthrCurrent, int n, SharedID *shridpObjs)
         {
             SharedID shridObj;
-            void * pvObjRaw = NULL;
-            USHRSynchCacheStackNode * pNode;
+            void *pvObjRaw = NULL;
+            USHRSynchCacheStackNode *pNode;
             int i = 0, j, k;
 
             Lock(pthrCurrent);
             pNode = m_pHead;
             while (pNode && i < n)
-            {            
+            {
                 shridpObjs[i] = pNode->pointers.shrid;
-                pvObjRaw = static_cast<void*>(pNode);
+                pvObjRaw = static_cast<void *>(pNode);
                 pNode = pNode->pointers.pNext;
                 i++;
             }
@@ -281,16 +277,16 @@ namespace CorUnix
 #ifdef _DEBUG
             if (NULL == m_pHead && m_iDepth != 0)
             {
-                    // Can't use ASSERT here, since this is header
-                    // (see comment above)
-                    fprintf(stderr,"SYNCCACHE: Invalid cache depth value");
-                    DebugBreak();
+                // Can't use ASSERT here, since this is header
+                // (see comment above)
+                fprintf(stderr, "SYNCCACHE: Invalid cache depth value");
+                DebugBreak();
             }
 #endif // _DEBUG
 
             if (0 == m_iDepth)
             {
-                for (k=0; k<m_iMaxDepth/PreAllocFactor-n+i; k++)
+                for (k = 0; k < m_iMaxDepth / PreAllocFactor - n + i; k++)
                 {
                     shridObj = RawSharedObjectAlloc(sizeof(USHRSynchCacheStackNode), DefaultSharedPool);
                     if (NULLSharedID == shridObj)
@@ -300,7 +296,7 @@ namespace CorUnix
                     }
                     pNode = SharedIDToTypePointer(USHRSynchCacheStackNode, shridObj);
 #ifdef _DEBUG
-                    memset(reinterpret_cast<void*>(pNode), 0, sizeof(USHRSynchCacheStackNode));
+                    memset(reinterpret_cast<void *>(pNode), 0, sizeof(USHRSynchCacheStackNode));
 #endif
                     pNode->pointers.shrid = shridObj;
                     pNode->pointers.pNext = m_pHead;
@@ -309,43 +305,43 @@ namespace CorUnix
                 }
             }
 
-            Unlock(pthrCurrent);       
+            Unlock(pthrCurrent);
 
-            for (j=i;j<n;j++)
+            for (j = i; j < n; j++)
             {
                 shridObj = RawSharedObjectAlloc(sizeof(USHRSynchCacheStackNode), DefaultSharedPool);
                 if (NULLSharedID == shridObj)
                     break;
 #ifdef _DEBUG
-                pvObjRaw = SharedIDToPointer(shridObj);                
-                memset(pvObjRaw, 0, sizeof(USHRSynchCacheStackNode));                
+                pvObjRaw = SharedIDToPointer(shridObj);
+                memset(pvObjRaw, 0, sizeof(USHRSynchCacheStackNode));
 #endif
                 shridpObjs[j] = shridObj;
             }
-            
-            for (i=0;i<j;i++)
-            {           
-                pvObjRaw = SharedIDToPointer(shridpObjs[i]);                
-                new (pvObjRaw) T;            
+
+            for (i = 0; i < j; i++)
+            {
+                pvObjRaw = SharedIDToPointer(shridpObjs[i]);
+                new (pvObjRaw) T;
             }
-            
+
             return j;
         }
 
-        void Add(CPalThread * pthrCurrent, SharedID shridObj)
+        void Add(CPalThread *pthrCurrent, SharedID shridObj)
         {
             if (NULLSharedID == shridObj)
             {
                 return;
             }
 
-            USHRSynchCacheStackNode * pNode = SharedIDToTypePointer(USHRSynchCacheStackNode, shridObj);
-            T * pObj = reinterpret_cast<T *>(pNode);
+            USHRSynchCacheStackNode *pNode = SharedIDToTypePointer(USHRSynchCacheStackNode, shridObj);
+            T *pObj = reinterpret_cast<T *>(pNode);
 
             pObj->T::~T();
-            
+
             pNode->pointers.shrid = shridObj;
-            
+
             Lock(pthrCurrent);
             if (m_iDepth < m_iMaxDepth)
             {
@@ -363,12 +359,12 @@ namespace CorUnix
             {
                 RawSharedObjectFree(shridObj);
             }
-            Unlock(pthrCurrent);       
+            Unlock(pthrCurrent);
         }
 
-        void Flush(CPalThread * pthrCurrent, bool fDontLock = false)
+        void Flush(CPalThread *pthrCurrent, bool fDontLock = false)
         {
-            USHRSynchCacheStackNode * pNode, * pTemp;
+            USHRSynchCacheStackNode *pNode, *pTemp;
             SharedID shridTemp;
 
             if (!fDontLock)
@@ -382,17 +378,16 @@ namespace CorUnix
             {
                 Unlock(pthrCurrent);
             }
-            
+
             while (pNode)
             {
                 pTemp = pNode;
                 pNode = pNode->pointers.pNext;
                 shridTemp = pTemp->pointers.shrid;
                 RawSharedObjectFree(shridTemp);
-            } 
-        }    
+            }
+        }
     };
-}
+} // namespace CorUnix
 
 #endif // _SYNCH_CACHE_H_
-

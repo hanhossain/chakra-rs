@@ -3,21 +3,21 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "SCACorePch.h"
 #include <cstdint>
+#include "SCACorePch.h"
 
 namespace Js
 {
     template <class Reader>
-    bool DeserializationCloner<Reader>::TryClonePrimitive(SrcTypeId typeId, Src src, Dst* dst)
+    bool DeserializationCloner<Reader>::TryClonePrimitive(SrcTypeId typeId, Src src, Dst *dst)
     {
         if (!IsSCAPrimitive(typeId))
         {
             return false;
         }
 
-        ScriptContext* scriptContext = this->GetScriptContext();
-        JavascriptLibrary* lib = scriptContext->GetLibrary();
+        ScriptContext *scriptContext = this->GetScriptContext();
+        JavascriptLibrary *lib = scriptContext->GetLibrary();
 
         switch (typeId)
         {
@@ -92,10 +92,10 @@ namespace Js
     }
 
     template <class Reader>
-    bool DeserializationCloner<Reader>::TryCloneObject(SrcTypeId typeId, Src src, Dst* dst, SCADeepCloneType* deepClone)
+    bool DeserializationCloner<Reader>::TryCloneObject(SrcTypeId typeId, Src src, Dst *dst, SCADeepCloneType *deepClone)
     {
-        ScriptContext* scriptContext = this->GetScriptContext();
-        JavascriptLibrary* lib = scriptContext->GetLibrary();
+        ScriptContext *scriptContext = this->GetScriptContext();
+        JavascriptLibrary *lib = scriptContext->GetLibrary();
         *deepClone = SCADeepCloneType::None;
 
         if (typeId == SCA_Transferable)
@@ -122,9 +122,9 @@ namespace Js
         switch (typeId)
         {
         case SCA_StringValue: // Clone string value as object type to resolve multiple references
-            {               
+            {
                 charcount_t len;
-                const char16_t* buf = ReadString(&len);
+                const char16_t *buf = ReadString(&len);
                 *dst = Js::JavascriptString::NewWithBuffer(buf, len, scriptContext);
             }
             break;
@@ -156,7 +156,7 @@ namespace Js
         case SCA_StringObject:
             {
                 charcount_t len;
-                const char16_t* buf = ReadString(&len);
+                const char16_t *buf = ReadString(&len);
                 *dst = lib->CreateStringObject(buf, len);
             }
             break;
@@ -164,12 +164,12 @@ namespace Js
         case SCA_RegExpObject:
             {
                 charcount_t len;
-                const char16_t* buf = ReadString(&len);
+                const char16_t *buf = ReadString(&len);
 
                 uint32_t flags;
                 m_reader->Read(&flags);
-                *dst = JavascriptRegExp::CreateRegEx(buf, len,
-                    static_cast<UnifiedRegex::RegexFlags>(flags), scriptContext);
+                *dst = JavascriptRegExp::CreateRegEx(buf, len, static_cast<UnifiedRegex::RegexFlags>(flags),
+                                                     scriptContext);
             }
             break;
 
@@ -208,7 +208,7 @@ namespace Js
             {
                 uint32_t len;
                 m_reader->Read(&len);
-                ArrayBuffer* arrayBuffer = lib->CreateArrayBuffer(len);
+                ArrayBuffer *arrayBuffer = lib->CreateArrayBuffer(len);
                 Read(arrayBuffer->GetBuffer(), arrayBuffer->GetByteLength());
                 *dst = arrayBuffer;
             }
@@ -216,60 +216,60 @@ namespace Js
 
         case SCA_SharedArrayBuffer:
             {
-                SharedContents * sharedContents;
-                m_reader->Read(reinterpret_cast<intptr_t*>(&sharedContents));
+                SharedContents *sharedContents;
+                m_reader->Read(reinterpret_cast<intptr_t *>(&sharedContents));
 
-                SharedArrayBuffer* arrayBuffer = lib->CreateSharedArrayBuffer(sharedContents);
+                SharedArrayBuffer *arrayBuffer = lib->CreateSharedArrayBuffer(sharedContents);
                 Assert(arrayBuffer->IsWebAssemblyArrayBuffer() == sharedContents->IsWebAssembly());
                 *dst = arrayBuffer;
             }
             break;
 
-//#ifdef ENABLE_WASM
-//        case SCA_WebAssemblyModule:
-//        {
-//            uint32_t len;
-//            m_reader->Read(&len);
-//            byte* buffer = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), byte, len);
-//            Read(buffer, len);
-//            WebAssemblySource wasmSrc(buffer, len, true, scriptContext);
-//            *dst = WebAssemblyModule::CreateModule(scriptContext, &wasmSrc);
-//            break;
-//        }
-//        case SCA_WebAssemblyMemory:
-//        {
-//            uint32_t initialLength = 0;
-//            uint32_t maximumLength = 0;
-//            uint32_t isShared = 0;
-//            m_reader->Read(&initialLength);
-//            m_reader->Read(&maximumLength);
-//
-//#ifdef ENABLE_WASM_THREADS
-//            m_reader->Read(&isShared);
-//            if (isShared)
-//            {
-//                SharedContents * sharedContents;
-//                m_reader->Read((intptr_t*)&sharedContents);
-//                *dst = WebAssemblyMemory::CreateFromSharedContents(initialLength, maximumLength, sharedContents, scriptContext);
-//            }
-//            else
-//#endif
-//            {
-//                uint32_t len;
-//                m_reader->Read(&len);
-//                WebAssemblyMemory* mem = WebAssemblyMemory::CreateForExistingBuffer(initialLength, maximumLength, len, scriptContext);
-//                Read(mem->GetBuffer()->GetBuffer(), len);
-//                *dst = mem;
-//            }
-//            break;
-//        }
-//#endif
+            // #ifdef ENABLE_WASM
+            //         case SCA_WebAssemblyModule:
+            //         {
+            //             uint32_t len;
+            //             m_reader->Read(&len);
+            //             byte* buffer = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), byte, len);
+            //             Read(buffer, len);
+            //             WebAssemblySource wasmSrc(buffer, len, true, scriptContext);
+            //             *dst = WebAssemblyModule::CreateModule(scriptContext, &wasmSrc);
+            //             break;
+            //         }
+            //         case SCA_WebAssemblyMemory:
+            //         {
+            //             uint32_t initialLength = 0;
+            //             uint32_t maximumLength = 0;
+            //             uint32_t isShared = 0;
+            //             m_reader->Read(&initialLength);
+            //             m_reader->Read(&maximumLength);
+            //
+            // #ifdef ENABLE_WASM_THREADS
+            //             m_reader->Read(&isShared);
+            //             if (isShared)
+            //             {
+            //                 SharedContents * sharedContents;
+            //                 m_reader->Read((intptr_t*)&sharedContents);
+            //                 *dst = WebAssemblyMemory::CreateFromSharedContents(initialLength, maximumLength,
+            //                 sharedContents, scriptContext);
+            //             }
+            //             else
+            // #endif
+            //             {
+            //                 uint32_t len;
+            //                 m_reader->Read(&len);
+            //                 WebAssemblyMemory* mem = WebAssemblyMemory::CreateForExistingBuffer(initialLength,
+            //                 maximumLength, len, scriptContext); Read(mem->GetBuffer()->GetBuffer(), len); *dst = mem;
+            //             }
+            //             break;
+            //         }
+            // #endif
 
         case SCA_Uint8ClampedArray:
             // If Khronos Interop is not enabled, we don't have Uint8ClampedArray available.
-            // This is a scenario where the source buffer was created in a newer document mode 
-            // but needs to be deserialized in an older document mode. 
-            // What we want to do is return the buffer as a CanvasPixelArray instead of 
+            // This is a scenario where the source buffer was created in a newer document mode
+            // but needs to be deserialized in an older document mode.
+            // What we want to do is return the buffer as a CanvasPixelArray instead of
             // Uint8ClampedArray since the older document mode knows what CanvasPixelArray is but
             // not what Uint8ClampedArray is.
             // We don't support pixelarray in edge anymore.
@@ -301,7 +301,7 @@ namespace Js
     void DeserializationCloner<Reader>::CloneProperties(SrcTypeId typeId, Src src, Dst dst)
     {
         // ScriptContext* scriptContext = GetScriptContext();
-        RecyclableObject* obj = VarTo<RecyclableObject>(dst);
+        RecyclableObject *obj = VarTo<RecyclableObject>(dst);
 
         if (obj->IsExternal()) // Read host object properties
         {
@@ -312,7 +312,7 @@ namespace Js
             // Read array index named properties
             if (typeId == SCA_DenseArray)
             {
-                JavascriptArray* arr = JavascriptArray::FromAnyArray(obj); // (might be ES5Array if -ForceES5Array)
+                JavascriptArray *arr = JavascriptArray::FromAnyArray(obj); // (might be ES5Array if -ForceES5Array)
                 uint32_t length = arr->GetLength();
                 for (uint32_t i = 0; i < length; i++)
                 {
@@ -320,13 +320,13 @@ namespace Js
                     this->GetEngine()->Clone(m_reader->GetPosition(), &value);
                     if (value)
                     {
-                        arr->DirectSetItemAt(i, value); //Note: no prototype check
+                        arr->DirectSetItemAt(i, value); // Note: no prototype check
                     }
                 }
             }
             else if (typeId == SCA_SparseArray)
             {
-                JavascriptArray* arr = JavascriptArray::FromAnyArray(obj); // (might be ES5Array if -ForceES5Array)
+                JavascriptArray *arr = JavascriptArray::FromAnyArray(obj); // (might be ES5Array if -ForceES5Array)
                 while (true)
                 {
                     uint32_t i;
@@ -343,7 +343,7 @@ namespace Js
                         this->ThrowSCADataCorrupt();
                     }
 
-                    arr->DirectSetItemAt(i, value); //Note: no prototype check
+                    arr->DirectSetItemAt(i, value); // Note: no prototype check
                 }
             }
 
@@ -355,7 +355,7 @@ namespace Js
     template <class Reader>
     void DeserializationCloner<Reader>::CloneMap(Src src, Dst dst)
     {
-        JavascriptMap* map = VarTo<JavascriptMap>(dst);
+        JavascriptMap *map = VarTo<JavascriptMap>(dst);
 
         int32_t size;
         m_reader->Read(&size);
@@ -384,7 +384,7 @@ namespace Js
     template <class Reader>
     void DeserializationCloner<Reader>::CloneSet(Src src, Dst dst)
     {
-        JavascriptSet* set = VarTo<JavascriptSet>(dst);
+        JavascriptSet *set = VarTo<JavascriptSet>(dst);
 
         int32_t size;
         m_reader->Read(&size);
@@ -408,7 +408,7 @@ namespace Js
     {
         Assert(FALSE); // Should never call this. Object reference handled explictly.
     }
-    
+
     //
     // Try to read a SCAString layout in the form of: [byteLen] [string content] [padding].
     // SCAString is also used for property name in object layout. In case of property terminator,
@@ -417,7 +417,7 @@ namespace Js
     // If buffer is not null and the size is appropriate, will try reusing it
     //
     template <class Reader>
-    const char16_t* DeserializationCloner<Reader>::TryReadString(charcount_t* len, bool reuseBuffer) const
+    const char16_t *DeserializationCloner<Reader>::TryReadString(charcount_t *len, bool reuseBuffer) const
     {
         // m_buffer is allocated on GC heap and stored in a regular field.
         // that is ok since 'this' is always a stack instance.
@@ -438,13 +438,13 @@ namespace Js
         else
         {
             charcount_t newLen = byteLen / sizeof(char16_t);
-            char16_t* buf;
+            char16_t *buf;
 
             if (reuseBuffer)
             {
                 if (this->m_bufferLength < newLen)
                 {
-                    Recycler* recycler = this->GetScriptContext()->GetRecycler();
+                    Recycler *recycler = this->GetScriptContext()->GetRecycler();
                     this->m_buffer = RecyclerNewArrayLeaf(recycler, char16_t, newLen + 1);
                     this->m_bufferLength = newLen;
                 }
@@ -453,7 +453,7 @@ namespace Js
             }
             else
             {
-                Recycler* recycler = this->GetScriptContext()->GetRecycler();
+                Recycler *recycler = this->GetScriptContext()->GetRecycler();
                 buf = RecyclerNewArrayLeaf(recycler, char16_t, newLen + 1);
             }
 
@@ -477,9 +477,9 @@ namespace Js
     // Throw if seeing SCA_PROPERTY_TERMINATOR.
     //
     template <class Reader>
-    const char16_t* DeserializationCloner<Reader>::ReadString(charcount_t* len) const
+    const char16_t *DeserializationCloner<Reader>::ReadString(charcount_t *len) const
     {
-        const char16_t* str = TryReadString(len, false);
+        const char16_t *str = TryReadString(len, false);
 
         if (str == nullptr)
         {
@@ -493,7 +493,7 @@ namespace Js
     // Read bytes data: [bytes] [padding]
     //
     template <class Reader>
-    void DeserializationCloner<Reader>::Read(uint8_t* buf, uint32_t len) const
+    void DeserializationCloner<Reader>::Read(uint8_t *buf, uint32_t len) const
     {
         m_reader->Read(buf, len);
 
@@ -509,7 +509,7 @@ namespace Js
     // Read a TypedArray or DataView.
     //
     template <class Reader>
-    void DeserializationCloner<Reader>::ReadTypedArray(SrcTypeId typeId, Dst* dst) const
+    void DeserializationCloner<Reader>::ReadTypedArray(SrcTypeId typeId, Dst *dst) const
     {
         switch (typeId)
         {
@@ -561,9 +561,9 @@ namespace Js
 
     template class DeserializationCloner<StreamReader>;
 
-    Var SCADeserializationEngine::Deserialize(StreamReader* reader, Var* transferableVars, size_t cTransferableVars)
+    Var SCADeserializationEngine::Deserialize(StreamReader *reader, Var *transferableVars, size_t cTransferableVars)
     {
-        ScriptContext* scriptContext = reader->GetScriptContext();
+        ScriptContext *scriptContext = reader->GetScriptContext();
         StreamDeserializationCloner cloner(scriptContext, reader);
 
         // Read version
@@ -573,7 +573,8 @@ namespace Js
         {
             cloner.ThrowSCANewVersion();
         }
-        Var value = SCAEngine<scaposition_t, Var, StreamDeserializationCloner>::Clone(reader->GetPosition(), &cloner, transferableVars, cTransferableVars);
+        Var value = SCAEngine<scaposition_t, Var, StreamDeserializationCloner>::Clone(
+            reader->GetPosition(), &cloner, transferableVars, cTransferableVars);
         if (!value)
         {
             cloner.ThrowSCADataCorrupt();
@@ -581,4 +582,4 @@ namespace Js
 
         return value;
     }
-}
+} // namespace Js

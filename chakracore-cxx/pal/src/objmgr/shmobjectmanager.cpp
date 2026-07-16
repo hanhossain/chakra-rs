@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -18,13 +18,13 @@ Abstract:
 
 --*/
 
-#include <string>
 #include "shmobjectmanager.hpp"
-#include "shmobject.hpp"
+#include <string>
 #include "pal/cs.hpp"
-#include "pal/thread.hpp"
-#include "pal/procobj.hpp"
 #include "pal/dbgmsg.h"
+#include "pal/procobj.hpp"
+#include "pal/thread.hpp"
+#include "shmobject.hpp"
 
 SET_DEFAULT_DEBUG_CHANNEL(PAL);
 
@@ -32,14 +32,9 @@ SET_DEFAULT_DEBUG_CHANNEL(PAL);
 
 using namespace CorUnix;
 
-IPalObjectManager * CorUnix::g_pObjectManager;
+IPalObjectManager *CorUnix::g_pObjectManager;
 
-static
-PAL_ERROR
-CheckObjectTypeAndRights(
-    IPalObject *pobj,
-    CAllowedObjectTypes *paot
-);
+static PAL_ERROR CheckObjectTypeAndRights(IPalObject *pobj, CAllowedObjectTypes *paot);
 
 /*++
 Function:
@@ -52,9 +47,7 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::Initialize(
-    void
-    )
+CSharedMemoryObjectManager::Initialize(void)
 {
     PAL_ERROR palError = NO_ERROR;
 
@@ -67,7 +60,7 @@ CSharedMemoryObjectManager::Initialize(
     palError = m_HandleManager.Initialize();
 
     LOGEXIT("CSharedMemoryObjectManager::Initialize returns %d", palError);
-    
+
     return palError;
 }
 
@@ -84,15 +77,13 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::Shutdown(
-    CPalThread *pthr
-    )
+CSharedMemoryObjectManager::Shutdown(CPalThread *pthr)
 {
     PLIST_ENTRY ple;
     CSharedMemoryObject *pshmobj;
 
     assert(NULL != pthr);
-    
+
     InternalEnterCriticalSection(pthr, &m_csListLock);
     SHMLock();
 
@@ -114,7 +105,7 @@ CSharedMemoryObjectManager::Shutdown(
     InternalLeaveCriticalSection(pthr, &m_csListLock);
 
     LOGEXIT("CSharedMemoryObjectManager::Shutdown returns %d\n", NO_ERROR);
-    
+
     return NO_ERROR;
 }
 
@@ -132,12 +123,9 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::AllocateObject(
-    CPalThread *pthr,
-    CObjectType *pot,
-    CObjectAttributes *poa,
-    IPalObject **ppobjNew            // OUT
-    )
+CSharedMemoryObjectManager::AllocateObject(CPalThread *pthr, CObjectType *pot, CObjectAttributes *poa,
+                                           IPalObject **ppobjNew // OUT
+)
 {
     PAL_ERROR palError = NO_ERROR;
     CSharedMemoryObject *pshmobj = NULL;
@@ -161,7 +149,7 @@ CSharedMemoryObjectManager::AllocateObject(
         palError = pshmobj->Initialize(pthr, poa);
         if (NO_ERROR == palError)
         {
-            *ppobjNew = static_cast<IPalObject*>(pshmobj);
+            *ppobjNew = static_cast<IPalObject *>(pshmobj);
         }
     }
     else
@@ -200,17 +188,14 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::RegisterObject(
-    CPalThread *pthr,
-    IPalObject *pobjToRegister,
-    CAllowedObjectTypes *paot,
-    uint32_t dwRightsRequested,
-    HANDLE *pHandle,                 // OUT
-    IPalObject **ppobjRegistered     // OUT
-    )
+CSharedMemoryObjectManager::RegisterObject(CPalThread *pthr, IPalObject *pobjToRegister, CAllowedObjectTypes *paot,
+                                           uint32_t dwRightsRequested,
+                                           HANDLE *pHandle, // OUT
+                                           IPalObject **ppobjRegistered // OUT
+)
 {
     PAL_ERROR palError = NO_ERROR;
-    CSharedMemoryObject *pshmobj = static_cast<CSharedMemoryObject*>(pobjToRegister);
+    CSharedMemoryObject *pshmobj = static_cast<CSharedMemoryObject *>(pobjToRegister);
     SHMObjData *psmodNew = NULL;
     CObjectAttributes *poa;
     CObjectType *potObj;
@@ -234,7 +219,7 @@ CSharedMemoryObjectManager::RegisterObject(
 
     potObj = pobjToRegister->GetObjectType();
     fShared = (SharedObject == pshmobj->GetObjectDomain());
-    
+
     InternalEnterCriticalSection(pthr, &m_csListLock);
 
     if (fShared)
@@ -243,7 +228,7 @@ CSharedMemoryObjectManager::RegisterObject(
         // We only need to acquire the shared memory lock if this
         // object is actually shared.
         //
-        
+
         SHMLock();
     }
 
@@ -256,17 +241,12 @@ CSharedMemoryObjectManager::RegisterObject(
         //
 
         assert(fShared);
-        
+
         //
         // Check if an object by this name already exists
         //
 
-        palError = LocateObject(
-            pthr,
-            &poa->sObjectName,
-            paot,
-            &pobjExisting
-            );
+        palError = LocateObject(pthr, &poa->sObjectName, paot, &pobjExisting);
 
         if (NO_ERROR == palError)
         {
@@ -274,14 +254,7 @@ CSharedMemoryObjectManager::RegisterObject(
             // Obtain a new handle to the existing object
             //
 
-            palError = ObtainHandleForObject(
-                pthr,
-                pobjExisting,
-                dwRightsRequested,
-                fInherit,
-                NULL, 
-                pHandle
-                );
+            palError = ObtainHandleForObject(pthr, pobjExisting, dwRightsRequested, fInherit, NULL, pHandle);
 
             if (NO_ERROR == palError)
             {
@@ -327,7 +300,7 @@ CSharedMemoryObjectManager::RegisterObject(
         if (SHMNULL != shmObjectListHead)
         {
             SHMObjData *psmodListHead;
-            
+
             psmodListHead = SHMPTR_TO_TYPED_PTR(SHMObjData, shmObjectListHead);
             if (NULL != psmodListHead)
             {
@@ -380,16 +353,11 @@ CSharedMemoryObjectManager::RegisterObject(
         psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, pshmobj->GetShmObjData());
         if (NULL != psmod)
         {
-            void *pvSharedImmutableData =
-                SHMPTR_TO_TYPED_PTR(void, psmod->shmObjImmutableData);
-            
+            void *pvSharedImmutableData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjImmutableData);
+
             if (NULL != pvSharedImmutableData)
             {
-                memcpy(
-                    pvSharedImmutableData,
-                    pvImmutableData,
-                    potObj->GetImmutableDataSize()
-                    );
+                memcpy(pvSharedImmutableData, pvImmutableData, potObj->GetImmutableDataSize());
             }
             else
             {
@@ -410,14 +378,7 @@ CSharedMemoryObjectManager::RegisterObject(
     // Obtain a handle for the new object
     //
 
-    palError = ObtainHandleForObject(
-        pthr,
-        pobjToRegister,
-        dwRightsRequested,
-        fInherit,
-        NULL, 
-        pHandle
-        );
+    palError = ObtainHandleForObject(pthr, pobjToRegister, dwRightsRequested, fInherit, NULL, pHandle);
 
     if (NO_ERROR == palError)
     {
@@ -428,14 +389,14 @@ CSharedMemoryObjectManager::RegisterObject(
         *ppobjRegistered = pobjToRegister;
         pobjToRegister = NULL;
     }
-        
+
 RegisterObjectExit:
 
     if (fShared)
     {
         SHMRelease();
     }
-    
+
     InternalLeaveCriticalSection(pthr, &m_csListLock);
 
     if (NULL != pobjToRegister)
@@ -468,19 +429,16 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::LocateObject(
-    CPalThread *pthr,
-    CPalString *psObjectToLocate,
-    CAllowedObjectTypes *paot,
-    IPalObject **ppobj               // OUT
-    )
+CSharedMemoryObjectManager::LocateObject(CPalThread *pthr, CPalString *psObjectToLocate, CAllowedObjectTypes *paot,
+                                         IPalObject **ppobj // OUT
+)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjExisting = NULL;
     SHMPTR shmSharedObjectData = SHMNULL;
     SHMPTR shmObjectListEntry = SHMNULL;
     SHMObjData *psmod = NULL;
-    char16_t* pwsz = NULL;
+    char16_t *pwsz = NULL;
 
     assert(NULL != pthr);
     assert(NULL != psObjectToLocate);
@@ -495,13 +453,10 @@ CSharedMemoryObjectManager::LocateObject(
     // Search the local named object list for this object
     //
 
-    for (PLIST_ENTRY ple = m_leNamedObjects.Flink;
-         ple != &m_leNamedObjects;
-         ple = ple->Flink)
+    for (PLIST_ENTRY ple = m_leNamedObjects.Flink; ple != &m_leNamedObjects; ple = ple->Flink)
     {
         CObjectAttributes *poa;
-        CSharedMemoryObject *pshmobj =
-            CSharedMemoryObject::GetObjectFromListLink(ple);
+        CSharedMemoryObject *pshmobj = CSharedMemoryObject::GetObjectFromListLink(ple);
 
         poa = pshmobj->GetObjectAttributes();
         assert(NULL != poa);
@@ -520,9 +475,9 @@ CSharedMemoryObjectManager::LocateObject(
         // This object has the name we're looking for
         //
 
-        pobjExisting = static_cast<IPalObject*>(pshmobj);
-        break;        
-    } 
+        pobjExisting = static_cast<IPalObject *>(pshmobj);
+        break;
+    }
 
     if (NULL != pobjExisting)
     {
@@ -530,12 +485,10 @@ CSharedMemoryObjectManager::LocateObject(
         //  Validate the located object's type
         //
 
-        if (paot->IsTypeAllowed(
-                pobjExisting->GetObjectType()->GetId()
-                ))
+        if (paot->IsTypeAllowed(pobjExisting->GetObjectType()->GetId()))
         {
             TRACE("Local object exists with compatible type\n");
-            
+
             //
             // Add a reference to the found object
             //
@@ -545,19 +498,19 @@ CSharedMemoryObjectManager::LocateObject(
         }
         else
         {
-            TRACE("Local object exists w/ incompatible type\n");            
+            TRACE("Local object exists w/ incompatible type\n");
             palError = ERROR_INVALID_HANDLE;
         }
-        
+
         goto LocateObjectExit;
     }
 
     //
     // Search the shared memory named object list for a matching object
     //
-    
+
     SHMLock();
-    
+
     shmObjectListEntry = SHMGetInfo(SIID_NAMED_OBJECTS);
     while (SHMNULL != shmObjectListEntry)
     {
@@ -583,7 +536,7 @@ CSharedMemoryObjectManager::LocateObject(
                 {
                     ASSERT("Unable to map psmod->shmObjName\n");
                     break;
-                }                
+                }
             }
 
             shmObjectListEntry = psmod->shmNextObj;
@@ -610,11 +563,11 @@ CSharedMemoryObjectManager::LocateObject(
             palError = ERROR_INVALID_HANDLE;
             goto LocateObjectExitSHMRelease;
         }
-        
+
         //
         // Get the local instance of the CObjectType
         //
-        
+
         CObjectType *pot = CObjectType::GetObjectTypeById(psmod->eTypeId);
         if (NULL == pot)
         {
@@ -623,31 +576,22 @@ CSharedMemoryObjectManager::LocateObject(
         }
 
         TRACE("Remote object exists compatible type -- importing\n");
-        
+
         //
         // Create the local state for the shared object
         //
 
-        palError = ImportSharedObjectIntoProcess(
-            pthr,
-            pot,
-            &oa,
-            shmSharedObjectData,
-            psmod,
-            TRUE,
-            &pshmobj
-            );
+        palError = ImportSharedObjectIntoProcess(pthr, pot, &oa, shmSharedObjectData, psmod, TRUE, &pshmobj);
 
         if (NO_ERROR == palError)
-        {   
-            *ppobj = static_cast<IPalObject*>(pshmobj);
+        {
+            *ppobj = static_cast<IPalObject *>(pshmobj);
         }
         else
         {
             ERROR("Failure initializing object from shared data\n");
             goto LocateObjectExitSHMRelease;
         }
-        
     }
     else
     {
@@ -688,15 +632,12 @@ Parameters:
   pNewHandle -- on success, receives the newly allocated handle
 --*/
 
-PAL_ERROR   
-CSharedMemoryObjectManager::ObtainHandleForObject(
-    CPalThread *pthr,
-    IPalObject *pobj,
-    uint32_t dwRightsRequested,
-    bool fInheritHandle,
-    IPalProcess *pProcessForHandle,     // IN, OPTIONAL
-    HANDLE *pNewHandle                  // OUT
-    )
+PAL_ERROR
+CSharedMemoryObjectManager::ObtainHandleForObject(CPalThread *pthr, IPalObject *pobj, uint32_t dwRightsRequested,
+                                                  bool fInheritHandle,
+                                                  IPalProcess *pProcessForHandle, // IN, OPTIONAL
+                                                  HANDLE *pNewHandle // OUT
+)
 {
     PAL_ERROR palError = NO_ERROR;
 
@@ -714,17 +655,11 @@ CSharedMemoryObjectManager::ObtainHandleForObject(
         return ERROR_CALL_NOT_IMPLEMENTED;
     }
 
-    palError = m_HandleManager.AllocateHandle(
-        pthr,
-        pobj,
-        dwRightsRequested,
-        fInheritHandle,
-        pNewHandle
-        );
+    palError = m_HandleManager.AllocateHandle(pthr, pobj, dwRightsRequested, fInheritHandle, pNewHandle);
 
     LOGEXIT("CSharedMemoryObjectManager::ObtainHandleForObject return %d\n", palError);
 
-    return palError;    
+    return palError;
 }
 
 /*++
@@ -740,10 +675,7 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::RevokeHandle(
-    CPalThread *pthr,
-    HANDLE hHandleToRevoke
-    )
+CSharedMemoryObjectManager::RevokeHandle(CPalThread *pthr, HANDLE hHandleToRevoke)
 {
     PAL_ERROR palError = NO_ERROR;
 
@@ -772,11 +704,9 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::ReferenceObjectByHandle(
-    CPalThread *pthr,
-    HANDLE hHandleToReference,
-    CAllowedObjectTypes *paot,
-    IPalObject **ppobj               // OUT
+CSharedMemoryObjectManager::ReferenceObjectByHandle(CPalThread *pthr, HANDLE hHandleToReference,
+                                                    CAllowedObjectTypes *paot,
+                                                    IPalObject **ppobj // OUT
 )
 {
     PAL_ERROR palError;
@@ -787,19 +717,11 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
     assert(NULL != paot);
     assert(NULL != ppobj);
 
-    palError = m_HandleManager.GetObjectFromHandle(
-        pthr,
-        hHandleToReference,
-        &dwRightsGranted,
-        &pobj
-    );
+    palError = m_HandleManager.GetObjectFromHandle(pthr, hHandleToReference, &dwRightsGranted, &pobj);
 
     if (NO_ERROR == palError)
     {
-        palError = CheckObjectTypeAndRights(
-            pobj,
-            paot
-        );
+        palError = CheckObjectTypeAndRights(pobj, paot);
 
         if (NO_ERROR == palError)
         {
@@ -815,9 +737,7 @@ CSharedMemoryObjectManager::ReferenceObjectByHandle(
         }
     }
 
-    LOGEXIT("CSharedMemoryObjectManager::ReferenceObjectByHandle returns %d\n",
-            palError
-    );
+    LOGEXIT("CSharedMemoryObjectManager::ReferenceObjectByHandle returns %d\n", palError);
 
     return palError;
 }
@@ -841,12 +761,9 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
-    CPalThread *pthr,
-    HANDLE rghHandlesToReference[],
-    uint32_t dwHandleCount,
-    CAllowedObjectTypes *paot,
-    IPalObject *rgpobjs[]            // OUT (caller allocated)
+CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(CPalThread *pthr, HANDLE rghHandlesToReference[],
+                                                                  uint32_t dwHandleCount, CAllowedObjectTypes *paot,
+                                                                  IPalObject *rgpobjs[] // OUT (caller allocated)
 )
 {
     PAL_ERROR palError = NO_ERROR;
@@ -863,20 +780,12 @@ CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
     m_HandleManager.Lock(pthr);
 
     for (dw = 0; dw < dwHandleCount; dw += 1)
-    {        
-        palError = m_HandleManager.GetObjectFromHandle(
-            pthr,
-            rghHandlesToReference[dw],
-            &dwRightsGranted,
-            &pobj
-            );
+    {
+        palError = m_HandleManager.GetObjectFromHandle(pthr, rghHandlesToReference[dw], &dwRightsGranted, &pobj);
 
         if (NO_ERROR == palError)
         {
-            palError = CheckObjectTypeAndRights(
-                pobj,
-                paot
-            );
+            palError = CheckObjectTypeAndRights(pobj, paot);
 
             if (NO_ERROR == palError)
             {
@@ -910,7 +819,7 @@ CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
         // dw's current value is the failing index, so we want
         // to free from dw - 1.
         //
-        
+
         while (dw > 0)
         {
             rgpobjs[--dw]->ReleaseReference(pthr);
@@ -923,9 +832,8 @@ CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray(
     }
 
     LOGEXIT("CSharedMemoryObjectManager::ReferenceMultipleObjectsByHandleArray"
-        " returns %d\n",
-        palError
-        );
+            " returns %d\n",
+            palError);
 
     return palError;
 }
@@ -969,15 +877,9 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::ImportSharedObjectIntoProcess(
-    CPalThread *pthr,
-    CObjectType *pot,
-    CObjectAttributes *poa,
-    SHMPTR shmSharedObjectData,
-    SHMObjData *psmod,
-    bool fAddRefSharedData,
-    CSharedMemoryObject **ppshmobj
-    )
+CSharedMemoryObjectManager::ImportSharedObjectIntoProcess(CPalThread *pthr, CObjectType *pot, CObjectAttributes *poa,
+                                                          SHMPTR shmSharedObjectData, SHMObjData *psmod,
+                                                          bool fAddRefSharedData, CSharedMemoryObject **ppshmobj)
 {
     PAL_ERROR palError = NO_ERROR;
     CSharedMemoryObject *pshmobj;
@@ -992,19 +894,11 @@ CSharedMemoryObjectManager::ImportSharedObjectIntoProcess(
 
     if (CObjectType::WaitableObject == pot->GetSynchronizationSupport())
     {
-        pshmobj = new CSharedMemoryWaitableObject(pot,
-                                                           &m_csListLock,
-                                                           shmSharedObjectData,
-                                                           psmod,
-                                                           fAddRefSharedData);
+        pshmobj = new CSharedMemoryWaitableObject(pot, &m_csListLock, shmSharedObjectData, psmod, fAddRefSharedData);
     }
     else
     {
-        pshmobj = new CSharedMemoryObject(pot,
-                                                   &m_csListLock,
-                                                   shmSharedObjectData,
-                                                   psmod,
-                                                   fAddRefSharedData);
+        pshmobj = new CSharedMemoryObject(pot, &m_csListLock, shmSharedObjectData, psmod, fAddRefSharedData);
     }
 
     if (NULL != pshmobj)
@@ -1020,7 +914,7 @@ CSharedMemoryObjectManager::ImportSharedObjectIntoProcess(
             {
                 pleObjectList = &m_leAnonymousObjects;
             }
-            
+
             InsertTailList(pleObjectList, pshmobj->GetObjectListLink());
         }
         else
@@ -1044,13 +938,11 @@ ImportSharedObjectIntoProcessExit:
     return palError;
 }
 
-static PalObjectTypeId RemotableObjectTypes[] =
-    {otiManualResetEvent, otiAutoResetEvent, otiMutex, otiProcess};
-    
-static CAllowedObjectTypes aotRemotable __attribute__((init_priority(200))) (
-    RemotableObjectTypes,
-    sizeof(RemotableObjectTypes) / sizeof(RemotableObjectTypes[0])
-    );
+static PalObjectTypeId RemotableObjectTypes[] = {otiManualResetEvent, otiAutoResetEvent, otiMutex, otiProcess};
+
+static CAllowedObjectTypes aotRemotable
+    __attribute__((init_priority(200))) (RemotableObjectTypes,
+                                         sizeof(RemotableObjectTypes) / sizeof(RemotableObjectTypes[0]));
 
 /*++
 Function:
@@ -1067,11 +959,7 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::ConvertRemoteHandleToLocal(
-    CPalThread *pthr,
-    RHANDLE rhRemote,
-    HANDLE *phLocal
-    )
+CSharedMemoryObjectManager::ConvertRemoteHandleToLocal(CPalThread *pthr, RHANDLE rhRemote, HANDLE *phLocal)
 {
     PAL_ERROR palError = NO_ERROR;
     SHMObjData *psmod;
@@ -1117,17 +1005,15 @@ CSharedMemoryObjectManager::ConvertRemoteHandleToLocal(
         pleObjectList = &m_leAnonymousObjects;
     }
 
-    for (PLIST_ENTRY ple = pleObjectList->Flink;
-         ple != pleObjectList;
-         ple = ple->Flink)
+    for (PLIST_ENTRY ple = pleObjectList->Flink; ple != pleObjectList; ple = ple->Flink)
     {
         pshmobj = CSharedMemoryObject::GetObjectFromListLink(ple);
 
-        if (SharedObject == pshmobj->GetObjectDomain()
-            && reinterpret_cast<SHMPTR>(rhRemote) == pshmobj->GetShmObjData())
+        if (SharedObject == pshmobj->GetObjectDomain() &&
+            reinterpret_cast<SHMPTR>(rhRemote) == pshmobj->GetShmObjData())
         {
             TRACE("Object for remote handle already present in this process\n");
-            
+
             //
             // PAL_LocalHandleToRemote bumped up the process refcount on the
             // object. Since this process already had a reference to the object
@@ -1154,51 +1040,37 @@ CSharedMemoryObjectManager::ConvertRemoteHandleToLocal(
     {
         CObjectType *pot;
         CObjectAttributes oa;
-        
+
         //
         // Get the local instance of the CObjectType
         //
-        
+
         pot = CObjectType::GetObjectTypeById(psmod->eTypeId);
         if (NULL == pot)
         {
             ASSERT("Invalid object type ID in shared memory info\n");
             goto ConvertRemoteHandleToLocalExit;
         }
-        
+
         //
         // Create the local state for the shared object
         //
 
-        palError = ImportSharedObjectIntoProcess(
-            pthr,
-            pot,
-            &oa,
-            reinterpret_cast<SHMPTR>(rhRemote),
-            psmod,
-            FALSE,
-            &pshmobj
-            );
+        palError =
+            ImportSharedObjectIntoProcess(pthr, pot, &oa, reinterpret_cast<SHMPTR>(rhRemote), psmod, FALSE, &pshmobj);
 
         if (NO_ERROR != palError)
         {
             goto ConvertRemoteHandleToLocalExit;
-        }        
+        }
     }
 
     //
     // Finally, allocate a local handle for the object
     //
 
-    palError = ObtainHandleForObject(
-        pthr,
-        pshmobj,
-        0,
-        FALSE,
-        NULL,
-        phLocal
-        );
-        
+    palError = ObtainHandleForObject(pthr, pshmobj, 0, FALSE, NULL, phLocal);
+
 ConvertRemoteHandleToLocalExit:
 
     SHMRelease();
@@ -1232,12 +1104,7 @@ Parameters:
   dwRightsRequired -- the required access rights (ignored)
 --*/
 
-static
-PAL_ERROR
-CheckObjectTypeAndRights(
-    IPalObject *pobj,
-    CAllowedObjectTypes *paot
-)
+static PAL_ERROR CheckObjectTypeAndRights(IPalObject *pobj, CAllowedObjectTypes *paot)
 {
     PAL_ERROR palError = NO_ERROR;
 
@@ -1252,7 +1119,7 @@ CheckObjectTypeAndRights(
         // This is where the access right check would occur if Win32 object
         // security were supported.
         //
-        
+
         if ((dwRightsRequired & dwRightsGranted) != dwRightsRequired)
         {
             palError = ERROR_ACCESS_DENIED;
@@ -1268,5 +1135,3 @@ CheckObjectTypeAndRights(
 
     return palError;
 }
-    
-

@@ -2,23 +2,26 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "RuntimeTypePch.h"
 #include "Common/UInt16Math.h"
+#include "RuntimeTypePch.h"
 
 namespace Js
 {
     template <typename T>
-    DictionaryTypeHandlerBase<T>* DictionaryTypeHandlerBase<T>::New(Recycler * recycler, int initialCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots)
+    DictionaryTypeHandlerBase<T> *DictionaryTypeHandlerBase<T>::New(Recycler *recycler, int initialCapacity,
+                                                                    uint16 inlineSlotCapacity,
+                                                                    uint16 offsetOfInlineSlots)
     {
-        return NewTypeHandler<DictionaryTypeHandlerBase>(recycler, initialCapacity, inlineSlotCapacity, offsetOfInlineSlots);
+        return NewTypeHandler<DictionaryTypeHandlerBase>(recycler, initialCapacity, inlineSlotCapacity,
+                                                         offsetOfInlineSlots);
     }
 
     template <typename T>
-    DictionaryTypeHandlerBase<T>::DictionaryTypeHandlerBase(Recycler* recycler) :
-        DynamicTypeHandler(1),
-        nextPropertyIndex(0)
+    DictionaryTypeHandlerBase<T>::DictionaryTypeHandlerBase(Recycler *recycler) :
+        DynamicTypeHandler(1), nextPropertyIndex(0)
 #if ENABLE_FIXED_FIELDS
-        , singletonInstance(nullptr)
+        ,
+        singletonInstance(nullptr)
 #endif
     {
         SetIsInlineSlotCapacityLocked();
@@ -26,12 +29,14 @@ namespace Js
     }
 
     template <typename T>
-    DictionaryTypeHandlerBase<T>::DictionaryTypeHandlerBase(Recycler* recycler, int slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots) :
-        // Do not RoundUp passed in slotCapacity. This may be called by ConvertTypeHandler for an existing DynamicObject and should use the real existing slotCapacity.
-        DynamicTypeHandler(slotCapacity, inlineSlotCapacity, offsetOfInlineSlots),
-        nextPropertyIndex(0)
+    DictionaryTypeHandlerBase<T>::DictionaryTypeHandlerBase(Recycler *recycler, int slotCapacity,
+                                                            uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots) :
+        // Do not RoundUp passed in slotCapacity. This may be called by ConvertTypeHandler for an existing DynamicObject
+        // and should use the real existing slotCapacity.
+        DynamicTypeHandler(slotCapacity, inlineSlotCapacity, offsetOfInlineSlots), nextPropertyIndex(0)
 #if ENABLE_FIXED_FIELDS
-        , singletonInstance(nullptr)
+        ,
+        singletonInstance(nullptr)
 #endif
     {
         SetIsInlineSlotCapacityLocked();
@@ -43,23 +48,28 @@ namespace Js
     // Takes over a given dictionary typeHandler. Used only by subclass.
     //
     template <typename T>
-    DictionaryTypeHandlerBase<T>::DictionaryTypeHandlerBase(DictionaryTypeHandlerBase* typeHandler) :
-        DynamicTypeHandler(typeHandler->GetSlotCapacity(), typeHandler->GetInlineSlotCapacity(), typeHandler->GetOffsetOfInlineSlots()),
+    DictionaryTypeHandlerBase<T>::DictionaryTypeHandlerBase(DictionaryTypeHandlerBase *typeHandler) :
+        DynamicTypeHandler(typeHandler->GetSlotCapacity(), typeHandler->GetInlineSlotCapacity(),
+                           typeHandler->GetOffsetOfInlineSlots()),
         propertyMap(typeHandler->propertyMap), nextPropertyIndex(typeHandler->nextPropertyIndex)
 #if ENABLE_FIXED_FIELDS
-        , singletonInstance(typeHandler->singletonInstance)
+        ,
+        singletonInstance(typeHandler->singletonInstance)
 #endif
     {
         Assert(typeHandler->GetIsInlineSlotCapacityLocked());
-        CopyPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection | PropertyTypesInlineSlotCapacityLocked | PropertyTypesHasSpecialProperties, typeHandler->GetPropertyTypes());
+        CopyPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection |
+                              PropertyTypesInlineSlotCapacityLocked | PropertyTypesHasSpecialProperties,
+                          typeHandler->GetPropertyTypes());
     }
 
     template <typename T>
-    DictionaryTypeHandlerBase<T>::DictionaryTypeHandlerBase(Recycler* recycler, DictionaryTypeHandlerBase * typeHandler) :
-        DynamicTypeHandler(typeHandler),
-        nextPropertyIndex(typeHandler->nextPropertyIndex)
+    DictionaryTypeHandlerBase<T>::DictionaryTypeHandlerBase(Recycler *recycler,
+                                                            DictionaryTypeHandlerBase *typeHandler) :
+        DynamicTypeHandler(typeHandler), nextPropertyIndex(typeHandler->nextPropertyIndex)
 #if ENABLE_FIXED_FIELDS
-        , singletonInstance(nullptr)
+        ,
+        singletonInstance(nullptr)
 #endif
     {
         Assert(this->GetIsInlineSlotCapacityLocked() == typeHandler->GetIsInlineSlotCapacityLocked());
@@ -67,7 +77,7 @@ namespace Js
     }
 
     template <typename T>
-    DynamicTypeHandler * DictionaryTypeHandlerBase<T>::Clone(Recycler * recycler)
+    DynamicTypeHandler *DictionaryTypeHandlerBase<T>::Clone(Recycler *recycler)
     {
         return RecyclerNew(recycler, DictionaryTypeHandlerBase, recycler, this);
     }
@@ -79,7 +89,7 @@ namespace Js
     }
 
     template <typename T>
-    PropertyId DictionaryTypeHandlerBase<T>::GetPropertyId(ScriptContext* scriptContext, PropertyIndex index)
+    PropertyId DictionaryTypeHandlerBase<T>::GetPropertyId(ScriptContext *scriptContext, PropertyIndex index)
     {
         if (index < propertyMap->Count())
         {
@@ -93,7 +103,7 @@ namespace Js
     }
 
     template <typename T>
-    PropertyId DictionaryTypeHandlerBase<T>::GetPropertyId(ScriptContext* scriptContext, BigPropertyIndex index)
+    PropertyId DictionaryTypeHandlerBase<T>::GetPropertyId(ScriptContext *scriptContext, BigPropertyIndex index)
     {
         if (index < propertyMap->Count())
         {
@@ -107,8 +117,11 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::FindNextProperty(ScriptContext* scriptContext, PropertyIndex& index, JavascriptString** propertyStringName,
-        PropertyId* propertyId, PropertyAttributes* attributes, Type* type, DynamicType *typeToEnumerate, EnumeratorFlags flags, DynamicObject* instance, PropertyValueInfo* info)
+    BOOL DictionaryTypeHandlerBase<T>::FindNextProperty(ScriptContext *scriptContext, PropertyIndex &index,
+                                                        JavascriptString **propertyStringName, PropertyId *propertyId,
+                                                        PropertyAttributes *attributes, Type *type,
+                                                        DynamicType *typeToEnumerate, EnumeratorFlags flags,
+                                                        DynamicObject *instance, PropertyValueInfo *info)
     {
         Assert(propertyStringName);
         Assert(propertyId);
@@ -119,10 +132,11 @@ namespace Js
             DictionaryPropertyDescriptor<T> descriptor = propertyMap->GetValueAt(index);
             PropertyAttributes attribs = descriptor.Attributes;
 
-            if (!(attribs & PropertyDeleted) && (!!(flags & EnumeratorFlags::EnumNonEnumerable) || (attribs & PropertyEnumerable)) &&
+            if (!(attribs & PropertyDeleted) &&
+                (!!(flags & EnumeratorFlags::EnumNonEnumerable) || (attribs & PropertyEnumerable)) &&
                 (!(attribs & PropertyLetConstGlobal) || descriptor.HasNonLetConstGlobal()))
             {
-                const PropertyRecord* propertyRecord = propertyMap->GetKeyAt(index);
+                const PropertyRecord *propertyRecord = propertyMap->GetKeyAt(index);
 
                 // Skip this property if it is a symbol and we are not including symbol properties
                 if (!(flags & EnumeratorFlags::EnumSymbols) && propertyRecord->IsSymbol())
@@ -137,12 +151,13 @@ namespace Js
                 }
 
                 *propertyId = propertyRecord->GetPropertyId();
-                PropertyString* propertyString = scriptContext->GetPropertyString(*propertyId);
+                PropertyString *propertyString = scriptContext->GetPropertyString(*propertyId);
                 *propertyStringName = propertyString;
                 T dataSlot = descriptor.template GetDataPropertyIndex<false>();
                 if (dataSlot != NoSlots && (attribs & PropertyWritable) && type == typeToEnumerate)
                 {
-                    PropertyValueInfo::SetCacheInfo(info, propertyString, propertyString->GetLdElemInlineCache(), false);
+                    PropertyValueInfo::SetCacheInfo(info, propertyString, propertyString->GetLdElemInlineCache(),
+                                                    false);
                     SetPropertyValueInfo(info, instance, dataSlot, &descriptor);
                 }
                 else
@@ -158,27 +173,35 @@ namespace Js
     }
 
     template <>
-    BOOL DictionaryTypeHandlerBase<BigPropertyIndex>::FindNextProperty(ScriptContext* scriptContext, PropertyIndex& index, JavascriptString** propertyString,
-        PropertyId* propertyId, PropertyAttributes* attributes, Type* type, DynamicType *typeToEnumerate, EnumeratorFlags flags, DynamicObject* instance, PropertyValueInfo* info)
+    BOOL DictionaryTypeHandlerBase<BigPropertyIndex>::FindNextProperty(
+        ScriptContext *scriptContext, PropertyIndex &index, JavascriptString **propertyString, PropertyId *propertyId,
+        PropertyAttributes *attributes, Type *type, DynamicType *typeToEnumerate, EnumeratorFlags flags,
+        DynamicObject *instance, PropertyValueInfo *info)
     {
         Assert(false);
         Throw::InternalError();
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::FindNextProperty(ScriptContext* scriptContext, BigPropertyIndex& index, JavascriptString** propertyString,
-        PropertyId* propertyId, PropertyAttributes* attributes, Type* type, DynamicType *typeToEnumerate, EnumeratorFlags flags, DynamicObject* instance, PropertyValueInfo* info)
+    BOOL DictionaryTypeHandlerBase<T>::FindNextProperty(ScriptContext *scriptContext, BigPropertyIndex &index,
+                                                        JavascriptString **propertyString, PropertyId *propertyId,
+                                                        PropertyAttributes *attributes, Type *type,
+                                                        DynamicType *typeToEnumerate, EnumeratorFlags flags,
+                                                        DynamicObject *instance, PropertyValueInfo *info)
     {
         PropertyIndex local = (PropertyIndex)index;
         Assert(index <= Constants::UShortMaxValue || index == Constants::NoBigSlot);
-        BOOL result = this->FindNextProperty(scriptContext, local, propertyString, propertyId, attributes, type, typeToEnumerate, flags, instance, info);
+        BOOL result = this->FindNextProperty(scriptContext, local, propertyString, propertyId, attributes, type,
+                                             typeToEnumerate, flags, instance, info);
         index = local;
         return result;
     }
 
     template <>
-    BOOL DictionaryTypeHandlerBase<BigPropertyIndex>::FindNextProperty(ScriptContext* scriptContext, BigPropertyIndex& index, JavascriptString** propertyStringName,
-        PropertyId* propertyId, PropertyAttributes* attributes, Type* type, DynamicType *typeToEnumerate, EnumeratorFlags flags, DynamicObject* instance, PropertyValueInfo* info)
+    BOOL DictionaryTypeHandlerBase<BigPropertyIndex>::FindNextProperty(
+        ScriptContext *scriptContext, BigPropertyIndex &index, JavascriptString **propertyStringName,
+        PropertyId *propertyId, PropertyAttributes *attributes, Type *type, DynamicType *typeToEnumerate,
+        EnumeratorFlags flags, DynamicObject *instance, PropertyValueInfo *info)
     {
         Assert(propertyStringName);
         Assert(propertyId);
@@ -188,10 +211,11 @@ namespace Js
         {
             DictionaryPropertyDescriptor<BigPropertyIndex> descriptor = propertyMap->GetValueAt(index);
             PropertyAttributes attribs = descriptor.Attributes;
-            if (!(attribs & PropertyDeleted) && (!!(flags & EnumeratorFlags::EnumNonEnumerable) || (attribs & PropertyEnumerable)) &&
+            if (!(attribs & PropertyDeleted) &&
+                (!!(flags & EnumeratorFlags::EnumNonEnumerable) || (attribs & PropertyEnumerable)) &&
                 (!(attribs & PropertyLetConstGlobal) || descriptor.HasNonLetConstGlobal()))
             {
-                const PropertyRecord* propertyRecord = propertyMap->GetKeyAt(index);
+                const PropertyRecord *propertyRecord = propertyMap->GetKeyAt(index);
 
                 // Skip this property if it is a symbol and we are not including symbol properties
                 if (!(flags & EnumeratorFlags::EnumSymbols) && propertyRecord->IsSymbol())
@@ -215,29 +239,34 @@ namespace Js
     }
 
     template <typename T>
-    PropertyIndex DictionaryTypeHandlerBase<T>::GetPropertyIndex(PropertyRecord const* propertyRecord)
+    PropertyIndex DictionaryTypeHandlerBase<T>::GetPropertyIndex(PropertyRecord const *propertyRecord)
     {
         return GetPropertyIndex_Internal<false>(propertyRecord);
     }
 
     template <typename T>
-    PropertyIndex DictionaryTypeHandlerBase<T>::GetRootPropertyIndex(PropertyRecord const* propertyRecord)
+    PropertyIndex DictionaryTypeHandlerBase<T>::GetRootPropertyIndex(PropertyRecord const *propertyRecord)
     {
         return GetPropertyIndex_Internal<true>(propertyRecord);
     }
 
 #if ENABLE_NATIVE_CODEGEN
     template <typename T>
-    bool DictionaryTypeHandlerBase<T>::GetPropertyEquivalenceInfo(PropertyRecord const* propertyRecord, PropertyEquivalenceInfo& info)
+    bool DictionaryTypeHandlerBase<T>::GetPropertyEquivalenceInfo(PropertyRecord const *propertyRecord,
+                                                                  PropertyEquivalenceInfo &info)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
-        if (this->propertyMap->TryGetReference(propertyRecord, &descriptor) && !(descriptor->Attributes & PropertyDeleted))
+        DictionaryPropertyDescriptor<T> *descriptor;
+        if (this->propertyMap->TryGetReference(propertyRecord, &descriptor) &&
+            !(descriptor->Attributes & PropertyDeleted))
         {
-            AssertMsg(descriptor->template GetDataPropertyIndex<false>() != Constants::NoSlot, "We don't support equivalent object type spec on accessors.");
-            AssertMsg(descriptor->template GetDataPropertyIndex<false>() <= Constants::PropertyIndexMax, "We don't support equivalent object type spec on big property indexes.");
+            AssertMsg(descriptor->template GetDataPropertyIndex<false>() != Constants::NoSlot,
+                      "We don't support equivalent object type spec on accessors.");
+            AssertMsg(descriptor->template GetDataPropertyIndex<false>() <= Constants::PropertyIndexMax,
+                      "We don't support equivalent object type spec on big property indexes.");
             T propertyIndex = descriptor->template GetDataPropertyIndex<false>();
-            info.slotIndex = propertyIndex <= Constants::PropertyIndexMax ?
-                AdjustValidSlotIndexForInlineSlots(static_cast<PropertyIndex>(propertyIndex)) : Constants::NoSlot;
+            info.slotIndex = propertyIndex <= Constants::PropertyIndexMax
+                ? AdjustValidSlotIndexForInlineSlots(static_cast<PropertyIndex>(propertyIndex))
+                : Constants::NoSlot;
             info.isAuxSlot = propertyIndex >= GetInlineSlotCapacity();
             info.isWritable = !!(descriptor->Attributes & PropertyWritable);
         }
@@ -251,13 +280,14 @@ namespace Js
     }
 
     template <typename T>
-    bool DictionaryTypeHandlerBase<T>::IsObjTypeSpecEquivalent(const Type* type, const TypeEquivalenceRecord& record, uint& failedPropertyIndex)
+    bool DictionaryTypeHandlerBase<T>::IsObjTypeSpecEquivalent(const Type *type, const TypeEquivalenceRecord &record,
+                                                               uint &failedPropertyIndex)
     {
         uint propertyCount = record.propertyCount;
-        EquivalentPropertyEntry* properties = record.properties;
+        EquivalentPropertyEntry *properties = record.properties;
         for (uint pi = 0; pi < propertyCount; pi++)
         {
-            const EquivalentPropertyEntry* refInfo = &properties[pi];
+            const EquivalentPropertyEntry *refInfo = &properties[pi];
             if (!this->IsObjTypeSpecEquivalentImpl<false>(type, refInfo))
             {
                 failedPropertyIndex = pi;
@@ -269,28 +299,30 @@ namespace Js
     }
 
     template <typename T>
-    bool DictionaryTypeHandlerBase<T>::IsObjTypeSpecEquivalent(const Type* type, const EquivalentPropertyEntry *entry)
+    bool DictionaryTypeHandlerBase<T>::IsObjTypeSpecEquivalent(const Type *type, const EquivalentPropertyEntry *entry)
     {
         return this->IsObjTypeSpecEquivalentImpl<true>(type, entry);
     }
 
     template <typename T>
     template <bool doLock>
-    bool DictionaryTypeHandlerBase<T>::IsObjTypeSpecEquivalentImpl(const Type* type, const EquivalentPropertyEntry *entry)
+    bool DictionaryTypeHandlerBase<T>::IsObjTypeSpecEquivalentImpl(const Type *type,
+                                                                   const EquivalentPropertyEntry *entry)
     {
-        ScriptContext* scriptContext = type->GetScriptContext();
+        ScriptContext *scriptContext = type->GetScriptContext();
 
         T absSlotIndex = Constants::NoSlot;
         PropertyIndex relSlotIndex = Constants::NoSlot;
 
-        const PropertyRecord* propertyRecord =
-            doLock ? scriptContext->GetPropertyNameLocked(entry->propertyId) : scriptContext->GetPropertyName(entry->propertyId);
-        DictionaryPropertyDescriptor<T>* descriptor;
-        if (this->propertyMap->TryGetReference(propertyRecord, &descriptor) && !(descriptor->Attributes & PropertyDeleted))
+        const PropertyRecord *propertyRecord = doLock ? scriptContext->GetPropertyNameLocked(entry->propertyId)
+                                                      : scriptContext->GetPropertyName(entry->propertyId);
+        DictionaryPropertyDescriptor<T> *descriptor;
+        if (this->propertyMap->TryGetReference(propertyRecord, &descriptor) &&
+            !(descriptor->Attributes & PropertyDeleted))
         {
-            // We don't object type specialize accessors at this point, so if we see an accessor on an object we must have a mismatch.
-            // When we add support for accessors we will need another bit on EquivalentPropertyEntry indicating whether we expect
-            // a data or accessor property.
+            // We don't object type specialize accessors at this point, so if we see an accessor on an object we must
+            // have a mismatch. When we add support for accessors we will need another bit on EquivalentPropertyEntry
+            // indicating whether we expect a data or accessor property.
             if (descriptor->GetIsAccessor())
             {
                 return false;
@@ -310,7 +342,8 @@ namespace Js
                 return false;
             }
 
-            if (entry->mustBeWritable && (!(descriptor->Attributes & PropertyWritable) || descriptor->IsOrMayBecomeFixed()))
+            if (entry->mustBeWritable &&
+                (!(descriptor->Attributes & PropertyWritable) || descriptor->IsOrMayBecomeFixed()))
             {
                 return false;
             }
@@ -329,9 +362,9 @@ namespace Js
 
     template <typename T>
     template <bool allowLetConstGlobal>
-    PropertyIndex DictionaryTypeHandlerBase<T>::GetPropertyIndex_Internal(PropertyRecord const* propertyRecord)
+    PropertyIndex DictionaryTypeHandlerBase<T>::GetPropertyIndex_Internal(PropertyRecord const *propertyRecord)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         if (propertyMap->TryGetReference(propertyRecord, &descriptor) && !(descriptor->Attributes & PropertyDeleted))
         {
             return descriptor->template GetDataPropertyIndex<allowLetConstGlobal>();
@@ -344,9 +377,10 @@ namespace Js
 
     template <>
     template <bool allowLetConstGlobal>
-    PropertyIndex DictionaryTypeHandlerBase<BigPropertyIndex>::GetPropertyIndex_Internal(PropertyRecord const* propertyRecord)
+    PropertyIndex
+    DictionaryTypeHandlerBase<BigPropertyIndex>::GetPropertyIndex_Internal(PropertyRecord const *propertyRecord)
     {
-        DictionaryPropertyDescriptor<BigPropertyIndex>* descriptor;
+        DictionaryPropertyDescriptor<BigPropertyIndex> *descriptor;
         if (propertyMap->TryGetReference(propertyRecord, &descriptor) && !(descriptor->Attributes & PropertyDeleted))
         {
             BigPropertyIndex dataPropertyIndex = descriptor->GetDataPropertyIndex<allowLetConstGlobal>();
@@ -359,59 +393,65 @@ namespace Js
     }
 
     template <>
-    PropertyIndex DictionaryTypeHandlerBase<BigPropertyIndex>::GetRootPropertyIndex(PropertyRecord const* propertyRecord)
+    PropertyIndex
+    DictionaryTypeHandlerBase<BigPropertyIndex>::GetRootPropertyIndex(PropertyRecord const *propertyRecord)
     {
         return Constants::NoSlot;
     }
 
     template <typename T>
-    void DictionaryTypeHandlerBase<T>::Add(
-        const PropertyRecord* propertyRecord,
-        PropertyAttributes attributes,
-        ScriptContext *const scriptContext)
+    void DictionaryTypeHandlerBase<T>::Add(const PropertyRecord *propertyRecord, PropertyAttributes attributes,
+                                           ScriptContext *const scriptContext)
     {
         return Add(propertyRecord, attributes, true, false, false, scriptContext);
     }
 
     template <typename T>
-    void DictionaryTypeHandlerBase<T>::Add(
-        const PropertyRecord* propertyRecord,
-        PropertyAttributes attributes,
-        bool isInitialized, bool isFixed, bool usedAsFixed,
-        ScriptContext *const scriptContext)
+    void DictionaryTypeHandlerBase<T>::Add(const PropertyRecord *propertyRecord, PropertyAttributes attributes,
+                                           bool isInitialized, bool isFixed, bool usedAsFixed,
+                                           ScriptContext *const scriptContext)
     {
-        Assert(this->GetSlotCapacity() <= MaxPropertyIndexSize);   // slotCapacity should never exceed MaxPropertyIndexSize
-        Assert(nextPropertyIndex < this->GetSlotCapacity());       // nextPropertyIndex must be ready
+        Assert(this->GetSlotCapacity() <=
+               MaxPropertyIndexSize); // slotCapacity should never exceed MaxPropertyIndexSize
+        Assert(nextPropertyIndex < this->GetSlotCapacity()); // nextPropertyIndex must be ready
         T index = ::Math::PostInc(nextPropertyIndex);
 
         DictionaryPropertyDescriptor<T> descriptor(index, attributes);
 #if ENABLE_FIXED_FIELDS
-        Assert((!isFixed && !usedAsFixed) || (!IsInternalPropertyId(propertyRecord->GetPropertyId()) && this->singletonInstance != nullptr));
+        Assert((!isFixed && !usedAsFixed) ||
+               (!IsInternalPropertyId(propertyRecord->GetPropertyId()) && this->singletonInstance != nullptr));
         descriptor.SetIsInitialized(isInitialized);
         descriptor.SetIsFixed(isFixed);
         descriptor.SetUsedAsFixed(usedAsFixed);
 #endif
         propertyMap->Add(propertyRecord, descriptor);
 
-        scriptContext->GetLibrary()->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, attributes, propertyRecord, scriptContext);
-        scriptContext->GetLibrary()->GetTypesWithNoSpecialPropertyProtoChainCache()->ProcessProperty(this, attributes, propertyRecord, scriptContext);
+        scriptContext->GetLibrary()->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(
+            this, attributes, propertyRecord, scriptContext);
+        scriptContext->GetLibrary()->GetTypesWithNoSpecialPropertyProtoChainCache()->ProcessProperty(
+            this, attributes, propertyRecord, scriptContext);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::HasProperty(DynamicObject* instance, PropertyId propertyId, bool *noRedecl, _Inout_opt_ PropertyValueInfo* info)
+    BOOL DictionaryTypeHandlerBase<T>::HasProperty(DynamicObject *instance, PropertyId propertyId, bool *noRedecl,
+                                                   _Inout_opt_ PropertyValueInfo *info)
     {
         return HasProperty_Internal<false>(instance, propertyId, noRedecl, info, nullptr, nullptr);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::HasRootProperty(DynamicObject* instance, PropertyId propertyId, bool *noRedecl, bool *pDeclaredProperty, bool *pNonconfigurableProperty)
+    BOOL DictionaryTypeHandlerBase<T>::HasRootProperty(DynamicObject *instance, PropertyId propertyId, bool *noRedecl,
+                                                       bool *pDeclaredProperty, bool *pNonconfigurableProperty)
     {
-        return HasProperty_Internal<true>(instance, propertyId, noRedecl, nullptr /*info*/, pDeclaredProperty, pNonconfigurableProperty);
+        return HasProperty_Internal<true>(instance, propertyId, noRedecl, nullptr /*info*/, pDeclaredProperty,
+                                          pNonconfigurableProperty);
     }
 
     template <typename T>
     template <bool allowLetConstGlobal>
-    BOOL DictionaryTypeHandlerBase<T>::HasProperty_Internal(DynamicObject* instance, PropertyId propertyId, bool *noRedecl, _Inout_opt_ PropertyValueInfo* info, bool *pDeclaredProperty, bool *pNonconfigurableProperty)
+    BOOL DictionaryTypeHandlerBase<T>::HasProperty_Internal(DynamicObject *instance, PropertyId propertyId,
+                                                            bool *noRedecl, _Inout_opt_ PropertyValueInfo *info,
+                                                            bool *pDeclaredProperty, bool *pNonconfigurableProperty)
     {
         // HasProperty is called with NoProperty in JavascriptDispatch.cpp to for undeferral of the
         // deferred type system that DOM objects use.  Allow NoProperty for this reason, but only
@@ -421,12 +461,13 @@ namespace Js
             return false;
         }
 
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
-            if ((descriptor->Attributes & PropertyDeleted) || (!allowLetConstGlobal && !descriptor->HasNonLetConstGlobal()))
+            if ((descriptor->Attributes & PropertyDeleted) ||
+                (!allowLetConstGlobal && !descriptor->HasNonLetConstGlobal()))
             {
                 return false;
             }
@@ -453,9 +494,9 @@ namespace Js
                 {
                     // PropertyAttributes is only one byte so it can't carry out data about whether this is an accessor.
                     // Accessors must be cached differently than normal properties, so if we want to cache this we must
-                    // do so here rather than in the caller. However, caching here would require passing originalInstance and
-                    // requestContext through a wide variety of call paths to this point (like we do for GetProperty), for
-                    // very little improvement. For now, just block caching this case.
+                    // do so here rather than in the caller. However, caching here would require passing
+                    // originalInstance and requestContext through a wide variety of call paths to this point (like we
+                    // do for GetProperty), for very little improvement. For now, just block caching this case.
                     PropertyValueInfo::SetNoCache(info, instance);
                 }
             }
@@ -472,13 +513,15 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::HasProperty(DynamicObject* instance, JavascriptString* propertyNameString)
+    BOOL DictionaryTypeHandlerBase<T>::HasProperty(DynamicObject *instance, JavascriptString *propertyNameString)
     {
-        AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
+        AssertMsg(
+            !PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* before calling GetSetter");
 
-        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
-        DictionaryPropertyDescriptor<T>* descriptor;
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(),
+                                                       propertyNameString->GetLength());
+        DictionaryPropertyDescriptor<T> *descriptor;
         if (propertyMap->TryGetReference(propertyName, &descriptor))
         {
             if ((descriptor->Attributes & PropertyDeleted) || !descriptor->HasNonLetConstGlobal())
@@ -492,27 +535,31 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::GetRootProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId,
-        Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    BOOL DictionaryTypeHandlerBase<T>::GetRootProperty(DynamicObject *instance, Var originalInstance,
+                                                       PropertyId propertyId, Var *value, PropertyValueInfo *info,
+                                                       ScriptContext *requestContext)
     {
         AssertMsg(VarIs<RootObjectBase>(instance), "Instance must be a root object!");
         return GetProperty_Internal<true>(instance, originalInstance, propertyId, value, info, requestContext);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::GetProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId,
-        Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    BOOL DictionaryTypeHandlerBase<T>::GetProperty(DynamicObject *instance, Var originalInstance, PropertyId propertyId,
+                                                   Var *value, PropertyValueInfo *info, ScriptContext *requestContext)
     {
         return GetProperty_Internal<false>(instance, originalInstance, propertyId, value, info, requestContext);
     }
 
     template <typename T>
     template <bool allowLetConstGlobal, typename PropertyType>
-    BOOL DictionaryTypeHandlerBase<T>::GetPropertyFromDescriptor(DynamicObject* instance, Var originalInstance,
-        DictionaryPropertyDescriptor<T>* descriptor, Var* value, PropertyValueInfo* info, PropertyType propertyT, ScriptContext* requestContext)
+    BOOL DictionaryTypeHandlerBase<T>::GetPropertyFromDescriptor(DynamicObject *instance, Var originalInstance,
+                                                                 DictionaryPropertyDescriptor<T> *descriptor,
+                                                                 Var *value, PropertyValueInfo *info,
+                                                                 PropertyType propertyT, ScriptContext *requestContext)
     {
         [[maybe_unused]] bool const isLetConstGlobal = (descriptor->Attributes & PropertyLetConstGlobal) != 0;
-        AssertMsg(!isLetConstGlobal || VarIs<RootObjectBase>(instance), "object must be a global object if letconstglobal is set");
+        AssertMsg(!isLetConstGlobal || VarIs<RootObjectBase>(instance),
+                  "object must be a global object if letconstglobal is set");
         if (allowLetConstGlobal)
         {
             // GetRootProperty: false if not global
@@ -541,9 +588,11 @@ namespace Js
             // We must update cache before calling a getter, because it can invalidate something. Bug# 593815
             SetPropertyValueInfoNonFixed(info, instance, descriptor->GetGetterPropertyIndex(), descriptor->Attributes);
             CacheOperators::CachePropertyReadForGetter(info, originalInstance, propertyT, requestContext);
-            PropertyValueInfo::SetNoCache(info, instance); // we already cached getter, so we don't have to do it once more
+            PropertyValueInfo::SetNoCache(info,
+                                          instance); // we already cached getter, so we don't have to do it once more
 
-            RecyclableObject* func = UnsafeVarTo<RecyclableObject>(instance->GetSlot(descriptor->GetGetterPropertyIndex()));
+            RecyclableObject *func =
+                UnsafeVarTo<RecyclableObject>(instance->GetSlot(descriptor->GetGetterPropertyIndex()));
             *value = JavascriptOperators::CallGetter(func, originalInstance, requestContext);
             return true;
         }
@@ -557,21 +606,24 @@ namespace Js
 
     template <typename T>
     template <bool allowLetConstGlobal>
-    BOOL DictionaryTypeHandlerBase<T>::GetProperty_Internal(DynamicObject* instance, Var originalInstance, PropertyId propertyId,
-        Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    BOOL DictionaryTypeHandlerBase<T>::GetProperty_Internal(DynamicObject *instance, Var originalInstance,
+                                                            PropertyId propertyId, Var *value, PropertyValueInfo *info,
+                                                            ScriptContext *requestContext)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
-            return GetPropertyFromDescriptor<allowLetConstGlobal>(instance, originalInstance, descriptor, value, info, propertyId, requestContext);
+            return GetPropertyFromDescriptor<allowLetConstGlobal>(instance, originalInstance, descriptor, value, info,
+                                                                  propertyId, requestContext);
         }
 
         // Check numeric propertyRecord only if objectArray available
         if (instance->HasObjectArray() && propertyRecord->IsNumeric())
         {
-            return DictionaryTypeHandlerBase<T>::GetItem(instance, originalInstance, propertyRecord->GetNumericValue(), value, requestContext);
+            return DictionaryTypeHandlerBase<T>::GetItem(instance, originalInstance, propertyRecord->GetNumericValue(),
+                                                         value, requestContext);
         }
 
         *value = requestContext->GetMissingPropertyResult();
@@ -579,17 +631,21 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::GetProperty(DynamicObject* instance, Var originalInstance, JavascriptString* propertyNameString,
-        Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
+    BOOL DictionaryTypeHandlerBase<T>::GetProperty(DynamicObject *instance, Var originalInstance,
+                                                   JavascriptString *propertyNameString, Var *value,
+                                                   PropertyValueInfo *info, ScriptContext *requestContext)
     {
-        AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
+        AssertMsg(
+            !PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* before calling GetSetter");
 
-        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
-        DictionaryPropertyDescriptor<T>* descriptor;
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(),
+                                                       propertyNameString->GetLength());
+        DictionaryPropertyDescriptor<T> *descriptor;
         if (propertyMap->TryGetReference(propertyName, &descriptor))
         {
-            return GetPropertyFromDescriptor<false>(instance, originalInstance, descriptor, value, info, propertyName, requestContext);
+            return GetPropertyFromDescriptor<false>(instance, originalInstance, descriptor, value, info, propertyName,
+                                                    requestContext);
         }
 
         *value = requestContext->GetMissingPropertyResult();
@@ -597,7 +653,8 @@ namespace Js
     }
 
     template <typename T>
-    void DictionaryTypeHandlerBase<T>::SetPropertyValueInfo(PropertyValueInfo* info, RecyclableObject* instance, T propIndex, DictionaryPropertyDescriptor<T>* descriptor)
+    void DictionaryTypeHandlerBase<T>::SetPropertyValueInfo(PropertyValueInfo *info, RecyclableObject *instance,
+                                                            T propIndex, DictionaryPropertyDescriptor<T> *descriptor)
     {
         SetPropertyValueInfoNonFixed(info, instance, propIndex, descriptor->Attributes);
         if (descriptor->IsOrMayBecomeFixed())
@@ -612,25 +669,35 @@ namespace Js
     }
 
     template <typename T>
-    void DictionaryTypeHandlerBase<T>::SetPropertyValueInfoNonFixed(PropertyValueInfo* info, RecyclableObject* instance, T propIndex, PropertyAttributes attributes, InlineCacheFlags flags)
+    void DictionaryTypeHandlerBase<T>::SetPropertyValueInfoNonFixed(PropertyValueInfo *info, RecyclableObject *instance,
+                                                                    T propIndex, PropertyAttributes attributes,
+                                                                    InlineCacheFlags flags)
     {
         PropertyValueInfo::Set(info, instance, propIndex, attributes, flags);
     }
 
     template <>
-    void DictionaryTypeHandlerBase<BigPropertyIndex>::SetPropertyValueInfoNonFixed(PropertyValueInfo* info, RecyclableObject* instance, BigPropertyIndex propIndex, PropertyAttributes attributes, InlineCacheFlags flags)
+    void DictionaryTypeHandlerBase<BigPropertyIndex>::SetPropertyValueInfoNonFixed(PropertyValueInfo *info,
+                                                                                   RecyclableObject *instance,
+                                                                                   BigPropertyIndex propIndex,
+                                                                                   PropertyAttributes attributes,
+                                                                                   InlineCacheFlags flags)
     {
         PropertyValueInfo::SetNoCache(info, instance);
     }
 
     template <typename T>
-    DescriptorFlags DictionaryTypeHandlerBase<T>::GetSetter(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
+    DescriptorFlags DictionaryTypeHandlerBase<T>::GetSetter(DynamicObject *instance, PropertyId propertyId,
+                                                            Var *setterValue, PropertyValueInfo *info,
+                                                            ScriptContext *requestContext)
     {
         return GetSetter_Internal<false>(instance, propertyId, setterValue, info, requestContext);
     }
 
     template <typename T>
-    DescriptorFlags DictionaryTypeHandlerBase<T>::GetRootSetter(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
+    DescriptorFlags DictionaryTypeHandlerBase<T>::GetRootSetter(DynamicObject *instance, PropertyId propertyId,
+                                                                Var *setterValue, PropertyValueInfo *info,
+                                                                ScriptContext *requestContext)
     {
         AssertMsg(VarIs<RootObjectBase>(instance), "Instance must be a root object!");
         return GetSetter_Internal<true>(instance, propertyId, setterValue, info, requestContext);
@@ -638,12 +705,14 @@ namespace Js
 
     template <typename T>
     template <bool allowLetConstGlobal>
-    DescriptorFlags DictionaryTypeHandlerBase<T>::GetSetter_Internal(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
+    DescriptorFlags DictionaryTypeHandlerBase<T>::GetSetter_Internal(DynamicObject *instance, PropertyId propertyId,
+                                                                     Var *setterValue, PropertyValueInfo *info,
+                                                                     ScriptContext *requestContext)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
 
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             return GetSetterFromDescriptor<allowLetConstGlobal>(instance, descriptor, setterValue, info);
@@ -652,7 +721,8 @@ namespace Js
         // Check numeric propertyRecord only if objectArray available
         if (instance->HasObjectArray() && propertyRecord->IsNumeric())
         {
-            return DictionaryTypeHandlerBase<T>::GetItemSetter(instance, propertyRecord->GetNumericValue(), setterValue, requestContext);
+            return DictionaryTypeHandlerBase<T>::GetItemSetter(instance, propertyRecord->GetNumericValue(), setterValue,
+                                                               requestContext);
         }
 
         return None;
@@ -660,7 +730,9 @@ namespace Js
 
     template <typename T>
     template <bool allowLetConstGlobal>
-    DescriptorFlags DictionaryTypeHandlerBase<T>::GetSetterFromDescriptor(DynamicObject* instance, DictionaryPropertyDescriptor<T> * descriptor, Var* setterValue, PropertyValueInfo* info)
+    DescriptorFlags DictionaryTypeHandlerBase<T>::GetSetterFromDescriptor(DynamicObject *instance,
+                                                                          DictionaryPropertyDescriptor<T> *descriptor,
+                                                                          Var *setterValue, PropertyValueInfo *info)
     {
         if (descriptor->Attributes & PropertyDeleted)
         {
@@ -685,21 +757,26 @@ namespace Js
         }
         else if (descriptor->GetSetterPropertyIndex() != NoSlots)
         {
-            *setterValue = ((DynamicObject*)instance)->GetSlot(descriptor->GetSetterPropertyIndex());
-            SetPropertyValueInfoNonFixed(info, instance, descriptor->GetSetterPropertyIndex(), descriptor->Attributes, InlineCacheSetterFlag);
+            *setterValue = ((DynamicObject *)instance)->GetSlot(descriptor->GetSetterPropertyIndex());
+            SetPropertyValueInfoNonFixed(info, instance, descriptor->GetSetterPropertyIndex(), descriptor->Attributes,
+                                         InlineCacheSetterFlag);
             return Accessor;
         }
         return None;
     }
 
     template <typename T>
-    DescriptorFlags DictionaryTypeHandlerBase<T>::GetSetter(DynamicObject* instance, JavascriptString* propertyNameString, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
+    DescriptorFlags DictionaryTypeHandlerBase<T>::GetSetter(DynamicObject *instance,
+                                                            JavascriptString *propertyNameString, Var *setterValue,
+                                                            PropertyValueInfo *info, ScriptContext *requestContext)
     {
-        AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
+        AssertMsg(
+            !PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* before calling GetSetter");
 
-        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
-        DictionaryPropertyDescriptor<T>* descriptor;
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(),
+                                                       propertyNameString->GetLength());
+        DictionaryPropertyDescriptor<T> *descriptor;
 
         if (propertyMap->TryGetReference(propertyName, &descriptor))
         {
@@ -710,35 +787,36 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetRootProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL DictionaryTypeHandlerBase<T>::SetRootProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                       PropertyOperationFlags flags, PropertyValueInfo *info)
     {
         AssertMsg(VarIs<RootObjectBase>(instance), "Instance must be a root object!");
         return SetProperty_Internal<true>(instance, propertyId, value, flags, info);
     }
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::InitProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL DictionaryTypeHandlerBase<T>::InitProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                    PropertyOperationFlags flags, PropertyValueInfo *info)
     {
         return SetProperty_Internal<false>(instance, propertyId, value, flags, info, true /* IsInit */);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL DictionaryTypeHandlerBase<T>::SetProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                   PropertyOperationFlags flags, PropertyValueInfo *info)
     {
         return SetProperty_Internal<false>(instance, propertyId, value, flags, info);
     }
 
     template <typename T>
     template <bool allowLetConstGlobal>
-    void DictionaryTypeHandlerBase<T>::SetPropertyWithDescriptor(
-        _In_ DynamicObject* instance,
-        _In_ PropertyRecord const* propertyRecord,
-        _Inout_ DictionaryPropertyDescriptor<T> ** pdescriptor,
-        _In_ Var value,
-        _In_ PropertyOperationFlags flags,
-        _Inout_opt_ PropertyValueInfo* info)
+    void DictionaryTypeHandlerBase<T>::SetPropertyWithDescriptor(_In_ DynamicObject *instance,
+                                                                 _In_ PropertyRecord const *propertyRecord,
+                                                                 _Inout_ DictionaryPropertyDescriptor<T> **pdescriptor,
+                                                                 _In_ Var value, _In_ PropertyOperationFlags flags,
+                                                                 _Inout_opt_ PropertyValueInfo *info)
     {
         Assert(pdescriptor && *pdescriptor);
-        DictionaryPropertyDescriptor<T> * descriptor = *pdescriptor;
+        DictionaryPropertyDescriptor<T> *descriptor = *pdescriptor;
         PropertyId propertyId = propertyRecord->GetPropertyId();
         Assert(instance);
         Assert((descriptor->Attributes & PropertyDeleted) == 0 || (allowLetConstGlobal && descriptor->GetIsShadowed()));
@@ -746,17 +824,17 @@ namespace Js
         // DictionaryTypeHandlers are not supposed to be shared.
         Assert(!GetIsOrMayBecomeShared());
 #if ENABLE_FIXED_FIELDS
-        DynamicObject* localSingletonInstance = this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
+        DynamicObject *localSingletonInstance =
+            this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
         Assert(this->singletonInstance == nullptr || localSingletonInstance == instance);
 #endif
         T dataSlotAllowLetConstGlobal = descriptor->template GetDataPropertyIndex<allowLetConstGlobal>();
         if (dataSlotAllowLetConstGlobal != NoSlots)
         {
-            if (allowLetConstGlobal
-                && (descriptor->Attributes & PropertyNoRedecl)
-                && !(flags & PropertyOperation_AllowUndecl))
+            if (allowLetConstGlobal && (descriptor->Attributes & PropertyNoRedecl) &&
+                !(flags & PropertyOperation_AllowUndecl))
             {
-                ScriptContext* scriptContext = instance->GetScriptContext();
+                ScriptContext *scriptContext = instance->GetScriptContext();
                 if (scriptContext->IsUndeclBlockVar(instance->GetSlot(dataSlotAllowLetConstGlobal)))
                 {
                     JavascriptError::ThrowReferenceError(scriptContext, JSERR_UseBeforeDeclaration);
@@ -772,9 +850,13 @@ namespace Js
                         (flags & (PropertyOperation_NonFixedValue | PropertyOperation_SpecialValue)) == 0)
                     {
                         Assert(value != nullptr);
-                        // We don't want fixed properties on external objects.  See DynamicObject::ResetObject for more information.
+                        // We don't want fixed properties on external objects.  See DynamicObject::ResetObject for more
+                        // information.
                         Assert(!instance->IsExternal());
-                        descriptor->SetIsFixed(VarIs<JavascriptFunction>(value) ? ShouldFixMethodProperties() : (ShouldFixDataProperties() && CheckHeuristicsForFixedDataProps(instance, propertyId, value)));
+                        descriptor->SetIsFixed(VarIs<JavascriptFunction>(value)
+                                                   ? ShouldFixMethodProperties()
+                                                   : (ShouldFixDataProperties() &&
+                                                      CheckHeuristicsForFixedDataProps(instance, propertyId, value)));
                     }
                 }
             }
@@ -788,7 +870,9 @@ namespace Js
             // when overwriting this property and correctly invalidate any JIT-ed code that hard-coded this method.
             if (!descriptor->IsOrMayBecomeFixed())
             {
-                SetPropertyValueInfoNonFixed(info, instance, dataSlotAllowLetConstGlobal, GetLetConstGlobalPropertyAttributes<allowLetConstGlobal>(descriptor->Attributes));
+                SetPropertyValueInfoNonFixed(
+                    info, instance, dataSlotAllowLetConstGlobal,
+                    GetLetConstGlobalPropertyAttributes<allowLetConstGlobal>(descriptor->Attributes));
             }
             else
             {
@@ -797,7 +881,7 @@ namespace Js
         }
         else if (descriptor->GetSetterPropertyIndex() != NoSlots)
         {
-            RecyclableObject* func = VarTo<RecyclableObject>(instance->GetSlot(descriptor->GetSetterPropertyIndex()));
+            RecyclableObject *func = VarTo<RecyclableObject>(instance->GetSlot(descriptor->GetSetterPropertyIndex()));
             JavascriptOperators::CallSetter(func, instance, value, NULL);
 
             // Wait for the setter to return before setting up the inline cache info, as the setter may change
@@ -813,7 +897,8 @@ namespace Js
                 }
                 else if (descriptor->GetSetterPropertyIndex() != NoSlots)
                 {
-                    SetPropertyValueInfoNonFixed(info, instance, descriptor->GetSetterPropertyIndex(), descriptor->Attributes, InlineCacheSetterFlag);
+                    SetPropertyValueInfoNonFixed(info, instance, descriptor->GetSetterPropertyIndex(),
+                                                 descriptor->Attributes, InlineCacheSetterFlag);
                 }
             }
             else
@@ -834,17 +919,20 @@ namespace Js
 
     template <typename T>
     template <bool allowLetConstGlobal>
-    BOOL DictionaryTypeHandlerBase<T>::SetProperty_Internal(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info, bool isInit)
+    BOOL DictionaryTypeHandlerBase<T>::SetProperty_Internal(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                            PropertyOperationFlags flags, PropertyValueInfo *info,
+                                                            bool isInit)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        DictionaryPropertyDescriptor<T>* descriptor;
-        bool throwIfNotExtensible = (flags & (PropertyOperation_ThrowIfNotExtensible | PropertyOperation_StrictMode)) != 0;
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        DictionaryPropertyDescriptor<T> *descriptor;
+        bool throwIfNotExtensible =
+            (flags & (PropertyOperation_ThrowIfNotExtensible | PropertyOperation_StrictMode)) != 0;
         bool isForce = (flags & PropertyOperation_Force) != 0;
 
         JavascriptLibrary::CheckAndInvalidateIsConcatSpreadableCache(propertyId, scriptContext);
 
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = scriptContext->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = scriptContext->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
 #if ENABLE_FIXED_FIELDS
@@ -862,7 +950,8 @@ namespace Js
                 scriptContext->InvalidateProtoCaches(propertyId);
                 if (descriptor->Attributes & PropertyLetConstGlobal)
                 {
-                    descriptor->Attributes = PropertyDynamicTypeDefaults | (descriptor->Attributes & (PropertyLetConstGlobal | PropertyNoRedecl));
+                    descriptor->Attributes = PropertyDynamicTypeDefaults |
+                        (descriptor->Attributes & (PropertyLetConstGlobal | PropertyNoRedecl));
                 }
                 else
                 {
@@ -871,17 +960,19 @@ namespace Js
                 instance->SetHasNoEnumerableProperties(false);
                 descriptor->ConvertToData();
             }
-            else if (!allowLetConstGlobal && descriptor->HasNonLetConstGlobal() && !(descriptor->Attributes & PropertyWritable))
+            else if (!allowLetConstGlobal && descriptor->HasNonLetConstGlobal() &&
+                     !(descriptor->Attributes & PropertyWritable))
             {
                 if (!isForce)
                 {
                     JavascriptError::ThrowCantAssignIfStrictMode(flags, scriptContext);
                 }
 
-                // Since we separate LdFld and StFld caches there is no point in caching for StFld with non-writable properties, except perhaps
-                // to prepopulate the type property cache (which we do share between LdFld and StFld), for potential future field loads.  This
-                // would require additional handling in CacheOperators::CachePropertyWrite, such that for !info-IsWritable() we don't populate
-                // the local cache (that would be illegal), but still populate the type's property cache.
+                // Since we separate LdFld and StFld caches there is no point in caching for StFld with non-writable
+                // properties, except perhaps to prepopulate the type property cache (which we do share between LdFld
+                // and StFld), for potential future field loads.  This would require additional handling in
+                // CacheOperators::CachePropertyWrite, such that for !info-IsWritable() we don't populate the local
+                // cache (that would be illegal), but still populate the type's property cache.
                 PropertyValueInfo::SetNoCache(info, instance);
                 return false;
             }
@@ -899,46 +990,54 @@ namespace Js
             // Calls this or subclass implementation
             return SetItem(instance, propertyRecord->GetNumericValue(), value, flags);
         }
-        return this->AddProperty(instance, propertyRecord, value, PropertyDynamicTypeDefaults, info, flags, throwIfNotExtensible, SideEffects_Any);
-        }
+        return this->AddProperty(instance, propertyRecord, value, PropertyDynamicTypeDefaults, info, flags,
+                                 throwIfNotExtensible, SideEffects_Any);
+    }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetProperty(DynamicObject* instance, JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)
+    BOOL DictionaryTypeHandlerBase<T>::SetProperty(DynamicObject *instance, JavascriptString *propertyNameString,
+                                                   Var value, PropertyOperationFlags flags, PropertyValueInfo *info)
     {
         // Either the property exists in the dictionary, in which case a PropertyRecord for it exists,
         // or we have to add it to the dictionary, in which case we need to get or create a PropertyRecord.
         // Thus, just get or create one and call the PropertyId overload of SetProperty.
-        PropertyRecord const * propertyRecord;
+        PropertyRecord const *propertyRecord;
         instance->GetScriptContext()->GetOrAddPropertyRecord(propertyNameString, &propertyRecord);
         return DictionaryTypeHandlerBase<T>::SetProperty(instance, propertyRecord->GetPropertyId(), value, flags, info);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetInternalProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags)
+    BOOL DictionaryTypeHandlerBase<T>::SetInternalProperty(DynamicObject *instance, PropertyId propertyId, Var value,
+                                                           PropertyOperationFlags flags)
     {
         return SetPropertyWithAttributes(instance, propertyId, value, PropertyInternalDefaults, nullptr, flags);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::DeleteProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags propertyOperationFlags)
+    BOOL DictionaryTypeHandlerBase<T>::DeleteProperty(DynamicObject *instance, PropertyId propertyId,
+                                                      PropertyOperationFlags propertyOperationFlags)
     {
         return DeleteProperty_Internal<false>(instance, propertyId, propertyOperationFlags);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::DeleteProperty(DynamicObject *instance, JavascriptString *propertyNameString, PropertyOperationFlags propertyOperationFlags)
+    BOOL DictionaryTypeHandlerBase<T>::DeleteProperty(DynamicObject *instance, JavascriptString *propertyNameString,
+                                                      PropertyOperationFlags propertyOperationFlags)
     {
-        AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
+        AssertMsg(
+            !PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord* ");
 
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        JavascriptLibrary* library = scriptContext->GetLibrary();
-        DictionaryPropertyDescriptor<T>* descriptor;
-        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(), propertyNameString->GetLength());
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        JavascriptLibrary *library = scriptContext->GetLibrary();
+        DictionaryPropertyDescriptor<T> *descriptor;
+        JsUtil::CharacterBuffer<char16_t> propertyName(propertyNameString->GetString(),
+                                                       propertyNameString->GetLength());
 
         if (propertyMap->TryGetReference(propertyName, &descriptor))
         {
-            if (!this->GetHasSpecialProperties() && NoSpecialPropertyCache::IsDefaultHandledSpecialProperty(propertyNameString))
+            if (!this->GetHasSpecialProperties() &&
+                NoSpecialPropertyCache::IsDefaultHandledSpecialProperty(propertyNameString))
             {
                 // If you are deleting a valueOf/toString and the flag wasn't set, it means you are deleting the default
                 // implementation off of Object.prototype
@@ -958,8 +1057,8 @@ namespace Js
             else if (!(descriptor->Attributes & PropertyConfigurable))
             {
                 // Let/const properties do not have attributes and they cannot be deleted
-                JavascriptError::ThrowCantDeleteIfStrictModeOrNonconfigurable(
-                    propertyOperationFlags, scriptContext, propertyNameString->GetString());
+                JavascriptError::ThrowCantDeleteIfStrictModeOrNonconfigurable(propertyOperationFlags, scriptContext,
+                                                                              propertyNameString->GetString());
 
                 return false;
             }
@@ -982,7 +1081,8 @@ namespace Js
 
                 if (this->GetFlags() & IsPrototypeFlag)
                 {
-                    scriptContext->InvalidateProtoCaches(scriptContext->GetOrAddPropertyIdTracked(propertyNameString->GetString(), propertyNameString->GetLength()));
+                    scriptContext->InvalidateProtoCaches(scriptContext->GetOrAddPropertyIdTracked(
+                        propertyNameString->GetString(), propertyNameString->GetLength()));
                 }
 
                 if ((descriptor->Attributes & PropertyLetConstGlobal) == 0)
@@ -1016,7 +1116,8 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::DeleteRootProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags propertyOperationFlags)
+    BOOL DictionaryTypeHandlerBase<T>::DeleteRootProperty(DynamicObject *instance, PropertyId propertyId,
+                                                          PropertyOperationFlags propertyOperationFlags)
     {
         AssertMsg(VarIs<RootObjectBase>(instance), "Instance must be a root object!");
         return DeleteProperty_Internal<true>(instance, propertyId, propertyOperationFlags);
@@ -1024,12 +1125,13 @@ namespace Js
 
     template <typename T>
     template <bool allowLetConstGlobal>
-    BOOL DictionaryTypeHandlerBase<T>::DeleteProperty_Internal(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags propertyOperationFlags)
+    BOOL DictionaryTypeHandlerBase<T>::DeleteProperty_Internal(DynamicObject *instance, PropertyId propertyId,
+                                                               PropertyOperationFlags propertyOperationFlags)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        DictionaryPropertyDescriptor<T>* descriptor;
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = scriptContext->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = scriptContext->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             if (!this->GetHasSpecialProperties() && NoSpecialPropertyCache::IsDefaultHandledSpecialProperty(propertyId))
@@ -1052,14 +1154,15 @@ namespace Js
                 // if branch below.
                 if (allowLetConstGlobal && (descriptor->Attributes & PropertyLetConstGlobal))
                 {
-                    JavascriptError::ThrowCantDeleteIfStrictMode(propertyOperationFlags, scriptContext, propertyRecord->GetBuffer());
+                    JavascriptError::ThrowCantDeleteIfStrictMode(propertyOperationFlags, scriptContext,
+                                                                 propertyRecord->GetBuffer());
 
                     return false;
                 }
                 return true;
             }
             else if (!(descriptor->Attributes & PropertyConfigurable) ||
-                (allowLetConstGlobal && (descriptor->Attributes & PropertyLetConstGlobal)))
+                     (allowLetConstGlobal && (descriptor->Attributes & PropertyLetConstGlobal)))
             {
                 // Let/const properties do not have attributes and they cannot be deleted
                 JavascriptError::ThrowCantDeleteIfStrictModeOrNonconfigurable(
@@ -1119,7 +1222,8 @@ namespace Js
         // Check numeric propertyRecord only if objectArray available
         if (instance->HasObjectArray() && propertyRecord->IsNumeric())
         {
-            return DictionaryTypeHandlerBase<T>::DeleteItem(instance, propertyRecord->GetNumericValue(), propertyOperationFlags);
+            return DictionaryTypeHandlerBase<T>::DeleteItem(instance, propertyRecord->GetNumericValue(),
+                                                            propertyOperationFlags);
         }
 
         return true;
@@ -1127,12 +1231,12 @@ namespace Js
 
 #if ENABLE_FIXED_FIELDS
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::IsFixedProperty(const DynamicObject* instance, PropertyId propertyId)
+    BOOL DictionaryTypeHandlerBase<T>::IsFixedProperty(const DynamicObject *instance, PropertyId propertyId)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         DictionaryPropertyDescriptor<T> descriptor;
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = scriptContext->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = scriptContext->GetPropertyName(propertyId);
         if (propertyMap->TryGetValue(propertyRecord, &descriptor))
         {
             return descriptor.GetIsFixed();
@@ -1146,11 +1250,12 @@ namespace Js
 #endif
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetItem(DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags)
+    BOOL DictionaryTypeHandlerBase<T>::SetItem(DynamicObject *instance, uint32_t index, Var value,
+                                               PropertyOperationFlags flags)
     {
         if (!(this->GetFlags() & IsExtensibleFlag) && !instance->HasObjectArray())
         {
-            ScriptContext* scriptContext = instance->GetScriptContext();
+            ScriptContext *scriptContext = instance->GetScriptContext();
             JavascriptError::ThrowCantExtendIfStrictMode(flags, scriptContext);
             return false;
         }
@@ -1158,25 +1263,28 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetItemWithAttributes(DynamicObject* instance, uint32_t index, Var value, PropertyAttributes attributes)
+    BOOL DictionaryTypeHandlerBase<T>::SetItemWithAttributes(DynamicObject *instance, uint32_t index, Var value,
+                                                             PropertyAttributes attributes)
     {
         return instance->SetObjectArrayItemWithAttributes(index, value, attributes);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetItemAttributes(DynamicObject* instance, uint32_t index, PropertyAttributes attributes)
+    BOOL DictionaryTypeHandlerBase<T>::SetItemAttributes(DynamicObject *instance, uint32_t index,
+                                                         PropertyAttributes attributes)
     {
         return instance->SetObjectArrayItemAttributes(index, attributes);
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetItemAccessors(DynamicObject* instance, uint32_t index, Var getter, Var setter)
+    BOOL DictionaryTypeHandlerBase<T>::SetItemAccessors(DynamicObject *instance, uint32_t index, Var getter, Var setter)
     {
         return instance->SetObjectArrayItemAccessors(index, getter, setter);
     }
 
     template <typename T>
-    DescriptorFlags DictionaryTypeHandlerBase<T>::GetItemSetter(DynamicObject* instance, uint32_t index, Var* setterValue, ScriptContext* requestContext)
+    DescriptorFlags DictionaryTypeHandlerBase<T>::GetItemSetter(DynamicObject *instance, uint32_t index,
+                                                                Var *setterValue, ScriptContext *requestContext)
     {
         if (instance->HasObjectArray())
         {
@@ -1186,11 +1294,11 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::IsEnumerable(DynamicObject* instance, PropertyId propertyId)
+    BOOL DictionaryTypeHandlerBase<T>::IsEnumerable(DynamicObject *instance, PropertyId propertyId)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             if (!descriptor->HasNonLetConstGlobal())
@@ -1205,7 +1313,7 @@ namespace Js
         // Check numeric propertyRecord only if objectArray available
         if (propertyRecord->IsNumeric())
         {
-            ArrayObject * objectArray = instance->GetObjectArray();
+            ArrayObject *objectArray = instance->GetObjectArray();
             if (objectArray != nullptr)
             {
                 return objectArray->IsEnumerable(propertyId);
@@ -1216,11 +1324,11 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::IsWritable(DynamicObject* instance, PropertyId propertyId)
+    BOOL DictionaryTypeHandlerBase<T>::IsWritable(DynamicObject *instance, PropertyId propertyId)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             if (!descriptor->HasNonLetConstGlobal())
@@ -1234,7 +1342,7 @@ namespace Js
         // Check numeric propertyRecord only if objectArray available
         if (propertyRecord->IsNumeric())
         {
-            ArrayObject * objectArray = instance->GetObjectArray();
+            ArrayObject *objectArray = instance->GetObjectArray();
             if (objectArray != nullptr)
             {
                 return objectArray->IsWritable(propertyId);
@@ -1245,11 +1353,11 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::IsConfigurable(DynamicObject* instance, PropertyId propertyId)
+    BOOL DictionaryTypeHandlerBase<T>::IsConfigurable(DynamicObject *instance, PropertyId propertyId)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             if (!descriptor->HasNonLetConstGlobal())
@@ -1263,7 +1371,7 @@ namespace Js
         // Check numeric propertyRecord only if objectArray available
         if (propertyRecord->IsNumeric())
         {
-            ArrayObject * objectArray = instance->GetObjectArray();
+            ArrayObject *objectArray = instance->GetObjectArray();
             if (objectArray != nullptr)
             {
                 return objectArray->IsConfigurable(propertyId);
@@ -1274,11 +1382,11 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetEnumerable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    BOOL DictionaryTypeHandlerBase<T>::SetEnumerable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             if (descriptor->Attributes & PropertyDeleted)
@@ -1307,7 +1415,7 @@ namespace Js
         // Check numeric propertyRecord only if objectArray available
         if (propertyRecord->IsNumeric())
         {
-            ArrayObject * objectArray = instance->GetObjectArray();
+            ArrayObject *objectArray = instance->GetObjectArray();
             if (objectArray != nullptr)
             {
                 return objectArray->SetEnumerable(propertyId, value);
@@ -1318,12 +1426,12 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetWritable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    BOOL DictionaryTypeHandlerBase<T>::SetWritable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(propertyId != Constants::NoProperty);
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        PropertyRecord const* propertyRecord = scriptContext->GetPropertyName(propertyId);
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        PropertyRecord const *propertyRecord = scriptContext->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             if (descriptor->Attributes & PropertyDeleted)
@@ -1345,7 +1453,8 @@ namespace Js
             {
                 descriptor->Attributes &= (~PropertyWritable);
 
-                instance->GetLibrary()->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, descriptor->Attributes, propertyId, scriptContext);
+                instance->GetLibrary()->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(
+                    this, descriptor->Attributes, propertyId, scriptContext);
             }
             instance->ChangeType();
             return true;
@@ -1361,11 +1470,11 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetConfigurable(DynamicObject* instance, PropertyId propertyId, BOOL value)
+    BOOL DictionaryTypeHandlerBase<T>::SetConfigurable(DynamicObject *instance, PropertyId propertyId, BOOL value)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             if (descriptor->Attributes & PropertyDeleted)
@@ -1393,7 +1502,7 @@ namespace Js
         // Check numeric propertyRecord only if objectArray available
         if (propertyRecord->IsNumeric())
         {
-            ArrayObject * objectArray = instance->GetObjectArray();
+            ArrayObject *objectArray = instance->GetObjectArray();
             if (objectArray != nullptr)
             {
                 return objectArray->SetConfigurable(propertyId, value);
@@ -1404,11 +1513,11 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::PreventExtensions(DynamicObject* instance)
+    BOOL DictionaryTypeHandlerBase<T>::PreventExtensions(DynamicObject *instance)
     {
         this->ClearFlags(IsExtensibleFlag);
 
-        ArrayObject * objectArray = instance->GetObjectArray();
+        ArrayObject *objectArray = instance->GetObjectArray();
         if (objectArray)
         {
             objectArray->PreventExtensions();
@@ -1418,7 +1527,7 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::Seal(DynamicObject* instance)
+    BOOL DictionaryTypeHandlerBase<T>::Seal(DynamicObject *instance)
     {
         this->ClearFlags(IsExtensibleFlag);
 
@@ -1433,7 +1542,7 @@ namespace Js
             }
         }
 
-        ArrayObject * objectArray = instance->GetObjectArray();
+        ArrayObject *objectArray = instance->GetObjectArray();
         if (objectArray)
         {
             objectArray->Seal();
@@ -1443,7 +1552,7 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::FreezeImpl(DynamicObject* instance, bool isConvertedType)
+    BOOL DictionaryTypeHandlerBase<T>::FreezeImpl(DynamicObject *instance, bool isConvertedType)
     {
         this->ClearFlags(IsExtensibleFlag);
 
@@ -1468,17 +1577,18 @@ namespace Js
 #if DBG
             else
             {
-                AssertMsg(VarIs<RootObjectBase>(instance), "instance needs to be global object when letconst global is set");
+                AssertMsg(VarIs<RootObjectBase>(instance),
+                          "instance needs to be global object when letconst global is set");
             }
 #endif
-                }
+        }
         if (!isConvertedType)
         {
             // Change of [[Writable]] property requires cache invalidation, hence ChangeType
             instance->ChangeType();
         }
 
-        ArrayObject * objectArray = instance->GetObjectArray();
+        ArrayObject *objectArray = instance->GetObjectArray();
         if (objectArray)
         {
             objectArray->Freeze();
@@ -1495,7 +1605,7 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::IsSealed(DynamicObject* instance)
+    BOOL DictionaryTypeHandlerBase<T>::IsSealed(DynamicObject *instance)
     {
         if (this->GetFlags() & IsExtensibleFlag)
         {
@@ -1517,7 +1627,7 @@ namespace Js
             }
         }
 
-        ArrayObject * objectArray = instance->GetObjectArray();
+        ArrayObject *objectArray = instance->GetObjectArray();
         if (objectArray && !objectArray->IsSealed())
         {
             return false;
@@ -1527,7 +1637,7 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::IsFrozen(DynamicObject* instance)
+    BOOL DictionaryTypeHandlerBase<T>::IsFrozen(DynamicObject *instance)
     {
         if (this->GetFlags() & IsExtensibleFlag)
         {
@@ -1545,7 +1655,8 @@ namespace Js
                     return false;
                 }
 
-                if (descriptor->template GetDataPropertyIndex<false>() != NoSlots && (descriptor->Attributes & PropertyWritable))
+                if (descriptor->template GetDataPropertyIndex<false>() != NoSlots &&
+                    (descriptor->Attributes & PropertyWritable))
                 {
                     // Only data descriptor has [[Writable]] property
                     return false;
@@ -1554,7 +1665,7 @@ namespace Js
         }
 
         // Use IsObjectArrayFrozen() to skip "length" [[Writable]] check
-        ArrayObject * objectArray = instance->GetObjectArray();
+        ArrayObject *objectArray = instance->GetObjectArray();
         if (objectArray && !objectArray->IsObjectArrayFrozen())
         {
             return false;
@@ -1564,14 +1675,16 @@ namespace Js
     }
 
     template <typename T>
-    _Check_return_ _Success_(return) BOOL DictionaryTypeHandlerBase<T>::GetAccessors(DynamicObject* instance, PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter)
+    _Check_return_ _Success_(return) BOOL DictionaryTypeHandlerBase<T>::GetAccessors(
+        DynamicObject *instance, PropertyId propertyId, _Outptr_result_maybenull_ Var *getter,
+        _Outptr_result_maybenull_ Var *setter)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        DictionaryPropertyDescriptor<T> *descriptor;
+        ScriptContext *scriptContext = instance->GetScriptContext();
         AssertMsg(nullptr != getter && nullptr != setter, "Getter/Setter must be a valid pointer");
 
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = scriptContext->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = scriptContext->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             if (descriptor->Attributes & PropertyDeleted)
@@ -1591,7 +1704,8 @@ namespace Js
                 if (descriptor->GetSetterPropertyIndex() != NoSlots)
                 {
                     *setter = instance->GetSlot(descriptor->GetSetterPropertyIndex());
-                    if(!getset) {
+                    if (!getset)
+                    {
                         // if we didn't set the getter above, we need to set it here
                         *getter = nullptr;
                     }
@@ -1604,7 +1718,7 @@ namespace Js
         // Check numeric propertyRecord only if objectArray available
         if (propertyRecord->IsNumeric())
         {
-            ArrayObject * objectArray = instance->GetObjectArray();
+            ArrayObject *objectArray = instance->GetObjectArray();
             if (objectArray != nullptr)
             {
                 return objectArray->GetAccessors(propertyId, getter, setter, scriptContext);
@@ -1615,28 +1729,29 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetAccessors(DynamicObject* instance, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
+    BOOL DictionaryTypeHandlerBase<T>::SetAccessors(DynamicObject *instance, PropertyId propertyId, Var getter,
+                                                    Var setter, PropertyOperationFlags flags)
     {
         Assert(instance);
-        JavascriptLibrary* library = instance->GetLibrary();
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        JavascriptLibrary *library = instance->GetLibrary();
+        ScriptContext *scriptContext = instance->GetScriptContext();
 
-        Assert(this->VerifyIsExtensible(scriptContext, false) || this->HasProperty(instance, propertyId)
-            || JavascriptFunction::IsBuiltinProperty(instance, propertyId));
+        Assert(this->VerifyIsExtensible(scriptContext, false) || this->HasProperty(instance, propertyId) ||
+               JavascriptFunction::IsBuiltinProperty(instance, propertyId));
 
         // We could potentially need 2 new slots to hold getter/setter, try pre-reserve
         if (this->GetSlotCapacity() - 2 < nextPropertyIndex)
         {
             if (this->GetSlotCapacity() > MaxPropertyIndexSize - 2)
             {
-                return ConvertToBigDictionaryTypeHandler(instance)
-                    ->SetAccessors(instance, propertyId, getter, setter, flags);
+                return ConvertToBigDictionaryTypeHandler(instance)->SetAccessors(instance, propertyId, getter, setter,
+                                                                                 flags);
             }
 
             this->EnsureSlotCapacity(instance, 2);
         }
 
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         if (this->GetFlags() & IsPrototypeFlag)
         {
             scriptContext->InvalidateProtoCaches(propertyId);
@@ -1660,7 +1775,7 @@ namespace Js
         }
 
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
 #if ENABLE_FIXED_FIELDS
@@ -1670,7 +1785,8 @@ namespace Js
             {
                 if (descriptor->Attributes & PropertyLetConstGlobal)
                 {
-                    descriptor->Attributes = PropertyDynamicTypeDefaults | (descriptor->Attributes & (PropertyLetConstGlobal | PropertyNoRedecl));
+                    descriptor->Attributes = PropertyDynamicTypeDefaults |
+                        (descriptor->Attributes & (PropertyLetConstGlobal | PropertyNoRedecl));
                 }
                 else
                 {
@@ -1694,7 +1810,8 @@ namespace Js
             // DictionaryTypeHandlers are not supposed to be shared.
             Assert(!GetIsOrMayBecomeShared());
 #if ENABLE_FIXED_FIELDS
-            DynamicObject* localSingletonInstance = this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
+            DynamicObject *localSingletonInstance =
+                this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
             Assert(this->singletonInstance == nullptr || localSingletonInstance == instance);
 
             // Although we don't actually have CreateTypeForNewScObject on DictionaryTypeHandler, we could potentially
@@ -1704,9 +1821,11 @@ namespace Js
                 descriptor->SetIsInitialized(true);
                 if (localSingletonInstance == instance && !IsInternalPropertyId(propertyId))
                 {
-                    // We don't want fixed properties on external objects.  See DynamicObject::ResetObject for more information.
+                    // We don't want fixed properties on external objects.  See DynamicObject::ResetObject for more
+                    // information.
                     Assert(!instance->IsExternal() || (flags & PropertyOperation_NonFixedValue) != 0);
-                    descriptor->SetIsFixed((flags & PropertyOperation_NonFixedValue) == 0 && ShouldFixAccessorProperties());
+                    descriptor->SetIsFixed((flags & PropertyOperation_NonFixedValue) == 0 &&
+                                           ShouldFixAccessorProperties());
                 }
                 if (!isGetterSet || !isSetterSet)
                 {
@@ -1715,7 +1834,8 @@ namespace Js
             }
             else if (descriptor->GetIsOnlyOneAccessorInitialized())
             {
-                // Only one of getter/setter was initialized, allow the isFixed to stay if we are defining the other one.
+                // Only one of getter/setter was initialized, allow the isFixed to stay if we are defining the other
+                // one.
                 Var oldGetter = GetSlot(instance, descriptor->GetGetterPropertyIndex());
                 Var oldSetter = GetSlot(instance, descriptor->GetSetterPropertyIndex());
 
@@ -1747,13 +1867,16 @@ namespace Js
                 SetSlotUnchecked(instance, descriptor->GetSetterPropertyIndex(), setter);
             }
             instance->ChangeType();
-            library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, PropertyNone, propertyRecord, scriptContext);
-            library->GetTypesWithNoSpecialPropertyProtoChainCache()->ProcessProperty(this, PropertyNone, propertyRecord, scriptContext);
+            library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, PropertyNone,
+                                                                                        propertyRecord, scriptContext);
+            library->GetTypesWithNoSpecialPropertyProtoChainCache()->ProcessProperty(this, PropertyNone, propertyRecord,
+                                                                                     scriptContext);
 
             SetPropertyUpdateSideEffect(instance, propertyId, nullptr, SideEffects_Any);
 
             // Let's make sure we always have a getter and a setter
-            Assert(instance->GetSlot(descriptor->GetGetterPropertyIndex()) != nullptr && instance->GetSlot(descriptor->GetSetterPropertyIndex()) != nullptr);
+            Assert(instance->GetSlot(descriptor->GetGetterPropertyIndex()) != nullptr &&
+                   instance->GetSlot(descriptor->GetSetterPropertyIndex()) != nullptr);
 
             return true;
         }
@@ -1775,7 +1898,8 @@ namespace Js
         // DictionaryTypeHandlers are not supposed to be shared.
         Assert(!GetIsOrMayBecomeShared());
 #if ENABLE_FIXED_FIELDS
-        DynamicObject* localSingletonInstance = this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
+        DynamicObject *localSingletonInstance =
+            this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
         Assert(this->singletonInstance == nullptr || localSingletonInstance == instance);
         newDescriptor.SetIsInitialized(true);
         if (localSingletonInstance == instance && !IsInternalPropertyId(propertyId))
@@ -1798,13 +1922,16 @@ namespace Js
         SetSlotUnchecked(instance, newDescriptor.GetGetterPropertyIndex(), getter);
         SetSlotUnchecked(instance, newDescriptor.GetSetterPropertyIndex(), setter);
 
-        library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, PropertyNone, propertyRecord, scriptContext);
-        library->GetTypesWithNoSpecialPropertyProtoChainCache()->ProcessProperty(this, PropertyNone, propertyRecord, scriptContext);
+        library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, PropertyNone, propertyRecord,
+                                                                                    scriptContext);
+        library->GetTypesWithNoSpecialPropertyProtoChainCache()->ProcessProperty(this, PropertyNone, propertyRecord,
+                                                                                 scriptContext);
 
         SetPropertyUpdateSideEffect(instance, propertyId, nullptr, SideEffects_Any);
 
         // Let's make sure we always have a getter and a setter
-        Assert(instance->GetSlot(newDescriptor.GetGetterPropertyIndex()) != nullptr && instance->GetSlot(newDescriptor.GetSetterPropertyIndex()) != nullptr);
+        Assert(instance->GetSlot(newDescriptor.GetGetterPropertyIndex()) != nullptr &&
+               instance->GetSlot(newDescriptor.GetSetterPropertyIndex()) != nullptr);
 
         return true;
     }
@@ -1822,11 +1949,13 @@ namespace Js
     //
     // throwIfNotExtensible should always be false for non-numeric properties.
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetPropertyWithAttributes(DynamicObject* instance, PropertyId propertyId, Var value,
-        PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
+    BOOL DictionaryTypeHandlerBase<T>::SetPropertyWithAttributes(DynamicObject *instance, PropertyId propertyId,
+                                                                 Var value, PropertyAttributes attributes,
+                                                                 PropertyValueInfo *info, PropertyOperationFlags flags,
+                                                                 SideEffects possibleSideEffects)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        DictionaryPropertyDescriptor<T> *descriptor;
+        ScriptContext *scriptContext = instance->GetScriptContext();
         bool isForce = (flags & PropertyOperation_Force) != 0;
         bool throwIfNotExtensible = (flags & PropertyOperation_ThrowIfNotExtensible) != 0;
 
@@ -1835,7 +1964,7 @@ namespace Js
         Assert(!(throwIfNotExtensible && scriptContext->IsNumericPropertyId(propertyId, &debugIndex)));
 #endif
         Assert(propertyId != Constants::NoProperty);
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
 #if ENABLE_FIXED_FIELDS
@@ -1843,7 +1972,8 @@ namespace Js
 #endif
             if (attributes & descriptor->Attributes & PropertyLetConstGlobal)
             {
-                // Do not need to change the descriptor or its attributes if setting the initial value of a LetConstGlobal
+                // Do not need to change the descriptor or its attributes if setting the initial value of a
+                // LetConstGlobal
             }
             else if (descriptor->Attributes & PropertyDeleted && !(attributes & PropertyLetConstGlobal))
             {
@@ -1858,7 +1988,8 @@ namespace Js
                 scriptContext->InvalidateProtoCaches(propertyId);
                 if (descriptor->Attributes & PropertyLetConstGlobal)
                 {
-                    descriptor->Attributes = attributes | (descriptor->Attributes & (PropertyLetConstGlobal | PropertyNoRedecl));
+                    descriptor->Attributes =
+                        attributes | (descriptor->Attributes & (PropertyLetConstGlobal | PropertyNoRedecl));
                 }
                 else
                 {
@@ -1868,7 +1999,8 @@ namespace Js
             }
             else if (descriptor->GetIsShadowed())
             {
-                descriptor->Attributes = attributes | (descriptor->Attributes & (PropertyLetConstGlobal | PropertyNoRedecl));
+                descriptor->Attributes =
+                    attributes | (descriptor->Attributes & (PropertyLetConstGlobal | PropertyNoRedecl));
             }
             else if ((descriptor->Attributes & PropertyLetConstGlobal) != (attributes & PropertyLetConstGlobal))
             {
@@ -1917,29 +2049,36 @@ namespace Js
 #if DEBUG
                     Var ctor = JavascriptOperators::GetProperty(instance, PropertyIds::constructor, scriptContext);
 #endif
-                    AssertMsg(VarIs<RootObjectBase>(instance) || JavascriptFunction::IsBuiltinProperty(instance, propertyId) ||
-                        // ValidateAndApplyPropertyDescriptor says to preserve Configurable and Enumerable flags
+                    AssertMsg(
+                        VarIs<RootObjectBase>(instance) ||
+                            JavascriptFunction::IsBuiltinProperty(instance, propertyId) ||
+                            // ValidateAndApplyPropertyDescriptor says to preserve Configurable and Enumerable flags
 
-                        // For InitRootFld, which is equivalent to
-                        // CreateGlobalFunctionBinding called from GlobalDeclarationInstantiation in the spec,
-                        // we can assume that the attributes specified include enumerable and writable.  Thus
-                        // we don't need to preserve the original values of these two attributes and therefore
-                        // do not need to change InitRootFld from being a SetPropertyWithAttributes API call to
-                        // something else.  All we need to do is convert the descriptor to a data descriptor.
-                        // Built-in Function.prototype properties 'length', 'arguments', and 'caller' are special cases.
+                            // For InitRootFld, which is equivalent to
+                            // CreateGlobalFunctionBinding called from GlobalDeclarationInstantiation in the spec,
+                            // we can assume that the attributes specified include enumerable and writable.  Thus
+                            // we don't need to preserve the original values of these two attributes and therefore
+                            // do not need to change InitRootFld from being a SetPropertyWithAttributes API call to
+                            // something else.  All we need to do is convert the descriptor to a data descriptor.
+                            // Built-in Function.prototype properties 'length', 'arguments', and 'caller' are special
+                            // cases.
 
-                        ((JavascriptOperators::IsClassConstructor(instance) // Static method
-                            || JavascriptOperators::IsClassConstructor(ctor)
-                            || JavascriptOperators::IsClassMethod(ctor))
-                            && (attributes & PropertyClassMemberDefaults) == PropertyClassMemberDefaults),
-                        // 14.3.9: InitClassMember sets property descriptor to {writable:true, enumerable:false, configurable:true}
+                            ((JavascriptOperators::IsClassConstructor(instance) // Static method
+                              || JavascriptOperators::IsClassConstructor(ctor) ||
+                              JavascriptOperators::IsClassMethod(ctor)) &&
+                             (attributes & PropertyClassMemberDefaults) == PropertyClassMemberDefaults),
+                        // 14.3.9: InitClassMember sets property descriptor to {writable:true, enumerable:false,
+                        // configurable:true}
 
-                        "Expect to only come down this path for InitClassMember or InitRootFld (on the global object) overwriting existing accessor property");
+                        "Expect to only come down this path for InitClassMember or InitRootFld (on the global object) "
+                        "overwriting existing accessor property");
                     if (!(descriptor->Attributes & PropertyConfigurable))
                     {
                         if (scriptContext && scriptContext->GetThreadContext()->RecordImplicitException())
                         {
-                            JavascriptError::ThrowTypeError(scriptContext, JSERR_DefineProperty_NotConfigurable, scriptContext->GetThreadContext()->GetPropertyName(propertyId)->GetBuffer());
+                            JavascriptError::ThrowTypeError(
+                                scriptContext, JSERR_DefineProperty_NotConfigurable,
+                                scriptContext->GetThreadContext()->GetPropertyName(propertyId)->GetBuffer());
                         }
                         return FALSE;
                     }
@@ -1959,13 +2098,14 @@ namespace Js
             {
                 SetPropertyWithDescriptor<false>(instance, propertyRecord, &descriptor, value, flags, info);
             }
-            if (descriptor != nullptr)  //descriptor can dissappear, so this reference may not exist.
+            if (descriptor != nullptr) // descriptor can dissappear, so this reference may not exist.
             {
                 if (descriptor->Attributes & PropertyEnumerable)
                 {
                     instance->SetHasNoEnumerableProperties(false);
                 }
-                instance->GetLibrary()->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, descriptor->Attributes, propertyId, scriptContext);
+                instance->GetLibrary()->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(
+                    this, descriptor->Attributes, propertyId, scriptContext);
             }
 
             SetPropertyUpdateSideEffect(instance, propertyId, value, possibleSideEffects);
@@ -1979,13 +2119,15 @@ namespace Js
             return SetItemWithAttributes(instance, propertyRecord->GetNumericValue(), value, attributes);
         }
 
-        return this->AddProperty(instance, propertyRecord, value, attributes, info, flags, throwIfNotExtensible, possibleSideEffects);
+        return this->AddProperty(instance, propertyRecord, value, attributes, info, flags, throwIfNotExtensible,
+                                 possibleSideEffects);
     }
 
     template <typename T>
-    void DictionaryTypeHandlerBase<T>::EnsureSlotCapacity(DynamicObject * instance, T increment /*= 1*/)
+    void DictionaryTypeHandlerBase<T>::EnsureSlotCapacity(DynamicObject *instance, T increment /*= 1*/)
     {
-        Assert(this->GetSlotCapacity() < MaxPropertyIndexSize); // Otherwise we can't grow this handler's capacity. We should've evolved to Bigger handler or OOM.
+        Assert(this->GetSlotCapacity() < MaxPropertyIndexSize); // Otherwise we can't grow this handler's capacity. We
+                                                                // should've evolved to Bigger handler or OOM.
 
         // A Dictionary type is expected to have more properties
         // grow exponentially rather linearly to avoid the realloc and moves,
@@ -2004,12 +2146,13 @@ namespace Js
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::SetAttributes(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attributes)
+    BOOL DictionaryTypeHandlerBase<T>::SetAttributes(DynamicObject *instance, PropertyId propertyId,
+                                                     PropertyAttributes attributes)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(propertyId != Constants::NoProperty);
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        PropertyRecord const* propertyRecord = scriptContext->GetPropertyName(propertyId);
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        PropertyRecord const *propertyRecord = scriptContext->GetPropertyName(propertyId);
         if (propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             if (descriptor->Attributes & PropertyDeleted)
@@ -2017,14 +2160,16 @@ namespace Js
                 return false;
             }
 
-            descriptor->Attributes = (descriptor->Attributes & ~PropertyDynamicTypeDefaults) | (attributes & PropertyDynamicTypeDefaults);
+            descriptor->Attributes =
+                (descriptor->Attributes & ~PropertyDynamicTypeDefaults) | (attributes & PropertyDynamicTypeDefaults);
 
             if (descriptor->Attributes & PropertyEnumerable)
             {
                 instance->SetHasNoEnumerableProperties(false);
             }
 
-            instance->GetLibrary()->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, descriptor->Attributes, propertyId, scriptContext);
+            instance->GetLibrary()->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(
+                this, descriptor->Attributes, propertyId, scriptContext);
 
             return true;
         }
@@ -2032,19 +2177,23 @@ namespace Js
         // Check numeric propertyId only if objectArray available
         if (instance->HasObjectArray() && propertyRecord->IsNumeric())
         {
-            return DictionaryTypeHandlerBase<T>::SetItemAttributes(instance, propertyRecord->GetNumericValue(), attributes);
+            return DictionaryTypeHandlerBase<T>::SetItemAttributes(instance, propertyRecord->GetNumericValue(),
+                                                                   attributes);
         }
 
         return false;
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::GetAttributesWithPropertyIndex(DynamicObject * instance, PropertyId propertyId, BigPropertyIndex index, PropertyAttributes * attributes)
+    BOOL DictionaryTypeHandlerBase<T>::GetAttributesWithPropertyIndex(DynamicObject *instance, PropertyId propertyId,
+                                                                      BigPropertyIndex index,
+                                                                      PropertyAttributes *attributes)
     {
         // this might get value that are deleted from the dictionary, but that should be nulled out
-        DictionaryPropertyDescriptor<T> * descriptor;
-        // We can't look it up using the slot index, as one propertyId might have multiple slots,  do the propertyId map lookup
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        DictionaryPropertyDescriptor<T> *descriptor;
+        // We can't look it up using the slot index, as one propertyId might have multiple slots,  do the propertyId map
+        // lookup
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
         if (!propertyMap->TryGetReference(propertyRecord, &descriptor))
         {
             return false;
@@ -2060,19 +2209,21 @@ namespace Js
     }
 
     template <typename T>
-    BigDictionaryTypeHandler* DictionaryTypeHandlerBase<T>::ConvertToBigDictionaryTypeHandler(DynamicObject* instance)
+    BigDictionaryTypeHandler *DictionaryTypeHandlerBase<T>::ConvertToBigDictionaryTypeHandler(DynamicObject *instance)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
-        Recycler* recycler = scriptContext->GetRecycler();
+        ScriptContext *scriptContext = instance->GetScriptContext();
+        Recycler *recycler = scriptContext->GetRecycler();
 
-        BigDictionaryTypeHandler* newTypeHandler = NewBigDictionaryTypeHandler(recycler, GetSlotCapacity(), GetInlineSlotCapacity(), GetOffsetOfInlineSlots());
+        BigDictionaryTypeHandler *newTypeHandler =
+            NewBigDictionaryTypeHandler(recycler, GetSlotCapacity(), GetInlineSlotCapacity(), GetOffsetOfInlineSlots());
         // We expect the new type handler to start off marked as having only writable data properties.
         Assert(newTypeHandler->GetHasOnlyWritableDataProperties());
 
 #if ENABLE_FIXED_FIELDS
-        DynamicType* oldType = instance->GetDynamicType();
-        RecyclerWeakReference<DynamicObject>* oldSingletonInstance = GetSingletonInstance();
-        TraceFixedFieldsBeforeTypeHandlerChange(u"DictionaryTypeHandler", u"BigDictionaryTypeHandler", instance, this, oldType, oldSingletonInstance);
+        DynamicType *oldType = instance->GetDynamicType();
+        RecyclerWeakReference<DynamicObject> *oldSingletonInstance = GetSingletonInstance();
+        TraceFixedFieldsBeforeTypeHandlerChange(u"DictionaryTypeHandler", u"BigDictionaryTypeHandler", instance, this,
+                                                oldType, oldSingletonInstance);
 
         CopySingletonInstance(instance, newTypeHandler);
 #endif
@@ -2080,7 +2231,7 @@ namespace Js
         DictionaryPropertyDescriptor<T> descriptor;
         DictionaryPropertyDescriptor<BigPropertyIndex> bigDescriptor;
 
-        const PropertyRecord* propertyId;
+        const PropertyRecord *propertyId;
         for (int i = 0; i < propertyMap->Count(); i++)
         {
             descriptor = propertyMap->GetValueAt(i);
@@ -2096,20 +2247,23 @@ namespace Js
         ClearSingletonInstance();
 #endif
 
-        AssertMsg((newTypeHandler->GetFlags() & IsPrototypeFlag) == 0, "Why did we create a brand new type handler with a prototype flag set?");
+        AssertMsg((newTypeHandler->GetFlags() & IsPrototypeFlag) == 0,
+                  "Why did we create a brand new type handler with a prototype flag set?");
         newTypeHandler->SetFlags(IsPrototypeFlag, this->GetFlags());
         newTypeHandler->ChangeFlags(IsExtensibleFlag, this->GetFlags());
-        // Any new type handler we expect to see here should have inline slot capacity locked.  If this were to change, we would need
-        // to update our shrinking logic (see PathTypeHandlerBase::ShrinkSlotAndInlineSlotCapacity).
+        // Any new type handler we expect to see here should have inline slot capacity locked.  If this were to change,
+        // we would need to update our shrinking logic (see PathTypeHandlerBase::ShrinkSlotAndInlineSlotCapacity).
         Assert(newTypeHandler->GetIsInlineSlotCapacityLocked());
-        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection | PropertyTypesHasSpecialProperties, this->GetPropertyTypes());
+        newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection |
+                                             PropertyTypesHasSpecialProperties,
+                                         this->GetPropertyTypes());
         newTypeHandler->SetInstanceTypeHandler(instance);
 
 #if ENABLE_FIXED_FIELDS
-        // Unlike for SimpleDictionaryTypeHandler or PathTypeHandler, the DictionaryTypeHandler copies usedAsFixed indiscriminately above.
-        // Therefore, we don't care if we changed the type or not, and don't need the assert below.
-        // We assumed that we don't need to transfer used as fixed bits unless we are a prototype, which is only valid if we also changed the type.
-        // Assert(instance->GetType() != oldType);
+        // Unlike for SimpleDictionaryTypeHandler or PathTypeHandler, the DictionaryTypeHandler copies usedAsFixed
+        // indiscriminately above. Therefore, we don't care if we changed the type or not, and don't need the assert
+        // below. We assumed that we don't need to transfer used as fixed bits unless we are a prototype, which is only
+        // valid if we also changed the type. Assert(instance->GetType() != oldType);
         Assert(!newTypeHandler->HasSingletonInstance() || !instance->HasSharedType());
 
         TraceFixedFieldsAfterTypeHandlerChange(instance, this, newTypeHandler, oldType, oldSingletonInstance);
@@ -2119,39 +2273,45 @@ namespace Js
     }
 
     template <typename T>
-    BigDictionaryTypeHandler* DictionaryTypeHandlerBase<T>::NewBigDictionaryTypeHandler(Recycler* recycler, int slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots)
+    BigDictionaryTypeHandler *
+    DictionaryTypeHandlerBase<T>::NewBigDictionaryTypeHandler(Recycler *recycler, int slotCapacity,
+                                                              uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots)
     {
-        return RecyclerNew(recycler, BigDictionaryTypeHandler, recycler, slotCapacity, inlineSlotCapacity, offsetOfInlineSlots);
+        return RecyclerNew(recycler, BigDictionaryTypeHandler, recycler, slotCapacity, inlineSlotCapacity,
+                           offsetOfInlineSlots);
     }
 
     template <>
-    BigDictionaryTypeHandler* DictionaryTypeHandlerBase<BigPropertyIndex>::ConvertToBigDictionaryTypeHandler(DynamicObject* instance)
+    BigDictionaryTypeHandler *
+    DictionaryTypeHandlerBase<BigPropertyIndex>::ConvertToBigDictionaryTypeHandler(DynamicObject *instance)
     {
         Throw::OutOfMemory();
     }
 
-    template<>
+    template <>
     BOOL DictionaryTypeHandlerBase<PropertyIndex>::IsBigDictionaryTypeHandler()
     {
         return FALSE;
     }
 
-    template<>
+    template <>
     BOOL DictionaryTypeHandlerBase<BigPropertyIndex>::IsBigDictionaryTypeHandler()
     {
         return TRUE;
     }
 
     template <typename T>
-    BOOL DictionaryTypeHandlerBase<T>::AddProperty(DynamicObject* instance, const PropertyRecord* propertyRecord, Var value,
-        PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, bool throwIfNotExtensible, SideEffects possibleSideEffects)
+    BOOL DictionaryTypeHandlerBase<T>::AddProperty(DynamicObject *instance, const PropertyRecord *propertyRecord,
+                                                   Var value, PropertyAttributes attributes, PropertyValueInfo *info,
+                                                   PropertyOperationFlags flags, bool throwIfNotExtensible,
+                                                   SideEffects possibleSideEffects)
     {
         AnalysisAssert(instance);
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         bool isForce = (flags & PropertyOperation_Force) != 0;
         PropertyId propertyId = propertyRecord->GetPropertyId();
 #if DBG
-        DictionaryPropertyDescriptor<T>* descriptor;
+        DictionaryPropertyDescriptor<T> *descriptor;
         Assert(!propertyMap->TryGetReference(propertyRecord, &descriptor));
         Assert(!propertyRecord->IsNumeric());
 #endif
@@ -2167,11 +2327,13 @@ namespace Js
         if (this->GetSlotCapacity() <= nextPropertyIndex)
         {
             if (this->GetSlotCapacity() >= MaxPropertyIndexSize ||
-                (this->GetSlotCapacity() >= CONFIG_FLAG(BigDictionaryTypeHandlerThreshold) && !this->IsBigDictionaryTypeHandler()))
+                (this->GetSlotCapacity() >= CONFIG_FLAG(BigDictionaryTypeHandlerThreshold) &&
+                 !this->IsBigDictionaryTypeHandler()))
             {
-                BigDictionaryTypeHandler* newTypeHandler = ConvertToBigDictionaryTypeHandler(instance);
+                BigDictionaryTypeHandler *newTypeHandler = ConvertToBigDictionaryTypeHandler(instance);
 
-                return newTypeHandler->AddProperty(instance, propertyRecord, value, attributes, info, flags, false, possibleSideEffects);
+                return newTypeHandler->AddProperty(instance, propertyRecord, value, attributes, info, flags, false,
+                                                   possibleSideEffects);
             }
             this->EnsureSlotCapacity(instance);
         }
@@ -2182,7 +2344,8 @@ namespace Js
         // DictionaryTypeHandlers are not supposed to be shared.
         Assert(!GetIsOrMayBecomeShared());
 #if ENABLE_FIXED_FIELDS
-        DynamicObject* localSingletonInstance = this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
+        DynamicObject *localSingletonInstance =
+            this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
         Assert(this->singletonInstance == nullptr || localSingletonInstance == instance);
 
         if ((flags & PropertyOperation_PreInit) == 0)
@@ -2192,9 +2355,13 @@ namespace Js
                 (flags & (PropertyOperation_NonFixedValue | PropertyOperation_SpecialValue)) == 0)
             {
                 Assert(value != nullptr);
-                // We don't want fixed properties on external objects.  See DynamicObject::ResetObject for more information.
+                // We don't want fixed properties on external objects.  See DynamicObject::ResetObject for more
+                // information.
                 Assert(!instance->IsExternal());
-                newDescriptor.SetIsFixed(VarIs<JavascriptFunction>(value) ? ShouldFixMethodProperties() : (ShouldFixDataProperties() && CheckHeuristicsForFixedDataProps(instance, propertyRecord, value)));
+                newDescriptor.SetIsFixed(VarIs<JavascriptFunction>(value)
+                                             ? ShouldFixMethodProperties()
+                                             : (ShouldFixDataProperties() &&
+                                                CheckHeuristicsForFixedDataProps(instance, propertyRecord, value)));
             }
         }
 #endif
@@ -2205,9 +2372,10 @@ namespace Js
         {
             instance->SetHasNoEnumerableProperties(false);
         }
-        JavascriptLibrary* library = scriptContext->GetLibrary();
+        JavascriptLibrary *library = scriptContext->GetLibrary();
 
-        library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, attributes, propertyId, scriptContext);
+        library->GetTypesWithOnlyWritablePropertyProtoChainCache()->ProcessProperty(this, attributes, propertyId,
+                                                                                    scriptContext);
         if (NoSpecialPropertyCache::IsSpecialProperty(propertyId) && !this->GetHasSpecialProperties())
         {
             if (!NoSpecialPropertyCache::IsDefaultSpecialProperty(instance, library, propertyId))
@@ -2255,34 +2423,37 @@ namespace Js
     // over all members of this handler including the property map.
     //
     template <typename T>
-    ES5ArrayTypeHandlerBase<T>* DictionaryTypeHandlerBase<T>::ConvertToES5ArrayType(DynamicObject *instance)
+    ES5ArrayTypeHandlerBase<T> *DictionaryTypeHandlerBase<T>::ConvertToES5ArrayType(DynamicObject *instance)
     {
-        Recycler* recycler = instance->GetRecycler();
+        Recycler *recycler = instance->GetRecycler();
 
-        ES5ArrayTypeHandlerBase<T>* newTypeHandler = RecyclerNew(recycler, ES5ArrayTypeHandlerBase<T>, recycler, this);
+        ES5ArrayTypeHandlerBase<T> *newTypeHandler = RecyclerNew(recycler, ES5ArrayTypeHandlerBase<T>, recycler, this);
         // Don't need to transfer the singleton instance, because the new handler takes over this handler.
-        AssertMsg((newTypeHandler->GetFlags() & IsPrototypeFlag) == 0, "Why did we create a brand new type handler with a prototype flag set?");
+        AssertMsg((newTypeHandler->GetFlags() & IsPrototypeFlag) == 0,
+                  "Why did we create a brand new type handler with a prototype flag set?");
         newTypeHandler->SetFlags(IsPrototypeFlag, this->GetFlags());
         // Property types were copied in the constructor.
-        //newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection | PropertyTypesInlineSlotCapacityLocked, this->GetPropertyTypes());
+        // newTypeHandler->SetPropertyTypes(PropertyTypesWritableDataOnly | PropertyTypesWritableDataOnlyDetection |
+        // PropertyTypesInlineSlotCapacityLocked, this->GetPropertyTypes());
         newTypeHandler->SetInstanceTypeHandler(instance);
         return newTypeHandler;
     }
 
     template <typename T>
-    void DictionaryTypeHandlerBase<T>::SetAllPropertiesToUndefined(DynamicObject* instance, bool invalidateFixedFields)
+    void DictionaryTypeHandlerBase<T>::SetAllPropertiesToUndefined(DynamicObject *instance, bool invalidateFixedFields)
     {
         // The Var for window is reused across navigation. we shouldn't preserve the IsExtensibleFlag when we don't keep
         // the expandos. Reset the IsExtensibleFlag in cleanup scenario should be good enough
         // to cover all the preventExtension/Freeze/Seal scenarios.
-        // Note that we don't change the flag for keepProperties scenario: the flags should be preserved and that's consistent
-        // with other browsers.
+        // Note that we don't change the flag for keepProperties scenario: the flags should be preserved and that's
+        // consistent with other browsers.
         ChangeFlags(IsExtensibleFlag | IsSealedOnceFlag | IsFrozenOnceFlag, IsExtensibleFlag);
 
         // Note: This method is currently only called from ResetObject, which in turn only applies to external objects.
-        // Before using for other purposes, make sure the assumptions made here make sense in the new context.  In particular,
-        // the invalidateFixedFields == false is only correct if a) the object is known not to have any, or b) the type of the
-        // object has changed and/or property guards have already been invalidated through some other means.
+        // Before using for other purposes, make sure the assumptions made here make sense in the new context.  In
+        // particular, the invalidateFixedFields == false is only correct if a) the object is known not to have any, or
+        // b) the type of the object has changed and/or property guards have already been invalidated through some other
+        // means.
         int propertyCount = this->propertyMap->Count();
 
 #if ENABLE_FIXED_FIELDS
@@ -2290,18 +2461,18 @@ namespace Js
         {
             for (int propertyIndex = 0; propertyIndex < propertyCount; propertyIndex++)
             {
-                const PropertyRecord* propertyRecord = this->propertyMap->GetKeyAt(propertyIndex);
-                DictionaryPropertyDescriptor<T>* descriptor = this->propertyMap->GetReferenceAt(propertyIndex);
+                const PropertyRecord *propertyRecord = this->propertyMap->GetKeyAt(propertyIndex);
+                DictionaryPropertyDescriptor<T> *descriptor = this->propertyMap->GetReferenceAt(propertyIndex);
                 InvalidateFixedField(instance, propertyRecord->GetPropertyId(), descriptor);
             }
         }
 #endif
 
-        Js::RecyclableObject* undefined = instance->GetLibrary()->GetUndefined();
-        Js::JavascriptFunction* defaultAccessor = instance->GetLibrary()->GetDefaultAccessorFunction();
+        Js::RecyclableObject *undefined = instance->GetLibrary()->GetUndefined();
+        Js::JavascriptFunction *defaultAccessor = instance->GetLibrary()->GetDefaultAccessorFunction();
         for (int propertyIndex = 0; propertyIndex < propertyCount; propertyIndex++)
         {
-            DictionaryPropertyDescriptor<T>* descriptor = this->propertyMap->GetReferenceAt(propertyIndex);
+            DictionaryPropertyDescriptor<T> *descriptor = this->propertyMap->GetReferenceAt(propertyIndex);
 
             T dataPropertyIndex = descriptor->template GetDataPropertyIndex<false>();
             if (dataPropertyIndex != NoSlots)
@@ -2317,20 +2488,23 @@ namespace Js
     }
 
     template <typename T>
-    void DictionaryTypeHandlerBase<T>::MarshalAllPropertiesToScriptContext(DynamicObject* instance, ScriptContext* targetScriptContext, bool invalidateFixedFields)
+    void DictionaryTypeHandlerBase<T>::MarshalAllPropertiesToScriptContext(DynamicObject *instance,
+                                                                           ScriptContext *targetScriptContext,
+                                                                           bool invalidateFixedFields)
     {
 #if ENABLE_FIXED_FIELDS
         // Note: This method is currently only called from ResetObject, which in turn only applies to external objects.
-        // Before using for other purposes, make sure the assumptions made here make sense in the new context.  In particular,
-        // the invalidateFixedFields == false is only correct if a) the object is known not to have any, or b) the type of the
-        // object has changed and/or property guards have already been invalidated through some other means.
+        // Before using for other purposes, make sure the assumptions made here make sense in the new context.  In
+        // particular, the invalidateFixedFields == false is only correct if a) the object is known not to have any, or
+        // b) the type of the object has changed and/or property guards have already been invalidated through some other
+        // means.
         if (invalidateFixedFields)
         {
             int propertyCount = this->propertyMap->Count();
             for (int propertyIndex = 0; propertyIndex < propertyCount; propertyIndex++)
             {
-                const PropertyRecord* propertyRecord = this->propertyMap->GetKeyAt(propertyIndex);
-                DictionaryPropertyDescriptor<T>* descriptor = this->propertyMap->GetReferenceAt(propertyIndex);
+                const PropertyRecord *propertyRecord = this->propertyMap->GetKeyAt(propertyIndex);
+                DictionaryPropertyDescriptor<T> *descriptor = this->propertyMap->GetReferenceAt(propertyIndex);
                 InvalidateFixedField(instance, propertyRecord->GetPropertyId(), descriptor);
             }
         }
@@ -2339,18 +2513,19 @@ namespace Js
         int slotCount = this->nextPropertyIndex;
         for (int slotIndex = 0; slotIndex < slotCount; slotIndex++)
         {
-            SetSlotUnchecked(instance, slotIndex, CrossSite::MarshalVar(targetScriptContext, GetSlot(instance, slotIndex)));
+            SetSlotUnchecked(instance, slotIndex,
+                             CrossSite::MarshalVar(targetScriptContext, GetSlot(instance, slotIndex)));
         }
     }
 
     template <typename T>
-    DynamicTypeHandler* DictionaryTypeHandlerBase<T>::ConvertToTypeWithItemAttributes(DynamicObject* instance)
+    DynamicTypeHandler *DictionaryTypeHandlerBase<T>::ConvertToTypeWithItemAttributes(DynamicObject *instance)
     {
         return JavascriptArray::IsNonES5Array(instance) ? ConvertToES5ArrayType(instance) : this;
     }
 
     template <typename T>
-    void DictionaryTypeHandlerBase<T>::SetIsPrototype(DynamicObject* instance)
+    void DictionaryTypeHandlerBase<T>::SetIsPrototype(DynamicObject *instance)
     {
         // Don't return if IsPrototypeFlag is set, because we may still need to do a type transition and
         // set fixed bits.  If this handler were to be shared, this instance may not be a prototype yet.
@@ -2370,7 +2545,8 @@ namespace Js
         Assert(this->singletonInstance == nullptr || this->singletonInstance->Get() == instance);
 
         // Review (jedmiad): Why isn't this getting inlined?
-        const auto setFixedFlags = [instance](const PropertyRecord* propertyRecord, DictionaryPropertyDescriptor<T>* const descriptor, bool hasNewType)
+        const auto setFixedFlags = [instance](const PropertyRecord *propertyRecord,
+                                              DictionaryPropertyDescriptor<T> *const descriptor, bool hasNewType)
         {
             if (IsInternalPropertyId(propertyRecord->GetPropertyId()))
             {
@@ -2378,35 +2554,40 @@ namespace Js
             }
             if (!(descriptor->Attributes & PropertyDeleted))
             {
-                // See PathTypeHandlerBase::ConvertToSimpleDictionaryType for rules governing fixed field bits during type
-                // handler transitions.  In addition, we know that the current instance is not yet a prototype.
+                // See PathTypeHandlerBase::ConvertToSimpleDictionaryType for rules governing fixed field bits during
+                // type handler transitions.  In addition, we know that the current instance is not yet a prototype.
 
                 Assert(descriptor->SanityCheckFixedBits());
                 if (descriptor->GetIsInitialized())
                 {
-                    // Since DictionaryTypeHandlers are never shared, we can set fixed fields and clear used as fixed as long
-                    // as we have changed the type.  Otherwise populated load field caches would still be valid and would need
-                    // to be explicitly invalidated if the property value changes.
+                    // Since DictionaryTypeHandlers are never shared, we can set fixed fields and clear used as fixed as
+                    // long as we have changed the type.  Otherwise populated load field caches would still be valid and
+                    // would need to be explicitly invalidated if the property value changes.
                     if (hasNewType)
                     {
                         T dataSlot = descriptor->template GetDataPropertyIndex<false>();
                         if (dataSlot != NoSlots)
                         {
                             Var value = instance->GetSlot(dataSlot);
-                            // Because DictionaryTypeHandlers are never shared we should always have a property value if the handler
-                            // says it's initialized.
+                            // Because DictionaryTypeHandlers are never shared we should always have a property value if
+                            // the handler says it's initialized.
                             Assert(value != nullptr);
-                            descriptor->SetIsFixed(VarIs<JavascriptFunction>(value) ? ShouldFixMethodProperties() : (ShouldFixDataProperties() && CheckHeuristicsForFixedDataProps(instance, propertyRecord, value)));
+                            descriptor->SetIsFixed(
+                                VarIs<JavascriptFunction>(value)
+                                    ? ShouldFixMethodProperties()
+                                    : (ShouldFixDataProperties() &&
+                                       CheckHeuristicsForFixedDataProps(instance, propertyRecord, value)));
                         }
                         else if (descriptor->GetIsAccessor())
                         {
-                            Assert(descriptor->GetGetterPropertyIndex() != NoSlots && descriptor->GetSetterPropertyIndex() != NoSlots);
+                            Assert(descriptor->GetGetterPropertyIndex() != NoSlots &&
+                                   descriptor->GetSetterPropertyIndex() != NoSlots);
                             descriptor->SetIsFixed(ShouldFixAccessorProperties());
                         }
 
-                        // Since we have a new type we can clear all used as fixed bits.  That's because any instance field loads
-                        // will have been invalidated by the type transition, and there are no proto fields loads from this object
-                        // because it is just now becoming a proto.
+                        // Since we have a new type we can clear all used as fixed bits.  That's because any instance
+                        // field loads will have been invalidated by the type transition, and there are no proto fields
+                        // loads from this object because it is just now becoming a proto.
                         descriptor->SetUsedAsFixed(false);
                     }
                 }
@@ -2418,8 +2599,8 @@ namespace Js
             }
         };
 
-        DynamicType* oldType = instance->GetDynamicType();
-        RecyclerWeakReference<DynamicObject>* oldSingletonInstance = GetSingletonInstance();
+        DynamicType *oldType = instance->GetDynamicType();
+        RecyclerWeakReference<DynamicObject> *oldSingletonInstance = GetSingletonInstance();
         TraceFixedFieldsBeforeSetIsProto(instance, this, oldType, oldSingletonInstance);
 #endif
 
@@ -2428,7 +2609,8 @@ namespace Js
 #endif
         if (ChangeTypeOnProto())
         {
-            // Forcing a type transition allows us to fix all fields (even those that were previously marked as non-fixed).
+            // Forcing a type transition allows us to fix all fields (even those that were previously marked as
+            // non-fixed).
             instance->ChangeType();
             Assert(!instance->HasSharedType());
 #if ENABLE_FIXED_FIELDS
@@ -2447,11 +2629,12 @@ namespace Js
         // We don't want fixed properties on external objects.  See DynamicObject::ResetObject for more information.
         if (!instance->IsExternal())
         {
-            // The propertyMap dictionary is guaranteed to have contiguous entries because we never remove entries from it.
+            // The propertyMap dictionary is guaranteed to have contiguous entries because we never remove entries from
+            // it.
             for (int i = 0; i < propertyMap->Count(); i++)
             {
-                const PropertyRecord* propertyRecord = propertyMap->GetKeyAt(i);
-                DictionaryPropertyDescriptor<T>* const descriptor = propertyMap->GetReferenceAt(i);
+                const PropertyRecord *propertyRecord = propertyMap->GetKeyAt(i);
+                DictionaryPropertyDescriptor<T> *const descriptor = propertyMap->GetReferenceAt(i);
                 setFixedFlags(propertyRecord, descriptor, hasNewType);
             }
         }
@@ -2466,9 +2649,10 @@ namespace Js
 
 #if DBG
     template <typename T>
-    bool DictionaryTypeHandlerBase<T>::CanStorePropertyValueDirectly(const DynamicObject* instance, PropertyId propertyId, bool allowLetConst)
+    bool DictionaryTypeHandlerBase<T>::CanStorePropertyValueDirectly(const DynamicObject *instance,
+                                                                     PropertyId propertyId, bool allowLetConst)
     {
-        ScriptContext* scriptContext = instance->GetScriptContext();
+        ScriptContext *scriptContext = instance->GetScriptContext();
         DictionaryPropertyDescriptor<T> descriptor;
 
         // We pass Constants::NoProperty for ActivationObjects for functions with same named formals.
@@ -2477,7 +2661,7 @@ namespace Js
             return true;
         }
 
-        PropertyRecord const* propertyRecord = scriptContext->GetPropertyName(propertyId);
+        PropertyRecord const *propertyRecord = scriptContext->GetPropertyName(propertyId);
         if (propertyMap->TryGetValue(propertyRecord, &descriptor))
         {
             if (allowLetConst && (descriptor.Attributes & PropertyLetConstGlobal))
@@ -2497,11 +2681,12 @@ namespace Js
     }
 
     template <typename T>
-    bool DictionaryTypeHandlerBase<T>::IsLetConstGlobal(DynamicObject* instance, PropertyId propertyId)
+    bool DictionaryTypeHandlerBase<T>::IsLetConstGlobal(DynamicObject *instance, PropertyId propertyId)
     {
-        DictionaryPropertyDescriptor<T>* descriptor;
-        PropertyRecord const* propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
-        if (propertyMap->TryGetReference(propertyRecord, &descriptor) && (descriptor->Attributes & PropertyLetConstGlobal))
+        DictionaryPropertyDescriptor<T> *descriptor;
+        PropertyRecord const *propertyRecord = instance->GetScriptContext()->GetPropertyName(propertyId);
+        if (propertyMap->TryGetReference(propertyRecord, &descriptor) &&
+            (descriptor->Attributes & PropertyLetConstGlobal))
         {
             return true;
         }
@@ -2510,7 +2695,9 @@ namespace Js
 #endif
 
     template <typename T>
-    bool DictionaryTypeHandlerBase<T>::NextLetConstGlobal(int& index, RootObjectBase* instance, const PropertyRecord** propertyRecord, Var* value, bool* isConst)
+    bool DictionaryTypeHandlerBase<T>::NextLetConstGlobal(int &index, RootObjectBase *instance,
+                                                          const PropertyRecord **propertyRecord, Var *value,
+                                                          bool *isConst)
     {
         for (; index < propertyMap->Count(); index++)
         {
@@ -2539,7 +2726,9 @@ namespace Js
     }
 
     template <typename T>
-    bool DictionaryTypeHandlerBase<T>::TryUseFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, FixedPropertyKind propertyType, ScriptContext * requestContext)
+    bool DictionaryTypeHandlerBase<T>::TryUseFixedProperty(PropertyRecord const *propertyRecord, Var *pProperty,
+                                                           FixedPropertyKind propertyType,
+                                                           ScriptContext *requestContext)
     {
         bool result = TryGetFixedProperty<false, true>(propertyRecord, pProperty, propertyType, requestContext);
         TraceUseFixedProperty(propertyRecord, pProperty, result, u"DictionaryTypeHandler", requestContext);
@@ -2547,7 +2736,9 @@ namespace Js
     }
 
     template <typename T>
-    bool DictionaryTypeHandlerBase<T>::TryUseFixedAccessor(PropertyRecord const * propertyRecord, Var * pAccessor, FixedPropertyKind propertyType, bool getter, ScriptContext * requestContext)
+    bool DictionaryTypeHandlerBase<T>::TryUseFixedAccessor(PropertyRecord const *propertyRecord, Var *pAccessor,
+                                                           FixedPropertyKind propertyType, bool getter,
+                                                           ScriptContext *requestContext)
     {
         bool result = TryGetFixedAccessor<false, true>(propertyRecord, pAccessor, propertyType, getter, requestContext);
         TraceUseFixedProperty(propertyRecord, pAccessor, result, u"DictionaryTypeHandler", requestContext);
@@ -2556,9 +2747,13 @@ namespace Js
 
 #if DBG
     template <typename T>
-    bool DictionaryTypeHandlerBase<T>::CheckFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, ScriptContext * requestContext)
+    bool DictionaryTypeHandlerBase<T>::CheckFixedProperty(PropertyRecord const *propertyRecord, Var *pProperty,
+                                                          ScriptContext *requestContext)
     {
-        return TryGetFixedProperty<true, false>(propertyRecord, pProperty, (Js::FixedPropertyKind)(Js::FixedPropertyKind::FixedMethodProperty | Js::FixedPropertyKind::FixedDataProperty), requestContext);
+        return TryGetFixedProperty<true, false>(propertyRecord, pProperty,
+                                                (Js::FixedPropertyKind)(Js::FixedPropertyKind::FixedMethodProperty |
+                                                                        Js::FixedPropertyKind::FixedDataProperty),
+                                                requestContext);
     }
 
     template <typename T>
@@ -2578,14 +2773,17 @@ namespace Js
 
     template <typename T>
     template <bool allowNonExistent, bool markAsUsed>
-    bool DictionaryTypeHandlerBase<T>::TryGetFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, FixedPropertyKind propertyType, ScriptContext * requestContext)
+    bool DictionaryTypeHandlerBase<T>::TryGetFixedProperty(PropertyRecord const *propertyRecord, Var *pProperty,
+                                                           FixedPropertyKind propertyType,
+                                                           ScriptContext *requestContext)
     {
         // Note: This function is not thread-safe and cannot be called from the JIT thread.  That's why we collect and
         // cache any fixed function instances during work item creation on the main thread.
-        DynamicObject* localSingletonInstance = this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
+        DynamicObject *localSingletonInstance =
+            this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
         if (localSingletonInstance != nullptr && localSingletonInstance->GetScriptContext() == requestContext)
         {
-            DictionaryPropertyDescriptor<T>* descriptor;
+            DictionaryPropertyDescriptor<T> *descriptor;
             if (propertyMap->TryGetReference(propertyRecord, &descriptor))
             {
                 if (descriptor->Attributes & PropertyDeleted || !descriptor->GetIsFixed())
@@ -2597,7 +2795,9 @@ namespace Js
                 {
                     Assert(!IsInternalPropertyId(propertyRecord->GetPropertyId()));
                     Var value = localSingletonInstance->GetSlot(dataSlot);
-                    if (value && ((IsFixedMethodProperty(propertyType) && VarIs<JavascriptFunction>(value)) || IsFixedDataProperty(propertyType)))
+                    if (value &&
+                        ((IsFixedMethodProperty(propertyType) && VarIs<JavascriptFunction>(value)) ||
+                         IsFixedDataProperty(propertyType)))
                     {
                         *pProperty = value;
                         if (markAsUsed)
@@ -2619,17 +2819,21 @@ namespace Js
 
     template <typename T>
     template <bool allowNonExistent, bool markAsUsed>
-    bool DictionaryTypeHandlerBase<T>::TryGetFixedAccessor(PropertyRecord const * propertyRecord, Var * pAccessor, FixedPropertyKind propertyType, bool getter, ScriptContext * requestContext)
+    bool DictionaryTypeHandlerBase<T>::TryGetFixedAccessor(PropertyRecord const *propertyRecord, Var *pAccessor,
+                                                           FixedPropertyKind propertyType, bool getter,
+                                                           ScriptContext *requestContext)
     {
         // Note: This function is not thread-safe and cannot be called from the JIT thread.  That's why we collect and
         // cache any fixed function instances during work item creation on the main thread.
-        DynamicObject* localSingletonInstance = this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
+        DynamicObject *localSingletonInstance =
+            this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr;
         if (localSingletonInstance != nullptr && localSingletonInstance->GetScriptContext() == requestContext)
         {
-            DictionaryPropertyDescriptor<T>* descriptor;
+            DictionaryPropertyDescriptor<T> *descriptor;
             if (propertyMap->TryGetReference(propertyRecord, &descriptor))
             {
-                if (descriptor->Attributes & PropertyDeleted || !descriptor->GetIsAccessor() || !descriptor->GetIsFixed())
+                if (descriptor->Attributes & PropertyDeleted || !descriptor->GetIsAccessor() ||
+                    !descriptor->GetIsFixed())
                 {
                     return false;
                 }
@@ -2660,7 +2864,7 @@ namespace Js
     }
 
     template <typename T>
-    void DictionaryTypeHandlerBase<T>::CopySingletonInstance(DynamicObject* instance, DynamicTypeHandler* typeHandler)
+    void DictionaryTypeHandlerBase<T>::CopySingletonInstance(DynamicObject *instance, DynamicTypeHandler *typeHandler)
     {
         if (this->singletonInstance != nullptr)
         {
@@ -2672,7 +2876,8 @@ namespace Js
 
     template <typename T>
     template <typename TPropertyKey>
-    void DictionaryTypeHandlerBase<T>::InvalidateFixedField(DynamicObject* instance, TPropertyKey propertyKey, DictionaryPropertyDescriptor<T>* descriptor)
+    void DictionaryTypeHandlerBase<T>::InvalidateFixedField(DynamicObject *instance, TPropertyKey propertyKey,
+                                                            DictionaryPropertyDescriptor<T> *descriptor)
     {
         // DictionaryTypeHandlers are never shared, but if they were we would need to invalidate even if
         // there wasn't a singleton instance.  See SimpleDictionaryTypeHandler::InvalidateFixedFields.
@@ -2698,30 +2903,31 @@ namespace Js
     }
 
     template <typename T>
-    void DictionaryTypeHandlerBase<T>::DumpFixedFields() const {
+    void DictionaryTypeHandlerBase<T>::DumpFixedFields() const
+    {
         for (int i = 0; i < propertyMap->Count(); i++)
         {
             DictionaryPropertyDescriptor<T> descriptor = propertyMap->GetValueAt(i);
 
-            const PropertyRecord* propertyRecord = propertyMap->GetKeyAt(i);
-            Output::Print(u" %s %d%d%d,", propertyRecord->GetBuffer(),
-                descriptor.GetIsInitialized() ? 1 : 0,
-                descriptor.GetIsFixed() ? 1 : 0,
-                descriptor.GetUsedAsFixed() ? 1 : 0);
+            const PropertyRecord *propertyRecord = propertyMap->GetKeyAt(i);
+            Output::Print(u" %s %d%d%d,", propertyRecord->GetBuffer(), descriptor.GetIsInitialized() ? 1 : 0,
+                          descriptor.GetIsFixed() ? 1 : 0, descriptor.GetUsedAsFixed() ? 1 : 0);
         }
     }
 
     template <typename T>
     void DictionaryTypeHandlerBase<T>::TraceFixedFieldsBeforeTypeHandlerChange(
-        const char16_t* oldTypeHandlerName, const char16_t* newTypeHandlerName,
-        DynamicObject* instance, DynamicTypeHandler* oldTypeHandler,
-        DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
+        const char16_t *oldTypeHandlerName, const char16_t *newTypeHandlerName, DynamicObject *instance,
+        DynamicTypeHandler *oldTypeHandler, DynamicType *oldType,
+        RecyclerWeakReference<DynamicObject> *oldSingletonInstanceBefore)
     {
         if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
         {
-            Output::Print(u"FixedFields: converting 0x%p from %s to %s:\n", instance, oldTypeHandlerName, newTypeHandlerName);
-            Output::Print(u"   before: type = 0x%p, type handler = 0x%p, old singleton = 0x%p(0x%p)\n",
-                oldType, oldTypeHandler, oldSingletonInstanceBefore, oldSingletonInstanceBefore != nullptr ? oldSingletonInstanceBefore->Get() : nullptr);
+            Output::Print(u"FixedFields: converting 0x%p from %s to %s:\n", instance, oldTypeHandlerName,
+                          newTypeHandlerName);
+            Output::Print(u"   before: type = 0x%p, type handler = 0x%p, old singleton = 0x%p(0x%p)\n", oldType,
+                          oldTypeHandler, oldSingletonInstanceBefore,
+                          oldSingletonInstanceBefore != nullptr ? oldSingletonInstanceBefore->Get() : nullptr);
             Output::Print(u"   fixed fields:");
             oldTypeHandler->DumpFixedFields();
             Output::Print(u"\n");
@@ -2738,17 +2944,19 @@ namespace Js
 
     template <typename T>
     void DictionaryTypeHandlerBase<T>::TraceFixedFieldsAfterTypeHandlerChange(
-        DynamicObject* instance, DynamicTypeHandler* oldTypeHandler, DynamicTypeHandler* newTypeHandler,
-        DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
+        DynamicObject *instance, DynamicTypeHandler *oldTypeHandler, DynamicTypeHandler *newTypeHandler,
+        DynamicType *oldType, RecyclerWeakReference<DynamicObject> *oldSingletonInstanceBefore)
     {
         if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
         {
-            RecyclerWeakReference<DynamicObject>* oldSingletonInstanceAfter = oldTypeHandler->GetSingletonInstance();
-            RecyclerWeakReference<DynamicObject>* newSingletonInstanceAfter = newTypeHandler->GetSingletonInstance();
-            Output::Print(u"   after: type = 0x%p, type handler = 0x%p, old singleton = 0x%p(0x%p), new singleton = 0x%p(0x%p)\n",
-                instance->GetType(), newTypeHandler,
-                oldSingletonInstanceAfter, oldSingletonInstanceAfter != nullptr ? oldSingletonInstanceAfter->Get() : nullptr,
-                newSingletonInstanceAfter, newSingletonInstanceAfter != nullptr ? newSingletonInstanceAfter->Get() : nullptr);
+            RecyclerWeakReference<DynamicObject> *oldSingletonInstanceAfter = oldTypeHandler->GetSingletonInstance();
+            RecyclerWeakReference<DynamicObject> *newSingletonInstanceAfter = newTypeHandler->GetSingletonInstance();
+            Output::Print(
+                u"   after: type = 0x%p, type handler = 0x%p, old singleton = 0x%p(0x%p), new singleton = 0x%p(0x%p)\n",
+                instance->GetType(), newTypeHandler, oldSingletonInstanceAfter,
+                oldSingletonInstanceAfter != nullptr ? oldSingletonInstanceAfter->Get() : nullptr,
+                newSingletonInstanceAfter,
+                newSingletonInstanceAfter != nullptr ? newSingletonInstanceAfter->Get() : nullptr);
             Output::Print(u"   fixed fields after:");
             newTypeHandler->DumpFixedFields();
             Output::Print(u"\n");
@@ -2756,7 +2964,8 @@ namespace Js
         }
         if (PHASE_VERBOSE_TESTTRACE1(FixMethodPropsPhase))
         {
-            Output::Print(u"   type %s, typeHandler %s, old singleton after %s null (%s), new singleton after %s null\n",
+            Output::Print(
+                u"   type %s, typeHandler %s, old singleton after %s null (%s), new singleton after %s null\n",
                 oldTypeHandler != newTypeHandler ? u"changed" : u"unchanged",
                 oldType != instance->GetType() ? u"changed" : u"unchanged",
                 oldSingletonInstanceBefore == nullptr ? u"==" : u"!=",
@@ -2771,13 +2980,14 @@ namespace Js
 
     template <typename T>
     void DictionaryTypeHandlerBase<T>::TraceFixedFieldsBeforeSetIsProto(
-        DynamicObject* instance, DynamicTypeHandler* oldTypeHandler, DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
+        DynamicObject *instance, DynamicTypeHandler *oldTypeHandler, DynamicType *oldType,
+        RecyclerWeakReference<DynamicObject> *oldSingletonInstanceBefore)
     {
         if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
         {
             Output::Print(u"FixedFields: PathTypeHandler::SetIsPrototype(0x%p):\n", instance);
-            Output::Print(u"   before: type = 0x%p, old singleton = 0x%p(0x%p)\n",
-                oldType, oldSingletonInstanceBefore, oldSingletonInstanceBefore != nullptr ? oldSingletonInstanceBefore->Get() : nullptr);
+            Output::Print(u"   before: type = 0x%p, old singleton = 0x%p(0x%p)\n", oldType, oldSingletonInstanceBefore,
+                          oldSingletonInstanceBefore != nullptr ? oldSingletonInstanceBefore->Get() : nullptr);
             Output::Print(u"   fixed fields:");
             oldTypeHandler->DumpFixedFields();
             Output::Print(u"\n");
@@ -2794,17 +3004,19 @@ namespace Js
 
     template <typename T>
     void DictionaryTypeHandlerBase<T>::TraceFixedFieldsAfterSetIsProto(
-        DynamicObject* instance, DynamicTypeHandler* oldTypeHandler, DynamicTypeHandler* newTypeHandler,
-        DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
+        DynamicObject *instance, DynamicTypeHandler *oldTypeHandler, DynamicTypeHandler *newTypeHandler,
+        DynamicType *oldType, RecyclerWeakReference<DynamicObject> *oldSingletonInstanceBefore)
     {
         if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
         {
-            RecyclerWeakReference<DynamicObject>* oldSingletonInstanceAfter = oldTypeHandler->GetSingletonInstance();
-            RecyclerWeakReference<DynamicObject>* newSingletonInstanceAfter = newTypeHandler->GetSingletonInstance();
-            Output::Print(u"   after: type = 0x%p, type handler = 0x%p, old singleton = 0x%p(0x%p), new singleton = 0x%p(0x%p)\n",
-                instance->GetType(), newTypeHandler,
-                oldSingletonInstanceAfter, oldSingletonInstanceAfter != nullptr ? oldSingletonInstanceAfter->Get() : nullptr,
-                newSingletonInstanceAfter, newSingletonInstanceAfter != nullptr ? newSingletonInstanceAfter->Get() : nullptr);
+            RecyclerWeakReference<DynamicObject> *oldSingletonInstanceAfter = oldTypeHandler->GetSingletonInstance();
+            RecyclerWeakReference<DynamicObject> *newSingletonInstanceAfter = newTypeHandler->GetSingletonInstance();
+            Output::Print(
+                u"   after: type = 0x%p, type handler = 0x%p, old singleton = 0x%p(0x%p), new singleton = 0x%p(0x%p)\n",
+                instance->GetType(), newTypeHandler, oldSingletonInstanceAfter,
+                oldSingletonInstanceAfter != nullptr ? oldSingletonInstanceAfter->Get() : nullptr,
+                newSingletonInstanceAfter,
+                newSingletonInstanceAfter != nullptr ? newSingletonInstanceAfter->Get() : nullptr);
             Output::Print(u"   fixed fields:");
             newTypeHandler->DumpFixedFields();
             Output::Print(u"\n");
@@ -2813,9 +3025,10 @@ namespace Js
         if (PHASE_VERBOSE_TESTTRACE1(FixMethodPropsPhase))
         {
             Output::Print(u"   type %s, old singleton after %s null (%s)\n",
-                oldType != instance->GetType() ? u"changed" : u"unchanged",
-                oldSingletonInstanceBefore == nullptr ? u"==" : u"!=",
-                oldSingletonInstanceBefore != oldTypeHandler->GetSingletonInstance() ? u"changed" : u"unchanged");
+                          oldType != instance->GetType() ? u"changed" : u"unchanged",
+                          oldSingletonInstanceBefore == nullptr ? u"==" : u"!=",
+                          oldSingletonInstanceBefore != oldTypeHandler->GetSingletonInstance() ? u"changed"
+                                                                                               : u"unchanged");
             Output::Print(u"   fixed fields after:");
             newTypeHandler->DumpFixedFields();
             Output::Print(u"\n");
@@ -2825,7 +3038,9 @@ namespace Js
 #endif // ENABLE_FIXED_FIELDS
 
 #if DBG_DUMP
-    template<typename T> void DictionaryTypeHandlerBase<T>::Dump(unsigned indent) const {
+    template <typename T>
+    void DictionaryTypeHandlerBase<T>::Dump(unsigned indent) const
+    {
         const auto padding(u"");
         const unsigned fieldIndent(indent + 2);
         const unsigned mapLabelIndent(indent + 4);
@@ -2839,23 +3054,25 @@ namespace Js
         }
         else
         {
-            Output::Print(u"%*spropertyMap: 0x%p\n", fieldIndent, padding, static_cast<void*>(this->propertyMap));
-            this->propertyMap->Map([&](const PropertyRecord *key, const DictionaryPropertyDescriptor<T> &value)
-            {
-                Output::Print(u"%*sKey:\n", mapLabelIndent, padding);
-                if (key == nullptr)
+            Output::Print(u"%*spropertyMap: 0x%p\n", fieldIndent, padding, static_cast<void *>(this->propertyMap));
+            this->propertyMap->Map(
+                [&](const PropertyRecord *key, const DictionaryPropertyDescriptor<T> &value)
                 {
-                    Output::Print(u"%*s<null>\n", mapValueIndent, padding);
-                }
-                else
-                {
-                    key->Dump(mapValueIndent);
-                }
-                Output::Print(u"%*sValue\n", mapLabelIndent, padding);
-                value.Dump(mapValueIndent);
-            });
+                    Output::Print(u"%*sKey:\n", mapLabelIndent, padding);
+                    if (key == nullptr)
+                    {
+                        Output::Print(u"%*s<null>\n", mapValueIndent, padding);
+                    }
+                    else
+                    {
+                        key->Dump(mapValueIndent);
+                    }
+                    Output::Print(u"%*sValue\n", mapLabelIndent, padding);
+                    value.Dump(mapValueIndent);
+                });
         }
-        Output::Print(u"%*snextPropertyIndex: %d\n", fieldIndent, padding, static_cast<int32_t>(this->nextPropertyIndex));
+        Output::Print(u"%*snextPropertyIndex: %d\n", fieldIndent, padding,
+                      static_cast<int32_t>(this->nextPropertyIndex));
     }
 
 #endif
@@ -2866,6 +3083,7 @@ namespace Js
     template <bool allowLetConstGlobal>
     PropertyAttributes GetLetConstGlobalPropertyAttributes(PropertyAttributes attributes)
     {
-        return (allowLetConstGlobal && (attributes & PropertyLetConstGlobal) != 0) ? (attributes | PropertyWritable) : attributes;
+        return (allowLetConstGlobal && (attributes & PropertyLetConstGlobal) != 0) ? (attributes | PropertyWritable)
+                                                                                   : attributes;
     }
-}
+} // namespace Js

@@ -21,89 +21,91 @@ Abstract:
 #include "pal/dbgmsg.h"
 SET_DEFAULT_DEBUG_CHANNEL(PROCESS); // some headers have code with asserts, so do this first
 
-#include "pal/procobj.hpp"
-#include "pal/thread.hpp"
-#include "pal/file.hpp"
-#include "pal/handlemgr.hpp"
-#include "procprivate.hpp"
-#include "pal/palinternal.h"
-#include "pal/process.h"
-#include "pal/init.h"
 #include "pal/critsect.h"
 #include "pal/debug.h"
-#include "pal/utils.h"
+#include "pal/file.hpp"
+#include "pal/handlemgr.hpp"
+#include "pal/init.h"
 #include "pal/misc.h"
-#include "pal/virtual.h"
+#include "pal/palinternal.h"
+#include "pal/process.h"
+#include "pal/procobj.hpp"
 #include "pal/stackstring.hpp"
+#include "pal/thread.hpp"
+#include "pal/utils.h"
+#include "pal/virtual.h"
+#include "procprivate.hpp"
 
 #include <errno.h>
 #include <poll.h>
 
-#include <unistd.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <signal.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #if HAVE_PRCTL_H
 #include <sys/prctl.h>
 #include <sys/syscall.h>
 #endif
-#include <sys/wait.h>
-#include <sys/time.h>
-#include <sys/resource.h>
 #include <debugmacrosext.h>
-#include <semaphore.h>
-#include <stdint.h>
 #include <dlfcn.h>
 #include <limits.h>
+#include <semaphore.h>
+#include <stdint.h>
+#include <sys/resource.h>
+#include <sys/time.h>
+#include <sys/wait.h>
 
 #ifdef __linux__
 #include <sys/syscall.h> // __NR_membarrier
 // Ensure __NR_membarrier is defined for portable builds.
-# if !defined(__NR_membarrier)
-#  if defined(__amd64__)
-#   define __NR_membarrier  324
-#  elif defined(__i386__)
-#   define __NR_membarrier  375
-#  elif defined(__arm__)
-#   define __NR_membarrier  389
-#  elif defined(__aarch64__)
-#   define __NR_membarrier  283
-#  elif defined(__loongarch64)
-#   define __NR_membarrier  283
-#  else
-#   error Unknown architecture
-#  endif
-# endif
+#if !defined(__NR_membarrier)
+#if defined(__amd64__)
+#define __NR_membarrier 324
+#elif defined(__i386__)
+#define __NR_membarrier 375
+#elif defined(__arm__)
+#define __NR_membarrier 389
+#elif defined(__aarch64__)
+#define __NR_membarrier 283
+#elif defined(__loongarch64)
+#define __NR_membarrier 283
+#else
+#error Unknown architecture
+#endif
+#endif
 #endif
 
 #ifdef __APPLE__
 #include <libproc.h>
-#include <sys/sysctl.h>
-#include <sys/posix_sem.h>
 #include <mach/task.h>
 #include <mach/vm_map.h>
-extern "C"
-{
-#  include <mach/thread_state.h>
+#include <sys/posix_sem.h>
+#include <sys/sysctl.h>
+extern "C" {
+#include <mach/thread_state.h>
 }
 
-#define CHECK_MACH(_msg, machret) do {                                      \
-        if (machret != KERN_SUCCESS)                                        \
-        {                                                                   \
-            char _szError[1024];                                            \
-            mach_error(_szError, machret);                                  \
-            abort();                                                        \
-        }                                                                   \
-    } while (false)
+#define CHECK_MACH(_msg, machret)                                                                                      \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (machret != KERN_SUCCESS)                                                                                   \
+        {                                                                                                              \
+            char _szError[1024];                                                                                       \
+            mach_error(_szError, machret);                                                                             \
+            abort();                                                                                                   \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (false)
 
 #endif // __APPLE__
 
 #ifdef __NetBSD__
+#include <kvm.h>
 #include <sys/cdefs.h>
 #include <sys/param.h>
 #include <sys/sysctl.h>
-#include <kvm.h>
 #endif
 
 #ifdef __FreeBSD__
@@ -116,43 +118,36 @@ extern bool g_running_in_exe;
 
 using namespace CorUnix;
 
-CObjectType CorUnix::otProcess __attribute__((init_priority(200))) (
-                otiProcess,
-                NULL,   // No cleanup routine
-                NULL,   // No initialization routine
-                0,      // No immutable data
-                sizeof(CProcProcessLocalData),
-                0,
-                PROCESS_ALL_ACCESS,
-                CObjectType::SecuritySupported,
-                CObjectType::SecurityInfoNotPersisted,
-                CObjectType::UnnamedObject,
-                CObjectType::CrossProcessDuplicationAllowed,
-                CObjectType::WaitableObject,
-                CObjectType::SingleTransitionObject,
-                CObjectType::ThreadReleaseHasNoSideEffects,
-                CObjectType::NoOwner
-                );
+CObjectType CorUnix::otProcess
+    __attribute__((init_priority(200))) (otiProcess,
+                                         NULL, // No cleanup routine
+                                         NULL, // No initialization routine
+                                         0, // No immutable data
+                                         sizeof(CProcProcessLocalData), 0, PROCESS_ALL_ACCESS,
+                                         CObjectType::SecuritySupported, CObjectType::SecurityInfoNotPersisted,
+                                         CObjectType::UnnamedObject, CObjectType::CrossProcessDuplicationAllowed,
+                                         CObjectType::WaitableObject, CObjectType::SingleTransitionObject,
+                                         CObjectType::ThreadReleaseHasNoSideEffects, CObjectType::NoOwner);
 
 //
 // Helper membarrier function
 //
 #ifdef __NR_membarrier
-# define membarrier(...)  syscall(__NR_membarrier, __VA_ARGS__)
+#define membarrier(...) syscall(__NR_membarrier, __VA_ARGS__)
 #else
-# define membarrier(...)  -ENOSYS
+#define membarrier(...) -ENOSYS
 #endif
 
 enum membarrier_cmd
 {
-    MEMBARRIER_CMD_QUERY                                 = 0,
-    MEMBARRIER_CMD_GLOBAL                                = (1 << 0),
-    MEMBARRIER_CMD_GLOBAL_EXPEDITED                      = (1 << 1),
-    MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED             = (1 << 2),
-    MEMBARRIER_CMD_PRIVATE_EXPEDITED                     = (1 << 3),
-    MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED            = (1 << 4),
-    MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE           = (1 << 5),
-    MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE  = (1 << 6)
+    MEMBARRIER_CMD_QUERY = 0,
+    MEMBARRIER_CMD_GLOBAL = (1 << 0),
+    MEMBARRIER_CMD_GLOBAL_EXPEDITED = (1 << 1),
+    MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED = (1 << 2),
+    MEMBARRIER_CMD_PRIVATE_EXPEDITED = (1 << 3),
+    MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED = (1 << 4),
+    MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE = (1 << 5),
+    MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE = (1 << 6)
 };
 
 CAllowedObjectTypes aotProcess __attribute__((init_priority(200))) (otiProcess);
@@ -160,7 +155,7 @@ CAllowedObjectTypes aotProcess __attribute__((init_priority(200))) (otiProcess);
 //
 // The representative IPalObject for this process
 //
-IPalObject* CorUnix::g_pobjProcess;
+IPalObject *CorUnix::g_pobjProcess;
 
 //
 // Critical section that protects process data (e.g., the
@@ -171,7 +166,7 @@ CRITICAL_SECTION g_csProcess __attribute__((init_priority(200)));
 //
 // List and count of active threads
 //
-CPalThread* CorUnix::pGThreadList;
+CPalThread *CorUnix::pGThreadList;
 uint32_t g_dwThreadCount;
 
 // Thread ID of thread that has started the ExitProcess process
@@ -179,10 +174,10 @@ Volatile<int32_t> terminator __attribute__((init_priority(200))) = 0;
 
 // Application group ID for this process
 #ifdef __APPLE__
-const char * gApplicationGroupId = nullptr;
+const char *gApplicationGroupId = nullptr;
 int gApplicationGroupIdLength = 0;
 #endif // __APPLE__
-PathCharString* gSharedFilesPath = nullptr;
+PathCharString *gSharedFilesPath = nullptr;
 
 // The lowest common supported semaphore length, including null character
 // NetBSD-7.99.25: 15 characters
@@ -207,11 +202,7 @@ static_assert(CLR_SEM_MAX_NAMELEN <= MAX_PATH, "CLR_SEM_MAX_NAMELEN > MAX_PATH")
 pthread_key_t CorUnix::thObjKey;
 
 PAL_ERROR
-PROCGetProcessStatus(
-    CPalThread *pThread,
-    HANDLE hProcess,
-    PROCESS_STATE *pps,
-    uint32_t *pdwExitCode);
+PROCGetProcessStatus(CPalThread *pThread, HANDLE hProcess, PROCESS_STATE *pps, uint32_t *pdwExitCode);
 
 static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally);
 
@@ -222,8 +213,7 @@ Function:
 See MSDN doc.
 --*/
 HANDLE
-GetCurrentProcess(
-          void)
+GetCurrentProcess(void)
 {
     LOGEXIT("GetCurrentProcess returns HANDLE %p\n", hPseudoCurrentProcess);
 
@@ -232,12 +222,7 @@ GetCurrentProcess(
 }
 
 PAL_ERROR
-PrepareStandardHandle(
-    CPalThread *pThread,
-    HANDLE hFile,
-    IPalObject **ppobjFile,
-    int *piFd
-    )
+PrepareStandardHandle(CPalThread *pThread, HANDLE hFile, IPalObject **ppobjFile, int *piFd)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjFile = NULL;
@@ -245,12 +230,7 @@ PrepareStandardHandle(
     CFileProcessLocalData *pLocalData = NULL;
     int iError = 0;
 
-    palError = g_pObjectManager->ReferenceObjectByHandle(
-        pThread,
-        hFile,
-        &aotFile,
-        &pobjFile
-    );
+    palError = g_pObjectManager->ReferenceObjectByHandle(pThread, hFile, &aotFile, &pobjFile);
 
     if (NO_ERROR != palError)
     {
@@ -258,12 +238,7 @@ PrepareStandardHandle(
         goto PrepareStandardHandleExit;
     }
 
-    palError = pobjFile->GetProcessLocalData(
-        pThread,
-        ReadLock,
-        &pDataLock,
-        reinterpret_cast<void **>(&pLocalData)
-        );
+    palError = pobjFile->GetProcessLocalData(pThread, ReadLock, &pDataLock, reinterpret_cast<void **>(&pLocalData));
 
     if (NO_ERROR != palError)
     {
@@ -325,10 +300,7 @@ Note:
 
 See MSDN doc.
 --*/
-BOOL
-TerminateProcess(
-     HANDLE hProcess,
-     uint32_t uExitCode)
+BOOL TerminateProcess(HANDLE hProcess, uint32_t uExitCode)
 {
     BOOL ret;
 
@@ -359,7 +331,7 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
     {
         SetLastError(ERROR_INVALID_HANDLE);
     }
-    else if(dwProcessId != getpid())
+    else if (dwProcessId != getpid())
     {
         if (uExitCode != 0)
             WARN("exit code 0x%x ignored for external process.\n", uExitCode);
@@ -370,7 +342,8 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
         }
         else
         {
-            switch (errno) {
+            switch (errno)
+            {
             case ESRCH:
                 SetLastError(ERROR_INVALID_HANDLE);
                 break;
@@ -396,7 +369,8 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
         {
             // TODO: Convert uExitCodes into sysexits(3)?
             ERROR("exit() only supports the lower 8-bits of an exit code. "
-                "status will only see error 0x%x instead of 0x%x.\n", uExitCode & 0xff, uExitCode);
+                  "status will only see error 0x%x instead of 0x%x.\n",
+                  uExitCode & 0xff, uExitCode);
         }
 
         TerminateCurrentProcessNoExit();
@@ -448,16 +422,16 @@ void PROCCleanupProcess()
     PALShutdown();
 }
 
-#define FATAL_ASSERT(e, msg) \
-    do \
-    { \
-        if (!(e)) \
-        { \
-            fprintf(stderr, "FATAL ERROR: " msg); \
-            abort(); \
-        } \
-    } \
-    while(0)
+#define FATAL_ASSERT(e, msg)                                                                                           \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (!(e))                                                                                                      \
+        {                                                                                                              \
+            fprintf(stderr, "FATAL ERROR: " msg);                                                                      \
+            abort();                                                                                                   \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
 
 /*++
 Function:
@@ -472,9 +446,7 @@ Parameter
 Return
   Return the process ID, or 0 if it's not a valid handle
 --*/
-uint32_t
-PROCGetProcessIDFromHandle(
-        HANDLE hProcess)
+uint32_t PROCGetProcessIDFromHandle(HANDLE hProcess)
 {
     PAL_ERROR palError;
     IPalObject *pobjProcess = NULL;
@@ -489,24 +461,15 @@ PROCGetProcessIDFromHandle(
     }
 
 
-    palError = g_pObjectManager->ReferenceObjectByHandle(
-        pThread,
-        hProcess,
-        &aotProcess,
-        &pobjProcess
-    );
+    palError = g_pObjectManager->ReferenceObjectByHandle(pThread, hProcess, &aotProcess, &pobjProcess);
 
     if (NO_ERROR == palError)
     {
         IDataLock *pDataLock;
         CProcProcessLocalData *pLocalData;
 
-        palError = pobjProcess->GetProcessLocalData(
-            pThread,
-            ReadLock,
-            &pDataLock,
-            reinterpret_cast<void **>(&pLocalData)
-            );
+        palError =
+            pobjProcess->GetProcessLocalData(pThread, ReadLock, &pDataLock, reinterpret_cast<void **>(&pLocalData));
 
         if (NO_ERROR == palError)
         {
@@ -523,9 +486,7 @@ PROCGetProcessIDFromHandleExit:
 }
 
 PAL_ERROR
-CorUnix::InitializeProcessData(
-    void
-    )
+CorUnix::InitializeProcessData(void)
 {
     PAL_ERROR palError = NO_ERROR;
     bool fLockInitialized = FALSE;
@@ -563,9 +524,7 @@ Return
 --*/
 
 PAL_ERROR
-CorUnix::CreateInitialProcessAndThreadObjects(
-    CPalThread *pThread
-    )
+CorUnix::CreateInitialProcessAndThreadObjects(CPalThread *pThread)
 {
     PAL_ERROR palError = NO_ERROR;
     HANDLE hThread;
@@ -589,18 +548,13 @@ CorUnix::CreateInitialProcessAndThreadObjects(
     // This handle isn't needed
     //
 
-    (void) g_pObjectManager->RevokeHandle(pThread, hThread);
+    (void)g_pObjectManager->RevokeHandle(pThread, hThread);
 
     //
     // Create and initialize process object
     //
 
-    palError = g_pObjectManager->AllocateObject(
-        pThread,
-        &otProcess,
-        &oa,
-        &pobjProcess
-        );
+    palError = g_pObjectManager->AllocateObject(pThread, &otProcess, &oa, &pobjProcess);
 
     if (NO_ERROR != palError)
     {
@@ -608,12 +562,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
         goto CreateInitialProcessAndThreadObjectsExit;
     }
 
-    palError = pobjProcess->GetProcessLocalData(
-        pThread,
-        WriteLock,
-        &pDataLock,
-        reinterpret_cast<void **>(&pLocalData)
-        );
+    palError = pobjProcess->GetProcessLocalData(pThread, WriteLock, &pDataLock, reinterpret_cast<void **>(&pLocalData));
 
     if (NO_ERROR != palError)
     {
@@ -625,14 +574,8 @@ CorUnix::CreateInitialProcessAndThreadObjects(
     pLocalData->ps = PS_RUNNING;
     pDataLock->ReleaseLock(pThread);
 
-    palError = g_pObjectManager->RegisterObject(
-        pThread,
-        pobjProcess,
-        &aotProcess,
-        PROCESS_ALL_ACCESS,
-        &hProcess,
-        &g_pobjProcess
-        );
+    palError = g_pObjectManager->RegisterObject(pThread, pobjProcess, &aotProcess, PROCESS_ALL_ACCESS, &hProcess,
+                                                &g_pobjProcess);
 
     //
     // pobjProcess is invalidated by the call to RegisterObject, so
@@ -675,11 +618,7 @@ Parameter
   pThread:   Thread object
 
 --*/
-void
-CorUnix::PROCAddThread(
-    CPalThread *pCurrentThread,
-    CPalThread *pTargetThread
-    )
+void CorUnix::PROCAddThread(CPalThread *pCurrentThread, CPalThread *pTargetThread)
 {
     /* protect the access of the thread list with critical section for
        mutithreading access */
@@ -689,8 +628,7 @@ CorUnix::PROCAddThread(
     pGThreadList = pTargetThread;
     g_dwThreadCount += 1;
 
-    TRACE("Thread 0x%p (id %#x) added to the process thread list\n",
-          pTargetThread, pTargetThread->GetThreadId());
+    TRACE("Thread 0x%p (id %#x) added to the process thread list\n", pTargetThread, pTargetThread->GetThreadId());
 
     InternalLeaveCriticalSection(pCurrentThread, &g_csProcess);
 }
@@ -708,11 +646,7 @@ Parameter
 
 (no return value)
 --*/
-void
-CorUnix::PROCRemoveThread(
-    CPalThread *pCurrentThread,
-    CPalThread *pTargetThread
-    )
+void CorUnix::PROCRemoveThread(CPalThread *pCurrentThread, CPalThread *pTargetThread)
 {
     CPalThread *curThread, *prevThread;
 
@@ -732,9 +666,9 @@ CorUnix::PROCRemoveThread(
     /* do we remove the first thread? */
     if (curThread == pTargetThread)
     {
-        pGThreadList =  curThread->GetNext();
-        TRACE("Thread 0x%p (id %#x) removed from the process thread list\n",
-            pTargetThread, pTargetThread->GetThreadId());
+        pGThreadList = curThread->GetNext();
+        TRACE("Thread 0x%p (id %#x) removed from the process thread list\n", pTargetThread,
+              pTargetThread->GetThreadId());
         goto EXIT;
     }
 
@@ -776,12 +710,7 @@ Parameter
 Return
   the number of threads.
 --*/
-int32_t
-CorUnix::PROCGetNumberOfThreads(
-    void)
-{
-    return g_dwThreadCount;
-}
+int32_t CorUnix::PROCGetNumberOfThreads(void) { return g_dwThreadCount; }
 
 
 /*++
@@ -797,12 +726,9 @@ Parameter
 Return
   void
 --*/
-void
-PROCProcessLock(
-    void)
+void PROCProcessLock(void)
 {
-    CPalThread * pThread =
-        (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
+    CPalThread *pThread = (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
 
     InternalEnterCriticalSection(pThread, &g_csProcess);
 }
@@ -821,12 +747,9 @@ Parameter
 Return
   void
 --*/
-void
-PROCProcessUnlock(
-    void)
+void PROCProcessUnlock(void)
 {
-    CPalThread * pThread =
-        (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
+    CPalThread *pThread = (PALIsThreadDataInitialized() ? InternalGetCurrentThread() : NULL);
 
     InternalLeaveCriticalSection(pThread, &g_csProcess);
 }
@@ -841,8 +764,7 @@ Abstract
 
 (no parameters, no return value)
 --*/
-void
-PROCCleanupThreadSemIds(void)
+void PROCCleanupThreadSemIds(void)
 {
     //
     // When using SysV semaphores, the semaphore ids used by PAL threads must be removed
@@ -859,7 +781,6 @@ PROCCleanupThreadSemIds(void)
     }
 
     PROCProcessUnlock();
-
 }
 #endif // USE_SYSV_SEMAPHORES
 
@@ -881,8 +802,7 @@ Note:
   This function is used in ExitThread and TerminateProcess
 
 --*/
-void
-CorUnix::TerminateCurrentProcessNoExit()
+void CorUnix::TerminateCurrentProcessNoExit()
 {
     BOOL locked;
     uint32_t old_terminator;
@@ -917,10 +837,10 @@ CorUnix::TerminateCurrentProcessNoExit()
        may take the process lock. We must do it in the same order to avoid
        deadlocks */
     locked = PALInitLock();
-    if(locked && PALIsInitialized())
+    if (locked && PALIsInitialized())
     {
-         PROCCleanupProcess();
-     }
+        PROCCleanupProcess();
+    }
 }
 
 /*++
@@ -939,12 +859,7 @@ Return value :
     TRUE on success
 --*/
 PAL_ERROR
-PROCGetProcessStatus(
-    CPalThread *pThread,
-    HANDLE hProcess,
-    PROCESS_STATE *pps,
-    uint32_t *pdwExitCode
-    )
+PROCGetProcessStatus(CPalThread *pThread, HANDLE hProcess, PROCESS_STATE *pps, uint32_t *pdwExitCode)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjProcess = NULL;
@@ -958,24 +873,14 @@ PROCGetProcessStatus(
     // the case if this function has already been called for the same process.
     //
 
-    palError = g_pObjectManager->ReferenceObjectByHandle(
-        pThread,
-        hProcess,
-        &aotProcess,
-        &pobjProcess
-    );
+    palError = g_pObjectManager->ReferenceObjectByHandle(pThread, hProcess, &aotProcess, &pobjProcess);
 
     if (NO_ERROR != palError)
     {
         goto PROCGetProcessStatusExit;
     }
 
-    palError = pobjProcess->GetProcessLocalData(
-        pThread,
-        WriteLock,
-        &pDataLock,
-        reinterpret_cast<void **>(&pLocalData)
-        );
+    palError = pobjProcess->GetProcessLocalData(pThread, WriteLock, &pDataLock, reinterpret_cast<void **>(&pLocalData));
 
     if (PS_DONE == pLocalData->ps)
     {
@@ -996,15 +901,15 @@ PROCGetProcessStatus(
        of the exit code. This is all that is required for the PAL spec. */
     TRACE("Looking for status of process; trying wait()");
 
-    while(1)
+    while (1)
     {
         /* try to get state of process, using non-blocking call */
         wait_retval = waitpid(pLocalData->dwProcessId, &status, WNOHANG);
 
-        if ( wait_retval == static_cast<pid_t>(pLocalData->dwProcessId) )
+        if (wait_retval == static_cast<pid_t>(pLocalData->dwProcessId))
         {
             /* success; get the exit code */
-            if ( WIFEXITED( status ) )
+            if (WIFEXITED(status))
             {
                 *pdwExitCode = WEXITSTATUS(status);
                 TRACE("Exit code was %d\n", *pdwExitCode);
@@ -1043,7 +948,7 @@ PROCGetProcessStatus(
                 TRACE("waitpid() failed with ECHILD; calling kill instead");
                 if (kill(pLocalData->dwProcessId, 0) != 0)
                 {
-                    if(ESRCH == errno)
+                    if (ESRCH == errno)
                     {
                         WARN("kill() failed with ESRCH, i.e. target "
                              "process exited and it wasn't a child, "
@@ -1053,8 +958,7 @@ PROCGetProcessStatus(
                     }
                     else
                     {
-                        ERROR("kill(pid, 0) failed; errno is %d (%s)\n",
-                              errno, strerror(errno));
+                        ERROR("kill(pid, 0) failed; errno is %d (%s)\n", errno, strerror(errno));
                         *pdwExitCode = EXIT_FAILURE;
                     }
                     *pps = PS_DONE;
@@ -1069,15 +973,15 @@ PROCGetProcessStatus(
             {
                 // Ignoring unexpected waitpid errno and assuming that
                 // the process is still running
-                ERROR("waitpid(pid=%u) failed with unexpected errno=%d (%s)\n",
-                      pLocalData->dwProcessId, errno, strerror(errno));
+                ERROR("waitpid(pid=%u) failed with unexpected errno=%d (%s)\n", pLocalData->dwProcessId, errno,
+                      strerror(errno));
                 *pps = PS_RUNNING;
                 *pdwExitCode = 0;
             }
         }
         else
         {
-            ASSERT("waitpid returned unexpected value %d\n",wait_retval);
+            ASSERT("waitpid returned unexpected value %d\n", wait_retval);
             *pdwExitCode = EXIT_FAILURE;
             *pps = PS_DONE;
         }
@@ -1086,14 +990,13 @@ PROCGetProcessStatus(
     }
 
     // Save the exit code for future reference (waitpid will only work once).
-    if(PS_DONE == *pps)
+    if (PS_DONE == *pps)
     {
         pLocalData->ps = PS_DONE;
         pLocalData->dwExitCode = *pdwExitCode;
     }
 
-    TRACE( "State of process 0x%08x : %d (exit code %d)\n",
-           pLocalData->dwProcessId, *pps, *pdwExitCode );
+    TRACE("State of process 0x%08x : %d (exit code %d)\n", pLocalData->dwProcessId, *pps, *pdwExitCode);
 
     pDataLock->ReleaseLock(pThread);
 
@@ -1114,19 +1017,18 @@ void PROCDumpThreadList()
 
     PROCProcessLock();
 
-    TRACE ("Threads:{\n");
+    TRACE("Threads:{\n");
 
     pThread = pGThreadList;
     while (NULL != pThread)
     {
-        TRACE ("    {pThr=0x%p tid=%#x lwpid=%#x state=%d finsusp=%d}\n",
-               pThread, (int)pThread->GetThreadId(), (int)pThread->GetLwpId(),
-               (int)pThread->synchronizationInfo.GetThreadState(),
-               (int)pThread->suspensionInfo.GetSuspendedForShutdown());
+        TRACE("    {pThr=0x%p tid=%#x lwpid=%#x state=%d finsusp=%d}\n", pThread, (int)pThread->GetThreadId(),
+              (int)pThread->GetLwpId(), (int)pThread->synchronizationInfo.GetThreadState(),
+              (int)pThread->suspensionInfo.GetSuspendedForShutdown());
 
         pThread = pThread->GetNext();
     }
-    TRACE ("Threads:}\n");
+    TRACE("Threads:}\n");
 
     PROCProcessUnlock();
 }

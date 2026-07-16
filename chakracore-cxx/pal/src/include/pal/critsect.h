@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -12,9 +12,9 @@ Module Name:
     include/pal/critsect.h
 
 Abstract:
-    
+
     Header file for the critical sections functions.
-    
+
 
 
 --*/
@@ -22,9 +22,10 @@ Abstract:
 #ifndef _PAL_CRITSECT_H_
 #define _PAL_CRITSECT_H_
 
+#include "pal.h"
+
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 void InternalInitializeCriticalSection(CRITICAL_SECTION *pcs);
@@ -43,4 +44,3 @@ void PALCLeaveCriticalSection(CRITICAL_SECTION *pcs);
 #endif // __cplusplus
 
 #endif /* _PAL_CRITSECT_H_ */
-

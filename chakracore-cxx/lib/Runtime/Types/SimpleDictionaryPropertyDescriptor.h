@@ -14,38 +14,41 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
             preventFalseReference(true), isInitialized(false), isFixed(false), usedAsFixed(false),
 #endif
-            propertyIndex(NoSlots), Attributes(PropertyDynamicTypeDefaults) {}
+            propertyIndex(NoSlots), Attributes(PropertyDynamicTypeDefaults)
+        {
+        }
 
         SimpleDictionaryPropertyDescriptor(TPropertyIndex inPropertyIndex) :
 #if ENABLE_FIXED_FIELDS
             preventFalseReference(true), isInitialized(false), isFixed(false), usedAsFixed(false),
 #endif
-            propertyIndex(inPropertyIndex), Attributes(PropertyDynamicTypeDefaults) {}
-            
+            propertyIndex(inPropertyIndex), Attributes(PropertyDynamicTypeDefaults)
+        {
+        }
+
 
         SimpleDictionaryPropertyDescriptor(TPropertyIndex inPropertyIndex, PropertyAttributes attributes) :
 #if ENABLE_FIXED_FIELDS
             preventFalseReference(true), isInitialized(false), isFixed(false), usedAsFixed(false),
 #endif
-            propertyIndex(inPropertyIndex), Attributes(attributes) {}
+            propertyIndex(inPropertyIndex), Attributes(attributes)
+        {
+        }
 
 
 #if ENABLE_FIXED_FIELDS
         // SimpleDictionaryPropertyDescriptor is allocated by a dictionary along with the PropertyRecord
         // so it can not allocate as leaf, tag the lower bit to prevent false reference
-        bool preventFalseReference:1;
-        bool isInitialized: 1;
-        bool isFixed:1;
-        bool usedAsFixed:1;
+        bool preventFalseReference : 1;
+        bool isInitialized : 1;
+        bool isFixed : 1;
+        bool usedAsFixed : 1;
 #endif
 
         PropertyAttributes Attributes;
         TPropertyIndex propertyIndex;
 
-        bool HasNonLetConstGlobal() const
-        {
-            return (this->Attributes & PropertyLetConstGlobal) == 0;
-        }
+        bool HasNonLetConstGlobal() const { return (this->Attributes & PropertyLetConstGlobal) == 0; }
 
         bool IsOrMayBecomeFixed() const
         {
@@ -55,19 +58,17 @@ namespace Js
             return false;
 #endif
         }
-     private:
+
+    private:
         static const TPropertyIndex NoSlots = PropertyIndexRanges<TPropertyIndex>::NoSlots;
     };
-}
+} // namespace Js
 
 namespace JsUtil
 {
     template <class TPropertyIndex>
     struct ClearValue<Js::SimpleDictionaryPropertyDescriptor<TPropertyIndex>>
     {
-        static inline void Clear(Js::SimpleDictionaryPropertyDescriptor<TPropertyIndex>* value)
-        {
-            *value = 0;
-        }
+        static inline void Clear(Js::SimpleDictionaryPropertyDescriptor<TPropertyIndex> *value) { *value = 0; }
     };
-}
+} // namespace JsUtil

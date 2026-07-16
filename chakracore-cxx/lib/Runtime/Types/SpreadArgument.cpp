@@ -2,15 +2,15 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "RuntimeTypePch.h"
 #include "Types/SpreadArgument.h"
+#include "RuntimeTypePch.h"
 namespace Js
 {
-    SpreadArgument::SpreadArgument(Var iterator, bool useDirectCall, DynamicType * type)
-        : DynamicObject(type), iteratorIndices(nullptr)
+    SpreadArgument::SpreadArgument(Var iterator, bool useDirectCall, DynamicType *type) :
+        DynamicObject(type), iteratorIndices(nullptr)
     {
         Assert(iterator != nullptr);
-        ScriptContext * scriptContext = this->GetScriptContext();
+        ScriptContext *scriptContext = this->GetScriptContext();
         Assert(iteratorIndices == nullptr);
 
         if (useDirectCall)
@@ -70,9 +70,9 @@ namespace Js
         else if (VarIs<RecyclableObject>(iterator))
         {
             Var nextItem;
-            RecyclableObject* obj = UnsafeVarTo<RecyclableObject>(iterator);
+            RecyclableObject *obj = UnsafeVarTo<RecyclableObject>(iterator);
 
-            RecyclableObject* nextFunc = JavascriptOperators::CacheIteratorNext(obj, scriptContext);
+            RecyclableObject *nextFunc = JavascriptOperators::CacheIteratorNext(obj, scriptContext);
 
             while (JavascriptOperators::IteratorStepAndValue(obj, scriptContext, nextFunc, &nextItem))
             {

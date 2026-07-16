@@ -153,15 +153,14 @@ Using Debug channels at Run Time
 #ifndef _PAL_DBGMSG_H_
 #define _PAL_DBGMSG_H_
 
-#include "pal/palinternal.h"
 #include "pal/debug.h"
+#include "pal/palinternal.h"
 #include "pal/thread.hpp"
 
 #include <cassert>
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 /* Channel identifiers */
@@ -213,23 +212,23 @@ typedef enum
 /* extern variables */
 
 // Change W16_NULLSTRING to external variable to avoid multiple warnings showing up in prefast
-extern const char16_t* W16_NULLSTRING;
+extern const char16_t *W16_NULLSTRING;
 
 /* compile out these trace levels; see the definition of NOTRACE */
 #if !defined(DEBUG)
-#define TRACE     NOTRACE
+#define TRACE NOTRACE
 #else
-#define TRACE     NOTRACE
+#define TRACE NOTRACE
 #endif
 #define TRACE_(x) TRACE
-#define WARN      TRACE
-#define WARN_(x)  TRACE
+#define WARN TRACE
+#define WARN_(x) TRACE
 #define ENTRY_(x) TRACE
-#define LOGEXIT   TRACE
+#define LOGEXIT TRACE
 #define LOGEXIT_(x) TRACE
-#define DBGOUT     TRACE
+#define DBGOUT TRACE
 #define DBGOUT_(x) TRACE
-#define ERROR     TRACE
+#define ERROR TRACE
 #define ERROR_(x) TRACE
 #define DBG_PRINTF(level, channel, bHeader) TRACE
 
@@ -248,21 +247,22 @@ extern const char16_t* W16_NULLSTRING;
 
 #else /* defined(_DEBUG) */
 
-#define ASSERT(...) \
-{ \
-    PRINT_ERROR("] %s %s:%d",__FUNCTION__,__FILE__,\
-                   __LINE__);\
-    PRINT_ERROR(__VA_ARGS__);\
-}
+#define ASSERT(...)                                                                                                    \
+    {                                                                                                                  \
+        PRINT_ERROR("] %s %s:%d", __FUNCTION__, __FILE__, __LINE__);                                                   \
+        PRINT_ERROR(__VA_ARGS__);                                                                                      \
+    }
 
 #define _ASSERT assert
-#define _ASSERT_MSG(expr, args...) \
-    do { \
-        if (!(expr)) \
-        { \
-            ASSERT("Expression: " #expr ", Description: " args); \
-        } \
-    } while(0)
+#define _ASSERT_MSG(expr, args...)                                                                                     \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (!(expr))                                                                                                   \
+        {                                                                                                              \
+            ASSERT("Expression: " #expr ", Description: " args);                                                       \
+        }                                                                                                              \
+    }                                                                                                                  \
+    while (0)
 
 #endif /* defined(_DEBUG) */
 

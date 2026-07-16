@@ -43,51 +43,51 @@ template <typename Dst, typename Src>
 inline bool FitsIn(Src val)
 {
     if (std::is_signed<Src>::value == std::is_signed<Dst>::value)
-    {   // Src and Dst are equally signed
+    { // Src and Dst are equally signed
         if (sizeof(Src) <= sizeof(Dst))
-        {   // No truncation is possible
+        { // No truncation is possible
             return true;
         }
         else
-        {   // Truncation is possible, requiring runtime check
+        { // Truncation is possible, requiring runtime check
             return val == (Src)((Dst)val);
         }
     }
     else if (std::is_signed<Src>::value)
-    {   // Src is signed, Dst is unsigned
+    { // Src is signed, Dst is unsigned
 #ifdef __GNUC__
-        // Workaround for GCC warning: "comparison is always
+      // Workaround for GCC warning: "comparison is always
         // false due to limited range of data type."
         if (!(val == 0 || val > 0))
 #else
         if (val < 0)
 #endif
-        {   // A negative number cannot be represented by an unsigned type
+        { // A negative number cannot be represented by an unsigned type
             return false;
         }
         else
         {
             if (sizeof(Src) <= sizeof(Dst))
-            {   // No truncation is possible
+            { // No truncation is possible
                 return true;
             }
             else
-            {   // Truncation is possible, requiring runtime check
+            { // Truncation is possible, requiring runtime check
                 return val == (Src)((Dst)val);
             }
         }
     }
     else
-    {   // Src is unsigned, Dst is signed
+    { // Src is unsigned, Dst is signed
         if (sizeof(Src) < sizeof(Dst))
-        {   // No truncation is possible. Note that Src is strictly
+        { // No truncation is possible. Note that Src is strictly
             // smaller than Dst.
             return true;
         }
         else
-        {   // Truncation is possible, requiring runtime check
+        { // Truncation is possible, requiring runtime check
 #ifdef __GNUC__
-            // Workaround for GCC warning: "comparison is always
+          // Workaround for GCC warning: "comparison is always
             // true due to limited range of data type." If in fact
             // Dst were unsigned we'd never execute this code
             // anyway.
@@ -95,7 +95,7 @@ inline bool FitsIn(Src val)
 #else
             return ((Dst)val >= 0) &&
 #endif
-                   (val == (Src)((Dst)val));
+                (val == (Src)((Dst)val));
         }
     }
 }
@@ -120,13 +120,13 @@ inline bool DoubleFitsInIntType(double val)
     return DstMinD <= val && val <= DstMaxD;
 }
 
-#define ovadd_lt(a, b, rhs) (((a) + (b) <  (rhs) ) && ((a) + (b) >= (a)))
-#define ovadd_le(a, b, rhs) (((a) + (b) <= (rhs) ) && ((a) + (b) >= (a)))
-#define ovadd_gt(a, b, rhs) (((a) + (b) >  (rhs) ) || ((a) + (b) < (a)))
-#define ovadd_ge(a, b, rhs) (((a) + (b) >= (rhs) ) || ((a) + (b) < (a)))
+#define ovadd_lt(a, b, rhs) (((a) + (b) < (rhs)) && ((a) + (b) >= (a)))
+#define ovadd_le(a, b, rhs) (((a) + (b) <= (rhs)) && ((a) + (b) >= (a)))
+#define ovadd_gt(a, b, rhs) (((a) + (b) > (rhs)) || ((a) + (b) < (a)))
+#define ovadd_ge(a, b, rhs) (((a) + (b) >= (rhs)) || ((a) + (b) < (a)))
 
 #define ovadd3_gt(a, b, c, rhs) (((a) + (b) + (c) > (rhs)) || ((a) + (b) < (a)) || ((a) + (b) + (c) < (c)))
 
-#define S_SIZE_T_WP64BUG(v)  S_SIZE_T( v )
+#define S_SIZE_T_WP64BUG(v) S_SIZE_T(v)
 
- #endif // SAFEMATH_H_
+#endif // SAFEMATH_H_

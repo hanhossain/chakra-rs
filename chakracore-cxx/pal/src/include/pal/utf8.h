@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -26,8 +26,7 @@ Revision History:
 #include <pal/palinternal.h> /* for char16_t */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 /*++
@@ -36,7 +35,7 @@ Function :
 
     Convert a string from UTF-8 to UTF-16 (UCS-2)
 --*/
-int UTF8ToUnicode(const char * lpSrcStr, int cchSrc, char16_t* lpDestStr, int cchDest, uint32_t dwFlags);
+int UTF8ToUnicode(const char *lpSrcStr, int cchSrc, char16_t *lpDestStr, int cchDest, uint32_t dwFlags);
 
 
 /*++
@@ -45,7 +44,7 @@ Function :
 
     Convert a string from UTF-16 (UCS-2) to UTF-8
 --*/
-int UnicodeToUTF8(const char16_t* lpSrcStr, int cchSrc, char* lpDestStr, int cchDest);
+int UnicodeToUTF8(const char16_t *lpSrcStr, int cchSrc, char *lpDestStr, int cchDest);
 
 #ifdef __cplusplus
 }

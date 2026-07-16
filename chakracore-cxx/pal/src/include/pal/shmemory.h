@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -74,11 +74,12 @@ SHMRelease
 #ifndef _PAL_SHMEMORY_H_
 #define _PAL_SHMEMORY_H_
 
+#include <string>
+#include "pal_mstypes.h"
 #include "volatile.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 /*
@@ -89,8 +90,9 @@ typedef unsigned long SHMPTR;
 #define MAX_SEGMENTS 256
 
 
-typedef enum {
-    SIID_PROCESS_INFO,/* pointers to PROCESS structures? */
+typedef enum
+{
+    SIID_PROCESS_INFO, /* pointers to PROCESS structures? */
     SIID_NAMED_OBJECTS,
     SIID_FILE_LOCKS,
 
@@ -99,9 +101,9 @@ typedef enum {
 
 typedef enum
 {
-    SHM_NAMED_MAPPINGS,      /* structs with map name, file name & flags? */
-    SHM_NAMED_EVENTS,        /* structs with event names & ThreadWaitingList struct? */
-    SHM_NAMED_MUTEXS,        /* structs with mutext names, and ThreadWaitingList struct */
+    SHM_NAMED_MAPPINGS, /* structs with map name, file name & flags? */
+    SHM_NAMED_EVENTS, /* structs with event names & ThreadWaitingList struct? */
+    SHM_NAMED_MUTEXS, /* structs with mutext names, and ThreadWaitingList struct */
 
     SHM_NAMED_LAST
 } SHM_NAMED_OBJECTS_ID;
@@ -113,7 +115,7 @@ typedef struct _SMNO
     SHMPTR ShmObjectName;
     SHMPTR ShmSelf;
 
-}SHM_NAMED_OBJECTS, * PSHM_NAMED_OBJECTS;
+} SHM_NAMED_OBJECTS, *PSHM_NAMED_OBJECTS;
 
 
 /*
@@ -127,8 +129,7 @@ validation (if segment is unknown, we have to call the function)
  */
 #if _DEBUG
 
-#define SHMPTR_TO_PTR(shmptr) \
-    SHMPtrToPtr(shmptr)
+#define SHMPTR_TO_PTR(shmptr) SHMPtrToPtr(shmptr)
 
 #else /* !_DEBUG */
 
@@ -137,18 +138,21 @@ extern int shm_numsegments;
 /* array containing the base address of each segment */
 extern Volatile<void *> shm_segment_bases[MAX_SEGMENTS];
 
-#define SHMPTR_TO_PTR(shmptr)\
-    ((shmptr)?(((static_cast<int>(shmptr)>>24)<shm_numsegments)?\
-    reinterpret_cast<void *>(reinterpret_cast<size_t>(shm_segment_bases[static_cast<int>(shmptr)>>24].Load())+(static_cast<int>(shmptr)&0x00FFFFFF)):\
-    SHMPtrToPtr(shmptr)): static_cast<void *>(NULL))
+#define SHMPTR_TO_PTR(shmptr)                                                                                          \
+    ((shmptr) ? (((static_cast<int>(shmptr) >> 24) < shm_numsegments)                                                  \
+                     ? reinterpret_cast<void *>(                                                                       \
+                           reinterpret_cast<size_t>(shm_segment_bases[static_cast<int>(shmptr) >> 24].Load()) +        \
+                           (static_cast<int>(shmptr) & 0x00FFFFFF))                                                    \
+                     : SHMPtrToPtr(shmptr))                                                                            \
+              : static_cast<void *>(NULL))
 
 
 #endif /* _DEBUG */
 
-/* Set ptr to NULL if shmPtr == 0, else set ptr to SHMPTR_TO_PTR(shmptr) 
-   return FALSE if SHMPTR_TO_PTR returns NULL ptr from non null shmptr, 
+/* Set ptr to NULL if shmPtr == 0, else set ptr to SHMPTR_TO_PTR(shmptr)
+   return FALSE if SHMPTR_TO_PTR returns NULL ptr from non null shmptr,
    TRUE otherwise */
-#define SHMPTR_TO_PTR_BOOL(ptr, shmptr) \
+#define SHMPTR_TO_PTR_BOOL(ptr, shmptr)                                                                                \
     ((shmptr != 0) ? ((ptr = SHMPTR_TO_PTR(shmptr)) != NULL) : ((ptr = NULL) == NULL))
 
 /*++
@@ -160,7 +164,7 @@ Unlike the macro defined above, this function performs as much validation as
 possible, and can handle cases when the SHMPTR is located in an aread of shared
 memory the process doesn't yet know about.
 --*/
-void * SHMPtrToPtr(SHMPTR shmptr);
+void *SHMPtrToPtr(SHMPTR shmptr);
 
 /*++
 SHMInitialize
@@ -280,7 +284,7 @@ Duplicates the string in shared memory.
 Returns the new address as SHMPTR on success.
 Returns (SHMPTR)NULL on failure.
 --*/
-SHMPTR SHMStrDup( const char * string );
+SHMPTR SHMStrDup(const char *string);
 
 /*++
 SHMWStrDup
@@ -290,7 +294,7 @@ Duplicates the wide string in shared memory.
 Returns the new address as SHMPTR on success.
 Returns (SHMPTR)NULL on failure.
 --*/
-SHMPTR SHMWStrDup( const std::u16string &string );
+SHMPTR SHMWStrDup(const std::u16string &string);
 
 
 /*++
@@ -304,10 +308,9 @@ If an object matches the name but is of a different type, the function
 returns NULL and sets pbNameExists to TRUE.
 
 --*/
-SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oid,
-                                 BOOL *pbNameExists );
+SHMPTR SHMFindNamedObjectByName(const char16_t *lpName, SHM_NAMED_OBJECTS_ID oid, BOOL *pbNameExists);
 
-/*++ 
+/*++
 SHMRemoveNamedObject
 
 Removes the specified named object from the list
@@ -316,7 +319,7 @@ No return.
 
 note : the caller is reponsible for releasing all associated memory
 --*/
-void SHMRemoveNamedObject( SHMPTR shmNamedObject );
+void SHMRemoveNamedObject(SHMPTR shmNamedObject);
 
 /*++ SHMAddNamedObject
 
@@ -324,11 +327,10 @@ Adds the specified named object to the list.
 
 No return.
 --*/
-void SHMAddNamedObject( SHMPTR shmNewNamedObject );
+void SHMAddNamedObject(SHMPTR shmNewNamedObject);
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
 
 #endif /* _PAL_SHMEMORY_H_ */
-

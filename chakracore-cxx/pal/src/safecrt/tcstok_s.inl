@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /***
@@ -14,7 +14,7 @@
 ****/
 
 _FUNC_PROLOGUE
-_CHAR * _FUNC_NAME(_CHAR *_String, const _CHAR *_Control, _CHAR **_Context)
+_CHAR *_FUNC_NAME(_CHAR *_String, const _CHAR *_Control, _CHAR **_Context)
 {
     _CHAR *token;
     const _CHAR *ctl;
@@ -31,8 +31,8 @@ _CHAR * _FUNC_NAME(_CHAR *_String, const _CHAR *_Control, _CHAR **_Context)
     }
 
     /* Find beginning of token (skip over leading delimiters). Note that
-    * there is no token iff this loop sets string to point to the terminal null. */
-    for ( ; *_String != 0 ; _String++)
+     * there is no token iff this loop sets string to point to the terminal null. */
+    for (; *_String != 0; _String++)
     {
         for (ctl = _Control; *ctl != 0 && *ctl != *_String; ctl++)
             ;
@@ -45,8 +45,8 @@ _CHAR * _FUNC_NAME(_CHAR *_String, const _CHAR *_Control, _CHAR **_Context)
     token = _String;
 
     /* Find the end of the token. If it is not the end of the string,
-    * put a null there. */
-    for ( ; *_String != 0 ; _String++)
+     * put a null there. */
+    for (; *_String != 0; _String++)
     {
         for (ctl = _Control; *ctl != 0 && *ctl != *_String; ctl++)
             ;

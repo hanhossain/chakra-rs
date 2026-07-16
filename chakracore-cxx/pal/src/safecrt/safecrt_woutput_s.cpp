@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /***
@@ -23,16 +23,16 @@
 
 #define __STDC_LIMIT_MACROS
 
-#include "pal/palinternal.h"
-#include <string.h>
 #include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <string.h>
 #include "internal_securecrt.h"
+#include "pal/palinternal.h"
 
 #include "mbusafecrt_internal.h"
 
-#ifndef _UNICODE    /* CRT flag */
+#ifndef _UNICODE /* CRT flag */
 #define _UNICODE 1
 #endif
 
@@ -47,9 +47,8 @@
 #define _TCHAR CRT_TCHAR
 #define TCHAR CRTTCHAR
 
-typedef char16_t     _TCHAR;
-typedef char16_t     TCHAR;
-#define _T(x)       L##x
+typedef char16_t _TCHAR;
+typedef char16_t TCHAR;
+#define _T(x) L##x
 
 #include "output.inl"
-

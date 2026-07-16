@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /***
@@ -14,9 +14,9 @@
 *
 *******************************************************************************/
 
-#include <string.h>
 #include <errno.h>
 #include <limits.h>
+#include <string.h>
 #include "internal_securecrt.h"
 
 #include "mbusafecrt_internal.h"
@@ -25,5 +25,5 @@
 
 #define _UNICODE
 #define TCHAR char16_t
-#define _T(x)       L##x
+#define _T(x) L##x
 #include "xtox_s.inl"

@@ -20,23 +20,23 @@
 #ifdef _DEBUG
 // A macro to execute a statement only in _DEBUG.
 #define DEBUG_STMT(stmt) stmt
-#define INDEBUG(x)          x
-#define INDEBUG_COMMA(x)    x,
-#define COMMA_INDEBUG(x)    ,x
+#define INDEBUG(x) x
+#define INDEBUG_COMMA(x) x,
+#define COMMA_INDEBUG(x) , x
 #define NOT_DEBUG(x)
 #else
 #define DEBUG_STMT(stmt)
 #define INDEBUG(x)
 #define INDEBUG_COMMA(x)
 #define COMMA_INDEBUG(x)
-#define NOT_DEBUG(x)        x
+#define NOT_DEBUG(x) x
 #endif
 
 
 #ifdef _DEBUG_IMPL
-#define INDEBUGIMPL(x)          x
-#define INDEBUGIMPL_COMMA(x)    x,
-#define COMMA_INDEBUGIMPL(x)    ,x
+#define INDEBUGIMPL(x) x
+#define INDEBUGIMPL_COMMA(x) x,
+#define COMMA_INDEBUGIMPL(x) , x
 #else
 #define INDEBUGIMPL(x)
 #define INDEBUGIMPL_COMMA(x)

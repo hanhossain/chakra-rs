@@ -1,6 +1,6 @@
 //
 // Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information. 
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
 /*++
@@ -22,55 +22,54 @@ Abstract:
 #ifndef _PAL_MAP_H_
 #define _PAL_MAP_H_
 
-#include "corunix.hpp"
 #include <sys/param.h>
+#include "corunix.hpp"
 
-extern "C"
-{
+extern "C" {
 #include "list.h"
 
 #ifndef NO_INO
-#define NO_INO ((ino_t)-1)
+#define NO_INO ((ino_t) - 1)
 #endif
 
-    /*++
-    Function :
-        MapInitialize
+/*++
+Function :
+    MapInitialize
 
-        Initialize the critical sections.
+    Initialize the critical sections.
 
-    Return value:
-        TRUE  if initialization succeeded
-        FALSE otherwise        
-    --*/
-    BOOL MAPInitialize( void );
+Return value:
+    TRUE  if initialization succeeded
+    FALSE otherwise
+--*/
+BOOL MAPInitialize(void);
 
-    /*++
-    Function :
-        MapCleanup
+/*++
+Function :
+    MapCleanup
 
-        Deletes the critical sections.
+    Deletes the critical sections.
 
-    --*/
-    void MAPCleanup( void );
+--*/
+void MAPCleanup(void);
 
-    /*++
-    Function :
-        MAPGetRegionInfo
+/*++
+Function :
+    MAPGetRegionInfo
 
-        Parameters: 
-        lpAddress: pointer to the starting memory location, not necessary
-                   to be rounded to the page location
+    Parameters:
+    lpAddress: pointer to the starting memory location, not necessary
+               to be rounded to the page location
 
-        lpBuffer: if this function finds information about the specified address,
-                  the information is stored in this struct
+    lpBuffer: if this function finds information about the specified address,
+              the information is stored in this struct
 
-        Note: This function is to be used in virtual.c
-              
-        Returns TRUE if this function finds information about the specified address
-    --*/
+    Note: This function is to be used in virtual.c
 
-    BOOL MAPGetRegionInfo(void * lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
+    Returns TRUE if this function finds information about the specified address
+--*/
+
+BOOL MAPGetRegionInfo(void *lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
 }
 
 namespace CorUnix
@@ -82,76 +81,55 @@ namespace CorUnix
     typedef struct _MVL
     {
         LIST_ENTRY Link;
-        
+
         //
         // Each MVL entry holds a reference to its parent file
         // mapping object.
         //
-        
+
         IPalObject *pFileMapping;
-        void * lpAddress;           /* The pointer to the mapped memory. */
-        size_t NumberOfBytesToMap;  /* Number of bytes to map. */
-        uint32_t dwDesiredAccess;      /* Desired access. */
-        void * lpPEBaseAddress;     /* If this mapping is part of a PE file mapping, this is the
-                                       base address pointer of the PE file (used to find all
-                                       parts of the PE file mapping to allow PE file unload).
-                                       Otherwise, it is NULL. */
-    } MAPPED_VIEW_LIST, * PMAPPED_VIEW_LIST;
+        void *lpAddress; /* The pointer to the mapped memory. */
+        size_t NumberOfBytesToMap; /* Number of bytes to map. */
+        uint32_t dwDesiredAccess; /* Desired access. */
+        void *lpPEBaseAddress; /* If this mapping is part of a PE file mapping, this is the
+                                  base address pointer of the PE file (used to find all
+                                  parts of the PE file mapping to allow PE file unload).
+                                  Otherwise, it is NULL. */
+    } MAPPED_VIEW_LIST, *PMAPPED_VIEW_LIST;
 
     class CFileMappingImmutableData
     {
     public:
         char szFileName[MAXPATHLEN];
-        uint32_t MaxSize;               // The max size of the file mapping object
-        uint32_t flProtect;            // Protection desired for the file view
-        BOOL bPALCreatedTempFile;   // TRUE if it's a PAL created file
-        uint32_t dwDesiredAccessWhenOpened;  // FILE_MAP_WRITE etc
+        uint32_t MaxSize; // The max size of the file mapping object
+        uint32_t flProtect; // Protection desired for the file view
+        BOOL bPALCreatedTempFile; // TRUE if it's a PAL created file
+        uint32_t dwDesiredAccessWhenOpened; // FILE_MAP_WRITE etc
     };
 
-    class CFileMappingProcessLocalData 
+    class CFileMappingProcessLocalData
     {
     public:
-        int32_t     UnixFd;                     /* File descriptor. */
+        int32_t UnixFd; /* File descriptor. */
     };
 
     PAL_ERROR
-    InternalCreateFileMapping(
-        CPalThread *pThread,
-        HANDLE hFile,
-        LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-        uint32_t flProtect,
-        uint32_t dwMaximumSizeHigh,
-        uint32_t dwMaximumSizeLow,
-        const char16_t* lpName,
-        HANDLE *phMapping
-        );
+    InternalCreateFileMapping(CPalThread *pThread, HANDLE hFile, LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
+                              uint32_t flProtect, uint32_t dwMaximumSizeHigh, uint32_t dwMaximumSizeLow,
+                              const char16_t *lpName, HANDLE *phMapping);
 
     PAL_ERROR
-    InternalOpenFileMapping(
-        CPalThread *pThread,
-        uint32_t dwDesiredAccess,
-        BOOL bInheritHandle,
-        const char16_t* lpName,
-        HANDLE *phMapping
-        );
+    InternalOpenFileMapping(CPalThread *pThread, uint32_t dwDesiredAccess, BOOL bInheritHandle, const char16_t *lpName,
+                            HANDLE *phMapping);
 
     PAL_ERROR
-    InternalMapViewOfFile(
-        CPalThread *pThread,
-        HANDLE hFileMappingObject,
-        uint32_t dwDesiredAccess,
-        uint32_t dwFileOffsetHigh,
-        uint32_t dwFileOffsetLow,
-        size_t dwNumberOfBytesToMap,
-        void * *ppvBaseAddress
-        );
+    InternalMapViewOfFile(CPalThread *pThread, HANDLE hFileMappingObject, uint32_t dwDesiredAccess,
+                          uint32_t dwFileOffsetHigh, uint32_t dwFileOffsetLow, size_t dwNumberOfBytesToMap,
+                          void **ppvBaseAddress);
 
     PAL_ERROR
-    InternalUnmapViewOfFile(
-        CPalThread *pThread,
-        const void * lpBaseAddress
-        );
+    InternalUnmapViewOfFile(CPalThread *pThread, const void *lpBaseAddress);
 
-}
+} // namespace CorUnix
 
 #endif /* _PAL_MAP_H_ */
