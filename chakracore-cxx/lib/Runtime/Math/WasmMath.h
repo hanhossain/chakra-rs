@@ -7,59 +7,67 @@
 
 namespace Wasm
 {
-class WasmMath
-{
-public:
-    template<typename T> static int Eqz(T value);
-    template<typename T> static T Shl( T aLeft, T aRight );
-    template<typename T> static T Shr( T aLeft, T aRight );
-    template<typename T> static T ShrU( T aLeft, T aRight );
-    template<typename T> static T Copysign(T aLeft, T aRight);
-    template<typename T> static T Trunc(T aLeft);
-    template<typename T> static T Nearest(T aLeft);
-    template<typename T> static T PopCnt(T value);
-    template<typename T> static T Ctz(T value);
-    template<typename T> static T Clz(T value);
-    template<typename T> static T Rol(T aLeft, T aRight);
-    template<typename T> static T Ror(T aLeft, T aRight);
-    template <typename T> bool static LessThan(T aLeft, T aRight);
-    template <typename T> bool static LessOrEqual(T aLeft, T aRight);
-    template <typename T> using CmpPtr = bool(*)(T a, T b);
-    template <
-        typename SourceType,
-        typename DstType,
-        typename ReinterpretType,
-        ReinterpretType Max,
-        ReinterpretType NegZero,
-        ReinterpretType NegOne,
-        CmpPtr<ReinterpretType> MaxCmp,
-        CmpPtr<ReinterpretType> NegOneCmp,
-        bool Saturate,
-        DstType MinResult,
-        DstType MaxResult>
-    static DstType ConvertFloatToInt(SourceType srcVal, _In_ Js::ScriptContext* scriptContext);
-    template <typename STYPE> static bool IsNaN(STYPE src);
+    class WasmMath
+    {
+    public:
+        template <typename T>
+        static int Eqz(T value);
+        template <typename T>
+        static T Shl(T aLeft, T aRight);
+        template <typename T>
+        static T Shr(T aLeft, T aRight);
+        template <typename T>
+        static T ShrU(T aLeft, T aRight);
+        template <typename T>
+        static T Copysign(T aLeft, T aRight);
+        template <typename T>
+        static T Trunc(T aLeft);
+        template <typename T>
+        static T Nearest(T aLeft);
+        template <typename T>
+        static T PopCnt(T value);
+        template <typename T>
+        static T Ctz(T value);
+        template <typename T>
+        static T Clz(T value);
+        template <typename T>
+        static T Rol(T aLeft, T aRight);
+        template <typename T>
+        static T Ror(T aLeft, T aRight);
+        template <typename T>
+        bool static LessThan(T aLeft, T aRight);
+        template <typename T>
+        bool static LessOrEqual(T aLeft, T aRight);
+        template <typename T>
+        using CmpPtr = bool (*)(T a, T b);
+        template <typename SourceType, typename DstType, typename ReinterpretType, ReinterpretType Max,
+                  ReinterpretType NegZero, ReinterpretType NegOne, CmpPtr<ReinterpretType> MaxCmp,
+                  CmpPtr<ReinterpretType> NegOneCmp, bool Saturate, DstType MinResult, DstType MaxResult>
+        static DstType ConvertFloatToInt(SourceType srcVal, _In_ Js::ScriptContext *scriptContext);
+        template <typename STYPE>
+        static bool IsNaN(STYPE src);
 
-    template<typename To, typename From> static To SignExtend(To value);
+        template <typename To, typename From>
+        static To SignExtend(To value);
 
-    template <bool Saturate>
-    static long F32ToI64(float src, _In_ Js::ScriptContext* scriptContext);
-    template <bool Saturate>
-    static unsigned long F32ToU64(float src, _In_ Js::ScriptContext* scriptContext);
-    template <bool Saturate>
-    static long F64ToI64(double src, _In_ Js::ScriptContext* scriptContext);
-    template <bool Saturate>
-    static unsigned long F64ToU64(double src, _In_ Js::ScriptContext* scriptContext);
-    template <bool Saturate>
-    static int32_t F32ToI32(float src, _In_ Js::ScriptContext* scriptContext);
-    template <bool Saturate>
-    static uint32_t F32ToU32(float src, _In_ Js::ScriptContext* scriptContext);
-    template <bool Saturate>
-    static int32_t F64ToI32(double src, _In_ Js::ScriptContext* scriptContext);
-    template <bool Saturate>
-    static uint32_t F64ToU32(double src, _In_ Js::ScriptContext* scriptContext);
-};
+        template <bool Saturate>
+        static long F32ToI64(float src, _In_ Js::ScriptContext *scriptContext);
+        template <bool Saturate>
+        static unsigned long F32ToU64(float src, _In_ Js::ScriptContext *scriptContext);
+        template <bool Saturate>
+        static long F64ToI64(double src, _In_ Js::ScriptContext *scriptContext);
+        template <bool Saturate>
+        static unsigned long F64ToU64(double src, _In_ Js::ScriptContext *scriptContext);
+        template <bool Saturate>
+        static int32_t F32ToI32(float src, _In_ Js::ScriptContext *scriptContext);
+        template <bool Saturate>
+        static uint32_t F32ToU32(float src, _In_ Js::ScriptContext *scriptContext);
+        template <bool Saturate>
+        static int32_t F64ToI32(double src, _In_ Js::ScriptContext *scriptContext);
+        template <bool Saturate>
+        static uint32_t F64ToU32(double src, _In_ Js::ScriptContext *scriptContext);
+    };
 
-} //namespace Wasm
+} // namespace Wasm
 
 #include "WasmMath.inl"
