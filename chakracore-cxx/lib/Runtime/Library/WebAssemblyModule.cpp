@@ -3,12 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimeLibraryPch.h"
 
 #ifdef ENABLE_WASM
 
-#include "WasmReaderPch.h"
-#include "Language/WebAssemblySource.h"
 
 namespace Js
 {

@@ -2,8 +2,6 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "RuntimeMathPch.h"
-
 namespace Js
 {
     // These implementations need to be compiled with /arch:sse2

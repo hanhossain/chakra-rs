@@ -52,7 +52,6 @@
 #include "Library/WebAssemblyModule.h"
 #include "Library/WebAssembly.h"
 #include "JsrtContext.h"
-#include "SCACorePch.h"
 #include "JsrtContextCore.h"
 
 JsrtContext *JsrtContext::New(JsrtRuntime * runtime)

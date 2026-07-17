@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include <string>
-#include "ParserPch.h"
 
 #include "Memory/AutoPtr.h"
 #include "Common/Event.h"

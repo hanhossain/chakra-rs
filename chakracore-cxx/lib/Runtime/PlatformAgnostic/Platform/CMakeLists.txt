@@ -49,3 +49,5 @@ target_include_directories (Chakra.Runtime.PlatformAgnostic PUBLIC
 target_compile_definitions(Chakra.Runtime.PlatformAgnostic PUBLIC
     PAL_STDCPP_COMPAT
 )
+
+target_precompile_headers(Chakra.Runtime.PlatformAgnostic PUBLIC RuntimePlatformAgnosticPch.h)

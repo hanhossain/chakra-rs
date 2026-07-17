@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimeBasePch.h"
 
 // Originally defined in ntstatus.h, define here because including windows.h (via PCH
 // above) with ntstatus.h causes macro redefinition errors for the common errors defined

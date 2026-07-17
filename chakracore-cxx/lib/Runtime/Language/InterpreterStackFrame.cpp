@@ -4,8 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimeLanguagePch.h"
-#include "RuntimeMathPch.h"
 #include "EHBailoutData.h"
 #include "Library/JavascriptRegularExpression.h"
 #include "Common/UInt16Math.h"

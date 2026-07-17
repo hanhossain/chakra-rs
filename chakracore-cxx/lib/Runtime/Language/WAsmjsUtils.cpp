@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimeLanguagePch.h"
 
 #if defined(ASMJS_PLAT) || defined(ENABLE_WASM)
 #include "InterpreterStackFrame.h"

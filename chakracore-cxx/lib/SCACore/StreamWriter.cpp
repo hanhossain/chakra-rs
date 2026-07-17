@@ -3,8 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "SCACorePch.h"
-
 namespace Js
 {
     void StreamWriter::Write(const void* pv, size_t cb)

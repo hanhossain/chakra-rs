@@ -2,10 +2,8 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "RuntimeLibraryPch.h"
 
 #ifdef ENABLE_WABT
-#include "WasmReaderPch.h"
 #include "wabtapi.h"
 #include "Codex/Utf8Helper.h"
 

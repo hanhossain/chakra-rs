@@ -7,7 +7,6 @@
 #include <string>
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "JsrtDebugUtils.h"
-#include "RuntimeDebugPch.h"
 #include "screrror.h"   // For CompileScriptException
 
 void JsrtDebugUtils::AddScriptIdToObject(Js::DynamicObject* object, Js::Utf8SourceInfo* utf8SourceInfo)

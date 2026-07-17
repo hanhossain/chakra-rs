@@ -5,7 +5,6 @@
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "JsrtDebugEventObject.h"
-#include "RuntimeDebugPch.h"
 #include "screrror.h"   // For CompileScriptException
 
 JsrtDebugEventObject::JsrtDebugEventObject(Js::ScriptContext *scriptContext)
