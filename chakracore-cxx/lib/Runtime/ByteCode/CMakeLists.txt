@@ -14,7 +14,6 @@ add_library (Chakra.Runtime.ByteCode OBJECT
     OpCodeUtil.cpp
     OpCodeUtilAsmJs.cpp
     OpCodes.cpp
-    RuntimeByteCodePch.cpp
     Scope.cpp
     ScopeInfo.cpp
     StatementReader.cpp
