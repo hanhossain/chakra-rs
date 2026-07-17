@@ -5,6 +5,7 @@
 
 
 #ifdef ENABLE_WASM
+#include "Language/WebAssemblySource.h"
 
 
 namespace Js
