@@ -5,7 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include <string>
-#include "JsrtPch.h"
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "JsrtDebugUtils.h"
 #include "RuntimeDebugPch.h"

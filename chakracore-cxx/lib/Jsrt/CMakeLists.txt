@@ -9,7 +9,6 @@ add_library (Chakra.Jsrt OBJECT
     JsrtExternalObject.cpp
     JsrtDebugEventObject.cpp
     JsrtHelper.cpp
-    JsrtPch.cpp
     JsrtRuntime.cpp
     JsrtSourceHolder.cpp
     JsrtThreadService.cpp

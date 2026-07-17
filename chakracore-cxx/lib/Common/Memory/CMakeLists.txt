@@ -2,7 +2,6 @@ set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
     Allocator.cpp
     ArenaAllocator.cpp
     CustomHeap.cpp
-    CommonMemoryPch.cpp
     ForcedMemoryConstraints.cpp
     HeapAllocator.cpp
     HeapBlock.cpp

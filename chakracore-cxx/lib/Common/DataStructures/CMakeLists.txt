@@ -1,7 +1,6 @@
 add_library (Chakra.Common.DataStructures OBJECT
     BigUInt.cpp
     BufferBuilder.cpp
-    CommonDataStructuresPch.cpp
     DictionaryStats.cpp
     FixedBitVector.cpp
     FixedBitVectorEnumerator.cpp

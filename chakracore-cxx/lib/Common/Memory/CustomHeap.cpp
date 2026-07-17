@@ -3,8 +3,6 @@
 // Copyright (c) ChakraCore Project Contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "CommonMemoryPch.h"
-
 #if ENABLE_NATIVE_CODEGEN || DYNAMIC_INTERPRETER_THUNK
 
 #include "Memory/XDataAllocator.h"
