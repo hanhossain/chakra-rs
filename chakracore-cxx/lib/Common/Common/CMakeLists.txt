@@ -3,7 +3,6 @@ if(CC_TARGETS_ARM64)
 endif()
 
 add_library (Chakra.Common.Common OBJECT
-    CommonCommonPch.cpp
     DateUtilities.cpp
     Event.cpp
     Int32Math.cpp

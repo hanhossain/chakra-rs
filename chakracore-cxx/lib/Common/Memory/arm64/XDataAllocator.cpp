@@ -2,8 +2,6 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "CommonMemoryPch.h"
-
 // ARM64 TODO: this is nearly identical to AMD64, consider merging in the future
 
 // This one works only for ARM64

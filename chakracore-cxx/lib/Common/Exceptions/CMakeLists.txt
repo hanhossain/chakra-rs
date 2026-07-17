@@ -1,7 +1,5 @@
 add_library (Chakra.Common.Exceptions OBJECT
-    # CommonExceptionsPch.cpp
     ExceptionCheck.cpp
-    ExceptionBase.cpp
     ReportError.cpp
     Throw.cpp
 )

@@ -2,7 +2,6 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "CommonCommonPch.h"
 
 bool
 Int32Math::Add(int32_t left, int32_t right, int32_t *pResult)

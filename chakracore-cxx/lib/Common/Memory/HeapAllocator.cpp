@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include <string>
-#include "CommonMemoryPch.h"
 #include "HeapAllocator.h"
 
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
