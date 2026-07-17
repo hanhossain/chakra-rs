@@ -2564,11 +2564,6 @@ JsErrorCode chakracore::jsrt::JsConstructObject(_In_ JsValueRef function, _In_re
         Js::CallInfo callInfo(Js::CallFlags::CallFlags_New, cargs);
         Js::Arguments jsArgs(callInfo, reinterpret_cast<Js::Var *>(args));
 
-        //
-        //TODO: we will want to look at this at some point -- either treat as "top-level" call or maybe constructors are fast so we can just jump back to previous "real" code
-        //TTDAssert(!Js::VarIs<Js::ScriptFunction>(jsFunction) || execContext->GetThreadContext()->TTDRootNestingCount != 0, "This will cause user code to execute and we need to add support for that as a top-level call source!!!!");
-        //
-
         BEGIN_SAFE_REENTRANT_CALL(scriptContext->GetThreadContext())
         {
             *result = Js::JavascriptFunction::CallAsConstructor(jsFunction, /* overridingNewTarget = */nullptr, jsArgs, scriptContext);
