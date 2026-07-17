@@ -3653,40 +3653,6 @@ static void DummyScriptUnloadCallback(_In_ JsSourceContext sourceContext)
 
 /////////////////////
 
-JsErrorCode chakracore::jsrt::JsTTDCreateRecordRuntime(_In_ JsRuntimeAttributes attributes, _In_ bool enableDebugging, _In_ size_t snapInterval, _In_ size_t snapHistoryLength,
-    _In_ TTDOpenResourceStreamCallback openResourceStream, _In_ JsTTDWriteBytesToStreamCallback writeBytesToStream, _In_ JsTTDFlushAndCloseStreamCallback flushAndCloseStream,
-    _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtime)
-{
-    return JsErrorCategoryUsage;
-}
-
-JsErrorCode chakracore::jsrt::JsTTDCreateReplayRuntime(_In_ JsRuntimeAttributes attributes, _In_reads_(infoUriCount) const char* infoUri, _In_ size_t infoUriCount, _In_ bool enableDebugging,
-    _In_ TTDOpenResourceStreamCallback openResourceStream, _In_ JsTTDReadBytesFromStreamCallback readBytesFromStream, _In_ JsTTDFlushAndCloseStreamCallback flushAndCloseStream,
-    _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtime)
-{
-    return JsErrorCategoryUsage;
-}
-
-JsErrorCode chakracore::jsrt::JsTTDCreateContext(_In_ JsRuntimeHandle runtimeHandle, _In_ bool useRuntimeTTDMode, _Out_ JsContextRef *newContext)
-{
-    return JsErrorCategoryUsage;
-}
-
-JsErrorCode chakracore::jsrt::JsTTDNotifyContextDestroy(_In_ JsContextRef context)
-{
-    return JsErrorCategoryUsage;
-}
-
-JsErrorCode chakracore::jsrt::JsTTDStart()
-{
-    return JsErrorCategoryUsage;
-}
-
-JsErrorCode chakracore::jsrt::JsTTDStop()
-{
-    return JsErrorCategoryUsage;
-}
-
 JsErrorCode chakracore::jsrt::JsTTDPauseTimeTravelBeforeRuntimeOperation()
 {
     return JsErrorCategoryUsage;
@@ -3697,17 +3663,7 @@ JsErrorCode chakracore::jsrt::JsTTDReStartTimeTravelAfterRuntimeOperation()
     return JsErrorCategoryUsage;
 }
 
-JsErrorCode chakracore::jsrt::JsTTDNotifyYield()
-{
-    return JsErrorCategoryUsage;
-}
-
 JsErrorCode chakracore::jsrt::JsTTDNotifyLongLivedReferenceAdd(_In_ JsValueRef value)
-{
-    return JsErrorCategoryUsage;
-}
-
-JsErrorCode chakracore::jsrt::JsTTDHostExit(_In_ int statusCode)
 {
     return JsErrorCategoryUsage;
 }
@@ -3737,14 +3693,6 @@ JsErrorCode chakracore::jsrt::JsTTDCheckAndAssertIfTTDRunning(_In_ const char* m
     return JsNoError;
 }
 
-JsErrorCode chakracore::jsrt::JsTTDGetSnapTimeTopLevelEventMove(_In_ JsRuntimeHandle runtimeHandle,
-   _In_ JsTTDMoveMode moveMode, _In_opt_ uint32_t kthEvent,
-   _Inout_ int64_t* targetEventTime, _Out_ int64_t* targetStartSnapTime,
-   _Out_opt_ int64_t* targetEndSnapTime)
-{
-    return JsErrorCategoryUsage;
-}
-
 JsErrorCode chakracore::jsrt::JsTTDGetSnapShotBoundInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t targetEventTime, _Out_ int64_t* startSnapTime, _Out_ int64_t* endSnapTime)
 {
     return JsErrorCategoryUsage;
@@ -3756,16 +3704,6 @@ JsErrorCode chakracore::jsrt::JsTTDGetPreviousSnapshotInterval(_In_ JsRuntimeHan
 }
 
 JsErrorCode chakracore::jsrt::JsTTDPreExecuteSnapShotInterval(_In_ JsRuntimeHandle runtimeHandle, _In_ int64_t startSnapTime, _In_ int64_t endSnapTime, _In_ JsTTDMoveMode moveMode, _Out_ int64_t* newTargetEventTime)
-{
-    return JsErrorCategoryUsage;
-}
-
-JsErrorCode chakracore::jsrt::JsTTDMoveToTopLevelEvent(_In_ JsRuntimeHandle runtimeHandle, _In_ JsTTDMoveMode moveMode, _In_ int64_t snapshotTime, _In_ int64_t eventTime)
-{
-    return JsErrorCategoryUsage;
-}
-
-JsErrorCode chakracore::jsrt::JsTTDReplayExecution(_Inout_ JsTTDMoveMode* moveMode, _Out_ int64_t* rootEventTime)
 {
     return JsErrorCategoryUsage;
 }

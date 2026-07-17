@@ -161,21 +161,6 @@ public:
     static JsErrorCode WINAPI JsSetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void* hostInfo) { return chakracore::jsrt::JsSetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
     static JsErrorCode WINAPI JsGetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void** hostInfo) { return chakracore::jsrt::JsGetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
 
-    static JsErrorCode WINAPI JsTTDCreateRecordRuntime(JsRuntimeAttributes attributes, size_t snapInterval, size_t snapHistoryLength, TTDOpenResourceStreamCallback openResourceStream, JsTTDWriteBytesToStreamCallback writeBytesToStream, JsTTDFlushAndCloseStreamCallback flushAndCloseStream, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) {  return chakracore::jsrt::JsTTDCreateRecordRuntime(attributes, false, snapInterval, snapHistoryLength, openResourceStream, writeBytesToStream, flushAndCloseStream, threadService, runtime); }
-    static JsErrorCode WINAPI JsTTDCreateReplayRuntime(JsRuntimeAttributes attributes, const char* infoUri, size_t infoUriCount, TTDOpenResourceStreamCallback openResourceStream, JsTTDReadBytesFromStreamCallback readBytesFromStream, JsTTDFlushAndCloseStreamCallback flushAndCloseStream, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsTTDCreateReplayRuntime(attributes, infoUri, infoUriCount, false, openResourceStream, readBytesFromStream, flushAndCloseStream, threadService, runtime); }
-    static JsErrorCode WINAPI JsTTDCreateContext(JsRuntimeHandle runtime, bool useRuntimeTTDMode, JsContextRef *newContext) { return chakracore::jsrt::JsTTDCreateContext(runtime, useRuntimeTTDMode, newContext); }
-    static JsErrorCode WINAPI JsTTDNotifyContextDestroy(JsContextRef context) { return chakracore::jsrt::JsTTDNotifyContextDestroy(context); }
-
-    static JsErrorCode WINAPI JsTTDStart() { return chakracore::jsrt::JsTTDStart(); }
-    static JsErrorCode WINAPI JsTTDStop() { return chakracore::jsrt::JsTTDStop(); }
-
-    static JsErrorCode WINAPI JsTTDNotifyYield() { return chakracore::jsrt::JsTTDNotifyYield(); }
-    static JsErrorCode WINAPI JsTTDHostExit(int statusCode) { return chakracore::jsrt::JsTTDHostExit(statusCode); }
-
-    static JsErrorCode WINAPI JsTTDGetSnapTimeTopLevelEventMove(JsRuntimeHandle runtimeHandle, JsTTDMoveMode moveMode, uint32_t kthEvent, int64_t* targetEventTime, int64_t* targetStartSnapTime, int64_t* targetEndSnapTime) { return chakracore::jsrt::JsTTDGetSnapTimeTopLevelEventMove(runtimeHandle, moveMode, kthEvent, targetEventTime, targetStartSnapTime, targetEndSnapTime); }
-    static JsErrorCode WINAPI JsTTDMoveToTopLevelEvent(JsRuntimeHandle runtimeHandle, JsTTDMoveMode moveMode, int64_t snapshotStartTime, int64_t eventTime) { return chakracore::jsrt::JsTTDMoveToTopLevelEvent(runtimeHandle, moveMode, snapshotStartTime, eventTime); }
-    static JsErrorCode WINAPI JsTTDReplayExecution(JsTTDMoveMode* moveMode, int64_t* rootEventTime) { return chakracore::jsrt::JsTTDReplayExecution(moveMode, rootEventTime); }
-
     static JsErrorCode WINAPI JsRun(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return chakracore::jsrt::JsRun(script, sourceContext, sourceUrl, parseAttributes, result); }
     static JsErrorCode WINAPI JsParse(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return chakracore::jsrt::JsParse(script, sourceContext, sourceUrl, parseAttributes, result); }
     static JsErrorCode WINAPI JsSerialize(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return chakracore::jsrt::JsSerialize(script, buffer, parseAttributes); }

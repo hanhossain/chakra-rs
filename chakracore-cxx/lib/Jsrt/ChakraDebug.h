@@ -701,109 +701,6 @@ namespace chakracore::jsrt
 {
     /// <summary>
     ///     TTD API -- may change in future versions:
-    ///     Creates a new runtime in Record Mode.
-    /// </summary>
-    /// <param name="attributes">The attributes of the runtime to be created.</param>
-    /// <param name="enableDebugging">A flag to enable debugging during record.</param>
-    /// <param name="snapInterval">The interval to wait between snapshots (measured in millis).</param>
-    /// <param name="snapHistoryLength">The amount of history to maintain before discarding -- measured in number of snapshots and controls how far back in time a trace can be reversed.</param>
-    /// <param name="openResourceStream">The <c>TTDOpenResourceStreamCallback</c> function for generating a JsTTDStreamHandle to read/write serialized data.</param>
-    /// <param name="writeBytesToStream">The <c>JsTTDWriteBytesToStreamCallback</c> function for writing bytes to a JsTTDStreamHandle.</param>
-    /// <param name="flushAndCloseStream">The <c>JsTTDFlushAndCloseStreamCallback</c> function for flushing and closing a JsTTDStreamHandle as needed.</param>
-    /// <param name="threadService">The thread service for the runtime. Can be null.</param>
-    /// <param name="runtime">The runtime created.</param>
-    /// <remarks>
-    ///     <para>See <c>JsCreateRuntime</c> for additional information.</para>
-    /// </remarks>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode
-        JsTTDCreateRecordRuntime(
-            _In_ JsRuntimeAttributes attributes,
-            _In_ bool enableDebugging,
-            _In_ size_t snapInterval,
-            _In_ size_t snapHistoryLength,
-            _In_ TTDOpenResourceStreamCallback openResourceStream,
-            _In_ JsTTDWriteBytesToStreamCallback writeBytesToStream,
-            _In_ JsTTDFlushAndCloseStreamCallback flushAndCloseStream,
-            _In_opt_ JsThreadServiceCallback threadService,
-            _Out_ JsRuntimeHandle *runtime);
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
-    ///     Creates a new runtime in Debug Mode.
-    /// </summary>
-    /// <param name="attributes">The attributes of the runtime to be created.</param>
-    /// <param name="infoUri">The uri where the recorded Time-Travel data should be loaded from.</param>
-    /// <param name="enableDebugging">A flag to enable additional debugging operation support during replay.</param>
-    /// <param name="openResourceStream">The <c>TTDOpenResourceStreamCallback</c> function for generating a JsTTDStreamHandle to read/write serialized data.</param>
-    /// <param name="readBytesFromStream">The <c>JsTTDReadBytesFromStreamCallback</c> function for reading bytes from a JsTTDStreamHandle.</param>
-    /// <param name="flushAndCloseStream">The <c>JsTTDFlushAndCloseStreamCallback</c> function for flushing and closing a JsTTDStreamHandle as needed.</param>
-    /// <param name="threadService">The thread service for the runtime. Can be null.</param>
-    /// <param name="runtime">The runtime created.</param>
-    /// <remarks>
-    ///     <para>See <c>JsCreateRuntime</c> for additional information.</para>
-    /// </remarks>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode
-        JsTTDCreateReplayRuntime(
-            _In_ JsRuntimeAttributes attributes,
-            _In_reads_(infoUriCount) const char* infoUri,
-            _In_ size_t infoUriCount,
-            _In_ bool enableDebugging,
-            _In_ TTDOpenResourceStreamCallback openResourceStream,
-            _In_ JsTTDReadBytesFromStreamCallback readBytesFromStream,
-            _In_ JsTTDFlushAndCloseStreamCallback flushAndCloseStream,
-            _In_opt_ JsThreadServiceCallback threadService,
-            _Out_ JsRuntimeHandle *runtime);
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
-    ///     Creates a script context that takes the TTD mode from the log or explicitly is not in TTD mode (regular takes mode from currently active script).
-    /// </summary>
-    /// <param name="runtime">The runtime the script context is being created in.</param>
-    /// <param name="useRuntimeTTDMode">Set to true to use runtime TTD mode false to explicitly be non-TTD context.</param>
-    /// <param name="newContext">The created script context.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode JsTTDCreateContext(
-        _In_ JsRuntimeHandle runtimeHandle,
-        _In_ bool useRuntimeTTDMode,
-        _Out_ JsContextRef *newContext);
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
-    ///     Notify the time-travel system that a context has been identified as dead by the gc (and is being de-allocated).
-    /// </summary>
-    /// <param name="context">The script context that is now dead.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode JsTTDNotifyContextDestroy(
-        _In_ JsContextRef context);
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
-    ///     Start Time-Travel record or replay at next turn of event loop.
-    /// </summary>
-    /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    JsErrorCode
-        JsTTDStart();
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
-    ///     Stop Time-Travel record or replay.
-    /// </summary>
-    /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    JsErrorCode
-        JsTTDStop();
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
     ///     Pause Time-Travel recording before executing code on behalf of debugger or other diagnostic/telemetry.
     /// </summary>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
@@ -820,29 +717,12 @@ namespace chakracore::jsrt
 
     /// <summary>
     ///     TTD API -- may change in future versions:
-    ///     Notify the Js runtime we are at a safe yield point in the event loop (i.e. no locals on the stack and we can process as desired).
-    /// </summary>
-    /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    JsErrorCode
-        JsTTDNotifyYield();
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
     ///     Notify the TTD runtime that we are doing a weak add on a reference (we may use this in external API calls and the release will happen in a GC callback).
     /// </summary>
     /// <param name="value">The value we are adding the ref to.</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
     JsErrorCode
         JsTTDNotifyLongLivedReferenceAdd(_In_ JsValueRef value);
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
-    ///     Notify the Js runtime the host is aborting the process and what the status code is.
-    /// </summary>
-    /// <param name="statusCode">The exit status code.</param>
-    /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    JsErrorCode
-        JsTTDHostExit(_In_ int statusCode);
 
     /// <summary>
     ///     TTD API -- may change in future versions:
@@ -911,26 +791,6 @@ namespace chakracore::jsrt
 
     /// <summary>
     ///     TTD API -- may change in future versions:
-    ///     Before calling JsTTDMoveToTopLevelEvent (which inflates a snapshot and replays) check to see if we want to reset the script context.
-    ///     We reset the script context if the move will require inflating from a different snapshot that the last one.
-    /// </summary>
-    /// <param name="runtimeHandle">The runtime handle that the script is executing in.</param>
-    /// <param name="moveMode">Flags controlling the way the move it performed and how other parameters are interpreted.</param>
-    /// <param name="kthEvent">When <c>moveMode == JsTTDMoveKthEvent</c> indicates which event, otherwise this parameter is ignored.</param>
-    /// <param name="targetEventTime">The event time we want to move to or -1 if not relevant.</param>
-    /// <param name="targetStartSnapTime">Out parameter with the event time of the snapshot that we should inflate from.</param>
-    /// <param name="targetEndSnapTime">Optional Out parameter with the snapshot time following the event.</param>
-    /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    JsErrorCode JsTTDGetSnapTimeTopLevelEventMove(
-        _In_ JsRuntimeHandle runtimeHandle,
-        _In_ JsTTDMoveMode moveMode,
-        _In_opt_ uint32_t kthEvent,
-        _Inout_ int64_t* targetEventTime,
-        _Out_ int64_t* targetStartSnapTime,
-        _Out_opt_ int64_t* targetEndSnapTime);
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
     ///     Get the snapshot interval that bounds the target event time.
     /// </summary>
     /// <param name="runtimeHandle">The runtime handle that the script is executing in.</param>
@@ -974,39 +834,6 @@ namespace chakracore::jsrt
         _In_ int64_t endSnapTime,
         _In_ JsTTDMoveMode moveMode,
         _Out_ int64_t* newTargetEventTime);
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
-    ///     Move to the given top-level call event time (assuming JsTTDPrepContextsForTopLevelEventMove) was called previously to reset any script contexts.
-    ///     This also computes the ready-to-run snapshot if needed.
-    /// </summary>
-    /// <param name="runtimeHandle">The runtime handle that the script is executing in.</param>
-    /// <param name="moveMode">Additional flags for controling how the move is done.</param>
-    /// <param name="snapshotTime">The event time that we will start executing from to move to the given target time.</param>
-    /// <param name="eventTime">The event that we want to move to.</param>
-    /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    JsErrorCode
-        JsTTDMoveToTopLevelEvent(
-            _In_ JsRuntimeHandle runtimeHandle,
-            _In_ JsTTDMoveMode moveMode,
-            _In_ int64_t snapshotTime,
-            _In_ int64_t eventTime);
-
-    /// <summary>
-    ///     TTD API -- may change in future versions:
-    ///     Execute from the current point in the log to the end returning the error code.
-    /// </summary>
-    /// <param name="moveMode">Additional flags for controling how the move is done.</param>
-    /// <param name="rootEventTime">The event time that we should move to next or notification (-1) that replay has ended.</param>
-    /// <returns>
-    ///     If the debugger requested an abort the code is JsNoError -- rootEventTime is the target event time we need to move to and re - execute from.
-    ///     If we aborted at the end of the replay log the code is JsNoError -- rootEventTime is -1.
-    ///     If there was an unhandled script exception the code is JsErrorCategoryScript.
-    /// </returns>
-    JsErrorCode
-        JsTTDReplayExecution(
-            _Inout_ JsTTDMoveMode* moveMode,
-            _Out_ int64_t* rootEventTime);
 
     /// <summary>
     ///     TTD API -- may change in future versions:

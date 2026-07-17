@@ -210,9 +210,6 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
                                                  nullptr /*result*/);
         }
 
-        //Do a yield after the main script body executes
-        ChakraRTInterface::JsTTDNotifyYield();
-
         if (runScript != JsNoError)
         {
             WScriptJsrt::PrintException(fileName, runScript);
