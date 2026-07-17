@@ -9,6 +9,7 @@
 #include "Parser.h"
 
 #include "Runtime.h"
+#include "RuntimeMathPch.h"
 
 #include "Library/DelayFreeArrayBufferHelper.h"
 #include "Base/ThreadContext.h"

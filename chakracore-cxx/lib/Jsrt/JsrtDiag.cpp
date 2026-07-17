@@ -5,7 +5,6 @@
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
 #include "JsrtInternal.h"
-#include "RuntimeDebugPch.h"
 #include "ThreadContextTlsEntry.h"
 #include "JsrtDebugUtils.h"
 #include "Codex/Utf8Helper.h"

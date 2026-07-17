@@ -129,3 +129,5 @@ target_include_directories (Chakra.Backend PUBLIC
 target_compile_definitions(Chakra.Backend PUBLIC
     PAL_STDCPP_COMPAT
 )
+
+target_precompile_headers(Chakra.Backend PUBLIC BackendPch.h)

@@ -8,7 +8,6 @@
 #include "JsrtDebugEventObject.h"
 #include "JsrtDebugUtils.h"
 #include "JsrtDebuggerObject.h"
-#include "RuntimeDebugPch.h"
 #include "screrror.h"   // For CompileScriptException
 
 JsrtDebugManager::JsrtDebugManager(ThreadContext* threadContext) :

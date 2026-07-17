@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimeLibraryPch.h"
 
 #include "Library/JSON.h"
 #include "Types/MissingPropertyTypeHandler.h"

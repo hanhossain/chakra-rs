@@ -7,7 +7,6 @@
 // There is one nested ArrayBuffer for each typed array. Multiple typed array
 // can share the same array buffer.
 //----------------------------------------------------------------------------
-#include "RuntimeLibraryPch.h"
 #include "AtomicsOperations.h"
 
 #define INSTANTIATE_BUILT_IN_ENTRYPOINTS(typeName) \

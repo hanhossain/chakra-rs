@@ -20,7 +20,6 @@
 // limitations under the License.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimeLanguagePch.h"
 
 #ifdef ASMJS_PLAT
 namespace Js

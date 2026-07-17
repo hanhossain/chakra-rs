@@ -24,6 +24,8 @@
 #include "Base/PropertyRecord.h"
 
 #include "ByteCode/ByteCodeReader.h"
+
+#include "Debug/RuntimeDebugPch.h"
 #include "Language/TaggedInt.h"
 
 #include "Library/RootObjectBase.h"

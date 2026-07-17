@@ -3,12 +3,10 @@
 // Copyright (c) ChakraCore Project Contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "JsrtPch.h"
 #include "JsrtInternal.h"
 #include "JsrtExternalObject.h"
 #include "JsrtExternalArrayBuffer.h"
 #include "jsrtHelper.h"
-#include "SCACorePch.h"
 #include "JsrtContextCore.h"
 #include "ChakraCore.h"
 

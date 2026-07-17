@@ -13,7 +13,6 @@
 #include "Debug/DiagHelperMethodWrapper.h"
 #endif
 #include "Library/JavascriptGeneratorFunction.h"
-#include "RuntimeMathPch.h"
 
 namespace IR
 {

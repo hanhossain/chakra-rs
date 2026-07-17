@@ -3,8 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimeMathPch.h"
-
 namespace Js
 {
         inline Var JavascriptMath::Increment(Var aRight, ScriptContext* scriptContext)

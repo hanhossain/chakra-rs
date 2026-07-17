@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 // ChakraDiag does not link with Runtime.lib and does not include .cpp files, so this file will be included as a header
 // For these reasons, we need the functions marked as inline in this file to remain inline
-#include "RuntimeLibraryPch.h"
 #include "DataStructures/LargeStack.h"
 
 namespace Js

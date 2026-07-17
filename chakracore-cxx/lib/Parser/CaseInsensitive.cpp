@@ -10,7 +10,6 @@
 // a non-7-bit-ASCII character cannot be mapped to 7-bit-ASCII characters.
 //
 
-#include "ParserPch.h"
 
 namespace UnifiedRegex
 {

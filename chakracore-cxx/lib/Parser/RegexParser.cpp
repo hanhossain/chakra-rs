@@ -100,7 +100,6 @@ Term ::= ... | '(' '?' '=' Disjunction ')' [removed] | '(' '?' '!' Disjunction '
 
 */
 
-#include "ParserPch.h"
 
 namespace UnifiedRegex
 {

@@ -21,7 +21,6 @@
 // limitations under the License.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimeLanguagePch.h"
 #include "Language/AsmJsTypes.h"
 
 #ifdef ASMJS_PLAT

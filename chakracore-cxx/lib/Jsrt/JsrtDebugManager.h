@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "RuntimeDebugPch.h"
 #include "JsrtDebuggerObject.h"
 #include "JsrtDebugEventObject.h"
 

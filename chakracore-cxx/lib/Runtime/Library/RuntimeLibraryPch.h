@@ -164,3 +164,4 @@
 #include "Exceptions/StackOverflowException.h"
 #include "Exceptions/NotImplementedException.h"
 #include "Exceptions/AsmJsParseException.h"
+#include "WasmReaderPch.h"
