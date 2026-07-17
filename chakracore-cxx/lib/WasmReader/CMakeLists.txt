@@ -7,7 +7,6 @@ add_library (Chakra.WasmReader OBJECT
     WasmElementSegment.cpp
     WasmFunctionInfo.cpp
     WasmGlobal.cpp
-    WasmReaderPch.cpp
     WasmSection.cpp
     WasmSignature.cpp
     )

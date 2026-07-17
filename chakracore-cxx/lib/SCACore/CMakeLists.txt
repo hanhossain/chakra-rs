@@ -1,6 +1,5 @@
 add_library (Chakra.SCACore OBJECT
     SCACore.cpp
-    SCACorePch.cpp
     SCADeserialization.cpp
     SCAEngine.cpp
     SCAPropBag.cpp

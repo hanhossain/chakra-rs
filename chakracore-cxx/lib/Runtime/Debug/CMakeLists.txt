@@ -10,7 +10,6 @@ add_library (Chakra.Runtime.Debug OBJECT
     DiagStackFrame.cpp
     MutationBreakpoint.cpp
     ProbeContainer.cpp
-    RuntimeDebugPch.cpp
 )
 
 target_include_directories (Chakra.Runtime.Debug PUBLIC

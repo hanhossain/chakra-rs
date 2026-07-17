@@ -1,7 +1,6 @@
 add_library (Chakra.Runtime.Math OBJECT
     AsmJsMath.cpp
-    RuntimeMathPch.cpp
-    )
+)
 
 target_include_directories (Chakra.Runtime.Math PUBLIC
     ${CHAKRACORE_SOURCE_DIR}/pal/inc

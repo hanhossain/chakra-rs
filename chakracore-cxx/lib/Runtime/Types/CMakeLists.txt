@@ -14,7 +14,6 @@ add_library (Chakra.Runtime.Types OBJECT
     PathTypeHandler.cpp
     PropertyDescriptor.cpp
     RecyclableObject.cpp
-    RuntimeTypePch.cpp
     ScriptFunctionType.cpp
     SimpleDictionaryTypeHandler.cpp
     SimpleDictionaryUnorderedTypeHandler.cpp

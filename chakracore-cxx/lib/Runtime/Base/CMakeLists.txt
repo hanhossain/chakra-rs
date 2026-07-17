@@ -14,7 +14,6 @@ add_library (Chakra.Runtime.Base OBJECT
     LineOffsetCache.cpp
     PerfHint.cpp
     PropertyRecord.cpp
-    RuntimeBasePch.cpp
     ScriptContext.cpp
     ScriptContextOptimizationOverrideInfo.cpp
     ScriptContextProfiler.cpp

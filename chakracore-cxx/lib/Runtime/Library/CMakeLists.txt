@@ -103,7 +103,6 @@ set(CRLIB_SOURCE_CODES
     RegexHelper.cpp
     RootObjectBase.cpp
     RuntimeFunction.cpp
-    RuntimeLibraryPch.cpp
     ScriptFunction.cpp
     SharedArrayBuffer.cpp
     SingleCharString.cpp
