@@ -6,20 +6,9 @@
 #include <filesystem>
 #include <iostream>
 #include <print>
-#include <limits>
 #include <sys/stat.h>
 
-#define MAX_URI_LENGTH 512
-
 namespace fs = std::filesystem;
-
-JsTTDStreamHandle TTDHostOpen(size_t pathLength, const char* path, bool isWrite)
-{
-    return (JsTTDStreamHandle)PAL_fopen(path, isWrite ? "w+b" : "r+b");
-}
-
-#define TTDHostRead(buff, size, handle) std::fread(buff, 1, size, (FILE*)handle)
-#define TTDHostWrite(buff, size, handle) std::fwrite(buff, 1, size, (FILE*)handle)
 
 int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& contents, uint32_t* lengthBytesOut /*= nullptr*/, const std::optional<std::filesystem::path> &fullPath, bool shouldMute /*=false */)
 {
@@ -311,86 +300,4 @@ Error:
     }
 
     return hr;
-}
-
-void Helpers::TTReportLastIOErrorAsNeeded(BOOL ok, const char* msg)
-{
-    if(!ok)
-    {
-        fprintf(stderr, "Error is: %i %s\n", errno, strerror(errno));
-        fprintf(stderr, "Message is: %s\n", msg);
-
-        AssertMsg(false, "IO Error!!!");
-        exit(1);
-    }
-}
-
-JsTTDStreamHandle CALLBACK Helpers::TTCreateStreamCallback(size_t uriLength, const char* uri, size_t asciiNameLength, const char* asciiName, bool read, bool write)
-{
-    AssertMsg((read | write) & (!read | !write), "Read/Write streams not supported yet -- defaulting to read only");
-
-    if(uriLength + asciiNameLength + 1 > MAX_URI_LENGTH)
-    {
-        std::print("We assume bounded MAX_URI_LENGTH for simplicity.");
-        exit(1);
-    }
-
-    char path[MAX_URI_LENGTH];
-    memset(path, 0, MAX_URI_LENGTH);
-
-    memcpy(path, uri, uriLength);
-    memcpy(path + uriLength, asciiName, asciiNameLength);
-
-    JsTTDStreamHandle res = TTDHostOpen(uriLength + asciiNameLength, path, write);
-    if(res == nullptr)
-    {
-        fprintf(stderr, "Failed to open file: %s\n", path);
-    }
-
-    Helpers::TTReportLastIOErrorAsNeeded(res != nullptr, "Failed File Open");
-    return res;
-}
-
-bool CALLBACK Helpers::TTReadBytesFromStreamCallback(JsTTDStreamHandle handle, byte* buff, size_t size, size_t* readCount)
-{
-    AssertMsg(handle != nullptr, "Bad file handle.");
-
-    if(size > std::numeric_limits<uint32_t>::max())
-    {
-        *readCount = 0;
-        return false;
-    }
-
-    BOOL ok = FALSE;
-    *readCount = TTDHostRead(buff, size, (FILE*)handle);
-    ok = (*readCount != 0);
-
-    Helpers::TTReportLastIOErrorAsNeeded(ok, "Failed Read!!!");
-
-    return ok ? true : false;
-}
-
-bool CALLBACK Helpers::TTWriteBytesToStreamCallback(JsTTDStreamHandle handle, const byte* buff, size_t size, size_t* writtenCount)
-{
-    AssertMsg(handle != nullptr, "Bad file handle.");
-
-    if(size > std::numeric_limits<uint32_t>::max())
-    {
-        *writtenCount = 0;
-        return false;
-    }
-
-    BOOL ok = FALSE;
-    *writtenCount = TTDHostWrite(buff, size, (FILE*)handle);
-    ok = (*writtenCount == size);
-
-    Helpers::TTReportLastIOErrorAsNeeded(ok, "Failed Read!!!");
-
-    return ok ? true : false;
-}
-
-void CALLBACK Helpers::TTFlushAndCloseStreamCallback(JsTTDStreamHandle handle, bool read, bool write)
-{
-    fflush((FILE*)handle);
-    fclose((FILE*)handle);
 }

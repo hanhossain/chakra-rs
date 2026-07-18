@@ -564,8 +564,7 @@ JsErrorCode chakracore::jsrt::JsHasOwnItem(_In_ JsValueRef object,
     _Out_ bool* hasOwnItem)
 {
   return ContextAPIWrapper<true>(
-      [&](Js::ScriptContext* scriptContext,
-          TTDRecorder& _actionEntryPopper) -> JsErrorCode {
+      [&](Js::ScriptContext* scriptContext) -> JsErrorCode {
 
         VALIDATE_INCOMING_OBJECT(object, scriptContext);
         PARAM_NOT_NULL(hasOwnItem);
@@ -595,21 +594,21 @@ JsErrorCode chakracore::jsrt::JsDetachArrayBuffer(
 
 JsErrorCode chakracore::jsrt::JsCreateSharedArrayBufferWithSharedContent(_In_ JsSharedArrayBufferContentHandle sharedContents, _Out_ JsValueRef *result)
 {
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
 
         PARAM_NOT_NULL(result);
 
         Js::JavascriptLibrary* library = scriptContext->GetLibrary();
         *result = library->CreateSharedArrayBuffer((Js::SharedContents*)sharedContents);
 
-        PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, result);
+        ;
         return JsNoError;
     });
 }
 
 JsErrorCode chakracore::jsrt::JsGetSharedArrayBufferContent(_In_ JsValueRef sharedArrayBuffer, _Out_ JsSharedArrayBufferContentHandle *sharedContents)
 {
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
 
         PARAM_NOT_NULL(sharedContents);
 
@@ -634,7 +633,7 @@ JsErrorCode chakracore::jsrt::JsGetSharedArrayBufferContent(_In_ JsValueRef shar
 
 JsErrorCode chakracore::jsrt::JsReleaseSharedArrayBufferContentHandle(_In_ JsSharedArrayBufferContentHandle sharedContents)
 {
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
         ((Js::SharedContents*)sharedContents)->Release();
         return JsNoError;
     });
@@ -649,8 +648,8 @@ JsErrorCode chakracore::jsrt::JsCreateCustomExternalObject(
     _In_opt_ JsValueRef prototype,
     _Out_ JsValueRef * object)
 {
-    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTAllocateExternalObject, prototype);
+    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        ;
 
         PARAM_NOT_NULL(object);
 
@@ -670,7 +669,7 @@ JsErrorCode chakracore::jsrt::JsCreateCustomExternalObject(
         Assert(interceptor);
         *getterSetterInterceptor = reinterpret_cast<JsGetterSetterInterceptor*>(interceptor);
 
-        PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, object);
+        ;
 
         return JsNoError;
     });
@@ -684,8 +683,8 @@ JsErrorCode chakracore::jsrt::JsCreateTracedExternalObject(
     _In_opt_ JsValueRef prototype,
     _Out_ JsValueRef *object)
 {
-    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTAllocateExternalObject, prototype);
+    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        ;
 
         PARAM_NOT_NULL(object);
 
@@ -701,7 +700,7 @@ JsErrorCode chakracore::jsrt::JsCreateTracedExternalObject(
         }
         *object = JsrtExternalObject::Create(data, (uint)inlineSlotSize, traceCallback, finalizeCallback, prototypeObject, scriptContext, nullptr);
 
-        PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, object);
+        ;
 
         return JsNoError;
     });
@@ -712,8 +711,8 @@ JsErrorCode chakracore::jsrt::JsPrivateHasProperty(
     _In_ JsValueRef key,
     _Out_ bool *hasProperty)
 {
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        ;
 
         VALIDATE_INCOMING_OBJECT(object, scriptContext);
         VALIDATE_INCOMING_REFERENCE(key, scriptContext);
@@ -736,8 +735,8 @@ JsErrorCode chakracore::jsrt::JsPrivateGetProperty(
     _In_ JsValueRef key,
     _Out_ JsValueRef *value)
 {
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTGetIndex, key, object);
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        ;
 
         VALIDATE_INCOMING_OBJECT(object, scriptContext);
         VALIDATE_INCOMING_REFERENCE(key, scriptContext);
@@ -748,12 +747,12 @@ JsErrorCode chakracore::jsrt::JsPrivateGetProperty(
         if (!dynObj->HasObjectArray())
         {
             *value = scriptContext->GetLibrary()->GetUndefined();
-            PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, value);
+            ;
             return JsNoError;
         }
         *value = (JsValueRef)Js::JavascriptOperators::OP_GetElementI(dynObj->GetObjectArray(), key, scriptContext);
 
-        PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, value);
+        ;
 
         return JsNoError;
     });
@@ -764,8 +763,8 @@ JsErrorCode chakracore::jsrt::JsPrivateSetProperty(
     _In_ JsValueRef key,
     _In_ JsValueRef value)
 {
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTSetIndex, object, key, value);
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        ;
 
         VALIDATE_INCOMING_OBJECT(object, scriptContext);
         VALIDATE_INCOMING_REFERENCE(key, scriptContext);
@@ -789,8 +788,8 @@ JsErrorCode chakracore::jsrt::JsPrivateDeleteProperty(
     _In_ JsValueRef key,
     _Out_ JsValueRef *result)
 {
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        ;
 
         VALIDATE_INCOMING_OBJECT(object, scriptContext);
         VALIDATE_INCOMING_REFERENCE(key, scriptContext);
@@ -811,7 +810,7 @@ JsErrorCode chakracore::jsrt::JsCloneObject(_In_ JsValueRef source, _Out_ JsValu
 {
     VALIDATE_JSREF(source);
 
-    return ContextAPINoScriptWrapper([&](Js::ScriptContext* scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
+    return ContextAPINoScriptWrapper([&](Js::ScriptContext* scriptContext) -> JsErrorCode {
 
         while (Js::VarIs<Js::JavascriptProxy>(source))
         {
@@ -862,16 +861,16 @@ JsErrorCode chakracore::jsrt::JsCreateString(
         return JsErrorOutOfMemory;
     }
 
-    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
+    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
 
         Js::JavascriptString *stringValue = Js::LiteralStringWithPropertyStringPtr::
             NewFromCString(content, (CharCount)length, scriptContext->GetLibrary());
 
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateString, stringValue->GetSz(), stringValue->GetLength());
+        ;
 
         *value = stringValue;
 
-        PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, value);
+        ;
 
         return JsNoError;
     });
@@ -896,16 +895,16 @@ JsErrorCode chakracore::jsrt::JsCreateStringUtf16(
         return JsErrorOutOfMemory;
     }
 
-    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
+    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
 
         Js::JavascriptString *stringValue = Js::LiteralStringWithPropertyStringPtr::
             NewFromWideString((const char16_t *)content, (CharCount)length, scriptContext->GetLibrary());
 
-        PERFORM_JSRT_TTD_RECORD_ACTION(scriptContext, RecordJsRTCreateString, stringValue->GetSz(), stringValue->GetLength());
+        ;
 
         *value = stringValue;
 
-        PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(scriptContext, value);
+        ;
 
         return JsNoError;
     });
@@ -917,8 +916,8 @@ JsErrorCode chakracore::jsrt::JsCreatePropertyString(
     _In_ size_t length,
     _Out_ JsValueRef *propertyString)
 {
-    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
+    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        ;
         Js::PropertyRecord* propertyRecord;
         JsErrorCode errorCode = JsCreatePropertyId(name, length, (JsPropertyIdRef *)&propertyRecord);
 
@@ -934,8 +933,8 @@ JsErrorCode chakracore::jsrt::JsCreatePropertyString(
 
 JsErrorCode chakracore::jsrt::JsCreatePromise(_Out_ JsValueRef *promise, _Out_ JsValueRef *resolve, _Out_ JsValueRef *reject)
 {
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        ;
 
         PARAM_NOT_NULL(promise);
         PARAM_NOT_NULL(resolve);
@@ -960,8 +959,8 @@ JsErrorCode chakracore::jsrt::JsCreatePromise(_Out_ JsValueRef *promise, _Out_ J
 
 JsErrorCode chakracore::jsrt::JsGetPromiseState(_In_ JsValueRef promise, _Out_ JsPromiseState *state)
 {
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        ;
 
         VALIDATE_INCOMING_REFERENCE(promise, scriptContext);
         PARAM_NOT_NULL(state);
@@ -993,8 +992,8 @@ JsErrorCode chakracore::jsrt::JsGetPromiseState(_In_ JsValueRef promise, _Out_ J
 
 JsErrorCode chakracore::jsrt::JsGetPromiseResult(_In_ JsValueRef promise, _Out_ JsValueRef *result)
 {
-    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
-        PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(scriptContext);
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        ;
 
         VALIDATE_INCOMING_REFERENCE(promise, scriptContext);
         PARAM_NOT_NULL(result);
@@ -1127,11 +1126,10 @@ JsErrorCode chakracore::jsrt::JsGetAndClearExceptionWithMetadata(_Out_ JsValueRe
 
     if (exception == nullptr)
     {
-        // TODO: How does this early bailout impact TTD?
         return JsErrorInvalidArgument;
     }
 
-    return ContextAPIWrapper<false>([&](Js::ScriptContext* scriptContext, TTDRecorder& _actionEntryPopper) -> JsErrorCode {
+    return ContextAPIWrapper<false>([&](Js::ScriptContext* scriptContext) -> JsErrorCode {
         Js::Var exceptionMetadata = Js::JavascriptExceptionMetadata::CreateMetadataVar(scriptContext);
         Js::JavascriptOperators::OP_SetProperty(exceptionMetadata, Js::PropertyIds::exception, exception, scriptContext);
 

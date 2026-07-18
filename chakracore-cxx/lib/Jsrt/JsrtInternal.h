@@ -7,7 +7,7 @@
 #include "JsrtExceptionBase.h"
 #include "Exceptions/EvalDisabledException.h"
 
-typedef struct {} TTDRecorder;
+#include <functional>
 
 // JSRT Unsafe mode leaves runtime health-state responsibility to the host
 #ifndef JSRT_VERIFY_RUNTIME_STATE
@@ -105,8 +105,7 @@ typedef struct {} TTDRecorder;
             MARSHAL_OBJECT(p, scriptContext)   \
         }
 
-template <class Fn>
-JsErrorCode GlobalAPIWrapper_Core(Fn fn)
+inline JsErrorCode GlobalAPIWrapper(const std::function<JsErrorCode()>& fn)
 {
     JsErrorCode errCode = JsNoError;
     try
@@ -134,22 +133,9 @@ JsErrorCode GlobalAPIWrapper_Core(Fn fn)
     return errCode;
 }
 
-template <class Fn>
-JsErrorCode GlobalAPIWrapper(Fn fn)
+inline JsErrorCode GlobalAPIWrapper_NoRecord(std::function<JsErrorCode()> fn)
 {
-    TTDRecorder _actionEntryPopper;
-    JsErrorCode errCode = GlobalAPIWrapper_Core([&fn, &_actionEntryPopper]() -> JsErrorCode
-    {
-        return fn(_actionEntryPopper);
-    });
-
-    return errCode;
-}
-
-template <class Fn>
-JsErrorCode GlobalAPIWrapper_NoRecord(Fn fn)
-{
-    return GlobalAPIWrapper_Core([&fn]() -> JsErrorCode
+    return GlobalAPIWrapper([&fn]() -> JsErrorCode
     {
         return fn();
     });
@@ -157,8 +143,8 @@ JsErrorCode GlobalAPIWrapper_NoRecord(Fn fn)
 
 JsErrorCode CheckContext(JsrtContext *currentContext, bool verifyRuntimeState, bool allowInObjectBeforeCollectCallback = false);
 
-template <bool verifyRuntimeState, class Fn>
-JsErrorCode ContextAPIWrapper_Core(Fn fn)
+template <bool verifyRuntimeState>
+JsErrorCode ContextAPIWrapper_Core(const std::function<JsErrorCode(Js::ScriptContext *)>& fn)
 {
     JsrtContext *currentContext = JsrtContext::GetCurrent();
     JsErrorCode errCode = CheckContext(currentContext, verifyRuntimeState);
@@ -215,20 +201,19 @@ JsErrorCode ContextAPIWrapper_Core(Fn fn)
     return errCode;
 }
 
-template <bool verifyRuntimeState, class Fn>
-JsErrorCode ContextAPIWrapper(Fn fn)
+template <bool verifyRuntimeState>
+JsErrorCode ContextAPIWrapper(std::function<JsErrorCode(Js::ScriptContext *)> fn)
 {
-    TTDRecorder _actionEntryPopper;
-    JsErrorCode errCode = ContextAPIWrapper_Core<verifyRuntimeState>([&fn, &_actionEntryPopper](Js::ScriptContext* scriptContext) -> JsErrorCode
+    JsErrorCode errCode = ContextAPIWrapper_Core<verifyRuntimeState>([&fn](Js::ScriptContext* scriptContext) -> JsErrorCode
     {
-        return fn(scriptContext, _actionEntryPopper);
+        return fn(scriptContext);
     });
 
     return errCode;
 }
 
-template <bool verifyRuntimeState, class Fn>
-JsErrorCode ContextAPIWrapper_NoRecord(Fn fn)
+template <bool verifyRuntimeState>
+JsErrorCode ContextAPIWrapper_NoRecord(std::function<JsErrorCode(Js::ScriptContext *)> fn)
 {
     return ContextAPIWrapper_Core<verifyRuntimeState>([&fn](Js::ScriptContext* scriptContext) -> JsErrorCode
     {
@@ -237,8 +222,7 @@ JsErrorCode ContextAPIWrapper_NoRecord(Fn fn)
 }
 
 // allowInObjectBeforeCollectCallback only when current API is guaranteed not to do recycler allocation.
-template <class Fn>
-JsErrorCode ContextAPINoScriptWrapper_Core(Fn fn, bool allowInObjectBeforeCollectCallback = false,
+inline JsErrorCode ContextAPINoScriptWrapper_Core(const std::function<JsErrorCode(Js::ScriptContext *)>& fn, bool allowInObjectBeforeCollectCallback = false,
     bool scriptExceptionAllowed = false)
 {
     JsrtContext *currentContext = JsrtContext::GetCurrent();
@@ -290,20 +274,17 @@ JsErrorCode ContextAPINoScriptWrapper_Core(Fn fn, bool allowInObjectBeforeCollec
     return errCode;
 }
 
-template <class Fn>
-JsErrorCode ContextAPINoScriptWrapper(Fn fn, bool allowInObjectBeforeCollectCallback = false, bool scriptExceptionAllowed = false)
+inline JsErrorCode ContextAPINoScriptWrapper(std::function<JsErrorCode(Js::ScriptContext *)> fn, bool allowInObjectBeforeCollectCallback = false, bool scriptExceptionAllowed = false)
 {
-    TTDRecorder _actionEntryPopper;
-    JsErrorCode errCode = ContextAPINoScriptWrapper_Core([&fn, &_actionEntryPopper](Js::ScriptContext* scriptContext) -> JsErrorCode
+    JsErrorCode errCode = ContextAPINoScriptWrapper_Core([&fn](Js::ScriptContext* scriptContext) -> JsErrorCode
     {
-        return fn(scriptContext, _actionEntryPopper);
+        return fn(scriptContext);
     }, allowInObjectBeforeCollectCallback, scriptExceptionAllowed);
 
     return errCode;
 }
 
-template <class Fn>
-JsErrorCode ContextAPINoScriptWrapper_NoRecord(Fn fn, bool allowInObjectBeforeCollectCallback = false, bool scriptExceptionAllowed = false)
+inline JsErrorCode ContextAPINoScriptWrapper_NoRecord(std::function<JsErrorCode(Js::ScriptContext *)> fn, bool allowInObjectBeforeCollectCallback = false, bool scriptExceptionAllowed = false)
 {
     return ContextAPINoScriptWrapper_Core([&fn](Js::ScriptContext* scriptContext) -> JsErrorCode
     {
@@ -311,8 +292,7 @@ JsErrorCode ContextAPINoScriptWrapper_NoRecord(Fn fn, bool allowInObjectBeforeCo
     }, allowInObjectBeforeCollectCallback, scriptExceptionAllowed);
 }
 
-template <class Fn>
-JsErrorCode SetContextAPIWrapper(JsrtContext* newContext, Fn fn)
+inline JsErrorCode SetContextAPIWrapper(JsrtContext* newContext, const std::function<JsErrorCode(Js::ScriptContext *)>& fn)
 {
     JsrtContext* oldContext = JsrtContext::GetCurrent();
     Js::ScriptContext* scriptContext = newContext->GetScriptContext();
@@ -387,13 +367,3 @@ void HandleScriptCompileError(Js::ScriptContext * scriptContext, CompileScriptEx
 #define BEGIN_JSRT_NO_EXCEPTION  BEGIN_NO_EXCEPTION
 #define END_JSRT_NO_EXCEPTION    END_NO_EXCEPTION return JsNoError;
 #define RETURN_NO_EXCEPTION(x)   _PREPARE_RETURN_NO_EXCEPTION return x
-
-////
-//Define compact TTD macros for use in the JSRT API's
-//A class to ensure that even when exceptions are thrown we update any event recording info we were in the middle of
-#define PERFORM_JSRT_TTD_RECORD_ACTION_CHECK(CTX) false
-
-#define PERFORM_JSRT_TTD_RECORD_ACTION(CTX, ACTION_CODE, ...)
-#define PERFORM_JSRT_TTD_RECORD_ACTION_RESULT(CTX, RESULT)
-
-#define PERFORM_JSRT_TTD_RECORD_ACTION_NOT_IMPLEMENTED(CTX)

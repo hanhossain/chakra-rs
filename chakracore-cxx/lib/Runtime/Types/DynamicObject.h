@@ -9,8 +9,6 @@ class ScriptSite;
 namespace Js
 {
 
-#define DEFINE_TTD_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(T)
-
 #if !defined(USED_IN_STATIC_LIB)
 #define DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(T) \
     friend class Js::CrossSiteObject<T>; \
@@ -19,8 +17,7 @@ namespace Js
         Assert(this->GetScriptContext() != scriptContext); \
         AssertMsg(VirtualTableInfo<T>::HasVirtualTable(this), "Derived class need to define marshal to script context"); \
         VirtualTableInfo<Js::CrossSiteObject<T>>::SetVirtualTable(this); \
-    }\
-    DEFINE_TTD_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(T)
+    }
 #else
 #define DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(T)  \
         virtual void MarshalToScriptContext(Js::ScriptContext * scriptContext)  {Assert(FALSE);}
@@ -63,12 +60,6 @@ namespace Js
         friend class JavascriptOperators;
         friend class JavascriptLibrary;
         friend class ModuleNamespace; // for slot setting.
-
-#if ENABLE_OBJECT_SOURCE_TRACKING
-    public:
-        //Field for tracking object allocation
-        TTD::DiagnosticOrigin TTDDiagOriginInfo;
-#endif
 
     private:
         // Memory layout of DynamicObject can be one of the following:
