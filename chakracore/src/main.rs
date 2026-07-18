@@ -17,8 +17,7 @@ fn main() -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
-    let res = chakracore_sys::chhelper::ffi::main_internal(&args);
-    ExitCode::from(res as u8)
+    chakracore::run(&args)
 }
 
 fn print_version() {
