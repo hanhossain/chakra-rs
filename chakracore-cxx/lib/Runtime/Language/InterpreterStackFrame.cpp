@@ -2871,14 +2871,6 @@ namespace Js
 #include "InterpreterLoop.inl"
 #undef INTERPRETERLOOPNAME
 
-#if ENABLE_TTD_DIAGNOSTICS_TRACING
-#define PROVIDE_INTERPRETER_STMTS
-#define INTERPRETERLOOPNAME ProcessUnprofiled_PreviousStmtTracking
-#include "InterpreterLoop.inl"
-#undef INTERPRETERLOOPNAME
-#undef PROVIDE_INTERPRETER_STMTS
-#endif
-
 #ifdef ASMJS_PLAT
 #define INTERPRETERLOOPNAME ProcessAsmJs
 #define INTERPRETER_ASMJS
@@ -3027,18 +3019,7 @@ namespace Js
         {
             Assert(!switchProfileMode);
 
-#if ENABLE_TTD_DIAGNOSTICS_TRACING
-            if (this->scriptContext->ShouldPerformRecordOrReplayAction())
-            {
-                result = ProcessUnprofiled_PreviousStmtTracking();
-            }
-            else
-            {
-                result = ProcessUnprofiled();
-            }
-#else
             result = ProcessUnprofiled();
-#endif
 
             Assert(!(switchProfileMode && result));
             if (switchProfileMode)
@@ -3085,18 +3066,7 @@ namespace Js
         }
         return result;
 #else
-#if ENABLE_TTD_DIAGNOSTICS_TRACING
-        if (this->scriptContext->ShouldPerformRecordOrReplayAction())
-        {
-            return ProcessUnprofiled_PreviousStmtTracking();
-        }
-        else
-        {
-            return ProcessUnprofiled();
-        }
-#else
         return ProcessUnprofiled();
-#endif
 #endif
     }
 
@@ -7311,20 +7281,6 @@ namespace Js
         Assert(localRegisterID == 0 || localRegisterID >= m_functionBody->GetConstantCount());
         ValidateRegValue(value);
         m_localSlots[localRegisterID] = value;
-
-#if ENABLE_OBJECT_SOURCE_TRACKING
-        if (value != nullptr && DynamicType::Is(Js::JavascriptOperators::GetTypeId(value)))
-        {
-            static_cast<DynamicObject*>(value)->SetDiagOriginInfoAsNeeded();
-        }
-#endif
-
-#if ENABLE_VALUE_TRACE
-        if (this->function->GetScriptContext()->ShouldPerformRecordOrReplayAction())
-        {
-            this->function->GetScriptContext()->GetThreadContext()->TTDExecutionInfo->GetTraceLogger()->WriteTraceValue(value);
-        }
-#endif
     }
 
     template <typename T>
@@ -7449,20 +7405,6 @@ namespace Js
         Assert(localRegisterID == 0 || localRegisterID >= m_functionBody->GetConstantCount());
         ValidateRegValue(value, true);
         m_localSlots[localRegisterID] = value;
-
-#if ENABLE_OBJECT_SOURCE_TRACKING
-        if (value != nullptr && DynamicType::Is(Js::JavascriptOperators::GetTypeId(value)))
-        {
-            static_cast<DynamicObject*>(value)->SetDiagOriginInfoAsNeeded();
-        }
-#endif
-
-#if ENABLE_VALUE_TRACE
-        if (this->function->GetScriptContext()->ShouldPerformRecordOrReplayAction())
-        {
-            this->function->GetScriptContext()->GetThreadContext()->TTDExecutionInfo->GetTraceLogger()->WriteTraceValue(value);
-        }
-#endif
     }
 
     template <typename RegSlotType>
@@ -7479,20 +7421,6 @@ namespace Js
         Assert(localRegisterID == 0 || localRegisterID >= m_functionBody->GetConstantCount());
         ValidateRegValue(value, true, false);
         m_localSlots[localRegisterID] = value;
-
-#if ENABLE_OBJECT_SOURCE_TRACKING
-        if (value != nullptr && DynamicType::Is(Js::JavascriptOperators::GetTypeId(value)))
-        {
-            static_cast<DynamicObject*>(value)->SetDiagOriginInfoAsNeeded();
-        }
-#endif
-
-#if ENABLE_VALUE_TRACE
-        if (this->function->GetScriptContext()->ShouldPerformRecordOrReplayAction())
-        {
-            this->function->GetScriptContext()->GetThreadContext()->TTDExecutionInfo->GetTraceLogger()->WriteTraceValue(value);
-        }
-#endif
     }
 
     template <>

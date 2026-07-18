@@ -22,10 +22,6 @@ namespace Js
         {
             Assert(type->GetTypeHandler()->GetInlineSlotCapacity() == type->GetTypeHandler()->GetSlotCapacity());
         }
-
-#if ENABLE_OBJECT_SOURCE_TRACKING
-        TTD::InitializeDiagnosticOriginInformation(this->TTDDiagOriginInfo);
-#endif
     }
 
     DynamicObject::DynamicObject(DynamicType * type, ScriptContext * scriptContext) :
@@ -39,10 +35,6 @@ namespace Js
     {
         Assert(!UsesObjectArrayOrFlagsAsFlags());
         InitSlots(this, scriptContext);
-
-#if ENABLE_OBJECT_SOURCE_TRACKING
-        TTD::InitializeDiagnosticOriginInformation(this->TTDDiagOriginInfo);
-#endif
     }
 
     DynamicObject::DynamicObject(DynamicObject * instance, bool deepCopy) :
@@ -132,10 +124,6 @@ namespace Js
                 (!deepCopy || typeHandler->IsObjectHeaderInlinedTypeHandler() || instance->UsesObjectArrayOrFlagsAsFlags())
             );
         }
-
-#if ENABLE_OBJECT_SOURCE_TRACKING
-        TTD::InitializeDiagnosticOriginInformation(this->TTDDiagOriginInfo);
-#endif
     }
 
     DynamicObject * DynamicObject::New(Recycler * recycler, DynamicType * type)

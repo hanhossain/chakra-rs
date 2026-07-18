@@ -489,11 +489,6 @@ JsErrorCode chakracore::jsrt::JsDiagSetStepType(
 #endif
 }
 
-JsErrorCode chakracore::jsrt::JsTTDDiagWriteLog(_In_reads_(uriLength) const char* uri, _In_ size_t uriLength)
-{
-    return JsErrorCategoryUsage;
-}
-
 JsErrorCode chakracore::jsrt::JsDiagGetFunctionPosition(
     _In_ JsValueRef function,
     _Out_ JsValueRef *functionPosition)
