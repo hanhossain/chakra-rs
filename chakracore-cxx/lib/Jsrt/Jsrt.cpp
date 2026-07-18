@@ -157,11 +157,8 @@ JsErrorCode CreateContextCore(_In_ JsRuntimeHandle runtimeHandle, _In_ bool inRe
 
 //A create runtime function that we can funnel to for regular and record or debug aware creation
 JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
-    _In_opt_ const char* optTTUri, size_t optTTUriCount, bool isRecord, bool isReplay, bool isDebug,
-    _In_ uint32_t snapInterval, _In_ uint32_t snapHistoryLength,
-    _In_opt_ TTDOpenResourceStreamCallback openResourceStream, _In_opt_ JsTTDReadBytesFromStreamCallback readBytesFromStream,
-    _In_opt_ JsTTDWriteBytesToStreamCallback writeBytesToStream, _In_opt_ JsTTDFlushAndCloseStreamCallback flushAndCloseStream,
-    _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtimeHandle)
+                              _In_opt_ JsThreadServiceCallback threadService,
+                              _Out_ JsRuntimeHandle *runtimeHandle)
 {
     VALIDATE_ENTER_CURRENT_THREAD();
 
@@ -260,10 +257,9 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
 JsErrorCode chakracore::jsrt::JsCreateRuntime(_In_ JsRuntimeAttributes attributes, _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtimeHandle)
 {
     return CreateRuntimeCore(attributes,
-        nullptr /*optRecordUri*/, 0 /*optRecordUriCount */, false /*isRecord*/, false /*isReplay*/, false /*isDebug*/,
-        UINT_MAX /*optSnapInterval*/, UINT_MAX /*optLogLength*/,
-        nullptr, nullptr, nullptr, nullptr, /*TTD IO handlers*/
-        threadService, runtimeHandle);
+                             threadService, runtimeHandle
+                             /*optSnapInterval*/
+                             /*optLogLength*/);
 }
 
 template <CollectionFlags flags>

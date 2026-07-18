@@ -629,11 +629,6 @@ CmdLineArgsParser::Parse(std::vector<std::u16string> vargs)
         }
     }
 
-    if(this->flagTable.Filename == nullptr)
-    {
-        this->flagTable.Filename = u"ttdSentinal.js";
-    }
-
     return err;
 }
 
