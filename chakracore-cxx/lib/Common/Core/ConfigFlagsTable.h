@@ -1500,9 +1500,7 @@ namespace Js
                 bool            IsEnabled(Flag flag);
                 void            Disable(Flag flag);
 
-                void             VerboseDump();
-
-    // Data
+                // Data
     public:
 
         ///----------------------------------------------------------------------------

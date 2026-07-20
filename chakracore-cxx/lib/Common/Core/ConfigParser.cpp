@@ -151,7 +151,7 @@ void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCus
 
 void ConfigParser::ProcessConfiguration()
 {
-    bool hasOutput = false;
+    [[maybe_unused]] bool hasOutput = false;
 
     if (Js::Configuration::Global.flags.DebugWindow)
     {
@@ -175,14 +175,6 @@ void ConfigParser::ProcessConfiguration()
     }
 #endif // STACK_BACK_TRACE
 #endif // ENABLE_TRACE
-
-    if (hasOutput)
-    {
-        Output::Print(u"\n");
-
-        Js::Configuration::Global.flags.VerboseDump();
-        Output::Flush();
-    }
 
     if (Js::Configuration::Global.flags.ForceSerialized)
     {
