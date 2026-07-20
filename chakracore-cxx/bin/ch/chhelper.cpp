@@ -10,6 +10,7 @@
 
 #include <chakracore-sys/src/chhelper.rs.h>
 #include <pthread.h>
+#include <rust/cxx.h>
 
 #ifdef __linux__
 #include <sys/sysinfo.h>
@@ -30,11 +31,10 @@ int32_t GetSerializedBuffer(const char *fileContents, JsFinalizeCallback fileCon
     int32_t hr = S_OK;
 
     JsValueRef scriptSource;
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(const_cast<char*>(fileContents),
-        static_cast<unsigned int>(strlen(fileContents)), fileContentFinalizeCallback, const_cast<char*>(fileContents), &
-        scriptSource));
-    IfJsErrorFailLog(ChakraRTInterface::JsSerialize(scriptSource, byteCodeBuffer,
-        JsParseScriptAttributeNone));
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
+        const_cast<char *>(fileContents), static_cast<unsigned int>(strlen(fileContents)), fileContentFinalizeCallback,
+        const_cast<char *>(fileContents), &scriptSource));
+    IfJsErrorFailLog(ChakraRTInterface::JsSerialize(scriptSource, byteCodeBuffer, JsParseScriptAttributeNone));
 
 Error:
     return hr;
@@ -63,8 +63,8 @@ int32_t CreateLibraryByteCode(const char *contentsRaw)
             printf(",");
         }
 
-        // Add a line break every 16 scratches, primarily so the compiler doesn't complain about the string being too long.
-        // Also, won't add for the last scratch
+        // Add a line break every 16 scratches, primarily so the compiler doesn't complain about the string being too
+        // long. Also, won't add for the last scratch
         if (i % 16 == 15 && i < bcBufferSize - 1)
         {
             printf("\n/* %08X */", i + 1);
@@ -86,15 +86,13 @@ typedef struct
     bool freeingHandled;
 } SerializedCallbackInfo;
 
-static bool DummyJsSerializedScriptLoadUtf8Source(
-    JsSourceContext sourceContext,
-    JsValueRef *scriptBuffer,
-    JsParseScriptAttributes *parseAttributes)
+static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext, JsValueRef *scriptBuffer,
+                                                  JsParseScriptAttributes *parseAttributes)
 {
-    SerializedCallbackInfo *serializedCallbackInfo = reinterpret_cast<SerializedCallbackInfo*>(sourceContext);
+    SerializedCallbackInfo *serializedCallbackInfo = reinterpret_cast<SerializedCallbackInfo *>(sourceContext);
     Assert(!serializedCallbackInfo->freeingHandled);
     serializedCallbackInfo->freeingHandled = true;
-    size_t length = strlen(reinterpret_cast<const char*>(serializedCallbackInfo->scriptBody));
+    size_t length = strlen(reinterpret_cast<const char *>(serializedCallbackInfo->scriptBody));
 
     // sourceContext is source ptr, see RunScript below
     if (ChakraRTInterface::JsCreateExternalArrayBuffer(serializedCallbackInfo->scriptBody,
@@ -111,7 +109,7 @@ static bool DummyJsSerializedScriptLoadUtf8Source(
 
 int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLength,
                   JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue,
-                  const std::optional<std::filesystem::path>& fullPath, JsValueRef parserStateCache)
+                  const std::optional<std::filesystem::path> &fullPath, JsValueRef parserStateCache)
 {
     int32_t hr = S_OK;
     MessageQueue *messageQueue = new MessageQueue();
@@ -136,45 +134,34 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
         if (fileContents == nullptr)
         {
             // if we have no fileContents, no worry about freeing them, and the call is simple.
-            runScript = ChakraRTInterface::JsRunSerialized(
-                bufferValue,
-                nullptr /*JsSerializedLoadScriptCallback*/,
-                0 /*SourceContext*/,
-                fname,
-                nullptr /*result*/
+            runScript = ChakraRTInterface::JsRunSerialized(bufferValue, nullptr /*JsSerializedLoadScriptCallback*/,
+                                                           0 /*SourceContext*/, fname, nullptr /*result*/
             );
         }
         else // fileContents != nullptr
         {
             // Memory management is a little more complex here
-            serializedCallbackInfo.scriptBody = const_cast<char*>(fileContents);
+            serializedCallbackInfo.scriptBody = const_cast<char *>(fileContents);
             serializedCallbackInfo.scriptBodyFinalizeCallback = fileContentsFinalizeCallback;
             serializedCallbackInfo.freeingHandled = false;
 
             // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
-            runScript = ChakraRTInterface::JsRunSerialized(
-                bufferValue,
-                DummyJsSerializedScriptLoadUtf8Source,
-                reinterpret_cast<JsSourceContext>(&serializedCallbackInfo),
-                // Use source ptr as sourceContext
-                fname,
-                nullptr /*result*/);
+            runScript = ChakraRTInterface::JsRunSerialized(bufferValue, DummyJsSerializedScriptLoadUtf8Source,
+                                                           reinterpret_cast<JsSourceContext>(&serializedCallbackInfo),
+                                                           // Use source ptr as sourceContext
+                                                           fname, nullptr /*result*/);
         }
     }
     else if (parserStateCache != nullptr)
     {
         JsValueRef scriptSource;
-        IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(const_cast<char*>(fileContents),
-            static_cast<unsigned int>(fileLength),
-            fileContentsFinalizeCallback, const_cast<char *>(fileContents), &scriptSource));
+        IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
+            const_cast<char *>(fileContents), static_cast<unsigned int>(fileLength), fileContentsFinalizeCallback,
+            const_cast<char *>(fileContents), &scriptSource));
 
-        runScript = ChakraRTInterface::JsRunScriptWithParserState(
-            scriptSource,
-            WScriptJsrt::GetNextSourceContext(),
-            fname,
-            JsParseScriptAttributeNone,
-            parserStateCache,
-            nullptr);
+        runScript =
+            ChakraRTInterface::JsRunScriptWithParserState(scriptSource, WScriptJsrt::GetNextSourceContext(), fname,
+                                                          JsParseScriptAttributeNone, parserStateCache, nullptr);
     }
     else if (HostConfigFlags::flags.Module)
     {
@@ -188,14 +175,12 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
     else // bufferValue == nullptr && parserStateCache == nullptr
     {
         JsValueRef scriptSource;
-        IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(const_cast<char *>(fileContents),
-            static_cast<unsigned int>(fileLength),
-            fileContentsFinalizeCallback, const_cast<char *>(fileContents), &scriptSource));
+        IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
+            const_cast<char *>(fileContents), static_cast<unsigned int>(fileLength), fileContentsFinalizeCallback,
+            const_cast<char *>(fileContents), &scriptSource));
 
-        runScript = ChakraRTInterface::JsRun(scriptSource,
-                                             WScriptJsrt::GetNextSourceContext(), fname,
-                                             JsParseScriptAttributeNone,
-                                             nullptr /*result*/);
+        runScript = ChakraRTInterface::JsRun(scriptSource, WScriptJsrt::GetNextSourceContext(), fname,
+                                             JsParseScriptAttributeNone, nullptr /*result*/);
     }
 
     if (runScript != JsNoError)
@@ -216,7 +201,7 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
     // free the source for the serialized script case if it's not been handed to a managed object
     if (!serializedCallbackInfo.freeingHandled && fileContentsFinalizeCallback != nullptr)
     {
-        fileContentsFinalizeCallback(const_cast<char*>(fileContents));
+        fileContentsFinalizeCallback(const_cast<char *>(fileContents));
     }
 
     if (false)
@@ -224,7 +209,7 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
     ErrorRunFinalize:
         if (fileContentsFinalizeCallback != nullptr)
         {
-            fileContentsFinalizeCallback(const_cast<char*>(fileContents));
+            fileContentsFinalizeCallback(const_cast<char *>(fileContents));
         }
     }
 Error:
@@ -303,9 +288,9 @@ int32_t GetParserStateBuffer(const char *fileContents, JsFinalizeCallback fileCo
     int32_t hr = S_OK;
     JsValueRef scriptSource = nullptr;
 
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(const_cast<char *>(fileContents),
-        static_cast<unsigned int>(strlen(fileContents)), fileContentsFinalizeCallback, const_cast<char *>(fileContents),
-        &scriptSource));
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
+        const_cast<char *>(fileContents), static_cast<unsigned int>(strlen(fileContents)), fileContentsFinalizeCallback,
+        const_cast<char *>(fileContents), &scriptSource));
 
     IfJsErrorFailLog(
         ChakraRTInterface::JsSerializeParserState(scriptSource, parserStateBuffer, JsParseScriptAttributeNone));
@@ -355,8 +340,7 @@ Error:
 
 int32_t CreateParserStateAndRunScript(const char *fileName, const char *fileContents, size_t fileLength,
                                       JsFinalizeCallback fileContentsFinalizeCallback,
-                                      const std::filesystem::path& fullPath,
-                                      JsRuntimeHandle& chRuntime,
+                                      const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
                                       const JsRuntimeAttributes jsrtAttributes)
 {
     int32_t hr = S_OK;
@@ -382,15 +366,14 @@ int32_t CreateParserStateAndRunScript(const char *fileName, const char *fileCont
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(
-        RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, nullptr, fullPath, bufferVal));
+    IfFailGo(RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, nullptr, fullPath, bufferVal));
 
     if (false)
     {
     ErrorRunFinalize:
         if (fileContentsFinalizeCallback != nullptr)
         {
-            fileContentsFinalizeCallback(const_cast<char*>(fileContents));
+            fileContentsFinalizeCallback(const_cast<char *>(fileContents));
         }
     }
 Error:
@@ -409,8 +392,7 @@ Error:
 
 int32_t CreateAndRunSerializedScript(const char *fileName, const char *fileContents, size_t fileLength,
                                      JsFinalizeCallback fileContentsFinalizeCallback,
-                                     const std::filesystem::path& fullPath,
-                                     JsRuntimeHandle& chRuntime,
+                                     const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
                                      const JsRuntimeAttributes jsrtAttributes)
 {
     int32_t hr = S_OK;
@@ -437,15 +419,14 @@ int32_t CreateAndRunSerializedScript(const char *fileName, const char *fileConte
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(
-        RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, bufferVal, fullPath, nullptr));
+    IfFailGo(RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, bufferVal, fullPath, nullptr));
 
     if (false)
     {
     ErrorRunFinalize:
         if (fileContentsFinalizeCallback != nullptr)
         {
-            fileContentsFinalizeCallback(const_cast<char*>(fileContents));
+            fileContentsFinalizeCallback(const_cast<char *>(fileContents));
         }
     }
 Error:
@@ -466,10 +447,8 @@ Error:
 int32_t RunBgParseSync(const char *fileContents, uint32_t lengthBytes, const char *fileName)
 {
     JsValueRef scriptSource;
-    JsErrorCode e = (ChakraRTInterface::JsCreateExternalArrayBuffer(const_cast<char*>(fileContents),
-                                                                    lengthBytes,
-                                                                    nullptr, const_cast<char*>(fileContents),
-                                                                    &scriptSource));
+    JsErrorCode e = (ChakraRTInterface::JsCreateExternalArrayBuffer(
+        const_cast<char *>(fileContents), lengthBytes, nullptr, const_cast<char *>(fileContents), &scriptSource));
 
     // What's the preferred way of doing this?
     char16_t fileNameWide[MAX_PATH] = {0};
@@ -480,7 +459,7 @@ int32_t RunBgParseSync(const char *fileContents, uint32_t lengthBytes, const cha
     }
 
     JsScriptContents scriptContents = {0};
-    scriptContents.container = const_cast<char*>(fileContents);
+    scriptContents.container = const_cast<char *>(fileContents);
     scriptContents.containerType = JsScriptContainerType::HeapAllocatedBuffer;
     scriptContents.encodingType = JsScriptEncodingType::Utf8;
     scriptContents.contentLengthInBytes = lengthBytes;
@@ -492,21 +471,15 @@ int32_t RunBgParseSync(const char *fileContents, uint32_t lengthBytes, const cha
 
     JsValueRef bgResult = nullptr;
     e = ChakraRTInterface::JsExecuteBackgroundParse_Experimental(
-        cookie,
-        scriptSource,
-        WScriptJsrt::GetNextSourceContext(),
-        scriptContents.fullPath,
+        cookie, scriptSource, WScriptJsrt::GetNextSourceContext(), scriptContents.fullPath,
         JsParseScriptAttributes::JsParseScriptAttributeNone,
         nullptr, //_In_ JsValueRef parserState,
-        &bgResult
-    );
+        &bgResult);
 
     return e;
 }
 
-int32_t ExecuteTest(const std::string& fileName,
-                    JsRuntimeHandle& chRuntime,
-                    JsRuntimeAttributes& jsrtAttributes)
+int32_t ExecuteTest(const std::string &fileName, JsRuntimeHandle &chRuntime, JsRuntimeAttributes &jsrtAttributes)
 {
     int32_t hr = S_OK;
     const char *fileContents = nullptr;
@@ -518,8 +491,7 @@ int32_t ExecuteTest(const std::string& fileName,
     IfFailGo(hr);
     if (HostConfigFlags::flags.GenerateLibraryByteCodeHeaderIsEnabled)
     {
-        jsrtAttributes = static_cast<JsRuntimeAttributes>(jsrtAttributes |
-            JsRuntimeAttributeSerializeLibraryByteCode);
+        jsrtAttributes = static_cast<JsRuntimeAttributes>(jsrtAttributes | JsRuntimeAttributeSerializeLibraryByteCode);
     }
 
     IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, &runtime));
@@ -568,9 +540,8 @@ int32_t ExecuteTest(const std::string& fileName,
         }
         else
         {
-            IfFailGo(
-                RunScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr, fullPath,
-                    nullptr));
+            IfFailGo(RunScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr,
+                               fullPath, nullptr));
         }
     }
 Error:
@@ -586,13 +557,14 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTestWithMemoryCheck(const std::string& fileName,
-                                   JsRuntimeHandle& chRuntime, JsRuntimeAttributes& jsrtAttributes)
+int32_t ExecuteTestWithMemoryCheck(const std::string &fileName, JsRuntimeHandle &chRuntime,
+                                   JsRuntimeAttributes &jsrtAttributes)
 {
     int32_t hr = E_FAIL;
     // REVIEW: Do we need a SEH handler here?
     hr = ExecuteTest(fileName, chRuntime, jsrtAttributes);
-    if (FAILED(hr)) exit(0);
+    if (FAILED(hr))
+        exit(0);
 
     fflush(NULL);
 #ifdef CHECK_MEMORY_LEAK
@@ -601,14 +573,15 @@ int32_t ExecuteTestWithMemoryCheck(const std::string& fileName,
     return hr;
 }
 
-int main_internal(int argc, char **c_argv)
+int main_internal(const rust::Vec<rust::String> &args)
 {
-    auto vargs = std::vector<std::u16string>(argc);
-    for (int i = 0; i < argc; i++)
+    std::vector<std::u16string> vargs;
+
+    for (auto arg : args)
     {
         std::u16string s;
-        NarrowStringToWideDynamic(c_argv[i], s);
-        vargs[i] = std::move(s);
+        NarrowStringToWideDynamic(arg.c_str(), s);
+        vargs.push_back(std::move(s));
     }
 
     int retval = -1;

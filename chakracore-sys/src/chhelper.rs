@@ -5,10 +5,10 @@ pub mod ffi {
         fn print_usage();
     }
 
-    extern "C++" {
+    unsafe extern "C++" {
         include!("chhelper.h");
 
-        unsafe fn main_internal(argc: i32, argv: *mut *mut c_char) -> i32;
+        fn main_internal(args: &Vec<String>) -> i32;
     }
 }
 
