@@ -31,13 +31,13 @@ private:
     static const int  MaxTokenSize  = 512;
 
     Js::ConfigFlagsTable& flagTable;
-    char16_t*           pszCurrentArg;
+    const char16_t *pszCurrentArg;
     ICustomConfigFlags * pCustomConfigFlags;
 
 // Methods
 public:
-    int                Parse(std::vector<std::u16string> vargs);
-    int Parse(char16_t* token) throw();
+    int Parse(const std::vector<std::u16string> &vargs);
+    int Parse(const char16_t* token) throw();
     CmdLineArgsParser(ICustomConfigFlags * pCustomConfigFlags = nullptr, Js::ConfigFlagsTable& flagTable = Js::Configuration::Global.flags);
     ~CmdLineArgsParser();
 
@@ -78,12 +78,12 @@ private:
             void                       ParseNumberTrioSet(Js::NumberTrioSet * numberTrioSet);
             void                       PrintUsage();
 
-            char16_t CurChar()
+            char16_t CurChar() const
             {
                 return this->pszCurrentArg[0];
             }
 
-            char16_t PeekChar()
+            char16_t PeekChar() const
             {
                 return this->pszCurrentArg[1];
             }
@@ -93,12 +93,11 @@ private:
                 this->pszCurrentArg++;
             }
 
-            bool IsDigit()
-            {
+            bool IsDigit() const {
                 return (CurChar() >='0' && CurChar() <= '9');
             }
 
-            bool IsHexDigit()
+            bool IsHexDigit() const
             {
                 return (CurChar() >= '0' && CurChar() <= '9') ||
                     (CurChar() >= 'A' && CurChar() <= 'F') ||

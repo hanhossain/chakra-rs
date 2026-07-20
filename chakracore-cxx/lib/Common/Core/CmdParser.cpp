@@ -617,13 +617,13 @@ CmdLineArgsParser::ParseFlag()
 ///----------------------------------------------------------------------------
 
 int
-CmdLineArgsParser::Parse(std::vector<std::u16string> vargs)
+CmdLineArgsParser::Parse(const std::vector<std::u16string> &vargs)
 {
     int err = 0;
 
     for(int i = 1; i < vargs.size(); i++)
     {
-        if ((err = Parse(vargs[i].data())) != 0)
+        if ((err = Parse(vargs[i].c_str())) != 0)
         {
             break;
         }
@@ -632,14 +632,14 @@ CmdLineArgsParser::Parse(std::vector<std::u16string> vargs)
     return err;
 }
 
-int CmdLineArgsParser::Parse(char16_t* oneArg) throw()
+int CmdLineArgsParser::Parse(const char16_t* oneArg) throw()
 {
     int err = 0;
     char16_t buffer[MaxTokenSize];
     memset((buffer),0,(sizeof(buffer)));
 
     this->pszCurrentArg = oneArg;
-    AssertMsg(NULL != this->pszCurrentArg, "How can command line give NULL argv's");
+    AssertMsg(nullptr != this->pszCurrentArg, "How can command line give NULL argv's");
     try
     {
         switch(CurChar())
@@ -689,7 +689,7 @@ int CmdLineArgsParser::Parse(char16_t* oneArg) throw()
 CmdLineArgsParser::CmdLineArgsParser(ICustomConfigFlags * pCustomConfigFlags, Js::ConfigFlagsTable& flagTable) :
     flagTable(flagTable), pCustomConfigFlags(pCustomConfigFlags)
 {
-    this->pszCurrentArg = NULL;
+    this->pszCurrentArg = nullptr;
 }
 
 CmdLineArgsParser::~CmdLineArgsParser()
