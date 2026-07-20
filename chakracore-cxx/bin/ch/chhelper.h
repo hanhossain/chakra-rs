@@ -1,4 +1,4 @@
 #pragma once
 #include <rust/cxx.h>
 
-int main_internal(const rust::Vec<rust::String> &args);
+int main_internal(rust::Vec<rust::String> &args);

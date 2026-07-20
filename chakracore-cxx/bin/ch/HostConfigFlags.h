@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <rust/cxx.h>
+
 #include "Core/ICustomConfigFlags.h"
 class HostConfigFlags : public ICustomConfigFlags
 {
@@ -26,10 +28,8 @@ public:
     bool ExecuteWithBgParse; bool ExecuteWithBgParseIsEnabled;
 
     static HostConfigFlags flags;
-    static std::vector<std::u16string> vargsVal;
+    static rust::Vec<rust::String> vargsVal;
     static void(*pfnPrintUsage)();
-
-    static void HandleArgsFlag(std::vector<std::u16string> &vargs);
 
     virtual bool ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser) override;
     virtual void PrintUsage() override;

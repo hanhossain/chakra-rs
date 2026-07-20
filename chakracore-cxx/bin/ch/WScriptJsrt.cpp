@@ -101,15 +101,7 @@ bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
         JsValueRef value;
         JsValueRef index;
 
-        char *argNarrow;
-        if (FAILED(WideStringToNarrowDynamic(HostConfigFlags::vargsVal[i].c_str(), &argNarrow)))
-        {
-            return false;
-        }
-        JsErrorCode errCode  = ChakraRTInterface::JsCreateString(
-            argNarrow,
-            strlen(argNarrow), &value);
-        free(argNarrow);
+        JsErrorCode errCode = ChakraRTInterface::JsCreateString(HostConfigFlags::vargsVal[i], &value);
         IfJsrtErrorFail(errCode, false);
 
         IfJsrtErrorFail(ChakraRTInterface::JsDoubleToNumber(i, &index), false);
@@ -645,7 +637,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char 
 
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
     unsigned int fileContentLength = (fileContent == nullptr) ? 0 : (unsigned int)strlen(fileContent);
- 
+
     errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)fileContent,
         fileContentLength, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
     if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent != nullptr && !HostConfigFlags::flags.IgnoreScriptErrorCode && moduleErrMap[requestModule] == RootModule)
@@ -807,7 +799,7 @@ JsValueRef WScriptJsrt::MonotonicNowCallback(JsValueRef callee, bool isConstruct
     JsErrorCode errorCode = JsNoError;
     [[maybe_unused]] int32_t hr = S_OK;
     JsValueRef result;
-    
+
     IfJsrtErrorSetGo(ChakraRTInterface::JsDoubleToNumber(static_cast<double>(std::chrono::steady_clock::now().time_since_epoch().count()) / 1e6 /* ns in ms */, &result));
 
     return result;
@@ -1318,36 +1310,36 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
         buflength += gotlength;
 
         // are we done?
-        if (buf[buflength - 2] == '\r' && buf[buflength - 1] == '\n') 
+        if (buf[buflength - 2] == '\r' && buf[buflength - 1] == '\n')
         {
             buf[buflength - 1] = '\0';
             buf[buflength - 2] = '\0';
             buflength -= 2;
             break;
         }
-        else if (buf[buflength - 1] == '\n') 
+        else if (buf[buflength - 1] == '\n')
         {
             buf[buflength - 1] = '\0';
             buflength -= 1;
             break;
         }
-        else if (buflength < bufsize - 1) 
+        else if (buflength < bufsize - 1)
         {
             break;
         }
 
         // Else, grow our buffer for another pass.
         bufsize *= 2;
-        if (bufsize > buflength) 
+        if (bufsize > buflength)
         {
             tmp = static_cast<char*>(realloc(buf, bufsize));
         }
-        else 
+        else
         {
             goto Error;
         }
 
-        if (!tmp) 
+        if (!tmp)
         {
             goto Error;
         }
@@ -1356,13 +1348,13 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
     }
 
     //Treat the empty string specially.
-    if (buflength == 0) 
+    if (buflength == 0)
     {
         if (feof(stdin))
         {
             goto Error;
         }
-        else 
+        else
         {
             JsValueRef emptyStringObject;
             IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(buf, buflength, &emptyStringObject));
@@ -1371,7 +1363,7 @@ JsValueRef WScriptJsrt::ReadLineStdinCallback(JsValueRef callee, bool isConstruc
         }
     }
 
-   
+
     // Turn buf into a JSString. Note that buflength includes the trailing null character.
     JsValueRef stringObject;
     IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(buf, buflength, &stringObject));
@@ -1653,7 +1645,7 @@ JsValueRef WScriptJsrt::GetProxyPropertiesCallback(JsValueRef callee, bool isCon
             JsPropertyIdRef targetProperty;
             JsPropertyIdRef handlerProperty;
             JsPropertyIdRef revokedProperty;
-            
+
             IfJsrtErrorSetGo(CreatePropertyIdFromString("target", &targetProperty));
             IfJsrtErrorSetGo(CreatePropertyIdFromString("handler", &handlerProperty));
             IfJsrtErrorSetGo(CreatePropertyIdFromString("revoked", &revokedProperty));
@@ -1738,10 +1730,10 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
                         JsPropertyIdRef columnPropertyId = JS_INVALID_REFERENCE;
                         JsValueRef columnProperty = JS_INVALID_REFERENCE;
-                        
+
                         int line;
                         int column;
-                        
+
                         IfJsrtErrorFail(CreatePropertyIdFromString("line", &linePropertyId), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, linePropertyId, &lineProperty), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(lineProperty, &line), false);
@@ -1770,7 +1762,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
                 int line;
                 int column;
-                
+
                 IfJsrtErrorFail(CreatePropertyIdFromString("line", &linePropertyId), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, linePropertyId, &lineProperty), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(lineProperty, &line), false);
@@ -2073,7 +2065,7 @@ JsErrorCode WScriptJsrt::NotifyModuleReadyCallback(_In_opt_ JsModuleRecord refer
         }
         std::println("NotifyModuleReadyCallback(exception) {}", fileName.GetString());
     }
-    
+
     if (moduleErrMap[referencingModule] != ErroredModule)
     {
         WScriptJsrt::ModuleMessage* moduleMessage =
@@ -2128,7 +2120,7 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
         std::println("Promise rejection handled");
     }
 
-    JsPropertyIdRef stackPropertyID; 
+    JsPropertyIdRef stackPropertyID;
     JsErrorCode error = ChakraRTInterface::JsCreatePropertyId("stack", strlen("stack"), &stackPropertyID);
     if (error == JsNoError)
     {
@@ -2145,7 +2137,7 @@ void WScriptJsrt::PromiseRejectionTrackerCallback(JsValueRef promise, JsValueRef
             }
         }
     }
-    
+
     if (error != JsNoError)
     {
         // weren't able to print stack, so just convert reason to a string

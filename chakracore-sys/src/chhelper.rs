@@ -8,7 +8,7 @@ pub mod ffi {
     unsafe extern "C++" {
         include!("chhelper.h");
 
-        fn main_internal(args: &Vec<String>) -> i32;
+        fn main_internal(args: &mut Vec<String>) -> i32;
     }
 }
 

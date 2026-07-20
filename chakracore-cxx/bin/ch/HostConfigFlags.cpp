@@ -8,7 +8,7 @@
 #include <chakracore-sys/src/str_helper.rs.h>
 
 HostConfigFlags HostConfigFlags::flags;
-std::vector<std::u16string> HostConfigFlags::vargsVal;
+rust::Vec<rust::String> HostConfigFlags::vargsVal;
 void(*HostConfigFlags::pfnPrintUsage)();
 
 template <>
@@ -191,26 +191,4 @@ void HostConfigFlags::PrintUsage()
     std::println();
     HostConfigFlags::PrintUsageString();
     ChakraRTInterface::PrintConfigFlagsUsageString();
-}
-
-void HostConfigFlags::HandleArgsFlag(std::vector<std::u16string> &vargs)
-{
-    const auto start = std::ranges::find(vargs, u"-args");
-    if (start == std::ranges::end(vargs))
-    {
-        return;
-    }
-
-    const auto end = std::ranges::find_if(start, std::ranges::end(vargs), [](const std::u16string &s)
-    {
-        return chakra_rs::str_helper::to_lowercase(s.c_str()) == u"-endargs";
-    });
-    if (end == std::ranges::end(vargs))
-    {
-        return;
-    }
-
-    auto subrange = std::ranges::subrange(start + 1, end);
-    HostConfigFlags::vargsVal = std::ranges::to<std::vector>(subrange);
-    vargs.erase(start, end + 1);
 }

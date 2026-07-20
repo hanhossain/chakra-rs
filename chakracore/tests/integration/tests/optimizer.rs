@@ -2112,7 +2112,7 @@ fn test115_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "test115.js",
-        compile_flags: vec!["-args", "bailout", "-endArgs"],
+        compile_flags: vec!["-args", "bailout", "-endargs"],
         tags: HashSet::from(["require_backend", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -3088,7 +3088,7 @@ fn array_check_hoist_bailout_js(#[case] variant: Variant) {
             "-off:arrayCheckHoist",
             "-args",
             "bailout",
-            "-endArgs",
+            "-endargs",
             "-dynamicprofileinput:profile.dpl.ArrayCheckHoist.js",
         ],
         tags: HashSet::from([
@@ -3115,7 +3115,7 @@ fn array_check_hoist_bailout_js2(#[case] variant: Variant) {
         compile_flags: vec![
             "-args",
             "bailout",
-            "-endArgs",
+            "-endargs",
             "-off:fieldCopyProp",
             "-off:objTypeSpec",
             "-dynamicprofileinput:profile.dpl.ArrayCheckHoist.js",
@@ -3144,7 +3144,7 @@ fn array_check_hoist_bailout_js3(#[case] variant: Variant) {
         compile_flags: vec![
             "-args",
             "bailout",
-            "-endArgs",
+            "-endargs",
             "-dynamicprofileinput:profile.dpl.ArrayCheckHoist.js",
         ],
         tags: HashSet::from([

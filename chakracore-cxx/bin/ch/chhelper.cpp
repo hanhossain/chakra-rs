@@ -9,6 +9,7 @@
 #include <print>
 
 #include <chakracore-sys/src/chhelper.rs.h>
+#include <chakracore-sys/src/str_helper.rs.h>
 #include <pthread.h>
 #include <rust/cxx.h>
 
@@ -573,8 +574,14 @@ int32_t ExecuteTestWithMemoryCheck(const std::string &fileName, JsRuntimeHandle 
     return hr;
 }
 
-int main_internal(const rust::Vec<rust::String> &args)
+int main_internal(rust::Vec<rust::String> &args)
 {
+    JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
+    JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
+
+    HostConfigFlags::pfnPrintUsage = chakra_rs::chhelper::print_usage;
+    HostConfigFlags::vargsVal = chakra_rs::str_helper::split_args(args);
+
     std::vector<std::u16string> vargs;
 
     for (auto arg : args)
@@ -584,29 +591,18 @@ int main_internal(const rust::Vec<rust::String> &args)
         vargs.push_back(std::move(s));
     }
 
-    int retval = -1;
-    int32_t exitCode = E_FAIL;
-    bool success = false;
-    ChakraRTInterface::ArgInfo argInfo;
-
-    JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
-    JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
-
-    HostConfigFlags::pfnPrintUsage = chakra_rs::chhelper::print_usage;
-
-    HostConfigFlags::HandleArgsFlag(vargs);
-
-    argInfo = {vargs, chakra_rs::chhelper::print_usage, {}};
-    success = ChakraRTInterface::LoadChakraDll(&argInfo);
+    ChakraRTInterface::ArgInfo argInfo = {vargs, chakra_rs::chhelper::print_usage, {}};
+    const bool success = ChakraRTInterface::LoadChakraDll(&argInfo);
 
     // handle command line flags
     OnChakraCoreLoaded();
 
     if (argInfo.filename_.empty())
     {
-        WideStringToNarrowDynamic(vargs[1].c_str(), argInfo.filename_);
+        argInfo.filename_ = static_cast<std::string>(args[1]);
     }
 
+    int32_t exitCode = E_FAIL;
     if (success)
     {
         if (HostConfigFlags::flags.CustomConfigFile != NULL)
@@ -619,7 +615,7 @@ int main_internal(const rust::Vec<rust::String> &args)
     }
 
     PAL_Shutdown();
-    retval = exitCode;
+    int retval = exitCode;
 
 #ifdef NO_SANITIZE_ADDRESS_CHECK
     pthread_exit(&retval);

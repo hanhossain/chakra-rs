@@ -17,7 +17,7 @@ fn main() -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
-    chakracore::run(&args)
+    chakracore::run(args)
 }
 
 fn print_version() {
