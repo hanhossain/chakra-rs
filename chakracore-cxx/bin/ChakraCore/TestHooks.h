@@ -17,7 +17,6 @@ struct TestHooks
     typedef int32_t(*PrintConfigFlagsUsageStringPtr)(void);
     typedef int32_t(*SetAssertToConsoleFlagPtr)(bool flag);
     typedef int32_t(*SetEnableCheckMemoryLeakOutputPtr)(bool flag);
-    typedef void(* NotifyUnhandledExceptionPtr)(PEXCEPTION_POINTERS exceptionInfo);
     typedef int(*LogicalStringCompareImpl)(const char16_t* p1, int p1size, const char16_t* p2, int p2size);
 
     SetConfigFlagsPtr pfSetConfigFlags;
@@ -1568,8 +1567,6 @@ int32_t (*pfSetKeepRecyclerTrackDataFlag)(bool flag);
 bool (*pfIsEnabledMaxSingleAllocSizeInMBFlag)();
 int32_t (*pfGetMaxSingleAllocSizeInMBFlag)(int *flag);
 int32_t (*pfSetMaxSingleAllocSizeInMBFlag)(int flag);
-
-    NotifyUnhandledExceptionPtr pfnNotifyUnhandledException;
 };
 
 int32_t OnChakraCoreLoaded();

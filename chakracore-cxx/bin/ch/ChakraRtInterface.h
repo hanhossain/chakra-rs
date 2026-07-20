@@ -67,14 +67,6 @@ public:
 #endif
     static int32_t SetOOPCFGRegistrationFlag(bool flag) { return CHECKED_CALL(SetOOPCFGRegistrationFlag, flag); }
 
-    static void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
-    {
-        if (m_testHooksSetup && m_testHooks.pfnNotifyUnhandledException != NULL)
-        {
-            m_testHooks.pfnNotifyUnhandledException(exceptionInfo);
-        }
-    }
-
     static JsErrorCode WINAPI JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, threadService, runtime); }
     static JsErrorCode WINAPI JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return chakracore::jsrt::JsCreateContext(runtime, newContext); }
     static JsErrorCode WINAPI JsSetObjectBeforeCollectCallback(JsRef ref, void* callbackState, JsObjectBeforeCollectCallback objectBeforeCollectCallback) { return chakracore::jsrt::JsSetObjectBeforeCollectCallback(ref, callbackState, objectBeforeCollectCallback); }
