@@ -106,10 +106,6 @@ int32_t SetEnableCheckMemoryLeakOutput(bool flag)
     return S_OK;
 }
 
-void NotifyUnhandledException(PEXCEPTION_POINTERS exceptionInfo)
-{
-}
-
 #if DBG
 bool IsEnabledArrayValidateFlag()
 {
@@ -7221,7 +7217,6 @@ IsEnabledEnableBGFreeZeroFlag, GetEnableBGFreeZeroFlag, SetEnableBGFreeZeroFlag,
 IsEnabledKeepRecyclerTrackDataFlag, GetKeepRecyclerTrackDataFlag, SetKeepRecyclerTrackDataFlag,
 
 IsEnabledMaxSingleAllocSizeInMBFlag, GetMaxSingleAllocSizeInMBFlag, SetMaxSingleAllocSizeInMBFlag,
-        NotifyUnhandledException
     };
     return ChakraRTInterface::InitializeTestHooks(testHooks);
 }
