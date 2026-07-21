@@ -702,7 +702,6 @@ namespace Js
         u"BgJitDelay",
 
         u"CheckAlignment",
-        u"CheckOpHelpers",
         u"CloneInlinedPolymorphicCaches",
         u"ConcurrentRuntime",
         u"ConstructorInlineThreshold",
@@ -1746,7 +1745,6 @@ namespace Js
         u"Delay to wait for speculative jitting before starting script execution",
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
-        u"Verify opHelper labels in the JIT are set properly",
         u"Clones polymorphic inline caches in inlined functions",
         u"Enable Concurrent GC and background JIT when creating runtime",
         u"Maximum size in bytecodes of a constructor inline candidate with monomorphic field access",
@@ -2385,7 +2383,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3047,7 +3044,6 @@ namespace Js
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
         CheckAlignment(false),
-        CheckOpHelpers(false),
         CloneInlinedPolymorphicCaches(DEFAULT_CONFIG_CloneInlinedPolymorphicCaches),
         ConcurrentRuntime(DEFAULT_CONFIG_ConcurrentRuntime),
         ConstructorInlineThreshold(DEFAULT_CONFIG_ConstructorInlineThreshold),
@@ -4378,8 +4374,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return FlagBoolean;
-        case CheckOpHelpersFlag:
-            return FlagBoolean;
         case CloneInlinedPolymorphicCachesFlag:
             return FlagBoolean;
         case ConcurrentRuntimeFlag:
@@ -5459,8 +5453,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
-        case CheckOpHelpersFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckOpHelpers));
         case CloneInlinedPolymorphicCachesFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CloneInlinedPolymorphicCaches));
         case ConcurrentRuntimeFlag:
@@ -6557,9 +6549,6 @@ namespace Js
             break;
 
         case CheckAlignmentFlag:
-            retValue = false;
-            break;
-        case CheckOpHelpersFlag:
             retValue = false;
             break;
         case CloneInlinedPolymorphicCachesFlag:

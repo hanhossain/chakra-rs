@@ -415,20 +415,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
 }
 #ifdef CHECK_MEMORY_LEAK
 #endif
-bool IsEnabledCheckOpHelpersFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::CheckOpHelpersFlag);
-}
-int32_t GetCheckOpHelpersFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.CheckOpHelpers;
-    return S_OK;
-}
-int32_t SetCheckOpHelpersFlag(bool flag)
-{
-    Js::Configuration::Global.flags.CheckOpHelpers = flag;
-    return S_OK;
-}
 bool IsEnabledCloneInlinedPolymorphicCachesFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::CloneInlinedPolymorphicCachesFlag);
@@ -6111,7 +6097,6 @@ IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
-IsEnabledCheckOpHelpersFlag, GetCheckOpHelpersFlag, SetCheckOpHelpersFlag,
 IsEnabledCloneInlinedPolymorphicCachesFlag, GetCloneInlinedPolymorphicCachesFlag, SetCloneInlinedPolymorphicCachesFlag,
 IsEnabledConcurrentRuntimeFlag, GetConcurrentRuntimeFlag, SetConcurrentRuntimeFlag,
 IsEnabledConstructorInlineThresholdFlag, GetConstructorInlineThresholdFlag, SetConstructorInlineThresholdFlag,
