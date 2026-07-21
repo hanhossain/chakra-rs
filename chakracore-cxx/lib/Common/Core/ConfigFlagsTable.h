@@ -75,7 +75,6 @@ namespace Js
         // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         WasmSimdFlag,
 
-        BailOnNoProfileRejitLimitFlag,
         BaselineModeFlag,
         DumpOnCrashFlag,
         FullMemoryDumpFlag,
@@ -1520,8 +1519,6 @@ namespace Js
         // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         Boolean WasmSimd;
 
-        // TODO (hanhossain): remove flag
-        Number BailOnNoProfileRejitLimit;
         Boolean BaselineMode;
         // TODO (hanhossain): remove flag
         String DumpOnCrash;

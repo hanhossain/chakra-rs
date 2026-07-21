@@ -569,7 +569,6 @@ namespace Js
 #if DBG
 #define DEFAULT_CONFIG_SkipFuncCountForBailOnNoProfile (0) //Initial Number of functions in a func body to be skipped from forcibly inserting BailOnNoProfile.
 #endif
-#define DEFAULT_CONFIG_BailOnNoProfileRejitLimit (50)   // The limit of bailout on no profile info before disable all the no profile bailouts
 #define DEFAULT_CONFIG_CallsToBailoutsRatioForRejit 10   // Ratio of function calls to bailouts above which a rejit is considered
 #define DEFAULT_CONFIG_LoopIterationsToBailoutsRatioForRejit 50 // Ratio of loop iteration count to bailouts above which a rejit of the loop body is considered
 #define DEFAULT_CONFIG_MinBailOutsBeforeRejit 2         // Minimum number of bailouts for a single bailout record after which a rejit is considered
@@ -702,7 +701,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         u"WasmSimd",
 
-        u"BailOnNoProfileRejitLimit",
         u"BaselineMode",
         u"DumpOnCrash",
         u"FullMemoryDump",
@@ -1766,7 +1764,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         u"Enable SIMD in WebAssembly",
 
-        u"The limit of bailout on no profile info before we disable the bailouts",
         u"Dump only stable content that can be used for baseline comparison",
         u"generate heap dump on asserts or unhandled exception if set",
         u"Will perform a full memory dump when -DumpOnCrash is supplied.",
@@ -2425,7 +2422,6 @@ namespace Js
 
 // WebAssembly Experimental Features
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3107,7 +3103,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         WasmSimd(true),
 
-        BailOnNoProfileRejitLimit(DEFAULT_CONFIG_BailOnNoProfileRejitLimit),
         BaselineMode(false),
         DumpOnCrash(nullptr),
         FullMemoryDump(nullptr),
@@ -4451,8 +4446,6 @@ namespace Js
         case WasmSimdFlag:
             return FlagBoolean;
 
-        case BailOnNoProfileRejitLimitFlag:
-            return FlagNumber;
         case BaselineModeFlag:
             return FlagBoolean;
         case DumpOnCrashFlag:
@@ -5570,8 +5563,6 @@ namespace Js
         case WasmSimdFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmSimd));
 
-        case BailOnNoProfileRejitLimitFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&BailOnNoProfileRejitLimit));
         case BaselineModeFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BaselineMode));
         case DumpOnCrashFlag:
