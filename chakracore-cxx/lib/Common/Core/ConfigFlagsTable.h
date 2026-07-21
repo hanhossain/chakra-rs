@@ -82,7 +82,6 @@ namespace Js
         BgJitFlag,
         BgJitDelayFlag,
 
-        HybridFgJitFlag,
         HybridFgJitBgQueueLengthThresholdFlag,
         BytecodeHistFlag,
         CurrentSourceInfoFlag,
@@ -1517,8 +1516,6 @@ namespace Js
         Boolean BgJit;
         Number BgJitDelay;
 
-        // TODO (hanhossain): remove flag
-        Boolean HybridFgJit;
         // TODO (hanhossain): remove flag
         Number HybridFgJitBgQueueLengthThreshold;
         // TODO (hanhossain): remove flag

@@ -1428,7 +1428,7 @@ NativeCodeGenerator::ShouldProcessInForeground(const bool willWaitForJob, const 
     return
         willWaitForJob ||
         (numJobsInQueue > (uint)CONFIG_FLAG(HybridFgJitBgQueueLengthThreshold) &&
-            (CONFIG_FLAG(HybridFgJit) || isOptimizedForManyInstances));
+            isOptimizedForManyInstances);
 }
 
 void
