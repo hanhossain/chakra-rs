@@ -60,7 +60,6 @@ namespace Js
         WasmMathExFilterFlag,
         WasmCheckVersionFlag,
         WasmAssignModuleIDFlag,
-        WasmFoldFlag,
         WasmIgnoreResponseFlag,
         WasmMaxTableSizeFlag,
         WasmThreadsFlag,
@@ -1513,8 +1512,6 @@ namespace Js
         Boolean WasmMathExFilter;
         Boolean WasmCheckVersion;
         Boolean WasmAssignModuleID;
-        // TODO (hanhossain): remove flag
-        Boolean WasmFold;
         // TODO (hanhossain): remove flag
         Boolean WasmIgnoreResponse;
         // TODO (hanhossain): remove flag

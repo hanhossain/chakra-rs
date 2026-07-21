@@ -6319,16 +6319,13 @@ GlobOpt::TypeSpecialization(
         {
             if (GetIsAsmJSFunc())
             {
-                if (CONFIG_FLAG(WasmFold))
-                {
-                    bool success = instr->GetSrc1()->IsInt64() ?
-                        this->OptConstFoldBinaryWasm<long>(&instr, src1Val, src2Val, pDstVal) :
-                        this->OptConstFoldBinaryWasm<int>(&instr, src1Val, src2Val, pDstVal);
+                bool success = instr->GetSrc1()->IsInt64() ?
+                    this->OptConstFoldBinaryWasm<long>(&instr, src1Val, src2Val, pDstVal) :
+                    this->OptConstFoldBinaryWasm<int>(&instr, src1Val, src2Val, pDstVal);
 
-                    if (success)
-                    {
-                        return instr;
-                    }
+                if (success)
+                {
+                    return instr;
                 }
             }
             else
