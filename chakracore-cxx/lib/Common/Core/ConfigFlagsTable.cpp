@@ -279,7 +279,6 @@ namespace Js
 #define DEFAULT_CONFIG_WasmSignExtends      (true)
 #define DEFAULT_CONFIG_WasmNontrapping      (true)
 #define DEFAULT_CONFIG_CurrentSourceInfo    (true)
-#define DEFAULT_CONFIG_HybridFgJitBgQueueLengthThreshold (32)
 #define DEFAULT_CONFIG_Prejit               (false)
 #define DEFAULT_CONFIG_ParserStateCache     (true)
 #define DEFAULT_CONFIG_CompressParserStateCache (false)
@@ -703,7 +702,6 @@ namespace Js
         u"BgJit",
         u"BgJitDelay",
 
-        u"HybridFgJitBgQueueLengthThreshold",
         u"BytecodeHist",
         u"CurrentSourceInfo",
         u"CFGLog",
@@ -1756,7 +1754,6 @@ namespace Js
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
         u"Delay to wait for speculative jitting before starting script execution",
 
-        u"The background job queue length must exceed this threshold to consider jitting in the foreground",
         u"Provide a histogram of the bytecodes run by the script. (NoNative required).",
         u"Enable IASD get current script source info",
         u"Log CFG checks",
@@ -2405,7 +2402,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3075,7 +3071,6 @@ namespace Js
         BgJit(true),
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
-        HybridFgJitBgQueueLengthThreshold(DEFAULT_CONFIG_HybridFgJitBgQueueLengthThreshold),
         BytecodeHist(false),
         CurrentSourceInfo(DEFAULT_CONFIG_CurrentSourceInfo),
         CFGLog(false),
@@ -4414,8 +4409,6 @@ namespace Js
         case BgJitDelayFlag:
             return FlagNumber;
 
-        case HybridFgJitBgQueueLengthThresholdFlag:
-            return FlagNumber;
         case BytecodeHistFlag:
             return FlagBoolean;
         case CurrentSourceInfoFlag:
@@ -5511,8 +5504,6 @@ namespace Js
         case BgJitDelayFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelay));
 
-        case HybridFgJitBgQueueLengthThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&HybridFgJitBgQueueLengthThreshold));
         case BytecodeHistFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BytecodeHist));
         case CurrentSourceInfoFlag:

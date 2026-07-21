@@ -399,20 +399,6 @@ int32_t SetBgJitDelayFlag(int flag)
     return S_OK;
 }
 
-bool IsEnabledHybridFgJitBgQueueLengthThresholdFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::HybridFgJitBgQueueLengthThresholdFlag);
-}
-int32_t GetHybridFgJitBgQueueLengthThresholdFlag(int *flag)
-{
-    *flag = Js::Configuration::Global.flags.HybridFgJitBgQueueLengthThreshold;
-    return S_OK;
-}
-int32_t SetHybridFgJitBgQueueLengthThresholdFlag(int flag)
-{
-    Js::Configuration::Global.flags.HybridFgJitBgQueueLengthThreshold = flag;
-    return S_OK;
-}
 bool IsEnabledBytecodeHistFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::BytecodeHistFlag);
@@ -6210,7 +6196,6 @@ IsEnabledBailOutAtEveryByteCodeFlag, GetBailOutAtEveryByteCodeFlag, SetBailOutAt
 IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
-IsEnabledHybridFgJitBgQueueLengthThresholdFlag, GetHybridFgJitBgQueueLengthThresholdFlag, SetHybridFgJitBgQueueLengthThresholdFlag,
 IsEnabledBytecodeHistFlag, GetBytecodeHistFlag, SetBytecodeHistFlag,
 IsEnabledCurrentSourceInfoFlag, GetCurrentSourceInfoFlag, SetCurrentSourceInfoFlag,
 IsEnabledCFGLogFlag, GetCFGLogFlag, SetCFGLogFlag,

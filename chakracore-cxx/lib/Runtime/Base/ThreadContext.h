@@ -311,7 +311,6 @@ private:
 #define DEFAULT_CONFIG_WasmSignExtends      (true)
 #define DEFAULT_CONFIG_WasmNontrapping      (true)
 #define DEFAULT_CONFIG_CurrentSourceInfo    (true)
-#define DEFAULT_CONFIG_HybridFgJitBgQueueLengthThreshold (32)
 #define DEFAULT_CONFIG_Prejit               (false)
 #define DEFAULT_CONFIG_ParserStateCache     (true)
 #define DEFAULT_CONFIG_CompressParserStateCache (false)
