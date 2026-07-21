@@ -38,9 +38,6 @@ struct TestHooks
 bool (*pfIsEnabledArrayValidateFlag)();
 int32_t (*pfGetArrayValidateFlag)(bool *flag);
 int32_t (*pfSetArrayValidateFlag)(bool flag);
-bool (*pfIsEnabledOOPJITFixupValidateFlag)();
-int32_t (*pfGetOOPJITFixupValidateFlag)(bool *flag);
-int32_t (*pfSetOOPJITFixupValidateFlag)(bool flag);
 #endif
 #ifdef ARENA_MEMORY_VERIFY
 bool (*pfIsEnabledArenaNoFreeListFlag)();

@@ -73,7 +73,6 @@ public:
 #endif
 public:
 
-    static void VerifyExistFixupEntry(void* targetAddr, void* addrToFixup, void* startAddress);
     static void AddFixupEntry(void* targetAddr, void* addrToFixup, void* startAddress, DataChunk * chunkList);
     static void AddFixupEntry(void* targetAddr, void* targetStartAddr, void* addrToFixup, void* startAddress, DataChunk * chunkList);
     static void AddFixupEntryForPointerArray(void* startAddress, DataChunk * chunkList);

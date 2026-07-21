@@ -51,7 +51,6 @@ namespace Js
     {
         #if DBG
         ArrayValidateFlag,
-        OOPJITFixupValidateFlag,
         #endif
         #ifdef ARENA_MEMORY_VERIFY
         ArenaNoFreeListFlag,
@@ -1516,7 +1515,6 @@ namespace Js
 
         #if DBG
             Boolean ArrayValidate;
-            Boolean OOPJITFixupValidate;
         #endif
         #ifdef ARENA_MEMORY_VERIFY
             Boolean ArenaNoFreeList;
