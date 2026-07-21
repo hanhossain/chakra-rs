@@ -31,6 +31,12 @@
 
 const int TotalNumberOfBuiltInProperties = Js::PropertyIds::_countJSOnlyProperty;
 
+#if ENABLE_NATIVE_CODEGEN
+/// Clear uniquePropertyGuard entries from recyclableData if number of invalidations of constructor caches happened are
+/// more than the threshold
+constexpr unsigned int ConstructorCacheInvalidationThreshold = 500;
+#endif
+
 /*
  * When we aren't adding any additional properties
  */
@@ -3198,7 +3204,7 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
     if (!isAllPropertyGuardsInvalidation)
     {
         this->recyclableData->constructorCacheInvalidationCount += count;
-        if (this->recyclableData->constructorCacheInvalidationCount > (uint)CONFIG_FLAG(ConstructorCacheInvalidationThreshold))
+        if (this->recyclableData->constructorCacheInvalidationCount > ConstructorCacheInvalidationThreshold)
         {
             // TODO: In future, we should compact the uniqueGuards dictionary so this function can be called from PreCollectionCallback
             // instead

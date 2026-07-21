@@ -595,7 +595,6 @@ namespace Js
 #define DEFAULT_CONFIG_FuncObjectInlineCacheThreshold   (2) // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
 #define DEFAULT_CONFIG_ShareInlineCaches (false)
 #define DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold (4)
-#define DEFAULT_CONFIG_ConstructorCacheInvalidationThreshold (500)
 
 #define DEFAULT_CONFIG_InMemoryTrace                (false)
 #define DEFAULT_CONFIG_InMemoryTraceBufferSize      (1024)
@@ -1256,8 +1255,6 @@ namespace Js
 
         u"ClearInlineCachesOnCollect",
         u"InlineCacheInvalidationListCompactionThreshold",
-        u"ConstructorCacheInvalidationThreshold",
-        u"GCMemoryThreshold",
 
 #if DBG
             u"SimulatePolyCacheWithOneTypeForInlineCacheIndex",
@@ -2275,9 +2272,6 @@ namespace Js
 
         u"Clear all inline caches on every garbage collection",
         u"Compact inline cache invalidation lists if their utilization falls below this threshold",
-        u"Clear uniquePropertyGuard entries from recyclableData if number of invalidations of constructor caches happened are more than the threshold.",
-
-        u"Threshold for allocation-based GC initiation (in MB)",
 
 #if DBG
             u"Use with SimulatePolyCacheWithOneTypeForFunction to simulate creating a polymorphic inline cache containing only one type due to a collision, for testing ObjTypeSpec",
@@ -2890,9 +2884,6 @@ namespace Js
 #endif
 
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-
         NoParentFlag,
 
 #if DBG
@@ -3529,9 +3520,6 @@ namespace Js
 
         ClearInlineCachesOnCollect(false),
         InlineCacheInvalidationListCompactionThreshold(DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold),
-        ConstructorCacheInvalidationThreshold(DEFAULT_CONFIG_ConstructorCacheInvalidationThreshold),
-
-        GCMemoryThreshold(0),
 
 #if DBG
             SimulatePolyCacheWithOneTypeForInlineCacheIndex(-1),
@@ -5211,11 +5199,6 @@ namespace Js
             return FlagBoolean;
         case InlineCacheInvalidationListCompactionThresholdFlag:
             return FlagNumber;
-        case ConstructorCacheInvalidationThresholdFlag:
-            return FlagNumber;
-
-        case GCMemoryThresholdFlag:
-            return FlagNumber;
 
         #if DBG
             case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:
@@ -6254,11 +6237,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ClearInlineCachesOnCollect));
         case InlineCacheInvalidationListCompactionThresholdFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&InlineCacheInvalidationListCompactionThreshold));
-        case ConstructorCacheInvalidationThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&ConstructorCacheInvalidationThreshold));
-
-        case GCMemoryThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&GCMemoryThreshold));
 
         #if DBG
             case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:

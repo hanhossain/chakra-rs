@@ -622,9 +622,6 @@ namespace Js
 
         ClearInlineCachesOnCollectFlag,
         InlineCacheInvalidationListCompactionThresholdFlag,
-        ConstructorCacheInvalidationThresholdFlag,
-
-        GCMemoryThresholdFlag,
 
         #if DBG
             SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag,
@@ -2294,11 +2291,6 @@ namespace Js
         Boolean ClearInlineCachesOnCollect;
         // TODO (hanhossain): remove flag
         Number InlineCacheInvalidationListCompactionThreshold;
-        // TODO (hanhossain): remove flag
-        Number ConstructorCacheInvalidationThreshold;
-
-        // TODO (hanhossain): remove flag
-        Number GCMemoryThreshold;
 
         #if DBG
             Number SimulatePolyCacheWithOneTypeForInlineCacheIndex;

@@ -265,12 +265,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     this->parallelMarkContext1.SetMaxPageCount(GetRecyclerFlagsTable().MaxMarkStackPageCount);
     this->parallelMarkContext2.SetMaxPageCount(GetRecyclerFlagsTable().MaxMarkStackPageCount);
     this->parallelMarkContext3.SetMaxPageCount(GetRecyclerFlagsTable().MaxMarkStackPageCount);
-
-    if (GetRecyclerFlagsTable().IsEnabled(Js::GCMemoryThresholdFlag))
-    {
-        // Note, we can't do this in the constructor for RecyclerHeuristic::Instance because it runs before config is processed
-        RecyclerHeuristic::Instance.ConfigureBaseFactor(GetRecyclerFlagsTable().GCMemoryThreshold);
-    }
 }
 
 #if DBG
