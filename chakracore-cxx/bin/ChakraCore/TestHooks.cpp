@@ -235,20 +235,6 @@ int32_t SetWasmAssignModuleIDFlag(bool flag)
     Js::Configuration::Global.flags.WasmAssignModuleID = flag;
     return S_OK;
 }
-bool IsEnabledWasmIgnoreLimitsFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::WasmIgnoreLimitsFlag);
-}
-int32_t GetWasmIgnoreLimitsFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.WasmIgnoreLimits;
-    return S_OK;
-}
-int32_t SetWasmIgnoreLimitsFlag(bool flag)
-{
-    Js::Configuration::Global.flags.WasmIgnoreLimits = flag;
-    return S_OK;
-}
 bool IsEnabledWasmFoldFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::WasmFoldFlag);
@@ -6458,7 +6444,6 @@ IsEnabledWasmSharedArrayVirtualBufferFlag, GetWasmSharedArrayVirtualBufferFlag, 
 IsEnabledWasmMathExFilterFlag, GetWasmMathExFilterFlag, SetWasmMathExFilterFlag,
 IsEnabledWasmCheckVersionFlag, GetWasmCheckVersionFlag, SetWasmCheckVersionFlag,
 IsEnabledWasmAssignModuleIDFlag, GetWasmAssignModuleIDFlag, SetWasmAssignModuleIDFlag,
-IsEnabledWasmIgnoreLimitsFlag, GetWasmIgnoreLimitsFlag, SetWasmIgnoreLimitsFlag,
 IsEnabledWasmFoldFlag, GetWasmFoldFlag, SetWasmFoldFlag,
 IsEnabledWasmIgnoreResponseFlag, GetWasmIgnoreResponseFlag, SetWasmIgnoreResponseFlag,
 IsEnabledWasmMaxTableSizeFlag, GetWasmMaxTableSizeFlag, SetWasmMaxTableSizeFlag,
