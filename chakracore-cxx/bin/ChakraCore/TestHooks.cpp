@@ -414,20 +414,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
     return S_OK;
 }
 
-bool IsEnabledConstructorCallsRequiredToFinalizeCachedTypeFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::ConstructorCallsRequiredToFinalizeCachedTypeFlag);
-}
-int32_t GetConstructorCallsRequiredToFinalizeCachedTypeFlag(int *flag)
-{
-    *flag = Js::Configuration::Global.flags.ConstructorCallsRequiredToFinalizeCachedType;
-    return S_OK;
-}
-int32_t SetConstructorCallsRequiredToFinalizeCachedTypeFlag(int flag)
-{
-    Js::Configuration::Global.flags.ConstructorCallsRequiredToFinalizeCachedType = flag;
-    return S_OK;
-}
 bool IsEnabledPropertyCacheMissPenaltyFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::PropertyCacheMissPenaltyFlag);
@@ -6054,7 +6040,6 @@ IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
-IsEnabledConstructorCallsRequiredToFinalizeCachedTypeFlag, GetConstructorCallsRequiredToFinalizeCachedTypeFlag, SetConstructorCallsRequiredToFinalizeCachedTypeFlag,
 IsEnabledPropertyCacheMissPenaltyFlag, GetPropertyCacheMissPenaltyFlag, SetPropertyCacheMissPenaltyFlag,
 IsEnabledPropertyCacheMissThresholdFlag, GetPropertyCacheMissThresholdFlag, SetPropertyCacheMissThresholdFlag,
 IsEnabledPropertyCacheMissResetFlag, GetPropertyCacheMissResetFlag, SetPropertyCacheMissResetFlag,
