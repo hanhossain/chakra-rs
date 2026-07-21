@@ -2861,7 +2861,7 @@ NativeCodeGenerator::EnterScriptStart()
         return;
     }
 
-    if(CONFIG_FLAG(BgJitDelayFgBuffer) >= CONFIG_FLAG(BgJitDelay))
+    if(0 >= CONFIG_FLAG(BgJitDelay))
     {
         return;
     }
@@ -2895,7 +2895,7 @@ NativeCodeGenerator::EnterScriptStart()
 #endif
         );
 
-    Processor()->PrioritizeManagerAndWait(this, CONFIG_FLAG(BgJitDelay) - CONFIG_FLAG(BgJitDelayFgBuffer));
+    Processor()->PrioritizeManagerAndWait(this, CONFIG_FLAG(BgJitDelay));
 }
 
 void

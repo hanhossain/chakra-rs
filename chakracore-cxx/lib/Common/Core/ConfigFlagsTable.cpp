@@ -278,7 +278,6 @@ namespace Js
 #define DEFAULT_CONFIG_WasmMultiValue       (false)
 #define DEFAULT_CONFIG_WasmSignExtends      (true)
 #define DEFAULT_CONFIG_WasmNontrapping      (true)
-#define DEFAULT_CONFIG_BgJitDelayFgBuffer   (0)
 #define DEFAULT_CONFIG_BgJitPendingFuncCap  (31)
 #define DEFAULT_CONFIG_CurrentSourceInfo    (true)
 #define DEFAULT_CONFIG_CreateFunctionProxy  (true)
@@ -706,7 +705,6 @@ namespace Js
         u"BailOutByteCode",
         u"BgJit",
         u"BgJitDelay",
-        u"BgJitDelayFgBuffer",
         u"BgJitPendingFuncCap",
 
         u"CreateFunctionProxy",
@@ -1763,7 +1761,6 @@ namespace Js
         u"Byte code location to insert BailOut. Use with -prejit only",
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
         u"Delay to wait for speculative jitting before starting script execution",
-        u"When speculatively jitting in the foreground thread, do so for (BgJitDelay - BgJitDelayBuffer) milliseconds",
         u"Disable delay if pending function count larger then cap",
 
         u"Create function proxies instead of full function bodies",
@@ -2409,7 +2406,6 @@ namespace Js
 
 // WebAssembly Experimental Features
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3090,7 +3086,6 @@ namespace Js
         BailOutByteCode(),
         BgJit(true),
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
-        BgJitDelayFgBuffer(DEFAULT_CONFIG_BgJitDelayFgBuffer),
         BgJitPendingFuncCap(DEFAULT_CONFIG_BgJitPendingFuncCap),
 
         CreateFunctionProxy(DEFAULT_CONFIG_CreateFunctionProxy),
@@ -4433,8 +4428,6 @@ namespace Js
             return FlagBoolean;
         case BgJitDelayFlag:
             return FlagNumber;
-        case BgJitDelayFgBufferFlag:
-            return FlagNumber;
         case BgJitPendingFuncCapFlag:
             return FlagNumber;
 
@@ -5538,8 +5531,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BgJit));
         case BgJitDelayFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelay));
-        case BgJitDelayFgBufferFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelayFgBuffer));
         case BgJitPendingFuncCapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BgJitPendingFuncCap));
 
