@@ -696,7 +696,6 @@ namespace Js
 
         u"CheckAlignment",
         u"DebugBreak",
-        u"StatementDebugBreak",
 
         u"DebugWindow",
         u"ParserStateCache",
@@ -1730,7 +1729,6 @@ namespace Js
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
         u"Index of the function where you want to break",
-        u"Index of the statement where you want to break",
 
         u"Send console output to debugger window",
         u"Enable creation of parser state cache",
@@ -2358,7 +2356,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
 
@@ -3011,7 +3008,6 @@ namespace Js
 
         CheckAlignment(false),
         DebugBreak(),
-        StatementDebugBreak(),
 
         DebugWindow(false),
         ParserStateCache(DEFAULT_CONFIG_ParserStateCache),
@@ -4333,8 +4329,6 @@ namespace Js
             return FlagBoolean;
         case DebugBreakFlag:
             return FlagNumberSet;
-        case StatementDebugBreakFlag:
-            return FlagNumberTrioSet;
 
         case DebugWindowFlag:
             return FlagBoolean;
@@ -5394,8 +5388,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
         case DebugBreakFlag:
             return reinterpret_cast<void*>(const_cast<NumberSet*>(&DebugBreak));
-        case StatementDebugBreakFlag:
-            return reinterpret_cast<void*>(const_cast<NumberTrioSet*>(&StatementDebugBreak));
 
         case DebugWindowFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&DebugWindow));
