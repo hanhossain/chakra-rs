@@ -242,7 +242,6 @@ namespace Js
         byteCodeDataSize = 0;
         byteCodeAuxiliaryDataSize = 0;
         byteCodeAuxiliaryContextDataSize = 0;
-        memset(byteCodeHistogram, 0, sizeof(byteCodeHistogram));
 #endif
 
         this->allocId = threadContext->GetScriptContextCount();
@@ -4580,62 +4579,6 @@ ScriptContext::GetJitFuncRangeCache()
                 byteCodeAuxiliaryDataSize,
                 byteCodeAuxiliaryContextDataSize,
                 byteCodeDataSize + byteCodeAuxiliaryDataSize + byteCodeAuxiliaryContextDataSize);
-        }
-
-        if (Configuration::Global.flags.BytecodeHist)
-        {
-            Output::Print(u"ByteCode Histogram\n");
-            Output::Print(u"\n");
-
-            uint total = 0;
-            uint unique = 0;
-            for (int j = 0; j < static_cast<int>(OpCode::ByteCodeLast); j++)
-            {
-                total += byteCodeHistogram[j];
-                if (byteCodeHistogram[j] > 0)
-                {
-                    unique++;
-                }
-            }
-            Output::Print(u"%9u                     Total executed ops\n", total);
-            Output::Print(u"\n");
-
-            uint max = UINT_MAX;
-            double pctcume = 0.0;
-
-            while (true)
-            {
-                uint upper = 0;
-                int index = -1;
-                for (int j = 0; j < static_cast<int>(OpCode::ByteCodeLast); j++)
-                {
-                    if (OpCodeUtil::IsValidOpcode(static_cast<OpCode>(j)) && byteCodeHistogram[j] > upper && byteCodeHistogram[j] < max)
-                    {
-                        index = j;
-                        upper = byteCodeHistogram[j];
-                    }
-                }
-
-                if (index == -1)
-                {
-                    break;
-                }
-
-                max = byteCodeHistogram[index];
-
-                for (OpCode j = static_cast<OpCode>(0); j < OpCode::ByteCodeLast; j++)
-                {
-                    if (OpCodeUtil::IsValidOpcode(j) && max == byteCodeHistogram[static_cast<int>(j)])
-                    {
-                        double pct = static_cast<double>(max) / total;
-                        pctcume += pct;
-
-                        Output::Print(u"%9u  %5.1lf  %5.1lf  %04x %s\n", max, pct * 100, pctcume * 100, j, OpCodeUtil::GetOpCodeName(j));
-                    }
-                }
-            }
-            Output::Print(u"\n");
-            Output::Print(u"Unique opcodes: %d\n", unique);
         }
 
 #endif
