@@ -279,7 +279,6 @@ namespace Js
 #define DEFAULT_CONFIG_WasmSignExtends      (true)
 #define DEFAULT_CONFIG_WasmNontrapping      (true)
 #define DEFAULT_CONFIG_CurrentSourceInfo    (true)
-#define DEFAULT_CONFIG_CreateFunctionProxy  (true)
 #define DEFAULT_CONFIG_HybridFgJit          (false)
 #define DEFAULT_CONFIG_HybridFgJitBgQueueLengthThreshold (32)
 #define DEFAULT_CONFIG_Prejit               (false)
@@ -705,7 +704,6 @@ namespace Js
         u"BgJit",
         u"BgJitDelay",
 
-        u"CreateFunctionProxy",
         u"HybridFgJit",
         u"HybridFgJitBgQueueLengthThreshold",
         u"BytecodeHist",
@@ -1760,7 +1758,6 @@ namespace Js
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
         u"Delay to wait for speculative jitting before starting script execution",
 
-        u"Create function proxies instead of full function bodies",
         u"When background JIT is enabled, enable jitting in the foreground based on heuristics. This flag is only effective when OptimizeForManyInstances is disabled (UI threads).",
         u"The background job queue length must exceed this threshold to consider jitting in the foreground",
         u"Provide a histogram of the bytecodes run by the script. (NoNative required).",
@@ -2411,7 +2408,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3083,7 +3079,6 @@ namespace Js
         BgJit(true),
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
-        CreateFunctionProxy(DEFAULT_CONFIG_CreateFunctionProxy),
         HybridFgJit(DEFAULT_CONFIG_HybridFgJit),
         HybridFgJitBgQueueLengthThreshold(DEFAULT_CONFIG_HybridFgJitBgQueueLengthThreshold),
         BytecodeHist(false),
@@ -4424,8 +4419,6 @@ namespace Js
         case BgJitDelayFlag:
             return FlagNumber;
 
-        case CreateFunctionProxyFlag:
-            return FlagBoolean;
         case HybridFgJitFlag:
             return FlagBoolean;
         case HybridFgJitBgQueueLengthThresholdFlag:
@@ -5525,8 +5518,6 @@ namespace Js
         case BgJitDelayFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelay));
 
-        case CreateFunctionProxyFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&CreateFunctionProxy));
         case HybridFgJitFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&HybridFgJit));
         case HybridFgJitBgQueueLengthThresholdFlag:
@@ -6644,9 +6635,6 @@ namespace Js
             retValue = true;
             break;
 
-        case CreateFunctionProxyFlag:
-            retValue = DEFAULT_CONFIG_CreateFunctionProxy;
-            break;
         case HybridFgJitFlag:
             retValue = DEFAULT_CONFIG_HybridFgJit;
             break;

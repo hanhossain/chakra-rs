@@ -88,7 +88,7 @@ namespace Js
                 if (jsBuiltIn##class##_##type##Bytecode != nullptr) \
                     return; \
                 EnsureSourceInfo(); \
-                uint32_t flags = fscrJsBuiltIn | (CONFIG_FLAG(CreateFunctionProxy) && !scriptContext->IsProfiling() ? fscrAllowFunctionProxy : 0); \
+                uint32_t flags = fscrJsBuiltIn | (!scriptContext->IsProfiling() ? fscrAllowFunctionProxy : 0); \
                 SRCINFO* hsi = sourceInfo; \
                 Js::ByteCodeSerializer::DeserializeFromBuffer(scriptContext, flags, (LPCUTF8)nullptr, hsi, (byte*)js::Library_Bytecode_##class##_##type, nullptr, &jsBuiltIn##class##_##type##Bytecode); \
                 jsBuiltInByteCode = jsBuiltIn##class##_##type##Bytecode; \

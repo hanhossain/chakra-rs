@@ -1385,7 +1385,6 @@ FuncInfo * ByteCodeGenerator::StartBindFunction(const char16_t *name, uint nameL
         //  1. The parse node is not defer parsed
         //  2. Or creating function proxies is disallowed
         bool createFunctionBody = (pnodeFnc->pnodeBody != nullptr);
-        if (!CONFIG_FLAG(CreateFunctionProxy)) createFunctionBody = true;
 
         const Js::FunctionInfo::Attributes attributes = GetFunctionInfoAttributes(pnodeFnc);
 
