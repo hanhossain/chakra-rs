@@ -38,9 +38,6 @@ struct TestHooks
 bool (*pfIsEnabledArrayValidateFlag)();
 int32_t (*pfGetArrayValidateFlag)(bool *flag);
 int32_t (*pfSetArrayValidateFlag)(bool flag);
-bool (*pfIsEnabledMemOpMissingValueValidateFlag)();
-int32_t (*pfGetMemOpMissingValueValidateFlag)(bool *flag);
-int32_t (*pfSetMemOpMissingValueValidateFlag)(bool flag);
 bool (*pfIsEnabledOOPJITFixupValidateFlag)();
 int32_t (*pfGetOOPJITFixupValidateFlag)(bool *flag);
 int32_t (*pfSetOOPJITFixupValidateFlag)(bool flag);

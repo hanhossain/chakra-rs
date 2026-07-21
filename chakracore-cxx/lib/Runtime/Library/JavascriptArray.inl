@@ -1117,15 +1117,6 @@ SECOND_PASS:
 
         fromArray->SetLastUsedSegment(fromSegment);
         this->SetLastUsedSegment(toSegment);
-#if DBG
-        if (Js::Configuration::Global.flags.MemOpMissingValueValidate)
-        {
-            if (toSegment == head)
-            {
-                Assert(ScanForMissingValues<T>(0, this->length) != HasNoMissingValues());
-            }
-        }
-#endif
         return true;
     }
 
@@ -1205,15 +1196,6 @@ SECOND_PASS:
         typename WriteBarrierFieldTypeTraits<T>::Type* segmentCopyStart = current->elements + (startIndex - current->left);
         CopyValueToSegmentBuferNoCheck(segmentCopyStart, length, newValue);
         this->SetLastUsedSegment(current);
-#if DBG
-        if (Js::Configuration::Global.flags.MemOpMissingValueValidate)
-        {
-            if (current == head)
-            {
-                Assert(ScanForMissingValues<T>(0, this->length) != HasNoMissingValues());
-            }
-        }
-#endif
         return true;
     }
 

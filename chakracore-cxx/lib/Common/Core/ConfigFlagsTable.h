@@ -51,7 +51,6 @@ namespace Js
     {
         #if DBG
         ArrayValidateFlag,
-        MemOpMissingValueValidateFlag,
         OOPJITFixupValidateFlag,
         #endif
         #ifdef ARENA_MEMORY_VERIFY
@@ -1517,7 +1516,6 @@ namespace Js
 
         #if DBG
             Boolean ArrayValidate;
-            Boolean MemOpMissingValueValidate;
             Boolean OOPJITFixupValidate;
         #endif
         #ifdef ARENA_MEMORY_VERIFY
