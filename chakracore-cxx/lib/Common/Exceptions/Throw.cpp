@@ -135,11 +135,6 @@ namespace Js {
 
     bool Throw::ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message)
     {
-        if (Js::Configuration::Global.flags.IsEnabled(Js::AssertBreakFlag))
-        {
-            DebugBreak();
-            return false;
-        }
         if (Js::Configuration::Global.flags.IsEnabled(Js::AssertIgnoreFlag))
         {
             return true;

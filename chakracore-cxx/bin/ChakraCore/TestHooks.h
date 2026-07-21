@@ -92,9 +92,6 @@ bool (*pfIsEnabledWasmSimdFlag)();
 int32_t (*pfGetWasmSimdFlag)(bool *flag);
 int32_t (*pfSetWasmSimdFlag)(bool flag);
 
-bool (*pfIsEnabledAssertBreakFlag)();
-int32_t (*pfGetAssertBreakFlag)(bool *flag);
-int32_t (*pfSetAssertBreakFlag)(bool flag);
 bool (*pfIsEnabledAssertPopUpFlag)();
 int32_t (*pfGetAssertPopUpFlag)(bool *flag);
 int32_t (*pfSetAssertPopUpFlag)(bool flag);
