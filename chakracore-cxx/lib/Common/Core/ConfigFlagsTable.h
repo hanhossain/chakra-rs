@@ -1512,7 +1512,6 @@ namespace Js
         Boolean WasmFastArray;
         Boolean WasmSharedArrayVirtualBuffer;
         Boolean WasmMathExFilter;
-        // TODO (hanhossain): remove flag
         Boolean WasmCheckVersion;
         Boolean WasmAssignModuleID;
         // TODO (hanhossain): remove flag
