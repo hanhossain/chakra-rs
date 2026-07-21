@@ -608,9 +608,6 @@ namespace Js
         MaxMarkStackPageCountFlag,
         MaxTrackedObjectListCountFlag,
 
-        // make the recycler page integration path easier to hit
-        NumberAllocPlusSizeFlag,
-
         #if DBG
         InitializeInterpreterSlotsWithInvalidStackVarFlag,
         #endif
@@ -2263,10 +2260,6 @@ namespace Js
         Number MaxMarkStackPageCount;
         // TODO (hanhossain): remove flag
         Number MaxTrackedObjectListCount;
-
-        // make the recycler page integration path easier to hit
-        // TODO (hanhossain): remove flag
-        Number NumberAllocPlusSize;
 
         #if DBG
             Boolean InitializeInterpreterSlotsWithInvalidStackVar;

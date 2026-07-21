@@ -1240,9 +1240,6 @@ namespace Js
         u"MaxMarkStackPageCount",
         u"MaxTrackedObjectListCount",
 
-// make the recycler page integration path easier to hit
-        u"NumberAllocPlusSize",
-
 #if DBG
         u"InitializeInterpreterSlotsWithInvalidStackVar",
 #endif
@@ -2249,9 +2246,6 @@ namespace Js
         u"Restrict recycler mark stack size (in pages)",
         u"Restrict recycler tracked object count during GC",
 
-// make the recycler page integration path easier to hit
-        u"Additional bytes to allocate with JavascriptNumber from number allocator (0~496)",
-
 #if DBG
         u"Enable the initialization of the interpreter local slots with invalid stack vars",
 #endif
@@ -2852,9 +2846,6 @@ namespace Js
 
 // recycler memory restrict test flags
         NoParentFlag,
-        NoParentFlag,
-
-// make the recycler page integration path easier to hit
         NoParentFlag,
 
 #if DBG
@@ -3480,9 +3471,6 @@ namespace Js
 // recycler memory restrict test flags
         MaxMarkStackPageCount(-1),
         MaxTrackedObjectListCount(-1),
-
-// make the recycler page integration path easier to hit
-        NumberAllocPlusSize(0),
 
 #if DBG
         InitializeInterpreterSlotsWithInvalidStackVar(false),
@@ -5146,10 +5134,6 @@ namespace Js
         case MaxTrackedObjectListCountFlag:
             return FlagNumber;
 
-        // make the recycler page integration path easier to hit
-        case NumberAllocPlusSizeFlag:
-            return FlagNumber;
-
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
             return FlagBoolean;
@@ -6171,10 +6155,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxMarkStackPageCount));
         case MaxTrackedObjectListCountFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxTrackedObjectListCount));
-
-        // make the recycler page integration path easier to hit
-        case NumberAllocPlusSizeFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&NumberAllocPlusSize));
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
