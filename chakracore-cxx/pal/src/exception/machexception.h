@@ -38,7 +38,6 @@ extern "C"
 
 // Process and thread initialization/cleanup/context routines
 bool SEHInitializeMachExceptions();
-void MachExceptionInitializeDebug(void);
 
 #ifdef __cplusplus
 }

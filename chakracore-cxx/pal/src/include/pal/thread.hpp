@@ -738,9 +738,6 @@ TLSInitialize(
     void
     );
 
-extern PAL_ActivationFunction g_activationFunction;
-extern PAL_SafeActivationCheckFunction g_safeActivationCheckFunction;
-
 /*++
 Macro:
   THREADSilentGetCurrentThreadId
