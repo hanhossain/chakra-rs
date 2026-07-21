@@ -271,7 +271,6 @@ namespace Js
 #define DEFAULT_CONFIG_WasmSharedArrayVirtualBuffer (true)
 #define DEFAULT_CONFIG_WasmCheckVersion     (true)
 #define DEFAULT_CONFIG_WasmAssignModuleID   (false)
-#define DEFAULT_CONFIG_WasmFold             (true)
 #define DEFAULT_CONFIG_WasmMathExFilter     (false)
 #define DEFAULT_CONFIG_WasmIgnoreResponse   (false)
 #define DEFAULT_CONFIG_WasmMaxTableSize     (10000000)
@@ -691,7 +690,6 @@ namespace Js
         u"WasmMathExFilter",
         u"WasmCheckVersion",
         u"WasmAssignModuleID",
-        u"WasmFold",
         u"WasmIgnoreResponse",
         u"WasmMaxTableSize",
         u"WasmThreads",
@@ -1763,7 +1761,6 @@ namespace Js
         u"Enable Math exception filter for WebAssembly",
         u"Check the binary version for WebAssembly",
         u"Assign an individual ID for WebAssembly module",
-        u"Enable i32/i64 const folding",
         u"Ignore the type of the Response object",
         u"Maximum size allowed to the WebAssembly.Table",
         u"Enable WebAssembly threads feature",
@@ -2428,7 +2425,6 @@ namespace Js
 #if DBG
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3125,7 +3121,6 @@ namespace Js
         WasmMathExFilter(DEFAULT_CONFIG_WasmMathExFilter),
         WasmCheckVersion(DEFAULT_CONFIG_WasmCheckVersion),
         WasmAssignModuleID(DEFAULT_CONFIG_WasmAssignModuleID),
-        WasmFold(DEFAULT_CONFIG_WasmFold),
         WasmIgnoreResponse(DEFAULT_CONFIG_WasmIgnoreResponse),
         WasmMaxTableSize(DEFAULT_CONFIG_WasmMaxTableSize),
         WasmThreads(DEFAULT_CONFIG_WasmThreads),
@@ -4471,8 +4466,6 @@ namespace Js
             return FlagBoolean;
         case WasmAssignModuleIDFlag:
             return FlagBoolean;
-        case WasmFoldFlag:
-            return FlagBoolean;
         case WasmIgnoreResponseFlag:
             return FlagBoolean;
         case WasmMaxTableSizeFlag:
@@ -5605,8 +5598,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmCheckVersion));
         case WasmAssignModuleIDFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmAssignModuleID));
-        case WasmFoldFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmFold));
         case WasmIgnoreResponseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmIgnoreResponse));
         case WasmMaxTableSizeFlag:
@@ -6755,9 +6746,6 @@ namespace Js
             break;
         case WasmAssignModuleIDFlag:
             retValue = DEFAULT_CONFIG_WasmAssignModuleID;
-            break;
-        case WasmFoldFlag:
-            retValue = DEFAULT_CONFIG_WasmFold;
             break;
         case WasmIgnoreResponseFlag:
             retValue = DEFAULT_CONFIG_WasmIgnoreResponse;
