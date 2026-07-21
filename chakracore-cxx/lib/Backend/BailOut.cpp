@@ -369,39 +369,30 @@ const char16_t * const falseString = u"false";
     if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::BailOutPhase, functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId()) && \
         ((bailOutKind) != IR::BailOnSimpleJitToFullJitLoopBody || CONFIG_FLAG(Verbose))) \
     { \
-        if (Js::Configuration::Global.flags.BailoutTraceFilter.Empty() || Js::Configuration::Global.flags.BailoutTraceFilter.Contains(bailOutKind)) \
+        Output::Print(__VA_ARGS__); \
+        if (bailOutKind != IR::BailOutInvalid) \
         { \
-            Output::Print(__VA_ARGS__); \
-            if (bailOutKind != IR::BailOutInvalid) \
-            { \
-                Output::Print(u" Kind: %S", ::GetBailOutKindName(bailOutKind)); \
-            } \
-            Output::Print(u"\n"); \
+            Output::Print(u" Kind: %S", ::GetBailOutKindName(bailOutKind)); \
         } \
+        Output::Print(u"\n"); \
     }
 
 #define BAILOUT_VERBOSE_TRACE(functionBody, bailOutKind, ...) \
     if (Js::Configuration::Global.flags.Verbose && Js::Configuration::Global.flags.Trace.IsEnabled(Js::BailOutPhase,functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId())) \
     { \
-        if (Js::Configuration::Global.flags.BailoutTraceFilter.Empty() || Js::Configuration::Global.flags.BailoutTraceFilter.Contains(bailOutKind)) \
-        { \
-            Output::Print(__VA_ARGS__); \
-        } \
+        Output::Print(__VA_ARGS__); \
     }
 
 #define BAILOUT_TESTTRACE(functionBody, bailOutKind, ...) \
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::BailOutPhase, functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId()) && \
         ((bailOutKind) != IR::BailOnSimpleJitToFullJitLoopBody || CONFIG_FLAG(Verbose))) \
     { \
-        if (Js::Configuration::Global.flags.BailoutTraceFilter.Empty() || Js::Configuration::Global.flags.BailoutTraceFilter.Contains(bailOutKind)) \
+        Output::Print(__VA_ARGS__); \
+        if (bailOutKind != IR::BailOutInvalid) \
         { \
-            Output::Print(__VA_ARGS__); \
-            if (bailOutKind != IR::BailOutInvalid) \
-            { \
-                Output::Print(u" Kind: %S", ::GetBailOutKindName(bailOutKind)); \
-            } \
-            Output::Print(u"\n"); \
+            Output::Print(u" Kind: %S", ::GetBailOutKindName(bailOutKind)); \
         } \
+        Output::Print(u"\n"); \
     }
 
 #define BAILOUT_FLUSH(functionBody) \

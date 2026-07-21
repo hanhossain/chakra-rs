@@ -592,7 +592,6 @@ namespace Js
         #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         FixPropsOnPathTypesFlag,
         #endif
-        BailoutTraceFilterFlag,
 
         #if DBG
         InitializeInterpreterSlotsWithInvalidStackVarFlag,
@@ -2223,8 +2222,6 @@ namespace Js
         // TODO (hanhossain): remove flag
             Boolean FixPropsOnPathTypes;
         #endif
-        // TODO (hanhossain): remove flag
-        NumberSet BailoutTraceFilter;
 
         #if DBG
             Boolean InitializeInterpreterSlotsWithInvalidStackVar;

@@ -585,7 +585,6 @@ namespace Js
 #define DEFAULT_CONFIG_IsolatePrototypes    (true)
 #define DEFAULT_CONFIG_ChangeTypeOnProto    (true)
 #define DEFAULT_CONFIG_FixPropsOnPathTypes    (true)
-#define DEFAULT_CONFIG_BailoutTraceFilter (-1)
 #define DEFAULT_CONFIG_TempMin    (0)
 #define DEFAULT_CONFIG_TempMax    (INT_MAX)
 
@@ -1220,7 +1219,6 @@ namespace Js
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         u"FixPropsOnPathTypes",
 #endif
-        u"BailoutTraceFilter",
 
 #if DBG
         u"InitializeInterpreterSlotsWithInvalidStackVar",
@@ -2212,7 +2210,6 @@ namespace Js
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         u"Mark properties as fixed on path types (default: false).",
 #endif
-        u"Filter the bailout trace messages to specific bailout kinds.",
 
         // todo (hanhossain): flag end
 #if DBG
@@ -2800,7 +2797,6 @@ namespace Js
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         NoParentFlag,
 #endif
-        NoParentFlag,
 
         // todo (hanhossain): flag end
 #if DBG
@@ -3410,7 +3406,6 @@ namespace Js
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         FixPropsOnPathTypes(DEFAULT_CONFIG_FixPropsOnPathTypes),
 #endif
-        BailoutTraceFilter(),
 
 #if DBG
         InitializeInterpreterSlotsWithInvalidStackVar(false),
@@ -5050,8 +5045,6 @@ namespace Js
         case FixPropsOnPathTypesFlag:
             return FlagBoolean;
         #endif
-        case BailoutTraceFilterFlag:
-            return FlagNumberSet;
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
@@ -6051,8 +6044,6 @@ namespace Js
         case FixPropsOnPathTypesFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&FixPropsOnPathTypes));
         #endif
-        case BailoutTraceFilterFlag:
-            return reinterpret_cast<void*>(const_cast<NumberSet*>(&BailoutTraceFilter));
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
