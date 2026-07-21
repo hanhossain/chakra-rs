@@ -278,7 +278,6 @@ namespace Js
 #define DEFAULT_CONFIG_WasmMultiValue       (false)
 #define DEFAULT_CONFIG_WasmSignExtends      (true)
 #define DEFAULT_CONFIG_WasmNontrapping      (true)
-#define DEFAULT_CONFIG_BgParse              (false)
 #define DEFAULT_CONFIG_BgJitDelayFgBuffer   (0)
 #define DEFAULT_CONFIG_BgJitPendingFuncCap  (31)
 #define DEFAULT_CONFIG_CurrentSourceInfo    (true)
@@ -706,7 +705,6 @@ namespace Js
         u"BailOutAtEveryByteCode",
         u"BailOutByteCode",
         u"BgJit",
-        u"BgParse",
         u"BgJitDelay",
         u"BgJitDelayFgBuffer",
         u"BgJitPendingFuncCap",
@@ -1764,7 +1762,6 @@ namespace Js
         u"Inserts BailOut at every Byte code (default: false)",
         u"Byte code location to insert BailOut. Use with -prejit only",
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
-        u"Background Parse. Disable to force all parsing to occur on UI thread. (default: true)",
         u"Delay to wait for speculative jitting before starting script execution",
         u"When speculatively jitting in the foreground thread, do so for (BgJitDelay - BgJitDelayBuffer) milliseconds",
         u"Disable delay if pending function count larger then cap",
@@ -2412,7 +2409,6 @@ namespace Js
 
 // WebAssembly Experimental Features
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3093,7 +3089,6 @@ namespace Js
         BailOutAtEveryByteCode(false),
         BailOutByteCode(),
         BgJit(true),
-        BgParse(DEFAULT_CONFIG_BgParse),
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
         BgJitDelayFgBuffer(DEFAULT_CONFIG_BgJitDelayFgBuffer),
         BgJitPendingFuncCap(DEFAULT_CONFIG_BgJitPendingFuncCap),
@@ -4436,8 +4431,6 @@ namespace Js
             return FlagNumberSet;
         case BgJitFlag:
             return FlagBoolean;
-        case BgParseFlag:
-            return FlagBoolean;
         case BgJitDelayFlag:
             return FlagNumber;
         case BgJitDelayFgBufferFlag:
@@ -5543,8 +5536,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<NumberSet*>(&BailOutByteCode));
         case BgJitFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BgJit));
-        case BgParseFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&BgParse));
         case BgJitDelayFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelay));
         case BgJitDelayFgBufferFlag:
@@ -6669,9 +6660,6 @@ namespace Js
             break;
         case BgJitFlag:
             retValue = true;
-            break;
-        case BgParseFlag:
-            retValue = DEFAULT_CONFIG_BgParse;
             break;
 
         case CreateFunctionProxyFlag:
