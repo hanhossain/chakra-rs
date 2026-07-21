@@ -54,19 +54,6 @@ NativeCodeData::AddFixupEntry(void* targetAddr, void* targetStartAddr, void* add
     DataChunk* targetChunk = NativeCodeData::GetDataChunk(targetStartAddr);
     Assert(targetChunk->len >= inDataOffset);
 
-#if DBG
-    if (CONFIG_FLAG(OOPJITFixupValidate))
-    {
-        bool foundTargetChunk = false;
-        while (chunkList)
-        {
-            foundTargetChunk |= (chunkList == targetChunk);
-            chunkList = chunkList->next;
-        }
-        AssertMsg(foundTargetChunk, "current pointer is not allocated with NativeCodeData allocator?"); // change to valid check instead of assertion?
-    }
-#endif
-
     DataChunk* chunk = NativeCodeData::GetDataChunk(startAddress);
 
     NativeDataFixupEntry* entry = (NativeDataFixupEntry*)malloc(sizeof(NativeDataFixupEntry));
@@ -162,33 +149,6 @@ NativeCodeData::GetDataDescription(void* data, JitArenaAllocator * alloc)
     return desc;
 }
 
-void
-NativeCodeData::VerifyExistFixupEntry(void* targetAddr, void* addrToFixup, void* startAddress)
-{
-    DataChunk* chunk = NativeCodeData::GetDataChunk(startAddress);
-    [[maybe_unused]] DataChunk* targetChunk = NativeCodeData::GetDataChunk(targetAddr);
-    if (chunk->len == 0)
-    {
-        return;
-    }
-    unsigned int offset = (unsigned int)((char*)addrToFixup - (char*)startAddress);
-    Assert(offset <= chunk->len);
-
-    NativeDataFixupEntry* entry = chunk->fixupList;
-    while (entry)
-    {
-        if (entry->addrOffset == offset)
-        {
-            // The following assertions can be false positive in case a data field happen to
-            // have value fall into NativeCodeData memory range
-            AssertMsg(entry->targetTotalOffset == targetChunk->offset, "Missing fixup");
-            return;
-        }
-        entry = entry->next;
-    }
-    AssertMsg(false, "Data chunk not found");
-}
-
 template<class DataChunkT>
 void
 NativeCodeData::DeleteChunkList(DataChunkT * chunkList)
@@ -250,7 +210,7 @@ NativeCodeData::Allocator::Alloc(size_t requestSize)
         // without zeroing, and the bool field is set to false, makes the garbage
         // memory not changed, and the garbage memory might be just pointing to the
         // same range of NativeCodeData memory, the checking tool will report false
-        // poisitive, see NativeCodeData::VerifyExistFixupEntry for more
+        // positive
         DataChunk * newChunk = HeapNewStructPlusZ(requestSize, DataChunk);
 #else
         DataChunk * newChunk = HeapNewStructPlus(requestSize, DataChunk);

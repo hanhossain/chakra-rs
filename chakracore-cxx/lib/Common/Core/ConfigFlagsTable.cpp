@@ -685,7 +685,6 @@ namespace Js
     {
 #if DBG
         u"ArrayValidate",
-        u"OOPJITFixupValidate",
 #endif
 #ifdef ARENA_MEMORY_VERIFY
         u"ArenaNoFreeList",
@@ -1769,7 +1768,6 @@ namespace Js
     {
 #if DBG
         u"Validate each array for valid elements (default: false)",
-        u"Validate that all entries in fixup list are allocated as NativeCodeData and that all NativeCodeData gets fixed up",
 #endif
 #ifdef ARENA_MEMORY_VERIFY
         u"Do not free list in arena",
@@ -2453,7 +2451,6 @@ namespace Js
     const Flag FlagParents[FlagCount + 1] =
     {
 #if DBG
-        NoParentFlag,
         NoParentFlag,
 #endif
 #ifdef ARENA_MEMORY_VERIFY
@@ -3155,7 +3152,6 @@ namespace Js
     ConfigFlagsTable::ConfigFlagsTable():
 #if DBG
         ArrayValidate(false),
-        OOPJITFixupValidate(false),
 #endif
 #ifdef ARENA_MEMORY_VERIFY
         ArenaNoFreeList(false),
@@ -4505,8 +4501,6 @@ namespace Js
         #if DBG
         case ArrayValidateFlag:
             return FlagBoolean;
-        case OOPJITFixupValidateFlag:
-            return FlagBoolean;
         #endif
         #ifdef ARENA_MEMORY_VERIFY
         case ArenaNoFreeListFlag:
@@ -5661,8 +5655,6 @@ namespace Js
         #if DBG
         case ArrayValidateFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ArrayValidate));
-        case OOPJITFixupValidateFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&OOPJITFixupValidate));
         #endif
         #ifdef ARENA_MEMORY_VERIFY
         case ArenaNoFreeListFlag:
@@ -6824,9 +6816,6 @@ namespace Js
         {
         #if DBG
         case ArrayValidateFlag:
-            retValue = false;
-            break;
-        case OOPJITFixupValidateFlag:
             retValue = false;
             break;
         #endif

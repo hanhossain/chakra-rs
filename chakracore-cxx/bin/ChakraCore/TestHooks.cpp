@@ -122,20 +122,6 @@ int32_t SetArrayValidateFlag(bool flag)
     return S_OK;
 }
 
-bool IsEnabledOOPJITFixupValidateFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::OOPJITFixupValidateFlag);
-}
-int32_t GetOOPJITFixupValidateFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.OOPJITFixupValidate;
-    return S_OK;
-}
-int32_t SetOOPJITFixupValidateFlag(bool flag)
-{
-    Js::Configuration::Global.flags.OOPJITFixupValidate = flag;
-    return S_OK;
-}
 #endif
 #ifdef ARENA_MEMORY_VERIFY
 bool IsEnabledArenaNoFreeListFlag()
@@ -6579,7 +6565,6 @@ int32_t OnChakraCoreLoaded()
 
 #if DBG
 IsEnabledArrayValidateFlag, GetArrayValidateFlag, SetArrayValidateFlag,
-IsEnabledOOPJITFixupValidateFlag, GetOOPJITFixupValidateFlag, SetOOPJITFixupValidateFlag,
 #endif
 #ifdef ARENA_MEMORY_VERIFY
 IsEnabledArenaNoFreeListFlag, GetArenaNoFreeListFlag, SetArenaNoFreeListFlag,
