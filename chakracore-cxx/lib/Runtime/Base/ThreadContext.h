@@ -667,7 +667,6 @@ private:
 
 #define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)
 #define DEFAULT_CONFIG_WriteBarrierTest (false)
-#define DEFAULT_CONFIG_VerifyBarrierBit  (false)
 
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)

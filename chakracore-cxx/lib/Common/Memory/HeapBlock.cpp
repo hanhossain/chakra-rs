@@ -961,16 +961,7 @@ SmallHeapBlockT<TBlockAttributes>::VerifyMark()
                     for (uint i = 0; i < objectWordCount; i++)
                     {
                         void* target = *reinterpret_cast<void**>(objectAddress);
-                        if (recycler->VerifyMark(objectAddress, target))
-                        {
-#if DBG
-                            if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
-                            {
-                                this->WBVerifyBitIsSet(objectAddress);
-                            }
-#endif
-                        }
-
+                        recycler->VerifyMark(objectAddress, target);
                         objectAddress += sizeof(void *);
                     }
                 }

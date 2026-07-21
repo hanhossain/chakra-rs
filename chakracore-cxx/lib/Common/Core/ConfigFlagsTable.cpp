@@ -635,7 +635,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)
 #define DEFAULT_CONFIG_WriteBarrierTest (false)
-#define DEFAULT_CONFIG_VerifyBarrierBit  (false)
 
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)
@@ -1275,7 +1274,6 @@ namespace Js
         u"StrictWriteBarrierCheck",
         u"WriteBarrierTest",
         u"ForceSoftwareWriteBarrier",
-        u"VerifyBarrierBit",
 
 // TODO (hanhossain): ConfigFlagsList end
         NULL
@@ -2303,7 +2301,6 @@ namespace Js
         u"Check write barrier setting on none write barrier pages",
         u"Always return true while checking barrier to test recycler regardless of annotation",
         u"Use to turn off write watch to test software write barrier on windows",
-        u"Verify software write barrier bit is set while marking",
 
         NULL
     };
@@ -2923,7 +2920,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3570,7 +3566,6 @@ namespace Js
         StrictWriteBarrierCheck(DEFAULT_CONFIG_StrictWriteBarrierCheck),
         WriteBarrierTest(DEFAULT_CONFIG_WriteBarrierTest),
         ForceSoftwareWriteBarrier(DEFAULT_CONFIG_ForceSoftwareWriteBarrier),
-        VerifyBarrierBit(DEFAULT_CONFIG_VerifyBarrierBit),
 
         nDummy(0)
     {
@@ -5268,8 +5263,6 @@ namespace Js
             return FlagBoolean;
         case ForceSoftwareWriteBarrierFlag:
             return FlagBoolean;
-        case VerifyBarrierBitFlag:
-            return FlagBoolean;
 
         default:
             return InvalidFlagType;
@@ -6325,8 +6318,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WriteBarrierTest));
         case ForceSoftwareWriteBarrierFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceSoftwareWriteBarrier));
-        case VerifyBarrierBitFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&VerifyBarrierBit));
 
         default:
             return NULL;
@@ -7266,9 +7257,6 @@ namespace Js
             break;
         case ForceSoftwareWriteBarrierFlag:
             retValue = DEFAULT_CONFIG_ForceSoftwareWriteBarrier;
-            break;
-        case VerifyBarrierBitFlag:
-            retValue = DEFAULT_CONFIG_VerifyBarrierBit;
             break;
 
         default:

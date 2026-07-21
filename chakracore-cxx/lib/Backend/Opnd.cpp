@@ -116,13 +116,6 @@ Opnd::IsWriteBarrierTriggerableValue()
         return false;
     }
 
-#if DBG
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
-    {
-        return true; // No further optimization if we are in verification
-    }
-#endif
-
     // If this operand is known address, then it doesn't need a write barrier, the address is either not a GC address or is pinned
     if (this->IsAddrOpnd() && this->AsAddrOpnd()->GetAddrOpndKind() == AddrOpndKindDynamicVar)
     {

@@ -7376,42 +7376,13 @@ Recycler::WBVerifyBitIsSet(char* addr, char* target)
     }
 }
 void
-Recycler::WBSetBit(char* addr)
+Recycler::WBSetBit([[maybe_unused]] char* addr)
 {
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
-    {
-        std::unique_lock<std::recursive_mutex> lock(recyclerListLock);
-        Recycler* recycler = Recycler::recyclerList;
-        while (recycler)
-        {
-            auto heapBlock = recycler->FindHeapBlock(reinterpret_cast<void*>(reinterpret_cast<unsigned long>(addr) & ~HeapInfo::ObjectAlignmentMask));
-            if (heapBlock)
-            {
-                heapBlock->WBSetBit(addr);
-                break;
-            }
-            recycler = recycler->next;
-        }
-    }
 }
+
 void
-Recycler::WBSetBitRange(char* addr, uint count)
+Recycler::WBSetBitRange([[maybe_unused]] char* addr, [[maybe_unused]] uint count)
 {
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
-    {
-        std::unique_lock<std::recursive_mutex> lock(recyclerListLock);
-        Recycler* recycler = Recycler::recyclerList;
-        while (recycler)
-        {
-            auto heapBlock = recycler->FindHeapBlock(reinterpret_cast<void*>(reinterpret_cast<unsigned long>(addr) & ~HeapInfo::ObjectAlignmentMask));
-            if (heapBlock)
-            {
-                heapBlock->WBSetBitRange(addr, count);
-                break;
-            }
-            recycler = recycler->next;
-        }
-    }
 }
 bool
 Recycler::WBCheckIsRecyclerAddress(char* addr)

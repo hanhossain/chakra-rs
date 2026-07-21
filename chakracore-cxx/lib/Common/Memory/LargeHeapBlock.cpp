@@ -945,16 +945,7 @@ LargeHeapBlock::VerifyMark()
         while (objectAddress + sizeof(void *) <= objectAddressEnd)
         {
             void* target = *reinterpret_cast<void**>(objectAddress);
-
-            if (recycler->VerifyMark(objectAddress, target))
-            {
-#if DBG
-                if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
-                {
-                    this->WBVerifyBitIsSet(objectAddress);
-                }
-#endif
-            }
+            recycler->VerifyMark(objectAddress, target);
 
             objectAddress += sizeof(void *);
         }

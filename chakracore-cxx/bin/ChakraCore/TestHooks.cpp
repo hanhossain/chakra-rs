@@ -5853,20 +5853,6 @@ int32_t SetForceSoftwareWriteBarrierFlag(bool flag)
     Js::Configuration::Global.flags.ForceSoftwareWriteBarrier = flag;
     return S_OK;
 }
-bool IsEnabledVerifyBarrierBitFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::VerifyBarrierBitFlag);
-}
-int32_t GetVerifyBarrierBitFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.VerifyBarrierBit;
-    return S_OK;
-}
-int32_t SetVerifyBarrierBitFlag(bool flag)
-{
-    Js::Configuration::Global.flags.VerifyBarrierBit = flag;
-    return S_OK;
-}
 
 int32_t OnChakraCoreLoaded()
 {
@@ -6454,7 +6440,6 @@ IsEnabledJITServerMaxInactivePageAllocatorCountFlag, GetJITServerMaxInactivePage
 IsEnabledStrictWriteBarrierCheckFlag, GetStrictWriteBarrierCheckFlag, SetStrictWriteBarrierCheckFlag,
 IsEnabledWriteBarrierTestFlag, GetWriteBarrierTestFlag, SetWriteBarrierTestFlag,
 IsEnabledForceSoftwareWriteBarrierFlag, GetForceSoftwareWriteBarrierFlag, SetForceSoftwareWriteBarrierFlag,
-IsEnabledVerifyBarrierBitFlag, GetVerifyBarrierBitFlag, SetVerifyBarrierBitFlag,
 
     };
     return ChakraRTInterface::InitializeTestHooks(testHooks);
