@@ -1508,23 +1508,23 @@ namespace Js
             Boolean ArrayValidate;
         #endif
         Boolean AsmJs;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean AsmJsStopOnError;
         Boolean Wasm;
         Boolean WasmI64;
         Boolean WasmFastArray;
         Boolean WasmSharedArrayVirtualBuffer;
         Boolean WasmMathExFilter;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean WasmCheckVersion;
         Boolean WasmAssignModuleID;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean WasmIgnoreLimits;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean WasmFold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean WasmIgnoreResponse;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number WasmMaxTableSize;
         Boolean WasmThreads;
         Boolean WasmMultiValue;
@@ -1533,7 +1533,7 @@ namespace Js
 
         // WebAssembly Experimental Features
         // Master WasmExperimental flag to activate WebAssembly experimental features
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean WasmExperimental;
 
         // The default value of the experimental features will be off because the parent is off
@@ -1542,169 +1542,169 @@ namespace Js
         // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         Boolean WasmSimd;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean AssertBreak;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean AssertPopUp;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean AssertIgnore;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean AsyncDebugging;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number BailOnNoProfileLimit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number BailOnNoProfileRejitLimit;
         Boolean BaselineMode;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         String DumpOnCrash;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         String FullMemoryDump;
             NumberPairSet BailOut;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean BailOutAtEveryLine;
             Boolean BailOutAtEveryByteCode;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean BailOutAtEveryImplicitCall;
             NumberSet BailOutByteCode;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean Benchmark;
         Boolean BgJit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean BgParse;
         Number BgJitDelay;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number BgJitDelayFgBuffer;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number BgJitPendingFuncCap;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean CreateFunctionProxy;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean HybridFgJit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number HybridFgJitBgQueueLengthThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean BytecodeHist;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean CurrentSourceInfo;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean CFGLog;
         Boolean CheckAlignment;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean CheckEmitBufferPermissions;
         #ifdef CHECK_MEMORY_LEAK
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean CheckMemoryLeak;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             String DumpOnLeak;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean CheckOpHelpers;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean CloneInlinedPolymorphicCaches;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ConcurrentRuntime;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ConstructorInlineThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ConstructorCallsRequiredToFinalizeCachedType;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number PropertyCacheMissPenalty;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number PropertyCacheMissThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number PropertyCacheMissReset;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean Debug;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         NumberSet DebugBreak;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         NumberTrioSet StatementDebugBreak;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Phases DebugBreakOnPhaseBegin;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DebugWindow;
         Boolean ParserStateCache;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean CompressParserStateCache;
         Boolean DeferTopLevelTillFirstCall;
         Number DeferParse;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DirectCallTelemetryStats;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DisableArrayBTree;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DisableRentalThreading;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DisableVTuneSourceLineInfo;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DisplayMemStats;
         Phases Dump;
         #ifdef DUMP_FRAGMENTATION_STATS
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean DumpFragmentationStats;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DumpIRAddresses;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DumpLineNoInColor;
         #ifdef RECYCLER_DUMP_OBJECT_GRAPH
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean DumpObjectGraphOnExit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean DumpObjectGraphOnCollect;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DumpEvalStringOnRemoval;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DumpObjectGraphOnEnum;
         #ifdef DYNAMIC_PROFILE_STORAGE
             String DynamicProfileCache;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         String Dpc;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             String DynamicProfileCacheDir;
             String DynamicProfileInput;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         String Dpi;
         #endif
         #ifdef EDIT_AND_CONTINUE
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean EditTest;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean WininetProfileCache;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean NoDynamicProfileInMemoryCache;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ProfileBasedSpeculativeJit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ProfileBasedSpeculationCap;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ExecuteByteCodeBufferReturnsInvalidByteCode;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ExpirableCollectionGCCount;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ExpirableCollectionTriggerThreshold;
         Boolean SkipSplitOnNoResult;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean Force32BitByteCode;
 
         Boolean CollectGarbage;
 
         Boolean Intl;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean IntlBuiltIns;
         Boolean IntlPlatform;
 
         Boolean JsBuiltIn;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean JitRepro;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean EntryPointInfoRpcData;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean LdChakraLib;
         Boolean TestChakraLib;
 
@@ -1722,28 +1722,28 @@ namespace Js
         // Per ES6 feature/flag
 
         Boolean ES7AsyncAwait;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ES6DateParseFix;
         Boolean ES6FunctionNameFull;
         Boolean ES6Generators;
         Boolean ES7ExponentiationOperator;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ES7ValuesEntries;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ES7TrailingComma;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ES6IsConcatSpreadable;
         Boolean ES6Math;
 
         Boolean ESDynamicImport;
 
         Boolean ES6Module;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ES6Object;
         Boolean ES6Number;
         Boolean ES6ObjectLiterals;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ES6Proxy;
         Boolean ES6Rest;
         Boolean ES6Spread;
@@ -1752,14 +1752,14 @@ namespace Js
         Boolean ES2018ObjectRestSpread;
 
         Boolean ES6PrototypeChain;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ES6ToPrimitive;
         Boolean ES6ToLength;
         Boolean ES6ToStringTag;
         Boolean ES6Unicode;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ES6UnicodeVerbose;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ES6Unscopables;
         Boolean ES6RegExSticky;
         Boolean ES2018RegExDotAll;
@@ -1774,7 +1774,7 @@ namespace Js
         // Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
         Boolean ES6RegExSymbols;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ES6Verbose;
         Boolean ESObjectGetOwnPropertyDescriptors;
 
@@ -1789,7 +1789,7 @@ namespace Js
         Boolean ESNumericSeparator;
 
         // ES Nullish coalescing operator support (??)
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ESNullishCoalescingOperator;
 
         // ES Hashbang support for interpreter directive syntax
@@ -1798,11 +1798,11 @@ namespace Js
         // ES Symbol.prototype.description flag
         Boolean ESSymbolDescription;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ESArrayFindFromLast;
 
         // ES Promise.any and AggregateError flag
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ESPromiseAny;
 
         // ES import.meta keyword meta-property
@@ -1814,226 +1814,226 @@ namespace Js
         // This flag to be removed once JITing generator functions is stable
         Boolean JitES6Generators;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean FastLineColumnCalculation;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         String Filename;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean FreeRejittedCode;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceGuardPages;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PrintGuardPageBounds;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceLegacyEngine;
         Phases Force;
         Phases Stress;
         Boolean ForceArrayBTree;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean StrongArraySort;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceCleanPropertyOnCollect;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceCleanCacheOnCollect;
         Boolean ForceGCAfterJSONParse;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceDecommitOnCollect;
         Boolean ForceDeferParse;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceDiagnosticsMode;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceGetWriteWatchOOM;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForcePostLowerGlobOptInstrString;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceSplitScope;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean EnumerateSpecialPropertiesInDebugger;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean EnableContinueAfterExceptionWrappersForHelpers;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean EnableContinueAfterExceptionWrappersForBuiltIns;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean EnableFunctionSourceReportForHeapEnum;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ForceFragmentAddressSpace;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ForceOOMOnEBCommit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceDynamicProfile;
         Boolean ForceES5Array;
         Boolean ForceAsmJsLinkFail;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceExpireOnNonCacheCollect;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceFastPath;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceFloatPref;
         Boolean ForceJITLoopBody;
         Boolean ForceStaticInterpreterThunk;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DumpCommentsFromReferencedFiles;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number DelayFullJITSmallFunc;
         Boolean EnableFatalErrorOnOOM;
 
         #if defined(_M_ARM32_OR_ARM64)
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean ForceLocalsPtr;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DeferLoadingAvailableSource;
         Boolean ForceNative;
         Boolean ForceSerialized;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ForceSerializedBytecodeMajorVersion;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ForceSerializedBytecodeVersionSchema;
         Boolean ForceStrictMode;
         Boolean ForceUndoDefer;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceBlockingConcurrentCollect;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean FreTestDiagMode;
         #ifdef BYTECODE_TESTING
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number ByteCodeBranchLimit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean MediumByteCodeLayout;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean LargeByteCodeLayout;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number InduceCodeGenFailure;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number InduceCodeGenFailureSeed;
         Number InjectPartiallyInitializedInterpreterFrameError;
         Number InjectPartiallyInitializedInterpreterFrameErrorType;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean GenerateByteCodeBufferReturnsCantGenerate;
         Number GoptCleanupThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number AsmGoptCleanupThreshold;
         Boolean HighPrecisionDate;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number InlineCountMax;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number InlineCountMaxInLoopBodies;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number icminlb;
         Number InlineInLoopBodyScaleDownFactor;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number iilbsdf;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number InlineThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number AggressiveInlineCountMax;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number AggressiveInlineThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number InlineThresholdAdjustCountInLargeFunction;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number InlineThresholdAdjustCountInMediumSizedFunction;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number InlineThresholdAdjustCountInSmallFunction;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number AsmJsInlineAdjust;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         String Interpret;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Phases Instrument;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number JitQueueThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number LoopInlineThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number LeafInlineThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ConstantArgumentInlineThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number RecursiveInlineThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number RecursiveInlineDepthMax;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number RecursiveInlineDepthMin;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number RedeferralCap;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number Loop;
         Number LoopInterpretCount;
         Number lic;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number LoopProfileIterations;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number OutsideLoopInlineThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxFuncInlineDepth;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxNumberOfInlineesWithLoop;
         #ifdef MEMSPECT_TRACKING
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Phases Memspect;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number PolymorphicInlineThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PrimeRecycler;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean TraceEngineRefcount;
         #if defined(CHECK_MEMORY_LEAK)
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean LeakStackTrace;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean ForceMemoryLeak;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DumpAfterFinalGC;
         Boolean ForceOldDateAPI;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number JitLoopBodyHotLoopThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number LoopBodySizeThresholdToDisableOpts;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxJitThreadCount;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceMaxJitThreadCount;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean MitigateSpectre;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean AddMaskingBlocks;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonVarArrayLoad;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonIntArrayLoad;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonFloatArrayLoad;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonTypedArrayLoad;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonStringLoad;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonObjectsForLoads;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonVarArrayStore;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonIntArrayStore;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonFloatArrayStore;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonTypedArrayStore;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonStringStore;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PoisonObjectsForStores;
 
         Number MinInterpretCount;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MinSimpleJitRunCount;
         Number MaxInterpretCount;
         Number Mic;
@@ -2041,241 +2041,241 @@ namespace Js
         Number MinMemOpCount; Number Mmoc;
 
         #if ENABLE_COPYONACCESS_ARRAY
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number MaxCopyOnAccessArrayLength;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number MinCopyOnAccessArrayLength;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number CopyOnAccessArraySegmentCacheSize;
         #endif
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MinTemplatizedJitRunCount;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MinAsmJsInterpreterRunCount;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MinTemplatizedJitLoopRunCount;
         Number MaxTemplatizedJitRunCount; Number Mtjrc;
         Number MaxAsmJsInterpreterRunCount; Number Maic;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number AutoProfilingInterpreter0Limit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ProfilingInterpreter0Limit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number AutoProfilingInterpreter1Limit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number SimpleJitLimit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ProfilingInterpreter1Limit;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         String ExecutionModeLimits; String Eml;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean EnforceExecutionModeLimits; Boolean Eeml;
 
         Number SimpleJitAfter; Number Sja;
         Number FullJitAfter; Number Fja;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean NewSimpleJit;
 
         Number MaxLinearIntCaseCount;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxSingleCharStrJumpTableSize;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxSingleCharStrJumpTableRatio;
         Number MinSwitchJumpTableSize;
         Number MaxLinearStringCaseCount;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MinDeferredFuncTokenCount;
         #if DBG
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number SkipFuncCountForBailOnNoProfile;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxJITFunctionBytecodeByteLength;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxJITFunctionBytecodeCount;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxLoopsPerFunction;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number FuncObjectInlineCacheThreshold;
         Boolean NoDeferParse;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean NoLogo;
         Boolean OOPJITMissingOpts;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean CrashOnOOPJITFailure;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean OOPCFGRegistration;
         Boolean ForceJITCFGCheck;
         Boolean UseJITTrampoline;
         Boolean NoNative;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number NopFrequency;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean NoStrictMode;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean NormalizeStats;
         Phases Off;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Phases OffProfiledByteCode;
         Phases On;
         #ifdef ENABLE_TRACE
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean InMemoryTrace;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number InMemoryTraceBufferSize;
             #ifdef STACK_BACK_TRACE
-        // TODO: remove
+        // TODO (hanhossain): remove flag
                 Boolean TraceWithStack;
             #endif // STACK_BACK_TRACE
         #endif // ENABLE_TRACE
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PrintRunTimeDataCollectionTrace;
         #ifdef ENABLE_PREJIT
             Boolean Prejit;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean PrintSrcInDump;
         #if PROFILE_DICTIONARY
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number ProfileDictionary;
         #endif
         #ifdef PROFILE_EXEC
             Phases Profile;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number ProfileThreshold;
         #endif
         #ifdef PROFILE_OBJECT_LITERALS
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean ProfileObjectLiteral;
         #endif
         #ifdef PROFILE_MEM
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             String ProfileMemory;
         #endif
         #ifdef PROFILE_STRINGS
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean ProfileStrings;
         #endif
         #ifdef PROFILE_TYPES
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean ProfileTypes;
         #endif
         #ifdef PROFILE_EVALMAP
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean ProfileEvalMap;
         #endif
 
         #ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean ProfileBailOutRecordMemory;
         #endif
 
         #if DBG
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean ValidateIntRanges;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number RejitMaxBailOutCount;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number CallsToBailoutsRatioForRejit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number LoopIterationsToBailoutsRatioForRejit;
         Number MinBailOutsBeforeRejit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MinBailOutsBeforeRejitForLoops;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean LibraryStackFrame;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean LibraryStackFrameDebugger;
         #ifdef RECYCLER_STRESS
             Boolean RecyclerStress;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
                 Boolean RecyclerBackgroundStress;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
                 Boolean RecyclerConcurrentStress;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
                 Boolean RecyclerConcurrentRepeatStress;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
                 Boolean RecyclerPartialStress;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean RecyclerTrackStress;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean RecyclerInduceFalsePositives;
         #endif // RECYCLER_STRESS
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean RecyclerForceMarkInterior;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number RecyclerPriorityBoostTimeout;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number RecyclerThreadCollectTimeout;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean EnableConcurrentSweepAlloc; Boolean ecsa;
             Number PageHeap;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean PageHeapAllocStack;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean PageHeapFreeStack;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             NumberRange PageHeapBucketNumber;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number PageHeapBlockType;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean PageHeapDecommitGuardPage;
         #ifdef RECYCLER_NO_PAGE_REUSE
             Boolean RecyclerNoPageReuse;
         #endif
         #ifdef RECYCLER_MEMORY_VERIFY
             Phases RecyclerVerify;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number RecyclerVerifyPadSize;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean RecyclerTest;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean RecyclerProtectPagesOnRescan;
         #ifdef RECYCLER_VERIFY_MARK
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean RecyclerVerifyMark;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number LowMemoryCap;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number NewPagesCapDuringBGSweeping;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number AllocPolicyLimit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         String RuntimeDataOutputFile;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number SpeculationCap;
         #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Phases Stats;
         #endif
         #if EXCEPTION_RECOVERY
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean SwallowExceptions;
         #endif
         Boolean PrintSystemException;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number SwitchOptHolesThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number TempMin;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number TempMax;
         Phases Trace;
 
         #if defined(_M_X64)
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number LoopAlignNopLimit;
         #endif
 
         #ifdef PROFILE_MEM
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Phases TraceMemory;
         #endif
         #if DBG_DUMP || defined(RECYCLER_TRACE)
@@ -2285,37 +2285,37 @@ namespace Js
             //    Level 3 = interfaces, methods and parameters
             //    Level 4 = interfaces and properties
             //    Level 5 (default) = ALL
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number TraceMetaDataParsing;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean TraceWin8Allocations;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean TraceWin8DeallocationsImmediate;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean PrintWin8StatsDetailed;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean TraceProtectPages;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean TraceAsyncDebugCalls;
         #ifdef TRACK_DISPATCH
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean TrackDispatch;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean Verbose;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean UseFullName;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean Utf8;
         Number Version;
         Boolean WERExceptionSupport;
         Boolean ExtendedErrorStackForTestHost;
         Boolean errorStackTrace;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DoHeapEnumOnEngineShutdown;
         #ifdef HEAP_ENUMERATION_VALIDATION
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean ValidateHeapEnum;
         #endif
 
@@ -2323,101 +2323,101 @@ namespace Js
             //
             // Regex flags
             //
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean RegexTracing;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean RegexProfile;
             Boolean RegexDebug;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean RegexDebugAST;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean RegexDebugAnnotatedAST;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean RegexBytecodeDebug;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean RegexOptimize;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number DynamicRegexMruListSize;
         #endif
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean OptimizeForManyInstances;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean EnableArrayTypeMutation;
         Number ArrayMutationTestSeed;
         Phases TestTrace;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean EnableEvalMapCleanup;
         #ifdef PROFILE_MEM
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean TraceObjectAllocation;
         #endif
         Number Sse;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number DeletedPropertyReuseThreshold;
         Boolean ForceStringKeyedSimpleDictionaryTypeHandler;
         Number BigDictionaryTypeHandlerThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean TypeSnapshotEnumeration;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean IsolatePrototypes;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ChangeTypeOnProto;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ShareInlineCaches;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DisableDebugObject;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean DumpHeap;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         String autoProxy;
         Number PerfHintLevel;
         #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean MemProtectHeap;
         #endif
         #ifdef RECYCLER_STRESS
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean MemProtectHeapStress;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
                 Boolean MemProtectHeapBackgroundStress;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
                 Boolean MemProtectHeapConcurrentStress;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
                 Boolean MemProtectHeapConcurrentRepeatStress;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
                 Boolean MemProtectHeapPartialStress;
         #endif
         #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean FixPropsOnPathTypes;
         #endif
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         NumberSet BailoutTraceFilter;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         NumberSet RejitTraceFilter;
 
         // recycler heuristic flags
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxBackgroundFinishMarkCount;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number BackgroundFinishMarkWaitTime;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MinBackgroundRepeatMarkRescanBytes;
 
         #if defined(_M_X64)
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Boolean ZeroMemoryWithNonTemporalStore;
         #endif
 
         // recycler memory restrict test flags
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxMarkStackPageCount;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxTrackedObjectListCount;
 
         // make the recycler page integration path easier to hit
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number NumberAllocPlusSize;
 
         #if DBG
@@ -2425,45 +2425,45 @@ namespace Js
         #endif
 
         #if DBG
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number PRNGSeed0;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
             Number PRNGSeed1;
         #endif
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ClearInlineCachesOnCollect;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number InlineCacheInvalidationListCompactionThreshold;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number ConstructorCacheInvalidationThreshold;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number GCMemoryThreshold;
 
         #if DBG
             Number SimulatePolyCacheWithOneTypeForInlineCacheIndex;
         #endif
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number JITServerIdleTimeout;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number JITServerMaxInactivePageAllocatorCount;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean StrictWriteBarrierCheck;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean WriteBarrierTest;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean ForceSoftwareWriteBarrier;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean VerifyBarrierBit;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean EnableBGFreeZero;
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Boolean KeepRecyclerTrackData;
 
-        // TODO: remove
+        // TODO (hanhossain): remove flag
         Number MaxSingleAllocSizeInMB;
         bool            flagPresent[FlagCount];
         // save the jscript.config for easier to get the raw input while analyzing dump file
