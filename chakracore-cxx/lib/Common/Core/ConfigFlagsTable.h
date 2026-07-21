@@ -53,7 +53,6 @@ namespace Js
         ArrayValidateFlag,
         #endif
         #ifdef ARENA_MEMORY_VERIFY
-        ArenaNoFreeListFlag,
         ArenaNoPageReuseFlag,
         ArenaUseHeapAllocFlag,
         #endif
@@ -1517,7 +1516,6 @@ namespace Js
             Boolean ArrayValidate;
         #endif
         #ifdef ARENA_MEMORY_VERIFY
-            Boolean ArenaNoFreeList;
             Boolean ArenaNoPageReuse;
             Boolean ArenaUseHeapAlloc;
         #endif

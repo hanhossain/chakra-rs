@@ -124,20 +124,6 @@ int32_t SetArrayValidateFlag(bool flag)
 
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-bool IsEnabledArenaNoFreeListFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::ArenaNoFreeListFlag);
-}
-int32_t GetArenaNoFreeListFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.ArenaNoFreeList;
-    return S_OK;
-}
-int32_t SetArenaNoFreeListFlag(bool flag)
-{
-    Js::Configuration::Global.flags.ArenaNoFreeList = flag;
-    return S_OK;
-}
 bool IsEnabledArenaNoPageReuseFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::ArenaNoPageReuseFlag);
@@ -6567,7 +6553,6 @@ int32_t OnChakraCoreLoaded()
 IsEnabledArrayValidateFlag, GetArrayValidateFlag, SetArrayValidateFlag,
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-IsEnabledArenaNoFreeListFlag, GetArenaNoFreeListFlag, SetArenaNoFreeListFlag,
 IsEnabledArenaNoPageReuseFlag, GetArenaNoPageReuseFlag, SetArenaNoPageReuseFlag,
 IsEnabledArenaUseHeapAllocFlag, GetArenaUseHeapAllocFlag, SetArenaUseHeapAllocFlag,
 #endif
