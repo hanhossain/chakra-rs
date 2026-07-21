@@ -243,16 +243,6 @@ CONTEXT_GetThreadContextFromPort(
 
 /*++
 Function:
-  SetThreadContextOnPort
-  Helper for CONTEXT_SetThreadContext
---*/
-kern_return_t
-CONTEXT_SetThreadContextOnPort(
-   mach_port_t Port,
-    const CONTEXT *lpContext);
-
-/*++
-Function:
   GetThreadContextFromThreadState
   Helper for mach exception support
 --*/

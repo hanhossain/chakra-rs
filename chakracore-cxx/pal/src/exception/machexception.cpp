@@ -957,23 +957,7 @@ SEHExceptionThread()
             sMessage.GetRemotePort(),
             sMessage.GetLocalPort());
 
-        if (sMessage.IsSetThreadRequest())
-        {
-            // Handle a request to set the thread context for the specified target thread.
-            CONTEXT sContext;
-            thread = sMessage.GetThreadContext(&sContext);
-
-            // Suspend the target thread
-            machret = SuspendMachThread(thread);
-            CHECK_MACH("SuspendMachThread", machret);
-
-            machret = CONTEXT_SetThreadContextOnPort(thread, &sContext);
-            CHECK_MACH("CONTEXT_SetThreadContextOnPort", machret);
-
-            machret = thread_resume(thread);
-            CHECK_MACH("thread_resume", machret);
-        }
-        else if (sMessage.IsExceptionNotification())
+        if (sMessage.IsExceptionNotification())
         {
             // This is a notification of an exception occurring on another thread.
             exception_type_t exceptionType = sMessage.GetException();
