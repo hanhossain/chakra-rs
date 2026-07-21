@@ -136,10 +136,6 @@ public:
     mach_port_t GetLocalPort();         // The destination port the message was sent to
     mach_port_t GetRemotePort();        // The source port the message came from (if a reply is expected)
 
-    // Get the properties of a set thread request. Fills in the provided context structure with the context
-    // from the message and returns the target thread to which the context should be applied.
-    thread_act_t GetThreadContext(CONTEXT *pContext);
-
     // Returns the pal thread instance for the forward exception message
     CPalThread *GetPalThread();
 

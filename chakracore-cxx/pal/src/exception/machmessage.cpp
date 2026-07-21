@@ -202,18 +202,6 @@ void MachMessage::GetPorts(bool fCalculate, bool fValidThread)
     }
 }
 
-// Get the properties of a set thread or forward exception request. Fills in the provided
-// context structure with the context from the message and returns the target thread to
-// which the context should be applied.
-thread_act_t MachMessage::GetThreadContext(CONTEXT *pContext)
-{
-    NONPAL_RETAIL_ASSERT("ASSERT: %s\n", "IsSetThreadRequest()");
-
-    memcpy(pContext, &m_pMessage->data.set_thread.new_context, sizeof(CONTEXT));
-    m_hThread = m_pMessage->data.set_thread.thread;
-    return m_hThread;
-}
-
 // Get the target thread for an exception notification message.
 thread_act_t MachMessage::GetThread()
 {
