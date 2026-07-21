@@ -320,65 +320,6 @@ BOOL CONTEXT_GetRegisters(LPCONTEXT lpContext)
 }
 
 /*++
-Function:
-  GetThreadContext
-
-See MSDN doc.
---*/
-BOOL CONTEXT_GetThreadContext(pthread_t self, LPCONTEXT lpContext)
-{
-    BOOL ret = FALSE;
-
-    if (lpContext == NULL)
-    {
-        ERROR("Invalid lpContext parameter value\n");
-        SetLastError(ERROR_NOACCESS);
-        goto EXIT;
-    }
-
-    /* How to consider the case when self is different from the current
-       thread of its owner process. Machine registers values could be retrieved
-       by a ptrace(pid, ...) call or from the "/proc/%pid/reg" file content.
-       Unfortunately, these two methods only depend on process ID, not on
-       thread ID. */
-
-    if (self != pthread_self())
-    {
-        uint32_t flags;
-        // There aren't any APIs for this. We can potentially get the
-        // context of another thread by using per-thread signals, but
-        // on FreeBSD signal handlers that are called as a result
-        // of signals raised via pthread_kill don't get a valid
-        // sigcontext or ucontext_t. But we need this to return TRUE
-        // to avoid an assertion in the CLR in code that manages to
-        // cope reasonably well without a valid thread context.
-        // Given that, we'll zero out our structure and return TRUE.
-        ERROR("GetThreadContext on a thread other than the current "
-              "thread is returning TRUE\n");
-        flags = lpContext->ContextFlags;
-        memset(lpContext, 0, sizeof(*lpContext));
-        lpContext->ContextFlags = flags;
-        ret = TRUE;
-        goto EXIT;
-    }
-
-    if (lpContext->ContextFlags &
-        (CONTEXT_CONTROL | CONTEXT_INTEGER) & CONTEXT_AREA_MASK)
-    {
-        if (CONTEXT_GetRegisters(lpContext) == FALSE)
-        {
-            SetLastError(ERROR_INTERNAL_ERROR);
-            goto EXIT;
-        }
-    }
-
-    ret = TRUE;
-
-EXIT:
-    return ret;
-}
-
-/*++
 Function :
     CONTEXTToNativeContext
 
@@ -1170,42 +1111,6 @@ CONTEXT_GetThreadContextFromThreadState(
             ASSERT("Invalid thread state flavor %d\n", threadStateFlavor);
             break;
     }
-}
-
-/*++
-Function:
-  GetThreadContext
-
-See MSDN doc.
---*/
-BOOL CONTEXT_GetThreadContext(pthread_t self, LPCONTEXT lpContext)
-{
-    BOOL ret = FALSE;
-
-    if (lpContext == NULL)
-    {
-        ERROR("Invalid lpContext parameter value\n");
-        SetLastError(ERROR_NOACCESS);
-        goto EXIT;
-    }
-
-    if (self != pthread_self())
-    {
-        // the target thread is in the current process, but isn't
-        // the current one: extract the CONTEXT from the Mach thread.
-        mach_port_t mptPort;
-        mptPort = pthread_mach_thread_np(self);
-
-        ret = (CONTEXT_GetThreadContextFromPort(mptPort, lpContext) == KERN_SUCCESS);
-    }
-    else
-    {
-        CONTEXT_CaptureContext(lpContext);
-        ret = TRUE;
-    }
-
-EXIT:
-    return ret;
 }
 
 #endif // !defined(__APPLE__)
