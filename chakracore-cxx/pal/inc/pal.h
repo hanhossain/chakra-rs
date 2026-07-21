@@ -1063,13 +1063,6 @@ typedef struct _RUNTIME_FUNCTION {
 } RUNTIME_FUNCTION, *PRUNTIME_FUNCTION;
 #endif
 
-BOOL
-WriteProcessMemory( HANDLE hProcess,
-                    void * lpBaseAddress,
-                    const void * lpBuffer,
-                    size_t nSize,
-                    size_t * lpNumberOfBytesWritten);
-
 #define STANDARD_RIGHTS_REQUIRED  (0x000F0000L)
 #define SYNCHRONIZE               (0x00100000L)
 
