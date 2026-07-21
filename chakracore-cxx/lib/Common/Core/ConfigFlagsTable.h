@@ -83,7 +83,6 @@ namespace Js
         BgJitDelayFlag,
 
         CheckAlignmentFlag,
-        ConstructorInlineThresholdFlag,
         ConstructorCallsRequiredToFinalizeCachedTypeFlag,
         PropertyCacheMissPenaltyFlag,
         PropertyCacheMissThresholdFlag,
@@ -1505,8 +1504,6 @@ namespace Js
         Number BgJitDelay;
 
         Boolean CheckAlignment;
-        // TODO (hanhossain): remove flag
-        Number ConstructorInlineThreshold;
         // TODO (hanhossain): remove flag
         Number ConstructorCallsRequiredToFinalizeCachedType;
         // TODO (hanhossain): remove flag

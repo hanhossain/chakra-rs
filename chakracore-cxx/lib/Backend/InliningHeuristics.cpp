@@ -55,7 +55,7 @@ void InliningThreshold::SetHeuristics()
         inlineThreshold += CONFIG_FLAG(AsmJsInlineAdjust);
     }
 
-    constructorInlineThreshold = CONFIG_FLAG(ConstructorInlineThreshold);
+    constructorInlineThreshold = 21;
     outsideLoopInlineThreshold = CONFIG_FLAG(OutsideLoopInlineThreshold);
     leafInlineThreshold = CONFIG_FLAG(LeafInlineThreshold);
     loopInlineThreshold = CONFIG_FLAG(LoopInlineThreshold);
