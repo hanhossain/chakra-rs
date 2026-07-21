@@ -1391,10 +1391,6 @@ public:
     bool DumpObjectGraph(RecyclerObjectGraphDumper::Param * param = nullptr);
     void DumpObjectDescription(void *object);
 #endif
-#ifdef CHECK_MEMORY_LEAK
-    void CheckLeaks(char16_t const * header);
-    void CheckLeaksOnProcessDetach(char16_t const * header);
-#endif
 #ifdef RECYCLER_TRACE
     void SetDomCollect(bool isDomCollect) { collectionParam.domCollect = isDomCollect; }
     void CaptureCollectionParam(CollectionFlags flags, bool repeat = false);
@@ -1859,14 +1855,6 @@ private:
     void EndNonCollectingMark();
 
 #if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(CHECK_MEMORY_LEAK)
-public:
-    bool IsInDllCanUnloadNow() const { return inDllCanUnloadNow; }
-    bool IsInDetachProcess() const { return inDetachProcess; }
-    void SetInDllCanUnloadNow();
-    void SetInDetachProcess();
-private:
-    bool inDllCanUnloadNow;
-    bool inDetachProcess;
     bool isPrimaryMarkContextInitialized;
 #endif
 #if defined(CHECK_MEMORY_LEAK)

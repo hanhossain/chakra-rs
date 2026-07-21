@@ -304,45 +304,6 @@ HeapAllocator::HeapAllocator(bool useAllocMemProtect)
 
 HeapAllocator::~HeapAllocator()
 {
-#ifdef HEAP_TRACK_ALLOC
-    bool hasFakeHeapLeak = false;
-    auto fakeHeapLeak = [&]()
-    {
-        // REVIEW: Okay to use global flags?
-        if (Js::Configuration::Global.flags.ForceMemoryLeak && !hasFakeHeapLeak)
-        {
-            AUTO_HANDLED_EXCEPTION_TYPE(ExceptionType_DisableCheck);
-            struct FakeMemory { int f; };
-            HeapNewStruct(FakeMemory);
-            hasFakeHeapLeak = true;
-        }
-    };
-
-#ifdef CHECK_MEMORY_LEAK
-    // REVIEW: Okay to use global flags?
-    if (Js::Configuration::Global.flags.CheckMemoryLeak)
-    {
-        fakeHeapLeak();
-        Output::CaptureStart();
-        Output::Print(u"-------------------------------------------------------------------------------------\n");
-        Output::Print(u"Heap Leaks\n");
-        Output::Print(u"-------------------------------------------------------------------------------------\n");
-        if (!HeapAllocator::CheckLeaks())
-        {
-            Output::Print(u"-------------------------------------------------------------------------------------\n");
-            Output::Print(u"Heap Leaked Object: %d bytes (%d objects)\n",
-                data.outstandingBytes, data.allocCount - data.deleteCount);
-            char16_t * buffer = Output::CaptureEnd();
-            MemoryLeakCheck::AddLeakDump(buffer, data.outstandingBytes, data.allocCount - data.deleteCount);
-        }
-        else
-        {
-            free(Output::CaptureEnd());
-        }
-    }
-#endif // CHECK_MEMORY_LEAK
-#endif // HEAP_TRACK_ALLOC
-
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
     if (memProtectHeapHandle != nullptr)
     {

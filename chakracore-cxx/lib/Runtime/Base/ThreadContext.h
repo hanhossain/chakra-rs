@@ -2171,10 +2171,6 @@ public:
         }
     }
 
-#if defined(CHECK_MEMORY_LEAK)
-    static void ReportAndCheckLeaksOnProcessDetach();
-#endif
-
 private:
     class ThreadContextRecyclerTelemetryHostInterface : public RecyclerTelemetryHostInterface
     {

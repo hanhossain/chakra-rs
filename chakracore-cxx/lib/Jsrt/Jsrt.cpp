@@ -385,28 +385,6 @@ JsErrorCode chakracore::jsrt::JsDisposeRuntime(_In_ JsRuntimeHandle runtimeHandl
         runtime->DeleteJsrtDebugManager();
 #endif
 
-#if defined(CHECK_MEMORY_LEAK)
-        bool doFinalGC = false;
-
-#if defined(CHECK_MEMORY_LEAK)
-        if (Js::Configuration::Global.flags.CheckMemoryLeak)
-        {
-            doFinalGC = true;
-        }
-#endif
-
-        if (doFinalGC)
-        {
-            Recycler *recycler = threadContext->GetRecycler();
-            if (recycler)
-            {
-                recycler->EnsureNotCollecting();
-                recycler->CollectNow<CollectNowFinalGC>();
-                Assert(!recycler->CollectionInProgress());
-            }
-        }
-#endif
-
         runtime->SetBeforeCollectCallback(nullptr, nullptr);
         threadContext->CloseForJSRT();
         HeapDelete(threadContext);

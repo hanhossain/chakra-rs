@@ -703,7 +703,6 @@ namespace Js
 
         u"CheckAlignment",
 #ifdef CHECK_MEMORY_LEAK
-        u"CheckMemoryLeak",
         u"DumpOnLeak",
 #endif
         u"CheckOpHelpers",
@@ -1751,7 +1750,6 @@ namespace Js
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
 #ifdef CHECK_MEMORY_LEAK
-        u"Check for heap memory leak",
         u"Create a dump on failed memory leak check",
 #endif
         u"Verify opHelper labels in the JIT are set properly",
@@ -2395,7 +2393,6 @@ namespace Js
 
         NoParentFlag,
 #ifdef CHECK_MEMORY_LEAK
-        NoParentFlag,
         NoParentFlag,
 #endif
         NoParentFlag,
@@ -3060,7 +3057,6 @@ namespace Js
 
         CheckAlignment(false),
 #ifdef CHECK_MEMORY_LEAK
-        CheckMemoryLeak(false),
         DumpOnLeak(nullptr),
 #endif
         CheckOpHelpers(false),
@@ -4395,8 +4391,6 @@ namespace Js
         case CheckAlignmentFlag:
             return FlagBoolean;
         #ifdef CHECK_MEMORY_LEAK
-        case CheckMemoryLeakFlag:
-            return FlagBoolean;
         case DumpOnLeakFlag:
             return FlagString;
         #endif
@@ -5482,8 +5476,6 @@ namespace Js
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
         #ifdef CHECK_MEMORY_LEAK
-        case CheckMemoryLeakFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckMemoryLeak));
         case DumpOnLeakFlag:
             return reinterpret_cast<void*>(const_cast<String*>(&DumpOnLeak));
         #endif
@@ -6587,11 +6579,6 @@ namespace Js
         case CheckAlignmentFlag:
             retValue = false;
             break;
-        #ifdef CHECK_MEMORY_LEAK
-        case CheckMemoryLeakFlag:
-            retValue = false;
-            break;
-        #endif
         case CheckOpHelpersFlag:
             retValue = false;
             break;
