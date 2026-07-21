@@ -685,7 +685,6 @@ namespace Js
     {
 #if DBG
         u"ArrayValidate",
-        u"MemOpMissingValueValidate",
         u"OOPJITFixupValidate",
 #endif
 #ifdef ARENA_MEMORY_VERIFY
@@ -1770,7 +1769,6 @@ namespace Js
     {
 #if DBG
         u"Validate each array for valid elements (default: false)",
-        u"Validate Missing Value Tracking on memset/memcopy",
         u"Validate that all entries in fixup list are allocated as NativeCodeData and that all NativeCodeData gets fixed up",
 #endif
 #ifdef ARENA_MEMORY_VERIFY
@@ -2455,7 +2453,6 @@ namespace Js
     const Flag FlagParents[FlagCount + 1] =
     {
 #if DBG
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
 #endif
@@ -3158,7 +3155,6 @@ namespace Js
     ConfigFlagsTable::ConfigFlagsTable():
 #if DBG
         ArrayValidate(false),
-        MemOpMissingValueValidate(false),
         OOPJITFixupValidate(false),
 #endif
 #ifdef ARENA_MEMORY_VERIFY
@@ -4509,8 +4505,6 @@ namespace Js
         #if DBG
         case ArrayValidateFlag:
             return FlagBoolean;
-        case MemOpMissingValueValidateFlag:
-            return FlagBoolean;
         case OOPJITFixupValidateFlag:
             return FlagBoolean;
         #endif
@@ -5667,8 +5661,6 @@ namespace Js
         #if DBG
         case ArrayValidateFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ArrayValidate));
-        case MemOpMissingValueValidateFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemOpMissingValueValidate));
         case OOPJITFixupValidateFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&OOPJITFixupValidate));
         #endif
@@ -6832,9 +6824,6 @@ namespace Js
         {
         #if DBG
         case ArrayValidateFlag:
-            retValue = false;
-            break;
-        case MemOpMissingValueValidateFlag:
             retValue = false;
             break;
         case OOPJITFixupValidateFlag:

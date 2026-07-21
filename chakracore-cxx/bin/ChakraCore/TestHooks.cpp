@@ -121,20 +121,7 @@ int32_t SetArrayValidateFlag(bool flag)
     Js::Configuration::Global.flags.ArrayValidate = flag;
     return S_OK;
 }
-bool IsEnabledMemOpMissingValueValidateFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::MemOpMissingValueValidateFlag);
-}
-int32_t GetMemOpMissingValueValidateFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.MemOpMissingValueValidate;
-    return S_OK;
-}
-int32_t SetMemOpMissingValueValidateFlag(bool flag)
-{
-    Js::Configuration::Global.flags.MemOpMissingValueValidate = flag;
-    return S_OK;
-}
+
 bool IsEnabledOOPJITFixupValidateFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::OOPJITFixupValidateFlag);
@@ -6592,7 +6579,6 @@ int32_t OnChakraCoreLoaded()
 
 #if DBG
 IsEnabledArrayValidateFlag, GetArrayValidateFlag, SetArrayValidateFlag,
-IsEnabledMemOpMissingValueValidateFlag, GetMemOpMissingValueValidateFlag, SetMemOpMissingValueValidateFlag,
 IsEnabledOOPJITFixupValidateFlag, GetOOPJITFixupValidateFlag, SetOOPJITFixupValidateFlag,
 #endif
 #ifdef ARENA_MEMORY_VERIFY
