@@ -220,18 +220,6 @@ CONTEXT_CaptureContext(
 
 /*++
 Function :
-    CONTEXT_SetThreadContext
-    Processor-dependent implementation of SetThreadContext
-Parameters :
-    HANDLE hThread : thread whose context is to be set
-    CONTEXT *lpContext : new context
-Return value :
-    TRUE on success, FALSE on failure
---*/
-BOOL CONTEXT_SetThreadContext(const CONTEXT *lpContext);
-
-/*++
-Function :
     CONTEXT_GetThreadContext
     Processor-dependent implementation of GetThreadContext
 Parameters :

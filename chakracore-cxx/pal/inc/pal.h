@@ -764,11 +764,6 @@ GetThreadContext(
           HANDLE hThread,
            LPCONTEXT lpContext);
 
-BOOL
-SetThreadContext(
-          HANDLE hThread,
-          const CONTEXT *lpContext);
-
 #define THREAD_BASE_PRIORITY_LOWRT    15
 #define THREAD_BASE_PRIORITY_MAX      2
 #define THREAD_BASE_PRIORITY_MIN      (-2)

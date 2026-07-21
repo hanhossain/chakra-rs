@@ -378,39 +378,6 @@ EXIT:
     return ret;
 }
 
-// TODO (hanhossain): if this should only be used for cross-process, can this be removed now?
-/*++
-Function:
-  SetThreadContext
-
-See MSDN doc.
---*/
-BOOL CONTEXT_SetThreadContext(const CONTEXT *lpContext)
-{
-    BOOL ret = FALSE;
-
-    if (lpContext == NULL)
-    {
-        ERROR("Invalid lpContext parameter value\n");
-        SetLastError(ERROR_NOACCESS);
-        goto EXIT;
-    }
-
-    /* How to consider the case when self is different from the current
-       thread of its owner process. Machine registers values could be retrieved
-       by a ptrace(pid, ...) call or from the "/proc/%pid/reg" file content.
-       Unfortunately, these two methods only depend on process ID, not on
-       thread ID. */
-
-    // Need to implement SetThreadContext(current thread) for the IX architecture; look at common_signal_handler.
-    _ASSERT(FALSE);
-
-    ASSERT("SetThreadContext should be called for cross-process only.\n");
-    SetLastError(ERROR_INVALID_PARAMETER);
-   EXIT:
-     return ret;
-}
-
 /*++
 Function :
     CONTEXTToNativeContext
@@ -1406,44 +1373,6 @@ CONTEXT_SetThreadContextOnPort(
 
 EXIT:
     return MachRet;
-}
-
-/*++
-Function:
-  SetThreadContext
-
-See MSDN doc.
---*/
-BOOL CONTEXT_SetThreadContext(pthread_t self, const CONTEXT *lpContext)
-{
-    BOOL ret = FALSE;
-
-    if (lpContext == NULL)
-    {
-        ERROR("Invalid lpContext parameter value\n");
-        SetLastError(ERROR_NOACCESS);
-        goto EXIT;
-    }
-
-    if (self != pthread_self())
-    {
-        // hThread is in the current process, but isn't the current
-        // thread.  Extract the CONTEXT from the Mach thread.
-
-        mach_port_t mptPort;
-
-        mptPort = pthread_mach_thread_np(self);
-
-        ret = (CONTEXT_SetThreadContextOnPort(mptPort, lpContext) == KERN_SUCCESS);
-    }
-    else
-    {
-        MachSetThreadContext(const_cast<CONTEXT *>(lpContext));
-        ASSERT("MachSetThreadContext should never return\n");
-    }
-
-EXIT:
-    return ret;
 }
 
 #endif // !defined(__APPLE__)
