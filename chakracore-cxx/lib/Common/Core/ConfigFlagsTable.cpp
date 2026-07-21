@@ -702,7 +702,6 @@ namespace Js
         u"BgJitDelay",
 
         u"CheckAlignment",
-        u"CheckEmitBufferPermissions",
 #ifdef CHECK_MEMORY_LEAK
         u"CheckMemoryLeak",
         u"DumpOnLeak",
@@ -1751,7 +1750,6 @@ namespace Js
         u"Delay to wait for speculative jitting before starting script execution",
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
-        u"Check JIT code buffers at commit and decommit time to ensure no PAGE_EXECUTE_READWRITE pages.",
 #ifdef CHECK_MEMORY_LEAK
         u"Check for heap memory leak",
         u"Create a dump on failed memory leak check",
@@ -2395,7 +2393,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
 #ifdef CHECK_MEMORY_LEAK
         NoParentFlag,
@@ -3062,7 +3059,6 @@ namespace Js
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
         CheckAlignment(false),
-        CheckEmitBufferPermissions(false),
 #ifdef CHECK_MEMORY_LEAK
         CheckMemoryLeak(false),
         DumpOnLeak(nullptr),
@@ -4398,8 +4394,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return FlagBoolean;
-        case CheckEmitBufferPermissionsFlag:
-            return FlagBoolean;
         #ifdef CHECK_MEMORY_LEAK
         case CheckMemoryLeakFlag:
             return FlagBoolean;
@@ -5487,8 +5481,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
-        case CheckEmitBufferPermissionsFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckEmitBufferPermissions));
         #ifdef CHECK_MEMORY_LEAK
         case CheckMemoryLeakFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckMemoryLeak));
@@ -6593,9 +6585,6 @@ namespace Js
             break;
 
         case CheckAlignmentFlag:
-            retValue = false;
-            break;
-        case CheckEmitBufferPermissionsFlag:
             retValue = false;
             break;
         #ifdef CHECK_MEMORY_LEAK

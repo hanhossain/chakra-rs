@@ -57,8 +57,6 @@ public:
     void DumpAndResetStats(char16_t const * source);
 #endif
 
-    void CheckBufferPermissions(TEmitBufferAllocation *allocation);
-
 #if DBG
     bool IsBufferExecuteReadOnly(TEmitBufferAllocation * allocation);
 #endif
