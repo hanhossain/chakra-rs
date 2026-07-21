@@ -625,10 +625,6 @@ namespace Js
 #define DEFAULT_CONFIG_LoopAlignNopLimit (6)
 #endif
 
-#if defined(_M_X64)
-#define DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore (true)
-#endif
-
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)
 #define TraceLevel_Info         (3)
@@ -1231,10 +1227,6 @@ namespace Js
         u"MaxBackgroundFinishMarkCount",
         u"BackgroundFinishMarkWaitTime",
         u"MinBackgroundRepeatMarkRescanBytes",
-
-#if defined(_M_X64)
-        u"ZeroMemoryWithNonTemporalStore",
-#endif
 
 #if DBG
         u"InitializeInterpreterSlotsWithInvalidStackVar",
@@ -2234,10 +2226,6 @@ namespace Js
         u"Millisecond to wait for background finish mark",
         u"Minimum number of bytes rescan to trigger background finish mark",
 
-#if defined(_M_X64)
-        u"Zero free memory with non-temporal stores to avoid evicting other content from processor cache",
-#endif
-
 #if DBG
         u"Enable the initialization of the interpreter local slots with invalid stack vars",
 #endif
@@ -2831,10 +2819,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-
-#if defined(_M_X64)
-        NoParentFlag,
-#endif
 
 #if DBG
         NoParentFlag,
@@ -3451,10 +3435,6 @@ namespace Js
         MaxBackgroundFinishMarkCount(1),
         BackgroundFinishMarkWaitTime(15),
         MinBackgroundRepeatMarkRescanBytes(-1),
-
-#if defined(_M_X64)
-        ZeroMemoryWithNonTemporalStore(DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore),
-#endif
 
 #if DBG
         InitializeInterpreterSlotsWithInvalidStackVar(false),
@@ -5107,11 +5087,6 @@ namespace Js
         case MinBackgroundRepeatMarkRescanBytesFlag:
             return FlagNumber;
 
-        #if defined(_M_X64)
-        case ZeroMemoryWithNonTemporalStoreFlag:
-            return FlagBoolean;
-        #endif
-
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
             return FlagBoolean;
@@ -6123,11 +6098,6 @@ namespace Js
         case MinBackgroundRepeatMarkRescanBytesFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinBackgroundRepeatMarkRescanBytes));
 
-        #if defined(_M_X64)
-        case ZeroMemoryWithNonTemporalStoreFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ZeroMemoryWithNonTemporalStore));
-        #endif
-
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&InitializeInterpreterSlotsWithInvalidStackVar));
@@ -7049,12 +7019,6 @@ namespace Js
         #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         case FixPropsOnPathTypesFlag:
             retValue = DEFAULT_CONFIG_FixPropsOnPathTypes;
-            break;
-        #endif
-
-        #if defined(_M_X64)
-        case ZeroMemoryWithNonTemporalStoreFlag:
-            retValue = DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore;
             break;
         #endif
 

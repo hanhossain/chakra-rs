@@ -1019,15 +1019,10 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FillFreePages(void * a
         // This helps low-end machines with limited cache size.
         //
 #if defined(_M_X64)
-        if (CONFIG_FLAG(ZeroMemoryWithNonTemporalStore))
-        {
-            js_memset_zero_nontemporal(address, AutoSystemInfo::PageSize * pageCount);
-        }
-        else
+        js_memset_zero_nontemporal(address, AutoSystemInfo::PageSize * pageCount);
+#else
+        memset(address, 0, AutoSystemInfo::PageSize * pageCount);
 #endif
-        {
-            memset(address, 0, AutoSystemInfo::PageSize * pageCount);
-        }
     }
 #endif
 
@@ -1679,15 +1674,10 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ZeroQueuedPages()
         //
         Assert(this->processHandle == GetCurrentProcess());
 #if defined(_M_X64)
-        if (CONFIG_FLAG(ZeroMemoryWithNonTemporalStore))
-        {
-            js_memset_zero_nontemporal(freePageEntry, AutoSystemInfo::PageSize * pageCount);
-        }
-        else
+        js_memset_zero_nontemporal(freePageEntry, AutoSystemInfo::PageSize * pageCount);
+#else
+        memset(freePageEntry, 0, pageCount * AutoSystemInfo::PageSize);
 #endif
-        {
-            memset(freePageEntry, 0, pageCount * AutoSystemInfo::PageSize);
-        }
 
         QueuePages(freePageEntry, pageCount, segment);
     }

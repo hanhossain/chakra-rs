@@ -600,10 +600,6 @@ namespace Js
         BackgroundFinishMarkWaitTimeFlag,
         MinBackgroundRepeatMarkRescanBytesFlag,
 
-        #if defined(_M_X64)
-        ZeroMemoryWithNonTemporalStoreFlag,
-        #endif
-
         #if DBG
         InitializeInterpreterSlotsWithInvalidStackVarFlag,
         #endif
@@ -2245,11 +2241,6 @@ namespace Js
         Number BackgroundFinishMarkWaitTime;
         // TODO (hanhossain): remove flag
         Number MinBackgroundRepeatMarkRescanBytes;
-
-        #if defined(_M_X64)
-        // TODO (hanhossain): remove flag
-            Boolean ZeroMemoryWithNonTemporalStore;
-        #endif
 
         #if DBG
             Boolean InitializeInterpreterSlotsWithInvalidStackVar;
