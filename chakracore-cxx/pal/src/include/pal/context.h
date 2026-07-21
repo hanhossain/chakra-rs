@@ -218,18 +218,6 @@ CONTEXT_CaptureContext(
     LPCONTEXT lpContext
     );
 
-/*++
-Function :
-    CONTEXT_GetThreadContext
-    Processor-dependent implementation of GetThreadContext
-Parameters :
-    HANDLE hThread : thread whose context is to retrieved
-    LPCONTEXT lpContext  : destination for thread's context
-Return value :
-    TRUE on success, FALSE on failure
---*/
-BOOL CONTEXT_GetThreadContext(pthread_t self, LPCONTEXT lpContext);
-
 #if defined(__APPLE__)
 /*++
 Function:
