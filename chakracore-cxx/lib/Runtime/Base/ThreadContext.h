@@ -361,7 +361,6 @@ private:
 #define DEFAULT_CONFIG_RecursiveInlineDepthMax      (8)      // Maximum inline depth for recursive calls
 #define DEFAULT_CONFIG_RecursiveInlineDepthMin      (2)      // Minimum inline depth for recursive call
 #define DEFAULT_CONFIG_InlineInLoopBodyScaleDownFactor    (4)
-#define DEFAULT_CONFIG_PropertyCacheMissReset (-5000)
 
 #define DEFAULT_CONFIG_HighPrecisionDate    (false)
 #define DEFAULT_CONFIG_ForceOldDateAPI      (false)

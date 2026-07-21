@@ -329,7 +329,6 @@ namespace Js
 #define DEFAULT_CONFIG_RecursiveInlineDepthMax      (8)      // Maximum inline depth for recursive calls
 #define DEFAULT_CONFIG_RecursiveInlineDepthMin      (2)      // Minimum inline depth for recursive call
 #define DEFAULT_CONFIG_InlineInLoopBodyScaleDownFactor    (4)
-#define DEFAULT_CONFIG_PropertyCacheMissReset (-5000)
 
 #define DEFAULT_CONFIG_HighPrecisionDate    (false)
 #define DEFAULT_CONFIG_ForceOldDateAPI      (false)
@@ -696,7 +695,6 @@ namespace Js
         u"BgJitDelay",
 
         u"CheckAlignment",
-        u"PropertyCacheMissReset",
         u"Debug",
         u"DebugBreak",
         u"StatementDebugBreak",
@@ -1733,7 +1731,6 @@ namespace Js
         u"Delay to wait for speculative jitting before starting script execution",
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
-        u"Point at which we try to start using string or symbol cache after giving up",
         u"Disable phases (layout, security code, etc) which makes JIT output harder to debug",
         u"Index of the function where you want to break",
         u"Index of the statement where you want to break",
@@ -2365,7 +2362,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3020,7 +3016,6 @@ namespace Js
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
         CheckAlignment(false),
-        PropertyCacheMissReset(DEFAULT_CONFIG_PropertyCacheMissReset),
         Debug(false),
         DebugBreak(),
         StatementDebugBreak(),
@@ -4344,8 +4339,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return FlagBoolean;
-        case PropertyCacheMissResetFlag:
-            return FlagNumber;
         case DebugFlag:
             return FlagBoolean;
         case DebugBreakFlag:
@@ -5411,8 +5404,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
-        case PropertyCacheMissResetFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&PropertyCacheMissReset));
         case DebugFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&Debug));
         case DebugBreakFlag:
