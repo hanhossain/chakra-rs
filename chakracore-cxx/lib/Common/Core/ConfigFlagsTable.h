@@ -80,7 +80,6 @@ namespace Js
         BailOutAtEveryByteCodeFlag,
         BailOutByteCodeFlag,
         BgJitFlag,
-        BgParseFlag,
         BgJitDelayFlag,
         BgJitDelayFgBufferFlag,
         BgJitPendingFuncCapFlag,
@@ -1519,8 +1518,6 @@ namespace Js
             Boolean BailOutAtEveryByteCode;
             NumberSet BailOutByteCode;
         Boolean BgJit;
-        // TODO (hanhossain): remove flag
-        Boolean BgParse;
         Number BgJitDelay;
         // TODO (hanhossain): remove flag
         Number BgJitDelayFgBuffer;

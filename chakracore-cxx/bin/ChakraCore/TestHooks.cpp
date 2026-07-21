@@ -384,20 +384,6 @@ int32_t SetBgJitFlag(bool flag)
     Js::Configuration::Global.flags.BgJit = flag;
     return S_OK;
 }
-bool IsEnabledBgParseFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::BgParseFlag);
-}
-int32_t GetBgParseFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.BgParse;
-    return S_OK;
-}
-int32_t SetBgParseFlag(bool flag)
-{
-    Js::Configuration::Global.flags.BgParse = flag;
-    return S_OK;
-}
 bool IsEnabledBgJitDelayFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::BgJitDelayFlag);
@@ -6278,7 +6264,6 @@ IsEnabledBaselineModeFlag, GetBaselineModeFlag, SetBaselineModeFlag,
 IsEnabledBailOutAtEveryByteCodeFlag, GetBailOutAtEveryByteCodeFlag, SetBailOutAtEveryByteCodeFlag,
 
 IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
-IsEnabledBgParseFlag, GetBgParseFlag, SetBgParseFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 IsEnabledBgJitDelayFgBufferFlag, GetBgJitDelayFgBufferFlag, SetBgJitDelayFgBufferFlag,
 IsEnabledBgJitPendingFuncCapFlag, GetBgJitPendingFuncCapFlag, SetBgJitPendingFuncCapFlag,
