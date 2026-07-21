@@ -341,20 +341,6 @@ int32_t SetWasmSimdFlag(bool flag)
     return S_OK;
 }
 
-bool IsEnabledAssertPopUpFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::AssertPopUpFlag);
-}
-int32_t GetAssertPopUpFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.AssertPopUp;
-    return S_OK;
-}
-int32_t SetAssertPopUpFlag(bool flag)
-{
-    Js::Configuration::Global.flags.AssertPopUp = flag;
-    return S_OK;
-}
 bool IsEnabledAssertIgnoreFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::AssertIgnoreFlag);
@@ -6416,7 +6402,6 @@ IsEnabledWasmNontrappingFlag, GetWasmNontrappingFlag, SetWasmNontrappingFlag,
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
 IsEnabledWasmSimdFlag, GetWasmSimdFlag, SetWasmSimdFlag,
 
-IsEnabledAssertPopUpFlag, GetAssertPopUpFlag, SetAssertPopUpFlag,
 IsEnabledAssertIgnoreFlag, GetAssertIgnoreFlag, SetAssertIgnoreFlag,
 IsEnabledAsyncDebuggingFlag, GetAsyncDebuggingFlag, SetAsyncDebuggingFlag,
 IsEnabledBailOnNoProfileLimitFlag, GetBailOnNoProfileLimitFlag, SetBailOnNoProfileLimitFlag,
