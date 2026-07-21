@@ -123,22 +123,6 @@ int32_t SetArrayValidateFlag(bool flag)
 }
 
 #endif
-#ifdef ARENA_MEMORY_VERIFY
-bool IsEnabledArenaUseHeapAllocFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::ArenaUseHeapAllocFlag);
-}
-int32_t GetArenaUseHeapAllocFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.ArenaUseHeapAlloc;
-    return S_OK;
-}
-int32_t SetArenaUseHeapAllocFlag(bool flag)
-{
-    Js::Configuration::Global.flags.ArenaUseHeapAlloc = flag;
-    return S_OK;
-}
-#endif
 bool IsEnabledValidateInlineStackFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::ValidateInlineStackFlag);
@@ -6537,9 +6521,6 @@ int32_t OnChakraCoreLoaded()
 
 #if DBG
 IsEnabledArrayValidateFlag, GetArrayValidateFlag, SetArrayValidateFlag,
-#endif
-#ifdef ARENA_MEMORY_VERIFY
-IsEnabledArenaUseHeapAllocFlag, GetArenaUseHeapAllocFlag, SetArenaUseHeapAllocFlag,
 #endif
 IsEnabledValidateInlineStackFlag, GetValidateInlineStackFlag, SetValidateInlineStackFlag,
 IsEnabledAsmDiffFlag, GetAsmDiffFlag, SetAsmDiffFlag,

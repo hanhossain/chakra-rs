@@ -169,13 +169,6 @@ RealAllocInlined(size_t nbytes)
 {
     Assert(nbytes != 0);
 
-#ifdef ARENA_MEMORY_VERIFY
-    if (Js::Configuration::Global.flags.ArenaUseHeapAlloc)
-    {
-        return AllocFromHeap<true>(nbytes);
-    }
-#endif
-
     Assert(cacheBlockEnd >= cacheBlockCurrent);
     char * p = cacheBlockCurrent;
     if (static_cast<size_t>(cacheBlockEnd - p) >= nbytes)

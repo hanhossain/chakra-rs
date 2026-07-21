@@ -52,9 +52,6 @@ namespace Js
         #if DBG
         ArrayValidateFlag,
         #endif
-        #ifdef ARENA_MEMORY_VERIFY
-        ArenaUseHeapAllocFlag,
-        #endif
         ValidateInlineStackFlag,
         AsmDiffFlag,
         AsmDumpModeFlag,
@@ -1513,9 +1510,6 @@ namespace Js
 
         #if DBG
             Boolean ArrayValidate;
-        #endif
-        #ifdef ARENA_MEMORY_VERIFY
-            Boolean ArenaUseHeapAlloc;
         #endif
         Boolean ValidateInlineStack;
         Boolean AsmDiff;
