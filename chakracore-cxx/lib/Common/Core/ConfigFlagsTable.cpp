@@ -632,7 +632,6 @@ namespace Js
 #endif
 
 #define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
-#define DEFAULT_CONFIG_EnableBGFreeZero (true)
 
 #define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)
 #define DEFAULT_CONFIG_WriteBarrierTest (false)
@@ -1277,7 +1276,6 @@ namespace Js
         u"WriteBarrierTest",
         u"ForceSoftwareWriteBarrier",
         u"VerifyBarrierBit",
-        u"EnableBGFreeZero",
 
 // TODO (hanhossain): ConfigFlagsList end
         NULL
@@ -2306,7 +2304,6 @@ namespace Js
         u"Always return true while checking barrier to test recycler regardless of annotation",
         u"Use to turn off write watch to test software write barrier on windows",
         u"Verify software write barrier bit is set while marking",
-        u"Use to turn off background freeing and zeroing to simulate linux",
 
         NULL
     };
@@ -2926,7 +2923,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3575,7 +3571,6 @@ namespace Js
         WriteBarrierTest(DEFAULT_CONFIG_WriteBarrierTest),
         ForceSoftwareWriteBarrier(DEFAULT_CONFIG_ForceSoftwareWriteBarrier),
         VerifyBarrierBit(DEFAULT_CONFIG_VerifyBarrierBit),
-        EnableBGFreeZero(DEFAULT_CONFIG_EnableBGFreeZero),
 
         nDummy(0)
     {
@@ -5275,8 +5270,6 @@ namespace Js
             return FlagBoolean;
         case VerifyBarrierBitFlag:
             return FlagBoolean;
-        case EnableBGFreeZeroFlag:
-            return FlagBoolean;
 
         default:
             return InvalidFlagType;
@@ -6334,8 +6327,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceSoftwareWriteBarrier));
         case VerifyBarrierBitFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&VerifyBarrierBit));
-        case EnableBGFreeZeroFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableBGFreeZero));
 
         default:
             return NULL;
@@ -7278,9 +7269,6 @@ namespace Js
             break;
         case VerifyBarrierBitFlag:
             retValue = DEFAULT_CONFIG_VerifyBarrierBit;
-            break;
-        case EnableBGFreeZeroFlag:
-            retValue = DEFAULT_CONFIG_EnableBGFreeZero;
             break;
 
         default:

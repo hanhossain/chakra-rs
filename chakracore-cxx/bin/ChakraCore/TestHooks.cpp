@@ -5867,20 +5867,6 @@ int32_t SetVerifyBarrierBitFlag(bool flag)
     Js::Configuration::Global.flags.VerifyBarrierBit = flag;
     return S_OK;
 }
-bool IsEnabledEnableBGFreeZeroFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::EnableBGFreeZeroFlag);
-}
-int32_t GetEnableBGFreeZeroFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.EnableBGFreeZero;
-    return S_OK;
-}
-int32_t SetEnableBGFreeZeroFlag(bool flag)
-{
-    Js::Configuration::Global.flags.EnableBGFreeZero = flag;
-    return S_OK;
-}
 
 int32_t OnChakraCoreLoaded()
 {
@@ -6469,7 +6455,6 @@ IsEnabledStrictWriteBarrierCheckFlag, GetStrictWriteBarrierCheckFlag, SetStrictW
 IsEnabledWriteBarrierTestFlag, GetWriteBarrierTestFlag, SetWriteBarrierTestFlag,
 IsEnabledForceSoftwareWriteBarrierFlag, GetForceSoftwareWriteBarrierFlag, SetForceSoftwareWriteBarrierFlag,
 IsEnabledVerifyBarrierBitFlag, GetVerifyBarrierBitFlag, SetVerifyBarrierBitFlag,
-IsEnabledEnableBGFreeZeroFlag, GetEnableBGFreeZeroFlag, SetEnableBGFreeZeroFlag,
 
     };
     return ChakraRTInterface::InitializeTestHooks(testHooks);

@@ -1412,9 +1412,6 @@ int32_t (*pfSetForceSoftwareWriteBarrierFlag)(bool flag);
 bool (*pfIsEnabledVerifyBarrierBitFlag)();
 int32_t (*pfGetVerifyBarrierBitFlag)(bool *flag);
 int32_t (*pfSetVerifyBarrierBitFlag)(bool flag);
-bool (*pfIsEnabledEnableBGFreeZeroFlag)();
-int32_t (*pfGetEnableBGFreeZeroFlag)(bool *flag);
-int32_t (*pfSetEnableBGFreeZeroFlag)(bool flag);
 };
 
 int32_t OnChakraCoreLoaded();

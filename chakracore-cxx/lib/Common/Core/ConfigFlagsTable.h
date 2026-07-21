@@ -637,7 +637,6 @@ namespace Js
         WriteBarrierTestFlag,
         ForceSoftwareWriteBarrierFlag,
         VerifyBarrierBitFlag,
-        EnableBGFreeZeroFlag,
 
         FlagCount,
         InvalidFlag,
@@ -2326,8 +2325,6 @@ namespace Js
         Boolean ForceSoftwareWriteBarrier;
         // TODO (hanhossain): remove flag
         Boolean VerifyBarrierBit;
-        // TODO (hanhossain): remove flag
-        Boolean EnableBGFreeZero;
 
         bool            flagPresent[FlagCount];
         // save the jscript.config for easier to get the raw input while analyzing dump file
