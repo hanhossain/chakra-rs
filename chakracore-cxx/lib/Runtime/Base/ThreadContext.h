@@ -606,7 +606,6 @@ private:
 #define DEFAULT_CONFIG_PrimeRecycler     (false)
 #define DEFAULT_CONFIG_DisableRentalThreading (false)
 #define DEFAULT_CONFIG_DisableDebugObject (false)
-#define DEFAULT_CONFIG_DumpHeap (false)
 #define DEFAULT_CONFIG_PerfHintLevel (1)
 #define DEFAULT_CONFIG_OOPJITMissingOpts (false)
 #define DEFAULT_CONFIG_OOPCFGRegistration (true)

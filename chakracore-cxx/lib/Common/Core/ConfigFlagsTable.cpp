@@ -573,7 +573,6 @@ namespace Js
 #define DEFAULT_CONFIG_PrimeRecycler     (false)
 #define DEFAULT_CONFIG_DisableRentalThreading (false)
 #define DEFAULT_CONFIG_DisableDebugObject (false)
-#define DEFAULT_CONFIG_DumpHeap (false)
 #define DEFAULT_CONFIG_PerfHintLevel (1)
 #define DEFAULT_CONFIG_OOPJITMissingOpts (false)
 #define DEFAULT_CONFIG_OOPCFGRegistration (true)
@@ -1199,7 +1198,6 @@ namespace Js
         u"ChangeTypeOnProto",
         u"ShareInlineCaches",
         u"DisableDebugObject",
-        u"DumpHeap",
         u"PerfHintLevel",
 
 #if DBG
@@ -2176,7 +2174,6 @@ namespace Js
         u"When becoming a prototype should the object switch to a new type (default: true)?",
         u"Determines whether inline caches are shared between all loads (or all stores) of the same property ID",
         u"Disable test only Debug object properties",
-        u"enable Debug.dumpHeap even when DisableDebugObject is set",
         // todo (hanhossain): flag end
         u"Specifies the perf-hint level (1,2) 1 == critical, 2 == only noisy",
 
@@ -2740,7 +2737,6 @@ namespace Js
 #ifdef PROFILE_MEM
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3344,7 +3340,6 @@ namespace Js
         ChangeTypeOnProto(DEFAULT_CONFIG_ChangeTypeOnProto),
         ShareInlineCaches(DEFAULT_CONFIG_ShareInlineCaches),
         DisableDebugObject(DEFAULT_CONFIG_DisableDebugObject),
-        DumpHeap(DEFAULT_CONFIG_DumpHeap),
         PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
 
 #if DBG
@@ -4959,8 +4954,6 @@ namespace Js
             return FlagBoolean;
         case DisableDebugObjectFlag:
             return FlagBoolean;
-        case DumpHeapFlag:
-            return FlagBoolean;
         case PerfHintLevelFlag:
             return FlagNumber;
 
@@ -5936,8 +5929,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ShareInlineCaches));
         case DisableDebugObjectFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&DisableDebugObject));
-        case DumpHeapFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpHeap));
         case PerfHintLevelFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PerfHintLevel));
 
@@ -6833,9 +6824,6 @@ namespace Js
             break;
         case DisableDebugObjectFlag:
             retValue = DEFAULT_CONFIG_DisableDebugObject;
-            break;
-        case DumpHeapFlag:
-            retValue = DEFAULT_CONFIG_DumpHeap;
             break;
 
         #if DBG

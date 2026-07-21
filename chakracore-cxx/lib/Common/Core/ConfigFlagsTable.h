@@ -576,7 +576,6 @@ namespace Js
         ChangeTypeOnProtoFlag,
         ShareInlineCachesFlag,
         DisableDebugObjectFlag,
-        DumpHeapFlag,
         PerfHintLevelFlag,
 
         #if DBG
@@ -2183,8 +2182,8 @@ namespace Js
         Boolean ShareInlineCaches;
         // TODO (hanhossain): remove flag
         Boolean DisableDebugObject;
-        // TODO (hanhossain): remove flag
-        Boolean DumpHeap;
+
+        // todo (hanhossain): flag end
         Number PerfHintLevel;
 
         #if DBG
