@@ -7,6 +7,8 @@
 
 namespace Js
 {
+    constexpr unsigned char DeletedPropertyReuseThreshold = 32;
+
     // ----------------------------------------------------------------------
     // Helper methods to deal with differing TMapKey and TPropertyKey types.
     // Used by both SimpleDictionaryTypeHandler and DictionaryTypeHandler.
@@ -365,8 +367,7 @@ namespace Js
     {
         Assert(scriptContext);
         return
-            !isUnordered &&
-            CONFIG_FLAG(DeletedPropertyReuseThreshold) > 0;
+            !isUnordered;
     }
 
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported>
@@ -1558,7 +1559,7 @@ namespace Js
                     if (SupportsSwitchingToUnordered(scriptContext))
                     {
                         ++numDeletedProperties;
-                        if (numDeletedProperties >= CONFIG_FLAG(DeletedPropertyReuseThreshold))
+                        if (numDeletedProperties >= DeletedPropertyReuseThreshold)
                         {
                             // This type handler is being used as a hashtable. Start reusing deleted property indexes for new
                             // property IDs. After this, enumeration order is nondeterministic.
@@ -1689,7 +1690,7 @@ namespace Js
                     if (SupportsSwitchingToUnordered(scriptContext))
                     {
                         ++numDeletedProperties;
-                        if (numDeletedProperties >= CONFIG_FLAG(DeletedPropertyReuseThreshold))
+                        if (numDeletedProperties >= DeletedPropertyReuseThreshold)
                         {
                             // This type handler is being used as a hashtable. Start reusing deleted property indexes for new
                             // property IDs. After this, enumeration order is nondeterministic.

@@ -599,7 +599,6 @@ private:
 
 #define DEFAULT_CONFIG_Sse                  (-1)
 
-#define DEFAULT_CONFIG_DeletedPropertyReuseThreshold (32)
 #define DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold (0xffff)
 #define DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler (false)
 #define DEFAULT_CONFIG_PrimeRecycler     (false)

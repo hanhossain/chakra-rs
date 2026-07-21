@@ -568,7 +568,6 @@ namespace Js
         TraceObjectAllocationFlag,
         #endif
         SseFlag,
-        DeletedPropertyReuseThresholdFlag,
         ForceStringKeyedSimpleDictionaryTypeHandlerFlag,
         BigDictionaryTypeHandlerThresholdFlag,
         PerfHintLevelFlag,
@@ -2162,10 +2161,8 @@ namespace Js
         // TODO (hanhossain): remove flag
             Boolean TraceObjectAllocation;
         #endif
-        Number Sse;
-        // TODO (hanhossain): remove flag
-        Number DeletedPropertyReuseThreshold;
         // todo (hanhossain): flag end
+        Number Sse;
         Boolean ForceStringKeyedSimpleDictionaryTypeHandler;
         Number BigDictionaryTypeHandlerThreshold;
 

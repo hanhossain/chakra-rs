@@ -566,7 +566,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_Sse                  (-1)
 
-#define DEFAULT_CONFIG_DeletedPropertyReuseThreshold (32)
 #define DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold (0xffff)
 #define DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler (false)
 #define DEFAULT_CONFIG_TypeSnapshotEnumeration (true)
@@ -1186,7 +1185,6 @@ namespace Js
         u"TraceObjectAllocation",
 #endif
         u"Sse",
-        u"DeletedPropertyReuseThreshold",
         u"ForceStringKeyedSimpleDictionaryTypeHandler",
         u"BigDictionaryTypeHandlerThreshold",
         u"PerfHintLevel",
@@ -2156,9 +2154,8 @@ namespace Js
 #ifdef PROFILE_MEM
         u"Enable cleaning up the eval map",
 #endif
-        u"Virtually disables SSE-based optimizations above the specified SSE level in the Chakra JIT (does not affect CRT SSE usage)",
-        u"Start reusing deleted property indexes after this many properties are deleted. Zero to disable reuse.",
         // todo (hanhossain): flag end
+        u"Virtually disables SSE-based optimizations above the specified SSE level in the Chakra JIT (does not affect CRT SSE usage)",
         u"Force switch to string keyed version of SimpleDictionaryTypeHandler on first new property added to a SimpleDictionaryTypeHandler",
         u"Min Slot Capacity required to convert DictionaryTypeHandler to BigDictionaryTypeHandler.(Advisable to give more than 15 - to avoid false positive cases)",
         u"Specifies the perf-hint level (1,2) 1 == critical, 2 == only noisy",
@@ -2723,9 +2720,8 @@ namespace Js
 #ifdef PROFILE_MEM
         NoParentFlag,
 #endif
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3313,7 +3309,6 @@ namespace Js
         TraceObjectAllocation(false),
 #endif
         Sse(DEFAULT_CONFIG_Sse),
-        DeletedPropertyReuseThreshold(DEFAULT_CONFIG_DeletedPropertyReuseThreshold),
         ForceStringKeyedSimpleDictionaryTypeHandler(DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler),
         BigDictionaryTypeHandlerThreshold(DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold),
         PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
@@ -4914,8 +4909,6 @@ namespace Js
         #endif
         case SseFlag:
             return FlagNumber;
-        case DeletedPropertyReuseThresholdFlag:
-            return FlagNumber;
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
             return FlagBoolean;
         case BigDictionaryTypeHandlerThresholdFlag:
@@ -5879,8 +5872,6 @@ namespace Js
         #endif
         case SseFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Sse));
-        case DeletedPropertyReuseThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&DeletedPropertyReuseThreshold));
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceStringKeyedSimpleDictionaryTypeHandler));
         case BigDictionaryTypeHandlerThresholdFlag:
