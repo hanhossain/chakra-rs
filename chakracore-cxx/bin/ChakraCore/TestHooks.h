@@ -39,9 +39,6 @@ bool (*pfIsEnabledArrayValidateFlag)();
 int32_t (*pfGetArrayValidateFlag)(bool *flag);
 int32_t (*pfSetArrayValidateFlag)(bool flag);
 #endif
-bool (*pfIsEnabledAsmDiffFlag)();
-int32_t (*pfGetAsmDiffFlag)(bool *flag);
-int32_t (*pfSetAsmDiffFlag)(bool flag);
 bool (*pfIsEnabledAsmDumpModeFlag)();
 int32_t (*pfGetAsmDumpModeFlag)(BSTR *flag);
 int32_t (*pfSetAsmDumpModeFlag)(BSTR flag);

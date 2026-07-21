@@ -1249,7 +1249,7 @@ Func::EndPhase(Js::Phase tag, bool dump)
                 Js::PhaseNames[tag],
                 ExecutionModeName(m_workItem->GetJitMode()));
         }
-        this->Dump(Js::Configuration::Global.flags.AsmDiff? IRDumpFlags_AsmDumpMode : IRDumpFlags_None);
+        this->Dump(IRDumpFlags_None);
     }
 #endif
 

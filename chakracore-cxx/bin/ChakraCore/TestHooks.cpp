@@ -123,20 +123,6 @@ int32_t SetArrayValidateFlag(bool flag)
 }
 
 #endif
-bool IsEnabledAsmDiffFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::AsmDiffFlag);
-}
-int32_t GetAsmDiffFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.AsmDiff;
-    return S_OK;
-}
-int32_t SetAsmDiffFlag(bool flag)
-{
-    Js::Configuration::Global.flags.AsmDiff = flag;
-    return S_OK;
-}
 bool IsEnabledAsmDumpModeFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::AsmDumpModeFlag);
@@ -6508,7 +6494,6 @@ int32_t OnChakraCoreLoaded()
 #if DBG
 IsEnabledArrayValidateFlag, GetArrayValidateFlag, SetArrayValidateFlag,
 #endif
-IsEnabledAsmDiffFlag, GetAsmDiffFlag, SetAsmDiffFlag,
 IsEnabledAsmDumpModeFlag, GetAsmDumpModeFlag, SetAsmDumpModeFlag,
 IsEnabledAsmJsFlag, GetAsmJsFlag, SetAsmJsFlag,
 IsEnabledAsmJsStopOnErrorFlag, GetAsmJsStopOnErrorFlag, SetAsmJsStopOnErrorFlag,

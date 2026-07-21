@@ -686,7 +686,6 @@ namespace Js
 #if DBG
         u"ArrayValidate",
 #endif
-        u"AsmDiff",
         u"AsmDumpMode",
         u"AsmJs",
         u"AsmJsStopOnError",
@@ -1763,7 +1762,6 @@ namespace Js
 #if DBG
         u"Validate each array for valid elements (default: false)",
 #endif
-        u"Dump the IR without memory locations and varying parameters.",
         u"Dump the final assembly to a file without memory locations and varying parameters\n\t\t\t\t\tThe 'filename' is the file where the assembly will be dumped. Dump to console if no file is specified",
         u"Enable Asmjs",
         u"Stop execution on any AsmJs validation errors",
@@ -2460,7 +2458,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
 
 // WebAssembly Experimental Features
 // Master WasmExperimental flag to activate WebAssembly experimental features
@@ -3135,7 +3132,6 @@ namespace Js
 #if DBG
         ArrayValidate(false),
 #endif
-        AsmDiff(false),
         AsmDumpMode(nullptr),
         AsmJs(DEFAULT_CONFIG_AsmJs),
         AsmJsStopOnError(DEFAULT_CONFIG_AsmJsStopOnError),
@@ -4478,8 +4474,6 @@ namespace Js
         case ArrayValidateFlag:
             return FlagBoolean;
         #endif
-        case AsmDiffFlag:
-            return FlagBoolean;
         case AsmDumpModeFlag:
             return FlagString;
         case AsmJsFlag:
@@ -5622,8 +5616,6 @@ namespace Js
         case ArrayValidateFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ArrayValidate));
         #endif
-        case AsmDiffFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmDiff));
         case AsmDumpModeFlag:
             return reinterpret_cast<void*>(const_cast<String*>(&AsmDumpMode));
         case AsmJsFlag:
@@ -6775,9 +6767,6 @@ namespace Js
             retValue = false;
             break;
         #endif
-        case AsmDiffFlag:
-            retValue = false;
-            break;
         case AsmJsFlag:
             retValue = DEFAULT_CONFIG_AsmJs;
             break;
