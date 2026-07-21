@@ -341,20 +341,6 @@ int32_t SetWasmSimdFlag(bool flag)
     return S_OK;
 }
 
-bool IsEnabledBailOnNoProfileLimitFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::BailOnNoProfileLimitFlag);
-}
-int32_t GetBailOnNoProfileLimitFlag(int *flag)
-{
-    *flag = Js::Configuration::Global.flags.BailOnNoProfileLimit;
-    return S_OK;
-}
-int32_t SetBailOnNoProfileLimitFlag(int flag)
-{
-    Js::Configuration::Global.flags.BailOnNoProfileLimit = flag;
-    return S_OK;
-}
 bool IsEnabledBailOnNoProfileRejitLimitFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::BailOnNoProfileRejitLimitFlag);
@@ -6374,7 +6360,6 @@ IsEnabledWasmNontrappingFlag, GetWasmNontrappingFlag, SetWasmNontrappingFlag,
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
 IsEnabledWasmSimdFlag, GetWasmSimdFlag, SetWasmSimdFlag,
 
-IsEnabledBailOnNoProfileLimitFlag, GetBailOnNoProfileLimitFlag, SetBailOnNoProfileLimitFlag,
 IsEnabledBailOnNoProfileRejitLimitFlag, GetBailOnNoProfileRejitLimitFlag, SetBailOnNoProfileRejitLimitFlag,
 IsEnabledBaselineModeFlag, GetBaselineModeFlag, SetBaselineModeFlag,
 IsEnabledDumpOnCrashFlag, GetDumpOnCrashFlag, SetDumpOnCrashFlag,

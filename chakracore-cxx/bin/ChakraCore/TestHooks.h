@@ -92,9 +92,6 @@ bool (*pfIsEnabledWasmSimdFlag)();
 int32_t (*pfGetWasmSimdFlag)(bool *flag);
 int32_t (*pfSetWasmSimdFlag)(bool flag);
 
-bool (*pfIsEnabledBailOnNoProfileLimitFlag)();
-int32_t (*pfGetBailOnNoProfileLimitFlag)(int *flag);
-int32_t (*pfSetBailOnNoProfileLimitFlag)(int flag);
 bool (*pfIsEnabledBailOnNoProfileRejitLimitFlag)();
 int32_t (*pfGetBailOnNoProfileRejitLimitFlag)(int *flag);
 int32_t (*pfSetBailOnNoProfileRejitLimitFlag)(int flag);
