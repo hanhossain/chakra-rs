@@ -985,8 +985,6 @@ private:
 #ifdef RECYCLER_TEST_SUPPORT
     BOOL (*checkFn)(char* addr, size_t size);
 #endif
-    ExternalRootMarker externalRootMarker;
-    void * externalRootMarkerContext;
 
 #ifdef PROFILE_EXEC
     Js::Profiler * profiler;
@@ -1133,8 +1131,6 @@ public:
     bool InCacheCleanupCollection() { return inCacheCleanupCollection; }
     void ClearCacheCleanupCollection() { Assert(inCacheCleanupCollection); inCacheCleanupCollection = false; }
 
-    // Finalizer support
-    void SetExternalRootMarker(ExternalRootMarker fn, void * context);
     ArenaAllocator * CreateGuestArena(char16_t const * name, void (*outOfMemoryFunc)());
     void DeleteGuestArena(ArenaAllocator * arenaAllocator);
     ArenaData ** RegisterExternalGuestArena(ArenaData* guestArena)
