@@ -580,7 +580,6 @@ namespace Js
 #define DEFAULT_CONFIG_UseJITTrampoline (true)
 
 #define DEFAULT_CONFIG_IsolatePrototypes    (true)
-#define DEFAULT_CONFIG_ChangeTypeOnProto    (true)
 #define DEFAULT_CONFIG_TempMin    (0)
 #define DEFAULT_CONFIG_TempMax    (INT_MAX)
 
@@ -1193,7 +1192,6 @@ namespace Js
         u"BigDictionaryTypeHandlerThreshold",
         u"TypeSnapshotEnumeration",
         u"IsolatePrototypes",
-        u"ChangeTypeOnProto",
         u"PerfHintLevel",
 
 #if DBG
@@ -2167,7 +2165,6 @@ namespace Js
         u"Min Slot Capacity required to convert DictionaryTypeHandler to BigDictionaryTypeHandler.(Advisable to give more than 15 - to avoid false positive cases)",
         u"Create a true snapshot of the type of an object before enumeration and enumerate only those properties.",
         u"Should prototypes get unique types not shared with other objects (default: true)?",
-        u"When becoming a prototype should the object switch to a new type (default: true)?",
         // todo (hanhossain): flag end
         u"Specifies the perf-hint level (1,2) 1 == critical, 2 == only noisy",
 
@@ -2731,7 +2728,6 @@ namespace Js
 #ifdef PROFILE_MEM
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3329,7 +3325,6 @@ namespace Js
         BigDictionaryTypeHandlerThreshold(DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold),
         TypeSnapshotEnumeration(DEFAULT_CONFIG_TypeSnapshotEnumeration),
         IsolatePrototypes(DEFAULT_CONFIG_IsolatePrototypes),
-        ChangeTypeOnProto(DEFAULT_CONFIG_ChangeTypeOnProto),
         PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
 
 #if DBG
@@ -4938,8 +4933,6 @@ namespace Js
             return FlagBoolean;
         case IsolatePrototypesFlag:
             return FlagBoolean;
-        case ChangeTypeOnProtoFlag:
-            return FlagBoolean;
         case PerfHintLevelFlag:
             return FlagNumber;
 
@@ -5909,8 +5902,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&TypeSnapshotEnumeration));
         case IsolatePrototypesFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&IsolatePrototypes));
-        case ChangeTypeOnProtoFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ChangeTypeOnProto));
         case PerfHintLevelFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PerfHintLevel));
 
@@ -6797,9 +6788,6 @@ namespace Js
             break;
         case IsolatePrototypesFlag:
             retValue = DEFAULT_CONFIG_IsolatePrototypes;
-            break;
-        case ChangeTypeOnProtoFlag:
-            retValue = DEFAULT_CONFIG_ChangeTypeOnProto;
             break;
 
         #if DBG

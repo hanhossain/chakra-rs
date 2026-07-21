@@ -2820,15 +2820,6 @@ namespace Js
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported>
     void SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::SetIsPrototype(DynamicObject* instance)
     {
-        // Don't return if IsPrototypeFlag is set, because we may still need to do a type transition and
-        // set fixed bits.  If this handler is shared, this instance may not even be a prototype yet.
-        // In this case we may need to convert to a non-shared type handler.
-        if (!ChangeTypeOnProto() && !(GetIsOrMayBecomeShared() && IsolatePrototypes()))
-        {
-            SetFlags(IsPrototypeFlag);
-            return;
-        }
-
         Assert(!GetIsShared() || this->singletonInstance == nullptr);
         Assert(this->singletonInstance == nullptr || this->singletonInstance->Get() == instance);
 
@@ -2900,7 +2891,7 @@ namespace Js
             TraceFixedFieldsBeforeSetIsProto(instance, this, oldType, oldSingletonInstance);
 #endif
 
-            if (!hasNewType && ChangeTypeOnProto())
+            if (!hasNewType)
             {
                 // We're about to split out the type.  If the original type was shared the handler better be shared as well.
                 // Otherwise, the handler would lose track of being shared between different types and instances.

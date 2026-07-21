@@ -560,7 +560,6 @@ namespace Js
         virtual bool IsObjectCopyable() const { return false; }
 
         static bool IsolatePrototypes() { return CONFIG_FLAG(IsolatePrototypes); }
-        static bool ChangeTypeOnProto() { return CONFIG_FLAG(ChangeTypeOnProto); }
         static bool ShouldFixMethodProperties() { return !PHASE_OFF1(FixMethodPropsPhase); }
         static bool ShouldFixDataProperties() { return !PHASE_OFF1(FixDataPropsPhase); }
         static bool ShouldFixAccessorProperties() { return !PHASE_OFF1(FixAccessorPropsPhase); }

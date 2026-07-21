@@ -2889,11 +2889,6 @@ namespace Js
         // Don't return if IsPrototypeFlag is set, because we may still need to do a type transition and
         // set fixed bits.  If this handler is shared, this instance may not even be a prototype yet.
         // In this case we may need to convert to a non-shared type handler.
-        if (!ChangeTypeOnProto() && !(GetIsOrMayBecomeShared() && IsolatePrototypes()))
-        {
-            SetFlags(IsPrototypeFlag);
-            return;
-        }
 
 #if ENABLE_FIXED_FIELDS
         DynamicType* oldTypeDebug = instance->GetDynamicType();
@@ -2911,7 +2906,7 @@ namespace Js
 #endif
             TryConvertToSimpleDictionaryType(instance, GetPathLength());
 
-            if (ChangeTypeOnProto() && instance->GetDynamicType() == oldType)
+            if (instance->GetDynamicType() == oldType)
             {
                 instance->ChangeType();
             }
@@ -2922,22 +2917,19 @@ namespace Js
             TraceFixedFieldsBeforeSetIsProto(instance, this, oldTypeDebug, oldSingletonInstance);
 #endif
 
-            if (ChangeTypeOnProto())
+            // If this handler is shared and we don't isolate prototypes, it's possible that the handler has
+            // the prototype flag, but this instance may not yet be a prototype and may not have taken
+            // the required type transition.  It would be nice to have a reliable flag on the object
+            // indicating whether it's a prototype to avoid multiple type transitions if the same object
+            // with shared type handler is used as prototype multiple times.
+            if (((GetFlags() & IsPrototypeFlag) == 0) || (GetIsShared() && !IsolatePrototypes()))
             {
-                // If this handler is shared and we don't isolate prototypes, it's possible that the handler has
-                // the prototype flag, but this instance may not yet be a prototype and may not have taken
-                // the required type transition.  It would be nice to have a reliable flag on the object
-                // indicating whether it's a prototype to avoid multiple type transitions if the same object
-                // with shared type handler is used as prototype multiple times.
-                if (((GetFlags() & IsPrototypeFlag) == 0) || (GetIsShared() && !IsolatePrototypes()))
-                {
-                    // We're about to split out the type.  If the original type was shared the handler better be shared as well.
-                    // Otherwise, the handler would lose track of being shared between different types and instances.
-                    Assert(!instance->HasSharedType() || instance->GetDynamicType()->GetTypeHandler()->GetIsShared());
+                // We're about to split out the type.  If the original type was shared the handler better be shared as well.
+                // Otherwise, the handler would lose track of being shared between different types and instances.
+                Assert(!instance->HasSharedType() || instance->GetDynamicType()->GetTypeHandler()->GetIsShared());
 
-                    instance->ChangeType();
-                    Assert(!instance->HasLockedType() && !instance->HasSharedType());
-                }
+                instance->ChangeType();
+                Assert(!instance->HasLockedType() && !instance->HasSharedType());
             }
         }
 

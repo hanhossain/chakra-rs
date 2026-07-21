@@ -649,7 +649,7 @@ namespace Js
 #if DBG
         Assert(currentTypeHandler->SupportsPrototypeInstances());
         Assert(!DynamicTypeHandler::IsolatePrototypes() || !currentTypeHandler->RespectsIsolatePrototypes() || !currentTypeHandler->GetIsOrMayBecomeShared());
-        Assert((wasPrototype && !wasShared) || !DynamicTypeHandler::ChangeTypeOnProto() || !currentTypeHandler->RespectsChangeTypeOnProto() || this->GetDynamicType() != oldType);
+        Assert((wasPrototype && !wasShared) || !currentTypeHandler->RespectsChangeTypeOnProto() || this->GetDynamicType() != oldType);
 #endif
 
         // If we haven't changed type we must explicitly invalidate store field inline caches to avoid properties

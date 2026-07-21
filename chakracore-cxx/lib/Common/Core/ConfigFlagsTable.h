@@ -573,7 +573,6 @@ namespace Js
         BigDictionaryTypeHandlerThresholdFlag,
         TypeSnapshotEnumerationFlag,
         IsolatePrototypesFlag,
-        ChangeTypeOnProtoFlag,
         PerfHintLevelFlag,
 
         #if DBG
@@ -2174,8 +2173,6 @@ namespace Js
         Boolean TypeSnapshotEnumeration;
         // TODO (hanhossain): remove flag
         Boolean IsolatePrototypes;
-        // TODO (hanhossain): remove flag
-        Boolean ChangeTypeOnProto;
 
         // todo (hanhossain): flag end
         Number PerfHintLevel;
