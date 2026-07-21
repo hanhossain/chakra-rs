@@ -137,20 +137,6 @@ int32_t SetAsmJsFlag(bool flag)
     Js::Configuration::Global.flags.AsmJs = flag;
     return S_OK;
 }
-bool IsEnabledAsmJsStopOnErrorFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::AsmJsStopOnErrorFlag);
-}
-int32_t GetAsmJsStopOnErrorFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.AsmJsStopOnError;
-    return S_OK;
-}
-int32_t SetAsmJsStopOnErrorFlag(bool flag)
-{
-    Js::Configuration::Global.flags.AsmJsStopOnError = flag;
-    return S_OK;
-}
 bool IsEnabledWasmFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::WasmFlag);
@@ -6465,7 +6451,6 @@ int32_t OnChakraCoreLoaded()
 IsEnabledArrayValidateFlag, GetArrayValidateFlag, SetArrayValidateFlag,
 #endif
 IsEnabledAsmJsFlag, GetAsmJsFlag, SetAsmJsFlag,
-IsEnabledAsmJsStopOnErrorFlag, GetAsmJsStopOnErrorFlag, SetAsmJsStopOnErrorFlag,
 IsEnabledWasmFlag, GetWasmFlag, SetWasmFlag,
 IsEnabledWasmI64Flag, GetWasmI64Flag, SetWasmI64Flag,
 IsEnabledWasmFastArrayFlag, GetWasmFastArrayFlag, SetWasmFastArrayFlag,

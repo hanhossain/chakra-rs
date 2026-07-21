@@ -53,7 +53,6 @@ namespace Js
         ArrayValidateFlag,
         #endif
         AsmJsFlag,
-        AsmJsStopOnErrorFlag,
         WasmFlag,
         WasmI64Flag,
         WasmFastArrayFlag,
@@ -1508,8 +1507,6 @@ namespace Js
             Boolean ArrayValidate;
         #endif
         Boolean AsmJs;
-        // TODO (hanhossain): remove flag
-        Boolean AsmJsStopOnError;
         Boolean Wasm;
         Boolean WasmI64;
         Boolean WasmFastArray;

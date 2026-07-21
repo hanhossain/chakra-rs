@@ -3392,10 +3392,6 @@ void ByteCodeGenerator::EmitScopeList(ParseNode *pnode, ParseNode *breakOnBodySc
                     pnode = pnode->AsParseNodeFnc()->pnodeNext;
                     break;
                 }
-                else if (CONFIG_FLAG(AsmJsStopOnError))
-                {
-                    exit(JSERR_AsmJsCompileError);
-                }
                 else
                 {
                     // If deferral is not allowed, throw and reparse everything with asm.js disabled.
