@@ -609,7 +609,6 @@ private:
 #define DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold (0xffff)
 #define DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler (false)
 #define DEFAULT_CONFIG_TypeSnapshotEnumeration (true)
-#define DEFAULT_CONFIG_ConcurrentRuntime (false)
 #define DEFAULT_CONFIG_PrimeRecycler     (false)
 #define DEFAULT_CONFIG_DisableRentalThreading (false)
 #define DEFAULT_CONFIG_DisableDebugObject (false)
