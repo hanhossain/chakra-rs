@@ -577,7 +577,6 @@ namespace Js
 #define DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold (0xffff)
 #define DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler (false)
 #define DEFAULT_CONFIG_TypeSnapshotEnumeration (true)
-#define DEFAULT_CONFIG_ConcurrentRuntime (false)
 #define DEFAULT_CONFIG_PrimeRecycler     (false)
 #define DEFAULT_CONFIG_DisableRentalThreading (false)
 #define DEFAULT_CONFIG_DisableDebugObject (false)
@@ -701,7 +700,6 @@ namespace Js
         u"BgJitDelay",
 
         u"CheckAlignment",
-        u"ConcurrentRuntime",
         u"ConstructorInlineThreshold",
         u"ConstructorCallsRequiredToFinalizeCachedType",
         u"PropertyCacheMissPenalty",
@@ -1743,7 +1741,6 @@ namespace Js
         u"Delay to wait for speculative jitting before starting script execution",
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
-        u"Enable Concurrent GC and background JIT when creating runtime",
         u"Maximum size in bytecodes of a constructor inline candidate with monomorphic field access",
         u"Number of calls to a constructor required before the type cached in the constructor cache is finalized",
         u"Number of string or symbol cache hits per miss needed to be worth using cache",
@@ -2380,7 +2377,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3040,7 +3036,6 @@ namespace Js
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
         CheckAlignment(false),
-        ConcurrentRuntime(DEFAULT_CONFIG_ConcurrentRuntime),
         ConstructorInlineThreshold(DEFAULT_CONFIG_ConstructorInlineThreshold),
         ConstructorCallsRequiredToFinalizeCachedType(DEFAULT_CONFIG_ConstructorCallsRequiredToFinalizeCachedType),
         PropertyCacheMissPenalty(DEFAULT_CONFIG_PropertyCacheMissPenalty),
@@ -4369,8 +4364,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return FlagBoolean;
-        case ConcurrentRuntimeFlag:
-            return FlagBoolean;
         case ConstructorInlineThresholdFlag:
             return FlagNumber;
         case ConstructorCallsRequiredToFinalizeCachedTypeFlag:
@@ -5446,8 +5439,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
-        case ConcurrentRuntimeFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ConcurrentRuntime));
         case ConstructorInlineThresholdFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&ConstructorInlineThreshold));
         case ConstructorCallsRequiredToFinalizeCachedTypeFlag:
@@ -6541,9 +6532,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             retValue = false;
-            break;
-        case ConcurrentRuntimeFlag:
-            retValue = DEFAULT_CONFIG_ConcurrentRuntime;
             break;
         case DebugFlag:
             retValue = false;

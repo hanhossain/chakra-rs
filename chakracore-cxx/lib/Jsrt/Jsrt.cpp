@@ -190,9 +190,7 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
         bool enableExperimentalFeatures = (attributes & JsRuntimeAttributeEnableExperimentalFeatures) != 0;
         ThreadContext * threadContext = HeapNew(ThreadContext, policyManager, threadService, enableExperimentalFeatures);
 
-        if (((attributes & JsRuntimeAttributeDisableBackgroundWork) != 0)
-            && !Js::Configuration::Global.flags.ConcurrentRuntime
-            )
+        if ((attributes & JsRuntimeAttributeDisableBackgroundWork) != 0)
         {
             threadContext->OptimizeForManyInstances(true);
 #if ENABLE_NATIVE_CODEGEN

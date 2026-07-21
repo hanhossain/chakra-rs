@@ -415,20 +415,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
 }
 #ifdef CHECK_MEMORY_LEAK
 #endif
-bool IsEnabledConcurrentRuntimeFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::ConcurrentRuntimeFlag);
-}
-int32_t GetConcurrentRuntimeFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.ConcurrentRuntime;
-    return S_OK;
-}
-int32_t SetConcurrentRuntimeFlag(bool flag)
-{
-    Js::Configuration::Global.flags.ConcurrentRuntime = flag;
-    return S_OK;
-}
 bool IsEnabledConstructorInlineThresholdFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::ConstructorInlineThresholdFlag);
@@ -6083,7 +6069,6 @@ IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
-IsEnabledConcurrentRuntimeFlag, GetConcurrentRuntimeFlag, SetConcurrentRuntimeFlag,
 IsEnabledConstructorInlineThresholdFlag, GetConstructorInlineThresholdFlag, SetConstructorInlineThresholdFlag,
 IsEnabledConstructorCallsRequiredToFinalizeCachedTypeFlag, GetConstructorCallsRequiredToFinalizeCachedTypeFlag, SetConstructorCallsRequiredToFinalizeCachedTypeFlag,
 IsEnabledPropertyCacheMissPenaltyFlag, GetPropertyCacheMissPenaltyFlag, SetPropertyCacheMissPenaltyFlag,
