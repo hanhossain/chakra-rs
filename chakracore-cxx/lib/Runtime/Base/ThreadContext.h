@@ -367,7 +367,6 @@ private:
 #define DEFAULT_CONFIG_PropertyCacheMissThreshold (-100)
 #define DEFAULT_CONFIG_PropertyCacheMissReset (-5000)
 
-#define DEFAULT_CONFIG_CloneInlinedPolymorphicCaches (true)
 #define DEFAULT_CONFIG_HighPrecisionDate    (false)
 #define DEFAULT_CONFIG_ForceOldDateAPI      (false)
 #define DEFAULT_CONFIG_Loop                 (1)

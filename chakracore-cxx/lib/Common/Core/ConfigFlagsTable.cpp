@@ -335,7 +335,6 @@ namespace Js
 #define DEFAULT_CONFIG_PropertyCacheMissThreshold (-100)
 #define DEFAULT_CONFIG_PropertyCacheMissReset (-5000)
 
-#define DEFAULT_CONFIG_CloneInlinedPolymorphicCaches (true)
 #define DEFAULT_CONFIG_HighPrecisionDate    (false)
 #define DEFAULT_CONFIG_ForceOldDateAPI      (false)
 #define DEFAULT_CONFIG_Loop                 (1)
@@ -702,7 +701,6 @@ namespace Js
         u"BgJitDelay",
 
         u"CheckAlignment",
-        u"CloneInlinedPolymorphicCaches",
         u"ConcurrentRuntime",
         u"ConstructorInlineThreshold",
         u"ConstructorCallsRequiredToFinalizeCachedType",
@@ -1745,7 +1743,6 @@ namespace Js
         u"Delay to wait for speculative jitting before starting script execution",
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
-        u"Clones polymorphic inline caches in inlined functions",
         u"Enable Concurrent GC and background JIT when creating runtime",
         u"Maximum size in bytecodes of a constructor inline candidate with monomorphic field access",
         u"Number of calls to a constructor required before the type cached in the constructor cache is finalized",
@@ -2383,7 +2380,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3044,7 +3040,6 @@ namespace Js
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
         CheckAlignment(false),
-        CloneInlinedPolymorphicCaches(DEFAULT_CONFIG_CloneInlinedPolymorphicCaches),
         ConcurrentRuntime(DEFAULT_CONFIG_ConcurrentRuntime),
         ConstructorInlineThreshold(DEFAULT_CONFIG_ConstructorInlineThreshold),
         ConstructorCallsRequiredToFinalizeCachedType(DEFAULT_CONFIG_ConstructorCallsRequiredToFinalizeCachedType),
@@ -4374,8 +4369,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return FlagBoolean;
-        case CloneInlinedPolymorphicCachesFlag:
-            return FlagBoolean;
         case ConcurrentRuntimeFlag:
             return FlagBoolean;
         case ConstructorInlineThresholdFlag:
@@ -5453,8 +5446,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
-        case CloneInlinedPolymorphicCachesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&CloneInlinedPolymorphicCaches));
         case ConcurrentRuntimeFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ConcurrentRuntime));
         case ConstructorInlineThresholdFlag:
@@ -6550,9 +6541,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             retValue = false;
-            break;
-        case CloneInlinedPolymorphicCachesFlag:
-            retValue = DEFAULT_CONFIG_CloneInlinedPolymorphicCaches;
             break;
         case ConcurrentRuntimeFlag:
             retValue = DEFAULT_CONFIG_ConcurrentRuntime;

@@ -415,20 +415,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
 }
 #ifdef CHECK_MEMORY_LEAK
 #endif
-bool IsEnabledCloneInlinedPolymorphicCachesFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::CloneInlinedPolymorphicCachesFlag);
-}
-int32_t GetCloneInlinedPolymorphicCachesFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.CloneInlinedPolymorphicCaches;
-    return S_OK;
-}
-int32_t SetCloneInlinedPolymorphicCachesFlag(bool flag)
-{
-    Js::Configuration::Global.flags.CloneInlinedPolymorphicCaches = flag;
-    return S_OK;
-}
 bool IsEnabledConcurrentRuntimeFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::ConcurrentRuntimeFlag);
@@ -6097,7 +6083,6 @@ IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
-IsEnabledCloneInlinedPolymorphicCachesFlag, GetCloneInlinedPolymorphicCachesFlag, SetCloneInlinedPolymorphicCachesFlag,
 IsEnabledConcurrentRuntimeFlag, GetConcurrentRuntimeFlag, SetConcurrentRuntimeFlag,
 IsEnabledConstructorInlineThresholdFlag, GetConstructorInlineThresholdFlag, SetConstructorInlineThresholdFlag,
 IsEnabledConstructorCallsRequiredToFinalizeCachedTypeFlag, GetConstructorCallsRequiredToFinalizeCachedTypeFlag, SetConstructorCallsRequiredToFinalizeCachedTypeFlag,
