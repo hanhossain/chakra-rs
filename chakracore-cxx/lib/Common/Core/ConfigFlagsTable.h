@@ -52,7 +52,6 @@ namespace Js
         #if DBG
         ArrayValidateFlag,
         #endif
-        AsmDiffFlag,
         AsmDumpModeFlag,
         AsmJsFlag,
         AsmJsStopOnErrorFlag,
@@ -1510,7 +1509,6 @@ namespace Js
         #if DBG
             Boolean ArrayValidate;
         #endif
-        Boolean AsmDiff;
         String AsmDumpMode;
         Boolean AsmJs;
         Boolean AsmJsStopOnError;
