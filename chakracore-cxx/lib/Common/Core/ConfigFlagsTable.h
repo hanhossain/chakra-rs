@@ -77,7 +77,6 @@ namespace Js
 
         BaselineModeFlag,
         BailOutFlag,
-        BailOutAtEveryLineFlag,
         BailOutAtEveryByteCodeFlag,
         BailOutAtEveryImplicitCallFlag,
         BailOutByteCodeFlag,
@@ -1519,8 +1518,6 @@ namespace Js
 
         Boolean BaselineMode;
             NumberPairSet BailOut;
-        // TODO (hanhossain): remove flag
-            Boolean BailOutAtEveryLine;
             Boolean BailOutAtEveryByteCode;
         // TODO (hanhossain): remove flag
             Boolean BailOutAtEveryImplicitCall;

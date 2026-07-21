@@ -1707,7 +1707,6 @@ LowererMDArch::LowerEntryInstr(IR::EntryInstr * entryInstr)
             // disabling apply inlining leads to explicit load from the zero-inited slot
             this->m_func->GetJITFunctionBody()->IsInlineApplyDisabled()))
         || Js::Configuration::Global.flags.IsEnabled(Js::BailOutFlag)
-        || Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryLineFlag)
         || Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryByteCodeFlag)
         || Js::Configuration::Global.flags.IsEnabled(Js::BailOutByteCodeFlag)
         )

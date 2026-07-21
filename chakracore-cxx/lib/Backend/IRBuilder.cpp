@@ -49,10 +49,6 @@ IRBuilder::AddStatementBoundary(uint statementIndex, uint offset)
                     }
                 }
             }
-            else if (Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryLineFlag)) 
-            {
-                this->InjectBailOut(offset);
-            }
         }
     }
     return m_statementReader.MoveNextStatementBoundary();
