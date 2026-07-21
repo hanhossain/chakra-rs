@@ -584,7 +584,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_IsolatePrototypes    (true)
 #define DEFAULT_CONFIG_ChangeTypeOnProto    (true)
-#define DEFAULT_CONFIG_FixPropsOnPathTypes    (true)
 #define DEFAULT_CONFIG_TempMin    (0)
 #define DEFAULT_CONFIG_TempMax    (INT_MAX)
 
@@ -1215,9 +1214,6 @@ namespace Js
         u"MemProtectHeapConcurrentStress",
         u"MemProtectHeapConcurrentRepeatStress",
         u"MemProtectHeapPartialStress",
-#endif
-#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        u"FixPropsOnPathTypes",
 #endif
 
 #if DBG
@@ -2207,9 +2203,6 @@ namespace Js
         u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
         u"Stress the partial recycler by partial collect on every allocation call",
 #endif
-#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        u"Mark properties as fixed on path types (default: false).",
-#endif
 
         // todo (hanhossain): flag end
 #if DBG
@@ -2792,9 +2785,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-#endif
-#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         NoParentFlag,
 #endif
 
@@ -3402,9 +3392,6 @@ namespace Js
         MemProtectHeapConcurrentStress(false),
         MemProtectHeapConcurrentRepeatStress(false),
         MemProtectHeapPartialStress(false),
-#endif
-#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        FixPropsOnPathTypes(DEFAULT_CONFIG_FixPropsOnPathTypes),
 #endif
 
 #if DBG
@@ -5041,10 +5028,6 @@ namespace Js
         case MemProtectHeapPartialStressFlag:
             return FlagBoolean;
         #endif
-        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        case FixPropsOnPathTypesFlag:
-            return FlagBoolean;
-        #endif
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
@@ -6040,10 +6023,6 @@ namespace Js
         case MemProtectHeapPartialStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapPartialStress));
         #endif
-        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        case FixPropsOnPathTypesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&FixPropsOnPathTypes));
-        #endif
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
@@ -6961,11 +6940,6 @@ namespace Js
             break;
         case MemProtectHeapPartialStressFlag:
             retValue = false;
-            break;
-        #endif
-        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        case FixPropsOnPathTypesFlag:
-            retValue = DEFAULT_CONFIG_FixPropsOnPathTypes;
             break;
         #endif
 

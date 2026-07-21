@@ -616,7 +616,6 @@ private:
 
 #define DEFAULT_CONFIG_IsolatePrototypes    (true)
 #define DEFAULT_CONFIG_ChangeTypeOnProto    (true)
-#define DEFAULT_CONFIG_FixPropsOnPathTypes    (true)
 #define DEFAULT_CONFIG_TempMin    (0)
 #define DEFAULT_CONFIG_TempMax    (INT_MAX)
 

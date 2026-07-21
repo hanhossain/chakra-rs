@@ -249,7 +249,7 @@ namespace Js
         static bool FixPropsOnPathTypes()
         {
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-            return CONFIG_FLAG(FixPropsOnPathTypes);
+            return true;
 #else
             return false;
 #endif

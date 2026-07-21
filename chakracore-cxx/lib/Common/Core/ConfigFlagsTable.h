@@ -589,9 +589,6 @@ namespace Js
         MemProtectHeapConcurrentRepeatStressFlag,
         MemProtectHeapPartialStressFlag,
         #endif
-        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        FixPropsOnPathTypesFlag,
-        #endif
 
         #if DBG
         InitializeInterpreterSlotsWithInvalidStackVarFlag,
@@ -2217,10 +2214,6 @@ namespace Js
                 Boolean MemProtectHeapConcurrentRepeatStress;
         // TODO (hanhossain): remove flag
                 Boolean MemProtectHeapPartialStress;
-        #endif
-        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        // TODO (hanhossain): remove flag
-            Boolean FixPropsOnPathTypes;
         #endif
 
         #if DBG
