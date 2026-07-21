@@ -310,10 +310,6 @@ namespace Js
             return previousInterpreterFrameIsFromBailout;
         }
 
-#if DBG
-        static bool ValidateTopJitFrame(Js::ScriptContext* scriptContext);
-#endif
-
     private:
         ScriptContext          *scriptContext;
         ScriptEntryExitRecord  *entryExitRecord;

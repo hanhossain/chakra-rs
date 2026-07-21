@@ -1567,28 +1567,4 @@ namespace Js
         this->previousInterpreterFrameIsFromBailout = false;
     }
 #endif
-
-#if DBG
-    // Force a stack walk which till we find an interpreter frame
-    // This will ensure inlined frames are decoded.
-    bool JavascriptStackWalker::ValidateTopJitFrame(Js::ScriptContext* scriptContext)
-    {
-        if (!Configuration::Global.flags.ValidateInlineStack)
-        {
-            return true;
-        }
-        Js::JavascriptStackWalker walker(scriptContext);
-        Js::JavascriptFunction* function;
-        while (walker.GetCaller(&function))
-        {
-            Assert(function);
-            if (walker.GetCurrentInterpreterFrame() != nullptr)
-            {
-                break;
-            }
-        }
-        // If no asserts have fired yet - we should have succeeded.
-        return true;
-    }
-#endif
 }

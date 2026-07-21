@@ -3400,9 +3400,6 @@ using namespace Js;
     Var JavascriptOperators::OP_GetElementI_JIT(Var instance, Var index, ScriptContext *scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetElementI);
-#if ENABLE_NATIVE_CODEGEN
-        Assert(Js::JavascriptStackWalker::ValidateTopJitFrame(scriptContext));
-#endif
         return OP_GetElementI(instance, index, scriptContext);
         JIT_HELPER_END(Op_GetElementI);
     }
@@ -7568,8 +7565,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         JIT_HELPER_REENTRANT_HEADER(Op_PatchGetValueWithThisPtr);
         ScriptContext *const scriptContext = functionBody->GetScriptContext();
 
-        Assert(Js::JavascriptStackWalker::ValidateTopJitFrame(scriptContext));
-
         RecyclableObject* object = nullptr;
         if (FALSE == JavascriptOperators::GetPropertyObject(instance, scriptContext, &object))
         {
@@ -7620,8 +7615,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         JIT_HELPER_REENTRANT_HEADER(Op_PatchGetValueForTypeOf);
         ScriptContext *const scriptContext = functionBody->GetScriptContext();
-
-        Assert(Js::JavascriptStackWalker::ValidateTopJitFrame(scriptContext));
 
         RecyclableObject* object = nullptr;
         if (FALSE == JavascriptOperators::GetPropertyObject(instance, scriptContext, &object))
