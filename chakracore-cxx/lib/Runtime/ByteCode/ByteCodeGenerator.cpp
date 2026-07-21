@@ -803,11 +803,7 @@ bool ByteCodeGenerator::IsInNonDebugMode() const
 
 bool ByteCodeGenerator::ShouldTrackDebuggerMetadata() const
 {
-    return (IsInDebugMode())
-#if DBG_DUMP
-        || (Js::Configuration::Global.flags.Debug)
-#endif
-        ;
+    return IsInDebugMode();
 }
 
 void ByteCodeGenerator::SetRootFuncInfo(FuncInfo* func)

@@ -52,7 +52,7 @@ SimpleLayout::MoveHelperBlock(IR::Instr * lastOpHelperLabel, uint32_t lastOpHelp
 void
 SimpleLayout::Layout()
 {
-    if (PHASE_OFF(Js::LayoutPhase, this->func) || CONFIG_ISENABLED(Js::DebugFlag))
+    if (PHASE_OFF(Js::LayoutPhase, this->func))
     {
         return;
     }

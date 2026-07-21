@@ -3112,13 +3112,7 @@ StoreCommon:
         bool isFunctionDeclaration /*= false*/)
     {
 #if DBG
-        bool isInDebugMode = m_isInDebugMode
-#if DBG_DUMP
-            || Js::Configuration::Global.flags.Debug
-#endif // DBG_DUMP
-            ;
-
-        AssertMsg(isInDebugMode, "Property offsets should only ever be updated in debug mode (not used in non-debug).");
+        AssertMsg(m_isInDebugMode, "Property offsets should only ever be updated in debug mode (not used in non-debug).");
 #endif // DBG
 
         Assert(currentDebuggerScope);

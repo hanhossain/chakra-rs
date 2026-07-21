@@ -695,7 +695,6 @@ namespace Js
         u"BgJitDelay",
 
         u"CheckAlignment",
-        u"Debug",
         u"DebugBreak",
         u"StatementDebugBreak",
         u"DebugBreakOnPhaseBegin",
@@ -1731,7 +1730,6 @@ namespace Js
         u"Delay to wait for speculative jitting before starting script execution",
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
-        u"Disable phases (layout, security code, etc) which makes JIT output harder to debug",
         u"Index of the function where you want to break",
         u"Index of the statement where you want to break",
         u"Break into debugger at the beginning of given phase for listed function",
@@ -2362,7 +2360,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3016,7 +3013,6 @@ namespace Js
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
         CheckAlignment(false),
-        Debug(false),
         DebugBreak(),
         StatementDebugBreak(),
         DebugBreakOnPhaseBegin(),
@@ -4339,8 +4335,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return FlagBoolean;
-        case DebugFlag:
-            return FlagBoolean;
         case DebugBreakFlag:
             return FlagNumberSet;
         case StatementDebugBreakFlag:
@@ -5404,8 +5398,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
-        case DebugFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&Debug));
         case DebugBreakFlag:
             return reinterpret_cast<void*>(const_cast<NumberSet*>(&DebugBreak));
         case StatementDebugBreakFlag:
@@ -6486,9 +6478,6 @@ namespace Js
             break;
 
         case CheckAlignmentFlag:
-            retValue = false;
-            break;
-        case DebugFlag:
             retValue = false;
             break;
 

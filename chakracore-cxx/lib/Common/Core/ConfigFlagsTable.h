@@ -83,7 +83,6 @@ namespace Js
         BgJitDelayFlag,
 
         CheckAlignmentFlag,
-        DebugFlag,
         DebugBreakFlag,
         StatementDebugBreakFlag,
         DebugBreakOnPhaseBeginFlag,
@@ -1500,8 +1499,6 @@ namespace Js
         Number BgJitDelay;
 
         Boolean CheckAlignment;
-        // TODO (hanhossain): remove flag
-        Boolean Debug;
         // TODO (hanhossain): remove flag
         NumberSet DebugBreak;
         // TODO (hanhossain): remove flag

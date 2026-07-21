@@ -414,20 +414,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
     return S_OK;
 }
 
-bool IsEnabledDebugFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::DebugFlag);
-}
-int32_t GetDebugFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.Debug;
-    return S_OK;
-}
-int32_t SetDebugFlag(bool flag)
-{
-    Js::Configuration::Global.flags.Debug = flag;
-    return S_OK;
-}
 
 bool IsEnabledDebugWindowFlag()
 {
@@ -5998,7 +5984,6 @@ IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
-IsEnabledDebugFlag, GetDebugFlag, SetDebugFlag,
 
 
 
