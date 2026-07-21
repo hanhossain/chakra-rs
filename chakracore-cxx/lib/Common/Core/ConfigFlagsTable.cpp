@@ -314,7 +314,6 @@ namespace Js
 #define DEFAULT_CONFIG_InlineThresholdAdjustCountInLargeFunction  (20)
 #define DEFAULT_CONFIG_InlineThresholdAdjustCountInMediumSizedFunction  (6)
 #define DEFAULT_CONFIG_InlineThresholdAdjustCountInSmallFunction  (10)
-#define DEFAULT_CONFIG_ConstructorInlineThreshold (21)      //Monomorphic constructor threshold
 #define DEFAULT_CONFIG_AsmJsInlineAdjust (35)                // wasm functions are cheaper to inline, so worth being more aggressive
 #define DEFAULT_CONFIG_ConstructorCallsRequiredToFinalizeCachedType (2)
 #define DEFAULT_CONFIG_OutsideLoopInlineThreshold (16)      //Threshold to inline outside loops
@@ -700,7 +699,6 @@ namespace Js
         u"BgJitDelay",
 
         u"CheckAlignment",
-        u"ConstructorInlineThreshold",
         u"ConstructorCallsRequiredToFinalizeCachedType",
         u"PropertyCacheMissPenalty",
         u"PropertyCacheMissThreshold",
@@ -1741,7 +1739,6 @@ namespace Js
         u"Delay to wait for speculative jitting before starting script execution",
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
-        u"Maximum size in bytecodes of a constructor inline candidate with monomorphic field access",
         u"Number of calls to a constructor required before the type cached in the constructor cache is finalized",
         u"Number of string or symbol cache hits per miss needed to be worth using cache",
         u"Point at which we disable string or symbol property cache",
@@ -2377,7 +2374,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3036,7 +3032,6 @@ namespace Js
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
         CheckAlignment(false),
-        ConstructorInlineThreshold(DEFAULT_CONFIG_ConstructorInlineThreshold),
         ConstructorCallsRequiredToFinalizeCachedType(DEFAULT_CONFIG_ConstructorCallsRequiredToFinalizeCachedType),
         PropertyCacheMissPenalty(DEFAULT_CONFIG_PropertyCacheMissPenalty),
         PropertyCacheMissThreshold(DEFAULT_CONFIG_PropertyCacheMissThreshold),
@@ -4364,8 +4359,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return FlagBoolean;
-        case ConstructorInlineThresholdFlag:
-            return FlagNumber;
         case ConstructorCallsRequiredToFinalizeCachedTypeFlag:
             return FlagNumber;
         case PropertyCacheMissPenaltyFlag:
@@ -5439,8 +5432,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
-        case ConstructorInlineThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&ConstructorInlineThreshold));
         case ConstructorCallsRequiredToFinalizeCachedTypeFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&ConstructorCallsRequiredToFinalizeCachedType));
         case PropertyCacheMissPenaltyFlag:

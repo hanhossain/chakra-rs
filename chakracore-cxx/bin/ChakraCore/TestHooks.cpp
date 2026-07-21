@@ -413,22 +413,7 @@ int32_t SetCheckAlignmentFlag(bool flag)
     Js::Configuration::Global.flags.CheckAlignment = flag;
     return S_OK;
 }
-#ifdef CHECK_MEMORY_LEAK
-#endif
-bool IsEnabledConstructorInlineThresholdFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::ConstructorInlineThresholdFlag);
-}
-int32_t GetConstructorInlineThresholdFlag(int *flag)
-{
-    *flag = Js::Configuration::Global.flags.ConstructorInlineThreshold;
-    return S_OK;
-}
-int32_t SetConstructorInlineThresholdFlag(int flag)
-{
-    Js::Configuration::Global.flags.ConstructorInlineThreshold = flag;
-    return S_OK;
-}
+
 bool IsEnabledConstructorCallsRequiredToFinalizeCachedTypeFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::ConstructorCallsRequiredToFinalizeCachedTypeFlag);
@@ -6069,7 +6054,6 @@ IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
-IsEnabledConstructorInlineThresholdFlag, GetConstructorInlineThresholdFlag, SetConstructorInlineThresholdFlag,
 IsEnabledConstructorCallsRequiredToFinalizeCachedTypeFlag, GetConstructorCallsRequiredToFinalizeCachedTypeFlag, SetConstructorCallsRequiredToFinalizeCachedTypeFlag,
 IsEnabledPropertyCacheMissPenaltyFlag, GetPropertyCacheMissPenaltyFlag, SetPropertyCacheMissPenaltyFlag,
 IsEnabledPropertyCacheMissThresholdFlag, GetPropertyCacheMissThresholdFlag, SetPropertyCacheMissThresholdFlag,
