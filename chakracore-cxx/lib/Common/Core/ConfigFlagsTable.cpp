@@ -1221,7 +1221,6 @@ namespace Js
         u"FixPropsOnPathTypes",
 #endif
         u"BailoutTraceFilter",
-        u"RejitTraceFilter",
 
 #if DBG
         u"InitializeInterpreterSlotsWithInvalidStackVar",
@@ -2214,8 +2213,8 @@ namespace Js
         u"Mark properties as fixed on path types (default: false).",
 #endif
         u"Filter the bailout trace messages to specific bailout kinds.",
-        u"Filter the rejit trace messages to specific bailout kinds.",
 
+        // todo (hanhossain): flag end
 #if DBG
         u"Enable the initialization of the interpreter local slots with invalid stack vars",
 #endif
@@ -2224,7 +2223,6 @@ namespace Js
             u"Use with SimulatePolyCacheWithOneTypeForFunction to simulate creating a polymorphic inline cache containing only one type due to a collision, for testing ObjTypeSpec",
 #endif
 
-        // todo (hanhossain): flag end
         NULL
     };
 
@@ -2803,8 +2801,8 @@ namespace Js
         NoParentFlag,
 #endif
         NoParentFlag,
-        NoParentFlag,
 
+        // todo (hanhossain): flag end
 #if DBG
         NoParentFlag,
 #endif
@@ -2813,7 +2811,6 @@ namespace Js
             NoParentFlag,
 #endif
 
-        // todo (hanhossain): flag end
 
         InvalidFlag
     };
@@ -3414,7 +3411,6 @@ namespace Js
         FixPropsOnPathTypes(DEFAULT_CONFIG_FixPropsOnPathTypes),
 #endif
         BailoutTraceFilter(),
-        RejitTraceFilter(),
 
 #if DBG
         InitializeInterpreterSlotsWithInvalidStackVar(false),
@@ -5056,8 +5052,6 @@ namespace Js
         #endif
         case BailoutTraceFilterFlag:
             return FlagNumberSet;
-        case RejitTraceFilterFlag:
-            return FlagNumberSet;
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
@@ -6059,8 +6053,6 @@ namespace Js
         #endif
         case BailoutTraceFilterFlag:
             return reinterpret_cast<void*>(const_cast<NumberSet*>(&BailoutTraceFilter));
-        case RejitTraceFilterFlag:
-            return reinterpret_cast<void*>(const_cast<NumberSet*>(&RejitTraceFilter));
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:

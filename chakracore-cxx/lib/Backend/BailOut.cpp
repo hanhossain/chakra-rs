@@ -359,11 +359,8 @@ BailOutRecord::BailOutRecord(uint32_t bailOutOffset, uint bailOutCacheIndex, IR:
 #define REJIT_KIND_TESTTRACE(bailOutKind, ...) \
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::ReJITPhase)) \
     { \
-        if (Js::Configuration::Global.flags.RejitTraceFilter.Empty() || Js::Configuration::Global.flags.RejitTraceFilter.Contains(bailOutKind)) \
-        { \
-            Output::Print(__VA_ARGS__); \
-            Output::Flush(); \
-        } \
+        Output::Print(__VA_ARGS__); \
+        Output::Flush(); \
     }
 const char16_t * const trueString = u"true";
 const char16_t * const falseString = u"false";

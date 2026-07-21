@@ -593,7 +593,6 @@ namespace Js
         FixPropsOnPathTypesFlag,
         #endif
         BailoutTraceFilterFlag,
-        RejitTraceFilterFlag,
 
         #if DBG
         InitializeInterpreterSlotsWithInvalidStackVarFlag,
@@ -2226,8 +2225,6 @@ namespace Js
         #endif
         // TODO (hanhossain): remove flag
         NumberSet BailoutTraceFilter;
-        // TODO (hanhossain): remove flag
-        NumberSet RejitTraceFilter;
 
         #if DBG
             Boolean InitializeInterpreterSlotsWithInvalidStackVar;
