@@ -702,9 +702,6 @@ namespace Js
         u"BgJitDelay",
 
         u"CheckAlignment",
-#ifdef CHECK_MEMORY_LEAK
-        u"DumpOnLeak",
-#endif
         u"CheckOpHelpers",
         u"CloneInlinedPolymorphicCaches",
         u"ConcurrentRuntime",
@@ -1749,9 +1746,6 @@ namespace Js
         u"Delay to wait for speculative jitting before starting script execution",
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
-#ifdef CHECK_MEMORY_LEAK
-        u"Create a dump on failed memory leak check",
-#endif
         u"Verify opHelper labels in the JIT are set properly",
         u"Clones polymorphic inline caches in inlined functions",
         u"Enable Concurrent GC and background JIT when creating runtime",
@@ -2392,9 +2386,6 @@ namespace Js
         NoParentFlag,
 
         NoParentFlag,
-#ifdef CHECK_MEMORY_LEAK
-        NoParentFlag,
-#endif
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3056,9 +3047,6 @@ namespace Js
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
         CheckAlignment(false),
-#ifdef CHECK_MEMORY_LEAK
-        DumpOnLeak(nullptr),
-#endif
         CheckOpHelpers(false),
         CloneInlinedPolymorphicCaches(DEFAULT_CONFIG_CloneInlinedPolymorphicCaches),
         ConcurrentRuntime(DEFAULT_CONFIG_ConcurrentRuntime),
@@ -4390,10 +4378,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return FlagBoolean;
-        #ifdef CHECK_MEMORY_LEAK
-        case DumpOnLeakFlag:
-            return FlagString;
-        #endif
         case CheckOpHelpersFlag:
             return FlagBoolean;
         case CloneInlinedPolymorphicCachesFlag:
@@ -5475,10 +5459,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
-        #ifdef CHECK_MEMORY_LEAK
-        case DumpOnLeakFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&DumpOnLeak));
-        #endif
         case CheckOpHelpersFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckOpHelpers));
         case CloneInlinedPolymorphicCachesFlag:

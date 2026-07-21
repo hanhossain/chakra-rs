@@ -414,22 +414,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
     return S_OK;
 }
 #ifdef CHECK_MEMORY_LEAK
-bool IsEnabledDumpOnLeakFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::DumpOnLeakFlag);
-}
-
-int32_t GetDumpOnLeakFlag(BSTR *flag)
-{
-    *flag = SysAllocString(Js::Configuration::Global.flags.DumpOnLeak);
-    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
-}
-
-int32_t SetDumpOnLeakFlag(BSTR flag)
-{
-    Js::Configuration::Global.flags.DumpOnLeak = flag;
-    return S_OK;
-}
 #endif
 bool IsEnabledCheckOpHelpersFlag()
 {
@@ -6127,9 +6111,6 @@ IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
-#ifdef CHECK_MEMORY_LEAK
-IsEnabledDumpOnLeakFlag, GetDumpOnLeakFlag, SetDumpOnLeakFlag,
-#endif
 IsEnabledCheckOpHelpersFlag, GetCheckOpHelpersFlag, SetCheckOpHelpersFlag,
 IsEnabledCloneInlinedPolymorphicCachesFlag, GetCloneInlinedPolymorphicCachesFlag, SetCloneInlinedPolymorphicCachesFlag,
 IsEnabledConcurrentRuntimeFlag, GetConcurrentRuntimeFlag, SetConcurrentRuntimeFlag,

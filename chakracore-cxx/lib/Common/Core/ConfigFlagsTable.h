@@ -83,9 +83,6 @@ namespace Js
         BgJitDelayFlag,
 
         CheckAlignmentFlag,
-        #ifdef CHECK_MEMORY_LEAK
-        DumpOnLeakFlag,
-        #endif
         CheckOpHelpersFlag,
         CloneInlinedPolymorphicCachesFlag,
         ConcurrentRuntimeFlag,
@@ -1511,10 +1508,6 @@ namespace Js
         Number BgJitDelay;
 
         Boolean CheckAlignment;
-        #ifdef CHECK_MEMORY_LEAK
-        // TODO (hanhossain): remove flag
-            String DumpOnLeak;
-        #endif
         // TODO (hanhossain): remove flag
         Boolean CheckOpHelpers;
         // TODO (hanhossain): remove flag
