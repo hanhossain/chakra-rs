@@ -25,6 +25,9 @@ Js::JavascriptMethod checkCodeGenThunk;
 /// Disable delay if pending function count larger then cap
 constexpr unsigned int BgJitPendingFuncCap = 31;
 
+/// The background job queue length must exceed this threshold to consider jitting in the foreground
+constexpr unsigned int HybridFgJitBgQueueLengthThreshold = 32;
+
 NativeCodeGenerator::NativeCodeGenerator(Js::ScriptContext * scriptContext)
 :   JsUtil::WaitableJobManager(scriptContext->GetThreadContext()->GetJobProcessor()),
     scriptContext(scriptContext),
@@ -1427,8 +1430,7 @@ NativeCodeGenerator::ShouldProcessInForeground(const bool willWaitForJob, const 
     // job queue is long enough and this native code generator is optimized for many instances (web workers)
     return
         willWaitForJob ||
-        (numJobsInQueue > (uint)CONFIG_FLAG(HybridFgJitBgQueueLengthThreshold) &&
-            isOptimizedForManyInstances);
+        (numJobsInQueue > HybridFgJitBgQueueLengthThreshold && isOptimizedForManyInstances);
 }
 
 void
