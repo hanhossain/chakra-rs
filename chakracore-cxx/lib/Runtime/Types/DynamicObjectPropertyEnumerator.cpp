@@ -145,9 +145,7 @@ namespace Js
     DynamicType * DynamicObjectPropertyEnumerator::GetTypeToEnumerate() const
     {
         return
-            GetSnapShotSemantics() &&
-            initialType->GetIsLocked() &&
-            CONFIG_FLAG(TypeSnapshotEnumeration)
+            GetSnapShotSemantics() && initialType->GetIsLocked()
             ? PointerValue(initialType)
             : object->GetDynamicType();
     }

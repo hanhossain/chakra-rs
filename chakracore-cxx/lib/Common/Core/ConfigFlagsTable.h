@@ -571,7 +571,6 @@ namespace Js
         DeletedPropertyReuseThresholdFlag,
         ForceStringKeyedSimpleDictionaryTypeHandlerFlag,
         BigDictionaryTypeHandlerThresholdFlag,
-        TypeSnapshotEnumerationFlag,
         PerfHintLevelFlag,
 
         #if DBG
@@ -2166,12 +2165,10 @@ namespace Js
         Number Sse;
         // TODO (hanhossain): remove flag
         Number DeletedPropertyReuseThreshold;
+        // todo (hanhossain): flag end
         Boolean ForceStringKeyedSimpleDictionaryTypeHandler;
         Number BigDictionaryTypeHandlerThreshold;
-        // TODO (hanhossain): remove flag
-        Boolean TypeSnapshotEnumeration;
 
-        // todo (hanhossain): flag end
         Number PerfHintLevel;
 
         #if DBG

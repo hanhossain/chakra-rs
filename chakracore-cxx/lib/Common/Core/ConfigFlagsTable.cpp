@@ -1189,7 +1189,6 @@ namespace Js
         u"DeletedPropertyReuseThreshold",
         u"ForceStringKeyedSimpleDictionaryTypeHandler",
         u"BigDictionaryTypeHandlerThreshold",
-        u"TypeSnapshotEnumeration",
         u"PerfHintLevel",
 
 #if DBG
@@ -2159,10 +2158,9 @@ namespace Js
 #endif
         u"Virtually disables SSE-based optimizations above the specified SSE level in the Chakra JIT (does not affect CRT SSE usage)",
         u"Start reusing deleted property indexes after this many properties are deleted. Zero to disable reuse.",
+        // todo (hanhossain): flag end
         u"Force switch to string keyed version of SimpleDictionaryTypeHandler on first new property added to a SimpleDictionaryTypeHandler",
         u"Min Slot Capacity required to convert DictionaryTypeHandler to BigDictionaryTypeHandler.(Advisable to give more than 15 - to avoid false positive cases)",
-        u"Create a true snapshot of the type of an object before enumeration and enumerate only those properties.",
-        // todo (hanhossain): flag end
         u"Specifies the perf-hint level (1,2) 1 == critical, 2 == only noisy",
 
 #if DBG
@@ -2727,10 +2725,9 @@ namespace Js
 #endif
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
+        NoParentFlag,
         NoParentFlag,
 
 #if DBG
@@ -3319,7 +3316,6 @@ namespace Js
         DeletedPropertyReuseThreshold(DEFAULT_CONFIG_DeletedPropertyReuseThreshold),
         ForceStringKeyedSimpleDictionaryTypeHandler(DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler),
         BigDictionaryTypeHandlerThreshold(DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold),
-        TypeSnapshotEnumeration(DEFAULT_CONFIG_TypeSnapshotEnumeration),
         PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
 
 #if DBG
@@ -4924,8 +4920,6 @@ namespace Js
             return FlagBoolean;
         case BigDictionaryTypeHandlerThresholdFlag:
             return FlagNumber;
-        case TypeSnapshotEnumerationFlag:
-            return FlagBoolean;
         case PerfHintLevelFlag:
             return FlagNumber;
 
@@ -5891,8 +5885,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceStringKeyedSimpleDictionaryTypeHandler));
         case BigDictionaryTypeHandlerThresholdFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BigDictionaryTypeHandlerThreshold));
-        case TypeSnapshotEnumerationFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&TypeSnapshotEnumeration));
         case PerfHintLevelFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PerfHintLevel));
 
@@ -6773,9 +6765,6 @@ namespace Js
         #endif
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
             retValue = DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler;
-            break;
-        case TypeSnapshotEnumerationFlag:
-            retValue = DEFAULT_CONFIG_TypeSnapshotEnumeration;
             break;
 
         #if DBG

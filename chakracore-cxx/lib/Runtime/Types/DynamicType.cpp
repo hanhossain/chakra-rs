@@ -187,13 +187,9 @@ namespace Js
 
     bool DynamicType::PrepareForTypeSnapshotEnumeration()
     {
-        if (CONFIG_FLAG(TypeSnapshotEnumeration))
-        {
-            // Lock the type and handler, enabling us to enumerate properties of the type snapshotted
-            // at the beginning of enumeration, despite property changes made by script during enumeration.
-            return LockType(); // Note: this only works for type handlers that support locking.
-        }
-        return false;
+        // Lock the type and handler, enabling us to enumerate properties of the type snapshotted
+        // at the beginning of enumeration, despite property changes made by script during enumeration.
+        return LockType(); // Note: this only works for type handlers that support locking.
     }
 
     void DynamicObject::InitSlots(DynamicObject* instance)
