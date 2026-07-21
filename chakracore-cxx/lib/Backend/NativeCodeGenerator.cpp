@@ -2305,7 +2305,7 @@ NativeCodeGenerator::GatherCodeGenData(
                         Assert(nativeEntryPointData->GetPolymorphicInlineCacheInfo()->GetSelfInfo()->GetPolymorphicInlineCaches()->GetInlineCache(functionBody, i) == polymorphicInlineCache);
                     }
                 }
-                else if(IsInlinee && CONFIG_FLAG(CloneInlinedPolymorphicCaches))
+                else if(IsInlinee)
                 {
                     // Clone polymorphic inline caches for runtime usage in this inlinee. The JIT should only use the pointers to
                     // the inline caches, as their cached data is not guaranteed to be stable while jitting.

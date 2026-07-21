@@ -83,7 +83,6 @@ namespace Js
         BgJitDelayFlag,
 
         CheckAlignmentFlag,
-        CloneInlinedPolymorphicCachesFlag,
         ConcurrentRuntimeFlag,
         ConstructorInlineThresholdFlag,
         ConstructorCallsRequiredToFinalizeCachedTypeFlag,
@@ -1507,8 +1506,6 @@ namespace Js
         Number BgJitDelay;
 
         Boolean CheckAlignment;
-        // TODO (hanhossain): remove flag
-        Boolean CloneInlinedPolymorphicCaches;
         // TODO (hanhossain): remove flag
         Boolean ConcurrentRuntime;
         // TODO (hanhossain): remove flag

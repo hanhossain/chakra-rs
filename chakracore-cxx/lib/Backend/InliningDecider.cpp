@@ -821,8 +821,7 @@ bool InliningDecider::DeciderInlineIntoInliner(Js::FunctionBody * inlinee, Js::F
 #pragma prefast(suppress: 6285, "logical-or of constants is by design")
         if (PHASE_OFF(Js::InlineConstructorsPhase, this->topFunc) ||
             PHASE_OFF(Js::InlineConstructorsPhase, inliner) ||
-            PHASE_OFF(Js::InlineConstructorsPhase, inlinee) ||
-            !CONFIG_FLAG(CloneInlinedPolymorphicCaches))
+            PHASE_OFF(Js::InlineConstructorsPhase, inlinee))
         {
             return false;
         }
