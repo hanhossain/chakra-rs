@@ -347,7 +347,6 @@ private:
 #define DEFAULT_CONFIG_InlineThresholdAdjustCountInMediumSizedFunction  (6)
 #define DEFAULT_CONFIG_InlineThresholdAdjustCountInSmallFunction  (10)
 #define DEFAULT_CONFIG_AsmJsInlineAdjust (35)                // wasm functions are cheaper to inline, so worth being more aggressive
-#define DEFAULT_CONFIG_ConstructorCallsRequiredToFinalizeCachedType (2)
 #define DEFAULT_CONFIG_OutsideLoopInlineThreshold (16)      //Threshold to inline outside loops
 #define DEFAULT_CONFIG_LeafInlineThreshold  (60)            //Inlinee threshold for function which is leaf (irrespective of it has loops or not)
 #define DEFAULT_CONFIG_LoopInlineThreshold  (25)            //Inlinee threshold for function with loops

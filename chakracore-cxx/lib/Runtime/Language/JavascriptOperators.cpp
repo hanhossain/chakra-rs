@@ -57,6 +57,9 @@ using namespace Js;
         IndexType_JavascriptString
     };
 
+/// Number of calls to a constructor required before the type cached in the constructor cache is finalized
+constexpr uint8_t ConstructorCallsRequiredToFinalizeCachedType = 2;
+
     IndexType GetIndexTypeFromString(char16_t const * propertyName, charcount_t propertyLength, ScriptContext* scriptContext, uint32_t* index, PropertyRecord const** propertyRecord, bool createIfNotFound)
     {
         if (JavascriptOperators::TryConvertToUInt32(propertyName, propertyLength, index) &&
@@ -6332,7 +6335,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         AssertMsg(constructorCache->NeedsUpdateAfterCtor(), "Why are we updating a constructor cache that doesn't need to be updated?");
 
         const bool finalizeCachedType =
-            constructorCache->CallCount() >= CONFIG_FLAG(ConstructorCallsRequiredToFinalizeCachedType);
+            constructorCache->CallCount() >= ConstructorCallsRequiredToFinalizeCachedType;
         if(!finalizeCachedType)
         {
             constructorCache->IncCallCount();
