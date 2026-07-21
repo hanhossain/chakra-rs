@@ -634,7 +634,6 @@ namespace Js
         JITServerMaxInactivePageAllocatorCountFlag,
 
         StrictWriteBarrierCheckFlag,
-        WriteBarrierTestFlag,
 
         FlagCount,
         InvalidFlag,
@@ -2317,8 +2316,6 @@ namespace Js
 
         // TODO (hanhossain): remove flag
         Boolean StrictWriteBarrierCheck;
-        // TODO (hanhossain): remove flag
-        Boolean WriteBarrierTest;
 
         bool            flagPresent[FlagCount];
         // save the jscript.config for easier to get the raw input while analyzing dump file

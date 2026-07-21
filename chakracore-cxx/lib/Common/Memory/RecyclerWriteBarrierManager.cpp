@@ -509,13 +509,6 @@ uint32_t
 RecyclerWriteBarrierManager::GetWriteBarrier(void * address)
 {
     // TODO: SWB remove after all write barrier annotation, this is in order to test the recycler change
-    if (CONFIG_FLAG(WriteBarrierTest))
-    {
-        return WRITE_BARRIER_PAGE_BIT | DIRTYBIT;
-    }
-    else
-    {
-        return cardTable[GetCardTableIndex(address)];
-    }
+    return cardTable[GetCardTableIndex(address)];
 }
 

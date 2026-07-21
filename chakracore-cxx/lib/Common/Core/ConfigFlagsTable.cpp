@@ -633,8 +633,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
 
-#define DEFAULT_CONFIG_WriteBarrierTest (false)
-
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)
 #define TraceLevel_Info         (3)
@@ -1271,7 +1269,6 @@ namespace Js
         u"JITServerMaxInactivePageAllocatorCount",
 
         u"StrictWriteBarrierCheck",
-        u"WriteBarrierTest",
 
 // TODO (hanhossain): ConfigFlagsList end
         NULL
@@ -2297,7 +2294,6 @@ namespace Js
         u"Max inactive page allocators to keep before schedule a cleanup",
 
         u"Check write barrier setting on none write barrier pages",
-        u"Always return true while checking barrier to test recycler regardless of annotation",
 
         NULL
     };
@@ -2917,7 +2913,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
 
         InvalidFlag
@@ -3560,7 +3555,6 @@ namespace Js
         JITServerMaxInactivePageAllocatorCount(10),
 
         StrictWriteBarrierCheck(DEFAULT_CONFIG_StrictWriteBarrierCheck),
-        WriteBarrierTest(DEFAULT_CONFIG_WriteBarrierTest),
 
         nDummy(0)
     {
@@ -5254,8 +5248,6 @@ namespace Js
 
         case StrictWriteBarrierCheckFlag:
             return FlagBoolean;
-        case WriteBarrierTestFlag:
-            return FlagBoolean;
 
         default:
             return InvalidFlagType;
@@ -6307,8 +6299,6 @@ namespace Js
 
         case StrictWriteBarrierCheckFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&StrictWriteBarrierCheck));
-        case WriteBarrierTestFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&WriteBarrierTest));
 
         default:
             return NULL;
@@ -7242,9 +7232,6 @@ namespace Js
 
         case StrictWriteBarrierCheckFlag:
             retValue = DEFAULT_CONFIG_StrictWriteBarrierCheck;
-            break;
-        case WriteBarrierTestFlag:
-            retValue = DEFAULT_CONFIG_WriteBarrierTest;
             break;
 
         default:

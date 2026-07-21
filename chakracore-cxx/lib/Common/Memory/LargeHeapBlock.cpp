@@ -1102,11 +1102,6 @@ LargeHeapBlock::ScanNewImplicitRoots(Recycler * recycler)
 
 bool LargeHeapBlock::IsPageDirty(char* page, RescanFlags flags, bool isWriteBarrier)
 {
-    // TODO: SWB, use special page allocator for large block with write barrier?
-    if (CONFIG_FLAG(WriteBarrierTest))
-    {
-        Assert(isWriteBarrier);
-    }
     if (isWriteBarrier)
     {
         return (RecyclerWriteBarrierManager::GetWriteBarrier(page) & DIRTYBIT) == DIRTYBIT;

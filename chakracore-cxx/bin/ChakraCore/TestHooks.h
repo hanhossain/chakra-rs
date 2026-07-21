@@ -1403,9 +1403,6 @@ int32_t (*pfSetJITServerMaxInactivePageAllocatorCountFlag)(int flag);
 bool (*pfIsEnabledStrictWriteBarrierCheckFlag)();
 int32_t (*pfGetStrictWriteBarrierCheckFlag)(bool *flag);
 int32_t (*pfSetStrictWriteBarrierCheckFlag)(bool flag);
-bool (*pfIsEnabledWriteBarrierTestFlag)();
-int32_t (*pfGetWriteBarrierTestFlag)(bool *flag);
-int32_t (*pfSetWriteBarrierTestFlag)(bool flag);
 };
 
 int32_t OnChakraCoreLoaded();

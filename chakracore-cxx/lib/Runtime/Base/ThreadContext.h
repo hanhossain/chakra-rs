@@ -665,8 +665,6 @@ private:
 
 #define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
 
-#define DEFAULT_CONFIG_WriteBarrierTest (false)
-
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)
 #define TraceLevel_Info         (3)
