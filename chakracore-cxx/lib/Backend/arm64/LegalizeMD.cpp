@@ -786,7 +786,6 @@ void LegalizeMD::ObfuscateLDIMM(IR::Instr * instrMov, IR::Instr * instrMovt)
     // Are security measures disabled?
 
     if (CONFIG_ISENABLED(Js::DebugFlag) ||
-        CONFIG_ISENABLED(Js::BenchmarkFlag) ||
         PHASE_OFF(Js::EncodeConstantsPhase, instrMov->m_func->GetTopFunc())
         )
     {

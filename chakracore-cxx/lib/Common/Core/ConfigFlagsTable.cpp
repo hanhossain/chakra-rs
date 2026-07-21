@@ -705,7 +705,6 @@ namespace Js
         u"BailOut",
         u"BailOutAtEveryByteCode",
         u"BailOutByteCode",
-        u"Benchmark",
         u"BgJit",
         u"BgParse",
         u"BgJitDelay",
@@ -1764,7 +1763,6 @@ namespace Js
         u"Source location to insert BailOut",
         u"Inserts BailOut at every Byte code (default: false)",
         u"Byte code location to insert BailOut. Use with -prejit only",
-        u"Disable security code which introduce variability in benchmarks",
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
         u"Background Parse. Disable to force all parsing to occur on UI thread. (default: true)",
         u"Delay to wait for speculative jitting before starting script execution",
@@ -2414,7 +2412,6 @@ namespace Js
 
 // WebAssembly Experimental Features
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3095,7 +3092,6 @@ namespace Js
         BailOut(),
         BailOutAtEveryByteCode(false),
         BailOutByteCode(),
-        Benchmark(false),
         BgJit(true),
         BgParse(DEFAULT_CONFIG_BgParse),
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
@@ -4438,8 +4434,6 @@ namespace Js
             return FlagBoolean;
         case BailOutByteCodeFlag:
             return FlagNumberSet;
-        case BenchmarkFlag:
-            return FlagBoolean;
         case BgJitFlag:
             return FlagBoolean;
         case BgParseFlag:
@@ -5547,8 +5541,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BailOutAtEveryByteCode));
         case BailOutByteCodeFlag:
             return reinterpret_cast<void*>(const_cast<NumberSet*>(&BailOutByteCode));
-        case BenchmarkFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&Benchmark));
         case BgJitFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BgJit));
         case BgParseFlag:
@@ -6673,9 +6665,6 @@ namespace Js
             retValue = false;
             break;
         case BailOutAtEveryByteCodeFlag:
-            retValue = false;
-            break;
-        case BenchmarkFlag:
             retValue = false;
             break;
         case BgJitFlag:

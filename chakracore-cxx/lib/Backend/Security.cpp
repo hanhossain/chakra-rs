@@ -128,7 +128,7 @@ void
 Security::InsertRandomFunctionPad(IR::Instr * instrBeforeInstr)
 {
     if (PHASE_OFF(Js::InsertNOPsPhase, instrBeforeInstr->m_func->GetTopFunc())
-        || CONFIG_ISENABLED(Js::DebugFlag) || CONFIG_ISENABLED(Js::BenchmarkFlag))
+        || CONFIG_ISENABLED(Js::DebugFlag))
     {
         return;
     }
@@ -162,7 +162,7 @@ Security::InsertRandomFunctionPad(IR::Instr * instrBeforeInstr)
 void
 Security::InsertNOPs()
 {
-    if (PHASE_OFF(Js::InsertNOPsPhase, this->func) || CONFIG_ISENABLED(Js::DebugFlag) || CONFIG_ISENABLED(Js::BenchmarkFlag))
+    if (PHASE_OFF(Js::InsertNOPsPhase, this->func) || CONFIG_ISENABLED(Js::DebugFlag))
     {
         return;
     }
