@@ -9,7 +9,6 @@
 //  AD PerfCounter
 //  AE PerfCounterSet
 //  AM Output/Configuration
-//  AN MemProtectHeap
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
 //  AS JavascriptDispatch/RecyclerObjectDumper

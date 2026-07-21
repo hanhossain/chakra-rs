@@ -579,9 +579,6 @@ namespace Js
         DumpHeapFlag,
         autoProxyFlag,
         PerfHintLevelFlag,
-        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        MemProtectHeapFlag,
-        #endif
 
         #if DBG
         InitializeInterpreterSlotsWithInvalidStackVarFlag,
@@ -2192,10 +2189,6 @@ namespace Js
         // TODO (hanhossain): remove flag
         String autoProxy;
         Number PerfHintLevel;
-        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        // TODO (hanhossain): remove flag
-            Boolean MemProtectHeap;
-        #endif
 
         #if DBG
             Boolean InitializeInterpreterSlotsWithInvalidStackVar;

@@ -1383,9 +1383,6 @@ Recycler::ExpectStackSkip() const
     expectStackSkip = expectStackSkip || (this->objectGraphDumper != nullptr);
 #endif
 
-#if defined(INTERNAL_MEM_PROTECT_HEAP_ALLOC)
-    expectStackSkip = expectStackSkip || GetRecyclerFlagsTable().MemProtectHeap;
-#endif
     return expectStackSkip || isExternalStackSkippingGC;
 }
 #endif

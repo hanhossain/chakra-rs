@@ -637,8 +637,6 @@ private:
 
 #define DEFAULT_CONFIG_RecyclerForceMarkInterior (false)
 
-#define DEFAULT_CONFIG_MemProtectHeap (false)
-
 #define DEFAULT_CONFIG_InduceCodeGenFailure (30) // When -InduceCodeGenFailure is passed in, 30% of JIT allocations will fail
 
 #define DEFAULT_CONFIG_SkipSplitWhenResultIgnored (false)

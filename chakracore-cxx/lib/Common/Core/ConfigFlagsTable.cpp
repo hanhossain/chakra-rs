@@ -16,7 +16,6 @@
 //  AD PerfCounter
 //  AE PerfCounterSet
 //  AM Output/Configuration
-//  AN MemProtectHeap
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
 //  AS JavascriptDispatch/RecyclerObjectDumper
@@ -604,8 +603,6 @@ namespace Js
 #define DEFAULT_CONFIG_DeferLoadingAvailableSource  (false)
 
 #define DEFAULT_CONFIG_RecyclerForceMarkInterior (false)
-
-#define DEFAULT_CONFIG_MemProtectHeap (false)
 
 #define DEFAULT_CONFIG_InduceCodeGenFailure (30) // When -InduceCodeGenFailure is passed in, 30% of JIT allocations will fail
 
@@ -1205,9 +1202,6 @@ namespace Js
         u"DumpHeap",
         u"autoProxy",
         u"PerfHintLevel",
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        u"MemProtectHeap",
-#endif
 
 #if DBG
         u"InitializeInterpreterSlotsWithInvalidStackVar",
@@ -2186,9 +2180,6 @@ namespace Js
         u"enable Debug.dumpHeap even when DisableDebugObject is set",
         u"__msTestHandler",
         u"Specifies the perf-hint level (1,2) 1 == critical, 2 == only noisy",
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        u"Use the mem protect heap as the default heap",
-#endif
 
         // todo (hanhossain): flag end
 #if DBG
@@ -2763,9 +2754,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        NoParentFlag,
-#endif
 
         // todo (hanhossain): flag end
 #if DBG
@@ -3362,9 +3350,6 @@ namespace Js
         DumpHeap(DEFAULT_CONFIG_DumpHeap),
         autoProxy(u"__msTestHandler"),
         PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        MemProtectHeap(DEFAULT_CONFIG_MemProtectHeap),
-#endif
 
 #if DBG
         InitializeInterpreterSlotsWithInvalidStackVar(false),
@@ -4984,10 +4969,6 @@ namespace Js
             return FlagString;
         case PerfHintLevelFlag:
             return FlagNumber;
-        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        case MemProtectHeapFlag:
-            return FlagBoolean;
-        #endif
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
@@ -5967,10 +5948,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<String*>(&autoProxy));
         case PerfHintLevelFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PerfHintLevel));
-        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        case MemProtectHeapFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeap));
-        #endif
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
@@ -6868,11 +6845,6 @@ namespace Js
         case DumpHeapFlag:
             retValue = DEFAULT_CONFIG_DumpHeap;
             break;
-        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        case MemProtectHeapFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_MemProtectHeap;
-            break;
-        #endif
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
