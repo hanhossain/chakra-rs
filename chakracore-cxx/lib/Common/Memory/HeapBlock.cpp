@@ -828,7 +828,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
 
     if (Recycler::DoProfileAllocTracker())
     {
-        // need CheckMemoryLeak or KeepRecyclerTrackData flag to have the tracker data and show following detailed info
+        // need KeepRecyclerTrackData flag to have the tracker data and show following detailed info
 #if  defined(__clang__)
         auto getDemangledName = [](const type_info* typeinfo) ->const char*
         {

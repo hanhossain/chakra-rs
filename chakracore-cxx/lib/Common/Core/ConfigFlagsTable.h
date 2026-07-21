@@ -84,7 +84,6 @@ namespace Js
 
         CheckAlignmentFlag,
         #ifdef CHECK_MEMORY_LEAK
-        CheckMemoryLeakFlag,
         DumpOnLeakFlag,
         #endif
         CheckOpHelpersFlag,
@@ -1513,8 +1512,6 @@ namespace Js
 
         Boolean CheckAlignment;
         #ifdef CHECK_MEMORY_LEAK
-        // TODO (hanhossain): remove flag
-            Boolean CheckMemoryLeak;
         // TODO (hanhossain): remove flag
             String DumpOnLeak;
         #endif

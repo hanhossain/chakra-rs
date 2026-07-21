@@ -4084,35 +4084,6 @@ uint ThreadContext::GetHighestPropertyNameIndex() const
     return propertyMap->GetLastIndex() + 1 + Js::InternalPropertyIds::Count;
 }
 
-#if defined(CHECK_MEMORY_LEAK)
-void ThreadContext::ReportAndCheckLeaksOnProcessDetach()
-{
-    bool needReportOrCheck = false;
-    needReportOrCheck = needReportOrCheck ||
-        (Js::Configuration::Global.flags.CheckMemoryLeak && MemoryLeakCheck::IsEnableOutput());
-
-    if (!needReportOrCheck)
-    {
-        return;
-    }
-
-    // Report leaks even if this is a force termination and we have not clean up the thread
-    // This is call during process detach. No one should be creating new thread context.
-    // So don't need to take the lock
-    ThreadContext * current = GetThreadContextList();
-
-    while (current)
-    {
-#if DBG
-        current->pageAllocator.ClearConcurrentThreadId();
-#endif
-        Recycler * recycler = current->GetRecycler();
-        recycler->CheckLeaksOnProcessDetach(u"Process Termination");
-        current = current->Next();
-    }
-}
-#endif
-
 AutoTagNativeLibraryEntry::AutoTagNativeLibraryEntry(Js::RecyclableObject* function, Js::CallInfo callInfo, const char16_t * name, void* addr)
 {
     // Save function/callInfo values (for StackWalker). Compiler may stackpack/optimize them for built-in native functions.

@@ -414,20 +414,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
     return S_OK;
 }
 #ifdef CHECK_MEMORY_LEAK
-bool IsEnabledCheckMemoryLeakFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::CheckMemoryLeakFlag);
-}
-int32_t GetCheckMemoryLeakFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.CheckMemoryLeak;
-    return S_OK;
-}
-int32_t SetCheckMemoryLeakFlag(bool flag)
-{
-    Js::Configuration::Global.flags.CheckMemoryLeak = flag;
-    return S_OK;
-}
 bool IsEnabledDumpOnLeakFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::DumpOnLeakFlag);
@@ -6142,7 +6128,6 @@ IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
 #ifdef CHECK_MEMORY_LEAK
-IsEnabledCheckMemoryLeakFlag, GetCheckMemoryLeakFlag, SetCheckMemoryLeakFlag,
 IsEnabledDumpOnLeakFlag, GetDumpOnLeakFlag, SetDumpOnLeakFlag,
 #endif
 IsEnabledCheckOpHelpersFlag, GetCheckOpHelpersFlag, SetCheckOpHelpersFlag,
