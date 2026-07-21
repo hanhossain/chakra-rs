@@ -107,9 +107,6 @@ bool (*pfIsEnabledCheckAlignmentFlag)();
 int32_t (*pfGetCheckAlignmentFlag)(bool *flag);
 int32_t (*pfSetCheckAlignmentFlag)(bool flag);
 
-bool (*pfIsEnabledDebugWindowFlag)();
-int32_t (*pfGetDebugWindowFlag)(bool *flag);
-int32_t (*pfSetDebugWindowFlag)(bool flag);
 bool (*pfIsEnabledParserStateCacheFlag)();
 int32_t (*pfGetParserStateCacheFlag)(bool *flag);
 int32_t (*pfSetParserStateCacheFlag)(bool flag);

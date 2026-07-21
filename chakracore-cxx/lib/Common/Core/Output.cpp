@@ -20,7 +20,6 @@
 #pragma warning(disable:4075)       // initializers put in unrecognized initialization area on purpose
 #pragma init_seg(".CRT$XCAM")
 
-bool                Output::s_useDebuggerWindow = false;
 std::recursive_mutex Output::s_mutex;
 #ifdef ENABLE_TRACE
 Js::ILogger*        Output::s_inMemoryLogger = nullptr;
@@ -355,11 +354,6 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
     bool useConsoleOrFile = true;
     if (!Output::s_capture)
     {
-        if (Output::s_useDebuggerWindow)
-        {
-            OutputDebugStringW(buf);
-            useConsoleOrFile = false;
-        }
 #ifdef ENABLE_TRACE
         if (Output::s_inMemoryLogger)
         {

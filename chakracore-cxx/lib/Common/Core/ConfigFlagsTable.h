@@ -84,7 +84,6 @@ namespace Js
 
         CheckAlignmentFlag,
 
-        DebugWindowFlag,
         ParserStateCacheFlag,
         CompressParserStateCacheFlag,
         DeferTopLevelTillFirstCallFlag,
@@ -1497,8 +1496,6 @@ namespace Js
 
         Boolean CheckAlignment;
 
-        // TODO (hanhossain): remove flag
-        Boolean DebugWindow;
         Boolean ParserStateCache;
         // TODO (hanhossain): remove flag
         Boolean CompressParserStateCache;

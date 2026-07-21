@@ -1080,16 +1080,6 @@ WriteProcessMemory( HANDLE hProcess,
                                    0xFFF)
 
 void
-OutputDebugStringA(
-     const char * lpOutputString);
-
-void
-OutputDebugStringW(
-     const char16_t* lpOutputStrig);
-
-#define OutputDebugString OutputDebugStringW
-
-void
 DebugBreak(
        void);
 
