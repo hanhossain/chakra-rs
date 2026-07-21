@@ -82,7 +82,6 @@ namespace Js
         BgJitFlag,
         BgJitDelayFlag,
 
-        BytecodeHistFlag,
         CurrentSourceInfoFlag,
         CFGLogFlag,
         CheckAlignmentFlag,
@@ -1515,8 +1514,6 @@ namespace Js
         Boolean BgJit;
         Number BgJitDelay;
 
-        // TODO (hanhossain): remove flag
-        Boolean BytecodeHist;
         // TODO (hanhossain): remove flag
         Boolean CurrentSourceInfo;
         // TODO (hanhossain): remove flag

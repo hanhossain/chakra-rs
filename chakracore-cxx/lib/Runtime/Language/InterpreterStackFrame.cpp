@@ -2303,7 +2303,6 @@ namespace Js
     void InterpreterStackFrame::TraceOpCode(InterpreterStackFrame* that, Js::OpCode op)
     {
 #if DBG_DUMP
-        that->scriptContext->byteCodeHistogram[(int)op]++;
         if (PHASE_TRACE(Js::InterpreterPhase, that->m_functionBody))
         {
             Output::Print(u"%d.%d:Executing %s at offset 0x%X\n", that->m_functionBody->GetSourceContextId(), that->m_functionBody->GetLocalFunctionId(), Js::OpCodeUtil::GetOpCodeName(op), that->DEBUG_currentByteOffset);

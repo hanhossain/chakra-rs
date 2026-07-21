@@ -702,7 +702,6 @@ namespace Js
         u"BgJit",
         u"BgJitDelay",
 
-        u"BytecodeHist",
         u"CurrentSourceInfo",
         u"CFGLog",
         u"CheckAlignment",
@@ -1754,7 +1753,6 @@ namespace Js
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
         u"Delay to wait for speculative jitting before starting script execution",
 
-        u"Provide a histogram of the bytecodes run by the script. (NoNative required).",
         u"Enable IASD get current script source info",
         u"Log CFG checks",
         u"Insert checks in the native code to verify 8-byte alignment of stack",
@@ -2402,7 +2400,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3071,7 +3068,6 @@ namespace Js
         BgJit(true),
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
-        BytecodeHist(false),
         CurrentSourceInfo(DEFAULT_CONFIG_CurrentSourceInfo),
         CFGLog(false),
         CheckAlignment(false),
@@ -4409,8 +4405,6 @@ namespace Js
         case BgJitDelayFlag:
             return FlagNumber;
 
-        case BytecodeHistFlag:
-            return FlagBoolean;
         case CurrentSourceInfoFlag:
             return FlagBoolean;
         case CFGLogFlag:
@@ -5504,8 +5498,6 @@ namespace Js
         case BgJitDelayFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelay));
 
-        case BytecodeHistFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&BytecodeHist));
         case CurrentSourceInfoFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CurrentSourceInfo));
         case CFGLogFlag:
@@ -6617,9 +6609,6 @@ namespace Js
             retValue = true;
             break;
 
-        case BytecodeHistFlag:
-            retValue = false;
-            break;
         case CurrentSourceInfoFlag:
             retValue = DEFAULT_CONFIG_CurrentSourceInfo;
             break;
