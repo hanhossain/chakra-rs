@@ -355,22 +355,7 @@ int32_t SetBaselineModeFlag(bool flag)
     Js::Configuration::Global.flags.BaselineMode = flag;
     return S_OK;
 }
-bool IsEnabledDumpOnCrashFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::DumpOnCrashFlag);
-}
 
-int32_t GetDumpOnCrashFlag(BSTR *flag)
-{
-    *flag = SysAllocString(Js::Configuration::Global.flags.DumpOnCrash);
-    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
-}
-
-int32_t SetDumpOnCrashFlag(BSTR flag)
-{
-    Js::Configuration::Global.flags.DumpOnCrash = flag;
-    return S_OK;
-}
 bool IsEnabledFullMemoryDumpFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::FullMemoryDumpFlag);
@@ -6347,7 +6332,6 @@ IsEnabledWasmNontrappingFlag, GetWasmNontrappingFlag, SetWasmNontrappingFlag,
 IsEnabledWasmSimdFlag, GetWasmSimdFlag, SetWasmSimdFlag,
 
 IsEnabledBaselineModeFlag, GetBaselineModeFlag, SetBaselineModeFlag,
-IsEnabledDumpOnCrashFlag, GetDumpOnCrashFlag, SetDumpOnCrashFlag,
 IsEnabledFullMemoryDumpFlag, GetFullMemoryDumpFlag, SetFullMemoryDumpFlag,
 
 IsEnabledBailOutAtEveryLineFlag, GetBailOutAtEveryLineFlag, SetBailOutAtEveryLineFlag,

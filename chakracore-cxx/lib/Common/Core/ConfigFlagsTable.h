@@ -76,7 +76,6 @@ namespace Js
         WasmSimdFlag,
 
         BaselineModeFlag,
-        DumpOnCrashFlag,
         FullMemoryDumpFlag,
         BailOutFlag,
         BailOutAtEveryLineFlag,
@@ -1520,8 +1519,6 @@ namespace Js
         Boolean WasmSimd;
 
         Boolean BaselineMode;
-        // TODO (hanhossain): remove flag
-        String DumpOnCrash;
         // TODO (hanhossain): remove flag
         String FullMemoryDump;
             NumberPairSet BailOut;

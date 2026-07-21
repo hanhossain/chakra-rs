@@ -702,7 +702,6 @@ namespace Js
         u"WasmSimd",
 
         u"BaselineMode",
-        u"DumpOnCrash",
         u"FullMemoryDump",
         u"BailOut",
         u"BailOutAtEveryLine",
@@ -1765,7 +1764,6 @@ namespace Js
         u"Enable SIMD in WebAssembly",
 
         u"Dump only stable content that can be used for baseline comparison",
-        u"generate heap dump on asserts or unhandled exception if set",
         u"Will perform a full memory dump when -DumpOnCrash is supplied.",
         u"Source location to insert BailOut",
         u"Inserts BailOut at every line of source (default: false)",
@@ -2422,7 +2420,6 @@ namespace Js
 
 // WebAssembly Experimental Features
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3104,7 +3101,6 @@ namespace Js
         WasmSimd(true),
 
         BaselineMode(false),
-        DumpOnCrash(nullptr),
         FullMemoryDump(nullptr),
         BailOut(),
         BailOutAtEveryLine(false),
@@ -4448,8 +4444,6 @@ namespace Js
 
         case BaselineModeFlag:
             return FlagBoolean;
-        case DumpOnCrashFlag:
-            return FlagString;
         case FullMemoryDumpFlag:
             return FlagString;
         case BailOutFlag:
@@ -5565,8 +5559,6 @@ namespace Js
 
         case BaselineModeFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BaselineMode));
-        case DumpOnCrashFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&DumpOnCrash));
         case FullMemoryDumpFlag:
             return reinterpret_cast<void*>(const_cast<String*>(&FullMemoryDump));
         case BailOutFlag:
