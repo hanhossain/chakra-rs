@@ -564,9 +564,6 @@ namespace Js
         ArrayMutationTestSeedFlag,
         TestTraceFlag,
         EnableEvalMapCleanupFlag,
-        #ifdef PROFILE_MEM
-        TraceObjectAllocationFlag,
-        #endif
         SseFlag,
         ForceStringKeyedSimpleDictionaryTypeHandlerFlag,
         BigDictionaryTypeHandlerThresholdFlag,
@@ -2157,10 +2154,6 @@ namespace Js
         Phases TestTrace;
         // TODO (hanhossain): remove flag
         Boolean EnableEvalMapCleanup;
-        #ifdef PROFILE_MEM
-        // TODO (hanhossain): remove flag
-            Boolean TraceObjectAllocation;
-        #endif
         // todo (hanhossain): flag end
         Number Sse;
         Boolean ForceStringKeyedSimpleDictionaryTypeHandler;

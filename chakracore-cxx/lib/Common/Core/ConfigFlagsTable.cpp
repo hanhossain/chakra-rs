@@ -1181,9 +1181,6 @@ namespace Js
         u"ArrayMutationTestSeed",
         u"TestTrace",
         u"EnableEvalMapCleanup",
-#ifdef PROFILE_MEM
-        u"TraceObjectAllocation",
-#endif
         u"Sse",
         u"ForceStringKeyedSimpleDictionaryTypeHandler",
         u"BigDictionaryTypeHandlerThreshold",
@@ -2151,9 +2148,6 @@ namespace Js
         u"Seed used for the array mutation",
         u"Test trace for the given phase",
         u"Enable cleaning up the eval map",
-#ifdef PROFILE_MEM
-        u"Enable cleaning up the eval map",
-#endif
         // todo (hanhossain): flag end
         u"Virtually disables SSE-based optimizations above the specified SSE level in the Chakra JIT (does not affect CRT SSE usage)",
         u"Force switch to string keyed version of SimpleDictionaryTypeHandler on first new property added to a SimpleDictionaryTypeHandler",
@@ -2717,9 +2711,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#ifdef PROFILE_MEM
-        NoParentFlag,
-#endif
         // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
@@ -3305,9 +3296,6 @@ namespace Js
         ArrayMutationTestSeed(0),
         TestTrace(),
         EnableEvalMapCleanup(true),
-#ifdef PROFILE_MEM
-        TraceObjectAllocation(false),
-#endif
         Sse(DEFAULT_CONFIG_Sse),
         ForceStringKeyedSimpleDictionaryTypeHandler(DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler),
         BigDictionaryTypeHandlerThreshold(DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold),
@@ -4903,10 +4891,6 @@ namespace Js
             return FlagPhases;
         case EnableEvalMapCleanupFlag:
             return FlagBoolean;
-        #ifdef PROFILE_MEM
-        case TraceObjectAllocationFlag:
-            return FlagBoolean;
-        #endif
         case SseFlag:
             return FlagNumber;
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
@@ -5866,10 +5850,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Phases*>(&TestTrace));
         case EnableEvalMapCleanupFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableEvalMapCleanup));
-        #ifdef PROFILE_MEM
-        case TraceObjectAllocationFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceObjectAllocation));
-        #endif
         case SseFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Sse));
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
@@ -6749,11 +6729,6 @@ namespace Js
         case EnableEvalMapCleanupFlag:
             retValue = true;
             break;
-        #ifdef PROFILE_MEM
-        case TraceObjectAllocationFlag:
-            retValue = false;
-            break;
-        #endif
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
             retValue = DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler;
             break;

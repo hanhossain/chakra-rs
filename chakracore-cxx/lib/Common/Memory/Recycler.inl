@@ -117,7 +117,7 @@ Recycler::AllocWithAttributesInlined(size_t size)
     }
 
 #ifdef PROFILE_RECYCLER_ALLOC
-    TrackAlloc(memBlock, size, trackAllocData, (CUSTOM_CONFIG_ISENABLED(GetRecyclerFlagsTable(), Js::TraceObjectAllocationFlag) && (attributes & TraceBit) == TraceBit));
+    TrackAlloc(memBlock, size, trackAllocData, false);
 #endif
     RecyclerMemoryTracking::ReportAllocation(this, memBlock, size);
     RECYCLER_PERF_COUNTER_INC(LiveObject);
