@@ -701,7 +701,6 @@ namespace Js
         u"BgJit",
         u"BgJitDelay",
 
-        u"CFGLog",
         u"CheckAlignment",
         u"CheckEmitBufferPermissions",
 #ifdef CHECK_MEMORY_LEAK
@@ -1751,7 +1750,6 @@ namespace Js
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
         u"Delay to wait for speculative jitting before starting script execution",
 
-        u"Log CFG checks",
         u"Insert checks in the native code to verify 8-byte alignment of stack",
         u"Check JIT code buffers at commit and decommit time to ensure no PAGE_EXECUTE_READWRITE pages.",
 #ifdef CHECK_MEMORY_LEAK
@@ -2397,7 +2395,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
 #ifdef CHECK_MEMORY_LEAK
@@ -3064,7 +3061,6 @@ namespace Js
         BgJit(true),
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
-        CFGLog(false),
         CheckAlignment(false),
         CheckEmitBufferPermissions(false),
 #ifdef CHECK_MEMORY_LEAK
@@ -4400,8 +4396,6 @@ namespace Js
         case BgJitDelayFlag:
             return FlagNumber;
 
-        case CFGLogFlag:
-            return FlagBoolean;
         case CheckAlignmentFlag:
             return FlagBoolean;
         case CheckEmitBufferPermissionsFlag:
@@ -5491,8 +5485,6 @@ namespace Js
         case BgJitDelayFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelay));
 
-        case CFGLogFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&CFGLog));
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
         case CheckEmitBufferPermissionsFlag:
@@ -6600,9 +6592,6 @@ namespace Js
             retValue = true;
             break;
 
-        case CFGLogFlag:
-            retValue = false;
-            break;
         case CheckAlignmentFlag:
             retValue = false;
             break;

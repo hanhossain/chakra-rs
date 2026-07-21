@@ -399,20 +399,6 @@ int32_t SetBgJitDelayFlag(int flag)
     return S_OK;
 }
 
-bool IsEnabledCFGLogFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::CFGLogFlag);
-}
-int32_t GetCFGLogFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.CFGLog;
-    return S_OK;
-}
-int32_t SetCFGLogFlag(bool flag)
-{
-    Js::Configuration::Global.flags.CFGLog = flag;
-    return S_OK;
-}
 bool IsEnabledCheckAlignmentFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::CheckAlignmentFlag);
@@ -6168,7 +6154,6 @@ IsEnabledBailOutAtEveryByteCodeFlag, GetBailOutAtEveryByteCodeFlag, SetBailOutAt
 IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
-IsEnabledCFGLogFlag, GetCFGLogFlag, SetCFGLogFlag,
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
 IsEnabledCheckEmitBufferPermissionsFlag, GetCheckEmitBufferPermissionsFlag, SetCheckEmitBufferPermissionsFlag,
 #ifdef CHECK_MEMORY_LEAK
