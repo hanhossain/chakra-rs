@@ -105,9 +105,6 @@ bool (*pfIsEnabledBgJitDelayFlag)();
 int32_t (*pfGetBgJitDelayFlag)(int *flag);
 int32_t (*pfSetBgJitDelayFlag)(int flag);
 
-bool (*pfIsEnabledCreateFunctionProxyFlag)();
-int32_t (*pfGetCreateFunctionProxyFlag)(bool *flag);
-int32_t (*pfSetCreateFunctionProxyFlag)(bool flag);
 bool (*pfIsEnabledHybridFgJitFlag)();
 int32_t (*pfGetHybridFgJitFlag)(bool *flag);
 int32_t (*pfSetHybridFgJitFlag)(bool flag);

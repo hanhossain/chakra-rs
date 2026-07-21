@@ -3555,7 +3555,7 @@ JsErrorCode RunSerializedScriptCore(
         {
             uint32_t flags = 0;
 
-            if (CONFIG_FLAG(CreateFunctionProxy) && !scriptContext->IsProfiling())
+            if (!scriptContext->IsProfiling())
             {
                 flags = fscrAllowFunctionProxy;
             }

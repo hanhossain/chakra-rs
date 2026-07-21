@@ -399,20 +399,6 @@ int32_t SetBgJitDelayFlag(int flag)
     return S_OK;
 }
 
-bool IsEnabledCreateFunctionProxyFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::CreateFunctionProxyFlag);
-}
-int32_t GetCreateFunctionProxyFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.CreateFunctionProxy;
-    return S_OK;
-}
-int32_t SetCreateFunctionProxyFlag(bool flag)
-{
-    Js::Configuration::Global.flags.CreateFunctionProxy = flag;
-    return S_OK;
-}
 bool IsEnabledHybridFgJitFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::HybridFgJitFlag);
@@ -6238,7 +6224,6 @@ IsEnabledBailOutAtEveryByteCodeFlag, GetBailOutAtEveryByteCodeFlag, SetBailOutAt
 IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
-IsEnabledCreateFunctionProxyFlag, GetCreateFunctionProxyFlag, SetCreateFunctionProxyFlag,
 IsEnabledHybridFgJitFlag, GetHybridFgJitFlag, SetHybridFgJitFlag,
 IsEnabledHybridFgJitBgQueueLengthThresholdFlag, GetHybridFgJitBgQueueLengthThresholdFlag, SetHybridFgJitBgQueueLengthThresholdFlag,
 IsEnabledBytecodeHistFlag, GetBytecodeHistFlag, SetBytecodeHistFlag,
