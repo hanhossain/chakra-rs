@@ -424,11 +424,11 @@ namespace Js
         bool isGlobalObject = instance->GetTypeId() == TypeIds_GlobalObject;
         bool isTypeLocked = instance->GetDynamicType()->GetIsLocked();
         bool isOrMayBecomeShared = GetIsOrMayBecomeShared();
-        Assert(!isOrMayBecomeShared || !IsolatePrototypes() || ((this->GetFlags() & IsPrototypeFlag) == 0));
+        Assert(!isOrMayBecomeShared || ((this->GetFlags() & IsPrototypeFlag) == 0));
         // For the global object we don't emit a type check before a hard-coded use of a fixed field. Therefore a type transition isn't sufficient to
         // invalidate any used fixed fields, and we must continue tracking them on the new type handler. If the type isn't locked, we may not change the
         // type of the instance, and we must also track the used fixed fields on the new handler.
-        bool transferUsedAsFixed = isGlobalObject || !isTypeLocked || ((this->GetFlags() & IsPrototypeFlag) != 0 || (isOrMayBecomeShared && !IsolatePrototypes())) || PHASE_FORCE1(Js::FixDataPropsPhase);
+        bool transferUsedAsFixed = isGlobalObject || !isTypeLocked || ((this->GetFlags() & IsPrototypeFlag) != 0) || PHASE_FORCE1(Js::FixDataPropsPhase);
 #endif
 
         SimpleDictionaryPropertyDescriptor<TPropertyIndex> descriptor;
@@ -2877,7 +2877,7 @@ namespace Js
 
         bool isShared = GetIsShared();
 #endif
-        if (GetIsOrMayBecomeShared() && IsolatePrototypes())
+        if (GetIsOrMayBecomeShared())
         {
             Type* oldType = instance->GetType();
             ConvertToNonSharedSimpleDictionaryType(instance)->SetIsPrototype(instance, instance->GetType() != oldType);

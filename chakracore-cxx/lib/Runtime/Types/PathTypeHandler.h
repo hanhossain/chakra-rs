@@ -214,7 +214,7 @@ namespace Js
 #endif
 
 #if DBG
-        virtual bool SupportsPrototypeInstances() const { return !IsolatePrototypes(); }
+        virtual bool SupportsPrototypeInstances() const { return false; }
         virtual bool CanStorePropertyValueDirectly(const DynamicObject* instance, PropertyId propertyId, bool allowLetConst) override;
 #endif
 

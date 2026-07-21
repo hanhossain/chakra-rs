@@ -579,7 +579,6 @@ namespace Js
 #define DEFAULT_CONFIG_ForceJITCFGCheck (false)
 #define DEFAULT_CONFIG_UseJITTrampoline (true)
 
-#define DEFAULT_CONFIG_IsolatePrototypes    (true)
 #define DEFAULT_CONFIG_TempMin    (0)
 #define DEFAULT_CONFIG_TempMax    (INT_MAX)
 
@@ -1191,7 +1190,6 @@ namespace Js
         u"ForceStringKeyedSimpleDictionaryTypeHandler",
         u"BigDictionaryTypeHandlerThreshold",
         u"TypeSnapshotEnumeration",
-        u"IsolatePrototypes",
         u"PerfHintLevel",
 
 #if DBG
@@ -2164,7 +2162,6 @@ namespace Js
         u"Force switch to string keyed version of SimpleDictionaryTypeHandler on first new property added to a SimpleDictionaryTypeHandler",
         u"Min Slot Capacity required to convert DictionaryTypeHandler to BigDictionaryTypeHandler.(Advisable to give more than 15 - to avoid false positive cases)",
         u"Create a true snapshot of the type of an object before enumeration and enumerate only those properties.",
-        u"Should prototypes get unique types not shared with other objects (default: true)?",
         // todo (hanhossain): flag end
         u"Specifies the perf-hint level (1,2) 1 == critical, 2 == only noisy",
 
@@ -2728,7 +2725,6 @@ namespace Js
 #ifdef PROFILE_MEM
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3324,7 +3320,6 @@ namespace Js
         ForceStringKeyedSimpleDictionaryTypeHandler(DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler),
         BigDictionaryTypeHandlerThreshold(DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold),
         TypeSnapshotEnumeration(DEFAULT_CONFIG_TypeSnapshotEnumeration),
-        IsolatePrototypes(DEFAULT_CONFIG_IsolatePrototypes),
         PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
 
 #if DBG
@@ -4931,8 +4926,6 @@ namespace Js
             return FlagNumber;
         case TypeSnapshotEnumerationFlag:
             return FlagBoolean;
-        case IsolatePrototypesFlag:
-            return FlagBoolean;
         case PerfHintLevelFlag:
             return FlagNumber;
 
@@ -5900,8 +5893,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&BigDictionaryTypeHandlerThreshold));
         case TypeSnapshotEnumerationFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&TypeSnapshotEnumeration));
-        case IsolatePrototypesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&IsolatePrototypes));
         case PerfHintLevelFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PerfHintLevel));
 
@@ -6785,9 +6776,6 @@ namespace Js
             break;
         case TypeSnapshotEnumerationFlag:
             retValue = DEFAULT_CONFIG_TypeSnapshotEnumeration;
-            break;
-        case IsolatePrototypesFlag:
-            retValue = DEFAULT_CONFIG_IsolatePrototypes;
             break;
 
         #if DBG
