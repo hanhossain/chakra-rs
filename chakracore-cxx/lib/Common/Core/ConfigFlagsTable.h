@@ -84,7 +84,6 @@ namespace Js
 
         CheckAlignmentFlag,
         DebugBreakFlag,
-        StatementDebugBreakFlag,
 
         DebugWindowFlag,
         ParserStateCacheFlag,
@@ -1500,8 +1499,6 @@ namespace Js
         Boolean CheckAlignment;
         // TODO (hanhossain): remove flag
         NumberSet DebugBreak;
-        // TODO (hanhossain): remove flag
-        NumberTrioSet StatementDebugBreak;
 
         // TODO (hanhossain): remove flag
         Boolean DebugWindow;
