@@ -105,9 +105,6 @@ bool (*pfIsEnabledBgJitDelayFlag)();
 int32_t (*pfGetBgJitDelayFlag)(int *flag);
 int32_t (*pfSetBgJitDelayFlag)(int flag);
 
-bool (*pfIsEnabledHybridFgJitFlag)();
-int32_t (*pfGetHybridFgJitFlag)(bool *flag);
-int32_t (*pfSetHybridFgJitFlag)(bool flag);
 bool (*pfIsEnabledHybridFgJitBgQueueLengthThresholdFlag)();
 int32_t (*pfGetHybridFgJitBgQueueLengthThresholdFlag)(int *flag);
 int32_t (*pfSetHybridFgJitBgQueueLengthThresholdFlag)(int flag);
