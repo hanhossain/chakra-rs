@@ -593,10 +593,7 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
                 }
             }
         }
-        if (instr->IsEntryInstr() && (
-            Js::Configuration::Global.flags.DebugBreak.Contains(m_func->GetFunctionNumber()) ||
-            PHASE_ON(Js::DebugBreakPhase, m_func)
-        ))
+        if (instr->IsEntryInstr() && PHASE_ON(Js::DebugBreakPhase, m_func))
         {
             IR::Instr *int3 = IR::Instr::New(Js::OpCode::INT, m_func);
             int3->SetSrc1(IR::IntConstOpnd::New(3, TyInt32, m_func));
