@@ -535,27 +535,6 @@ Func::TryCodegen()
 
     }
 
-#if DBG_DUMP
-    if (Js::Configuration::Global.flags.IsEnabled(Js::AsmDumpModeFlag))
-    {
-        FILE * oldFile = 0;
-        FILE * asmFile = GetScriptContext()->GetNativeCodeGenerator()->asmFile;
-        if (asmFile)
-        {
-            oldFile = Output::SetFile(asmFile);
-        }
-
-        this->Dump(IRDumpFlags_AsmDumpMode);
-
-        Output::Flush();
-
-        if (asmFile)
-        {
-            FILE *openedFile = Output::SetFile(oldFile);
-            Assert(openedFile == asmFile);
-        }
-    }
-#endif
     if (this->IsOOPJIT())
     {
         BEGIN_CODEGEN_PHASE(this, Js::NativeCodeDataPhase);
