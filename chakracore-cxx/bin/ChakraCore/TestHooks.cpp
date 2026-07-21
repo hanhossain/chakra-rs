@@ -356,20 +356,6 @@ int32_t SetBaselineModeFlag(bool flag)
     return S_OK;
 }
 
-bool IsEnabledBailOutAtEveryLineFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryLineFlag);
-}
-int32_t GetBailOutAtEveryLineFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.BailOutAtEveryLine;
-    return S_OK;
-}
-int32_t SetBailOutAtEveryLineFlag(bool flag)
-{
-    Js::Configuration::Global.flags.BailOutAtEveryLine = flag;
-    return S_OK;
-}
 bool IsEnabledBailOutAtEveryByteCodeFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryByteCodeFlag);
@@ -6317,7 +6303,6 @@ IsEnabledWasmSimdFlag, GetWasmSimdFlag, SetWasmSimdFlag,
 
 IsEnabledBaselineModeFlag, GetBaselineModeFlag, SetBaselineModeFlag,
 
-IsEnabledBailOutAtEveryLineFlag, GetBailOutAtEveryLineFlag, SetBailOutAtEveryLineFlag,
 IsEnabledBailOutAtEveryByteCodeFlag, GetBailOutAtEveryByteCodeFlag, SetBailOutAtEveryByteCodeFlag,
 IsEnabledBailOutAtEveryImplicitCallFlag, GetBailOutAtEveryImplicitCallFlag, SetBailOutAtEveryImplicitCallFlag,
 

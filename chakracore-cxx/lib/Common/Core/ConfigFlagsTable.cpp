@@ -703,7 +703,6 @@ namespace Js
 
         u"BaselineMode",
         u"BailOut",
-        u"BailOutAtEveryLine",
         u"BailOutAtEveryByteCode",
         u"BailOutAtEveryImplicitCall",
         u"BailOutByteCode",
@@ -1764,7 +1763,6 @@ namespace Js
 
         u"Dump only stable content that can be used for baseline comparison",
         u"Source location to insert BailOut",
-        u"Inserts BailOut at every line of source (default: false)",
         u"Inserts BailOut at every Byte code (default: false)",
         u"Force generating implicit call bailout even when we don't need it",
         u"Byte code location to insert BailOut. Use with -prejit only",
@@ -2418,7 +2416,6 @@ namespace Js
 
 // WebAssembly Experimental Features
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3099,7 +3096,6 @@ namespace Js
 
         BaselineMode(false),
         BailOut(),
-        BailOutAtEveryLine(false),
         BailOutAtEveryByteCode(false),
         BailOutAtEveryImplicitCall(false),
         BailOutByteCode(),
@@ -4442,8 +4438,6 @@ namespace Js
             return FlagBoolean;
         case BailOutFlag:
             return FlagNumberPairSet;
-        case BailOutAtEveryLineFlag:
-            return FlagBoolean;
         case BailOutAtEveryByteCodeFlag:
             return FlagBoolean;
         case BailOutAtEveryImplicitCallFlag:
@@ -5555,8 +5549,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BaselineMode));
         case BailOutFlag:
             return reinterpret_cast<void*>(const_cast<NumberPairSet*>(&BailOut));
-        case BailOutAtEveryLineFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&BailOutAtEveryLine));
         case BailOutAtEveryByteCodeFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BailOutAtEveryByteCode));
         case BailOutAtEveryImplicitCallFlag:
@@ -6686,9 +6678,6 @@ namespace Js
             break;
 
         case BaselineModeFlag:
-            retValue = false;
-            break;
-        case BailOutAtEveryLineFlag:
             retValue = false;
             break;
         case BailOutAtEveryByteCodeFlag:
