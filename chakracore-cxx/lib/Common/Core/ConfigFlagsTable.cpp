@@ -695,7 +695,6 @@ namespace Js
         u"BgJitDelay",
 
         u"CheckAlignment",
-        u"DebugBreak",
 
         u"DebugWindow",
         u"ParserStateCache",
@@ -1728,7 +1727,6 @@ namespace Js
         u"Delay to wait for speculative jitting before starting script execution",
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
-        u"Index of the function where you want to break",
 
         u"Send console output to debugger window",
         u"Enable creation of parser state cache",
@@ -2356,7 +2354,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
 
         NoParentFlag,
@@ -3007,7 +3004,6 @@ namespace Js
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
         CheckAlignment(false),
-        DebugBreak(),
 
         DebugWindow(false),
         ParserStateCache(DEFAULT_CONFIG_ParserStateCache),
@@ -4327,8 +4323,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return FlagBoolean;
-        case DebugBreakFlag:
-            return FlagNumberSet;
 
         case DebugWindowFlag:
             return FlagBoolean;
@@ -5386,8 +5380,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
-        case DebugBreakFlag:
-            return reinterpret_cast<void*>(const_cast<NumberSet*>(&DebugBreak));
 
         case DebugWindowFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&DebugWindow));

@@ -1427,13 +1427,6 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
                 m_func->m_unwindInfo.SetLabelOffset(instr->AsLabelInstr()->m_id, uint32_t(m_pc - m_encoder->m_encodeBuffer));
             }
         }
-    #if DBG_DUMP
-        if (instr->IsEntryInstr() && Js::Configuration::Global.flags.DebugBreak.Contains(m_func->GetFunctionNumber()))
-        {
-            IR::Instr *int3 = IR::Instr::New(Js::OpCode::DEBUGBREAK, m_func);
-            return this->Encode(int3, m_pc);
-        }
-    #endif
         return 0;
     }
 
