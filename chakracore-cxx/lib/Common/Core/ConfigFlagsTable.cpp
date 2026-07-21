@@ -687,7 +687,6 @@ namespace Js
         u"ArrayValidate",
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-        u"ArenaNoFreeList",
         u"ArenaNoPageReuse",
         u"ArenaUseHeapAlloc",
 #endif
@@ -1770,7 +1769,6 @@ namespace Js
         u"Validate each array for valid elements (default: false)",
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-        u"Do not free list in arena",
         u"Do not reuse page in arena",
         u"Arena use heap to allocate memory instead of page allocator",
 #endif
@@ -2454,7 +2452,6 @@ namespace Js
         NoParentFlag,
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
 #endif
@@ -3154,7 +3151,6 @@ namespace Js
         ArrayValidate(false),
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-        ArenaNoFreeList(false),
         ArenaNoPageReuse(false),
         ArenaUseHeapAlloc(false),
 #endif
@@ -4503,8 +4499,6 @@ namespace Js
             return FlagBoolean;
         #endif
         #ifdef ARENA_MEMORY_VERIFY
-        case ArenaNoFreeListFlag:
-            return FlagBoolean;
         case ArenaNoPageReuseFlag:
             return FlagBoolean;
         case ArenaUseHeapAllocFlag:
@@ -5657,8 +5651,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ArrayValidate));
         #endif
         #ifdef ARENA_MEMORY_VERIFY
-        case ArenaNoFreeListFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ArenaNoFreeList));
         case ArenaNoPageReuseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ArenaNoPageReuse));
         case ArenaUseHeapAllocFlag:
@@ -6820,9 +6812,6 @@ namespace Js
             break;
         #endif
         #ifdef ARENA_MEMORY_VERIFY
-        case ArenaNoFreeListFlag:
-            retValue = false;
-            break;
         case ArenaNoPageReuseFlag:
             retValue = false;
             break;

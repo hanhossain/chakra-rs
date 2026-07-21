@@ -539,12 +539,6 @@ Free(void * buffer, size_t byteSize)
 
     ArenaMemoryTracking::ReportFree(this, buffer, byteSize);
 
-#ifdef ARENA_MEMORY_VERIFY
-    if (Js::Configuration::Global.flags.ArenaNoFreeList)
-    {
-        return;
-    }
-#endif
     if (buffer == cacheBlockCurrent - byteSize)
     {
 #ifdef PROFILE_MEM
