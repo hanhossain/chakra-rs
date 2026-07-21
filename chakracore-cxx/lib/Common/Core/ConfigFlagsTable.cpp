@@ -1263,9 +1263,6 @@ namespace Js
             u"SimulatePolyCacheWithOneTypeForInlineCacheIndex",
 #endif
 
-        u"JITServerIdleTimeout",
-        u"JITServerMaxInactivePageAllocatorCount",
-
 // TODO (hanhossain): ConfigFlagsList end
         NULL
     };
@@ -2286,9 +2283,7 @@ namespace Js
             u"Use with SimulatePolyCacheWithOneTypeForFunction to simulate creating a polymorphic inline cache containing only one type due to a collision, for testing ObjTypeSpec",
 #endif
 
-        u"Idle timeout in milliseconds to do the cleanup in JIT server",
-        u"Max inactive page allocators to keep before schedule a cleanup",
-
+        // todo (hanhossain): flag end
         NULL
     };
 
@@ -2904,8 +2899,7 @@ namespace Js
             NoParentFlag,
 #endif
 
-        NoParentFlag,
-        NoParentFlag,
+        // todo (hanhossain): flag end
 
         InvalidFlag
     };
@@ -3542,9 +3536,6 @@ namespace Js
 #if DBG
             SimulatePolyCacheWithOneTypeForInlineCacheIndex(-1),
 #endif
-
-        JITServerIdleTimeout(500),
-        JITServerMaxInactivePageAllocatorCount(10),
 
         nDummy(0)
     {
@@ -5231,11 +5222,6 @@ namespace Js
             return FlagNumber;
         #endif
 
-        case JITServerIdleTimeoutFlag:
-            return FlagNumber;
-        case JITServerMaxInactivePageAllocatorCountFlag:
-            return FlagNumber;
-
         default:
             return InvalidFlagType;
         }
@@ -6278,11 +6264,6 @@ namespace Js
             case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&SimulatePolyCacheWithOneTypeForInlineCacheIndex));
         #endif
-
-        case JITServerIdleTimeoutFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&JITServerIdleTimeout));
-        case JITServerMaxInactivePageAllocatorCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&JITServerMaxInactivePageAllocatorCount));
 
         default:
             return NULL;

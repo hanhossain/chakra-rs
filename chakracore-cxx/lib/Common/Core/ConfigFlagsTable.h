@@ -630,9 +630,6 @@ namespace Js
             SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag,
         #endif
 
-        JITServerIdleTimeoutFlag,
-        JITServerMaxInactivePageAllocatorCountFlag,
-
         FlagCount,
         InvalidFlag,
         NoParentFlag,
@@ -2306,11 +2303,6 @@ namespace Js
         #if DBG
             Number SimulatePolyCacheWithOneTypeForInlineCacheIndex;
         #endif
-
-        // TODO (hanhossain): remove flag
-        Number JITServerIdleTimeout;
-        // TODO (hanhossain): remove flag
-        Number JITServerMaxInactivePageAllocatorCount;
 
         bool            flagPresent[FlagCount];
         // save the jscript.config for easier to get the raw input while analyzing dump file
