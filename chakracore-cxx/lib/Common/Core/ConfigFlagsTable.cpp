@@ -594,7 +594,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_FuncObjectInlineCacheThreshold   (2) // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
 #define DEFAULT_CONFIG_ShareInlineCaches (false)
-#define DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold (4)
 
 #define DEFAULT_CONFIG_InMemoryTrace                (false)
 #define DEFAULT_CONFIG_InMemoryTraceBufferSize      (1024)
@@ -1254,7 +1253,6 @@ namespace Js
 #endif
 
         u"ClearInlineCachesOnCollect",
-        u"InlineCacheInvalidationListCompactionThreshold",
 
 #if DBG
             u"SimulatePolyCacheWithOneTypeForInlineCacheIndex",
@@ -2271,7 +2269,6 @@ namespace Js
 #endif
 
         u"Clear all inline caches on every garbage collection",
-        u"Compact inline cache invalidation lists if their utilization falls below this threshold",
 
 #if DBG
             u"Use with SimulatePolyCacheWithOneTypeForFunction to simulate creating a polymorphic inline cache containing only one type due to a collision, for testing ObjTypeSpec",
@@ -2883,7 +2880,6 @@ namespace Js
         NoParentFlag,
 #endif
 
-        NoParentFlag,
         NoParentFlag,
 
 #if DBG
@@ -3519,7 +3515,6 @@ namespace Js
 #endif
 
         ClearInlineCachesOnCollect(false),
-        InlineCacheInvalidationListCompactionThreshold(DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold),
 
 #if DBG
             SimulatePolyCacheWithOneTypeForInlineCacheIndex(-1),
@@ -5197,8 +5192,6 @@ namespace Js
 
         case ClearInlineCachesOnCollectFlag:
             return FlagBoolean;
-        case InlineCacheInvalidationListCompactionThresholdFlag:
-            return FlagNumber;
 
         #if DBG
             case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:
@@ -6235,8 +6228,6 @@ namespace Js
 
         case ClearInlineCachesOnCollectFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ClearInlineCachesOnCollect));
-        case InlineCacheInvalidationListCompactionThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&InlineCacheInvalidationListCompactionThreshold));
 
         #if DBG
             case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:

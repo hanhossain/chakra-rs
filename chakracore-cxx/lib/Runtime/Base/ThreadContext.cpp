@@ -37,6 +37,9 @@ const int TotalNumberOfBuiltInProperties = Js::PropertyIds::_countJSOnlyProperty
 constexpr unsigned int ConstructorCacheInvalidationThreshold = 500;
 #endif
 
+/// Compact inline cache invalidation lists if their utilization falls below this threshold
+constexpr int InlineCacheInvalidationListCompactionThreshold = 4;
+
 /*
  * When we aren't adding any additional properties
  */
@@ -2853,8 +2856,8 @@ void ThreadContext::NotifyInlineCacheBatchUnregistered(uint count)
 {
     this->unregisteredInlineCacheCount += count;
     // Negative or 0 InlineCacheInvalidationListCompactionThreshold forces compaction all the time.
-    if (CONFIG_FLAG(InlineCacheInvalidationListCompactionThreshold) <= 0 ||
-        this->registeredInlineCacheCount / this->unregisteredInlineCacheCount < static_cast<uint>(CONFIG_FLAG(InlineCacheInvalidationListCompactionThreshold)))
+    if (InlineCacheInvalidationListCompactionThreshold <= 0 ||
+        this->registeredInlineCacheCount / this->unregisteredInlineCacheCount < static_cast<uint>(InlineCacheInvalidationListCompactionThreshold))
     {
         CompactInlineCacheInvalidationLists();
     }
