@@ -118,8 +118,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #ifdef RECYCLER_TEST_SUPPORT
     checkFn(NULL),
 #endif
-    externalRootMarker(NULL),
-    externalRootMarkerContext(NULL),
     recyclerSweepManager(nullptr),
     inEndMarkOnLowMemory(false),
     enableScanInteriorPointers(CUSTOM_CONFIG_FLAG(configFlagsTable, RecyclerForceMarkInterior)),
@@ -1582,40 +1580,6 @@ Recycler::FindRoots()
 #endif
 
     RECYCLER_PROFILE_EXEC_BEGIN(this, Js::FindRootPhase);
-
-    // go through ITracker* stuff. Don't need to do it if we are doing a partial collection
-    // as we keep track and mark all trackable objects.
-    // Do this first because the host might unpin stuff in the process
-    if (externalRootMarker != NULL)
-    {
-        if (!this->inPartialCollectMode)
-        {
-            RECYCLER_PROFILE_EXEC_BEGIN(this, Js::FindRootExtPhase);
-#if DBG_DUMP
-            if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::MarkPhase)
-                || GetRecyclerFlagsTable().Trace.IsEnabled(Js::FindRootPhase))
-            {
-                this->forceTraceMark = true;
-                Output::Print(u"Scanning External Roots: ");
-            }
-#endif
-            BEGIN_DUMP_OBJECT(this, u"External Roots");
-
-            // PARTIALGC-TODO: How do we count external roots?
-            externalRootMarker(externalRootMarkerContext);
-            END_DUMP_OBJECT(this);
-#if DBG_DUMP
-            if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::MarkPhase)
-                || GetRecyclerFlagsTable().Trace.IsEnabled(Js::FindRootPhase))
-            {
-                this->forceTraceMark = false;
-                Output::Print(u"\n");
-                Output::Flush();
-            }
-#endif
-            RECYCLER_PROFILE_EXEC_END(this, Js::FindRootExtPhase);
-        }
-    }
 
 #if DBG_DUMP
     if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::MarkPhase)
@@ -5346,13 +5310,6 @@ Recycler::FinishCollection()
 #endif
 
     RECORD_TIMESTAMP(currentCollectionEndTime);
-}
-
-void
-Recycler::SetExternalRootMarker(ExternalRootMarker fn, void * context)
-{
-    externalRootMarker = fn;
-    externalRootMarkerContext = context;
 }
 
 void
