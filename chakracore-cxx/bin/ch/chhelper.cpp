@@ -504,10 +504,6 @@ int32_t ExecuteTest(const std::string &fileName, JsRuntimeHandle &chRuntime, JsR
         IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
     }
 
-#ifdef DEBUG
-    ChakraRTInterface::SetCheckOpHelpersFlag(true);
-#endif
-
     if (!WScriptJsrt::Initialize())
     {
         IfFailGo(E_FAIL);

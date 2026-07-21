@@ -9,9 +9,6 @@
 void
 DbCheckPostLower::Check()
 {
-    bool doOpHelperCheck = Js::Configuration::Global.flags.CheckOpHelpers && !this->func->isPostLayout;
-    bool isInHelperBlock = false;
-
     FOREACH_INSTR_IN_FUNC_EDITING(instr, instrNext, this->func)
     {
         Assert(Lowerer::ValidOpcodeAfterLower(instr, this->func));
@@ -20,121 +17,7 @@ DbCheckPostLower::Check()
         {
         case IR::InstrKindLabel:
         case IR::InstrKindProfiledLabel:
-        {
-            isInHelperBlock = instr->AsLabelInstr()->isOpHelper;
-            if (doOpHelperCheck && !isInHelperBlock && !instr->AsLabelInstr()->m_noHelperAssert)
-            {
-                bool foundNonHelperPath = false;
-                bool isDeadLabel = true;
-
-                IR::LabelInstr* labelInstr = instr->AsLabelInstr();
-
-                while (1)
-                {
-                    FOREACH_SLIST_ENTRY(IR::BranchInstr *, branchInstr, &labelInstr->labelRefs)
-                    {
-                        isDeadLabel = false;
-                        IR::Instr *instrPrev = branchInstr->m_prev;
-                        while (instrPrev && !instrPrev->IsLabelInstr())
-                        {
-                            instrPrev = instrPrev->m_prev;
-                        }
-                        if (!instrPrev || !instrPrev->AsLabelInstr()->isOpHelper || branchInstr->m_isHelperToNonHelperBranch)
-                        {
-                            foundNonHelperPath = true;
-                            break;
-                        }
-                    } NEXT_SLIST_ENTRY;
-
-                    if (!labelInstr->m_next->IsLabelInstr())
-                    {
-                        break;
-                    }
-                    IR::LabelInstr *const nextLabel = labelInstr->m_next->AsLabelInstr();
-
-                    // It is generally not expected for a non-helper label to be immediately followed by a helper label. Some
-                    // special cases may flag the helper label with m_noHelperAssert = true. Peeps can cause non-helper blocks
-                    // to fall through into helper blocks, so skip this check after peeps.
-                    Assert(func->isPostPeeps || nextLabel->m_noHelperAssert || !nextLabel->isOpHelper);
-
-                    if(nextLabel->isOpHelper)
-                    {
-                        break;
-                    }
-                    labelInstr = nextLabel;
-                }
-
-                instrNext = labelInstr->m_next;
-
-                // This label is unreachable or at least one path to it is not from a helper block.
-
-                if (!foundNonHelperPath && !instr->GetNextRealInstrOrLabel()->IsExitInstr() && !isDeadLabel)
-                {
-                    IR::Instr *prevInstr = labelInstr->GetPrevRealInstrOrLabel();
-                    if (prevInstr->HasFallThrough() && !(prevInstr->IsBranchInstr() && prevInstr->AsBranchInstr()->m_isHelperToNonHelperBranch))
-                    {
-                        while (prevInstr && !prevInstr->IsLabelInstr())
-                        {
-                            prevInstr = prevInstr->m_prev;
-                        }
-
-                        AssertMsg(prevInstr && prevInstr->IsLabelInstr() && !prevInstr->AsLabelInstr()->isOpHelper, "Inconsistency in Helper label annotations");
-                    }
-                }
-            }
-            break;
-        }
         case IR::InstrKindBranch:
-            if (doOpHelperCheck && !isInHelperBlock)
-            {
-                IR::LabelInstr *targetLabel = instr->AsBranchInstr()->GetTarget();
-
-                // This branch needs a path to a non-helper block.
-                if (instr->AsBranchInstr()->IsConditional())
-                {
-                    if (targetLabel->isOpHelper && !targetLabel->m_noHelperAssert)
-                    {
-                        IR::Instr *instrNextDebug = instr->GetNextRealInstrOrLabel();
-                        Assert(!(instrNextDebug->IsLabelInstr() && instrNextDebug->AsLabelInstr()->isOpHelper));
-                    }
-                }
-                else
-                {
-                    Assert(instr->AsBranchInstr()->IsUnconditional());
-
-                    if (targetLabel)
-                    {
-                        if (!targetLabel->isOpHelper || targetLabel->m_noHelperAssert)
-                        {
-                            break;
-                        }
-                        // Target is opHelper
-
-                        IR::Instr *instrPrev = instr->m_prev;
-
-                        if (this->func->isPostRegAlloc)
-                        {
-                            while (LowererMD::IsAssign(instrPrev))
-                            {
-                                // Skip potential register allocation compensation code
-                                instrPrev = instrPrev->m_prev;
-                            }
-                        }
-
-                        if (instrPrev->m_opcode == Js::OpCode::DeletedNonHelperBranch)
-                        {
-                            break;
-                        }
-
-                        Assert((instrPrev->IsBranchInstr() && instrPrev->AsBranchInstr()->IsConditional()
-                            && (!instrPrev->AsBranchInstr()->GetTarget()->isOpHelper || instrPrev->AsBranchInstr()->GetTarget()->m_noHelperAssert)));
-                    }
-                    else
-                    {
-                        Assert(instr->GetSrc1());
-                    }
-                }
-            }
             break;
 
         default:
