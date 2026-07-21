@@ -620,8 +620,6 @@ namespace Js
         PRNGSeed1Flag,
         #endif
 
-        ClearInlineCachesOnCollectFlag,
-
         #if DBG
             SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag,
         #endif
@@ -2285,9 +2283,6 @@ namespace Js
         // TODO (hanhossain): remove flag
             Number PRNGSeed1;
         #endif
-
-        // TODO (hanhossain): remove flag
-        Boolean ClearInlineCachesOnCollect;
 
         #if DBG
             Number SimulatePolyCacheWithOneTypeForInlineCacheIndex;

@@ -1252,8 +1252,6 @@ namespace Js
         u"PRNGSeed1",
 #endif
 
-        u"ClearInlineCachesOnCollect",
-
 #if DBG
             u"SimulatePolyCacheWithOneTypeForInlineCacheIndex",
 #endif
@@ -2268,8 +2266,6 @@ namespace Js
         u"Override seed1 for Math.Random()",
 #endif
 
-        u"Clear all inline caches on every garbage collection",
-
 #if DBG
             u"Use with SimulatePolyCacheWithOneTypeForFunction to simulate creating a polymorphic inline cache containing only one type due to a collision, for testing ObjTypeSpec",
 #endif
@@ -2879,8 +2875,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #endif
-
-        NoParentFlag,
 
 #if DBG
             NoParentFlag,
@@ -3513,8 +3507,6 @@ namespace Js
         PRNGSeed0(0),
         PRNGSeed1(0),
 #endif
-
-        ClearInlineCachesOnCollect(false),
 
 #if DBG
             SimulatePolyCacheWithOneTypeForInlineCacheIndex(-1),
@@ -5190,9 +5182,6 @@ namespace Js
             return FlagNumber;
         #endif
 
-        case ClearInlineCachesOnCollectFlag:
-            return FlagBoolean;
-
         #if DBG
             case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:
             return FlagNumber;
@@ -6226,9 +6215,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&PRNGSeed1));
         #endif
 
-        case ClearInlineCachesOnCollectFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ClearInlineCachesOnCollect));
-
         #if DBG
             case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&SimulatePolyCacheWithOneTypeForInlineCacheIndex));
@@ -7159,11 +7145,6 @@ namespace Js
             retValue = false;
             break;
         #endif
-
-        case ClearInlineCachesOnCollectFlag:
-            retValue = false;
-            break;
-
 
         default:
             // not found - or not a boolean flag
