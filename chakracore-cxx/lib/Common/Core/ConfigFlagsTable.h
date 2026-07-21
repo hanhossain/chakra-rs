@@ -75,7 +75,6 @@ namespace Js
         // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         WasmSimdFlag,
 
-        AssertIgnoreFlag,
         AsyncDebuggingFlag,
         BailOnNoProfileLimitFlag,
         BailOnNoProfileRejitLimitFlag,
@@ -1523,8 +1522,6 @@ namespace Js
         // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         Boolean WasmSimd;
 
-        // TODO (hanhossain): remove flag
-        Boolean AssertIgnore;
         // TODO (hanhossain): remove flag
         Boolean AsyncDebugging;
         // TODO (hanhossain): remove flag
