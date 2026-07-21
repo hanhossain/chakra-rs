@@ -95,21 +95,14 @@ Recycler::AllocWithAttributesInlined(size_t size)
 
     char* memBlock = nullptr;
     HeapInfo * heapInfo = this->GetHeapInfoForAllocation<attributes>();
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
+    if ((attributes & InternalObjectInfoBitMask) != LeafBit)
     {
-        if ((attributes & InternalObjectInfoBitMask) != LeafBit)
-        {
-            // none leaf allocation or Finalizable Leaf allocation,  adding WithBarrierBit
-            memBlock = RealAlloc<(ObjectInfoBits)((attributes | WithBarrierBit) & InternalObjectInfoBitMask), nothrow>(heapInfo, allocSize);
-        }
-        else
-        {
-            // pure Leaf allocation
-            memBlock = RealAlloc<(ObjectInfoBits)(attributes & InternalObjectInfoBitMask), nothrow>(heapInfo, allocSize);
-        }
+        // none leaf allocation or Finalizable Leaf allocation,  adding WithBarrierBit
+        memBlock = RealAlloc<(ObjectInfoBits)((attributes | WithBarrierBit) & InternalObjectInfoBitMask), nothrow>(heapInfo, allocSize);
     }
     else
     {
+        // pure Leaf allocation
         memBlock = RealAlloc<(ObjectInfoBits)(attributes & InternalObjectInfoBitMask), nothrow>(heapInfo, allocSize);
     }
 
@@ -245,7 +238,7 @@ Recycler::AllocZeroWithAttributesInlined(size_t size)
     VerifyPageHeapFillAfterAlloc(obj, size, attributes);
 
 #if DBG
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(RecyclerVerifyMark))
+    if (CONFIG_FLAG(RecyclerVerifyMark))
     {
         this->FindHeapBlock(obj)->WBClearObject(obj);
     }

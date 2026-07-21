@@ -633,7 +633,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
 
-#define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)
 #define DEFAULT_CONFIG_WriteBarrierTest (false)
 
 #define TraceLevel_Error        (1)
@@ -1273,7 +1272,6 @@ namespace Js
 
         u"StrictWriteBarrierCheck",
         u"WriteBarrierTest",
-        u"ForceSoftwareWriteBarrier",
 
 // TODO (hanhossain): ConfigFlagsList end
         NULL
@@ -2300,7 +2298,6 @@ namespace Js
 
         u"Check write barrier setting on none write barrier pages",
         u"Always return true while checking barrier to test recycler regardless of annotation",
-        u"Use to turn off write watch to test software write barrier on windows",
 
         NULL
     };
@@ -2920,7 +2917,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
 
@@ -3565,7 +3561,6 @@ namespace Js
 
         StrictWriteBarrierCheck(DEFAULT_CONFIG_StrictWriteBarrierCheck),
         WriteBarrierTest(DEFAULT_CONFIG_WriteBarrierTest),
-        ForceSoftwareWriteBarrier(DEFAULT_CONFIG_ForceSoftwareWriteBarrier),
 
         nDummy(0)
     {
@@ -5261,8 +5256,6 @@ namespace Js
             return FlagBoolean;
         case WriteBarrierTestFlag:
             return FlagBoolean;
-        case ForceSoftwareWriteBarrierFlag:
-            return FlagBoolean;
 
         default:
             return InvalidFlagType;
@@ -6316,8 +6309,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&StrictWriteBarrierCheck));
         case WriteBarrierTestFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WriteBarrierTest));
-        case ForceSoftwareWriteBarrierFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceSoftwareWriteBarrier));
 
         default:
             return NULL;
@@ -7254,9 +7245,6 @@ namespace Js
             break;
         case WriteBarrierTestFlag:
             retValue = DEFAULT_CONFIG_WriteBarrierTest;
-            break;
-        case ForceSoftwareWriteBarrierFlag:
-            retValue = DEFAULT_CONFIG_ForceSoftwareWriteBarrier;
             break;
 
         default:

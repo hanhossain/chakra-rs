@@ -3612,15 +3612,12 @@ Recycler::BackgroundRescan(RescanFlags rescanFlags)
 
     RECYCLER_PROFILE_EXEC_BACKGROUND_BEGIN(this, Js::BackgroundRescanPhase);
 
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
+    pendingWriteBarrierBlockMap.LockResize();
+    pendingWriteBarrierBlockMap.Map([](void* address, size_t size)
     {
-        pendingWriteBarrierBlockMap.LockResize();
-        pendingWriteBarrierBlockMap.Map([](void* address, size_t size)
-        {
-            RecyclerWriteBarrierManager::WriteBarrier(address, size);
-        });
-        pendingWriteBarrierBlockMap.UnlockResize();
-    }
+        RecyclerWriteBarrierManager::WriteBarrier(address, size);
+    });
+    pendingWriteBarrierBlockMap.UnlockResize();
 
     size_t rescannedPageCount = heapBlockMap.Rescan(this, ((rescanFlags & RescanFlags_ResetWriteWatch) != 0));
 
@@ -7340,22 +7337,16 @@ Recycler::NotifyFree(char *address, size_t size)
 void
 Recycler::RegisterPendingWriteBarrierBlock(void* address, size_t bytes)
 {
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
-    {
 #if DBG
-        WBSetBitRange(static_cast<char*>(address), static_cast<uint>(bytes)/sizeof(void*));
+    WBSetBitRange(static_cast<char*>(address), static_cast<uint>(bytes)/sizeof(void*));
 #endif
-        pendingWriteBarrierBlockMap.Item(address, bytes);
-        RecyclerWriteBarrierManager::WriteBarrier(address, bytes);
-    }
+    pendingWriteBarrierBlockMap.Item(address, bytes);
+    RecyclerWriteBarrierManager::WriteBarrier(address, bytes);
 }
 void
 Recycler::UnRegisterPendingWriteBarrierBlock(void* address)
 {
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
-    {
-        pendingWriteBarrierBlockMap.Remove(address);
-    }
+    pendingWriteBarrierBlockMap.Remove(address);
 }
 
 #if DBG

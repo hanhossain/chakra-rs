@@ -951,9 +951,7 @@ SmallHeapBlockT<TBlockAttributes>::VerifyMark()
             // Since this situation is hard to detect, just don't verify mark for write barrier blocks.
             // We could fix this if we had object layout info.
 
-            if (!this->IsLeafBlock()
-                && (!this->IsWithBarrier() || CONFIG_FLAG(ForceSoftwareWriteBarrier))
-                )
+            if (!this->IsLeafBlock())
             {
                 if ((ObjectInfo(objectIndex) & LeafBit) == 0)
                 {
@@ -1416,7 +1414,7 @@ SmallHeapBlockT<TBlockAttributes>::EnqueueProcessedObject(FreeObject ** list, vo
     *list = freeObject;
 
 #if DBG
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(RecyclerVerifyMark))
+    if (CONFIG_FLAG(RecyclerVerifyMark))
     {
         this->WBClearObject(static_cast<char*>(objectAddress));
     }

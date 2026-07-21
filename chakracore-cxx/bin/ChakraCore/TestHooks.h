@@ -1406,9 +1406,6 @@ int32_t (*pfSetStrictWriteBarrierCheckFlag)(bool flag);
 bool (*pfIsEnabledWriteBarrierTestFlag)();
 int32_t (*pfGetWriteBarrierTestFlag)(bool *flag);
 int32_t (*pfSetWriteBarrierTestFlag)(bool flag);
-bool (*pfIsEnabledForceSoftwareWriteBarrierFlag)();
-int32_t (*pfGetForceSoftwareWriteBarrierFlag)(bool *flag);
-int32_t (*pfSetForceSoftwareWriteBarrierFlag)(bool flag);
 };
 
 int32_t OnChakraCoreLoaded();

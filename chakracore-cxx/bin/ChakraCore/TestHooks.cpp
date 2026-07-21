@@ -5839,20 +5839,6 @@ int32_t SetWriteBarrierTestFlag(bool flag)
     Js::Configuration::Global.flags.WriteBarrierTest = flag;
     return S_OK;
 }
-bool IsEnabledForceSoftwareWriteBarrierFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::ForceSoftwareWriteBarrierFlag);
-}
-int32_t GetForceSoftwareWriteBarrierFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.ForceSoftwareWriteBarrier;
-    return S_OK;
-}
-int32_t SetForceSoftwareWriteBarrierFlag(bool flag)
-{
-    Js::Configuration::Global.flags.ForceSoftwareWriteBarrier = flag;
-    return S_OK;
-}
 
 int32_t OnChakraCoreLoaded()
 {
@@ -6439,7 +6425,6 @@ IsEnabledJITServerMaxInactivePageAllocatorCountFlag, GetJITServerMaxInactivePage
 
 IsEnabledStrictWriteBarrierCheckFlag, GetStrictWriteBarrierCheckFlag, SetStrictWriteBarrierCheckFlag,
 IsEnabledWriteBarrierTestFlag, GetWriteBarrierTestFlag, SetWriteBarrierTestFlag,
-IsEnabledForceSoftwareWriteBarrierFlag, GetForceSoftwareWriteBarrierFlag, SetForceSoftwareWriteBarrierFlag,
 
     };
     return ChakraRTInterface::InitializeTestHooks(testHooks);
