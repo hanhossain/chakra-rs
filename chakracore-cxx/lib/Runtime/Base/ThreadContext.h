@@ -310,7 +310,6 @@ private:
 #define DEFAULT_CONFIG_WasmMultiValue       (false)
 #define DEFAULT_CONFIG_WasmSignExtends      (true)
 #define DEFAULT_CONFIG_WasmNontrapping      (true)
-#define DEFAULT_CONFIG_BgJitPendingFuncCap  (31)
 #define DEFAULT_CONFIG_CurrentSourceInfo    (true)
 #define DEFAULT_CONFIG_CreateFunctionProxy  (true)
 #define DEFAULT_CONFIG_HybridFgJit          (false)

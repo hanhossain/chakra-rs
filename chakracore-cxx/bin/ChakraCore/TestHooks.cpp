@@ -398,20 +398,6 @@ int32_t SetBgJitDelayFlag(int flag)
     Js::Configuration::Global.flags.BgJitDelay = flag;
     return S_OK;
 }
-bool IsEnabledBgJitPendingFuncCapFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::BgJitPendingFuncCapFlag);
-}
-int32_t GetBgJitPendingFuncCapFlag(int *flag)
-{
-    *flag = Js::Configuration::Global.flags.BgJitPendingFuncCap;
-    return S_OK;
-}
-int32_t SetBgJitPendingFuncCapFlag(int flag)
-{
-    Js::Configuration::Global.flags.BgJitPendingFuncCap = flag;
-    return S_OK;
-}
 
 bool IsEnabledCreateFunctionProxyFlag()
 {
@@ -6251,7 +6237,6 @@ IsEnabledBailOutAtEveryByteCodeFlag, GetBailOutAtEveryByteCodeFlag, SetBailOutAt
 
 IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
-IsEnabledBgJitPendingFuncCapFlag, GetBgJitPendingFuncCapFlag, SetBgJitPendingFuncCapFlag,
 
 IsEnabledCreateFunctionProxyFlag, GetCreateFunctionProxyFlag, SetCreateFunctionProxyFlag,
 IsEnabledHybridFgJitFlag, GetHybridFgJitFlag, SetHybridFgJitFlag,

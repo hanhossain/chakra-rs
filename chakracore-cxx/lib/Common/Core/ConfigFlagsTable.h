@@ -81,7 +81,6 @@ namespace Js
         BailOutByteCodeFlag,
         BgJitFlag,
         BgJitDelayFlag,
-        BgJitPendingFuncCapFlag,
 
         CreateFunctionProxyFlag,
         HybridFgJitFlag,
@@ -1518,8 +1517,6 @@ namespace Js
             NumberSet BailOutByteCode;
         Boolean BgJit;
         Number BgJitDelay;
-        // TODO (hanhossain): remove flag
-        Number BgJitPendingFuncCap;
 
         // TODO (hanhossain): remove flag
         Boolean CreateFunctionProxy;
