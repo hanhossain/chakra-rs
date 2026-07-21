@@ -616,11 +616,6 @@ namespace Js
         #endif
 
         #if DBG
-        PRNGSeed0Flag,
-        PRNGSeed1Flag,
-        #endif
-
-        #if DBG
             SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag,
         #endif
 
@@ -2275,13 +2270,6 @@ namespace Js
 
         #if DBG
             Boolean InitializeInterpreterSlotsWithInvalidStackVar;
-        #endif
-
-        #if DBG
-        // TODO (hanhossain): remove flag
-            Number PRNGSeed0;
-        // TODO (hanhossain): remove flag
-            Number PRNGSeed1;
         #endif
 
         #if DBG

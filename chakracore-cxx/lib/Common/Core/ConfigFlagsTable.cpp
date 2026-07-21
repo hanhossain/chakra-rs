@@ -1248,11 +1248,6 @@ namespace Js
 #endif
 
 #if DBG
-        u"PRNGSeed0",
-        u"PRNGSeed1",
-#endif
-
-#if DBG
             u"SimulatePolyCacheWithOneTypeForInlineCacheIndex",
 #endif
 
@@ -2262,11 +2257,6 @@ namespace Js
 #endif
 
 #if DBG
-        u"Override seed0 for Math.Random()",
-        u"Override seed1 for Math.Random()",
-#endif
-
-#if DBG
             u"Use with SimulatePolyCacheWithOneTypeForFunction to simulate creating a polymorphic inline cache containing only one type due to a collision, for testing ObjTypeSpec",
 #endif
 
@@ -2868,11 +2858,6 @@ namespace Js
         NoParentFlag,
 
 #if DBG
-        NoParentFlag,
-#endif
-
-#if DBG
-        NoParentFlag,
         NoParentFlag,
 #endif
 
@@ -3501,11 +3486,6 @@ namespace Js
 
 #if DBG
         InitializeInterpreterSlotsWithInvalidStackVar(false),
-#endif
-
-#if DBG
-        PRNGSeed0(0),
-        PRNGSeed1(0),
 #endif
 
 #if DBG
@@ -5176,13 +5156,6 @@ namespace Js
         #endif
 
         #if DBG
-        case PRNGSeed0Flag:
-            return FlagNumber;
-        case PRNGSeed1Flag:
-            return FlagNumber;
-        #endif
-
-        #if DBG
             case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:
             return FlagNumber;
         #endif
@@ -6206,13 +6179,6 @@ namespace Js
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&InitializeInterpreterSlotsWithInvalidStackVar));
-        #endif
-
-        #if DBG
-        case PRNGSeed0Flag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&PRNGSeed0));
-        case PRNGSeed1Flag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&PRNGSeed1));
         #endif
 
         #if DBG

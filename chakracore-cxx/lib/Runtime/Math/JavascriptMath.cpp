@@ -1171,21 +1171,11 @@ StringCommon:
 
         void InitializeRandomSeeds(unsigned long *seed0, unsigned long *seed1, ScriptContext *scriptContext)
         {
-#if DBG
-            if (CONFIG_FLAG(PRNGSeed0) && CONFIG_FLAG(PRNGSeed1))
-            {
-                *seed0 = CONFIG_FLAG(PRNGSeed0);
-                *seed1 = CONFIG_FLAG(PRNGSeed1);
-            }
-            else
-#endif
-            {
-                std::random_device rd;
-                std::mt19937_64 gen(rd());
-                std::uniform_int_distribution<unsigned long> dist;
-                *seed0 = dist(gen);
-                *seed1 = dist(gen);
-            }
+            std::random_device rd;
+            std::mt19937_64 gen(rd());
+            std::uniform_int_distribution<unsigned long> dist;
+            *seed0 = dist(gen);
+            *seed1 = dist(gen);
         }
 
         double ConvertRandomSeedsToDouble(const unsigned long seed0, const unsigned long seed1)
