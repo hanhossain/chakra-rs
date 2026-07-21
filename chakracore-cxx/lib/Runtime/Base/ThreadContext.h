@@ -664,7 +664,6 @@ private:
 #endif
 
 #define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
-#define DEFAULT_CONFIG_KeepRecyclerTrackData  (false)
 #define DEFAULT_CONFIG_EnableBGFreeZero (true)
 
 #define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)

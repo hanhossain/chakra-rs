@@ -632,7 +632,6 @@ namespace Js
 #endif
 
 #define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
-#define DEFAULT_CONFIG_KeepRecyclerTrackData  (false)
 #define DEFAULT_CONFIG_EnableBGFreeZero (true)
 
 #define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)
@@ -1279,7 +1278,6 @@ namespace Js
         u"ForceSoftwareWriteBarrier",
         u"VerifyBarrierBit",
         u"EnableBGFreeZero",
-        u"KeepRecyclerTrackData",
 
 // TODO (hanhossain): ConfigFlagsList end
         NULL
@@ -2309,7 +2307,6 @@ namespace Js
         u"Use to turn off write watch to test software write barrier on windows",
         u"Verify software write barrier bit is set while marking",
         u"Use to turn off background freeing and zeroing to simulate linux",
-        u"Keep recycler track data after sweep until reuse",
 
         NULL
     };
@@ -2929,7 +2926,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3580,7 +3576,6 @@ namespace Js
         ForceSoftwareWriteBarrier(DEFAULT_CONFIG_ForceSoftwareWriteBarrier),
         VerifyBarrierBit(DEFAULT_CONFIG_VerifyBarrierBit),
         EnableBGFreeZero(DEFAULT_CONFIG_EnableBGFreeZero),
-        KeepRecyclerTrackData(DEFAULT_CONFIG_KeepRecyclerTrackData),
 
         nDummy(0)
     {
@@ -5282,9 +5277,6 @@ namespace Js
             return FlagBoolean;
         case EnableBGFreeZeroFlag:
             return FlagBoolean;
-        case KeepRecyclerTrackDataFlag:
-            return FlagBoolean;
-
 
         default:
             return InvalidFlagType;
@@ -6344,8 +6336,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&VerifyBarrierBit));
         case EnableBGFreeZeroFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableBGFreeZero));
-        case KeepRecyclerTrackDataFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&KeepRecyclerTrackData));
 
         default:
             return NULL;
@@ -7291,9 +7281,6 @@ namespace Js
             break;
         case EnableBGFreeZeroFlag:
             retValue = DEFAULT_CONFIG_EnableBGFreeZero;
-            break;
-        case KeepRecyclerTrackDataFlag:
-            retValue = DEFAULT_CONFIG_KeepRecyclerTrackData;
             break;
 
         default:

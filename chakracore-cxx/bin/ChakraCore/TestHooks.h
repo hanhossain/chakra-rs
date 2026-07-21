@@ -1415,9 +1415,6 @@ int32_t (*pfSetVerifyBarrierBitFlag)(bool flag);
 bool (*pfIsEnabledEnableBGFreeZeroFlag)();
 int32_t (*pfGetEnableBGFreeZeroFlag)(bool *flag);
 int32_t (*pfSetEnableBGFreeZeroFlag)(bool flag);
-bool (*pfIsEnabledKeepRecyclerTrackDataFlag)();
-int32_t (*pfGetKeepRecyclerTrackDataFlag)(bool *flag);
-int32_t (*pfSetKeepRecyclerTrackDataFlag)(bool flag);
 };
 
 int32_t OnChakraCoreLoaded();

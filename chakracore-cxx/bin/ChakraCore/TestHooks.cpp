@@ -5881,20 +5881,6 @@ int32_t SetEnableBGFreeZeroFlag(bool flag)
     Js::Configuration::Global.flags.EnableBGFreeZero = flag;
     return S_OK;
 }
-bool IsEnabledKeepRecyclerTrackDataFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::KeepRecyclerTrackDataFlag);
-}
-int32_t GetKeepRecyclerTrackDataFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.KeepRecyclerTrackData;
-    return S_OK;
-}
-int32_t SetKeepRecyclerTrackDataFlag(bool flag)
-{
-    Js::Configuration::Global.flags.KeepRecyclerTrackData = flag;
-    return S_OK;
-}
 
 int32_t OnChakraCoreLoaded()
 {
@@ -6484,7 +6470,6 @@ IsEnabledWriteBarrierTestFlag, GetWriteBarrierTestFlag, SetWriteBarrierTestFlag,
 IsEnabledForceSoftwareWriteBarrierFlag, GetForceSoftwareWriteBarrierFlag, SetForceSoftwareWriteBarrierFlag,
 IsEnabledVerifyBarrierBitFlag, GetVerifyBarrierBitFlag, SetVerifyBarrierBitFlag,
 IsEnabledEnableBGFreeZeroFlag, GetEnableBGFreeZeroFlag, SetEnableBGFreeZeroFlag,
-IsEnabledKeepRecyclerTrackDataFlag, GetKeepRecyclerTrackDataFlag, SetKeepRecyclerTrackDataFlag,
 
     };
     return ChakraRTInterface::InitializeTestHooks(testHooks);

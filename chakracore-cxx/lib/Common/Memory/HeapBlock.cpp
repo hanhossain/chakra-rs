@@ -867,13 +867,6 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
             if (trackerData->isArray)
             {
                 Output::Print(u"Missing Barrier\nOn array of %S\n", typeName);
-#ifdef STACK_BACK_TRACE
-                if (CONFIG_FLAG(KeepRecyclerTrackData))
-                {
-                    Output::Print(u"Allocation stack:\n");
-                    reinterpret_cast<StackBackTrace*>(trackerData + 1)->Print();
-                }
-#endif
             }
             else
             {
@@ -908,11 +901,6 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
             {
                 Output::Print(u"Target type (missing barrier field type) is array item of %S\n", targetTypeName);
 #ifdef STACK_BACK_TRACE
-                if (CONFIG_FLAG(KeepRecyclerTrackData))
-                {
-                    Output::Print(u"Allocation stack:\n");
-                    reinterpret_cast<StackBackTrace*>(targetTrackerData + 1)->Print();
-                }
 #endif
             }
             else if (targetOffset == 0)

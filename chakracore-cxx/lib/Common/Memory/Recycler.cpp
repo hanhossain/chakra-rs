@@ -6646,10 +6646,6 @@ Recycler::DoProfileAllocTracker()
         || Js::Configuration::Global.flags.DumpObjectGraphOnCollect
         || Js::Configuration::Global.flags.DumpObjectGraphOnEnum;
 #endif
-    if (CONFIG_FLAG(KeepRecyclerTrackData))
-    {
-        doTracker = true;
-    }
     return doTracker || MemoryProfiler::DoTrackRecyclerAllocation();
 }
 
@@ -6669,10 +6665,6 @@ void
 Recycler::TrackAllocCore(void * object, size_t size, const TrackAllocData& trackAllocData, bool traceLifetime)
 {
     auto&& typeInfo = trackAllocData.GetTypeInfo();
-    if (CONFIG_FLAG(KeepRecyclerTrackData))
-    {
-        TrackFree(static_cast<char*>(object), size);
-    }
 
     Assert(GetTrackerData(object) == nullptr || GetTrackerData(object) == &TrackerData::ExplicitFreeListObjectData);
     Assert(typeInfo != nullptr);
@@ -6693,18 +6685,7 @@ Recycler::TrackAllocCore(void * object, size_t size, const TrackAllocData& track
 
     if (!trackerDictionary->TryGetValue(typeInfo, &item))
     {
-#ifdef STACK_BACK_TRACE
-        if (CONFIG_FLAG(KeepRecyclerTrackData) && isArray) // type info is not useful record stack instead
-        {
-            size_t stackTraceSize = 16 * sizeof(void*);
-            item = NoCheckHeapNewPlus(stackTraceSize, TrackerItem, typeInfo);
-            StackBackTrace::Capture(reinterpret_cast<char*>(&item[1]), stackTraceSize, 7);
-        }
-        else
-#endif
-        {
-            item = NoCheckHeapNew(TrackerItem, typeInfo);
-        }
+        item = NoCheckHeapNew(TrackerItem, typeInfo);
 
         item->instanceData.ItemSize = itemSize;
         item->arrayData.ItemSize = itemSize;
@@ -6797,10 +6778,7 @@ BOOL Recycler::TrackFree(const char* address, size_t size)
         }
         else
         {
-            if (!CONFIG_FLAG(KeepRecyclerTrackData))
-            {
-                Assert(false);
-            }
+            Assert(false);
         }
     }
     return true;
@@ -6826,17 +6804,14 @@ Recycler::SetTrackerData(void * address, TrackerData * data)
 void
 Recycler::TrackUnallocated(char* address, char *endAddress, size_t sizeCat)
 {
-    if (!CONFIG_FLAG(KeepRecyclerTrackData))
+    if (this->trackerDictionary != nullptr)
     {
-        if (this->trackerDictionary != nullptr)
+        std::unique_lock lock(trackerCriticalSection);
+        while (address + sizeCat <= endAddress)
         {
-            std::unique_lock lock(trackerCriticalSection);
-            while (address + sizeCat <= endAddress)
-            {
-                Assert(GetTrackerData(address) == nullptr);
-                SetTrackerData(address, &TrackerData::EmptyData);
-                address += sizeCat;
-            }
+            Assert(GetTrackerData(address) == nullptr);
+            SetTrackerData(address, &TrackerData::EmptyData);
+            address += sizeCat;
         }
     }
 }
@@ -7370,10 +7345,7 @@ Recycler::NotifyFree(char *address, size_t size)
 #endif
 
 #ifdef PROFILE_RECYCLER_ALLOC
-    if (!CONFIG_FLAG(KeepRecyclerTrackData))
-    {
-        TrackFree(address, size);
-    }
+    TrackFree(address, size);
 #endif
 
 #ifdef RECYCLER_STATS
