@@ -371,7 +371,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
 #define DEFAULT_CONFIG_NewPagesCapDuringBGSweeping    (15000 * 4)
-#define DEFAULT_CONFIG_MaxSingleAllocSizeInMB  (2048)
 #define DEFAULT_CONFIG_AllocationPolicyLimit    (-1)
 
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
@@ -1281,8 +1280,6 @@ namespace Js
         u"VerifyBarrierBit",
         u"EnableBGFreeZero",
         u"KeepRecyclerTrackData",
-
-        u"MaxSingleAllocSizeInMB",
 
 // TODO (hanhossain): ConfigFlagsList end
         NULL
@@ -2314,8 +2311,6 @@ namespace Js
         u"Use to turn off background freeing and zeroing to simulate linux",
         u"Keep recycler track data after sweep until reuse",
 
-        u"Max size(in MB) in single allocation",
-
         NULL
     };
 
@@ -2939,8 +2934,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-
         NoParentFlag,
 
         InvalidFlag
@@ -3589,7 +3582,6 @@ namespace Js
         EnableBGFreeZero(DEFAULT_CONFIG_EnableBGFreeZero),
         KeepRecyclerTrackData(DEFAULT_CONFIG_KeepRecyclerTrackData),
 
-        MaxSingleAllocSizeInMB(DEFAULT_CONFIG_MaxSingleAllocSizeInMB),
         nDummy(0)
     {
         for(int i=0; i < FlagCount; flagPresent[i++] = false);
@@ -5293,8 +5285,6 @@ namespace Js
         case KeepRecyclerTrackDataFlag:
             return FlagBoolean;
 
-        case MaxSingleAllocSizeInMBFlag:
-            return FlagNumber;
 
         default:
             return InvalidFlagType;
@@ -6357,8 +6347,6 @@ namespace Js
         case KeepRecyclerTrackDataFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&KeepRecyclerTrackData));
 
-        case MaxSingleAllocSizeInMBFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxSingleAllocSizeInMB));
         default:
             return NULL;
         }

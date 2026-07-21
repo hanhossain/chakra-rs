@@ -5896,21 +5896,6 @@ int32_t SetKeepRecyclerTrackDataFlag(bool flag)
     return S_OK;
 }
 
-bool IsEnabledMaxSingleAllocSizeInMBFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::MaxSingleAllocSizeInMBFlag);
-}
-int32_t GetMaxSingleAllocSizeInMBFlag(int *flag)
-{
-    *flag = Js::Configuration::Global.flags.MaxSingleAllocSizeInMB;
-    return S_OK;
-}
-int32_t SetMaxSingleAllocSizeInMBFlag(int flag)
-{
-    Js::Configuration::Global.flags.MaxSingleAllocSizeInMB = flag;
-    return S_OK;
-}
-
 int32_t OnChakraCoreLoaded()
 {
     TestHooks testHooks =
@@ -6501,7 +6486,6 @@ IsEnabledVerifyBarrierBitFlag, GetVerifyBarrierBitFlag, SetVerifyBarrierBitFlag,
 IsEnabledEnableBGFreeZeroFlag, GetEnableBGFreeZeroFlag, SetEnableBGFreeZeroFlag,
 IsEnabledKeepRecyclerTrackDataFlag, GetKeepRecyclerTrackDataFlag, SetKeepRecyclerTrackDataFlag,
 
-IsEnabledMaxSingleAllocSizeInMBFlag, GetMaxSingleAllocSizeInMBFlag, SetMaxSingleAllocSizeInMBFlag,
     };
     return ChakraRTInterface::InitializeTestHooks(testHooks);
 }

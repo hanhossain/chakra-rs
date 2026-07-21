@@ -1418,10 +1418,6 @@ int32_t (*pfSetEnableBGFreeZeroFlag)(bool flag);
 bool (*pfIsEnabledKeepRecyclerTrackDataFlag)();
 int32_t (*pfGetKeepRecyclerTrackDataFlag)(bool *flag);
 int32_t (*pfSetKeepRecyclerTrackDataFlag)(bool flag);
-
-bool (*pfIsEnabledMaxSingleAllocSizeInMBFlag)();
-int32_t (*pfGetMaxSingleAllocSizeInMBFlag)(int *flag);
-int32_t (*pfSetMaxSingleAllocSizeInMBFlag)(int flag);
 };
 
 int32_t OnChakraCoreLoaded();

@@ -28,6 +28,9 @@
 
 DEFINE_RECYCLER_TRACKER_PERF_COUNTER(RecyclerWeakReferenceBase);
 
+/// Max size (in MB) in single allocation
+constexpr size_t MaxSingleAllocSizeInMB = 2048;
+
 #ifdef PROFILE_RECYCLER_ALLOC
 struct UnallocatedPortionOfBumpAllocatedBlock
 {
@@ -1151,7 +1154,7 @@ Recycler::LargeAlloc(HeapInfo* heap, size_t size, ObjectInfoBits attributes)
 {
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
 
-    size_t limit = static_cast<size_t>(GetRecyclerFlagsTable().MaxSingleAllocSizeInMB) * 1024 * 1024;
+    size_t limit = MaxSingleAllocSizeInMB * 1024 * 1024;
 
     if (size >= limit)
     {

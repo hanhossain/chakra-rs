@@ -640,8 +640,6 @@ namespace Js
         EnableBGFreeZeroFlag,
         KeepRecyclerTrackDataFlag,
 
-        MaxSingleAllocSizeInMBFlag,
-
         FlagCount,
         InvalidFlag,
         NoParentFlag,
@@ -2334,8 +2332,6 @@ namespace Js
         // TODO (hanhossain): remove flag
         Boolean KeepRecyclerTrackData;
 
-        // TODO (hanhossain): remove flag
-        Number MaxSingleAllocSizeInMB;
         bool            flagPresent[FlagCount];
         // save the jscript.config for easier to get the raw input while analyzing dump file
         char16_t          rawInputFromConfigFile[512];
