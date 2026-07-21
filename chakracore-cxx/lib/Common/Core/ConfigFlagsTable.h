@@ -83,8 +83,6 @@ namespace Js
         BgJitDelayFlag,
 
         CheckAlignmentFlag,
-        PropertyCacheMissPenaltyFlag,
-        PropertyCacheMissThresholdFlag,
         PropertyCacheMissResetFlag,
         DebugFlag,
         DebugBreakFlag,
@@ -1503,10 +1501,6 @@ namespace Js
         Number BgJitDelay;
 
         Boolean CheckAlignment;
-        // TODO (hanhossain): remove flag
-        Number PropertyCacheMissPenalty;
-        // TODO (hanhossain): remove flag
-        Number PropertyCacheMissThreshold;
         // TODO (hanhossain): remove flag
         Number PropertyCacheMissReset;
         // TODO (hanhossain): remove flag
