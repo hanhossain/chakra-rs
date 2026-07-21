@@ -414,20 +414,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
     return S_OK;
 }
 
-bool IsEnabledPropertyCacheMissResetFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::PropertyCacheMissResetFlag);
-}
-int32_t GetPropertyCacheMissResetFlag(int *flag)
-{
-    *flag = Js::Configuration::Global.flags.PropertyCacheMissReset;
-    return S_OK;
-}
-int32_t SetPropertyCacheMissResetFlag(int flag)
-{
-    Js::Configuration::Global.flags.PropertyCacheMissReset = flag;
-    return S_OK;
-}
 bool IsEnabledDebugFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::DebugFlag);
@@ -6012,7 +5998,6 @@ IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
-IsEnabledPropertyCacheMissResetFlag, GetPropertyCacheMissResetFlag, SetPropertyCacheMissResetFlag,
 IsEnabledDebugFlag, GetDebugFlag, SetDebugFlag,
 
 

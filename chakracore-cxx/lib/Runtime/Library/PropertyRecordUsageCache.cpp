@@ -9,6 +9,9 @@ constexpr int PropertyCacheMissPenalty = 10;
 /// Point at which we disable string or symbol property cache
 constexpr int PropertyCacheMissThreshold = -100;
 
+/// Point at which we try to start using string or symbol cache after giving up
+constexpr int PropertyCacheMissReset = -5000;
+
 namespace Js
 {
     PropertyRecordUsageCache::PropertyRecordUsageCache() :
@@ -49,7 +52,7 @@ namespace Js
     void PropertyRecordUsageCache::RegisterCacheMiss()
     {
         this->hitRate -= PropertyCacheMissPenalty;
-        if (this->hitRate < (int)CONFIG_FLAG(PropertyCacheMissReset))
+        if (this->hitRate < PropertyCacheMissReset)
         {
             this->hitRate = 0;
         }
