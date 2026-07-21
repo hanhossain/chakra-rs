@@ -67,10 +67,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocations(bool r
     TEmitBufferAllocation * allocation = this->allocations;
     while (allocation != nullptr)
     {
-        if(CONFIG_FLAG(CheckEmitBufferPermissions))
-        {
-            CheckBufferPermissions(allocation);
-        }
         if (release)
         {
             this->allocationHeap.Free(allocation->allocation);
@@ -504,58 +500,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CompletePreviousAlloca
     if (allocation != nullptr)
     {
         allocation->bytesUsed = allocation->bytesCommitted;
-    }
-}
-
-template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
-void
-EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckBufferPermissions(TEmitBufferAllocation *allocation)
-{
-    std::unique_lock<SyncObject> autoCs(this->criticalSection);
-
-    if(allocation->bytesCommitted == 0)
-        return;
-
-    MEMORY_BASIC_INFORMATION memInfo;
-
-    uint8_t *buffer = (uint8_t*) allocation->allocation->address;
-    size_t size = allocation->bytesCommitted;
-
-    while(1)
-    {
-        size_t result = VirtualQuery(buffer, &memInfo, sizeof(memInfo));
-        if(result == 0)
-        {
-            // VirtualQuery failed.  This is not an expected condition, but it would be benign for the purposes of this check.  Seems
-            // to occur occasionally on process shutdown.
-            break;
-        }
-        else if(memInfo.Protect == PAGE_EXECUTE_READWRITE)
-        {
-            Output::Print(u"ERROR: Found PAGE_EXECUTE_READWRITE page!\n");
-#ifdef DEBUG
-            AssertMsg(FALSE, "Page was marked PAGE_EXECUTE_READWRITE");
-#else
-            Fatal();
-#endif
-        }
-
-        // Figure out if we need to continue the query.  The returned size might be larger than the size we requested,
-        // for instance if more pages were allocated directly afterward, with the same permissions.
-        if(memInfo.RegionSize >= size)
-        {
-            break;
-        }
-
-        // recalculate size for next iteration
-        buffer += memInfo.RegionSize;
-        size -= memInfo.RegionSize;
-
-        if(size <= 0)
-        {
-            AssertMsg(FALSE, "Last VirtualQuery left us with unmatched regions");
-            break;
-        }
     }
 }
 

@@ -413,20 +413,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
     Js::Configuration::Global.flags.CheckAlignment = flag;
     return S_OK;
 }
-bool IsEnabledCheckEmitBufferPermissionsFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::CheckEmitBufferPermissionsFlag);
-}
-int32_t GetCheckEmitBufferPermissionsFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.CheckEmitBufferPermissions;
-    return S_OK;
-}
-int32_t SetCheckEmitBufferPermissionsFlag(bool flag)
-{
-    Js::Configuration::Global.flags.CheckEmitBufferPermissions = flag;
-    return S_OK;
-}
 #ifdef CHECK_MEMORY_LEAK
 bool IsEnabledCheckMemoryLeakFlag()
 {
@@ -6155,7 +6141,6 @@ IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
-IsEnabledCheckEmitBufferPermissionsFlag, GetCheckEmitBufferPermissionsFlag, SetCheckEmitBufferPermissionsFlag,
 #ifdef CHECK_MEMORY_LEAK
 IsEnabledCheckMemoryLeakFlag, GetCheckMemoryLeakFlag, SetCheckMemoryLeakFlag,
 IsEnabledDumpOnLeakFlag, GetDumpOnLeakFlag, SetDumpOnLeakFlag,

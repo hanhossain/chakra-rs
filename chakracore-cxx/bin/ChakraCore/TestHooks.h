@@ -108,9 +108,6 @@ int32_t (*pfSetBgJitDelayFlag)(int flag);
 bool (*pfIsEnabledCheckAlignmentFlag)();
 int32_t (*pfGetCheckAlignmentFlag)(bool *flag);
 int32_t (*pfSetCheckAlignmentFlag)(bool flag);
-bool (*pfIsEnabledCheckEmitBufferPermissionsFlag)();
-int32_t (*pfGetCheckEmitBufferPermissionsFlag)(bool *flag);
-int32_t (*pfSetCheckEmitBufferPermissionsFlag)(bool flag);
 #ifdef CHECK_MEMORY_LEAK
 bool (*pfIsEnabledCheckMemoryLeakFlag)();
 int32_t (*pfGetCheckMemoryLeakFlag)(bool *flag);

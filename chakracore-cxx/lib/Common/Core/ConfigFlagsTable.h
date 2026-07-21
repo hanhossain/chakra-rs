@@ -83,7 +83,6 @@ namespace Js
         BgJitDelayFlag,
 
         CheckAlignmentFlag,
-        CheckEmitBufferPermissionsFlag,
         #ifdef CHECK_MEMORY_LEAK
         CheckMemoryLeakFlag,
         DumpOnLeakFlag,
@@ -1513,8 +1512,6 @@ namespace Js
         Number BgJitDelay;
 
         Boolean CheckAlignment;
-        // TODO (hanhossain): remove flag
-        Boolean CheckEmitBufferPermissions;
         #ifdef CHECK_MEMORY_LEAK
         // TODO (hanhossain): remove flag
             Boolean CheckMemoryLeak;
