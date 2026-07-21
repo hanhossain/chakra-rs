@@ -604,10 +604,6 @@ namespace Js
         ZeroMemoryWithNonTemporalStoreFlag,
         #endif
 
-        // recycler memory restrict test flags
-        MaxMarkStackPageCountFlag,
-        MaxTrackedObjectListCountFlag,
-
         #if DBG
         InitializeInterpreterSlotsWithInvalidStackVarFlag,
         #endif
@@ -2254,12 +2250,6 @@ namespace Js
         // TODO (hanhossain): remove flag
             Boolean ZeroMemoryWithNonTemporalStore;
         #endif
-
-        // recycler memory restrict test flags
-        // TODO (hanhossain): remove flag
-        Number MaxMarkStackPageCount;
-        // TODO (hanhossain): remove flag
-        Number MaxTrackedObjectListCount;
 
         #if DBG
             Boolean InitializeInterpreterSlotsWithInvalidStackVar;

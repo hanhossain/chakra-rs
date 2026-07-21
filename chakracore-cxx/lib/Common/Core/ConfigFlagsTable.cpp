@@ -1236,10 +1236,6 @@ namespace Js
         u"ZeroMemoryWithNonTemporalStore",
 #endif
 
-// recycler memory restrict test flags
-        u"MaxMarkStackPageCount",
-        u"MaxTrackedObjectListCount",
-
 #if DBG
         u"InitializeInterpreterSlotsWithInvalidStackVar",
 #endif
@@ -2242,10 +2238,6 @@ namespace Js
         u"Zero free memory with non-temporal stores to avoid evicting other content from processor cache",
 #endif
 
-// recycler memory restrict test flags
-        u"Restrict recycler mark stack size (in pages)",
-        u"Restrict recycler tracked object count during GC",
-
 #if DBG
         u"Enable the initialization of the interpreter local slots with invalid stack vars",
 #endif
@@ -2843,10 +2835,6 @@ namespace Js
 #if defined(_M_X64)
         NoParentFlag,
 #endif
-
-// recycler memory restrict test flags
-        NoParentFlag,
-        NoParentFlag,
 
 #if DBG
         NoParentFlag,
@@ -3467,10 +3455,6 @@ namespace Js
 #if defined(_M_X64)
         ZeroMemoryWithNonTemporalStore(DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore),
 #endif
-
-// recycler memory restrict test flags
-        MaxMarkStackPageCount(-1),
-        MaxTrackedObjectListCount(-1),
 
 #if DBG
         InitializeInterpreterSlotsWithInvalidStackVar(false),
@@ -5128,12 +5112,6 @@ namespace Js
             return FlagBoolean;
         #endif
 
-        // recycler memory restrict test flags
-        case MaxMarkStackPageCountFlag:
-            return FlagNumber;
-        case MaxTrackedObjectListCountFlag:
-            return FlagNumber;
-
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
             return FlagBoolean;
@@ -6149,12 +6127,6 @@ namespace Js
         case ZeroMemoryWithNonTemporalStoreFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ZeroMemoryWithNonTemporalStore));
         #endif
-
-        // recycler memory restrict test flags
-        case MaxMarkStackPageCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxMarkStackPageCount));
-        case MaxTrackedObjectListCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxTrackedObjectListCount));
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
