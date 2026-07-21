@@ -153,6 +153,7 @@ void ConfigParser::ProcessConfiguration()
 {
     [[maybe_unused]] bool hasOutput = false;
 
+    // TODO (hanhossain): remove
     if (Js::Configuration::Global.flags.DebugWindow)
     {
         Output::UseDebuggerWindow();
@@ -160,6 +161,7 @@ void ConfigParser::ProcessConfiguration()
     }
 
 #ifdef ENABLE_TRACE
+    // TODO (hanhossain): remove
     if (CONFIG_FLAG(InMemoryTrace))
     {
         Output::SetInMemoryLogger(

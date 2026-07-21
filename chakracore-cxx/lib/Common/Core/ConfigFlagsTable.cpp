@@ -250,14 +250,7 @@ namespace Js
         return static_cast<Phase>(i);
     }
 
-
-    //
-    // List of names of all the flags
-    //
-
-    const char16_t* const FlagNames[FlagCount + 1] =
-    {
-    // TODO (hanhossain): ConfigFlagsList start
+// TODO (hanhossain): ConfigFlagsList start
 // TODO (hanhossain): remove default values start
 #ifndef DEFAULT_CONFIG_BgJitDelay
 #if _M_ARM
@@ -684,6 +677,12 @@ namespace Js
 
 // TODO (hanhossain): remove default values end
 
+
+    //
+    // List of names of all the flags
+    //
+    const char16_t* const FlagNames[FlagCount + 1] =
+    {
 #if DBG
         u"ArrayValidate",
         u"MemOpMissingValueValidate",
