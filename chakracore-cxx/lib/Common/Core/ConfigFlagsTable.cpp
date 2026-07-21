@@ -686,7 +686,6 @@ namespace Js
 #if DBG
         u"ArrayValidate",
 #endif
-        u"ValidateInlineStack",
         u"AsmDiff",
         u"AsmDumpMode",
         u"AsmJs",
@@ -1764,7 +1763,6 @@ namespace Js
 #if DBG
         u"Validate each array for valid elements (default: false)",
 #endif
-        u"Does a stack walk on helper calls to validate inline stack is correctly restored",
         u"Dump the IR without memory locations and varying parameters.",
         u"Dump the final assembly to a file without memory locations and varying parameters\n\t\t\t\t\tThe 'filename' is the file where the assembly will be dumped. Dump to console if no file is specified",
         u"Enable Asmjs",
@@ -2463,7 +2461,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
 
 // WebAssembly Experimental Features
 // Master WasmExperimental flag to activate WebAssembly experimental features
@@ -3138,7 +3135,6 @@ namespace Js
 #if DBG
         ArrayValidate(false),
 #endif
-        ValidateInlineStack(false),
         AsmDiff(false),
         AsmDumpMode(nullptr),
         AsmJs(DEFAULT_CONFIG_AsmJs),
@@ -4482,8 +4478,6 @@ namespace Js
         case ArrayValidateFlag:
             return FlagBoolean;
         #endif
-        case ValidateInlineStackFlag:
-            return FlagBoolean;
         case AsmDiffFlag:
             return FlagBoolean;
         case AsmDumpModeFlag:
@@ -5628,8 +5622,6 @@ namespace Js
         case ArrayValidateFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ArrayValidate));
         #endif
-        case ValidateInlineStackFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ValidateInlineStack));
         case AsmDiffFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmDiff));
         case AsmDumpModeFlag:
@@ -6783,9 +6775,6 @@ namespace Js
             retValue = false;
             break;
         #endif
-        case ValidateInlineStackFlag:
-            retValue = false;
-            break;
         case AsmDiffFlag:
             retValue = false;
             break;

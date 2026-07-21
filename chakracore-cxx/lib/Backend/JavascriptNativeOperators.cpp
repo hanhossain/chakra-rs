@@ -364,7 +364,6 @@ using namespace Js;
     Var JavascriptNativeOperators::OP_GetElementI_JIT_ExpectingNativeFloatArray(Var instance, Var index, ScriptContext *scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetElementI_ExpectingNativeFloatArray);
-        Assert(Js::JavascriptStackWalker::ValidateTopJitFrame(scriptContext));
 
         JavascriptOperators::UpdateNativeArrayProfileInfoToCreateVarArray(instance, true, false);
         return JavascriptOperators::OP_GetElementI_JIT(instance, index, scriptContext);
@@ -374,7 +373,6 @@ using namespace Js;
     Var JavascriptNativeOperators::OP_GetElementI_JIT_ExpectingVarArray(Var instance, Var index, ScriptContext *scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_GetElementI_ExpectingVarArray);
-        Assert(Js::JavascriptStackWalker::ValidateTopJitFrame(scriptContext));
 
         JavascriptOperators::UpdateNativeArrayProfileInfoToCreateVarArray(instance, false, true);
         return JavascriptOperators::OP_GetElementI_JIT(instance, index, scriptContext);

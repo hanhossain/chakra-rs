@@ -791,7 +791,6 @@ CommonNumber:
     void JavascriptConversion::ToNumber_Helper(Var aValue, double *pResult, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_ConvNumber_Helper);
-        Assert(Js::JavascriptStackWalker::ValidateTopJitFrame(scriptContext));
         *pResult = ToNumber_Full(aValue, scriptContext);
         JIT_HELPER_END(Op_ConvNumber_Helper);
     }
@@ -801,7 +800,6 @@ CommonNumber:
     BOOL JavascriptConversion::ToNumber_FromPrimitive(Var aValue, double *pResult, BOOL allowUndefined, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Op_ConvNumber_FromPrimitive);
-        Assert(Js::JavascriptStackWalker::ValidateTopJitFrame(scriptContext));
         Assert(!TaggedNumber::Is(aValue));
         RecyclableObject *obj = VarTo<RecyclableObject>(aValue);
 
@@ -953,7 +951,6 @@ CommonNumber:
     int32_t JavascriptConversion::ToInt32_Full(Var aValue, ScriptContext* scriptContext)
     {
         JIT_HELPER_REENTRANT_HEADER(Conv_ToInt32_Full);
-        Assert(Js::JavascriptStackWalker::ValidateTopJitFrame(scriptContext));
         AssertMsg(!TaggedInt::Is(aValue), "Should be detected");
 
         ScriptContext * objectScriptContext = VarIs<RecyclableObject>(aValue) ? UnsafeVarTo<RecyclableObject>(aValue)->GetScriptContext() : nullptr;

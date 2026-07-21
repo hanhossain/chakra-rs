@@ -123,20 +123,6 @@ int32_t SetArrayValidateFlag(bool flag)
 }
 
 #endif
-bool IsEnabledValidateInlineStackFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::ValidateInlineStackFlag);
-}
-int32_t GetValidateInlineStackFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.ValidateInlineStack;
-    return S_OK;
-}
-int32_t SetValidateInlineStackFlag(bool flag)
-{
-    Js::Configuration::Global.flags.ValidateInlineStack = flag;
-    return S_OK;
-}
 bool IsEnabledAsmDiffFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::AsmDiffFlag);
@@ -6522,7 +6508,6 @@ int32_t OnChakraCoreLoaded()
 #if DBG
 IsEnabledArrayValidateFlag, GetArrayValidateFlag, SetArrayValidateFlag,
 #endif
-IsEnabledValidateInlineStackFlag, GetValidateInlineStackFlag, SetValidateInlineStackFlag,
 IsEnabledAsmDiffFlag, GetAsmDiffFlag, SetAsmDiffFlag,
 IsEnabledAsmDumpModeFlag, GetAsmDumpModeFlag, SetAsmDumpModeFlag,
 IsEnabledAsmJsFlag, GetAsmJsFlag, SetAsmJsFlag,
