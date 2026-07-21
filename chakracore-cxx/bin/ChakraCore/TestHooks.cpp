@@ -341,20 +341,6 @@ int32_t SetWasmSimdFlag(bool flag)
     return S_OK;
 }
 
-bool IsEnabledAsyncDebuggingFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::AsyncDebuggingFlag);
-}
-int32_t GetAsyncDebuggingFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.AsyncDebugging;
-    return S_OK;
-}
-int32_t SetAsyncDebuggingFlag(bool flag)
-{
-    Js::Configuration::Global.flags.AsyncDebugging = flag;
-    return S_OK;
-}
 bool IsEnabledBailOnNoProfileLimitFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::BailOnNoProfileLimitFlag);
@@ -6388,7 +6374,6 @@ IsEnabledWasmNontrappingFlag, GetWasmNontrappingFlag, SetWasmNontrappingFlag,
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
 IsEnabledWasmSimdFlag, GetWasmSimdFlag, SetWasmSimdFlag,
 
-IsEnabledAsyncDebuggingFlag, GetAsyncDebuggingFlag, SetAsyncDebuggingFlag,
 IsEnabledBailOnNoProfileLimitFlag, GetBailOnNoProfileLimitFlag, SetBailOnNoProfileLimitFlag,
 IsEnabledBailOnNoProfileRejitLimitFlag, GetBailOnNoProfileRejitLimitFlag, SetBailOnNoProfileRejitLimitFlag,
 IsEnabledBaselineModeFlag, GetBaselineModeFlag, SetBaselineModeFlag,
