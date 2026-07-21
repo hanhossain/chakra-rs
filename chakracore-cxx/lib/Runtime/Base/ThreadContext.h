@@ -555,7 +555,6 @@ private:
 #define DEFAULT_CONFIG_ES6All                  (false)
 // ES6 DEFAULT BEHAVIOR
 
-#define DEFAULT_CONFIG_AsyncDebugging           (true)
 #define DEFAULT_CONFIG_TraceAsyncDebugCalls     (false)
 #define DEFAULT_CONFIG_ForcePostLowerGlobOptInstrString (false)
 #define DEFAULT_CONFIG_EnumerateSpecialPropertiesInDebugger (true)

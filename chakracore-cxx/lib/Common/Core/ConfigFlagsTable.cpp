@@ -523,7 +523,6 @@ namespace Js
 #define DEFAULT_CONFIG_ES6All                  (false)
 // ES6 DEFAULT BEHAVIOR
 
-#define DEFAULT_CONFIG_AsyncDebugging           (true)
 #define DEFAULT_CONFIG_TraceAsyncDebugCalls     (false)
 #define DEFAULT_CONFIG_ForcePostLowerGlobOptInstrString (false)
 #define DEFAULT_CONFIG_EnumerateSpecialPropertiesInDebugger (true)
@@ -704,7 +703,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         u"WasmSimd",
 
-        u"AsyncDebugging",
         u"BailOnNoProfileLimit",
         u"BailOnNoProfileRejitLimit",
         u"BaselineMode",
@@ -1770,7 +1768,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         u"Enable SIMD in WebAssembly",
 
-        u"Enable async debugging feature (default: false)",
         u"The limit of bailout on no profile info before triggering a rejit",
         u"The limit of bailout on no profile info before we disable the bailouts",
         u"Dump only stable content that can be used for baseline comparison",
@@ -2431,7 +2428,6 @@ namespace Js
 
 // WebAssembly Experimental Features
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3115,7 +3111,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         WasmSimd(true),
 
-        AsyncDebugging(DEFAULT_CONFIG_AsyncDebugging),
         BailOnNoProfileLimit(DEFAULT_CONFIG_BailOnNoProfileLimit),
         BailOnNoProfileRejitLimit(DEFAULT_CONFIG_BailOnNoProfileRejitLimit),
         BaselineMode(false),
@@ -4461,8 +4456,6 @@ namespace Js
         case WasmSimdFlag:
             return FlagBoolean;
 
-        case AsyncDebuggingFlag:
-            return FlagBoolean;
         case BailOnNoProfileLimitFlag:
             return FlagNumber;
         case BailOnNoProfileRejitLimitFlag:
@@ -5584,8 +5577,6 @@ namespace Js
         case WasmSimdFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmSimd));
 
-        case AsyncDebuggingFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&AsyncDebugging));
         case BailOnNoProfileLimitFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BailOnNoProfileLimit));
         case BailOnNoProfileRejitLimitFlag:
@@ -6728,9 +6719,6 @@ namespace Js
             retValue = true;
             break;
 
-        case AsyncDebuggingFlag:
-            retValue = DEFAULT_CONFIG_AsyncDebugging;
-            break;
         case BaselineModeFlag:
             retValue = false;
             break;
