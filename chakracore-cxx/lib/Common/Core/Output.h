@@ -110,7 +110,6 @@ public:
     static void     SkipToColumn(size_t column);
     static FILE*    SetFile(FILE *);
     static FILE*    GetFile();
-    static void     UseDebuggerWindow() { s_useDebuggerWindow = true; }
     static void     Flush();
 
     static uint16_t     SetConsoleForeground(uint16_t color);
@@ -123,7 +122,6 @@ public:
 private:
     static void     DirectPrint(const char16_t * string);
 
-    static bool     s_useDebuggerWindow;
     static std::recursive_mutex s_mutex;
 
 #ifdef ENABLE_TRACE

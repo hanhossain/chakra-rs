@@ -406,21 +406,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
     return S_OK;
 }
 
-
-bool IsEnabledDebugWindowFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::DebugWindowFlag);
-}
-int32_t GetDebugWindowFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.DebugWindow;
-    return S_OK;
-}
-int32_t SetDebugWindowFlag(bool flag)
-{
-    Js::Configuration::Global.flags.DebugWindow = flag;
-    return S_OK;
-}
 bool IsEnabledParserStateCacheFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::ParserStateCacheFlag);
@@ -5978,7 +5963,6 @@ IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
 
 
 
-IsEnabledDebugWindowFlag, GetDebugWindowFlag, SetDebugWindowFlag,
 IsEnabledParserStateCacheFlag, GetParserStateCacheFlag, SetParserStateCacheFlag,
 IsEnabledCompressParserStateCacheFlag, GetCompressParserStateCacheFlag, SetCompressParserStateCacheFlag,
 IsEnabledDeferTopLevelTillFirstCallFlag, GetDeferTopLevelTillFirstCallFlag, SetDeferTopLevelTillFirstCallFlag,

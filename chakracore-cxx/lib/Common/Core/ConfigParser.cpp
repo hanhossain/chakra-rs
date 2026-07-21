@@ -153,13 +153,6 @@ void ConfigParser::ProcessConfiguration()
 {
     [[maybe_unused]] bool hasOutput = false;
 
-    // TODO (hanhossain): remove
-    if (Js::Configuration::Global.flags.DebugWindow)
-    {
-        Output::UseDebuggerWindow();
-        hasOutput = true;
-    }
-
 #ifdef ENABLE_TRACE
     // TODO (hanhossain): remove
     if (CONFIG_FLAG(InMemoryTrace))

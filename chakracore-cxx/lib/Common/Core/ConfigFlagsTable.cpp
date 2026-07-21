@@ -696,7 +696,6 @@ namespace Js
 
         u"CheckAlignment",
 
-        u"DebugWindow",
         u"ParserStateCache",
         u"CompressParserStateCache",
         u"DeferTopLevelTillFirstCall",
@@ -1728,7 +1727,6 @@ namespace Js
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
 
-        u"Send console output to debugger window",
         u"Enable creation of parser state cache",
         u"Enable compression of the parser state cache",
         u"Enable tracking of deferred top level functions in a script file, until the first function of the script context is parsed.",
@@ -2356,7 +2354,6 @@ namespace Js
 
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3005,7 +3002,6 @@ namespace Js
 
         CheckAlignment(false),
 
-        DebugWindow(false),
         ParserStateCache(DEFAULT_CONFIG_ParserStateCache),
         CompressParserStateCache(DEFAULT_CONFIG_CompressParserStateCache),
         DeferTopLevelTillFirstCall(DEFAULT_CONFIG_DeferTopLevelTillFirstCall),
@@ -4324,8 +4320,6 @@ namespace Js
         case CheckAlignmentFlag:
             return FlagBoolean;
 
-        case DebugWindowFlag:
-            return FlagBoolean;
         case ParserStateCacheFlag:
             return FlagBoolean;
         case CompressParserStateCacheFlag:
@@ -5381,8 +5375,6 @@ namespace Js
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
 
-        case DebugWindowFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&DebugWindow));
         case ParserStateCacheFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ParserStateCache));
         case CompressParserStateCacheFlag:
@@ -6457,9 +6449,6 @@ namespace Js
             retValue = false;
             break;
 
-        case DebugWindowFlag:
-            retValue = false;
-            break;
         case ParserStateCacheFlag:
             retValue = DEFAULT_CONFIG_ParserStateCache;
             break;

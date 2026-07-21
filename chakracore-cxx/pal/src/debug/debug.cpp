@@ -61,7 +61,6 @@ extern "C" void DBG_DebugBreak_End();
 const BOOL DBG_ATTACH       = TRUE;
 const BOOL DBG_DETACH       = FALSE;
 #endif
-static const char PAL_OUTPUTDEBUGSTRING[]    = "PAL_OUTPUTDEBUGSTRING";
 
 /* ------------------- Static function prototypes ----------------------------*/
 
@@ -119,77 +118,6 @@ BOOL FlushInstructionCache(const void * lpBaseAddress, size_t dwSize)
     return Ret;
 }
 
-
-/*++
-Function:
-  OutputDebugStringA
-
-See MSDN doc.
---*/
-void
-OutputDebugStringA(
-         const char * lpOutputString)
-{
-    /* as we don't support debug events, we are going to output the debug string
-      to stderr instead of generating OUT_DEBUG_STRING_EVENT */
-    if (lpOutputString != nullptr && getenv(PAL_OUTPUTDEBUGSTRING) != nullptr)
-    {
-        fprintf(stderr, "%s", lpOutputString);
-    }
-
-    LOGEXIT("OutputDebugStringA returns\n");
-}
-
-/*++
-Function:
-  OutputDebugStringW
-
-See MSDN doc.
---*/
-void
-OutputDebugStringW(
-         const char16_t* lpOutputString)
-{
-    char *lpOutputStringA;
-    int strLen;
-
-    if (lpOutputString == NULL)
-    {
-        OutputDebugStringA("");
-        goto EXIT;
-    }
-
-    if ((strLen = WideCharToMultiByte(CP_ACP, 0, lpOutputString, -1, NULL, 0, NULL))
-        == 0)
-    {
-        ASSERT("failed to get wide chars length\n");
-        SetLastError(ERROR_INTERNAL_ERROR);
-        goto EXIT;
-    }
-
-    /* strLen includes the null terminator */
-    if ((lpOutputStringA = static_cast<char*>(malloc((strLen * sizeof(char))))) == NULL)
-    {
-        ERROR("Insufficient memory available !\n");
-        SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        goto EXIT;
-    }
-
-    if(! WideCharToMultiByte(CP_ACP, 0, lpOutputString, -1,
-                             lpOutputStringA, strLen, NULL))
-    {
-        ASSERT("failed to convert wide chars to multibytes\n");
-        SetLastError(ERROR_INTERNAL_ERROR);
-        free(lpOutputStringA);
-        goto EXIT;
-    }
-
-    OutputDebugStringA(lpOutputStringA);
-    free(lpOutputStringA);
-
-EXIT:
-    LOGEXIT("OutputDebugStringW returns\n");
-}
 
 /*++
 Function:
