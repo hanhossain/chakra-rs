@@ -686,7 +686,6 @@ namespace Js
 #if DBG
         u"ArrayValidate",
 #endif
-        u"AsmDumpMode",
         u"AsmJs",
         u"AsmJsStopOnError",
         u"AsmJsEdge",
@@ -1762,7 +1761,6 @@ namespace Js
 #if DBG
         u"Validate each array for valid elements (default: false)",
 #endif
-        u"Dump the final assembly to a file without memory locations and varying parameters\n\t\t\t\t\tThe 'filename' is the file where the assembly will be dumped. Dump to console if no file is specified",
         u"Enable Asmjs",
         u"Stop execution on any AsmJs validation errors",
         u"Enable asm.js features which may have backward incompatible changes or not validate on old demos",
@@ -2457,7 +2455,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
 
 // WebAssembly Experimental Features
 // Master WasmExperimental flag to activate WebAssembly experimental features
@@ -3132,7 +3129,6 @@ namespace Js
 #if DBG
         ArrayValidate(false),
 #endif
-        AsmDumpMode(nullptr),
         AsmJs(DEFAULT_CONFIG_AsmJs),
         AsmJsStopOnError(DEFAULT_CONFIG_AsmJsStopOnError),
         AsmJsEdge(DEFAULT_CONFIG_AsmJsEdge),
@@ -4474,8 +4470,6 @@ namespace Js
         case ArrayValidateFlag:
             return FlagBoolean;
         #endif
-        case AsmDumpModeFlag:
-            return FlagString;
         case AsmJsFlag:
             return FlagBoolean;
         case AsmJsStopOnErrorFlag:
@@ -5616,8 +5610,6 @@ namespace Js
         case ArrayValidateFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ArrayValidate));
         #endif
-        case AsmDumpModeFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&AsmDumpMode));
         case AsmJsFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmJs));
         case AsmJsStopOnErrorFlag:

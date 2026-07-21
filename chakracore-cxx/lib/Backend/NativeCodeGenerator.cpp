@@ -43,42 +43,7 @@ NativeCodeGenerator::NativeCodeGenerator(Js::ScriptContext * scriptContext)
     freeLoopBodyManager.SetNativeCodeGen(this);
 
 #if DBG_DUMP
-    if (Js::Configuration::Global.flags.IsEnabled(Js::AsmDumpModeFlag)
-        && (Js::Configuration::Global.flags.AsmDumpMode != nullptr))
-    {
-        bool fileOpened = false;
-        fileOpened = (0 == _wfopen_s(&this->asmFile, Js::Configuration::Global.flags.AsmDumpMode, u"wt"));
-        if (!fileOpened)
-        {
-            size_t len = std::u16string(Js::Configuration::Global.flags.AsmDumpMode).length();
-            if (len < _MAX_PATH - 5)
-            {
-                char16_t filename[_MAX_PATH];
-                wcscpy_s(filename, _MAX_PATH, Js::Configuration::Global.flags.AsmDumpMode);
-                char16_t * number = filename + len;
-                for (int i = 0; i < 1000; i++)
-                {
-                    _itow_s(i, number, 5, 10);
-                    fileOpened = (0 == _wfopen_s(&this->asmFile, filename, u"wt"));
-                    if (fileOpened)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            if (!fileOpened)
-            {
-                this->asmFile = nullptr;
-                AssertMsg(0, "Could not open file for AsmDump. The output will goto standard console");
-            }
-        }
-
-    }
-    else
-    {
         this->asmFile = nullptr;
-    }
 #endif
 
 #if DBG

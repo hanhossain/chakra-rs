@@ -123,22 +123,6 @@ int32_t SetArrayValidateFlag(bool flag)
 }
 
 #endif
-bool IsEnabledAsmDumpModeFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::AsmDumpModeFlag);
-}
-
-int32_t GetAsmDumpModeFlag(BSTR *flag)
-{
-    *flag = SysAllocString(Js::Configuration::Global.flags.AsmDumpMode);
-    return (*flag == NULL ? E_OUTOFMEMORY : S_OK);
-}
-
-int32_t SetAsmDumpModeFlag(BSTR flag)
-{
-    Js::Configuration::Global.flags.AsmDumpMode = flag;
-    return S_OK;
-}
 bool IsEnabledAsmJsFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::AsmJsFlag);
@@ -6494,7 +6478,6 @@ int32_t OnChakraCoreLoaded()
 #if DBG
 IsEnabledArrayValidateFlag, GetArrayValidateFlag, SetArrayValidateFlag,
 #endif
-IsEnabledAsmDumpModeFlag, GetAsmDumpModeFlag, SetAsmDumpModeFlag,
 IsEnabledAsmJsFlag, GetAsmJsFlag, SetAsmJsFlag,
 IsEnabledAsmJsStopOnErrorFlag, GetAsmJsStopOnErrorFlag, SetAsmJsStopOnErrorFlag,
 IsEnabledAsmJsEdgeFlag, GetAsmJsEdgeFlag, SetAsmJsEdgeFlag,
