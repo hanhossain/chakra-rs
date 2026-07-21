@@ -572,7 +572,6 @@ namespace Js
 #define DEFAULT_CONFIG_TypeSnapshotEnumeration (true)
 #define DEFAULT_CONFIG_PrimeRecycler     (false)
 #define DEFAULT_CONFIG_DisableRentalThreading (false)
-#define DEFAULT_CONFIG_DisableDebugObject (false)
 #define DEFAULT_CONFIG_PerfHintLevel (1)
 #define DEFAULT_CONFIG_OOPJITMissingOpts (false)
 #define DEFAULT_CONFIG_OOPCFGRegistration (true)
@@ -589,7 +588,6 @@ namespace Js
 #define DEFAULT_CONFIG_LibraryStackFrameDebugger    (false)
 
 #define DEFAULT_CONFIG_FuncObjectInlineCacheThreshold   (2) // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
-#define DEFAULT_CONFIG_ShareInlineCaches (false)
 
 #define DEFAULT_CONFIG_InMemoryTrace                (false)
 #define DEFAULT_CONFIG_InMemoryTraceBufferSize      (1024)
@@ -1196,8 +1194,6 @@ namespace Js
         u"TypeSnapshotEnumeration",
         u"IsolatePrototypes",
         u"ChangeTypeOnProto",
-        u"ShareInlineCaches",
-        u"DisableDebugObject",
         u"PerfHintLevel",
 
 #if DBG
@@ -2172,8 +2168,6 @@ namespace Js
         u"Create a true snapshot of the type of an object before enumeration and enumerate only those properties.",
         u"Should prototypes get unique types not shared with other objects (default: true)?",
         u"When becoming a prototype should the object switch to a new type (default: true)?",
-        u"Determines whether inline caches are shared between all loads (or all stores) of the same property ID",
-        u"Disable test only Debug object properties",
         // todo (hanhossain): flag end
         u"Specifies the perf-hint level (1,2) 1 == critical, 2 == only noisy",
 
@@ -2737,8 +2731,6 @@ namespace Js
 #ifdef PROFILE_MEM
         NoParentFlag,
 #endif
-        NoParentFlag,
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3338,8 +3330,6 @@ namespace Js
         TypeSnapshotEnumeration(DEFAULT_CONFIG_TypeSnapshotEnumeration),
         IsolatePrototypes(DEFAULT_CONFIG_IsolatePrototypes),
         ChangeTypeOnProto(DEFAULT_CONFIG_ChangeTypeOnProto),
-        ShareInlineCaches(DEFAULT_CONFIG_ShareInlineCaches),
-        DisableDebugObject(DEFAULT_CONFIG_DisableDebugObject),
         PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
 
 #if DBG
@@ -4950,10 +4940,6 @@ namespace Js
             return FlagBoolean;
         case ChangeTypeOnProtoFlag:
             return FlagBoolean;
-        case ShareInlineCachesFlag:
-            return FlagBoolean;
-        case DisableDebugObjectFlag:
-            return FlagBoolean;
         case PerfHintLevelFlag:
             return FlagNumber;
 
@@ -5925,10 +5911,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&IsolatePrototypes));
         case ChangeTypeOnProtoFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ChangeTypeOnProto));
-        case ShareInlineCachesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ShareInlineCaches));
-        case DisableDebugObjectFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&DisableDebugObject));
         case PerfHintLevelFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PerfHintLevel));
 
@@ -6818,12 +6800,6 @@ namespace Js
             break;
         case ChangeTypeOnProtoFlag:
             retValue = DEFAULT_CONFIG_ChangeTypeOnProto;
-            break;
-        case ShareInlineCachesFlag:
-            retValue = DEFAULT_CONFIG_ShareInlineCaches;
-            break;
-        case DisableDebugObjectFlag:
-            retValue = DEFAULT_CONFIG_DisableDebugObject;
             break;
 
         #if DBG

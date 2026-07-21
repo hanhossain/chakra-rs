@@ -2223,7 +2223,6 @@ namespace Js
         //
 
         typename WriteBarrierFieldTypeTraits<Js::ByteCodeCache*, _no_write_barrier_policy, _no_write_barrier_policy>::Type byteCodeCache;   // Not GC allocated so naked pointer
-        static bool shareInlineCaches;
         WriteBarrierFieldTypeTraits<FunctionEntryPointInfo*>::Type defaultFunctionEntryPointInfo;
 
 #if ENABLE_PROFILE_INFO
@@ -3013,8 +3012,6 @@ namespace Js
         bool UninstallProbe(int offset);
         bool ProbeAtOffset(int offset, OpCode* pOriginalOpcode);
 #endif
-
-        static bool ShouldShareInlineCaches() { return CONFIG_FLAG(ShareInlineCaches); }
 
         uint GetInlineCacheCount() const { return GetCountField(CounterFields::InlineCacheCount); }
         void SetInlineCacheCount(uint count) { SetCountField(CounterFields::InlineCacheCount, count); }

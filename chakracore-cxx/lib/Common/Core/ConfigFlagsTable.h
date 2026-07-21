@@ -574,8 +574,6 @@ namespace Js
         TypeSnapshotEnumerationFlag,
         IsolatePrototypesFlag,
         ChangeTypeOnProtoFlag,
-        ShareInlineCachesFlag,
-        DisableDebugObjectFlag,
         PerfHintLevelFlag,
 
         #if DBG
@@ -2178,10 +2176,6 @@ namespace Js
         Boolean IsolatePrototypes;
         // TODO (hanhossain): remove flag
         Boolean ChangeTypeOnProto;
-        // TODO (hanhossain): remove flag
-        Boolean ShareInlineCaches;
-        // TODO (hanhossain): remove flag
-        Boolean DisableDebugObject;
 
         // todo (hanhossain): flag end
         Number PerfHintLevel;
