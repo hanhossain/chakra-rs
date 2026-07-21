@@ -370,20 +370,6 @@ int32_t SetBailOutAtEveryByteCodeFlag(bool flag)
     Js::Configuration::Global.flags.BailOutAtEveryByteCode = flag;
     return S_OK;
 }
-bool IsEnabledBenchmarkFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::BenchmarkFlag);
-}
-int32_t GetBenchmarkFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.Benchmark;
-    return S_OK;
-}
-int32_t SetBenchmarkFlag(bool flag)
-{
-    Js::Configuration::Global.flags.Benchmark = flag;
-    return S_OK;
-}
 bool IsEnabledBgJitFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::BgJitFlag);
@@ -6291,7 +6277,6 @@ IsEnabledBaselineModeFlag, GetBaselineModeFlag, SetBaselineModeFlag,
 
 IsEnabledBailOutAtEveryByteCodeFlag, GetBailOutAtEveryByteCodeFlag, SetBailOutAtEveryByteCodeFlag,
 
-IsEnabledBenchmarkFlag, GetBenchmarkFlag, SetBenchmarkFlag,
 IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgParseFlag, GetBgParseFlag, SetBgParseFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
