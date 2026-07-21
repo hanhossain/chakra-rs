@@ -292,7 +292,6 @@ private:
 #endif
 #endif // DEFAULT_CONFIG_BgJitDelay
 #define DEFAULT_CONFIG_AsmJs                (true)
-#define DEFAULT_CONFIG_AsmJsEdge            (false)
 #define DEFAULT_CONFIG_AsmJsStopOnError     (false)
 
 #define DEFAULT_CONFIG_Wasm               (true)

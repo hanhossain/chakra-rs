@@ -260,7 +260,6 @@ namespace Js
 #endif
 #endif // DEFAULT_CONFIG_BgJitDelay
 #define DEFAULT_CONFIG_AsmJs                (true)
-#define DEFAULT_CONFIG_AsmJsEdge            (false)
 #define DEFAULT_CONFIG_AsmJsStopOnError     (false)
 
 #define DEFAULT_CONFIG_Wasm               (true)
@@ -688,7 +687,6 @@ namespace Js
 #endif
         u"AsmJs",
         u"AsmJsStopOnError",
-        u"AsmJsEdge",
         u"Wasm",
         u"WasmI64",
         u"WasmFastArray",
@@ -1763,7 +1761,6 @@ namespace Js
 #endif
         u"Enable Asmjs",
         u"Stop execution on any AsmJs validation errors",
-        u"Enable asm.js features which may have backward incompatible changes or not validate on old demos",
         u"Enable WebAssembly",
         u"Enable Int64 testing for WebAssembly. ArgIns can be [number,string,{low:number,high:number}]. Return values will be {low:number,high:number}",
         u"Enable fast array implementation for WebAssembly",
@@ -2437,7 +2434,6 @@ namespace Js
 #if DBG
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3131,7 +3127,6 @@ namespace Js
 #endif
         AsmJs(DEFAULT_CONFIG_AsmJs),
         AsmJsStopOnError(DEFAULT_CONFIG_AsmJsStopOnError),
-        AsmJsEdge(DEFAULT_CONFIG_AsmJsEdge),
         Wasm(DEFAULT_CONFIG_Wasm),
         WasmI64(DEFAULT_CONFIG_WasmI64),
         WasmFastArray(DEFAULT_CONFIG_WasmFastArray),
@@ -4474,8 +4469,6 @@ namespace Js
             return FlagBoolean;
         case AsmJsStopOnErrorFlag:
             return FlagBoolean;
-        case AsmJsEdgeFlag:
-            return FlagBoolean;
         case WasmFlag:
             return FlagBoolean;
         case WasmI64Flag:
@@ -5614,8 +5607,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmJs));
         case AsmJsStopOnErrorFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmJsStopOnError));
-        case AsmJsEdgeFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmJsEdge));
         case WasmFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&Wasm));
         case WasmI64Flag:
@@ -6764,9 +6755,6 @@ namespace Js
             break;
         case AsmJsStopOnErrorFlag:
             retValue = DEFAULT_CONFIG_AsmJsStopOnError;
-            break;
-        case AsmJsEdgeFlag:
-            retValue = DEFAULT_CONFIG_AsmJsEdge;
             break;
         case WasmFlag:
             retValue = DEFAULT_CONFIG_Wasm;
