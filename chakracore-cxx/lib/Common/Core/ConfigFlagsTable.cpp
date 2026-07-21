@@ -686,9 +686,6 @@ namespace Js
 #if DBG
         u"ArrayValidate",
 #endif
-#ifdef ARENA_MEMORY_VERIFY
-        u"ArenaUseHeapAlloc",
-#endif
         u"ValidateInlineStack",
         u"AsmDiff",
         u"AsmDumpMode",
@@ -1767,9 +1764,6 @@ namespace Js
 #if DBG
         u"Validate each array for valid elements (default: false)",
 #endif
-#ifdef ARENA_MEMORY_VERIFY
-        u"Arena use heap to allocate memory instead of page allocator",
-#endif
         u"Does a stack walk on helper calls to validate inline stack is correctly restored",
         u"Dump the IR without memory locations and varying parameters.",
         u"Dump the final assembly to a file without memory locations and varying parameters\n\t\t\t\t\tThe 'filename' is the file where the assembly will be dumped. Dump to console if no file is specified",
@@ -2447,9 +2441,6 @@ namespace Js
     const Flag FlagParents[FlagCount + 1] =
     {
 #if DBG
-        NoParentFlag,
-#endif
-#ifdef ARENA_MEMORY_VERIFY
         NoParentFlag,
 #endif
         NoParentFlag,
@@ -3146,9 +3137,6 @@ namespace Js
     ConfigFlagsTable::ConfigFlagsTable():
 #if DBG
         ArrayValidate(false),
-#endif
-#ifdef ARENA_MEMORY_VERIFY
-        ArenaUseHeapAlloc(false),
 #endif
         ValidateInlineStack(false),
         AsmDiff(false),
@@ -4494,10 +4482,6 @@ namespace Js
         case ArrayValidateFlag:
             return FlagBoolean;
         #endif
-        #ifdef ARENA_MEMORY_VERIFY
-        case ArenaUseHeapAllocFlag:
-            return FlagBoolean;
-        #endif
         case ValidateInlineStackFlag:
             return FlagBoolean;
         case AsmDiffFlag:
@@ -5643,10 +5627,6 @@ namespace Js
         #if DBG
         case ArrayValidateFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ArrayValidate));
-        #endif
-        #ifdef ARENA_MEMORY_VERIFY
-        case ArenaUseHeapAllocFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ArenaUseHeapAlloc));
         #endif
         case ValidateInlineStackFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ValidateInlineStack));
@@ -6800,11 +6780,6 @@ namespace Js
         {
         #if DBG
         case ArrayValidateFlag:
-            retValue = false;
-            break;
-        #endif
-        #ifdef ARENA_MEMORY_VERIFY
-        case ArenaUseHeapAllocFlag:
             retValue = false;
             break;
         #endif

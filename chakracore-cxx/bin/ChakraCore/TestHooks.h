@@ -39,11 +39,6 @@ bool (*pfIsEnabledArrayValidateFlag)();
 int32_t (*pfGetArrayValidateFlag)(bool *flag);
 int32_t (*pfSetArrayValidateFlag)(bool flag);
 #endif
-#ifdef ARENA_MEMORY_VERIFY
-bool (*pfIsEnabledArenaUseHeapAllocFlag)();
-int32_t (*pfGetArenaUseHeapAllocFlag)(bool *flag);
-int32_t (*pfSetArenaUseHeapAllocFlag)(bool flag);
-#endif
 bool (*pfIsEnabledValidateInlineStackFlag)();
 int32_t (*pfGetValidateInlineStackFlag)(bool *flag);
 int32_t (*pfSetValidateInlineStackFlag)(bool flag);
