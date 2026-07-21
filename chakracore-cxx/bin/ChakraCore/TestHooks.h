@@ -104,9 +104,6 @@ int32_t (*pfSetBgJitFlag)(bool flag);
 bool (*pfIsEnabledBgJitDelayFlag)();
 int32_t (*pfGetBgJitDelayFlag)(int *flag);
 int32_t (*pfSetBgJitDelayFlag)(int flag);
-bool (*pfIsEnabledBgJitPendingFuncCapFlag)();
-int32_t (*pfGetBgJitPendingFuncCapFlag)(int *flag);
-int32_t (*pfSetBgJitPendingFuncCapFlag)(int flag);
 
 bool (*pfIsEnabledCreateFunctionProxyFlag)();
 int32_t (*pfGetCreateFunctionProxyFlag)(bool *flag);

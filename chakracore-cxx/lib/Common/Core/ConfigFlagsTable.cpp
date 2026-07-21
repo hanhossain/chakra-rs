@@ -278,7 +278,6 @@ namespace Js
 #define DEFAULT_CONFIG_WasmMultiValue       (false)
 #define DEFAULT_CONFIG_WasmSignExtends      (true)
 #define DEFAULT_CONFIG_WasmNontrapping      (true)
-#define DEFAULT_CONFIG_BgJitPendingFuncCap  (31)
 #define DEFAULT_CONFIG_CurrentSourceInfo    (true)
 #define DEFAULT_CONFIG_CreateFunctionProxy  (true)
 #define DEFAULT_CONFIG_HybridFgJit          (false)
@@ -705,7 +704,6 @@ namespace Js
         u"BailOutByteCode",
         u"BgJit",
         u"BgJitDelay",
-        u"BgJitPendingFuncCap",
 
         u"CreateFunctionProxy",
         u"HybridFgJit",
@@ -1761,7 +1759,6 @@ namespace Js
         u"Byte code location to insert BailOut. Use with -prejit only",
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
         u"Delay to wait for speculative jitting before starting script execution",
-        u"Disable delay if pending function count larger then cap",
 
         u"Create function proxies instead of full function bodies",
         u"When background JIT is enabled, enable jitting in the foreground based on heuristics. This flag is only effective when OptimizeForManyInstances is disabled (UI threads).",
@@ -2406,7 +2403,6 @@ namespace Js
 
 // WebAssembly Experimental Features
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3086,7 +3082,6 @@ namespace Js
         BailOutByteCode(),
         BgJit(true),
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
-        BgJitPendingFuncCap(DEFAULT_CONFIG_BgJitPendingFuncCap),
 
         CreateFunctionProxy(DEFAULT_CONFIG_CreateFunctionProxy),
         HybridFgJit(DEFAULT_CONFIG_HybridFgJit),
@@ -4428,8 +4423,6 @@ namespace Js
             return FlagBoolean;
         case BgJitDelayFlag:
             return FlagNumber;
-        case BgJitPendingFuncCapFlag:
-            return FlagNumber;
 
         case CreateFunctionProxyFlag:
             return FlagBoolean;
@@ -5531,8 +5524,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BgJit));
         case BgJitDelayFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelay));
-        case BgJitPendingFuncCapFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&BgJitPendingFuncCap));
 
         case CreateFunctionProxyFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CreateFunctionProxy));

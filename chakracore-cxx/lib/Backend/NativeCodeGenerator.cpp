@@ -22,6 +22,9 @@ Js::JavascriptMethod checkCodeGenThunk;
 #define ASSERT_THREAD() AssertMsg(mainThreadId == GetCurrentThreadContextId(), \
     "Cannot use this member of native code generator from thread other than the creating context's current thread")
 
+/// Disable delay if pending function count larger then cap
+constexpr unsigned int BgJitPendingFuncCap = 31;
+
 NativeCodeGenerator::NativeCodeGenerator(Js::ScriptContext * scriptContext)
 :   JsUtil::WaitableJobManager(scriptContext->GetThreadContext()->GetJobProcessor()),
     scriptContext(scriptContext),
@@ -2835,7 +2838,7 @@ NativeCodeGenerator::EnterScriptStart()
         return;
     }
 
-    if (pendingCodeGenWorkItems == 0 || pendingCodeGenWorkItems > (uint)CONFIG_FLAG(BgJitPendingFuncCap))
+    if (pendingCodeGenWorkItems == 0 || pendingCodeGenWorkItems > BgJitPendingFuncCap)
     {
         // We have already finish code gen for this script context
         // Only wait if the script is small and we can easily pre-JIT all of it.
