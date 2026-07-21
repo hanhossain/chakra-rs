@@ -8,7 +8,7 @@ void
 Security::EncodeLargeConstants()
 {
 #pragma prefast(suppress:6236 6285, "logical-or of constants is by design")
-    if (PHASE_OFF(Js::EncodeConstantsPhase, this->func) || CONFIG_ISENABLED(Js::DebugFlag) || !MD_ENCODE_LG_CONSTS)
+    if (PHASE_OFF(Js::EncodeConstantsPhase, this->func) || !MD_ENCODE_LG_CONSTS)
     {
         return;
     }
@@ -127,8 +127,7 @@ Security::GetNextNOPInsertPoint()
 void
 Security::InsertRandomFunctionPad(IR::Instr * instrBeforeInstr)
 {
-    if (PHASE_OFF(Js::InsertNOPsPhase, instrBeforeInstr->m_func->GetTopFunc())
-        || CONFIG_ISENABLED(Js::DebugFlag))
+    if (PHASE_OFF(Js::InsertNOPsPhase, instrBeforeInstr->m_func->GetTopFunc()))
     {
         return;
     }
@@ -162,7 +161,7 @@ Security::InsertRandomFunctionPad(IR::Instr * instrBeforeInstr)
 void
 Security::InsertNOPs()
 {
-    if (PHASE_OFF(Js::InsertNOPsPhase, this->func) || CONFIG_ISENABLED(Js::DebugFlag))
+    if (PHASE_OFF(Js::InsertNOPsPhase, this->func))
     {
         return;
     }

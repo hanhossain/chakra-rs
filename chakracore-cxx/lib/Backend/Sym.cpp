@@ -1098,22 +1098,6 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
         {
             Output::Print(u"s%d", m_id);
 
-            if (Js::Configuration::Global.flags.Debug && stackSym->HasByteCodeRegSlot())
-            {
-                if (!JITManager::GetJITManager()->IsOOPJITEnabled())
-                {
-                    Js::FunctionBody* functionBody = (Js::FunctionBody*)stackSym->GetByteCodeFunc()->GetJITFunctionBody()->GetAddr();
-                    if (functionBody->GetPropertyIdOnRegSlotsContainer())
-                    {
-                        if (functionBody->IsNonTempLocalVar(stackSym->GetByteCodeRegSlot()))
-                        {
-                            uint index = stackSym->GetByteCodeRegSlot() - stackSym->GetByteCodeFunc()->GetJITFunctionBody()->GetConstCount();
-                            Js::PropertyId propertyId = functionBody->GetPropertyIdOnRegSlotsContainer()->propertyIdsForRegSlots[index];
-                            Output::Print(u"(%s)", stackSym->GetByteCodeFunc()->GetInProcThreadContext()->GetPropertyRecord(propertyId)->GetBuffer());
-                        }
-                    }
-                }
-            }
             if (stackSym->IsVar())
             {
                 if (stackSym->HasObjectTypeSym() && !SimpleForm)

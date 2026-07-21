@@ -108,9 +108,6 @@ int32_t (*pfSetBgJitDelayFlag)(int flag);
 bool (*pfIsEnabledCheckAlignmentFlag)();
 int32_t (*pfGetCheckAlignmentFlag)(bool *flag);
 int32_t (*pfSetCheckAlignmentFlag)(bool flag);
-bool (*pfIsEnabledDebugFlag)();
-int32_t (*pfGetDebugFlag)(bool *flag);
-int32_t (*pfSetDebugFlag)(bool flag);
 
 bool (*pfIsEnabledDebugWindowFlag)();
 int32_t (*pfGetDebugWindowFlag)(bool *flag);
