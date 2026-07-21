@@ -39,16 +39,6 @@ extern "C" void
 DBG_DebugBreak();
 
 /*++
-Function:
-  IsInDebugBreak(addr)
-
-  Returns true if the address is in DBG_DebugBreak.
-
---*/
-BOOL
-IsInDebugBreak(void *addr);
-
-/*++
 Function :
     DBG_FlushInstructionCache
 
