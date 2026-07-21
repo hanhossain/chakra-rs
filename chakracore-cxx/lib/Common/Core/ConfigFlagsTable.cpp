@@ -278,7 +278,6 @@ namespace Js
 #define DEFAULT_CONFIG_WasmMultiValue       (false)
 #define DEFAULT_CONFIG_WasmSignExtends      (true)
 #define DEFAULT_CONFIG_WasmNontrapping      (true)
-#define DEFAULT_CONFIG_CurrentSourceInfo    (true)
 #define DEFAULT_CONFIG_Prejit               (false)
 #define DEFAULT_CONFIG_ParserStateCache     (true)
 #define DEFAULT_CONFIG_CompressParserStateCache (false)
@@ -702,7 +701,6 @@ namespace Js
         u"BgJit",
         u"BgJitDelay",
 
-        u"CurrentSourceInfo",
         u"CFGLog",
         u"CheckAlignment",
         u"CheckEmitBufferPermissions",
@@ -1753,7 +1751,6 @@ namespace Js
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
         u"Delay to wait for speculative jitting before starting script execution",
 
-        u"Enable IASD get current script source info",
         u"Log CFG checks",
         u"Insert checks in the native code to verify 8-byte alignment of stack",
         u"Check JIT code buffers at commit and decommit time to ensure no PAGE_EXECUTE_READWRITE pages.",
@@ -2400,7 +2397,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3068,7 +3064,6 @@ namespace Js
         BgJit(true),
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
-        CurrentSourceInfo(DEFAULT_CONFIG_CurrentSourceInfo),
         CFGLog(false),
         CheckAlignment(false),
         CheckEmitBufferPermissions(false),
@@ -4405,8 +4400,6 @@ namespace Js
         case BgJitDelayFlag:
             return FlagNumber;
 
-        case CurrentSourceInfoFlag:
-            return FlagBoolean;
         case CFGLogFlag:
             return FlagBoolean;
         case CheckAlignmentFlag:
@@ -5498,8 +5491,6 @@ namespace Js
         case BgJitDelayFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BgJitDelay));
 
-        case CurrentSourceInfoFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&CurrentSourceInfo));
         case CFGLogFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CFGLog));
         case CheckAlignmentFlag:
@@ -6609,9 +6600,6 @@ namespace Js
             retValue = true;
             break;
 
-        case CurrentSourceInfoFlag:
-            retValue = DEFAULT_CONFIG_CurrentSourceInfo;
-            break;
         case CFGLogFlag:
             retValue = false;
             break;
