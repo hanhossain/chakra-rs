@@ -28,10 +28,6 @@
 std::recursive_mutex HeapAllocator::cs;
 #endif
 
-#ifdef CHECK_MEMORY_LEAK
-MemoryLeakCheck MemoryLeakCheck::leakCheck;
-#endif
-
 HeapAllocator HeapAllocator::Instance;
 NoThrowHeapAllocator NoThrowHeapAllocator::Instance;
 NoCheckHeapAllocator NoCheckHeapAllocator::Instance;
@@ -488,24 +484,4 @@ MemoryLeakCheck::~MemoryLeakCheck()
     }
 }
 
-void
-MemoryLeakCheck::AddLeakDump(char16_t const * dump, size_t bytes, size_t count)
-{
-    std::unique_lock autocs(leakCheck.cs);
-    LeakRecord * record = NoCheckHeapNewStruct(LeakRecord);
-    record->dump = dump;
-    record->next = nullptr;
-    if (leakCheck.tail == nullptr)
-    {
-        leakCheck.head = record;
-        leakCheck.tail = record;
-    }
-    else
-    {
-        leakCheck.tail->next = record;
-        leakCheck.tail = record;
-    }
-    leakCheck.leakedBytes += bytes;
-    leakCheck.leakedCount += count;
-}
 #endif

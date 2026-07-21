@@ -98,14 +98,6 @@ int32_t SetAssertToConsoleFlag(bool flag)
     return S_OK;
 }
 
-int32_t SetEnableCheckMemoryLeakOutput(bool flag)
-{
-#if defined(CHECK_MEMORY_LEAK)
-    MemoryLeakCheck::SetEnableOutput(flag);
-#endif
-    return S_OK;
-}
-
 #if DBG
 bool IsEnabledArrayValidateFlag()
 {
@@ -5942,7 +5934,6 @@ int32_t OnChakraCoreLoaded()
         SetConfigFile,
         PrintConfigFlagsUsageString,
         SetAssertToConsoleFlag,
-        SetEnableCheckMemoryLeakOutput,
         PlatformAgnostic::UnicodeText::Internal::LogicalStringCompareImpl,
 
         //BigInt hooks
