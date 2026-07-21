@@ -704,7 +704,6 @@ namespace Js
         u"BaselineMode",
         u"BailOut",
         u"BailOutAtEveryByteCode",
-        u"BailOutAtEveryImplicitCall",
         u"BailOutByteCode",
         u"Benchmark",
         u"BgJit",
@@ -1764,7 +1763,6 @@ namespace Js
         u"Dump only stable content that can be used for baseline comparison",
         u"Source location to insert BailOut",
         u"Inserts BailOut at every Byte code (default: false)",
-        u"Force generating implicit call bailout even when we don't need it",
         u"Byte code location to insert BailOut. Use with -prejit only",
         u"Disable security code which introduce variability in benchmarks",
         u"Background JIT. Disable to force heuristic-based foreground JITting. (default: true)",
@@ -2416,7 +2414,6 @@ namespace Js
 
 // WebAssembly Experimental Features
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3097,7 +3094,6 @@ namespace Js
         BaselineMode(false),
         BailOut(),
         BailOutAtEveryByteCode(false),
-        BailOutAtEveryImplicitCall(false),
         BailOutByteCode(),
         Benchmark(false),
         BgJit(true),
@@ -4440,8 +4436,6 @@ namespace Js
             return FlagNumberPairSet;
         case BailOutAtEveryByteCodeFlag:
             return FlagBoolean;
-        case BailOutAtEveryImplicitCallFlag:
-            return FlagBoolean;
         case BailOutByteCodeFlag:
             return FlagNumberSet;
         case BenchmarkFlag:
@@ -5551,8 +5545,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<NumberPairSet*>(&BailOut));
         case BailOutAtEveryByteCodeFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&BailOutAtEveryByteCode));
-        case BailOutAtEveryImplicitCallFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&BailOutAtEveryImplicitCall));
         case BailOutByteCodeFlag:
             return reinterpret_cast<void*>(const_cast<NumberSet*>(&BailOutByteCode));
         case BenchmarkFlag:
@@ -6681,9 +6673,6 @@ namespace Js
             retValue = false;
             break;
         case BailOutAtEveryByteCodeFlag:
-            retValue = false;
-            break;
-        case BailOutAtEveryImplicitCallFlag:
             retValue = false;
             break;
         case BenchmarkFlag:

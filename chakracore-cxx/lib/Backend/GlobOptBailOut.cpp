@@ -1387,15 +1387,6 @@ GlobOpt::IsImplicitCallBailOutCurrentlyNeeded(IR::Instr * instr, Value const * s
         return true;
     }
 
-#if DBG
-    if (Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryImplicitCallFlag) &&
-        !instr->HasBailOutInfo() && MayNeedBailOnImplicitCall(instr, nullptr, nullptr))
-    {
-        // always add implicit call bailout even if we don't need it, but only on opcode that supports it
-        return true;
-    }
-#endif
-
     return false;
 }
 
