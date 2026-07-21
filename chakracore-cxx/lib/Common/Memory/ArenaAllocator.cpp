@@ -405,13 +405,6 @@ ArenaAllocatorBase<TFreeListPolicy, ObjectAlignmentBitShiftArg, RequireObjectAli
 ReleasePageMemory()
 {
     pageAllocator->SuspendIdleDecommit();
-#ifdef ARENA_MEMORY_VERIFY
-    bool reenableDisablePageReuse = false;
-    if (Js::Configuration::Global.flags.ArenaNoPageReuse)
-    {
-        reenableDisablePageReuse = !pageAllocator->DisablePageReuse();
-    }
-#endif
     BigBlock *blockp = bigBlocks;
     while (blockp != NULL)
     {
@@ -427,13 +420,6 @@ ReleasePageMemory()
         blockp = blockp->nextBigBlock;
         GetPageAllocator()->ReleaseAllocationNoSuspend(allocation);
     }
-
-#ifdef ARENA_MEMORY_VERIFY
-    if (reenableDisablePageReuse)
-    {
-        pageAllocator->ReenablePageReuse();
-    }
-#endif
 
     pageAllocator->ResumeIdleDecommit();
 }

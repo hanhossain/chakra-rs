@@ -40,9 +40,6 @@ int32_t (*pfGetArrayValidateFlag)(bool *flag);
 int32_t (*pfSetArrayValidateFlag)(bool flag);
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-bool (*pfIsEnabledArenaNoPageReuseFlag)();
-int32_t (*pfGetArenaNoPageReuseFlag)(bool *flag);
-int32_t (*pfSetArenaNoPageReuseFlag)(bool flag);
 bool (*pfIsEnabledArenaUseHeapAllocFlag)();
 int32_t (*pfGetArenaUseHeapAllocFlag)(bool *flag);
 int32_t (*pfSetArenaUseHeapAllocFlag)(bool flag);
