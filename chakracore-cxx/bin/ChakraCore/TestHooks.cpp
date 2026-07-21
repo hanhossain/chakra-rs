@@ -399,20 +399,6 @@ int32_t SetBgJitDelayFlag(int flag)
     return S_OK;
 }
 
-bool IsEnabledCurrentSourceInfoFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::CurrentSourceInfoFlag);
-}
-int32_t GetCurrentSourceInfoFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.CurrentSourceInfo;
-    return S_OK;
-}
-int32_t SetCurrentSourceInfoFlag(bool flag)
-{
-    Js::Configuration::Global.flags.CurrentSourceInfo = flag;
-    return S_OK;
-}
 bool IsEnabledCFGLogFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::CFGLogFlag);
@@ -6182,7 +6168,6 @@ IsEnabledBailOutAtEveryByteCodeFlag, GetBailOutAtEveryByteCodeFlag, SetBailOutAt
 IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
-IsEnabledCurrentSourceInfoFlag, GetCurrentSourceInfoFlag, SetCurrentSourceInfoFlag,
 IsEnabledCFGLogFlag, GetCFGLogFlag, SetCFGLogFlag,
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
 IsEnabledCheckEmitBufferPermissionsFlag, GetCheckEmitBufferPermissionsFlag, SetCheckEmitBufferPermissionsFlag,

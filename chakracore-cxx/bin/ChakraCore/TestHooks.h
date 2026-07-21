@@ -105,9 +105,6 @@ bool (*pfIsEnabledBgJitDelayFlag)();
 int32_t (*pfGetBgJitDelayFlag)(int *flag);
 int32_t (*pfSetBgJitDelayFlag)(int flag);
 
-bool (*pfIsEnabledCurrentSourceInfoFlag)();
-int32_t (*pfGetCurrentSourceInfoFlag)(bool *flag);
-int32_t (*pfSetCurrentSourceInfoFlag)(bool flag);
 bool (*pfIsEnabledCFGLogFlag)();
 int32_t (*pfGetCFGLogFlag)(bool *flag);
 int32_t (*pfSetCFGLogFlag)(bool flag);
