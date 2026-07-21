@@ -16,6 +16,9 @@
 
 extern const IRType RegTypes[RegNumCount];
 
+/// The limit of bailout on no profile info before triggering a rejit
+constexpr int BailOnNoProfileLimit = 200;
+
 // In `FillBailOutRecord`, some of the fields of BailOutInfo are modified directly,
 // so simply doing a shallow copy of pointers when duplicating the BailOutInfo to
 // the helper calls for lazy bailouts will mess things up.Make a deep copies of such fields.
@@ -2610,7 +2613,7 @@ void BailOutRecord::ScheduleLoopBodyCodeGen(Js::ScriptFunction * function, Js::S
 
 void BailOutRecord::CheckPreemptiveRejit(Js::FunctionBody* executeFunction, IR::BailOutKind bailOutKind, BailOutRecord* bailoutRecord, uint8_t& callsOrIterationsCount, int loopNumber)
 {
-    if (bailOutKind == IR::BailOutOnNoProfile && executeFunction->IncrementBailOnMisingProfileCount() > CONFIG_FLAG(BailOnNoProfileLimit))
+    if (bailOutKind == IR::BailOutOnNoProfile && executeFunction->IncrementBailOnMisingProfileCount() > BailOnNoProfileLimit)
     {
         // A rejit here should improve code quality, so lets avoid too many unnecessary bailouts.
         executeFunction->ResetBailOnMisingProfileCount();
