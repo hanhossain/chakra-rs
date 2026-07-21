@@ -85,7 +85,6 @@ namespace Js
         CheckAlignmentFlag,
         DebugBreakFlag,
         StatementDebugBreakFlag,
-        DebugBreakOnPhaseBeginFlag,
 
         DebugWindowFlag,
         ParserStateCacheFlag,
@@ -1503,8 +1502,6 @@ namespace Js
         NumberSet DebugBreak;
         // TODO (hanhossain): remove flag
         NumberTrioSet StatementDebugBreak;
-        // TODO (hanhossain): remove flag
-        Phases DebugBreakOnPhaseBegin;
 
         // TODO (hanhossain): remove flag
         Boolean DebugWindow;
@@ -2481,8 +2478,6 @@ namespace Js
 
 #define PHASE_DUMP1(phase)          Js::Configuration::Global.flags.Dump.IsEnabled((phase))
 #define PHASE_DUMP(phase, func)     Js::Configuration::Global.flags.Dump.IsEnabled((phase), (func)->GetSourceContextId(),(func)->GetLocalFunctionId())
-
-#define PHASE_DEBUGBREAK_ON_PHASE_BEGIN(phase, func) Js::Configuration::Global.flags.DebugBreakOnPhaseBegin.IsEnabled((phase), (func)->GetSourceContextId(), (func)->GetLocalFunctionId())
 
 #define PHASE_STATS1(phase)         Js::Configuration::Global.flags.Stats.IsEnabled((phase))
 #define CUSTOM_PHASE_STATS1(flags, phase) flags.Stats.IsEnabled((phase))

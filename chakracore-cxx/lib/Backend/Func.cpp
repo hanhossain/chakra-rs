@@ -1162,11 +1162,6 @@ Func::BeginPhase(Js::Phase tag)
 {
 #ifdef DBG
     this->GetTopFunc()->currentPhases.Push(tag);
-
-    if (PHASE_DEBUGBREAK_ON_PHASE_BEGIN(tag, this))
-    {
-        __debugbreak();
-    }
 #endif
 
 #ifdef PROFILE_EXEC
