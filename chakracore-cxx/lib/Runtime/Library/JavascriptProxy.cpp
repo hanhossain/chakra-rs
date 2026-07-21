@@ -2032,47 +2032,13 @@ namespace Js
             }
             else
             {
-                autoProxyName = Js::Configuration::Global.flags.autoProxy;
+                autoProxyName = u"__msTestHandler";
             }
 
             threadContext->handlerPropertyId = threadContext->GetOrAddPropertyRecordBind(
                 JsUtil::CharacterBuffer<char16_t>(autoProxyName, static_cast<charcount_t>(std::u16string(autoProxyName).length())))->GetPropertyId();
         }
         return threadContext->handlerPropertyId;
-    }
-
-    RecyclableObject* JavascriptProxy::AutoProxyWrapper(Var obj)
-    {
-        RecyclableObject* object = VarTo<RecyclableObject>(obj);
-        if (!JavascriptOperators::IsObject(object) || VarIs<JavascriptProxy>(object))
-        {
-            return object;
-        }
-        ScriptContext* scriptContext = object->GetScriptContext();
-        if (!scriptContext->GetThreadContext()->IsScriptActive())
-        {
-            return object;
-        }
-        if (!scriptContext->GetConfig()->IsES6ProxyEnabled())
-        {
-            return object;
-        }
-        Assert(Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag));
-        PropertyId handlerId = EnsureHandlerPropertyId(scriptContext);
-        GlobalObject* globalObject = scriptContext->GetLibrary()->GetGlobalObject();
-        Var handler = nullptr;
-        if (!JavascriptOperators::GetProperty(globalObject, handlerId, &handler, scriptContext))
-        {
-            handler = scriptContext->GetLibrary()->CreateObject();
-            JavascriptOperators::SetProperty(globalObject, globalObject, handlerId, handler, scriptContext);
-        }
-        CallInfo callInfo(CallFlags_Value, 3);
-        Var varArgs[3];
-        Js::Arguments arguments(callInfo, varArgs);
-        varArgs[0] = scriptContext->GetLibrary()->GetProxyConstructor();
-        varArgs[1] = object;
-        varArgs[2] = handler;
-        return Create(scriptContext, arguments);
     }
 
     Var JavascriptProxy::ConstructorTrap(Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32_t> *spreadIndices)

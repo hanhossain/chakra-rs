@@ -406,10 +406,6 @@ namespace Js
         {
             JavascriptError::ThrowRangeError(scriptContext, JSERR_FunctionArgument_Invalid);
         }
-        if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-        {
-            newArr = Js::JavascriptProxy::AutoProxyWrapper(newArr);
-        }
         return isCtorSuperCall ?
             JavascriptOperators::OrdinaryCreateFromConstructor(VarTo<RecyclableObject>(newTarget), newArr, nullptr, scriptContext) :
             newArr;

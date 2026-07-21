@@ -5168,10 +5168,6 @@ namespace Js
     Var InterpreterStackFrame::OP_NewScObjectSimple()
     {
         Var object = scriptContext->GetLibrary()->CreateObject(true);
-        if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-        {
-            object = JavascriptProxy::AutoProxyWrapper(object);
-        }
         return object;
     }
 
@@ -5962,12 +5958,6 @@ namespace Js
         END_SAFE_REENTRANT_CALL
 
             PopOut(ArgCount);
-        if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-        {
-            newVarInstance = JavascriptProxy::AutoProxyWrapper(newVarInstance);
-            // this might come from a different scriptcontext.
-            newVarInstance = CrossSite::MarshalVar(GetScriptContext(), newVarInstance);
-        }
         return newVarInstance;
     }
 
@@ -5990,12 +5980,6 @@ namespace Js
         END_SAFE_REENTRANT_CALL
 
         PopOut(ArgCount);
-        if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-        {
-            newVarInstance = JavascriptProxy::AutoProxyWrapper(newVarInstance);
-            // this might come from a different scriptcontext.
-            newVarInstance = CrossSite::MarshalVar(GetScriptContext(), newVarInstance);
-        }
 #ifdef TELEMETRY_PROFILED
         {
             this->scriptContext->GetTelemetry().GetOpcodeTelemetry().NewScriptObject(target, args, newVarInstance);

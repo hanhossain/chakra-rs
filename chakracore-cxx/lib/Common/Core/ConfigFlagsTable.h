@@ -577,7 +577,6 @@ namespace Js
         ShareInlineCachesFlag,
         DisableDebugObjectFlag,
         DumpHeapFlag,
-        autoProxyFlag,
         PerfHintLevelFlag,
 
         #if DBG
@@ -2186,8 +2185,6 @@ namespace Js
         Boolean DisableDebugObject;
         // TODO (hanhossain): remove flag
         Boolean DumpHeap;
-        // TODO (hanhossain): remove flag
-        String autoProxy;
         Number PerfHintLevel;
 
         #if DBG

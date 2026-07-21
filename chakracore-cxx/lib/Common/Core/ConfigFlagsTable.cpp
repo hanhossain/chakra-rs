@@ -1200,7 +1200,6 @@ namespace Js
         u"ShareInlineCaches",
         u"DisableDebugObject",
         u"DumpHeap",
-        u"autoProxy",
         u"PerfHintLevel",
 
 #if DBG
@@ -2178,10 +2177,9 @@ namespace Js
         u"Determines whether inline caches are shared between all loads (or all stores) of the same property ID",
         u"Disable test only Debug object properties",
         u"enable Debug.dumpHeap even when DisableDebugObject is set",
-        u"__msTestHandler",
+        // todo (hanhossain): flag end
         u"Specifies the perf-hint level (1,2) 1 == critical, 2 == only noisy",
 
-        // todo (hanhossain): flag end
 #if DBG
         u"Enable the initialization of the interpreter local slots with invalid stack vars",
 #endif
@@ -2752,10 +2750,9 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
+        // todo (hanhossain): flag end
         NoParentFlag,
 
-        // todo (hanhossain): flag end
 #if DBG
         NoParentFlag,
 #endif
@@ -3348,7 +3345,6 @@ namespace Js
         ShareInlineCaches(DEFAULT_CONFIG_ShareInlineCaches),
         DisableDebugObject(DEFAULT_CONFIG_DisableDebugObject),
         DumpHeap(DEFAULT_CONFIG_DumpHeap),
-        autoProxy(u"__msTestHandler"),
         PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
 
 #if DBG
@@ -4965,8 +4961,6 @@ namespace Js
             return FlagBoolean;
         case DumpHeapFlag:
             return FlagBoolean;
-        case autoProxyFlag:
-            return FlagString;
         case PerfHintLevelFlag:
             return FlagNumber;
 
@@ -5944,8 +5938,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&DisableDebugObject));
         case DumpHeapFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpHeap));
-        case autoProxyFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&autoProxy));
         case PerfHintLevelFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PerfHintLevel));
 
