@@ -284,11 +284,11 @@ Recycler::SetMemProtectMode()
     this->enableScanImplicitRoots = true;
     this->disableCollectOnAllocationHeuristics = true;
 #ifdef RECYCLER_STRESS
-    this->recyclerStress = GetRecyclerFlagsTable().MemProtectHeapStress;
-    this->recyclerBackgroundStress = GetRecyclerFlagsTable().MemProtectHeapBackgroundStress;
-    this->recyclerConcurrentStress = GetRecyclerFlagsTable().MemProtectHeapConcurrentStress;
-    this->recyclerConcurrentRepeatStress = GetRecyclerFlagsTable().MemProtectHeapConcurrentRepeatStress;
-    this->recyclerPartialStress = GetRecyclerFlagsTable().MemProtectHeapPartialStress;
+    this->recyclerStress = false;
+    this->recyclerBackgroundStress = false;
+    this->recyclerConcurrentStress = false;
+    this->recyclerConcurrentRepeatStress = false;
+    this->recyclerPartialStress = false;
 #endif
 }
 

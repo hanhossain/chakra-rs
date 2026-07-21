@@ -582,13 +582,6 @@ namespace Js
         #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
         MemProtectHeapFlag,
         #endif
-        #ifdef RECYCLER_STRESS
-        MemProtectHeapStressFlag,
-        MemProtectHeapBackgroundStressFlag,
-        MemProtectHeapConcurrentStressFlag,
-        MemProtectHeapConcurrentRepeatStressFlag,
-        MemProtectHeapPartialStressFlag,
-        #endif
 
         #if DBG
         InitializeInterpreterSlotsWithInvalidStackVarFlag,
@@ -2202,18 +2195,6 @@ namespace Js
         #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
         // TODO (hanhossain): remove flag
             Boolean MemProtectHeap;
-        #endif
-        #ifdef RECYCLER_STRESS
-        // TODO (hanhossain): remove flag
-            Boolean MemProtectHeapStress;
-        // TODO (hanhossain): remove flag
-                Boolean MemProtectHeapBackgroundStress;
-        // TODO (hanhossain): remove flag
-                Boolean MemProtectHeapConcurrentStress;
-        // TODO (hanhossain): remove flag
-                Boolean MemProtectHeapConcurrentRepeatStress;
-        // TODO (hanhossain): remove flag
-                Boolean MemProtectHeapPartialStress;
         #endif
 
         #if DBG

@@ -1208,13 +1208,6 @@ namespace Js
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
         u"MemProtectHeap",
 #endif
-#ifdef RECYCLER_STRESS
-        u"MemProtectHeapStress",
-        u"MemProtectHeapBackgroundStress",
-        u"MemProtectHeapConcurrentStress",
-        u"MemProtectHeapConcurrentRepeatStress",
-        u"MemProtectHeapPartialStress",
-#endif
 
 #if DBG
         u"InitializeInterpreterSlotsWithInvalidStackVar",
@@ -2196,13 +2189,6 @@ namespace Js
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
         u"Use the mem protect heap as the default heap",
 #endif
-#ifdef RECYCLER_STRESS
-        u"Stress the recycler by collect on every allocation call",
-        u"Stress the recycler by collect in the background thread on every allocation call",
-        u"Stress the concurrent recycler by concurrent collect on every allocation call",
-        u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
-        u"Stress the partial recycler by partial collect on every allocation call",
-#endif
 
         // todo (hanhossain): flag end
 #if DBG
@@ -2778,13 +2764,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        NoParentFlag,
-#endif
-#ifdef RECYCLER_STRESS
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         NoParentFlag,
 #endif
 
@@ -3385,13 +3364,6 @@ namespace Js
         PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
 #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
         MemProtectHeap(DEFAULT_CONFIG_MemProtectHeap),
-#endif
-#ifdef RECYCLER_STRESS
-        MemProtectHeapStress(false),
-        MemProtectHeapBackgroundStress(false),
-        MemProtectHeapConcurrentStress(false),
-        MemProtectHeapConcurrentRepeatStress(false),
-        MemProtectHeapPartialStress(false),
 #endif
 
 #if DBG
@@ -5016,18 +4988,6 @@ namespace Js
         case MemProtectHeapFlag:
             return FlagBoolean;
         #endif
-        #ifdef RECYCLER_STRESS
-        case MemProtectHeapStressFlag:
-            return FlagBoolean;
-        case MemProtectHeapBackgroundStressFlag:
-            return FlagBoolean;
-        case MemProtectHeapConcurrentStressFlag:
-            return FlagBoolean;
-        case MemProtectHeapConcurrentRepeatStressFlag:
-            return FlagBoolean;
-        case MemProtectHeapPartialStressFlag:
-            return FlagBoolean;
-        #endif
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
@@ -6011,18 +5971,6 @@ namespace Js
         case MemProtectHeapFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeap));
         #endif
-        #ifdef RECYCLER_STRESS
-        case MemProtectHeapStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapStress));
-        case MemProtectHeapBackgroundStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapBackgroundStress));
-        case MemProtectHeapConcurrentStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapConcurrentStress));
-        case MemProtectHeapConcurrentRepeatStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapConcurrentRepeatStress));
-        case MemProtectHeapPartialStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapPartialStress));
-        #endif
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
@@ -6923,23 +6871,6 @@ namespace Js
         #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
         case MemProtectHeapFlag:
             retValue = (Boolean) DEFAULT_CONFIG_MemProtectHeap;
-            break;
-        #endif
-        #ifdef RECYCLER_STRESS
-        case MemProtectHeapStressFlag:
-            retValue = false;
-            break;
-        case MemProtectHeapBackgroundStressFlag:
-            retValue = false;
-            break;
-        case MemProtectHeapConcurrentStressFlag:
-            retValue = false;
-            break;
-        case MemProtectHeapConcurrentRepeatStressFlag:
-            retValue = false;
-            break;
-        case MemProtectHeapPartialStressFlag:
-            retValue = false;
             break;
         #endif
 
