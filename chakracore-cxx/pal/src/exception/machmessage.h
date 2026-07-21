@@ -167,12 +167,6 @@ public:
     // Fetch the return code from a reply type message.
     kern_return_t GetReturnCode();
 
-    // Initialize and send a request to set the register context of a particular thread.
-    void SendSetThread(mach_port_t hServerPort, CONTEXT *pContext);
-
-    // Initialize and send a request to forward the exception message to the notification thread
-    void SendForwardException(mach_port_t hServerPort, MachExceptionInfo *pExceptionInfo, CPalThread *ppalThread);
-
     // Initialize the message (overwriting any previous content) to represent a forwarded version of the given
     // exception notification message and send that message to the chain-back handler previously registered
     // for the exception type being notified. The new message takes account of the fact that the target

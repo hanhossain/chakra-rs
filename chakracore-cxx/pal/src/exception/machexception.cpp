@@ -1174,34 +1174,6 @@ void MachExceptionInfo::RestoreState(mach_port_t thread)
 #endif
 }
 
-/*++
-Function :
-    MachSetThreadContext
-
-    Sets the context of the current thread by sending a notification
-    to the exception thread.
-
-Parameters:
-    lpContext - the CONTEXT to set the current thread
-
-Return value :
-    Doesn't return
---*/
-__attribute__((noreturn))
-void
-MachSetThreadContext(CONTEXT *lpContext)
-{
-    // We need to send a message to the worker thread so that it can set our thread context.
-    MachMessage sRequest;
-    sRequest.SendSetThread(s_ExceptionPort, lpContext);
-
-    // Make sure we don't do anything
-    while (TRUE)
-    {
-        sched_yield();
-    }
-}
-
 
 /*++
 Function :
