@@ -1858,8 +1858,6 @@ private:
     bool isPrimaryMarkContextInitialized;
 #endif
 #if defined(CHECK_MEMORY_LEAK)
-    template <class Fn>
-    void ReportOnProcessDetach(Fn fn);
 #ifdef STACK_BACK_TRACE
     void PrintPinnedObjectStackTraces();
 #endif

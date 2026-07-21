@@ -7176,32 +7176,6 @@ Recycler::DeleteGuestArena(ArenaAllocator * arenaAllocator)
 }
 
 #if defined(CHECK_MEMORY_LEAK)
-template <class Fn>
-void
-Recycler::ReportOnProcessDetach(Fn fn)
-{
-#if DBG
-    // Process detach can be done on any thread, just disable the thread check
-    this->markContext.GetPageAllocator()->SetDisableThreadAccessCheck();
-#endif
-
-    if (this->IsConcurrentState())
-    {
-        this->AbortConcurrent(true);
-    }
-
-    if (this->CollectionInProgress())
-    {
-        Output::Print(u"WARNING: Thread terminated during GC.  Can't dump object graph\n");
-        return;
-    }
-    // Don't mark external roots on another thread
-    this->SetExternalRootMarker(NULL, NULL);
-#if DBG
-    this->ResetThreadId();
-#endif
-    fn();
-}
 
 #ifdef STACK_BACK_TRACE
 void
