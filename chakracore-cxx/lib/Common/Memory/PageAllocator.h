@@ -596,7 +596,6 @@ public:
     void EnableVerify() { verifyEnabled = true; }
 #endif
 #if defined(RECYCLER_NO_PAGE_REUSE) || defined(ARENA_MEMORY_VERIFY)
-    void ReenablePageReuse() { Assert(disablePageReuse); disablePageReuse = false; }
     bool DisablePageReuse() { bool wasDisablePageReuse = disablePageReuse; disablePageReuse = true; return wasDisablePageReuse; }
     bool IsPageReuseDisabled() { return disablePageReuse; }
 #endif

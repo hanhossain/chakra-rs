@@ -687,7 +687,6 @@ namespace Js
         u"ArrayValidate",
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-        u"ArenaNoPageReuse",
         u"ArenaUseHeapAlloc",
 #endif
         u"ValidateInlineStack",
@@ -1769,7 +1768,6 @@ namespace Js
         u"Validate each array for valid elements (default: false)",
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-        u"Do not reuse page in arena",
         u"Arena use heap to allocate memory instead of page allocator",
 #endif
         u"Does a stack walk on helper calls to validate inline stack is correctly restored",
@@ -2452,7 +2450,6 @@ namespace Js
         NoParentFlag,
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-        NoParentFlag,
         NoParentFlag,
 #endif
         NoParentFlag,
@@ -3151,7 +3148,6 @@ namespace Js
         ArrayValidate(false),
 #endif
 #ifdef ARENA_MEMORY_VERIFY
-        ArenaNoPageReuse(false),
         ArenaUseHeapAlloc(false),
 #endif
         ValidateInlineStack(false),
@@ -4499,8 +4495,6 @@ namespace Js
             return FlagBoolean;
         #endif
         #ifdef ARENA_MEMORY_VERIFY
-        case ArenaNoPageReuseFlag:
-            return FlagBoolean;
         case ArenaUseHeapAllocFlag:
             return FlagBoolean;
         #endif
@@ -5651,8 +5645,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ArrayValidate));
         #endif
         #ifdef ARENA_MEMORY_VERIFY
-        case ArenaNoPageReuseFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ArenaNoPageReuse));
         case ArenaUseHeapAllocFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ArenaUseHeapAlloc));
         #endif
@@ -6812,9 +6804,6 @@ namespace Js
             break;
         #endif
         #ifdef ARENA_MEMORY_VERIFY
-        case ArenaNoPageReuseFlag:
-            retValue = false;
-            break;
         case ArenaUseHeapAllocFlag:
             retValue = false;
             break;
