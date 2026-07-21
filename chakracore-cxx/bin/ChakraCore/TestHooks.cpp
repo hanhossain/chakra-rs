@@ -5811,21 +5811,6 @@ int32_t SetJITServerMaxInactivePageAllocatorCountFlag(int flag)
     return S_OK;
 }
 
-bool IsEnabledStrictWriteBarrierCheckFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::StrictWriteBarrierCheckFlag);
-}
-int32_t GetStrictWriteBarrierCheckFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.StrictWriteBarrierCheck;
-    return S_OK;
-}
-int32_t SetStrictWriteBarrierCheckFlag(bool flag)
-{
-    Js::Configuration::Global.flags.StrictWriteBarrierCheck = flag;
-    return S_OK;
-}
-
 int32_t OnChakraCoreLoaded()
 {
     TestHooks testHooks =
@@ -6408,8 +6393,6 @@ IsEnabledGCMemoryThresholdFlag, GetGCMemoryThresholdFlag, SetGCMemoryThresholdFl
 
 IsEnabledJITServerIdleTimeoutFlag, GetJITServerIdleTimeoutFlag, SetJITServerIdleTimeoutFlag,
 IsEnabledJITServerMaxInactivePageAllocatorCountFlag, GetJITServerMaxInactivePageAllocatorCountFlag, SetJITServerMaxInactivePageAllocatorCountFlag,
-
-IsEnabledStrictWriteBarrierCheckFlag, GetStrictWriteBarrierCheckFlag, SetStrictWriteBarrierCheckFlag,
 
     };
     return ChakraRTInterface::InitializeTestHooks(testHooks);

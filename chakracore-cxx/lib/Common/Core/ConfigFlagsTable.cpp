@@ -631,8 +631,6 @@ namespace Js
 #define DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore (true)
 #endif
 
-#define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
-
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)
 #define TraceLevel_Info         (3)
@@ -1267,8 +1265,6 @@ namespace Js
 
         u"JITServerIdleTimeout",
         u"JITServerMaxInactivePageAllocatorCount",
-
-        u"StrictWriteBarrierCheck",
 
 // TODO (hanhossain): ConfigFlagsList end
         NULL
@@ -2293,8 +2289,6 @@ namespace Js
         u"Idle timeout in milliseconds to do the cleanup in JIT server",
         u"Max inactive page allocators to keep before schedule a cleanup",
 
-        u"Check write barrier setting on none write barrier pages",
-
         NULL
     };
 
@@ -2911,8 +2905,6 @@ namespace Js
 #endif
 
         NoParentFlag,
-        NoParentFlag,
-
         NoParentFlag,
 
         InvalidFlag
@@ -3553,8 +3545,6 @@ namespace Js
 
         JITServerIdleTimeout(500),
         JITServerMaxInactivePageAllocatorCount(10),
-
-        StrictWriteBarrierCheck(DEFAULT_CONFIG_StrictWriteBarrierCheck),
 
         nDummy(0)
     {
@@ -5246,9 +5236,6 @@ namespace Js
         case JITServerMaxInactivePageAllocatorCountFlag:
             return FlagNumber;
 
-        case StrictWriteBarrierCheckFlag:
-            return FlagBoolean;
-
         default:
             return InvalidFlagType;
         }
@@ -6297,9 +6284,6 @@ namespace Js
         case JITServerMaxInactivePageAllocatorCountFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&JITServerMaxInactivePageAllocatorCount));
 
-        case StrictWriteBarrierCheckFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&StrictWriteBarrierCheck));
-
         default:
             return NULL;
         }
@@ -7230,9 +7214,6 @@ namespace Js
             retValue = false;
             break;
 
-        case StrictWriteBarrierCheckFlag:
-            retValue = DEFAULT_CONFIG_StrictWriteBarrierCheck;
-            break;
 
         default:
             // not found - or not a boolean flag

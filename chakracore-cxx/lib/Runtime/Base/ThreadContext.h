@@ -663,8 +663,6 @@ private:
 #define DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore (true)
 #endif
 
-#define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
-
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)
 #define TraceLevel_Info         (3)

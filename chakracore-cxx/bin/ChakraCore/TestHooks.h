@@ -1400,9 +1400,6 @@ bool (*pfIsEnabledJITServerMaxInactivePageAllocatorCountFlag)();
 int32_t (*pfGetJITServerMaxInactivePageAllocatorCountFlag)(int *flag);
 int32_t (*pfSetJITServerMaxInactivePageAllocatorCountFlag)(int flag);
 
-bool (*pfIsEnabledStrictWriteBarrierCheckFlag)();
-int32_t (*pfGetStrictWriteBarrierCheckFlag)(bool *flag);
-int32_t (*pfSetStrictWriteBarrierCheckFlag)(bool flag);
 };
 
 int32_t OnChakraCoreLoaded();

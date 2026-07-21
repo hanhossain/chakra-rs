@@ -61,10 +61,6 @@ SegmentBase<T>::~SegmentBase()
         GetAllocator()->GetVirtualAllocator()->Free(originalAddress, GetPageCount() * AutoSystemInfo::PageSize, MEM_RELEASE);
         GetAllocator()->ReportFree(this->segmentPageCount * AutoSystemInfo::PageSize); //Note: We reported the guard pages free when we decommitted them during segment initialization
 #if defined(RECYCLER_WRITE_BARRIER_BYTE)
-        if (CONFIG_FLAG(StrictWriteBarrierCheck) && this->isWriteBarrierEnabled)
-        {
-            RecyclerWriteBarrierManager::ToggleBarrier(this->address, this->segmentPageCount * AutoSystemInfo::PageSize, false);
-        }
         RecyclerWriteBarrierManager::OnSegmentFree(this->address, this->segmentPageCount);
 #endif
     }
@@ -146,20 +142,7 @@ SegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
 
 #if defined(RECYCLER_WRITE_BARRIER_BYTE)
     bool registerBarrierResult = true;
-    if (CONFIG_FLAG(StrictWriteBarrierCheck))
-    {
-        if (this->isWriteBarrierEnabled)
-        {
-            // only commit card table for write barrier pages for strict check
-            // we can do this in free build if all write barrier annotated struct
-            // only allocate with write barrier pages
-            registerBarrierResult = RecyclerWriteBarrierManager::OnSegmentAlloc(this->address, this->segmentPageCount);
-        }
-    }
-    else
-    {
-        registerBarrierResult = RecyclerWriteBarrierManager::OnSegmentAlloc(this->address, this->segmentPageCount);
-    }
+    registerBarrierResult = RecyclerWriteBarrierManager::OnSegmentAlloc(this->address, this->segmentPageCount);
 
     if (!registerBarrierResult)
     {
@@ -172,15 +155,6 @@ SegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
 #endif
 
     this->isWriteBarrierAllowed = true;
-#if DBG
-
-    if (this->isWriteBarrierEnabled)
-    {
-        RecyclerWriteBarrierManager::ToggleBarrier(this->address,
-          this->segmentPageCount * AutoSystemInfo::PageSize, true);
-    }
-#endif
-
     return true;
 }
 

@@ -633,8 +633,6 @@ namespace Js
         JITServerIdleTimeoutFlag,
         JITServerMaxInactivePageAllocatorCountFlag,
 
-        StrictWriteBarrierCheckFlag,
-
         FlagCount,
         InvalidFlag,
         NoParentFlag,
@@ -2313,9 +2311,6 @@ namespace Js
         Number JITServerIdleTimeout;
         // TODO (hanhossain): remove flag
         Number JITServerMaxInactivePageAllocatorCount;
-
-        // TODO (hanhossain): remove flag
-        Boolean StrictWriteBarrierCheck;
 
         bool            flagPresent[FlagCount];
         // save the jscript.config for easier to get the raw input while analyzing dump file

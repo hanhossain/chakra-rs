@@ -18,10 +18,6 @@
 #pragma warning(disable:4075)       // initializers put in unrecognized initialization area on purpose
 #pragma init_seg(".CRT$XCAU")
 
-namespace Memory
-{
-    FN_VerifyIsNotBarrierAddress* g_verifyIsNotBarrierAddress = nullptr;
-}
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
 X64WriteBarrierCardTableManager RecyclerWriteBarrierManager::x64CardTableManager;
 X64WriteBarrierCardTableManager::CommittedSectionBitVector X64WriteBarrierCardTableManager::committedSections(&HeapAllocator::Instance);
@@ -55,7 +51,6 @@ X64WriteBarrierCardTableManager::OnThreadInit()
     size_t numPages = (stackBase - stackEnd) / AutoSystemInfo::PageSize;
     // stackEnd is the lower boundary
     bool ret = OnSegmentAlloc(reinterpret_cast<char*>(stackEnd), numPages);
-    RecyclerWriteBarrierManager::ToggleBarrier(reinterpret_cast<char*>(stackEnd), (stackBase - stackEnd), true);
     return ret;
 }
 
@@ -287,7 +282,6 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address)
     }
 
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
-    VerifyIsBarrierAddress(address);
     const uintptr_t index = GetCardTableIndex(address);
     cardTable[index] |= DIRTYBIT;
 #else
@@ -313,7 +307,6 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
         return;
     }
 
-    VerifyIsBarrierAddress(address, bytes);
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
     uintptr_t startIndex = GetCardTableIndex(address);
     char * endAddress = reinterpret_cast<char*>(Math::Align<long>(reinterpret_cast<long>(static_cast<char*>(address) + bytes),
@@ -350,34 +343,6 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
 #endif
 }
 
-void
-RecyclerWriteBarrierManager::ToggleBarrier(void * address, size_t bytes, bool enable)
-{
-    if (CONFIG_FLAG(StrictWriteBarrierCheck))
-    {
-        uintptr_t startIndex = GetCardTableIndex(address);
-        char * endAddress = reinterpret_cast<char*>(Math::Align<long>(reinterpret_cast<long>(static_cast<char*>(address) + bytes),
-                                                                      s_WriteBarrierPageSize));
-        uintptr_t endIndex = GetCardTableIndex(endAddress);
-        if (enable)
-        {
-            for (uintptr_t i = startIndex; i < endIndex; i++)
-            {
-                cardTable[i] |= WRITE_BARRIER_PAGE_BIT;
-            }
-        }
-        else
-        {
-            for (uintptr_t i = startIndex; i < endIndex; i++)
-            {
-                cardTable[i] &= ~WRITE_BARRIER_PAGE_BIT;
-            }
-        }
-
-        GlobalSwbVerboseTrace(u"Enabling 0x%p (CIndex: %u-%u)\n", address, startIndex, endIndex);
-    }
-}
-
 bool
 RecyclerWriteBarrierManager::IsBarrierAddress(void * address)
 {
@@ -396,65 +361,9 @@ RecyclerWriteBarrierManager::IsBarrierAddress(uintptr_t index)
 // after SWB is widely enabled and if an annotated structure can be allocated
 // with both Heap and Recycler/Arena we'll capture the issue
 
-void
-RecyclerWriteBarrierManager::VerifyIsBarrierAddress(void * address)
-{
-    if (CONFIG_FLAG(StrictWriteBarrierCheck))
-    {
-        if (!IsBarrierAddress(GetCardTableIndex(address)))
-        {
-            Js::Throw::FatalInternalError();
-        }
-    }
-}
-
-void
-RecyclerWriteBarrierManager::VerifyIsBarrierAddress(void * address, size_t bytes)
-{
-    if (CONFIG_FLAG(StrictWriteBarrierCheck))
-    {
-        uintptr_t startIndex = GetCardTableIndex(address);
-        char * endAddress = reinterpret_cast<char*>(Math::Align<long>(reinterpret_cast<long>(static_cast<char*>(address) + bytes),
-                                                                      s_WriteBarrierPageSize));
-        uintptr_t endIndex = GetCardTableIndex(endAddress);
-        do
-        {
-            // no need to check if cardTable is commited or not, if it's not commited it'll AV instead of assertion
-            if (!IsBarrierAddress(startIndex))
-            {
-                Js::Throw::FatalInternalError();
-            }
-        } while (startIndex++ < endIndex);
-    }
-}
-
-void
-RecyclerWriteBarrierManager::VerifyIsNotBarrierAddress(void * address, size_t bytes)
-{
-    if (CONFIG_FLAG(StrictWriteBarrierCheck))
-    {
-        uintptr_t startIndex = GetCardTableIndex(address);
-        char * endAddress = reinterpret_cast<char*>(Math::Align<long>(reinterpret_cast<long>(static_cast<char*>(address) + bytes),
-                                                                      s_WriteBarrierPageSize));
-        uintptr_t endIndex = GetCardTableIndex(endAddress);
-        do
-        {
-            if(IsCardTableCommited(startIndex))
-            {
-                if (IsBarrierAddress(startIndex))
-                {
-                    Js::Throw::FatalInternalError();
-                }
-            }
-
-        } while (++startIndex < endIndex);
-    }
-}
-
 bool
 RecyclerWriteBarrierManager::Initialize()
 {
-    g_verifyIsNotBarrierAddress = RecyclerWriteBarrierManager::VerifyIsNotBarrierAddress;
     return true;
 }
 
