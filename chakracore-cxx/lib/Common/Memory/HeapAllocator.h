@@ -53,7 +53,6 @@
 #define NoCheckHeapNewZ(T, ...) AllocatorNewZ(NoCheckHeapAllocator, &NoCheckHeapAllocator::Instance, T, __VA_ARGS__)
 #define NoCheckHeapNewPlus(size, T, ...) AllocatorNewPlus(NoCheckHeapAllocator, &NoCheckHeapAllocator::Instance, size, T, __VA_ARGS__)
 #define NoCheckHeapNewPlusZ(size, T, ...) AllocatorNewPlusZ(NoCheckHeapAllocator, &NoCheckHeapAllocator::Instance, size, T, __VA_ARGS__)
-#define NoCheckHeapNewStruct(T) AllocatorNewStruct(NoCheckHeapAllocator, &NoCheckHeapAllocator::Instance, T)
 #define NoCheckHeapNewStructZ(T) AllocatorNewStructZ(NoCheckHeapAllocator, &NoCheckHeapAllocator::Instance, T)
 #define NoCheckHeapNewArray(T, count, ...) AllocatorNewArray(NoCheckHeapAllocator, &NoCheckHeapAllocator::Instance, T, count)
 #define NoCheckHeapNewArrayZ(T, count, ...) AllocatorNewArrayZ(NoCheckHeapAllocator, &NoCheckHeapAllocator::Instance, T, count)
@@ -326,12 +325,7 @@ class MemoryLeakCheck
 public:
     MemoryLeakCheck() : head(NULL), tail(NULL), leakedBytes(0), leakedCount(0), enableOutput(true) {}
     ~MemoryLeakCheck();
-    static void AddLeakDump(char16_t const * dump, size_t bytes, size_t count);
-    static void SetEnableOutput(bool flag) { leakCheck.enableOutput = flag; }
-    static bool IsEnableOutput() { return leakCheck.enableOutput; }
 private:
-    static MemoryLeakCheck leakCheck;
-
     struct LeakRecord
     {
         char16_t const * dump;

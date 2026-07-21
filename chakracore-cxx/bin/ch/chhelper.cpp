@@ -564,9 +564,6 @@ int32_t ExecuteTestWithMemoryCheck(const std::string &fileName, JsRuntimeHandle 
         exit(0);
 
     fflush(NULL);
-#ifdef CHECK_MEMORY_LEAK
-    ChakraRTInterface::SetEnableCheckMemoryLeakOutput(true);
-#endif
     return hr;
 }
 

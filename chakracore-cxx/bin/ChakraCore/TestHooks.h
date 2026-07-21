@@ -16,14 +16,12 @@ struct TestHooks
     typedef int32_t(*SetConfigFilePtr)(char16_t* strConfigFile);
     typedef int32_t(*PrintConfigFlagsUsageStringPtr)(void);
     typedef int32_t(*SetAssertToConsoleFlagPtr)(bool flag);
-    typedef int32_t(*SetEnableCheckMemoryLeakOutputPtr)(bool flag);
     typedef int(*LogicalStringCompareImpl)(const char16_t* p1, int p1size, const char16_t* p2, int p2size);
 
     SetConfigFlagsPtr pfSetConfigFlags;
     SetConfigFilePtr  pfSetConfigFile;
     PrintConfigFlagsUsageStringPtr pfPrintConfigFlagsUsageString;
     SetAssertToConsoleFlagPtr pfSetAssertToConsoleFlag;
-    SetEnableCheckMemoryLeakOutputPtr pfSetEnableCheckMemoryLeakOutput;
     LogicalStringCompareImpl pfLogicalCompareStringImpl;
 
     // Javasscript Bigint hooks
