@@ -78,7 +78,6 @@ namespace Js
         BaselineModeFlag,
         BailOutFlag,
         BailOutAtEveryByteCodeFlag,
-        BailOutAtEveryImplicitCallFlag,
         BailOutByteCodeFlag,
         BenchmarkFlag,
         BgJitFlag,
@@ -1519,8 +1518,6 @@ namespace Js
         Boolean BaselineMode;
             NumberPairSet BailOut;
             Boolean BailOutAtEveryByteCode;
-        // TODO (hanhossain): remove flag
-            Boolean BailOutAtEveryImplicitCall;
             NumberSet BailOutByteCode;
         // TODO (hanhossain): remove flag
         Boolean Benchmark;

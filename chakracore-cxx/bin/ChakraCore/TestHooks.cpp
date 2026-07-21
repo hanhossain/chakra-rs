@@ -370,20 +370,6 @@ int32_t SetBailOutAtEveryByteCodeFlag(bool flag)
     Js::Configuration::Global.flags.BailOutAtEveryByteCode = flag;
     return S_OK;
 }
-bool IsEnabledBailOutAtEveryImplicitCallFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::BailOutAtEveryImplicitCallFlag);
-}
-int32_t GetBailOutAtEveryImplicitCallFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.BailOutAtEveryImplicitCall;
-    return S_OK;
-}
-int32_t SetBailOutAtEveryImplicitCallFlag(bool flag)
-{
-    Js::Configuration::Global.flags.BailOutAtEveryImplicitCall = flag;
-    return S_OK;
-}
 bool IsEnabledBenchmarkFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::BenchmarkFlag);
@@ -6304,7 +6290,6 @@ IsEnabledWasmSimdFlag, GetWasmSimdFlag, SetWasmSimdFlag,
 IsEnabledBaselineModeFlag, GetBaselineModeFlag, SetBaselineModeFlag,
 
 IsEnabledBailOutAtEveryByteCodeFlag, GetBailOutAtEveryByteCodeFlag, SetBailOutAtEveryByteCodeFlag,
-IsEnabledBailOutAtEveryImplicitCallFlag, GetBailOutAtEveryImplicitCallFlag, SetBailOutAtEveryImplicitCallFlag,
 
 IsEnabledBenchmarkFlag, GetBenchmarkFlag, SetBenchmarkFlag,
 IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
