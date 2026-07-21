@@ -278,7 +278,6 @@ namespace Js
 #define DEFAULT_CONFIG_WasmMultiValue       (false)
 #define DEFAULT_CONFIG_WasmSignExtends      (true)
 #define DEFAULT_CONFIG_WasmNontrapping      (true)
-#define DEFAULT_CONFIG_WasmExperimental     (false)
 #define DEFAULT_CONFIG_BgParse              (false)
 #define DEFAULT_CONFIG_BgJitDelayFgBuffer   (0)
 #define DEFAULT_CONFIG_BgJitPendingFuncCap  (31)
@@ -698,8 +697,6 @@ namespace Js
         u"WasmNontrapping",
 
 // WebAssembly Experimental Features
-// Master WasmExperimental flag to activate WebAssembly experimental features
-        u"WasmExperimental",
 
 // The default value of the experimental features will be off because the parent is off
 // Turning on the parent causes the child flag to take on their default value (aka on)
@@ -1769,8 +1766,6 @@ namespace Js
         u"Enable non-trapping float-to-int conversions in WebAssembly",
 
 // WebAssembly Experimental Features
-// Master WasmExperimental flag to activate WebAssembly experimental features
-        u"Enable WebAssembly experimental features",
 
 // The default value of the experimental features will be off because the parent is off
 // Turning on the parent causes the child flag to take on their default value (aka on)
@@ -2441,14 +2436,6 @@ namespace Js
         NoParentFlag,
 
 // WebAssembly Experimental Features
-// Master WasmExperimental flag to activate WebAssembly experimental features
-        NoParentFlag,
-
-// The default value of the experimental features will be off because the parent is off
-// Turning on the parent causes the child flag to take on their default value (aka on)
-// In Edge, we manually turn on the individual child flags
-// Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
-        WasmExperimentalFlag,
 
         NoParentFlag,
         NoParentFlag,
@@ -3129,8 +3116,6 @@ namespace Js
         WasmNontrapping(DEFAULT_CONFIG_WasmNontrapping),
 
 // WebAssembly Experimental Features
-// Master WasmExperimental flag to activate WebAssembly experimental features
-        WasmExperimental(DEFAULT_CONFIG_WasmExperimental),
 
 // The default value of the experimental features will be off because the parent is off
 // Turning on the parent causes the child flag to take on their default value (aka on)
@@ -3780,7 +3765,6 @@ namespace Js
         // set mark for parent flags
         memset((this->flagIsParent),0,(sizeof(this->flagIsParent)));
         if (static_cast<int>(NoParentFlag) < FlagCount) this->flagIsParent[static_cast<int>(NoParentFlag)] = true;
-        if (static_cast<int>(WasmExperimentalFlag) < FlagCount) this->flagIsParent[static_cast<int>(WasmExperimentalFlag)] = true;
         if (static_cast<int>(ES6Flag) < FlagCount) this->flagIsParent[static_cast<int>(ES6Flag)] = true;
         if (static_cast<int>(MitigateSpectreFlag) < FlagCount) this->flagIsParent[static_cast<int>(MitigateSpectreFlag)] = true;
 
@@ -4480,9 +4464,6 @@ namespace Js
             return FlagBoolean;
 
         // WebAssembly Experimental Features
-        // Master WasmExperimental flag to activate WebAssembly experimental features
-        case WasmExperimentalFlag:
-            return FlagBoolean;
 
         // The default value of the experimental features will be off because the parent is off
         // Turning on the parent causes the child flag to take on their default value (aka on)
@@ -5612,9 +5593,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmNontrapping));
 
         // WebAssembly Experimental Features
-        // Master WasmExperimental flag to activate WebAssembly experimental features
-        case WasmExperimentalFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmExperimental));
 
         // The default value of the experimental features will be off because the parent is off
         // Turning on the parent causes the child flag to take on their default value (aka on)
@@ -6764,10 +6742,6 @@ namespace Js
             break;
 
         // WebAssembly Experimental Features
-        // Master WasmExperimental flag to activate WebAssembly experimental features
-        case WasmExperimentalFlag:
-            retValue = DEFAULT_CONFIG_WasmExperimental;
-            break;
 
         // The default value of the experimental features will be off because the parent is off
         // Turning on the parent causes the child flag to take on their default value (aka on)

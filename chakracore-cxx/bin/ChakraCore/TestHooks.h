@@ -83,10 +83,6 @@ int32_t (*pfGetWasmNontrappingFlag)(bool *flag);
 int32_t (*pfSetWasmNontrappingFlag)(bool flag);
 
 // WebAssembly Experimental Features
-// Master WasmExperimental flag to activate WebAssembly experimental features
-bool (*pfIsEnabledWasmExperimentalFlag)();
-int32_t (*pfGetWasmExperimentalFlag)(bool *flag);
-int32_t (*pfSetWasmExperimentalFlag)(bool flag);
 
 // The default value of the experimental features will be off because the parent is off
 // Turning on the parent causes the child flag to take on their default value (aka on)

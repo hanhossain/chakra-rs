@@ -68,8 +68,6 @@ namespace Js
         WasmNontrappingFlag,
 
         // WebAssembly Experimental Features
-        // Master WasmExperimental flag to activate WebAssembly experimental features
-        WasmExperimentalFlag,
 
         // The default value of the experimental features will be off because the parent is off
         // Turning on the parent causes the child flag to take on their default value (aka on)
@@ -1520,9 +1518,6 @@ namespace Js
         Boolean WasmNontrapping;
 
         // WebAssembly Experimental Features
-        // Master WasmExperimental flag to activate WebAssembly experimental features
-        // TODO (hanhossain): remove flag
-        Boolean WasmExperimental;
 
         // The default value of the experimental features will be off because the parent is off
         // Turning on the parent causes the child flag to take on their default value (aka on)

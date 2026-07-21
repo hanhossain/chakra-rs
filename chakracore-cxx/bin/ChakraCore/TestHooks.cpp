@@ -321,21 +321,6 @@ int32_t SetWasmNontrappingFlag(bool flag)
 }
 
 // WebAssembly Experimental Features
-// Master WasmExperimental flag to activate WebAssembly experimental features
-bool IsEnabledWasmExperimentalFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::WasmExperimentalFlag);
-}
-int32_t GetWasmExperimentalFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.WasmExperimental;
-    return S_OK;
-}
-int32_t SetWasmExperimentalFlag(bool flag)
-{
-    Js::Configuration::Global.flags.WasmExperimental = flag;
-    return S_OK;
-}
 
 // The default value of the experimental features will be off because the parent is off
 // Turning on the parent causes the child flag to take on their default value (aka on)
@@ -6438,8 +6423,6 @@ IsEnabledWasmSignExtendsFlag, GetWasmSignExtendsFlag, SetWasmSignExtendsFlag,
 IsEnabledWasmNontrappingFlag, GetWasmNontrappingFlag, SetWasmNontrappingFlag,
 
 // WebAssembly Experimental Features
-// Master WasmExperimental flag to activate WebAssembly experimental features
-IsEnabledWasmExperimentalFlag, GetWasmExperimentalFlag, SetWasmExperimentalFlag,
 
 // The default value of the experimental features will be off because the parent is off
 // Turning on the parent causes the child flag to take on their default value (aka on)
