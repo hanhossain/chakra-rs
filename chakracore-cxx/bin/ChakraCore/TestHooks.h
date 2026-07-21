@@ -92,9 +92,6 @@ bool (*pfIsEnabledWasmSimdFlag)();
 int32_t (*pfGetWasmSimdFlag)(bool *flag);
 int32_t (*pfSetWasmSimdFlag)(bool flag);
 
-bool (*pfIsEnabledAssertIgnoreFlag)();
-int32_t (*pfGetAssertIgnoreFlag)(bool *flag);
-int32_t (*pfSetAssertIgnoreFlag)(bool flag);
 bool (*pfIsEnabledAsyncDebuggingFlag)();
 int32_t (*pfGetAsyncDebuggingFlag)(bool *flag);
 int32_t (*pfSetAsyncDebuggingFlag)(bool flag);

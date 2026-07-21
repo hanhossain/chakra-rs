@@ -135,10 +135,6 @@ namespace Js {
 
     bool Throw::ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message)
     {
-        if (Js::Configuration::Global.flags.IsEnabled(Js::AssertIgnoreFlag))
-        {
-            return true;
-        }
         if (AssertsToConsole)
         {
             fprintf(stderr, "ASSERTION %u: (%s, line %u) %s\n Failure: %s\n", getpid(), fileName, lineNumber, message, error);

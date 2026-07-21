@@ -704,7 +704,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         u"WasmSimd",
 
-        u"AssertIgnore",
         u"AsyncDebugging",
         u"BailOnNoProfileLimit",
         u"BailOnNoProfileRejitLimit",
@@ -1771,7 +1770,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         u"Enable SIMD in WebAssembly",
 
-        u"Ignores asserts if set",
         u"Enable async debugging feature (default: false)",
         u"The limit of bailout on no profile info before triggering a rejit",
         u"The limit of bailout on no profile info before we disable the bailouts",
@@ -2433,7 +2431,6 @@ namespace Js
 
 // WebAssembly Experimental Features
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3118,7 +3115,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         WasmSimd(true),
 
-        AssertIgnore(false),
         AsyncDebugging(DEFAULT_CONFIG_AsyncDebugging),
         BailOnNoProfileLimit(DEFAULT_CONFIG_BailOnNoProfileLimit),
         BailOnNoProfileRejitLimit(DEFAULT_CONFIG_BailOnNoProfileRejitLimit),
@@ -4465,8 +4461,6 @@ namespace Js
         case WasmSimdFlag:
             return FlagBoolean;
 
-        case AssertIgnoreFlag:
-            return FlagBoolean;
         case AsyncDebuggingFlag:
             return FlagBoolean;
         case BailOnNoProfileLimitFlag:
@@ -5590,8 +5584,6 @@ namespace Js
         case WasmSimdFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmSimd));
 
-        case AssertIgnoreFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&AssertIgnore));
         case AsyncDebuggingFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&AsyncDebugging));
         case BailOnNoProfileLimitFlag:
@@ -6736,9 +6728,6 @@ namespace Js
             retValue = true;
             break;
 
-        case AssertIgnoreFlag:
-            retValue = false;
-            break;
         case AsyncDebuggingFlag:
             retValue = DEFAULT_CONFIG_AsyncDebugging;
             break;
