@@ -108,11 +108,6 @@ int32_t (*pfSetBgJitDelayFlag)(int flag);
 bool (*pfIsEnabledCheckAlignmentFlag)();
 int32_t (*pfGetCheckAlignmentFlag)(bool *flag);
 int32_t (*pfSetCheckAlignmentFlag)(bool flag);
-#ifdef CHECK_MEMORY_LEAK
-bool (*pfIsEnabledDumpOnLeakFlag)();
-int32_t (*pfGetDumpOnLeakFlag)(BSTR *flag);
-int32_t (*pfSetDumpOnLeakFlag)(BSTR flag);
-#endif
 bool (*pfIsEnabledCheckOpHelpersFlag)();
 int32_t (*pfGetCheckOpHelpersFlag)(bool *flag);
 int32_t (*pfSetCheckOpHelpersFlag)(bool flag);
