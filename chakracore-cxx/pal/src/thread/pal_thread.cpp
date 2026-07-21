@@ -108,11 +108,6 @@ can't be suspended. */
 pthread_mutex_t ptmEndThread __attribute__((init_priority(200)));
 pthread_cond_t ptcEndThread __attribute__((init_priority(200)));
 
-// Activation function that gets called when an activation is injected into a thread.
-PAL_ActivationFunction g_activationFunction = NULL;
-// Function to check if an activation can be safely injected at a specified context
-PAL_SafeActivationCheckFunction g_safeActivationCheckFunction = NULL;
-
 void ThreadCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool, bool);
 
 PAL_ERROR

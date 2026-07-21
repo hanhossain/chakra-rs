@@ -419,32 +419,8 @@ Parameters :
 
 (no return value)
 --*/
-static void inject_activation_handler([[maybe_unused]] int code, siginfo_t *siginfo, void *context)
+static void inject_activation_handler([[maybe_unused]] int code, [[maybe_unused]] siginfo_t *siginfo, [[maybe_unused]] void *context)
 {
-    // Only accept activations from the current process
-    if (siginfo->si_pid == getpid())
-    {
-        if (g_activationFunction != NULL)
-        {
-            assert(g_safeActivationCheckFunction != NULL);
-
-            native_context_t *ucontext = static_cast<native_context_t*>(context);
-
-            CONTEXT winContext;
-            CONTEXTFromNativeContext(
-                ucontext,
-                &winContext,
-                CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_POINT);
-
-            if (g_safeActivationCheckFunction(CONTEXTGetPC(&winContext), true))
-            {
-                g_activationFunction(&winContext);
-            }
-
-            // Activation function may have modified the context, so update it.
-            CONTEXTToNativeContext(&winContext, ucontext);
-        }
-    }
 }
 
 /*++

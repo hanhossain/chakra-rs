@@ -180,30 +180,6 @@ typedef ucontext_t native_context_t;
 
 #endif // defined(__linux__)
 
-
-
-inline static unsigned long CONTEXTGetPC(LPCONTEXT pContext)
-{
-#if defined(_AMD64_)
-    return pContext->Rip;
-#elif defined(_ARM64_) || defined(_ARM_)
-    return pContext->Pc;
-#else
-#error don't know how to get the program counter for this architecture
-#endif
-}
-
-inline static void CONTEXTSetPC(LPCONTEXT pContext, unsigned long pc)
-{
-#if defined(_AMD64_)
-    pContext->Rip = pc;
-#elif defined(_ARM64_) || defined(_ARM_)
-    pContext->Pc = pc;
-#else
-#error don't know how to set the program counter for this architecture
-#endif
-}
-
 /*++
 Function :
     CONTEXT_CaptureContext
@@ -241,20 +217,6 @@ CONTEXT_GetThreadContextFromThreadState(
     LPCONTEXT lpContext);
 
 #else // defined(__APPLE__)
-/*++
-Function :
-    CONTEXTToNativeContext
-
-    Converts a CONTEXT record to a native context.
-Parameters :
-    const CONTEXT *lpContext : CONTEXT to convert, including
-                               flags that determine which registers are valid in
-                               lpContext and which ones to set in native
-    native_context_t *native : native context to fill in
-Return value :
-    None
---*/
-void CONTEXTToNativeContext(const CONTEXT *lpContext, native_context_t *native);
 
 /*++
 Function :
