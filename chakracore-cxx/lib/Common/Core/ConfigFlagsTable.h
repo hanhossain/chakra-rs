@@ -1513,7 +1513,6 @@ namespace Js
         Boolean WasmCheckVersion;
         Boolean WasmAssignModuleID;
         Boolean WasmIgnoreResponse;
-        // TODO (hanhossain): remove flag
         Number WasmMaxTableSize;
         Boolean WasmThreads;
         Boolean WasmMultiValue;
