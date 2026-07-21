@@ -329,8 +329,6 @@ namespace Js
 #define DEFAULT_CONFIG_RecursiveInlineDepthMax      (8)      // Maximum inline depth for recursive calls
 #define DEFAULT_CONFIG_RecursiveInlineDepthMin      (2)      // Minimum inline depth for recursive call
 #define DEFAULT_CONFIG_InlineInLoopBodyScaleDownFactor    (4)
-#define DEFAULT_CONFIG_PropertyCacheMissPenalty (10)
-#define DEFAULT_CONFIG_PropertyCacheMissThreshold (-100)
 #define DEFAULT_CONFIG_PropertyCacheMissReset (-5000)
 
 #define DEFAULT_CONFIG_HighPrecisionDate    (false)
@@ -698,8 +696,6 @@ namespace Js
         u"BgJitDelay",
 
         u"CheckAlignment",
-        u"PropertyCacheMissPenalty",
-        u"PropertyCacheMissThreshold",
         u"PropertyCacheMissReset",
         u"Debug",
         u"DebugBreak",
@@ -1737,8 +1733,6 @@ namespace Js
         u"Delay to wait for speculative jitting before starting script execution",
 
         u"Insert checks in the native code to verify 8-byte alignment of stack",
-        u"Number of string or symbol cache hits per miss needed to be worth using cache",
-        u"Point at which we disable string or symbol property cache",
         u"Point at which we try to start using string or symbol cache after giving up",
         u"Disable phases (layout, security code, etc) which makes JIT output harder to debug",
         u"Index of the function where you want to break",
@@ -2371,8 +2365,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3028,8 +3020,6 @@ namespace Js
         BgJitDelay(DEFAULT_CONFIG_BgJitDelay),
 
         CheckAlignment(false),
-        PropertyCacheMissPenalty(DEFAULT_CONFIG_PropertyCacheMissPenalty),
-        PropertyCacheMissThreshold(DEFAULT_CONFIG_PropertyCacheMissThreshold),
         PropertyCacheMissReset(DEFAULT_CONFIG_PropertyCacheMissReset),
         Debug(false),
         DebugBreak(),
@@ -4354,10 +4344,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return FlagBoolean;
-        case PropertyCacheMissPenaltyFlag:
-            return FlagNumber;
-        case PropertyCacheMissThresholdFlag:
-            return FlagNumber;
         case PropertyCacheMissResetFlag:
             return FlagNumber;
         case DebugFlag:
@@ -5425,10 +5411,6 @@ namespace Js
 
         case CheckAlignmentFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&CheckAlignment));
-        case PropertyCacheMissPenaltyFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&PropertyCacheMissPenalty));
-        case PropertyCacheMissThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&PropertyCacheMissThreshold));
         case PropertyCacheMissResetFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PropertyCacheMissReset));
         case DebugFlag:

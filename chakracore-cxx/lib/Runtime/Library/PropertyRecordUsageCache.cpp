@@ -3,6 +3,12 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
+/// Number of string or symbol cache hits per miss needed to be worth using cache
+constexpr int PropertyCacheMissPenalty = 10;
+
+/// Point at which we disable string or symbol property cache
+constexpr int PropertyCacheMissThreshold = -100;
+
 namespace Js
 {
     PropertyRecordUsageCache::PropertyRecordUsageCache() :
@@ -37,12 +43,12 @@ namespace Js
 
     bool PropertyRecordUsageCache::ShouldUseCache() const
     {
-        return this->hitRate > (int)CONFIG_FLAG(PropertyCacheMissThreshold);
+        return this->hitRate > PropertyCacheMissThreshold;
     }
 
     void PropertyRecordUsageCache::RegisterCacheMiss()
     {
-        this->hitRate -= (int)CONFIG_FLAG(PropertyCacheMissPenalty);
+        this->hitRate -= PropertyCacheMissPenalty;
         if (this->hitRate < (int)CONFIG_FLAG(PropertyCacheMissReset))
         {
             this->hitRate = 0;

@@ -414,34 +414,6 @@ int32_t SetCheckAlignmentFlag(bool flag)
     return S_OK;
 }
 
-bool IsEnabledPropertyCacheMissPenaltyFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::PropertyCacheMissPenaltyFlag);
-}
-int32_t GetPropertyCacheMissPenaltyFlag(int *flag)
-{
-    *flag = Js::Configuration::Global.flags.PropertyCacheMissPenalty;
-    return S_OK;
-}
-int32_t SetPropertyCacheMissPenaltyFlag(int flag)
-{
-    Js::Configuration::Global.flags.PropertyCacheMissPenalty = flag;
-    return S_OK;
-}
-bool IsEnabledPropertyCacheMissThresholdFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::PropertyCacheMissThresholdFlag);
-}
-int32_t GetPropertyCacheMissThresholdFlag(int *flag)
-{
-    *flag = Js::Configuration::Global.flags.PropertyCacheMissThreshold;
-    return S_OK;
-}
-int32_t SetPropertyCacheMissThresholdFlag(int flag)
-{
-    Js::Configuration::Global.flags.PropertyCacheMissThreshold = flag;
-    return S_OK;
-}
 bool IsEnabledPropertyCacheMissResetFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::PropertyCacheMissResetFlag);
@@ -6040,8 +6012,6 @@ IsEnabledBgJitFlag, GetBgJitFlag, SetBgJitFlag,
 IsEnabledBgJitDelayFlag, GetBgJitDelayFlag, SetBgJitDelayFlag,
 
 IsEnabledCheckAlignmentFlag, GetCheckAlignmentFlag, SetCheckAlignmentFlag,
-IsEnabledPropertyCacheMissPenaltyFlag, GetPropertyCacheMissPenaltyFlag, SetPropertyCacheMissPenaltyFlag,
-IsEnabledPropertyCacheMissThresholdFlag, GetPropertyCacheMissThresholdFlag, SetPropertyCacheMissThresholdFlag,
 IsEnabledPropertyCacheMissResetFlag, GetPropertyCacheMissResetFlag, SetPropertyCacheMissResetFlag,
 IsEnabledDebugFlag, GetDebugFlag, SetDebugFlag,
 
