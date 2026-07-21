@@ -72,12 +72,6 @@ void MachMessage::Receive(mach_port_t hPort)
     m_fPortsOwned = true;
 }
 
-// Indicates whether the message is a request to set the context of a thread.
-bool MachMessage::IsSetThreadRequest()
-{
-    return m_pMessage->header.msgh_id == SET_THREAD_MESSAGE_ID;
-}
-
 // Indicates whether the message is a request to forward the exception
 bool MachMessage::IsForwardExceptionRequest()
 {
@@ -213,7 +207,7 @@ void MachMessage::GetPorts(bool fCalculate, bool fValidThread)
 // which the context should be applied.
 thread_act_t MachMessage::GetThreadContext(CONTEXT *pContext)
 {
-    NONPAL_ASSERTE(IsSetThreadRequest());
+    NONPAL_RETAIL_ASSERT("ASSERT: %s\n", "IsSetThreadRequest()");
 
     memcpy(pContext, &m_pMessage->data.set_thread.new_context, sizeof(CONTEXT));
     m_hThread = m_pMessage->data.set_thread.thread;

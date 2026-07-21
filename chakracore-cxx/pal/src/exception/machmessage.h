@@ -125,7 +125,6 @@ public:
     void Receive(mach_port_t hPort);
 
     // Indicate whether a received message belongs to a particular semantic class.
-    bool IsSetThreadRequest();          // Message is a request to set the context of a particular thread
     bool IsForwardExceptionRequest();   // Message is a request to forward the exception
     bool IsSendOnceDestroyedNotify();   // Message is a notification that a send-once message was destroyed by the receiver
     bool IsExceptionNotification();     // Message is a notification of an exception
