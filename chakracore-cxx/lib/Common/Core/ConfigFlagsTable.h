@@ -1509,18 +1509,25 @@ namespace Js
             Boolean ArrayValidate;
         #endif
         Boolean AsmJs;
+        // TODO: remove
         Boolean AsmJsStopOnError;
+        // TODO: remove
         Boolean AsmJsEdge;
         Boolean Wasm;
         Boolean WasmI64;
         Boolean WasmFastArray;
         Boolean WasmSharedArrayVirtualBuffer;
         Boolean WasmMathExFilter;
+        // TODO: remove
         Boolean WasmCheckVersion;
         Boolean WasmAssignModuleID;
+        // TODO: remove
         Boolean WasmIgnoreLimits;
+        // TODO: remove
         Boolean WasmFold;
+        // TODO: remove
         Boolean WasmIgnoreResponse;
+        // TODO: remove
         Number WasmMaxTableSize;
         Boolean WasmThreads;
         Boolean WasmMultiValue;
@@ -1529,6 +1536,7 @@ namespace Js
 
         // WebAssembly Experimental Features
         // Master WasmExperimental flag to activate WebAssembly experimental features
+        // TODO: remove
         Boolean WasmExperimental;
 
         // The default value of the experimental features will be off because the parent is off
@@ -1537,102 +1545,169 @@ namespace Js
         // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         Boolean WasmSimd;
 
+        // TODO: remove
         Boolean AssertBreak;
+        // TODO: remove
         Boolean AssertPopUp;
+        // TODO: remove
         Boolean AssertIgnore;
+        // TODO: remove
         Boolean AsyncDebugging;
+        // TODO: remove
         Number BailOnNoProfileLimit;
+        // TODO: remove
         Number BailOnNoProfileRejitLimit;
         Boolean BaselineMode;
+        // TODO: remove
         String DumpOnCrash;
+        // TODO: remove
         String FullMemoryDump;
             NumberPairSet BailOut;
+        // TODO: remove
             Boolean BailOutAtEveryLine;
             Boolean BailOutAtEveryByteCode;
+        // TODO: remove
             Boolean BailOutAtEveryImplicitCall;
             NumberSet BailOutByteCode;
+        // TODO: remove
         Boolean Benchmark;
         Boolean BgJit;
+        // TODO: remove
         Boolean BgParse;
         Number BgJitDelay;
+        // TODO: remove
         Number BgJitDelayFgBuffer;
+        // TODO: remove
         Number BgJitPendingFuncCap;
 
+        // TODO: remove
         Boolean CreateFunctionProxy;
+        // TODO: remove
         Boolean HybridFgJit;
+        // TODO: remove
         Number HybridFgJitBgQueueLengthThreshold;
+        // TODO: remove
         Boolean BytecodeHist;
+        // TODO: remove
         Boolean CurrentSourceInfo;
+        // TODO: remove
         Boolean CFGLog;
         Boolean CheckAlignment;
+        // TODO: remove
         Boolean CheckEmitBufferPermissions;
         #ifdef CHECK_MEMORY_LEAK
+        // TODO: remove
             Boolean CheckMemoryLeak;
+        // TODO: remove
             String DumpOnLeak;
         #endif
+        // TODO: remove
         Boolean CheckOpHelpers;
+        // TODO: remove
         Boolean CloneInlinedPolymorphicCaches;
+        // TODO: remove
         Boolean ConcurrentRuntime;
+        // TODO: remove
         Number ConstructorInlineThreshold;
+        // TODO: remove
         Number ConstructorCallsRequiredToFinalizeCachedType;
+        // TODO: remove
         Number PropertyCacheMissPenalty;
+        // TODO: remove
         Number PropertyCacheMissThreshold;
+        // TODO: remove
         Number PropertyCacheMissReset;
+        // TODO: remove
         Boolean Debug;
+        // TODO: remove
         NumberSet DebugBreak;
+        // TODO: remove
         NumberTrioSet StatementDebugBreak;
+        // TODO: remove
         Phases DebugBreakOnPhaseBegin;
 
+        // TODO: remove
         Boolean DebugWindow;
         Boolean ParserStateCache;
+        // TODO: remove
         Boolean CompressParserStateCache;
         Boolean DeferTopLevelTillFirstCall;
         Number DeferParse;
+        // TODO: remove
         Boolean DirectCallTelemetryStats;
+        // TODO: remove
         Boolean DisableArrayBTree;
+        // TODO: remove
         Boolean DisableRentalThreading;
+        // TODO: remove
         Boolean DisableVTuneSourceLineInfo;
+        // TODO: remove
         Boolean DisplayMemStats;
         Phases Dump;
         #ifdef DUMP_FRAGMENTATION_STATS
+        // TODO: remove
             Boolean DumpFragmentationStats;
         #endif
+        // TODO: remove
         Boolean DumpIRAddresses;
+        // TODO: remove
         Boolean DumpLineNoInColor;
         #ifdef RECYCLER_DUMP_OBJECT_GRAPH
+        // TODO: remove
             Boolean DumpObjectGraphOnExit;
+        // TODO: remove
             Boolean DumpObjectGraphOnCollect;
         #endif
+        // TODO: remove
         Boolean DumpEvalStringOnRemoval;
+        // TODO: remove
         Boolean DumpObjectGraphOnEnum;
         #ifdef DYNAMIC_PROFILE_STORAGE
-            String DynamicProfileCache; String Dpc;
+            String DynamicProfileCache;
+        // TODO: remove
+        String Dpc;
+        // TODO: remove
             String DynamicProfileCacheDir;
-            String DynamicProfileInput; String Dpi;
+            String DynamicProfileInput;
+        // TODO: remove
+        String Dpi;
         #endif
         #ifdef EDIT_AND_CONTINUE
+        // TODO: remove
             Boolean EditTest;
         #endif
+        // TODO: remove
         Boolean WininetProfileCache;
+        // TODO: remove
         Boolean NoDynamicProfileInMemoryCache;
+        // TODO: remove
         Boolean ProfileBasedSpeculativeJit;
+        // TODO: remove
         Number ProfileBasedSpeculationCap;
+        // TODO: remove
         Boolean ExecuteByteCodeBufferReturnsInvalidByteCode;
+        // TODO: remove
         Number ExpirableCollectionGCCount;
+        // TODO: remove
         Number ExpirableCollectionTriggerThreshold;
         Boolean SkipSplitOnNoResult;
+        // TODO: remove
         Boolean Force32BitByteCode;
 
         Boolean CollectGarbage;
 
         Boolean Intl;
+        // TODO: remove
         Boolean IntlBuiltIns;
         Boolean IntlPlatform;
 
         Boolean JsBuiltIn;
+        // TODO: remove
         Boolean JitRepro;
+        // TODO: remove
         Boolean EntryPointInfoRpcData;
 
+        // TODO: remove
         Boolean LdChakraLib;
         Boolean TestChakraLib;
 
@@ -1650,22 +1725,28 @@ namespace Js
         // Per ES6 feature/flag
 
         Boolean ES7AsyncAwait;
+        // TODO: remove
         Boolean ES6DateParseFix;
         Boolean ES6FunctionNameFull;
         Boolean ES6Generators;
         Boolean ES7ExponentiationOperator;
 
+        // TODO: remove
         Boolean ES7ValuesEntries;
+        // TODO: remove
         Boolean ES7TrailingComma;
+        // TODO: remove
         Boolean ES6IsConcatSpreadable;
         Boolean ES6Math;
 
         Boolean ESDynamicImport;
 
         Boolean ES6Module;
+        // TODO: remove
         Boolean ES6Object;
         Boolean ES6Number;
         Boolean ES6ObjectLiterals;
+        // TODO: remove
         Boolean ES6Proxy;
         Boolean ES6Rest;
         Boolean ES6Spread;
@@ -1674,11 +1755,14 @@ namespace Js
         Boolean ES2018ObjectRestSpread;
 
         Boolean ES6PrototypeChain;
+        // TODO: remove
         Boolean ES6ToPrimitive;
         Boolean ES6ToLength;
         Boolean ES6ToStringTag;
         Boolean ES6Unicode;
+        // TODO: remove
         Boolean ES6UnicodeVerbose;
+        // TODO: remove
         Boolean ES6Unscopables;
         Boolean ES6RegExSticky;
         Boolean ES2018RegExDotAll;
@@ -1693,6 +1777,7 @@ namespace Js
         // Also, the corresponding helpers in JnHelperMethodList.h should be marked as being reentrant
         Boolean ES6RegExSymbols;
 
+        // TODO: remove
         Boolean ES6Verbose;
         Boolean ESObjectGetOwnPropertyDescriptors;
 
@@ -1707,6 +1792,7 @@ namespace Js
         Boolean ESNumericSeparator;
 
         // ES Nullish coalescing operator support (??)
+        // TODO: remove
         Boolean ESNullishCoalescingOperator;
 
         // ES Hashbang support for interpreter directive syntax
@@ -1715,9 +1801,11 @@ namespace Js
         // ES Symbol.prototype.description flag
         Boolean ESSymbolDescription;
 
+        // TODO: remove
         Boolean ESArrayFindFromLast;
 
         // ES Promise.any and AggregateError flag
+        // TODO: remove
         Boolean ESPromiseAny;
 
         // ES import.meta keyword meta-property
@@ -1729,293 +1817,468 @@ namespace Js
         // This flag to be removed once JITing generator functions is stable
         Boolean JitES6Generators;
 
+        // TODO: remove
         Boolean FastLineColumnCalculation;
+        // TODO: remove
         String Filename;
+        // TODO: remove
         Boolean FreeRejittedCode;
+        // TODO: remove
         Boolean ForceGuardPages;
+        // TODO: remove
         Boolean PrintGuardPageBounds;
+        // TODO: remove
         Boolean ForceLegacyEngine;
         Phases Force;
         Phases Stress;
         Boolean ForceArrayBTree;
+        // TODO: remove
         Boolean StrongArraySort;
+        // TODO: remove
         Boolean ForceCleanPropertyOnCollect;
+        // TODO: remove
         Boolean ForceCleanCacheOnCollect;
         Boolean ForceGCAfterJSONParse;
+        // TODO: remove
         Boolean ForceDecommitOnCollect;
         Boolean ForceDeferParse;
+        // TODO: remove
         Boolean ForceDiagnosticsMode;
+        // TODO: remove
         Boolean ForceGetWriteWatchOOM;
+        // TODO: remove
         Boolean ForcePostLowerGlobOptInstrString;
+        // TODO: remove
         Boolean ForceSplitScope;
+        // TODO: remove
         Boolean EnumerateSpecialPropertiesInDebugger;
+        // TODO: remove
         Boolean EnableContinueAfterExceptionWrappersForHelpers;
+        // TODO: remove
         Boolean EnableContinueAfterExceptionWrappersForBuiltIns;
+        // TODO: remove
         Boolean EnableFunctionSourceReportForHeapEnum;
+        // TODO: remove
         Number ForceFragmentAddressSpace;
+        // TODO: remove
         Number ForceOOMOnEBCommit;
+        // TODO: remove
         Boolean ForceDynamicProfile;
         Boolean ForceES5Array;
         Boolean ForceAsmJsLinkFail;
+        // TODO: remove
         Boolean ForceExpireOnNonCacheCollect;
+        // TODO: remove
         Boolean ForceFastPath;
+        // TODO: remove
         Boolean ForceFloatPref;
         Boolean ForceJITLoopBody;
         Boolean ForceStaticInterpreterThunk;
+        // TODO: remove
         Boolean DumpCommentsFromReferencedFiles;
+        // TODO: remove
         Number DelayFullJITSmallFunc;
         Boolean EnableFatalErrorOnOOM;
 
         #if defined(_M_ARM32_OR_ARM64)
+        // TODO: remove
             Boolean ForceLocalsPtr;
         #endif
+        // TODO: remove
         Boolean DeferLoadingAvailableSource;
         Boolean ForceNative;
         Boolean ForceSerialized;
+        // TODO: remove
         Number ForceSerializedBytecodeMajorVersion;
+        // TODO: remove
         Number ForceSerializedBytecodeVersionSchema;
         Boolean ForceStrictMode;
         Boolean ForceUndoDefer;
+        // TODO: remove
         Boolean ForceBlockingConcurrentCollect;
+        // TODO: remove
         Boolean FreTestDiagMode;
         #ifdef BYTECODE_TESTING
+        // TODO: remove
             Number ByteCodeBranchLimit;
+        // TODO: remove
             Boolean MediumByteCodeLayout;
+        // TODO: remove
             Boolean LargeByteCodeLayout;
         #endif
+        // TODO: remove
         Number InduceCodeGenFailure;
+        // TODO: remove
         Number InduceCodeGenFailureSeed;
         Number InjectPartiallyInitializedInterpreterFrameError;
         Number InjectPartiallyInitializedInterpreterFrameErrorType;
+        // TODO: remove
         Boolean GenerateByteCodeBufferReturnsCantGenerate;
         Number GoptCleanupThreshold;
+        // TODO: remove
         Number AsmGoptCleanupThreshold;
         Boolean HighPrecisionDate;
+        // TODO: remove
         Number InlineCountMax;
-        Number InlineCountMaxInLoopBodies; Number icminlb;
-        Number InlineInLoopBodyScaleDownFactor; Number iilbsdf;
+        // TODO: remove
+        Number InlineCountMaxInLoopBodies;
+        // TODO: remove
+        Number icminlb;
+        Number InlineInLoopBodyScaleDownFactor;
+        // TODO: remove
+        Number iilbsdf;
+        // TODO: remove
         Number InlineThreshold;
+        // TODO: remove
         Number AggressiveInlineCountMax;
+        // TODO: remove
         Number AggressiveInlineThreshold;
+        // TODO: remove
         Number InlineThresholdAdjustCountInLargeFunction;
+        // TODO: remove
         Number InlineThresholdAdjustCountInMediumSizedFunction;
+        // TODO: remove
         Number InlineThresholdAdjustCountInSmallFunction;
+        // TODO: remove
         Number AsmJsInlineAdjust;
+        // TODO: remove
         String Interpret;
+        // TODO: remove
         Phases Instrument;
+        // TODO: remove
         Number JitQueueThreshold;
+        // TODO: remove
         Number LoopInlineThreshold;
+        // TODO: remove
         Number LeafInlineThreshold;
+        // TODO: remove
         Number ConstantArgumentInlineThreshold;
+        // TODO: remove
         Number RecursiveInlineThreshold;
+        // TODO: remove
         Number RecursiveInlineDepthMax;
+        // TODO: remove
         Number RecursiveInlineDepthMin;
+        // TODO: remove
         Number RedeferralCap;
+        // TODO: remove
         Number Loop;
-        Number LoopInterpretCount; Number lic;
+        Number LoopInterpretCount;
+        Number lic;
+        // TODO: remove
         Number LoopProfileIterations;
+        // TODO: remove
         Number OutsideLoopInlineThreshold;
+        // TODO: remove
         Number MaxFuncInlineDepth;
+        // TODO: remove
         Number MaxNumberOfInlineesWithLoop;
         #ifdef MEMSPECT_TRACKING
+        // TODO: remove
             Phases Memspect;
         #endif
+        // TODO: remove
         Number PolymorphicInlineThreshold;
+        // TODO: remove
         Boolean PrimeRecycler;
+        // TODO: remove
         Boolean TraceEngineRefcount;
         #if defined(CHECK_MEMORY_LEAK)
+        // TODO: remove
             Boolean LeakStackTrace;
+        // TODO: remove
             Boolean ForceMemoryLeak;
         #endif
+        // TODO: remove
         Boolean DumpAfterFinalGC;
         Boolean ForceOldDateAPI;
 
+        // TODO: remove
         Number JitLoopBodyHotLoopThreshold;
+        // TODO: remove
         Number LoopBodySizeThresholdToDisableOpts;
 
+        // TODO: remove
         Number MaxJitThreadCount;
+        // TODO: remove
         Boolean ForceMaxJitThreadCount;
 
+        // TODO: remove
         Boolean MitigateSpectre;
 
+        // TODO: remove
         Boolean AddMaskingBlocks;
 
+        // TODO: remove
         Boolean PoisonVarArrayLoad;
+        // TODO: remove
         Boolean PoisonIntArrayLoad;
+        // TODO: remove
         Boolean PoisonFloatArrayLoad;
+        // TODO: remove
         Boolean PoisonTypedArrayLoad;
+        // TODO: remove
         Boolean PoisonStringLoad;
+        // TODO: remove
         Boolean PoisonObjectsForLoads;
 
+        // TODO: remove
         Boolean PoisonVarArrayStore;
+        // TODO: remove
         Boolean PoisonIntArrayStore;
+        // TODO: remove
         Boolean PoisonFloatArrayStore;
+        // TODO: remove
         Boolean PoisonTypedArrayStore;
+        // TODO: remove
         Boolean PoisonStringStore;
+        // TODO: remove
         Boolean PoisonObjectsForStores;
 
         Number MinInterpretCount;
+        // TODO: remove
         Number MinSimpleJitRunCount;
-        Number MaxInterpretCount; Number Mic;
+        Number MaxInterpretCount;
+        Number Mic;
         Number MaxSimpleJitRunCount; Number Msjrc;
         Number MinMemOpCount; Number Mmoc;
 
         #if ENABLE_COPYONACCESS_ARRAY
+        // TODO: remove
             Number MaxCopyOnAccessArrayLength;
+        // TODO: remove
             Number MinCopyOnAccessArrayLength;
+        // TODO: remove
             Number CopyOnAccessArraySegmentCacheSize;
         #endif
 
+        // TODO: remove
         Number MinTemplatizedJitRunCount;
+        // TODO: remove
         Number MinAsmJsInterpreterRunCount;
 
+        // TODO: remove
         Number MinTemplatizedJitLoopRunCount;
         Number MaxTemplatizedJitRunCount; Number Mtjrc;
         Number MaxAsmJsInterpreterRunCount; Number Maic;
 
+        // TODO: remove
         Number AutoProfilingInterpreter0Limit;
+        // TODO: remove
         Number ProfilingInterpreter0Limit;
+        // TODO: remove
         Number AutoProfilingInterpreter1Limit;
+        // TODO: remove
         Number SimpleJitLimit;
+        // TODO: remove
         Number ProfilingInterpreter1Limit;
 
+        // TODO: remove
         String ExecutionModeLimits; String Eml;
+        // TODO: remove
         Boolean EnforceExecutionModeLimits; Boolean Eeml;
 
         Number SimpleJitAfter; Number Sja;
         Number FullJitAfter; Number Fja;
 
+        // TODO: remove
         Boolean NewSimpleJit;
 
         Number MaxLinearIntCaseCount;
+        // TODO: remove
         Number MaxSingleCharStrJumpTableSize;
+        // TODO: remove
         Number MaxSingleCharStrJumpTableRatio;
         Number MinSwitchJumpTableSize;
         Number MaxLinearStringCaseCount;
+        // TODO: remove
         Number MinDeferredFuncTokenCount;
         #if DBG
+        // TODO: remove
             Number SkipFuncCountForBailOnNoProfile;
         #endif
+        // TODO: remove
         Number MaxJITFunctionBytecodeByteLength;
+        // TODO: remove
         Number MaxJITFunctionBytecodeCount;
+        // TODO: remove
         Number MaxLoopsPerFunction;
+        // TODO: remove
         Number FuncObjectInlineCacheThreshold;
         Boolean NoDeferParse;
+        // TODO: remove
         Boolean NoLogo;
         Boolean OOPJITMissingOpts;
+        // TODO: remove
         Boolean CrashOnOOPJITFailure;
+        // TODO: remove
         Boolean OOPCFGRegistration;
         Boolean ForceJITCFGCheck;
         Boolean UseJITTrampoline;
         Boolean NoNative;
+        // TODO: remove
         Number NopFrequency;
+        // TODO: remove
         Boolean NoStrictMode;
+        // TODO: remove
         Boolean NormalizeStats;
         Phases Off;
+        // TODO: remove
         Phases OffProfiledByteCode;
         Phases On;
         #ifdef ENABLE_TRACE
+        // TODO: remove
             Boolean InMemoryTrace;
+        // TODO: remove
             Number InMemoryTraceBufferSize;
             #ifdef STACK_BACK_TRACE
+        // TODO: remove
                 Boolean TraceWithStack;
             #endif // STACK_BACK_TRACE
         #endif // ENABLE_TRACE
+        // TODO: remove
         Boolean PrintRunTimeDataCollectionTrace;
         #ifdef ENABLE_PREJIT
             Boolean Prejit;
         #endif
+        // TODO: remove
         Boolean PrintSrcInDump;
         #if PROFILE_DICTIONARY
+        // TODO: remove
             Number ProfileDictionary;
         #endif
         #ifdef PROFILE_EXEC
             Phases Profile;
+        // TODO: remove
             Number ProfileThreshold;
         #endif
         #ifdef PROFILE_OBJECT_LITERALS
+        // TODO: remove
             Boolean ProfileObjectLiteral;
         #endif
         #ifdef PROFILE_MEM
+        // TODO: remove
             String ProfileMemory;
         #endif
         #ifdef PROFILE_STRINGS
+        // TODO: remove
             Boolean ProfileStrings;
         #endif
         #ifdef PROFILE_TYPES
+        // TODO: remove
             Boolean ProfileTypes;
         #endif
         #ifdef PROFILE_EVALMAP
+        // TODO: remove
             Boolean ProfileEvalMap;
         #endif
 
         #ifdef PROFILE_BAILOUT_RECORD_MEMORY
+        // TODO: remove
             Boolean ProfileBailOutRecordMemory;
         #endif
 
         #if DBG
+        // TODO: remove
             Boolean ValidateIntRanges;
         #endif
+        // TODO: remove
         Number RejitMaxBailOutCount;
+        // TODO: remove
         Number CallsToBailoutsRatioForRejit;
+        // TODO: remove
         Number LoopIterationsToBailoutsRatioForRejit;
         Number MinBailOutsBeforeRejit;
+        // TODO: remove
         Number MinBailOutsBeforeRejitForLoops;
+        // TODO: remove
         Boolean LibraryStackFrame;
+        // TODO: remove
         Boolean LibraryStackFrameDebugger;
         #ifdef RECYCLER_STRESS
             Boolean RecyclerStress;
+        // TODO: remove
                 Boolean RecyclerBackgroundStress;
+        // TODO: remove
                 Boolean RecyclerConcurrentStress;
+        // TODO: remove
                 Boolean RecyclerConcurrentRepeatStress;
+        // TODO: remove
                 Boolean RecyclerPartialStress;
+        // TODO: remove
             Boolean RecyclerTrackStress;
+        // TODO: remove
             Boolean RecyclerInduceFalsePositives;
         #endif // RECYCLER_STRESS
+        // TODO: remove
         Boolean RecyclerForceMarkInterior;
+        // TODO: remove
             Number RecyclerPriorityBoostTimeout;
+        // TODO: remove
             Number RecyclerThreadCollectTimeout;
+        // TODO: remove
             Boolean EnableConcurrentSweepAlloc; Boolean ecsa;
             Number PageHeap;
+        // TODO: remove
             Boolean PageHeapAllocStack;
+        // TODO: remove
             Boolean PageHeapFreeStack;
+        // TODO: remove
             NumberRange PageHeapBucketNumber;
+        // TODO: remove
             Number PageHeapBlockType;
+        // TODO: remove
             Boolean PageHeapDecommitGuardPage;
         #ifdef RECYCLER_NO_PAGE_REUSE
             Boolean RecyclerNoPageReuse;
         #endif
         #ifdef RECYCLER_MEMORY_VERIFY
             Phases RecyclerVerify;
+        // TODO: remove
             Number RecyclerVerifyPadSize;
         #endif
+        // TODO: remove
         Boolean RecyclerTest;
+        // TODO: remove
         Boolean RecyclerProtectPagesOnRescan;
         #ifdef RECYCLER_VERIFY_MARK
+        // TODO: remove
             Boolean RecyclerVerifyMark;
         #endif
+        // TODO: remove
         Number LowMemoryCap;
+        // TODO: remove
         Number NewPagesCapDuringBGSweeping;
+        // TODO: remove
         Number AllocPolicyLimit;
+        // TODO: remove
         String RuntimeDataOutputFile;
+        // TODO: remove
         Number SpeculationCap;
         #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
+        // TODO: remove
             Phases Stats;
         #endif
         #if EXCEPTION_RECOVERY
+        // TODO: remove
             Boolean SwallowExceptions;
         #endif
         Boolean PrintSystemException;
+        // TODO: remove
         Number SwitchOptHolesThreshold;
+        // TODO: remove
         Number TempMin;
+        // TODO: remove
         Number TempMax;
         Phases Trace;
 
         #if defined(_M_X64)
+        // TODO: remove
             Number LoopAlignNopLimit;
         #endif
 
         #ifdef PROFILE_MEM
+        // TODO: remove
             Phases TraceMemory;
         #endif
         #if DBG_DUMP || defined(RECYCLER_TRACE)
@@ -2025,25 +2288,37 @@ namespace Js
             //    Level 3 = interfaces, methods and parameters
             //    Level 4 = interfaces and properties
             //    Level 5 (default) = ALL
+        // TODO: remove
             Number TraceMetaDataParsing;
+        // TODO: remove
             Boolean TraceWin8Allocations;
+        // TODO: remove
             Boolean TraceWin8DeallocationsImmediate;
+        // TODO: remove
             Boolean PrintWin8StatsDetailed;
+        // TODO: remove
             Boolean TraceProtectPages;
         #endif
+        // TODO: remove
         Boolean TraceAsyncDebugCalls;
         #ifdef TRACK_DISPATCH
+        // TODO: remove
             Boolean TrackDispatch;
         #endif
+        // TODO: remove
         Boolean Verbose;
+        // TODO: remove
         Boolean UseFullName;
+        // TODO: remove
         Boolean Utf8;
         Number Version;
         Boolean WERExceptionSupport;
         Boolean ExtendedErrorStackForTestHost;
         Boolean errorStackTrace;
+        // TODO: remove
         Boolean DoHeapEnumOnEngineShutdown;
         #ifdef HEAP_ENUMERATION_VALIDATION
+        // TODO: remove
             Boolean ValidateHeapEnum;
         #endif
 
@@ -2051,66 +2326,101 @@ namespace Js
             //
             // Regex flags
             //
+        // TODO: remove
             Boolean RegexTracing;
+        // TODO: remove
             Boolean RegexProfile;
             Boolean RegexDebug;
+        // TODO: remove
             Boolean RegexDebugAST;
+        // TODO: remove
             Boolean RegexDebugAnnotatedAST;
+        // TODO: remove
             Boolean RegexBytecodeDebug;
+        // TODO: remove
             Boolean RegexOptimize;
+        // TODO: remove
             Number DynamicRegexMruListSize;
         #endif
 
+        // TODO: remove
         Boolean OptimizeForManyInstances;
+        // TODO: remove
         Boolean EnableArrayTypeMutation;
         Number ArrayMutationTestSeed;
         Phases TestTrace;
+        // TODO: remove
         Boolean EnableEvalMapCleanup;
         #ifdef PROFILE_MEM
+        // TODO: remove
             Boolean TraceObjectAllocation;
         #endif
         Number Sse;
+        // TODO: remove
         Number DeletedPropertyReuseThreshold;
         Boolean ForceStringKeyedSimpleDictionaryTypeHandler;
         Number BigDictionaryTypeHandlerThreshold;
+        // TODO: remove
         Boolean TypeSnapshotEnumeration;
+        // TODO: remove
         Boolean IsolatePrototypes;
+        // TODO: remove
         Boolean ChangeTypeOnProto;
+        // TODO: remove
         Boolean ShareInlineCaches;
+        // TODO: remove
         Boolean DisableDebugObject;
+        // TODO: remove
         Boolean DumpHeap;
+        // TODO: remove
         String autoProxy;
         Number PerfHintLevel;
         #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
+        // TODO: remove
             Boolean MemProtectHeap;
         #endif
         #ifdef RECYCLER_STRESS
+        // TODO: remove
             Boolean MemProtectHeapStress;
+        // TODO: remove
                 Boolean MemProtectHeapBackgroundStress;
+        // TODO: remove
                 Boolean MemProtectHeapConcurrentStress;
+        // TODO: remove
                 Boolean MemProtectHeapConcurrentRepeatStress;
+        // TODO: remove
                 Boolean MemProtectHeapPartialStress;
         #endif
         #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
+        // TODO: remove
             Boolean FixPropsOnPathTypes;
         #endif
+        // TODO: remove
         NumberSet BailoutTraceFilter;
+        // TODO: remove
         NumberSet RejitTraceFilter;
 
         // recycler heuristic flags
+        // TODO: remove
         Number MaxBackgroundFinishMarkCount;
+        // TODO: remove
         Number BackgroundFinishMarkWaitTime;
+        // TODO: remove
         Number MinBackgroundRepeatMarkRescanBytes;
 
         #if defined(_M_X64)
+        // TODO: remove
             Boolean ZeroMemoryWithNonTemporalStore;
         #endif
 
         // recycler memory restrict test flags
+        // TODO: remove
         Number MaxMarkStackPageCount;
+        // TODO: remove
         Number MaxTrackedObjectListCount;
 
         // make the recycler page integration path easier to hit
+        // TODO: remove
         Number NumberAllocPlusSize;
 
         #if DBG
@@ -2118,30 +2428,45 @@ namespace Js
         #endif
 
         #if DBG
+        // TODO: remove
             Number PRNGSeed0;
+        // TODO: remove
             Number PRNGSeed1;
         #endif
 
+        // TODO: remove
         Boolean ClearInlineCachesOnCollect;
+        // TODO: remove
         Number InlineCacheInvalidationListCompactionThreshold;
+        // TODO: remove
         Number ConstructorCacheInvalidationThreshold;
 
+        // TODO: remove
         Number GCMemoryThreshold;
 
         #if DBG
             Number SimulatePolyCacheWithOneTypeForInlineCacheIndex;
         #endif
 
+        // TODO: remove
         Number JITServerIdleTimeout;
+        // TODO: remove
         Number JITServerMaxInactivePageAllocatorCount;
 
+        // TODO: remove
         Boolean StrictWriteBarrierCheck;
+        // TODO: remove
         Boolean WriteBarrierTest;
+        // TODO: remove
         Boolean ForceSoftwareWriteBarrier;
+        // TODO: remove
         Boolean VerifyBarrierBit;
+        // TODO: remove
         Boolean EnableBGFreeZero;
+        // TODO: remove
         Boolean KeepRecyclerTrackData;
 
+        // TODO: remove
         Number MaxSingleAllocSizeInMB;
         bool            flagPresent[FlagCount];
         // save the jscript.config for easier to get the raw input while analyzing dump file
