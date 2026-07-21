@@ -260,7 +260,6 @@ namespace Js
 #endif
 #endif // DEFAULT_CONFIG_BgJitDelay
 #define DEFAULT_CONFIG_AsmJs                (true)
-#define DEFAULT_CONFIG_AsmJsStopOnError     (false)
 
 #define DEFAULT_CONFIG_Wasm               (true)
 #define DEFAULT_CONFIG_WasmI64            (false)
@@ -686,7 +685,6 @@ namespace Js
         u"ArrayValidate",
 #endif
         u"AsmJs",
-        u"AsmJsStopOnError",
         u"Wasm",
         u"WasmI64",
         u"WasmFastArray",
@@ -1760,7 +1758,6 @@ namespace Js
         u"Validate each array for valid elements (default: false)",
 #endif
         u"Enable Asmjs",
-        u"Stop execution on any AsmJs validation errors",
         u"Enable WebAssembly",
         u"Enable Int64 testing for WebAssembly. ArgIns can be [number,string,{low:number,high:number}]. Return values will be {low:number,high:number}",
         u"Enable fast array implementation for WebAssembly",
@@ -2434,7 +2431,6 @@ namespace Js
 #if DBG
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3126,7 +3122,6 @@ namespace Js
         ArrayValidate(false),
 #endif
         AsmJs(DEFAULT_CONFIG_AsmJs),
-        AsmJsStopOnError(DEFAULT_CONFIG_AsmJsStopOnError),
         Wasm(DEFAULT_CONFIG_Wasm),
         WasmI64(DEFAULT_CONFIG_WasmI64),
         WasmFastArray(DEFAULT_CONFIG_WasmFastArray),
@@ -4467,8 +4462,6 @@ namespace Js
         #endif
         case AsmJsFlag:
             return FlagBoolean;
-        case AsmJsStopOnErrorFlag:
-            return FlagBoolean;
         case WasmFlag:
             return FlagBoolean;
         case WasmI64Flag:
@@ -5605,8 +5598,6 @@ namespace Js
         #endif
         case AsmJsFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmJs));
-        case AsmJsStopOnErrorFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&AsmJsStopOnError));
         case WasmFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&Wasm));
         case WasmI64Flag:
@@ -6752,9 +6743,6 @@ namespace Js
         #endif
         case AsmJsFlag:
             retValue = DEFAULT_CONFIG_AsmJs;
-            break;
-        case AsmJsStopOnErrorFlag:
-            retValue = DEFAULT_CONFIG_AsmJsStopOnError;
             break;
         case WasmFlag:
             retValue = DEFAULT_CONFIG_Wasm;
