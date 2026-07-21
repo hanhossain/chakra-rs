@@ -2013,7 +2013,7 @@ Recycler::RescanMark(uint32_t waitTime)
         // Only do background finish mark if we have a time limit or it is forced
         (CUSTOM_PHASE_FORCE1(GetRecyclerFlagsTable(), Js::BackgroundFinishMarkPhase) || waitTime != INFINITE) &&
         // Don't do background finish mark if we failed to finish mark too many times
-        (this->backgroundFinishMarkCount < RecyclerHeuristic::MaxBackgroundFinishMarkCount(this->GetRecyclerFlagsTable())))
+        (this->backgroundFinishMarkCount < RecyclerHeuristic::MaxBackgroundFinishMarkCount()))
     {
         this->PrepareBackgroundFindRoots();
         if (StartConcurrent(CollectionStateConcurrentFinishMark))

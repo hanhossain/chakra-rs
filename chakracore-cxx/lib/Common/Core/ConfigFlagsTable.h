@@ -595,11 +595,6 @@ namespace Js
         BailoutTraceFilterFlag,
         RejitTraceFilterFlag,
 
-        // recycler heuristic flags
-        MaxBackgroundFinishMarkCountFlag,
-        BackgroundFinishMarkWaitTimeFlag,
-        MinBackgroundRepeatMarkRescanBytesFlag,
-
         #if DBG
         InitializeInterpreterSlotsWithInvalidStackVarFlag,
         #endif
@@ -2233,14 +2228,6 @@ namespace Js
         NumberSet BailoutTraceFilter;
         // TODO (hanhossain): remove flag
         NumberSet RejitTraceFilter;
-
-        // recycler heuristic flags
-        // TODO (hanhossain): remove flag
-        Number MaxBackgroundFinishMarkCount;
-        // TODO (hanhossain): remove flag
-        Number BackgroundFinishMarkWaitTime;
-        // TODO (hanhossain): remove flag
-        Number MinBackgroundRepeatMarkRescanBytes;
 
         #if DBG
             Boolean InitializeInterpreterSlotsWithInvalidStackVar;

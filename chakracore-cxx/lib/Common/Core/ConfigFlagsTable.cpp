@@ -1223,11 +1223,6 @@ namespace Js
         u"BailoutTraceFilter",
         u"RejitTraceFilter",
 
-// recycler heuristic flags
-        u"MaxBackgroundFinishMarkCount",
-        u"BackgroundFinishMarkWaitTime",
-        u"MinBackgroundRepeatMarkRescanBytes",
-
 #if DBG
         u"InitializeInterpreterSlotsWithInvalidStackVar",
 #endif
@@ -2221,11 +2216,6 @@ namespace Js
         u"Filter the bailout trace messages to specific bailout kinds.",
         u"Filter the rejit trace messages to specific bailout kinds.",
 
-// recycler heuristic flags
-        u"Maximum number of background finish mark",
-        u"Millisecond to wait for background finish mark",
-        u"Minimum number of bytes rescan to trigger background finish mark",
-
 #if DBG
         u"Enable the initialization of the interpreter local slots with invalid stack vars",
 #endif
@@ -2812,11 +2802,6 @@ namespace Js
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         NoParentFlag,
 #endif
-        NoParentFlag,
-        NoParentFlag,
-
-// recycler heuristic flags
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
 
@@ -3430,11 +3415,6 @@ namespace Js
 #endif
         BailoutTraceFilter(),
         RejitTraceFilter(),
-
-// recycler heuristic flags
-        MaxBackgroundFinishMarkCount(1),
-        BackgroundFinishMarkWaitTime(15),
-        MinBackgroundRepeatMarkRescanBytes(-1),
 
 #if DBG
         InitializeInterpreterSlotsWithInvalidStackVar(false),
@@ -5079,14 +5059,6 @@ namespace Js
         case RejitTraceFilterFlag:
             return FlagNumberSet;
 
-        // recycler heuristic flags
-        case MaxBackgroundFinishMarkCountFlag:
-            return FlagNumber;
-        case BackgroundFinishMarkWaitTimeFlag:
-            return FlagNumber;
-        case MinBackgroundRepeatMarkRescanBytesFlag:
-            return FlagNumber;
-
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
             return FlagBoolean;
@@ -6089,14 +6061,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<NumberSet*>(&BailoutTraceFilter));
         case RejitTraceFilterFlag:
             return reinterpret_cast<void*>(const_cast<NumberSet*>(&RejitTraceFilter));
-
-        // recycler heuristic flags
-        case MaxBackgroundFinishMarkCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxBackgroundFinishMarkCount));
-        case BackgroundFinishMarkWaitTimeFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&BackgroundFinishMarkWaitTime));
-        case MinBackgroundRepeatMarkRescanBytesFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MinBackgroundRepeatMarkRescanBytes));
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:

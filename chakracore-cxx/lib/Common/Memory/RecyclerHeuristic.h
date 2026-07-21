@@ -36,9 +36,8 @@ public:
 
     // Constant heuristic that may be changed by switches
     static uint UncollectedAllocBytesCollection();
-    static uint MaxBackgroundFinishMarkCount(Js::ConfigFlagsTable&);
+    static uint MaxBackgroundFinishMarkCount();
     static uint32_t BackgroundFinishMarkWaitTime(bool, Js::ConfigFlagsTable&);
-    static size_t MinBackgroundRepeatMarkRescanBytes(Js::ConfigFlagsTable&);
     static uint32_t FinishConcurrentCollectWaitTime(Js::ConfigFlagsTable&);
     static uint32_t PriorityBoostTimeout(Js::ConfigFlagsTable&);
     static bool PartialConcurrentNextCollection(double ratio, Js::ConfigFlagsTable& flags);
@@ -70,6 +69,5 @@ private:
     static const uint32_t DefaultFinishConcurrentCollectWaitTime = 1000;                       // 1 second
     static const uint DefaultMaxBackgroundFinishMarkCount = 1;
     static const uint32_t DefaultBackgroundFinishMarkWaitTime = 15; // ms
-    static const size_t DefaultMinBackgroundRepeatMarkRescanBytes = 1 MEGABYTES;
 };
 }
