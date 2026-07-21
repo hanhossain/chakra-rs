@@ -151,20 +151,6 @@ int32_t SetAsmJsStopOnErrorFlag(bool flag)
     Js::Configuration::Global.flags.AsmJsStopOnError = flag;
     return S_OK;
 }
-bool IsEnabledAsmJsEdgeFlag()
-{
-    return Js::Configuration::Global.flags.IsEnabled(Js::AsmJsEdgeFlag);
-}
-int32_t GetAsmJsEdgeFlag(bool *flag)
-{
-    *flag = Js::Configuration::Global.flags.AsmJsEdge;
-    return S_OK;
-}
-int32_t SetAsmJsEdgeFlag(bool flag)
-{
-    Js::Configuration::Global.flags.AsmJsEdge = flag;
-    return S_OK;
-}
 bool IsEnabledWasmFlag()
 {
     return Js::Configuration::Global.flags.IsEnabled(Js::WasmFlag);
@@ -6480,7 +6466,6 @@ IsEnabledArrayValidateFlag, GetArrayValidateFlag, SetArrayValidateFlag,
 #endif
 IsEnabledAsmJsFlag, GetAsmJsFlag, SetAsmJsFlag,
 IsEnabledAsmJsStopOnErrorFlag, GetAsmJsStopOnErrorFlag, SetAsmJsStopOnErrorFlag,
-IsEnabledAsmJsEdgeFlag, GetAsmJsEdgeFlag, SetAsmJsEdgeFlag,
 IsEnabledWasmFlag, GetWasmFlag, SetWasmFlag,
 IsEnabledWasmI64Flag, GetWasmI64Flag, SetWasmI64Flag,
 IsEnabledWasmFastArrayFlag, GetWasmFastArrayFlag, SetWasmFastArrayFlag,

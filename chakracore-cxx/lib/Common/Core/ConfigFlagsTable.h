@@ -54,7 +54,6 @@ namespace Js
         #endif
         AsmJsFlag,
         AsmJsStopOnErrorFlag,
-        AsmJsEdgeFlag,
         WasmFlag,
         WasmI64Flag,
         WasmFastArrayFlag,
@@ -1511,8 +1510,6 @@ namespace Js
         Boolean AsmJs;
         // TODO: remove
         Boolean AsmJsStopOnError;
-        // TODO: remove
-        Boolean AsmJsEdge;
         Boolean Wasm;
         Boolean WasmI64;
         Boolean WasmFastArray;

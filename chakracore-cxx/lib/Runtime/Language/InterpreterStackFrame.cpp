@@ -2416,15 +2416,6 @@ namespace Js
                 AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Accessing var import %s has side effects", this->scriptContext->GetPropertyName(import.field)->GetBuffer());
                 return this->ProcessLinkFailedAsmJsModule();
             }
-            if (CONFIG_FLAG(AsmJsEdge))
-            {
-                // emscripten had a bug which caused this check to fail in some circumstances, so this check fails for some demos
-                if (!TaggedNumber::Is(value) && (!VarIs<RecyclableObject>(value) || DynamicType::Is(VarTo<RecyclableObject>(value)->GetTypeId())))
-                {
-                    AsmJSCompiler::OutputError(this->scriptContext, u"Asm.js Runtime Error : Var import %s must be primitive", this->scriptContext->GetPropertyName(import.field)->GetBuffer());
-                    goto linkFailure;
-                }
-            }
 
             if (type.isInt())
             {
