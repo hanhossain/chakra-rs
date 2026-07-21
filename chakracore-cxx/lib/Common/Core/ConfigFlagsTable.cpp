@@ -704,7 +704,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         u"WasmSimd",
 
-        u"AssertBreak",
         u"AssertPopUp",
         u"AssertIgnore",
         u"AsyncDebugging",
@@ -1773,7 +1772,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         u"Enable SIMD in WebAssembly",
 
-        u"Debug break on assert",
         u"Pop up asserts (default: false)",
         u"Ignores asserts if set",
         u"Enable async debugging feature (default: false)",
@@ -3123,7 +3121,6 @@ namespace Js
 // Not having the DEFAULT_CONFIG_XXXX macro ensures we use CONFIG_FLAG_RELEASE instead of CONFIG_FLAG
         WasmSimd(true),
 
-        AssertBreak(false),
         AssertPopUp(false),
         AssertIgnore(false),
         AsyncDebugging(DEFAULT_CONFIG_AsyncDebugging),
@@ -4472,8 +4469,6 @@ namespace Js
         case WasmSimdFlag:
             return FlagBoolean;
 
-        case AssertBreakFlag:
-            return FlagBoolean;
         case AssertPopUpFlag:
             return FlagBoolean;
         case AssertIgnoreFlag:
@@ -5601,8 +5596,6 @@ namespace Js
         case WasmSimdFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WasmSimd));
 
-        case AssertBreakFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&AssertBreak));
         case AssertPopUpFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&AssertPopUp));
         case AssertIgnoreFlag:
@@ -6751,9 +6744,6 @@ namespace Js
             retValue = true;
             break;
 
-        case AssertBreakFlag:
-            retValue = false;
-            break;
         case AssertPopUpFlag:
             retValue = false;
             break;
