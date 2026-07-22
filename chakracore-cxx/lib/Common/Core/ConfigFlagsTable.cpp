@@ -1143,7 +1143,6 @@ namespace Js
 #endif
         u"Verbose",
         u"UseFullName",
-        u"Utf8",
         u"Version",
         u"WERExceptionSupport",
         u"ExtendedErrorStackForTestHost",
@@ -2097,7 +2096,6 @@ namespace Js
 #endif
         u"Dump details",
         u"Enable fully qualified name",
-        u"Use UTF8 for file output",
         // todo (hanhossain): flag end
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
         u"WER feature for extended exception support. Enabled when WinRT is enabled",
@@ -2645,7 +2643,6 @@ namespace Js
 #ifdef TRACK_DISPATCH
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         // todo (hanhossain): flag end
@@ -3219,7 +3216,6 @@ namespace Js
 #endif
         Verbose(DEFAULT_CONFIG_Verbose),
         UseFullName(DEFAULT_CONFIG_UseFullName),
-        Utf8(false),
         Version(6 ),
         WERExceptionSupport(false),
         ExtendedErrorStackForTestHost(DEFAULT_CONFIG_ExtendedErrorStackForTestHost),
@@ -4781,8 +4777,6 @@ namespace Js
             return FlagBoolean;
         case UseFullNameFlag:
             return FlagBoolean;
-        case Utf8Flag:
-            return FlagBoolean;
         case VersionFlag:
             return FlagNumber;
         case WERExceptionSupportFlag:
@@ -5716,8 +5710,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&Verbose));
         case UseFullNameFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&UseFullName));
-        case Utf8Flag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&Utf8));
         case VersionFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Version));
         case WERExceptionSupportFlag:
@@ -6562,9 +6554,6 @@ namespace Js
             break;
         case UseFullNameFlag:
             retValue = DEFAULT_CONFIG_UseFullName;
-            break;
-        case Utf8Flag:
-            retValue = false;
             break;
         case WERExceptionSupportFlag:
             retValue = false;

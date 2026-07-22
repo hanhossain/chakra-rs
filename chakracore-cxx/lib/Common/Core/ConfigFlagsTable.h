@@ -535,7 +535,6 @@ namespace Js
         #endif
         VerboseFlag,
         UseFullNameFlag,
-        Utf8Flag,
         VersionFlag,
         WERExceptionSupportFlag,
         ExtendedErrorStackForTestHostFlag,
@@ -2099,8 +2098,6 @@ namespace Js
         Boolean Verbose;
         // TODO (hanhossain): remove flag
         Boolean UseFullName;
-        // TODO (hanhossain): remove flag
-        Boolean Utf8;
         // todo (hanhossain): flag end
         Number Version;
         Boolean WERExceptionSupport;
