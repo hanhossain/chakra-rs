@@ -391,7 +391,6 @@ namespace Js
 #define DEFAULT_CONFIG_DynamicRegexMruListSize (16)
 #define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
 #define DEFAULT_CONFIG_AsmGoptCleanupThreshold  (500)
-#define DEFAULT_CONFIG_OptimizeForManyInstances (false)
 
 #define DEFAULT_CONFIG_DeferParseThreshold             (4 * 1024) // Unit is number of characters
 #define DEFAULT_CONFIG_ProfileBasedDeferParseThreshold (100)      // Unit is number of characters
@@ -1174,7 +1173,6 @@ namespace Js
         u"DynamicRegexMruListSize",
 #endif
 
-        u"OptimizeForManyInstances",
         u"ArrayMutationTestSeed",
         u"TestTrace",
         u"Sse",
@@ -2139,7 +2137,6 @@ namespace Js
         u"Size of the MRU list for dynamic regexes",
 #endif
 
-        u"Optimize script engine for many instances (low memory footprint per engine, assume low spare CPU cycles) (default: false)",
         // todo (hanhossain): flag end
         u"Seed used for the array mutation",
         u"Test trace for the given phase",
@@ -2700,7 +2697,6 @@ namespace Js
         NoParentFlag,
 #endif
 
-        NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
@@ -3283,7 +3279,6 @@ namespace Js
         DynamicRegexMruListSize(DEFAULT_CONFIG_DynamicRegexMruListSize),
 #endif
 
-        OptimizeForManyInstances(DEFAULT_CONFIG_OptimizeForManyInstances),
         ArrayMutationTestSeed(0),
         TestTrace(),
         Sse(DEFAULT_CONFIG_Sse),
@@ -4871,8 +4866,6 @@ namespace Js
             return FlagNumber;
         #endif
 
-        case OptimizeForManyInstancesFlag:
-            return FlagBoolean;
         case ArrayMutationTestSeedFlag:
             return FlagNumber;
         case TestTraceFlag:
@@ -5826,8 +5819,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&DynamicRegexMruListSize));
         #endif
 
-        case OptimizeForManyInstancesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&OptimizeForManyInstances));
         case ArrayMutationTestSeedFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&ArrayMutationTestSeed));
         case TestTraceFlag:
@@ -6702,9 +6693,6 @@ namespace Js
             break;
         #endif
 
-        case OptimizeForManyInstancesFlag:
-            retValue = DEFAULT_CONFIG_OptimizeForManyInstances;
-            break;
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
             retValue = DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler;
             break;

@@ -559,7 +559,6 @@ namespace Js
         DynamicRegexMruListSizeFlag,
         #endif
 
-        OptimizeForManyInstancesFlag,
         ArrayMutationTestSeedFlag,
         TestTraceFlag,
         SseFlag,
@@ -2144,8 +2143,6 @@ namespace Js
             Number DynamicRegexMruListSize;
         #endif
 
-        // TODO (hanhossain): remove flag
-        Boolean OptimizeForManyInstances;
         // todo (hanhossain): flag end
         Number ArrayMutationTestSeed;
         Phases TestTrace;

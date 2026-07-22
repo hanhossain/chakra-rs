@@ -99,7 +99,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     JsUtil::DoublyLinkedListElement<ThreadContext>(),
     allocationPolicyManager(allocationPolicyManager),
     threadService(threadServiceCallback),
-    isOptimizedForManyInstances(Js::Configuration::Global.flags.OptimizeForManyInstances),
+    isOptimizedForManyInstances(false),
     bgJit(Js::Configuration::Global.flags.BgJit),
     pageAllocator(allocationPolicyManager, PageAllocatorType_Thread, Js::Configuration::Global.flags, 0, RecyclerHeuristic::Instance.DefaultMaxFreePageCount,
         false
