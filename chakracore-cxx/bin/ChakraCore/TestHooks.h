@@ -13,13 +13,11 @@ interface ICustomConfigFlags;
 struct TestHooks
 {
     using SetConfigFlagsPtr = int32_t(*)(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags);
-    typedef int32_t(*SetConfigFilePtr)(char16_t* strConfigFile);
     typedef int32_t(*PrintConfigFlagsUsageStringPtr)(void);
     typedef int32_t(*SetAssertToConsoleFlagPtr)(bool flag);
     typedef int(*LogicalStringCompareImpl)(const char16_t* p1, int p1size, const char16_t* p2, int p2size);
 
     SetConfigFlagsPtr pfSetConfigFlags;
-    SetConfigFilePtr  pfSetConfigFile;
     PrintConfigFlagsUsageStringPtr pfPrintConfigFlagsUsageString;
     SetAssertToConsoleFlagPtr pfSetAssertToConsoleFlag;
     LogicalStringCompareImpl pfLogicalCompareStringImpl;

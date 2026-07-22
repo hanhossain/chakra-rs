@@ -22,30 +22,14 @@ class ConfigParser
 private:
     static const int  MaxTokenSize  = 512;
     static const int MaxRegSize = 2048;
-    static const char16_t* featureKeyName ;
-    bool _hasReadConfig;
-
-    Js::ConfigFlagsTable& _flags;
-    const char16_t* _configFileName;
-
 public:
     static ConfigParser s_moduleConfigParser;
 
-    ConfigParser(Js::ConfigFlagsTable& outputFlags, const char16_t* configFileName = u"jscript.config") :
-        _flags(outputFlags),
-        _hasReadConfig(false),
-        _configFileName(configFileName)
+    ConfigParser()
     {
     }
 
     static void ParseOnModuleLoad(CmdLineArgsParser& parser);
 
-    static void ParseCustomConfigFile(CmdLineArgsParser& parser, const char16_t* strConfigFile)
-    {
-        s_moduleConfigParser.ParseConfig(parser, strConfigFile);
-    }
-
-    void ParseConfig(CmdLineArgsParser &parser, const char16_t* strCustomConfigFile = nullptr);
     void ProcessConfiguration();
-    bool HasReadConfig() { return _hasReadConfig; }
 };

@@ -24,7 +24,6 @@ public:
     bool Test262; bool Test262IsEnabled;
     bool Module; bool ModuleIsEnabled;
     bool TrackRejectedPromises; bool TrackRejectedPromisesIsEnabled;
-    BSTR CustomConfigFile; bool CustomConfigFileIsEnabled;
     bool ExecuteWithBgParse; bool ExecuteWithBgParseIsEnabled;
 
     static HostConfigFlags flags;

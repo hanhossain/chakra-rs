@@ -598,11 +598,6 @@ int main_internal(rust::Vec<rust::String> &args)
     int32_t exitCode = E_FAIL;
     if (success)
     {
-        if (HostConfigFlags::flags.CustomConfigFile != NULL)
-        {
-            ChakraRTInterface::SetConfigFile(HostConfigFlags::flags.CustomConfigFile);
-        }
-
         // On linux, execute on the same thread
         exitCode = ExecuteTestWithMemoryCheck(argInfo.filename_, chRuntime, jsrtAttributes);
     }

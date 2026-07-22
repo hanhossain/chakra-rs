@@ -77,13 +77,6 @@ int32_t SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFl
     return S_OK;
 }
 
-int32_t SetConfigFile(char16_t* strConfigFile)
-{
-    CmdLineArgsParser parser;
-    ConfigParser::ParseCustomConfigFile(parser, strConfigFile);
-    return S_OK;
-}
-
 int32_t PrintConfigFlagsUsageString()
 {
     Js::ConfigFlagsTable::PrintUsageString();
@@ -103,7 +96,6 @@ int32_t OnChakraCoreLoaded()
     TestHooks testHooks =
     {
         SetConfigFlags,
-        SetConfigFile,
         PrintConfigFlagsUsageString,
         SetAssertToConsoleFlag,
         PlatformAgnostic::UnicodeText::Internal::LogicalStringCompareImpl,
