@@ -642,7 +642,6 @@ namespace Js
         }
 #if ENABLE_REGEX_CONFIG_OPTIONS
         RegexHelperTrace(scriptContext, UnifiedRegex::RegexStats::Test, regularExpression, input);
-        UnifiedRegex::RegexPattern::TraceTestCache(cacheHit, input, cachedInput, !useCache);
 #endif
 
         if (cacheHit)

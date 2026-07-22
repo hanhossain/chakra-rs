@@ -213,10 +213,5 @@ namespace UnifiedRegex
         w->Print(isLiteral ? u"literal" : u"dynamic");
         w->Print(u" */");
     }
-
-    /* static */
-    void RegexPattern::TraceTestCache(bool cacheHit, Js::JavascriptString* input, Js::JavascriptString* cachedValue, bool disabled)
-    {
-    }
 #endif
 }
