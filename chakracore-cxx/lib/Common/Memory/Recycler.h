@@ -1042,7 +1042,6 @@ private:
 #endif
 #ifdef RECYCLER_TRACE
     CollectionParam collectionParam;
-    void PrintBlockStatus(HeapBucket * heapBucket, HeapBlock * heapBlock, char16_t const * name);
 #endif
 #ifdef RECYCLER_MEMORY_VERIFY
     uint verifyPad;

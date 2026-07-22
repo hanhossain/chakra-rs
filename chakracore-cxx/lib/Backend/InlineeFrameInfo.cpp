@@ -5,12 +5,6 @@
 #include "Backend.h"
 #include "Common/InlinedFrameLayout.h"
 
-#define BAILOUT_VERBOSE_TRACE(functionBody, ...) \
-    if (Js::Configuration::Global.flags.Verbose && Js::Configuration::Global.flags.Trace.IsEnabled(Js::BailOutPhase,functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId())) \
-    { \
-        Output::Print(__VA_ARGS__); \
-    }
-
 #define BAILOUT_FLUSH(functionBody) \
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::BailOutPhase, functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId()) || \
     Js::Configuration::Global.flags.Trace.IsEnabled(Js::BailOutPhase, functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId())) \
@@ -202,13 +196,13 @@ void InlineeFrameRecord::Restore(Js::FunctionBody* functionBody, InlinedFrameLay
     Assert(this->inlineDepth != 0);
     Assert(inlineeStartOffset != 0);
 
-    BAILOUT_VERBOSE_TRACE(functionBody, u"Restore function object: ");
+    ;
     // No deepCopy needed for just the function
     Js::Var varFunction = this->Restore(this->functionOffset, /*isFloat64*/ false, /*isInt32*/ false, layout, functionBody, boxValues);
     Assert(Js::VarIs<Js::ScriptFunction>(varFunction));
 
     Js::ScriptFunction* function = Js::VarTo<Js::ScriptFunction>(varFunction);
-    BAILOUT_VERBOSE_TRACE(functionBody, u"Inlinee: %s [%d.%d] \n", function->GetFunctionBody()->GetDisplayName(), function->GetFunctionBody()->GetSourceContextId(), function->GetFunctionBody()->GetLocalFunctionId());
+    ;
 
     inlinedFrame->function = function;
     inlinedFrame->callInfo.InlineeStartOffset = inlineeStartOffset;
@@ -216,7 +210,7 @@ void InlineeFrameRecord::Restore(Js::FunctionBody* functionBody, InlinedFrameLay
     inlinedFrame->MapArgs([=, this](uint i, Js::Var* varRef) {
         bool isFloat64 = floatArgs.Test(i) != 0;
         bool isInt32 = losslessInt32Args.Test(i) != 0;
-        BAILOUT_VERBOSE_TRACE(functionBody, u"Restore argument %d: ", i);
+        ;
 
         // Forward deepCopy flag for the arguments in case their data must be guaranteed
         // to have its own lifetime
@@ -324,12 +318,12 @@ Js::Var InlineeFrameRecord::Restore(int offset, bool isFloat64, bool isInt32, Js
     }
     else
     {
-        BAILOUT_VERBOSE_TRACE(functionBody, u"Stack offset %10d", offset);
+        ;
         if (isFloat64)
         {
             dblValue = layout->GetDoubleAtOffset(offset);
             value = Js::JavascriptNumber::New(dblValue, functionBody->GetScriptContext());
-            BAILOUT_VERBOSE_TRACE(functionBody, u", value: %f (ToVar: 0x%p)", dblValue, value);
+            ;
         }
         else if (isInt32)
         {
@@ -345,11 +339,11 @@ Js::Var InlineeFrameRecord::Restore(int offset, bool isFloat64, bool isInt32, Js
     {
         int32_t int32Value = ::Math::PointerCastToIntegralTruncate<int32_t>(value);
         value = Js::JavascriptNumber::ToVar(int32Value, functionBody->GetScriptContext());
-        BAILOUT_VERBOSE_TRACE(functionBody, u", value: %10d (ToVar: 0x%p)", int32Value, value);
+        ;
     }
     else
     {
-        BAILOUT_VERBOSE_TRACE(functionBody, u", value: 0x%p", value);
+        ;
         if (boxStackInstance)
         {
             // Do not deepCopy in this call to BoxStackInstance because this should be used for
@@ -360,11 +354,11 @@ Js::Var InlineeFrameRecord::Restore(int offset, bool isFloat64, bool isInt32, Js
 
             if (oldValue != value)
             {
-                BAILOUT_VERBOSE_TRACE(functionBody, u" (Boxed: 0x%p)", value);
+                ;
             }
         }
     }
-    BAILOUT_VERBOSE_TRACE(functionBody, u"\n");
+    ;
     return value;
 }
 

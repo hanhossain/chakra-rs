@@ -872,10 +872,6 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
             {
                 auto dumpFalsePositive = [&]()
                 {
-                    if (CONFIG_FLAG(Verbose))
-                    {
-                        Output::Print(u"False Positive: %S+0x%x => 0x%p -> 0x%p\n", typeName, offset, objectAddress, target);
-                    }
                 };
 
                 if (IsLikelyRuntimeFalseReference(objectStartAddress, offset, typeName))
@@ -1190,9 +1186,6 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
 
             Assert(!this->HasPendingDisposeObjects());
 
-#ifdef RECYCLER_TRACE
-            recycler->PrintBlockStatus(this->heapBucket, this, u"[**26**] ending sweep Pass1, state returned SweepStateEmpty.");
-#endif
             return SweepStateEmpty;
     }
 
@@ -1209,14 +1202,6 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
     if (expectSweepCount == 0)
     {
         // nothing has been freed
-#ifdef RECYCLER_TRACE
-        if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
-        {
-            SweepState stateReturned = (this->freeCount == 0) ? SweepStateFull : state;
-            CollectionState collectionState = recycler->collectionState;
-            Output::Print(u"[GC #%d] [HeapBucket 0x%p] HeapBlock 0x%p %s %d [CollectionState: %d] \n", recycler->collectionCount, this->heapBucket, this, u"[**37**] heapBlock swept. State returned:", stateReturned, collectionState);
-        }
-#endif
         return (this->freeCount == 0) ? SweepStateFull : state;
     }
 
@@ -1241,19 +1226,10 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
         RECYCLER_STATS_INC(recycler, heapBlockConcurrentSweptCount[this->GetHeapBlockType()]);
         // This heap block has objects that need to be swept concurrently.
         this->isPendingConcurrentSweep = true;
-#ifdef RECYCLER_TRACE
-        if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase))
-        {
-            recycler->PrintBlockStatus(this->heapBucket, this, u"[**29**] heapBlock swept. State returned: SweepStatePendingSweep");
-    }
-#endif
         return SweepStatePendingSweep;
     }
     Assert(!recyclerSweep.IsBackground());
 
-#ifdef RECYCLER_TRACE
-    recycler->PrintBlockStatus(this->heapBucket, this, u"[**16**] calling SweepObjects.");
-#endif
     SweepObjects<SweepMode_InThread>(recycler);
     if (HasPendingDisposeObjects())
     {
@@ -1385,10 +1361,6 @@ SmallHeapBlockT<TBlockAttributes>::SweepObjects(Recycler * recycler)
 
     // The count of marked, non-free objects should still be the same
     Assert(this->markCount == this->GetMarkCountForSweep());
-
-#ifdef RECYCLER_TRACE
-    recycler->PrintBlockStatus(this->heapBucket, this, u"[**30**] finished SweepObjects, heapblock SWEPT.");
-#endif
 }
 
 template <class TBlockAttributes>

@@ -4502,7 +4502,7 @@ Instr::Dump(IRDumpFlags flags)
 
             if (dumpMarkTempNumber)
             {
-                if (Js::Configuration::Global.flags.Verbose || OpCodeAttr::TempNumberProducing(this->m_opcode))
+                if (OpCodeAttr::TempNumberProducing(this->m_opcode))
                 {
                     if (this->dstIsTempNumberTransferred)
                     {
@@ -4517,7 +4517,7 @@ Instr::Dump(IRDumpFlags flags)
             }
             if (dumpMarkTempObject)
             {
-                if (Js::Configuration::Global.flags.Verbose || OpCodeAttr::TempObjectProducing(this->m_opcode))
+                if (OpCodeAttr::TempObjectProducing(this->m_opcode))
                 {
                     if (this->dstIsTempObject)
                     {

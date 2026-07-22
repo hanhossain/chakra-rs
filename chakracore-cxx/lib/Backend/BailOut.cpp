@@ -367,7 +367,7 @@ const char16_t * const falseString = u"false";
 
 #define BAILOUT_KIND_TRACE(functionBody, bailOutKind, ...) \
     if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::BailOutPhase, functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId()) && \
-        ((bailOutKind) != IR::BailOnSimpleJitToFullJitLoopBody || CONFIG_FLAG(Verbose))) \
+        ((bailOutKind) != IR::BailOnSimpleJitToFullJitLoopBody)) \
     { \
         Output::Print(__VA_ARGS__); \
         if (bailOutKind != IR::BailOutInvalid) \
@@ -377,15 +377,9 @@ const char16_t * const falseString = u"false";
         Output::Print(u"\n"); \
     }
 
-#define BAILOUT_VERBOSE_TRACE(functionBody, bailOutKind, ...) \
-    if (Js::Configuration::Global.flags.Verbose && Js::Configuration::Global.flags.Trace.IsEnabled(Js::BailOutPhase,functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId())) \
-    { \
-        Output::Print(__VA_ARGS__); \
-    }
-
 #define BAILOUT_TESTTRACE(functionBody, bailOutKind, ...) \
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::BailOutPhase, functionBody->GetSourceContextId(),functionBody->GetLocalFunctionId()) && \
-        ((bailOutKind) != IR::BailOnSimpleJitToFullJitLoopBody || CONFIG_FLAG(Verbose))) \
+        ((bailOutKind) != IR::BailOnSimpleJitToFullJitLoopBody)) \
     { \
         Output::Print(__VA_ARGS__); \
         if (bailOutKind != IR::BailOutInvalid) \
@@ -604,11 +598,11 @@ BailOutRecord::RestoreValues(IR::BailOutKind bailOutKind, Js::JavascriptCallStac
     if (this->localOffsetsCount)
     {
         Js::FunctionBody* functionBody = newInstance->function->GetFunctionBody();
-        BAILOUT_VERBOSE_TRACE(functionBody, bailOutKind, u"BailOut:   Register #%3d: Not live\n", 0);
+        ;
 
         for (uint i = 1; i < functionBody->GetConstantCount(); i++)
         {
-            BAILOUT_VERBOSE_TRACE(functionBody, bailOutKind, u"BailOut:   Register #%3d: Constant table\n", i);
+            ;
         }
 
         if (functionBody->IsInDebugMode())
@@ -652,8 +646,7 @@ BailOutRecord::RestoreValues(IR::BailOutKind bailOutKind, Js::JavascriptCallStac
         Assert(bailOutReturnValue->returnValueRegSlot < newInstance->GetJavascriptFunction()->GetFunctionBody()->GetLocalsCount());
         newInstance->m_localSlots[bailOutReturnValue->returnValueRegSlot] = bailOutReturnValue->returnValue;
 
-        BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"BailOut:   Register #%3d: Return, value: 0x%p\n",
-            bailOutReturnValue->returnValueRegSlot, bailOutReturnValue->returnValue);
+        ;
     }
 
     if (branchValueRegSlot != Js::Constants::NoRegister)
@@ -734,14 +727,6 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
     double dblValue = 0.0;
     int32_t int32Value = 0;
 
-    char16_t const * name = u"OutParam";
-    if (isLocal)
-    {
-        name = u"Register";
-    }
-
-    BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"BailOut:   %s #%3d: ", name, regSlot);
-
     if (offset < 0)
     {
         // Stack offset are negative
@@ -782,7 +767,7 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
 
         }
 
-        BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"Stack offset %6d", offset);
+        ;
     }
     else if (offset > 0)
     {
@@ -797,9 +782,9 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
                 Assert(RegTypes[LinearScanMD::GetRegisterFromSaveIndex(offset)] == TyFloat64);
                 dblValue = *((double*)&(registerSaves[offset - 1]));
 #ifdef _M_ARM
-                BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"Register %-4S  %4d", RegNames[(offset - RegD0) / 2 + RegD0], offset);
+                ;
 #else
-                BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"Register %-4S  %4d", RegNames[LinearScanMD::GetRegisterFromSaveIndex(offset)], offset);
+                ;
 #endif
             }
             else
@@ -815,7 +800,7 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
                     value = registerSaves[offset - 1];
                 }
 
-                BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"Register %-4S  %4d", RegNames[LinearScanMD::GetRegisterFromSaveIndex(offset)], offset);
+                ;
             }
         }
         else if (BailOutRecord::IsArgumentsObject((uint)offset))
@@ -829,7 +814,7 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
                 value = EnsureArguments(newInstance, layout, scriptContext, pArgumentsObject);
             }
             Assert(value);
-            BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"Arguments object");
+            ;
             boxStackInstance = false;
         }
         else
@@ -844,27 +829,27 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
             {
                 value = this->constants[constantIndex];
             }
-            BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"Constant index %4d", constantIndex);
+            ;
             boxStackInstance = false;
         }
     }
     else
     {
         // Consider Assert(false) here
-        BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"Not live\n");
+        ;
         return;
     }
 
     if (isFloat64)
     {
         value = Js::JavascriptNumber::New(dblValue, scriptContext);
-        BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u", value: %f (ToVar: 0x%p)", dblValue, value);
+        ;
     }
     else if (isInt32)
     {
         Assert(!value);
         value = Js::JavascriptNumber::ToVar(int32Value, scriptContext);
-        BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u", value: %10d (ToVar: 0x%p)", int32Value, value);
+        ;
     }
     else if (regSlot == newInstance->function->GetFunctionBody()->GetYieldRegister() && newInstance->function->GetFunctionBody()->IsCoroutine())
     {
@@ -874,16 +859,16 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
 
         if (ThreadContext::IsOnStack(value))
         {
-            BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u", value: 0x%p (Resume Yield Object)", value);
+            ;
         }
         else
         {
-            BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u", value: 0x%p (Yield Return Value)", value);
+            ;
         }
     }
     else
     {
-        BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u", value: 0x%p", value);
+        ;
         if (boxStackInstance)
         {
             Js::Var oldValue = value;
@@ -891,14 +876,14 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
 
             if (oldValue != value)
             {
-                BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u" (Boxed: 0x%p)", value);
+                ;
             }
         }
     }
 
     values[regSlot] = value;
 
-    BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"\n");
+    ;
 }
 
 void
@@ -1361,14 +1346,14 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
         for(uint i = 0; i < args.Info.Count; ++i)
         {
             const Js::Var arg = args.Values[i];
-            BAILOUT_VERBOSE_TRACE(executeFunction, bailOutKind, u"BailOut:   Argument #%3u: value: 0x%p", i, arg);
+            ;
             const Js::Var boxedArg = Js::JavascriptOperators::BoxStackInstance(arg, functionScriptContext, /* allowStackFunction */ true, /* deepCopy */ false);
             if(boxedArg != arg)
             {
                 args.Values[i] = boxedArg;
-                BAILOUT_VERBOSE_TRACE(executeFunction, bailOutKind, u" (Boxed: 0x%p)", boxedArg);
+                ;
             }
-            BAILOUT_VERBOSE_TRACE(executeFunction, bailOutKind, u"\n");
+            ;
         }
     }
 
@@ -1647,7 +1632,7 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
         dynamicProfileInfo->RecordImplicitCallFlags(threadContext->GetImplicitCallFlags());
     }
 
-    BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"BailOut:   Return Value: 0x%p", aReturn);
+    ;
     if (bailOutRecord->globalBailOutRecordTable->isInlinedConstructor)
     {
         AssertMsg(!executeFunction->IsGenerator(), "Generator functions are not expected to be inlined. If this changes then need to use the real user args here from the generator object");
@@ -1658,10 +1643,10 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
         aReturn = Js::JavascriptOperators::BoxStackInstance(oldValue, functionScriptContext, /* allowStackFunction */ true, /* deepCopy */ false);
         if (oldValue != aReturn)
         {
-            BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u" (Boxed: 0x%p)", aReturn);
+            ;
         }
     }
-    BAILOUT_VERBOSE_TRACE(newInstance->function->GetFunctionBody(), bailOutKind, u"\n");
+    ;
     return aReturn;
 }
 

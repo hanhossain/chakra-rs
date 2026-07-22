@@ -1822,16 +1822,6 @@ namespace Js
 
             cbNeeded = utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::Cesu8>(utf8Script, cbUtf8Buffer, reinterpret_cast<const char16_t*>(script), ccLength);
 
-#if DBG_DUMP && defined(PROFILE_MEM)
-            if (Js::Configuration::Global.flags.TraceMemory.IsEnabled(Js::ParsePhase) && Configuration::Global.flags.Verbose)
-            {
-                Output::Print(u"Loading script.\n"
-                    u"  Unicode (in bytes)    %u\n"
-                    u"  UTF-8 size (in bytes) %u\n"
-                    u"  Expected savings      %d\n", length * sizeof(char16_t), cbNeeded, length * sizeof(char16_t) - cbNeeded);
-            }
-#endif
-
             // Free unused bytes
             Assert(cbNeeded + 1 <= cbUtf8Buffer);
             *ppSourceInfo = Utf8SourceInfo::New(this, utf8Script, static_cast<int>(length),
@@ -4770,70 +4760,6 @@ ScriptContext::GetJitFuncRangeCache()
             }
             Output::Print(u"%-40s %6d\n", u"TOTAL,", totalRejits);
             Output::Print(u"\n\n");
-
-            // If in verbose mode, dump data for each FunctionBody
-            if (CONFIG_FLAG(Verbose) && rejitStatsMap != nullptr)
-            {
-                // Aggregated data
-                Output::Print(u"%-30s %14s %14s\n", u"Function (#),", u"Bailout Count,", u"Rejit Count");
-                rejitStatsMap->Map([](Js::FunctionBody const *body, RejitStats *stats, RecyclerWeakReference<const Js::FunctionBody> const*) {
-                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    for (uint i = 0; i < NumRejitReasons; ++i)
-                        stats->m_totalRejits += stats->m_rejitReasonCounts[i];
-
-                    stats->m_bailoutReasonCounts->Map([stats](uint kind, uint val) {
-                        stats->m_totalBailouts += val;
-                    });
-
-                    char16_t buf[256];
-
-                    swprintf_s(buf, u"%s (%s),", body->GetExternalDisplayName(), (const_cast<Js::FunctionBody*>(body))->GetDebugNumberSet(debugStringBuffer)); //TODO Kount
-                    Output::Print(u"%-30s %14d, %14d\n", buf, stats->m_totalBailouts, stats->m_totalRejits);
-
-                });
-                Output::Print(u"\n\n");
-
-                // Per FunctionBody data
-                rejitStatsMap->Map([](Js::FunctionBody const *body, RejitStats *stats, RecyclerWeakReference<const Js::FunctionBody> const *) {
-                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    char16_t buf[256];
-
-                    swprintf_s(buf, u"%s (%s),", body->GetExternalDisplayName(), (const_cast<Js::FunctionBody*>(body))->GetDebugNumberSet(debugStringBuffer)); //TODO Kount
-                    Output::Print(u"%-30s\n\n", buf);
-
-                    // Dump bailout data
-                    if (stats->m_totalBailouts != 0)
-                    {
-                        Output::Print(u"%10sBailouts:\n", u"");
-
-                        stats->m_bailoutReasonCounts->Map([](uint kind, uint val) {
-                            if (val != 0)
-                            {
-                                char16_t buf[256];
-                                swprintf_s(buf, u"%S,", GetBailOutKindName((IR::BailOutKind)kind));
-                                Output::Print(u"%10s%-40s %6d\n", u"", buf, val);
-                            }
-                        });
-                    }
-                    Output::Print(u"\n");
-
-                    // Dump rejit data.
-                    if (stats->m_totalRejits != 0)
-                    {
-                        Output::Print(u"%10sRejits:\n", u"");
-                        for (uint i = 0; i < NumRejitReasons; ++i)
-                        {
-                            if (stats->m_rejitReasonCounts[i] != 0)
-                            {
-                                swprintf_s(buf, u"%S,", RejitReasonNames[i]);
-                                Output::Print(u"%10s%-40s %6d\n", u"", buf, stats->m_rejitReasonCounts[i]);
-                            }
-                        }
-                        Output::Print(u"\n\n");
-                    }
-                });
-
-            }
         }
 
         this->ClearBailoutReasonCountsMap();

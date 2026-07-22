@@ -6593,7 +6593,6 @@ namespace Js
         Boolean* settingAsBoolean = this->GetAsBoolean(flag);
         Assert(settingAsBoolean != nullptr);
 
-        Output::VerboseNote(u"FLAG %s = %d\n", FlagNames[static_cast<int>(flag)], value);
         *settingAsBoolean = value;
 
         // check if parent flag
@@ -6609,7 +6608,6 @@ namespace Js
                 // if the parent flag is FALSE, the children flag values are FALSE (always - as disabled)
                 Boolean childValue = value == TRUE ? childDefaultValue : FALSE;
 
-                Output::VerboseNote(u"FLAG %s = %d - setting child flag %s = %d\n", FlagNames[static_cast<int>(flag)], value, FlagNames[static_cast<int>(childFlag)], childValue);
                 this->SetAsBoolean(childFlag, childValue);
 
                 // get next child flag
@@ -6700,7 +6698,6 @@ namespace Js
             {
                 Boolean childValue = value;
 
-                Output::VerboseNote(u"FLAG %s = %d - setting child flag %s = %d\n", FlagNames[static_cast<int>(parentFlag)], value, FlagNames[static_cast<int>(childFlag)], childValue);
                 this->SetAsBoolean(childFlag, childValue);
             }
 

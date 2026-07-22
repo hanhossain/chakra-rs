@@ -31,21 +31,8 @@ using namespace Js;
 
             const Js::TypeEquivalenceRecord& record = guard->GetCache()->record;
             ScriptContext* scriptContext = type->GetScriptContext();
-            if (isEquivalent)
-            {
-                if (Js::Configuration::Global.flags.Verbose)
-                {
-                    Output::Print(u"    <start>, ");
-                    for (uint pi = 0; pi < propertyCount; pi++)
-                    {
-                        const EquivalentPropertyEntry* refInfo = &record.properties[pi];
-                        const PropertyRecord* propertyRecord = scriptContext->GetPropertyName(refInfo->propertyId);
-                        Output::Print(u"%s(#%d)@%ua%dw%d, ", propertyRecord->GetBuffer(), propertyRecord->GetPropertyId(), refInfo->slotIndex, refInfo->isAuxSlot, refInfo->mustBeWritable);
-                    }
-                    Output::Print(u"<end>\n");
-                }
-            }
-            else
+
+            if (!isEquivalent)
             {
                 const EquivalentPropertyEntry* refInfo = &record.properties[failedPropertyIndex];
                 Js::PropertyEquivalenceInfo info(Constants::NoSlot, false, false);

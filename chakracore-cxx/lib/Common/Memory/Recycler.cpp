@@ -5776,17 +5776,6 @@ Recycler::PrintCollectTrace(Js::Phase phase, bool finish, bool noConcurrentWork)
 }
 #endif
 
-#ifdef RECYCLER_TRACE
-void
-Recycler::PrintBlockStatus(HeapBucket * heapBucket, HeapBlock * heapBlock, char16_t const * statusMessage)
-{
-    if (this->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
-    {
-        Output::Print(u"[GC #%d] [HeapBucket 0x%p] HeapBlock 0x%p %s [CollectionState: %d] \n", this->collectionCount, heapBucket, heapBlock, statusMessage, static_cast<CollectionState>(this->collectionState));
-    }
-}
-#endif
-
 #ifdef RECYCLER_STATS
 void
 Recycler::PrintHeapBlockStats(char16_t const * name, HeapBlock::HeapBlockType type)

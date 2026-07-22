@@ -556,48 +556,45 @@ void Opnd::DumpValueType()
         return;
     }
 
-    if(!CONFIG_FLAG(Verbose))
+    // Skip printing the value type when it's obvious since verbose mode is off
+    switch(this->GetKind())
     {
-        // Skip printing the value type when it's obvious since verbose mode is off
-        switch(this->GetKind())
+    case OpndKindIntConst:
+    case OpndKindInt64Const:
+    case OpndKindFloatConst:
+        return;
+
+    case OpndKindReg:
         {
-        case OpndKindIntConst:
-        case OpndKindInt64Const:
-        case OpndKindFloatConst:
-            return;
-
-        case OpndKindReg:
+            StackSym *const sym = this->AsRegOpnd()->m_sym;
+            if(sym && (
+                sym->IsInt32() ||
+                sym->IsFloat32() ||
+                sym->IsFloat64() ||
+                sym->IsInt64() ||
+                sym->IsUint64()
+                ))
             {
-                StackSym *const sym = this->AsRegOpnd()->m_sym;
-                if(sym && (
-                    sym->IsInt32() ||
-                    sym->IsFloat32() ||
-                    sym->IsFloat64() ||
-                    sym->IsInt64() ||
-                    sym->IsUint64()
-                    ))
-                {
-                    return;
-                }
-                break;
-            }
-
-        case OpndKindAddr:
-            if(this->AsAddrOpnd()->m_address && this->AsAddrOpnd()->IsVar())
-            {
-                IR::AddrOpnd *addrOpnd = this->AsAddrOpnd();
-                Js::Var address = addrOpnd->decodedValue ? addrOpnd->decodedValue : addrOpnd->m_address;
-
-                // Tagged int might be encoded here, so check the type
-                if (addrOpnd->GetAddrOpndKind() == AddrOpndKindConstantVar
-                    || Js::TaggedInt::Is(address) || (
-                    Js::JavascriptNumber::Is_NoTaggedIntCheck(address)))
-                {
-                    return;
-                }
+                return;
             }
             break;
         }
+
+    case OpndKindAddr:
+        if(this->AsAddrOpnd()->m_address && this->AsAddrOpnd()->IsVar())
+        {
+            IR::AddrOpnd *addrOpnd = this->AsAddrOpnd();
+            Js::Var address = addrOpnd->decodedValue ? addrOpnd->decodedValue : addrOpnd->m_address;
+
+            // Tagged int might be encoded here, so check the type
+            if (addrOpnd->GetAddrOpndKind() == AddrOpndKindConstantVar
+                || Js::TaggedInt::Is(address) || (
+                Js::JavascriptNumber::Is_NoTaggedIntCheck(address)))
+            {
+                return;
+            }
+        }
+        break;
     }
 
     DumpValueType(m_valueType);

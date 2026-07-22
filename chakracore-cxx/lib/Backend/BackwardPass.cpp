@@ -2964,9 +2964,6 @@ BackwardPass::ProcessBlock(BasicBlock * block)
 
     FOREACH_INSTR_BACKWARD_IN_BLOCK_EDITING(instr, instrPrev, block)
     {
-#if DBG_DUMP
-        TraceInstrUses(block, instr, true);
-#endif
 #if DBG
         if (tracker.active)
         {
@@ -3483,9 +3480,6 @@ BackwardPass::ProcessBlock(BasicBlock * block)
             }
 #endif
             // Continue normal CollectionPass behavior
-#if DBG_DUMP
-            TraceInstrUses(block, instr, false);
-#endif
             continue;
         }
 
@@ -3868,9 +3862,6 @@ BackwardPass::ProcessBlock(BasicBlock * block)
 
         instrPrev = ProcessPendingPreOpBailOutInfo(instr);
 
-#if DBG_DUMP
-        TraceInstrUses(block, instr, false);
-#endif
     }
     NEXT_INSTR_BACKWARD_IN_BLOCK_EDITING;
 
@@ -4322,38 +4313,6 @@ BackwardPass::DumpBlockData(BasicBlock * block, IR::Instr* instr)
     if (byteCodeRegisterUpwardExposed)
     {
         JitAdelete(this->tempAlloc, byteCodeRegisterUpwardExposed);
-    }
-}
-
-void
-BackwardPass::TraceInstrUses(BasicBlock * block, IR::Instr* instr, bool isStart)
-{
-    if ((!IsCollectionPass() || tag == Js::CaptureByteCodeRegUsePhase) && IsTraceEnabled() && Js::Configuration::Global.flags.Verbose)
-    {
-        const char16_t* tagName = 
-            tag == Js::CaptureByteCodeRegUsePhase ? u"CAPTURE BYTECODE REGISTER" : (
-            tag == Js::BackwardPhase ? u"BACKWARD" : (
-            tag == Js::DeadStorePhase ? u"DEADSTORE" :
-            u"UNKNOWN"
-        ));
-        if (isStart)
-        {
-            Output::Print(u">>>>>>>>>>>>>>>>>>>>>> %s: Instr Start\n", tagName);
-        }
-        else
-        {
-            Output::Print(u"---------------------------------------\n");
-        }
-        instr->Dump();
-        DumpBlockData(block, instr);
-        if (isStart)
-        {
-            Output::Print(u"----------------------------------------\n");
-        }
-        else
-        {
-            Output::Print(u"<<<<<<<<<<<<<<<<<<<<<< %s: Instr End\n", tagName);
-        }
     }
 }
 

@@ -877,12 +877,6 @@ Encoder::Encode()
 
         Js::Configuration::Global.flags.DumpIRAddresses = dumpIRAddressesValue;
     }
-
-    if (PHASE_DUMP(Js::EncoderPhase, m_func) && Js::Configuration::Global.flags.Verbose && !m_func->IsOOPJIT())
-    {
-        this->DumpInlineeFrameMap(m_func->GetJITOutput()->GetCodeAddress());
-        Output::Flush();
-    }
 #endif
 }
 

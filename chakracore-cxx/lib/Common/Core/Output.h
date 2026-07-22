@@ -71,7 +71,6 @@ namespace Js
 class Output
 {
 public:
-    static size_t VerboseNote(const char16_t * format, ...);
 #ifdef ENABLE_TRACE
     static size_t Trace(Js::Phase phase, const char16_t *form, ...);
     static size_t Trace2(Js::Phase phase, const char16_t *form, ...);

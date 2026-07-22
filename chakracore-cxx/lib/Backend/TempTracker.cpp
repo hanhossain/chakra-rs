@@ -429,7 +429,7 @@ TempTracker<T>::MarkTemp(StackSym * sym, BackwardPass * backwardPass)
                 // of dependency or not.
 
 #if DBG_DUMP
-                if (T::DoTrace(backwardPass) && Js::Configuration::Global.flags.Verbose)
+                if (T::DoTrace(backwardPass) && false)
                 {
                      Output::Print(u"%s: Loop mark temp check instr:\n", T::GetTraceName());
                      instr->DumpSimple();
