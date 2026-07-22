@@ -1211,8 +1211,8 @@ namespace Js
 
     // Methods
     public:
-        inline  bool            InRange(TRangeUnitData i);
-        inline  bool            ContainsAll();
+        inline  bool            InRange(TRangeUnitData i) const;
+        inline  bool            ContainsAll() const;
         inline  void            Add(TRangeUnitData i, RangeBase<TRangeUnitData>* oppositeRange = nullptr);
         inline  void            Add(TRangeUnitData i, TRangeUnitData j, RangeBase<TRangeUnitData>* oppositeRange = nullptr);
         inline  void            Clear();
@@ -1292,9 +1292,9 @@ namespace Js
 
         void            Enable(Phase phase);
         void            Disable(Phase phase);
-        bool            IsEnabled(Phase phase);
-        bool            IsEnabled(Phase phase, uint sourceContextId, Js::LocalFunctionId functionId);
-        bool            IsEnabledForAll(Phase phase);
+        bool            IsEnabled(Phase phase) const;
+        bool            IsEnabled(Phase phase, uint sourceContextId, Js::LocalFunctionId functionId) const;
+        bool            IsEnabledForAll(Phase phase) const;
         Range *         GetRange(Phase phase);
         Phase           GetFirstPhase();
     };
@@ -2571,7 +2571,7 @@ RangeBase<TRangeUnitData>::Add(TRangeUnitData i, TRangeUnitData j, RangeBase<TRa
 
 template <typename TRangeUnitData>
 bool
-RangeBase<TRangeUnitData>::ContainsAll()
+RangeBase<TRangeUnitData>::ContainsAll() const
 {
     return range.Empty();
 }
@@ -2594,7 +2594,7 @@ Js::RangeBase<TRangeUnitData>::Clear()
 ///----------------------------------------------------------------------------
 
 template <typename TRangeUnitData>
-bool RangeBase<TRangeUnitData>::InRange(TRangeUnitData n)
+bool RangeBase<TRangeUnitData>::InRange(TRangeUnitData n) const
 {
     if (range.Empty())
     {

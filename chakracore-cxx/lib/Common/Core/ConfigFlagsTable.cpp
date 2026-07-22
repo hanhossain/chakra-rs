@@ -196,24 +196,18 @@ namespace Js
     ///----------------------------------------------------------------------------
     ///----------------------------------------------------------------------------
 
-    bool
-    Phases::IsEnabled(Phase phase)
+    bool Phases::IsEnabled(Phase phase) const { return this->phaseList[static_cast<int>(phase)].valid; }
+
+    bool Phases::IsEnabled(Phase phase, uint sourceContextId, Js::LocalFunctionId functionId) const
     {
-        return this->phaseList[static_cast<int>(phase)].valid;
+        return this->phaseList[static_cast<int>(phase)].valid &&
+            this->phaseList[static_cast<int>(phase)].range.InRange(SourceFunctionNode(sourceContextId, functionId));
     }
 
-    bool
-    Phases::IsEnabled(Phase phase, uint sourceContextId, Js::LocalFunctionId functionId)
+    bool Phases::IsEnabledForAll(Phase phase) const
     {
-        return  this->phaseList[static_cast<int>(phase)].valid &&
-                this->phaseList[static_cast<int>(phase)].range.InRange(SourceFunctionNode(sourceContextId, functionId));
-    }
-
-    bool
-    Phases::IsEnabledForAll(Phase phase)
-    {
-        return  this->phaseList[static_cast<int>(phase)].valid &&
-                this->phaseList[static_cast<int>(phase)].range.ContainsAll();
+        return this->phaseList[static_cast<int>(phase)].valid &&
+            this->phaseList[static_cast<int>(phase)].range.ContainsAll();
     }
 
     Range *
