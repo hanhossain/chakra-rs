@@ -144,12 +144,6 @@ namespace Js
             {
                 InitializePrototypes(scriptContext);
             }
-#if DBG_DUMP
-            if (PHASE_DUMP(Js::ByteCodePhase, functionGlobal->GetFunctionProxy()) && Js::Configuration::Global.flags.Verbose)
-            {
-                DumpByteCode();
-            }
-#endif
         }
         catch (const JavascriptException& err)
         {

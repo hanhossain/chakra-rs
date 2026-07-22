@@ -3245,10 +3245,6 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
     }
 
 #if DBG_DUMP
-    if (PHASE_DUMP(Js::ByteCodePhase, funcInfo->byteCodeFunction) && Js::Configuration::Global.flags.Verbose)
-    {
-        pnodeFnc->Dump();
-    }
     if (this->Trace() || PHASE_DUMP(Js::ByteCodePhase, funcInfo->byteCodeFunction))
     {
         Js::ByteCodeDumper::Dump(byteCodeFunction);

@@ -1468,8 +1468,10 @@ void ValueType::ToVerboseString(char (&str)[VALUE_TYPE_MAX_STRING_SIZE]) const
         else
             b &= ~BitPattern(VALUE_TYPE_ARRAY_BIT_COUNT, VALUE_TYPE_COMMON_BIT_COUNT);
     }
-    else if(!CONFIG_FLAG(Verbose))
+    else
+    {
         b &= ~(Bits::IntCanBeUntagged | Bits::IntIsLikelyUntagged); // these will be simplified
+    }
     size_t length = 0;
     bool addUnderscore = false;
     size_t nameIndexOffset = 0;
@@ -1493,7 +1495,7 @@ void ValueType::ToVerboseString(char (&str)[VALUE_TYPE_MAX_STRING_SIZE]) const
                 break;
 
             case Bits::Int:
-                if(!CONFIG_FLAG(Verbose) && !OneOn(Bits::Object))
+                if(!OneOn(Bits::Object))
                 {
                     if(AnyOnExcept(Bits::Likely | Bits::IntCanBeUntagged | Bits::CanBeTaggedValue))
                     {
@@ -1554,7 +1556,7 @@ void ValueType::ToString(char16_t (&str)[VALUE_TYPE_MAX_STRING_SIZE]) const
 
 void ValueType::ToString(char (&str)[VALUE_TYPE_MAX_STRING_SIZE]) const
 {
-    if(IsUninitialized() || CONFIG_FLAG(Verbose))
+    if(IsUninitialized())
     {
         ToVerboseString(str);
         return;

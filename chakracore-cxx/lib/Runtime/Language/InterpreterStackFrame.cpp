@@ -5522,12 +5522,6 @@ namespace Js
         if (entryPointInfo != NULL && entryPointInfo->IsCodeGenDone())
         {
 #if DBG_DUMP
-            if (PHASE_TRACE1(Js::JITLoopBodyPhase) && CONFIG_FLAG(Verbose))
-            {
-                fn->DumpFunctionId(true);
-                Output::Print(u": %-20s LoopBody Execute  Loop: %2d\n", fn->GetDisplayName(), loopNumber);
-                Output::Flush();
-            }
             loopHeader->nativeCount++;
 #endif
 #ifdef BGJIT_STATS

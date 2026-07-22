@@ -360,12 +360,6 @@ bool DynamicProfileStorage::Initialize()
                 }
 
                 Sleep(DELAY_INTERVAL);
-                if (Js::Configuration::Global.flags.Verbose)
-                {
-                    Output::Print(u"  Retrying load of dynamic profile from '%s' (attempt %d)...\n",
-                        (char16_t const *)Js::Configuration::Global.flags.DynamicProfileInput, i + 1);
-                    Output::Flush();
-                }
             }
 
             if (!readSuccessful)
@@ -495,23 +489,7 @@ bool DynamicProfileStorage::ImportFile(__in_z char16_t const * filename, bool al
     errno_t e;
     if (!reader.Init(filename, u"rb", false, &e))
     {
-        if (allowNonExistingFile)
-        {
-            return true;
-        }
-        else
-        {
-            if (Js::Configuration::Global.flags.Verbose)
-            {
-                Output::Print(u"ERROR: DynamicProfileStorage: Unable to open file '%s' to import (%d)\n", filename, e);
-
-                char16_t error_string[256];
-                _wcserror_s(error_string, e);
-                Output::Print(u"ERROR:   For file '%s': %s (%d)\n", filename, error_string, e);
-                Output::Flush();
-            }
-            return false;
-        }
+        return allowNonExistingFile;
     }
 
     uint32_t magic;
