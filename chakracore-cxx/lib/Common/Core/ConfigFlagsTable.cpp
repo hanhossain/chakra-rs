@@ -388,7 +388,6 @@ namespace Js
 #define DEFAULT_CONFIG_RegexDebugAnnotatedAST (true)
 #define DEFAULT_CONFIG_RegexBytecodeDebug   (false)
 #define DEFAULT_CONFIG_RegexOptimize        (true)
-#define DEFAULT_CONFIG_DynamicRegexMruListSize (16)
 #define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
 #define DEFAULT_CONFIG_AsmGoptCleanupThreshold  (500)
 
@@ -1170,7 +1169,6 @@ namespace Js
         u"RegexDebugAnnotatedAST",
         u"RegexBytecodeDebug",
         u"RegexOptimize",
-        u"DynamicRegexMruListSize",
 #endif
 
         u"ArrayMutationTestSeed",
@@ -2133,11 +2131,10 @@ namespace Js
         u"Display Regex AST (requires -RegexDebug to view). [default on]",
         u"Display Regex Annotated AST (requires -RegexDebug and -RegexDebugAST to view). [default on]",
         u"Display layout of UnifiedRegex bytecode (requires -RegexDebug to view).",
+        // todo (hanhossain): flag end
         u"Optimize regular expressions in the unified Regex system (default: true)",
-        u"Size of the MRU list for dynamic regexes",
 #endif
 
-        // todo (hanhossain): flag end
         u"Seed used for the array mutation",
         u"Test trace for the given phase",
         u"Virtually disables SSE-based optimizations above the specified SSE level in the Chakra JIT (does not affect CRT SSE usage)",
@@ -2693,11 +2690,10 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
+        // todo (hanhossain): flag end
         NoParentFlag,
 #endif
 
-        // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3276,7 +3272,6 @@ namespace Js
         RegexDebugAnnotatedAST(DEFAULT_CONFIG_RegexDebugAnnotatedAST),
         RegexBytecodeDebug(DEFAULT_CONFIG_RegexBytecodeDebug),
         RegexOptimize(DEFAULT_CONFIG_RegexOptimize),
-        DynamicRegexMruListSize(DEFAULT_CONFIG_DynamicRegexMruListSize),
 #endif
 
         ArrayMutationTestSeed(0),
@@ -4862,8 +4857,6 @@ namespace Js
             return FlagBoolean;
         case RegexOptimizeFlag:
             return FlagBoolean;
-        case DynamicRegexMruListSizeFlag:
-            return FlagNumber;
         #endif
 
         case ArrayMutationTestSeedFlag:
@@ -5815,8 +5808,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexBytecodeDebug));
         case RegexOptimizeFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexOptimize));
-        case DynamicRegexMruListSizeFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&DynamicRegexMruListSize));
         #endif
 
         case ArrayMutationTestSeedFlag:

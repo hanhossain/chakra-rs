@@ -1166,10 +1166,7 @@ namespace Js
 #endif
 
         ClearArray(this->Cache()->propertyStrings, 80);
-        this->Cache()->dynamicRegexMap =
-            RegexPatternMruMap::New(
-                recycler,
-                REGEX_CONFIG_FLAG(DynamicRegexMruListSize) <= 0 ? 16 : REGEX_CONFIG_FLAG(DynamicRegexMruListSize));
+        this->Cache()->dynamicRegexMap = RegexPatternMruMap::New(recycler, 16);
 
         SourceContextInfo* sourceContextInfo = RecyclerNewStructZ(this->GetRecycler(), SourceContextInfo);
         sourceContextInfo->dwHostSourceContext = Js::Constants::NoHostSourceContext;
@@ -3896,10 +3893,7 @@ namespace Js
             }
         }
 
-        if (REGEX_CONFIG_FLAG(DynamicRegexMruListSize) > 0)
-        {
-            GetDynamicRegexMap()->RemoveRecentlyUnusedItems();
-        }
+        GetDynamicRegexMap()->RemoveRecentlyUnusedItems();
 
         CleanSourceListInternal(true);
     }

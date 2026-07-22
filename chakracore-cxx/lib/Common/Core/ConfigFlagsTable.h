@@ -556,7 +556,6 @@ namespace Js
         RegexDebugAnnotatedASTFlag,
         RegexBytecodeDebugFlag,
         RegexOptimizeFlag,
-        DynamicRegexMruListSizeFlag,
         #endif
 
         ArrayMutationTestSeedFlag,
@@ -2137,13 +2136,10 @@ namespace Js
             Boolean RegexDebugAnnotatedAST;
         // TODO (hanhossain): remove flag
             Boolean RegexBytecodeDebug;
-        // TODO (hanhossain): remove flag
+        // todo (hanhossain): flag end
             Boolean RegexOptimize;
-        // TODO (hanhossain): remove flag
-            Number DynamicRegexMruListSize;
         #endif
 
-        // todo (hanhossain): flag end
         Number ArrayMutationTestSeed;
         Phases TestTrace;
         Number Sse;
