@@ -863,8 +863,6 @@ tokens Scanner<EncodingPolicy>::ScanRegExpConstant(ArenaAllocator* alloc)
     UnifiedRegex::DebugWriter *w = 0;
     if (REGEX_CONFIG_FLAG(RegexDebug))
         w = m_scriptContext->GetRegexDebugWriter();
-    if (REGEX_CONFIG_FLAG(RegexProfile))
-        m_scriptContext->GetRegexStatsDatabase()->BeginProfile();
 #endif
     UnifiedRegex::Node* root = 0;
     charcount_t totalLen = 0, bodyChars = 0, totalChars = 0, bodyLen = 0;

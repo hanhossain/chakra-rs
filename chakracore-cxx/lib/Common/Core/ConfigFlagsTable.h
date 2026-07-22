@@ -550,7 +550,6 @@ namespace Js
         // Regex flags
         //
         RegexTracingFlag,
-        RegexProfileFlag,
         RegexDebugFlag,
         RegexOptimizeFlag,
         #endif
@@ -2124,8 +2123,6 @@ namespace Js
             //
         // TODO (hanhossain): remove flag
             Boolean RegexTracing;
-        // TODO (hanhossain): remove flag
-            Boolean RegexProfile;
         // todo (hanhossain): flag end
             Boolean RegexDebug;
             Boolean RegexOptimize;

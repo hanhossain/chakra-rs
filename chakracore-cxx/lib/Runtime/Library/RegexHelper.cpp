@@ -200,10 +200,6 @@ namespace Js
             return pattern;
         }
 
-#if ENABLE_REGEX_CONFIG_OPTIONS
-        if (REGEX_CONFIG_FLAG(RegexProfile))
-            scriptContext->GetRegexStatsDatabase()->BeginProfile();
-#endif
         BEGIN_TEMP_ALLOCATOR(ctAllocator, scriptContext, u"UnifiedRegexParseAndCompile");
         UnifiedRegex::StandardChars<char16_t>* standardChars = scriptContext->GetThreadContext()->GetStandardChars((char16_t*)0);
         UnifiedRegex::Node* root = 0;
@@ -238,11 +234,6 @@ namespace Js
         UnifiedRegex::RegexPattern* pattern = UnifiedRegex::RegexPattern::New(scriptContext, program, isLiteralSource);
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
-        if (REGEX_CONFIG_FLAG(RegexProfile))
-        {
-            stats = scriptContext->GetRegexStatsDatabase()->GetRegexStats(pattern);
-            scriptContext->GetRegexStatsDatabase()->EndProfile(stats, UnifiedRegex::RegexStats::Parse);
-        }
         if (REGEX_CONFIG_FLAG(RegexTracing))
         {
             UnifiedRegex::DebugWriter* tw = scriptContext->GetRegexDebugWriter();
@@ -250,8 +241,6 @@ namespace Js
             pattern->Print(tw);
             tw->EOL();
         }
-        if (REGEX_CONFIG_FLAG(RegexProfile))
-            scriptContext->GetRegexStatsDatabase()->BeginProfile();
 #endif
 
         UnifiedRegex::Compiler::Compile
@@ -268,11 +257,6 @@ namespace Js
             , stats
 #endif
             );
-
-#if ENABLE_REGEX_CONFIG_OPTIONS
-        if (REGEX_CONFIG_FLAG(RegexProfile))
-            scriptContext->GetRegexStatsDatabase()->EndProfile(stats, UnifiedRegex::RegexStats::Compile);
-#endif
 
         END_TEMP_ALLOCATOR(ctAllocator, scriptContext);
 #ifdef PROFILE_EXEC
@@ -301,13 +285,6 @@ namespace Js
         Assert(regExp);
         Assert(input);
 
-        if (REGEX_CONFIG_FLAG(RegexProfile))
-        {
-            UnifiedRegex::RegexStats* stats =
-                scriptContext->GetRegexStatsDatabase()->GetRegexStats(regExp->GetPattern());
-            stats->useCounts[use]++;
-            stats->inputLength += inputLength;
-        }
         if (REGEX_CONFIG_FLAG(RegexTracing))
         {
             UnifiedRegex::DebugWriter* w = scriptContext->GetRegexDebugWriter();
@@ -1925,11 +1902,6 @@ namespace Js
         Assert(pattern->rep.unified.matcher != 0);
 #if ENABLE_REGEX_CONFIG_OPTIONS
         UnifiedRegex::RegexStats* stats = 0;
-        if (REGEX_CONFIG_FLAG(RegexProfile))
-        {
-            stats = scriptContext->GetRegexStatsDatabase()->GetRegexStats(pattern);
-            scriptContext->GetRegexStatsDatabase()->BeginProfile();
-        }
         UnifiedRegex::DebugWriter* w = 0;
         if (REGEX_CONFIG_FLAG(RegexTracing) && CONFIG_FLAG(Verbose))
             w = scriptContext->GetRegexDebugWriter();
@@ -1946,10 +1918,6 @@ namespace Js
 #endif
                 );
 
-#if ENABLE_REGEX_CONFIG_OPTIONS
-        if (REGEX_CONFIG_FLAG(RegexProfile))
-            scriptContext->GetRegexStatsDatabase()->EndProfile(stats, UnifiedRegex::RegexStats::Execute);
-#endif
         return pattern->GetGroup(0);
     }
 

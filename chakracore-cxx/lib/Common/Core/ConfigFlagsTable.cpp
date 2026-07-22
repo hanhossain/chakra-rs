@@ -382,7 +382,6 @@ namespace Js
 #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
 #define DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold (50)  // Threshold at which Entry Point Collection is triggered
 #define DEFAULT_CONFIG_RegexTracing         (false)
-#define DEFAULT_CONFIG_RegexProfile         (false)
 #define DEFAULT_CONFIG_RegexDebug           (false)
 #define DEFAULT_CONFIG_RegexOptimize        (true)
 #define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
@@ -1160,7 +1159,6 @@ namespace Js
 // Regex flags
 //
         u"RegexTracing",
-        u"RegexProfile",
         u"RegexDebug",
         u"RegexOptimize",
 #endif
@@ -2120,7 +2118,6 @@ namespace Js
 // Regex flags
 //
         u"Trace all Regex invocations to the output.",
-        u"Collect usage statistics on all Regex invocations.",
         // todo (hanhossain): flag end
         u"Trace compilation of UnifiedRegex expressions.",
         u"Optimize regular expressions in the unified Regex system (default: true)",
@@ -2675,7 +2672,6 @@ namespace Js
 //
 // Regex flags
 //
-        NoParentFlag,
         NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
@@ -3254,7 +3250,6 @@ namespace Js
 // Regex flags
 //
         RegexTracing(DEFAULT_CONFIG_RegexTracing),
-        RegexProfile(DEFAULT_CONFIG_RegexProfile),
         RegexDebug(DEFAULT_CONFIG_RegexDebug),
         RegexOptimize(DEFAULT_CONFIG_RegexOptimize),
 #endif
@@ -4830,8 +4825,6 @@ namespace Js
         //
         case RegexTracingFlag:
             return FlagBoolean;
-        case RegexProfileFlag:
-            return FlagBoolean;
         case RegexDebugFlag:
             return FlagBoolean;
         case RegexOptimizeFlag:
@@ -5775,8 +5768,6 @@ namespace Js
         //
         case RegexTracingFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexTracing));
-        case RegexProfileFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexProfile));
         case RegexDebugFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexDebug));
         case RegexOptimizeFlag:
@@ -6636,9 +6627,6 @@ namespace Js
         //
         case RegexTracingFlag:
             retValue = DEFAULT_CONFIG_RegexTracing;
-            break;
-        case RegexProfileFlag:
-            retValue = DEFAULT_CONFIG_RegexProfile;
             break;
         case RegexDebugFlag:
             retValue = DEFAULT_CONFIG_RegexDebug;
