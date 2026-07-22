@@ -3874,29 +3874,25 @@ namespace Js
             return;
         }
 
-        if (EnableEvalMapCleanup())
+        // The eval map is not re-entrant, so make sure it's not in the middle of adding an entry
+        // Also, don't clean the eval map if the debugger is attached
+        if (!this->IsScriptContextInDebugMode())
         {
-            // The eval map is not re-entrant, so make sure it's not in the middle of adding an entry
-            // Also, don't clean the eval map if the debugger is attached
-            if (!this->IsScriptContextInDebugMode())
+            if (this->Cache()->evalCacheDictionary != nullptr)
             {
-                if (this->Cache()->evalCacheDictionary != nullptr)
-                {
-                    this->CleanDynamicFunctionCache<Js::EvalCacheTopLevelDictionary>(this->Cache()->evalCacheDictionary->GetDictionary());
-                }
-                if (this->Cache()->indirectEvalCacheDictionary != nullptr)
-                {
-                    this->CleanDynamicFunctionCache<Js::EvalCacheTopLevelDictionary>(this->Cache()->indirectEvalCacheDictionary->GetDictionary());
-                }
-                if (this->Cache()->newFunctionCache != nullptr)
-                {
-                    this->CleanDynamicFunctionCache<Js::NewFunctionCache>(this->Cache()->newFunctionCache);
-                }
-                if (this->hostScriptContext != nullptr)
-                {
-                    this->hostScriptContext->CleanDynamicCodeCache();
-                }
-
+                this->CleanDynamicFunctionCache<Js::EvalCacheTopLevelDictionary>(this->Cache()->evalCacheDictionary->GetDictionary());
+            }
+            if (this->Cache()->indirectEvalCacheDictionary != nullptr)
+            {
+                this->CleanDynamicFunctionCache<Js::EvalCacheTopLevelDictionary>(this->Cache()->indirectEvalCacheDictionary->GetDictionary());
+            }
+            if (this->Cache()->newFunctionCache != nullptr)
+            {
+                this->CleanDynamicFunctionCache<Js::NewFunctionCache>(this->Cache()->newFunctionCache);
+            }
+            if (this->hostScriptContext != nullptr)
+            {
+                this->hostScriptContext->CleanDynamicCodeCache();
             }
         }
 

@@ -956,7 +956,6 @@ private:
         template <class TDelegate>
         FunctionBody* FindFunction(TDelegate predicate);
 
-        inline bool EnableEvalMapCleanup() { return CONFIG_FLAG(EnableEvalMapCleanup); };
         uint GetNextSourceContextId();
 
         bool IsInNewFunctionMap(EvalMapString const& key, FunctionInfo **ppFuncInfo);

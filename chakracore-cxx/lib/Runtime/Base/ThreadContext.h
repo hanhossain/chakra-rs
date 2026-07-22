@@ -412,7 +412,6 @@ private:
 #define DEFAULT_CONFIG_ProfileBasedSpeculationCap (1600)
 #define DEFAULT_CONFIG_Verbose              (false)
 #define DEFAULT_CONFIG_ForceStrictMode      (false)
-#define DEFAULT_CONFIG_EnableEvalMapCleanup (true)
 #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
 #define DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold (50)  // Threshold at which Entry Point Collection is triggered
 #define DEFAULT_CONFIG_RegexTracing         (false)

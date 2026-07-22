@@ -379,7 +379,6 @@ namespace Js
 #define DEFAULT_CONFIG_ProfileBasedSpeculationCap (1600)
 #define DEFAULT_CONFIG_Verbose              (false)
 #define DEFAULT_CONFIG_ForceStrictMode      (false)
-#define DEFAULT_CONFIG_EnableEvalMapCleanup (true)
 #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
 #define DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold (50)  // Threshold at which Entry Point Collection is triggered
 #define DEFAULT_CONFIG_RegexTracing         (false)
@@ -1180,7 +1179,6 @@ namespace Js
         u"EnableArrayTypeMutation",
         u"ArrayMutationTestSeed",
         u"TestTrace",
-        u"EnableEvalMapCleanup",
         u"Sse",
         u"ForceStringKeyedSimpleDictionaryTypeHandler",
         u"BigDictionaryTypeHandlerThreshold",
@@ -2145,10 +2143,9 @@ namespace Js
 
         u"Optimize script engine for many instances (low memory footprint per engine, assume low spare CPU cycles) (default: false)",
         u"Enable force array type mutation on re-entrant region",
+        // todo (hanhossain): flag end
         u"Seed used for the array mutation",
         u"Test trace for the given phase",
-        u"Enable cleaning up the eval map",
-        // todo (hanhossain): flag end
         u"Virtually disables SSE-based optimizations above the specified SSE level in the Chakra JIT (does not affect CRT SSE usage)",
         u"Force switch to string keyed version of SimpleDictionaryTypeHandler on first new property added to a SimpleDictionaryTypeHandler",
         u"Min Slot Capacity required to convert DictionaryTypeHandler to BigDictionaryTypeHandler.(Advisable to give more than 15 - to avoid false positive cases)",
@@ -2708,10 +2705,9 @@ namespace Js
 
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
+        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3295,7 +3291,6 @@ namespace Js
         EnableArrayTypeMutation(DEFAULT_CONFIG_EnableArrayTypeMutation),
         ArrayMutationTestSeed(0),
         TestTrace(),
-        EnableEvalMapCleanup(true),
         Sse(DEFAULT_CONFIG_Sse),
         ForceStringKeyedSimpleDictionaryTypeHandler(DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler),
         BigDictionaryTypeHandlerThreshold(DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold),
@@ -4889,8 +4884,6 @@ namespace Js
             return FlagNumber;
         case TestTraceFlag:
             return FlagPhases;
-        case EnableEvalMapCleanupFlag:
-            return FlagBoolean;
         case SseFlag:
             return FlagNumber;
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
@@ -5848,8 +5841,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&ArrayMutationTestSeed));
         case TestTraceFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&TestTrace));
-        case EnableEvalMapCleanupFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableEvalMapCleanup));
         case SseFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Sse));
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
@@ -6725,9 +6716,6 @@ namespace Js
             break;
         case EnableArrayTypeMutationFlag:
             retValue = DEFAULT_CONFIG_EnableArrayTypeMutation;
-            break;
-        case EnableEvalMapCleanupFlag:
-            retValue = true;
             break;
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
             retValue = DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler;

@@ -563,7 +563,6 @@ namespace Js
         EnableArrayTypeMutationFlag,
         ArrayMutationTestSeedFlag,
         TestTraceFlag,
-        EnableEvalMapCleanupFlag,
         SseFlag,
         ForceStringKeyedSimpleDictionaryTypeHandlerFlag,
         BigDictionaryTypeHandlerThresholdFlag,
@@ -2150,11 +2149,9 @@ namespace Js
         Boolean OptimizeForManyInstances;
         // TODO (hanhossain): remove flag
         Boolean EnableArrayTypeMutation;
+        // todo (hanhossain): flag end
         Number ArrayMutationTestSeed;
         Phases TestTrace;
-        // TODO (hanhossain): remove flag
-        Boolean EnableEvalMapCleanup;
-        // todo (hanhossain): flag end
         Number Sse;
         Boolean ForceStringKeyedSimpleDictionaryTypeHandler;
         Number BigDictionaryTypeHandlerThreshold;
