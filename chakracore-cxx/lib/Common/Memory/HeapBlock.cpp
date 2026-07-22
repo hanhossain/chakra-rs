@@ -867,22 +867,11 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
             if (trackerData->isArray)
             {
                 Output::Print(u"Missing Barrier\nOn array of %S\n", typeName);
-#ifdef STACK_BACK_TRACE
-                if (CONFIG_FLAG(KeepRecyclerTrackData))
-                {
-                    Output::Print(u"Allocation stack:\n");
-                    reinterpret_cast<StackBackTrace*>(trackerData + 1)->Print();
-                }
-#endif
             }
             else
             {
                 auto dumpFalsePositive = [&]()
                 {
-                    if (CONFIG_FLAG(Verbose))
-                    {
-                        Output::Print(u"False Positive: %S+0x%x => 0x%p -> 0x%p\n", typeName, offset, objectAddress, target);
-                    }
                 };
 
                 if (IsLikelyRuntimeFalseReference(objectStartAddress, offset, typeName))
@@ -908,11 +897,6 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
             {
                 Output::Print(u"Target type (missing barrier field type) is array item of %S\n", targetTypeName);
 #ifdef STACK_BACK_TRACE
-                if (CONFIG_FLAG(KeepRecyclerTrackData))
-                {
-                    Output::Print(u"Allocation stack:\n");
-                    reinterpret_cast<StackBackTrace*>(targetTrackerData + 1)->Print();
-                }
 #endif
             }
             else if (targetOffset == 0)
@@ -963,9 +947,7 @@ SmallHeapBlockT<TBlockAttributes>::VerifyMark()
             // Since this situation is hard to detect, just don't verify mark for write barrier blocks.
             // We could fix this if we had object layout info.
 
-            if (!this->IsLeafBlock()
-                && (!this->IsWithBarrier() || CONFIG_FLAG(ForceSoftwareWriteBarrier))
-                )
+            if (!this->IsLeafBlock())
             {
                 if ((ObjectInfo(objectIndex) & LeafBit) == 0)
                 {
@@ -973,16 +955,7 @@ SmallHeapBlockT<TBlockAttributes>::VerifyMark()
                     for (uint i = 0; i < objectWordCount; i++)
                     {
                         void* target = *reinterpret_cast<void**>(objectAddress);
-                        if (recycler->VerifyMark(objectAddress, target))
-                        {
-#if DBG
-                            if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
-                            {
-                                this->WBVerifyBitIsSet(objectAddress);
-                            }
-#endif
-                        }
-
+                        recycler->VerifyMark(objectAddress, target);
                         objectAddress += sizeof(void *);
                     }
                 }
@@ -1213,9 +1186,6 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
 
             Assert(!this->HasPendingDisposeObjects());
 
-#ifdef RECYCLER_TRACE
-            recycler->PrintBlockStatus(this->heapBucket, this, u"[**26**] ending sweep Pass1, state returned SweepStateEmpty.");
-#endif
             return SweepStateEmpty;
     }
 
@@ -1232,14 +1202,6 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
     if (expectSweepCount == 0)
     {
         // nothing has been freed
-#ifdef RECYCLER_TRACE
-        if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
-        {
-            SweepState stateReturned = (this->freeCount == 0) ? SweepStateFull : state;
-            CollectionState collectionState = recycler->collectionState;
-            Output::Print(u"[GC #%d] [HeapBucket 0x%p] HeapBlock 0x%p %s %d [CollectionState: %d] \n", recycler->collectionCount, this->heapBucket, this, u"[**37**] heapBlock swept. State returned:", stateReturned, collectionState);
-        }
-#endif
         return (this->freeCount == 0) ? SweepStateFull : state;
     }
 
@@ -1264,19 +1226,10 @@ SmallHeapBlockT<TBlockAttributes>::Sweep(RecyclerSweep& recyclerSweep, bool queu
         RECYCLER_STATS_INC(recycler, heapBlockConcurrentSweptCount[this->GetHeapBlockType()]);
         // This heap block has objects that need to be swept concurrently.
         this->isPendingConcurrentSweep = true;
-#ifdef RECYCLER_TRACE
-        if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase))
-        {
-            recycler->PrintBlockStatus(this->heapBucket, this, u"[**29**] heapBlock swept. State returned: SweepStatePendingSweep");
-    }
-#endif
         return SweepStatePendingSweep;
     }
     Assert(!recyclerSweep.IsBackground());
 
-#ifdef RECYCLER_TRACE
-    recycler->PrintBlockStatus(this->heapBucket, this, u"[**16**] calling SweepObjects.");
-#endif
     SweepObjects<SweepMode_InThread>(recycler);
     if (HasPendingDisposeObjects())
     {
@@ -1408,10 +1361,6 @@ SmallHeapBlockT<TBlockAttributes>::SweepObjects(Recycler * recycler)
 
     // The count of marked, non-free objects should still be the same
     Assert(this->markCount == this->GetMarkCountForSweep());
-
-#ifdef RECYCLER_TRACE
-    recycler->PrintBlockStatus(this->heapBucket, this, u"[**30**] finished SweepObjects, heapblock SWEPT.");
-#endif
 }
 
 template <class TBlockAttributes>
@@ -1437,7 +1386,7 @@ SmallHeapBlockT<TBlockAttributes>::EnqueueProcessedObject(FreeObject ** list, vo
     *list = freeObject;
 
 #if DBG
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(RecyclerVerifyMark))
+    if (CONFIG_FLAG(RecyclerVerifyMark))
     {
         this->WBClearObject(static_cast<char*>(objectAddress));
     }

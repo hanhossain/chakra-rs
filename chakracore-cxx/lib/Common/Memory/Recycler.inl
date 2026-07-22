@@ -95,21 +95,14 @@ Recycler::AllocWithAttributesInlined(size_t size)
 
     char* memBlock = nullptr;
     HeapInfo * heapInfo = this->GetHeapInfoForAllocation<attributes>();
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
+    if ((attributes & InternalObjectInfoBitMask) != LeafBit)
     {
-        if ((attributes & InternalObjectInfoBitMask) != LeafBit)
-        {
-            // none leaf allocation or Finalizable Leaf allocation,  adding WithBarrierBit
-            memBlock = RealAlloc<(ObjectInfoBits)((attributes | WithBarrierBit) & InternalObjectInfoBitMask), nothrow>(heapInfo, allocSize);
-        }
-        else
-        {
-            // pure Leaf allocation
-            memBlock = RealAlloc<(ObjectInfoBits)(attributes & InternalObjectInfoBitMask), nothrow>(heapInfo, allocSize);
-        }
+        // none leaf allocation or Finalizable Leaf allocation,  adding WithBarrierBit
+        memBlock = RealAlloc<(ObjectInfoBits)((attributes | WithBarrierBit) & InternalObjectInfoBitMask), nothrow>(heapInfo, allocSize);
     }
     else
     {
+        // pure Leaf allocation
         memBlock = RealAlloc<(ObjectInfoBits)(attributes & InternalObjectInfoBitMask), nothrow>(heapInfo, allocSize);
     }
 
@@ -124,7 +117,7 @@ Recycler::AllocWithAttributesInlined(size_t size)
     }
 
 #ifdef PROFILE_RECYCLER_ALLOC
-    TrackAlloc(memBlock, size, trackAllocData, (CUSTOM_CONFIG_ISENABLED(GetRecyclerFlagsTable(), Js::TraceObjectAllocationFlag) && (attributes & TraceBit) == TraceBit));
+    TrackAlloc(memBlock, size, trackAllocData, false);
 #endif
     RecyclerMemoryTracking::ReportAllocation(this, memBlock, size);
     RECYCLER_PERF_COUNTER_INC(LiveObject);
@@ -245,7 +238,7 @@ Recycler::AllocZeroWithAttributesInlined(size_t size)
     VerifyPageHeapFillAfterAlloc(obj, size, attributes);
 
 #if DBG
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(RecyclerVerifyMark))
+    if (CONFIG_FLAG(RecyclerVerifyMark))
     {
         this->FindHeapBlock(obj)->WBClearObject(obj);
     }
@@ -491,9 +484,6 @@ Recycler::NotifyFree(T * heapBlock)
 #if DBG || defined(RECYCLER_STATS)
         this->isForceSweeping = true;
         heapBlock->isForceSweeping = true;
-#endif
-#ifdef RECYCLER_TRACE
-        this->PrintBlockStatus(nullptr, heapBlock, u"[**34**] calling SweepObjects during NotifyFree.");
 #endif
         heapBlock->template SweepObjects<SweepMode_InThread>(this);
 #if DBG || defined(RECYCLER_STATS)

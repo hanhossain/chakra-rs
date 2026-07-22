@@ -14,7 +14,7 @@
 #include <filesystem>
 #include <unistd.h>
 
-ConfigParser ConfigParser::s_moduleConfigParser(Js::Configuration::Global.flags);
+ConfigParser ConfigParser::s_moduleConfigParser {};
 
 #ifdef ENABLE_TRACE
 class ArenaHost
@@ -49,104 +49,8 @@ ArenaAllocator* GetOutputAllocator2()
 
 void ConfigParser::ParseOnModuleLoad(CmdLineArgsParser& parser)
 {
-    Assert(!s_moduleConfigParser.HasReadConfig());
-
-    s_moduleConfigParser.ParseConfig(parser);
     s_moduleConfigParser.ProcessConfiguration();
     // 'parser' destructor post-processes some configuration
-}
-
-void ConfigParser::ParseConfig(CmdLineArgsParser &parser, const char16_t* strCustomConfigFile)
-{
-    Assert(!_hasReadConfig || strCustomConfigFile != nullptr);
-    _hasReadConfig = true;
-
-    const char16_t* configFileName = strCustomConfigFile;
-
-    if (configFileName == nullptr)
-    {
-        configFileName = _configFileName;
-    }
-
-    int err = 0;
-
-    const std::filesystem::path filename = configFileName;
-
-    FILE* configFile;
-    if (_wfopen_s(&configFile, filename.u16string().c_str(), u"r") != 0 || configFile == nullptr)
-    {
-        return;
-    }
-
-    char16_t configBuffer[MaxTokenSize];
-    int index = 0;
-
-#define ReadChar(file) std::getc(file)
-#define UnreadChar(c, file) std::ungetc(c, file)
-#define CharType int
-#define EndChar EOF
-
-    // We don't expect the token to overflow- if it does
-    // the simplest thing to do would be to ignore the
-    // read tokens
-    // We could use _fwscanf_s here but the function
-    // isn't implemented in the PAL and we'd have to deal with
-    // wchar => char16_t impedance mismatch.
-    while (index < MaxTokenSize)
-    {
-        CharType curChar = ReadChar(configFile);
-
-        if (this->_flags.rawInputFromConfigFileIndex < std::size(this->_flags.rawInputFromConfigFile))
-        {
-            this->_flags.rawInputFromConfigFile[this->_flags.rawInputFromConfigFileIndex++] = curChar;
-        }
-
-        if (curChar == EndChar || isspace(curChar) || curChar == 0)
-        {
-            configBuffer[index] = 0;
-
-            // Parse only if there's something in configBuffer
-            if (index > 0 && (err = parser.Parse(configBuffer)) != 0)
-            {
-                break;
-            }
-
-            while(curChar != EndChar && (isspace(curChar) || curChar == 0))
-            {
-                curChar = ReadChar(configFile);
-            }
-
-            if (curChar == EndChar)
-            {
-                break;
-            }
-            else
-            {
-                UnreadChar(curChar, configFile);
-            }
-
-            index = 0;
-        }
-        else
-        {
-            // The expectation is that non-ANSI characters
-            // are not used in the config- otherwise it will
-            // be interpreted incorrectly here
-            configBuffer[index++] = static_cast<char16_t>(curChar);
-        }
-    }
-
-#undef ReadChar
-#undef UnreadChar
-#undef CharType
-#undef EndChar
-
-    fclose(configFile);
-
-    if (err !=0)
-    {
-        return;
-    }
 }
 
 void ConfigParser::ProcessConfiguration()

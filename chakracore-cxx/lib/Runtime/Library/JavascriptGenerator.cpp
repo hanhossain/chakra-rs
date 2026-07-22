@@ -80,30 +80,25 @@ JavascriptGenerator* JavascriptGenerator::New(
 
     Arguments heapArgs(args.Info, (Var*)argValuesCopy);
 
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
+    JavascriptGenerator* obj = RecyclerNewFinalized(
+        recycler,
+        JavascriptGenerator,
+        generatorType,
+        heapArgs,
+        scriptFunction);
+
+    if (obj->args.Values != nullptr)
     {
-        JavascriptGenerator* obj = RecyclerNewFinalized(
-            recycler,
-            JavascriptGenerator,
-            generatorType,
-            heapArgs,
-            scriptFunction);
+        recycler->RegisterPendingWriteBarrierBlock(
+            obj->args.Values,
+            obj->args.Info.Count * sizeof(Var));
 
-        if (obj->args.Values != nullptr)
-        {
-            recycler->RegisterPendingWriteBarrierBlock(
-                obj->args.Values,
-                obj->args.Info.Count * sizeof(Var));
-
-            recycler->RegisterPendingWriteBarrierBlock(
-                &obj->args.Values,
-                sizeof(Var*));
-        }
-
-        return obj;
+        recycler->RegisterPendingWriteBarrierBlock(
+            &obj->args.Values,
+            sizeof(Var*));
     }
 
-    return RecyclerNew(recycler, JavascriptGenerator, generatorType, heapArgs, scriptFunction);
+    return obj;
 }
 
 template<>
@@ -117,10 +112,7 @@ void JavascriptGenerator::SetFrame(InterpreterStackFrame* frame, size_t bytes)
 {
     Assert(this->frame == nullptr);
     this->frame = frame;
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
-    {
-        GetScriptContext()->GetRecycler()->RegisterPendingWriteBarrierBlock(frame, bytes);
-    }
+    GetScriptContext()->GetRecycler()->RegisterPendingWriteBarrierBlock(frame, bytes);
 }
 
 void JavascriptGenerator::SetFrameSlots(Js::RegSlot slotCount, typename WriteBarrierFieldTypeTraits<Var>::Type* frameSlotArray)
@@ -134,7 +126,7 @@ void JavascriptGenerator::SetFrameSlots(Js::RegSlot slotCount, typename WriteBar
 
 void JavascriptGenerator::Finalize(bool isShutdown)
 {
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && !isShutdown)
+    if (!isShutdown)
     {
         auto* recycler = GetScriptContext()->GetRecycler();
         

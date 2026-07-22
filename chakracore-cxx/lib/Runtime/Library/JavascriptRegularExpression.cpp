@@ -19,21 +19,6 @@ using namespace Js;
         Assert(type->GetTypeId() == TypeIds_RegEx);
         Assert(!this->GetType()->AreThisAndPrototypesEnsuredToHaveOnlyWritableDataProperties());
         Assert(!this->GetType()->ThisAndPrototypesHaveNoSpecialProperties());
-
-#if ENABLE_REGEX_CONFIG_OPTIONS
-        if (REGEX_CONFIG_FLAG(RegexTracing))
-        {
-            UnifiedRegex::DebugWriter* w = type->GetScriptContext()->GetRegexDebugWriter();
-            if (pattern == 0)
-                w->PrintEOL(u"// REGEX CREATE");
-            else
-            {
-                w->Print(u"// REGEX CREATE ");
-                pattern->Print(w);
-                w->EOL();
-            }
-        }
-#endif
     }
 
     JavascriptRegExp::JavascriptRegExp(DynamicType * type) :
@@ -44,14 +29,6 @@ using namespace Js;
         lastIndexOrFlag(0)
     {
         Assert(type->GetTypeId() == TypeIds_RegEx);
-
-#if DBG
-        if (REGEX_CONFIG_FLAG(RegexTracing))
-        {
-            UnifiedRegex::DebugWriter* w = type->GetScriptContext()->GetRegexDebugWriter();
-            w->PrintEOL(u"REGEX CREATE");
-        }
-#endif
     }
 
      JavascriptRegExp::JavascriptRegExp(JavascriptRegExp * instance, bool deepCopy) :

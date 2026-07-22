@@ -1166,10 +1166,7 @@ namespace Js
 #endif
 
         ClearArray(this->Cache()->propertyStrings, 80);
-        this->Cache()->dynamicRegexMap =
-            RegexPatternMruMap::New(
-                recycler,
-                REGEX_CONFIG_FLAG(DynamicRegexMruListSize) <= 0 ? 16 : REGEX_CONFIG_FLAG(DynamicRegexMruListSize));
+        this->Cache()->dynamicRegexMap = RegexPatternMruMap::New(recycler, 16);
 
         SourceContextInfo* sourceContextInfo = RecyclerNewStructZ(this->GetRecycler(), SourceContextInfo);
         sourceContextInfo->dwHostSourceContext = Js::Constants::NoHostSourceContext;
@@ -1824,16 +1821,6 @@ namespace Js
             utf8Script = RecyclerNewArrayLeafTrace(this->GetRecycler(), utf8char_t, cbUtf8Buffer);
 
             cbNeeded = utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::Cesu8>(utf8Script, cbUtf8Buffer, reinterpret_cast<const char16_t*>(script), ccLength);
-
-#if DBG_DUMP && defined(PROFILE_MEM)
-            if (Js::Configuration::Global.flags.TraceMemory.IsEnabled(Js::ParsePhase) && Configuration::Global.flags.Verbose)
-            {
-                Output::Print(u"Loading script.\n"
-                    u"  Unicode (in bytes)    %u\n"
-                    u"  UTF-8 size (in bytes) %u\n"
-                    u"  Expected savings      %d\n", length * sizeof(char16_t), cbNeeded, length * sizeof(char16_t) - cbNeeded);
-            }
-#endif
 
             // Free unused bytes
             Assert(cbNeeded + 1 <= cbUtf8Buffer);
@@ -3874,36 +3861,29 @@ namespace Js
             return;
         }
 
-        if (EnableEvalMapCleanup())
+        // The eval map is not re-entrant, so make sure it's not in the middle of adding an entry
+        // Also, don't clean the eval map if the debugger is attached
+        if (!this->IsScriptContextInDebugMode())
         {
-            // The eval map is not re-entrant, so make sure it's not in the middle of adding an entry
-            // Also, don't clean the eval map if the debugger is attached
-            if (!this->IsScriptContextInDebugMode())
+            if (this->Cache()->evalCacheDictionary != nullptr)
             {
-                if (this->Cache()->evalCacheDictionary != nullptr)
-                {
-                    this->CleanDynamicFunctionCache<Js::EvalCacheTopLevelDictionary>(this->Cache()->evalCacheDictionary->GetDictionary());
-                }
-                if (this->Cache()->indirectEvalCacheDictionary != nullptr)
-                {
-                    this->CleanDynamicFunctionCache<Js::EvalCacheTopLevelDictionary>(this->Cache()->indirectEvalCacheDictionary->GetDictionary());
-                }
-                if (this->Cache()->newFunctionCache != nullptr)
-                {
-                    this->CleanDynamicFunctionCache<Js::NewFunctionCache>(this->Cache()->newFunctionCache);
-                }
-                if (this->hostScriptContext != nullptr)
-                {
-                    this->hostScriptContext->CleanDynamicCodeCache();
-                }
-
+                this->CleanDynamicFunctionCache<Js::EvalCacheTopLevelDictionary>(this->Cache()->evalCacheDictionary->GetDictionary());
+            }
+            if (this->Cache()->indirectEvalCacheDictionary != nullptr)
+            {
+                this->CleanDynamicFunctionCache<Js::EvalCacheTopLevelDictionary>(this->Cache()->indirectEvalCacheDictionary->GetDictionary());
+            }
+            if (this->Cache()->newFunctionCache != nullptr)
+            {
+                this->CleanDynamicFunctionCache<Js::NewFunctionCache>(this->Cache()->newFunctionCache);
+            }
+            if (this->hostScriptContext != nullptr)
+            {
+                this->hostScriptContext->CleanDynamicCodeCache();
             }
         }
 
-        if (REGEX_CONFIG_FLAG(DynamicRegexMruListSize) > 0)
-        {
-            GetDynamicRegexMap()->RemoveRecentlyUnusedItems();
-        }
+        GetDynamicRegexMap()->RemoveRecentlyUnusedItems();
 
         CleanSourceListInternal(true);
     }
@@ -4780,70 +4760,6 @@ ScriptContext::GetJitFuncRangeCache()
             }
             Output::Print(u"%-40s %6d\n", u"TOTAL,", totalRejits);
             Output::Print(u"\n\n");
-
-            // If in verbose mode, dump data for each FunctionBody
-            if (CONFIG_FLAG(Verbose) && rejitStatsMap != nullptr)
-            {
-                // Aggregated data
-                Output::Print(u"%-30s %14s %14s\n", u"Function (#),", u"Bailout Count,", u"Rejit Count");
-                rejitStatsMap->Map([](Js::FunctionBody const *body, RejitStats *stats, RecyclerWeakReference<const Js::FunctionBody> const*) {
-                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    for (uint i = 0; i < NumRejitReasons; ++i)
-                        stats->m_totalRejits += stats->m_rejitReasonCounts[i];
-
-                    stats->m_bailoutReasonCounts->Map([stats](uint kind, uint val) {
-                        stats->m_totalBailouts += val;
-                    });
-
-                    char16_t buf[256];
-
-                    swprintf_s(buf, u"%s (%s),", body->GetExternalDisplayName(), (const_cast<Js::FunctionBody*>(body))->GetDebugNumberSet(debugStringBuffer)); //TODO Kount
-                    Output::Print(u"%-30s %14d, %14d\n", buf, stats->m_totalBailouts, stats->m_totalRejits);
-
-                });
-                Output::Print(u"\n\n");
-
-                // Per FunctionBody data
-                rejitStatsMap->Map([](Js::FunctionBody const *body, RejitStats *stats, RecyclerWeakReference<const Js::FunctionBody> const *) {
-                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    char16_t buf[256];
-
-                    swprintf_s(buf, u"%s (%s),", body->GetExternalDisplayName(), (const_cast<Js::FunctionBody*>(body))->GetDebugNumberSet(debugStringBuffer)); //TODO Kount
-                    Output::Print(u"%-30s\n\n", buf);
-
-                    // Dump bailout data
-                    if (stats->m_totalBailouts != 0)
-                    {
-                        Output::Print(u"%10sBailouts:\n", u"");
-
-                        stats->m_bailoutReasonCounts->Map([](uint kind, uint val) {
-                            if (val != 0)
-                            {
-                                char16_t buf[256];
-                                swprintf_s(buf, u"%S,", GetBailOutKindName((IR::BailOutKind)kind));
-                                Output::Print(u"%10s%-40s %6d\n", u"", buf, val);
-                            }
-                        });
-                    }
-                    Output::Print(u"\n");
-
-                    // Dump rejit data.
-                    if (stats->m_totalRejits != 0)
-                    {
-                        Output::Print(u"%10sRejits:\n", u"");
-                        for (uint i = 0; i < NumRejitReasons; ++i)
-                        {
-                            if (stats->m_rejitReasonCounts[i] != 0)
-                            {
-                                swprintf_s(buf, u"%S,", RejitReasonNames[i]);
-                                Output::Print(u"%10s%-40s %6d\n", u"", buf, stats->m_rejitReasonCounts[i]);
-                            }
-                        }
-                        Output::Print(u"\n\n");
-                    }
-                });
-
-            }
         }
 
         this->ClearBailoutReasonCountsMap();
@@ -4946,49 +4862,11 @@ ScriptContext::GetJitFuncRangeCache()
 #endif
 
 #ifdef REJIT_STATS
-    void ScriptContext::LogDataForFunctionBody(Js::FunctionBody *body, uint idx, bool isRejit)
-    {
-        if (rejitStatsMap == NULL)
-        {
-            rejitStatsMap = RecyclerNew(this->recycler, RejitStatsMap, this->recycler);
-            BindReference(rejitStatsMap);
-        }
-
-        RejitStats *stats = NULL;
-        if (!rejitStatsMap->TryGetValue(body, &stats))
-        {
-            stats = Anew(GeneralAllocator(), RejitStats, this);
-            rejitStatsMap->Item(body, stats);
-        }
-
-        if (isRejit)
-        {
-            stats->m_rejitReasonCounts[idx]++;
-        }
-        else
-        {
-            if (!stats->m_bailoutReasonCounts->ContainsKey(idx))
-            {
-                stats->m_bailoutReasonCounts->Item(idx, 1);
-            }
-            else
-            {
-                uint val = stats->m_bailoutReasonCounts->Item(idx);
-                ++val;
-                stats->m_bailoutReasonCounts->Item(idx, val);
-            }
-        }
-    }
     void ScriptContext::LogRejit(Js::FunctionBody *body, RejitReason reason)
     {
         byte reasonIndex = static_cast<byte>(reason);
         Assert(reasonIndex < NumRejitReasons);
         rejitReasonCounts[reasonIndex]++;
-
-        if (CONFIG_FLAG(Verbose))
-        {
-            LogDataForFunctionBody(body, reasonIndex, true);
-        }
     }
     void ScriptContext::LogBailout(Js::FunctionBody *body, uint kind)
     {
@@ -5001,11 +4879,6 @@ ScriptContext::GetJitFuncRangeCache()
             uint val = bailoutReasonCounts->Item(kind);
             ++val;
             bailoutReasonCounts->Item(kind, val);
-        }
-
-        if (CONFIG_FLAG(Verbose))
-        {
-            LogDataForFunctionBody(body, kind, false);
         }
     }
     void ScriptContext::ClearBailoutReasonCountsMap()

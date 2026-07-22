@@ -11,7 +11,6 @@
 //  AD PerfCounter
 //  AE PerfCounterSet
 //  AM Output/Configuration
-//  AN MemProtectHeap
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
 //  AS JavascriptDispatch/RecyclerObjectDumper
@@ -41,24 +40,6 @@ thread_local size_t   Output::align = 0;
 thread_local const char16_t* Output::prefix = nullptr;
 
 #define MAX_OUTPUT_BUFFER_SIZE 10 * 1024 * 1024  // 10 MB maximum before we force a flush
-
-size_t
-Output::VerboseNote(const char16_t * format, ...)
-{
-#ifdef ENABLE_TRACE
-    if (Js::Configuration::Global.flags.Verbose)
-    {
-        std::unique_lock lock(s_mutex);
-        va_list argptr;
-        va_start(argptr, format);
-        size_t size = PAL_vfwprintf(stdout, format, argptr);
-        fflush(stdout);
-        va_end(argptr);
-        return size;
-    }
-#endif
-    return 0;
-}
 
 #ifdef ENABLE_TRACE
 size_t

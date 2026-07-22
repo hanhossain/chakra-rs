@@ -7,6 +7,8 @@
 
 namespace Js
 {
+    constexpr unsigned char DeletedPropertyReuseThreshold = 32;
+
     // ----------------------------------------------------------------------
     // Helper methods to deal with differing TMapKey and TPropertyKey types.
     // Used by both SimpleDictionaryTypeHandler and DictionaryTypeHandler.
@@ -365,8 +367,7 @@ namespace Js
     {
         Assert(scriptContext);
         return
-            !isUnordered &&
-            CONFIG_FLAG(DeletedPropertyReuseThreshold) > 0;
+            !isUnordered;
     }
 
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported>
@@ -424,11 +425,11 @@ namespace Js
         bool isGlobalObject = instance->GetTypeId() == TypeIds_GlobalObject;
         bool isTypeLocked = instance->GetDynamicType()->GetIsLocked();
         bool isOrMayBecomeShared = GetIsOrMayBecomeShared();
-        Assert(!isOrMayBecomeShared || !IsolatePrototypes() || ((this->GetFlags() & IsPrototypeFlag) == 0));
+        Assert(!isOrMayBecomeShared || ((this->GetFlags() & IsPrototypeFlag) == 0));
         // For the global object we don't emit a type check before a hard-coded use of a fixed field. Therefore a type transition isn't sufficient to
         // invalidate any used fixed fields, and we must continue tracking them on the new type handler. If the type isn't locked, we may not change the
         // type of the instance, and we must also track the used fixed fields on the new handler.
-        bool transferUsedAsFixed = isGlobalObject || !isTypeLocked || ((this->GetFlags() & IsPrototypeFlag) != 0 || (isOrMayBecomeShared && !IsolatePrototypes())) || PHASE_FORCE1(Js::FixDataPropsPhase);
+        bool transferUsedAsFixed = isGlobalObject || !isTypeLocked || ((this->GetFlags() & IsPrototypeFlag) != 0) || PHASE_FORCE1(Js::FixDataPropsPhase);
 #endif
 
         SimpleDictionaryPropertyDescriptor<TPropertyIndex> descriptor;
@@ -1558,7 +1559,7 @@ namespace Js
                     if (SupportsSwitchingToUnordered(scriptContext))
                     {
                         ++numDeletedProperties;
-                        if (numDeletedProperties >= CONFIG_FLAG(DeletedPropertyReuseThreshold))
+                        if (numDeletedProperties >= DeletedPropertyReuseThreshold)
                         {
                             // This type handler is being used as a hashtable. Start reusing deleted property indexes for new
                             // property IDs. After this, enumeration order is nondeterministic.
@@ -1689,7 +1690,7 @@ namespace Js
                     if (SupportsSwitchingToUnordered(scriptContext))
                     {
                         ++numDeletedProperties;
-                        if (numDeletedProperties >= CONFIG_FLAG(DeletedPropertyReuseThreshold))
+                        if (numDeletedProperties >= DeletedPropertyReuseThreshold)
                         {
                             // This type handler is being used as a hashtable. Start reusing deleted property indexes for new
                             // property IDs. After this, enumeration order is nondeterministic.
@@ -2820,15 +2821,6 @@ namespace Js
     template <typename TPropertyIndex, typename TMapKey, bool IsNotExtensibleSupported>
     void SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::SetIsPrototype(DynamicObject* instance)
     {
-        // Don't return if IsPrototypeFlag is set, because we may still need to do a type transition and
-        // set fixed bits.  If this handler is shared, this instance may not even be a prototype yet.
-        // In this case we may need to convert to a non-shared type handler.
-        if (!ChangeTypeOnProto() && !(GetIsOrMayBecomeShared() && IsolatePrototypes()))
-        {
-            SetFlags(IsPrototypeFlag);
-            return;
-        }
-
         Assert(!GetIsShared() || this->singletonInstance == nullptr);
         Assert(this->singletonInstance == nullptr || this->singletonInstance->Get() == instance);
 
@@ -2886,7 +2878,7 @@ namespace Js
 
         bool isShared = GetIsShared();
 #endif
-        if (GetIsOrMayBecomeShared() && IsolatePrototypes())
+        if (GetIsOrMayBecomeShared())
         {
             Type* oldType = instance->GetType();
             ConvertToNonSharedSimpleDictionaryType(instance)->SetIsPrototype(instance, instance->GetType() != oldType);
@@ -2900,7 +2892,7 @@ namespace Js
             TraceFixedFieldsBeforeSetIsProto(instance, this, oldType, oldSingletonInstance);
 #endif
 
-            if (!hasNewType && ChangeTypeOnProto())
+            if (!hasNewType)
             {
                 // We're about to split out the type.  If the original type was shared the handler better be shared as well.
                 // Otherwise, the handler would lose track of being shared between different types and instances.

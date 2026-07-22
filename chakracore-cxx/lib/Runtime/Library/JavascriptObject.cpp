@@ -1335,10 +1335,7 @@ Var JavascriptObject::EntryDefineProperty(RecyclableObject* function, CallInfo c
         JavascriptError::ThrowTypeError(scriptContext, JSERR_PropertyDescriptor_Invalid, scriptContext->GetPropertyName(propertyRecord->GetPropertyId())->GetBuffer());
     }
 
-    if (CONFIG_FLAG(UseFullName))
-    {
-        ModifyGetterSetterFuncName(propertyRecord, propertyDescriptor, scriptContext);
-    }
+    ModifyGetterSetterFuncName(propertyRecord, propertyDescriptor, scriptContext);
 
     BOOL success = DefineOwnPropertyHelper(obj, propertyRecord->GetPropertyId(), propertyDescriptor, scriptContext);
     if (!success)
@@ -1845,11 +1842,6 @@ Var JavascriptObject::EntryCreate(RecyclableObject* function, CallInfo callInfo,
     RecyclableObject* protoObj = VarTo<RecyclableObject>(protoVar);
     DynamicObject* object = function->GetLibrary()->CreateObject(protoObj);
 
-    if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-    {
-        object = VarTo<DynamicObject>(JavascriptProxy::AutoProxyWrapper(object));
-    }
-
     if (args.Info.Count > 2 && JavascriptOperators::GetTypeId(args[2]) != TypeIds_Undefined)
     {
         RecyclableObject* properties = nullptr;
@@ -1934,10 +1926,7 @@ Var JavascriptObject::DefinePropertiesHelperForGenericObjects(RecyclableObject *
         // In proxy, we need to get back the original ToPropertDescriptor var in [[defineProperty]] trap.
         descriptors[descCount].originalVar = tempVar;
 
-        if (CONFIG_FLAG(UseFullName))
-        {
-            ModifyGetterSetterFuncName(propertyRecord, descriptors[descCount].descriptor, scriptContext);
-        }
+        ModifyGetterSetterFuncName(propertyRecord, descriptors[descCount].descriptor, scriptContext);
 
         descriptors[descCount].propRecord = propertyRecord;
 
@@ -2013,10 +2002,7 @@ Var JavascriptObject::DefinePropertiesHelperForProxyObjects(RecyclableObject *ob
                     JavascriptError::ThrowTypeError(scriptContext, JSERR_PropertyDescriptor_Invalid, scriptContext->GetPropertyName(propertyId)->GetBuffer());
                 }
 
-                if (CONFIG_FLAG(UseFullName))
-                {
-                    ModifyGetterSetterFuncName(propertyRecord, descriptors[descCount].descriptor, scriptContext);
-                }
+                ModifyGetterSetterFuncName(propertyRecord, descriptors[descCount].descriptor, scriptContext);
 
                 descriptors[descCount].propRecord = propertyRecord;
 

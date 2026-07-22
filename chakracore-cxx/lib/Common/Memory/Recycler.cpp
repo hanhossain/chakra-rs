@@ -28,6 +28,9 @@
 
 DEFINE_RECYCLER_TRACKER_PERF_COUNTER(RecyclerWeakReferenceBase);
 
+/// Max size (in MB) in single allocation
+constexpr size_t MaxSingleAllocSizeInMB = 2048;
+
 #ifdef PROFILE_RECYCLER_ALLOC
 struct UnallocatedPortionOfBumpAllocatedBlock
 {
@@ -201,9 +204,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #ifdef PROFILE_RECYCLER_ALLOC
     , trackerDictionary(nullptr)
 #endif
-#ifdef HEAP_ENUMERATION_VALIDATION
-    ,pfPostHeapEnumScanCallback(nullptr)
-#endif
     , isPageHeapEnabled(false)
     , capturePageHeapAllocStack(false)
     , capturePageHeapFreeStack(false)
@@ -256,18 +256,13 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     allowAllocationDuringHeapEnum = false;
 #endif
     ScheduleNextCollection();
+    constexpr size_t maxMarkStackPageCount = -1;
 
     // recycler requires at least Recycler::PrimaryMarkStackReservedPageCount to function properly for the main mark context
-    this->markContext.SetMaxPageCount(max(static_cast<size_t>(GetRecyclerFlagsTable().MaxMarkStackPageCount), static_cast<size_t>(Recycler::PrimaryMarkStackReservedPageCount)));
-    this->parallelMarkContext1.SetMaxPageCount(GetRecyclerFlagsTable().MaxMarkStackPageCount);
-    this->parallelMarkContext2.SetMaxPageCount(GetRecyclerFlagsTable().MaxMarkStackPageCount);
-    this->parallelMarkContext3.SetMaxPageCount(GetRecyclerFlagsTable().MaxMarkStackPageCount);
-
-    if (GetRecyclerFlagsTable().IsEnabled(Js::GCMemoryThresholdFlag))
-    {
-        // Note, we can't do this in the constructor for RecyclerHeuristic::Instance because it runs before config is processed
-        RecyclerHeuristic::Instance.ConfigureBaseFactor(GetRecyclerFlagsTable().GCMemoryThreshold);
-    }
+    this->markContext.SetMaxPageCount(max(maxMarkStackPageCount, static_cast<size_t>(Recycler::PrimaryMarkStackReservedPageCount)));
+    this->parallelMarkContext1.SetMaxPageCount(maxMarkStackPageCount);
+    this->parallelMarkContext2.SetMaxPageCount(maxMarkStackPageCount);
+    this->parallelMarkContext3.SetMaxPageCount(maxMarkStackPageCount);
 }
 
 #if DBG
@@ -286,11 +281,11 @@ Recycler::SetMemProtectMode()
     this->enableScanImplicitRoots = true;
     this->disableCollectOnAllocationHeuristics = true;
 #ifdef RECYCLER_STRESS
-    this->recyclerStress = GetRecyclerFlagsTable().MemProtectHeapStress;
-    this->recyclerBackgroundStress = GetRecyclerFlagsTable().MemProtectHeapBackgroundStress;
-    this->recyclerConcurrentStress = GetRecyclerFlagsTable().MemProtectHeapConcurrentStress;
-    this->recyclerConcurrentRepeatStress = GetRecyclerFlagsTable().MemProtectHeapConcurrentRepeatStress;
-    this->recyclerPartialStress = GetRecyclerFlagsTable().MemProtectHeapPartialStress;
+    this->recyclerStress = false;
+    this->recyclerBackgroundStress = false;
+    this->recyclerConcurrentStress = false;
+    this->recyclerConcurrentRepeatStress = false;
+    this->recyclerPartialStress = false;
 #endif
 }
 
@@ -1151,7 +1146,7 @@ Recycler::LargeAlloc(HeapInfo* heap, size_t size, ObjectInfoBits attributes)
 {
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
 
-    size_t limit = static_cast<size_t>(GetRecyclerFlagsTable().MaxSingleAllocSizeInMB) * 1024 * 1024;
+    size_t limit = MaxSingleAllocSizeInMB * 1024 * 1024;
 
     if (size >= limit)
     {
@@ -1385,9 +1380,6 @@ Recycler::ExpectStackSkip() const
     expectStackSkip = expectStackSkip || (this->objectGraphDumper != nullptr);
 #endif
 
-#if defined(INTERNAL_MEM_PROTECT_HEAP_ALLOC)
-    expectStackSkip = expectStackSkip || GetRecyclerFlagsTable().MemProtectHeap;
-#endif
     return expectStackSkip || isExternalStackSkippingGC;
 }
 #endif
@@ -1766,11 +1758,7 @@ Recycler::CheckAllocExternalMark() const
 {
     Assert(!disableThreadAccessCheck);
     Assert(GetCurrentThreadContextId() == mainThreadId);
-  #ifdef HEAP_ENUMERATION_VALIDATION
-    Assert((this->IsMarkState() || this->IsPostEnumHeapValidationInProgress()) && collectionState != CollectionStateConcurrentMark);
-  #else
     Assert(this->IsMarkState()  && collectionState != CollectionStateConcurrentMark);
-  #endif
 }
 #endif
 
@@ -1784,11 +1772,7 @@ Recycler::TryExternalMarkNonInterior(void* candidate)
 void
 Recycler::TryMarkNonInterior(void* candidate, void* parentReference)
 {
-#ifdef HEAP_ENUMERATION_VALIDATION
-    Assert(!isHeapEnumInProgress || this->IsPostEnumHeapValidationInProgress());
-#else
     Assert(!isHeapEnumInProgress);
-#endif
     Assert(this->collectionState != CollectionStateParallelMark);
     markContext.Mark</*parallel */ false, /* interior */ false, /* doSpecialMark */ false>(candidate, parentReference);
 }
@@ -1796,11 +1780,7 @@ Recycler::TryMarkNonInterior(void* candidate, void* parentReference)
 void
 Recycler::TryMarkInterior(void* candidate, void* parentReference)
 {
-#ifdef HEAP_ENUMERATION_VALIDATION
-    Assert(!isHeapEnumInProgress || this->IsPostEnumHeapValidationInProgress());
-#else
     Assert(!isHeapEnumInProgress);
-#endif
     Assert(this->collectionState != CollectionStateParallelMark);
     markContext.Mark</*parallel */ false, /* interior */ true, /* doSpecialMark */ false>(candidate, parentReference);
 }
@@ -2015,7 +1995,7 @@ Recycler::RescanMark(uint32_t waitTime)
         // Only do background finish mark if we have a time limit or it is forced
         (CUSTOM_PHASE_FORCE1(GetRecyclerFlagsTable(), Js::BackgroundFinishMarkPhase) || waitTime != INFINITE) &&
         // Don't do background finish mark if we failed to finish mark too many times
-        (this->backgroundFinishMarkCount < RecyclerHeuristic::MaxBackgroundFinishMarkCount(this->GetRecyclerFlagsTable())))
+        (this->backgroundFinishMarkCount < RecyclerHeuristic::MaxBackgroundFinishMarkCount()))
     {
         this->PrepareBackgroundFindRoots();
         if (StartConcurrent(CollectionStateConcurrentFinishMark))
@@ -2473,28 +2453,6 @@ Recycler::IsMarkStackEmpty()
 }
 #endif
 
-#ifdef HEAP_ENUMERATION_VALIDATION
-void
-Recycler::PostHeapEnumScan(PostHeapEnumScanCallback callback, void *data)
-{
-    this->pfPostHeapEnumScanCallback = callback;
-    this->postHeapEnunScanData = data;
-
-    FindRoots();
-    if (this->needExternalWrapperTracing)
-    {
-        this->FinishWrapperObjectTracing();
-    }
-    else
-    {
-        this->ProcessMark(false);
-    }
-
-    this->pfPostHeapEnumScanCallback = NULL;
-    this->postHeapEnunScanData = NULL;
-}
-#endif
-
 bool
 Recycler::QueueTrackedObject(FinalizableObject * trackableObject)
 {
@@ -2720,10 +2678,7 @@ Recycler::SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager)
     {
         SetCollectionState(CollectionStateSetupConcurrentSweep);
 
-        if (CONFIG_FLAG(EnableBGFreeZero))
-        {
-            autoHeap.StartQueueZeroPage();
-        }
+        autoHeap.StartQueueZeroPage();
     }
     else
     {
@@ -2737,17 +2692,11 @@ Recycler::SweepHeap(bool concurrent, RecyclerSweepManager& recyclerSweepManager)
 
     if (concurrent)
     {
-        if (CONFIG_FLAG(EnableBGFreeZero))
-        {
-            autoHeap.StopQueueZeroPage();
-        }
+        autoHeap.StopQueueZeroPage();
     }
     else
     {
-        if (CONFIG_FLAG(EnableBGFreeZero))
-        {
-            Assert(!autoHeap.HasZeroQueuedPages());
-        }
+        Assert(!autoHeap.HasZeroQueuedPages());
     }
 }
 
@@ -3618,15 +3567,12 @@ Recycler::BackgroundRescan(RescanFlags rescanFlags)
 
     RECYCLER_PROFILE_EXEC_BACKGROUND_BEGIN(this, Js::BackgroundRescanPhase);
 
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
+    pendingWriteBarrierBlockMap.LockResize();
+    pendingWriteBarrierBlockMap.Map([](void* address, size_t size)
     {
-        pendingWriteBarrierBlockMap.LockResize();
-        pendingWriteBarrierBlockMap.Map([](void* address, size_t size)
-        {
-            RecyclerWriteBarrierManager::WriteBarrier(address, size);
-        });
-        pendingWriteBarrierBlockMap.UnlockResize();
-    }
+        RecyclerWriteBarrierManager::WriteBarrier(address, size);
+    });
+    pendingWriteBarrierBlockMap.UnlockResize();
 
     size_t rescannedPageCount = heapBlockMap.Rescan(this, ((rescanFlags & RescanFlags_ResetWriteWatch) != 0));
 
@@ -3806,15 +3752,12 @@ Recycler::FinishConcurrent()
 
         if (forceFinish || !IsConcurrentExecutingState())
         {
-            if (CONFIG_FLAG(EnableBGFreeZero))
+            if (this->IsConcurrentSweepState())
             {
-                if (this->IsConcurrentSweepState())
-                {
-                    // Help with the background thread to zero and flush zero pages
-                    // if we are going to wait anyways.
-                    autoHeap.ZeroQueuedPages();
-                    autoHeap.FlushBackgroundPages();
-                }
+                // Help with the background thread to zero and flush zero pages
+                // if we are going to wait anyways.
+                autoHeap.ZeroQueuedPages();
+                autoHeap.FlushBackgroundPages();
             }
 #ifdef RECYCLER_TRACE
             collectionParam.finishOnly = true;
@@ -4997,12 +4940,9 @@ Recycler::FinishTransferSwept(CollectionFlags flags)
 #endif
     SetCollectionState(CollectionStateTransferSwept);
 
-    if (CONFIG_FLAG(EnableBGFreeZero))
-    {
-        // We should have zeroed all the pages in the background thread
-        Assert(!autoHeap.HasZeroQueuedPages());
-        autoHeap.FlushBackgroundPages();
-    }
+    // We should have zeroed all the pages in the background thread
+    Assert(!autoHeap.HasZeroQueuedPages());
+    autoHeap.FlushBackgroundPages();
 
     Assert(this->recyclerSweepManager != nullptr);
     Assert(!this->recyclerSweepManager->IsBackground());
@@ -5104,29 +5044,21 @@ Recycler::DoBackgroundWork(bool forceForeground)
 
         {
             RECYCLER_PROFILE_EXEC_BACKGROUND_BEGIN(this, Js::ConcurrentSweepPhase);
-        if (CONFIG_FLAG(EnableBGFreeZero))
-        {
             // Zero the queued pages first so they are available to be allocated
             autoHeap.BackgroundZeroQueuedPages();
-        }
-        Assert(this->recyclerSweepManager != nullptr);
-        this->recyclerSweepManager->BackgroundSweep();
+            Assert(this->recyclerSweepManager != nullptr);
+            this->recyclerSweepManager->BackgroundSweep();
 
             // If allocations were allowed during concurrent sweep then the allocableHeapBlock lists still needs to be swept so we
             // will remain in CollectionStateConcurrentSweepPass1Wait state.
         }
         {
 
-            if (CONFIG_FLAG(EnableBGFreeZero))
-            {
-                // Drain the zero queue again as we might have free more during sweep
-                // in the background
-                autoHeap.BackgroundZeroQueuedPages();
-            }
+            // Drain the zero queue again as we might have free more during sweep
+            // in the background
+            autoHeap.BackgroundZeroQueuedPages();
 
-            {
-                Assert(this->collectionState == CollectionStateConcurrentSweep);
-            }
+            Assert(this->collectionState == CollectionStateConcurrentSweep);
             this->SetCollectionState(CollectionStateTransferSweptWait);
         }
 
@@ -5840,17 +5772,6 @@ Recycler::PrintCollectTrace(Js::Phase phase, bool finish, bool noConcurrentWork)
         }
         Output::Print(u"\n");
         Output::Flush();
-    }
-}
-#endif
-
-#ifdef RECYCLER_TRACE
-void
-Recycler::PrintBlockStatus(HeapBucket * heapBucket, HeapBlock * heapBlock, char16_t const * statusMessage)
-{
-    if (this->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
-    {
-        Output::Print(u"[GC #%d] [HeapBucket 0x%p] HeapBlock 0x%p %s [CollectionState: %d] \n", this->collectionCount, heapBucket, heapBlock, statusMessage, static_cast<CollectionState>(this->collectionState));
     }
 }
 #endif
@@ -6643,10 +6564,6 @@ Recycler::DoProfileAllocTracker()
         || Js::Configuration::Global.flags.DumpObjectGraphOnCollect
         || Js::Configuration::Global.flags.DumpObjectGraphOnEnum;
 #endif
-    if (CONFIG_FLAG(KeepRecyclerTrackData))
-    {
-        doTracker = true;
-    }
     return doTracker || MemoryProfiler::DoTrackRecyclerAllocation();
 }
 
@@ -6666,10 +6583,6 @@ void
 Recycler::TrackAllocCore(void * object, size_t size, const TrackAllocData& trackAllocData, bool traceLifetime)
 {
     auto&& typeInfo = trackAllocData.GetTypeInfo();
-    if (CONFIG_FLAG(KeepRecyclerTrackData))
-    {
-        TrackFree(static_cast<char*>(object), size);
-    }
 
     Assert(GetTrackerData(object) == nullptr || GetTrackerData(object) == &TrackerData::ExplicitFreeListObjectData);
     Assert(typeInfo != nullptr);
@@ -6690,18 +6603,7 @@ Recycler::TrackAllocCore(void * object, size_t size, const TrackAllocData& track
 
     if (!trackerDictionary->TryGetValue(typeInfo, &item))
     {
-#ifdef STACK_BACK_TRACE
-        if (CONFIG_FLAG(KeepRecyclerTrackData) && isArray) // type info is not useful record stack instead
-        {
-            size_t stackTraceSize = 16 * sizeof(void*);
-            item = NoCheckHeapNewPlus(stackTraceSize, TrackerItem, typeInfo);
-            StackBackTrace::Capture(reinterpret_cast<char*>(&item[1]), stackTraceSize, 7);
-        }
-        else
-#endif
-        {
-            item = NoCheckHeapNew(TrackerItem, typeInfo);
-        }
+        item = NoCheckHeapNew(TrackerItem, typeInfo);
 
         item->instanceData.ItemSize = itemSize;
         item->arrayData.ItemSize = itemSize;
@@ -6794,10 +6696,7 @@ BOOL Recycler::TrackFree(const char* address, size_t size)
         }
         else
         {
-            if (!CONFIG_FLAG(KeepRecyclerTrackData))
-            {
-                Assert(false);
-            }
+            Assert(false);
         }
     }
     return true;
@@ -6823,17 +6722,14 @@ Recycler::SetTrackerData(void * address, TrackerData * data)
 void
 Recycler::TrackUnallocated(char* address, char *endAddress, size_t sizeCat)
 {
-    if (!CONFIG_FLAG(KeepRecyclerTrackData))
+    if (this->trackerDictionary != nullptr)
     {
-        if (this->trackerDictionary != nullptr)
+        std::unique_lock lock(trackerCriticalSection);
+        while (address + sizeCat <= endAddress)
         {
-            std::unique_lock lock(trackerCriticalSection);
-            while (address + sizeCat <= endAddress)
-            {
-                Assert(GetTrackerData(address) == nullptr);
-                SetTrackerData(address, &TrackerData::EmptyData);
-                address += sizeCat;
-            }
+            Assert(GetTrackerData(address) == nullptr);
+            SetTrackerData(address, &TrackerData::EmptyData);
+            address += sizeCat;
         }
     }
 }
@@ -7367,10 +7263,7 @@ Recycler::NotifyFree(char *address, size_t size)
 #endif
 
 #ifdef PROFILE_RECYCLER_ALLOC
-    if (!CONFIG_FLAG(KeepRecyclerTrackData))
-    {
-        TrackFree(address, size);
-    }
+    TrackFree(address, size);
 #endif
 
 #ifdef RECYCLER_STATS
@@ -7388,22 +7281,16 @@ Recycler::NotifyFree(char *address, size_t size)
 void
 Recycler::RegisterPendingWriteBarrierBlock(void* address, size_t bytes)
 {
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
-    {
 #if DBG
-        WBSetBitRange(static_cast<char*>(address), static_cast<uint>(bytes)/sizeof(void*));
+    WBSetBitRange(static_cast<char*>(address), static_cast<uint>(bytes)/sizeof(void*));
 #endif
-        pendingWriteBarrierBlockMap.Item(address, bytes);
-        RecyclerWriteBarrierManager::WriteBarrier(address, bytes);
-    }
+    pendingWriteBarrierBlockMap.Item(address, bytes);
+    RecyclerWriteBarrierManager::WriteBarrier(address, bytes);
 }
 void
 Recycler::UnRegisterPendingWriteBarrierBlock(void* address)
 {
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier))
-    {
-        pendingWriteBarrierBlockMap.Remove(address);
-    }
+    pendingWriteBarrierBlockMap.Remove(address);
 }
 
 #if DBG
@@ -7424,42 +7311,13 @@ Recycler::WBVerifyBitIsSet(char* addr, char* target)
     }
 }
 void
-Recycler::WBSetBit(char* addr)
+Recycler::WBSetBit([[maybe_unused]] char* addr)
 {
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
-    {
-        std::unique_lock<std::recursive_mutex> lock(recyclerListLock);
-        Recycler* recycler = Recycler::recyclerList;
-        while (recycler)
-        {
-            auto heapBlock = recycler->FindHeapBlock(reinterpret_cast<void*>(reinterpret_cast<unsigned long>(addr) & ~HeapInfo::ObjectAlignmentMask));
-            if (heapBlock)
-            {
-                heapBlock->WBSetBit(addr);
-                break;
-            }
-            recycler = recycler->next;
-        }
-    }
 }
+
 void
-Recycler::WBSetBitRange(char* addr, uint count)
+Recycler::WBSetBitRange([[maybe_unused]] char* addr, [[maybe_unused]] uint count)
 {
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
-    {
-        std::unique_lock<std::recursive_mutex> lock(recyclerListLock);
-        Recycler* recycler = Recycler::recyclerList;
-        while (recycler)
-        {
-            auto heapBlock = recycler->FindHeapBlock(reinterpret_cast<void*>(reinterpret_cast<unsigned long>(addr) & ~HeapInfo::ObjectAlignmentMask));
-            if (heapBlock)
-            {
-                heapBlock->WBSetBitRange(addr, count);
-                break;
-            }
-            recycler = recycler->next;
-        }
-    }
 }
 bool
 Recycler::WBCheckIsRecyclerAddress(char* addr)

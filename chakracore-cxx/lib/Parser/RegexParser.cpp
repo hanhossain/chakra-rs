@@ -2994,20 +2994,6 @@ namespace UnifiedRegex
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
         RegexStats* stats = 0;
-        if (REGEX_CONFIG_FLAG(RegexProfile))
-        {
-            stats = this->scriptContext->GetRegexStatsDatabase()->GetRegexStats(pattern);
-            this->scriptContext->GetRegexStatsDatabase()->EndProfile(stats, RegexStats::Parse);
-        }
-        if (REGEX_CONFIG_FLAG(RegexTracing))
-        {
-            DebugWriter* tw = this->scriptContext->GetRegexDebugWriter();
-            tw->Print(u"// REGEX COMPILE ");
-            pattern->Print(tw);
-            tw->EOL();
-        }
-        if (REGEX_CONFIG_FLAG(RegexProfile))
-            this->scriptContext->GetRegexStatsDatabase()->BeginProfile();
 #endif
 
         ArenaAllocator* rtAllocator = this->scriptContext->RegexAllocator();
@@ -3025,11 +3011,6 @@ namespace UnifiedRegex
               , stats
 #endif
                 );
-
-#if ENABLE_REGEX_CONFIG_OPTIONS
-        if (REGEX_CONFIG_FLAG(RegexProfile))
-            this->scriptContext->GetRegexStatsDatabase()->EndProfile(stats, RegexStats::Compile);
-#endif
 
 #ifdef PROFILE_EXEC
         this->scriptContext->ProfileEnd(Js::RegexCompilePhase);

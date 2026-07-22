@@ -5,17 +5,11 @@
 #include <string>
 #include "HeapAllocator.h"
 
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-// Not enabled in ChakraCore
-#include "MemProtectHeap.h"
-#endif
-
 // Initialization order
 //  AB AutoSystemInfo
 //  AD PerfCounter
 //  AE PerfCounterSet
 //  AM Output/Configuration
-//  AN MemProtectHeap
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
 //  AS JavascriptDispatch/RecyclerObjectDumper
@@ -46,22 +40,6 @@ char * HeapAllocator::AllocT(size_t byteSize)
 #endif
 
     char * buffer;
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-    if (DoUseMemProtectHeap())
-    {
-        void * memory = MemProtectHeapRootAlloc(memProtectHeapHandle, byteSize);
-        if (memory == nullptr)
-        {
-            if (noThrow)
-            {
-                return nullptr;
-            }
-            Js::Throw::OutOfMemory();
-        }
-        buffer = (char *)memory;
-    }
-    else
-#endif
     {
         buffer = static_cast<char*>(malloc(byteSize));
     }
@@ -123,14 +101,6 @@ void HeapAllocator::Free(void * buffer, size_t byteSize)
         size_t * allocSize = (size_t *)(((char *)buffer) - ::Math::Align<size_t>(sizeof(size_t), MEMORY_ALLOCATION_ALIGNMENT));
         HEAP_PERF_COUNTER_SUB(LiveObjectSize, *allocSize);
         buffer = allocSize;
-    }
-#endif
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-    if (DoUseMemProtectHeap())
-    {
-        int32_t hr = MemProtectHeapUnrootAndZero(memProtectHeapHandle, buffer);
-        Assert(SUCCEEDED(hr));
-        return;
     }
 #endif
 
@@ -204,108 +174,16 @@ void NoThrowHeapAllocator::ClearTrackAllocInfo(TrackAllocData* data /*= NULL*/)
 
 HeapAllocator * HeapAllocator::GetNoMemProtectInstance()
 {
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-    // Used only in Chakra, no need to use CUSTOM_CONFIG_FLAG
-    if (CONFIG_FLAG(MemProtectHeap))
-    {
-        return &NoMemProtectInstance;
-    }
-#endif
     return &Instance;
 }
 
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-HeapAllocator HeapAllocator::NoMemProtectInstance(false);
-
-bool HeapAllocator::DoUseMemProtectHeap()
-{
-    if (!allocMemProtect)
-    {
-        return false;
-    }
-
-    if (memProtectHeapHandle != nullptr)
-    {
-        return true;
-    }
-
-    DebugOnly(bool wasUsed = isUsed);
-    isUsed = true;
-
-    // Flag is used only in Chakra, no need to use CUSTOM_CONFIG_FLAG
-    if (CONFIG_FLAG(MemProtectHeap))
-    {
-        Assert(!wasUsed);
-        if (FAILED(MemProtectHeapCreate(&memProtectHeapHandle, MemProtectHeapCreateFlags_ProtectCurrentStack)))
-        {
-            Assert(false);
-        }
-        return true;
-    }
-
-    return false;
-}
-
-void HeapAllocator::FinishMemProtectHeapCollect()
-{
-    if (memProtectHeapHandle)
-    {
-        MemProtectHeapCollect(memProtectHeapHandle, MemProtectHeap_ForceFinishCollect);
-        DebugOnly(MemProtectHeapSetDisableConcurrentThreadExitedCheck(memProtectHeapHandle));
-    }
-}
-
-NoThrowNoMemProtectHeapAllocator NoThrowNoMemProtectHeapAllocator::Instance;
-
-char * NoThrowNoMemProtectHeapAllocator::AllocZero(size_t byteSize)
-{
-    return HeapAllocator::GetNoMemProtectInstance()->NoThrowAllocZero(byteSize);
-}
-
-char * NoThrowNoMemProtectHeapAllocator::Alloc(size_t byteSize)
-{
-    return HeapAllocator::GetNoMemProtectInstance()->NoThrowAlloc(byteSize);
-}
-
-void NoThrowNoMemProtectHeapAllocator::Free(void * buffer, size_t byteSize)
-{
-    HeapAllocator::GetNoMemProtectInstance()->Free(buffer, byteSize);
-}
-
-#ifdef TRACK_ALLOC
-NoThrowNoMemProtectHeapAllocator * NoThrowNoMemProtectHeapAllocator::TrackAllocInfo(TrackAllocData const& data)
-{
-    HeapAllocator::GetNoMemProtectInstance()->TrackAllocInfo(data);
-    return this;
-}
-#endif // TRACK_ALLOC
-
-#ifdef TRACK_ALLOC
-void NoThrowNoMemProtectHeapAllocator::ClearTrackAllocInfo(TrackAllocData* data /*= NULL*/)
-{
-    HeapAllocator::GetNoMemProtectInstance()->ClearTrackAllocInfo(data);
-}
-#endif // TRACK_ALLOC
-#endif
-
 HeapAllocator::HeapAllocator(bool useAllocMemProtect)
     : m_privateHeap(nullptr)
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-    , isUsed(false)
-    , memProtectHeapHandle(nullptr)
-    , allocMemProtect(useAllocMemProtect)
-#endif
 {
 }
 
 HeapAllocator::~HeapAllocator()
 {
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-    if (memProtectHeapHandle != nullptr)
-    {
-        MemProtectHeapDestroy(memProtectHeapHandle);
-    }
-#endif // INTERNAL_MEM_PROTECT_HEAP_ALLOC
 }
 
 #ifdef HEAP_TRACK_ALLOC

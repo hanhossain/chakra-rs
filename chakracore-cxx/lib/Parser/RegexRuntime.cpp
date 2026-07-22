@@ -438,24 +438,8 @@ namespace UnifiedRegex
 
 #define PRINT_RE_BYTECODE_BEGIN(Name) \
     w->Print(u"L%04x: ", label); \
-    if (REGEX_CONFIG_FLAG(RegexBytecodeDebug)) \
-    { \
-        w->Print(u"(0x%03x bytes) ", sizeof(*this)); \
-    } \
     w->Print(u##Name); \
     w->Print(u"(");
-
-#define PRINT_RE_BYTECODE_MID() \
-    w->PrintEOL(u")"); \
-    if (REGEX_CONFIG_FLAG(RegexBytecodeDebug)) \
-    { \
-        w->Indent(); \
-        Inst::PrintBytes<Inst>(w, static_cast<const Inst *>(this), static_cast<const Inst *>(this), u"Inst")
-
-#define PRINT_RE_BYTECODE_END() \
-        w->Unindent(); \
-    } \
-    return sizeof(*this);
 
 #endif
 
@@ -975,9 +959,8 @@ namespace UnifiedRegex
     int NopInst::Print(DebugWriter* w, Label label, const Char* litbuf) const
     {
         PRINT_RE_BYTECODE_BEGIN("Nop");
-        PRINT_RE_BYTECODE_MID();
-        Inst::PrintBytes<NopInst>(w, this, this, u"NopInst");
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -994,9 +977,8 @@ namespace UnifiedRegex
     int FailInst::Print(DebugWriter* w, Label label, const Char* litbuf) const
     {
         PRINT_RE_BYTECODE_BEGIN("Fail");
-        PRINT_RE_BYTECODE_MID();
-        Inst::PrintBytes<NopInst>(w, this, reinterpret_cast<const NopInst *>(this), u"NopInst");
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1016,9 +998,8 @@ namespace UnifiedRegex
     int SuccInst::Print(DebugWriter* w, Label label, const Char* litbuf) const
     {
         PRINT_RE_BYTECODE_BEGIN("Succ");
-        PRINT_RE_BYTECODE_MID();
-        Inst::PrintBytes<NopInst>(w, this, reinterpret_cast<const NopInst *>(this), u"NopInst");
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1037,9 +1018,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("Jump");
         PRINT_MIXIN(JumpMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(JumpMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1069,10 +1049,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("JumpIfNotChar");
         PRINT_MIXIN_COMMA(CharMixin);
         PRINT_MIXIN(JumpMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_BYTES(JumpMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1103,10 +1081,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("MatchCharOrJump");
         PRINT_MIXIN_COMMA(CharMixin);
         PRINT_MIXIN(JumpMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_BYTES(JumpMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1136,10 +1112,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("JumpIfNotSet");
         PRINT_MIXIN_COMMA(SetMixin<false>);
         PRINT_MIXIN(JumpMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_BYTES(JumpMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1170,10 +1144,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("MatchSetOrJump");
         PRINT_MIXIN_COMMA(SetMixin<false>);
         PRINT_MIXIN(JumpMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_BYTES(JumpMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1188,9 +1160,8 @@ namespace UnifiedRegex
     {                                                                                           \
         PRINT_RE_BYTECODE_BEGIN("SwitchAndConsume"#n);                                          \
         PRINT_MIXIN(SwitchMixin<n>);                                                            \
-        PRINT_RE_BYTECODE_MID();                                                                \
-        PRINT_BYTES(SwitchMixin<n>);                                                            \
-        PRINT_RE_BYTECODE_END();                                                                \
+        w->PrintEOL(u")"); \
+        return sizeof(*this); \
     }
 #else
 #define COMP_STATS
@@ -1289,8 +1260,8 @@ namespace UnifiedRegex
 
         w->Print(u"<hardFail>: %s", canHardFail ? u"true" : u"false");
 
-        PRINT_RE_BYTECODE_MID();
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1337,8 +1308,8 @@ namespace UnifiedRegex
 
         w->Print(u"<hardFail>: %s", canHardFail ? u"true" : u"false");
 
-        PRINT_RE_BYTECODE_MID();
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1364,8 +1335,8 @@ namespace UnifiedRegex
     int BOLTestInst::Print(DebugWriter* w, Label label, const Char* litbuf) const
     {
         PRINT_RE_BYTECODE_BEGIN("BOLTest");
-        PRINT_RE_BYTECODE_MID();
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1391,8 +1362,8 @@ namespace UnifiedRegex
     int EOLTestInst::Print(DebugWriter* w, Label label, const Char* litbuf) const
     {
         PRINT_RE_BYTECODE_BEGIN("EOLTest");
-        PRINT_RE_BYTECODE_MID();
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1435,8 +1406,8 @@ namespace UnifiedRegex
             PRINT_RE_BYTECODE_BEGIN("WordBoundaryTest");
         }
 
-        PRINT_RE_BYTECODE_MID();
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1464,9 +1435,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("MatchChar");
         PRINT_MIXIN(CharMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1494,9 +1464,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("MatchChar2");
         PRINT_MIXIN(Char2Mixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char2Mixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1524,9 +1493,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("MatchChar3");
         PRINT_MIXIN(Char3Mixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char3Mixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1554,9 +1522,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("MatchChar4");
         PRINT_MIXIN(Char4Mixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char4Mixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1594,9 +1561,8 @@ namespace UnifiedRegex
         }
         PRINT_MIXIN(SetMixin<IsNegation>);
 
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<IsNegation>);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1653,9 +1619,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("MatchLiteral");
         PRINT_MIXIN_ARGS(LiteralMixin, false);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(LiteralMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1703,9 +1668,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("MatchLiteralEquiv");
         PRINT_MIXIN_ARGS(LiteralMixin, true);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(LiteralMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1741,9 +1705,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("MatchTrie");
         PRINT_MIXIN(TrieMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(TrieMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1770,9 +1733,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("OptMatchChar");
         PRINT_MIXIN(CharMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1799,9 +1761,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("OptMatchSet");
         PRINT_MIXIN(SetMixin<false>);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1833,9 +1794,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("SyncToCharAndContinue");
         PRINT_MIXIN(CharMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1868,9 +1828,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("SyncToChar2SetAndContinue");
         PRINT_MIXIN(Char2Mixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char2Mixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1913,9 +1872,8 @@ namespace UnifiedRegex
         }
         PRINT_MIXIN(SetMixin<IsNegation>);
 
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<IsNegation>);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -1953,9 +1911,8 @@ namespace UnifiedRegex
         // NOTE: this text is unique to this instantiation
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndContinueInstT<Char2LiteralScannerMixin> aka SyncToChar2LiteralAndContinue");
         PRINT_MIXIN(Char2LiteralScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char2LiteralScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -1964,9 +1921,8 @@ namespace UnifiedRegex
         // NOTE: this text is unique to this instantiation
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndContinueInstT<ScannerMixin> aka SyncToLiteralAndContinue");
         PRINT_MIXIN(ScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -1975,9 +1931,8 @@ namespace UnifiedRegex
         // NOTE: this text is unique to this instantiation
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndContinueInstT<ScannerMixin_WithLinearCharMap> aka SyncToLinearLiteralAndContinue");
         PRINT_MIXIN(ScannerMixin_WithLinearCharMap); // NOTE: would work with template <typename ScannerT> ScannerT::Print
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin_WithLinearCharMap); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -1986,9 +1941,8 @@ namespace UnifiedRegex
         // NOTE: this text is unique to this instantiation
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndContinueInstT<EquivScannerMixin> aka SyncToLiteralEquivAndContinue");
         PRINT_MIXIN(EquivScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -1997,9 +1951,8 @@ namespace UnifiedRegex
         // NOTE: this text is unique to this instantiation
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndContinueInstT<EquivTrivialLastPatCharScannerMixin> aka SyncToLiteralEquivTrivialLastPatCharAndContinue");
         PRINT_MIXIN(EquivTrivialLastPatCharScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivTrivialLastPatCharScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2036,9 +1989,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("SyncToCharAndConsume");
         PRINT_MIXIN(CharMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2076,9 +2028,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("SyncToChar2SetAndConsume");
         PRINT_MIXIN(Char2Mixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char2Mixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2124,9 +2075,8 @@ namespace UnifiedRegex
             PRINT_RE_BYTECODE_BEGIN("SyncToSetAndConsume");
         }
 
-        PRINT_RE_BYTECODE_MID();
-        PRINT_MIXIN(SetMixin<IsNegation>);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2165,9 +2115,8 @@ namespace UnifiedRegex
         // NOTE: this text is unique to this instantiation
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndConsumeInstT<Char2LiteralScannerMixin> aka SyncToChar2LiteralAndConsume");
         PRINT_MIXIN(Char2LiteralScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char2LiteralScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -2176,9 +2125,8 @@ namespace UnifiedRegex
         // NOTE: this text is unique to this instantiation
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndConsumeInstT<ScannerMixin> aka SyncToLiteralAndConsume");
         PRINT_MIXIN(ScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -2187,9 +2135,8 @@ namespace UnifiedRegex
         // NOTE: this text is unique to this instantiation
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndConsumeInstT<ScannerMixin_WithLinearCharMap> aka SyncToLinearLiteralAndConsume");
         PRINT_MIXIN(ScannerMixin_WithLinearCharMap); // NOTE: would work with template <typename ScannerT> ScannerT::Print
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin_WithLinearCharMap); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -2198,9 +2145,8 @@ namespace UnifiedRegex
         // NOTE: this text is unique to this instantiation
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndConsumeInstT<EquivScannerMixin> aka SyncToLiteralEquivAndConsume");
         PRINT_MIXIN(EquivScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -2209,9 +2155,8 @@ namespace UnifiedRegex
         // NOTE: this text is unique to this instantiation
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndConsumeInstT<EquivTrivialLastPatCharScannerMixin> aka SyncToLiteralEquivTrivialLastPatCharAndConsume");
         PRINT_MIXIN(EquivTrivialLastPatCharScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivTrivialLastPatCharScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2277,10 +2222,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToCharAndBackup");
         PRINT_MIXIN_COMMA(CharMixin);
         PRINT_MIXIN(BackupMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_BYTES(BackupMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2356,10 +2299,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(SetMixin<IsNegation>);
 
         PRINT_MIXIN(BackupMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<IsNegation>);
-        PRINT_BYTES(BackupMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2429,10 +2370,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndBackupInstT<Char2LiteralScannerMixin> aka SyncToChar2LiteralAndBackup");
         PRINT_MIXIN_COMMA(Char2LiteralScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_MIXIN(BackupMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(Char2LiteralScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_BYTES(BackupMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -2442,10 +2381,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndBackupInstT<ScannerMixin> aka SyncToLiteralAndBackup");
         PRINT_MIXIN_COMMA(ScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_MIXIN(BackupMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_BYTES(BackupMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -2455,10 +2392,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndBackupInstT<ScannerMixin_WithLinearCharMap> aka SyncToLinearLiteralAndBackup");
         PRINT_MIXIN_COMMA(ScannerMixin_WithLinearCharMap); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_MIXIN(BackupMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannerMixin_WithLinearCharMap); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_BYTES(BackupMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -2468,10 +2403,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndBackupInstT<EquivScannerMixin> aka SyncToLiteralEquivAndBackup");
         PRINT_MIXIN_COMMA(EquivScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_MIXIN(BackupMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_BYTES(BackupMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 
     template <>
@@ -2481,10 +2414,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralAndBackupInstT<EquivTrivialLastPatCharScannerMixin> aka SyncToLiteralEquivTrivialLastPatCharAndBackup");
         PRINT_MIXIN_COMMA(EquivTrivialLastPatCharScannerMixin); // NOTE: would work with template <typename ScannerT> ScannerT::Print
         PRINT_MIXIN(BackupMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EquivTrivialLastPatCharScannerMixin); // NOTE: unique because macro expansion and u###InstType happen before template is evaluated (so text would be ScannerT)
-        PRINT_BYTES(BackupMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2605,10 +2536,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("SyncToLiteralsAndBackup");
         PRINT_MIXIN_COMMA(ScannersMixin);
         PRINT_MIXIN(BackupMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(ScannersMixin);
-        PRINT_BYTES(BackupMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2753,9 +2682,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("MatchGroup");
         PRINT_MIXIN(GroupMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(GroupMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2779,9 +2707,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("BeginDefineGroup");
         PRINT_MIXIN(GroupMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(GroupMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2815,10 +2742,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("EndDefineGroup");
         PRINT_MIXIN_COMMA(GroupMixin);
         PRINT_MIXIN(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(GroupMixin);
-        PRINT_BYTES(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2853,11 +2778,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(GroupMixin);
         PRINT_MIXIN_COMMA(FixedLengthMixin);
         PRINT_MIXIN(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(GroupMixin);
-        PRINT_BYTES(FixedLengthMixin);
-        PRINT_BYTES(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -2936,11 +2858,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(BeginLoopMixin);
         PRINT_MIXIN_COMMA(BodyGroupsMixin);
         PRINT_MIXIN(GreedyMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(BeginLoopMixin);
-        PRINT_BYTES(BodyGroupsMixin);
-        PRINT_BYTES(GreedyMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3027,9 +2946,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("RepeatLoop");
         PRINT_MIXIN(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3075,11 +2993,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(CharMixin);
         PRINT_MIXIN_COMMA(BeginLoopMixin);
         PRINT_MIXIN(BodyGroupsMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_BYTES(BeginLoopMixin);
-        PRINT_BYTES(BodyGroupsMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3127,11 +3042,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(SetMixin<false>);
         PRINT_MIXIN_COMMA(BeginLoopMixin);
         PRINT_MIXIN(BodyGroupsMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_BYTES(BeginLoopMixin);
-        PRINT_BYTES(BodyGroupsMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3199,9 +3111,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("RepeatLoopIfChar");
         PRINT_MIXIN(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3269,9 +3180,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("RepeatLoopIfSet");
         PRINT_MIXIN(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3319,10 +3229,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("BeginLoopFixed");
         PRINT_MIXIN_COMMA(BeginLoopMixin);
         PRINT_MIXIN(FixedLengthMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(BeginLoopMixin);
-        PRINT_BYTES(FixedLengthMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3380,9 +3288,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("RepeatLoopFixed");
         PRINT_MIXIN(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3454,10 +3361,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("LoopSetInst");
         PRINT_MIXIN_COMMA(SetMixin<false>);
         PRINT_MIXIN(BeginLoopBasicsMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_BYTES(BeginLoopBasicsMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3535,11 +3440,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(SetMixin<false>);
         PRINT_MIXIN_COMMA(BeginLoopBasicsMixin);
         PRINT_MIXIN(FollowFirstMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_BYTES(BeginLoopBasicsMixin);
-        PRINT_MIXIN(FollowFirstMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3600,12 +3502,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(FixedLengthMixin);
         PRINT_MIXIN_COMMA(GroupMixin);
         PRINT_MIXIN(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(BeginLoopMixin);
-        PRINT_BYTES(FixedLengthMixin);
-        PRINT_BYTES(GroupMixin);
-        PRINT_BYTES(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3669,9 +3567,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("RepeatLoopFixedGroupLastIteration");
         PRINT_MIXIN(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3701,9 +3598,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("BeginGreedyLoopNoBacktrack");
         PRINT_MIXIN(GreedyLoopNoBacktrackMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(GreedyLoopNoBacktrackMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3745,9 +3641,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("RepeatGreedyLoopNoBacktrack");
         PRINT_MIXIN(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(RepeatLoopMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3805,9 +3700,8 @@ namespace UnifiedRegex
         }
 
         PRINT_MIXIN(CharMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3865,9 +3759,8 @@ namespace UnifiedRegex
         }
 
         PRINT_MIXIN(SetMixin<false>);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -3943,11 +3836,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(CharMixin);
         PRINT_MIXIN_COMMA(GroupMixin);
         PRINT_MIXIN(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_BYTES(GroupMixin);
-        PRINT_BYTES(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4023,11 +3913,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(SetMixin<false>);
         PRINT_MIXIN_COMMA(GroupMixin);
         PRINT_MIXIN(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_BYTES(GroupMixin);
-        PRINT_BYTES(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4070,10 +3957,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("ChompCharBounded");
         PRINT_MIXIN_COMMA(CharMixin);
         PRINT_MIXIN(ChompBoundedMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_BYTES(ChompBoundedMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4116,10 +4001,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("ChompSetBounded");
         PRINT_MIXIN_COMMA(SetMixin<false>);
         PRINT_MIXIN(ChompBoundedMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_BYTES(ChompBoundedMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4181,12 +4064,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(ChompBoundedMixin);
         PRINT_MIXIN_COMMA(GroupMixin);
         PRINT_MIXIN(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_BYTES(ChompBoundedMixin);
-        PRINT_BYTES(GroupMixin);
-        PRINT_BYTES(NoNeedToSaveMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4211,9 +4090,8 @@ namespace UnifiedRegex
     {
         PRINT_RE_BYTECODE_BEGIN("Try");
         PRINT_MIXIN(TryMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(TryMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4248,10 +4126,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("TryIfChar");
         PRINT_MIXIN_COMMA(CharMixin);
         PRINT_MIXIN(TryMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_BYTES(TryMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4287,10 +4163,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("TryMatchChar");
         PRINT_MIXIN_COMMA(CharMixin);
         PRINT_MIXIN(TryMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(CharMixin);
-        PRINT_BYTES(TryMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4325,10 +4199,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("TryIfSet");
         PRINT_MIXIN_COMMA(SetMixin<false>);
         PRINT_MIXIN(TryMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_BYTES(TryMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4364,10 +4236,8 @@ namespace UnifiedRegex
         PRINT_RE_BYTECODE_BEGIN("TryMatchSet");
         PRINT_MIXIN_COMMA(SetMixin<false>);
         PRINT_MIXIN(TryMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(SetMixin<false>);
-        PRINT_BYTES(TryMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4404,11 +4274,8 @@ namespace UnifiedRegex
         PRINT_MIXIN_COMMA(BodyGroupsMixin);
         PRINT_MIXIN_COMMA(NegationMixin);
         PRINT_MIXIN(NextLabelMixin);
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(BodyGroupsMixin);
-        PRINT_BYTES(NegationMixin);
-        PRINT_BYTES(NextLabelMixin);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 
@@ -4432,9 +4299,8 @@ namespace UnifiedRegex
     int EndAssertionInst::Print(DebugWriter* w, Label label, const Char* litbuf) const
     {
         PRINT_RE_BYTECODE_BEGIN("EndAssertion");
-        PRINT_RE_BYTECODE_MID();
-        PRINT_BYTES(EndAssertionInst);
-        PRINT_RE_BYTECODE_END();
+        w->PrintEOL(u")");
+        return sizeof(*this);
     }
 #endif
 

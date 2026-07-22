@@ -141,12 +141,8 @@ class RecyclerWriteBarrierManager
 public:
     static void WriteBarrier(void * address);
     static void WriteBarrier(void * address, size_t bytes);
-    static void ToggleBarrier(void * address, size_t bytes, bool enable);
     static bool IsBarrierAddress(void * address);
     static bool IsBarrierAddress(uintptr_t index);
-    static void VerifyIsBarrierAddress(void * address, size_t bytes);
-    static void VerifyIsNotBarrierAddress(void * address, size_t bytes);
-    static void VerifyIsBarrierAddress(void * address);
     static bool Initialize();
 
     static bool IsCardTableCommited(_In_ uintptr_t index)

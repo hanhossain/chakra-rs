@@ -793,9 +793,6 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
         // The whole list need to be consistent
         DebugOnly(VerifyBlockConsistencyInList(heapBlock, recyclerSweep));
 
-#ifdef RECYCLER_TRACE
-        recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**1**] starting Sweep Pass1.");
-#endif
         SweepState state = heapBlock->Sweep(recyclerSweep, queuePendingSweep, allocable);
 
         DebugOnly(VerifyBlockConsistencyInList(heapBlock, recyclerSweep, state));
@@ -813,9 +810,6 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
 
             heapBlock->SetNextBlock(pendingSweepList);
             pendingSweepList = heapBlock;
-#ifdef RECYCLER_TRACE
-            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**2**] finished Sweep Pass1, heapblock added to pendingSweepList.");
-#endif
             recyclerSweep.GetManager()->NotifyAllocableObjects(heapBlock);
             break;
         }
@@ -839,9 +833,6 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
             finalizableHeapBucket->pendingDisposeList = heapBlock->template AsFinalizableBlock<typename TBlockType::HeapBlockAttributes>();
             Assert(!this->heapInfo->hasPendingTransferDisposedObjects);
             recycler->hasDisposableObject = true;
-#ifdef RECYCLER_TRACE
-            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**3**] finished Sweep Pass1, heapblock added to pendingDisposeList.");
-#endif
             break;
         }
         case SweepStateSwept:
@@ -855,9 +846,6 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
                 this->heapBlockList = heapBlock;
             }
 
-#ifdef RECYCLER_TRACE
-            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**6**] finished Sweep Pass1, heapblock added to heapBlockList.");
-#endif
             recyclerSweep.GetManager()->NotifyAllocableObjects(heapBlock);
             break;
         }
@@ -867,9 +855,6 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
             DebugOnly(this->AssertCheckHeapBlockNotInAnyList(heapBlock));
             heapBlock->SetNextBlock(this->fullBlockList);
             this->fullBlockList = heapBlock;
-#ifdef RECYCLER_TRACE
-            recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**7**] finished Sweep Pass1, heapblock FULL added to fullBlockList.");
-#endif
             break;
         }
         case SweepStateEmpty:
@@ -895,9 +880,6 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
                 // the maximum and will get decommitted anyway
                 recyclerSweep.template QueueEmptyHeapBlock<TBlockType>(this, heapBlock);
                 RECYCLER_STATS_INC(recycler, numZeroedOutSmallBlocks);
-#ifdef RECYCLER_TRACE
-                recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**8**] finished Sweep Pass1, heapblock EMPTY added to pendingEmptyBlockList.");
-#endif
             }
             else
             {
@@ -906,9 +888,6 @@ HeapBucketT<TBlockType>::SweepHeapBlockList(RecyclerSweep& recyclerSweep, TBlock
                 FreeHeapBlock(heapBlock);
 #if defined(RECYCLER_SLOW_CHECK_ENABLED)
                 this->heapBlockCount--;
-#endif
-#ifdef RECYCLER_TRACE
-                recyclerSweep.GetRecycler()->PrintBlockStatus(this, heapBlock, u"[**9**] finished Sweep Pass1, heapblock EMPTY, was FREED in-thread.");
 #endif
             }
 
@@ -1072,13 +1051,6 @@ template <typename TBlockType>
 void
 HeapBucketT<TBlockType>::AppendAllocableHeapBlockList(TBlockType * list)
 {
-#ifdef RECYCLER_TRACE
-    if (this->GetRecycler()->GetRecyclerFlagsTable().Trace.IsEnabled(Js::ConcurrentSweepPhase) && CONFIG_FLAG_RELEASE(Verbose))
-    {
-        CollectionState collectionState = this->GetRecycler()->collectionState;
-        Output::Print(u"[GC #%d] [HeapBucket 0x%p] in AppendAllocableHeapBlockList [CollectionState: %d] \n", this->GetRecycler()->collectionCount, this, collectionState);
-    }
-#endif
     // Add the list to the end of the current list
     TBlockType * currentHeapBlockList = this->heapBlockList;
     if (currentHeapBlockList == nullptr)

@@ -104,7 +104,7 @@ inline char*
 SmallHeapBlockAllocator<TBlockType>::InlinedAllocImpl(Recycler * recycler, size_t sizeCat, ObjectInfoBits attributes)
 {
     Assert((attributes & InternalObjectInfoBitMask) == attributes);
-    Assert(!CONFIG_FLAG(ForceSoftwareWriteBarrier) || (attributes & WithBarrierBit) || (attributes & LeafBit));
+    Assert((attributes & WithBarrierBit) || (attributes & LeafBit));
 
     AUTO_NO_EXCEPTION_REGION;
     char * memBlock = (char *)freeObjectList;

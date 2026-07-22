@@ -13,9 +13,6 @@ inline long VirtualTableInfo<T>::RegisterVirtualTable()
     long vtable = *(long const*)&T(VirtualTableInfoCtorValue);
 
 #if DBG
-#if ENABLE_VALIDATE_VTABLE_CTOR
-    //printf("m_vtableMapHash->Add(VirtualTableInfo<%s>::Address, dummy);\n", typeid(T).name());
-#endif
     if (T::RegisterVTable)
     {
         VirtualTableRegistry::Add(vtable, typeid(T).name());

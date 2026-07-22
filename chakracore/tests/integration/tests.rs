@@ -15,8 +15,6 @@ mod boolean;
 #[cfg(feature = "optimized-tests")]
 mod bugs;
 mod closures;
-#[cfg(windows)]
-mod config_parsing;
 #[cfg(feature = "optimized-tests")]
 mod control_flow;
 #[cfg(feature = "optimized-tests")]

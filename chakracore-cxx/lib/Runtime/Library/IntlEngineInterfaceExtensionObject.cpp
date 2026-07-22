@@ -572,14 +572,6 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
                 deletePrototypePropertyHelper(scriptContext, intlObject, Js::PropertyIds::NumberFormat, Js::PropertyIds::format);
                 deletePrototypePropertyHelper(scriptContext, intlObject, Js::PropertyIds::DateTimeFormat, Js::PropertyIds::format);
             }
-
-#if DBG_DUMP
-            if (PHASE_DUMP(Js::ByteCodePhase, function->GetFunctionProxy()) && Js::Configuration::Global.flags.Verbose)
-            {
-                DumpByteCode();
-            }
-#endif
-
         }
         catch (const JavascriptException& err)
         {

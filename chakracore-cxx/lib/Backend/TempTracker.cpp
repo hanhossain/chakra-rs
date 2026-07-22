@@ -429,7 +429,7 @@ TempTracker<T>::MarkTemp(StackSym * sym, BackwardPass * backwardPass)
                 // of dependency or not.
 
 #if DBG_DUMP
-                if (T::DoTrace(backwardPass) && Js::Configuration::Global.flags.Verbose)
+                if (T::DoTrace(backwardPass) && false)
                 {
                      Output::Print(u"%s: Loop mark temp check instr:\n", T::GetTraceName());
                      instr->DumpSimple();
@@ -1117,12 +1117,6 @@ ObjectTemp::CanStoreTemp(IR::Instr * instr)
     if (OpCodeAttr::TempObjectCanStoreTemp(opcode))
     {
         // Special cases where stack allocation doesn't happen
-#if ENABLE_REGEX_CONFIG_OPTIONS
-        if (opcode == Js::OpCode::NewRegEx && REGEX_CONFIG_FLAG(RegexTracing))
-        {
-            return false;
-        }
-#endif
         if (opcode == Js::OpCode::NewScObjectNoCtor)
         {
             if (PHASE_OFF(Js::FixedNewObjPhase, instr->m_func) && PHASE_OFF(Js::ObjTypeSpecNewObjPhase, instr->m_func->GetTopFunc()))

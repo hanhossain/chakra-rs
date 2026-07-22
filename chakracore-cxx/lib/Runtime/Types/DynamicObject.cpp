@@ -624,7 +624,7 @@ namespace Js
 #if DBG
         bool wasShared = currentTypeHandler->GetIsShared();
         bool wasPrototype = (currentTypeHandler->GetFlags() & DynamicTypeHandler::IsPrototypeFlag) != 0;
-        Assert(!DynamicTypeHandler::IsolatePrototypes() || !currentTypeHandler->RespectsIsolatePrototypes() || !currentTypeHandler->GetIsOrMayBecomeShared() || !wasPrototype);
+        Assert(!currentTypeHandler->RespectsIsolatePrototypes() || !currentTypeHandler->GetIsOrMayBecomeShared() || !wasPrototype);
 #endif
 
         // If this handler is not shared and it already has a prototype flag then we must have taken the required
@@ -648,8 +648,8 @@ namespace Js
 
 #if DBG
         Assert(currentTypeHandler->SupportsPrototypeInstances());
-        Assert(!DynamicTypeHandler::IsolatePrototypes() || !currentTypeHandler->RespectsIsolatePrototypes() || !currentTypeHandler->GetIsOrMayBecomeShared());
-        Assert((wasPrototype && !wasShared) || !DynamicTypeHandler::ChangeTypeOnProto() || !currentTypeHandler->RespectsChangeTypeOnProto() || this->GetDynamicType() != oldType);
+        Assert(!currentTypeHandler->RespectsIsolatePrototypes() || !currentTypeHandler->GetIsOrMayBecomeShared());
+        Assert((wasPrototype && !wasShared) || !currentTypeHandler->RespectsChangeTypeOnProto() || this->GetDynamicType() != oldType);
 #endif
 
         // If we haven't changed type we must explicitly invalidate store field inline caches to avoid properties

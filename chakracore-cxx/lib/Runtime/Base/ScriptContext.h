@@ -630,8 +630,6 @@ public:
             }
         };
 
-        void LogDataForFunctionBody(Js::FunctionBody *body, uint idx, bool isRejit);
-
         void LogRejit(Js::FunctionBody *body, RejitReason reason);
         void LogBailout(Js::FunctionBody *body, uint kind);
 
@@ -872,10 +870,6 @@ private:
         time_t GetCreateTime() const { return createTime; }
         uint GetAllocId() const { return allocId; }
 
-#ifdef HEAP_ENUMERATION_VALIDATION
-        bool IsInitialized() { return this->isInitialized; }
-#endif
-
 #ifdef ENABLE_SCRIPT_DEBUGGING
         bool IsDebugContextInitialized() const { return this->isDebugContextInitialized; }
         DebugContext* GetDebugContext() const;
@@ -956,7 +950,6 @@ private:
         template <class TDelegate>
         FunctionBody* FindFunction(TDelegate predicate);
 
-        inline bool EnableEvalMapCleanup() { return CONFIG_FLAG(EnableEvalMapCleanup); };
         uint GetNextSourceContextId();
 
         bool IsInNewFunctionMap(EvalMapString const& key, FunctionInfo **ppFuncInfo);

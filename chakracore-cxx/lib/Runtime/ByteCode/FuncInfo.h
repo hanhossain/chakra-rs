@@ -701,70 +701,11 @@ public:
             properties->Add(propertySlot, cacheList);
         }
 
-        // If we share inline caches we should never have more than one entry in the list.
-        Assert(!Js::FunctionBody::ShouldShareInlineCaches() || cacheList->Count() <= 1);
-
         InlineCacheUnit cacheIdUnit;
 
-        if (Js::FunctionBody::ShouldShareInlineCaches() && !cacheList->Empty())
-        {
-            cacheIdUnit = cacheList->Head();
-            if (isLoadMethod)
-            {
-                if (cacheIdUnit.loadMethodCacheId == (uint)-1)
-                {
-                    cacheIdUnit.loadMethodCacheId = this->NewInlineCache();
-                }
-                cacheId = cacheIdUnit.loadMethodCacheId;
-            }
-            else if (isStore)
-            {
-                if (cacheIdUnit.storeCacheId == (uint)-1)
-                {
-                    cacheIdUnit.storeCacheId = this->NewInlineCache();
-                }
-                cacheId = cacheIdUnit.storeCacheId;
-            }
-            else
-            {
-                if (cacheIdUnit.loadCacheId == (uint)-1)
-                {
-                    cacheIdUnit.loadCacheId = this->NewInlineCache();
-                }
-                cacheId = cacheIdUnit.loadCacheId;
-            }
-            cacheList->Head() = cacheIdUnit;
-        }
-        else
-        {
-            cacheId = this->NewInlineCache();
-            if (Js::FunctionBody::ShouldShareInlineCaches())
-            {
-                if (isLoadMethod)
-                {
-                    cacheIdUnit.loadCacheId = (uint)-1;
-                    cacheIdUnit.loadMethodCacheId = cacheId;
-                    cacheIdUnit.storeCacheId = (uint)-1;
-                }
-                else if (isStore)
-                {
-                    cacheIdUnit.loadCacheId = (uint)-1;
-                    cacheIdUnit.loadMethodCacheId = (uint)-1;
-                    cacheIdUnit.storeCacheId = cacheId;
-                }
-                else
-                {
-                    cacheIdUnit.loadCacheId = cacheId;
-                    cacheIdUnit.loadMethodCacheId = (uint)-1;
-                    cacheIdUnit.storeCacheId = (uint)-1;
-                }
-            }
-            else
-            {
-                cacheIdUnit.cacheId = cacheId;
-            }
-            cacheList->Prepend(cacheIdUnit);
-        }
+        cacheId = this->NewInlineCache();
+        cacheIdUnit.cacheId = cacheId;
+        cacheList->Prepend(cacheIdUnit);
 
         return cacheId;
     }

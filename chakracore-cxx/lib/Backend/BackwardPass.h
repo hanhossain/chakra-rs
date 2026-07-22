@@ -73,7 +73,6 @@ private:
     void InvalidateCloneStrCandidate(IR::Opnd *opnd);
 #if DBG_DUMP
     void DumpBlockData(BasicBlock * block, IR::Instr* instr = nullptr);
-    void TraceInstrUses(BasicBlock * block, IR::Instr* instr, bool isStart);
     void TraceBlockUses(BasicBlock * block, bool isStart);
     void DumpMarkTemp();
 #endif

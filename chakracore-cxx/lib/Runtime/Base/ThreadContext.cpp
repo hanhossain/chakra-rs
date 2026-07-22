@@ -31,6 +31,15 @@
 
 const int TotalNumberOfBuiltInProperties = Js::PropertyIds::_countJSOnlyProperty;
 
+#if ENABLE_NATIVE_CODEGEN
+/// Clear uniquePropertyGuard entries from recyclableData if number of invalidations of constructor caches happened are
+/// more than the threshold
+constexpr unsigned int ConstructorCacheInvalidationThreshold = 500;
+#endif
+
+/// Compact inline cache invalidation lists if their utilization falls below this threshold
+constexpr int InlineCacheInvalidationListCompactionThreshold = 4;
+
 /*
  * When we aren't adding any additional properties
  */
@@ -90,7 +99,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     JsUtil::DoublyLinkedListElement<ThreadContext>(),
     allocationPolicyManager(allocationPolicyManager),
     threadService(threadServiceCallback),
-    isOptimizedForManyInstances(Js::Configuration::Global.flags.OptimizeForManyInstances),
+    isOptimizedForManyInstances(false),
     bgJit(Js::Configuration::Global.flags.BgJit),
     pageAllocator(allocationPolicyManager, PageAllocatorType_Thread, Js::Configuration::Global.flags, 0, RecyclerHeuristic::Instance.DefaultMaxFreePageCount,
         false
@@ -2847,8 +2856,8 @@ void ThreadContext::NotifyInlineCacheBatchUnregistered(uint count)
 {
     this->unregisteredInlineCacheCount += count;
     // Negative or 0 InlineCacheInvalidationListCompactionThreshold forces compaction all the time.
-    if (CONFIG_FLAG(InlineCacheInvalidationListCompactionThreshold) <= 0 ||
-        this->registeredInlineCacheCount / this->unregisteredInlineCacheCount < static_cast<uint>(CONFIG_FLAG(InlineCacheInvalidationListCompactionThreshold)))
+    if (InlineCacheInvalidationListCompactionThreshold <= 0 ||
+        this->registeredInlineCacheCount / this->unregisteredInlineCacheCount < static_cast<uint>(InlineCacheInvalidationListCompactionThreshold))
     {
         CompactInlineCacheInvalidationLists();
     }
@@ -3198,7 +3207,7 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
     if (!isAllPropertyGuardsInvalidation)
     {
         this->recyclableData->constructorCacheInvalidationCount += count;
-        if (this->recyclableData->constructorCacheInvalidationCount > (uint)CONFIG_FLAG(ConstructorCacheInvalidationThreshold))
+        if (this->recyclableData->constructorCacheInvalidationCount > ConstructorCacheInvalidationThreshold)
         {
             // TODO: In future, we should compact the uniqueGuards dictionary so this function can be called from PreCollectionCallback
             // instead
@@ -4128,35 +4137,6 @@ void JsReentLock::setSecondObjectForMutation(Js::Var object)
     }
 
     // Don't care about any other objects for now
-}
-
-void JsReentLock::MutateArrayObject(Js::Var arrayObject)
-{
-    if (arrayObject)
-    {
-        Js::JavascriptArray *arr = Js::JavascriptArray::FromAnyArray(arrayObject);
-        uint32_t random = static_cast<unsigned int>(rand());
-
-        if (random % 20 == 0)
-        {
-            arr->DoTypeMutation();
-        }
-        else if (random % 20 == 1)
-        {
-            // TODO : modify the length of the current array
-            //       Or other opportunities
-        }
-    }
-}
-
-
-void JsReentLock::MutateArrayObject()
-{
-    if (CONFIG_FLAG(EnableArrayTypeMutation))
-    {
-        JsReentLock::MutateArrayObject(m_arrayObject);
-        JsReentLock::MutateArrayObject(m_arrayObject2);
-    }
 }
 
 #endif

@@ -149,43 +149,6 @@ namespace Js
             }
             Output::Print(u"    %04x %2s", byteOffset, layoutSize == LargeLayout ? u"L-" : layoutSize == MediumLayout ? u"M-" : u"");
             DumpOp(op, layoutSize, reader, body);
-            if (Js::Configuration::Global.flags.Verbose)
-            {
-                int layoutStart = byteOffset + 2; // Account for the prefix op
-                int endByteOffset = reader.GetCurrentOffset();
-                Output::SkipToColumn(70);
-                if (layoutSize == LargeLayout)
-                {
-                    Output::Print(u"%02X ",
-                        op > Js::OpCodeAsmJs::MaxByteSizedOpcodes ?
-                        Js::OpCodeAsmJs::ExtendedLargeLayoutPrefix : Js::OpCodeAsmJs::LargeLayoutPrefix);
-                }
-                else if (layoutSize == MediumLayout)
-                {
-                    Output::Print(u"%02X ",
-                        op > Js::OpCodeAsmJs::MaxByteSizedOpcodes ?
-                        Js::OpCodeAsmJs::ExtendedMediumLayoutPrefix : Js::OpCodeAsmJs::MediumLayoutPrefix);
-                }
-                else
-                {
-                    Assert(layoutSize == SmallLayout);
-                    if (op > Js::OpCodeAsmJs::MaxByteSizedOpcodes)
-                    {
-                        Output::Print(u"%02X ", Js::OpCodeAsmJs::ExtendedOpcodePrefix);
-                    }
-                    else
-                    {
-                        Output::Print(u"   ");
-                        layoutStart--; // don't have a prefix
-                    }
-                }
-
-                Output::Print(u"%02x", (byte)op);
-                for (int i = layoutStart; i < endByteOffset; i++)
-                {
-                    Output::Print(u" %02x", reader.GetRawByte(i));
-                }
-            }
             Output::Print(u"\n");
         }
         if (statementReader.AtStatementBoundary(&reader))

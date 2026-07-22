@@ -9,7 +9,6 @@
 //  AD PerfCounter
 //  AE PerfCounterSet
 //  AM Output/Configuration
-//  AN MemProtectHeap
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
 //  AS JavascriptDispatch/RecyclerObjectDumper
@@ -78,12 +77,8 @@ RecyclerHeuristic::UncollectedAllocBytesCollection()
 }
 
 uint
-RecyclerHeuristic::MaxBackgroundFinishMarkCount(Js::ConfigFlagsTable& flags)
+RecyclerHeuristic::MaxBackgroundFinishMarkCount()
 {
-    if (flags.IsEnabled(Js::MaxBackgroundFinishMarkCountFlag))
-    {
-        return flags.MaxBackgroundFinishMarkCount;
-    }
     return DefaultMaxBackgroundFinishMarkCount;
 }
 
@@ -102,25 +97,11 @@ RecyclerHeuristic::BackgroundFinishMarkWaitTime(bool backgroundFinishMarkWaitTim
     {
         return INFINITE;
     }
-    if (flags.IsEnabled(Js::BackgroundFinishMarkWaitTimeFlag))
-    {
-        return flags.BackgroundFinishMarkWaitTime;
-    }
     if (CUSTOM_PHASE_FORCE1(flags, Js::BackgroundFinishMarkPhase))
     {
         return INFINITE;
     }
     return DefaultBackgroundFinishMarkWaitTime;
-}
-
-size_t
-RecyclerHeuristic::MinBackgroundRepeatMarkRescanBytes(Js::ConfigFlagsTable& flags)
-{
-    if (flags.IsEnabled(Js::MinBackgroundRepeatMarkRescanBytesFlag))
-    {
-        return flags.MinBackgroundRepeatMarkRescanBytes;
-    }
-    return DefaultMinBackgroundRepeatMarkRescanBytes;
 }
 
 uint32_t

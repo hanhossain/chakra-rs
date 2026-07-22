@@ -53,11 +53,7 @@ public:
 
     static int32_t SetAssertToConsoleFlag(bool flag) { return CHECKED_CALL(SetAssertToConsoleFlag, flag); }
     static int32_t SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags) { return CHECKED_CALL(SetConfigFlags, vargs, customConfigFlags); }
-    static int32_t SetConfigFile(char16_t * strConfigFileName) { return CHECKED_CALL(SetConfigFile, strConfigFileName); }
-    static int32_t GetFileNameFlag(BSTR * filename) { return CHECKED_CALL(GetFilenameFlag, filename); }
     static int32_t PrintConfigFlagsUsageString() { m_usageStringPrinted = true;  return CHECKED_CALL(PrintConfigFlagsUsageString); }
-
-    static int32_t SetOOPCFGRegistrationFlag(bool flag) { return CHECKED_CALL(SetOOPCFGRegistrationFlag, flag); }
 
     static JsErrorCode WINAPI JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, threadService, runtime); }
     static JsErrorCode WINAPI JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return chakracore::jsrt::JsCreateContext(runtime, newContext); }

@@ -14,9 +14,6 @@ namespace Js
             Type(scriptContext, typeId, prototype, entryPoint)
         {
             Assert(StaticType::Is(typeId));
-#ifdef HEAP_ENUMERATION_VALIDATION
-            if (prototype) prototype->SetHeapEnumValidationCookie(HEAP_ENUMERATION_LIBRARY_OBJECT_COOKIE);
-#endif
         }
         void SetDispatchInvoke(JavascriptMethod method) { Assert(typeId == TypeIds_HostDispatch); entryPoint = method; }
     public:

@@ -70,24 +70,7 @@ struct TrackAllocData
 #define TRACK_ALLOC_INFO(alloc, T, AllocatorType, size, count) static_cast<AllocatorType *>(alloc)
 #endif
 
-#ifdef HEAP_ENUMERATION_VALIDATION
-namespace Js {
-    class DynamicObject;
-};
-extern void PostAllocationCallbackForHeapEnumValidation(const type_info&, Js::DynamicObject*);
-template <typename T>
-inline T* PostAllocationCallback(const type_info& objType, T *obj)
-{
-    if (__is_base_of(Js::DynamicObject, T))
-    {
-        PostAllocationCallbackForHeapEnumValidation(objType, (Js::DynamicObject*)obj);
-    }
-    return obj;
-}
-#define VALIDATE_OBJECT(T, obj) (PostAllocationCallback(typeid(T), obj))
-#else
 #define VALIDATE_OBJECT(T, obj) obj
-#endif
 
 // Any allocator
 #define AllocatorNewBaseFuncPtr(AllocatorType, alloc, AllocFuncPtr, T, ...) VALIDATE_OBJECT(T, new (TRACK_ALLOC_INFO(static_cast<AllocatorType *>(alloc), T, AllocatorType, 0, (size_t)-1), AllocFuncPtr) T(__VA_ARGS__))

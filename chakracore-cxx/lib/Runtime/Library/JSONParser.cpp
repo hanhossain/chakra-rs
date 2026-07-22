@@ -289,10 +289,6 @@ namespace JSON
 
                 // first, create the object
                 Js::DynamicObject* object = scriptContext->GetLibrary()->CreateObject();
-                if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-                {
-                    object = VarTo<DynamicObject>(JavascriptProxy::AutoProxyWrapper(object));
-                }
 
                 //next token after '{'
                 Scan();

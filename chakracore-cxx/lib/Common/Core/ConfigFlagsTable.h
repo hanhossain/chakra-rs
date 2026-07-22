@@ -534,113 +534,33 @@ namespace Js
         TrackDispatchFlag,
         #endif
         VerboseFlag,
-        UseFullNameFlag,
-        Utf8Flag,
         VersionFlag,
         WERExceptionSupportFlag,
         ExtendedErrorStackForTestHostFlag,
         errorStackTraceFlag,
-        DoHeapEnumOnEngineShutdownFlag,
-        #ifdef HEAP_ENUMERATION_VALIDATION
-        ValidateHeapEnumFlag,
-        #endif
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //
         // Regex flags
         //
-        RegexTracingFlag,
-        RegexProfileFlag,
         RegexDebugFlag,
-        RegexDebugASTFlag,
-        RegexDebugAnnotatedASTFlag,
-        RegexBytecodeDebugFlag,
         RegexOptimizeFlag,
-        DynamicRegexMruListSizeFlag,
         #endif
 
-        OptimizeForManyInstancesFlag,
-        EnableArrayTypeMutationFlag,
         ArrayMutationTestSeedFlag,
         TestTraceFlag,
-        EnableEvalMapCleanupFlag,
-        #ifdef PROFILE_MEM
-        TraceObjectAllocationFlag,
-        #endif
         SseFlag,
-        DeletedPropertyReuseThresholdFlag,
         ForceStringKeyedSimpleDictionaryTypeHandlerFlag,
         BigDictionaryTypeHandlerThresholdFlag,
-        TypeSnapshotEnumerationFlag,
-        IsolatePrototypesFlag,
-        ChangeTypeOnProtoFlag,
-        ShareInlineCachesFlag,
-        DisableDebugObjectFlag,
-        DumpHeapFlag,
-        autoProxyFlag,
         PerfHintLevelFlag,
-        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        MemProtectHeapFlag,
-        #endif
-        #ifdef RECYCLER_STRESS
-        MemProtectHeapStressFlag,
-        MemProtectHeapBackgroundStressFlag,
-        MemProtectHeapConcurrentStressFlag,
-        MemProtectHeapConcurrentRepeatStressFlag,
-        MemProtectHeapPartialStressFlag,
-        #endif
-        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        FixPropsOnPathTypesFlag,
-        #endif
-        BailoutTraceFilterFlag,
-        RejitTraceFilterFlag,
-
-        // recycler heuristic flags
-        MaxBackgroundFinishMarkCountFlag,
-        BackgroundFinishMarkWaitTimeFlag,
-        MinBackgroundRepeatMarkRescanBytesFlag,
-
-        #if defined(_M_X64)
-        ZeroMemoryWithNonTemporalStoreFlag,
-        #endif
-
-        // recycler memory restrict test flags
-        MaxMarkStackPageCountFlag,
-        MaxTrackedObjectListCountFlag,
-
-        // make the recycler page integration path easier to hit
-        NumberAllocPlusSizeFlag,
 
         #if DBG
         InitializeInterpreterSlotsWithInvalidStackVarFlag,
         #endif
 
         #if DBG
-        PRNGSeed0Flag,
-        PRNGSeed1Flag,
-        #endif
-
-        ClearInlineCachesOnCollectFlag,
-        InlineCacheInvalidationListCompactionThresholdFlag,
-        ConstructorCacheInvalidationThresholdFlag,
-
-        GCMemoryThresholdFlag,
-
-        #if DBG
             SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag,
         #endif
-
-        JITServerIdleTimeoutFlag,
-        JITServerMaxInactivePageAllocatorCountFlag,
-
-        StrictWriteBarrierCheckFlag,
-        WriteBarrierTestFlag,
-        ForceSoftwareWriteBarrierFlag,
-        VerifyBarrierBitFlag,
-        EnableBGFreeZeroFlag,
-        KeepRecyclerTrackDataFlag,
-
-        MaxSingleAllocSizeInMBFlag,
 
         FlagCount,
         InvalidFlag,
@@ -1291,8 +1211,8 @@ namespace Js
 
     // Methods
     public:
-        inline  bool            InRange(TRangeUnitData i);
-        inline  bool            ContainsAll();
+        inline  bool            InRange(TRangeUnitData i) const;
+        inline  bool            ContainsAll() const;
         inline  void            Add(TRangeUnitData i, RangeBase<TRangeUnitData>* oppositeRange = nullptr);
         inline  void            Add(TRangeUnitData i, TRangeUnitData j, RangeBase<TRangeUnitData>* oppositeRange = nullptr);
         inline  void            Clear();
@@ -1372,9 +1292,9 @@ namespace Js
 
         void            Enable(Phase phase);
         void            Disable(Phase phase);
-        bool            IsEnabled(Phase phase);
-        bool            IsEnabled(Phase phase, uint sourceContextId, Js::LocalFunctionId functionId);
-        bool            IsEnabledForAll(Phase phase);
+        bool            IsEnabled(Phase phase) const;
+        bool            IsEnabled(Phase phase, uint sourceContextId, Js::LocalFunctionId functionId) const;
+        bool            IsEnabledForAll(Phase phase) const;
         Range *         GetRange(Phase phase);
         Phase           GetFirstPhase();
     };
@@ -2175,167 +2095,36 @@ namespace Js
         #endif
         // TODO (hanhossain): remove flag
         Boolean Verbose;
-        // TODO (hanhossain): remove flag
-        Boolean UseFullName;
-        // TODO (hanhossain): remove flag
-        Boolean Utf8;
+        // todo (hanhossain): flag end
         Number Version;
         Boolean WERExceptionSupport;
         Boolean ExtendedErrorStackForTestHost;
         Boolean errorStackTrace;
-        // TODO (hanhossain): remove flag
-        Boolean DoHeapEnumOnEngineShutdown;
-        #ifdef HEAP_ENUMERATION_VALIDATION
-        // TODO (hanhossain): remove flag
-            Boolean ValidateHeapEnum;
-        #endif
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
             //
             // Regex flags
             //
-        // TODO (hanhossain): remove flag
-            Boolean RegexTracing;
-        // TODO (hanhossain): remove flag
-            Boolean RegexProfile;
             Boolean RegexDebug;
-        // TODO (hanhossain): remove flag
-            Boolean RegexDebugAST;
-        // TODO (hanhossain): remove flag
-            Boolean RegexDebugAnnotatedAST;
-        // TODO (hanhossain): remove flag
-            Boolean RegexBytecodeDebug;
-        // TODO (hanhossain): remove flag
             Boolean RegexOptimize;
-        // TODO (hanhossain): remove flag
-            Number DynamicRegexMruListSize;
         #endif
 
-        // TODO (hanhossain): remove flag
-        Boolean OptimizeForManyInstances;
-        // TODO (hanhossain): remove flag
-        Boolean EnableArrayTypeMutation;
         Number ArrayMutationTestSeed;
         Phases TestTrace;
-        // TODO (hanhossain): remove flag
-        Boolean EnableEvalMapCleanup;
-        #ifdef PROFILE_MEM
-        // TODO (hanhossain): remove flag
-            Boolean TraceObjectAllocation;
-        #endif
         Number Sse;
-        // TODO (hanhossain): remove flag
-        Number DeletedPropertyReuseThreshold;
         Boolean ForceStringKeyedSimpleDictionaryTypeHandler;
         Number BigDictionaryTypeHandlerThreshold;
-        // TODO (hanhossain): remove flag
-        Boolean TypeSnapshotEnumeration;
-        // TODO (hanhossain): remove flag
-        Boolean IsolatePrototypes;
-        // TODO (hanhossain): remove flag
-        Boolean ChangeTypeOnProto;
-        // TODO (hanhossain): remove flag
-        Boolean ShareInlineCaches;
-        // TODO (hanhossain): remove flag
-        Boolean DisableDebugObject;
-        // TODO (hanhossain): remove flag
-        Boolean DumpHeap;
-        // TODO (hanhossain): remove flag
-        String autoProxy;
+
         Number PerfHintLevel;
-        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        // TODO (hanhossain): remove flag
-            Boolean MemProtectHeap;
-        #endif
-        #ifdef RECYCLER_STRESS
-        // TODO (hanhossain): remove flag
-            Boolean MemProtectHeapStress;
-        // TODO (hanhossain): remove flag
-                Boolean MemProtectHeapBackgroundStress;
-        // TODO (hanhossain): remove flag
-                Boolean MemProtectHeapConcurrentStress;
-        // TODO (hanhossain): remove flag
-                Boolean MemProtectHeapConcurrentRepeatStress;
-        // TODO (hanhossain): remove flag
-                Boolean MemProtectHeapPartialStress;
-        #endif
-        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        // TODO (hanhossain): remove flag
-            Boolean FixPropsOnPathTypes;
-        #endif
-        // TODO (hanhossain): remove flag
-        NumberSet BailoutTraceFilter;
-        // TODO (hanhossain): remove flag
-        NumberSet RejitTraceFilter;
-
-        // recycler heuristic flags
-        // TODO (hanhossain): remove flag
-        Number MaxBackgroundFinishMarkCount;
-        // TODO (hanhossain): remove flag
-        Number BackgroundFinishMarkWaitTime;
-        // TODO (hanhossain): remove flag
-        Number MinBackgroundRepeatMarkRescanBytes;
-
-        #if defined(_M_X64)
-        // TODO (hanhossain): remove flag
-            Boolean ZeroMemoryWithNonTemporalStore;
-        #endif
-
-        // recycler memory restrict test flags
-        // TODO (hanhossain): remove flag
-        Number MaxMarkStackPageCount;
-        // TODO (hanhossain): remove flag
-        Number MaxTrackedObjectListCount;
-
-        // make the recycler page integration path easier to hit
-        // TODO (hanhossain): remove flag
-        Number NumberAllocPlusSize;
 
         #if DBG
             Boolean InitializeInterpreterSlotsWithInvalidStackVar;
         #endif
 
         #if DBG
-        // TODO (hanhossain): remove flag
-            Number PRNGSeed0;
-        // TODO (hanhossain): remove flag
-            Number PRNGSeed1;
-        #endif
-
-        // TODO (hanhossain): remove flag
-        Boolean ClearInlineCachesOnCollect;
-        // TODO (hanhossain): remove flag
-        Number InlineCacheInvalidationListCompactionThreshold;
-        // TODO (hanhossain): remove flag
-        Number ConstructorCacheInvalidationThreshold;
-
-        // TODO (hanhossain): remove flag
-        Number GCMemoryThreshold;
-
-        #if DBG
             Number SimulatePolyCacheWithOneTypeForInlineCacheIndex;
         #endif
 
-        // TODO (hanhossain): remove flag
-        Number JITServerIdleTimeout;
-        // TODO (hanhossain): remove flag
-        Number JITServerMaxInactivePageAllocatorCount;
-
-        // TODO (hanhossain): remove flag
-        Boolean StrictWriteBarrierCheck;
-        // TODO (hanhossain): remove flag
-        Boolean WriteBarrierTest;
-        // TODO (hanhossain): remove flag
-        Boolean ForceSoftwareWriteBarrier;
-        // TODO (hanhossain): remove flag
-        Boolean VerifyBarrierBit;
-        // TODO (hanhossain): remove flag
-        Boolean EnableBGFreeZero;
-        // TODO (hanhossain): remove flag
-        Boolean KeepRecyclerTrackData;
-
-        // TODO (hanhossain): remove flag
-        Number MaxSingleAllocSizeInMB;
         bool            flagPresent[FlagCount];
         // save the jscript.config for easier to get the raw input while analyzing dump file
         char16_t          rawInputFromConfigFile[512];
@@ -2782,7 +2571,7 @@ RangeBase<TRangeUnitData>::Add(TRangeUnitData i, TRangeUnitData j, RangeBase<TRa
 
 template <typename TRangeUnitData>
 bool
-RangeBase<TRangeUnitData>::ContainsAll()
+RangeBase<TRangeUnitData>::ContainsAll() const
 {
     return range.Empty();
 }
@@ -2805,7 +2594,7 @@ Js::RangeBase<TRangeUnitData>::Clear()
 ///----------------------------------------------------------------------------
 
 template <typename TRangeUnitData>
-bool RangeBase<TRangeUnitData>::InRange(TRangeUnitData n)
+bool RangeBase<TRangeUnitData>::InRange(TRangeUnitData n) const
 {
     if (range.Empty())
     {

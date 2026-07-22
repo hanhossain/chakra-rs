@@ -197,7 +197,6 @@ namespace Js
 
 
         static PropertyId EnsureHandlerPropertyId(ScriptContext* scriptContext);
-        static RecyclableObject* AutoProxyWrapper(Var obj);
 
     private:
         JavascriptFunction* GetMethodHelper(PropertyId methodId, ScriptContext* requestContext);

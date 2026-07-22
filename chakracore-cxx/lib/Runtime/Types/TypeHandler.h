@@ -216,9 +216,9 @@ namespace Js
             // but it's not ok to change these after the fact.
 
             // If we isolate prototypes, don't set a prototype flag on a type handler that is shared or may become shared
-            Assert((this->flags & IsPrototypeFlag) != 0 || !IsolatePrototypes() || (this->flags & (MayBecomeSharedFlag | IsSharedFlag)) == 0 || (values & IsPrototypeFlag) == 0);
+            Assert((this->flags & IsPrototypeFlag) != 0 || (this->flags & (MayBecomeSharedFlag | IsSharedFlag)) == 0 || (values & IsPrototypeFlag) == 0);
             // If we isolate prototypes, don't set a shared or may become shared flag on a prototype type handler.
-            Assert((this->flags & IsSharedFlag) != 0 || !IsolatePrototypes() || (this->flags & IsPrototypeFlag) == 0 || (values & (MayBecomeSharedFlag | IsSharedFlag)) == 0);
+            Assert((this->flags & IsSharedFlag) != 0 || (this->flags & IsPrototypeFlag) == 0 || (values & (MayBecomeSharedFlag | IsSharedFlag)) == 0);
 
 #if ENABLE_FIXED_FIELDS
             // Don't set a shared flag if this type handler has a singleton instance.
@@ -258,9 +258,9 @@ namespace Js
             // but it's not ok to change these after the fact.
 
             // If we isolate prototypes, don't set a prototype flag on a shared type handler.
-            Assert((this->flags & IsPrototypeFlag) != 0 || !IsolatePrototypes() || (this->flags & (MayBecomeSharedFlag | IsSharedFlag)) == 0 || ((selector & values) & IsPrototypeFlag) == 0);
+            Assert((this->flags & IsPrototypeFlag) != 0 || (this->flags & (MayBecomeSharedFlag | IsSharedFlag)) == 0 || ((selector & values) & IsPrototypeFlag) == 0);
             // If we isolate prototypes, don't set a shared flag on a prototype type handler.
-            Assert((this->flags & IsSharedFlag) != 0 || !IsolatePrototypes() || (this->flags & IsPrototypeFlag) == 0 || ((selector & values) & (MayBecomeSharedFlag | IsSharedFlag)) == 0);
+            Assert((this->flags & IsSharedFlag) != 0 || (this->flags & IsPrototypeFlag) == 0 || ((selector & values) & (MayBecomeSharedFlag | IsSharedFlag)) == 0);
 
 #if ENABLE_FIXED_FIELDS
             // Don't set a shared flag if this type handler has a singleton instance.
@@ -559,8 +559,6 @@ namespace Js
 
         virtual bool IsObjectCopyable() const { return false; }
 
-        static bool IsolatePrototypes() { return CONFIG_FLAG(IsolatePrototypes); }
-        static bool ChangeTypeOnProto() { return CONFIG_FLAG(ChangeTypeOnProto); }
         static bool ShouldFixMethodProperties() { return !PHASE_OFF1(FixMethodPropsPhase); }
         static bool ShouldFixDataProperties() { return !PHASE_OFF1(FixDataPropsPhase); }
         static bool ShouldFixAccessorProperties() { return !PHASE_OFF1(FixAccessorPropsPhase); }

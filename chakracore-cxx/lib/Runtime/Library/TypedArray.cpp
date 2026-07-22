@@ -443,10 +443,6 @@ namespace Js
         }
         END_SAFE_REENTRANT_CALL
 
-        if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-        {
-            object = Js::JavascriptProxy::AutoProxyWrapper(object);
-        }
         return isCtorSuperCall ?
             JavascriptOperators::OrdinaryCreateFromConstructor(VarTo<RecyclableObject>(newTarget), VarTo<RecyclableObject>(object), nullptr, scriptContext) :
             object;
@@ -3413,10 +3409,6 @@ namespace Js
 
         Assert(!(callInfo.Flags & CallFlags_New) || args[0] == nullptr);
         Var object = TypedArrayBase::CreateNewInstance(args, scriptContext, sizeof(char16_t), CharArray::Create);
-        if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-        {
-            object = Js::JavascriptProxy::AutoProxyWrapper(object);
-        }
         return object;
     }
 }

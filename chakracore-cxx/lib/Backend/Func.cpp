@@ -2120,11 +2120,7 @@ bool Func::DoRecordNativeMap() const
         return true;
     }
 #endif
-#if DBG_DUMP
-    return PHASE_DUMP(Js::EncoderPhase, this) && Js::Configuration::Global.flags.Verbose;
-#else
     return false;
-#endif
 }
 #endif
 

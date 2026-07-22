@@ -366,7 +366,6 @@ private:
 #define DEFAULT_CONFIG_ForceOldDateAPI      (false)
 #define DEFAULT_CONFIG_Loop                 (1)
 #define DEFAULT_CONFIG_ForceDiagnosticsMode (false)
-#define DEFAULT_CONFIG_UseFullName          (true)
 #define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForHelpers  (true)
 #define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForBuiltIns  (true)
 #define DEFAULT_CONFIG_EnableFunctionSourceReportForHeapEnum (true)
@@ -403,7 +402,6 @@ private:
 
 #define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
 #define DEFAULT_CONFIG_NewPagesCapDuringBGSweeping    (15000 * 4)
-#define DEFAULT_CONFIG_MaxSingleAllocSizeInMB  (2048)
 #define DEFAULT_CONFIG_AllocationPolicyLimit    (-1)
 
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
@@ -413,21 +411,12 @@ private:
 #define DEFAULT_CONFIG_ProfileBasedSpeculationCap (1600)
 #define DEFAULT_CONFIG_Verbose              (false)
 #define DEFAULT_CONFIG_ForceStrictMode      (false)
-#define DEFAULT_CONFIG_EnableEvalMapCleanup (true)
 #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
 #define DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold (50)  // Threshold at which Entry Point Collection is triggered
-#define DEFAULT_CONFIG_RegexTracing         (false)
-#define DEFAULT_CONFIG_RegexProfile         (false)
 #define DEFAULT_CONFIG_RegexDebug           (false)
-#define DEFAULT_CONFIG_RegexDebugAST        (true)
-#define DEFAULT_CONFIG_RegexDebugAnnotatedAST (true)
-#define DEFAULT_CONFIG_RegexBytecodeDebug   (false)
 #define DEFAULT_CONFIG_RegexOptimize        (true)
-#define DEFAULT_CONFIG_DynamicRegexMruListSize (16)
 #define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
 #define DEFAULT_CONFIG_AsmGoptCleanupThreshold  (500)
-#define DEFAULT_CONFIG_OptimizeForManyInstances (false)
-#define DEFAULT_CONFIG_EnableArrayTypeMutation (false)
 
 #define DEFAULT_CONFIG_DeferParseThreshold             (4 * 1024) // Unit is number of characters
 #define DEFAULT_CONFIG_ProfileBasedDeferParseThreshold (100)      // Unit is number of characters
@@ -600,14 +589,10 @@ private:
 
 #define DEFAULT_CONFIG_Sse                  (-1)
 
-#define DEFAULT_CONFIG_DeletedPropertyReuseThreshold (32)
 #define DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold (0xffff)
 #define DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler (false)
-#define DEFAULT_CONFIG_TypeSnapshotEnumeration (true)
 #define DEFAULT_CONFIG_PrimeRecycler     (false)
 #define DEFAULT_CONFIG_DisableRentalThreading (false)
-#define DEFAULT_CONFIG_DisableDebugObject (false)
-#define DEFAULT_CONFIG_DumpHeap (false)
 #define DEFAULT_CONFIG_PerfHintLevel (1)
 #define DEFAULT_CONFIG_OOPJITMissingOpts (false)
 #define DEFAULT_CONFIG_OOPCFGRegistration (true)
@@ -615,10 +600,6 @@ private:
 #define DEFAULT_CONFIG_ForceJITCFGCheck (false)
 #define DEFAULT_CONFIG_UseJITTrampoline (true)
 
-#define DEFAULT_CONFIG_IsolatePrototypes    (true)
-#define DEFAULT_CONFIG_ChangeTypeOnProto    (true)
-#define DEFAULT_CONFIG_FixPropsOnPathTypes    (true)
-#define DEFAULT_CONFIG_BailoutTraceFilter (-1)
 #define DEFAULT_CONFIG_TempMin    (0)
 #define DEFAULT_CONFIG_TempMax    (INT_MAX)
 
@@ -626,9 +607,6 @@ private:
 #define DEFAULT_CONFIG_LibraryStackFrameDebugger    (false)
 
 #define DEFAULT_CONFIG_FuncObjectInlineCacheThreshold   (2) // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
-#define DEFAULT_CONFIG_ShareInlineCaches (false)
-#define DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold (4)
-#define DEFAULT_CONFIG_ConstructorCacheInvalidationThreshold (500)
 
 #define DEFAULT_CONFIG_InMemoryTrace                (false)
 #define DEFAULT_CONFIG_InMemoryTraceBufferSize      (1024)
@@ -641,8 +619,6 @@ private:
 #define DEFAULT_CONFIG_DeferLoadingAvailableSource  (false)
 
 #define DEFAULT_CONFIG_RecyclerForceMarkInterior (false)
-
-#define DEFAULT_CONFIG_MemProtectHeap (false)
 
 #define DEFAULT_CONFIG_InduceCodeGenFailure (30) // When -InduceCodeGenFailure is passed in, 30% of JIT allocations will fail
 
@@ -659,18 +635,6 @@ private:
 #if defined(_M_X64)
 #define DEFAULT_CONFIG_LoopAlignNopLimit (6)
 #endif
-
-#if defined(_M_X64)
-#define DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore (true)
-#endif
-
-#define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
-#define DEFAULT_CONFIG_KeepRecyclerTrackData  (false)
-#define DEFAULT_CONFIG_EnableBGFreeZero (true)
-
-#define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)
-#define DEFAULT_CONFIG_WriteBarrierTest (false)
-#define DEFAULT_CONFIG_VerifyBarrierBit  (false)
 
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)
@@ -2292,16 +2256,11 @@ public:
 #if DBG
     void setObjectForMutation(Js::Var object);
     void setSecondObjectForMutation(Js::Var object);
-    void MutateArrayObject();
 #endif
 
     ~JsReentLock()
     {
         m_threadContext->SetNoJsReentrancy(m_savedNoJsReentrancy);
     }
-#if DBG
-private:
-    static void MutateArrayObject(Js::Var arrayObject);
-#endif
 };
 #endif

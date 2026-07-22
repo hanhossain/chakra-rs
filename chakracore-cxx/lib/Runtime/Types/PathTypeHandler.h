@@ -214,7 +214,7 @@ namespace Js
 #endif
 
 #if DBG
-        virtual bool SupportsPrototypeInstances() const { return !IsolatePrototypes(); }
+        virtual bool SupportsPrototypeInstances() const { return false; }
         virtual bool CanStorePropertyValueDirectly(const DynamicObject* instance, PropertyId propertyId, bool allowLetConst) override;
 #endif
 
@@ -249,7 +249,7 @@ namespace Js
         static bool FixPropsOnPathTypes()
         {
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-            return CONFIG_FLAG(FixPropsOnPathTypes);
+            return true;
 #else
             return false;
 #endif

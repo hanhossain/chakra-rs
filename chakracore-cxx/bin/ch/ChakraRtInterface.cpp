@@ -42,33 +42,6 @@ int32_t ChakraRTInterface::ParseConfigFlags()
         }
     }
 
-    if (hr == S_OK)
-    {
-        m_argInfo->filename_.clear();
-        Assert(m_testHooks.pfGetFilenameFlag != nullptr);
-
-        char16_t* fileNameWide = nullptr;
-        hr = GetFileNameFlag(&fileNameWide);
-
-        if (hr != S_OK)
-        {
-            std::print("Error: no script file specified.");
-            m_argInfo->hostPrintUsage();
-            m_usageStringPrinted = true;
-        }
-        else
-        {
-            hr = WideStringToNarrowDynamic(fileNameWide, m_argInfo->filename_);
-            SysFreeString(fileNameWide);
-            if (FAILED(hr))
-            {
-                Assert(hr == E_OUTOFMEMORY);
-                std::print("Error: Ran out of memory");
-                return hr;
-            }
-        }
-    }
-
     return S_OK;
 }
 

@@ -2351,15 +2351,6 @@ namespace Js
     template <typename T>
     void DictionaryTypeHandlerBase<T>::SetIsPrototype(DynamicObject* instance)
     {
-        // Don't return if IsPrototypeFlag is set, because we may still need to do a type transition and
-        // set fixed bits.  If this handler were to be shared, this instance may not be a prototype yet.
-        // We might need to convert to a non-shared type handler and/or change type.
-        if (!ChangeTypeOnProto() && !(GetIsOrMayBecomeShared() && IsolatePrototypes()))
-        {
-            SetFlags(IsPrototypeFlag);
-            return;
-        }
-
         // DictionaryTypeHandlers are never shared. If we allow sharing, we will have to handle this case
         // just like SimpleDictionaryTypeHandler.
         Assert(!GetIsOrMayBecomeShared());
@@ -2425,15 +2416,12 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
         bool hasNewType = false;
 #endif
-        if (ChangeTypeOnProto())
-        {
-            // Forcing a type transition allows us to fix all fields (even those that were previously marked as non-fixed).
-            instance->ChangeType();
-            Assert(!instance->HasSharedType());
+        // Forcing a type transition allows us to fix all fields (even those that were previously marked as non-fixed).
+        instance->ChangeType();
+        Assert(!instance->HasSharedType());
 #if ENABLE_FIXED_FIELDS
-            hasNewType = true;
+        hasNewType = true;
 #endif
-        }
 
         // Currently there is no way to become the prototype if you are a stack instance
         Assert(!ThreadContext::IsOnStack(instance));

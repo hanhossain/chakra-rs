@@ -945,16 +945,7 @@ LargeHeapBlock::VerifyMark()
         while (objectAddress + sizeof(void *) <= objectAddressEnd)
         {
             void* target = *reinterpret_cast<void**>(objectAddress);
-
-            if (recycler->VerifyMark(objectAddress, target))
-            {
-#if DBG
-                if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
-                {
-                    this->WBVerifyBitIsSet(objectAddress);
-                }
-#endif
-            }
+            recycler->VerifyMark(objectAddress, target);
 
             objectAddress += sizeof(void *);
         }
@@ -1111,11 +1102,6 @@ LargeHeapBlock::ScanNewImplicitRoots(Recycler * recycler)
 
 bool LargeHeapBlock::IsPageDirty(char* page, RescanFlags flags, bool isWriteBarrier)
 {
-    // TODO: SWB, use special page allocator for large block with write barrier?
-    if (CONFIG_FLAG(WriteBarrierTest))
-    {
-        Assert(isWriteBarrier);
-    }
     if (isWriteBarrier)
     {
         return (RecyclerWriteBarrierManager::GetWriteBarrier(page) & DIRTYBIT) == DIRTYBIT;

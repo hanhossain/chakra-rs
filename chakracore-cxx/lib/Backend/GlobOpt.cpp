@@ -26,7 +26,6 @@
         Output::Print(u"TRACE MemOp:");\
         OUTPUT_MEMOP_TRACE(loop, instr, __VA_ARGS__)\
     }
-#define TRACE_MEMOP_VERBOSE(loop, instr, ...) if(CONFIG_FLAG(Verbose)) {TRACE_MEMOP(loop, instr, __VA_ARGS__)}
 
 #define TRACE_MEMOP_PHASE(phase, loop, instr, ...) \
     if (DO_MEMOP_TRACE_PHASE(phase))\
@@ -34,16 +33,13 @@
         Output::Print(u"TRACE " u###phase u":");\
         OUTPUT_MEMOP_TRACE(loop, instr, __VA_ARGS__)\
     }
-#define TRACE_MEMOP_PHASE_VERBOSE(phase, loop, instr, ...) if(CONFIG_FLAG(Verbose)) {TRACE_MEMOP_PHASE(phase, loop, instr, __VA_ARGS__)}
 
 #else
 #define DO_MEMOP_TRACE()
 #define DO_MEMOP_TRACE_PHASE(phase)
 #define OUTPUT_MEMOP_TRACE(loop, instr, ...)
 #define TRACE_MEMOP(loop, instr, ...)
-#define TRACE_MEMOP_VERBOSE(loop, instr, ...)
 #define TRACE_MEMOP_PHASE(phase, loop, instr, ...)
-#define TRACE_MEMOP_PHASE_VERBOSE(phase, loop, instr, ...)
 #endif
 
 class AutoRestoreVal
@@ -1866,7 +1862,7 @@ GlobOpt::IsAllowedForMemOpt(IR::Instr* instr, bool isMemset, IR::RegOpnd *baseOp
         indexValueType.ToString(indexValueTypeStr);
         char16_t baseValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
         baseValueType.ToString(baseValueTypeStr);
-        TRACE_MEMOP_VERBOSE(loop, instr, u"Index[%s] or Array[%s] value type is invalid", indexValueTypeStr, baseValueTypeStr);
+        ;
 #endif
         return false;
     }
@@ -1884,7 +1880,7 @@ GlobOpt::IsAllowedForMemOpt(IR::Instr* instr, bool isMemset, IR::RegOpnd *baseOp
             );
         if (!hasBoundChecksRemoved)
         {
-            TRACE_MEMOP_VERBOSE(loop, instr, u"Missing bounds check optimization");
+            ;
             return false;
         }
     }
@@ -1899,7 +1895,7 @@ GlobOpt::IsAllowedForMemOpt(IR::Instr* instr, bool isMemset, IR::RegOpnd *baseOp
         JsArrayKills arrayKills = CheckJsArrayKills(instr);
         if (arrayKills.KillsValueType(baseValueType))
         {
-            TRACE_MEMOP_VERBOSE(loop, instr, u"The array (s%d) can lose its value type", GetVarSymID(baseOpnd->GetStackSym()));
+            ;
             return false;
         }
     }
@@ -1907,7 +1903,7 @@ GlobOpt::IsAllowedForMemOpt(IR::Instr* instr, bool isMemset, IR::RegOpnd *baseOp
     // Process the Index Operand
     if (!this->OptIsInvariant(baseOpnd, this->currentBlock, loop, CurrentBlockData()->FindValue(baseOpnd->m_sym), false, true))
     {
-        TRACE_MEMOP_VERBOSE(loop, instr, u"Base (s%d) is not invariant", GetVarSymID(baseOpnd->GetStackSym()));
+        ;
         return false;
     }
 
@@ -1918,7 +1914,7 @@ GlobOpt::IsAllowedForMemOpt(IR::Instr* instr, bool isMemset, IR::RegOpnd *baseOp
     if (!iv)
     {
         // If the index is not an induction variable return
-        TRACE_MEMOP_VERBOSE(loop, instr, u"Index (s%d) is not an induction variable", indexSymID);
+        ;
         return false;
     }
 
@@ -1937,7 +1933,7 @@ GlobOpt::IsAllowedForMemOpt(IR::Instr* instr, bool isMemset, IR::RegOpnd *baseOp
             inductionVariableChangeInfo.unroll > 1 // Must be 0 (not seen yet) or 1 (already seen)
         )
         {
-            TRACE_MEMOP_VERBOSE(loop, instr, u"The index does not change by 1: %d><%d, unroll=%d", bounds.LowerBound(), bounds.UpperBound(), inductionVariableChangeInfo.unroll);
+            ;
             return false;
         }
 
@@ -1949,7 +1945,7 @@ GlobOpt::IsAllowedForMemOpt(IR::Instr* instr, bool isMemset, IR::RegOpnd *baseOp
             // All MemOp operations within the same loop must use the same index
             if (previousCandidate->index != indexSymID)
             {
-                TRACE_MEMOP_VERBOSE(loop, instr, u"The index is not the same as other MemOp in the loop");
+                ;
                 return false;
             }
         }
@@ -2038,7 +2034,7 @@ GlobOpt::CollectMemsetStElementI(IR::Instr *instr, Loop *loop)
     }
     else if(!srcSym)
     {
-        TRACE_MEMOP_PHASE_VERBOSE(MemSet, loop, instr, u"Source is not an invariant");
+        ;
         return false;
     }
 
@@ -2085,7 +2081,7 @@ bool GlobOpt::CollectMemcopyStElementI(IR::Instr *instr, Loop *loop)
     {
         // This must be the last use of the register.
         // It will invalidate `var m = a[i]; b[i] = m;` but this is not a very interesting case.
-        TRACE_MEMOP_PHASE_VERBOSE(MemCopy, loop, instr, u"Source (s%d) is still alive after StElemI", baseSymID);
+        ;
         return false;
     }
 
@@ -2110,7 +2106,7 @@ bool GlobOpt::CollectMemcopyStElementI(IR::Instr *instr, Loop *loop)
         GetVarSymID(memcopyInfo->transferSym) != srcSymID
     )
     {
-        TRACE_MEMOP_PHASE_VERBOSE(MemCopy, loop, instr, u"No matching LdElem found (s%d)", baseSymID);
+        ;
         return false;
     }
 
@@ -2121,7 +2117,7 @@ bool GlobOpt::CollectMemcopyStElementI(IR::Instr *instr, Loop *loop)
     if (isIndexPreIncr != memcopyInfo->bIndexAlreadyChanged)
     {
         // The index changed between the load and the store
-        TRACE_MEMOP_PHASE_VERBOSE(MemCopy, loop, instr, u"Index value changed between ldElem and stElem");
+        ;
         return false;
     }
 
@@ -2164,7 +2160,7 @@ GlobOpt::CollectMemOpInfo(IR::Instr *instrBegin, IR::Instr *instr, Value *src1Va
 
     if (loop->GetLoopFlags().isInterpreted && !loop->GetLoopFlags().memopMinCountReached)
     {
-        TRACE_MEMOP_VERBOSE(loop, instr, u"minimum loop count not reached")
+
         loop->doMemOp = false;
         return false;
     }
@@ -2340,7 +2336,7 @@ GlobOpt::CollectMemOpInfo(IR::Instr *instrBegin, IR::Instr *instr, Value *src1Va
                         if (chkInstr->HasSymUse(memcopyCandidate->transferSym))
                         {
                             loop->doMemOp = false;
-                            TRACE_MEMOP_PHASE_VERBOSE(MemCopy, loop, chkInstr, u"Found illegal use of LdElemI value(s%d)", GetVarSymID(memcopyCandidate->transferSym));
+                            ;
                             return false;
                         }
                     }
@@ -2392,7 +2388,7 @@ GlobOpt::IsInstrInvalidForMemOp(IR::Instr *instr, Loop *loop, Value *src1Val, Va
         !(instr->IsBranchInstr() && instr->AsBranchInstr()->IsUnconditional())
     )
     {
-        TRACE_MEMOP_VERBOSE(loop, instr, u"Instruction not accepted for memop");
+        ;
         return true;
     }
 
@@ -2400,20 +2396,20 @@ GlobOpt::IsInstrInvalidForMemOp(IR::Instr *instr, Loop *loop, Value *src1Val, Va
     if (OpCodeAttr::FastFldInstr(instr->m_opcode) || (instr->m_prev && OpCodeAttr::FastFldInstr(instr->m_prev->m_opcode)))
     {
         // Refuse any operations interacting with Fields
-        TRACE_MEMOP_VERBOSE(loop, instr, u"Field interaction detected");
+        ;
         return true;
     }
 
     if (Js::OpCodeUtil::GetOpCodeLayout(instr->m_opcode) == Js::OpLayoutType::ElementSlot)
     {
         // Refuse any operations interacting with slots
-        TRACE_MEMOP_VERBOSE(loop, instr, u"Slot interaction detected");
+        ;
         return true;
     }
 
     if (this->MayNeedBailOnImplicitCall(instr, src1Val, src2Val))
     {
-        TRACE_MEMOP_VERBOSE(loop, instr, u"Implicit call bailout detected");
+        ;
         return true;
     }
 
@@ -16593,7 +16589,7 @@ GlobOpt::Trace(BasicBlock * block, bool before) const
         }
     }
 
-    if (!typeSpecTrace && !floatTypeSpecTrace && !valueTableTrace && !Js::Configuration::Global.flags.Verbose)
+    if (!typeSpecTrace && !floatTypeSpecTrace && !valueTableTrace)
     {
         return;
     }
@@ -17422,12 +17418,12 @@ GlobOpt::InspectInstrForMemSetCandidate(Loop* loop, IR::Instr* instr, MemSetEmit
             emitData->bailOutKind = instr->GetBailOutKind();
             return true;
         }
-        TRACE_MEMOP_PHASE_VERBOSE(MemSet, loop, instr, u"Orphan StElemI_A detected");
+        ;
         errorInInstr = true;
     }
     else if (instr->m_opcode == Js::OpCode::LdElemI_A)
     {
-        TRACE_MEMOP_PHASE_VERBOSE(MemSet, loop, instr, u"Orphan LdElemI_A detected");
+        ;
         errorInInstr = true;
     }
     return false;
@@ -17452,7 +17448,7 @@ GlobOpt::InspectInstrForMemCopyCandidate(Loop* loop, IR::Instr* instr, MemCopyEm
             // Still need to find the LdElem
             return false;
         }
-        TRACE_MEMOP_PHASE_VERBOSE(MemCopy, loop, instr, u"Orphan StElemI_A detected");
+        ;
         errorInInstr = true;
     }
     else if (instr->m_opcode == Js::OpCode::LdElemI_A)
@@ -17475,7 +17471,7 @@ GlobOpt::InspectInstrForMemCopyCandidate(Loop* loop, IR::Instr* instr, MemCopyEm
                 stValueType.ToString(stValueTypeStr);
                 char16_t ldValueTypeStr[VALUE_TYPE_MAX_STRING_SIZE];
                 ldValueType.ToString(ldValueTypeStr);
-                TRACE_MEMOP_PHASE_VERBOSE(MemCopy, loop, instr, u"for mismatch in Load(%s) and Store(%s) value type", ldValueTypeStr, stValueTypeStr);
+                ;
 #endif
                 errorInInstr = true;
                 return false;
@@ -17483,7 +17479,7 @@ GlobOpt::InspectInstrForMemCopyCandidate(Loop* loop, IR::Instr* instr, MemCopyEm
             // We found both instruction for this candidate
             return true;
         }
-        TRACE_MEMOP_PHASE_VERBOSE(MemCopy, loop, instr, u"Orphan LdElemI_A detected");
+        ;
         errorInInstr = true;
     }
     return false;
@@ -17525,13 +17521,13 @@ GlobOpt::ValidateMemOpCandidates(Loop * loop, _Out_writes_(iEmitData) MemOpEmitD
             // Get the inductionVariable changeInfo
             if (!loop->memOpInfo->inductionVariableChangeInfoMap->TryGetValue(candidate->index, &inductionVariableChangeInfo))
             {
-                TRACE_MEMOP_VERBOSE(loop, nullptr, u"MemOp skipped (s%d): no induction variable", candidate->base);
+                ;
                 return false;
             }
 
             if (inductionVariableChangeInfo.unroll != candidate->count)
             {
-                TRACE_MEMOP_VERBOSE(loop, nullptr, u"MemOp skipped (s%d): not matching unroll count", candidate->base);
+                ;
                 return false;
             }
 

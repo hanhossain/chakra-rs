@@ -220,19 +220,6 @@ public:
 
     HeapAllocator(bool useAllocMemProtect = true);
     ~HeapAllocator();
-
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-    void FinishMemProtectHeapCollect();
-
-private:
-    bool DoUseMemProtectHeap();
-    static HeapAllocator NoMemProtectInstance;
-#if DBG
-    bool isUsed;
-    bool allocMemProtect;
-    void * memProtectHeapHandle;
-#endif // DBG
-#endif // INTERNAL_MEM_PROTECT_HEAP_ALLOC
 }; // HeapAllocator.
 
 class NoThrowHeapAllocator
@@ -262,26 +249,6 @@ public:
     void ClearTrackAllocInfo(TrackAllocData* data = NULL);
 #endif
 };
-
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-
-
-class NoThrowNoMemProtectHeapAllocator
-{
-public:
-    static const bool FakeZeroLengthArray = false;
-    char * Alloc(size_t byteSize);
-    char * AllocZero(size_t byteSize);
-    void Free(void * buffer, size_t byteSize);
-    static NoThrowNoMemProtectHeapAllocator Instance;
-
-#ifdef TRACK_ALLOC
-    // Doesn't support tracking information, dummy implementation
-    NoThrowNoMemProtectHeapAllocator * TrackAllocInfo(TrackAllocData const& data);
-    void ClearTrackAllocInfo(TrackAllocData* data = NULL);
-#endif
-};
-#endif
 
 class NoCheckHeapAllocator
 {
@@ -343,45 +310,7 @@ private:
 #endif
 } // namespace Memory
 
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-//----------------------------------------
-// NoThrowNoMemProtectHeapAllocator overrides
-//----------------------------------------
-template <>
-_Ret_maybenull_ inline void *
-operator new(size_t byteSize, NoThrowNoMemProtectHeapAllocator * alloc, char * (NoThrowNoMemProtectHeapAllocator::*AllocFunc)(size_t))
-{
-    return ::operator new(byteSize, alloc, true, AllocFunc);
-}
-
-template <>
-_Ret_maybenull_ inline void *
-operator new[](size_t byteSize, NoThrowNoMemProtectHeapAllocator * alloc, char * (NoThrowNoMemProtectHeapAllocator::*AllocFunc)(size_t))
-{
-    return ::operator new[](byteSize, alloc, true, AllocFunc);
-}
-
-template <>
-_Ret_maybenull_ inline void *
-operator new(size_t byteSize, NoThrowNoMemProtectHeapAllocator * alloc, char * (NoThrowNoMemProtectHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
-{
-    return ::operator new(byteSize, alloc, true, AllocFunc, plusSize);
-}
-
-inline void
-operator delete(void * obj, NoThrowNoMemProtectHeapAllocator * alloc, char * (NoThrowNoMemProtectHeapAllocator::*AllocFunc)(size_t))
-{
-    alloc->Free(obj, (size_t)-1);
-}
-
-inline void
-operator delete(void * obj, NoThrowNoMemProtectHeapAllocator * alloc, char * (NoThrowNoMemProtectHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
-{
-    alloc->Free(obj, (size_t)-1);
-}
-#else
 typedef NoThrowHeapAllocator NoThrowNoMemProtectHeapAllocator;
-#endif
 
 //----------------------------------------
 // HeapAllocator overrides

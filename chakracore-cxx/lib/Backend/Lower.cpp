@@ -98,36 +98,6 @@ Lowerer::Lower()
 
     this->LowerRange(m_func->m_headInstr, m_func->m_tailInstr, defaultDoFastPath, loopFastPath);
 
-#if DBG
-    // TODO: (leish)(swb) implement for arm
-#if defined(_M_AMD64)
-    if (CONFIG_FLAG(ForceSoftwareWriteBarrier) && CONFIG_FLAG(VerifyBarrierBit))
-    {
-        // find out all write barrier setting instr, call Recycler::WBSetBit for verification purpose
-        // should do this in LowererMD::GenerateWriteBarrier, however, can't insert call instruction there
-        FOREACH_INSTR_EDITING(instr, instrNext, m_func->m_headInstr)
-            if (instr->m_src1 && instr->m_src1->IsAddrOpnd())
-            {
-                IR::AddrOpnd* addrOpnd = instr->m_src1->AsAddrOpnd();
-                if (addrOpnd->GetAddrOpndKind() == IR::AddrOpndKindWriteBarrierCardTable)
-                {
-                    auto& leaInstr = instr->m_prev->m_prev->m_prev;
-                    auto& movInstr = instr->m_prev->m_prev;
-                    auto& shrInstr = instr->m_prev;
-                    Assert(leaInstr->m_opcode == Js::OpCode::LEA);
-                    Assert(movInstr->m_opcode == Js::OpCode::MOV);
-                    Assert(shrInstr->m_opcode == Js::OpCode::SHR);
-                    m_lowererMD.LoadHelperArgument(movInstr, leaInstr->m_dst);
-                    IR::Instr* instrCall = IR::Instr::New(Js::OpCode::Call, m_func);
-                    movInstr->InsertBefore(instrCall);
-                    m_lowererMD.ChangeToHelperCall(instrCall, IR::HelperWriteBarrierSetVerifyBit);
-                }
-            }
-        NEXT_INSTR_EDITING
-    }
-#endif
-#endif
-
     this->m_func->ClearCloneMap();
 
     if (m_func->HasAnyStackNestedFunc())
@@ -11925,16 +11895,6 @@ Lowerer::LowerNewRegEx(IR::Instr * instr)
 
     Assert(src1->IsAddrOpnd());
 
-#if ENABLE_REGEX_CONFIG_OPTIONS
-    if (REGEX_CONFIG_FLAG(RegexTracing))
-    {
-        Assert(!instr->GetDst()->CanStoreTemp());
-        IR::Instr * instrPrev = LoadScriptContext(instr);
-        instrPrev = m_lowererMD.LoadHelperArgument(instr, src1);
-        m_lowererMD.ChangeToHelperCall(instr, IR::HelperScrRegEx_OP_NewRegEx);
-        return instrPrev;
-    }
-#endif
     IR::Instr * instrPrev = instr->m_prev;
     IR::RegOpnd * dstOpnd = instr->UnlinkDst()->AsRegOpnd();
     IR::SymOpnd * tempObjectSymOpnd;

@@ -283,10 +283,6 @@ namespace Js
             return false; // Not a supported object type
         }
 
-        if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-        {
-            *dst = JavascriptProxy::AutoProxyWrapper(*dst);
-        }
         return true;
     }
 

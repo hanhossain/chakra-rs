@@ -5168,10 +5168,6 @@ namespace Js
     Var InterpreterStackFrame::OP_NewScObjectSimple()
     {
         Var object = scriptContext->GetLibrary()->CreateObject(true);
-        if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-        {
-            object = JavascriptProxy::AutoProxyWrapper(object);
-        }
         return object;
     }
 
@@ -5526,12 +5522,6 @@ namespace Js
         if (entryPointInfo != NULL && entryPointInfo->IsCodeGenDone())
         {
 #if DBG_DUMP
-            if (PHASE_TRACE1(Js::JITLoopBodyPhase) && CONFIG_FLAG(Verbose))
-            {
-                fn->DumpFunctionId(true);
-                Output::Print(u": %-20s LoopBody Execute  Loop: %2d\n", fn->GetDisplayName(), loopNumber);
-                Output::Flush();
-            }
             loopHeader->nativeCount++;
 #endif
 #ifdef BGJIT_STATS
@@ -5962,12 +5952,6 @@ namespace Js
         END_SAFE_REENTRANT_CALL
 
             PopOut(ArgCount);
-        if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-        {
-            newVarInstance = JavascriptProxy::AutoProxyWrapper(newVarInstance);
-            // this might come from a different scriptcontext.
-            newVarInstance = CrossSite::MarshalVar(GetScriptContext(), newVarInstance);
-        }
         return newVarInstance;
     }
 
@@ -5990,12 +5974,6 @@ namespace Js
         END_SAFE_REENTRANT_CALL
 
         PopOut(ArgCount);
-        if (Js::Configuration::Global.flags.IsEnabled(Js::autoProxyFlag))
-        {
-            newVarInstance = JavascriptProxy::AutoProxyWrapper(newVarInstance);
-            // this might come from a different scriptcontext.
-            newVarInstance = CrossSite::MarshalVar(GetScriptContext(), newVarInstance);
-        }
 #ifdef TELEMETRY_PROFILED
         {
             this->scriptContext->GetTelemetry().GetOpcodeTelemetry().NewScriptObject(target, args, newVarInstance);

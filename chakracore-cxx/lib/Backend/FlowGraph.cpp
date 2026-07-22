@@ -3978,7 +3978,7 @@ FlowGraph::Dump(bool onlyOnVerboseMode, const char16_t *form)
 {
     if(PHASE_DUMP(Js::FGBuildPhase, this->GetFunc()))
     {
-        if (!onlyOnVerboseMode || Js::Configuration::Global.flags.Verbose)
+        if (!onlyOnVerboseMode)
         {
             if (form)
             {
@@ -4443,13 +4443,6 @@ static bool IsLegalOpcodeForPathDepBrFold(IR::Instr *instr)
     case Js::OpCode::InlineeEnd:
         return true;
     }
-#if DBG
-    if (PHASE_TRACE(Js::PathDepBranchFoldingPhase, instr->m_func) && Js::Configuration::Global.flags.Verbose)
-    {
-        Output::Print(u"Skipping PathDependentBranchFolding due to: ");
-        instr->Dump();
-    }
-#endif
     return false;
 }
 
@@ -4869,13 +4862,6 @@ BasicBlock::CheckLegalityAndFoldPathDepBranches(GlobOpt* globOpt)
             }NEXT_SUCCESSOR_BLOCK_EDITING;
             lastBranchTarget = branchTarget;
             instr = lastBranchTarget;
-#if DBG
-            if (PHASE_TRACE(Js::PathDepBranchFoldingPhase, instr->m_func) && Js::Configuration::Global.flags.Verbose)
-            {
-                Output::Print(u"After PathDependentBranchFolding: ");
-                this->func->Dump();
-            }
-#endif
         }
         else
         {

@@ -16,7 +16,6 @@
 //  AD PerfCounter
 //  AE PerfCounterSet
 //  AM Output/Configuration
-//  AN MemProtectHeap
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
 //  AS JavascriptDispatch/RecyclerObjectDumper
@@ -197,24 +196,18 @@ namespace Js
     ///----------------------------------------------------------------------------
     ///----------------------------------------------------------------------------
 
-    bool
-    Phases::IsEnabled(Phase phase)
+    bool Phases::IsEnabled(Phase phase) const { return this->phaseList[static_cast<int>(phase)].valid; }
+
+    bool Phases::IsEnabled(Phase phase, uint sourceContextId, Js::LocalFunctionId functionId) const
     {
-        return this->phaseList[static_cast<int>(phase)].valid;
+        return this->phaseList[static_cast<int>(phase)].valid &&
+            this->phaseList[static_cast<int>(phase)].range.InRange(SourceFunctionNode(sourceContextId, functionId));
     }
 
-    bool
-    Phases::IsEnabled(Phase phase, uint sourceContextId, Js::LocalFunctionId functionId)
+    bool Phases::IsEnabledForAll(Phase phase) const
     {
-        return  this->phaseList[static_cast<int>(phase)].valid &&
-                this->phaseList[static_cast<int>(phase)].range.InRange(SourceFunctionNode(sourceContextId, functionId));
-    }
-
-    bool
-    Phases::IsEnabledForAll(Phase phase)
-    {
-        return  this->phaseList[static_cast<int>(phase)].valid &&
-                this->phaseList[static_cast<int>(phase)].range.ContainsAll();
+        return this->phaseList[static_cast<int>(phase)].valid &&
+            this->phaseList[static_cast<int>(phase)].range.ContainsAll();
     }
 
     Range *
@@ -334,7 +327,6 @@ namespace Js
 #define DEFAULT_CONFIG_ForceOldDateAPI      (false)
 #define DEFAULT_CONFIG_Loop                 (1)
 #define DEFAULT_CONFIG_ForceDiagnosticsMode (false)
-#define DEFAULT_CONFIG_UseFullName          (true)
 #define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForHelpers  (true)
 #define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForBuiltIns  (true)
 #define DEFAULT_CONFIG_EnableFunctionSourceReportForHeapEnum (true)
@@ -371,7 +363,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
 #define DEFAULT_CONFIG_NewPagesCapDuringBGSweeping    (15000 * 4)
-#define DEFAULT_CONFIG_MaxSingleAllocSizeInMB  (2048)
 #define DEFAULT_CONFIG_AllocationPolicyLimit    (-1)
 
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
@@ -381,21 +372,12 @@ namespace Js
 #define DEFAULT_CONFIG_ProfileBasedSpeculationCap (1600)
 #define DEFAULT_CONFIG_Verbose              (false)
 #define DEFAULT_CONFIG_ForceStrictMode      (false)
-#define DEFAULT_CONFIG_EnableEvalMapCleanup (true)
 #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
 #define DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold (50)  // Threshold at which Entry Point Collection is triggered
-#define DEFAULT_CONFIG_RegexTracing         (false)
-#define DEFAULT_CONFIG_RegexProfile         (false)
 #define DEFAULT_CONFIG_RegexDebug           (false)
-#define DEFAULT_CONFIG_RegexDebugAST        (true)
-#define DEFAULT_CONFIG_RegexDebugAnnotatedAST (true)
-#define DEFAULT_CONFIG_RegexBytecodeDebug   (false)
 #define DEFAULT_CONFIG_RegexOptimize        (true)
-#define DEFAULT_CONFIG_DynamicRegexMruListSize (16)
 #define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
 #define DEFAULT_CONFIG_AsmGoptCleanupThreshold  (500)
-#define DEFAULT_CONFIG_OptimizeForManyInstances (false)
-#define DEFAULT_CONFIG_EnableArrayTypeMutation (false)
 
 #define DEFAULT_CONFIG_DeferParseThreshold             (4 * 1024) // Unit is number of characters
 #define DEFAULT_CONFIG_ProfileBasedDeferParseThreshold (100)      // Unit is number of characters
@@ -568,14 +550,11 @@ namespace Js
 
 #define DEFAULT_CONFIG_Sse                  (-1)
 
-#define DEFAULT_CONFIG_DeletedPropertyReuseThreshold (32)
 #define DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold (0xffff)
 #define DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler (false)
 #define DEFAULT_CONFIG_TypeSnapshotEnumeration (true)
 #define DEFAULT_CONFIG_PrimeRecycler     (false)
 #define DEFAULT_CONFIG_DisableRentalThreading (false)
-#define DEFAULT_CONFIG_DisableDebugObject (false)
-#define DEFAULT_CONFIG_DumpHeap (false)
 #define DEFAULT_CONFIG_PerfHintLevel (1)
 #define DEFAULT_CONFIG_OOPJITMissingOpts (false)
 #define DEFAULT_CONFIG_OOPCFGRegistration (true)
@@ -583,10 +562,6 @@ namespace Js
 #define DEFAULT_CONFIG_ForceJITCFGCheck (false)
 #define DEFAULT_CONFIG_UseJITTrampoline (true)
 
-#define DEFAULT_CONFIG_IsolatePrototypes    (true)
-#define DEFAULT_CONFIG_ChangeTypeOnProto    (true)
-#define DEFAULT_CONFIG_FixPropsOnPathTypes    (true)
-#define DEFAULT_CONFIG_BailoutTraceFilter (-1)
 #define DEFAULT_CONFIG_TempMin    (0)
 #define DEFAULT_CONFIG_TempMax    (INT_MAX)
 
@@ -594,9 +569,6 @@ namespace Js
 #define DEFAULT_CONFIG_LibraryStackFrameDebugger    (false)
 
 #define DEFAULT_CONFIG_FuncObjectInlineCacheThreshold   (2) // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
-#define DEFAULT_CONFIG_ShareInlineCaches (false)
-#define DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold (4)
-#define DEFAULT_CONFIG_ConstructorCacheInvalidationThreshold (500)
 
 #define DEFAULT_CONFIG_InMemoryTrace                (false)
 #define DEFAULT_CONFIG_InMemoryTraceBufferSize      (1024)
@@ -609,8 +581,6 @@ namespace Js
 #define DEFAULT_CONFIG_DeferLoadingAvailableSource  (false)
 
 #define DEFAULT_CONFIG_RecyclerForceMarkInterior (false)
-
-#define DEFAULT_CONFIG_MemProtectHeap (false)
 
 #define DEFAULT_CONFIG_InduceCodeGenFailure (30) // When -InduceCodeGenFailure is passed in, 30% of JIT allocations will fail
 
@@ -627,18 +597,6 @@ namespace Js
 #if defined(_M_X64)
 #define DEFAULT_CONFIG_LoopAlignNopLimit (6)
 #endif
-
-#if defined(_M_X64)
-#define DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore (true)
-#endif
-
-#define DEFAULT_CONFIG_StrictWriteBarrierCheck  (false)
-#define DEFAULT_CONFIG_KeepRecyclerTrackData  (false)
-#define DEFAULT_CONFIG_EnableBGFreeZero (true)
-
-#define DEFAULT_CONFIG_ForceSoftwareWriteBarrier  (true)
-#define DEFAULT_CONFIG_WriteBarrierTest (false)
-#define DEFAULT_CONFIG_VerifyBarrierBit  (false)
 
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)
@@ -1177,112 +1135,33 @@ namespace Js
         u"TrackDispatch",
 #endif
         u"Verbose",
-        u"UseFullName",
-        u"Utf8",
         u"Version",
         u"WERExceptionSupport",
         u"ExtendedErrorStackForTestHost",
         u"errorStackTrace",
-        u"DoHeapEnumOnEngineShutdown",
-#ifdef HEAP_ENUMERATION_VALIDATION
-        u"ValidateHeapEnum",
-#endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
 // Regex flags
 //
-        u"RegexTracing",
-        u"RegexProfile",
         u"RegexDebug",
-        u"RegexDebugAST",
-        u"RegexDebugAnnotatedAST",
-        u"RegexBytecodeDebug",
         u"RegexOptimize",
-        u"DynamicRegexMruListSize",
 #endif
 
-        u"OptimizeForManyInstances",
-        u"EnableArrayTypeMutation",
         u"ArrayMutationTestSeed",
         u"TestTrace",
-        u"EnableEvalMapCleanup",
-#ifdef PROFILE_MEM
-        u"TraceObjectAllocation",
-#endif
         u"Sse",
-        u"DeletedPropertyReuseThreshold",
         u"ForceStringKeyedSimpleDictionaryTypeHandler",
         u"BigDictionaryTypeHandlerThreshold",
-        u"TypeSnapshotEnumeration",
-        u"IsolatePrototypes",
-        u"ChangeTypeOnProto",
-        u"ShareInlineCaches",
-        u"DisableDebugObject",
-        u"DumpHeap",
-        u"autoProxy",
         u"PerfHintLevel",
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        u"MemProtectHeap",
-#endif
-#ifdef RECYCLER_STRESS
-        u"MemProtectHeapStress",
-        u"MemProtectHeapBackgroundStress",
-        u"MemProtectHeapConcurrentStress",
-        u"MemProtectHeapConcurrentRepeatStress",
-        u"MemProtectHeapPartialStress",
-#endif
-#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        u"FixPropsOnPathTypes",
-#endif
-        u"BailoutTraceFilter",
-        u"RejitTraceFilter",
-
-// recycler heuristic flags
-        u"MaxBackgroundFinishMarkCount",
-        u"BackgroundFinishMarkWaitTime",
-        u"MinBackgroundRepeatMarkRescanBytes",
-
-#if defined(_M_X64)
-        u"ZeroMemoryWithNonTemporalStore",
-#endif
-
-// recycler memory restrict test flags
-        u"MaxMarkStackPageCount",
-        u"MaxTrackedObjectListCount",
-
-// make the recycler page integration path easier to hit
-        u"NumberAllocPlusSize",
 
 #if DBG
         u"InitializeInterpreterSlotsWithInvalidStackVar",
 #endif
 
 #if DBG
-        u"PRNGSeed0",
-        u"PRNGSeed1",
-#endif
-
-        u"ClearInlineCachesOnCollect",
-        u"InlineCacheInvalidationListCompactionThreshold",
-        u"ConstructorCacheInvalidationThreshold",
-        u"GCMemoryThreshold",
-
-#if DBG
             u"SimulatePolyCacheWithOneTypeForInlineCacheIndex",
 #endif
-
-        u"JITServerIdleTimeout",
-        u"JITServerMaxInactivePageAllocatorCount",
-
-        u"StrictWriteBarrierCheck",
-        u"WriteBarrierTest",
-        u"ForceSoftwareWriteBarrier",
-        u"VerifyBarrierBit",
-        u"EnableBGFreeZero",
-        u"KeepRecyclerTrackData",
-
-        u"MaxSingleAllocSizeInMB",
 
 // TODO (hanhossain): ConfigFlagsList end
         NULL
@@ -2208,113 +2087,34 @@ namespace Js
         u"Save stack traces of where JavascriptDispatch/HostVariant are created",
 #endif
         u"Dump details",
-        u"Enable fully qualified name",
-        u"Use UTF8 for file output",
+        // todo (hanhossain): flag end
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
         u"WER feature for extended exception support. Enabled when WinRT is enabled",
         u"Enable passing extended error stack string to test host.",
         u"error.StackTrace feature. Remove when feature complete",
-        u"Perform a heap enumeration whenever shut a script engine down",
-#ifdef HEAP_ENUMERATION_VALIDATION
-        u"Validate that heap enumeration is reporting all Js::RecyclableObjects in the heap",
-#endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
 // Regex flags
 //
-        u"Trace all Regex invocations to the output.",
-        u"Collect usage statistics on all Regex invocations.",
         u"Trace compilation of UnifiedRegex expressions.",
-        u"Display Regex AST (requires -RegexDebug to view). [default on]",
-        u"Display Regex Annotated AST (requires -RegexDebug and -RegexDebugAST to view). [default on]",
-        u"Display layout of UnifiedRegex bytecode (requires -RegexDebug to view).",
         u"Optimize regular expressions in the unified Regex system (default: true)",
-        u"Size of the MRU list for dynamic regexes",
 #endif
 
-        u"Optimize script engine for many instances (low memory footprint per engine, assume low spare CPU cycles) (default: false)",
-        u"Enable force array type mutation on re-entrant region",
         u"Seed used for the array mutation",
         u"Test trace for the given phase",
-        u"Enable cleaning up the eval map",
-#ifdef PROFILE_MEM
-        u"Enable cleaning up the eval map",
-#endif
         u"Virtually disables SSE-based optimizations above the specified SSE level in the Chakra JIT (does not affect CRT SSE usage)",
-        u"Start reusing deleted property indexes after this many properties are deleted. Zero to disable reuse.",
         u"Force switch to string keyed version of SimpleDictionaryTypeHandler on first new property added to a SimpleDictionaryTypeHandler",
         u"Min Slot Capacity required to convert DictionaryTypeHandler to BigDictionaryTypeHandler.(Advisable to give more than 15 - to avoid false positive cases)",
-        u"Create a true snapshot of the type of an object before enumeration and enumerate only those properties.",
-        u"Should prototypes get unique types not shared with other objects (default: true)?",
-        u"When becoming a prototype should the object switch to a new type (default: true)?",
-        u"Determines whether inline caches are shared between all loads (or all stores) of the same property ID",
-        u"Disable test only Debug object properties",
-        u"enable Debug.dumpHeap even when DisableDebugObject is set",
-        u"__msTestHandler",
         u"Specifies the perf-hint level (1,2) 1 == critical, 2 == only noisy",
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        u"Use the mem protect heap as the default heap",
-#endif
-#ifdef RECYCLER_STRESS
-        u"Stress the recycler by collect on every allocation call",
-        u"Stress the recycler by collect in the background thread on every allocation call",
-        u"Stress the concurrent recycler by concurrent collect on every allocation call",
-        u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
-        u"Stress the partial recycler by partial collect on every allocation call",
-#endif
-#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        u"Mark properties as fixed on path types (default: false).",
-#endif
-        u"Filter the bailout trace messages to specific bailout kinds.",
-        u"Filter the rejit trace messages to specific bailout kinds.",
-
-// recycler heuristic flags
-        u"Maximum number of background finish mark",
-        u"Millisecond to wait for background finish mark",
-        u"Minimum number of bytes rescan to trigger background finish mark",
-
-#if defined(_M_X64)
-        u"Zero free memory with non-temporal stores to avoid evicting other content from processor cache",
-#endif
-
-// recycler memory restrict test flags
-        u"Restrict recycler mark stack size (in pages)",
-        u"Restrict recycler tracked object count during GC",
-
-// make the recycler page integration path easier to hit
-        u"Additional bytes to allocate with JavascriptNumber from number allocator (0~496)",
 
 #if DBG
         u"Enable the initialization of the interpreter local slots with invalid stack vars",
 #endif
 
 #if DBG
-        u"Override seed0 for Math.Random()",
-        u"Override seed1 for Math.Random()",
-#endif
-
-        u"Clear all inline caches on every garbage collection",
-        u"Compact inline cache invalidation lists if their utilization falls below this threshold",
-        u"Clear uniquePropertyGuard entries from recyclableData if number of invalidations of constructor caches happened are more than the threshold.",
-
-        u"Threshold for allocation-based GC initiation (in MB)",
-
-#if DBG
             u"Use with SimulatePolyCacheWithOneTypeForFunction to simulate creating a polymorphic inline cache containing only one type due to a collision, for testing ObjTypeSpec",
 #endif
-
-        u"Idle timeout in milliseconds to do the cleanup in JIT server",
-        u"Max inactive page allocators to keep before schedule a cleanup",
-
-        u"Check write barrier setting on none write barrier pages",
-        u"Always return true while checking barrier to test recycler regardless of annotation",
-        u"Use to turn off write watch to test software write barrier on windows",
-        u"Verify software write barrier bit is set while marking",
-        u"Use to turn off background freeing and zeroing to simulate linux",
-        u"Keep recycler track data after sweep until reuse",
-
-        u"Max size(in MB) in single allocation",
 
         NULL
     };
@@ -2835,16 +2635,11 @@ namespace Js
         NoParentFlag,
 #endif
         NoParentFlag,
+        // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-#ifdef HEAP_ENUMERATION_VALIDATION
-        NoParentFlag,
-#endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
@@ -2852,12 +2647,6 @@ namespace Js
 //
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
 #endif
 
         NoParentFlag,
@@ -2865,83 +2654,16 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#ifdef PROFILE_MEM
-        NoParentFlag,
-#endif
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        NoParentFlag,
-#endif
-#ifdef RECYCLER_STRESS
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-#endif
-#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        NoParentFlag,
-#endif
-        NoParentFlag,
-        NoParentFlag,
-
-// recycler heuristic flags
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-
-#if defined(_M_X64)
-        NoParentFlag,
-#endif
-
-// recycler memory restrict test flags
-        NoParentFlag,
-        NoParentFlag,
-
-// make the recycler page integration path easier to hit
         NoParentFlag,
 
 #if DBG
         NoParentFlag,
 #endif
-
-#if DBG
-        NoParentFlag,
-        NoParentFlag,
-#endif
-
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-
-        NoParentFlag,
 
 #if DBG
             NoParentFlag,
 #endif
 
-        NoParentFlag,
-        NoParentFlag,
-
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-
-        NoParentFlag,
 
         InvalidFlag
     };
@@ -3483,113 +3205,34 @@ namespace Js
         TrackDispatch(false),
 #endif
         Verbose(DEFAULT_CONFIG_Verbose),
-        UseFullName(DEFAULT_CONFIG_UseFullName),
-        Utf8(false),
         Version(6 ),
         WERExceptionSupport(false),
         ExtendedErrorStackForTestHost(DEFAULT_CONFIG_ExtendedErrorStackForTestHost),
         errorStackTrace(DEFAULT_CONFIG_errorStackTrace),
-        DoHeapEnumOnEngineShutdown(false),
-#ifdef HEAP_ENUMERATION_VALIDATION
-        ValidateHeapEnum(false),
-#endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
 // Regex flags
 //
-        RegexTracing(DEFAULT_CONFIG_RegexTracing),
-        RegexProfile(DEFAULT_CONFIG_RegexProfile),
         RegexDebug(DEFAULT_CONFIG_RegexDebug),
-        RegexDebugAST(DEFAULT_CONFIG_RegexDebugAST),
-        RegexDebugAnnotatedAST(DEFAULT_CONFIG_RegexDebugAnnotatedAST),
-        RegexBytecodeDebug(DEFAULT_CONFIG_RegexBytecodeDebug),
         RegexOptimize(DEFAULT_CONFIG_RegexOptimize),
-        DynamicRegexMruListSize(DEFAULT_CONFIG_DynamicRegexMruListSize),
 #endif
 
-        OptimizeForManyInstances(DEFAULT_CONFIG_OptimizeForManyInstances),
-        EnableArrayTypeMutation(DEFAULT_CONFIG_EnableArrayTypeMutation),
         ArrayMutationTestSeed(0),
         TestTrace(),
-        EnableEvalMapCleanup(true),
-#ifdef PROFILE_MEM
-        TraceObjectAllocation(false),
-#endif
         Sse(DEFAULT_CONFIG_Sse),
-        DeletedPropertyReuseThreshold(DEFAULT_CONFIG_DeletedPropertyReuseThreshold),
         ForceStringKeyedSimpleDictionaryTypeHandler(DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler),
         BigDictionaryTypeHandlerThreshold(DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold),
-        TypeSnapshotEnumeration(DEFAULT_CONFIG_TypeSnapshotEnumeration),
-        IsolatePrototypes(DEFAULT_CONFIG_IsolatePrototypes),
-        ChangeTypeOnProto(DEFAULT_CONFIG_ChangeTypeOnProto),
-        ShareInlineCaches(DEFAULT_CONFIG_ShareInlineCaches),
-        DisableDebugObject(DEFAULT_CONFIG_DisableDebugObject),
-        DumpHeap(DEFAULT_CONFIG_DumpHeap),
-        autoProxy(u"__msTestHandler"),
         PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
-#ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        MemProtectHeap(DEFAULT_CONFIG_MemProtectHeap),
-#endif
-#ifdef RECYCLER_STRESS
-        MemProtectHeapStress(false),
-        MemProtectHeapBackgroundStress(false),
-        MemProtectHeapConcurrentStress(false),
-        MemProtectHeapConcurrentRepeatStress(false),
-        MemProtectHeapPartialStress(false),
-#endif
-#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        FixPropsOnPathTypes(DEFAULT_CONFIG_FixPropsOnPathTypes),
-#endif
-        BailoutTraceFilter(),
-        RejitTraceFilter(),
-
-// recycler heuristic flags
-        MaxBackgroundFinishMarkCount(1),
-        BackgroundFinishMarkWaitTime(15),
-        MinBackgroundRepeatMarkRescanBytes(-1),
-
-#if defined(_M_X64)
-        ZeroMemoryWithNonTemporalStore(DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore),
-#endif
-
-// recycler memory restrict test flags
-        MaxMarkStackPageCount(-1),
-        MaxTrackedObjectListCount(-1),
-
-// make the recycler page integration path easier to hit
-        NumberAllocPlusSize(0),
 
 #if DBG
         InitializeInterpreterSlotsWithInvalidStackVar(false),
 #endif
 
 #if DBG
-        PRNGSeed0(0),
-        PRNGSeed1(0),
-#endif
-
-        ClearInlineCachesOnCollect(false),
-        InlineCacheInvalidationListCompactionThreshold(DEFAULT_CONFIG_InlineCacheInvalidationListCompactionThreshold),
-        ConstructorCacheInvalidationThreshold(DEFAULT_CONFIG_ConstructorCacheInvalidationThreshold),
-
-        GCMemoryThreshold(0),
-
-#if DBG
             SimulatePolyCacheWithOneTypeForInlineCacheIndex(-1),
 #endif
 
-        JITServerIdleTimeout(500),
-        JITServerMaxInactivePageAllocatorCount(10),
-
-        StrictWriteBarrierCheck(DEFAULT_CONFIG_StrictWriteBarrierCheck),
-        WriteBarrierTest(DEFAULT_CONFIG_WriteBarrierTest),
-        ForceSoftwareWriteBarrier(DEFAULT_CONFIG_ForceSoftwareWriteBarrier),
-        VerifyBarrierBit(DEFAULT_CONFIG_VerifyBarrierBit),
-        EnableBGFreeZero(DEFAULT_CONFIG_EnableBGFreeZero),
-        KeepRecyclerTrackData(DEFAULT_CONFIG_KeepRecyclerTrackData),
-
-        MaxSingleAllocSizeInMB(DEFAULT_CONFIG_MaxSingleAllocSizeInMB),
         nDummy(0)
     {
         for(int i=0; i < FlagCount; flagPresent[i++] = false);
@@ -5121,10 +4764,6 @@ namespace Js
         #endif
         case VerboseFlag:
             return FlagBoolean;
-        case UseFullNameFlag:
-            return FlagBoolean;
-        case Utf8Flag:
-            return FlagBoolean;
         case VersionFlag:
             return FlagNumber;
         case WERExceptionSupportFlag:
@@ -5133,119 +4772,28 @@ namespace Js
             return FlagBoolean;
         case errorStackTraceFlag:
             return FlagBoolean;
-        case DoHeapEnumOnEngineShutdownFlag:
-            return FlagBoolean;
-        #ifdef HEAP_ENUMERATION_VALIDATION
-        case ValidateHeapEnumFlag:
-            return FlagBoolean;
-        #endif
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //
         // Regex flags
         //
-        case RegexTracingFlag:
-            return FlagBoolean;
-        case RegexProfileFlag:
-            return FlagBoolean;
         case RegexDebugFlag:
-            return FlagBoolean;
-        case RegexDebugASTFlag:
-            return FlagBoolean;
-        case RegexDebugAnnotatedASTFlag:
-            return FlagBoolean;
-        case RegexBytecodeDebugFlag:
             return FlagBoolean;
         case RegexOptimizeFlag:
             return FlagBoolean;
-        case DynamicRegexMruListSizeFlag:
-            return FlagNumber;
         #endif
 
-        case OptimizeForManyInstancesFlag:
-            return FlagBoolean;
-        case EnableArrayTypeMutationFlag:
-            return FlagBoolean;
         case ArrayMutationTestSeedFlag:
             return FlagNumber;
         case TestTraceFlag:
             return FlagPhases;
-        case EnableEvalMapCleanupFlag:
-            return FlagBoolean;
-        #ifdef PROFILE_MEM
-        case TraceObjectAllocationFlag:
-            return FlagBoolean;
-        #endif
         case SseFlag:
-            return FlagNumber;
-        case DeletedPropertyReuseThresholdFlag:
             return FlagNumber;
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
             return FlagBoolean;
         case BigDictionaryTypeHandlerThresholdFlag:
             return FlagNumber;
-        case TypeSnapshotEnumerationFlag:
-            return FlagBoolean;
-        case IsolatePrototypesFlag:
-            return FlagBoolean;
-        case ChangeTypeOnProtoFlag:
-            return FlagBoolean;
-        case ShareInlineCachesFlag:
-            return FlagBoolean;
-        case DisableDebugObjectFlag:
-            return FlagBoolean;
-        case DumpHeapFlag:
-            return FlagBoolean;
-        case autoProxyFlag:
-            return FlagString;
         case PerfHintLevelFlag:
-            return FlagNumber;
-        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        case MemProtectHeapFlag:
-            return FlagBoolean;
-        #endif
-        #ifdef RECYCLER_STRESS
-        case MemProtectHeapStressFlag:
-            return FlagBoolean;
-        case MemProtectHeapBackgroundStressFlag:
-            return FlagBoolean;
-        case MemProtectHeapConcurrentStressFlag:
-            return FlagBoolean;
-        case MemProtectHeapConcurrentRepeatStressFlag:
-            return FlagBoolean;
-        case MemProtectHeapPartialStressFlag:
-            return FlagBoolean;
-        #endif
-        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        case FixPropsOnPathTypesFlag:
-            return FlagBoolean;
-        #endif
-        case BailoutTraceFilterFlag:
-            return FlagNumberSet;
-        case RejitTraceFilterFlag:
-            return FlagNumberSet;
-
-        // recycler heuristic flags
-        case MaxBackgroundFinishMarkCountFlag:
-            return FlagNumber;
-        case BackgroundFinishMarkWaitTimeFlag:
-            return FlagNumber;
-        case MinBackgroundRepeatMarkRescanBytesFlag:
-            return FlagNumber;
-
-        #if defined(_M_X64)
-        case ZeroMemoryWithNonTemporalStoreFlag:
-            return FlagBoolean;
-        #endif
-
-        // recycler memory restrict test flags
-        case MaxMarkStackPageCountFlag:
-            return FlagNumber;
-        case MaxTrackedObjectListCountFlag:
-            return FlagNumber;
-
-        // make the recycler page integration path easier to hit
-        case NumberAllocPlusSizeFlag:
             return FlagNumber;
 
         #if DBG
@@ -5254,47 +4802,9 @@ namespace Js
         #endif
 
         #if DBG
-        case PRNGSeed0Flag:
-            return FlagNumber;
-        case PRNGSeed1Flag:
-            return FlagNumber;
-        #endif
-
-        case ClearInlineCachesOnCollectFlag:
-            return FlagBoolean;
-        case InlineCacheInvalidationListCompactionThresholdFlag:
-            return FlagNumber;
-        case ConstructorCacheInvalidationThresholdFlag:
-            return FlagNumber;
-
-        case GCMemoryThresholdFlag:
-            return FlagNumber;
-
-        #if DBG
             case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:
             return FlagNumber;
         #endif
-
-        case JITServerIdleTimeoutFlag:
-            return FlagNumber;
-        case JITServerMaxInactivePageAllocatorCountFlag:
-            return FlagNumber;
-
-        case StrictWriteBarrierCheckFlag:
-            return FlagBoolean;
-        case WriteBarrierTestFlag:
-            return FlagBoolean;
-        case ForceSoftwareWriteBarrierFlag:
-            return FlagBoolean;
-        case VerifyBarrierBitFlag:
-            return FlagBoolean;
-        case EnableBGFreeZeroFlag:
-            return FlagBoolean;
-        case KeepRecyclerTrackDataFlag:
-            return FlagBoolean;
-
-        case MaxSingleAllocSizeInMBFlag:
-            return FlagNumber;
 
         default:
             return InvalidFlagType;
@@ -6185,10 +5695,6 @@ namespace Js
         #endif
         case VerboseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&Verbose));
-        case UseFullNameFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&UseFullName));
-        case Utf8Flag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&Utf8));
         case VersionFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Version));
         case WERExceptionSupportFlag:
@@ -6197,120 +5703,29 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ExtendedErrorStackForTestHost));
         case errorStackTraceFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&errorStackTrace));
-        case DoHeapEnumOnEngineShutdownFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&DoHeapEnumOnEngineShutdown));
-        #ifdef HEAP_ENUMERATION_VALIDATION
-        case ValidateHeapEnumFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ValidateHeapEnum));
-        #endif
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //
         // Regex flags
         //
-        case RegexTracingFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexTracing));
-        case RegexProfileFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexProfile));
         case RegexDebugFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexDebug));
-        case RegexDebugASTFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexDebugAST));
-        case RegexDebugAnnotatedASTFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexDebugAnnotatedAST));
-        case RegexBytecodeDebugFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexBytecodeDebug));
         case RegexOptimizeFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexOptimize));
-        case DynamicRegexMruListSizeFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&DynamicRegexMruListSize));
         #endif
 
-        case OptimizeForManyInstancesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&OptimizeForManyInstances));
-        case EnableArrayTypeMutationFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableArrayTypeMutation));
         case ArrayMutationTestSeedFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&ArrayMutationTestSeed));
         case TestTraceFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&TestTrace));
-        case EnableEvalMapCleanupFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableEvalMapCleanup));
-        #ifdef PROFILE_MEM
-        case TraceObjectAllocationFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceObjectAllocation));
-        #endif
         case SseFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Sse));
-        case DeletedPropertyReuseThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&DeletedPropertyReuseThreshold));
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceStringKeyedSimpleDictionaryTypeHandler));
         case BigDictionaryTypeHandlerThresholdFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&BigDictionaryTypeHandlerThreshold));
-        case TypeSnapshotEnumerationFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&TypeSnapshotEnumeration));
-        case IsolatePrototypesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&IsolatePrototypes));
-        case ChangeTypeOnProtoFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ChangeTypeOnProto));
-        case ShareInlineCachesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ShareInlineCaches));
-        case DisableDebugObjectFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&DisableDebugObject));
-        case DumpHeapFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpHeap));
-        case autoProxyFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&autoProxy));
         case PerfHintLevelFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PerfHintLevel));
-        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        case MemProtectHeapFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeap));
-        #endif
-        #ifdef RECYCLER_STRESS
-        case MemProtectHeapStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapStress));
-        case MemProtectHeapBackgroundStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapBackgroundStress));
-        case MemProtectHeapConcurrentStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapConcurrentStress));
-        case MemProtectHeapConcurrentRepeatStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapConcurrentRepeatStress));
-        case MemProtectHeapPartialStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&MemProtectHeapPartialStress));
-        #endif
-        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        case FixPropsOnPathTypesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&FixPropsOnPathTypes));
-        #endif
-        case BailoutTraceFilterFlag:
-            return reinterpret_cast<void*>(const_cast<NumberSet*>(&BailoutTraceFilter));
-        case RejitTraceFilterFlag:
-            return reinterpret_cast<void*>(const_cast<NumberSet*>(&RejitTraceFilter));
-
-        // recycler heuristic flags
-        case MaxBackgroundFinishMarkCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxBackgroundFinishMarkCount));
-        case BackgroundFinishMarkWaitTimeFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&BackgroundFinishMarkWaitTime));
-        case MinBackgroundRepeatMarkRescanBytesFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MinBackgroundRepeatMarkRescanBytes));
-
-        #if defined(_M_X64)
-        case ZeroMemoryWithNonTemporalStoreFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ZeroMemoryWithNonTemporalStore));
-        #endif
-
-        // recycler memory restrict test flags
-        case MaxMarkStackPageCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxMarkStackPageCount));
-        case MaxTrackedObjectListCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxTrackedObjectListCount));
-
-        // make the recycler page integration path easier to hit
-        case NumberAllocPlusSizeFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&NumberAllocPlusSize));
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
@@ -6318,47 +5733,10 @@ namespace Js
         #endif
 
         #if DBG
-        case PRNGSeed0Flag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&PRNGSeed0));
-        case PRNGSeed1Flag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&PRNGSeed1));
-        #endif
-
-        case ClearInlineCachesOnCollectFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ClearInlineCachesOnCollect));
-        case InlineCacheInvalidationListCompactionThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&InlineCacheInvalidationListCompactionThreshold));
-        case ConstructorCacheInvalidationThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&ConstructorCacheInvalidationThreshold));
-
-        case GCMemoryThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&GCMemoryThreshold));
-
-        #if DBG
             case SimulatePolyCacheWithOneTypeForInlineCacheIndexFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&SimulatePolyCacheWithOneTypeForInlineCacheIndex));
         #endif
 
-        case JITServerIdleTimeoutFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&JITServerIdleTimeout));
-        case JITServerMaxInactivePageAllocatorCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&JITServerMaxInactivePageAllocatorCount));
-
-        case StrictWriteBarrierCheckFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&StrictWriteBarrierCheck));
-        case WriteBarrierTestFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&WriteBarrierTest));
-        case ForceSoftwareWriteBarrierFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceSoftwareWriteBarrier));
-        case VerifyBarrierBitFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&VerifyBarrierBit));
-        case EnableBGFreeZeroFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableBGFreeZero));
-        case KeepRecyclerTrackDataFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&KeepRecyclerTrackData));
-
-        case MaxSingleAllocSizeInMBFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxSingleAllocSizeInMB));
         default:
             return NULL;
         }
@@ -7159,12 +6537,6 @@ namespace Js
         case VerboseFlag:
             retValue = DEFAULT_CONFIG_Verbose;
             break;
-        case UseFullNameFlag:
-            retValue = DEFAULT_CONFIG_UseFullName;
-            break;
-        case Utf8Flag:
-            retValue = false;
-            break;
         case WERExceptionSupportFlag:
             retValue = false;
             break;
@@ -7174,139 +6546,28 @@ namespace Js
         case errorStackTraceFlag:
             retValue = DEFAULT_CONFIG_errorStackTrace;
             break;
-        case DoHeapEnumOnEngineShutdownFlag:
-            retValue = false;
-            break;
-        #ifdef HEAP_ENUMERATION_VALIDATION
-        case ValidateHeapEnumFlag:
-            retValue = false;
-            break;
-        #endif
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //
         // Regex flags
         //
-        case RegexTracingFlag:
-            retValue = DEFAULT_CONFIG_RegexTracing;
-            break;
-        case RegexProfileFlag:
-            retValue = DEFAULT_CONFIG_RegexProfile;
-            break;
         case RegexDebugFlag:
             retValue = DEFAULT_CONFIG_RegexDebug;
-            break;
-        case RegexDebugASTFlag:
-            retValue = DEFAULT_CONFIG_RegexDebugAST;
-            break;
-        case RegexDebugAnnotatedASTFlag:
-            retValue = DEFAULT_CONFIG_RegexDebugAnnotatedAST;
-            break;
-        case RegexBytecodeDebugFlag:
-            retValue = DEFAULT_CONFIG_RegexBytecodeDebug;
             break;
         case RegexOptimizeFlag:
             retValue = DEFAULT_CONFIG_RegexOptimize;
             break;
         #endif
 
-        case OptimizeForManyInstancesFlag:
-            retValue = DEFAULT_CONFIG_OptimizeForManyInstances;
-            break;
-        case EnableArrayTypeMutationFlag:
-            retValue = DEFAULT_CONFIG_EnableArrayTypeMutation;
-            break;
-        case EnableEvalMapCleanupFlag:
-            retValue = true;
-            break;
-        #ifdef PROFILE_MEM
-        case TraceObjectAllocationFlag:
-            retValue = false;
-            break;
-        #endif
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
             retValue = DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler;
             break;
-        case TypeSnapshotEnumerationFlag:
-            retValue = DEFAULT_CONFIG_TypeSnapshotEnumeration;
-            break;
-        case IsolatePrototypesFlag:
-            retValue = DEFAULT_CONFIG_IsolatePrototypes;
-            break;
-        case ChangeTypeOnProtoFlag:
-            retValue = DEFAULT_CONFIG_ChangeTypeOnProto;
-            break;
-        case ShareInlineCachesFlag:
-            retValue = DEFAULT_CONFIG_ShareInlineCaches;
-            break;
-        case DisableDebugObjectFlag:
-            retValue = DEFAULT_CONFIG_DisableDebugObject;
-            break;
-        case DumpHeapFlag:
-            retValue = DEFAULT_CONFIG_DumpHeap;
-            break;
-        #ifdef INTERNAL_MEM_PROTECT_HEAP_ALLOC
-        case MemProtectHeapFlag:
-            retValue = (Boolean) DEFAULT_CONFIG_MemProtectHeap;
-            break;
-        #endif
-        #ifdef RECYCLER_STRESS
-        case MemProtectHeapStressFlag:
-            retValue = false;
-            break;
-        case MemProtectHeapBackgroundStressFlag:
-            retValue = false;
-            break;
-        case MemProtectHeapConcurrentStressFlag:
-            retValue = false;
-            break;
-        case MemProtectHeapConcurrentRepeatStressFlag:
-            retValue = false;
-            break;
-        case MemProtectHeapPartialStressFlag:
-            retValue = false;
-            break;
-        #endif
-        #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        case FixPropsOnPathTypesFlag:
-            retValue = DEFAULT_CONFIG_FixPropsOnPathTypes;
-            break;
-        #endif
-
-        #if defined(_M_X64)
-        case ZeroMemoryWithNonTemporalStoreFlag:
-            retValue = DEFAULT_CONFIG_ZeroMemoryWithNonTemporalStore;
-            break;
-        #endif
 
         #if DBG
         case InitializeInterpreterSlotsWithInvalidStackVarFlag:
             retValue = false;
             break;
         #endif
-
-        case ClearInlineCachesOnCollectFlag:
-            retValue = false;
-            break;
-
-        case StrictWriteBarrierCheckFlag:
-            retValue = DEFAULT_CONFIG_StrictWriteBarrierCheck;
-            break;
-        case WriteBarrierTestFlag:
-            retValue = DEFAULT_CONFIG_WriteBarrierTest;
-            break;
-        case ForceSoftwareWriteBarrierFlag:
-            retValue = DEFAULT_CONFIG_ForceSoftwareWriteBarrier;
-            break;
-        case VerifyBarrierBitFlag:
-            retValue = DEFAULT_CONFIG_VerifyBarrierBit;
-            break;
-        case EnableBGFreeZeroFlag:
-            retValue = DEFAULT_CONFIG_EnableBGFreeZero;
-            break;
-        case KeepRecyclerTrackDataFlag:
-            retValue = DEFAULT_CONFIG_KeepRecyclerTrackData;
-            break;
 
         default:
             // not found - or not a boolean flag
@@ -7332,7 +6593,6 @@ namespace Js
         Boolean* settingAsBoolean = this->GetAsBoolean(flag);
         Assert(settingAsBoolean != nullptr);
 
-        Output::VerboseNote(u"FLAG %s = %d\n", FlagNames[static_cast<int>(flag)], value);
         *settingAsBoolean = value;
 
         // check if parent flag
@@ -7348,7 +6608,6 @@ namespace Js
                 // if the parent flag is FALSE, the children flag values are FALSE (always - as disabled)
                 Boolean childValue = value == TRUE ? childDefaultValue : FALSE;
 
-                Output::VerboseNote(u"FLAG %s = %d - setting child flag %s = %d\n", FlagNames[static_cast<int>(flag)], value, FlagNames[static_cast<int>(childFlag)], childValue);
                 this->SetAsBoolean(childFlag, childValue);
 
                 // get next child flag
@@ -7439,7 +6698,6 @@ namespace Js
             {
                 Boolean childValue = value;
 
-                Output::VerboseNote(u"FLAG %s = %d - setting child flag %s = %d\n", FlagNames[static_cast<int>(parentFlag)], value, FlagNames[static_cast<int>(childFlag)], childValue);
                 this->SetAsBoolean(childFlag, childValue);
             }
 

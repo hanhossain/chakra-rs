@@ -485,10 +485,6 @@ namespace Js
 
         Assert(currentType != instance->GetType());
         instance->ReplaceType(currentType);
-        if(!IsolatePrototypes() && GetFlags() & IsPrototypeFlag)
-        {
-            scriptContext->InvalidateProtoCaches(propertyId);
-        }
 
         return true;
     }
@@ -1495,8 +1491,8 @@ namespace Js
         bool transferFixed = canBeSingletonInstance;
 
         // If we are a prototype or may become a prototype we must transfer used as fixed bits.  See point 4 in ConvertToSimpleDictionaryType.
-        Assert(!DynamicTypeHandler::IsolatePrototypes() || ((oldTypeHandler->GetFlags() & IsPrototypeFlag) == 0));
-        bool transferUsedAsFixed = ((oldTypeHandler->GetFlags() & IsPrototypeFlag) != 0 || (oldTypeHandler->GetIsOrMayBecomeShared() && !DynamicTypeHandler::IsolatePrototypes()));
+        Assert(((oldTypeHandler->GetFlags() & IsPrototypeFlag) == 0));
+        bool transferUsedAsFixed = ((oldTypeHandler->GetFlags() & IsPrototypeFlag) != 0);
 #endif
 
         ObjectSlotAttributes * attributes = this->GetAttributeArray();
@@ -1557,7 +1553,7 @@ namespace Js
 
         // PathTypeHandlers are always shared, so if we're isolating prototypes, a PathTypeHandler should
         // never have the prototype flag set.
-        Assert(!DynamicTypeHandler::IsolatePrototypes() || ((oldTypeHandler->GetFlags() & IsPrototypeFlag) == 0));
+        Assert(((oldTypeHandler->GetFlags() & IsPrototypeFlag) == 0));
         AssertMsg(!newTypeHandler->GetIsPrototype(), "Why did we create a brand new type handler with a prototype flag set?");
         newTypeHandler->SetFlags(IsPrototypeFlag, oldTypeHandler->GetFlags());
 
@@ -1737,13 +1733,13 @@ namespace Js
         bool transferIsFixed = !mayBecomeShared && canBeSingletonInstance;
 
         // If we are a prototype or may become a prototype we must transfer used as fixed bits.  See point 4 above.
-        Assert(!DynamicTypeHandler::IsolatePrototypes() || ((oldTypeHandler->GetFlags() & IsPrototypeFlag) == 0));
+        Assert(((oldTypeHandler->GetFlags() & IsPrototypeFlag) == 0));
         // For the global object we don't emit a type check before a hard-coded use of a fixed field.  Therefore a type transition isn't sufficient to
         // invalidate any used fixed fields, and we must continue tracking them on the new type handler.  The global object should never have a path
         // type handler.
         Assert(instance->GetTypeId() != TypeIds_GlobalObject);
         // If the type isn't locked, we may not change the type of the instance, and we must also track the used fixed fields on the new handler.
-        bool transferUsedAsFixed = !instance->GetDynamicType()->GetIsLocked() || ((oldTypeHandler->GetFlags() & IsPrototypeFlag) != 0 || (oldTypeHandler->GetIsOrMayBecomeShared() && !DynamicTypeHandler::IsolatePrototypes()));
+        bool transferUsedAsFixed = !instance->GetDynamicType()->GetIsLocked() || ((oldTypeHandler->GetFlags() & IsPrototypeFlag) != 0);
 #endif
 
         // Consider: As noted in point 2 above, when converting to non-shared SimpleDictionaryTypeHandler we could be more aggressive
@@ -1789,7 +1785,7 @@ namespace Js
             newTypeHandler->SetFlags(IsLockedFlag | MayBecomeSharedFlag);
         }
 
-        Assert(!DynamicTypeHandler::IsolatePrototypes() || !oldTypeHandler->GetIsOrMayBecomeShared() || ((oldTypeHandler->GetFlags() & IsPrototypeFlag) == 0));
+        Assert(!oldTypeHandler->GetIsOrMayBecomeShared() || ((oldTypeHandler->GetFlags() & IsPrototypeFlag) == 0));
         AssertMsg((newTypeHandler->GetFlags() & IsPrototypeFlag) == 0, "Why did we create a brand new type handler with a prototype flag set?");
         newTypeHandler->SetFlags(IsPrototypeFlag, oldTypeHandler->GetFlags());
 
@@ -2023,11 +2019,11 @@ namespace Js
 
                 if (oldSetters)
                 {
-                    newTypePath = GetTypePath()->Branch<true>(recycler, GetPathLength(), GetIsOrMayBecomeShared() && !IsolatePrototypes(), oldAttributes);
+                    newTypePath = GetTypePath()->Branch<true>(recycler, GetPathLength(), false, oldAttributes);
                 }
                 else
                 {
-                    newTypePath = GetTypePath()->Branch<false>(recycler, GetPathLength(), GetIsOrMayBecomeShared() && !IsolatePrototypes());
+                    newTypePath = GetTypePath()->Branch<false>(recycler, GetPathLength(), false);
                 }
 
 #ifdef PROFILE_TYPES
@@ -2243,7 +2239,7 @@ namespace Js
 #endif
         }
 
-        Assert(!IsolatePrototypes() || !GetIsOrMayBecomeShared() || !GetIsPrototype());
+        Assert(!GetIsOrMayBecomeShared() || !GetIsPrototype());
         nextPath->SetFlags(IsPrototypeFlag, this->GetFlags());
         Assert(this->GetHasOnlyWritableDataProperties() == nextPath->GetHasOnlyWritableDataProperties() || !(key.GetAttributes() & ObjectSlotAttr_Writable) || (key.GetAttributes() & ObjectSlotAttr_Accessor));
         Assert(this->GetIsInlineSlotCapacityLocked() == nextPath->GetIsInlineSlotCapacityLocked());
@@ -2423,7 +2419,7 @@ namespace Js
 
         newTypeHandler->SetSlotAndCache(instance, propertyId, propertyRecord, index, value, info, flags, possibleSideEffects);
 
-        Assert(!IsolatePrototypes() || ((this->GetFlags() & IsPrototypeFlag) == 0));
+        Assert(((this->GetFlags() & IsPrototypeFlag) == 0));
         if (this->GetFlags() & IsPrototypeFlag)
         {
             scriptContext->InvalidateProtoCaches(propertyId);
@@ -2889,18 +2885,13 @@ namespace Js
         // Don't return if IsPrototypeFlag is set, because we may still need to do a type transition and
         // set fixed bits.  If this handler is shared, this instance may not even be a prototype yet.
         // In this case we may need to convert to a non-shared type handler.
-        if (!ChangeTypeOnProto() && !(GetIsOrMayBecomeShared() && IsolatePrototypes()))
-        {
-            SetFlags(IsPrototypeFlag);
-            return;
-        }
 
 #if ENABLE_FIXED_FIELDS
         DynamicType* oldTypeDebug = instance->GetDynamicType();
         RecyclerWeakReference<DynamicObject>* oldSingletonInstance = GetSingletonInstance();
 #endif
 
-        if ((GetIsOrMayBecomeShared() && IsolatePrototypes()))
+        if ((GetIsOrMayBecomeShared()))
         {
             // The type coming in may not be shared or even locked (i.e. might have been created via DynamicObject::ChangeType()).
             // In that case the type handler change below won't change the type on the object, so we have to force it.
@@ -2911,7 +2902,7 @@ namespace Js
 #endif
             TryConvertToSimpleDictionaryType(instance, GetPathLength());
 
-            if (ChangeTypeOnProto() && instance->GetDynamicType() == oldType)
+            if (instance->GetDynamicType() == oldType)
             {
                 instance->ChangeType();
             }
@@ -2922,22 +2913,19 @@ namespace Js
             TraceFixedFieldsBeforeSetIsProto(instance, this, oldTypeDebug, oldSingletonInstance);
 #endif
 
-            if (ChangeTypeOnProto())
+            // If this handler is shared and we don't isolate prototypes, it's possible that the handler has
+            // the prototype flag, but this instance may not yet be a prototype and may not have taken
+            // the required type transition.  It would be nice to have a reliable flag on the object
+            // indicating whether it's a prototype to avoid multiple type transitions if the same object
+            // with shared type handler is used as prototype multiple times.
+            if (((GetFlags() & IsPrototypeFlag) == 0))
             {
-                // If this handler is shared and we don't isolate prototypes, it's possible that the handler has
-                // the prototype flag, but this instance may not yet be a prototype and may not have taken
-                // the required type transition.  It would be nice to have a reliable flag on the object
-                // indicating whether it's a prototype to avoid multiple type transitions if the same object
-                // with shared type handler is used as prototype multiple times.
-                if (((GetFlags() & IsPrototypeFlag) == 0) || (GetIsShared() && !IsolatePrototypes()))
-                {
-                    // We're about to split out the type.  If the original type was shared the handler better be shared as well.
-                    // Otherwise, the handler would lose track of being shared between different types and instances.
-                    Assert(!instance->HasSharedType() || instance->GetDynamicType()->GetTypeHandler()->GetIsShared());
+                // We're about to split out the type.  If the original type was shared the handler better be shared as well.
+                // Otherwise, the handler would lose track of being shared between different types and instances.
+                Assert(!instance->HasSharedType() || instance->GetDynamicType()->GetTypeHandler()->GetIsShared());
 
-                    instance->ChangeType();
-                    Assert(!instance->HasLockedType() && !instance->HasSharedType());
-                }
+                instance->ChangeType();
+                Assert(!instance->HasLockedType() && !instance->HasSharedType());
             }
         }
 
@@ -3031,7 +3019,7 @@ namespace Js
     void PathTypeHandlerBase::DoShareTypeHandlerInternal(ScriptContext* scriptContext)
     {
         Assert((GetFlags() & (IsLockedFlag | MayBecomeSharedFlag | IsSharedFlag)) == (IsLockedFlag | MayBecomeSharedFlag));
-        Assert(!IsolatePrototypes() || !GetIsOrMayBecomeShared() || !GetIsPrototype());
+        Assert(!GetIsOrMayBecomeShared() || !GetIsPrototype());
 
 #ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
         // If this handler is becoming shared we need to remove the singleton instance (so that it can be collected

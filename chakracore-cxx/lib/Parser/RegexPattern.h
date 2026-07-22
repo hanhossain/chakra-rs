@@ -79,9 +79,5 @@ namespace UnifiedRegex
         void Print(DebugWriter* w);
 #endif
         RegexPattern *CopyToScriptContext(Js::ScriptContext *scriptContext);
-
-#if ENABLE_REGEX_CONFIG_OPTIONS
-        static void TraceTestCache(bool cacheHit, Js::JavascriptString* input, Js::JavascriptString* cachedValue, bool disabled);
-#endif
     };
 }

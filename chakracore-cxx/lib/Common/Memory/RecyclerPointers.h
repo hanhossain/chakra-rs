@@ -100,21 +100,12 @@ struct WriteBarrierFieldTypeTraits { typedef typename _WriteBarrierFieldType<T, 
 
 // ArrayWriteBarrier behavior
 //
-typedef void FN_VerifyIsNotBarrierAddress(void*, size_t);
-extern "C" FN_VerifyIsNotBarrierAddress* g_verifyIsNotBarrierAddress;
 template <class Policy>
 struct _ArrayWriteBarrier
 {
     template <class T>
     static void WriteBarrier(T * address, size_t count)
     {
-        if (Js::Configuration::Global.flags.StrictWriteBarrierCheck)
-        {
-            if (g_verifyIsNotBarrierAddress)
-            {
-                g_verifyIsNotBarrierAddress(address, count);
-            }
-        }
     }
 
     template <class T>
@@ -274,7 +265,6 @@ public:
     // Setters
     NoWriteBarrierField& operator=(T const& value)
     {
-        RecyclerWriteBarrierManager::VerifyIsNotBarrierAddress(this);
         this->value = value;
         return *this;
     }
@@ -300,7 +290,6 @@ public:
     // Setters
     NoWriteBarrierPtr& operator=(T * value)
     {
-        RecyclerWriteBarrierManager::VerifyIsNotBarrierAddress(this);
         this->value = value;
         return *this;
     }

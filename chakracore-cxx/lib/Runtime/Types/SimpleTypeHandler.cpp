@@ -1180,14 +1180,6 @@ namespace Js
     template<size_t size>
     void SimpleTypeHandler<size>::SetIsPrototype(DynamicObject* instance)
     {
-        // Don't return if IsPrototypeFlag is set, because we may still need to do a type transition and
-        // set fixed bits.  If this handler is shared, this instance may not even be a prototype yet.
-        // In this case we may need to convert to a non-shared type handler.
-        if (!ChangeTypeOnProto() && !(GetIsOrMayBecomeShared() && IsolatePrototypes()))
-        {
-            return;
-        }
-
         ConvertToSimpleDictionaryType(instance)->SetIsPrototype(instance);
     }
 
