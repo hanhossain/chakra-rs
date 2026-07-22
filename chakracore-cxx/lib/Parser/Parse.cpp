@@ -4563,7 +4563,7 @@ template<bool buildAST> void Parser::ParseComputedName(ParseNodePtr* ppnodeName,
         *ppnodeName = CreateUniNode(knopComputedName, pnodeNameExpr, pnodeNameExpr->ichMin, pnodeNameExpr->ichLim);
     }
 
-    if (ppFullNameHint && buildAST && CONFIG_FLAG(UseFullName))
+    if (ppFullNameHint && buildAST)
     {
         *ppFullNameHint = FormatPropertyString(*ppNameHint, pnodeNameExpr, pNameLength, pShortNameOffset);
     }
@@ -4860,16 +4860,7 @@ ParseNodePtr Parser::ParseMemberList(LPCOLESTR pNameHint, uint32_t* pNameHintLen
 
         if (pFullNameHint == nullptr)
         {
-            if (CONFIG_FLAG(UseFullName))
-            {
-                pFullNameHint = AppendNameHints(pNameHint, pidHint, &fullNameHintLength, &shortNameOffset, false, wrapInBrackets);
-            }
-            else
-            {
-                pFullNameHint = pidHint ? pidHint->Psz() : nullptr;
-                fullNameHintLength = pidHint ? pidHint->Cch() : 0;
-                shortNameOffset = 0;
-            }
+            pFullNameHint = AppendNameHints(pNameHint, pidHint, &fullNameHintLength, &shortNameOffset, false, wrapInBrackets);
         }
 
         RestorePoint atPid;
@@ -5075,7 +5066,7 @@ ParseNodePtr Parser::ParseMemberList(LPCOLESTR pNameHint, uint32_t* pNameHintLen
 
                 pnodeArg = ParseMemberGetSet<buildAST>(op, &pNameGetOrSet, iecpMin, ichMin);
 
-                if (CONFIG_FLAG(UseFullName) && buildAST && pnodeArg->pnode2->nop == knopFncDecl)
+                if (buildAST && pnodeArg->pnode2->nop == knopFncDecl)
                 {
                     // displays as "get object.funcname" or "set object.funcname"
                     uint32_t getOrSetOffset = 0;
@@ -7759,9 +7750,7 @@ IdentPtr Parser::ParseClassPropertyName(IdentPtr * pidHint)
 
 LPCOLESTR Parser::ConstructFinalHintNode(IdentPtr pClassName, IdentPtr pMemberName, IdentPtr pGetSet, bool isStatic, uint32_t* nameLength, uint32_t* pShortNameOffset, bool isComputedName, LPCOLESTR pMemberNameHint)
 {
-    if ((pMemberName == nullptr && !isComputedName) ||
-        (pMemberNameHint == nullptr && isComputedName) ||
-        !CONFIG_FLAG(UseFullName))
+    if ((pMemberName == nullptr && !isComputedName) || (pMemberNameHint == nullptr && isComputedName))
     {
         return nullptr;
     }
@@ -9049,26 +9038,7 @@ ParseNodePtr Parser::ParseExpr(int oplMin,
             }
             else if (pnode->nop == knopDot || pnode->nop == knopIndex)
             {
-                if (CONFIG_FLAG(UseFullName))
-                {
-                    pNameHint = ConstructNameHint(pnode->AsParseNodeBin(), &hintLength, &hintOffset);
-                }
-                else
-                {
-                    ParseNodePtr pnodeName = pnode;
-                    while (pnodeName->nop == knopDot)
-                    {
-                        pnodeName = pnodeName->AsParseNodeBin()->pnode2;
-                    }
-
-                    if (pnodeName->nop == knopName)
-                    {
-                        IdentPtr pid = pnode->AsParseNodeName()->pid;
-                        pNameHint = pid->Psz();
-                        hintLength = pid->Cch();
-                        hintOffset = 0;
-                    }
-                }
+                pNameHint = ConstructNameHint(pnode->AsParseNodeBin(), &hintLength, &hintOffset);
             }
         }
 

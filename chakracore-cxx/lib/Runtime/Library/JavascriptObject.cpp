@@ -1335,10 +1335,7 @@ Var JavascriptObject::EntryDefineProperty(RecyclableObject* function, CallInfo c
         JavascriptError::ThrowTypeError(scriptContext, JSERR_PropertyDescriptor_Invalid, scriptContext->GetPropertyName(propertyRecord->GetPropertyId())->GetBuffer());
     }
 
-    if (CONFIG_FLAG(UseFullName))
-    {
-        ModifyGetterSetterFuncName(propertyRecord, propertyDescriptor, scriptContext);
-    }
+    ModifyGetterSetterFuncName(propertyRecord, propertyDescriptor, scriptContext);
 
     BOOL success = DefineOwnPropertyHelper(obj, propertyRecord->GetPropertyId(), propertyDescriptor, scriptContext);
     if (!success)
@@ -1929,10 +1926,7 @@ Var JavascriptObject::DefinePropertiesHelperForGenericObjects(RecyclableObject *
         // In proxy, we need to get back the original ToPropertDescriptor var in [[defineProperty]] trap.
         descriptors[descCount].originalVar = tempVar;
 
-        if (CONFIG_FLAG(UseFullName))
-        {
-            ModifyGetterSetterFuncName(propertyRecord, descriptors[descCount].descriptor, scriptContext);
-        }
+        ModifyGetterSetterFuncName(propertyRecord, descriptors[descCount].descriptor, scriptContext);
 
         descriptors[descCount].propRecord = propertyRecord;
 
@@ -2008,10 +2002,7 @@ Var JavascriptObject::DefinePropertiesHelperForProxyObjects(RecyclableObject *ob
                     JavascriptError::ThrowTypeError(scriptContext, JSERR_PropertyDescriptor_Invalid, scriptContext->GetPropertyName(propertyId)->GetBuffer());
                 }
 
-                if (CONFIG_FLAG(UseFullName))
-                {
-                    ModifyGetterSetterFuncName(propertyRecord, descriptors[descCount].descriptor, scriptContext);
-                }
+                ModifyGetterSetterFuncName(propertyRecord, descriptors[descCount].descriptor, scriptContext);
 
                 descriptors[descCount].propRecord = propertyRecord;
 

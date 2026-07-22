@@ -333,7 +333,6 @@ namespace Js
 #define DEFAULT_CONFIG_ForceOldDateAPI      (false)
 #define DEFAULT_CONFIG_Loop                 (1)
 #define DEFAULT_CONFIG_ForceDiagnosticsMode (false)
-#define DEFAULT_CONFIG_UseFullName          (true)
 #define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForHelpers  (true)
 #define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForBuiltIns  (true)
 #define DEFAULT_CONFIG_EnableFunctionSourceReportForHeapEnum (true)
@@ -1142,7 +1141,6 @@ namespace Js
         u"TrackDispatch",
 #endif
         u"Verbose",
-        u"UseFullName",
         u"Version",
         u"WERExceptionSupport",
         u"ExtendedErrorStackForTestHost",
@@ -2095,7 +2093,6 @@ namespace Js
         u"Save stack traces of where JavascriptDispatch/HostVariant are created",
 #endif
         u"Dump details",
-        u"Enable fully qualified name",
         // todo (hanhossain): flag end
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
         u"WER feature for extended exception support. Enabled when WinRT is enabled",
@@ -2643,7 +2640,6 @@ namespace Js
 #ifdef TRACK_DISPATCH
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
@@ -3215,7 +3211,6 @@ namespace Js
         TrackDispatch(false),
 #endif
         Verbose(DEFAULT_CONFIG_Verbose),
-        UseFullName(DEFAULT_CONFIG_UseFullName),
         Version(6 ),
         WERExceptionSupport(false),
         ExtendedErrorStackForTestHost(DEFAULT_CONFIG_ExtendedErrorStackForTestHost),
@@ -4775,8 +4770,6 @@ namespace Js
         #endif
         case VerboseFlag:
             return FlagBoolean;
-        case UseFullNameFlag:
-            return FlagBoolean;
         case VersionFlag:
             return FlagNumber;
         case WERExceptionSupportFlag:
@@ -5708,8 +5701,6 @@ namespace Js
         #endif
         case VerboseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&Verbose));
-        case UseFullNameFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&UseFullName));
         case VersionFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Version));
         case WERExceptionSupportFlag:
@@ -6551,9 +6542,6 @@ namespace Js
         #endif
         case VerboseFlag:
             retValue = DEFAULT_CONFIG_Verbose;
-            break;
-        case UseFullNameFlag:
-            retValue = DEFAULT_CONFIG_UseFullName;
             break;
         case WERExceptionSupportFlag:
             retValue = false;

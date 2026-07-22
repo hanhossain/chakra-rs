@@ -366,7 +366,6 @@ private:
 #define DEFAULT_CONFIG_ForceOldDateAPI      (false)
 #define DEFAULT_CONFIG_Loop                 (1)
 #define DEFAULT_CONFIG_ForceDiagnosticsMode (false)
-#define DEFAULT_CONFIG_UseFullName          (true)
 #define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForHelpers  (true)
 #define DEFAULT_CONFIG_EnableContinueAfterExceptionWrappersForBuiltIns  (true)
 #define DEFAULT_CONFIG_EnableFunctionSourceReportForHeapEnum (true)

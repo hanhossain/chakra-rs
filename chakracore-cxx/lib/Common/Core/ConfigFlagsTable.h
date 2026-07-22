@@ -534,7 +534,6 @@ namespace Js
         TrackDispatchFlag,
         #endif
         VerboseFlag,
-        UseFullNameFlag,
         VersionFlag,
         WERExceptionSupportFlag,
         ExtendedErrorStackForTestHostFlag,
@@ -2096,8 +2095,6 @@ namespace Js
         #endif
         // TODO (hanhossain): remove flag
         Boolean Verbose;
-        // TODO (hanhossain): remove flag
-        Boolean UseFullName;
         // todo (hanhossain): flag end
         Number Version;
         Boolean WERExceptionSupport;
