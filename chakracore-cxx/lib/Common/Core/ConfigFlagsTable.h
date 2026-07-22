@@ -553,7 +553,6 @@ namespace Js
         RegexProfileFlag,
         RegexDebugFlag,
         RegexDebugASTFlag,
-        RegexDebugAnnotatedASTFlag,
         RegexOptimizeFlag,
         #endif
 
@@ -2131,8 +2130,6 @@ namespace Js
             Boolean RegexDebug;
         // TODO (hanhossain): remove flag
             Boolean RegexDebugAST;
-        // TODO (hanhossain): remove flag
-            Boolean RegexDebugAnnotatedAST;
         // todo (hanhossain): flag end
             Boolean RegexOptimize;
         #endif

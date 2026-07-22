@@ -385,7 +385,6 @@ namespace Js
 #define DEFAULT_CONFIG_RegexProfile         (false)
 #define DEFAULT_CONFIG_RegexDebug           (false)
 #define DEFAULT_CONFIG_RegexDebugAST        (true)
-#define DEFAULT_CONFIG_RegexDebugAnnotatedAST (true)
 #define DEFAULT_CONFIG_RegexOptimize        (true)
 #define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
 #define DEFAULT_CONFIG_AsmGoptCleanupThreshold  (500)
@@ -1165,7 +1164,6 @@ namespace Js
         u"RegexProfile",
         u"RegexDebug",
         u"RegexDebugAST",
-        u"RegexDebugAnnotatedAST",
         u"RegexOptimize",
 #endif
 
@@ -2127,7 +2125,6 @@ namespace Js
         u"Collect usage statistics on all Regex invocations.",
         u"Trace compilation of UnifiedRegex expressions.",
         u"Display Regex AST (requires -RegexDebug to view). [default on]",
-        u"Display Regex Annotated AST (requires -RegexDebug and -RegexDebugAST to view). [default on]",
         // todo (hanhossain): flag end
         u"Optimize regular expressions in the unified Regex system (default: true)",
 #endif
@@ -2681,7 +2678,6 @@ namespace Js
 //
 // Regex flags
 //
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3265,7 +3261,6 @@ namespace Js
         RegexProfile(DEFAULT_CONFIG_RegexProfile),
         RegexDebug(DEFAULT_CONFIG_RegexDebug),
         RegexDebugAST(DEFAULT_CONFIG_RegexDebugAST),
-        RegexDebugAnnotatedAST(DEFAULT_CONFIG_RegexDebugAnnotatedAST),
         RegexOptimize(DEFAULT_CONFIG_RegexOptimize),
 #endif
 
@@ -4846,8 +4841,6 @@ namespace Js
             return FlagBoolean;
         case RegexDebugASTFlag:
             return FlagBoolean;
-        case RegexDebugAnnotatedASTFlag:
-            return FlagBoolean;
         case RegexOptimizeFlag:
             return FlagBoolean;
         #endif
@@ -5795,8 +5788,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexDebug));
         case RegexDebugASTFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexDebugAST));
-        case RegexDebugAnnotatedASTFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexDebugAnnotatedAST));
         case RegexOptimizeFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RegexOptimize));
         #endif
@@ -6663,9 +6654,6 @@ namespace Js
             break;
         case RegexDebugASTFlag:
             retValue = DEFAULT_CONFIG_RegexDebugAST;
-            break;
-        case RegexDebugAnnotatedASTFlag:
-            retValue = DEFAULT_CONFIG_RegexDebugAnnotatedAST;
             break;
         case RegexOptimizeFlag:
             retValue = DEFAULT_CONFIG_RegexOptimize;

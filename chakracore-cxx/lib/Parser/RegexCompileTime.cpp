@@ -4722,7 +4722,7 @@ namespace UnifiedRegex
                     root->AnnotatePass4(compiler);
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
-                    if (w != 0 && REGEX_CONFIG_FLAG(RegexDebugAST) && REGEX_CONFIG_FLAG(RegexDebugAnnotatedAST))
+                    if (w != 0 && REGEX_CONFIG_FLAG(RegexDebugAST))
                     {
                         w->PrintEOL(u"REGEX ANNOTATED AST /%s/ {", PointerValue(program->source));
                         w->Indent();
