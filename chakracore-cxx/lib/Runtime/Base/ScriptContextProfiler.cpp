@@ -83,39 +83,27 @@ namespace Js
     ScriptContextProfiler::ProfilePrint()
     {
         Js::ScriptContextProfiler* profiler = this;
-        if (Js::Configuration::Global.flags.Verbose)
+        //Merge all the profiler for single snapshot.
+        Js::ScriptContextProfiler* mergeToProfiler = profiler;
+
+        // find the first initialized profiler
+        while (mergeToProfiler != nullptr && !mergeToProfiler->IsInitialized())
         {
-            //Print individual profiler information in verbose mode
+            mergeToProfiler = mergeToProfiler->next;
+        }
+        if (mergeToProfiler != nullptr)
+        {
+            // merge the rest profiler to the above initialized profiler
+            profiler = mergeToProfiler->next;
             while (profiler)
             {
-                profiler->ProfilePrint(Js::Configuration::Global.flags.Profile.GetFirstPhase());
+                if (profiler->IsInitialized())
+                {
+                    mergeToProfiler->ProfileMerge(profiler);
+                }
                 profiler = profiler->next;
             }
-        }
-        else
-        {
-            //Merge all the profiler for single snapshot.
-            Js::ScriptContextProfiler* mergeToProfiler = profiler;
-
-            // find the first initialized profiler
-            while (mergeToProfiler != nullptr && !mergeToProfiler->IsInitialized())
-            {
-                mergeToProfiler = mergeToProfiler->next;
-            }
-            if (mergeToProfiler != nullptr)
-            {
-                // merge the rest profiler to the above initialized profiler
-                profiler = mergeToProfiler->next;
-                while (profiler)
-                {
-                    if (profiler->IsInitialized())
-                    {
-                        mergeToProfiler->ProfileMerge(profiler);
-                    }
-                    profiler = profiler->next;
-                }
-                mergeToProfiler->ProfilePrint(Js::Configuration::Global.flags.Profile.GetFirstPhase());
-            }
+            mergeToProfiler->ProfilePrint(Js::Configuration::Global.flags.Profile.GetFirstPhase());
         }
     }
 

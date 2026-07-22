@@ -630,8 +630,6 @@ public:
             }
         };
 
-        void LogDataForFunctionBody(Js::FunctionBody *body, uint idx, bool isRejit);
-
         void LogRejit(Js::FunctionBody *body, RejitReason reason);
         void LogBailout(Js::FunctionBody *body, uint kind);
 

@@ -4936,49 +4936,11 @@ ScriptContext::GetJitFuncRangeCache()
 #endif
 
 #ifdef REJIT_STATS
-    void ScriptContext::LogDataForFunctionBody(Js::FunctionBody *body, uint idx, bool isRejit)
-    {
-        if (rejitStatsMap == NULL)
-        {
-            rejitStatsMap = RecyclerNew(this->recycler, RejitStatsMap, this->recycler);
-            BindReference(rejitStatsMap);
-        }
-
-        RejitStats *stats = NULL;
-        if (!rejitStatsMap->TryGetValue(body, &stats))
-        {
-            stats = Anew(GeneralAllocator(), RejitStats, this);
-            rejitStatsMap->Item(body, stats);
-        }
-
-        if (isRejit)
-        {
-            stats->m_rejitReasonCounts[idx]++;
-        }
-        else
-        {
-            if (!stats->m_bailoutReasonCounts->ContainsKey(idx))
-            {
-                stats->m_bailoutReasonCounts->Item(idx, 1);
-            }
-            else
-            {
-                uint val = stats->m_bailoutReasonCounts->Item(idx);
-                ++val;
-                stats->m_bailoutReasonCounts->Item(idx, val);
-            }
-        }
-    }
     void ScriptContext::LogRejit(Js::FunctionBody *body, RejitReason reason)
     {
         byte reasonIndex = static_cast<byte>(reason);
         Assert(reasonIndex < NumRejitReasons);
         rejitReasonCounts[reasonIndex]++;
-
-        if (CONFIG_FLAG(Verbose))
-        {
-            LogDataForFunctionBody(body, reasonIndex, true);
-        }
     }
     void ScriptContext::LogBailout(Js::FunctionBody *body, uint kind)
     {
@@ -4991,11 +4953,6 @@ ScriptContext::GetJitFuncRangeCache()
             uint val = bailoutReasonCounts->Item(kind);
             ++val;
             bailoutReasonCounts->Item(kind, val);
-        }
-
-        if (CONFIG_FLAG(Verbose))
-        {
-            LogDataForFunctionBody(body, kind, false);
         }
     }
     void ScriptContext::ClearBailoutReasonCountsMap()
