@@ -540,7 +540,6 @@ namespace Js
         WERExceptionSupportFlag,
         ExtendedErrorStackForTestHostFlag,
         errorStackTraceFlag,
-        DoHeapEnumOnEngineShutdownFlag,
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //
@@ -2102,14 +2101,12 @@ namespace Js
         Boolean UseFullName;
         // TODO (hanhossain): remove flag
         Boolean Utf8;
+        // todo (hanhossain): flag end
         Number Version;
         Boolean WERExceptionSupport;
         Boolean ExtendedErrorStackForTestHost;
         Boolean errorStackTrace;
-        // TODO (hanhossain): remove flag
-        Boolean DoHeapEnumOnEngineShutdown;
 
-        // todo (hanhossain): flag end
         #if ENABLE_REGEX_CONFIG_OPTIONS
             //
             // Regex flags

@@ -1148,7 +1148,6 @@ namespace Js
         u"WERExceptionSupport",
         u"ExtendedErrorStackForTestHost",
         u"errorStackTrace",
-        u"DoHeapEnumOnEngineShutdown",
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
@@ -2099,13 +2098,12 @@ namespace Js
         u"Dump details",
         u"Enable fully qualified name",
         u"Use UTF8 for file output",
+        // todo (hanhossain): flag end
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
         u"WER feature for extended exception support. Enabled when WinRT is enabled",
         u"Enable passing extended error stack string to test host.",
         u"error.StackTrace feature. Remove when feature complete",
-        u"Perform a heap enumeration whenever shut a script engine down",
 
-        // todo (hanhossain): flag end
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
 // Regex flags
@@ -2650,13 +2648,12 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
+        // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
 
-        // todo (hanhossain): flag end
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
 // Regex flags
@@ -3227,7 +3224,6 @@ namespace Js
         WERExceptionSupport(false),
         ExtendedErrorStackForTestHost(DEFAULT_CONFIG_ExtendedErrorStackForTestHost),
         errorStackTrace(DEFAULT_CONFIG_errorStackTrace),
-        DoHeapEnumOnEngineShutdown(false),
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
@@ -4795,8 +4791,6 @@ namespace Js
             return FlagBoolean;
         case errorStackTraceFlag:
             return FlagBoolean;
-        case DoHeapEnumOnEngineShutdownFlag:
-            return FlagBoolean;
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //
@@ -5732,8 +5726,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ExtendedErrorStackForTestHost));
         case errorStackTraceFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&errorStackTrace));
-        case DoHeapEnumOnEngineShutdownFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&DoHeapEnumOnEngineShutdown));
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //
@@ -6582,9 +6574,6 @@ namespace Js
             break;
         case errorStackTraceFlag:
             retValue = DEFAULT_CONFIG_errorStackTrace;
-            break;
-        case DoHeapEnumOnEngineShutdownFlag:
-            retValue = false;
             break;
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
