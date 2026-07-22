@@ -204,9 +204,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #ifdef PROFILE_RECYCLER_ALLOC
     , trackerDictionary(nullptr)
 #endif
-#ifdef HEAP_ENUMERATION_VALIDATION
-    ,pfPostHeapEnumScanCallback(nullptr)
-#endif
     , isPageHeapEnabled(false)
     , capturePageHeapAllocStack(false)
     , capturePageHeapFreeStack(false)
@@ -1761,11 +1758,7 @@ Recycler::CheckAllocExternalMark() const
 {
     Assert(!disableThreadAccessCheck);
     Assert(GetCurrentThreadContextId() == mainThreadId);
-  #ifdef HEAP_ENUMERATION_VALIDATION
-    Assert((this->IsMarkState() || this->IsPostEnumHeapValidationInProgress()) && collectionState != CollectionStateConcurrentMark);
-  #else
     Assert(this->IsMarkState()  && collectionState != CollectionStateConcurrentMark);
-  #endif
 }
 #endif
 
@@ -1779,11 +1772,7 @@ Recycler::TryExternalMarkNonInterior(void* candidate)
 void
 Recycler::TryMarkNonInterior(void* candidate, void* parentReference)
 {
-#ifdef HEAP_ENUMERATION_VALIDATION
-    Assert(!isHeapEnumInProgress || this->IsPostEnumHeapValidationInProgress());
-#else
     Assert(!isHeapEnumInProgress);
-#endif
     Assert(this->collectionState != CollectionStateParallelMark);
     markContext.Mark</*parallel */ false, /* interior */ false, /* doSpecialMark */ false>(candidate, parentReference);
 }
@@ -1791,11 +1780,7 @@ Recycler::TryMarkNonInterior(void* candidate, void* parentReference)
 void
 Recycler::TryMarkInterior(void* candidate, void* parentReference)
 {
-#ifdef HEAP_ENUMERATION_VALIDATION
-    Assert(!isHeapEnumInProgress || this->IsPostEnumHeapValidationInProgress());
-#else
     Assert(!isHeapEnumInProgress);
-#endif
     Assert(this->collectionState != CollectionStateParallelMark);
     markContext.Mark</*parallel */ false, /* interior */ true, /* doSpecialMark */ false>(candidate, parentReference);
 }
@@ -2465,28 +2450,6 @@ bool
 Recycler::IsMarkStackEmpty()
 {
     return (markContext.IsEmpty() && parallelMarkContext1.IsEmpty() && parallelMarkContext2.IsEmpty() && parallelMarkContext3.IsEmpty());
-}
-#endif
-
-#ifdef HEAP_ENUMERATION_VALIDATION
-void
-Recycler::PostHeapEnumScan(PostHeapEnumScanCallback callback, void *data)
-{
-    this->pfPostHeapEnumScanCallback = callback;
-    this->postHeapEnunScanData = data;
-
-    FindRoots();
-    if (this->needExternalWrapperTracing)
-    {
-        this->FinishWrapperObjectTracing();
-    }
-    else
-    {
-        this->ProcessMark(false);
-    }
-
-    this->pfPostHeapEnumScanCallback = NULL;
-    this->postHeapEnunScanData = NULL;
 }
 #endif
 

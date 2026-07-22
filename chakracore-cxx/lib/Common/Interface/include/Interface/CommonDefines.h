@@ -151,8 +151,6 @@
 #endif
 
 #if DBG_DUMP
-#undef DBG_EXTRAFIELD   // make sure we don't extra fields in free build.
-
 #define TRACK_DISPATCH
 #define BGJIT_STATS
 #define REJIT_STATS
@@ -213,9 +211,6 @@
 
 #define ARENA_ALLOCATOR_FREE_LIST_SIZE
 
-#ifdef DBG_EXTRAFIELD
-#define HEAP_ENUMERATION_VALIDATION
-#endif
 #endif // DBG_DUMP
 
 //----------------------------------------------------------------------------------------------------

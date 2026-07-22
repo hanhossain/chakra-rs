@@ -624,9 +624,6 @@ class Recycler
 #if defined(RECYCLER_TRACE)
     friend class JavascriptThreadService;
 #endif
-#ifdef HEAP_ENUMERATION_VALIDATION
-    friend class ActiveScriptProfilerHeapEnum;
-#endif
     friend class ScriptEngineBase;  // This is for disabling GC for certain Host operations.
 public:
     static const uint ConcurrentThreadStackSize = 300000;
@@ -1835,13 +1832,6 @@ public:
         AutoBooleanToggle allowAllocationDuringRenentrance;
 #endif
     };
-#ifdef HEAP_ENUMERATION_VALIDATION
-    typedef void(*PostHeapEnumScanCallback)(const HeapObject& heapObject, void *data);
-    PostHeapEnumScanCallback pfPostHeapEnumScanCallback;
-    void *postHeapEnunScanData;
-    void PostHeapEnumScan(PostHeapEnumScanCallback callback, void*data);
-    bool IsPostEnumHeapValidationInProgress() const { return pfPostHeapEnumScanCallback != NULL; }
-#endif
 
 public:
     void* GetRealAddressFromInterior(void* candidate);

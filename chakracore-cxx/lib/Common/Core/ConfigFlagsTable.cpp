@@ -1149,9 +1149,6 @@ namespace Js
         u"ExtendedErrorStackForTestHost",
         u"errorStackTrace",
         u"DoHeapEnumOnEngineShutdown",
-#ifdef HEAP_ENUMERATION_VALIDATION
-        u"ValidateHeapEnum",
-#endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
@@ -2107,9 +2104,6 @@ namespace Js
         u"Enable passing extended error stack string to test host.",
         u"error.StackTrace feature. Remove when feature complete",
         u"Perform a heap enumeration whenever shut a script engine down",
-#ifdef HEAP_ENUMERATION_VALIDATION
-        u"Validate that heap enumeration is reporting all Js::RecyclableObjects in the heap",
-#endif
 
         // todo (hanhossain): flag end
 #if ENABLE_REGEX_CONFIG_OPTIONS
@@ -2661,9 +2655,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#ifdef HEAP_ENUMERATION_VALIDATION
-        NoParentFlag,
-#endif
 
         // todo (hanhossain): flag end
 #if ENABLE_REGEX_CONFIG_OPTIONS
@@ -3237,9 +3228,6 @@ namespace Js
         ExtendedErrorStackForTestHost(DEFAULT_CONFIG_ExtendedErrorStackForTestHost),
         errorStackTrace(DEFAULT_CONFIG_errorStackTrace),
         DoHeapEnumOnEngineShutdown(false),
-#ifdef HEAP_ENUMERATION_VALIDATION
-        ValidateHeapEnum(false),
-#endif
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
 //
@@ -4809,10 +4797,6 @@ namespace Js
             return FlagBoolean;
         case DoHeapEnumOnEngineShutdownFlag:
             return FlagBoolean;
-        #ifdef HEAP_ENUMERATION_VALIDATION
-        case ValidateHeapEnumFlag:
-            return FlagBoolean;
-        #endif
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //
@@ -5750,10 +5734,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&errorStackTrace));
         case DoHeapEnumOnEngineShutdownFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&DoHeapEnumOnEngineShutdown));
-        #ifdef HEAP_ENUMERATION_VALIDATION
-        case ValidateHeapEnumFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ValidateHeapEnum));
-        #endif
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //
@@ -6606,11 +6586,6 @@ namespace Js
         case DoHeapEnumOnEngineShutdownFlag:
             retValue = false;
             break;
-        #ifdef HEAP_ENUMERATION_VALIDATION
-        case ValidateHeapEnumFlag:
-            retValue = false;
-            break;
-        #endif
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //

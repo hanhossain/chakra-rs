@@ -4908,11 +4908,6 @@ namespace Js
         DebugOnly(bool status = ) function->GetFunctionName(&functionName);
         AssertMsg(status, "DefaultCreateFunction sets the functionNameId, status should always be true");
         function->SetPropertyWithAttributes(PropertyIds::name, functionName, PropertyConfigurable, nullptr);
-
-#ifdef HEAP_ENUMERATION_VALIDATION
-        if (prototype) prototype->SetHeapEnumValidationCookie(HEAP_ENUMERATION_LIBRARY_OBJECT_COOKIE);
-        function->SetHeapEnumValidationCookie(HEAP_ENUMERATION_LIBRARY_OBJECT_COOKIE);
-#endif
         return function;
     }
 
@@ -5385,9 +5380,6 @@ namespace Js
         function->SetExternalFlags(flags);
         function->SetFunctionNameId(nameId);
         function->SetSignature(signature);
-#ifdef HEAP_ENUMERATION_VALIDATION
-        function->SetHeapEnumValidationCookie(HEAP_ENUMERATION_LIBRARY_OBJECT_COOKIE);
-#endif
 #if DBG_DUMP
         if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::HostPhase))
         {

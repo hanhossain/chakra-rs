@@ -251,11 +251,6 @@ namespace Js {
 
     public:
         RecyclableObject(Type * type);
-#if DBG_EXTRAFIELD
-        // This dtor should only be call when OOM occurs and RecyclableObject ctor has completed
-        // as the base class, or we have a stack instance
-        ~RecyclableObject() { dtorCalled = true; }
-#endif
         ScriptContext* GetScriptContext() const;
         TypeId GetTypeId() const;
         RecyclableObject* GetPrototype() const;
@@ -401,16 +396,8 @@ namespace Js {
 
         // If dtor is called, that means that OOM happened (mostly), then the vtable might not be initialized
         // to the base class', so we can't assert.
-        virtual void Finalize(bool isShutdown) override {
-#ifdef DBG_EXTRAFIELD
-            AssertMsg(dtorCalled, "Can't allocate a finalizable object without implementing Finalize");
-#endif
-        }
-        virtual void Dispose(bool isShutdown) override {
-#ifdef DBG_EXTRAFIELD
-            AssertMsg(dtorCalled, "Can't allocate a finalizable object without implementing Dispose");
-#endif
-        }
+        virtual void Finalize(bool isShutdown) override {}
+        virtual void Dispose(bool isShutdown) override {}
         virtual void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
 
         static uint32_t GetOffsetOfType() { return offsetof(RecyclableObject, type); }
@@ -430,20 +417,9 @@ namespace Js {
 
     private:
 
-#if DBG_EXTRAFIELD
-        bool dtorCalled;
-#endif
         friend class LowererMD;
         friend class LowererMDArch;
         friend struct InlineCache;
-
-#ifdef HEAP_ENUMERATION_VALIDATION
-    private:
-        uint32_t m_heapEnumValidationCookie;
-    public:
-        void SetHeapEnumValidationCookie(int cookie ) { m_heapEnumValidationCookie = cookie; }
-        int GetHeapEnumValidationCookie() { return m_heapEnumValidationCookie; }
-#endif
     };
 
     // DO specialize this method; DON'T call it directly (use VarIs instead)

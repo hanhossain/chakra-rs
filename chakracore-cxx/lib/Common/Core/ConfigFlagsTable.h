@@ -541,9 +541,6 @@ namespace Js
         ExtendedErrorStackForTestHostFlag,
         errorStackTraceFlag,
         DoHeapEnumOnEngineShutdownFlag,
-        #ifdef HEAP_ENUMERATION_VALIDATION
-        ValidateHeapEnumFlag,
-        #endif
 
         #if ENABLE_REGEX_CONFIG_OPTIONS
         //
@@ -2111,10 +2108,6 @@ namespace Js
         Boolean errorStackTrace;
         // TODO (hanhossain): remove flag
         Boolean DoHeapEnumOnEngineShutdown;
-        #ifdef HEAP_ENUMERATION_VALIDATION
-        // TODO (hanhossain): remove flag
-            Boolean ValidateHeapEnum;
-        #endif
 
         // todo (hanhossain): flag end
         #if ENABLE_REGEX_CONFIG_OPTIONS

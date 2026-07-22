@@ -113,12 +113,6 @@ namespace Js
     // with the globalobject which is currently being created.
     RecyclableObject::RecyclableObject(DynamicType * type, ScriptContext * scriptContext) : type(type)
     {
-#if DBG_EXTRAFIELD
-        dtorCalled = false;
-#ifdef HEAP_ENUMERATION_VALIDATION
-        m_heapEnumValidationCookie = 0;
-#endif
-#endif
         Assert(type->GetTypeId() == TypeIds_GlobalObject);
         RecordAllocation(scriptContext);
     }
@@ -137,12 +131,6 @@ namespace Js
 
     RecyclableObject::RecyclableObject(Type * type) : type(type)
     {
-#if DBG_EXTRAFIELD
-        dtorCalled = false;
-#ifdef HEAP_ENUMERATION_VALIDATION
-        m_heapEnumValidationCookie = 0;
-#endif
-#endif
 #if DBG || defined(PROFILE_TYPES)
 #if ENABLE_NATIVE_CODEGEN
         if (!JITManager::GetJITManager()->IsOOPJITEnabled())
