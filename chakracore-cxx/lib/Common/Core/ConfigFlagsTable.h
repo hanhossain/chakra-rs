@@ -549,7 +549,6 @@ namespace Js
         //
         // Regex flags
         //
-        RegexTracingFlag,
         RegexDebugFlag,
         RegexOptimizeFlag,
         #endif
@@ -2117,13 +2116,11 @@ namespace Js
             Boolean ValidateHeapEnum;
         #endif
 
+        // todo (hanhossain): flag end
         #if ENABLE_REGEX_CONFIG_OPTIONS
             //
             // Regex flags
             //
-        // TODO (hanhossain): remove flag
-            Boolean RegexTracing;
-        // todo (hanhossain): flag end
             Boolean RegexDebug;
             Boolean RegexOptimize;
         #endif

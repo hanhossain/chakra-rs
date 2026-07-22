@@ -217,29 +217,6 @@ namespace UnifiedRegex
     /* static */
     void RegexPattern::TraceTestCache(bool cacheHit, Js::JavascriptString* input, Js::JavascriptString* cachedValue, bool disabled)
     {
-        if (REGEX_CONFIG_FLAG(RegexTracing))
-        {
-            if (disabled)
-            {
-                Output::Print(u"Regexp Test Cache Disabled.\n");
-            }
-            else if (cacheHit)
-            {
-                Output::Print(u"Regexp Test Cache Hit.\n");
-            }
-            else
-            {
-                Output::Print(u"Regexp Test Cache Miss. ");
-                if (cachedValue != nullptr)
-                {
-                    Output::Print(u"Input: (%p); Cached String: (%p) '%s'\n", input, cachedValue, cachedValue->GetString());
-                }
-                else
-                {
-                    Output::Print(u"Cache was empty\n");
-                }
-            }
-        }
     }
 #endif
 }

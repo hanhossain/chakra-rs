@@ -11895,16 +11895,6 @@ Lowerer::LowerNewRegEx(IR::Instr * instr)
 
     Assert(src1->IsAddrOpnd());
 
-#if ENABLE_REGEX_CONFIG_OPTIONS
-    if (REGEX_CONFIG_FLAG(RegexTracing))
-    {
-        Assert(!instr->GetDst()->CanStoreTemp());
-        IR::Instr * instrPrev = LoadScriptContext(instr);
-        instrPrev = m_lowererMD.LoadHelperArgument(instr, src1);
-        m_lowererMD.ChangeToHelperCall(instr, IR::HelperScrRegEx_OP_NewRegEx);
-        return instrPrev;
-    }
-#endif
     IR::Instr * instrPrev = instr->m_prev;
     IR::RegOpnd * dstOpnd = instr->UnlinkDst()->AsRegOpnd();
     IR::SymOpnd * tempObjectSymOpnd;

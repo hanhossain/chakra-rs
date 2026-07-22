@@ -2994,13 +2994,6 @@ namespace UnifiedRegex
 
 #if ENABLE_REGEX_CONFIG_OPTIONS
         RegexStats* stats = 0;
-        if (REGEX_CONFIG_FLAG(RegexTracing))
-        {
-            DebugWriter* tw = this->scriptContext->GetRegexDebugWriter();
-            tw->Print(u"// REGEX COMPILE ");
-            pattern->Print(tw);
-            tw->EOL();
-        }
 #endif
 
         ArenaAllocator* rtAllocator = this->scriptContext->RegexAllocator();

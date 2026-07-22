@@ -414,7 +414,6 @@ private:
 #define DEFAULT_CONFIG_ForceStrictMode      (false)
 #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
 #define DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold (50)  // Threshold at which Entry Point Collection is triggered
-#define DEFAULT_CONFIG_RegexTracing         (false)
 #define DEFAULT_CONFIG_RegexDebug           (false)
 #define DEFAULT_CONFIG_RegexOptimize        (true)
 #define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
