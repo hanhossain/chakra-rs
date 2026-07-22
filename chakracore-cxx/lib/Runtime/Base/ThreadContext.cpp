@@ -4139,34 +4139,5 @@ void JsReentLock::setSecondObjectForMutation(Js::Var object)
     // Don't care about any other objects for now
 }
 
-void JsReentLock::MutateArrayObject(Js::Var arrayObject)
-{
-    if (arrayObject)
-    {
-        Js::JavascriptArray *arr = Js::JavascriptArray::FromAnyArray(arrayObject);
-        uint32_t random = static_cast<unsigned int>(rand());
-
-        if (random % 20 == 0)
-        {
-            arr->DoTypeMutation();
-        }
-        else if (random % 20 == 1)
-        {
-            // TODO : modify the length of the current array
-            //       Or other opportunities
-        }
-    }
-}
-
-
-void JsReentLock::MutateArrayObject()
-{
-    if (CONFIG_FLAG(EnableArrayTypeMutation))
-    {
-        JsReentLock::MutateArrayObject(m_arrayObject);
-        JsReentLock::MutateArrayObject(m_arrayObject2);
-    }
-}
-
 #endif
 #endif

@@ -560,7 +560,6 @@ namespace Js
         #endif
 
         OptimizeForManyInstancesFlag,
-        EnableArrayTypeMutationFlag,
         ArrayMutationTestSeedFlag,
         TestTraceFlag,
         SseFlag,
@@ -2147,8 +2146,6 @@ namespace Js
 
         // TODO (hanhossain): remove flag
         Boolean OptimizeForManyInstances;
-        // TODO (hanhossain): remove flag
-        Boolean EnableArrayTypeMutation;
         // todo (hanhossain): flag end
         Number ArrayMutationTestSeed;
         Phases TestTrace;

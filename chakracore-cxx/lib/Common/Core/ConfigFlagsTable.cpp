@@ -392,7 +392,6 @@ namespace Js
 #define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
 #define DEFAULT_CONFIG_AsmGoptCleanupThreshold  (500)
 #define DEFAULT_CONFIG_OptimizeForManyInstances (false)
-#define DEFAULT_CONFIG_EnableArrayTypeMutation (false)
 
 #define DEFAULT_CONFIG_DeferParseThreshold             (4 * 1024) // Unit is number of characters
 #define DEFAULT_CONFIG_ProfileBasedDeferParseThreshold (100)      // Unit is number of characters
@@ -1176,7 +1175,6 @@ namespace Js
 #endif
 
         u"OptimizeForManyInstances",
-        u"EnableArrayTypeMutation",
         u"ArrayMutationTestSeed",
         u"TestTrace",
         u"Sse",
@@ -2142,7 +2140,6 @@ namespace Js
 #endif
 
         u"Optimize script engine for many instances (low memory footprint per engine, assume low spare CPU cycles) (default: false)",
-        u"Enable force array type mutation on re-entrant region",
         // todo (hanhossain): flag end
         u"Seed used for the array mutation",
         u"Test trace for the given phase",
@@ -2703,7 +2700,6 @@ namespace Js
         NoParentFlag,
 #endif
 
-        NoParentFlag,
         NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
@@ -3288,7 +3284,6 @@ namespace Js
 #endif
 
         OptimizeForManyInstances(DEFAULT_CONFIG_OptimizeForManyInstances),
-        EnableArrayTypeMutation(DEFAULT_CONFIG_EnableArrayTypeMutation),
         ArrayMutationTestSeed(0),
         TestTrace(),
         Sse(DEFAULT_CONFIG_Sse),
@@ -4878,8 +4873,6 @@ namespace Js
 
         case OptimizeForManyInstancesFlag:
             return FlagBoolean;
-        case EnableArrayTypeMutationFlag:
-            return FlagBoolean;
         case ArrayMutationTestSeedFlag:
             return FlagNumber;
         case TestTraceFlag:
@@ -5835,8 +5828,6 @@ namespace Js
 
         case OptimizeForManyInstancesFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&OptimizeForManyInstances));
-        case EnableArrayTypeMutationFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableArrayTypeMutation));
         case ArrayMutationTestSeedFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&ArrayMutationTestSeed));
         case TestTraceFlag:
@@ -6713,9 +6704,6 @@ namespace Js
 
         case OptimizeForManyInstancesFlag:
             retValue = DEFAULT_CONFIG_OptimizeForManyInstances;
-            break;
-        case EnableArrayTypeMutationFlag:
-            retValue = DEFAULT_CONFIG_EnableArrayTypeMutation;
             break;
         case ForceStringKeyedSimpleDictionaryTypeHandlerFlag:
             retValue = DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler;

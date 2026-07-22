@@ -88,11 +88,9 @@ inline int _count_args(const T1&, const T2&, const T3&, const T4&, const T5&, Js
 #if DBG && ENABLE_JS_REENTRANCY_CHECK
 #define SETOBJECT_FOR_MUTATION(reentrancyLock, arrayObject) reentrancyLock.setObjectForMutation(arrayObject)
 #define SET_SECOND_OBJECT_FOR_MUTATION(reentrancyLock, arrayObject) reentrancyLock.setSecondObjectForMutation(arrayObject)
-#define MUTATE_ARRAY_OBJECT(reentrancyLock) reentrancyLock.MutateArrayObject()
 #else
 #define SETOBJECT_FOR_MUTATION(reentrancyLock, arrayObject) 
 #define SET_SECOND_OBJECT_FOR_MUTATION(reentrancyLock, arrayObject) 
-#define MUTATE_ARRAY_OBJECT(reentrancyLock) 
 #endif
 
 #if ENABLE_JS_REENTRANCY_CHECK
@@ -119,7 +117,6 @@ inline int _count_args(const T1&, const T2&, const T3&, const T4&, const T5&, Js
 #define JS_REENTRANT(reentrancyLock, ...) \
     reentrancyLock.unlock(); \
     __VA_ARGS__; \
-    MUTATE_ARRAY_OBJECT(reentrancyLock); \
     reentrancyLock.relock();
 #define JS_REENTRANT_NO_MUTATE(reentrancyLock, ...) \
     reentrancyLock.unlock(); \

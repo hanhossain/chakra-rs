@@ -425,7 +425,6 @@ private:
 #define DEFAULT_CONFIG_GoptCleanupThreshold  (25)
 #define DEFAULT_CONFIG_AsmGoptCleanupThreshold  (500)
 #define DEFAULT_CONFIG_OptimizeForManyInstances (false)
-#define DEFAULT_CONFIG_EnableArrayTypeMutation (false)
 
 #define DEFAULT_CONFIG_DeferParseThreshold             (4 * 1024) // Unit is number of characters
 #define DEFAULT_CONFIG_ProfileBasedDeferParseThreshold (100)      // Unit is number of characters
@@ -2265,16 +2264,11 @@ public:
 #if DBG
     void setObjectForMutation(Js::Var object);
     void setSecondObjectForMutation(Js::Var object);
-    void MutateArrayObject();
 #endif
 
     ~JsReentLock()
     {
         m_threadContext->SetNoJsReentrancy(m_savedNoJsReentrancy);
     }
-#if DBG
-private:
-    static void MutateArrayObject(Js::Var arrayObject);
-#endif
 };
 #endif
