@@ -7,8 +7,12 @@ pub mod ffi {
 
     unsafe extern "C++" {
         include!("chhelper.h");
+        include!("chakracore-sys/src/config.rs.h");
 
-        fn main_internal(args: &mut Vec<String>) -> i32;
+        #[namespace = "chakra_rs::config"]
+        type CoreConfig = crate::config::CoreConfig;
+
+        fn main_internal(config: CoreConfig) -> i32;
     }
 }
 

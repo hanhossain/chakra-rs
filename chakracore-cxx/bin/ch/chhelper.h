@@ -1,4 +1,4 @@
 #pragma once
-#include <rust/cxx.h>
+#include "chakracore-sys/src/config.rs.h"
 
-int main_internal(rust::Vec<rust::String> &args);
+int main_internal(chakra_rs::config::CoreConfig config);

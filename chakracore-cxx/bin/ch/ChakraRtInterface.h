@@ -18,17 +18,15 @@ public:
     {
         std::vector<std::u16string> vargs_;
         HostPrintUsageFuncPtr hostPrintUsage;
-        std::string filename_;
 
         ArgInfo() :
             hostPrintUsage(nullptr)
         {
         }
 
-        ArgInfo(const std::vector<std::u16string> &vargs, HostPrintUsageFuncPtr hostPrintUsage, std::string filename) :
+        ArgInfo(const std::vector<std::u16string> &vargs, HostPrintUsageFuncPtr hostPrintUsage) :
             vargs_(vargs),
-            hostPrintUsage(hostPrintUsage),
-            filename_(std::move(filename))
+            hostPrintUsage(hostPrintUsage)
         {
         }
     };

@@ -6,6 +6,7 @@ links = "chakracore-sys"
 
 [dependencies]
 cxx = "1.0.194"
+serde = { version = "1.0.229", features = ["derive"] }
 
 [build-dependencies]
 cmake = "0.1.57"

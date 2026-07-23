@@ -1,8 +1,9 @@
+use chakracore_sys::config::CoreConfig;
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    let mut args: Vec<_> = std::env::args().collect();
-    let Some(chakra_args) = ChakraArgs::new(&mut args) else {
+    let args: Vec<_> = std::env::args().collect();
+    let Some(chakra_args) = ChakraArgs::new(args) else {
         chakracore_sys::chhelper::print_usage();
         return ExitCode::FAILURE;
     };
@@ -17,7 +18,7 @@ fn main() -> ExitCode {
         return ExitCode::SUCCESS;
     }
 
-    chakracore::run(args)
+    chakracore::run(chakra_args.config)
 }
 
 fn print_version() {
@@ -29,20 +30,19 @@ fn print_version() {
 }
 
 #[derive(Debug, Clone, Default)]
-pub struct ChakraArgs {
-    pub version: bool,
-    pub help: bool,
+struct ChakraArgs {
+    version: bool,
+    help: bool,
+    config: CoreConfig,
 }
 
 impl ChakraArgs {
-    pub fn new(args: &mut Vec<String>) -> Option<Self> {
+    fn new(args: Vec<String>) -> Option<Self> {
         if args.len() < 2 {
             return None;
         }
 
-        let chakra_args = ChakraArgs::default();
-
-        for arg in args {
+        for arg in args.iter() {
             if arg == "-v" || arg == "--version" {
                 return Some(ChakraArgs {
                     version: true,
@@ -58,6 +58,13 @@ impl ChakraArgs {
             }
         }
 
-        Some(chakra_args)
+        let mut core_config: CoreConfig = serde_json::from_str(&args[1]).unwrap();
+        // TODO (hanhossain): remove this insert
+        // insert exe name since c++ code expects it still
+        core_config.args.insert(0, args[0].clone());
+        Some(ChakraArgs {
+            config: core_config,
+            ..Default::default()
+        })
     }
 }
