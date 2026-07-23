@@ -59,11 +59,9 @@ impl ChakraArgs {
         }
 
         let mut core_config: CoreConfig = serde_json::from_str(&args[1]).unwrap();
-        // TODO (hanhossain): remove these inserts
+        // TODO (hanhossain): remove this insert
         // insert exe name since c++ code expects it still
         core_config.args.insert(0, args[0].clone());
-        // insert filename since c++ code expects it still
-        core_config.args.insert(1, core_config.filename.clone());
         Some(ChakraArgs {
             config: core_config,
             ..Default::default()

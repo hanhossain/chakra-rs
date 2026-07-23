@@ -554,12 +554,12 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTestWithMemoryCheck(const std::string &fileName, JsRuntimeHandle &chRuntime,
+int32_t ExecuteTestWithMemoryCheck(const rust::String &fileName, JsRuntimeHandle &chRuntime,
                                    JsRuntimeAttributes &jsrtAttributes)
 {
     int32_t hr = E_FAIL;
     // REVIEW: Do we need a SEH handler here?
-    hr = ExecuteTest(fileName, chRuntime, jsrtAttributes);
+    hr = ExecuteTest(static_cast<std::string>(fileName), chRuntime, jsrtAttributes);
     if (FAILED(hr))
         exit(0);
 
@@ -584,22 +584,17 @@ int main_internal(chakra_rs::config::CoreConfig config)
         vargs.push_back(std::move(s));
     }
 
-    ChakraRTInterface::ArgInfo argInfo = {vargs, chakra_rs::chhelper::print_usage, {}};
+    ChakraRTInterface::ArgInfo argInfo = {vargs, chakra_rs::chhelper::print_usage};
     const bool success = ChakraRTInterface::LoadChakraDll(&argInfo);
 
     // handle command line flags
     OnChakraCoreLoaded();
 
-    if (argInfo.filename_.empty())
-    {
-        argInfo.filename_ = static_cast<std::string>(config.args[1]);
-    }
-
     int32_t exitCode = E_FAIL;
     if (success)
     {
         // On linux, execute on the same thread
-        exitCode = ExecuteTestWithMemoryCheck(argInfo.filename_, chRuntime, jsrtAttributes);
+        exitCode = ExecuteTestWithMemoryCheck(config.filename, chRuntime, jsrtAttributes);
     }
 
     PAL_Shutdown();
