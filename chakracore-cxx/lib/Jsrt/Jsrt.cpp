@@ -242,7 +242,6 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
         JsrtRuntime * runtime = HeapNew(JsrtRuntime, threadContext, enableIdle, dispatchExceptions);
         threadContext->SetCurrentThreadId(ThreadContext::NoThread);
         *runtimeHandle = runtime->ToHandle();
-        runtime->SetSerializeByteCodeForLibrary((attributes & JsRuntimeAttributeSerializeLibraryByteCode) != 0);
 
         return JsNoError;
     });

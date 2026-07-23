@@ -45,7 +45,6 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 }
 
 HostConfigFlags::HostConfigFlags() :
-    GenerateLibraryByteCodeHeader(nullptr), GenerateLibraryByteCodeHeaderIsEnabled(false),
     GenerateParserStateCache(false), GenerateParserStateCacheIsEnabled(false),
     UseParserStateCache(false), UseParserStateCacheIsEnabled(false),
     InspectMaxStringLength(16), InspectMaxStringLengthIsEnabled(false),
@@ -66,12 +65,6 @@ HostConfigFlags::HostConfigFlags() :
 bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
 {
     const auto flagStringsNormalized = chakra_rs::str_helper::to_lowercase(flagsString);
-    if (chakra_rs::str_helper::to_lowercase("GenerateLibraryByteCodeHeader") == flagStringsNormalized)
-    {
-        this->GenerateLibraryByteCodeHeaderIsEnabled = true;
-        Parse<BSTR>(parser, &this->GenerateLibraryByteCodeHeader);
-        return true;
-    }
     if (chakra_rs::str_helper::to_lowercase(u"GenerateParserStateCache") == flagStringsNormalized)
     {
         this->GenerateParserStateCacheIsEnabled = true;
@@ -155,7 +148,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
 
 void HostConfigFlags::PrintUsageString()
 {
-    std::println("{:>20}          \t{}", "GenerateLibraryByteCodeHeader", "\"Generate bytecode header file from library code\"");
     std::println("{:>20}          \t{}", "GenerateParserStateCache", "\"Parse source file to create parser state cache and write it to file or console\"");
     std::println("{:>20}          \t{}", "UseParserStateCache", "\"Create parser state cache while parsing and use it during script execution\"");
     std::println("{:>20}          \t{}", "InspectMaxStringLength", "\"Max string length to dump in locals inspection\"");
