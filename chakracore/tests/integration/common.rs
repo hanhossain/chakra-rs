@@ -1,3 +1,4 @@
+use chakracore_sys::config::CoreConfig;
 use pretty_assertions::{assert_eq, assert_ne};
 use std::collections::HashSet;
 use std::fs::read_to_string;
@@ -170,15 +171,20 @@ pub fn run_test_variant<const N: usize>(
     dbg!(&test);
 
     assert!(source.exists());
+    let filename = source.to_str().unwrap().to_owned();
 
+    let mut args = vec![
+        "-ExtendedErrorStackForTestHost".to_owned(),
+        "-BaselineMode".to_owned(),
+        "-WERExceptionSupport".to_owned(),
+    ];
+    args.extend(test.compile_flags.into_iter().map(String::from));
+    args.extend(variant_config.compile_flags.into_iter().map(String::from));
+
+    let core_config = CoreConfig { filename, args };
+    let serialized_config = serde_json::to_string(&core_config).unwrap();
     let mut ch = Command::new(CH_PATH);
-    ch.current_dir(test_dir)
-        .arg(source)
-        .arg("-ExtendedErrorStackForTestHost")
-        .arg("-BaselineMode")
-        .arg("-WERExceptionSupport")
-        .args(&test.compile_flags)
-        .args(&variant_config.compile_flags);
+    ch.current_dir(test_dir).arg(serialized_config);
 
     if cfg!(unix) {
         ch.env("TZ", "America/Los_Angeles");

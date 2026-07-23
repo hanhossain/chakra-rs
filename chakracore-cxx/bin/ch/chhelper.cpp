@@ -567,17 +567,17 @@ int32_t ExecuteTestWithMemoryCheck(const std::string &fileName, JsRuntimeHandle 
     return hr;
 }
 
-int main_internal(rust::Vec<rust::String> &args)
+int main_internal(chakra_rs::config::CoreConfig config)
 {
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
     HostConfigFlags::pfnPrintUsage = chakra_rs::chhelper::print_usage;
-    HostConfigFlags::vargsVal = chakra_rs::str_helper::split_args(args);
+    HostConfigFlags::vargsVal = chakra_rs::str_helper::split_args(config.args);
 
     std::vector<std::u16string> vargs;
 
-    for (auto arg : args)
+    for (auto arg : config.args)
     {
         std::u16string s;
         NarrowStringToWideDynamic(arg.c_str(), s);
@@ -592,7 +592,7 @@ int main_internal(rust::Vec<rust::String> &args)
 
     if (argInfo.filename_.empty())
     {
-        argInfo.filename_ = static_cast<std::string>(args[1]);
+        argInfo.filename_ = static_cast<std::string>(config.args[1]);
     }
 
     int32_t exitCode = E_FAIL;

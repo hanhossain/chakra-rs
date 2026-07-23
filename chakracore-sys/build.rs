@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 fn main() {
-    let bridges = ["src/chhelper.rs", "src/str_helper.rs"];
+    let bridges = ["src/chhelper.rs", "src/config.rs", "src/str_helper.rs"];
     let mut cxx_bridge = cxx_build::bridges(bridges);
     cxx_bridge
         .include("../chakracore-cxx/bin/ch")

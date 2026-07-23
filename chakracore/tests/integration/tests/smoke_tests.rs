@@ -1,14 +1,17 @@
 use crate::common::CH_PATH;
-use std::path::PathBuf;
+use chakracore_sys::config::CoreConfig;
 
-// TODO (hanhossain): use common module
 #[test]
 fn hello() {
-    let source =
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../chakracore-cxx/test/Basics/hello.js");
+    let source = "../chakracore-cxx/test/Basics/hello.js";
+    let config = CoreConfig {
+        filename: source.to_owned(),
+        ..Default::default()
+    };
+    let config = serde_json::to_string(&config).unwrap();
 
     let mut ch_exe = std::process::Command::new(CH_PATH);
-    ch_exe.arg(source);
+    ch_exe.arg(config);
     let output = ch_exe.output().unwrap();
 
     let out = String::from_utf8_lossy(&output.stdout);
