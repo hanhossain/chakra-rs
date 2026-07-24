@@ -5,6 +5,8 @@ use std::fs::read_to_string;
 use std::path::PathBuf;
 use std::process::Command;
 use std::time::Duration;
+use tracing::instrument;
+use tracing_subscriber::EnvFilter;
 
 pub const CH_PATH: &'static str = env!("CARGO_BIN_EXE_chakracore");
 pub const SLOW_TEST_TIMEOUT: Duration = Duration::from_secs(180);
@@ -83,6 +85,7 @@ pub enum Variant {
     DisableJit,
 }
 
+#[derive(Debug)]
 struct VariantConfig<'a> {
     compile_flags: Vec<&'a str>,
     excluded_tags: HashSet<&'static str>,
@@ -93,6 +96,16 @@ pub fn run_test_variant<const N: usize>(
     variant: Variant,
     common_tags: [&'static str; N],
 ) {
+    let _subscriber = tracing::subscriber::set_default(
+        tracing_subscriber::fmt()
+            .with_env_filter(
+                EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("trace")),
+            )
+            .with_test_writer()
+            .finish(),
+    );
+    tracing::info!("starting test");
+
     test.tags.extend(common_tags.iter());
     test.validate();
 
@@ -155,10 +168,16 @@ pub fn run_test_variant<const N: usize>(
     );
 
     if cfg!(disable_jit) && variant != Variant::DisableJit {
-        println!("Skipping {variant:?} as it's not supported with cfg!(disable_jit)");
+        tracing::info!(
+            ?variant,
+            "Skipping variant as it's not supported with `cfg!(disable_jit)`"
+        );
         return;
     } else if !cfg!(disable_jit) && variant == Variant::DisableJit {
-        println!("Skipping {variant:?} as it's not supported without cfg!(disable_jit)");
+        tracing::info!(
+            ?variant,
+            "Skipping variant as it requires `cfg!(disable_jit)`"
+        );
         return;
     }
 
@@ -166,9 +185,6 @@ pub fn run_test_variant<const N: usize>(
 
     let test_dir = manifest_dir.join(test.directory);
     let source = test_dir.join(test.source_path);
-    println!("source_path: {:?}", source);
-
-    dbg!(&test);
 
     assert!(source.exists());
     let filename = source.to_str().unwrap().to_owned();
@@ -182,6 +198,8 @@ pub fn run_test_variant<const N: usize>(
     args.extend(variant_config.compile_flags.into_iter().map(String::from));
 
     let core_config = CoreConfig { filename, args };
+    tracing::info!(?core_config);
+
     let serialized_config = serde_json::to_string(&core_config).unwrap();
     let mut ch = Command::new(CH_PATH);
     ch.current_dir(test_dir).arg(serialized_config);
@@ -190,7 +208,7 @@ pub fn run_test_variant<const N: usize>(
         ch.env("TZ", "America/Los_Angeles");
     }
 
-    println!("Running command: {ch:#?}");
+    tracing::info!(?ch, "Running command");
     let output = ch.output().unwrap();
 
     let mut out = String::from_utf8_lossy(&output.stdout).to_string();
@@ -233,6 +251,7 @@ pub fn run_test_variant<const N: usize>(
     }
 
     assert!(output.status.success());
+    assert!(false);
 }
 
 fn trim_carriage_return(s: &str) -> &str {
