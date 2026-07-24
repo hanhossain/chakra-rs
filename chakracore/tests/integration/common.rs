@@ -2,10 +2,11 @@ use chakracore_sys::config::CoreConfig;
 use pretty_assertions::{assert_eq, assert_ne};
 use std::collections::HashSet;
 use std::fs::read_to_string;
+use std::io::{BufRead, BufReader, Read};
 use std::path::PathBuf;
-use std::process::Command;
+use std::process::{Command, Stdio};
+use std::thread;
 use std::time::Duration;
-use tracing::instrument;
 use tracing_subscriber::EnvFilter;
 
 pub const CH_PATH: &'static str = env!("CARGO_BIN_EXE_chakracore");
@@ -96,7 +97,7 @@ pub fn run_test_variant<const N: usize>(
     variant: Variant,
     common_tags: [&'static str; N],
 ) {
-    let _subscriber = tracing::subscriber::set_default(
+    let _subscriber_guard = tracing::subscriber::set_default(
         tracing_subscriber::fmt()
             .with_env_filter(
                 EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("trace")),
@@ -202,23 +203,34 @@ pub fn run_test_variant<const N: usize>(
 
     let serialized_config = serde_json::to_string(&core_config).unwrap();
     let mut ch = Command::new(CH_PATH);
-    ch.current_dir(test_dir).arg(serialized_config);
-
-    if cfg!(unix) {
-        ch.env("TZ", "America/Los_Angeles");
-    }
+    ch.current_dir(test_dir)
+        .arg(serialized_config)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .env("TZ", "America/Los_Angeles");
 
     tracing::info!(?ch, "Running command");
-    let output = ch.output().unwrap();
 
-    let mut out = String::from_utf8_lossy(&output.stdout).to_string();
-    let err = String::from_utf8_lossy(&output.stderr);
-    out.push_str(&err);
+    let mut child = ch.spawn().unwrap();
+    let stdout = child.stdout.take().unwrap();
+    let stderr = child.stderr.take().unwrap();
 
-    let actual = out
-        .lines()
-        .map(|s| trim_carriage_return(s))
-        .collect::<Vec<_>>();
+    let dispatcher = tracing::dispatcher::get_default(|dispatch| dispatch.clone());
+    let dispatcher2 = dispatcher.clone();
+
+    let stdout_reader = thread::spawn(move || {
+        tracing::dispatcher::with_default(&dispatcher, || read_stdout(stdout))
+    });
+    let stderr_reader = thread::spawn(move || {
+        tracing::dispatcher::with_default(&dispatcher2, || read_stderr(stderr))
+    });
+
+    let mut actual = stdout_reader.join().unwrap();
+    let err_actual = stderr_reader.join().unwrap();
+    actual.extend(err_actual);
+
+    let status = child.wait().unwrap();
+    tracing::info!("Child process exited");
 
     match test.baseline_path {
         Some(baseline_path) => {
@@ -250,8 +262,29 @@ pub fn run_test_variant<const N: usize>(
         }
     }
 
-    assert!(output.status.success());
-    assert!(false);
+    assert!(status.success());
+}
+
+#[tracing::instrument(skip_all, name = "stdout")]
+fn read_stdout<R: Read>(stream: R) -> Vec<String> {
+    let mut actual = Vec::new();
+    let reader = BufReader::new(stream);
+    for message in reader.lines().map(|line| line.unwrap()) {
+        tracing::info!(target: "chakracore", message);
+        actual.push(message);
+    }
+    actual
+}
+
+#[tracing::instrument(skip_all, name = "stderr")]
+fn read_stderr<R: Read>(stream: R) -> Vec<String> {
+    let mut actual = Vec::new();
+    let reader = BufReader::new(stream);
+    for message in reader.lines().map(|line| line.unwrap()) {
+        tracing::info!(target: "chakracore", message);
+        actual.push(message);
+    }
+    actual
 }
 
 fn trim_carriage_return(s: &str) -> &str {
