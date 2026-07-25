@@ -209,28 +209,37 @@ pub fn run_test_variant<const N: usize>(
         .stderr(Stdio::piped())
         .env("TZ", "America/Los_Angeles");
 
-    tracing::info!(?ch, "Running command");
+    let (status, actual) = {
+        let _span = tracing::info_span!("run_test_variant").entered();
+        tracing::info!(?ch, "Running command");
 
-    let mut child = ch.spawn().unwrap();
-    let stdout = child.stdout.take().unwrap();
-    let stderr = child.stderr.take().unwrap();
+        let mut child = ch.spawn().unwrap();
+        let stdout = child.stdout.take().unwrap();
+        let stderr = child.stderr.take().unwrap();
 
-    let dispatcher = tracing::dispatcher::get_default(|dispatch| dispatch.clone());
-    let dispatcher2 = dispatcher.clone();
+        let dispatcher = tracing::dispatcher::get_default(|dispatch| dispatch.clone());
+        let dispatcher2 = dispatcher.clone();
 
-    let stdout_reader = thread::spawn(move || {
-        tracing::dispatcher::with_default(&dispatcher, || read_stdout(stdout))
-    });
-    let stderr_reader = thread::spawn(move || {
-        tracing::dispatcher::with_default(&dispatcher2, || read_stderr(stderr))
-    });
+        let stdout_span = tracing::info_span!("stdout_reader");
+        let stdout_reader = thread::spawn(move || {
+            let _span = stdout_span.entered();
+            tracing::dispatcher::with_default(&dispatcher, || read_stdout(stdout))
+        });
 
-    let mut actual = stdout_reader.join().unwrap();
-    let err_actual = stderr_reader.join().unwrap();
-    actual.extend(err_actual);
+        let stderr_span = tracing::info_span!("stderr_reader");
+        let stderr_reader = thread::spawn(move || {
+            let _span = stderr_span.entered();
+            tracing::dispatcher::with_default(&dispatcher2, || read_stderr(stderr))
+        });
 
-    let status = child.wait().unwrap();
-    tracing::info!("Child process exited");
+        let mut actual = stdout_reader.join().unwrap();
+        let err_actual = stderr_reader.join().unwrap();
+        actual.extend(err_actual);
+
+        let status = child.wait().unwrap();
+        tracing::info!(?status, "Child process exited");
+        (status, actual)
+    };
 
     match test.baseline_path {
         Some(baseline_path) => {
@@ -265,7 +274,6 @@ pub fn run_test_variant<const N: usize>(
     assert!(status.success());
 }
 
-#[tracing::instrument(skip_all, name = "stdout")]
 fn read_stdout<R: Read>(stream: R) -> Vec<String> {
     let mut actual = Vec::new();
     let reader = BufReader::new(stream);
@@ -276,7 +284,6 @@ fn read_stdout<R: Read>(stream: R) -> Vec<String> {
     actual
 }
 
-#[tracing::instrument(skip_all, name = "stderr")]
 fn read_stderr<R: Read>(stream: R) -> Vec<String> {
     let mut actual = Vec::new();
     let reader = BufReader::new(stream);
