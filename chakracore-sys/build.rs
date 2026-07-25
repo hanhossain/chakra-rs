@@ -5,6 +5,7 @@ fn main() {
     let mut cxx_bridge = cxx_build::bridges(bridges);
     cxx_bridge
         .include("../chakracore-cxx/bin/ch")
+        .include("../chakracore-cxx/lib/Common")
         .compile("binding");
 
     let out_dir = std::env::var("OUT_DIR").unwrap();
