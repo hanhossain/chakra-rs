@@ -130,7 +130,6 @@ before any other functions and if it is not successful,
 no other functions should be done. */
 static HANDLE pStdIn;
 static HANDLE pStdOut;
-static HANDLE pStdErr;
 
 /*++
 Function : 
@@ -444,9 +443,6 @@ GetStdHandle(
         break;
     case STD_OUTPUT_HANDLE:
         hRet = pStdOut;
-        break;
-    case STD_ERROR_HANDLE:
-        hRet = pStdErr; 
         break;
     default:
         ERROR("nStdHandle is invalid\n");
@@ -836,7 +832,6 @@ BOOL FILEInitStdHandles(void)
 {
     HANDLE stdin_handle;
     HANDLE stdout_handle;
-    HANDLE stderr_handle;
 
     TRACE("creating handle objects for stdin, stdout, stderr\n");
 
@@ -855,20 +850,11 @@ BOOL FILEInitStdHandles(void)
         goto fail;
     }
 
-    stderr_handle = init_std_handle(&pStdErr, stderr);
-    if(INVALID_HANDLE_VALUE == stderr_handle)
-    {
-        ERROR("failed to create stderr handle\n");
-        CloseHandle(stdin_handle);
-        CloseHandle(stdout_handle);
-        goto fail;
-    }
     return TRUE;
 
 fail:
     pStdIn = INVALID_HANDLE_VALUE;
     pStdOut = INVALID_HANDLE_VALUE;
-    pStdErr = INVALID_HANDLE_VALUE;
     return FALSE;
 }
 
@@ -885,16 +871,12 @@ void FILECleanupStdHandles(void)
 {
     HANDLE stdin_handle;
     HANDLE stdout_handle;
-    HANDLE stderr_handle;
 
     TRACE("closing standard handles\n");
     stdin_handle = pStdIn;
     stdout_handle = pStdOut;
-    stderr_handle = pStdErr;
     pStdIn = INVALID_HANDLE_VALUE;
     pStdOut = INVALID_HANDLE_VALUE;
-    pStdErr = INVALID_HANDLE_VALUE;
     CloseHandle(stdin_handle);
     CloseHandle(stdout_handle);
-    CloseHandle(stderr_handle);
 }

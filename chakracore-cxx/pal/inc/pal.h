@@ -263,7 +263,6 @@ WriteFile(
 
 #define STD_INPUT_HANDLE         (static_cast<uint32_t>(-10))
 #define STD_OUTPUT_HANDLE        (static_cast<uint32_t>(-11))
-#define STD_ERROR_HANDLE         (static_cast<uint32_t>(-12))
 
 HANDLE
 GetStdHandle(

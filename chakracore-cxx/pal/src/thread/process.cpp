@@ -448,17 +448,6 @@ void PROCCleanupProcess()
     PALShutdown();
 }
 
-#define FATAL_ASSERT(e, msg) \
-    do \
-    { \
-        if (!(e)) \
-        { \
-            fprintf(stderr, "FATAL ERROR: " msg); \
-            abort(); \
-        } \
-    } \
-    while(0)
-
 /*++
 Function:
   PROCGetProcessIDFromHandle
