@@ -131,8 +131,6 @@ namespace Js {
         IsInAssert = true;
     }
 
-#define CHAKRA_ASSERT_CAPTION u"CHAKRA ASSERT"
-
     bool Throw::ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message)
     {
         if (AssertsToConsole)
