@@ -76,6 +76,7 @@ fn main() {
 
         println!("cargo::rustc-link-lib=chhelper");
         println!("cargo::rustc-link-lib=ChakraCoreStatic");
+        println!("cargo::rustc-link-lib=Chakra.Ffi");
 
         if cfg!(target_os = "macos") {
             println!("cargo::rustc-link-search=native=/opt/homebrew/opt/icu4c/lib");
