@@ -136,7 +136,6 @@ namespace Js {
         if (AssertsToConsole)
         {
             fprintf(stderr, "ASSERTION %u: (%s, line %u) %s\n Failure: %s\n", getpid(), fileName, lineNumber, message, error);
-            fflush(stderr);
             return false;
         }
 
