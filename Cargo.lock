@@ -55,6 +55,7 @@ dependencies = [
  "cxx",
  "cxx-build",
  "serde",
+ "tracing",
 ]
 
 [[package]]

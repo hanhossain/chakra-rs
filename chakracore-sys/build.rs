@@ -1,7 +1,12 @@
 use std::path::PathBuf;
 
 fn main() {
-    let bridges = ["src/chhelper.rs", "src/config.rs", "src/str_helper.rs"];
+    let bridges = [
+        "src/chhelper.rs",
+        "src/config.rs",
+        "src/logger.rs",
+        "src/str_helper.rs",
+    ];
     let mut cxx_bridge = cxx_build::bridges(bridges);
     cxx_bridge
         .include("../chakracore-cxx/bin/ch")
@@ -83,6 +88,7 @@ fn main() {
     }
 
     println!("cargo::rerun-if-changed=../chakracore-cxx/bin/");
+    println!("cargo::rerun-if-changed=../chakracore-cxx/ffi/");
     println!("cargo::rerun-if-changed=../chakracore-cxx/lib/");
     println!("cargo::rerun-if-changed=../chakracore-cxx/pal/");
     println!("cargo::rerun-if-changed=../chakracore-cxx/CMakeLists.txt");

@@ -255,6 +255,8 @@ endif ()
 # detect features
 include_directories(SYSTEM /usr/local/include)
 
+add_subdirectory(ffi)
+
 add_subdirectory(pal)
 
 add_subdirectory(lib)
