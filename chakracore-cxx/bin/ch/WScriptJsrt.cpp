@@ -14,6 +14,8 @@
 #include <filesystem>
 #include <iostream>
 
+#include "chakra/Logger.h"
+
 namespace fs = std::filesystem;
 
 #if defined(_AMD64_) || defined(_IA64_) || defined(_M_AMD64) || defined(_M_IA64)
@@ -1417,7 +1419,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
             IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength), ErrorStillFree);
             if (bufferLength < lengthBytes)
             {
-                std::println(stderr, "Array buffer size is insufficient to store the binary file.");
+                chakra::Logger::error("Array buffer size is insufficient to store the binary file.");
             }
             else
             {

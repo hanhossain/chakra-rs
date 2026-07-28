@@ -36,6 +36,8 @@ Abstract:
 #include <unistd.h>
 #include <limits.h>
 
+#include "chakra/Logger.h"
+
 #if defined(__APPLE__)
 #include <mach/vm_map.h>
 #include <mach/mach_init.h>
@@ -824,7 +826,7 @@ static void * VIRTUALReserveMemory(
 
     if ((flAllocationType & MEM_RESERVE_EXECUTABLE) != 0)
     {
-        fprintf(stderr, "MEM_RESERVE_EXECUTABLE is not supported!");
+        chakra::Logger::error("MEM_RESERVE_EXECUTABLE is not supported!");
         abort();
     }
 
