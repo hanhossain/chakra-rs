@@ -1,4 +1,4 @@
-use crate::common::CH_PATH;
+use crate::common::{init_tracing, run_test};
 use chakracore_sys::config::CoreConfig;
 
 #[test]
@@ -8,17 +8,11 @@ fn hello() {
         filename: source.to_owned(),
         ..Default::default()
     };
-    let config = serde_json::to_string(&config).unwrap();
 
-    let mut ch_exe = std::process::Command::new(CH_PATH);
-    ch_exe.arg(config);
-    let output = ch_exe.output().unwrap();
+    let _guard = init_tracing();
+    let (exit_status, actual) = run_test(config, None);
 
-    let out = String::from_utf8_lossy(&output.stdout);
-
-    let actual = out.lines().collect::<Vec<_>>();
     let expected = vec!["hello world", "PASS"];
     assert_eq!(actual, expected);
-    assert_eq!(output.stderr, b"");
-    assert!(output.status.success());
+    assert!(exit_status.success());
 }
