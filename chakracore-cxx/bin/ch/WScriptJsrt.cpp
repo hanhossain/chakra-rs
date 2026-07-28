@@ -215,7 +215,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
             hr = Helpers::LoadScriptFromFile(*fileName, fileContent);
             if (FAILED(hr))
             {
-                fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
+                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName.GetString()));
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
                 return returnValue;
             }
@@ -1245,7 +1245,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
 
             if (FAILED(hr))
             {
-                fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
+                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName.GetString()));
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
                 return returnValue;
             }
@@ -1407,7 +1407,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
 
             if (FAILED(hr))
             {
-                fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
+                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName.GetString()));
                 IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetUndefinedValue(&returnValue), Error);
                 return returnValue;
             }
@@ -1814,13 +1814,13 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
         }
         else
         {
-            std::println(stderr, "Error : %{}", errorTypeString);
+            chakra::Logger::error(std::format("Error : {}", errorTypeString));
         }
         return true;
     }
     else
     {
-        std::println(stderr, "Error : %{}", errorTypeString);
+        chakra::Logger::error(std::format("Error : {}", errorTypeString));
     }
     return false;
 }
@@ -1955,7 +1955,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
                     auto actualModuleRecord = moduleRecordMap.find(fullPath_.value());
                     if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)
                     {
-                        fprintf(stderr, "Couldn't load file '%s'\n", specifierStr.GetString());
+                        chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr.GetString()));
                     }
                 }
                 LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);

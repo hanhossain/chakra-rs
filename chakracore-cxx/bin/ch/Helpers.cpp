@@ -260,8 +260,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     {
         if (printFileOpenError)
         {
-            fprintf(stderr, "Error in opening file '%s' ", filename);
-            fprintf(stderr, "\n");
+            chakra::Logger::error(std::format("Error in opening file '{}'", filename));
         }
         return E_FAIL;
     }

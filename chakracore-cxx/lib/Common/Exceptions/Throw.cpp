@@ -14,6 +14,8 @@
 // Header files required before including ConfigFlagsTable.h
 
 #include <unistd.h>
+#include <format>
+#include "chakra/Logger.h"
 
 #include "Interface/EnumHelp.h"
 #include "Common/MathUtil.h"
@@ -135,7 +137,7 @@ namespace Js {
     {
         if (AssertsToConsole)
         {
-            fprintf(stderr, "ASSERTION %u: (%s, line %u) %s\n Failure: %s\n", getpid(), fileName, lineNumber, message, error);
+            chakra::Logger::error(std::format("ASSERTION {}: ({}, line {}) {}\n Failure: {}\n", getpid(), fileName, lineNumber, message, error));
             return false;
         }
 
