@@ -5,7 +5,12 @@ use tracing_subscriber::filter::LevelFilter;
 
 fn main() -> ExitCode {
     tracing_subscriber::fmt()
+        .json()
         .with_max_level(LevelFilter::TRACE)
+        .with_writer(std::io::stderr)
+        .with_thread_names(true)
+        .with_target(false)
+        .without_time()
         .init();
     let wait_for_debugger = std::env::var("WAIT_FOR_DEBUGGER")
         .unwrap_or_default()
@@ -27,6 +32,8 @@ fn main() -> ExitCode {
         } else {
             tracing::info!("debugger attached");
         }
+    } else {
+        tracing::debug!("not waiting for debugger");
     }
 
     let args: Vec<_> = std::env::args().collect();

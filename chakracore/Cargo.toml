@@ -7,11 +7,12 @@ edition = "2024"
 chakracore-sys = { path = "../chakracore-sys" }
 serde_json = "1.0.151"
 tracing = "0.1.44"
-tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+tracing-subscriber = { version = "0.3.23", features = ["env-filter", "json"] }
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
 rstest = "0.26.1"
+serde = { version = "1.0.229", features = ["derive"] }
 
 [features]
 compile-cpp = ["chakracore-sys/compile-cpp"]

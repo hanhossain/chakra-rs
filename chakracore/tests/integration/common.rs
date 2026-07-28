@@ -1,12 +1,15 @@
 use chakracore_sys::config::CoreConfig;
 use pretty_assertions::{assert_eq, assert_ne};
+use serde::Deserialize;
 use std::collections::HashSet;
 use std::fs::read_to_string;
 use std::io::{BufRead, BufReader, Read};
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
+use std::str::FromStr;
 use std::thread;
 use std::time::Duration;
+use tracing::Level;
 use tracing_subscriber::EnvFilter;
 
 pub const CH_PATH: &'static str = env!("CARGO_BIN_EXE_chakracore");
@@ -288,10 +291,45 @@ fn read_stderr<R: Read>(stream: R) -> Vec<String> {
     let mut actual = Vec::new();
     let reader = BufReader::new(stream);
     for message in reader.lines().map(|line| line.unwrap()) {
-        tracing::info!(target: "chakracore", message);
-        actual.push(message);
+        if let Ok(event) = serde_json::from_str::<ChildEvent>(&message) {
+            match event.level.as_str() {
+                "TRACE" => {
+                    tracing::trace!(target: "chakracore", message = event.fields.message, thread.name = event.thread_name)
+                }
+                "DEBUG" => {
+                    tracing::debug!(target: "chakracore", message = event.fields.message, thread.name = event.thread_name)
+                }
+                "INFO" => {
+                    tracing::info!(target: "chakracore", message = event.fields.message, thread.name = event.thread_name)
+                }
+                "WARN" => {
+                    tracing::warn!(target: "chakracore", message = event.fields.message, thread.name = event.thread_name)
+                }
+                "ERROR" => {
+                    tracing::error!(target: "chakracore", message = event.fields.message, thread.name = event.thread_name)
+                }
+                _ => panic!("invalid level: {}", event.level),
+            }
+        } else {
+            actual.push(message);
+        }
     }
     actual
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ChildEvent {
+    level: String,
+    fields: ChildEventFields,
+    #[serde(rename = "threadName")]
+    thread_name: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ChildEventFields {
+    message: String,
 }
 
 fn trim_carriage_return(s: &str) -> &str {
