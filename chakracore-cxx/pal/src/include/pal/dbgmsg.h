@@ -242,20 +242,17 @@ extern const char16_t* W16_NULLSTRING;
 
 #if !defined(_DEBUG)
 
-#define ASSERT(args...)
 #define _ASSERT(expr)
 #define _ASSERT_MSG(args...)
 
 #else /* defined(_DEBUG) */
-
-#define ASSERT(...) fprintf(stderr, __VA_ARGS__);
 
 #define _ASSERT assert
 #define _ASSERT_MSG(expr, args...) \
     do { \
         if (!(expr)) \
         { \
-            ASSERT("Expression: " #expr ", Description: " args); \
+            fprintf(stderr, "Expression: " #expr ", Description: " args); \
         } \
     } while(0)
 

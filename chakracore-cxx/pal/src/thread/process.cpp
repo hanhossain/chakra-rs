@@ -267,7 +267,7 @@ PrepareStandardHandle(
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Unable to access file data\n");
+        fprintf(stderr, "Unable to access file data\n");
         goto PrepareStandardHandleExit;
     }
 
@@ -379,7 +379,7 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
                 break;
             default:
                 // Unexpected failure.
-                ASSERT(FALSE);
+                assert(false);
                 SetLastError(ERROR_INTERNAL_ERROR);
                 break;
             }
@@ -422,7 +422,7 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
             exit(uExitCode);
         }
 
-        ASSERT(FALSE); // we shouldn't get here
+        assert(false); // we shouldn't get here
     }
 
     return ret;
@@ -606,7 +606,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Unable to access local data");
+        fprintf(stderr, "Unable to access local data");
         goto CreateInitialProcessAndThreadObjectsExit;
     }
 
@@ -632,7 +632,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Failure registering process object");
+        fprintf(stderr, "Failure registering process object");
         goto CreateInitialProcessAndThreadObjectsExit;
     }
 
@@ -714,7 +714,7 @@ CorUnix::PROCRemoveThread(
     /* if thread list is empty */
     if (curThread == NULL)
     {
-        ASSERT("Thread list is empty.\n");
+        fprintf(stderr, "Thread list is empty.\n");
         goto EXIT;
     }
 
@@ -1066,7 +1066,7 @@ PROCGetProcessStatus(
         }
         else
         {
-            ASSERT("waitpid returned unexpected value %d\n",wait_retval);
+            fprintf(stderr, "waitpid returned unexpected value %d\n",wait_retval);
             *pdwExitCode = EXIT_FAILURE;
             *pps = PS_DONE;
         }

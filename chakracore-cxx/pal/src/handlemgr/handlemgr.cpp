@@ -224,7 +224,7 @@ CSimpleHandleManager::FreeHandle(
 
     if (HandleIsSpecial(h))
     {
-        ASSERT("Trying to free Special Handle %p.\n", h);
+        fprintf(stderr, "Trying to free Special Handle %p.\n", h);
         palError = ERROR_INVALID_HANDLE;
         goto FreeHandleExit;
     }
@@ -275,7 +275,7 @@ bool CSimpleHandleManager::ValidateHandle(HANDLE handle)
     
     if (NULL == m_rghteHandleTable)
     {
-        ASSERT("Handle Manager is not initialized!\n");
+        fprintf(stderr, "Handle Manager is not initialized!\n");
         return FALSE;
     }
     
@@ -295,7 +295,7 @@ bool CSimpleHandleManager::ValidateHandle(HANDLE handle)
         // the specialness of the handle) so we assert here.
         //
         
-        ASSERT ("Handle %p is a special handle, returning FALSE.\n", handle);
+        fprintf(stderr, "Handle %p is a special handle, returning FALSE.\n", handle);
         return FALSE;
     }
 

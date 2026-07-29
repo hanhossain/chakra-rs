@@ -194,7 +194,7 @@ FILELockFileRegion(
     
     if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKS, fileLocks, shmFileLocks) == FALSE || fileLocks == NULL)
     {
-        ASSERT("Unable to get pointer from shm pointer.\n");
+        fprintf(stderr, "Unable to get pointer from shm pointer.\n");
         palError = ERROR_INTERNAL_ERROR;
         goto EXIT;
     }
@@ -206,7 +206,7 @@ FILELockFileRegion(
         if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLock, fileLocks->fileLockedRgns) 
             == FALSE)
         {
-            ASSERT("Unable to get pointer from shm pointer.\n");
+            fprintf(stderr, "Unable to get pointer from shm pointer.\n");
             palError = ERROR_INTERNAL_ERROR;
             goto EXIT;
         }
@@ -222,7 +222,7 @@ FILELockFileRegion(
             prevLock = curLock; 
             if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLock, curLock->next) == FALSE)
             {
-                ASSERT("Unable to get pointer from shm pointer.\n");
+                fprintf(stderr, "Unable to get pointer from shm pointer.\n");
                 palError = ERROR_INTERNAL_ERROR;
                 goto EXIT;
             }
@@ -244,7 +244,7 @@ FILELockFileRegion(
             prevLock = curLock; 
             if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLock, curLock->next) == FALSE)
             {
-                ASSERT("Unable to get pointer from shm pointer.\n");
+                fprintf(stderr, "Unable to get pointer from shm pointer.\n");
                 palError = ERROR_INTERNAL_ERROR;
                 goto EXIT;
             }
@@ -269,7 +269,7 @@ FILELockFileRegion(
             prevLock = curLock; 
             if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLock, curLock->next) == FALSE)
             {
-                ASSERT("Unable to get pointer from shm pointer.\n");
+                fprintf(stderr, "Unable to get pointer from shm pointer.\n");
                 palError = ERROR_INTERNAL_ERROR;
                 goto EXIT;
             }
@@ -347,7 +347,7 @@ FILEUnlockFileRegion(
         (fileLocks == NULL) ||
         (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLockRgn, fileLocks->fileLockedRgns) == FALSE))
     {
-        ASSERT("Unable to get pointer from shm pointer.\n");
+        fprintf(stderr, "Unable to get pointer from shm pointer.\n");
         palError = ERROR_INTERNAL_ERROR;
         goto EXIT;
     }
@@ -366,7 +366,7 @@ FILEUnlockFileRegion(
         shmcurLockRgn = curLockRgn->next;
         if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLockRgn, shmcurLockRgn) == FALSE)
         {
-            ASSERT("Unable to get pointer from shm pointer.\n");
+            fprintf(stderr, "Unable to get pointer from shm pointer.\n");
             goto EXIT;
         }
     }
@@ -422,7 +422,7 @@ FILEGetSHMFileLocks(
         if ( (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKS, filelocksPtr, shmPtrRet) == FALSE) ||
              (SHMPTR_TO_TYPED_PTR_BOOL(char, unix_filename, filelocksPtr->unix_filename) == FALSE))
         {
-            ASSERT("Unable to get pointer from shm pointer.\n");
+            fprintf(stderr, "Unable to get pointer from shm pointer.\n");
             palError = ERROR_INTERNAL_ERROR;
             goto EXIT;
         }
@@ -462,7 +462,7 @@ FILEGetSHMFileLocks(
 
     if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKS, filelocksPtr, shmPtrRet) == FALSE)
     {
-        ASSERT("Unable to get pointer from shm pointer.\n");
+        fprintf(stderr, "Unable to get pointer from shm pointer.\n");
         palError = ERROR_INTERNAL_ERROR;
         goto CLEANUP1;
     }
@@ -485,7 +485,7 @@ FILEGetSHMFileLocks(
 
     if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKS, nextFilelocksPtr, filelocksPtr->next) == FALSE)
     {
-        ASSERT("Unable to get pointer from shm pointer.\n");
+        fprintf(stderr, "Unable to get pointer from shm pointer.\n");
         palError = ERROR_INTERNAL_ERROR;
         goto CLEANUP2;
     }
@@ -530,7 +530,7 @@ FILEAddNewLockedRgn(
 
     if ((fileLocks == NULL) || (pvControllerInstance == NULL))
     {
-        ASSERT("Invalid Null parameter.\n");
+        fprintf(stderr, "Invalid Null parameter.\n");
         return FALSE;
     }
 
@@ -549,7 +549,7 @@ FILEAddNewLockedRgn(
 
     if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, newLockRgn, shmNewLockRgn) == FALSE)
     {
-        ASSERT("Unable to get pointer from shm pointer.\n");
+        fprintf(stderr, "Unable to get pointer from shm pointer.\n");
         palError = ERROR_INTERNAL_ERROR;
         goto EXIT;
     }
@@ -566,7 +566,7 @@ FILEAddNewLockedRgn(
     {
         if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, lockRgnPtr, insertAfter->next) == FALSE)
         {
-            ASSERT("Unable to get pointer from shm pointer.\n");
+            fprintf(stderr, "Unable to get pointer from shm pointer.\n");
             palError = ERROR_INTERNAL_ERROR;
             goto EXIT;
         }
@@ -575,7 +575,7 @@ FILEAddNewLockedRgn(
     {
         if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, lockRgnPtr, fileLocks->fileLockedRgns) == FALSE)
         {
-            ASSERT("Unable to get pointer from shm pointer.\n");
+            fprintf(stderr, "Unable to get pointer from shm pointer.\n");
             palError = ERROR_INTERNAL_ERROR;
             goto EXIT;
         }
@@ -589,7 +589,7 @@ FILEAddNewLockedRgn(
             insertAfter = lockRgnPtr;
             if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, lockRgnPtr, lockRgnPtr->next) == FALSE)
             {
-                ASSERT("Unable to get pointer from shm pointer.\n");
+                fprintf(stderr, "Unable to get pointer from shm pointer.\n");
                 palError = ERROR_INTERNAL_ERROR;
                 goto EXIT;
             }
@@ -640,7 +640,7 @@ FILECleanUpLockedRgn(
 
     if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKS, fileLocks, shmFileLocks) == FALSE)
     {
-        ASSERT("Unable to get pointer from shm pointer.\n");
+        fprintf(stderr, "Unable to get pointer from shm pointer.\n");
         goto EXIT;
     }
 
@@ -651,7 +651,7 @@ FILECleanUpLockedRgn(
             shmcurLockRgn = fileLocks->fileLockedRgns;
             if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLockRgn, shmcurLockRgn) == FALSE)
             {
-                ASSERT("Unable to get pointer from shm pointer.\n");
+                fprintf(stderr, "Unable to get pointer from shm pointer.\n");
                 goto EXIT;
             }
             
@@ -672,7 +672,7 @@ FILECleanUpLockedRgn(
                         shmcurLockRgn = fileLocks->fileLockedRgns;
                         if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLockRgn, shmcurLockRgn) == FALSE)
                         {
-                            ASSERT("Unable to get pointer from shm pointer.\n");
+                            fprintf(stderr, "Unable to get pointer from shm pointer.\n");
                             goto EXIT;
                         }
                     }
@@ -683,7 +683,7 @@ FILECleanUpLockedRgn(
                         shmcurLockRgn = prevLock->next;
                         if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLockRgn, shmcurLockRgn) == FALSE)
                         {
-                            ASSERT("Unable to get pointer from shm pointer.\n");
+                            fprintf(stderr, "Unable to get pointer from shm pointer.\n");
                             goto EXIT;
                         }
                     }
@@ -694,7 +694,7 @@ FILECleanUpLockedRgn(
                 shmcurLockRgn = curLockRgn->next;
                 if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLockRgn, shmcurLockRgn) == FALSE)
                 {
-                    ASSERT("Unable to get pointer from shm pointer.\n");
+                    fprintf(stderr, "Unable to get pointer from shm pointer.\n");
                     goto EXIT;
                 }
             }
@@ -718,7 +718,7 @@ FILECleanUpLockedRgn(
             if ( (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKS, prevFileLocks, fileLocks->prev) == FALSE) ||
                  (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKS, nextFileLocks, fileLocks->next) == FALSE))
             {
-                ASSERT("Unable to get pointer from shm pointer.\n");
+                fprintf(stderr, "Unable to get pointer from shm pointer.\n");
                 goto EXIT;
             }
 

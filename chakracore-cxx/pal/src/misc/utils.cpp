@@ -198,7 +198,7 @@ char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
                                  lpMultiByteStr, length, NULL);
     if(0 == length)
     {
-        ASSERT("WCToMB error; GetLastError returns %#x\n", GetLastError());
+        fprintf(stderr, "WCToMB error; GetLastError returns %#x\n", GetLastError());
         free(lpMultiByteStr);
         return NULL;
     }
@@ -258,7 +258,7 @@ char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte)
                                       lpWideCharStr, length);
     if(0 >= length)
     {
-        ASSERT("MCToMB error; GetLastError returns %#x\n", GetLastError());
+        fprintf(stderr, "MCToMB error; GetLastError returns %#x\n", GetLastError());
         free(lpWideCharStr);
         return NULL;
     }
@@ -296,7 +296,7 @@ uint32_t UTIL_MachErrorToPalError(kern_return_t MachReturn)
         return ERROR_INVALID_PARAMETER;
 
     default:
-        ASSERT("Unknown kern_return_t value %d - reporting ERROR_INTERNAL_ERROR\n", MachReturn);
+        fprintf(stderr, "Unknown kern_return_t value %d - reporting ERROR_INTERNAL_ERROR\n", MachReturn);
         return ERROR_INTERNAL_ERROR;
     }
 }

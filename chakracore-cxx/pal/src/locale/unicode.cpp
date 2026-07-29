@@ -368,7 +368,7 @@ MultiByteToWideChar(
 
     if (dwFlags & ~(MB_ERR_INVALID_CHARS | MB_PRECOMPOSED))
     {
-        ASSERT("Error dwFlags(0x%x) parameter is invalid\n", dwFlags);
+        fprintf(stderr, "Error dwFlags(0x%x) parameter is invalid\n", dwFlags);
         SetLastError(ERROR_INVALID_FLAGS);
         goto EXIT;
     }

@@ -176,7 +176,7 @@ Initialize()
         // different, we can't run.
         if (VIRTUAL_PAGE_SIZE != getpagesize())
         {
-            ASSERT("VIRTUAL_PAGE_SIZE is incorrect for this system!\n"
+            fprintf(stderr, "VIRTUAL_PAGE_SIZE is incorrect for this system!\n"
                 "Change include/pal/virtual.h and clr/src/inc/stdmacros.h "
                 "to reflect the correct page size of %d.\n", getpagesize());
         }
@@ -364,7 +364,7 @@ done:
 
     if (retval != 0 && GetLastError() == ERROR_SUCCESS)
     {
-        ASSERT("returning failure, but last error not set\n");
+        fprintf(stderr, "returning failure, but last error not set\n");
     }
 
     LOGEXIT("PAL_Initialize returns int %d\n", retval);

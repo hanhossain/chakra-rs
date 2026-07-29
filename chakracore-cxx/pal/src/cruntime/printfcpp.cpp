@@ -62,7 +62,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
         nsize = WideCharToMultiByte(CP_ACP, 0,static_cast<const char16_t*>(buffer), count, 0, 0, 0);
         if (!nsize)
         {
-            ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
+            fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n", GetLastError());
             return -1;
         }
         newBuff = static_cast<char*>(malloc(nsize));
@@ -75,7 +75,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
         nsize = WideCharToMultiByte(CP_ACP, 0, static_cast<const char16_t*>(buffer), count, newBuff, nsize, 0);
         if (!nsize)
         {
-            ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
+            fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n", GetLastError());
             free(newBuff);
             return -1;
         }
@@ -1167,7 +1167,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                     }
                     else
                     {
-                        ASSERT( "Unable to convert from multibyte "
+                        fprintf(stderr, "Unable to convert from multibyte "
                                " to wide char.\n" );
                         LOGEXIT("vfwprintf returns int -1\n");
                         va_end(ap);
@@ -1581,7 +1581,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                     }
                     else
                     {
-                        ASSERT( "Unable to convert from multibyte "
+                        fprintf(stderr, "Unable to convert from multibyte "
                                " to wide char.\n" );
                         va_end(ap);
                         return -1;
@@ -1765,7 +1765,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
 
                     if (strncpy_s(TempNumberBuffer, TempCount+1, reinterpret_cast<char*>(BufferPtr), TempCount) != SAFECRT_SUCCESS)
                     {
-                        ASSERT("strncpy_s failed!\n");
+                        fprintf(stderr, "strncpy_s failed!\n");
                         free(TempNumberBuffer);
                         va_end(ap);
                         return -1;
@@ -1777,7 +1777,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                                                        BufferPtr, TempCount);
                     if (!mbtowcResult)
                     {
-                        ASSERT("MultiByteToWideChar failed.  Error is %d\n",
+                        fprintf(stderr, "MultiByteToWideChar failed.  Error is %d\n",
                               GetLastError());
                         free(TempNumberBuffer);
                         va_end(ap);
@@ -1799,7 +1799,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
 
                     if (strncpy_s(TempNumberBuffer, TempInt+1, reinterpret_cast<char*>(BufferPtr), TempInt) != SAFECRT_SUCCESS)
                     {
-                        ASSERT("strncpy_s failed!\n");
+                        fprintf(stderr, "strncpy_s failed!\n");
                         free(TempNumberBuffer);
                         va_end(ap);
                         return -1;
@@ -1811,7 +1811,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                                                        BufferPtr, TempInt);
                     if (!mbtowcResult)
                     {
-                        ASSERT("MultiByteToWideChar failed.  Error is %d\n",
+                        fprintf(stderr, "MultiByteToWideChar failed.  Error is %d\n",
                               GetLastError());
                         free(TempNumberBuffer);
                         va_end(ap);
@@ -1902,7 +1902,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                                              0, 0);
                 if (!Length)
                 {
-                    ASSERT("WideCharToMultiByte failed.  Error is %d\n",
+                    fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
                         GetLastError());
                     va_end(ap);
                     return -1;
@@ -1927,7 +1927,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                                                  Precision, TempStr, Length, 0);
                     if (!Length)
                     {
-                        ASSERT("WideCharToMultiByte failed.  Error is %d\n",
+                        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
                               GetLastError());
                         free(TempStr);
                         va_end(ap);
@@ -1943,7 +1943,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                                                        TempStr, Length, 0);
                     if (!wctombResult)
                     {
-                        ASSERT("WideCharToMultiByte failed.  Error is %d\n",
+                        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
                               GetLastError());
                         free(TempStr);
                         va_end(ap);
@@ -1988,7 +1988,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                                              TempBuffer, sizeof(TempBuffer), 0);
                 if (!Length)
                 {
-                    ASSERT("WideCharToMultiByte failed.  Error is %d\n",
+                    fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
                           GetLastError());
                     va_end(ap);
                     return -1;

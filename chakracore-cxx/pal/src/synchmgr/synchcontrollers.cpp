@@ -298,7 +298,7 @@ namespace CorUnix
         {
             if (fSharedObject && (NULLSharedID != shridNewNode))
             {
-                ASSERT("Bad Shared Memory ptr %p\n", shridNewNode);
+                fprintf(stderr, "Bad Shared Memory ptr %p\n", shridNewNode);
                 palErr = ERROR_INTERNAL_ERROR;
             }        
             else
@@ -311,7 +311,7 @@ namespace CorUnix
 
         if (ptwiWaitInfo->lObjCount >= MAXIMUM_WAIT_OBJECTS)
         {
-            ASSERT("Too many objects");
+            fprintf(stderr, "Too many objects");
             palErr = ERROR_INTERNAL_ERROR; 
             goto RWT_exit;
         }       
@@ -367,7 +367,7 @@ namespace CorUnix
                 // This pointer is set in CSynchWaitController only when the
                 // wait controller for the object is created by calling
                 // GetSynchWaitControllersForObjects
-                ASSERT("Process synch data pointer is missing\n");
+                fprintf(stderr, "Process synch data pointer is missing\n");
                 palErr = ERROR_INTERNAL_ERROR;
                 goto RWT_exit;
             }
@@ -407,7 +407,7 @@ namespace CorUnix
                 }
                 else
                 {
-                    ASSERT("Unexpected thread wait state %d\n", dwWaitState);
+                    fprintf(stderr, "Unexpected thread wait state %d\n", dwWaitState);
                     palErr = ERROR_INTERNAL_ERROR;
                 }
                 goto RWT_exit;
@@ -638,7 +638,7 @@ namespace CorUnix
         
         if (0 != m_psdSynchData->GetOwnershipCount())
         {
-            ASSERT("Ownership count should be zero at this time\n");
+            fprintf(stderr, "Ownership count should be zero at this time\n");
             palErr = ERROR_INTERNAL_ERROR;
             goto SO_exit;
         }

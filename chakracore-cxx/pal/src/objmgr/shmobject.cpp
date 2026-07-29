@@ -84,7 +84,7 @@ CSharedMemoryObject::Initialize(
             //
             if (NULL == psmod)
             {
-                ASSERT("psmod should not be NULL");
+                fprintf(stderr, "psmod should not be NULL");
                 palError = ERROR_INTERNAL_ERROR;
                 goto InitializeExit;
             } 
@@ -92,7 +92,7 @@ CSharedMemoryObject::Initialize(
             m_pvSharedData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjSharedData);
             if (NULL == m_pvSharedData)
             {
-                ASSERT("Unable to map shared data area\n");
+                fprintf(stderr, "Unable to map shared data area\n");
                 palError = ERROR_INTERNAL_ERROR;
                 goto InitializeExit;
             }
@@ -172,7 +172,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
     psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, m_shmod);
     if (NULL == psmod)
     {
-        ASSERT("Unable to map shared object data\n");
+        fprintf(stderr, "Unable to map shared object data\n");
         palError = ERROR_INTERNAL_ERROR;
         goto InitializeFromExistingSharedDataExit;
     }
@@ -197,7 +197,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
         }
         else
         {
-            ASSERT("Unable to map object name\n");
+            fprintf(stderr, "Unable to map object name\n");
             palError = ERROR_INTERNAL_ERROR;
             goto InitializeFromExistingSharedDataExit;
         }
@@ -232,7 +232,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
         }
         else
         {
-            ASSERT("Unable to map object immutable data\n");
+            fprintf(stderr, "Unable to map object immutable data\n");
             palError = ERROR_INTERNAL_ERROR;
             goto InitializeFromExistingSharedDataExit;
         }
@@ -243,7 +243,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
         m_pvSharedData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjSharedData);
         if (NULL == m_pvSharedData)
         {
-            ASSERT("Unable to map object shared data\n");
+            fprintf(stderr, "Unable to map object shared data\n");
             palError = ERROR_INTERNAL_ERROR;
             goto InitializeFromExistingSharedDataExit;
         }
@@ -744,7 +744,7 @@ CSharedMemoryObject::DereferenceSharedData()
 
                         if (!SHMSetInfo(SIID_NAMED_OBJECTS, psmod->shmNextObj))
                         {
-                            ASSERT("Failed to set shared named object list head");
+                            fprintf(stderr, "Failed to set shared named object list head");
                         }
                     }
 
@@ -779,7 +779,7 @@ CSharedMemoryObject::DereferenceSharedData()
     }
     else
     {
-        ASSERT("Multiple calls to DereferenceSharedData\n");
+        fprintf(stderr, "Multiple calls to DereferenceSharedData\n");
     }
 
     LOGEXIT("CSharedMemoryObject::DereferenceSharedData returns %d\n",
@@ -800,7 +800,7 @@ CSharedMemoryObject::~CSharedMemoryObject()
 {
     if (!m_fSharedDataDereferenced)
     {
-        ASSERT("DereferenceSharedData not called before object destructor -- delete called directly?\n");
+        fprintf(stderr, "DereferenceSharedData not called before object destructor -- delete called directly?\n");
         DereferenceSharedData();
     }
 
@@ -959,7 +959,7 @@ CSharedMemoryObject::GetSynchStateController(
     // This is not a waitable object!
     //
 
-    ASSERT("Attempt to obtain a synch state controller on a non-waitable object\n");
+    fprintf(stderr, "Attempt to obtain a synch state controller on a non-waitable object\n");
     return ERROR_INVALID_HANDLE;
 }
 
@@ -989,7 +989,7 @@ CSharedMemoryObject::GetSynchWaitController(
     // This is not a waitable object!!!
     //
 
-    ASSERT("Attempt to obtain a synch wait controller on a non-waitable object\n");
+    fprintf(stderr, "Attempt to obtain a synch wait controller on a non-waitable object\n");
     return ERROR_INVALID_HANDLE;
 }
 
@@ -1034,7 +1034,7 @@ CSharedMemoryObject::GetObjectSynchData(
     // This is not a waitable object!!!
     //
 
-    ASSERT("Attempt to obtain a synch data for a non-waitable object\n");
+    fprintf(stderr, "Attempt to obtain a synch data for a non-waitable object\n");
     return ERROR_INVALID_HANDLE;
 }
 
@@ -1219,7 +1219,7 @@ CSharedMemoryWaitableObject::~CSharedMemoryWaitableObject()
 {
     if (!m_fSharedDataDereferenced)
     {
-        ASSERT("DereferenceSharedData not called before object destructor -- delete called directly?\n");
+        fprintf(stderr, "DereferenceSharedData not called before object destructor -- delete called directly?\n");
         DereferenceSharedData();
     }
     

@@ -130,7 +130,7 @@ FileMappingCleanupRoutine(
 
         if (NO_ERROR != palError)
         {
-            ASSERT("Unable to obtain immutable data for object to be reclaimed");
+            fprintf(stderr, "Unable to obtain immutable data for object to be reclaimed");
             return;
         }
 
@@ -156,7 +156,7 @@ FileMappingCleanupRoutine(
 
         if (NO_ERROR != palError)
         {
-            ASSERT("Unable to obtain process local data for object to be reclaimed");
+            fprintf(stderr, "Unable to obtain process local data for object to be reclaimed");
             return;
         }
 
@@ -290,14 +290,14 @@ CorUnix::InternalCreateFileMapping(
 
     if (lpName != nullptr)
     {
-        ASSERT("lpName: Cross-process named objects are not supported in PAL");
+        fprintf(stderr, "lpName: Cross-process named objects are not supported in PAL");
         palError = ERROR_NOT_SUPPORTED;
         goto ExitInternalCreateFileMapping;
     }
 
     if (0 != dwMaximumSizeHigh)
     {
-        ASSERT("dwMaximumSizeHigh is always 0.\n");
+        fprintf(stderr, "dwMaximumSizeHigh is always 0.\n");
         palError = ERROR_INVALID_PARAMETER;
         goto ExitInternalCreateFileMapping;
     }
@@ -306,7 +306,7 @@ CorUnix::InternalCreateFileMapping(
         && PAGE_READONLY != flProtect
         && PAGE_WRITECOPY != flProtect)
     {
-        ASSERT( "invalid flProtect %#x, acceptable values are PAGE_READONLY "
+        fprintf(stderr, "invalid flProtect %#x, acceptable values are PAGE_READONLY "
                 "(%#x), PAGE_READWRITE (%#x) and PAGE_WRITECOPY (%#x).\n", 
                 flProtect, PAGE_READONLY, PAGE_READWRITE, PAGE_WRITECOPY );
         palError = ERROR_INVALID_PARAMETER;
@@ -322,7 +322,7 @@ CorUnix::InternalCreateFileMapping(
 
     if (hFile != INVALID_HANDLE_VALUE && NULL != lpName)
     {
-        ASSERT( "If hFile is not -1, then lpName must be NULL.\n" );
+        fprintf(stderr, "If hFile is not -1, then lpName must be NULL.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto ExitInternalCreateFileMapping;
     }
@@ -471,14 +471,14 @@ CorUnix::InternalCreateFileMapping(
         } 
         else 
         {
-            ASSERT("should not get here\n");
+            fprintf(stderr, "should not get here\n");
             palError = ERROR_INTERNAL_ERROR;
             goto ExitInternalCreateFileMapping;
         }
     
         if (-1 == fstat(UnixFd, &UnixFileInformation))
         {
-            ASSERT("fstat() failed for this reason %s.\n", strerror(errno));
+            fprintf(stderr, "fstat() failed for this reason %s.\n", strerror(errno));
             palError = ERROR_INTERNAL_ERROR;
             goto ExitInternalCreateFileMapping;
         }
@@ -623,7 +623,7 @@ CorUnix::InternalOpenFileMapping(
 
     if ( MAPContainsInvalidFlags( dwDesiredAccess ) ) 
     {
-        ASSERT( "dwDesiredAccess can be one or more of FILE_MAP_READ, " 
+        fprintf(stderr, "dwDesiredAccess can be one or more of FILE_MAP_READ, "
                "FILE_MAP_WRITE, FILE_MAP_COPY or FILE_MAP_ALL_ACCESS.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto ExitInternalOpenFileMapping;
@@ -774,7 +774,7 @@ CorUnix::InternalMapViewOfFile(
     /* Sanity checks */
     if ( MAPContainsInvalidFlags( dwDesiredAccess ) )
     {
-        ASSERT( "dwDesiredAccess can be one of FILE_MAP_WRITE, FILE_MAP_READ,"
+        fprintf(stderr, "dwDesiredAccess can be one of FILE_MAP_WRITE, FILE_MAP_READ,"
                " FILE_MAP_COPY or FILE_MAP_ALL_ACCESS.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto InternalMapViewOfFileExit;
@@ -782,7 +782,7 @@ CorUnix::InternalMapViewOfFile(
 
     if ( 0 != dwFileOffsetHigh || 0 != dwFileOffsetLow )
     {
-        ASSERT( "dwFileOffsetHigh and dwFileOffsetLow are always 0.\n" );
+        fprintf(stderr, "dwFileOffsetHigh and dwFileOffsetLow are always 0.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto InternalMapViewOfFileExit;
     }
@@ -889,7 +889,7 @@ CorUnix::InternalMapViewOfFile(
         }
         else
         {
-            ASSERT( "MapFileMapToMmapFlags failed!\n" );
+            fprintf(stderr, "MapFileMapToMmapFlags failed!\n" );
             palError = ERROR_INTERNAL_ERROR;
             goto InternalMapViewOfFileLeaveCriticalSection;
         }
@@ -982,7 +982,7 @@ CorUnix::InternalUnmapViewOfFile(
     
     if (-1 == munmap(const_cast<void*>(lpBaseAddress), pView->NumberOfBytesToMap))
     {
-        ASSERT( "Unable to unmap the memory. Error=%s.\n",
+        fprintf(stderr, "Unable to unmap the memory. Error=%s.\n",
                 strerror( errno ) );
         palError = ERROR_INTERNAL_ERROR;
 
@@ -1178,7 +1178,7 @@ static uint32_t MAPConvertProtectToAccess( uint32_t flProtect )
         return FILE_MAP_COPY;
     }
 
-    ASSERT( "Unknown flag for flProtect. This line "
+    fprintf(stderr, "Unknown flag for flProtect. This line "
             "should not have been executed.\n " );
     return static_cast<uint32_t>(-1);
 }
@@ -1211,7 +1211,7 @@ static uint32_t MAPConvertAccessToProtect(uint32_t flAccess)
         return PAGE_NOACCESS;
     }
 
-    ASSERT("Unknown flag for flAccess.\n");
+    fprintf(stderr, "Unknown flag for flAccess.\n");
     return static_cast<uint32_t>(-1);
 }
 
@@ -1248,7 +1248,7 @@ static int32_t MAPFileMapToMmapFlags( uint32_t flags )
         return PROT_READ | PROT_WRITE;
     } 
 
-    ASSERT( "Unknown flag. This line should not have been executed.\n" );
+    fprintf(stderr, "Unknown flag. This line should not have been executed.\n" );
     return -1;
 }
 
@@ -1394,7 +1394,7 @@ static int32_t MAPProtectionToFileOpenFlags( uint32_t flProtect )
         retVal = O_RDONLY;
         break;
     default:
-        ASSERT("unexpected flProtect value %#x\n", flProtect);
+        fprintf(stderr, "unexpected flProtect value %#x\n", flProtect);
         retVal = 0;
         break;
     }         

@@ -94,7 +94,7 @@ void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool 
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Unable to obtain data to cleanup file object");
+        fprintf(stderr, "Unable to obtain data to cleanup file object");
         return;
     }
 
@@ -151,7 +151,7 @@ void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode )
 
     if ( !lpErrorCode )
     {
-        ASSERT( "lpErrorCode has to be valid\n" );
+        fprintf(stderr, "lpErrorCode has to be valid\n" );
         return;
     }
 
@@ -251,7 +251,7 @@ CorUnix::InternalWriteFile(
     }
     else
     {
-        ASSERT( "lpNumberOfBytesWritten is NULL\n" );
+        fprintf(stderr, "lpNumberOfBytesWritten is NULL\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto done;
     }
@@ -264,7 +264,7 @@ CorUnix::InternalWriteFile(
     }
     else if ( lpOverlapped )
     {
-        ASSERT( "lpOverlapped is not NULL, as it should be.\n" );
+        fprintf(stderr, "lpOverlapped is not NULL, as it should be.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto done;
     }
@@ -320,7 +320,7 @@ CorUnix::InternalWriteFile(
 
         if (NO_ERROR != palError)
         {
-            ASSERT("Failed to get the current file position\n");
+            fprintf(stderr, "Failed to get the current file position\n");
             palError = ERROR_INTERNAL_ERROR;
             goto done;
         }

@@ -154,7 +154,7 @@ CorUnix::InternalCreateEvent(
 
     if (lpName != nullptr)
     {
-        ASSERT("lpName: Cross-process named objects are not supported in PAL");
+        fprintf(stderr, "lpName: Cross-process named objects are not supported in PAL");
         palError = ERROR_NOT_SUPPORTED;
         goto InternalCreateEventExit;
     }
@@ -188,7 +188,7 @@ CorUnix::InternalCreateEvent(
 
         if (NO_ERROR != palError)
         {
-            ASSERT("Unable to set new event state (%d)\n", palError);
+            fprintf(stderr, "Unable to set new event state (%d)\n", palError);
             goto InternalCreateEventExit;
         }
     }
@@ -326,7 +326,7 @@ CorUnix::InternalSetEvent(
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Error %d obtaining synch state controller\n", palError);
+        fprintf(stderr, "Error %d obtaining synch state controller\n", palError);
         goto InternalSetEventExit;
     }
 
@@ -334,7 +334,7 @@ CorUnix::InternalSetEvent(
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Error %d setting event state\n", palError);
+        fprintf(stderr, "Error %d setting event state\n", palError);
         goto InternalSetEventExit;
     }
 

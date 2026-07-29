@@ -439,7 +439,7 @@ void SEHSetSafeState(CPalThread *pthrCurrent, BOOL state)
 {
     if (NULL == pthrCurrent)
     {
-        ASSERT( "Unable to get the thread object.\n" );
+        fprintf(stderr, "Unable to get the thread object.\n" );
         return;
     }
     pthrCurrent->sehInfo.safe_state = state;
@@ -461,7 +461,7 @@ BOOL SEHGetSafeState(CPalThread *pthrCurrent)
 {
     if (NULL == pthrCurrent)
     {
-        ASSERT( "Unable to get the thread object.\n" );
+        fprintf(stderr, "Unable to get the thread object.\n" );
         return FALSE;
     }
     return pthrCurrent->sehInfo.safe_state;
@@ -505,7 +505,7 @@ static void common_signal_handler(PEXCEPTION_POINTERS pointers, int code,
     sigaddset(&signal_set, code);
     if(-1 == sigprocmask(SIG_UNBLOCK, &signal_set, NULL))
     {
-        ASSERT("sigprocmask failed; error is %d (%s)\n", errno, strerror(errno));
+        fprintf(stderr, "sigprocmask failed; error is %d (%s)\n", errno, strerror(errno));
     }
 
     // We do nothing further
@@ -540,7 +540,7 @@ void handle_signal(int signal_id, SIGFUNC sigfunc, struct sigaction *previousAct
 
     if (-1 == sigaction(signal_id, &newAction, previousAction))
     {
-        ASSERT("handle_signal: sigaction() call failed with error code %d (%s)\n",
+        fprintf(stderr, "handle_signal: sigaction() call failed with error code %d (%s)\n",
             errno, strerror(errno));
     }
 }
@@ -561,7 +561,7 @@ void restore_signal(int signal_id, struct sigaction *previousAction)
 {
     if (-1 == sigaction(signal_id, previousAction, NULL))
     {
-        ASSERT("restore_signal: sigaction() call failed with error code %d (%s)\n",
+        fprintf(stderr, "restore_signal: sigaction() call failed with error code %d (%s)\n",
             errno, strerror(errno));
     }
 }

@@ -49,7 +49,7 @@ CreateCurrentThreadData()
         PAL_ERROR palError = AllocatePalThread(&pThread);
         if (NO_ERROR != palError)
         {
-            ASSERT("Unable to allocate pal thread: error %d - aborting\n", palError);
+            fprintf(stderr, "Unable to allocate pal thread: error %d - aborting\n", palError);
             abort();
         }
     }

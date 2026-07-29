@@ -308,7 +308,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
             }
             else
             {
-                ASSERT("Awakened for APC, but no APC is pending\n");
+                fprintf(stderr, "Awakened for APC, but no APC is pending\n");
                 pThread->SetLastError(ERROR_INTERNAL_ERROR);
                 dwRet = WAIT_FAILED;
             }
@@ -564,7 +564,7 @@ PAL_ERROR CorUnix::InternalSleepEx (
                         "Awakened for APC, but no APC is pending\n");
             break;
         case MutexAbondoned:
-            ASSERT("Thread %p awakened with reason=MutexAbondoned from a "
+            fprintf(stderr, "Thread %p awakened with reason=MutexAbondoned from a "
                    "SleepEx\n", pThread);
             palErr = ERROR_INTERNAL_ERROR;
             break;

@@ -243,7 +243,7 @@ namespace CorUnix
                     }
                     else
                     {
-                        ASSERT("Unexpected thread wait state %u\n",
+                        fprintf(stderr, "Unexpected thread wait state %u\n",
                                dwWaitState);
                         palErr = ERROR_INTERNAL_ERROR;
                     }
@@ -995,7 +995,7 @@ namespace CorUnix
                 reinterpret_cast<SharedID>(pvSynchData));
             if (NULL == psdSynchData)
             {
-                ASSERT("Bad shared memory pointer\n");
+                fprintf(stderr, "Bad shared memory pointer\n");
                 goto FOSD_exit;
             }
         }
@@ -1349,7 +1349,7 @@ namespace CorUnix
         }
         else
         {
-            ASSERT("Multiple PAL Synchronization manager initializations\n");
+            fprintf(stderr, "Multiple PAL Synchronization manager initializations\n");
         }
 
         return pRet;
@@ -1372,7 +1372,7 @@ namespace CorUnix
                                            SynchMgrStatusIdle);
         if (static_cast<int32_t>(SynchMgrStatusIdle) != lInit)
         {
-            ASSERT("Synchronization Manager already being initialized");
+            fprintf(stderr, "Synchronization Manager already being initialized");
             palErr = ERROR_INTERNAL_ERROR;
             goto I_exit;
         }
@@ -1441,7 +1441,7 @@ namespace CorUnix
 
         if (static_cast<int32_t>(SynchMgrStatusRunning) != lInit)
         {
-            ASSERT("Unexpected initialization status found "
+            fprintf(stderr, "Unexpected initialization status found "
                    "in PrepareForShutdown [expected=%d current=%d]\n",
                    SynchMgrStatusRunning, lInit);
             // We intentionally not set s_lInitStatus to SynchMgrStatusError
@@ -1807,7 +1807,7 @@ namespace CorUnix
                     if (1 < iRet)
                     {
                         // Unexpected iRet > 1
-                        ASSERT("Unexpected return code %d from blocking poll/kevent call\n",
+                        fprintf(stderr, "Unexpected return code %d from blocking poll/kevent call\n",
                                 iRet);
                         goto RBFPP_exit;
                     }
@@ -1815,7 +1815,7 @@ namespace CorUnix
                     if (EINTR != iErrno)
                     {
                         // Unexpected error
-                        ASSERT("Unexpected error from blocking poll/kevent call: %d (%s)\n",
+                        fprintf(stderr, "Unexpected error from blocking poll/kevent call: %d (%s)\n",
                                iErrno, strerror(iErrno));
                         goto RBFPP_exit;
                     }
@@ -2196,7 +2196,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::SendMsgToRemoteWorker(
     )
     {
-        ASSERT("There should never be a reason to send a message to a remote worker\n");
+        fprintf(stderr, "There should never be a reason to send a message to a remote worker\n");
         return ERROR_INTERNAL_ERROR;
     }
 
@@ -2755,7 +2755,7 @@ namespace CorUnix
             poll(NULL, 0, INFTIM);
             sched_yield();
         }
-        ASSERT("This code should never be executed\n");
+        fprintf(stderr, "This code should never be executed\n");
     }
 
     /*++

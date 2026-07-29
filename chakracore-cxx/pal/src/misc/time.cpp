@@ -59,7 +59,7 @@ BOOL TIMEInitialize(void)
     kern_return_t machRet;
     if ((machRet = mach_timebase_info(&s_TimebaseInfo)) != KERN_SUCCESS)
     {
-        ASSERT("mach_timebase_info() failed: %s\n", mach_error_string(machRet));
+        fprintf(stderr, "mach_timebase_info() failed: %s\n", mach_error_string(machRet));
         return FALSE;
     }
 #endif
@@ -105,7 +105,7 @@ GetSystemTime(
     utPtr = &ut;
     if (gmtime_r(&tt, utPtr) == NULL)
     {
-        ASSERT("gmtime() failed; errno is %d (%s)\n", errno, strerror(errno));
+        fprintf(stderr, "gmtime() failed; errno is %d (%s)\n", errno, strerror(errno));
         goto EXIT;
     }
 
@@ -119,7 +119,7 @@ GetSystemTime(
 
     if(-1 == timeofday_retval)
     {
-        ASSERT("gettimeofday() failed; errno is %d (%s)\n",
+        fprintf(stderr, "gettimeofday() failed; errno is %d (%s)\n",
                errno, strerror(errno));
         lpSystemTime->wMilliseconds = 0;
     }
@@ -193,7 +193,7 @@ QueryPerformanceCounter(
         struct timespec ts;
         if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
         {
-            ASSERT("clock_gettime(CLOCK_MONOTONIC) failed; errno is %d (%s)\n", errno, strerror(errno));
+            fprintf(stderr, "clock_gettime(CLOCK_MONOTONIC) failed; errno is %d (%s)\n", errno, strerror(errno));
             retval = FALSE;
             break;
         }
@@ -246,7 +246,7 @@ QueryThreadCycleTime(
 
     if(!GetThreadTimesInternal(ThreadHandle, &kernelTime, &userTime))
     {
-        ASSERT("Could not get cycle time for current thread");
+        fprintf(stderr, "Could not get cycle time for current thread");
         retval = FALSE;
         goto EXIT;
     }
@@ -276,7 +276,7 @@ GetTickCount64Fallback()
         struct timespec ts;
         if (clock_gettime(clockType, &ts) != 0)
         {
-            ASSERT("clock_gettime(CLOCK_MONOTONIC*) failed; errno is %d (%s)\n", errno, strerror(errno));
+            fprintf(stderr, "clock_gettime(CLOCK_MONOTONIC*) failed; errno is %d (%s)\n", errno, strerror(errno));
             goto EXIT;
         }
         retval = (ts.tv_sec * tccSecondsToMillieSeconds)+(ts.tv_nsec / tccMillieSecondsToNanoSeconds);
@@ -286,7 +286,7 @@ GetTickCount64Fallback()
         // use denom == 0 to indicate that s_TimebaseInfo is uninitialised.
         if (s_TimebaseInfo.denom == 0)
         {
-            ASSERT("s_TimebaseInfo is uninitialized.\n");
+            fprintf(stderr, "s_TimebaseInfo is uninitialized.\n");
             goto EXIT;
         }
         retval = (mach_absolute_time() * s_TimebaseInfo.numer / s_TimebaseInfo.denom) / tccMillieSecondsToNanoSeconds;

@@ -318,7 +318,7 @@ CSharedMemoryObjectManager::RegisterObject(
         psmodNew = SHMPTR_TO_TYPED_PTR(SHMObjData, pshmobj->GetShmObjData());
         if (NULL == psmodNew)
         {
-            ASSERT("Failure to map shared object data\n");
+            fprintf(stderr, "Failure to map shared object data\n");
             palError = ERROR_INTERNAL_ERROR;
             goto RegisterObjectExit;
         }
@@ -336,7 +336,7 @@ CSharedMemoryObjectManager::RegisterObject(
             }
             else
             {
-                ASSERT("Failure to map shared object data\n");
+                fprintf(stderr, "Failure to map shared object data\n");
                 palError = ERROR_INTERNAL_ERROR;
                 goto RegisterObjectExit;
             }
@@ -346,7 +346,7 @@ CSharedMemoryObjectManager::RegisterObject(
 
         if (!SHMSetInfo(SIID_NAMED_OBJECTS, pshmobj->GetShmObjData()))
         {
-            ASSERT("Failed to set shared named object list head\n");
+            fprintf(stderr, "Failed to set shared named object list head\n");
             palError = ERROR_INTERNAL_ERROR;
             goto RegisterObjectExit;
         }
@@ -373,7 +373,7 @@ CSharedMemoryObjectManager::RegisterObject(
         palError = pobjToRegister->GetImmutableData(&pvImmutableData);
         if (NO_ERROR != palError)
         {
-            ASSERT("Failure to obtain object immutable data\n");
+            fprintf(stderr, "Failure to obtain object immutable data\n");
             goto RegisterObjectExit;
         }
 
@@ -393,14 +393,14 @@ CSharedMemoryObjectManager::RegisterObject(
             }
             else
             {
-                ASSERT("Failure to map psmod->shmObjImmutableData\n");
+                fprintf(stderr, "Failure to map psmod->shmObjImmutableData\n");
                 palError = ERROR_INTERNAL_ERROR;
                 goto RegisterObjectExit;
             }
         }
         else
         {
-            ASSERT("Failure to map pshmobj->GetShmObjData()\n");
+            fprintf(stderr, "Failure to map pshmobj->GetShmObjData()\n");
             palError = ERROR_INTERNAL_ERROR;
             goto RegisterObjectExit;
         }
@@ -581,7 +581,7 @@ CSharedMemoryObjectManager::LocateObject(
                 }
                 else
                 {
-                    ASSERT("Unable to map psmod->shmObjName\n");
+                    fprintf(stderr, "Unable to map psmod->shmObjName\n");
                     break;
                 }                
             }
@@ -590,7 +590,7 @@ CSharedMemoryObjectManager::LocateObject(
         }
         else
         {
-            ASSERT("Unable to map shmObjectListEntry\n");
+            fprintf(stderr, "Unable to map shmObjectListEntry\n");
             break;
         }
     }
@@ -618,7 +618,7 @@ CSharedMemoryObjectManager::LocateObject(
         CObjectType *pot = CObjectType::GetObjectTypeById(psmod->eTypeId);
         if (NULL == pot)
         {
-            ASSERT("Invalid object type ID in shared memory info\n");
+            fprintf(stderr, "Invalid object type ID in shared memory info\n");
             goto LocateObjectExitSHMRelease;
         }
 
@@ -710,7 +710,7 @@ CSharedMemoryObjectManager::ObtainHandleForObject(
         // Not yet supported
         //
 
-        ASSERT("Caller to ObtainHandleForObject provided a process\n");
+        fprintf(stderr, "Caller to ObtainHandleForObject provided a process\n");
         return ERROR_CALL_NOT_IMPLEMENTED;
     }
 
@@ -1162,7 +1162,7 @@ CSharedMemoryObjectManager::ConvertRemoteHandleToLocal(
         pot = CObjectType::GetObjectTypeById(psmod->eTypeId);
         if (NULL == pot)
         {
-            ASSERT("Invalid object type ID in shared memory info\n");
+            fprintf(stderr, "Invalid object type ID in shared memory info\n");
             goto ConvertRemoteHandleToLocalExit;
         }
         

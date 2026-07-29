@@ -95,7 +95,7 @@ char16_t* Internal_i64tow(int64_t value, char16_t* string, int radix, BOOL isI64
 
     if (radix < 2 || radix > 36)
     {
-        ASSERT( "Invalid radix, radix must be between 2 and 36\n" );
+        fprintf(stderr, "Invalid radix, radix must be between 2 and 36\n" );
         SetLastError(ERROR_INVALID_PARAMETER);
         return string;
     }
@@ -231,7 +231,7 @@ _wtoi(
     len = WideCharToMultiByte(CP_ACP, 0, string, -1, 0, 0, 0);
     if (!len)
     {
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n",
+        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
               GetLastError());
         return -1;
     }
@@ -245,7 +245,7 @@ _wtoi(
     len = WideCharToMultiByte(CP_ACP, 0, string, -1, tempStr, len, 0);
     if (!len)
     {
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n",
+        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
               GetLastError());
         free(tempStr);
         return -1;
@@ -306,7 +306,7 @@ PAL__wcstoui64(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL);
     if (!size)
     {
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
+        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL__wcstoui64Exit;
@@ -322,7 +322,7 @@ PAL__wcstoui64(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, s_nptr, size, NULL);
     if (!size)
     {
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
+        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n", GetLastError());
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL__wcstoui64Exit;

@@ -231,7 +231,7 @@ PAL_ERROR CorUnix::CPalThread::EnableMachExceptions()
         countBits = ((countBits & 0xFFFF0000) >> 16) + (countBits & 0x0000FFFF);
         if (countBits != static_cast<exception_mask_t>(CThreadMachExceptionHandlers::s_nPortsMax))
         {
-            ASSERT("s_nPortsMax is %u, but needs to be %u\n",
+            fprintf(stderr, "s_nPortsMax is %u, but needs to be %u\n",
                    CThreadMachExceptionHandlers::s_nPortsMax, countBits);
         }
 #endif // _DEBUG
@@ -265,7 +265,7 @@ PAL_ERROR CorUnix::CPalThread::EnableMachExceptions()
 
         if (machret != KERN_SUCCESS)
         {
-            ASSERT("thread_swap_exception_ports failed: %d %s\n", machret, mach_error_string(machret));
+            fprintf(stderr, "thread_swap_exception_ports failed: %d %s\n", machret, mach_error_string(machret));
             return UTIL_MachErrorToPalError(machret);
         }
 
@@ -336,7 +336,7 @@ PAL_ERROR CorUnix::CPalThread::DisableMachExceptions()
 
     if (MachRet != KERN_SUCCESS)
     {
-        ASSERT("thread_set_exception_ports failed: %d\n", MachRet);
+        fprintf(stderr, "thread_set_exception_ports failed: %d\n", MachRet);
         palError = UTIL_MachErrorToPalError(MachRet);
     }
 
@@ -1177,7 +1177,7 @@ bool SEHInitializeMachExceptions()
     machret = mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE, &s_ExceptionPort);
     if (machret != KERN_SUCCESS)
     {
-        ASSERT("mach_port_allocate failed: %d\n", machret);
+        fprintf(stderr, "mach_port_allocate failed: %d\n", machret);
         UTIL_SetLastErrorFromMach(machret);
         return true;
     }
@@ -1186,7 +1186,7 @@ bool SEHInitializeMachExceptions()
     machret = mach_port_insert_right(mach_task_self(), s_ExceptionPort, s_ExceptionPort, MACH_MSG_TYPE_MAKE_SEND);
     if (machret != KERN_SUCCESS)
     {
-        ASSERT("mach_port_insert_right failed: %d\n", machret);
+        fprintf(stderr, "mach_port_insert_right failed: %d\n", machret);
         UTIL_SetLastErrorFromMach(machret);
         return false;
     }

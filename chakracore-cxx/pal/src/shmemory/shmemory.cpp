@@ -467,7 +467,7 @@ void SHMCleanup(void)
         if ( -1 == munmap( shm_segment_bases[ shm_numsegments ],
                            segment_size ) )
         {
-            ASSERT( "munmap() failed; errno is %d (%s).\n",
+            fprintf(stderr, "munmap() failed; errno is %d (%s).\n",
                   errno, strerror( errno ) );
         }
     }
@@ -522,7 +522,7 @@ SHMPTR SHMalloc(size_t size)
     /* If no block size is found, requested size was too large. */
     if( SPS_LAST == sps )
     {
-        ASSERT("Got request for shared memory block of %u bytes; maximum block "
+        fprintf(stderr, "Got request for shared memory block of %u bytes; maximum block "
               "size is %d.\n", size, block_sizes[SPS_LAST-1]);
         return 0;
     }
@@ -555,7 +555,7 @@ SHMPTR SHMalloc(size_t size)
 
     if( 0 == first_free )
     {
-        ASSERT("First free block in %d-byte pool (%08x) was invalid!\n",
+        fprintf(stderr, "First free block in %d-byte pool (%08x) was invalid!\n",
               block_sizes[sps], first_free);
         SHMRelease();
         return 0;
@@ -571,7 +571,7 @@ SHMPTR SHMalloc(size_t size)
     if(( 0 == header->pools[sps].free_items && 0 != next_free) ||
        ( 0 != header->pools[sps].free_items && 0 == next_free))
     {
-        ASSERT("free block count is %d, but next free block is %#x\n",
+        fprintf(stderr, "free block count is %d, but next free block is %#x\n",
                header->pools[sps].free_items, next_free);
         /* assume all remaining blocks in the pool are corrupt */
         header->pools[sps].first_free = 0;
@@ -579,7 +579,7 @@ SHMPTR SHMalloc(size_t size)
     }
     else if (0 != next_free && 0 == SHMPTR_TO_PTR(next_free) )
     {
-        ASSERT("Next free block (%#x) in %d-byte pool is invalid!\n",
+        fprintf(stderr, "Next free block (%#x) in %d-byte pool is invalid!\n",
                next_free, block_sizes[sps]);
         /* assume all remaining blocks in the pool are corrupt */
         header->pools[sps].first_free = 0;
@@ -625,7 +625,7 @@ void SHMfree(SHMPTR shmptr)
 
     if(!shmptr_ptr)
     {
-        ASSERT("Tried to free an invalid shared memory pointer 0x%08x\n", shmptr);
+        fprintf(stderr, "Tried to free an invalid shared memory pointer 0x%08x\n", shmptr);
         SHMRelease();
         return;
     }
@@ -652,7 +652,7 @@ void SHMfree(SHMPTR shmptr)
        have caught this.)  */
     if(sps == SPS_LAST)
     {
-        ASSERT("Shared memory pointer 0x%08x is out of bounds!\n", shmptr);
+        fprintf(stderr, "Shared memory pointer 0x%08x is out of bounds!\n", shmptr);
         SHMRelease();
         return;
     }
@@ -668,7 +668,7 @@ void SHMfree(SHMPTR shmptr)
        this isn't a real SHMPTR */
     if( 0 != ( offset % block_sizes[sps] ) )
     {
-        ASSERT("Shared memory pointer 0x%08x is misaligned!\n", shmptr);
+        fprintf(stderr, "Shared memory pointer 0x%08x is misaligned!\n", shmptr);
         SHMRelease();
         return;
     }
@@ -781,7 +781,7 @@ void * SHMPtrToPtr(SHMPTR shmptr)
         /* if segment is still unknown, then it doesn't exist */
         if(segment>=shm_numsegments)
         {
-            ASSERT("Segment %d still unknown; returning NULL\n", segment);
+            fprintf(stderr, "Segment %d still unknown; returning NULL\n", segment);
             return NULL;
         }
         TRACE("Segment %d found; continuing\n", segment);
@@ -791,7 +791,7 @@ void * SHMPtrToPtr(SHMPTR shmptr)
     offset = SHMPTR_OFFSET(shmptr);
     if(offset>=segment_size)
     {
-        ASSERT("Offset %d is larger than segment size (%d)! returning NULL\n",
+        fprintf(stderr, "Offset %d is larger than segment size (%d)! returning NULL\n",
               offset, segment_size);
         return NULL;
 
@@ -802,7 +802,7 @@ void * SHMPtrToPtr(SHMPTR shmptr)
     {
         if (static_cast<size_t>(offset) < roundup(sizeof(SHM_FIRST_HEADER), sizeof(int64_t)))
         {
-            ASSERT("Offset %d is in segment header! returning NULL\n", offset);
+            fprintf(stderr, "Offset %d is in segment header! returning NULL\n", offset);
             return NULL;
         }
     }
@@ -810,7 +810,7 @@ void * SHMPtrToPtr(SHMPTR shmptr)
     {
         if (static_cast<size_t>(offset) < sizeof(SHM_SEGMENT_HEADER))
         {
-            ASSERT("Offset %d is in segment header! returning NULL\n", offset);
+            fprintf(stderr, "Offset %d is in segment header! returning NULL\n", offset);
             return NULL;
         }
     }
@@ -846,7 +846,7 @@ SHMPTR SHMGetInfo(SHM_INFO_ID element)
 
     if(element >= SIID_LAST)
     {
-        ASSERT("Invalid SHM info element %d\n", element);
+        fprintf(stderr, "Invalid SHM info element %d\n", element);
         return 0;
     }
 
@@ -854,7 +854,7 @@ SHMPTR SHMGetInfo(SHM_INFO_ID element)
        current thread is here, it can't be in SHMLock or SHMUnlock */
     if( reinterpret_cast<HANDLE>(pthread_self()) != locking_thread )
     {
-        ASSERT("SHMGetInfo called while thread does not hold the SHM lock!\n");
+        fprintf(stderr, "SHMGetInfo called while thread does not hold the SHM lock!\n");
     }
 
     header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
@@ -888,7 +888,7 @@ BOOL SHMSetInfo(SHM_INFO_ID element, SHMPTR value)
 
     if(element >= SIID_LAST)
     {
-        ASSERT("Invalid SHM info element %d\n", element);
+        fprintf(stderr, "Invalid SHM info element %d\n", element);
         return FALSE;
     }
 
@@ -896,7 +896,7 @@ BOOL SHMSetInfo(SHM_INFO_ID element, SHMPTR value)
        current thread is here, it can't be in SHMLock or SHMUnlock */
     if( reinterpret_cast<HANDLE>(pthread_self()) != locking_thread )
     {
-        ASSERT("SHMGetInfo called while thread does not hold the SHM lock!\n");
+        fprintf(stderr, "SHMGetInfo called while thread does not hold the SHM lock!\n");
     }
 
     header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
@@ -1307,13 +1307,13 @@ SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oi
 
     if(oid==SHM_NAMED_LAST)
     {
-        ASSERT("Invalid named object type.\n");
+        fprintf(stderr, "Invalid named object type.\n");
         return 0;
     }
 
     if (pbNameExists == NULL)
     {
-        ASSERT("pbNameExists must be non-NULL.\n");
+        fprintf(stderr, "pbNameExists must be non-NULL.\n");
     }
 
     SHMLock();
@@ -1329,7 +1329,7 @@ SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oi
         pNamedObject = static_cast<PSHM_NAMED_OBJECTS>(SHMPTR_TO_PTR(shmNamedObject));
         if(NULL == pNamedObject)
         {
-            ASSERT("Got invalid SHMPTR value; list of named objects is "
+            fprintf(stderr, "Got invalid SHMPTR value; list of named objects is "
                    "corrupted.\n");
             break;
         }
@@ -1435,7 +1435,7 @@ void SHMAddNamedObject( SHMPTR shmNewNamedObject )
 
     if ( pshmNew == NULL )
     {
-        ASSERT( "pshmNew should not be NULL\n" );
+        fprintf(stderr, "pshmNew should not be NULL\n" );
     }
 
     SHMLock();
@@ -1444,7 +1444,7 @@ void SHMAddNamedObject( SHMPTR shmNewNamedObject )
 
     if ( !SHMSetInfo( SIID_NAMED_OBJECTS, shmNewNamedObject ) )
     {
-        ASSERT( "Unable to add the mapping object to shared memory.\n" );
+        fprintf(stderr, "Unable to add the mapping object to shared memory.\n" );
     }
 
     SHMRelease();

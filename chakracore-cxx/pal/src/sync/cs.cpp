@@ -312,7 +312,7 @@ void InternalDeleteCriticalSection(
             if (tid != pPalCriticalSection->OwningThread)
             {
                 // not owner
-                ASSERT("Thread tid=%u deleting a CS owned by thread tid=%u\n",
+                fprintf(stderr, "Thread tid=%u deleting a CS owned by thread tid=%u\n",
                        tid, pPalCriticalSection->OwningThread);
             }
             else
@@ -1029,7 +1029,7 @@ namespace CorUnix
             iRet = pthread_mutex_init(&pPalCriticalSection->csndNativeData.mutex, NULL);
             if (0 != iRet)
             {
-                ASSERT("Failed initializing mutex in CS @ %p [err=%d]\n",
+                fprintf(stderr, "Failed initializing mutex in CS @ %p [err=%d]\n",
                         pPalCriticalSection, iRet);
                 pPalCriticalSection->cisInitState = PalCsUserInitialized;
                 fRet = false;
@@ -1040,7 +1040,7 @@ namespace CorUnix
             iRet = pthread_cond_init(&pPalCriticalSection->csndNativeData.condition, NULL);
             if (0 != iRet)
             {
-                ASSERT("Failed initializing condition in CS @ %p [err=%d]\n",
+                fprintf(stderr, "Failed initializing condition in CS @ %p [err=%d]\n",
                        pPalCriticalSection, iRet);
                 pthread_mutex_destroy(&pPalCriticalSection->csndNativeData.mutex);
                 pPalCriticalSection->cisInitState = PalCsUserInitialized;
@@ -1063,7 +1063,7 @@ namespace CorUnix
         }
         else
         {
-            ASSERT("CS %p is not initialized", pPalCriticalSection);
+            fprintf(stderr, "CS %p is not initialized", pPalCriticalSection);
             fRet = false;
             goto PCDI_exit;
         }
@@ -1192,7 +1192,7 @@ namespace CorUnix
             if (0 != iRet)
             {
                 // Failed: unlock the mutex and bail out
-                ASSERT("Failed waiting on condition in CS %p [err=%d]\n",
+                fprintf(stderr, "Failed waiting on condition in CS %p [err=%d]\n",
                        pPalCriticalSection, iRet);
                 pthread_mutex_unlock(&pPalCriticalSection->csndNativeData.mutex);
                 palErr = ERROR_INTERNAL_ERROR;
@@ -1252,7 +1252,7 @@ namespace CorUnix
         {
             // Failed: set palErr, but continue in order to unlock
             // the mutex anyway
-            ASSERT("Failed setting condition in CS %p [ret=%d]\n",
+            fprintf(stderr, "Failed setting condition in CS %p [ret=%d]\n",
                    pPalCriticalSection, iRet);
             palErr = ERROR_INTERNAL_ERROR;
         }

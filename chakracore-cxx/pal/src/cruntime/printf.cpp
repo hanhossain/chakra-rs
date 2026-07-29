@@ -527,7 +527,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                 size = WideCharToMultiByte(CP_ACP, 0, Buff, -1, 0, 0, 0);
                 if (!size)
                 {
-                    ASSERT("WideCharToMultiByte failed.  Error is %d\n",
+                    fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
                         GetLastError());
                     return -1;
                 }
@@ -542,7 +542,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                                            newBuff, size, 0);
                 if (!size)
                 {
-                    ASSERT("WideCharToMultiByte failed.  Error is %d\n",
+                    fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
                         GetLastError());
                     free(newBuff);
                     return -1;

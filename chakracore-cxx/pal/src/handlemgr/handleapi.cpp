@@ -113,7 +113,7 @@ CorUnix::InternalDuplicateHandle(
     /* Check validity of process handles */
     if (0 == source_process_id || 0 == target_process_id)
     {
-        ASSERT("Can't duplicate handle: invalid source or destination process");
+        fprintf(stderr, "Can't duplicate handle: invalid source or destination process");
         palError = ERROR_INVALID_PARAMETER;
         goto InternalDuplicateHandleExit;
     }
@@ -122,7 +122,7 @@ CorUnix::InternalDuplicateHandle(
     if (source_process_id != cur_process_id
         && target_process_id != cur_process_id)
     {
-        ASSERT("Can't duplicate handle : neither source or destination"
+        fprintf(stderr, "Can't duplicate handle : neither source or destination"
                "processes are from current process");
         palError = ERROR_INVALID_PARAMETER;
         goto InternalDuplicateHandleExit;
@@ -130,14 +130,14 @@ CorUnix::InternalDuplicateHandle(
 
     if (FALSE != bInheritHandle)
     {
-        ASSERT("Can't duplicate handle : bInheritHandle is not FALSE.\n");
+        fprintf(stderr, "Can't duplicate handle : bInheritHandle is not FALSE.\n");
         palError = ERROR_INVALID_PARAMETER;
         goto InternalDuplicateHandleExit;
     }
 
     if (dwOptions & ~(DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE))
     {
-        ASSERT(
+        fprintf(stderr,
             "Can't duplicate handle : dwOptions is %#x which is not "
             "a subset of (DUPLICATE_SAME_ACCESS|DUPLICATE_CLOSE_SOURCE) "
             "(%#x).\n",
@@ -149,7 +149,7 @@ CorUnix::InternalDuplicateHandle(
     
     if (0 == (dwOptions & DUPLICATE_SAME_ACCESS))
     {
-        ASSERT(
+        fprintf(stderr,
             "Can't duplicate handle : dwOptions is %#x which does not "
             "include DUPLICATE_SAME_ACCESS (%#x).\n",
             dwOptions,
@@ -160,7 +160,7 @@ CorUnix::InternalDuplicateHandle(
 
     if (NULL == phDuplicate)
     {
-        ASSERT("Can't duplicate handle : lpTargetHandle is NULL.\n");
+        fprintf(stderr, "Can't duplicate handle : lpTargetHandle is NULL.\n");
         goto InternalDuplicateHandleExit;
     }
 
@@ -215,7 +215,7 @@ CorUnix::InternalDuplicateHandle(
     }
     else
     {
-        ASSERT("Duplication not supported for this special handle (%p)\n", hSource);
+        fprintf(stderr, "Duplication not supported for this special handle (%p)\n", hSource);
         palError = ERROR_INVALID_HANDLE;
         goto InternalDuplicateHandleExit;
     }

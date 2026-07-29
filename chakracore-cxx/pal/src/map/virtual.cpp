@@ -484,7 +484,7 @@ static BOOL VIRTUALReleaseMemory( PCMI pMemoryToBeReleased )
 
     if ( !pMemoryToBeReleased )
     {
-        ASSERT( "Invalid pointer.\n" );
+        fprintf(stderr, "Invalid pointer.\n" );
         return FALSE;
     }
 
@@ -851,7 +851,7 @@ static void * VIRTUALReserveMemory(
         if ( !VIRTUALStoreAllocationInfo( StartBoundary, MemSize,
                                    flAllocationType, flProtect ) )
         {
-            ASSERT( "Unable to store the structure in the list.\n");
+            fprintf(stderr, "Unable to store the structure in the list.\n");
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             munmap( pRetVal, MemSize );
             pRetVal = NULL;
@@ -1011,7 +1011,7 @@ static void * VIRTUALCommitMemory(
 
             if ( !pInformation )
             {
-                ASSERT( "Unable to locate the region information.\n" );
+                fprintf(stderr, "Unable to locate the region information.\n" );
                 pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
                 pRetVal = NULL;
                 goto done;
@@ -1131,7 +1131,7 @@ error:
         munmap( pRetVal, MemSize );
         if ( VIRTUALReleaseMemory( pInformation ) == FALSE )
         {
-            ASSERT( "Unable to remove the PCMI entry from the list.\n" );
+            fprintf(stderr, "Unable to remove the PCMI entry from the list.\n" );
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             pRetVal = NULL;
             goto done;
@@ -1176,13 +1176,13 @@ static BOOL VIRTUALGetBackingFile(CPalThread *pthrCurrent)
 
     if (!(PALGetLibRotorPalName(palName, MAX_PATH_FNAME)))
     {
-        ASSERT("Surprisingly, LibRotorPal can't be found!");
+        fprintf(stderr, "Surprisingly, LibRotorPal can't be found!");
         goto done;
     }
     gBackingFile = InternalOpen(palName, O_RDONLY);
     if (gBackingFile == -1)
     {
-        ASSERT("Failed to open %s as a backing file: errno=%d\n",
+        fprintf(stderr, "Failed to open %s as a backing file: errno=%d\n",
                 palName, errno);
         goto done;
     }
@@ -1226,14 +1226,14 @@ VirtualAlloc_(
     /* Test for un-supported flags. */
     if ( ( flAllocationType & ~( MEM_COMMIT | MEM_RESERVE | MEM_TOP_DOWN | MEM_RESERVE_EXECUTABLE ) ) != 0 )
     {
-        ASSERT( "flAllocationType can be one, or any combination of MEM_COMMIT, \
+        fprintf(stderr, "flAllocationType can be one, or any combination of MEM_COMMIT, \
                MEM_RESERVE, MEM_TOP_DOWN, or MEM_RESERVE_EXECUTABLE.\n" );
         pthrCurrent->SetLastError( ERROR_INVALID_PARAMETER );
         goto done;
     }
     if ( VIRTUALContainsInvalidProtectionFlags( flProtect ) )
     {
-        ASSERT( "flProtect can be one of PAGE_READONLY, PAGE_READWRITE, or \
+        fprintf(stderr, "flProtect can be one of PAGE_READONLY, PAGE_READWRITE, or \
                PAGE_EXECUTE_READWRITE || PAGE_NOACCESS. \n" );
 
         pthrCurrent->SetLastError( ERROR_INVALID_PARAMETER );
@@ -1352,7 +1352,7 @@ VirtualFreeEnclosing_(
     }
     else
     {
-        ASSERT("Unable to unmap the memory, munmap() returned "
+        fprintf(stderr, "Unable to unmap the memory, munmap() returned "
             "an abnormal value.\n");
         pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
         bRetVal = FALSE;
@@ -1368,7 +1368,7 @@ VirtualFreeEnclosing_(
         }
         else
         {
-            ASSERT("Unable to unmap the memory, munmap() returned "
+            fprintf(stderr, "Unable to unmap the memory, munmap() returned "
                 "an abnormal value.\n");
             pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
             bRetVal = FALSE;
@@ -1439,7 +1439,7 @@ VirtualAlloc(
             // Free the regions enclosing the 64K aligned region we intend to use.
             if (VirtualFreeEnclosing_(address, dwSize, KB64, addr64) == 0)
             {
-                ASSERT("Unable to unmap the enclosing memory.\n");
+                fprintf(stderr, "Unable to unmap the enclosing memory.\n");
                 return nullptr;
             }
 
@@ -1538,7 +1538,7 @@ VirtualFree(
         pUnCommittedMem = VIRTUALFindRegionInformation( StartBoundary );
         if (!pUnCommittedMem)
         {
-            ASSERT( "Unable to locate the region information.\n" );
+            fprintf(stderr, "Unable to locate the region information.\n" );
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             bRetVal = FALSE;
             goto VirtualFreeExit;
@@ -1573,7 +1573,7 @@ VirtualFree(
         }
         else
         {
-            ASSERT( "mmap() returned an abnormal value.\n" );
+            fprintf(stderr, "mmap() returned an abnormal value.\n" );
             bRetVal = FALSE;
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             goto VirtualFreeExit;
@@ -1608,7 +1608,7 @@ VirtualFree(
         {
             if ( VIRTUALReleaseMemory( pMemoryToBeReleased ) == FALSE )
             {
-                ASSERT( "Unable to remove the PCMI entry from the list.\n" );
+                fprintf(stderr, "Unable to remove the PCMI entry from the list.\n" );
                 pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
                 bRetVal = FALSE;
                 goto VirtualFreeExit;
@@ -1617,7 +1617,7 @@ VirtualFree(
         }
         else
         {
-            ASSERT( "Unable to unmap the memory, munmap() returned "
+            fprintf(stderr, "Unable to unmap the memory, munmap() returned "
                    "an abnormal value.\n" );
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             bRetVal = FALSE;
@@ -1663,7 +1663,7 @@ VirtualProtect(
 #if DEBUG
     if ( VIRTUALContainsInvalidProtectionFlags( flNewProtect ) )
     {
-        ASSERT( "flProtect can be one of PAGE_NOACCESS, PAGE_READONLY, "
+        fprintf(stderr, "flProtect can be one of PAGE_NOACCESS, PAGE_READONLY, "
                "PAGE_READWRITE, PAGE_EXECUTE, PAGE_EXECUTE_READ "
                ", or PAGE_EXECUTE_READWRITE. \n" );
         SetLastError( ERROR_INVALID_PARAMETER );

@@ -731,7 +731,7 @@ CONTEXT_GetThreadContextFromPort(
         MachRet = thread_get_state(Port, StateFlavor, reinterpret_cast<thread_state_t>(&State), &StateCount);
         if (MachRet != KERN_SUCCESS)
         {
-            ASSERT("thread_get_state(THREAD_STATE) failed: %d\n", MachRet);
+            fprintf(stderr, "thread_get_state(THREAD_STATE) failed: %d\n", MachRet);
             goto exit;
         }
 
@@ -929,7 +929,7 @@ CONTEXT_GetThreadContextFromThreadState(
 #endif
 
         default:
-            ASSERT("Invalid thread state flavor %d\n", threadStateFlavor);
+            fprintf(stderr, "Invalid thread state flavor %d\n", threadStateFlavor);
             break;
     }
 }

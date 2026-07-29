@@ -166,7 +166,7 @@ GetEnvironmentVariableW(
     if ( 0 == WideCharToMultiByte( CP_ACP, 0, lpName, -1, inBuff, 
                                    inBuffSize, NULL ) )
     {
-        ASSERT( "WideCharToMultiByte failed!\n" );
+        fprintf(stderr, "WideCharToMultiByte failed!\n" );
         SetLastError( ERROR_INTERNAL_ERROR );
         goto done;
     }
@@ -189,7 +189,7 @@ GetEnvironmentVariableW(
         }
         else
         {
-            ASSERT( "MultiByteToWideChar failed!\n" );
+            fprintf(stderr, "MultiByteToWideChar failed!\n" );
             SetLastError( ERROR_INTERNAL_ERROR );
             size = 0;
             *lpBuffer = '\0';

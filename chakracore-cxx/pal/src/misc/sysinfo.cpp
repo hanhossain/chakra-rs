@@ -114,7 +114,7 @@ GetSystemInfo(
     nrcpus = sysconf(_SC_NPROCESSORS_ONLN);
     if (nrcpus < 1)
     {
-        ASSERT("sysconf failed for _SC_NPROCESSORS_ONLN (%d)\n", errno);
+        fprintf(stderr, "sysconf failed for _SC_NPROCESSORS_ONLN (%d)\n", errno);
     }
 
     TRACE("dwNumberOfProcessors=%d\n", nrcpus);
