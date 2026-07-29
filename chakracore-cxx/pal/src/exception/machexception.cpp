@@ -44,6 +44,8 @@ SET_DEFAULT_DEBUG_CHANNEL(EXCEPT); // some headers have code with asserts, so do
 #include <dlfcn.h>
 #include <mach-o/loader.h>
 #include <sys/mman.h>
+#include "chakra/Logger.h"
+#include <format>
 
 using namespace CorUnix;
 
@@ -231,8 +233,8 @@ PAL_ERROR CorUnix::CPalThread::EnableMachExceptions()
         countBits = ((countBits & 0xFFFF0000) >> 16) + (countBits & 0x0000FFFF);
         if (countBits != static_cast<exception_mask_t>(CThreadMachExceptionHandlers::s_nPortsMax))
         {
-            fprintf(stderr, "s_nPortsMax is %u, but needs to be %u\n",
-                   CThreadMachExceptionHandlers::s_nPortsMax, countBits);
+            chakra::Logger::error(std::format("s_nPortsMax is {}, but needs to be {}\n",
+                   CThreadMachExceptionHandlers::s_nPortsMax, countBits));
         }
 #endif // _DEBUG
 
@@ -265,7 +267,7 @@ PAL_ERROR CorUnix::CPalThread::EnableMachExceptions()
 
         if (machret != KERN_SUCCESS)
         {
-            fprintf(stderr, "thread_swap_exception_ports failed: %d %s\n", machret, mach_error_string(machret));
+            chakra::Logger::error(std::format("thread_swap_exception_ports failed: {} {}\n", machret, mach_error_string(machret)));
             return UTIL_MachErrorToPalError(machret);
         }
 
@@ -336,7 +338,7 @@ PAL_ERROR CorUnix::CPalThread::DisableMachExceptions()
 
     if (MachRet != KERN_SUCCESS)
     {
-        fprintf(stderr, "thread_set_exception_ports failed: %d\n", MachRet);
+        chakra::Logger::error(std::format("thread_set_exception_ports failed: {}\n", MachRet));
         palError = UTIL_MachErrorToPalError(MachRet);
     }
 
@@ -1177,7 +1179,7 @@ bool SEHInitializeMachExceptions()
     machret = mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE, &s_ExceptionPort);
     if (machret != KERN_SUCCESS)
     {
-        fprintf(stderr, "mach_port_allocate failed: %d\n", machret);
+        chakra::Logger::error(std::format("mach_port_allocate failed: {}\n", machret));
         UTIL_SetLastErrorFromMach(machret);
         return true;
     }
@@ -1186,7 +1188,7 @@ bool SEHInitializeMachExceptions()
     machret = mach_port_insert_right(mach_task_self(), s_ExceptionPort, s_ExceptionPort, MACH_MSG_TYPE_MAKE_SEND);
     if (machret != KERN_SUCCESS)
     {
-        fprintf(stderr, "mach_port_insert_right failed: %d\n", machret);
+        chakra::Logger::error(std::format("mach_port_insert_right failed: {}\n", machret));
         UTIL_SetLastErrorFromMach(machret);
         return false;
     }

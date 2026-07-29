@@ -31,6 +31,7 @@ Abstract:
 
 #include <errno.h>
 #include <limits.h>
+#include <format>
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
@@ -232,8 +233,8 @@ _wtoi(
     len = WideCharToMultiByte(CP_ACP, 0, string, -1, 0, 0, 0);
     if (!len)
     {
-        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
-              GetLastError());
+        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
+              GetLastError()));
         return -1;
     }
     tempStr = static_cast<char*>(malloc(len));
@@ -246,8 +247,8 @@ _wtoi(
     len = WideCharToMultiByte(CP_ACP, 0, string, -1, tempStr, len, 0);
     if (!len)
     {
-        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
-              GetLastError());
+        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
+              GetLastError()));
         free(tempStr);
         return -1;
     }
@@ -307,7 +308,7 @@ PAL__wcstoui64(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL);
     if (!size)
     {
-        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n", GetLastError());
+        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL__wcstoui64Exit;
@@ -323,7 +324,7 @@ PAL__wcstoui64(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, s_nptr, size, NULL);
     if (!size)
     {
-        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n", GetLastError());
+        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL__wcstoui64Exit;

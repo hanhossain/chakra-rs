@@ -44,6 +44,7 @@ Abstract:
 
 #include "pal/context.h"
 #include "chakra/Logger.h"
+#include <format>
 
 using namespace CorUnix;
 
@@ -506,7 +507,7 @@ static void common_signal_handler(PEXCEPTION_POINTERS pointers, int code,
     sigaddset(&signal_set, code);
     if(-1 == sigprocmask(SIG_UNBLOCK, &signal_set, NULL))
     {
-        fprintf(stderr, "sigprocmask failed; error is %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("sigprocmask failed; error is {} ({})\n", errno, strerror(errno)));
     }
 
     // We do nothing further
@@ -541,8 +542,8 @@ void handle_signal(int signal_id, SIGFUNC sigfunc, struct sigaction *previousAct
 
     if (-1 == sigaction(signal_id, &newAction, previousAction))
     {
-        fprintf(stderr, "handle_signal: sigaction() call failed with error code %d (%s)\n",
-            errno, strerror(errno));
+        chakra::Logger::error(std::format("handle_signal: sigaction() call failed with error code {} ({})\n",
+            errno, strerror(errno)));
     }
 }
 
@@ -562,8 +563,8 @@ void restore_signal(int signal_id, struct sigaction *previousAction)
 {
     if (-1 == sigaction(signal_id, previousAction, NULL))
     {
-        fprintf(stderr, "restore_signal: sigaction() call failed with error code %d (%s)\n",
-            errno, strerror(errno));
+        chakra::Logger::error(std::format("restore_signal: sigaction() call failed with error code {} ({})\n",
+            errno, strerror(errno)));
     }
 }
 

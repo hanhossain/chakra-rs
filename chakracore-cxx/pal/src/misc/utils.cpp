@@ -27,6 +27,8 @@ Abstract:
 #include "pal/utils.h"
 #include "pal/dbgmsg.h"
 #include "pal/file.h"
+#include "chakra/Logger.h"
+#include <format>
 
 #include <errno.h>
 #include <string.h>
@@ -198,7 +200,7 @@ char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
                                  lpMultiByteStr, length, NULL);
     if(0 == length)
     {
-        fprintf(stderr, "WCToMB error; GetLastError returns %#x\n", GetLastError());
+        chakra::Logger::error(std::format("WCToMB error; GetLastError returns {:#x}\n", GetLastError()));
         free(lpMultiByteStr);
         return NULL;
     }
@@ -258,7 +260,7 @@ char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte)
                                       lpWideCharStr, length);
     if(0 >= length)
     {
-        fprintf(stderr, "MCToMB error; GetLastError returns %#x\n", GetLastError());
+        chakra::Logger::error(std::format("MCToMB error; GetLastError returns {:#x}\n", GetLastError()));
         free(lpWideCharStr);
         return NULL;
     }
@@ -296,7 +298,7 @@ uint32_t UTIL_MachErrorToPalError(kern_return_t MachReturn)
         return ERROR_INVALID_PARAMETER;
 
     default:
-        fprintf(stderr, "Unknown kern_return_t value %d - reporting ERROR_INTERNAL_ERROR\n", MachReturn);
+        chakra::Logger::error(std::format("Unknown kern_return_t value {} - reporting ERROR_INTERNAL_ERROR\n", MachReturn));
         return ERROR_INTERNAL_ERROR;
     }
 }

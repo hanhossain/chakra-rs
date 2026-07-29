@@ -27,6 +27,7 @@ Revision History:
 #include <new>
 #include "pal/dbgmsg.h"
 #include "chakra/Logger.h"
+#include <format>
 
 SET_DEFAULT_DEBUG_CHANNEL(SYNC);
 
@@ -565,8 +566,8 @@ PAL_ERROR CorUnix::InternalSleepEx (
                         "Awakened for APC, but no APC is pending\n");
             break;
         case MutexAbondoned:
-            fprintf(stderr, "Thread %p awakened with reason=MutexAbondoned from a "
-                   "SleepEx\n", pThread);
+            chakra::Logger::error(std::format("Thread {} awakened with reason=MutexAbondoned from a "
+                   "SleepEx\n", static_cast<void *>(pThread)));
             palErr = ERROR_INTERNAL_ERROR;
             break;
         case WaitFailed:

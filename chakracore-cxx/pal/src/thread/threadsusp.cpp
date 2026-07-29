@@ -35,6 +35,7 @@ Revision History:
 #include <limits.h>
 #include <debugmacrosext.h>
 #include "chakra/Logger.h"
+#include <format>
 
 #if defined(_AIX)
 // AIX requires explicit definition of the union semun (see semctl man page)
@@ -290,7 +291,7 @@ CThreadSuspensionInfo::InternalResumeThreadFromData(
                 // Some other error occurred; need to release suspension mutexes before leaving ResumeThread.
                 palError = ERROR_INTERNAL_ERROR;
                 ReleaseSuspensionLocks(pthrResumer, pthrTarget);
-                fprintf(stderr, "Write() failed; error is %d (%s)\n", errno, strerror(errno));
+                chakra::Logger::error(std::format("Write() failed; error is {} ({})\n", errno, strerror(errno)));
                 goto InternalResumeThreadFromDataExit;
             }
         }
@@ -516,12 +517,12 @@ CThreadSuspensionInfo::PostOnSuspendSemaphore()
 #if USE_POSIX_SEMAPHORES
     if (sem_post(&m_semSusp) == -1)
     {
-        fprintf(stderr, "sem_post returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("sem_post returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
 #elif USE_SYSV_SEMAPHORES
     if (semop(m_nSemsuspid, &m_sbSempost, 1) == -1)
     {
-        fprintf(stderr, "semop - post returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("semop - post returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
 #elif USE_PTHREAD_CONDVARS
     int status;
@@ -540,7 +541,7 @@ CThreadSuspensionInfo::PostOnSuspendSemaphore()
     status = pthread_mutex_lock(&m_mutexSusp);
     if (status != 0)
     {
-        fprintf(stderr, "pthread_mutex_lock returned %d (%s)\n", status, strerror(status));
+        chakra::Logger::error(std::format("pthread_mutex_lock returned {} ({})\n", status, strerror(status)));
     }
 
     m_fSuspended = TRUE;
@@ -548,13 +549,13 @@ CThreadSuspensionInfo::PostOnSuspendSemaphore()
     status = pthread_cond_signal(&m_condSusp);
     if (status != 0)
     {
-        fprintf(stderr, "pthread_cond_signal returned %d (%s)\n", status, strerror(status));
+        chakra::Logger::error(std::format("pthread_cond_signal returned {} ({})\n", status, strerror(status)));
     }
 
     status = pthread_mutex_unlock(&m_mutexSusp);
     if (status != 0)
     {
-        fprintf(stderr, "pthread_mutex_unlock returned %d (%s)\n", status, strerror(status));
+        chakra::Logger::error(std::format("pthread_mutex_unlock returned {} ({})\n", status, strerror(status)));
     }
 #endif // USE_POSIX_SEMAPHORES
 }
@@ -572,12 +573,12 @@ CThreadSuspensionInfo::WaitOnSuspendSemaphore()
 #if USE_POSIX_SEMAPHORES
     while (sem_wait(&m_semSusp) == -1)
     {
-        fprintf(stderr, "sem_wait returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("sem_wait returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
 #elif USE_SYSV_SEMAPHORES
     while (semop(m_nSemsuspid, &m_sbSemwait, 1) == -1)
     {
-        fprintf(stderr, "semop wait returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("semop wait returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
 #elif USE_PTHREAD_CONDVARS
     int status;
@@ -590,7 +591,7 @@ CThreadSuspensionInfo::WaitOnSuspendSemaphore()
     status = pthread_mutex_lock(&m_mutexSusp);
     if (status != 0)
     {
-        fprintf(stderr, "pthread_mutex_lock returned %d (%s)\n", status, strerror(status));
+        chakra::Logger::error(std::format("pthread_mutex_lock returned {} ({})\n", status, strerror(status)));
     }
 
     // If the target has already acknowledged the suspend we shouldn't wait.
@@ -601,14 +602,14 @@ CThreadSuspensionInfo::WaitOnSuspendSemaphore()
         status = pthread_cond_wait(&m_condSusp, &m_mutexSusp);
         if (status != 0)
         {
-            fprintf(stderr, "pthread_cond_wait returned %d (%s)\n", status, strerror(status));
+            chakra::Logger::error(std::format("pthread_cond_wait returned {} ({})\n", status, strerror(status)));
         }
     }
 
     status = pthread_mutex_unlock(&m_mutexSusp);
     if (status != 0)
     {
-        fprintf(stderr, "pthread_mutex_unlock returned %d (%s)\n", status, strerror(status));
+        chakra::Logger::error(std::format("pthread_mutex_unlock returned {} ({})\n", status, strerror(status)));
     }
 #endif // USE_POSIX_SEMAPHORES
 }
@@ -626,12 +627,12 @@ CThreadSuspensionInfo::PostOnResumeSemaphore()
 #if USE_POSIX_SEMAPHORES
     if (sem_post(&m_semResume) == -1)
     {
-        fprintf(stderr, "sem_post returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("sem_post returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
 #elif USE_SYSV_SEMAPHORES
     if (semop(m_nSemrespid, &m_sbSempost, 1) == -1)
     {
-        fprintf(stderr, "semop - post returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("semop - post returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
 #elif USE_PTHREAD_CONDVARS
     int status;
@@ -650,7 +651,7 @@ CThreadSuspensionInfo::PostOnResumeSemaphore()
     status = pthread_mutex_lock(&m_mutexResume);
     if (status != 0)
     {
-        fprintf(stderr, "pthread_mutex_lock returned %d (%s)\n", status, strerror(status));
+        chakra::Logger::error(std::format("pthread_mutex_lock returned {} ({})\n", status, strerror(status)));
     }
 
     m_fResumed = TRUE;
@@ -658,13 +659,13 @@ CThreadSuspensionInfo::PostOnResumeSemaphore()
     status = pthread_cond_signal(&m_condResume);
     if (status != 0)
     {
-        fprintf(stderr, "pthread_cond_signal returned %d (%s)\n", status, strerror(status));
+        chakra::Logger::error(std::format("pthread_cond_signal returned {} ({})\n", status, strerror(status)));
     }
 
     status = pthread_mutex_unlock(&m_mutexResume);
     if (status != 0)
     {
-        fprintf(stderr, "pthread_mutex_unlock returned %d (%s)\n", status, strerror(status));
+        chakra::Logger::error(std::format("pthread_mutex_unlock returned {} ({})\n", status, strerror(status)));
     }
 #endif // USE_POSIX_SEMAPHORES
 }
@@ -682,12 +683,12 @@ CThreadSuspensionInfo::WaitOnResumeSemaphore()
 #if USE_POSIX_SEMAPHORES
     while (sem_wait(&m_semResume) == -1)
     {
-        fprintf(stderr, "sem_wait returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("sem_wait returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
 #elif USE_SYSV_SEMAPHORES
     while (semop(m_nSemrespid, &m_sbSemwait, 1) == -1)
     {
-        fprintf(stderr, "semop wait returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("semop wait returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
 #elif USE_PTHREAD_CONDVARS
     int status;
@@ -700,7 +701,7 @@ CThreadSuspensionInfo::WaitOnResumeSemaphore()
     status = pthread_mutex_lock(&m_mutexResume);
     if (status != 0)
     {
-        fprintf(stderr, "pthread_mutex_lock returned %d (%s)\n", status, strerror(status));
+        chakra::Logger::error(std::format("pthread_mutex_lock returned {} ({})\n", status, strerror(status)));
     }
 
     // If the target has already acknowledged the resume we shouldn't wait.
@@ -711,14 +712,14 @@ CThreadSuspensionInfo::WaitOnResumeSemaphore()
         status = pthread_cond_wait(&m_condResume, &m_mutexResume);
         if (status != 0)
         {
-            fprintf(stderr, "pthread_cond_wait returned %d (%s)\n", status, strerror(status));
+            chakra::Logger::error(std::format("pthread_cond_wait returned {} ({})\n", status, strerror(status)));
         }
     }
 
     status = pthread_mutex_unlock(&m_mutexResume);
     if (status != 0)
     {
-        fprintf(stderr, "pthread_mutex_unlock returned %d (%s)\n", status, strerror(status));
+        chakra::Logger::error(std::format("pthread_mutex_unlock returned {} ({})\n", status, strerror(status)));
     }
 #endif // USE_POSIX_SEMAPHORES
 }
@@ -738,7 +739,7 @@ CThreadSuspensionInfo::InitializeSuspensionLock()
     int iError = pthread_mutex_init(&m_ptmSuspmutex, NULL);
     if (0 != iError )
     {
-        fprintf(stderr, "pthread_mutex_init(&suspmutex) returned %d\n", iError);
+        chakra::Logger::error(std::format("pthread_mutex_init(&suspmutex) returned {}\n", iError));
         return;
     }
     m_fSuspmutexInitialized = TRUE;
@@ -766,7 +767,7 @@ CThreadSuspensionInfo::InitializePreCreate()
 
     if (0 != iError )
     {
-        fprintf(stderr, "sem_init(&suspsem) returned %d\n", iError);
+        chakra::Logger::error(std::format("sem_init(&suspsem) returned {}\n", iError));
         goto InitializePreCreateExit;
     }
 
@@ -775,7 +776,7 @@ CThreadSuspensionInfo::InitializePreCreate()
 
     if (0 != iError )
     {
-        fprintf(stderr, "sem_init(&suspsem) returned %d\n", iError);
+        chakra::Logger::error(std::format("sem_init(&suspsem) returned {}\n", iError));
         sem_destroy(&m_semSusp);
         goto InitializePreCreateExit;
     }
@@ -788,14 +789,14 @@ CThreadSuspensionInfo::InitializePreCreate()
     m_nSemsuspid = semget(IPC_PRIVATE, 1, IPC_CREAT | 0666);
     if (m_nSemsuspid == -1)
     {
-        fprintf(stderr, "semget for suspension sem id returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("semget for suspension sem id returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
         goto InitializePreCreateExit;
     }
 
     m_nSemrespid = semget(IPC_PRIVATE, 1, IPC_CREAT | 0666);
     if (m_nSemrespid == -1)
     {
-        fprintf(stderr, "semget for resumption sem id returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("semget for resumption sem id returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
         goto InitializePreCreateExit;
     }
 
@@ -809,7 +810,7 @@ CThreadSuspensionInfo::InitializePreCreate()
     iError = semctl(m_nSemsuspid, 0, SETVAL, semunData);
     if (iError == -1)
     {
-        fprintf(stderr, "semctl for suspension sem id returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("semctl for suspension sem id returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
         goto InitializePreCreateExit;
     }
 
@@ -817,7 +818,7 @@ CThreadSuspensionInfo::InitializePreCreate()
     iError = semctl(m_nSemrespid, 0, SETVAL, semunData);
     if (iError == -1)
     {
-        fprintf(stderr, "semctl for resumption sem id returned -1 and set errno to %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("semctl for resumption sem id returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
         goto InitializePreCreateExit;
     }
 
@@ -834,28 +835,28 @@ CThreadSuspensionInfo::InitializePreCreate()
     iError = pthread_cond_init(&m_condSusp, NULL);
     if (iError != 0)
     {
-        fprintf(stderr, "pthread_cond_init for suspension returned %d (%s)\n", iError, strerror(iError));
+        chakra::Logger::error(std::format("pthread_cond_init for suspension returned {} ({})\n", iError, strerror(iError)));
         goto InitializePreCreateExit;
     }
 
     iError = pthread_mutex_init(&m_mutexSusp, NULL);
     if (iError != 0)
     {
-        fprintf(stderr, "pthread_mutex_init for suspension returned %d (%s)\n", iError, strerror(iError));
+        chakra::Logger::error(std::format("pthread_mutex_init for suspension returned {} ({})\n", iError, strerror(iError)));
         goto InitializePreCreateExit;
     }
 
     iError = pthread_cond_init(&m_condResume, NULL);
     if (iError != 0)
     {
-        fprintf(stderr, "pthread_cond_init for resume returned %d (%s)\n", iError, strerror(iError));
+        chakra::Logger::error(std::format("pthread_cond_init for resume returned {} ({})\n", iError, strerror(iError)));
         goto InitializePreCreateExit;
     }
 
     iError = pthread_mutex_init(&m_mutexResume, NULL);
     if (iError != 0)
     {
-        fprintf(stderr, "pthread_mutex_init for resume returned %d (%s)\n", iError, strerror(iError));
+        chakra::Logger::error(std::format("pthread_mutex_init for resume returned {} ({})\n", iError, strerror(iError)));
         goto InitializePreCreateExit;
     }
 
@@ -879,7 +880,7 @@ InitializePreCreateExit:
             }
             default:
             {
-                fprintf(stderr, "A pthrSuspender init call returned %d (%s)\n", iError, strerror(iError));
+                chakra::Logger::error(std::format("A pthrSuspender init call returned {} ({})\n", iError, strerror(iError)));
                 palError = ERROR_INTERNAL_ERROR;
             }
         }

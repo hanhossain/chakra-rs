@@ -39,6 +39,7 @@ SET_DEFAULT_DEBUG_CHANNEL(PROCESS); // some headers have code with asserts, so d
 
 #include <errno.h>
 #include <poll.h>
+#include <format>
 
 #include <unistd.h>
 #include <sys/mman.h>
@@ -1067,7 +1068,7 @@ PROCGetProcessStatus(
         }
         else
         {
-            fprintf(stderr, "waitpid returned unexpected value %d\n",wait_retval);
+            chakra::Logger::error(std::format("waitpid returned unexpected value {}\n",wait_retval));
             *pdwExitCode = EXIT_FAILURE;
             *pps = PS_DONE;
         }

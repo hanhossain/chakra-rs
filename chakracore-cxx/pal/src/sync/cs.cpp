@@ -23,6 +23,8 @@
 
 #include <sched.h>
 #include <pthread.h>
+#include "chakra/Logger.h"
+#include <format>
 
 using namespace CorUnix;
 
@@ -312,8 +314,8 @@ void InternalDeleteCriticalSection(
             if (tid != pPalCriticalSection->OwningThread)
             {
                 // not owner
-                fprintf(stderr, "Thread tid=%u deleting a CS owned by thread tid=%u\n",
-                       tid, pPalCriticalSection->OwningThread);
+                chakra::Logger::error(std::format("Thread tid={} deleting a CS owned by thread tid={}\n",
+                       tid, pPalCriticalSection->OwningThread));
             }
             else
             {
@@ -1029,8 +1031,8 @@ namespace CorUnix
             iRet = pthread_mutex_init(&pPalCriticalSection->csndNativeData.mutex, NULL);
             if (0 != iRet)
             {
-                fprintf(stderr, "Failed initializing mutex in CS @ %p [err=%d]\n",
-                        pPalCriticalSection, iRet);
+                chakra::Logger::error(std::format("Failed initializing mutex in CS @ {} [err={}]\n",
+                        static_cast<void *>(pPalCriticalSection), iRet));
                 pPalCriticalSection->cisInitState = PalCsUserInitialized;
                 fRet = false;
                 goto PCDI_exit;
@@ -1040,8 +1042,8 @@ namespace CorUnix
             iRet = pthread_cond_init(&pPalCriticalSection->csndNativeData.condition, NULL);
             if (0 != iRet)
             {
-                fprintf(stderr, "Failed initializing condition in CS @ %p [err=%d]\n",
-                       pPalCriticalSection, iRet);
+                chakra::Logger::error(std::format("Failed initializing condition in CS @ {} [err={}]\n",
+                       static_cast<void *>(pPalCriticalSection), iRet));
                 pthread_mutex_destroy(&pPalCriticalSection->csndNativeData.mutex);
                 pPalCriticalSection->cisInitState = PalCsUserInitialized;
                 fRet = false;
@@ -1063,7 +1065,7 @@ namespace CorUnix
         }
         else
         {
-            fprintf(stderr, "CS %p is not initialized", pPalCriticalSection);
+            chakra::Logger::error(std::format("CS {} is not initialized", static_cast<void *>(pPalCriticalSection)));
             fRet = false;
             goto PCDI_exit;
         }
@@ -1192,8 +1194,8 @@ namespace CorUnix
             if (0 != iRet)
             {
                 // Failed: unlock the mutex and bail out
-                fprintf(stderr, "Failed waiting on condition in CS %p [err=%d]\n",
-                       pPalCriticalSection, iRet);
+                chakra::Logger::error(std::format("Failed waiting on condition in CS {} [err={}]\n",
+                       static_cast<void *>(pPalCriticalSection), iRet));
                 pthread_mutex_unlock(&pPalCriticalSection->csndNativeData.mutex);
                 palErr = ERROR_INTERNAL_ERROR;
                 goto PCDAW_exit;
@@ -1252,8 +1254,8 @@ namespace CorUnix
         {
             // Failed: set palErr, but continue in order to unlock
             // the mutex anyway
-            fprintf(stderr, "Failed setting condition in CS %p [ret=%d]\n",
-                   pPalCriticalSection, iRet);
+            chakra::Logger::error(std::format("Failed setting condition in CS {} [ret={}]\n",
+                   static_cast<void *>(pPalCriticalSection), iRet));
             palErr = ERROR_INTERNAL_ERROR;
         }
 

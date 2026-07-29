@@ -157,6 +157,7 @@ is still alive).
 
 #include <mutex>
 #include <string>
+#include <format>
 
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
@@ -468,8 +469,8 @@ void SHMCleanup(void)
         if ( -1 == munmap( shm_segment_bases[ shm_numsegments ],
                            segment_size ) )
         {
-            fprintf(stderr, "munmap() failed; errno is %d (%s).\n",
-                  errno, strerror( errno ) );
+            chakra::Logger::error(std::format("munmap() failed; errno is {} ({}).\n",
+                  errno, strerror( errno ) ));
         }
     }
 
@@ -523,8 +524,8 @@ SHMPTR SHMalloc(size_t size)
     /* If no block size is found, requested size was too large. */
     if( SPS_LAST == sps )
     {
-        fprintf(stderr, "Got request for shared memory block of %u bytes; maximum block "
-              "size is %d.\n", size, block_sizes[SPS_LAST-1]);
+        chakra::Logger::error(std::format("Got request for shared memory block of {} bytes; maximum block "
+              "size is %d.\n", size, block_sizes[SPS_LAST-1]));
         return 0;
     }
 
@@ -556,8 +557,8 @@ SHMPTR SHMalloc(size_t size)
 
     if( 0 == first_free )
     {
-        fprintf(stderr, "First free block in %d-byte pool (%08x) was invalid!\n",
-              block_sizes[sps], first_free);
+        chakra::Logger::error(std::format("First free block in {}-byte pool ({:08x}) was invalid!\n",
+              block_sizes[sps], first_free));
         SHMRelease();
         return 0;
     }
@@ -572,16 +573,16 @@ SHMPTR SHMalloc(size_t size)
     if(( 0 == header->pools[sps].free_items && 0 != next_free) ||
        ( 0 != header->pools[sps].free_items && 0 == next_free))
     {
-        fprintf(stderr, "free block count is %d, but next free block is %#x\n",
-               header->pools[sps].free_items, next_free);
+        chakra::Logger::error(std::format("free block count is {}, but next free block is {:#x}\n",
+               header->pools[sps].free_items, next_free));
         /* assume all remaining blocks in the pool are corrupt */
         header->pools[sps].first_free = 0;
         header->pools[sps].free_items = 0;
     }
     else if (0 != next_free && 0 == SHMPTR_TO_PTR(next_free) )
     {
-        fprintf(stderr, "Next free block (%#x) in %d-byte pool is invalid!\n",
-               next_free, block_sizes[sps]);
+        chakra::Logger::error(std::format("Next free block ({:#x}) in {}-byte pool is invalid!\n",
+               next_free, block_sizes[sps]));
         /* assume all remaining blocks in the pool are corrupt */
         header->pools[sps].first_free = 0;
         header->pools[sps].free_items = 0;
@@ -626,7 +627,7 @@ void SHMfree(SHMPTR shmptr)
 
     if(!shmptr_ptr)
     {
-        fprintf(stderr, "Tried to free an invalid shared memory pointer 0x%08x\n", shmptr);
+        chakra::Logger::error(std::format("Tried to free an invalid shared memory pointer 0x{:08x}\n", shmptr));
         SHMRelease();
         return;
     }
@@ -653,7 +654,7 @@ void SHMfree(SHMPTR shmptr)
        have caught this.)  */
     if(sps == SPS_LAST)
     {
-        fprintf(stderr, "Shared memory pointer 0x%08x is out of bounds!\n", shmptr);
+        chakra::Logger::error(std::format("Shared memory pointer 0x{:08x} is out of bounds!\n", shmptr));
         SHMRelease();
         return;
     }
@@ -669,7 +670,7 @@ void SHMfree(SHMPTR shmptr)
        this isn't a real SHMPTR */
     if( 0 != ( offset % block_sizes[sps] ) )
     {
-        fprintf(stderr, "Shared memory pointer 0x%08x is misaligned!\n", shmptr);
+        chakra::Logger::error(std::format("Shared memory pointer 0x{:08x} is misaligned!\n", shmptr));
         SHMRelease();
         return;
     }
@@ -782,7 +783,7 @@ void * SHMPtrToPtr(SHMPTR shmptr)
         /* if segment is still unknown, then it doesn't exist */
         if(segment>=shm_numsegments)
         {
-            fprintf(stderr, "Segment %d still unknown; returning NULL\n", segment);
+            chakra::Logger::error(std::format("Segment {} still unknown; returning NULL\n", segment));
             return NULL;
         }
         TRACE("Segment %d found; continuing\n", segment);
@@ -792,8 +793,8 @@ void * SHMPtrToPtr(SHMPTR shmptr)
     offset = SHMPTR_OFFSET(shmptr);
     if(offset>=segment_size)
     {
-        fprintf(stderr, "Offset %d is larger than segment size (%d)! returning NULL\n",
-              offset, segment_size);
+        chakra::Logger::error(std::format("Offset {} is larger than segment size ({})! returning NULL\n",
+              offset, segment_size));
         return NULL;
 
     }
@@ -803,7 +804,7 @@ void * SHMPtrToPtr(SHMPTR shmptr)
     {
         if (static_cast<size_t>(offset) < roundup(sizeof(SHM_FIRST_HEADER), sizeof(int64_t)))
         {
-            fprintf(stderr, "Offset %d is in segment header! returning NULL\n", offset);
+            chakra::Logger::error(std::format("Offset {} is in segment header! returning NULL\n", offset));
             return NULL;
         }
     }
@@ -811,7 +812,7 @@ void * SHMPtrToPtr(SHMPTR shmptr)
     {
         if (static_cast<size_t>(offset) < sizeof(SHM_SEGMENT_HEADER))
         {
-            fprintf(stderr, "Offset %d is in segment header! returning NULL\n", offset);
+            chakra::Logger::error(std::format("Offset {} is in segment header! returning NULL\n", offset));
             return NULL;
         }
     }
@@ -847,7 +848,7 @@ SHMPTR SHMGetInfo(SHM_INFO_ID element)
 
     if(element >= SIID_LAST)
     {
-        fprintf(stderr, "Invalid SHM info element %d\n", element);
+        chakra::Logger::error(std::format("Invalid SHM info element {}\n", static_cast<int>(element)));
         return 0;
     }
 
@@ -889,7 +890,7 @@ BOOL SHMSetInfo(SHM_INFO_ID element, SHMPTR value)
 
     if(element >= SIID_LAST)
     {
-        fprintf(stderr, "Invalid SHM info element %d\n", element);
+        chakra::Logger::error(std::format("Invalid SHM info element {}\n", static_cast<int>(element)));
         return FALSE;
     }
 

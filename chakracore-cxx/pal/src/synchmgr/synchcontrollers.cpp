@@ -28,6 +28,7 @@ Abstract:
 #include <errno.h>
 #include <limits.h>
 #include "chakra/Logger.h"
+#include <format>
 
 namespace CorUnix
 {
@@ -299,7 +300,7 @@ namespace CorUnix
         {
             if (fSharedObject && (NULLSharedID != shridNewNode))
             {
-                fprintf(stderr, "Bad Shared Memory ptr %p\n", shridNewNode);
+                chakra::Logger::error(std::format("Bad Shared Memory ptr {}\n", shridNewNode));
                 palErr = ERROR_INTERNAL_ERROR;
             }        
             else
@@ -408,7 +409,7 @@ namespace CorUnix
                 }
                 else
                 {
-                    fprintf(stderr, "Unexpected thread wait state %d\n", dwWaitState);
+                    chakra::Logger::error(std::format("Unexpected thread wait state {}\n", dwWaitState));
                     palErr = ERROR_INTERNAL_ERROR;
                 }
                 goto RWT_exit;

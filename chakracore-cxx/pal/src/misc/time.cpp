@@ -32,6 +32,7 @@ Abstract:
 #include <errno.h>
 #include <string.h>
 #include <sched.h>
+#include <format>
 
 #if defined(__APPLE__)
 #include <mach/mach_time.h>
@@ -60,7 +61,7 @@ BOOL TIMEInitialize(void)
     kern_return_t machRet;
     if ((machRet = mach_timebase_info(&s_TimebaseInfo)) != KERN_SUCCESS)
     {
-        fprintf(stderr, "mach_timebase_info() failed: %s\n", mach_error_string(machRet));
+        chakra::Logger::error(std::format("mach_timebase_info() failed: {}\n", mach_error_string(machRet)));
         return FALSE;
     }
 #endif
@@ -106,7 +107,7 @@ GetSystemTime(
     utPtr = &ut;
     if (gmtime_r(&tt, utPtr) == NULL)
     {
-        fprintf(stderr, "gmtime() failed; errno is %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("gmtime() failed; errno is {} ({})\n", errno, strerror(errno)));
         goto EXIT;
     }
 
@@ -120,8 +121,8 @@ GetSystemTime(
 
     if(-1 == timeofday_retval)
     {
-        fprintf(stderr, "gettimeofday() failed; errno is %d (%s)\n",
-               errno, strerror(errno));
+        chakra::Logger::error(std::format("gettimeofday() failed; errno is {} ({})\n",
+               errno, strerror(errno)));
         lpSystemTime->wMilliseconds = 0;
     }
     else
@@ -194,7 +195,7 @@ QueryPerformanceCounter(
         struct timespec ts;
         if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
         {
-            fprintf(stderr, "clock_gettime(CLOCK_MONOTONIC) failed; errno is %d (%s)\n", errno, strerror(errno));
+            chakra::Logger::error(std::format("clock_gettime(CLOCK_MONOTONIC) failed; errno is {} ({})\n", errno, strerror(errno)));
             retval = FALSE;
             break;
         }
@@ -277,7 +278,7 @@ GetTickCount64Fallback()
         struct timespec ts;
         if (clock_gettime(clockType, &ts) != 0)
         {
-            fprintf(stderr, "clock_gettime(CLOCK_MONOTONIC*) failed; errno is %d (%s)\n", errno, strerror(errno));
+            chakra::Logger::error(std::format("clock_gettime(CLOCK_MONOTONIC*) failed; errno is {} ({})\n", errno, strerror(errno)));
             goto EXIT;
         }
         retval = (ts.tv_sec * tccSecondsToMillieSeconds)+(ts.tv_nsec / tccMillieSecondsToNanoSeconds);

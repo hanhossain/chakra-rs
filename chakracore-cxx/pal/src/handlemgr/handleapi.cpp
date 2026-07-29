@@ -26,6 +26,7 @@ Abstract:
 #include "pal/dbgmsg.h"
 #include "pal/process.h"
 #include "chakra/Logger.h"
+#include <format>
 
 using namespace CorUnix;
 
@@ -138,23 +139,23 @@ CorUnix::InternalDuplicateHandle(
 
     if (dwOptions & ~(DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE))
     {
-        fprintf(stderr,
-            "Can't duplicate handle : dwOptions is %#x which is not "
+        chakra::Logger::error(std::format(
+            "Can't duplicate handle : dwOptions is {:#x} which is not "
             "a subset of (DUPLICATE_SAME_ACCESS|DUPLICATE_CLOSE_SOURCE) "
-            "(%#x).\n",
+            "({:#x}).\n",
             dwOptions,
-            DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE);
+            DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE));
         palError = ERROR_INVALID_PARAMETER;
         goto InternalDuplicateHandleExit;
     }
     
     if (0 == (dwOptions & DUPLICATE_SAME_ACCESS))
     {
-        fprintf(stderr,
-            "Can't duplicate handle : dwOptions is %#x which does not "
+        chakra::Logger::error(std::format(
+            "Can't duplicate handle : dwOptions is {:#x} which does not "
             "include DUPLICATE_SAME_ACCESS (%#x).\n",
             dwOptions,
-            DUPLICATE_SAME_ACCESS);
+            DUPLICATE_SAME_ACCESS));
         palError = ERROR_INVALID_PARAMETER;
         goto InternalDuplicateHandleExit;
     }
@@ -216,7 +217,7 @@ CorUnix::InternalDuplicateHandle(
     }
     else
     {
-        fprintf(stderr, "Duplication not supported for this special handle (%p)\n", hSource);
+        chakra::Logger::error(std::format("Duplication not supported for this special handle ({})\n", hSource));
         palError = ERROR_INVALID_HANDLE;
         goto InternalDuplicateHandleExit;
     }

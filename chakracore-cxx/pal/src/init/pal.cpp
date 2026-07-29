@@ -40,6 +40,7 @@ Abstract:
 #include "pal/locale.h"
 #include "pal/init.h"
 #include "chakra/Logger.h"
+#include <format>
 
 #if defined(__APPLE__)
 #include "../exception/machexception.h"
@@ -177,9 +178,9 @@ Initialize()
         // different, we can't run.
         if (VIRTUAL_PAGE_SIZE != getpagesize())
         {
-            chakra::Logger::error("VIRTUAL_PAGE_SIZE is incorrect for this system!\n"
+            chakra::Logger::error(std::format("VIRTUAL_PAGE_SIZE is incorrect for this system!\n"
                 "Change include/pal/virtual.h and clr/src/inc/stdmacros.h "
-                "to reflect the correct page size of %d.\n", getpagesize());
+                "to reflect the correct page size of {}.\n", getpagesize()));
         }
 #endif  // _DEBUG
 

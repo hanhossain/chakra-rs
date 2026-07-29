@@ -25,6 +25,7 @@ Revision History:
 #include "pal/thread.hpp"
 #include "pal/dbgmsg.h"
 #include "chakra/Logger.h"
+#include <format>
 
 using namespace CorUnix;
 
@@ -189,7 +190,7 @@ CorUnix::InternalCreateEvent(
 
         if (NO_ERROR != palError)
         {
-            fprintf(stderr, "Unable to set new event state (%d)\n", palError);
+            chakra::Logger::error(std::format("Unable to set new event state ({})\n", palError));
             goto InternalCreateEventExit;
         }
     }
@@ -327,7 +328,7 @@ CorUnix::InternalSetEvent(
 
     if (NO_ERROR != palError)
     {
-        fprintf(stderr, "Error %d obtaining synch state controller\n", palError);
+        chakra::Logger::error(std::format("Error {} obtaining synch state controller\n", palError));
         goto InternalSetEventExit;
     }
 
@@ -335,7 +336,7 @@ CorUnix::InternalSetEvent(
 
     if (NO_ERROR != palError)
     {
-        fprintf(stderr, "Error %d setting event state\n", palError);
+        chakra::Logger::error(std::format("Error {} setting event state\n", palError));
         goto InternalSetEventExit;
     }
 

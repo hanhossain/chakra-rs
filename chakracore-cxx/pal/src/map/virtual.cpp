@@ -1183,8 +1183,8 @@ static BOOL VIRTUALGetBackingFile(CPalThread *pthrCurrent)
     gBackingFile = InternalOpen(palName, O_RDONLY);
     if (gBackingFile == -1)
     {
-        fprintf(stderr, "Failed to open %s as a backing file: errno=%d\n",
-                palName, errno);
+        chakra::Logger::error(std::format("Failed to open {} as a backing file: errno={}\n",
+                palName, errno));
         goto done;
     }
 

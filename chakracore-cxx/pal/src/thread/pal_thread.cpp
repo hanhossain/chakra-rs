@@ -41,6 +41,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #include "pal/utils.h"
 #include "pal/virtual.h"
 #include "chakra/Logger.h"
+#include <format>
 
 #if defined(__NetBSD__) && !defined(__linux__)
 #include <sys/cdefs.h>
@@ -418,8 +419,8 @@ CorUnix::InternalCreateThread(
     /* Validate parameters */
     if (lpThreadAttributes != NULL)
     {
-        fprintf(stderr, "lpThreadAttributes parameter must be NULL (%p)\n",
-               lpThreadAttributes);
+        chakra::Logger::error(std::format("lpThreadAttributes parameter must be NULL ({})\n",
+               static_cast<void *>(lpThreadAttributes)));
         palError = ERROR_INVALID_PARAMETER;
         goto EXIT;
     }
@@ -429,7 +430,7 @@ CorUnix::InternalCreateThread(
 
     if ((dwCreationFlags != 0) && (dwCreationFlags != CREATE_SUSPENDED))
     {
-        fprintf(stderr, "dwCreationFlags parameter is invalid (%#x)\n", dwCreationFlags);
+        chakra::Logger::error(std::format("dwCreationFlags parameter is invalid ({:#x})\n", dwCreationFlags));
         palError = ERROR_INVALID_PARAMETER;
         goto EXIT;
     }
@@ -832,7 +833,7 @@ CorUnix::InternalSetThreadPriority(
         break;
 
     default:
-        fprintf(stderr, "Priority %d not supported\n", iNewPriority);
+        chakra::Logger::error(std::format("Priority {} not supported\n", iNewPriority));
         palError = ERROR_INVALID_PARAMETER;
         goto InternalSetThreadPriorityExit;
     }
@@ -874,8 +875,8 @@ CorUnix::InternalSetThreadPriority(
     min_priority = sched_get_priority_min(policy);
     if( -1 == max_priority || -1 == min_priority)
     {
-        fprintf(stderr, "sched_get_priority_min/max failed; error is %d (%s)\n",
-               errno, strerror(errno));
+        chakra::Logger::error(std::format("sched_get_priority_min/max failed; error is {} ({})\n",
+               errno, strerror(errno)));
         palError = ERROR_INTERNAL_ERROR;
         goto InternalSetThreadPriorityExit;
     }
@@ -922,7 +923,7 @@ CorUnix::InternalSetThreadPriority(
     st = pthread_setschedparam(pTargetThread->GetPThreadSelf(), policy, &schedParam);
     if (st != 0)
     {
-        fprintf(stderr, "Unable to set thread priority to %d (error %d)\n", static_cast<int>(posix_priority), st);
+        chakra::Logger::error(std::format("Unable to set thread priority to {} (error {})\n", static_cast<int>(posix_priority), st));
         palError = ERROR_INTERNAL_ERROR;
         goto InternalSetThreadPriorityExit;
     }
@@ -974,8 +975,8 @@ CorUnix::GetThreadTimesInternal(
 
     if (palError != NO_ERROR)
     {
-        fprintf(stderr, "Unable to get thread data from handle %p"
-              "thread\n", hThread);
+        chakra::Logger::error(std::format("Unable to get thread data from handle {}"
+              "thread\n", hThread));
         SetLastError(ERROR_INTERNAL_ERROR);
         goto SetTimesToZero;
     }
@@ -1042,8 +1043,8 @@ CorUnix::GetThreadTimesInternal(
     );
     if (palError != NO_ERROR)
     {
-        fprintf(stderr, "Unable to get thread data from handle %p"
-              "thread\n", hThread);
+        chakra::Logger::error(std::format("Unable to get thread data from handle {}"
+              "thread\n", hThread));
         SetLastError(ERROR_INTERNAL_ERROR);
         goto SetTimesToZero;
     }
@@ -1062,7 +1063,7 @@ CorUnix::GetThreadTimesInternal(
     if (klwp == NULL || nlwps < 1)
     {
         kvm_close(kd);
-        fprintf(stderr, "Unable to get clock from %p thread\n", hThread);
+        chakra::Logger::error(std::format("Unable to get clock from {} thread\n", hThread));
         SetLastError(ERROR_INTERNAL_ERROR);
         pTargetThread->Unlock(pThread);
         goto SetTimesToZero;
@@ -1080,7 +1081,7 @@ CorUnix::GetThreadTimesInternal(
     if (!found)
     {
         kvm_close(kd);
-        fprintf(stderr, "Unable to get clock from %p thread\n", hThread);
+        chakra::Logger::error(std::format("Unable to get clock from {} thread\n", hThread));
         SetLastError(ERROR_INTERNAL_ERROR);
         pTargetThread->Unlock(pThread);
         goto SetTimesToZero;
@@ -1124,8 +1125,8 @@ CorUnix::GetThreadTimesInternal(
     );
     if (palError != NO_ERROR)
     {
-        fprintf(stderr, "Unable to get thread data from handle %p"
-              "thread\n", hThread);
+        chakra::Logger::error(std::format("Unable to get thread data from handle {}"
+              "thread\n", hThread));
         SetLastError(ERROR_INTERNAL_ERROR);
         goto SetTimesToZero;
     }
@@ -1144,7 +1145,7 @@ CorUnix::GetThreadTimesInternal(
     struct timespec ts;
     if (clock_gettime(cid, &ts) != 0)
     {
-        fprintf(stderr, "clock_gettime() failed; errno is %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("clock_gettime() failed; errno is {} ({})\n", errno, strerror(errno)));
         SetLastError(ERROR_INTERNAL_ERROR);
         pTargetThread->Unlock(pThread);
         goto SetTimesToZero;
@@ -1157,7 +1158,7 @@ CorUnix::GetThreadTimesInternal(
     fd = open(statusFilename, O_RDONLY);
     if (fd == -1)
     {
-       fprintf(stderr, "open(%s) failed; errno is %d (%s)\n", statusFilename, errno, strerror(errno));
+       chakra::Logger::error(std::format("open({}) failed; errno is {} ({})\n", statusFilename, errno, strerror(errno)));
        SetLastError(ERROR_INTERNAL_ERROR);
        pTargetThread->Unlock(pThread);
        goto SetTimesToZero;
@@ -1229,7 +1230,7 @@ void *CPalThread::ThreadEntry(CPalThread *pThread)
     palError = pThread->RunPostCreateInitializers();
     if (NO_ERROR != palError)
     {
-        fprintf(stderr, "Error %i initializing thread data (post creation)\n", palError);
+        chakra::Logger::error(std::format("Error {} initializing thread data (post creation)\n", palError));
         goto fail;
     }
 
@@ -1239,7 +1240,7 @@ void *CPalThread::ThreadEntry(CPalThread *pThread)
         palError = pThread->suspensionInfo.InternalSuspendNewThreadFromData(pThread);
         if (NO_ERROR != palError)
         {
-            fprintf(stderr, "Error %i attempting to suspend new thread\n", palError);
+            chakra::Logger::error(std::format("Error {} attempting to suspend new thread\n", palError));
             goto fail;
         }
 

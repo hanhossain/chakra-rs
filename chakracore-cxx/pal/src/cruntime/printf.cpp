@@ -28,6 +28,8 @@ Revision History:
 #include "pal/thread.hpp"
 #include "pal/threadsusp.hpp"
 #include "pal/printfcpp.hpp"
+#include "chakra/Logger.h"
+#include <format>
 
 /* <stdarg.h> needs to be included after "palinternal.h" to avoid name
    collision for va_start and va_end */
@@ -527,8 +529,8 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                 size = WideCharToMultiByte(CP_ACP, 0, Buff, -1, 0, 0, 0);
                 if (!size)
                 {
-                    fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
-                        GetLastError());
+                    chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
+                        GetLastError()));
                     return -1;
                 }
                 newBuff = static_cast<char*>(malloc(size));
@@ -542,8 +544,8 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                                            newBuff, size, 0);
                 if (!size)
                 {
-                    fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
-                        GetLastError());
+                    chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
+                        GetLastError()));
                     free(newBuff);
                     return -1;
                 }

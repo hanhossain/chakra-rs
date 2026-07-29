@@ -32,6 +32,8 @@ Revision History:
 #include "pal/locale.h"
 #include "pal/cruntime.h"
 #include "pal/stackstring.hpp"
+#include "chakra/Logger.h"
+#include <format>
 
 #include <pthread.h>
 #include <locale.h>
@@ -368,7 +370,7 @@ MultiByteToWideChar(
 
     if (dwFlags & ~(MB_ERR_INVALID_CHARS | MB_PRECOMPOSED))
     {
-        fprintf(stderr, "Error dwFlags(0x%x) parameter is invalid\n", dwFlags);
+        chakra::Logger::error(std::format("Error dwFlags(0x{:x}) parameter is invalid\n", dwFlags));
         SetLastError(ERROR_INVALID_FLAGS);
         goto EXIT;
     }

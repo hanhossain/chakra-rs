@@ -32,6 +32,7 @@ Revision History:
 #include "pal/cruntime.h"
 #include "chakra/Logger.h"
 
+#include <format>
 #include <errno.h>
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
@@ -63,7 +64,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
         nsize = WideCharToMultiByte(CP_ACP, 0,static_cast<const char16_t*>(buffer), count, 0, 0, 0);
         if (!nsize)
         {
-            fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n", GetLastError());
+            chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
             return -1;
         }
         newBuff = static_cast<char*>(malloc(nsize));
@@ -76,7 +77,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
         nsize = WideCharToMultiByte(CP_ACP, 0, static_cast<const char16_t*>(buffer), count, newBuff, nsize, 0);
         if (!nsize)
         {
-            fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n", GetLastError());
+            chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
             free(newBuff);
             return -1;
         }
@@ -1778,8 +1779,8 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                                                        BufferPtr, TempCount);
                     if (!mbtowcResult)
                     {
-                        fprintf(stderr, "MultiByteToWideChar failed.  Error is %d\n",
-                              GetLastError());
+                        chakra::Logger::error(std::format("MultiByteToWideChar failed.  Error is {}\n",
+                              GetLastError()));
                         free(TempNumberBuffer);
                         va_end(ap);
                         return -1;
@@ -1812,8 +1813,8 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                                                        BufferPtr, TempInt);
                     if (!mbtowcResult)
                     {
-                        fprintf(stderr, "MultiByteToWideChar failed.  Error is %d\n",
-                              GetLastError());
+                        chakra::Logger::error(std::format("MultiByteToWideChar failed.  Error is {}\n",
+                              GetLastError()));
                         free(TempNumberBuffer);
                         va_end(ap);
                         return -1;
@@ -1903,8 +1904,8 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                                              0, 0);
                 if (!Length)
                 {
-                    fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
-                        GetLastError());
+                    chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
+                        GetLastError()));
                     va_end(ap);
                     return -1;
                 }
@@ -1928,8 +1929,8 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                                                  Precision, TempStr, Length, 0);
                     if (!Length)
                     {
-                        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
-                              GetLastError());
+                        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
+                              GetLastError()));
                         free(TempStr);
                         va_end(ap);
                         return -1;
@@ -1944,8 +1945,8 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                                                        TempStr, Length, 0);
                     if (!wctombResult)
                     {
-                        fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
-                              GetLastError());
+                        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
+                              GetLastError()));
                         free(TempStr);
                         va_end(ap);
                         return -1;
@@ -1989,8 +1990,8 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                                              TempBuffer, sizeof(TempBuffer), 0);
                 if (!Length)
                 {
-                    fprintf(stderr, "WideCharToMultiByte failed.  Error is %d\n",
-                          GetLastError());
+                    chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
+                          GetLastError()));
                     va_end(ap);
                     return -1;
                 }

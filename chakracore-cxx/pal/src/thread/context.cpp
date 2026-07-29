@@ -28,6 +28,8 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #include "pal/thread.hpp"
 #include "pal/utils.h"
 #include "pal/virtual.h"
+#include "chakra/Logger.h"
+#include <format>
 
 #include <errno.h>
 #include <unistd.h>
@@ -731,7 +733,7 @@ CONTEXT_GetThreadContextFromPort(
         MachRet = thread_get_state(Port, StateFlavor, reinterpret_cast<thread_state_t>(&State), &StateCount);
         if (MachRet != KERN_SUCCESS)
         {
-            fprintf(stderr, "thread_get_state(THREAD_STATE) failed: %d\n", MachRet);
+            chakra::Logger::error(std::format("thread_get_state(THREAD_STATE) failed: {}\n", MachRet));
             goto exit;
         }
 
@@ -929,7 +931,7 @@ CONTEXT_GetThreadContextFromThreadState(
 #endif
 
         default:
-            fprintf(stderr, "Invalid thread state flavor %d\n", threadStateFlavor);
+            chakra::Logger::error(std::format("Invalid thread state flavor {}\n", threadStateFlavor));
             break;
     }
 }

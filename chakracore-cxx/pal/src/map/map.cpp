@@ -37,6 +37,7 @@ Abstract:
 #include <sys/mman.h>
 #include <unistd.h>
 #include <errno.h>
+#include <format>
 
 using namespace CorUnix;
 
@@ -307,9 +308,9 @@ CorUnix::InternalCreateFileMapping(
         && PAGE_READONLY != flProtect
         && PAGE_WRITECOPY != flProtect)
     {
-        fprintf(stderr, "invalid flProtect %#x, acceptable values are PAGE_READONLY "
-                "(%#x), PAGE_READWRITE (%#x) and PAGE_WRITECOPY (%#x).\n", 
-                flProtect, PAGE_READONLY, PAGE_READWRITE, PAGE_WRITECOPY );
+        chakra::Logger::error(std::format("invalid flProtect {:#x}, acceptable values are PAGE_READONLY "
+                "({:#x}), PAGE_READWRITE ({:#x}) and PAGE_WRITECOPY ({:#x}).\n",
+                flProtect, PAGE_READONLY, PAGE_READWRITE, PAGE_WRITECOPY ));
         palError = ERROR_INVALID_PARAMETER;
         goto ExitInternalCreateFileMapping;
     }
@@ -479,7 +480,7 @@ CorUnix::InternalCreateFileMapping(
     
         if (-1 == fstat(UnixFd, &UnixFileInformation))
         {
-            fprintf(stderr, "fstat() failed for this reason %s.\n", strerror(errno));
+            chakra::Logger::error(std::format("fstat() failed for this reason {}.\n", strerror(errno)));
             palError = ERROR_INTERNAL_ERROR;
             goto ExitInternalCreateFileMapping;
         }
@@ -983,8 +984,8 @@ CorUnix::InternalUnmapViewOfFile(
     
     if (-1 == munmap(const_cast<void*>(lpBaseAddress), pView->NumberOfBytesToMap))
     {
-        fprintf(stderr, "Unable to unmap the memory. Error=%s.\n",
-                strerror( errno ) );
+        chakra::Logger::error(std::format("Unable to unmap the memory. Error={}.\n",
+                strerror( errno ) ));
         palError = ERROR_INTERNAL_ERROR;
 
         //
@@ -1395,7 +1396,7 @@ static int32_t MAPProtectionToFileOpenFlags( uint32_t flProtect )
         retVal = O_RDONLY;
         break;
     default:
-        fprintf(stderr, "unexpected flProtect value %#x\n", flProtect);
+        chakra::Logger::error(std::format("unexpected flProtect value {:#x}\n", flProtect));
         retVal = 0;
         break;
     }         

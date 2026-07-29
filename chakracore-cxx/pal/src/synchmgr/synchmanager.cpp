@@ -32,6 +32,7 @@ Abstract:
 #include <signal.h>
 #include <errno.h>
 #include <poll.h>
+#include <format>
 #include "chakra/Logger.h"
 
 namespace CorUnix
@@ -244,8 +245,8 @@ namespace CorUnix
                     }
                     else
                     {
-                        fprintf(stderr, "Unexpected thread wait state %u\n",
-                               dwWaitState);
+                        chakra::Logger::error(std::format("Unexpected thread wait state {}\n",
+                               dwWaitState));
                         palErr = ERROR_INTERNAL_ERROR;
                     }
                     goto BT_exit;
@@ -1442,9 +1443,9 @@ namespace CorUnix
 
         if (static_cast<int32_t>(SynchMgrStatusRunning) != lInit)
         {
-            chakra::Logger::error("Unexpected initialization status found "
-                   "in PrepareForShutdown [expected=%d current=%d]\n",
-                   SynchMgrStatusRunning, lInit);
+            chakra::Logger::error(std::format("Unexpected initialization status found "
+                   "in PrepareForShutdown [expected={} current={}]\n",
+                   static_cast<int>(SynchMgrStatusRunning), lInit));
             // We intentionally not set s_lInitStatus to SynchMgrStatusError
             // cause this could interfere with a previous thread already
             // executing shutdown
@@ -1808,16 +1809,16 @@ namespace CorUnix
                     if (1 < iRet)
                     {
                         // Unexpected iRet > 1
-                        fprintf(stderr, "Unexpected return code %d from blocking poll/kevent call\n",
-                                iRet);
+                        chakra::Logger::error(std::format("Unexpected return code {} from blocking poll/kevent call\n",
+                                iRet));
                         goto RBFPP_exit;
                     }
 
                     if (EINTR != iErrno)
                     {
                         // Unexpected error
-                        fprintf(stderr, "Unexpected error from blocking poll/kevent call: %d (%s)\n",
-                               iErrno, strerror(iErrno));
+                        chakra::Logger::error(std::format("Unexpected error from blocking poll/kevent call: {} ({})\n",
+                               iErrno, strerror(iErrno)));
                         goto RBFPP_exit;
                     }
 
