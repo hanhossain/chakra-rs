@@ -1709,7 +1709,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
             if (errorMessage.Initialize(exception) != JsNoError)
             {
-                std::println(stderr, "ERROR attempting to coerce error to string, using alternate handler");
+                std::println("ERROR attempting to coerce error to string, using alternate handler");
                 bool hasException = false;
                 ChakraRTInterface::JsHasException(&hasException);
                 if (hasException)
@@ -1743,12 +1743,12 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                         IfJsrtErrorFail(CreatePropertyIdFromString("column", &columnPropertyId), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, columnPropertyId, &columnProperty), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
-                        std::println(stderr, "{}\n        at code ({}:{}:{})",
+                        std::println("{}\n        at code ({}:{}:{})",
                             errorMessage.GetString(), path.filename().string(), line + 1, column + 1);
                     }
                     else
                     {
-                        std::println(stderr, "{}\n\tat code ({}:\?\?:\?\?)", errorMessage.GetString(), path.filename().string());
+                        std::println("{}\n\tat code ({}:\?\?:\?\?)", errorMessage.GetString(), path.filename().string());
                     }
                     return true;
                 }
@@ -1773,7 +1773,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, columnPropertyId, &columnProperty), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
 
-                std::println(stderr, "{}\n\tat code ({}:{}:{})",
+                std::println("{}\n\tat code ({}:{}:{})",
                     errorMessage.GetString(), path.filename().string(), (int)line + 1,
                     (int)column + 1);
             }
@@ -1802,13 +1802,13 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                     std::filesystem::path filepath(fName);
 
                     // do not mix char/wchar. print them separately
-                    std::println(stderr, "thrown at {}:\n^", filepath.filename().string());
-                    std::println(stderr, "{}", errorMessage.GetString());
+                    std::println("thrown at {}:\n^", filepath.filename().string());
+                    std::println("{}", errorMessage.GetString());
                 }
                 else
                 {
                     IfJsrtErrorFail(errorStack.Initialize(stackProperty), false);
-                    std::println(stderr, "{}", errorStack.GetString());
+                    std::println("{}", errorStack.GetString());
                 }
             }
         }
