@@ -149,20 +149,6 @@ namespace chakracore::jsrt
             _Out_opt_ void** callbackState);
 
     /// <summary>
-    ///     Request the runtime to break on next JavaScript statement.
-    /// </summary>
-    /// <param name="runtimeHandle">Runtime to request break.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    /// <remarks>
-    ///     The runtime should be in debug state. This API can be called from another runtime.
-    /// </remarks>
-    JsErrorCode
-        JsDiagRequestAsyncBreak(
-            _In_ JsRuntimeHandle runtimeHandle);
-
-    /// <summary>
     ///     List all breakpoints in the current runtime.
     /// </summary>
     /// <param name="breakpoints">Array of breakpoints.</param>

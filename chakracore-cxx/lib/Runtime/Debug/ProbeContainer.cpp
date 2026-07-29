@@ -953,11 +953,6 @@ namespace Js
         debugManager->asyncBreakController.Deactivate();
     }
 
-    bool ProbeContainer::IsAsyncActivate() const
-    {
-        return this->pAsyncHaltCallback != nullptr;
-    }
-
     void ProbeContainer::PrepDiagForEnterScript()
     {
         // This will be called from ParseScriptText.

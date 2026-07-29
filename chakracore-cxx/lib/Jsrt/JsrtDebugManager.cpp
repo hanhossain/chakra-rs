@@ -321,27 +321,6 @@ void JsrtDebugManager::SetResumeType(BREAKRESUMEACTION resumeAction)
     this->resumeAction = resumeAction;
 }
 
-bool JsrtDebugManager::EnableAsyncBreak(Js::ScriptContext* scriptContext)
-{
-    if (!scriptContext->IsDebugContextInitialized())
-    {
-        // Although the script context exists, it hasn't been fully initialized yet.
-        return false;
-    }
-
-    Js::ProbeContainer* probeContainer = scriptContext->GetDebugContext()->GetProbeContainer();
-
-    // This can be called when we are already at break
-    if (!probeContainer->IsAsyncActivate())
-    {
-        probeContainer->AsyncActivate(this);
-
-        scriptContext->GetThreadContext()->GetDebugManager()->GetDebuggingFlags()->SetForceInterpreter(true);
-        return true;
-    }
-    return false;
-}
-
 void JsrtDebugManager::CallDebugEventCallback(JsDiagDebugEvent debugEvent, Js::DynamicObject* eventDataObject, Js::ScriptContext* scriptContext, bool isBreak)
 {
     class AutoClear

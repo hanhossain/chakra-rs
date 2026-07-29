@@ -958,15 +958,6 @@ JsValueRef WScriptJsrt::DumpFunctionPositionCallback(JsValueRef callee, bool isC
     return JS_INVALID_REFERENCE;
 }
 
-// TODO (hanhossain): remove this method entirely
-JsValueRef WScriptJsrt::RequestAsyncBreakCallback(JsValueRef callee, bool isConstructCall,
-    JsValueRef * arguments, unsigned short argumentCount, void * callbackState)
-{
-    Helpers::LogError(u"RequestAsyncBreak can only be called when debugger is attached");
-
-    return JS_INVALID_REFERENCE;
-}
-
 bool WScriptJsrt::CreateNamedFunction(const char* nameString, JsNativeFunction callback,
     JsValueRef* functionVar)
 {
@@ -1017,7 +1008,6 @@ bool WScriptJsrt::Initialize()
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Attach", AttachCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Detach", DetachCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "DumpFunctionPosition", DumpFunctionPositionCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "RequestAsyncBreak", RequestAsyncBreakCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadBinaryFile", LoadBinaryFileCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadTextFile", LoadTextFileCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Flag", FlagCallback));

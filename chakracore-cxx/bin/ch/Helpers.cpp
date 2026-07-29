@@ -233,17 +233,6 @@ const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
     }
 }
 
-void Helpers::LogError(__nullterminated const char16_t *msg, ...)
-{
-    va_list args;
-    va_start(args, msg);
-    std::print("ERROR: ");
-    PAL_vfwprintf(stderr, msg, args);
-    std::println();
-    fflush(stdout);
-    va_end(args);
-}
-
 int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, uint32_t& lengthBytes, bool printFileOpenError)
 {
     int32_t hr = S_OK;
