@@ -27,6 +27,7 @@ Abstract:
 #include <sched.h>
 #include <errno.h>
 #include <limits.h>
+#include "chakra/Logger.h"
 
 namespace CorUnix
 {
@@ -311,7 +312,7 @@ namespace CorUnix
 
         if (ptwiWaitInfo->lObjCount >= MAXIMUM_WAIT_OBJECTS)
         {
-            fprintf(stderr, "Too many objects");
+            chakra::Logger::error("Too many objects");
             palErr = ERROR_INTERNAL_ERROR; 
             goto RWT_exit;
         }       
@@ -367,7 +368,7 @@ namespace CorUnix
                 // This pointer is set in CSynchWaitController only when the
                 // wait controller for the object is created by calling
                 // GetSynchWaitControllersForObjects
-                fprintf(stderr, "Process synch data pointer is missing\n");
+                chakra::Logger::error("Process synch data pointer is missing\n");
                 palErr = ERROR_INTERNAL_ERROR;
                 goto RWT_exit;
             }
@@ -638,7 +639,7 @@ namespace CorUnix
         
         if (0 != m_psdSynchData->GetOwnershipCount())
         {
-            fprintf(stderr, "Ownership count should be zero at this time\n");
+            chakra::Logger::error("Ownership count should be zero at this time\n");
             palErr = ERROR_INTERNAL_ERROR;
             goto SO_exit;
         }

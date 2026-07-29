@@ -25,6 +25,7 @@ Abstract:
 #include "pal/procobj.hpp"
 #include "pal/dbgmsg.h"
 #include "pal/process.h"
+#include "chakra/Logger.h"
 
 using namespace CorUnix;
 
@@ -113,7 +114,7 @@ CorUnix::InternalDuplicateHandle(
     /* Check validity of process handles */
     if (0 == source_process_id || 0 == target_process_id)
     {
-        fprintf(stderr, "Can't duplicate handle: invalid source or destination process");
+        chakra::Logger::error("Can't duplicate handle: invalid source or destination process");
         palError = ERROR_INVALID_PARAMETER;
         goto InternalDuplicateHandleExit;
     }
@@ -122,7 +123,7 @@ CorUnix::InternalDuplicateHandle(
     if (source_process_id != cur_process_id
         && target_process_id != cur_process_id)
     {
-        fprintf(stderr, "Can't duplicate handle : neither source or destination"
+        chakra::Logger::error("Can't duplicate handle : neither source or destination"
                "processes are from current process");
         palError = ERROR_INVALID_PARAMETER;
         goto InternalDuplicateHandleExit;
@@ -130,7 +131,7 @@ CorUnix::InternalDuplicateHandle(
 
     if (FALSE != bInheritHandle)
     {
-        fprintf(stderr, "Can't duplicate handle : bInheritHandle is not FALSE.\n");
+        chakra::Logger::error("Can't duplicate handle : bInheritHandle is not FALSE.\n");
         palError = ERROR_INVALID_PARAMETER;
         goto InternalDuplicateHandleExit;
     }
@@ -160,7 +161,7 @@ CorUnix::InternalDuplicateHandle(
 
     if (NULL == phDuplicate)
     {
-        fprintf(stderr, "Can't duplicate handle : lpTargetHandle is NULL.\n");
+        chakra::Logger::error("Can't duplicate handle : lpTargetHandle is NULL.\n");
         goto InternalDuplicateHandleExit;
     }
 

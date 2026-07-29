@@ -26,6 +26,7 @@ Revision History:
 #include "pal/synchobjects.hpp"
 #include <new>
 #include "pal/dbgmsg.h"
+#include "chakra/Logger.h"
 
 SET_DEFAULT_DEBUG_CHANNEL(SYNC);
 
@@ -308,7 +309,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
             }
             else
             {
-                fprintf(stderr, "Awakened for APC, but no APC is pending\n");
+                chakra::Logger::error("Awakened for APC, but no APC is pending\n");
                 pThread->SetLastError(ERROR_INTERNAL_ERROR);
                 dwRet = WAIT_FAILED;
             }

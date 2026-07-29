@@ -35,6 +35,7 @@ SET_DEFAULT_DEBUG_CHANNEL(PROCESS); // some headers have code with asserts, so d
 #include "pal/misc.h"
 #include "pal/virtual.h"
 #include "pal/stackstring.hpp"
+#include "chakra/Logger.h"
 
 #include <errno.h>
 #include <poll.h>
@@ -267,7 +268,7 @@ PrepareStandardHandle(
 
     if (NO_ERROR != palError)
     {
-        fprintf(stderr, "Unable to access file data\n");
+        chakra::Logger::error("Unable to access file data\n");
         goto PrepareStandardHandleExit;
     }
 
@@ -606,7 +607,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
 
     if (NO_ERROR != palError)
     {
-        fprintf(stderr, "Unable to access local data");
+        chakra::Logger::error("Unable to access local data");
         goto CreateInitialProcessAndThreadObjectsExit;
     }
 
@@ -632,7 +633,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
 
     if (NO_ERROR != palError)
     {
-        fprintf(stderr, "Failure registering process object");
+        chakra::Logger::error("Failure registering process object");
         goto CreateInitialProcessAndThreadObjectsExit;
     }
 
@@ -714,7 +715,7 @@ CorUnix::PROCRemoveThread(
     /* if thread list is empty */
     if (curThread == NULL)
     {
-        fprintf(stderr, "Thread list is empty.\n");
+        chakra::Logger::error("Thread list is empty.\n");
         goto EXIT;
     }
 

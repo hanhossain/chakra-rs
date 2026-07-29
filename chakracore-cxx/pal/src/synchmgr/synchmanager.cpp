@@ -32,6 +32,7 @@ Abstract:
 #include <signal.h>
 #include <errno.h>
 #include <poll.h>
+#include "chakra/Logger.h"
 
 namespace CorUnix
 {
@@ -995,7 +996,7 @@ namespace CorUnix
                 reinterpret_cast<SharedID>(pvSynchData));
             if (NULL == psdSynchData)
             {
-                fprintf(stderr, "Bad shared memory pointer\n");
+                chakra::Logger::error("Bad shared memory pointer\n");
                 goto FOSD_exit;
             }
         }
@@ -1349,7 +1350,7 @@ namespace CorUnix
         }
         else
         {
-            fprintf(stderr, "Multiple PAL Synchronization manager initializations\n");
+            chakra::Logger::error("Multiple PAL Synchronization manager initializations\n");
         }
 
         return pRet;
@@ -1372,7 +1373,7 @@ namespace CorUnix
                                            SynchMgrStatusIdle);
         if (static_cast<int32_t>(SynchMgrStatusIdle) != lInit)
         {
-            fprintf(stderr, "Synchronization Manager already being initialized");
+            chakra::Logger::error("Synchronization Manager already being initialized");
             palErr = ERROR_INTERNAL_ERROR;
             goto I_exit;
         }
@@ -1441,7 +1442,7 @@ namespace CorUnix
 
         if (static_cast<int32_t>(SynchMgrStatusRunning) != lInit)
         {
-            fprintf(stderr, "Unexpected initialization status found "
+            chakra::Logger::error("Unexpected initialization status found "
                    "in PrepareForShutdown [expected=%d current=%d]\n",
                    SynchMgrStatusRunning, lInit);
             // We intentionally not set s_lInitStatus to SynchMgrStatusError
@@ -2196,7 +2197,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::SendMsgToRemoteWorker(
     )
     {
-        fprintf(stderr, "There should never be a reason to send a message to a remote worker\n");
+        chakra::Logger::error("There should never be a reason to send a message to a remote worker\n");
         return ERROR_INTERNAL_ERROR;
     }
 
@@ -2755,7 +2756,7 @@ namespace CorUnix
             poll(NULL, 0, INFTIM);
             sched_yield();
         }
-        fprintf(stderr, "This code should never be executed\n");
+        chakra::Logger::error("This code should never be executed\n");
     }
 
     /*++

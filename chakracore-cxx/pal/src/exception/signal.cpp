@@ -43,6 +43,7 @@ Abstract:
 #include <unistd.h>
 
 #include "pal/context.h"
+#include "chakra/Logger.h"
 
 using namespace CorUnix;
 
@@ -439,7 +440,7 @@ void SEHSetSafeState(CPalThread *pthrCurrent, BOOL state)
 {
     if (NULL == pthrCurrent)
     {
-        fprintf(stderr, "Unable to get the thread object.\n" );
+        chakra::Logger::error("Unable to get the thread object.\n" );
         return;
     }
     pthrCurrent->sehInfo.safe_state = state;
@@ -461,7 +462,7 @@ BOOL SEHGetSafeState(CPalThread *pthrCurrent)
 {
     if (NULL == pthrCurrent)
     {
-        fprintf(stderr, "Unable to get the thread object.\n" );
+        chakra::Logger::error("Unable to get the thread object.\n" );
         return FALSE;
     }
     return pthrCurrent->sehInfo.safe_state;

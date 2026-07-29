@@ -41,6 +41,7 @@ Abstract:
 #include <sys/mount.h>
 #include <errno.h>
 #include <limits.h>
+#include "chakra/Logger.h"
 
 using namespace CorUnix;
 
@@ -94,7 +95,7 @@ void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool 
 
     if (NO_ERROR != palError)
     {
-        fprintf(stderr, "Unable to obtain data to cleanup file object");
+        chakra::Logger::error("Unable to obtain data to cleanup file object");
         return;
     }
 
@@ -151,7 +152,7 @@ void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode )
 
     if ( !lpErrorCode )
     {
-        fprintf(stderr, "lpErrorCode has to be valid\n" );
+        chakra::Logger::error("lpErrorCode has to be valid\n" );
         return;
     }
 
@@ -251,7 +252,7 @@ CorUnix::InternalWriteFile(
     }
     else
     {
-        fprintf(stderr, "lpNumberOfBytesWritten is NULL\n" );
+        chakra::Logger::error("lpNumberOfBytesWritten is NULL\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto done;
     }
@@ -264,7 +265,7 @@ CorUnix::InternalWriteFile(
     }
     else if ( lpOverlapped )
     {
-        fprintf(stderr, "lpOverlapped is not NULL, as it should be.\n" );
+        chakra::Logger::error("lpOverlapped is not NULL, as it should be.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto done;
     }
@@ -320,7 +321,7 @@ CorUnix::InternalWriteFile(
 
         if (NO_ERROR != palError)
         {
-            fprintf(stderr, "Failed to get the current file position\n");
+            chakra::Logger::error("Failed to get the current file position\n");
             palError = ERROR_INTERNAL_ERROR;
             goto done;
         }

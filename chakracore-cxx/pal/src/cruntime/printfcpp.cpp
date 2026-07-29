@@ -30,6 +30,7 @@ Revision History:
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/cruntime.h"
+#include "chakra/Logger.h"
 
 #include <errno.h>
 
@@ -1167,7 +1168,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                     }
                     else
                     {
-                        fprintf(stderr, "Unable to convert from multibyte "
+                        chakra::Logger::error("Unable to convert from multibyte "
                                " to wide char.\n" );
                         LOGEXIT("vfwprintf returns int -1\n");
                         va_end(ap);
@@ -1581,7 +1582,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                     }
                     else
                     {
-                        fprintf(stderr, "Unable to convert from multibyte "
+                        chakra::Logger::error("Unable to convert from multibyte "
                                " to wide char.\n" );
                         va_end(ap);
                         return -1;
@@ -1765,7 +1766,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
 
                     if (strncpy_s(TempNumberBuffer, TempCount+1, reinterpret_cast<char*>(BufferPtr), TempCount) != SAFECRT_SUCCESS)
                     {
-                        fprintf(stderr, "strncpy_s failed!\n");
+                        chakra::Logger::error("strncpy_s failed!\n");
                         free(TempNumberBuffer);
                         va_end(ap);
                         return -1;
@@ -1799,7 +1800,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
 
                     if (strncpy_s(TempNumberBuffer, TempInt+1, reinterpret_cast<char*>(BufferPtr), TempInt) != SAFECRT_SUCCESS)
                     {
-                        fprintf(stderr, "strncpy_s failed!\n");
+                        chakra::Logger::error("strncpy_s failed!\n");
                         free(TempNumberBuffer);
                         va_end(ap);
                         return -1;

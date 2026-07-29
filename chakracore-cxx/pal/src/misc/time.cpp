@@ -25,6 +25,7 @@ Abstract:
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/misc.h"
+#include "chakra/Logger.h"
 
 #include <time.h>
 #include <sys/time.h>
@@ -246,7 +247,7 @@ QueryThreadCycleTime(
 
     if(!GetThreadTimesInternal(ThreadHandle, &kernelTime, &userTime))
     {
-        fprintf(stderr, "Could not get cycle time for current thread");
+        chakra::Logger::error("Could not get cycle time for current thread");
         retval = FALSE;
         goto EXIT;
     }
@@ -286,7 +287,7 @@ GetTickCount64Fallback()
         // use denom == 0 to indicate that s_TimebaseInfo is uninitialised.
         if (s_TimebaseInfo.denom == 0)
         {
-            fprintf(stderr, "s_TimebaseInfo is uninitialized.\n");
+            chakra::Logger::error("s_TimebaseInfo is uninitialized.\n");
             goto EXIT;
         }
         retval = (mach_absolute_time() * s_TimebaseInfo.numer / s_TimebaseInfo.denom) / tccMillieSecondsToNanoSeconds;

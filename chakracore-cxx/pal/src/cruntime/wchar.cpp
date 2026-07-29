@@ -27,6 +27,7 @@ Abstract:
 
 #include "pal/thread.hpp"
 #include "pal/threadsusp.hpp"
+#include "chakra/Logger.h"
 
 #include <errno.h>
 #include <limits.h>
@@ -95,7 +96,7 @@ char16_t* Internal_i64tow(int64_t value, char16_t* string, int radix, BOOL isI64
 
     if (radix < 2 || radix > 36)
     {
-        fprintf(stderr, "Invalid radix, radix must be between 2 and 36\n" );
+        chakra::Logger::error("Invalid radix, radix must be between 2 and 36\n" );
         SetLastError(ERROR_INVALID_PARAMETER);
         return string;
     }

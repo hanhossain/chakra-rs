@@ -39,6 +39,7 @@ Abstract:
 #include "pal/debug.h"
 #include "pal/locale.h"
 #include "pal/init.h"
+#include "chakra/Logger.h"
 
 #if defined(__APPLE__)
 #include "../exception/machexception.h"
@@ -176,7 +177,7 @@ Initialize()
         // different, we can't run.
         if (VIRTUAL_PAGE_SIZE != getpagesize())
         {
-            fprintf(stderr, "VIRTUAL_PAGE_SIZE is incorrect for this system!\n"
+            chakra::Logger::error("VIRTUAL_PAGE_SIZE is incorrect for this system!\n"
                 "Change include/pal/virtual.h and clr/src/inc/stdmacros.h "
                 "to reflect the correct page size of %d.\n", getpagesize());
         }
@@ -364,7 +365,7 @@ done:
 
     if (retval != 0 && GetLastError() == ERROR_SUCCESS)
     {
-        fprintf(stderr, "returning failure, but last error not set\n");
+        chakra::Logger::error("returning failure, but last error not set\n");
     }
 
     LOGEXIT("PAL_Initialize returns int %d\n", retval);

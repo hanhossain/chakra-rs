@@ -29,6 +29,7 @@ Abstract:
 #include "pal/map.hpp"
 #include "pal/thread.hpp"
 #include "pal/file.hpp"
+#include "chakra/Logger.h"
 #include <new>
 
 #include <sys/stat.h>
@@ -130,7 +131,7 @@ FileMappingCleanupRoutine(
 
         if (NO_ERROR != palError)
         {
-            fprintf(stderr, "Unable to obtain immutable data for object to be reclaimed");
+            chakra::Logger::error("Unable to obtain immutable data for object to be reclaimed");
             return;
         }
 
@@ -156,7 +157,7 @@ FileMappingCleanupRoutine(
 
         if (NO_ERROR != palError)
         {
-            fprintf(stderr, "Unable to obtain process local data for object to be reclaimed");
+            chakra::Logger::error("Unable to obtain process local data for object to be reclaimed");
             return;
         }
 
@@ -290,14 +291,14 @@ CorUnix::InternalCreateFileMapping(
 
     if (lpName != nullptr)
     {
-        fprintf(stderr, "lpName: Cross-process named objects are not supported in PAL");
+        chakra::Logger::error("lpName: Cross-process named objects are not supported in PAL");
         palError = ERROR_NOT_SUPPORTED;
         goto ExitInternalCreateFileMapping;
     }
 
     if (0 != dwMaximumSizeHigh)
     {
-        fprintf(stderr, "dwMaximumSizeHigh is always 0.\n");
+        chakra::Logger::error("dwMaximumSizeHigh is always 0.\n");
         palError = ERROR_INVALID_PARAMETER;
         goto ExitInternalCreateFileMapping;
     }
@@ -322,7 +323,7 @@ CorUnix::InternalCreateFileMapping(
 
     if (hFile != INVALID_HANDLE_VALUE && NULL != lpName)
     {
-        fprintf(stderr, "If hFile is not -1, then lpName must be NULL.\n" );
+        chakra::Logger::error("If hFile is not -1, then lpName must be NULL.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto ExitInternalCreateFileMapping;
     }
@@ -471,7 +472,7 @@ CorUnix::InternalCreateFileMapping(
         } 
         else 
         {
-            fprintf(stderr, "should not get here\n");
+            chakra::Logger::error("should not get here\n");
             palError = ERROR_INTERNAL_ERROR;
             goto ExitInternalCreateFileMapping;
         }
@@ -623,7 +624,7 @@ CorUnix::InternalOpenFileMapping(
 
     if ( MAPContainsInvalidFlags( dwDesiredAccess ) ) 
     {
-        fprintf(stderr, "dwDesiredAccess can be one or more of FILE_MAP_READ, "
+        chakra::Logger::error("dwDesiredAccess can be one or more of FILE_MAP_READ, "
                "FILE_MAP_WRITE, FILE_MAP_COPY or FILE_MAP_ALL_ACCESS.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto ExitInternalOpenFileMapping;
@@ -774,7 +775,7 @@ CorUnix::InternalMapViewOfFile(
     /* Sanity checks */
     if ( MAPContainsInvalidFlags( dwDesiredAccess ) )
     {
-        fprintf(stderr, "dwDesiredAccess can be one of FILE_MAP_WRITE, FILE_MAP_READ,"
+        chakra::Logger::error("dwDesiredAccess can be one of FILE_MAP_WRITE, FILE_MAP_READ,"
                " FILE_MAP_COPY or FILE_MAP_ALL_ACCESS.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto InternalMapViewOfFileExit;
@@ -782,7 +783,7 @@ CorUnix::InternalMapViewOfFile(
 
     if ( 0 != dwFileOffsetHigh || 0 != dwFileOffsetLow )
     {
-        fprintf(stderr, "dwFileOffsetHigh and dwFileOffsetLow are always 0.\n" );
+        chakra::Logger::error("dwFileOffsetHigh and dwFileOffsetLow are always 0.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto InternalMapViewOfFileExit;
     }
@@ -889,7 +890,7 @@ CorUnix::InternalMapViewOfFile(
         }
         else
         {
-            fprintf(stderr, "MapFileMapToMmapFlags failed!\n" );
+            chakra::Logger::error("MapFileMapToMmapFlags failed!\n" );
             palError = ERROR_INTERNAL_ERROR;
             goto InternalMapViewOfFileLeaveCriticalSection;
         }
@@ -1178,7 +1179,7 @@ static uint32_t MAPConvertProtectToAccess( uint32_t flProtect )
         return FILE_MAP_COPY;
     }
 
-    fprintf(stderr, "Unknown flag for flProtect. This line "
+    chakra::Logger::error("Unknown flag for flProtect. This line "
             "should not have been executed.\n " );
     return static_cast<uint32_t>(-1);
 }
@@ -1211,7 +1212,7 @@ static uint32_t MAPConvertAccessToProtect(uint32_t flAccess)
         return PAGE_NOACCESS;
     }
 
-    fprintf(stderr, "Unknown flag for flAccess.\n");
+    chakra::Logger::error("Unknown flag for flAccess.\n");
     return static_cast<uint32_t>(-1);
 }
 
@@ -1248,7 +1249,7 @@ static int32_t MAPFileMapToMmapFlags( uint32_t flags )
         return PROT_READ | PROT_WRITE;
     } 
 
-    fprintf(stderr, "Unknown flag. This line should not have been executed.\n" );
+    chakra::Logger::error("Unknown flag. This line should not have been executed.\n" );
     return -1;
 }
 

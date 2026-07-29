@@ -24,6 +24,7 @@ Abstract:
 #include "pal/cs.hpp"
 #include <new>
 #include "pal/dbgmsg.h"
+#include "chakra/Logger.h"
 
 using namespace CorUnix;
 
@@ -275,7 +276,7 @@ bool CSimpleHandleManager::ValidateHandle(HANDLE handle)
     
     if (NULL == m_rghteHandleTable)
     {
-        fprintf(stderr, "Handle Manager is not initialized!\n");
+        chakra::Logger::error("Handle Manager is not initialized!\n");
         return FALSE;
     }
     

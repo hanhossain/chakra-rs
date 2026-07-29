@@ -34,6 +34,7 @@ Revision History:
 #include <sys/stat.h>
 #include <limits.h>
 #include <debugmacrosext.h>
+#include "chakra/Logger.h"
 
 #if defined(_AIX)
 // AIX requires explicit definition of the union semun (see semctl man page)
@@ -229,7 +230,7 @@ CThreadSuspensionInfo::InternalResumeThreadFromData(
 
     if (SignalHandlerThread == pthrTarget->GetThreadType())
     {
-        fprintf(stderr, "Attempting to resume the signal handling thread, which can never be suspended.\n");
+        chakra::Logger::error("Attempting to resume the signal handling thread, which can never be suspended.\n");
         palError = ERROR_INVALID_HANDLE;
         goto InternalResumeThreadFromDataExit;
     }
@@ -800,7 +801,7 @@ CThreadSuspensionInfo::InitializePreCreate()
 
     if (m_nSemsuspid == m_nSemrespid)
     {
-        fprintf(stderr, "Suspension and Resumption Semaphores have the same id\n");
+        chakra::Logger::error("Suspension and Resumption Semaphores have the same id\n");
         goto InitializePreCreateExit;
     }
 

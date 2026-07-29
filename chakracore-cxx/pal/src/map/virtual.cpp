@@ -28,6 +28,7 @@ Abstract:
 #include "pal/map.h"
 #include "pal/init.h"
 #include "common.h"
+#include "chakra/Logger.h"
 
 #include <sys/types.h>
 #include <sys/mman.h>
@@ -484,7 +485,7 @@ static BOOL VIRTUALReleaseMemory( PCMI pMemoryToBeReleased )
 
     if ( !pMemoryToBeReleased )
     {
-        fprintf(stderr, "Invalid pointer.\n" );
+        chakra::Logger::error("Invalid pointer.\n" );
         return FALSE;
     }
 
@@ -851,7 +852,7 @@ static void * VIRTUALReserveMemory(
         if ( !VIRTUALStoreAllocationInfo( StartBoundary, MemSize,
                                    flAllocationType, flProtect ) )
         {
-            fprintf(stderr, "Unable to store the structure in the list.\n");
+            chakra::Logger::error("Unable to store the structure in the list.\n");
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             munmap( pRetVal, MemSize );
             pRetVal = NULL;
@@ -1011,7 +1012,7 @@ static void * VIRTUALCommitMemory(
 
             if ( !pInformation )
             {
-                fprintf(stderr, "Unable to locate the region information.\n" );
+                chakra::Logger::error("Unable to locate the region information.\n" );
                 pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
                 pRetVal = NULL;
                 goto done;
@@ -1131,7 +1132,7 @@ error:
         munmap( pRetVal, MemSize );
         if ( VIRTUALReleaseMemory( pInformation ) == FALSE )
         {
-            fprintf(stderr, "Unable to remove the PCMI entry from the list.\n" );
+            chakra::Logger::error("Unable to remove the PCMI entry from the list.\n" );
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             pRetVal = NULL;
             goto done;
@@ -1176,7 +1177,7 @@ static BOOL VIRTUALGetBackingFile(CPalThread *pthrCurrent)
 
     if (!(PALGetLibRotorPalName(palName, MAX_PATH_FNAME)))
     {
-        fprintf(stderr, "Surprisingly, LibRotorPal can't be found!");
+        chakra::Logger::error("Surprisingly, LibRotorPal can't be found!");
         goto done;
     }
     gBackingFile = InternalOpen(palName, O_RDONLY);
@@ -1226,14 +1227,14 @@ VirtualAlloc_(
     /* Test for un-supported flags. */
     if ( ( flAllocationType & ~( MEM_COMMIT | MEM_RESERVE | MEM_TOP_DOWN | MEM_RESERVE_EXECUTABLE ) ) != 0 )
     {
-        fprintf(stderr, "flAllocationType can be one, or any combination of MEM_COMMIT, \
+        chakra::Logger::error("flAllocationType can be one, or any combination of MEM_COMMIT, \
                MEM_RESERVE, MEM_TOP_DOWN, or MEM_RESERVE_EXECUTABLE.\n" );
         pthrCurrent->SetLastError( ERROR_INVALID_PARAMETER );
         goto done;
     }
     if ( VIRTUALContainsInvalidProtectionFlags( flProtect ) )
     {
-        fprintf(stderr, "flProtect can be one of PAGE_READONLY, PAGE_READWRITE, or \
+        chakra::Logger::error("flProtect can be one of PAGE_READONLY, PAGE_READWRITE, or \
                PAGE_EXECUTE_READWRITE || PAGE_NOACCESS. \n" );
 
         pthrCurrent->SetLastError( ERROR_INVALID_PARAMETER );
@@ -1352,7 +1353,7 @@ VirtualFreeEnclosing_(
     }
     else
     {
-        fprintf(stderr, "Unable to unmap the memory, munmap() returned "
+        chakra::Logger::error("Unable to unmap the memory, munmap() returned "
             "an abnormal value.\n");
         pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
         bRetVal = FALSE;
@@ -1368,7 +1369,7 @@ VirtualFreeEnclosing_(
         }
         else
         {
-            fprintf(stderr, "Unable to unmap the memory, munmap() returned "
+            chakra::Logger::error("Unable to unmap the memory, munmap() returned "
                 "an abnormal value.\n");
             pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
             bRetVal = FALSE;
@@ -1439,7 +1440,7 @@ VirtualAlloc(
             // Free the regions enclosing the 64K aligned region we intend to use.
             if (VirtualFreeEnclosing_(address, dwSize, KB64, addr64) == 0)
             {
-                fprintf(stderr, "Unable to unmap the enclosing memory.\n");
+                chakra::Logger::error("Unable to unmap the enclosing memory.\n");
                 return nullptr;
             }
 
@@ -1538,7 +1539,7 @@ VirtualFree(
         pUnCommittedMem = VIRTUALFindRegionInformation( StartBoundary );
         if (!pUnCommittedMem)
         {
-            fprintf(stderr, "Unable to locate the region information.\n" );
+            chakra::Logger::error("Unable to locate the region information.\n" );
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             bRetVal = FALSE;
             goto VirtualFreeExit;
@@ -1573,7 +1574,7 @@ VirtualFree(
         }
         else
         {
-            fprintf(stderr, "mmap() returned an abnormal value.\n" );
+            chakra::Logger::error("mmap() returned an abnormal value.\n" );
             bRetVal = FALSE;
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             goto VirtualFreeExit;
@@ -1608,7 +1609,7 @@ VirtualFree(
         {
             if ( VIRTUALReleaseMemory( pMemoryToBeReleased ) == FALSE )
             {
-                fprintf(stderr, "Unable to remove the PCMI entry from the list.\n" );
+                chakra::Logger::error("Unable to remove the PCMI entry from the list.\n" );
                 pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
                 bRetVal = FALSE;
                 goto VirtualFreeExit;
@@ -1617,7 +1618,7 @@ VirtualFree(
         }
         else
         {
-            fprintf(stderr, "Unable to unmap the memory, munmap() returned "
+            chakra::Logger::error("Unable to unmap the memory, munmap() returned "
                    "an abnormal value.\n" );
             pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
             bRetVal = FALSE;
@@ -1663,7 +1664,7 @@ VirtualProtect(
 #if DEBUG
     if ( VIRTUALContainsInvalidProtectionFlags( flNewProtect ) )
     {
-        fprintf(stderr, "flProtect can be one of PAGE_NOACCESS, PAGE_READONLY, "
+        chakra::Logger::error("flProtect can be one of PAGE_NOACCESS, PAGE_READONLY, "
                "PAGE_READWRITE, PAGE_EXECUTE, PAGE_EXECUTE_READ "
                ", or PAGE_EXECUTE_READWRITE. \n" );
         SetLastError( ERROR_INVALID_PARAMETER );

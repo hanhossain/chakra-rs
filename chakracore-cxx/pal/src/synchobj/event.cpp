@@ -24,6 +24,7 @@ Revision History:
 #include "pal/event.hpp"
 #include "pal/thread.hpp"
 #include "pal/dbgmsg.h"
+#include "chakra/Logger.h"
 
 using namespace CorUnix;
 
@@ -154,7 +155,7 @@ CorUnix::InternalCreateEvent(
 
     if (lpName != nullptr)
     {
-        fprintf(stderr, "lpName: Cross-process named objects are not supported in PAL");
+        chakra::Logger::error("lpName: Cross-process named objects are not supported in PAL");
         palError = ERROR_NOT_SUPPORTED;
         goto InternalCreateEventExit;
     }

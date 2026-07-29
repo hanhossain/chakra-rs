@@ -22,6 +22,7 @@ Abstract:
 #include <new>
 #include "pal/cs.hpp"
 #include "pal/dbgmsg.h"
+#include "chakra/Logger.h"
 
 #include <stddef.h>
 
@@ -84,7 +85,7 @@ CSharedMemoryObject::Initialize(
             //
             if (NULL == psmod)
             {
-                fprintf(stderr, "psmod should not be NULL");
+                chakra::Logger::error("psmod should not be NULL");
                 palError = ERROR_INTERNAL_ERROR;
                 goto InitializeExit;
             } 
@@ -92,7 +93,7 @@ CSharedMemoryObject::Initialize(
             m_pvSharedData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjSharedData);
             if (NULL == m_pvSharedData)
             {
-                fprintf(stderr, "Unable to map shared data area\n");
+                chakra::Logger::error("Unable to map shared data area\n");
                 palError = ERROR_INTERNAL_ERROR;
                 goto InitializeExit;
             }
@@ -172,7 +173,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
     psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, m_shmod);
     if (NULL == psmod)
     {
-        fprintf(stderr, "Unable to map shared object data\n");
+        chakra::Logger::error("Unable to map shared object data\n");
         palError = ERROR_INTERNAL_ERROR;
         goto InitializeFromExistingSharedDataExit;
     }
@@ -197,7 +198,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
         }
         else
         {
-            fprintf(stderr, "Unable to map object name\n");
+            chakra::Logger::error("Unable to map object name\n");
             palError = ERROR_INTERNAL_ERROR;
             goto InitializeFromExistingSharedDataExit;
         }
@@ -232,7 +233,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
         }
         else
         {
-            fprintf(stderr, "Unable to map object immutable data\n");
+            chakra::Logger::error("Unable to map object immutable data\n");
             palError = ERROR_INTERNAL_ERROR;
             goto InitializeFromExistingSharedDataExit;
         }
@@ -243,7 +244,7 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
         m_pvSharedData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjSharedData);
         if (NULL == m_pvSharedData)
         {
-            fprintf(stderr, "Unable to map object shared data\n");
+            chakra::Logger::error("Unable to map object shared data\n");
             palError = ERROR_INTERNAL_ERROR;
             goto InitializeFromExistingSharedDataExit;
         }
@@ -744,7 +745,7 @@ CSharedMemoryObject::DereferenceSharedData()
 
                         if (!SHMSetInfo(SIID_NAMED_OBJECTS, psmod->shmNextObj))
                         {
-                            fprintf(stderr, "Failed to set shared named object list head");
+                            chakra::Logger::error("Failed to set shared named object list head");
                         }
                     }
 
@@ -779,7 +780,7 @@ CSharedMemoryObject::DereferenceSharedData()
     }
     else
     {
-        fprintf(stderr, "Multiple calls to DereferenceSharedData\n");
+        chakra::Logger::error("Multiple calls to DereferenceSharedData\n");
     }
 
     LOGEXIT("CSharedMemoryObject::DereferenceSharedData returns %d\n",
@@ -800,7 +801,7 @@ CSharedMemoryObject::~CSharedMemoryObject()
 {
     if (!m_fSharedDataDereferenced)
     {
-        fprintf(stderr, "DereferenceSharedData not called before object destructor -- delete called directly?\n");
+        chakra::Logger::error("DereferenceSharedData not called before object destructor -- delete called directly?\n");
         DereferenceSharedData();
     }
 
@@ -959,7 +960,7 @@ CSharedMemoryObject::GetSynchStateController(
     // This is not a waitable object!
     //
 
-    fprintf(stderr, "Attempt to obtain a synch state controller on a non-waitable object\n");
+    chakra::Logger::error("Attempt to obtain a synch state controller on a non-waitable object\n");
     return ERROR_INVALID_HANDLE;
 }
 
@@ -989,7 +990,7 @@ CSharedMemoryObject::GetSynchWaitController(
     // This is not a waitable object!!!
     //
 
-    fprintf(stderr, "Attempt to obtain a synch wait controller on a non-waitable object\n");
+    chakra::Logger::error("Attempt to obtain a synch wait controller on a non-waitable object\n");
     return ERROR_INVALID_HANDLE;
 }
 
@@ -1034,7 +1035,7 @@ CSharedMemoryObject::GetObjectSynchData(
     // This is not a waitable object!!!
     //
 
-    fprintf(stderr, "Attempt to obtain a synch data for a non-waitable object\n");
+    chakra::Logger::error("Attempt to obtain a synch data for a non-waitable object\n");
     return ERROR_INVALID_HANDLE;
 }
 
@@ -1219,7 +1220,7 @@ CSharedMemoryWaitableObject::~CSharedMemoryWaitableObject()
 {
     if (!m_fSharedDataDereferenced)
     {
-        fprintf(stderr, "DereferenceSharedData not called before object destructor -- delete called directly?\n");
+        chakra::Logger::error("DereferenceSharedData not called before object destructor -- delete called directly?\n");
         DereferenceSharedData();
     }
     

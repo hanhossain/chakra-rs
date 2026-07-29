@@ -25,6 +25,7 @@ Revision History:
 #include "pal/critsect.h"
 #include "pal/dbgmsg.h"
 #include "pal/misc.h"
+#include "chakra/Logger.h"
 
 #include <stdlib.h>
 
@@ -166,7 +167,7 @@ GetEnvironmentVariableW(
     if ( 0 == WideCharToMultiByte( CP_ACP, 0, lpName, -1, inBuff, 
                                    inBuffSize, NULL ) )
     {
-        fprintf(stderr, "WideCharToMultiByte failed!\n" );
+        chakra::Logger::error("WideCharToMultiByte failed!\n" );
         SetLastError( ERROR_INTERNAL_ERROR );
         goto done;
     }
@@ -189,7 +190,7 @@ GetEnvironmentVariableW(
         }
         else
         {
-            fprintf(stderr, "MultiByteToWideChar failed!\n" );
+            chakra::Logger::error("MultiByteToWideChar failed!\n" );
             SetLastError( ERROR_INTERNAL_ERROR );
             size = 0;
             *lpBuffer = '\0';

@@ -176,6 +176,7 @@ is still alive).
 #include <string.h>
 #include <sched.h>
 #include <pthread.h>
+#include "chakra/Logger.h"
 
 SET_DEFAULT_DEBUG_CHANNEL(SHMEM);
 
@@ -854,7 +855,7 @@ SHMPTR SHMGetInfo(SHM_INFO_ID element)
        current thread is here, it can't be in SHMLock or SHMUnlock */
     if( reinterpret_cast<HANDLE>(pthread_self()) != locking_thread )
     {
-        fprintf(stderr, "SHMGetInfo called while thread does not hold the SHM lock!\n");
+        chakra::Logger::error("SHMGetInfo called while thread does not hold the SHM lock!\n");
     }
 
     header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
@@ -896,7 +897,7 @@ BOOL SHMSetInfo(SHM_INFO_ID element, SHMPTR value)
        current thread is here, it can't be in SHMLock or SHMUnlock */
     if( reinterpret_cast<HANDLE>(pthread_self()) != locking_thread )
     {
-        fprintf(stderr, "SHMGetInfo called while thread does not hold the SHM lock!\n");
+        chakra::Logger::error("SHMGetInfo called while thread does not hold the SHM lock!\n");
     }
 
     header = static_cast<SHM_FIRST_HEADER*>(shm_segment_bases[0].Load());
@@ -1307,13 +1308,13 @@ SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oi
 
     if(oid==SHM_NAMED_LAST)
     {
-        fprintf(stderr, "Invalid named object type.\n");
+        chakra::Logger::error("Invalid named object type.\n");
         return 0;
     }
 
     if (pbNameExists == NULL)
     {
-        fprintf(stderr, "pbNameExists must be non-NULL.\n");
+        chakra::Logger::error("pbNameExists must be non-NULL.\n");
     }
 
     SHMLock();
@@ -1329,7 +1330,7 @@ SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oi
         pNamedObject = static_cast<PSHM_NAMED_OBJECTS>(SHMPTR_TO_PTR(shmNamedObject));
         if(NULL == pNamedObject)
         {
-            fprintf(stderr, "Got invalid SHMPTR value; list of named objects is "
+            chakra::Logger::error("Got invalid SHMPTR value; list of named objects is "
                    "corrupted.\n");
             break;
         }
@@ -1435,7 +1436,7 @@ void SHMAddNamedObject( SHMPTR shmNewNamedObject )
 
     if ( pshmNew == NULL )
     {
-        fprintf(stderr, "pshmNew should not be NULL\n" );
+        chakra::Logger::error("pshmNew should not be NULL\n" );
     }
 
     SHMLock();
@@ -1444,7 +1445,7 @@ void SHMAddNamedObject( SHMPTR shmNewNamedObject )
 
     if ( !SHMSetInfo( SIID_NAMED_OBJECTS, shmNewNamedObject ) )
     {
-        fprintf(stderr, "Unable to add the mapping object to shared memory.\n" );
+        chakra::Logger::error("Unable to add the mapping object to shared memory.\n" );
     }
 
     SHMRelease();
