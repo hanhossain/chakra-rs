@@ -248,12 +248,7 @@ extern const char16_t* W16_NULLSTRING;
 
 #else /* defined(_DEBUG) */
 
-#define ASSERT(...) \
-{ \
-    PRINT_ERROR("] %s %s:%d",__FUNCTION__,__FILE__,\
-                   __LINE__);\
-    PRINT_ERROR(__VA_ARGS__);\
-}
+#define ASSERT(...) fprintf(stderr, __VA_ARGS__);
 
 #define _ASSERT assert
 #define _ASSERT_MSG(expr, args...) \
