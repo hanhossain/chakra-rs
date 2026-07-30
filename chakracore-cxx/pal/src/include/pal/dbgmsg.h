@@ -248,13 +248,7 @@ extern const char16_t* W16_NULLSTRING;
 #else /* defined(_DEBUG) */
 
 #define _ASSERT assert
-#define _ASSERT_MSG(expr, args...) \
-    do { \
-        if (!(expr)) \
-        { \
-            fprintf(stderr, "Expression: " #expr ", Description: " args); \
-        } \
-    } while(0)
+#define _ASSERT_MSG(expr, args...) assert(expr)
 
 #endif /* defined(_DEBUG) */
 
