@@ -385,46 +385,6 @@ done:
 
 /*++
 Function:
-  WriteFileW
-
-Note:
-  lpOverlapped always NULL.
-
-See MSDN doc.
---*/
-BOOL
-WriteFile(
-       HANDLE hFile,
-       const void * lpBuffer,
-       uint32_t nNumberOfBytesToWrite,
-       uint32_t * lpNumberOfBytesWritten,
-       LPOVERLAPPED lpOverlapped)
-{
-    PAL_ERROR palError;
-    CPalThread *pThread;
-    
-    pThread = InternalGetCurrentThread();
-
-    palError = InternalWriteFile(
-        pThread,
-        hFile,
-        lpBuffer,
-        nNumberOfBytesToWrite,
-        lpNumberOfBytesWritten,
-        lpOverlapped
-        );
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-
-    LOGEXIT("WriteFile returns BOOL %d\n", NO_ERROR == palError);
-    return NO_ERROR == palError;
-}
-
-/*++
-Function:
   GetStdHandle
 
 See MSDN doc.
