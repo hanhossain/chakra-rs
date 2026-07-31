@@ -45,7 +45,6 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 }
 
 HostConfigFlags::HostConfigFlags() :
-    GenerateParserStateCache(false), GenerateParserStateCacheIsEnabled(false),
     UseParserStateCache(false), UseParserStateCacheIsEnabled(false),
     InspectMaxStringLength(16), InspectMaxStringLengthIsEnabled(false),
     Serialized(nullptr), SerializedIsEnabled(false),
@@ -65,12 +64,6 @@ HostConfigFlags::HostConfigFlags() :
 bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
 {
     const auto flagStringsNormalized = chakra_rs::str_helper::to_lowercase(flagsString);
-    if (chakra_rs::str_helper::to_lowercase(u"GenerateParserStateCache") == flagStringsNormalized)
-    {
-        this->GenerateParserStateCacheIsEnabled = true;
-        Parse<bool>(parser, &this->GenerateParserStateCache);
-        return true;
-    }
     if (chakra_rs::str_helper::to_lowercase(u"UseParserStateCache") == flagStringsNormalized)
     {
         this->UseParserStateCacheIsEnabled = true;
@@ -148,7 +141,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
 
 void HostConfigFlags::PrintUsageString()
 {
-    std::println("{:>20}          \t{}", "GenerateParserStateCache", "\"Parse source file to create parser state cache and write it to file or console\"");
     std::println("{:>20}          \t{}", "UseParserStateCache", "\"Create parser state cache while parsing and use it during script execution\"");
     std::println("{:>20}          \t{}", "InspectMaxStringLength", "\"Max string length to dump in locals inspection\"");
     std::println("{:>20}          \t{}", "Serialized", "\"If source is UTF8, deserializes from bytecode file\"");

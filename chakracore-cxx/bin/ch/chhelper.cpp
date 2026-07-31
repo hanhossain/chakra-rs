@@ -262,6 +262,7 @@ Error:
     return hr;
 }
 
+// TODO (hanhossain): GenerateParserStateCache
 int32_t CreateParserState(const char *fileContents, JsFinalizeCallback fileContentsFinalizeCallback)
 {
     int32_t hr = S_OK;
@@ -479,10 +480,6 @@ int32_t ExecuteTest(const std::string &fileName, JsRuntimeHandle &chRuntime, JsR
         {
             CreateAndRunSerializedScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);
-        }
-        else if (HostConfigFlags::flags.GenerateParserStateCacheIsEnabled)
-        {
-            CreateParserState(fileContents, WScriptJsrt::FinalizeFree);
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
