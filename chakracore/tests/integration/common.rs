@@ -1,6 +1,7 @@
 use chakracore_sys::config::CoreConfig;
 use pretty_assertions::{assert_eq, assert_ne};
 use serde::Deserialize;
+use std::assert_matches;
 use std::collections::HashSet;
 use std::fs::read_to_string;
 use std::io::{BufRead, BufReader, Read};
@@ -278,9 +279,9 @@ pub fn run_test(core_config: CoreConfig, test_dir: Option<&Path>) -> (ExitStatus
         tracing::dispatcher::with_default(&dispatcher2, || read_stderr(stderr))
     });
 
-    let mut actual = stdout_reader.join().unwrap();
+    let actual = stdout_reader.join().unwrap();
     let err_actual = stderr_reader.join().unwrap();
-    actual.extend(err_actual);
+    assert_matches!(err_actual, None);
 
     let status = child.wait().unwrap();
     tracing::info!(?status, "Child process exited");
@@ -297,7 +298,7 @@ fn read_stdout<R: Read>(stream: R) -> Vec<String> {
     actual
 }
 
-fn read_stderr<R: Read>(stream: R) -> Vec<String> {
+fn read_stderr<R: Read>(stream: R) -> Option<Vec<String>> {
     let mut actual = Vec::new();
     let reader = BufReader::new(stream);
     for message in reader.lines().map(|line| line.unwrap()) {
@@ -321,10 +322,15 @@ fn read_stderr<R: Read>(stream: R) -> Vec<String> {
                 _ => panic!("invalid level: {}", event.level),
             }
         } else {
+            tracing::error!(message, "Failed to parse message:");
             actual.push(message);
         }
     }
-    actual
+    if actual.is_empty() {
+        None
+    } else {
+        Some(actual)
+    }
 }
 
 #[derive(Debug, Deserialize)]
