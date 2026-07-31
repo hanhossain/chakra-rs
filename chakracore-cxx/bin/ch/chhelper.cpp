@@ -262,46 +262,6 @@ Error:
     return hr;
 }
 
-// TODO (hanhossain): GenerateParserStateCache
-int32_t CreateParserState(const char *fileContents, JsFinalizeCallback fileContentsFinalizeCallback)
-{
-    int32_t hr = S_OK;
-    HANDLE fileHandle = nullptr;
-    JsValueRef parserStateBuffer = nullptr;
-    uint8_t *buffer = nullptr;
-    unsigned int bufferSize = 0;
-
-    IfFailedGoLabel(GetParserStateBuffer(fileContents, fileContentsFinalizeCallback, &parserStateBuffer), Error);
-    IfJsErrorFailLog(ChakraRTInterface::JsGetArrayBufferStorage(parserStateBuffer, &buffer, &bufferSize));
-
-    fileHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    IfFalseGo(fileHandle != INVALID_HANDLE_VALUE && fileHandle != nullptr);
-
-    for (unsigned int i = 0; i < bufferSize; i++)
-    {
-        const unsigned int BYTES_PER_LINE = 32;
-        uint32_t written = 0;
-        char scratch[3];
-        auto scratchLen = sizeof(scratch);
-        [[maybe_unused]] int num = snprintf(scratch, scratchLen, "%02X", buffer[i]);
-        Assert(num == 2);
-        IfFalseGo(WriteFile(fileHandle, scratch, static_cast<uint32_t>(scratchLen - 1), &written, nullptr));
-
-        // Add line breaks so this block can be readable
-        if (i % BYTES_PER_LINE == (BYTES_PER_LINE - 1) && i < bufferSize - 1)
-        {
-            IfFalseGo(WriteFile(fileHandle, "\n", 1, &written, nullptr));
-        }
-    }
-
-Error:
-    if (fileHandle != nullptr)
-    {
-        CloseHandle(fileHandle);
-    }
-    return hr;
-}
-
 int32_t CreateParserStateAndRunScript(const char *fileName, const char *fileContents, size_t fileLength,
                                       JsFinalizeCallback fileContentsFinalizeCallback,
                                       const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
