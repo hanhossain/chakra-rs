@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RecyclerWriteBarrierManager.h"
 
+#include "chakra/Logger.h"
+
 // Initialization order
 //  AB AutoSystemInfo
 //  AD PerfCounter
@@ -238,7 +240,7 @@ X64WriteBarrierCardTableManager::Initialize()
         void * cardTableSpace = ::VirtualAlloc(NULL, _cardTableNumEntries, MEM_RESERVE, PAGE_READWRITE);
         if (!cardTableSpace) // Crash Early with a meaningful message. Otherwise the behavior is undefined.
         {
-            fprintf(stderr, "Out of Memory\n"); fflush(stderr);
+            chakra::Logger::error("Out of Memory\n");
             abort();
         }
 

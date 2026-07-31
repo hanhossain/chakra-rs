@@ -25,12 +25,14 @@ Abstract:
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
 #include "pal/misc.h"
+#include "chakra/Logger.h"
 
 #include <time.h>
 #include <sys/time.h>
 #include <errno.h>
 #include <string.h>
 #include <sched.h>
+#include <format>
 
 #if defined(__APPLE__)
 #include <mach/mach_time.h>
@@ -59,7 +61,7 @@ BOOL TIMEInitialize(void)
     kern_return_t machRet;
     if ((machRet = mach_timebase_info(&s_TimebaseInfo)) != KERN_SUCCESS)
     {
-        ASSERT("mach_timebase_info() failed: %s\n", mach_error_string(machRet));
+        chakra::Logger::error(std::format("mach_timebase_info() failed: {}\n", mach_error_string(machRet)));
         return FALSE;
     }
 #endif
@@ -105,7 +107,7 @@ GetSystemTime(
     utPtr = &ut;
     if (gmtime_r(&tt, utPtr) == NULL)
     {
-        ASSERT("gmtime() failed; errno is %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("gmtime() failed; errno is {} ({})\n", errno, strerror(errno)));
         goto EXIT;
     }
 
@@ -119,8 +121,8 @@ GetSystemTime(
 
     if(-1 == timeofday_retval)
     {
-        ASSERT("gettimeofday() failed; errno is %d (%s)\n",
-               errno, strerror(errno));
+        chakra::Logger::error(std::format("gettimeofday() failed; errno is {} ({})\n",
+               errno, strerror(errno)));
         lpSystemTime->wMilliseconds = 0;
     }
     else
@@ -193,7 +195,7 @@ QueryPerformanceCounter(
         struct timespec ts;
         if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
         {
-            ASSERT("clock_gettime(CLOCK_MONOTONIC) failed; errno is %d (%s)\n", errno, strerror(errno));
+            chakra::Logger::error(std::format("clock_gettime(CLOCK_MONOTONIC) failed; errno is {} ({})\n", errno, strerror(errno)));
             retval = FALSE;
             break;
         }
@@ -246,7 +248,7 @@ QueryThreadCycleTime(
 
     if(!GetThreadTimesInternal(ThreadHandle, &kernelTime, &userTime))
     {
-        ASSERT("Could not get cycle time for current thread");
+        chakra::Logger::error("Could not get cycle time for current thread");
         retval = FALSE;
         goto EXIT;
     }
@@ -276,7 +278,7 @@ GetTickCount64Fallback()
         struct timespec ts;
         if (clock_gettime(clockType, &ts) != 0)
         {
-            ASSERT("clock_gettime(CLOCK_MONOTONIC*) failed; errno is %d (%s)\n", errno, strerror(errno));
+            chakra::Logger::error(std::format("clock_gettime(CLOCK_MONOTONIC*) failed; errno is {} ({})\n", errno, strerror(errno)));
             goto EXIT;
         }
         retval = (ts.tv_sec * tccSecondsToMillieSeconds)+(ts.tv_nsec / tccMillieSecondsToNanoSeconds);
@@ -286,7 +288,7 @@ GetTickCount64Fallback()
         // use denom == 0 to indicate that s_TimebaseInfo is uninitialised.
         if (s_TimebaseInfo.denom == 0)
         {
-            ASSERT("s_TimebaseInfo is uninitialized.\n");
+            chakra::Logger::error("s_TimebaseInfo is uninitialized.\n");
             goto EXIT;
         }
         retval = (mach_absolute_time() * s_TimebaseInfo.numer / s_TimebaseInfo.denom) / tccMillieSecondsToNanoSeconds;

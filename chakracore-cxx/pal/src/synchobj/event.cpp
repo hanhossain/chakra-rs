@@ -24,6 +24,8 @@ Revision History:
 #include "pal/event.hpp"
 #include "pal/thread.hpp"
 #include "pal/dbgmsg.h"
+#include "chakra/Logger.h"
+#include <format>
 
 using namespace CorUnix;
 
@@ -154,7 +156,7 @@ CorUnix::InternalCreateEvent(
 
     if (lpName != nullptr)
     {
-        ASSERT("lpName: Cross-process named objects are not supported in PAL");
+        chakra::Logger::error("lpName: Cross-process named objects are not supported in PAL");
         palError = ERROR_NOT_SUPPORTED;
         goto InternalCreateEventExit;
     }
@@ -188,7 +190,7 @@ CorUnix::InternalCreateEvent(
 
         if (NO_ERROR != palError)
         {
-            ASSERT("Unable to set new event state (%d)\n", palError);
+            chakra::Logger::error(std::format("Unable to set new event state ({})\n", palError));
             goto InternalCreateEventExit;
         }
     }
@@ -326,7 +328,7 @@ CorUnix::InternalSetEvent(
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Error %d obtaining synch state controller\n", palError);
+        chakra::Logger::error(std::format("Error {} obtaining synch state controller\n", palError));
         goto InternalSetEventExit;
     }
 
@@ -334,7 +336,7 @@ CorUnix::InternalSetEvent(
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Error %d setting event state\n", palError);
+        chakra::Logger::error(std::format("Error {} setting event state\n", palError));
         goto InternalSetEventExit;
     }
 

@@ -8,6 +8,8 @@
 #include <print>
 #include <sys/stat.h>
 
+#include "chakra/Logger.h"
+
 namespace fs = std::filesystem;
 
 int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& contents, uint32_t* lengthBytesOut /*= nullptr*/, const std::optional<std::filesystem::path> &fullPath, bool shouldMute /*=false */)
@@ -74,7 +76,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
     if (nullptr == pRawBytes)
     {
-        std::print(stderr, "out of memory");
+        chakra::Logger::error("out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
 
@@ -132,7 +134,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
 
             {
                 // unicode unsupported
-                std::print(stderr, "unsupported file encoding. Only ANSI and UTF8 supported");
+                chakra::Logger::error("unsupported file encoding. Only ANSI and UTF8 supported");
                 IfFailGo(E_UNEXPECTED);
             }
 #pragma prefast(pop)
@@ -231,17 +233,6 @@ const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
     }
 }
 
-void Helpers::LogError(__nullterminated const char16_t *msg, ...)
-{
-    va_list args;
-    va_start(args, msg);
-    std::print("ERROR: ");
-    PAL_vfwprintf(stderr, msg, args);
-    std::println();
-    fflush(stdout);
-    va_end(args);
-}
-
 int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, uint32_t& lengthBytes, bool printFileOpenError)
 {
     int32_t hr = S_OK;
@@ -258,8 +249,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     {
         if (printFileOpenError)
         {
-            fprintf(stderr, "Error in opening file '%s' ", filename);
-            fprintf(stderr, "\n");
+            chakra::Logger::error(std::format("Error in opening file '{}'", filename));
         }
         return E_FAIL;
     }
@@ -278,7 +268,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     }
     else
     {
-        std::print(stderr, "out of memory");
+        chakra::Logger::error("out of memory");
         IfFailGo(E_OUTOFMEMORY);
     }
     //
@@ -287,7 +277,7 @@ int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, u
     result = std::fread((void*)contents, sizeof(char), lengthBytes, file);
     if (result != lengthBytes)
     {
-        std::print(stderr, "Read error");
+        chakra::Logger::error("Read error");
         IfFailGo(E_FAIL);
     }
 

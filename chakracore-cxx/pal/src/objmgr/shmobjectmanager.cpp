@@ -25,6 +25,7 @@ Abstract:
 #include "pal/thread.hpp"
 #include "pal/procobj.hpp"
 #include "pal/dbgmsg.h"
+#include "chakra/Logger.h"
 
 SET_DEFAULT_DEBUG_CHANNEL(PAL);
 
@@ -318,7 +319,7 @@ CSharedMemoryObjectManager::RegisterObject(
         psmodNew = SHMPTR_TO_TYPED_PTR(SHMObjData, pshmobj->GetShmObjData());
         if (NULL == psmodNew)
         {
-            ASSERT("Failure to map shared object data\n");
+            chakra::Logger::error("Failure to map shared object data\n");
             palError = ERROR_INTERNAL_ERROR;
             goto RegisterObjectExit;
         }
@@ -336,7 +337,7 @@ CSharedMemoryObjectManager::RegisterObject(
             }
             else
             {
-                ASSERT("Failure to map shared object data\n");
+                chakra::Logger::error("Failure to map shared object data\n");
                 palError = ERROR_INTERNAL_ERROR;
                 goto RegisterObjectExit;
             }
@@ -346,7 +347,7 @@ CSharedMemoryObjectManager::RegisterObject(
 
         if (!SHMSetInfo(SIID_NAMED_OBJECTS, pshmobj->GetShmObjData()))
         {
-            ASSERT("Failed to set shared named object list head\n");
+            chakra::Logger::error("Failed to set shared named object list head\n");
             palError = ERROR_INTERNAL_ERROR;
             goto RegisterObjectExit;
         }
@@ -373,7 +374,7 @@ CSharedMemoryObjectManager::RegisterObject(
         palError = pobjToRegister->GetImmutableData(&pvImmutableData);
         if (NO_ERROR != palError)
         {
-            ASSERT("Failure to obtain object immutable data\n");
+            chakra::Logger::error("Failure to obtain object immutable data\n");
             goto RegisterObjectExit;
         }
 
@@ -393,14 +394,14 @@ CSharedMemoryObjectManager::RegisterObject(
             }
             else
             {
-                ASSERT("Failure to map psmod->shmObjImmutableData\n");
+                chakra::Logger::error("Failure to map psmod->shmObjImmutableData\n");
                 palError = ERROR_INTERNAL_ERROR;
                 goto RegisterObjectExit;
             }
         }
         else
         {
-            ASSERT("Failure to map pshmobj->GetShmObjData()\n");
+            chakra::Logger::error("Failure to map pshmobj->GetShmObjData()\n");
             palError = ERROR_INTERNAL_ERROR;
             goto RegisterObjectExit;
         }
@@ -581,7 +582,7 @@ CSharedMemoryObjectManager::LocateObject(
                 }
                 else
                 {
-                    ASSERT("Unable to map psmod->shmObjName\n");
+                    chakra::Logger::error("Unable to map psmod->shmObjName\n");
                     break;
                 }                
             }
@@ -590,7 +591,7 @@ CSharedMemoryObjectManager::LocateObject(
         }
         else
         {
-            ASSERT("Unable to map shmObjectListEntry\n");
+            chakra::Logger::error("Unable to map shmObjectListEntry\n");
             break;
         }
     }
@@ -618,7 +619,7 @@ CSharedMemoryObjectManager::LocateObject(
         CObjectType *pot = CObjectType::GetObjectTypeById(psmod->eTypeId);
         if (NULL == pot)
         {
-            ASSERT("Invalid object type ID in shared memory info\n");
+            chakra::Logger::error("Invalid object type ID in shared memory info\n");
             goto LocateObjectExitSHMRelease;
         }
 
@@ -710,7 +711,7 @@ CSharedMemoryObjectManager::ObtainHandleForObject(
         // Not yet supported
         //
 
-        ASSERT("Caller to ObtainHandleForObject provided a process\n");
+        chakra::Logger::error("Caller to ObtainHandleForObject provided a process\n");
         return ERROR_CALL_NOT_IMPLEMENTED;
     }
 
@@ -1162,7 +1163,7 @@ CSharedMemoryObjectManager::ConvertRemoteHandleToLocal(
         pot = CObjectType::GetObjectTypeById(psmod->eTypeId);
         if (NULL == pot)
         {
-            ASSERT("Invalid object type ID in shared memory info\n");
+            chakra::Logger::error("Invalid object type ID in shared memory info\n");
             goto ConvertRemoteHandleToLocalExit;
         }
         

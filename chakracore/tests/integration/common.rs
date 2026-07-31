@@ -1,10 +1,16 @@
 use chakracore_sys::config::CoreConfig;
 use pretty_assertions::{assert_eq, assert_ne};
+use serde::Deserialize;
+use std::assert_matches;
 use std::collections::HashSet;
 use std::fs::read_to_string;
-use std::path::PathBuf;
-use std::process::Command;
+use std::io::{BufRead, BufReader, Read};
+use std::path::{Path, PathBuf};
+use std::process::{Command, ExitStatus, Stdio};
+use std::thread;
 use std::time::Duration;
+use tracing::dispatcher::DefaultGuard;
+use tracing_subscriber::EnvFilter;
 
 pub const CH_PATH: &'static str = env!("CARGO_BIN_EXE_chakracore");
 pub const SLOW_TEST_TIMEOUT: Duration = Duration::from_secs(180);
@@ -83,9 +89,23 @@ pub enum Variant {
     DisableJit,
 }
 
+#[derive(Debug)]
 struct VariantConfig<'a> {
     compile_flags: Vec<&'a str>,
     excluded_tags: HashSet<&'static str>,
+}
+
+pub fn init_tracing() -> DefaultGuard {
+    let guard = tracing::subscriber::set_default(
+        tracing_subscriber::fmt()
+            .with_env_filter(
+                EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("trace")),
+            )
+            .with_test_writer()
+            .finish(),
+    );
+    tracing::info!("starting test");
+    guard
 }
 
 pub fn run_test_variant<const N: usize>(
@@ -93,6 +113,8 @@ pub fn run_test_variant<const N: usize>(
     variant: Variant,
     common_tags: [&'static str; N],
 ) {
+    let _subscriber_guard = init_tracing();
+
     test.tags.extend(common_tags.iter());
     test.validate();
 
@@ -155,10 +177,16 @@ pub fn run_test_variant<const N: usize>(
     );
 
     if cfg!(disable_jit) && variant != Variant::DisableJit {
-        println!("Skipping {variant:?} as it's not supported with cfg!(disable_jit)");
+        tracing::info!(
+            ?variant,
+            "Skipping variant as it's not supported with `cfg!(disable_jit)`"
+        );
         return;
     } else if !cfg!(disable_jit) && variant == Variant::DisableJit {
-        println!("Skipping {variant:?} as it's not supported without cfg!(disable_jit)");
+        tracing::info!(
+            ?variant,
+            "Skipping variant as it requires `cfg!(disable_jit)`"
+        );
         return;
     }
 
@@ -166,9 +194,6 @@ pub fn run_test_variant<const N: usize>(
 
     let test_dir = manifest_dir.join(test.directory);
     let source = test_dir.join(test.source_path);
-    println!("source_path: {:?}", source);
-
-    dbg!(&test);
 
     assert!(source.exists());
     let filename = source.to_str().unwrap().to_owned();
@@ -182,25 +207,7 @@ pub fn run_test_variant<const N: usize>(
     args.extend(variant_config.compile_flags.into_iter().map(String::from));
 
     let core_config = CoreConfig { filename, args };
-    let serialized_config = serde_json::to_string(&core_config).unwrap();
-    let mut ch = Command::new(CH_PATH);
-    ch.current_dir(test_dir).arg(serialized_config);
-
-    if cfg!(unix) {
-        ch.env("TZ", "America/Los_Angeles");
-    }
-
-    println!("Running command: {ch:#?}");
-    let output = ch.output().unwrap();
-
-    let mut out = String::from_utf8_lossy(&output.stdout).to_string();
-    let err = String::from_utf8_lossy(&output.stderr);
-    out.push_str(&err);
-
-    let actual = out
-        .lines()
-        .map(|s| trim_carriage_return(s))
-        .collect::<Vec<_>>();
+    let (status, actual) = run_test(core_config, Some(test_dir.as_path()));
 
     match test.baseline_path {
         Some(baseline_path) => {
@@ -232,7 +239,113 @@ pub fn run_test_variant<const N: usize>(
         }
     }
 
-    assert!(output.status.success());
+    assert!(status.success());
+}
+
+#[tracing::instrument(skip_all)]
+pub fn run_test(core_config: CoreConfig, test_dir: Option<&Path>) -> (ExitStatus, Vec<String>) {
+    tracing::info!(?core_config);
+
+    let serialized_config = serde_json::to_string(&core_config).unwrap();
+    let mut ch = Command::new(CH_PATH);
+
+    if let Some(test_dir) = test_dir {
+        ch.current_dir(test_dir);
+    }
+
+    ch.arg(serialized_config)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .env("TZ", "America/Los_Angeles");
+
+    tracing::info!(?ch, "Running command");
+
+    let mut child = ch.spawn().unwrap();
+    let stdout = child.stdout.take().unwrap();
+    let stderr = child.stderr.take().unwrap();
+
+    let dispatcher = tracing::dispatcher::get_default(|dispatch| dispatch.clone());
+    let dispatcher2 = dispatcher.clone();
+
+    let stdout_span = tracing::info_span!("stdout_reader");
+    let stdout_reader = thread::spawn(move || {
+        let _span = stdout_span.entered();
+        tracing::dispatcher::with_default(&dispatcher, || read_stdout(stdout))
+    });
+
+    let stderr_span = tracing::info_span!("stderr_reader");
+    let stderr_reader = thread::spawn(move || {
+        let _span = stderr_span.entered();
+        tracing::dispatcher::with_default(&dispatcher2, || read_stderr(stderr))
+    });
+
+    let actual = stdout_reader.join().unwrap();
+    let err_actual = stderr_reader.join().unwrap();
+    assert_matches!(err_actual, None);
+
+    let status = child.wait().unwrap();
+    tracing::info!(?status, "Child process exited");
+    (status, actual)
+}
+
+fn read_stdout<R: Read>(stream: R) -> Vec<String> {
+    let mut actual = Vec::new();
+    let reader = BufReader::new(stream);
+    for message in reader.lines().map(|line| line.unwrap()) {
+        tracing::info!(target: "chakracore stdout", message);
+        actual.push(message);
+    }
+    actual
+}
+
+fn read_stderr<R: Read>(stream: R) -> Option<Vec<String>> {
+    let mut actual = Vec::new();
+    let reader = BufReader::new(stream);
+    for message in reader.lines().map(|line| line.unwrap()) {
+        if let Ok(event) = serde_json::from_str::<ChildEvent>(&message) {
+            match event.level.as_str() {
+                "TRACE" => {
+                    tracing::trace!(target: "chakracore stderr", message = event.fields.message, thread.name = event.thread_name)
+                }
+                "DEBUG" => {
+                    tracing::debug!(target: "chakracore stderr", message = event.fields.message, thread.name = event.thread_name)
+                }
+                "INFO" => {
+                    tracing::info!(target: "chakracore stderr", message = event.fields.message, thread.name = event.thread_name)
+                }
+                "WARN" => {
+                    tracing::warn!(target: "chakracore stderr", message = event.fields.message, thread.name = event.thread_name)
+                }
+                "ERROR" => {
+                    tracing::error!(target: "chakracore stderr", message = event.fields.message, thread.name = event.thread_name)
+                }
+                _ => panic!("invalid level: {}", event.level),
+            }
+        } else {
+            tracing::error!(message, "Failed to parse message:");
+            actual.push(message);
+        }
+    }
+    if actual.is_empty() {
+        None
+    } else {
+        Some(actual)
+    }
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ChildEvent {
+    level: String,
+    fields: ChildEventFields,
+    #[serde(rename = "threadName")]
+    thread_name: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ChildEventFields {
+    message: String,
 }
 
 fn trim_carriage_return(s: &str) -> &str {

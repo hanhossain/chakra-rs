@@ -32,6 +32,8 @@
 #include "PlatformAgnostic/CommonPal.h"
 
 #include <stdarg.h>
+#include <format>
+#include "chakra/Logger.h"
 
 #if defined(_DEBUG)
 #define _DEBUG_WAS_DEFINED
@@ -62,8 +64,7 @@
 do { \
 if (!(exp)) \
 { \
-    fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, CHAKRACORE_STRINGIZE(exp), comment); \
-    fflush(stderr); \
+    chakra::Logger::error(std::format("ASSERTION ({}, line {}) {} {}", __FILE__, __LINE__, CHAKRACORE_STRINGIZE(exp), comment)); \
     DebugBreak(); \
 } \
 } while (0)
@@ -89,13 +90,11 @@ using utf8::WideStringToNarrowDynamic;
 #include "PlatformAgnostic/ChakraICU.h"
 #endif
 
-// TODO (hanhossain): do we still need this to fflush(stderr)?
 #define IfJsErrorFailLog(expr) \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
         goto Error; \
     } \
 } while (0)
@@ -105,8 +104,7 @@ do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
         hr = E_FAIL; \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
         goto Error; \
     } \
 } while (0)
@@ -115,8 +113,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
         goto label; \
     } \
 } while (0)
@@ -125,8 +122,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
         return JS_INVALID_REFERENCE; \
     } \
 } while (0)
@@ -135,8 +131,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
         return false; \
     } \
 } while (0)
@@ -145,8 +140,7 @@ do { \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        std::println(stderr, "ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode)); \
-        fflush(stderr); \
+        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
         return (jsErrorCode); \
     } \
 } while (0)

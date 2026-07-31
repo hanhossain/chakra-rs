@@ -1,10 +1,16 @@
 use std::path::PathBuf;
 
 fn main() {
-    let bridges = ["src/chhelper.rs", "src/config.rs", "src/str_helper.rs"];
+    let bridges = [
+        "src/chhelper.rs",
+        "src/config.rs",
+        "src/logger.rs",
+        "src/str_helper.rs",
+    ];
     let mut cxx_bridge = cxx_build::bridges(bridges);
     cxx_bridge
         .include("../chakracore-cxx/bin/ch")
+        .include("../chakracore-cxx/lib/Common")
         .compile("binding");
 
     let out_dir = std::env::var("OUT_DIR").unwrap();
@@ -70,6 +76,7 @@ fn main() {
 
         println!("cargo::rustc-link-lib=chhelper");
         println!("cargo::rustc-link-lib=ChakraCoreStatic");
+        println!("cargo::rustc-link-lib=Chakra.Ffi");
 
         if cfg!(target_os = "macos") {
             println!("cargo::rustc-link-search=native=/opt/homebrew/opt/icu4c/lib");
@@ -82,6 +89,7 @@ fn main() {
     }
 
     println!("cargo::rerun-if-changed=../chakracore-cxx/bin/");
+    println!("cargo::rerun-if-changed=../chakracore-cxx/ffi/");
     println!("cargo::rerun-if-changed=../chakracore-cxx/lib/");
     println!("cargo::rerun-if-changed=../chakracore-cxx/pal/");
     println!("cargo::rerun-if-changed=../chakracore-cxx/CMakeLists.txt");

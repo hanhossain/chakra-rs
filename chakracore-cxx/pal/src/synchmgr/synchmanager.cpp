@@ -32,6 +32,8 @@ Abstract:
 #include <signal.h>
 #include <errno.h>
 #include <poll.h>
+#include <format>
+#include "chakra/Logger.h"
 
 namespace CorUnix
 {
@@ -243,8 +245,8 @@ namespace CorUnix
                     }
                     else
                     {
-                        ASSERT("Unexpected thread wait state %u\n",
-                               dwWaitState);
+                        chakra::Logger::error(std::format("Unexpected thread wait state {}\n",
+                               dwWaitState));
                         palErr = ERROR_INTERNAL_ERROR;
                     }
                     goto BT_exit;
@@ -995,7 +997,7 @@ namespace CorUnix
                 reinterpret_cast<SharedID>(pvSynchData));
             if (NULL == psdSynchData)
             {
-                ASSERT("Bad shared memory pointer\n");
+                chakra::Logger::error("Bad shared memory pointer\n");
                 goto FOSD_exit;
             }
         }
@@ -1349,7 +1351,7 @@ namespace CorUnix
         }
         else
         {
-            ASSERT("Multiple PAL Synchronization manager initializations\n");
+            chakra::Logger::error("Multiple PAL Synchronization manager initializations\n");
         }
 
         return pRet;
@@ -1372,7 +1374,7 @@ namespace CorUnix
                                            SynchMgrStatusIdle);
         if (static_cast<int32_t>(SynchMgrStatusIdle) != lInit)
         {
-            ASSERT("Synchronization Manager already being initialized");
+            chakra::Logger::error("Synchronization Manager already being initialized");
             palErr = ERROR_INTERNAL_ERROR;
             goto I_exit;
         }
@@ -1441,9 +1443,9 @@ namespace CorUnix
 
         if (static_cast<int32_t>(SynchMgrStatusRunning) != lInit)
         {
-            ASSERT("Unexpected initialization status found "
-                   "in PrepareForShutdown [expected=%d current=%d]\n",
-                   SynchMgrStatusRunning, lInit);
+            chakra::Logger::error(std::format("Unexpected initialization status found "
+                   "in PrepareForShutdown [expected={} current={}]\n",
+                   static_cast<int>(SynchMgrStatusRunning), lInit));
             // We intentionally not set s_lInitStatus to SynchMgrStatusError
             // cause this could interfere with a previous thread already
             // executing shutdown
@@ -1807,16 +1809,16 @@ namespace CorUnix
                     if (1 < iRet)
                     {
                         // Unexpected iRet > 1
-                        ASSERT("Unexpected return code %d from blocking poll/kevent call\n",
-                                iRet);
+                        chakra::Logger::error(std::format("Unexpected return code {} from blocking poll/kevent call\n",
+                                iRet));
                         goto RBFPP_exit;
                     }
 
                     if (EINTR != iErrno)
                     {
                         // Unexpected error
-                        ASSERT("Unexpected error from blocking poll/kevent call: %d (%s)\n",
-                               iErrno, strerror(iErrno));
+                        chakra::Logger::error(std::format("Unexpected error from blocking poll/kevent call: {} ({})\n",
+                               iErrno, strerror(iErrno)));
                         goto RBFPP_exit;
                     }
 
@@ -2196,7 +2198,7 @@ namespace CorUnix
     PAL_ERROR CPalSynchronizationManager::SendMsgToRemoteWorker(
     )
     {
-        ASSERT("There should never be a reason to send a message to a remote worker\n");
+        chakra::Logger::error("There should never be a reason to send a message to a remote worker\n");
         return ERROR_INTERNAL_ERROR;
     }
 
@@ -2755,7 +2757,7 @@ namespace CorUnix
             poll(NULL, 0, INFTIM);
             sched_yield();
         }
-        ASSERT("This code should never be executed\n");
+        chakra::Logger::error("This code should never be executed\n");
     }
 
     /*++

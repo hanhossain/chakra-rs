@@ -24,6 +24,8 @@ Abstract:
 #include "pal/cs.hpp"
 #include <new>
 #include "pal/dbgmsg.h"
+#include "chakra/Logger.h"
+#include <format>
 
 using namespace CorUnix;
 
@@ -224,7 +226,7 @@ CSimpleHandleManager::FreeHandle(
 
     if (HandleIsSpecial(h))
     {
-        ASSERT("Trying to free Special Handle %p.\n", h);
+        chakra::Logger::error(std::format("Trying to free Special Handle {}.\n", h));
         palError = ERROR_INVALID_HANDLE;
         goto FreeHandleExit;
     }
@@ -275,7 +277,7 @@ bool CSimpleHandleManager::ValidateHandle(HANDLE handle)
     
     if (NULL == m_rghteHandleTable)
     {
-        ASSERT("Handle Manager is not initialized!\n");
+        chakra::Logger::error("Handle Manager is not initialized!\n");
         return FALSE;
     }
     
@@ -295,7 +297,7 @@ bool CSimpleHandleManager::ValidateHandle(HANDLE handle)
         // the specialness of the handle) so we assert here.
         //
         
-        ASSERT ("Handle %p is a special handle, returning FALSE.\n", handle);
+        chakra::Logger::error(std::format("Handle {} is a special handle, returning FALSE.\n", handle));
         return FALSE;
     }
 

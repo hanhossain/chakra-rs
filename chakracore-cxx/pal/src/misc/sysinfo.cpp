@@ -30,6 +30,8 @@ Revision History:
 #include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include "chakra/Logger.h"
+#include <format>
 
 #include <sys/param.h>
 
@@ -114,7 +116,7 @@ GetSystemInfo(
     nrcpus = sysconf(_SC_NPROCESSORS_ONLN);
     if (nrcpus < 1)
     {
-        ASSERT("sysconf failed for _SC_NPROCESSORS_ONLN (%d)\n", errno);
+        chakra::Logger::error(std::format("sysconf failed for _SC_NPROCESSORS_ONLN ({})\n", errno));
     }
 
     TRACE("dwNumberOfProcessors=%d\n", nrcpus);

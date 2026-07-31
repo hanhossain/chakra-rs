@@ -153,7 +153,6 @@ namespace Js
 
         void AsyncActivate(HaltCallback* haltCallback);
         void AsyncDeactivate();
-        bool IsAsyncActivate() const;
 
         void PrepDiagForEnterScript();
 

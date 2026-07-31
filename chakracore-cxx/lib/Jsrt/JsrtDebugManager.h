@@ -24,8 +24,6 @@ public:
     void HandleResume(Js::InterpreterHaltState* haltState, BREAKRESUMEACTION resumeAction);
     void SetResumeType(BREAKRESUMEACTION resumeAction);
 
-    bool EnableAsyncBreak(Js::ScriptContext* scriptContext);
-
     void CallDebugEventCallback(JsDiagDebugEvent debugEvent, Js::DynamicObject* eventDataObject, Js::ScriptContext* scriptContext, bool isBreak);
     void CallDebugEventCallbackForBreak(JsDiagDebugEvent debugEvent, Js::DynamicObject* eventDataObject, Js::ScriptContext* scriptContext);
 

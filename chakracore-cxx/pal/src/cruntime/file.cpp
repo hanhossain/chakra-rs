@@ -30,6 +30,7 @@ Abstract:
 #include <sys/stat.h>
 #include <pthread.h>
 #include <limits.h>
+#include "chakra/Logger.h"
 
     #define CLEARERR(f)
 
@@ -64,7 +65,7 @@ static char* MapFileOpenModes(char* str)
 
     if (NULL == str)
     {
-        ASSERT("MapFileOpenModes called with a NULL parameter for str.\n");
+        chakra::Logger::error("MapFileOpenModes called with a NULL parameter for str.\n");
         return NULL;
     }
 
@@ -92,7 +93,7 @@ static char* MapFileOpenModes(char* str)
     The PAL does not support this behavior. */
     if (NULL != strchr(str,'D'))
     {
-        ASSERT("The PAL doesn't support the 'D' flag for _fdopen and fopen.\n");
+        chakra::Logger::error("The PAL doesn't support the 'D' flag for _fdopen and fopen.\n");
         return NULL;
     }
 

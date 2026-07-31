@@ -27,9 +27,11 @@ Abstract:
 
 #include "pal/thread.hpp"
 #include "pal/threadsusp.hpp"
+#include "chakra/Logger.h"
 
 #include <errno.h>
 #include <limits.h>
+#include <format>
 
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
@@ -95,7 +97,7 @@ char16_t* Internal_i64tow(int64_t value, char16_t* string, int radix, BOOL isI64
 
     if (radix < 2 || radix > 36)
     {
-        ASSERT( "Invalid radix, radix must be between 2 and 36\n" );
+        chakra::Logger::error("Invalid radix, radix must be between 2 and 36\n" );
         SetLastError(ERROR_INVALID_PARAMETER);
         return string;
     }
@@ -231,8 +233,8 @@ _wtoi(
     len = WideCharToMultiByte(CP_ACP, 0, string, -1, 0, 0, 0);
     if (!len)
     {
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n",
-              GetLastError());
+        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
+              GetLastError()));
         return -1;
     }
     tempStr = static_cast<char*>(malloc(len));
@@ -245,8 +247,8 @@ _wtoi(
     len = WideCharToMultiByte(CP_ACP, 0, string, -1, tempStr, len, 0);
     if (!len)
     {
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n",
-              GetLastError());
+        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
+              GetLastError()));
         free(tempStr);
         return -1;
     }
@@ -306,7 +308,7 @@ PAL__wcstoui64(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, NULL, 0, NULL);
     if (!size)
     {
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
+        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL__wcstoui64Exit;
@@ -322,7 +324,7 @@ PAL__wcstoui64(
     size = WideCharToMultiByte(CP_ACP, 0, nptr, -1, s_nptr, size, NULL);
     if (!size)
     {
-        ASSERT("WideCharToMultiByte failed.  Error is %d\n", GetLastError());
+        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
         SetLastError(ERROR_INVALID_PARAMETER);
         res = 0;
         goto PAL__wcstoui64Exit;

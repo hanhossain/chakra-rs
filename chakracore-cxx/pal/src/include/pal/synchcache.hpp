@@ -25,6 +25,8 @@ Abstract:
 #include "pal/thread.hpp"
 #include <new>
 
+#include "chakra/Logger.h"
+
 namespace CorUnix
 {    
     template <typename T> class CSynchCache
@@ -109,7 +111,7 @@ namespace CorUnix
                 // which causes template instatiation in the header
                 // where the DEBUG CHANNEL is not defined and cannot
                 // be defined
-                fprintf(stderr,"SYNCCACHE: Invalid cache depth value");
+                chakra::Logger::error("SYNCCACHE: Invalid cache depth value");
                 DebugBreak();
             }
 #endif // _DEBUG
@@ -283,7 +285,7 @@ namespace CorUnix
             {
                     // Can't use ASSERT here, since this is header
                     // (see comment above)
-                    fprintf(stderr,"SYNCCACHE: Invalid cache depth value");
+                    chakra::Logger::error("SYNCCACHE: Invalid cache depth value");
                     DebugBreak();
             }
 #endif // _DEBUG

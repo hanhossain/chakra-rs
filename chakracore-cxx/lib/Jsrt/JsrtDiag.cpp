@@ -233,34 +233,6 @@ JsErrorCode chakracore::jsrt::JsDiagGetSource(
 #endif
 }
 
-JsErrorCode chakracore::jsrt::JsDiagRequestAsyncBreak(
-    _In_ JsRuntimeHandle runtimeHandle)
-{
-#ifndef ENABLE_SCRIPT_DEBUGGING
-    return JsErrorCategoryUsage;
-#else
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
-
-        VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-        JsrtRuntime * runtime = JsrtRuntime::FromHandle(runtimeHandle);
-
-        JsrtDebugManager* jsrtDebugManager = runtime->GetJsrtDebugManager();
-
-        VALIDATE_IS_DEBUGGING(jsrtDebugManager);
-
-        for (Js::ScriptContext *scriptContext = runtime->GetThreadContext()->GetScriptContextList();
-        scriptContext != nullptr && !scriptContext->IsClosed();
-            scriptContext = scriptContext->next)
-        {
-            jsrtDebugManager->EnableAsyncBreak(scriptContext);
-        }
-
-        return JsNoError;
-    });
-#endif
-}
-
 JsErrorCode chakracore::jsrt::JsDiagGetBreakpoints(
     _Out_ JsValueRef *breakpoints)
 {

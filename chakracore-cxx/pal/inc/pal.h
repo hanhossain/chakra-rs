@@ -55,9 +55,8 @@ Abstract:
 #include "TargetConditionals.h"
 #endif // __APPLE__ ?
 
+// TODO (hanhossain): can remove, might need to include <cstdarg>
 typedef __builtin_va_list va_list;
-#define PRINT_ERROR(...) \
-    fprintf(stderr, __VA_ARGS__)
 
 #ifdef  __cplusplus
 extern "C" {
@@ -263,7 +262,6 @@ WriteFile(
 
 #define STD_INPUT_HANDLE         (static_cast<uint32_t>(-10))
 #define STD_OUTPUT_HANDLE        (static_cast<uint32_t>(-11))
-#define STD_ERROR_HANDLE         (static_cast<uint32_t>(-12))
 
 HANDLE
 GetStdHandle(

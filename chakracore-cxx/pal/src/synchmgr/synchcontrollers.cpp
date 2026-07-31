@@ -27,6 +27,8 @@ Abstract:
 #include <sched.h>
 #include <errno.h>
 #include <limits.h>
+#include "chakra/Logger.h"
+#include <format>
 
 namespace CorUnix
 {
@@ -298,7 +300,7 @@ namespace CorUnix
         {
             if (fSharedObject && (NULLSharedID != shridNewNode))
             {
-                ASSERT("Bad Shared Memory ptr %p\n", shridNewNode);
+                chakra::Logger::error(std::format("Bad Shared Memory ptr {}\n", shridNewNode));
                 palErr = ERROR_INTERNAL_ERROR;
             }        
             else
@@ -311,7 +313,7 @@ namespace CorUnix
 
         if (ptwiWaitInfo->lObjCount >= MAXIMUM_WAIT_OBJECTS)
         {
-            ASSERT("Too many objects");
+            chakra::Logger::error("Too many objects");
             palErr = ERROR_INTERNAL_ERROR; 
             goto RWT_exit;
         }       
@@ -367,7 +369,7 @@ namespace CorUnix
                 // This pointer is set in CSynchWaitController only when the
                 // wait controller for the object is created by calling
                 // GetSynchWaitControllersForObjects
-                ASSERT("Process synch data pointer is missing\n");
+                chakra::Logger::error("Process synch data pointer is missing\n");
                 palErr = ERROR_INTERNAL_ERROR;
                 goto RWT_exit;
             }
@@ -407,7 +409,7 @@ namespace CorUnix
                 }
                 else
                 {
-                    ASSERT("Unexpected thread wait state %d\n", dwWaitState);
+                    chakra::Logger::error(std::format("Unexpected thread wait state {}\n", dwWaitState));
                     palErr = ERROR_INTERNAL_ERROR;
                 }
                 goto RWT_exit;
@@ -638,7 +640,7 @@ namespace CorUnix
         
         if (0 != m_psdSynchData->GetOwnershipCount())
         {
-            ASSERT("Ownership count should be zero at this time\n");
+            chakra::Logger::error("Ownership count should be zero at this time\n");
             palErr = ERROR_INTERNAL_ERROR;
             goto SO_exit;
         }

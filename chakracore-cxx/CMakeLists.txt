@@ -246,6 +246,7 @@ if (CC_TARGETS_ARM64)
 endif ()
 
 include_directories(${CMAKE_SOURCE_DIR}/target/cxxbridge)
+include_directories(ffi/include)
 include_directories(SYSTEM ${ICU_INCLUDE_PATH})
 
 if (IN_DOCKER)
@@ -254,6 +255,8 @@ endif ()
 
 # detect features
 include_directories(SYSTEM /usr/local/include)
+
+add_subdirectory(ffi)
 
 add_subdirectory(pal)
 

@@ -14,6 +14,8 @@
 // Header files required before including ConfigFlagsTable.h
 
 #include <unistd.h>
+#include <format>
+#include "chakra/Logger.h"
 
 #include "Interface/EnumHelp.h"
 #include "Common/MathUtil.h"
@@ -131,14 +133,11 @@ namespace Js {
         IsInAssert = true;
     }
 
-#define CHAKRA_ASSERT_CAPTION u"CHAKRA ASSERT"
-
     bool Throw::ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message)
     {
         if (AssertsToConsole)
         {
-            fprintf(stderr, "ASSERTION %u: (%s, line %u) %s\n Failure: %s\n", getpid(), fileName, lineNumber, message, error);
-            fflush(stderr);
+            chakra::Logger::error(std::format("ASSERTION {}: ({}, line {}) {}\n Failure: {}\n", getpid(), fileName, lineNumber, message, error));
             return false;
         }
 

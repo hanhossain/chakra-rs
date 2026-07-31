@@ -41,6 +41,7 @@ Abstract:
 #include <sys/mount.h>
 #include <errno.h>
 #include <limits.h>
+#include "chakra/Logger.h"
 
 using namespace CorUnix;
 
@@ -94,7 +95,7 @@ void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool 
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Unable to obtain data to cleanup file object");
+        chakra::Logger::error("Unable to obtain data to cleanup file object");
         return;
     }
 
@@ -130,7 +131,6 @@ before any other functions and if it is not successful,
 no other functions should be done. */
 static HANDLE pStdIn;
 static HANDLE pStdOut;
-static HANDLE pStdErr;
 
 /*++
 Function : 
@@ -152,7 +152,7 @@ void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode )
 
     if ( !lpErrorCode )
     {
-        ASSERT( "lpErrorCode has to be valid\n" );
+        chakra::Logger::error("lpErrorCode has to be valid\n" );
         return;
     }
 
@@ -252,7 +252,7 @@ CorUnix::InternalWriteFile(
     }
     else
     {
-        ASSERT( "lpNumberOfBytesWritten is NULL\n" );
+        chakra::Logger::error("lpNumberOfBytesWritten is NULL\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto done;
     }
@@ -265,7 +265,7 @@ CorUnix::InternalWriteFile(
     }
     else if ( lpOverlapped )
     {
-        ASSERT( "lpOverlapped is not NULL, as it should be.\n" );
+        chakra::Logger::error("lpOverlapped is not NULL, as it should be.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto done;
     }
@@ -321,7 +321,7 @@ CorUnix::InternalWriteFile(
 
         if (NO_ERROR != palError)
         {
-            ASSERT("Failed to get the current file position\n");
+            chakra::Logger::error("Failed to get the current file position\n");
             palError = ERROR_INTERNAL_ERROR;
             goto done;
         }
@@ -444,9 +444,6 @@ GetStdHandle(
         break;
     case STD_OUTPUT_HANDLE:
         hRet = pStdOut;
-        break;
-    case STD_ERROR_HANDLE:
-        hRet = pStdErr; 
         break;
     default:
         ERROR("nStdHandle is invalid\n");
@@ -836,7 +833,6 @@ BOOL FILEInitStdHandles(void)
 {
     HANDLE stdin_handle;
     HANDLE stdout_handle;
-    HANDLE stderr_handle;
 
     TRACE("creating handle objects for stdin, stdout, stderr\n");
 
@@ -855,20 +851,11 @@ BOOL FILEInitStdHandles(void)
         goto fail;
     }
 
-    stderr_handle = init_std_handle(&pStdErr, stderr);
-    if(INVALID_HANDLE_VALUE == stderr_handle)
-    {
-        ERROR("failed to create stderr handle\n");
-        CloseHandle(stdin_handle);
-        CloseHandle(stdout_handle);
-        goto fail;
-    }
     return TRUE;
 
 fail:
     pStdIn = INVALID_HANDLE_VALUE;
     pStdOut = INVALID_HANDLE_VALUE;
-    pStdErr = INVALID_HANDLE_VALUE;
     return FALSE;
 }
 
@@ -885,16 +872,12 @@ void FILECleanupStdHandles(void)
 {
     HANDLE stdin_handle;
     HANDLE stdout_handle;
-    HANDLE stderr_handle;
 
     TRACE("closing standard handles\n");
     stdin_handle = pStdIn;
     stdout_handle = pStdOut;
-    stderr_handle = pStdErr;
     pStdIn = INVALID_HANDLE_VALUE;
     pStdOut = INVALID_HANDLE_VALUE;
-    pStdErr = INVALID_HANDLE_VALUE;
     CloseHandle(stdin_handle);
     CloseHandle(stdout_handle);
-    CloseHandle(stderr_handle);
 }

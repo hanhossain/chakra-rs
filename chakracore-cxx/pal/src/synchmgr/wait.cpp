@@ -26,6 +26,8 @@ Revision History:
 #include "pal/synchobjects.hpp"
 #include <new>
 #include "pal/dbgmsg.h"
+#include "chakra/Logger.h"
+#include <format>
 
 SET_DEFAULT_DEBUG_CHANNEL(SYNC);
 
@@ -308,7 +310,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
             }
             else
             {
-                ASSERT("Awakened for APC, but no APC is pending\n");
+                chakra::Logger::error("Awakened for APC, but no APC is pending\n");
                 pThread->SetLastError(ERROR_INTERNAL_ERROR);
                 dwRet = WAIT_FAILED;
             }
@@ -564,8 +566,8 @@ PAL_ERROR CorUnix::InternalSleepEx (
                         "Awakened for APC, but no APC is pending\n");
             break;
         case MutexAbondoned:
-            ASSERT("Thread %p awakened with reason=MutexAbondoned from a "
-                   "SleepEx\n", pThread);
+            chakra::Logger::error(std::format("Thread {} awakened with reason=MutexAbondoned from a "
+                   "SleepEx\n", static_cast<void *>(pThread)));
             palErr = ERROR_INTERNAL_ERROR;
             break;
         case WaitFailed:

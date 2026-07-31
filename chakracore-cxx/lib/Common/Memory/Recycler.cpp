@@ -8,6 +8,7 @@
 
 #include "Memory/RecyclerWatsonTelemetry.h"
 #include "Memory/RecyclerObjectDumper.h"
+#include "chakra/Logger.h"
 
 #ifdef _M_AMD64
 #include "Interface/amd64.h"
@@ -6313,7 +6314,7 @@ void Recycler::VerifyCheck(bool cond, std::string_view msg, void * address, void
 {
     if (!cond)
     {
-        std::print(stderr, "RECYCLER CORRUPTION: StartAddress={} CorruptedAddress={}: {}", address, corruptedAddress, msg);
+        chakra::Logger::error(std::format("RECYCLER CORRUPTION: StartAddress={} CorruptedAddress={}: {}", address, corruptedAddress, msg));
         Js::Throw::FatalInternalError();
     }
 }

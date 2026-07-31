@@ -40,6 +40,8 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #include "pal/init.h"
 #include "pal/utils.h"
 #include "pal/virtual.h"
+#include "chakra/Logger.h"
+#include <format>
 
 #if defined(__NetBSD__) && !defined(__linux__)
 #include <sys/cdefs.h>
@@ -417,8 +419,8 @@ CorUnix::InternalCreateThread(
     /* Validate parameters */
     if (lpThreadAttributes != NULL)
     {
-        ASSERT("lpThreadAttributes parameter must be NULL (%p)\n",
-               lpThreadAttributes);
+        chakra::Logger::error(std::format("lpThreadAttributes parameter must be NULL ({})\n",
+               static_cast<void *>(lpThreadAttributes)));
         palError = ERROR_INVALID_PARAMETER;
         goto EXIT;
     }
@@ -428,7 +430,7 @@ CorUnix::InternalCreateThread(
 
     if ((dwCreationFlags != 0) && (dwCreationFlags != CREATE_SUSPENDED))
     {
-        ASSERT("dwCreationFlags parameter is invalid (%#x)\n", dwCreationFlags);
+        chakra::Logger::error(std::format("dwCreationFlags parameter is invalid ({:#x})\n", dwCreationFlags));
         palError = ERROR_INVALID_PARAMETER;
         goto EXIT;
     }
@@ -578,7 +580,7 @@ ExitThread(
     /* kill the thread (itself), resulting in a call to InternalEndCurrentThread */
     pthread_exit(NULL);
 
-    ASSERT("pthread_exit should not return!\n");
+    chakra::Logger::error("pthread_exit should not return!\n");
     while (true);
 }
 
@@ -636,14 +638,14 @@ CorUnix::InternalEndCurrentThread(
         palError = pSynchStateController->SetSignalCount(1);
         if (NO_ERROR != palError)
         {
-            ASSERT("Unable to mark thread object as signaled");
+            chakra::Logger::error("Unable to mark thread object as signaled");
         }
 
         pSynchStateController->ReleaseController();
     }
     else
     {
-        ASSERT("Unable to obtain state controller for thread");
+        chakra::Logger::error("Unable to obtain state controller for thread");
     }
 
     //
@@ -831,7 +833,7 @@ CorUnix::InternalSetThreadPriority(
         break;
 
     default:
-        ASSERT("Priority %d not supported\n", iNewPriority);
+        chakra::Logger::error(std::format("Priority {} not supported\n", iNewPriority));
         palError = ERROR_INVALID_PARAMETER;
         goto InternalSetThreadPriorityExit;
     }
@@ -853,7 +855,7 @@ CorUnix::InternalSetThreadPriority(
             &schedParam
             ) != 0)
     {
-        ASSERT("Unable to get current thread scheduling information\n");
+        chakra::Logger::error("Unable to get current thread scheduling information\n");
         palError = ERROR_INTERNAL_ERROR;
         goto InternalSetThreadPriorityExit;
     }
@@ -873,8 +875,8 @@ CorUnix::InternalSetThreadPriority(
     min_priority = sched_get_priority_min(policy);
     if( -1 == max_priority || -1 == min_priority)
     {
-        ASSERT("sched_get_priority_min/max failed; error is %d (%s)\n",
-               errno, strerror(errno));
+        chakra::Logger::error(std::format("sched_get_priority_min/max failed; error is {} ({})\n",
+               errno, strerror(errno)));
         palError = ERROR_INTERNAL_ERROR;
         goto InternalSetThreadPriorityExit;
     }
@@ -921,7 +923,7 @@ CorUnix::InternalSetThreadPriority(
     st = pthread_setschedparam(pTargetThread->GetPThreadSelf(), policy, &schedParam);
     if (st != 0)
     {
-        ASSERT("Unable to set thread priority to %d (error %d)\n", static_cast<int>(posix_priority), st);
+        chakra::Logger::error(std::format("Unable to set thread priority to {} (error {})\n", static_cast<int>(posix_priority), st));
         palError = ERROR_INTERNAL_ERROR;
         goto InternalSetThreadPriorityExit;
     }
@@ -973,8 +975,8 @@ CorUnix::GetThreadTimesInternal(
 
     if (palError != NO_ERROR)
     {
-        ASSERT("Unable to get thread data from handle %p"
-              "thread\n", hThread);
+        chakra::Logger::error(std::format("Unable to get thread data from handle {}"
+              "thread\n", hThread));
         SetLastError(ERROR_INTERNAL_ERROR);
         goto SetTimesToZero;
     }
@@ -995,7 +997,7 @@ CorUnix::GetThreadTimesInternal(
 
     if (status != KERN_SUCCESS)
     {
-        ASSERT("Unable to get resource usage information for the current "
+        chakra::Logger::error("Unable to get resource usage information for the current "
               "thread\n");
         SetLastError(ERROR_INTERNAL_ERROR);
         goto SetTimesToZero;
@@ -1041,8 +1043,8 @@ CorUnix::GetThreadTimesInternal(
     );
     if (palError != NO_ERROR)
     {
-        ASSERT("Unable to get thread data from handle %p"
-              "thread\n", hThread);
+        chakra::Logger::error(std::format("Unable to get thread data from handle {}"
+              "thread\n", hThread));
         SetLastError(ERROR_INTERNAL_ERROR);
         goto SetTimesToZero;
     }
@@ -1050,7 +1052,7 @@ CorUnix::GetThreadTimesInternal(
     kd = kvm_open(NULL, NULL, NULL, KVM_NO_FILES, "kvm_open");
     if (kd == NULL)
     {
-        ASSERT("kvm_open(3) error");
+        chakra::Logger::error("kvm_open(3) error");
         SetLastError(ERROR_INTERNAL_ERROR);
         goto SetTimesToZero;
     }
@@ -1061,7 +1063,7 @@ CorUnix::GetThreadTimesInternal(
     if (klwp == NULL || nlwps < 1)
     {
         kvm_close(kd);
-        ASSERT("Unable to get clock from %p thread\n", hThread);
+        chakra::Logger::error(std::format("Unable to get clock from {} thread\n", hThread));
         SetLastError(ERROR_INTERNAL_ERROR);
         pTargetThread->Unlock(pThread);
         goto SetTimesToZero;
@@ -1079,7 +1081,7 @@ CorUnix::GetThreadTimesInternal(
     if (!found)
     {
         kvm_close(kd);
-        ASSERT("Unable to get clock from %p thread\n", hThread);
+        chakra::Logger::error(std::format("Unable to get clock from {} thread\n", hThread));
         SetLastError(ERROR_INTERNAL_ERROR);
         pTargetThread->Unlock(pThread);
         goto SetTimesToZero;
@@ -1123,8 +1125,8 @@ CorUnix::GetThreadTimesInternal(
     );
     if (palError != NO_ERROR)
     {
-        ASSERT("Unable to get thread data from handle %p"
-              "thread\n", hThread);
+        chakra::Logger::error(std::format("Unable to get thread data from handle {}"
+              "thread\n", hThread));
         SetLastError(ERROR_INTERNAL_ERROR);
         goto SetTimesToZero;
     }
@@ -1134,7 +1136,7 @@ CorUnix::GetThreadTimesInternal(
 #if defined(__linux__)
     if (pthread_getcpuclockid(pTargetThread->GetPThreadSelf(), &cid) != 0)
     {
-        ASSERT("Unable to get clock from thread\n", hThread);
+        chakra::Logger::error("Unable to get clock from thread\n");
         SetLastError(ERROR_INTERNAL_ERROR);
         pTargetThread->Unlock(pThread);
         goto SetTimesToZero;
@@ -1143,7 +1145,7 @@ CorUnix::GetThreadTimesInternal(
     struct timespec ts;
     if (clock_gettime(cid, &ts) != 0)
     {
-        ASSERT("clock_gettime() failed; errno is %d (%s)\n", errno, strerror(errno));
+        chakra::Logger::error(std::format("clock_gettime() failed; errno is {} ({})\n", errno, strerror(errno)));
         SetLastError(ERROR_INTERNAL_ERROR);
         pTargetThread->Unlock(pThread);
         goto SetTimesToZero;
@@ -1156,7 +1158,7 @@ CorUnix::GetThreadTimesInternal(
     fd = open(statusFilename, O_RDONLY);
     if (fd == -1)
     {
-       ASSERT("open(%s) failed; errno is %d (%s)\n", statusFilename, errno, strerror(errno));
+       chakra::Logger::error(std::format("open({}) failed; errno is {} ({})\n", statusFilename, errno, strerror(errno)));
        SetLastError(ERROR_INTERNAL_ERROR);
        pTargetThread->Unlock(pThread);
        goto SetTimesToZero;
@@ -1214,7 +1216,7 @@ void *CPalThread::ThreadEntry(CPalThread *pThread)
 
     if (nullptr == pThread)
     {
-        ASSERT("THREAD pointer is NULL!\n");
+        chakra::Logger::error("THREAD pointer is NULL!\n");
         goto fail;
     }
 
@@ -1228,7 +1230,7 @@ void *CPalThread::ThreadEntry(CPalThread *pThread)
     palError = pThread->RunPostCreateInitializers();
     if (NO_ERROR != palError)
     {
-        ASSERT("Error %i initializing thread data (post creation)\n", palError);
+        chakra::Logger::error(std::format("Error {} initializing thread data (post creation)\n", palError));
         goto fail;
     }
 
@@ -1238,7 +1240,7 @@ void *CPalThread::ThreadEntry(CPalThread *pThread)
         palError = pThread->suspensionInfo.InternalSuspendNewThreadFromData(pThread);
         if (NO_ERROR != palError)
         {
-            ASSERT("Error %i attempting to suspend new thread\n", palError);
+            chakra::Logger::error(std::format("Error {} attempting to suspend new thread\n", palError));
             goto fail;
         }
 
@@ -1271,7 +1273,7 @@ void *CPalThread::ThreadEntry(CPalThread *pThread)
     ExitThread(retValue);
 
     /* Note: never get here */
-    ASSERT("ExitThread failed!\n");
+    chakra::Logger::error("ExitThread failed!\n");
     for (;;);
 
 fail:
@@ -1801,7 +1803,7 @@ CPalThread::RunPostCreateInitializers(
 
     if (pthread_setspecific(thObjKey, this))
     {
-        ASSERT("Unable to set the thread object key's value\n");
+        chakra::Logger::error("Unable to set the thread object key's value\n");
         palError = ERROR_INTERNAL_ERROR;
         goto RunPostCreateInitializersExit;
     }
@@ -1845,7 +1847,7 @@ CPalThread::SetStartStatus(
 #if _DEBUG
     if (m_fStartStatusSet)
     {
-        ASSERT("Multiple calls to CPalThread::SetStartStatus\n");
+        chakra::Logger::error("Multiple calls to CPalThread::SetStartStatus\n");
     }
 #endif
 
@@ -1862,7 +1864,7 @@ CPalThread::SetStartStatus(
     iError = pthread_mutex_lock(&m_startMutex);
     if (0 != iError)
     {
-        ASSERT("pthread primitive failure\n");
+        chakra::Logger::error("pthread primitive failure\n");
         // bugcheck?
     }
 
@@ -1872,14 +1874,14 @@ CPalThread::SetStartStatus(
     iError = pthread_cond_signal(&m_startCond);
     if (0 != iError)
     {
-        ASSERT("pthread primitive failure\n");
+        chakra::Logger::error("pthread primitive failure\n");
         // bugcheck?
     }
 
     iError = pthread_mutex_unlock(&m_startMutex);
     if (0 != iError)
     {
-        ASSERT("pthread primitive failure\n");
+        chakra::Logger::error("pthread primitive failure\n");
         // bugcheck?
     }
 }
@@ -1894,7 +1896,7 @@ CPalThread::WaitForStartStatus(
     iError = pthread_mutex_lock(&m_startMutex);
     if (0 != iError)
     {
-        ASSERT("pthread primitive failure\n");
+        chakra::Logger::error("pthread primitive failure\n");
         // bugcheck?
     }
 
@@ -1903,7 +1905,7 @@ CPalThread::WaitForStartStatus(
         iError = pthread_cond_wait(&m_startCond, &m_startMutex);
         if (0 != iError)
         {
-            ASSERT("pthread primitive failure\n");
+            chakra::Logger::error("pthread primitive failure\n");
             // bugcheck?
         }
     }
@@ -1911,7 +1913,7 @@ CPalThread::WaitForStartStatus(
     iError = pthread_mutex_unlock(&m_startMutex);
     if (0 != iError)
     {
-        ASSERT("pthread primitive failure\n");
+        chakra::Logger::error("pthread primitive failure\n");
         // bugcheck?
     }
 
@@ -1955,7 +1957,7 @@ void ThreadCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, boo
     }
     else
     {
-        ASSERT("Unable to obtain thread data");
+        chakra::Logger::error("Unable to obtain thread data");
     }
 
 }

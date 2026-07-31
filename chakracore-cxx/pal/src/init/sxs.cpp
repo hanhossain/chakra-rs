@@ -17,6 +17,8 @@
 #include "pal/dbgmsg.h"
 #include "pal/thread.hpp"
 #include "../thread/procprivate.hpp"
+#include "chakra/Logger.h"
+#include <format>
 
 using namespace CorUnix;
 
@@ -49,7 +51,7 @@ CreateCurrentThreadData()
         PAL_ERROR palError = AllocatePalThread(&pThread);
         if (NO_ERROR != palError)
         {
-            ASSERT("Unable to allocate pal thread: error %d - aborting\n", palError);
+            chakra::Logger::error(std::format("Unable to allocate pal thread: error {} - aborting\n", palError));
             abort();
         }
     }

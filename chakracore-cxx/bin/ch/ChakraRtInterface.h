@@ -118,7 +118,6 @@ public:
     static JsErrorCode WINAPI JsDiagGetSource(unsigned int scriptId, JsValueRef *source) { return chakracore::jsrt::JsDiagGetSource(scriptId, source); }
     static JsErrorCode WINAPI JsDiagSetBreakpoint(unsigned int scriptId, unsigned int lineNumber, unsigned int columnNumber, JsValueRef *breakpoint) { return chakracore::jsrt::JsDiagSetBreakpoint(scriptId, lineNumber, columnNumber, breakpoint); }
     static JsErrorCode WINAPI JsDiagGetStackTrace(JsValueRef *stackTrace) { return chakracore::jsrt::JsDiagGetStackTrace(stackTrace); }
-    static JsErrorCode WINAPI JsDiagRequestAsyncBreak(JsRuntimeHandle runtimeHandle) { return chakracore::jsrt::JsDiagRequestAsyncBreak(runtimeHandle); }
     static JsErrorCode WINAPI JsDiagGetBreakpoints(JsValueRef * breakpoints) { return chakracore::jsrt::JsDiagGetBreakpoints(breakpoints); }
     static JsErrorCode WINAPI JsDiagRemoveBreakpoint(unsigned int breakpointId) { return chakracore::jsrt::JsDiagRemoveBreakpoint(breakpointId); }
     static JsErrorCode WINAPI JsDiagSetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes exceptionAttributes) { return chakracore::jsrt::JsDiagSetBreakOnException(runtimeHandle, exceptionAttributes); }

@@ -14,6 +14,8 @@
 #include <filesystem>
 #include <iostream>
 
+#include "chakra/Logger.h"
+
 namespace fs = std::filesystem;
 
 #if defined(_AMD64_) || defined(_IA64_) || defined(_M_AMD64) || defined(_M_IA64)
@@ -213,7 +215,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
             hr = Helpers::LoadScriptFromFile(*fileName, fileContent);
             if (FAILED(hr))
             {
-                fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
+                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName.GetString()));
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
                 return returnValue;
             }
@@ -956,15 +958,6 @@ JsValueRef WScriptJsrt::DumpFunctionPositionCallback(JsValueRef callee, bool isC
     return JS_INVALID_REFERENCE;
 }
 
-// TODO (hanhossain): remove this method entirely
-JsValueRef WScriptJsrt::RequestAsyncBreakCallback(JsValueRef callee, bool isConstructCall,
-    JsValueRef * arguments, unsigned short argumentCount, void * callbackState)
-{
-    Helpers::LogError(u"RequestAsyncBreak can only be called when debugger is attached");
-
-    return JS_INVALID_REFERENCE;
-}
-
 bool WScriptJsrt::CreateNamedFunction(const char* nameString, JsNativeFunction callback,
     JsValueRef* functionVar)
 {
@@ -1015,7 +1008,6 @@ bool WScriptJsrt::Initialize()
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Attach", AttachCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Detach", DetachCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "DumpFunctionPosition", DumpFunctionPositionCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "RequestAsyncBreak", RequestAsyncBreakCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadBinaryFile", LoadBinaryFileCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadTextFile", LoadTextFileCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Flag", FlagCallback));
@@ -1243,7 +1235,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
 
             if (FAILED(hr))
             {
-                fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
+                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName.GetString()));
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
                 return returnValue;
             }
@@ -1405,7 +1397,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
 
             if (FAILED(hr))
             {
-                fprintf(stderr, "Couldn't load file '%s'\n", fileName.GetString());
+                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName.GetString()));
                 IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetUndefinedValue(&returnValue), Error);
                 return returnValue;
             }
@@ -1417,7 +1409,7 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
             IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength), ErrorStillFree);
             if (bufferLength < lengthBytes)
             {
-                std::println(stderr, "Array buffer size is insufficient to store the binary file.");
+                chakra::Logger::error("Array buffer size is insufficient to store the binary file.");
             }
             else
             {
@@ -1707,7 +1699,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
             if (errorMessage.Initialize(exception) != JsNoError)
             {
-                std::println(stderr, "ERROR attempting to coerce error to string, using alternate handler");
+                std::println("ERROR attempting to coerce error to string, using alternate handler");
                 bool hasException = false;
                 ChakraRTInterface::JsHasException(&hasException);
                 if (hasException)
@@ -1741,12 +1733,12 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                         IfJsrtErrorFail(CreatePropertyIdFromString("column", &columnPropertyId), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, columnPropertyId, &columnProperty), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
-                        std::println(stderr, "{}\n        at code ({}:{}:{})",
+                        std::println("{}\n        at code ({}:{}:{})",
                             errorMessage.GetString(), path.filename().string(), line + 1, column + 1);
                     }
                     else
                     {
-                        std::println(stderr, "{}\n\tat code ({}:\?\?:\?\?)", errorMessage.GetString(), path.filename().string());
+                        std::println("{}\n\tat code ({}:\?\?:\?\?)", errorMessage.GetString(), path.filename().string());
                     }
                     return true;
                 }
@@ -1771,7 +1763,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, columnPropertyId, &columnProperty), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
 
-                std::println(stderr, "{}\n\tat code ({}:{}:{})",
+                std::println("{}\n\tat code ({}:{}:{})",
                     errorMessage.GetString(), path.filename().string(), (int)line + 1,
                     (int)column + 1);
             }
@@ -1800,25 +1792,25 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                     std::filesystem::path filepath(fName);
 
                     // do not mix char/wchar. print them separately
-                    std::println(stderr, "thrown at {}:\n^", filepath.filename().string());
-                    std::println(stderr, "{}", errorMessage.GetString());
+                    std::println("thrown at {}:\n^", filepath.filename().string());
+                    std::println("{}", errorMessage.GetString());
                 }
                 else
                 {
                     IfJsrtErrorFail(errorStack.Initialize(stackProperty), false);
-                    std::println(stderr, "{}", errorStack.GetString());
+                    std::println("{}", errorStack.GetString());
                 }
             }
         }
         else
         {
-            std::println(stderr, "Error : %{}", errorTypeString);
+            chakra::Logger::error(std::format("Error : {}", errorTypeString));
         }
         return true;
     }
     else
     {
-        std::println(stderr, "Error : %{}", errorTypeString);
+        chakra::Logger::error(std::format("Error : {}", errorTypeString));
     }
     return false;
 }
@@ -1953,7 +1945,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
                     auto actualModuleRecord = moduleRecordMap.find(fullPath_.value());
                     if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)
                     {
-                        fprintf(stderr, "Couldn't load file '%s'\n", specifierStr.GetString());
+                        chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr.GetString()));
                     }
                 }
                 LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);

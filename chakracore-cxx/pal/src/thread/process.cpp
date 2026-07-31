@@ -35,9 +35,11 @@ SET_DEFAULT_DEBUG_CHANNEL(PROCESS); // some headers have code with asserts, so d
 #include "pal/misc.h"
 #include "pal/virtual.h"
 #include "pal/stackstring.hpp"
+#include "chakra/Logger.h"
 
 #include <errno.h>
 #include <poll.h>
+#include <format>
 
 #include <unistd.h>
 #include <sys/mman.h>
@@ -267,7 +269,7 @@ PrepareStandardHandle(
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Unable to access file data\n");
+        chakra::Logger::error("Unable to access file data\n");
         goto PrepareStandardHandleExit;
     }
 
@@ -379,7 +381,7 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
                 break;
             default:
                 // Unexpected failure.
-                ASSERT(FALSE);
+                assert(false);
                 SetLastError(ERROR_INTERNAL_ERROR);
                 break;
             }
@@ -422,7 +424,7 @@ static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateU
             exit(uExitCode);
         }
 
-        ASSERT(FALSE); // we shouldn't get here
+        assert(false); // we shouldn't get here
     }
 
     return ret;
@@ -447,17 +449,6 @@ void PROCCleanupProcess()
     /* This must be called after PALCommonCleanup */
     PALShutdown();
 }
-
-#define FATAL_ASSERT(e, msg) \
-    do \
-    { \
-        if (!(e)) \
-        { \
-            fprintf(stderr, "FATAL ERROR: " msg); \
-            abort(); \
-        } \
-    } \
-    while(0)
 
 /*++
 Function:
@@ -617,7 +608,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Unable to access local data");
+        chakra::Logger::error("Unable to access local data");
         goto CreateInitialProcessAndThreadObjectsExit;
     }
 
@@ -643,7 +634,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
 
     if (NO_ERROR != palError)
     {
-        ASSERT("Failure registering process object");
+        chakra::Logger::error("Failure registering process object");
         goto CreateInitialProcessAndThreadObjectsExit;
     }
 
@@ -725,7 +716,7 @@ CorUnix::PROCRemoveThread(
     /* if thread list is empty */
     if (curThread == NULL)
     {
-        ASSERT("Thread list is empty.\n");
+        chakra::Logger::error("Thread list is empty.\n");
         goto EXIT;
     }
 
@@ -1077,7 +1068,7 @@ PROCGetProcessStatus(
         }
         else
         {
-            ASSERT("waitpid returned unexpected value %d\n",wait_retval);
+            chakra::Logger::error(std::format("waitpid returned unexpected value {}\n",wait_retval));
             *pdwExitCode = EXIT_FAILURE;
             *pps = PS_DONE;
         }
