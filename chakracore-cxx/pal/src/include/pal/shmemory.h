@@ -273,16 +273,6 @@ BOOL SHMSetInfo(SHM_INFO_ID element, SHMPTR value);
 /********************** Shared memory help functions ********************/
 
 /*++
-SHMStrDup
-
-Duplicates the string in shared memory.
-
-Returns the new address as SHMPTR on success.
-Returns (SHMPTR)NULL on failure.
---*/
-SHMPTR SHMStrDup( const char * string );
-
-/*++
 SHMWStrDup
 
 Duplicates the wide string in shared memory.
