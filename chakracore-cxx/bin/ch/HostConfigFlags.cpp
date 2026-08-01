@@ -48,7 +48,6 @@ HostConfigFlags::HostConfigFlags() :
     UseParserStateCache(false), UseParserStateCacheIsEnabled(false),
     Serialized(nullptr), SerializedIsEnabled(false),
     OOPJIT(false), OOPJITIsEnabled(false),
-    EnsureCloseJITServer(true), EnsureCloseJITServerIsEnabled(false),
     IgnoreScriptErrorCode(false), IgnoreScriptErrorCodeIsEnabled(false),
     MuteHostErrorMsg(false), MuteHostErrorMsgIsEnabled(false),
     TraceHostCallback(false), TraceHostCallbackIsEnabled(false),
@@ -79,12 +78,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
     {
         this->OOPJITIsEnabled = true;
         Parse<bool>(parser, &this->OOPJIT);
-        return true;
-    }
-    if (chakra_rs::str_helper::to_lowercase(u"EnsureCloseJITServer") == flagStringsNormalized)
-    {
-        this->EnsureCloseJITServerIsEnabled = true;
-        Parse<bool>(parser, &this->EnsureCloseJITServer);
         return true;
     }
     if (chakra_rs::str_helper::to_lowercase(u"IgnoreScriptErrorCode") == flagStringsNormalized)
@@ -137,7 +130,6 @@ void HostConfigFlags::PrintUsageString()
     std::println("{:>20}          \t{}", "UseParserStateCache", "\"Create parser state cache while parsing and use it during script execution\"");
     std::println("{:>20}          \t{}", "Serialized", "\"If source is UTF8, deserializes from bytecode file\"");
     std::println("{:>20}          \t{}", "OOPJIT", "\"Run JIT in a separate process\"");
-    std::println("{:>20}          \t{}", "EnsureCloseJITServer", "\"JIT process will be force closed when ch is terminated\"");
     std::println("{:>20}          \t{}", "IgnoreScriptErrorCode", "\"Don't return error code on script error\"");
     std::println("{:>20}          \t{}", "MuteHostErrorMsg", "\"Mute host error output, e.g. module load failures\"");
     std::println("{:>20}          \t{}", "TraceHostCallback", "\"Output traces for host callbacks\"");

@@ -14,7 +14,6 @@ public:
     bool UseParserStateCache; bool UseParserStateCacheIsEnabled;
     BSTR Serialized; bool SerializedIsEnabled;
     bool OOPJIT; bool OOPJITIsEnabled;
-    bool EnsureCloseJITServer; bool EnsureCloseJITServerIsEnabled;
     bool IgnoreScriptErrorCode; bool IgnoreScriptErrorCodeIsEnabled;
     bool MuteHostErrorMsg; bool MuteHostErrorMsgIsEnabled;
     bool TraceHostCallback; bool TraceHostCallbackIsEnabled;
