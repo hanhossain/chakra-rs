@@ -38,15 +38,6 @@ FILEAddNewLockedRgn(
     LOCK_TYPE lockType
     );
 
-PAL_ERROR
-FILEUnlockFileRegion(
-    SHMPTR shmFileLocks,
-    void * pvControllerInstance,
-    unsigned long unlockRgnStart, 
-    unsigned long nbBytesToUnlock,
-    LOCK_TYPE unlockType
-    );
-
 void
 FILECleanUpLockedRgn(
     SHMPTR shmFileLocks,
@@ -98,88 +89,6 @@ CSharedMemoryFileLockController::ReleaseController()
     }
 
     delete this;
-}
-
-PAL_ERROR
-FILEUnlockFileRegion(
-    SHMPTR shmFileLocks,
-    void * pvControllerInstance,
-    unsigned long unlockRgnStart, 
-    unsigned long nbBytesToUnlock,
-    LOCK_TYPE unlockType
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    SHMFILELOCKRGNS *prevLock = NULL, *curLockRgn = NULL, unlockRgn;
-    SHMPTR shmcurLockRgn;
-    SHMFILELOCKS *fileLocks;
-
-    SHMLock();
-
-    
-    /* check if the region to unlock is empty or not */
-    if (nbBytesToUnlock == 0) 
-    {
-        palError = ERROR_NOT_LOCKED;
-        WARN("Attempt to unlock an empty region\n");
-        goto EXIT;
-    }
-    
-    if ((SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKS, fileLocks, shmFileLocks) == FALSE) || 
-        (fileLocks == NULL) ||
-        (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLockRgn, fileLocks->fileLockedRgns) == FALSE))
-    {
-        chakra::Logger::error("Unable to get pointer from shm pointer.\n");
-        palError = ERROR_INTERNAL_ERROR;
-        goto EXIT;
-    }
-    
-    unlockRgn.processId = getpid();
-    unlockRgn.pvControllerInstance = pvControllerInstance;
-    unlockRgn.lockRgnStart = unlockRgnStart;
-    unlockRgn.nbBytesLocked = nbBytesToUnlock;
-    unlockRgn.lockType = unlockType;
-
-    shmcurLockRgn = fileLocks->fileLockedRgns;
-    
-    while((curLockRgn != NULL) && !IS_LOCK_EQUAL(curLockRgn, &unlockRgn))
-    {
-        prevLock = curLockRgn; 
-        shmcurLockRgn = curLockRgn->next;
-        if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, curLockRgn, shmcurLockRgn) == FALSE)
-        {
-            chakra::Logger::error("Unable to get pointer from shm pointer.\n");
-            goto EXIT;
-        }
-    }
-    
-    if (curLockRgn != NULL) 
-    {
-        TRACE("removing the lock region (%I64u, %I64u)\n", 
-               curLockRgn->lockRgnStart, curLockRgn->nbBytesLocked);
-
-        if (prevLock == NULL) 
-        {
-            /* removing the first lock */
-            fileLocks->fileLockedRgns = curLockRgn->next;
-        }
-        else
-        {
-            prevLock->next = curLockRgn->next;
-        }
-        SHMfree(shmcurLockRgn);
-    }
-    else
-    {
-        /* the lock doesn't exist */
-        WARN("Attempt to unlock a non locked region\n");
-        palError = ERROR_NOT_LOCKED;
-        goto EXIT;
-    }
-    
-EXIT:    
-    SHMRelease();
-    return palError;
 }
 
 
