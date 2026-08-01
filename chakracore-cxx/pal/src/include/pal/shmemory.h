@@ -283,20 +283,6 @@ Returns (SHMPTR)NULL on failure.
 SHMPTR SHMWStrDup( const std::u16string &string );
 
 
-/*++
-SHMFindNamedObjectByName
-
-Searches for an object whose name matches the name and ID passed in.
-
-Returns a SHMPTR to its location in shared memory. If no object
-matches the name, the function returns NULL and sets pbNameExists to FALSE.
-If an object matches the name but is of a different type, the function
-returns NULL and sets pbNameExists to TRUE.
-
---*/
-SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oid,
-                                 BOOL *pbNameExists );
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus
