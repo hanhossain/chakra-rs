@@ -12,7 +12,6 @@ class HostConfigFlags : public ICustomConfigFlags
 {
 public:
     bool UseParserStateCache; bool UseParserStateCacheIsEnabled;
-    int InspectMaxStringLength; bool InspectMaxStringLengthIsEnabled;
     BSTR Serialized; bool SerializedIsEnabled;
     bool OOPJIT; bool OOPJITIsEnabled;
     bool EnsureCloseJITServer; bool EnsureCloseJITServerIsEnabled;

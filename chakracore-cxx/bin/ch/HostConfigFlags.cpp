@@ -46,7 +46,6 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 
 HostConfigFlags::HostConfigFlags() :
     UseParserStateCache(false), UseParserStateCacheIsEnabled(false),
-    InspectMaxStringLength(16), InspectMaxStringLengthIsEnabled(false),
     Serialized(nullptr), SerializedIsEnabled(false),
     OOPJIT(false), OOPJITIsEnabled(false),
     EnsureCloseJITServer(true), EnsureCloseJITServerIsEnabled(false),
@@ -68,12 +67,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
     {
         this->UseParserStateCacheIsEnabled = true;
         Parse<bool>(parser, &this->UseParserStateCache);
-        return true;
-    }
-    if (chakra_rs::str_helper::to_lowercase(u"InspectMaxStringLength") == flagStringsNormalized)
-    {
-        this->InspectMaxStringLengthIsEnabled = true;
-        Parse<int>(parser, &this->InspectMaxStringLength);
         return true;
     }
     if (chakra_rs::str_helper::to_lowercase(u"Serialized") == flagStringsNormalized)
@@ -142,7 +135,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
 void HostConfigFlags::PrintUsageString()
 {
     std::println("{:>20}          \t{}", "UseParserStateCache", "\"Create parser state cache while parsing and use it during script execution\"");
-    std::println("{:>20}          \t{}", "InspectMaxStringLength", "\"Max string length to dump in locals inspection\"");
     std::println("{:>20}          \t{}", "Serialized", "\"If source is UTF8, deserializes from bytecode file\"");
     std::println("{:>20}          \t{}", "OOPJIT", "\"Run JIT in a separate process\"");
     std::println("{:>20}          \t{}", "EnsureCloseJITServer", "\"JIT process will be force closed when ch is terminated\"");
