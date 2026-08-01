@@ -1161,17 +1161,6 @@ namespace CorUnix
 
     extern IPalSynchronizationManager *g_pSynchronizationManager;
 
-    class IFileTransactionLock
-    {
-    public:
-
-        //
-        // Called when the transaction completes (which includes
-        // error completions, or the outright failure to queue
-        // the transaction).
-        //
-    };
-
     class IFileLockController
     {
     public:
