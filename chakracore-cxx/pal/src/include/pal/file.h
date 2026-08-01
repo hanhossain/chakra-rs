@@ -70,15 +70,6 @@ Return value:
 BOOL FILEInitStdHandles(void);
 
 /*++
-FILECleanupStdHandles
-
-Close promary handles for stdin, stdout and stderr
-
-(no parameters, no return value)
---*/
-void FILECleanupStdHandles(void);
-
-/*++
 
 Function :
     FILEGetProperNotFoundError

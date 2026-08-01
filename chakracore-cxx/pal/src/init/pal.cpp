@@ -76,8 +76,6 @@ using namespace CorUnix;
 // necessary prototype here
 //
 
-extern "C" BOOL CRTInitStdStreams( void );
-
 
 SET_DEFAULT_DEBUG_CHANNEL(PAL);
 
@@ -311,12 +309,6 @@ Initialize()
             goto CLEANUP13;
         }
 
-        if (FALSE == CRTInitStdStreams())
-        {
-            ERROR("Unable to initialize CRT standard streams\n");
-            goto CLEANUP15;
-        }
-
         TRACE("First-time PAL initialization complete.\n");
         init_count++;
 
@@ -337,8 +329,6 @@ Initialize()
     goto done;
 
     /* No cleanup required for CRTInitStdStreams */
-CLEANUP15:
-    FILECleanupStdHandles();
 CLEANUP13:
     VIRTUALCleanup();
     MAPCleanup();

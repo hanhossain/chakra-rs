@@ -505,26 +505,3 @@ fail:
     pStdOut = INVALID_HANDLE_VALUE;
     return FALSE;
 }
-
-
-/*++
-FILECleanupStdHandles
-
-Remove all regions, locked by a file pointer, from shared memory
-
-(no parameters)
-
---*/
-void FILECleanupStdHandles(void)
-{
-    HANDLE stdin_handle;
-    HANDLE stdout_handle;
-
-    TRACE("closing standard handles\n");
-    stdin_handle = pStdIn;
-    stdout_handle = pStdOut;
-    pStdIn = INVALID_HANDLE_VALUE;
-    pStdOut = INVALID_HANDLE_VALUE;
-    CloseHandle(stdin_handle);
-    CloseHandle(stdout_handle);
-}

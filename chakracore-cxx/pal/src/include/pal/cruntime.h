@@ -150,17 +150,6 @@ Returns TRUE if c is a control character.
 int PAL_iswpunct(char16_t c);
 #endif  // defined(__APPLE__)
 
-/*++
-
-Functio:
-
-    CRTInitStdStreams.
-    
-    Initilizes the standard streams.
-    Returns TRUE on success, FALSE otherwise.
---*/
-BOOL CRTInitStdStreams( void );
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus
