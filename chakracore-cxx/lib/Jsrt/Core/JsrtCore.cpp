@@ -1428,18 +1428,6 @@ JsErrorCode chakracore::jsrt::JsIsConstructor(_In_ JsValueRef object, _Out_ bool
     });
 }
 
-JsErrorCode chakracore::jsrt::JsQueueBackgroundParse_Experimental(
-    _In_ JsScriptContents* contents,
-    _Out_ uint32_t* dwBgParseCookie)
-{
-    int32_t hr;
-    hr = E_NOTIMPL;
-
-    JsErrorCode res = (hr == S_OK) ? JsNoError : JsErrorFatal;
-
-    return res;
-}
-
 JsErrorCode chakracore::jsrt::JsDiscardBackgroundParse_Experimental(
     _In_ uint32_t dwBgParseCookie,
     _In_ void* buffer,

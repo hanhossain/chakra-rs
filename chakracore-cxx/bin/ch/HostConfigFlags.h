@@ -20,7 +20,6 @@ public:
     bool Test262; bool Test262IsEnabled;
     bool Module; bool ModuleIsEnabled;
     bool TrackRejectedPromises; bool TrackRejectedPromisesIsEnabled;
-    bool ExecuteWithBgParse; bool ExecuteWithBgParseIsEnabled;
 
     static HostConfigFlags flags;
     static rust::Vec<rust::String> vargsVal;

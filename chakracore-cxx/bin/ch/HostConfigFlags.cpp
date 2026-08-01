@@ -54,7 +54,6 @@ HostConfigFlags::HostConfigFlags() :
     Test262(false), Test262IsEnabled(false),
     Module(false), ModuleIsEnabled(false),
     TrackRejectedPromises(false), TrackRejectedPromisesIsEnabled(false),
-    ExecuteWithBgParse(false), ExecuteWithBgParseIsEnabled(false),
     nDummy(0)
 {
 }
@@ -116,12 +115,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
         Parse<bool>(parser, &this->TrackRejectedPromises);
         return true;
     }
-    if (chakra_rs::str_helper::to_lowercase(u"ExecuteWithBgParse") == flagStringsNormalized)
-    {
-        this->ExecuteWithBgParseIsEnabled = true;
-        Parse<bool>(parser, &this->ExecuteWithBgParse);
-        return true;
-    }
     return false;
 }
 
@@ -136,7 +129,6 @@ void HostConfigFlags::PrintUsageString()
     std::println("{:>20}          \t{}", "Test262", "\"load Test262 harness\"");
     std::println("{:>20}          \t{}", "Module", "\"load the script as a module\"");
     std::println("{:>20}          \t{}", "TrackRejectedPromises", "\"Enable tracking of unhandled promise rejections\"");
-    std::println("{:>20}          \t{}", "ExecuteWithBgParse", "\"Load script with bgparse (note: requires bgparse and parserstatecache be on as well)\"");
 }
 
 void HostConfigFlags::PrintUsage()

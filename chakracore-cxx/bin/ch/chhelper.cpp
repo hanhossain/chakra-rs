@@ -21,8 +21,6 @@
 
 unsigned int MessageBase::s_messageCount = 0;
 
-int32_t RunBgParseSync(const char *fileContents, uint32_t lengthBytes, const char *fileName);
-
 static_assert(sizeof(ssize_t) == sizeof(long));
 
 // On success the param byteCodeBuffer will be allocated in the function.
@@ -129,11 +127,6 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
     else if (HostConfigFlags::flags.Module)
     {
         runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath.value_or("").c_str());
-    }
-    else if (HostConfigFlags::flags.ExecuteWithBgParse)
-    {
-        unsigned int lengthBytes = static_cast<unsigned int>(fileLength);
-        runScript = static_cast<JsErrorCode>(RunBgParseSync(fileContents, lengthBytes, fileName));
     }
     else // bufferValue == nullptr && parserStateCache == nullptr
     {
@@ -365,42 +358,6 @@ Error:
     }
 
     return hr;
-}
-
-// Use the asynchronous BGParse JSRT APIs in a synchronous call
-int32_t RunBgParseSync(const char *fileContents, uint32_t lengthBytes, const char *fileName)
-{
-    JsValueRef scriptSource;
-    JsErrorCode e = (ChakraRTInterface::JsCreateExternalArrayBuffer(
-        const_cast<char *>(fileContents), lengthBytes, nullptr, const_cast<char *>(fileContents), &scriptSource));
-
-    // What's the preferred way of doing this?
-    char16_t fileNameWide[MAX_PATH] = {0};
-    size_t fileNameLength = strlen(fileName);
-    for (size_t i = 0; i < fileNameLength; i++)
-    {
-        fileNameWide[i] = fileName[i];
-    }
-
-    JsScriptContents scriptContents = {0};
-    scriptContents.container = const_cast<char *>(fileContents);
-    scriptContents.containerType = JsScriptContainerType::HeapAllocatedBuffer;
-    scriptContents.encodingType = JsScriptEncodingType::Utf8;
-    scriptContents.contentLengthInBytes = lengthBytes;
-    scriptContents.fullPath = fileNameWide;
-
-    uint32_t cookie = 0;
-    e = ChakraRTInterface::JsQueueBackgroundParse_Experimental(&scriptContents, &cookie);
-    Assert(e == JsErrorCode::JsNoError);
-
-    JsValueRef bgResult = nullptr;
-    e = ChakraRTInterface::JsExecuteBackgroundParse_Experimental(
-        cookie, scriptSource, WScriptJsrt::GetNextSourceContext(), scriptContents.fullPath,
-        JsParseScriptAttributes::JsParseScriptAttributeNone,
-        nullptr, //_In_ JsValueRef parserState,
-        &bgResult);
-
-    return e;
 }
 
 int32_t ExecuteTest(const std::string &fileName, JsRuntimeHandle &chRuntime, JsRuntimeAttributes &jsrtAttributes)

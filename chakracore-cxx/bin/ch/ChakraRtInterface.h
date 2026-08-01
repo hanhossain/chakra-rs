@@ -169,7 +169,6 @@ public:
     static JsErrorCode WINAPI JsVarDeserializerFree(JsVarDeserializerHandle deserializerHandle) { return chakracore::jsrt::JsVarDeserializerFree(deserializerHandle); }
 
     static JsErrorCode WINAPI JsDetachArrayBuffer(JsValueRef buffer) { return chakracore::jsrt::JsDetachArrayBuffer(buffer); }
-    static JsErrorCode WINAPI JsQueueBackgroundParse_Experimental(JsScriptContents* contents, uint32_t* dwBgParseCookie) { return chakracore::jsrt::JsQueueBackgroundParse_Experimental(contents, dwBgParseCookie);  }
     static JsErrorCode WINAPI JsDiscardBackgroundParse_Experimental(uint32_t dwBgParseCookie, void* buffer, bool* callerOwnsBuffer) { return chakracore::jsrt::JsDiscardBackgroundParse_Experimental(dwBgParseCookie, buffer, callerOwnsBuffer); }
     static JsErrorCode WINAPI JsExecuteBackgroundParse_Experimental(uint32_t dwBgParseCookie, JsValueRef script, JsSourceContext sourceContext, char16_t *url, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef *result) { return chakracore::jsrt::JsExecuteBackgroundParse_Experimental(dwBgParseCookie, script, sourceContext, url, parseAttributes, parserState, result); }
 

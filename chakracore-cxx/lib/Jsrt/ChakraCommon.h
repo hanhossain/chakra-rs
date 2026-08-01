@@ -2406,20 +2406,6 @@ namespace chakracore::jsrt
 
     /// <summary>
     ///     Note: Experimental API
-    ///     Starts a request for background script parsing on another thread
-    /// </summary>
-    /// <param name="contents">ScriptContents struct with data needed to start parsing</param>
-    /// <param name="dwBgParseCookie">Identifier for subsequent BGParse operations</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode
-        JsQueueBackgroundParse_Experimental(
-            _In_ JsScriptContents* contents,
-            _Out_ uint32_t* dwBgParseCookie);
-
-    /// <summary>
-    ///     Note: Experimental API
     ///     Appropriately frees resources associated with a previously queued background parse
     /// </summary>
     /// <param name="dwBgParseCookie">Identifier for BGParse operation</param>
