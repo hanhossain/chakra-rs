@@ -19,7 +19,6 @@ public:
     bool TraceHostCallback; bool TraceHostCallbackIsEnabled;
     bool Test262; bool Test262IsEnabled;
     bool Module; bool ModuleIsEnabled;
-    bool TrackRejectedPromises; bool TrackRejectedPromisesIsEnabled;
 
     static HostConfigFlags flags;
     static rust::Vec<rust::String> vargsVal;

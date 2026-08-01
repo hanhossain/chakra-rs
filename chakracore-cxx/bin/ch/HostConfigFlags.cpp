@@ -53,7 +53,6 @@ HostConfigFlags::HostConfigFlags() :
     TraceHostCallback(false), TraceHostCallbackIsEnabled(false),
     Test262(false), Test262IsEnabled(false),
     Module(false), ModuleIsEnabled(false),
-    TrackRejectedPromises(false), TrackRejectedPromisesIsEnabled(false),
     nDummy(0)
 {
 }
@@ -109,12 +108,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
         Parse<bool>(parser, &this->Module);
         return true;
     }
-    if (chakra_rs::str_helper::to_lowercase(u"TrackRejectedPromises") == flagStringsNormalized)
-    {
-        this->TrackRejectedPromisesIsEnabled = true;
-        Parse<bool>(parser, &this->TrackRejectedPromises);
-        return true;
-    }
     return false;
 }
 
@@ -128,7 +121,6 @@ void HostConfigFlags::PrintUsageString()
     std::println("{:>20}          \t{}", "TraceHostCallback", "\"Output traces for host callbacks\"");
     std::println("{:>20}          \t{}", "Test262", "\"load Test262 harness\"");
     std::println("{:>20}          \t{}", "Module", "\"load the script as a module\"");
-    std::println("{:>20}          \t{}", "TrackRejectedPromises", "\"Enable tracking of unhandled promise rejections\"");
 }
 
 void HostConfigFlags::PrintUsage()

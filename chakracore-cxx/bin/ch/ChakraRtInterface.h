@@ -111,7 +111,6 @@ public:
     static JsErrorCode WINAPI JsGetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef *value) { return chakracore::jsrt::JsGetIndexedProperty(object, index, value); }
     static JsErrorCode WINAPI JsSetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef value) { return chakracore::jsrt::JsSetIndexedProperty(object, index, value); }
     static JsErrorCode WINAPI JsSetPromiseContinuationCallback(JsPromiseContinuationCallback callback, void *callbackState) { return chakracore::jsrt::JsSetPromiseContinuationCallback(callback, callbackState); }
-    static JsErrorCode WINAPI JsSetHostPromiseRejectionTracker(JsHostPromiseRejectionTrackerCallback callback, void *callbackState) { return chakracore::jsrt::JsSetHostPromiseRejectionTracker(callback, callbackState); }
     static JsErrorCode WINAPI JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return chakracore::jsrt::JsGetContextOfObject(object, context); }
     static JsErrorCode WINAPI JsDiagStartDebugging(JsRuntimeHandle runtimeHandle, JsDiagDebugEventCallback debugEventCallback, void* callbackState) { return chakracore::jsrt::JsDiagStartDebugging(runtimeHandle, debugEventCallback, callbackState); }
     static JsErrorCode WINAPI JsDiagStopDebugging(JsRuntimeHandle runtimeHandle, void** callbackState) { return chakracore::jsrt::JsDiagStopDebugging(runtimeHandle, callbackState); }

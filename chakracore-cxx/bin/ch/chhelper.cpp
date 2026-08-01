@@ -388,12 +388,7 @@ int32_t ExecuteTest(const std::string &fileName, JsRuntimeHandle &chRuntime, JsR
     {
         auto fullPath = std::filesystem::path(fileName).lexically_normal();
 
-        if (HostConfigFlags::flags.TrackRejectedPromises)
-        {
-            ChakraRTInterface::JsSetHostPromiseRejectionTracker(WScriptJsrt::PromiseRejectionTrackerCallback, nullptr);
-        }
-
-        else if (HostConfigFlags::flags.SerializedIsEnabled)
+        if (HostConfigFlags::flags.SerializedIsEnabled)
         {
             CreateAndRunSerializedScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);
