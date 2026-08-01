@@ -22,7 +22,6 @@ Abstract:
 #include <string>
 #include "pal/thread.hpp"
 #include "pal/file.hpp"
-#include "shmfilelockmgr.hpp"
 #include <new>
 #include "pal/stackstring.hpp"
 
