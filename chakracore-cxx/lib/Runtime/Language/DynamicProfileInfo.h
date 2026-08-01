@@ -372,7 +372,6 @@ namespace Js
         bool IsNativeFloatArray() const { return !(bits & NotNativeFloatBit) && !PHASE_OFF1(NativeArrayPhase); }
         bool IsNativeArray() const { return IsNativeFloatArray(); }
         void SetIsNotNativeIntArray();
-        void SetIsNotNativeFloatArray();
         void SetIsNotNativeArray();
 
         static uint32_t GetOffsetOfBits() { return offsetof(ArrayCallSiteInfo, bits); }
