@@ -49,16 +49,6 @@ namespace CorUnix
         BOOL inheritable;
     };
 
-    PAL_ERROR
-    InternalWriteFile(
-        CPalThread *pThread,
-        HANDLE hFile,
-        const void * lpBuffer,
-        uint32_t nNumberOfBytesToWrite,
-        uint32_t * lpNumberOfBytesWritten,
-        LPOVERLAPPED lpOverlapped
-        );
-
     /*++
     InternalOpen
     Wraps open
