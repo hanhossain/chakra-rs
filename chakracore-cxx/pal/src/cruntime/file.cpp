@@ -37,20 +37,6 @@ Abstract:
 SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
 /*++
-
-Function:
-
-    CRTInitStdStreams.
-
-    Initilizes the standard streams.
-    Returns TRUE on success, FALSE otherwise.
---*/
-BOOL CRTInitStdStreams()
-{
-    return TRUE;
-}
-
-/*++
 Function :
 
     MapFileOpenModes

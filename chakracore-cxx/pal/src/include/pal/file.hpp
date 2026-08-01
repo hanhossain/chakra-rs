@@ -90,20 +90,11 @@ Return value:
 BOOL FILEInitStdHandles(void);
 
 /*++
-FILECleanupStdHandles
 
-Close primary handles for stdin, stdout and stderr
-
-(no parameters, no return value)
---*/
-void FILECleanupStdHandles(void);
-
-/*++
-
-Function : 
+Function :
     FILEGetProperNotFoundError
-    
-Returns the proper error code, based on the 
+
+Returns the proper error code, based on the
 Windows behavoir.
 
     IN char* lpPath - The path to check.
