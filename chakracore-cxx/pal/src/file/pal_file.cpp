@@ -90,11 +90,6 @@ void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool 
         return;
     }
 
-    if (pLocalData->pLockController != NULL)
-    {
-        pLocalData->pLockController->ReleaseController();
-    }
-
     if (!fShutdown && -1 != pLocalData->unix_fd)
     {
         close(pLocalData->unix_fd);
@@ -369,7 +364,6 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
     IPalObject *pRegisteredFile = NULL;
     IDataLock *pDataLock = NULL;
     CFileProcessLocalData *pLocalData = NULL;
-    IFileLockController *pLockController = NULL;
     CObjectAttributes oa;
 
     HANDLE hFile = INVALID_HANDLE_VALUE;
@@ -419,9 +413,6 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
     // to the local file data
     //
 
-    pLocalData->pLockController = pLockController;
-    pLockController = NULL;
-
     //
     // We've finished initializing our local data, so release that lock
     //
@@ -447,11 +438,6 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
     pFileObject = NULL;
 
 done:
-
-    if (NULL != pLockController)
-    {
-        pLockController->ReleaseController();
-    }
 
     if (NULL != pDataLock)
     {

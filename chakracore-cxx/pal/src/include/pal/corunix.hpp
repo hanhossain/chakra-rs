@@ -1160,47 +1160,6 @@ namespace CorUnix
     };
 
     extern IPalSynchronizationManager *g_pSynchronizationManager;
-
-    class IFileLockController
-    {
-    public:
-
-        //
-        // A transaction lock is acquired before a read or write
-        // operation, and released when that operation completes.
-        // The lock is not tied to the calling thread, since w/
-        // asynch file IO the completion may occur on a different
-        // thread.
-        //
-
-        enum FileTransactionLockType
-        {
-            ReadLock,
-            WriteLock
-        };
-
-        enum FileLockExclusivity
-        {
-            ExclusiveFileLock,
-            SharedFileLock
-        };
-
-        enum FileLockWaitMode
-        {
-            FailImmediately,
-            WaitForLockAcquisition
-        };
-
-        //
-        // ReleaseController should be called from the file object's
-        // cleanup routine. It must always be called, even if fShutdown is
-        // TRUE or fCleanupSharedState is FALSE.
-        //
-
-        virtual
-        void
-        ReleaseController() = 0;
-    };
 }
 
 #endif // _CORUNIX_H

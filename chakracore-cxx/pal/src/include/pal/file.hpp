@@ -38,8 +38,6 @@ namespace CorUnix
     class CFileProcessLocalData
     {
     public:
-        IFileLockController *pLockController;
-
         int  unix_fd;
         uint32_t dwDesiredAccess; /* Unix assumes files are always opened for reading.
                                   In Windows we can open a file for writing only */
