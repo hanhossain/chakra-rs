@@ -87,36 +87,6 @@ namespace CorUnix
         void
         ReleaseController();
     };
-
-    class CSharedMemoryFileTransactionLock : public IFileTransactionLock
-    {
-    private:
-
-        SHMPTR m_shmFileLocks;
-        void * m_pvControllerInstance;
-        unsigned long m_lockRgnStart;
-        unsigned long m_nbBytesToLock;
-    protected:
-        virtual ~CSharedMemoryFileTransactionLock()
-        {
-        };
-        
-    public:
-
-        CSharedMemoryFileTransactionLock(
-            SHMPTR shmFileLocks,
-            void * pvControllerInstance,
-            unsigned long lockRgnStart,
-            unsigned long nbBytesToLock
-            )
-            :
-            m_shmFileLocks(shmFileLocks),
-            m_pvControllerInstance(pvControllerInstance),
-            m_lockRgnStart(lockRgnStart),
-            m_nbBytesToLock(nbBytesToLock)
-        {
-        };
-    };
 }
 
 #endif /* _PAL_SHMFILELOCKMGR_H_ */
