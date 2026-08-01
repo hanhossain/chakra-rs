@@ -28,16 +28,6 @@ using namespace CorUnix;
 
 SET_DEFAULT_DEBUG_CHANNEL(FILE);
 
-PAL_ERROR
-FILEAddNewLockedRgn(
-    SHMFILELOCKS* fileLocks,
-    void * pvControllerInstance,
-    SHMFILELOCKRGNS *insertAfter,
-    unsigned long lockRgnStart, 
-    unsigned long nbBytesToLock, 
-    LOCK_TYPE lockType
-    );
-
 void
 FILECleanUpLockedRgn(
     SHMPTR shmFileLocks,
@@ -201,117 +191,6 @@ EXIT:
     {
         *pshmFileLocks = shmPtrRet;
     }
-    
-    return palError;
-}
-
-PAL_ERROR
-FILEAddNewLockedRgn(
-    SHMFILELOCKS* fileLocks,
-    void * pvControllerInstance,
-    SHMFILELOCKRGNS *insertAfter,
-    unsigned long lockRgnStart, 
-    unsigned long nbBytesToLock, 
-    LOCK_TYPE lockType
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    SHMFILELOCKRGNS *newLockRgn, *lockRgnPtr;
-    SHMPTR shmNewLockRgn = SHMNULL;
-
-    if ((fileLocks == NULL) || (pvControllerInstance == NULL))
-    {
-        chakra::Logger::error("Invalid Null parameter.\n");
-        return FALSE;
-    }
-
-    SHMLock();
-    
-    /* Create a new entry for the new locked region */
-    TRACE("Create a new entry for the new lock region (%I64u %I64u)\n", 
-          lockRgnStart, nbBytesToLock);
-    
-    if ((shmNewLockRgn = SHMalloc(sizeof(SHMFILELOCKRGNS))) == SHMNULL)
-    {
-        ERROR("Can't allocate SHMFILELOCKRGNS structure\n");
-        palError = ERROR_NOT_ENOUGH_MEMORY;
-        goto EXIT;
-    }
-
-    if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, newLockRgn, shmNewLockRgn) == FALSE)
-    {
-        chakra::Logger::error("Unable to get pointer from shm pointer.\n");
-        palError = ERROR_INTERNAL_ERROR;
-        goto EXIT;
-    }
-    
-    newLockRgn->processId = getpid();
-    newLockRgn->pvControllerInstance = pvControllerInstance;
-    newLockRgn->lockRgnStart = lockRgnStart;
-    newLockRgn->nbBytesLocked = nbBytesToLock;
-    newLockRgn->lockType = lockType;
-    
-    /* All locked regions with the same offset should be sorted ascending */
-    /* the sort is based on the length of the locked byte range */
-    if (insertAfter != NULL)
-    {
-        if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, lockRgnPtr, insertAfter->next) == FALSE)
-        {
-            chakra::Logger::error("Unable to get pointer from shm pointer.\n");
-            palError = ERROR_INTERNAL_ERROR;
-            goto EXIT;
-        }
-    }
-    else
-    {
-        if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, lockRgnPtr, fileLocks->fileLockedRgns) == FALSE)
-        {
-            chakra::Logger::error("Unable to get pointer from shm pointer.\n");
-            palError = ERROR_INTERNAL_ERROR;
-            goto EXIT;
-        }
-    }
-    
-    while(lockRgnPtr != NULL)
-    {
-        if ( (lockRgnPtr->lockRgnStart == newLockRgn->lockRgnStart) &&
-             (newLockRgn->nbBytesLocked > lockRgnPtr->nbBytesLocked))
-        {
-            insertAfter = lockRgnPtr;
-            if (SHMPTR_TO_TYPED_PTR_BOOL(SHMFILELOCKRGNS, lockRgnPtr, lockRgnPtr->next) == FALSE)
-            {
-                chakra::Logger::error("Unable to get pointer from shm pointer.\n");
-                palError = ERROR_INTERNAL_ERROR;
-                goto EXIT;
-            }
-            continue;
-        }
-
-        break;
-    }
-    
-    if (insertAfter != NULL)
-    {       
-        TRACE("Adding lock after the lock rgn (%I64d %I64d)\n", 
-              insertAfter->lockRgnStart,insertAfter->nbBytesLocked);
-        newLockRgn->next = insertAfter->next;
-        insertAfter->next = shmNewLockRgn;
-    }
-    else
-    {
-        TRACE("adding lock into the head of the list\n");
-        newLockRgn->next = fileLocks->fileLockedRgns;
-        fileLocks->fileLockedRgns = shmNewLockRgn;
-    }
-
-EXIT:
-
-    if (NO_ERROR != palError && SHMNULL != shmNewLockRgn)
-    {
-        SHMfree(shmNewLockRgn);
-    }
-   
-    SHMRelease();
     
     return palError;
 }
