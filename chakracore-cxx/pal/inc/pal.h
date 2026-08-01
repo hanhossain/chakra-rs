@@ -1829,19 +1829,11 @@ unsigned long long _rotr64(unsigned long long value, int shift)
 }
 #endif
 
-#if !defined(PAL_STDCPP_COMPAT) || defined(USING_PAL_STDLIB)
-
-#endif // !PAL_STDCPP_COMPAT
-
 #ifndef PAL_STDCPP_COMPAT
 
 #define SEEK_SET    0
 #define SEEK_CUR    1
 #define SEEK_END    2
-
-#define _IOFBF  0       /* setvbuf should set fully buffered */
-#define _IOLBF  1       /* setvbuf should set line buffered */
-#define _IONBF  2       /* setvbuf should set unbuffered */
 
 #endif // PAL_STDCPP_COMPAT
 
