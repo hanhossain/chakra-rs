@@ -83,15 +83,6 @@ namespace CorUnix
         {
         };
 
-        PAL_ERROR
-        GetTransactionLock(
-            uint32_t dwOffsetLow,
-            uint32_t dwOffsetHigh,
-            uint32_t nNumberOfBytesToLockLow,
-            uint32_t nNumberOfBytesToLockHigh,
-            IFileTransactionLock **ppTransactionLock    // OUT
-            ) override;
-
         virtual
         void
         ReleaseController();

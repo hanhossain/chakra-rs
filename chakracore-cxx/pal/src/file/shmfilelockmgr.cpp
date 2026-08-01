@@ -94,53 +94,6 @@ FILEGetSHMFileLocks(
          ((LockToTest)->nbBytesLocked == (lockRgn)->nbBytesLocked)   && \
          ((LockToTest)->lockType == (lockRgn)->lockType))
 
-PAL_ERROR
-CSharedMemoryFileLockController::GetTransactionLock(
-    uint32_t dwOffsetLow,
-    uint32_t dwOffsetHigh,
-    uint32_t nNumberOfBytesToLockLow,
-    uint32_t nNumberOfBytesToLockHigh,
-    IFileTransactionLock **ppTransactionLock    // OUT
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    unsigned long lockRgnStart;
-    unsigned long nbBytesToLock;
-
-    lockRgnStart  = static_cast<unsigned long>(dwOffsetHigh) << 32  | dwOffsetLow;
-    nbBytesToLock = static_cast<unsigned long>(nNumberOfBytesToLockHigh) << 32  |
-                             nNumberOfBytesToLockLow;
-
-    palError = FILELockFileRegion(
-        m_shmFileLocks,
-        reinterpret_cast<void *>(this),
-        lockRgnStart, 
-        nbBytesToLock,
-        RDWR_LOCK_RGN
-        );
-
-    if (NO_ERROR == palError)
-    {
-        *ppTransactionLock = new CSharedMemoryFileTransactionLock(m_shmFileLocks,
-                                                                           reinterpret_cast<void *>(this),
-                                                                           lockRgnStart, 
-                                                                           nbBytesToLock);
-        if (NULL == *ppTransactionLock)
-        {
-            palError = ERROR_OUTOFMEMORY;
-            FILEUnlockFileRegion(
-                m_shmFileLocks,
-                reinterpret_cast<void *>(this),
-                lockRgnStart, 
-                nbBytesToLock,
-                RDWR_LOCK_RGN
-                );
-        }
-    }
-
-    return palError;
-}
-
 void
 CSharedMemoryFileLockController::ReleaseController()
 {
