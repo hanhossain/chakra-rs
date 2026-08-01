@@ -66,21 +66,6 @@ FILEGetSHMFileLocks(
          ((LockToTest)->nbBytesLocked == (lockRgn)->nbBytesLocked)   && \
          ((LockToTest)->lockType == (lockRgn)->lockType))
 
-void
-CSharedMemoryFileLockController::ReleaseController()
-{
-    if (SHMNULL != m_shmFileLocks)
-    {
-        FILECleanUpLockedRgn(
-            m_shmFileLocks,
-            m_dwAccessRights,
-            reinterpret_cast<void *>(this)
-            );
-    }
-
-    delete this;
-}
-
 
 PAL_ERROR
 FILEGetSHMFileLocks(

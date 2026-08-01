@@ -60,34 +60,8 @@ namespace CorUnix
 
         SHMPTR next;
     } SHMFILELOCKRGNS;
-    
-    class CSharedMemoryFileLockController : public IFileLockController
-    {
-    private:
-        uint32_t m_dwAccessRights;
-        SHMPTR m_shmFileLocks;
-    protected:
-        virtual ~CSharedMemoryFileLockController()
-        {
-        };
-        
-    public:
 
-        CSharedMemoryFileLockController(
-            uint32_t dwAccessRights,
-            SHMPTR shmFileLocks
-            )
-            :
-            m_dwAccessRights(dwAccessRights),
-            m_shmFileLocks(shmFileLocks)
-        {
-        };
-
-        virtual
-        void
-        ReleaseController();
-    };
-}
+} // namespace CorUnix
 
 #endif /* _PAL_SHMFILELOCKMGR_H_ */
 
