@@ -1170,10 +1170,6 @@ namespace CorUnix
         // error completions, or the outright failure to queue
         // the transaction).
         //
-
-        virtual
-        void
-        ReleaseLock() = 0;
     };
 
     class IFileLockController

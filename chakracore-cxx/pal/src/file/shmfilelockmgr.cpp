@@ -156,20 +156,6 @@ CSharedMemoryFileLockController::ReleaseController()
     delete this;
 }
 
-void
-CSharedMemoryFileTransactionLock::ReleaseLock()
-{
-    FILEUnlockFileRegion(
-        m_shmFileLocks,
-        m_pvControllerInstance,
-        m_lockRgnStart, 
-        m_nbBytesToLock,
-        RDWR_LOCK_RGN
-        );
-
-    delete this;
-}
-
 PAL_ERROR
 FILELockFileRegion(
     SHMPTR shmFileLocks,

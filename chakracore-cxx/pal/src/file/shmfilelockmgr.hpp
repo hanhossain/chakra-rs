@@ -125,10 +125,6 @@ namespace CorUnix
             m_nbBytesToLock(nbBytesToLock)
         {
         };
-
-        virtual
-        void
-        ReleaseLock();
     };
 }
 
