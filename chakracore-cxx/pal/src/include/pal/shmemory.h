@@ -307,25 +307,6 @@ returns NULL and sets pbNameExists to TRUE.
 SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oid,
                                  BOOL *pbNameExists );
 
-/*++ 
-SHMRemoveNamedObject
-
-Removes the specified named object from the list
-
-No return.
-
-note : the caller is reponsible for releasing all associated memory
---*/
-void SHMRemoveNamedObject( SHMPTR shmNamedObject );
-
-/*++ SHMAddNamedObject
-
-Adds the specified named object to the list.
-
-No return.
---*/
-void SHMAddNamedObject( SHMPTR shmNewNamedObject );
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus
