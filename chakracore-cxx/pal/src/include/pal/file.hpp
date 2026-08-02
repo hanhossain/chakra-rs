@@ -88,20 +88,6 @@ Return value:
     TRUE on success, FALSE on failure
 --*/
 BOOL FILEInitStdHandles(void);
-
-/*++
-
-Function :
-    FILEGetProperNotFoundError
-
-Returns the proper error code, based on the
-Windows behavoir.
-
-    IN char* lpPath - The path to check.
-    uint32_t * lpErrorCode - The error to set.
-*/
-void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode );
-
 }
 
 #endif /* _PAL_FILE_HPP_ */
