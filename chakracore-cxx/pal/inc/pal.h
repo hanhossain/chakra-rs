@@ -943,26 +943,6 @@ BOOL FlushInstructionCache(const void * lpBaseAddress, size_t dwSize);
 #define MAX_LEADBYTES         12
 #define MAX_DEFAULTCHAR       2
 
-typedef struct _cpinfo {
-    uint32_t MaxCharSize;
-    uint8_t DefaultChar[MAX_DEFAULTCHAR];
-    uint8_t LeadByte[MAX_LEADBYTES];
-} CPINFO, *LPCPINFO;
-
-BOOL
-GetCPInfo(
-       uint32_t CodePage,
-       LPCPINFO lpCPInfo);
-
-BOOL
-IsDBCSLeadByteEx(
-          uint32_t CodePage,
-          uint8_t TestChar);
-
-BOOL
-IsValidCodePage(
-         uint32_t CodePage);
-
 
 #define MB_PRECOMPOSED            0x00000001
 #define MB_ERR_INVALID_CHARS      0x00000008
@@ -1736,7 +1716,6 @@ char16_t * _wcslwr(char16_t *);
 unsigned long PAL__wcstoui64(const char16_t *, char16_t **, int);
 char16_t * _i64tow(long, char16_t *, int);
 char16_t * _ui64tow(unsigned long, char16_t *, int);
-int _wtoi(const char16_t *);
 
 #ifdef __cplusplus
 extern "C++" {

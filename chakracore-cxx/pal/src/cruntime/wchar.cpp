@@ -215,50 +215,6 @@ char16_t *
     return ret;
 }
 
-
-/*--
-Function:
-  _wtoi
-
-See MSDN doc
---*/
-int
-_wtoi(
-    const char16_t *string)
-{
-    int len;
-    int ret;
-    char *tempStr;
-
-    len = WideCharToMultiByte(CP_ACP, 0, string, -1, 0, 0, 0);
-    if (!len)
-    {
-        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
-              GetLastError()));
-        return -1;
-    }
-    tempStr = static_cast<char*>(malloc(len));
-    if (!tempStr)
-    {
-        ERROR("malloc failed\n");
-        SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        return -1;
-    }
-    len = WideCharToMultiByte(CP_ACP, 0, string, -1, tempStr, len, 0);
-    if (!len)
-    {
-        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
-              GetLastError()));
-        free(tempStr);
-        return -1;
-    }
-    ret = atoi(tempStr);
-
-    free(tempStr);
-    LOGEXIT("_wtoi returns int %d\n", ret);
-    return ret;
-}
-
 /*++
 Function:
   _wcslwr

@@ -50,41 +50,6 @@ extern "C"
 {
 #endif // __cplusplus
 
-/*++
-Function:
-  UTIL_inverse_wcspbrk
-
-  Opposite of wcspbrk : searches a string for the first character NOT in the 
-  given set
-
-Parameters :
-    char16_t* lpwstr :   string to search
-    const char16_t* charset : list of characters to search for
-                                      
-Return value :
-    pointer to first character of lpwstr that isn't in the set
-    NULL if all characters are in the set                                                                 
---*/
-char16_t* UTIL_inverse_wcspbrk(char16_t* lpwstr, const char16_t* charset);
-
-/*++
-Function : 
-    UTIL_IsReadOnlyBitsSet
-    
-    Takes a struct stat *
-    Returns true if the file is read only,
---*/
-BOOL UTIL_IsReadOnlyBitsSet( struct stat * stat_data );
-
-/*++
-Function : 
-    UTIL_IsExecuteBitsSet
-    
-    Takes a struct stat *
-    Returns true if the file is executable.
---*/
-BOOL UTIL_IsExecuteBitsSet( struct stat * stat_data );
-
 
 #if defined(__APPLE__)
 #include <mach/kern_return.h>
