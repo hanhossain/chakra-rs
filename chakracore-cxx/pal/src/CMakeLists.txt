@@ -100,8 +100,7 @@ set(SOURCES
   misc/bstr.cpp
   misc/dbgmsg.cpp
   misc/error.cpp
-  misc/environ.cpp
-  misc/strutil.cpp
+    misc/strutil.cpp
   misc/time.cpp
   misc/sysinfo.cpp
   misc/utils.cpp

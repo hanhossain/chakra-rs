@@ -82,16 +82,6 @@ AutoSystemInfo::Initialize()
     initialized = true;
 #endif
 
-    char16_t DisableDebugScopeCaptureFlag[MAX_PATH];
-    if (::GetEnvironmentVariable(u"JS_DEBUG_SCOPE", DisableDebugScopeCaptureFlag, std::size(DisableDebugScopeCaptureFlag)) != 0)
-    {
-        disableDebugScopeCapture = true;
-    }
-    else
-    {
-        disableDebugScopeCapture = false;
-    }
-
     this->supportsOnlyMultiThreadedCOM = false;
     this->shouldQCMoreFrequently = false;
     this->isLowMemoryDevice = false;

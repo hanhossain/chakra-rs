@@ -15,8 +15,6 @@ public:
     static AutoSystemInfo Data;
     uint GetAllocationGranularityPageCount() const;
     uint GetAllocationGranularityPageSize() const;
-
-    bool DisableDebugScopeCapture() const { return this->disableDebugScopeCapture; }
     bool IsWin8OrLater();
     bool IsWin8Point1OrLater();
 #if defined(_M_X64)
@@ -73,7 +71,6 @@ private:
 #endif
     uint32_t dwNumberOfPhysicalProcessors;
 
-    bool disableDebugScopeCapture;
 #if DBG
     bool initialized;
 #endif
