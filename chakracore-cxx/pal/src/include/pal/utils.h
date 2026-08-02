@@ -86,25 +86,6 @@ Function :
 BOOL UTIL_IsExecuteBitsSet( struct stat * stat_data );
 
 
-/*++
-Function : 
-    UTIL_WCToMB_Alloc
-    
-    Converts a wide string to a multibyte string, allocating the required buffer
-    
-Parameters :
-    const char16_t* lpWideCharStr : string to convert
-    int cchWideChar : number of wide characters to convert
-                      (-1 to convert a complete null-termnated string)
-    
-Return Value :
-    newly allocated buffer containing the converted string. Conversion is 
-    performed using CP_ACP. Buffer is allocated with malloc(), release it 
-    with free().
-    In case if failure, LastError will be set.
---*/
-char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar);
-
 #if defined(__APPLE__)
 #include <mach/kern_return.h>
 
