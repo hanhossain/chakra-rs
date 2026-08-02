@@ -42,22 +42,6 @@ typedef struct _find_handle
 } find_obj;
 
 /*++
-Function:
-  FILEGetLastErrorFromErrno
-
-Convert errno into the appropriate win32 error and return it.
---*/
-uint32_t FILEGetLastErrorFromErrno( void );
-
-/*++
-Function:
-  DIRGetLastErrorFromErrno
-
-Convert errno into the appropriate win32 error and return it.
---*/
-uint32_t DIRGetLastErrorFromErrno( void );
-
-/*++
 FILEInitStdHandles
 
 Create handle objects for stdin, stdout and stderr

@@ -105,25 +105,6 @@ Return Value :
 --*/
 char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar);
 
-/*++
-Function : 
-    UTIL_MBToWC_Alloc
-    
-    Converts a multibyte string to a wide string, allocating the required buffer
-    
-Parameters :
-    const char * lpMultiByteStr : string to convert
-    int cbMultiByte : number of bytes to convert 
-                      (-1 to convert a complete null-termnated string)
-    
-Return Value :
-    newly allocated buffer containing the converted string. Conversion is 
-    performed using CP_ACP. Buffer is allocated with malloc(), release it 
-    with free().
-    In case if failure, LastError will be set.
---*/
-char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte);
-
 #if defined(__APPLE__)
 #include <mach/kern_return.h>
 

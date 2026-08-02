@@ -207,66 +207,6 @@ char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
     return lpMultiByteStr;
 }
 
-/*++
-Function : 
-    UTIL_MBToWC_Alloc
-    
-    Converts a multibyte string to a wide string, allocating the required buffer
-    
-Parameters :
-    const char * lpMultiByteStr : string to convert
-    int cbMultiByte : number of bytes to convert
-                      (-1 to convert a complete null-termnated string)
-    
-Return Value :
-    newly allocated buffer containing the converted string. Conversion is 
-    performed using CP_ACP. Buffer is allocated with malloc(), release it 
-    with free().
-    In case if failure, LastError will be set.
---*/
-char16_t* UTIL_MBToWC_Alloc(const char * lpMultiByteStr, int cbMultiByte)
-{
-    int length;
-    char16_t* lpWideCharStr;
-
-    /* get required buffer length */
-    length = MultiByteToWideChar(CP_ACP, 0, lpMultiByteStr, cbMultiByte,
-                                      NULL, 0);
-    if(0 == length)
-    {
-        ERROR("MBToWC error; GetLastError returns %#x", GetLastError());
-        return NULL;
-    }
-
-    if (length >= (INT_MAX / sizeof(char16_t)))
-    {
-        ERROR("integer overflow! length = %d , sizeof(char16_t) = (%d)\n", length,sizeof(char16_t) );
-        SetLastError(ERROR_ARITHMETIC_OVERFLOW);
-        return NULL;
-    }
-
-    /* allocate required buffer */
-    size_t fullsize = length * sizeof(char16_t);
-    lpWideCharStr = static_cast<char16_t*>(malloc(fullsize));
-    if(NULL == lpWideCharStr)
-    {
-        ERROR("malloc() failed! errno is %d (%s)\n", errno,strerror(errno));
-        SetLastError(FILEGetLastErrorFromErrno());
-        return NULL;
-    }
-
-    /* convert into allocated buffer */
-    length = MultiByteToWideChar(CP_ACP, 0, lpMultiByteStr, cbMultiByte, 
-                                      lpWideCharStr, length);
-    if(0 >= length)
-    {
-        chakra::Logger::error(std::format("MCToMB error; GetLastError returns {:#x}\n", GetLastError()));
-        free(lpWideCharStr);
-        return NULL;
-    }
-    return lpWideCharStr;
-}
-
 #if defined(__APPLE__)
 /*++
 Function:
