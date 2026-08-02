@@ -69,19 +69,6 @@ Return value:
 --*/
 BOOL FILEInitStdHandles(void);
 
-/*++
-
-Function :
-    FILEGetProperNotFoundError
-
-Returns the proper error code, based on the
-Windows behavoir.
-
-    IN char* lpPath - The path to check.
-    uint32_t * lpErrorCode - The error to set.
-*/
-void FILEGetProperNotFoundError( char* lpPath, uint32_t * lpErrorCode );
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus
