@@ -1036,20 +1036,6 @@ void
 DebugBreak(
        void);
 
-uint32_t
-GetEnvironmentVariableA(
-             const char * lpName,
-             char* lpBuffer,
-             uint32_t nSize);
-
-uint32_t
-GetEnvironmentVariableW(
-             const char16_t* lpName,
-             char16_t* lpBuffer,
-             uint32_t nSize);
-
-#define GetEnvironmentVariable GetEnvironmentVariableW
-
 BOOL
 CloseHandle(
           HANDLE hObject);
