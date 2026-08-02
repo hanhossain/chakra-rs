@@ -659,19 +659,6 @@ namespace CorUnix
         //
 
 #if defined(__APPLE__)
-        // Hook Mach exceptions, i.e., call thread_swap_exception_ports
-        // to replace the thread's current exception ports with our own.
-        // The previously active exception ports are saved.  Called when
-        // this thread enters a region of code that depends on this PAL.
-        // Should only fail on internal errors.
-        PAL_ERROR EnableMachExceptions();
-
-        // Unhook Mach exceptions, i.e., call thread_set_exception_ports
-        // to restore the thread's exception ports with those we saved
-        // in EnableMachExceptions.  Called when this thread leaves a
-        // region of code that depends on this PAL.  Should only fail
-        // on internal errors.
-        PAL_ERROR DisableMachExceptions();
 
         // The exception handling thread needs to be able to get at the list of handlers that installing our
         // own handler on a thread has displaced (in case we need to forward an exception that we don't want

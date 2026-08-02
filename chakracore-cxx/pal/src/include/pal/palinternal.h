@@ -224,6 +224,4 @@ typedef enum _TimeConversionConstants
 
 #define MAX_LONGPATH   1024  /* max. length of full pathname */
 
-BOOL PAL_IsDebuggerPresent();
-
 #endif /* _PAL_INTERNAL_H_ */

@@ -155,58 +155,6 @@ BOOL UTIL_IsExecuteBitsSet( struct stat * stat_data )
     return bRetVal;
 }
 
-/*++
-Function : 
-    UTIL_WCToMB_Alloc
-    
-    Converts a wide string to a multibyte string, allocating the required buffer
-    
-Parameters :
-    const char16_t* lpWideCharStr : string to convert
-    int cchWideChar : number of wide characters to convert
-                      (-1 to convert a complete null-termnated string)
-    
-Return Value :
-    newly allocated buffer containing the converted string. Conversion is 
-    performed using CP_ACP. Buffer is allocated with malloc(), release it 
-    with free().
-    In case if failure, LastError will be set.
---*/
-char* UTIL_WCToMB_Alloc(const char16_t* lpWideCharStr, int cchWideChar)
-{
-    int length;
-    char* lpMultiByteStr;
-
-    /* get required buffer length */
-    length = WideCharToMultiByte(CP_ACP, 0, lpWideCharStr, cchWideChar, 
-                                 NULL, 0, NULL);
-    if(0 == length)
-    {
-        ERROR("WCToMB error; GetLastError returns %#x", GetLastError());
-        return NULL;
-    }
-
-    /* allocate required buffer */
-    lpMultiByteStr = static_cast<char*>(malloc(length));
-    if(NULL == lpMultiByteStr)
-    {
-        ERROR("malloc() failed! errno is %d (%s)\n", errno,strerror(errno));
-        SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        return NULL;
-    }
-
-    /* convert into allocated buffer */
-    length = WideCharToMultiByte(CP_ACP, 0, lpWideCharStr, cchWideChar, 
-                                 lpMultiByteStr, length, NULL);
-    if(0 == length)
-    {
-        chakra::Logger::error(std::format("WCToMB error; GetLastError returns {:#x}\n", GetLastError()));
-        free(lpMultiByteStr);
-        return NULL;
-    }
-    return lpMultiByteStr;
-}
-
 #if defined(__APPLE__)
 /*++
 Function:
