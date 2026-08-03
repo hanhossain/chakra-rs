@@ -57,13 +57,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocations(bool r
 {
     std::unique_lock<SyncObject> autoCs(this->criticalSection);
 
-#if DBG_DUMP
-    if (!release && PHASE_STATS1(Js::EmitterPhase))
-    {
-        this->DumpAndResetStats(Js::Configuration::Global.flags.Filename);
-    }
-#endif
-
     TEmitBufferAllocation * allocation = this->allocations;
     while (allocation != nullptr)
     {

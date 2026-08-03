@@ -1088,9 +1088,6 @@ namespace Js
         u"AllocPolicyLimit",
         u"RuntimeDataOutputFile",
         u"SpeculationCap",
-#if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-        u"Stats",
-#endif
         u"PrintSystemException",
         u"Trace",
 
@@ -2009,9 +2006,6 @@ namespace Js
         u"Memory allocation policy limit in MB (default: -1, which means no allocation policy limit).",
         u"Filename to write the dynamic profile info",
         u"How much bytecode we'll speculatively JIT",
-#if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-        u"Stats the given phase",
-#endif
         // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
@@ -2526,9 +2520,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-        NoParentFlag,
-#endif
         // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
@@ -3065,9 +3056,6 @@ namespace Js
         AllocPolicyLimit(DEFAULT_CONFIG_AllocationPolicyLimit),
         RuntimeDataOutputFile(nullptr),
         SpeculationCap(DEFAULT_CONFIG_SpeculationCap),
-#if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-        Stats(),
-#endif
         PrintSystemException(false),
         Trace(),
 
@@ -4576,10 +4564,6 @@ namespace Js
             return FlagString;
         case SpeculationCapFlag:
             return FlagNumber;
-        #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-        case StatsFlag:
-            return FlagPhases;
-        #endif
         case PrintSystemExceptionFlag:
             return FlagBoolean;
         case TraceFlag:
@@ -5462,10 +5446,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<String*>(&RuntimeDataOutputFile));
         case SpeculationCapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&SpeculationCap));
-        #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-        case StatsFlag:
-            return reinterpret_cast<void*>(const_cast<Phases*>(&Stats));
-        #endif
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case TraceFlag:

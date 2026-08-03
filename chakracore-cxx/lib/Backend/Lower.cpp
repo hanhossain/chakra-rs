@@ -195,14 +195,6 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
             noMathFastPath  = !defaultDoLoopFastPath;
         }
 
-#ifdef INLINE_CACHE_STATS
-        if(PHASE_STATS1(Js::PolymorphicInlineCachePhase))
-        {
-            // Always use the slow path, so we can track property accesses
-            noFieldFastPath = true;
-        }
-#endif
-
 #if DBG
         if (instr->HasBailOutInfo())
         {

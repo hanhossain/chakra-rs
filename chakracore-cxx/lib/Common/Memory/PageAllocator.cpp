@@ -2013,11 +2013,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
     this->decommitPageCount += (decommitCount - deleteCount);
     if (CUSTOM_PHASE_TRACE1(this->pageAllocatorFlagTable, Js::PageAllocatorPhase))
     {
-        if (CUSTOM_PHASE_STATS1(this->pageAllocatorFlagTable, Js::PageAllocatorPhase))
-        {
-            Output::Print(u" After decommit now:\n");
-            this->DumpStats();
-        }
         Output::Flush();
     }
 #endif

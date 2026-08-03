@@ -497,9 +497,6 @@ namespace Js
         AllocPolicyLimitFlag,
         RuntimeDataOutputFileFlag,
         SpeculationCapFlag,
-        #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-        StatsFlag,
-        #endif
         PrintSystemExceptionFlag,
         TraceFlag,
 
@@ -2012,10 +2009,6 @@ namespace Js
         String RuntimeDataOutputFile;
         // TODO (hanhossain): remove flag
         Number SpeculationCap;
-        #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-        // TODO (hanhossain): remove flag
-            Phases Stats;
-        #endif
         // todo (hanhossain): flag end
         Boolean PrintSystemException;
         Phases Trace;
@@ -2171,14 +2164,6 @@ namespace Js
 
 #define PHASE_DUMP1(phase)          Js::Configuration::Global.flags.Dump.IsEnabled((phase))
 #define PHASE_DUMP(phase, func)     Js::Configuration::Global.flags.Dump.IsEnabled((phase), (func)->GetSourceContextId(),(func)->GetLocalFunctionId())
-
-#define PHASE_STATS1(phase)         Js::Configuration::Global.flags.Stats.IsEnabled((phase))
-#define CUSTOM_PHASE_STATS1(flags, phase) flags.Stats.IsEnabled((phase))
-
-#define PHASE_STATS_ALL(phase)      Js::Configuration::Global.flags.Stats.IsEnabledForAll((phase))
-#define PHASE_STATS(phase, func)    PHASE_STATS_RAW((phase), (func)->GetSourceContextId(), (func)->GetLocalFunctionId())
-#define PHASE_STATS_RAW(phase, sourceId, functionId) \
-                                    Js::Configuration::Global.flags.Stats.IsEnabled((phase), (sourceId), (functionId))
 
 #define PHASE_TESTTRACE1(phase) Js::Configuration::Global.flags.TestTrace.IsEnabled((phase))
 #define PHASE_TESTTRACE(phase, func) PHASE_TESTTRACE_RAW((phase), (func)->GetSourceContextId(), (func)->GetLocalFunctionId())

@@ -179,17 +179,10 @@ Output::VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const 
 }
 
 #ifdef BGJIT_STATS
+// TODO (hanhossain): remove
 size_t
 Output::TraceStats(Js::Phase phase, const char16_t *form, ...)
 {
-    if(PHASE_STATS1(phase))
-    {
-        va_list argptr;
-        va_start(argptr, form);
-        size_t ret_val = Output::VPrint(form, argptr);
-        va_end(argptr);
-        return ret_val;
-    }
     return 0;
 }
 #endif

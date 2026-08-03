@@ -423,27 +423,6 @@ BackwardPass::Optimize()
         // Tracking int overflow makes use of a scratch field in stack syms, which needs to be cleared
         func->m_symTable->ClearStackSymScratch();
     }
-
-#if DBG_DUMP
-    if (PHASE_STATS(this->tag, this->func))
-    {
-        this->func->DumpHeader();
-        Output::Print(this->tag == Js::BackwardPhase? u"Backward Phase Stats:\n" : u"Deadstore Phase Stats:\n");
-        if (this->DoDeadStore())
-        {
-            Output::Print(u"  Deadstore              : %3d\n", this->numDeadStore);
-        }
-        if (this->DoMarkTempNumbers())
-        {
-            Output::Print(u"  Temp Number            : %3d\n", this->numMarkTempNumber);
-            Output::Print(u"  Transferred Temp Number: %3d\n", this->numMarkTempNumberTransferred);
-        }
-        if (this->DoMarkTempObjects())
-        {
-            Output::Print(u"  Temp Object            : %3d\n", this->numMarkTempObject);
-        }
-    }
-#endif
 }
 
 void

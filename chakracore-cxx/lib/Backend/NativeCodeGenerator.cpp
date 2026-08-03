@@ -2661,7 +2661,6 @@ NativeCodeGenerator::GatherCodeGenData(Js::FunctionBody *const topFunctionBody, 
 #ifdef FIELD_ACCESS_STATS
         Js::FieldAccessStats* fieldAccessStats = entryPoint->EnsureFieldAccessStats(recycler);
         fieldAccessStats->Add(jitTimeData->inlineCacheStats);
-        entryPoint->GetScriptContext()->RecordFieldAccessStats(topFunctionBody, fieldAccessStats);
 #endif
 
 #ifdef FIELD_ACCESS_STATS

@@ -2434,12 +2434,6 @@ ThreadContext::TryRedeferral()
     if (pActiveFuncs)
     {
         Adelete(this->GetThreadAlloc(), pActiveFuncs);
-#if DBG
-        if (PHASE_STATS1(Js::RedeferralPhase) && this->redeferredFunctions)
-        {
-            Output::Print(u"Redeferred: %d, Bytes: 0x%x\n", this->redeferredFunctions, this->recoveredBytes);
-        }
-#endif
     }
 }
 

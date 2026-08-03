@@ -920,26 +920,6 @@ namespace Js
         Assert(this->CanBeDeferred());
 
 #if DBG
-        if (PHASE_STATS(RedeferralPhase, this))
-        {
-            ThreadContext * threadContext = this->GetScriptContext()->GetThreadContext();
-            threadContext->redeferredFunctions++;
-            threadContext->recoveredBytes += sizeof(*this) + this->GetInlineCacheCount() * sizeof(InlineCache);
-            if (this->byteCodeBlock)
-            {
-                threadContext->recoveredBytes += this->byteCodeBlock->GetLength();
-                if (this->GetAuxiliaryData())
-                {
-                    threadContext->recoveredBytes += this->GetAuxiliaryData()->GetLength();
-                }
-            }
-            this->MapEntryPoints([&](int index, FunctionEntryPointInfo * info) {
-                threadContext->recoveredBytes += sizeof(info);
-            });
-
-            // TODO: Get size of polymorphic caches, jitted code, etc.
-        }
-
         // We can't get here if the function is being jitted. Jitting was either completed or not begun.
         this->UnlockCounters();
 #endif
