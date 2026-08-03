@@ -338,23 +338,11 @@ See MSDN doc.
 
 --*/
 int
-WideCharToMultiByte(
-         uint32_t dwFlags,
-         const char16_t* lpWideCharStr,
-         int cchWideChar,
-         char* lpMultiByteStr,
-         int cbMultiByte,
-         LPBOOL lpUsedDefaultChar)
+WideCharToMultiByte(const char16_t *lpWideCharStr, int cchWideChar, char *lpMultiByteStr, int cbMultiByte,
+                        LPBOOL lpUsedDefaultChar)
 {
     int32_t retval =0;
     BOOL usedDefaultChar = FALSE;
-
-    if (dwFlags & ~WC_NO_BEST_FIT_CHARS)
-    {
-        ERROR("dwFlags %d invalid\n", dwFlags);
-        SetLastError(ERROR_INVALID_FLAGS);
-        goto EXIT;
-    }
 
     // No special action is needed for WC_NO_BEST_FIT_CHARS. The default
     // behavior of this API on Unix is not to find the best fit for a unicode
@@ -394,7 +382,7 @@ EXIT:
      * best fit characters under these conditions and that could pose
      * a security risk.
      */
-    _ASSERT_MSG((dwFlags & WC_NO_BEST_FIT_CHARS) || !usedDefaultChar,
+    _ASSERT_MSG(!usedDefaultChar,
           "WideCharToMultiByte found a string which doesn't round trip: (%p)%S "
           "and WC_NO_BEST_FIT_CHARS was not specified\n",
           lpWideCharStr, lpWideCharStr);
