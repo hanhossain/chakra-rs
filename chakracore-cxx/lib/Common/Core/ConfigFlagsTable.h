@@ -530,9 +530,6 @@ namespace Js
         TraceProtectPagesFlag,
         #endif
         TraceAsyncDebugCallsFlag,
-        #ifdef TRACK_DISPATCH
-        TrackDispatchFlag,
-        #endif
         VersionFlag,
         WERExceptionSupportFlag,
         ExtendedErrorStackForTestHostFlag,
@@ -2088,10 +2085,6 @@ namespace Js
         #endif
         // TODO (hanhossain): remove flag
         Boolean TraceAsyncDebugCalls;
-        #ifdef TRACK_DISPATCH
-        // TODO (hanhossain): remove flag
-            Boolean TrackDispatch;
-        #endif
         // todo (hanhossain): flag end
         Number Version;
         Boolean WERExceptionSupport;
