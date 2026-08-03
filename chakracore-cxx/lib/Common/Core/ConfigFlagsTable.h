@@ -504,7 +504,6 @@ namespace Js
         SwallowExceptionsFlag,
         #endif
         PrintSystemExceptionFlag,
-        SwitchOptHolesThresholdFlag,
         TraceFlag,
 
         VersionFlag,
@@ -2024,10 +2023,8 @@ namespace Js
         // TODO (hanhossain): remove flag
             Boolean SwallowExceptions;
         #endif
-        Boolean PrintSystemException;
-        // TODO (hanhossain): remove flag
-        Number SwitchOptHolesThreshold;
         // todo (hanhossain): flag end
+        Boolean PrintSystemException;
         Phases Trace;
 
         Number Version;

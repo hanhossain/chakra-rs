@@ -4,6 +4,9 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Backend.h"
 
+/// Maximum percentage of holes (missing case values in a switch statement) with which a jump table can be created
+constexpr int SwitchOptHolesThreshold = 50;
+
 ///----------------------------------------------------------------------------
 ///
 /// IRBuilderSwitchAdapter
@@ -597,7 +600,7 @@ SwitchIRBuilder::BuildOptimizedIntegerCaseInstrs(uint32_t targetOffset)
             int numFilledEntries = nextIndex - startjmpTableIndex + 1;
 
             //Checks if the % of filled entries(unique targets from the case arms) in the jump table is within the threshold
-            if (speculatedJmpTableSize != 0 && ((numFilledEntries)* 100 / speculatedJmpTableSize) < (100 - CONFIG_FLAG(SwitchOptHolesThreshold)))
+            if (speculatedJmpTableSize != 0 && ((numFilledEntries)* 100 / speculatedJmpTableSize) < (100 - SwitchOptHolesThreshold))
             {
                 if (jmpTableSize >= CONFIG_FLAG(MinSwitchJumpTableSize))
                 {
