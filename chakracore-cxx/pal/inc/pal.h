@@ -959,13 +959,8 @@ MultiByteToWideChar(
 #define WC_NO_BEST_FIT_CHARS      0x00000400
 
 int
-WideCharToMultiByte(
-             uint32_t dwFlags,
-             const char16_t* lpWideCharStr,
-             int cchWideChar,
-             char* lpMultiByteStr,
-             int cbMultyByte,
-             LPBOOL lpUsedDefaultChar);
+WideCharToMultiByte(const char16_t *lpWideCharStr, int cchWideChar, char *lpMultiByteStr, int cbMultyByte,
+                        LPBOOL lpUsedDefaultChar);
 
 #define DATE_LONGDATE             0x00000002  // use long date picture
 
