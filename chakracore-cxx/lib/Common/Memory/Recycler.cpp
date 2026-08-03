@@ -195,9 +195,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     , backgroundProfilerPageAllocator(nullptr, configFlagsTable, PageAllocatorType_GCThread)
     , backgroundProfilerArena()
 #endif
-#ifdef PROFILE_MEM
-    , memoryData(nullptr)
-#endif
 #ifdef RECYCLER_DUMP_OBJECT_GRAPH
     , objectGraphDumper(nullptr)
     , dumpObjectOnceOnCollect(false)
@@ -584,10 +581,6 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
     this->skipStack = false;
 
     this->enablePartialCollect = !CUSTOM_PHASE_OFF1(GetRecyclerFlagsTable(), Js::PartialCollectPhase);
-
-#ifdef PROFILE_MEM
-    this->memoryData = MemoryProfiler::GetRecyclerMemoryData();
-#endif
 
 #if DBG || DBG_DUMP || defined(RECYCLER_TRACE)
     mainThreadId = GetCurrentThreadContextId();
@@ -5224,12 +5217,6 @@ Recycler::FinishCollection()
         PrintCollectStats();
     }
 #endif
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (MemoryProfiler::IsTraceEnabled(true))
-    {
-        PrintAllocStats();
-    }
-#endif
 
 #if ENABLE_MEM_STATS
     autoHeap.ReportMemStats(this);
@@ -6757,84 +6744,6 @@ Recycler::TrackFreeWeakRef(RecyclerWeakReferenceBase * weakRef)
 #endif
 }
 
-void
-Recycler::PrintAllocStats()
-{
-    if (this->trackerDictionary == nullptr)
-    {
-        return;
-    }
-    size_t itemCount = 0;
-    int allocCount = 0;
-    long reqSize = 0;
-    long allocSize = 0;
-    int freeCount = 0;
-    long freeSize = 0;
-    Output::Print(u"=================================================================================================================\n");
-    Output::Print(u"Recycler Allocations\n");
-    Output::Print(u"=================================================================================================================\n");
-    Output::Print(u"ItemSize  ItemCount   AllocCount  RequestSize      AllocSize        FreeCount   FreeSize         DiffCount   DiffSize        \n");
-    Output::Print(u"--------  ----------  ----------  ---------------  ---------------  ----------  ---------------  ----------  ---------------\n");
-    for (int i = 0; i < trackerDictionary->Count(); i++)
-    {
-        TrackerItem * item = trackerDictionary->GetValueAt(i);
-        type_info const * typeinfo = trackerDictionary->GetKeyAt(i);
-        if (item->instanceData.AllocCount != 0)
-        {
-            Output::Print(u"%8d  %10d  %10d  %15I64d  %15I64d  %10d  %15I64d  %10d  %15I64d  %S\n",
-                item->instanceData.ItemSize, item->instanceData.ItemCount, item->instanceData.AllocCount, item->instanceData.ReqSize,
-                item->instanceData.AllocSize, item->instanceData.FreeCount, item->instanceData.FreeSize,
-                item->instanceData.AllocCount - item->instanceData.FreeCount,  item->instanceData.AllocSize - item->instanceData.FreeSize, typeinfo->name());
-            itemCount += item->instanceData.ItemCount;
-            allocCount += item->instanceData.AllocCount;
-            reqSize += item->instanceData.ReqSize;
-            allocSize += item->instanceData.AllocSize;
-            freeCount += item->instanceData.FreeCount;
-            freeSize += item->instanceData.FreeSize;
-        }
-
-        if (item->arrayData.AllocCount != 0)
-        {
-            Output::Print(u"%8d  %10d  %10d  %15I64d  %15I64d  %10d  %15I64d  %10d  %15I64d  %S[]\n",
-                item->arrayData.ItemSize, item->arrayData.ItemCount, item->arrayData.AllocCount, item->arrayData.ReqSize,
-                item->arrayData.AllocSize, item->arrayData.FreeCount, item->arrayData.FreeSize,
-                item->instanceData.AllocCount - item->instanceData.FreeCount, item->arrayData.AllocSize - item->arrayData.FreeSize, typeinfo->name());
-            itemCount += item->arrayData.ItemCount;
-            allocCount += item->arrayData.AllocCount;
-            reqSize += item->arrayData.ReqSize;
-            allocSize += item->arrayData.AllocSize;
-            freeCount += item->arrayData.FreeCount;
-            freeSize += item->arrayData.FreeSize;
-        }
-    }
-    Output::Print(u"--------  ----------  ----------  ---------------  ---------------  ----------  ---------------  ----------  ---------------\n");
-    Output::Print(u"            %8d  %10d  %15I64d  %15I64d  %10d  %15I64d  %10d  %15I64d  **Total**\n",
-        itemCount, allocCount, reqSize, allocSize, freeCount, freeSize, allocCount - freeCount, allocSize - freeSize);
-
-#ifdef EXCEL_FRIENDLY_DUMP
-    Output::Print(u"\nExcel friendly version\nItemSize\tItemCount\tAllocCount\tRequestSize\tAllocSize\tFreeCount\tFreeSize\tDiffCount\tDiffSize\tType\n");
-    for (int i = 0; i < trackerDictionary->Count(); i++)
-    {
-        TrackerItem * item = trackerDictionary->GetValueAt(i);
-        type_info const * typeinfo = trackerDictionary->GetKeyAt(i);
-        if (item->instanceData.AllocCount != 0)
-        {
-            Output::Print(u"%d\t%d\t%d\t%I64d\t%I64d\t%d\t%I64d\t%d\t%I64d\t%S\n",
-                item->instanceData.ItemSize, item->instanceData.ItemCount, item->instanceData.AllocCount, item->instanceData.ReqSize,
-                item->instanceData.AllocSize, item->instanceData.FreeCount, item->instanceData.FreeSize,
-                item->instanceData.AllocCount - item->instanceData.FreeCount,  item->instanceData.AllocSize - item->instanceData.FreeSize, typeinfo->name());
-        }
-        if (item->arrayData.AllocCount != 0)
-        {
-            Output::Print(u"%d\t%d\t%d\t%I64d\t%I64d\t%d\t%I64d\t%d\t%I64d\t%S[]\n",
-                item->arrayData.ItemSize, item->arrayData.ItemCount, item->arrayData.AllocCount, item->arrayData.ReqSize,
-                item->arrayData.AllocSize, item->arrayData.FreeCount, item->arrayData.FreeSize,
-                item->instanceData.AllocCount - item->instanceData.FreeCount, item->arrayData.AllocSize - item->arrayData.FreeSize, typeinfo->name());
-        }
-    }
-#endif // EXCEL_FRIENDLY_DUMP
-    Output::Flush();
-}
 #endif // PROFILE_RECYCLER_ALLOC
 #endif // TRACK_ALLOC
 

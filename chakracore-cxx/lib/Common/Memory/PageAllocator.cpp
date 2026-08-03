@@ -676,10 +676,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::PageAllocatorBase(Allo
     this->disablePageReuse = false;
 #endif
 
-#ifdef PROFILE_MEM
-    this->memoryData = MemoryProfiler::GetPageMemoryData(type);
-#endif
-
     PageTracking::PageAllocatorCreated(reinterpret_cast<PageAllocator*>(this));
 }
 
@@ -2157,16 +2153,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::LogAllocSegment(uint s
     AddReservedBytes(bytes);
     AddCommittedBytes(bytes);
     AddNumberOfSegments(segmentCount);
-#ifdef PROFILE_MEM
-    if (this->memoryData)
-    {
-        this->memoryData->allocSegmentCount += segmentCount;
-        this->memoryData->allocSegmentBytes += pageCount * AutoSystemInfo::PageSize;
-
-        this->memoryData->currentCommittedPageCount += pageCount;
-        this->memoryData->peakCommittedPageCount = max(this->memoryData->peakCommittedPageCount, this->memoryData->currentCommittedPageCount);
-    }
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -2177,14 +2163,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::LogFreeSegment(TSegmen
     SubCommittedBytes(bytes);
     SubReservedBytes(bytes);
     SubNumberOfSegments(1);
-#ifdef PROFILE_MEM
-    if (this->memoryData)
-    {
-        this->memoryData->releaseSegmentCount++;
-        this->memoryData->releaseSegmentBytes += segment->GetPageCount() * AutoSystemInfo::PageSize;
-        this->memoryData->currentCommittedPageCount -= segment->GetPageCount();
-    }
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -2193,13 +2171,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::LogFreeDecommittedSegm
 {
     SubReservedBytes(segment->GetPageCount() * AutoSystemInfo::PageSize);
     SubNumberOfSegments(1);
-#ifdef PROFILE_MEM
-    if (this->memoryData)
-    {
-        this->memoryData->releaseSegmentCount++;
-        this->memoryData->releaseSegmentBytes += segment->GetPageCount() * AutoSystemInfo::PageSize;
-    }
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -2207,12 +2178,6 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::LogFreePages(size_t pageCount)
 {
     SubUsedBytes(pageCount * AutoSystemInfo::PageSize);
-#ifdef PROFILE_MEM
-    if (this->memoryData)
-    {
-        this->memoryData->releasePageCount += pageCount;
-    }
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -2220,12 +2185,6 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::LogFreePartiallyDecommittedPageSegment(TPageSegment * pageSegment)
 {
     AddCommittedBytes(pageSegment->GetDecommitPageCount() * AutoSystemInfo::PageSize);
-#ifdef PROFILE_MEM
-    if (this->memoryData)
-    {
-        this->memoryData->currentCommittedPageCount += pageSegment->GetDecommitPageCount();
-    }
-#endif
     LogFreeSegment(pageSegment);
 }
 
@@ -2234,24 +2193,12 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::LogAllocPages(size_t pageCount)
 {
     AddUsedBytes(pageCount * AutoSystemInfo::PageSize);
-#ifdef PROFILE_MEM
-    if (this->memoryData)
-    {
-        this->memoryData->allocPageCount += pageCount;
-    }
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
 void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::LogRecommitPages(size_t pageCount)
 {
-#ifdef PROFILE_MEM
-    if (this->memoryData)
-    {
-        this->memoryData->recommitPageCount += pageCount;
-    }
-#endif
     LogCommitPages(pageCount);
 }
 
@@ -2260,13 +2207,6 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::LogCommitPages(size_t pageCount)
 {
     AddCommittedBytes(pageCount * AutoSystemInfo::PageSize);
-#ifdef PROFILE_MEM
-    if (this->memoryData)
-    {
-        this->memoryData->currentCommittedPageCount += pageCount;
-        this->memoryData->peakCommittedPageCount = max(this->memoryData->peakCommittedPageCount, this->memoryData->currentCommittedPageCount);
-    }
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -2274,13 +2214,6 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::LogDecommitPages(size_t pageCount)
 {
     SubCommittedBytes(pageCount * AutoSystemInfo::PageSize);
-#ifdef PROFILE_MEM
-    if (this->memoryData)
-    {
-        this->memoryData->decommitPageCount += pageCount;
-        this->memoryData->currentCommittedPageCount -= pageCount;
-    }
-#endif
 }
 
 #if DBG_DUMP

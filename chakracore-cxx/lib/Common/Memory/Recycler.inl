@@ -297,14 +297,6 @@ Recycler::RealAllocFromBucket(HeapInfo* heap, size_t size)
         }
     }
 #endif
-#ifdef PROFILE_MEM
-    if (this->memoryData)
-    {
-        this->memoryData->requestCount++;
-        this->memoryData->requestBytes += size;
-        this->memoryData->alignmentBytes += sizeCat - size;
-    }
-#endif
 
     return memBlock;
 

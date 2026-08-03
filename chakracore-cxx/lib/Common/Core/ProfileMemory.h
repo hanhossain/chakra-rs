@@ -68,15 +68,9 @@ class MemoryProfiler
 public:
     MemoryProfiler();
     ~MemoryProfiler();
-    static ArenaMemoryData * Begin(const char16_t* name);
-    static RecyclerMemoryData * GetRecyclerMemoryData();
-    static PageMemoryData * GetPageMemoryData(PageAllocatorType type);
     static void Reset(const char16_t* name, ArenaMemoryData * arena);
     static void End(const char16_t* name, ArenaMemoryData * arena);
-    static void PrintAll();
 
-    static void PrintCurrentThread();
-    static bool IsTraceEnabled(bool isRecycler = false);
     static bool IsEnabled();
     static bool DoTrackRecyclerAllocation();
 
@@ -120,14 +114,10 @@ private:
 
     static MemoryProfiler * EnsureMemoryProfiler();
     static void AccumulateData(ArenaMemoryDataSummary *, ArenaMemoryData *, bool reset = false);
-    void Print();
     void PrintArenaHeader(char16_t const * title);
     static void PrintPageMemoryData(PageMemoryData const& pageMemoryData, char const * title);
 
 private:
-
-    void PrintArena(bool liveOnly);
-
     static thread_local MemoryProfiler * Instance;
 
     static std::recursive_mutex s_cs;

@@ -156,9 +156,6 @@ private:
     const char16_t* name;
 #endif
 
-#ifdef PROFILE_MEM
-    struct ArenaMemoryData * memoryData;
-#endif
 #if DBG
     bool needsDelayFreeList;
 #endif
@@ -179,10 +176,6 @@ public:
         Assert(!lockBlockList);
 
         freeList = TFreeListPolicy::Reset(freeList);
-#ifdef PROFILE_MEM
-        LogReset();
-#endif
-
         ArenaMemoryTracking::ReportFreeAll(this);
 
         if (this->blockState == 1)
@@ -192,9 +185,6 @@ public:
             Assert(cacheBlockEnd == bigBlocks->GetBytes() + bigBlocks->nbytes);
             Assert(bigBlocks->GetBytes() <= cacheBlockCurrent && cacheBlockCurrent <= cacheBlockEnd);
             cacheBlockCurrent = bigBlocks->GetBytes();
-#ifdef PROFILE_MEM
-            LogRealAlloc(bigBlocks->allocation->GetSize() + sizeof(PageAllocation));
-#endif
             return;
         }
         FullReset();
@@ -261,14 +251,6 @@ protected:
     char * RealAlloc(size_t nbytes);
     char * RealAllocInlined(size_t nbytes);
 private:
-#ifdef PROFILE_MEM
-    void LogBegin();
-    void LogReset();
-    void LogEnd();
-    void LogAlloc(size_t requestedBytes, size_t allocateBytes);
-    void LogRealAlloc(size_t size);
-#endif
-
     static size_t AllocatedSize(ArenaMemoryBlock * blockList);
     static size_t Size(BigBlock * blockList);
     void FullReset();
@@ -284,11 +266,6 @@ private:
     size_t freeListSize;
 #endif
     void * freeList;
-
-#ifdef PROFILE_MEM
-    void LogFree(size_t size);
-    void LogReuse(size_t size);
-#endif
 };
 
 

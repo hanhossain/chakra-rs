@@ -778,10 +778,6 @@ private:
     template <bool notPageAligned>
     char* AllocPagesInternal(uint pageCount, TPageSegment ** pageSegment);
 
-#ifdef PROFILE_MEM
-    PageMemoryData * memoryData;
-#endif
-
     size_t usedBytes;
     PageAllocatorType type;
 

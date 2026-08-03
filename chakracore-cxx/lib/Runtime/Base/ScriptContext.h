@@ -529,9 +529,6 @@ namespace Js
 
         Profiler * CreateProfiler();
 #endif
-#ifdef PROFILE_MEM
-        bool profileMemoryDump;
-#endif
 #ifdef PROFILE_STRINGS
         StringProfiler* stringProfiler;
 #endif
@@ -1475,10 +1472,6 @@ private:
         void ProfileResume(Js::Profiler::SuspendRecord * suspendRecord);
         void ProfilePrint();
         bool IsProfilerCreated() const { return isProfilerCreated; }
-#endif
-
-#ifdef PROFILE_MEM
-        void DisableProfileMemoryDumpOnDelete() { profileMemoryDump = false; }
 #endif
 
 #ifdef PROFILE_STRINGS
