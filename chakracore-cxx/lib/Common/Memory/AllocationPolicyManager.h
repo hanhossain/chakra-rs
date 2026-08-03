@@ -43,11 +43,6 @@ public:
         context(NULL),
         memoryAllocationCallback(NULL)
     {
-        Js::Number limitMB = Js::Configuration::Global.flags.AllocPolicyLimit;
-        if (limitMB > 0)
-        {
-            memoryLimit = static_cast<size_t>(limitMB) * 1024 * 1024;
-        }
     }
 
     ~AllocationPolicyManager()

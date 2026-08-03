@@ -363,7 +363,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
 #define DEFAULT_CONFIG_NewPagesCapDuringBGSweeping    (15000 * 4)
-#define DEFAULT_CONFIG_AllocationPolicyLimit    (-1)
 
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
 #define DEFAULT_CONFIG_MaxLoopsPerFunction  (10)
@@ -1084,7 +1083,6 @@ namespace Js
 #endif
         u"LowMemoryCap",
         u"NewPagesCapDuringBGSweeping",
-        u"AllocPolicyLimit",
         u"PrintSystemException",
         u"Trace",
 
@@ -2000,7 +1998,6 @@ namespace Js
 #endif
         u"Memory cap indicating a low-memory process",
         u"New pages count allowed to be allocated during background sweeping",
-        u"Memory allocation policy limit in MB (default: -1, which means no allocation policy limit).",
         // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
@@ -2510,7 +2507,6 @@ namespace Js
 #ifdef RECYCLER_VERIFY_MARK
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         // todo (hanhossain): flag end
@@ -3046,7 +3042,6 @@ namespace Js
 #endif
         LowMemoryCap(DEFAULT_CONFIG_LowMemoryCap),
         NewPagesCapDuringBGSweeping(DEFAULT_CONFIG_NewPagesCapDuringBGSweeping),
-        AllocPolicyLimit(DEFAULT_CONFIG_AllocationPolicyLimit),
         PrintSystemException(false),
         Trace(),
 
@@ -4549,8 +4544,6 @@ namespace Js
             return FlagNumber;
         case NewPagesCapDuringBGSweepingFlag:
             return FlagNumber;
-        case AllocPolicyLimitFlag:
-            return FlagNumber;
         case PrintSystemExceptionFlag:
             return FlagBoolean;
         case TraceFlag:
@@ -5427,8 +5420,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&LowMemoryCap));
         case NewPagesCapDuringBGSweepingFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&NewPagesCapDuringBGSweeping));
-        case AllocPolicyLimitFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&AllocPolicyLimit));
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case TraceFlag:
