@@ -339,7 +339,6 @@ See MSDN doc.
 --*/
 int
 WideCharToMultiByte(
-         uint32_t CodePage,
          uint32_t dwFlags,
          const char16_t* lpWideCharStr,
          int cchWideChar,
@@ -349,13 +348,6 @@ WideCharToMultiByte(
 {
     int32_t retval =0;
     BOOL usedDefaultChar = FALSE;
-#if defined(__APPLE__)
-    CFStringRef cfString = NULL;
-    CFStringEncoding cfEncoding;
-    int charsToConvert;
-    CFIndex charsConverted;
-    CFIndex bytesConverted;
-#endif /* !defined(__APPLE__) */
 
     if (dwFlags & ~WC_NO_BEST_FIT_CHARS)
     {
@@ -383,84 +375,11 @@ WideCharToMultiByte(
 
     // Use UnicodeToUTF8 on all systems because we use
     // UTF8ToUnicode in MultiByteToWideChar() on all systems.
-    if (CodePage == CP_UTF8 || (CodePage == CP_ACP))
+    if (cchWideChar == -1)
     {
-        if (cchWideChar == -1)
-        {
-            cchWideChar = std::u16string(lpWideCharStr).length() + 1;
-        }
-        retval = UnicodeToUTF8(lpWideCharStr, cchWideChar, lpMultiByteStr, cbMultiByte);
-        goto EXIT;
+        cchWideChar = std::u16string(lpWideCharStr).length() + 1;
     }
-
-#if defined(__APPLE__)
-    charsToConvert = cchWideChar;
-    if (charsToConvert == -1)
-    {
-        const char16_t* ptr = lpWideCharStr;
-
-        charsToConvert = 0;
-        while(*ptr++ != 0)
-        {
-            charsToConvert++;
-        }
-        charsToConvert++;   /* For the terminating '\0' */
-    }
-
-    cfEncoding = CODEPAGECPToCFStringEncoding(CodePage);
-    if (cfEncoding == kCFStringEncodingInvalidId)
-    {
-        ERROR( "This code page is not in the system.\n" );
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto EXIT;
-    }
-
-    cfString = CFStringCreateWithCharacters(kCFAllocatorDefault,
-                      reinterpret_cast<const UniChar*>(lpWideCharStr), charsToConvert);
-    if (cfString == NULL)
-    {
-        ERROR("CFString creation failed.\n");
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto EXIT;
-    }
-
-    if (cbMultiByte == 0)
-    {
-        lpMultiByteStr = NULL;
-    }
-    charsConverted = CFStringGetBytes(cfString,
-                    CFRangeMake(0, charsToConvert),
-                    cfEncoding, '?', TRUE, reinterpret_cast<UInt8*>(lpMultiByteStr),
-                    cbMultiByte, &bytesConverted);
-    if (charsConverted != charsToConvert)
-    {
-        if (lpMultiByteStr != NULL)
-        {
-            // CFStringGetBytes can fail due to an insufficient buffer or for
-            // other reasons. We need to check if we're out of buffer space.
-            charsConverted = CFStringGetBytes(cfString,
-                        CFRangeMake(0, charsToConvert),
-                        cfEncoding, '?', TRUE, NULL,
-                        0, &bytesConverted);
-            if (cbMultiByte < bytesConverted)
-            {
-                ERROR("Insufficient buffer for CFStringGetBytes.\n");
-                SetLastError(ERROR_INSUFFICIENT_BUFFER);
-                goto ReleaseString;
-            }
-        }
-        ERROR("Not all characters were converted.\n");
-        SetLastError(ERROR_INVALID_PARAMETER);
-        goto ReleaseString;
-    }
-    retval = bytesConverted;
-
-ReleaseString:
-    if (cfString != NULL)
-    {
-        CFRelease(cfString);
-    }
-#endif /* defined(__APPLE__) */
+    retval = UnicodeToUTF8(lpWideCharStr, cchWideChar, lpMultiByteStr, cbMultiByte);
 
 EXIT:
 

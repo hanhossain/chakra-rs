@@ -960,7 +960,6 @@ MultiByteToWideChar(
 
 int
 WideCharToMultiByte(
-             uint32_t CodePage,
              uint32_t dwFlags,
              const char16_t* lpWideCharStr,
              int cchWideChar,

@@ -526,7 +526,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                 char* newBuff = 0;
                 void * voidPtr = NULL;
 
-                size = WideCharToMultiByte(CP_ACP, 0, Buff, -1, 0, 0, 0);
+                size = WideCharToMultiByte(0, Buff, -1, 0, 0, 0);
                 if (!size)
                 {
                     chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
@@ -540,7 +540,7 @@ int PAL_wvsscanf(const char16_t* Buffer, const char16_t* Format, va_list ap)
                     SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                     return -1;
                 }
-                size = WideCharToMultiByte(CP_ACP, 0, Buff, size,
+                size = WideCharToMultiByte(0, Buff, size,
                                            newBuff, size, 0);
                 if (!size)
                 {
