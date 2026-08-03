@@ -25,12 +25,6 @@ void ReportFatalException(
 
 // Disable optimization make sure all the frames are still available in Dr. Watson bug reports.
 #pragma optimize("", off)
-void JavascriptDispatch_OOM_fatal_error(
-    size_t context)
-{
-    int scenario = 1;
-    ReportFatalException(context, E_OUTOFMEMORY, JavascriptDispatch_OUTOFMEMORY, scenario);
-};
 
 void CustomHeap_BadPageState_unrecoverable_error(
     size_t context)
@@ -59,28 +53,10 @@ void FailedToBox_OOM_unrecoverable_error(
     ReportFatalException(context, E_UNEXPECTED, Fatal_FailedToBox_OUTOFMEMORY, scenario);
 }
 
-void X64WriteBarrier_OOM_unrecoverable_error()
-{
-    int scenario = 3;
-    ReportFatalException(NULL, E_OUTOFMEMORY, WriteBarrier_OUTOFMEMORY, scenario);
-}
-
 void DebugHeap_OOM_fatal_error()
 {
     int scenario = 3;
     ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_Debug_Heap_OUTOFMEMORY, scenario);
-}
-
-void Binary_Inconsistency_fatal_error()
-{
-    int scenario = 4;
-    ReportFatalException(NULL, E_UNEXPECTED, Fatal_Binary_Inconsistency, scenario);
-}
-
-void Version_Inconsistency_fatal_error()
-{
-    int scenario = 4;
-    ReportFatalException(NULL, E_UNEXPECTED, Fatal_Version_Inconsistency, scenario);
 }
 
 void LargeHeapBlock_Metadata_Corrupted(
@@ -109,18 +85,6 @@ void EntryExitRecord_Corrupted_unrecoverable_error()
     ReportFatalException(NULL, E_UNEXPECTED, Fatal_EntryExitRecordCorruption, scenario);
 }
 
-void UnexpectedExceptionHandling_fatal_error()
-{
-    int scenario = 7;
-    ReportFatalException(NULL, E_UNEXPECTED, Fatal_UnexpectedExceptionHandling, scenario);
-}
-
-void RpcFailure_unrecoverable_error(int32_t hr)
-{
-    int scenario = 8;
-    ReportFatalException(NULL, hr, Fatal_RpcFailure, scenario);
-}
-
 void OutOfMemory_unrecoverable_error()
 {
     int scenario = 9;
@@ -136,79 +100,6 @@ void RecyclerSingleAllocationLimit_unrecoverable_error()
 void MemGCSingleAllocationLimit_unrecoverable_error()
 {
     int scenario = 11;
-    ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
-}
-
-// same as OutOfMemory_unrecoverable_error, but with a different `scenario`
-// - just to cause separate bucketing of these failures 
-void OutOfMemoryTooManyPinnedObjects_unrecoverable_error()
-{
-    int scenario = 12;
-    ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
-}
-
-// same as OutOfMemory_unrecoverable_error, but with a different `scenario`
-// - just to cause separate bucketing of these failures 
-void OutOfMemoryTooManyClosedContexts_unrecoverable_error()
-{
-    int scenario = 13;
-    ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
-}
-
-// same as OutOfMemory_unrecoverable_error, but with a different `scenario`
-// - just to cause separate bucketing of these failures 
-void OutOfMemoryAllocationPolicy_unrecoverable_error()
-{
-    int scenario = 14;
-    ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
-}
-
-void XDataRegistration_unrecoverable_error(int32_t hr, size_t scenario)
-{
-    ReportFatalException(NULL, hr, Fatal_XDataRegistration, scenario);
-}
-
-///////
-//
-// The following variety of OOM unrecoverable errors are similar to the ones above 
-// and exist specifically for additional distinct bucketing of crash dumps for 
-// diagnostics purposes.
-//
-///////
-
-void OutOfMemoryTooManyPinnedObjects_unrecoverable_error_visible()
-{
-    int scenario = 15;
-    ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
-}
-
-void OutOfMemoryTooManyClosedContexts_unrecoverable_error_visible()
-{
-    int scenario = 16;
-    ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
-}
-
-void OutOfMemoryAllocationPolicy_unrecoverable_error_visible()
-{
-    int scenario = 17;
-    ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
-}
-
-void OutOfMemoryTooManyPinnedObjects_unrecoverable_error_notvisible()
-{
-    int scenario = 18;
-    ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
-}
-
-void OutOfMemoryTooManyClosedContexts_unrecoverable_error_notvisible()
-{
-    int scenario = 19;
-    ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
-}
-
-void OutOfMemoryAllocationPolicy_unrecoverable_error_notvisible()
-{
-    int scenario = 20;
     ReportFatalException(NULL, E_OUTOFMEMORY, Fatal_OutOfMemory, scenario);
 }
 
