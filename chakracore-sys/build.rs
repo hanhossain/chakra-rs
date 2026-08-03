@@ -25,22 +25,14 @@ fn main() {
 
     if cfg!(feature = "compile-cpp") {
         if let Ok(chakra_build) = std::env::var("CHAKRA_BUILD") {
-            println!(
-                "cargo::rustc-link-search=native={}/chakracore-cxx/bin/ch",
-                chakra_build
-            );
-            println!(
-                "cargo::rustc-link-search=native={}/chakracore-cxx/lib",
-                chakra_build
-            );
-            println!(
-                "cargo::rerun-if-changed={}/chakracore-cxx/bin/ch",
-                chakra_build
-            );
-            println!(
-                "cargo::rerun-if-changed={}/chakracore-cxx/lib",
-                chakra_build
-            );
+            update_local_link_search(&chakra_build, "chakracore-cxx/bin/ch");
+            println!("cargo::rerun-if-changed={chakra_build}/chakracore-cxx/bin/ch");
+
+            update_local_link_search(&chakra_build, "chakracore-cxx/lib");
+            println!("cargo::rerun-if-changed={chakra_build}/chakracore-cxx/lib");
+
+            update_local_link_search(&chakra_build, "chakracore-cxx/ffi");
+            println!("cargo::rerun-if-changed={chakra_build}/chakracore-cxx/ffi");
         } else {
             let debug: bool = std::env::var("DEBUG").unwrap().parse::<bool>().unwrap();
             let optimized = cfg!(feature = "optimized-tests");
@@ -61,7 +53,8 @@ fn main() {
                 .generator("Ninja")
                 .define("CMAKE_CXX_COMPILER", "clang++")
                 .define("CMAKE_C_COMPILER", "clang")
-                .profile(build_type);
+                .profile(build_type)
+                .build_target("chhelper");
 
             if cfg!(target_os = "macos") {
                 config
@@ -70,8 +63,12 @@ fn main() {
             }
 
             config.always_configure(true);
-            let dst = config.build();
-            println!("cargo::rustc-link-search=native={}/lib", dst.display());
+            let mut dst = config.build();
+            dst.push("build");
+            let chakra_build = dst.to_str().unwrap();
+            update_local_link_search(chakra_build, "chakracore-cxx/bin/ch");
+            update_local_link_search(chakra_build, "chakracore-cxx/lib");
+            update_local_link_search(chakra_build, "chakracore-cxx/ffi");
         }
 
         println!("cargo::rustc-link-lib=chhelper");
@@ -95,4 +92,8 @@ fn main() {
     println!("cargo::rerun-if-changed=../chakracore-cxx/CMakeLists.txt");
     println!("cargo::rerun-if-changed=../CMakeLists.txt");
     println!("cargo::rerun-if-env-changed=CHAKRA_BUILD");
+}
+
+fn update_local_link_search(chakra_build: &str, path: &str) {
+    println!("cargo::rustc-link-search=native={chakra_build}/{path}");
 }
