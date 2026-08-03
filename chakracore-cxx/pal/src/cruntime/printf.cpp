@@ -97,8 +97,7 @@ See MSDN doc.
 --*/
 __attribute__((no_instrument_function))
 int
-PAL_fwprintf(
-     FILE *stream,
+PAL_wprintf(
      const char16_t *format,
      ...)
 {
@@ -106,10 +105,10 @@ PAL_fwprintf(
     va_list ap;
 
     va_start(ap, format);
-    Length = PAL_vfwprintf( stream, format, ap);
+    Length = PAL_vwprintf(format, ap);
     va_end(ap);
 
-    LOGEXIT("PAL_fwprintf returns int %d\n", Length);
+    LOGEXIT("PAL_wprintf returns int %d\n", Length);
     return Length;
 }
 

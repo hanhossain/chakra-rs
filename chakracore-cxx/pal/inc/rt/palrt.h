@@ -611,7 +611,6 @@ Remember to fix the errcode defintion in safecrt.h.
 
 #define _vscprintf _vscprintf_unsafe
 #define _vscwprintf _vscwprintf_unsafe
-#define _scwprintf _scwprintf_unsafe
 
 extern "C++" {
 
@@ -681,16 +680,6 @@ inline int _vscwprintf_unsafe(const char16_t *_Format, va_list _ArgList)
 
         guess *= 2;
     }
-}
-
-inline int _scwprintf_unsafe(const char16_t *_Format, ...)
-{
-    int ret;
-    va_list _ArgList;
-    va_start(_ArgList, _Format);
-    ret = _vscwprintf_unsafe(_Format, _ArgList);
-    va_end(_ArgList);
-    return ret;
 }
 
 inline int _vsnwprintf_unsafe(char16_t *_Dst, size_t _SizeInWords, size_t _Count, const char16_t *_Format, va_list _ArgList)

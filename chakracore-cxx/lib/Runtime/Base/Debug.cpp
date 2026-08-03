@@ -6,9 +6,7 @@
 #if DBG_DUMP
 #include "Language/JavascriptStackWalker.h"
 
-char16_t* DumpCallStack(uint frameCount) { return DumpCallStackFull(frameCount, /*print*/ true); }
-
-char16_t* DumpCallStackFull(uint frameCount, bool print)
+char16_t * DumpCallStackFull(uint frameCount, bool print)
 {
     Js::ScriptContext* scriptContext = ThreadContext::GetContextForCurrentThread()->GetScriptContextList();
     Js::JavascriptStackWalker walker(scriptContext);

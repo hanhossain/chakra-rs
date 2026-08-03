@@ -6,7 +6,6 @@
 
 #if DBG_DUMP
 char16_t* DumpCallStackFull(uint frameCount = -1, bool print = true);
-char16_t* DumpCallStack(uint frameCount = -1);
 #endif
 
 #if DBG_DUMP

@@ -41,8 +41,7 @@ int
         va_list ap);
 
     int
-    PAL_vfwprintf(
-        FILE *stream,
+    PAL_vwprintf(
         const char16_t *format,
         va_list ap);
 }
@@ -60,8 +59,7 @@ namespace CorUnix
         va_list ap);
 
     int
-    PAL_vfwprintf(
-        FILE *stream,
+    PAL_vwprintf(
         const char16_t *format,
         va_list ap);
 
