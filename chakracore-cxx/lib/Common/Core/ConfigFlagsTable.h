@@ -513,9 +513,6 @@ namespace Js
         LoopAlignNopLimitFlag,
         #endif
 
-        #ifdef PROFILE_MEM
-        TraceMemoryFlag,
-        #endif
         VersionFlag,
         WERExceptionSupportFlag,
         ExtendedErrorStackForTestHostFlag,
@@ -2047,10 +2044,6 @@ namespace Js
             Number LoopAlignNopLimit;
         #endif
 
-        #ifdef PROFILE_MEM
-        // TODO (hanhossain): remove flag
-            Phases TraceMemory;
-        #endif
         // todo (hanhossain): flag end
         Number Version;
         Boolean WERExceptionSupport;
