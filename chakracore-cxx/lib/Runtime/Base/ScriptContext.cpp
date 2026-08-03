@@ -264,10 +264,6 @@ namespace Js
         ensureParentInfo = false;
 #endif
 
-#ifdef PROFILE_MEM
-        profileMemoryDump = true;
-#endif
-
         // Do this after all operations that may cause potential exceptions. Note: InitialAllocations may still throw!
         numberAllocator.Initialize(this->GetRecycler());
 
@@ -4529,19 +4525,6 @@ ScriptContext::GetJitFuncRangeCache()
         }
 #endif
 
-#ifdef PROFILE_MEM
-        if (profileMemoryDump && MemoryProfiler::IsTraceEnabled())
-        {
-            MemoryProfiler::PrintAll();
-#ifdef PROFILE_RECYCLER_ALLOC
-            if (Js::Configuration::Global.flags.TraceMemory.IsEnabled(Js::AllPhase)
-                || Js::Configuration::Global.flags.TraceMemory.IsEnabled(Js::RunPhase))
-            {
-                GetRecycler()->PrintAllocStats();
-            }
-#endif
-        }
-#endif
 #if DBG_DUMP
         if (PHASE_STATS1(Js::ByteCodePhase))
         {

@@ -52,7 +52,6 @@ ArenaAllocatorBase(const char16_t* name, PageAllocator * pageAllocator, void(*ou
 {
 #ifdef PROFILE_MEM
     this->name = name;
-    LogBegin();
 #endif
 #if DBG
     needsDelayFreeList = false;
@@ -74,10 +73,6 @@ ArenaAllocatorBase<TFreeListPolicy, ObjectAlignmentBitShiftArg, RequireObjectAli
     }
     ReleaseHeapMemory();
     TFreeListPolicy::Release(this->freeList);
-#ifdef PROFILE_MEM
-    LogEnd();
-#endif
-
 }
 
 template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>
@@ -102,7 +97,6 @@ Move(ArenaAllocatorBase *srcAllocator)
 #ifdef PROFILE_MEM
     this->name = srcAllocator->name;
     srcAllocator->name = nullptr;
-    AllocatorFieldMove(this, srcAllocator, memoryData);
 #endif
 }
 
@@ -358,9 +352,6 @@ AddBigBlock(size_t requestBytes)
     blockp->nbytes = allocation->GetSize() - sizeof(BigBlock);
     blockp->currentByte = 0;
 
-#ifdef PROFILE_MEM
-    LogRealAlloc(allocation->GetSize() + sizeof(PageAllocation));
-#endif
     return(blockp);
 }
 
@@ -461,9 +452,6 @@ AllocInternal(size_t requestedBytes)
         // We have checked the size requested, so no integer overflow check
         nbytes = Math::Align(requestedBytes, ArenaAllocator::ObjectAlignment);
         Assert(nbytes <= ArenaAllocator::MaxSmallObjectSize);
-#ifdef PROFILE_MEM
-        LogAlloc(requestedBytes, nbytes);
-#endif
         void * freeObject = TFreeListPolicy::Allocate(this->freeList, nbytes);
 
         if (freeObject != nullptr)
@@ -476,9 +464,6 @@ AllocInternal(size_t requestedBytes)
             this->freeListSize -= nbytes;
 #endif
 
-#ifdef PROFILE_MEM
-            LogReuse(nbytes);
-#endif
             ArenaMemoryTracking::ReportAllocation(this, freeObject, nbytes);
             return static_cast<char*>(freeObject);
         }
@@ -486,9 +471,6 @@ AllocInternal(size_t requestedBytes)
     else
     {
         nbytes = AllocSizeMath::Align(requestedBytes, ArenaAllocator::ObjectAlignment);
-#ifdef PROFILE_MEM
-        LogAlloc(requestedBytes, nbytes);
-#endif
     }
     // TODO: Support large object free listing
     return ArenaAllocatorBase::RealAllocInlined(nbytes);
@@ -520,9 +502,6 @@ Free(void * buffer, size_t byteSize)
 
     if (buffer == cacheBlockCurrent - byteSize)
     {
-#ifdef PROFILE_MEM
-        LogFree(byteSize);
-#endif
         cacheBlockCurrent = static_cast<char*>(buffer);
         return;
     }
@@ -562,9 +541,6 @@ Free(void * buffer, size_t byteSize)
         this->freeListSize += size;
 #endif
 
-#ifdef PROFILE_MEM
-        LogFree(byteSize);
-#endif
         return;
     }
 
@@ -638,86 +614,6 @@ ArenaAllocatorBase<TFreeListPolicy, ObjectAlignmentBitShiftArg, RequireObjectAli
 {
     Assert(needsDelayFreeList);
     TFreeListPolicy::MergeDelayFreeList(freeList);
-}
-#endif
-
-#ifdef PROFILE_MEM
-template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>
-void
-ArenaAllocatorBase<TFreeListPolicy, ObjectAlignmentBitShiftArg, RequireObjectAlignment, MaxObjectSize>::
-LogBegin()
-{
-    memoryData = MemoryProfiler::Begin(this->name);
-}
-
-template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>
-void
-ArenaAllocatorBase<TFreeListPolicy, ObjectAlignmentBitShiftArg, RequireObjectAlignment, MaxObjectSize>::
-LogReset()
-{
-    if (memoryData)
-    {
-        MemoryProfiler::Reset(this->name, memoryData);
-    }
-}
-
-template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>
-void
-ArenaAllocatorBase<TFreeListPolicy, ObjectAlignmentBitShiftArg, RequireObjectAlignment, MaxObjectSize>::
-LogEnd()
-{
-    if (memoryData)
-    {
-        MemoryProfiler::End(this->name, memoryData);
-    }
-}
-
-template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>
-void
-ArenaAllocatorBase<TFreeListPolicy, ObjectAlignmentBitShiftArg, RequireObjectAlignment, MaxObjectSize>::
-LogAlloc(size_t requestedBytes, size_t allocateBytes)
-{
-    if (memoryData)
-    {
-        memoryData->requestCount++;
-        memoryData->requestBytes += requestedBytes;
-        memoryData->alignmentBytes += allocateBytes - requestedBytes;
-    }
-}
-
-template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>
-void
-ArenaAllocatorBase<TFreeListPolicy, ObjectAlignmentBitShiftArg, RequireObjectAlignment, MaxObjectSize>::
-LogRealAlloc(size_t size)
-{
-    if (memoryData)
-    {
-        memoryData->allocatedBytes += size;
-    }
-}
-
-template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>
-void
-ArenaAllocatorBase<TFreeListPolicy, ObjectAlignmentBitShiftArg, RequireObjectAlignment, MaxObjectSize>::
-LogFree(size_t size)
-{
-    if (memoryData)
-    {
-        memoryData->freelistBytes += size;
-        memoryData->freelistCount++;
-    }
-}
-
-template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>
-void
-ArenaAllocatorBase<TFreeListPolicy, ObjectAlignmentBitShiftArg, RequireObjectAlignment, MaxObjectSize>::
-LogReuse(size_t size)
-{
-    if (memoryData)
-    {
-        memoryData->reuseCount++;
-        memoryData->reuseBytes += size;
-    }
 }
 #endif
 

@@ -978,9 +978,6 @@ private:
         return this->autoHeap.GetDefaultHeap();
     }
 
-#ifdef PROFILE_MEM
-    RecyclerMemoryData * memoryData;
-#endif
     ThreadContextId mainThreadId;
 
 #if DBG
@@ -1673,7 +1670,6 @@ public:
     void ClearTrackAllocInfo(TrackAllocData* data = NULL);
 
 #ifdef PROFILE_RECYCLER_ALLOC
-    void PrintAllocStats();
 private:
     static bool DoProfileAllocTracker();
     void InitializeProfileAllocTracker();
