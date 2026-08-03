@@ -712,14 +712,7 @@ namespace Js
                 stackFunction->GetFunctionProxy()->IsDeferredDeserializeFunction()?
                     u"<DeferDeserialize>" : stackFunction->GetParseableFunctionInfo()->GetDisplayName(),
                 stackFunction->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer));
-            if (PHASE_VERBOSE_TESTTRACE(Js::StackFuncPhase, stackFunction->GetFunctionProxy()))
-            {
-                Output::Print(u" %p\n", stackFunction);
-            }
-            else
-            {
-                Output::Print(u"\n");
-            }
+            Output::Print(u"\n");
             Output::Flush();
         }
 
@@ -735,20 +728,12 @@ namespace Js
     {
         if (stackFunction)
         {
-            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-
-            FunctionProxy* functionProxy = (*infoRef)->GetFunctionProxy();
+            FunctionProxy * functionProxy = (*infoRef)->GetFunctionProxy();
             AssertMsg(functionProxy != nullptr, "BYTE-CODE VERIFY: Must specify a valid function to create");
             Assert(stackFunction->GetFunctionInfo()->GetFunctionProxy() == functionProxy);
             Assert(!functionProxy->IsFunctionBody() || functionProxy->GetFunctionBody()->GetStackNestedFuncParentStrongRef() != nullptr);
             stackFunction->SetEnvironment(environment);
 
-
-            PHASE_PRINT_VERBOSE_TRACE(Js::StackFuncPhase, functionProxy,
-                u"Stack alloc nested function: %s %s (address: %p)\n",
-                    functionProxy->IsFunctionBody()?
-                        functionProxy->GetFunctionBody()->GetDisplayName() : u"<deferred>",
-                        functionProxy->GetDebugNumberSet(debugStringBuffer), stackFunction);
             return stackFunction;
         }
         return ScriptFunction::OP_NewScFunc(environment, infoRef);

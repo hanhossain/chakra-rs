@@ -8,20 +8,6 @@
 char16_t* DumpCallStackFull(uint frameCount = -1, bool print = true);
 #endif
 
-#if DBG_DUMP
-#define OUTPUT_TRACE_WITH_STACK(Phase, ...) OUTPUT_TRACE_WITH_STACK_COUNT(Phase, /*frameCount*/ 3, __VA_ARGS__)
-#define OUTPUT_TRACE_WITH_STACK_COUNT(Phase, frameCount, ...)  \
-    if(Js::Configuration::Global.flags.Verbose) \
-        { \
-        Output::TraceWithCallback( Phase, [] () { \
-            return DumpCallStackFull(frameCount, /*print*/false); \
-    }, __VA_ARGS__); \
-                                }
-#else
-#define OUTPUT_TRACE_WITH_STACK(Phase, ...)
-#define OUTPUT_TRACE_WITH_STACK_COUNT(Phase, frameCount, ...)
-#endif
-
 #define OUTPUT_PRINT(FunctionBody) \
     Output::Print(u"Function %s (#%d.%u, #%u) ", (FunctionBody)->GetDisplayName(), \
             (int)(FunctionBody)->GetSourceContextId(), (FunctionBody)->GetLocalFunctionId(), (FunctionBody)->GetFunctionNumber());
@@ -42,14 +28,3 @@ char16_t* DumpCallStackFull(uint frameCount = -1, bool print = true);
            (int)(Func)->GetJITFunctionBody()->GetSourceContextId(), (Func)->GetWorkItem()->GetJITTimeInfo()->GetLocalFunctionId(), (Func)->GetJITFunctionBody()->GetFunctionNumber()); \
         Output::TraceWithPrefix((Phase), prefixValue, __VA_ARGS__); \
       }
-#define OUTPUT_VERBOSE_TRACE2(Phase, FunctionBody, ...) \
-    if(Js::Configuration::Global.flags.Verbose) \
-    { \
-        OUTPUT_TRACE2((Phase), (FunctionBody), __VA_ARGS__); \
-    }
-#define OUTPUT_VERBOSE_TRACE_FUNC(Phase, Func, ...) \
-     if(Js::Configuration::Global.flags.Verbose) \
-     { \
-        OUTPUT_TRACE_FUNC((Phase), (Func), __VA_ARGS__); \
-       }
-

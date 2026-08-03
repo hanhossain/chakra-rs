@@ -39,7 +39,7 @@ typedef void* FunctionTableHandle;
 #define PAGE_ALLOC_TRACE_EX(verbose, stats, format, ...)                \
     if (this->pageAllocatorFlagTable.Trace.IsEnabled(Js::PageAllocatorPhase)) \
     { \
-        if (!verbose || this->pageAllocatorFlagTable.Verbose) \
+        if (!verbose) \
         {   \
             Output::Print(u"%p : %p> PageAllocator(%p): ", GetCurrentThreadContextId(), ::GetCurrentThreadId(), this); \
             if (debugName != nullptr) \

@@ -240,24 +240,6 @@ public:
             branchedPath->SetMaxInitializedLength(pathLength);
 #endif
 
-#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-            if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
-            {
-                Output::Print(u"FixedFields: TypePath::Branch: singleton: 0x%p(0x%p)\n", PointerValue(this->singletonInstance), this->singletonInstance->Get());
-                Output::Print(u"   fixed fields:");
-
-                for (PropertyIndex i = 0; i < GetPathLength(); i++)
-                {
-                    Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
-                        i < GetMaxInitializedLength() ? 1 : 0,
-                        GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
-                        GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
-                }
-
-                Output::Print(u"\n");
-            }
-#endif
-
             return branchedPath;
         }
 
@@ -298,25 +280,6 @@ public:
     int AddInternal(const PropertyRecord * propId)
     {
         int propertyIndex = this->GetData()->Add<addNewId>(propId, assignments);
-
-#ifdef SUPPORT_FIXED_FIELDS_ON_PATH_TYPES
-        if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"FixedFields: TypePath::AddInternal: singleton = 0x%p(0x%p)\n",
-                PointerValue(this->singletonInstance), this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
-            Output::Print(u"   fixed fields:");
-
-            for (PropertyIndex i = 0; i < GetPathLength(); i++)
-            {
-                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
-                    i < GetMaxInitializedLength() ? 1 : 0,
-                    GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
-                    GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
-            }
-
-            Output::Print(u"\n");
-        }
-#endif
 
         return propertyIndex;
     }

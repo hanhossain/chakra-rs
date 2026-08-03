@@ -791,23 +791,6 @@ void GlobOpt::ArraySrcOpt::DoExtractBoundChecks()
 
     if (globOpt->DoBoundCheckHoist())
     {
-        if (indexVarSym)
-        {
-            TRACE_PHASE_INSTR_VERBOSE(
-                Js::Phase::BoundCheckHoistPhase,
-                instr,
-                u"Determining array bound check hoistability for index s%u\n",
-                indexVarSym->m_id);
-        }
-        else
-        {
-            TRACE_PHASE_INSTR_VERBOSE(
-                Js::Phase::BoundCheckHoistPhase,
-                instr,
-                u"Determining array bound check hoistability for index %d\n",
-                indexConstantBounds.LowerBound());
-        }
-
         globOpt->DetermineArrayBoundCheckHoistability(
             !eliminatedLowerBoundCheck,
             !eliminatedUpperBoundCheck,

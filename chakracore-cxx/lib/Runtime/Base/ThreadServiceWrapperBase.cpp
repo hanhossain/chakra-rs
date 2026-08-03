@@ -61,7 +61,6 @@ bool ThreadServiceWrapperBase::ScheduleIdleCollect(uint ticks, bool scheduleAsTa
 
     if (OnScheduleIdleCollect(ticks, scheduleAsTask))
     {
-        IDLE_COLLECT_VERBOSE_TRACE(u"ScheduledIdleCollect- Set hasScheduledIdleCollect\n");
 
         hasScheduledIdleCollect = true;
         return true;
@@ -84,7 +83,6 @@ bool ThreadServiceWrapperBase::IdleCollect()
     AutoAddRefReleaseThreadService autoThreadServiceKeepAlive(this);
 
     Assert(hasScheduledIdleCollect);
-    IDLE_COLLECT_VERBOSE_TRACE(u"IdleCollect- reset hasScheduledIdleCollect\n");
     hasScheduledIdleCollect = false;
 
     // Don't do anything and kill the timer if we are called recursively or if we are in script
@@ -157,7 +155,6 @@ void ThreadServiceWrapperBase::FinishIdleCollect(ThreadServiceWrapperBase::Finis
         reason == FinishReason::FinishReasonTaskComplete ||
         inIdleCollect || threadContext->IsInScript() || !threadContext->GetRecycler()->CollectionInProgress());
 
-    IDLE_COLLECT_VERBOSE_TRACE(u"FinishIdleCollect- Reset hasScheduledIdleCollect\n");
     hasScheduledIdleCollect = false;
     needIdleCollect = false;
 
@@ -185,15 +182,6 @@ bool ThreadServiceWrapperBase::ScheduleNextCollectOnExit()
     Recycler* recycler = threadContext->GetRecycler();
     recycler->FinishConcurrent<FinishConcurrentOnExitScript>();
 
-#ifdef RECYCLER_TRACE
-    bool oldNeedIdleCollect = needIdleCollect;
-
-    if (forceIdleCollectOnce)
-    {
-        IDLE_COLLECT_VERBOSE_TRACE(u"Need to force one idle collection\n");
-    }
-#endif
-
     needIdleCollect = forceIdleCollectOnce || recycler->ShouldIdleCollectOnExit();
 
     if (needIdleCollect)
@@ -201,19 +189,15 @@ bool ThreadServiceWrapperBase::ScheduleNextCollectOnExit()
         // Set up when we will do the idle decommit
         tickCountNextIdleCollection = GetTickCount() + IdleTicks;
 
-        IDLE_COLLECT_VERBOSE_TRACE(u"Idle on exit collect %s: %d\n", (oldNeedIdleCollect ? u"rescheduled" : u"scheduled"),
-            tickCountNextIdleCollection - GetTickCount());
     }
     else
     {
-        IDLE_COLLECT_VERBOSE_TRACE(u"Idle on exit collect %s\n", oldNeedIdleCollect ? u"cancelled" : u"not scheduled");
         if (!recycler->CollectionInProgress())
         {
             // We collected and finished, no need to ensure the idle collect call back.
             return true;
         }
 
-        IDLE_COLLECT_VERBOSE_TRACE(u"Idle on exit collect %s\n", hasScheduledIdleCollect || oldNeedIdleCollect ? u"reschedule finish" : u"schedule finish");
     }
 
     // Don't schedule the call back if we are already in idle call back, as we don't do anything on recursive call anyways
@@ -231,14 +215,12 @@ bool ThreadServiceWrapperBase::ScheduleNextCollectOnExit()
 
 void ThreadServiceWrapperBase::ClearForceOneIdleCollection()
 {
-    IDLE_COLLECT_VERBOSE_TRACE(u"Clearing force idle collect flag\n");
 
     this->forceIdleCollectOnce = false;
 }
 
 void ThreadServiceWrapperBase::SetForceOneIdleCollection()
 {
-    IDLE_COLLECT_VERBOSE_TRACE(u"Setting force idle collect flag\n");
 
     this->forceIdleCollectOnce = true;
 }
@@ -250,7 +232,6 @@ void ThreadServiceWrapperBase::ScheduleFinishConcurrent()
 
     if (!this->inIdleCollect)
     {
-        IDLE_COLLECT_VERBOSE_TRACE(u"Idle collect %s\n", needIdleCollect ? u"reschedule finish" : u"scheduled finish");
         this->needIdleCollect = false;
         ScheduleIdleCollect(IdleFinishTicks, true /* schedule as task */);
     }

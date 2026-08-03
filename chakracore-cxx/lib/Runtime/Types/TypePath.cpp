@@ -120,23 +120,6 @@ namespace Js {
     {
         Assert(index >= this->GetMaxInitializedLength());
         this->SetMaxInitializedLength(index + 1);
-
-        if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"FixedFields: TypePath::AddBlankFieldAt: singleton = 0x%p(0x%p)\n",
-                PointerValue(this->singletonInstance), this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
-            Output::Print(u"   fixed fields:");
-
-            for (PropertyIndex i = 0; i < GetPathLength(); i++)
-            {
-                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
-                    i < GetMaxInitializedLength() ? 1 : 0,
-                    GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
-                    GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
-            }
-
-            Output::Print(u"\n");
-        }
     }
 
     void TypePath::AddSingletonInstanceFieldAt(DynamicObject* instance, PropertyIndex index, bool isFixed, int typePathLength)
@@ -160,23 +143,6 @@ namespace Js {
         {
             this->GetData()->fixedFields.Set(index);
         }
-
-        if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"FixedFields: TypePath::AddSingletonInstanceFieldAt: singleton = 0x%p(0x%p)\n",
-                PointerValue(this->singletonInstance), this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
-            Output::Print(u"   fixed fields:");
-
-            for (PropertyIndex i = 0; i < GetPathLength(); i++)
-            {
-                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
-                    i < GetMaxInitializedLength() ? 1 : 0,
-                    GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
-                    GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
-            }
-
-            Output::Print(u"\n");
-        }
     }
 
     void TypePath::AddSingletonInstanceFieldAt(PropertyIndex index, int typePathLength)
@@ -187,23 +153,6 @@ namespace Js {
         Assert(!this->GetData()->fixedFields.Test(index) && !this->GetData()->usedFixedFields.Test(index));
 
         this->SetMaxInitializedLength(index + 1);
-
-        if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"FixedFields: TypePath::AddSingletonInstanceFieldAt: singleton = 0x%p(0x%p)\n",
-                PointerValue(this->singletonInstance), this->singletonInstance != nullptr ? this->singletonInstance->Get() : nullptr);
-            Output::Print(u"   fixed fields:");
-
-            for (PropertyIndex i = 0; i < GetPathLength(); i++)
-            {
-                Output::Print(u" %s %d%d%d,", GetPropertyId(i)->GetBuffer(),
-                    i < GetMaxInitializedLength() ? 1 : 0,
-                    GetIsFixedFieldAt(i, GetPathLength()) ? 1 : 0,
-                    GetIsUsedFixedFieldAt(i, GetPathLength()) ? 1 : 0);
-            }
-
-            Output::Print(u"\n");
-        }
     }
 #endif
 

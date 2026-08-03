@@ -3004,12 +3004,6 @@ constexpr uint8_t ConstructorCallsRequiredToFinalizeCachedType = 2;
                 PropertyOperationFlags setPropertyOpFlags = allowUndecInConsoleScope ? PropertyOperation_AllowUndeclInConsoleScope : PropertyOperation_None;
                 object->SetProperty(propertyId, newValue, setPropertyOpFlags, &info2);
 
-#if DBG_DUMP
-                if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-                {
-                    CacheOperators::TraceCache(inlineCache, u"PatchSetPropertyScoped", propertyId, scriptContext, object);
-                }
-#endif
                 if (!VarIs<JavascriptProxy>(object) && !allowUndecInConsoleScope)
                 {
                     CacheOperators::CachePropertyWrite(object, false, type, propertyId, &info2, scriptContext);
@@ -7555,13 +7549,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             return value;
         }
 
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchGetValue", propertyId, scriptContext, object);
-        }
-#endif
-
         return JavascriptOperators::GetProperty(thisInstance, object, propertyId, scriptContext, &info);
         JIT_HELPER_END(Op_PatchGetValueWithThisPtr);
     }
@@ -7606,12 +7593,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             return value;
         }
 
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchGetValueForTypeOf", propertyId, scriptContext, object);
-        }
-#endif
         Var prop = nullptr;
 
         BEGIN_TYPEOF_ERROR_HANDLER(scriptContext);
@@ -7637,13 +7618,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         {
             return value;
         }
-
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchGetValue", propertyId, scriptContext, object);
-        }
-#endif
 
         return JavascriptOperators::GetProperty(instance, object, propertyId, scriptContext, &info);
     }
@@ -7693,13 +7667,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             return value;
         }
 
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchGetRootValue", propertyId, scriptContext, object);
-        }
-#endif
-
         return JavascriptOperators::OP_GetRootProperty(object, propertyId, &info, scriptContext);
         JIT_HELPER_END(Op_PatchGetRootValue);
     }
@@ -7726,12 +7693,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             return value;
         }
 
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchGetRootValueForTypeOf", propertyId, scriptContext, object);
-        }
-#endif
         value = nullptr;
         BEGIN_TYPEOF_ERROR_HANDLER(scriptContext);
         AssertOrFailFast(VarIsCorrectType(static_cast<RecyclableObject*>(object)));
@@ -7801,12 +7762,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 return value;
             }
 
-#if DBG_DUMP
-            if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-            {
-                CacheOperators::TraceCache(inlineCache, u"PatchGetPropertyScoped", propertyId, scriptContext, object);
-            }
-#endif
             if (JavascriptOperators::GetProperty(object, propertyId, &value, scriptContext, &info))
             {
                 if (scriptContext->IsUndeclBlockVar(value) && propertyId != PropertyIds::_this)
@@ -7904,13 +7859,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             return value;
         }
 
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchGetMethod", propertyId, scriptContext, object);
-        }
-#endif
-
         value = Js::JavascriptOperators::PatchGetMethodFromObject(instance, object, propertyId, &info, scriptContext, false);
 #ifdef TELEMETRY_JSO
         if (TELEMETRY_PROPERTY_OPCODE_FILTER(propertyId))
@@ -7946,13 +7894,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         {
             return value;
         }
-
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchGetRootMethod", propertyId, scriptContext, object);
-        }
-#endif
 
         value = Js::JavascriptOperators::PatchGetMethodFromObject(object, object, propertyId, &info, scriptContext, true);
 #ifdef TELEMETRY_JSO
@@ -8003,13 +7944,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         {
             return value;
         }
-
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchGetMethod", propertyId, scriptContext, object);
-        }
-#endif
 
         return Js::JavascriptOperators::PatchGetMethodFromObject(instance, object, propertyId, &info, scriptContext, isRoot);
         JIT_HELPER_END(Op_ScopedGetMethod);
@@ -8166,13 +8100,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             return;
         }
 
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchPutValue", propertyId, scriptContext, object);
-        }
-#endif
-
         ImplicitCallFlags prevImplicitCallFlags = ImplicitCall_None;
         ImplicitCallFlags currImplicitCallFlags = ImplicitCall_None;
         bool hasThisOnlyStatements = functionBody->GetHasOnlyThisStmts();
@@ -8212,13 +8139,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         {
             return;
         }
-
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchPutRootValue", propertyId, scriptContext, object);
-        }
-#endif
 
         ImplicitCallFlags prevImplicitCallFlags = ImplicitCall_None;
         ImplicitCallFlags currImplicitCallFlags = ImplicitCall_None;
@@ -8288,13 +8208,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             return;
         }
 
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchPutValueNoLocalFastPath", propertyId, scriptContext, object);
-        }
-#endif
-
         ImplicitCallFlags prevImplicitCallFlags = ImplicitCall_None;
         ImplicitCallFlags currImplicitCallFlags = ImplicitCall_None;
         bool hasThisOnlyStatements = functionBody->GetHasOnlyThisStmts();
@@ -8335,13 +8248,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         {
             return;
         }
-
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchPutRootValueNoLocalFastPath", propertyId, scriptContext, object);
-        }
-#endif
 
         ImplicitCallFlags prevImplicitCallFlags = ImplicitCall_None;
         ImplicitCallFlags currImplicitCallFlags = ImplicitCall_None;
@@ -8590,13 +8496,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         {
             return;
         }
-
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(inlineCache, u"PatchInitValue", propertyId, scriptContext, object);
-        }
-#endif
 
         Type *typeWithoutProperty = object->GetType();
 

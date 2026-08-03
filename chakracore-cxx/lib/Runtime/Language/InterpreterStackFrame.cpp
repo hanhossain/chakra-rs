@@ -8746,11 +8746,6 @@ namespace Js
             {
                 Assert(this->GetFunctionBody()->GetDoScopeObjectCreation());
                 isCachedScope = true;
-                if (PHASE_VERBOSE_TRACE1(Js::StackArgFormalsOptPhase) && m_functionBody->GetInParamsCount() > 1)
-                {
-                    Output::Print(u"StackArgFormals : %s (%d) :Using the restored scope object in the bail out path. \n", m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
-                    Output::Flush();
-                }
             }
             else
             {
@@ -8766,12 +8761,6 @@ namespace Js
                 }
                 Assert(propIds != nullptr);
                 SetLocalClosure(frameObject);
-
-                if (PHASE_VERBOSE_TRACE1(Js::StackArgFormalsOptPhase) && m_functionBody->GetInParamsCount() > 1)
-                {
-                    Output::Print(u"StackArgFormals : %s (%d) :Creating scope object in the bail out path. \n", m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
-                    Output::Flush();
-                }
             }
         }
         else
@@ -8780,12 +8769,6 @@ namespace Js
             Assert(formalsCount == 0 || (m_functionBody->GetIsStrictMode() || hasNonSimpleParams));
             frameObject = nullptr;
             formalsCount = 0;
-
-            if (PHASE_VERBOSE_TRACE1(Js::StackArgOptPhase))
-            {
-                Output::Print(u"StackArgOpt : %s (%d) :Creating NULL scope object in the bail out path. \n", m_functionBody->GetDisplayName(), m_functionBody->GetFunctionNumber());
-                Output::Flush();
-            }
         }
 
         if (heapArgObj)

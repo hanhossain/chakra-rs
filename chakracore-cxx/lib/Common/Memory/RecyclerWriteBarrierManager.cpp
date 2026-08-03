@@ -291,13 +291,6 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address)
     const uint cardIndex = ((uint) address) / (s_BytesPerCard);
     cardTable[cardIndex] |= bitMask;
 #endif
-#if DBG_DUMP
-    // Global to process, use global configuration here
-    if (PHASE_VERBOSE_TRACE1(Js::SWBPhase))
-    {
-        Output::Print(u"Writing to 0x%p (CIndex: %u)\n", address, index);
-    }
-#endif
 }
 
 void
@@ -315,7 +308,6 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
     uintptr_t endIndex = GetCardTableIndex(endAddress);
     Assert(startIndex <= endIndex);
     memset(cardTable + startIndex, WRITE_BARRIER_PAGE_BIT | DIRTYBIT, endIndex - startIndex);
-    GlobalSwbVerboseTrace(u"Writing to 0x%p (CIndex: %u-%u)\n", address, startIndex, endIndex);
 
 #else
     uint bitShift = (((uint)address) >> s_BitArrayCardTableShift);
@@ -399,14 +391,6 @@ RecyclerWriteBarrierManager::ResetWriteBarrier(void * address, size_t pageCount)
 #else
         memset(&cardTable[cardIndex], 0, sizeof(uint32_t) * pageCount);
 #endif
-    }
-#endif
-
-#if DBG_DUMP
-    // Global to process, use global configuration here
-    if (PHASE_VERBOSE_TRACE1(Js::SWBPhase))
-    {
-        Output::Print(u"Resetting %u pages at CIndex: %u\n", address, pageCount, cardIndex);
     }
 #endif
 }

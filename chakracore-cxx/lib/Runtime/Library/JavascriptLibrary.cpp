@@ -6326,7 +6326,6 @@ namespace Js
         DynamicType* dynamicType = nullptr;
         const bool useCache = prototype->GetScriptContext() == this->scriptContext;
 #if DBG
-        DynamicType* oldCachedType = nullptr;
         char16_t reason[1024];
         swprintf_s(reason, 1024, u"Cache not populated.");
 #endif
@@ -6356,59 +6355,16 @@ namespace Js
 
                     if (PHASE_TRACE1(TypeShareForChangePrototypePhase))
                     {
-#if DBG
-                        if (PHASE_VERBOSE_TRACE1(TypeShareForChangePrototypePhase))
-                        {
-                            Output::Print(u"TypeSharing: Reusing prototype [0x%p] object's InlineSlot cache 0x%p in CreateObject.\n", prototype, dynamicType);
-                        }
-                        else
-                        {
-#endif
-                            Output::Print(u"TypeSharing: Reusing prototype object's InlineSlot cache in __proto__.\n");
-#if DBG
-                        }
-#endif
+                        Output::Print(u"TypeSharing: Reusing prototype object's InlineSlot cache in __proto__.\n");
                         Output::Flush();
                     }
 
                     return dynamicType;
                 }
-#if DBG
-                if (PHASE_VERBOSE_TRACE1(TypeShareForChangePrototypePhase))
-                {
-                    if (dynamicTypeHandler->IsObjectHeaderInlinedTypeHandler() != useObjectHeaderInlining)
-                    {
-                        swprintf_s(reason, 1024, u"useObjectHeaderInlining mismatch.");
-                    }
-                    else
-                    {
-                        uint16 cachedCapacity = dynamicTypeHandler->GetInlineSlotCapacity();
-                        uint16 requiredCapacity = useObjectHeaderInlining
-                            ? DynamicTypeHandler::RoundUpObjectHeaderInlinedInlineSlotCapacity(requestedInlineSlotCapacity)
-                            : DynamicTypeHandler::RoundUpInlineSlotCapacity(requestedInlineSlotCapacity);
-
-                        swprintf_s(reason, 1024, u"inlineSlotCapacity mismatch. Required = %d, Cached = %d", requiredCapacity, cachedCapacity);
-                    }
-                }
-#endif
             }
 
         }
 
-#if DBG
-        if (PHASE_VERBOSE_TRACE1(TypeShareForChangePrototypePhase))
-        {
-            if (dynamicType == nullptr)
-            {
-                swprintf_s(reason, 1024, u"cached type was null");
-            }
-            else if ((Js::Var)dynamicType == this->GetUndefined())
-            {
-                swprintf_s(reason, 1024, u"cached type was undefined");
-            }
-        }
-        oldCachedType = dynamicType;
-#endif
         PathTypeHandlerNoAttr* typeHandler = PathTypeHandlerNoAttr::New(scriptContext, this->GetRootPath(), 0, requestedInlineSlotCapacity, offsetOfInlineSlots, true, true);
         dynamicType = DynamicType::New(scriptContext, typeId, prototype, RecyclableObject::DefaultEntryPoint, typeHandler, true, true);
 
@@ -6417,18 +6373,7 @@ namespace Js
             prototype->SetInternalProperty(Js::InternalPropertyIds::TypeOfPrototypeObjectInlined, (Var)dynamicType, PropertyOperationFlags::PropertyOperation_Force, nullptr);
             if (PHASE_TRACE1(TypeShareForChangePrototypePhase))
             {
-#if DBG
-                if (PHASE_VERBOSE_TRACE1(TypeShareForChangePrototypePhase))
-                {
-                    Output::Print(u"TypeSharing: Updating prototype [0x%p] object's InlineSlot cache from 0x%p to 0x%p in CreateObject. Reason = %s\n", prototype, oldCachedType, dynamicType, reason);
-                }
-                else
-                {
-#endif
-                    Output::Print(u"TypeSharing: Updating prototype object's InlineSlot cache in CreateObject.\n");
-#if DBG
-                }
-#endif
+                Output::Print(u"TypeSharing: Updating prototype object's InlineSlot cache in CreateObject.\n");
                 Output::Flush();
             }
         }

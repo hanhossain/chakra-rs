@@ -76,7 +76,7 @@ namespace Js
         {
             this->stElemInlineCache = newPolymorphicInlineCache;
         }
-        if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase) || PHASE_TRACE1(PropertyCachePhase))
+        if (PHASE_TRACE1(PropertyCachePhase))
         {
             Output::Print(u"PropertyRecordUsageCache '%s' : Bigger PIC, oldSize = %d, newSize = %d\n", GetString(), polymorphicInlineCacheSize, newPolymorphicInlineCacheSize);
         }

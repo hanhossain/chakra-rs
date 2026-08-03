@@ -829,20 +829,6 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
     workItem->GetJITData()->startTime = (long)start_time.QuadPart;
     CodeGen(pageAllocator, workItem->GetJITData(), jitWriteData, foreground, epInfo);
 
-    if (JITManager::GetJITManager()->IsOOPJITEnabled() && PHASE_VERBOSE_TRACE(Js::BackEndPhase, workItem->GetFunctionBody()))
-    {
-        LARGE_INTEGER freq;
-        LARGE_INTEGER end_time;
-        QueryPerformanceCounter(&end_time);
-        QueryPerformanceFrequency(&freq);
-
-        Output::Print(
-            u"BackendMarshalOut - function: %s time:%8.6f mSec\r\n",
-            workItem->GetFunctionBody()->GetDisplayName(),
-            (((double)((end_time.QuadPart - jitWriteData.startTime)* (double)1000.0 / (double)freq.QuadPart))) / (1));
-        Output::Flush();
-    }
-
     epInfo->GetNativeEntryPointData()->SetFrameHeight(jitWriteData.frameHeight);
 
     if (workItem->Type() == JsFunctionType)
@@ -1951,12 +1937,6 @@ NativeCodeGenerator::GatherCodeGenData(
 
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 
-    if (PHASE_VERBOSE_TRACE(Js::ObjTypeSpecPhase, topFunctionBody) || PHASE_VERBOSE_TRACE(Js::EquivObjTypeSpecPhase, topFunctionBody))
-    {
-        Output::Print(u"ObjTypeSpec: top function %s (%s), function %s (%s): GatherCodeGenData(): \n",
-            topFunctionBody->GetDisplayName(), topFunctionBody->GetDebugNumberSet(debugStringBuffer), functionBody->GetDisplayName(), functionBody->GetDebugNumberSet(debugStringBuffer));
-        Output::Flush();
-    }
     const auto profileData =
         functionBody->HasDynamicProfileInfo()
             ? functionBody->GetAnyDynamicProfileInfo()
@@ -1989,39 +1969,12 @@ NativeCodeGenerator::GatherCodeGenData(
             entryPoint->GetNativeEntryPointData()->AddWeakFuncRef(weakFuncRef, recycler);
         }
 
-        if (PHASE_VERBOSE_TESTTRACE(Js::ObjTypeSpecPhase, functionBody) ||
-            PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
-        {
-            if (functionBody->GetInlineCacheCount() > 0)
-            {
-                if (!IsInlinee)
-                {
-                    Output::Print(u"-----------------------------------------------------------------------------\n");
-                }
-                else
-                {
-                    Output::Print(u"\tInlinee:\t");
-                }
-                functionBody->DumpFullFunctionName();
-                Output::Print(u"\n");
-            }
-        }
-
         SetInlineCacheCount(totalInlineCacheCount, functionBody->GetInlineCacheCount());
 
         Assert(functionBody->GetProfiledFldCount() == functionBody->GetInlineCacheCount()); // otherwise, isInst inline caches need to be cloned
         for(uint i = 0; i < functionBody->GetInlineCacheCount(); ++i)
         {
             const auto cacheType = profileData->GetFldInfo(functionBody, i)->flags;
-
-            PHASE_PRINT_VERBOSE_TESTTRACE(
-                Js::ObjTypeSpecPhase, functionBody,
-                u"Cache #%3d, Layout: %s, Profile info: %s\n",
-                i,
-                functionBody->GetInlineCache(i)->LayoutString(),
-                cacheType == Js::FldInfo_NoInfo ? u"none" :
-                (cacheType & Js::FldInfo_Polymorphic) ? u"polymorphic" : u"monomorphic");
-
             if (cacheType == Js::FldInfo_NoInfo)
             {
                 IncInlineCacheCount(noInfoInlineCacheCount);
@@ -2049,17 +2002,6 @@ NativeCodeGenerator::GatherCodeGenData(
                 if (inlineCache != nullptr)
                 {
                     ObjTypeSpecFldInfo* objTypeSpecFldInfo = nullptr;
-
-                    if (PHASE_VERBOSE_TRACE(Js::ObjTypeSpecPhase, topFunctionBody) || PHASE_VERBOSE_TRACE(Js::EquivObjTypeSpecPhase, topFunctionBody))
-                    {
-                        char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                        Js::PropertyId propertyId = functionBody->GetPropertyIdFromCacheId(i);
-                        Js::PropertyRecord const * const propertyRecord = functionBody->GetScriptContext()->GetPropertyName(propertyId);
-                        Output::Print(u"ObTypeSpec: top function %s (%s), function %s (%s): cloning mono cache for %s (#%d) cache %d \n",
-                            topFunctionBody->GetDisplayName(), topFunctionBody->GetDebugNumberSet(debugStringBuffer),
-                            functionBody->GetDisplayName(), functionBody->GetDebugNumberSet(debugStringBuffer2), propertyRecord->GetBuffer(), propertyId, i);
-                        Output::Flush();
-                    }
 
                     IncInlineCacheCount(monoInlineCacheCount);
 
@@ -2226,17 +2168,6 @@ NativeCodeGenerator::GatherCodeGenData(
                     {
                         if (!polymorphicInlineCache->GetIgnoreForEquivalentObjTypeSpec() || (polymorphicInlineCache->GetCloneForJitTimeUse() && !PHASE_OFF(Js::PolymorphicInlinePhase, functionBody) && !PHASE_OFF(Js::PolymorphicInlineFixedMethodsPhase, functionBody)))
                         {
-                            if (PHASE_VERBOSE_TRACE(Js::ObjTypeSpecPhase, topFunctionBody) || PHASE_VERBOSE_TRACE(Js::EquivObjTypeSpecPhase, topFunctionBody))
-                            {
-                                char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-
-                                Js::PropertyId propertyId = functionBody->GetPropertyIdFromCacheId(i);
-                                Js::PropertyRecord const * const propertyRecord = functionBody->GetScriptContext()->GetPropertyName(propertyId);
-                                Output::Print(u"ObTypeSpec: top function %s (%s), function %s (%s): cloning poly cache for %s (#%d) cache %d \n",
-                                    topFunctionBody->GetDisplayName(), topFunctionBody->GetDebugNumberSet(debugStringBuffer),
-                                    functionBody->GetDisplayName(), functionBody->GetDebugNumberSet(debugStringBuffer2), propertyRecord->GetBuffer(), propertyId, i);
-                                Output::Flush();
-                            }
                             ObjTypeSpecFldInfo* objTypeSpecFldInfo = ObjTypeSpecFldInfo::CreateFrom(objTypeSpecFldInfoList->Count(), polymorphicInlineCache, i, entryPoint, topFunctionBody, functionBody, InlineCacheStatsArg(jitTimeData));
                             if (objTypeSpecFldInfo != nullptr)
                             {
@@ -2269,15 +2200,7 @@ NativeCodeGenerator::GatherCodeGenData(
 
                 if (polymorphicInlineCache != nullptr)
                 {
-                    if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
-                    {
-                        if (IsInlinee) Output::Print(u"\t");
-                        Output::Print(u"\t%d: PIC size = %d\n", i, polymorphicInlineCache->GetSize());
-#if DBG_DUMP
-                        polymorphicInlineCache->Dump();
-#endif
-                    }
-                    else if (PHASE_TRACE1(Js::PolymorphicInlineCachePhase))
+                    if (PHASE_TRACE1(Js::PolymorphicInlineCachePhase))
                     {
                         Js::PropertyId propertyId = functionBody->GetPropertyIdFromCacheId(i);
                         Js::PropertyRecord const * const propertyRecord = functionBody->GetScriptContext()->GetPropertyName(propertyId);
@@ -2680,31 +2603,6 @@ NativeCodeGenerator::GatherCodeGenData(
             }
         }
     }
-
-#ifdef FIELD_ACCESS_STATS
-    if (PHASE_VERBOSE_TRACE(Js::ObjTypeSpecPhase, topFunctionBody) || PHASE_VERBOSE_TRACE(Js::EquivObjTypeSpecPhase, topFunctionBody))
-    {
-        if (jitTimeData->inlineCacheStats)
-        {
-            Output::Print(u"ObTypeSpec: gathered code gen data for function %s (#%u) inlined %s (#%u): inline cache stats:\n",
-                topFunctionBody->GetDisplayName(), topFunctionBody->GetFunctionNumber(), functionBody->GetDisplayName(), functionBody->GetFunctionNumber());
-            Output::Print(u"    overall: total %u, no profile info %u\n",
-                jitTimeData->inlineCacheStats->totalInlineCacheCount, jitTimeData->inlineCacheStats->noInfoInlineCacheCount);
-            Output::Print(u"    mono: total %u, empty %u, cloned %u\n",
-                jitTimeData->inlineCacheStats->monoInlineCacheCount, jitTimeData->inlineCacheStats->emptyMonoInlineCacheCount,
-                jitTimeData->inlineCacheStats->clonedMonoInlineCacheCount);
-            Output::Print(u"    poly: total %u (high %u, low %u), empty %u, equivalent %u, cloned %u\n",
-                jitTimeData->inlineCacheStats->polyInlineCacheCount, jitTimeData->inlineCacheStats->highUtilPolyInlineCacheCount,
-                jitTimeData->inlineCacheStats->lowUtilPolyInlineCacheCount, jitTimeData->inlineCacheStats->emptyPolyInlineCacheCount,
-                jitTimeData->inlineCacheStats->equivPolyInlineCacheCount, jitTimeData->inlineCacheStats->clonedPolyInlineCacheCount);
-        }
-        else
-        {
-            Output::Print(u"ObTypeSpec: function %s (%s): inline cache stats unavailable\n", topFunctionBody->GetDisplayName(), topFunctionBody->GetDebugNumberSet(debugStringBuffer));
-        }
-        Output::Flush();
-    }
-#endif
 
 #undef SetInlineCacheCount
 #undef IncInlineCacheCount

@@ -230,8 +230,8 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::Alloc(size_t bytes, ushort pdataCou
         return AllocLargeObject(bytes, pdataCount, xdataSize, canAllocInPreReservedHeapPageSegment, isAnyJittedCode, isAllJITCodeInPreReservedRegion);
     }
 
-    VerboseHeapTrace(u"Bucket is %d\n", bucket);
-    VerboseHeapTrace(u"Requested: %d bytes. Allocated: %d bytes\n", bytes, bytesToAllocate);
+    ;
+    ;
 
     do
     {
@@ -344,7 +344,7 @@ BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocation(Allocation* allocation, 
             pageCount = allocation->GetPageCount();
         }
 
-        VerboseHeapTrace(u"Protecting 0x%p with 0x%x\n", address, dwVirtualProtectFlags);
+        ;
         return this->codePageAllocators->ProtectPages(address, pageCount, segment, dwVirtualProtectFlags, desiredOldProtectFlag);
     }
     else
@@ -359,7 +359,7 @@ BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocation(Allocation* allocation, 
         address = allocation->page->address;
         pageCount = 1;
 
-        VerboseHeapTrace(u"Protecting 0x%p with 0x%x\n", address, dwVirtualProtectFlags);
+        ;
         return this->codePageAllocators->ProtectPages(address, pageCount, segment, dwVirtualProtectFlags, desiredOldProtectFlag);
     }
 }
@@ -467,7 +467,7 @@ void Heap<TAlloc, TPreReservedAlloc>::FreeDecommittedLargeObjects()
     Assert(inDtor);
     FOREACH_DLISTBASE_ENTRY_EDITING(Allocation, allocation, &this->decommittedLargeObjects, largeObjectIter)
     {
-        VerboseHeapTrace(u"Decommitting large object at address 0x%p of size %u\n", allocation.address, allocation.size);
+        ;
 
         this->codePageAllocators->ReleaseDecommitted(allocation.address, allocation.GetPageCount(), allocation.largeObjectAllocation.segment);
 
@@ -562,7 +562,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
             Adelete(this->auxiliaryAllocator, allocation);
             // If we run out of XData space with the segment, move the page to the full page list, and return false to try the next page.
             BucketId bucket = page->currentBucket;
-            VerboseHeapTrace(u"Moving page from bucket %d to full list\n", bucket);
+            ;
 
             Assert(!page->inFullList);
             this->buckets[bucket].MoveElementTo(page, &this->fullPages[bucket]);
@@ -608,17 +608,17 @@ bool Heap<TAlloc, TPreReservedAlloc>::AllocInPage(Page* page, size_t bytes, usho
     }
 
     page->freeBitVector.ClearRange(index, length);
-    VerboseHeapTrace(u"ChunkSize: %d, Index: %d, Free bit vector in page: ", length, index);
+    ;
 
 #if VERBOSE_HEAP
     page->freeBitVector.DumpWord();
 #endif
-    VerboseHeapTrace(u"\n");
+    ;
 
     if (this->ShouldBeInFullList(page))
     {
         BucketId bucket = page->currentBucket;
-        VerboseHeapTrace(u"Moving page from bucket %d to full list\n", bucket);
+        ;
 
         Assert(!page->inFullList);
         this->buckets[bucket].MoveElementTo(page, &this->fullPages[bucket]);
@@ -664,7 +664,7 @@ Page* Heap<TAlloc, TPreReservedAlloc>::AllocNewPage(BucketId bucket, bool canAll
     this->codePageAllocators->ProtectPages(address, 1, pageSegment, protectFlags, PAGE_READWRITE);
 
     // Switch to allocating on a list of pages so we can do leak tracking later
-    VerboseHeapTrace(u"Allocing new page in bucket %d\n", bucket);
+    ;
     Page* page = this->buckets[bucket].PrependNode(this->auxiliaryAllocator, address, pageSegment, bucket);
 
     if (page == nullptr)
@@ -741,9 +741,9 @@ Page* Heap<TAlloc, TPreReservedAlloc>::FindPageToSplit(BucketId targetBucket, bo
                 Page* page = &pageInBucket;
                 if (findPreReservedHeapPages)
                 {
-                    VerboseHeapTrace(u"PRE-RESERVE: Found page for splitting in Pre Reserved Segment\n");
+                    ;
                 }
-                VerboseHeapTrace(u"Found page to split. Moving from bucket %d to %d\n", b, targetBucket);
+                ;
                 return AddPageToBucket(page, targetBucket);
             }
         }
@@ -788,7 +788,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
 
     if (page->inFullList)
     {
-        VerboseHeapTrace(u"Recycling page 0x%p because address 0x%p of size %d was freed\n", page->address, object->address, object->size);
+        ;
        
         // If the object being freed is equal to the page size, we're
         // going to remove it anyway so don't add it to a bucket
@@ -825,7 +825,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::FreeAllocation(Allocation* object)
                 std::unique_lock autoLock(this->codePageAllocators->cs);
                 this->codePageAllocators->ReleasePages(pageAddress, 1, segment);
             }
-            VerboseHeapTrace(u"FastPath: freeing page-sized object directly\n");
+            ;
             return true;
         }
     }
@@ -874,19 +874,19 @@ void Heap<TAlloc, TPreReservedAlloc>::FreeAllocationHelper(Allocation* object, B
         MemoryOperationLastError::RecordError(JSERR_FatalMemoryExhaustion);
         return;
     }
-    VerboseHeapTrace(u"Setting %d bits starting at bit %d, Free bit vector in page was ", length, index);
+    ;
 #if VERBOSE_HEAP
     page->freeBitVector.DumpWord();
 #endif
-    VerboseHeapTrace(u"\n");
+    ;
 
     page->freeBitVector.SetRange(index, length);
 
-    VerboseHeapTrace(u"Free bit vector in page: ", length, index);
+    ;
 #if VERBOSE_HEAP
     page->freeBitVector.DumpWord();
 #endif
-    VerboseHeapTrace(u"\n");
+    ;
 
 #if DBG_DUMP
     this->freeObjectSize += object->size;
@@ -918,7 +918,7 @@ void Heap<TAlloc, TPreReservedAlloc>::FreePage(Page* page)
     EnsurePageWriteable(page);
     size_t freeSpace = page->freeBitVector.Count() * Page::Alignment;
 
-    VerboseHeapTrace(u"Removing page in bucket %d, freeSpace: %d\n", page->currentBucket, freeSpace);
+    ;
     this->codePageAllocators->ReleasePages(page->address, 1, page->segment);
 
 #if DBG_DUMP
@@ -975,7 +975,7 @@ bool Heap<TAlloc, TPreReservedAlloc>::UpdateFullPages()
                 Assert(page.inFullList);
                 if (!this->ShouldBeInFullList(&page))
                 {
-                    VerboseHeapTrace(u"Recycling page 0x%p because XDATA was freed\n", page.address);
+                    ;
                     bucketIter.MoveCurrentTo(&(this->buckets[bucket]));
                     page.inFullList = false;
                     updated = true;

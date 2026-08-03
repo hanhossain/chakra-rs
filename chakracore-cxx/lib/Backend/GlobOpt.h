@@ -107,12 +107,6 @@ class GlobOpt;
         Output::Flush(); \
     }
 
-#define TRACE_PHASE_INSTR_VERBOSE(phase, instr, ...) \
-    if(CONFIG_FLAG(Verbose)) \
-    { \
-        TRACE_PHASE_INSTR(phase, instr, __VA_ARGS__); \
-    }
-
 #else   // DBG_DUMP
 
 #define GOPT_TRACE(...)
@@ -122,7 +116,6 @@ class GlobOpt;
 #define GOPT_TRACE_INSTR(instr, ...)
 #define GOPT_TRACE_BLOCK(block, before)
 #define TRACE_PHASE_INSTR(phase, instr, ...)
-#define TRACE_PHASE_INSTR_VERBOSE(phase, instr, ...)
 
 #endif  // DBG_DUMP
 

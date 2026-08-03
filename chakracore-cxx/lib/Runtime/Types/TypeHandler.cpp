@@ -335,31 +335,11 @@ using namespace Js;
 #if ENABLE_FIXED_FIELDS
     bool DynamicTypeHandler::TryUseFixedProperty(PropertyRecord const* propertyRecord, Var * pProperty, FixedPropertyKind propertyType, ScriptContext * requestContext)
     {
-        if (PHASE_VERBOSE_TRACE1(Js::FixedMethodsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::FixedMethodsPhase) ||
-            PHASE_VERBOSE_TRACE1(Js::UseFixedDataPropsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::UseFixedDataPropsPhase))
-        {
-            Output::Print(u"FixedFields: attempt to use fixed property %s from DynamicTypeHandler returned false.\n", propertyRecord->GetBuffer());
-            if (this->HasSingletonInstance() && this->GetSingletonInstance()->Get()->GetScriptContext() != requestContext)
-            {
-                Output::Print(u"FixedFields: Cross Site Script Context is used for property %s. \n", propertyRecord->GetBuffer());
-            }
-            Output::Flush();
-        }
         return false;
     }
 
     bool DynamicTypeHandler::TryUseFixedAccessor(PropertyRecord const* propertyRecord, Var * pAccessor, FixedPropertyKind propertyType, bool getter, ScriptContext * requestContext)
     {
-        if (PHASE_VERBOSE_TRACE1(Js::FixedMethodsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::FixedMethodsPhase) ||
-            PHASE_VERBOSE_TRACE1(Js::UseFixedDataPropsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::UseFixedDataPropsPhase))
-        {
-            Output::Print(u"FixedFields: attempt to use fixed accessor %s from DynamicTypeHandler returned false.\n", propertyRecord->GetBuffer());
-            if (this->HasSingletonInstance() && this->GetSingletonInstance()->Get()->GetScriptContext() != requestContext)
-            {
-                Output::Print(u"FixedFields: Cross Site Script Context is used for property %s. \n", propertyRecord->GetBuffer());
-            }
-            Output::Flush();
-        }
         return false;
     }
 
@@ -435,43 +415,6 @@ using namespace Js;
 
     void DynamicTypeHandler::TraceUseFixedProperty(PropertyRecord const * propertyRecord, Var * pProperty, bool result, const char16_t* typeHandlerName, ScriptContext * requestContext)
     {
-        const char16_t* fixedPropertyResultType = nullptr;
-        bool log = false;
-
-        if (pProperty && *pProperty && ((Js::VarIs<Js::JavascriptFunction>(*pProperty) && (PHASE_VERBOSE_TRACE1(Js::FixedMethodsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::FixedMethodsPhase))) ||
-            ((PHASE_VERBOSE_TRACE1(Js::UseFixedDataPropsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::UseFixedDataPropsPhase))) ))
-        {
-            if(*pProperty == nullptr)
-            {
-                fixedPropertyResultType = u"null";
-            }
-            else if (Js::VarIs<Js::JavascriptFunction>(*pProperty))
-            {
-                fixedPropertyResultType = u"function";
-            }
-            else if (TaggedInt::Is(*pProperty))
-            {
-                fixedPropertyResultType = u"int constant";
-            }
-            else
-            {
-                fixedPropertyResultType = u"Var";
-            }
-            log = true;
-        }
-
-        if(log)
-        {
-            Output::Print(u"FixedFields: attempt to use fixed property %s, which is a %s, from %s returned %s.\n",
-                propertyRecord->GetBuffer(), fixedPropertyResultType, typeHandlerName, IsTrueOrFalse(result));
-
-            if (this->HasSingletonInstance() && this->GetSingletonInstance()->Get()->GetScriptContext() != requestContext)
-            {
-                Output::Print(u"FixedFields: Cross Site Script Context is used for property %s. \n", propertyRecord->GetBuffer());
-            }
-
-            Output::Flush();
-        }
     }
 #endif // ENABLE_FIXED_FIELDS
 

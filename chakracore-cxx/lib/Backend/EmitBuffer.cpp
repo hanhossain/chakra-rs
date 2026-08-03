@@ -160,7 +160,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::NewAllocation(size_t b
 #endif
 
     AutoCustomHeapPointer<TAlloc, TPreReservedAlloc> allocatedMemory(&this->allocationHeap, heapAllocation);
-    VerboseHeapTrace(u"New allocation: 0x%p, size: %p\n", heapAllocation->address, heapAllocation->size);
+    ;
     TEmitBufferAllocation * allocation = AnewStruct(this->allocator, TEmitBufferAllocation);
 
     allocation->bytesCommitted = heapAllocation->size;
@@ -224,7 +224,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::FreeAllocation(void* a
             {
                 SetValidCallTarget(allocation, address, false);
             }
-            VerboseHeapTrace(u"Freeing 0x%p, allocation: 0x%p\n", address, allocation->allocation->address);
+            ;
 
             this->allocationHeap.Free(allocation->allocation);
             this->allocator->Free(allocation, sizeof(TEmitBufferAllocation));
@@ -360,7 +360,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForIn
     this->totalBytesCode += bufferSize;
 #endif
 
-    VerboseHeapTrace(u"Setting execute permissions on 0x%p, allocation: 0x%p\n", pBuffer, allocation->allocation->address);
+    ;
 
     if (CheckCommitFaultInjection())
     {

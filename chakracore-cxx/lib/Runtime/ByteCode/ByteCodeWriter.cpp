@@ -3028,7 +3028,7 @@ StoreCommon:
 
         debuggerScope->SetParentScope(m_currentDebuggerScope);
         m_currentDebuggerScope = debuggerScope;
-        OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"PushDebuggerScope() - Pushed scope 0x%p of type %d.\n", m_currentDebuggerScope, m_currentDebuggerScope->scopeType);
+        ;
     }
 
     // Pops the current debugger scope from the stack.
@@ -3036,7 +3036,7 @@ StoreCommon:
     {
         Assert(m_currentDebuggerScope);
 
-        OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"PopDebuggerScope() - Popped scope 0x%p of type %d.\n", m_currentDebuggerScope, m_currentDebuggerScope->scopeType);
+        ;
         if (m_currentDebuggerScope != nullptr)
         {
             m_currentDebuggerScope = m_currentDebuggerScope->GetParentScope();

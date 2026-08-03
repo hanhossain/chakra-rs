@@ -2453,7 +2453,7 @@ public:
         PrependInt32(builder, u"ScopeInfo scope type", scopeInfo->scopeType);
         PrependInt32(builder, u"ScopeInfo scope id", scopeInfo->scopeId);
 
-        OUTPUT_VERBOSE_TRACE(Js::ByteCodeSerializationPhase, u"Adding ScopeInfo (0x%p). Flags: %u. Type: %d. ScopeId: %d. Symbol count: %u\n", scopeInfo, scopeInfoFlags, scopeInfo->scopeType, scopeInfo->scopeId, scopeInfo->symbolCount);
+        ;
 
         for (int i = 0; i < scopeInfo->symbolCount; i++)
         {
@@ -2479,7 +2479,7 @@ public:
             PropertyId propertyId = encodePossiblyBuiltInPropertyId(symPropertyId);
             PrependInt32(builder, u"SymbolInfo property id", propertyId);
 
-            OUTPUT_VERBOSE_TRACE(Js::ByteCodeSerializationPhase, u"\t\tSymbolInfo (0x%p). Flags: %u. Type: %d. PropertyId: %u (%u)\n", sym, symbolInfoFlags, sym->symbolType, sym->propertyId, symPropertyId);
+            ;
         }
 
         bool hasParent = scopeInfo->parent != nullptr;
@@ -2524,7 +2524,7 @@ public:
             localScopeInfoId = this->scopeInfoCount.value++;
             scopeInfoToScopeInfoIdMap->AddNew(scopeInfo, localScopeInfoId);
 
-            OUTPUT_VERBOSE_TRACE(Js::ByteCodeSerializationPhase, u"Mapping ScopeInfo 0x%p to local id %u\n", scopeInfo, localScopeInfoId);
+            ;
 
             AddOneScopeInfo(this->scopeInfoTable, scopeInfo);
         }
@@ -4450,7 +4450,7 @@ public:
 
         current = ReadInt32(current, &(*scopeInfo)->scopeId);
 
-        OUTPUT_VERBOSE_TRACE(Js::ByteCodeSerializationPhase, u"Reading ScopeInfo. Flags: %u. Type: %d. ScopeId: %d. Symbol count: %d\n", scopeInfoFlags, scopeType, (*scopeInfo)->scopeId, symbolCount);
+        ;
 
         for (int i = 0; i < symbolCount; i++)
         {
@@ -4471,7 +4471,7 @@ public:
             current = ReadInt32(current, &obscuredPropertyId);
             sym->propertyId = cache->LookupPropertyId(obscuredPropertyId);
 
-            OUTPUT_VERBOSE_TRACE(Js::ByteCodeSerializationPhase, u"\t\tSymbolInfo. Flags: %u. Type: %d. PropertyId: %u\n", symbolInfoFlags, sym->symbolType, sym->propertyId);
+            ;
         }
 
         bool hasParent = false;
@@ -4887,7 +4887,7 @@ ScopeInfo* ByteCodeCache::LookupScopeInfo(ScriptContext * scriptContext, LocalSc
 
         EnsureLocalScopeInfoIdToScopeInfoMap(scriptContext)->AddNew(scopeInfoId, scopeInfo);
 
-        OUTPUT_VERBOSE_TRACE(Js::ByteCodeSerializationPhase, u"ScopeInfo id %u mapped to 0x%p\n", scopeInfoId, scopeInfo);
+        ;
     }
     return scopeInfo;
 }

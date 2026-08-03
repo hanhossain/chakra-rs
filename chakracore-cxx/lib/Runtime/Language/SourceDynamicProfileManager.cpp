@@ -118,19 +118,19 @@ namespace Js
     {
         if(isNonCachableScript)
         {
-            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Skipping save of profile. Non-cacheable resource. %s\n", info->url);
+            ;
             return false;
         }
 
         if (dataCacheWrapper->BlocksWritten() > 0)
         {
-            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Saving profile. There are other blocks in the cache. %s\n", info->url);
+            ;
             return true;
         }
 
         if(!startupFunctions || startupFunctions->Length() <= DEFAULT_CONFIG_MinProfileCacheSize)
         {
-            OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Skipping save of profile. Small number of functions. %s\n", info->url);
+            ;
             return false;
         }
 
@@ -141,12 +141,12 @@ namespace Js
             uint saveThreshold = (cachedStartupFunctions->Length() * DEFAULT_CONFIG_ProfileDifferencePercent) / 100;
             if(numberOfBitsDifferent <= saveThreshold)
             {
-                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Skipping save of profile. Number of functions different: %d %s\n", numberOfBitsDifferent, info->url);
+                ;
                 return false;
             }
             else
             {
-                OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Number of functions different: %d \n", numberOfBitsDifferent);
+                ;
             }
         }
         return true;

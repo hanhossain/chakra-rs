@@ -251,7 +251,7 @@ namespace Js
     {
         if (!haltCallbackProbe || haltCallbackProbe->IsInClosedState() || debugManager->IsAtDispatchHalt())
         {
-            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"ProbeContainer::CanDispatchHalt: Not in break mode. pHaltState = %p\n", pHaltState);
+            ;
             return false;
         }
         return true;

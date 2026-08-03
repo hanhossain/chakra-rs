@@ -60,16 +60,6 @@ namespace Js
         }
 
         DebugOnly(VerifyRegistrationForInvalidation(this, requestContext, propertyId));
-
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            Output::Print(u"IC::CacheLocal, %s: ", requestContext->GetPropertyName(propertyId)->GetBuffer());
-            Dump();
-            Output::Print(u"\n");
-            Output::Flush();
-        }
-#endif
     }
 
     void InlineCache::CacheProto(
@@ -126,16 +116,6 @@ namespace Js
 
         DebugOnly(VerifyRegistrationForInvalidation(this, requestContext, propertyId));
         Assert(u.proto.isMissing == (uint16)(u.proto.prototypeObject == requestContext->GetLibrary()->GetMissingPropertyHolder()));
-
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            Output::Print(u"IC::CacheProto, %s: ", requestContext->GetPropertyName(propertyId)->GetBuffer());
-            Dump();
-            Output::Print(u"\n");
-            Output::Flush();
-        }
-#endif
     }
 
     // TODO (InlineCacheCleanup): When simplifying inline caches due to not sharing between loads and stores, create two
@@ -190,16 +170,6 @@ namespace Js
         type->SetHasBeenCached();
 
         DebugOnly(VerifyRegistrationForInvalidation(this, requestContext, propertyId));
-
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            Output::Print(u"IC::CacheAccessor, %s: ", requestContext->GetPropertyName(propertyId)->GetBuffer());
-            Dump();
-            Output::Print(u"\n");
-            Output::Flush();
-        }
-#endif
     }
 
     bool InlineCache::PretendTryGetProperty(Type *const type, PropertyCacheOperationInfo * operationInfo) const
@@ -716,15 +686,6 @@ namespace Js
                 type, propertyId, propertyIndex, isInlineSlot, nullptr, requiredAuxSlotCapacity, requestContext);
             UpdateInlineCachesFillInfo(inlineCacheIndex, true /*set*/);
 
-#if DBG_DUMP
-            if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
-            {
-                Output::Print(u"PIC::CacheLocal, %s, %d: ", requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
-                inlineCaches[inlineCacheIndex].Dump();
-                Output::Print(u"\n");
-                Output::Flush();
-            }
-#endif
             PHASE_PRINT_INTRUSIVE_TESTTRACE1(
                 Js::PolymorphicInlineCachePhase,
                 u"TestTrace PIC: CacheLocal, 0x%x, entryIndex = %d, collision = %s, entries = %d\n", this, inlineCacheIndex, collision ? u"true" : u"false", GetEntryCount());
@@ -739,15 +700,6 @@ namespace Js
                 type, propertyId, propertyIndex, isInlineSlot, typeWithoutProperty, requiredAuxSlotCapacity, requestContext);
             UpdateInlineCachesFillInfo(inlineCacheIndex, true /*set*/);
 
-#if DBG_DUMP
-            if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
-            {
-                Output::Print(u"PIC::CacheLocal, %s, %d: ", requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
-                inlineCaches[inlineCacheIndex].Dump();
-                Output::Print(u"\n");
-                Output::Flush();
-            }
-#endif
             PHASE_PRINT_INTRUSIVE_TESTTRACE1(
                 Js::PolymorphicInlineCachePhase,
                 u"TestTrace PIC: CacheLocal, 0x%x, entryIndex = %d, collision = %s, entries = %d\n", this, inlineCacheIndex, collision ? u"true" : u"false", GetEntryCount());
@@ -790,15 +742,6 @@ namespace Js
             prototypeObjectWithProperty, propertyId, propertyIndex, isInlineSlot, isMissing, type, requestContext);
         UpdateInlineCachesFillInfo(inlineCacheIndex, true /*set*/);
 
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
-        {
-            Output::Print(u"PIC::CacheProto, %s, %d: ", requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
-            inlineCaches[inlineCacheIndex].Dump();
-            Output::Print(u"\n");
-            Output::Flush();
-        }
-#endif
         PHASE_PRINT_INTRUSIVE_TESTTRACE1(
             Js::PolymorphicInlineCachePhase,
             u"TestTrace PIC: CacheProto, 0x%x, entryIndex = %d, collision = %s, entries = %d\n", this, inlineCacheIndex, collision ? u"true" : u"false", GetEntryCount());
@@ -840,15 +783,6 @@ namespace Js
         inlineCaches[inlineCacheIndex].CacheAccessor(isGetter, propertyId, propertyIndex, isInlineSlot, type, object, isOnProto, requestContext);
         UpdateInlineCachesFillInfo(inlineCacheIndex, true /*set*/);
 
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
-        {
-            Output::Print(u"PIC::CacheAccessor, %s, %d: ", requestContext->GetPropertyName(propertyId)->GetBuffer(), inlineCacheIndex);
-            inlineCaches[inlineCacheIndex].Dump();
-            Output::Print(u"\n");
-            Output::Flush();
-        }
-#endif
         PHASE_PRINT_INTRUSIVE_TESTTRACE1(
             Js::PolymorphicInlineCachePhase,
             u"TestTrace PIC: CacheAccessor, 0x%x, entryIndex = %d, collision = %s, entries = %d\n", this, inlineCacheIndex, collision ? u"true" : u"false", GetEntryCount());

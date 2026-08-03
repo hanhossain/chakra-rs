@@ -3609,8 +3609,7 @@ namespace Js
                 function->IsLibraryCode() &&
                 !AutoRegisterIgnoreExceptionWrapper::IsRegistered(scriptContext->GetThreadContext());
 
-            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"DebugProfileProbeThunk: calling function: %s isWrapperRegistered=%d useDebugWrapper=%d\n",
-                function->GetFunctionInfo()->HasBody() ? function->GetFunctionBody()->GetDisplayName() : u"built-in/library", AutoRegisterIgnoreExceptionWrapper::IsRegistered(scriptContext->GetThreadContext()), useDebugWrapper);
+            ;
 
             if (scriptContext->IsDebuggerRecording())
             {
@@ -4587,9 +4586,9 @@ ScriptContext::GetJitFuncRangeCache()
 
             if (anyFunctionBody)
             {
-                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, u"Function list\n");
-                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, u"===============================\n");
-                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, u"%-24s, %-8s, %-10s, %-10s, %-10s, %-10s, %-10s\n", u"Function", u"InterpretedCount", u"ByteCodeInLoopSize", u"ByteCodeSize", u"IsJitted", u"IsUsed", u"NativeCodeSize");
+                ;
+                ;
+                ;
 
                 this->MapFunction([&](FunctionBody* body)
                 {
@@ -4600,19 +4599,8 @@ ScriptContext::GetJitFuncRangeCache()
                     {
                         body->MapEntryPoints([&](uint entryPointIndex, FunctionEntryPointInfo* entryPoint)
                         {
-                            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                            char rejit = entryPointIndex > 0 ? '*' : ' ';
                             isNativeCode = entryPoint->IsNativeCode() | isNativeCode;
-                            OUTPUT_VERBOSE_STATS(Js::BGJitPhase, u"%-20s %16s %c, %8d , %10d , %10d, %-10s, %-10s, %10d\n",
-                                body->GetExternalDisplayName(),
-                                body->GetDebugNumberSet(debugStringBuffer),
-                                rejit,
-                                body->GetInterpretedCount(),
-                                body->GetByteCodeInLoopCount(),
-                                body->GetByteCodeCount(),
-                                entryPoint->IsNativeCode() ? u"Jitted" : u"Interpreted",
-                                body->GetNativeEntryPointUsed() ? u"Used" : u"NotUsed",
-                                entryPoint->IsNativeCode() ? entryPoint->GetCodeSize() : 0);
+                            ;
                         });
                     }
                     if (body->GetInterpretedCount() == 0)
@@ -4670,18 +4658,6 @@ ScriptContext::GetJitFuncRangeCache()
                         {
                             if (entryPoint->IsNativeCode())
                             {
-                                char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                                char rejit = index > 0 ? '*' : ' ';
-                                OUTPUT_VERBOSE_STATS(Js::BGJitPhase, u"%-20s %16s %c, %8d , %10d , %10d, %-10s, %-10s, %10d\n",
-                                    loopBodyName,
-                                    body->GetDebugNumberSet(debugStringBuffer),
-                                    rejit,
-                                    header->interpretCount,
-                                    header->GetByteCodeCount(),
-                                    header->GetByteCodeCount(),
-                                    u"Jitted",
-                                    entryPoint->IsUsed() ? u"Used" : u"NotUsed",
-                                    entryPoint->GetCodeSize());
                                 if (entryPoint->IsUsed())
                                 {
                                     loopJitCodeUsed++;
@@ -4779,20 +4755,6 @@ ScriptContext::GetJitFuncRangeCache()
                 {
                     functionStats.Add(entryPointStats);
                 });
-
-                if (PHASE_VERBOSE_STATS1(Js::ObjTypeSpecPhase))
-                {
-                    FunctionBody* functionBody = entry->functionBodyWeakRef->Get();
-                    const char16_t* functionName = functionBody != nullptr ? functionBody->GetDisplayName() : u"<unknown>";
-                    Output::Print(u"FieldAccessStats: function %s (#%u): inline cache stats:\n", functionName, functionNumber);
-                    Output::Print(u"    overall: total %u, no profile info %u\n", functionStats.totalInlineCacheCount, functionStats.noInfoInlineCacheCount);
-                    Output::Print(u"    mono: total %u, empty %u, cloned %u\n",
-                        functionStats.monoInlineCacheCount, functionStats.emptyMonoInlineCacheCount, functionStats.clonedMonoInlineCacheCount);
-                    Output::Print(u"    poly: total %u (high %u, low %u), null %u, empty %u, ignored %u, disabled %u, equivalent %u, non-equivalent %u, cloned %u\n",
-                        functionStats.polyInlineCacheCount, functionStats.highUtilPolyInlineCacheCount, functionStats.lowUtilPolyInlineCacheCount,
-                        functionStats.nullPolyInlineCacheCount, functionStats.emptyPolyInlineCacheCount, functionStats.ignoredPolyInlineCacheCount, functionStats.disabledPolyInlineCacheCount,
-                        functionStats.equivPolyInlineCacheCount, functionStats.nonEquivPolyInlineCacheCount, functionStats.clonedPolyInlineCacheCount);
-                }
 
                 globalStats.Add(&functionStats);
             });

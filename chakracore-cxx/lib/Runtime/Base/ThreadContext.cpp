@@ -2612,7 +2612,6 @@ ThreadContext::RegisterExpirableObject(ExpirableObject* object)
     ExpirableObject** registrationData = this->expirableObjectList->PrependNode();
     (*registrationData) = object;
     object->SetRegistrationHandle(static_cast<void*>(registrationData));
-    OUTPUT_VERBOSE_TRACE(Js::ExpirableCollectPhase, u"Registered 0x%p\n", object);
 
     numExpirableObjects++;
 }
@@ -2628,7 +2627,6 @@ ThreadContext::UnregisterExpirableObject(ExpirableObject* object)
 
     this->expirableObjectList->MoveElementTo(registrationData, this->expirableObjectDisposeList);
     object->ClearRegistrationHandle();
-    OUTPUT_VERBOSE_TRACE(Js::ExpirableCollectPhase, u"Unregistered 0x%p\n", object);
     numExpirableObjects--;
 }
 
@@ -2686,13 +2684,13 @@ ThreadContext::ClearInvalidatedUniqueGuards()
             bool shouldRemove = guard != nullptr && !guard->IsValid();
             if (shouldRemove)
             {
-                if (PHASE_TRACE1(Js::TracePropertyGuardsPhase) || PHASE_VERBOSE_TRACE1(Js::FixedMethodsPhase))
+                if (PHASE_TRACE1(Js::TracePropertyGuardsPhase))
                 {
                     Output::Print(u"FixedFields: invalidating guard: name: %s, address: 0x%p, value: 0x%p, value address: 0x%p\n",
                                   propertyRecord->GetBuffer(), guard, guard->GetValue(), guard->GetAddressOfValue());
                     Output::Flush();
                 }
-                if (PHASE_TESTTRACE1(Js::TracePropertyGuardsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::FixedMethodsPhase))
+                if (PHASE_TESTTRACE1(Js::TracePropertyGuardsPhase))
                 {
                     Output::Print(u"FixedFields: invalidating guard: name: %s, value: 0x%p\n",
                                   propertyRecord->GetBuffer(), guard->GetValue());
@@ -2909,12 +2907,6 @@ ThreadContext::InvalidateAndDeleteInlineCacheList(InlineCacheList* inlineCacheLi
         cacheCount++;
         if (inlineCache != nullptr)
         {
-            if (PHASE_VERBOSE_TRACE1(Js::TraceInlineCacheInvalidationPhase))
-            {
-                Output::Print(u"InlineCacheInvalidation: invalidating cache 0x%p\n", inlineCache);
-                Output::Flush();
-            }
-
             memset(inlineCache, 0, sizeof(Js::InlineCache));
         }
         else
@@ -3076,8 +3068,6 @@ ThreadContext::RegisterSharedPropertyGuard(Js::PropertyId propertyId)
 
     Js::PropertyGuard* guard = entry->sharedGuard;
 
-    PHASE_PRINT_VERBOSE_TRACE1(Js::FixedMethodsPhase, u"FixedFields: registered shared guard: name: %s, address: 0x%p, value: 0x%p, value address: 0x%p, %s\n",
-        propertyRecord->GetBuffer(), guard, guard->GetValue(), guard->GetAddressOfValue(), foundExistingGuard ? u"existing" : u"new");
     PHASE_PRINT_TESTTRACE1(Js::FixedMethodsPhase, u"FixedFields: registered shared guard: name: %s, value: 0x%p, %s\n",
         propertyRecord->GetBuffer(), guard->GetValue(), foundExistingGuard ? u"existing" : u"new");
 
@@ -3126,14 +3116,14 @@ ThreadContext::RegisterUniquePropertyGuard(Js::PropertyId propertyId, RecyclerWe
 
     entry->uniqueGuards.Item(guardWeakRef);
 
-    if (PHASE_TRACE1(Js::TracePropertyGuardsPhase) || PHASE_VERBOSE_TRACE1(Js::FixedMethodsPhase))
+    if (PHASE_TRACE1(Js::TracePropertyGuardsPhase))
     {
         Output::Print(u"FixedFields: registered unique guard: name: %s, address: 0x%p, value: 0x%p, value address: 0x%p, %s entry\n",
             propertyRecord->GetBuffer(), guard, guard->GetValue(), guard->GetAddressOfValue(), foundExistingGuard ? u"existing" : u"new");
         Output::Flush();
     }
 
-    if (PHASE_TESTTRACE1(Js::TracePropertyGuardsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::FixedMethodsPhase))
+    if (PHASE_TESTTRACE1(Js::TracePropertyGuardsPhase))
     {
         Output::Print(u"FixedFields: registered unique guard: name: %s, value: 0x%p, %s entry\n",
             propertyRecord->GetBuffer(), guard->GetValue(), foundExistingGuard ? u"existing" : u"new");
@@ -3158,14 +3148,14 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
     {
         Js::PropertyGuard* guard = entry->sharedGuard;
 
-        if (PHASE_TRACE1(Js::TracePropertyGuardsPhase) || PHASE_VERBOSE_TRACE1(Js::FixedMethodsPhase))
+        if (PHASE_TRACE1(Js::TracePropertyGuardsPhase))
         {
             Output::Print(u"FixedFields: invalidating guard: name: %s, address: 0x%p, value: 0x%p, value address: 0x%p\n",
                 propertyRecord->GetBuffer(), guard, guard->GetValue(), guard->GetAddressOfValue());
             Output::Flush();
         }
 
-        if (PHASE_TESTTRACE1(Js::TracePropertyGuardsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::FixedMethodsPhase))
+        if (PHASE_TESTTRACE1(Js::TracePropertyGuardsPhase))
         {
             Output::Print(u"FixedFields: invalidating guard: name: %s, value: 0x%p\n", propertyRecord->GetBuffer(), guard->GetValue());
             Output::Flush();
@@ -3180,14 +3170,14 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
         Js::PropertyGuard* guard = guardWeakRef->Get();
         if (guard != nullptr)
         {
-            if (PHASE_TRACE1(Js::TracePropertyGuardsPhase) || PHASE_VERBOSE_TRACE1(Js::FixedMethodsPhase))
+            if (PHASE_TRACE1(Js::TracePropertyGuardsPhase))
             {
                 Output::Print(u"FixedFields: invalidating guard: name: %s, address: 0x%p, value: 0x%p, value address: 0x%p\n",
                     propertyRecord->GetBuffer(), guard, guard->GetValue(), guard->GetAddressOfValue());
                 Output::Flush();
             }
 
-            if (PHASE_TESTTRACE1(Js::TracePropertyGuardsPhase) || PHASE_VERBOSE_TESTTRACE1(Js::FixedMethodsPhase))
+            if (PHASE_TESTTRACE1(Js::TracePropertyGuardsPhase))
             {
                 Output::Print(u"FixedFields: invalidating guard: name: %s, value: 0x%p\n",
                     propertyRecord->GetBuffer(), guard->GetValue());
@@ -3451,11 +3441,6 @@ ThreadContext::InvalidateIsInstInlineCacheList(Js::IsInstInlineCache* inlineCach
     Js::IsInstInlineCache* nextInlineCache;
     for (curInlineCache = inlineCacheList; curInlineCache != nullptr; curInlineCache = nextInlineCache)
     {
-        if (PHASE_VERBOSE_TRACE1(Js::TraceInlineCacheInvalidationPhase))
-        {
-            Output::Print(u"InlineCacheInvalidation: invalidating instanceof cache 0x%p\n", curInlineCache);
-            Output::Flush();
-        }
         // Stash away the next cache before we zero out the current one (including its next pointer).
         nextInlineCache = curInlineCache->next;
         // Clear the current cache to invalidate it.
@@ -3774,7 +3759,6 @@ Js::SourceDynamicProfileManager* ThreadContext::GetSourceDynamicProfileManager(_
       {
           managerCache->AddRef();
           *addRef = true;
-          OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Addref dynamic source profile manger - Url: %s\n", url);
       }
 
       if (newCache)
@@ -3801,7 +3785,6 @@ uint ThreadContext::ReleaseSourceDynamicProfileManagers(const char16_t* url)
     if(managerCache)  // manager cache may be null we exceeded -INMEMORY_CACHE_MAX_URL
     {
         refCount = managerCache->Release();
-        OUTPUT_VERBOSE_TRACE(Js::DynamicProfilePhase, u"Release dynamic source profile manger %d Url: %s\n", refCount, url);
         Output::Flush();
         if(refCount == 0)
         {

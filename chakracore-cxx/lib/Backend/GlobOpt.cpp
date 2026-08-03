@@ -1520,12 +1520,6 @@ GlobOpt::OptArguments(IR::Instr *instr)
                 Assert(scopeObjSym);
                 Assert(scopeObjSym->GetInstrDef()->m_opcode == Js::OpCode::InitCachedScope || scopeObjSym->GetInstrDef()->m_opcode == Js::OpCode::NewScopeObject);
                 Assert(instr->m_func->GetScopeObjSym() == scopeObjSym);
-
-                if (PHASE_VERBOSE_TRACE1(Js::StackArgFormalsOptPhase))
-                {
-                    Output::Print(u"StackArgFormals : %s (%d) :Setting scopeObjSym in forward pass. \n", instr->m_func->GetJITFunctionBody()->GetDisplayName(), instr->m_func->GetJITFunctionBody()->GetFunctionNumber());
-                    Output::Flush();
-                }
             }
         }
 
