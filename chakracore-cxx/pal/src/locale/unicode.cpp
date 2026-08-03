@@ -338,8 +338,7 @@ See MSDN doc.
 
 --*/
 int
-WideCharToMultiByte(const char16_t *lpWideCharStr, int cchWideChar, char *lpMultiByteStr, int cbMultiByte,
-                        LPBOOL lpUsedDefaultChar)
+WideCharToMultiByte(const char16_t *lpWideCharStr, int cchWideChar, char *lpMultiByteStr, int cbMultiByte)
 {
     int32_t retval =0;
     BOOL usedDefaultChar = FALSE;
@@ -370,11 +369,6 @@ WideCharToMultiByte(const char16_t *lpWideCharStr, int cchWideChar, char *lpMult
     retval = UnicodeToUTF8(lpWideCharStr, cchWideChar, lpMultiByteStr, cbMultiByte);
 
 EXIT:
-
-    if ( lpUsedDefaultChar != NULL )
-    {
-        *lpUsedDefaultChar = usedDefaultChar;
-    }
 
     /* Flag the cases when WC_NO_BEST_FIT_CHARS was not specified
      * but we found characters that had to be replaced with default
