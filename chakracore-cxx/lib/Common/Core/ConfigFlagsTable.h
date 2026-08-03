@@ -505,8 +505,6 @@ namespace Js
         #endif
         PrintSystemExceptionFlag,
         SwitchOptHolesThresholdFlag,
-        TempMinFlag,
-        TempMaxFlag,
         TraceFlag,
 
         VersionFlag,
@@ -2029,13 +2027,9 @@ namespace Js
         Boolean PrintSystemException;
         // TODO (hanhossain): remove flag
         Number SwitchOptHolesThreshold;
-        // TODO (hanhossain): remove flag
-        Number TempMin;
-        // TODO (hanhossain): remove flag
-        Number TempMax;
+        // todo (hanhossain): flag end
         Phases Trace;
 
-        // todo (hanhossain): flag end
         Number Version;
         Boolean WERExceptionSupport;
         Boolean ExtendedErrorStackForTestHost;

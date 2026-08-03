@@ -560,9 +560,6 @@ namespace Js
 #define DEFAULT_CONFIG_ForceJITCFGCheck (false)
 #define DEFAULT_CONFIG_UseJITTrampoline (true)
 
-#define DEFAULT_CONFIG_TempMin    (0)
-#define DEFAULT_CONFIG_TempMax    (INT_MAX)
-
 #define DEFAULT_CONFIG_LibraryStackFrame            (true)
 #define DEFAULT_CONFIG_LibraryStackFrameDebugger    (false)
 
@@ -1100,8 +1097,6 @@ namespace Js
 #endif
         u"PrintSystemException",
         u"SwitchOptHolesThreshold",
-        u"TempMin",
-        u"TempMax",
         u"Trace",
 
         u"Version",
@@ -2027,11 +2022,9 @@ namespace Js
 #endif
         u"Always print a message when there's OOM or OOS",
         u"Maximum percentage of holes (missing case values in a switch statement) with which a jump table can be created",
-        u"Temp number switch which code can temporarily use for debugging",
-        u"Temp number switch which code can temporarily use for debugging",
+        // todo (hanhossain): flag end
         u"Trace the given phase",
 
-        // todo (hanhossain): flag end
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
         u"WER feature for extended exception support. Enabled when WinRT is enabled",
         u"Enable passing extended error stack string to test host.",
@@ -2550,11 +2543,9 @@ namespace Js
 #endif
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
+        // todo (hanhossain): flag end
         NoParentFlag,
 
-        // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3095,8 +3086,6 @@ namespace Js
 #endif
         PrintSystemException(false),
         SwitchOptHolesThreshold(DEFAULT_CONFIG_SwitchOptHolesThreshold),
-        TempMin(DEFAULT_CONFIG_TempMin),
-        TempMax(DEFAULT_CONFIG_TempMax),
         Trace(),
 
         Version(6 ),
@@ -4616,10 +4605,6 @@ namespace Js
             return FlagBoolean;
         case SwitchOptHolesThresholdFlag:
             return FlagNumber;
-        case TempMinFlag:
-            return FlagNumber;
-        case TempMaxFlag:
-            return FlagNumber;
         case TraceFlag:
             return FlagPhases;
 
@@ -5512,10 +5497,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case SwitchOptHolesThresholdFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&SwitchOptHolesThreshold));
-        case TempMinFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&TempMin));
-        case TempMaxFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&TempMax));
         case TraceFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&Trace));
 
