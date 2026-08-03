@@ -22,8 +22,6 @@ namespace Js {
         static void NotImplemented();
         static void InternalError();
         static void FatalInternalError(int32_t hr = E_FAIL);
-        static void FatalInternalErrorEx(int scenario);
-        static void FatalInternalGlobalizationError();
 
         static void FatalProjectionError();
 #if ENABLE_JS_REENTRANCY_CHECK
