@@ -500,9 +500,6 @@ namespace Js
         #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
         StatsFlag,
         #endif
-        #if EXCEPTION_RECOVERY
-        SwallowExceptionsFlag,
-        #endif
         PrintSystemExceptionFlag,
         TraceFlag,
 
@@ -2018,10 +2015,6 @@ namespace Js
         #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
         // TODO (hanhossain): remove flag
             Phases Stats;
-        #endif
-        #if EXCEPTION_RECOVERY
-        // TODO (hanhossain): remove flag
-            Boolean SwallowExceptions;
         #endif
         // todo (hanhossain): flag end
         Boolean PrintSystemException;

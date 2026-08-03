@@ -124,7 +124,6 @@
 #define POLY_INLINE_CACHE_SIZE_STATS
 
 #define JS_PROFILE_DATA_INTERFACE 1
-#define EXCEPTION_RECOVERY 1
 #define RECYCLER_TEST_SUPPORT
 #define ARENA_ALLOCATOR_FREE_LIST_SIZE
 
@@ -157,7 +156,6 @@
 #define INLINE_CACHE_STATS
 #define FIELD_ACCESS_STATS
 #define MISSING_PROPERTY_STATS
-#define EXCEPTION_RECOVERY 1
 #define EXCEPTION_CHECK                     // Check exception handling.
 // todo: implement this for clang x86
 #define PROFILE_MEM

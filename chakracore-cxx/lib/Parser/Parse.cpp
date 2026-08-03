@@ -10034,48 +10034,6 @@ ParseNodePtr Parser::ParseStatement()
     bool isAsyncMethod = false;
     bool labelledStatement = false;
     tokens tok;
-#if EXCEPTION_RECOVERY
-    ParseNodeTryCatch * pParentTryCatch = nullptr;
-    ParseNodeBlock * pTryBlock = nullptr;
-    ParseNodeTry * pTry = nullptr;
-    ParseNodeBlock * pParentTryCatchBlock = nullptr;
-
-    StmtNest stmtTryCatchBlock;
-    StmtNest stmtTryCatch;
-    StmtNest stmtTry;
-    StmtNest stmtTryBlock;
-#endif
-
-    if (buildAST)
-    {
-#if EXCEPTION_RECOVERY
-        if (Js::Configuration::Global.flags.SwallowExceptions)
-        {
-            // If we're swallowing exceptions, surround this statement with a try/catch block:
-            //
-            //   Before: x.y = 3;
-            //   After:  try { x.y = 3; } catch(__ehobj) { }
-            //
-            // This is done to force the runtime to recover from exceptions at the most granular
-            // possible point.  Recovering from EH dramatically improves coverage of testing via
-            // fault injection.
-
-
-            // create and push the try-catch node
-            pParentTryCatchBlock = CreateBlockNode();
-            PushStmt<buildAST>(&stmtTryCatchBlock, pParentTryCatchBlock, knopBlock, nullptr);
-            pParentTryCatch = CreateNodeForOpT<knopTryCatch>();
-            PushStmt<buildAST>(&stmtTryCatch, pParentTryCatch, knopTryCatch, nullptr);
-
-            // create and push a try node
-            pTry = CreateNodeForOpT<knopTry>();
-            PushStmt<buildAST>(&stmtTry, pTry, knopTry, nullptr);
-            pTryBlock = CreateBlockNode();
-            PushStmt<buildAST>(&stmtTryBlock, pTryBlock, knopBlock, nullptr);
-            // these nodes will be closed after the statement is parsed.
-        }
-#endif // EXCEPTION_RECOVERY
-    }
 
     EnsureStackAvailable();
 
@@ -11220,74 +11178,6 @@ LNeedTerminator:
                 m_currentNodeProg->SetHasNonThisStmt();
             }
         }
-
-#if EXCEPTION_RECOVERY
-        // close the try/catch block
-        if (Js::Configuration::Global.flags.SwallowExceptions)
-        {
-            // pop the try block and fill in the body
-            PopStmt(&stmtTryBlock);
-            pTryBlock->pnodeStmt = pnode;
-            PopStmt(&stmtTry);
-            if (pnode != nullptr)
-            {
-                pTry->ichLim = pnode->ichLim;
-            }
-            pTry->pnodeBody = pTryBlock;
-
-
-            // create a catch block with an empty body
-            StmtNest stmtCatch;
-            ParseNodeCatch * pCatch;
-            pCatch = CreateNodeForOpT<knopCatch>();
-            PushStmt<buildAST>(&stmtCatch, pCatch, knopCatch, nullptr);
-            pCatch->pnodeBody = nullptr;
-            if (pnode != nullptr)
-            {
-                pCatch->ichLim = pnode->ichLim;
-            }
-            pCatch->grfnop = 0;
-            pCatch->pnodeNext = nullptr;
-
-            // create a fake name for the catch var.
-            const char16_t *uniqueNameStr = u"__ehobj";
-            IdentPtr uniqueName = this->GetHashTbl()->PidHashNameLen(uniqueNameStr, static_cast<int32_t>(std::u16string(uniqueNameStr).length()));
-
-            pCatch->SetParam(CreateNameNode(uniqueName));
-
-            // Add this catch to the current list. We don't bother adjusting the catch and function expression
-            // lists here because the catch is just an empty statement.
-
-            if (m_ppnodeExprScope)
-            {
-                Assert(*m_ppnodeExprScope == nullptr);
-                *m_ppnodeExprScope = pCatch;
-                m_ppnodeExprScope = &pCatch->pnodeNext;
-            }
-            else
-            {
-                Assert(m_ppnodeScope);
-                Assert(*m_ppnodeScope == nullptr);
-                *m_ppnodeScope = pCatch;
-                m_ppnodeScope = &pCatch->pnodeNext;
-            }
-
-            pCatch->pnodeScopes = nullptr;
-
-            PopStmt(&stmtCatch);
-
-            // fill in and pop the try-catch
-            pParentTryCatch->pnodeTry = pTry;
-            pParentTryCatch->pnodeCatch = pCatch;
-            PopStmt(&stmtTryCatch);
-            PopStmt(&stmtTryCatchBlock);
-
-            // replace the node that's being returned
-            pParentTryCatchBlock->pnodeStmt = pParentTryCatch;
-            pnode = pParentTryCatchBlock;
-        }
-#endif // EXCEPTION_RECOVERY
-
     }
 
     return pnode;
