@@ -516,19 +516,6 @@ namespace Js
         #ifdef PROFILE_MEM
         TraceMemoryFlag,
         #endif
-        #if DBG_DUMP || defined(RECYCLER_TRACE)
-        //TraceMetaDataParsing flag with optional levels:
-        //    Level 1 = interfaces only
-        //    Level 2 = interfaces and methods
-        //    Level 3 = interfaces, methods and parameters
-        //    Level 4 = interfaces and properties
-        //    Level 5 (default) = ALL
-        TraceMetaDataParsingFlag,
-        TraceWin8AllocationsFlag,
-        TraceWin8DeallocationsImmediateFlag,
-        PrintWin8StatsDetailedFlag,
-        TraceProtectPagesFlag,
-        #endif
         VersionFlag,
         WERExceptionSupportFlag,
         ExtendedErrorStackForTestHostFlag,
@@ -2063,24 +2050,6 @@ namespace Js
         #ifdef PROFILE_MEM
         // TODO (hanhossain): remove flag
             Phases TraceMemory;
-        #endif
-        #if DBG_DUMP || defined(RECYCLER_TRACE)
-            //TraceMetaDataParsing flag with optional levels:
-            //    Level 1 = interfaces only
-            //    Level 2 = interfaces and methods
-            //    Level 3 = interfaces, methods and parameters
-            //    Level 4 = interfaces and properties
-            //    Level 5 (default) = ALL
-        // TODO (hanhossain): remove flag
-            Number TraceMetaDataParsing;
-        // TODO (hanhossain): remove flag
-            Boolean TraceWin8Allocations;
-        // TODO (hanhossain): remove flag
-            Boolean TraceWin8DeallocationsImmediate;
-        // TODO (hanhossain): remove flag
-            Boolean PrintWin8StatsDetailed;
-        // TODO (hanhossain): remove flag
-            Boolean TraceProtectPages;
         #endif
         // todo (hanhossain): flag end
         Number Version;

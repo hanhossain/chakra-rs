@@ -321,12 +321,6 @@ BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocation(Allocation* allocation, 
     void * segment;
     if (allocation->IsLargeAllocation())
     {
-#if DBG_DUMP || defined(RECYCLER_TRACE)
-        if (Js::Configuration::Global.flags.IsEnabled(Js::TraceProtectPagesFlag))
-        {
-            Output::Print(u"Protecting large allocation\n");
-        }
-#endif
         segment = allocation->largeObjectAllocation.segment;
 
         if (addressInPage != nullptr)
@@ -349,12 +343,6 @@ BOOL Heap<TAlloc, TPreReservedAlloc>::ProtectAllocation(Allocation* allocation, 
     }
     else
     {
-#if DBG_DUMP || defined(RECYCLER_TRACE)
-        if (Js::Configuration::Global.flags.IsEnabled(Js::TraceProtectPagesFlag))
-        {
-            Output::Print(u"Protecting small allocation\n");
-        }
-#endif
         segment = allocation->page->segment;
         address = allocation->page->address;
         pageCount = 1;

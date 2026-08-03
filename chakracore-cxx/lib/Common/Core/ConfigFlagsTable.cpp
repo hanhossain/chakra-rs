@@ -1115,19 +1115,6 @@ namespace Js
 #ifdef PROFILE_MEM
         u"TraceMemory",
 #endif
-#if DBG_DUMP || defined(RECYCLER_TRACE)
-//TraceMetaDataParsing flag with optional levels:
-//    Level 1 = interfaces only
-//    Level 2 = interfaces and methods
-//    Level 3 = interfaces, methods and parameters
-//    Level 4 = interfaces and properties
-//    Level 5 (default) = ALL
-        u"TraceMetaDataParsing",
-        u"TraceWin8Allocations",
-        u"TraceWin8DeallocationsImmediate",
-        u"PrintWin8StatsDetailed",
-        u"TraceProtectPages",
-#endif
         u"Version",
         u"WERExceptionSupport",
         u"ExtendedErrorStackForTestHost",
@@ -2062,19 +2049,6 @@ namespace Js
 #ifdef PROFILE_MEM
         u"Trace memory usage",
 #endif
-#if DBG_DUMP || defined(RECYCLER_TRACE)
-//TraceMetaDataParsing flag with optional levels:
-//    Level 1 = interfaces only
-//    Level 2 = interfaces and methods
-//    Level 3 = interfaces, methods and parameters
-//    Level 4 = interfaces and properties
-//    Level 5 (default) = ALL
-        u"Trace metadata parsing for generating JS projections. [Levels 1-5, with 5 corresponding to most detailed]",
-        u"Trace the win8 memory allocations",
-        u"Trace the win8 memory deallocations immediately",
-        u"Print the detailed memory trace report",
-        u"Trace calls to protecting pages of custom heap allocated pages",
-#endif
         // todo (hanhossain): flag end
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
         u"WER feature for extended exception support. Enabled when WinRT is enabled",
@@ -2603,19 +2577,6 @@ namespace Js
 #endif
 
 #ifdef PROFILE_MEM
-        NoParentFlag,
-#endif
-#if DBG_DUMP || defined(RECYCLER_TRACE)
-//TraceMetaDataParsing flag with optional levels:
-//    Level 1 = interfaces only
-//    Level 2 = interfaces and methods
-//    Level 3 = interfaces, methods and parameters
-//    Level 4 = interfaces and properties
-//    Level 5 (default) = ALL
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         NoParentFlag,
 #endif
         // todo (hanhossain): flag end
@@ -3169,19 +3130,6 @@ namespace Js
 
 #ifdef PROFILE_MEM
         TraceMemory(),
-#endif
-#if DBG_DUMP || defined(RECYCLER_TRACE)
-//TraceMetaDataParsing flag with optional levels:
-//    Level 1 = interfaces only
-//    Level 2 = interfaces and methods
-//    Level 3 = interfaces, methods and parameters
-//    Level 4 = interfaces and properties
-//    Level 5 (default) = ALL
-        TraceMetaDataParsing(5),
-        TraceWin8Allocations(false),
-        TraceWin8DeallocationsImmediate(false),
-        PrintWin8StatsDetailed(false),
-        TraceProtectPages(false),
 #endif
         Version(6 ),
         WERExceptionSupport(false),
@@ -4716,24 +4664,6 @@ namespace Js
         case TraceMemoryFlag:
             return FlagPhases;
         #endif
-        #if DBG_DUMP || defined(RECYCLER_TRACE)
-        //TraceMetaDataParsing flag with optional levels:
-        //    Level 1 = interfaces only
-        //    Level 2 = interfaces and methods
-        //    Level 3 = interfaces, methods and parameters
-        //    Level 4 = interfaces and properties
-        //    Level 5 (default) = ALL
-        case TraceMetaDataParsingFlag:
-            return FlagNumber;
-        case TraceWin8AllocationsFlag:
-            return FlagBoolean;
-        case TraceWin8DeallocationsImmediateFlag:
-            return FlagBoolean;
-        case PrintWin8StatsDetailedFlag:
-            return FlagBoolean;
-        case TraceProtectPagesFlag:
-            return FlagBoolean;
-        #endif
         case VersionFlag:
             return FlagNumber;
         case WERExceptionSupportFlag:
@@ -5639,24 +5569,6 @@ namespace Js
         case TraceMemoryFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&TraceMemory));
         #endif
-        #if DBG_DUMP || defined(RECYCLER_TRACE)
-        //TraceMetaDataParsing flag with optional levels:
-        //    Level 1 = interfaces only
-        //    Level 2 = interfaces and methods
-        //    Level 3 = interfaces, methods and parameters
-        //    Level 4 = interfaces and properties
-        //    Level 5 (default) = ALL
-        case TraceMetaDataParsingFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&TraceMetaDataParsing));
-        case TraceWin8AllocationsFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceWin8Allocations));
-        case TraceWin8DeallocationsImmediateFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceWin8DeallocationsImmediate));
-        case PrintWin8StatsDetailedFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintWin8StatsDetailed));
-        case TraceProtectPagesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceProtectPages));
-        #endif
         case VersionFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Version));
         case WERExceptionSupportFlag:
@@ -6468,26 +6380,6 @@ namespace Js
             break;
 
 
-        #if DBG_DUMP || defined(RECYCLER_TRACE)
-        //TraceMetaDataParsing flag with optional levels:
-        //    Level 1 = interfaces only
-        //    Level 2 = interfaces and methods
-        //    Level 3 = interfaces, methods and parameters
-        //    Level 4 = interfaces and properties
-        //    Level 5 (default) = ALL
-        case TraceWin8AllocationsFlag:
-            retValue = false;
-            break;
-        case TraceWin8DeallocationsImmediateFlag:
-            retValue = false;
-            break;
-        case PrintWin8StatsDetailedFlag:
-            retValue = false;
-            break;
-        case TraceProtectPagesFlag:
-            retValue = false;
-            break;
-        #endif
         case WERExceptionSupportFlag:
             retValue = false;
             break;
