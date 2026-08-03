@@ -1091,9 +1091,6 @@ namespace Js
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
         u"Stats",
 #endif
-#if EXCEPTION_RECOVERY
-        u"SwallowExceptions",
-#endif
         u"PrintSystemException",
         u"Trace",
 
@@ -2015,9 +2012,6 @@ namespace Js
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
         u"Stats the given phase",
 #endif
-#if EXCEPTION_RECOVERY
-        u"Force a try/catch around every statement",
-#endif
         // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
@@ -2533,9 +2527,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
-        NoParentFlag,
-#endif
-#if EXCEPTION_RECOVERY
         NoParentFlag,
 #endif
         // todo (hanhossain): flag end
@@ -3076,9 +3067,6 @@ namespace Js
         SpeculationCap(DEFAULT_CONFIG_SpeculationCap),
 #if DBG_DUMP || defined(BGJIT_STATS) || defined(RECYCLER_STATS)
         Stats(),
-#endif
-#if EXCEPTION_RECOVERY
-        SwallowExceptions(false),
 #endif
         PrintSystemException(false),
         Trace(),
@@ -4592,10 +4580,6 @@ namespace Js
         case StatsFlag:
             return FlagPhases;
         #endif
-        #if EXCEPTION_RECOVERY
-        case SwallowExceptionsFlag:
-            return FlagBoolean;
-        #endif
         case PrintSystemExceptionFlag:
             return FlagBoolean;
         case TraceFlag:
@@ -5482,10 +5466,6 @@ namespace Js
         case StatsFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&Stats));
         #endif
-        #if EXCEPTION_RECOVERY
-        case SwallowExceptionsFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&SwallowExceptions));
-        #endif
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case TraceFlag:
@@ -6289,11 +6269,6 @@ namespace Js
             break;
         #ifdef RECYCLER_VERIFY_MARK
         case RecyclerVerifyMarkFlag:
-            retValue = false;
-            break;
-        #endif
-        #if EXCEPTION_RECOVERY
-        case SwallowExceptionsFlag:
             retValue = false;
             break;
         #endif
