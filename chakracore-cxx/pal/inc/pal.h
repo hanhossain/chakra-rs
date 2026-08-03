@@ -948,13 +948,7 @@ BOOL FlushInstructionCache(const void * lpBaseAddress, size_t dwSize);
 #define MB_ERR_INVALID_CHARS      0x00000008
 
 int
-MultiByteToWideChar(
-             uint32_t CodePage,
-             uint32_t dwFlags,
-             const char * lpMultiByteStr,
-             int cbMultiByte,
-             char16_t* lpWideCharStr,
-             int cchWideChar);
+MultiByteToWideChar(const char *lpMultiByteStr, int cbMultiByte, char16_t *lpWideCharStr, int cchWideChar);
 
 #define WC_NO_BEST_FIT_CHARS      0x00000400
 
