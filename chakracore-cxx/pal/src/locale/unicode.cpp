@@ -51,28 +51,6 @@ using namespace CorUnix;
 
 SET_DEFAULT_DEBUG_CHANNEL(UNICODE);
 
-#if defined(__APPLE__)
-
-static CP_MAPPING CP_TO_NATIVE_TABLE[] = {
-    { 65001, kCFStringEncodingUTF8, 4, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 1252, kCFStringEncodingWindowsLatin1, 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 1251, kCFStringEncodingWindowsCyrillic, 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 1253, kCFStringEncodingWindowsGreek, 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 1254, kCFStringEncodingWindowsLatin5, 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 1258, kCFStringEncodingWindowsVietnamese, 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 932, kCFStringEncodingDOSJapanese, 2, { 129, 159, 224, 252, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 949, kCFStringEncodingDOSKorean, 2, { 129, 254, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-    { 950, kCFStringEncodingDOSChineseTrad, 2, { 129, 254, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
-};
-
-#else // defined(__APPLE__)
-
-static const CP_MAPPING CP_TO_NATIVE_TABLE[] = {
-    { 65001, "utf8", 4, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
-};
-
-#endif // defined(__APPLE__)
-
 #if !defined(__APPLE__)
 /*++
 Function:
@@ -158,88 +136,15 @@ BOOL GetUnicodeData(int32_t nUnicodeValue, UnicodeDataRec *pDataRec)
 
 /*++
 Function:
-CODEPAGEGetData
-
-    IN uint32_t CodePage - The code page the caller
-    is attempting to retrieve data on.
-
-    Returns a pointer to structure, NULL otherwise.
---*/
-const CP_MAPPING *
-CODEPAGEGetData(  uint32_t CodePage )
-{
-    uint32_t nSize = sizeof( CP_TO_NATIVE_TABLE ) / sizeof( CP_TO_NATIVE_TABLE[ 0 ] );
-    uint32_t nIndex = 0;
-
-    if ( CP_ACP == CodePage )
-    {
-        CodePage = CP_UTF8;
-    }
-
-    /* checking if the CodePage is ACP and returning true if so */
-    while (nIndex < nSize)
-    {
-        if ( ( CP_TO_NATIVE_TABLE[ nIndex ] ).nCodePage == CodePage )
-        {
-            return &(CP_TO_NATIVE_TABLE[ nIndex ]);
-        }
-        nIndex++;
-    }
-    return NULL;
-}
-
-#if defined(__APPLE__)
-/*++
-Function :
-
-CODEPAGECPToCFStringEncoding - Gets the CFStringEncoding for
-the given codepage.
-
-Returns the CFStringEncoding for the given codepage.
---*/
-CFStringEncoding CODEPAGECPToCFStringEncoding(uint32_t codepage)
-{
-    const CP_MAPPING *cp_mapping = CODEPAGEGetData(codepage);
-    if (cp_mapping == NULL)
-    {
-        return kCFStringEncodingInvalidId;
-    }
-    else
-    {
-        return cp_mapping->nCFEncoding;
-    }
-}
-#endif // defined(__APPLE__)
-
-/*++
-Function:
 MultiByteToWideChar
 
 See MSDN doc.
 
 --*/
 int
-MultiByteToWideChar(
-         uint32_t CodePage,
-         uint32_t dwFlags,
-         const char * lpMultiByteStr,
-         int cbMultiByte,
-         char16_t* lpWideCharStr,
-         int cchWideChar)
+MultiByteToWideChar(const char *lpMultiByteStr, int cbMultiByte, char16_t *lpWideCharStr, int cchWideChar)
 {
     int32_t retval =0;
-#if defined(__APPLE__)
-    CFStringRef cfString = NULL;
-    CFStringEncoding cfEncoding;
-    int bytesToConvert;
-#endif /* defined(__APPLE__) */
-
-    if (dwFlags & ~(MB_ERR_INVALID_CHARS | MB_PRECOMPOSED))
-    {
-        chakra::Logger::error(std::format("Error dwFlags(0x{:x}) parameter is invalid\n", dwFlags));
-        SetLastError(ERROR_INVALID_FLAGS);
-        goto EXIT;
-    }
 
     if ( (cbMultiByte == 0) || (cchWideChar < 0) ||
         (lpMultiByteStr == NULL) ||
@@ -254,74 +159,12 @@ MultiByteToWideChar(
 
     // Use UTF8ToUnicode on all systems, since it replaces
     // invalid characters and Core Foundation doesn't do that.
-    if (CodePage == CP_UTF8 || (CodePage == CP_ACP))
+    if (cbMultiByte <= -1)
     {
-        if (cbMultiByte <= -1)
-        {
         cbMultiByte = strlen(lpMultiByteStr) + 1;
-        }
-
-        retval = UTF8ToUnicode(lpMultiByteStr, cbMultiByte, lpWideCharStr, cchWideChar, dwFlags);
-        goto EXIT;
     }
 
-#if !defined(__APPLE__)
-    ERROR( "This code page is not in the system.\n" );
-    SetLastError( ERROR_INVALID_PARAMETER );
-    goto EXIT;
-#else /* !defined(__APPLE__) */
-    bytesToConvert = cbMultiByte;
-    if (bytesToConvert == -1)
-    {
-        /* Plus one for the trailing '\0', which will end up
-        * in the CFString. */
-        bytesToConvert = strlen(lpMultiByteStr) + 1;
-    }
-
-    cfEncoding = CODEPAGECPToCFStringEncoding(CodePage);
-    if (cfEncoding == kCFStringEncodingInvalidId)
-    {
-        ERROR( "This code page is not in the system.\n" );
-        SetLastError( ERROR_INVALID_PARAMETER );
-        goto EXIT;
-    }
-
-    cfString = CFStringCreateWithBytes(kCFAllocatorDefault, reinterpret_cast<UInt8*>(const_cast<char*>(lpMultiByteStr)),
-                     bytesToConvert, cfEncoding, TRUE);
-    if (cfString == NULL)
-    {
-        ERROR( "Failed to convert the string to the specified encoding.\n" );
-        SetLastError( ERROR_NO_UNICODE_TRANSLATION );
-        goto EXIT;
-    }
-
-    if (cchWideChar != 0)
-    {
-        /* Do the conversion. */
-        CFIndex length = CFStringGetLength(cfString);
-        if (length > cchWideChar)
-        {
-            ERROR("Error insufficient buffer\n");
-            SetLastError(ERROR_INSUFFICIENT_BUFFER);
-            retval = 0;
-            goto ReleaseString;
-        }
-        CFStringGetCharacters(cfString, CFRangeMake(0, length),
-                reinterpret_cast<UniChar*>(lpWideCharStr));
-        retval = length;
-    }
-    else
-    {
-        /* Just return the number of wide characters needed. */
-        retval = CFStringGetLength(cfString);
-    }
-
-ReleaseString:
-    if (cfString != NULL)
-    {
-        CFRelease(cfString);
-    }
-#endif /* !defined(__APPLE__) */
+    retval = UTF8ToUnicode(lpMultiByteStr, cbMultiByte, lpWideCharStr, cchWideChar);
 
 EXIT:
 

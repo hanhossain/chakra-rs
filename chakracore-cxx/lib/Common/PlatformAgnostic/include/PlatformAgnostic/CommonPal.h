@@ -234,7 +234,7 @@ inline errno_t _wcserror_s(char16_t (&buffer)[size], int errnum)
 {
     const char* str = strerror(errnum);
     // WARN: does not return detail errno when fail
-    return MultiByteToWideChar(CP_ACP, 0, str, -1, buffer, size) ? 0 : -1;
+    return MultiByteToWideChar(str, -1, buffer, size) ? 0 : -1;
 }
 
 #define midl_user_free(ptr) \

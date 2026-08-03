@@ -1148,7 +1148,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                     /* %lS assumes a char* argument. */
                     char* s = va_arg(ap, char* );
                     uint32_t Length = 0;
-                    Length = MultiByteToWideChar( CP_ACP, 0, s, -1, NULL, 0 );
+                    Length = MultiByteToWideChar(s, -1, NULL, 0);
                     if ( Length != 0 )
                     {
                         TempWStr =
@@ -1156,8 +1156,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                         if ( TempWStr )
                         {
                             WStrWasMalloced = TRUE;
-                            MultiByteToWideChar( CP_ACP, 0, s, -1,
-                                                 TempWStr, Length );
+                            MultiByteToWideChar(s, -1, TempWStr, Length);
                         }
                         else
                         {
@@ -1405,9 +1404,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                     }
                 }
 
-                mbtowcResult = MultiByteToWideChar(CP_ACP, 0,
-                                                   TempSprintfStr, -1,
-                                                   NULL, 0);
+                mbtowcResult = MultiByteToWideChar(TempSprintfStr, -1, NULL, 0);
 
                 if (mbtowcResult == 0)
                 {
@@ -1435,8 +1432,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                     return -1;
                 }
 
-                MultiByteToWideChar(CP_ACP, 0, TempSprintfStr, -1,
-                                    TempWideBuffer, mbtowcResult);
+                MultiByteToWideChar(TempSprintfStr, -1, TempWideBuffer, mbtowcResult);
 
                 ret = Internal_Convertfwrite(
                                     pthrCurrent,
@@ -1563,7 +1559,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                     // %lS and %hs assume an char* argument.
                     char* s = va_arg(ap, char* );
                     uint32_t Length = 0;
-                    Length = MultiByteToWideChar( CP_ACP, 0, s, -1, NULL, 0 );
+                    Length = MultiByteToWideChar(s, -1, NULL, 0);
                     if ( Length != 0 )
                     {
                         TempWStr =
@@ -1571,8 +1567,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                         if ( TempWStr )
                         {
                             needToFree = TRUE;
-                            MultiByteToWideChar( CP_ACP, 0, s, -1,
-                                                 TempWStr, Length );
+                            MultiByteToWideChar(s, -1, TempWStr, Length);
                         }
                         else
                         {
@@ -1773,10 +1768,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                         return -1;
                     }
 
-                    mbtowcResult = MultiByteToWideChar(CP_ACP, 0,
-                                                       TempNumberBuffer,
-                                                       TempCount,
-                                                       BufferPtr, TempCount);
+                    mbtowcResult = MultiByteToWideChar(TempNumberBuffer, TempCount, BufferPtr, TempCount);
                     if (!mbtowcResult)
                     {
                         chakra::Logger::error(std::format("MultiByteToWideChar failed.  Error is {}\n",
@@ -1807,10 +1799,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                         return -1;
                     }
 
-                    mbtowcResult = MultiByteToWideChar(CP_ACP, 0,
-                                                       TempNumberBuffer,
-                                                       TempInt,
-                                                       BufferPtr, TempInt);
+                    mbtowcResult = MultiByteToWideChar(TempNumberBuffer, TempInt, BufferPtr, TempInt);
                     if (!mbtowcResult)
                     {
                         chakra::Logger::error(std::format("MultiByteToWideChar failed.  Error is {}\n",

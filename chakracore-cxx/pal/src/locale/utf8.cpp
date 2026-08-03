@@ -57,20 +57,13 @@ Revision History:
 //
 ////////////////////////////////////////////////////////////////////////////
 
-int UTF8ToUnicode(
-    const char * lpSrcStr,
-    int cchSrc,
-    char16_t* lpDestStr,
-    int cchDest,
-    uint32_t dwFlags
-    )
+int UTF8ToUnicode(const char *lpSrcStr, int cchSrc, char16_t *lpDestStr, int cchDest)
 {
     int nTB = 0;                   // # trail bytes to follow
     int cchWC = 0;                 // # of Unicode code points generated
     const uint8_t* pUTF8 = reinterpret_cast<const uint8_t*>(lpSrcStr);
     uint32_t dwUnicodeChar = 0;       // Our character with room for full surrogate char
     BOOL bSurrogatePair = FALSE;   // Indicate we're collecting a surrogate pair
-    BOOL bCheckInvalidBytes = (dwFlags & MB_ERR_INVALID_CHARS);
     uint8_t UTF8;
 
     // Note that we can't test destination buffer length here because we may have to
@@ -168,12 +161,6 @@ int UTF8ToUnicode(
             }
             else
             {
-                if (bCheckInvalidBytes) 
-                {
-                    SetLastError(ERROR_NO_UNICODE_TRANSLATION);
-                    return (0);
-                }
-                
                 // error - not expecting a trail byte. That is, there is a trailing byte without leading byte.
                 bSurrogatePair = FALSE;
             }
@@ -185,12 +172,6 @@ int UTF8ToUnicode(
             //
             if (nTB > 0)
             {
-                // error - A leading byte before the previous sequence is completed.
-                if (bCheckInvalidBytes) 
-                {
-                    SetLastError(ERROR_NO_UNICODE_TRANSLATION);
-                    return (0);
-                }
                 //
                 //  Error - previous sequence not finished.
                 //
@@ -295,20 +276,13 @@ int UTF8ToUnicode(
                     //
                     dwUnicodeChar = UTF8;
                     nTB--;
-                } else 
-                {
-                    if (bCheckInvalidBytes) 
-                    {
-                        SetLastError(ERROR_NO_UNICODE_TRANSLATION);
-                        return (0);
-                    }
                 }
             }
         }
         pUTF8++;
     }
 
-    if ((bCheckInvalidBytes && nTB != 0) || (cchWC == 0)) 
+    if (cchWC == 0)
     {
         // About (cchWC == 0):
         // Because we now throw away non-shortest form, it is possible that we generate 0 chars.
