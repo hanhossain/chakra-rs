@@ -321,10 +321,6 @@ LinearScan::RegAlloc()
     this->InsertOpHelperSpillAndRestores();
 
 #if DBG_DUMP
-    if (PHASE_STATS(Js::LinearScanPhase, this->func))
-    {
-        this->PrintStats();
-    }
     if (PHASE_TRACE(Js::StackPackPhase, this->func))
     {
         Output::Print(u"---------------------------\n");

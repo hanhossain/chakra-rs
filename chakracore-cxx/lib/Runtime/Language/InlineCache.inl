@@ -80,13 +80,6 @@ namespace Js
             OutputPropertyValueAndOperationInfo<OutputExistence, true /*IsMissing*/, ReturnOperationInfo, CacheType_Proto, SlotType_Inline>(
                 instance, propertyObject, propertyId, propertyValue, requestContext, operationInfo);
 
-#ifdef MISSING_PROPERTY_STATS
-            if (PHASE_STATS1(MissingPropertyCachePhase))
-            {
-                requestContext->RecordMissingPropertyHit();
-            }
-#endif
-
             return true;
         }
 
@@ -94,13 +87,6 @@ namespace Js
         {
             OutputPropertyValueAndOperationInfo<OutputExistence, true /*IsMissing*/, ReturnOperationInfo, CacheType_Proto, SlotType_Aux>(
                 instance, propertyObject, propertyId, propertyValue, requestContext, operationInfo);
-
-#ifdef MISSING_PROPERTY_STATS
-            if (PHASE_STATS1(MissingPropertyCachePhase))
-            {
-                requestContext->RecordMissingPropertyHit();
-            }
-#endif
 
             return true;
         }
@@ -528,13 +514,6 @@ namespace Js
         uint inlineCacheIndex = GetInlineCacheIndexForType(type);
         InlineCache *cache = &inlineCaches[inlineCacheIndex];
 
-#ifdef INLINE_CACHE_STATS
-        bool isEmpty = false;
-        if (PHASE_STATS1(Js::PolymorphicInlineCachePhase))
-        {
-            isEmpty = cache->IsEmpty();
-        }
-#endif
         bool result = cache->TryGetProperty<CheckLocal, CheckProto, CheckAccessor, CheckMissing, ReturnOperationInfo, OutputExistence>(
             instance, propertyObject, propertyId, propertyValue, requestContext, operationInfo);
 
@@ -554,14 +533,6 @@ namespace Js
         {
             cache->CopyTo(propertyId, requestContext, inlineCacheToPopulate);
         }
-
-#ifdef INLINE_CACHE_STATS
-        if (PHASE_STATS1(Js::PolymorphicInlineCachePhase))
-        {
-            bool collision = !result && !isEmpty;
-            GetScriptContext()->LogCacheUsage(this, /*isGet*/ true, propertyId, result, collision);
-        }
-#endif
 
         return result;
     }
@@ -588,13 +559,6 @@ namespace Js
         uint inlineCacheIndex = GetInlineCacheIndexForType(type);
         InlineCache *cache = &inlineCaches[inlineCacheIndex];
 
-#ifdef INLINE_CACHE_STATS
-        bool isEmpty = false;
-        if (PHASE_STATS1(Js::PolymorphicInlineCachePhase))
-        {
-            isEmpty = cache->IsEmpty();
-        }
-#endif
         bool result = cache->TrySetProperty<CheckLocal, CheckLocalTypeWithoutProperty, CheckAccessor, ReturnOperationInfo>(
             object, propertyId, propertyValue, requestContext, operationInfo, propertyOperationFlags);
 
@@ -614,14 +578,6 @@ namespace Js
         {
             cache->CopyTo(propertyId, requestContext, inlineCacheToPopulate);
         }
-
-#ifdef INLINE_CACHE_STATS
-        if (PHASE_STATS1(Js::PolymorphicInlineCachePhase))
-        {
-            bool collision = !result && !isEmpty;
-            GetScriptContext()->LogCacheUsage(this, /*isGet*/ false, propertyId, result, collision);
-        }
-#endif
 
         return result;
     }

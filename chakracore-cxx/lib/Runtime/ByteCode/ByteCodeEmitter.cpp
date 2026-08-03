@@ -3152,22 +3152,6 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
         // Do a uint32_t add just to verify that we haven't overflowed the reg slot type.
         UInt32Math::Add(funcInfo->varRegsCount, funcInfo->constRegsCount);
 
-#if DBG_DUMP
-        if (PHASE_STATS1(Js::ByteCodePhase))
-        {
-            Output::Print(u" BCode: %-10d, Aux: %-10d, AuxC: %-10d Total: %-10d,  %s\n",
-                m_writer.ByteCodeDataSize(),
-                m_writer.AuxiliaryDataSize(),
-                m_writer.AuxiliaryContextDataSize(),
-                m_writer.ByteCodeDataSize() + m_writer.AuxiliaryDataSize() + m_writer.AuxiliaryContextDataSize(),
-                funcInfo->name);
-
-            this->scriptContext->byteCodeDataSize += m_writer.ByteCodeDataSize();
-            this->scriptContext->byteCodeAuxiliaryDataSize += m_writer.AuxiliaryDataSize();
-            this->scriptContext->byteCodeAuxiliaryContextDataSize += m_writer.AuxiliaryContextDataSize();
-        }
-#endif
-
         this->MapCacheIdsToPropertyIds(funcInfo);
         this->MapReferencedPropertyIds(funcInfo);
 

@@ -1724,12 +1724,6 @@ constexpr uint8_t ConstructorCallsRequiredToFinalizeCachedType = 2;
 
         else
         {
-#ifdef MISSING_PROPERTY_STATS
-            if (PHASE_STATS1(MissingPropertyCachePhase))
-            {
-                requestContext->RecordMissingPropertyMiss();
-            }
-#endif
             if (PHASE_TRACE1(MissingPropertyCachePhase))
             {
                 Output::Print(u"MissingPropertyCaching: Missing property %d on slow path.\n", propertyId);
@@ -1781,12 +1775,6 @@ constexpr uint8_t ConstructorCallsRequiredToFinalizeCachedType = 2;
             return;
         }
 
-#ifdef MISSING_PROPERTY_STATS
-        if (PHASE_STATS1(MissingPropertyCachePhase))
-        {
-            requestContext->RecordMissingPropertyCacheAttempt();
-        }
-#endif
         if (PHASE_TRACE1(MissingPropertyCachePhase))
         {
             Output::Print(u"MissingPropertyCache: Caching missing property for property %d.\n", propertyId);

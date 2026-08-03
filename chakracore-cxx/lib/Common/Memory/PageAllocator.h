@@ -48,10 +48,6 @@ typedef void* FunctionTableHandle;
             } \
             Output::Print(format, ##__VA_ARGS__);         \
             Output::Print(u"\n"); \
-            if (stats && this->pageAllocatorFlagTable.Stats.IsEnabled(Js::PageAllocatorPhase)) \
-            { \
-                this->DumpStats();         \
-            }  \
             Output::Flush(); \
         } \
     }

@@ -324,13 +324,6 @@ namespace Js
         }
 
         char * record = DynamicProfileStorage::AllocRecord(static_cast<uint32_t>(counter.GetByteCount()));
-#if DBG_DUMP
-        if (PHASE_STATS1(DynamicProfilePhase))
-        {
-            Output::Print(u"%-180s : %d bytes\n", url, counter.GetByteCount());
-        }
-#endif
-
         BufferWriter writer(DynamicProfileStorage::GetRecordBuffer(record), counter.GetByteCount());
         if (!this->Serialize(&writer))
         {

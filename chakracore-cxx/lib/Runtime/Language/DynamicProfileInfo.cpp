@@ -1853,64 +1853,6 @@ namespace Js
             }
             NEXT_SLISTBASE_ENTRY;
         }
-
-        if (PHASE_STATS1(DynamicProfilePhase))
-        {
-            uint estimatedSavedBytes = sizeof(uint); // count of functions
-            uint functionSaved = 0;
-            uint loopSaved = 0;
-            uint callSiteSaved = 0;
-            uint elementAccessSaved = 0;
-            uint fldAccessSaved = 0;
-
-            FOREACH_SLISTBASE_ENTRY(DynamicProfileInfo * const, info, profileInfoList)
-            {
-                bool hasHotLoop = false;
-                if (info->functionBody->DoJITLoopBody())
-                {
-                    for (uint i = 0; i < info->functionBody->GetLoopCount(); i++)
-                    {
-                        if (info->functionBody->GetLoopHeader(i)->interpretCount >= 10)
-                        {
-                            hasHotLoop = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (hasHotLoop || info->functionBody->GetInterpretedCount() >= 10)
-                {
-                    functionSaved++;
-                    loopSaved += info->functionBody->GetLoopCount();
-
-                    estimatedSavedBytes += sizeof(uint) * 5; // function number, loop count, call site count, local array, temp array
-                    estimatedSavedBytes += (info->functionBody->GetLoopCount() + 7) / 8; // hot loop bit vector
-                    estimatedSavedBytes += (info->functionBody->GetProfiledCallSiteCount() + 7) / 8; // call site bit vector
-                    // call site function number
-                    for (ProfileId i = 0; i < info->functionBody->GetProfiledCallSiteCount(); i++)
-                    {
-                        // TODO poly
-                        if ((info->callSiteInfo[i].u.functionData.sourceId != NoSourceId) && (info->callSiteInfo[i].u.functionData.sourceId != InvalidSourceId))
-                        {
-                            estimatedSavedBytes += sizeof(CallSiteInfo);
-                            callSiteSaved++;
-                        }
-                    }
-
-                    elementAccessSaved += info->functionBody->GetProfiledLdElemCount() + info->functionBody->GetProfiledStElemCount();
-                    fldAccessSaved += info->functionBody->GetProfiledFldCount();
-                    estimatedSavedBytes += (info->functionBody->GetProfiledLdElemCount() + info->functionBody->GetProfiledStElemCount() + 7) / 8; // temp array access
-                }
-            }
-            NEXT_SLISTBASE_ENTRY;
-
-            if (estimatedSavedBytes != sizeof(uint))
-            {
-                Output::Print(u"Estimated save size (Memory used): %6d (%6d): %3d %3d %4d %4d %3d\n",
-                    estimatedSavedBytes, dynamicProfileInfoAllocator->Size(), functionSaved, loopSaved, callSiteSaved,
-                    elementAccessSaved, fldAccessSaved);
-            }
-        }
     }
 
     void DynamicProfileInfo::DumpScriptContext(ScriptContext * scriptContext)

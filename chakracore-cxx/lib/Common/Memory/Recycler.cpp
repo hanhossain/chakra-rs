@@ -5210,14 +5210,6 @@ Recycler::FinishCollection()
     }
 #endif
 
-
-#ifdef RECYCLER_STATS
-    if (CUSTOM_PHASE_STATS1(this->GetRecyclerFlagsTable(), Js::RecyclerPhase))
-    {
-        PrintCollectStats();
-    }
-#endif
-
 #if ENABLE_MEM_STATS
     autoHeap.ReportMemStats(this);
 #endif
@@ -5297,13 +5289,6 @@ Recycler::ForceSweepObject()
     if (trackerDictionary != nullptr)
     {
         // Need to sweep object if we are tracing recycler allocs
-        return true;
-    }
-#endif
-
-#ifdef RECYCLER_STATS
-    if (CUSTOM_PHASE_STATS1(this->GetRecyclerFlagsTable(), Js::RecyclerPhase))
-    {
         return true;
     }
 #endif

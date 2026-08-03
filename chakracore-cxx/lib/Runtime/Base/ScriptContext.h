@@ -664,7 +664,6 @@ public:
 
         FieldAccessStatsByFunctionNumberMap* fieldAccessStatsByFunctionNumber;
 
-        void RecordFieldAccessStats(FunctionBody* functionBody, FieldAccessStatsPtr fieldAccessStats);
 #endif
 
 #ifdef MISSING_PROPERTY_STATS
