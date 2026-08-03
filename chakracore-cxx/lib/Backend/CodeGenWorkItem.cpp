@@ -6,6 +6,9 @@
 #include "Language/SourceDynamicProfileManager.h"
 #include "NativeEntryPointData.h"
 
+/// How much bytecode we'll speculatively JIT
+constexpr unsigned int SpeculationCap = 1;
+
 CodeGenWorkItem::CodeGenWorkItem(
     JsUtil::JobManager *const manager,
     Js::FunctionBody *const functionBody,
@@ -56,7 +59,7 @@ bool CodeGenWorkItem::ShouldSpeculativelyJit(uint byteCodeSizeGenerated) const
 
         // JIT this now if we are under the speculation cap.
         return
-            byteCodeSizeGenerated < (uint)CONFIG_FLAG(SpeculationCap) ||
+            byteCodeSizeGenerated < SpeculationCap ||
             (
                 byteCodeSizeGenerated < (uint)CONFIG_FLAG(ProfileBasedSpeculationCap) &&
                 this->ShouldSpeculativelyJitBasedOnProfile()
@@ -64,7 +67,7 @@ bool CodeGenWorkItem::ShouldSpeculativelyJit(uint byteCodeSizeGenerated) const
     }
     else
     {
-        return byteCodeSizeGenerated < (uint)CONFIG_FLAG(SpeculationCap);
+        return byteCodeSizeGenerated < SpeculationCap;
     }
 }
 

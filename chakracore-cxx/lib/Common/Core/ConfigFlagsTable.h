@@ -496,7 +496,6 @@ namespace Js
         NewPagesCapDuringBGSweepingFlag,
         AllocPolicyLimitFlag,
         RuntimeDataOutputFileFlag,
-        SpeculationCapFlag,
         PrintSystemExceptionFlag,
         TraceFlag,
 
@@ -2007,8 +2006,6 @@ namespace Js
         Number AllocPolicyLimit;
         // TODO (hanhossain): remove flag
         String RuntimeDataOutputFile;
-        // TODO (hanhossain): remove flag
-        Number SpeculationCap;
         // todo (hanhossain): flag end
         Boolean PrintSystemException;
         Phases Trace;
