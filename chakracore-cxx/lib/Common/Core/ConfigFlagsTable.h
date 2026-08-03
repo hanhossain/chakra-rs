@@ -529,7 +529,6 @@ namespace Js
         PrintWin8StatsDetailedFlag,
         TraceProtectPagesFlag,
         #endif
-        TraceAsyncDebugCallsFlag,
         VersionFlag,
         WERExceptionSupportFlag,
         ExtendedErrorStackForTestHostFlag,
@@ -2083,8 +2082,6 @@ namespace Js
         // TODO (hanhossain): remove flag
             Boolean TraceProtectPages;
         #endif
-        // TODO (hanhossain): remove flag
-        Boolean TraceAsyncDebugCalls;
         // todo (hanhossain): flag end
         Number Version;
         Boolean WERExceptionSupport;
