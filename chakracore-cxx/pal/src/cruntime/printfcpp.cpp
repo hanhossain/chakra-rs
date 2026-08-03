@@ -61,7 +61,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
     {
         int nsize;
         char* newBuff = 0;
-        nsize = WideCharToMultiByte(CP_ACP, 0,static_cast<const char16_t*>(buffer), count, 0, 0, 0);
+        nsize = WideCharToMultiByte(0,static_cast<const char16_t*>(buffer), count, 0, 0, 0);
         if (!nsize)
         {
             chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
@@ -74,7 +74,7 @@ static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, s
             pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
             return -1;
         }
-        nsize = WideCharToMultiByte(CP_ACP, 0, static_cast<const char16_t*>(buffer), count, newBuff, nsize, 0);
+        nsize = WideCharToMultiByte(0, static_cast<const char16_t*>(buffer), count, newBuff, nsize, 0);
         if (!nsize)
         {
             chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
@@ -1900,7 +1900,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                 }
 
                 TempWStr = va_arg(ap, char16_t*);
-                Length = WideCharToMultiByte(CP_ACP, 0, TempWStr, -1, 0,
+                Length = WideCharToMultiByte(0, TempWStr, -1, 0,
                                              0, 0);
                 if (!Length)
                 {
@@ -1925,7 +1925,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                 }
                 else if (Precision > 0 && Precision < Length - 1)
                 {
-                    Length = WideCharToMultiByte(CP_ACP, 0, TempWStr,
+                    Length = WideCharToMultiByte(0, TempWStr,
                                                  Precision, TempStr, Length, 0);
                     if (!Length)
                     {
@@ -1941,7 +1941,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                 /* copy everything */
                 else
                 {
-                    wctombResult = WideCharToMultiByte(CP_ACP, 0, TempWStr, -1,
+                    wctombResult = WideCharToMultiByte(0, TempWStr, -1,
                                                        TempStr, Length, 0);
                     if (!wctombResult)
                     {
@@ -1986,7 +1986,7 @@ int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_l
                 }
 
                 TempWChar = va_arg(ap, int);
-                Length = WideCharToMultiByte(CP_ACP, 0, &TempWChar, 1,
+                Length = WideCharToMultiByte(0, &TempWChar, 1,
                                              TempBuffer, sizeof(TempBuffer), 0);
                 if (!Length)
                 {

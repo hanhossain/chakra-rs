@@ -194,10 +194,10 @@ _wfopen(
     assert(mode != NULL);
 
     /* Convert the parameters to ASCII and defer to PAL_fopen */
-    if ( WideCharToMultiByte( CP_ACP, 0, fileName, -1, mbFileName,
+    if ( WideCharToMultiByte(0, fileName, -1, mbFileName,
                               sizeof mbFileName, NULL ) != 0 )
     {
-        if ( WideCharToMultiByte( CP_ACP, 0, mode, -1, mbMode,
+        if ( WideCharToMultiByte(0, mode, -1, mbMode,
                                   sizeof mbMode, NULL ) != 0 )
         {
             filePtr = PAL_fopen(mbFileName, mbMode);
