@@ -252,14 +252,6 @@ typedef struct _WIN32_FILE_ATTRIBUTE_DATA {
 
 typedef void * LPOVERLAPPED;  // diff from winbase.h
 
-BOOL
-WriteFile(
-       HANDLE hFile,
-       const void * lpBuffer,
-       uint32_t nNumberOfBytesToWrite,
-       uint32_t * lpNumberOfBytesWritten,
-       LPOVERLAPPED lpOverlapped);
-
 #define STD_INPUT_HANDLE         (static_cast<uint32_t>(-10))
 #define STD_OUTPUT_HANDLE        (static_cast<uint32_t>(-11))
 

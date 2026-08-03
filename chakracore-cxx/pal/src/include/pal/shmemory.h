@@ -273,16 +273,6 @@ BOOL SHMSetInfo(SHM_INFO_ID element, SHMPTR value);
 /********************** Shared memory help functions ********************/
 
 /*++
-SHMStrDup
-
-Duplicates the string in shared memory.
-
-Returns the new address as SHMPTR on success.
-Returns (SHMPTR)NULL on failure.
---*/
-SHMPTR SHMStrDup( const char * string );
-
-/*++
 SHMWStrDup
 
 Duplicates the wide string in shared memory.
@@ -292,39 +282,6 @@ Returns (SHMPTR)NULL on failure.
 --*/
 SHMPTR SHMWStrDup( const std::u16string &string );
 
-
-/*++
-SHMFindNamedObjectByName
-
-Searches for an object whose name matches the name and ID passed in.
-
-Returns a SHMPTR to its location in shared memory. If no object
-matches the name, the function returns NULL and sets pbNameExists to FALSE.
-If an object matches the name but is of a different type, the function
-returns NULL and sets pbNameExists to TRUE.
-
---*/
-SHMPTR SHMFindNamedObjectByName( const char16_t* lpName, SHM_NAMED_OBJECTS_ID oid,
-                                 BOOL *pbNameExists );
-
-/*++ 
-SHMRemoveNamedObject
-
-Removes the specified named object from the list
-
-No return.
-
-note : the caller is reponsible for releasing all associated memory
---*/
-void SHMRemoveNamedObject( SHMPTR shmNamedObject );
-
-/*++ SHMAddNamedObject
-
-Adds the specified named object to the list.
-
-No return.
---*/
-void SHMAddNamedObject( SHMPTR shmNewNamedObject );
 
 #ifdef __cplusplus
 }

@@ -45,19 +45,14 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 }
 
 HostConfigFlags::HostConfigFlags() :
-    GenerateParserStateCache(false), GenerateParserStateCacheIsEnabled(false),
     UseParserStateCache(false), UseParserStateCacheIsEnabled(false),
-    InspectMaxStringLength(16), InspectMaxStringLengthIsEnabled(false),
     Serialized(nullptr), SerializedIsEnabled(false),
     OOPJIT(false), OOPJITIsEnabled(false),
-    EnsureCloseJITServer(true), EnsureCloseJITServerIsEnabled(false),
     IgnoreScriptErrorCode(false), IgnoreScriptErrorCodeIsEnabled(false),
     MuteHostErrorMsg(false), MuteHostErrorMsgIsEnabled(false),
     TraceHostCallback(false), TraceHostCallbackIsEnabled(false),
     Test262(false), Test262IsEnabled(false),
     Module(false), ModuleIsEnabled(false),
-    TrackRejectedPromises(false), TrackRejectedPromisesIsEnabled(false),
-    ExecuteWithBgParse(false), ExecuteWithBgParseIsEnabled(false),
     nDummy(0)
 {
 }
@@ -65,22 +60,10 @@ HostConfigFlags::HostConfigFlags() :
 bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
 {
     const auto flagStringsNormalized = chakra_rs::str_helper::to_lowercase(flagsString);
-    if (chakra_rs::str_helper::to_lowercase(u"GenerateParserStateCache") == flagStringsNormalized)
-    {
-        this->GenerateParserStateCacheIsEnabled = true;
-        Parse<bool>(parser, &this->GenerateParserStateCache);
-        return true;
-    }
     if (chakra_rs::str_helper::to_lowercase(u"UseParserStateCache") == flagStringsNormalized)
     {
         this->UseParserStateCacheIsEnabled = true;
         Parse<bool>(parser, &this->UseParserStateCache);
-        return true;
-    }
-    if (chakra_rs::str_helper::to_lowercase(u"InspectMaxStringLength") == flagStringsNormalized)
-    {
-        this->InspectMaxStringLengthIsEnabled = true;
-        Parse<int>(parser, &this->InspectMaxStringLength);
         return true;
     }
     if (chakra_rs::str_helper::to_lowercase(u"Serialized") == flagStringsNormalized)
@@ -93,12 +76,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
     {
         this->OOPJITIsEnabled = true;
         Parse<bool>(parser, &this->OOPJIT);
-        return true;
-    }
-    if (chakra_rs::str_helper::to_lowercase(u"EnsureCloseJITServer") == flagStringsNormalized)
-    {
-        this->EnsureCloseJITServerIsEnabled = true;
-        Parse<bool>(parser, &this->EnsureCloseJITServer);
         return true;
     }
     if (chakra_rs::str_helper::to_lowercase(u"IgnoreScriptErrorCode") == flagStringsNormalized)
@@ -131,36 +108,19 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
         Parse<bool>(parser, &this->Module);
         return true;
     }
-    if (chakra_rs::str_helper::to_lowercase(u"TrackRejectedPromises") == flagStringsNormalized)
-    {
-        this->TrackRejectedPromisesIsEnabled = true;
-        Parse<bool>(parser, &this->TrackRejectedPromises);
-        return true;
-    }
-    if (chakra_rs::str_helper::to_lowercase(u"ExecuteWithBgParse") == flagStringsNormalized)
-    {
-        this->ExecuteWithBgParseIsEnabled = true;
-        Parse<bool>(parser, &this->ExecuteWithBgParse);
-        return true;
-    }
     return false;
 }
 
 void HostConfigFlags::PrintUsageString()
 {
-    std::println("{:>20}          \t{}", "GenerateParserStateCache", "\"Parse source file to create parser state cache and write it to file or console\"");
     std::println("{:>20}          \t{}", "UseParserStateCache", "\"Create parser state cache while parsing and use it during script execution\"");
-    std::println("{:>20}          \t{}", "InspectMaxStringLength", "\"Max string length to dump in locals inspection\"");
     std::println("{:>20}          \t{}", "Serialized", "\"If source is UTF8, deserializes from bytecode file\"");
     std::println("{:>20}          \t{}", "OOPJIT", "\"Run JIT in a separate process\"");
-    std::println("{:>20}          \t{}", "EnsureCloseJITServer", "\"JIT process will be force closed when ch is terminated\"");
     std::println("{:>20}          \t{}", "IgnoreScriptErrorCode", "\"Don't return error code on script error\"");
     std::println("{:>20}          \t{}", "MuteHostErrorMsg", "\"Mute host error output, e.g. module load failures\"");
     std::println("{:>20}          \t{}", "TraceHostCallback", "\"Output traces for host callbacks\"");
     std::println("{:>20}          \t{}", "Test262", "\"load Test262 harness\"");
     std::println("{:>20}          \t{}", "Module", "\"load the script as a module\"");
-    std::println("{:>20}          \t{}", "TrackRejectedPromises", "\"Enable tracking of unhandled promise rejections\"");
-    std::println("{:>20}          \t{}", "ExecuteWithBgParse", "\"Load script with bgparse (note: requires bgparse and parserstatecache be on as well)\"");
 }
 
 void HostConfigFlags::PrintUsage()

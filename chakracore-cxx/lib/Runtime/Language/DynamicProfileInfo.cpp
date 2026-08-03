@@ -37,12 +37,6 @@ namespace Js
         bits |= NotNativeIntBit;
     }
 
-    void ArrayCallSiteInfo::SetIsNotNativeFloatArray()
-    {
-        OUTPUT_TRACE_WITH_STACK(Js::NativeArrayConversionPhase, u"SetIsNotNativeFloatArray \n");
-        bits |= NotNativeFloatBit;
-    }
-
     void ArrayCallSiteInfo::SetIsNotNativeArray()
     {
         OUTPUT_TRACE_WITH_STACK(Js::NativeArrayConversionPhase, u"SetIsNotNativeArray \n");

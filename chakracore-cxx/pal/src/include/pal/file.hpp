@@ -38,8 +38,6 @@ namespace CorUnix
     class CFileProcessLocalData
     {
     public:
-        IFileLockController *pLockController;
-
         int  unix_fd;
         uint32_t dwDesiredAccess; /* Unix assumes files are always opened for reading.
                                   In Windows we can open a file for writing only */
@@ -48,16 +46,6 @@ namespace CorUnix
         char unix_filename[MAXPATHLEN];
         BOOL inheritable;
     };
-
-    PAL_ERROR
-    InternalWriteFile(
-        CPalThread *pThread,
-        HANDLE hFile,
-        const void * lpBuffer,
-        uint32_t nNumberOfBytesToWrite,
-        uint32_t * lpNumberOfBytesWritten,
-        LPOVERLAPPED lpOverlapped
-        );
 
     /*++
     InternalOpen

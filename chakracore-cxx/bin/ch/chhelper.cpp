@@ -21,8 +21,6 @@
 
 unsigned int MessageBase::s_messageCount = 0;
 
-int32_t RunBgParseSync(const char *fileContents, uint32_t lengthBytes, const char *fileName);
-
 static_assert(sizeof(ssize_t) == sizeof(long));
 
 // On success the param byteCodeBuffer will be allocated in the function.
@@ -129,11 +127,6 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
     else if (HostConfigFlags::flags.Module)
     {
         runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath.value_or("").c_str());
-    }
-    else if (HostConfigFlags::flags.ExecuteWithBgParse)
-    {
-        unsigned int lengthBytes = static_cast<unsigned int>(fileLength);
-        runScript = static_cast<JsErrorCode>(RunBgParseSync(fileContents, lengthBytes, fileName));
     }
     else // bufferValue == nullptr && parserStateCache == nullptr
     {
@@ -262,45 +255,6 @@ Error:
     return hr;
 }
 
-int32_t CreateParserState(const char *fileContents, JsFinalizeCallback fileContentsFinalizeCallback)
-{
-    int32_t hr = S_OK;
-    HANDLE fileHandle = nullptr;
-    JsValueRef parserStateBuffer = nullptr;
-    uint8_t *buffer = nullptr;
-    unsigned int bufferSize = 0;
-
-    IfFailedGoLabel(GetParserStateBuffer(fileContents, fileContentsFinalizeCallback, &parserStateBuffer), Error);
-    IfJsErrorFailLog(ChakraRTInterface::JsGetArrayBufferStorage(parserStateBuffer, &buffer, &bufferSize));
-
-    fileHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    IfFalseGo(fileHandle != INVALID_HANDLE_VALUE && fileHandle != nullptr);
-
-    for (unsigned int i = 0; i < bufferSize; i++)
-    {
-        const unsigned int BYTES_PER_LINE = 32;
-        uint32_t written = 0;
-        char scratch[3];
-        auto scratchLen = sizeof(scratch);
-        [[maybe_unused]] int num = snprintf(scratch, scratchLen, "%02X", buffer[i]);
-        Assert(num == 2);
-        IfFalseGo(WriteFile(fileHandle, scratch, static_cast<uint32_t>(scratchLen - 1), &written, nullptr));
-
-        // Add line breaks so this block can be readable
-        if (i % BYTES_PER_LINE == (BYTES_PER_LINE - 1) && i < bufferSize - 1)
-        {
-            IfFalseGo(WriteFile(fileHandle, "\n", 1, &written, nullptr));
-        }
-    }
-
-Error:
-    if (fileHandle != nullptr)
-    {
-        CloseHandle(fileHandle);
-    }
-    return hr;
-}
-
 int32_t CreateParserStateAndRunScript(const char *fileName, const char *fileContents, size_t fileLength,
                                       JsFinalizeCallback fileContentsFinalizeCallback,
                                       const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
@@ -406,42 +360,6 @@ Error:
     return hr;
 }
 
-// Use the asynchronous BGParse JSRT APIs in a synchronous call
-int32_t RunBgParseSync(const char *fileContents, uint32_t lengthBytes, const char *fileName)
-{
-    JsValueRef scriptSource;
-    JsErrorCode e = (ChakraRTInterface::JsCreateExternalArrayBuffer(
-        const_cast<char *>(fileContents), lengthBytes, nullptr, const_cast<char *>(fileContents), &scriptSource));
-
-    // What's the preferred way of doing this?
-    char16_t fileNameWide[MAX_PATH] = {0};
-    size_t fileNameLength = strlen(fileName);
-    for (size_t i = 0; i < fileNameLength; i++)
-    {
-        fileNameWide[i] = fileName[i];
-    }
-
-    JsScriptContents scriptContents = {0};
-    scriptContents.container = const_cast<char *>(fileContents);
-    scriptContents.containerType = JsScriptContainerType::HeapAllocatedBuffer;
-    scriptContents.encodingType = JsScriptEncodingType::Utf8;
-    scriptContents.contentLengthInBytes = lengthBytes;
-    scriptContents.fullPath = fileNameWide;
-
-    uint32_t cookie = 0;
-    e = ChakraRTInterface::JsQueueBackgroundParse_Experimental(&scriptContents, &cookie);
-    Assert(e == JsErrorCode::JsNoError);
-
-    JsValueRef bgResult = nullptr;
-    e = ChakraRTInterface::JsExecuteBackgroundParse_Experimental(
-        cookie, scriptSource, WScriptJsrt::GetNextSourceContext(), scriptContents.fullPath,
-        JsParseScriptAttributes::JsParseScriptAttributeNone,
-        nullptr, //_In_ JsValueRef parserState,
-        &bgResult);
-
-    return e;
-}
-
 int32_t ExecuteTest(const std::string &fileName, JsRuntimeHandle &chRuntime, JsRuntimeAttributes &jsrtAttributes)
 {
     int32_t hr = S_OK;
@@ -470,19 +388,10 @@ int32_t ExecuteTest(const std::string &fileName, JsRuntimeHandle &chRuntime, JsR
     {
         auto fullPath = std::filesystem::path(fileName).lexically_normal();
 
-        if (HostConfigFlags::flags.TrackRejectedPromises)
-        {
-            ChakraRTInterface::JsSetHostPromiseRejectionTracker(WScriptJsrt::PromiseRejectionTrackerCallback, nullptr);
-        }
-
-        else if (HostConfigFlags::flags.SerializedIsEnabled)
+        if (HostConfigFlags::flags.SerializedIsEnabled)
         {
             CreateAndRunSerializedScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);
-        }
-        else if (HostConfigFlags::flags.GenerateParserStateCacheIsEnabled)
-        {
-            CreateParserState(fileContents, WScriptJsrt::FinalizeFree);
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {

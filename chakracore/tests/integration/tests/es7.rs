@@ -214,13 +214,6 @@ fn atomics_test_js(#[case] variant: Variant) {
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
-//   <test>
-//   <default>
-//     <files>PromiseRejectionTracking.js</files>
-//     <baseline>PromiseRejectionTracking.baseline</baseline>
-//     <compile-flags>-TrackRejectedPromises -args summary -endargs -nodeferparse</compile-flags>
-//   </default>
-// </test>
 
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]

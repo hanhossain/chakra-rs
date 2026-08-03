@@ -22,7 +22,6 @@ Abstract:
 #include <string>
 #include "pal/thread.hpp"
 #include "pal/file.hpp"
-#include "shmfilelockmgr.hpp"
 #include <new>
 #include "pal/stackstring.hpp"
 
@@ -48,15 +47,6 @@ using namespace CorUnix;
 SET_DEFAULT_DEBUG_CHANNEL(FILE);
 
 int MaxWCharToAcpLengthFactor = 3;
-
-PAL_ERROR
-InternalSetFilePointerForUnixFd(
-    int iUnixFd,
-    int32_t lDistanceToMove,
-    int32_t * lpDistanceToMoveHigh,
-    uint32_t dwMoveMethod,
-    int32_t * lpNewFilePointerLow
-    );
 
 void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool fShutdown, bool);
 
@@ -97,11 +87,6 @@ void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool 
     {
         chakra::Logger::error("Unable to obtain data to cleanup file object");
         return;
-    }
-
-    if (pLocalData->pLockController != NULL)
-    {
-        pLocalData->pLockController->ReleaseController();
     }
 
     if (!fShutdown && -1 != pLocalData->unix_fd)
@@ -220,209 +205,6 @@ PAL_ERROR FILEGetLastErrorFromErrnoAndFilename(char* lpPath)
     return palError;
 }
 
-
-PAL_ERROR
-CorUnix::InternalWriteFile(
-    CPalThread *pThread,
-    HANDLE hFile,
-    const void * lpBuffer,
-    uint32_t nNumberOfBytesToWrite,
-    uint32_t * lpNumberOfBytesWritten,
-    LPOVERLAPPED lpOverlapped
-    )
-{
-    PAL_ERROR palError = 0;
-    IPalObject *pFileObject = NULL;
-    CFileProcessLocalData *pLocalData = NULL;
-    IDataLock *pLocalDataLock = NULL;
-    IFileTransactionLock *pTransactionLock = NULL;
-    int ifd;
-
-    int32_t writeOffsetStartLow = 0, writeOffsetStartHigh = 0;
-    int res;
-
-    if (NULL != lpNumberOfBytesWritten)
-    {
-        //
-        // This must be set to 0 before any other error checking takes
-        // place, per MSDN
-        //
-
-        *lpNumberOfBytesWritten = 0;
-    }
-    else
-    {
-        chakra::Logger::error("lpNumberOfBytesWritten is NULL\n" );
-        palError = ERROR_INVALID_PARAMETER;
-        goto done;
-    }
-
-    // Win32 WriteFile disallows writing to STD_INPUT_HANDLE
-    if (hFile == INVALID_HANDLE_VALUE || hFile == pStdIn)
-    {
-        palError = ERROR_INVALID_HANDLE;
-        goto done;
-    }
-    else if ( lpOverlapped )
-    {
-        chakra::Logger::error("lpOverlapped is not NULL, as it should be.\n" );
-        palError = ERROR_INVALID_PARAMETER;
-        goto done;
-    }
-
-    palError = g_pObjectManager->ReferenceObjectByHandle(
-        pThread,
-        hFile,
-        &aotFile,
-        &pFileObject
-    );
-
-    if (NO_ERROR != palError)
-    {
-        goto done;
-    }
-    
-    palError = pFileObject->GetProcessLocalData(
-        pThread,
-        ReadLock, 
-        &pLocalDataLock,
-        reinterpret_cast<void**>(&pLocalData)
-        );
-
-    if (NO_ERROR != palError)
-    {
-        goto done;
-    }
-
-    if (pLocalData->open_flags_deviceaccessonly == TRUE)
-    {
-        ERROR("File open for device access only\n");
-        palError = ERROR_ACCESS_DENIED;
-        goto done;
-    }
-
-    ifd = pLocalData->unix_fd;
-
-    //
-    // Inform the lock controller for this file (if any) of our intention
-    // to perform a write. (Note that pipes don't have lock controllers.)
-    //
-    
-    if (NULL != pLocalData->pLockController)
-    {
-        /* Get the current file position to calculate the region to lock */
-        palError = InternalSetFilePointerForUnixFd(
-            ifd,
-            0,
-            &writeOffsetStartHigh,
-            FILE_CURRENT,
-            &writeOffsetStartLow
-            );
-
-        if (NO_ERROR != palError)
-        {
-            chakra::Logger::error("Failed to get the current file position\n");
-            palError = ERROR_INTERNAL_ERROR;
-            goto done;
-        }
-
-        palError = pLocalData->pLockController->GetTransactionLock(
-            writeOffsetStartLow,
-            writeOffsetStartHigh,
-            nNumberOfBytesToWrite,
-            0,
-            &pTransactionLock
-            );
-
-        if (NO_ERROR != palError)
-        {
-            ERROR("Unable to obtain write transaction lock");
-            goto done;
-        }
-    }
-
-    //
-    // Release the data lock before performing the (possibly blocking)
-    // write call
-    //
-
-    pLocalDataLock->ReleaseLock(pThread);
-    pLocalDataLock = NULL;
-    pLocalData = NULL;
-
-    res = write( ifd, lpBuffer, nNumberOfBytesToWrite );
-    TRACE("write() returns %d\n", res);
-
-    if ( res >= 0 )
-    {
-        *lpNumberOfBytesWritten = res;
-    }
-    else
-    {
-        palError = FILEGetLastErrorFromErrno();
-    }
-    
-done:
-    
-    if (NULL != pTransactionLock)
-    {
-        pTransactionLock->ReleaseLock();
-    }
-
-    if (NULL != pLocalDataLock)
-    {
-        pLocalDataLock->ReleaseLock(pThread);
-    }
-
-    if (NULL != pFileObject)
-    {
-        pFileObject->ReleaseReference(pThread);
-    }
-
-    return palError;
-}
-
-
-/*++
-Function:
-  WriteFileW
-
-Note:
-  lpOverlapped always NULL.
-
-See MSDN doc.
---*/
-BOOL
-WriteFile(
-       HANDLE hFile,
-       const void * lpBuffer,
-       uint32_t nNumberOfBytesToWrite,
-       uint32_t * lpNumberOfBytesWritten,
-       LPOVERLAPPED lpOverlapped)
-{
-    PAL_ERROR palError;
-    CPalThread *pThread;
-    
-    pThread = InternalGetCurrentThread();
-
-    palError = InternalWriteFile(
-        pThread,
-        hFile,
-        lpBuffer,
-        nNumberOfBytesToWrite,
-        lpNumberOfBytesWritten,
-        lpOverlapped
-        );
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-
-    LOGEXIT("WriteFile returns BOOL %d\n", NO_ERROR == palError);
-    return NO_ERROR == palError;
-}
-
 /*++
 Function:
   GetStdHandle
@@ -465,132 +247,6 @@ GetStdHandle(
 // handle multiple times, and, in the process, would attempt to recursively
 // obtain the local process data lock for the underlying file object.
 //
-
-PAL_ERROR
-InternalSetFilePointerForUnixFd(
-    int iUnixFd,
-    int32_t lDistanceToMove,
-    int32_t * lpDistanceToMoveHigh,
-    uint32_t dwMoveMethod,
-    int32_t * lpNewFilePointerLow
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    int     seek_whence = 0;
-    long seek_offset = 0LL;
-    long seek_res = 0LL;
-    off_t old_offset;
-
-    switch( dwMoveMethod )
-    {
-    case FILE_BEGIN:
-        seek_whence = SEEK_SET; 
-        break;
-    case FILE_CURRENT:
-        seek_whence = SEEK_CUR; 
-        break;
-    case FILE_END:
-        seek_whence = SEEK_END; 
-        break;
-    default:
-        ERROR("dwMoveMethod = %d is invalid\n", dwMoveMethod);
-        palError = ERROR_INVALID_PARAMETER;
-        goto done;
-    }
-
-    //
-    // According to MSDN, if lpDistanceToMoveHigh is not null, 
-    // lDistanceToMove is treated as unsigned; 
-    // it is treated as signed otherwise
-    //
-    
-    if ( lpDistanceToMoveHigh )
-    {
-        /* set the high 32 bits of the offset */
-        seek_offset = (static_cast<long>(*lpDistanceToMoveHigh) << 32);
-        
-        /* set the low 32 bits */
-        /* cast to unsigned long to avoid sign extension */
-        seek_offset |= static_cast<uint32_t>(lDistanceToMove);
-    }
-    else
-    {
-        seek_offset |= lDistanceToMove;
-    }
-
-    /* store the current position, in case the lseek moves the pointer
-       before the beginning of the file */
-    old_offset = lseek(iUnixFd, 0, SEEK_CUR);
-    if (old_offset == -1)
-    {
-        ERROR("lseek(fd,0,SEEK_CUR) failed errno:%d (%s)\n", 
-              errno, strerror(errno));
-        palError = ERROR_ACCESS_DENIED;
-        goto done;
-    }
-    
-    // Check to see if we're going to seek to a negative offset.
-    // If we're seeking from the beginning or the current mark,
-    // this is simple.
-    if ((seek_whence == SEEK_SET && seek_offset < 0) ||
-        (seek_whence == SEEK_CUR && seek_offset + old_offset < 0))
-    {
-        palError = ERROR_NEGATIVE_SEEK;
-        goto done;
-    }
-    else if (seek_whence == SEEK_END && seek_offset < 0)
-    {
-        // We need to determine if we're seeking past the
-        // beginning of the file, but we don't want to adjust
-        // the mark in the process. stat is the only way to
-        // do that.
-        struct stat fileData;
-        int result;
-        
-        result = fstat(iUnixFd, &fileData);
-        if (result == -1)
-        {
-            // It's a bad fd. This shouldn't happen because
-            // we've already called lseek on it, but you
-            // never know. This is the best we can do.
-            palError = ERROR_ACCESS_DENIED;
-            goto done;
-        }
-        if (fileData.st_size < -seek_offset)
-        {
-            // Seeking past the beginning.
-            palError = ERROR_NEGATIVE_SEEK;
-            goto done;
-        }
-    }
-
-    seek_res = static_cast<long>(lseek(iUnixFd,
-                                       seek_offset,
-                                       seek_whence));
-    if ( seek_res < 0 )
-    {
-        /* lseek() returns -1 on error, but also can seek to negative
-           file offsets, so -1 can also indicate a successful seek to offset
-           -1.  Win32 doesn't allow negative file offsets, so either case
-           is an error. */
-        ERROR("lseek failed errno:%d (%s)\n", errno, strerror(errno));
-        lseek(iUnixFd, old_offset, SEEK_SET);
-        palError = ERROR_ACCESS_DENIED;
-    }
-    else
-    {
-        /* store high-order uint32_t */
-        if ( lpDistanceToMoveHigh )
-            *lpDistanceToMoveHigh = static_cast<uint32_t>(seek_res >> 32);
-    
-        /* return low-order uint32_t of seek result */
-        *lpNewFilePointerLow = static_cast<uint32_t>(seek_res);
-    }
-
-done:
-
-    return palError;
-}
 
 
 #define ENSURE_UNIQUE_NOT_ZERO \
@@ -707,7 +363,6 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
     IPalObject *pRegisteredFile = NULL;
     IDataLock *pDataLock = NULL;
     CFileProcessLocalData *pLocalData = NULL;
-    IFileLockController *pLockController = NULL;
     CObjectAttributes oa;
 
     HANDLE hFile = INVALID_HANDLE_VALUE;
@@ -757,9 +412,6 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
     // to the local file data
     //
 
-    pLocalData->pLockController = pLockController;
-    pLockController = NULL;
-
     //
     // We've finished initializing our local data, so release that lock
     //
@@ -785,11 +437,6 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
     pFileObject = NULL;
 
 done:
-
-    if (NULL != pLockController)
-    {
-        pLockController->ReleaseController();
-    }
 
     if (NULL != pDataLock)
     {
