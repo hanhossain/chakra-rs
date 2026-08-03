@@ -1297,7 +1297,6 @@ namespace Js
 #if DBG_DUMP
                 DynamicProfileInfo::DumpScriptContext(this);
 #endif
-                DynamicProfileInfo::DumpScriptContextToFile(this);
 #endif
 
 #if ENABLE_PROFILE_INFO

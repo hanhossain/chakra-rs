@@ -511,7 +511,6 @@ namespace Js
         static void DumpScriptContext(ScriptContext * scriptContext);
         static char16_t const * GetImplicitCallFlagsString(ImplicitCallFlags flags);
 #endif
-        static void DumpScriptContextToFile(ScriptContext * scriptContext);
         static bool NeedProfileInfoList();
 #if JS_PROFILE_DATA_INTERFACE
         friend class ProfileDataObject;
