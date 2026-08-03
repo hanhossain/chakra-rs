@@ -528,7 +528,6 @@ namespace Js
 #define DEFAULT_CONFIG_MaxSingleCharStrJumpTableRatio  (2)       // Maximum single char string jump table size as multiples of the actual case arm
 #define DEFAULT_CONFIG_MaxSingleCharStrJumpTableSize  (128)       // Maximum single char string jump table size
 #define DEFAULT_CONFIG_MinSwitchJumpTableSize   (9)     // Minimum number of case target entries in the jump table(this may also include values that are missing in the consecutive set of integer case arms)
-#define DEFAULT_CONFIG_SwitchOptHolesThreshold  (50)     // Maximum percentage of holes (missing case values in a switch statement) with which a jump table can be created
 #define DEFAULT_CONFIG_MaxLinearStringCaseCount (4)     // Maximum number of String cases (in switch statement) for which instructions can be generated linearly.
 
 #define DEFAULT_CONFIG_MinDeferredFuncTokenCount (20)   // Minimum size in tokens of a defer-parsed function
@@ -1096,7 +1095,6 @@ namespace Js
         u"SwallowExceptions",
 #endif
         u"PrintSystemException",
-        u"SwitchOptHolesThreshold",
         u"Trace",
 
         u"Version",
@@ -2020,9 +2018,8 @@ namespace Js
 #if EXCEPTION_RECOVERY
         u"Force a try/catch around every statement",
 #endif
-        u"Always print a message when there's OOM or OOS",
-        u"Maximum percentage of holes (missing case values in a switch statement) with which a jump table can be created",
         // todo (hanhossain): flag end
+        u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
 
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
@@ -2541,9 +2538,8 @@ namespace Js
 #if EXCEPTION_RECOVERY
         NoParentFlag,
 #endif
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
         NoParentFlag,
 
         NoParentFlag,
@@ -3085,7 +3081,6 @@ namespace Js
         SwallowExceptions(false),
 #endif
         PrintSystemException(false),
-        SwitchOptHolesThreshold(DEFAULT_CONFIG_SwitchOptHolesThreshold),
         Trace(),
 
         Version(6 ),
@@ -4603,8 +4598,6 @@ namespace Js
         #endif
         case PrintSystemExceptionFlag:
             return FlagBoolean;
-        case SwitchOptHolesThresholdFlag:
-            return FlagNumber;
         case TraceFlag:
             return FlagPhases;
 
@@ -5495,8 +5488,6 @@ namespace Js
         #endif
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
-        case SwitchOptHolesThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&SwitchOptHolesThreshold));
         case TraceFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&Trace));
 
