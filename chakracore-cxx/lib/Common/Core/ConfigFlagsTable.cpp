@@ -1112,9 +1112,6 @@ namespace Js
         u"LoopAlignNopLimit",
 #endif
 
-#ifdef PROFILE_MEM
-        u"TraceMemory",
-#endif
         u"Version",
         u"WERExceptionSupport",
         u"ExtendedErrorStackForTestHost",
@@ -2046,9 +2043,6 @@ namespace Js
         u"Max number of nops for loop alignment",
 #endif
 
-#ifdef PROFILE_MEM
-        u"Trace memory usage",
-#endif
         // todo (hanhossain): flag end
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
         u"WER feature for extended exception support. Enabled when WinRT is enabled",
@@ -2576,9 +2570,6 @@ namespace Js
         NoParentFlag,
 #endif
 
-#ifdef PROFILE_MEM
-        NoParentFlag,
-#endif
         // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
@@ -3128,9 +3119,6 @@ namespace Js
         LoopAlignNopLimit(DEFAULT_CONFIG_LoopAlignNopLimit),
 #endif
 
-#ifdef PROFILE_MEM
-        TraceMemory(),
-#endif
         Version(6 ),
         WERExceptionSupport(false),
         ExtendedErrorStackForTestHost(DEFAULT_CONFIG_ExtendedErrorStackForTestHost),
@@ -4660,10 +4648,6 @@ namespace Js
             return FlagNumber;
         #endif
 
-        #ifdef PROFILE_MEM
-        case TraceMemoryFlag:
-            return FlagPhases;
-        #endif
         case VersionFlag:
             return FlagNumber;
         case WERExceptionSupportFlag:
@@ -5565,10 +5549,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&LoopAlignNopLimit));
         #endif
 
-        #ifdef PROFILE_MEM
-        case TraceMemoryFlag:
-            return reinterpret_cast<void*>(const_cast<Phases*>(&TraceMemory));
-        #endif
         case VersionFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Version));
         case WERExceptionSupportFlag:
