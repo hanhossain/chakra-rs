@@ -261,7 +261,7 @@ PAL__wcstoui64(
     unsigned long long res;
     int size;
 
-    size = WideCharToMultiByte(nptr, -1, NULL, 0, NULL);
+    size = WideCharToMultiByte(nptr, -1, NULL, 0);
     if (!size)
     {
         chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
@@ -277,7 +277,7 @@ PAL__wcstoui64(
         res = 0;
         goto PAL__wcstoui64Exit;
     }
-    size = WideCharToMultiByte(nptr, -1, s_nptr, size, NULL);
+    size = WideCharToMultiByte(nptr, -1, s_nptr, size);
     if (!size)
     {
         chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
