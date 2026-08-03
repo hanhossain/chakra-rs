@@ -3077,20 +3077,6 @@ namespace Js
     void FunctionBody::RestoreState(ParseNodeFnc * pnodeFnc)
     {
         Assert(this->IsReparsed());
-        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        if(!!pnodeFnc->ChildCallsEval() != this->GetChildCallsEval())
-        {
-            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"Child calls eval is different on debug reparse: %s(%s)\n", this->GetExternalDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
-        }
-        if(!!pnodeFnc->CallsEval() != this->GetCallsEval())
-        {
-            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"Calls eval is different on debug reparse: %s(%s)\n", this->GetExternalDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
-        }
-        if(!!pnodeFnc->HasReferenceableBuiltInArguments() != this->HasReferenceableBuiltInArguments())
-        {
-            OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"Referenceable Built in args is different on debug reparse: %s(%s)\n", this->GetExternalDisplayName(), this->GetDebugNumberSet(debugStringBuffer));
-        }
-
         pnodeFnc->SetChildCallsEval(this->GetChildCallsEval());
         pnodeFnc->SetCallsEval(this->GetCallsEval());
         pnodeFnc->SetHasReferenceableBuiltInArguments(this->HasReferenceableBuiltInArguments());
@@ -4979,10 +4965,6 @@ namespace Js
         this->SetAuxPtr<AuxPointerType::StackNestedFuncParent>(nullptr);
         this->SetReparsed(true);
 #if DBG
-        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        OUTPUT_VERBOSE_TRACE(Js::DebuggerPhase, u"Regenerate Due To Debug Mode: function %s (%s) from script context %p\n",
-            this->GetDisplayName(), this->GetDebugNumberSet(debugStringBuffer), m_scriptContext);
-
         this->UnlockCounters(); // assuming background jit is stopped and allow the counter setters access again
 #endif
     }
@@ -6047,11 +6029,6 @@ namespace Js
             )
         {
             PolymorphicInlineCache * polymorphicInlineCache = CreatePolymorphicInlineCache(index, MinPolymorphicInlineCacheSize);
-            if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
-            {
-                this->DumpFullFunctionName();
-                Output::Print(u": New PIC, index = %d, size = %d\n", index, MinPolymorphicInlineCacheSize);
-            }
 
 #if PHASE_PRINT_INTRUSIVE_TESTTRACE1
             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
@@ -6078,11 +6055,6 @@ namespace Js
         Assert(newPolymorphicInlineCacheSize > polymorphicInlineCacheSize);
         PolymorphicInlineCache * newPolymorphicInlineCache = CreatePolymorphicInlineCache(index, newPolymorphicInlineCacheSize);
         polymorphicInlineCache->CopyTo(propertyId, m_scriptContext, newPolymorphicInlineCache);
-        if (PHASE_VERBOSE_TRACE1(Js::PolymorphicInlineCachePhase))
-        {
-            this->DumpFullFunctionName();
-            Output::Print(u": Bigger PIC, index = %d, oldSize = %d, newSize = %d\n", index, polymorphicInlineCacheSize, newPolymorphicInlineCacheSize);
-        }
 #if PHASE_PRINT_INTRUSIVE_TESTTRACE1
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
 #endif

@@ -7595,26 +7595,6 @@ Lowerer::GenerateCachedTypeCheck(IR::Instr *instrChk, IR::PropertySymOpnd *prope
         }
     }
 
-    if (PHASE_VERBOSE_TRACE(Js::ObjTypeSpecPhase, this->m_func))
-    {
-        OUTPUT_VERBOSE_TRACE_FUNC(Js::ObjTypeSpecPhase, this->m_func, u"Emitted %s type check ",
-            directCheckType != nullptr ? u"direct" : propertySymOpnd->IsPoly() ? u"equivalent" : u"indirect");
-#if DBG
-        if (propertySymOpnd->GetGuardedPropOps() != nullptr)
-        {
-            Output::Print(u" guarding operations:\n    ");
-            propertySymOpnd->GetGuardedPropOps()->Dump();
-        }
-        else
-        {
-            Output::Print(u"\n");
-        }
-#else
-        Output::Print(u"\n");
-#endif
-        Output::Flush();
-    }
-
     if (doEquivTypeCheck)
     {
         // TODO (ObjTypeSpec): For isolated equivalent type checks it would be good to emit a check if the cache is still valid, and
@@ -7786,8 +7766,6 @@ Lowerer::GenerateCachedTypeWithoutPropertyCheck(IR::Instr *instrInsert, IR::Prop
 
     if (typePropertyGuard)
     {
-        bool emitDirectCheck = true;
-
         Assert(typePropertyGuard != nullptr);
         Assert(Js::PropertyGuard::GetSizeOfValue() == static_cast<size_t>(TySize[TyMachPtr]));
 
@@ -7806,11 +7784,6 @@ Lowerer::GenerateCachedTypeWithoutPropertyCheck(IR::Instr *instrInsert, IR::Prop
         {
             expectedTypeOpnd = IR::MemRefOpnd::New((void*)(typePropertyGuard->GetAddressOfValue()), TyMachPtr, this->m_func, IR::AddrOpndKindDynamicGuardValueRef);
         }
-
-        emitDirectCheck = false;
-
-        OUTPUT_VERBOSE_TRACE_FUNC(Js::ObjTypeSpecPhase, this->m_func, u"Emitted %s type check for type 0x%p.\n",
-            emitDirectCheck ? u"direct" : u"indirect", typeWithoutProperty->GetAddr());
     }
     else
     {

@@ -80,11 +80,6 @@ private:
 
 
 #ifdef RECYCLER_TRACE
-#define IDLE_COLLECT_VERBOSE_TRACE(msg, ...) \
-    if (Js::Configuration::Global.flags.Verbose) \
-            { \
-        IDLE_COLLECT_TRACE(msg, ##__VA_ARGS__); \
-            }
 
 #define IDLE_COLLECT_TRACE(msg, ...) \
     if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::IdleCollectPhase)) \
@@ -94,5 +89,4 @@ private:
             }
 #else
 #define IDLE_COLLECT_TRACE(...)
-#define IDLE_COLLECT_VERBOSE_TRACE(...)
 #endif

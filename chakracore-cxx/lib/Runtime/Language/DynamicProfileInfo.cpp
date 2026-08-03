@@ -33,13 +33,11 @@ namespace Js
 
     void ArrayCallSiteInfo::SetIsNotNativeIntArray()
     {
-        OUTPUT_TRACE_WITH_STACK(Js::NativeArrayConversionPhase, u"SetIsNotNativeIntArray \n");
         bits |= NotNativeIntBit;
     }
 
     void ArrayCallSiteInfo::SetIsNotNativeArray()
     {
-        OUTPUT_TRACE_WITH_STACK(Js::NativeArrayConversionPhase, u"SetIsNotNativeArray \n");
         bits = NotNativeIntBit | NotNativeFloatBit;
     }
 

@@ -533,7 +533,6 @@ namespace Js
         #ifdef TRACK_DISPATCH
         TrackDispatchFlag,
         #endif
-        VerboseFlag,
         VersionFlag,
         WERExceptionSupportFlag,
         ExtendedErrorStackForTestHostFlag,
@@ -2093,8 +2092,6 @@ namespace Js
         // TODO (hanhossain): remove flag
             Boolean TrackDispatch;
         #endif
-        // TODO (hanhossain): remove flag
-        Boolean Verbose;
         // todo (hanhossain): flag end
         Number Version;
         Boolean WERExceptionSupport;
@@ -2245,34 +2242,16 @@ namespace Js
     #define PHASE_TRACE_StringConcat (false)
 #endif
 
-#define PHASE_VERBOSE_TRACE1(phase) \
-    ((PHASE_TRACE1((phase))) && Js::Configuration::Global.flags.Verbose)
-
-#define CUSTOM_PHASE_VERBOSE_TRACE1(flags, phase) \
-    ((CUSTOM_PHASE_TRACE1((flags), (phase))) && flags.Verbose)
-
-#define PHASE_VERBOSE_TRACE(phase, func) \
-    ((PHASE_TRACE((phase), (func))) && Js::Configuration::Global.flags.Verbose)
-#define PHASE_VERBOSE_TRACE_RAW(phase, sourceId, functionId) \
-    ((PHASE_TRACE_RAW((phase), (sourceId), (functionId))) && Js::Configuration::Global.flags.Verbose)
-
 #define PHASE_DUMP1(phase)          Js::Configuration::Global.flags.Dump.IsEnabled((phase))
 #define PHASE_DUMP(phase, func)     Js::Configuration::Global.flags.Dump.IsEnabled((phase), (func)->GetSourceContextId(),(func)->GetLocalFunctionId())
 
 #define PHASE_STATS1(phase)         Js::Configuration::Global.flags.Stats.IsEnabled((phase))
 #define CUSTOM_PHASE_STATS1(flags, phase) flags.Stats.IsEnabled((phase))
-#define PHASE_VERBOSE_STATS1(phase) \
-    ((PHASE_STATS1(phase)) && Js::Configuration::Global.flags.Verbose)
 
 #define PHASE_STATS_ALL(phase)      Js::Configuration::Global.flags.Stats.IsEnabledForAll((phase))
 #define PHASE_STATS(phase, func)    PHASE_STATS_RAW((phase), (func)->GetSourceContextId(), (func)->GetLocalFunctionId())
 #define PHASE_STATS_RAW(phase, sourceId, functionId) \
                                     Js::Configuration::Global.flags.Stats.IsEnabled((phase), (sourceId), (functionId))
-
-#define PHASE_VERBOSE_STATS(phase, func) \
-    ((PHASE_STATS(phase, func)) && Js::Configuration::Global.flags.Verbose)
-#define PHASE_VERBOSE_STATS_RAW(phase, sourceId, functionId) \
-    ((PHASE_STATS_RAW(phase, sourceId, functionId)) && Js::Configuration::Global.flags.Verbose)
 
 #define PHASE_TESTTRACE1(phase) Js::Configuration::Global.flags.TestTrace.IsEnabled((phase))
 #define PHASE_TESTTRACE(phase, func) PHASE_TESTTRACE_RAW((phase), (func)->GetSourceContextId(), (func)->GetLocalFunctionId())
@@ -2308,40 +2287,6 @@ namespace Js
         Output::Flush(); \
     }
 
-#define PHASE_PRINT_VERBOSE_TRACE1(phase, ...) \
-    if (PHASE_VERBOSE_TRACE1(phase)) \
-    { \
-        Output::Print(__VA_ARGS__); \
-        Output::Flush(); \
-    }
-
-#define CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(flags, phase, ...) \
-    if (CUSTOM_PHASE_VERBOSE_TRACE1(flags, phase)) \
-    { \
-        Output::Print(__VA_ARGS__); \
-        Output::Flush(); \
-    }
-
-#define PHASE_PRINT_VERBOSE_TRACE(phase, func, ...) \
-    if (PHASE_VERBOSE_TRACE(phase, func)) \
-    { \
-        Output::Print(__VA_ARGS__); \
-        Output::Flush(); \
-    }
-
-#define PHASE_PRINT_VERBOSE_TRACE_RAW(phase, sourceId, functionId, ...) \
-    if (PHASE_VERBOSE_TRACE_RAW(phase, sourceId, functionId)) \
-    { \
-        Output::Print(__VA_ARGS__); \
-        Output::Flush(); \
-    }
-
-#define PHASE_VERBOSE_TESTTRACE1(phase) (PHASE_TESTTRACE1(phase) && Js::Configuration::Global.flags.Verbose)
-#define PHASE_VERBOSE_TESTTRACE(phase, func) \
-    (PHASE_TESTTRACE(phase, func) && Js::Configuration::Global.flags.Verbose)
-#define PHASE_VERBOSE_TESTTRACE_RAW(phase, sourceId, functionId) \
-    (PHASE_TESTTRACE_RAW(phase, sourceId, functionId) && Js::Configuration::Global.flags.Verbose)
-
 #define PHASE_PRINT_TESTTRACE1(phase, ...) \
     if (PHASE_TESTTRACE1(phase)) \
     { \
@@ -2358,27 +2303,6 @@ namespace Js
 
 #define PHASE_PRINT_TESTTRACE_RAW(phase, sourceId, functionId, ...) \
     if (PHASE_TESTTRACE_RAW(phase, sourceId, functionId)) \
-    { \
-        Output::Print(__VA_ARGS__); \
-        Output::Flush(); \
-    }
-
-#define PHASE_PRINT_VERBOSE_TESTTRACE1(phase, ...) \
-    if (PHASE_VERBOSE_TESTTRACE1(phase)) \
-    { \
-        Output::Print(__VA_ARGS__); \
-        Output::Flush(); \
-    }
-
-#define PHASE_PRINT_VERBOSE_TESTTRACE(phase, func, ...) \
-    if (PHASE_VERBOSE_TESTTRACE(phase, func)) \
-    { \
-        Output::Print(__VA_ARGS__); \
-        Output::Flush(); \
-    }
-
-#define PHASE_PRINT_VERBOSE_TESTTRACE_RAW(phase, sourceId, functionId, ...) \
-    if (PHASE_VERBOSE_TESTTRACE_RAW(phase, sourceId, functionId)) \
     { \
         Output::Print(__VA_ARGS__); \
         Output::Flush(); \

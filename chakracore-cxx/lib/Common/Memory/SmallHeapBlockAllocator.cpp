@@ -213,8 +213,7 @@ SmallHeapBlockAllocator<TBlockType>::TrackNativeAllocatedObjects()
     Assert(curr <= reinterpret_cast<char*>(this->freeObjectList));
 
 #if DBG_DUMP
-    AllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"TrackNativeAllocatedObjects: recycler = 0x%p, sizeCat = %u, lastRuntimeAllocatedBlock = 0x%p, freeObjectList = 0x%p, nativeAllocatedObjectCount = %u\n",
-        recycler, sizeCat, this->lastNonNativeBumpAllocatedBlock, this->freeObjectList, (reinterpret_cast<char*>(this->freeObjectList) - curr) / sizeCat);
+    ;
 #endif
 
     while (curr < reinterpret_cast<char*>(this->freeObjectList))
@@ -234,8 +233,7 @@ SmallHeapBlockAllocator<TBlockType>::TrackNativeAllocatedObjects()
     size_t byteCount = ((char *)this->freeObjectList - curr);
 
 #if DBG_DUMP
-    AllocationVerboseTrace(u"TrackNativeAllocatedObjects: recycler = 0x%p, sizeCat = %u, lastRuntimeAllocatedBlock = 0x%p, freeObjectList = 0x%p, nativeAllocatedObjectCount = %u\n",
-        recycler, sizeCat, this->lastNonNativeBumpAllocatedBlock, this->freeObjectList, ((char *)this->freeObjectList - curr) / sizeCat);
+    ;
 #endif
 
     RECYCLER_PERF_COUNTER_ADD(LiveObject, byteCount / sizeCat);

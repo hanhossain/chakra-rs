@@ -506,10 +506,6 @@ LargeHeapBlock::AllocFreeListEntry(size_t size, ObjectInfoBits attributes, Large
     }
 #endif
 
-#if DBG
-    LargeAllocationVerboseTrace(this->heapInfo->recycler->GetRecyclerFlagsTable(), u"Allocated object of size 0x%x in from free list entry at address 0x%p\n", size, allocObject);
-#endif
-
     Assert(allocCount <= objectCount);
 
     header->objectIndex = headerIndex;
@@ -565,10 +561,6 @@ LargeHeapBlock::Alloc(size_t size, ObjectInfoBits attributes)
     }
 
     Recycler* recycler = this->heapInfo->recycler;
-#if DBG
-    LargeAllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Allocated object of size 0x%x in existing heap block at address 0x%p\n", size, allocObject);
-#endif
-
     Assert(allocCount < objectCount);
     allocAddressEnd = newAllocAddressEnd;
 #ifdef RECYCLER_ZERO_MEM_CHECK
@@ -1815,9 +1807,6 @@ LargeHeapBlock::SweepObjects(Recycler * recycler)
 #if DBG
             Assert(expectedSweepCount != 0);
             expectedSweepCount--;
-#endif
-#if DBG
-            LargeAllocationVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Index %d empty\n", i);
 #endif
             continue;
         }

@@ -370,7 +370,6 @@ namespace Js
 #define DEFAULT_CONFIG_NopFrequency         (8)
 #define DEFAULT_CONFIG_SpeculationCap       (1)         // Needs to be 1 and not 0 since the compiler complains about a condition being always false
 #define DEFAULT_CONFIG_ProfileBasedSpeculationCap (1600)
-#define DEFAULT_CONFIG_Verbose              (false)
 #define DEFAULT_CONFIG_ForceStrictMode      (false)
 #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
 #define DEFAULT_CONFIG_ExpirableCollectionTriggerThreshold (50)  // Threshold at which Entry Point Collection is triggered
@@ -1134,7 +1133,6 @@ namespace Js
 #ifdef TRACK_DISPATCH
         u"TrackDispatch",
 #endif
-        u"Verbose",
         u"Version",
         u"WERExceptionSupport",
         u"ExtendedErrorStackForTestHost",
@@ -2086,7 +2084,6 @@ namespace Js
 #ifdef TRACK_DISPATCH
         u"Save stack traces of where JavascriptDispatch/HostVariant are created",
 #endif
-        u"Dump details",
         // todo (hanhossain): flag end
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
         u"WER feature for extended exception support. Enabled when WinRT is enabled",
@@ -2634,7 +2631,6 @@ namespace Js
 #ifdef TRACK_DISPATCH
         NoParentFlag,
 #endif
-        NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
@@ -3204,7 +3200,6 @@ namespace Js
 #ifdef TRACK_DISPATCH
         TrackDispatch(false),
 #endif
-        Verbose(DEFAULT_CONFIG_Verbose),
         Version(6 ),
         WERExceptionSupport(false),
         ExtendedErrorStackForTestHost(DEFAULT_CONFIG_ExtendedErrorStackForTestHost),
@@ -4762,8 +4757,6 @@ namespace Js
         case TrackDispatchFlag:
             return FlagBoolean;
         #endif
-        case VerboseFlag:
-            return FlagBoolean;
         case VersionFlag:
             return FlagNumber;
         case WERExceptionSupportFlag:
@@ -5693,8 +5686,6 @@ namespace Js
         case TrackDispatchFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&TrackDispatch));
         #endif
-        case VerboseFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&Verbose));
         case VersionFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Version));
         case WERExceptionSupportFlag:
@@ -6534,9 +6525,6 @@ namespace Js
             retValue = false;
             break;
         #endif
-        case VerboseFlag:
-            retValue = DEFAULT_CONFIG_Verbose;
-            break;
         case WERExceptionSupportFlag:
             retValue = false;
             break;

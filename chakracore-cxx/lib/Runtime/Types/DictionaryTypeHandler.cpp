@@ -2704,23 +2704,6 @@ namespace Js
         DynamicObject* instance, DynamicTypeHandler* oldTypeHandler,
         DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
     {
-        if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"FixedFields: converting 0x%p from %s to %s:\n", instance, oldTypeHandlerName, newTypeHandlerName);
-            Output::Print(u"   before: type = 0x%p, type handler = 0x%p, old singleton = 0x%p(0x%p)\n",
-                oldType, oldTypeHandler, oldSingletonInstanceBefore, oldSingletonInstanceBefore != nullptr ? oldSingletonInstanceBefore->Get() : nullptr);
-            Output::Print(u"   fixed fields:");
-            oldTypeHandler->DumpFixedFields();
-            Output::Print(u"\n");
-        }
-        if (PHASE_VERBOSE_TESTTRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"FixedFields: converting instance from %s to %s:\n", oldTypeHandlerName, newTypeHandlerName);
-            Output::Print(u"   old singleton before %s null \n", oldSingletonInstanceBefore == nullptr ? u"==" : u"!=");
-            Output::Print(u"   fixed fields before:");
-            oldTypeHandler->DumpFixedFields();
-            Output::Print(u"\n");
-        }
     }
 
     template <typename T>
@@ -2728,55 +2711,12 @@ namespace Js
         DynamicObject* instance, DynamicTypeHandler* oldTypeHandler, DynamicTypeHandler* newTypeHandler,
         DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
     {
-        if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
-        {
-            RecyclerWeakReference<DynamicObject>* oldSingletonInstanceAfter = oldTypeHandler->GetSingletonInstance();
-            RecyclerWeakReference<DynamicObject>* newSingletonInstanceAfter = newTypeHandler->GetSingletonInstance();
-            Output::Print(u"   after: type = 0x%p, type handler = 0x%p, old singleton = 0x%p(0x%p), new singleton = 0x%p(0x%p)\n",
-                instance->GetType(), newTypeHandler,
-                oldSingletonInstanceAfter, oldSingletonInstanceAfter != nullptr ? oldSingletonInstanceAfter->Get() : nullptr,
-                newSingletonInstanceAfter, newSingletonInstanceAfter != nullptr ? newSingletonInstanceAfter->Get() : nullptr);
-            Output::Print(u"   fixed fields after:");
-            newTypeHandler->DumpFixedFields();
-            Output::Print(u"\n");
-            Output::Flush();
-        }
-        if (PHASE_VERBOSE_TESTTRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"   type %s, typeHandler %s, old singleton after %s null (%s), new singleton after %s null\n",
-                oldTypeHandler != newTypeHandler ? u"changed" : u"unchanged",
-                oldType != instance->GetType() ? u"changed" : u"unchanged",
-                oldSingletonInstanceBefore == nullptr ? u"==" : u"!=",
-                oldSingletonInstanceBefore != oldTypeHandler->GetSingletonInstance() ? u"changed" : u"unchanged",
-                newTypeHandler->GetSingletonInstance() == nullptr ? u"==" : u"!=");
-            Output::Print(u"   fixed fields after:");
-            newTypeHandler->DumpFixedFields();
-            Output::Print(u"\n");
-            Output::Flush();
-        }
     }
 
     template <typename T>
     void DictionaryTypeHandlerBase<T>::TraceFixedFieldsBeforeSetIsProto(
         DynamicObject* instance, DynamicTypeHandler* oldTypeHandler, DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
     {
-        if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"FixedFields: PathTypeHandler::SetIsPrototype(0x%p):\n", instance);
-            Output::Print(u"   before: type = 0x%p, old singleton = 0x%p(0x%p)\n",
-                oldType, oldSingletonInstanceBefore, oldSingletonInstanceBefore != nullptr ? oldSingletonInstanceBefore->Get() : nullptr);
-            Output::Print(u"   fixed fields:");
-            oldTypeHandler->DumpFixedFields();
-            Output::Print(u"\n");
-        }
-        if (PHASE_VERBOSE_TESTTRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"FixedFields: PathTypeHandler::SetIsPrototype():\n");
-            Output::Print(u"   old singleton before %s null \n", oldSingletonInstanceBefore == nullptr ? u"==" : u"!=");
-            Output::Print(u"   fixed fields before:");
-            oldTypeHandler->DumpFixedFields();
-            Output::Print(u"\n");
-        }
     }
 
     template <typename T>
@@ -2784,30 +2724,6 @@ namespace Js
         DynamicObject* instance, DynamicTypeHandler* oldTypeHandler, DynamicTypeHandler* newTypeHandler,
         DynamicType* oldType, RecyclerWeakReference<DynamicObject>* oldSingletonInstanceBefore)
     {
-        if (PHASE_VERBOSE_TRACE1(FixMethodPropsPhase))
-        {
-            RecyclerWeakReference<DynamicObject>* oldSingletonInstanceAfter = oldTypeHandler->GetSingletonInstance();
-            RecyclerWeakReference<DynamicObject>* newSingletonInstanceAfter = newTypeHandler->GetSingletonInstance();
-            Output::Print(u"   after: type = 0x%p, type handler = 0x%p, old singleton = 0x%p(0x%p), new singleton = 0x%p(0x%p)\n",
-                instance->GetType(), newTypeHandler,
-                oldSingletonInstanceAfter, oldSingletonInstanceAfter != nullptr ? oldSingletonInstanceAfter->Get() : nullptr,
-                newSingletonInstanceAfter, newSingletonInstanceAfter != nullptr ? newSingletonInstanceAfter->Get() : nullptr);
-            Output::Print(u"   fixed fields:");
-            newTypeHandler->DumpFixedFields();
-            Output::Print(u"\n");
-            Output::Flush();
-        }
-        if (PHASE_VERBOSE_TESTTRACE1(FixMethodPropsPhase))
-        {
-            Output::Print(u"   type %s, old singleton after %s null (%s)\n",
-                oldType != instance->GetType() ? u"changed" : u"unchanged",
-                oldSingletonInstanceBefore == nullptr ? u"==" : u"!=",
-                oldSingletonInstanceBefore != oldTypeHandler->GetSingletonInstance() ? u"changed" : u"unchanged");
-            Output::Print(u"   fixed fields after:");
-            newTypeHandler->DumpFixedFields();
-            Output::Print(u"\n");
-            Output::Flush();
-        }
     }
 #endif // ENABLE_FIXED_FIELDS
 

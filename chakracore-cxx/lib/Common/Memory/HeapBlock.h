@@ -16,11 +16,6 @@ namespace Memory
 {
 enum class PageHeapBlockTypeFilter;
 
-#define PageHeapVerboseTrace(flags, ...) \
-if (flags.Verbose && flags.Trace.IsEnabled(Js::PageHeapPhase)) \
-    { \
-        Output::Print(__VA_ARGS__); \
-    }
 #define PageHeapTrace(flags, ...) \
 if (flags.Trace.IsEnabled(Js::PageHeapPhase)) \
     { \

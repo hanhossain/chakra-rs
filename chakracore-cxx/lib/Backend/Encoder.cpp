@@ -482,9 +482,9 @@ Encoder::Encode()
     xdataSize = 0;
     pdataCount = 0;
 #endif
-    OUTPUT_VERBOSE_TRACE(Js::EmitterPhase, u"PDATA count:%u\n", pdataCount);
-    OUTPUT_VERBOSE_TRACE(Js::EmitterPhase, u"Size of XDATA:%u\n", xdataSize);
-    OUTPUT_VERBOSE_TRACE(Js::EmitterPhase, u"Size of code:%u\n", codeSize);
+    ;
+    ;
+    ;
 
     TryCopyAndAddRelocRecordsForSwitchJumpTableEntries(m_encodeBuffer, codeSize, jumpTableListForSwitchStatement, totalJmpTableSizeInBytes);
 
@@ -1098,10 +1098,6 @@ void Encoder::ValidateCRC(uint bufferCRC, uint initialCRCSeed, _In_reads_bytes_(
 BOOL
 Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, uint * pShortenedBufferCRC, uint bufferCrcToValidate, size_t jumpTableSize)
 {
-    static uint32_t globalTotalBytesSaved = 0, globalTotalBytesWithoutShortening = 0;
-    static uint32_t globalTotalBytesInserted = 0; // loop alignment nops
-
-    uint32_t brShortenedCount = 0;
     bool   codeChange       = false; // any overall BR shortened or label aligned ?
 
     uint8_t* buffStart = *codeStart;
@@ -1214,7 +1210,6 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
         {
             uint32_t brOffset;
 
-            brShortenedCount++;
             // update with shortened br offset
             reloc.m_ptr = shortBrPtr;
 
@@ -1242,14 +1237,9 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
     if (!codeChange)
         return codeChange;
 
-    globalTotalBytesWithoutShortening += (uint32_t)(*codeSize);
-    globalTotalBytesSaved += (uint32_t)(*codeSize - newCodeSize);
-
     if (PHASE_TRACE(Js::BrShortenPhase, this->m_func))
     {
-        OUTPUT_VERBOSE_TRACE(Js::BrShortenPhase, u"func: %s, bytes saved: %d, bytes saved %%:%.2f, total bytes saved: %d, total bytes saved%%: %.2f, BR shortened: %d\n",
-            this->m_func->GetJITFunctionBody()->GetDisplayName(), (*codeSize - newCodeSize), ((float)*codeSize - newCodeSize) / *codeSize * 100,
-            globalTotalBytesSaved, ((float)globalTotalBytesSaved) / globalTotalBytesWithoutShortening * 100 , brShortenedCount);
+        ;
         Output::Flush();
     }
 
@@ -1367,10 +1357,6 @@ Encoder::ShortenBranchesAndLabelAlign(uint8_t **codeStart, ptrdiff_t *codeSize, 
 
             if (PHASE_TRACE(Js::LoopAlignPhase, this->m_func))
             {
-                globalTotalBytesInserted += nop_count;
-
-                OUTPUT_VERBOSE_TRACE(Js::LoopAlignPhase, u"func: %s, bytes inserted: %d, bytes inserted %%:%.4f, total bytes inserted:%d, total bytes inserted %%:%.4f\n",
-                    this->m_func->GetJITFunctionBody()->GetDisplayName(), nop_count, (float)nop_count / newCodeSize * 100, globalTotalBytesInserted, (float)globalTotalBytesInserted / (globalTotalBytesWithoutShortening - globalTotalBytesSaved) * 100);
                 Output::Flush();
             }
             uint8_t * tmpDst_p = dst_p;

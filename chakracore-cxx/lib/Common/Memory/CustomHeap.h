@@ -9,11 +9,6 @@
 namespace Memory
 {
 
-#define VerboseHeapTrace(...) { \
-    OUTPUT_VERBOSE_TRACE(Js::CustomHeapPhase, __VA_ARGS__); \
-}
-
-
 #define HeapTrace(...) { \
     Output::Print(__VA_ARGS__); \
     Output::Flush(); \
@@ -190,7 +185,7 @@ public:
 
             if (address == nullptr)
             {
-                VerboseHeapTrace(u"PRE-RESERVE: PreReserved Segment CANNOT be allocated \n");
+                ;
             }
         }
 
@@ -204,7 +199,7 @@ public:
         }
         else
         {
-            VerboseHeapTrace(u"PRE-RESERVE: Allocing new page in PreReserved Segment \n");
+            ;
         }
 
         return address;

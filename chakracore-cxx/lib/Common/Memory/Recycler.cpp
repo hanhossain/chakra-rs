@@ -1394,10 +1394,6 @@ Recycler::ScanStack()
 {
     if (this->skipStack)
     {
-#ifdef RECYCLER_TRACE
-        CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(GetRecyclerFlagsTable(), Js::ScanStackPhase, u"[%04X] Skipping the stack scan\n", ::GetCurrentThreadId());
-#endif
-
         Assert(this->isFinishGCOnIdle || this->isConcurrentGCOnIdle || this->ExpectStackSkip());
         return 0;
     }
@@ -1739,7 +1735,7 @@ Recycler::ResetMarks(ResetMarkFlags flags)
     Assert(!this->CollectionInProgress());
     this->SetCollectionState(CollectionStateResetMarks);
 
-    RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"Reset marks\n");
+    ;
     RECYCLER_PROFILE_EXEC_BEGIN(this, Js::ResetMarksPhase);
 
     Assert(IsMarkStackEmpty());
@@ -2034,18 +2030,18 @@ Recycler::FinishMark(uint32_t waitTime)
     if (scannedRootBytes != Recycler::InvalidScanRootBytes)
     {
 #if DBG
-        RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"CTO: %d\n", this->clientTrackedObjectList.Count());
+        ;
 #endif
 
         if (this->inPartialCollectMode)
         {
-            RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"Processing client tracked objects\n");
+            ;
             ProcessClientTrackedObjects();
         }
         else
         if (DoQueueTrackedObject())
         {
-            RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"Processing regular tracked objects\n");
+            ;
 
             ProcessTrackedObjects();
         }
@@ -2229,7 +2225,7 @@ Recycler::RootMark(CollectionState markState)
 {
     size_t scannedRootBytes = 0;
     Assert(!this->NeedOOMRescan() || markState == CollectionStateRescanMark);
-    RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"PreMark done, partial collect: %d\n", this->inPartialCollectMode);
+    ;
 
     Assert(collectionState == (markState == CollectionStateMark? CollectionStateFindRoots : CollectionStateRescanFindRoots));
 
@@ -2366,7 +2362,7 @@ Recycler::EndMarkOnLowMemory()
     this->inEndMarkOnLowMemory = true;
 
     // Treat this as a concurrent mark reset so that we don't invalidate the allocators
-    RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"OOM during mark- rerunning mark\n");
+    ;
 
     // Try to release as much memory as possible
     autoHeap.DecommitNow();
@@ -4476,9 +4472,6 @@ Recycler::BackgroundScanStack()
 {
     if (this->skipStack)
     {
-#ifdef RECYCLER_TRACE
-        CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(GetRecyclerFlagsTable(), Js::ScanStackPhase, u"[%04X] Skipping the stack scan\n", ::GetCurrentThreadId());
-#endif
         return 0;
     }
 
@@ -5347,9 +5340,6 @@ Recycler::ShouldIdleCollectOnExit()
 
     if (this->CollectionInProgress())
     {
-#ifdef RECYCLER_TRACE
-        CUSTOM_PHASE_PRINT_VERBOSE_TRACE1(GetRecyclerFlagsTable(), Js::IdleCollectPhase, u"%04X> Skipping scheduling Idle Collect. Reason: Collection in progress\n", ::GetCurrentThreadId());
-#endif
 
         // Don't schedule an idle collect if there is a collection going on already
         // IDLE-GC-TODO: Fix ResetHeuristics in the GC so we can detect memory allocation during
@@ -7228,7 +7218,7 @@ void Recycler::SetCheckFn(BOOL(*checkFn)(char* addr, size_t size))
 void
 Recycler::NotifyFree(char *address, size_t size)
 {
-    RecyclerVerboseTrace(GetRecyclerFlagsTable(), u"Sweeping object %p\n", address);
+    ;
 
 #ifdef RECYCLER_TEST_SUPPORT
     if (BinaryFeatureControl::RecyclerTest())

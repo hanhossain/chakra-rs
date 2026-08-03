@@ -148,9 +148,6 @@ Recycler::AllocWithAttributesInlined(size_t size)
     this->FillCheckPad(memBlock, size, alignedSize);
 #endif
 
-
-    SwbVerboseTrace(this->GetRecyclerFlagsTable(), u"Allocated SWB memory: 0x%p\n", memBlock);
-
 #pragma prefast(suppress:6313, "attributes is a template parameter and can be 0")
     if ((attributes & NewTrackBit) &&
 #if defined(RECYCLER_STATS)

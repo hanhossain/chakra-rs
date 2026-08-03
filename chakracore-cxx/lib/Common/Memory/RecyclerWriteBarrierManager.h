@@ -211,23 +211,9 @@ if (flags.Trace.IsEnabled(Js::MemoryAllocationPhase)) \
 { \
     Output::Print(__VA_ARGS__); \
 }
-#define GlobalSwbVerboseTrace(...) \
-if (Js::Configuration::Global.flags.Verbose && \
-    Js::Configuration::Global.flags.Trace.IsEnabled(Js::MemoryAllocationPhase)) \
-{ \
-    Output::Print(__VA_ARGS__); \
-}
 
-#define SwbVerboseTrace(flags, ...) \
-if (flags.Verbose && \
-    flags.Trace.IsEnabled(Js::MemoryAllocationPhase)) \
-{ \
-    Output::Print(__VA_ARGS__); \
-}
 #else
 #define SwbTrace(...)
-#define SwbVerboseTrace(...)
-#define GlobalSwbVerboseTrace(...)
 #endif
 
 }

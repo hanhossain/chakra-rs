@@ -511,31 +511,6 @@ ObjTypeSpecFldInfo* ObjTypeSpecFldInfo::CreateFrom(uint id, Js::InlineCache* cac
             if (fixedProperty != nullptr && Js::VarIs<Js::JavascriptFunction>(fixedProperty))
             {
                 functionObject = (Js::JavascriptFunction *)fixedProperty;
-                if (PHASE_VERBOSE_TRACE(Js::FixedMethodsPhase, functionBody))
-                {
-                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-
-                    Js::DynamicObject* protoObject = isProto ? prototypeObject : nullptr;
-                    Output::Print(u"FixedFields: function %s (%s) cloning cache with fixed method: %s (%s), function: 0x%p, body: 0x%p (cache id: %d, layout: %s, type: 0x%p, proto: 0x%p, proto type: 0x%p)\n",
-                        functionBody->GetDisplayName(), functionBody->GetDebugNumberSet(debugStringBuffer),
-                        fixedPropertyRecord->GetBuffer(), functionObject->GetFunctionInfo()->GetFunctionProxy() ?
-                        functionObject->GetFunctionInfo()->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer2) : u"(null)", functionObject, functionObject->GetFunctionInfo(),
-                        cacheId, isProto ? u"proto" : u"local", type, protoObject, protoObject != nullptr ? protoObject->GetType() : nullptr);
-                    Output::Flush();
-                }
-
-                if (PHASE_VERBOSE_TESTTRACE(Js::FixedMethodsPhase, functionBody))
-                {
-                    char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-
-                    Output::Print(u"FixedFields: function %s (%s) cloning cache with fixed method: %s (%s) (cache id: %d, layout: %s)\n",
-                        functionBody->GetDisplayName(), functionBody->GetDebugNumberSet(debugStringBuffer), fixedPropertyRecord->GetBuffer(), functionObject->GetFunctionInfo()->GetFunctionProxy() ?
-                        functionObject->GetFunctionInfo()->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer2) : u"(null)", functionObject, functionObject->GetFunctionInfo(),
-                        cacheId, isProto ? u"proto" : u"local");
-                    Output::Flush();
-                }
 
                 // We don't need to check for a singleton here. We checked that the singleton still existed
                 // when we obtained the fixed field value inside TryUseFixedProperty. Since we don't need the

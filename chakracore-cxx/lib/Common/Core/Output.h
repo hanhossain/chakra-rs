@@ -19,24 +19,12 @@ enum Phase: unsigned short;
 #if defined(BGJIT_STATS)
 #define OUTPUT_TRACE(Phase, ...) Output::Trace((Phase), __VA_ARGS__)
 #define OUTPUT_TRACE_2(Phase, ...) Output::Trace2((Phase), __VA_ARGS__)
-#define OUTPUT_VERBOSE_TRACE(Phase, ...) \
-    if(Js::Configuration::Global.flags.Verbose) \
-    { \
-        OUTPUT_TRACE((Phase), __VA_ARGS__); \
-    }
 #define OUTPUT_STATS(Phase, ...) Output::TraceStats((Phase), __VA_ARGS__)
-#define OUTPUT_VERBOSE_STATS(Phase, ...) \
-    if(Js::Configuration::Global.flags.Verbose) \
-    { \
-        OUTPUT_STATS((Phase), __VA_ARGS__); \
-    }
 #define OUTPUT_FLUSH() Output::Flush()
 #else
 #define OUTPUT_TRACE(Phase, ...)
 #define OUTPUT_TRACE_2(Phase, ...)
-#define OUTPUT_VERBOSE_TRACE(Phase, ...)
 #define OUTPUT_STATS(Phase, ...)
-#define OUTPUT_VERBOSE_STATS(Phase, ...)
 #define OUTPUT_FLUSH()
 #endif
 

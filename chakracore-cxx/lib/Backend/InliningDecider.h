@@ -90,11 +90,6 @@ private:
     PREVENT_COPY(InliningDecider)
 };
 
-#define INLINE_VERBOSE_TRACE(...) \
-    if (Js::Configuration::Global.flags.Verbose && Js::Configuration::Global.flags.Trace.IsEnabled(Js::InlinePhase, this->topFunc->GetSourceContextId(), this->topFunc->GetLocalFunctionId())) \
-    { \
-    Output::Print(__VA_ARGS__); \
-    }
 #define INLINE_TRACE(...) \
     if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::InlinePhase, topFunc->GetSourceContextId(), topFunc->GetLocalFunctionId())) \
     { \
@@ -109,13 +104,6 @@ private:
 #define INLINE_TRACE_AND_TESTTRACE(...) \
     INLINE_TRACE(__VA_ARGS__)\
     INLINE_TESTTRACE(__VA_ARGS__)
-
-#define INLINE_TESTTRACE_VERBOSE(...) \
-    if (Js::Configuration::Global.flags.Verbose && Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::InlinePhase, topFunc->GetSourceContextId(), topFunc->GetLocalFunctionId())) \
-    { \
-    Output::Print(__VA_ARGS__); \
-    Output::Flush(); \
-    }
 
 #define POLYMORPHIC_INLINE_TESTTRACE(...) \
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::PolymorphicInlinePhase)) \

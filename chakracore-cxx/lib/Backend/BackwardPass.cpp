@@ -282,12 +282,6 @@ BackwardPass::InsertArgInsForFormals()
             AssertMsg(!func->HasStackSymForFormal(argumentIndex - 1), "Already has a stack sym for this formal?");
             this->func->TrackStackSymForFormalIndex(argumentIndex - 1, symDst);
         }
-
-        if (PHASE_VERBOSE_TRACE1(Js::StackArgFormalsOptPhase) && paramsCount > 0)
-        {
-            Output::Print(u"StackArgFormals : %s (%d) :Inserting ArgIn_A for LdSlot (formals) in the start of Deadstore pass. \n", func->GetJITFunctionBody()->GetDisplayName(), func->GetFunctionNumber());
-            Output::Flush();
-        }
     }
 }
 
@@ -828,27 +822,8 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
                         blockSucc->cloneStrCandidates = nullptr;
                     }
                 }
-#if DBG_DUMP
-                if (PHASE_VERBOSE_TRACE(Js::TraceObjTypeSpecWriteGuardsPhase, this->func))
-                {
-                    char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    Output::Print(u"ObjTypeSpec: top function %s (%s), function %s (%s), write guard symbols on edge %d => %d: ",
-                        this->func->GetTopFunc()->GetJITFunctionBody()->GetDisplayName(),
-                        this->func->GetTopFunc()->GetDebugNumberSet(debugStringBuffer),
-                        this->func->GetJITFunctionBody()->GetDisplayName(),
-                        this->func->GetDebugNumberSet(debugStringBuffer2), block->GetBlockNum(),
-                        blockSucc->GetBlockNum());
-                }
-#endif
                 if (blockSucc->stackSymToWriteGuardsMap != nullptr)
                 {
-#if DBG_DUMP
-                    if (PHASE_VERBOSE_TRACE(Js::TraceObjTypeSpecWriteGuardsPhase, this->func))
-                    {
-                        Output::Print(u"\n");
-                        blockSucc->stackSymToWriteGuardsMap->Dump();
-                    }
-#endif
                     if (stackSymToWriteGuardsMap == nullptr)
                     {
                         stackSymToWriteGuardsMap = blockSucc->stackSymToWriteGuardsMap->Copy();
@@ -865,39 +840,11 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
                         blockSucc->stackSymToWriteGuardsMap = nullptr;
                     }
                 }
-                else
-                {
-#if DBG_DUMP
-                    if (PHASE_VERBOSE_TRACE(Js::TraceObjTypeSpecWriteGuardsPhase, this->func))
-                    {
-                        Output::Print(u"null\n");
-                    }
-#endif
-                }
             }
             else
             {
-#if DBG_DUMP
-                if (PHASE_VERBOSE_TRACE(Js::TraceObjTypeSpecTypeGuardsPhase, this->func))
-                {
-                    char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                    Output::Print(u"ObjTypeSpec: top function %s (%s), function %s (%s), guarded property operations on edge %d => %d: \n",
-                        this->func->GetTopFunc()->GetJITFunctionBody()->GetDisplayName(),
-                        this->func->GetTopFunc()->GetDebugNumberSet(debugStringBuffer),
-                        this->func->GetJITFunctionBody()->GetDisplayName(),
-                        this->func->GetDebugNumberSet(debugStringBuffer2),
-                        block->GetBlockNum(), blockSucc->GetBlockNum());
-                }
-#endif
                 if (blockSucc->stackSymToGuardedProperties != nullptr)
                 {
-#if DBG_DUMP
-                    if (PHASE_VERBOSE_TRACE(Js::TraceObjTypeSpecTypeGuardsPhase, this->func))
-                    {
-                        blockSucc->stackSymToGuardedProperties->Dump();
-                        Output::Print(u"\n");
-                    }
-#endif
                     if (stackSymToGuardedProperties == nullptr)
                     {
                         stackSymToGuardedProperties = blockSucc->stackSymToGuardedProperties->Copy();
@@ -913,15 +860,6 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
                         blockSucc->stackSymToGuardedProperties->Delete();
                         blockSucc->stackSymToGuardedProperties = nullptr;
                     }
-                }
-                else
-                {
-#if DBG_DUMP
-                    if (PHASE_VERBOSE_TRACE(Js::TraceObjTypeSpecTypeGuardsPhase, this->func))
-                    {
-                        Output::Print(u"null\n");
-                    }
-#endif
                 }
 
                 if (blockSucc->couldRemoveNegZeroBailoutForDef != nullptr)
@@ -4083,12 +4021,6 @@ BackwardPass::DeadStoreOrChangeInstrForScopeObjRemoval(IR::Instr ** pInstrPrev)
                         srcOpnd->SetIsJITOptimizedReg(true);
                         instr->ReplaceSrc1(srcOpnd);
                         this->ProcessSymUse(paramStackSym, true, true);
-
-                        if (PHASE_VERBOSE_TRACE1(Js::StackArgFormalsOptPhase))
-                        {
-                            Output::Print(u"StackArgFormals : %s (%d) :Replacing LdSlot with Ld_A in Deadstore pass. \n", instr->m_func->GetJITFunctionBody()->GetDisplayName(), instr->m_func->GetFunctionNumber());
-                            Output::Flush();
-                        }
                     }
                 }
                 break;

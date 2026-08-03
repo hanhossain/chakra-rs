@@ -449,12 +449,6 @@ Var JavascriptObject::GetToStringTagValue(RecyclableObject *thisArg, ScriptConte
     }
     else
     {
-#if DBG_DUMP
-        if (PHASE_VERBOSE_TRACE1(Js::InlineCachePhase))
-        {
-            CacheOperators::TraceCache(cache, u"PatchGetValue", toStringTagId, scriptContext, thisArg);
-        }
-#endif
         return JavascriptOperators::GetProperty(thisArg, thisArg, toStringTagId, scriptContext, &info);
     }
 }

@@ -50,8 +50,6 @@ bool InliningDecider::InlineIntoInliner(Js::FunctionBody *const inliner) const
 
     if (inliner->GetProfiledCallSiteCount() == 0 && !inliner->GetAnyDynamicProfileInfo()->HasLdFldCallSiteInfo())
     {
-        INLINE_TESTTRACE_VERBOSE(u"INLINING: Skip Inline: Leaf function\tCaller: %s (%s)\n", inliner->GetDisplayName(),
-            inliner->GetDebugNumberSet(debugStringBuffer));
         // Nothing to do
         return false;
     }
@@ -225,8 +223,6 @@ Js::FunctionInfo *InliningDecider::Inline(Js::FunctionBody *const inliner,
     {
         if (isLoopBody && PHASE_OFF(Js::InlineInJitLoopBodyPhase, this->topFunc))
         {
-            INLINE_TESTTRACE_VERBOSE(u"INLINING: Skip Inline: Jit loop body: %s (%s)\n", this->topFunc->GetDisplayName(),
-                this->topFunc->GetDebugNumberSet(debugStringBuffer));
             return nullptr;
         }
 

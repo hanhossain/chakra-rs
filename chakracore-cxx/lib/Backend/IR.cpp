@@ -126,9 +126,7 @@ Instr::TryOptimizeInstrWithFixedDataProperty(IR::Instr **pInstr, GlobOpt * globo
 
             IR::Instr* loadInstr = IR::Instr::NewConstantLoad(dataValueDstOpnd, (intptr_t)fixedValue, valType, instr->m_func);
 
-            OUTPUT_VERBOSE_TRACE(Js::UseFixedDataPropsPhase,
-                u"FixedFields: Replacing the source (fixed Data prop) with property id %u with 0x%x .\n",
-                propSymOpnd->GetPropertyId(), fixedValue);
+            ;
 
             instr->InsertAfter(loadInstr);
             propSymOpnd->SetUsesFixedValue(true);

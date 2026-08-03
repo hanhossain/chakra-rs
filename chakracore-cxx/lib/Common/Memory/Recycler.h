@@ -255,38 +255,6 @@ private:
 #define RecyclerNewTrackedLeafTrace RecyclerNewTrackedLeaf
 #endif
 
-#ifdef RECYCLER_TRACE
-#define RecyclerVerboseTrace(flags, ...) \
-    if (flags.Verbose && flags.Trace.IsEnabled(Js::RecyclerPhase)) \
-        { \
-        Output::Print(__VA_ARGS__); \
-        }
-#define AllocationVerboseTrace(flags, ...) \
-    if (flags.Verbose && flags.Trace.IsEnabled(Js::MemoryAllocationPhase)) \
-        { \
-        Output::Print(__VA_ARGS__); \
-        }
-
-#define LargeAllocationVerboseTrace(flags, ...) \
-    if (flags.Verbose && \
-        (flags.Trace.IsEnabled(Js::MemoryAllocationPhase) || \
-         flags.Trace.IsEnabled(Js::LargeMemoryAllocationPhase))) \
-        { \
-        Output::Print(__VA_ARGS__); \
-        }
-#define PageAllocatorAllocationVerboseTrace(flags, ...) \
-    if (flags.Verbose && flags.Trace.IsEnabled(Js::PageAllocatorAllocPhase)) \
-        { \
-        Output::Print(__VA_ARGS__); \
-        }
-
-#else
-#define RecyclerVerboseTrace(...)
-#define AllocationVerboseTrace(...)
-#define LargeAllocationVerboseTrace(...)
-
-#endif
-
 #define RecyclerHeapNew(recycler,heapInfo,T,...) new (recycler, heapInfo) T(__VA_ARGS__)
 #define RecyclerHeapDelete(recycler,heapInfo,addr) (static_cast<Recycler *>(recycler)->HeapFree(heapInfo,addr))
 

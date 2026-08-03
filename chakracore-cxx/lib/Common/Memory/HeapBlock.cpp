@@ -384,7 +384,7 @@ SmallHeapBlockT<TBlockAttributes>::ReleasePages(Recycler * recycler)
 #if DBG
     if (this->IsLeafBlock())
     {
-        RecyclerVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Releasing leaf block pages at address 0x%p\n", address);
+        ;
     }
 #endif
 
@@ -430,7 +430,7 @@ SmallHeapBlockT<TBlockAttributes>::ReleasePagesShutdown(Recycler * recycler)
 #if DBG
     if (this->IsLeafBlock())
     {
-        RecyclerVerboseTrace(recycler->GetRecyclerFlagsTable(), u"Releasing leaf block pages at address 0x%p\n", address);
+        ;
     }
 
     RemoveFromHeapBlockMap(recycler);
