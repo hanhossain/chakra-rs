@@ -80,6 +80,9 @@ enum CMP_IMM8
     ORD
 };
 
+/// Max number of nops for loop alignment
+constexpr uint8_t LoopAlignNopLimit = 6;
+
 ///----------------------------------------------------------------------------
 ///
 /// EncoderMD::Init
@@ -1490,7 +1493,7 @@ EncoderMD::FixRelocListEntry(uint32_t index, int totalBytesSaved, uint8_t *buffS
             uint32_t offset = (uint32_t)diff;
             // Since the final code buffer is page aligned, it is enough to align the offset of the label.
             uint8_t nopCount = (16 - (uint8_t)(offset & 0xf)) % 16;
-            if (nopCount <= Js::Configuration::Global.flags.LoopAlignNopLimit)
+            if (nopCount <= LoopAlignNopLimit)
             {
                 // new label pc
                 newPC += nopCount;

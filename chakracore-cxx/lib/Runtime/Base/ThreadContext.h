@@ -630,10 +630,6 @@ private:
 #define DEFAULT_CONFIG_CopyOnAccessArraySegmentCacheSize (16U)
 #endif
 
-#if defined(_M_X64)
-#define DEFAULT_CONFIG_LoopAlignNopLimit (6)
-#endif
-
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)
 #define TraceLevel_Info         (3)

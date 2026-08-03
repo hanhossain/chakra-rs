@@ -509,10 +509,6 @@ namespace Js
         TempMaxFlag,
         TraceFlag,
 
-        #if defined(_M_X64)
-        LoopAlignNopLimitFlag,
-        #endif
-
         VersionFlag,
         WERExceptionSupportFlag,
         ExtendedErrorStackForTestHostFlag,
@@ -2038,11 +2034,6 @@ namespace Js
         // TODO (hanhossain): remove flag
         Number TempMax;
         Phases Trace;
-
-        #if defined(_M_X64)
-        // TODO (hanhossain): remove flag
-            Number LoopAlignNopLimit;
-        #endif
 
         // todo (hanhossain): flag end
         Number Version;

@@ -592,10 +592,6 @@ namespace Js
 #define DEFAULT_CONFIG_CopyOnAccessArraySegmentCacheSize (16U)
 #endif
 
-#if defined(_M_X64)
-#define DEFAULT_CONFIG_LoopAlignNopLimit (6)
-#endif
-
 #define TraceLevel_Error        (1)
 #define TraceLevel_Warning      (2)
 #define TraceLevel_Info         (3)
@@ -1107,10 +1103,6 @@ namespace Js
         u"TempMin",
         u"TempMax",
         u"Trace",
-
-#if defined(_M_X64)
-        u"LoopAlignNopLimit",
-#endif
 
         u"Version",
         u"WERExceptionSupport",
@@ -2039,10 +2031,6 @@ namespace Js
         u"Temp number switch which code can temporarily use for debugging",
         u"Trace the given phase",
 
-#if defined(_M_X64)
-        u"Max number of nops for loop alignment",
-#endif
-
         // todo (hanhossain): flag end
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
         u"WER feature for extended exception support. Enabled when WinRT is enabled",
@@ -2565,10 +2553,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-
-#if defined(_M_X64)
-        NoParentFlag,
-#endif
 
         // todo (hanhossain): flag end
         NoParentFlag,
@@ -3114,10 +3098,6 @@ namespace Js
         TempMin(DEFAULT_CONFIG_TempMin),
         TempMax(DEFAULT_CONFIG_TempMax),
         Trace(),
-
-#if defined(_M_X64)
-        LoopAlignNopLimit(DEFAULT_CONFIG_LoopAlignNopLimit),
-#endif
 
         Version(6 ),
         WERExceptionSupport(false),
@@ -4643,11 +4623,6 @@ namespace Js
         case TraceFlag:
             return FlagPhases;
 
-        #if defined(_M_X64)
-        case LoopAlignNopLimitFlag:
-            return FlagNumber;
-        #endif
-
         case VersionFlag:
             return FlagNumber;
         case WERExceptionSupportFlag:
@@ -5543,11 +5518,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&TempMax));
         case TraceFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&Trace));
-
-        #if defined(_M_X64)
-        case LoopAlignNopLimitFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&LoopAlignNopLimit));
-        #endif
 
         case VersionFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Version));
