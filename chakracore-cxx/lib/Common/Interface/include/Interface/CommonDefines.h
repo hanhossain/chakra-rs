@@ -151,7 +151,6 @@
 #endif
 
 #if DBG_DUMP
-#define TRACK_DISPATCH
 #define BGJIT_STATS
 #define REJIT_STATS
 #define POLY_INLINE_CACHE_SIZE_STATS
@@ -222,7 +221,6 @@
 // #define DUMP_FRAGMENTATION_STATS        // Display HeapBucket fragmentation stats after sweep
 
 // ----- Fretest or free build special build features (already enabled in debug builds) -----
-// #define TRACK_DISPATCH
 
 // #define BGJIT_STATS
 
@@ -330,10 +328,6 @@
 // (STACK_BACK_TRACE is enabled on release build, used by RECYCLER_PAGE_HEAP.)
 #if defined(STACK_BACK_TRACE)
 #define ENABLE_DEBUG_STACK_BACK_TRACE 1
-#endif
-
-#if defined(TRACK_DISPATCH) || defined(CHECK_MEMORY_LEAK)
-#define TRACK_JS_DISPATCH
 #endif
 
 // CHECK_MEMORY_LEAK requires RECYCLER_DUMP_OBJECT_GRAPH

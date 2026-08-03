@@ -1130,9 +1130,6 @@ namespace Js
         u"TraceProtectPages",
 #endif
         u"TraceAsyncDebugCalls",
-#ifdef TRACK_DISPATCH
-        u"TrackDispatch",
-#endif
         u"Version",
         u"WERExceptionSupport",
         u"ExtendedErrorStackForTestHost",
@@ -2081,9 +2078,6 @@ namespace Js
         u"Trace calls to protecting pages of custom heap allocated pages",
 #endif
         u"Trace calls to async debugging API (default: false)",
-#ifdef TRACK_DISPATCH
-        u"Save stack traces of where JavascriptDispatch/HostVariant are created",
-#endif
         // todo (hanhossain): flag end
         u"Version in which to run the jscript engine. [one of 1,2,3,4,5,6]. Default is latest for jc/jshost, 1 for IE",
         u"WER feature for extended exception support. Enabled when WinRT is enabled",
@@ -2628,9 +2622,6 @@ namespace Js
         NoParentFlag,
 #endif
         NoParentFlag,
-#ifdef TRACK_DISPATCH
-        NoParentFlag,
-#endif
         // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
@@ -3197,9 +3188,6 @@ namespace Js
         TraceProtectPages(false),
 #endif
         TraceAsyncDebugCalls(DEFAULT_CONFIG_TraceAsyncDebugCalls),
-#ifdef TRACK_DISPATCH
-        TrackDispatch(false),
-#endif
         Version(6 ),
         WERExceptionSupport(false),
         ExtendedErrorStackForTestHost(DEFAULT_CONFIG_ExtendedErrorStackForTestHost),
@@ -4753,10 +4741,6 @@ namespace Js
         #endif
         case TraceAsyncDebugCallsFlag:
             return FlagBoolean;
-        #ifdef TRACK_DISPATCH
-        case TrackDispatchFlag:
-            return FlagBoolean;
-        #endif
         case VersionFlag:
             return FlagNumber;
         case WERExceptionSupportFlag:
@@ -5682,10 +5666,6 @@ namespace Js
         #endif
         case TraceAsyncDebugCallsFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceAsyncDebugCalls));
-        #ifdef TRACK_DISPATCH
-        case TrackDispatchFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&TrackDispatch));
-        #endif
         case VersionFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Version));
         case WERExceptionSupportFlag:
@@ -6520,11 +6500,6 @@ namespace Js
         case TraceAsyncDebugCallsFlag:
             retValue = DEFAULT_CONFIG_TraceAsyncDebugCalls;
             break;
-        #ifdef TRACK_DISPATCH
-        case TrackDispatchFlag:
-            retValue = false;
-            break;
-        #endif
         case WERExceptionSupportFlag:
             retValue = false;
             break;
