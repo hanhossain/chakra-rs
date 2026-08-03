@@ -368,7 +368,6 @@ namespace Js
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
 #define DEFAULT_CONFIG_MaxLoopsPerFunction  (10)
 #define DEFAULT_CONFIG_NopFrequency         (8)
-#define DEFAULT_CONFIG_SpeculationCap       (1)         // Needs to be 1 and not 0 since the compiler complains about a condition being always false
 #define DEFAULT_CONFIG_ProfileBasedSpeculationCap (1600)
 #define DEFAULT_CONFIG_ForceStrictMode      (false)
 #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
@@ -1087,7 +1086,6 @@ namespace Js
         u"NewPagesCapDuringBGSweeping",
         u"AllocPolicyLimit",
         u"RuntimeDataOutputFile",
-        u"SpeculationCap",
         u"PrintSystemException",
         u"Trace",
 
@@ -2005,7 +2003,6 @@ namespace Js
         u"New pages count allowed to be allocated during background sweeping",
         u"Memory allocation policy limit in MB (default: -1, which means no allocation policy limit).",
         u"Filename to write the dynamic profile info",
-        u"How much bytecode we'll speculatively JIT",
         // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
@@ -2515,7 +2512,6 @@ namespace Js
 #ifdef RECYCLER_VERIFY_MARK
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3055,7 +3051,6 @@ namespace Js
         NewPagesCapDuringBGSweeping(DEFAULT_CONFIG_NewPagesCapDuringBGSweeping),
         AllocPolicyLimit(DEFAULT_CONFIG_AllocationPolicyLimit),
         RuntimeDataOutputFile(nullptr),
-        SpeculationCap(DEFAULT_CONFIG_SpeculationCap),
         PrintSystemException(false),
         Trace(),
 
@@ -4562,8 +4557,6 @@ namespace Js
             return FlagNumber;
         case RuntimeDataOutputFileFlag:
             return FlagString;
-        case SpeculationCapFlag:
-            return FlagNumber;
         case PrintSystemExceptionFlag:
             return FlagBoolean;
         case TraceFlag:
@@ -5444,8 +5437,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&AllocPolicyLimit));
         case RuntimeDataOutputFileFlag:
             return reinterpret_cast<void*>(const_cast<String*>(&RuntimeDataOutputFile));
-        case SpeculationCapFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&SpeculationCap));
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case TraceFlag:
