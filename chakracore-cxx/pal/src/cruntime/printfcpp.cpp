@@ -39,9 +39,8 @@ SET_DEFAULT_DEBUG_CHANNEL(CRT);
 
 using namespace CorUnix;
 
-int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, const char16_t* Format, va_list ap);
-int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_list ap);
-int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format, va_list ap);
+int CoreWvsnprintf(char16_t *Buffer, size_t Count, const char16_t *Format, va_list ap);
+int CoreVwprintf(const char16_t *format, va_list ap);
 
 extern "C"
 {
@@ -53,388 +52,41 @@ Function:
   to be converted from WideChar to MultiByte
 *******************************************************************************/
 
-static int Internal_Convertfwrite(CPalThread *pthrCurrent, const void *buffer, size_t size, size_t count, FILE *stream, BOOL convert)
+static int Internal_Convertfwrite(const void *buffer, size_t count)
 {
     int ret;
 
-    if(convert)
+    int nsize;
+    char *newBuff = 0;
+    nsize = WideCharToMultiByte(static_cast<const char16_t *>(buffer), count, 0, 0);
+    if (!nsize)
     {
-        int nsize;
-        char* newBuff = 0;
-        nsize = WideCharToMultiByte(static_cast<const char16_t *>(buffer), count, 0, 0);
-        if (!nsize)
-        {
-            chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
-            return -1;
-        }
-        newBuff = static_cast<char*>(malloc(nsize));
-        if (!newBuff)
-        {
-            ERROR("malloc failed\n");
-            pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-            return -1;
-        }
-        nsize = WideCharToMultiByte(static_cast<const char16_t *>(buffer), count, newBuff, nsize);
-        if (!nsize)
-        {
-            chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
-            free(newBuff);
-            return -1;
-        }
-        ret = std::fwrite(newBuff, 1, nsize, stream);
-        if (ret < nsize)
-        {
-            ERROR("InternalFwrite did not write the whole buffer. Error is %d\n", iError);
-            free(newBuff);
-            return -1;
-        }
-        free(newBuff);
-   }
-   else
-   {
-        ret = std::fwrite(buffer, size, count, stream);
-        if (ret < count)
-        {
-            ERROR("InternalFwrite did not write the whole buffer. Error is %d\n", iError);
-            return -1;
-        }
-   }
-   return ret;
-
-}
-
-/*******************************************************************************
-Function:
-  Internal_ExtractFormatA
-
-Parameters:
-  Fmt
-    - format string to parse
-    - first character must be a '%'
-    - parameter gets updated to point to the character after
-      the %<foo> format string
-  Out
-    - buffer will contain the %<foo> format string
-  Flags
-    - parameter will be set with the PRINTF_FORMAT_FLAGS defined above
-  Width
-    - will contain the width specified by the format string
-    - -1 if none given
-  Precision
-    - will contain the precision specified in the format string
-    - -1 if none given
-  Prefix
-    - an enumeration of the type prefix
-  Type
-    - an enumeration of the type value
-
-Notes:
-  - I'm also handling the undocumented %ws, %wc, %w...
-  - %#10x, when we have a width greater than the length (i.e padding) the
-    length of the padding is not consistent with MS's wsprintf
-    (MS adds an extra 2 padding chars, length of "0x")
-  - MS's wsprintf seems to ignore a 'h' prefix for number types
-  - MS's "%p" is different than gcc's
-    e.g. printf("%p", NULL);
-        MS  -->  00000000
-        gcc -->  0x0
-  - the length of the exponent (precision) for floating types is different
-    between MS and gcc
-    e.g. printf("%E", 256.0);
-        MS  -->  2.560000E+002
-        gcc -->  2.560000E+02
-*******************************************************************************/
-BOOL Internal_ExtractFormatA(CPalThread *pthrCurrent, const char * *Fmt, char* Out, int32_t * Flags,
-    int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
-{
-    BOOL Result = FALSE;
-    char* TempStr;
-    char* TempStrPtr;
-
-    *Width = WIDTH_DEFAULT;
-    *Precision = PRECISION_DEFAULT;
-    *Flags = PFF_NONE;
-    *Prefix = PFF_PREFIX_DEFAULT;
-    *Type = PFF_TYPE_DEFAULT;
-
-    if (*Fmt && **Fmt == '%')
-    {
-        *Out++ = *(*Fmt)++;
+        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
+        return -1;
     }
-    else
-    {
-        return Result;
-    }
-
-    /* we'll never need a temp string longer than the original */
-    TempStrPtr = TempStr = static_cast<char*>(malloc(strlen(*Fmt) + 1));
-    if (!TempStr)
+    newBuff = static_cast<char *>(malloc(nsize));
+    if (!newBuff)
     {
         ERROR("malloc failed\n");
-        pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        return Result;
+        CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+        return -1;
     }
-
-    /* parse flags */
-    while (**Fmt && (**Fmt == '-' || **Fmt == '+' ||
-           **Fmt == '0' || **Fmt == ' ' || **Fmt == '#'))
+    nsize = WideCharToMultiByte(static_cast<const char16_t *>(buffer), count, newBuff, nsize);
+    if (!nsize)
     {
-        switch (**Fmt)
-        {
-        case '-':
-            *Flags |= PFF_MINUS; break;
-        case '+':
-            *Flags |= PFF_PLUS; break;
-        case '0':
-            *Flags |= PFF_ZERO; break;
-        case ' ':
-            *Flags |= PFF_SPACE; break;
-        case '#':
-            *Flags |= PFF_POUND; break;
-        }
-            *Out++ = *(*Fmt)++;
+        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
+        free(newBuff);
+        return -1;
     }
-    /* '-' flag negates '0' flag */
-    if ((*Flags & PFF_MINUS) && (*Flags & PFF_ZERO))
+    ret = std::fwrite(newBuff, 1, nsize, stdout);
+    if (ret < nsize)
     {
-        *Flags -= PFF_ZERO;
+        ERROR("InternalFwrite did not write the whole buffer. Error is %d\n", iError);
+        free(newBuff);
+        return -1;
     }
-
-    /* grab width specifier */
-    if (isdigit(static_cast<unsigned char>(**Fmt)))
-    {
-        TempStrPtr = TempStr;
-        while (isdigit(static_cast<unsigned char>(**Fmt)))
-        {
-            *TempStrPtr++ = **Fmt;
-            *Out++ = *(*Fmt)++;
-        }
-        *TempStrPtr = 0; /* end string */
-        *Width = atoi(TempStr);
-        if (*Width < 0)
-        {
-            ERROR("atoi returned a negative value indicative of an overflow.\n");
-            pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
-            return Result;
-        }
-    }
-    else if (**Fmt == '*')
-    {
-        *Width = WIDTH_STAR;
-        *Out++ = *(*Fmt)++;
-        if (isdigit(static_cast<unsigned char>(**Fmt)))
-        {
-            /* this is an invalid width because we have a * then a number */
-            /* printf handles this by just printing the whole string */
-            *Width = WIDTH_INVALID;
-            while (isdigit(static_cast<unsigned char>(**Fmt)))
-            {
-               *Out++ = *(*Fmt)++;
-            }
-        }
-    }
-
-
-    /* grab precision specifier */
-    if (**Fmt == '.')
-    {
-        *Out++ = *(*Fmt)++;
-        if (isdigit(static_cast<unsigned char>(**Fmt)))
-        {
-            TempStrPtr = TempStr;
-            while (isdigit(static_cast<unsigned char>(**Fmt)))
-            {
-                *TempStrPtr++ = **Fmt;
-                *Out++ = *(*Fmt)++;
-            }
-            *TempStrPtr = 0; /* end string */
-            *Precision = atoi(TempStr);
-            if (*Precision < 0)
-            {
-                ERROR("atoi returned a negative value indicative of an overflow.\n");
-                pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
-                return Result;
-            }
-        }
-        else if (**Fmt == '*')
-        {
-            *Precision = PRECISION_STAR;
-            *Out++ = *(*Fmt)++;
-            if (isdigit(static_cast<unsigned char>(**Fmt)))
-            {
-                /* this is an invalid precision because we have a .* then a number */
-                /* printf handles this by just printing the whole string */
-                *Precision = PRECISION_INVALID;
-                while (isdigit(static_cast<unsigned char>(**Fmt)))
-                {
-                    *Out++ = *(*Fmt)++;
-                }
-            }
-        }
-        else
-        {
-            *Precision = PRECISION_DOT;
-        }
-    }
-
-    if (**Fmt == 'p')
-    {
-        *Prefix = PFF_PREFIX_LONGLONG;
-    }
-    if ((*Fmt)[0] == 'I')
-    {
-        /* grab prefix of 'I64' for long */
-        if ((*Fmt)[1] == '6' && (*Fmt)[2] == '4')
-        {
-            /* convert to 'll' so that Unix snprintf can handle it */
-            *Fmt += 3;
-            *Prefix = PFF_PREFIX_LONGLONG;
-        }
-        /* grab prefix of 'I32' for int32_t */
-        else if ((*Fmt)[1] == '3' && (*Fmt)[2] == '2')
-        {
-            *Fmt += 3;
-        }
-        else
-        {
-            ++(*Fmt);
-            /* convert to 'll' so that Unix snprintf can handle it */
-            *Prefix = PFF_PREFIX_LONGLONG;
-        }
-    }
-    /* grab a prefix of 'h' */
-    else if (**Fmt == 'h')
-    {
-        *Prefix = PFF_PREFIX_SHORT;
-        ++(*Fmt);
-    }
-    /* grab prefix of 'l' or the undocumented 'w' (at least in MSDN) */
-    else if (**Fmt == 'l' || **Fmt == 'w')
-    {
-        ++(*Fmt);
-        // Only want to change the prefix on 64 bit when printing characters.
-        if (**Fmt == 'c' || **Fmt == 's')
-        {
-            *Prefix = PFF_PREFIX_LONG;
-        }
-        if (**Fmt == 'l')
-        {
-            *Prefix = PFF_PREFIX_LONGLONG;
-            ++(*Fmt);
-        }
-    }
-    else if (**Fmt == 'L')
-    {
-        /* a prefix of 'L' seems to be ignored */
-        ++(*Fmt);
-    }
-
-    /* grab type 'c' */
-    if (**Fmt == 'c' || **Fmt == 'C')
-    {
-        *Type = PFF_TYPE_CHAR;
-        if (*Prefix != PFF_PREFIX_SHORT && **Fmt == 'C')
-        {
-            *Prefix = PFF_PREFIX_LONG; /* give it a wide prefix */
-        }
-        if (*Prefix == PFF_PREFIX_LONG)
-        {
-            *Out++ = 'l';
-        }
-        *Out++ = 'c';
-        ++(*Fmt);
-        Result = TRUE;
-    }
-    /* grab type 's' */
-    else if (**Fmt == 's' || **Fmt == 'S')
-    {
-        *Type = PFF_TYPE_STRING;
-        if (*Prefix != PFF_PREFIX_SHORT && **Fmt == 'S')
-        {
-            *Prefix = PFF_PREFIX_LONG; /* give it a wide prefix */
-        }
-        if (*Prefix == PFF_PREFIX_LONG)
-        {
-            *Out++ = 'l';
-        }
-        *Out++ = 's';
-        ++(*Fmt);
-        Result = TRUE;
-    }
-    /* grab int types */
-    else if (**Fmt == 'd' || **Fmt == 'i' || **Fmt == 'o' ||
-             **Fmt == 'u' || **Fmt == 'x' || **Fmt == 'X')
-    {
-        *Type = PFF_TYPE_INT;
-        if (*Prefix == PFF_PREFIX_SHORT)
-        {
-            *Out++ = 'h';
-        }
-        else if (*Prefix == PFF_PREFIX_LONG)
-        {
-            *Out++ = 'l';
-        }
-        else if (*Prefix == PFF_PREFIX_LONGLONG)
-        {
-            *Out++ = 'l';
-            *Out++ = 'l';
-        }
-        *Out++ = *(*Fmt)++;
-        Result = TRUE;
-    }
-    else if (**Fmt == 'e' || **Fmt == 'E' || **Fmt == 'f' ||
-             **Fmt == 'g' || **Fmt == 'G')
-    {
-        /* we can safely ignore the prefixes and only add the type*/
-        *Type = PFF_TYPE_FLOAT;
-        *Out++ = *(*Fmt)++;
-        Result = TRUE;
-    }
-    else if (**Fmt == 'n')
-    {
-        if (*Prefix == PFF_PREFIX_SHORT)
-        {
-            *Out++ = 'h';
-        }
-        *Out++ = *(*Fmt)++;
-        *Type = PFF_TYPE_N;
-        Result = TRUE;
-    }
-    else if (**Fmt == 'p')
-    {
-        *Type = PFF_TYPE_P;
-        (*Fmt)++;
-
-        if (*Prefix == PFF_PREFIX_LONGLONG)
-        {
-            if (*Precision == PRECISION_DEFAULT)
-            {
-                *Precision = 16;
-                *Out++ = '.';
-                *Out++ = '1';
-                *Out++ = '6';
-            }
-            /* native *printf does not support %I64p
-               (actually %llp), so we need to cheat a little bit */
-            *Out++ = 'l';
-            *Out++ = 'l';
-        }
-        else
-        {
-            if (*Precision == PRECISION_DEFAULT)
-            {
-                *Precision = 8;
-                *Out++ = '.';
-                *Out++ = '8';
-            }
-        }
-        *Out++ = 'X';
-        Result = TRUE;
-    }
-
-    *Out = 0;  /* end the string */
-    free(TempStr);
-    return Result;
+    free(newBuff);
+    return ret;
 }
 
 /*******************************************************************************
@@ -443,8 +95,8 @@ Function:
 
   -- see Internal_ExtractFormatA above
 *******************************************************************************/
-BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, const char16_t* *Fmt, char* Out, int32_t * Flags,
-    int32_t * Width, int32_t * Precision, int32_t * Prefix, int32_t * Type)
+BOOL Internal_ExtractFormatW(const char16_t **Fmt, char *Out, int32_t *Flags, int32_t *Width, int32_t *Precision,
+                             int32_t *Prefix, int32_t *Type)
 {
     BOOL Result = FALSE;
     char* TempStr;
@@ -470,7 +122,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, const char16_t* *Fmt, char
     if (!TempStr)
     {
         ERROR("malloc failed\n");
-        pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+        CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         return Result;
     }
 
@@ -513,7 +165,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, const char16_t* *Fmt, char
         if (*Width < 0)
         {
             ERROR("atoi returned a negative value indicative of an overflow.\n");
-            pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
+            CorUnix::CPalThread::SetLastError(ERROR_INTERNAL_ERROR);
             return Result;
         }
     }
@@ -550,7 +202,7 @@ BOOL Internal_ExtractFormatW(CPalThread *pthrCurrent, const char16_t* *Fmt, char
             if (*Precision < 0)
             {
                 ERROR("atoi returned a negative value indicative of an overflow.\n");
-                pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
+                CorUnix::CPalThread::SetLastError(ERROR_INTERNAL_ERROR);
                 return Result;
             }
         }
@@ -948,8 +600,7 @@ Parameters:
   Flags
     - padding style flags (PRINTF_FORMAT_FLAGS)
 *******************************************************************************/
-static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, FILE *stream, char16_t* In,
-                                       int32_t Padding, int32_t Flags,BOOL convert)
+static int32_t Internal_AddPaddingVfwprintf(char16_t *In, int32_t Padding, int32_t Flags)
 {
     char16_t* Out;
     char16_t* OutOriginal;
@@ -970,7 +621,7 @@ static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, FILE *strea
     if (!Out)
     {
         ERROR("malloc failed\n");
-        pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+        CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
         return -1;
     }
     OutOriginal = Out;
@@ -981,7 +632,7 @@ static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, FILE *strea
         {
             ERROR("wcscpy_s failed!\n");
             free(OutOriginal);
-            pthrCurrent->SetLastError(ERROR_INSUFFICIENT_BUFFER);
+            CorUnix::CPalThread::SetLastError(ERROR_INSUFFICIENT_BUFFER);
             return -1;
         }
         Out += LengthInStr;
@@ -1011,7 +662,7 @@ static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, FILE *strea
         {
             ERROR("wcscpy_s failed!\n");
             free(OutOriginal);
-            pthrCurrent->SetLastError(ERROR_INSUFFICIENT_BUFFER);
+            CorUnix::CPalThread::SetLastError(ERROR_INSUFFICIENT_BUFFER);
             return -1;
         }
 
@@ -1020,8 +671,7 @@ static int32_t Internal_AddPaddingVfwprintf(CPalThread *pthrCurrent, FILE *strea
     }
 
     if (Length > 0) {
-        Written = Internal_Convertfwrite(pthrCurrent, OutOriginal, sizeof(char16_t), Length,
-            stream, convert);
+        Written = Internal_Convertfwrite(OutOriginal, Length);
 
         if (-1 == Written)
         {
@@ -1057,30 +707,28 @@ Function:
 
 int PAL__wvsnprintf(char16_t* Buffer, size_t Count, const char16_t* Format, va_list ap)
 {
-    return CoreWvsnprintf(InternalGetCurrentThread(), Buffer, Count, Format, ap);
+    return CoreWvsnprintf(Buffer, Count, Format, ap);
 }
 
 /*******************************************************************************
 Function:
-  PAL_vfwprintf
+  PAL_vwprintf
 
 Parameters:
-  stream
-    - out stream
   Format
     - format string
   ap
     - stdarg parameter list
 *******************************************************************************/
 
-int PAL_vfwprintf(FILE *stream, const char16_t *format, va_list ap)
+int PAL_vwprintf(const char16_t *format, va_list ap)
 {
-    return CoreVfwprintf(InternalGetCurrentThread(), stream, format, ap);
+    return CoreVwprintf(format, ap);
 }
 
 } // end extern "C"
 
-int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format, va_list aparg)
+int CoreVwprintf(const char16_t *format, va_list aparg)
 {
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
     const char16_t* Fmt = format;
@@ -1100,18 +748,12 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
     int ret;
     va_list ap;
 
-    /* fwprintf for now in the PAL is always used on file opened
-       in text mode. In those case the output should be ANSI not Unicode */
-    BOOL textMode = TRUE;
-
     va_copy(ap, aparg);
 
     while (*Fmt)
     {
         if(*Fmt == '%' &&
-                TRUE == Internal_ExtractFormatW(pthrCurrent, &Fmt, TempBuff, &Flags,
-                                                &Width, &Precision,
-                                                &Prefix, &Type))
+                TRUE == Internal_ExtractFormatW(&Fmt, TempBuff, &Flags, &Width, &Precision, &Prefix, &Type))
         {
             if (((Prefix == PFF_PREFIX_LONG || Prefix == PFF_PREFIX_LONG_W) &&
                  (Type == PFF_TYPE_STRING || Type == PFF_TYPE_WSTRING)) ||
@@ -1182,7 +824,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                 {
                     ERROR("malloc failed\n");
                     LOGEXIT("vfwprintf returns int -1\n");
-                    pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+                    CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                     if (WStrWasMalloced)
                     {
                         free(TempWStr);
@@ -1222,9 +864,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
 
                 /* do the padding (if needed)*/
                 paddingReturnValue =
-                    Internal_AddPaddingVfwprintf( pthrCurrent, stream, WorkingWStr,
-                                                 Width - Length,
-                                                 Flags,textMode);
+                    Internal_AddPaddingVfwprintf(WorkingWStr, Width - Length, Flags);
 
                 if (paddingReturnValue == -1)
                 {
@@ -1267,9 +907,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
 
                /* do the padding (if needed)*/
                 paddingReturnValue =
-                    Internal_AddPaddingVfwprintf(pthrCurrent, stream, TempWChar,
-                                                 Width - 1,
-                                                 Flags,textMode);
+                    Internal_AddPaddingVfwprintf(TempWChar, Width - 1, Flags);
                 if (paddingReturnValue == -1)
                 {
                     ERROR("Internal_AddPaddingVfwprintf failed\n");
@@ -1340,7 +978,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                         {
                             ERROR("malloc failed\n");
                             LOGEXIT("vfwprintf returns int -1\n");
-                            pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+                            CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                             va_end(ap);
                             return -1;
                         }
@@ -1367,7 +1005,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                         {
                             ERROR("malloc failed\n");
                             LOGEXIT("vfwprintf returns int -1\n");
-                            pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+                            CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                             va_end(ap);
                             return -1;
                         }
@@ -1391,7 +1029,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                         {
                             ERROR("malloc failed\n");
                             LOGEXIT("vfwprintf returns int -1\n");
-                            pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+                            CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                             va_end(ap);
                             return -1;
                         }
@@ -1423,7 +1061,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
                 {
                     ERROR("malloc failed\n");
                     LOGEXIT("vfwprintf returns int -1\n");
-                    pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+                    CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                     if(TempSprintfStrPtr)
                     {
                         free(TempSprintfStrPtr);
@@ -1434,13 +1072,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
 
                 MultiByteToWideChar(TempSprintfStr, -1, TempWideBuffer, mbtowcResult);
 
-                ret = Internal_Convertfwrite(
-                                    pthrCurrent,
-                                    TempWideBuffer,
-                                    sizeof(char16_t),
-                                    mbtowcResult-1,
-                                    stream,
-                                    textMode);
+                ret = Internal_Convertfwrite(TempWideBuffer, mbtowcResult - 1);
 
                 if (-1 == ret)
                 {
@@ -1463,13 +1095,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
         }
         else
         {
-            ret = Internal_Convertfwrite(
-                                    pthrCurrent,
-                                    Fmt++,
-                                    sizeof(char16_t),
-                                    1,
-                                    stream,
-                                    textMode); /* copy regular chars into buffer */
+            ret = Internal_Convertfwrite(Fmt++, 1); /* copy regular chars into buffer */
 
             if (-1 == ret)
             {
@@ -1487,7 +1113,7 @@ int CoreVfwprintf(CPalThread *pthrCurrent, FILE *stream, const char16_t *format,
     return (written);
 }
 
-int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, const char16_t* Format, va_list aparg)
+int CoreWvsnprintf(char16_t *Buffer, size_t Count, const char16_t *Format, va_list aparg)
 {
     BOOL BufferRanOut = FALSE;
     char TempBuff[1024]; /* used to hold a single %<foo> format string */
@@ -1517,9 +1143,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
             break;
         }
         else if(*Fmt == '%' &&
-                TRUE == Internal_ExtractFormatW(pthrCurrent, &Fmt, TempBuff, &Flags,
-                                                &Width, &Precision,
-                                                &Prefix, &Type))
+                TRUE == Internal_ExtractFormatW(&Fmt, TempBuff, &Flags, &Width, &Precision, &Prefix, &Type))
         {
             if (((Prefix == PFF_PREFIX_LONG || Prefix == PFF_PREFIX_LONG_W) &&
                 (Type == PFF_TYPE_STRING || Type == PFF_TYPE_WSTRING)) ||
@@ -1599,7 +1223,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                 if (!WorkingWStr)
                 {
                     ERROR("malloc failed\n");
-                    pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+                    CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                     if (needToFree)
                     {
                         free(TempWStr);
@@ -1754,7 +1378,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                     if (!TempNumberBuffer)
                     {
                         ERROR("malloc failed\n");
-                        pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+                        CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                         errno = ENOMEM;
                         va_end(ap);
                         return -1;
@@ -1786,7 +1410,7 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
                     if (!TempNumberBuffer)
                     {
                         ERROR("malloc failed\n");
-                        pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+                        CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                         va_end(ap);
                         return -1;
                     }
@@ -1835,298 +1459,4 @@ int CoreWvsnprintf(CPalThread *pthrCurrent, char16_t* Buffer, size_t Count, cons
     {
         return BufferPtr - Buffer;
     }
-}
-
-int CoreVfprintf(CPalThread *pthrCurrent, FILE *stream, const char *format, va_list aparg)
-{
-    char TempBuff[1024]; /* used to hold a single %<foo> format string */
-    const char * Fmt = format;
-    char16_t* TempWStr;
-    char* TempStr;
-    char16_t TempWChar;
-    int32_t Flags;
-    int32_t Width;
-    int32_t Precision;
-    int32_t Prefix;
-    int32_t Type;
-    int32_t Length;
-    int32_t TempInt;
-    int wctombResult;
-    int written = 0;
-    int paddingReturnValue;
-    va_list ap;
-
-
-    va_copy(ap, aparg);
-
-    while (*Fmt)
-    {
-        if (*Fmt == '%' &&
-            TRUE == Internal_ExtractFormatA(pthrCurrent, &Fmt, TempBuff, &Flags,
-                                            &Width, &Precision,
-                                            &Prefix, &Type))
-        {
-            if (Prefix == PFF_PREFIX_LONG && Type == PFF_TYPE_STRING)
-            {
-                if (WIDTH_STAR == Width)
-                {
-                    Width = va_arg(ap, int32_t);
-                }
-                else if (WIDTH_INVALID == Width)
-                {
-                    /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, int32_t); /* value not used */
-                }
-
-                if (PRECISION_STAR == Precision)
-                {
-                    Precision = va_arg(ap, int32_t);
-                }
-                else if (PRECISION_INVALID == Precision)
-                {
-                    /* both a '*' and a number, ignore, but remove arg */
-                    TempInt = va_arg(ap, int32_t); /* value not used */
-                }
-
-                TempWStr = va_arg(ap, char16_t*);
-                Length = WideCharToMultiByte(TempWStr, -1, 0, 0);
-                if (!Length)
-                {
-                    chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
-                        GetLastError()));
-                    va_end(ap);
-                    return -1;
-                }
-                TempStr = static_cast<char*>(malloc(Length));
-                if (!TempStr)
-                {
-                    ERROR("malloc failed\n");
-                    pthrCurrent->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-                    va_end(ap);
-                    return -1;
-                }
-                if (PRECISION_DOT == Precision)
-                {
-                    /* copy nothing */
-                    *TempStr = 0;
-                    Length = 0;
-                }
-                else if (Precision > 0 && Precision < Length - 1)
-                {
-                    Length = WideCharToMultiByte(TempWStr, Precision, TempStr, Length);
-                    if (!Length)
-                    {
-                        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
-                              GetLastError()));
-                        free(TempStr);
-                        va_end(ap);
-                        return -1;
-                    }
-                    TempStr[Length] = 0;
-                    Length = Precision;
-                }
-                /* copy everything */
-                else
-                {
-                    wctombResult = WideCharToMultiByte(TempWStr, -1, TempStr, Length);
-                    if (!wctombResult)
-                    {
-                        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
-                              GetLastError()));
-                        free(TempStr);
-                        va_end(ap);
-                        return -1;
-                    }
-                    --Length; /* exclude null char */
-                }
-
-                /* do the padding (if needed)*/
-                paddingReturnValue =
-                  Internal_AddPaddingVfprintf(pthrCurrent, stream, TempStr,
-                                              Width - Length, Flags);
-                if (-1 == paddingReturnValue)
-                {
-                    ERROR("Internal_AddPaddingVfprintf failed\n");
-                    free(TempStr);
-                    va_end(ap);
-                    return -1;
-                }
-                written += paddingReturnValue;
-
-                free(TempStr);
-            }
-            else if (Prefix == PFF_PREFIX_LONG && Type == PFF_TYPE_CHAR)
-            {
-                char TempBuffer[5];
-                if (WIDTH_STAR == Width ||
-                    WIDTH_INVALID == Width)
-                {
-                    /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, int32_t); /* value not used */
-                }
-                if (PRECISION_STAR == Precision ||
-                    PRECISION_INVALID == Precision)
-                {
-                    /* ignore (because it's a char), and remove arg */
-                    TempInt = va_arg(ap, int32_t); /* value not used */
-                }
-
-                TempWChar = va_arg(ap, int);
-                Length = WideCharToMultiByte(&TempWChar, 1, TempBuffer, sizeof(TempBuffer));
-                if (!Length)
-                {
-                    chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n",
-                          GetLastError()));
-                    va_end(ap);
-                    return -1;
-                }
-                TempBuffer[Length] = 0;
-
-                /* do the padding (if needed)*/
-                paddingReturnValue =
-                  Internal_AddPaddingVfprintf(pthrCurrent, stream, TempBuffer,
-                                              Width - Length, Flags);
-                if (-1 == paddingReturnValue)
-                {
-                    ERROR("Internal_AddPaddingVfprintf failed\n");
-                    va_end(ap);
-                    return -1;
-                }
-                written += paddingReturnValue;
-
-            }
-            /* this places the number of bytes written to the buffer in the
-               next arg */
-            else if (Type == PFF_TYPE_N)
-            {
-                if (WIDTH_STAR == Width)
-                {
-                    Width = va_arg(ap, int32_t);
-                }
-                if (PRECISION_STAR == Precision)
-                {
-                    Precision = va_arg(ap, int32_t);
-                }
-
-                if (Prefix == PFF_PREFIX_SHORT)
-                {
-                    *(va_arg(ap, short *)) = written;
-                }
-                else
-                {
-                    *(va_arg(ap, int32_t *)) = written;
-                }
-            }
-            else if (Type == PFF_TYPE_CHAR && (Flags & PFF_ZERO) != 0)
-            {
-                // Some versions of fprintf don't support 0-padded chars,
-                // so we handle them here.
-                char ch[2];
-
-                ch[0] = static_cast<char>(va_arg(ap, int));
-                ch[1] = '\0';
-                Length = 1;
-                paddingReturnValue = Internal_AddPaddingVfprintf(
-                                                pthrCurrent,
-                                                stream,
-                                                ch,
-                                                Width - Length,
-                                                Flags);
-                if (-1 == paddingReturnValue)
-                {
-                    ERROR("Internal_AddPaddingVfprintf failed\n");
-                    va_end(ap);
-                    return -1;
-                }
-                written += paddingReturnValue;
-            }
-            else if (Type == PFF_TYPE_STRING && (Flags & PFF_ZERO) != 0)
-            {
-                // Some versions of fprintf don't support 0-padded strings,
-                // so we handle them here.
-                char *tempStr;
-
-                tempStr = va_arg(ap, char *);
-                Length = strlen(tempStr);
-                paddingReturnValue = Internal_AddPaddingVfprintf(
-                                                pthrCurrent,
-                                                stream,
-                                                tempStr,
-                                                Width - Length,
-                                                Flags);
-                if (-1 == paddingReturnValue)
-                {
-                    ERROR("Internal_AddPaddingVfprintf failed\n");
-                    va_end(ap);
-                    return -1;
-                }
-                written += paddingReturnValue;
-            }
-            else
-            {
-                // Types that fprintf can handle.
-                TempInt = 0;
-
-                // %h (short) doesn't seem to be handled properly by local sprintf,
-                // so we do the truncation ourselves for some cases.
-                if (Type == PFF_TYPE_P && Prefix == PFF_PREFIX_SHORT)
-                {
-                    // Convert from pointer -> int -> short to avoid warnings.
-                    long trunc1;
-                    short trunc2;
-
-                    trunc1 = va_arg(ap, int32_t);
-                    trunc2 = static_cast<short>(trunc1);
-                    trunc1 = trunc2;
-
-                    TempInt = fprintf(stream, TempBuff, trunc1);
-                }
-                else if (Type == PFF_TYPE_INT && Prefix == PFF_PREFIX_SHORT)
-                {
-                    // Convert explicitly from int to short to get
-                    // correct sign extension for shorts on all systems.
-                    int n;
-                    short s;
-
-                    n = va_arg(ap, int);
-                    s = static_cast<short>(n);
-
-                    TempInt = fprintf( stream, TempBuff, s);
-                }
-                else
-                {
-                    va_list apcopy;
-                    va_copy(apcopy, ap);
-                    TempInt = vfprintf(stream, TempBuff, apcopy);
-                    va_end(apcopy);
-                    PAL_printf_arg_remover(&ap, Width, Precision, Type, Prefix);
-                }
-
-                if (-1 == TempInt)
-                {
-                    ERROR("vfprintf returned an error\n");
-                }
-                else
-                {
-                    written += TempInt;
-                }
-            }
-        }
-        else
-        {
-
-            int res = std::fwrite(Fmt++, 1, 1, stream); /* copy regular chars into buffer */
-            if (res < 1)
-            {
-                ERROR("fwrite() failed with errno == %d\n", errno);
-                va_end(ap);
-                return -1;
-            }
-            ++written;
-        }
-    }
-
-    va_end(ap);
-
-    return written;
 }

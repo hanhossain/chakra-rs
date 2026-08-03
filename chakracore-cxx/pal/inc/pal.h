@@ -1790,8 +1790,8 @@ unsigned long long _rotr64(unsigned long long value, int shift)
 #endif // PAL_STDCPP_COMPAT
 
 FILE * PAL_fopen(const char *, const char *);
-int PAL_fwprintf(FILE *, const char16_t *, ...);
-int PAL_vfwprintf(FILE *, const char16_t *, va_list);
+int PAL_wprintf(const char16_t *, ...);
+int PAL_vwprintf(const char16_t *, va_list);
 
 FILE * _wfopen(const char16_t *, const char16_t *);
 
