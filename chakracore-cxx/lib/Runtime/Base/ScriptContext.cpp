@@ -553,14 +553,6 @@ namespace Js
 
         PERF_COUNTER_DEC(Basic, ScriptContextActive);
 
-#if DBG_DUMP
-        if (Js::Configuration::Global.flags.TraceWin8Allocations)
-        {
-            Output::Print(u"MemoryTrace: ScriptContext Close\n");
-            Output::Flush();
-        }
-#endif
-
 #if ENABLE_NATIVE_CODEGEN
         if (nativeCodeGen != nullptr)
         {

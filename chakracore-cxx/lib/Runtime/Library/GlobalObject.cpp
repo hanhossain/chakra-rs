@@ -946,14 +946,6 @@ LHexError:
     {
         PROBE_STACK(function->GetScriptContext(), Js::Constants::MinStackDefault);
 
-#if DBG_DUMP
-        if (Js::Configuration::Global.flags.TraceWin8Allocations)
-        {
-            Output::Print(u"MemoryTrace: GlobalObject::EntryCollectGarbage Invoke\n");
-            Output::Flush();
-        }
-#endif
-
 #if DBG
         // Clear 1K of stack to avoid false positive in debug build.
         // Because we don't debug build don't stack pack
@@ -979,14 +971,6 @@ LHexError:
 #endif
             recycler->CollectNow<CollectNowDecommitNowExplicit>();
         }
-
-#if DBG_DUMP
-        if (Js::Configuration::Global.flags.TraceWin8Allocations)
-        {
-            Output::Print(u"MemoryTrace: GlobalObject::EntryCollectGarbage Exit\n");
-            Output::Flush();
-        }
-#endif
 
         return scriptContext->GetLibrary()->GetUndefined();
     }

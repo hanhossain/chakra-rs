@@ -2447,13 +2447,6 @@ HeapPageAllocator<T>::ProtectPages(char* address, size_t pageCount, void* segmen
         return FALSE;
     }
 
-#if DBG_DUMP || defined(RECYCLER_TRACE)
-    if (this->pageAllocatorFlagTable.IsEnabled(Js::TraceProtectPagesFlag))
-    {
-        Output::Print(u"VirtualProtect(0x%p, %d, %d, %d)\n", address, pageCount, pageCount * AutoSystemInfo::PageSize, dwVirtualProtectFlags);
-    }
-#endif
-
     uint32_t oldProtect; // this is only for first page
     BOOL retVal = VirtualProtect(address, pageCount * AutoSystemInfo::PageSize, dwVirtualProtectFlags, &oldProtect);
     if (retVal == FALSE)
