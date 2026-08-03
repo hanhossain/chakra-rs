@@ -1085,7 +1085,6 @@ namespace Js
         u"LowMemoryCap",
         u"NewPagesCapDuringBGSweeping",
         u"AllocPolicyLimit",
-        u"RuntimeDataOutputFile",
         u"PrintSystemException",
         u"Trace",
 
@@ -2002,7 +2001,6 @@ namespace Js
         u"Memory cap indicating a low-memory process",
         u"New pages count allowed to be allocated during background sweeping",
         u"Memory allocation policy limit in MB (default: -1, which means no allocation policy limit).",
-        u"Filename to write the dynamic profile info",
         // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
@@ -2512,7 +2510,6 @@ namespace Js
 #ifdef RECYCLER_VERIFY_MARK
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3050,7 +3047,6 @@ namespace Js
         LowMemoryCap(DEFAULT_CONFIG_LowMemoryCap),
         NewPagesCapDuringBGSweeping(DEFAULT_CONFIG_NewPagesCapDuringBGSweeping),
         AllocPolicyLimit(DEFAULT_CONFIG_AllocationPolicyLimit),
-        RuntimeDataOutputFile(nullptr),
         PrintSystemException(false),
         Trace(),
 
@@ -4555,8 +4551,6 @@ namespace Js
             return FlagNumber;
         case AllocPolicyLimitFlag:
             return FlagNumber;
-        case RuntimeDataOutputFileFlag:
-            return FlagString;
         case PrintSystemExceptionFlag:
             return FlagBoolean;
         case TraceFlag:
@@ -5435,8 +5429,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&NewPagesCapDuringBGSweeping));
         case AllocPolicyLimitFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&AllocPolicyLimit));
-        case RuntimeDataOutputFileFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&RuntimeDataOutputFile));
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case TraceFlag:

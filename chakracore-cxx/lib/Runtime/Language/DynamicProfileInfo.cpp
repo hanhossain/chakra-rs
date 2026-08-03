@@ -27,7 +27,6 @@ namespace Js
 #ifdef DYNAMIC_PROFILE_STORAGE
             || DynamicProfileStorage::IsEnabled()
 #endif
-            || (Configuration::Global.flags.RuntimeDataOutputFile != nullptr)
             ;
     }
 
@@ -2316,67 +2315,6 @@ namespace Js
     {
         WriteData(functionBody->GetSourceContextInfo()->sourceContextId, file);
         WriteData(functionBody->GetLocalFunctionId(), file);
-    }
-
-    void DynamicProfileInfo::DumpScriptContextToFile(ScriptContext * scriptContext)
-    {
-        if (Configuration::Global.flags.RuntimeDataOutputFile == nullptr)
-        {
-            return;
-        }
-
-        std::unique_lock autocs(s_csOutput);
-        FILE * file;
-        if (_wfopen_s(&file, Configuration::Global.flags.RuntimeDataOutputFile, u"ab+") != 0 || file == nullptr)
-        {
-            return;
-        }
-
-        WriteData(scriptContext->GetAllocId(), file);
-        WriteData(scriptContext->GetCreateTime(), file);
-        WriteData(scriptContext->GetUrl(), file);
-        WriteData(scriptContext->GetSourceContextInfoMap() != nullptr ? scriptContext->GetSourceContextInfoMap()->Count() : 0, file);
-
-        if (scriptContext->GetSourceContextInfoMap())
-        {
-            scriptContext->GetSourceContextInfoMap()->Map([&](unsigned long dwHostSourceContext, SourceContextInfo * sourceContextInfo)
-            {
-                WriteData(sourceContextInfo->sourceContextId, file);
-                WriteData(sourceContextInfo->nextLocalFunctionId, file);
-                WriteData(sourceContextInfo->url, file);
-            });
-        }
-
-        FOREACH_SLISTBASE_ENTRY(DynamicProfileInfo * const, info, scriptContext->GetProfileInfoList())
-        {
-            WriteData((byte)1, file);
-            WriteData(info->functionBody, file);
-            WriteData(info->functionBody->GetDisplayName(), file);
-            WriteData(info->functionBody->GetInterpretedCount(), file);
-            uint loopCount = info->functionBody->GetLoopCount();
-            WriteData(loopCount, file);
-            for (uint i = 0; i < loopCount; i++)
-            {
-                if (info->functionBody->DoJITLoopBody())
-                {
-                    WriteData(info->functionBody->GetLoopHeader(i)->interpretCount, file);
-                }
-                else
-                {
-                    WriteData(-1, file);
-                }
-            }
-            WriteArray(info->functionBody->GetProfiledLdLenCount(), info->ldLenInfo, file);
-            WriteArray(info->functionBody->GetProfiledLdElemCount(), info->ldElemInfo, file);
-            WriteArray(info->functionBody->GetProfiledStElemCount(), info->stElemInfo, file);
-            WriteArray(info->functionBody->GetProfiledArrayCallSiteCount(), info->arrayCallSiteInfo, file);
-            WriteArray(info->functionBody->GetProfiledCallSiteCount(), info->callSiteInfo, file);
-        }
-        NEXT_SLISTBASE_ENTRY;
-
-        WriteData((byte)0, file);
-        fflush(file);
-        fclose(file);
     }
 
     void DynamicProfileInfo::InstantiateForceInlinedMembers()
