@@ -361,8 +361,6 @@ namespace Js
 #define DEFAULT_CONFIG_PageHeapFreeStack    (false)
 #define DEFAULT_CONFIG_PageHeapBlockType    (static_cast<Js::Number>(PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll))
 
-#define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
-
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
 #define DEFAULT_CONFIG_MaxLoopsPerFunction  (10)
 #define DEFAULT_CONFIG_NopFrequency         (8)
@@ -1080,7 +1078,6 @@ namespace Js
 #ifdef RECYCLER_VERIFY_MARK
         u"RecyclerVerifyMark",
 #endif
-        u"LowMemoryCap",
         u"PrintSystemException",
         u"Trace",
 
@@ -1994,7 +1991,6 @@ namespace Js
 #ifdef RECYCLER_VERIFY_MARK
         u"verify concurrent gc",
 #endif
-        u"Memory cap indicating a low-memory process",
         // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
@@ -2504,7 +2500,6 @@ namespace Js
 #ifdef RECYCLER_VERIFY_MARK
         NoParentFlag,
 #endif
-        NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
@@ -3036,7 +3031,6 @@ namespace Js
 #ifdef RECYCLER_VERIFY_MARK
         RecyclerVerifyMark(false),
 #endif
-        LowMemoryCap(DEFAULT_CONFIG_LowMemoryCap),
         PrintSystemException(false),
         Trace(),
 
@@ -4535,8 +4529,6 @@ namespace Js
         case RecyclerVerifyMarkFlag:
             return FlagBoolean;
         #endif
-        case LowMemoryCapFlag:
-            return FlagNumber;
         case PrintSystemExceptionFlag:
             return FlagBoolean;
         case TraceFlag:
@@ -5409,8 +5401,6 @@ namespace Js
         case RecyclerVerifyMarkFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerVerifyMark));
         #endif
-        case LowMemoryCapFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&LowMemoryCap));
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case TraceFlag:

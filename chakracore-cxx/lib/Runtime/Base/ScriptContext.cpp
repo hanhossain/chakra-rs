@@ -1064,7 +1064,7 @@ namespace Js
 
     bool ScriptContext::DoUndeferGlobalFunctions() const
     {
-        return CONFIG_FLAG(DeferTopLevelTillFirstCall) && !AutoSystemInfo::Data.IsLowMemoryProcess();
+        return CONFIG_FLAG(DeferTopLevelTillFirstCall);
     }
 
     RegexPatternMruMap* ScriptContext::GetDynamicRegexMap() const

@@ -30,9 +30,6 @@ public:
     BOOL TZCntAvailable() const;
     bool IsAtomPlatform() const;
 #endif
-    bool IsLowMemoryProcess();
-    BOOL GetAvailableCommit(ULONG64 *pCommit);
-    void SetAvailableCommit(ULONG64 commit);
     uint32_t GetNumberOfLogicalProcessors() const { return this->dwNumberOfProcessors; }
     uint32_t GetNumberOfPhysicalProcessors() const { return this->dwNumberOfPhysicalProcessors; }
 
@@ -92,15 +89,12 @@ private:
 
     static const uint32_t INVALID_VERSION = static_cast<uint32_t>(-1);
 
-    ULONG64 availableCommit;
     bool shouldQCMoreFrequently;
     bool supportsOnlyMultiThreadedCOM;
-    bool isLowMemoryDevice;
 
 public:
     static bool ShouldQCMoreFrequently();
     static bool SupportsOnlyMultiThreadedCOM();
-    static bool IsLowMemoryDevice();
 };
 
 
