@@ -3506,7 +3506,7 @@ namespace Js
         PropertyIndex propertyIndex = GetTypePath()->LookupInline(propertyId, GetPathLength());
         if (propertyIndex == Constants::NoSlot)
         {
-            return __super::GetSetter(instance, propertyId, setterValue, info, requestContext);
+            return PathTypeHandlerNoAttr::GetSetter(instance, propertyId, setterValue, info, requestContext);
         }
         ObjectSlotAttributes attr = attributes[propertyIndex];
         if (attr & ObjectSlotAttr_Deleted)
@@ -3555,7 +3555,7 @@ namespace Js
         PropertyIndex index = GetTypePath()->LookupInline(propertyId, GetPathLength());
         if (index == Constants::NoSlot)
         {
-            return __super::HasProperty(instance, propertyId, noRedecl, info);
+            return PathTypeHandlerNoAttr::HasProperty(instance, propertyId, noRedecl, info);
         }
 
         ObjectSlotAttributes attr = attributes[index];
@@ -3585,7 +3585,7 @@ namespace Js
         PropertyIndex index = GetTypePath()->LookupInline(propertyId, GetPathLength());
         if (index == Constants::NoSlot)
         {
-            return __super::GetProperty(instance, originalInstance, propertyId, value, info, requestContext);
+            return PathTypeHandlerNoAttr::GetProperty(instance, originalInstance, propertyId, value, info, requestContext);
         }
 
         ObjectSlotAttributes attr = attributes[index];

@@ -169,7 +169,7 @@ namespace Js
             return;
         }
 
-        __super::GetPropertyRecord(propRecord, dontLookupFromDictionary);
+        LiteralString::GetPropertyRecord(propRecord, dontLookupFromDictionary);
 
         if (*propRecord)
         {
@@ -206,7 +206,7 @@ namespace Js
         {
             // Without a property record, we can safely multi-reference the underlying buffer. Assertions in
             // the constructor of LiteralString will verify this.
-            return __super::CloneToScriptContext(requestContext);
+            return LiteralString::CloneToScriptContext(requestContext);
         }
 
         // We have a property record, so go ahead and make this be a property string in the request context.

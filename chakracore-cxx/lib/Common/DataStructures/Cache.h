@@ -147,7 +147,7 @@ namespace JsUtil
             {
                 AutoRestoreValue<bool> var(&this->inAdd, true);
 
-                return __super::Add(key, value);
+                return TCacheStoreType::Add(key, value);
             }
             void SetIsInAdd(bool value) {inAdd = value; }
         private:

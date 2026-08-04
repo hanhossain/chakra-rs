@@ -350,12 +350,12 @@ namespace JsUtil
 
         void LockResize()
         {
-            __super::LockResize();
+            Lock::LockResize();
         }
 
         void UnlockResize()
         {
-            __super::UnlockResize();
+            Lock::UnlockResize();
         }
 
     protected:

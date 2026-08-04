@@ -622,7 +622,7 @@ namespace Js
             return None_NoProto;
         }
 
-        return __super::GetSetter(propertyId, setterValue, info, requestContext);
+        return ArrayBufferParent::GetSetter(propertyId, setterValue, info, requestContext);
     }
 
     DescriptorFlags TypedArrayBase::GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
@@ -632,7 +632,7 @@ namespace Js
             return None_NoProto;
         }
 
-        return __super::GetSetter(propertyNameString, setterValue, info, requestContext);
+        return ArrayBufferParent::GetSetter(propertyNameString, setterValue, info, requestContext);
     }
 
     DescriptorFlags TypedArrayBase::GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext)
@@ -645,7 +645,7 @@ namespace Js
             return None_NoProto;
         }
 
-        return __super::GetItemSetter(index, setterValue, requestContext);
+        return ArrayBufferParent::GetItemSetter(index, setterValue, requestContext);
     }
 
     BOOL TypedArrayBase::GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache)
@@ -722,7 +722,7 @@ namespace Js
             return true;
         }
 
-        return __super::SetEnumerable(propertyId, value);
+        return ArrayBufferParent::SetEnumerable(propertyId, value);
     }
 
     BOOL TypedArrayBase::SetWritable(PropertyId propertyId, BOOL value)
@@ -741,7 +741,7 @@ namespace Js
             return true;
         }
 
-        return __super::SetWritable(propertyId, value);
+        return ArrayBufferParent::SetWritable(propertyId, value);
     }
 
     BOOL TypedArrayBase::SetConfigurable(PropertyId propertyId, BOOL value)
@@ -760,7 +760,7 @@ namespace Js
             return true;
         }
 
-        return __super::SetConfigurable(propertyId, value);
+        return ArrayBufferParent::SetConfigurable(propertyId, value);
     }
 
     BOOL TypedArrayBase::SetAttributes(PropertyId propertyId, PropertyAttributes attributes)
@@ -774,7 +774,7 @@ namespace Js
             return true;
         }
 
-        return __super::SetAttributes(propertyId, attributes);
+        return ArrayBufferParent::SetAttributes(propertyId, attributes);
     }
 
     BOOL TypedArrayBase::SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
@@ -788,7 +788,7 @@ namespace Js
                 GetScriptContext()->GetThreadContext()->GetPropertyName(propertyId)->GetBuffer());
         }
 
-        return __super::SetAccessors(propertyId, getter, setter, flags);
+        return ArrayBufferParent::SetAccessors(propertyId, getter, setter, flags);
     }
 
     BOOL TypedArrayBase::SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
@@ -807,7 +807,7 @@ namespace Js
             return FALSE;
         }
 
-        return __super::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
+        return ArrayBufferParent::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
     }
 
     BOOL TypedArrayBase::SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes)

@@ -40,7 +40,7 @@ namespace Js
             return IsLengthWritable();
         }
 
-        return __super::IsWritable(propertyId);
+        return JavascriptArray::IsWritable(propertyId);
     }
 
     BOOL ES5Array::SetEnumerable(PropertyId propertyId, BOOL value)
@@ -183,7 +183,7 @@ namespace Js
             return result;
         }
 
-        return __super::SetProperty(propertyId, value, propertyOperationFlags, info);
+        return JavascriptArray::SetProperty(propertyId, value, propertyOperationFlags, info);
     }
 
     BOOL ES5Array::SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags propertyOperationFlags, PropertyValueInfo* info)
@@ -197,7 +197,7 @@ namespace Js
             return result;
         }
 
-        return __super::SetProperty(propertyNameString, value, propertyOperationFlags, info);
+        return JavascriptArray::SetProperty(propertyNameString, value, propertyOperationFlags, info);
     }
 
     bool ES5Array::SetPropertyBuiltIns(PropertyId propertyId, Var value, PropertyOperationFlags propertyOperationFlags, BOOL* result)
@@ -237,7 +237,7 @@ namespace Js
             return true;
         }
 
-        return __super::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
+        return JavascriptArray::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
     }
 
     BOOL ES5Array::DeleteItem(uint32_t index, PropertyOperationFlags flags)

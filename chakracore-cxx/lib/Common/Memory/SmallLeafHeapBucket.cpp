@@ -44,7 +44,7 @@ template <typename TBlockAttributes>
 void
 SmallLeafHeapBucketT<TBlockAttributes>::VerifyMark()
 {
-    __super::VerifyMark();
+    BaseT::VerifyMark();
 }
 #endif
 

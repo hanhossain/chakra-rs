@@ -34,6 +34,7 @@ typedef RecyclerRootPtr<void> RecyclerRootVar;
 template <typename T>
 class AutoRecyclerRootPtr : public RecyclerRootPtr<T>
 {
+    using Base = RecyclerRootPtr<T>;
 public:
     AutoRecyclerRootPtr(T * ptr, Recycler * recycler) : recycler(recycler)
     {
@@ -47,13 +48,13 @@ public:
     void Root(T * ptr)
     {
         Unroot();
-        __super::Root(ptr, recycler);
+        Base::Root(ptr, recycler);
     }
     void Unroot()
     {
         if (this->ptr != nullptr)
         {
-            __super::Unroot(recycler);
+            Base::Unroot(recycler);
         }
     }
     Recycler * GetRecycler() const

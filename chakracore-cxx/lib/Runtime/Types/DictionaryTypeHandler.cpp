@@ -1153,7 +1153,7 @@ namespace Js
             JavascriptError::ThrowCantExtendIfStrictMode(flags, scriptContext);
             return false;
         }
-        return __super::SetItem(instance, index, value, flags);
+        return DynamicTypeHandler::SetItem(instance, index, value, flags);
     }
 
     template <typename T>
@@ -1181,7 +1181,7 @@ namespace Js
         {
             return instance->GetObjectArrayItemSetter(index, setterValue, requestContext);
         }
-        return __super::GetItemSetter(instance, index, setterValue, requestContext);
+        return DynamicTypeHandler::GetItemSetter(instance, index, setterValue, requestContext);
     }
 
     template <typename T>

@@ -202,7 +202,7 @@ namespace Js
     {
         // No need to invalidate the cached scope even if the property is a cached function object.
         // The caller won't be using the object itself.
-        return __super::GetPropertyQuery(originalInstance, propertyId, value, info, requestContext);
+        return ActivationObject::GetPropertyQuery(originalInstance, propertyId, value, info, requestContext);
     }
 
     void ActivationObjectEx::GetPropertyCore(PropertyValueInfo *info, ScriptContext *requestContext)
@@ -235,7 +235,7 @@ namespace Js
 
     PropertyQueryFlags ActivationObjectEx::GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var *value, PropertyValueInfo *info, ScriptContext *requestContext)
     {
-        if (JavascriptConversion::PropertyQueryFlagsToBoolean(__super::GetPropertyQuery(originalInstance, propertyId, value, info, requestContext)))
+        if (JavascriptConversion::PropertyQueryFlagsToBoolean(ActivationObject::GetPropertyQuery(originalInstance, propertyId, value, info, requestContext)))
         {
             GetPropertyCore(info, requestContext);
             return PropertyQueryFlags::Property_Found;
@@ -245,7 +245,7 @@ namespace Js
 
     PropertyQueryFlags ActivationObjectEx::GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var *value, PropertyValueInfo *info, ScriptContext *requestContext)
     {
-        if (JavascriptConversion::PropertyQueryFlagsToBoolean(__super::GetPropertyQuery(originalInstance, propertyNameString, value, info, requestContext)))
+        if (JavascriptConversion::PropertyQueryFlagsToBoolean(ActivationObject::GetPropertyQuery(originalInstance, propertyNameString, value, info, requestContext)))
         {
             GetPropertyCore(info, requestContext);
             return PropertyQueryFlags::Property_Found;

@@ -209,8 +209,9 @@ namespace Js
     template <class Allocator>
     class FunctionTreeComparer : public ParseTreeComparer<FunctionTreeComparer<Allocator>, Allocator>
     {
+        using Base = ParseTreeComparer<FunctionTreeComparer<Allocator>, Allocator>;
     public:
-        using PNode = ParseTreeComparer<FunctionTreeComparer<Allocator>, Allocator>::PNode;
+        using PNode = Base::PNode;
 
         FunctionTreeComparer(Allocator* alloc) : ParseTreeComparer(alloc) {}
         FunctionTreeComparer(const FunctionTreeComparer& other) : ParseTreeComparer(other) {}
@@ -223,7 +224,7 @@ namespace Js
         {
             while (true)
             {
-                x = __super::GetParent(x);
+                x = Base::GetParent(x);
                 if (!x || x->nop == knopFncDecl || x->nop == knopProg)
                 {
                     break;
@@ -236,7 +237,7 @@ namespace Js
         template <class Func>
         void MapChildren(PNode x, const Func& func) const
         {
-            __super::MapChildren(x, [&](PNode child)
+            Base::MapChildren(x, [&](PNode child)
             {
                 if (child->nop == knopFncDecl)
                 {
@@ -256,7 +257,7 @@ namespace Js
         {
             func(x);
 
-            __super::MapChildren(x, [&](PNode child)
+            Base::MapChildren(x, [&](PNode child)
             {
                 if (child->nop == knopFncDecl)
                 {

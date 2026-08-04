@@ -109,7 +109,7 @@ void
 SmallNormalHeapBlockT<TBlockAttributes>::ScanNewImplicitRoots(Recycler * recycler)
 {
     Assert(this->IsAnyNormalBlock());
-    __super::ScanNewImplicitRootsBase([recycler](void * objectAddress, size_t objectSize)
+    Base::ScanNewImplicitRootsBase([recycler](void * objectAddress, size_t objectSize)
     {
         // TODO: only interior?
         recycler->ScanObjectInlineInterior(static_cast<void**>(objectAddress), objectSize);

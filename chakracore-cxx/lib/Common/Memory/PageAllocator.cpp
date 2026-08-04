@@ -219,7 +219,7 @@ bool
 PageSegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
 {
     Assert(freePageCount + this->GetAllocator()->secondaryAllocPageCount == this->segmentPageCount || freePageCount == 0);
-    if (__super::Initialize(allocFlags, excludeGuardPages))
+    if (Base::Initialize(allocFlags, excludeGuardPages))
     {
         if (freePageCount != 0)
         {

@@ -636,76 +636,76 @@ namespace Js
         int Count() const
         {
             typename LockPolicy::ReadLock autoLock(syncObj);
-            return __super::Count();
+            return ListType::Count();
         }
 
         const T& Item(int index) const
         {
             typename LockPolicy::ReadLock autoLock(syncObj);
-            return __super::Item(index);
+            return ListType::Item(index);
         }
 
         void Item(int index, const T& item)
         {
             typename LockPolicy::WriteLock autoLock(syncObj);
-            __super::Item(index, item);
+            ListType::Item(index, item);
         }
 
         void SetExistingItem(int index, const T& item)
         {
             typename LockPolicy::WriteLock autoLock(syncObj);
-            __super::SetExistingItem(index, item);
+            ListType::SetExistingItem(index, item);
         }
 
         bool IsItemValid(int index)
         {
             typename LockPolicy::ReadLock autoLock(syncObj);
-            return __super::IsItemValid(index);
+            return ListType::IsItemValid(index);
         }
 
         int SetAtFirstFreeSpot(const T& item)
         {
             typename LockPolicy::WriteLock autoLock(syncObj);
-            return __super::SetAtFirstFreeSpot(item);
+            return ListType::SetAtFirstFreeSpot(item);
         }
 
         void ClearAndZero()
         {
             typename LockPolicy::WriteLock autoLock(syncObj);
-            __super::ClearAndZero();
+            ListType::ClearAndZero();
         }
 
         void RemoveAt(int index)
         {
             typename LockPolicy::AddRemoveLock autoLock(syncObj);
-            return __super::RemoveAt(index);
+            return ListType::RemoveAt(index);
         }
 
         int Add(const T& item)
         {
             typename LockPolicy::AddRemoveLock autoLock(syncObj);
-            return __super::Add(item);
+            return ListType::Add(item);
         }
 
         template<class TMapFunction>
         void Map(TMapFunction map) const
         {
             typename LockPolicy::ReadLock autoLock(syncObj);
-            __super::Map(map);
+            ListType::Map(map);
         }
 
         template<class TMapFunction>
         bool MapUntil(TMapFunction map) const
         {
             typename LockPolicy::ReadLock autoLock(syncObj);
-            return __super::MapUntil(map);
+            return ListType::MapUntil(map);
         }
 
         template<class DebugSite, class TMapFunction>
         int32_t Map(DebugSite site, TMapFunction map) const // external debugging version
         {
             // No lock needed. Threads are suspended during external debugging.
-            return __super::Map(site, map);
+            return ListType::Map(site, map);
         }
     };
 
@@ -890,7 +890,7 @@ namespace Js
             {
                 CleanupWeakReference(list);
             }
-            return __super::GetFreeItemIndex(list);
+            return Base::GetFreeItemIndex(list);
         }
     };
 }

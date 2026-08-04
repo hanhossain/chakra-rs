@@ -16,7 +16,7 @@ template <typename TBlockType>
 void
 SmallNormalHeapBucketBase<TBlockType>::AggregateBucketStats()
 {
-    __super::AggregateBucketStats();
+    BaseT::AggregateBucketStats();
 
     HeapBlockList::ForEach(partialHeapBlockList, [this](TBlockType* heapBlock) {
         heapBlock->AggregateBlockStats(this->memStats);
@@ -59,7 +59,7 @@ template <typename TBlockType>
 void
 SmallNormalHeapBucketBase<TBlockType>::ScanNewImplicitRoots(Recycler * recycler)
 {
-    __super::ScanNewImplicitRoots(recycler);
+    BaseT::ScanNewImplicitRoots(recycler);
 
     Assert(recycler->inPartialCollectMode || partialHeapBlockList == nullptr);
     // Don't need to scan the partial heap block list for new implicit root as we don't allocate from them
@@ -441,7 +441,7 @@ template <typename TBlockType>
 void
 SmallNormalHeapBucketBase<TBlockType>::EnumerateObjects(ObjectInfoBits infoBits, void (*CallBackFunction)(void * address, size_t size))
 {
-    __super::EnumerateObjects(infoBits, CallBackFunction);
+    BaseT::EnumerateObjects(infoBits, CallBackFunction);
     HeapBucket::EnumerateObjects(partialHeapBlockList, infoBits, CallBackFunction);
     HeapBucket::EnumerateObjects(partialSweptHeapBlockList, infoBits, CallBackFunction);
 }
@@ -456,7 +456,7 @@ SmallNormalHeapBucketBase<TBlockType>::ResetMarks(ResetMarkFlags flags)
 {
     Assert(this->partialHeapBlockList == nullptr);
     Assert(this->partialSweptHeapBlockList == nullptr);
-    __super::ResetMarks(flags);
+    BaseT::ResetMarks(flags);
 }
 
 template <typename TBlockType>
@@ -476,7 +476,7 @@ template <typename TBlockType>
 size_t
 SmallNormalHeapBucketBase<TBlockType>::GetNonEmptyHeapBlockCount(bool checkCount) const
 {
-    size_t currentHeapBlockCount = __super::GetNonEmptyHeapBlockCount(false);
+    size_t currentHeapBlockCount = BaseT::GetNonEmptyHeapBlockCount(false);
     currentHeapBlockCount += HeapBlockList::Count(partialHeapBlockList);
     currentHeapBlockCount += HeapBlockList::Count(partialSweptHeapBlockList);
     bool allocatingDuringConcurrentSweep = false;
@@ -489,7 +489,7 @@ template <typename TBlockType>
 size_t
 SmallNormalHeapBucketBase<TBlockType>::Check(bool checkCount)
 {
-    size_t smallHeapBlockCount = __super::Check(false);
+    size_t smallHeapBlockCount = BaseT::Check(false);
     Assert(partialHeapBlockList == nullptr || this->GetRecycler()->inPartialCollectMode);
     smallHeapBlockCount += HeapInfo::Check(false, false, this->partialHeapBlockList);
 
@@ -507,7 +507,7 @@ template <typename TBlockType>
 void
 SmallNormalHeapBucketBase<TBlockType>::Verify()
 {
-    __super::Verify();
+    BaseT::Verify();
     Assert(this->partialHeapBlockList == nullptr || this->GetRecycler()->inPartialCollectMode);
     HeapBlockList::ForEach(this->partialHeapBlockList, [](TBlockType * heapBlock)
     {
@@ -526,7 +526,7 @@ template <typename TBlockType>
 void
 SmallNormalHeapBucketBase<TBlockType>::VerifyMark()
 {
-    __super::VerifyMark();
+    BaseT::VerifyMark();
     HeapBlockList::ForEach(this->partialHeapBlockList, [](TBlockType * heapBlock)
     {
         heapBlock->VerifyMark();

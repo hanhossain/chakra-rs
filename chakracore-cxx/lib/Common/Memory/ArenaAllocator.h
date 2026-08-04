@@ -685,7 +685,7 @@ public:
     void Free(void * buffer, size_t byteSize)
     {
         Unlock();
-        __super::Free(buffer, byteSize);
+        ArenaAllocatorBase::Free(buffer, byteSize);
     }
 #endif
     void ZeroAll();
@@ -740,7 +740,7 @@ public:
     void Free(void * buffer, size_t byteSize)
     {
         Unlock();
-        __super::Free(buffer, byteSize);
+        ArenaAllocatorBase::Free(buffer, byteSize);
     }
 #endif
 

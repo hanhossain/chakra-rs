@@ -232,7 +232,7 @@ using namespace Js;
     void ScriptFunction::ReplaceTypeWithPredecessorType(DynamicType * previousType)
     {
         ProxyEntryPointInfo* oldEntryPointInfo = this->GetScriptFunctionType()->GetEntryPointInfo();
-        __super::ReplaceTypeWithPredecessorType(previousType);
+        ScriptFunctionBase::ReplaceTypeWithPredecessorType(previousType);
         ProxyEntryPointInfo* newEntryPointInfo = this->GetScriptFunctionType()->GetEntryPointInfo();
         CopyEntryPointInfoToThreadContextIfNecessary(oldEntryPointInfo, newEntryPointInfo);
     }

@@ -139,7 +139,7 @@ public:
     public:
         char * Alloc(size_t requestedBytes)
         {
-            char* dataBlock = __super::Alloc(requestedBytes);
+            char* dataBlock = Allocator::Alloc(requestedBytes);
 #if DBG
             if (JITManager::GetJITManager()->IsJITServer())
             {
@@ -157,7 +157,7 @@ public:
         }
         char * AllocZero(size_t requestedBytes)
         {
-            char* dataBlock = __super::AllocZero(requestedBytes);
+            char* dataBlock = Allocator::AllocZero(requestedBytes);
 
 #if DBG
             if (JITManager::GetJITManager()->IsJITServer())
@@ -204,11 +204,11 @@ public:
     public:
         char * Alloc(size_t requestedBytes)
         {
-            return AddFixup(__super::Alloc(requestedBytes));
+            return AddFixup(Allocator::Alloc(requestedBytes));
         }
         char * AllocZero(size_t requestedBytes)
         {
-            return AddFixup(__super::AllocZero(requestedBytes));
+            return AddFixup(Allocator::AllocZero(requestedBytes));
         }
 
         static void Fixup(void* pThis, NativeCodeData::DataChunk* chunkList)

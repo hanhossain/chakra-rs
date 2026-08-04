@@ -76,17 +76,17 @@ namespace Js
         void UpdateInlineSlotCount();
         void EnableAfterTypeUpdate();
 
-        intptr_t GetRawGuardValue() const { return __super::GetValue(); }
+        intptr_t GetRawGuardValue() const { return PropertyGuard::GetValue(); }
 
         DynamicType* GetGuardValueAsType() const
         {
-            return reinterpret_cast<DynamicType*>((CtorCacheGuardValues)__super::GetValue() & ~CtorCacheGuardValues::TagFlag);
+            return reinterpret_cast<DynamicType*>((CtorCacheGuardValues)PropertyGuard::GetValue() & ~CtorCacheGuardValues::TagFlag);
         }
 
         DynamicType* GetType() const
         {
-            Assert(static_cast<intptr_t>((CtorCacheGuardValues)__super::GetValue() & CtorCacheGuardValues::TagFlag) == 0);
-            return reinterpret_cast<DynamicType*>(__super::GetValue());
+            Assert(static_cast<intptr_t>((CtorCacheGuardValues)PropertyGuard::GetValue() & CtorCacheGuardValues::TagFlag) == 0);
+            return reinterpret_cast<DynamicType*>(PropertyGuard::GetValue());
         }
 
         DynamicType* GetPendingType() const
@@ -164,12 +164,12 @@ namespace Js
 
         bool IsInvalidated() const
         {
-            return (CtorCacheGuardValues)__super::GetValue() == CtorCacheGuardValues::Invalid && this->content.isPopulated;
+            return (CtorCacheGuardValues)PropertyGuard::GetValue() == CtorCacheGuardValues::Invalid && this->content.isPopulated;
         }
 
         bool NeedsTypeUpdate() const
         {
-            return (CtorCacheGuardValues)__super::GetValue() == CtorCacheGuardValues::Special && this->content.typeUpdatePending;
+            return (CtorCacheGuardValues)PropertyGuard::GetValue() == CtorCacheGuardValues::Special && this->content.typeUpdatePending;
         }
 
         uint8_t CallCount() const
@@ -190,12 +190,12 @@ namespace Js
 
         bool IsNormal() const
         {
-            return (CtorCacheGuardValues)__super::GetValue() != CtorCacheGuardValues::Invalid && static_cast<intptr_t>((CtorCacheGuardValues)__super::GetValue() & CtorCacheGuardValues::TagFlag) == 0;
+            return (CtorCacheGuardValues)PropertyGuard::GetValue() != CtorCacheGuardValues::Invalid && static_cast<intptr_t>((CtorCacheGuardValues)PropertyGuard::GetValue() & CtorCacheGuardValues::TagFlag) == 0;
         }
 
         bool SkipDefaultNewObject() const
         {
-            return (CtorCacheGuardValues)__super::GetValue() == CtorCacheGuardValues::Special && this->content.skipDefaultNewObject;
+            return (CtorCacheGuardValues)PropertyGuard::GetValue() == CtorCacheGuardValues::Special && this->content.skipDefaultNewObject;
         }
 
         bool IsSetUpForJit() const
@@ -216,7 +216,7 @@ namespace Js
 
         const void* GetAddressOfGuardValue()
         {
-            return reinterpret_cast<const void*>(__super::GetAddressOfValue());
+            return reinterpret_cast<const void*>(PropertyGuard::GetAddressOfValue());
         }
 
         static uint32_t GetOffsetOfUpdateAfterCtor()
@@ -237,11 +237,11 @@ namespace Js
     #if DBG
         bool IsConsistent() const
         {
-            return (CtorCacheGuardValues)__super::GetValue() == CtorCacheGuardValues::Invalid ||
+            return (CtorCacheGuardValues)PropertyGuard::GetValue() == CtorCacheGuardValues::Invalid ||
                 (this->content.isPopulated && (
-                ((CtorCacheGuardValues)__super::GetValue() == CtorCacheGuardValues::Special && !this->content.updateAfterCtor && this->content.skipDefaultNewObject && !this->content.typeUpdatePending && this->content.slotCount == 0 && this->content.inlineSlotCount == 0 && this->content.pendingType == nullptr) ||
-                    ((CtorCacheGuardValues)__super::GetValue() == CtorCacheGuardValues::Special && !this->content.updateAfterCtor && this->content.typeUpdatePending && !this->content.skipDefaultNewObject && this->content.pendingType != nullptr) ||
-                    (((CtorCacheGuardValues)__super::GetValue() & CtorCacheGuardValues::TagFlag) == CtorCacheGuardValues::Invalid && !this->content.skipDefaultNewObject && !this->content.typeUpdatePending && this->content.pendingType == nullptr)));
+                ((CtorCacheGuardValues)PropertyGuard::GetValue() == CtorCacheGuardValues::Special && !this->content.updateAfterCtor && this->content.skipDefaultNewObject && !this->content.typeUpdatePending && this->content.slotCount == 0 && this->content.inlineSlotCount == 0 && this->content.pendingType == nullptr) ||
+                    ((CtorCacheGuardValues)PropertyGuard::GetValue() == CtorCacheGuardValues::Special && !this->content.updateAfterCtor && this->content.typeUpdatePending && !this->content.skipDefaultNewObject && this->content.pendingType != nullptr) ||
+                    (((CtorCacheGuardValues)PropertyGuard::GetValue() & CtorCacheGuardValues::TagFlag) == CtorCacheGuardValues::Invalid && !this->content.skipDefaultNewObject && !this->content.typeUpdatePending && this->content.pendingType == nullptr)));
         }
     #endif
 

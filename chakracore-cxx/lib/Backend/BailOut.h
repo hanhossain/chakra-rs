@@ -492,39 +492,39 @@ template<>
 inline char*
 NativeCodeData::AllocatorT<BailOutRecord::StackLiteralBailOutRecord>::Alloc(size_t requestedBytes)
 {
-    return __super::Alloc(requestedBytes);
+    return Allocator::Alloc(requestedBytes);
 }
 template<>
 inline char*
 NativeCodeData::AllocatorT<BailOutRecord::StackLiteralBailOutRecord>::AllocZero(size_t requestedBytes)
 {
-    return __super::AllocZero(requestedBytes);
+    return Allocator::AllocZero(requestedBytes);
 }
 
 template<>
 inline char*
 NativeCodeData::AllocatorT<Js::EquivalentPropertyEntry>::Alloc(size_t requestedBytes)
 {
-    return __super::Alloc(requestedBytes);
+    return Allocator::Alloc(requestedBytes);
 }
 template<>
 inline char*
 NativeCodeData::AllocatorT<Js::EquivalentPropertyEntry>::AllocZero(size_t requestedBytes)
 {
-    return __super::AllocZero(requestedBytes);
+    return Allocator::AllocZero(requestedBytes);
 }
 
 template<>
 inline char*
 NativeCodeData::AllocatorT<GlobalBailOutRecordDataRow>::Alloc(size_t requestedBytes)
 {
-    return __super::Alloc(requestedBytes);
+    return Allocator::Alloc(requestedBytes);
 }
 template<>
 inline char*
 NativeCodeData::AllocatorT<GlobalBailOutRecordDataRow>::AllocZero(size_t requestedBytes)
 {
-    return __super::AllocZero(requestedBytes);
+    return Allocator::AllocZero(requestedBytes);
 }
 #endif
 

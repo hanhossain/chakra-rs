@@ -81,7 +81,7 @@ namespace Js
 
     BOOL ObjectPrototypeObject::DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags)
     {
-        const BOOL result = __super::DeleteProperty(propertyId, flags);
+        const BOOL result = DynamicObject::DeleteProperty(propertyId, flags);
         if (result && propertyId == PropertyIds::__proto__)
         {
             this->__proto__Enabled = false;
@@ -92,7 +92,7 @@ namespace Js
 
     BOOL ObjectPrototypeObject::DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags)
     {
-        const BOOL result = __super::DeleteProperty(propertyNameString, flags);
+        const BOOL result = DynamicObject::DeleteProperty(propertyNameString, flags);
 
         if (result && BuiltInPropertyRecords::__proto__.Equals(propertyNameString))
         {

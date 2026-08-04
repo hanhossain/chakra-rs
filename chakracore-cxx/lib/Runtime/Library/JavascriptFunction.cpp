@@ -2168,7 +2168,7 @@ using namespace Js;
             }
         }
 
-        return __super::GetAccessors(propertyId, getter, setter, requestContext);
+        return DynamicObject::GetAccessors(propertyId, getter, setter, requestContext);
     }
 
     DescriptorFlags JavascriptFunction::GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
@@ -2179,7 +2179,7 @@ using namespace Js;
             return flags;
         }
 
-        return __super::GetSetter(propertyId, setterValue, info, requestContext);
+        return DynamicObject::GetSetter(propertyId, setterValue, info, requestContext);
     }
 
     DescriptorFlags JavascriptFunction::GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
@@ -2193,7 +2193,7 @@ using namespace Js;
             return flags;
         }
 
-        return __super::GetSetter(propertyNameString, setterValue, info, requestContext);
+        return DynamicObject::GetSetter(propertyNameString, setterValue, info, requestContext);
     }
 
     bool JavascriptFunction::GetSetterBuiltIns(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext, DescriptorFlags* descriptorFlags)
@@ -2623,7 +2623,7 @@ using namespace Js;
 
     BOOL JavascriptFunction::SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
     {
-        BOOL result = __super::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
+        BOOL result = DynamicObject::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
 
         if (propertyId == PropertyIds::prototype || propertyId == PropertyIds::_symbolHasInstance)
         {

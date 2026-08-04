@@ -1350,7 +1350,7 @@ namespace Js
 
     void JavascriptLibrary::Finalize(bool isShutdown)
     {
-        __super::Finalize(isShutdown);
+        JavascriptLibraryBase::Finalize(isShutdown);
 
         this->SetFakeGlobalFuncForUndefer(nullptr);
 

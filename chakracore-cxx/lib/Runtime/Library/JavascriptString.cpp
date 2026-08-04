@@ -3836,7 +3836,7 @@ case_2:
             return FALSE;
         }
 
-        return __super::SetItem(index, value, propertyOperationFlags);
+        return RecyclableObject::SetItem(index, value, propertyOperationFlags);
     }
 
     BOOL JavascriptString::DeleteItem(uint32_t index, PropertyOperationFlags propertyOperationFlags)
@@ -3848,7 +3848,7 @@ case_2:
             return FALSE;
         }
 
-        return __super::DeleteItem(index, propertyOperationFlags);
+        return RecyclableObject::DeleteItem(index, propertyOperationFlags);
     }
 
     PropertyQueryFlags JavascriptString::HasItemQuery(uint32_t index)
@@ -3884,7 +3884,7 @@ case_2:
 
             return FALSE;
         }
-        return __super::DeleteProperty(propertyId, propertyOperationFlags);
+        return RecyclableObject::DeleteProperty(propertyId, propertyOperationFlags);
     }
 
     BOOL JavascriptString::DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags propertyOperationFlags)
@@ -3895,7 +3895,7 @@ case_2:
 
             return FALSE;
         }
-        return __super::DeleteProperty(propertyNameString, propertyOperationFlags);
+        return RecyclableObject::DeleteProperty(propertyNameString, propertyOperationFlags);
     }
 
     BOOL JavascriptString::GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext)

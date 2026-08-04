@@ -16,7 +16,7 @@ namespace Js
         public:
             char * Alloc(size_t requestedBytes)
             {
-                char* dataBlock = __super::Alloc(requestedBytes);
+                char* dataBlock = Allocator::Alloc(requestedBytes);
 #if DBG
                 if (JITManager::GetJITManager()->IsJITServer())
                 {
@@ -34,7 +34,7 @@ namespace Js
 
             char * AllocZero(size_t requestedBytes)
             {
-                char* dataBlock = __super::AllocZero(requestedBytes);
+                char* dataBlock = Allocator::AllocZero(requestedBytes);
 #if DBG
                 if (JITManager::GetJITManager()->IsJITServer())
                 {
