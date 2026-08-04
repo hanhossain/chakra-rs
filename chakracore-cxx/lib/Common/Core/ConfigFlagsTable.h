@@ -488,7 +488,6 @@ namespace Js
         RecyclerVerifyPadSizeFlag,
         #endif
         RecyclerTestFlag,
-        RecyclerProtectPagesOnRescanFlag,
         PrintSystemExceptionFlag,
         TraceFlag,
 
@@ -1985,8 +1984,6 @@ namespace Js
         #endif
         // TODO (hanhossain): remove flag
         Boolean RecyclerTest;
-        // TODO (hanhossain): remove flag
-        Boolean RecyclerProtectPagesOnRescan;
         // todo (hanhossain): flag end
         Boolean PrintSystemException;
         Phases Trace;

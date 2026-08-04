@@ -1074,7 +1074,6 @@ namespace Js
         u"RecyclerVerifyPadSize",
 #endif
         u"RecyclerTest",
-        u"RecyclerProtectPagesOnRescan",
         u"PrintSystemException",
         u"Trace",
 
@@ -1984,7 +1983,6 @@ namespace Js
         u"Padding size to verify recycler memory",
 #endif
         u"Run recycler tests instead of executing script",
-        u"Temporarily switch all pages to read only during rescan",
         // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
@@ -2489,7 +2487,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
@@ -3018,7 +3015,6 @@ namespace Js
         RecyclerVerifyPadSize(12),
 #endif
         RecyclerTest(false),
-        RecyclerProtectPagesOnRescan(false),
         PrintSystemException(false),
         Trace(),
 
@@ -4511,8 +4507,6 @@ namespace Js
         #endif
         case RecyclerTestFlag:
             return FlagBoolean;
-        case RecyclerProtectPagesOnRescanFlag:
-            return FlagBoolean;
         case PrintSystemExceptionFlag:
             return FlagBoolean;
         case TraceFlag:
@@ -5379,8 +5373,6 @@ namespace Js
         #endif
         case RecyclerTestFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerTest));
-        case RecyclerProtectPagesOnRescanFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerProtectPagesOnRescan));
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case TraceFlag:
@@ -6177,9 +6169,6 @@ namespace Js
             break;
         #endif
         case RecyclerTestFlag:
-            retValue = false;
-            break;
-        case RecyclerProtectPagesOnRescanFlag:
             retValue = false;
             break;
         case PrintSystemExceptionFlag:

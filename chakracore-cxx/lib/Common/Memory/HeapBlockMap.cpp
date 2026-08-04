@@ -725,18 +725,6 @@ HeapBlockMap32::GetHeapBlockForRescan(HeapBlockMap32::L2MapChunk* chunk, uint id
 #endif
 
 void
-HeapBlockMap32::MakeAllPagesReadOnly(Recycler* recycler)
-{
-    this->ChangeProtectionLevel(recycler, PAGE_READONLY, PAGE_READWRITE);
-}
-
-void
-HeapBlockMap32::MakeAllPagesReadWrite(Recycler* recycler)
-{
-    this->ChangeProtectionLevel(recycler, PAGE_READWRITE, PAGE_READONLY);
-}
-
-void
 HeapBlockMap32::ChangeProtectionLevel(Recycler* recycler, uint32_t protectFlags, uint32_t expectedOldFlags)
 {
     this->ForEachSegment(recycler, [&](char* segmentStart, size_t segmentLength, Segment* currentSegment, PageAllocator* segmentPageAllocator)
@@ -1252,28 +1240,6 @@ HeapBlockMap64::ResetDirtyPages(Recycler * recycler)
     while (node != nullptr)
     {
         node->map.ResetDirtyPages(recycler);
-        node = node->next;
-    }
-}
-
-void
-HeapBlockMap64::MakeAllPagesReadOnly(Recycler* recycler)
-{
-    Node * node = this->list;
-    while (node != nullptr)
-    {
-        node->map.MakeAllPagesReadOnly(recycler);
-        node = node->next;
-    }
-}
-
-void
-HeapBlockMap64::MakeAllPagesReadWrite(Recycler* recycler)
-{
-    Node * node = this->list;
-    while (node != nullptr)
-    {
-        node->map.MakeAllPagesReadWrite(recycler);
         node = node->next;
     }
 }
