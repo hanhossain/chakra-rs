@@ -1355,10 +1355,7 @@ Recycler::ScanArena(ArenaData * alloc, bool background)
 #endif
 
     // The arena has been scanned so the full blocks can be rearranged at this point
-    if (background || !GetRecyclerFlagsTable().RecyclerProtectPagesOnRescan)
-    {
-        alloc->SetLockBlockList(false);
-    }
+    alloc->SetLockBlockList(false);
 
     return scanRootBytes;
 }
@@ -4794,29 +4791,9 @@ Recycler::WaitForConcurrentThread(uint32_t waitTime, RecyclerWaitReason caller)
     return (ret == WAIT_OBJECT_0);
 }
 
-AutoProtectPages::AutoProtectPages(Recycler* recycler, bool protectEnabled) :
-    isReadOnly(false),
+AutoProtectPages::AutoProtectPages(Recycler* recycler) :
     recycler(recycler)
 {
-    if (protectEnabled)
-    {
-        recycler->heapBlockMap.MakeAllPagesReadOnly(recycler);
-        isReadOnly = true;
-    }
-}
-
-AutoProtectPages::~AutoProtectPages()
-{
-    Unprotect();
-}
-
-void AutoProtectPages::Unprotect()
-{
-    if (isReadOnly)
-    {
-        recycler->heapBlockMap.MakeAllPagesReadWrite(recycler);
-        isReadOnly = false;
-    }
 }
 
 BOOL
@@ -4864,8 +4841,7 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
         // PageAllocator expects when it goes to change the page protection
         // One viable fix is to move the guard page protection logic outside of the heap blocks
         // and into the page allocator
-        AssertMsg(!(IsPageHeapEnabled() && GetRecyclerFlagsTable().RecyclerProtectPagesOnRescan), "ProtectPagesOnRescan not supported in page heap mode");
-        AutoProtectPages protectPages(this, GetRecyclerFlagsTable().RecyclerProtectPagesOnRescan);
+        AutoProtectPages protectPages{this};
 
         const bool backgroundFinishMark = !forceInThread && concurrent && ((flags & CollectOverride_BackgroundFinishMark) != 0);
         const uint32_t finishMarkWaitTime = RecyclerHeuristic::BackgroundFinishMarkWaitTime(backgroundFinishMark, GetRecyclerFlagsTable());
@@ -4883,7 +4859,6 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
         collectionStats.continueCollectAllocBytes = autoHeap.uncollectedAllocBytes;
 #endif
 
-        protectPages.Unprotect();
         needConcurrentSweep = this->Sweep(rescanRootBytes, concurrent, true);
     }
     else

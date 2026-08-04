@@ -60,8 +60,6 @@ public:
 
     void ResetDirtyPages(Recycler * recycler);
     uint Rescan(Recycler * recycler, bool resetWriteWatch);
-    void MakeAllPagesReadOnly(Recycler* recycler);
-    void MakeAllPagesReadWrite(Recycler* recycler);
 
     void Cleanup(bool concurrentFindImplicitRoot);
 
@@ -238,8 +236,6 @@ public:
 
     void ResetDirtyPages(Recycler * recycler);
     uint Rescan(Recycler * recycler, bool resetWriteWatch);
-    void MakeAllPagesReadOnly(Recycler* recycler);
-    void MakeAllPagesReadWrite(Recycler* recycler);
     bool OOMRescan(Recycler * recycler);
 
     void Cleanup(bool concurrentFindImplicitRoot);

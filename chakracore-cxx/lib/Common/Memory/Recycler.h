@@ -565,13 +565,11 @@ private:
 class AutoProtectPages
 {
 public:
-    AutoProtectPages(Recycler* recycler, bool protectEnabled);
-    ~AutoProtectPages();
-    void Unprotect();
+    explicit AutoProtectPages(Recycler* recycler);
+    ~AutoProtectPages() = default;
 
 private:
     Recycler* recycler;
-    bool isReadOnly;
 };
 
 class Recycler
