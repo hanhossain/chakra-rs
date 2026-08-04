@@ -485,7 +485,6 @@ namespace Js
         #endif
         #ifdef RECYCLER_MEMORY_VERIFY
         RecyclerVerifyFlag,
-        RecyclerVerifyPadSizeFlag,
         #endif
         PrintSystemExceptionFlag,
         TraceFlag,
@@ -1973,15 +1972,13 @@ namespace Js
             Number PageHeapBlockType;
         // TODO (hanhossain): remove flag
             Boolean PageHeapDecommitGuardPage;
+        // todo (hanhossain): flag end
         #ifdef RECYCLER_NO_PAGE_REUSE
             Boolean RecyclerNoPageReuse;
         #endif
         #ifdef RECYCLER_MEMORY_VERIFY
             Phases RecyclerVerify;
-        // TODO (hanhossain): remove flag
-            Number RecyclerVerifyPadSize;
         #endif
-        // todo (hanhossain): flag end
         Boolean PrintSystemException;
         Phases Trace;
 

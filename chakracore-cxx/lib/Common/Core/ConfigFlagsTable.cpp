@@ -1071,7 +1071,6 @@ namespace Js
 #endif
 #ifdef RECYCLER_MEMORY_VERIFY
         u"RecyclerVerify",
-        u"RecyclerVerifyPadSize",
 #endif
         u"PrintSystemException",
         u"Trace",
@@ -1974,14 +1973,13 @@ namespace Js
         u"Bucket numbers to be used for page heap allocations",
         u"Type of blocks to use page heap for",
         u"Decommit page heap guard page",
+        // todo (hanhossain): flag end
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"Do not reuse page in recycler",
 #endif
 #ifdef RECYCLER_MEMORY_VERIFY
         u"Verify recycler memory",
-        u"Padding size to verify recycler memory",
 #endif
-        // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
 
@@ -2478,14 +2476,13 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
+        // todo (hanhossain): flag end
 #ifdef RECYCLER_NO_PAGE_REUSE
         NoParentFlag,
 #endif
 #ifdef RECYCLER_MEMORY_VERIFY
         NoParentFlag,
-        NoParentFlag,
 #endif
-        // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
 
@@ -3009,7 +3006,6 @@ namespace Js
 #endif
 #ifdef RECYCLER_MEMORY_VERIFY
         RecyclerVerify(),
-        RecyclerVerifyPadSize(12),
 #endif
         PrintSystemException(false),
         Trace(),
@@ -4498,8 +4494,6 @@ namespace Js
         #ifdef RECYCLER_MEMORY_VERIFY
         case RecyclerVerifyFlag:
             return FlagPhases;
-        case RecyclerVerifyPadSizeFlag:
-            return FlagNumber;
         #endif
         case PrintSystemExceptionFlag:
             return FlagBoolean;
@@ -5362,8 +5356,6 @@ namespace Js
         #ifdef RECYCLER_MEMORY_VERIFY
         case RecyclerVerifyFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&RecyclerVerify));
-        case RecyclerVerifyPadSizeFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&RecyclerVerifyPadSize));
         #endif
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
