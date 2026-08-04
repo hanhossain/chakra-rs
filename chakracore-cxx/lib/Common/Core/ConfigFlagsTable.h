@@ -492,7 +492,6 @@ namespace Js
         #ifdef RECYCLER_VERIFY_MARK
         RecyclerVerifyMarkFlag,
         #endif
-        LowMemoryCapFlag,
         PrintSystemExceptionFlag,
         TraceFlag,
 
@@ -1995,8 +1994,6 @@ namespace Js
         // TODO (hanhossain): remove flag
             Boolean RecyclerVerifyMark;
         #endif
-        // TODO (hanhossain): remove flag
-        Number LowMemoryCap;
         // todo (hanhossain): flag end
         Boolean PrintSystemException;
         Phases Trace;

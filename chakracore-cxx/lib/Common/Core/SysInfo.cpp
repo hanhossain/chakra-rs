@@ -44,12 +44,6 @@ AutoSystemInfo::SupportsOnlyMultiThreadedCOM()
     return Data.supportsOnlyMultiThreadedCOM;
 }
 
-bool
-AutoSystemInfo::IsLowMemoryDevice()
-{
-    return Data.isLowMemoryDevice;
-}
-
 void
 AutoSystemInfo::Initialize()
 {
@@ -84,10 +78,6 @@ AutoSystemInfo::Initialize()
 
     this->supportsOnlyMultiThreadedCOM = false;
     this->shouldQCMoreFrequently = false;
-    this->isLowMemoryDevice = false;
-
-    // 0 indicates we haven't retrieved the available commit. We get it lazily.
-    this->availableCommit = 0;
 
     ChakraBinaryAutoSystemInfoInit(this);
 }
@@ -275,32 +265,6 @@ AutoSystemInfo::IsWin8Point1OrLater()
 const char16_t* AutoSystemInfo::GetJscriptDllFileName()
 {
     return Data.binaryName;
-}
-
-bool AutoSystemInfo::IsLowMemoryProcess()
-{
-    ULONG64 commit = ULONG64(-1);
-    this->GetAvailableCommit(&commit);
-    return commit <= CONFIG_FLAG(LowMemoryCap);
-}
-
-BOOL AutoSystemInfo::GetAvailableCommit(ULONG64 *pCommit)
-{
-    Assert(initialized);
-
-    // Non-zero value indicates we've been here before.
-    if (this->availableCommit == 0)
-    {
-        return false;
-    }
-
-    *pCommit = this->availableCommit;
-    return true;
-}
-
-void AutoSystemInfo::SetAvailableCommit(ULONG64 commit)
-{
-    ::InterlockedCompareExchange64(reinterpret_cast<volatile long*>(&this->availableCommit), commit, 0);
 }
 
 //

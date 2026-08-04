@@ -230,22 +230,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     arrayMutationSeed = (Js::Configuration::Global.flags.ArrayMutationTestSeed != 0) ? static_cast<uint>(Js::Configuration::Global.flags.ArrayMutationTestSeed) : static_cast<uint>(time(NULL));
     srand(arrayMutationSeed);
 #endif
-
-    this->InitAvailableCommit();
-}
-
-void ThreadContext::InitAvailableCommit()
-{
-    // Once per process: get the available commit for the process from the OS and push it to the AutoSystemInfo.
-    // (This must be done lazily, outside DllMain. And it must be done from the Runtime, since the common lib
-    // doesn't have access to the DelayLoadLibrary stuff.)
-    ULONG64 commit;
-    BOOL success = AutoSystemInfo::Data.GetAvailableCommit(&commit);
-    if (!success)
-    {
-        commit = static_cast<ULONG64>(-1);
-        AutoSystemInfo::Data.SetAvailableCommit(commit);
-    }
 }
 
 void ThreadContext::SetStackProber(StackProber * stackProber)

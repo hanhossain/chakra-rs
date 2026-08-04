@@ -32,16 +32,7 @@ RecyclerHeuristic::RecyclerHeuristic()
 
     // xplat-todo: Android sysconf is rather unreliable,
     // ullTotalPhys may not be the best source for a decision below
-    if (isSuccess && AutoSystemInfo::IsLowMemoryDevice() && physicalMemoryBytes <= 512 MEGABYTES)
-    {
-        // Low-end Apollo (512MB RAM) scenario.
-        // Note that what's specific about Apollo is that IE runs in physical memory,
-        //      that's one reason to distinguish 512MB Apollo from 512MB desktop.
-        baseFactor = 16;
-        this->DefaultMaxFreePageCount = 16 MEGABYTES_OF_PAGES;
-        this->DefaultMaxAllocPageCount = 32;
-    }
-    else if (isSuccess && physicalMemoryBytes <= 1024 MEGABYTES)
+    if (isSuccess && physicalMemoryBytes <= 1024 MEGABYTES)
     {
         // Tablet/slate/high-end Apollo scenario, including 512MB non-Apollo.
         baseFactor = 64;

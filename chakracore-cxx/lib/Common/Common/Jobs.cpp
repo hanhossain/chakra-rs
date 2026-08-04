@@ -490,9 +490,7 @@ namespace JsUtil
         currentJob(nullptr),
         threadStartedOrClosing(false),
         backgroundPageAllocator(policyManager, Js::Configuration::Global.flags, PageAllocatorType_BGJIT,
-        (AutoSystemInfo::Data.IsLowMemoryProcess() ?
-            PageAllocator::DefaultLowMaxFreePageCount :
-            PageAllocator::DefaultMaxFreePageCount)),
+            PageAllocator::DefaultMaxFreePageCount),
         threadArena(nullptr),
         processor(nullptr),
         parser(nullptr),
@@ -506,11 +504,6 @@ namespace JsUtil
         if (CONFIG_FLAG(ForceMaxJitThreadCount))
         {
             this->maxThreadCount = CONFIG_FLAG(MaxJitThreadCount);
-        }
-        else if (AutoSystemInfo::Data.IsLowMemoryProcess())
-        {
-            // In a low-memory scenario, don't spin up multiple threads, regardless of how many cores we have.
-            this->maxThreadCount = 1;
         }
         else
         {
