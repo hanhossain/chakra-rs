@@ -123,7 +123,7 @@ namespace Js
 
             struct InlinedFrame *Next()
             {
-                InlinedFrameLayout *next = __super::Next();
+                InlinedFrameLayout *next = InlinedFrameLayout::Next();
                 return (InlinedFrame*)next;
             }
 

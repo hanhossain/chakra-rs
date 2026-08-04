@@ -377,7 +377,7 @@ namespace Js
 
         // Use 'this' dynamic object.
         // This will use type handler and convert its objectArray to ES5Array is not already converted.
-        return __super::SetConfigurable(propertyId, value);
+        return ArgumentsObject::SetConfigurable(propertyId, value);
     }
 
     BOOL HeapArgumentsObject::SetEnumerable(PropertyId propertyId, BOOL value)
@@ -387,7 +387,7 @@ namespace Js
         {
             return this->ConvertToES5HeapArgumentsObject()->SetEnumerableForFormal(index, propertyId, value);
         }
-        return __super::SetEnumerable(propertyId, value);
+        return ArgumentsObject::SetEnumerable(propertyId, value);
     }
 
     BOOL HeapArgumentsObject::SetWritable(PropertyId propertyId, BOOL value)
@@ -397,7 +397,7 @@ namespace Js
         {
             return this->ConvertToES5HeapArgumentsObject()->SetWritableForFormal(index, propertyId, value);
         }
-        return __super::SetWritable(propertyId, value);
+        return ArgumentsObject::SetWritable(propertyId, value);
     }
 
     BOOL HeapArgumentsObject::SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
@@ -407,7 +407,7 @@ namespace Js
         {
             return this->ConvertToES5HeapArgumentsObject()->SetAccessorsForFormal(index, propertyId, getter, setter, flags);
         }
-        return __super::SetAccessors(propertyId, getter, setter, flags);
+        return ArgumentsObject::SetAccessors(propertyId, getter, setter, flags);
     }
 
     BOOL HeapArgumentsObject::SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
@@ -421,7 +421,7 @@ namespace Js
             return this->ConvertToES5HeapArgumentsObject()->SetPropertyWithAttributesForFormal(
                 index, propertyId, value, attributes, info, flags, possibleSideEffects);
         }
-        return __super::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
+        return ArgumentsObject::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
     }
 
     // This disables adding new properties to the object.
@@ -536,22 +536,22 @@ namespace Js
     {
         return this->IsFormalDisconnectedFromNamedArgument(index) ?
             JavascriptConversion::PropertyQueryFlagsToBoolean(this->DynamicObject::GetItemQuery(this, index, value, requestContext)) :
-            __super::GetItemAt(index, value, requestContext);
+            HeapArgumentsObject::GetItemAt(index, value, requestContext);
     }
 
     BOOL ES5HeapArgumentsObject::SetItemAt(uint32_t index, Var value)
     {
         return this->IsFormalDisconnectedFromNamedArgument(index) ?
             this->DynamicObject::SetItem(index, value, PropertyOperation_None) :
-            __super::SetItemAt(index, value);
+            HeapArgumentsObject::SetItemAt(index, value);
     }
 
     BOOL ES5HeapArgumentsObject::DeleteItemAt(uint32_t index)
     {
-        BOOL result = __super::DeleteItemAt(index);
+        BOOL result = HeapArgumentsObject::DeleteItemAt(index);
         if (result && IsFormalArgument(index))
         {
-            AssertMsg(this->IsFormalDisconnectedFromNamedArgument(index), "__super::DeleteItemAt must perform the disconnect.");
+            AssertMsg(this->IsFormalDisconnectedFromNamedArgument(index), "HeapArgumentsObject::DeleteItemAt must perform the disconnect.");
             // Make sure that objectArray does not have the item ().
             if (this->HasObjectArrayItem(index))
             {
@@ -614,7 +614,7 @@ namespace Js
 
         if (!IsFormalDisconnectedFromNamedArgument(index))
         {
-            __super::DeleteItemAt(index);
+            HeapArgumentsObject::DeleteItemAt(index);
         }
     }
 

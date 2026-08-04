@@ -581,7 +581,7 @@ namespace Js
     {
         if (internalPropertyId == InternalPropertyIds::WeakMapKeyMap)
         {
-            return __super::GetInternalProperty(instance, internalPropertyId, value, info, requestContext);
+            return DynamicObject::GetInternalProperty(instance, internalPropertyId, value, info, requestContext);
         }
         return FALSE;
     }
@@ -710,7 +710,7 @@ namespace Js
     {
         if (internalPropertyId == InternalPropertyIds::WeakMapKeyMap)
         {
-            return __super::SetInternalProperty(internalPropertyId, value, flags, info);
+            return DynamicObject::SetInternalProperty(internalPropertyId, value, flags, info);
         }
         return FALSE;
     }
@@ -1666,7 +1666,7 @@ namespace Js
                 return nullptr;
             JavascriptError::ThrowTypeError(GetScriptContext(), JSERR_ErrorOnRevokedProxy, u"toObject");
         }
-        return __super::ToObject(requestContext);
+        return DynamicObject::ToObject(requestContext);
     }
 
     Var JavascriptProxy::GetTypeOfString(ScriptContext* requestContext)

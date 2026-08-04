@@ -1639,7 +1639,7 @@ ThreadContext::PopInterpreterFrame()
 BOOL
 ThreadContext::ExecuteRecyclerCollectionFunctionCommon(Recycler * recycler, CollectionFunction function, CollectionFlags flags)
 {
-    return  __super::ExecuteRecyclerCollectionFunction(recycler, function, flags);
+    return  DefaultRecyclerCollectionWrapper::ExecuteRecyclerCollectionFunction(recycler, function, flags);
 }
 
 #if DBG
@@ -1758,7 +1758,7 @@ ThreadContext::DisposeObjects(Recycler * recycler)
 
     if (!this->IsScriptActive())
     {
-        __super::DisposeObjects(recycler);
+        DefaultRecyclerCollectionWrapper::DisposeObjects(recycler);
     }
     else
     {
@@ -1770,7 +1770,7 @@ ThreadContext::DisposeObjects(Recycler * recycler)
         this->ProbeStack(Js::Constants::MinStackCallout);
 
         this->LeaveScriptStart<false>(frameAddr);
-        __super::DisposeObjects(recycler);
+        DefaultRecyclerCollectionWrapper::DisposeObjects(recycler);
         this->LeaveScriptEnd<false>(frameAddr);
     }
 }

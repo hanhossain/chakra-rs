@@ -49,7 +49,7 @@ public:
     void MarkTemp(StackSym * sym, BackwardPass * backwardPass);
 
 #if DBG
-    void Dump() { __super::Dump(T::GetTraceName()); }
+    void Dump() { T::Dump(T::GetTraceName()); }
 #endif
 };
 

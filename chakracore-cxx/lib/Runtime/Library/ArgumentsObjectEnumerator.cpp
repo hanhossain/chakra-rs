@@ -57,7 +57,7 @@ namespace Js
 
     BOOL ES5ArgumentsObjectEnumerator::Init(EnumeratorCache * enumeratorCache)
     {
-        __super::Reset();
+        ArgumentsObjectPrefixEnumerator::Reset();
         this->enumeratedFormalsInObjectArrayCount = 0;
         return argumentsObject->DynamicObject::GetEnumerator(&objectEnumerator, flags, GetScriptContext(), enumeratorCache);
     }

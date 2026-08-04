@@ -2463,14 +2463,14 @@ using namespace Js;
     {
         // Force the array to be non-native to simplify inspection, filling from proto, etc.
         ToVarArray(this);
-        __super::SetIsPrototype();
+        JavascriptNativeArray::SetIsPrototype();
     }
 
     void JavascriptNativeFloatArray::SetIsPrototype()
     {
         // Force the array to be non-native to simplify inspection, filling from proto, etc.
         ToVarArray(this);
-        __super::SetIsPrototype();
+        JavascriptNativeArray::SetIsPrototype();
     }
 
 #if ENABLE_PROFILE_INFO
@@ -2673,7 +2673,7 @@ using namespace Js;
         {
             return flags;
         }
-        return __super::GetSetter(propertyId, setterValue, info, requestContext);
+        return ArrayObject::GetSetter(propertyId, setterValue, info, requestContext);
     }
 
     DescriptorFlags JavascriptArray::GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
@@ -2687,7 +2687,7 @@ using namespace Js;
             return flags;
         }
 
-        return __super::GetSetter(propertyNameString, setterValue, info, requestContext);
+        return ArrayObject::GetSetter(propertyNameString, setterValue, info, requestContext);
     }
 
     bool JavascriptArray::GetSetterBuiltIns(PropertyId propertyId, PropertyValueInfo* info, DescriptorFlags* descriptorFlags)
@@ -12391,7 +12391,7 @@ Case0:
                 ->SetEnumerable(this, propertyId, value);
         }
 
-        return __super::SetEnumerable(propertyId, value);
+        return ArrayObject::SetEnumerable(propertyId, value);
     }
 
     //
@@ -12410,7 +12410,7 @@ Case0:
                 ->SetWritable(this, propertyId, value);
         }
 
-        return __super::SetWritable(propertyId, value);
+        return ArrayObject::SetWritable(propertyId, value);
     }
 
     //
@@ -12434,7 +12434,7 @@ Case0:
                 ->SetConfigurable(this, propertyId, value);
         }
 
-        return __super::SetConfigurable(propertyId, value);
+        return ArrayObject::SetConfigurable(propertyId, value);
     }
 
     //
@@ -12456,7 +12456,7 @@ Case0:
                 ->SetItemAttributes(this, index, attributes);
         }
 
-        return __super::SetAttributes(propertyId, attributes);
+        return ArrayObject::SetAttributes(propertyId, attributes);
     }
 
     //
@@ -12474,7 +12474,7 @@ Case0:
                 ->SetItemAccessors(this, index, getter, setter);
         }
 
-        return __super::SetAccessors(propertyId, getter, setter, flags);
+        return ArrayObject::SetAccessors(propertyId, getter, setter, flags);
     }
 
     //
@@ -12801,7 +12801,7 @@ Case0:
             return SetItemWithAttributes(index, value, attributes);
         }
 
-        return __super::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
+        return ArrayObject::SetPropertyWithAttributes(propertyId, value, attributes, info, flags, possibleSideEffects);
     }
 
     BOOL JavascriptArray::SetItem(uint32_t index, Var value, PropertyOperationFlags flags)

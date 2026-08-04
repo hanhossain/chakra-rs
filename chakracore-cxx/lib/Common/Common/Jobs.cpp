@@ -980,7 +980,7 @@ namespace JsUtil
             Js::Throw::OutOfMemory(); // Overflow: job counts we use are int32_t's.
         ++numJobs;
 
-        __super::AddJob(job, prioritize);
+        JobProcessor::AddJob(job, prioritize);
         IndicateNewJob();
     }
 
@@ -996,7 +996,7 @@ namespace JsUtil
         {
             return false;
         }
-        return __super::RemoveJob(job);
+        return JobProcessor::RemoveJob(job);
     }
 
     bool BackgroundJobProcessor::Process(Job *const job, ParallelThreadData *threadData)

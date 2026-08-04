@@ -446,14 +446,14 @@ namespace Js
     ModuleNamespace* SourceTextModuleRecord::GetNamespace()
     {
         Assert(localExportSlots != nullptr);
-        Assert(PointerValue(localExportSlots[GetLocalExportSlotCount()]) == __super::GetNamespace());
+        Assert(PointerValue(localExportSlots[GetLocalExportSlotCount()]) == ModuleRecordBase::GetNamespace());
         return (ModuleNamespace*)(void*)(localExportSlots[GetLocalExportSlotCount()]);
     }
 
     void SourceTextModuleRecord::SetNamespace(ModuleNamespace* moduleNamespace)
     {
         Assert(localExportSlots != nullptr);
-        __super::SetNamespace(moduleNamespace);
+        ModuleRecordBase::SetNamespace(moduleNamespace);
         localExportSlots[GetLocalExportSlotCount()] = moduleNamespace;
     }
 

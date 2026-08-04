@@ -13,7 +13,7 @@ namespace Js
     void ModuleRoot::SetHostObject(ModuleID moduleID, HostObjectBase * hostObject)
     {
         this->moduleID = moduleID;
-        __super::SetHostObject(hostObject);
+        RootObjectBase::SetHostObject(hostObject);
     }
 
     PropertyQueryFlags ModuleRoot::HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info)
@@ -42,7 +42,7 @@ namespace Js
 
     BOOL ModuleRoot::HasRootProperty(PropertyId propertyId)
     {
-        if (__super::HasRootProperty(propertyId))
+        if (RootObjectBase::HasRootProperty(propertyId))
         {
             return TRUE;
         }
@@ -334,7 +334,7 @@ namespace Js
             return FALSE;
         }
 
-        return __super::SetRootProperty(propertyId, value, (PropertyOperationFlags)(flags | PropertyOperation_NonFixedValue), info);
+        return RootObjectBase::SetRootProperty(propertyId, value, (PropertyOperationFlags)(flags | PropertyOperation_NonFixedValue), info);
     }
 
     BOOL ModuleRoot::SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info)

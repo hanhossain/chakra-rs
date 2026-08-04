@@ -604,7 +604,7 @@ Js::DynamicObject* JsrtDebuggerObjectProperty::GetChildren(Js::ScriptContext* sc
         this->walkerRef = objectDisplayRef->CreateWalker();
     }
 
-    Js::DynamicObject* childrens = __super::GetChildren(this->walkerRef, scriptContext, fromCount, totalCount);
+    Js::DynamicObject* childrens = JsrtDebuggerObjectBase::GetChildren(this->walkerRef, scriptContext, fromCount, totalCount);
 
     objectDisplay->ReleaseStrongReference();
 
@@ -675,7 +675,7 @@ Js::DynamicObject * JsrtDebuggerObjectScope::GetChildren(Js::ScriptContext * scr
         this->walkerRef = objectDisplayRef->CreateWalker();
     }
 
-    Js::DynamicObject* childrens = __super::GetChildren(this->walkerRef, scriptContext, fromCount, totalCount);
+    Js::DynamicObject* childrens = JsrtDebuggerObjectBase::GetChildren(this->walkerRef, scriptContext, fromCount, totalCount);
 
     objectDisplay->ReleaseStrongReference();
 
@@ -758,7 +758,7 @@ Js::DynamicObject * JsrtDebuggerObjectFunction::GetChildren(Js::ScriptContext * 
         this->walkerRef = objectDisplayRef->CreateWalker();
     }
 
-    Js::DynamicObject* childrens = __super::GetChildren(this->walkerRef, scriptContext, fromCount, totalCount);
+    Js::DynamicObject* childrens = JsrtDebuggerObjectBase::GetChildren(this->walkerRef, scriptContext, fromCount, totalCount);
 
     this->objectDisplay->ReleaseStrongReference();
 
@@ -826,7 +826,7 @@ Js::DynamicObject * JsrtDebuggerObjectGlobalsNode::GetChildren(Js::ScriptContext
         this->walkerRef = objectDisplayRef->CreateWalker();
     }
 
-    Js::DynamicObject* childrens = __super::GetChildren(this->walkerRef, scriptContext, fromCount, totalCount);
+    Js::DynamicObject* childrens = JsrtDebuggerObjectBase::GetChildren(this->walkerRef, scriptContext, fromCount, totalCount);
 
     objectDisplay->ReleaseStrongReference();
 

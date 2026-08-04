@@ -1455,7 +1455,7 @@ namespace Js
 
     void ParseableFunctionInfo::Copy(ParseableFunctionInfo * other)
     {
-        __super::Copy(other);
+        FunctionProxy::Copy(other);
 
 #define CopyDeferParseField(field) other->field = this->field;
         CopyDeferParseField(flags);
@@ -2160,7 +2160,7 @@ namespace Js
 
     void DeferDeserializeFunctionInfo::Finalize(bool isShutdown)
     {
-        __super::Finalize(isShutdown);
+        FunctionProxy::Finalize(isShutdown);
         PERF_COUNTER_DEC(Code, DeferDeserializeFunctionProxy);
     }
 
@@ -2650,7 +2650,7 @@ namespace Js
 
     void ParseableFunctionInfo::Finalize(bool isShutdown)
     {
-        __super::Finalize(isShutdown);
+        FunctionProxy::Finalize(isShutdown);
         if (this->GetFunctionInfo())
         {
             // (If function info was never set, then initialization didn't finish, so there's nothing to remove from the dictionary.)
@@ -8403,7 +8403,7 @@ namespace Js
 
     void EntryPointInfo::Finalize(bool isShutdown)
     {
-        __super::Finalize(isShutdown);
+        ProxyEntryPointInfo::Finalize(isShutdown);
 
         if (!isShutdown)
         {

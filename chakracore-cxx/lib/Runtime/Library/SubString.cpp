@@ -74,7 +74,7 @@ namespace Js
         {
             return originalFullStringReference;
         }
-        return __super::GetOriginalStringReference();
+        return JavascriptString::GetOriginalStringReference();
     }
 
     size_t SubString::GetAllocatedByteCount() const
@@ -83,7 +83,7 @@ namespace Js
         {
             return 0;
         }
-        return __super::GetAllocatedByteCount();
+        return JavascriptString::GetAllocatedByteCount();
     }
 
     bool SubString::IsSubstring() const

@@ -2729,7 +2729,7 @@ BranchBailOutRecord::BailOutFromFunction(Js::JavascriptCallStackLayout * layout,
         Js::ScriptContext *scriptContext = layout->functionObject->GetScriptContext();
         branchValue = (cond ? scriptContext->GetLibrary()->GetTrue() : scriptContext->GetLibrary()->GetFalse());
     }
-    return __super::BailOutCommon(layout, bailOutRecord, bailOutOffset, returnAddress, bailOutRecord->bailOutKind, savedImplicitCallFlags, branchValue, nullptr, argoutRestoreAddress);
+    return BailOutCommon(layout, bailOutRecord, bailOutOffset, returnAddress, bailOutRecord->bailOutKind, savedImplicitCallFlags, branchValue, nullptr, argoutRestoreAddress);
 }
 
 uint32_t
@@ -2743,7 +2743,7 @@ BranchBailOutRecord::BailOutFromLoopBody(Js::JavascriptCallStackLayout * layout,
         Js::ScriptContext *scriptContext = layout->functionObject->GetScriptContext();
         branchValue = (cond ? scriptContext->GetLibrary()->GetTrue() : scriptContext->GetLibrary()->GetFalse());
     }
-    return __super::BailOutFromLoopBodyCommon(layout, bailOutRecord, bailOutOffset, bailOutRecord->bailOutKind, branchValue);
+    return BailOutFromLoopBodyCommon(layout, bailOutRecord, bailOutOffset, bailOutRecord->bailOutKind, branchValue);
 }
 
 Js::Var
@@ -2757,7 +2757,7 @@ BranchBailOutRecord::BailOutInlined(Js::JavascriptCallStackLayout * layout, Bran
         Js::ScriptContext *scriptContext = layout->functionObject->GetScriptContext();
         branchValue = (cond ? scriptContext->GetLibrary()->GetTrue() : scriptContext->GetLibrary()->GetFalse());
     }
-    return __super::BailOutInlinedCommon(layout, bailOutRecord, bailOutOffset, returnAddress, bailOutRecord->bailOutKind, savedImplicitCallFlags, branchValue);
+    return BailOutInlinedCommon(layout, bailOutRecord, bailOutOffset, returnAddress, bailOutRecord->bailOutKind, savedImplicitCallFlags, branchValue);
 }
 
 uint32_t
@@ -2771,7 +2771,7 @@ BranchBailOutRecord::BailOutFromLoopBodyInlined(Js::JavascriptCallStackLayout * 
         Js::ScriptContext *scriptContext = layout->functionObject->GetScriptContext();
         branchValue = (cond ? scriptContext->GetLibrary()->GetTrue() : scriptContext->GetLibrary()->GetFalse());
     }
-    return __super::BailOutFromLoopBodyInlinedCommon(layout, bailOutRecord, bailOutOffset, returnAddress, bailOutRecord->bailOutKind, branchValue);
+    return BailOutFromLoopBodyInlinedCommon(layout, bailOutRecord, bailOutOffset, returnAddress, bailOutRecord->bailOutKind, branchValue);
 }
 
 SharedBailOutRecord::SharedBailOutRecord(uint32_t bailOutOffset, uint bailOutCacheIndex, IR::BailOutKind kind, Func *bailOutFunc)

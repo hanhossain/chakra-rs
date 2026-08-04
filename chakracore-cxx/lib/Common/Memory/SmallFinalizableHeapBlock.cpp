@@ -128,7 +128,7 @@ void
 SmallFinalizableHeapBlockT<TBlockAttributes>::SetAttributes(void * address, unsigned char attributes)
 {
     Assert((attributes & FinalizeBit) != 0);
-    __super::SetAttributes(address, attributes);
+    Base::SetAttributes(address, attributes);
     finalizeCount++;
 
 #ifdef RECYCLER_FINALIZE_CHECK
@@ -579,7 +579,7 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::Init(ushort objectSize, ushort obj
     Assert(this->disposedObjectListTail == nullptr);
     Assert(this->finalizeCount == 0);
     Assert(this->pendingDisposeCount == 0);
-    __super::Init(objectSize, objectCount);
+    Base::Init(objectSize, objectCount);
 }
 
 template <class TBlockAttributes>
@@ -588,7 +588,7 @@ SmallFinalizableHeapBlockT<TBlockAttributes>::FinishPartialCollect()
 {
     Assert(this->disposedObjectList == nullptr);
     Assert(this->disposedObjectListTail == nullptr);
-    __super::FinishPartialCollect();
+    Base::FinishPartialCollect();
 }
 #endif
 

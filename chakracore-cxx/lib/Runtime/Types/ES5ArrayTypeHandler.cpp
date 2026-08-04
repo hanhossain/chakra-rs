@@ -254,7 +254,7 @@ namespace Js
     template <class T>
     void ES5ArrayTypeHandlerBase<T>::SetIsPrototype(DynamicObject * instance)
     {
-        __super::SetIsPrototype(instance);
+        DictionaryTypeHandlerBase<T>::SetIsPrototype(instance);
 
         // We have ES5 array has array/object prototype, we can't use array fast path for set
         // as index could be readonly or be getter/setter in the prototype
@@ -303,7 +303,7 @@ namespace Js
             }
 
             arrayInstance->ChangeType(); // force change TypeId
-            __super::SetInstanceTypeHandler(arrayInstance, false); // after forcing the type change, we don't need to changeType again.
+            DictionaryTypeHandlerBase<T>::SetInstanceTypeHandler(arrayInstance, false); // after forcing the type change, we don't need to changeType again.
 #if DBG
             doneConversion = true;
 #endif
@@ -784,7 +784,7 @@ namespace Js
             return ES5ArrayTypeHandlerBase<T>::HasItem(instance, index);
         }
 
-        return __super::HasProperty(instance, propertyId, noRedecl, info);
+        return DictionaryTypeHandlerBase<T>::HasProperty(instance, propertyId, noRedecl, info);
     }
 
     template <class T>
@@ -793,7 +793,7 @@ namespace Js
         AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord*");
 
-        return __super::HasProperty(instance, propertyNameString);
+        return DictionaryTypeHandlerBase<T>::HasProperty(instance, propertyNameString);
     }
 
     template <class T>
@@ -806,7 +806,7 @@ namespace Js
             return GetItem(VarTo<ES5Array>(instance), instance, index, value, requestContext);
         }
 
-        return __super::GetProperty(instance, originalInstance, propertyId, value, info, requestContext);
+        return DictionaryTypeHandlerBase<T>::GetProperty(instance, originalInstance, propertyId, value, info, requestContext);
     }
 
     template <class T>
@@ -815,7 +815,7 @@ namespace Js
         AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord*");
 
-        return __super::GetProperty(instance, originalInstance, propertyNameString, value, info, requestContext);
+        return DictionaryTypeHandlerBase<T>::GetProperty(instance, originalInstance, propertyNameString, value, info, requestContext);
     }
 
     template <class T>
@@ -830,7 +830,7 @@ namespace Js
             return ES5ArrayTypeHandlerBase<T>::GetItemSetter(instance, index, setterValue, requestContext);
         }
 
-        return __super::GetSetter(instance, propertyId, setterValue, info, requestContext);
+        return DictionaryTypeHandlerBase<T>::GetSetter(instance, propertyId, setterValue, info, requestContext);
     }
 
     template <class T>
@@ -839,7 +839,7 @@ namespace Js
         AssertMsg(!PropertyRecord::IsPropertyNameNumeric(propertyNameString->GetString(), propertyNameString->GetLength()),
             "Numeric property names should have been converted to uint or PropertyRecord*");
 
-        return __super::GetSetter(instance, propertyNameString, setterValue, info, requestContext);
+        return DictionaryTypeHandlerBase<T>::GetSetter(instance, propertyNameString, setterValue, info, requestContext);
     }
 
     template <class T>
@@ -852,7 +852,7 @@ namespace Js
             return DeleteItem(VarTo<ES5Array>(instance), instance, index, flags);
         }
 
-        return __super::DeleteProperty(instance, propertyId, flags);
+        return DictionaryTypeHandlerBase<T>::DeleteProperty(instance, propertyId, flags);
     }
 
     template <class T>
@@ -1129,7 +1129,7 @@ namespace Js
     {
         BOOL isNumericPropertyId;
         return IsAttributeSet(instance, propertyId, PropertyEnumerable, isNumericPropertyId)
-            && (isNumericPropertyId || __super::IsEnumerable(instance, propertyId));
+            && (isNumericPropertyId || DictionaryTypeHandlerBase<T>::IsEnumerable(instance, propertyId));
     }
 
     template <class T>
@@ -1137,7 +1137,7 @@ namespace Js
     {
         BOOL isNumericPropertyId;
         return IsAttributeSet(instance, propertyId, PropertyWritable, isNumericPropertyId)
-            && (isNumericPropertyId || __super::IsWritable(instance, propertyId));
+            && (isNumericPropertyId || DictionaryTypeHandlerBase<T>::IsWritable(instance, propertyId));
     }
 
     template <class T>
@@ -1145,7 +1145,7 @@ namespace Js
     {
         BOOL isNumericPropertyId;
         return IsAttributeSet(instance, propertyId, PropertyConfigurable, isNumericPropertyId)
-            && (isNumericPropertyId || __super::IsConfigurable(instance, propertyId));
+            && (isNumericPropertyId || DictionaryTypeHandlerBase<T>::IsConfigurable(instance, propertyId));
     }
 
     template <class T>
@@ -1159,7 +1159,7 @@ namespace Js
 
         BOOL isNumericPropertyId;
         return UpdateAttribute(instance, propertyId, PropertyEnumerable, value, isNumericPropertyId)
-            || (!isNumericPropertyId && __super::SetEnumerable(instance, propertyId, value));
+            || (!isNumericPropertyId && DictionaryTypeHandlerBase<T>::SetEnumerable(instance, propertyId, value));
     }
 
     template <class T>
@@ -1177,7 +1177,7 @@ namespace Js
 
         BOOL isNumericPropertyId;
         return UpdateAttribute(instance, propertyId, PropertyWritable, value, isNumericPropertyId)
-            || (!isNumericPropertyId && __super::SetWritable(instance, propertyId, value));
+            || (!isNumericPropertyId && DictionaryTypeHandlerBase<T>::SetWritable(instance, propertyId, value));
     }
 
     template <class T>
@@ -1191,7 +1191,7 @@ namespace Js
 
         BOOL isNumericPropertyId;
         return UpdateAttribute(instance, propertyId, PropertyConfigurable, value, isNumericPropertyId)
-            || (!isNumericPropertyId && __super::SetConfigurable(instance, propertyId, value));
+            || (!isNumericPropertyId && DictionaryTypeHandlerBase<T>::SetConfigurable(instance, propertyId, value));
     }
 
     template <class T>
@@ -1205,7 +1205,7 @@ namespace Js
             return GetItemAccessors(VarTo<ES5Array>(instance), instance, index, getter, setter);
         }
 
-        return __super::GetAccessors(instance, propertyId, getter, setter);
+        return DictionaryTypeHandlerBase<T>::GetAccessors(instance, propertyId, getter, setter);
     }
 
     template <class T>
@@ -1220,7 +1220,7 @@ namespace Js
 
         this->SetDataItemSealed(); // set shared data item attributes sealed
 
-        return __super::Seal(instance);
+        return DictionaryTypeHandlerBase<T>::Seal(instance);
     }
 
     template <class T>
@@ -1247,7 +1247,7 @@ namespace Js
         this->SetDataItemFrozen(); // set shared data item attributes frozen
         SetLengthWritable(false); // Freeze "length" as well
 
-        return __super::FreezeImpl(instance, isConvertedType);
+        return DictionaryTypeHandlerBase<T>::FreezeImpl(instance, isConvertedType);
     }
 
     template <class T>
@@ -1259,7 +1259,7 @@ namespace Js
     template <class T>
     BOOL ES5ArrayTypeHandlerBase<T>::IsSealed(DynamicObject* instance)
     {
-        if (!__super::IsSealed(instance))
+        if (!DictionaryTypeHandlerBase<T>::IsSealed(instance))
         {
             return false;
         }
@@ -1297,7 +1297,7 @@ namespace Js
     template <class T>
     BOOL ES5ArrayTypeHandlerBase<T>::IsObjectArrayFrozen(ES5Array* arr)
     {
-        if (!__super::IsFrozen(arr))
+        if (!DictionaryTypeHandlerBase<T>::IsFrozen(arr))
         {
             return false;
         }
@@ -1358,7 +1358,7 @@ namespace Js
             return SetItemAttributes(VarTo<ES5Array>(instance), instance, index, attributes);
         }
 
-        return __super::SetAttributes(instance, propertyId, attributes);
+        return DictionaryTypeHandlerBase<T>::SetAttributes(instance, propertyId, attributes);
     }
 
     template <class T>

@@ -131,7 +131,7 @@ IdleDecommitPageAllocator::LeaveIdleDecommit(bool allowTimer)
         return idleDecommitSignal;
     }
     this->maxFreePageCount = maxNonIdleDecommitFreePageCount;
-    __super::DecommitNow();
+    PageAllocator::DecommitNow();
     ClearMinFreePageCount();
     return IdleDecommitSignal_None;
 }
@@ -146,7 +146,7 @@ IdleDecommitPageAllocator::DecommitNow(bool all)
     if (maxFreePageCount == maxNonIdleDecommitFreePageCount)
         all = true;
 
-    __super::DecommitNow(all);
+    PageAllocator::DecommitNow(all);
 
     if (all)
     {
@@ -213,7 +213,7 @@ IdleDecommitPageAllocator::IdleDecommit()
 #if DBG_DUMP
             idleDecommitCount++;
 #endif
-            __super::DecommitNow();
+            PageAllocator::DecommitNow();
             hasDecommitTimer = false;
             ClearMinFreePageCount();
             this->maxFreePageCount = maxNonIdleDecommitFreePageCount;
@@ -259,7 +259,7 @@ IdleDecommitPageAllocator::ShutdownIdleDecommit()
 void
 IdleDecommitPageAllocator::DumpStats() const
 {
-    __super::DumpStats();
+    PageAllocator::DumpStats();
     Output::Print(u"  Idle Decommit Count       : %4d\n",
         this->idleDecommitCount);
 }

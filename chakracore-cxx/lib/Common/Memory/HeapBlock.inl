@@ -47,7 +47,7 @@ template <class TBlockAttributes>
 IdleDecommitPageAllocator*
 SmallHeapBlockT<TBlockAttributes>::GetPageAllocator()
 {
-    return __super::GetPageAllocator(this->heapBucket->heapInfo);
+    return HeapBlock::GetPageAllocator(this->heapBucket->heapInfo);
 }
 
 template <class TBlockAttributes>

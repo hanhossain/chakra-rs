@@ -1075,7 +1075,7 @@ BOOL CustomExternalWrapperObject::DeleteProperty(Js::PropertyId propertyId, Js::
     Assert(!GetScriptContext()->IsHeapEnumInProgress());
     if (nullptr == deleteMethod)
     {
-        return __super::DeleteProperty(propertyId, flags);
+        return DynamicObject::DeleteProperty(propertyId, flags);
     }
 
     Js::Var isPropertyNameNumeric;

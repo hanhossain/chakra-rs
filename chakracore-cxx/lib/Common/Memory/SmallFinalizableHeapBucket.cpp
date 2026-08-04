@@ -53,7 +53,7 @@ template <class TBlockType>
 size_t
 SmallFinalizableHeapBucketBaseT<TBlockType>::GetNonEmptyHeapBlockCount(bool checkCount) const
 {
-    size_t currentHeapBlockCount =  __super::GetNonEmptyHeapBlockCount(false)
+    size_t currentHeapBlockCount =  BaseT::GetNonEmptyHeapBlockCount(false)
         + HeapBlockList::Count(pendingDisposeList)
         + HeapBlockList::Count(tempPendingDisposeList);
     RECYCLER_SLOW_CHECK(Assert(!checkCount || this->heapBlockCount == currentHeapBlockCount));
@@ -65,7 +65,7 @@ template <class TBlockType>
 void
 SmallFinalizableHeapBucketBaseT<TBlockType>::ResetMarks(ResetMarkFlags flags)
 {
-    __super::ResetMarks(flags);
+    BaseT::ResetMarks(flags);
 
     if ((flags & ResetMarkFlags_ScanImplicitRoot) != 0)
     {
@@ -81,7 +81,7 @@ template <class TBlockType>
 void
 SmallFinalizableHeapBucketBaseT<TBlockType>::AggregateBucketStats()
 {
-    __super::AggregateBucketStats();
+    BaseT::AggregateBucketStats();
 
     HeapBlockList::ForEach(pendingDisposeList, [this](TBlockType* heapBlock) {
         heapBlock->AggregateBlockStats(this->memStats);
@@ -171,7 +171,7 @@ template <class TBlockType>
 void
 SmallFinalizableHeapBucketBaseT<TBlockType>::EnumerateObjects(ObjectInfoBits infoBits, void(*CallBackFunction)(void * address, size_t size))
 {
-    __super::EnumerateObjects(infoBits, CallBackFunction);
+    BaseT::EnumerateObjects(infoBits, CallBackFunction);
     HeapBucket::EnumerateObjects(this->pendingDisposeList, infoBits, CallBackFunction);
 }
 
@@ -180,7 +180,7 @@ template <class TBlockType>
 size_t
 SmallFinalizableHeapBucketBaseT<TBlockType>::Check()
 {
-    size_t smallHeapBlockCount = __super::Check(false) + HeapInfo::Check(false, true, this->pendingDisposeList);
+    size_t smallHeapBlockCount = BaseT::Check(false) + HeapInfo::Check(false, true, this->pendingDisposeList);
     Assert(this->heapBlockCount == smallHeapBlockCount);
     return smallHeapBlockCount;
 }
@@ -223,7 +223,7 @@ template <class TBlockType>
 void
 SmallFinalizableHeapBucketBaseT<TBlockType>::VerifyMark()
 {
-    __super::VerifyMark();
+    BaseT::VerifyMark();
     HeapBlockList::ForEach(this->pendingDisposeList, [](TBlockType * heapBlock)
     {
         Assert(heapBlock->HasAnyDisposeObjects());

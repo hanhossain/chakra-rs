@@ -1061,7 +1061,7 @@ LHexError:
 
     BOOL GlobalObject::HasRootProperty(PropertyId propertyId)
     {
-        return __super::HasRootProperty(propertyId) ||
+        return RootObjectBase::HasRootProperty(propertyId) ||
             (this->directHostObject && JavascriptOperators::HasProperty(this->directHostObject, propertyId)) ||
             (this->hostObject && JavascriptOperators::HasProperty(this->hostObject, propertyId));
     }
@@ -1096,7 +1096,7 @@ LHexError:
 
     BOOL GlobalObject::GetRootProperty(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext)
     {
-        if (__super::GetRootProperty(originalInstance, propertyId, value, info, requestContext))
+        if (RootObjectBase::GetRootProperty(originalInstance, propertyId, value, info, requestContext))
         {
             return TRUE;
         }
@@ -1135,7 +1135,7 @@ LHexError:
     BOOL GlobalObject::GetRootPropertyReference(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info,
         ScriptContext* requestContext)
     {
-        if (__super::GetRootPropertyReference(originalInstance, propertyId, value, info, requestContext))
+        if (RootObjectBase::GetRootPropertyReference(originalInstance, propertyId, value, info, requestContext))
         {
             return true;
         }
@@ -1232,7 +1232,7 @@ LHexError:
 
     BOOL GlobalObject::SetExistingRootProperty(PropertyId propertyId, Var value, PropertyValueInfo* info, BOOL *setAttempted)
     {
-        BOOL hasOwnProperty = __super::HasRootProperty(propertyId);
+        BOOL hasOwnProperty = RootObjectBase::HasRootProperty(propertyId);
         BOOL hasProperty = JavascriptOperators::HasProperty(this->GetPrototype(), propertyId);
         *setAttempted = TRUE;
 
@@ -1261,7 +1261,7 @@ LHexError:
 
         if (hasOwnProperty || hasProperty)
         {
-            return __super::SetRootProperty(propertyId, value, PropertyOperation_None, info);
+            return RootObjectBase::SetRootProperty(propertyId, value, PropertyOperation_None, info);
         }
 
         *setAttempted = FALSE;
@@ -1353,7 +1353,7 @@ LHexError:
 
         this->GetScriptContext()->InvalidateProtoCaches(propertyId);
 
-        return __super::SetRootProperty(propertyId, value, flags, info);
+        return RootObjectBase::SetRootProperty(propertyId, value, flags, info);
     }
 
     BOOL GlobalObject::SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags)
@@ -1401,7 +1401,7 @@ LHexError:
 
     DescriptorFlags GlobalObject::GetRootSetter(PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext)
     {
-        DescriptorFlags flags = __super::GetRootSetter(propertyId, setterValue, info, requestContext);
+        DescriptorFlags flags = RootObjectBase::GetRootSetter(propertyId, setterValue, info, requestContext);
         if (flags == None)
         {
             if (this->directHostObject)
@@ -1439,9 +1439,9 @@ LHexError:
 
     BOOL GlobalObject::DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags)
     {
-        if (JavascriptConversion::PropertyQueryFlagsToBoolean(__super::HasPropertyQuery(propertyId, nullptr /*info*/)))
+        if (JavascriptConversion::PropertyQueryFlagsToBoolean(RootObjectBase::HasPropertyQuery(propertyId, nullptr /*info*/)))
         {
-            return __super::DeleteProperty(propertyId, flags);
+            return RootObjectBase::DeleteProperty(propertyId, flags);
         }
         else if (this->directHostObject && this->directHostObject->HasProperty(propertyId))
         {
@@ -1470,9 +1470,9 @@ LHexError:
 
     BOOL GlobalObject::DeleteRootProperty(PropertyId propertyId, PropertyOperationFlags flags)
     {
-        if (__super::HasRootProperty(propertyId))
+        if (RootObjectBase::HasRootProperty(propertyId))
         {
-            return __super::DeleteRootProperty(propertyId, flags);
+            return RootObjectBase::DeleteRootProperty(propertyId, flags);
         }
         else if (this->directHostObject && this->directHostObject->HasProperty(propertyId))
         {

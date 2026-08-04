@@ -413,7 +413,7 @@ public:
     HashTableS(TAllocator * allocator) : HashTable(allocator, size) {}
     void Reset()
     {
-        __super::Init();
+        HashTable<T, TAllocator>::Init();
     }
 private:
     char tableSpace[size * sizeof(SListBase<Bucket<T>>)];
