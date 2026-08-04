@@ -463,9 +463,7 @@ HeapInfo::Initialize(Recycler * recycler
     {
         isPageHeapEnabled = recycler->GetRecyclerFlagsTable().PageHeap != PageHeapMode::PageHeapModeOff;
         pageheapmode = static_cast<PageHeapMode>(recycler->GetRecyclerFlagsTable().PageHeap);
-        blockTypeFilter = static_cast<PageHeapBlockTypeFilter>(recycler->GetRecyclerFlagsTable().PageHeapBlockType);
         pBucketNumberRange = &recycler->GetRecyclerFlagsTable().PageHeapBucketNumber;
-
     }
     else
     {

@@ -359,7 +359,6 @@ namespace Js
 #define DEFAULT_CONFIG_PageHeap             (static_cast<Js::Number>(PageHeapMode::PageHeapModeOff))
 #define DEFAULT_CONFIG_PageHeapAllocStack   (false)
 #define DEFAULT_CONFIG_PageHeapFreeStack    (false)
-#define DEFAULT_CONFIG_PageHeapBlockType    (static_cast<Js::Number>(PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll))
 
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
 #define DEFAULT_CONFIG_MaxLoopsPerFunction  (10)
@@ -1064,7 +1063,6 @@ namespace Js
         u"PageHeapAllocStack",
         u"PageHeapFreeStack",
         u"PageHeapBucketNumber",
-        u"PageHeapBlockType",
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"RecyclerNoPageReuse",
 #endif
@@ -1970,7 +1968,6 @@ namespace Js
         u"Capture alloc stack under page heap mode",
         u"Capture free stack under page heap mode",
         u"Bucket numbers to be used for page heap allocations",
-        u"Type of blocks to use page heap for",
         // todo (hanhossain): flag end
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"Do not reuse page in recycler",
@@ -2463,7 +2460,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #endif // RECYCLER_STRESS
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2996,7 +2992,6 @@ namespace Js
         PageHeapAllocStack(DEFAULT_CONFIG_PageHeapAllocStack),
         PageHeapFreeStack(DEFAULT_CONFIG_PageHeapFreeStack),
         PageHeapBucketNumber(),
-        PageHeapBlockType(DEFAULT_CONFIG_PageHeapBlockType),
 #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuse(false),
 #endif
@@ -4479,8 +4474,6 @@ namespace Js
             return FlagBoolean;
         case PageHeapBucketNumberFlag:
             return FlagNumberRange;
-        case PageHeapBlockTypeFlag:
-            return FlagNumber;
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             return FlagBoolean;
@@ -5339,8 +5332,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PageHeapFreeStack));
         case PageHeapBucketNumberFlag:
             return reinterpret_cast<void*>(const_cast<NumberRange*>(&PageHeapBucketNumber));
-        case PageHeapBlockTypeFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&PageHeapBlockType));
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerNoPageReuse));
