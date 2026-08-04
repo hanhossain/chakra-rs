@@ -945,9 +945,6 @@ private:
     uint tickCountNextFinishCollection;
 
     void (*outOfMemoryFunc)();
-#ifdef RECYCLER_TEST_SUPPORT
-    BOOL (*checkFn)(char* addr, size_t size);
-#endif
 
 #ifdef PROFILE_EXEC
     Js::Profiler * profiler;
@@ -1115,10 +1112,6 @@ public:
         // candidate GC to indicate this fact
         this->CollectNow<CollectExhaustiveCandidate>();
     }
-
-#ifdef RECYCLER_TEST_SUPPORT
-    void SetCheckFn(BOOL(*checkFn)(char* addr, size_t size));
-#endif
 
     void SetCollectionWrapper(RecyclerCollectionWrapper * wrapper);
     static size_t GetAlignedSize(size_t size) { return HeapInfo::GetAlignedSize(size); }

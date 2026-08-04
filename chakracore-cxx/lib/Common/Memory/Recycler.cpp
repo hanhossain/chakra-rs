@@ -22,7 +22,6 @@
 #include "Interface/arm64.h"
 #endif
 
-#include "Core/BinaryFeatureControl.h"
 #include "Common/ThreadService.h"
 #include "Memory/AutoAllocatorObjectPtr.h"
 #include "Common/Tick.h"
@@ -119,9 +118,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     parallelMarkContext3(this, &this->parallelMarkPagePool3),
     clientTrackedObjectAllocator(u"CTO-List", pageAllocator, Js::Throw::OutOfMemory),
     outOfMemoryFunc(outOfMemoryFunc),
-#ifdef RECYCLER_TEST_SUPPORT
-    checkFn(NULL),
-#endif
     recyclerSweepManager(nullptr),
     inEndMarkOnLowMemory(false),
     enableScanInteriorPointers(CUSTOM_CONFIG_FLAG(configFlagsTable, RecyclerForceMarkInterior)),
@@ -5243,16 +5239,6 @@ Recycler::Realloc(void* buffer, size_t existingBytes, size_t requestedBytes, boo
 bool
 Recycler::ForceSweepObject()
 {
-#ifdef RECYCLER_TEST_SUPPORT
-    if (BinaryFeatureControl::RecyclerTest())
-    {
-        if (checkFn != nullptr)
-        {
-            return true;
-        }
-    }
-#endif
-
 #ifdef PROFILE_RECYCLER_ALLOC
     if (trackerDictionary != nullptr)
     {
@@ -7068,28 +7054,9 @@ void Recycler::ClearObjectBeforeCollectCallbacks()
     Assert(objectBeforeCollectCallbackList == nullptr);
 }
 
-#ifdef RECYCLER_TEST_SUPPORT
-void Recycler::SetCheckFn(BOOL(*checkFn)(char* addr, size_t size))
-{
-    Assert(BinaryFeatureControl::RecyclerTest());
-    this->EnsureNotCollecting();
-    this->checkFn = checkFn;
-}
-#endif
-
 void
 Recycler::NotifyFree(char *address, size_t size)
 {
-    ;
-
-#ifdef RECYCLER_TEST_SUPPORT
-    if (BinaryFeatureControl::RecyclerTest())
-    {
-        if (checkFn != NULL)
-            checkFn(address, size);
-    }
-#endif
-
     RecyclerMemoryTracking::ReportFree(this, address, size);
     RECYCLER_PERF_COUNTER_DEC(LiveObject);
     RECYCLER_PERF_COUNTER_SUB(LiveObjectSize, size);

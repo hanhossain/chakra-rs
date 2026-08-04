@@ -1073,7 +1073,6 @@ namespace Js
         u"RecyclerVerify",
         u"RecyclerVerifyPadSize",
 #endif
-        u"RecyclerTest",
         u"PrintSystemException",
         u"Trace",
 
@@ -1982,7 +1981,6 @@ namespace Js
         u"Verify recycler memory",
         u"Padding size to verify recycler memory",
 #endif
-        u"Run recycler tests instead of executing script",
         // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
@@ -2487,7 +2485,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #endif
-        NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
@@ -3014,7 +3011,6 @@ namespace Js
         RecyclerVerify(),
         RecyclerVerifyPadSize(12),
 #endif
-        RecyclerTest(false),
         PrintSystemException(false),
         Trace(),
 
@@ -4505,8 +4501,6 @@ namespace Js
         case RecyclerVerifyPadSizeFlag:
             return FlagNumber;
         #endif
-        case RecyclerTestFlag:
-            return FlagBoolean;
         case PrintSystemExceptionFlag:
             return FlagBoolean;
         case TraceFlag:
@@ -5371,8 +5365,6 @@ namespace Js
         case RecyclerVerifyPadSizeFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&RecyclerVerifyPadSize));
         #endif
-        case RecyclerTestFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerTest));
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case TraceFlag:
@@ -6168,9 +6160,6 @@ namespace Js
             retValue = false;
             break;
         #endif
-        case RecyclerTestFlag:
-            retValue = false;
-            break;
         case PrintSystemExceptionFlag:
             retValue = false;
             break;

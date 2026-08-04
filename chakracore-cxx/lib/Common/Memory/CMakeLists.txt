@@ -31,7 +31,6 @@ set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
     SmallLeafHeapBucket.cpp
     SmallNormalHeapBlock.cpp
     SmallNormalHeapBucket.cpp
-    StressTest.cpp
     VirtualAllocWrapper.cpp
     )
 
