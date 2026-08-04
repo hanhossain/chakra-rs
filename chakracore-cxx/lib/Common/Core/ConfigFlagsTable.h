@@ -493,7 +493,6 @@ namespace Js
         RecyclerVerifyMarkFlag,
         #endif
         LowMemoryCapFlag,
-        NewPagesCapDuringBGSweepingFlag,
         PrintSystemExceptionFlag,
         TraceFlag,
 
@@ -1998,8 +1997,6 @@ namespace Js
         #endif
         // TODO (hanhossain): remove flag
         Number LowMemoryCap;
-        // TODO (hanhossain): remove flag
-        Number NewPagesCapDuringBGSweeping;
         // todo (hanhossain): flag end
         Boolean PrintSystemException;
         Phases Trace;

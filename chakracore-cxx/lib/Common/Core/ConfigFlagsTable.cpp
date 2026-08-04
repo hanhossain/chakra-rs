@@ -362,7 +362,6 @@ namespace Js
 #define DEFAULT_CONFIG_PageHeapBlockType    (static_cast<Js::Number>(PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll))
 
 #define DEFAULT_CONFIG_LowMemoryCap         (0xB900000) // 185 MB - based on memory cap for process on low-capacity device
-#define DEFAULT_CONFIG_NewPagesCapDuringBGSweeping    (15000 * 4)
 
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
 #define DEFAULT_CONFIG_MaxLoopsPerFunction  (10)
@@ -1082,7 +1081,6 @@ namespace Js
         u"RecyclerVerifyMark",
 #endif
         u"LowMemoryCap",
-        u"NewPagesCapDuringBGSweeping",
         u"PrintSystemException",
         u"Trace",
 
@@ -1997,7 +1995,6 @@ namespace Js
         u"verify concurrent gc",
 #endif
         u"Memory cap indicating a low-memory process",
-        u"New pages count allowed to be allocated during background sweeping",
         // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
@@ -2507,7 +2504,6 @@ namespace Js
 #ifdef RECYCLER_VERIFY_MARK
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
@@ -3041,7 +3037,6 @@ namespace Js
         RecyclerVerifyMark(false),
 #endif
         LowMemoryCap(DEFAULT_CONFIG_LowMemoryCap),
-        NewPagesCapDuringBGSweeping(DEFAULT_CONFIG_NewPagesCapDuringBGSweeping),
         PrintSystemException(false),
         Trace(),
 
@@ -4542,8 +4537,6 @@ namespace Js
         #endif
         case LowMemoryCapFlag:
             return FlagNumber;
-        case NewPagesCapDuringBGSweepingFlag:
-            return FlagNumber;
         case PrintSystemExceptionFlag:
             return FlagBoolean;
         case TraceFlag:
@@ -5418,8 +5411,6 @@ namespace Js
         #endif
         case LowMemoryCapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&LowMemoryCap));
-        case NewPagesCapDuringBGSweepingFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&NewPagesCapDuringBGSweeping));
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case TraceFlag:
