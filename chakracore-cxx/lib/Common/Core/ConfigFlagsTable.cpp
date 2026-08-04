@@ -1075,9 +1075,6 @@ namespace Js
 #endif
         u"RecyclerTest",
         u"RecyclerProtectPagesOnRescan",
-#ifdef RECYCLER_VERIFY_MARK
-        u"RecyclerVerifyMark",
-#endif
         u"PrintSystemException",
         u"Trace",
 
@@ -1988,9 +1985,6 @@ namespace Js
 #endif
         u"Run recycler tests instead of executing script",
         u"Temporarily switch all pages to read only during rescan",
-#ifdef RECYCLER_VERIFY_MARK
-        u"verify concurrent gc",
-#endif
         // todo (hanhossain): flag end
         u"Always print a message when there's OOM or OOS",
         u"Trace the given phase",
@@ -2497,9 +2491,6 @@ namespace Js
 #endif
         NoParentFlag,
         NoParentFlag,
-#ifdef RECYCLER_VERIFY_MARK
-        NoParentFlag,
-#endif
         // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
@@ -3028,9 +3019,6 @@ namespace Js
 #endif
         RecyclerTest(false),
         RecyclerProtectPagesOnRescan(false),
-#ifdef RECYCLER_VERIFY_MARK
-        RecyclerVerifyMark(false),
-#endif
         PrintSystemException(false),
         Trace(),
 
@@ -4525,10 +4513,6 @@ namespace Js
             return FlagBoolean;
         case RecyclerProtectPagesOnRescanFlag:
             return FlagBoolean;
-        #ifdef RECYCLER_VERIFY_MARK
-        case RecyclerVerifyMarkFlag:
-            return FlagBoolean;
-        #endif
         case PrintSystemExceptionFlag:
             return FlagBoolean;
         case TraceFlag:
@@ -5397,10 +5381,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerTest));
         case RecyclerProtectPagesOnRescanFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerProtectPagesOnRescan));
-        #ifdef RECYCLER_VERIFY_MARK
-        case RecyclerVerifyMarkFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerVerifyMark));
-        #endif
         case PrintSystemExceptionFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSystemException));
         case TraceFlag:
@@ -6202,11 +6182,6 @@ namespace Js
         case RecyclerProtectPagesOnRescanFlag:
             retValue = false;
             break;
-        #ifdef RECYCLER_VERIFY_MARK
-        case RecyclerVerifyMarkFlag:
-            retValue = false;
-            break;
-        #endif
         case PrintSystemExceptionFlag:
             retValue = false;
             break;

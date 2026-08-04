@@ -4883,13 +4883,6 @@ Recycler::FinishConcurrentCollect(CollectionFlags flags)
         collectionStats.continueCollectAllocBytes = autoHeap.uncollectedAllocBytes;
 #endif
 
-#ifdef RECYCLER_VERIFY_MARK
-        if (GetRecyclerFlagsTable().RecyclerVerifyMark)
-        {
-            this->VerifyMark();
-        }
-#endif
-
         protectPages.Unprotect();
         needConcurrentSweep = this->Sweep(rescanRootBytes, concurrent, true);
     }

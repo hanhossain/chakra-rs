@@ -234,13 +234,6 @@ Recycler::AllocZeroWithAttributesInlined(size_t size)
 
     VerifyPageHeapFillAfterAlloc(obj, size, attributes);
 
-#if DBG
-    if (CONFIG_FLAG(RecyclerVerifyMark))
-    {
-        this->FindHeapBlock(obj)->WBClearObject(obj);
-    }
-#endif
-
     return obj;
 }
 
