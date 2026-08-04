@@ -1,6 +1,5 @@
 add_library (Chakra.Common.Core OBJECT
     Api.cpp
-    BinaryFeatureControl.cpp
     CmdParser.cpp
     CodexAssert.cpp
     ConfigFlagsTable.cpp

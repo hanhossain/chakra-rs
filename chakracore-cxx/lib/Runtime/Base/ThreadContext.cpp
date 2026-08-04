@@ -25,10 +25,6 @@
 #include "Base/ScriptMemoryDumper.h"
 #include "Memory/RecyclerWatsonTelemetry.h"
 
-#if DBG
-#include "Memory/StressTest.h"
-#endif
-
 const int TotalNumberOfBuiltInProperties = Js::PropertyIds::_countJSOnlyProperty;
 
 #if ENABLE_NATIVE_CODEGEN
@@ -607,14 +603,6 @@ Recycler* ThreadContext::EnsureRecycler()
             throw;
         }
     }
-
-#if DBG
-    if (CONFIG_FLAG(RecyclerTest))
-    {
-        StressTester test(recycler);
-        test.Run();
-    }
-#endif
 
     return recycler;
 }
