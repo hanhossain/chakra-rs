@@ -208,7 +208,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 {
 
 #ifdef RECYCLER_MEMORY_VERIFY
-    verifyPad =  GetRecyclerFlagsTable().RecyclerVerifyPadSize;
     verifyEnabled =  GetRecyclerFlagsTable().IsEnabled(Js::RecyclerVerifyFlag);
     if (verifyEnabled)
     {

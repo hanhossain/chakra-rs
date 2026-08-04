@@ -1004,7 +1004,7 @@ private:
     CollectionParam collectionParam;
 #endif
 #ifdef RECYCLER_MEMORY_VERIFY
-    uint verifyPad;
+    unsigned int verifyPad{12};
     bool verifyEnabled;
 #endif
 
