@@ -202,34 +202,14 @@ LargeHeapBucket::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size,
     heapBlock->heapInfo = this->heapInfo;
     heapBlock->pageHeapData = pageHeapData;
     
-    bool decommitGuardPage = true;
-    decommitGuardPage = this->GetRecycler()->GetRecyclerFlagsTable().PageHeapDecommitGuardPage;
-#if defined(RECYCLER_NO_PAGE_REUSE)
-    decommitGuardPage |= heapBlock->GetPageAllocator(heapInfo)->IsPageReuseDisabled();
-#endif
-    if (decommitGuardPage)
-    {
 #pragma prefast(suppress:6250, "Calling 'VirtualFree' without the MEM_RELEASE flag might free memory but not address descriptors (VADs).")
-        if (VirtualFree(guardPageAddress, AutoSystemInfo::PageSize * guardPageCount, MEM_DECOMMIT))
-        {
-            pageHeapData->isGuardPageDecommitted = true;
-        }
-        else
-        {
-            Js::Throw::FatalInternalError();
-        }
+    if (VirtualFree(guardPageAddress, AutoSystemInfo::PageSize * guardPageCount, MEM_DECOMMIT))
+    {
+        pageHeapData->isGuardPageDecommitted = true;
     }
     else
     {
-        uint32_t oldProtect;
-        if (VirtualProtect(guardPageAddress, AutoSystemInfo::PageSize * guardPageCount, PAGE_NOACCESS, &oldProtect))
-        {
-            pageHeapData->isGuardPageDecommitted = false;
-        }
-        else
-        {
-            Js::Throw::FatalInternalError();
-        }        
+        Js::Throw::FatalInternalError();
     }
 
     pageHeapData->objectAddress = heapBlock->Alloc(size, attributes);

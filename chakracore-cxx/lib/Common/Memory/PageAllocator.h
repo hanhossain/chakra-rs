@@ -593,7 +593,7 @@ public:
 #endif
 #if defined(RECYCLER_NO_PAGE_REUSE) || defined(ARENA_MEMORY_VERIFY)
     bool DisablePageReuse() { bool wasDisablePageReuse = disablePageReuse; disablePageReuse = true; return wasDisablePageReuse; }
-    bool IsPageReuseDisabled() { return disablePageReuse; }
+    bool IsPageReuseDisabled() const { return disablePageReuse; }
 #endif
 
 #if DBG

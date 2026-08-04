@@ -479,7 +479,6 @@ namespace Js
         PageHeapFreeStackFlag,
         PageHeapBucketNumberFlag,
         PageHeapBlockTypeFlag,
-        PageHeapDecommitGuardPageFlag,
         #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuseFlag,
         #endif
@@ -1970,8 +1969,6 @@ namespace Js
             NumberRange PageHeapBucketNumber;
         // TODO (hanhossain): remove flag
             Number PageHeapBlockType;
-        // TODO (hanhossain): remove flag
-            Boolean PageHeapDecommitGuardPage;
         // todo (hanhossain): flag end
         #ifdef RECYCLER_NO_PAGE_REUSE
             Boolean RecyclerNoPageReuse;

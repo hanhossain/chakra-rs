@@ -1065,7 +1065,6 @@ namespace Js
         u"PageHeapFreeStack",
         u"PageHeapBucketNumber",
         u"PageHeapBlockType",
-        u"PageHeapDecommitGuardPage",
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"RecyclerNoPageReuse",
 #endif
@@ -1972,7 +1971,6 @@ namespace Js
         u"Capture free stack under page heap mode",
         u"Bucket numbers to be used for page heap allocations",
         u"Type of blocks to use page heap for",
-        u"Decommit page heap guard page",
         // todo (hanhossain): flag end
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"Do not reuse page in recycler",
@@ -2465,7 +2463,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #endif // RECYCLER_STRESS
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -3000,7 +2997,6 @@ namespace Js
         PageHeapFreeStack(DEFAULT_CONFIG_PageHeapFreeStack),
         PageHeapBucketNumber(),
         PageHeapBlockType(DEFAULT_CONFIG_PageHeapBlockType),
-        PageHeapDecommitGuardPage(true),
 #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuse(false),
 #endif
@@ -4485,8 +4481,6 @@ namespace Js
             return FlagNumberRange;
         case PageHeapBlockTypeFlag:
             return FlagNumber;
-        case PageHeapDecommitGuardPageFlag:
-            return FlagBoolean;
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             return FlagBoolean;
@@ -5347,8 +5341,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<NumberRange*>(&PageHeapBucketNumber));
         case PageHeapBlockTypeFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PageHeapBlockType));
-        case PageHeapDecommitGuardPageFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&PageHeapDecommitGuardPage));
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerNoPageReuse));
@@ -6143,9 +6135,6 @@ namespace Js
             break;
         case PageHeapFreeStackFlag:
             retValue = DEFAULT_CONFIG_PageHeapFreeStack;
-            break;
-        case PageHeapDecommitGuardPageFlag:
-            retValue = true;
             break;
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
