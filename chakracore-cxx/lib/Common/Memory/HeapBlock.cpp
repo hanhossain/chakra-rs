@@ -1385,13 +1385,6 @@ SmallHeapBlockT<TBlockAttributes>::EnqueueProcessedObject(FreeObject ** list, vo
     freeObject->SetNext(*list);
     *list = freeObject;
 
-#if DBG
-    if (CONFIG_FLAG(RecyclerVerifyMark))
-    {
-        this->WBClearObject(static_cast<char*>(objectAddress));
-    }
-#endif
-
     // clear the attributes so that when we are allocating a leaf, we don't have to set the attribute
     this->ObjectInfo(index) = 0;
 }

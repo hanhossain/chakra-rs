@@ -489,9 +489,6 @@ namespace Js
         #endif
         RecyclerTestFlag,
         RecyclerProtectPagesOnRescanFlag,
-        #ifdef RECYCLER_VERIFY_MARK
-        RecyclerVerifyMarkFlag,
-        #endif
         PrintSystemExceptionFlag,
         TraceFlag,
 
@@ -1990,10 +1987,6 @@ namespace Js
         Boolean RecyclerTest;
         // TODO (hanhossain): remove flag
         Boolean RecyclerProtectPagesOnRescan;
-        #ifdef RECYCLER_VERIFY_MARK
-        // TODO (hanhossain): remove flag
-            Boolean RecyclerVerifyMark;
-        #endif
         // todo (hanhossain): flag end
         Boolean PrintSystemException;
         Phases Trace;
