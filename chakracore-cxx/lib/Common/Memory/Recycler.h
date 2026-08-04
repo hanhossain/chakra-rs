@@ -520,8 +520,6 @@ struct CollectionParam
 
 class RecyclerParallelThread
 {
-    friend class ThreadContext;
-
 public:
     typedef void (Recycler::* WorkFunc)();
 
@@ -1619,7 +1617,6 @@ private:
     friend class HeapInfo;
     friend class HeapInfoManager;
     friend class LargeHeapBucket;
-    friend class ThreadContext;
 
     template <typename TBlockType>
     friend class HeapBucketT;
