@@ -4,6 +4,9 @@
 //-------------------------------------------------------------------------------------------------------
 #include "HeapBucket.h"
 
+/// New pages count allowed to be allocated during background sweeping
+constexpr size_t NewPagesCapDuringBGSweeping = 15000 * 4;
+
 HeapBucket::HeapBucket() :
     heapInfo(nullptr),
     sizeCat(0)
@@ -452,7 +455,7 @@ HeapBucketT<TBlockType>::SnailAlloc(Recycler * recycler, TBlockAllocatorType * a
     if (!collected)
     {
         // wait for background sweeping finish if there are too many pages allocated during background sweeping
-        if (recycler->IsConcurrentSweepExecutingState() && recycler->autoHeap.uncollectedNewPageCount > static_cast<uint>(CONFIG_FLAG(NewPagesCapDuringBGSweeping)))
+        if (recycler->IsConcurrentSweepExecutingState() && recycler->autoHeap.uncollectedNewPageCount > NewPagesCapDuringBGSweeping)
         {
             recycler->FinishConcurrent<ForceFinishCollection>();
             memBlock = this->TryAlloc(recycler, allocator, sizeCat, attributes);
