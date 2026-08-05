@@ -432,6 +432,7 @@ int32_t ExecuteTestWithMemoryCheck(const rust::String &fileName, JsRuntimeHandle
 
 int main_internal(chakra_rs::config::CoreConfig config)
 {
+    chakra::Logger::trace("hello world?");
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 

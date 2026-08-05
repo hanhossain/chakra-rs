@@ -3,15 +3,25 @@ use chakracore_sys::config::CoreConfig;
 use std::process::ExitCode;
 use tracing_subscriber::filter::LevelFilter;
 
-fn main() -> ExitCode {
-    tracing_subscriber::fmt()
-        .json()
+fn setup_tracing() {
+    let is_chakra_test = std::env::var("CHAKRA_TEST")
+        .unwrap_or_default()
+        .parse::<bool>()
+        .unwrap_or_default();
+    let subscriber = tracing_subscriber::fmt()
         .with_max_level(LevelFilter::TRACE)
         .with_writer(std::io::stderr)
-        .with_thread_names(true)
-        .with_target(false)
-        .without_time()
-        .init();
+        .with_thread_names(true);
+    if is_chakra_test {
+        subscriber.json().without_time().init();
+    } else {
+        subscriber.init();
+    }
+}
+
+fn main() -> ExitCode {
+    setup_tracing();
+
     let wait_for_debugger = std::env::var("WAIT_FOR_DEBUGGER")
         .unwrap_or_default()
         .parse::<bool>()

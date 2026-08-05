@@ -256,7 +256,8 @@ pub fn run_test(core_config: CoreConfig, test_dir: Option<&Path>) -> (ExitStatus
     ch.arg(serialized_config)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
-        .env("TZ", "America/Los_Angeles");
+        .env("TZ", "America/Los_Angeles")
+        .env("CHAKRA_TEST", "true");
 
     tracing::info!(?ch, "Running command");
 
@@ -303,21 +304,57 @@ fn read_stderr<R: Read>(stream: R) -> Option<Vec<String>> {
     let reader = BufReader::new(stream);
     for message in reader.lines().map(|line| line.unwrap()) {
         if let Ok(event) = serde_json::from_str::<ChildEvent>(&message) {
+            let fields = &event.fields;
             match event.level.as_str() {
                 "TRACE" => {
-                    tracing::trace!(target: "chakracore stderr", message = event.fields.message, thread.name = event.thread_name)
+                    tracing::trace!(
+                        target: "chakracore stderr",
+                        message = fields.message,
+                        fields.function_name,
+                        fields.file_name,
+                        fields.line,
+                        thread_name = event.thread_name,
+                        target = event.target);
                 }
                 "DEBUG" => {
-                    tracing::debug!(target: "chakracore stderr", message = event.fields.message, thread.name = event.thread_name)
+                    tracing::debug!(
+                        target: "chakracore stderr",
+                        message = fields.message,
+                        fields.function_name,
+                        fields.file_name,
+                        fields.line,
+                        thread_name = event.thread_name,
+                        target = event.target);
                 }
                 "INFO" => {
-                    tracing::info!(target: "chakracore stderr", message = event.fields.message, thread.name = event.thread_name)
+                    tracing::info!(
+                        target: "chakracore stderr",
+                        message = fields.message,
+                        fields.function_name,
+                        fields.file_name,
+                        fields.line,
+                        thread_name = event.thread_name,
+                        target = event.target);
                 }
                 "WARN" => {
-                    tracing::warn!(target: "chakracore stderr", message = event.fields.message, thread.name = event.thread_name)
+                    tracing::warn!(
+                        target: "chakracore stderr",
+                        message = fields.message,
+                        fields.function_name,
+                        fields.file_name,
+                        fields.line,
+                        thread_name = event.thread_name,
+                        target = event.target);
                 }
                 "ERROR" => {
-                    tracing::error!(target: "chakracore stderr", message = event.fields.message, thread.name = event.thread_name)
+                    tracing::error!(
+                        target: "chakracore stderr",
+                        message = fields.message,
+                        fields.function_name,
+                        fields.file_name,
+                        fields.line,
+                        thread_name = event.thread_name,
+                        target = event.target);
                 }
                 _ => panic!("invalid level: {}", event.level),
             }
@@ -338,6 +375,7 @@ fn read_stderr<R: Read>(stream: R) -> Option<Vec<String>> {
 struct ChildEvent {
     level: String,
     fields: ChildEventFields,
+    target: String,
     #[serde(rename = "threadName")]
     thread_name: String,
 }
@@ -346,6 +384,9 @@ struct ChildEvent {
 #[serde(deny_unknown_fields)]
 struct ChildEventFields {
     message: String,
+    function_name: Option<String>,
+    file_name: Option<String>,
+    line: Option<usize>,
 }
 
 fn trim_carriage_return(s: &str) -> &str {
