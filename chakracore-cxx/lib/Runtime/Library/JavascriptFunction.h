@@ -191,7 +191,7 @@ namespace Js
         virtual BOOL IsWinRTFunction() { return FALSE; }
         BOOL IsStrictMode() const;
         BOOL IsLambda() const;
-        virtual inline BOOL IsConstructor() const;
+        virtual BOOL IsConstructor() const;
         bool HasRestrictedProperties() const;
 
         ConstructorCache* GetConstructorCache() { Assert(this->constructorCache != nullptr); return this->constructorCache; }

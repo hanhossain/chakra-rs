@@ -1283,10 +1283,10 @@ public:
     void RootRelease(void* obj, uint *count = nullptr);
 
     template <ObjectInfoBits attributes, bool nothrow>
-    inline char* RealAlloc(HeapInfo* heap, size_t size);
+    char * RealAlloc(HeapInfo* heap, size_t size);
 
     template <ObjectInfoBits attributes, bool isSmallAlloc, bool nothrow>
-    inline char* RealAllocFromBucket(HeapInfo* heap, size_t size);
+    char * RealAllocFromBucket(HeapInfo* heap, size_t size);
 
     void EnterIdleDecommit();
     void LeaveIdleDecommit();
@@ -1379,7 +1379,7 @@ private:
 
     // Allocation
     template <ObjectInfoBits attributes, bool nothrow>
-    inline char * AllocWithAttributesInlined(size_t size);
+    char * AllocWithAttributesInlined(size_t size);
     template <ObjectInfoBits attributes, bool nothrow>
     char * AllocWithAttributes(size_t size)
     {
@@ -1387,7 +1387,7 @@ private:
     }
 
     template <ObjectInfoBits attributes, bool nothrow>
-    inline char* AllocZeroWithAttributesInlined(size_t size);
+    char * AllocZeroWithAttributesInlined(size_t size);
 
     template <ObjectInfoBits attributes, bool nothrow>
     char* AllocZeroWithAttributes(size_t size)
@@ -1476,7 +1476,7 @@ private:
     inline void ScanObjectInlineInterior(void ** obj, size_t byteCount);
 
     template <bool doSpecialMark, bool forceInterior = false>
-    inline void ScanMemoryInline(void ** obj, size_t byteCount
+    void ScanMemoryInline(void ** obj, size_t byteCount
         ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType scanMemoryType = RecyclerScanMemoryType::General));
 
     template <bool doSpecialMark>
@@ -2339,7 +2339,7 @@ operator delete(void * obj, Recycler * alloc, HeapInfo * heapInfo)
 }
 
 template<ObjectInfoBits infoBits>
-_Ret_notnull_ inline void *
+_Ret_notnull_ void *
 operator new(size_t byteSize, Recycler * recycler, const InfoBitsWrapper<infoBits>&)
 {
     AssertCanHandleOutOfMemory();

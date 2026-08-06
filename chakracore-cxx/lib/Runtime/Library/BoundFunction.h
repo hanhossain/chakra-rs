@@ -40,7 +40,7 @@ namespace Js
 
         BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = NULL) override;
         BOOL HasInstance(Var instance, ScriptContext* scriptContext, IsInstInlineCache* inlineCache = NULL) override;
-        inline BOOL IsConstructor() const override;
+        BOOL IsConstructor() const override;
 
         // Below functions are used by debugger to identify and emit event handler information
         bool IsBoundFunction() const override { return true; }
