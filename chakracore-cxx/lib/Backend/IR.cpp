@@ -4790,11 +4790,6 @@ Instr::Dump(int window)
 
     Output::Print(u"-------------------------------------------------------------------------------");
 
-    if (this == NULL)
-    {
-        return;
-    }
-
     for (i = 0, instr = this; (instr->m_prev != NULL && i < window/2); instr = instr->m_prev, ++i)
     {} // Nothing
 

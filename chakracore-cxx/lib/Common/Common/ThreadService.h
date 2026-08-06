@@ -39,7 +39,7 @@ namespace JsUtil
 
         bool HasCallback() const
         {
-            return this != nullptr && threadService != nullptr;
+            return threadService != nullptr;
         }
 
         bool IsInCallback() const

@@ -11803,7 +11803,7 @@ Case0:
     void JavascriptArray::ValidateArrayCommon()
     {
         SparseArraySegmentBase * lastUsedSegment = this->GetLastUsedSegment();
-        AssertMsg(this != nullptr && head && lastUsedSegment, "Array should not be null");
+        AssertMsg(head && lastUsedSegment, "Array should not be null");
         AssertMsg(head->left == 0, "Array always should have a segment starting at zero");
 
         // Simple segments validation
