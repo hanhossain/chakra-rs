@@ -139,7 +139,6 @@ add_compile_options(-Wextra)
 # ignore in general
 add_compile_options(-Wno-delayed-template-parsing-in-cxx20)
 add_compile_options(-Wno-null-conversion)
-add_compile_options(-Wno-tautological-undefined-compare)
 add_compile_options(-Wno-pragmas)
 add_compile_options(-Wno-int-to-void-pointer-cast)
 add_compile_options(-Wno-undefined-inline)

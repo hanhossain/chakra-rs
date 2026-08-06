@@ -22,11 +22,6 @@ namespace regex
         // Delete all the nodes in the list (if any).
         void FreeList(ArenaAllocator * a)
         {
-            if (this == nullptr)
-            {
-                return;
-            }
-
             auto nextToDelete = this->next;
             Adelete(a, this);
             nextToDelete->FreeList(a);
