@@ -12,7 +12,14 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<JavascriptBigInt*>::Type value;
 
         DEFINE_VTABLE_CTOR(JavascriptBigIntObject, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptBigIntObject);
+        friend class Js::CrossSiteObject<JavascriptBigIntObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptBigIntObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptBigIntObject>>::SetVirtualTable(this);
+        };
     public:
         JavascriptBigIntObject(JavascriptBigInt* value, DynamicType * type);
 

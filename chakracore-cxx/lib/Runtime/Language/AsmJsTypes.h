@@ -741,7 +741,7 @@ namespace Js
             Assert( index < mSize );
             return mTable.Item( index );
         }
-        virtual bool SupportsArgCall(ArgSlot argCount, AsmJsType* args, AsmJsRetType& retType );
+        bool SupportsArgCall(ArgSlot argCount, AsmJsType* args, AsmJsRetType& retType ) override;
 
     };
 
@@ -868,7 +868,7 @@ namespace Js
 
         }
 
-        virtual AsmJsType GetType() const;
+        AsmJsType GetType() const override;
         inline ArrayBufferView::ViewType GetViewType() const
         {
             return mViewType;

@@ -10,7 +10,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(BoundFunction, JavascriptFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(BoundFunction);
+        friend class Js::CrossSiteObject<BoundFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<BoundFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<BoundFunction>>::SetVirtualTable(this);
+        };
 
     private:
         bool GetPropertyBuiltIns(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext, BOOL* result);
@@ -24,19 +31,19 @@ namespace Js
         static BoundFunction* New(ScriptContext* scriptContext, ArgumentReader args);
 
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
-        virtual JavascriptString* GetDisplayNameImpl() const override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        JavascriptString * GetDisplayNameImpl() const override;
+        PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
 
-        _Check_return_ _Success_(return) virtual BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        _Check_return_ _Success_(return) BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
 
-        virtual BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = NULL) override;
-        virtual BOOL HasInstance(Var instance, ScriptContext* scriptContext, IsInstInlineCache* inlineCache = NULL) override;
-        virtual inline BOOL IsConstructor() const override;
+        BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = NULL) override;
+        BOOL HasInstance(Var instance, ScriptContext* scriptContext, IsInstInlineCache* inlineCache = NULL) override;
+        inline BOOL IsConstructor() const override;
 
         // Below functions are used by debugger to identify and emit event handler information
-        virtual bool IsBoundFunction() const { return true; }
+        bool IsBoundFunction() const override { return true; }
         JavascriptFunction * GetTargetFunction() const;
         // Below functions are used by heap enumerator
         uint GetArgsCountForHeapEnum() { return count;}

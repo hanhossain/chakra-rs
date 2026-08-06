@@ -21,7 +21,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptSetIterator, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptSetIterator);
+        friend class Js::CrossSiteObject<JavascriptSetIterator>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptSetIterator>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptSetIterator>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptSetIterator(DynamicType* type, JavascriptSet* set, JavascriptSetIteratorKind kind);

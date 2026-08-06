@@ -15,7 +15,14 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<DateImplementation>::Type m_date;
 
         DEFINE_VTABLE_CTOR_MEMBER_INIT(JavascriptDate, DynamicObject, m_date);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptDate);
+        friend class Js::CrossSiteObject<JavascriptDate>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptDate>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptDate>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptDate(double value, DynamicType * type);
@@ -133,9 +140,9 @@ namespace Js
         static JavascriptString* ToLocaleString(JavascriptDate* date, ScriptContext* requestContext);
         static JavascriptString* ToString(JavascriptDate* date, ScriptContext* requestContext);
 
-        virtual BOOL ToPrimitive(JavascriptHint hint, Var* result, ScriptContext * requestContext) override;
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL ToPrimitive(JavascriptHint hint, Var* result, ScriptContext * requestContext) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
     private:
         static Var GetDateData(JavascriptDate* date, DateImplementation::DateData dd, ScriptContext* scriptContext);

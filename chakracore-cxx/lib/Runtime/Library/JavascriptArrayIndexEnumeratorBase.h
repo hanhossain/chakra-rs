@@ -17,6 +17,6 @@ namespace Js
         DEFINE_VTABLE_CTOR_ABSTRACT(JavascriptArrayIndexEnumeratorBase, JavascriptEnumerator)
 
         JavascriptArrayIndexEnumeratorBase(JavascriptArray* arrayObject, EnumeratorFlags flags, ScriptContext* scriptContext);
-        virtual uint32_t GetCurrentItemIndex()  override { return index; }
+        uint32_t GetCurrentItemIndex()  override { return index; }
     };
 }

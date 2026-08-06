@@ -2756,7 +2756,7 @@ namespace Js
     GENERATE_FOREACH_TYPEDARRAY(TypedArrayOp2, GenerateNotSupportedStub2, Xor)
 
     template<>
-    VTableValue Int8Array::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Int8Array::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableInt8Array;
     }
@@ -2768,7 +2768,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Int8VirtualArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Int8VirtualArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableInt8VirtualArray;
     }
@@ -2792,7 +2792,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Uint8Array::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Uint8Array::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableUint8Array;
     }
@@ -2816,7 +2816,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Uint8VirtualArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Uint8VirtualArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableUint8VirtualArray;
     }
@@ -2840,7 +2840,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Uint8ClampedArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Uint8ClampedArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableUint8ClampedArray;
     }
@@ -2864,7 +2864,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Uint8ClampedVirtualArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Uint8ClampedVirtualArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableUint8ClampedVirtualArray;
     }
@@ -2888,7 +2888,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Int16Array::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Int16Array::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableInt16Array;
     }
@@ -2912,7 +2912,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Int16VirtualArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Int16VirtualArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableInt16VirtualArray;
     }
@@ -2936,7 +2936,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Uint16Array::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Uint16Array::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableUint16Array;
     }
@@ -2960,7 +2960,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Uint16VirtualArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Uint16VirtualArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableUint16VirtualArray;
     }
@@ -2984,7 +2984,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Int32Array::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Int32Array::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableInt32Array;
     }
@@ -3008,7 +3008,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Int32VirtualArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Int32VirtualArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableInt32VirtualArray;
     }
@@ -3032,7 +3032,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Uint32Array::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Uint32Array::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableUint32Array;
     }
@@ -3056,7 +3056,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Uint32VirtualArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Uint32VirtualArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableUint32VirtualArray;
     }
@@ -3080,7 +3080,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Float32Array::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Float32Array::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableFloat32Array;
     }
@@ -3104,7 +3104,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Float32VirtualArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Float32VirtualArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableFloat32VirtualArray;
     }
@@ -3128,7 +3128,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Float64Array::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Float64Array::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableFloat64Array;
     }
@@ -3152,7 +3152,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Float64VirtualArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Float64VirtualArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableFloat64VirtualArray;
     }
@@ -3176,7 +3176,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Int64Array::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Int64Array::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableInt64Array;
     }
@@ -3200,7 +3200,7 @@ namespace Js
     }
 
     template<>
-    VTableValue Uint64Array::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue Uint64Array::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableUint64Array;
     }
@@ -3238,7 +3238,7 @@ namespace Js
     }
 
     template<>
-    VTableValue BoolArray::DummyVirtualFunctionToHinderLinkerICF()
+    VTableValue BoolArray::DummyVirtualFunctionToHinderLinkerICF() const
     {
         return VTableValue::VtableBoolArray;
     }

@@ -47,7 +47,14 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<FunctionInfo *>::Type functionInfo;  // Underlying function
 
         DEFINE_VTABLE_CTOR(JavascriptFunction, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptFunction);
+        friend class Js::CrossSiteObject<JavascriptFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptFunction>>::SetVirtualTable(this);
+        };
 
     private:
          // noinline, we want to use own stack frame.
@@ -192,31 +199,31 @@ namespace Js
 
         void ResetConstructorCacheToDefault();
 
-        virtual bool HasReadOnlyPropertiesInvisibleToTypeHandler() override { return true; }
+        bool HasReadOnlyPropertiesInvisibleToTypeHandler() override { return true; }
 
-        virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
-        _Check_return_ _Success_(return) virtual BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL IsConfigurable(PropertyId propertyId) override;
-        virtual BOOL IsEnumerable(PropertyId propertyId) override;
-        virtual BOOL IsWritable(PropertyId propertyId) override;
-        virtual BOOL GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext) override;
-        virtual uint GetSpecialPropertyCount() const override;
-        virtual PropertyId const * GetSpecialPropertyIds() const override;
-        virtual BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual Var GetTypeOfString(ScriptContext * requestContext) override;
+        PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
+        _Check_return_ _Success_(return) BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL IsConfigurable(PropertyId propertyId) override;
+        BOOL IsEnumerable(PropertyId propertyId) override;
+        BOOL IsWritable(PropertyId propertyId) override;
+        BOOL GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext) override;
+        uint GetSpecialPropertyCount() const override;
+        PropertyId const * GetSpecialPropertyIds() const override;
+        BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
+        BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        Var GetTypeOfString(ScriptContext * requestContext) override;
 
-        virtual BOOL HasInstance(Var instance, ScriptContext* scriptContext, IsInstInlineCache* inlineCache = NULL);
+        BOOL HasInstance(Var instance, ScriptContext* scriptContext, IsInstInlineCache* inlineCache = NULL) override;
         static BOOL HasInstance(Var funcPrototype, Var instance, ScriptContext* scriptContext, IsInstInlineCache* inlineCache, JavascriptFunction* function);
 
         // This will be overridden for the BoundFunction

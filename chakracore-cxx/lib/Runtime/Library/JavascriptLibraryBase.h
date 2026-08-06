@@ -334,9 +334,9 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<ChakraEngine*>::Type chakraEngine;
 
     private:
-        virtual void Dispose(bool isShutdown) override;
-        virtual void Finalize(bool isShutdown) override;
-        virtual void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
+        void Dispose(bool isShutdown) override;
+        void Finalize(bool isShutdown) override;
+        void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
 
     protected:
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type arrayPrototypeForEachFunction;

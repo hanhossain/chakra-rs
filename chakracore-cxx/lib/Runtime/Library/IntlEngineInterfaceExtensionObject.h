@@ -18,7 +18,7 @@ namespace Js
     {
     public:
         IntlEngineInterfaceExtensionObject(ScriptContext* scriptContext);
-        void Initialize();
+        void Initialize() override;
         void InjectIntlLibraryCode(_In_ ScriptContext * scriptContext, DynamicObject* intlObject, IntlInitializationType intlInitializationType);
 
         JavascriptFunction* GetDateToLocaleString() { return dateToLocaleString; }

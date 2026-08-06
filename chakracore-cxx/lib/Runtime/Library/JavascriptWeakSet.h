@@ -15,7 +15,14 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<KeySet>::Type keySet;
 
         DEFINE_VTABLE_CTOR_MEMBER_INIT(JavascriptWeakSet, DynamicObject, keySet);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptWeakSet);
+        friend class Js::CrossSiteObject<JavascriptWeakSet>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptWeakSet>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptWeakSet>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptWeakSet(DynamicType* type);
@@ -24,7 +31,7 @@ namespace Js
         bool Delete(RecyclableObject* key);
         bool Has(RecyclableObject* key);
 
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
         class EntryInfo
         {

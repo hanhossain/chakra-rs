@@ -19,9 +19,9 @@ namespace Js
             Assert(type->GetTypeId() == TypeIds_Arguments);
         }
 
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
 
         virtual uint32_t GetNumberOfArguments() const = 0;
         virtual uint32_t GetNextFormalArgIndex(uint32_t index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const = 0;
@@ -59,7 +59,14 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type              numOfArguments:31;
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type              callerDeleted:1;
 
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(HeapArgumentsObject);
+        friend class Js::CrossSiteObject<HeapArgumentsObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<HeapArgumentsObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<HeapArgumentsObject>>::SetVirtualTable(this);
+        };
 
     protected:
         typename WriteBarrierFieldTypeTraits<uint32_t>::Type              formalCount;
@@ -78,35 +85,34 @@ namespace Js
         virtual BOOL SetItemAt(uint32_t index, Var value);
         virtual BOOL DeleteItemAt(uint32_t index);
 
-        virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
+        PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
 
-        virtual uint32_t GetNumberOfArguments() const override;
-        virtual uint32_t GetNextFormalArgIndex(uint32_t index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const override;
-        virtual Var GetHeapArguments() { return this; }
-        virtual void SetHeapArguments(HeapArgumentsObject *args)
-        {
+        uint32_t GetNumberOfArguments() const override;
+        uint32_t GetNextFormalArgIndex(uint32_t index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const override;
+        Var GetHeapArguments() override { return this; }
+        void SetHeapArguments(HeapArgumentsObject *args) override {
             AssertMsg(false, "Should never get here");
         }
-        virtual BOOL AdvanceWalkerToArgsFrame(JavascriptStackWalker *walker) override;
+        BOOL AdvanceWalkerToArgsFrame(JavascriptStackWalker *walker) override;
 
-        virtual BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetWritable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override;
-        virtual BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
-        virtual BOOL PreventExtensions() override;
-        virtual BOOL Seal() override;
-        virtual BOOL Freeze() override;
+        BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
+        BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
+        BOOL SetWritable(PropertyId propertyId, BOOL value) override;
+        BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override;
+        BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
+        BOOL PreventExtensions() override;
+        BOOL Seal() override;
+        BOOL Freeze() override;
 
         uint32_t GetFormalCount() const
         {
@@ -166,7 +172,14 @@ namespace Js
 
     private:
         DEFINE_VTABLE_CTOR(ES5HeapArgumentsObject, HeapArgumentsObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ES5HeapArgumentsObject);
+        friend class Js::CrossSiteObject<ES5HeapArgumentsObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ES5HeapArgumentsObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ES5HeapArgumentsObject>>::SetVirtualTable(this);
+        };
         uint32_t GetNextFormalArgIndexHelper(uint32_t index, BOOL enumNonEnumerable, PropertyAttributes* attributes = nullptr) const;
 
     public:
@@ -175,20 +188,20 @@ namespace Js
         {
         }
 
-        virtual BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetWritable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags) override;
-        virtual BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
-        virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
-        virtual BOOL PreventExtensions() override;
-        virtual BOOL Seal() override;
-        virtual BOOL Freeze() override;
+        BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
+        BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
+        BOOL SetWritable(PropertyId propertyId, BOOL value) override;
+        BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags) override;
+        BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
+        BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
+        BOOL PreventExtensions() override;
+        BOOL Seal() override;
+        BOOL Freeze() override;
 
-        virtual uint32_t GetNextFormalArgIndex(uint32_t index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const override;
-        virtual BOOL GetItemAt(uint32_t index, Var *value, ScriptContext * scriptContext) override;
-        virtual BOOL SetItemAt(uint32_t index, Var value) override;
-        virtual BOOL DeleteItemAt(uint32_t index) override;
+        uint32_t GetNextFormalArgIndex(uint32_t index, BOOL enumNonEnumerable = FALSE, PropertyAttributes* attributes = nullptr) const override;
+        BOOL GetItemAt(uint32_t index, Var *value, ScriptContext * scriptContext) override;
+        BOOL SetItemAt(uint32_t index, Var value) override;
+        BOOL DeleteItemAt(uint32_t index) override;
 
         void DisconnectFormalFromNamedArgument(uint32_t index);
         BOOL IsFormalDisconnectedFromNamedArgument(uint32_t index);

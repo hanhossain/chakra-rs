@@ -19,9 +19,9 @@ namespace Js
 
     public:
         ArgumentsObjectPrefixEnumerator(ArgumentsObject* argumentsObject, EnumeratorFlags flags, ScriptContext* requestContext);
-        virtual void Reset() override;
-        virtual JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) override;
-        virtual uint32_t GetCurrentItemIndex()  override { return formalArgIndex; }
+        void Reset() override;
+        JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) override;
+        uint32_t GetCurrentItemIndex()  override { return formalArgIndex; }
     };
 
     class ES5ArgumentsObjectEnumerator : public ArgumentsObjectPrefixEnumerator
@@ -32,8 +32,8 @@ namespace Js
         BOOL Init(EnumeratorCache * enumeratorCache);
     public:
         static ES5ArgumentsObjectEnumerator * New(ArgumentsObject* argumentsObject, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache);
-        virtual void Reset() override;
-        virtual JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) override;
+        void Reset() override;
+        JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) override;
     private:
         typename WriteBarrierFieldTypeTraits<JavascriptStaticEnumerator>::Type objectEnumerator;
         typename WriteBarrierFieldTypeTraits<uint>::Type enumeratedFormalsInObjectArrayCount;  // The number of enumerated formals for far.

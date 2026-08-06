@@ -12,7 +12,14 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<JavascriptSymbol*>::Type value;
 
         DEFINE_VTABLE_CTOR(JavascriptSymbolObject, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptSymbolObject);
+        friend class Js::CrossSiteObject<JavascriptSymbolObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptSymbolObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptSymbolObject>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptSymbolObject(JavascriptSymbol* value, DynamicType * type);
@@ -28,8 +35,8 @@ namespace Js
 
         Var Unwrap() const;
 
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
     };
 
     template <> inline bool VarIsImpl<JavascriptSymbolObject>(RecyclableObject* obj)

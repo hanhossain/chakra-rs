@@ -22,7 +22,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptMapIterator, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptMapIterator);
+        friend class Js::CrossSiteObject<JavascriptMapIterator>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptMapIterator>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptMapIterator>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptMapIterator(DynamicType* type, JavascriptMap* map, JavascriptMapIteratorKind kind);

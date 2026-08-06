@@ -21,7 +21,14 @@ namespace Js
     class JavascriptExternalFunction : public RuntimeFunction
     {
     private:
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptExternalFunction);
+        friend class Js::CrossSiteObject<JavascriptExternalFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptExternalFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptExternalFunction>>::SetVirtualTable(this);
+        };
     protected:
         DEFINE_VTABLE_CTOR(JavascriptExternalFunction, RuntimeFunction);
         JavascriptExternalFunction(DynamicType * type);
@@ -33,7 +40,7 @@ namespace Js
         JavascriptExternalFunction(JavascriptExternalFunction* wrappedMethod, DynamicType* type);
         JavascriptExternalFunction(StdCallJavascriptMethod nativeMethod, DynamicType* type);
 
-        virtual BOOL IsExternalFunction() override { return TRUE; }
+        BOOL IsExternalFunction() override { return TRUE; }
         inline void SetSignature(Var signature) { this->signature = signature; }
         Var GetSignature() { return signature; }
         inline void SetCallbackState(void *callbackState) { this->callbackState = callbackState; }

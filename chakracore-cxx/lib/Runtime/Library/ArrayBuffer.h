@@ -39,7 +39,7 @@ namespace Js
     public:
         DEFINE_VTABLE_CTOR_ABSTRACT(ArrayBufferBase, DynamicObject);
 
-        virtual void MarshalToScriptContext(Js::ScriptContext * scriptContext) = 0;
+        void MarshalToScriptContext(Js::ScriptContext * scriptContext) override = 0;
 
         ArrayBufferBase(DynamicType *type) :
             DynamicObject(type),
@@ -115,19 +115,20 @@ namespace Js
                 : ArrayBufferDetachedStateBase(TypeIds_ArrayBuffer, buffer, bufferLength, allocationType),
                 recycler(r),
                 freeFunction(freeFunction)
-            {}
+            {
+            }
 
-            virtual void ClearSelfOnly() override
+            void ClearSelfOnly() override
             {
                 HeapDelete(this);
             }
 
-            virtual void DiscardState() override
+            void DiscardState() override
             {
                 DiscardStateBase(freeFunction);
             }
 
-            virtual void Discard() override
+            void Discard() override
             {
                 ClearSelfOnly();
             }
@@ -160,19 +161,19 @@ namespace Js
 
         static ArrayBuffer* NewFromDetachedState(DetachedStateBase* state, JavascriptLibrary *library);
 
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
         ArrayBufferDetachedStateBase* DetachAndGetState(bool queueForDelayFree = true);
-        virtual uint32_t GetByteLength() const override;
-        virtual uint8_t* GetBuffer() const override;
+        uint32_t GetByteLength() const override;
+        uint8_t * GetBuffer() const override;
         RefCountedBuffer *GetBufferContent() { return bufferContent;  }
         static int GetBufferContentsOffset() { return offsetof(ArrayBuffer, bufferContent); }
 
         typedef void(*FreeFn)(void*);
         virtual FreeFn GetArrayBufferFreeFn() { return nullptr; }
         static int GetByteLengthOffset() { return offsetof(ArrayBuffer, bufferLength); }
-        virtual void AddParent(ArrayBufferParent* parent) override;
+        void AddParent(ArrayBufferParent* parent) override;
 
         void Detach();
         //maximum 2G -1  for amd64
@@ -180,9 +181,9 @@ namespace Js
         static const uint32_t ParentsCleanupThreshold = 1000;
 
         virtual bool IsValidAsmJsBufferLength(uint length, bool forceCheck = false) { return false; }
-        virtual bool IsArrayBuffer() override { return true; }
-        virtual bool IsSharedArrayBuffer() override { return false; }
-        virtual ArrayBuffer * GetAsArrayBuffer() override;
+        bool IsArrayBuffer() override { return true; }
+        bool IsSharedArrayBuffer() override { return false; }
+        ArrayBuffer * GetAsArrayBuffer() override;
 
         virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32_t bufferLength);
 
@@ -248,24 +249,31 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptArrayBuffer, ArrayBuffer);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptArrayBuffer);
+        friend class Js::CrossSiteObject<JavascriptArrayBuffer>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptArrayBuffer>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptArrayBuffer>>::SetVirtualTable(this);
+        };
 
     public:
         static JavascriptArrayBuffer* Create(uint32_t length, DynamicType * type);
         static JavascriptArrayBuffer* Create(byte* buffer, uint32_t length, DynamicType * type);
         static JavascriptArrayBuffer* Create(RefCountedBuffer* buffer, uint32_t length, DynamicType * type);
-        virtual void Dispose(bool isShutdown) override;
-        virtual void Finalize(bool isShutdown) override;
+        void Dispose(bool isShutdown) override;
+        void Finalize(bool isShutdown) override;
 
         static bool IsValidAsmJsBufferLengthAlgo(uint length, bool forceCheck);
-        virtual bool IsValidAsmJsBufferLength(uint length, bool forceCheck = false) override;
-        virtual bool IsValidVirtualBufferLength(uint length) const override;
+        bool IsValidAsmJsBufferLength(uint length, bool forceCheck = false) override;
+        bool IsValidVirtualBufferLength(uint length) const override;
 
-        virtual FreeFn GetArrayBufferFreeFn() override;
+        FreeFn GetArrayBufferFreeFn() override;
 
        protected:
         JavascriptArrayBuffer(DynamicType * type);
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32_t bufferLength) override;
+        ArrayBufferDetachedStateBase * CreateDetachedState(RefCountedBuffer * content, uint32_t bufferLength) override;
 
         template<typename Allocator>
         JavascriptArrayBuffer(uint32_t length, DynamicType * type, Allocator allocator): ArrayBuffer(length, type, allocator){}
@@ -284,7 +292,14 @@ namespace Js
         WebAssemblyArrayBuffer(byte* buffer, uint32_t length, DynamicType * type);
     protected:
         DEFINE_VTABLE_CTOR(WebAssemblyArrayBuffer, JavascriptArrayBuffer);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(WebAssemblyArrayBuffer);
+        friend class Js::CrossSiteObject<WebAssemblyArrayBuffer>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<WebAssemblyArrayBuffer>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<WebAssemblyArrayBuffer>>::SetVirtualTable(this);
+        };
     public:
         static WebAssemblyArrayBuffer* Create(byte* buffer, uint32_t length, DynamicType * type);
         WebAssemblyArrayBuffer* GrowMemory(uint32_t newBufferLength);
@@ -302,10 +317,17 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(ProjectionArrayBuffer, ArrayBuffer);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ProjectionArrayBuffer);
+        friend class Js::CrossSiteObject<ProjectionArrayBuffer>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ProjectionArrayBuffer>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ProjectionArrayBuffer>>::SetVirtualTable(this);
+        };
 
         typedef void (*FreeFn)(void * ptr);
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer * content, uint32_t bufferLength) override
+        ArrayBufferDetachedStateBase * CreateDetachedState(RefCountedBuffer * content, uint32_t bufferLength) override
         {
             return HeapNew(ArrayBufferDetachedState<FreeFn>, content, bufferLength, CoTaskMemFree, GetScriptContext()->GetRecycler(), ArrayBufferAllocationType::CoTask);
         }
@@ -317,10 +339,10 @@ namespace Js
         static ProjectionArrayBuffer* Create(byte* buffer, uint32_t length, DynamicType * type);
         static ProjectionArrayBuffer* Create(RefCountedBuffer* buffer, uint32_t length, DynamicType * type);
 
-        virtual ArrayBufferContentForDelayedFreeBase* CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32_t bufferLength) override;
+        ArrayBufferContentForDelayedFreeBase * CopyBufferContentForDelayedFree(RefCountedBuffer * content, uint32_t bufferLength) override;
 
-        virtual void Dispose(bool isShutdown) override;
-        virtual void Finalize(bool isShutdown) override;
+        void Dispose(bool isShutdown) override;
+        void Finalize(bool isShutdown) override;
     private:
         ProjectionArrayBuffer(uint32_t length, DynamicType * type);
         ProjectionArrayBuffer(byte* buffer, uint32_t length, DynamicType * type);
@@ -332,24 +354,31 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(ExternalArrayBuffer, ArrayBuffer);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ExternalArrayBuffer);
+        friend class Js::CrossSiteObject<ExternalArrayBuffer>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ExternalArrayBuffer>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ExternalArrayBuffer>>::SetVirtualTable(this);
+        };
 
     public:
         ExternalArrayBuffer(byte *buffer, uint32_t length, DynamicType *type);
         ExternalArrayBuffer(RefCountedBuffer *buffer, uint32_t length, DynamicType *type);
         static ExternalArrayBuffer* Create(RefCountedBuffer* buffer, uint32_t length, DynamicType * type);
     protected:
-        virtual ArrayBufferDetachedStateBase* CreateDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength) override;
-        virtual void ReportExternalMemoryFree() override;
+        ArrayBufferDetachedStateBase * CreateDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength) override;
+        void ReportExternalMemoryFree() override;
     };
 
     class ExternalArrayBufferDetachedState : public ArrayBufferDetachedStateBase
     {
     public:
         ExternalArrayBufferDetachedState(RefCountedBuffer* buffer, uint32_t bufferLength);
-        virtual void ClearSelfOnly() override;
-        virtual void DiscardState() override;
-        virtual void Discard() override;
+        void ClearSelfOnly() override;
+        void DiscardState() override;
+        void Discard() override;
         virtual ArrayBuffer* Create(JavascriptLibrary* library);
     };
 }

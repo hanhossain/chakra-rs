@@ -12,15 +12,22 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<JavascriptBoolean*>::Type value;
 
         DEFINE_VTABLE_CTOR(JavascriptBooleanObject, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptBooleanObject);
+        friend class Js::CrossSiteObject<JavascriptBooleanObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptBooleanObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptBooleanObject>>::SetVirtualTable(this);
+        };
     public:
         JavascriptBooleanObject(JavascriptBoolean* value, DynamicType * type);
 
         BOOL GetValue() const;
         void Initialize(JavascriptBoolean* value);
 
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
     };
 
     template <> inline bool VarIsImpl<JavascriptBooleanObject>(RecyclableObject* obj)

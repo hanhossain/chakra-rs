@@ -16,7 +16,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptPromiseResolveOrRejectFunction, RuntimeFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptPromiseResolveOrRejectFunction);
+        friend class Js::CrossSiteObject<JavascriptPromiseResolveOrRejectFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptPromiseResolveOrRejectFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptPromiseResolveOrRejectFunction>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptPromiseResolveOrRejectFunction(DynamicType* type);
@@ -39,7 +46,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptPromiseCapabilitiesExecutorFunction, RuntimeFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptPromiseCapabilitiesExecutorFunction);
+        friend class Js::CrossSiteObject<JavascriptPromiseCapabilitiesExecutorFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptPromiseCapabilitiesExecutorFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptPromiseCapabilitiesExecutorFunction>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptPromiseCapabilitiesExecutorFunction(DynamicType* type, FunctionInfo* functionInfo, JavascriptPromiseCapability* capability);
@@ -56,7 +70,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptPromiseResolveThenableTaskFunction, RuntimeFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptPromiseResolveThenableTaskFunction);
+        friend class Js::CrossSiteObject<JavascriptPromiseResolveThenableTaskFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptPromiseResolveThenableTaskFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptPromiseResolveThenableTaskFunction>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptPromiseResolveThenableTaskFunction(DynamicType* type, FunctionInfo* functionInfo, JavascriptPromise* promise, RecyclableObject* thenable, RecyclableObject* thenFunction)
@@ -80,7 +101,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptPromiseReactionTaskFunction, RuntimeFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptPromiseReactionTaskFunction);
+        friend class Js::CrossSiteObject<JavascriptPromiseReactionTaskFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptPromiseReactionTaskFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptPromiseReactionTaskFunction>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptPromiseReactionTaskFunction(DynamicType* type, FunctionInfo* functionInfo, JavascriptPromiseReaction* reaction, Var argument)
@@ -101,7 +129,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptPromiseThenFinallyFunction, RuntimeFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptPromiseThenFinallyFunction);
+        friend class Js::CrossSiteObject<JavascriptPromiseThenFinallyFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptPromiseThenFinallyFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptPromiseThenFinallyFunction>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptPromiseThenFinallyFunction(DynamicType* type, FunctionInfo* functionInfo, RecyclableObject* OnFinally, RecyclableObject* Constructor, bool shouldThrow)
@@ -124,7 +159,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptPromiseThunkFinallyFunction, RuntimeFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptPromiseThunkFinallyFunction);
+        friend class Js::CrossSiteObject<JavascriptPromiseThunkFinallyFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptPromiseThunkFinallyFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptPromiseThunkFinallyFunction>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptPromiseThunkFinallyFunction(DynamicType* type, FunctionInfo* functionInfo, Var value, bool shouldThrow)
@@ -150,7 +192,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptPromiseAllResolveElementFunction, RuntimeFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptPromiseAllResolveElementFunction);
+        friend class Js::CrossSiteObject<JavascriptPromiseAllResolveElementFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptPromiseAllResolveElementFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptPromiseAllResolveElementFunction>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptPromiseAllResolveElementFunction(DynamicType* type);
@@ -179,7 +228,16 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptPromiseAllSettledResolveOrRejectElementFunction, JavascriptPromiseAllResolveElementFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptPromiseAllSettledResolveOrRejectElementFunction);
+        friend class Js::CrossSiteObject<JavascriptPromiseAllSettledResolveOrRejectElementFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(
+                VirtualTableInfo<JavascriptPromiseAllSettledResolveOrRejectElementFunction>::HasVirtualTable(this),
+                "Derived class need to define marshal to script context");
+            VirtualTableInfo<
+                Js::CrossSiteObject<JavascriptPromiseAllSettledResolveOrRejectElementFunction>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptPromiseAllSettledResolveOrRejectElementFunction(DynamicType* type);
@@ -217,15 +275,13 @@ namespace Js
 
     public:
         // Finalizable support
-        virtual void Finalize(bool isShutdown)
-        {
+        void Finalize(bool isShutdown) override {
         }
 
-        virtual void Dispose(bool isShutdown)
-        {
+        void Dispose(bool isShutdown) override {
         }
 
-        virtual void Mark(Recycler *recycler) override
+        void Mark(Recycler *recycler) override
         {
             AssertMsg(false, "Mark called on object that isnt TrackableObject");
         }
@@ -251,15 +307,13 @@ namespace Js
 
     public:
         // Finalizable support
-        virtual void Finalize(bool isShutdown)
-        {
+        void Finalize(bool isShutdown) override {
         }
 
-        virtual void Dispose(bool isShutdown)
-        {
+        void Dispose(bool isShutdown) override {
         }
 
-        virtual void Mark(Recycler *recycler) override
+        void Mark(Recycler *recycler) override
         {
             AssertMsg(false, "Mark called on object that isnt TrackableObject");
         }
@@ -281,7 +335,14 @@ namespace Js
     {
     private:
         DEFINE_VTABLE_CTOR(JavascriptPromise, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptPromise);
+        friend class Js::CrossSiteObject<JavascriptPromise>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptPromise>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptPromise>>::SetVirtualTable(this);
+        };
 
     public:
         class EntryInfo
@@ -356,8 +417,8 @@ namespace Js
             RecyclableObject* rejectionHandler,
             ScriptContext* scriptContext);
 
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
         JavascriptPromiseReactionList* GetReactions();
 
@@ -418,7 +479,14 @@ namespace Js
     class JavascriptPromiseAnyRejectElementFunction : public JavascriptPromiseAllResolveElementFunction {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptPromiseAnyRejectElementFunction, JavascriptPromiseAllResolveElementFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptPromiseAnyRejectElementFunction);
+        friend class Js::CrossSiteObject<JavascriptPromiseAnyRejectElementFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptPromiseAnyRejectElementFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptPromiseAnyRejectElementFunction>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptPromiseAnyRejectElementFunction(DynamicType* type);

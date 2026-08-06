@@ -67,7 +67,14 @@ namespace Js
     {
     private:
         DEFINE_VTABLE_CTOR(EngineInterfaceObject, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(EngineInterfaceObject);
+        friend class Js::CrossSiteObject<EngineInterfaceObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<EngineInterfaceObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<EngineInterfaceObject>>::SetVirtualTable(this);
+        };
 
         typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type commonNativeInterfaces;
 

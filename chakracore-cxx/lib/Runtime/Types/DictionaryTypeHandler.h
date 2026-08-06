@@ -64,86 +64,86 @@ namespace Js
         // Create a new type handler for a future DynamicObject. This is for public usage. "initialCapacity" indicates desired slotCapacity, subject to alignment round up.
         static DictionaryTypeHandlerBase* New(Recycler * recycler, int initialCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots);
 
-        virtual DynamicTypeHandler * Clone(Recycler * recycler);
+        DynamicTypeHandler * Clone(Recycler * recycler) override;
 
         BOOL IsBigDictionaryTypeHandler();
 
-        virtual BOOL IsLockable() const override { return false; }
-        virtual BOOL IsSharable() const override { return false; }        
-        virtual int GetPropertyCount() override;
+        BOOL IsLockable() const override { return false; }
+        BOOL IsSharable() const override { return false; }
+        int GetPropertyCount() override;
 
-        virtual PropertyId GetPropertyId(ScriptContext* scriptContext, PropertyIndex index) override;
-        virtual PropertyId GetPropertyId(ScriptContext* scriptContext, BigPropertyIndex index) override;
+        PropertyId GetPropertyId(ScriptContext* scriptContext, PropertyIndex index) override;
+        PropertyId GetPropertyId(ScriptContext* scriptContext, BigPropertyIndex index) override;
 
-        virtual BOOL FindNextProperty(ScriptContext* scriptContext, PropertyIndex& index, JavascriptString** propertyString,
+        BOOL FindNextProperty(ScriptContext* scriptContext, PropertyIndex& index, JavascriptString** propertyString,
             PropertyId* propertyId, PropertyAttributes* attributes, Type* type, DynamicType *typeToEnumerate, EnumeratorFlags flags, DynamicObject* instance, PropertyValueInfo* info) override;
-        virtual BOOL FindNextProperty(ScriptContext* scriptContext, BigPropertyIndex& index, JavascriptString** propertyString,
+        BOOL FindNextProperty(ScriptContext* scriptContext, BigPropertyIndex& index, JavascriptString** propertyString,
             PropertyId* propertyId, PropertyAttributes* attributes, Type* type, DynamicType *typeToEnumerate, EnumeratorFlags flags, DynamicObject* instance, PropertyValueInfo* info) override;
 
-        virtual PropertyIndex GetPropertyIndex(PropertyRecord const* propertyRecord) override;
+        PropertyIndex GetPropertyIndex(PropertyRecord const* propertyRecord) override;
 #if ENABLE_NATIVE_CODEGEN
         virtual bool GetPropertyEquivalenceInfo(PropertyRecord const* propertyRecord, PropertyEquivalenceInfo& info) override;
         virtual bool IsObjTypeSpecEquivalent(const Type* type, const TypeEquivalenceRecord& record, uint& failedPropertyIndex) override;
         virtual bool IsObjTypeSpecEquivalent(const Type* type, const EquivalentPropertyEntry* entry) override;
 #endif
 
-        virtual BOOL HasProperty(DynamicObject* instance, PropertyId propertyId, bool *noRedecl = nullptr, _Inout_opt_ PropertyValueInfo* info = nullptr) override;
-        virtual BOOL HasProperty(DynamicObject* instance, JavascriptString* propertyNameString) override;
-        virtual BOOL GetProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL GetProperty(DynamicObject* instance, Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL InitProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetProperty(DynamicObject* instance, JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetInternalProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags) override;
-        virtual DescriptorFlags GetSetter(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(DynamicObject* instance, JavascriptString* propertyNameString, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL DeleteProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteProperty(DynamicObject* instance, JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
+        BOOL HasProperty(DynamicObject* instance, PropertyId propertyId, bool *noRedecl = nullptr, _Inout_opt_ PropertyValueInfo* info = nullptr) override;
+        BOOL HasProperty(DynamicObject* instance, JavascriptString* propertyNameString) override;
+        BOOL GetProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL GetProperty(DynamicObject* instance, Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL InitProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetProperty(DynamicObject* instance, JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetInternalProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags) override;
+        DescriptorFlags GetSetter(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(DynamicObject* instance, JavascriptString* propertyNameString, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL DeleteProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags flags) override;
+        BOOL DeleteProperty(DynamicObject* instance, JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
 
-        virtual PropertyIndex GetRootPropertyIndex(PropertyRecord const* propertyRecord) override;
+        PropertyIndex GetRootPropertyIndex(PropertyRecord const* propertyRecord) override;
 
-        virtual BOOL HasRootProperty(DynamicObject* instance, PropertyId propertyId, bool *noRedecl, bool *pDeclaredProperty = nullptr, bool *pNonconfigurableProperty = nullptr) override;
-        virtual BOOL GetRootProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL SetRootProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual DescriptorFlags GetRootSetter(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL DeleteRootProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags flags) override;
+        BOOL HasRootProperty(DynamicObject* instance, PropertyId propertyId, bool *noRedecl, bool *pDeclaredProperty = nullptr, bool *pNonconfigurableProperty = nullptr) override;
+        BOOL GetRootProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL SetRootProperty(DynamicObject* instance, PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        DescriptorFlags GetRootSetter(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL DeleteRootProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags flags) override;
 
-        virtual BOOL IsDictionaryTypeHandler() const {return TRUE;}
+        BOOL IsDictionaryTypeHandler() const override { return TRUE;}
 #if DBG
-        virtual bool IsLetConstGlobal(DynamicObject* instance, PropertyId propertyId) override;
+        bool IsLetConstGlobal(DynamicObject* instance, PropertyId propertyId) override;
 #endif
-        virtual bool NextLetConstGlobal(int& index, RootObjectBase* instance, const PropertyRecord** propertyRecord, Var* value, bool* isConst) override;
+        bool NextLetConstGlobal(int& index, RootObjectBase* instance, const PropertyRecord** propertyRecord, Var* value, bool* isConst) override;
 
-        virtual BOOL IsEnumerable(DynamicObject* instance, PropertyId propertyId) override;
-        virtual BOOL IsWritable(DynamicObject* instance, PropertyId propertyId) override;
-        virtual BOOL IsConfigurable(DynamicObject* instance, PropertyId propertyId) override;
-        virtual BOOL SetEnumerable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetWritable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetConfigurable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetItem(DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL SetItemWithAttributes(DynamicObject* instance, uint32_t index, Var value, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAttributes(DynamicObject* instance, uint32_t index, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAccessors(DynamicObject* instance, uint32_t index, Var getter, Var setter) override;
-        virtual DescriptorFlags GetItemSetter(DynamicObject* instance, uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
-        virtual BOOL SetAccessors(DynamicObject* instance, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override;
-        _Check_return_ _Success_(return) virtual BOOL GetAccessors(DynamicObject* instance, PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter) override;
-        virtual BOOL PreventExtensions(DynamicObject *instance) override;
-        virtual BOOL Seal(DynamicObject* instance) override;
-        virtual BOOL IsSealed(DynamicObject* instance) override;
-        virtual BOOL IsFrozen(DynamicObject* instance) override;
-        virtual BOOL SetPropertyWithAttributes(DynamicObject* instance, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
-        virtual BOOL SetAttributes(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attributes) override;
-        virtual BOOL GetAttributesWithPropertyIndex(DynamicObject * instance, PropertyId propertyId, BigPropertyIndex index, PropertyAttributes * attributes) override;
+        BOOL IsEnumerable(DynamicObject* instance, PropertyId propertyId) override;
+        BOOL IsWritable(DynamicObject* instance, PropertyId propertyId) override;
+        BOOL IsConfigurable(DynamicObject* instance, PropertyId propertyId) override;
+        BOOL SetEnumerable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
+        BOOL SetWritable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
+        BOOL SetConfigurable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
+        BOOL SetItem(DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags) override;
+        BOOL SetItemWithAttributes(DynamicObject* instance, uint32_t index, Var value, PropertyAttributes attributes) override;
+        BOOL SetItemAttributes(DynamicObject* instance, uint32_t index, PropertyAttributes attributes) override;
+        BOOL SetItemAccessors(DynamicObject* instance, uint32_t index, Var getter, Var setter) override;
+        DescriptorFlags GetItemSetter(DynamicObject* instance, uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
+        BOOL SetAccessors(DynamicObject* instance, PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override;
+        _Check_return_ _Success_(return) BOOL GetAccessors(DynamicObject* instance, PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter) override;
+        BOOL PreventExtensions(DynamicObject *instance) override;
+        BOOL Seal(DynamicObject* instance) override;
+        BOOL IsSealed(DynamicObject* instance) override;
+        BOOL IsFrozen(DynamicObject* instance) override;
+        BOOL SetPropertyWithAttributes(DynamicObject* instance, PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
+        BOOL SetAttributes(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attributes) override;
+        BOOL GetAttributesWithPropertyIndex(DynamicObject * instance, PropertyId propertyId, BigPropertyIndex index, PropertyAttributes * attributes) override;
 
-        virtual void SetAllPropertiesToUndefined(DynamicObject* instance, bool invalidateFixedFields) override;
-        virtual void MarshalAllPropertiesToScriptContext(DynamicObject* instance, ScriptContext* targetScriptContext, bool invalidateFixedFields) override;
-        virtual DynamicTypeHandler* ConvertToTypeWithItemAttributes(DynamicObject* instance) override;
+        void SetAllPropertiesToUndefined(DynamicObject* instance, bool invalidateFixedFields) override;
+        void MarshalAllPropertiesToScriptContext(DynamicObject* instance, ScriptContext* targetScriptContext, bool invalidateFixedFields) override;
+        DynamicTypeHandler * ConvertToTypeWithItemAttributes(DynamicObject* instance) override;
 
-        virtual void SetIsPrototype(DynamicObject* instance) override;
+        void SetIsPrototype(DynamicObject* instance) override;
 
 #if DBG
-        virtual bool SupportsPrototypeInstances() const { return true; }
-        virtual bool CanStorePropertyValueDirectly(const DynamicObject* instance, PropertyId propertyId, bool allowLetConst) override;
+        bool SupportsPrototypeInstances() const override { return true; }
+        bool CanStorePropertyValueDirectly(const DynamicObject* instance, PropertyId propertyId, bool allowLetConst) override;
 #endif
 
 #if ENABLE_FIXED_FIELDS
@@ -257,7 +257,7 @@ namespace Js
             _Inout_opt_ PropertyValueInfo* info);
 
     protected:
-        virtual BOOL FreezeImpl(DynamicObject* instance, bool isConvertedType) override;
+        BOOL FreezeImpl(DynamicObject* instance, bool isConvertedType) override;
         virtual BigDictionaryTypeHandler* NewBigDictionaryTypeHandler(Recycler* recycler, int slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots);
 
 #if DBG_DUMP

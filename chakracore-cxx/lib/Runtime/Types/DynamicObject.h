@@ -9,20 +9,6 @@ class ScriptSite;
 namespace Js
 {
 
-#if !defined(USED_IN_STATIC_LIB)
-#define DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(T) \
-    friend class Js::CrossSiteObject<T>; \
-    virtual void MarshalToScriptContext(Js::ScriptContext * scriptContext) \
-    { \
-        Assert(this->GetScriptContext() != scriptContext); \
-        AssertMsg(VirtualTableInfo<T>::HasVirtualTable(this), "Derived class need to define marshal to script context"); \
-        VirtualTableInfo<Js::CrossSiteObject<T>>::SetVirtualTable(this); \
-    }
-#else
-#define DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(T)  \
-        virtual void MarshalToScriptContext(Js::ScriptContext * scriptContext)  {Assert(FALSE);}
-#endif
-
 #if DBG
 #define SetSlotArguments(propertyId, slotIndex, value) propertyId, false, slotIndex, value
 #define SetSlotArgumentsRoot(propertyId, allowLetConst, slotIndex, value) propertyId, allowLetConst, slotIndex, value
@@ -113,7 +99,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(DynamicObject, RecyclableObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(DynamicObject);
+        friend class Js::CrossSiteObject<DynamicObject>;
+        virtual void MarshalToScriptContext(Js::ScriptContext *scriptContext)
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<DynamicObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<DynamicObject>>::SetVirtualTable(this);
+        }
 
         DynamicObject(DynamicType * type, const bool initSlots = true);
         DynamicObject(DynamicType * type, ScriptContext * scriptContext);
@@ -231,65 +224,65 @@ namespace Js
         virtual bool HasReadOnlyPropertiesInvisibleToTypeHandler() { return false; }
 
         void InitSlots(DynamicObject* instance);
-        virtual int GetPropertyCount() override;
+        int GetPropertyCount() override;
         int GetPropertyCountForEnum();
-        virtual PropertyId GetPropertyId(PropertyIndex index) override;
-        virtual PropertyId GetPropertyId(BigPropertyIndex index) override;
-        PropertyIndex GetPropertyIndex(PropertyId propertyId);
-        virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
-        virtual BOOL HasOwnProperty(PropertyId propertyId) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL GetInternalProperty(Var instance, PropertyId internalPropertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetInternalProperty(PropertyId internalPropertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = nullptr) override;
-        virtual BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
-        virtual BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
+        PropertyId GetPropertyId(PropertyIndex index) override;
+        PropertyId GetPropertyId(BigPropertyIndex index) override;
+        PropertyIndex GetPropertyIndex(PropertyId propertyId) override;
+        PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
+        BOOL HasOwnProperty(PropertyId propertyId) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL GetInternalProperty(Var instance, PropertyId internalPropertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetInternalProperty(PropertyId internalPropertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = nullptr) override;
+        BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
+        BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
+        BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
 #if ENABLE_FIXED_FIELDS
         virtual BOOL IsFixedProperty(PropertyId propertyId) override;
 #endif
-        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
-        virtual BOOL HasOwnItem(uint32_t index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
-        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
-        virtual BOOL ToPrimitive(JavascriptHint hint, Var* result, ScriptContext * requestContext) override;
-        virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext * scriptContext, EnumeratorCache * enumeratorCache = nullptr) override;
-        virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override;
-        _Check_return_ _Success_(return) virtual BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override;
-        virtual BOOL IsWritable(PropertyId propertyId) override;
-        virtual BOOL IsConfigurable(PropertyId propertyId) override;
-        virtual BOOL IsEnumerable(PropertyId propertyId) override;
-        virtual BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetWritable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetAttributes(PropertyId propertyId, PropertyAttributes attributes) override;
-        virtual BOOL IsExtensible() override { return GetIsExtensible(); };
-        virtual BOOL PreventExtensions() override;
-        virtual BOOL Seal() override;
-        virtual BOOL Freeze() override;
-        virtual BOOL IsSealed() override;
-        virtual BOOL IsFrozen() override;
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual Var GetTypeOfString(ScriptContext * requestContext) override;
+        PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        BOOL HasOwnItem(uint32_t index) override;
+        PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
+        BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
+        BOOL ToPrimitive(JavascriptHint hint, Var* result, ScriptContext * requestContext) override;
+        BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext * scriptContext, EnumeratorCache * enumeratorCache = nullptr) override;
+        BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override;
+        _Check_return_ _Success_(return) BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override;
+        BOOL IsWritable(PropertyId propertyId) override;
+        BOOL IsConfigurable(PropertyId propertyId) override;
+        BOOL IsEnumerable(PropertyId propertyId) override;
+        BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
+        BOOL SetWritable(PropertyId propertyId, BOOL value) override;
+        BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
+        BOOL SetAttributes(PropertyId propertyId, PropertyAttributes attributes) override;
+        BOOL IsExtensible() override { return GetIsExtensible(); };
+        BOOL PreventExtensions() override;
+        BOOL Seal() override;
+        BOOL Freeze() override;
+        BOOL IsSealed() override;
+        BOOL IsFrozen() override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        Var GetTypeOfString(ScriptContext * requestContext) override;
 
 #if DBG
-        virtual bool CanStorePropertyValueDirectly(PropertyId propertyId, bool allowLetConst) override;
+        bool CanStorePropertyValueDirectly(PropertyId propertyId, bool allowLetConst) override;
 #endif
 
-        virtual void RemoveFromPrototype(ScriptContext * requestContext, bool * allProtoCachesInvalidated) override;
-        virtual void AddToPrototype(ScriptContext * requestContext, bool * allProtoCachesInvalidated) override;
-        virtual bool ClearProtoCachesWereInvalidated() override;
-        virtual void SetPrototype(RecyclableObject* newPrototype) override;
+        void RemoveFromPrototype(ScriptContext * requestContext, bool * allProtoCachesInvalidated) override;
+        void AddToPrototype(ScriptContext * requestContext, bool * allProtoCachesInvalidated) override;
+        bool ClearProtoCachesWereInvalidated() override;
+        void SetPrototype(RecyclableObject* newPrototype) override;
 
         virtual BOOL IsCrossSiteObject() const { return FALSE; }
 
@@ -305,7 +298,7 @@ namespace Js
         BOOL FindNextProperty(BigPropertyIndex& index, JavascriptString** propertyString, PropertyId* propertyId, PropertyAttributes* attributes,
             DynamicType *typeToEnumerate, EnumeratorFlags flags, ScriptContext * requestContext, PropertyValueInfo * info);
 
-        virtual BOOL HasDeferredTypeHandler() const;
+        BOOL HasDeferredTypeHandler() const override;
         static uint32_t GetOffsetOfAuxSlots();
         static uint32_t GetOffsetOfObjectArray();
         static uint32_t GetOffsetOfType();
@@ -343,18 +336,18 @@ namespace Js
         BOOL CallToPrimitiveFunction(Var toPrimitiveFunction, PropertyId propertyId, Var* result, ScriptContext * requestContext);
 #if DBG
     public:
-        virtual bool DbgIsDynamicObject() const override { return true; }
+        bool DbgIsDynamicObject() const override { return true; }
 #endif
 
 #ifdef RECYCLER_STRESS
     public:
-        virtual void Finalize(bool isShutdown) override;
-        virtual void Dispose(bool isShutdown) override;
-        virtual void Mark(Recycler *recycler) override;
+        void Finalize(bool isShutdown) override;
+        void Dispose(bool isShutdown) override;
+        void Mark(Recycler *recycler) override;
 #endif
 
     public:
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
+        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF() const
         {
             // This virtual function hinders linker to do ICF vtable of this class with other classes.
             // ICF vtable causes unexpected behavior in type check code. Objects uses vtable as identify should

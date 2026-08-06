@@ -52,14 +52,14 @@ namespace Js
         {
         }
 
-        virtual LPCUTF8 GetSource(const char16_t* reasonString) override
+        LPCUTF8 GetSource(const char16_t* reasonString) override
         {
             return source;
         }
 
-        virtual size_t GetByteLength(const char16_t* reasonString) override { return byteLength; }
+        size_t GetByteLength(const char16_t* reasonString) override { return byteLength; }
 
-        virtual bool Equals(ISourceHolder* other) override
+        bool Equals(ISourceHolder* other) override
         {
           const char16_t* reason = u"Equal Comparison";
             return this == other ||
@@ -68,32 +68,32 @@ namespace Js
                         || memcmp(this->GetSource(reason), other->GetSource(reason), this->GetByteLength(reason)) == 0 ));
         }
 
-        virtual bool IsEmpty() override
+        bool IsEmpty() override
         {
             return this->isEmpty;
         }
 
-        virtual hash_t GetHashCode() override
+        hash_t GetHashCode() override
         {
             Assert(byteLength < std::numeric_limits<uint32_t>::max());
             return JsUtil::CharacterBuffer<utf8char_t>::StaticGetHashCode(source, (charcount_t)byteLength);
         }
 
-        virtual void Finalize(bool isShutdown) override
+        void Finalize(bool isShutdown) override
         {
         }
 
-        virtual void Dispose(bool isShutdown) override
+        void Dispose(bool isShutdown) override
         {
         }
 
-        virtual void Mark(Recycler * recycler) override
+        void Mark(Recycler * recycler) override
         {
         }
 
-        virtual void Unload() override { }
+        void Unload() override { }
 
-        virtual bool IsDeferrable() override
+        bool IsDeferrable() override
         {
             return CONFIG_FLAG(DeferLoadingAvailableSource);
         }
@@ -108,8 +108,8 @@ namespace Js
             originalSourceBuffer(originalSourceBuffer)
         { }
 
-        virtual void Unload() override;
-        virtual void Dispose(bool isShutdown) override;
+        void Unload() override;
+        void Dispose(bool isShutdown) override;
 
     private:
         bool shouldFreeSource;

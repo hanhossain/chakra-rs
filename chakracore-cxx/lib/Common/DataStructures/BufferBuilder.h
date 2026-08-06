@@ -97,7 +97,7 @@ namespace Js
             }
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const override
         {
             DebugOnly(uint32_t size = sizeof(T));
 
@@ -184,7 +184,7 @@ namespace Js
             return this->offset + sizeof(T);
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const override
         {
             if (bufferSize - this->offset<sizeof(T))
             {
@@ -228,7 +228,7 @@ namespace Js
             });
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const override
         {
             return list->Iterate([&](BufferBuilder * builder) {
                 builder->Write(buffer, bufferSize);
@@ -257,7 +257,7 @@ namespace Js
             return this->offset + sizeof(int);
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const override
         {
             if (bufferSize - this->offset<sizeof(int))
             {
@@ -285,7 +285,7 @@ namespace Js
             return this->offset + size;
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const override
         {
             if (bufferSize - this->offset<size)
             {
@@ -320,7 +320,7 @@ namespace Js
             return content->FixOffset(offset);
         }
 
-        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const
+        void Write(__in_bcount(bufferSize) byte * buffer, uint32_t bufferSize) const override
         {
             if (bufferSize - this->offset < this->padding)
             {

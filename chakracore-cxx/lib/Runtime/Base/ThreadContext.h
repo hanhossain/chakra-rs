@@ -734,7 +734,7 @@ public:
         this->isThreadBound = true;
     }
     bool IsJSRT() const { return !this->isThreadBound; }
-    virtual bool IsThreadBound() const override { return this->isThreadBound; }
+    bool IsThreadBound() const override { return this->isThreadBound; }
     void SetStackProber(StackProber * stackProber);
     static uint32_t GetStackLimitForCurrentThreadOffset() { return offsetof(ThreadContext, stackLimitForCurrentThread); }
 
@@ -770,7 +770,7 @@ public:
 
     Js::PropertyRecord const * GetPropertyRecord(Js::PropertyId propertyId);
 
-    virtual bool IsNumericProperty(Js::PropertyId propertyId) override;
+    bool IsNumericProperty(Js::PropertyId propertyId) override;
 
 #ifdef ENABLE_WASM_SIMD
 #if _M_AMD64
@@ -1313,11 +1313,11 @@ public:
     ScriptSite* GetTopLevelScriptSite () { return this->topLevelScriptSite; }
 #endif
 #if DBG || defined(PROFILE_EXEC)
-    virtual bool AsyncHostOperationStart(void *) override;
-    virtual void AsyncHostOperationEnd(bool wasInAsync, void *) override;
+    bool AsyncHostOperationStart(void *) override;
+    void AsyncHostOperationEnd(bool wasInAsync, void *) override;
 #endif
 #if DBG
-    virtual void CheckJsReentrancyOnDispose() override;
+    void CheckJsReentrancyOnDispose() override;
     bool IsInAsyncHostOperation() const;
 #endif
 
@@ -1570,21 +1570,21 @@ public:
     void RegisterConstructorCache(Js::PropertyId propertyId, Js::ConstructorCache* cache);
 #endif
 
-    virtual size_t GetScriptStackLimit() const override;
+    size_t GetScriptStackLimit() const override;
 
-    virtual HANDLE GetProcessHandle() const override;
+    HANDLE GetProcessHandle() const override;
 
-    virtual intptr_t GetThreadStackLimitAddr() const override;
+    intptr_t GetThreadStackLimitAddr() const override;
 
 #if ENABLE_NATIVE_CODEGEN && defined(ENABLE_WASM_SIMD)
     virtual intptr_t GetSimdTempAreaAddr(uint8_t tempIndex) const override;
 #endif
 
-    virtual intptr_t GetDisableImplicitFlagsAddr() const override;
-    virtual intptr_t GetImplicitCallFlagsAddr() const override;
+    intptr_t GetDisableImplicitFlagsAddr() const override;
+    intptr_t GetImplicitCallFlagsAddr() const override;
 
-    virtual ptrdiff_t GetChakraBaseAddressDifference() const override;
-    virtual ptrdiff_t GetCRTBaseAddressDifference() const override;
+    ptrdiff_t GetChakraBaseAddressDifference() const override;
+    ptrdiff_t GetCRTBaseAddressDifference() const override;
 
 private:
     void RegisterInlineCache(InlineCacheListMapByPropertyId& inlineCacheMap, Js::InlineCache* inlineCache, Js::PropertyId propertyId);
@@ -1921,21 +1921,21 @@ public:
     void DisableImplicitCall() { disableImplicitFlags = (DisableImplicitFlags)(disableImplicitFlags | DisableImplicitCallFlag); }
     void ClearDisableImplicitFlags() { disableImplicitFlags = DisableImplicitNoFlag; }
 
-    virtual uint GetRandomNumber() override;
-    virtual bool DoSpecialMarkOnScanStack() override { return this->DoRedeferFunctionBodies(); }
-    virtual void OnScanStackCallback(void ** stackTop, size_t byteCount, void ** registers, size_t registersByteCount) override;
+    uint GetRandomNumber() override;
+    bool DoSpecialMarkOnScanStack() override { return this->DoRedeferFunctionBodies(); }
+    void OnScanStackCallback(void ** stackTop, size_t byteCount, void ** registers, size_t registersByteCount) override;
 
-    virtual void PostSweepRedeferralCallBack() override;
+    void PostSweepRedeferralCallBack() override;
 
     // DefaultCollectWrapper
-    virtual void PreCollectionCallBack(CollectionFlags flags) override;
-    virtual void PreSweepCallback() override;
-    virtual void PreRescanMarkCallback() override;
-    virtual void WaitCollectionCallBack() override;
-    virtual void PostCollectionCallBack() override;
-    virtual BOOL ExecuteRecyclerCollectionFunction(Recycler * recycler, CollectionFunction function, CollectionFlags flags) override;
-    virtual void DisposeObjects(Recycler * recycler) override;
-    virtual void PreDisposeObjectsCallBack() override;
+    void PreCollectionCallBack(CollectionFlags flags) override;
+    void PreSweepCallback() override;
+    void PreRescanMarkCallback() override;
+    void WaitCollectionCallBack() override;
+    void PostCollectionCallBack() override;
+    BOOL ExecuteRecyclerCollectionFunction(Recycler * recycler, CollectionFunction function, CollectionFlags flags) override;
+    void DisposeObjects(Recycler * recycler) override;
+    void PreDisposeObjectsCallBack() override;
 
     void DoExpirableCollectModeStackWalk();
 
@@ -2120,14 +2120,14 @@ private:
         {
         }
 
-        virtual LPFILETIME GetLastScriptExecutionEndTime() const;
-        virtual bool TransmitGCTelemetryStats(RecyclerTelemetryInfo& rti);
-        virtual bool TransmitTelemetryError(const RecyclerTelemetryInfo& rti, const char * msg);
-        virtual bool TransmitHeapUsage(size_t totalHeapBytes, size_t usedHeapBytes, double heapUsedRatio);
-        virtual bool IsThreadBound() const;
-        virtual uint32_t GetCurrentScriptThreadID() const;
-        virtual bool IsTelemetryProviderEnabled() const;
-        virtual uint GetClosedContextCount() const;
+        LPFILETIME GetLastScriptExecutionEndTime() const override;
+        bool TransmitGCTelemetryStats(RecyclerTelemetryInfo& rti) override;
+        bool TransmitTelemetryError(const RecyclerTelemetryInfo& rti, const char * msg) override;
+        bool TransmitHeapUsage(size_t totalHeapBytes, size_t usedHeapBytes, double heapUsedRatio) override;
+        bool IsThreadBound() const override;
+        uint32_t GetCurrentScriptThreadID() const override;
+        bool IsTelemetryProviderEnabled() const override;
+        uint GetClosedContextCount() const override;
 
     private:
         ThreadContext * tc;

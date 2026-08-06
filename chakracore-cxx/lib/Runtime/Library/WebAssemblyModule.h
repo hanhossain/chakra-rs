@@ -31,7 +31,14 @@ class WebAssemblyModule : public DynamicObject
 {
 protected:
     DEFINE_VTABLE_CTOR(WebAssemblyModule, DynamicObject);
-    DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(WebAssemblyModule);
+    friend class Js::CrossSiteObject<WebAssemblyModule>;
+    void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+    {
+        Assert(this->GetScriptContext() != scriptContext);
+        AssertMsg(VirtualTableInfo<WebAssemblyModule>::HasVirtualTable(this),
+                  "Derived class need to define marshal to script context");
+        VirtualTableInfo<Js::CrossSiteObject<WebAssemblyModule>>::SetVirtualTable(this);
+    };
 
 public:
 
@@ -151,9 +158,9 @@ public:
 
     static char16_t* FormatExceptionMessage(Wasm::WasmCompilationException* ex, AutoFreeExceptionMessage* autoClean, WebAssemblyModule* wasmModule = nullptr, FunctionBody* body = nullptr);
 
-    virtual void Finalize(bool isShutdown) override;
-    virtual void Dispose(bool isShutdown) override;
-    virtual void Mark(Recycler * recycler) override;
+    void Finalize(bool isShutdown) override;
+    void Dispose(bool isShutdown) override;
+    void Mark(Recycler * recycler) override;
 
 private:
     static JavascriptString * GetExternalKindString(ScriptContext * scriptContext, Wasm::ExternalKinds kind);

@@ -10,7 +10,14 @@ namespace Js {
     {
     protected:
         DEFINE_VTABLE_CTOR(JsrtExternalArrayBuffer, ExternalArrayBuffer);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JsrtExternalArrayBuffer);
+        friend class Js::CrossSiteObject<JsrtExternalArrayBuffer>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JsrtExternalArrayBuffer>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JsrtExternalArrayBuffer>>::SetVirtualTable(this);
+        };
 
         JsrtExternalArrayBuffer(byte *buffer, uint32_t length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);
         JsrtExternalArrayBuffer(RefCountedBuffer *buffer, uint32_t length, JsFinalizeCallback finalizeCallback, void *callbackState, DynamicType *type);

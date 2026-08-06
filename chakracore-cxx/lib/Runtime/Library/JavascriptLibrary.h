@@ -1234,7 +1234,7 @@ namespace Js
     public:
         template<bool addPrototype, bool addName, bool useLengthType, bool addLength>
         static bool InitializeFunction(DynamicObject* function, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
-        virtual void Finalize(bool isShutdown) override;
+        void Finalize(bool isShutdown) override;
 
 #if DBG
         void DumpLibraryByteCode();

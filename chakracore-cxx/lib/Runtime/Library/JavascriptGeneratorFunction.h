@@ -17,7 +17,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptGeneratorFunction, ScriptFunctionBase);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptGeneratorFunction);
+        friend class Js::CrossSiteObject<JavascriptGeneratorFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptGeneratorFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptGeneratorFunction>>::SetVirtualTable(this);
+        };
 
         JavascriptGeneratorFunction(DynamicType* type, FunctionInfo* functionInfo, GeneratorVirtualScriptFunction* scriptFunction);
 
@@ -25,7 +32,7 @@ namespace Js
         JavascriptGeneratorFunction(DynamicType* type, GeneratorVirtualScriptFunction* scriptFunction);
         JavascriptGeneratorFunction(DynamicType* type);
 
-        virtual JavascriptString* GetDisplayNameImpl() const override;
+        JavascriptString * GetDisplayNameImpl() const override;
         GeneratorVirtualScriptFunction* GetGeneratorVirtualScriptFunction() { return scriptFunction; }
 
         // Returns whether this function is exactly a JavascriptGeneratorFunction, not a JavascriptAsyncFunction
@@ -46,33 +53,33 @@ namespace Js
             this->scriptFunction = scriptFunction;
         }
 
-        virtual Var GetHomeObj() const override;
-        virtual void SetHomeObj(Var homeObj) override;
-        virtual void SetComputedNameVar(Var computedNameVar) override;
-        virtual Var GetComputedNameVar() const override;
-        virtual bool IsAnonymousFunction() const override;
+        Var GetHomeObj() const override;
+        void SetHomeObj(Var homeObj) override;
+        void SetComputedNameVar(Var computedNameVar) override;
+        Var GetComputedNameVar() const override;
+        bool IsAnonymousFunction() const override;
 
-        virtual Var GetSourceString() const;
-        virtual JavascriptString * EnsureSourceString();
+        Var GetSourceString() const override;
+        JavascriptString * EnsureSourceString() override;
 
-        virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
 
-        _Check_return_ _Success_(return) virtual BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        _Check_return_ _Success_(return) BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
 
-        virtual BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = NULL) override;
-        virtual BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
+        BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = NULL) override;
+        BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
+        BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
 
-        virtual BOOL IsWritable(PropertyId propertyId) override;
-        virtual BOOL IsEnumerable(PropertyId propertyId) override;
-        virtual bool IsGeneratorFunction() const { return true; };
+        BOOL IsWritable(PropertyId propertyId) override;
+        BOOL IsEnumerable(PropertyId propertyId) override;
+        bool IsGeneratorFunction() const override { return true; };
 
         class EntryInfo
         {
@@ -84,7 +91,7 @@ namespace Js
         static Var NewInstanceRestrictedMode(RecyclableObject* function, CallInfo callInfo, ...);
 
     public:
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
+        VTableValue DummyVirtualFunctionToHinderLinkerICF() const override
         {
             return VTableValue::VtableJavascriptGeneratorFunction;
         }
@@ -108,10 +115,10 @@ namespace Js
 
         static uint32_t GetRealFunctionOffset() { return offsetof(GeneratorVirtualScriptFunction, realFunction); }
 
-        virtual JavascriptFunction* GetRealFunctionObject() override { return realFunction; }
+        JavascriptFunction * GetRealFunctionObject() override { return realFunction; }
         void SetRealGeneratorFunction(JavascriptGeneratorFunction* realFunction) { this->realFunction = realFunction; }
 
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
+        VTableValue DummyVirtualFunctionToHinderLinkerICF() const override
         {
             return VTableValue::VtableJavascriptGeneratorFunction;
         }

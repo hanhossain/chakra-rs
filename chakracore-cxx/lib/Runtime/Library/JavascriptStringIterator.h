@@ -14,7 +14,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptStringIterator, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptStringIterator);
+        friend class Js::CrossSiteObject<JavascriptStringIterator>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptStringIterator>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptStringIterator>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptStringIterator(DynamicType* type, JavascriptString* string);

@@ -75,26 +75,26 @@ namespace Js
         static Var EntryGetterByteLength(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryGetterSymbolSpecies(RecyclableObject* function, CallInfo callInfo, ...);
 
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
-        virtual uint32_t GetByteLength() const override;
-        virtual uint8_t* GetBuffer() const override;
+        uint32_t GetByteLength() const override;
+        uint8_t * GetBuffer() const override;
 
         static int GetByteLengthOffset() { Assert(false); return 0; }
         static int GetBufferOffset() { Assert(false); return 0; }
         static int GetSharedContentsOffset() { return offsetof(SharedArrayBuffer, sharedContents); }
-        virtual bool IsArrayBuffer() override { return false; }
-        virtual bool IsSharedArrayBuffer() override { return true; }
-        virtual ArrayBuffer * GetAsArrayBuffer() { return nullptr; }
-        virtual SharedArrayBuffer * GetAsSharedArrayBuffer() override;
+        bool IsArrayBuffer() override { return false; }
+        bool IsSharedArrayBuffer() override { return true; }
+        ArrayBuffer * GetAsArrayBuffer() override { return nullptr; }
+        SharedArrayBuffer * GetAsSharedArrayBuffer() override;
 
         WaiterList *GetWaiterList(uint index);
         SharedContents *GetSharedContents() { return sharedContents; }
 
         //maximum 2G -1  for amd64
         static const uint32_t MaxSharedArrayBufferLength = 0x7FFFFFFF;
-        virtual bool IsValidVirtualBufferLength(uint length) const;
+        bool IsValidVirtualBufferLength(uint length) const override;
 
     protected:
         // maxLength is necessary only for WebAssemblySharedArrayBuffer to know how much it can grow
@@ -117,13 +117,20 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(JavascriptSharedArrayBuffer, SharedArrayBuffer);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptSharedArrayBuffer);
+        friend class Js::CrossSiteObject<JavascriptSharedArrayBuffer>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptSharedArrayBuffer>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptSharedArrayBuffer>>::SetVirtualTable(this);
+        };
 
     public:
         static JavascriptSharedArrayBuffer* Create(uint32_t length, DynamicType * type);
         static JavascriptSharedArrayBuffer* Create(SharedContents *sharedContents, DynamicType * type);
-        virtual void Dispose(bool isShutdown) override;
-        virtual void Finalize(bool isShutdown) override;
+        void Dispose(bool isShutdown) override;
+        void Finalize(bool isShutdown) override;
 
     protected:
         JavascriptSharedArrayBuffer(DynamicType * type);
@@ -136,7 +143,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(WebAssemblySharedArrayBuffer, JavascriptSharedArrayBuffer);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(WebAssemblySharedArrayBuffer);
+        friend class Js::CrossSiteObject<WebAssemblySharedArrayBuffer>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<WebAssemblySharedArrayBuffer>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<WebAssemblySharedArrayBuffer>>::SetVirtualTable(this);
+        };
 
     public:
         static WebAssemblySharedArrayBuffer* Create(uint32_t length, uint32_t maxLength, DynamicType * type);

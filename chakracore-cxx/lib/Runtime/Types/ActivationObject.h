@@ -16,23 +16,30 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(ActivationObject, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ActivationObject);
+        friend class Js::CrossSiteObject<ActivationObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ActivationObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ActivationObject>>::SetVirtualTable(this);
+        };
     public:
         ActivationObject(DynamicType * type) : DynamicObject(type)
         {}
 
-        virtual BOOL HasOwnPropertyCheckNoRedecl(PropertyId propertyId) override;
-        virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetInternalProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL EnsureProperty(PropertyId propertyId) override;
-        virtual BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
-        virtual BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = NULL) override;
-        virtual BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
-        virtual BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
-        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL HasOwnPropertyCheckNoRedecl(PropertyId propertyId) override;
+        BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetInternalProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL EnsureProperty(PropertyId propertyId) override;
+        BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
+        BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = NULL) override;
+        BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
+        BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
+        BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
     };
 
     template <> bool VarIsImpl<ActivationObject>(RecyclableObject* instance);
@@ -43,14 +50,21 @@ namespace Js
     {
     private:
         DEFINE_VTABLE_CTOR(BlockActivationObject, ActivationObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(BlockActivationObject);
+        friend class Js::CrossSiteObject<BlockActivationObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<BlockActivationObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<BlockActivationObject>>::SetVirtualTable(this);
+        };
     public:
         BlockActivationObject(DynamicType * type) : ActivationObject(type) {}
 
-        virtual BOOL EnsureProperty(PropertyId propertyId) override;
-        virtual BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
-        virtual BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
-        virtual BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
+        BOOL EnsureProperty(PropertyId propertyId) override;
+        BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
+        BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
+        BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
 
         BlockActivationObject* Clone(ScriptContext *scriptContext);
     };
@@ -62,14 +76,21 @@ namespace Js
     {
     private:
         DEFINE_VTABLE_CTOR(PseudoActivationObject, ActivationObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(PseudoActivationObject);
+        friend class Js::CrossSiteObject<PseudoActivationObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<PseudoActivationObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<PseudoActivationObject>>::SetVirtualTable(this);
+        };
     public:
         PseudoActivationObject(DynamicType * type) : ActivationObject(type) {}
 
-        virtual BOOL EnsureProperty(PropertyId propertyId) override;
-        virtual BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
-        virtual BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
-        virtual BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
+        BOOL EnsureProperty(PropertyId propertyId) override;
+        BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
+        BOOL InitFuncScoped(PropertyId propertyId, Var value) override;
+        BOOL InitPropertyScoped(PropertyId propertyId, Var value) override;
     };
 
     template <> bool VarIsImpl<PseudoActivationObject>(RecyclableObject* instance);
@@ -78,7 +99,14 @@ namespace Js
     {
     private:
         DEFINE_VTABLE_CTOR(ConsoleScopeActivationObject, ActivationObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ConsoleScopeActivationObject);
+        friend class Js::CrossSiteObject<ConsoleScopeActivationObject>;
+        virtual void MarshalToScriptContext(Js::ScriptContext *scriptContext)
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ConsoleScopeActivationObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ConsoleScopeActivationObject>>::SetVirtualTable(this);
+        };
     public:
         ConsoleScopeActivationObject(DynamicType * type) : ActivationObject(type) {}
 
@@ -95,7 +123,14 @@ namespace Js
     {
     private:
         DEFINE_VTABLE_CTOR(ActivationObjectEx, ActivationObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ActivationObjectEx);
+        friend class Js::CrossSiteObject<ActivationObjectEx>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ActivationObjectEx>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ActivationObjectEx>>::SetVirtualTable(this);
+        };
 
         void GetPropertyCore(PropertyValueInfo *info, ScriptContext *requestContext);
     public:
@@ -114,10 +149,10 @@ namespace Js
             }
         }
 
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var *value, PropertyValueInfo *info, ScriptContext *requestContext) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var *value, PropertyValueInfo *info, ScriptContext *requestContext) override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var *value, PropertyValueInfo *info, ScriptContext *requestContext) override;
-        virtual void InvalidateCachedScope() override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var *value, PropertyValueInfo *info, ScriptContext *requestContext) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var *value, PropertyValueInfo *info, ScriptContext *requestContext) override;
+        PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var *value, PropertyValueInfo *info, ScriptContext *requestContext) override;
+        void InvalidateCachedScope() override;
 
         bool IsCommitted() const { return committed; }
         void SetCommit(bool set) { committed = set; }

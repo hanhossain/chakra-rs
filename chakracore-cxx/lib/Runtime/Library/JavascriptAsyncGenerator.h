@@ -33,7 +33,14 @@ class JavascriptAsyncGenerator : public JavascriptGenerator
 
 private:
     DEFINE_VTABLE_CTOR(JavascriptAsyncGenerator, JavascriptGenerator);
-    DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptAsyncGenerator);
+    friend class Js::CrossSiteObject<JavascriptAsyncGenerator>;
+    void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+    {
+        Assert(this->GetScriptContext() != scriptContext);
+        AssertMsg(VirtualTableInfo<JavascriptAsyncGenerator>::HasVirtualTable(this),
+                  "Derived class need to define marshal to script context");
+        VirtualTableInfo<Js::CrossSiteObject<JavascriptAsyncGenerator>>::SetVirtualTable(this);
+    };
 
     typename WriteBarrierFieldTypeTraits<RequestQueue*>::Type requestQueue;
     typename WriteBarrierFieldTypeTraits<PendingState>::Type pendingState = PendingState::None;
@@ -115,7 +122,14 @@ class AsyncGeneratorCallbackFunction : public RuntimeFunction
 {
 protected:
     DEFINE_VTABLE_CTOR(AsyncGeneratorCallbackFunction, RuntimeFunction);
-    DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(AsyncGeneratorCallbackFunction);
+    friend class Js::CrossSiteObject<AsyncGeneratorCallbackFunction>;
+    void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+    {
+        Assert(this->GetScriptContext() != scriptContext);
+        AssertMsg(VirtualTableInfo<AsyncGeneratorCallbackFunction>::HasVirtualTable(this),
+                  "Derived class need to define marshal to script context");
+        VirtualTableInfo<Js::CrossSiteObject<AsyncGeneratorCallbackFunction>>::SetVirtualTable(this);
+    };
 
 public:
     AsyncGeneratorCallbackFunction(

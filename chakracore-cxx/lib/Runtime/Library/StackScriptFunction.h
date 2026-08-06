@@ -33,7 +33,7 @@ namespace Js
         // Defining this function also make the vtable unique, so that we can detect stack function
         // via the vtable
         DEFINE_VTABLE_CTOR(StackScriptFunction, ScriptFunction);
-        virtual void MarshalToScriptContext(Js::ScriptContext * scriptContext) override
+        void MarshalToScriptContext(Js::ScriptContext * scriptContext) override
         {
             Assert(false);
         }
@@ -79,8 +79,7 @@ namespace Js
         ScriptFunction * boxedScriptFunction;
 
     public:
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
-        {
+        VTableValue DummyVirtualFunctionToHinderLinkerICF() const override {
             return VTableValue::VtableStackScriptFunction;
         }
     };
