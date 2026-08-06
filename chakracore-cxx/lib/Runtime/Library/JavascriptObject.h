@@ -11,7 +11,14 @@ namespace Js
     {
     private:
         DEFINE_VTABLE_CTOR(JavascriptObject, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptObject);
+        friend class Js::CrossSiteObject<JavascriptObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptObject>>::SetVirtualTable(this);
+        };
     public:
         JavascriptObject(DynamicType* type)  : DynamicObject(type)
         {

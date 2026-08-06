@@ -26,22 +26,22 @@ namespace Js
         ModuleImportOrExportEntryList* GetLocalExportEntryList() const { return localExportRecordList; }
         ModuleImportOrExportEntryList* GetIndirectExportEntryList() const { return indirectExportRecordList; }
         ModuleImportOrExportEntryList* GetStarExportRecordList() const { return starExportRecordList; }
-        virtual ExportedNames* GetExportedNames(ExportModuleRecordList* exportStarSet) override;
-        virtual bool IsSourceTextModuleRecord() override { return true; } // we don't really have other kind of modulerecord at this time.
+        ExportedNames * GetExportedNames(ExportModuleRecordList* exportStarSet) override;
+        bool IsSourceTextModuleRecord() override { return true; } // we don't really have other kind of modulerecord at this time.
 
         // return false when "ambiguous".
         // otherwise nullptr means "null" where we have circular reference/cannot resolve.
         bool ResolveExport(PropertyId exportName, ResolveSet* resolveSet, ModuleNameRecord** exportRecord) override;
         bool ResolveImport(PropertyId localName, ModuleNameRecord** importRecord);
         bool ModuleDeclarationInstantiation() override;
-        void GenerateRootFunction();
+        void GenerateRootFunction() override;
         Var ModuleEvaluation() override;
         void FinishModuleEvaluation(bool shouldIncrementAwait);
         bool ModuleEvaluationPrepass();
         void DecrementAndEvaluateIfNothingAwaited();
         void PropogateRejection(Var reason);
-        virtual ModuleNamespace* GetNamespace();
-        virtual void SetNamespace(ModuleNamespace* moduleNamespace);
+        ModuleNamespace * GetNamespace() override;
+        void SetNamespace(ModuleNamespace* moduleNamespace) override;
 
         void Finalize(bool isShutdown) override;
         void Dispose(bool isShutdown) override { return; }
@@ -215,7 +215,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(AsyncModuleCallbackFunction, RuntimeFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(AsyncModuleCallbackFunction);
+        friend class Js::CrossSiteObject<AsyncModuleCallbackFunction>;
+        virtual void MarshalToScriptContext(Js::ScriptContext *scriptContext)
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<AsyncModuleCallbackFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<AsyncModuleCallbackFunction>>::SetVirtualTable(this);
+        };
 
     public:
         AsyncModuleCallbackFunction(

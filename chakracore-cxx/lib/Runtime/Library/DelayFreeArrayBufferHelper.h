@@ -98,13 +98,14 @@ namespace Js
     public:
         ArrayBufferContentForDelayedFree(RefCountedBuffer *content, uint32_t len, Recycler *r, FreeFN freeFunction)
             : ArrayBufferContentForDelayedFreeBase( content, len, r), freeFunction(freeFunction)
-        {}
+        {
+        }
 
-        virtual void FreeTheBuffer(void* buffer) override
+        void FreeTheBuffer(void* buffer) override
         {
             freeFunction(buffer);
         }
-        virtual void ClearSelfOnly() override
+        void ClearSelfOnly() override
         {
             HeapDelete(this);
         }

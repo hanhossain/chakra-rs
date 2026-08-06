@@ -67,11 +67,12 @@ namespace Js
             buffer(buffer),
             bufferLength(bufferLength),
             allocationType(allocationType)
-        {}
+        {
+        }
 
-        virtual void AddRefBufferContent() override;
+        void AddRefBufferContent() override;
 
-        virtual long ReleaseRefBufferContent() override;
+        long ReleaseRefBufferContent() override;
 
     protected:
         // Clean up all local state. Different subclasses use different cleanup mechanisms for the buffer allocation.

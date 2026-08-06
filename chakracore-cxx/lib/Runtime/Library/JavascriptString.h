@@ -105,26 +105,27 @@ namespace Js
         virtual int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const { return -1; }
         virtual bool IsTree() const { return false; }
 
-        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags propertyOperationFlags) override;
-        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags propertyOperationFlags) override;
-        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
-        virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
-        virtual BOOL IsEnumerable(PropertyId propertyId) override;
-        virtual BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags propertyOperationFlags) override;
-        virtual BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags propertyOperationFlags) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual RecyclableObject* ToObject(ScriptContext * requestContext) override;
-        virtual Var GetTypeOfString(ScriptContext * requestContext) override;
+        BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags propertyOperationFlags) override;
+        BOOL DeleteItem(uint32_t index, PropertyOperationFlags propertyOperationFlags) override;
+        PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
+        PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
+        BOOL IsEnumerable(PropertyId propertyId) override;
+        BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags propertyOperationFlags) override;
+        BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags propertyOperationFlags) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        RecyclableObject * ToObject(ScriptContext * requestContext) override;
+        Var GetTypeOfString(ScriptContext * requestContext) override;
         // should never be called, JavascriptConversion::ToPrimitive() short-circuits and returns input value
-        virtual BOOL ToPrimitive(JavascriptHint hint, Var* value, ScriptContext * requestContext) override { AssertMsg(false, "String ToPrimitive should not be called"); *value = this; return true;}
-        virtual RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
+        BOOL ToPrimitive(JavascriptHint hint, Var* value, ScriptContext * requestContext) override { AssertMsg(false, "String ToPrimitive should not be called"); *value = this; return true;
+        }
+        RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
 
         virtual BOOL BufferEquals(__in_ecount(otherLength) const char16_t* otherBuffer, charcount_t otherLength);
         char16_t* GetNormalizedString(PlatformAgnostic::UnicodeText::NormalizationForm, ArenaAllocator*, charcount_t&);

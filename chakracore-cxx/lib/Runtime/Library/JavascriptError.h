@@ -17,7 +17,14 @@ namespace Js
     class JavascriptError : public DynamicObject
     {
     private:
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptError);
+        friend class Js::CrossSiteObject<JavascriptError>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptError>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptError>>::SetVirtualTable(this);
+        };
 
         typename WriteBarrierFieldTypeTraits<ErrorTypeEnum>::Type m_errorType;
 
@@ -126,8 +133,8 @@ namespace Js
         BOOL IsPrototype() const { return isPrototype; }
         bool IsStackPropertyRedefined() const { return isStackPropertyRedefined; }
         void SetStackPropertyRedefined(const bool value) { isStackPropertyRedefined = value; }
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
         void SetJavascriptExceptionObject(JavascriptExceptionObject *exceptionObject)
         {

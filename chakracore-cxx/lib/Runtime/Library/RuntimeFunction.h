@@ -10,7 +10,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(RuntimeFunction, JavascriptFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(RuntimeFunction);
+        friend class Js::CrossSiteObject<RuntimeFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<RuntimeFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<RuntimeFunction>>::SetVirtualTable(this);
+        };
         RuntimeFunction(DynamicType * type);
     public:
         RuntimeFunction(DynamicType * type, FunctionInfo * functionInfo);
@@ -27,7 +34,7 @@ namespace Js
         // See RuntimeFunction::EnsureSourceString() for details.
         typename WriteBarrierFieldTypeTraits<bool>::Type isDisplayString;
         typename WriteBarrierFieldTypeTraits<Var>::Type functionNameId;
-        virtual Var GetSourceString() const { return functionNameId; }
-        virtual JavascriptString * EnsureSourceString();
+        Var GetSourceString() const override { return functionNameId; }
+        JavascriptString * EnsureSourceString() override;
     };
 };

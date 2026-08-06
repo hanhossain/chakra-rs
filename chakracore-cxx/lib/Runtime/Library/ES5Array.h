@@ -34,7 +34,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR(ES5Array, JavascriptArray);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ES5Array);
+        friend class Js::CrossSiteObject<ES5Array>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ES5Array>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ES5Array>>::SetVirtualTable(this);
+        };
 
     private:
         bool GetPropertyBuiltIns(PropertyId propertyId, Var* value, BOOL* result);
@@ -45,7 +52,7 @@ namespace Js
         static uint32_t ToLengthValue(Var value, ScriptContext* scriptContext);
         bool IsLengthWritable() const;
 
-        virtual DynamicType* DuplicateType() override;
+        DynamicType * DuplicateType() override;
 
         // Enumerate
         BOOL IsValidDescriptorToken(void * descriptorValidationToken) const;
@@ -55,46 +62,46 @@ namespace Js
         //
         // To skip JavascriptArray overrides
         //
-        virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
-        virtual BOOL IsWritable(PropertyId propertyId) override;
-        virtual BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetWritable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetAttributes(PropertyId propertyId, PropertyAttributes attributes) override;
+        PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
+        BOOL IsWritable(PropertyId propertyId) override;
+        BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
+        BOOL SetWritable(PropertyId propertyId, BOOL value) override;
+        BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
+        BOOL SetAttributes(PropertyId propertyId, PropertyAttributes attributes) override;
 
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
 
-        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
-        virtual DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
+        DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
 
-        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
+        DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
 
-        virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags) override;
-        virtual BOOL PreventExtensions() override;
-        virtual BOOL Seal() override;
-        virtual BOOL Freeze() override;
+        BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags) override;
+        BOOL PreventExtensions() override;
+        BOOL Seal() override;
+        BOOL Freeze() override;
 
-        virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
+        BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
 
         // objectArray support
-        virtual BOOL SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAttributes(uint32_t index, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAccessors(uint32_t index, Var getter, Var setter) override;
-        virtual BOOL IsObjectArrayFrozen() override;
-        virtual JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext* requestContext) override;
+        BOOL SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes) override;
+        BOOL SetItemAttributes(uint32_t index, PropertyAttributes attributes) override;
+        BOOL SetItemAccessors(uint32_t index, Var getter, Var setter) override;
+        BOOL IsObjectArrayFrozen() override;
+        JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext* requestContext) override;
 
         // for SCA
-        virtual BOOL IsItemEnumerable(uint32_t index) override;
+        BOOL IsItemEnumerable(uint32_t index) override;
     };
 
     template <> inline bool VarIsImpl<ES5Array>(RecyclableObject* instance)

@@ -37,14 +37,15 @@ namespace Js
         static Var OP_LdTrue(ScriptContext* scriptContext);
         static Var OP_LdFalse(ScriptContext* scriptContext);
 
-        virtual BOOL Equals(Var other, BOOL* value, ScriptContext * requestContext) override;
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual RecyclableObject* ToObject(ScriptContext * requestContext) override;
-        virtual Var GetTypeOfString(ScriptContext * requestContext) override;
+        BOOL Equals(Var other, BOOL* value, ScriptContext * requestContext) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        RecyclableObject * ToObject(ScriptContext * requestContext) override;
+        Var GetTypeOfString(ScriptContext * requestContext) override;
         // should never be called, JavascriptConversion::ToPrimitive() short-circuits and returns input value
-        virtual BOOL ToPrimitive(JavascriptHint hint, Var* value, ScriptContext* requestContext) override {AssertMsg(false, "Boolean ToPrimitive should not be called"); *value = this; return true;}
-        virtual RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
+        BOOL ToPrimitive(JavascriptHint hint, Var* value, ScriptContext* requestContext) override {AssertMsg(false, "Boolean ToPrimitive should not be called"); *value = this; return true;
+        }
+        RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
 
     public:
         virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()

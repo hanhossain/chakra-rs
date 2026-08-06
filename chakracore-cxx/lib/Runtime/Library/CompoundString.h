@@ -417,10 +417,10 @@ namespace Js
     private:
         void Unreference();
     public:
-        virtual const char16_t *GetSz() override;
+        const char16_t *GetSz() override;
         using JavascriptString::Copy;
-        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override;
-        virtual bool IsTree() const override;
+        void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override;
+        bool IsTree() const override;
 
     protected:
         DEFINE_VTABLE_CTOR(CompoundString, LiteralString);

@@ -11,7 +11,14 @@ namespace Js
     {
     protected:
         DEFINE_VTABLE_CTOR( WebAssemblyTable, DynamicObject );
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT( WebAssemblyTable );
+        friend class Js::CrossSiteObject<WebAssemblyTable>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<WebAssemblyTable>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<WebAssemblyTable>>::SetVirtualTable(this);
+        };
 #ifdef ENABLE_WASM
     public:
         class EntryInfo

@@ -15,7 +15,7 @@ protected:
 
     PropertyString(StaticType* type, const Js::PropertyRecord* propertyRecord);
 public:
-    virtual void GetPropertyRecord(_Out_ PropertyRecord const** propertyRecord, bool dontLookupFromDictionary = false) override
+    void GetPropertyRecord(_Out_ PropertyRecord const** propertyRecord, bool dontLookupFromDictionary = false) override
     {
         *propertyRecord = this->propertyRecordUsageCache.GetPropertyRecord();
     }
@@ -52,8 +52,8 @@ public:
 
     static PropertyString* New(StaticType* type, const Js::PropertyRecord* propertyRecord, Recycler *recycler);
 
-    virtual void const * GetOriginalStringReference() override;
-    virtual RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
+    void const * GetOriginalStringReference() override;
+    RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
 
     static uint32_t GetOffsetOfLdElemInlineCache() { return offsetof(PropertyString, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfLdElemInlineCache(); }
     static uint32_t GetOffsetOfStElemInlineCache() { return offsetof(PropertyString, propertyRecordUsageCache) + PropertyRecordUsageCache::GetOffsetOfStElemInlineCache(); }

@@ -52,7 +52,14 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<SetKind>::Type kind = SetKind::EmptySet;
 
         DEFINE_VTABLE_CTOR_MEMBER_INIT(JavascriptSet, DynamicObject, list);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptSet);
+        friend class Js::CrossSiteObject<JavascriptSet>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptSet>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptSet>>::SetVirtualTable(this);
+        };
 
         template <typename T>
         T* CreateVarSetFromList(uint initialCapacity);
@@ -84,7 +91,7 @@ namespace Js
 
         SetDataList::Iterator GetIterator();
 
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
         class EntryInfo
         {

@@ -21,8 +21,8 @@ class JsrtContextCore : public JsrtContext
 {
 public:
     static JsrtContextCore *New(JsrtRuntime * runtime);
-    virtual void Finalize(bool isShutdown) override;
-    virtual void Dispose(bool isShutdown) override;
+    void Finalize(bool isShutdown) override;
+    void Dispose(bool isShutdown) override;
     ChakraCoreHostScriptContext* GetHostScriptContext() const { return hostContext; }
 
     void OnScriptLoad(Js::JavascriptFunction * scriptFunction, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException);
@@ -65,8 +65,8 @@ public:
     JsErrorCode SetTransferableVars(JsValueRef *transferableVars, size_t transferableVarsCount);
     void FreeSelf();
 
-    virtual bool WriteHostObject(void* data) override;
-    virtual byte * ExtendBuffer(byte *oldBuffer, size_t newSize, size_t *allocatedSize) override;
+    bool WriteHostObject(void* data) override;
+    byte * ExtendBuffer(byte *oldBuffer, size_t newSize, size_t *allocatedSize) override;
 };
 
 class ChakraHostDeserializerHandle : public HostReadStream
@@ -91,7 +91,7 @@ public:
     JsValueRef ReadValue();
     void FreeSelf();
 
-    virtual Js::Var ReadHostObject() override;
+    Js::Var ReadHostObject() override;
 
 };
 
@@ -111,50 +111,45 @@ public:
     {
     }
 
-    virtual void Delete()
-    {
+    void Delete() override {
         HeapDelete(this);
     }
 
-    int32_t GetPreviousHostScriptContext(__deref_out HostScriptContext** previousScriptSite)
+    int32_t GetPreviousHostScriptContext(__deref_out HostScriptContext** previousScriptSite) override
     {
         *previousScriptSite = GetScriptContext()->GetThreadContext()->GetPreviousHostScriptContext();
         return NOERROR;
     }
 
-    int32_t SetCaller(IUnknown *punkNew, IUnknown **ppunkPrev)
-    {
+    int32_t SetCaller(IUnknown *punkNew, IUnknown **ppunkPrev) override {
         return NOERROR;
     }
 
-    BOOL HasCaller()
-    {
+    BOOL HasCaller() override {
         return FALSE;
     }
 
-    int32_t PushHostScriptContext()
+    int32_t PushHostScriptContext() override
     {
         GetScriptContext()->GetThreadContext()->PushHostScriptContext(this);
         return NOERROR;
     }
 
-    void PopHostScriptContext()
-    {
+    void PopHostScriptContext() override {
         GetScriptContext()->GetThreadContext()->PopHostScriptContext();
     }
 
-    int32_t GetDispatchExCaller(_Outptr_result_maybenull_ void** dispatchExCaller)
+    int32_t GetDispatchExCaller(_Outptr_result_maybenull_ void** dispatchExCaller) override
     {
         *dispatchExCaller = nullptr;
         return NOERROR;
     }
 
-    void ReleaseDispatchExCaller(void* dispatchExCaller)
-    {
+    void ReleaseDispatchExCaller(void* dispatchExCaller) override {
         return;
     }
 
-    Js::ModuleRoot * GetModuleRoot(int moduleID)
+    Js::ModuleRoot * GetModuleRoot(int moduleID) override
     {
         Assert(false);
         return nullptr;

@@ -11,7 +11,14 @@ namespace Js
         friend ArrayBuffer;
     protected:
         DEFINE_VTABLE_CTOR(DataView, ArrayBufferParent);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(DataView);
+        friend class Js::CrossSiteObject<DataView>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<DataView>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<DataView>>::SetVirtualTable(this);
+        };
     public:
         class EntryInfo
         {
@@ -68,8 +75,8 @@ namespace Js
         static Var EntryGetterByteOffset(RecyclableObject* function, CallInfo callInfo, ...);
 
         // objectArray support
-        virtual BOOL SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes) override;
-        virtual JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext * requestContext) override
+        BOOL SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes) override;
+        JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext * requestContext) override
         {
             // Data View can not be an objectArray
             Assert(false);

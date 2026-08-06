@@ -163,47 +163,47 @@ namespace Js
         BOOL GetItemAccessors(ES5Array* arr, DynamicObject* instance, uint32_t index, Var* getter, Var* setter);
 
     public:
-        virtual DynamicTypeHandler * Clone(Recycler * recyler);
-        virtual BOOL HasProperty(DynamicObject* instance, PropertyId propertyId, bool *noRedecl = nullptr, _Inout_opt_ PropertyValueInfo* info = nullptr) override;
-        virtual BOOL HasProperty(DynamicObject* instance, JavascriptString* propertyNameString) override;
-        virtual BOOL GetProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL GetProperty(DynamicObject* instance, Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(DynamicObject* instance, JavascriptString* propertyNameString, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL DeleteProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags flags) override;
+        DynamicTypeHandler * Clone(Recycler * recyler) override;
+        BOOL HasProperty(DynamicObject* instance, PropertyId propertyId, bool *noRedecl = nullptr, _Inout_opt_ PropertyValueInfo* info = nullptr) override;
+        BOOL HasProperty(DynamicObject* instance, JavascriptString* propertyNameString) override;
+        BOOL GetProperty(DynamicObject* instance, Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL GetProperty(DynamicObject* instance, Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(DynamicObject* instance, PropertyId propertyId, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(DynamicObject* instance, JavascriptString* propertyNameString, Var* setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL DeleteProperty(DynamicObject* instance, PropertyId propertyId, PropertyOperationFlags flags) override;
 
-        virtual BOOL HasItem(DynamicObject* instance, uint32_t index) override;
-        virtual BOOL SetItem(DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL SetItemWithAttributes(DynamicObject* instance, uint32_t index, Var value, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAttributes(DynamicObject* instance, uint32_t index, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAccessors(DynamicObject* instance, uint32_t index, Var getter, Var setter) override;
-        virtual BOOL DeleteItem(DynamicObject* instance, uint32_t index, PropertyOperationFlags flags) override;
-        virtual BOOL GetItem(DynamicObject* instance, Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetItemSetter(DynamicObject* instance, uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
-        virtual BOOL IsEnumerable(DynamicObject* instance, PropertyId propertyId) override;
-        virtual BOOL IsWritable(DynamicObject* instance, PropertyId propertyId) override;
-        virtual BOOL IsConfigurable(DynamicObject* instance, PropertyId propertyId) override;
-        virtual BOOL SetEnumerable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetWritable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetConfigurable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
-        _Check_return_ _Success_(return) virtual BOOL GetAccessors(DynamicObject* instance, PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter) override;
-        virtual BOOL Seal(DynamicObject* instance) override;
-        virtual BOOL IsSealed(DynamicObject* instance) override;
-        virtual BOOL IsFrozen(DynamicObject* instance) override;
-        virtual BOOL SetAttributes(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attributes) override;
+        BOOL HasItem(DynamicObject* instance, uint32_t index) override;
+        BOOL SetItem(DynamicObject* instance, uint32_t index, Var value, PropertyOperationFlags flags) override;
+        BOOL SetItemWithAttributes(DynamicObject* instance, uint32_t index, Var value, PropertyAttributes attributes) override;
+        BOOL SetItemAttributes(DynamicObject* instance, uint32_t index, PropertyAttributes attributes) override;
+        BOOL SetItemAccessors(DynamicObject* instance, uint32_t index, Var getter, Var setter) override;
+        BOOL DeleteItem(DynamicObject* instance, uint32_t index, PropertyOperationFlags flags) override;
+        BOOL GetItem(DynamicObject* instance, Var originalInstance, uint32_t index, Var* value, ScriptContext* requestContext) override;
+        DescriptorFlags GetItemSetter(DynamicObject* instance, uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
+        BOOL IsEnumerable(DynamicObject* instance, PropertyId propertyId) override;
+        BOOL IsWritable(DynamicObject* instance, PropertyId propertyId) override;
+        BOOL IsConfigurable(DynamicObject* instance, PropertyId propertyId) override;
+        BOOL SetEnumerable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
+        BOOL SetWritable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
+        BOOL SetConfigurable(DynamicObject* instance, PropertyId propertyId, BOOL value) override;
+        _Check_return_ _Success_(return) BOOL GetAccessors(DynamicObject* instance, PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter) override;
+        BOOL Seal(DynamicObject* instance) override;
+        BOOL IsSealed(DynamicObject* instance) override;
+        BOOL IsFrozen(DynamicObject* instance) override;
+        BOOL SetAttributes(DynamicObject* instance, PropertyId propertyId, PropertyAttributes attributes) override;
 
-        virtual bool IsLengthWritable() const override;
-        virtual uint32_t SetLength(ES5Array* arr, uint32_t newLen, PropertyOperationFlags propertyOperationFlags) override;
-        virtual BOOL IsObjectArrayFrozen(ES5Array* arr) override;
-        virtual BOOL IsItemEnumerable(ES5Array* arr, uint32_t index) override;
-        virtual BOOL IsValidDescriptorToken(void * descriptorValidationToken) const override;
-        virtual uint32_t GetNextDescriptor(uint32_t key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken) override;
-        virtual BOOL GetDescriptor(uint32_t index, Js::IndexPropertyDescriptor **ppDescriptor) override;
+        bool IsLengthWritable() const override;
+        uint32_t SetLength(ES5Array* arr, uint32_t newLen, PropertyOperationFlags propertyOperationFlags) override;
+        BOOL IsObjectArrayFrozen(ES5Array* arr) override;
+        BOOL IsItemEnumerable(ES5Array* arr, uint32_t index) override;
+        BOOL IsValidDescriptorToken(void * descriptorValidationToken) const override;
+        uint32_t GetNextDescriptor(uint32_t key, IndexPropertyDescriptor** descriptor, void ** descriptorValidationToken) override;
+        BOOL GetDescriptor(uint32_t index, Js::IndexPropertyDescriptor **ppDescriptor) override;
 
-        virtual void SetIsPrototype(DynamicObject* instance) override;
+        void SetIsPrototype(DynamicObject* instance) override;
     private:
-        virtual BOOL FreezeImpl(DynamicObject* instance, bool isConvertedType) override;
-        virtual BigDictionaryTypeHandler* NewBigDictionaryTypeHandler(Recycler* recycler, int slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots) override;
+        BOOL FreezeImpl(DynamicObject* instance, bool isConvertedType) override;
+        BigDictionaryTypeHandler * NewBigDictionaryTypeHandler(Recycler* recycler, int slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots) override;
 
 #if DBG_DUMP
     public:

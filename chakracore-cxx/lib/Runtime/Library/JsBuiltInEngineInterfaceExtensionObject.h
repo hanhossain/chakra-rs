@@ -18,7 +18,7 @@ namespace Js
     {
     public:
         JsBuiltInEngineInterfaceExtensionObject(ScriptContext* scriptContext);
-        void Initialize();
+        void Initialize() override;
         void InitializePrototypes(ScriptContext * scriptContext);
         void InjectJsBuiltInLibraryCode(ScriptContext * scriptContext, JsBuiltInFile file);
 

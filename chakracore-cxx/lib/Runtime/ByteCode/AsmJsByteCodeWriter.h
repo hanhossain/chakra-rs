@@ -8,8 +8,10 @@
 #ifndef WASM_BYTECODE_WRITER
 #define ASMJS_BYTECODE_WRITER_H
 #define IMP_IWASM
+#define IMP_IWASM_OVERRIDE
 #else
 #define IMP_IWASM virtual
+#define IMP_IWASM_OVERRIDE override
 #endif
 
 #if defined(ASMJS_PLAT) || defined(ENABLE_WASM)
@@ -24,35 +26,35 @@ namespace Js
         using ByteCodeWriter::MarkLabel;
 
     public:
-        IMP_IWASM void InitData(ArenaAllocator* alloc, int32_t initCodeBufferSize);
-        IMP_IWASM void EmptyAsm(OpCodeAsmJs op);
-        IMP_IWASM void Conv(OpCodeAsmJs op, RegSlot R0, RegSlot R1);
-        IMP_IWASM void AsmInt1Const1(OpCodeAsmJs op, RegSlot R0, int C1);
-        IMP_IWASM void AsmReg1IntConst1(OpCodeAsmJs op, RegSlot R0, int C1);
-        IMP_IWASM void AsmLong1Const1(OpCodeAsmJs op, RegSlot R0, long C1);
-        IMP_IWASM void AsmFloat1Const1(OpCodeAsmJs op, RegSlot R0, float C1);
-        IMP_IWASM void AsmDouble1Const1(OpCodeAsmJs op, RegSlot R0, double C1);
-        IMP_IWASM void AsmReg1(OpCodeAsmJs op, RegSlot R0);
-        IMP_IWASM void AsmReg2(OpCodeAsmJs op, RegSlot R0, RegSlot R1);
-        IMP_IWASM void AsmReg3(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2);
-        IMP_IWASM void AsmBr(ByteCodeLabel labelID, OpCodeAsmJs op = OpCodeAsmJs::AsmBr);
-        IMP_IWASM void AsmBrReg1(OpCodeAsmJs op, ByteCodeLabel labelID, RegSlot R1);
-        IMP_IWASM void AsmBrReg1Const1(OpCodeAsmJs op, ByteCodeLabel labelID, RegSlot R1, int C1);
-        IMP_IWASM void AsmStartCall(OpCodeAsmJs op, ArgSlot ArgCount, bool isPatching = false);
-        IMP_IWASM void AsmCall(OpCodeAsmJs op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, AsmJsRetType retType, ProfileId profileId);
-        IMP_IWASM void AsmSlot(OpCodeAsmJs op, RegSlot value, RegSlot instance, uint32_t slotId);
-        IMP_IWASM void WasmMemAccess(OpCodeAsmJs op, RegSlot value, uint32_t slotIndex, uint32_t offset, ArrayBufferView::ViewType viewType);
+        IMP_IWASM void InitData(ArenaAllocator* alloc, int32_t initCodeBufferSize) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void EmptyAsm(OpCodeAsmJs op) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void Conv(OpCodeAsmJs op, RegSlot R0, RegSlot R1) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmInt1Const1(OpCodeAsmJs op, RegSlot R0, int C1) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmReg1IntConst1(OpCodeAsmJs op, RegSlot R0, int C1) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmLong1Const1(OpCodeAsmJs op, RegSlot R0, long C1) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmFloat1Const1(OpCodeAsmJs op, RegSlot R0, float C1) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmDouble1Const1(OpCodeAsmJs op, RegSlot R0, double C1) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmReg1(OpCodeAsmJs op, RegSlot R0) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmReg2(OpCodeAsmJs op, RegSlot R0, RegSlot R1) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmReg3(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmBr(ByteCodeLabel labelID, OpCodeAsmJs op = OpCodeAsmJs::AsmBr) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmBrReg1(OpCodeAsmJs op, ByteCodeLabel labelID, RegSlot R1) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmBrReg1Const1(OpCodeAsmJs op, ByteCodeLabel labelID, RegSlot R1, int C1) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmStartCall(OpCodeAsmJs op, ArgSlot ArgCount, bool isPatching = false) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmCall(OpCodeAsmJs op, RegSlot returnValueRegister, RegSlot functionRegister, ArgSlot givenArgCount, AsmJsRetType retType, ProfileId profileId) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmSlot(OpCodeAsmJs op, RegSlot value, RegSlot instance, uint32_t slotId) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void WasmMemAccess(OpCodeAsmJs op, RegSlot value, uint32_t slotIndex, uint32_t offset, ArrayBufferView::ViewType viewType) IMP_IWASM_OVERRIDE;
 
-        IMP_IWASM void MarkAsmJsLabel(ByteCodeLabel labelID);
-        IMP_IWASM void ExitLoop(uint loopId);
-        IMP_IWASM void AsmReg4(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3);
-        IMP_IWASM void AsmReg5(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, RegSlot R4);
-        IMP_IWASM void AsmReg9(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, RegSlot R4, RegSlot R5, RegSlot R6, RegSlot R7, RegSlot R8);
+        IMP_IWASM void MarkAsmJsLabel(ByteCodeLabel labelID) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void ExitLoop(uint loopId) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmReg4(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmReg5(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, RegSlot R4) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmReg9(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, RegSlot R4, RegSlot R5, RegSlot R6, RegSlot R7, RegSlot R8) IMP_IWASM_OVERRIDE;
         IMP_IWASM void AsmReg17(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, RegSlot R3, RegSlot R4, RegSlot R5, RegSlot R6, RegSlot R7, RegSlot R8,
-            RegSlot R9, RegSlot R10, RegSlot R11, RegSlot R12, RegSlot R13, RegSlot R14, RegSlot R15, RegSlot R16);
-        IMP_IWASM void AsmShuffle(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, uint8_t indices[]);
-        IMP_IWASM void AsmSimdTypedArr(OpCodeAsmJs op, RegSlot value, uint32_t slotIndex, uint8_t dataWidth, ArrayBufferView::ViewType viewType, uint32_t offset = 0);
-        IMP_IWASM void WasmSimdConst(OpCodeAsmJs op, RegSlot R0, int C0, int C1, int C2, int C3);
+            RegSlot R9, RegSlot R10, RegSlot R11, RegSlot R12, RegSlot R13, RegSlot R14, RegSlot R15, RegSlot R16) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmShuffle(OpCodeAsmJs op, RegSlot R0, RegSlot R1, RegSlot R2, uint8_t indices[]) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void AsmSimdTypedArr(OpCodeAsmJs op, RegSlot value, uint32_t slotIndex, uint8_t dataWidth, ArrayBufferView::ViewType viewType, uint32_t offset = 0) IMP_IWASM_OVERRIDE;
+        IMP_IWASM void WasmSimdConst(OpCodeAsmJs op, RegSlot R0, int C0, int C1, int C2, int C3) IMP_IWASM_OVERRIDE;
 
 #ifdef WASM_BYTECODE_WRITER
         // We don't want to expose api not in IWasmByteCodeWriter, but it's easier to compile them anyway
@@ -127,6 +129,7 @@ namespace Js
     };
 }
 
+#undef IMP_IWASM_OVERRIDE
 #undef IMP_IWASM
 #endif
 

@@ -33,7 +33,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(FunctionWithComputedName<BaseClass>, BaseClass);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(FunctionWithComputedName<BaseClass>);
+        friend class Js::CrossSiteObject<FunctionWithComputedName<BaseClass>>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<FunctionWithComputedName<BaseClass>>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<FunctionWithComputedName<BaseClass>>>::SetVirtualTable(this);
+        };
     public:
         FunctionWithComputedName(FunctionProxy * proxy, ScriptFunctionType* deferredPrototypeType)
             : BaseClass(proxy, deferredPrototypeType), computedNameVar(nullptr)
@@ -42,7 +49,7 @@ namespace Js
         }
         virtual Var GetComputedNameVar() const override { return this->computedNameVar; }
         virtual void SetComputedNameVar(Var computedNameVar) override;
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF() const;
+        VTableValue DummyVirtualFunctionToHinderLinkerICF() const override;
     };
 
     template <class BaseClass>
@@ -52,7 +59,14 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<Var>::Type homeObj;
     protected:
         DEFINE_VTABLE_CTOR(FunctionWithHomeObj<BaseClass>, BaseClass);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(FunctionWithHomeObj<BaseClass>);
+        friend class Js::CrossSiteObject<FunctionWithHomeObj<BaseClass>>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<FunctionWithHomeObj<BaseClass>>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<FunctionWithHomeObj<BaseClass>>>::SetVirtualTable(this);
+        };
     public:
         FunctionWithHomeObj(FunctionProxy* proxy, ScriptFunctionType* deferredPrototypeType)
             : BaseClass(proxy, deferredPrototypeType), homeObj(nullptr)
@@ -62,7 +76,7 @@ namespace Js
         virtual Var GetHomeObj() const override { return homeObj; }
         virtual void SetHomeObj(Var homeObj) override { this->homeObj = homeObj; }
         static uint32_t GetOffsetOfHomeObj() { return  offsetof(FunctionWithHomeObj<BaseClass>, homeObj); }
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF() const;
+        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF() const override;
     };
 
     class ScriptFunction : public ScriptFunctionBase
@@ -76,7 +90,14 @@ namespace Js
         static bool GetSymbolName(Var computedNameVar, const char16_t** symbolName, charcount_t *length);
     protected:
         DEFINE_VTABLE_CTOR(ScriptFunction, ScriptFunctionBase);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ScriptFunction);
+        friend class Js::CrossSiteObject<ScriptFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ScriptFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ScriptFunction>>::SetVirtualTable(this);
+        };
     public:
         ScriptFunction(FunctionProxy * proxy, ScriptFunctionType* deferredPrototypeType);
         inline static BOOL Test(JavascriptFunction *func) { return func->IsScriptFunction(); }
@@ -112,25 +133,25 @@ namespace Js
         bool IsNewEntryPointAvailable();
         JavascriptMethod UpdateUndeferredBody(FunctionBody* newFunctionInfo);
 
-        virtual ScriptFunctionType * DuplicateType() override;
-        virtual void PrepareForConversionToNonPathType() override;
-        virtual void ReplaceTypeWithPredecessorType(DynamicType * previousType) override;
+        ScriptFunctionType * DuplicateType() override;
+        void PrepareForConversionToNonPathType() override;
+        void ReplaceTypeWithPredecessorType(DynamicType * previousType) override;
 
-        virtual Var GetSourceString() const;
-        virtual JavascriptString * EnsureSourceString();
+        Var GetSourceString() const override;
+        JavascriptString * EnsureSourceString() override;
 
         bool GetHasInlineCaches() { return hasInlineCaches; }
         void SetHasInlineCaches(bool has) { hasInlineCaches = has; }
 
         bool HasSuperReference();
 
-        virtual Var GetHomeObj() const override { return nullptr; }
-        virtual void SetHomeObj(Var homeObj) override { AssertMsg(false, "Should have created FunctionWithHomeObj variant"); }
+        Var GetHomeObj() const override { return nullptr; }
+        void SetHomeObj(Var homeObj) override { AssertMsg(false, "Should have created FunctionWithHomeObj variant"); }
 
-        virtual Var GetComputedNameVar() const override { return nullptr; }
-        virtual void SetComputedNameVar(Var computedNameVar) override { AssertMsg(false, "Should have created the FunctionWithComputedName variant"); }
-        virtual JavascriptString* GetDisplayNameImpl() const override;
-        virtual bool IsAnonymousFunction() const override;
+        Var GetComputedNameVar() const override { return nullptr; }
+        void SetComputedNameVar(Var computedNameVar) override { AssertMsg(false, "Should have created the FunctionWithComputedName variant"); }
+        JavascriptString * GetDisplayNameImpl() const override;
+        bool IsAnonymousFunction() const override;
         virtual bool IsAsmJsFunction() const { return false; }
         virtual bool IsWasmFunction() const { return false; }
 
@@ -139,8 +160,7 @@ namespace Js
         bool HasFunctionBody();
 
     public:
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
-        {
+        VTableValue DummyVirtualFunctionToHinderLinkerICF() const override {
             return VTableValue::VtableScriptFunction;
         }
     };
@@ -160,7 +180,7 @@ namespace Js
 
         static AsmJsScriptFunction * OP_NewAsmJsFunc(FrameDisplay *environment, FunctionInfoPtrPtr infoRef);
 
-        virtual bool IsAsmJsFunction() const override { return true; }
+        bool IsAsmJsFunction() const override { return true; }
 
         void SetModuleEnvironment(typename WriteBarrierFieldTypeTraits<Var>::Type* mem) { m_moduleEnvironment = mem; }
         typename WriteBarrierFieldTypeTraits<Var>::Type* GetModuleEnvironment() const { return m_moduleEnvironment; }
@@ -169,7 +189,14 @@ namespace Js
         class JavascriptArrayBuffer* GetAsmJsArrayBuffer() const;
     protected:
         DEFINE_VTABLE_CTOR(AsmJsScriptFunction, ScriptFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(AsmJsScriptFunction);
+        friend class Js::CrossSiteObject<AsmJsScriptFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<AsmJsScriptFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<AsmJsScriptFunction>>::SetVirtualTable(this);
+        };
 
     private:
         typename WriteBarrierFieldTypeTraits<typename WriteBarrierFieldTypeTraits<Var>::Type*>::Type m_moduleEnvironment;
@@ -194,10 +221,17 @@ namespace Js
 
         WebAssemblyMemory* GetWebAssemblyMemory() const;
 
-        virtual bool IsWasmFunction() const override { return true; }
+        bool IsWasmFunction() const override { return true; }
     protected:
         DEFINE_VTABLE_CTOR(WasmScriptFunction, AsmJsScriptFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(WasmScriptFunction);
+        friend class Js::CrossSiteObject<WasmScriptFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<WasmScriptFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<WasmScriptFunction>>::SetVirtualTable(this);
+        };
     private:
         typename WriteBarrierFieldTypeTraits<Wasm::WasmSignature *>::Type m_signature;
     };
@@ -234,7 +268,14 @@ namespace Js
         ScriptFunctionWithInlineCache(DynamicType * type);
 
         DEFINE_VTABLE_CTOR(ScriptFunctionWithInlineCache, ScriptFunction);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ScriptFunctionWithInlineCache);
+        friend class Js::CrossSiteObject<ScriptFunctionWithInlineCache>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ScriptFunctionWithInlineCache>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ScriptFunctionWithInlineCache>>::SetVirtualTable(this);
+        };
 
     public:
         ScriptFunctionWithInlineCache(FunctionProxy * proxy, ScriptFunctionType* deferredPrototypeType);
@@ -247,7 +288,7 @@ namespace Js
         static uint32_t GetOffsetOfInlineCaches() { return offsetof(ScriptFunctionWithInlineCache, m_inlineCaches); };
         template<bool isShutdown>
         void FreeOwnInlineCaches();
-        virtual void Finalize(bool isShutdown) override;
+        void Finalize(bool isShutdown) override;
     };
 
     template <> inline bool VarIsImpl<ScriptFunctionWithInlineCache>(RecyclableObject* obj)

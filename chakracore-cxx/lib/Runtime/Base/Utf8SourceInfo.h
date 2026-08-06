@@ -270,9 +270,9 @@ namespace Js
             return (s1 == s2) || s1->GetSourceHolder()->Equals(s2->GetSourceHolder());
         }
 
-        virtual void Finalize(bool isShutdown) override { /* nothing */ }
-        virtual void Dispose(bool isShutdown) override;
-        virtual void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
+        void Finalize(bool isShutdown) override { /* nothing */ }
+        void Dispose(bool isShutdown) override;
+        void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
 
         static Utf8SourceInfo* NewWithHolder(ScriptContext* scriptContext,
             ISourceHolder* sourceHolder, int32_t length, SRCINFO const* srcInfo,

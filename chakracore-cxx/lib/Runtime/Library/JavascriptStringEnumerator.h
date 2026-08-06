@@ -16,8 +16,8 @@ namespace Js
 
     public:
         JavascriptStringEnumerator(JavascriptString* stringObject, ScriptContext * requestContext);
-        virtual void Reset() override;
-        virtual JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) override;
-        virtual uint32_t GetCurrentItemIndex()  override { return index; }
+        void Reset() override;
+        JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) override;
+        uint32_t GetCurrentItemIndex()  override { return index; }
     };
 }

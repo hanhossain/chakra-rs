@@ -29,9 +29,9 @@ namespace Js
         Js::RootObjectInlineCache * GetRootInlineCache(Js::PropertyRecord const* propertyRecord, bool isLoadMethod, bool isStore);
         uint ReleaseInlineCache(PropertyId propertyId, bool isLoadMethod, bool isStore, bool isShutdown);
 
-        virtual BOOL EnsureProperty(PropertyId propertyId) override;
-        virtual BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
-        virtual BOOL HasOwnPropertyCheckNoRedecl(PropertyId propertyId) override;
+        BOOL EnsureProperty(PropertyId propertyId) override;
+        BOOL EnsureNoRedeclProperty(PropertyId propertyId) override;
+        BOOL HasOwnPropertyCheckNoRedecl(PropertyId propertyId) override;
         void EnsureCanDeclGloFunc(PropertyId propertyId);
 
         // These are special "Root" versions of the property APIs that allow access

@@ -15,7 +15,14 @@ namespace Js
         bool __proto__Enabled; // Now only used by diagnostics to decide display __proto__ or [prototype]
 
         DEFINE_VTABLE_CTOR(ObjectPrototypeObject, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ObjectPrototypeObject);
+        friend class Js::CrossSiteObject<ObjectPrototypeObject>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ObjectPrototypeObject>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ObjectPrototypeObject>>::SetVirtualTable(this);
+        };
 
     public:
         ObjectPrototypeObject(DynamicType* type);
@@ -31,13 +38,13 @@ namespace Js
         static Var Entry__proto__getter(RecyclableObject* function, CallInfo callInfo, ...);
         static Var Entry__proto__setter(RecyclableObject* function, CallInfo callInfo, ...);
 
-        virtual BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
+        BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
+        BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
 
         // Indicates if __proto__ is enabled currently (note that it can be disabled and re-enabled),
         // only useful for diagnostics to decide displaying __proto__ or [prototype].
         bool is__proto__Enabled() const { return __proto__Enabled; }
-        BOOL IsProtoImmutable() const { return true; }
+        BOOL IsProtoImmutable() const override { return true; }
 
         void PostDefineOwnProperty__proto__(RecyclableObject* obj);
     };

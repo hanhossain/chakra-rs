@@ -50,7 +50,14 @@ class JsrtExternalObject : public Js::DynamicObject
 {
 protected:
     DEFINE_VTABLE_CTOR(JsrtExternalObject, Js::DynamicObject);
-    DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JsrtExternalObject);
+    friend class Js::CrossSiteObject<JsrtExternalObject>;
+    void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+    {
+        Assert(this->GetScriptContext() != scriptContext);
+        AssertMsg(VirtualTableInfo<JsrtExternalObject>::HasVirtualTable(this),
+                  "Derived class need to define marshal to script context");
+        VirtualTableInfo<Js::CrossSiteObject<JsrtExternalObject>>::SetVirtualTable(this);
+    };
 
 public:
     JsrtExternalObject(JsrtExternalType * type, void *data, uint inlineSlotSize);

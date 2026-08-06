@@ -825,7 +825,7 @@ private:
         DateTime::DaylightTimeHelper *GetDaylightTimeHelper() { return &daylightTimeHelper; }
         DateTime::Utility *GetDateUtility() { return &dateTimeUtility; }
 
-        virtual bool IsClosed() const override { return isClosed; }
+        bool IsClosed() const override { return isClosed; }
         void SetIsClosed();
 
         bool IsFinalized() const { return isFinalized; }
@@ -1478,55 +1478,55 @@ private:
 #endif
 
     public:
-        virtual intptr_t GetNullAddr() const override;
-        virtual intptr_t GetUndefinedAddr() const override;
-        virtual intptr_t GetTrueAddr() const override;
-        virtual intptr_t GetFalseAddr() const override;
-        virtual intptr_t GetUndeclBlockVarAddr() const override;
-        virtual intptr_t GetEmptyStringAddr() const override;
-        virtual intptr_t GetNegativeZeroAddr() const override;
-        virtual intptr_t GetNumberTypeStaticAddr() const override;
-        virtual intptr_t GetStringTypeStaticAddr() const override;
-        virtual intptr_t GetSymbolTypeStaticAddr() const override;
-        virtual intptr_t GetObjectTypeAddr() const override;
-        virtual intptr_t GetObjectHeaderInlinedTypeAddr() const override;
-        virtual intptr_t GetRegexTypeAddr() const override;
-        virtual intptr_t GetArrayTypeAddr() const override;
-        virtual intptr_t GetNativeIntArrayTypeAddr() const override;
-        virtual intptr_t GetNativeFloatArrayTypeAddr() const override;
-        virtual intptr_t GetArrayConstructorAddr() const override;
-        virtual intptr_t GetCharStringCacheAddr() const override;
-        virtual intptr_t GetSideEffectsAddr() const override;
-        virtual intptr_t GetArraySetElementFastPathVtableAddr() const override;
-        virtual intptr_t GetIntArraySetElementFastPathVtableAddr() const override;
-        virtual intptr_t GetFloatArraySetElementFastPathVtableAddr() const override;
-        virtual intptr_t GetLibraryAddr() const override;
-        virtual intptr_t GetGlobalObjectAddr() const override;
-        virtual intptr_t GetGlobalObjectThisAddr() const override;
-        virtual intptr_t GetObjectPrototypeAddr() const;
-        virtual intptr_t GetFunctionPrototypeAddr() const;
-        virtual intptr_t GetNumberAllocatorAddr() const override;
-        virtual intptr_t GetRecyclerAddr() const override;
-        virtual bool GetRecyclerAllowNativeCodeBumpAllocation() const override;
-        virtual bool IsPRNGSeeded() const override;
-        virtual intptr_t GetBuiltinFunctionsBaseAddr() const override;
+        intptr_t GetNullAddr() const override;
+        intptr_t GetUndefinedAddr() const override;
+        intptr_t GetTrueAddr() const override;
+        intptr_t GetFalseAddr() const override;
+        intptr_t GetUndeclBlockVarAddr() const override;
+        intptr_t GetEmptyStringAddr() const override;
+        intptr_t GetNegativeZeroAddr() const override;
+        intptr_t GetNumberTypeStaticAddr() const override;
+        intptr_t GetStringTypeStaticAddr() const override;
+        intptr_t GetSymbolTypeStaticAddr() const override;
+        intptr_t GetObjectTypeAddr() const override;
+        intptr_t GetObjectHeaderInlinedTypeAddr() const override;
+        intptr_t GetRegexTypeAddr() const override;
+        intptr_t GetArrayTypeAddr() const override;
+        intptr_t GetNativeIntArrayTypeAddr() const override;
+        intptr_t GetNativeFloatArrayTypeAddr() const override;
+        intptr_t GetArrayConstructorAddr() const override;
+        intptr_t GetCharStringCacheAddr() const override;
+        intptr_t GetSideEffectsAddr() const override;
+        intptr_t GetArraySetElementFastPathVtableAddr() const override;
+        intptr_t GetIntArraySetElementFastPathVtableAddr() const override;
+        intptr_t GetFloatArraySetElementFastPathVtableAddr() const override;
+        intptr_t GetLibraryAddr() const override;
+        intptr_t GetGlobalObjectAddr() const override;
+        intptr_t GetGlobalObjectThisAddr() const override;
+        intptr_t GetObjectPrototypeAddr() const override;
+        intptr_t GetFunctionPrototypeAddr() const override;
+        intptr_t GetNumberAllocatorAddr() const override;
+        intptr_t GetRecyclerAddr() const override;
+        bool GetRecyclerAllowNativeCodeBumpAllocation() const override;
+        bool IsPRNGSeeded() const override;
+        intptr_t GetBuiltinFunctionsBaseAddr() const override;
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
-        virtual intptr_t GetDebuggingFlagsAddr() const override;
-        virtual intptr_t GetDebugStepTypeAddr() const override;
-        virtual intptr_t GetDebugFrameAddressAddr() const override;
-        virtual intptr_t GetDebugScriptIdWhenSetAddr() const override;
+        intptr_t GetDebuggingFlagsAddr() const override;
+        intptr_t GetDebugStepTypeAddr() const override;
+        intptr_t GetDebugFrameAddressAddr() const override;
+        intptr_t GetDebugScriptIdWhenSetAddr() const override;
 #endif
 
-        virtual intptr_t GetChakraLibAddr() const override;
-        virtual intptr_t GetAddr() const override;
+        intptr_t GetChakraLibAddr() const override;
+        intptr_t GetAddr() const override;
 
-        virtual intptr_t GetVTableAddress(VTableValue vtableType) const override;
+        intptr_t GetVTableAddress(VTableValue vtableType) const override;
 
-        virtual bool IsRecyclerVerifyEnabled() const override;
-        virtual uint GetRecyclerVerifyPad() const override;
+        bool IsRecyclerVerifyEnabled() const override;
+        uint GetRecyclerVerifyPad() const override;
 
-        virtual typename WriteBarrierFieldTypeTraits<Js::Var>::Type* GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex) override;
+        typename WriteBarrierFieldTypeTraits<Js::Var>::Type* GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex) override;
 
         Js::SourceTextModuleRecord* GetModuleRecord(uint moduleId) const
         {

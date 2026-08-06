@@ -57,7 +57,14 @@ namespace Js
         bool KeyMapGet(WeakMapKeyMap* map, Var* value) const;
 
         DEFINE_VTABLE_CTOR_MEMBER_INIT(JavascriptWeakMap, DynamicObject, keySet);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptWeakMap);
+        friend class Js::CrossSiteObject<JavascriptWeakMap>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptWeakMap>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptWeakMap>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptWeakMap(DynamicType* type);
@@ -68,7 +75,7 @@ namespace Js
         bool Has(RecyclableObject* key) const;
         void Set(RecyclableObject* key, Var value);
 
-        virtual void Finalize(bool isShutdown) override
+        void Finalize(bool isShutdown) override
         {
             if (!isShutdown)
             {
@@ -76,9 +83,9 @@ namespace Js
             }
         }
 
-        virtual void Dispose(bool isShutdown) override { }
+        void Dispose(bool isShutdown) override { }
 
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
         class EntryInfo
         {

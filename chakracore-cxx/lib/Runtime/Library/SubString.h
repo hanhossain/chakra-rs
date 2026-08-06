@@ -19,10 +19,10 @@ namespace Js
     public:
         static JavascriptString* New(JavascriptString* string, charcount_t start, charcount_t length);
         static JavascriptString* New(const char16_t* stringStr, charcount_t start, charcount_t length, ScriptContext *scriptContext);
-        virtual const char16_t* GetSz() override;
-        virtual void const * GetOriginalStringReference() override;
-        virtual size_t GetAllocatedByteCount() const override;
-        virtual bool IsSubstring() const override;
-        virtual void CachePropertyRecord(_In_ PropertyRecord const* propertyRecord) override;
+        const char16_t* GetSz() override;
+        void const * GetOriginalStringReference() override;
+        size_t GetAllocatedByteCount() const override;
+        bool IsSubstring() const override;
+        void CachePropertyRecord(_In_ PropertyRecord const* propertyRecord) override;
     };
 }

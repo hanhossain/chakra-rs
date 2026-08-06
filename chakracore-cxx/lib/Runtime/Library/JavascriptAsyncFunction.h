@@ -14,7 +14,14 @@ private:
     static FunctionInfo functionInfo;
 
     DEFINE_VTABLE_CTOR(JavascriptAsyncFunction, JavascriptGeneratorFunction);
-    DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptAsyncFunction);
+    friend class Js::CrossSiteObject<JavascriptAsyncFunction>;
+    void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+    {
+        Assert(this->GetScriptContext() != scriptContext);
+        AssertMsg(VirtualTableInfo<JavascriptAsyncFunction>::HasVirtualTable(this),
+                  "Derived class need to define marshal to script context");
+        VirtualTableInfo<Js::CrossSiteObject<JavascriptAsyncFunction>>::SetVirtualTable(this);
+    };
 
 protected:
     JavascriptAsyncFunction(DynamicType* type);
@@ -56,8 +63,7 @@ public:
             VirtualTableInfo<CrossSiteObject<JavascriptAsyncFunction>>::HasVirtualTable(obj);
     }
 
-    virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
-    {
+    VTableValue DummyVirtualFunctionToHinderLinkerICF() const override {
         return VTableValue::VtableJavascriptAsyncFunction;
     }
 
@@ -76,7 +82,14 @@ class JavascriptAsyncSpawnStepFunction : public RuntimeFunction
 {
 protected:
     DEFINE_VTABLE_CTOR(JavascriptAsyncSpawnStepFunction, RuntimeFunction);
-    DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptAsyncSpawnStepFunction);
+    friend class Js::CrossSiteObject<JavascriptAsyncSpawnStepFunction>;
+    void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+    {
+        Assert(this->GetScriptContext() != scriptContext);
+        AssertMsg(VirtualTableInfo<JavascriptAsyncSpawnStepFunction>::HasVirtualTable(this),
+                  "Derived class need to define marshal to script context");
+        VirtualTableInfo<Js::CrossSiteObject<JavascriptAsyncSpawnStepFunction>>::SetVirtualTable(this);
+    };
 
 public:
     JavascriptAsyncSpawnStepFunction(

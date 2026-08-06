@@ -18,13 +18,13 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<const Js::PropertyRecord*>::Type propertyRecord;
 
     public:
-        virtual void GetPropertyRecord(_Out_ PropertyRecord const** propRecord, bool dontLookupFromDictionary = false) override;
+        void GetPropertyRecord(_Out_ PropertyRecord const** propRecord, bool dontLookupFromDictionary = false) override;
         void GetPropertyRecordImpl(_Out_ PropertyRecord const** propRecord, bool dontLookupFromDictionary = false);
-        virtual void CachePropertyRecord(_In_ PropertyRecord const* propertyRecord) override;
+        void CachePropertyRecord(_In_ PropertyRecord const* propertyRecord) override;
         void CachePropertyRecordImpl(_In_ PropertyRecord const* propertyRecord);
-        virtual void const * GetOriginalStringReference() override;
+        void const * GetOriginalStringReference() override;
 
-        virtual RecyclableObject* CloneToScriptContext(ScriptContext* requestContext) override;
+        RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
 
         bool HasPropertyRecord() const { return propertyRecord != nullptr; }
 
@@ -77,8 +77,8 @@ namespace Js
         ConcatStringBase(StaticType* stringTypeStatic);
         DEFINE_VTABLE_CTOR_ABSTRACT(ConcatStringBase, LiteralString);
 
-        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer,
-            StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) = 0;
+        void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer,
+            StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override = 0;
         void CopyImpl(_Out_writes_(m_charLength) char16_t *const buffer,
             int itemCount, _In_reads_(itemCount) JavascriptString * const * items,
             StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth);
@@ -86,9 +86,9 @@ namespace Js
         // Subclass can call this to implement GetSz and use the actual type to avoid virtual call to Copy.
         template <typename ConcatStringType> const char16_t * GetSzImpl();
     public:
-        virtual const char16_t* GetSz() = 0;     // Force subclass to call GetSzImpl with the real type to avoid virtual calls
+        const char16_t* GetSz() override = 0;     // Force subclass to call GetSzImpl with the real type to avoid virtual calls
         using JavascriptString::Copy;
-        virtual bool IsTree() const override;
+        bool IsTree() const override;
     };
 
     // Concat string with N (or less) child nodes.
@@ -109,12 +109,12 @@ namespace Js
         ConcatStringN(StaticType* stringTypeStatic, bool doZeroSlotsAndLength = true);
         DEFINE_VTABLE_CTOR(ConcatStringN<N>, ConcatStringBase);
 
-        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override
+        void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override
         {
 #pragma prefast(suppress: __WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY, "WDGVSO:14980704 The CopyImpl method uses GetLength() to ensure we only access m_charLength elements of buffer.")
             ConcatStringBase::CopyImpl(buffer, N, AddressOf(m_slots[0]), nestedStringTreeCopyInfos, recursionDepth);
         }
-        virtual int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const
+        int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const override
         {
             items = AddressOf(m_slots[0]);
             return N;
@@ -168,7 +168,7 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(ConcatStringBuilder, ConcatStringBase);
-        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override;
+        void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override;
 
     public:
         static ConcatStringBuilder* New(ScriptContext* scriptContext, int initialSlotCount);
@@ -200,13 +200,13 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(ConcatStringWrapping, ConcatStringBase);
-        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override
+        void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override
         {
             const_cast<ConcatStringWrapping *>(this)->EnsureAllSlots();
 #pragma prefast(suppress: __WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY, "WDGVSO:14980704 The CopyImpl method uses GetLength() to ensure we only access m_charLength elements of buffer.")
             ConcatStringBase::CopyImpl(buffer, std::size(m_slots), AddressOf(m_slots[0]), nestedStringTreeCopyInfos, recursionDepth);
         }
-        virtual int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const override
+        int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const override
         {
             const_cast<ConcatStringWrapping *>(this)->EnsureAllSlots();
             items = AddressOf(m_slots[0]);
@@ -246,13 +246,13 @@ namespace Js
         ConcatStringMulti(uint slotCount, JavascriptString * a1, JavascriptString * a2, StaticType* stringTypeStatic);
         DEFINE_VTABLE_CTOR(ConcatStringMulti, ConcatStringBase);
 
-        virtual void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override
+        void CopyVirtual(_Out_writes_(m_charLength) char16_t *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos, const byte recursionDepth) override
         {
             Assert(IsFilled());
 #pragma prefast(suppress: __WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY, "WDGVSO:14980704 The CopyImpl method uses GetLength() to ensure we only access m_charLength elements of buffer.")
             ConcatStringBase::CopyImpl(buffer, slotCount, AddressOf(m_slots[0]), nestedStringTreeCopyInfos, recursionDepth);
         }
-        virtual int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const
+        int GetRandomAccessItemsFromConcatString(Js::JavascriptString * const *& items) const override
         {
             Assert(IsFilled());
             items = AddressOf(m_slots[0]);

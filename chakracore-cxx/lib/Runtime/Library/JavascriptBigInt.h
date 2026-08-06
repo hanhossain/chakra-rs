@@ -50,7 +50,7 @@ namespace Js
         static JavascriptBigInt * CreateZeroWithLength(digit_t length, ScriptContext * scriptContext);
         static JavascriptBigInt * CreateOne(ScriptContext * scriptContext);
         static JavascriptBigInt * Create(const char16_t * content, charcount_t cchUseLength, bool isNegative, ScriptContext * scriptContext);
-        virtual RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
+        RecyclableObject * CloneToScriptContext(ScriptContext* requestContext) override;
 
         class EntryInfo
         {
@@ -62,7 +62,7 @@ namespace Js
 
         static Var NewInstance(RecyclableObject* function, CallInfo callInfo, ...);
 
-        virtual BOOL Equals(Var other, BOOL* value, ScriptContext * requestContext) override;
+        BOOL Equals(Var other, BOOL* value, ScriptContext * requestContext) override;
 
         static digit_t AddDigit(digit_t a, digit_t b, digit_t * carry);
         static digit_t SubDigit(digit_t a, digit_t b, digit_t * borrow);

@@ -107,7 +107,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptArray, ArrayObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptArray);
+        friend class Js::CrossSiteObject<JavascriptArray>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptArray>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptArray>>::SetVirtualTable(this);
+        };
     protected:
         typename WriteBarrierFieldTypeTraits<SparseArraySegmentBase*>::Type head;
         union SegmentUnionType
@@ -202,7 +209,7 @@ namespace Js
 
         template<typename T> BOOL DirectDeleteItemAt(uint32_t itemIndex);
 
-        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override
+        DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override
         {
             Var value = nullptr;
             return this->DirectGetItemAt(index, &value) ? WritableData : None;
@@ -336,49 +343,49 @@ namespace Js
 #if DBG
         void DoTypeMutation();
 #endif
-        virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
-        virtual BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
-        virtual BOOL IsEnumerable(PropertyId propertyId) override;
-        virtual BOOL IsConfigurable(PropertyId propertyId) override;
-        virtual BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetWritable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
-        virtual BOOL SetAttributes(PropertyId propertyId, PropertyAttributes attributes) override;
+        PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
+        BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
+        BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
+        BOOL IsEnumerable(PropertyId propertyId) override;
+        BOOL IsConfigurable(PropertyId propertyId) override;
+        BOOL SetEnumerable(PropertyId propertyId, BOOL value) override;
+        BOOL SetWritable(PropertyId propertyId, BOOL value) override;
+        BOOL SetConfigurable(PropertyId propertyId, BOOL value) override;
+        BOOL SetAttributes(PropertyId propertyId, PropertyAttributes attributes) override;
 
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext);
-        virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
-        virtual BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override;
+        BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override;
 
-        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
+        PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
 
-        virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags) override;
-        virtual BOOL PreventExtensions() override;
-        virtual BOOL Seal() override;
-        virtual BOOL Freeze() override;
+        BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags) override;
+        BOOL PreventExtensions() override;
+        BOOL Seal() override;
+        BOOL Freeze() override;
 
-        virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext) override;
-        virtual uint GetSpecialPropertyCount() const override;
-        virtual PropertyId const * GetSpecialPropertyIds() const override;
-        virtual DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetSpecialPropertyName(uint32_t index, JavascriptString ** propertyName, ScriptContext * requestContext) override;
+        uint GetSpecialPropertyCount() const override;
+        PropertyId const * GetSpecialPropertyIds() const override;
+        DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override;
 
         // objectArray support
-        virtual BOOL SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAttributes(uint32_t index, PropertyAttributes attributes) override;
-        virtual BOOL SetItemAccessors(uint32_t index, Var getter, Var setter) override;
-        virtual BOOL IsObjectArrayFrozen() override;
-        virtual JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext* requestContext) override;
+        BOOL SetItemWithAttributes(uint32_t index, Var value, PropertyAttributes attributes) override;
+        BOOL SetItemAttributes(uint32_t index, PropertyAttributes attributes) override;
+        BOOL SetItemAccessors(uint32_t index, Var getter, Var setter) override;
+        BOOL IsObjectArrayFrozen() override;
+        JavascriptEnumerator * GetIndexEnumerator(EnumeratorFlags flags, ScriptContext* requestContext) override;
 
         // Get non-index enumerator for SCA
         BOOL GetNonIndexEnumerator(JavascriptStaticEnumerator * enumerator, ScriptContext* requestContext);
@@ -930,8 +937,7 @@ namespace Js
         template<class T, uint ConstInlinePropertySlots, bool UseDynamicInlinePropertySlots> static SparseArraySegment<typename T::TElement> *DetermineInlineHeadSegmentPointer(T *const array);
 
     public:
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
-        {
+        VTableValue DummyVirtualFunctionToHinderLinkerICF() {
             return VtableHelper();
         }
     };
@@ -974,7 +980,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptNativeArray, JavascriptArray);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptNativeArray);
+        friend class Js::CrossSiteObject<JavascriptNativeArray>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptNativeArray>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptNativeArray>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptNativeArray(DynamicType * type) :
@@ -1039,7 +1052,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptNativeIntArray, JavascriptNativeArray);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptNativeIntArray);
+        friend class Js::CrossSiteObject<JavascriptNativeIntArray>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptNativeIntArray>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptNativeIntArray>>::SetVirtualTable(this);
+        };
     public:
         JavascriptNativeIntArray(DynamicType * type);
         JavascriptNativeIntArray(uint32_t length, uint32_t size, DynamicType * type);
@@ -1063,18 +1083,18 @@ namespace Js
         static uint allocationBuckets[AllocationBucketsCount][AllocationBucketsInfoSize];
         static const int32_t MissingItem;
 
-        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual BOOL DirectGetVarItemAt(uint index, Var* outval, ScriptContext *scriptContext);
-        virtual BOOL DirectGetItemAtFull(uint index, Var* outVal);
-        virtual Var DirectGetItem(uint32_t index);
-        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
+        PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        BOOL DirectGetVarItemAt(uint index, Var* outval, ScriptContext *scriptContext) override;
+        BOOL DirectGetItemAtFull(uint index, Var* outVal) override;
+        Var DirectGetItem(uint32_t index) override;
+        DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override;
 
-        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
+        BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
 #ifdef VALIDATE_ARRAY
-        virtual void ValidateArray() override;
+        void ValidateArray() override;
 #endif
         BOOL SetItem(uint32_t index, int32_t iValue);
 
@@ -1087,14 +1107,14 @@ namespace Js
 #if ENABLE_PROFILE_INFO
         virtual JavascriptArray *FillFromArgs(uint length, uint start, Var *args, ArrayCallSiteInfo *info = nullptr, bool dontCreateNewArray = false) override;
 #else
-        virtual JavascriptArray *FillFromArgs(uint length, uint start, Var *args, bool dontCreateNewArray = false) override;
+        JavascriptArray *FillFromArgs(uint length, uint start, Var *args, bool dontCreateNewArray = false) override;
 #endif
-        virtual void ClearElements(SparseArraySegmentBase *seg, uint32_t newSegmentLength) override;
-        virtual void SetIsPrototype() override;
+        void ClearElements(SparseArraySegmentBase *seg, uint32_t newSegmentLength) override;
+        void SetIsPrototype() override;
 
         TypeId TrySetNativeIntArrayItem(Var value, int32_t *iValue, double *dValue);
 
-        virtual bool IsMissingHeadSegmentItem(const uint32_t index) const override;
+        bool IsMissingHeadSegmentItem(const uint32_t index) const override;
 
         static VTableValue VtableHelper()
         {
@@ -1107,11 +1127,10 @@ namespace Js
         static DynamicType * GetInitialType(ScriptContext * scriptContext);
         static JavascriptNativeIntArray * BoxStackInstance(JavascriptNativeIntArray * instance, bool deepCopy);
     private:
-        virtual int32_t HeadSegmentIndexOfHelper(Var search, uint32_t &fromIndex, uint32_t toIndex, bool includesAlgorithm, ScriptContext * scriptContext) override;
+        int32_t HeadSegmentIndexOfHelper(Var search, uint32_t &fromIndex, uint32_t toIndex, bool includesAlgorithm, ScriptContext * scriptContext) override;
 
     public:
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
-        {
+        VTableValue DummyVirtualFunctionToHinderLinkerICF() {
             return VtableHelper();
         }
     };
@@ -1131,7 +1150,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptCopyOnAccessNativeIntArray, JavascriptNativeIntArray);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptCopyOnAccessNativeIntArray);
+        friend class Js::CrossSiteObject<JavascriptCopyOnAccessNativeIntArray>;
+        virtual void MarshalToScriptContext(Js::ScriptContext *scriptContext)
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptCopyOnAccessNativeIntArray>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptCopyOnAccessNativeIntArray>>::SetVirtualTable(this);
+        };
 
     public:
         JavascriptCopyOnAccessNativeIntArray(uint32_t length, DynamicType * type) :
@@ -1173,7 +1199,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(JavascriptNativeFloatArray, JavascriptNativeArray);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptNativeFloatArray);
+        friend class Js::CrossSiteObject<JavascriptNativeFloatArray>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptNativeFloatArray>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptNativeFloatArray>>::SetVirtualTable(this);
+        };
     public:
         JavascriptNativeFloatArray(DynamicType * type);
         JavascriptNativeFloatArray(uint32_t length, uint32_t size, DynamicType * type);
@@ -1198,22 +1231,22 @@ namespace Js
         static uint allocationBuckets[AllocationBucketsCount][AllocationBucketsInfoSize];
         static const double MissingItem;
 
-        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override;
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
-        virtual BOOL DirectGetVarItemAt(uint index, Var* outval, ScriptContext *scriptContext);
-        virtual BOOL DirectGetItemAtFull(uint index, Var* outVal);
-        virtual Var DirectGetItem(uint32_t index);
-        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override
+        PropertyQueryFlags HasItemQuery(uint32_t index) override;
+        PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override;
+        BOOL DirectGetVarItemAt(uint index, Var* outval, ScriptContext *scriptContext) override;
+        BOOL DirectGetItemAtFull(uint index, Var* outVal) override;
+        Var DirectGetItem(uint32_t index) override;
+        DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override
         {
             double value = 0;
             return this->DirectGetItemAt(index, &value) ? WritableData : None;
         }
 
-        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
+        BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override;
+        BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override;
 #ifdef VALIDATE_ARRAY
-        virtual void ValidateArray() override;
+        void ValidateArray() override;
 #endif
         BOOL SetItem(uint32_t index, double dValue);
 
@@ -1223,14 +1256,14 @@ namespace Js
 #if ENABLE_PROFILE_INFO
         virtual JavascriptArray *FillFromArgs(uint length, uint start, Var *args, ArrayCallSiteInfo *info = nullptr, bool dontCreateNewArray = false) override;
 #else
-        virtual JavascriptArray *FillFromArgs(uint length, uint start, Var *args, bool dontCreateNewArray = false) override;
+        JavascriptArray *FillFromArgs(uint length, uint start, Var *args, bool dontCreateNewArray = false) override;
 #endif
-        virtual void ClearElements(SparseArraySegmentBase *seg, uint32_t newSegmentLength) override;
-        virtual void SetIsPrototype() override;
+        void ClearElements(SparseArraySegmentBase *seg, uint32_t newSegmentLength) override;
+        void SetIsPrototype() override;
 
         TypeId TrySetNativeFloatArrayItem(Var value, double *dValue);
 
-        virtual bool IsMissingHeadSegmentItem(const uint32_t index) const override;
+        bool IsMissingHeadSegmentItem(const uint32_t index) const override;
 
         static VTableValue VtableHelper()
         {
@@ -1246,11 +1279,10 @@ namespace Js
         static JavascriptNativeFloatArray * BoxStackInstance(JavascriptNativeFloatArray * instance, bool deepCopy);
         static double Pop(ScriptContext * scriptContext, Var nativeFloatArray);
     private:
-        virtual int32_t HeadSegmentIndexOfHelper(Var search, uint32_t &fromIndex, uint32_t toIndex, bool includesAlgorithm, ScriptContext * scriptContext) override;
+        int32_t HeadSegmentIndexOfHelper(Var search, uint32_t &fromIndex, uint32_t toIndex, bool includesAlgorithm, ScriptContext * scriptContext) override;
 
     public:
-        virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
-        {
+        VTableValue DummyVirtualFunctionToHinderLinkerICF() {
             return VtableHelper();
         }
 

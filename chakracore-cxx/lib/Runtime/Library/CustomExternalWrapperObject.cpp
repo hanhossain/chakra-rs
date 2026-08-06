@@ -922,13 +922,13 @@ BOOL CustomExternalWrapperObject::GetEnumerator(Js::JavascriptStaticEnumerator *
         {
             visited = RecyclerNew(scriptContext->GetRecycler(), VisitedNamesHashSet, scriptContext->GetRecycler());
         }
-        virtual void Reset() override
+        void Reset() override
         {
             index = 0;
             visited->Reset();
         }
 
-        virtual JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) override
+        JavascriptString * MoveAndGetNext(PropertyId& propertyId, PropertyAttributes* attributes = nullptr) override
         {
             propertyId = Constants::NoProperty;
             if (attributes != nullptr)

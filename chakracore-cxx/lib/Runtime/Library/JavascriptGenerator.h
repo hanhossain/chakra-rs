@@ -65,7 +65,14 @@ private:
 
 protected:
     DEFINE_VTABLE_CTOR_MEMBER_INIT(JavascriptGenerator, DynamicObject, args);
-    DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptGenerator);
+    friend class Js::CrossSiteObject<JavascriptGenerator>;
+    void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+    {
+        Assert(this->GetScriptContext() != scriptContext);
+        AssertMsg(VirtualTableInfo<JavascriptGenerator>::HasVirtualTable(this),
+                  "Derived class need to define marshal to script context");
+        VirtualTableInfo<Js::CrossSiteObject<JavascriptGenerator>>::SetVirtualTable(this);
+    };
 
     JavascriptGenerator(DynamicType* type, Arguments& args, ScriptFunction* scriptFunction);
 
@@ -105,7 +112,7 @@ public:
     void SetFrame(InterpreterStackFrame* frame, size_t bytes);
     void SetFrameSlots(uint slotCount, typename WriteBarrierFieldTypeTraits<Var>::Type* frameSlotArray);
 
-    virtual void Finalize(bool isShutdown) override;
+    void Finalize(bool isShutdown) override;
 
     class EntryInfo
     {

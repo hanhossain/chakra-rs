@@ -18,7 +18,14 @@ namespace Js
     class ExternalIteratorCreatorFunction : public RuntimeFunction
     {
     protected:
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ExternalIteratorCreatorFunction);
+        friend class Js::CrossSiteObject<ExternalIteratorCreatorFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ExternalIteratorCreatorFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ExternalIteratorCreatorFunction>>::SetVirtualTable(this);
+        };
         DEFINE_VTABLE_CTOR(ExternalIteratorCreatorFunction, RuntimeFunction);
 
     public:
@@ -28,7 +35,7 @@ namespace Js
             uint byteCount,
             Var prototypeForIterator, InitIteratorFunction initFunction, NextFunction nextFunction);
 
-        virtual BOOL IsExternalFunction() override { return TRUE; }
+        BOOL IsExternalFunction() override { return TRUE; }
 
         static Var EntryExternalEntries(RecyclableObject* function, CallInfo callInfo, ...);
         static Var EntryExternalKeys(RecyclableObject* function, CallInfo callInfo, ...);
@@ -56,15 +63,21 @@ namespace Js
     class JavascriptExternalIteratorNextFunction : public RuntimeFunction
     {
     protected:
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptExternalIteratorNextFunction);
+        friend class Js::CrossSiteObject<JavascriptExternalIteratorNextFunction>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<JavascriptExternalIteratorNextFunction>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<JavascriptExternalIteratorNextFunction>>::SetVirtualTable(this);
+        };
         DEFINE_VTABLE_CTOR(JavascriptExternalIteratorNextFunction, RuntimeFunction);
 
         typename WriteBarrierFieldTypeTraits<JavascriptTypeId>::Type m_externalTypeId;
 
         JavascriptExternalIteratorNextFunction(DynamicType* type, FunctionInfo* functionInfo, JavascriptTypeId typeId);
     public:
-
-        virtual BOOL IsExternalFunction() override { return TRUE; }
+        BOOL IsExternalFunction() override { return TRUE; }
         JavascriptTypeId GetExternalTypeId() const { return m_externalTypeId; }
 
         static JavascriptExternalIteratorNextFunction* CreateFunction(JavascriptLibrary *library, JavascriptTypeId typeId, JavascriptMethod entryPoint);
@@ -81,7 +94,14 @@ namespace Js
 
     protected:
         DEFINE_VTABLE_CTOR(CustomExternalIterator, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(CustomExternalIterator);
+        friend class Js::CrossSiteObject<CustomExternalIterator>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<CustomExternalIterator>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<CustomExternalIterator>>::SetVirtualTable(this);
+        };
 
     public:
         CustomExternalIterator(DynamicType* type, ExternalIteratorKind kind, JavascriptTypeId typeId, NextFunction nextFunction);

@@ -133,7 +133,7 @@ namespace CorUnix
         //
         // CThreadInfoInitializer methods
         //
-        virtual PAL_ERROR InitializePreCreate(void);
+        PAL_ERROR InitializePreCreate(void) override;
 
         PAL_ERROR InitializePostCreate(CPalThread *pthrCurrent) override;
 

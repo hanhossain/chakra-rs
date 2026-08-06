@@ -9,11 +9,11 @@ class ExpirableObject: public FinalizableObject
 public:
     ExpirableObject(ThreadContext* threadContext);
 
-    virtual void Finalize(bool isShutdown);
+    void Finalize(bool isShutdown) override;
 
-    virtual void Dispose(bool isShutdown) override;
+    void Dispose(bool isShutdown) override;
 
-    virtual void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
+    void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
 
     // Called when an expirable object gets expired
     virtual void Expire() = 0;

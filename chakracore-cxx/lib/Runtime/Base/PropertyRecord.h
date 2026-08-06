@@ -102,13 +102,12 @@ namespace Js
 
     public:
         // Finalizable support
-        virtual void Finalize(bool isShutdown);
+        void Finalize(bool isShutdown) override;
 
-        virtual void Dispose(bool isShutdown)
-        {
+        void Dispose(bool isShutdown) override {
         }
 
-        virtual void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
+        void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
 
 #if DBG_DUMP
     public:

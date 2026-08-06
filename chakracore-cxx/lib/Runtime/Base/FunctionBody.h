@@ -202,12 +202,11 @@ namespace Js
         {
         }
         static uint32_t GetAddressOffset() { return offsetof(ProxyEntryPointInfo, jsMethod); }
-        virtual void Expire()
-        {
+        void Expire() override {
             AssertMsg(false, "Expire called on object that doesn't support expiration");
         }
 
-        virtual void EnterExpirableCollectMode()
+        void EnterExpirableCollectMode() override
         {
             AssertMsg(false, "EnterExpirableCollectMode called on object that doesn't support expiration");
         }
@@ -293,7 +292,7 @@ namespace Js
 #endif
 
     public:
-        virtual void Finalize(bool isShutdown) override;
+        void Finalize(bool isShutdown) override;
 
 #if ENABLE_NATIVE_CODEGEN
         NativeEntryPointData * EnsureNativeEntryPointData();
@@ -623,12 +622,12 @@ namespace Js
     public:
         FunctionEntryPointInfo(FunctionProxy * functionInfo, Js::JavascriptMethod method, ThreadContext* context);
 
-        virtual bool IsFunctionEntryPointInfo() const override { return true; }
+        bool IsFunctionEntryPointInfo() const override { return true; }
 
         bool ExecutedSinceCallCountCollection() const;
         void CollectCallCounts();
 
-        virtual FunctionBody *GetFunctionBody() const override;
+        FunctionBody *GetFunctionBody() const override;
 #if ENABLE_NATIVE_CODEGEN
         ExecutionMode GetJitMode() const;
         void SetJitMode(const ExecutionMode jitMode);
@@ -643,9 +642,9 @@ namespace Js
         }
 #endif
 
-        virtual void OnCleanup(bool isShutdown) override;
+        void OnCleanup(bool isShutdown) override;
 
-        virtual void ReleasePendingWorkItem() override;
+        void ReleasePendingWorkItem() override;
 
 #ifdef PERF_COUNTERS
         virtual void OnRecorded() override;
@@ -669,9 +668,9 @@ namespace Js
 #endif
         { }
 
-        virtual FunctionBody *GetFunctionBody() const override;
+        FunctionBody *GetFunctionBody() const override;
 
-        virtual void OnCleanup(bool isShutdown) override;
+        void OnCleanup(bool isShutdown) override;
 
 #if ENABLE_NATIVE_CODEGEN
         virtual void ResetOnNativeCodeInstallFailure() override;
@@ -991,11 +990,11 @@ namespace Js
             SetDisplayNameFlagsRecyclerAllocated = 2
         };
 
-        virtual void Dispose(bool isShutdown) override
+        void Dispose(bool isShutdown) override
         {
         }
 
-        virtual void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
+        void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
 
         static uint GetOffsetOfFunctionInfo() { return offsetof(FunctionProxy, functionInfo); }
         FunctionInfo * GetFunctionInfo() const
@@ -1063,7 +1062,7 @@ namespace Js
 
         uint GetFunctionNumber() const { return m_functionNumber; }
 
-        virtual void Finalize(bool isShutdown) override;
+        void Finalize(bool isShutdown) override;
 
         void UpdateFunctionBodyImpl(FunctionBody* body);
         bool IsFunctionBody() const;
@@ -1446,14 +1445,14 @@ namespace Js
     public:
         static DeferDeserializeFunctionInfo* New(ScriptContext* scriptContext, int nestedFunctionCount, LocalFunctionId functionId, ByteCodeCache* byteCodeCache, const byte* serializedFunction, Utf8SourceInfo* utf8SourceInfo, const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, NativeModule *nativeModule, FunctionInfo::Attributes attributes);
 
-        virtual void Finalize(bool isShutdown) override;
+        void Finalize(bool isShutdown) override;
         FunctionBody* Deserialize();
 
-        virtual const char16_t* GetDisplayName() const override;
+        const char16_t* GetDisplayName() const override;
         void SetDisplayName(const char16_t* displayName);
-        virtual void SetDisplayName(const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags = SetDisplayNameFlagsNone) override;
-        virtual uint GetDisplayNameLength() const { return m_displayNameLength; }
-        virtual uint GetShortDisplayNameOffset() const { return m_displayShortNameOffset; }
+        void SetDisplayName(const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags = SetDisplayNameFlagsNone) override;
+        uint GetDisplayNameLength() const override { return m_displayNameLength; }
+        uint GetShortDisplayNameOffset() const override { return m_displayShortNameOffset; }
         const char16_t* GetSourceInfo(int& lineNumber, int& columnNumber) const;
     private:
         typename WriteBarrierFieldTypeTraits<const byte*>::Type m_functionBytes;
@@ -1558,8 +1557,8 @@ namespace Js
         bool GetHasRestParameter() const { return GetHasRestParameter(flags); }
         void SetHasRestParameter() { SetFlags(true, Flags_HasRestParameter); }
 
-        virtual uint GetDisplayNameLength() const { return m_displayNameLength; }
-        virtual uint GetShortDisplayNameOffset() const { return m_displayShortNameOffset; }
+        uint GetDisplayNameLength() const override { return m_displayNameLength; }
+        uint GetShortDisplayNameOffset() const override { return m_displayShortNameOffset; }
         bool GetIsDeclaration() const { return m_isDeclaration; }
         void SetIsDeclaration(const bool is) { m_isDeclaration = is; }
         bool GetIsAccessor() const { return m_isAccessor; }
@@ -1756,11 +1755,11 @@ namespace Js
             return funcBody->GetDisplayName();
         }
 
-        virtual const char16_t* GetDisplayName() const override;
+        const char16_t* GetDisplayName() const override;
         void SetDisplayName(const char16_t* displayName);
-        virtual void SetDisplayName(const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags = SetDisplayNameFlagsNone) override;
+        void SetDisplayName(const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags = SetDisplayNameFlagsNone) override;
 
-        virtual void Finalize(bool isShutdown) override;
+        void Finalize(bool isShutdown) override;
 
         JavascriptString * GetCachedSourceString();
 
@@ -2527,8 +2526,8 @@ namespace Js
         Js::DebuggerMode GetDebuggerMode();
 #endif
 #endif
-        virtual void Finalize(bool isShutdown) override;
-        virtual void OnMark() override;
+        void Finalize(bool isShutdown) override;
+        void OnMark() override;
 
         void Cleanup(bool isScriptContextClosing);
         void CleanupSourceInfo(bool isScriptContextClosing);

@@ -17,7 +17,14 @@ namespace Js
             SimplePropertyDescriptorMap;
     protected:
         DEFINE_VTABLE_CTOR(ModuleNamespace, DynamicObject);
-        DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(ModuleNamespace);
+        friend class Js::CrossSiteObject<ModuleNamespace>;
+        void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+        {
+            Assert(this->GetScriptContext() != scriptContext);
+            AssertMsg(VirtualTableInfo<ModuleNamespace>::HasVirtualTable(this),
+                      "Derived class need to define marshal to script context");
+            VirtualTableInfo<Js::CrossSiteObject<ModuleNamespace>>::SetVirtualTable(this);
+        };
 
     protected:
         ModuleNamespace(ModuleRecordBase* moduleRecord, DynamicType * type);
@@ -32,55 +39,55 @@ namespace Js
         void Initialize();
         ListForListIterator* GetSortedExportedNames() { return this->sortedExportedNames; }
 
-        virtual PropertyId GetPropertyId(BigPropertyIndex index) override;
-        virtual PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
-        virtual BOOL HasOwnProperty(PropertyId propertyId) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL GetInternalProperty(Var instance, PropertyId internalPropertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
-        virtual BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override { return FALSE; }
-        virtual BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override { return FALSE; }
-        virtual BOOL SetInternalProperty(PropertyId internalPropertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override { return FALSE; }
-        virtual DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override { return DescriptorFlags::None; }
-        virtual DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override { return DescriptorFlags::None; }
-        virtual BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = nullptr) override { Assert(false); return FALSE; }
-        virtual BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override { return false; }
-        virtual BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
-        virtual BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
+        PropertyId GetPropertyId(BigPropertyIndex index) override;
+        PropertyQueryFlags HasPropertyQuery(PropertyId propertyId, _Inout_opt_ PropertyValueInfo* info) override;
+        BOOL HasOwnProperty(PropertyId propertyId) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyQuery(Var originalInstance, JavascriptString* propertyNameString, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL GetInternalProperty(Var instance, PropertyId internalPropertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        PropertyQueryFlags GetPropertyReferenceQuery(Var originalInstance, PropertyId propertyId, Var* value, PropertyValueInfo* info, ScriptContext* requestContext) override;
+        BOOL SetProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override { return FALSE; }
+        BOOL SetProperty(JavascriptString* propertyNameString, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override { return FALSE; }
+        BOOL SetInternalProperty(PropertyId internalPropertyId, Var value, PropertyOperationFlags flags, PropertyValueInfo* info) override { return FALSE; }
+        DescriptorFlags GetSetter(PropertyId propertyId, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override { return DescriptorFlags::None; }
+        DescriptorFlags GetSetter(JavascriptString* propertyNameString, Var *setterValue, PropertyValueInfo* info, ScriptContext* requestContext) override { return DescriptorFlags::None; }
+        BOOL InitProperty(PropertyId propertyId, Var value, PropertyOperationFlags flags = PropertyOperation_None, PropertyValueInfo* info = nullptr) override { Assert(false); return FALSE; }
+        BOOL SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags = PropertyOperation_None, SideEffects possibleSideEffects = SideEffects_Any) override { return false; }
+        BOOL DeleteProperty(PropertyId propertyId, PropertyOperationFlags flags) override;
+        BOOL DeleteProperty(JavascriptString *propertyNameString, PropertyOperationFlags flags) override;
 #if ENABLE_FIXED_FIELDS
         virtual BOOL IsFixedProperty(PropertyId propertyId) override { return false; }
 #endif
-        virtual PropertyQueryFlags HasItemQuery(uint32_t index) override { return PropertyQueryFlags::Property_NotFound; }
-        virtual BOOL HasOwnItem(uint32_t index) override { return false; }
-        virtual PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override { return PropertyQueryFlags::Property_NotFound; }
-        virtual PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override { return PropertyQueryFlags::Property_NotFound; }
-        virtual DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override { *setterValue = nullptr; return DescriptorFlags::None; }
-        virtual BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override { return false; }
-        virtual BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override { return true; }
-        virtual BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr);
-        virtual BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override { return false; }
-        _Check_return_ _Success_(return) virtual BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override { return FALSE; };
-        virtual BOOL IsWritable(PropertyId propertyId) override;
-        virtual BOOL IsConfigurable(PropertyId propertyId) override;
-        virtual BOOL IsEnumerable(PropertyId propertyId) override;
-        virtual BOOL SetEnumerable(PropertyId propertyId, BOOL value) override { return false; }
-        virtual BOOL SetWritable(PropertyId propertyId, BOOL value) override { return false; }
-        virtual BOOL IsProtoImmutable() const { return true; }
-        virtual BOOL SetConfigurable(PropertyId propertyId, BOOL value) override { return false; }
-        virtual BOOL SetAttributes(PropertyId propertyId, PropertyAttributes attributes) override { return false; }
-        virtual BOOL IsExtensible() override { return false; };
-        virtual BOOL PreventExtensions() override { return true; }
-        virtual BOOL Seal() override { return false; }
-        virtual BOOL Freeze() override { return false; }
-        virtual BOOL IsSealed() override { return true; }
-        virtual BOOL IsFrozen() override { return true; }
-        virtual BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
-        virtual BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        PropertyQueryFlags HasItemQuery(uint32_t index) override { return PropertyQueryFlags::Property_NotFound; }
+        BOOL HasOwnItem(uint32_t index) override { return false; }
+        PropertyQueryFlags GetItemQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override { return PropertyQueryFlags::Property_NotFound; }
+        PropertyQueryFlags GetItemReferenceQuery(Var originalInstance, uint32_t index, Var* value, ScriptContext * requestContext) override { return PropertyQueryFlags::Property_NotFound; }
+        DescriptorFlags GetItemSetter(uint32_t index, Var* setterValue, ScriptContext* requestContext) override { *setterValue = nullptr; return DescriptorFlags::None; }
+        BOOL SetItem(uint32_t index, Var value, PropertyOperationFlags flags) override { return false; }
+        BOOL DeleteItem(uint32_t index, PropertyOperationFlags flags) override { return true; }
+        BOOL GetEnumerator(JavascriptStaticEnumerator * enumerator, EnumeratorFlags flags, ScriptContext* requestContext, EnumeratorCache * enumeratorCache = nullptr) override;
+        BOOL SetAccessors(PropertyId propertyId, Var getter, Var setter, PropertyOperationFlags flags = PropertyOperation_None) override { return false; }
+        _Check_return_ _Success_(return) BOOL GetAccessors(PropertyId propertyId, _Outptr_result_maybenull_ Var* getter, _Outptr_result_maybenull_ Var* setter, ScriptContext* requestContext) override { return FALSE; };
+        BOOL IsWritable(PropertyId propertyId) override;
+        BOOL IsConfigurable(PropertyId propertyId) override;
+        BOOL IsEnumerable(PropertyId propertyId) override;
+        BOOL SetEnumerable(PropertyId propertyId, BOOL value) override { return false; }
+        BOOL SetWritable(PropertyId propertyId, BOOL value) override { return false; }
+        BOOL IsProtoImmutable() const override { return true; }
+        BOOL SetConfigurable(PropertyId propertyId, BOOL value) override { return false; }
+        BOOL SetAttributes(PropertyId propertyId, PropertyAttributes attributes) override { return false; }
+        BOOL IsExtensible() override { return false; };
+        BOOL PreventExtensions() override { return true; }
+        BOOL Seal() override { return false; }
+        BOOL Freeze() override { return false; }
+        BOOL IsSealed() override { return true; }
+        BOOL IsFrozen() override { return true; }
+        BOOL GetDiagValueString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
+        BOOL GetDiagTypeString(StringBuilder<ArenaAllocator>* stringBuilder, ScriptContext* requestContext) override;
 
-        virtual void RemoveFromPrototype(ScriptContext * requestContext, bool * allProtoCachesInvalidated) override { Assert(false); }
-        virtual void AddToPrototype(ScriptContext * requestContext, bool * allProtoCachesInvalidated) override { Assert(false); }
-        virtual void SetPrototype(RecyclableObject* newPrototype) override { Assert(false); return; }
+        void RemoveFromPrototype(ScriptContext * requestContext, bool * allProtoCachesInvalidated) override { Assert(false); }
+        void AddToPrototype(ScriptContext * requestContext, bool * allProtoCachesInvalidated) override { Assert(false); }
+        void SetPrototype(RecyclableObject* newPrototype) override { Assert(false); return; }
 
     private:
         typename WriteBarrierFieldTypeTraits<ModuleRecordBase*>::Type moduleRecord;

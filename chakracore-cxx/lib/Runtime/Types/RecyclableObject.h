@@ -396,9 +396,9 @@ namespace Js {
 
         // If dtor is called, that means that OOM happened (mostly), then the vtable might not be initialized
         // to the base class', so we can't assert.
-        virtual void Finalize(bool isShutdown) override {}
-        virtual void Dispose(bool isShutdown) override {}
-        virtual void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
+        void Finalize(bool isShutdown) override {}
+        void Dispose(bool isShutdown) override {}
+        void Mark(Recycler *recycler) override { AssertMsg(false, "Mark called on object that isn't TrackableObject"); }
 
         static uint32_t GetOffsetOfType() { return offsetof(RecyclableObject, type); }
 

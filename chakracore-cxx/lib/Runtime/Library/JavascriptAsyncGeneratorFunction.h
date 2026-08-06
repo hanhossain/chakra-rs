@@ -13,7 +13,14 @@ class JavascriptAsyncGeneratorFunction : public JavascriptGeneratorFunction
       static FunctionInfo functionInfo;
 
       DEFINE_VTABLE_CTOR(JavascriptAsyncGeneratorFunction, JavascriptGeneratorFunction);
-      DEFINE_MARSHAL_OBJECT_TO_SCRIPT_CONTEXT(JavascriptAsyncGeneratorFunction);
+      friend class Js::CrossSiteObject<JavascriptAsyncGeneratorFunction>;
+      void MarshalToScriptContext(Js::ScriptContext *scriptContext) override
+      {
+          Assert(this->GetScriptContext() != scriptContext);
+          AssertMsg(VirtualTableInfo<JavascriptAsyncGeneratorFunction>::HasVirtualTable(this),
+                    "Derived class need to define marshal to script context");
+          VirtualTableInfo<Js::CrossSiteObject<JavascriptAsyncGeneratorFunction>>::SetVirtualTable(this);
+      };
 
   protected:
       JavascriptAsyncGeneratorFunction(DynamicType* type);
@@ -39,7 +46,7 @@ class JavascriptAsyncGeneratorFunction : public JavascriptGeneratorFunction
       }
 
   public:
-      virtual VTableValue DummyVirtualFunctionToHinderLinkerICF()
+      VTableValue DummyVirtualFunctionToHinderLinkerICF() const override
       {
           return VTableValue::VtableJavascriptAsyncGeneratorFunction;
       }
