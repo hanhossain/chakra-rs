@@ -362,6 +362,7 @@ Error:
 
 int32_t ExecuteTest(const std::string &fileName, JsRuntimeHandle &chRuntime, JsRuntimeAttributes &jsrtAttributes)
 {
+    chakra::Logger::trace("executing test");
     int32_t hr = S_OK;
     const char *fileContents = nullptr;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -400,6 +401,7 @@ int32_t ExecuteTest(const std::string &fileName, JsRuntimeHandle &chRuntime, JsR
         }
         else
         {
+            chakra::Logger::trace(std::format("run script fileName[{}] fullPath[{}]", fileName, fullPath.c_str()));
             IfFailGo(RunScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr,
                                fullPath, nullptr));
         }
@@ -422,6 +424,7 @@ int32_t ExecuteTestWithMemoryCheck(const rust::String &fileName, JsRuntimeHandle
 {
     int32_t hr = E_FAIL;
     // REVIEW: Do we need a SEH handler here?
+    chakra::Logger::trace("execute test with memory check");
     hr = ExecuteTest(static_cast<std::string>(fileName), chRuntime, jsrtAttributes);
     if (FAILED(hr))
         exit(0);

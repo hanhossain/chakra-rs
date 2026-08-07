@@ -39,6 +39,7 @@ jobs:
     env:
       CARGO_TERM_COLOR: always
       RUSTFLAGS: -D warnings
+      CLICOLOR_FORCE: 1
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
@@ -98,3 +99,44 @@ jobs:
       - run: cargo check
       - run: cmake --preset ${{ matrix.os-prefix}}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
       - run: cmake --build build-${{ matrix.os-prefix}}-${{ matrix.build-type }}
+  ubuntu-upgrade:
+    name: rust / ubuntu26.04 / ${{ matrix.build-type }}
+    runs-on: ubuntu-26.04
+    strategy:
+      fail-fast: false
+      matrix:
+        build-type:
+          - debug
+          - test
+        include:
+          - build-type: debug
+            features: "--features compile-cpp"
+          - build-type: test
+            features: "--features compile-cpp,optimized-tests"
+    env:
+      CARGO_TERM_COLOR: always
+      RUSTFLAGS: -D warnings
+      CLICOLOR_FORCE: 1
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install dependencies
+        run: sudo apt-get install -y ninja-build clang-21 lld-21 libc++-21-dev libc++abi-21-dev libicu-dev
+      - if: ${{ runner.os == 'Linux' }}
+        run: |
+          sudo ln -sf /usr/bin/clang++-21 /usr/bin/clang++
+          sudo ln -sf /usr/bin/clang-21 /usr/bin/clang
+      - name: Install cargo-nextest
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest
+      - name: Build
+        run: cargo build ${{ matrix.features }} --all-targets -vv
+      # TODO: don't fail fast
+      - name: Run tests
+        run: cargo nextest run ${{ matrix.features }} --no-fail-fast
+      # TODO: don't fail fast
+      - name: Run slow tests
+        run: cargo nextest run ${{ matrix.features }} --no-fail-fast -- --ignored
+        env:
+          CHAKRA_TEST_SLOW: true
