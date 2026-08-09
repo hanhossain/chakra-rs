@@ -4,7 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Common/Event.h"
 
-Event::Event(const bool autoReset, const bool signaled) : handle(CreateEvent(0, !autoReset, signaled, 0))
+Event::Event(const bool autoReset, const bool signaled) : handle(CreateEventW(0, !autoReset, signaled, 0))
 {
     if(!handle)
         Js::Throw::OutOfMemory();

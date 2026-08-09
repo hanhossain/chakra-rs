@@ -282,8 +282,6 @@ CreateEventW(
           BOOL bInitialState,
           const char16_t* lpName);
 
-#define CreateEvent CreateEventW
-
 BOOL
 SetEvent(
       HANDLE hEvent);
