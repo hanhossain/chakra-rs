@@ -573,63 +573,6 @@ ExitInternalCreateFileMapping:
 }
 
 
-PAL_ERROR
-CorUnix::InternalOpenFileMapping(
-    CPalThread *pThread,
-    uint32_t dwDesiredAccess,
-    BOOL bInheritHandle,
-    const char16_t* lpName,
-    HANDLE *phMapping
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    IPalObject *pFileMapping = NULL;
-    CPalString sObjectName(lpName);
-
-    if ( MAPContainsInvalidFlags( dwDesiredAccess ) ) 
-    {
-        chakra::Logger::error("dwDesiredAccess can be one or more of FILE_MAP_READ, "
-               "FILE_MAP_WRITE, FILE_MAP_COPY or FILE_MAP_ALL_ACCESS.\n" );
-        palError = ERROR_INVALID_PARAMETER;
-        goto ExitInternalOpenFileMapping;
-    }
-
-    palError = g_pObjectManager->LocateObject(
-        pThread,
-        &sObjectName,
-        &aotFileMapping, 
-        &pFileMapping
-        );
-
-    if (NO_ERROR != palError)
-    {
-        goto ExitInternalOpenFileMapping;
-    }
-
-    palError = g_pObjectManager->ObtainHandleForObject(
-        pThread,
-        pFileMapping,
-        dwDesiredAccess,
-        bInheritHandle,
-        NULL,
-        phMapping
-        );
-
-    if (NO_ERROR != palError)
-    {
-        goto ExitInternalOpenFileMapping;
-    }
-
-ExitInternalOpenFileMapping:
-
-    if (NULL != pFileMapping)
-    {
-        pFileMapping->ReleaseReference(pThread);
-    }
-    
-    return palError;
-}
-
 /*++
 Function:
   MapViewOfFile
@@ -647,14 +590,14 @@ Function:
                   Since currently the mappings are supported only at file
                   offset 0, MapViewOfFile will succeed if the new view
                   is equal or smaller of the existing one, and the address
-                  returned will be the same address of the existing 
+                  returned will be the same address of the existing
                   mapping.
-                  Since the underlying mapping is always the same, all 
+                  Since the underlying mapping is always the same, all
                   the shared views of the same file region will share the
-                  same protection, i.e. they will have the largest 
+                  same protection, i.e. they will have the largest
                   protection requested. If any mapping asked for a
-                  read-write access, all the read-only mappings of the 
-                  same region will silently get a read-write access to 
+                  read-write access, all the read-only mappings of the
+                  same region will silently get a read-write access to
                   it.
 
 See MSDN doc.

@@ -119,15 +119,6 @@ namespace CorUnix
                               uint32_t dwMaximumSizeLow, HANDLE *phMapping);
 
     PAL_ERROR
-    InternalOpenFileMapping(
-        CPalThread *pThread,
-        uint32_t dwDesiredAccess,
-        BOOL bInheritHandle,
-        const char16_t* lpName,
-        HANDLE *phMapping
-        );
-
-    PAL_ERROR
     InternalMapViewOfFile(
         CPalThread *pThread,
         HANDLE hFileMappingObject,
