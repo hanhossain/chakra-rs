@@ -86,11 +86,7 @@ Parameters:
 --*/
 
 HANDLE
-CreateEventW(
-          LPSECURITY_ATTRIBUTES lpEventAttributes,
-          BOOL bManualReset,
-          BOOL bInitialState,
-          const char16_t* lpName)
+CreateEventW(BOOL bManualReset, BOOL bInitialState)
 {
     HANDLE hEvent = NULL;
     PAL_ERROR palError;
@@ -98,14 +94,7 @@ CreateEventW(
 
     pthr = InternalGetCurrentThread();
 
-    palError = InternalCreateEvent(
-        pthr,
-        lpEventAttributes, 
-        bManualReset,
-        bInitialState,
-        lpName,
-        &hEvent
-        );
+    palError = InternalCreateEvent(pthr, bManualReset, bInitialState, &hEvent);
 
     //
     // We always need to set last error, even on success:
@@ -137,29 +126,15 @@ Parameters:
 --*/
 
 PAL_ERROR
-CorUnix::InternalCreateEvent(
-    CPalThread *pthr,
-    LPSECURITY_ATTRIBUTES lpEventAttributes,
-    BOOL bManualReset,
-    BOOL bInitialState,
-    const char16_t* lpName,
-    HANDLE *phEvent
-    )
+CorUnix::InternalCreateEvent(CPalThread *pthr, BOOL bManualReset, BOOL bInitialState, HANDLE *phEvent)
 {
-    CObjectAttributes oa(lpName, lpEventAttributes);
+    CObjectAttributes oa;
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjEvent = NULL;
     IPalObject *pobjRegisteredEvent = NULL;
 
     assert(NULL != pthr);
     assert(NULL != phEvent);
-
-    if (lpName != nullptr)
-    {
-        chakra::Logger::error("lpName: Cross-process named objects are not supported in PAL");
-        palError = ERROR_NOT_SUPPORTED;
-        goto InternalCreateEventExit;
-    }
 
     palError = g_pObjectManager->AllocateObject(
         pthr,

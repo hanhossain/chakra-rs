@@ -3911,7 +3911,7 @@ Recycler::InitializeConcurrent(JsUtil::ThreadService *threadService)
     {
         AUTO_NESTED_HANDLED_EXCEPTION_TYPE(ExceptionType_OutOfMemory);
 
-        concurrentWorkDoneEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
+        concurrentWorkDoneEvent = CreateEventW(FALSE, FALSE);
         if (concurrentWorkDoneEvent == nullptr)
         {
             throw Js::OutOfMemoryException();
@@ -3922,13 +3922,13 @@ Recycler::InitializeConcurrent(JsUtil::ThreadService *threadService)
 #endif
         if (!threadService->HasCallback())
         {
-            concurrentIdleDecommitEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
+            concurrentIdleDecommitEvent = CreateEventW(FALSE, FALSE);
             if (concurrentIdleDecommitEvent == nullptr)
             {
                 throw Js::OutOfMemoryException();
             }
 
-            concurrentWorkReadyEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
+            concurrentWorkReadyEvent = CreateEventW(FALSE, FALSE);
             if (concurrentWorkReadyEvent == nullptr)
             {
                 throw Js::OutOfMemoryException();
@@ -5317,7 +5317,7 @@ RecyclerParallelThread::StartConcurrent()
         // This may be the first time.  If so, initialize by creating the doneEvent.
         if (this->concurrentWorkDoneEvent == NULL)
         {
-            this->concurrentWorkDoneEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
+            this->concurrentWorkDoneEvent = CreateEventW(FALSE, FALSE);
             if (this->concurrentWorkDoneEvent == nullptr)
             {
                 return false;
@@ -5361,13 +5361,13 @@ RecyclerParallelThread::EnableConcurrent(bool waitForThread)
     Assert(this->concurrentWorkReadyEvent == NULL);
     Assert(this->concurrentThread == NULL);
 
-    this->concurrentWorkDoneEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
+    this->concurrentWorkDoneEvent = CreateEventW(FALSE, FALSE);
     if (this->concurrentWorkDoneEvent == nullptr)
     {
         return false;
     }
 
-    this->concurrentWorkReadyEvent = CreateEventW(NULL, FALSE, FALSE, NULL);
+    this->concurrentWorkReadyEvent = CreateEventW(FALSE, FALSE);
     if (this->concurrentWorkReadyEvent == nullptr)
     {
         CloseHandle(this->concurrentWorkDoneEvent);
