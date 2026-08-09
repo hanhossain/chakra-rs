@@ -103,7 +103,7 @@ CreateEventW(BOOL bManualReset, BOOL bInitialState)
     // entry to the function
     //
 
-    pthr->SetLastError(palError);
+    CorUnix::CPalThread::SetLastError(palError);
 
     LOGEXIT("CreateEventW returns HANDLE %p\n", hEvent);
     return hEvent;
@@ -219,7 +219,7 @@ SetEvent(
 
     if (NO_ERROR != palError)
     {
-        pthr->SetLastError(palError);
+        CorUnix::CPalThread::SetLastError(palError);
     }
     
     LOGEXIT("SetEvent returns BOOL %d\n", (NO_ERROR == palError));
@@ -247,7 +247,7 @@ ResetEvent(
 
     if (NO_ERROR != palError)
     {
-        pthr->SetLastError(palError);
+        CorUnix::CPalThread::SetLastError(palError);
     }
     
     LOGEXIT("ResetEvent returns BOOL %d\n", (NO_ERROR == palError));

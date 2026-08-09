@@ -80,9 +80,10 @@ Function:
 
 --*/
 static void * ReserveVirtualMemory(
-                CPalThread *pthrCurrent, /* Currently executing thread */
-                void * lpAddress,        /* Region to reserve or commit */
-                size_t dwSize);          /* Size of Region */
+    /* Currently executing thread */
+    void *lpAddress,
+    /* Region to reserve or commit */
+    size_t dwSize);          /* Size of Region */
 
 /*++
 Function:
@@ -836,7 +837,7 @@ static void * VIRTUALReserveMemory(
     if (pRetVal == NULL)
     {
         // Try to reserve memory from the OS
-        pRetVal = ReserveVirtualMemory(pthrCurrent, reinterpret_cast<void*>(StartBoundary), MemSize);
+        pRetVal = ReserveVirtualMemory(reinterpret_cast<void *>(StartBoundary), MemSize);
     }
 
     if (pRetVal != NULL)
@@ -853,7 +854,7 @@ static void * VIRTUALReserveMemory(
                                    flAllocationType, flProtect ) )
         {
             chakra::Logger::error("Unable to store the structure in the list.\n");
-            pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
+            CorUnix::CPalThread::SetLastError( ERROR_INTERNAL_ERROR );
             munmap( pRetVal, MemSize );
             pRetVal = NULL;
         }
@@ -870,9 +871,10 @@ static void * VIRTUALReserveMemory(
  *
  */
 static void * ReserveVirtualMemory(
-                 CPalThread *pthrCurrent, /* Currently executing thread */
-                 void * lpAddress,        /* Region to reserve or commit */
-                 size_t dwSize)           /* Size of Region */
+    /* Currently executing thread */
+    void *lpAddress,
+    /* Region to reserve or commit */
+    size_t dwSize)           /* Size of Region */
 {
     void * pRetVal = NULL;
 #if !defined(__APPLE__) && !defined(vm_address_t)
@@ -898,7 +900,7 @@ static void * ReserveVirtualMemory(
                           (reinterpret_cast<void*>(StartBoundary) != NULL) ? FALSE : TRUE);
     if (result != KERN_SUCCESS) {
         ERROR("vm_allocate failed to allocated the requested region!\n");
-        pthrCurrent->SetLastError(ERROR_INVALID_ADDRESS);
+        CorUnix::CPalThread::SetLastError(ERROR_INVALID_ADDRESS);
         pRetVal = NULL;
         goto done;
     }
@@ -921,7 +923,7 @@ static void * ReserveVirtualMemory(
         StartBoundary != reinterpret_cast<unsigned long>(pRetVal))
     {
         ERROR("We did not get the region we asked for!\n");
-        pthrCurrent->SetLastError(ERROR_INVALID_ADDRESS);
+        CorUnix::CPalThread::SetLastError(ERROR_INVALID_ADDRESS);
         munmap(pRetVal, MemSize);
         pRetVal = NULL;
         goto done;
@@ -936,7 +938,7 @@ static void * ReserveVirtualMemory(
 #if defined(__APPLE__)
         vm_deallocate(mach_task_self(), StartBoundary, MemSize);
 #endif  // defined(__APPLE__)
-        pthrCurrent->SetLastError( ERROR_NOT_ENOUGH_MEMORY );
+        CorUnix::CPalThread::SetLastError( ERROR_NOT_ENOUGH_MEMORY );
         pRetVal = NULL;
         goto done;
     }
@@ -1013,7 +1015,7 @@ static void * VIRTUALCommitMemory(
             if ( !pInformation )
             {
                 chakra::Logger::error("Unable to locate the region information.\n" );
-                pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
+                CorUnix::CPalThread::SetLastError( ERROR_INTERNAL_ERROR );
                 pRetVal = NULL;
                 goto done;
             }
@@ -1133,7 +1135,7 @@ error:
         if ( VIRTUALReleaseMemory( pInformation ) == FALSE )
         {
             chakra::Logger::error("Unable to remove the PCMI entry from the list.\n" );
-            pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
+            CorUnix::CPalThread::SetLastError( ERROR_INTERNAL_ERROR );
             pRetVal = NULL;
             goto done;
         }
@@ -1214,13 +1216,12 @@ VirtualAlloc_(
           uint32_t flProtect)        /* Type of access protection */
 {
     void *  pRetVal       = NULL;
-    CPalThread *pthrCurrent;
 
-    pthrCurrent = InternalGetCurrentThread();
+    CPalThread *pthrCurrent = InternalGetCurrentThread();
 
     if ( ( flAllocationType & MEM_WRITE_WATCH )  != 0 )
     {
-        pthrCurrent->SetLastError( ERROR_INVALID_PARAMETER );
+        CorUnix::CPalThread::SetLastError( ERROR_INVALID_PARAMETER );
         goto done;
     }
 
@@ -1229,7 +1230,7 @@ VirtualAlloc_(
     {
         chakra::Logger::error("flAllocationType can be one, or any combination of MEM_COMMIT, \
                MEM_RESERVE, MEM_TOP_DOWN, or MEM_RESERVE_EXECUTABLE.\n" );
-        pthrCurrent->SetLastError( ERROR_INVALID_PARAMETER );
+        CorUnix::CPalThread::SetLastError( ERROR_INVALID_PARAMETER );
         goto done;
     }
     if ( VIRTUALContainsInvalidProtectionFlags( flProtect ) )
@@ -1237,7 +1238,7 @@ VirtualAlloc_(
         chakra::Logger::error("flProtect can be one of PAGE_READONLY, PAGE_READWRITE, or \
                PAGE_EXECUTE_READWRITE || PAGE_NOACCESS. \n" );
 
-        pthrCurrent->SetLastError( ERROR_INVALID_PARAMETER );
+        CorUnix::CPalThread::SetLastError( ERROR_INVALID_PARAMETER );
         goto done;
     }
     if ( flAllocationType & MEM_TOP_DOWN )
@@ -1322,13 +1323,12 @@ VirtualFreeEnclosing_(
     assert(beforeRegionSize == beforeRegionSize2);
 #endif
 
-    CPalThread *pthrCurrent;
-    pthrCurrent = InternalGetCurrentThread();
+    CPalThread *pthrCurrent = InternalGetCurrentThread();
 
     if (dwSize == 0)
     {
         ERROR("dwSize must be non-zero when releasing enclosing memory region.\n");
-        pthrCurrent->SetLastError(ERROR_INVALID_PARAMETER);
+        CorUnix::CPalThread::SetLastError(ERROR_INVALID_PARAMETER);
         return FALSE;
     }
 
@@ -1340,7 +1340,7 @@ VirtualFreeEnclosing_(
     if (!pMemoryToBeReleased)
     {
         ERROR("lpRegionStartAddress must be the base address returned by VirtualAlloc.\n");
-        pthrCurrent->SetLastError(ERROR_INVALID_ADDRESS);
+        CorUnix::CPalThread::SetLastError(ERROR_INVALID_ADDRESS);
         bRetVal = FALSE;
         goto VirtualFreeEnclosingExit;
     }
@@ -1355,7 +1355,7 @@ VirtualFreeEnclosing_(
     {
         chakra::Logger::error("Unable to unmap the memory, munmap() returned "
             "an abnormal value.\n");
-        pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
+        CorUnix::CPalThread::SetLastError(ERROR_INTERNAL_ERROR);
         bRetVal = FALSE;
         goto VirtualFreeEnclosingExit;
     }
@@ -1371,7 +1371,7 @@ VirtualFreeEnclosing_(
         {
             chakra::Logger::error("Unable to unmap the memory, munmap() returned "
                 "an abnormal value.\n");
-            pthrCurrent->SetLastError(ERROR_INTERNAL_ERROR);
+            CorUnix::CPalThread::SetLastError(ERROR_INTERNAL_ERROR);
             bRetVal = FALSE;
             goto VirtualFreeEnclosingExit;
         }
@@ -1482,9 +1482,8 @@ VirtualFree(
          uint32_t dwFreeType )   /* Operation type. */
 {
     BOOL bRetVal = TRUE;
-    CPalThread *pthrCurrent;
 
-    pthrCurrent = InternalGetCurrentThread();
+    CPalThread *pthrCurrent = InternalGetCurrentThread();
     InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
 
     /* Sanity Checks. */
@@ -1492,7 +1491,7 @@ VirtualFree(
     {
         ERROR( "lpAddress cannot be NULL. You must specify the base address of\
                regions to be de-committed. \n" );
-        pthrCurrent->SetLastError( ERROR_INVALID_ADDRESS );
+        CorUnix::CPalThread::SetLastError( ERROR_INVALID_ADDRESS );
         bRetVal = FALSE;
         goto VirtualFreeExit;
     }
@@ -1501,7 +1500,7 @@ VirtualFree(
     {
         ERROR( "dwFreeType must contain one of the following: \
                MEM_RELEASE or MEM_DECOMMIT\n" );
-        pthrCurrent->SetLastError( ERROR_INVALID_PARAMETER );
+        CorUnix::CPalThread::SetLastError( ERROR_INVALID_PARAMETER );
         bRetVal = FALSE;
         goto VirtualFreeExit;
     }
@@ -1521,7 +1520,7 @@ VirtualFree(
         if ( dwSize == 0 )
         {
             ERROR( "dwSize cannot be 0. \n" );
-            pthrCurrent->SetLastError( ERROR_INVALID_PARAMETER );
+            CorUnix::CPalThread::SetLastError( ERROR_INVALID_PARAMETER );
             bRetVal = FALSE;
             goto VirtualFreeExit;
         }
@@ -1540,7 +1539,7 @@ VirtualFree(
         if (!pUnCommittedMem)
         {
             chakra::Logger::error("Unable to locate the region information.\n" );
-            pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
+            CorUnix::CPalThread::SetLastError( ERROR_INTERNAL_ERROR );
             bRetVal = FALSE;
             goto VirtualFreeExit;
         }
@@ -1576,7 +1575,7 @@ VirtualFree(
         {
             chakra::Logger::error("mmap() returned an abnormal value.\n" );
             bRetVal = FALSE;
-            pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
+            CorUnix::CPalThread::SetLastError( ERROR_INTERNAL_ERROR );
             goto VirtualFreeExit;
         }
     }
@@ -1589,14 +1588,14 @@ VirtualFree(
         if ( !pMemoryToBeReleased )
         {
             ERROR( "lpAddress must be the base address returned by VirtualAlloc.\n" );
-            pthrCurrent->SetLastError( ERROR_INVALID_ADDRESS );
+            CorUnix::CPalThread::SetLastError( ERROR_INVALID_ADDRESS );
             bRetVal = FALSE;
             goto VirtualFreeExit;
         }
         if ( dwSize != 0 )
         {
             ERROR( "dwSize must be 0 if you are releasing the memory.\n" );
-            pthrCurrent->SetLastError( ERROR_INVALID_PARAMETER );
+            CorUnix::CPalThread::SetLastError( ERROR_INVALID_PARAMETER );
             bRetVal = FALSE;
             goto VirtualFreeExit;
         }
@@ -1610,7 +1609,7 @@ VirtualFree(
             if ( VIRTUALReleaseMemory( pMemoryToBeReleased ) == FALSE )
             {
                 chakra::Logger::error("Unable to remove the PCMI entry from the list.\n" );
-                pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
+                CorUnix::CPalThread::SetLastError( ERROR_INTERNAL_ERROR );
                 bRetVal = FALSE;
                 goto VirtualFreeExit;
             }
@@ -1620,7 +1619,7 @@ VirtualFree(
         {
             chakra::Logger::error("Unable to unmap the memory, munmap() returned "
                    "an abnormal value.\n" );
-            pthrCurrent->SetLastError( ERROR_INTERNAL_ERROR );
+            CorUnix::CPalThread::SetLastError( ERROR_INTERNAL_ERROR );
             bRetVal = FALSE;
             goto VirtualFreeExit;
         }
@@ -1909,13 +1908,13 @@ VirtualQuery(
     if ( !lpBuffer)
     {
         ERROR( "lpBuffer has to be a valid pointer.\n" );
-        pthrCurrent->SetLastError( ERROR_NOACCESS );
+        CorUnix::CPalThread::SetLastError( ERROR_NOACCESS );
         goto ExitVirtualQuery;
     }
     if ( dwLength < sizeof( *lpBuffer ) )
     {
         ERROR( "dwLength cannot be smaller then the size of *lpBuffer.\n" );
-        pthrCurrent->SetLastError( ERROR_BAD_LENGTH );
+        CorUnix::CPalThread::SetLastError( ERROR_BAD_LENGTH );
         goto ExitVirtualQuery;
     }
 
