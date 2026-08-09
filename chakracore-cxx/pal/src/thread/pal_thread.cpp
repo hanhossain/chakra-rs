@@ -384,7 +384,7 @@ CreateThread(
 
     if (NO_ERROR != palError)
     {
-        pThread->SetLastError(palError);
+        CorUnix::CPalThread::SetLastError(palError);
     }
     if(lpThreadId != nullptr)
     {
@@ -698,7 +698,7 @@ GetThreadPriority(
 
     if (NO_ERROR != palError)
     {
-        pThread->SetLastError(palError);
+        CorUnix::CPalThread::SetLastError(palError);
     }
 
     LOGEXIT("GetThreadPriorityExit returns int %d\n", iPriority);
@@ -770,7 +770,7 @@ SetThreadPriority(
 
     if (NO_ERROR != palError)
     {
-        pThread->SetLastError(palError);
+        CorUnix::CPalThread::SetLastError(palError);
     }
 
     LOGEXIT("SetThreadPriority returns BOOL %d\n", NO_ERROR == palError);
@@ -1333,7 +1333,7 @@ CorUnix::CreateThreadData(
         goto CreateThreadDataExit;
     }
 
-    pThread->SetLastError(0);
+    CorUnix::CPalThread::SetLastError(0);
 
     pThread->m_threadId = THREADSilentGetCurrentThreadId();
     pThread->m_pthreadSelf = pthread_self();

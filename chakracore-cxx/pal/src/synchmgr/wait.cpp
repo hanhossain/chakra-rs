@@ -133,7 +133,7 @@ Sleep( uint32_t dwMilliseconds)
     {
         ERROR("Sleep(dwMilliseconds=%u) failed [error=%u]\n",
               dwMilliseconds, palErr);
-        pThread->SetLastError(palErr);
+        CorUnix::CPalThread::SetLastError(palErr);
     }
 
     LOGEXIT("Sleep returns VOID\n");
@@ -220,7 +220,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         ppISyncWaitCtrlrs = NULL; // make delete at the end safe
         ERROR("Invalid object count=%d [range: 1 to %d]\n",
                nCount, MAXIMUM_WAIT_OBJECTS);
-        pThread->SetLastError(ERROR_INVALID_PARAMETER);
+        CorUnix::CPalThread::SetLastError(ERROR_INVALID_PARAMETER);
         goto WFMOExIntExit;
     }
     else if (nCount == 1)
@@ -238,7 +238,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
             if ((NULL == ppIPalObjs) || (NULL == ppISyncWaitCtrlrs))
             {
                 ERROR("Out of memory allocating internal structures\n");
-                pThread->SetLastError(ERROR_NOT_ENOUGH_MEMORY);
+                CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
                 goto WFMOExIntExit;
             }
         }
@@ -254,9 +254,9 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         ERROR("Unable to obtain object for some or all of the handles [error=%u]\n",
               palErr);
         if (palErr == ERROR_INVALID_HANDLE)
-            pThread->SetLastError(ERROR_INVALID_HANDLE);
+            CorUnix::CPalThread::SetLastError(ERROR_INVALID_HANDLE);
         else
-            pThread->SetLastError(ERROR_INTERNAL_ERROR);
+            CorUnix::CPalThread::SetLastError(ERROR_INTERNAL_ERROR);
         goto WFMOExIntExit;
     }
 
@@ -273,7 +273,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
                 if (ppIPalObjs[j] == objectToCheck)
                 {
                     ERROR("Duplicate handle provided for a wait-all operation [error=%u]\n", ERROR_INVALID_PARAMETER);
-                    pThread->SetLastError(ERROR_INVALID_PARAMETER);
+                    CorUnix::CPalThread::SetLastError(ERROR_INVALID_PARAMETER);
                     goto WFMOExIntCleanup;
                 }
             }
@@ -286,7 +286,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
     {
         ERROR("Unable to obtain ISynchWaitController interface for some or all "
               "of the objects [error=%u]\n", palErr);
-        pThread->SetLastError(ERROR_INTERNAL_ERROR);
+        CorUnix::CPalThread::SetLastError(ERROR_INTERNAL_ERROR);
         goto WFMOExIntCleanup;
     }
 
@@ -311,7 +311,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
             else
             {
                 chakra::Logger::error("Awakened for APC, but no APC is pending\n");
-                pThread->SetLastError(ERROR_INTERNAL_ERROR);
+                CorUnix::CPalThread::SetLastError(ERROR_INTERNAL_ERROR);
                 dwRet = WAIT_FAILED;
             }
             goto WFMOExIntCleanup;
@@ -328,7 +328,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         {
             ERROR("ISynchWaitController::CanThreadWaitWithoutBlocking() failed for "
                   "%d-th object [handle=%p error=%u]\n", i, lpHandles[i], palErr);
-            pThread->SetLastError(ERROR_INTERNAL_ERROR);
+            CorUnix::CPalThread::SetLastError(ERROR_INTERNAL_ERROR);
             goto WFMOExIntReleaseControllers;
         }
         if (fValue)
@@ -362,7 +362,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
         if( iStartIdx < 0 )
         {
             ERROR("Buffer underflow due to iStartIdx < 0");
-            pThread->SetLastError(ERROR_INTERNAL_ERROR);
+            CorUnix::CPalThread::SetLastError(ERROR_INTERNAL_ERROR);
             dwRet = WAIT_FAILED;
             goto WFMOExIntCleanup;
         }
@@ -374,7 +374,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
                 ERROR("ReleaseWaitingThreadWithoutBlocking() failed for %d-th "
                       "object [handle=%p error=%u]\n",
                       i, lpHandles[i], palErr);
-                pThread->SetLastError(palErr);
+                CorUnix::CPalThread::SetLastError(palErr);
                 goto WFMOExIntReleaseControllers;
             }
         }
@@ -400,7 +400,7 @@ uint32_t CorUnix::InternalWaitForMultipleObjectsEx(
             {
                 ERROR("RegisterWaitingThread() failed for %d-th object "
                       "[handle=%p error=%u]\n", i, lpHandles[i], palErr);
-                pThread->SetLastError(palErr);
+                CorUnix::CPalThread::SetLastError(palErr);
                 goto WFMOExIntReleaseControllers;
             }
         }
@@ -436,7 +436,7 @@ WFMOExIntReleaseControllers:
         {
             ERROR("IPalSynchronizationManager::BlockThread failed for thread "
                   "pThread=%p [error=%u]\n", pThread, palErr);
-            pThread->SetLastError(palErr);
+            CorUnix::CPalThread::SetLastError(palErr);
             goto WFMOExIntCleanup;
         }
         switch (twrWakeupReason)
@@ -479,7 +479,7 @@ WFMOExIntReleaseControllers:
 
         if (iSignaledObjIndex < 0)
         {
-            pThread->SetLastError(ERROR_INTERNAL_ERROR);
+            CorUnix::CPalThread::SetLastError(ERROR_INTERNAL_ERROR);
             dwRet = WAIT_FAILED;
             goto WFMOExIntCleanup;
         }

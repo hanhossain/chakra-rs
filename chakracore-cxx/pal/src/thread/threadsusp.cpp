@@ -146,7 +146,7 @@ ResumeThread(
 
     if (NO_ERROR != palError)
     {
-        pthrResumer->SetLastError(palError);
+        CorUnix::CPalThread::SetLastError(palError);
         dwSuspendCount = static_cast<uint32_t>(-1);
     }
     else
