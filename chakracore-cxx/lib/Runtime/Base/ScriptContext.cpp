@@ -165,9 +165,6 @@ namespace Js
 #ifdef EDIT_AND_CONTINUE
         , activeScriptEditQuery(nullptr)
 #endif
-#ifdef RECYCLER_PERF_COUNTERS
-        , bindReferenceCount(0)
-#endif
         , nextPendingClose(nullptr)
         , intConstPropsOnGlobalObject(nullptr)
         , intConstPropsOnGlobalUserObject(nullptr)
@@ -271,8 +268,8 @@ namespace Js
         m_iProfileSession = -1;
 #endif
 
-        PERF_COUNTER_INC(Basic, ScriptContext);
-        PERF_COUNTER_INC(Basic, ScriptContextActive);
+        ;
+        ;
 
         END_NO_EXCEPTION;
     }
@@ -503,7 +500,7 @@ namespace Js
         Assert(this->IsActuallyClosed());
         this->GetThreadContext()->closedScriptContextCount--;
 
-        PERF_COUNTER_DEC(Basic, ScriptContext);
+        ;
     }
 
     void ScriptContext::SetUrl(BSTR bstrUrl)
@@ -547,7 +544,7 @@ namespace Js
         isScriptContextActuallyClosed = true;
         this->GetThreadContext()->closedScriptContextCount++;
 
-        PERF_COUNTER_DEC(Basic, ScriptContextActive);
+        ;
 
 #if ENABLE_NATIVE_CODEGEN
         if (nativeCodeGen != nullptr)
@@ -667,7 +664,7 @@ namespace Js
         }
 #endif
 
-        RECYCLER_PERF_COUNTER_SUB(BindReference, bindReferenceCount);
+        ;
 
         if (this->interpreterArena)
         {
@@ -1487,7 +1484,7 @@ namespace Js
 
         if (-1 != this->GetLibrary()->EnsureReferencedPropertyRecordList()->AddNew(propertyRecord))
         {
-            RECYCLER_PERF_COUNTER_INC(PropertyRecordBindReference);
+            ;
         }
     }
     void ScriptContext::TrackPid(PropertyId propertyId)
@@ -3697,11 +3694,6 @@ namespace Js
         bindRef.AddNew(addr);
 #endif
         javascriptLibrary->BindReference(addr);
-
-#ifdef RECYCLER_PERF_COUNTERS
-        this->bindReferenceCount++;
-        RECYCLER_PERF_COUNTER_INC(BindReference);
-#endif
     }
 
 #ifdef PROFILE_STRINGS

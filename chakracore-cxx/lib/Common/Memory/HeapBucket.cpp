@@ -248,18 +248,18 @@ HeapBucketT<TBlockType>::IntegrateBlock(char * blockAddress, PageSegment * segme
 
     recycler->autoHeap.uncollectedAllocBytes += heapBlock->GetAndClearLastFreeCount() * heapBlock->GetObjectSize();
     RecyclerMemoryTracking::ReportAllocation(recycler, blockAddress, heapBlock->GetObjectSize() * heapBlock->GetObjectCount());
-    RECYCLER_PERF_COUNTER_ADD(LiveObject,heapBlock->GetObjectCount());
-    RECYCLER_PERF_COUNTER_ADD(LiveObjectSize, heapBlock->GetObjectSize() * heapBlock->GetObjectCount());
+    ;
+    ;
 
     if (heapBlock->IsLargeHeapBlock())
     {
-        RECYCLER_PERF_COUNTER_ADD(LargeHeapBlockLiveObject,heapBlock->GetObjectCount());
-        RECYCLER_PERF_COUNTER_ADD(LargeHeapBlockLiveObjectSize, heapBlock->GetObjectSize() * heapBlock->GetObjectCount());
+        ;
+        ;
     }
     else
     {
-        RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockLiveObject,heapBlock->GetObjectCount());
-        RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockLiveObjectSize, heapBlock->GetObjectSize() * heapBlock->GetObjectCount());
+        ;
+        ;
     }
 
 #if DBG

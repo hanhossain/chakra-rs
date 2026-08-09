@@ -6,9 +6,6 @@ add_library (Chakra.Common.Core OBJECT
     ConfigParser.cpp
     CRC.cpp
     Output.cpp
-    PerfCounter.cpp
-    PerfCounterImpl.cpp
-    PerfCounterSet.cpp
     ProfileInstrument.cpp
     ProfileMemory.cpp
     StackBackTrace.cpp

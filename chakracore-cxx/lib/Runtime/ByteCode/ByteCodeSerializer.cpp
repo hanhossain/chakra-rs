@@ -4095,9 +4095,6 @@ public:
                 sourceInfo->GetSrcInfo()->sourceContextInfo->sourceContextId,
                 firstFunctionId + functionId, static_cast<FunctionInfo::Attributes>(attributes),
                 Js::FunctionBody::FunctionBodyFlags::Flags_None  // bytecode serializer will initialize
-#ifdef PERF_COUNTERS
-                , (deferDeserializeFunctionInfo != nullptr)
-#endif
                 );
 
             (*functionBody)->SetDisplayName(displayName, displayNameLength, displayShortNameOffset, displayNameFlags);

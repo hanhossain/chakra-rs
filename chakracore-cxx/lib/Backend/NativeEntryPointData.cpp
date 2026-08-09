@@ -81,12 +81,6 @@ NativeEntryPointData::FreeNativeCode(ScriptContext * scriptContext, bool isShutd
         }
     }
 
-#ifdef PERF_COUNTERS
-    PERF_COUNTER_SUB(Code, TotalNativeCodeSize, codeSize);
-    PERF_COUNTER_SUB(Code, FunctionNativeCodeSize,codeSize);
-    PERF_COUNTER_SUB(Code, DynamicNativeCodeSize, codeSize);
-#endif
-
     this->nativeAddress = nullptr;
     this->thunkAddress = nullptr;
     this->codeSize = 0;

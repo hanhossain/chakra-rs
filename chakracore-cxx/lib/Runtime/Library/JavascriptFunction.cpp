@@ -16,7 +16,7 @@ using namespace Js;
 
     const charcount_t JavascriptFunction::DIAG_MAX_FUNCTION_STRING;
 
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(JavascriptFunction);
+    ;
     JavascriptFunction::JavascriptFunction(DynamicType * type)
         : DynamicObject(type), functionInfo(nullptr), constructorCache(&ConstructorCache::DefaultInstance)
     {

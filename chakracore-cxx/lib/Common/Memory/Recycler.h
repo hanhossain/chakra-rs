@@ -1117,8 +1117,6 @@ public:
     template <CollectionFlags flags>
     BOOL CollectNow();
 
-    void DisplayMemStats();
-
     void AddExternalMemoryUsage(size_t size);
 
     bool NeedDispose() { return this->hasDisposableObject; }
@@ -1668,17 +1666,10 @@ private:
     void TrackIntegrate(__in_ecount(blockSize) char * blockAddress, size_t blockSize, size_t allocSize, size_t objectSize, const TrackAllocData& trackAllocData);
     BOOL TrackFree(const char* address, size_t size);
 
-    void TrackAllocWeakRef(RecyclerWeakReferenceBase * weakRef);
-    void TrackFreeWeakRef(RecyclerWeakReferenceBase * weakRef);
-
     struct TrackerData
     {
         TrackerData(type_info const * typeinfo, bool isArray) : typeinfo(typeinfo), isArray(isArray),
             ItemSize(0), ItemCount(0), AllocCount(0), ReqSize(0), AllocSize(0), FreeCount(0), FreeSize(0), TraceLifetime(false)
-#ifdef PERF_COUNTERS
-            , counter(PerfCounter::RecyclerTrackerCounterSet::GetPerfCounter(typeinfo, isArray))
-            , sizeCounter(PerfCounter::RecyclerTrackerCounterSet::GetPerfSizeCounter(typeinfo, isArray))
-#endif
         {
         }
 
@@ -1695,10 +1686,6 @@ private:
         long AllocSize;
         int FreeCount;
         long FreeSize;
-#ifdef PERF_COUNTERS
-        PerfCounter::Counter& counter;
-        PerfCounter::Counter& sizeCounter;
-#endif
 
         static TrackerData EmptyData;
         static TrackerData ExplicitFreeListObjectData;
@@ -1709,15 +1696,9 @@ private:
     struct TrackerItem
     {
         TrackerItem(type_info const * typeinfo) : instanceData(typeinfo, false), arrayData(typeinfo, true)
-#ifdef PERF_COUNTERS
-            , weakRefCounter(PerfCounter::RecyclerTrackerCounterSet::GetWeakRefPerfCounter(typeinfo))
-#endif
         {}
         TrackerData instanceData;
         TrackerData arrayData;
-#ifdef PERF_COUNTERS
-        PerfCounter::Counter& weakRefCounter;
-#endif
     };
 
     typedef JsUtil::BaseDictionary<type_info const *, TrackerItem *, NoCheckHeapAllocator, PrimeSizePolicy, DefaultComparer, JsUtil::SimpleDictionaryEntry, JsUtil::NoResizeLock> TypeInfotoTrackerItemMap;
@@ -2036,9 +2017,6 @@ public:
     virtual void SetObjectMarkedBit(void* objectAddress) override { Assert(false); }
 #ifdef RECYCLER_VERIFY_MARK
     virtual bool VerifyMark(void * objectAddress, void * target) override { Assert(false); return false; }
-#endif
-#ifdef RECYCLER_PERF_COUNTERS
-    virtual void UpdatePerfCountersOnFree() override { Assert(false); }
 #endif
 #ifdef PROFILE_RECYCLER_ALLOC
     virtual void * GetTrackerData(void * address) override { Assert(false); return nullptr; }

@@ -8,9 +8,6 @@
 NativeCodeData::NativeCodeData(DataChunk * chunkList)
     : chunkList(chunkList)
 {
-#ifdef PERF_COUNTERS
-    this->size = 0;
-#endif
 }
 
 NativeCodeData::~NativeCodeData()
@@ -23,8 +20,8 @@ NativeCodeData::~NativeCodeData()
     {
         NativeCodeData::DeleteChunkList(this->noFixupChunkList);
     }
-    PERF_COUNTER_SUB(Code, DynamicNativeCodeDataSize, this->size);
-    PERF_COUNTER_SUB(Code, TotalNativeCodeDataSize, this->size);
+    ;
+    ;
 }
 
 void
@@ -172,9 +169,6 @@ NativeCodeData::Allocator::Allocator()
 #if DBG
     this->finalized = false;
 #endif
-#ifdef PERF_COUNTERS
-    this->size = 0;
-#endif
 }
 
 NativeCodeData::Allocator::~Allocator()
@@ -188,8 +182,8 @@ NativeCodeData::Allocator::~Allocator()
     {
         NativeCodeData::DeleteChunkList(this->noFixupChunkList);
     }
-    PERF_COUNTER_SUB(Code, DynamicNativeCodeDataSize, this->size);
-    PERF_COUNTER_SUB(Code, TotalNativeCodeDataSize, this->size);
+    ;
+    ;
 }
 
 char *
@@ -248,13 +242,7 @@ NativeCodeData::Allocator::Alloc(size_t requestSize)
         data = newChunk->data;
     }
 
-
-#ifdef PERF_COUNTERS
-    this->size += requestSize;
-    PERF_COUNTER_ADD(Code, DynamicNativeCodeDataSize, requestSize);
-#endif
-
-    PERF_COUNTER_ADD(Code, TotalNativeCodeDataSize, requestSize);
+    ;
     return data;
 }
 
@@ -288,10 +276,6 @@ NativeCodeData::Allocator::Finalize()
     {
         data = HeapNew(NativeCodeData, this->chunkList);
         this->chunkList = nullptr;
-#ifdef PERF_COUNTERS
-        data->size = this->size;
-        this->size = 0;
-#endif
     }
 #if DBG
     this->finalized = true;

@@ -781,32 +781,6 @@ private:
     size_t committedBytes;
     size_t numberOfSegments;
 
-#ifdef PERF_COUNTERS
-    PerfCounter::Counter& GetReservedSizeCounter() const
-    {
-        return PerfCounter::PageAllocatorCounterSet::GetReservedSizeCounter(type);
-    }
-    PerfCounter::Counter& GetCommittedSizeCounter() const
-    {
-        return PerfCounter::PageAllocatorCounterSet::GetCommittedSizeCounter(type);
-    }
-    PerfCounter::Counter& GetUsedSizeCounter() const
-    {
-        return PerfCounter::PageAllocatorCounterSet::GetUsedSizeCounter(type);
-    }
-    PerfCounter::Counter& GetTotalReservedSizeCounter() const
-    {
-        return PerfCounter::PageAllocatorCounterSet::GetTotalReservedSizeCounter();
-    }
-    PerfCounter::Counter& GetTotalCommittedSizeCounter() const
-    {
-        return PerfCounter::PageAllocatorCounterSet::GetTotalCommittedSizeCounter();
-    }
-    PerfCounter::Counter& GetTotalUsedSizeCounter() const
-    {
-        return PerfCounter::PageAllocatorCounterSet::GetTotalUsedSizeCounter();
-    }
-#endif
     void AddReservedBytes(size_t bytes);
     void SubReservedBytes(size_t bytes);
     void AddCommittedBytes(size_t bytes);

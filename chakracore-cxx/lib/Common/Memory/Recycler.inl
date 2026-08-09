@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Core/PerfCounterSet.h"
 #include "Core/ProfileMemory.h"
 
 template <ObjectInfoBits attributes>
@@ -120,21 +119,21 @@ Recycler::AllocWithAttributesInlined(size_t size)
     TrackAlloc(memBlock, size, trackAllocData, false);
 #endif
     RecyclerMemoryTracking::ReportAllocation(this, memBlock, size);
-    RECYCLER_PERF_COUNTER_INC(LiveObject);
-    RECYCLER_PERF_COUNTER_ADD(LiveObjectSize, HeapInfo::GetAlignedSizeNoCheck(allocSize));
-    RECYCLER_PERF_COUNTER_SUB(FreeObjectSize, HeapInfo::GetAlignedSizeNoCheck(allocSize));
+    ;
+    ;
+    ;
 
     if (HeapInfo::IsSmallBlockAllocation(HeapInfo::GetAlignedSizeNoCheck(allocSize)))
     {
-        RECYCLER_PERF_COUNTER_INC(SmallHeapBlockLiveObject);
-        RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockLiveObjectSize, HeapInfo::GetAlignedSizeNoCheck(allocSize));
-        RECYCLER_PERF_COUNTER_SUB(SmallHeapBlockFreeObjectSize, HeapInfo::GetAlignedSizeNoCheck(allocSize));
+        ;
+        ;
+        ;
     }
     else
     {
-        RECYCLER_PERF_COUNTER_INC(LargeHeapBlockLiveObject);
-        RECYCLER_PERF_COUNTER_ADD(LargeHeapBlockLiveObjectSize, HeapInfo::GetAlignedSizeNoCheck(allocSize));
-        RECYCLER_PERF_COUNTER_SUB(LargeHeapBlockFreeObjectSize, HeapInfo::GetAlignedSizeNoCheck(allocSize));
+        ;
+        ;
+        ;
     }
 
 #ifdef RECYCLER_MEMORY_VERIFY
@@ -326,9 +325,6 @@ inline RecyclerWeakReference<T>* Recycler::CreateWeakReferenceHandle(T* pStrongR
     if (weakRef->typeInfo == nullptr)
     {
         weakRef->typeInfo = &typeid(T);
-#ifdef TRACK_ALLOC
-        TrackAllocWeakRef(weakRef);
-#endif
     }
 #endif
     return weakRef;
@@ -344,9 +340,6 @@ inline bool Recycler::FindOrCreateWeakReferenceHandle(T* pStrongReference, Recyc
     if (!ret)
     {
         (*ppWeakRef)->typeInfo = &typeid(T);
-#ifdef TRACK_ALLOC
-        TrackAllocWeakRef(*ppWeakRef);
-#endif
     }
 #endif
     return ret;
@@ -474,25 +467,6 @@ Recycler::NotifyFree(T * heapBlock)
 #endif
         RECYCLER_STATS_INC(this, heapBlockFreeCount[heapBlock->GetHeapBlockType()]);
     }
-#ifdef RECYCLER_PERF_COUNTERS
-    if (forceSweepObject)
-    {
-        RECYCLER_PERF_COUNTER_SUB(FreeObjectSize, heapBlock->GetPageCount() * AutoSystemInfo::PageSize);
-
-        if (heapBlock->IsLargeHeapBlock())
-        {
-            RECYCLER_PERF_COUNTER_SUB(LargeHeapBlockFreeObjectSize, heapBlock->GetPageCount() * AutoSystemInfo::PageSize);
-        }
-        else
-        {
-            RECYCLER_PERF_COUNTER_SUB(SmallHeapBlockFreeObjectSize, heapBlock->GetPageCount() * AutoSystemInfo::PageSize);
-        }
-    }
-    else
-    {
-        heapBlock->UpdatePerfCountersOnFree();
-    }
-#endif
 }
 
 template <class TBlockAttributes>

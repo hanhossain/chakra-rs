@@ -5,8 +5,8 @@
 
 namespace Js
 {
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(DynamicObject);
-    DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER(DynamicObject);
+    ;
+    ;
 
     DynamicObject::DynamicObject(DynamicType * type, const bool initSlots) :
         RecyclableObject(type),

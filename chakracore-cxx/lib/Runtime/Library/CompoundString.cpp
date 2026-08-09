@@ -1172,7 +1172,7 @@ using namespace Js;
         return !HasOnlyDirectChars();
     }
 
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(CompoundString);
+    ;
 
     static_assert(static_cast<CharCount>(-1) > static_cast<CharCount>(0)); // CharCount is assumed to be unsigned
 

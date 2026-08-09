@@ -244,7 +244,7 @@ LargeHeapBucket::PageHeapAlloc(Recycler * recycler, size_t sizeCat, size_t size,
     recycler->autoHeap.uncollectedNewPageCount += pageCount;
 
     RECYCLER_SLOW_CHECK(this->heapInfo->heapBlockCount[HeapBlock::HeapBlockType::LargeBlockType]++);
-    RECYCLER_PERF_COUNTER_ADD(FreeObjectSize, heapBlock->GetPageCount() * AutoSystemInfo::PageSize);
+    ;
 
 #ifdef STACK_BACK_TRACE
     if (recycler->ShouldCapturePageHeapAllocStack())
@@ -320,7 +320,7 @@ LargeHeapBucket::AddLargeHeapBlock(size_t size, bool nothrow)
     heapBlock->SetNextBlock(this->largeBlockList);
     this->largeBlockList = heapBlock;
 
-    RECYCLER_PERF_COUNTER_ADD(FreeObjectSize, heapBlock->GetPageCount() * AutoSystemInfo::PageSize);
+    ;
     return heapBlock;
 }
 

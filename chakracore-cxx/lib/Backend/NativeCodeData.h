@@ -68,9 +68,6 @@ public:
         DataChunkNoFixup * noFixupChunkList;
     };
 
-#ifdef PERF_COUNTERS
-    size_t size;
-#endif
 public:
 
     static void AddFixupEntry(void* targetAddr, void* addrToFixup, void* startAddress, DataChunk * chunkList);
@@ -113,9 +110,6 @@ public:
     private:
 #if DBG
         bool finalized;
-#endif
-#ifdef PERF_COUNTERS
-        size_t size;
 #endif
     };
 

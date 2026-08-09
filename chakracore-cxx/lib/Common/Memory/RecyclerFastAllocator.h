@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Core/PerfCounterSet.h"
 #include "Memory/HeapBlock.h"
 #include "Memory/SmallFinalizableHeapBucket.h"
 
@@ -66,13 +65,13 @@ public:
         recycler->TrackAlloc(memBlock, sizeof(T), trackAllocData);
 #endif
         RecyclerMemoryTracking::ReportAllocation(this->recycler, memBlock, sizeof(T));
-        RECYCLER_PERF_COUNTER_INC(LiveObject);
-        RECYCLER_PERF_COUNTER_ADD(LiveObjectSize, sizeCat);
-        RECYCLER_PERF_COUNTER_SUB(FreeObjectSize, sizeCat);
+        ;
+        ;
+        ;
 
-        RECYCLER_PERF_COUNTER_INC(SmallHeapBlockLiveObject);
-        RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockLiveObjectSize, sizeCat);
-        RECYCLER_PERF_COUNTER_SUB(SmallHeapBlockFreeObjectSize, sizeCat);
+        ;
+        ;
+        ;
 
 #ifdef RECYCLER_MEMORY_VERIFY
         recycler->FillCheckPad(memBlock, sizeof(T), sizeCat);
@@ -120,13 +119,13 @@ public:
         recycler->TrackAlloc(memBlock, sizeof(T), trackAllocData);
 #endif
         RecyclerMemoryTracking::ReportAllocation(recycler, memBlock, sizeof(T));
-        RECYCLER_PERF_COUNTER_INC(LiveObject);
-        RECYCLER_PERF_COUNTER_ADD(LiveObjectSize, sizeCat);
-        RECYCLER_PERF_COUNTER_SUB(FreeObjectSize, sizeCat);
+        ;
+        ;
+        ;
 
-        RECYCLER_PERF_COUNTER_INC(SmallHeapBlockLiveObject);
-        RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockLiveObjectSize, sizeCat);
-        RECYCLER_PERF_COUNTER_SUB(SmallHeapBlockFreeObjectSize, sizeCat);
+        ;
+        ;
+        ;
 
 #ifdef RECYCLER_MEMORY_VERIFY
         recycler->FillCheckPad(memBlock, sizeof(T), sizeCat, true);

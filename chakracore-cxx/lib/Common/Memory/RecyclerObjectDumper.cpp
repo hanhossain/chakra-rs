@@ -7,8 +7,6 @@
 #ifdef PROFILE_RECYCLER_ALLOC
 // Initialization order
 //  AB AutoSystemInfo
-//  AD PerfCounter
-//  AE PerfCounterSet
 //  AM Output/Configuration
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger

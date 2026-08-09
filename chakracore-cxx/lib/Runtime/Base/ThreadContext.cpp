@@ -211,7 +211,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     pageAllocator.debugName = u"Thread";
 #endif
 
-    PERF_COUNTER_INC(Basic, ThreadContext);
+    ;
 
     std::unique_lock autocs(ThreadContext::GetMutex());
     ThreadContext::LinkToBeginning(this, &ThreadContext::globalListFirst, &ThreadContext::globalListLast);
@@ -450,7 +450,7 @@ ThreadContext::~ThreadContext()
     Assert(processNativeCodeSize >= nativeCodeSize);
     ::InterlockedExchangeSubtract(&processNativeCodeSize, nativeCodeSize);
 
-    PERF_COUNTER_DEC(Basic, ThreadContext);
+    ;
 
 }
 
@@ -2119,10 +2119,6 @@ ThreadContext::RemoveRecyclerCollectCallBack(ThreadContext::CollectCallBack * co
 void
 ThreadContext::PreCollectionCallBack(CollectionFlags flags)
 {
-#ifdef PERF_COUNTERS
-    PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, u"TestTrace: deferparse - # of func: %d # deferparsed: %d\n", PerfCounter::CodeCounterSet::GetTotalFunctionCounter().GetValue(), PerfCounter::CodeCounterSet::GetDeferredFunctionCounter().GetValue());
-#endif
-
     // This needs to be done before ClearInlineCaches since that method can empty the list of
     // script contexts with inline caches
     this->ClearScriptContextCaches();

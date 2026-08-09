@@ -6,8 +6,6 @@
 
 // Initialization order
 //  AB AutoSystemInfo
-//  AD PerfCounter
-//  AE PerfCounterSet
 //  AM Output/Configuration
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger

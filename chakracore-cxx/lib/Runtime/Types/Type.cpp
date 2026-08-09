@@ -5,7 +5,7 @@
 
 namespace Js
 {
-    DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER(Type);
+    ;
 
     InternalString Type::ObjectTypeNameString    = InternalString(u"object", _no_write_barrier_tag(), 6);
     InternalString Type::UndefinedTypeNameString = InternalString(u"undefined", _no_write_barrier_tag(), 9);

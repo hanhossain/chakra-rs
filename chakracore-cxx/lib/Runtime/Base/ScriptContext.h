@@ -1539,10 +1539,6 @@ private:
     private:
         BuiltInLibraryFunctionMap* builtInLibraryFunctions;
 
-#ifdef RECYCLER_PERF_COUNTERS
-        size_t bindReferenceCount;
-#endif
-
         ScriptContext * nextPendingClose;
     public:
         void SetNextPendingClose(ScriptContext * nextPendingClose);

@@ -160,15 +160,15 @@ LargeHeapBlock::LargeHeapBlock(char * address, size_t pageCount, Segment * segme
     this->isPendingConcurrentSweep = false;
     this->addressEnd = this->address + this->pageCount * AutoSystemInfo::PageSize;
 
-    RECYCLER_PERF_COUNTER_INC(LargeHeapBlockCount);
-    RECYCLER_PERF_COUNTER_ADD(LargeHeapBlockPageSize, pageCount * AutoSystemInfo::PageSize);
+    ;
+    ;
 }
 
 LargeHeapBlock::~LargeHeapBlock()
 {
     AssertMsg(this->segment == nullptr || this->heapInfo->recyclerLargeBlockPageAllocator.IsClosed(),
         "ReleasePages needs to be called before delete");
-    RECYCLER_PERF_COUNTER_DEC(LargeHeapBlockCount);
+    ;
 
     if (pageHeapData)
     {
@@ -322,7 +322,7 @@ LargeHeapBlock::ReleasePages(Recycler * recycler)
             {
 #pragma prefast(suppress:6250, "Calling 'VirtualFree' without the MEM_RELEASE flag might free memory but not address descriptors (VADs).")
                 VirtualFree(pageHeapData->objectPageAddr, this->pageCount* AutoSystemInfo::PageSize, MEM_DECOMMIT);
-                RECYCLER_PERF_COUNTER_SUB(LargeHeapBlockPageSize, pageCount * AutoSystemInfo::PageSize);
+                ;
                 this->segment = nullptr;
                 return;
             }
@@ -346,7 +346,7 @@ LargeHeapBlock::ReleasePages(Recycler * recycler)
     }
 #endif
     pageAllocator->Release(blockStartAddress, realPageCount, segment);
-    RECYCLER_PERF_COUNTER_SUB(LargeHeapBlockPageSize, pageCount * AutoSystemInfo::PageSize);
+    ;
     this->segment = nullptr;
 }
 
@@ -2119,34 +2119,6 @@ LargeHeapBlock::GetMarkCount()
 
     return markCount;
 }
-
-#ifdef RECYCLER_PERF_COUNTERS
-void
-LargeHeapBlock::UpdatePerfCountersOnFree()
-{
-    Assert(GetMarkCount() == 0);
-    size_t usedCount = 0;
-    size_t usedBytes = 0;
-    for (uint i = 0; i < allocCount; i++)
-    {
-        LargeObjectHeader * header = this->HeaderList()[i];
-        if (header == nullptr)
-        {
-            continue;
-        }
-        usedCount++;
-        usedBytes += header->objectSize;
-    }
-
-    RECYCLER_PERF_COUNTER_SUB(LargeHeapBlockLiveObject, usedCount);
-    RECYCLER_PERF_COUNTER_SUB(LargeHeapBlockLiveObjectSize, usedBytes);
-    RECYCLER_PERF_COUNTER_SUB(LargeHeapBlockFreeObjectSize, this->GetPageCount() * AutoSystemInfo::PageSize - usedBytes);
-
-    RECYCLER_PERF_COUNTER_SUB(LiveObject, usedCount);
-    RECYCLER_PERF_COUNTER_SUB(LiveObjectSize, usedBytes);
-    RECYCLER_PERF_COUNTER_SUB(FreeObjectSize, this->GetPageCount() * AutoSystemInfo::PageSize - usedBytes);
-}
-#endif
 
 #ifdef PROFILE_RECYCLER_ALLOC
 void *

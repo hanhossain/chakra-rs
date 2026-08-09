@@ -411,9 +411,6 @@ void WasmModuleGenerator::GenerateFunctionHeader(uint32_t index)
         wasmInfo->GetNumber(),
         Js::FunctionInfo::Attributes::ErrorOnNew,
         Js::FunctionBody::Flags_None
-#ifdef PERF_COUNTERS
-        , false /* is function from deferred deserialized proxy */
-#endif
     );
     wasmInfo->SetBody(body);
     // TODO (michhol): numbering

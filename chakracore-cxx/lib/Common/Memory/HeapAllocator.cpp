@@ -7,8 +7,6 @@
 
 // Initialization order
 //  AB AutoSystemInfo
-//  AD PerfCounter
-//  AE PerfCounterSet
 //  AM Output/Configuration
 //  AP DbgHelpSymbolManager
 //  AQ CFGLogger
@@ -34,9 +32,6 @@ char * HeapAllocator::AllocT(size_t byteSize)
     byteSize = AllocSizeMath::Add(requestedBytes, ::Math::Align<size_t>(sizeof(HeapAllocRecord), MEMORY_ALLOCATION_ALIGNMENT));
     TrackAllocData allocData;
     ClearTrackAllocInfo(&allocData);
-#elif defined(HEAP_PERF_COUNTERS)
-    size_t requestedBytes = byteSize;
-    byteSize = AllocSizeMath::Add(requestedBytes, ::Math::Align<size_t>(sizeof(size_t), MEMORY_ALLOCATION_ALIGNMENT));
 #endif
 
     char * buffer;
@@ -49,7 +44,7 @@ char * HeapAllocator::AllocT(size_t byteSize)
         Js::Throw::OutOfMemory();
     }
 
-#if defined(HEAP_TRACK_ALLOC) || defined(HEAP_PERF_COUNTERS)
+#if defined(HEAP_TRACK_ALLOC)
     if (!noThrow || buffer != nullptr)
     {
 #ifdef HEAP_TRACK_ALLOC
@@ -62,8 +57,8 @@ char * HeapAllocator::AllocT(size_t byteSize)
         buffer += ::Math::Align<size_t>(sizeof(size_t), MEMORY_ALLOCATION_ALIGNMENT);
 
 #endif
-        HEAP_PERF_COUNTER_INC(LiveObject);
-        HEAP_PERF_COUNTER_ADD(LiveObjectSize, requestedBytes);
+        ;
+        ;
     }
 #endif
     return buffer;
@@ -82,8 +77,8 @@ void HeapAllocator::Free(void * buffer, size_t byteSize)
             sizeof(HeapAllocRecord), MEMORY_ALLOCATION_ALIGNMENT));
         Assert(byteSize == static_cast<size_t>(-1) || record->size == byteSize);
 
-        HEAP_PERF_COUNTER_DEC(LiveObject);
-        HEAP_PERF_COUNTER_SUB(LiveObjectSize, record->size);
+        ;
+        ;
 
         cs.lock();
         data.LogFree(record);
@@ -93,14 +88,6 @@ void HeapAllocator::Free(void * buffer, size_t byteSize)
 #if DBG
         memset(buffer, DbgMemFill, record->size + ::Math::Align<size_t>(sizeof(HeapAllocRecord), MEMORY_ALLOCATION_ALIGNMENT));
 #endif
-    }
-#elif defined(HEAP_PERF_COUNTERS)
-    if (buffer != nullptr)
-    {
-        HEAP_PERF_COUNTER_DEC(LiveObject);
-        size_t * allocSize = (size_t *)(((char *)buffer) - ::Math::Align<size_t>(sizeof(size_t), MEMORY_ALLOCATION_ALIGNMENT));
-        HEAP_PERF_COUNTER_SUB(LiveObjectSize, *allocSize);
-        buffer = allocSize;
     }
 #endif
 

@@ -5,8 +5,8 @@
 
 namespace Js
 {
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(DynamicType);
-    DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER(DynamicType);
+    ;
+    ;
 
     DynamicType::DynamicType(DynamicType * type, DynamicTypeHandler *typeHandler, bool isLocked, bool isShared)
         : Type(type), typeHandler(typeHandler), isLocked(isLocked), isShared(isShared)

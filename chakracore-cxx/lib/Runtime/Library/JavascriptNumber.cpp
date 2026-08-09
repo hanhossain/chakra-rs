@@ -10,7 +10,7 @@ using namespace PlatformAgnostic;
 
 namespace Js
 {
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(JavascriptNumber);
+    ;
 
     Var JavascriptNumber::ToVarNoCheck(double value, ScriptContext* scriptContext)
     {
