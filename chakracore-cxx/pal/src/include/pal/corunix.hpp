@@ -506,16 +506,9 @@ namespace CorUnix
     class CObjectAttributes
     {
     public:
-
         CPalString sObjectName;
-        LPSECURITY_ATTRIBUTES pSecurityAttributes;
 
-        CObjectAttributes(
-            const char16_t *pwszObjectName,
-            LPSECURITY_ATTRIBUTES pSecurityAttributes_
-            )
-            :
-            pSecurityAttributes(pSecurityAttributes_)
+        CObjectAttributes(const char16_t *pwszObjectName)
         {
             if (NULL != pwszObjectName)
             {
@@ -523,11 +516,7 @@ namespace CorUnix
             }
         };
 
-        CObjectAttributes()
-            :
-            pSecurityAttributes(NULL)
-        {
-        };
+        CObjectAttributes() {};
     };
 
     //

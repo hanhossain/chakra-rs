@@ -228,11 +228,6 @@ CSharedMemoryObjectManager::RegisterObject(
     poa = pobjToRegister->GetObjectAttributes();
     assert(NULL != poa);
 
-    if (NULL != poa->pSecurityAttributes)
-    {
-        fInherit = poa->pSecurityAttributes->bInheritHandle;
-    }
-
     potObj = pobjToRegister->GetObjectType();
     fShared = (SharedObject == pshmobj->GetObjectDomain());
     
@@ -599,7 +594,7 @@ CSharedMemoryObjectManager::LocateObject(
     if (SHMNULL != shmSharedObjectData)
     {
         CSharedMemoryObject *pshmobj = NULL;
-        CObjectAttributes oa(pwsz, NULL);
+        CObjectAttributes oa(pwsz);
 
         //
         // Check if the type is allowed
