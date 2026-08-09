@@ -56,14 +56,10 @@ CRITICAL_SECTION mapping_critsec __attribute__((init_priority(200)));
 LIST_ENTRY MappedViewList __attribute__((init_priority(200)));
 
 static PAL_ERROR MAPGrowLocalFile(int32_t, uint32_t);
-static PMAPPED_VIEW_LIST MAPGetViewForAddress( const void * );
-static PAL_ERROR MAPDesiredAccessAllowed( uint32_t, uint32_t, uint32_t );
 
 static int32_t MAPProtectionToFileOpenFlags( uint32_t );
 static BOOL MAPIsRequestPermissible( uint32_t, CFileProcessLocalData * );
-static BOOL MAPContainsInvalidFlags( uint32_t );
 static uint32_t MAPConvertProtectToAccess( uint32_t );
-static int32_t MAPFileMapToMmapFlags( uint32_t );
 
 #if !defined(__linux__)
 /* We need MAP_ANON. However on some platforms like HP-UX, it is defined as MAP_ANONYMOUS */
@@ -222,11 +218,10 @@ See MSDN doc.
 HANDLE
 CreateFileMappingW(HANDLE hFile, uint32_t flProtect, uint32_t dwMaximumSizeHigh, uint32_t dwMaximumSizeLow)
 {
-    HANDLE hFileMapping = NULL;
-    CPalThread *pThread = NULL;
+    HANDLE hFileMapping = nullptr;
     PAL_ERROR palError = NO_ERROR;
     
-    pThread = InternalGetCurrentThread();
+    CPalThread *pThread = InternalGetCurrentThread();
 
     palError = InternalCreateFileMapping(pThread, hFile, flProtect, dwMaximumSizeHigh, dwMaximumSizeLow, &hFileMapping);
 
@@ -237,7 +232,7 @@ CreateFileMappingW(HANDLE hFile, uint32_t flProtect, uint32_t dwMaximumSizeHigh,
     // entry to the function
     //
 
-    pThread->SetLastError(palError);
+    CorUnix::CPalThread::SetLastError(palError);
 
     LOGEXIT( "CreateFileMappingW returning %p .\n", hFileMapping );
     return hFileMapping;
@@ -566,357 +561,6 @@ ExitInternalCreateFileMapping:
     return palError;
 }
 
-
-/*++
-Function:
-  MapViewOfFile
-
-  Limitations: 1) Currently file mappings are supported only at file
-                  offset 0.
-               2) Some platforms (specifically HP-UX) do not support
-                  multiple simultaneous shared mapping of the same file
-                  region in the same process. On these platforms, in case
-                  we are asked for a new view completely contained in an
-                  existing one, we return an address within the existing
-                  mapping. In case the new requested view is overlapping
-                  with the existing one, but not contained in it, the
-                  mapping is impossible, and MapViewOfFile will fail.
-                  Since currently the mappings are supported only at file
-                  offset 0, MapViewOfFile will succeed if the new view
-                  is equal or smaller of the existing one, and the address
-                  returned will be the same address of the existing
-                  mapping.
-                  Since the underlying mapping is always the same, all
-                  the shared views of the same file region will share the
-                  same protection, i.e. they will have the largest
-                  protection requested. If any mapping asked for a
-                  read-write access, all the read-only mappings of the
-                  same region will silently get a read-write access to
-                  it.
-
-See MSDN doc.
---*/
-void *
-MapViewOfFile(
-           HANDLE hFileMappingObject,
-           uint32_t dwDesiredAccess,
-           uint32_t dwFileOffsetHigh,
-           uint32_t dwFileOffsetLow,
-           size_t dwNumberOfBytesToMap)
-{
-    PAL_ERROR palError = NO_ERROR;
-    CPalThread *pThread = NULL;
-    void * pvMappedBaseAddress = NULL;
-
-    pThread = InternalGetCurrentThread();
-
-    palError = InternalMapViewOfFile(
-        pThread,
-        hFileMappingObject,
-        dwDesiredAccess,
-        dwFileOffsetHigh,
-        dwFileOffsetLow,
-        dwNumberOfBytesToMap,
-        &pvMappedBaseAddress
-        );
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-
-    LOGEXIT( "MapViewOfFile returning %p.\n", pvMappedBaseAddress );
-    return pvMappedBaseAddress;
-}
-
-/*++
-Function:
-  UnmapViewOfFile
-
-See MSDN doc.
---*/
-BOOL
-UnmapViewOfFile(
-         const void * lpBaseAddress)
-{
-    PAL_ERROR palError;
-    CPalThread *pThread;
-    
-    pThread = InternalGetCurrentThread();
-
-    palError = InternalUnmapViewOfFile(pThread, lpBaseAddress);
-
-    if (NO_ERROR != palError)
-    {
-        pThread->SetLastError(palError);
-    }
-    
-    LOGEXIT( "UnmapViewOfFile returning %s.\n", (NO_ERROR == palError) ? "TRUE" : "FALSE" );
-    return (NO_ERROR == palError);
-}
-
-PAL_ERROR
-CorUnix::InternalMapViewOfFile(
-    CPalThread *pThread,
-    HANDLE hFileMappingObject,
-    uint32_t dwDesiredAccess,
-    uint32_t dwFileOffsetHigh,
-    uint32_t dwFileOffsetLow,
-    size_t dwNumberOfBytesToMap,
-    void * *ppvBaseAddress
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    IPalObject *pMappingObject = NULL;
-    CFileMappingImmutableData *pImmutableData = NULL;
-    CFileMappingProcessLocalData *pProcessLocalData = NULL;
-    IDataLock *pProcessLocalDataLock = NULL;
-    void * pvBaseAddress = NULL;
-
-    /* Sanity checks */
-    if ( MAPContainsInvalidFlags( dwDesiredAccess ) )
-    {
-        chakra::Logger::error("dwDesiredAccess can be one of FILE_MAP_WRITE, FILE_MAP_READ,"
-               " FILE_MAP_COPY or FILE_MAP_ALL_ACCESS.\n" );
-        palError = ERROR_INVALID_PARAMETER;
-        goto InternalMapViewOfFileExit;
-    }
-
-    if ( 0 != dwFileOffsetHigh || 0 != dwFileOffsetLow )
-    {
-        chakra::Logger::error("dwFileOffsetHigh and dwFileOffsetLow are always 0.\n" );
-        palError = ERROR_INVALID_PARAMETER;
-        goto InternalMapViewOfFileExit;
-    }
-
-    palError = g_pObjectManager->ReferenceObjectByHandle(
-        pThread,
-        hFileMappingObject,
-        &aotFileMapping,
-        &pMappingObject
-    );
-
-    if (NO_ERROR != palError)
-    {
-        ERROR( "Unable to reference handle %p.\n",hFileMappingObject );
-        goto InternalMapViewOfFileExit;
-    }
-
-    palError = pMappingObject->GetImmutableData(
-        reinterpret_cast<void**>(&pImmutableData)
-        );
-
-    if (NO_ERROR != palError)
-    {
-        ERROR( "Unable to obtain object immutable data");
-        goto InternalMapViewOfFileExit;
-    }
-
-    palError = pMappingObject->GetProcessLocalData(
-        pThread,
-        ReadLock,
-        &pProcessLocalDataLock,
-        reinterpret_cast<void**>(&pProcessLocalData)
-        );
-
-    if (NO_ERROR != palError)
-    {
-        ERROR( "Unable to obtain object process local data");
-        goto InternalMapViewOfFileExit;
-    }
-    
-    /* If dwNumberOfBytesToMap is 0, we need to map the entire file.
-     * mmap doesn't do the same thing as Windows in that case, though,
-     * so we use the file size instead. */
-    if (0 == dwNumberOfBytesToMap)
-    {
-        dwNumberOfBytesToMap = pImmutableData->MaxSize;
-    }
-
-    palError = MAPDesiredAccessAllowed(
-        pImmutableData->flProtect,
-        dwDesiredAccess,
-        pImmutableData->dwDesiredAccessWhenOpened
-        );
-
-    if (NO_ERROR != palError)
-    {
-        goto InternalMapViewOfFileExit;
-    }
-
-    InternalEnterCriticalSection(pThread, &mapping_critsec);
-
-    if (FILE_MAP_COPY == dwDesiredAccess)
-    {
-        int flags = MAP_PRIVATE;
-
-#if !defined(__linux__)
-        if (pProcessLocalData->UnixFd == -1)
-        {
-            flags |= MAP_ANON;
-        }
-#endif
-        pvBaseAddress = mmap(
-            NULL,
-            dwNumberOfBytesToMap,
-            PROT_READ|PROT_WRITE,
-            flags,
-            pProcessLocalData->UnixFd,
-            0
-            );
-    }
-    else
-    {
-        int32_t prot = MAPFileMapToMmapFlags(dwDesiredAccess);
-        if (prot != -1)
-        {
-            int flags = MAP_SHARED;
-
-#if !defined(__linux__)
-            if (pProcessLocalData->UnixFd == -1)
-            {
-                flags |= MAP_ANON;
-            }
-#endif
-
-            pvBaseAddress = mmap(
-                NULL,
-                dwNumberOfBytesToMap,
-                prot,
-                flags,
-                pProcessLocalData->UnixFd,
-                0
-                );
-
-        }
-        else
-        {
-            chakra::Logger::error("MapFileMapToMmapFlags failed!\n" );
-            palError = ERROR_INTERNAL_ERROR;
-            goto InternalMapViewOfFileLeaveCriticalSection;
-        }
-    }
-
-    if (MAP_FAILED == pvBaseAddress
-        )
-    {
-        ERROR( "mmap failed with code %s.\n", strerror( errno ) );
-        palError = ERROR_NOT_ENOUGH_MEMORY;
-        goto InternalMapViewOfFileLeaveCriticalSection;
-
-    }
-
-    {
-        //
-        // Allocate and fill out a new view structure, and add it to
-        // the global list.
-        //
-        
-        PMAPPED_VIEW_LIST pNewView = static_cast<PMAPPED_VIEW_LIST>(malloc(sizeof(*pNewView)));
-        if (NULL != pNewView)
-        {
-            pNewView->lpAddress = pvBaseAddress;
-            pNewView->NumberOfBytesToMap = dwNumberOfBytesToMap;
-            pNewView->dwDesiredAccess = dwDesiredAccess;
-            pNewView->pFileMapping = pMappingObject;
-            pNewView->pFileMapping->AddReference();
-            pNewView->lpPEBaseAddress = 0;
-            InsertTailList(&MappedViewList, &pNewView->Link);
-
-        }
-        else
-        {
-            palError = ERROR_INTERNAL_ERROR;
-        }
-
-        if (NO_ERROR != palError)
-        {
-            if (-1 == munmap(pvBaseAddress, dwNumberOfBytesToMap))
-            {
-                ERROR("Unable to unmap the file. Expect trouble.\n");
-                goto InternalMapViewOfFileLeaveCriticalSection;
-            }
-        }
-    }
-    
-    TRACE( "Added %p to the list.\n", pvBaseAddress );
-    *ppvBaseAddress = pvBaseAddress;
-
-InternalMapViewOfFileLeaveCriticalSection:
-
-    InternalLeaveCriticalSection(pThread, &mapping_critsec);
-
-InternalMapViewOfFileExit:
-
-    if (NULL != pProcessLocalDataLock)
-    {
-        pProcessLocalDataLock->ReleaseLock(pThread);
-    }
-
-    if (NULL != pMappingObject)
-    {
-        pMappingObject->ReleaseReference(pThread);
-    }
-
-    return palError;
-}
-
-
-PAL_ERROR
-CorUnix::InternalUnmapViewOfFile(
-    CPalThread *pThread,
-    const void * lpBaseAddress
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    PMAPPED_VIEW_LIST pView = NULL;
-    IPalObject *pMappingObject = NULL;
-
-    InternalEnterCriticalSection(pThread, &mapping_critsec);
-
-    pView = MAPGetViewForAddress(lpBaseAddress);
-    if (NULL == pView)
-    {
-        ERROR("lpBaseAddress has to be the address returned by MapViewOfFile[Ex]");
-        palError = ERROR_INVALID_HANDLE;
-        goto InternalUnmapViewOfFileExit;
-    }
-    
-    if (-1 == munmap(const_cast<void*>(lpBaseAddress), pView->NumberOfBytesToMap))
-    {
-        chakra::Logger::error(std::format("Unable to unmap the memory. Error={}.\n",
-                strerror( errno ) ));
-        palError = ERROR_INTERNAL_ERROR;
-
-        //
-        // Even if the unmap fails we want to continue removing the
-        // info for this view
-        //
-    }
-
-    RemoveEntryList(&pView->Link);
-    pMappingObject = pView->pFileMapping;
-    free(pView);
-    
-InternalUnmapViewOfFileExit:
-
-    InternalLeaveCriticalSection(pThread, &mapping_critsec);
-
-    //
-    // We can't dereference the file mapping object until after
-    // we've released the mapping critical section, since it may
-    // start going down its cleanup path and we don't want to make
-    // any assumptions as to what locks that might grab...
-    //
-
-    if (NULL != pMappingObject)
-    {
-        pMappingObject->ReleaseReference(pThread);
-    }
-
-    return palError;
-}
-
 /*++
 Function :
     MAPInitialize
@@ -955,107 +599,6 @@ void MAPCleanup( void )
 {
     TRACE( "Deleting the critical section.\n" );
     InternalDeleteCriticalSection(&mapping_critsec);
-}
-
-/*++
-Function :
-    MAPGetViewForAddress
-
-    Returns the mapped view (if any) that is based at the passed in address.
-
-    Callers to this function must hold mapping_critsec
---*/
-static PMAPPED_VIEW_LIST MAPGetViewForAddress( const void * lpAddress )
-{       
-    if ( NULL == lpAddress )
-    {
-        ERROR( "lpAddress cannot be NULL\n" );
-        return NULL;
-    }
-
-    for(LIST_ENTRY *pLink = MappedViewList.Flink;
-        pLink != &MappedViewList;
-        pLink = pLink->Flink)
-    {
-        PMAPPED_VIEW_LIST pView = CONTAINING_RECORD(pLink, MAPPED_VIEW_LIST, Link);
-
-        if (pView->lpAddress == lpAddress)
-        {
-            return pView;
-        }
-    }
-            
-    WARN( "No match found.\n" );
-    
-    return NULL;
-}
-
-/*++
-Function :
-
-    MAPDesiredAccessAllowed
-
-    Determines if desired access is allowed based on the protection state.
-
-    if dwDesiredAccess conflicts with flProtect then the error is
-    ERROR_INVALID_PARAMETER, if the dwDesiredAccess conflicts with
-    dwDesiredAccessWhenOpened, then the error code is ERROR_ACCESS_DENIED
---*/
-static PAL_ERROR MAPDesiredAccessAllowed( uint32_t flProtect,
-                                     uint32_t dwUserDesiredAccess,
-                                     uint32_t dwDesiredAccessWhenOpened )
-{
-    TRACE( "flProtect=%d, dwUserDesiredAccess=%d, dwDesiredAccessWhenOpened=%d\n",
-           flProtect, dwUserDesiredAccess, dwDesiredAccessWhenOpened );
-
-    /* check flProtect parameters*/
-    if ( FILE_MAP_READ!= dwUserDesiredAccess && PAGE_READONLY == flProtect )
-    {
-        ERROR( "map object is read-only, can't map a view with write access\n");
-        return ERROR_INVALID_PARAMETER;
-    }
-
-    if ( FILE_MAP_WRITE == dwUserDesiredAccess && PAGE_READWRITE != flProtect )
-    {
-        ERROR( "map object not open read-write, can't map a view with write "
-               "access.\n" );
-        return ERROR_INVALID_PARAMETER;
-    }
-
-    if ( FILE_MAP_COPY == dwUserDesiredAccess  && PAGE_WRITECOPY != flProtect )
-    {
-        ERROR( "map object not open for copy-on-write, can't map copy-on-write "
-               "view.\n" );
-        return ERROR_INVALID_PARAMETER;
-    }
-    
-    /* Check to see we don't confict with the desired access we
-    opened the mapping object with. */
-    if ( ( dwUserDesiredAccess == FILE_MAP_READ ) &&
-        !( ( dwDesiredAccessWhenOpened == FILE_MAP_READ ) || 
-           ( dwDesiredAccessWhenOpened == FILE_MAP_ALL_ACCESS ) ) ) 
-    {
-        ERROR( "dwDesiredAccess conflict : read access requested, object not "
-               "opened with read access.\n" );
-        return ERROR_ACCESS_DENIED;
-    }
-    if ( ( dwUserDesiredAccess & FILE_MAP_WRITE ) &&
-        !( ( dwDesiredAccessWhenOpened == FILE_MAP_WRITE ) || 
-           ( dwDesiredAccessWhenOpened == FILE_MAP_ALL_ACCESS ) ) ) 
-    {
-        ERROR( "dwDesiredAccess conflict : write access requested, object not "
-               "opened with write access.\n" );
-        return ERROR_ACCESS_DENIED;
-    }
-    if ( ( dwUserDesiredAccess == FILE_MAP_COPY ) &&
-        !( dwDesiredAccessWhenOpened == FILE_MAP_COPY ) )
-    {
-        ERROR( "dwDesiredAccess conflict : copy-on-write access requested, "
-               "object not opened with copy-on-write access.\n" );
-        return ERROR_ACCESS_DENIED;
-    }
-
-    return NO_ERROR;
 }
 
 /*++
@@ -1119,48 +662,11 @@ static uint32_t MAPConvertAccessToProtect(uint32_t flAccess)
 
 /*++
 Function :
-    MAPFileMapToMmapFlags
-
-    Converts the mapping flags to unix protection flags.
---*/
-static int32_t MAPFileMapToMmapFlags( uint32_t flags )
-{
-    if ( FILE_MAP_READ == flags )
-    {
-        TRACE( "FILE_MAP_READ\n" );
-        return PROT_READ;
-    }
-    else if ( FILE_MAP_WRITE == flags )
-    {
-        TRACE( "FILE_MAP_WRITE\n" );
-        /* The limitation of x86 architecture
-        means you cant have writable but not readable
-        page. In Windows maps of FILE_MAP_WRITE can still be
-        read from. */
-        return PROT_WRITE | PROT_READ;
-    }
-    else if ( (FILE_MAP_READ|FILE_MAP_WRITE) == flags )
-    {
-        TRACE( "FILE_MAP_READ|FILE_MAP_WRITE\n" );
-        return PROT_READ | PROT_WRITE;
-    }
-    else if( FILE_MAP_COPY == flags)
-    {
-        TRACE( "FILE_MAP_COPY\n");
-        return PROT_READ | PROT_WRITE;
-    } 
-
-    chakra::Logger::error("Unknown flag. This line should not have been executed.\n" );
-    return -1;
-}
-
-/*++
-Function :
 
     MAPGrowLocalFile
 
     Grows the file on disk to match the specified size.
-    
+
 --*/
 static PAL_ERROR MAPGrowLocalFile( int32_t UnixFD, uint32_t NewSize )
 {
@@ -1252,33 +758,10 @@ done:
 
 /*++
 Function :
-    MAPContainsInvalidFlags
-
-    Checks that only valid flags are in the parameter.
-    
---*/
-static BOOL MAPContainsInvalidFlags( uint32_t flags )
-{
-
-    if ( (flags == FILE_MAP_READ) ||
-         (flags == FILE_MAP_WRITE) ||
-         (flags == FILE_MAP_ALL_ACCESS) ||
-         (flags == FILE_MAP_COPY) )
-    {
-        return FALSE;
-    }
-    else
-    {
-        return TRUE;
-    }
-}
-
-/*++
-Function : 
     MAPProtectionToFileOpenFlags
-    
+
     Converts the PAGE_* flags to the O_* flags.
- 
+
     Returns the file open flags.
 --*/
 static int32_t MAPProtectionToFileOpenFlags( uint32_t flProtect )

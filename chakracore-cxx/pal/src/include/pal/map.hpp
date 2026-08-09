@@ -118,23 +118,6 @@ namespace CorUnix
     InternalCreateFileMapping(CPalThread *pThread, HANDLE hFile, uint32_t flProtect, uint32_t dwMaximumSizeHigh,
                               uint32_t dwMaximumSizeLow, HANDLE *phMapping);
 
-    PAL_ERROR
-    InternalMapViewOfFile(
-        CPalThread *pThread,
-        HANDLE hFileMappingObject,
-        uint32_t dwDesiredAccess,
-        uint32_t dwFileOffsetHigh,
-        uint32_t dwFileOffsetLow,
-        size_t dwNumberOfBytesToMap,
-        void * *ppvBaseAddress
-        );
-
-    PAL_ERROR
-    InternalUnmapViewOfFile(
-        CPalThread *pThread,
-        const void * lpBaseAddress
-        );
-
-}
+} // namespace CorUnix
 
 #endif /* _PAL_MAP_H_ */

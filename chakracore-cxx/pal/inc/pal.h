@@ -851,18 +851,6 @@ CreateFileMappingW(HANDLE hFile, uint32_t flProtect, uint32_t dwMaxmimumSizeHigh
 #define FILE_MAP_ALL_ACCESS SECTION_ALL_ACCESS
 #define FILE_MAP_COPY       SECTION_QUERY
 
-void *
-MapViewOfFile(
-           HANDLE hFileMappingObject,
-           uint32_t dwDesiredAccess,
-           uint32_t dwFileOffsetHigh,
-           uint32_t dwFileOffsetLow,
-           size_t dwNumberOfBytesToMap);
-
-BOOL
-UnmapViewOfFile(
-         const void * lpBaseAddress);
-
 typedef long (*FARPROC)();
 
 
