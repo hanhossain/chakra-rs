@@ -30,9 +30,9 @@ RuntimeThreadData::RuntimeThreadData() :
     parent(nullptr),
     leaving(false)
 {
-    this->hevntInitialScriptCompleted = CreateEventW(NULL, TRUE, FALSE, NULL);
-    this->hevntReceivedBroadcast = CreateEventW(NULL, FALSE, FALSE, NULL);
-    this->hevntShutdown = CreateEventW(NULL, TRUE, FALSE, NULL);
+    this->hevntInitialScriptCompleted = CreateEventW(TRUE, FALSE);
+    this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
+    this->hevntShutdown = CreateEventW(TRUE, FALSE);
 
     InitializeCriticalSection(&csReportQ);
 }

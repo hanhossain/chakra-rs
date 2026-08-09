@@ -276,11 +276,7 @@ typedef struct _SYSTEMTIME {
 #define FILE_TYPE_PIPE            0x0003
 
 HANDLE
-CreateEventW(
-          LPSECURITY_ATTRIBUTES lpEventAttributes,
-          BOOL bManualReset,
-          BOOL bInitialState,
-          const char16_t* lpName);
+CreateEventW(BOOL bManualReset, BOOL bInitialState);
 
 BOOL
 SetEvent(
