@@ -247,7 +247,6 @@ PAL_ERROR
 CorUnix::InternalCreateFileMapping(CPalThread *pThread, HANDLE hFile, uint32_t flProtect, uint32_t dwMaximumSizeHigh,
                                    uint32_t dwMaximumSizeLow, HANDLE *phMapping)
 {
-    CObjectAttributes objectAttributes;
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pMapping = NULL;
     IPalObject *pRegisteredMapping = NULL;
@@ -292,12 +291,7 @@ CorUnix::InternalCreateFileMapping(CPalThread *pThread, HANDLE hFile, uint32_t f
         goto ExitInternalCreateFileMapping;
     }
 
-    palError = g_pObjectManager->AllocateObject(
-        pThread,
-        &otFileMapping,
-        &objectAttributes,
-        &pMapping
-        );
+    palError = g_pObjectManager->AllocateObject(pThread, &otFileMapping, &pMapping);
 
     if (NO_ERROR != palError)
     {

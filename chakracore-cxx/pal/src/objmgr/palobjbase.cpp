@@ -41,15 +41,11 @@ Parameters:
 --*/
 
 PAL_ERROR
-CPalObjectBase::Initialize(
-    CPalThread *pthr,
-    CObjectAttributes *poa
-    )
+CPalObjectBase::Initialize(CPalThread *pthr)
 {
     PAL_ERROR palError = NO_ERROR;
 
     assert(NULL != pthr);
-    assert(NULL != poa);
 
     if (0 != m_pot->GetImmutableDataSize())
     {
@@ -118,16 +114,6 @@ Function:
 
   Returns the attributes of the object
 --*/
-
-CObjectAttributes *
-CPalObjectBase::GetObjectAttributes(
-    void
-    )
-{
-    LOGEXIT("CPalObjectBase::GetObjectAttributes returns %p\n", &m_oa);
-    
-    return &m_oa;
-}
 
 /*++
 Function:

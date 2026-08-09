@@ -170,7 +170,6 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
     IPalObject *pRegisteredFile = NULL;
     IDataLock *pDataLock = NULL;
     CFileProcessLocalData *pLocalData = NULL;
-    CObjectAttributes oa;
 
     HANDLE hFile = INVALID_HANDLE_VALUE;
     int new_fd = -1;
@@ -184,12 +183,7 @@ static HANDLE init_std_handle(HANDLE * pStd, FILE *stream)
         goto done;
     }
 
-    palError = g_pObjectManager->AllocateObject(
-        pThread,
-        &otFile,
-        &oa,
-        &pFileObject
-        );
+    palError = g_pObjectManager->AllocateObject(pThread, &otFile, &pFileObject);
 
     if (NO_ERROR != palError)
     {

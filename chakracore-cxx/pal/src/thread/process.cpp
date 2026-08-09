@@ -563,7 +563,6 @@ CorUnix::CreateInitialProcessAndThreadObjects(
     IPalObject *pobjProcess = NULL;
     IDataLock *pDataLock;
     CProcProcessLocalData *pLocalData;
-    CObjectAttributes oa;
     HANDLE hProcess;
 
     //
@@ -586,12 +585,7 @@ CorUnix::CreateInitialProcessAndThreadObjects(
     // Create and initialize process object
     //
 
-    palError = g_pObjectManager->AllocateObject(
-        pThread,
-        &otProcess,
-        &oa,
-        &pobjProcess
-        );
+    palError = g_pObjectManager->AllocateObject(pThread, &otProcess, &pobjProcess);
 
     if (NO_ERROR != palError)
     {

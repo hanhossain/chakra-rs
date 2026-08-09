@@ -43,18 +43,14 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObject::Initialize(
-    CPalThread *pthr,
-    CObjectAttributes *poa
-    )
+CSharedMemoryObject::Initialize(CPalThread *pthr)
 {
     PAL_ERROR palError = NO_ERROR;
     SHMObjData *psmod = NULL;
 
     assert(NULL != pthr);
-    assert(NULL != poa);
 
-    palError = CPalObjectBase::Initialize(pthr, poa);
+    palError = CPalObjectBase::Initialize(pthr);
     if (NO_ERROR != palError)
     {
         goto InitializeExit;
@@ -475,17 +471,13 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryWaitableObject::Initialize(
-    CPalThread *pthr,
-    CObjectAttributes *poa
-    )
+CSharedMemoryWaitableObject::Initialize(CPalThread *pthr)
 {
     PAL_ERROR palError = NO_ERROR;
 
     assert(NULL != pthr);
-    assert(NULL != poa);
 
-    palError = CSharedMemoryObject::Initialize(pthr, poa);
+    palError = CSharedMemoryObject::Initialize(pthr);
     if (NO_ERROR != palError)
     {
         goto InitializeExit;

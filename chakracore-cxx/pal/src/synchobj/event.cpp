@@ -128,7 +128,6 @@ Parameters:
 PAL_ERROR
 CorUnix::InternalCreateEvent(CPalThread *pthr, BOOL bManualReset, BOOL bInitialState, HANDLE *phEvent)
 {
-    CObjectAttributes oa;
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjEvent = NULL;
     IPalObject *pobjRegisteredEvent = NULL;
@@ -136,12 +135,7 @@ CorUnix::InternalCreateEvent(CPalThread *pthr, BOOL bManualReset, BOOL bInitialS
     assert(NULL != pthr);
     assert(NULL != phEvent);
 
-    palError = g_pObjectManager->AllocateObject(
-        pthr,
-        bManualReset ? &otManualResetEvent : &otAutoResetEvent,
-        &oa,
-        &pobjEvent
-        );
+    palError = g_pObjectManager->AllocateObject(pthr, bManualReset ? &otManualResetEvent : &otAutoResetEvent, &pobjEvent);
 
     if (NO_ERROR != palError)
     {

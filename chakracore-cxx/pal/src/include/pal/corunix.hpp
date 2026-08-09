@@ -497,19 +497,6 @@ namespace CorUnix
     };
 
     //
-    // Attributes for a given object instance. If the object does not have
-    // a name the sObjectName member should be zero'd out. If the default
-    // security attributes are desired then pSecurityAttributes should
-    // be NULL.
-    //
-
-    class CObjectAttributes
-    {
-    public:
-        CObjectAttributes() {};
-    };
-
-    //
     // ISynchStateController is used to modify any object's synchronization
     // state. It is intended to be used from within the APIs exposed for
     // various objects (e.g., SetEvent, ReleaseMutex, etc.).
@@ -714,12 +701,6 @@ namespace CorUnix
             ) = 0;
 
         virtual
-        CObjectAttributes *
-        GetObjectAttributes(
-            void
-            ) = 0;
-
-        virtual
         PAL_ERROR
         GetImmutableData(
             void **ppvImmutableData             // OUT
@@ -842,12 +823,11 @@ namespace CorUnix
 
         virtual
         PAL_ERROR
-        AllocateObject(
-            CPalThread *pThread,                // IN, OPTIONAL
-            CObjectType *pType,
-            CObjectAttributes *pAttributes,
-            IPalObject **ppNewObject            // OUT
-            ) = 0;
+        AllocateObject(CPalThread *pThread,
+                                         // IN, OPTIONAL
+                                         CObjectType *pType,
+                                         IPalObject **ppNewObject // OUT
+                                         ) = 0;
 
         //
         // After calling RegisterObject pObjectToRegister is no
