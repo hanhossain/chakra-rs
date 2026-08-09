@@ -185,7 +185,7 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
         {
             return JsErrorInvalidArgument;
         }
-        CreateFileMapping(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, 0, 0, nullptr);
+        CreateFileMappingW(INVALID_HANDLE_VALUE, PAGE_READWRITE, 0, 0);
         AllocationPolicyManager * policyManager = HeapNew(AllocationPolicyManager, (attributes & JsRuntimeAttributeDisableBackgroundWork) == 0);
         bool enableExperimentalFeatures = (attributes & JsRuntimeAttributeEnableExperimentalFeatures) != 0;
         ThreadContext * threadContext = HeapNew(ThreadContext, policyManager, threadService, enableExperimentalFeatures);

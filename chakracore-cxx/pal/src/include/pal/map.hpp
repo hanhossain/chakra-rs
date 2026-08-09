@@ -115,16 +115,8 @@ namespace CorUnix
     };
 
     PAL_ERROR
-    InternalCreateFileMapping(
-        CPalThread *pThread,
-        HANDLE hFile,
-        LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-        uint32_t flProtect,
-        uint32_t dwMaximumSizeHigh,
-        uint32_t dwMaximumSizeLow,
-        const char16_t* lpName,
-        HANDLE *phMapping
-        );
+    InternalCreateFileMapping(CPalThread *pThread, HANDLE hFile, uint32_t flProtect, uint32_t dwMaximumSizeHigh,
+                              uint32_t dwMaximumSizeLow, HANDLE *phMapping);
 
     PAL_ERROR
     InternalOpenFileMapping(
