@@ -220,13 +220,7 @@ Note:
 See MSDN doc.
 --*/
 HANDLE
-CreateFileMappingW(
-                HANDLE hFile,
-                LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-                uint32_t flProtect,
-                uint32_t dwMaximumSizeHigh,
-                uint32_t dwMaximumSizeLow,
-                const char16_t* lpName)
+CreateFileMappingW(HANDLE hFile, uint32_t flProtect, uint32_t dwMaximumSizeHigh, uint32_t dwMaximumSizeLow)
 {
     HANDLE hFileMapping = NULL;
     CPalThread *pThread = NULL;
@@ -234,16 +228,7 @@ CreateFileMappingW(
     
     pThread = InternalGetCurrentThread();
 
-    palError = InternalCreateFileMapping(
-        pThread,
-        hFile,
-        lpFileMappingAttributes,
-        flProtect,
-        dwMaximumSizeHigh,
-        dwMaximumSizeLow,
-        lpName,
-        &hFileMapping
-        );
+    palError = InternalCreateFileMapping(pThread, hFile, flProtect, dwMaximumSizeHigh, dwMaximumSizeLow, &hFileMapping);
 
     //
     // We always need to set last error, even on success:
@@ -259,18 +244,10 @@ CreateFileMappingW(
 }
 
 PAL_ERROR
-CorUnix::InternalCreateFileMapping(
-    CPalThread *pThread,
-    HANDLE hFile,
-    LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-    uint32_t flProtect,
-    uint32_t dwMaximumSizeHigh,
-    uint32_t dwMaximumSizeLow,
-    const char16_t* lpName,
-    HANDLE *phMapping
-    )
+CorUnix::InternalCreateFileMapping(CPalThread *pThread, HANDLE hFile, uint32_t flProtect, uint32_t dwMaximumSizeHigh,
+                                   uint32_t dwMaximumSizeLow, HANDLE *phMapping)
 {
-    CObjectAttributes objectAttributes(lpName, lpFileMappingAttributes);
+    CObjectAttributes objectAttributes;
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pMapping = NULL;
     IPalObject *pRegisteredMapping = NULL;
@@ -289,13 +266,6 @@ CorUnix::InternalCreateFileMapping(
     //
     // Validate parameters
     //
-
-    if (lpName != nullptr)
-    {
-        chakra::Logger::error("lpName: Cross-process named objects are not supported in PAL");
-        palError = ERROR_NOT_SUPPORTED;
-        goto ExitInternalCreateFileMapping;
-    }
 
     if (0 != dwMaximumSizeHigh)
     {
@@ -318,13 +288,6 @@ CorUnix::InternalCreateFileMapping(
     if (hFile == INVALID_HANDLE_VALUE && 0 == dwMaximumSizeLow)
     {
         ERROR( "If hFile is INVALID_HANDLE_VALUE, then you must specify a size.\n" );
-        palError = ERROR_INVALID_PARAMETER;
-        goto ExitInternalCreateFileMapping;
-    }
-
-    if (hFile != INVALID_HANDLE_VALUE && NULL != lpName)
-    {
-        chakra::Logger::error("If hFile is not -1, then lpName must be NULL.\n" );
         palError = ERROR_INVALID_PARAMETER;
         goto ExitInternalCreateFileMapping;
     }

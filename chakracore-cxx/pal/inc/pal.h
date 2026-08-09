@@ -839,15 +839,7 @@ void DeleteCriticalSection(  LPCRITICAL_SECTION lpCriticalSection);
 #define MEM_RESERVE_EXECUTABLE          0x40000000 // reserve memory using executable memory allocator
 
 HANDLE
-CreateFileMappingW(
-            HANDLE hFile,
-            LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
-            uint32_t flProtect,
-            uint32_t dwMaxmimumSizeHigh,
-            uint32_t dwMaximumSizeLow,
-            const char16_t* lpName);
-
-#define CreateFileMapping CreateFileMappingW
+CreateFileMappingW(HANDLE hFile, uint32_t flProtect, uint32_t dwMaxmimumSizeHigh, uint32_t dwMaximumSizeLow);
 
 #define SECTION_QUERY       0x0001
 #define SECTION_MAP_WRITE   0x0002
