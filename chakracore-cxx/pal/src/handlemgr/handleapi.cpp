@@ -64,25 +64,15 @@ DuplicateHandle(
          BOOL bInheritHandle,
          uint32_t dwOptions)
 {
-    PAL_ERROR palError;
-    CPalThread *pThread;
-    
-    pThread = InternalGetCurrentThread();
 
-    palError = InternalDuplicateHandle(
-        pThread,
-        hSourceProcessHandle,
-        hSourceHandle,
-        hTargetProcessHandle,
-        lpTargetHandle,
-        dwDesiredAccess,
-        bInheritHandle,
-        dwOptions
-        );
+    CPalThread *pThread = InternalGetCurrentThread();
+
+    PAL_ERROR palError = InternalDuplicateHandle(pThread, hSourceProcessHandle, hSourceHandle, hTargetProcessHandle,
+                                                 lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
 
     if (NO_ERROR != palError)
     {
-        pThread->SetLastError(palError);
+        CorUnix::CPalThread::SetLastError(palError);
     }
 
     LOGEXIT("DuplicateHandle returns BOOL %d\n", (NO_ERROR == palError));
@@ -268,19 +258,13 @@ BOOL
 CloseHandle(
           HANDLE hObject)
 {
-    CPalThread *pThread;
-    PAL_ERROR palError;
 
-    pThread = InternalGetCurrentThread();
-
-    palError = InternalCloseHandle(
-        pThread,
-        hObject
-        );
+    CPalThread *pThread = InternalGetCurrentThread();
+    PAL_ERROR palError = InternalCloseHandle(pThread, hObject);
 
     if (NO_ERROR != palError)
     {
-        pThread->SetLastError(palError);
+        CorUnix::CPalThread::SetLastError(palError);
     }
 
     LOGEXIT("CloseHandle returns BOOL %d\n", (NO_ERROR == palError));

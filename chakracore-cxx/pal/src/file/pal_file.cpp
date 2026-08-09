@@ -127,11 +127,9 @@ HANDLE
 GetStdHandle(
           uint32_t nStdHandle)
 {
-    CPalThread *pThread;
     HANDLE hRet = INVALID_HANDLE_VALUE;
 
-    pThread = InternalGetCurrentThread();
-    switch( nStdHandle )
+    switch ( nStdHandle )
     {
     case STD_INPUT_HANDLE:
         hRet = pStdIn;
@@ -141,7 +139,7 @@ GetStdHandle(
         break;
     default:
         ERROR("nStdHandle is invalid\n");
-        pThread->SetLastError(ERROR_INVALID_PARAMETER);
+        CorUnix::CPalThread::SetLastError(ERROR_INVALID_PARAMETER);
         break;
     }
 
