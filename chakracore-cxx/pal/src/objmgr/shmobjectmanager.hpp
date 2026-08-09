@@ -72,13 +72,6 @@ namespace CorUnix
             CPalThread *pthr
             );
 
-        PAL_ERROR
-        ConvertRemoteHandleToLocal(
-            CPalThread *pthr,
-            RHANDLE rhRemote,
-            HANDLE *phLocal
-            );
-
         //
         // IPalObjectManager routines
         //
