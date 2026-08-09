@@ -508,14 +508,6 @@ namespace CorUnix
     public:
         CPalString sObjectName;
 
-        CObjectAttributes(const char16_t *pwszObjectName)
-        {
-            if (NULL != pwszObjectName)
-            {
-                sObjectName.SetString(pwszObjectName);
-            }
-        };
-
         CObjectAttributes() {};
     };
 

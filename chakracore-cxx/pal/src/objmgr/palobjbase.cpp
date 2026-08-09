@@ -88,11 +88,6 @@ CPalObjectBase::Initialize(
         }
     }
 
-    if (0 != poa->sObjectName.GetStringLength())
-    {
-        palError = m_oa.sObjectName.CopyString(&poa->sObjectName);
-    }
-
 IntializeExit:
 
     LOGEXIT("CPalObjectBase::Initialize returns %d\n", palError);

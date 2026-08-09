@@ -60,22 +60,6 @@ CSharedMemoryObject::Initialize(
         goto InitializeExit;
     }
 
-    //
-    // If this is a named object it needs to go into the shared domain;
-    // otherwise it remains local
-    //
-
-    if (0 != m_oa.sObjectName.GetStringLength())
-    {   
-        m_ObjectDomain = SharedObject;
-
-        palError = AllocateSharedDataItems(&m_shmod, &psmod);
-        if (NO_ERROR != palError || NULL == psmod)
-        {
-            goto InitializeExit;
-        }
-    }
-
     if (0 != m_pot->GetSharedDataSize())
     {       
         if (SharedObject == m_ObjectDomain)
@@ -186,15 +170,15 @@ CSharedMemoryObject::InitializeFromExistingSharedData(
     // of the name
     //
 
-    if (0 == poa->sObjectName.GetStringLength()
-        && 0 != psmod->dwNameLength)
+    if (0 != psmod->dwNameLength)
     {
         char16_t *wsz;
 
         wsz = SHMPTR_TO_TYPED_PTR(char16_t, psmod->shmObjName);
         if (NULL != wsz)
         {
-            poa->sObjectName.SetStringWithLength(wsz, psmod->dwNameLength);
+            chakra::Logger::error("honestly, who knows");
+            abort();
         }
         else
         {
