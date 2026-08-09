@@ -122,22 +122,10 @@ namespace CorUnix
         int32_t m_fSharedDataDereferenced;
         int32_t m_fDeleteSharedData;
 
-        PAL_ERROR
-        AllocateSharedDataItems(
-            SHMPTR *pshmObjData,
-            SHMObjData **ppsmod
-            );
-
         static
         void
         FreeSharedDataAreas(
             SHMPTR shmObjData
-            );
-
-        void
-        PromoteSharedData(
-            SHMPTR shmObjData,
-            SHMObjData *psmod
             );
 
         bool
@@ -215,24 +203,6 @@ namespace CorUnix
             CObjectAttributes *poa
             );
 
-        virtual
-        PAL_ERROR
-        InitializeFromExistingSharedData(
-            CPalThread *pthr,
-            CObjectAttributes *poa
-            );
-
-        virtual
-        PAL_ERROR
-        EnsureObjectIsShared(
-            CPalThread *pthr
-            );
-
-        void
-        CleanupForProcessShutdown(
-            CPalThread *pthr
-            );
-
         SHMPTR
         GetShmObjData(
             void
@@ -255,35 +225,15 @@ namespace CorUnix
         // access to m_Link.
         //
 
-        static
-        CSharedMemoryObject*
-        GetObjectFromListLink(PLIST_ENTRY pLink);
-
         //
         // IPalObject routines
         //
-        
-        virtual
-        PAL_ERROR
-        GetSharedData(
-            CPalThread *pthr,
-            LockType eLockRequest,
-            IDataLock **ppDataLock,
-            void **ppvSharedData
-            );
 
         virtual
         PAL_ERROR
         GetSynchStateController(
             CPalThread *pthr,
             ISynchStateController **ppStateController
-            );
-
-        virtual
-        PAL_ERROR
-        GetSynchWaitController(
-            CPalThread *pthr,
-            ISynchWaitController **ppWaitController
             );
 
         virtual
@@ -345,12 +295,6 @@ namespace CorUnix
             CObjectAttributes *poa
             );
 
-        virtual
-        PAL_ERROR
-        EnsureObjectIsShared(
-            CPalThread *pthr
-            );
-
         //
         // IPalObject routines
         //
@@ -360,13 +304,6 @@ namespace CorUnix
         GetSynchStateController(
             CPalThread *pthr,
             ISynchStateController **ppStateController
-            );
-
-        virtual
-        PAL_ERROR
-        GetSynchWaitController(
-            CPalThread *pthr,
-            ISynchWaitController **ppWaitController
             );
 
         virtual
