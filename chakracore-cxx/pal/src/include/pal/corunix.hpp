@@ -506,8 +506,6 @@ namespace CorUnix
     class CObjectAttributes
     {
     public:
-        CPalString sObjectName;
-
         CObjectAttributes() {};
     };
 
@@ -744,15 +742,6 @@ namespace CorUnix
             void **ppvProcessLocalData          // OUT
             ) = 0;
 
-        virtual
-        PAL_ERROR
-        GetSharedData(
-            CPalThread *pThread,                // IN, OPTIONAL
-            LockType eLockRequest,
-            IDataLock **ppDataLock,             // OUT
-            void **ppvSharedData                // OUT
-            ) = 0;
-
         //
         // The following two routines obtain the global dispatcher lock.
         // If a thread needs to make use of a synchronization interface
@@ -779,13 +768,6 @@ namespace CorUnix
         GetSynchStateController(
             CPalThread *pThread,                // IN, OPTIONAL
             ISynchStateController **ppStateController   // OUT
-            ) = 0;
-
-        virtual
-        PAL_ERROR
-        GetSynchWaitController(
-            CPalThread *pThread,                // IN, OPTIONAL
-            ISynchWaitController **ppWaitController   // OUT
             ) = 0;
 
         virtual
@@ -892,20 +874,6 @@ namespace CorUnix
             uint32_t dwRightsRequested,
             HANDLE *pHandle,                    // OUT
             IPalObject **ppRegisteredObject     // OUT
-            ) = 0;
-
-        //
-        // LocateObject is used for OpenXXX routines. ObtainHandleForObject
-        // is needed for the OpenXXX routines and DuplicateHandle.
-        //
-
-        virtual
-        PAL_ERROR
-        LocateObject(
-            CPalThread *pThread,                // IN, OPTIONAL
-            CPalString *psObjectToLocate,
-            CAllowedObjectTypes *pAllowedTypes,
-            IPalObject **ppObject               // OUT
             ) = 0;
 
         //

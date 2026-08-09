@@ -39,17 +39,6 @@ namespace CorUnix
         
         CSimpleHandleManager m_HandleManager;
 
-        PAL_ERROR
-        ImportSharedObjectIntoProcess(
-            CPalThread *pthr,
-            CObjectType *pot,
-            CObjectAttributes *poa,
-            SHMPTR shmSharedObjectData,
-            SHMObjData *psmod,
-            bool fAddRefSharedData,
-            CSharedMemoryObject **ppshmobj
-            );
-        
     public:
 
         CSharedMemoryObjectManager()
@@ -65,11 +54,6 @@ namespace CorUnix
         PAL_ERROR
         Initialize(
             void
-            );
-
-        PAL_ERROR
-        Shutdown(
-            CPalThread *pthr
             );
 
         //
@@ -92,14 +76,6 @@ namespace CorUnix
             uint32_t dwRightsRequested,
             HANDLE *pHandle,
             IPalObject **ppobjRegistered
-            ) override;
-
-        PAL_ERROR
-        LocateObject(
-            CPalThread *pthr,
-            CPalString *psObjectToLocate,
-            CAllowedObjectTypes *paot,
-            IPalObject **ppobj
             ) override;
 
         PAL_ERROR
