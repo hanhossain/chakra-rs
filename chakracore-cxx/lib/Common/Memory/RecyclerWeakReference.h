@@ -42,10 +42,6 @@ protected:
     typename WriteBarrierFieldTypeTraits<RecyclerWeakReferenceBase*, _no_write_barrier_policy, _no_write_barrier_policy>::Type next;
 #if DBG
     typename WriteBarrierFieldTypeTraits<type_info const *, _no_write_barrier_policy, _no_write_barrier_policy>::Type typeInfo;
-
-#if defined TRACK_ALLOC && defined(PERF_COUNTERS)
-    typename WriteBarrierFieldTypeTraits<PerfCounter::Counter *, _no_write_barrier_policy, _no_write_barrier_policy>::Type counter;
-#endif
 #endif
 };
 
@@ -365,9 +361,6 @@ private:
         count++;
 #if DBG
         entry->typeInfo = nullptr;
-#if defined(TRACK_ALLOC) && defined(PERF_COUNTERS)
-        entry->counter = nullptr;
-#endif
 #endif
         return entry;
     }

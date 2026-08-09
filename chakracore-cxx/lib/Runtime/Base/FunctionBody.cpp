@@ -81,7 +81,7 @@ namespace Js
         m_tag11(true),
         m_isJsBuiltInCode(false)
     {
-        PERF_COUNTER_INC(Code, TotalFunction);
+        ;
     }
 
     bool FunctionProxy::IsWasmFunction() const
@@ -444,31 +444,18 @@ namespace Js
 
     FunctionBody * FunctionBody::NewFromRecycler(ScriptContext * scriptContext, const char16_t * displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
         Utf8SourceInfo* sourceInfo, uint uScriptId, Js::LocalFunctionId functionId, FunctionInfo::Attributes attributes, FunctionBodyFlags flags
-#ifdef PERF_COUNTERS
-            , bool isDeserializedFunction
-#endif
             )
     {
             return FunctionBody::NewFromRecycler(scriptContext, displayName, displayNameLength, displayShortNameOffset, nestedCount, sourceInfo,
             scriptContext->GetThreadContext()->NewFunctionNumber(), uScriptId, functionId, attributes, flags
-#ifdef PERF_COUNTERS
-            , isDeserializedFunction
-#endif
             );
     }
 
     FunctionBody * FunctionBody::NewFromRecycler(ScriptContext * scriptContext, const char16_t * displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
         Utf8SourceInfo* sourceInfo, uint uFunctionNumber, uint uScriptId, Js::LocalFunctionId  functionId, FunctionInfo::Attributes attributes, FunctionBodyFlags flags
-#ifdef PERF_COUNTERS
-            , bool isDeserializedFunction
-#endif
             )
     {
-#ifdef PERF_COUNTERS
-            return RecyclerNewWithBarrierFinalized(scriptContext->GetRecycler(), FunctionBody, scriptContext, displayName, displayNameLength, displayShortNameOffset, nestedCount, sourceInfo, uFunctionNumber, uScriptId, functionId, attributes, flags, isDeserializedFunction);
-#else
-            return RecyclerNewWithBarrierFinalized(scriptContext->GetRecycler(), FunctionBody, scriptContext, displayName, displayNameLength, displayShortNameOffset, nestedCount, sourceInfo, uFunctionNumber, uScriptId, functionId, attributes, flags);
-#endif
+        return RecyclerNewWithBarrierFinalized(scriptContext->GetRecycler(), FunctionBody, scriptContext, displayName, displayNameLength, displayShortNameOffset, nestedCount, sourceInfo, uFunctionNumber, uScriptId, functionId, attributes, flags);
     }
 
     FunctionBody *
@@ -494,9 +481,6 @@ namespace Js
     FunctionBody::FunctionBody(ScriptContext* scriptContext, const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
         Utf8SourceInfo* utf8SourceInfo, uint uFunctionNumber, uint uScriptId,
         Js::LocalFunctionId  functionId, FunctionInfo::Attributes attributes, FunctionBodyFlags flags
-#ifdef PERF_COUNTERS
-        , bool isDeserializedFunction
-#endif
         ) :
         ParseableFunctionInfo(scriptContext->CurrentThunk, nestedCount, functionId, utf8SourceInfo, scriptContext, uFunctionNumber, displayName, displayNameLength, displayShortNameOffset, attributes, flags),
         counters(this),
@@ -582,9 +566,6 @@ namespace Js
 #if DBG
         , m_isSerialized(false)
 #endif
-#ifdef PERF_COUNTERS
-        , m_isDeserializedFunction(isDeserializedFunction)
-#endif
 #if DBG
         , m_DEBUG_executionCount(0)
         , m_nativeEntryPointIsInterpreterThunk(false)
@@ -601,12 +582,6 @@ namespace Js
         this->SetDefaultFunctionEntryPointInfo(static_cast<FunctionEntryPointInfo*>(this->GetDefaultEntryPointInfo()), DefaultEntryThunk);
         this->m_hasBeenParsed = true;
 
-#ifdef PERF_COUNTERS
-        if (isDeserializedFunction)
-        {
-            PERF_COUNTER_INC(Code, DeserializedFunctionBody);
-        }
-#endif
         Assert(!utf8SourceInfo || m_uScriptId == utf8SourceInfo->GetSrcInfo()->sourceContextInfo->sourceContextId);
 
         // Sync entryPoints changes to etw rundown lock
@@ -705,9 +680,6 @@ namespace Js
         , m_isPartialDeserializedFunction(false)
 #if DBG
         , m_isSerialized(false)
-#endif
-#ifdef PERF_COUNTERS
-        , m_isDeserializedFunction(false)
 #endif
 #if DBG
         , m_DEBUG_executionCount(0)
@@ -1541,7 +1513,7 @@ namespace Js
     {
         this->functionInfo = RecyclerNew(scriptContext->GetRecycler(), FunctionInfo, DefaultDeferredDeserializeThunk, static_cast<FunctionInfo::Attributes>(attributes | FunctionInfo::Attributes::DeferredDeserialize), functionId, this);
         this->m_defaultEntryPointInfo = RecyclerNew(scriptContext->GetRecycler(), ProxyEntryPointInfo, DefaultDeferredDeserializeThunk);
-        PERF_COUNTER_INC(Code, DeferDeserializeFunctionProxy);
+        ;
 
         SetDisplayName(displayName, displayNameLength, displayShortNameOffset, FunctionProxy::SetDisplayNameFlagsDontCopy);
     }
@@ -1694,9 +1666,6 @@ namespace Js
         Assert(scriptContext->DeferredParsingThunk == DefaultDeferredParsingThunk);
 #endif
 
-#ifdef PERF_COUNTERS
-        PERF_COUNTER_INC(Code, DeferredFunction);
-#endif
         uint newFunctionNumber = scriptContext->GetThreadContext()->NewFunctionNumber();
         if (!sourceInfo->GetSourceContextInfo()->IsDynamic())
         {
@@ -2161,7 +2130,7 @@ namespace Js
     void DeferDeserializeFunctionInfo::Finalize(bool isShutdown)
     {
         FunctionProxy::Finalize(isShutdown);
-        PERF_COUNTER_DEC(Code, DeferDeserializeFunctionProxy);
+        ;
     }
 
     FunctionBody* DeferDeserializeFunctionInfo::Deserialize()
@@ -2262,7 +2231,7 @@ namespace Js
                 funcBody = FunctionBody::NewFromParseableFunctionInfo(this);
                 autoRestoreFunctionInfo.funcBody = funcBody;
 
-                PERF_COUNTER_DEC(Code, DeferredFunction);
+                ;
 
                 if (!this->GetSourceContextInfo()->IsDynamic())
                 {
@@ -2572,13 +2541,10 @@ namespace Js
             this->GetLocalFunctionId(),
             (FunctionInfo::Attributes)(this->GetAttributes() & ~(FunctionInfo::Attributes::DeferredDeserialize | FunctionInfo::Attributes::DeferredParse)),
             Js::FunctionBody::FunctionBodyFlags::Flags_HasNoExplicitReturnValue
-#ifdef PERF_COUNTERS
-            , false /* is function from deferred deserialized proxy */
-#endif
             );
 
         this->Copy(funcBody);
-        PERF_COUNTER_DEC(Code, DeferredFunction);
+        ;
 
         if (!this->GetSourceContextInfo()->IsDynamic())
         {
@@ -2658,7 +2624,7 @@ namespace Js
         }
         if (!this->m_hasBeenParsed)
         {
-            PERF_COUNTER_DEC(Code, DeferredFunction);
+            ;
         }
     }
 
@@ -3926,13 +3892,6 @@ namespace Js
         CheckNotExecuting();
         CheckEmpty();
 
-#ifdef PERF_COUNTERS
-        uint32_t byteCodeSize = byteCodeBlock->GetLength()
-            + (auxBlock? auxBlock->GetLength() : 0)
-            + (auxContextBlock? auxContextBlock->GetLength() : 0);
-        PERF_COUNTER_ADD(Code, DynamicByteCodeSize, byteCodeSize);
-#endif
-
         SetByteCodeCount(byteCodeCount);
         SetByteCodeInLoopCount(byteCodeInLoopCount);
         SetByteCodeWithoutLDACount(byteCodeWithoutLDACount);
@@ -3947,7 +3906,7 @@ namespace Js
         MemoryBarrier();
 
         this->byteCodeBlock = byteCodeBlock;
-        PERF_COUNTER_ADD(Code, TotalByteCodeSize, byteCodeSize);
+        ;
 
         // If this is a defer parse function body, we would not have registered it
         // on the function bodies list so we should register it now
@@ -7252,10 +7211,6 @@ namespace Js
                 });
             });
         }
-
-#ifdef PERF_COUNTERS
-        this->CleanupPerfCounter();
-#endif
     }
 
     //
@@ -7307,25 +7262,6 @@ namespace Js
 
         this->cleanedUp = true;
     }
-
-
-#ifdef PERF_COUNTERS
-    void FunctionBody::CleanupPerfCounter()
-    {
-        // We might not have the byte code block yet if we defer parsed.
-        uint32_t byteCodeSize = (this->byteCodeBlock? this->byteCodeBlock->GetLength() : 0)
-            + (this->GetAuxiliaryData() ? this->GetAuxiliaryData()->GetLength() : 0)
-            + (this->GetAuxiliaryContextData() ? this->GetAuxiliaryContextData()->GetLength() : 0);
-        PERF_COUNTER_SUB(Code, DynamicByteCodeSize, byteCodeSize);
-
-        if (this->m_isDeserializedFunction)
-        {
-            PERF_COUNTER_DEC(Code, DeserializedFunctionBody);
-        }
-
-        PERF_COUNTER_SUB(Code, TotalByteCodeSize, byteCodeSize);
-    }
-#endif
 
     void FunctionBody::CaptureDynamicProfileState(FunctionEntryPointInfo* entryPointInfo)
     {
@@ -7860,10 +7796,6 @@ namespace Js
         Assert(codeSize > 0);
         this->GetNativeEntryPointData()->RecordNativeCode(thunkAddress, nativeAddress, codeSize, validationCookie);
         this->state = CodeGenRecorded;
-
-#ifdef PERF_COUNTERS
-        this->OnRecorded();
-#endif
     }
 
     void EntryPointInfo::SetCodeGenDone()
@@ -8528,15 +8460,6 @@ namespace Js
 #endif
     //End AsmJS Support
 
-#ifdef PERF_COUNTERS
-    void FunctionEntryPointInfo::OnRecorded()
-    {
-        PERF_COUNTER_ADD(Code, TotalNativeCodeSize, GetCodeSize());
-        PERF_COUNTER_ADD(Code, FunctionNativeCodeSize, GetCodeSize());
-        PERF_COUNTER_ADD(Code, DynamicNativeCodeSize, GetCodeSize());
-    }
-#endif
-
     FunctionEntryPointInfo::FunctionEntryPointInfo(FunctionProxy * functionProxy, Js::JavascriptMethod method, ThreadContext* context) :
         EntryPointInfo(method, functionProxy->GetScriptContext()->GetLibrary(), context),
         localVarSlotsOffset(Js::Constants::InvalidOffset),
@@ -8875,15 +8798,6 @@ namespace Js
                 functionBody->SetSimpleJitEntryPointInfo(this);
             }
         }
-    }
-#endif
-
-#ifdef PERF_COUNTERS
-    void LoopEntryPointInfo::OnRecorded()
-    {
-        PERF_COUNTER_ADD(Code, TotalNativeCodeSize, GetCodeSize());
-        PERF_COUNTER_ADD(Code, LoopNativeCodeSize, GetCodeSize());
-        PERF_COUNTER_ADD(Code, DynamicNativeCodeSize, GetCodeSize());
     }
 #endif
 

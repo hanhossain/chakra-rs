@@ -47,8 +47,8 @@ typedef struct JsNativeString
 
 using namespace Js;
 
-    DEFINE_RECYCLER_TRACKER_ARRAY_PERF_COUNTER(Var);
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(FrameDisplay);
+    ;
+    ;
 
     enum IndexType
     {

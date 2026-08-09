@@ -1410,9 +1410,6 @@ FuncInfo * ByteCodeGenerator::StartBindFunction(const char16_t *name, uint nameL
                     , pnodeFnc->IsClassConstructor() ?
                         Js::FunctionBody::FunctionBodyFlags::Flags_None :
                         Js::FunctionBody::FunctionBodyFlags::Flags_HasNoExplicitReturnValue
-#ifdef PERF_COUNTERS
-                    , false /* is function from deferred deserialized proxy */
-#endif
                 );
             }
         }
@@ -2068,11 +2065,6 @@ void ByteCodeGenerator::Generate(ParseNodeProg *pnodeProg, uint32_t grfscr, Byte
     {
         *ppRootFunc = byteCodeGenerator->GetRootFunc();
     }
-
-#ifdef PERF_COUNTERS
-    PHASE_PRINT_TESTTRACE1(Js::DeferParsePhase, u"TestTrace: deferparse - # of func: %d # deferparsed: %d\n",
-        PerfCounter::CodeCounterSet::GetTotalFunctionCounter().GetValue(), PerfCounter::CodeCounterSet::GetDeferredFunctionCounter().GetValue());
-#endif
 }
 
 void ByteCodeGenerator::CheckDeferParseHasMaybeEscapedNestedFunc()
@@ -5289,9 +5281,6 @@ Js::FunctionBody * ByteCodeGenerator::MakeGlobalFunctionBody(ParseNode *pnode)
             pnode->AsParseNodeFnc()->functionId,
             Js::FunctionInfo::Attributes::None,
             Js::FunctionBody::FunctionBodyFlags::Flags_HasNoExplicitReturnValue
-#ifdef PERF_COUNTERS
-            , false /* is function from deferred deserialized proxy */
-#endif
             );
 
     func->SetIsGlobalFunc(true);

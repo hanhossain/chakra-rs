@@ -5,7 +5,7 @@
 
 namespace Js
 {
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(SingleCharString);
+    ;
 
     SingleCharString::SingleCharString(char16_t ch, StaticType * type) : JavascriptString(type, 1, m_buff)
     {

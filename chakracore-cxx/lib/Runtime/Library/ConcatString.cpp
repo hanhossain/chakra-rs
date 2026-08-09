@@ -7,7 +7,7 @@
 
 namespace Js
 {
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(ConcatString);
+    ;
 
     // Note: see also: ConcatString.inl
     LiteralStringWithPropertyStringPtr::LiteralStringWithPropertyStringPtr(StaticType* stringType) :

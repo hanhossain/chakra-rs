@@ -182,11 +182,6 @@
 #define RECYCLER_TRACE
 #define RECYCLER_VERIFY_MARK
 
-#ifdef PERF_COUNTERS
-#define RECYCLER_PERF_COUNTERS
-#define HEAP_PERF_COUNTERS
-#endif // PERF_COUNTERS
-
 #define PAGEALLOCATOR_PROTECT_FREEPAGE
 #define ARENA_MEMORY_VERIFY
 #define SEPARATE_ARENA
@@ -241,11 +236,6 @@
 // #define RECYCLER_MEMORY_VERIFY
 // #define RECYCLER_TRACE
 // #define RECYCLER_VERIFY_MARK
-
-// #ifdef PERF_COUNTERS
-// #define RECYCLER_PERF_COUNTERS
-// #define HEAP_PERF_COUNTERS
-// #endif //PERF_COUNTERS
 
 // Other defines that can be enabled in release build
 // #define PAGEALLOCATOR_PROTECT_FREEPAGE
@@ -356,7 +346,6 @@
 #undef RECYCLER_DUMP_OBJECT_GRAPH
 #undef HEAP_TRACK_ALLOC
 #undef RECYCLER_STATS
-#undef PERF_COUNTERS
 #endif
 
 //----------------------------------------------------------------------------------------------------

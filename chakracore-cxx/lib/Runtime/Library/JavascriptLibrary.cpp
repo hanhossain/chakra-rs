@@ -1356,7 +1356,7 @@ namespace Js
 
         if (this->referencedPropertyRecords != nullptr)
         {
-            RECYCLER_PERF_COUNTER_SUB(PropertyRecordBindReference, this->referencedPropertyRecords->Count());
+            ;
         }
     }
 

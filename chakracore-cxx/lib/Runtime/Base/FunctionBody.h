@@ -8,7 +8,6 @@
 #include "AuxPtrs.h"
 #include "CompactCounters.h"
 #include "Core/CommonMinMax.h"
-#include "Core/PerfCounterSet.h"
 #include "DataStructures/Interval.h"
 #include "DataStructures/GrowingArray.h"
 
@@ -324,9 +323,6 @@ namespace Js
 
         virtual void OnCleanup(bool isShutdown) = 0;
 
-#ifdef PERF_COUNTERS
-        virtual void OnRecorded() = 0;
-#endif
     private:
         State GetState() const
         {
@@ -646,10 +642,6 @@ namespace Js
 
         void ReleasePendingWorkItem() override;
 
-#ifdef PERF_COUNTERS
-        virtual void OnRecorded() override;
-#endif
-
     };
 
     class LoopEntryPointInfo : public EntryPointInfo
@@ -678,10 +670,6 @@ namespace Js
         {
             return (uint8_t)CONFIG_FLAG(LoopIterationsToBailoutsRatioForRejit) + 1;
         }
-#endif
-
-#ifdef PERF_COUNTERS
-        virtual void OnRecorded() override;
 #endif
 
 #ifdef BGJIT_STATS
@@ -1196,7 +1184,7 @@ namespace Js
 
         void CleanupFunctionProxyCounters()
         {
-            PERF_COUNTER_DEC(Code, TotalFunction);
+            ;
         }
 
         uint32_t ComputeAbsoluteLineNumber(uint32_t relativeLineNumber) const;
@@ -2193,9 +2181,6 @@ namespace Js
 #if DBG
         WriteBarrierFieldTypeTraits<bool>::Type m_isSerialized : 1;
 #endif
-#ifdef PERF_COUNTERS
-        WriteBarrierFieldTypeTraits<bool>::Type m_isDeserializedFunction : 1;
-#endif
 #if DBG
         // Indicates that nested functions can be allocated on the stack (but may not be)
         WriteBarrierFieldTypeTraits<bool>::Type m_canDoStackNestedFunc : 1;
@@ -2238,9 +2223,6 @@ namespace Js
 
         FunctionBody(ScriptContext* scriptContext, const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount, Utf8SourceInfo* sourceInfo,
             uint uFunctionNumber, uint uScriptId, Js::LocalFunctionId functionId, FunctionInfo::Attributes attributes, FunctionBodyFlags flags
-#ifdef PERF_COUNTERS
-            , bool isDeserializedFunction = false
-#endif
             );
 
         FunctionBody(ParseableFunctionInfo * parseableFunctionInfo);
@@ -2266,16 +2248,10 @@ namespace Js
         static FunctionBody * NewFromRecycler(Js::ScriptContext * scriptContext, const char16_t * displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
             Utf8SourceInfo* sourceInfo, uint uScriptId, Js::LocalFunctionId functionId, FunctionInfo::Attributes attributes
             , FunctionBodyFlags flags
-#ifdef PERF_COUNTERS
-            , bool isDeserializedFunction
-#endif
             );
         static FunctionBody * NewFromRecycler(Js::ScriptContext * scriptContext, const char16_t * displayName, uint displayNameLength, uint displayShortNameOffset, uint nestedCount,
             Utf8SourceInfo* sourceInfo, uint uFunctionNumber, uint uScriptId, Js::LocalFunctionId functionId, FunctionInfo::Attributes attributes
             , FunctionBodyFlags flags
-#ifdef PERF_COUNTERS
-            , bool isDeserializedFunction
-#endif
             );
 
         static FunctionBody * NewFromParseableFunctionInfo(ParseableFunctionInfo * info);
@@ -2534,10 +2510,6 @@ namespace Js
         template<bool IsScriptContextShutdown>
         void CleanUpInlineCaches();
         void CleanupRecyclerData(bool isRecyclerShutdown, bool doEntryPointCleanupCaptureStack);
-
-#ifdef PERF_COUNTERS
-        void CleanupPerfCounter();
-#endif
 
         bool HasRejit() const
         {
@@ -2805,9 +2777,6 @@ namespace Js
         ArgSlot GetProfiledInParamsCount() const { return this->GetInParamsCount() > 1? this->GetInParamsCount() - 1 : 0; }
 
         bool IsPartialDeserializedFunction() { return this->m_isPartialDeserializedFunction; }
-#ifdef PERF_COUNTERS
-        bool IsDeserializedFunction() { return this->m_isDeserializedFunction; }
-#endif
 
 #if ENABLE_NATIVE_CODEGEN
         void SetPolymorphicCallSiteInfoHead(PolymorphicCallSiteInfo *polyCallSiteInfo) { this->SetAuxPtr<AuxPointerType::PolymorphicCallSiteInfoHead>(polyCallSiteInfo); }

@@ -319,8 +319,8 @@ SmallHeapBlockT<TBlockAttributes>::ReassignPages(Recycler * recycler)
         return FALSE;
     }
 
-    RECYCLER_PERF_COUNTER_ADD(FreeObjectSize, this->GetPageCount() * AutoSystemInfo::PageSize);
-    RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockFreeObjectSize, this->GetPageCount() * AutoSystemInfo::PageSize);
+    ;
+    ;
     return TRUE;
 }
 
@@ -1929,26 +1929,6 @@ SmallHeapBlockT<TBlockAttributes>::AggregateBlockStats(HeapBucketStats& stats, b
 }
 #endif
 
-#ifdef RECYCLER_PERF_COUNTERS
-template <class TBlockAttributes>
-void
-SmallHeapBlockT<TBlockAttributes>::UpdatePerfCountersOnFree()
-{
-    Assert(markCount == 0);
-    Assert(this->IsFreeBitsValid());
-
-    size_t usedCount = (objectCount - freeCount);
-    size_t usedBytes = usedCount * objectSize;
-
-    RECYCLER_PERF_COUNTER_SUB(SmallHeapBlockLiveObject, usedCount);
-    RECYCLER_PERF_COUNTER_SUB(SmallHeapBlockLiveObjectSize, usedBytes);
-    RECYCLER_PERF_COUNTER_SUB(SmallHeapBlockFreeObjectSize, this->GetPageCount() * AutoSystemInfo::PageSize - usedBytes);
-
-    RECYCLER_PERF_COUNTER_SUB(LiveObject, usedCount);
-    RECYCLER_PERF_COUNTER_SUB(LiveObjectSize, usedBytes);
-    RECYCLER_PERF_COUNTER_SUB(FreeObjectSize, this->GetPageCount() * AutoSystemInfo::PageSize - usedBytes);
-}
-#endif
 #ifdef PROFILE_RECYCLER_ALLOC
 template <class TBlockAttributes>
 void *

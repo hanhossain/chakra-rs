@@ -5,7 +5,7 @@
 
 namespace Js
 {
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(SubString);
+    ;
 
     inline SubString::SubString(void const * originalFullStringReference, const char16_t* subString, charcount_t length, ScriptContext *scriptContext) :
         JavascriptString(scriptContext->GetLibrary()->GetStringTypeStatic())

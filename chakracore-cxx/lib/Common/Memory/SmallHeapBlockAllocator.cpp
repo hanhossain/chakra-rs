@@ -67,16 +67,6 @@ SmallHeapBlockAllocator<TBlockType>::Clear()
             this->bucket->heapInfo->recycler->TrackUnallocated(reinterpret_cast<char*>(this->freeObjectList), this->endAddress, this->bucket->sizeCat);
 #endif
             RecyclerMemoryTracking::ReportUnallocated(this->heapBlock->heapBucket->heapInfo->recycler, reinterpret_cast<char*>(this->freeObjectList), this->endAddress, heapBlock->heapBucket->sizeCat);
-#ifdef RECYCLER_PERF_COUNTERS
-            size_t unallocatedObjects = heapBlock->objectCount - ((char *)this->freeObjectList - heapBlock->address) / heapBlock->objectSize;
-            size_t unallocatedObjectBytes = unallocatedObjects * heapBlock->GetObjectSize();
-            RECYCLER_PERF_COUNTER_ADD(LiveObject, unallocatedObjects);
-            RECYCLER_PERF_COUNTER_ADD(LiveObjectSize, unallocatedObjectBytes);
-            RECYCLER_PERF_COUNTER_SUB(FreeObjectSize, unallocatedObjectBytes);
-            RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockLiveObject, unallocatedObjects);
-            RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockLiveObjectSize, unallocatedObjectBytes);
-            RECYCLER_PERF_COUNTER_SUB(SmallHeapBlockFreeObjectSize, unallocatedObjectBytes);
-#endif
             Assert(heapBlock->freeObjectList == nullptr);
             this->endAddress = nullptr;
         }
@@ -221,27 +211,6 @@ SmallHeapBlockAllocator<TBlockType>::TrackNativeAllocatedObjects()
         pfnTrackNativeAllocatedObjectCallBack(recycler, curr, sizeCat);
         curr += sizeCat;
     }
-#elif defined(RECYCLER_PERF_COUNTERS)
-    if (lastNonNativeBumpAllocatedBlock == nullptr)
-    {
-        return;
-    }
-
-    size_t sizeCat = this->heapBlock->heapBucket->sizeCat;
-    char * curr = lastNonNativeBumpAllocatedBlock + sizeCat;
-    Assert(curr <= (char *)this->freeObjectList);
-    size_t byteCount = ((char *)this->freeObjectList - curr);
-
-#if DBG_DUMP
-    ;
-#endif
-
-    RECYCLER_PERF_COUNTER_ADD(LiveObject, byteCount / sizeCat);
-    RECYCLER_PERF_COUNTER_ADD(LiveObjectSize, byteCount);
-    RECYCLER_PERF_COUNTER_SUB(FreeObjectSize, byteCount);
-    RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockLiveObject, byteCount / sizeCat);
-    RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockLiveObjectSize, byteCount);
-    RECYCLER_PERF_COUNTER_SUB(SmallHeapBlockFreeObjectSize, byteCount);
 #else
 #error Not implemented
 #endif

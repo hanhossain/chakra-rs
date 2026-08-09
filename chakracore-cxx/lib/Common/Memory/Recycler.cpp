@@ -26,7 +26,7 @@
 #include "Memory/AutoAllocatorObjectPtr.h"
 #include "Common/Tick.h"
 
-DEFINE_RECYCLER_TRACKER_PERF_COUNTER(RecyclerWeakReferenceBase);
+;
 
 /// Max size (in MB) in single allocation
 constexpr size_t MaxSingleAllocSizeInMB = 2048;
@@ -443,7 +443,7 @@ Recycler::RootAddRef(void* obj, uint *count)
         if (refCount == 1)
         {
             this->scanPinnedObjectMap = true;
-            RECYCLER_PERF_COUNTER_INC(PinnedObject);
+            ;
         }
 #if defined(CHECK_MEMORY_LEAK)
 #ifdef STACK_BACK_TRACE
@@ -549,7 +549,7 @@ Recycler::RootRelease(void* obj, uint *count)
             pinnedObjectMap.Remove(obj);
         }
 
-        RECYCLER_PERF_COUNTER_DEC(PinnedObject);
+        ;
     }
 
     // Any time a root is removed during a GC, it indicates that an exhaustive
@@ -1266,9 +1266,9 @@ void Recycler::TrackNativeAllocatedMemoryBlock(Recycler * recycler, void * memBl
 #endif
 
     RecyclerMemoryTracking::ReportAllocation(recycler, memBlock, sizeCat);
-    RECYCLER_PERF_COUNTER_INC(LiveObject);
-    RECYCLER_PERF_COUNTER_ADD(LiveObjectSize, sizeCat);
-    RECYCLER_PERF_COUNTER_SUB(FreeObjectSize, sizeCat);
+    ;
+    ;
+    ;
 
 #ifdef RECYCLER_MEMORY_VERIFY
     AssertMsg(!recycler->VerifyEnabled(), "Why did we register allocation tracking callback if all allocations are forced to slow path?");
@@ -2543,18 +2543,6 @@ Recycler::Sweep(size_t rescanRootBytes, bool concurrent, bool adjustPartialHeuri
     }
 
     return false;
-}
-
-void Recycler::DisplayMemStats()
-{
-#ifdef PERF_COUNTERS
-#if DBG_DUMP
-    Output::Print(u"Recycler Live Object Count  %u\n", PerfCounter::RecyclerCounterSet::GetLiveObjectCounter().GetValue());
-    Output::Print(u"Recycler Live Object Size   %u\n", PerfCounter::RecyclerCounterSet::GetLiveObjectSizeCounter().GetValue());
-#endif
-
-    Output::Print(u"Recycler Used Page Size %u\n", PerfCounter::PageAllocatorCounterSet::GetUsedSizeCounter(PageAllocatorType::PageAllocatorType_Recycler).GetValue());
-#endif
 }
 
 CollectedRecyclerWeakRefHeapBlock CollectedRecyclerWeakRefHeapBlock::Instance;
@@ -6544,10 +6532,6 @@ Recycler::TrackAllocCore(void * object, size_t size, const TrackAllocData& track
         Output::Print(data.isArray ? u"Allocated %S[] %p\n" : u"Allocated %S %p\n", data.typeinfo->name(), object);
     }
 #endif
-#ifdef PERF_COUNTERS
-    ++data.counter;
-    data.sizeCounter += HeapInfo::GetAlignedSizeNoCheck(size);
-#endif
 
     SetTrackerData(object, &data);
 }
@@ -6591,14 +6575,6 @@ BOOL Recycler::TrackFree(const char* address, size_t size)
         {
             if (data != &TrackerData::EmptyData)
             {
-#ifdef PERF_COUNTERS
-                --data->counter;
-                data->sizeCounter -= size;
-#endif
-                if (data->typeinfo == &typeid(RecyclerWeakReferenceBase))
-                {
-                    TrackFreeWeakRef(const_cast<RecyclerWeakReferenceBase*>(reinterpret_cast<const RecyclerWeakReferenceBase*>(address)));
-                }
                 data->FreeSize += size;
                 data->FreeCount++;
 #ifdef TRACE_OBJECT_LIFETIME
@@ -6648,38 +6624,6 @@ Recycler::TrackUnallocated(char* address, char *endAddress, size_t sizeCat)
             address += sizeCat;
         }
     }
-}
-
-void
-Recycler::TrackAllocWeakRef(RecyclerWeakReferenceBase * weakRef)
-{
-    Assert(weakRef->typeInfo != nullptr);
-#if DBG && defined(PERF_COUNTERS)
-    if (this->trackerDictionary != nullptr)
-    {
-        TrackerItem * item;
-        if (trackerDictionary->TryGetValue(weakRef->typeInfo, &item))
-        {
-            weakRef->counter = &item->weakRefCounter;
-        }
-        else
-        {
-            weakRef->counter = &PerfCounter::RecyclerTrackerCounterSet::GetWeakRefPerfCounter(weakRef->typeInfo);
-        }
-        ++(*weakRef->counter);
-    }
-#endif
-}
-
-void
-Recycler::TrackFreeWeakRef(RecyclerWeakReferenceBase * weakRef)
-{
-#if DBG && defined(PERF_COUNTERS)
-    if (weakRef->counter != nullptr)
-    {
-        --(*weakRef->counter);
-    }
-#endif
 }
 
 #endif // PROFILE_RECYCLER_ALLOC
@@ -7057,21 +7001,21 @@ void
 Recycler::NotifyFree(char *address, size_t size)
 {
     RecyclerMemoryTracking::ReportFree(this, address, size);
-    RECYCLER_PERF_COUNTER_DEC(LiveObject);
-    RECYCLER_PERF_COUNTER_SUB(LiveObjectSize, size);
-    RECYCLER_PERF_COUNTER_ADD(FreeObjectSize, size);
+    ;
+    ;
+    ;
 
     if (HeapInfo::IsSmallBlockAllocation(HeapInfo::GetAlignedSizeNoCheck(size)))
     {
-        RECYCLER_PERF_COUNTER_DEC(SmallHeapBlockLiveObject);
-        RECYCLER_PERF_COUNTER_SUB(SmallHeapBlockLiveObjectSize, size);
-        RECYCLER_PERF_COUNTER_ADD(SmallHeapBlockFreeObjectSize, size);
+        ;
+        ;
+        ;
     }
     else
     {
-        RECYCLER_PERF_COUNTER_DEC(LargeHeapBlockLiveObject);
-        RECYCLER_PERF_COUNTER_SUB(LargeHeapBlockLiveObjectSize, size);
-        RECYCLER_PERF_COUNTER_ADD(LargeHeapBlockFreeObjectSize, size);
+        ;
+        ;
+        ;
     }
 
 #ifdef RECYCLER_MEMORY_VERIFY

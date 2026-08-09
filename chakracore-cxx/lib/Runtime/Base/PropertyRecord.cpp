@@ -5,8 +5,8 @@
 
 namespace Js
 {
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(PropertyRecord);
-    DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER(PropertyRecord);
+    ;
+    ;
 
     // Constructor for runtime-constructed PropertyRecords
     PropertyRecord::PropertyRecord(uint32_t byteCount, bool isNumeric, uint hash, bool isSymbol)

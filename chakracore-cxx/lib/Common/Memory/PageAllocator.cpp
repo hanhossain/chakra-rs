@@ -2023,10 +2023,6 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddReservedBytes(size_t bytes)
 {
     reservedBytes += bytes;
-#ifdef PERF_COUNTERS
-    GetReservedSizeCounter() += bytes;
-    GetTotalReservedSizeCounter() += bytes;
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -2034,10 +2030,6 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SubReservedBytes(size_t bytes)
 {
     reservedBytes -= bytes;
-#ifdef PERF_COUNTERS
-    GetReservedSizeCounter() -= bytes;
-    GetTotalReservedSizeCounter() -= bytes;
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -2045,10 +2037,6 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddCommittedBytes(size_t bytes)
 {
     committedBytes += bytes;
-#ifdef PERF_COUNTERS
-    GetCommittedSizeCounter() += bytes;
-    GetTotalCommittedSizeCounter() += bytes;
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -2056,10 +2044,6 @@ void
 PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SubCommittedBytes(size_t bytes)
 {
     committedBytes -= bytes;
-#ifdef PERF_COUNTERS
-    GetCommittedSizeCounter() -= bytes;
-    GetTotalCommittedSizeCounter() -= bytes;
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -2073,11 +2057,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AddUsedBytes(size_t by
     {
         maxUsedBytes = totalUsedBytes;
     }
-
-#ifdef PERF_COUNTERS
-    GetUsedSizeCounter() += bytes;
-    GetTotalUsedSizeCounter() += bytes;
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>
@@ -2088,10 +2067,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::SubUsedBytes(size_t by
     Assert(bytes <= totalUsedBytes);
     usedBytes -= bytes;
     ::InterlockedExchangeAdd64(reinterpret_cast<volatile long*>(&totalUsedBytes), -static_cast<long>(bytes));
-#ifdef PERF_COUNTERS
-    GetUsedSizeCounter() -= bytes;
-    GetTotalUsedSizeCounter() -= bytes;
-#endif
 }
 
 template<typename TVirtualAlloc, typename TSegment, typename TPageSegment>

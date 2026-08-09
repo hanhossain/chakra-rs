@@ -40,7 +40,7 @@ class MarkContext;
 #endif
 #endif  // ENABLE_MEM_STATS
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING) || defined(RECYCLER_PERF_COUNTERS)
+#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
 #define RECYCLER_TRACK_NATIVE_ALLOCATED_OBJECTS
 #endif
 
@@ -375,9 +375,6 @@ public:
     virtual void SetTrackerData(void * address, void * data) = 0;
 #endif
     bool isForceSweeping;
-#ifdef RECYCLER_PERF_COUNTERS
-    virtual void UpdatePerfCountersOnFree() = 0;
-#endif
 };
 
 enum SweepMode
@@ -677,9 +674,6 @@ public:
 #ifdef RECYCLER_VERIFY_MARK
     void VerifyMark();
     virtual bool VerifyMark(void * objectAddress, void * target) override;
-#endif
-#ifdef RECYCLER_PERF_COUNTERS
-    virtual void UpdatePerfCountersOnFree() override;
 #endif
 #ifdef PROFILE_RECYCLER_ALLOC
     virtual void * GetTrackerData(void * address) override;

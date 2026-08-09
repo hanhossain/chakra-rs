@@ -5,8 +5,8 @@
 
 namespace Js
 {
-    DEFINE_RECYCLER_TRACKER_PERF_COUNTER(PropertyString);
-    DEFINE_RECYCLER_TRACKER_WEAKREF_PERF_COUNTER(PropertyString);
+    ;
+    ;
 
     PropertyString::PropertyString(StaticType* type, const Js::PropertyRecord* propertyRecord) :
         JavascriptString(type, propertyRecord->GetLength(), propertyRecord->GetBuffer()),
