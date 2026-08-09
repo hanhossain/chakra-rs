@@ -198,10 +198,7 @@ namespace CorUnix
 
         virtual
         PAL_ERROR
-        Initialize(
-            CPalThread *pthr,
-            CObjectAttributes *poa
-            );
+        Initialize(CPalThread *pthr);
 
         SHMPTR
         GetShmObjData(
@@ -290,10 +287,7 @@ namespace CorUnix
 
         virtual
         PAL_ERROR
-        Initialize(
-            CPalThread *pthr,
-            CObjectAttributes *poa
-            );
+        Initialize(CPalThread *pthr);
 
         //
         // IPalObject routines

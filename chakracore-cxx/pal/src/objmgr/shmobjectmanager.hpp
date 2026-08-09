@@ -61,12 +61,7 @@ namespace CorUnix
         //
 
         PAL_ERROR
-        AllocateObject(
-            CPalThread *pthr,
-            CObjectType *pot,
-            CObjectAttributes *poa,
-            IPalObject **ppobjNew
-            ) override;
+        AllocateObject(CPalThread *pthr, CObjectType *pot, IPalObject **ppobjNew) override;
 
         PAL_ERROR
         RegisterObject(

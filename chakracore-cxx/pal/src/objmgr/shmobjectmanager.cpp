@@ -98,19 +98,15 @@ Parameters:
 --*/
 
 PAL_ERROR
-CSharedMemoryObjectManager::AllocateObject(
-    CPalThread *pthr,
-    CObjectType *pot,
-    CObjectAttributes *poa,
-    IPalObject **ppobjNew            // OUT
-    )
+CSharedMemoryObjectManager::AllocateObject(CPalThread *pthr, CObjectType *pot,
+                                           IPalObject **ppobjNew // OUT
+)
 {
     PAL_ERROR palError = NO_ERROR;
     CSharedMemoryObject *pshmobj = NULL;
 
     assert(NULL != pthr);
     assert(NULL != pot);
-    assert(NULL != poa);
     assert(NULL != ppobjNew);
 
     if (CObjectType::WaitableObject == pot->GetSynchronizationSupport())
@@ -124,7 +120,7 @@ CSharedMemoryObjectManager::AllocateObject(
 
     if (NULL != pshmobj)
     {
-        palError = pshmobj->Initialize(pthr, poa);
+        palError = pshmobj->Initialize(pthr);
         if (NO_ERROR == palError)
         {
             *ppobjNew = static_cast<IPalObject*>(pshmobj);
@@ -177,7 +173,6 @@ CSharedMemoryObjectManager::RegisterObject(
 {
     PAL_ERROR palError = NO_ERROR;
     CSharedMemoryObject *pshmobj = static_cast<CSharedMemoryObject*>(pobjToRegister);
-    CObjectAttributes *poa;
     CObjectType *potObj;
     BOOL fInherit = FALSE;
     BOOL fShared = FALSE;
@@ -187,9 +182,6 @@ CSharedMemoryObjectManager::RegisterObject(
     assert(NULL != paot);
     assert(NULL != pHandle);
     assert(NULL != ppobjRegistered);
-
-    poa = pobjToRegister->GetObjectAttributes();
-    assert(NULL != poa);
 
     potObj = pobjToRegister->GetObjectType();
     fShared = (SharedObject == pshmobj->GetObjectDomain());

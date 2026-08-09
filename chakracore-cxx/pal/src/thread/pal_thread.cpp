@@ -409,7 +409,6 @@ CorUnix::InternalCreateThread(
 {
     PAL_ERROR palError;
     CPalThread *pNewThread = NULL;
-    CObjectAttributes oa;
     bool fThreadDataAddedToProcessList = false;
     HANDLE hNewThread = NULL;
 
@@ -1392,7 +1391,6 @@ CorUnix::CreateThreadObject(
     IDataLock *pDataLock;
     HANDLE hThread = NULL;
     CThreadProcessLocalData *pLocalData = NULL;
-    CObjectAttributes oa;
     BOOL fThreadDataStoredInObject = FALSE;
     IPalObject *pobjRegisteredThread = NULL;
 
@@ -1400,12 +1398,7 @@ CorUnix::CreateThreadObject(
     // Create the IPalObject for the thread
     //
 
-    palError = g_pObjectManager->AllocateObject(
-        pThread,
-        &otThread,
-        &oa,
-        &pobjThread
-        );
+    palError = g_pObjectManager->AllocateObject(pThread, &otThread, &pobjThread);
 
     if (NO_ERROR != palError)
     {
