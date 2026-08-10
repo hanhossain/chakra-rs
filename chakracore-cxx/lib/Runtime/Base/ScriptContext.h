@@ -1031,7 +1031,6 @@ private:
 
         template<WellKnownHostType wellKnownType>
         bool IsWellKnownHostType(Js::TypeId typeId) { return threadContext->IsWellKnownHostType<wellKnownType>(typeId); }
-        void SetWellKnownHostTypeId(WellKnownHostType wellKnownType, Js::TypeId typeId) { threadContext->SetWellKnownHostTypeId(wellKnownType, typeId); }
 
         ParseNodeProg * ParseScript(Parser* parser, const byte* script,
             size_t cb, SRCINFO const * pSrcInfo,
