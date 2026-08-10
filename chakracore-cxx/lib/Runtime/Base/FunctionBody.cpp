@@ -8391,12 +8391,6 @@ namespace Js
             }
 #endif
 #endif
-#if DEBUG
-            const unsigned char* rpcData = serializedRpcData;
-            HeapDeleteArray(serializedRpcDataSize, rpcData);
-            serializedRpcDataSize = 0;
-            serializedRpcData = nullptr;
-#endif
         }
     }
 
