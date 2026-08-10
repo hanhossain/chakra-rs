@@ -668,29 +668,6 @@ volatile unsigned long NativeCodeGenerator::CodegenFailureSeed = 0;
 void NativeCodeGenerator::CodeGen(PageAllocator* pageAllocator, CodeGenWorkItemIDL* workItemData, _Out_ JITOutputIDL& jitWriteData, const bool foreground, Js::EntryPointInfo* epInfo /*= nullptr*/)
 {
     {
-#if DBG
-        // TODO (hanhossain): remove OOPJIT
-        size_t serializedRpcDataSize = 0;
-        // TODO (hanhossain): remove OOPJIT
-        const unsigned char* serializedRpcData = nullptr;
-        struct AutoFreeArray
-        {
-            const byte* arr = nullptr;
-            size_t bufferSize = 0;
-            ~AutoFreeArray() { HeapDeleteArray(bufferSize, arr); }
-        } autoFreeArray;
-
-        if (CONFIG_FLAG(EntryPointInfoRpcData) && epInfo != nullptr)
-        {
-            epInfo->SetSerializedRpcData(serializedRpcData, serializedRpcDataSize);
-        }
-        else
-        {
-            autoFreeArray.arr = serializedRpcData;
-            autoFreeArray.bufferSize = serializedRpcDataSize;
-        }
-#endif
-
         InProcCodeGenAllocators *const allocators =
             foreground ? EnsureForegroundAllocators(pageAllocator) : GetBackgroundAllocator(pageAllocator); // okay to do outside lock since the respective function is called only from one thread
         NoRecoverMemoryJitArenaAllocator jitArena(u"JITArena", pageAllocator, Js::Throw::OutOfMemory);
@@ -1686,12 +1663,6 @@ NativeCodeGenerator::JobProcessed(JsUtil::Job *const job, const bool succeeded)
     }
 }
 
-// TODO (hanhossain): remove OOPJIT
-void
-NativeCodeGenerator::UpdateJITState()
-{
-}
-
 JsUtil::Job *
 NativeCodeGenerator::GetJobToProcessProactively()
 {
@@ -2561,8 +2532,6 @@ NativeCodeGenerator::GatherCodeGenData(Js::FunctionBody *const topFunctionBody, 
         }
     } autoProfile(foregroundCodeGenProfiler);
 #endif
-
-    UpdateJITState();
 
     const auto recycler = scriptContext->GetRecycler();
     {

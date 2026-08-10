@@ -272,24 +272,6 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<FieldAccessStatsPtr>::Type fieldAccessStats;
 #endif
 
-#if DEBUG
-    private:
-        typename WriteBarrierFieldTypeTraits<const unsigned char*>::Type serializedRpcData = nullptr;
-        typename WriteBarrierFieldTypeTraits<size_t>::Type serializedRpcDataSize = 0;
-    public:
-        void SetSerializedRpcData(const unsigned char* data, size_t size)
-        {
-            if (this->serializedRpcData != nullptr)
-            {
-                // We may have multiple codegens happen for same entrypoint
-                const unsigned char* rpcData = this->serializedRpcData;
-                HeapDeleteArray(this->serializedRpcDataSize, rpcData);
-            }
-            serializedRpcData = data;
-            serializedRpcDataSize = size;
-        }
-#endif
-
     public:
         void Finalize(bool isShutdown) override;
 
