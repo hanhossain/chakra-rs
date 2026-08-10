@@ -767,14 +767,14 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
 
         // TODO: need to add a switch in case we don't need to wait for
         // child initial script completion
-        ResetEvent(threadData->hevntInitialScriptCompleted);
+        threadData->reset_initial_script_completed();
 
         child->hThread = ::CreateThread(NULL, [](void* param) -> uint32_t
         {
             return ((RuntimeThreadData*)param)->ThreadProc();
         }, (void*)child, NULL, NULL);
 
-        WaitForSingleObject(threadData->hevntInitialScriptCompleted, INFINITE);
+        threadData->wait_initial_script_completed();
     }
     else
     {
