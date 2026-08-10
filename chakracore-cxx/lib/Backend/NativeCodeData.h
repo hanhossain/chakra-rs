@@ -16,8 +16,6 @@
 #define NativeCodeDataNewArrayZNoFixup(alloc, T, count) AllocatorNewArrayZ(NativeCodeData::AllocatorNoFixup<NativeCodeData::Array<T>>, alloc, T, count)
 #define NativeCodeDataNewPlusZNoFixup(size, alloc, T, ...) AllocatorNewPlusZ(NativeCodeData::AllocatorNoFixup<T>, alloc, size, T, __VA_ARGS__)
 
-#define FixupNativeDataPointer(field, chunkList) NativeCodeData::AddFixupEntry(this->field, &this->field, this, chunkList)
-
 class NativeCodeData
 {
 
@@ -47,13 +45,6 @@ public:
         char data[0];
     };
 
-    static DataChunk* GetDataChunk(void* data)
-    {
-        // TODO (hanhossain): remove OOPJIT
-        Assert(false);
-        return (NativeCodeData::DataChunk*)((char*)data - offsetof(NativeCodeData::DataChunk, data));
-    }
-
     NativeCodeData(DataChunk * chunkList);
     union
     {
@@ -62,11 +53,7 @@ public:
     };
 
 public:
-
-    static void AddFixupEntry(void* targetAddr, void* addrToFixup, void* startAddress, DataChunk * chunkList);
-    static void AddFixupEntry(void* targetAddr, void* targetStartAddr, void* addrToFixup, void* startAddress, DataChunk * chunkList);
-    static void AddFixupEntryForPointerArray(void* startAddress, DataChunk * chunkList);
-    template<class DataChunkT>
+    template <class DataChunkT>
     static void DeleteChunkList(DataChunkT * chunkList);
 public:
     class Allocator
@@ -104,18 +91,10 @@ public:
 #endif
     };
 
+    // TODO (hanhossain): remove OOPJIT
     template<typename T>
     class Array
     {
-    public:
-        void Fixup(NativeCodeData::DataChunk* chunkList)
-        {
-            int count = NativeCodeData::GetDataChunk(this)->len / sizeof(T);
-            while (count-- > 0)
-            {
-                (((T*)this) + count)->Fixup(chunkList);
-            }
-        }
     };
 
     template<typename T>
@@ -155,11 +134,6 @@ public:
         char * AllocZero(size_t requestedBytes)
         {
             return AddFixup(Allocator::AllocZero(requestedBytes));
-        }
-
-        static void Fixup(void* pThis, NativeCodeData::DataChunk* chunkList)
-        {
-            ((T*)pThis)->Fixup(chunkList);
         }
     };
 
@@ -229,11 +203,4 @@ template<>
 inline void VarType<DataDesc_InlineeFrameRecord_Constants>::Fixup(NativeCodeData::DataChunk* chunkList)
 {
     AssertMsg(false, "InlineeFrameRecord::constants contains Var from main process, should not fixup");
-}
-
-struct GlobalBailOutRecordDataTable;
-template<>
-inline void NativeCodeData::Array<GlobalBailOutRecordDataTable *>::Fixup(NativeCodeData::DataChunk* chunkList)
-{
-    NativeCodeData::AddFixupEntryForPointerArray(this, chunkList);
 }
