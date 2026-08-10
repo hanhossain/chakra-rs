@@ -53,6 +53,7 @@ fn main() {
                 .generator("Ninja")
                 .define("CMAKE_CXX_COMPILER", "clang++")
                 .define("CMAKE_C_COMPILER", "clang")
+                .define("CMAKE_COLOR_DIAGNOSTICS", "ON")
                 .profile(build_type)
                 .build_target("chhelper");
 
