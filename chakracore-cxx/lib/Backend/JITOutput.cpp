@@ -52,13 +52,6 @@ JITOutput::SetFrameHeight(uint val)
     m_outputData->frameHeight = val;
 }
 
-void
-JITOutput::RecordThrowMap(Js::ThrowMapEntry * throwMap, uint mapCount)
-{
-    m_outputData->throwMapOffset = NativeCodeData::GetDataTotalOffset(throwMap);
-    m_outputData->throwMapCount = mapCount;
-}
-
 bool
 JITOutput::IsTrackCompoundedIntOverflowDisabled() const
 {

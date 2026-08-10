@@ -54,15 +54,6 @@ public:
         return (NativeCodeData::DataChunk*)((char*)data - offsetof(NativeCodeData::DataChunk, data));
     }
 
-    static char16_t* GetDataDescription(void* data, JitArenaAllocator * alloc);
-
-    static unsigned int GetDataTotalOffset(void* data)
-    {
-        // TODO (hanhossain): remove OOPJIT
-        Assert(false);
-        return GetDataChunk(data)->offset;
-    }
-
     NativeCodeData(DataChunk * chunkList);
     union
     {
@@ -107,8 +98,6 @@ public:
         Allocator * TrackAllocInfo(TrackAllocData const& data) { return this; }
         void ClearTrackAllocInfo(TrackAllocData* data = NULL) {}
 #endif
-    protected:
-        bool isOOPJIT;
     private:
 #if DBG
         bool finalized;
@@ -155,19 +144,6 @@ public:
     {
         char* AddFixup(char* dataBlock)
         {
-            if (isOOPJIT)
-            {
-                DataChunk* chunk = NativeCodeData::GetDataChunk(dataBlock);
-                chunk->fixupFunc = &Fixup;
-#if DBG
-                chunk->dataType = typeid(T).name();
-                if (PHASE_TRACE1(Js::NativeCodeDataPhase))
-                {
-                    Output::Print(u"NativeCodeData Alloc: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n",
-                        chunk, (void*)dataBlock, chunk->allocIndex, chunk->len, chunk->offset, chunk->dataType);
-                }
-#endif
-            }
             return dataBlock;
         }
 
