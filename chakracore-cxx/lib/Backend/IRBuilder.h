@@ -126,7 +126,6 @@ private:
     void                EnsureConsumeBranchIsland();
     uint                ResolveVirtualLongBranch(IR::BranchInstr * branchInstr, uint offset);
     BranchReloc *       CreateRelocRecord(IR::BranchInstr * branchInstr, uint32_t offset, uint32_t targetOffset);
-    void                LoadNativeCodeData();
     void                BuildConstantLoads();
     void                BuildImplicitArgIns();    
 
