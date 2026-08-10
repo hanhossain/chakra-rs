@@ -11,6 +11,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ (github.ref == 'refs/heads/master' && github.sha) || github.ref }}
   cancel-in-progress: true
 
+env:
+  CARGO_TERM_COLOR: always
+  CMAKE_COLOR_DIAGNOSTICS: ON
+  CLICOLOR_FORCE: 1
+
 jobs:
   build-rust:
     name: rust / ${{ matrix.os }} / ${{ matrix.build-type }}
@@ -37,7 +42,6 @@ jobs:
           - build-type: test
             features: "--features compile-cpp,optimized-tests"
     env:
-      CARGO_TERM_COLOR: always
       CARGO_BUILD_WARNINGS: deny
     steps:
       - uses: actions/checkout@v6
@@ -83,10 +87,6 @@ jobs:
             os-image: ubuntu-latest
             os-prefix: linux
             deps: sudo apt-get install -y ninja-build clang-19 lld-19 libc++-19-dev libc++abi-19-dev
-    env:
-      CARGO_TERM_COLOR: always
-      CMAKE_COLOR_DIAGNOSTICS: ON
-      CLICOLOR_FORCE: 1
     steps:
       - uses: actions/checkout@v6
       - name: Install dependencies
