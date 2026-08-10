@@ -6,4 +6,3 @@
 #pragma once
 
 #include "JITTypes.h"
-#include "ChakraJIT.h"
