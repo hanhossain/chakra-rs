@@ -7654,36 +7654,6 @@ Lowerer::GeneratePolymorphicTypeIndex(IR::RegOpnd * typeOpnd, Js::PropertyGuard 
 }
 
 void
-Lowerer::GenerateLeaOfOOPData(IR::RegOpnd * regOpnd, void * address, int32_t offset, IR::Instr * instrInsert)
-{
-    Func * func = instrInsert->m_func;
-    int32_t dataOffset;
-    Int32Math::Add(NativeCodeData::GetDataTotalOffset(address), offset, &dataOffset);
-    InsertLea(regOpnd,
-              IR::IndirOpnd::New(IR::RegOpnd::New(func->GetTopFunc()->GetNativeCodeDataSym(), TyVar, m_func), dataOffset, TyMachPtr,
-#if DBG
-                                 NativeCodeData::GetDataDescription(address, func->m_alloc),
-#endif
-                                 func, true),
-              instrInsert);
-}
-
-IR::Opnd *
-Lowerer::GenerateIndirOfOOPData(void * address, int32_t offset, IR::Instr * instrInsert)
-{
-    Func * func = instrInsert->m_func;
-    int32_t dataOffset;
-    Int32Math::Add(NativeCodeData::GetDataTotalOffset(address), offset, &dataOffset);
-    IR::Opnd * opnd = IR::IndirOpnd::New(IR::RegOpnd::New(func->GetTopFunc()->GetNativeCodeDataSym(), TyVar, m_func), dataOffset, TyMachPtr,
-#if DBG
-                                         NativeCodeData::GetDataDescription(address, func->m_alloc),
-#endif
-                                         func, true);
-
-    return opnd;
-}
-
-void
 Lowerer::InsertObjectPoison(IR::Opnd* poisonedOpnd, IR::BranchInstr* branchInstr, IR::Instr* insertInstr, bool isForStore)
 {
 #ifndef _M_ARM

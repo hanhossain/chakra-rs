@@ -823,9 +823,7 @@ typedef struct JITOutputIDL
     unsigned int frameHeight;
 
     unsigned int codeSize;
-    unsigned int throwMapOffset;
 
-    unsigned int throwMapCount;
     unsigned int inlineeFrameOffsetArrayOffset;
 
     unsigned int inlineeFrameOffsetArrayCount;

@@ -123,23 +123,7 @@ NativeCodeData::AddFixupEntryForPointerArray(void* startAddress, DataChunk * chu
     }
 }
 
-char16_t*
-NativeCodeData::GetDataDescription(void* data, JitArenaAllocator * alloc)
-{
-    auto chunk = GetDataChunk(data);
-    char16_t buf[1024] = { 0 };
-#if DBG
-    swprintf_s(buf, u"%hs, NativeCodeData: index: %x, len: %x, offset: +%x", chunk->dataType, chunk->allocIndex, chunk->len, chunk->offset);
-#else
-    swprintf_s(buf, u"NativeCodeData: index: %x, len: %x, offset: +%x", chunk->allocIndex, chunk->len, chunk->offset);
-#endif
-    auto len = std::u16string(buf).length() + 1;
-    auto desc = JitAnewArray(alloc, char16_t, len);
-    wcscpy_s(desc, len, buf);
-    return desc;
-}
-
-template<class DataChunkT>
+template <class DataChunkT>
 void
 NativeCodeData::DeleteChunkList(DataChunkT * chunkList)
 {
@@ -154,9 +138,7 @@ NativeCodeData::DeleteChunkList(DataChunkT * chunkList)
 
 NativeCodeData::Allocator::Allocator()
     : chunkList(nullptr),
-    lastChunkList(nullptr),
-    // TODO (hanhossain): remove OOPJIT
-    isOOPJIT(false)
+    lastChunkList(nullptr)
 {
     this->totalSize = 0;
     this->allocCount = 0;
@@ -180,47 +162,6 @@ NativeCodeData::Allocator::Alloc(size_t requestSize)
     char * data = nullptr;
     requestSize = Math::Align(requestSize, sizeof(void*));
 
-    if (isOOPJIT)
-    {
-
-#if DBG
-        // Always zero out the data for chk build to reduce the chance of false
-        // positive while verifying missing fixup entries
-        // Allocation without zeroing out, and with bool field in the structure
-        // will increase the chance of false positive because of reusing memory
-        // without zeroing, and the bool field is set to false, makes the garbage
-        // memory not changed, and the garbage memory might be just pointing to the
-        // same range of NativeCodeData memory, the checking tool will report false
-        // positive
-        DataChunk * newChunk = HeapNewStructPlusZ(requestSize, DataChunk);
-#else
-        DataChunk * newChunk = HeapNewStructPlus(requestSize, DataChunk);
-#endif
-
-#if DBG
-        newChunk->dataType = nullptr;
-#endif
-
-        newChunk->next = nullptr;
-        newChunk->allocIndex = this->allocCount++;
-        newChunk->len = (unsigned int)requestSize;
-        newChunk->fixupList = nullptr;
-        newChunk->fixupFunc = nullptr;
-        newChunk->offset = this->totalSize;
-        if (this->chunkList == nullptr)
-        {
-            this->chunkList = newChunk;
-            this->lastChunkList = newChunk;
-        }
-        else
-        {
-            this->lastChunkList->next = newChunk;
-            this->lastChunkList = newChunk;
-        }
-        this->totalSize += (unsigned int)requestSize;
-        data = newChunk->data;
-    }
-    else
     {
         DataChunkNoFixup * newChunk = HeapNewStructPlus(requestSize, DataChunkNoFixup);
         newChunk->len = (unsigned int)requestSize;
@@ -229,7 +170,6 @@ NativeCodeData::Allocator::Alloc(size_t requestSize)
         data = newChunk->data;
     }
 
-    ;
     return data;
 }
 
@@ -243,15 +183,8 @@ char *
 NativeCodeData::Allocator::AllocZero(size_t requestSize)
 {
     char * data = Alloc(requestSize);
-#if !DBG
     // Allocated with HeapNewStructPlusZ for chk build
     memset(data, 0, requestSize);
-#else
-    if (!isOOPJIT)
-    {
-        memset(data, 0, requestSize);
-    }
-#endif
     return data;
 }
 

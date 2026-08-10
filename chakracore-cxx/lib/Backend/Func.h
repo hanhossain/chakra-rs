@@ -1004,7 +1004,6 @@ private:
     StackSym* m_localClosureSym;
     StackSym* m_paramClosureSym;
     StackSym* m_localFrameDisplaySym;
-    StackSym* m_nativeCodeDataSym;
     StackSym* m_inlineeFrameStartSym;
     StackSym* m_loopParamSym;
     StackSym* m_bailoutReturnValueSym;
@@ -1054,10 +1053,7 @@ public:
     void SetScopeObjSym(StackSym* sym);
     StackSym* GetScopeObjSym();
 
-    StackSym* GetNativeCodeDataSym() const;
-    void SetNativeCodeDataSym(StackSym* sym);
-
-    StackSym* CreateInlineeStackSym();
+    StackSym * CreateInlineeStackSym();
 
     // Lazy bailout
     // The stack sym is used to store the pointer to

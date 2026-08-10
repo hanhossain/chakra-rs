@@ -17,7 +17,6 @@ public:
     void SetHasBailoutInstr(bool val);
     void SetArgUsedForBranch(uint8_t param);
     void SetFrameHeight(uint val);
-    void RecordThrowMap(Js::ThrowMapEntry * throwMap, uint mapCount);
 #ifdef _M_ARM
     void RecordXData(uint8_t * xdata);
 #endif

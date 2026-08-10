@@ -107,7 +107,6 @@ Func::Func(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     cachedInlineeFrameInfo(nullptr),
     frameInfo(nullptr),
     isTJLoopBody(false),
-    m_nativeCodeDataSym(nullptr),
     isFlowGraphValid(false),
     legalizePostRegAlloc(false),
 #if DBG
@@ -1664,22 +1663,6 @@ Func::SetScopeObjSym(StackSym * sym)
 }
 
 StackSym *
-Func::GetNativeCodeDataSym() const
-{
-    // TODO (hanhossain): remove OOPJIT
-    Assert(false);
-    return m_nativeCodeDataSym;
-}
-
-void
-Func::SetNativeCodeDataSym(StackSym * opnd)
-{
-    // TODO (hanhossain): remove OOPJIT
-    Assert(false);
-    m_nativeCodeDataSym = opnd;
-}
-
-StackSym*
 Func::GetScopeObjSym()
 {
     if (stackArgWithFormalsTracker == nullptr)
