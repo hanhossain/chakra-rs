@@ -341,8 +341,9 @@ void NativeCodeGenerator::TransitionFromSimpleJit(Js::ScriptFunction *const func
 #ifdef ALLOW_JIT_REPRO
 int32_t NativeCodeGenerator::JitFromEncodedWorkItem(_In_reads_(bufferSize) const byte* buffer, _In_ uint bufferSize)
 {
+    // TODO (hanhossain): remove OOPJIT
     CodeGenWorkItemIDL* workItemData = nullptr;
-    int32_t hr = JITManager::DeserializeRPCData(buffer, bufferSize, &workItemData);
+    int32_t hr = E_NOTIMPL;
     if (FAILED(hr))
     {
         return hr;
@@ -668,9 +669,10 @@ void NativeCodeGenerator::CodeGen(PageAllocator* pageAllocator, CodeGenWorkItemI
 {
     {
 #if DBG
+        // TODO (hanhossain): remove OOPJIT
         size_t serializedRpcDataSize = 0;
+        // TODO (hanhossain): remove OOPJIT
         const unsigned char* serializedRpcData = nullptr;
-        JITManager::SerializeRPCData(workItemData, &serializedRpcDataSize, &serializedRpcData);
         struct AutoFreeArray
         {
             const byte* arr = nullptr;
