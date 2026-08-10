@@ -20,14 +20,6 @@ enum class RemoteCallType
 class JITManager
 {
 public:
-    int32_t CleanupScriptContext(
-        PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
-        { Assert(false); return E_FAIL; }
-
-    int32_t CloseScriptContext(
-        PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
-        { Assert(false); return E_FAIL; }
-
     int32_t FreeAllocation(
         PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
         intptr_t codeAddress)
