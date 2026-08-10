@@ -405,10 +405,6 @@ namespace Js
             return isInvalidatedForHostObjects;
         }
 
-#if ENABLE_NATIVE_CODEGEN
-        void InitializeRemoteScriptContext();
-#endif
-
         void SetPrivilegeLevel(ScriptContextPrivilegeLevel level) { this->scriptContextPrivilegeLevel = level; }
         ScriptContextPrivilegeLevel GetPrivilegeLevel() { return this->scriptContextPrivilegeLevel; }
         void SetIsDiagnosticsScriptContext(bool);

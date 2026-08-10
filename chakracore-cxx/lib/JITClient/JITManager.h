@@ -20,9 +20,6 @@ enum class RemoteCallType
 class JITManager
 {
 public:
-    int32_t ConnectRpcServer(HANDLE jitProcessHandle, __in_opt void* serverSecurityDescriptor, UUID connectionUuid)
-        { Assert(false); return E_FAIL; }
-
     bool IsConnected() const { return false; }
     bool IsJITServer() const { return false; }
     void SetIsJITServer() { Assert(false); }
