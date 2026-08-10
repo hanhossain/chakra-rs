@@ -477,10 +477,6 @@ namespace Js
         ArenaAllocator* diagnosticArena;
 #endif
 
-#if ENABLE_NATIVE_CODEGEN
-        PSCRIPTCONTEXT_HANDLE m_remoteScriptContextAddr;
-#endif
-
         bool startupComplete; // Indicates if the heuristic startup phase for this script context is complete
         bool isInvalidatedForHostObjects;  // Indicates that we've invalidate all objects in the host so stop calling them.
 #ifdef ENABLE_SCRIPT_DEBUGGING
@@ -843,13 +839,6 @@ private:
 
         void SetDirectHostTypeId(TypeId typeId) {directHostTypeId = typeId; }
         TypeId GetDirectHostTypeId() const { return directHostTypeId; }
-
-#if ENABLE_NATIVE_CODEGEN
-        PSCRIPTCONTEXT_HANDLE GetRemoteScriptAddr(bool allowInitialize = true)
-        {
-            return m_remoteScriptContextAddr;
-        }
-#endif
 
         char16_t const * GetUrl() const { return url; }
         void SetUrl(BSTR bstr);

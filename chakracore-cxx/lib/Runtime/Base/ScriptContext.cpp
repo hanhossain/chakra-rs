@@ -70,7 +70,6 @@ namespace Js
 #endif
 #if ENABLE_NATIVE_CODEGEN
         nativeCodeGen(nullptr),
-        m_remoteScriptContextAddr(nullptr),
         jitFuncRangeCache(nullptr),
 #endif
         threadContext(threadContext),
@@ -477,23 +476,8 @@ namespace Js
         // In case there is something added to the list between close and dtor, just reset the list again
         this->weakReferenceDictionaryList.Reset();
 
-#if ENABLE_NATIVE_CODEGEN
-        if (m_remoteScriptContextAddr)
-        {
-            // TODO (hanhossain): remove OOPJIT
-            Assert(false);
-            if (JITManager::GetJITManager()->CleanupScriptContext(&m_remoteScriptContextAddr) == S_OK)
-            {
-                Assert(m_remoteScriptContextAddr == nullptr);
-            }
-            m_remoteScriptContextAddr = nullptr;
-        }
-#endif
-
         Assert(this->IsActuallyClosed());
         this->GetThreadContext()->closedScriptContextCount--;
-
-        ;
     }
 
     void ScriptContext::SetUrl(BSTR bstrUrl)
@@ -589,13 +573,6 @@ namespace Js
         if (this->asmJsInterpreterThunkEmitter != nullptr)
         {
             this->asmJsInterpreterThunkEmitter->Close();
-        }
-#endif
-
-#if ENABLE_NATIVE_CODEGEN
-        if (m_remoteScriptContextAddr)
-        {
-            JITManager::GetJITManager()->CloseScriptContext(m_remoteScriptContextAddr);
         }
 #endif
 
