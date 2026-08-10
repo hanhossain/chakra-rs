@@ -5213,7 +5213,8 @@ Inline::MapFormals(Func *inlinee,
                     // Don't bother mapping if it's not an object, though, since we'd have to create a
                     // boxed value at JIT time, and that case doesn't seem worth it.
                     Js::TypeId typeId = Js::TypeIds_Limit;
-                    Js::Var localVar = thisConstSym->GetConstAddress(topFunc->IsOOPJIT());
+                    constexpr bool isOopJit = false;
+                    Js::Var localVar = thisConstSym->GetConstAddress(isOopJit);
                     if (localVar != nullptr)
                     {
                         typeId = Js::JavascriptOperators::GetTypeIdNoCheck(localVar);
@@ -5240,8 +5241,6 @@ Inline::MapFormals(Func *inlinee,
                         if (instr->m_opcode == Js::OpCode::LdThis)
                         {
                             int moduleId = instr->GetSrc2()->AsIntConstOpnd()->AsInt32();
-                            // TODO OOP JIT, create and use server copy of module roots
-                            Assert(!topFunc->IsOOPJIT() || moduleId == 0);
                             thisConstVar = Js::JavascriptOperators::GetThisHelper(localVar, typeId, moduleId, scriptContext);
                             instr->FreeSrc2();
                         }

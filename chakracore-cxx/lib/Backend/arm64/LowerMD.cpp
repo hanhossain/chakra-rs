@@ -4954,7 +4954,7 @@ LowererMD::GenerateFastRecyclerAlloc(size_t allocSize, IR::RegOpnd* newObjDst, I
     bool allowNativeCodeBumpAllocation = scriptContext->GetRecyclerAllowNativeCodeBumpAllocation();
     Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation((void*)scriptContext->GetRecyclerAddr(), alignedSize,
         allocatorAddress, endAddressOffset, freeListOffset,
-        allowNativeCodeBumpAllocation, this->m_func->IsOOPJIT());
+        allowNativeCodeBumpAllocation);
 
     IR::RegOpnd * allocatorAddressRegOpnd = IR::RegOpnd::New(TyMachPtr, this->m_func);
 
@@ -6692,23 +6692,6 @@ LowererMD::LoadFloatValue(IR::Opnd * opndDst, double value, IR::Instr * instrIns
     }
     void * pValue = NativeCodeDataNewNoFixup(instrInsert->m_func->GetNativeCodeDataAllocator(), DoubleType<DataDesc_LowererMD_LoadFloatValue_Double>, value);
     IR::Opnd * opnd;
-    if (instrInsert->m_func->IsOOPJIT())
-    {
-        int offset = NativeCodeData::GetDataTotalOffset(pValue);
-        auto addressRegOpnd = IR::RegOpnd::New(TyMachPtr, instrInsert->m_func);
-
-        Lowerer::InsertMove(
-            addressRegOpnd,
-            IR::MemRefOpnd::New(instrInsert->m_func->GetWorkItem()->GetWorkItemData()->nativeDataAddr, TyMachPtr, instrInsert->m_func, IR::AddrOpndKindDynamicNativeCodeDataRef),
-            instrInsert);
-
-        opnd = IR::IndirOpnd::New(addressRegOpnd, offset, TyMachDouble,
-#if DBG
-            NativeCodeData::GetDataDescription(pValue, instrInsert->m_func->m_alloc),
-#endif
-            instrInsert->m_func, true);
-    }
-    else
     {
         opnd = IR::MemRefOpnd::New((void*)pValue, TyMachDouble, instrInsert->m_func);
     }

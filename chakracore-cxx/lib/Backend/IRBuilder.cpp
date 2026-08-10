@@ -29,7 +29,6 @@ IRBuilder::AddStatementBoundary(uint statementIndex, uint offset)
         this->AddInstr(pragmaInstr, offset);
     }
 
-    if (!this->m_func->IsOOPJIT())
     {
         // Don't inject bailout if the function have trys
         if (!this->m_func->GetTopFunc()->HasTry() && (statementIndex != Js::Constants::NoStatementIndex))
@@ -650,7 +649,6 @@ IRBuilder::Build()
             && newOpcode != Js::OpCode::BrLong  // Don't inject bailout on BrLong as they are just redirecting to a different offset anyways
             )
         {
-            if (!this->m_func->IsOOPJIT())
             {
                 if (!seenLdStackArgPtr && !seenProfiledBeginSwitch)
                 {
@@ -698,7 +696,6 @@ IRBuilder::Build()
             break;
         }
 
-        if (!this->m_func->IsOOPJIT())
         {
             if (!this->m_func->GetTopFunc()->HasTry() && Js::Configuration::Global.flags.IsEnabled(Js::BailOutByteCodeFlag))
             {
@@ -1370,13 +1367,7 @@ IRBuilder::BuildImplicitArgIns()
 void
 IRBuilder::LoadNativeCodeData()
 {
-    if (m_func->IsOOPJIT() && m_func->IsTopFunc())
-    {
-        IR::RegOpnd * nativeDataOpnd = IR::RegOpnd::New(TyVar, m_func);
-        IR::Instr * instr = IR::Instr::New(Js::OpCode::LdNativeCodeData, nativeDataOpnd, m_func);
-        this->AddInstr(instr, Js::Constants::NoByteCodeOffset);
-        m_func->SetNativeCodeDataSym(nativeDataOpnd->GetStackSym());
-    }
+    // TODO (hanhossain): remove OOPJIT
 }
 
 void
@@ -1406,14 +1397,6 @@ IRBuilder::BuildConstantLoads()
         case Js::TypeIds_String:
         {
             valueType = ValueType::String;
-            if (m_func->IsOOPJIT())
-            {
-                // must be either PropertyString or LiteralString
-                JITRecyclableObject * jitObj = m_func->GetJITFunctionBody()->GetConstantContent(reg);
-                JITJavascriptString * constStr = JITJavascriptString::FromVar(jitObj);
-                instr = IR::Instr::NewConstantLoad(dstOpnd, varConst, valueType, m_func, constStr);
-            }
-            else
             {
                 instr = IR::Instr::NewConstantLoad(dstOpnd, varConst, valueType, m_func);
             }
@@ -1425,8 +1408,7 @@ IRBuilder::BuildConstantLoads()
             break;
         default:
             valueType = ValueType::FromTypeId(type, false);
-            instr = IR::Instr::NewConstantLoad(dstOpnd, varConst, valueType, m_func,
-                m_func->IsOOPJIT() ? m_func->GetJITFunctionBody()->GetConstAsT<Js::RecyclableObject>(reg) : nullptr);
+            instr = IR::Instr::NewConstantLoad(dstOpnd, varConst, valueType, m_func, nullptr);
             break;
         }        
         this->AddInstr(instr, Js::Constants::NoByteCodeOffset);

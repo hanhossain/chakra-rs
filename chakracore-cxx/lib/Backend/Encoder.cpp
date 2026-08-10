@@ -277,28 +277,13 @@ Encoder::Encode()
 
     if (m_pragmaInstrToRecordMap->Count() > 0)
     {
-        if (m_func->IsOOPJIT())
+        auto entryPointInfo = m_func->GetInProcJITEntryPointInfo();
+        auto functionBody = entryPointInfo->GetFunctionBody();
+        Js::SmallSpanSequenceIter iter;
+        for (int32_t i = 0; i < m_pragmaInstrToRecordMap->Count(); i++)
         {
-            int allocSize = m_pragmaInstrToRecordMap->Count();
-            Js::ThrowMapEntry * throwMap = NativeCodeDataNewArrayNoFixup(m_func->GetNativeCodeDataAllocator(), Js::ThrowMapEntry, allocSize);
-            for (int i = 0; i < allocSize; i++)
-            {
-                IR::PragmaInstr *inst = m_pragmaInstrToRecordMap->Item(i);
-                throwMap[i].nativeBufferOffset = inst->m_offsetInBuffer;
-                throwMap[i].statementIndex = inst->m_statementIndex;
-            }
-            m_func->GetJITOutput()->RecordThrowMap(throwMap, m_pragmaInstrToRecordMap->Count());
-        }
-        else
-        {
-            auto entryPointInfo = m_func->GetInProcJITEntryPointInfo();
-            auto functionBody = entryPointInfo->GetFunctionBody();
-            Js::SmallSpanSequenceIter iter;
-            for (int32_t i = 0; i < m_pragmaInstrToRecordMap->Count(); i++)
-            {
-                IR::PragmaInstr *inst = m_pragmaInstrToRecordMap->Item(i);
-                functionBody->RecordNativeThrowMap(iter, inst->m_offsetInBuffer, inst->m_statementIndex, entryPointInfo, Js::LoopHeader::NoLoop);
-            }
+            IR::PragmaInstr *inst = m_pragmaInstrToRecordMap->Item(i);
+            functionBody->RecordNativeThrowMap(iter, inst->m_offsetInBuffer, inst->m_statementIndex, entryPointInfo, Js::LoopHeader::NoLoop);
         }
     }
 
@@ -537,29 +522,7 @@ Encoder::Encode()
     if (this->m_inlineeFrameMap->Count() > 0 &&
         !(this->m_inlineeFrameMap->Count() == 1 && this->m_inlineeFrameMap->Item(0).record == nullptr))
     {
-        if (!m_func->IsOOPJIT()) // in-proc JIT
-        {
-            m_func->GetInProcJITEntryPointInfo()->GetInProcNativeEntryPointData()->RecordInlineeFrameMap(m_inlineeFrameMap);
-        }
-        else // OOP JIT
-        {
-            NativeOffsetInlineeFrameRecordOffset* pairs = NativeCodeDataNewArrayZNoFixup(m_func->GetNativeCodeDataAllocator(), NativeOffsetInlineeFrameRecordOffset, this->m_inlineeFrameMap->Count());
-
-            this->m_inlineeFrameMap->Map([&pairs](int i, NativeOffsetInlineeFramePair& p)
-            {
-                pairs[i].offset = p.offset;
-                if (p.record)
-                {
-                    pairs[i].recordOffset = NativeCodeData::GetDataChunk(p.record)->offset;
-                }
-                else
-                {
-                    pairs[i].recordOffset = NativeOffsetInlineeFrameRecordOffset::InvalidRecordOffset;
-                }
-            });
-
-            m_func->GetJITOutput()->RecordInlineeFrameOffsetsInfo(NativeCodeData::GetDataChunk(pairs)->offset, this->m_inlineeFrameMap->Count());
-        }
+        m_func->GetInProcJITEntryPointInfo()->GetInProcNativeEntryPointData()->RecordInlineeFrameMap(m_inlineeFrameMap);
     }
 
     this->SaveLazyBailOutJitTransferData();
@@ -570,23 +533,6 @@ Encoder::Encode()
         int pinnedTypeRefCount = this->m_func->pinnedTypeRefs->Count();
         PinnedTypeRefsIDL* pinnedTypeRefs = nullptr;
 
-        if (this->m_func->IsOOPJIT())
-        {
-            size_t size = offsetof(PinnedTypeRefsIDL, typeRefs) + sizeof(void*)*pinnedTypeRefCount;
-            pinnedTypeRefs = (PinnedTypeRefsIDL*)malloc(size);
-            if (pinnedTypeRefs != nullptr)
-            {
-                memset(pinnedTypeRefs, 0, size);
-            }
-            if (!pinnedTypeRefs)
-            {
-                Js::Throw::OutOfMemory();
-            }
-
-            pinnedTypeRefs->count = pinnedTypeRefCount;
-            pinnedTypeRefs->isOOPJIT = true;
-        }
-        else
         {
             pinnedTypeRefs = HeapNewStructPlus(offsetof(PinnedTypeRefsIDL, typeRefs) + sizeof(void*)*pinnedTypeRefCount - sizeof(PinnedTypeRefsIDL), PinnedTypeRefsIDL);
             pinnedTypeRefs->count = pinnedTypeRefCount;
@@ -617,43 +563,6 @@ Encoder::Encode()
 
         int equivalentTypeGuardsCount = this->m_func->equivalentTypeGuards->Count();
 
-        if (this->m_func->IsOOPJIT())
-        {
-            auto& equivalentTypeGuardOffsets = this->m_func->GetJITOutput()->GetOutputData()->equivalentTypeGuardOffsets;
-            size_t allocSize = offsetof(EquivalentTypeGuardOffsets, guards) + equivalentTypeGuardsCount * sizeof(EquivalentTypeGuardIDL);
-            equivalentTypeGuardOffsets = (EquivalentTypeGuardOffsets*)malloc(allocSize);
-            if (equivalentTypeGuardOffsets == nullptr)
-            {
-                Js::Throw::OutOfMemory();
-            }
-            else
-            {
-                memset(equivalentTypeGuardOffsets, 0, allocSize);
-            }
-
-            equivalentTypeGuardOffsets->count = equivalentTypeGuardsCount;
-
-            int i = 0;
-            this->m_func->equivalentTypeGuards->Map([&equivalentTypeGuardOffsets, &i](Js::JitEquivalentTypeGuard* srcGuard) -> void
-            {
-                equivalentTypeGuardOffsets->guards[i].offset = NativeCodeData::GetDataTotalOffset(srcGuard);
-
-                auto cache = srcGuard->GetCache();
-                equivalentTypeGuardOffsets->guards[i].cache.guardOffset = NativeCodeData::GetDataTotalOffset(cache->guard);
-                equivalentTypeGuardOffsets->guards[i].cache.hasFixedValue = cache->hasFixedValue;
-                equivalentTypeGuardOffsets->guards[i].cache.isLoadedFromProto = cache->isLoadedFromProto;
-                equivalentTypeGuardOffsets->guards[i].cache.nextEvictionVictim = cache->nextEvictionVictim;
-                equivalentTypeGuardOffsets->guards[i].cache.record.propertyCount = cache->record.propertyCount;
-                equivalentTypeGuardOffsets->guards[i].cache.record.propertyOffset = NativeCodeData::GetDataTotalOffset(cache->record.properties);
-                for (int j = 0; j < EQUIVALENT_TYPE_CACHE_SIZE; j++)
-                {
-                    equivalentTypeGuardOffsets->guards[i].cache.types[j] = (intptr_t)PointerValue(cache->types[j]);
-                }
-                i++;
-            });
-            Assert(equivalentTypeGuardsCount == i);
-        }
-        else
         {
             Js::JitEquivalentTypeGuard** guards = HeapNewArrayZ(Js::JitEquivalentTypeGuard*, equivalentTypeGuardsCount);
             Js::JitEquivalentTypeGuard** dstGuard = guards;
@@ -681,7 +590,6 @@ Encoder::Encode()
 #endif
 
 
-        if (!this->m_func->IsOOPJIT())
         {
             int propertyCount = this->m_func->propertyGuardsByPropertyId->Count();
             Assert(propertyCount > 0);
@@ -723,39 +631,6 @@ Encoder::Encode()
 
             m_func->GetInProcJITEntryPointInfo()->GetJitTransferData()->RecordTypeGuards(this->m_func->indexedPropertyGuardCount, typeGuardTransferRecord, typeGuardTransferSize);
         }
-        else
-        {
-            this->m_func->GetJITOutput()->GetOutputData()->propertyGuardCount = this->m_func->indexedPropertyGuardCount;
-            auto entry = &this->m_func->GetJITOutput()->GetOutputData()->typeGuardEntries;
-
-            this->m_func->propertyGuardsByPropertyId->Map([&entry](Js::PropertyId propertyId, Func::IndexedPropertyGuardSet* srcSet) -> void
-            {
-                auto count = srcSet->Count();
-                size_t size = offsetof(TypeGuardTransferEntryIDL, guardOffsets) + count*sizeof(int);
-                (*entry) = (TypeGuardTransferEntryIDL*)malloc(size);
-                if (!*entry)
-                {
-                    Js::Throw::OutOfMemory();
-                }
-                else
-                {
-                    memset(*entry, 0, size);
-                }
-                (*entry)->propId = propertyId;
-                (*entry)->guardsCount = count;
-                (*entry)->next = nullptr;
-
-                auto& guardOffsets = (*entry)->guardOffsets;
-                int guardIndex = 0;
-                srcSet->Map([&guardOffsets, &guardIndex](Js::JitIndexedPropertyGuard* guard) -> void
-                {
-                    guardOffsets[guardIndex++] = NativeCodeData::GetDataTotalOffset(guard);
-                });
-                Assert(guardIndex == count);
-                entry = &(*entry)->next;
-            });
-
-        }
     }
 
     // Save all constructor caches on the JIT transfer data in a map keyed by property ID. We will use this map when installing the entry
@@ -776,46 +651,6 @@ Encoder::Encode()
             cacheSlotCount += cacheSet->Count();
         });
 
-        if (m_func->IsOOPJIT())
-        {
-            m_func->GetJITOutput()->GetOutputData()->ctorCachesCount = propertyCount;
-            m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries = (CtorCacheTransferEntryIDL**)malloc(propertyCount * sizeof(CtorCacheTransferEntryIDL*));
-            if (m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries)
-            {
-                memset(m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries, 0, propertyCount * sizeof(CtorCacheTransferEntryIDL*));
-            }
-            CtorCacheTransferEntryIDL** entries = m_func->GetJITOutput()->GetOutputData()->ctorCacheEntries;
-            if (!entries)
-            {
-                Js::Throw::OutOfMemory();
-            }
-
-            uint propIndex = 0;
-            m_func->ctorCachesByPropertyId->Map([entries, &propIndex](Js::PropertyId propertyId, Func::CtorCacheSet* srcCacheSet) -> void
-            {
-                entries[propIndex] = (CtorCacheTransferEntryIDL*)malloc(srcCacheSet->Count() * sizeof(intptr_t) + sizeof(CtorCacheTransferEntryIDL));
-                if (entries[propIndex])
-                {
-                    memset(entries[propIndex], 0, srcCacheSet->Count() * sizeof(intptr_t) + sizeof(CtorCacheTransferEntryIDL));
-                }
-                else
-                {
-                    Js::Throw::OutOfMemory();
-                }
-                entries[propIndex]->propId = propertyId;
-
-                int cacheIndex = 0;
-
-                srcCacheSet->Map([entries, propIndex, &cacheIndex](intptr_t cache) -> void
-                {
-                    entries[propIndex]->caches[cacheIndex++] = cache;
-                });
-
-                entries[propIndex]->cacheCount = cacheIndex;
-                propIndex++;
-            });
-        }
-        else
         {
             Assert(m_func->GetInProcJITEntryPointInfo()->GetNativeEntryPointData()->GetConstructorCacheCount() > 0);
 

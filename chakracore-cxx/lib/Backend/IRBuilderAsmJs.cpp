@@ -203,13 +203,7 @@ IRBuilderAsmJs::Build()
 void
 IRBuilderAsmJs::LoadNativeCodeData()
 {
-    if (m_func->IsOOPJIT() && m_func->IsTopFunc())
-    {
-        IR::RegOpnd * nativeDataOpnd = IR::RegOpnd::New(TyVar, m_func);
-        IR::Instr * instr = IR::Instr::New(Js::OpCode::LdNativeCodeData, nativeDataOpnd, m_func);
-        this->AddInstr(instr, Js::Constants::NoByteCodeOffset);
-        m_func->SetNativeCodeDataSym(nativeDataOpnd->GetStackSym());
-    }
+    // TODO (hanhossain): remove OOPJIT
 }
 
 void
@@ -827,7 +821,6 @@ IRBuilderAsmJs::BuildConstantLoads()
 
     uint32_t regAllocated = AsmJsRegSlots::RegCount;
     byte* table = (byte*)constTable;
-    const bool isOOPJIT = m_func->IsOOPJIT();
     for (int i = 0; i < WAsmJs::LIMIT; ++i)
     {
         WAsmJs::Types type = (WAsmJs::Types)i;
@@ -848,10 +841,10 @@ IRBuilderAsmJs::BuildConstantLoads()
                 TyInt32,
                 ValueType::GetInt(false),
                 Js::OpCode::Ld_I4,
-                [isOOPJIT](IR::Instr* instr, int32_t val)
+                [](IR::Instr* instr, int32_t val)
                 {
                     IR::RegOpnd* dstOpnd = instr->GetDst()->AsRegOpnd();
-                    if (!isOOPJIT && dstOpnd->m_sym->IsSingleDef())
+                    if (dstOpnd->m_sym->IsSingleDef())
                     {
                         dstOpnd->m_sym->SetIsIntConst(val);
                     }
