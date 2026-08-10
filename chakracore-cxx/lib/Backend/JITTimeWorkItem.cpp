@@ -94,7 +94,6 @@ JITTimeWorkItem::InitializeReader(
     }
 #if DBG
     reader->Create(m_jitBody.GetByteCodeBuffer(), startOffset, m_jitBody.GetByteCodeLength());
-    if (!JITManager::GetJITManager()->IsOOPJITEnabled())
     {
         Js::FunctionBody::StatementMapList * runtimeMap = ((Js::FunctionBody*)m_jitBody.GetAddr())->GetStatementMaps();
         Assert(!m_fullStatementList || ((int)m_jitBody.GetFullStatementMapCount() == runtimeMap->Count() && runtimeMap->Count() >= 0));

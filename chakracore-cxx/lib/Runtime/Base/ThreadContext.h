@@ -1359,15 +1359,6 @@ public:
         {
             jobProcessor->Close();
         }
-
-        if (JITManager::GetJITManager()->IsOOPJITEnabled() && JITManager::GetJITManager()->IsConnected() && m_remoteThreadContextInfo)
-        {
-            if (JITManager::GetJITManager()->CleanupThreadContext(&m_remoteThreadContextInfo) == S_OK)
-            {
-                Assert(m_remoteThreadContextInfo == nullptr);
-            }
-            m_remoteThreadContextInfo = nullptr;
-        }
 #endif
         if (this->recycler != nullptr)
         {

@@ -145,7 +145,8 @@ public:
 #endif
     }
 
-    bool IsOOPJIT() const { return JITManager::GetJITManager()->IsOOPJITEnabled(); }
+    // TODO (hanhossain): remove OOPJIT
+    bool IsOOPJIT() const { return false; }
 
     void InitLocalClosureSyms();
 

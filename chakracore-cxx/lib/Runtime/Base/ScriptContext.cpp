@@ -480,7 +480,8 @@ namespace Js
 #if ENABLE_NATIVE_CODEGEN
         if (m_remoteScriptContextAddr)
         {
-            Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+            // TODO (hanhossain): remove OOPJIT
+            Assert(false);
             if (JITManager::GetJITManager()->CleanupScriptContext(&m_remoteScriptContextAddr) == S_OK)
             {
                 Assert(m_remoteScriptContextAddr == nullptr);

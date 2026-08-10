@@ -328,11 +328,6 @@ NativeEntryPointData::Cleanup(ScriptContext * scriptContext, bool isShutdown, bo
     this->FreeJitTransferData();
     this->FreeNativeCode(scriptContext, isShutdown);
 
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        ((OOPNativeEntryPointData *)this)->OnCleanup();
-    }
-    else
     {
         ((InProcNativeEntryPointData *)this)->OnCleanup();
     }
@@ -377,13 +372,11 @@ InProcNativeEntryPointData::InProcNativeEntryPointData() :
     nativeCodeData(nullptr), inlineeFrameMap(nullptr), sortedLazyBailoutRecordList(nullptr),
     lazyBailOutRecordSlotOffset{0}, lazyBailOutThunkOffset{0}
 {
-    Assert(!JITManager::GetJITManager()->IsOOPJITEnabled());
 }
 
 void
 InProcNativeEntryPointData::SetNativeCodeData(NativeCodeData * data)
 {
-    Assert(!JITManager::GetJITManager()->IsOOPJITEnabled());
     Assert(this->nativeCodeData == nullptr);
     this->nativeCodeData = data;
 }
@@ -391,14 +384,12 @@ InProcNativeEntryPointData::SetNativeCodeData(NativeCodeData * data)
 InlineeFrameMap *
 InProcNativeEntryPointData::GetInlineeFrameMap()
 {
-    Assert(!JITManager::GetJITManager()->IsOOPJITEnabled());
     return inlineeFrameMap;
 }
 
 void
 InProcNativeEntryPointData::RecordInlineeFrameMap(JsUtil::List<NativeOffsetInlineeFramePair, ArenaAllocator>* tempInlineeFrameMap)
 {
-    Assert(!JITManager::GetJITManager()->IsOOPJITEnabled());
     Assert(this->inlineeFrameMap == nullptr);
     if (tempInlineeFrameMap->Count() > 0)
     {
@@ -410,14 +401,12 @@ InProcNativeEntryPointData::RecordInlineeFrameMap(JsUtil::List<NativeOffsetInlin
 NativeLazyBailOutRecordList *
 InProcNativeEntryPointData::GetSortedLazyBailOutRecordList() const
 {
-    Assert(!JITManager::GetJITManager()->IsOOPJITEnabled());
     return this->sortedLazyBailoutRecordList;
 }
 
 void 
 InProcNativeEntryPointData::SetSortedLazyBailOutRecordList(JsUtil::List<LazyBailOutRecord, ArenaAllocator> *sortedLazyBailOutRecordList)
 {
-    Assert(!JITManager::GetJITManager()->IsOOPJITEnabled());
     Assert(this->sortedLazyBailoutRecordList == nullptr);
 
 #if DBG
@@ -474,7 +463,6 @@ InProcNativeEntryPointData::SetLazyBailOutThunkOffset(uint32_t thunkOffset)
 void
 InProcNativeEntryPointData::OnCleanup()
 {
-    Assert(!JITManager::GetJITManager()->IsOOPJITEnabled());
     if (this->nativeCodeData)
     {
         DeleteNativeCodeData(this->nativeCodeData);
@@ -498,27 +486,31 @@ InProcNativeEntryPointData::OnCleanup()
 OOPNativeEntryPointData::OOPNativeEntryPointData() :
     nativeDataBuffer(nullptr)
 {
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
 }
 
 char*
 OOPNativeEntryPointData::GetNativeDataBuffer()
 {
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     return nativeDataBuffer;
 }
 
 char**
 OOPNativeEntryPointData::GetNativeDataBufferRef()
 {
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     return &nativeDataBuffer;
 }
 
 void
 OOPNativeEntryPointData::SetNativeDataBuffer(char * buffer)
 {
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     Assert(this->nativeDataBuffer == nullptr);
     this->nativeDataBuffer = buffer;
 }
@@ -526,28 +518,32 @@ OOPNativeEntryPointData::SetNativeDataBuffer(char * buffer)
 uint32_t
 OOPNativeEntryPointData::GetOffsetOfNativeDataBuffer()
 {
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     return offsetof(OOPNativeEntryPointData, nativeDataBuffer);
 }
 
 uint
 OOPNativeEntryPointData::GetInlineeFrameOffsetArrayOffset() 
 { 
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     return this->inlineeFrameOffsetArrayOffset; 
 }
 
 uint
 OOPNativeEntryPointData::GetInlineeFrameOffsetArrayCount() 
 { 
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     return this->inlineeFrameOffsetArrayCount; 
 }
 
 void
 OOPNativeEntryPointData::RecordInlineeFrameOffsetsInfo(unsigned int offsetsArrayOffset, unsigned int offsetsArrayCount)
 {
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     this->inlineeFrameOffsetArrayOffset = offsetsArrayOffset;
     this->inlineeFrameOffsetArrayCount = offsetsArrayCount;
 }
@@ -556,7 +552,8 @@ OOPNativeEntryPointData::RecordInlineeFrameOffsetsInfo(unsigned int offsetsArray
 void
 OOPNativeEntryPointData::OnCleanup()
 {
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     if (this->nativeDataBuffer)
     {
         DeleteNativeDataBuffer(this->nativeDataBuffer);
@@ -567,7 +564,8 @@ OOPNativeEntryPointData::OnCleanup()
 void
 OOPNativeEntryPointData::DeleteNativeDataBuffer(char * nativeDataBuffer)
 {
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     NativeDataBuffer* buffer = (NativeDataBuffer*)(nativeDataBuffer - offsetof(NativeDataBuffer, data));
     midl_user_free(buffer);
 }

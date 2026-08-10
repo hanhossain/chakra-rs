@@ -17904,11 +17904,6 @@ void GlobOpt::PRE::TraceFailedPreloadInLandingPad(const Loop *const loop, Proper
         switch (propertySym->m_fieldKind)
         {
         case PropertyKindData:
-            if (JITManager::GetJITManager()->IsOOPJITEnabled())
-            {
-                swprintf_s(propSymStr, u"s%d->#%d", objectSymId, propertyId);
-            }
-            else
             {
                 Js::PropertyRecord const* fieldName = propertySym->m_func->GetInProcThreadContext()->GetPropertyRecord(propertyId);
                 swprintf_s(propSymStr, u"s%d->%s", objectSymId, fieldName->GetBuffer());

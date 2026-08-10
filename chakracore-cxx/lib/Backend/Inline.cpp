@@ -3911,13 +3911,6 @@ Inline::InlineGetterSetterFunction(IR::Instr *accessorInstr, const FunctionJITTi
         char16_t debugStringBuffer [MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         char16_t debugStringBuffer2[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         PropertySym *propertySym = isGetter ? accessorInstr->GetSrc1()->AsSymOpnd()->m_sym->AsPropertySym() : accessorInstr->GetDst()->AsSymOpnd()->m_sym->AsPropertySym();
-        if (JITManager::GetJITManager()->IsOOPJITEnabled())
-        {
-            Output::Print(u"INLINING: %s: \tInlinee: %s (%s)\tCaller: %s (%s)\t fieldId: %d\n", isGetter ? u"Getter" : u"Setter",
-                funcBody->GetDisplayName(), inlineeData->GetDebugNumberSet(debugStringBuffer), funcCaller->GetDisplayName(), accessorInstr->m_func->GetWorkItem()->GetJITTimeInfo()->GetDebugNumberSet(debugStringBuffer2),
-                propertySym->m_propertyId);
-        }
-        else
         {
             Output::Print(u"INLINING: %s: \tInlinee: %s (%s)\tCaller: %s (%s)\t fieldName: %s\n", isGetter ? u"Getter" : u"Setter",
                 funcBody->GetDisplayName(), inlineeData->GetDebugNumberSet(debugStringBuffer), funcCaller->GetDisplayName(), accessorInstr->m_func->GetWorkItem()->GetJITTimeInfo()->GetDebugNumberSet(debugStringBuffer2),

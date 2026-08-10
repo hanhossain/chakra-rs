@@ -132,9 +132,6 @@ namespace Js
     RecyclableObject::RecyclableObject(Type * type) : type(type)
     {
 #if DBG || defined(PROFILE_TYPES)
-#if ENABLE_NATIVE_CODEGEN
-        if (!JITManager::GetJITManager()->IsOOPJITEnabled())
-#endif
         {
             RecordAllocation(type->GetScriptContext());
         }

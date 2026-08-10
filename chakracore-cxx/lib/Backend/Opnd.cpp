@@ -3193,10 +3193,7 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
                             Output::Print(u",");
                         }
                         const ObjTypeSpecFldInfo* propertyOpInfo = func->GetTopFunc()->GetGlobalObjTypeSpecFldInfo(propertyOpId);
-                        if (!JITManager::GetJITManager()->IsOOPJITEnabled())
-                        {
-                            Output::Print(u"%s", func->GetInProcThreadContext()->GetPropertyRecord(propertyOpInfo->GetPropertyId())->GetBuffer(), propertyOpId);
-                        }
+                        Output::Print(u"%s", func->GetInProcThreadContext()->GetPropertyRecord(propertyOpInfo->GetPropertyId())->GetBuffer(), propertyOpId);
                         Output::Print(u"(%u)", propertyOpId);
 
                         if (propertyOpInfo->IsLoadedFromProto())

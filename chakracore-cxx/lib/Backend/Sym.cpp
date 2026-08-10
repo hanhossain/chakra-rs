@@ -1136,11 +1136,6 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
         {
         case PropertyKindData:
             propertySym->m_stackSym->Dump(flags, valueType);
-            if (JITManager::GetJITManager()->IsOOPJITEnabled())
-            {
-                Output::Print(u"->#%d", propertySym->m_propertyId);
-            }
-            else
             {
                 Js::PropertyRecord const* fieldName = propertySym->m_func->GetInProcThreadContext()->GetPropertyRecord(propertySym->m_propertyId);
                 Output::Print(u"->%s", fieldName->GetBuffer());

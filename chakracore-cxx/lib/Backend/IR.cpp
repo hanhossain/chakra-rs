@@ -4250,7 +4250,6 @@ Instr::DumpTestTrace()
         switch (propertySym->m_fieldKind)
         {
         case PropertyKindData:
-            if (!JITManager::GetJITManager()->IsOOPJITEnabled())
             {
                 Js::PropertyRecord const* fieldName = propertySym->GetFunc()->GetInProcThreadContext()->GetPropertyRecord(propertySym->m_propertyId);
                 Output::Print(u"field: %s ", fieldName->GetBuffer());
