@@ -410,8 +410,6 @@ IRBuilder::Build()
 
     m_switchBuilder.Init(m_func, m_tempAlloc, false);
 
-    this->LoadNativeCodeData();
-
     this->BuildConstantLoads();
 
     if (!this->IsLoopBody() && m_func->GetJITFunctionBody()->HasImplicitArgIns())
@@ -1362,12 +1360,6 @@ IRBuilder::BuildImplicitArgIns()
     {
         this->BuildArgIn((uint32_t)-1, startReg + i, i);
     }
-}
-
-void
-IRBuilder::LoadNativeCodeData()
-{
-    // TODO (hanhossain): remove OOPJIT
 }
 
 void

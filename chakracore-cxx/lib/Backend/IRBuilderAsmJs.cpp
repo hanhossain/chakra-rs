@@ -115,8 +115,6 @@ IRBuilderAsmJs::Build()
     m_offsetToInstructionCount = offsetToInstructionCount;
     m_offsetToInstruction = JitAnewArrayZ(m_tempAlloc, IR::Instr *, offsetToInstructionCount);
 
-    LoadNativeCodeData();
-
     BuildConstantLoads();
     if (!this->IsLoopBody() && m_func->GetJITFunctionBody()->HasImplicitArgIns())
     {
@@ -198,12 +196,6 @@ IRBuilderAsmJs::Build()
     {
         m_func->SetDoFastPaths();
     }
-}
-
-void
-IRBuilderAsmJs::LoadNativeCodeData()
-{
-    // TODO (hanhossain): remove OOPJIT
 }
 
 void

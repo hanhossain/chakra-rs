@@ -116,7 +116,6 @@ private:
         ValueType arrayType;
     };
 
-    void                    LoadNativeCodeData();
     void                    AddInstr(IR::Instr * instr, uint32_t offset);
     bool                    IsLoopBody()const;
     uint                    GetLoopBodyExitInstrOffset() const;
