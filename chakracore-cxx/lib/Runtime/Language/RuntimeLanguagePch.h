@@ -68,7 +68,6 @@
 #ifdef ASMJS_PLAT
 #include "Language/AsmJsJitTemplate.h"
 #include "Language/AsmJsEncoder.h"
-#include "Language/AsmJsCodeGenerator.h"
 #include "Language/AsmJs.h"
 #include "Language/AsmJsModule.h"
 #include "Language/AsmJsTypes.h"

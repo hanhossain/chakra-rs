@@ -29,7 +29,6 @@
 #include "Language/AsmJsModule.h"
 #ifdef ASMJS_PLAT
 #include "Language/AsmJsEncoder.h"
-#include "Language/AsmJsCodeGenerator.h"
 #include "Language/AsmJsUtils.h"
 #endif
 
@@ -1253,14 +1252,6 @@ namespace Js
 
 
 #ifdef ASMJS_PLAT
-    AsmJsCodeGenerator* ScriptContext::InitAsmJsCodeGenerator()
-    {
-        if( !asmJsCodeGenerator )
-        {
-            asmJsCodeGenerator = HeapNew( AsmJsCodeGenerator, this );
-        }
-        return asmJsCodeGenerator;
-    }
 #endif
     void ScriptContext::MarkForClose()
     {
