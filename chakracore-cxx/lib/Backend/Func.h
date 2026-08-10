@@ -211,13 +211,6 @@ public:
         return (ThreadContext*)m_threadContextInfo;
     }
 
-    ServerThreadContext* GetOOPThreadContext() const
-    {
-        // TODO (hanhossain): remove OOPJIT
-        Assert(false);
-        return (ServerThreadContext*)m_threadContextInfo;
-    }
-
     ThreadContextInfo * GetThreadContextInfo() const
     {
         return m_threadContextInfo;
