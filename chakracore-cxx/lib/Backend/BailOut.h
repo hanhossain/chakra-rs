@@ -185,16 +185,6 @@ public:
     static uint32_t GetArgumentsObjectOffset();
     static const uint BailOutRegisterSaveSlotCount = LinearScanMD::RegisterSaveSlotCount;
 
-    void Fixup(NativeCodeData::DataChunk* chunkList)
-    {
-        FixupNativeDataPointer(globalBailOutRecordTable, chunkList);
-        FixupNativeDataPointer(argOutOffsetInfo, chunkList);
-        FixupNativeDataPointer(parent, chunkList);
-        FixupNativeDataPointer(constants, chunkList);
-        FixupNativeDataPointer(ehBailoutData, chunkList);
-        FixupNativeDataPointer(stackLiteralBailOutRecord, chunkList);
-    }
-
 public:
     void IsOffsetNativeIntOrFloat(uint offsetIndex, int argOutSlotStart, bool * pIsFloat64, bool * pIsInt32) const;
 
@@ -277,6 +267,7 @@ public:
     };
 
 protected:
+    // TODO (hanhossain): remove OOPJIT - maybe?
     struct ArgOutOffsetInfo
     {
         BVFixed * argOutFloat64Syms;        // Used for float-type-specialized ArgOut symbols. Index = [0 .. BailOutInfo::totalOutParamCount].
@@ -286,18 +277,6 @@ protected:
         uint startCallCount;
         uint argOutSymStart;
         uint startCallIndex;
-        void Fixup(NativeCodeData::DataChunk* chunkList)
-        {
-            FixupNativeDataPointer(argOutFloat64Syms, chunkList);
-            FixupNativeDataPointer(argOutLosslessInt32Syms, chunkList);
-            // special handling for startCallOutParamCounts and outParamOffsets, becuase it points to middle of the allocation
-            uint* startCallOutParamCountsStart = startCallOutParamCounts - startCallIndex;
-            NativeCodeData::AddFixupEntry(startCallOutParamCounts, startCallOutParamCountsStart, &this->startCallOutParamCounts, this, chunkList);
-
-            int* outParamOffsetsStart = outParamOffsets - argOutSymStart;
-            NativeCodeData::AddFixupEntry(outParamOffsets, outParamOffsetsStart, &this->outParamOffsets, this, chunkList);
-
-        }
     };
 
     // The offset to 'globalBailOutRecordTable' is hard-coded in LinearScanMD::SaveAllRegisters, so let this be the first member variable
@@ -477,17 +456,8 @@ struct GlobalBailOutRecordDataTable
             }
         }
     }
-
-    void Fixup(NativeCodeData::DataChunk* chunkList)
-    {
-        FixupNativeDataPointer(globalBailOutRecordDataRows, chunkList);
-    }
 };
-#if DBG
-template<> inline void NativeCodeData::AllocatorT<BailOutRecord::StackLiteralBailOutRecord>::Fixup(void* pThis, NativeCodeData::DataChunk* chunkList) {}
-template<> inline void NativeCodeData::AllocatorT<Js::EquivalentPropertyEntry>::Fixup(void* pThis, NativeCodeData::DataChunk* chunkList) {}
-template<> inline void NativeCodeData::AllocatorT<GlobalBailOutRecordDataRow>::Fixup(void* pThis, NativeCodeData::DataChunk* chunkList) {}
-#else
+#if !DBG
 template<>
 inline char*
 NativeCodeData::AllocatorT<BailOutRecord::StackLiteralBailOutRecord>::Alloc(size_t requestedBytes)
@@ -527,10 +497,3 @@ NativeCodeData::AllocatorT<GlobalBailOutRecordDataRow>::AllocZero(size_t request
     return Allocator::AllocZero(requestedBytes);
 }
 #endif
-
-template<>
-inline void NativeCodeData::AllocatorT<GlobalBailOutRecordDataTable*>::Fixup(void* pThis, NativeCodeData::DataChunk* chunkList)
-{
-    // for every pointer needs to update the table
-    NativeCodeData::AddFixupEntryForPointerArray(pThis, chunkList);
-}

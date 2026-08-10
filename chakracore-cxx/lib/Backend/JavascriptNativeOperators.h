@@ -46,15 +46,6 @@ namespace Js
                 : BranchBaseDictionary(allocator, dictionarySize)
             {
             }
-            void Fixup(NativeCodeData::DataChunk* chunkList, void** remoteKeys)
-            {
-                for (int i = 0; i < this->Count(); i++)
-                {
-                    this->entries[i].FixupWithRemoteKey(remoteKeys[i]);
-                }
-                FixupNativeDataPointer(buckets, chunkList);
-                FixupNativeDataPointer(entries, chunkList);
-            }
         };
 
         BranchDictionaryWrapper(NativeCodeData::Allocator * allocator, uint dictionarySize, ArenaAllocator* remoteKeyAlloc) :

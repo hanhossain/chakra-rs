@@ -118,13 +118,6 @@ struct InlineeFrameRecord
     void DumpOffset(int offset) const;
 #endif
 
-    void Fixup(NativeCodeData::DataChunk* chunkList)
-    {
-        FixupNativeDataPointer(argOffsets, chunkList);
-        FixupNativeDataPointer(constants, chunkList);
-        FixupNativeDataPointer(parent, chunkList);
-    }
-
 private:
     void Restore(Js::FunctionBody* functionBody, InlinedFrameLayout *outerMostFrame, Js::JavascriptCallStackLayout * layout, bool boxValues) const;
     Js::Var Restore(int offset, bool isFloat64, bool isInt32, Js::JavascriptCallStackLayout * layout, Js::FunctionBody* functionBody, bool boxValue) const;
