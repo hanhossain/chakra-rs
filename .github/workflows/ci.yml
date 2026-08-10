@@ -38,7 +38,7 @@ jobs:
             features: "--features compile-cpp,optimized-tests"
     env:
       CARGO_TERM_COLOR: always
-      RUSTFLAGS: -D warnings
+      CARGO_BUILD_WARNINGS: deny
     steps:
       - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
