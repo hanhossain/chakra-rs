@@ -346,7 +346,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 #endif
 
 #include "JITTypes.h"
-#include "JITManager.h"
 
 #include "Base/SourceHolder.h"
 #include "Base/LineOffsetCache.h"
