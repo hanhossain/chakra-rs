@@ -124,7 +124,6 @@ public:
     }
     InProcCodeGenAllocators * GetInProcCodeGenAllocators()
     {
-        Assert(!JITManager::GetJITManager()->IsJITServer());
         return reinterpret_cast<InProcCodeGenAllocators*>(this->GetTopFunc()->m_codeGenAllocators);
     }
     NativeCodeData::Allocator *GetNativeCodeDataAllocator()

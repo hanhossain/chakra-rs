@@ -5425,7 +5425,7 @@ BackwardPass::TrackObjTypeSpecProperties(IR::PropertySymOpnd *opnd, BasicBlock *
             //Assert(!existingFldInfo->IsPoly() || !opnd->IsPoly() || GlobOpt::AreTypeSetsIdentical(existingFldInfo->GetEquivalentTypeSet(), opnd->GetEquivalentTypeSet()));
             //Assert(existingFldInfo->GetSlotIndex() == opnd->GetSlotIndex());
 
-            if (PHASE_TRACE(Js::EquivObjTypeSpecPhase, this->func) && !JITManager::GetJITManager()->IsJITServer())
+            if (PHASE_TRACE(Js::EquivObjTypeSpecPhase, this->func))
             {
                 if (existingFldInfo->IsPoly() && opnd->IsPoly() &&
                     (!GlobOpt::AreTypeSetsIdentical(existingFldInfo->GetEquivalentTypeSet(), opnd->GetEquivalentTypeSet()) ||

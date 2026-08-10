@@ -20,7 +20,6 @@ enum class RemoteCallType
 class JITManager
 {
 public:
-    bool IsJITServer() const { return false; }
     void EnableOOPJIT() { Assert(false); }
 
     int32_t SetWellKnownHostTypeId(

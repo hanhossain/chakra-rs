@@ -12,16 +12,9 @@ NativeCodeData::NativeCodeData(DataChunk * chunkList)
 
 NativeCodeData::~NativeCodeData()
 {
-    if (JITManager::GetJITManager()->IsJITServer())
-    {
-        NativeCodeData::DeleteChunkList(this->chunkList);
-    }
-    else
     {
         NativeCodeData::DeleteChunkList(this->noFixupChunkList);
     }
-    ;
-    ;
 }
 
 void
@@ -162,7 +155,8 @@ NativeCodeData::DeleteChunkList(DataChunkT * chunkList)
 NativeCodeData::Allocator::Allocator()
     : chunkList(nullptr),
     lastChunkList(nullptr),
-    isOOPJIT(JITManager::GetJITManager()->IsJITServer())
+    // TODO (hanhossain): remove OOPJIT
+    isOOPJIT(false)
 {
     this->totalSize = 0;
     this->allocCount = 0;
@@ -174,16 +168,9 @@ NativeCodeData::Allocator::Allocator()
 NativeCodeData::Allocator::~Allocator()
 {
     Assert(!finalized || this->chunkList == nullptr);
-    if (JITManager::GetJITManager()->IsJITServer())
-    {
-        NativeCodeData::DeleteChunkList(this->chunkList);
-    }
-    else
     {
         NativeCodeData::DeleteChunkList(this->noFixupChunkList);
     }
-    ;
-    ;
 }
 
 char *
