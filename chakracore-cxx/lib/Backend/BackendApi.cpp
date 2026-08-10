@@ -63,12 +63,6 @@ GenerateAllFunctions(NativeCodeGenerator * nativeCodeGen, Js::FunctionBody *fn)
     nativeCodeGen->GenerateAllFunctions(fn);
 }
 #endif
-#ifdef ALLOW_JIT_REPRO
-int32_t JitFromEncodedWorkItem(NativeCodeGenerator *nativeCodeGen, _In_reads_(bufferSize) const byte* buffer, _In_ uint bufferSize)
-{
-    return nativeCodeGen->JitFromEncodedWorkItem(buffer, bufferSize);
-}
-#endif
 
 void
 GenerateLoopBody(NativeCodeGenerator *nativeCodeGen, Js::FunctionBody *fn, Js::LoopHeader * loopHeader, Js::EntryPointInfo* info, uint localCount, Js::Var localSlots[])
