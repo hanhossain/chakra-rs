@@ -1658,23 +1658,6 @@ ThreadContext::IsInAsyncHostOperation() const
 }
 #endif
 
-#if ENABLE_NATIVE_CODEGEN
-void
-ThreadContext::SetJITConnectionInfo(HANDLE processHandle, void* serverSecurityDescriptor, UUID connectionId)
-{
-    Assert(JITManager::GetJITManager()->IsOOPJITEnabled());
-    if (!JITManager::GetJITManager()->IsConnected())
-    {
-        // TODO: return int32_t
-        JITManager::GetJITManager()->ConnectRpcServer(processHandle, serverSecurityDescriptor, connectionId);
-    }
-}
-bool
-ThreadContext::EnsureJITThreadContext(bool allowPrereserveAlloc)
-{
-}
-#endif
-
 BOOL
 ThreadContext::ExecuteRecyclerCollectionFunction(Recycler * recycler, CollectionFunction function, CollectionFlags flags)
 {

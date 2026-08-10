@@ -877,9 +877,6 @@ public:
         m_jitNeedsPropertyUpdate = false;
     }
 
-    static void SetJITConnectionInfo(HANDLE processHandle, void* serverSecurityDescriptor, UUID connectionId);
-    bool EnsureJITThreadContext(bool allowPrereserveAlloc);
-
     PTHREADCONTEXT_HANDLE GetRemoteThreadContextAddr()
     {
         Assert(m_remoteThreadContextInfo);
