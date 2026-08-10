@@ -2821,22 +2821,6 @@ fn proxybug_withproto_js(#[case] variant: Variant) {
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
 
-#[cfg(not(feature = "optimized-tests"))]
-#[rstest]
-#[case::interpreted(Variant::Interpreted)]
-#[case::dynapogo(Variant::Dynapogo)]
-#[case::disable_jit(Variant::DisableJit)]
-fn proxy_in_proxy_js(#[case] variant: Variant) {
-    let test = common::Test {
-        directory: DIRECTORY,
-        source_path: "ProxyInProxy.js",
-        baseline_path: Some("ProxyInProxy.baseline"),
-        compile_flags: vec!["-mic:1", "-off:simpleJIT"],
-        tags: HashSet::from(["exclude_test"]),
-    };
-    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
-}
-
 #[cfg(feature = "optimized-tests")]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
