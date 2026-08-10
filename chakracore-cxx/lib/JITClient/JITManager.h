@@ -20,48 +20,12 @@ enum class RemoteCallType
 class JITManager
 {
 public:
-    bool IsConnected() const { return false; }
     bool IsJITServer() const { return false; }
-    void SetIsJITServer() { Assert(false); }
     void EnableOOPJIT() { Assert(false); }
-    void SetJITFailed(int32_t hr) { Assert(false); }
-
-    int32_t InitializeThreadContext(
-        ThreadContextDataIDL * data,
-        PPTHREADCONTEXT_HANDLE threadContextInfoAddress,
-        intptr_t *prereservedRegionAddr,
-        intptr_t * jitThunkAddr)
-        { Assert(false); return E_FAIL; }
-
-    int32_t DecommitInterpreterBufferManager(
-        PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-        boolean asmJsThunk)
-        { Assert(false); return E_FAIL; }
-
-    int32_t CleanupThreadContext(
-        PPTHREADCONTEXT_HANDLE threadContextInfoAddress)
-        { Assert(false); return E_FAIL; }
-
-    int32_t UpdatePropertyRecordMap(
-        PTHREADCONTEXT_HANDLE threadContextInfoAddress,
-        __in_opt BVSparseNodeIDL * updatedPropsBVHead)
-        { Assert(false); return E_FAIL; }
-
-    int32_t AddModuleRecordInfo(
-            /* [in] */ PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-            /* [in] */ unsigned int moduleId,
-            /* [in] */ intptr_t localExportSlotsAddr)
-        { Assert(false); return E_FAIL; }
 
     int32_t SetWellKnownHostTypeId(
         PTHREADCONTEXT_HANDLE threadContextRoot,
         int typeId)
-        { Assert(false); return E_FAIL; }
-
-    int32_t InitializeScriptContext(
-        ScriptContextDataIDL * data,
-        PTHREADCONTEXT_HANDLE threadContextInfoAddress,
-        PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
         { Assert(false); return E_FAIL; }
 
     int32_t CleanupScriptContext(
@@ -87,21 +51,6 @@ public:
         intptr_t address,
         boolean * result)
         { Assert(false); return E_FAIL; }
-
-    int32_t RemoteCodeGenCall(
-        CodeGenWorkItemIDL *workItemData,
-        PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-        JITOutputIDL *jitData)
-        { Assert(false); return E_FAIL; }
-
-#if DBG
-    int32_t IsInterpreterThunkAddr(
-        PSCRIPTCONTEXT_HANDLE scriptContextInfoAddress,
-        intptr_t address,
-        boolean asmjsThunk,
-        boolean * result)
-        { Assert(false); return E_FAIL; }
-#endif
 
     static int32_t DeserializeRPCData(
         _In_reads_(bufferSize) const byte* buffer,
