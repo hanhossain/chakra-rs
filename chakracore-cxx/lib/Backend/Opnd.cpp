@@ -2036,7 +2036,7 @@ AddrOpnd::New(intptr_t address, AddrOpndKind addrOpndKind, Func *func, bool dont
 
     // TODO (michhol): OOP JIT, use intptr_t instead of Js::Var by default so people don't try to dereference
     addrOpnd->m_address = (Js::Var)address;
-    addrOpnd->m_localAddress = func->IsOOPJIT() ? varLocal : (Js::Var)address;
+    addrOpnd->m_localAddress = (Js::Var)address;
     addrOpnd->addrOpndKind = addrOpndKind;
     addrOpnd->m_type = addrOpnd->IsVar() ? TyVar : TyMachPtr;
     addrOpnd->m_dontEncode = dontEncode;
@@ -2078,7 +2078,7 @@ AddrOpnd::New(Js::Var address, AddrOpndKind addrOpndKind, Func *func, bool dontE
     addrOpnd = JitAnew(func->m_alloc, IR::AddrOpnd);
 
     addrOpnd->m_address = address;
-    addrOpnd->m_localAddress = func->IsOOPJIT() ? varLocal : address;
+    addrOpnd->m_localAddress = address;
     addrOpnd->addrOpndKind = addrOpndKind;
     addrOpnd->m_type = addrOpnd->IsVar()? TyVar : TyMachPtr;
     addrOpnd->m_dontEncode = dontEncode;
@@ -3557,11 +3557,6 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
             {
                 DumpAddress(address, printToConsole, skipMaskedAddress);
                 // TODO: michhol OOP JIT, fix dumping these
-                if (func->IsOOPJIT())
-                {
-                    WriteToBuffer(&buffer, &n, u" (unknown)");
-                }
-                else
                 {
                     switch (Js::VarTo<Js::RecyclableObject>(address)->GetTypeId())
                     {
@@ -3696,12 +3691,6 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
 
         case IR::AddrOpndKindDynamicFunctionInfo:
             DumpAddress(address, printToConsole, skipMaskedAddress);
-            if (func->IsOOPJIT())
-            {
-                // TODO: OOP JIT, dump more info
-                WriteToBuffer(&buffer, &n, u" (FunctionInfo)");
-            }
-            else
             {
                 DumpFunctionInfo(&buffer, &n, (Js::FunctionInfo *)address, printToConsole);
             }
@@ -3709,12 +3698,6 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
 
         case IR::AddrOpndKindDynamicFunctionBody:
             DumpAddress(address, printToConsole, skipMaskedAddress);
-            if (func->IsOOPJIT())
-            {
-                // TODO: OOP JIT, dump more info
-                WriteToBuffer(&buffer, &n, u" (FunctionBody)");
-            }
-            else
             {
                 DumpFunctionInfo(&buffer, &n, ((Js::FunctionBody *)address)->GetFunctionInfo(), printToConsole);
             }
@@ -3723,12 +3706,6 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
         case IR::AddrOpndKindDynamicFunctionBodyWeakRef:
             DumpAddress(address, printToConsole, skipMaskedAddress);
 
-            if (func->IsOOPJIT())
-            {
-                // TODO: OOP JIT, dump more info
-                WriteToBuffer(&buffer, &n, u" (FunctionBodyWeakRef)");
-            }
-            else
             {
                 DumpFunctionInfo(&buffer, &n, ((RecyclerWeakReference<Js::FunctionBody> *)address)->FastGet()->GetFunctionInfo(), printToConsole, u"FunctionBodyWeakRef");
             }
@@ -3760,7 +3737,7 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
             DumpAddress(address, printToConsole, skipMaskedAddress);
             {
                 Js::RecyclableObject * dynamicObject = (Js::RecyclableObject *)((intptr_t)address - Js::RecyclableObject::GetOffsetOfType());
-                if (!func->IsOOPJIT() && Js::VarIs<Js::JavascriptFunction>(dynamicObject))
+                if (Js::VarIs<Js::JavascriptFunction>(dynamicObject))
                 {
                     DumpFunctionInfo(&buffer, &n, Js::VarTo<Js::JavascriptFunction>((void *)((intptr_t)address - Js::RecyclableObject::GetOffsetOfType()))->GetFunctionInfo(),
                         printToConsole, u"FunctionObjectTypeRef");
@@ -3776,7 +3753,6 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
         case IR::AddrOpndKindDynamicType:
             DumpAddress(address, printToConsole, skipMaskedAddress);
             // TODO: OOP JIT, dump more info
-            if(!func->IsOOPJIT())
             {
                 Js::TypeId typeId = ((Js::Type*)address)->GetTypeId();
                 switch (typeId)
@@ -3811,15 +3787,10 @@ Opnd::GetAddrDescription(__out_ecount(count) char16_t *const description, const 
 
         case AddrOpndKindDynamicFrameDisplay:
             DumpAddress(address, printToConsole, skipMaskedAddress);
-            if (!func->IsOOPJIT())
             {
                 Js::FrameDisplay * frameDisplay = (Js::FrameDisplay *)address;
                 WriteToBuffer(&buffer, &n, (frameDisplay->GetStrictMode() ? u" (StrictFrameDisplay len %d)" : u" (FrameDisplay len %d)"),
                     frameDisplay->GetLength());
-            }
-            else
-            {
-                WriteToBuffer(&buffer, &n, u" (FrameDisplay)");
             }
             break;
         case AddrOpndKindSz:

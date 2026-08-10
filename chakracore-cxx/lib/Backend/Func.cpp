@@ -535,76 +535,6 @@ Func::TryCodegen()
 
     }
 
-    if (this->IsOOPJIT())
-    {
-        BEGIN_CODEGEN_PHASE(this, Js::NativeCodeDataPhase);
-
-        auto dataAllocator = this->GetNativeCodeDataAllocator();
-        if (dataAllocator->allocCount > 0)
-        {
-            NativeCodeData::DataChunk *chunk = (NativeCodeData::DataChunk*)dataAllocator->chunkList;
-            NativeCodeData::DataChunk *next1 = chunk;
-            while (next1)
-            {
-                if (next1->fixupFunc)
-                {
-                    next1->fixupFunc(next1->data, chunk);
-                }
-                next1 = next1->next;
-            }
-
-            JITOutputIDL* jitOutputData = m_output.GetOutputData();
-            size_t allocSize = offsetof(NativeDataFixupTable, fixupRecords) + sizeof(NativeDataFixupRecord)* (dataAllocator->allocCount);
-            jitOutputData->nativeDataFixupTable = (NativeDataFixupTable*)malloc(allocSize);
-            if (!jitOutputData->nativeDataFixupTable)
-            {
-                Js::Throw::OutOfMemory();
-            }
-            else
-            {
-                memset(jitOutputData->nativeDataFixupTable, 0, allocSize);
-            }
-            jitOutputData->nativeDataFixupTable->count = dataAllocator->allocCount;
-
-            jitOutputData->buffer = (NativeDataBuffer*)malloc(offsetof(NativeDataBuffer, data) + dataAllocator->totalSize);
-            if (!jitOutputData->buffer)
-            {
-                Js::Throw::OutOfMemory();
-            }
-            else
-            {
-                memset(jitOutputData->buffer, 0, offsetof(NativeDataBuffer, data) + dataAllocator->totalSize);
-            }
-
-            jitOutputData->buffer->len = dataAllocator->totalSize;
-
-            unsigned int len = 0;
-            unsigned int count = 0;
-            next1 = chunk;
-            while (next1)
-            {
-                memcpy(jitOutputData->buffer->data + len, next1->data, next1->len);
-                len += next1->len;
-
-                jitOutputData->nativeDataFixupTable->fixupRecords[count].index = next1->allocIndex;
-                jitOutputData->nativeDataFixupTable->fixupRecords[count].length = next1->len;
-                jitOutputData->nativeDataFixupTable->fixupRecords[count].startOffset = next1->offset;
-                jitOutputData->nativeDataFixupTable->fixupRecords[count].updateList = next1->fixupList;
-
-                count++;
-                next1 = next1->next;
-            }
-
-#if DBG
-            if (PHASE_TRACE1(Js::NativeCodeDataPhase))
-            {
-                Output::Print(u"NativeCodeData Server Buffer: %p, len: %x, chunk head: %p\n", jitOutputData->buffer->data, jitOutputData->buffer->len, chunk);
-            }
-#endif
-        }
-        END_CODEGEN_PHASE(this, Js::NativeCodeDataPhase);
-    }
-
     END_CODEGEN_PHASE(this, Js::BackEndPhase);
 }
 
@@ -1539,11 +1469,6 @@ Func::InitializeEquivalentTypeGuard(Js::JitEquivalentTypeGuard * guard)
     // If we want to hard code the address of the cache, we will need to go back to allocating it from the native code data allocator.
     // We would then need to maintain consistency (double write) to both the recycler allocated cache and the one on the heap.
     Js::EquivalentTypeCache* cache = nullptr;
-    if (this->IsOOPJIT())
-    {
-        cache = JitAnewZ(this->m_alloc, Js::EquivalentTypeCache);
-    }
-    else
     {
         cache = NativeCodeDataNewZNoFixup(GetTransferDataAllocator(), Js::EquivalentTypeCache);
     }
@@ -1741,14 +1666,16 @@ Func::SetScopeObjSym(StackSym * sym)
 StackSym *
 Func::GetNativeCodeDataSym() const
 {
-    Assert(IsOOPJIT());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     return m_nativeCodeDataSym;
 }
 
 void
 Func::SetNativeCodeDataSym(StackSym * opnd)
 {
-    Assert(IsOOPJIT());
+    // TODO (hanhossain): remove OOPJIT
+    Assert(false);
     m_nativeCodeDataSym = opnd;
 }
 
@@ -2127,9 +2054,6 @@ bool Func::DoRecordNativeMap() const
 #ifdef PERF_HINT
 void WritePerfHint(PerfHints hint, Func* func, uint byteCodeOffset /*= Js::Constants::NoByteCodeOffset*/)
 {
-    if (!func->IsOOPJIT())
-    {
-        WritePerfHint(hint, (Js::FunctionBody*)func->GetJITFunctionBody()->GetAddr(), byteCodeOffset);
-    }
+    WritePerfHint(hint, (Js::FunctionBody*)func->GetJITFunctionBody()->GetAddr(), byteCodeOffset);
 }
 #endif

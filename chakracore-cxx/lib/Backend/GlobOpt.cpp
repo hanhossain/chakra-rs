@@ -6819,7 +6819,7 @@ GlobOpt::CanProveConditionalBranch(IR::Instr *instr, Value *src1Val, Value *src2
         } \
         else if (src1Var && src2Var) \
         { \
-            if (func->IsOOPJIT() || !CONFIG_FLAG(OOPJITMissingOpts)) \
+            if (!CONFIG_FLAG(OOPJITMissingOpts)) \
             { \
                 return false; \
             } \

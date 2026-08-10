@@ -33,7 +33,6 @@ endif()
 
 add_library (Chakra.Backend OBJECT
     AsmJsJITInfo.cpp
-    Backend.cpp
     BackendApi.cpp
     BackendOpCodeAttrAsmJs.cpp
     BackwardPass.cpp

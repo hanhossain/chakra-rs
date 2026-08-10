@@ -1194,13 +1194,13 @@ Recycler::OutOfMemory()
     outOfMemoryFunc();
 }
 
-void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(void* recyclerAddr, size_t allocSize, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation, bool isOOPJIT)
+void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(void* recyclerAddr, size_t allocSize, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation)
 {
     Assert(recyclerAddr);
-    return static_cast<Recycler*>(recyclerAddr)->GetNormalHeapBlockAllocatorInfoForNativeAllocation(allocSize, allocatorAddress, endAddressOffset, freeListOffset, allowBumpAllocation, isOOPJIT);
+    return static_cast<Recycler*>(recyclerAddr)->GetNormalHeapBlockAllocatorInfoForNativeAllocation(allocSize, allocatorAddress, endAddressOffset, freeListOffset, allowBumpAllocation);
 }
 
-void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t allocSize, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation, bool isOOPJIT)
+void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t allocSize, void*& allocatorAddress, uint32_t& endAddressOffset, uint32_t& freeListOffset, bool allowBumpAllocation)
 {
     Assert(HeapInfo::IsAlignedSize(allocSize));
     Assert(HeapInfo::IsSmallObject(allocSize));
@@ -1215,13 +1215,10 @@ void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t allocSi
     endAddressOffset = SmallHeapBlockAllocator<SmallNormalHeapBlockT<SmallAllocationBlockAttributes>>::GetEndAddressOffset();
     freeListOffset = SmallHeapBlockAllocator<SmallNormalHeapBlockT<SmallAllocationBlockAttributes>>::GetFreeObjectListOffset();;
 
-    if (!isOOPJIT)
-    {
-        Assert(allocatorAddress == GetAddressOfAllocator<NoBit>(allocSize));
-        Assert(endAddressOffset == GetEndAddressOffset<NoBit>(allocSize));
-        Assert(freeListOffset == GetFreeObjectListOffset<NoBit>(allocSize));
-        Assert(allowBumpAllocation == AllowNativeCodeBumpAllocation());
-    }
+    Assert(allocatorAddress == GetAddressOfAllocator<NoBit>(allocSize));
+    Assert(endAddressOffset == GetEndAddressOffset<NoBit>(allocSize));
+    Assert(freeListOffset == GetFreeObjectListOffset<NoBit>(allocSize));
+    Assert(allowBumpAllocation == AllowNativeCodeBumpAllocation());
 
     if (!allowBumpAllocation)
     {

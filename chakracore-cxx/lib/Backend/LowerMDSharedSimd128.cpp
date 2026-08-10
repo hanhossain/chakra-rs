@@ -435,21 +435,8 @@ IR::Instr* LowererMD::Simd128LoadConst(IR::Instr* instr)
 
     void *pValue = NativeCodeDataNewNoFixup(this->m_func->GetNativeCodeDataAllocator(), SIMDType<DataDesc_LowererMD_Simd128LoadConst>, value);
     IR::Opnd * simdRef;
-    if (!m_func->IsOOPJIT())
     {
         simdRef = IR::MemRefOpnd::New((void *)pValue, instr->GetDst()->GetType(), instr->m_func);
-    }
-    else
-    {
-        int offset = NativeCodeData::GetDataTotalOffset(pValue);
-
-        simdRef = IR::IndirOpnd::New(IR::RegOpnd::New(m_func->GetTopFunc()->GetNativeCodeDataSym(), TyVar, m_func), offset, instr->GetDst()->GetType(),
-#if DBG
-            NativeCodeData::GetDataDescription(pValue, m_func->m_alloc),
-#endif
-            m_func, true);
-
-        GetLowerer()->addToLiveOnBackEdgeSyms->Set(m_func->GetTopFunc()->GetNativeCodeDataSym()->m_id);
     }
 
     instr->ReplaceSrc1(simdRef);

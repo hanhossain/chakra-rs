@@ -2046,7 +2046,6 @@ PragmaInstr::Record(uint32_t nativeBufferOffset)
 {
     // Currently the only pragma instructions are for Source Info
     Assert(this->m_func->GetTopFunc()->DoRecordNativeMap());
-    if (!m_func->IsOOPJIT())
     {
         m_func->GetTopFunc()->GetInProcJITEntryPointInfo()->RecordNativeMap(nativeBufferOffset, m_statementIndex);
     }
@@ -3747,15 +3746,8 @@ IR::Instr* IR::Instr::NewConstantLoad(IR::RegOpnd* dstOpnd, intptr_t varConst, V
             {
                 // TODO (michhol): OOP JIT. we may need to unbox before sending over const table
 
-                if (!func->IsOOPJIT())
                 {
                     srcOpnd = IR::FloatConstOpnd::New((Js::Var)varConst, TyFloat64, func);
-                }
-                else
-                {
-                    srcOpnd = IR::FloatConstOpnd::New((Js::Var)varConst, TyFloat64, func
-                    );
-
                 }
 
                 instr = IR::Instr::New(Js::OpCode::LdC_A_R8, dstOpnd, srcOpnd, func);
@@ -4616,7 +4608,6 @@ Instr::Dump(IRDumpFlags flags)
         {
             Assert(src1->IsIntConstOpnd());
             Js::ParseableFunctionInfo * function = nullptr;
-            if (!m_func->IsOOPJIT())
             {
                 function = ((Js::ParseableFunctionInfo *)m_func->GetJITFunctionBody()->GetAddr())->GetNestedFunctionForExecution((uint)src1->AsIntConstOpnd()->GetValue())->GetParseableFunctionInfo();
             }
@@ -4760,11 +4751,7 @@ PragmaInstr::Dump(IRDumpFlags flags)
 {
     if (Js::Configuration::Global.flags.PrintSrcInDump && this->m_opcode == Js::OpCode::StatementBoundary)
     {
-        Js::FunctionBody * functionBody = nullptr;
-        if (!m_func->IsOOPJIT())
-        {
-            functionBody = ((Js::FunctionBody*)m_func->GetJITFunctionBody()->GetAddr());
-        }
+        Js::FunctionBody *functionBody = ((Js::FunctionBody*)m_func->GetJITFunctionBody()->GetAddr());
         if (functionBody && !functionBody->GetUtf8SourceInfo()->GetIsLibraryCode())
         {
             functionBody->PrintStatementSourceLine(this->m_statementIndex);

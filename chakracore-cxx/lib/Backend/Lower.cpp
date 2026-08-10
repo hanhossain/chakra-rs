@@ -1183,7 +1183,8 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
         }
 
         case Js::OpCode::LdNativeCodeData:
-            Assert(m_func->IsOOPJIT());
+            // TODO (hanhossain): remove OOPJIT
+            Assert(false);
             instrPrev = LowerLdNativeCodeData(instr);
             break;
         case Js::OpCode::CheckThis:
@@ -3450,7 +3451,7 @@ Lowerer::LowerNewScObjectLiteral(IR::Instr *newObjInstr)
 
     //#if 0 TODO: OOP JIT, obj literal types
     // should pass in isShared bit through RPC, enable for in-proc jit to see perf impact
-    Js::DynamicType * literalType = func->IsOOPJIT() || !CONFIG_FLAG(OOPJITMissingOpts) ? nullptr : *(Js::DynamicType **)literalTypeRef;
+    Js::DynamicType * literalType = !CONFIG_FLAG(OOPJITMissingOpts) ? nullptr : *(Js::DynamicType **)literalTypeRef;
 
     if (literalType == nullptr || !literalType->GetIsShared())
     {
@@ -7558,21 +7559,6 @@ Lowerer::GenerateCachedTypeCheck(IR::Instr *instrChk, IR::PropertySymOpnd *prope
     {
         Assert(Js::PropertyGuard::GetSizeOfValue() == static_cast<size_t>(TySize[TyMachPtr]));
 
-        if (this->m_func->IsOOPJIT())
-        {
-            if (polyIndexOpnd != nullptr)
-            {
-                IR::RegOpnd * baseOpnd = IR::RegOpnd::New(TyMachPtr, func);
-                this->GenerateLeaOfOOPData(baseOpnd, typeCheckGuard, Js::JitPolyEquivalentTypeGuard::GetOffsetOfPolyValues(), instrChk);
-                expectedTypeOpnd = IR::IndirOpnd::New(baseOpnd, polyIndexOpnd, m_lowererMD.GetDefaultIndirScale(), TyMachPtr, func);
-            }
-            else
-            {
-                expectedTypeOpnd = this->GenerateIndirOfOOPData(typeCheckGuard, 0, instrChk);
-            }
-            this->addToLiveOnBackEdgeSyms->Set(func->GetTopFunc()->GetNativeCodeDataSym()->m_id);
-        }
-        else
         {
             if (polyIndexOpnd != nullptr)
             {
@@ -7604,13 +7590,6 @@ Lowerer::GenerateCachedTypeCheck(IR::Instr *instrChk, IR::PropertySymOpnd *prope
         instrChk->InsertBefore(labelCheckEquivalentType);
 
         IR::Opnd* typeCheckGuardOpnd = nullptr;
-        if (this->m_func->IsOOPJIT())
-        {
-            typeCheckGuardOpnd = IR::RegOpnd::New(TyMachPtr, func);
-            this->GenerateLeaOfOOPData(typeCheckGuardOpnd->AsRegOpnd(), typeCheckGuard, 0, instrChk);
-            this->addToLiveOnBackEdgeSyms->Set(func->GetTopFunc()->GetNativeCodeDataSym()->m_id);
-        }
-        else
         {
             typeCheckGuardOpnd = IR::AddrOpnd::New((Js::Var)typeCheckGuard, IR::AddrOpndKindDynamicTypeCheckGuard, func, true);
         }
@@ -7761,18 +7740,6 @@ Lowerer::GenerateCachedTypeWithoutPropertyCheck(IR::Instr *instrInsert, IR::Prop
         Assert(typePropertyGuard != nullptr);
         Assert(Js::PropertyGuard::GetSizeOfValue() == static_cast<size_t>(TySize[TyMachPtr]));
 
-        if (this->m_func->IsOOPJIT())
-        {
-            int typeCheckGuardOffset = NativeCodeData::GetDataTotalOffset(typePropertyGuard);
-            expectedTypeOpnd = IR::IndirOpnd::New(IR::RegOpnd::New(m_func->GetTopFunc()->GetNativeCodeDataSym(), TyVar, m_func), typeCheckGuardOffset, TyMachPtr,
-#if DBG
-                NativeCodeData::GetDataDescription(typePropertyGuard, this->m_func->m_alloc),
-#endif
-                this->m_func, true);
-
-            this->addToLiveOnBackEdgeSyms->Set(m_func->GetTopFunc()->GetNativeCodeDataSym()->m_id);
-        }
-        else
         {
             expectedTypeOpnd = IR::MemRefOpnd::New((void*)(typePropertyGuard->GetAddressOfValue()), TyMachPtr, this->m_func, IR::AddrOpndKindDynamicGuardValueRef);
         }
@@ -10024,23 +9991,6 @@ IR::Instr* Lowerer::LowerMultiBr(IR::Instr * instr, IR::JnHelperMethod helperMet
     //Load the address of the dictionary pair- Js::StringDictionaryWrapper
     auto dictionary = instr->AsBranchInstr()->AsMultiBrInstr()->GetBranchDictionary();
 
-    if (this->m_func->IsOOPJIT())
-    {
-        auto dictionaryOffset = NativeCodeData::GetDataTotalOffset(dictionary);
-        auto addressRegOpnd = IR::RegOpnd::New(TyMachPtr, m_func);
-
-        Lowerer::InsertLea(addressRegOpnd,
-            IR::IndirOpnd::New(IR::RegOpnd::New(m_func->GetTopFunc()->GetNativeCodeDataSym(), TyVar, m_func), dictionaryOffset, TyMachPtr,
-#if DBG
-                NativeCodeData::GetDataDescription(dictionary, this->m_func->m_alloc),
-#endif
-                this->m_func, true), instr);
-
-        this->addToLiveOnBackEdgeSyms->Set(m_func->GetTopFunc()->GetNativeCodeDataSym()->m_id);
-
-        m_lowererMD.LoadHelperArgument(instr, addressRegOpnd);
-    }
-    else
     {
         IR::AddrOpnd* nativestringDictionaryOpnd = IR::AddrOpnd::New(dictionary, IR::AddrOpndKindDynamicMisc, this->m_func);
         m_lowererMD.LoadHelperArgument(instr, nativestringDictionaryOpnd);
@@ -13937,11 +13887,6 @@ void Lowerer::InsertMoveForPolymorphicCacheIndex(IR::Instr * instr, BailOutInfo 
 {
     IR::Opnd * indexOpnd = nullptr;
 
-    if (this->m_func->IsOOPJIT())
-    {
-        indexOpnd = IR::IndirOpnd::New(IR::RegOpnd::New(m_func->GetTopFunc()->GetNativeCodeDataSym(), TyVar, m_func), (int)(bailOutRecordOffset + BailOutRecord::GetOffsetOfPolymorphicCacheIndex()), TyUint32, m_func);
-    }
-    else
     {
         indexOpnd = IR::MemRefOpnd::New((uint8_t*)bailOutInfo->bailOutRecord + BailOutRecord::GetOffsetOfPolymorphicCacheIndex(), TyUint32, this->m_func);
     }
@@ -13982,19 +13927,6 @@ Lowerer::GenerateBailOut(IR::Instr * instr, IR::BranchInstr * branchInstr, IR::L
         IR::Opnd * indexOpndForBailOutKind = nullptr;
 
         int bailOutRecordOffset = 0;
-        if (this->m_func->IsOOPJIT())
-        {
-            bailOutRecordOffset = NativeCodeData::GetDataTotalOffset(bailOutInfo->bailOutRecord);
-
-            indexOpndForBailOutKind = IR::IndirOpnd::New(IR::RegOpnd::New(m_func->GetTopFunc()->GetNativeCodeDataSym(), TyVar, m_func), (int)(bailOutRecordOffset + BailOutRecord::GetOffsetOfBailOutKind()), TyUint32,
-#if DBG
-                NativeCodeData::GetDataDescription(bailOutInfo->bailOutRecord, this->m_func->m_alloc),
-#endif
-                m_func, true);
-
-            this->addToLiveOnBackEdgeSyms->Set(m_func->GetTopFunc()->GetNativeCodeDataSym()->m_id);
-        }
-        else
         {
             indexOpndForBailOutKind =
                 IR::MemRefOpnd::New((uint8_t*)bailOutInfo->bailOutRecord + BailOutRecord::GetOffsetOfBailOutKind(), TyUint32, this->m_func, IR::AddrOpndKindDynamicBailOutKindRef);
@@ -14025,11 +13957,6 @@ Lowerer::GenerateBailOut(IR::Instr * instr, IR::BranchInstr * branchInstr, IR::L
             }
 
             IR::Opnd *functionBodyOpnd;
-            if (this->m_func->IsOOPJIT())
-            {
-                functionBodyOpnd = IR::IndirOpnd::New(IR::RegOpnd::New(m_func->GetTopFunc()->GetNativeCodeDataSym(), TyVar, m_func), (int)(bailOutRecordOffset + SharedBailOutRecord::GetOffsetOfFunctionBody()), TyMachPtr, m_func);
-            }
-            else
             {
                 functionBodyOpnd = IR::MemRefOpnd::New((uint8_t*)bailOutInfo->bailOutRecord + SharedBailOutRecord::GetOffsetOfFunctionBody(), TyMachPtr, this->m_func);
             }
@@ -27326,8 +27253,6 @@ IR::AddrOpnd *Lowerer::CreateFunctionBodyOpnd(Func *const func) const
 
 IR::AddrOpnd *Lowerer::CreateFunctionBodyOpnd(Js::FunctionBody *const functionBody) const
 {
-    // TODO: OOP JIT, CreateFunctionBodyOpnd
-    Assert(!m_func->IsOOPJIT());
     return IR::AddrOpnd::New(functionBody, IR::AddrOpndKindDynamicFunctionBody, m_func, true);
 }
 

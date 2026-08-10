@@ -5074,7 +5074,7 @@ LowererMD::GenerateFastRecyclerAlloc(size_t allocSize, IR::RegOpnd* newObjDst, I
     bool allowNativeCodeBumpAllocation = scriptContext->GetRecyclerAllowNativeCodeBumpAllocation();
     Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation((void*)scriptContext->GetRecyclerAddr(), alignedSize,
         allocatorAddress, endAddressOffset, freeListOffset,
-        allowNativeCodeBumpAllocation, this->m_func->IsOOPJIT());
+        allowNativeCodeBumpAllocation);
 
     endAddressOpnd = IR::MemRefOpnd::New((char*)allocatorAddress + endAddressOffset, TyMachPtr, this->m_func, IR::AddrOpndKindDynamicRecyclerAllocatorEndAddressRef);
     freeListOpnd = IR::MemRefOpnd::New((char*)allocatorAddress + freeListOffset, TyMachPtr, this->m_func, IR::AddrOpndKindDynamicRecyclerAllocatorFreeListRef);
@@ -5320,20 +5320,8 @@ LowererMD::EmitLoadFloatCommon(IR::Opnd *dst, IR::Opnd *src, IR::Instr *insertIn
         Js::Var value = regOpnd->m_sym->GetFloatConstValueAsVar_PostGlobOpt();
         void *pDouble = (double*)NativeCodeDataNewNoFixup(this->m_func->GetNativeCodeDataAllocator(), DoubleType<DataDesc_LowererMD_EmitLoadFloatCommon_Double>, Js::JavascriptNumber::GetValue(value));
         IR::Opnd * doubleRef;
-        if (!m_func->IsOOPJIT())
         {
             doubleRef = IR::MemRefOpnd::New(pDouble, TyFloat64, this->m_func, IR::AddrOpndKindDynamicDoubleRef);
-        }
-        else
-        {
-            int offset = NativeCodeData::GetDataTotalOffset(pDouble);
-            doubleRef = IR::IndirOpnd::New(IR::RegOpnd::New(m_func->GetTopFunc()->GetNativeCodeDataSym(), TyVar, m_func), offset, TyMachDouble,
-#if DBG
-                NativeCodeData::GetDataDescription(pDouble, m_func->m_alloc),
-#endif
-                m_func, true);
-
-            GetLowerer()->addToLiveOnBackEdgeSyms->Set(m_func->GetTopFunc()->GetNativeCodeDataSym()->m_id);
         }
         regFloatOpnd = IR::RegOpnd::New(TyFloat64, this->m_func);
         instr = IR::Instr::New(Js::OpCode::MOVSD, regFloatOpnd, doubleRef, this->m_func);
@@ -6146,26 +6134,9 @@ LowererMD::LoadFloatValue(IR::Opnd * opndDst, T value, IR::Instr * instrInsert)
         pValue = NativeCodeDataNewNoFixup(instrInsert->m_func->GetNativeCodeDataAllocator(), FloatType<DataDesc_LowererMD_LoadFloatValue_Float>, (float)value);
     }
 
-    if (!instrInsert->m_func->IsOOPJIT())
     {
         opnd = IR::MemRefOpnd::New((void*)pValue, irtype,
             instrInsert->m_func, isFloat64 ? IR::AddrOpndKindDynamicDoubleRef : IR::AddrOpndKindDynamicFloatRef);
-    }
-    else // OOP JIT
-    {
-        int offset = NativeCodeData::GetDataTotalOffset(pValue);
-        auto addressRegOpnd = IR::RegOpnd::New(TyMachPtr, instrInsert->m_func);
-
-        Lowerer::InsertMove(
-            addressRegOpnd,
-            IR::MemRefOpnd::New(instrInsert->m_func->GetWorkItem()->GetWorkItemData()->nativeDataAddr, TyMachPtr, instrInsert->m_func, IR::AddrOpndKindDynamicNativeCodeDataRef),
-            instrInsert);
-
-        opnd = IR::IndirOpnd::New(addressRegOpnd, offset, irtype,
-#if DBG
-            NativeCodeData::GetDataDescription(pValue, instrInsert->m_func->m_alloc),
-#endif
-            instrInsert->m_func, true);
     }
 
     // movsd xmm, [reg+offset]

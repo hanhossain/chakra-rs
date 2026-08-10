@@ -144,9 +144,6 @@ public:
 #endif
     }
 
-    // TODO (hanhossain): remove OOPJIT
-    bool IsOOPJIT() const { return false; }
-
     void InitLocalClosureSyms();
 
     bool HasAnyStackNestedFunc() const { return this->hasAnyStackNestedFunc; }
@@ -211,13 +208,13 @@ public:
 
     ThreadContext * GetInProcThreadContext() const
     {
-        Assert(!IsOOPJIT());
         return (ThreadContext*)m_threadContextInfo;
     }
 
     ServerThreadContext* GetOOPThreadContext() const
     {
-        Assert(IsOOPJIT());
+        // TODO (hanhossain): remove OOPJIT
+        Assert(false);
         return (ServerThreadContext*)m_threadContextInfo;
     }
 
@@ -248,7 +245,6 @@ public:
 
     Js::EntryPointInfo* GetInProcJITEntryPointInfo() const
     {
-        Assert(!IsOOPJIT());
         return m_entryPointInfo;
     }
 
@@ -314,8 +310,6 @@ static const unsigned long c_debugFillPattern = c_debugFillPattern8;
     uint32_t GetInstrCount();
     inline Js::ScriptContext* GetScriptContext() const
     {
-        Assert(!IsOOPJIT());
-
         return static_cast<Js::ScriptContext*>(this->GetScriptContextInfo());
     }
     void NumberInstrs();
