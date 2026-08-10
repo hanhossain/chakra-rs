@@ -20,8 +20,6 @@ enum class RemoteCallType
 class JITManager
 {
 public:
-    void EnableOOPJIT() { Assert(false); }
-
     int32_t SetWellKnownHostTypeId(
         PTHREADCONTEXT_HANDLE threadContextRoot,
         int typeId)
