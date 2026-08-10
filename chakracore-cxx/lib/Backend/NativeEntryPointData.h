@@ -175,29 +175,4 @@ private:
     typename WriteBarrierFieldTypeTraits<uint32_t, _no_write_barrier_policy, _no_write_barrier_policy>::Type lazyBailOutThunkOffset;
 };
 
-class OOPNativeEntryPointData : public NativeEntryPointData
-{
-public:
-    OOPNativeEntryPointData();
-
-    static uint32_t GetOffsetOfNativeDataBuffer();
-    static void DeleteNativeDataBuffer(char * naitveDataBuffer);
-
-    char* GetNativeDataBuffer();
-    char** GetNativeDataBufferRef();
-    void SetNativeDataBuffer(char *);
-
-    uint GetInlineeFrameOffsetArrayOffset();
-    uint GetInlineeFrameOffsetArrayCount();
-    void RecordInlineeFrameOffsetsInfo(unsigned int offsetsArrayOffset, unsigned int offsetsArrayCount);
-
-
-    void OnCleanup();
-private:
-    typename WriteBarrierFieldTypeTraits<uint>::Type inlineeFrameOffsetArrayOffset;
-    typename WriteBarrierFieldTypeTraits<uint>::Type inlineeFrameOffsetArrayCount;
-    typename WriteBarrierFieldTypeTraits<char *, _no_write_barrier_policy, _no_write_barrier_policy>::Type nativeDataBuffer;
-
-};
-
 #endif
