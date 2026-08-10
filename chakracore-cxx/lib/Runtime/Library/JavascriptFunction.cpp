@@ -3081,15 +3081,8 @@ using namespace Js;
             JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedArrayBufferObject);
         }
 
-        ArrayBufferBase* arrayBuffer = VarTo<ArrayBufferBase>(args[1]);
-        const byte* buffer = arrayBuffer->GetBuffer();
-        uint32_t size = arrayBuffer->GetByteLength();
-        int32_t hr = JitFromEncodedWorkItem(scriptContext->GetNativeCodeGenerator(), buffer, size);
-        if (FAILED(hr))
-        {
-            return JavascriptNumber::New(hr, scriptContext);
-        }
-        return scriptContext->GetLibrary()->GetUndefined();
+        // TODO (hanhossain): remove OOPJIT
+        return JavascriptNumber::New(E_NOTIMPL, scriptContext);
     }
 #endif
 

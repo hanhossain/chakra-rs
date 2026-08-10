@@ -338,23 +338,6 @@ void NativeCodeGenerator::TransitionFromSimpleJit(Js::ScriptFunction *const func
     }
 }
 
-#ifdef ALLOW_JIT_REPRO
-int32_t NativeCodeGenerator::JitFromEncodedWorkItem(_In_reads_(bufferSize) const byte* buffer, _In_ uint bufferSize)
-{
-    // TODO (hanhossain): remove OOPJIT
-    CodeGenWorkItemIDL* workItemData = nullptr;
-    int32_t hr = E_NOTIMPL;
-    if (FAILED(hr))
-    {
-        return hr;
-    }
-    AssertOrFailFast(workItemData);
-    JITOutputIDL jitOutput = { 0 };
-    CodeGen(scriptContext->GetThreadContext()->GetPageAllocator(), workItemData, jitOutput, true);
-    return S_OK;
-}
-#endif
-
 ///----------------------------------------------------------------------------
 ///
 /// NativeCodeGenerator::GenerateFunction
