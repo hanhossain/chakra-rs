@@ -23,7 +23,6 @@ public:
     bool IsConnected() const { return false; }
     bool IsJITServer() const { return false; }
     void SetIsJITServer() { Assert(false); }
-    bool IsOOPJITEnabled() const { return false; }
     void EnableOOPJIT() { Assert(false); }
     void SetJITFailed(int32_t hr) { Assert(false); }
 

@@ -133,7 +133,6 @@ private:
 
     InProcCodeGenAllocators *EnsureForegroundAllocators(PageAllocator * pageAllocator)
     {
-        Assert(!JITManager::GetJITManager()->IsOOPJITEnabled());
         if (this->foregroundAllocators == nullptr)
         {
             this->foregroundAllocators = CreateAllocators(pageAllocator);
@@ -165,7 +164,6 @@ private:
 
     virtual void ProcessorThreadSpecificCallBack(PageAllocator * pageAllocator) override
     {
-        if (!JITManager::GetJITManager()->IsOOPJITEnabled())
         {
             AllocateBackgroundAllocators(pageAllocator);
         }

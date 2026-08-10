@@ -3073,11 +3073,8 @@ using namespace Js;
         Assert(!(callInfo.Flags & CallFlags_New));
 
         // todo:: make it work with inproc jit
-        if (!JITManager::GetJITManager()->IsOOPJITEnabled())
-        {
-            Output::Print(u"Out of proc jit is necessary to repro using an encoded buffer");
-            Js::Throw::FatalInternalError();
-        }
+        Output::Print(u"Out of proc jit is necessary to repro using an encoded buffer");
+        Js::Throw::FatalInternalError();
 
         if (args.Info.Count < 2 || !VarIs<ArrayBufferBase>(args[1]))
         {

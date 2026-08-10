@@ -6656,17 +6656,6 @@ namespace Js
     void JavascriptLibrary::SetIsPRNGSeeded(bool val)
     {
         this->isPRNGSeeded = val;
-#if ENABLE_NATIVE_CODEGEN
-        if (JITManager::GetJITManager()->IsOOPJITEnabled() && JITManager::GetJITManager()->IsConnected())
-        {
-            PSCRIPTCONTEXT_HANDLE remoteScriptContext = this->scriptContext->GetRemoteScriptAddr(false);
-            if (remoteScriptContext)
-            {
-                int32_t hr = JITManager::GetJITManager()->SetIsPRNGSeeded(remoteScriptContext, val);
-                JITManager::HandleServerCallResult(hr, RemoteCallType::StateUpdate);
-            }
-        }
-#endif
     }
     long* JavascriptLibrary::GetVTableAddresses()
     {

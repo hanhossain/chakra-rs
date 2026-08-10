@@ -33,7 +33,7 @@ JITTimeProfileInfo::InitializeJITProfileData(
     data->profiledLdElemCount = functionBody->GetProfiledLdElemCount();
     data->profiledStElemCount = functionBody->GetProfiledStElemCount();
 
-    if (JITManager::GetJITManager()->IsOOPJITEnabled() || isForegroundJIT)
+    if (isForegroundJIT)
     {
         data->ldLenData = (LdLenIDL*)profileInfo->GetLdLenInfo();
         data->ldElemData = (LdElemIDL*)profileInfo->GetLdElemInfo();

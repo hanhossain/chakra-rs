@@ -1422,21 +1422,6 @@ namespace Js
             localExportSlots[currentSlotCount] = nullptr;
 
             localSlotCount = currentSlotCount;
-
-#if ENABLE_NATIVE_CODEGEN
-            if (JITManager::GetJITManager()->IsOOPJITEnabled() && JITManager::GetJITManager()->IsConnected())
-            {
-                PSCRIPTCONTEXT_HANDLE remoteScriptContext = this->scriptContext->GetRemoteScriptAddr(false);
-                if (remoteScriptContext)
-                {
-                    int32_t hr = JITManager::GetJITManager()->AddModuleRecordInfo(
-                        remoteScriptContext,
-                        this->GetModuleId(),
-                        (intptr_t)this->GetLocalExportSlots());
-                    JITManager::HandleServerCallResult(hr, RemoteCallType::StateUpdate);
-                }
-            }
-#endif
         }
     }
 

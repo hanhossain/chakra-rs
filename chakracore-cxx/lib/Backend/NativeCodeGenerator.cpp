@@ -666,32 +666,6 @@ volatile unsigned long NativeCodeGenerator::CodegenFailureSeed = 0;
 
 void NativeCodeGenerator::CodeGen(PageAllocator* pageAllocator, CodeGenWorkItemIDL* workItemData, _Out_ JITOutputIDL& jitWriteData, const bool foreground, Js::EntryPointInfo* epInfo /*= nullptr*/)
 {
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        PSCRIPTCONTEXT_HANDLE remoteScriptContext = this->scriptContext->GetRemoteScriptAddr();
-        if (!JITManager::GetJITManager()->IsConnected())
-        {
-            throw Js::OperationAbortedException();
-        }
-        int32_t hr = JITManager::GetJITManager()->RemoteCodeGenCall(
-            workItemData,
-            remoteScriptContext,
-            &jitWriteData);
-        if (hr == E_ACCESSDENIED && scriptContext->IsClosed())
-        {
-            // script context may close after codegen call starts, consider this as aborted codegen
-            hr = E_ABORT;
-        }
-        JITManager::HandleServerCallResult(hr, RemoteCallType::CodeGen);
-
-        if (!PreReservedVirtualAllocWrapper::IsInRange((void*)this->scriptContext->GetThreadContext()->GetPreReservedRegionAddr(), (void*)jitWriteData.codeAddress))
-        {
-            this->scriptContext->GetJitFuncRangeCache()->AddFuncRange((void*)jitWriteData.codeAddress, jitWriteData.codeSize);
-        }
-        Assert(jitWriteData.codeAddress);
-        Assert(jitWriteData.codeSize);
-    }
-    else
     {
 #if DBG
         size_t serializedRpcDataSize = 0;
@@ -863,38 +837,6 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
     xdataInfo->address = (byte*)jitWriteData.xdataAddr;
     XDataAllocator::Register(xdataInfo, jitWriteData.codeAddress, jitWriteData.codeSize);
     epInfo->GetNativeEntryPointData()->SetXDataInfo(xdataInfo);
-
-#if defined(_M_ARM)
-    // for in-proc jit we do registration in encoder
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        XDataAllocation * xdataInfo = HeapNewZ(XDataAllocation);
-        xdataInfo->pdataCount = jitWriteData.pdataCount;
-        xdataInfo->xdataSize = jitWriteData.xdataSize;
-        if (jitWriteData.buffer)
-        {
-            xdataInfo->address = jitWriteData.buffer->data + jitWriteData.xdataOffset;
-            for (ushort i = 0; i < xdataInfo->pdataCount; ++i)
-            {
-                RUNTIME_FUNCTION *function = xdataInfo->GetPdataArray() + i;
-                // if flag is 0, then we have separate .xdata, for which we need to fixup the address
-                if (function->Flag == 0)
-                {
-                    // UnwindData was set on server as the offset from the beginning of xdata buffer
-                    function->UnwindData = (uint32_t)(xdataInfo->address + function->UnwindData);
-                    Assert(((uint32_t)function->UnwindData & 0x3) == 0); // 4 byte aligned
-                }
-            }
-        }
-        else
-        {
-            xdataInfo->address = nullptr;
-        }
-        // unmask thumb mode from code address
-        XDataAllocator::Register(xdataInfo, jitWriteData.codeAddress & ~0x1, jitWriteData.codeSize);
-        epInfo->GetNativeEntryPointData()->SetXDataInfo(xdataInfo);
-    }
-#endif
 
     if (!CONFIG_FLAG(OOPCFGRegistration))
     {
@@ -1742,28 +1684,10 @@ NativeCodeGenerator::JobProcessed(JsUtil::Job *const job, const bool succeeded)
     }
 }
 
+// TODO (hanhossain): remove OOPJIT
 void
 NativeCodeGenerator::UpdateJITState()
 {
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        // TODO: OOP JIT, move server calls to background thread to reduce foreground thread delay
-        if (!this->scriptContext->GetRemoteScriptAddr() || !JITManager::GetJITManager()->IsConnected())
-        {
-            return;
-        }
-
-        if (scriptContext->GetThreadContext()->JITNeedsPropUpdate())
-        {
-            typedef BVSparseNode<JitArenaAllocator> BVSparseNode;
-            static_assert(sizeof(BVSparseNode) == sizeof(BVSparseNodeIDL));
-            BVSparseNodeIDL * bvHead = (BVSparseNodeIDL*)scriptContext->GetThreadContext()->GetJITNumericProperties()->head;
-            int32_t hr = JITManager::GetJITManager()->UpdatePropertyRecordMap(scriptContext->GetThreadContext()->GetRemoteThreadContextAddr(), bvHead);
-
-            JITManager::HandleServerCallResult(hr, RemoteCallType::StateUpdate);
-            scriptContext->GetThreadContext()->ResetJITNeedsPropUpdate();
-        }
-    }
 }
 
 JsUtil::Job *
@@ -2832,12 +2756,7 @@ bool NativeCodeGenerator::TryReleaseNonHiPriWorkItem(CodeGenWorkItem* workItem)
 void
 NativeCodeGenerator::FreeNativeCodeGenAllocation(void* codeAddress)
 {
-    if (JITManager::GetJITManager()->IsOOPJITEnabled())
-    {
-        int32_t hr = JITManager::GetJITManager()->FreeAllocation(this->scriptContext->GetRemoteScriptAddr(), (intptr_t)codeAddress);
-        JITManager::HandleServerCallResult(hr, RemoteCallType::MemFree);
-    }
-    else if(this->backgroundAllocators)
+    if(this->backgroundAllocators)
     {
         this->backgroundAllocators->emitBufferManager.FreeAllocation(codeAddress);
     }
@@ -2853,21 +2772,7 @@ NativeCodeGenerator::QueueFreeNativeCodeGenAllocation(void* codeAddress, void * 
         return;
     }
 
-    if (JITManager::GetJITManager()->IsOOPJITEnabled() && !CONFIG_FLAG(OOPCFGRegistration))
-    {
-        //DeRegister Entry Point for CFG
-        if (thunkAddress)
-        {
-            ThreadContext::GetContextForCurrentThread()->SetValidCallTargetForCFG(thunkAddress, false);
-        }
-        else
-        {
-            ThreadContext::GetContextForCurrentThread()->SetValidCallTargetForCFG(codeAddress, false);
-        }
-    }
-
-    if ((!JITManager::GetJITManager()->IsOOPJITEnabled() && !this->scriptContext->GetThreadContext()->GetPreReservedVirtualAllocator()->IsInRange((void*)codeAddress)) ||
-        (JITManager::GetJITManager()->IsOOPJITEnabled() && !PreReservedVirtualAllocWrapper::IsInRange((void*)this->scriptContext->GetThreadContext()->GetPreReservedRegionAddr(), (void*)codeAddress)))
+    if (!this->scriptContext->GetThreadContext()->GetPreReservedVirtualAllocator()->IsInRange((void *)codeAddress))
     {
         this->scriptContext->GetJitFuncRangeCache()->RemoveFuncRange((void*)codeAddress);
     }
