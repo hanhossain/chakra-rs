@@ -7,7 +7,6 @@
 
 #include "Core/ProfileInstrument.h"
 
-class ServerScriptContext;
 class NativeCodeGenerator;
 namespace Js
 {
@@ -15,7 +14,6 @@ namespace Js
     {
 #ifdef PROFILE_EXEC
         friend class ::NativeCodeGenerator;
-        friend class ::ServerScriptContext;
 
     public:
         ScriptContextProfiler();
