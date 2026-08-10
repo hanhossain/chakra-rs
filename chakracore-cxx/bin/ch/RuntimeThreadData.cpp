@@ -30,7 +30,6 @@ RuntimeThreadData::RuntimeThreadData() :
     parent(nullptr),
     leaving(false)
 {
-    this->hevntInitialScriptCompleted = CreateEventW(TRUE, FALSE);
     this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
     this->hevntShutdown = CreateEventW(TRUE, FALSE);
 
@@ -39,7 +38,6 @@ RuntimeThreadData::RuntimeThreadData() :
 
 RuntimeThreadData::~RuntimeThreadData()
 {
-    CloseHandle(this->hevntInitialScriptCompleted);
     CloseHandle(this->hevntReceivedBroadcast);
     CloseHandle(this->hevntShutdown);
     CloseHandle(this->hThread);
@@ -74,7 +72,7 @@ uint32_t RuntimeThreadData::ThreadProc()
 
     ChakraRTInterface::JsRun(scriptSource, WScriptJsrt::GetNextSourceContext(), fname, JsParseScriptAttributeNone, nullptr);
 
-    SetEvent(this->parent->hevntInitialScriptCompleted);
+    this->parent->set_initial_script_completed();
 
     // loop waiting for work;
 
@@ -126,4 +124,25 @@ Error:
     ChakraRTInterface::JsDisposeRuntime(runtime);
     threadLocalData.Uninitialize();
     return 0;
+}
+
+void RuntimeThreadData::set_initial_script_completed()
+{
+    {
+        std::lock_guard lock(initial_script_completed_mtx_);
+        initial_script_completed_ = true;
+    }
+    initial_script_completed_cv_.notify_all();
+}
+
+void RuntimeThreadData::reset_initial_script_completed()
+{
+    std::unique_lock lock(initial_script_completed_mtx_);
+    initial_script_completed_ = false;
+}
+
+void RuntimeThreadData::wait_initial_script_completed()
+{
+    std::unique_lock lock(initial_script_completed_mtx_);
+    initial_script_completed_cv_.wait(lock, [this] { return initial_script_completed_; });
 }

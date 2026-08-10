@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <condition_variable>
 #include <list>
 #include <optional>
 #include <semaphore>
@@ -12,7 +13,6 @@ class RuntimeThreadData
 public:
     RuntimeThreadData();
     ~RuntimeThreadData();
-    HANDLE hevntInitialScriptCompleted;
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
     std::optional<std::binary_semaphore> semaphore;
@@ -39,7 +39,14 @@ public:
 
 
     uint32_t ThreadProc();
+    void set_initial_script_completed();
+    void reset_initial_script_completed();
+    void wait_initial_script_completed();
 
+private:
+    bool initial_script_completed_;
+    std::condition_variable initial_script_completed_cv_;
+    std::mutex initial_script_completed_mtx_;
 };
 
 struct RuntimeThreadLocalData
