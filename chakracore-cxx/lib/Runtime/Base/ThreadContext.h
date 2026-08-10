@@ -848,7 +848,6 @@ public:
     typedef JsUtil::WeaklyReferencedKeyDictionary<const Js::PropertyRecord, PropertyGuardEntry*, Js::PropertyRecordPointerComparer> PropertyGuardDictionary;
 
 private:
-    PTHREADCONTEXT_HANDLE m_remoteThreadContextInfo;
     intptr_t m_prereservedRegionAddr;
     intptr_t m_jitThunkStartAddr;
 
@@ -875,12 +874,6 @@ public:
     void ResetJITNeedsPropUpdate()
     {
         m_jitNeedsPropertyUpdate = false;
-    }
-
-    PTHREADCONTEXT_HANDLE GetRemoteThreadContextAddr()
-    {
-        Assert(m_remoteThreadContextInfo);
-        return m_remoteThreadContextInfo;
     }
 #endif
 
@@ -1333,11 +1326,6 @@ public:
         static_assert(wellKnownType <= WellKnownHostType_Last);
         return wellKnownHostTypeIds[wellKnownType] == typeId;
     }
-
-    // Register a well known type to a Js::TypeId.
-    //  wellKnownType:  The well known type which we should register
-    //  typeId:         The type id which matches to the well known type
-    void SetWellKnownHostTypeId(WellKnownHostType wellKnownType, Js::TypeId typeId);
 
     uint32_t GetNextPolymorphicCacheState()
     {

@@ -20,11 +20,6 @@ enum class RemoteCallType
 class JITManager
 {
 public:
-    int32_t SetWellKnownHostTypeId(
-        PTHREADCONTEXT_HANDLE threadContextRoot,
-        int typeId)
-        { Assert(false); return E_FAIL; }
-
     int32_t CleanupScriptContext(
         PPSCRIPTCONTEXT_HANDLE scriptContextInfoAddress)
         { Assert(false); return E_FAIL; }

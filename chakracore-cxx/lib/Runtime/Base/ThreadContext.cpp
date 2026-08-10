@@ -173,8 +173,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     redeferralState(InitialRedeferralState),
     gcSinceLastRedeferral(0),
     gcSinceCallCountsCollected(0),
-    tridentLoadAddress(nullptr),
-    m_remoteThreadContextInfo(nullptr)
+    tridentLoadAddress(nullptr)
 #ifdef ENABLE_SCRIPT_DEBUGGING
     , debugManager(nullptr)
 #endif
@@ -1834,24 +1833,6 @@ Js::TypeId ThreadContext::ReserveTypeIds(int count)
 Js::TypeId ThreadContext::CreateTypeId()
 {
     return nextTypeId = static_cast<Js::TypeId>(nextTypeId + 1);
-}
-
-void ThreadContext::SetWellKnownHostTypeId(WellKnownHostType wellKnownType, Js::TypeId typeId)
-{
-    AssertMsg(wellKnownType <= WellKnownHostType_Last, "ThreadContext::SetWellKnownHostTypeId called on unknown type");
-
-    if (wellKnownType >= 0 && wellKnownType <= WellKnownHostType_Last)
-    {
-        this->wellKnownHostTypeIds[wellKnownType] = typeId;
-#if ENABLE_NATIVE_CODEGEN
-        // The jit server really only needs to know about WellKnownHostType_HTMLAllCollection
-        if (this->m_remoteThreadContextInfo && wellKnownType == WellKnownHostType_HTMLAllCollection)
-        {
-            int32_t hr = JITManager::GetJITManager()->SetWellKnownHostTypeId(this->m_remoteThreadContextInfo, (int)typeId);
-            JITManager::HandleServerCallResult(hr, RemoteCallType::StateUpdate);
-        }
-#endif
-    }
 }
 
 #ifdef ENABLE_SCRIPT_DEBUGGING
