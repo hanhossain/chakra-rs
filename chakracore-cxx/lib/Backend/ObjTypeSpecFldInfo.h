@@ -182,8 +182,6 @@ public:
 
     Js::JavascriptFunction* GetFieldValueAsFunctionIfAvailable() const
     {
-        Assert(!JITManager::GetJITManager()->IsJITServer());
-
         if (IsPoly() && DoesntHaveEquivalence())
         {
             return nullptr;

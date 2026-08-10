@@ -49,7 +49,8 @@ public:
 
     static DataChunk* GetDataChunk(void* data)
     {
-        Assert(JITManager::GetJITManager()->IsJITServer());
+        // TODO (hanhossain): remove OOPJIT
+        Assert(false);
         return (NativeCodeData::DataChunk*)((char*)data - offsetof(NativeCodeData::DataChunk, data));
     }
 
@@ -57,7 +58,8 @@ public:
 
     static unsigned int GetDataTotalOffset(void* data)
     {
-        Assert(JITManager::GetJITManager()->IsJITServer());
+        // TODO (hanhossain): remove OOPJIT
+        Assert(false);
         return GetDataChunk(data)->offset;
     }
 
@@ -134,37 +136,11 @@ public:
         char * Alloc(size_t requestedBytes)
         {
             char* dataBlock = Allocator::Alloc(requestedBytes);
-#if DBG
-            if (JITManager::GetJITManager()->IsJITServer())
-            {
-                DataChunk* chunk = NativeCodeData::GetDataChunk(dataBlock);
-                chunk->dataType = typeid(T).name();
-                if (PHASE_TRACE1(Js::NativeCodeDataPhase))
-                {
-                    Output::Print(u"NativeCodeData AllocNoFix: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n",
-                        chunk, (void*)dataBlock, chunk->allocIndex, chunk->len, chunk->offset, chunk->dataType);
-                }
-            }
-#endif
-
             return dataBlock;
         }
         char * AllocZero(size_t requestedBytes)
         {
             char* dataBlock = Allocator::AllocZero(requestedBytes);
-
-#if DBG
-            if (JITManager::GetJITManager()->IsJITServer())
-            {
-                DataChunk* chunk = NativeCodeData::GetDataChunk(dataBlock);
-                chunk->dataType = typeid(T).name();
-                if (PHASE_TRACE1(Js::NativeCodeDataPhase))
-                {
-                    Output::Print(u"NativeCodeData AllocNoFix: chunk: %p, data: %p, index: %d, len: %x, totalOffset: %x, type: %S\n",
-                        chunk, (void*)dataBlock, chunk->allocIndex, chunk->len, chunk->offset, chunk->dataType);
-                }
-            }
-#endif
 
             return dataBlock;
         }

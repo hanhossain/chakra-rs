@@ -5150,9 +5150,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
     {
         if (! JavascriptOperators::IsObjectType(typeId) && ! JavascriptOperators::IsUndefinedOrNullType(typeId))
         {
-#if ENABLE_NATIVE_CODEGEN
-            Assert(!JITManager::GetJITManager()->IsJITServer());
-#endif
             return JavascriptOperators::ToObject(thisVar, (ScriptContext*)scriptContext);
         }
         else

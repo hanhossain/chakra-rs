@@ -509,7 +509,6 @@ Encoder::Encode()
     m_func->GetJITOutput()->RecordNativeCode(m_encodeBuffer, (uint8_t *)localAddress);
 
 #if defined(_M_X64)
-    if (!JITManager::GetJITManager()->IsJITServer())
     {
         ValidateCRCOnFinalBuffer((uint8_t *)allocation->address, codeSize, totalJmpTableSizeInBytes, m_encodeBuffer, initialCRCSeed, bufferCRC, isSuccessBrShortAndLoopAlign);
     }

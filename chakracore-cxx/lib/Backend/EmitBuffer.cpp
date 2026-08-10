@@ -134,7 +134,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::NewAllocation(size_t b
 
     if (heapAllocation  == nullptr)
     {
-        if (!JITManager::GetJITManager()->IsJITServer())
         {
             // This is used in interpreter scenario, thus we need to try to recover memory, if possible.
             // Can't simply throw as in JIT scenario, for which throw is what we want in order to give more mem to interpreter.
@@ -179,7 +178,6 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::SetValidCallTarget(TEm
 #if _M_ARM
     callTarget = (void*)((uintptr_t)callTarget | 0x1); // add the thumb bit back, so we CFG-unregister the actual call target
 #endif
-    if (!JITManager::GetJITManager()->IsJITServer())
     {
         this->threadContext->SetValidCallTargetForCFG(callTarget, isValid);
     }
@@ -360,7 +358,7 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBufferForIn
         return false;
     }
 
-    if (!JITManager::GetJITManager()->IsJITServer() && !this->allocationHeap.ProtectAllocationWithExecuteReadOnly(allocation->allocation))
+    if (!this->allocationHeap.ProtectAllocationWithExecuteReadOnly(allocation->allocation))
     {
         return false;
     }
@@ -425,7 +423,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
         {
             return false;
         }
-        if (!JITManager::GetJITManager()->IsJITServer() && !this->allocationHeap.ProtectAllocationWithExecuteReadWrite(allocation->allocation, (char*)readWriteBuffer))
+        if (!this->allocationHeap.ProtectAllocationWithExecuteReadWrite(allocation->allocation, (char*)readWriteBuffer))
         {
             return false;
         }
@@ -466,7 +464,7 @@ EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CommitBuffer(TEmitBuff
 
         Assert(readWriteBuffer + readWriteBytes == currentDestBuffer);
 
-        if (!JITManager::GetJITManager()->IsJITServer() && !this->allocationHeap.ProtectAllocationWithExecuteReadOnly(allocation->allocation, (char*)readWriteBuffer))
+        if (!this->allocationHeap.ProtectAllocationWithExecuteReadOnly(allocation->allocation, (char*)readWriteBuffer))
         {
             return false;
         }

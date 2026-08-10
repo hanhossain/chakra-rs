@@ -1526,7 +1526,7 @@ Inline::TryOptimizeCallInstrWithFixedMethod(IR::Instr *callInstr, const Function
             (isCtor && (
                 PHASE_TRACE(Js::FixedNewObjPhase, callInstr->m_func) ||
                 PHASE_TESTTRACE(Js::FixedNewObjPhase, callInstr->m_func)))
-        ) && !dontOptimizeJustCheck && !JITManager::GetJITManager()->IsJITServer();
+        ) && !dontOptimizeJustCheck;
 
     if (printFixedFieldsTrace)
     {
@@ -5220,7 +5220,8 @@ Inline::MapFormals(Func *inlinee,
                     }
                     else
                     {
-                        Assert(JITManager::GetJITManager()->IsJITServer());
+                        // TODO (hanhossain): remove OOPJIT
+                        Assert(false);
                         // with OOP JIT we may create const Opnds for library vars without materializing a JITRecyclableObject
                         IR::Opnd * thisConstOpnd = thisConstSym->GetConstOpnd();
                         if (thisConstOpnd->GetValueType().IsUndefined())
