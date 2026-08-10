@@ -449,11 +449,6 @@ namespace Js
             }
         }
 
-#ifdef ASMJS_PLAT
-        inline AsmJsCodeGenerator* GetAsmJsCodeGenerator() const{return asmJsCodeGenerator;}
-        AsmJsCodeGenerator* InitAsmJsCodeGenerator();
-#endif
-
         bool IsExceptionWrapperForBuiltInsEnabled();
         static bool IsExceptionWrapperForBuiltInsEnabled(ScriptContext* scriptContext);
         static bool IsExceptionWrapperForHelpersEnabled(ScriptContext* scriptContext);
@@ -707,7 +702,6 @@ private:
         BackgroundParser *backgroundParser;
 #ifdef ASMJS_PLAT
         InterpreterThunkEmitter* asmJsInterpreterThunkEmitter;
-        AsmJsCodeGenerator* asmJsCodeGenerator;
         typedef JsUtil::BaseDictionary<void*, SList<AsmJsScriptFunction *>*, ArenaAllocator> AsmFunctionMap;
         AsmFunctionMap* asmJsEnvironmentMap;
         ArenaAllocator* debugTransitionAlloc;

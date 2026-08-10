@@ -5,7 +5,6 @@ endif()
 set(CRL_SOURCE_FILES ${CRL_SOURCE_FILES}
     AsmJs.cpp
     AsmJsByteCodeGenerator.cpp
-    AsmJsCodeGenerator.cpp
     AsmJsEncoder.cpp
     AsmJsLink.cpp
     AsmJsModule.cpp
