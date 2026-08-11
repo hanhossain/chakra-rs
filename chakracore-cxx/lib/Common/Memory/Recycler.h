@@ -779,8 +779,6 @@ private:
 
     RecyclerCollectionWrapper * collectionWrapper;
 
-    HANDLE mainThreadHandle;
-    void * stackBase;
     class SavedRegisterState
     {
     public:
@@ -1045,7 +1043,6 @@ public:
 
     inline bool ShouldCapturePageHeapFreeStack() const { return capturePageHeapFreeStack; }
 
-    void SetIsThreadBound();
     void SetIsScriptActive(bool isScriptActive);
     void SetIsInScript(bool isInScript);
     bool HasNativeGCHost() const;
@@ -1582,13 +1579,10 @@ private:
     void PrepareBackgroundFindRoots();
     void RevertPrepareBackgroundFindRoots();
     size_t BackgroundFindRoots();
-    size_t BackgroundScanStack();
     size_t BackgroundRepeatMark();
     size_t BackgroundRescan(RescanFlags rescanFlags);
     void BackgroundResetWriteWatchAll();
     size_t BackgroundFinishMark();
-
-    char* GetScriptThreadStackTop();
 
     void SweepPendingObjects(RecyclerSweepManager& recyclerSweepManager);
     void ConcurrentTransferSweptObjects(RecyclerSweepManager& recyclerSweepManager);
@@ -1629,7 +1623,6 @@ private:
 #ifdef RECYCLER_VERIFY_MARK
     void VerifyMark();
     void VerifyMarkRoots();
-    void VerifyMarkStack();
     void VerifyMarkArena(ArenaData * arena);
     void VerifyMarkBigBlockList(BigBlock * memoryBlocks);
     void VerifyMarkArenaMemoryBlockList(ArenaMemoryBlock * memoryBlocks);

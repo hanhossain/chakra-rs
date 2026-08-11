@@ -727,10 +727,6 @@ public:
     uint32_t GetCurrentThreadId() const { return this->currentThreadId; }
     void SetIsThreadBound()
     {
-        if (this->recycler)
-        {
-            this->recycler->SetIsThreadBound();
-        }
         this->isThreadBound = true;
     }
     bool IsJSRT() const { return !this->isThreadBound; }
