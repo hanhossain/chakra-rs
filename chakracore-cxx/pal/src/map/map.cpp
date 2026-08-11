@@ -595,6 +595,7 @@ Note:
     manager.
 
 --*/
+// TODO (hanhossain): remove more-pal-file
 void MAPCleanup( void )
 {
     TRACE( "Deleting the critical section.\n" );

@@ -59,28 +59,5 @@ namespace CorUnix
         );
 }
 
-extern "C"
-{
-
-//
-// These routines should all be separated out into something along the lines
-// of fileutils.* (instead of being commingled with the core file object
-// code).
-//
-
-
-/*++
-FILEInitStdHandles
-
-Create handle objects for stdin, stdout and stderr
-
-(no parameters)
-
-Return value:
-    TRUE on success, FALSE on failure
---*/
-BOOL FILEInitStdHandles(void);
-}
-
 #endif /* _PAL_FILE_HPP_ */
 

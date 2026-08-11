@@ -116,6 +116,7 @@ VIRTUALInitialize( void )
  *      Deletes this section's critical section.
  *
  */
+// TODO (hanhossain): remove more-pal-file
 extern "C"
 void VIRTUALCleanup()
 {

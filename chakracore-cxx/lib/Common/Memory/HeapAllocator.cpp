@@ -296,22 +296,6 @@ HeapAllocatorData::CheckLeaks()
 
     Output::Flush();
 
-#if !DBG
-    // REVIEW: Okay to use global flags?
-    if (needPause && Js::Configuration::Global.flags.Console)
-    {
-        //This is not defined for WinCE
-        HANDLE handle = GetStdHandle( STD_INPUT_HANDLE );
-
-        FlushConsoleInputBuffer(handle);
-
-        Output::Print(u"Press any key to continue...\n");
-        Output::Flush();
-
-        WaitForSingleObject(handle, INFINITE);
-
-    }
-#endif
     return allocCount == deleteCount && outstandingBytes == 0;
 }
 

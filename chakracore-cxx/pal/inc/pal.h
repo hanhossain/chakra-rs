@@ -252,13 +252,6 @@ typedef struct _WIN32_FILE_ATTRIBUTE_DATA {
 
 typedef void * LPOVERLAPPED;  // diff from winbase.h
 
-#define STD_INPUT_HANDLE         (static_cast<uint32_t>(-10))
-#define STD_OUTPUT_HANDLE        (static_cast<uint32_t>(-11))
-
-HANDLE
-GetStdHandle(
-          uint32_t nStdHandle);
-
 typedef struct _SYSTEMTIME {
     uint16_t wYear;
     uint16_t wMonth;
