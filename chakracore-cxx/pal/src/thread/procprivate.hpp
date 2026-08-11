@@ -51,16 +51,6 @@ namespace CorUnix
 
     /*++
     Function:
-      PROCGetNumberOfThreads
-
-    Abstract
-      Return the number of threads in the thread list.
-    --*/
-    int32_t PROCGetNumberOfThreads(void);
-
-
-    /*++
-    Function:
       TerminateCurrentProcessNoExit
 
     Parameters:

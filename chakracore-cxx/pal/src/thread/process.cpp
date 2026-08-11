@@ -113,9 +113,6 @@ extern "C"
 #include <sys/user.h>
 #endif
 
-extern char *g_szCoreCLRPath;
-extern bool g_running_in_exe;
-
 using namespace CorUnix;
 
 CObjectType CorUnix::otProcess __attribute__((init_priority(200))) (
@@ -128,27 +125,6 @@ CObjectType CorUnix::otProcess __attribute__((init_priority(200))) (
                 CObjectType::ThreadReleaseHasNoSideEffects,
                 CObjectType::NoOwner
                 );
-
-//
-// Helper membarrier function
-//
-#ifdef __NR_membarrier
-# define membarrier(...)  syscall(__NR_membarrier, __VA_ARGS__)
-#else
-# define membarrier(...)  -ENOSYS
-#endif
-
-enum membarrier_cmd
-{
-    MEMBARRIER_CMD_QUERY                                 = 0,
-    MEMBARRIER_CMD_GLOBAL                                = (1 << 0),
-    MEMBARRIER_CMD_GLOBAL_EXPEDITED                      = (1 << 1),
-    MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED             = (1 << 2),
-    MEMBARRIER_CMD_PRIVATE_EXPEDITED                     = (1 << 3),
-    MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED            = (1 << 4),
-    MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE           = (1 << 5),
-    MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE  = (1 << 6)
-};
 
 CAllowedObjectTypes aotProcess __attribute__((init_priority(200))) (otiProcess);
 
@@ -167,7 +143,6 @@ CRITICAL_SECTION g_csProcess __attribute__((init_priority(200)));
 // List and count of active threads
 //
 CPalThread* CorUnix::pGThreadList;
-uint32_t g_dwThreadCount;
 
 // Thread ID of thread that has started the ExitProcess process
 Volatile<int32_t> terminator __attribute__((init_priority(200))) = 0;
@@ -200,13 +175,6 @@ static_assert(CLR_SEM_MAX_NAMELEN <= MAX_PATH, "CLR_SEM_MAX_NAMELEN > MAX_PATH")
 // (through pthread_setspecific)
 //
 pthread_key_t CorUnix::thObjKey;
-
-PAL_ERROR
-PROCGetProcessStatus(
-    CPalThread *pThread,
-    HANDLE hProcess,
-    PROCESS_STATE *pps,
-    uint32_t *pdwExitCode);
 
 static BOOL PROCEndProcess(HANDLE hProcess, uint32_t uExitCode, BOOL bTerminateUnconditionally);
 
@@ -515,7 +483,6 @@ CorUnix::InitializeProcessData(
     bool fLockInitialized = FALSE;
 
     pGThreadList = NULL;
-    g_dwThreadCount = 0;
 
     InternalInitializeCriticalSection(&g_csProcess);
     fLockInitialized = TRUE;
@@ -665,7 +632,6 @@ CorUnix::PROCAddThread(
 
     pTargetThread->SetNext(pGThreadList);
     pGThreadList = pTargetThread;
-    g_dwThreadCount += 1;
 
     TRACE("Thread 0x%p (id %#x) added to the process thread list\n",
           pTargetThread, pTargetThread->GetThreadId());
@@ -725,7 +691,6 @@ CorUnix::PROCRemoveThread(
         {
             /* found, fix the chain list */
             prevThread->SetNext(curThread->GetNext());
-            g_dwThreadCount -= 1;
             TRACE("Thread %p removed from the process thread list\n", pTargetThread);
             goto EXIT;
         }
@@ -739,28 +704,6 @@ CorUnix::PROCRemoveThread(
 EXIT:
     InternalLeaveCriticalSection(pCurrentThread, &g_csProcess);
 }
-
-
-/*++
-Function:
-  PROCGetNumberOfThreads
-
-Abstract
-  Return the number of threads in the thread list.
-
-Parameter
-  void
-
-Return
-  the number of threads.
---*/
-int32_t
-CorUnix::PROCGetNumberOfThreads(
-    void)
-{
-    return g_dwThreadCount;
-}
-
 
 /*++
 Function:
@@ -899,190 +842,6 @@ CorUnix::TerminateCurrentProcessNoExit()
     {
          PROCCleanupProcess();
      }
-}
-
-/*++
-Function:
-    PROCGetProcessStatus
-
-Abstract:
-    Retrieve process state information (state & exit code).
-
-Parameters:
-    uint32_t process_id : PID of process to retrieve state for
-    PROCESS_STATE *state : state of process (starting, running, done)
-    uint32_t *exit_code : exit code of process (from ExitProcess, etc.)
-
-Return value :
-    TRUE on success
---*/
-PAL_ERROR
-PROCGetProcessStatus(
-    CPalThread *pThread,
-    HANDLE hProcess,
-    PROCESS_STATE *pps,
-    uint32_t *pdwExitCode
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    IPalObject *pobjProcess = NULL;
-    IDataLock *pDataLock;
-    CProcProcessLocalData *pLocalData;
-    pid_t wait_retval;
-    int status;
-
-    //
-    // First, check if we already know the status of this process. This will be
-    // the case if this function has already been called for the same process.
-    //
-
-    palError = g_pObjectManager->ReferenceObjectByHandle(
-        pThread,
-        hProcess,
-        &aotProcess,
-        &pobjProcess
-    );
-
-    if (NO_ERROR != palError)
-    {
-        goto PROCGetProcessStatusExit;
-    }
-
-    palError = pobjProcess->GetProcessLocalData(
-        pThread,
-        WriteLock,
-        &pDataLock,
-        reinterpret_cast<void **>(&pLocalData)
-        );
-
-    if (PS_DONE == pLocalData->ps)
-    {
-        TRACE("We already called waitpid() on process ID %#x; process has "
-              "terminated, exit code is %d\n",
-              pLocalData->dwProcessId, pLocalData->dwExitCode);
-
-        *pps = pLocalData->ps;
-        *pdwExitCode = pLocalData->dwExitCode;
-
-        pDataLock->ReleaseLock(pThread);
-
-        goto PROCGetProcessStatusExit;
-    }
-
-    /* By using waitpid(), we can even retrieve the exit code of a non-PAL
-       process. However, note that waitpid() can only provide the low 8 bits
-       of the exit code. This is all that is required for the PAL spec. */
-    TRACE("Looking for status of process; trying wait()");
-
-    while(1)
-    {
-        /* try to get state of process, using non-blocking call */
-        wait_retval = waitpid(pLocalData->dwProcessId, &status, WNOHANG);
-
-        if ( wait_retval == static_cast<pid_t>(pLocalData->dwProcessId) )
-        {
-            /* success; get the exit code */
-            if ( WIFEXITED( status ) )
-            {
-                *pdwExitCode = WEXITSTATUS(status);
-                TRACE("Exit code was %d\n", *pdwExitCode);
-            }
-            else
-            {
-                WARN("process terminated without exiting; can't get exit "
-                     "code. faking it.\n");
-                *pdwExitCode = EXIT_FAILURE;
-            }
-            *pps = PS_DONE;
-        }
-        else if (0 == wait_retval)
-        {
-            // The process is still running.
-            TRACE("Process %#x is still active.\n", pLocalData->dwProcessId);
-            *pps = PS_RUNNING;
-            *pdwExitCode = 0;
-        }
-        else if (-1 == wait_retval)
-        {
-            // This might happen if waitpid() had already been called, but
-            // this shouldn't happen - we call waitpid once, store the
-            // result, and use that afterwards.
-            // One legitimate cause of failure is EINTR; if this happens we
-            // have to try again. A second legitimate cause is ECHILD, which
-            // happens if we're trying to retrieve the status of a currently-
-            // running process that isn't a child of this process.
-            if (EINTR == errno)
-            {
-                TRACE("waitpid() failed with EINTR; re-waiting");
-                continue;
-            }
-            else if (ECHILD == errno)
-            {
-                TRACE("waitpid() failed with ECHILD; calling kill instead");
-                if (kill(pLocalData->dwProcessId, 0) != 0)
-                {
-                    if(ESRCH == errno)
-                    {
-                        WARN("kill() failed with ESRCH, i.e. target "
-                             "process exited and it wasn't a child, "
-                             "so can't get the exit code, assuming  "
-                             "it was 0.\n");
-                        *pdwExitCode = 0;
-                    }
-                    else
-                    {
-                        ERROR("kill(pid, 0) failed; errno is %d (%s)\n",
-                              errno, strerror(errno));
-                        *pdwExitCode = EXIT_FAILURE;
-                    }
-                    *pps = PS_DONE;
-                }
-                else
-                {
-                    *pps = PS_RUNNING;
-                    *pdwExitCode = 0;
-                }
-            }
-            else
-            {
-                // Ignoring unexpected waitpid errno and assuming that
-                // the process is still running
-                ERROR("waitpid(pid=%u) failed with unexpected errno=%d (%s)\n",
-                      pLocalData->dwProcessId, errno, strerror(errno));
-                *pps = PS_RUNNING;
-                *pdwExitCode = 0;
-            }
-        }
-        else
-        {
-            chakra::Logger::error(std::format("waitpid returned unexpected value {}\n",wait_retval));
-            *pdwExitCode = EXIT_FAILURE;
-            *pps = PS_DONE;
-        }
-        // Break out of the loop in all cases except EINTR.
-        break;
-    }
-
-    // Save the exit code for future reference (waitpid will only work once).
-    if(PS_DONE == *pps)
-    {
-        pLocalData->ps = PS_DONE;
-        pLocalData->dwExitCode = *pdwExitCode;
-    }
-
-    TRACE( "State of process 0x%08x : %d (exit code %d)\n",
-           pLocalData->dwProcessId, *pps, *pdwExitCode );
-
-    pDataLock->ReleaseLock(pThread);
-
-PROCGetProcessStatusExit:
-
-    if (NULL != pobjProcess)
-    {
-        pobjProcess->ReleaseReference(pThread);
-    }
-
-    return palError;
 }
 
 #ifdef _DEBUG
