@@ -48,6 +48,7 @@ using namespace CorUnix;
 
 SET_DEFAULT_DEBUG_CHANNEL(VIRTUAL);
 
+// TODO (hanhossain): remove more-pal-file
 CRITICAL_SECTION virtual_critsec __attribute__((init_priority(200)));
 
 #ifdef DEBUG
@@ -56,15 +57,10 @@ Volatile<int> attempt2 = 0;
 #endif
 
 // The first node in our list of allocated blocks.
+// TODO (hanhossain): remove more-pal-file
 static PCMI pVirtualMemoryLastFound;
+// TODO (hanhossain): remove more-pal-file
 static PCMI pVirtualMemory;
-
-#if RESERVE_FROM_BACKING_FILE
-static BOOL VIRTUALGetBackingFile(CPalThread * pthrCurrent);
-
-// The file that we're using to back our pages.
-static int gBackingFile __attribute__((init_priority(200))) = -1;
-#endif // RESERVE_FROM_BACKING_FILE
 
 /* We need MAP_ANON. However on some platforms like HP-UX, it is defined as MAP_ANONYMOUS */
 #if !defined(MAP_ANON) && defined(MAP_ANONYMOUS)
@@ -104,55 +100,10 @@ VIRTUALInitialize( void )
 
     InternalInitializeCriticalSection(&virtual_critsec);
 
-    pVirtualMemory = NULL;
-    pVirtualMemoryLastFound = NULL;
+    pVirtualMemory = nullptr;
+    pVirtualMemoryLastFound = nullptr;
 
     return TRUE;
-}
-
-/***
- *
- * VIRTUALCleanup()
- *      Deletes this section's critical section.
- *
- */
-// TODO (hanhossain): remove more-pal-file
-extern "C"
-void VIRTUALCleanup()
-{
-    PCMI pEntry;
-    PCMI pTempEntry;
-    CPalThread * pthrCurrent = InternalGetCurrentThread();
-
-    InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
-
-    // Clean up the allocated memory.
-    pEntry = pVirtualMemory;
-    while ( pEntry )
-    {
-        WARN( "The memory at %d was not freed through a call to VirtualFree.\n",
-              pEntry->startBoundary );
-        free(pEntry->pAllocState);
-        free(pEntry->pProtectionState );
-        pTempEntry = pEntry;
-        pEntry = pEntry->pNext;
-        free(pTempEntry );
-    }
-    pVirtualMemory = NULL;
-    pVirtualMemoryLastFound = NULL;
-
-#if RESERVE_FROM_BACKING_FILE
-    if (gBackingFile != -1)
-    {
-        close(gBackingFile);
-        gBackingFile = -1;
-    }
-#endif  // RESERVE_FROM_BACKING_FILE
-
-    InternalLeaveCriticalSection(pthrCurrent, &virtual_critsec);
-
-    TRACE( "Deleting the Virtual Critical Sections. \n" );
-    DeleteCriticalSection( &virtual_critsec );
 }
 
 /***
@@ -414,11 +365,7 @@ static BOOL VIRTUALSetAllocState( uint32_t nAction, size_t nStartingBit,
  */
 static PCMI VIRTUALFindRegionInformation(  unsigned long address )
 {
-    PCMI pEntry = NULL;
-
-    TRACE( "VIRTUALFindRegionInformation( %#x )\n", address );
-
-    pEntry = pVirtualMemory;
+    PCMI pEntry = nullptr;
 
     if (pVirtualMemoryLastFound && pVirtualMemoryLastFound->startBoundary <= address)
     {
@@ -438,7 +385,7 @@ static PCMI VIRTUALFindRegionInformation(  unsigned long address )
         if ( pEntry->startBoundary > address )
         {
             /* Gone past the possible location in the list. */
-            pEntry = NULL;
+            pEntry = nullptr;
             break;
         }
         if ( pEntry->startBoundary + pEntry->memSize > address )
@@ -451,25 +398,6 @@ static PCMI VIRTUALFindRegionInformation(  unsigned long address )
 
     if (pEntry) pVirtualMemoryLastFound = pEntry;
     return pEntry;
-}
-
-/*++
-Function :
-    VIRTUALOwnedRegion
-
-    Returns whether the space in question is owned the VIRTUAL system.
-
---*/
-BOOL VIRTUALOwnedRegion(  unsigned long address )
-{
-    PCMI pEntry = NULL;
-    CPalThread * pthrCurrent = InternalGetCurrentThread();
-
-    InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
-    pEntry = VIRTUALFindRegionInformation( address );
-    InternalLeaveCriticalSection(pthrCurrent, &virtual_critsec);
-
-    return pEntry != NULL;
 }
 
 /*++
@@ -908,13 +836,7 @@ static void * ReserveVirtualMemory(
     mmapFlags |= MAP_FIXED;
 #endif // defined(__APPLE__)
 
-#if RESERVE_FROM_BACKING_FILE
-    mmapFile = gBackingFile;
-    mmapOffset = (char *) StartBoundary - (char *) gBackingBaseAddress;
-    mmapFlags |= MAP_PRIVATE;
-#else // RESERVE_FROM_BACKING_FILE
     mmapFlags |= MAP_ANON | MAP_PRIVATE;
-#endif // RESERVE_FROM_BACKING_FILE
 
     pRetVal = mmap(reinterpret_cast<void*>(StartBoundary), MemSize, PROT_NONE,
                    mmapFlags, mmapFile, mmapOffset);
@@ -1149,54 +1071,6 @@ done:
     return pRetVal;
 }
 
-#if RESERVE_FROM_BACKING_FILE
-/*++
-Function:
-    VIRTUALGetBackingFile
-
-    Ensures that we have a set of pages that correspond to a backing file.
-    We use the PAL as the backing file merely because we're pretty confident
-    it exists.
-
-    When the backing file hasn't been created, we create it, mmap pages
-    onto it, and create the free list.
-
-    Returns TRUE if we could locate our backing file, open it, mmap
-    pages onto it, and create the free list. Does nothing if we already
-    have a mapping.
---*/
-static BOOL VIRTUALGetBackingFile(CPalThread *pthrCurrent)
-{
-    BOOL result = FALSE;
-    char palName[MAX_PATH_FNAME];
-
-    InternalEnterCriticalSection(pthrCurrent, &virtual_critsec);
-
-    if (gBackingFile != -1)
-    {
-        result = TRUE;
-        goto done;
-    }
-
-    if (!(PALGetLibRotorPalName(palName, MAX_PATH_FNAME)))
-    {
-        chakra::Logger::error("Surprisingly, LibRotorPal can't be found!");
-        goto done;
-    }
-    gBackingFile = InternalOpen(palName, O_RDONLY);
-    if (gBackingFile == -1)
-    {
-        chakra::Logger::error(std::format("Failed to open {} as a backing file: errno={}\n",
-                palName, errno));
-        goto done;
-    }
-
-done:
-    InternalLeaveCriticalSection(pthrCurrent, &virtual_critsec);
-    return result;
-}
-#endif // RESERVE_FROM_BACKING_FILE
-
 /*++
 Function:
   VirtualAlloc
@@ -1246,11 +1120,6 @@ VirtualAlloc_(
     {
         WARN( "Ignoring the allocation flag MEM_TOP_DOWN.\n" );
     }
-
-#if RESERVE_FROM_BACKING_FILE
-    // Make sure we have memory to map before we try to use it.
-    VIRTUALGetBackingFile(pthrCurrent);
-#endif  // RESERVE_FROM_BACKING_FILE
 
     if ( flAllocationType & MEM_RESERVE )
     {
@@ -1551,15 +1420,8 @@ VirtualFree(
         // Explicitly calling mmap instead of mprotect here makes it
         // that much more clear to the operating system that we no
         // longer need these pages.
-#if RESERVE_FROM_BACKING_FILE
-        if ( mmap( (void *)StartBoundary, MemSize, PROT_NONE,
-                   MAP_FIXED | MAP_PRIVATE, gBackingFile,
-                   (char *) StartBoundary - (char *) gBackingBaseAddress ) !=
-             MAP_FAILED )
-#else   // RESERVE_FROM_BACKING_FILE
         if ( mmap( reinterpret_cast<void*>(StartBoundary), MemSize, PROT_NONE,
                    MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0 ) != MAP_FAILED )
-#endif  // RESERVE_FROM_BACKING_FILE
         {
             size_t index = 0;
             size_t nNumOfPagesToChange = 0;

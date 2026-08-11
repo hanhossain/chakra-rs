@@ -724,22 +724,6 @@ HeapBlockMap32::GetHeapBlockForRescan(HeapBlockMap32::L2MapChunk* chunk, uint id
 }
 #endif
 
-void
-HeapBlockMap32::ChangeProtectionLevel(Recycler* recycler, uint32_t protectFlags, uint32_t expectedOldFlags)
-{
-    this->ForEachSegment(recycler, [&](char* segmentStart, size_t segmentLength, Segment* currentSegment, PageAllocator* segmentPageAllocator)
-    {
-        // Ideally, we shouldn't to exclude LargeBlocks here but guest arenas are allocated
-        // from this allocator and we touch them during marking if they're pending delete
-        if (!recycler->autoHeap.IsRecyclerLeafPageAllocator(segmentPageAllocator)
-            && !recycler->autoHeap.IsRecyclerLargeBlockPageAllocator(segmentPageAllocator))
-        {
-            Assert(currentSegment->IsPageSegment());
-            static_cast<PageSegment*>(currentSegment)->ChangeSegmentProtection(protectFlags, expectedOldFlags);
-        }
-    });
-}
-
 uint
 HeapBlockMap32::Rescan(Recycler * recycler, bool resetWriteWatch)
 {

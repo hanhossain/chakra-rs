@@ -320,17 +320,6 @@ bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::CheckCommitFaultI
     return false;
 }
 
-#if DBG
-template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
-bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::IsBufferExecuteReadOnly(TEmitBufferAllocation * allocation)
-{
-    std::unique_lock<SyncObject> autoCs(this->criticalSection);
-    MEMORY_BASIC_INFORMATION memBasicInfo;
-    size_t resultBytes = VirtualQuery(allocation->allocation->address, &memBasicInfo, sizeof(memBasicInfo));
-    return resultBytes != 0 && memBasicInfo.Protect == PAGE_EXECUTE_READ;
-}
-#endif
-
 template <typename TAlloc, typename TPreReservedAlloc, class SyncObject>
 bool EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::ProtectBufferWithExecuteReadWriteForInterpreter(TEmitBufferAllocation* allocation)
 {
