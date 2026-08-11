@@ -246,11 +246,6 @@ namespace CorUnix
         uint32_t m_dwImmutableDataSize;
         uint32_t m_dwProcessLocalDataSize;
         uint32_t m_dwSharedDataSize;
-        uint32_t m_dwSupportedAccessRights;
-        // Generic access rights mapping
-        SecuritySupport m_eSecuritySupport;
-        SecurityPersistence m_eSecurityPersistence;
-        ObjectNameSupport m_eObjectNameSupport;
         SynchronizationSupport m_eSynchronizationSupport;
         SignalingSemantics m_eSignalingSemantics;
         ThreadReleaseSemantics m_eThreadReleaseSemantics;
@@ -264,10 +259,6 @@ namespace CorUnix
             uint32_t dwImmutableDataSize,
             uint32_t dwProcessLocalDataSize,
             uint32_t dwSharedDataSize,
-            uint32_t dwSupportedAccessRights,
-            SecuritySupport eSecuritySupport,
-            SecurityPersistence eSecurityPersistence,
-            ObjectNameSupport eObjectNameSupport,
             SynchronizationSupport eSynchronizationSupport,
             SignalingSemantics eSignalingSemantics,
             ThreadReleaseSemantics eThreadReleaseSemantics,
@@ -279,10 +270,6 @@ namespace CorUnix
             m_dwImmutableDataSize(dwImmutableDataSize),
             m_dwProcessLocalDataSize(dwProcessLocalDataSize),
             m_dwSharedDataSize(dwSharedDataSize),
-            m_dwSupportedAccessRights(dwSupportedAccessRights),
-            m_eSecuritySupport(eSecuritySupport),
-            m_eSecurityPersistence(eSecurityPersistence),
-            m_eObjectNameSupport(eObjectNameSupport),
             m_eSynchronizationSupport(eSynchronizationSupport),
             m_eSignalingSemantics(eSignalingSemantics),
             m_eThreadReleaseSemantics(eThreadReleaseSemantics),
@@ -338,40 +325,6 @@ namespace CorUnix
             )
         {
             return m_dwSharedDataSize;
-        };
-
-        uint32_t
-        GetSupportedAccessRights(
-            void
-            )
-        {
-            return m_dwSupportedAccessRights;
-        };
-
-        // Generic access rights mapping
-
-        SecuritySupport
-        GetSecuritySupport(
-            void
-            )
-        {
-            return  m_eSecuritySupport;
-        };
-
-        SecurityPersistence
-        GetSecurityPersistence(
-            void
-            )
-        {
-            return  m_eSecurityPersistence;
-        };
-
-        ObjectNameSupport
-        GetObjectNameSupport(
-            void
-            )
-        {
-            return  m_eObjectNameSupport;
         };
 
         SynchronizationSupport

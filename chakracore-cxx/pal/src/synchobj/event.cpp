@@ -38,10 +38,6 @@ CObjectType CorUnix::otManualResetEvent(
                 0,      // No immutable data
                 0,      // No process local data
                 0,      // No shared data
-                EVENT_ALL_ACCESS, // Currently ignored (no Win32 security)
-                CObjectType::SecuritySupported,
-                CObjectType::SecurityInfoNotPersisted,
-                CObjectType::UnnamedObject,
                 CObjectType::WaitableObject,
                 CObjectType::ObjectCanBeUnsignaled,
                 CObjectType::ThreadReleaseHasNoSideEffects,
@@ -54,10 +50,6 @@ CObjectType CorUnix::otAutoResetEvent(
                 0,      // No immutable data
                 0,      // No process local data
                 0,      // No shared data
-                EVENT_ALL_ACCESS, // Currently ignored (no Win32 security)
-                CObjectType::SecuritySupported,
-                CObjectType::SecurityInfoNotPersisted,
-                CObjectType::UnnamedObject,
                 CObjectType::WaitableObject,
                 CObjectType::ObjectCanBeUnsignaled,
                 CObjectType::ThreadReleaseAltersSignalCount,

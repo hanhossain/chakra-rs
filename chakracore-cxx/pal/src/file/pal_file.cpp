@@ -58,10 +58,6 @@ CObjectType CorUnix::otFile __attribute__((init_priority(200))) (
                 0,      // No immutable data
                 sizeof(CFileProcessLocalData),
                 0,      // No shared data
-                GENERIC_READ|GENERIC_WRITE,  // Ignored -- no Win32 object security support
-                CObjectType::SecuritySupported,
-                CObjectType::OSPersistedSecurityInfo,
-                CObjectType::UnnamedObject,
                 CObjectType::UnwaitableObject,
                 CObjectType::SignalingNotApplicable,
                 CObjectType::ThreadReleaseNotApplicable,
