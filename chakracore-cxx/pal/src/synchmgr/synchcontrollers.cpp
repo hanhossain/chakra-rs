@@ -48,13 +48,8 @@ namespace CorUnix
 
     Initializes a generic controller 
     --*/
-    PAL_ERROR CSynchControllerBase::Init(
-        CPalThread * pthrCurrent,
-        ControllerType ctCtrlrType,
-        ObjectDomain odObjectDomain,
-        CObjectType *potObjectType,
-        CSynchData * psdSynchData,
-        WaitDomain wdWaitDomain)
+    PAL_ERROR CSynchControllerBase::Init(CPalThread *pthrCurrent, ControllerType ctCtrlrType,
+                                         CObjectType *potObjectType, CSynchData *psdSynchData, WaitDomain wdWaitDomain)
     {
         VALIDATEOBJECT(psdSynchData);
 
@@ -63,7 +58,6 @@ namespace CorUnix
         // Initialize internal controller data
         m_pthrOwner      = pthrCurrent;
         m_ctCtrlrType    = ctCtrlrType;
-        m_odObjectDomain = odObjectDomain;        
         m_potObjectType  = potObjectType;
         m_psdSynchData   = psdSynchData;
         m_wdWaitDomain   = wdWaitDomain;
@@ -267,10 +261,8 @@ namespace CorUnix
         
         PAL_ERROR palErr = NO_ERROR;
         WaitingThreadsListNode * pwtlnNewNode = NULL;
-        SharedID shridNewNode = NULLSharedID;
-        ThreadWaitInfo * ptwiWaitInfo; 
+        ThreadWaitInfo * ptwiWaitInfo;
         uint32_t * pdwWaitState;
-        bool fSharedObject = (SharedObject == m_odObjectDomain);
         bool fEarlyDeath = false;
         bool fSynchDataRefd = false;
         CPalSynchronizationManager * pSynchManager = 
@@ -286,24 +278,12 @@ namespace CorUnix
         pdwWaitState = SharedIDToTypePointer(uint32_t,
                 m_pthrOwner->synchronizationInfo.m_shridWaitAwakened);
 
-        if (fSharedObject)
-        {
-            shridNewNode = pSynchManager->CacheGetSharedWTListNode(m_pthrOwner);
-            pwtlnNewNode = SharedIDToTypePointer(WaitingThreadsListNode, shridNewNode);
-        }
-        else
         {
             pwtlnNewNode = pSynchManager->CacheGetLocalWTListNode(m_pthrOwner);
         }
         
         if (!pwtlnNewNode)
         {
-            if (fSharedObject && (NULLSharedID != shridNewNode))
-            {
-                chakra::Logger::error(std::format("Bad Shared Memory ptr {}\n", shridNewNode));
-                palErr = ERROR_INTERNAL_ERROR;
-            }        
-            else
             {
                 ERROR("Out of memory\n");
                 palErr = ERROR_NOT_ENOUGH_MEMORY;
@@ -342,13 +322,6 @@ namespace CorUnix
         pwtlnNewNode->dwFlags            = (MultipleObjectsWaitAll == wtWaitType) ? 
                                             WTLN_FLAG_WAIT_ALL : 0;
         pwtlnNewNode->shridWaitingState  = m_pthrOwner->synchronizationInfo.m_shridWaitAwakened; 
-        if (fSharedObject)
-        {
-            pwtlnNewNode->dwFlags                   |= WTLN_FLAG_OWNER_OBJECT_IS_SHARED;
-            pwtlnNewNode->shridSHRThis               = shridNewNode;
-            pwtlnNewNode->ptrOwnerObjSynchData.shrid = m_psdSynchData->GetSharedThis();
-        }
-        else
         {
             pwtlnNewNode->ptrOwnerObjSynchData.ptr = m_psdSynchData;
         }
@@ -417,12 +390,6 @@ namespace CorUnix
         }
 
         // Add new node to queue
-        if (fSharedObject)
-        {
-            m_psdSynchData->SharedWaiterEnqueue(shridNewNode);
-            ptwiWaitInfo->lSharedObjCount += 1;
-        }
-        else
         {
             m_psdSynchData->WaiterEnqueue(pwtlnNewNode);
         }
@@ -434,17 +401,13 @@ namespace CorUnix
         if (palErr != NO_ERROR)
         {
             // Unregister any partial wait registration
-            pSynchManager->UnRegisterWait(m_pthrOwner, ptwiWaitInfo, fSharedObject);
+            pSynchManager->UnRegisterWait(m_pthrOwner, ptwiWaitInfo, false);
             
             if (fSynchDataRefd)
             {
                 m_psdSynchData->Release(m_pthrOwner);
             }
-            if ((fSharedObject)  && (NULLSharedID != shridNewNode))
-            {
-                pSynchManager->CacheAddSharedWTListNode(m_pthrOwner, shridNewNode);
-            }
-            else if (NULL != pwtlnNewNode)
+            if (NULL != pwtlnNewNode)
             {
                 pSynchManager->CacheAddLocalWTListNode(m_pthrOwner, pwtlnNewNode);
             }
@@ -633,59 +596,14 @@ namespace CorUnix
         {
             CPalSynchronizationManager * pSynchManager = 
                 CPalSynchronizationManager::GetInstance();
-            bool fSharedObject = (SharedObject == m_odObjectDomain);
+            bool fSharedObject = false;
 
             _ASSERT_MSG((fSharedObject && (NULLSharedID == m_ptrWTLHead.shrid)) ||
                         (!fSharedObject && (NULL == m_ptrWTLHead.ptr)),
                         "Final Release on CSynchData with threads still in "
                         "the waiting list\n"); 
 
-            TRACE("Disposing %s waitable object with SynchData @ "
-                  "{shrid=%p, p=%p}\n",
-                  (SharedObject == m_odObjectDomain) ? "shared" : "local",
-                  (void *)m_shridThis, this);
-            
-
-#ifdef SYNCH_STATISTICS
-            int32_t lStatWaitCount = GetStatWaitCount();
-            int32_t lStatContentionCount = GetStatContentionCount();
-            int32_t lCount, lNewCount;
-
-            TRACE("Statistical data for SynchData of otiType=%u @ %p: WaitCount=%d "
-                  "ContentionCount=%d\n", m_otiObjectTypeId, this, lStatWaitCount, 
-                  lStatContentionCount);
-            
-            do {
-                lCount = g_rglStatWaitCount[m_otiObjectTypeId];
-                lNewCount = lCount + lStatWaitCount;
-                lNewCount = InterlockedCompareExchange(&(g_rglStatWaitCount[m_otiObjectTypeId]), 
-                                                       lNewCount, lCount);
-            } while (lCount != lNewCount);
-
-            lStatWaitCount = lNewCount;
-
-            do {
-                lCount = g_rglStatContentionCount[m_otiObjectTypeId];
-                lNewCount = lCount + lStatContentionCount;
-                lNewCount = InterlockedCompareExchange(&(g_rglStatContentionCount[m_otiObjectTypeId]), 
-                                                       lNewCount, lCount);
-            } while (lCount != lNewCount);
-
-            lStatContentionCount = lNewCount;
-
-            TRACE("Total current statistical data for otiType=%u objects: WaitCount=%d "
-                  "ContentionCount=%d\n", m_otiObjectTypeId, lStatWaitCount, 
-                  lStatContentionCount);
-#endif // SYNCH_STATISTICS       
-
-            if (fSharedObject)
-            {
-                pSynchManager->CacheAddSharedSynchData(pthrCurrent, m_shridThis);
-            }
-            else
-            {
-                pSynchManager->CacheAddLocalSynchData(pthrCurrent, this);
-            }            
+            pSynchManager->CacheAddLocalSynchData(pthrCurrent, this);
         }
             
         return lCount;
@@ -931,7 +849,6 @@ namespace CorUnix
     {        
         PAL_ERROR palErr = NO_ERROR;
         bool fSharedSynchLock = false;
-        bool fSharedObject = (SharedObject == GetObjectDomain());
         bool fThreadAwakened = false;
         bool fDelegatedSignaling = false;
         uint32_t * pdwWaitState;
@@ -946,16 +863,8 @@ namespace CorUnix
 
         *pfDelegated = false;
 
-        if (fSharedObject)
-        {
-            shridItem = GetWTLHeadShmPtr();
-            pwtlnItem = SharedIDToTypePointer(WaitingThreadsListNode, shridItem);
-        }
-        else
-        {
-            pwtlnItem = GetWTLHeadPtr();
-        }
-            
+        pwtlnItem = GetWTLHeadPtr();
+
         while (pwtlnItem)
         {
             VALIDATEOBJECT(pwtlnItem);
@@ -965,16 +874,7 @@ namespace CorUnix
             pdwWaitState = SharedIDToTypePointer(uint32_t,
                 pwtlnItem->shridWaitingState);           
 
-            if (fSharedObject)
-            {
-                shridNextItem = pwtlnItem->ptrNext.shrid;
-                pwtlnNextItem = SharedIDToTypePointer(WaitingThreadsListNode, 
-                                                  shridNextItem);
-            }
-            else
-            {
-                pwtlnNextItem = pwtlnItem->ptrNext.ptr;
-            }                    
+            pwtlnNextItem = pwtlnItem->ptrNext.ptr;
 
             if (fWaitAll)
             {
@@ -1002,9 +902,9 @@ namespace CorUnix
                 // it can only be a wait performed by a thread in the current 
                 // process, therefore pwtlnItem->ptwiWaitInfo is valid.
 
-                assert(fSharedObject || pwtlnItem->dwProcessId == getpid());
+                assert(pwtlnItem->dwProcessId == getpid());
                 
-                if (!fSharedSynchLock && !fSharedObject && 
+                if (!fSharedSynchLock &&
                     LocalWait != pwtlnItem->ptwiWaitInfo->wdWaitDomain)
                 {
                     CPalSynchronizationManager::AcquireSharedSynchLock(pthrCurrent);
@@ -1096,7 +996,7 @@ namespace CorUnix
                         // Unregister the wait
                         pSynchManager->UnRegisterWait(pthrCurrent, 
                                                       ptwiWaitInfo,
-                                                      fSharedObject || fSharedSynchLock);
+                                                      fSharedSynchLock);
 
                         // After UnRegisterWait pwtlnItem is invalid
                         pwtlnItem = NULL; 
@@ -1164,7 +1064,7 @@ namespace CorUnix
                             "IsRestOfWaitAllSatisfied() apparently "
                             "returned -1 on a normal (non wait all) "
                             "wait\n");
-                _ASSERT_MSG(fSharedObject,
+                _ASSERT_MSG(false,
                             "About to delegate object signaling to a remote "
                             "process, but the signaled object is actually "
                             "local\n");
@@ -1251,10 +1151,8 @@ namespace CorUnix
         PAL_ERROR palErr = NO_ERROR;
         int32_t lAwakenedCount = 0;
         bool fSharedSynchLock = false;
-        bool fSharedObject = (SharedObject == GetObjectDomain());
         uint32_t * pdwWaitState;
         uint32_t dwObjIdx;
-        SharedID shridItem = NULLSharedID, shridNextItem = NULLSharedID;
         WaitingThreadsListNode * pwtlnItem, * pwtlnNextItem;
         uint32_t dwPid = getpid();
         CPalSynchronizationManager * pSynchManager = 
@@ -1262,12 +1160,6 @@ namespace CorUnix
 
         VALIDATEOBJECT(this);
 
-        if (fSharedObject)
-        {
-            shridItem = GetWTLHeadShmPtr();
-            pwtlnItem = SharedIDToTypePointer(WaitingThreadsListNode, shridItem);
-        }
-        else
         {
             pwtlnItem = GetWTLHeadPtr();
         }
@@ -1280,23 +1172,15 @@ namespace CorUnix
             pdwWaitState = SharedIDToTypePointer(uint32_t,
                 pwtlnItem->shridWaitingState);           
 
-            if (fSharedObject)
-            {
-                shridNextItem = pwtlnItem->ptrNext.shrid;
-                pwtlnNextItem = SharedIDToTypePointer(WaitingThreadsListNode, 
-                                                  shridNextItem);
-            }
-            else
             {
                 pwtlnNextItem = pwtlnItem->ptrNext.ptr;
             }    
 
             // See note in similar spot in ReleaseFirstWaiter
             
-            assert(fSharedObject || pwtlnItem->dwProcessId == getpid());
+            assert(pwtlnItem->dwProcessId == getpid());
 
-            if (!fSharedSynchLock && !fSharedObject && 
-                LocalWait != pwtlnItem->ptwiWaitInfo->wdWaitDomain)
+            if (!fSharedSynchLock && LocalWait != pwtlnItem->ptwiWaitInfo->wdWaitDomain)
             {
                 CPalSynchronizationManager::AcquireSharedSynchLock(pthrCurrent);
                 fSharedSynchLock = true;
@@ -1360,7 +1244,7 @@ namespace CorUnix
                     // Unregister the wait
                     pSynchManager->UnRegisterWait(pthrCurrent, 
                                                   ptwiWaitInfo, 
-                                                  fSharedObject || fSharedSynchLock);
+                                                  fSharedSynchLock);
 
                     // After UnRegisterWait pwtlnItem is invalid
                     pwtlnItem = NULL; 
@@ -1386,7 +1270,6 @@ namespace CorUnix
             }
 
             // Go to the next item
-            shridItem = shridNextItem;
             pwtlnItem = pwtlnNextItem;
         }
 
@@ -1434,7 +1317,7 @@ namespace CorUnix
         _ASSERT_MSG(0 != (WTLN_FLAG_WAIT_ALL & pwtlnNode->dwFlags),
                     "IsRestOfWaitAllSatisfied() called on a normal "
                     "(non wait all) wait");
-        _ASSERT_MSG((SharedObject == GetObjectDomain()) == 
+        _ASSERT_MSG((false) ==
                     (0 != (WTLN_FLAG_OWNER_OBJECT_IS_SHARED & pwtlnNode->dwFlags)),
                     "WTLN_FLAG_OWNER_OBJECT_IS_SHARED in WaitingThreadsListNode "
                     "not consistent with target object's domain\n");
@@ -1680,9 +1563,6 @@ namespace CorUnix
         VALIDATEOBJECT(this);
         VALIDATEOBJECT(pwtlnNewNode);
 
-        _ASSERT_MSG(ProcessLocalObject == GetObjectDomain(),
-                    "Trying to enqueue a WaitingThreadsListNode as local "
-                    "on a shared object\n");
         _ASSERT_MSG(0 == (WTLN_FLAG_OWNER_OBJECT_IS_SHARED & pwtlnNewNode->dwFlags),
                     "Trying to add a WaitingThreadsListNode marked as shared "
                     "as it was a local one\n");
@@ -1730,7 +1610,7 @@ namespace CorUnix
     {
         VALIDATEOBJECT(this);
 
-        _ASSERT_MSG(SharedObject == GetObjectDomain(),
+        _ASSERT_MSG(false,
                     "Trying to enqueue a WaitingThreadsListNode as shared "
                     "on a local object\n");
 

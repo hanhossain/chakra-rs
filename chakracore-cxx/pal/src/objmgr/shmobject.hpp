@@ -58,7 +58,6 @@ namespace CorUnix
         
         SHMPTR shmObjName;
         SHMPTR shmObjImmutableData;
-        SHMPTR shmObjSharedData;
 
         int32_t lProcessRefCount;
         uint32_t dwNameLength;
@@ -83,32 +82,6 @@ namespace CorUnix
         //
 
         CRITICAL_SECTION *m_pcsObjListLock;
-
-        //
-        // The SHMObjData for this object, protected by the
-        // shared memory lock.
-        //
-        
-        SHMPTR m_shmod;
-
-        //
-        // The shared data (i.e., m_shmObjData->shmObjSharedData)
-        // for this object, mapped into this process. This will be
-        // NULL if m_pot->dwSharedDataSize is 0. Access to this data
-        // is controlled by m_ssmlSharedData when m_ObjectDomain is
-        // SharedObject, and m_sdlSharedData when it is ProcessLocalObject.
-        //
-
-        void *m_pvSharedData;
-        
-        CSimpleSharedMemoryLock m_ssmlSharedData;
-        CSimpleDataLock m_sdlSharedData;
-
-        //
-        // Is this object process local or shared?
-        //
-        
-        ObjectDomain m_ObjectDomain;
 
         //
         // m_fSharedDataDereferenced will be TRUE if DereferenceSharedData
@@ -159,54 +132,15 @@ namespace CorUnix
             :
             CPalObjectBase(pot),
             m_pcsObjListLock(pcsObjListLock),
-            m_shmod(SHMNULL),
-            m_pvSharedData(NULL),
-            m_ObjectDomain(ProcessLocalObject),
             m_fSharedDataDereferenced(FALSE),
             m_fDeleteSharedData(FALSE)
         {
             InitializeListHead(&m_le);
-        };
-
-        //
-        // Constructor used to import a shared object into this process. The
-        // shared memory lock must be held when calling this contstructor
-        //
-
-        CSharedMemoryObject(
-            CObjectType *pot,
-            CRITICAL_SECTION *pcsObjListLock,
-            SHMPTR shmSharedObjectData,
-            SHMObjData *psmod,
-            bool fAddRefSharedData
-            )
-            :
-            CPalObjectBase(pot),
-            m_pcsObjListLock(pcsObjListLock),
-            m_shmod(shmSharedObjectData),
-            m_pvSharedData(NULL),
-            m_ObjectDomain(SharedObject),
-            m_fSharedDataDereferenced(FALSE),
-            m_fDeleteSharedData(FALSE)
-        {
-            InitializeListHead(&m_le);
-            if (fAddRefSharedData)
-            {
-                psmod->lProcessRefCount += 1;
-            }
         };
 
         virtual
         PAL_ERROR
         Initialize(CPalThread *pthr);
-
-        SHMPTR
-        GetShmObjData(
-            void
-            )
-        {
-            return m_shmod;
-        };
 
         PLIST_ENTRY
         GetObjectListLink(
@@ -234,12 +168,6 @@ namespace CorUnix
             );
 
         virtual
-        ObjectDomain
-        GetObjectDomain(
-            void
-            );
-
-        virtual
         PAL_ERROR
         GetObjectSynchData(
             void **ppvSynchData
@@ -264,24 +192,6 @@ namespace CorUnix
             :
             CSharedMemoryObject(pot, pcsObjListLock),
             m_pvSynchData(NULL)
-        {
-        };
-
-        //
-        // Constructor used to import a shared object into this process. The
-        // shared memory lock must be held when calling this contstructor
-        //
-
-        CSharedMemoryWaitableObject(
-            CObjectType *pot,
-            CRITICAL_SECTION *pcsObjListLock,
-            SHMPTR shmSharedObjectData,
-            SHMObjData *psmod,
-            bool fAddRefSharedData
-            )
-            :
-            CSharedMemoryObject(pot, pcsObjListLock, shmSharedObjectData, psmod, fAddRefSharedData),
-            m_pvSynchData(psmod->pvSynchData)
         {
         };
 

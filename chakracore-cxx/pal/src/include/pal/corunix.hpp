@@ -245,7 +245,6 @@ namespace CorUnix
         OBJECTCLEANUPROUTINE m_pCleanupRoutine;
         uint32_t m_dwImmutableDataSize;
         uint32_t m_dwProcessLocalDataSize;
-        uint32_t m_dwSharedDataSize;
         SynchronizationSupport m_eSynchronizationSupport;
         SignalingSemantics m_eSignalingSemantics;
         ThreadReleaseSemantics m_eThreadReleaseSemantics;
@@ -258,7 +257,6 @@ namespace CorUnix
             OBJECTCLEANUPROUTINE pCleanupRoutine,
             uint32_t dwImmutableDataSize,
             uint32_t dwProcessLocalDataSize,
-            uint32_t dwSharedDataSize,
             SynchronizationSupport eSynchronizationSupport,
             SignalingSemantics eSignalingSemantics,
             ThreadReleaseSemantics eThreadReleaseSemantics,
@@ -269,7 +267,6 @@ namespace CorUnix
             m_pCleanupRoutine(pCleanupRoutine),
             m_dwImmutableDataSize(dwImmutableDataSize),
             m_dwProcessLocalDataSize(dwProcessLocalDataSize),
-            m_dwSharedDataSize(dwSharedDataSize),
             m_eSynchronizationSupport(eSynchronizationSupport),
             m_eSignalingSemantics(eSignalingSemantics),
             m_eThreadReleaseSemantics(eThreadReleaseSemantics),
@@ -317,14 +314,6 @@ namespace CorUnix
             )
         {
             return m_dwProcessLocalDataSize;
-        };
-
-        uint32_t
-        GetSharedDataSize(
-            void
-            )
-        {
-            return m_dwSharedDataSize;
         };
 
         SynchronizationSupport
@@ -566,15 +555,9 @@ namespace CorUnix
     };
 
     //
-    // The following two enums are part of the local object
+    // The following enum is part of the local object
     // optimizations
     //
-
-    enum ObjectDomain
-    {
-        ProcessLocalObject,
-        SharedObject
-    };
 
     enum WaitDomain
     {
@@ -661,12 +644,6 @@ namespace CorUnix
         // manager. The promotion / process synch lock must be held
         // before calling this routine.
         //
-
-        virtual
-        ObjectDomain
-        GetObjectDomain(
-            void
-            ) = 0;
 
         //
         // This routine is only for use by the synchronization manager
@@ -917,18 +894,13 @@ namespace CorUnix
 
         virtual
         PAL_ERROR
-        AllocateObjectSynchData(
-            CObjectType *pObjectType,
-            ObjectDomain eObjectDomain,
-            void **ppvSynchData                 // OUT
-            ) = 0;
+        AllocateObjectSynchData(CObjectType *pObjectType,
+                                                  void **ppvSynchData // OUT
+                                                  ) = 0;
 
         virtual
         void
-        FreeObjectSynchData(
-            ObjectDomain eObjectDomain,
-            void *pvSynchData
-        ) = 0;
+        FreeObjectSynchData(void *pvSynchData) = 0;
 
         //
         // The next two routines provide access to the process-wide
@@ -954,23 +926,19 @@ namespace CorUnix
 
         virtual
         PAL_ERROR
-        CreateSynchStateController(
-            CPalThread *pThread,                // IN, OPTIONAL
-            CObjectType *pObjectType,
-            void *pvSynchData,
-            ObjectDomain eObjectDomain,
-            ISynchStateController **ppStateController       // OUT
-            ) = 0;
+        CreateSynchStateController(CPalThread *pThread,
+                                                     // IN, OPTIONAL
+                                                     CObjectType *pObjectType, void *pvSynchData,
+                                                     ISynchStateController **ppStateController // OUT
+                                                     ) = 0;
 
         virtual
         PAL_ERROR
-        CreateSynchWaitController(
-            CPalThread *pThread,                // IN, OPTIONAL
-            CObjectType *pObjectType,
-            void *pvSynchData,
-            ObjectDomain eObjectDomain,
-            ISynchWaitController **ppWaitController       // OUT
-            ) = 0;
+        CreateSynchWaitController(CPalThread *pThread,
+                                                    // IN, OPTIONAL
+                                                    CObjectType *pObjectType, void *pvSynchData,
+                                                    ISynchWaitController **ppWaitController // OUT
+                                                    ) = 0;
     };
 
     extern IPalSynchronizationManager *g_pSynchronizationManager;

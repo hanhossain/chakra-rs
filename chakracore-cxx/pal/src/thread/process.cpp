@@ -123,7 +123,6 @@ CObjectType CorUnix::otProcess __attribute__((init_priority(200))) (
                 NULL,   // No cleanup routine
                 0,      // No immutable data
                 sizeof(CProcProcessLocalData),
-                0,
                 CObjectType::WaitableObject,
                 CObjectType::SingleTransitionObject,
                 CObjectType::ThreadReleaseHasNoSideEffects,

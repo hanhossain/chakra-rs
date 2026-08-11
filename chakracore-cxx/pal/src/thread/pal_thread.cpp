@@ -117,7 +117,6 @@ CObjectType CorUnix::otThread __attribute__((init_priority(200))) (
                 ThreadCleanupRoutine,
                 0, //sizeof(CThreadImmutableData),
                 sizeof(CThreadProcessLocalData),
-                0, //sizeof(CThreadSharedData),
                 CObjectType::WaitableObject,
                 CObjectType::SingleTransitionObject,
                 CObjectType::ThreadReleaseHasNoSideEffects,

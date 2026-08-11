@@ -76,7 +76,6 @@ CObjectType CorUnix::otFileMapping __attribute__((init_priority(200)))(
                 FileMappingCleanupRoutine,
                 sizeof(CFileMappingImmutableData),
                 sizeof(CFileMappingProcessLocalData),
-                0,
                 CObjectType::UnwaitableObject,
                 CObjectType::SignalingNotApplicable,
                 CObjectType::ThreadReleaseNotApplicable,

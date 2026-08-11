@@ -173,9 +173,7 @@ CSharedMemoryObjectManager::RegisterObject(
 {
     PAL_ERROR palError = NO_ERROR;
     CSharedMemoryObject *pshmobj = static_cast<CSharedMemoryObject*>(pobjToRegister);
-    CObjectType *potObj;
     BOOL fInherit = FALSE;
-    BOOL fShared = FALSE;
 
     assert(NULL != pthr);
     assert(NULL != pobjToRegister);
@@ -183,72 +181,13 @@ CSharedMemoryObjectManager::RegisterObject(
     assert(NULL != pHandle);
     assert(NULL != ppobjRegistered);
 
-    potObj = pobjToRegister->GetObjectType();
-    fShared = (SharedObject == pshmobj->GetObjectDomain());
-    
     InternalEnterCriticalSection(pthr, &m_csListLock);
-
-    if (fShared)
-    {
-        //
-        // We only need to acquire the shared memory lock if this
-        // object is actually shared.
-        //
-        
-        SHMLock();
-    }
 
     //
     // Place the object on the anonymous object list
     //
 
     InsertTailList(&m_leAnonymousObjects, pshmobj->GetObjectListLink());
-
-    //
-    // Hoist the object's immutable data (if any) into shared memory if
-    // the object is shared
-    //
-
-    if (fShared && 0 != potObj->GetImmutableDataSize())
-    {
-        void *pvImmutableData;
-        SHMObjData *psmod;
-
-        palError = pobjToRegister->GetImmutableData(&pvImmutableData);
-        if (NO_ERROR != palError)
-        {
-            chakra::Logger::error("Failure to obtain object immutable data\n");
-            goto RegisterObjectExit;
-        }
-
-        psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, pshmobj->GetShmObjData());
-        if (NULL != psmod)
-        {
-            void *pvSharedImmutableData =
-                SHMPTR_TO_TYPED_PTR(void, psmod->shmObjImmutableData);
-            
-            if (NULL != pvSharedImmutableData)
-            {
-                memcpy(
-                    pvSharedImmutableData,
-                    pvImmutableData,
-                    potObj->GetImmutableDataSize()
-                    );
-            }
-            else
-            {
-                chakra::Logger::error("Failure to map psmod->shmObjImmutableData\n");
-                palError = ERROR_INTERNAL_ERROR;
-                goto RegisterObjectExit;
-            }
-        }
-        else
-        {
-            chakra::Logger::error("Failure to map pshmobj->GetShmObjData()\n");
-            palError = ERROR_INTERNAL_ERROR;
-            goto RegisterObjectExit;
-        }
-    }
 
     //
     // Obtain a handle for the new object
@@ -273,13 +212,6 @@ CSharedMemoryObjectManager::RegisterObject(
         pobjToRegister = NULL;
     }
         
-RegisterObjectExit:
-
-    if (fShared)
-    {
-        SHMRelease();
-    }
-    
     InternalLeaveCriticalSection(pthr, &m_csListLock);
 
     if (NULL != pobjToRegister)

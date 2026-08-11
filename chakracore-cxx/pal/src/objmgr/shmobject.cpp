@@ -46,7 +46,6 @@ PAL_ERROR
 CSharedMemoryObject::Initialize(CPalThread *pthr)
 {
     PAL_ERROR palError = NO_ERROR;
-    SHMObjData *psmod = NULL;
 
     assert(NULL != pthr);
 
@@ -55,58 +54,6 @@ CSharedMemoryObject::Initialize(CPalThread *pthr)
     {
         goto InitializeExit;
     }
-
-    if (0 != m_pot->GetSharedDataSize())
-    {       
-        if (SharedObject == m_ObjectDomain)
-        {
-            //
-            // Map the shared data into our address space
-            //
-            if (NULL == psmod)
-            {
-                chakra::Logger::error("psmod should not be NULL");
-                palError = ERROR_INTERNAL_ERROR;
-                goto InitializeExit;
-            } 
-
-            m_pvSharedData = SHMPTR_TO_TYPED_PTR(void, psmod->shmObjSharedData);
-            if (NULL == m_pvSharedData)
-            {
-                chakra::Logger::error("Unable to map shared data area\n");
-                palError = ERROR_INTERNAL_ERROR;
-                goto InitializeExit;
-            }
-        }
-        else 
-        {
-            //
-            // Initialize the local shared data lock.
-            //
-
-            palError = m_sdlSharedData.Initialize();
-            if (NO_ERROR != palError)
-            {
-                ERROR("Failure initializing m_sdlSharedData\n");
-                goto InitializeExit;
-            } 
-        
-            //
-            // Allocate local memory to hold the shared data
-            //
-
-            m_pvSharedData = malloc(m_pot->GetSharedDataSize());
-            if (NULL == m_pvSharedData)
-            {
-                ERROR("Failure allocating m_pvSharedData (local copy)\n");
-                palError = ERROR_OUTOFMEMORY;
-                goto InitializeExit;
-            }
-        }
-
-        memset((m_pvSharedData),0,(m_pot->GetSharedDataSize()));
-    }
-
 
 InitializeExit:
 
@@ -144,11 +91,6 @@ CSharedMemoryObject::FreeSharedDataAreas(
     if (SHMNULL != psmod->shmObjImmutableData)
     {
         SHMfree(psmod->shmObjImmutableData);
-    }
-
-    if (SHMNULL != psmod->shmObjSharedData)
-    {
-        SHMfree(psmod->shmObjSharedData);
     }
 
     if (SHMNULL != psmod->shmObjName)
@@ -242,101 +184,22 @@ Return value:
 bool
 CSharedMemoryObject::DereferenceSharedData()
 {
-    int32_t fSharedDataAlreadDereferenced;
 
-    fSharedDataAlreadDereferenced = InterlockedExchange(
-        &m_fSharedDataDereferenced,
-        TRUE
-        );
+    int32_t fSharedDataAlreadDereferenced = InterlockedExchange(&m_fSharedDataDereferenced, TRUE);
 
     if (!fSharedDataAlreadDereferenced)
     {   
-        if (SHMNULL != m_shmod)
-        {
-            SHMObjData *psmod;
-            
-            SHMLock();
+        //
+        // If the object is local the shared data needs to be
+        // deleted by definition
+        //
 
-            psmod = SHMPTR_TO_TYPED_PTR(SHMObjData, m_shmod);
-            assert(NULL != psmod);
-            
-            psmod->lProcessRefCount -= 1;
-            if (0 == psmod->lProcessRefCount)
-            {
-                //
-                // No other process is using this object, so remove
-                // it from the shared memory named object list (if it
-                // had been added to it). The final cleanup will happen
-                // in the object's destructor
-                //
-
-                m_fDeleteSharedData = TRUE;
-
-                if (psmod->fAddedToList)
-                {
-                    //
-                    // This object better have a name...
-                    //
-
-                    assert(0 != psmod->dwNameLength);
-
-                    if (SHMNULL != psmod->shmPrevObj)
-                    {
-                        SHMObjData *psmodPrevious = SHMPTR_TO_TYPED_PTR(SHMObjData, psmod->shmPrevObj);
-                        assert(NULL != psmodPrevious);
-
-                        psmodPrevious->shmNextObj = psmod->shmNextObj;
-                    }
-                    else
-                    {
-                        //
-                        // This object is the head of the shared memory named object
-                        // list -- reset that pointer now
-                        //
-
-                        if (!SHMSetInfo(SIID_NAMED_OBJECTS, psmod->shmNextObj))
-                        {
-                            chakra::Logger::error("Failed to set shared named object list head");
-                        }
-                    }
-
-                    if (SHMNULL != psmod->shmNextObj)
-                    {
-                        SHMObjData *psmodNext = SHMPTR_TO_TYPED_PTR(SHMObjData, psmod->shmNextObj);
-                        assert(NULL != psmodNext);
-                        
-                        psmodNext->shmPrevObj = psmod->shmPrevObj;
-                    }
-                }
-#if _DEBUG                
-                else
-                {
-                    assert(SHMNULL == psmod->shmPrevObj);
-                    assert(SHMNULL == psmod->shmNextObj);
-                }
-#endif                
-            }
-
-            SHMRelease();
-        }
-        else if (ProcessLocalObject == m_ObjectDomain)
-        {
-            //
-            // If the object is local the shared data needs to be
-            // deleted by definition
-            //
-            
-            m_fDeleteSharedData = TRUE;
-        }
+        m_fDeleteSharedData = TRUE;
     }
     else
     {
         chakra::Logger::error("Multiple calls to DereferenceSharedData\n");
     }
-
-    LOGEXIT("CSharedMemoryObject::DereferenceSharedData returns %d\n",
-        m_fDeleteSharedData
-        );
 
     return m_fDeleteSharedData;
 }
@@ -354,15 +217,6 @@ CSharedMemoryObject::~CSharedMemoryObject()
     {
         chakra::Logger::error("DereferenceSharedData not called before object destructor -- delete called directly?\n");
         DereferenceSharedData();
-    }
-
-    if (NULL != m_pvSharedData && ProcessLocalObject == m_ObjectDomain)
-    {
-        free(m_pvSharedData);
-    }
-    else if (SHMNULL != m_shmod && m_fDeleteSharedData)
-    {
-        FreeSharedDataAreas(m_shmod);        
     }
 
     LOGEXIT("CSharedMemoryObject::~CSharedMemoryObject\n");
@@ -411,25 +265,6 @@ CSharedMemoryObject::GetSynchStateController(
 
     chakra::Logger::error("Attempt to obtain a synch state controller on a non-waitable object\n");
     return ERROR_INVALID_HANDLE;
-}
-
-/*++
-Function:
-  CSharedMemoryObject::GetObjectDomain
-
-  Returns the object's domain (local or shared)
-
---*/
-
-ObjectDomain
-CSharedMemoryObject::GetObjectDomain(
-    void
-    )
-{
-    TRACE("CSharedMemoryObject::GetObjectDomain(this = %p)\n", this);
-    LOGEXIT("CSharedMemoryObject::GetObjectDomain returns %d\n", m_ObjectDomain);
-    
-    return m_ObjectDomain;
 }
 
 /*++
@@ -489,19 +324,7 @@ CSharedMemoryWaitableObject::Initialize(CPalThread *pthr)
 
     assert(CObjectType::WaitableObject == m_pot->GetSynchronizationSupport());
 
-    palError = g_pSynchronizationManager->AllocateObjectSynchData(
-        m_pot,
-        m_ObjectDomain,
-        &m_pvSynchData
-        );
-
-    if (NO_ERROR == palError && SharedObject == m_ObjectDomain)
-    {        
-        SHMObjData *pshmod = SHMPTR_TO_TYPED_PTR(SHMObjData, m_shmod);
-        assert(NULL != pshmod);
-
-        pshmod->pvSynchData = m_pvSynchData;
-    }
+    palError = g_pSynchronizationManager->AllocateObjectSynchData(m_pot, &m_pvSynchData);
 
 InitializeExit:
 
@@ -539,10 +362,7 @@ CSharedMemoryWaitableObject::~CSharedMemoryWaitableObject()
     
     if (NULL != m_pvSynchData && m_fDeleteSharedData)
     {
-        g_pSynchronizationManager->FreeObjectSynchData(
-            m_ObjectDomain,
-            m_pvSynchData
-        );
+        g_pSynchronizationManager->FreeObjectSynchData(m_pvSynchData);
     }
 
     LOGEXIT("CSharedMemoryWaitableObject::~CSharedMemoryWaitableObject\n");
@@ -578,13 +398,7 @@ CSharedMemoryWaitableObject::GetSynchStateController(
 
     g_pSynchronizationManager->AcquireProcessLock(pthr);
     
-    palError = g_pSynchronizationManager->CreateSynchStateController(
-        pthr,
-        m_pot,
-        m_pvSynchData,
-        m_ObjectDomain,
-        ppStateController
-        );
+    palError = g_pSynchronizationManager->CreateSynchStateController(pthr, m_pot, m_pvSynchData, ppStateController);
 
     g_pSynchronizationManager->ReleaseProcessLock(pthr);
 

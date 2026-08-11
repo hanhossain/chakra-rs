@@ -154,7 +154,6 @@ namespace CorUnix
         WTLNodeGenrPtr  m_ptrWTLTail;
         uint32_t m_ulcWaitingThreads;
         SharedID m_shridThis;
-        ObjectDomain m_odObjectDomain; 
         PalObjectTypeId m_otiObjectTypeId;
         int32_t  m_lRefCount;
         int32_t  m_lSignalCount;
@@ -213,16 +212,6 @@ namespace CorUnix
         void WaiterEnqueue(WaitingThreadsListNode * pwtlnNewNode);
         void SharedWaiterEnqueue(SharedID shridNewNode);
  
-        // Object Domain accessor methods
-        ObjectDomain GetObjectDomain(void) 
-        { 
-            return m_odObjectDomain; 
-        }        
-        void SetObjectDomain(ObjectDomain odObjectDomain) 
-        { 
-            m_odObjectDomain = odObjectDomain; 
-        }
-
         // Object Type accessor methods
         CObjectType * GetObjectType(void) 
         { 
@@ -418,18 +407,12 @@ namespace CorUnix
     protected:
         CPalThread * m_pthrOwner;
         ControllerType m_ctCtrlrType;
-        ObjectDomain m_odObjectDomain;
         CObjectType * m_potObjectType;
         CSynchData * m_psdSynchData;
         WaitDomain m_wdWaitDomain;
              
-        PAL_ERROR Init(
-            CPalThread * pthrCurrent,
-            ControllerType ctCtrlrType,
-            ObjectDomain odObjectDomain,
-            CObjectType *potObjectType,
-            CSynchData * psdSynchData,
-            WaitDomain wdWaitDomain);
+        PAL_ERROR Init(CPalThread *pthrCurrent, ControllerType ctCtrlrType, CObjectType *potObjectType,
+                       CSynchData *psdSynchData, WaitDomain wdWaitDomain);
         
         void Release(void);
 
@@ -826,28 +809,15 @@ namespace CorUnix
             uint32_t dwObjectCount,
             ISynchStateController *rgControllers[]) override;
 
-        PAL_ERROR AllocateObjectSynchData(
-            CObjectType *potObjectType,
-            ObjectDomain odObjectDomain,
-            void **ppvSynchData) override;
+        PAL_ERROR AllocateObjectSynchData(CObjectType *potObjectType, void **ppvSynchData) override;
 
-        void FreeObjectSynchData(
-            ObjectDomain odObjectDomain,
-            void *pvSynchData) override;
+        void FreeObjectSynchData(void *pvSynchData) override;
 
-        PAL_ERROR CreateSynchStateController(
-            CPalThread *pthrCurrent,
-            CObjectType *potObjectType,
-            void *pvSynchData,
-            ObjectDomain odObjectDomain,
-            ISynchStateController **ppStateController) override;
+        PAL_ERROR CreateSynchStateController(CPalThread *pthrCurrent, CObjectType *potObjectType, void *pvSynchData,
+                                             ISynchStateController **ppStateController) override;
 
-        PAL_ERROR CreateSynchWaitController(
-            CPalThread *pthrCurrent,
-            CObjectType *potObjectType,
-            void *pvSynchData,
-            ObjectDomain odObjectDomain,
-            ISynchWaitController **ppWaitController) override;
+        PAL_ERROR CreateSynchWaitController(CPalThread *pthrCurrent, CObjectType *potObjectType, void *pvSynchData,
+                                            ISynchWaitController **ppWaitController) override;
 
         PAL_ERROR QueueUserAPC(
             CPalThread * pthrCurrent,

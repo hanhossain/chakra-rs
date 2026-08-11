@@ -561,13 +561,6 @@ namespace CorUnix
             TRACE("Abandoning object with SynchData at %p\n",
                   psdSynchData);
 
-            if (!fSharedSynchLock &&
-                (SharedObject == psdSynchData->GetObjectDomain()))
-            {
-                AcquireSharedSynchLock(pthrCurrent);
-                fSharedSynchLock = true;
-            }
-
             // Reset ownership data
             psdSynchData->ResetOwnership();
 
@@ -745,10 +738,6 @@ namespace CorUnix
 
         for (uIdx=0; uIdx<dwObjectCount; uIdx++)
         {
-            if (SharedObject == rgObjects[uIdx]->GetObjectDomain())
-            {
-                ++uSharedObjectCount;
-            }
             if (uSharedObjectCount > 0 && uSharedObjectCount <= uIdx)
             {
                 wdWaitDomain = MixedWait;
@@ -763,8 +752,6 @@ namespace CorUnix
         for (uIdx=0;uIdx<dwObjectCount;uIdx++)
         {
             void * pvSData;
-            CSynchData * psdSynchData;
-            ObjectDomain odObjectDomain = rgObjects[uIdx]->GetObjectDomain();
 
             palErr = rgObjects[uIdx]->GetObjectSynchData(&pvSData);
             if (NO_ERROR != palErr)
@@ -772,9 +759,7 @@ namespace CorUnix
                 break;
             }
 
-            psdSynchData = (SharedObject == odObjectDomain) ? SharedIDToTypePointer(
-                CSynchData, reinterpret_cast<SharedID>(pvSData)) :
-                static_cast<CSynchData *>(pvSData);
+            CSynchData *psdSynchData = static_cast<CSynchData *>(pvSData);
 
             VALIDATEOBJECT(psdSynchData);
 
@@ -783,21 +768,11 @@ namespace CorUnix
 
             if (CSynchControllerBase::WaitController == ctCtrlrType)
             {
-                Ctrlrs.pWaitCtrlrs[uIdx]->Init(pthrCurrent,
-                                            ctCtrlrType,
-                                            odObjectDomain,
-                                            potObjectType,
-                                            psdSynchData,
-                                            wdWaitDomain);
+                Ctrlrs.pWaitCtrlrs[uIdx]->Init(pthrCurrent, ctCtrlrType, potObjectType, psdSynchData, wdWaitDomain);
             }
             else
             {
-                Ctrlrs.pStateCtrlrs[uIdx]->Init(pthrCurrent,
-                                             ctCtrlrType,
-                                             odObjectDomain,
-                                             potObjectType,
-                                             psdSynchData,
-                                             wdWaitDomain);
+                Ctrlrs.pStateCtrlrs[uIdx]->Init(pthrCurrent, ctCtrlrType, potObjectType, psdSynchData, wdWaitDomain);
             }
 
             if (CSynchControllerBase::WaitController == ctCtrlrType &&
@@ -913,40 +888,12 @@ namespace CorUnix
 
     Returns a new SynchData for an object of given type and domain
     --*/
-    PAL_ERROR CPalSynchronizationManager::AllocateObjectSynchData(
-        CObjectType *potObjectType,
-        ObjectDomain odObjectDomain,
-        void **ppvSynchData)
+    PAL_ERROR CPalSynchronizationManager::AllocateObjectSynchData(CObjectType *potObjectType, void **ppvSynchData)
     {
         PAL_ERROR palErr = NO_ERROR;
         CSynchData * psdSynchData = NULL;
         CPalThread * pthrCurrent = InternalGetCurrentThread();
 
-        if (SharedObject == odObjectDomain)
-        {
-            SharedID shridSynchData = m_cacheSHRSynchData.Get(pthrCurrent);
-            if (NULLSharedID == shridSynchData)
-            {
-                ERROR("Unable to allocate shared memory\n");
-                palErr = ERROR_NOT_ENOUGH_MEMORY;
-                goto AOSD_exit;
-            }
-            psdSynchData = SharedIDToTypePointer(CSynchData, shridSynchData);
-
-            VALIDATEOBJECT(psdSynchData);
-
-            _ASSERT_MSG(NULL != psdSynchData, "Bad shared memory pointer\n");
-
-            // Initialize waiting list pointers
-            psdSynchData->SetWTLHeadShrPtr(NULLSharedID);
-            psdSynchData->SetWTLTailShrPtr(NULLSharedID);
-
-            // Store shared pointer to this object
-            psdSynchData->SetSharedThis(shridSynchData);
-
-            *ppvSynchData = reinterpret_cast<void *>(shridSynchData);
-        }
-        else
         {
             psdSynchData = m_cacheSynchData.Get(pthrCurrent);
             if (NULL == psdSynchData)
@@ -966,8 +913,7 @@ namespace CorUnix
             *ppvSynchData = static_cast<void *>(psdSynchData);
         }
 
-        // Initialize object domain and object type;
-        psdSynchData->SetObjectDomain(odObjectDomain);
+        // Initialize object type;
         psdSynchData->SetObjectType(potObjectType);
 
     AOSD_exit:
@@ -984,32 +930,12 @@ namespace CorUnix
     be used from withing the Synchronization Manager itself (e.g. the
     Worker Thread)
     --*/
-    void CPalSynchronizationManager::FreeObjectSynchData(
-        ObjectDomain odObjectDomain,
-        void *pvSynchData)
+    void CPalSynchronizationManager::FreeObjectSynchData(void *pvSynchData)
     {
-        CSynchData * psdSynchData;
-        CPalThread * pthrCurrent = InternalGetCurrentThread();
-
-        if (odObjectDomain == SharedObject)
-        {
-            psdSynchData = SharedIDToTypePointer(CSynchData,
-                reinterpret_cast<SharedID>(pvSynchData));
-            if (NULL == psdSynchData)
-            {
-                chakra::Logger::error("Bad shared memory pointer\n");
-                goto FOSD_exit;
-            }
-        }
-        else
-        {
-            psdSynchData = static_cast<CSynchData *>(pvSynchData);
-        }
+        CPalThread *pthrCurrent = InternalGetCurrentThread();
+        CSynchData *psdSynchData = static_cast<CSynchData *>(pvSynchData);
 
         psdSynchData->Release(pthrCurrent);
-
-    FOSD_exit:
-        return;
     }
 
     /*++
@@ -1018,21 +944,15 @@ namespace CorUnix
 
     Creates a state controller for the given object
     --*/
-    PAL_ERROR CPalSynchronizationManager::CreateSynchStateController(
-        CPalThread *pthrCurrent,
-        CObjectType *potObjectType,
-        void *pvSynchData,
-        ObjectDomain odObjectDomain,
-        ISynchStateController **ppStateController)
+    PAL_ERROR CPalSynchronizationManager::CreateSynchStateController(CPalThread *pthrCurrent,
+                                                                     CObjectType *potObjectType, void *pvSynchData,
+                                                                     ISynchStateController **ppStateController)
     {
         PAL_ERROR palErr = NO_ERROR;
         CSynchStateController * pCtrlr =  NULL;
-        WaitDomain wdWaitDomain = (SharedObject == odObjectDomain) ? SharedWait : LocalWait;
-        CSynchData * psdSynchData;
+        WaitDomain wdWaitDomain = LocalWait;
 
-        psdSynchData = (SharedObject == odObjectDomain) ? SharedIDToTypePointer(
-            CSynchData, reinterpret_cast<SharedID>(pvSynchData)) :
-            static_cast<CSynchData *>(pvSynchData);
+        CSynchData *psdSynchData = static_cast<CSynchData *>(pvSynchData);
 
         VALIDATEOBJECT(psdSynchData);
 
@@ -1043,12 +963,7 @@ namespace CorUnix
             goto CSSC_exit;
         }
 
-        pCtrlr->Init(pthrCurrent,
-                     CSynchControllerBase::StateController,
-                     odObjectDomain,
-                     potObjectType,
-                     psdSynchData,
-                     wdWaitDomain);
+        pCtrlr->Init(pthrCurrent, CSynchControllerBase::StateController, potObjectType, psdSynchData, wdWaitDomain);
 
         // Succeeded
         *ppStateController = static_cast<ISynchStateController*>(pCtrlr);
@@ -1067,21 +982,15 @@ namespace CorUnix
 
     Creates a wait controller for the given object
     --*/
-    PAL_ERROR CPalSynchronizationManager::CreateSynchWaitController(
-        CPalThread *pthrCurrent,
-        CObjectType *potObjectType,
-        void *pvSynchData,
-        ObjectDomain odObjectDomain,
-        ISynchWaitController **ppWaitController)
+    PAL_ERROR CPalSynchronizationManager::CreateSynchWaitController(CPalThread *pthrCurrent, CObjectType *potObjectType,
+                                                                    void *pvSynchData,
+                                                                    ISynchWaitController **ppWaitController)
     {
         PAL_ERROR palErr = NO_ERROR;
         CSynchWaitController * pCtrlr =  NULL;
-        WaitDomain wdWaitDomain = (SharedObject == odObjectDomain) ? SharedWait : LocalWait;
-        CSynchData * psdSynchData;
+        WaitDomain wdWaitDomain = LocalWait;
 
-        psdSynchData = (SharedObject == odObjectDomain) ? SharedIDToTypePointer(
-            CSynchData, reinterpret_cast<SharedID>(pvSynchData)) :
-            static_cast<CSynchData *>(pvSynchData);
+        CSynchData *psdSynchData = static_cast<CSynchData *>(pvSynchData);
 
         VALIDATEOBJECT(psdSynchData);
 
@@ -1092,12 +1001,7 @@ namespace CorUnix
             goto CSWC_exit;
         }
 
-        pCtrlr->Init(pthrCurrent,
-                     CSynchControllerBase::WaitController,
-                     odObjectDomain,
-                     potObjectType,
-                     psdSynchData,
-                     wdWaitDomain);
+        pCtrlr->Init(pthrCurrent, CSynchControllerBase::WaitController, potObjectType, psdSynchData, wdWaitDomain);
 
         // Succeeded
         *ppWaitController = static_cast<ISynchWaitController*>(pCtrlr);
@@ -2559,25 +2463,16 @@ namespace CorUnix
     void CPalSynchronizationManager::UnmarkTWListForDelegatedObjectSignalingInProgress(
         CSynchData * pTgtObjectSynchData)
     {
-        bool fSharedObject = (SharedObject == pTgtObjectSynchData->GetObjectDomain());
         WaitingThreadsListNode * pwtlnNode;
 
         VALIDATEOBJECT(pTgtObjectSynchData);
 
-        pwtlnNode =  fSharedObject ?
-            SharedIDToTypePointer(WaitingThreadsListNode,
-                pTgtObjectSynchData->GetWTLHeadShmPtr()) :
-                pTgtObjectSynchData->GetWTLHeadPtr();
+        pwtlnNode = pTgtObjectSynchData->GetWTLHeadPtr();
         while (pwtlnNode)
         {
             VALIDATEOBJECT(pwtlnNode);
-
             pwtlnNode->dwFlags &= ~WTLN_FLAG_DELEGATED_OBJECT_SIGNALING_IN_PROGRESS;
-
-            pwtlnNode = fSharedObject ?
-                SharedIDToTypePointer(WaitingThreadsListNode,
-                    pwtlnNode->ptrNext.shrid) :
-                    pwtlnNode->ptrNext.ptr;
+            pwtlnNode = pwtlnNode->ptrNext.ptr;
         }
     }
 
