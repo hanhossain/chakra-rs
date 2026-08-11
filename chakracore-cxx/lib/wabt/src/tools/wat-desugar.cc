@@ -20,8 +20,6 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "config.h"
-
 #include "src/apply-names.h"
 #include "src/common.h"
 #include "src/error-formatter.h"

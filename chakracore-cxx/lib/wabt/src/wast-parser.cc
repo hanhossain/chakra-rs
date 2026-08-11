@@ -2277,7 +2277,7 @@ Result WastParser::ParseModuleCommand(Script* script, CommandPtr* out_command) {
         if (error.loc.offset == kInvalidOffset) {
           Error(bsm->loc, "error in binary module: %s", error.message.c_str());
         } else {
-          Error(bsm->loc, "error in binary module: @0x%08" PRIzx ": %s",
+          Error(bsm->loc, "error in binary module: @0x%08" "zx" ": %s",
                 error.loc.offset, error.message.c_str());
         }
       }

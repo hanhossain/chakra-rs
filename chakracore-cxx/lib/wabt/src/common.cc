@@ -28,7 +28,7 @@ Reloc::Reloc(RelocType type, Offset offset, Index index, int32_t addend)
     : type(type), offset(offset), index(index), addend(addend) {}
 
 const char* g_kind_name[] = {"func", "table", "memory", "global", "except"};
-WABT_STATIC_ASSERT(WABT_ARRAY_SIZE(g_kind_name) == kExternalKindCount);
+static_assert(std::size(g_kind_name) == kExternalKindCount);
 
 const char* g_reloc_type_name[] = {
     "R_WEBASSEMBLY_FUNCTION_INDEX_LEB",  "R_WEBASSEMBLY_TABLE_INDEX_SLEB",
@@ -37,14 +37,14 @@ const char* g_reloc_type_name[] = {
     "R_WEBASSEMBLY_TYPE_INDEX_LEB",      "R_WEBASSEMBLY_GLOBAL_INDEX_LEB",
     "R_WEBASSEMBLY_FUNCTION_OFFSET_I32", "R_WEBASSEMBLY_SECTION_OFFSET_I32",
 };
-WABT_STATIC_ASSERT(WABT_ARRAY_SIZE(g_reloc_type_name) == kRelocTypeCount);
+static_assert(std::size(g_reloc_type_name) == kRelocTypeCount);
 
 Result ReadFile(string_view filename, std::vector<uint8_t>* out_data) {
   FILE* infile = fopen(filename.to_string().c_str(), "rb");
   if (!infile) {
     const char format[] = "unable to read file %s";
     char msg[PATH_MAX + sizeof(format)];
-    wabt_snprintf(msg, sizeof(msg), format, filename.to_string().c_str());
+    snprintf(msg, sizeof(msg), format, filename.to_string().c_str());
     perror(msg);
     return Result::Error;
   }

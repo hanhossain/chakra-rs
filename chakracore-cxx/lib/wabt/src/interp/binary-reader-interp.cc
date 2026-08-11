@@ -347,7 +347,7 @@ Label* BinaryReaderInterp::TopLabel() {
   return GetLabel(0);
 }
 
-void WABT_PRINTF_FORMAT(2, 3) BinaryReaderInterp::PrintError(const char* format,
+void __attribute__((format(printf, 2, 3))) BinaryReaderInterp::PrintError(const char* format,
                                                              ...) {
   WABT_SNPRINTF_ALLOCA(buffer, length, format);
   errors_->emplace_back(ErrorLevel::Error, Location(kInvalidOffset), buffer);
@@ -983,7 +983,7 @@ wabt::Result BinaryReaderInterp::OnElemSegmentFunctionIndexCount(Index index,
   // Check both cases, as table_offset_ + count may overflow.
   if (table_offset_ > table->func_indexes.size() ||
       table_offset_ + count > table->func_indexes.size()) {
-    PrintError("elem segment is out of bounds: [%u, %u) >= max value %" PRIzd,
+    PrintError("elem segment is out of bounds: [%u, %u) >= max value %" "zd",
                table_offset_, table_offset_ + count,
                table->func_indexes.size());
     return wabt::Result::Error;
@@ -1017,7 +1017,7 @@ wabt::Result BinaryReaderInterp::OnDataSegmentData(Index index,
       static_cast<uint64_t>(address) + static_cast<uint64_t>(size);
   if (end_address > memory->data.size()) {
     PrintError("data segment is out of bounds: [%" PRIaddress ", %" PRIu64
-               ") >= max value %" PRIzd,
+               ") >= max value %" "zd",
                address, end_address, memory->data.size());
     return wabt::Result::Error;
   }

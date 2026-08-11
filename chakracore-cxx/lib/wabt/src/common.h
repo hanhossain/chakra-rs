@@ -28,9 +28,8 @@
 #include <memory>
 #include <string>
 #include <type_traits>
+#include <utility>
 #include <vector>
-
-#include "config.h"
 
 #include "src/make-unique.h"
 #include "src/result.h"
@@ -64,11 +63,11 @@
   va_copy(args_copy, args);                                                \
   char fixed_buf[WABT_DEFAULT_SNPRINTF_ALLOCA_BUFSIZE];                    \
   char* buffer = fixed_buf;                                                \
-  size_t len = wabt_vsnprintf(fixed_buf, sizeof(fixed_buf), format, args); \
+  size_t len = vsnprintf(fixed_buf, sizeof(fixed_buf), format, args); \
   va_end(args);                                                            \
   if (len + 1 > sizeof(fixed_buf)) {                                       \
     buffer = static_cast<char*>(alloca(len + 1));                          \
-    len = wabt_vsnprintf(buffer, len + 1, format, args_copy);              \
+    len = vsnprintf(buffer, len + 1, format, args_copy);              \
   }                                                                        \
   va_end(args_copy)
 
@@ -98,7 +97,7 @@
 
 #define PRIindex "u"
 #define PRIaddress "u"
-#define PRIoffset PRIzx
+#define PRIoffset "zx"
 
 struct v128 {
   uint32_t v[4];
@@ -124,7 +123,7 @@ Dst Bitcast(Src&& value) {
 
 template <typename T>
 void ZeroMemory(T& v) {
-  WABT_STATIC_ASSERT(std::is_standard_layout_v<T>);
+  static_assert(std::is_standard_layout_v<T>);
   memset(&v, 0, sizeof(v));
 }
 
@@ -140,16 +139,16 @@ void Destruct(T& placement) {
   placement.~T();
 }
 
-inline std::string WABT_PRINTF_FORMAT(1, 2)
+inline std::string __attribute__((format(printf, (1), (2))))
     StringPrintf(const char* format, ...) {
   va_list args;
   va_list args_copy;
   va_start(args, format);
   va_copy(args_copy, args);
-  size_t len = wabt_vsnprintf(nullptr, 0, format, args) + 1;  // For \0.
+  size_t len = vsnprintf(nullptr, 0, format, args) + 1;  // For \0.
   std::vector<char> buffer(len);
   va_end(args);
-  wabt_vsnprintf(buffer.data(), len, format, args_copy);
+  vsnprintf(buffer.data(), len, format, args_copy);
   va_end(args_copy);
   return std::string(buffer.data(), len - 1);
 }
@@ -307,7 +306,7 @@ void InitStdio();
 
 extern const char* g_kind_name[];
 
-static WABT_INLINE const char* GetKindName(ExternalKind kind) {
+static inline const char* GetKindName(ExternalKind kind) {
   assert(static_cast<int>(kind) < kExternalKindCount);
   return g_kind_name[static_cast<size_t>(kind)];
 }
@@ -316,14 +315,14 @@ static WABT_INLINE const char* GetKindName(ExternalKind kind) {
 
 extern const char* g_reloc_type_name[];
 
-static WABT_INLINE const char* GetRelocTypeName(RelocType reloc) {
+static inline const char* GetRelocTypeName(RelocType reloc) {
   assert(static_cast<int>(reloc) < kRelocTypeCount);
   return g_reloc_type_name[static_cast<size_t>(reloc)];
 }
 
 /* symbol */
 
-static WABT_INLINE const char* GetSymbolTypeName(SymbolType type) {
+static inline const char* GetSymbolTypeName(SymbolType type) {
   switch (type) {
     case SymbolType::Function:
       return "func";
@@ -334,12 +333,12 @@ static WABT_INLINE const char* GetSymbolTypeName(SymbolType type) {
     case SymbolType::Section:
       return "section";
   }
-  WABT_UNREACHABLE;
+  std::unreachable();
 }
 
 /* type */
 
-static WABT_INLINE const char* GetTypeName(Type type) {
+static inline const char* GetTypeName(Type type) {
   switch (type) {
     case Type::I32:
       return "i32";
@@ -364,19 +363,19 @@ static WABT_INLINE const char* GetTypeName(Type type) {
     default:
       return "<type index>";
   }
-  WABT_UNREACHABLE;
+  std::unreachable();
 }
 
-static WABT_INLINE bool IsTypeIndex(Type type) {
+static inline bool IsTypeIndex(Type type) {
   return static_cast<int32_t>(type) >= 0;
 }
 
-static WABT_INLINE Index GetTypeIndex(Type type) {
+static inline Index GetTypeIndex(Type type) {
   assert(IsTypeIndex(type));
   return static_cast<Index>(type);
 }
 
-static WABT_INLINE TypeVector GetInlineTypeVector(Type type) {
+static inline TypeVector GetInlineTypeVector(Type type) {
   assert(!IsTypeIndex(type));
   switch (type) {
     case Type::Void:
@@ -390,7 +389,7 @@ static WABT_INLINE TypeVector GetInlineTypeVector(Type type) {
       return TypeVector(&type, &type + 1);
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 

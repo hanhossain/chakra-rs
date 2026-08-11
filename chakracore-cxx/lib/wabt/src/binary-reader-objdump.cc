@@ -21,6 +21,7 @@
 #include <cinttypes>
 #include <cstdio>
 #include <cstring>
+#include <utility>
 #include <vector>
 
 #include "src/binary-reader-nop.h"
@@ -158,12 +159,12 @@ string_view BinaryReaderObjdumpBase::GetSymbolName(Index symbol_index) const {
     case SymbolType::Section:
       return GetSectionName(sym.index);
   }
-  WABT_UNREACHABLE;
+  std::unreachable();
 }
 
 void BinaryReaderObjdumpBase::PrintRelocation(const Reloc& reloc,
                                               Offset offset) const {
-  printf("           %06" PRIzx ": %-18s %" PRIindex, offset,
+  printf("           %06" "zx" ": %-18s %" PRIindex, offset,
          GetRelocTypeName(reloc.type), reloc.index);
   if (reloc.addend) {
     printf(" + %d", reloc.addend);
@@ -378,7 +379,7 @@ std::string BinaryReaderObjdumpDisassemble::BlockSigToString(Type type) const {
 Result BinaryReaderObjdumpDisassemble::OnOpcode(Opcode opcode) {
   if (options_->debug) {
     const char* opcode_name = opcode.GetName();
-    printf("on_opcode: %#" PRIzx ": %s\n", state->offset, opcode_name);
+    printf("on_opcode: %#" "zx" ": %s\n", state->offset, opcode_name);
   }
 
   if (last_opcode_end) {
@@ -386,7 +387,7 @@ Result BinaryReaderObjdumpDisassemble::OnOpcode(Opcode opcode) {
       Opcode missing_opcode = Opcode::FromCode(data_[last_opcode_end]);
       const char* opcode_name = missing_opcode.GetName();
       fprintf(stderr,
-              "warning: %#" PRIzx " missing opcode callback at %#" PRIzx
+              "warning: %#" "zx" " missing opcode callback at %#" "zx"
               " (%#02x=%s)\n",
               state->offset, last_opcode_end + 1, data_[last_opcode_end],
               opcode_name);
@@ -413,7 +414,7 @@ Result BinaryReaderObjdumpDisassemble::OnLocalDecl(Index decl_index,
   Offset offset = current_opcode_offset;
   size_t data_size = state->offset - offset;
 
-  printf(" %06" PRIzx ":", offset);
+  printf(" %06" "zx" ":", offset);
   for (size_t i = 0; i < data_size && i < IMMEDIATE_OCTET_COUNT;
        i++, offset++) {
     printf(" %02x", data_[offset]);
@@ -450,7 +451,7 @@ void BinaryReaderObjdumpDisassemble::LogOpcode(size_t data_size,
   while (offset < offset_end) {
     // Print bytes, but only display a maximum of IMMEDIATE_OCTET_COUNT on each
     // line.
-    printf(" %06" PRIzx ":", offset);
+    printf(" %06" "zx" ":", offset);
     size_t i;
     for (i = 0; offset < offset_end && i < IMMEDIATE_OCTET_COUNT;
          ++i, ++offset) {
@@ -608,9 +609,9 @@ Result BinaryReaderObjdumpDisassemble::BeginFunctionBody(Index index,
                                                          Offset size) {
   const char* name = GetFunctionName(index);
   if (name) {
-    printf("%06" PRIzx " <%s>:\n", state->offset, name);
+    printf("%06" "zx" " <%s>:\n", state->offset, name);
   } else {
-    printf("%06" PRIzx " func[%" PRIindex "]:\n", state->offset, index);
+    printf("%06" "zx" " func[%" PRIindex "]:\n", state->offset, index);
   }
 
   last_opcode_end = 0;
@@ -859,7 +860,7 @@ Result BinaryReaderObjdump::BeginSection(BinarySection section_code,
 
   switch (options_->mode) {
     case ObjdumpMode::Headers:
-      printf("%9s start=%#010" PRIzx " end=%#010" PRIzx " (size=%#010" PRIoffset
+      printf("%9s start=%#010" "zx" " end=%#010" "zx" " (size=%#010" PRIoffset
              ") ",
              name, state->offset, state->offset + size, size);
       break;
@@ -898,7 +899,7 @@ bool BinaryReaderObjdump::ShouldPrintDetails() {
   return print_details_;
 }
 
-void WABT_PRINTF_FORMAT(2, 3) BinaryReaderObjdump::PrintDetails(const char* fmt,
+void __attribute__((format(printf, 2, 3))) BinaryReaderObjdump::PrintDetails(const char* fmt,
                                                                 ...) {
   if (!ShouldPrintDetails()) {
     return;
@@ -981,7 +982,7 @@ Result BinaryReaderObjdump::OnFunctionBodyCount(Index count) {
 }
 
 Result BinaryReaderObjdump::BeginFunctionBody(Index index, Offset size) {
-  PrintDetails(" - func[%" PRIindex "] size=%" PRIzd "\n", index, size);
+  PrintDetails(" - func[%" PRIindex "] size=%" "zd" "\n", index, size);
   return Result::Ok;
 }
 

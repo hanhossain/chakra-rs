@@ -77,7 +77,7 @@ class Stream {
 
   void MoveData(size_t dst_offset, size_t src_offset, size_t size);
 
-  void WABT_PRINTF_FORMAT(2, 3) Writef(const char* format, ...);
+  void __attribute__((format(printf, 2, 3))) Writef(const char* format, ...);
 
   // Specified as uint32_t instead of uint8_t so we can check if the value
   // given is in range before wrapping.

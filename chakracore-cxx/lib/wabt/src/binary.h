@@ -73,7 +73,7 @@ enum class SegmentFlags : uint8_t {
 
 extern const char* g_section_name[];
 
-static WABT_INLINE const char* GetSectionName(BinarySection sec) {
+static inline const char* GetSectionName(BinarySection sec) {
   assert(static_cast<int>(sec) < kBinarySectionCount);
   return g_section_name[static_cast<size_t>(sec)];
 }

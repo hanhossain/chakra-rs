@@ -264,7 +264,7 @@ void WatWriter::WriteDataWithNextChar(const void* src, size_t size) {
   stream_->WriteData(src, size);
 }
 
-void WABT_PRINTF_FORMAT(2, 3) WatWriter::Writef(const char* format, ...) {
+void __attribute__((format(printf, 2, 3))) WatWriter::Writef(const char* format, ...) {
   WABT_SNPRINTF_ALLOCA(buffer, length, format);
   /* default to following space */
   WriteDataWithNextChar(buffer, length);

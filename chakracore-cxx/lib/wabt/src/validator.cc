@@ -21,8 +21,6 @@
 #include <cstdarg>
 #include <cstdio>
 
-#include "config.h"
-
 #include "src/binary-reader.h"
 #include "src/cast.h"
 #include "src/expr-visitor.h"
@@ -115,7 +113,7 @@ class Validator : public ExprVisitor::Delegate {
     };
   };
 
-  void WABT_PRINTF_FORMAT(3, 4)
+  void __attribute__((format(printf, (3), (4))))
       PrintError(const Location* loc, const char* fmt, ...);
   void OnTypecheckerError(const char* msg);
   Result CheckVar(Index max_index,
@@ -436,7 +434,7 @@ void Validator::CheckTypes(const Location* loc,
       CheckTypeIndex(loc, actual[i], expected[i], desc, i, index_kind);
     }
   } else {
-    PrintError(loc, "expected %" PRIzd " %ss, got %" PRIzd, expected.size(),
+    PrintError(loc, "expected %" "zd" " %ss, got %" "zd", expected.size(),
                index_kind, actual.size());
   }
 }
@@ -450,7 +448,7 @@ void Validator::CheckConstTypes(const Location* loc,
       CheckTypeIndex(loc, actual[i], expected[i].type, desc, i, "result");
     }
   } else {
-    PrintError(loc, "expected %" PRIzd " results, got %" PRIzd, expected.size(),
+    PrintError(loc, "expected %" "zd" " results, got %" "zd", expected.size(),
                actual.size());
   }
 }
@@ -1324,8 +1322,8 @@ const TypeVector* Validator::CheckInvoke(const InvokeAction* action) {
   size_t expected_args = func->GetNumParams();
   if (expected_args != actual_args) {
     PrintError(&action->loc,
-               "too %s parameters to function. got %" PRIzd
-               ", expected %" PRIzd,
+               "too %s parameters to function. got %" "zd"
+               ", expected %" "zd",
                actual_args > expected_args ? "many" : "few", actual_args,
                expected_args);
     return nullptr;
@@ -1424,7 +1422,7 @@ void Validator::CheckAssertReturnNanCommand(const Action* action) {
       result.kind = ActionResult::Kind::Type;
       result.type = (*result.types)[0];
     } else {
-      PrintError(&action->loc, "expected 1 result, got %" PRIzd,
+      PrintError(&action->loc, "expected 1 result, got %" "zd",
                  result.types->size());
       result.type = Type::Any;
     }

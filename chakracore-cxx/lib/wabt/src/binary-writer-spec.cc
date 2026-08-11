@@ -19,8 +19,6 @@
 #include <cassert>
 #include <cinttypes>
 
-#include "config.h"
-
 #include "src/binary-writer.h"
 #include "src/binary.h"
 #include "src/cast.h"
@@ -134,7 +132,7 @@ void BinaryWriterSpec::WriteCommandType(const Command& command) {
       "assert_trap",
       "assert_exhaustion",
   };
-  WABT_STATIC_ASSERT(WABT_ARRAY_SIZE(s_command_names) == kCommandTypeCount);
+  static_assert(std::size(s_command_names) == kCommandTypeCount);
 
   WriteKey("type");
   assert(s_command_names[static_cast<size_t>(command.type)]);

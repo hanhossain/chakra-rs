@@ -64,7 +64,7 @@ void Stream::MoveData(size_t dst_offset, size_t src_offset, size_t size) {
   }
   if (log_stream_) {
     log_stream_->Writef(
-        "; move data: [%" PRIzx ", %" PRIzx ") -> [%" PRIzx ", %" PRIzx ")\n",
+        "; move data: [%" "zx" ", %" "zx" ") -> [%" "zx" ", %" "zx" ")\n",
         src_offset, src_offset + size, dst_offset, dst_offset + size);
   }
   result_ = MoveDataImpl(dst_offset, src_offset, size);
@@ -89,7 +89,7 @@ void Stream::WriteMemoryDump(const void* start,
     if (prefix) {
       Writef("%s", prefix);
     }
-    Writef("%07" PRIzx ": ", reinterpret_cast<intptr_t>(p) -
+    Writef("%07" "zx" ": ", reinterpret_cast<intptr_t>(p) -
                                  reinterpret_cast<intptr_t>(start) + offset);
     while (p < line_end) {
       for (int i = 0; i < DUMP_OCTETS_PER_GROUP; ++i, ++p) {
@@ -133,7 +133,7 @@ Result OutputBuffer::WriteToFile(string_view filename) const {
 
   ssize_t bytes = fwrite(data.data(), 1, data.size(), file);
   if (bytes < 0 || static_cast<size_t>(bytes) != data.size()) {
-    ERROR("failed to write %" PRIzd " bytes to %s\n", data.size(),
+    ERROR("failed to write %" "zd" " bytes to %s\n", data.size(),
           filename_str.c_str());
     fclose(file);
     return Result::Error;
@@ -241,13 +241,13 @@ Result FileStream::WriteDataImpl(size_t at, const void* data, size_t size) {
   }
   if (at != offset_) {
     if (fseek(file_, at, SEEK_SET) != 0) {
-      ERROR("fseek offset=%" PRIzd " failed, errno=%d\n", size, errno);
+      ERROR("fseek offset=%" "zd" " failed, errno=%d\n", size, errno);
       return Result::Error;
     }
     offset_ = at;
   }
   if (fwrite(data, size, 1, file_) != 1) {
-    ERROR("fwrite size=%" PRIzd " failed, errno=%d\n", size, errno);
+    ERROR("fwrite size=%" "zd" " failed, errno=%d\n", size, errno);
     return Result::Error;
   }
   offset_ += size;

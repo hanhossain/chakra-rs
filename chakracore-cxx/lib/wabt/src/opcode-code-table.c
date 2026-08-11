@@ -16,8 +16,6 @@
 
 #include "src/opcode-code-table.h"
 
-#include "config.h"
-
 #include <stdint.h>
 
 typedef enum WabtOpcodeEnum {
@@ -29,7 +27,7 @@ typedef enum WabtOpcodeEnum {
   Invalid,
 } WabtOpcodeEnum;
 
-WABT_STATIC_ASSERT(Invalid <= WABT_OPCODE_CODE_TABLE_SIZE);
+static_assert(Invalid <= WABT_OPCODE_CODE_TABLE_SIZE);
 
 /* The array index calculated below must match the one in Opcode::FromCode. */
 uint32_t WabtOpcodeCodeTable[WABT_OPCODE_CODE_TABLE_SIZE] = {

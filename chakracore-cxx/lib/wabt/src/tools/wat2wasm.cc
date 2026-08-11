@@ -21,8 +21,6 @@
 #include <cstdio>
 #include <string>
 
-#include "config.h"
-
 #include "src/binary-writer.h"
 #include "src/common.h"
 #include "src/error-formatter.h"

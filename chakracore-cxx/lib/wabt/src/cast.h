@@ -63,7 +63,7 @@ namespace wabt {
 
 template <typename Derived, typename Base>
 bool isa(const Base* base) {
-  WABT_STATIC_ASSERT((std::is_base_of<Base, Derived>::value));
+  static_assert(std::is_base_of_v<Base, Derived>);
   return Derived::classof(base);
 }
 

@@ -264,7 +264,7 @@ Location BinaryReaderIR::GetLocation() const {
   return loc;
 }
 
-void WABT_PRINTF_FORMAT(2, 3) BinaryReaderIR::PrintError(const char* format,
+void __attribute__((format(printf, (2), (3)))) BinaryReaderIR::PrintError(const char* format,
                                                          ...) {
   WABT_SNPRINTF_ALLOCA(buffer, length, format);
   errors_->emplace_back(ErrorLevel::Error, Location(kInvalidOffset), buffer);
@@ -288,7 +288,7 @@ Result BinaryReaderIR::PopLabel() {
 
 Result BinaryReaderIR::GetLabelAt(LabelNode** label, Index depth) {
   if (depth >= label_stack_.size()) {
-    PrintError("accessing stack depth: %" PRIindex " >= max: %" PRIzd, depth,
+    PrintError("accessing stack depth: %" PRIindex " >= max: %" "zd", depth,
                label_stack_.size());
     return Result::Error;
   }
@@ -1047,7 +1047,7 @@ Result BinaryReaderIR::OnDataSegmentData(Index index,
 Result BinaryReaderIR::OnFunctionNamesCount(Index count) {
   if (count > module_->funcs.size()) {
     PrintError("expected function name count (%" PRIindex
-               ") <= function count (%" PRIzd ")",
+               ") <= function count (%" "zd" ")",
                count, module_->funcs.size());
     return Result::Error;
   }

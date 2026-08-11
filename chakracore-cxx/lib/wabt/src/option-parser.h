@@ -82,7 +82,7 @@ class OptionParser {
 
  private:
   static int Match(const char* s, const std::string& full, bool has_argument);
-  void WABT_PRINTF_FORMAT(2, 3) Errorf(const char* format, ...);
+  void __attribute__((format(printf, 2, 3))) Errorf(const char* format, ...);
   void HandleArgument(size_t* arg_index, const char* arg_value);
 
   // Print the error and exit(1).

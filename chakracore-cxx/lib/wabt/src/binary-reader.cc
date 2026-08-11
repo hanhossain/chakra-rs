@@ -22,19 +22,14 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <utility>
 #include <vector>
-
-#include "config.h"
 
 #include "src/binary-reader-logging.h"
 #include "src/binary.h"
 #include "src/leb128.h"
 #include "src/stream.h"
 #include "src/utf8.h"
-
-#if HAVE_ALLOCA
-#include <alloca.h>
-#endif
 
 #define ERROR_UNLESS(expr, ...) \
   do {                          \
@@ -82,28 +77,28 @@ class BinaryReader {
     T previous_value_;
   };
 
-  void WABT_PRINTF_FORMAT(2, 3) PrintError(const char* format, ...);
-  Result ReadOpcode(Opcode* out_value, const char* desc) WABT_WARN_UNUSED;
+  void __attribute__((format(printf, 2, 3))) PrintError(const char* format, ...);
+  Result ReadOpcode(Opcode* out_value, const char* desc) __attribute__((warn_unused_result));
   template <typename T>
   Result ReadT(T* out_value,
                const char* type_name,
-               const char* desc) WABT_WARN_UNUSED;
-  Result ReadU8(uint8_t* out_value, const char* desc) WABT_WARN_UNUSED;
-  Result ReadU32(uint32_t* out_value, const char* desc) WABT_WARN_UNUSED;
-  Result ReadF32(uint32_t* out_value, const char* desc) WABT_WARN_UNUSED;
-  Result ReadF64(uint64_t* out_value, const char* desc) WABT_WARN_UNUSED;
-  Result ReadV128(v128* out_value, const char* desc) WABT_WARN_UNUSED;
-  Result ReadU32Leb128(uint32_t* out_value, const char* desc) WABT_WARN_UNUSED;
-  Result ReadS32Leb128(uint32_t* out_value, const char* desc) WABT_WARN_UNUSED;
-  Result ReadS64Leb128(uint64_t* out_value, const char* desc) WABT_WARN_UNUSED;
-  Result ReadType(Type* out_value, const char* desc) WABT_WARN_UNUSED;
-  Result ReadStr(string_view* out_str, const char* desc) WABT_WARN_UNUSED;
+               const char* desc) __attribute__((warn_unused_result));
+  Result ReadU8(uint8_t* out_value, const char* desc) __attribute__((warn_unused_result));
+  Result ReadU32(uint32_t* out_value, const char* desc) __attribute__((warn_unused_result));
+  Result ReadF32(uint32_t* out_value, const char* desc) __attribute__((warn_unused_result));
+  Result ReadF64(uint64_t* out_value, const char* desc) __attribute__((warn_unused_result));
+  Result ReadV128(v128* out_value, const char* desc) __attribute__((warn_unused_result));
+  Result ReadU32Leb128(uint32_t* out_value, const char* desc) __attribute__((warn_unused_result));
+  Result ReadS32Leb128(uint32_t* out_value, const char* desc) __attribute__((warn_unused_result));
+  Result ReadS64Leb128(uint64_t* out_value, const char* desc) __attribute__((warn_unused_result));
+  Result ReadType(Type* out_value, const char* desc) __attribute__((warn_unused_result));
+  Result ReadStr(string_view* out_str, const char* desc) __attribute__((warn_unused_result));
   Result ReadBytes(const void** out_data,
                    Address* out_data_size,
-                   const char* desc) WABT_WARN_UNUSED;
-  Result ReadIndex(Index* index, const char* desc) WABT_WARN_UNUSED;
-  Result ReadOffset(Offset* offset, const char* desc) WABT_WARN_UNUSED;
-  Result ReadCount(Index* index, const char* desc) WABT_WARN_UNUSED;
+                   const char* desc) __attribute__((warn_unused_result));
+  Result ReadIndex(Index* index, const char* desc) __attribute__((warn_unused_result));
+  Result ReadOffset(Offset* offset, const char* desc) __attribute__((warn_unused_result));
+  Result ReadCount(Index* index, const char* desc) __attribute__((warn_unused_result));
 
   bool IsConcreteType(Type);
   bool IsBlockType(Type);
@@ -113,32 +108,32 @@ class BinaryReader {
   Index NumTotalMemories();
   Index NumTotalGlobals();
 
-  Result ReadI32InitExpr(Index index) WABT_WARN_UNUSED;
-  Result ReadInitExpr(Index index, bool require_i32 = false) WABT_WARN_UNUSED;
+  Result ReadI32InitExpr(Index index) __attribute__((warn_unused_result));
+  Result ReadInitExpr(Index index, bool require_i32 = false) __attribute__((warn_unused_result));
   Result ReadTable(Type* out_elem_type,
-                   Limits* out_elem_limits) WABT_WARN_UNUSED;
-  Result ReadMemory(Limits* out_page_limits) WABT_WARN_UNUSED;
-  Result ReadGlobalHeader(Type* out_type, bool* out_mutable) WABT_WARN_UNUSED;
-  Result ReadExceptionType(TypeVector& sig) WABT_WARN_UNUSED;
-  Result ReadFunctionBody(Offset end_offset) WABT_WARN_UNUSED;
-  Result ReadNameSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadRelocSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadDylinkSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadLinkingSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadCustomSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadTypeSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadImportSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadFunctionSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadTableSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadMemorySection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadGlobalSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadExportSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadStartSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadElemSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadCodeSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadDataSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadExceptionSection(Offset section_size) WABT_WARN_UNUSED;
-  Result ReadSections() WABT_WARN_UNUSED;
+                   Limits* out_elem_limits) __attribute__((warn_unused_result));
+  Result ReadMemory(Limits* out_page_limits) __attribute__((warn_unused_result));
+  Result ReadGlobalHeader(Type* out_type, bool* out_mutable) __attribute__((warn_unused_result));
+  Result ReadExceptionType(TypeVector& sig) __attribute__((warn_unused_result));
+  Result ReadFunctionBody(Offset end_offset) __attribute__((warn_unused_result));
+  Result ReadNameSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadRelocSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadDylinkSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadLinkingSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadCustomSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadTypeSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadImportSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadFunctionSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadTableSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadMemorySection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadGlobalSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadExportSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadStartSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadElemSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadCodeSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadDataSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadExceptionSection(Offset section_size) __attribute__((warn_unused_result));
+  Result ReadSections() __attribute__((warn_unused_result));
   Result ReportUnexpectedOpcode(Opcode opcode, const char* message = nullptr);
 
   size_t read_end_ = 0;  // Either the section end or data_size.
@@ -184,7 +179,7 @@ BinaryReader::BinaryReader(const void* data,
   delegate->OnSetState(&state_);
 }
 
-void WABT_PRINTF_FORMAT(2, 3) BinaryReader::PrintError(const char* format,
+void __attribute__((format(printf, 2, 3))) BinaryReader::PrintError(const char* format,
                                                        ...) {
   ErrorLevel error_level =
       reading_custom_section_ && !options_.fail_on_custom_section_error
@@ -197,7 +192,7 @@ void WABT_PRINTF_FORMAT(2, 3) BinaryReader::PrintError(const char* format,
 
   if (!handled) {
     // Not great to just print, but we don't want to eat the error either.
-    fprintf(stderr, "%07" PRIzx ": %s: %s\n", state_.offset,
+    fprintf(stderr, "%07" "zx" ": %s: %s\n", state_.offset,
             GetErrorLevelName(error_level), buffer);
   }
 }
@@ -358,7 +353,7 @@ Result BinaryReader::ReadCount(Index* count, const char* desc) {
   // when an erroneous large count is used, before allocating memory for it.
   size_t section_remaining = read_end_ - state_.offset;
   if (*count > section_remaining) {
-    PrintError("invalid %s %" PRIindex ", only %" PRIzd
+    PrintError("invalid %s %" PRIindex ", only %" "zd"
                " bytes left in section",
                desc, *count, section_remaining);
     return Result::Error;
@@ -1510,7 +1505,7 @@ Result BinaryReader::ReadNameSection(Offset section_size) {
     }
     ++i;
     ERROR_UNLESS(state_.offset == subsection_end,
-                 "unfinished sub-section (expected end: 0x%" PRIzx ")",
+                 "unfinished sub-section (expected end: 0x%" "zx" ")",
                  subsection_end);
   }
   CALLBACK0(EndNamesSection);
@@ -1670,7 +1665,7 @@ Result BinaryReader::ReadLinkingSection(Offset section_size) {
         break;
     }
     ERROR_UNLESS(state_.offset == subsection_end,
-                 "unfinished sub-section (expected end: 0x%" PRIzx ")",
+                 "unfinished sub-section (expected end: 0x%" "zx" ")",
                  subsection_end);
   }
   CALLBACK0(EndLinkingSection);
@@ -2186,7 +2181,7 @@ Result BinaryReader::ReadSections() {
         result |= section_result;
         break;
       case BinarySection::Invalid:
-        WABT_UNREACHABLE;
+        std::unreachable();
     }
 
     if (Failed(section_result)) {
@@ -2201,7 +2196,7 @@ Result BinaryReader::ReadSections() {
     }
 
     ERROR_UNLESS(state_.offset == read_end_,
-                 "unfinished section (expected end: 0x%" PRIzx ")", read_end_);
+                 "unfinished section (expected end: 0x%" "zx" ")", read_end_);
 
     if (section != BinarySection::Custom) {
       last_known_section_ = section;

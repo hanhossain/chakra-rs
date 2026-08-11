@@ -21,8 +21,6 @@
 #include <cassert>
 #include <cstdio>
 
-#include "config.h"
-
 #include "src/lexer-source.h"
 #include "src/wast-parser.h"
 

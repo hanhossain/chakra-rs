@@ -40,7 +40,7 @@ std::string FormatError(const Error& error,
   if (location_type == Location::Type::Text) {
     result += StringPrintf("%d:%d: ", loc.line, loc.first_column);
   } else if (loc.offset != kInvalidOffset) {
-    result += StringPrintf("%07" PRIzx ": ", loc.offset);
+    result += StringPrintf("%07" "zx" ": ", loc.offset);
   }
 
   result += color.MaybeRedCode();
