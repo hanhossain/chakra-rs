@@ -26,9 +26,6 @@ Abstract:
 
 namespace CorUnix
 {
-    PAL_ERROR
-    InternalDuplicateHandle(CPalThread *pThread, HANDLE hSource, LPHANDLE phDuplicate, uint32_t dwDesiredAccess,
-                            BOOL bInheritHandle, uint32_t dwOptions);
 
     PAL_ERROR
     InternalCloseHandle(

@@ -124,7 +124,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     enableScanImplicitRoots(false),
     disableCollectOnAllocationHeuristics(false),
     skipStack(false),
-    mainThreadHandle(NULL),
     backgroundFinishMarkCount(0),
     hasPendingUnpinnedObject(false),
     hasPendingConcurrentFindRoot(false),
@@ -368,11 +367,6 @@ Recycler::~Recycler()
         recyclerSweepManager = nullptr;
     }
 
-    if (mainThreadHandle != nullptr)
-    {
-        CloseHandle(mainThreadHandle);
-    }
-
     autoHeap.Close();
 
     markContext.Release();
@@ -419,15 +413,6 @@ Recycler::~Recycler()
 #endif
     Assert(this->collectionState == CollectionStateExit || this->collectionState == CollectionStateNotCollecting);
     Assert(this->disableConcurrentThreadExitedCheck || this->concurrentThreadExited == true);
-}
-
-void
-Recycler::SetIsThreadBound()
-{
-    Assert(mainThreadHandle == nullptr);
-    ::DuplicateHandle(&mainThreadHandle);
-
-    stackBase = GetStackBase();
 }
 
 void
@@ -985,11 +970,6 @@ bool Recycler::ExplicitFreeInternal(void* buffer, size_t size, size_t sizeCat)
     Assert((info.GetAttributes() & ~ObjectInfoBits::LeafBit) == 0);          // Only NoBit or LeafBit
 
     HeapInfo * heapInfo = this->GetHeapInfo<attributes>();
-
-    // Either the mainThreadHandle is null (we're not thread bound)
-    // or we should be calling this function on the main script thread
-    Assert(this->mainThreadHandle == NULL ||
-        ::GetCurrentThreadId() == ::GetThreadId(this->mainThreadHandle));
 
     HeapBlock* heapBlock = this->FindHeapBlock(buffer);
 
@@ -4406,9 +4386,6 @@ Recycler::BackgroundRepeatMark()
         return Recycler::InvalidScanRootBytes;
     }
 
-    // Rescan the stack
-    this->BackgroundScanStack();
-
     // Process mark stack
     this->DoBackgroundParallelMark();
 
@@ -4426,42 +4403,6 @@ Recycler::BackgroundRepeatMark()
     RECYCLER_PROFILE_EXEC_BACKGROUND_END(this, Js::BackgroundRepeatMarkPhase);
 
     return rescannedPageCount;
-}
-
-char* Recycler::GetScriptThreadStackTop()
-{
-    // We should have already checked if the recycler is thread bound or not
-    Assert(mainThreadHandle != NULL);
-
-    return static_cast<char*>(savedThreadContext.GetStackTop());
-}
-
-size_t
-Recycler::BackgroundScanStack()
-{
-    if (this->skipStack)
-    {
-        return 0;
-    }
-
-    if (!this->isInScript || mainThreadHandle == nullptr)
-    {
-        // No point in scanning the main thread's stack if we are not in script
-        // We also can't scan the main thread's stack if we are not thread bounded, and didn't create the main thread's handle
-        return 0;
-    }
-
-    char* stackTop = this->GetScriptThreadStackTop();
-
-    if (stackTop != nullptr)
-    {
-        size_t size = static_cast<char*>(stackBase) - stackTop;
-        ScanMemoryInline<false>(reinterpret_cast<void**>(stackTop), size
-            ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
-        return size;
-    }
-
-    return 0;
 }
 
 void
@@ -4942,7 +4883,6 @@ Recycler::DoBackgroundWork(bool forceForeground)
             // fall-through
         case CollectionStateConcurrentFindRoots:
             this->BackgroundFindRoots();
-            this->BackgroundScanStack();
             this->SetCollectionState(CollectionStateConcurrentMark);
             // fall-through
         case CollectionStateConcurrentMark:
@@ -6713,28 +6653,6 @@ Recycler::VerifyMarkArenaMemoryBlockList(ArenaMemoryBlock * memoryBlocks)
             VerifyMark(base[i]);
         }
         blockp = blockp->next;
-    }
-}
-
-void
-Recycler::VerifyMarkStack()
-{
-    SAVE_THREAD_CONTEXT();
-    void ** stackTop = static_cast<void**>(this->savedThreadContext.GetStackTop());
-
-    void * stackStart = GetStackBase();
-    Assert(stackStart > stackTop);
-
-    for (;stackTop < stackStart; stackTop++)
-    {
-        void* candidate = *stackTop;
-        VerifyMark(nullptr, candidate);
-    }
-
-    void** registers = this->savedThreadContext.GetRegisters();
-    for (int i = 0; i < SavedRegisterState::NumRegistersToSave; i++)
-    {
-        VerifyMark(nullptr, registers[i]);
     }
 }
 

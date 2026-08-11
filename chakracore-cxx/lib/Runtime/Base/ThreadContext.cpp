@@ -563,11 +563,6 @@ Recycler* ThreadContext::EnsureRecycler()
 
         this->recyclableData.Root(RecyclerNewZ(newRecycler, RecyclableData, newRecycler), newRecycler);
 
-        if (this->IsThreadBound())
-        {
-            newRecycler->SetIsThreadBound();
-        }
-
         // Assign the recycler to the ThreadContext after everything is initialized, because an OOM during initialization would
         // result in only partial initialization, so the 'recycler' member variable should remain null to cause full
         // reinitialization when requested later. Anything that happens after the Detach must have special cleanup code.

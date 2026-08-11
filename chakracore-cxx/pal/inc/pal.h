@@ -352,9 +352,6 @@ WaitForMultipleObjectsEx(
 #define DUPLICATE_CLOSE_SOURCE      0x00000001
 #define DUPLICATE_SAME_ACCESS       0x00000002
 
-BOOL
-DuplicateHandle(LPHANDLE lpTargetHandle);
-
 void
 Sleep(
        uint32_t dwMilliseconds);
