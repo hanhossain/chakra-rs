@@ -302,13 +302,6 @@ Initialize()
             goto CLEANUP6;
         }
 
-        /* create file objects for standard handles */
-        if(!FILEInitStdHandles())
-        {
-            ERROR("Unable to initialize standard file handles\n");
-            goto CLEANUP13;
-        }
-
         TRACE("First-time PAL initialization complete.\n");
         init_count++;
 
@@ -328,10 +321,6 @@ Initialize()
     }
     goto done;
 
-    /* No cleanup required for CRTInitStdStreams */
-CLEANUP13:
-    VIRTUALCleanup();
-    MAPCleanup();
 CLEANUP6:
 CLEANUP5:
 CLEANUP1c:

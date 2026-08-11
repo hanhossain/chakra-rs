@@ -41,18 +41,6 @@ typedef struct _find_handle
     char   **next;
 } find_obj;
 
-/*++
-FILEInitStdHandles
-
-Create handle objects for stdin, stdout and stderr
-
-(no parameters)
-
-Return value:
-    TRUE on success, FALSE on failure
---*/
-BOOL FILEInitStdHandles(void);
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus
