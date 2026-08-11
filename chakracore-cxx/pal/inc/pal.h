@@ -169,13 +169,6 @@ typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
 int
 PAL_InitializeChakraCore();
 
-/// <summary>
-/// This function shuts down PAL WITHOUT exiting the current process.
-/// </summary>
-void
-PAL_Shutdown(
-    void);
-
 /******************* winuser.h Entrypoints *******************************/
 
 typedef int errno_t;
@@ -328,11 +321,6 @@ typedef struct _PROCESS_INFORMATION {
     uint32_t dwThreadId_PAL_Undefined;
 } *LPPROCESS_INFORMATION;
 
-BOOL
-TerminateProcess(
-          HANDLE hProcess,
-          uint32_t uExitCode);
-
 #define MAXIMUM_WAIT_OBJECTS  64
 #define WAIT_OBJECT_0 0
 #define WAIT_ABANDONED_0 0x00000080
@@ -365,14 +353,7 @@ WaitForMultipleObjectsEx(
 #define DUPLICATE_SAME_ACCESS       0x00000002
 
 BOOL
-DuplicateHandle(
-         HANDLE hSourceProcessHandle,
-         HANDLE hSourceHandle,
-         HANDLE hTargetProcessHandle,
-         LPHANDLE lpTargetHandle,
-         uint32_t dwDesiredAccess,
-         BOOL bInheritHandle,
-         uint32_t dwOptions);
+DuplicateHandle(LPHANDLE lpTargetHandle);
 
 void
 Sleep(

@@ -39,36 +39,13 @@ CloseSpecialHandle(
     HANDLE hObject
     );
 
-/*++
-Function:
-  DuplicateHandle
-
-See MSDN doc.
-
-PAL-specific behavior :
-    -Source and Target process needs to be the current process.
-    -lpTargetHandle must be non-NULL
-    -dwDesiredAccess is ignored
-    -bInheritHandle must be FALSE
-    -dwOptions must be a combo of DUPLICATE_SAME_ACCESS and
-               DUPLICATE_CLOSE_SOURCE
-
---*/
 BOOL
-DuplicateHandle(
-         HANDLE hSourceProcessHandle,
-         HANDLE hSourceHandle,
-         HANDLE hTargetProcessHandle,
-         LPHANDLE lpTargetHandle,
-         uint32_t dwDesiredAccess,
-         BOOL bInheritHandle,
-         uint32_t dwOptions)
+DuplicateHandle(LPHANDLE lpTargetHandle)
 {
 
     CPalThread *pThread = InternalGetCurrentThread();
 
-    PAL_ERROR palError = InternalDuplicateHandle(pThread, hSourceProcessHandle, hSourceHandle, hTargetProcessHandle,
-                                                 lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
+    PAL_ERROR palError = InternalDuplicateHandle(pThread, ::PAL_GetCurrentThread(), lpTargetHandle, 0, false, DUPLICATE_SAME_ACCESS);
 
     if (NO_ERROR != palError)
     {
@@ -80,75 +57,15 @@ DuplicateHandle(
 }
 
 PAL_ERROR
-CorUnix::InternalDuplicateHandle(
-    CPalThread *pThread,
-    HANDLE hSourceProcess,
-    HANDLE hSource,
-    HANDLE hTargetProcess,
-    LPHANDLE phDuplicate,
-    uint32_t dwDesiredAccess,
-    BOOL bInheritHandle,
-    uint32_t dwOptions
-    )
+CorUnix::InternalDuplicateHandle(CPalThread *pThread, HANDLE hSource, LPHANDLE phDuplicate, uint32_t dwDesiredAccess,
+                                 BOOL bInheritHandle, uint32_t dwOptions)
 {
     PAL_ERROR palError = NO_ERROR;
     IPalObject *pobjSource = NULL;
-    
-    uint32_t source_process_id;
-    uint32_t target_process_id;
-    uint32_t cur_process_id;
 
-    cur_process_id = getpid();
-    source_process_id = PROCGetProcessIDFromHandle(hSourceProcess);
-    target_process_id = PROCGetProcessIDFromHandle(hTargetProcess);
-
-    /* Check validity of process handles */
-    if (0 == source_process_id || 0 == target_process_id)
-    {
-        chakra::Logger::error("Can't duplicate handle: invalid source or destination process");
-        palError = ERROR_INVALID_PARAMETER;
-        goto InternalDuplicateHandleExit;
-    }
-
-    /* At least source or target process should be the current process. */
-    if (source_process_id != cur_process_id
-        && target_process_id != cur_process_id)
-    {
-        chakra::Logger::error("Can't duplicate handle : neither source or destination"
-               "processes are from current process");
-        palError = ERROR_INVALID_PARAMETER;
-        goto InternalDuplicateHandleExit;
-    }
-
-    if (FALSE != bInheritHandle)
-    {
-        chakra::Logger::error("Can't duplicate handle : bInheritHandle is not FALSE.\n");
-        palError = ERROR_INVALID_PARAMETER;
-        goto InternalDuplicateHandleExit;
-    }
-
-    if (dwOptions & ~(DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE))
-    {
-        chakra::Logger::error(std::format(
-            "Can't duplicate handle : dwOptions is {:#x} which is not "
-            "a subset of (DUPLICATE_SAME_ACCESS|DUPLICATE_CLOSE_SOURCE) "
-            "({:#x}).\n",
-            dwOptions,
-            DUPLICATE_SAME_ACCESS | DUPLICATE_CLOSE_SOURCE));
-        palError = ERROR_INVALID_PARAMETER;
-        goto InternalDuplicateHandleExit;
-    }
-    
-    if (0 == (dwOptions & DUPLICATE_SAME_ACCESS))
-    {
-        chakra::Logger::error(std::format(
-            "Can't duplicate handle : dwOptions is {:#x} which does not "
-            "include DUPLICATE_SAME_ACCESS (%#x).\n",
-            dwOptions,
-            DUPLICATE_SAME_ACCESS));
-        palError = ERROR_INVALID_PARAMETER;
-        goto InternalDuplicateHandleExit;
-    }
+    uint32_t cur_process_id = getpid();
+    uint32_t source_process_id = getpid();
+    uint32_t target_process_id = getpid();
 
     if (NULL == phDuplicate)
     {

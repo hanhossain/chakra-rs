@@ -461,7 +461,6 @@ int main_internal(chakra_rs::config::CoreConfig config)
         exitCode = ExecuteTestWithMemoryCheck(config.filename, chRuntime, jsrtAttributes);
     }
 
-    PAL_Shutdown();
     int retval = exitCode;
 
 #ifdef NO_SANITIZE_ADDRESS_CHECK

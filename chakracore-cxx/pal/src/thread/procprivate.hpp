@@ -49,20 +49,7 @@ namespace CorUnix
     --*/
     void PROCRemoveThread(CPalThread *pCurrentThread, CPalThread *pTargetThread);
 
-    /*++
-    Function:
-      TerminateCurrentProcessNoExit
-
-    Parameters:
-        BOOL bTerminateUnconditionally - If this is set, the PAL will exit as
-        quickly as possible. In particular, it will not unload DLLs.
-
-    Abstract:
-        Terminate Current Process, but leave the caller alive
-    --*/
-    void TerminateCurrentProcessNoExit();
-
-}
+} // namespace CorUnix
 
 #endif //_PAL_PROCPRIVATE_HPP_
 

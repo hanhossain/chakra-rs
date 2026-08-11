@@ -30,24 +30,6 @@ extern "C"
 {
 #endif // __cplusplus
 
-/*++
-Function:
-  PALShutdown
-
-Utility function to force PAL to shutdown state
-
---*/
-void PALShutdown( void );
-
-/*++
-Function:
-  PALCommonCleanup
-
-Utility function to prepare for shutdown.
-
---*/
-void PALCommonCleanup();
-
 extern Volatile<int32_t> init_count;
 #if defined(DEBUG)
 extern bool PAL_InitializeChakraCoreCalled;
