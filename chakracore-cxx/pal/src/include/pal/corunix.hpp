@@ -205,12 +205,6 @@ namespace CorUnix
             UnnamedObject
         };
 
-        enum HandleDuplicationSupport
-        {
-            CrossProcessDuplicationAllowed,
-            LocalDuplicationOnly
-        };
-
         enum SynchronizationSupport
         {
             WaitableObject,
@@ -257,7 +251,6 @@ namespace CorUnix
         SecuritySupport m_eSecuritySupport;
         SecurityPersistence m_eSecurityPersistence;
         ObjectNameSupport m_eObjectNameSupport;
-        HandleDuplicationSupport m_eHandleDuplicationSupport;
         SynchronizationSupport m_eSynchronizationSupport;
         SignalingSemantics m_eSignalingSemantics;
         ThreadReleaseSemantics m_eThreadReleaseSemantics;
@@ -275,7 +268,6 @@ namespace CorUnix
             SecuritySupport eSecuritySupport,
             SecurityPersistence eSecurityPersistence,
             ObjectNameSupport eObjectNameSupport,
-            HandleDuplicationSupport eHandleDuplicationSupport,
             SynchronizationSupport eSynchronizationSupport,
             SignalingSemantics eSignalingSemantics,
             ThreadReleaseSemantics eThreadReleaseSemantics,
@@ -291,7 +283,6 @@ namespace CorUnix
             m_eSecuritySupport(eSecuritySupport),
             m_eSecurityPersistence(eSecurityPersistence),
             m_eObjectNameSupport(eObjectNameSupport),
-            m_eHandleDuplicationSupport(eHandleDuplicationSupport),
             m_eSynchronizationSupport(eSynchronizationSupport),
             m_eSignalingSemantics(eSignalingSemantics),
             m_eThreadReleaseSemantics(eThreadReleaseSemantics),
@@ -381,14 +372,6 @@ namespace CorUnix
             )
         {
             return  m_eObjectNameSupport;
-        };
-
-        HandleDuplicationSupport
-        GetHandleDuplicationSupport(
-            void
-            )
-        {
-            return  m_eHandleDuplicationSupport;
         };
 
         SynchronizationSupport
@@ -501,12 +484,6 @@ namespace CorUnix
 
         virtual
         PAL_ERROR
-        IncrementSignalCount(
-            int32_t lAmountToIncrement
-            ) = 0;
-
-        virtual
-        PAL_ERROR
         DecrementSignalCount(
             int32_t lAmountToDecrement
             ) = 0;
@@ -523,23 +500,11 @@ namespace CorUnix
         // handle manager. Any other call to this method is an error.
         //
 
-        virtual
-        PAL_ERROR
-        SetOwner(
-            CPalThread *pNewOwningThread
-            ) = 0;
-
         //
         // DecrementOwnershipCount returns an error if the object
         // is unowned, or if the thread this controller is bound to
         // is not the owner of the object.
         //
-
-        virtual
-        PAL_ERROR
-        DecrementOwnershipCount(
-            void
-            ) = 0;
 
         virtual
         void
@@ -1011,14 +976,6 @@ namespace CorUnix
             ObjectDomain eObjectDomain,
             void *pvSynchData
         ) = 0;
-
-        virtual
-        PAL_ERROR
-        PromoteObjectSynchData(
-            CPalThread *pThread,
-            void *pvLocalSynchData,
-            void **ppvSharedSynchData           // OUT
-            ) = 0;
 
         //
         // The next two routines provide access to the process-wide

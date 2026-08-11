@@ -487,10 +487,7 @@ namespace CorUnix
         //
         PAL_ERROR GetSignalCount(int32_t *plSignalCount) override;
         PAL_ERROR SetSignalCount(int32_t lNewCount) override;
-        PAL_ERROR IncrementSignalCount(int32_t lAmountToIncrement) override;
         PAL_ERROR DecrementSignalCount(int32_t lAmountToDecrement) override;
-        PAL_ERROR SetOwner(CPalThread *pNewOwningThread) override;
-        PAL_ERROR DecrementOwnershipCount(void) override;
         void ReleaseController(void) override;
     };
 
@@ -838,11 +835,6 @@ namespace CorUnix
             ObjectDomain odObjectDomain,
             void *pvSynchData) override;
 
-        PAL_ERROR PromoteObjectSynchData(
-            CPalThread *pthrCurrent,
-            void *pvLocalSynchData,
-            void **ppvSharedSynchData) override;
-
         PAL_ERROR CreateSynchStateController(
             CPalThread *pthrCurrent,
             CObjectType *potObjectType,
@@ -938,8 +930,6 @@ namespace CorUnix
         // Non-static helper methods
         //
     private:
-        int32_t DoMonitorProcesses(CPalThread * pthrCurrent);
-
         void DiscardMonitoredProcesses(CPalThread * pthrCurrent);
 
         PAL_ERROR ReadCmdFromProcessPipe(

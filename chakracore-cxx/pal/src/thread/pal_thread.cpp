@@ -122,7 +122,6 @@ CObjectType CorUnix::otThread __attribute__((init_priority(200))) (
                 CObjectType::SecuritySupported,
                 CObjectType::SecurityInfoNotPersisted,
                 CObjectType::UnnamedObject,
-                CObjectType::LocalDuplicationOnly,
                 CObjectType::WaitableObject,
                 CObjectType::SingleTransitionObject,
                 CObjectType::ThreadReleaseHasNoSideEffects,
