@@ -5221,18 +5221,7 @@ Inline::MapFormals(Func *inlinee,
                     }
                     else
                     {
-                        // TODO (hanhossain): remove OOPJIT
-                        Assert(false);
-                        // with OOP JIT we may create const Opnds for library vars without materializing a JITRecyclableObject
-                        IR::Opnd * thisConstOpnd = thisConstSym->GetConstOpnd();
-                        if (thisConstOpnd->GetValueType().IsUndefined())
-                        {
-                            typeId = Js::TypeIds_Undefined;
-                        }
-                        else if (thisConstOpnd->GetValueType().IsNull())
-                        {
-                            typeId = Js::TypeIds_Null;
-                        }
+                        throw std::runtime_error("localVar cannot be nullptr with inprocess jit");
                     }
                     if (typeId != Js::TypeIds_Limit && (Js::JavascriptOperators::IsObjectType(typeId) || Js::JavascriptOperators::IsUndefinedOrNullType(typeId)))
                     {

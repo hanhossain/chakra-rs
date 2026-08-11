@@ -1183,9 +1183,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
         }
 
         case Js::OpCode::LdNativeCodeData:
-            // TODO (hanhossain): remove OOPJIT
-            Assert(false);
-            instrPrev = LowerLdNativeCodeData(instr);
+            throw std::runtime_error("localVar cannot be nullptr with inprocess jit");
             break;
         case Js::OpCode::CheckThis:
             GenerateLdThisCheck(instr);
@@ -27931,19 +27929,6 @@ Lowerer::LowerLdAsmJsEnv(IR::Instr * instr)
     Assert(!instr->GetSrc1());
     IR::IndirOpnd *indirOpnd = IR::IndirOpnd::New(functionObjOpnd->AsRegOpnd(), Js::AsmJsScriptFunction::GetOffsetOfModuleMemory(), TyMachPtr, m_func);
     instr->SetSrc1(indirOpnd);
-    LowererMD::ChangeToAssign(instr);
-
-    return instrPrev;
-}
-
-IR::Instr *
-Lowerer::LowerLdNativeCodeData(IR::Instr * instr)
-{
-    Assert(!instr->GetSrc1());
-    Assert(m_func->IsTopFunc());
-    IR::Instr * instrPrev = instr->m_prev;
-    instr->SetSrc1(IR::MemRefOpnd::New((void*)m_func->GetWorkItem()->GetWorkItemData()->nativeDataAddr, TyMachPtr, m_func, IR::AddrOpndKindDynamicNativeCodeDataRef));
-
     LowererMD::ChangeToAssign(instr);
 
     return instrPrev;
