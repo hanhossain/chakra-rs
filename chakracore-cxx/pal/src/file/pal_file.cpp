@@ -57,7 +57,6 @@ CObjectType CorUnix::otFile __attribute__((init_priority(200))) (
                 FileCleanupRoutine,
                 0,      // No immutable data
                 sizeof(CFileProcessLocalData),
-                0,      // No shared data
                 CObjectType::UnwaitableObject,
                 CObjectType::SignalingNotApplicable,
                 CObjectType::ThreadReleaseNotApplicable,

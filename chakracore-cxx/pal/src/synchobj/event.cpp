@@ -37,7 +37,6 @@ CObjectType CorUnix::otManualResetEvent(
                 NULL,   // No cleanup routine
                 0,      // No immutable data
                 0,      // No process local data
-                0,      // No shared data
                 CObjectType::WaitableObject,
                 CObjectType::ObjectCanBeUnsignaled,
                 CObjectType::ThreadReleaseHasNoSideEffects,
@@ -49,7 +48,6 @@ CObjectType CorUnix::otAutoResetEvent(
                 NULL,   // No cleanup routine
                 0,      // No immutable data
                 0,      // No process local data
-                0,      // No shared data
                 CObjectType::WaitableObject,
                 CObjectType::ObjectCanBeUnsignaled,
                 CObjectType::ThreadReleaseAltersSignalCount,
