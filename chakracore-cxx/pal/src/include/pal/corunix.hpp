@@ -110,20 +110,6 @@ namespace CorUnix
         bool            // fCleanupSharedState
         );
 
-    //
-    // Signature of the initialization routine that is to be called
-    // when the first reference within a process to an existing
-    // object comes into existence. This routine is responsible for
-    // initializing the object's process local data, based on the
-    // immutable and shared data. The thread that this routine is
-    // called on holds an implicit read lock on the shared data.
-    //
-
-    typedef PAL_ERROR (*OBJECTINITROUTINE) (
-        void *,         // pImmutableData
-        void *          // pProcessLocalData
-        );
-
     enum PalObjectTypeId
     {
         otiAutoResetEvent = 0,
@@ -263,7 +249,6 @@ namespace CorUnix
 
         PalObjectTypeId m_eTypeId;
         OBJECTCLEANUPROUTINE m_pCleanupRoutine;
-        OBJECTINITROUTINE m_pInitRoutine;
         uint32_t m_dwImmutableDataSize;
         uint32_t m_dwProcessLocalDataSize;
         uint32_t m_dwSharedDataSize;
@@ -283,7 +268,6 @@ namespace CorUnix
         CObjectType(
             PalObjectTypeId eTypeId,
             OBJECTCLEANUPROUTINE pCleanupRoutine,
-            OBJECTINITROUTINE pInitRoutine,
             uint32_t dwImmutableDataSize,
             uint32_t dwProcessLocalDataSize,
             uint32_t dwSharedDataSize,
@@ -300,7 +284,6 @@ namespace CorUnix
             :
             m_eTypeId(eTypeId),
             m_pCleanupRoutine(pCleanupRoutine),
-            m_pInitRoutine(pInitRoutine),
             m_dwImmutableDataSize(dwImmutableDataSize),
             m_dwProcessLocalDataSize(dwProcessLocalDataSize),
             m_dwSharedDataSize(dwSharedDataSize),
@@ -340,14 +323,6 @@ namespace CorUnix
             )
         {
             return m_pCleanupRoutine;
-        };
-
-        OBJECTINITROUTINE
-        GetObjectInitRoutine(
-            void
-            )
-        {
-            return  m_pInitRoutine;
         };
 
         uint32_t

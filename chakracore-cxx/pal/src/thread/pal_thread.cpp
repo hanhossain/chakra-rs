@@ -112,13 +112,9 @@ pthread_cond_t ptcEndThread __attribute__((init_priority(200)));
 
 void ThreadCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool, bool);
 
-PAL_ERROR
-ThreadInitializationRoutine(void *, void *);
-
 CObjectType CorUnix::otThread __attribute__((init_priority(200))) (
                 otiThread,
                 ThreadCleanupRoutine,
-                ThreadInitializationRoutine,
                 0, //sizeof(CThreadImmutableData),
                 sizeof(CThreadProcessLocalData),
                 0, //sizeof(CThreadSharedData),
@@ -1847,11 +1843,6 @@ void ThreadCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, boo
         chakra::Logger::error("Unable to obtain thread data");
     }
 
-}
-
-PAL_ERROR ThreadInitializationRoutine(void *, void *)
-{
-    return NO_ERROR;
 }
 
 // Get base address of the current thread's stack
