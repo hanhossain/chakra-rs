@@ -56,8 +56,6 @@ SET_DEFAULT_DEBUG_CHANNEL(VIRTUAL);
 CRITICAL_SECTION mapping_critsec __attribute__((init_priority(200)));
 LIST_ENTRY MappedViewList __attribute__((init_priority(200)));
 
-static int32_t MAPProtectionToFileOpenFlags( uint32_t );
-
 #if !defined(__linux__)
 /* We need MAP_ANON. However on some platforms like HP-UX, it is defined as MAP_ANONYMOUS */
 #if !defined(MAP_ANON) && defined(MAP_ANONYMOUS)
@@ -73,16 +71,9 @@ FileMappingCleanupRoutine(
     bool fCleanupSharedState
     );
 
-PAL_ERROR
-FileMappingInitializationRoutine(
-    void *pImmutableData,
-    void *pProcessLocalData
-    );
-
 CObjectType CorUnix::otFileMapping __attribute__((init_priority(200)))(
                 otiFileMapping,
                 FileMappingCleanupRoutine,
-                FileMappingInitializationRoutine,
                 sizeof(CFileMappingImmutableData),
                 sizeof(CFileMappingProcessLocalData),
                 0,
@@ -169,35 +160,6 @@ FileMappingCleanupRoutine(
     //
 }
 
-PAL_ERROR
-FileMappingInitializationRoutine(
-    void *pvImmutableData,
-    void *pvProcessLocalData
-    )
-{
-    PAL_ERROR palError = NO_ERROR;
-    
-    CFileMappingImmutableData *pImmutableData =
-        reinterpret_cast<CFileMappingImmutableData *>(pvImmutableData);
-    CFileMappingProcessLocalData *pProcessLocalData =
-        reinterpret_cast<CFileMappingProcessLocalData *>(pvProcessLocalData);
-
-    pProcessLocalData->UnixFd = InternalOpen(
-        pImmutableData->szFileName,
-        MAPProtectionToFileOpenFlags(pImmutableData->flProtect)
-        );
-
-    if (-1 == pProcessLocalData->UnixFd)
-    {
-        palError = ERROR_INTERNAL_ERROR;
-        goto ExitFileMappingInitializationRoutine;
-    }
-
-ExitFileMappingInitializationRoutine:
-
-    return palError;
-}
-
 /*++
 Function :
     MAPInitialize
@@ -250,36 +212,6 @@ static uint32_t MAPConvertAccessToProtect(uint32_t flAccess)
 
     chakra::Logger::error("Unknown flag for flAccess.\n");
     return static_cast<uint32_t>(-1);
-}
-
-/*++
-Function :
-    MAPProtectionToFileOpenFlags
-
-    Converts the PAGE_* flags to the O_* flags.
-
-    Returns the file open flags.
---*/
-static int32_t MAPProtectionToFileOpenFlags( uint32_t flProtect )
-{
-    int32_t retVal = 0;
-    switch(flProtect)
-    {
-    case PAGE_READONLY:
-        retVal = O_RDONLY;
-        break;
-    case PAGE_READWRITE:
-        retVal = O_RDWR;
-        break;
-    case PAGE_WRITECOPY:
-        retVal = O_RDONLY;
-        break;
-    default:
-        chakra::Logger::error(std::format("unexpected flProtect value {:#x}\n", flProtect));
-        retVal = 0;
-        break;
-    }         
-    return retVal;
 }
 
 // returns TRUE if we have information about the specified address

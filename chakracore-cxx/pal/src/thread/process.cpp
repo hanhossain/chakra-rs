@@ -121,7 +121,6 @@ using namespace CorUnix;
 CObjectType CorUnix::otProcess __attribute__((init_priority(200))) (
                 otiProcess,
                 NULL,   // No cleanup routine
-                NULL,   // No initialization routine
                 0,      // No immutable data
                 sizeof(CProcProcessLocalData),
                 0,

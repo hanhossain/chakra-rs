@@ -55,7 +55,6 @@ void FileCleanupRoutine(CPalThread *pThread, IPalObject *pObjectToCleanup, bool 
 CObjectType CorUnix::otFile __attribute__((init_priority(200))) (
                 otiFile,
                 FileCleanupRoutine,
-                NULL,   // No initialization routine
                 0,      // No immutable data
                 sizeof(CFileProcessLocalData),
                 0,      // No shared data
