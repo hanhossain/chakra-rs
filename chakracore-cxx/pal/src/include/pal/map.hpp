@@ -101,11 +101,6 @@ namespace CorUnix
     public:
         int32_t     UnixFd;                     /* File descriptor. */
     };
-
-    PAL_ERROR
-    InternalCreateFileMapping(CPalThread *pThread, HANDLE hFile, uint32_t flProtect, uint32_t dwMaximumSizeHigh,
-                              uint32_t dwMaximumSizeLow, HANDLE *phMapping);
-
 } // namespace CorUnix
 
 #endif /* _PAL_MAP_H_ */
