@@ -322,9 +322,7 @@ public:
         return unallocPages;
     }
 
-    void ChangeSegmentProtection(uint32_t protectFlags, uint32_t expectedOldProtectFlags);
-
-//---------- Private members ---------------/
+    //---------- Private members ---------------/
 private:
     void DecommitFreePagesInternal(uint index, uint pageCount);
 

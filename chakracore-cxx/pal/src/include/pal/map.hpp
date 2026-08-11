@@ -45,31 +45,21 @@ extern "C"
     --*/
     BOOL MAPInitialize( void );
 
-    /*++
-    Function :
-        MapCleanup
+/*++
+Function :
+    MAPGetRegionInfo
 
-        Deletes the critical sections.
+    Parameters:
+    lpAddress: pointer to the starting memory location, not necessary
+               to be rounded to the page location
 
-    --*/
-    void MAPCleanup( void );
+    lpBuffer: if this function finds information about the specified address,
+              the information is stored in this struct
 
-    /*++
-    Function :
-        MAPGetRegionInfo
+    Note: This function is to be used in virtual.c
 
-        Parameters: 
-        lpAddress: pointer to the starting memory location, not necessary
-                   to be rounded to the page location
-
-        lpBuffer: if this function finds information about the specified address,
-                  the information is stored in this struct
-
-        Note: This function is to be used in virtual.c
-              
-        Returns TRUE if this function finds information about the specified address
-    --*/
-
+    Returns TRUE if this function finds information about the specified address
+--*/
     BOOL MAPGetRegionInfo(void * lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer);
 }
 
@@ -104,8 +94,6 @@ namespace CorUnix
         char szFileName[MAXPATHLEN];
         uint32_t MaxSize;               // The max size of the file mapping object
         uint32_t flProtect;            // Protection desired for the file view
-        BOOL bPALCreatedTempFile;   // TRUE if it's a PAL created file
-        uint32_t dwDesiredAccessWhenOpened;  // FILE_MAP_WRITE etc
     };
 
     class CFileMappingProcessLocalData 

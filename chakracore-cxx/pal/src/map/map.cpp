@@ -52,6 +52,7 @@ SET_DEFAULT_DEBUG_CHANNEL(VIRTUAL);
 // this critical section.
 //
 
+// TODO (hanhossain): remove more-pal-file
 CRITICAL_SECTION mapping_critsec __attribute__((init_priority(200)));
 LIST_ENTRY MappedViewList __attribute__((init_priority(200)));
 
@@ -59,7 +60,6 @@ static PAL_ERROR MAPGrowLocalFile(int32_t, uint32_t);
 
 static int32_t MAPProtectionToFileOpenFlags( uint32_t );
 static BOOL MAPIsRequestPermissible( uint32_t, CFileProcessLocalData * );
-static uint32_t MAPConvertProtectToAccess( uint32_t );
 
 #if !defined(__linux__)
 /* We need MAP_ANON. However on some platforms like HP-UX, it is defined as MAP_ANONYMOUS */
@@ -130,11 +130,6 @@ FileMappingCleanupRoutine(
         {
             chakra::Logger::error("Unable to obtain immutable data for object to be reclaimed");
             return;
-        }
-
-        if (pImmutableData->bPALCreatedTempFile)
-        {
-            unlink(pImmutableData->szFileName);
         }
     }
 
@@ -254,7 +249,6 @@ CorUnix::InternalCreateFileMapping(CPalThread *pThread, HANDLE hFile, uint32_t f
     
     struct stat UnixFileInformation;
     int32_t UnixFd = -1;
-    BOOL bPALCreatedTempFile = FALSE;
     uint32_t nFileSize = 0;
 
     //
@@ -475,9 +469,7 @@ CorUnix::InternalCreateFileMapping(CPalThread *pThread, HANDLE hFile, uint32_t f
 
     pImmutableData->MaxSize = nFileSize;
     pImmutableData->flProtect = flProtect;
-    pImmutableData->bPALCreatedTempFile = bPALCreatedTempFile;
-    pImmutableData->dwDesiredAccessWhenOpened = MAPConvertProtectToAccess(flProtect);
-    
+
 
     //
     // The local data isn't grabbed / modified until here so that we don't
@@ -537,11 +529,6 @@ ExitInternalCreateFileMapping:
     {
         pMapping->ReleaseReference(pThread);
 
-        if (bPALCreatedTempFile)
-        {
-            unlink(pImmutableData->szFileName);
-        }
-
         if (-1 != UnixFd)
         {
             close(UnixFd);
@@ -585,56 +572,10 @@ MAPInitialize( void )
 
 /*++
 Function :
-    MAPCleanup
-
-    Deletes the critical sections. And all other necessary cleanup.
-
-Note:
-    This function is called after the handle manager is stopped. So
-    there shouldn't be any call that will cause an access to the handle
-    manager.
-
---*/
-// TODO (hanhossain): remove more-pal-file
-void MAPCleanup( void )
-{
-    TRACE( "Deleting the critical section.\n" );
-    InternalDeleteCriticalSection(&mapping_critsec);
-}
-
-/*++
-Function :
-    MAPConvertProtectToAccess
-
-    Converts the PAGE_READONLY type flags to FILE_MAP_READ flags.
-
---*/
-static uint32_t MAPConvertProtectToAccess( uint32_t flProtect )
-{
-    if ( PAGE_READONLY == flProtect )
-    {
-        return FILE_MAP_READ;
-    }
-    if ( PAGE_READWRITE == flProtect )
-    {
-        return FILE_MAP_ALL_ACCESS;
-    }
-    if ( PAGE_WRITECOPY == flProtect )
-    {
-        return FILE_MAP_COPY;
-    }
-
-    chakra::Logger::error("Unknown flag for flProtect. This line "
-            "should not have been executed.\n " );
-    return static_cast<uint32_t>(-1);
-}
-
-/*++
-Function :
     MAPConvertAccessToProtect
 
     Converts the FILE_MAP_READ type flags to PAGE_READONLY flags.
-    Currently, this function only deals with the access flags recognized as valid 
+    Currently, this function only deals with the access flags recognized as valid
     by MAPContainsInvalidFlags().
 
 --*/

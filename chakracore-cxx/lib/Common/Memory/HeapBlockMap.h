@@ -79,8 +79,6 @@ private:
     template <class Fn>
     void ForEachSegment(Recycler * recycler, Fn func);
 
-    void ChangeProtectionLevel(Recycler* recycler, uint32_t protectFlags, uint32_t expectedOldFlags);
-
     static uint GetLevel1Id(void * address)
     {
         return ::Math::PointerCastToIntegralTruncate<uint>(address) / L2Count / PageSize;

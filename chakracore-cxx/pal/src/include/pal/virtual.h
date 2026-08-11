@@ -85,24 +85,6 @@ Return value:
 --*/
 BOOL VIRTUALInitialize( void );
 
-/*++
-Function :
-    VIRTUALCleanup
-
-    Deletes the critical sections.
-
---*/
-void VIRTUALCleanup( void );
-
-/*++
-Function :
-    VIRTUALOwnedRegion
-
-    Returns whether the space in question is owned the VIRTUAL system.
-
---*/
-BOOL VIRTUALOwnedRegion(  unsigned long address );
-
 
 #ifdef __cplusplus
 }
