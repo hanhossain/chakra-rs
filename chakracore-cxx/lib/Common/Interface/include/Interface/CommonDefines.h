@@ -99,9 +99,6 @@
 #ifdef DBG
 #define ENABLE_BACKGROUND_PARSING 1
 #endif
-
-#define ALLOW_JIT_REPRO
-
 #endif
 
 #ifndef PERFMAP_SIGNAL

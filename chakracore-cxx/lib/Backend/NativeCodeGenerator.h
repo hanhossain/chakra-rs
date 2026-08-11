@@ -40,8 +40,6 @@ public:
     bool DoBackEnd(Js::FunctionBody * fn);
 #endif
 
-#ifdef ALLOW_JIT_REPRO
-#endif
 void SetProfileMode(BOOL fSet);
 public:
     static Js::Var CheckCodeGenThunk(Js::RecyclableObject* function, Js::CallInfo callInfo, ...);

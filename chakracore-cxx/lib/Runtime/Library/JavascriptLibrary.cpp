@@ -3127,14 +3127,6 @@ namespace Js
         library->AddMember(functionConstructor, PropertyIds::name, scriptContext->GetPropertyString(PropertyIds::Function), PropertyConfigurable);
 
         functionConstructor->SetHasNoEnumerableProperties(true);
-
-#ifdef ALLOW_JIT_REPRO
-        if (CONFIG_FLAG(JitRepro))
-        {
-            library->AddFunctionToLibraryObject(functionConstructor, PropertyIds::invokeJit, &JavascriptFunction::EntryInfo::InvokeJit, 1);
-        }
-#endif
-
         return true;
     }
 
