@@ -3061,29 +3061,3 @@ using namespace Js;
 
         return result;
     }
-
-#ifdef ALLOW_JIT_REPRO
-    Var JavascriptFunction::EntryInvokeJit(RecyclableObject* function, CallInfo callInfo, ...)
-    {
-        PROBE_STACK(function->GetScriptContext(), Js::Constants::MinStackDefault);
-
-        ARGUMENTS(args, callInfo);
-        ScriptContext* scriptContext = function->GetScriptContext();
-
-        Assert(!(callInfo.Flags & CallFlags_New));
-
-        // todo:: make it work with inproc jit
-        Output::Print(u"Out of proc jit is necessary to repro using an encoded buffer");
-        Js::Throw::FatalInternalError();
-
-        if (args.Info.Count < 2 || !VarIs<ArrayBufferBase>(args[1]))
-        {
-            JavascriptError::ThrowTypeError(scriptContext, JSERR_NeedArrayBufferObject);
-        }
-
-        // TODO (hanhossain): remove OOPJIT
-        return JavascriptNumber::New(E_NOTIMPL, scriptContext);
-    }
-#endif
-
-

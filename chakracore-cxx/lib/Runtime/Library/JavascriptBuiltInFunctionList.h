@@ -142,9 +142,6 @@ BUILTIN(JavascriptFunction, ToString, EntryToString, FunctionInfo::ErrorOnNew | 
 BUILTIN(JavascriptFunction, SymbolHasInstance, EntrySymbolHasInstance, FunctionInfo::ErrorOnNew)
 BUILTIN(JavascriptFunction, NewAsyncGeneratorFunctionInstance, NewAsyncGeneratorFunctionInstance, FunctionInfo::SkipDefaultNewObject)
 BUILTIN(JavascriptFunction, NewAsyncFunctionInstance, NewAsyncFunctionInstance, FunctionInfo::SkipDefaultNewObject)
-#ifdef ALLOW_JIT_REPRO
-BUILTIN(JavascriptFunction, InvokeJit, EntryInvokeJit, FunctionInfo::ErrorOnNew)
-#endif
 BUILTIN(JavascriptNumber, IsNaN, EntryIsNaN, FunctionInfo::ErrorOnNew)
 BUILTIN(JavascriptNumber, IsFinite, EntryIsFinite, FunctionInfo::ErrorOnNew)
 BUILTIN(JavascriptNumber, IsInteger, EntryIsInteger, FunctionInfo::ErrorOnNew)

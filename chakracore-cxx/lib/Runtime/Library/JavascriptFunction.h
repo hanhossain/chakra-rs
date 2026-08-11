@@ -94,9 +94,6 @@ namespace Js
 
             static FunctionInfo NewAsyncFunctionInstance;
             static FunctionInfo NewAsyncGeneratorFunctionInstance;
-#ifdef ALLOW_JIT_REPRO
-            static FunctionInfo InvokeJit;
-#endif
         };
 
         static const int numberLinesPrependedToAnonymousFunction = 1;
@@ -116,9 +113,6 @@ namespace Js
         static Var NewAsyncGeneratorFunctionInstanceRestrictedMode(RecyclableObject* function, CallInfo callInfo, ...);
         static Var NewAsyncFunctionInstance(RecyclableObject* function, CallInfo callInfo, ...);
         static Var NewAsyncFunctionInstanceRestrictedMode(RecyclableObject* function, CallInfo callInfo, ...);
-#ifdef ALLOW_JIT_REPRO
-        static Var EntryInvokeJit(RecyclableObject* function, CallInfo callInfo, ...);
-#endif
 
         Var CallFunction(Arguments args);
         Var CallRootFunction(Arguments args, ScriptContext * scriptContext, bool inScript);

@@ -62,8 +62,6 @@ void GenerateLoopBody(NativeCodeGenerator * nativeCodeGen, Js::FunctionBody * fu
 #ifdef ENABLE_PREJIT
 void GenerateAllFunctions(NativeCodeGenerator * nativeCodeGen, Js::FunctionBody * fn);
 #endif
-#ifdef ALLOW_JIT_REPRO
-#endif
 
 BOOL IsIntermediateCodeGenThunk(Js::JavascriptMethod codeAddress);
 BOOL IsAsmJsCodeGenThunk(Js::JavascriptMethod codeAddress);
