@@ -93,8 +93,6 @@ public:
     void ResetIsAllJITCodeInPreReservedRegion();
     bool IsAllJITCodeInPreReservedRegion() const;
 
-    virtual HANDLE GetProcessHandle() const = 0;
-
     virtual bool IsThreadBound() const = 0;
 
     virtual size_t GetScriptStackLimit() const = 0;
@@ -128,16 +126,6 @@ public:
             _In_opt_ void * viewBase,
             bool isSetValid);
 protected:
-    class AutoCloseHandle
-    {
-    public:
-        AutoCloseHandle(HANDLE handle) : handle(handle) { Assert(this->handle != GetCurrentProcess()); }
-        ~AutoCloseHandle() { CloseHandle(this->handle); }
-        HANDLE GetHandle() const { return this->handle; }
-    private:
-        HANDLE handle;
-    };
-
     Js::TypeId wellKnownHostTypeIds[WellKnownHostType_Last + 1];
 
     bool m_isAllJITCodeInPreReservedRegion;

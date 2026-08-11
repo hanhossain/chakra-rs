@@ -176,22 +176,6 @@ static_assert(CLR_SEM_MAX_NAMELEN <= MAX_PATH, "CLR_SEM_MAX_NAMELEN > MAX_PATH")
 //
 pthread_key_t CorUnix::thObjKey;
 
-/*++
-Function:
-  GetCurrentProcess
-
-See MSDN doc.
---*/
-HANDLE
-GetCurrentProcess(
-          void)
-{
-    LOGEXIT("GetCurrentProcess returns HANDLE %p\n", hPseudoCurrentProcess);
-
-    /* return a pseudo handle */
-    return hPseudoCurrentProcess;
-}
-
 PAL_ERROR
 PrepareStandardHandle(
     CPalThread *pThread,

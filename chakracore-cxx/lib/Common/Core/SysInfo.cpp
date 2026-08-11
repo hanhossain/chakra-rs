@@ -50,7 +50,6 @@ AutoSystemInfo::Initialize()
     majorVersion = CHAKRA_CORE_MAJOR_VERSION;
     minorVersion = CHAKRA_CORE_MINOR_VERSION;
 
-    processHandle = GetCurrentProcess();
     GetSystemInfo(this);
 
     // Make the page size constant so calculation are faster.

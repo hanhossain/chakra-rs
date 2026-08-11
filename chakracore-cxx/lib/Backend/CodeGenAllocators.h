@@ -14,7 +14,7 @@ private:
 public:
     EmitBufferManager<TAlloc, TPreReservedAlloc, std::recursive_mutex> emitBufferManager;
 
-    CodeGenAllocators(AllocationPolicyManager * policyManager, Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, CustomHeap::CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators, HANDLE processHandle);
+    CodeGenAllocators(AllocationPolicyManager * policyManager, Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, CustomHeap::CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators);
     ~CodeGenAllocators();
 
 #if DBG

@@ -124,7 +124,7 @@ private:
 
     InProcCodeGenAllocators *CreateAllocators(PageAllocator *const pageAllocator)
     {
-        return HeapNew(InProcCodeGenAllocators, pageAllocator->GetAllocationPolicyManager(), scriptContext, scriptContext->GetThreadContext(), scriptContext->GetThreadContext()->GetCodePageAllocators(), GetCurrentProcess());
+        return HeapNew(InProcCodeGenAllocators, pageAllocator->GetAllocationPolicyManager(), scriptContext, scriptContext->GetThreadContext(), scriptContext->GetThreadContext()->GetCodePageAllocators());
     }
 
     InProcCodeGenAllocators *EnsureForegroundAllocators(PageAllocator * pageAllocator)

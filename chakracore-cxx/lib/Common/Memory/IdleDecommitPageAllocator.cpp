@@ -15,7 +15,7 @@ IdleDecommitPageAllocator::IdleDecommitPageAllocator(AllocationPolicyManager * p
     hadDecommitTimer(false),
     PageAllocator(policyManager, flagTable, type, maxFreePageCount, zeroPages,
     backgroundPageQueue,
-    maxAllocPageCount, 0, false, false, GetCurrentProcess(), enableWriteBarrier),
+    maxAllocPageCount, 0, false, false, enableWriteBarrier),
     maxIdleDecommitFreePageCount(maxIdleFreePageCount),
     maxNonIdleDecommitFreePageCount(maxFreePageCount)
 {

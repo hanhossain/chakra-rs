@@ -539,7 +539,6 @@ public:
         uint secondaryAllocPageCount = DefaultSecondaryAllocPageCount,
         bool stopAllocationOnOutOfMemory = false,
         bool excludeGuardPages = false,
-        HANDLE processHandle = GetCurrentProcess(),
         bool enableWriteBarrier = false
         );
 
@@ -763,7 +762,6 @@ protected:
     bool IsAddressInSegment(void* address, const TPageSegment& segment);
     bool IsAddressInSegment(void* address, const TSegment& segment);
 
-    HANDLE processHandle;
 private:
     uint GetSecondaryAllocPageCount() const { return this->secondaryAllocPageCount; }
     void IntegrateSegments(DListBase<TPageSegment>& segmentList, uint segmentCount, size_t pageCount);
@@ -865,7 +863,7 @@ class HeapPageAllocator : public PageAllocatorBase<TVirtualAlloc>
 
     PREVENT_STANDALONE_HEAPINSTANCE();
 public:
-    HeapPageAllocator(AllocationPolicyManager * policyManager, bool allocXdata, bool excludeGuardPages, TVirtualAlloc * virtualAllocator, HANDLE processHandle = nullptr);
+    HeapPageAllocator(AllocationPolicyManager * policyManager, bool allocXdata, bool excludeGuardPages, TVirtualAlloc * virtualAllocator);
 
     BOOL ProtectPages(char* address, size_t pageCount, void* segment, uint32_t dwVirtualProtectFlags, uint32_t desiredOldProtectFlag);
     bool AllocSecondary(void* segment, size_t functionStart, uint32_t functionSize, ushort pdataCount, ushort xdataSize, SecondaryAllocation* allocation);
