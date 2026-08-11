@@ -124,10 +124,6 @@ CObjectType CorUnix::otProcess __attribute__((init_priority(200))) (
                 0,      // No immutable data
                 sizeof(CProcProcessLocalData),
                 0,
-                PROCESS_ALL_ACCESS,
-                CObjectType::SecuritySupported,
-                CObjectType::SecurityInfoNotPersisted,
-                CObjectType::UnnamedObject,
                 CObjectType::WaitableObject,
                 CObjectType::SingleTransitionObject,
                 CObjectType::ThreadReleaseHasNoSideEffects,
