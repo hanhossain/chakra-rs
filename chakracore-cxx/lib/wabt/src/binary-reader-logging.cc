@@ -37,10 +37,10 @@ namespace {
 void SPrintLimits(char* dst, size_t size, const Limits* limits) {
   int result;
   if (limits->has_max) {
-    result = wabt_snprintf(dst, size, "initial: %" PRIu64 ", max: %" PRIu64,
+    result = snprintf(dst, size, "initial: %" PRIu64 ", max: %" PRIu64,
                            limits->initial, limits->max);
   } else {
-    result = wabt_snprintf(dst, size, "initial: %" PRIu64, limits->initial);
+    result = snprintf(dst, size, "initial: %" PRIu64, limits->initial);
   }
   WABT_USE(result);
   assert(static_cast<size_t>(result) < size);
@@ -121,7 +121,7 @@ Result BinaryReaderLogging::BeginSection(BinarySection section_type,
 
 Result BinaryReaderLogging::BeginCustomSection(Offset size,
                                                string_view section_name) {
-  LOGF("BeginCustomSection('" PRIstringview "', size: %" PRIzd ")\n",
+  LOGF("BeginCustomSection('" PRIstringview "', size: %" "zd" ")\n",
        WABT_PRINTF_STRING_VIEW_ARG(section_name), size);
   Indent();
   return reader_->BeginCustomSection(size, section_name);
@@ -255,7 +255,7 @@ Result BinaryReaderLogging::OnExport(Index index,
 }
 
 Result BinaryReaderLogging::BeginFunctionBody(Index value, Offset size) {
-  LOGF("BeginFunctionBody(%" PRIindex ", size:%" PRIzd ")\n", value, size);
+  LOGF("BeginFunctionBody(%" PRIindex ", size:%" "zd" ")\n", value, size);
   return reader_->BeginFunctionBody(value, size);
 }
 
@@ -386,7 +386,7 @@ Result BinaryReaderLogging::OnDataSegmentData(Index index,
 Result BinaryReaderLogging::OnModuleNameSubsection(Index index,
                                                    uint32_t name_type,
                                                    Offset subsection_size) {
-  LOGF("OnModuleNameSubsection(index:%" PRIindex ", nametype:%u, size:%" PRIzd
+  LOGF("OnModuleNameSubsection(index:%" PRIindex ", nametype:%u, size:%" "zd"
        ")\n",
        index, name_type, subsection_size);
   return reader_->OnModuleNameSubsection(index, name_type, subsection_size);
@@ -401,7 +401,7 @@ Result BinaryReaderLogging::OnModuleName(string_view name) {
 Result BinaryReaderLogging::OnFunctionNameSubsection(Index index,
                                                      uint32_t name_type,
                                                      Offset subsection_size) {
-  LOGF("OnFunctionNameSubsection(index:%" PRIindex ", nametype:%u, size:%" PRIzd
+  LOGF("OnFunctionNameSubsection(index:%" PRIindex ", nametype:%u, size:%" "zd"
        ")\n",
        index, name_type, subsection_size);
   return reader_->OnFunctionNameSubsection(index, name_type, subsection_size);
@@ -416,7 +416,7 @@ Result BinaryReaderLogging::OnFunctionName(Index index, string_view name) {
 Result BinaryReaderLogging::OnLocalNameSubsection(Index index,
                                                   uint32_t name_type,
                                                   Offset subsection_size) {
-  LOGF("OnLocalNameSubsection(index:%" PRIindex ", nametype:%u, size:%" PRIzd
+  LOGF("OnLocalNameSubsection(index:%" PRIindex ", nametype:%u, size:%" "zd"
        ")\n",
        index, name_type, subsection_size);
   return reader_->OnLocalNameSubsection(index, name_type, subsection_size);
@@ -502,7 +502,7 @@ Result BinaryReaderLogging::OnReloc(RelocType type,
                                     Index index,
                                     uint32_t addend) {
   int32_t signed_addend = static_cast<int32_t>(addend);
-  LOGF("OnReloc(type: %s, offset: %" PRIzd ", index: %" PRIindex
+  LOGF("OnReloc(type: %s, offset: %" "zd" ", index: %" PRIindex
        ", addend: %d)\n",
        GetRelocTypeName(type), offset, index, signed_addend);
   return reader_->OnReloc(type, offset, index, addend);
@@ -572,7 +572,7 @@ Result BinaryReaderLogging::OnInitFunction(uint32_t priority,
 
 #define DEFINE_BEGIN(name)                        \
   Result BinaryReaderLogging::name(Offset size) { \
-    LOGF(#name "(%" PRIzd ")\n", size);           \
+    LOGF(#name "(%" "zd" ")\n", size);           \
     Indent();                                     \
     return reader_->name(size);                   \
   }

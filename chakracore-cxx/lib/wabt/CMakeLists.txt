@@ -16,26 +16,6 @@
 cmake_minimum_required(VERSION 3.28)
 project(WABT)
 
-set(COMPILER_IS_CLANG 1)
-
-include(CheckIncludeFile)
-include(CheckSymbolExists)
-
-check_include_file("alloca.h" HAVE_ALLOCA_H)
-check_include_file("unistd.h" HAVE_UNISTD_H)
-check_symbol_exists(snprintf "stdio.h" HAVE_SNPRINTF)
-check_symbol_exists(sysconf "unistd.h" HAVE_SYSCONF)
-check_symbol_exists(strcasecmp "strings.h" HAVE_STRCASECMP)
-
-include(CheckTypeSize)
-check_type_size(ssize_t SSIZE_T)
-check_type_size(size_t SIZEOF_SIZE_T)
-
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/config.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/config.h
-)
-
 # disable -Wunused-parameter: this is really common when implementing
 #   interfaces, etc.
 # disable -Wpointer-arith: this is a GCC extension, and doesn't work in MSVC.
@@ -48,10 +28,7 @@ set_source_files_properties(
   COMPILE_FLAGS "-Wno-format-security -Wno-old-style-cast"
 )
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${WABT_SOURCE_DIR}/cmake)
 set(WAST_LEXER_GEN_CC src/prebuilt/wast-lexer-gen.cc)
-
-add_custom_target(everything)
 
 add_library(libwabt OBJECT
   chakra/wabtapi.cc
@@ -94,7 +71,6 @@ add_library(libwabt OBJECT
 
 target_include_directories(libwabt PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 target_compile_definitions(libwabt PUBLIC

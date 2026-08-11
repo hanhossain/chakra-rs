@@ -20,12 +20,7 @@
 
 #include "src/common.h"
 
-#if _WIN32
-#include <io.h>
-#include <windows.h>
-#elif HAVE_UNISTD_H
 #include <unistd.h>
-#endif
 
 namespace wabt {
 
@@ -39,23 +34,7 @@ bool Color::SupportsColor(FILE* file) {
   if (force) {
     return atoi(force) != 0;
   }
-
-#if _WIN32
-
-  {
-    // TODO(binji): Support older Windows by using SetConsoleTextAttribute?
-    return false;
-  }
-
-#elif HAVE_UNISTD_H
-
   return isatty(fileno(file));
-
-#else
-
-  return false;
-
-#endif
 }
 
 void Color::WriteCode(const char* code) const {

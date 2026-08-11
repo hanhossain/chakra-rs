@@ -22,6 +22,7 @@
 #include <cmath>
 #include <limits>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "src/interp/interp-internal.h"
@@ -75,7 +76,7 @@ std::string TypedValueToString(const TypedValue& tv) {
                           tv.value.v128_bits.v[2], tv.value.v128_bits.v[3]);
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -701,7 +702,7 @@ template<> v128 GetValue<v128>(Value v) { return v.v128_bits; }
 #define TRAP_UNLESS(cond, type) TRAP_IF(!(cond), type)
 #define TRAP_IF(cond, type)    \
   do {                         \
-    if (WABT_UNLIKELY(cond)) { \
+    if (__builtin_expect(!!(cond), 0)) { \
       TRAP(type);              \
     }                          \
   } while (0)
@@ -710,7 +711,7 @@ template<> v128 GetValue<v128>(Value v) { return v.v128_bits; }
   TRAP_IF(value_stack_top_ >= value_stack_.size(), ValueStackExhausted)
 
 #define PUSH_NEG_1_AND_BREAK_IF(cond) \
-  if (WABT_UNLIKELY(cond)) {          \
+  if (__builtin_expect(!!(cond), 0)) {          \
     CHECK_TRAP(Push<int32_t>(-1));    \
     break;                            \
   }
@@ -1073,7 +1074,7 @@ Result IntRemS(ValueTypeRep<T> lhs_rep,
   auto lhs = FromRep<T>(lhs_rep);
   auto rhs = FromRep<T>(rhs_rep);
   TRAP_IF(rhs == 0, IntegerDivideByZero);
-  if (WABT_LIKELY(IsNormalDivRemS(lhs, rhs))) {
+  if (__builtin_expect(!!(IsNormalDivRemS(lhs, rhs)), 1)) {
     *out_result = ToRep(lhs % rhs);
   } else {
     *out_result = 0;
@@ -1110,7 +1111,7 @@ template <typename T>
 ValueTypeRep<T> FloatDiv(ValueTypeRep<T> lhs_rep, ValueTypeRep<T> rhs_rep) {
   typedef FloatTraits<T> Traits;
   ValueTypeRep<T> result;
-  if (WABT_UNLIKELY(Traits::IsZero(rhs_rep))) {
+  if (__builtin_expect(!!(Traits::IsZero(rhs_rep)), 0)) {
     if (Traits::IsNan(lhs_rep)) {
       result = lhs_rep | Traits::kQuietNan;
     } else if (Traits::IsZero(lhs_rep)) {
@@ -1217,7 +1218,7 @@ ValueTypeRep<T> FloatNeg(ValueTypeRep<T> v_rep) {
 template <typename T>
 ValueTypeRep<T> FloatCeil(ValueTypeRep<T> v_rep) {
   auto result = ToRep(std::ceil(FromRep<T>(v_rep)));
-  if (WABT_UNLIKELY(FloatTraits<T>::IsNan(result))) {
+  if (__builtin_expect(!!(FloatTraits<T>::IsNan(result)), 0)) {
     result |= FloatTraits<T>::kQuietNanBit;
   }
   return result;
@@ -1227,7 +1228,7 @@ ValueTypeRep<T> FloatCeil(ValueTypeRep<T> v_rep) {
 template <typename T>
 ValueTypeRep<T> FloatFloor(ValueTypeRep<T> v_rep) {
   auto result = ToRep(std::floor(FromRep<T>(v_rep)));
-  if (WABT_UNLIKELY(FloatTraits<T>::IsNan(result))) {
+  if (__builtin_expect(!!(FloatTraits<T>::IsNan(result)), 0)) {
     result |= FloatTraits<T>::kQuietNanBit;
   }
   return result;
@@ -1237,7 +1238,7 @@ ValueTypeRep<T> FloatFloor(ValueTypeRep<T> v_rep) {
 template <typename T>
 ValueTypeRep<T> FloatTrunc(ValueTypeRep<T> v_rep) {
   auto result = ToRep(std::trunc(FromRep<T>(v_rep)));
-  if (WABT_UNLIKELY(FloatTraits<T>::IsNan(result))) {
+  if (__builtin_expect(!!(FloatTraits<T>::IsNan(result)), 0)) {
     result |= FloatTraits<T>::kQuietNanBit;
   }
   return result;
@@ -1247,7 +1248,7 @@ ValueTypeRep<T> FloatTrunc(ValueTypeRep<T> v_rep) {
 template <typename T>
 ValueTypeRep<T> FloatNearest(ValueTypeRep<T> v_rep) {
   auto result = ToRep(std::nearbyint(FromRep<T>(v_rep)));
-  if (WABT_UNLIKELY(FloatTraits<T>::IsNan(result))) {
+  if (__builtin_expect(!!(FloatTraits<T>::IsNan(result)), 0)) {
     result |= FloatTraits<T>::kQuietNanBit;
   }
   return result;
@@ -1257,7 +1258,7 @@ ValueTypeRep<T> FloatNearest(ValueTypeRep<T> v_rep) {
 template <typename T>
 ValueTypeRep<T> FloatSqrt(ValueTypeRep<T> v_rep) {
   auto result = ToRep(std::sqrt(FromRep<T>(v_rep)));
-  if (WABT_UNLIKELY(FloatTraits<T>::IsNan(result))) {
+  if (__builtin_expect(!!(FloatTraits<T>::IsNan(result)), 0)) {
     result |= FloatTraits<T>::kQuietNanBit;
   }
   return result;
@@ -1268,11 +1269,11 @@ template <typename T>
 ValueTypeRep<T> FloatMin(ValueTypeRep<T> lhs_rep, ValueTypeRep<T> rhs_rep) {
   typedef FloatTraits<T> Traits;
 
-  if (WABT_UNLIKELY(Traits::IsNan(lhs_rep))) {
+  if (__builtin_expect(!!(Traits::IsNan(lhs_rep)), 0)) {
     return lhs_rep | Traits::kQuietNanBit;
-  } else if (WABT_UNLIKELY(Traits::IsNan(rhs_rep))) {
+  } else if (__builtin_expect(!!(Traits::IsNan(rhs_rep)), 0)) {
     return rhs_rep | Traits::kQuietNanBit;
-  } else if (WABT_UNLIKELY(Traits::IsZero(lhs_rep) &&
+  } else if (__builtin_expect(!!(Traits::IsZero(lhs_rep, 0)) &&
                            Traits::IsZero(rhs_rep))) {
     // min(0.0, -0.0) == -0.0, but std::min won't produce the correct result.
     // We can instead compare using the unsigned integer representation, but
@@ -1288,11 +1289,11 @@ template <typename T>
 ValueTypeRep<T> FloatMax(ValueTypeRep<T> lhs_rep, ValueTypeRep<T> rhs_rep) {
   typedef FloatTraits<T> Traits;
 
-  if (WABT_UNLIKELY(Traits::IsNan(lhs_rep))) {
+  if (__builtin_expect(!!(Traits::IsNan(lhs_rep)), 0)) {
     return lhs_rep | Traits::kQuietNanBit;
-  } else if (WABT_UNLIKELY(Traits::IsNan(rhs_rep))) {
+  } else if (__builtin_expect(!!(Traits::IsNan(rhs_rep)), 0)) {
     return rhs_rep | Traits::kQuietNanBit;
-  } else if (WABT_UNLIKELY(Traits::IsZero(lhs_rep) &&
+  } else if (__builtin_expect(!!(Traits::IsZero(lhs_rep, 0)) &&
                            Traits::IsZero(rhs_rep))) {
     // min(0.0, -0.0) == -0.0, but std::min won't produce the correct result.
     // We can instead compare using the unsigned integer representation, but
@@ -1357,7 +1358,7 @@ ValueTypeRep<R> SimdConvert(ValueTypeRep<T> v_rep) {
 template <>
 ValueTypeRep<double> SimdConvert<double, uint64_t>(
     ValueTypeRep<uint64_t> v_rep) {
-  return ToRep(wabt_convert_uint64_to_double(v_rep));
+  return ToRep(static_cast<double>(v_rep));
 }
 
 // i{32,64}.trunc_{s,u}/f{32,64}
@@ -1373,9 +1374,9 @@ Result IntTrunc(ValueTypeRep<T> v_rep, ValueTypeRep<R>* out_result) {
 template <typename R, typename T>
 ValueTypeRep<R> IntTruncSat(ValueTypeRep<T> v_rep) {
   typedef FloatTraits<T> Traits;
-  if (WABT_UNLIKELY(Traits::IsNan(v_rep))) {
+  if (__builtin_expect(!!(Traits::IsNan(v_rep)), 0)) {
     return 0;
-  } else if (WABT_UNLIKELY((!IsConversionInRange<R, T>(v_rep)))) {
+  } else if (__builtin_expect(!!((!IsConversionInRange<R, T>(v_rep))), 0)) {
     if (v_rep & Traits::kSignMask) {
       return ToRep(std::numeric_limits<R>::min());
     } else {
@@ -1990,16 +1991,16 @@ Result Thread::Run(int num_instructions) {
         CHECK_TRAP(Binop(Ge<uint32_t>));
         break;
 
-      case Opcode::I32Clz:
-        CHECK_TRAP(Push<uint32_t>(Clz(Pop<uint32_t>())));
+    case Opcode::I32Clz:
+        CHECK_TRAP(Push<uint32_t>(std::countl_zero(Pop<uint32_t>())));
         break;
 
-      case Opcode::I32Ctz:
-        CHECK_TRAP(Push<uint32_t>(Ctz(Pop<uint32_t>())));
+    case Opcode::I32Ctz:
+        CHECK_TRAP(Push<uint32_t>(std::countr_zero(Pop<uint32_t>())));
         break;
 
-      case Opcode::I32Popcnt:
-        CHECK_TRAP(Push<uint32_t>(Popcount(Pop<uint32_t>())));
+    case Opcode::I32Popcnt:
+        CHECK_TRAP(Push<uint32_t>(std::popcount(Pop<uint32_t>())));
         break;
 
       case Opcode::I32Eqz:
@@ -2098,16 +2099,16 @@ Result Thread::Run(int num_instructions) {
         CHECK_TRAP(Binop(Ge<uint64_t>));
         break;
 
-      case Opcode::I64Clz:
-        CHECK_TRAP(Push<uint64_t>(Clz(Pop<uint64_t>())));
+    case Opcode::I64Clz:
+        CHECK_TRAP(Push<uint64_t>(std::countl_zero(Pop<uint64_t>())));
         break;
 
-      case Opcode::I64Ctz:
-        CHECK_TRAP(Push<uint64_t>(Ctz(Pop<uint64_t>())));
+    case Opcode::I64Ctz:
+        CHECK_TRAP(Push<uint64_t>(std::countr_zero(Pop<uint64_t>())));
         break;
 
-      case Opcode::I64Popcnt:
-        CHECK_TRAP(Push<uint64_t>(Popcount(Pop<uint64_t>())));
+    case Opcode::I64Popcnt:
+        CHECK_TRAP(Push<uint64_t>(std::popcount(Pop<uint64_t>())));
         break;
 
       case Opcode::F32Add:
@@ -2359,7 +2360,7 @@ Result Thread::Run(int num_instructions) {
         break;
 
       case Opcode::F32ConvertUI64:
-        CHECK_TRAP(Push<float>(wabt_convert_uint64_to_float(Pop<uint64_t>())));
+        CHECK_TRAP(Push<float>(static_cast<float>(Pop<uint64_t>())));
         break;
 
       case Opcode::F32DemoteF64: {
@@ -2367,7 +2368,7 @@ Result Thread::Run(int num_instructions) {
         typedef FloatTraits<double> F64Traits;
 
         uint64_t value = PopRep<double>();
-        if (WABT_LIKELY((IsConversionInRange<float, double>(value)))) {
+        if (__builtin_expect(!!((IsConversionInRange<float, double>(value))), 1)) {
           CHECK_TRAP(Push<float>(FromRep<double>(value)));
         } else if (IsInRangeF64DemoteF32RoundToF32Max(value)) {
           CHECK_TRAP(PushRep<float>(F32Traits::kMax));
@@ -2404,7 +2405,7 @@ Result Thread::Run(int num_instructions) {
 
       case Opcode::F64ConvertUI64:
         CHECK_TRAP(
-            Push<double>(wabt_convert_uint64_to_double(Pop<uint64_t>())));
+            Push<double>(static_cast<double>(Pop<uint64_t>())));
         break;
 
       case Opcode::F64PromoteF32:
@@ -3241,31 +3242,31 @@ Result Thread::Run(int num_instructions) {
         break;
 
       case Opcode::MemoryInit:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::MemoryDrop:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::MemoryCopy:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::MemoryFill:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::TableInit:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::TableDrop:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::TableCopy:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       // The following opcodes are either never generated or should never be
@@ -3282,7 +3283,7 @@ Result Thread::Run(int num_instructions) {
       case Opcode::Rethrow:
       case Opcode::Throw:
       case Opcode::Try:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
     }
   }

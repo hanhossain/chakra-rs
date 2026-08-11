@@ -18,6 +18,7 @@
 #define WABT_ERROR_H_
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "src/common.h"
@@ -30,14 +31,14 @@ enum class ErrorLevel {
   Error,
 };
 
-static WABT_INLINE const char* GetErrorLevelName(ErrorLevel error_level) {
+static inline const char* GetErrorLevelName(ErrorLevel error_level) {
   switch (error_level) {
     case ErrorLevel::Warning:
       return "warning";
     case ErrorLevel::Error:
       return "error";
   }
-  WABT_UNREACHABLE;
+  std::unreachable();
 }
 
 class Error {

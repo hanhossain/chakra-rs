@@ -108,7 +108,7 @@ NameResolver::NameResolver(Script* script, Errors* errors)
 
 }  // end anonymous namespace
 
-void WABT_PRINTF_FORMAT(3, 4) NameResolver::PrintError(const Location* loc,
+void __attribute__((format(printf, (3), (4)))) NameResolver::PrintError(const Location* loc,
                                                        const char* format,
                                                        ...) {
   result_ = Result::Error;

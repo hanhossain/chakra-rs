@@ -524,7 +524,7 @@ class Thread {
 
   void Reset();
   Index NumValues() const { return value_stack_top_; }
-  Result Push(Value) WABT_WARN_UNUSED;
+  Result Push(Value) __attribute__((warn_unused_result));
   Value Pop();
   Value ValueAt(Index at) const;
 
@@ -549,7 +549,7 @@ class Thread {
   // ValueTypeRep (uint32_t) and push that. Similarly, Pop<float> will pop the
   // value and convert to float.
   template <typename T>
-  Result Push(T) WABT_WARN_UNUSED;
+  Result Push(T) __attribute__((warn_unused_result));
   template <typename T>
   T Pop();
 
@@ -557,13 +557,13 @@ class Thread {
   // uint32_t argument which is the integer representation of that float value.
   // Similarly, PopRep<float> will not convert the value to a float.
   template <typename T>
-  Result PushRep(ValueTypeRep<T>) WABT_WARN_UNUSED;
+  Result PushRep(ValueTypeRep<T>) __attribute__((warn_unused_result));
   template <typename T>
   ValueTypeRep<T> PopRep();
 
   void DropKeep(uint32_t drop_count, uint32_t keep_count);
 
-  Result PushCall(const uint8_t* pc) WABT_WARN_UNUSED;
+  Result PushCall(const uint8_t* pc) __attribute__((warn_unused_result));
   IstreamOffset PopCall();
 
   template <typename R, typename T> using UnopFunc      = R(T);
@@ -572,34 +572,34 @@ class Thread {
   template <typename R, typename T> using BinopTrapFunc = Result(T, T, R*);
 
   template <typename MemType, typename ResultType = MemType>
-  Result Load(const uint8_t** pc) WABT_WARN_UNUSED;
+  Result Load(const uint8_t** pc) __attribute__((warn_unused_result));
   template <typename MemType, typename ResultType = MemType>
-  Result Store(const uint8_t** pc) WABT_WARN_UNUSED;
+  Result Store(const uint8_t** pc) __attribute__((warn_unused_result));
   template <typename MemType, typename ResultType = MemType>
-  Result AtomicLoad(const uint8_t** pc) WABT_WARN_UNUSED;
+  Result AtomicLoad(const uint8_t** pc) __attribute__((warn_unused_result));
   template <typename MemType, typename ResultType = MemType>
-  Result AtomicStore(const uint8_t** pc) WABT_WARN_UNUSED;
+  Result AtomicStore(const uint8_t** pc) __attribute__((warn_unused_result));
   template <typename MemType, typename ResultType = MemType>
   Result AtomicRmw(BinopFunc<ResultType, ResultType>,
-                   const uint8_t** pc) WABT_WARN_UNUSED;
+                   const uint8_t** pc) __attribute__((warn_unused_result));
   template <typename MemType, typename ResultType = MemType>
-  Result AtomicRmwCmpxchg(const uint8_t** pc) WABT_WARN_UNUSED;
+  Result AtomicRmwCmpxchg(const uint8_t** pc) __attribute__((warn_unused_result));
 
   template <typename R, typename T = R>
-  Result Unop(UnopFunc<R, T> func) WABT_WARN_UNUSED;
+  Result Unop(UnopFunc<R, T> func) __attribute__((warn_unused_result));
   template <typename R, typename T = R>
-  Result UnopTrap(UnopTrapFunc<R, T> func) WABT_WARN_UNUSED;
-
-  template <typename T, typename L, typename R, typename P = R>
-  Result SimdUnop(UnopFunc<R, P> func) WABT_WARN_UNUSED;
-
-  template <typename R, typename T = R>
-  Result Binop(BinopFunc<R, T> func) WABT_WARN_UNUSED;
-  template <typename R, typename T = R>
-  Result BinopTrap(BinopTrapFunc<R, T> func) WABT_WARN_UNUSED;
+  Result UnopTrap(UnopTrapFunc<R, T> func) __attribute__((warn_unused_result));
 
   template <typename T, typename L, typename R, typename P = R>
-  Result SimdBinop(BinopFunc<R, P> func) WABT_WARN_UNUSED;
+  Result SimdUnop(UnopFunc<R, P> func) __attribute__((warn_unused_result));
+
+  template <typename R, typename T = R>
+  Result Binop(BinopFunc<R, T> func) __attribute__((warn_unused_result));
+  template <typename R, typename T = R>
+  Result BinopTrap(BinopTrapFunc<R, T> func) __attribute__((warn_unused_result));
+
+  template <typename T, typename L, typename R, typename P = R>
+  Result SimdBinop(BinopFunc<R, P> func) __attribute__((warn_unused_result));
 
   Environment* env_ = nullptr;
   std::vector<Value> value_stack_;

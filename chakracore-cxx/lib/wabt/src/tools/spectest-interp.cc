@@ -21,6 +21,7 @@
 #include <cstdlib>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "src/binary-reader.h"
@@ -204,7 +205,7 @@ class JSONParser {
   wabt::Result ParseScript(Script* out_script);
 
  private:
-  void WABT_PRINTF_FORMAT(2, 3) PrintError(const char* format, ...);
+  void __attribute__((format(printf, 2, 3))) PrintError(const char* format, ...);
 
   void PutbackChar();
   int ReadChar();
@@ -778,7 +779,7 @@ class CommandRunner {
   int total() const { return total_; }
 
  private:
-  void WABT_PRINTF_FORMAT(3, 4)
+  void __attribute__((format(printf, 3, 4)))
       PrintError(uint32_t line_number, const char* format, ...);
   ExecResult RunAction(int line_number,
                        const Action* action,
@@ -968,7 +969,7 @@ ExecResult CommandRunner::RunAction(int line_number,
       break;
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 
   return exec_result;
@@ -1049,7 +1050,7 @@ wabt::Result CommandRunner::ReadInvalidModule(int line_number,
     }
   }
 
-  WABT_UNREACHABLE;
+  std::unreachable();
 }
 
 wabt::Result CommandRunner::OnModuleCommand(const ModuleCommand* command) {
@@ -1205,7 +1206,7 @@ static bool TypedValuesAreEqual(const TypedValue& tv1, const TypedValue& tv2) {
     case Type::F64:
       return tv1.value.f64_bits == tv2.value.f64_bits;
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -1222,8 +1223,8 @@ wabt::Result CommandRunner::OnAssertReturnCommand(
 
   if (exec_result.values.size() != command->expected.size()) {
     PrintError(command->line,
-               "result length mismatch in assert_return: expected %" PRIzd
-               ", got %" PRIzd,
+               "result length mismatch in assert_return: expected %" "zd"
+               ", got %" "zd",
                command->expected.size(), exec_result.values.size());
     return wabt::Result::Error;
   }
@@ -1234,7 +1235,7 @@ wabt::Result CommandRunner::OnAssertReturnCommand(
     const TypedValue& actual_tv = exec_result.values[i];
     if (!TypedValuesAreEqual(expected_tv, actual_tv)) {
       PrintError(command->line,
-                 "mismatch in result %" PRIzd
+                 "mismatch in result %" "zd"
                  " of assert_return: expected %s, got %s",
                  i, TypedValueToString(expected_tv).c_str(),
                  TypedValueToString(actual_tv).c_str());
@@ -1258,7 +1259,7 @@ wabt::Result CommandRunner::OnAssertReturnNanCommand(
   }
 
   if (exec_result.values.size() != 1) {
-    PrintError(command->line, "expected one result, got %" PRIzd,
+    PrintError(command->line, "expected one result, got %" "zd",
                exec_result.values.size());
     return wabt::Result::Error;
   }

@@ -41,7 +41,7 @@ class WastParser {
  public:
   WastParser(WastLexer*, Errors*, WastParseOptions*);
 
-  void WABT_PRINTF_FORMAT(3, 4) Error(Location, const char* format, ...);
+  void __attribute__((format(printf, (3), (4)))) Error(Location, const char* format, ...);
   Result ParseModule(std::unique_ptr<Module>* out_module);
   Result ParseScript(std::unique_ptr<Script>* out_script);
 

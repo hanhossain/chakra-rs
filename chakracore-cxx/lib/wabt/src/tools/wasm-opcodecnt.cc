@@ -111,7 +111,7 @@ void WriteCounts(Stream& stream, const OpcodeInfoCounts& info_counts) {
   for (auto& pair : sorted) {
     Opcode opcode = pair.first;
     size_t count = pair.second;
-    stream.Writef("%s%s%" PRIzd "\n", opcode.GetName(), s_separator, count);
+    stream.Writef("%s%s%" "zd" "\n", opcode.GetName(), s_separator, count);
   }
 }
 
@@ -135,7 +135,7 @@ void WriteCountsWithImmediates(Stream& stream,
     auto&& info = pair.first;
     size_t count = pair.second;
     info.Write(stream);
-    stream.Writef("%s%" PRIzd "\n", s_separator, count);
+    stream.Writef("%s%" "zd" "\n", s_separator, count);
   }
 }
 

@@ -17,6 +17,7 @@
 #include "src/type-checker.h"
 
 #include <cinttypes>
+#include <utility>
 
 namespace wabt {
 
@@ -64,7 +65,7 @@ void TypeChecker::PrintError(const char* fmt, ...) {
 Result TypeChecker::GetLabel(Index depth, Label** out_label) {
   if (depth >= label_stack_.size()) {
     assert(label_stack_.size() > 0);
-    PrintError("invalid depth: %" PRIindex " (max %" PRIzd ")", depth,
+    PrintError("invalid depth: %" PRIindex " (max %" "zd" ")", depth,
                label_stack_.size() - 1);
     *out_label = nullptr;
     return Result::Error;
@@ -524,7 +525,7 @@ Result TypeChecker::OnEnd() {
                                             "if_except false branch",
                                             "try",
                                             "try catch"};
-  WABT_STATIC_ASSERT(WABT_ARRAY_SIZE(s_label_type_name) == kLabelTypeCount);
+  static_assert(std::size(s_label_type_name) == kLabelTypeCount);
   Label* label;
   CHECK_RESULT(TopLabel(&label));
   assert(static_cast<int>(label->label_type) < kLabelTypeCount);
@@ -718,7 +719,7 @@ Result TypeChecker::OnSimdLaneOp(Opcode opcode, uint64_t lane_idx) {
       result = CheckOpcode2(opcode);
       break;
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
   return result;
 }

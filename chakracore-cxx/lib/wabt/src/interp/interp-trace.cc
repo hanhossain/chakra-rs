@@ -17,6 +17,7 @@
 #include "src/interp/interp.h"
 
 #include <cinttypes>
+#include <utility>
 
 #include "src/interp/interp-internal.h"
 
@@ -27,7 +28,7 @@ void Thread::Trace(Stream* stream) {
   const uint8_t* istream = GetIstream();
   const uint8_t* pc = &istream[pc_];
 
-  stream->Writef("#%u. %4" PRIzd ": V:%-3u| ", call_stack_top_, pc - istream,
+  stream->Writef("#%u. %4" "zd" ": V:%-3u| ", call_stack_top_, pc - istream,
                  value_stack_top_);
 
   Opcode opcode = ReadOpcode(&pc);
@@ -691,31 +692,31 @@ void Thread::Trace(Stream* stream) {
     }
 
     case Opcode::MemoryInit:
-      WABT_UNREACHABLE;
+      std::unreachable();
       break;
 
     case Opcode::MemoryDrop:
-      WABT_UNREACHABLE;
+      std::unreachable();
       break;
 
     case Opcode::MemoryCopy:
-      WABT_UNREACHABLE;
+      std::unreachable();
       break;
 
     case Opcode::MemoryFill:
-      WABT_UNREACHABLE;
+      std::unreachable();
       break;
 
     case Opcode::TableInit:
-      WABT_UNREACHABLE;
+      std::unreachable();
       break;
 
     case Opcode::TableDrop:
-      WABT_UNREACHABLE;
+      std::unreachable();
       break;
 
     case Opcode::TableCopy:
-      WABT_UNREACHABLE;
+      std::unreachable();
       break;
 
     // The following opcodes are either never generated or should never be
@@ -732,7 +733,7 @@ void Thread::Trace(Stream* stream) {
     case Opcode::Rethrow:
     case Opcode::Throw:
     case Opcode::Try:
-      WABT_UNREACHABLE;
+      std::unreachable();
       break;
   }
 }

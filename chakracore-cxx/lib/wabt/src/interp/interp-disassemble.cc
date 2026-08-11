@@ -17,6 +17,7 @@
 #include "src/interp/interp.h"
 
 #include <cinttypes>
+#include <utility>
 
 #include "src/cast.h"
 #include "src/interp/interp-internal.h"
@@ -37,7 +38,7 @@ void Environment::Disassemble(Stream* stream,
   const uint8_t* pc = &istream[from];
 
   while (static_cast<IstreamOffset>(pc - istream) < to) {
-    stream->Writef("%4" PRIzd "| ", pc - istream);
+    stream->Writef("%4" "zd" "| ", pc - istream);
 
     Opcode opcode = ReadOpcode(&pc);
     assert(!opcode.IsInvalid());
@@ -555,7 +556,7 @@ void Environment::Disassemble(Stream* stream,
         if (num_bytes % WABT_TABLE_ENTRY_SIZE == 0) {
           Index num_entries = num_bytes / WABT_TABLE_ENTRY_SIZE;
           for (Index i = 0; i < num_entries; ++i) {
-            stream->Writef("%4" PRIzd "| ", pc - istream);
+            stream->Writef("%4" "zd" "| ", pc - istream);
             IstreamOffset offset;
             uint32_t drop;
             uint32_t keep;
@@ -581,31 +582,31 @@ void Environment::Disassemble(Stream* stream,
       }
 
       case Opcode::MemoryInit:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::MemoryDrop:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::MemoryCopy:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::MemoryFill:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::TableInit:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::TableDrop:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       case Opcode::TableCopy:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
 
       // The following opcodes are either never generated or should never be
@@ -621,7 +622,7 @@ void Environment::Disassemble(Stream* stream,
       case Opcode::Rethrow:
       case Opcode::Throw:
       case Opcode::Try:
-        WABT_UNREACHABLE;
+        std::unreachable();
         break;
     }
   }

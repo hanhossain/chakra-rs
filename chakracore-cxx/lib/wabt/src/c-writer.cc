@@ -20,6 +20,7 @@
 #include <cinttypes>
 #include <map>
 #include <set>
+#include <utility>
 
 #include "src/cast.h"
 #include "src/common.h"
@@ -115,7 +116,7 @@ int GetShiftMask(Type type) {
   switch (type) {
     case Type::I32: return 31;
     case Type::I64: return 63;
-    default: WABT_UNREACHABLE; return 0;
+    default: std::unreachable(); return 0;
   }
 }
 
@@ -486,7 +487,7 @@ char CWriter::MangleType(Type type) {
     case Type::I64: return 'j';
     case Type::F32: return 'f';
     case Type::F64: return 'd';
-    default: WABT_UNREACHABLE;
+    default: std::unreachable();
   }
 }
 
@@ -636,7 +637,7 @@ void CWriter::WriteData(const void* src, size_t size) {
   stream_->WriteData(src, size);
 }
 
-void WABT_PRINTF_FORMAT(2, 3) CWriter::Writef(const char* format, ...) {
+void __attribute__((format(printf, 2, 3))) CWriter::Writef(const char* format, ...) {
   WABT_SNPRINTF_ALLOCA(buffer, length, format);
   WriteData(buffer, length);
 }
@@ -759,7 +760,7 @@ void CWriter::Write(Type type) {
     case Type::F32: Write("f32"); break;
     case Type::F64: Write("f64"); break;
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -770,7 +771,7 @@ void CWriter::Write(TypeEnum type) {
     case Type::F32: Write("WASM_RT_F32"); break;
     case Type::F64: Write("WASM_RT_F64"); break;
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -779,7 +780,7 @@ void CWriter::Write(SignedType type) {
     case Type::I32: Write("s32"); break;
     case Type::I64: Write("s64"); break;
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -846,7 +847,7 @@ void CWriter::Write(const Const& const_) {
       break;
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -866,7 +867,7 @@ void CWriter::WriteInitExpr(const ExprList& expr_list) {
       break;
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -897,7 +898,7 @@ void CWriter::WriteSourceTop() {
 
 void CWriter::WriteFuncTypes() {
   Write(Newline());
-  Writef("static u32 func_types[%" PRIzd "];", module_->func_types.size());
+  Writef("static u32 func_types[%" "zd" "];", module_->func_types.size());
   Write(Newline(), Newline());
   Write("static void init_func_types(void) {", Newline());
   Index func_type_index = 0;
@@ -969,7 +970,7 @@ void CWriter::WriteImports() {
       }
 
       default:
-        WABT_UNREACHABLE;
+        std::unreachable();
     }
 
     Write(Newline());
@@ -1239,7 +1240,7 @@ void CWriter::WriteExports(WriteExportsKind kind) {
       }
 
       default:
-        WABT_UNREACHABLE;
+        std::unreachable();
     }
 
     if (kind == WriteExportsKind::Initializers) {
@@ -1850,7 +1851,7 @@ void CWriter::Write(const BinaryExpr& expr) {
       break;
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -1919,7 +1920,7 @@ void CWriter::Write(const CompareExpr& expr) {
       break;
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -2040,7 +2041,7 @@ void CWriter::Write(const ConvertExpr& expr) {
       break;
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -2063,7 +2064,7 @@ void CWriter::Write(const LoadExpr& expr) {
     case Opcode::I64Load32U: func = "i64_load32_u"; break;
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 
   assert(module_->memories.size() == 1);
@@ -2093,7 +2094,7 @@ void CWriter::Write(const StoreExpr& expr) {
     case Opcode::I64Store32: func = "i64_store32"; break;
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 
   assert(module_->memories.size() == 1);
@@ -2194,7 +2195,7 @@ void CWriter::Write(const UnaryExpr& expr) {
       break;
 
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -2209,7 +2210,7 @@ void CWriter::Write(const TernaryExpr& expr) {
       break;
     }
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
@@ -2243,7 +2244,7 @@ void CWriter::Write(const SimdLaneOpExpr& expr) {
       break;
     }
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 
   PushType(result_type);

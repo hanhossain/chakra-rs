@@ -21,9 +21,8 @@
 #include <cstdarg>
 #include <cstdint>
 #include <cstdio>
+#include <utility>
 #include <vector>
-
-#include "config.h"
 
 #include "src/binary.h"
 #include "src/cast.h"
@@ -255,7 +254,7 @@ void BinaryWriter::WriteSectionHeader(const char* desc,
 
 void BinaryWriter::BeginKnownSection(BinarySection section_code) {
   char desc[100];
-  wabt_snprintf(desc, sizeof(desc), "section \"%s\" (%u)",
+  snprintf(desc, sizeof(desc), "section \"%s\" (%u)",
                 GetSectionName(section_code),
                 static_cast<unsigned>(section_code));
   WriteSectionHeader(desc, section_code);
@@ -263,7 +262,7 @@ void BinaryWriter::BeginKnownSection(BinarySection section_code) {
 
 void BinaryWriter::BeginCustomSection(const char* name) {
   char desc[100];
-  wabt_snprintf(desc, sizeof(desc), "section \"%s\"", name);
+  snprintf(desc, sizeof(desc), "section \"%s\"", name);
   WriteSectionHeader(desc, BinarySection::Custom);
   WriteStr(stream_, name, "custom section name", PrintChars::Yes);
 }
@@ -317,7 +316,7 @@ Index BinaryWriter::GetSymbolIndex(RelocType reloc_type, Index index) {
       name = module_->globals[index]->name;
       break;
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
   auto iter = symtab_.find(name);
   if (iter != symtab_.end()) {
@@ -724,7 +723,7 @@ void BinaryWriter::WriteExceptType(const TypeVector* except_types) {
 
 void BinaryWriter::WriteRelocSection(const RelocSection* reloc_section) {
   char section_name[128];
-  wabt_snprintf(section_name, sizeof(section_name), "%s.%s",
+  snprintf(section_name, sizeof(section_name), "%s.%s",
                 WABT_BINARY_SECTION_RELOC, reloc_section->name);
   BeginCustomSection(section_name);
   WriteU32Leb128(stream_, reloc_section->section_index, "reloc section index");
@@ -865,7 +864,7 @@ Result BinaryWriter::WriteModule() {
     for (size_t i = 0; i < num_funcs; ++i) {
       const Func* func = module_->funcs[i + module_->num_func_imports];
       char desc[100];
-      wabt_snprintf(desc, sizeof(desc), "function %" PRIzd " signature index",
+      snprintf(desc, sizeof(desc), "function %" "zd" " signature index",
                     i);
       WriteU32Leb128(stream_, module_->GetFuncTypeIndex(func->decl), desc);
     }
@@ -1063,7 +1062,7 @@ Result BinaryWriter::WriteModule() {
           continue;
         }
         WriteU32Leb128(stream_, i, "function index");
-        wabt_snprintf(desc, sizeof(desc), "func name %" PRIzd, i);
+        snprintf(desc, sizeof(desc), "func name %" "zd", i);
         WriteDebugName(stream_, func->name, desc);
       }
       EndSubsection();
@@ -1084,7 +1083,7 @@ Result BinaryWriter::WriteModule() {
                                     &index_to_name);
       for (size_t j = 0; j < num_params_and_locals; ++j) {
         const std::string& name = index_to_name[j];
-        wabt_snprintf(desc, sizeof(desc), "local name %" PRIzd, j);
+        snprintf(desc, sizeof(desc), "local name %" "zd", j);
         WriteU32Leb128(stream_, j, "local index");
         WriteDebugName(stream_, name, desc);
       }

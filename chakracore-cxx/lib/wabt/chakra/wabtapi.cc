@@ -41,7 +41,7 @@ void CheckResult(
                 256
             );
             char buf[4096];
-            wabt_snprintf(buf, 4096, "Wast Parsing %s", message.c_str());
+            snprintf(buf, 4096, "Wast Parsing %s", message.c_str());
             throw WabtAPIError(buf);
         }
         throw WabtAPIError(errorMessage);
@@ -157,7 +157,7 @@ void write_command_type(Context* ctx, CommandType type, Js::Var cmdObj)
         "assert_trap",
         "assert_exhaustion",
     };
-    WABT_STATIC_ASSERT(sizeof(s_command_names) / sizeof(char*) == (int)CommandType::Last + 1);
+    static_assert(std::size(s_command_names) == (int)CommandType::Last + 1);
     uint i = (uint)type;
     if (i > (uint)CommandType::Last)
     {
@@ -182,19 +182,19 @@ Js::Var create_const_vector(Context* ctx, const ConstVector& consts)
         {
         case Type::I32:
             write_string(ctx, constDescriptor, PropertyIds::type, "i32");
-            wabt_snprintf(buf, 32, "%u", const_.u32);
+            snprintf(buf, 32, "%u", const_.u32);
             break;
         case Type::I64:
             write_string(ctx, constDescriptor, PropertyIds::type, "i64");
-            wabt_snprintf(buf, 32, "%llu", const_.u64);
+            snprintf(buf, 32, "%llu", const_.u64);
             break;
         case Type::F32:
             write_string(ctx, constDescriptor, PropertyIds::type, "f32");
-            wabt_snprintf(buf, 32, "%u", const_.f32_bits);
+            snprintf(buf, 32, "%u", const_.f32_bits);
             break;
         case Type::F64:
             write_string(ctx, constDescriptor, PropertyIds::type, "f64");
-            wabt_snprintf(buf, 32, "%llu", const_.f64_bits);
+            snprintf(buf, 32, "%llu", const_.f64_bits);
             break;
         default:
             assert(0);

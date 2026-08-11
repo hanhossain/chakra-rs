@@ -118,7 +118,7 @@ class TypeChecker {
   Result EndFunction();
 
  private:
-  void WABT_PRINTF_FORMAT(2, 3) PrintError(const char* fmt, ...);
+  void __attribute__((format(printf, 2, 3))) PrintError(const char* fmt, ...);
   Result TopLabel(Label** out_label);
   void ResetTypeStackToLabel(Label* label);
   Result SetUnreachable();

@@ -18,6 +18,8 @@
 
 #include "src/feature.h"
 
+#include <utility>
+
 namespace wabt {
 
 // static
@@ -349,7 +351,7 @@ uint32_t Opcode::GetSimdLaneCount() const {
       return 2;
       break;
     default:
-      WABT_UNREACHABLE;
+      std::unreachable();
   }
 }
 
