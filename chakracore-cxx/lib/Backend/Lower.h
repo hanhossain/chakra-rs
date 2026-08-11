@@ -778,7 +778,6 @@ private:
     IR::Instr *     LowerLdAsmJsEnv(IR::Instr *instr);
     IR::Instr *     LowerLdEnv(IR::Instr *instr);
     IR::Instr *     LowerLdSuper(IR::Instr *instr, IR::JnHelperMethod helperOpCode);
-    IR::Instr *     LowerLdNativeCodeData(IR::Instr *instr);
     IR::Instr *     LowerFrameDisplayCheck(IR::Instr * instr);
     IR::Instr *     LowerSlotArrayCheck(IR::Instr * instr);
     static void     InsertObjectPoison(IR::Opnd* poisonedOpnd, IR::BranchInstr* branchInstr, IR::Instr* insertInstr, bool isForStore);
