@@ -89,10 +89,6 @@ static pthread_mutex_t init_critsec_mutex = PTHREAD_MUTEX_INITIALIZER;
    very first PAL_Initialize call, and is freed afterward. */
 static PCRITICAL_SECTION init_critsec = NULL;
 
-#ifdef _DEBUG
-extern void PROCDumpThreadList(void);
-#endif
-
 /*++
 Function:
   Initialize
@@ -405,20 +401,6 @@ PAL_InitializeChakraCore()
 
 /*++
 Function:
-  PAL_Shutdown
-
-Abstract:
-  This function shuts down the PAL WITHOUT exiting the current process.
---*/
-void
-PAL_Shutdown(
-    void)
-{
-    TerminateCurrentProcessNoExit();
-}
-
-/*++
-Function:
   PALIsThreadDataInitialized
 
 Returns TRUE if startup has reached a point where thread data is available
@@ -426,51 +408,6 @@ Returns TRUE if startup has reached a point where thread data is available
 BOOL PALIsThreadDataInitialized()
 {
     return g_fThreadDataAvailable;
-}
-
-/*++
-Function:
-  PALCommonCleanup
-
-Utility function to prepare for shutdown.
-
---*/
-void
-PALCommonCleanup()
-{
-    static bool cleanupDone = false;
-
-    if (!cleanupDone)
-    {
-        cleanupDone = true;
-
-        PALSetShutdownIntent();
-
-        //
-        // Let the synchronization manager know we're about to shutdown
-        //
-
-        CPalSynchMgrController::PrepareForShutdown();
-
-#ifdef _DEBUG
-        PROCDumpThreadList();
-#endif
-    }
-}
-
-/*++
-Function:
-  PALShutdown
-
-  sets the PAL's initialization count to zero, so that PALIsInitialized will
-  return FALSE. called by PROCCleanupProcess to tell some functions that the
-  PAL isn't fully functional, and that they should use an alternate code path
-
-(no parameters, no retun vale)
---*/
-void PALShutdown()
-{
-    init_count = 0;
 }
 
 BOOL PALIsShuttingDown()

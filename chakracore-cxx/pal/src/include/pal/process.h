@@ -45,15 +45,6 @@ extern char16_t* pAppDir;
 
 /*++
 Function:
-  PROCGetProcessIDFromHandle
-
-Abstract
-  Return the process ID from a process handle
---*/
-uint32_t PROCGetProcessIDFromHandle(HANDLE hProcess);
-
-/*++
-Function:
   PROCCreateInitialProcess
 
 Abstract
@@ -103,17 +94,6 @@ Abstract
   Leave the critical section associated to the current process
 --*/
 void PROCProcessUnlock(void);
-
-/*++
-Function:
-  PROCCleanupProcess
-  
-  Do all cleanup work for TerminateProcess, but don't terminate the process.
-  If bTerminateUnconditionally is TRUE, we exit as quickly as possible.
-
-(no return value)
---*/
-void PROCCleanupProcess();
 
 #if defined(__APPLE__)
 /*++

@@ -425,8 +425,7 @@ void
 Recycler::SetIsThreadBound()
 {
     Assert(mainThreadHandle == nullptr);
-    ::DuplicateHandle(::GetCurrentProcess(), ::PAL_GetCurrentThread(), ::GetCurrentProcess(),  &mainThreadHandle,
-        0, FALSE, DUPLICATE_SAME_ACCESS);
+    ::DuplicateHandle(&mainThreadHandle);
 
     stackBase = GetStackBase();
 }

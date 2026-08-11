@@ -5,6 +5,8 @@
 #include "Util/Abstractions.h"
 #include "Exceptions/ReportError.h"
 
+#include <cstdlib>
+
 // Disable inline so that __builtin_return_address(0) will get the address of the calling function.
 void ReportFatalException(
     size_t context,
@@ -20,7 +22,7 @@ void ReportFatalException(
         DebugBreak();
     }
 
-    TerminateProcess(GetCurrentProcess(), DBG_TERMINATE_PROCESS);
+    std::abort();
 }
 
 // Disable optimization make sure all the frames are still available in Dr. Watson bug reports.
