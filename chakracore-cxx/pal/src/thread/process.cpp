@@ -128,7 +128,6 @@ CObjectType CorUnix::otProcess __attribute__((init_priority(200))) (
                 CObjectType::SecuritySupported,
                 CObjectType::SecurityInfoNotPersisted,
                 CObjectType::UnnamedObject,
-                CObjectType::CrossProcessDuplicationAllowed,
                 CObjectType::WaitableObject,
                 CObjectType::SingleTransitionObject,
                 CObjectType::ThreadReleaseHasNoSideEffects,

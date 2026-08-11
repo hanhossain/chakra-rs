@@ -62,7 +62,6 @@ CObjectType CorUnix::otFile __attribute__((init_priority(200))) (
                 CObjectType::SecuritySupported,
                 CObjectType::OSPersistedSecurityInfo,
                 CObjectType::UnnamedObject,
-                CObjectType::LocalDuplicationOnly,
                 CObjectType::UnwaitableObject,
                 CObjectType::SignalingNotApplicable,
                 CObjectType::ThreadReleaseNotApplicable,

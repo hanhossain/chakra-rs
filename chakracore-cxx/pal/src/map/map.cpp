@@ -81,7 +81,6 @@ CObjectType CorUnix::otFileMapping __attribute__((init_priority(200)))(
                 CObjectType::SecuritySupported,
                 CObjectType::SecurityInfoNotPersisted,
                 CObjectType::ObjectCanHaveName,
-                CObjectType::LocalDuplicationOnly,
                 CObjectType::UnwaitableObject,
                 CObjectType::SignalingNotApplicable,
                 CObjectType::ThreadReleaseNotApplicable,
