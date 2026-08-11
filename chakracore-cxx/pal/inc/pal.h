@@ -272,10 +272,6 @@ BOOL
 ResetEvent(
         HANDLE hEvent);
 
-HANDLE
-GetCurrentProcess(
-          void);
-
 uint32_t
 GetCurrentThreadId(
            void);

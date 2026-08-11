@@ -58,7 +58,6 @@ private:
     bool isWindows8OrGreater;
     bool isWindows8Point1OrGreater;
     uint allocationGranularityPageCount;
-    HANDLE processHandle;
     uint32_t crtSize;
 #if defined(_M_X64)
     int CPUInfo[4];

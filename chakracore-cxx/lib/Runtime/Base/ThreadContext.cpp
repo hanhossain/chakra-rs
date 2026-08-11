@@ -157,9 +157,9 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     m_jitNumericProperties(nullptr),
     m_jitNeedsPropertyUpdate(false),
 #if DYNAMIC_INTERPRETER_THUNK || defined(ASMJS_PLAT)
-    thunkPageAllocators(allocationPolicyManager, /* allocXData */ false, /* virtualAllocator */ nullptr, GetCurrentProcess()),
+    thunkPageAllocators(allocationPolicyManager, /* allocXData */ false, /* virtualAllocator */ nullptr),
 #endif
-    codePageAllocators(allocationPolicyManager, ALLOC_XDATA, GetPreReservedVirtualAllocator(), GetCurrentProcess()),
+    codePageAllocators(allocationPolicyManager, ALLOC_XDATA, GetPreReservedVirtualAllocator()),
 #endif
     dynamicObjectEnumeratorCacheMap(&HeapAllocator::Instance, 16),
     //threadContextFlags(ThreadContextFlagNoFlag),
@@ -240,12 +240,6 @@ void ThreadContext::SetStackProber(StackProber * stackProber)
 size_t ThreadContext::GetScriptStackLimit() const
 {
     return stackProber->GetScriptStackLimit();
-}
-
-HANDLE
-ThreadContext::GetProcessHandle() const
-{
-    return GetCurrentProcess();
 }
 
 intptr_t

@@ -124,11 +124,10 @@ template <typename TAlloc, typename TPreReservedAlloc>
 class CodePageAllocators
 {
 public:
-    CodePageAllocators(AllocationPolicyManager * policyManager, bool allocXdata, PreReservedVirtualAllocWrapper * virtualAllocator, HANDLE processHandle) :
-        pageAllocator(policyManager, allocXdata, true /*excludeGuardPages*/, nullptr, processHandle),
-        preReservedHeapAllocator(policyManager, allocXdata, true /*excludeGuardPages*/, virtualAllocator, processHandle),
-        secondaryAllocStateChangedCount(0),
-        processHandle(processHandle)
+    CodePageAllocators(AllocationPolicyManager * policyManager, bool allocXdata, PreReservedVirtualAllocWrapper * virtualAllocator) :
+        pageAllocator(policyManager, allocXdata, true /*excludeGuardPages*/, nullptr),
+        preReservedHeapAllocator(policyManager, allocXdata, true /*excludeGuardPages*/, virtualAllocator),
+        secondaryAllocStateChangedCount(0)
     {
 #if DBG
         this->preReservedHeapAllocator.ClearConcurrentThreadId();
@@ -352,7 +351,6 @@ private:
 
     HeapPageAllocator<TAlloc>               pageAllocator;
     HeapPageAllocator<TPreReservedAlloc>  preReservedHeapAllocator;
-    HANDLE processHandle;
 
     // Track the number of time a segment's secondary allocate change from full to available to allocate.
     // So that we know whether CustomHeap to know when to update their "full page"
@@ -376,7 +374,7 @@ template <typename TAlloc, typename TPreReservedAlloc>
 class Heap
 {
 public:
-    Heap(ArenaAllocator * alloc, CodePageAllocators<TAlloc, TPreReservedAlloc>  * codePageAllocators, HANDLE processHandle);
+    Heap(ArenaAllocator * alloc, CodePageAllocators<TAlloc, TPreReservedAlloc>  * codePageAllocators);
 
     Allocation* Alloc(size_t bytes, ushort pdataCount, ushort xdataSize, bool canAllocInPreReservedHeapPageSegment, bool isAnyJittedCode, _Inout_ bool* isAllJITCodeInPreReservedRegion);
     void Free(Allocation* allocation);
@@ -535,7 +533,6 @@ private:
     DListBase<Allocation>  decommittedLargeObjects;
 
     uint                   lastSecondaryAllocStateChangedCount;
-    HANDLE                 processHandle;
 #if DBG
     bool inDtor;
 #endif

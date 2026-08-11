@@ -19,11 +19,10 @@ namespace CustomHeap
 #pragma region "Constructor and Destructor"
 
 template<typename TAlloc, typename TPreReservedAlloc>
-Heap<TAlloc, TPreReservedAlloc>::Heap(ArenaAllocator * alloc, CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators, HANDLE processHandle):
+Heap<TAlloc, TPreReservedAlloc>::Heap(ArenaAllocator * alloc, CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators):
     auxiliaryAllocator(alloc),
     codePageAllocators(codePageAllocators),
-    lastSecondaryAllocStateChangedCount(0),
-    processHandle(processHandle)
+    lastSecondaryAllocStateChangedCount(0)
 #if DBG_DUMP
     , freeObjectSize(0)
     , totalAllocationSize(0)
@@ -390,12 +389,9 @@ Allocation* Heap<TAlloc, TPreReservedAlloc>::AllocLargeObject(size_t bytes, usho
         FillDebugBreak(reinterpret_cast<uint8_t*>(localAddr), pages*AutoSystemInfo::PageSize);
         this->codePageAllocators->FreeLocal(localAddr, segment);
 
-        if (this->processHandle == GetCurrentProcess())
-        {
-            uint32_t protectFlags = 0;
-            protectFlags = PAGE_EXECUTE_READ;
-            this->codePageAllocators->ProtectPages(address, pages, segment, protectFlags /*dwVirtualProtectFlags*/, PAGE_READWRITE /*desiredOldProtectFlags*/);
-        }
+        uint32_t protectFlags = 0;
+        protectFlags = PAGE_EXECUTE_READ;
+        this->codePageAllocators->ProtectPages(address, pages, segment, protectFlags /*dwVirtualProtectFlags*/, PAGE_READWRITE /*desiredOldProtectFlags*/);
 #if PDATA_ENABLED
         if(pdataCount > 0)
         {

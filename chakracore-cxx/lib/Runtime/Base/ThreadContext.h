@@ -1544,8 +1544,6 @@ public:
 
     size_t GetScriptStackLimit() const override;
 
-    HANDLE GetProcessHandle() const override;
-
     intptr_t GetThreadStackLimitAddr() const override;
 
 #if ENABLE_NATIVE_CODEGEN && defined(ENABLE_WASM_SIMD)

@@ -223,17 +223,14 @@ PageSegmentBase<T>::Initialize(uint32_t allocFlags, bool excludeGuardPages)
     {
         if (freePageCount != 0)
         {
-            if (this->GetAllocator()->processHandle == GetCurrentProcess())
+            uint32_t oldProtect;
+            BOOL vpresult = VirtualProtect(this->address, this->GetAvailablePageCount() * AutoSystemInfo::PageSize, PAGE_NOACCESS, &oldProtect);
+            if(vpresult == FALSE)
             {
-                uint32_t oldProtect;
-                BOOL vpresult = VirtualProtect(this->address, this->GetAvailablePageCount() * AutoSystemInfo::PageSize, PAGE_NOACCESS, &oldProtect);
-                if(vpresult == FALSE)
-                {
-                    Assert(UNREACHED);
-                    return false;
-                }
-                Assert(oldProtect == PAGE_READWRITE);
+                Assert(UNREACHED);
+                return false;
             }
+            Assert(oldProtect == PAGE_READWRITE);
         }
         return true;
     }
@@ -323,17 +320,14 @@ PageSegmentBase<T>::AllocPages(uint pageCount)
             Assert(freePageCount == this->GetCountOfFreePages());
 
 #ifdef PAGEALLOCATOR_PROTECT_FREEPAGE
-            if (this->GetAllocator()->processHandle == GetCurrentProcess())
+            uint32_t oldProtect;
+            BOOL vpresult = VirtualProtect(allocAddress, pageCount * AutoSystemInfo::PageSize, PAGE_READWRITE, &oldProtect);
+            if (vpresult == FALSE)
             {
-                uint32_t oldProtect;
-                BOOL vpresult = VirtualProtect(allocAddress, pageCount * AutoSystemInfo::PageSize, PAGE_READWRITE, &oldProtect);
-                if (vpresult == FALSE)
-                {
-                    Assert(UNREACHED);
-                    return nullptr;
-                }
-                Assert(oldProtect == PAGE_NOACCESS);
+                Assert(UNREACHED);
+                return nullptr;
             }
+            Assert(oldProtect == PAGE_NOACCESS);
 #endif
             return allocAddress;
         }
@@ -432,13 +426,10 @@ PageSegmentBase<T>::ReleasePages(void * address, uint pageCount)
     Assert(freePageCount == this->GetCountOfFreePages());
 
 #ifdef PAGEALLOCATOR_PROTECT_FREEPAGE
-    if (this->GetAllocator()->processHandle == GetCurrentProcess())
-    {
-        uint32_t oldProtect;
-        BOOL vpresult = VirtualProtect(address, pageCount * AutoSystemInfo::PageSize, PAGE_NOACCESS, &oldProtect);
-        Assert(vpresult != FALSE);
-        Assert(oldProtect == PAGE_READWRITE);
-    }
+    uint32_t oldProtect;
+    BOOL vpresult = VirtualProtect(address, pageCount * AutoSystemInfo::PageSize, PAGE_NOACCESS, &oldProtect);
+    Assert(vpresult != FALSE);
+    Assert(oldProtect == PAGE_READWRITE);
 #endif
 
 }
@@ -571,7 +562,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::PageAllocatorBase(Allo
     uint secondaryAllocPageCount,
     bool stopAllocationOnOutOfMemory,
     bool excludeGuardPages,
-    HANDLE processHandle,
     bool enableWriteBarrier
 ) :
     policyManager(policyManager),
@@ -600,7 +590,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::PageAllocatorBase(Allo
     , committedBytes(0)
     , usedBytes(0)
     , numberOfSegments(0)
-    , processHandle(processHandle)
     , enableWriteBarrier(enableWriteBarrier)
 {
     AssertMsg(Math::IsPow2(maxAllocPageCount + secondaryAllocPageCount), "Illegal maxAllocPageCount: Why is this not a power of 2 aligned?");
@@ -929,7 +918,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FillAllocPages(void * 
 #ifdef RECYCLER_MEMORY_VERIFY
     if (verifyEnabled)
     {
-        Assert(this->processHandle == GetCurrentProcess());
         memset(address, Recycler::VerifyMemFill, bufferSize);
         return;
     }
@@ -939,7 +927,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FillAllocPages(void * 
     if (ZeroPages())
     {
         // for release build, the page is zeroed in ReleasePages
-        Assert(this->processHandle == GetCurrentProcess());
         memset(address, 0, bufferSize);
     }
 #endif
@@ -1079,7 +1066,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::AllocSegment(size_t pa
 #ifdef RECYCLER_MEMORY_VERIFY
     if (verifyEnabled)
     {
-        Assert(this->processHandle == GetCurrentProcess());
         memset(segment->GetAddress(), Recycler::VerifyMemFill, AutoSystemInfo::PageSize * segment->GetPageCount());
     }
 #endif
@@ -1426,7 +1412,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ReleaseSegment(TSegmen
 #ifdef RECYCLER_NO_PAGE_REUSE
     if (disablePageReuse)
     {
-        Assert(this->processHandle == GetCurrentProcess());
 #pragma prefast(suppress:6250, "Calling 'VirtualFree' without the MEM_RELEASE flag might free memory but not address descriptors (VADs).")
         VirtualFree(segment->GetAddress(), segment->GetPageCount() * AutoSystemInfo::PageSize, MEM_DECOMMIT);
         return;
@@ -1460,7 +1445,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ReleasePages(void * ad
 #ifdef RECYCLER_NO_PAGE_REUSE
     if (disablePageReuse)
     {
-        Assert(this->processHandle == GetCurrentProcess());
 #pragma prefast(suppress:6250, "Calling 'VirtualFree' without the MEM_RELEASE flag might free memory but not address descriptors (VADs).")
         VirtualFree(address, pageCount * AutoSystemInfo::PageSize, MEM_DECOMMIT);
         return;
@@ -1618,7 +1602,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::ZeroQueuedPages()
         // Do memset via non-temporal store to avoid evicting existing processor cache.
         // This helps low-end machines with limited cache size.
         //
-        Assert(this->processHandle == GetCurrentProcess());
 #if defined(_M_X64)
         js_memset_zero_nontemporal(freePageEntry, AutoSystemInfo::PageSize * pageCount);
 #else
@@ -1675,7 +1658,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::FlushBackgroundPages()
         DListBase<TPageSegment> * fromSegmentList = GetSegmentList(segment);
         Assert(fromSegmentList != nullptr);
 
-        Assert(this->processHandle == GetCurrentProcess());
         memset(freePageEntry, 0, sizeof(FreePageEntry));
 
         segment->ReleasePages(freePageEntry, pageCount);
@@ -1778,7 +1760,6 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
             else
             {
                 // Zero them and release them in case we don't decommit them.
-                Assert(this->processHandle == GetCurrentProcess());
                 memset(freePageEntry, 0, pageCount * AutoSystemInfo::PageSize);
                 segment->ReleasePages(freePageEntry, pageCount);
                 LogFreePages(pageCount);
@@ -2187,7 +2168,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::Check()
 #endif
 
 template<typename T>
-HeapPageAllocator<T>::HeapPageAllocator(AllocationPolicyManager * policyManager, bool allocXdata, bool excludeGuardPages, T * virtualAllocator, HANDLE processHandle) :
+HeapPageAllocator<T>::HeapPageAllocator(AllocationPolicyManager * policyManager, bool allocXdata, bool excludeGuardPages, T * virtualAllocator) :
     PageAllocatorBase<T>(policyManager,
         Js::Configuration::Global.flags,
         PageAllocatorType_CustomHeap,
@@ -2197,8 +2178,7 @@ HeapPageAllocator<T>::HeapPageAllocator(AllocationPolicyManager * policyManager,
         /*maxAllocPageCount*/ allocXdata ? (Base::DefaultMaxAllocPageCount - XDATA_RESERVE_PAGE_COUNT) : Base::DefaultMaxAllocPageCount,
         /*secondaryAllocPageCount=*/ allocXdata ? XDATA_RESERVE_PAGE_COUNT : 0,
         /*stopAllocationOnOutOfMemory*/ false,
-        excludeGuardPages,
-        processHandle),
+        excludeGuardPages),
     allocXdata(allocXdata)
 {
     this->InitVirtualAllocator(virtualAllocator);
@@ -2279,11 +2259,6 @@ HeapPageAllocator<T>::ProtectPages(char* address, size_t pageCount, void* segmen
     }
 
 
-    // OOP JIT page protection is immutable
-    if (this->processHandle != GetCurrentProcess())
-    {
-        return TRUE;
-    }
     MEMORY_BASIC_INFORMATION memBasicInfo;
 
     // check old protection on all pages about to change, ensure the fidelity

@@ -10,13 +10,12 @@
 //----------------------------------------------------------------------------
 template <typename TAlloc, typename TPreReservedAlloc, typename SyncObject>
 EmitBufferManager<TAlloc, TPreReservedAlloc, SyncObject>::EmitBufferManager(ArenaAllocator * allocator, CustomHeap::CodePageAllocators<TAlloc, TPreReservedAlloc> * codePageAllocators,
-    Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, const char16_t* name, HANDLE processHandle) :
-    allocationHeap(allocator, codePageAllocators, processHandle),
+    Js::ScriptContext * scriptContext, ThreadContextInfo * threadContext, const char16_t* name) :
+    allocationHeap(allocator, codePageAllocators),
     allocator(allocator),
     allocations(nullptr),
     scriptContext(scriptContext),
-    threadContext(threadContext),
-    processHandle(processHandle)
+    threadContext(threadContext)
 {
 #if DBG_DUMP
     this->totalBytesCode = 0;
