@@ -32,10 +32,6 @@ Abstract:
 
 namespace CorUnix
 {
-#ifdef SYNCH_STATISTICS
-    int32_t g_rglStatWaitCount[ObjectTypeIdCount]       = { 0 };
-    int32_t g_rglStatContentionCount[ObjectTypeIdCount] = { 0 };
-#endif // SYNCH_STATISTICS
     ////////////////////////////
     //                        //
     //  CSynchControllerBase  //
@@ -235,13 +231,6 @@ namespace CorUnix
         assert(InternalGetCurrentThread() == m_pthrOwner);
 
         palErr = m_psdSynchData->ReleaseWaiterWithoutBlocking(m_pthrOwner, m_pthrOwner);
-
-#ifdef SYNCH_STATISTICS
-        if (NO_ERROR == palErr)
-        {
-            m_psdSynchData->IncrementStatWaitCount();
-        }
-#endif
         return palErr;
     }
 
@@ -427,13 +416,6 @@ namespace CorUnix
                 CPalSynchronizationManager::ThreadPrepareForShutdown();
             }
         }
-#ifdef SYNCH_STATISTICS
-        else
-        {
-            m_psdSynchData->IncrementStatWaitCount();
-            m_psdSynchData->IncrementStatContentionCount();
-        }
-#endif        
         return palErr;
     }                                                
 
@@ -699,12 +681,6 @@ namespace CorUnix
             }
         }        
         
-#ifdef SYNCH_STATISTICS
-        if (NO_ERROR == palErr)
-        {
-            IncrementStatWaitCount();
-        }
-#endif
         return palErr;
 
     }
@@ -1651,60 +1627,5 @@ namespace CorUnix
 
         return;
     }    
-    
-#ifdef SYNCH_OBJECT_VALIDATION
-    CSynchData::~CSynchData()
-    {
-        ValidateObject(true);
-        InvalidateObject();
-    }
-    /*++
-    Method:
-      CSynchData::ValidateObject
-
-    Makes sure that the signature at the beginning and at the end of the
-    current object are those of a currently alive object (i.e. the object
-    has been constructed and does not appear to have been overwritten)
-    --*/    
-    void CSynchData::ValidateObject(bool fDestructor)
-    {
-        TRACE("Verifying in-use CSynchData @ %p\n", this);
-        _ASSERT_MSG(HeadSignature == m_dwDebugHeadSignature,
-                    "CSynchData header signature corruption [p=%p]", this);
-        _ASSERT_MSG(TailSignature == m_dwDebugTailSignature,
-                    "CSynchData trailer signature corruption [p=%p]", this);
-        _ASSERT_MSG((fDestructor && 0 == m_lRefCount) || 
-                    (!fDestructor && 0 < m_lRefCount),
-                    "CSynchData %p with NULL reference count\n", this);
-    }
-    /*++
-    Method:
-      CSynchData::ValidateEmptyObject
-
-    Makes sure that the signature at the beginning and at the end of the
-    current object are not those of a currently alive object (i.e. the
-    object has not yet been constructed or it has alread been destructed)
-    --*/    
-    void CSynchData::ValidateEmptyObject()
-    {
-        TRACE("Verifying empty CSynchData @ %p\n", this);
-        _ASSERT_MSG(HeadSignature != m_dwDebugHeadSignature,
-                    "CSynchData header previously signed [p=%p]", this);
-        _ASSERT_MSG(TailSignature != m_dwDebugTailSignature,
-                    "CSynchData trailer previously signed [p=%p]", this);
-    }
-    /*++
-    Method:
-      CSynchData::InvalidateObject
-
-    Turns signatures from alive object to destructed object
-    --*/    
-    void CSynchData::InvalidateObject()
-    {
-        TRACE("Invalidating CSynchData @ %p\n", this);
-        m_dwDebugHeadSignature = EmptySignature;
-        m_dwDebugTailSignature = EmptySignature;
-    }
-#endif // SYNCH_OBJECT_VALIDATION
 }
 

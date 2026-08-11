@@ -37,50 +37,6 @@ Abstract:
 
 namespace CorUnix
 {
-    /////////////////////////////////
-    //                             //
-    //   WaitingThreadsListNode    //
-    //                             //
-    /////////////////////////////////
-#ifdef SYNCH_OBJECT_VALIDATION
-    _WaitingThreadsListNode::_WaitingThreadsListNode()
-    {
-        ValidateEmptyObject();
-        dwDebugHeadSignature = HeadSignature;
-        dwDebugTailSignature = TailSignature;
-    }
-    _WaitingThreadsListNode::~_WaitingThreadsListNode()
-    {
-        ValidateObject();
-        InvalidateObject();
-    }
-    void _WaitingThreadsListNode::ValidateObject()
-    {
-        TRACE("Verifying WaitingThreadsListNode @ %p\n", this);
-        _ASSERT_MSG(HeadSignature == dwDebugHeadSignature,
-                    "WaitingThreadsListNode header signature corruption [p=%p]",
-                    this);
-        _ASSERT_MSG(TailSignature == dwDebugTailSignature,
-                    "WaitingThreadsListNode trailer signature corruption [p=%p]",
-                    this);
-    }
-    void _WaitingThreadsListNode::ValidateEmptyObject()
-    {
-        _ASSERT_MSG(HeadSignature != dwDebugHeadSignature,
-                    "WaitingThreadsListNode header previously signed [p=%p]",
-                    this);
-        _ASSERT_MSG(TailSignature != dwDebugTailSignature,
-                    "WaitingThreadsListNode trailer previously signed [p=%p]",
-                    this);
-    }
-    void _WaitingThreadsListNode::InvalidateObject()
-    {
-        TRACE("Invalidating WaitingThreadsListNode @ %p\n", this);
-        dwDebugHeadSignature = EmptySignature;
-        dwDebugTailSignature = EmptySignature;
-    }
-#endif // SYNCH_OBJECT_VALIDATION
-
     //////////////////////////////
     //                          //
     //  CPalSynchMgrController  //

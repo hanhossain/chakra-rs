@@ -39,29 +39,14 @@ Abstract:
 
 SET_DEFAULT_DEBUG_CHANNEL(SYNC);
 
-#ifdef _DEBUG
-// #define SYNCH_OBJECT_VALIDATION
-// #define SYNCH_STATISTICS
-#endif
-
-#ifdef SYNCH_OBJECT_VALIDATION
-#define VALIDATEOBJECT(obj) ((obj)->ValidateObject())
-#else
 #define VALIDATEOBJECT(obj)
-#endif
-    
+
 namespace CorUnix
 {          
     const uint32_t WTLN_FLAG_OWNER_OBJECT_IS_SHARED                 = 1<<0;
     const uint32_t WTLN_FLAG_WAIT_ALL                               = 1<<1;
     const uint32_t WTLN_FLAG_DELEGATED_OBJECT_SIGNALING_IN_PROGRESS = 1<<2;
     
-#ifdef SYNCH_OBJECT_VALIDATION
-    const uint32_t HeadSignature  = 0x48454144;
-    const uint32_t TailSignature  = 0x5441494C;
-    const uint32_t EmptySignature = 0xBAADF00D;
-#endif
-
     enum THREAD_WAIT_STATE
     {
         TWS_ACTIVE,
@@ -91,9 +76,6 @@ namespace CorUnix
 
     typedef struct _WaitingThreadsListNode
     {
-#ifdef SYNCH_OBJECT_VALIDATION
-        uint32_t dwDebugHeadSignature;
-#endif
         WTLNodeGenrPtr ptrNext;
         WTLNodeGenrPtr ptrPrev;
         SharedID shridSHRThis;        
@@ -109,15 +91,6 @@ namespace CorUnix
         SynchDataGenrPtr ptrOwnerObjSynchData;
         struct _ThreadWaitInfo * ptwiWaitInfo;  // valid only in the 
                                                 // target process
-#ifdef SYNCH_OBJECT_VALIDATION
-        _WaitingThreadsListNode();
-        ~_WaitingThreadsListNode();
-        void ValidateObject(void);
-        void ValidateEmptyObject(void);
-        void InvalidateObject(void);
-
-        uint32_t dwDebugTailSignature;
-#endif
     } WaitingThreadsListNode;
 
     typedef struct _DeferredSignalingListNode
@@ -144,9 +117,6 @@ namespace CorUnix
     
     class CSynchData
     {        
-#ifdef SYNCH_OBJECT_VALIDATION
-        uint32_t m_dwDebugHeadSignature;
-#endif
         // NB: For perforformance purposes this class is supposed
         //     to have no virtual methods, and no destructor.
 
@@ -167,11 +137,6 @@ namespace CorUnix
         OwnedObjectsListNode * m_poolnOwnedObjectListNode;
         bool m_fAbandoned;
 
-#ifdef SYNCH_STATISTICS
-        uint32_t m_lStatWaitCount;
-        uint32_t m_lStatContentionCount;
-#endif
-
     public:
                 
         CSynchData() 
@@ -183,15 +148,6 @@ namespace CorUnix
             // m_ptrWTLHead, m_ptrWTLTail, m_odObjectDomain 
             // and m_otiObjectTypeId are initialized by
             // CPalSynchronizationManager::AllocateObjectSynchData
-#ifdef SYNCH_STATISTICS
-            m_lStatWaitCount = 0;
-            m_lStatContentionCount = 0;
-#endif
-#ifdef SYNCH_OBJECT_VALIDATION
-            ValidateEmptyObject();
-            m_dwDebugHeadSignature = HeadSignature;;
-            m_dwDebugTailSignature = TailSignature;
-#endif
         }
 
         int32_t AddRef()
@@ -330,24 +286,6 @@ namespace CorUnix
         }
 
 
-#ifdef SYNCH_STATISTICS
-        void IncrementStatWaitCount(void)
-        {
-            m_lStatWaitCount++;
-        }
-        int32_t GetStatWaitCount(void)
-        {
-            return m_lStatWaitCount;
-        }
-        void IncrementStatContentionCount(void)
-        {
-            m_lStatContentionCount++;
-        }
-        int32_t GetStatContentionCount(void)
-        {
-            return m_lStatContentionCount;
-        }
-#endif
         //
         // Wating threads list access methods
         //
@@ -383,14 +321,6 @@ namespace CorUnix
         { 
             m_ptrWTLTail.shrid = shrid; 
         }
-#ifdef SYNCH_OBJECT_VALIDATION
-        ~CSynchData();
-        void ValidateObject(bool fDestructor = false);
-        void ValidateEmptyObject(void);
-        void InvalidateObject(void);
-
-        uint32_t m_dwDebugTailSignature;
-#endif
     };
 
     
