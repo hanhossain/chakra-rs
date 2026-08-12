@@ -377,7 +377,6 @@ namespace Js
         SimpleJitLimitFlag,
         ProfilingInterpreter1LimitFlag,
 
-        ExecutionModeLimitsFlag, EmlFlag,
         EnforceExecutionModeLimitsFlag, EemlFlag,
 
         SimpleJitAfterFlag, SjaFlag,
@@ -1814,8 +1813,6 @@ namespace Js
         // TODO (hanhossain): remove flag
         Number ProfilingInterpreter1Limit;
 
-        // TODO (hanhossain): remove flag
-        String ExecutionModeLimits; String Eml;
         // TODO (hanhossain): remove flag
         Boolean EnforceExecutionModeLimits; Boolean Eeml;
 

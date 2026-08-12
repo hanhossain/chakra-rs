@@ -343,7 +343,6 @@ void _invalid_parameter()
 #define _vstprintf_s    vswprintf_s
 #define _sntprintf_s    _snwprintf_s
 #define _vsntprintf_s   _vsnwprintf_s
-#define _tsscanf_s      PAL_swscanf
 
 #endif /* _SAFECRT_DEFINE_TCS_MACROS */
 
@@ -2589,6 +2588,5 @@ int _vsnwprintf_s(char (&_Dst)[_SizeInWords], size_t _Count, const char *_Format
 
 /* swscanf_s */
 _SAFECRT__EXTERN_C
-int PAL_swscanf(const char16_t *_String, const char16_t *_Format, ...);
 
 #endif  /* _INC_SAFECRT */

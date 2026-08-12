@@ -955,8 +955,6 @@ namespace Js
         u"SimpleJitLimit",
         u"ProfilingInterpreter1Limit",
 
-        u"ExecutionModeLimits",
-        u"Eml",
         u"EnforceExecutionModeLimits",
         u"Eeml",
 
@@ -1860,8 +1858,6 @@ namespace Js
         u"Limit after which to transition to the next execution mode",
         u"Limit after which to transition to the next execution mode",
 
-        u"",
-        u"",
         u"Enforces the execution mode limits such that they are never exceeded.",
         u"Enforces the execution mode limits such that they are never exceeded.",
 
@@ -2361,8 +2357,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
 
@@ -2884,8 +2878,6 @@ namespace Js
         SimpleJitLimit(DEFAULT_CONFIG_SimpleJitLimit),
         ProfilingInterpreter1Limit(DEFAULT_CONFIG_ProfilingInterpreter1Limit),
 
-        ExecutionModeLimits(u""),
-        Eml(u""),
         EnforceExecutionModeLimits(false),
         Eeml(false),
 
@@ -3218,11 +3210,6 @@ namespace Js
             MaxAsmJsInterpreterRunCount = Maic;
         }
 
-        if(!IsEnabled(ExecutionModeLimitsFlag) && IsEnabled(EmlFlag))
-        {
-            Enable(ExecutionModeLimitsFlag);
-            ExecutionModeLimits = Eml;
-        }
         if(!IsEnabled(EnforceExecutionModeLimitsFlag) && IsEnabled(EemlFlag))
         {
             Enable(EnforceExecutionModeLimitsFlag);
@@ -3364,38 +3351,6 @@ namespace Js
                 IsEnabled(SimpleJitLimitFlag) ||
                 IsEnabled(ProfilingInterpreter1LimitFlag))
             {
-                break;
-            }
-
-            if(IsEnabled(ExecutionModeLimitsFlag))
-            {
-                uint autoProfilingInterpreter0Limit;
-                uint profilingInterpreter0Limit;
-                uint autoProfilingInterpreter1Limit;
-                uint simpleJitLimit;
-                uint profilingInterpreter1Limit;
-                [[maybe_unused]] const int scannedCount =
-                    PAL_swscanf(
-                        static_cast<const char16_t*>(ExecutionModeLimits),
-                        u"%u.%u.%u.%u.%u",
-                        &autoProfilingInterpreter0Limit,
-                        &profilingInterpreter0Limit,
-                        &autoProfilingInterpreter1Limit,
-                        &simpleJitLimit,
-                        &profilingInterpreter1Limit);
-                Assert(scannedCount == 5);
-
-                Enable(AutoProfilingInterpreter0LimitFlag);
-                Enable(ProfilingInterpreter0LimitFlag);
-                Enable(AutoProfilingInterpreter1LimitFlag);
-                Enable(SimpleJitLimitFlag);
-                Enable(ProfilingInterpreter1LimitFlag);
-
-                AutoProfilingInterpreter0Limit = autoProfilingInterpreter0Limit;
-                ProfilingInterpreter0Limit = profilingInterpreter0Limit;
-                AutoProfilingInterpreter1Limit = autoProfilingInterpreter1Limit;
-                SimpleJitLimit = simpleJitLimit;
-                ProfilingInterpreter1Limit = profilingInterpreter1Limit;
                 break;
             }
 
@@ -4293,10 +4248,6 @@ namespace Js
         case ProfilingInterpreter1LimitFlag:
             return FlagNumber;
 
-        case ExecutionModeLimitsFlag:
-            return FlagString;
-        case EmlFlag:
-            return FlagString;
         case EnforceExecutionModeLimitsFlag:
             return FlagBoolean;
         case EemlFlag:
@@ -5151,10 +5102,6 @@ namespace Js
         case ProfilingInterpreter1LimitFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&ProfilingInterpreter1Limit));
 
-        case ExecutionModeLimitsFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&ExecutionModeLimits));
-        case EmlFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&Eml));
         case EnforceExecutionModeLimitsFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&EnforceExecutionModeLimits));
         case EemlFlag:
