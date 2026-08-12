@@ -3150,7 +3150,17 @@ ThreadContext::InvalidatePropertyGuardEntry(const Js::PropertyRecord* propertyRe
         }
         entry->entryPoints->Map([=](Js::EntryPointInfo* info, uint8_t& dummy, const RecyclerWeakReference<Js::EntryPointInfo>* infoWeakRef)
         {
-            OUTPUT_TRACE2(Js::LazyBailoutPhase, info->GetFunctionBody(), u"Lazy bailout - Invalidation due to property: %s \n", propertyRecord->GetBuffer());
+                if (Js::Configuration::Global.flags.Trace.IsEnabled((Js::LazyBailoutPhase)))
+                {
+                    char16_t prefixValue[512];
+                    swprintf_s(prefixValue, u"Function %s (#%d.%u, #%u)", (info->GetFunctionBody())->GetDisplayName(),
+                               (int)(info->GetFunctionBody())->GetSourceContextId(),
+                               (info->GetFunctionBody())->GetLocalFunctionId(),
+                               (info->GetFunctionBody())->GetFunctionNumber());
+                    Output::TraceWithPrefix((Js::LazyBailoutPhase), prefixValue,
+                                            u"Lazy bailout - Invalidation due to property: %s \n",
+                                            propertyRecord->GetBuffer());
+                }
             info->Invalidate(true);
         });
         entry->entryPoints->Clear();
