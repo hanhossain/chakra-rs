@@ -2565,28 +2565,4 @@ int _snwprintf_s(char16_t *_Dst, size_t _SizeInWords, size_t _Count, const char1
 _SAFECRT__EXTERN_C
 int _vsnwprintf_s(char16_t *_Dst, size_t _SizeInWords, size_t _Count, const char16_t *_Format, va_list _ArgList);
 
-#if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
-template <size_t _SizeInWords>
-inline
-int _snwprintf_s(char (&_Dst)[_SizeInWords], size_t _Count, const char *_Format, ...)
-{
-    int ret;
-    va_list _ArgList;
-    va_start(_ArgList, _Format);
-    ret = _vsnwprintf_s(_Dst, _SizeInWords, _Count, _Format, _ArgList);
-    va_end(_ArgList);
-    return ret;
-}
-
-template <size_t _SizeInWords>
-inline
-int _vsnwprintf_s(char (&_Dst)[_SizeInWords], size_t _Count, const char *_Format, va_list _ArgList)
-{
-    return _vsnwprintf_s(_Dst, _SizeInWords, _Count, _Format, _ArgList);
-}
-#endif
-
-/* swscanf_s */
-_SAFECRT__EXTERN_C
-
 #endif  /* _INC_SAFECRT */
