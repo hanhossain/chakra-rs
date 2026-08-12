@@ -2,6 +2,8 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include "Language/DynamicProfileStorage.h"
+
 #include <filesystem>
 #include <mutex>
 
@@ -13,8 +15,6 @@ bool DynamicProfileStorage::enabled = false;
 bool DynamicProfileStorage::useCacheDir = false;
 bool DynamicProfileStorage::collectInfo = false;
 std::mutex DynamicProfileStorage::mutex;
-char16_t DynamicProfileStorage::cacheDrive[_MAX_DRIVE];
-char16_t DynamicProfileStorage::cacheDir[_MAX_DIR];
 char16_t DynamicProfileStorage::catalogFilename[_MAX_PATH];
 std::recursive_mutex DynamicProfileStorage::cs;
 DynamicProfileStorage::InfoMap DynamicProfileStorage::infoMap(&NoCheckHeapAllocator::Instance);
@@ -211,25 +211,21 @@ void DynamicProfileStorageReaderWriter::Close(bool deleteFile)
     filename = nullptr;
 }
 
-void DynamicProfileStorage::StorageInfo::GetFilename(_Out_writes_z_(_MAX_PATH) char16_t filename[_MAX_PATH]) const
+std::filesystem::path DynamicProfileStorage::StorageInfo::GetFilename() const
 {
-    char16_t tempFile[_MAX_PATH];
-    wcscpy_s(tempFile, u"jsdpcache_file");
-    _itow_s(this->fileId, tempFile + std::size(u"jsdpcache_file") - 1, std::size(tempFile) - std::size(u"jsdpcache_file") + 1, 10);
-    _wmakepath_s(filename, _MAX_PATH, cacheDrive, cacheDir, tempFile, u".dpd");
+    return std::format("jsdpcache_file{}.dpd", fileId);
 }
 
 char const * DynamicProfileStorage::StorageInfo::ReadRecord() const
 {
-    char16_t cacheFilename[_MAX_PATH];
-    this->GetFilename(cacheFilename);
+    auto cacheFilename = GetFilename();
     DynamicProfileStorageReaderWriter reader;
-    if (!reader.Init(cacheFilename, u"rb", false))
+    if (!reader.Init(cacheFilename.u16string().c_str(), u"rb", false))
     {
 #if DBG_DUMP
         if (DynamicProfileStorage::DoTrace())
         {
-            Output::Print(u"TRACE: DynamicProfileStorage: Unable to open cache dir file '%s'", cacheFilename);
+            Output::Print(u"TRACE: DynamicProfileStorage: Unable to open cache dir file '%s'", cacheFilename.u16string().c_str());
             Output::Flush();
         }
 #endif
@@ -240,7 +236,7 @@ char const * DynamicProfileStorage::StorageInfo::ReadRecord() const
     char * record = AllocRecord(size);
     if (record == nullptr)
     {
-        Output::Print(u"ERROR: DynamicProfileStorage: Out of memory reading '%s'", cacheFilename);
+        Output::Print(u"ERROR: DynamicProfileStorage: Out of memory reading '%s'", cacheFilename.u16string().c_str());
         Output::Flush();
         return nullptr;
     }
@@ -255,12 +251,11 @@ char const * DynamicProfileStorage::StorageInfo::ReadRecord() const
 
 bool DynamicProfileStorage::StorageInfo::WriteRecord(__in_ecount(sizeof(uint32_t) + *record)char const * record) const
 {
-    char16_t cacheFilename[_MAX_PATH];
-    this->GetFilename(cacheFilename);
+    auto cacheFilename = GetFilename();
     DynamicProfileStorageReaderWriter writer;
-    if (!writer.Init(cacheFilename, u"wcb", true))
+    if (!writer.Init(cacheFilename.u16string().c_str(), u"wcb", true))
     {
-        Output::Print(u"ERROR: DynamicProfileStorage: Unable open record file '%s'", cacheFilename);
+        Output::Print(u"ERROR: DynamicProfileStorage: Unable open record file '%s'", cacheFilename.u16string().c_str());
         Output::Flush();
         return false;
     }
@@ -447,8 +442,7 @@ void DynamicProfileStorage::ClearInfoMap(bool deleteFileStorage)
             AssertOrFailFast(useCacheDir);
             if (deleteFileStorage)
             {
-                char16_t filename[_MAX_PATH];
-                info.GetFilename(filename);
+                auto filename = info.GetFilename();
                 std::filesystem::remove(filename);
             }
         }
@@ -952,8 +946,6 @@ void DynamicProfileStorage::SaveRecord(__in_z char16_t const * filename, __in_ec
         }
         AssertOrFailFast(useCacheDir);
 
-        char16_t cacheFilename[_MAX_PATH];
-        info->GetFilename(cacheFilename);
         DynamicProfileStorageReaderWriter writer;
         if (info->WriteRecord(record))
         {

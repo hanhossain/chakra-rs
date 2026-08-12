@@ -78,9 +78,7 @@
 
 #include "Language/JavascriptMathOperators.h"
 #include "Language/JavascriptStackWalker.h"
-#ifdef DYNAMIC_PROFILE_STORAGE
-#include "Language/DynamicProfileStorage.h"
-#endif
+
 #include "Language/SourceDynamicProfileManager.h"
 #include "Language/SimpleDataCacheWrapper.h"
 
