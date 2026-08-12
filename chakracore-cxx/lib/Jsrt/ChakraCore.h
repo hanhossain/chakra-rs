@@ -506,28 +506,6 @@ namespace chakracore::jsrt
         _Out_ JsValueRef *value);
 
     /// <summary>
-    ///     Create JavascriptString variable from Utf16 string
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///         Requires an active script context.
-    ///     </para>
-    ///     <para>
-    ///         Expects Utf16 string
-    ///     </para>
-    /// </remarks>
-    /// <param name="content">Pointer to string memory.</param>
-    /// <param name="length">Number of characters within the string</param>
-    /// <param name="value">JsValueRef representing the JavascriptString</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode JsCreateStringUtf16(
-        _In_ const uint16_t *content,
-        _In_ size_t length,
-        _Out_ JsValueRef *value);
-
-    /// <summary>
     ///     Write JavascriptString value into C string buffer (Utf8)
     /// </summary>
     /// <remarks>

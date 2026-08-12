@@ -39,9 +39,6 @@ namespace Js
         static JavascriptString *
         NewFromCString(const char * cString, const CharCount charCount, JavascriptLibrary *const library);
 
-        static JavascriptString *
-        NewFromWideString(const char16_t * wString, const CharCount charCount, JavascriptLibrary *const library);
-
         static JavascriptString * CreateEmptyString(JavascriptLibrary *const library);
 
     protected:
