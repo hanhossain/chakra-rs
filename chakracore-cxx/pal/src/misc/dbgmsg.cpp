@@ -28,7 +28,6 @@ Abstract:
 #include "pal/dbgmsg.h"
 #include "pal/cruntime.h"
 #include "pal/critsect.h"
-#include "pal/file.h"
 #include "pal/misc.h"
 
 /* standard headers */

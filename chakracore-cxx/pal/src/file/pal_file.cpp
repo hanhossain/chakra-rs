@@ -27,7 +27,6 @@ Abstract:
 
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
-#include "pal/file.h"
 #include "pal/filetime.h"
 #include "pal/utils.h"
 
