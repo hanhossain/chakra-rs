@@ -614,7 +614,7 @@ Remember to fix the errcode defintion in safecrt.h.
 
 extern "C++" {
 
-#include <safemath.h>
+#include <type_traits>
 
 inline errno_t _wcslwr_unsafe(char16_t *str, size_t sz)
 {
