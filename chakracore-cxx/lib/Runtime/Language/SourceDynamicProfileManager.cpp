@@ -2,6 +2,8 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include "SourceDynamicProfileManager.h"
+#include "DynamicProfileStorage.h"
 
 #if ENABLE_PROFILE_INFO
 namespace Js

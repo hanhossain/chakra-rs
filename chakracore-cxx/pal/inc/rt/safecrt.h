@@ -337,7 +337,6 @@ void _invalid_parameter()
 #define _tcsset_s       _wcsset_s
 #define _tcsnset_s      _wcsnset_s
 #define _tcstok_s       wcstok_s
-#define _tmakepath_s    _wmakepath_s
 #define _stprintf_s     swprintf_s
 #define _vstprintf_s    vswprintf_s
 #define _sntprintf_s    _snwprintf_s
@@ -2166,120 +2165,6 @@ unsigned char * _mbstok_s(unsigned char *_String, const unsigned char *_Control,
 #endif
 
 #endif /* _SAFECRT_DEFINE_MBS_FUNCTIONS */
-
-/* _wmakepath_s */
-_SAFECRT__EXTERN_C
-errno_t _wmakepath_s(char16_t *_Dst, size_t _SizeInWords, const char16_t *_Drive, const char16_t *_Dir, const char16_t *_Filename, const char16_t *_Ext);
-
-#if defined(__cplusplus) && _SAFECRT_USE_CPP_OVERLOADS
-template <size_t _SizeInWords>
-inline
-errno_t _wmakepath_s(char16_t (&_Dst)[_SizeInWords], const char16_t *_Drive, const char16_t *_Dir, const char16_t *_Filename, const char16_t *_Ext)
-{
-    return _wmakepath_s(_Dst, _SizeInWords, _Drive, _Dir, _Filename, _Ext);
-}
-#endif
-
-#if _SAFECRT_USE_INLINES || _SAFECRT_IMPL
-
-_SAFECRT__INLINE
-errno_t _wmakepath_s(char16_t *_Dst, size_t _SizeInWords, const char16_t *_Drive, const char16_t *_Dir, const char16_t *_Filename, const char16_t *_Ext)
-{
-    size_t written;
-    const char16_t *p;
-    char16_t *d;
-
-    /* validation section */
-    _SAFECRT__VALIDATE_STRING(_Dst, _SizeInWords);
-
-    /* copy drive */
-    written = 0;
-    d = _Dst;
-    if (_Drive != nullptr && *_Drive != 0)
-    {
-        written += 2;
-        if(written >= _SizeInWords)
-        {
-            goto error_return;
-        }
-        *d++ = *_Drive;
-        *d++ = L':';
-    }
-
-    /* copy dir */
-    p = _Dir;
-    if (p != nullptr && *p != 0)
-    {
-        do {
-            if(++written >= _SizeInWords)
-            {
-                goto error_return;
-            }
-            *d++ = *p++;
-        } while (*p != 0);
-
-        p = p - 1;
-        if (*p != L'/' && *p != L'\\')
-        {
-            if(++written >= _SizeInWords)
-            {
-                goto error_return;
-            }
-            *d++ = L'\\';
-        }
-    }
-
-    /* copy fname */
-    p = _Filename;
-    if (p != nullptr)
-    {
-        while (*p != 0)
-        {
-            if(++written >= _SizeInWords)
-            {
-                goto error_return;
-            }
-            *d++ = *p++;
-        }
-    }
-
-    /* copy extension; check to see if a '.' needs to be inserted */
-    p = _Ext;
-    if (p != nullptr)
-    {
-        if (*p != 0 && *p != L'.')
-        {
-            if(++written >= _SizeInWords)
-            {
-                goto error_return;
-            }
-            *d++ = L'.';
-        }
-        while (*p != 0)
-        {
-            if(++written >= _SizeInWords)
-            {
-                goto error_return;
-            }
-            *d++ = *p++;
-        }
-    }
-
-    if(++written > _SizeInWords)
-    {
-        goto error_return;
-    }
-    *d = 0;
-    _SAFECRT__FILL_STRING(_Dst, _SizeInWords, written);
-    return 0;
-
-error_return:
-    _SAFECRT__RESET_STRING(_Dst, _SizeInWords);
-    _SAFECRT__RETURN_BUFFER_TOO_SMALL(_Dst, _SizeInWords);
-    /* should never happen, but compiler can't tell */
-    return EINVAL;
-}
-#endif
 
 /* swprintf_s, vswprintf_s */
 EXTERN_C

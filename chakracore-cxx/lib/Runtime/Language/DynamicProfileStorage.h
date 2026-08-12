@@ -5,6 +5,7 @@
 #pragma once
 
 #ifdef DYNAMIC_PROFILE_STORAGE
+#include <filesystem>
 #include <mutex>
 class DynamicProfileStorage
 {
@@ -45,8 +46,6 @@ private:
     static bool enabled;
     static bool collectInfo;
     static bool useCacheDir;
-    static char16_t cacheDrive[_MAX_DRIVE];
-    static char16_t cacheDir[_MAX_DIR];
     static char16_t catalogFilename[_MAX_PATH];
     static uint32_t const MagicNumber;
     static uint32_t const FileFormatVersion;
@@ -64,7 +63,7 @@ private:
     class StorageInfo
     {
     public:
-        void GetFilename(_Out_writes_z_(_MAX_PATH) char16_t filename[_MAX_PATH]) const;
+        std::filesystem::path GetFilename() const;
         char const * ReadRecord() const;
         bool WriteRecord(__in_ecount(sizeof(uint32_t) + *record) char const * record) const;
         bool isFileStorage;
