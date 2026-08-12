@@ -76,14 +76,9 @@ extern errno_t _ui64tow_s( unsigned long long inValue, char16_t* outBuffer, size
 
 extern errno_t _wmakepath_s( char16_t* outDest, size_t inDestBufferSize, const char16_t* inDrive, const char16_t* inDirectory, const char16_t* inFilename, const char16_t* inExtension );
 
-extern errno_t _wsplitpath_s( const char16_t* inPath, char16_t* outDrive, size_t inDriveSize, char16_t* outDirectory, size_t inDirectorySize, char16_t* outFilename, size_t inFilenameSize, char16_t* outExtension, size_t inExtensionSize );
-
 extern int swprintf_s( char16_t *string, size_t sizeInWords, const char16_t *format, ... );
 
-extern int _snwprintf_s( char16_t *string, size_t sizeInWords, size_t count, const char16_t *format, ... );
-
 extern int _vswprintf_s( char16_t* string, size_t sizeInWords, const char16_t* format, va_list arglist );
-extern int _vsnwprintf_s( char16_t* string, size_t sizeInWords, size_t count, const char16_t* format, va_list arglist );
-    }
+}
 
 #endif	/* MBUSAFECRT_H */

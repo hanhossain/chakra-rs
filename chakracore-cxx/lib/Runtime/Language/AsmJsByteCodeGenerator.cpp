@@ -17,6 +17,7 @@
 #include "ByteCode/AsmJsByteCodeWriter.h"
 #include "Language/AsmJsByteCodeGenerator.h"
 
+#include <filesystem>
 
 namespace Js
 {
@@ -270,19 +271,17 @@ namespace Js
             moduleName = mCompiler->GetModuleFunctionName()->Psz();
         }
 
-        char16_t filename[_MAX_FNAME];
-        char16_t ext[_MAX_EXT];
+        std::filesystem::path url;
         bool hasURL = mFunction->GetFuncBody()->GetSourceContextInfo()->url != nullptr;
         Assert(hasURL || mFunction->GetFuncBody()->GetSourceContextInfo()->IsDynamic());
         if (hasURL)
         {
-            _wsplitpath_s(mFunction->GetFuncBody()->GetSourceContextInfo()->url, NULL, 0, NULL, 0, filename, _MAX_FNAME, ext, _MAX_EXT);
+            url = mFunction->GetFuncBody()->GetSourceContextInfo()->url;
         }
         AsmJSCompiler::OutputError(
             mCompiler->GetScriptContext(),
-            u"\n%s%s(%d, %d)\n\tAsm.js Compilation Error function : %s::%s\n\t%s\n",
-            hasURL ? filename : u"[Dynamic code]",
-            hasURL ? ext : u"",
+            u"\n%s(%d, %d)\n\tAsm.js Compilation Error function : %s::%s\n\t%s\n",
+            hasURL ? url.filename().u16string().c_str() : u"[Dynamic code]",
             line + 1,
             col + 1,
             moduleName,
