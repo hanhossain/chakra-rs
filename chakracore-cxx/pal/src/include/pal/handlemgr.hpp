@@ -30,9 +30,7 @@ Abstract:
 
 
 /* Pseudo handles constant for current thread and process */
-extern const HANDLE hPseudoCurrentProcess;
 extern const HANDLE hPseudoCurrentThread;
-extern const HANDLE hPseudoGlobalIOCP;
 
 namespace CorUnix
 {

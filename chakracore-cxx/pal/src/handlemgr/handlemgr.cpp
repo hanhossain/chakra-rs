@@ -34,10 +34,7 @@ SET_DEFAULT_DEBUG_CHANNEL(HANDLE);
 /* Constants */
 /* Special handles */
 /* Pseudo handles constant for current thread and process */
-const HANDLE hPseudoCurrentProcess = reinterpret_cast<HANDLE>(0xFFFFFF01);
 const HANDLE hPseudoCurrentThread  = reinterpret_cast<HANDLE>(0xFFFFFF03);
-/* Pseudo handle constant for the global IO Completion port */
-const HANDLE hPseudoGlobalIOCP  = reinterpret_cast<HANDLE>(0xFFFFFF05);
 
 PAL_ERROR
 CSimpleHandleManager::Initialize(
@@ -323,8 +320,6 @@ CorUnix::HandleIsSpecial(
     HANDLE h
     )
 {
-    return (hPseudoCurrentProcess == h ||
-            hPseudoCurrentThread == h ||
-            hPseudoGlobalIOCP == h);
+    return hPseudoCurrentThread == h;
 }
 

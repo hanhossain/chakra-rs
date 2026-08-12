@@ -95,8 +95,7 @@ CloseSpecialHandle(
     HANDLE hObject
     )
 {
-    if ((hObject == hPseudoCurrentThread) ||
-        (hObject == hPseudoCurrentProcess))
+    if (hObject == hPseudoCurrentThread)
     {
         return NO_ERROR;
     }
