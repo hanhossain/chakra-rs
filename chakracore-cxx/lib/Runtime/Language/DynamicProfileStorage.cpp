@@ -306,26 +306,6 @@ bool DynamicProfileStorage::Initialize()
     bool success = true;
     initialized = true;
 
-#ifdef FORCE_DYNAMIC_PROFILE_STORAGE
-    enabled = true;
-    collectInfo = true;
-    if (!SetupCacheDir(nullptr))
-    {
-        success = false;
-    }
-
-#else
-    if (Js::Configuration::Global.flags.IsEnabled(Js::DynamicProfileCacheDirFlag))
-    {
-        enabled = true;
-        collectInfo = true;
-        if (!SetupCacheDir(Js::Configuration::Global.flags.DynamicProfileCacheDir))
-        {
-            success = false;
-        }
-    }
-#endif
-
     // If -DynamicProfileInput is specified, the file specified in -DynamicProfileCache
     // will not be imported and will be overwritten
     if (Js::Configuration::Global.flags.IsEnabled(Js::DynamicProfileInputFlag))
@@ -666,9 +646,6 @@ void DynamicProfileStorage::DisableCacheDir()
     AssertOrFailFast(useCacheDir);
     ClearInfoMap(false);
     useCacheDir = false;
-#ifdef FORCE_DYNAMIC_PROFILE_STORAGE
-    Js::Throw::FatalInternalError();
-#endif
 }
 
 bool DynamicProfileStorage::AcquireLock()
@@ -689,51 +666,6 @@ bool DynamicProfileStorage::ReleaseLock()
 #endif
     mutex.unlock();
     return true;
-}
-
-bool DynamicProfileStorage::SetupCacheDir(__in_z char16_t const * dirname)
-{
-    AssertOrFailFast(enabled);
-
-    useCacheDir = true;
-    if (!AcquireLock())
-    {
-        return false;
-    }
-
-    std::filesystem::path dirPath;
-
-    if (dirname != nullptr)
-    {
-        dirPath = dirname;
-    }
-    else
-    {
-        std::filesystem::path tempPath = std::filesystem::temp_directory_path();
-        tempPath.append("jsdpcache");
-
-        if (std::error_code errorCode; !std::filesystem::create_directories(tempPath, errorCode) && errorCode)
-        {
-            DisableCacheDir();
-            Output::Print(u"ERROR: DynamicProfileStorage: Can't setup cache directory: Unable to create directory\n");
-            Output::Flush();
-            ReleaseLock();
-            return false;
-        }
-        dirPath = tempPath;
-    }
-
-    char16_t cacheFile[_MAX_FNAME];
-    char16_t cacheExt[_MAX_EXT];
-    _wsplitpath_s(dirPath.u16string().c_str(), cacheDrive, cacheDir, cacheFile, cacheExt);
-    wcscat_s(cacheDir, cacheFile);
-    wcscat_s(cacheDir, cacheExt);
-
-    _wmakepath_s(catalogFilename, cacheDrive, cacheDir, u"jsdpcache_master", u".dpc");
-    bool succeed = LoadCacheCatalog();
-    ReleaseLock();
-
-    return succeed;
 }
 
 bool DynamicProfileStorage::CreateCacheCatalog()

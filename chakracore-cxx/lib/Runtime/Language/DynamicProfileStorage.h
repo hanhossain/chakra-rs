@@ -30,7 +30,6 @@ private:
 
     static bool ImportFile(__in_z char16_t const * filename, bool allowNonExistingFile);
     static bool ExportFile(__in_z char16_t const * filename);
-    static bool SetupCacheDir(__in_z char16_t const * dirname);
     static void DisableCacheDir();
 
     static bool CreateCacheCatalog();

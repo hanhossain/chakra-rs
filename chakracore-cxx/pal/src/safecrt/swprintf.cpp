@@ -80,23 +80,3 @@ int swprintf_s (
 
     return ret;
 }
-
-int _snwprintf_s (
-        char16_t *string,
-        size_t sizeInWords,
-        size_t count,
-        const char16_t *format,
-        ...
-        )
-{
-    int ret;
-    va_list arglist;
-
-    va_start(arglist, format);
-
-    ret = _vsnwprintf_s(string, sizeInWords, count, format, arglist);
-
-    va_end(arglist);
-
-    return ret;
-}

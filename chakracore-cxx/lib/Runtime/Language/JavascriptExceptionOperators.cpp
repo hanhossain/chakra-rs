@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Language/InterpreterStackFrame.h"
 
+#include <filesystem>
+
 namespace Js
 {
     void JavascriptExceptionOperators::AutoCatchHandlerExists::FetchNonUserCodeStatus(ScriptContext * scriptContext)
@@ -1407,18 +1409,8 @@ namespace Js
 
         if (CONFIG_FLAG(ExtendedErrorStackForTestHost) && *fileName != u'\0')
         {
-            char16_t shortfilename[_MAX_FNAME];
-            char16_t ext[_MAX_EXT];
-            errno_t err = _wsplitpath_s(fileName, NULL, 0, NULL, 0, shortfilename, _MAX_FNAME, ext, _MAX_EXT);
-            if (err != 0)
-            {
-                bs->AppendCharsSz(fileName);
-            }
-            else
-            {
-                bs->AppendCharsSz(shortfilename);
-                bs->AppendCharsSz(ext);
-            }
+            auto shortfilename = std::filesystem::path(fileName).filename();
+            bs->AppendCharsSz(shortfilename.u16string().c_str());
         }
         else
         {
