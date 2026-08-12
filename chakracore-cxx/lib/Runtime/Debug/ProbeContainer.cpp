@@ -936,15 +936,6 @@ namespace Js
         this->IsNextStatementChanged = true;
     }
 
-    void ProbeContainer::AsyncActivate(HaltCallback* haltCallback)
-    {
-        OUTPUT_TRACE(Js::DebuggerPhase, u"Async break activated\n");
-        InterlockedExchangePointer((void **)&this->pAsyncHaltCallback, haltCallback);
-
-        Assert(debugManager);
-        debugManager->asyncBreakController.Activate(haltCallback);
-    }
-
     void ProbeContainer::AsyncDeactivate()
     {
         InterlockedExchangePointer((void **)&this->pAsyncHaltCallback, nullptr);
