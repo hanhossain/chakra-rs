@@ -25,43 +25,6 @@ namespace Js
     {
     }
 
-    JavascriptString * LiteralStringWithPropertyStringPtr::
-    NewFromWideString(const char16_t * wideString, const CharCount charCount, JavascriptLibrary *const library)
-    {
-        Assert(library != nullptr && wideString != nullptr);
-
-        switch (charCount)
-        {
-            case 0:
-            {
-                JavascriptString * emptyString = library->GetEmptyString();
-                AssertMsg(VirtualTableInfo<Js::LiteralStringWithPropertyStringPtr>::HasVirtualTable(emptyString),
-                    "Library::GetEmptyString is no longer LiteralStringWithPropertyStringPtr ?");
-                return emptyString;
-            }
-            case 1:
-            {
-                return library->GetCharStringCache().GetStringForChar((char16_t(*wideString)));
-            }
-            default:
-                break;
-        }
-
-        Recycler * recycler = library->GetRecycler();
-        ScriptContext * scriptContext = library->GetScriptContext();
-        char16_t* destString = RecyclerNewArrayLeaf(recycler, char16_t, charCount + 1);
-
-        if (destString == nullptr)
-        {
-            Js::JavascriptError::ThrowOutOfMemoryError(scriptContext);
-        }
-
-        js_wmemcpy_s(destString, charCount, wideString, charCount);
-        destString[charCount] = char16_t(0);
-
-        return (JavascriptString*) RecyclerNew(library->GetRecycler(), LiteralStringWithPropertyStringPtr, destString, charCount, library);
-    }
-
     JavascriptString * LiteralStringWithPropertyStringPtr::CreateEmptyString(JavascriptLibrary *const library)
     {
         return (JavascriptString*) RecyclerNew(library->GetRecycler(), LiteralStringWithPropertyStringPtr, u"", 0, library);

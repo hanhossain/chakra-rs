@@ -876,41 +876,6 @@ JsErrorCode chakracore::jsrt::JsCreateString(
     });
 }
 
-JsErrorCode chakracore::jsrt::JsCreateStringUtf16(
-    _In_ const uint16_t *content,
-    _In_ size_t length,
-    _Out_ JsValueRef *value)
-{
-    PARAM_NOT_NULL(content);
-    PARAM_NOT_NULL(value);
-    *value = JS_INVALID_REFERENCE;
-
-    if (length == static_cast<size_t>(-1))
-    {
-        length = std::u16string((const char16_t *)content).length();
-    }
-
-    if (length > static_cast<CharCount>(-1))
-    {
-        return JsErrorOutOfMemory;
-    }
-
-    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
-
-        Js::JavascriptString *stringValue = Js::LiteralStringWithPropertyStringPtr::
-            NewFromWideString((const char16_t *)content, (CharCount)length, scriptContext->GetLibrary());
-
-        ;
-
-        *value = stringValue;
-
-        ;
-
-        return JsNoError;
-    });
-}
-
-
 JsErrorCode chakracore::jsrt::JsCreatePropertyString(
     _In_z_ const char *name,
     _In_ size_t length,

@@ -148,7 +148,6 @@ public:
     static JsErrorCode WINAPI JsCreateString(const char *content, size_t length, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, length, value); }
     static JsErrorCode WINAPI JsCreateString(const std::string &content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content.c_str(), content.length(), value); }
     static JsErrorCode WINAPI JsCreateString(const rust::String &content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(static_cast<std::string>(content).c_str(), content.length(), value); }
-    static JsErrorCode WINAPI JsCreateStringUtf16(const uint16_t *content, size_t length, JsValueRef *value) { return chakracore::jsrt::JsCreateStringUtf16(content, length, value); }
     static JsErrorCode WINAPI JsCreatePropertyId(const char *name, size_t length, JsPropertyIdRef *propertyId) { return chakracore::jsrt::JsCreatePropertyId(name, length, propertyId); }
     static JsErrorCode WINAPI JsCreateExternalArrayBuffer(void *data, unsigned int byteLength, JsFinalizeCallback finalizeCallback, void *callbackState, JsValueRef *result)  { return chakracore::jsrt::JsCreateExternalArrayBuffer(data, byteLength, finalizeCallback, callbackState, result); }
     static JsErrorCode WINAPI JsGetProxyProperties(JsValueRef object, bool* isProxy, JsValueRef* target, JsValueRef* handler)  { return chakracore::jsrt::JsGetProxyProperties(object, isProxy, target, handler); }
