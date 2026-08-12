@@ -151,7 +151,6 @@ namespace Js
         bool IsSetNextStatementCalled() const { return IsNextStatementChanged; }
         int GetByteCodeOffset() const { Assert(IsNextStatementChanged); return bytecodeOffset; }
 
-        void AsyncActivate(HaltCallback* haltCallback);
         void AsyncDeactivate();
 
         void PrepDiagForEnterScript();

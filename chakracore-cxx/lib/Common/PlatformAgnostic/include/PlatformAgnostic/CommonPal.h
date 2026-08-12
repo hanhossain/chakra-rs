@@ -246,8 +246,6 @@ uint32_t CharUpperBuffW(const char16_t* lpsz, uint32_t  cchLength);
 #define BYTE_MAX    0xff
 #define USHORT_MAX  0xffff
 
-#define StringCchPrintf  StringCchPrintfW
-
 // Use intsafe.h for internal builds (currently missing some files with stdint.h)
 #include <stdint.h>
 
@@ -283,9 +281,6 @@ extern "C" void * _AddressOfReturnAddress(void);
 #define STRSAFEAPI  inline int32_t
 #endif
 
-STRSAFEAPI StringCchPrintfW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, ...);
-STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, va_list argList);
-
 #define STRSAFE_MAX_CCH  2147483647 // max # of characters we support (same as INT_MAX)
 
 // STRSAFE error return codes
@@ -294,69 +289,6 @@ STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_
 #define STRSAFE_E_INVALID_PARAMETER         (static_cast<int32_t>(0x80070057L))  // 0x57 =  87L = ERROR_INVALID_PARAMETER
 #define STRSAFE_E_END_OF_FILE               (static_cast<int32_t>(0x80070026L))  // 0x26 =  38L = ERROR_HANDLE_EOF
 // ----- END: Define strsafe related types and defines for non-VC++ compilers -----
-
-// Provide the definitions for non-windows platforms
-STRSAFEAPI StringVPrintfWorkerW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, va_list argList)
-{
-    int32_t hr = S_OK;
-
-    if (cchDest == 0)
-    {
-        // can not null terminate a zero-byte dest buffer
-        hr = STRSAFE_E_INVALID_PARAMETER;
-    }
-    else
-    {
-        int iRet;
-        size_t cchMax;
-
-        // leave the last space for the null terminator
-        cchMax = cchDest - 1;
-
-        iRet = _vsnwprintf(pszDest, cchMax, pszFormat, argList);
-        // ASSERT((iRet < 0) || (((size_t)iRet) <= cchMax));
-
-        if ((iRet < 0) || (static_cast<size_t>(iRet) > cchMax))
-        {
-            // need to null terminate the string
-            pszDest += cchMax;
-            *pszDest = u'\0';
-
-            // we have truncated pszDest
-            hr = STRSAFE_E_INSUFFICIENT_BUFFER;
-        }
-        else if (static_cast<size_t>(iRet) == cchMax)
-        {
-            // need to null terminate the string
-            pszDest += cchMax;
-            *pszDest = u'\0';
-        }
-    }
-
-    return hr;
-}
-
-STRSAFEAPI StringCchPrintfW(char16_t* pszDest, size_t cchDest, const char16_t* pszFormat, ...)
-{
-    int32_t hr;
-
-    if (cchDest > STRSAFE_MAX_CCH)
-    {
-        hr = STRSAFE_E_INVALID_PARAMETER;
-    }
-    else
-    {
-        va_list argList;
-
-        va_start(argList, pszFormat);
-
-        hr = StringVPrintfWorkerW(pszDest, cchDest, pszFormat, argList);
-
-        va_end(argList);
-    }
-
-    return hr;
-}
 
 __inline
 int32_t ULongMult(uint32_t ulMultiplicand, uint32_t ulMultiplier, uint32_t* pulResult);

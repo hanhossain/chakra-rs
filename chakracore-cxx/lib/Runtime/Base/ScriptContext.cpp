@@ -2514,38 +2514,6 @@ namespace Js
         return nullptr;
     }
 
-    SourceContextInfo* ScriptContext::CreateSourceContextInfo(uint hash, unsigned long hostSourceContext)
-    {
-        EnsureDynamicSourceContextInfoMap();
-        if (this->GetSourceContextInfo(hash) != nullptr)
-        {
-            return this->Cache()->noContextSourceContextInfo;
-        }
-
-        if (this->Cache()->dynamicSourceContextInfoMap->Count() > INMEMORY_CACHE_MAX_PROFILE_MANAGER)
-        {
-            OUTPUT_TRACE(Js::DynamicProfilePhase, u"Max of dynamic script profile info reached.\n");
-            return this->Cache()->noContextSourceContextInfo;
-        }
-
-        // This is capped so we can continue allocating in the arena
-        SourceContextInfo * sourceContextInfo = RecyclerNewStructZ(this->GetRecycler(), SourceContextInfo);
-        sourceContextInfo->sourceContextId = this->GetNextSourceContextId();
-        sourceContextInfo->dwHostSourceContext = hostSourceContext;
-        sourceContextInfo->isHostDynamicDocument = true;
-        sourceContextInfo->hash = hash;
-#if ENABLE_PROFILE_INFO
-        sourceContextInfo->sourceDynamicProfileManager = this->threadContext->GetSourceDynamicProfileManager(this->GetUrl(), hash, &referencesSharedDynamicSourceContextInfo);
-#endif
-
-        // For the host provided dynamic code (if hostSourceContext is not NoHostSourceContext), do not add to dynamicSourceContextInfoMap
-        if (hostSourceContext == Js::Constants::NoHostSourceContext)
-        {
-            this->Cache()->dynamicSourceContextInfoMap->Add(hash, sourceContextInfo);
-        }
-        return sourceContextInfo;
-    }
-
     //
     // Makes a copy of the URL to be stored in the map.
     //
@@ -4782,15 +4750,6 @@ ScriptContext::GetJitFuncRangeCache()
         });
     }
 
-    JITPageAddrToFuncRangeCache::JITPageAddrToFuncRangeMap * JITPageAddrToFuncRangeCache::GetJITPageAddrToFuncRangeMap()
-    {
-        return jitPageAddrToFuncRangeMap;
-    }
-
-    JITPageAddrToFuncRangeCache::LargeJITFuncAddrToSizeMap * JITPageAddrToFuncRangeCache::GetLargeJITFuncAddrToSizeMap()
-    {
-        return largeJitFuncToSizeMap;
-    }
 #endif
 
 } // End namespace Js

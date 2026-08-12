@@ -339,8 +339,6 @@ namespace Js
         void RemoveFuncRange(void * address);
         void * GetPageAddr(void * address);
         bool IsNativeAddr(void * address);
-        JITPageAddrToFuncRangeMap * GetJITPageAddrToFuncRangeMap();
-        LargeJITFuncAddrToSizeMap * GetLargeJITFuncAddrToSizeMap();
         static std::recursive_mutex& GetMutex() { return cs; }
     };
 #endif
@@ -932,7 +930,6 @@ private:
 
         SourceContextInfo * GetSourceContextInfo(unsigned long hostSourceContext, SimpleDataCacheWrapper* dataCacheWrapper);
         SourceContextInfo * GetSourceContextInfo(uint hash);
-        SourceContextInfo * CreateSourceContextInfo(uint hash, unsigned long hostSourceContext);
         SourceContextInfo * CreateSourceContextInfo(unsigned long hostSourceContext, char16_t const * url, size_t len,
             SimpleDataCacheWrapper* dataCacheWrapper, char16_t const * sourceMapUrl = nullptr, size_t sourceMapUrlLen = 0);
 
