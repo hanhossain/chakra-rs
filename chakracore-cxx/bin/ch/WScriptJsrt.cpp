@@ -90,7 +90,6 @@ unsigned long WScriptJsrt::GetNextSourceContext()
 
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
 {
-    // const char16_t* *argv = HostConfigFlags::argsVal;
     JsValueRef retArr;
 
     Assert(argsObject);
