@@ -22,7 +22,6 @@ public:
 
     static HostConfigFlags flags;
     static rust::Vec<rust::String> vargsVal;
-    static void(*pfnPrintUsage)();
 
     virtual bool ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser) override;
     virtual void PrintUsage() override;

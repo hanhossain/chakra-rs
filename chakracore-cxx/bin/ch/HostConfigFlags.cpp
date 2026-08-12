@@ -5,11 +5,11 @@
 #include "stdafx.h"
 #include <print>
 #include <rust/cxx.h>
+#include <chakracore-sys/src/chhelper.rs.h>
 #include <chakracore-sys/src/str_helper.rs.h>
 
 HostConfigFlags HostConfigFlags::flags;
 rust::Vec<rust::String> HostConfigFlags::vargsVal;
-void(*HostConfigFlags::pfnPrintUsage)();
 
 template <>
 void HostConfigFlags::Parse<bool>(ICmdLineArgsParser * parser, bool * value)
@@ -125,10 +125,7 @@ void HostConfigFlags::PrintUsageString()
 
 void HostConfigFlags::PrintUsage()
 {
-    if (pfnPrintUsage)
-    {
-        pfnPrintUsage();
-    }
+    chakra_rs::chhelper::print_usage();
 
     std::println();
     std::println("Host Config Flags: ");

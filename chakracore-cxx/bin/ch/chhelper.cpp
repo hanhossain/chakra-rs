@@ -436,7 +436,6 @@ int main_internal(chakra_rs::config::CoreConfig config)
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
-    HostConfigFlags::pfnPrintUsage = chakra_rs::chhelper::print_usage;
     HostConfigFlags::vargsVal = chakra_rs::str_helper::split_args(config.args);
 
     std::vector<std::u16string> vargs;
