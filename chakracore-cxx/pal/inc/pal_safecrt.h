@@ -34,7 +34,6 @@ Wrapper for including SafeCRT for Mac build of CoreCLR
 #endif
 
 #define _SAFECRT_SET_ERRNO 0
-#define _SAFECRT_DEFINE_MBS_FUNCTIONS 0
 #define _SAFECRT_DEFINE_TCS_MACROS 1
 //#define _SAFECRT_INVALID_PARAMETER(message) WARN(message "\n")
 
