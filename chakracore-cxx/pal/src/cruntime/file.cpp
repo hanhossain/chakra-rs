@@ -22,7 +22,6 @@ Abstract:
 
 #include "pal/palinternal.h"
 #include "pal/dbgmsg.h"
-#include "pal/file.h"
 #include "pal/cruntime.h"
 
 #include <unistd.h>

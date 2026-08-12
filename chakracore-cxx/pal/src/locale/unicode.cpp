@@ -27,7 +27,6 @@ Revision History:
 #include "pal/palinternal.h"
 #include "pal/unicode_data.h"
 #include "pal/dbgmsg.h"
-#include "pal/file.h"
 #include "pal/utf8.h"
 #include "pal/locale.h"
 #include "pal/cruntime.h"
