@@ -7913,7 +7913,17 @@ namespace Js
             }
             else
             {
-                OUTPUT_TRACE2(Js::LazyBailoutPhase, this->GetFunctionBody(), u"Lazy bailout - Invalidation due to property: %s \n", scriptContext->GetPropertyName(propertyId)->GetBuffer());
+                if (Js::Configuration::Global.flags.Trace.IsEnabled((Js::LazyBailoutPhase)))
+                {
+                    char16_t prefixValue[512];
+                    swprintf_s(prefixValue, u"Function %s (#%d.%u, #%u)", (this->GetFunctionBody())->GetDisplayName(),
+                               (int)(this->GetFunctionBody())->GetSourceContextId(),
+                               (this->GetFunctionBody())->GetLocalFunctionId(),
+                               (this->GetFunctionBody())->GetFunctionNumber());
+                    Output::TraceWithPrefix((Js::LazyBailoutPhase), prefixValue,
+                                            u"Lazy bailout - Invalidation due to property: %s \n",
+                                            scriptContext->GetPropertyName(propertyId)->GetBuffer());
+                }
                 this->Invalidate(true);
                 return;
             }

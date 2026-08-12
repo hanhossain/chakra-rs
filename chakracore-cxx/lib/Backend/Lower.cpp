@@ -6234,14 +6234,21 @@ Lowerer::GenerateCheckFixedFld(IR::Instr * instrChkFld)
     bool checkFixedDataGenerated = false;
     bool checkFixedTypeGenerated = false;
 
-    OUTPUT_TRACE_FUNC(
-        Js::ObjTypeSpecPhase,
-        this->m_func,
-        u"Fixed field check: %s, property ID: %d, cache ID: %u, cloned cache: true, layout: %s, redundant check: %s count of props: %u \n",
-        Js::OpCodeUtil::GetOpCodeName(instrChkFld->m_opcode),
-        propertySym->m_propertyId,
-        inlineCacheIndex, propertySymOpnd->GetCacheLayoutString(), propertySymOpnd->IsTypeChecked() ? u"true" : u"false",
-        propertySymOpnd->GetGuardedPropOps() ? propertySymOpnd->GetGuardedPropOps()->Count() : 0);
+    if (PHASE_TRACE((Js::ObjTypeSpecPhase), (this->m_func)))
+    {
+        char16_t prefixValue[512];
+        swprintf_s(prefixValue, u"%s (#%d.%u, #%u)", (this->m_func)->GetJITFunctionBody()->GetDisplayName(),
+                   (int)(this->m_func)->GetJITFunctionBody()->GetSourceContextId(),
+                   (this->m_func)->GetWorkItem()->GetJITTimeInfo()->GetLocalFunctionId(),
+                   (this->m_func)->GetJITFunctionBody()->GetFunctionNumber());
+        Output::TraceWithPrefix(
+            (Js::ObjTypeSpecPhase), prefixValue,
+            u"Fixed field check: %s, property ID: %d, cache ID: %u, cloned cache: true, layout: %s, redundant check: "
+            u"%s count of props: %u \n",
+            Js::OpCodeUtil::GetOpCodeName(instrChkFld->m_opcode), propertySym->m_propertyId, inlineCacheIndex,
+            propertySymOpnd->GetCacheLayoutString(), propertySymOpnd->IsTypeChecked() ? u"true" : u"false",
+            propertySymOpnd->GetGuardedPropOps() ? propertySymOpnd->GetGuardedPropOps()->Count() : 0);
+    }
 
     if (emitPrimaryTypeCheck || emitFixedFieldTypeCheck)
     {

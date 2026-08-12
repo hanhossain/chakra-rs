@@ -3,7 +3,6 @@ add_library (Chakra.Runtime.Base OBJECT
     CharStringCache.cpp
     Constants.cpp
     CrossSite.cpp
-    Debug.cpp
     # Entropy.cpp
     Exception.cpp
     ExpirableObject.cpp

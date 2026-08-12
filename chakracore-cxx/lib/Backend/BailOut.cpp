@@ -2784,8 +2784,11 @@ SharedBailOutRecord::SharedBailOutRecord(uint32_t bailOutOffset, uint bailOutCac
 #if DBG
 void LazyBailOutRecord::Dump(Js::FunctionBody* functionBody) const
 {
-    OUTPUT_PRINT(functionBody);
-    Output::Print(u"Bytecode Offset: #%04x opcode: %s", this->bailOutRecord->GetBailOutOffset(), Js::OpCodeUtil::GetOpCodeName(this->bailOutRecord->GetBailOutOpCode()));
+    Output::Print(u"Function %s (#%d.%u, #%u) ", (functionBody)->GetDisplayName(),
+                  (int)(functionBody)->GetSourceContextId(), (functionBody)->GetLocalFunctionId(),
+                  (functionBody)->GetFunctionNumber());
+    Output::Print(u"Bytecode Offset: #%04x opcode: %s", this->bailOutRecord->GetBailOutOffset(),
+                  Js::OpCodeUtil::GetOpCodeName(this->bailOutRecord->GetBailOutOpCode()));
 }
 #endif
 

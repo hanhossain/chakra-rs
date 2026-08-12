@@ -431,7 +431,6 @@ enum tagDEBUG_EVENT_INFO_TYPE
 
 #include "Library/WasmLibrary.h"
 #include "Library/WabtInterface.h"
-#include "Base/Debug.h"
 
 #ifdef _M_X64
 #include "Language/amd64/StackFrame.h"
