@@ -4,14 +4,13 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include <string>
-#include <vector>
+#include <rust/cxx.h>
 
 interface ICustomConfigFlags;
 
 struct TestHooks
 {
-    static int32_t SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags);
+    static int32_t SetConfigFlags(const rust::Vec<rust::String> &vargs, ICustomConfigFlags *customConfigFlags);
     static int32_t SetAssertToConsoleFlag(bool flag);
     static int32_t PrintConfigFlagsUsageString();
 };

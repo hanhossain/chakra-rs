@@ -5,6 +5,10 @@
 #include "Core/ICustomConfigFlags.h"
 #include "Core/CmdParser.h"
 
+#include <rust/cxx.h>
+
+#include "Codex/Utf8Helper.h"
+
 using namespace Js;
 
 
@@ -616,14 +620,16 @@ CmdLineArgsParser::ParseFlag()
 ///
 ///----------------------------------------------------------------------------
 
-int
-CmdLineArgsParser::Parse(const std::vector<std::u16string> &vargs)
+int CmdLineArgsParser::Parse(const rust::Vec<rust::String> &vargs)
 {
     int err = 0;
 
     for(int i = 1; i < vargs.size(); i++)
     {
-        if ((err = Parse(vargs[i].c_str())) != 0)
+        rust::String r = vargs[i];
+        std::u16string s;
+        utf8::NarrowStringToWideDynamic(r.c_str(), s);
+        if ((err = Parse(s.c_str())) != 0)
         {
             break;
         }

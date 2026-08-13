@@ -4,8 +4,10 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <rust/cxx.h>
 #include <string>
 #include <vector>
+
 #include "Core/ICustomConfigFlags.h"
 
 ///----------------------------------------------------------------------------
@@ -36,7 +38,7 @@ private:
 
 // Methods
 public:
-    int Parse(const std::vector<std::u16string> &vargs);
+    int Parse(const rust::Vec<rust::String> &vargs);
     int Parse(const char16_t* token) throw();
     CmdLineArgsParser(ICustomConfigFlags * pCustomConfigFlags = nullptr, Js::ConfigFlagsTable& flagTable = Js::Configuration::Global.flags);
     ~CmdLineArgsParser();

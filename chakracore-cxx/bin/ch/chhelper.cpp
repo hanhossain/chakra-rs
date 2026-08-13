@@ -436,18 +436,8 @@ int main_internal(chakra_rs::config::CoreConfig config)
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
     HostConfigFlags::vargsVal = config.host_args;
-
-    std::vector<std::u16string> vargs;
-
-    for (auto arg : config.args)
-    {
-        std::u16string s;
-        NarrowStringToWideDynamic(arg.c_str(), s);
-        vargs.push_back(std::move(s));
-    }
-
     // handle command line flags
-    ChakraRTInterface::InitializeTestHooks(vargs);
+    ChakraRTInterface::InitializeTestHooks(config.args);
 
     // On linux, execute on the same thread
     int32_t exitCode = ExecuteTestWithMemoryCheck(config.filename, chRuntime, jsrtAttributes);
