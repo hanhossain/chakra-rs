@@ -254,6 +254,7 @@ fn obj_lit_get_set_parse_only_js_deferparse(#[case] variant: Variant) {
         baseline_path: Some("ObjLitGetSetParseOnlyFdp.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -343,6 +344,7 @@ fn array_length_js_forcees5array(#[case] variant: Variant) {
         baseline_path: Some("array_length.baseline"),
         compile_flags: vec!["-ForceES5Array"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -406,6 +408,7 @@ fn define_property_js_serialized(#[case] variant: Variant) {
         baseline_path: Some("defineProperty.baseline"),
         compile_flags: vec!["-Serialized"],
         tags: HashSet::from(["exclude_forceserialized"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -437,6 +440,7 @@ fn define_index_property_js_serialized(#[case] variant: Variant) {
         baseline_path: Some("defineIndexProperty.baseline"),
         compile_flags: vec!["-Serialized"],
         tags: HashSet::from(["exclude_forceserialized"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

@@ -131,7 +131,7 @@ fn dateutc_dategmt_same_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "DateUTC-DateGMT-same.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -329,7 +329,7 @@ fn to_string_and_to_utcstring_year_padding_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "toStringAndToUTCStringYearPadding.js",
         tags: HashSet::from(["slow", "exclude_xplat"]),
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -344,7 +344,7 @@ fn parse_to_string_results_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "parseToStringResults.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -359,7 +359,7 @@ fn parse_to_utcstring_and_to_isostring_results_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "parseToUTCStringAndToISOStringResults.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -378,7 +378,7 @@ fn parse_invalid_iso_js(#[case] variant: Variant) {
         source_path: "parseInvalidISO.js",
         baseline_path: Some("parseInvalidISO.baseline"),
         tags: HashSet::from(["slow", "exclude_xplat"]),
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

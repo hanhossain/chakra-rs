@@ -14,7 +14,7 @@ fn error_cause_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "error_cause.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -28,7 +28,7 @@ fn aggregate_error_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "aggregate_error.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -315,6 +315,7 @@ fn encodeoverflow_js(#[case] variant: Variant) {
         baseline_path: Some("encodeoverflow.baseline"),
         compile_flags: vec!["-EnableFatalErrorOnOOM-"],
         tags: HashSet::from(["Slow"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

@@ -143,7 +143,7 @@ fn property_and_index_of_number_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "property_and_index_of_number.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -157,7 +157,8 @@ fn numeric_separator_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "NumericSeparator.js",
-        compile_flags: vec!["-ESNumericSeparator", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ESNumericSeparator"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

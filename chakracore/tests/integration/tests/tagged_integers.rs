@@ -774,6 +774,7 @@ fn loops_js2(#[case] variant: Variant) {
             "-off:constfold",
             "-off:typespec",
         ],
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

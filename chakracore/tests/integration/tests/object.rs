@@ -69,7 +69,7 @@ fn from_entries_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "fromEntries.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -172,7 +172,7 @@ fn property_descriptor_non_object_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "propertyDescriptorNonObject.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -186,7 +186,7 @@ fn property_record_large_heap_block_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "propertyRecordLargeHeapBlock.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -200,7 +200,7 @@ fn to_locale_string2_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "toLocaleString2.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -215,8 +215,9 @@ fn to_locale_string_basics_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "toLocaleStringBasics.js",
         baseline_path: Some("toLocaleStringBasics.baseline"),
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["Intl", "exclude_sanitize_address"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -392,12 +393,8 @@ fn get_own_property_descriptors_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "getOwnPropertyDescriptors.js",
-        compile_flags: vec![
-            "-args",
-            "summary",
-            "-endargs",
-            "-ESObjectGetOwnPropertyDescriptors",
-        ],
+        compile_flags: vec!["-ESObjectGetOwnPropertyDescriptors"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -467,7 +464,7 @@ fn forinnonenumerableshadowing_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "forinnonenumerableshadowing.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -541,10 +538,8 @@ fn type_snapshot_enumeration_cached_type_js(#[case] variant: Variant) {
             "-maxinterpretcount:1",
             "-maxsimplejitruncount:1",
             "-off:ArrayCheckHoist",
-            "-args",
-            "summary",
-            "-endargs",
         ],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -656,7 +651,7 @@ fn object_create_null_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "objectCreateNull.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -894,7 +889,8 @@ fn assign_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "assign.js",
         baseline_path: Some("assign.baseline"),
-        compile_flags: vec!["-args", "summary", "-endargs", "-trace:ObjectCopy"],
+        compile_flags: vec!["-trace:ObjectCopy"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -908,13 +904,8 @@ fn object_spread_simple_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ObjectSpread_Simple.js",
-        compile_flags: vec![
-            "-args",
-            "summary",
-            "-endargs",
-            "-NoNative",
-            "-ES2018ObjectRestSpread",
-        ],
+        compile_flags: vec!["-NoNative", "-ES2018ObjectRestSpread"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -929,14 +920,12 @@ fn object_spread_jit_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "ObjectSpread_JIT.js",
         compile_flags: vec![
-            "-args",
-            "summary",
-            "-endargs",
             "-ES2018ObjectRestSpread",
             "-bgjit-",
             "-maxinterpretcount:1",
             "-off:simplejit",
         ],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -950,13 +939,8 @@ fn object_spread_limits_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ObjectSpread_Limits.js",
-        compile_flags: vec![
-            "-args",
-            "summary",
-            "-endargs",
-            "-NoNative",
-            "-ES2018ObjectRestSpread",
-        ],
+        compile_flags: vec!["-NoNative", "-ES2018ObjectRestSpread"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -970,14 +954,8 @@ fn object_rest_simple_js_force_serialized(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ObjectRest_Simple.js",
-        compile_flags: vec![
-            "-args",
-            "summary",
-            "-endargs",
-            "-NoNative",
-            "-ES2018ObjectRestSpread",
-            "-forceserialized",
-        ],
+        compile_flags: vec!["-NoNative", "-ES2018ObjectRestSpread", "-forceserialized"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -991,13 +969,8 @@ fn object_rest_simple_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ObjectRest_Simple.js",
-        compile_flags: vec![
-            "-args",
-            "summary",
-            "-endargs",
-            "-NoNative",
-            "-ES2018ObjectRestSpread",
-        ],
+        compile_flags: vec!["-NoNative", "-ES2018ObjectRestSpread"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1011,13 +984,8 @@ fn object_rest_jit_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ObjectRest_JIT.js",
-        compile_flags: vec![
-            "-args",
-            "summary",
-            "-endargs",
-            "-ES2018ObjectRestSpread",
-            "-off:simplejit",
-        ],
+        compile_flags: vec!["-ES2018ObjectRestSpread", "-off:simplejit"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

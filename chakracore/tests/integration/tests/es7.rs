@@ -12,7 +12,8 @@ fn asyncawait_syntax_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "asyncawait-syntax.js",
-        compile_flags: vec!["-nodeferparse", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-nodeferparse"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -26,7 +27,8 @@ fn asyncawait_syntax_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "asyncawait-syntax.js",
-        compile_flags: vec!["-forcedeferparse", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-forcedeferparse"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -41,7 +43,8 @@ fn asyncawait_functionality_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "asyncawait-functionality.js",
         baseline_path: Some("asyncawait-functionality.baseline"),
-        compile_flags: vec!["-nodeferparse", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-nodeferparse"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -56,13 +59,8 @@ fn asyncawait_functionality_js_force_defer_parse(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "asyncawait-functionality.js",
         baseline_path: Some("asyncawait-functionality.baseline"),
-        compile_flags: vec![
-            "-es6experimental",
-            "-forcedeferparse",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-es6experimental", "-forcedeferparse"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -91,7 +89,7 @@ fn stringpad_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "stringpad.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -105,7 +103,8 @@ fn asyncawait_apis_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "asyncawait-apis.js",
-        compile_flags: vec!["-es7asyncawait", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-es7asyncawait"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -119,7 +118,7 @@ fn values_and_entries_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "valuesAndEntries.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -133,7 +132,8 @@ fn misc_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "misc_bugs.js",
-        compile_flags: vec!["-es6experimental", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-es6experimental"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -147,13 +147,8 @@ fn misc_bugs_js_force_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "misc_bugs.js",
-        compile_flags: vec![
-            "-es6experimental",
-            "-ForceDeferParse",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-es6experimental", "-ForceDeferParse"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -167,7 +162,7 @@ fn immutable_prototype_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "immutable-prototype.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -181,7 +176,7 @@ fn lookupgettersetter_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "lookupgettersetter.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -195,7 +190,8 @@ fn sharedarraybuffer_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sharedarraybuffer.js",
-        compile_flags: vec!["-ESSharedArrayBuffer", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ESSharedArrayBuffer"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -209,7 +205,8 @@ fn atomics_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "atomics_test.js",
-        compile_flags: vec!["-ESSharedArrayBuffer", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ESSharedArrayBuffer"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -223,7 +220,8 @@ fn symboldescription_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "symboldescription.js",
-        compile_flags: vec!["-ESSymbolDescription", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ESSymbolDescription"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -237,7 +235,8 @@ fn global_this_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "globalThis.js",
-        compile_flags: vec!["-ESGlobalThis", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ESGlobalThis"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -251,7 +250,8 @@ fn async_generator_apis_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "async-generator-apis.js",
-        compile_flags: vec!["-ES2018AsyncIteration", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ES2018AsyncIteration"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -265,7 +265,8 @@ fn async_generator_functionality_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "async-generator-functionality.js",
-        compile_flags: vec!["-ES2018AsyncIteration", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ES2018AsyncIteration"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -279,7 +280,8 @@ fn for_await_of_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "for-await-of.js",
-        compile_flags: vec!["-ES2018AsyncIteration", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ES2018AsyncIteration"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -293,7 +295,7 @@ fn wellformed_json_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "wellformedJSON.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -307,7 +309,7 @@ fn json_superset_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "json_superset.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -321,7 +323,8 @@ fn deferparseclass_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "deferparseclass.js",
-        compile_flags: vec!["-force:deferparse", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-force:deferparse"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -335,7 +338,7 @@ fn nullish_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "nullish.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

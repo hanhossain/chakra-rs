@@ -12,7 +12,8 @@ fn comparison_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "comparison.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -26,7 +27,8 @@ fn global_object_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "global_object.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -40,7 +42,8 @@ fn increment_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "increment.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -54,7 +57,8 @@ fn decrement_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "decrement.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -68,7 +72,8 @@ fn assign_by_value_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "assign_by_value.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -82,7 +87,8 @@ fn add_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "add.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -96,7 +102,8 @@ fn subtract_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "subtract.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -110,7 +117,8 @@ fn mixed_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "mixed.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -124,7 +132,8 @@ fn strictly_equal_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "strictly_equal.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -138,7 +147,8 @@ fn bitwise_not_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bitwise_not.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -152,7 +162,8 @@ fn multiply_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "multiply.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESBigInt"],
+        compile_flags: vec!["-ESBigInt"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

@@ -33,7 +33,7 @@ fn bug0_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug0.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };

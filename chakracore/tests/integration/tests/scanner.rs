@@ -12,7 +12,7 @@ fn numeric_literal_suffix_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "NumericLiteralSuffix.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -40,7 +40,8 @@ fn hashbang_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Hashbang.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-ESHashbang"],
+        compile_flags: vec!["-ESHashbang"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

@@ -477,12 +477,8 @@ fn inline_builtins_js2(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "inlineBuiltIns.js",
         baseline_path: Some("inlineBuiltIns.baseline"),
-        compile_flags: vec![
-            "-args",
-            "dynapogo",
-            "-endargs",
-            "-dynamicprofileinput:profile.dpl.inlineBuiltIns.js",
-        ],
+        compile_flags: vec!["-dynamicprofileinput:profile.dpl.inlineBuiltIns.js"],
+        host_args: vec!["dynapogo"],
         tags: HashSet::from([
             "require_backend",
             "exclude_interpreted",
@@ -548,7 +544,7 @@ fn inline_get_bailout_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "inline_get_bailout.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };

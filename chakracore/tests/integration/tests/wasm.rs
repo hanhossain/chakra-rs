@@ -13,7 +13,8 @@ fn unsigned_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
-        compile_flags: vec!["-wasm", "-args", "0", "5", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["0", "5"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -27,7 +28,8 @@ fn unsigned_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
-        compile_flags: vec!["-wasm", "-args", "6", "10", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["6", "10"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -41,7 +43,8 @@ fn unsigned_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
-        compile_flags: vec!["-wasm", "-args", "11", "15", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["11", "15"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -55,7 +58,8 @@ fn unsigned_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
-        compile_flags: vec!["-wasm", "-args", "16", "20", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["16", "20"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -69,7 +73,8 @@ fn unsigned_js5(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unsigned.js",
-        compile_flags: vec!["-wasm", "-args", "21", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["21"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -83,7 +88,8 @@ fn regress_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regress.js",
-        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["--no-verbose"],
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
@@ -98,7 +104,8 @@ fn regress_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "regress.js",
-        compile_flags: vec!["-wasm", "-args", "--no-verbose", "--no-wabt", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["--no-verbose", "--no-wabt"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -371,7 +378,8 @@ fn table_signatures_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "table_signatures.js",
-        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["--no-verbose"],
         tags: HashSet::from(["exclude_drt", "exclude_win7"]),
         ..Default::default()
     };
@@ -467,13 +475,8 @@ fn params_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "params.js",
         baseline_path: Some("baselines/params.baseline"),
-        compile_flags: vec![
-            "-wasm",
-            "-EnableFatalErrorOnOOM-",
-            "-args",
-            "14000",
-            "-endargs",
-        ],
+        compile_flags: vec!["-wasm", "-EnableFatalErrorOnOOM-"],
+        host_args: vec!["14000"],
         tags: HashSet::from([
             "exclude_drt",
             "exclude_win7",
@@ -506,7 +509,8 @@ fn params_js2(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "params.js",
         baseline_path: Some("baselines/params.baseline"),
-        compile_flags: vec!["-wasm", "-args", "14000", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["14000"],
         tags: HashSet::from(["exclude_win7", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -522,14 +526,8 @@ fn oom_wasm_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "oom_wasm.js",
-        compile_flags: vec![
-            "-EnableFatalErrorOnOOM-",
-            "-wasm",
-            "-args",
-            "0",
-            "16384",
-            "-endargs",
-        ],
+        compile_flags: vec!["-EnableFatalErrorOnOOM-", "-wasm"],
+        host_args: vec!["0", "16384"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -544,14 +542,8 @@ fn oom_wasm_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "oom_wasm.js",
-        compile_flags: vec![
-            "-EnableFatalErrorOnOOM-",
-            "-wasm",
-            "-args",
-            "3",
-            "16381",
-            "-endargs",
-        ],
+        compile_flags: vec!["-EnableFatalErrorOnOOM-", "-wasm"],
+        host_args: vec!["3", "16381"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -566,14 +558,8 @@ fn oom_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "oom.js",
-        compile_flags: vec![
-            "-EnableFatalErrorOnOOM-",
-            "-wasm",
-            "-args",
-            "0",
-            "16384",
-            "-endargs",
-        ],
+        compile_flags: vec!["-EnableFatalErrorOnOOM-", "-wasm"],
+        host_args: vec!["0", "16384"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -588,14 +574,8 @@ fn oom_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "oom.js",
-        compile_flags: vec![
-            "-EnableFatalErrorOnOOM-",
-            "-wasm",
-            "-args",
-            "3",
-            "16381",
-            "-endargs",
-        ],
+        compile_flags: vec!["-EnableFatalErrorOnOOM-", "-wasm"],
+        host_args: vec!["3", "16381"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -624,7 +604,8 @@ fn i64_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "i64.js",
-        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["--no-verbose"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -689,7 +670,8 @@ fn signextend_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "signextend.js",
-        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["--no-verbose"],
         tags: HashSet::from(["exclude_win7"]),
         ..Default::default()
     };
@@ -745,7 +727,8 @@ fn binary_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "binary.js",
-        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["--no-verbose"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -758,7 +741,8 @@ fn binary_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "binary.js",
-        compile_flags: vec!["-wasm", "-args", "--no-verbose", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["--no-verbose"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);
@@ -787,7 +771,8 @@ fn limits_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "limits.js",
-        compile_flags: vec!["-wasm", "-args", "--no-verbose", "--end", "4", "-endargs"],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["--no-verbose", "--end", "4"],
         tags: HashSet::from([
             "exclude_drt",
             "exclude_win7",
@@ -810,16 +795,8 @@ fn limits_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "limits.js",
-        compile_flags: vec![
-            "-wasm",
-            "-args",
-            "--no-verbose",
-            "--start",
-            "4",
-            "--end",
-            "12",
-            "-endargs",
-        ],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["--no-verbose", "--start", "4", "--end", "12"],
         tags: HashSet::from([
             "exclude_drt",
             "exclude_win7",
@@ -842,14 +819,8 @@ fn limits_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "limits.js",
-        compile_flags: vec![
-            "-wasm",
-            "-args",
-            "--no-verbose",
-            "--start",
-            "12",
-            "-endargs",
-        ],
+        compile_flags: vec!["-wasm"],
+        host_args: vec!["--no-verbose", "--start", "12"],
         tags: HashSet::from([
             "exclude_drt",
             "exclude_win7",
@@ -940,13 +911,8 @@ fn atomics_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "atomics_test.js",
-        compile_flags: vec![
-            "-wasmthreads",
-            "-ESSharedArrayBuffer",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-wasmthreads", "-ESSharedArrayBuffer"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, COMMON_TAGS);

@@ -22,6 +22,7 @@ pub struct Test {
     pub source_path: &'static str,
     pub baseline_path: Option<&'static str>,
     pub compile_flags: Vec<&'static str>,
+    pub host_args: Vec<&'static str>,
     pub tags: HashSet<&'static str>,
 }
 
@@ -206,7 +207,11 @@ pub fn run_test_variant<const N: usize>(
     args.extend(test.compile_flags.into_iter().map(String::from));
     args.extend(variant_config.compile_flags.into_iter().map(String::from));
 
-    let core_config = CoreConfig { filename, args };
+    let core_config = CoreConfig {
+        filename,
+        args,
+        host_args: test.host_args.into_iter().map(String::from).collect(),
+    };
     let (status, actual) = run_test(core_config, Some(test_dir.as_path()));
 
     match test.baseline_path {

@@ -69,6 +69,7 @@ fn stringify_replacer_js(#[case] variant: Variant) {
         baseline_path: Some("stringify-replacer.baseline"),
         compile_flags: vec!["-recyclerstress"],
         tags: HashSet::from(["exclude_test", "slow"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -146,6 +147,7 @@ fn simple_with_log_js(#[case] variant: Variant) {
         baseline_path: Some("simple.withLog.baseline"),
         compile_flags: vec!["-recyclerstress", "-trace:JSON"],
         tags: HashSet::from(["exclude_test", "slow"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -193,6 +195,7 @@ fn json_cache_js_force_gc(#[case] variant: Variant) {
         baseline_path: Some("jsonCache.baseline"),
         compile_flags: vec!["-ForceGCAfterJSONParse"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

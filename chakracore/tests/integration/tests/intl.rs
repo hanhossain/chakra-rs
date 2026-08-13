@@ -14,7 +14,7 @@ fn collator_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Collator.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
@@ -43,7 +43,7 @@ fn date_time_format_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "DateTimeFormat.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
@@ -58,7 +58,7 @@ fn number_format_options_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "NumberFormatOptions.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
@@ -73,7 +73,7 @@ fn supported_locales_of_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "SupportedLocalesOf.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
@@ -146,7 +146,7 @@ fn intl_identities_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "IntlIdentities.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["Intl", "exclude_noicu"]),
         ..Default::default()
     };
@@ -226,7 +226,7 @@ fn tainting_prevention_tests_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "TaintingPreventionTests.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["Intl", "exclude_noicu", "Slow"]),
         ..Default::default()
     };

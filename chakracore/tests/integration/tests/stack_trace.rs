@@ -14,13 +14,8 @@ fn simple_throw_js_stack_trace_disabled(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "SimpleThrow.js",
         baseline_path: Some("simpleThrow.js.stackTraceDisabled.baseline"),
-        compile_flags: vec![
-            "-ExtendedErrorStackForTestHost",
-            "-errorStackTrace-",
-            "-args",
-            "runTest",
-            "-endargs",
-        ],
+        compile_flags: vec!["-ExtendedErrorStackForTestHost", "-errorStackTrace-"],
+        host_args: vec!["runTest"],
         tags: HashSet::from(["StackTrace"]),
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -37,6 +32,7 @@ fn property_validation_js(#[case] variant: Variant) {
         baseline_path: Some("PropertyValidation.nostrict.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -52,6 +48,7 @@ fn property_validation_js_force_strict_mode(#[case] variant: Variant) {
         baseline_path: Some("PropertyValidation.nostrict.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost", "-forceStrictMode"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -65,12 +62,8 @@ fn simple_throw_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "SimpleThrow.js",
         baseline_path: Some("SimpleThrow.js.baseline"),
-        compile_flags: vec![
-            "-ExtendedErrorStackForTestHost",
-            "-args",
-            "runTest",
-            "-endargs",
-        ],
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        host_args: vec!["runTest"],
         tags: HashSet::from(["StackTrace"]),
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -85,13 +78,8 @@ fn long_call_stack_throw_js_args5(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "LongCallStackThrow.js",
         baseline_path: Some("LongCallStackThrow.js.Args5.baseline"),
-        compile_flags: vec![
-            "-ExtendedErrorStackForTestHost",
-            "-args",
-            "runTest",
-            "5",
-            "-endargs",
-        ],
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        host_args: vec!["runTest", "5"],
         tags: HashSet::from(["StackTrace"]),
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -106,13 +94,8 @@ fn long_call_stack_throw_js_args6(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "LongCallStackThrow.js",
         baseline_path: Some("LongCallStackThrow.js.Args6.baseline"),
-        compile_flags: vec![
-            "-ExtendedErrorStackForTestHost",
-            "-args",
-            "runTest",
-            "6",
-            "-endargs",
-        ],
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        host_args: vec!["runTest", "6"],
         tags: HashSet::from(["StackTrace"]),
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -127,13 +110,8 @@ fn long_call_stack_throw_js_args7(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "LongCallStackThrow.js",
         baseline_path: Some("LongCallStackThrow.js.Args7.baseline"),
-        compile_flags: vec![
-            "-ExtendedErrorStackForTestHost",
-            "-args",
-            "runTest",
-            "7",
-            "-endargs",
-        ],
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        host_args: vec!["runTest", "7"],
         tags: HashSet::from(["StackTrace"]),
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -148,14 +126,10 @@ fn long_call_stack_throw_js_args30(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "LongCallStackThrow.js",
         baseline_path: Some("LongCallStackThrow.js.Args30.baseline"),
-        compile_flags: vec![
-            "-ExtendedErrorStackForTestHost",
-            "-args",
-            "runTest",
-            "30",
-            "-endargs",
-        ],
+        compile_flags: vec!["-ExtendedErrorStackForTestHost"],
+        host_args: vec!["runTest", "30"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -171,6 +145,7 @@ fn stack_trace_limit_js(#[case] variant: Variant) {
         baseline_path: Some("StackTraceLimit.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -218,6 +193,7 @@ fn dynamic_js(#[case] variant: Variant) {
         baseline_path: Some("dynamic.js.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -233,6 +209,7 @@ fn error_prototype_js(#[case] variant: Variant) {
         baseline_path: Some("ErrorPrototype.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -248,6 +225,7 @@ fn error_dot_stack_already_exists_js(#[case] variant: Variant) {
         baseline_path: Some("ErrorDotStackAlreadyExists.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -263,6 +241,7 @@ fn function_name_js(#[case] variant: Variant) {
         baseline_path: Some("FunctionName.js.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -278,6 +257,7 @@ fn x64_stack_walk_js(#[case] variant: Variant) {
         baseline_path: Some("x64StackWalk.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -293,6 +273,7 @@ fn x64_stack_walk_loop_body_js(#[case] variant: Variant) {
         baseline_path: Some("x64StackWalkLoopBody.baseline"),
         compile_flags: vec!["-ExtendedErrorStackForTestHost", "-loopinterpretcount:1"],
         tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -305,7 +286,7 @@ fn dot_chain_name_hint_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "dotChainNameHint.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
