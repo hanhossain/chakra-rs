@@ -4,14 +4,33 @@ fn main() {
     let bridges = [
         "src/chhelper.rs",
         "src/config.rs",
+        "src/host_config.rs",
         "src/logger.rs",
         "src/str_helper.rs",
     ];
     let mut cxx_bridge = cxx_build::bridges(bridges);
+
+    if !cxx_bridge.get_compiler().is_like_clang() {
+        cxx_bridge.compiler("clang");
+    }
+
+    let c_compiler = cxx_bridge.clone();
+
     cxx_bridge
+        .std("c++23")
         .flag("-fcolor-diagnostics")
+        // disable c++ warnings until regular cmake build no longer has warnings
+        .warnings(false)
+        .flag("-fms-extensions")
+        .define("PAL_STDCPP_COMPAT", None)
         .include("../chakracore-cxx/bin/ch")
+        .include("../chakracore-cxx/bin/ChakraCore")
+        .include("../chakracore-cxx/ffi/include")
         .include("../chakracore-cxx/lib/Common")
+        .include("../chakracore-cxx/lib/Common/Interface/include")
+        .include("../chakracore-cxx/lib/Common/PlatformAgnostic/include")
+        .include("../chakracore-cxx/lib/Jsrt")
+        .include("../chakracore-cxx/pal/inc")
         .compile("binding");
 
     let out_dir = std::env::var("OUT_DIR").unwrap();
@@ -43,14 +62,10 @@ fn main() {
                 (_, false) => "Release",
             };
 
-            if !cxx_bridge.get_compiler().is_like_clang() {
-                cxx_bridge.compiler("clang");
-            }
-
             let mut config = cmake::Config::new("..");
             config
-                .init_c_cfg(cxx_bridge.clone())
-                .init_cxx_cfg(cxx_bridge)
+                .init_c_cfg(c_compiler.clone())
+                .init_cxx_cfg(c_compiler)
                 .generator("Ninja")
                 .define("CMAKE_CXX_COMPILER", "clang++")
                 .define("CMAKE_C_COMPILER", "clang")
@@ -64,7 +79,7 @@ fn main() {
                     .define("ICU_INCLUDE_PATH", "/opt/homebrew/opt/icu4c/include");
             }
 
-            config.always_configure(false);
+            config.always_configure(true);
             let mut dst = config.build();
             dst.push("build");
             let chakra_build = dst.to_str().unwrap();

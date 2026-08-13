@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #pragma once
+#include "stdafx.h"
 
 #include <rust/cxx.h>
 
@@ -26,6 +27,7 @@ public:
     virtual bool ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser) override;
     virtual void PrintUsage() override;
     static void PrintUsageString();
+    static void SetHostArgs(const rust::Vec<rust::String> &hostArgs);
 
 private:
     int nDummy;
