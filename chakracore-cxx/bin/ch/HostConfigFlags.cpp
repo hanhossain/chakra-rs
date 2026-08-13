@@ -131,5 +131,5 @@ void HostConfigFlags::PrintUsage()
     std::println("Host Config Flags: ");
     std::println();
     HostConfigFlags::PrintUsageString();
-    ChakraRTInterface::PrintConfigFlagsUsageString();
+    TestHooks::PrintConfigFlagsUsageString();
 }

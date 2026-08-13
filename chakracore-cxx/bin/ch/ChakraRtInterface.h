@@ -11,25 +11,16 @@
 
 class ChakraRTInterface
 {
-public:
-#define CHECKED_CALL_RETURN(func, retVal, ...) (m_testHooksSetup && m_testHooks.pf##func? m_testHooks.pf##func(__VA_ARGS__) : retVal)
-#define CHECKED_CALL(func, ...) (m_testHooksSetup && m_testHooks.pf##func? m_testHooks.pf##func(__VA_ARGS__) : E_NOTIMPL)
-
 private:
     static bool m_testHooksSetup;
     static bool m_testHooksInitialized;
     static bool m_usageStringPrinted;
-    static TestHooks m_testHooks;
 
 private:
     static int32_t ParseConfigFlags(const std::vector<std::u16string> &vargs);
 
 public:
     static int32_t InitializeTestHooks(const TestHooks& testHooks, const std::vector<std::u16string> &vargs);
-
-    static int32_t SetAssertToConsoleFlag(bool flag) { return CHECKED_CALL(SetAssertToConsoleFlag, flag); }
-    static int32_t SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags) { return CHECKED_CALL(SetConfigFlags, vargs, customConfigFlags); }
-    static int32_t PrintConfigFlagsUsageString() { m_usageStringPrinted = true;  return CHECKED_CALL(PrintConfigFlagsUsageString); }
 
     static JsErrorCode WINAPI JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, threadService, runtime); }
     static JsErrorCode WINAPI JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return chakracore::jsrt::JsCreateContext(runtime, newContext); }

@@ -13,26 +13,15 @@ bool ChakraRTInterface::m_testHooksSetup = false;
 bool ChakraRTInterface::m_testHooksInitialized = false;
 bool ChakraRTInterface::m_usageStringPrinted = false;
 
-TestHooks ChakraRTInterface::m_testHooks = { 0 };
-
 /*static*/
 int32_t ChakraRTInterface::ParseConfigFlags(const std::vector<std::u16string> &vargs)
 {
-    int32_t hr = S_OK;
-
-    if (m_testHooks.pfSetAssertToConsoleFlag)
+    TestHooks::SetAssertToConsoleFlag(true);
+    int32_t hr = TestHooks::SetConfigFlags(vargs, &HostConfigFlags::flags);
+    if (hr != S_OK && !m_usageStringPrinted)
     {
-        SetAssertToConsoleFlag(true);
-    }
-
-    if (m_testHooks.pfSetConfigFlags)
-    {
-        hr = SetConfigFlags(vargs, &HostConfigFlags::flags);
-        if (hr != S_OK && !m_usageStringPrinted)
-        {
-            chakra_rs::chhelper::print_usage();
-            m_usageStringPrinted = true;
-        }
+        chakra_rs::chhelper::print_usage();
+        m_usageStringPrinted = true;
     }
 
     return S_OK;
@@ -43,7 +32,6 @@ int32_t ChakraRTInterface::InitializeTestHooks(const TestHooks& testHooks, const
 {
     if (!m_testHooksInitialized)
     {
-        m_testHooks = testHooks;
         m_testHooksSetup = true;
         m_testHooksInitialized = true;
         return ParseConfigFlags(vargs);

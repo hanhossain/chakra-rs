@@ -66,7 +66,7 @@ int LogicalStringCompareImpl(const char16_t* p1, int p1size, const char16_t* p2,
 }
 }
 
-int32_t SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags)
+int32_t TestHooks::SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags)
 {
     CmdLineArgsParser parser(customConfigFlags);
     if (parser.Parse(vargs) != 0)
@@ -77,13 +77,13 @@ int32_t SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFl
     return S_OK;
 }
 
-int32_t PrintConfigFlagsUsageString()
+int32_t TestHooks::PrintConfigFlagsUsageString()
 {
     Js::ConfigFlagsTable::PrintUsageString();
     return S_OK;
 }
 
-int32_t SetAssertToConsoleFlag(bool flag)
+int32_t TestHooks::SetAssertToConsoleFlag(bool flag)
 {
 #ifdef DBG
     AssertsToConsole = flag;
@@ -95,9 +95,6 @@ int32_t OnChakraCoreLoaded(const std::vector<std::u16string> &vargs)
 {
     TestHooks testHooks =
     {
-        SetConfigFlags,
-        PrintConfigFlagsUsageString,
-        SetAssertToConsoleFlag,
         PlatformAgnostic::UnicodeText::Internal::LogicalStringCompareImpl,
 
         //BigInt hooks
