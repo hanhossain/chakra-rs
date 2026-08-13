@@ -559,7 +559,8 @@ fn bug_os_4683246_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS_4683246.js",
-        compile_flags: vec!["-loopinterpretcount:0", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-loopinterpretcount:0"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
@@ -592,10 +593,8 @@ fn os_5248645_js(#[case] variant: Variant) {
             "-maxinterpretCount:2",
             "-off:simplejit",
             "-off:dynamicProfile",
-            "-args",
-            "summary",
-            "-endargs",
         ],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
@@ -683,7 +682,7 @@ fn simpletypehandler_property_deletion_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "simpletypehandler-property-deletion.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -781,7 +780,7 @@ fn deletenonconfig_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "deletenonconfig.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -795,7 +794,7 @@ fn misc_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "misc_bugs.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -809,7 +808,7 @@ fn cross_context_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "cross_context_test.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -823,7 +822,7 @@ fn json_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "json_bugs.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1057,7 +1056,7 @@ fn bug14323330_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug14323330.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1098,7 +1097,7 @@ fn bug_os14326981_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS14326981.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1213,10 +1212,8 @@ fn bug_os17417473_js(#[case] variant: Variant) {
             "-Fja:6",
             "-maxInterpretCount:2",
             "-MinBailOutsBeforeRejit:2",
-            "-args",
-            "summary",
-            "-endargs",
         ],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1397,7 +1394,7 @@ fn bug_5572_wscript_loadscript_loadmodule_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_5572_wscript_loadscript_loadmodule.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1429,13 +1426,8 @@ fn bug_5585_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_5585.js",
-        compile_flags: vec![
-            "-esdynamicimport",
-            "-mutehosterrormsg",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-esdynamicimport", "-mutehosterrormsg"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1484,7 +1476,7 @@ fn bug_5883_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_5883.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1552,7 +1544,7 @@ fn bug_6179_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_6179.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1566,13 +1558,8 @@ fn bug_os21193960_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS21193960.js",
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-maxsimplejitruncount:2",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-maxinterpretcount:1", "-maxsimplejitruncount:2"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

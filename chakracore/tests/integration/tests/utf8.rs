@@ -96,7 +96,7 @@ fn bug_gh2656_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bugGH2656.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_noicu"]),
         ..Default::default()
     };

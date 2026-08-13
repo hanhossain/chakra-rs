@@ -113,13 +113,8 @@ fn module_syntax_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "module-syntax.js",
-        compile_flags: vec![
-            "-MuteHostErrorMsg",
-            "-ES6Module",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-MuteHostErrorMsg", "-ES6Module"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
@@ -134,7 +129,8 @@ fn module_syntax1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "module-syntax1.js",
-        compile_flags: vec!["-ES6Module", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ES6Module"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
@@ -148,13 +144,8 @@ fn module_functionality_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "module-functionality.js",
-        compile_flags: vec![
-            "-MuteHostErrorMsg",
-            "-ES6Module",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-MuteHostErrorMsg", "-ES6Module"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
@@ -183,13 +174,8 @@ fn dynamic_module_functionality_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "dynamic-module-functionality.js",
-        compile_flags: vec![
-            "-ES6Module",
-            "-ESDynamicImport",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-ES6Module", "-ESDynamicImport"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
@@ -204,14 +190,8 @@ fn dynamic_module_import_specifier_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "dynamic-module-import-specifier.js",
-        compile_flags: vec![
-            "-MuteHostErrorMsg",
-            "-ES6Module",
-            "-ESDynamicImport",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-MuteHostErrorMsg", "-ES6Module", "-ESDynamicImport"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
@@ -240,14 +220,8 @@ fn module_syntax_js_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "module-syntax.js",
-        compile_flags: vec![
-            "-MuteHostErrorMsg",
-            "-ES6Module",
-            "-force:deferparse",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-MuteHostErrorMsg", "-ES6Module", "-force:deferparse"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
@@ -262,13 +236,8 @@ fn module_syntax1_js_defer_parse(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "module-syntax1.js",
-        compile_flags: vec![
-            "-ES6Module",
-            "-force:deferparse",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-ES6Module", "-force:deferparse"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
@@ -282,13 +251,8 @@ fn module_namespace_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "module-namespace.js",
-        compile_flags: vec![
-            "-ES6Module",
-            "-Es6ToStringTag",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-ES6Module", "-Es6ToStringTag"],
+        host_args: vec!["summary"],
         tags: HashSet::from([
             "exclude_dynapogo",
             "exclude_drt",
@@ -307,13 +271,8 @@ fn module_bugfixes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "module-bugfixes.js",
-        compile_flags: vec![
-            "-MuteHostErrorMsg",
-            "-ES6Module",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-MuteHostErrorMsg", "-ES6Module"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
@@ -327,7 +286,8 @@ fn export_binding_loader_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "exportBindingLoader.js",
-        compile_flags: vec!["-ES6Module", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ES6Module"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
@@ -378,7 +338,8 @@ fn bug_os14562349_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS14562349.js",
-        compile_flags: vec!["-ESDynamicImport", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ESDynamicImport"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -410,6 +371,7 @@ fn bug_issue_3257_js(#[case] variant: Variant) {
         baseline_path: Some("bug_issue_3257.baseline"),
         compile_flags: vec!["-ESDynamicImport"],
         tags: HashSet::from(["exclude_sanitize_address"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -437,13 +399,8 @@ fn export_namespace_as_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "export_namespace_as.js",
-        compile_flags: vec![
-            "-ESExportNsAs",
-            "-MuteHostErrorMsg",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-ESExportNsAs", "-MuteHostErrorMsg"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_sanitize_address"]),
         ..Default::default()
     };
@@ -548,7 +505,8 @@ fn import_meta_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ImportMeta.js",
-        compile_flags: vec!["-args", "summary", "-endargs", "-esimportmeta"],
+        compile_flags: vec!["-esimportmeta"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

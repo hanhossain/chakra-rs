@@ -2152,13 +2152,8 @@ fn params_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "params.js",
         baseline_path: Some("params.baseline"),
-        compile_flags: vec![
-            "-testtrace:asmjs",
-            "-args",
-            "14000",
-            "-endargs",
-            "-EnableFatalErrorOnOOM-",
-        ],
+        compile_flags: vec!["-testtrace:asmjs", "-EnableFatalErrorOnOOM-"],
+        host_args: vec!["14000"],
         tags: HashSet::from(["exclude_dynapogo", "exclude_mac", "slow"]),
         ..Default::default()
     };

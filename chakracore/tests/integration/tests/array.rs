@@ -31,7 +31,7 @@ fn array_at_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "array_at.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -46,7 +46,7 @@ fn array_flat_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "array_flat.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -61,7 +61,7 @@ fn array_findlast_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "array_findlast.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -76,7 +76,7 @@ fn array_findlastindex_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "array_findlastindex.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -126,6 +126,7 @@ fn array_init2_js_serialized(#[case] variant: Variant) {
         baseline_path: Some("array_init2.baseline"),
         compile_flags: vec!["-Serialized"],
         tags: HashSet::from(["exclude_forceserialized"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -141,13 +142,8 @@ fn splice_btree_memory_corruption_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "SpliceBtreeMemoryCorruption.js",
-        compile_flags: vec![
-            "-args",
-            "summary",
-            "-endargs",
-            "-ForceArrayBTree",
-            "-recyclerStress",
-        ],
+        compile_flags: vec!["-ForceArrayBTree", "-recyclerStress"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["exclude_test", "Slow"]),
         ..Default::default()
     };
@@ -163,13 +159,8 @@ fn slice_array_force_btree_bug616623_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "sliceArrayForceBtreeBug616623.js",
-        compile_flags: vec![
-            "-forcearraybtree",
-            "-off:nativearray",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-forcearraybtree", "-off:nativearray"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -288,7 +279,7 @@ fn slice_and_concat_alter_original_array_bug_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "SliceandConcatAlterOriginalArrayBug.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -394,6 +385,7 @@ fn array_ctr_js_array_validate(#[case] variant: Variant) {
         baseline_path: Some("array_ctr.baseline"),
         compile_flags: vec!["-arrayValidate"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -793,6 +785,7 @@ fn to_string_js_force_es5_array(#[case] variant: Variant) {
         baseline_path: Some("toString.baseline"),
         compile_flags: vec!["-ForceES5Array"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -824,6 +817,7 @@ fn to_locale_string_js_force_es5_array(#[case] variant: Variant) {
         baseline_path: Some("toLocaleString.baseline"),
         compile_flags: vec!["-ForceES5Array"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -868,7 +862,7 @@ fn array_sort_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "array_sort.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -883,7 +877,7 @@ fn array_includes_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "array_includes.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -931,6 +925,7 @@ fn array_splice_js_array_validate(#[case] variant: Variant) {
         baseline_path: Some("array_splice.baseline"),
         compile_flags: vec!["-arrayValidate"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -1146,6 +1141,7 @@ fn array_literal_js_recycler_stress(#[case] variant: Variant) {
         baseline_path: Some("array_literal.baseline"),
         compile_flags: vec!["-recyclerStress"],
         tags: HashSet::from(["exclude_test", "Slow"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -1178,6 +1174,7 @@ fn nativearray_gen1_js_force_serialized(#[case] variant: Variant) {
         compile_flags: vec!["-sse:0", "-forceserialized"],
         // exclude the serialized variants because we're using -forceserialized here.
         tags: HashSet::from(["exclude_serialized"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -1555,7 +1552,7 @@ fn fail_to_set_length_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "FailToSetLength.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1617,6 +1614,7 @@ fn copy_on_access_array_bugs_js(#[case] variant: Variant) {
         baseline_path: Some("CopyOnAccessArray_bugs.baseline"),
         compile_flags: vec!["-force:copyonaccessarray"],
         tags: HashSet::from(["require_backend"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -1636,6 +1634,7 @@ fn copy_on_access_array_cache_index_overflow_js(#[case] variant: Variant) {
             "exclude_forceserialized",
             "require_backend",
         ]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -1747,10 +1746,8 @@ fn memcopy_js_float(#[case] variant: Variant) {
             "-off:inline",
             "-off:globopt:1.18-1.30",
             "-mmoc:0",
-            "-args",
-            "float",
-            "-endargs",
         ],
+        host_args: vec!["float"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1906,7 +1903,7 @@ fn array_type_confusion_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Array_TypeConfusion_bugs.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1921,7 +1918,8 @@ fn array_type_confusion_bugs_js_force_array_btree(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Array_TypeConfusion_bugs.js",
-        compile_flags: vec!["-ForceArrayBTree", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-ForceArrayBTree"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

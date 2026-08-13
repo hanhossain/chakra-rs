@@ -246,6 +246,7 @@ fn modopt_js(#[case] variant: Variant) {
             "exclude_arm",
             "require_backend",
         ]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

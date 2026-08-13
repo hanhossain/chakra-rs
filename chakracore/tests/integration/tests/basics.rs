@@ -30,7 +30,7 @@ fn script_function_to_strings_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "ScriptFunctionToStrings.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -175,7 +175,8 @@ fn labels_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Labels.js",
-        compile_flags: vec!["-MuteHostErrorMsg", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-MuteHostErrorMsg"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -731,7 +732,7 @@ fn special_symbol_capture_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "SpecialSymbolCapture.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -754,6 +755,7 @@ fn verify_parser_state_js(#[case] variant: Variant) {
             "-Trace:CreateParserState",
         ],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -774,6 +776,7 @@ fn verify_skip_nested_deferred_js(#[case] variant: Variant) {
             "-Trace:SkipNestedDeferred",
         ],
         tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -830,7 +833,7 @@ fn float_comparison_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "FloatComparison.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

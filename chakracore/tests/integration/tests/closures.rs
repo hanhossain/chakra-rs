@@ -245,6 +245,7 @@ fn initcachedscope_js(#[case] variant: Variant) {
         baseline_path: Some("initcachedscope.baseline"),
         compile_flags: vec!["-recyclerstress", "-force:cachedscope"],
         tags: HashSet::from(["exclude_test", "Slow"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -292,6 +293,7 @@ fn invalcachedscope_js_serialized(#[case] variant: Variant) {
         baseline_path: Some("invalcachedscope.baseline"),
         compile_flags: vec!["-Serialized"],
         tags: HashSet::from(["exclude_forceserialized"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -308,6 +310,7 @@ fn invalcachedscope_js_deferparse(#[case] variant: Variant) {
         baseline_path: Some("invalcachedscope.baseline"),
         compile_flags: vec!["-force:deferparse", "-Intl-"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }

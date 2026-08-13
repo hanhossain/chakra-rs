@@ -9,7 +9,6 @@
 #include <print>
 
 #include <chakracore-sys/src/chhelper.rs.h>
-#include <chakracore-sys/src/str_helper.rs.h>
 #include <pthread.h>
 #include <rust/cxx.h>
 
@@ -436,7 +435,7 @@ int main_internal(chakra_rs::config::CoreConfig config)
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
-    HostConfigFlags::vargsVal = chakra_rs::str_helper::split_args(config.args);
+    HostConfigFlags::vargsVal = config.host_args;
 
     std::vector<std::u16string> vargs;
 

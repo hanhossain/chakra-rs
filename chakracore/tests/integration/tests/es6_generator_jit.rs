@@ -14,7 +14,7 @@ fn generator_jit_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generator-jit-bugs.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
@@ -29,7 +29,8 @@ fn generator_jit_bugs_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generator-jit-bugs.js",
-        compile_flags: vec!["-JitES6Generators", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-JitES6Generators"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
@@ -44,13 +45,8 @@ fn generator_jit_bugs_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generator-jit-bugs.js",
-        compile_flags: vec![
-            "-JitES6Generators",
-            "-off:simplejit",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-JitES6Generators", "-off:simplejit"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
@@ -64,13 +60,8 @@ fn generator_jit_bugs_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generator-jit-bugs.js",
-        compile_flags: vec![
-            "-JitES6Generators",
-            "-off:fulljit",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-JitES6Generators", "-off:fulljit"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -85,7 +76,7 @@ fn async_jit_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "async-jit-bugs.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
@@ -100,7 +91,8 @@ fn async_jit_bugs_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "async-jit-bugs.js",
-        compile_flags: vec!["-JitES6Generators", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-JitES6Generators"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
@@ -115,13 +107,8 @@ fn async_jit_bugs_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "async-jit-bugs.js",
-        compile_flags: vec![
-            "-JitES6Generators",
-            "-off:simplejit",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-JitES6Generators", "-off:simplejit"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
@@ -135,13 +122,8 @@ fn async_jit_bugs_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "async-jit-bugs.js",
-        compile_flags: vec![
-            "-JitES6Generators",
-            "-off:fulljit",
-            "-args",
-            "summary",
-            "-endargs",
-        ],
+        compile_flags: vec!["-JitES6Generators", "-off:fulljit"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -155,7 +137,8 @@ fn async_jit_bugs_js5(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "async-jit-bugs.js",
-        compile_flags: vec!["-off:fulljit", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-off:fulljit"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -170,7 +153,7 @@ fn new_test_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "newtest.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
@@ -185,7 +168,8 @@ fn new_test_js2(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "newtest.js",
-        compile_flags: vec!["-off:simplejit", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-off:simplejit"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };
@@ -199,7 +183,8 @@ fn new_test_js3(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "newtest.js",
-        compile_flags: vec!["-off:fulljit", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-off:fulljit"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -213,7 +198,8 @@ fn new_test_js4(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "newtest.js",
-        compile_flags: vec!["-off:fulljit", "-args", "summary", "-endargs"],
+        compile_flags: vec!["-off:fulljit"],
+        host_args: vec!["summary"],
         tags: HashSet::from(["require_backend", "exclude_nonative", "exclude_dynapogo"]),
         ..Default::default()
     };

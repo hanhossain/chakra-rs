@@ -186,6 +186,7 @@ fn defer_unicode_js(#[case] variant: Variant) {
         baseline_path: Some("deferunicode.baseline"),
         compile_flags: vec!["-force:deferparse"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -214,7 +215,7 @@ fn can_declare_global_function_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "CanDeclareGlobalFunction.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

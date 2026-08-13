@@ -384,6 +384,7 @@ fn defer1_js(#[case] variant: Variant) {
         baseline_path: Some("defer1.baseline"),
         compile_flags: vec!["-force:deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -398,6 +399,7 @@ fn defer2_js(#[case] variant: Variant) {
         baseline_path: Some("defer2.baseline"),
         compile_flags: vec!["-force:deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -858,7 +860,7 @@ fn letlet_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "letlet.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

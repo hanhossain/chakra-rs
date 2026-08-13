@@ -2112,7 +2112,7 @@ fn test115_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "test115.js",
-        compile_flags: vec!["-args", "bailout", "-endargs"],
+        host_args: vec!["bailout"],
         tags: HashSet::from(["require_backend", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -3086,11 +3086,9 @@ fn array_check_hoist_bailout_js(#[case] variant: Variant) {
         baseline_path: Some("ArrayCheckHoist_Bailout.baseline"),
         compile_flags: vec![
             "-off:arrayCheckHoist",
-            "-args",
-            "bailout",
-            "-endargs",
             "-dynamicprofileinput:profile.dpl.ArrayCheckHoist.js",
         ],
+        host_args: vec!["bailout"],
         tags: HashSet::from([
             "require_backend",
             "exclude_interpreted",
@@ -3113,13 +3111,11 @@ fn array_check_hoist_bailout_js2(#[case] variant: Variant) {
         source_path: "ArrayCheckHoist.js",
         baseline_path: Some("ArrayCheckHoist_Bailout.baseline"),
         compile_flags: vec![
-            "-args",
-            "bailout",
-            "-endargs",
             "-off:fieldCopyProp",
             "-off:objTypeSpec",
             "-dynamicprofileinput:profile.dpl.ArrayCheckHoist.js",
         ],
+        host_args: vec!["bailout"],
         tags: HashSet::from([
             "require_backend",
             "exclude_interpreted",
@@ -3141,12 +3137,8 @@ fn array_check_hoist_bailout_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "ArrayCheckHoist.js",
         baseline_path: Some("ArrayCheckHoist_Bailout.baseline"),
-        compile_flags: vec![
-            "-args",
-            "bailout",
-            "-endargs",
-            "-dynamicprofileinput:profile.dpl.ArrayCheckHoist.js",
-        ],
+        compile_flags: vec!["-dynamicprofileinput:profile.dpl.ArrayCheckHoist.js"],
+        host_args: vec!["bailout"],
         tags: HashSet::from([
             "require_backend",
             "exclude_interpreted",

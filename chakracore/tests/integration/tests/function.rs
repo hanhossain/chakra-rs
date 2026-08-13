@@ -146,7 +146,7 @@ fn arguments_es5_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "arguments.es5.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -178,6 +178,7 @@ fn arguments_limits_js(#[case] variant: Variant) {
         baseline_path: Some("argumentsLimits.baseline"),
         compile_flags: vec!["-EnableFatalErrorOnOOM-"],
         tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -221,7 +222,7 @@ fn builtin_func_has_own_prop_caller_arguments_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "builtinFuncHasOwnPropCallerArguments.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -236,7 +237,7 @@ fn func_and_bound_func_length_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "funcAndboundFuncLength.js",
-        compile_flags: vec!["-args", "summary", "-endargs"],
+        host_args: vec!["summary"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -421,6 +422,7 @@ fn deferred_parsing_js(#[case] variant: Variant) {
         baseline_path: Some("deferredParsing_3.baseline"),
         compile_flags: vec!["-force:deferparse"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -437,6 +439,7 @@ fn deferred_parsing_js_force_undodefer(#[case] variant: Variant) {
         baseline_path: Some("deferredParsing_3.baseline"),
         compile_flags: vec!["-forceUndoDefer"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -453,6 +456,7 @@ fn deferred_getter_setter_js(#[case] variant: Variant) {
         baseline_path: Some("deferredGetterSetter.baseline"),
         compile_flags: vec!["-force:deferparse"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -483,6 +487,7 @@ fn deferred_bad_continue_js2(#[case] variant: Variant) {
         baseline_path: Some("deferredBadContinue.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_dynapogo"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -514,6 +519,7 @@ fn deferred_with_js(#[case] variant: Variant) {
         baseline_path: Some("deferredWith.v4.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -530,6 +536,7 @@ fn deferred_with2_js(#[case] variant: Variant) {
         baseline_path: Some("deferredWith2.baseline"),
         compile_flags: vec!["-Force:Deferparse"],
         tags: HashSet::from(["exclude_test"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -836,6 +843,7 @@ fn func_body_bug133933_js(#[case] variant: Variant) {
         baseline_path: Some("FuncBody.bug133933.baseline"),
         compile_flags: vec!["-trace:FunctionSourceInfoParse", "-off:deferparse"],
         tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -903,6 +911,7 @@ fn func_body_bug231397_js(#[case] variant: Variant) {
             "exclude_nonative",
             "require_backend",
         ]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -1044,6 +1053,7 @@ fn stack_args_with_formals_js_stack_arg_formals_opt(#[case] variant: Variant) {
             "exclude_arm64",
         ]),
         baseline_path: Some("StackArgsWithFormals.baseline"),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -1083,6 +1093,7 @@ fn stack_args_len_const_opt_js(#[case] variant: Variant) {
             "exclude_arm64",
         ]),
         baseline_path: Some("stackArgsLenConstOpt.baseline"),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
