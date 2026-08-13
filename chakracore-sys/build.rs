@@ -9,6 +9,7 @@ fn main() {
     ];
     let mut cxx_bridge = cxx_build::bridges(bridges);
     cxx_bridge
+        .flag("-fcolor-diagnostics")
         .include("../chakracore-cxx/bin/ch")
         .include("../chakracore-cxx/lib/Common")
         .compile("binding");
