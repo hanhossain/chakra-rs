@@ -53,19 +53,6 @@
 #include "Core/ConfigParser.h"
 #include "TestHooks.h"
 
-namespace PlatformAgnostic
-{
-namespace UnicodeText
-{
-namespace Internal
-{
-// this is in place of including PlatformAgnostic/UnicodeTextInternal.h, which has template
-// instantiations that upset Clang on macOS and Linux
-int LogicalStringCompareImpl(const char16_t* p1, int p1size, const char16_t* p2, int p2size);
-}
-}
-}
-
 int32_t TestHooks::SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags)
 {
     CmdLineArgsParser parser(customConfigFlags);
@@ -89,18 +76,4 @@ int32_t TestHooks::SetAssertToConsoleFlag(bool flag)
     AssertsToConsole = flag;
 #endif
     return S_OK;
-}
-
-int32_t OnChakraCoreLoaded(const std::vector<std::u16string> &vargs)
-{
-    TestHooks testHooks =
-    {
-        PlatformAgnostic::UnicodeText::Internal::LogicalStringCompareImpl,
-
-        //BigInt hooks
-        Js::JavascriptBigInt::AddDigit,
-        Js::JavascriptBigInt::SubDigit,
-        Js::JavascriptBigInt::MulDigit,
-    };
-    return ChakraRTInterface::InitializeTestHooks(testHooks, vargs);
 }

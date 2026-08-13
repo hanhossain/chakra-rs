@@ -28,7 +28,7 @@ int32_t ChakraRTInterface::ParseConfigFlags(const std::vector<std::u16string> &v
 }
 
 /*static*/
-int32_t ChakraRTInterface::InitializeTestHooks(const TestHooks& testHooks, const std::vector<std::u16string> &vargs)
+int32_t ChakraRTInterface::InitializeTestHooks(const std::vector<std::u16string> &vargs)
 {
     if (!m_testHooksInitialized)
     {
