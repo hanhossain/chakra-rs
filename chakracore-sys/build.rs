@@ -6,6 +6,7 @@ fn main() {
         "src/config.rs",
         "src/host_config.rs",
         "src/logger.rs",
+        "src/rt_interface.rs",
         "src/str_helper.rs",
     ];
     let mut cxx_bridge = cxx_build::bridges(bridges);
