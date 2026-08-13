@@ -91,7 +91,7 @@ int32_t SetAssertToConsoleFlag(bool flag)
     return S_OK;
 }
 
-int32_t OnChakraCoreLoaded()
+int32_t OnChakraCoreLoaded(const std::vector<std::u16string> &vargs)
 {
     TestHooks testHooks =
     {
@@ -105,5 +105,5 @@ int32_t OnChakraCoreLoaded()
         Js::JavascriptBigInt::SubDigit,
         Js::JavascriptBigInt::MulDigit,
     };
-    return ChakraRTInterface::InitializeTestHooks(testHooks);
+    return ChakraRTInterface::InitializeTestHooks(testHooks, vargs);
 }

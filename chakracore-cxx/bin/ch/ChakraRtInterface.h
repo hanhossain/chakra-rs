@@ -12,25 +12,6 @@
 class ChakraRTInterface
 {
 public:
-    typedef void(* HostPrintUsageFuncPtr)();
-
-    struct ArgInfo
-    {
-        std::vector<std::u16string> vargs_;
-        HostPrintUsageFuncPtr hostPrintUsage;
-
-        ArgInfo() :
-            hostPrintUsage(nullptr)
-        {
-        }
-
-        ArgInfo(const std::vector<std::u16string> &vargs, HostPrintUsageFuncPtr hostPrintUsage) :
-            vargs_(vargs),
-            hostPrintUsage(hostPrintUsage)
-        {
-        }
-    };
-
 #define CHECKED_CALL_RETURN(func, retVal, ...) (m_testHooksSetup && m_testHooks.pf##func? m_testHooks.pf##func(__VA_ARGS__) : retVal)
 #define CHECKED_CALL(func, ...) (m_testHooksSetup && m_testHooks.pf##func? m_testHooks.pf##func(__VA_ARGS__) : E_NOTIMPL)
 
@@ -38,16 +19,13 @@ private:
     static bool m_testHooksSetup;
     static bool m_testHooksInitialized;
     static bool m_usageStringPrinted;
-    static ArgInfo* m_argInfo;
     static TestHooks m_testHooks;
 
 private:
-    static int32_t ParseConfigFlags();
+    static int32_t ParseConfigFlags(const std::vector<std::u16string> &vargs);
 
 public:
-    static int32_t InitializeTestHooks(TestHooks& testHooks);
-
-    static bool LoadChakraDll(ArgInfo* argInfo);
+    static int32_t InitializeTestHooks(const TestHooks& testHooks, const std::vector<std::u16string> &vargs);
 
     static int32_t SetAssertToConsoleFlag(bool flag) { return CHECKED_CALL(SetAssertToConsoleFlag, flag); }
     static int32_t SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags) { return CHECKED_CALL(SetConfigFlags, vargs, customConfigFlags); }

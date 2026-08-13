@@ -446,18 +446,11 @@ int main_internal(chakra_rs::config::CoreConfig config)
         vargs.push_back(std::move(s));
     }
 
-    ChakraRTInterface::ArgInfo argInfo = {vargs, chakra_rs::chhelper::print_usage};
-    const bool success = ChakraRTInterface::LoadChakraDll(&argInfo);
-
     // handle command line flags
-    OnChakraCoreLoaded();
+    OnChakraCoreLoaded(vargs);
 
-    int32_t exitCode = E_FAIL;
-    if (success)
-    {
-        // On linux, execute on the same thread
-        exitCode = ExecuteTestWithMemoryCheck(config.filename, chRuntime, jsrtAttributes);
-    }
+    // On linux, execute on the same thread
+    int32_t exitCode = ExecuteTestWithMemoryCheck(config.filename, chRuntime, jsrtAttributes);
 
     int retval = exitCode;
 

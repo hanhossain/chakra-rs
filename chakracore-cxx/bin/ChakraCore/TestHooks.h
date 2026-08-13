@@ -31,5 +31,5 @@ struct TestHooks
     MulDigit pfMulDigit;
 };
 
-int32_t OnChakraCoreLoaded();
+int32_t OnChakraCoreLoaded(const std::vector<std::u16string> &vargs);
 
