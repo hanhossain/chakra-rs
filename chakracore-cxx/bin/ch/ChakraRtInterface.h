@@ -20,7 +20,7 @@ private:
     static int32_t ParseConfigFlags(const std::vector<std::u16string> &vargs);
 
 public:
-    static int32_t InitializeTestHooks(const TestHooks& testHooks, const std::vector<std::u16string> &vargs);
+    static int32_t InitializeTestHooks(const std::vector<std::u16string> &vargs);
 
     static JsErrorCode WINAPI JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, threadService, runtime); }
     static JsErrorCode WINAPI JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return chakracore::jsrt::JsCreateContext(runtime, newContext); }

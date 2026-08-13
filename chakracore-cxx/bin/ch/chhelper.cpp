@@ -447,7 +447,7 @@ int main_internal(chakra_rs::config::CoreConfig config)
     }
 
     // handle command line flags
-    OnChakraCoreLoaded(vargs);
+    ChakraRTInterface::InitializeTestHooks(vargs);
 
     // On linux, execute on the same thread
     int32_t exitCode = ExecuteTestWithMemoryCheck(config.filename, chRuntime, jsrtAttributes);
