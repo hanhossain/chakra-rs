@@ -435,9 +435,6 @@ int main_internal(chakra_rs::config::CoreConfig config)
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
-    // handle command line flags
-    ChakraRTInterface::InitializeTestHooks(config.args);
-
     // On linux, execute on the same thread
     int32_t exitCode = ExecuteTestWithMemoryCheck(config.filename, chRuntime, jsrtAttributes);
 
