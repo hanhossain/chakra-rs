@@ -123,6 +123,11 @@ void HostConfigFlags::PrintUsageString()
     std::println("{:>20}          \t{}", "Module", "\"load the script as a module\"");
 }
 
+void HostConfigFlags::SetHostArgs(const rust::Vec<rust::String> &hostArgs)
+{
+    HostConfigFlags::vargsVal = hostArgs;
+}
+
 void HostConfigFlags::PrintUsage()
 {
     chakra_rs::chhelper::print_usage();

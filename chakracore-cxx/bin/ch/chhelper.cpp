@@ -435,7 +435,6 @@ int main_internal(chakra_rs::config::CoreConfig config)
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
 
-    HostConfigFlags::vargsVal = config.host_args;
     // handle command line flags
     ChakraRTInterface::InitializeTestHooks(config.args);
 
