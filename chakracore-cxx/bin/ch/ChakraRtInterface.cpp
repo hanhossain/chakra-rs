@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
 
+#include <chakracore-sys/src/chhelper.rs.h>
 #include <dlfcn.h>
 #include <print>
 
@@ -12,18 +13,10 @@ bool ChakraRTInterface::m_testHooksSetup = false;
 bool ChakraRTInterface::m_testHooksInitialized = false;
 bool ChakraRTInterface::m_usageStringPrinted = false;
 
-ChakraRTInterface::ArgInfo* ChakraRTInterface::m_argInfo = nullptr;
 TestHooks ChakraRTInterface::m_testHooks = { 0 };
 
 /*static*/
-bool ChakraRTInterface::LoadChakraDll(ArgInfo* argInfo)
-{
-    m_argInfo = argInfo;
-    return true;
-}
-
-/*static*/
-int32_t ChakraRTInterface::ParseConfigFlags()
+int32_t ChakraRTInterface::ParseConfigFlags(const std::vector<std::u16string> &vargs)
 {
     int32_t hr = S_OK;
 
@@ -34,10 +27,10 @@ int32_t ChakraRTInterface::ParseConfigFlags()
 
     if (m_testHooks.pfSetConfigFlags)
     {
-        hr = SetConfigFlags(m_argInfo->vargs_, &HostConfigFlags::flags);
+        hr = SetConfigFlags(vargs, &HostConfigFlags::flags);
         if (hr != S_OK && !m_usageStringPrinted)
         {
-            m_argInfo->hostPrintUsage();
+            chakra_rs::chhelper::print_usage();
             m_usageStringPrinted = true;
         }
     }
@@ -46,14 +39,14 @@ int32_t ChakraRTInterface::ParseConfigFlags()
 }
 
 /*static*/
-int32_t ChakraRTInterface::InitializeTestHooks(TestHooks& testHooks)
+int32_t ChakraRTInterface::InitializeTestHooks(const TestHooks& testHooks, const std::vector<std::u16string> &vargs)
 {
     if (!m_testHooksInitialized)
     {
         m_testHooks = testHooks;
         m_testHooksSetup = true;
         m_testHooksInitialized = true;
-        return ParseConfigFlags();
+        return ParseConfigFlags(vargs);
     }
 
     return S_OK;
