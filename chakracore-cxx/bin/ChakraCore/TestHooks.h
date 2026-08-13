@@ -7,19 +7,12 @@
 #include <string>
 #include <vector>
 
-#include <oaidl.h>
 interface ICustomConfigFlags;
 
 struct TestHooks
 {
-    using SetConfigFlagsPtr = int32_t(*)(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags);
-    typedef int32_t(*PrintConfigFlagsUsageStringPtr)(void);
-    typedef int32_t(*SetAssertToConsoleFlagPtr)(bool flag);
     typedef int(*LogicalStringCompareImpl)(const char16_t* p1, int p1size, const char16_t* p2, int p2size);
 
-    SetConfigFlagsPtr pfSetConfigFlags;
-    PrintConfigFlagsUsageStringPtr pfPrintConfigFlagsUsageString;
-    SetAssertToConsoleFlagPtr pfSetAssertToConsoleFlag;
     LogicalStringCompareImpl pfLogicalCompareStringImpl;
 
     // Javasscript Bigint hooks
@@ -29,6 +22,10 @@ struct TestHooks
     AddDigit pfAddDigit;
     SubDigit pfSubDigit;
     MulDigit pfMulDigit;
+
+    static int32_t SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags);
+    static int32_t SetAssertToConsoleFlag(bool flag);
+    static int32_t PrintConfigFlagsUsageString();
 };
 
 int32_t OnChakraCoreLoaded(const std::vector<std::u16string> &vargs);

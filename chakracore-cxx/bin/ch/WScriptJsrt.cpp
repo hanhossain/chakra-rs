@@ -1442,9 +1442,8 @@ JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, Js
     {
         AutoString cmd;
         IfJsrtErrorSetGo(cmd.Initialize(arguments[1]));
-        //char16_t* argv[] = { nullptr, cmd.GetWideString() };
         const std::vector<std::u16string> argv = { {}, cmd.GetWideString() };
-        ChakraRTInterface::SetConfigFlags(argv, nullptr);
+        TestHooks::SetConfigFlags(argv, nullptr);
     }
 
 Error:
