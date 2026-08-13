@@ -53,7 +53,7 @@
 #include "Core/ConfigParser.h"
 #include "TestHooks.h"
 
-int32_t TestHooks::SetConfigFlags(const std::vector<std::u16string> &vargs, ICustomConfigFlags* customConfigFlags)
+int32_t TestHooks::SetConfigFlags(const rust::Vec<rust::String> &vargs, ICustomConfigFlags* customConfigFlags)
 {
     CmdLineArgsParser parser(customConfigFlags);
     if (parser.Parse(vargs) != 0)

@@ -1442,7 +1442,8 @@ JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, Js
     {
         AutoString cmd;
         IfJsrtErrorSetGo(cmd.Initialize(arguments[1]));
-        const std::vector<std::u16string> argv = { {}, cmd.GetWideString() };
+
+        const rust::Vec<rust::String> argv{{}, cmd.GetString()};
         TestHooks::SetConfigFlags(argv, nullptr);
     }
 

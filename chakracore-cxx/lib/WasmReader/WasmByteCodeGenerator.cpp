@@ -12,6 +12,7 @@
 #include "ByteCode/ByteCodeDumper.h"
 #include "AsmJsByteCodeDumper.h"
 #include "Language/InterpreterStackFrame.h"
+#include <format>
 
 #if DBG_DUMP
 #define DebugPrintOp(op) if (DO_WASM_TRACE_BYTECODE) { PrintOpBegin(op); }
@@ -328,17 +329,13 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
     if (firstThunk)
     {
         int sourceId = static_cast<int>(firstThunk->GetBody()->GetSourceContextId());
-        char16_t range[64];
-        swprintf_s(range, 64, u"%d.%d-%d.%d",
-                   sourceId, firstThunk->GetBody()->GetLocalFunctionId(),
-                   sourceId, lastThunk->GetBody()->GetLocalFunctionId());
-        char16_t offFullJit[128];
-        swprintf_s(offFullJit, 128, u"-off:fulljit:%s", range);
-        char16_t offSimpleJit[128];
-        swprintf_s(offSimpleJit, 128, u"-off:simplejit:%s", range);
-        char16_t offLoopJit[128];
-        swprintf_s(offLoopJit, 128, u"-off:jitloopbody:%s", range);
-        std::vector<std::u16string> argv = { {}, offFullJit, offSimpleJit, offLoopJit };
+        auto range = std::format("{}.{}-{}.{}",
+           sourceId, firstThunk->GetBody()->GetLocalFunctionId(),
+           sourceId, lastThunk->GetBody()->GetLocalFunctionId());
+        auto offFullJit = std::format("-off:fulljit:{}", range);
+        auto offSimpleJit = std::format("-off:simplejit:{}", range);
+        auto offLoopJit = std::format("-off:jitloopbody:{}", range);
+        const rust::Vec<rust::String> argv = { {}, offFullJit, offSimpleJit, offLoopJit };
         CmdLineArgsParser parser(nullptr);
         parser.Parse(argv);
     }

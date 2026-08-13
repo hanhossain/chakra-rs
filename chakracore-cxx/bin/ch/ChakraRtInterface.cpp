@@ -14,7 +14,7 @@ bool ChakraRTInterface::m_testHooksInitialized = false;
 bool ChakraRTInterface::m_usageStringPrinted = false;
 
 /*static*/
-int32_t ChakraRTInterface::ParseConfigFlags(const std::vector<std::u16string> &vargs)
+int32_t ChakraRTInterface::ParseConfigFlags(const rust::Vec<rust::String> &vargs)
 {
     TestHooks::SetAssertToConsoleFlag(true);
     int32_t hr = TestHooks::SetConfigFlags(vargs, &HostConfigFlags::flags);
@@ -28,7 +28,7 @@ int32_t ChakraRTInterface::ParseConfigFlags(const std::vector<std::u16string> &v
 }
 
 /*static*/
-int32_t ChakraRTInterface::InitializeTestHooks(const std::vector<std::u16string> &vargs)
+int32_t ChakraRTInterface::InitializeTestHooks(const rust::Vec<rust::String> &vargs)
 {
     if (!m_testHooksInitialized)
     {
