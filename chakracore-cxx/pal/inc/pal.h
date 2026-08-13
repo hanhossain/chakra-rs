@@ -735,27 +735,13 @@ SetThreadPriority(
 
 typedef BOOL (*ReadMemoryWordCallback)(size_t address, size_t *value);
 
-#if defined(__FreeBSD__) && defined(__x86_64__)
-#define PAL_CS_NATIVE_DATA_SIZE 24
-#elif defined(__sun__)
-#define PAL_CS_NATIVE_DATA_SIZE 48
-#elif defined(__hpux__) && (defined(__hppa__) || defined (__ia64__))
-#define PAL_CS_NATIVE_DATA_SIZE 148
-#elif defined(_AIX)
-#define PAL_CS_NATIVE_DATA_SIZE 100
-#elif defined(__APPLE__) && defined(__i386__)
-#define PAL_CS_NATIVE_DATA_SIZE 76
-#elif defined(__APPLE__) && defined(__x86_64__)
+#if defined(__APPLE__) && defined(__x86_64__)
 #define PAL_CS_NATIVE_DATA_SIZE 120
 #elif defined(__APPLE__) && defined(_ARM64_)
 #define PAL_CS_NATIVE_DATA_SIZE 120
-#elif defined(__LINUX__) && defined(__i386__)
-#define PAL_CS_NATIVE_DATA_SIZE 56
-#elif defined(__LINUX__) && defined(__x86_64__)
+#elif defined(__linux__) && defined(__x86_64__)
 #define PAL_CS_NATIVE_DATA_SIZE 96
-#elif defined(__LINUX__) && defined(_ARM_)
-#define PAL_CS_NATIVE_DATA_SIZE 80
-#elif defined(__LINUX__) && defined(_ARM64_)
+#elif defined(__linux__) && defined(_ARM64_)
 #define PAL_CS_NATIVE_DATA_SIZE 116
 #else
 #warning

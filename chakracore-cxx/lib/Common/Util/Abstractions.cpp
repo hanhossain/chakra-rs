@@ -1,7 +1,7 @@
 #include "Abstractions.h"
 #include <unistd.h>
 
-#if defined (__LINUX__)
+#if defined (__linux__)
 #include <cstdlib>
 #include <cstring>
 #include <sys/fcntl.h>
@@ -13,7 +13,7 @@
 // Used to determine if a debugger is attached to the process.
 bool Abstractions::IsDebuggerPresent()
 {
-#if defined (__LINUX__)
+#if defined (__linux__)
     bool debugger_present = false;
     char buf[2048];
 

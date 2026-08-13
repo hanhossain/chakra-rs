@@ -721,7 +721,7 @@ Abstract:
   linux we need to use gettid().
 
 --*/
-#if defined(__LINUX__)
+#if defined(__linux__)
 #define THREADSilentGetCurrentThreadId() static_cast<size_t>(syscall(SYS_gettid))
 #elif defined(__APPLE__)
 inline size_t THREADSilentGetCurrentThreadId() {
