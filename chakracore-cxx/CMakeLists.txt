@@ -101,17 +101,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL AppleClang
     OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 endif ()
 
-add_definitions(-DCHAKRA_STATIC_LIBRARY=1)
-
-add_definitions(-DFEATURE_PAL)
-
-if (CC_TARGET_OS_LINUX)
-    add_definitions(-D__LINUX__=1)
-    if (CC_TARGETS_AMD64)
-        add_definitions(-DLINUX64)
-    endif (CC_TARGETS_AMD64)
-endif ()
-
 if (CC_TARGETS_AMD64)
     set(IS_64BIT_BUILD 1)
     add_definitions(-D_M_X64 -D_M_AMD64 -D_AMD64_)

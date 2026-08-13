@@ -58,19 +58,16 @@ SET_DEFAULT_DEBUG_CHANNEL(MISC);
 #define SYSCONF_PAGES _SC_AVPHYS_PAGES
 #endif // __APPLE__
 
-#ifdef __LINUX__
+#ifdef __linux__
+#ifdef __x86_64__
 // There is no reasonable way to get the max. value for the VAS on
-// Linux, so just hardcode the ABI values for 64 and 32bits.
-#ifdef LINUX64
+// Linux, so just hardcode the ABI values for 64 bits.
 // The hardware limit for x86-64 CPUs is 256TB, but the practical
 // limit at the moment for Linux kernels is 128TB.  See for example:
 // https://access.redhat.com/articles/rhel-limits
 #define MAX_PROCESS_VA_SPACE_LINUX (128ull * 1024 * 1024 * 1024 * 1024)
-#else
-// This is unsupported at the moment, but the x32 ABI has a 4GB limit.
-#define MAX_PROCESS_VA_SPACE_LINUX (4ull * 1024 * 1024 * 1024)
 #endif
-#endif // __LINUX__
+#endif // __linux__
 
 /*++
 Function:
@@ -133,7 +130,7 @@ GetCurrentThreadStackLimits(&lowl, &highl);
 
 #ifdef VM_MAXUSER_ADDRESS
     lpSystemInfo->lpMaximumApplicationAddress = (void *) VM_MAXUSER_ADDRESS;
-#elif defined(__LINUX__)
+#elif defined(__linux__)
     lpSystemInfo->lpMaximumApplicationAddress = reinterpret_cast<void*>(MAX_PROCESS_VA_SPACE_LINUX);
 #elif defined(USERLIMIT)
     lpSystemInfo->lpMaximumApplicationAddress = (void *) USERLIMIT;
@@ -198,7 +195,7 @@ GlobalMemoryStatusEx(
     // We do this only when we have the total physical memory available.
     if (lpBuffer->ullTotalPhys > 0)
     {
-#if defined(__LINUX__)
+#if defined(__linux__)
         lpBuffer->ullAvailPhys = sysconf(SYSCONF_PAGES) * sysconf(_SC_PAGE_SIZE);
         int64_t used_memory = lpBuffer->ullTotalPhys - lpBuffer->ullAvailPhys;
         lpBuffer->dwMemoryLoad = static_cast<uint32_t>((used_memory * 100) / lpBuffer->ullTotalPhys);
@@ -222,7 +219,7 @@ GlobalMemoryStatusEx(
 #endif // __APPLE__
     }
 
-#ifdef __LINUX__
+#ifdef __linux__
     lpBuffer->ullTotalVirtual = MAX_PROCESS_VA_SPACE_LINUX;
 #else
     // xplat-todo: for all the other unices just use 128TB for now.
