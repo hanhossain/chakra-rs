@@ -1240,7 +1240,7 @@ namespace JsUtil
         }
     }
 
-    unsigned int WINAPI BackgroundJobProcessor::StaticThreadProc(void *lpParam)
+    unsigned int BackgroundJobProcessor::StaticThreadProc(void *lpParam)
     {
         Assert(lpParam);
         Memory::RecyclerWriteBarrierManager::OnThreadInit();

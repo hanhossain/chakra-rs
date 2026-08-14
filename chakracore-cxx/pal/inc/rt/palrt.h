@@ -142,12 +142,7 @@ typedef enum tagEFaultRepRetVal
 
 #endif // DEBUG
 
-#define NTAPI
-#define WINAPI
 #define CALLBACK
-#define NTSYSAPI
-
-#define _WINNT_
 
 // C++ standard, 18.1.5 - offsetof requires a POD (plain old data) struct or
 // union. Since offsetof is a macro, gcc doesn't actually check for improper
@@ -931,10 +926,6 @@ STDAPI UrlGetPartW(const char16_t* pszIn, char16_t* pszOut, uint32_t * pcchOut, 
 typedef uint32_t OLE_COLOR;
 
 #define PF_COMPARE_EXCHANGE_DOUBLE          2
-
-typedef void (NTAPI * WAITORTIMERCALLBACKFUNC) (void *, BOOLEAN );
-
-typedef HANDLE HWND;
 
 #define IS_TEXT_UNICODE_SIGNATURE             0x0008
 #define IS_TEXT_UNICODE_UNICODE_MASK          0x000F

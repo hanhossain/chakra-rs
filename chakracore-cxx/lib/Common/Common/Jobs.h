@@ -538,7 +538,7 @@ namespace JsUtil
         virtual void DissociatePageAllocator(PageAllocator* const pageAllocator) override;
 
     private:
-        static unsigned int WINAPI StaticThreadProc(void *lpParam);
+        static unsigned int StaticThreadProc(void *lpParam);
         static void CALLBACK ThreadServiceCallback(void * callbackData);
     };
 #endif
