@@ -2,9 +2,8 @@ use chakracore_sys::chhelper::ffi::ExecuteTest;
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
 use chakracore_sys::rt_interface::ffi::ChakraRTInterface;
-use std::process::ExitCode;
 
-pub fn run(config: CoreConfig) -> ExitCode {
+pub fn run(config: CoreConfig) -> Result<(), Error> {
     HostConfigFlags::SetHostArgs(&config.host_args);
 
     // handle command line flags
@@ -13,7 +12,18 @@ pub fn run(config: CoreConfig) -> ExitCode {
     let res = ExecuteTest(&config.filename);
     if res < 0 {
         tracing::error!(hresult = res, "hresult was negative. exiting.");
-        return ExitCode::FAILURE;
+        return Err(Error::NegativeHResult(res));
     }
-    ExitCode::from(res as u8)
+    if res > 0 {
+        return Err(Error::ExitCode(res as u8));
+    }
+    Ok(())
+}
+
+#[derive(thiserror::Error, Debug)]
+pub enum Error {
+    #[error("exit code")]
+    ExitCode(u8),
+    #[error("hresult was negative")]
+    NegativeHResult(i32),
 }
