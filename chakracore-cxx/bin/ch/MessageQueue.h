@@ -145,7 +145,7 @@ private:
         // If the list is empty, just set head to newNode
         if (head == nullptr)
         {
-            Assert(node == nullptr);
+            assert(node == nullptr);
             head = newNode;
             return;
         }
@@ -159,7 +159,7 @@ private:
             return;
         }
 
-        Assert(node);
+        assert(node);
         newNode->next = node->next;
         newNode->prev = node;
 
@@ -204,7 +204,7 @@ public:
 
     MessageBase* PopAndWait()
     {
-        Assert(!m_queue.IsEmpty());
+        assert(!m_queue.IsEmpty());
 
         ListEntry entry = m_queue.Pop();
         MessageBase *tmp = entry.message;

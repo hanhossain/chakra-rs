@@ -97,7 +97,7 @@ bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
 {
     JsValueRef retArr;
 
-    Assert(argsObject);
+    assert(argsObject);
     *argsObject = nullptr;
 
     IfJsrtErrorFail(ChakraRTInterface::JsCreateArray(HostConfigFlags::vargsVal.size(), &retArr), false);
@@ -379,18 +379,18 @@ Error:
 
 JsValueRef ReadHostObject(void * state)
 {
-    Assert(false); // TBD
+    assert(false); // TBD
     return nullptr;
 }
 
 JsValueRef GetSharedArrayBufferFromId(void * state, uint32_t id)
 {
-    Assert(false); // TBD
+    assert(false); // TBD
     return nullptr;
 }
 JsValueRef GetWasmModuleFromId(void * state, uint32_t transfer_id)
 {
-    Assert(false); // TBD
+    assert(false); // TBD
     return nullptr;
 }
 
@@ -1172,7 +1172,7 @@ bool WScriptJsrt::Uninitialize()
         }
 
         [[maybe_unused]] uint32_t waitRet = WaitForMultipleObjects(count, &childrenHandles[0], TRUE, INFINITE);
-        Assert(waitRet == WAIT_OBJECT_0);
+        assert(waitRet == WAIT_OBJECT_0);
 
         for (auto i = threadData->children.begin(); i != threadData->children.end(); i++)
         {
@@ -1817,7 +1817,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
 void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
 {
-    Assert(messageQueue == nullptr);
+    assert(messageQueue == nullptr);
 
     messageQueue = _messageQueue;
 }
@@ -1843,7 +1843,7 @@ WScriptJsrt::CallbackMessage::~CallbackMessage()
         WScriptJsrt::PrintException("", JsErrorScriptException);
     }
     [[maybe_unused]] JsErrorCode errorCode = ChakraRTInterface::JsRelease(m_function, nullptr);
-    Assert(errorCode == JsNoError);
+    assert(errorCode == JsNoError);
     m_function = JS_INVALID_REFERENCE;
 }
 
@@ -2090,8 +2090,8 @@ JsErrorCode WScriptJsrt::InitializeImportMetaCallback(_In_opt_ JsModuleRecord re
 
 void WScriptJsrt::PromiseContinuationCallback(JsValueRef task, void *callbackState)
 {
-    Assert(task != JS_INVALID_REFERENCE);
-    Assert(callbackState != JS_INVALID_REFERENCE);
+    assert(task != JS_INVALID_REFERENCE);
+    assert(callbackState != JS_INVALID_REFERENCE);
     MessageQueue * messageQueue = (MessageQueue *)callbackState;
 
     WScriptJsrt::CallbackMessage *msg = new WScriptJsrt::CallbackMessage(0, task);

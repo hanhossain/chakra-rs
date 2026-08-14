@@ -53,7 +53,7 @@ public:
                 errorCode_ = ChakraRTInterface::JsCopyString(strValue, data_, length, &writtenLength);
                 if (errorCode_ == JsNoError)
                 {
-                    AssertMsg(length == writtenLength, "Inconsistent length in utf8 encoding");
+                    assert(length == writtenLength && "Inconsistent length in utf8 encoding");
                 }
             }
         }
