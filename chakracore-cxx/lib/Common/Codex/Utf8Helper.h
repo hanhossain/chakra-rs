@@ -214,7 +214,7 @@ namespace utf8
     {
     public:
         static void* allocate(size_t size) { return ::malloc(size); }
-        static void free(void* ptr, size_t count) { ::free(ptr); }
+        static void free(void *ptr) { ::free(ptr); }
     };
 
     inline int32_t WideStringToNarrowDynamic(_In_ const char16_t* sourceString, _Out_ char** destStringPtr)
@@ -370,7 +370,7 @@ namespace utf8
         {
             if (dst && freeDst)
             {
-                Allocator::free(dst, allocateCount);
+                Allocator::free(dst);
             }
         }
 

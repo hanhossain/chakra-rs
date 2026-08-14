@@ -17,7 +17,9 @@
 
 namespace fs = std::filesystem;
 
-int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& contents, uint32_t* lengthBytesOut /*= nullptr*/, const std::optional<std::filesystem::path> &fullPath, bool shouldMute /*=false */)
+int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&contents,
+                                    uint32_t *lengthBytesOut /*= nullptr*/,
+                                    const std::optional<std::filesystem::path> &fullPath)
 {
     static fs::path sHostApplicationPath;
 
