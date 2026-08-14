@@ -5,9 +5,10 @@
 #include "stdafx.h"
 #include <filesystem>
 #include <iostream>
-#include <print>
 #include <sys/stat.h>
 
+#include "AutoString.h"
+#include "SourceMap.h"
 #include "chakra/Logger.h"
 
 namespace fs = std::filesystem;

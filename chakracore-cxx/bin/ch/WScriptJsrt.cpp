@@ -14,6 +14,8 @@
 #include <filesystem>
 #include <iostream>
 
+#include "AutoString.h"
+#include "SourceMap.h"
 #include "chakra/Logger.h"
 
 namespace fs = std::filesystem;
