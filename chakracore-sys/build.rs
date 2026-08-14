@@ -17,6 +17,8 @@ fn main() {
 
     let c_compiler = cxx_bridge.clone();
 
+    let icu_include_path = "/opt/homebrew/opt/icu4c/include";
+
     cxx_bridge
         .std("c++23")
         .flag("-fcolor-diagnostics")
@@ -31,8 +33,13 @@ fn main() {
         .include("../chakracore-cxx/lib/Common/Interface/include")
         .include("../chakracore-cxx/lib/Common/PlatformAgnostic/include")
         .include("../chakracore-cxx/lib/Jsrt")
-        .include("../chakracore-cxx/pal/inc")
-        .compile("binding");
+        .include("../chakracore-cxx/lib/Runtime")
+        .include("../chakracore-cxx/pal/inc");
+
+    if cfg!(target_os = "macos") {
+        cxx_bridge.include(icu_include_path);
+    }
+    cxx_bridge.compile("binding");
 
     let out_dir = std::env::var("OUT_DIR").unwrap();
     let target = std::env::var("TARGET").unwrap();
@@ -77,7 +84,7 @@ fn main() {
             if cfg!(target_os = "macos") {
                 config
                     .define("DISABLE_JIT", "ON")
-                    .define("ICU_INCLUDE_PATH", "/opt/homebrew/opt/icu4c/include");
+                    .define("ICU_INCLUDE_PATH", icu_include_path);
             }
 
             config.always_configure(true);

@@ -37,16 +37,6 @@ namespace PlatformAgnostic
         //            //   and all compatibility characters to their equivalents.
         //     Other, // Not supported
         // };
-#if !defined(HAS_ICU)
-        enum NormalizationForm
-        {
-            C,
-            D,
-            KC,
-            KD,
-            Other
-        };
-#else
         // ICU does not have specific enums for KC and KD
         // Instead, they have a string argument, "nfc" or "nfkc",
         // coupled with the COMPOSE or DECOMPOSE enum variant
@@ -63,7 +53,6 @@ namespace PlatformAgnostic
             KD = INT_MIN + UNORM2_DECOMPOSE,
             Other = INT_MAX
         };
-#endif
 
         // Mapping of a unicode codepoint to a class of characters
         // Used by the legacy API
