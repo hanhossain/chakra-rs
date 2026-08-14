@@ -28,8 +28,6 @@ add_library (Chakra.Runtime.Base OBJECT
     ThreadServiceWrapperBase.cpp
     Utf8SourceInfo.cpp
     VTuneChakraProfile.cpp
-    # WindowsFoundationAdapter.cpp
-    WindowsGlobalizationAdapter.cpp
     jitprofiling.cpp
     )
 

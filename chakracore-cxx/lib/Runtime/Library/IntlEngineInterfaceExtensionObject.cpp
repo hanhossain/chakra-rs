@@ -6,7 +6,6 @@
 #include "EngineInterfaceObject.h"
 #include "IntlEngineInterfaceExtensionObject.h"
 #include "Types/DeferredTypeHandler.h"
-#include "Base/WindowsGlobalizationAdapter.h"
 
 #include <chakracore-sys/src/str_helper.rs.h>
 #include <rust/cxx.h>

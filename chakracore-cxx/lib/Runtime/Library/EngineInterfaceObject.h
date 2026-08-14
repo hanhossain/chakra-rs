@@ -20,8 +20,6 @@
 
 namespace Js
 {
-    class WindowsGlobalizationAdapter;
-
     enum EngineInterfaceExtensionKind
     {
         EngineInterfaceExtensionKind_JsBuiltIn = 0,
