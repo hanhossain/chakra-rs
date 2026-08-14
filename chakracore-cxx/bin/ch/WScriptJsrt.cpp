@@ -307,7 +307,7 @@ JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall,
                 JsPropertyIdRef lengthPropId;
                 JsValueRef arrayLengthObj = JS_INVALID_REFERENCE;
                 int arrayLength = 0;
-                IfJsrtErrorSetGo(CreatePropertyIdFromString("length", &lengthPropId));
+                IfJsrtErrorSetGo(ChakraRTInterface::JsCreatePropertyId("length", &lengthPropId));
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetProperty(transferArray, lengthPropId, &arrayLengthObj));
                 IfJsrtErrorSetGo(ChakraRTInterface::JsNumberToInt(arrayLengthObj, &arrayLength));
                 if (arrayLength > 0)
@@ -973,7 +973,7 @@ bool WScriptJsrt::InstallObjectsOnObject(JsValueRef object, const char* name,
 {
     JsValueRef propertyValueRef;
     JsPropertyIdRef propertyId;
-    IfJsrtErrorFail(CreatePropertyIdFromString(name, &propertyId), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId(name, &propertyId), false);
     if (!CreateNamedFunction(name, nativeFunction, &propertyValueRef))
     {
         return false;
@@ -1021,11 +1021,11 @@ bool WScriptJsrt::Initialize()
     JsValueRef platformObject;
     IfJsrtErrorFail(ChakraRTInterface::JsCreateObject(&platformObject), false);
     JsPropertyIdRef platformProperty;
-    IfJsrtErrorFail(CreatePropertyIdFromString("Platform", &platformProperty), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("Platform", &platformProperty), false);
 
     // Set CPU arch
     JsPropertyIdRef archProperty;
-    IfJsrtErrorFail(CreatePropertyIdFromString("ARCH", &archProperty), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("ARCH", &archProperty), false);
     JsValueRef archValue;
     IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
         CPU_ARCH_TEXT, strlen(CPU_ARCH_TEXT), &archValue), false);
@@ -1034,7 +1034,7 @@ bool WScriptJsrt::Initialize()
 
     // Set Build Type
     JsPropertyIdRef buildProperty;
-    IfJsrtErrorFail(CreatePropertyIdFromString("BUILD_TYPE", &buildProperty), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("BUILD_TYPE", &buildProperty), false);
     JsValueRef buildValue;
 #ifdef _DEBUG
 #define BUILD_TYPE_STRING_CH "Debug" // (O0)
@@ -1049,7 +1049,7 @@ bool WScriptJsrt::Initialize()
 
     // Set Link Type [static / shared]
     JsPropertyIdRef linkProperty;
-    IfJsrtErrorFail(CreatePropertyIdFromString("LINK_TYPE", &linkProperty), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("LINK_TYPE", &linkProperty), false);
     JsValueRef linkValue;
     IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
         LINK_TYPE, strlen(LINK_TYPE), &linkValue), false);
@@ -1058,7 +1058,7 @@ bool WScriptJsrt::Initialize()
 
     // Set destination OS
     JsPropertyIdRef osProperty;
-    IfJsrtErrorFail(CreatePropertyIdFromString("OS", &osProperty), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("OS", &osProperty), false);
     JsValueRef osValue;
     IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
         DEST_PLATFORM_TEXT, strlen(DEST_PLATFORM_TEXT), &osValue), false);
@@ -1067,12 +1067,12 @@ bool WScriptJsrt::Initialize()
 
     // set Internationalization library
     JsPropertyIdRef intlLibraryProp;
-    IfJsrtErrorFail(CreatePropertyIdFromString("INTL_LIBRARY", &intlLibraryProp), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("INTL_LIBRARY", &intlLibraryProp), false);
     JsValueRef intlLibraryStr;
     IfJsrtErrorFail(ChakraRTInterface::JsCreateString(INTL_LIBRARY_TEXT, strlen(INTL_LIBRARY_TEXT), &intlLibraryStr), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(platformObject, intlLibraryProp, intlLibraryStr, true), false);
     JsPropertyIdRef icuVersionProp;
-    IfJsrtErrorFail(CreatePropertyIdFromString("ICU_VERSION", &icuVersionProp), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("ICU_VERSION", &icuVersionProp), false);
     JsValueRef icuVersionNum;
     IfJsrtErrorFail(ChakraRTInterface::JsIntToNumber(icuVersion, &icuVersionNum), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(platformObject, icuVersionProp, icuVersionNum, true), false);
@@ -1088,11 +1088,11 @@ bool WScriptJsrt::Initialize()
     }
 
     JsPropertyIdRef argsName;
-    IfJsrtErrorFail(CreatePropertyIdFromString("Arguments", &argsName), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("Arguments", &argsName), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(wscript, argsName, argsObject, true), false);
 
     JsPropertyIdRef wscriptName;
-    IfJsrtErrorFail(CreatePropertyIdFromString("WScript", &wscriptName), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("WScript", &wscriptName), false);
 
     JsValueRef global;
     IfJsrtErrorFail(ChakraRTInterface::JsGetGlobalObject(&global), false);
@@ -1109,7 +1109,7 @@ bool WScriptJsrt::Initialize()
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(console, "log", EchoCallback));
 
     JsPropertyIdRef consoleName;
-    IfJsrtErrorFail(CreatePropertyIdFromString("console", &consoleName), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("console", &consoleName), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(global, consoleName, console, true), false);
 
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_FetchImportedModuleCallback, (void*)WScriptJsrt::FetchImportedModule), false);
@@ -1637,9 +1637,9 @@ JsValueRef WScriptJsrt::GetProxyPropertiesCallback(JsValueRef callee, bool isCon
             JsPropertyIdRef handlerProperty;
             JsPropertyIdRef revokedProperty;
 
-            IfJsrtErrorSetGo(CreatePropertyIdFromString("target", &targetProperty));
-            IfJsrtErrorSetGo(CreatePropertyIdFromString("handler", &handlerProperty));
-            IfJsrtErrorSetGo(CreatePropertyIdFromString("revoked", &revokedProperty));
+            IfJsrtErrorSetGo(ChakraRTInterface::JsCreatePropertyId("target", &targetProperty));
+            IfJsrtErrorSetGo(ChakraRTInterface::JsCreatePropertyId("handler", &handlerProperty));
+            IfJsrtErrorSetGo(ChakraRTInterface::JsCreatePropertyId("revoked", &revokedProperty));
             IfJsrtErrorSetGo(ChakraRTInterface::JsCreateObject(&returnValue));
 
             JsValueRef revoked = JS_INVALID_REFERENCE;
@@ -1674,7 +1674,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
         if (ChakraRTInterface::JsGetAndClearExceptionWithMetadata(&metaData) == JsNoError)
         {
             JsPropertyIdRef exceptionId = JS_INVALID_REFERENCE;
-            IfJsrtErrorFail(CreatePropertyIdFromString("exception", &exceptionId), false);
+            IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("exception", &exceptionId), false);
             IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, exceptionId, &exception), false);
         }
         else
@@ -1707,7 +1707,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                     ChakraRTInterface::JsGetAndClearException(&throwAway);
                 }
                 JsPropertyIdRef messagePropertyId = JS_INVALID_REFERENCE;
-                IfJsrtErrorFail(CreatePropertyIdFromString("message", &messagePropertyId), false);
+                IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("message", &messagePropertyId), false);
                 JsValueRef message = JS_INVALID_REFERENCE;
                 IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, messagePropertyId, &message), false);
                 IfJsrtErrorFail(errorMessage.Initialize(message), false);
@@ -1725,11 +1725,11 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                         int line;
                         int column;
 
-                        IfJsrtErrorFail(CreatePropertyIdFromString("line", &linePropertyId), false);
+                        IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("line", &linePropertyId), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, linePropertyId, &lineProperty), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(lineProperty, &line), false);
 
-                        IfJsrtErrorFail(CreatePropertyIdFromString("column", &columnPropertyId), false);
+                        IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("column", &columnPropertyId), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, columnPropertyId, &columnProperty), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
                         std::println("{}\n        at code ({}:{}:{})",
@@ -1754,11 +1754,11 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 int line;
                 int column;
 
-                IfJsrtErrorFail(CreatePropertyIdFromString("line", &linePropertyId), false);
+                IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("line", &linePropertyId), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, linePropertyId, &lineProperty), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(lineProperty, &line), false);
 
-                IfJsrtErrorFail(CreatePropertyIdFromString("column", &columnPropertyId), false);
+                IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("column", &columnPropertyId), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, columnPropertyId, &columnProperty), false);
                 IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
 
@@ -1773,7 +1773,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 JsValueRef stackProperty = JS_INVALID_REFERENCE;
                 AutoString errorStack;
 
-                JsErrorCode errorCode = CreatePropertyIdFromString("stack", &stackPropertyId);
+                JsErrorCode errorCode = ChakraRTInterface::JsCreatePropertyId("stack", &stackPropertyId);
 
                 if (errorCode == JsErrorCode::JsNoError)
                 {
@@ -2078,7 +2078,7 @@ JsErrorCode WScriptJsrt::InitializeImportMetaCallback(_In_opt_ JsModuleRecord re
         ChakraRTInterface::JsGetModuleHostInfo(referencingModule, JsModuleHostInfo_Url, &specifier);
 
         JsPropertyIdRef urlPropId;
-        if (JsNoError == CreatePropertyIdFromString("url", &urlPropId))
+        if (JsNoError == ChakraRTInterface::JsCreatePropertyId("url", &urlPropId))
         {
             ChakraRTInterface::JsSetProperty(importMetaVar, urlPropId, specifier, false);
         }

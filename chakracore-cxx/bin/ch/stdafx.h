@@ -340,8 +340,3 @@ public:
         return false;
     }
 };
-
-inline JsErrorCode CreatePropertyIdFromString(const char* str, JsPropertyIdRef *Id)
-{
-    return ChakraRTInterface::JsCreatePropertyId(str, strlen(str), Id);
-}
