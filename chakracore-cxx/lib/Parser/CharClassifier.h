@@ -94,7 +94,6 @@ enum
 
 namespace Js
 {
-    class WindowsGlobalizationAdapter;
     class DelayLoadWindowsGlobalization;
 
     typedef
