@@ -103,7 +103,7 @@ int32_t Helpers::LoadScriptFromFile(const char * filenameToLoad, const char *& c
             // Q: module source is on persistent memory. Why do we use the copy instead?
             // A: if we use the same memory twice, ch doesn't know that during FinalizeCallback free.
             // the copy memory will be freed by the finalizer
-            Assert(pRawBytesFromMap);
+            assert(pRawBytesFromMap);
             memcpy(pRawBytes, pRawBytesFromMap, lengthBytes);
         }
     }

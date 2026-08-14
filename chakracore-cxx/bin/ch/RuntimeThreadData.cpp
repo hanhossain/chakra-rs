@@ -118,7 +118,7 @@ uint32_t RuntimeThreadData::ThreadProc()
         }
         else if (waitRet != WAIT_OBJECT_0)
         {
-            Assert(false);
+            assert(false);
             break;
         }
     }

@@ -151,12 +151,12 @@ public:
     AutoRestoreContext(JsContextRef newContext)
     {
         JsErrorCode errorCode = ChakraRTInterface::JsGetCurrentContext(&oldContext);
-        Assert(errorCode == JsNoError);
+        assert(errorCode == JsNoError);
 
         if (oldContext != newContext)
         {
             errorCode = ChakraRTInterface::JsSetCurrentContext(newContext);
-            Assert(errorCode == JsNoError);
+            assert(errorCode == JsNoError);
             contextChanged = true;
         }
         else

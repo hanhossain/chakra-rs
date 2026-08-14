@@ -56,7 +56,7 @@ static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext,
                                                   JsParseScriptAttributes *parseAttributes)
 {
     SerializedCallbackInfo *serializedCallbackInfo = reinterpret_cast<SerializedCallbackInfo *>(sourceContext);
-    Assert(!serializedCallbackInfo->freeingHandled);
+    assert(!serializedCallbackInfo->freeingHandled);
     serializedCallbackInfo->freeingHandled = true;
     size_t length = strlen(reinterpret_cast<const char *>(serializedCallbackInfo->scriptBody));
 
@@ -85,7 +85,7 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
         ChakraRTInterface::JsSetPromiseContinuationCallback(WScriptJsrt::PromiseContinuationCallback, messageQueue),
         ErrorRunFinalize);
 
-    Assert(fileContents != nullptr || bufferValue != nullptr);
+    assert(fileContents != nullptr || bufferValue != nullptr);
 
     JsErrorCode runScript;
     JsValueRef fname;

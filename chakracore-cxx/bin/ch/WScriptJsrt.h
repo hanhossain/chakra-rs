@@ -98,7 +98,7 @@ public:
         case (JsErrorCode::JsErrorBadSerializedScript):
             return "ErrorBadSerializedScript ";
         default:
-            AssertMsg(false, "Unexpected JsErrorCode");
+            assert(false && "Unexpected JsErrorCode");
             return nullptr;
         }
     }

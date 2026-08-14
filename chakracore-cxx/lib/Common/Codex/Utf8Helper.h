@@ -49,7 +49,7 @@ namespace utf8
         }
 
         size_t cbEncoded = utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::TrueUtf8>(destString, cbDestString, sourceString, static_cast<charcount_t>(cchSourceString));
-        Assert(cbEncoded <= cbDestString);
+        assert(cbEncoded <= cbDestString);
         static_assert(sizeof(utf8char_t) == sizeof(char), "Needs to be valid for cast");
         *destStringPtr = reinterpret_cast<char*>(destString);
         *destCount = cbEncoded;
@@ -90,7 +90,7 @@ namespace utf8
         else
         {
             cbEncoded = utf8::EncodeInto<utf8::Utf8EncodingKind::TrueUtf8>(reinterpret_cast<utf8char_t*>(destString), destCount, sourceString, static_cast<charcount_t>(cchSourceString));
-            Assert(cbEncoded <= destCount);
+            assert(cbEncoded <= destCount);
         }
 
         if (writtenCount != nullptr)
@@ -168,7 +168,7 @@ namespace utf8
             *destCount = cchDestString;
         }
 
-        Assert(destString[*destCount] == 0);
+        assert(destString[*destCount] == 0);
 
         return S_OK;
     }
