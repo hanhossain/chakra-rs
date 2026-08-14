@@ -7,22 +7,14 @@ set(PL_SOURCE_FILES
   Linux/NumbersUtility.cpp
   POSIX/ArraysUtility.cpp
   Common/Thread.cpp
+  Common/UnicodeText.ICU.cpp
+  Unix/SystemInfo.cpp
 )
 
-set(PL_SOURCE_FILES
-    ${PL_SOURCE_FILES}
-    Common/UnicodeText.ICU.cpp
-)
-
-if(CC_TARGET_OS_LINUX)
-  set(PL_SOURCE_FILES ${PL_SOURCE_FILES}
-    Linux/SystemInfo.cpp
-    )
-elseif(CC_TARGET_OS_OSX)
+if(CC_TARGET_OS_OSX)
   set(PL_SOURCE_FILES ${PL_SOURCE_FILES}
     Unix/AssemblyCommon.cpp
-    Unix/SystemInfo.cpp
-    )
+  )
 endif()
 
 add_library (Chakra.Runtime.PlatformAgnostic OBJECT
