@@ -1,5 +1,4 @@
 #pragma once
-#include "stdafx.h"
 #include "ChakraRtInterface.h"
 #include "Codex/Utf8Helper.h"
 

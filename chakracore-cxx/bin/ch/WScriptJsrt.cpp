@@ -3,7 +3,6 @@
 // Copyright (c) 2021 ChakraCore Project Contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "stdafx.h"
 #include "WScriptJsrt.h"
 
 #include "PlatformAgnostic/ChakraICU.h"
@@ -44,6 +43,12 @@ namespace fs = std::filesystem;
 #elif defined(__FreeBSD__) || defined(__unix__)
 #define DEST_PLATFORM_TEXT "bsd"
 #endif // FreeBSD or unix ?
+
+#define IfJsrtErrorFail(expr, ret) do { if ((expr) != JsNoError) return ret; } while (0)
+#define IfJsrtErrorHR(expr) do { if((expr) != JsNoError) { hr = E_FAIL; goto Error; } } while(0)
+#define IfJsrtErrorSetGo(expr) do { errorCode = (expr); if(errorCode != JsNoError) { hr = E_FAIL; goto Error; } } while(0)
+#define IfJsrtErrorSetGoLabel(expr, label) do { errorCode = (expr); if(errorCode != JsNoError) { hr = E_FAIL; goto label; } } while(0)
+#define IfFalseGo(expr) do { if(!(expr)) { hr = E_FAIL; goto Error; } } while(0)
 
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
 #define INTL_LIBRARY_TEXT "icu"

@@ -32,5 +32,3 @@ target_link_libraries(chhelper PUBLIC ChakraCoreStatic Chakra.Ffi)
 target_compile_definitions(chhelper PUBLIC
     PAL_STDCPP_COMPAT
 )
-
-target_precompile_headers(chhelper PUBLIC stdafx.h)

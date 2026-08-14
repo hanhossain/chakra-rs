@@ -2,7 +2,6 @@
 // Copyright (C) Microsoft Corporation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "stdafx.h"
 #include "RuntimeThreadData.h"
 
 #include <format>
@@ -11,6 +10,9 @@
 #include "Helpers.h"
 #include "WScriptJsrt.h"
 #include "chakra/Logger.h"
+
+#define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
+#define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
 void RuntimeThreadLocalData::Initialize(RuntimeThreadData* threadData)
 {
