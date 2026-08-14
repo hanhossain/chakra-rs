@@ -416,9 +416,10 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTestWithMemoryCheck(const rust::String &fileName, JsRuntimeHandle &chRuntime,
-                                   JsRuntimeAttributes &jsrtAttributes)
+int32_t ExecuteTestWithMemoryCheck(const rust::String &fileName)
 {
+    JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
+    JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
     int32_t hr = E_FAIL;
     // REVIEW: Do we need a SEH handler here?
     hr = ExecuteTest(static_cast<std::string>(fileName), chRuntime, jsrtAttributes);
@@ -427,22 +428,4 @@ int32_t ExecuteTestWithMemoryCheck(const rust::String &fileName, JsRuntimeHandle
 
     fflush(NULL);
     return hr;
-}
-
-int main_internal(chakra_rs::config::CoreConfig config)
-{
-    chakra::Logger::trace("hello world?");
-    JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
-    JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
-
-    // On linux, execute on the same thread
-    int32_t exitCode = ExecuteTestWithMemoryCheck(config.filename, chRuntime, jsrtAttributes);
-
-    int retval = exitCode;
-
-#ifdef NO_SANITIZE_ADDRESS_CHECK
-    pthread_exit(&retval);
-#else
-    return retval;
-#endif
 }

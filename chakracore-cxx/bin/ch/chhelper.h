@@ -1,4 +1,4 @@
 #pragma once
-#include "chakracore-sys/src/config.rs.h"
+#include "rust/cxx.h"
 
-int main_internal(chakra_rs::config::CoreConfig config);
+int32_t ExecuteTestWithMemoryCheck(const rust::String &fileName);
