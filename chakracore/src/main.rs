@@ -1,6 +1,5 @@
 use chakracore_sys::chhelper::ffi::Abstractions;
 use chakracore_sys::config::CoreConfig;
-use std::process::ExitCode;
 use tracing_subscriber::filter::LevelFilter;
 
 fn setup_tracing() {
@@ -19,7 +18,7 @@ fn setup_tracing() {
     }
 }
 
-fn main() -> ExitCode {
+fn main() -> anyhow::Result<()> {
     setup_tracing();
 
     let wait_for_debugger = std::env::var("WAIT_FOR_DEBUGGER")
@@ -37,8 +36,7 @@ fn main() -> ExitCode {
         }
 
         if counter >= 30 {
-            tracing::warn!("debugger did not attach in time");
-            return ExitCode::FAILURE;
+            anyhow::bail!("debugger did not attach in time");
         } else {
             tracing::info!("debugger attached");
         }
@@ -49,20 +47,21 @@ fn main() -> ExitCode {
     let args: Vec<_> = std::env::args().collect();
     let Some(chakra_args) = ChakraArgs::new(args) else {
         chakracore_sys::chhelper::print_usage();
-        return ExitCode::FAILURE;
+        anyhow::bail!("invalid arguments");
     };
 
     if chakra_args.version {
         print_version();
-        return ExitCode::SUCCESS;
+        return Ok(());
     }
 
     if chakra_args.help {
         chakracore_sys::chhelper::print_usage();
-        return ExitCode::SUCCESS;
+        return Ok(());
     }
 
-    chakracore::run(chakra_args.config)
+    chakracore::run(chakra_args.config)?;
+    Ok(())
 }
 
 fn print_version() {
