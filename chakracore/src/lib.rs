@@ -1,3 +1,4 @@
+use chakracore_sys::chhelper::ffi::ExecuteTestWithMemoryCheck;
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
 use chakracore_sys::rt_interface::ffi::ChakraRTInterface;
@@ -9,6 +10,6 @@ pub fn run(config: CoreConfig) -> ExitCode {
     // handle command line flags
     ChakraRTInterface::InitializeTestHooks(&config.args);
 
-    let res = chakracore_sys::chhelper::ffi::main_internal(config);
+    let res = ExecuteTestWithMemoryCheck(&config.filename);
     ExitCode::from(res as u8)
 }

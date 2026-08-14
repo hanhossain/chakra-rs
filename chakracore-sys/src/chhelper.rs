@@ -7,13 +7,9 @@ pub mod ffi {
 
     unsafe extern "C++" {
         include!("chhelper.h");
-        include!("chakracore-sys/src/config.rs.h");
         include!("Util/Abstractions.h");
 
-        #[namespace = "chakra_rs::config"]
-        type CoreConfig = crate::config::CoreConfig;
-
-        fn main_internal(config: CoreConfig) -> i32;
+        fn ExecuteTestWithMemoryCheck(fileName: &String) -> i32;
 
         type Abstractions;
         #[Self = "Abstractions"]
