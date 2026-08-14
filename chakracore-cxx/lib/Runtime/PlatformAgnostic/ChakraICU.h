@@ -6,7 +6,6 @@
 
 #include "Interface/CommonDefines.h"
 
-#ifdef HAS_ICU
 #ifdef WINDOWS10_ICU
 // if WINDOWS10_ICU is defined, pretend like we are building for recent Redstone,
 // even if that isn't necessarily true
@@ -100,4 +99,3 @@ namespace PlatformAgnostic
         }
     }
 }
-#endif // ifdef HAS_ICU

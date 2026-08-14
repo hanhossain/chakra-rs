@@ -46,11 +46,7 @@ namespace fs = std::filesystem;
 #endif // FreeBSD or unix ?
 
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
-#ifdef HAS_ICU
 #define INTL_LIBRARY_TEXT "icu"
-#else
-#define INTL_LIBRARY_TEXT ""
-#endif
 
 struct ArrayBufferTransferInfo {
     byte* buffer;
@@ -996,11 +992,7 @@ bool WScriptJsrt::Initialize()
 {
     int32_t hr = S_OK;
     const char* LINK_TYPE = "static";
-#ifdef HAS_ICU
     int icuVersion = PlatformAgnostic::ICUHelpers::GetICUMajorVersion();
-#else
-    int icuVersion = -1;
-#endif
 
     JsValueRef wscript;
     IfJsrtErrorFail(ChakraRTInterface::JsCreateObject(&wscript), false);
