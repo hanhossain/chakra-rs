@@ -359,8 +359,11 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTest(const std::string &fileName, JsRuntimeHandle &chRuntime, JsRuntimeAttributes &jsrtAttributes)
+int32_t ExecuteTest(const rust::String &filename)
 {
+    auto fileName = static_cast<std::string>(filename);
+    JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
+    JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
     int32_t hr = S_OK;
     const char *fileContents = nullptr;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -413,19 +416,5 @@ Error:
 
     fflush(NULL);
 
-    return hr;
-}
-
-int32_t ExecuteTestWithMemoryCheck(const rust::String &fileName)
-{
-    JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
-    JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
-    int32_t hr = E_FAIL;
-    // REVIEW: Do we need a SEH handler here?
-    hr = ExecuteTest(static_cast<std::string>(fileName), chRuntime, jsrtAttributes);
-    if (FAILED(hr))
-        exit(0);
-
-    fflush(NULL);
     return hr;
 }
