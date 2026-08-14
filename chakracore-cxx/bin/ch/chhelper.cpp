@@ -17,6 +17,7 @@
 #include "Helpers.h"
 #include "HostConfigFlags.h"
 #include "MessageQueue.h"
+#include "chakra/Logger.h"
 
 #ifdef __linux__
 #include <sys/sysinfo.h>

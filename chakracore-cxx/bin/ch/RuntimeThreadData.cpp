@@ -5,9 +5,12 @@
 #include "stdafx.h"
 #include "RuntimeThreadData.h"
 
+#include <format>
+
 #include "ChakraRtInterface.h"
 #include "Helpers.h"
 #include "WScriptJsrt.h"
+#include "chakra/Logger.h"
 
 void RuntimeThreadLocalData::Initialize(RuntimeThreadData* threadData)
 {
