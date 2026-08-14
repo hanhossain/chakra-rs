@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <optional>
 
+#include "ChakraCore.h"
 #include "MessageQueue.h"
 
 enum ModuleState

@@ -4,6 +4,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "stdafx.h"
+#include "ChakraCommon.h"
 
 class MessageBase
 {
