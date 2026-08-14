@@ -4,6 +4,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "chhelper.h"
+#include "WScriptJsrt.h"
 
 #include <filesystem>
 #include <print>
@@ -11,6 +12,11 @@
 #include <chakracore-sys/src/chhelper.rs.h>
 #include <pthread.h>
 #include <rust/cxx.h>
+
+#include "ChakraRtInterface.h"
+#include "Helpers.h"
+#include "HostConfigFlags.h"
+#include "MessageQueue.h"
 
 #ifdef __linux__
 #include <sys/sysinfo.h>
