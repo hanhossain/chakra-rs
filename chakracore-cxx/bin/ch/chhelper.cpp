@@ -29,6 +29,9 @@ unsigned int MessageBase::s_messageCount = 0;
 
 static_assert(sizeof(ssize_t) == sizeof(long));
 
+#define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
+#define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
+
 // On success the param byteCodeBuffer will be allocated in the function.
 int32_t GetSerializedBuffer(const char *fileContents, JsFinalizeCallback fileContentFinalizeCallback,
                             JsValueRef *byteCodeBuffer)

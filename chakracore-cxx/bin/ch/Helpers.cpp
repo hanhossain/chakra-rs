@@ -2,7 +2,6 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "stdafx.h"
 #include "Helpers.h"
 
 #include <filesystem>
@@ -16,6 +15,9 @@
 #include "chakra/Logger.h"
 
 namespace fs = std::filesystem;
+
+#define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
+#define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
 int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&contents,
                                     uint32_t *lengthBytesOut /*= nullptr*/,
