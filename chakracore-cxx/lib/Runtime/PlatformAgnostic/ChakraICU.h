@@ -6,15 +6,6 @@
 
 #include "Interface/CommonDefines.h"
 
-#ifdef WINDOWS10_ICU
-// if WINDOWS10_ICU is defined, pretend like we are building for recent Redstone,
-// even if that isn't necessarily true
-#pragma push_macro("NTDDI_VERSION")
-#undef NTDDI_VERSION
-#define NTDDI_VERSION NTDDI_WIN10_RS5
-#include <icu.h>
-#pragma pop_macro("NTDDI_VERSION")
-#else // ifdef WINDOWS10_ICU
 // Normalize ICU_VERSION for non-Kit ICU
 #ifndef ICU_VERSION
 #include <unicode/uvernum.h>
@@ -43,7 +34,6 @@
 #include <unicode/ustring.h>
 #include <unicode/unorm2.h>
 #include <unicode/upluralrules.h>
-#endif // ifdef WINDOWS10_ICU
 
 // Different assertion code is used in ChakraFull that enforces that messages are char literals
 #define ICU_ERRORMESSAGE(e) u_errorName(e)
