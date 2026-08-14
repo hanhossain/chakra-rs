@@ -6,6 +6,7 @@
 #pragma once
 #include <list>
 #include <filesystem>
+#include <map>
 #include <optional>
 
 #include "ChakraCore.h"

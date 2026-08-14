@@ -25,12 +25,3 @@
 #define IfFalseGoLabel(expr, label) do { if(!(expr)) { hr = E_FAIL; goto label; } } while(0)
 
 #include "Interface/CommonDefines.h"
-#include <map>
-#include <string>
-#include <print>
-
-#include "PlatformAgnostic/CommonPal.h"
-
-#include <stdarg.h>
-#include <format>
-#include "chakra/Logger.h"

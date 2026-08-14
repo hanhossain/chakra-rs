@@ -19,6 +19,8 @@
 #ifndef _CHAKRACOMMON_H_
 #define _CHAKRACOMMON_H_
 
+#include "PlatformAgnostic/CommonPal.h"
+
 // SAL compat
 #define _In_
 #define _In_z_
