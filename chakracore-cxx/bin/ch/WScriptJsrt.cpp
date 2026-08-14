@@ -4,6 +4,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "WScriptJsrt.h"
+
 #include "PlatformAgnostic/ChakraICU.h"
 #include <vector>
 #include <ctime>
@@ -15,7 +17,12 @@
 #include <iostream>
 
 #include "AutoString.h"
+#include "ChakraRtInterface.h"
+#include "Helpers.h"
+#include "HostConfigFlags.h"
+#include "RuntimeThreadData.h"
 #include "SourceMap.h"
+#include "TestHooks.h"
 #include "chakra/Logger.h"
 
 namespace fs = std::filesystem;

@@ -3,10 +3,14 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
-#include <print>
-#include <rust/cxx.h>
+#include "HostConfigFlags.h"
+
 #include <chakracore-sys/src/chhelper.rs.h>
 #include <chakracore-sys/src/str_helper.rs.h>
+#include <print>
+#include <rust/cxx.h>
+
+#include "TestHooks.h"
 
 HostConfigFlags HostConfigFlags::flags;
 rust::Vec<rust::String> HostConfigFlags::vargsVal;

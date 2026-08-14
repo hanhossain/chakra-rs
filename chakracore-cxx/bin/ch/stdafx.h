@@ -83,71 +83,8 @@ typedef void * Var;
 #include "Codex/Utf8Helper.h"
 using utf8::NarrowStringToWideDynamic;
 using utf8::WideStringToNarrowDynamic;
-#include "Helpers.h"
 
 #include "PlatformAgnostic/SystemInfo.h"
 #ifdef HAS_ICU
 #include "PlatformAgnostic/ChakraICU.h"
 #endif
-
-#define IfJsErrorFailLog(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
-        goto Error; \
-    } \
-} while (0)
-
-#define IfJsErrorFailLogAndHR(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        hr = E_FAIL; \
-        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
-        goto Error; \
-    } \
-} while (0)
-
-#define IfJsErrorFailLogLabel(expr, label) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
-        goto label; \
-    } \
-} while (0)
-
-#define IfJsErrorFailLogAndRet(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
-        return JS_INVALID_REFERENCE; \
-    } \
-} while (0)
-
-#define IfJsrtErrorFailLogAndRetFalse(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
-        return false; \
-    } \
-} while (0)
-
-#define IfJsrtErrorFailLogAndRetErrorCode(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
-        return (jsErrorCode); \
-    } \
-} while (0)
-
-#include "TestHooks.h"
-#include "ChakraRtInterface.h"
-#include "HostConfigFlags.h"
-#include "MessageQueue.h"
-#include "RuntimeThreadData.h"
-#include "WScriptJsrt.h"

@@ -4,10 +4,13 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "ChakraRtInterface.h"
 
 #include <chakracore-sys/src/chhelper.rs.h>
 #include <dlfcn.h>
-#include <print>
+
+#include "HostConfigFlags.h"
+#include "TestHooks.h"
 
 bool ChakraRTInterface::m_testHooksSetup = false;
 bool ChakraRTInterface::m_testHooksInitialized = false;

@@ -3,6 +3,11 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "RuntimeThreadData.h"
+
+#include "ChakraRtInterface.h"
+#include "Helpers.h"
+#include "WScriptJsrt.h"
 
 void RuntimeThreadLocalData::Initialize(RuntimeThreadData* threadData)
 {
