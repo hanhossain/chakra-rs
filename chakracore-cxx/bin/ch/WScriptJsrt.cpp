@@ -1936,7 +1936,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
         errorCode = specifierStr.GetError();
         if (errorCode == JsNoError)
         {
-            hr = Helpers::LoadScriptFromFile(*specifierStr, fileContent, nullptr, fullPath_, true);
+            hr = Helpers::LoadScriptFromFile(*specifierStr, fileContent, nullptr, fullPath_);
 
             if (FAILED(hr))
             {
