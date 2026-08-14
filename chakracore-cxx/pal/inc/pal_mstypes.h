@@ -86,7 +86,6 @@ typedef const TCHAR *LPCTSTR;
 #define HIBYTE(w)           ((uint8_t)((unsigned long)(w) >> 8))
 
 typedef void *HANDLE;
-typedef HANDLE HWND;
 typedef struct __PAL_RemoteHandle__ { HANDLE h; } *RHANDLE;
 typedef HANDLE *PHANDLE;
 typedef HANDLE *LPHANDLE;
