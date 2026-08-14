@@ -75,11 +75,3 @@ if (!(exp)) \
 #define Assert(exp)             AssertMsg(exp, #exp)
 #define _JSRT_
 #include "ChakraCore.h"
-#include "PlatformAgnostic/CommonTypedefs.h"
-#include "TestHooksRt.h"
-
-typedef void * Var;
-
-#include "Codex/Utf8Helper.h"
-using utf8::NarrowStringToWideDynamic;
-using utf8::WideStringToNarrowDynamic;

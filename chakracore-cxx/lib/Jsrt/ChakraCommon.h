@@ -432,6 +432,10 @@ typedef unsigned short char16_t;
         //      disabled as well
         /// </summary>
         JsRuntimeAttributeDisableExecutablePageAllocation = 0x00000100,
+        /// <summary>
+        /// Runtime will generate bytecode buffer by treating current file as library file.
+        /// </summary>
+        JsRuntimeAttributeSerializeLibraryByteCode = 0x8000000,
 
     } JsRuntimeAttributes;
 

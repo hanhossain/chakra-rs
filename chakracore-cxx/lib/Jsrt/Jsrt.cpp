@@ -19,8 +19,6 @@
 #include "cmperr.h"     // For ERRnoMemory
 #include "screrror.h"   // For CompileScriptException
 
-#include "TestHooksRt.h"
-
 using namespace chakracore::jsrt;
 
 JsErrorCode RunScriptWithParserStateCore(

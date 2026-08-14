@@ -74,7 +74,7 @@ unsigned long WScriptJsrt::sourceContext = 0;
                                     "Failed to convert wide string. Out of memory?";\
                                                                                     \
         char *errorMessageNarrow;                                                   \
-        if (FAILED(WideStringToNarrowDynamic(errorMessage, &errorMessageNarrow)))   \
+        if (FAILED(utf8::WideStringToNarrowDynamic(errorMessage, &errorMessageNarrow)))   \
         {                                                                           \
             errorCode = ChakraRTInterface::JsCreateString(outOfMemoryString,        \
                 strlen(outOfMemoryString), &errorMessageString);                    \
