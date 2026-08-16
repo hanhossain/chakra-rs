@@ -6,23 +6,22 @@ class AutoString
 {
     size_t length_;
     char* data_;
-    char16_t* data_wide;
     JsErrorCode errorCode_;
     bool dontFree_;
 public:
     AutoString():length_(0), data_(nullptr),
-        data_wide(nullptr), errorCode_(JsNoError), dontFree_(false)
+        errorCode_(JsNoError), dontFree_(false)
     { }
 
     AutoString(AutoString &autoString):length_(autoString.length_),
-        data_(autoString.data_), data_wide(autoString.data_wide),
+        data_(autoString.data_),
         errorCode_(JsNoError), dontFree_(false)
     {
         autoString.dontFree_ = true; // take over the ownership
     }
 
     AutoString(JsValueRef value):length_(0), data_(nullptr),
-        data_wide(nullptr), errorCode_(JsNoError), dontFree_(false)
+        errorCode_(JsNoError), dontFree_(false)
     {
         Initialize(value);
     }
@@ -73,22 +72,6 @@ public:
         return data_;
     }
 
-    char16_t* GetWideString(charcount_t* destCount = nullptr)
-    {
-        if(data_wide || !data_)
-        {
-            return data_wide;
-        }
-        charcount_t tempDestCount;
-        utf8::NarrowStringToWide<utf8::malloc_allocator>(data_, length_, &data_wide, &tempDestCount);
-
-        if (destCount)
-        {
-            *destCount = tempDestCount;
-        }
-        return data_wide;
-    }
-
     bool HasError() const {
         return errorCode_ != JsNoError;
     }
@@ -111,13 +94,6 @@ public:
         {
             free(data_);
             data_ = nullptr;
-        }
-
-        // Free this anyway.
-        if (data_wide != nullptr)
-        {
-            free(data_wide);
-            data_wide = nullptr;
         }
     }
 
