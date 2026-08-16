@@ -19,6 +19,9 @@
 #include "cmperr.h"     // For ERRnoMemory
 #include "screrror.h"   // For CompileScriptException
 
+#include <rust/cxx.h>
+#include <cstring>
+
 using namespace chakracore::jsrt;
 
 JsErrorCode RunScriptWithParserStateCore(
@@ -3671,6 +3674,7 @@ JsErrorCode chakracore::jsrt::JsCopyStringUtf16(
         });
 }
 
+// TODO (hanhossain): should accept a rust::String& arg instead.
 JsErrorCode chakracore::jsrt::JsCopyString(
     _In_ JsValueRef value,
     _Out_opt_ char* buffer,
@@ -3688,10 +3692,14 @@ JsErrorCode chakracore::jsrt::JsCopyString(
         return errorCode;
     }
 
-    utf8::WideToNarrow utf8Str(str, strLength, buffer, bufferSize);
+    rust::String rs{str, strLength};
+    if (buffer)
+    {
+        std::strcpy(buffer, rs.c_str());
+    }
     if (length)
     {
-        *length = utf8Str.Length();
+        *length = rs.length();
     }
 
     return JsNoError;
