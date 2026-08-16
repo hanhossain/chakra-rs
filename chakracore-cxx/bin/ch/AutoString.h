@@ -97,6 +97,6 @@ public:
         }
     }
 
-    char* operator*() { return data_; }
+    const char* operator*() { return data_; }
 };
 

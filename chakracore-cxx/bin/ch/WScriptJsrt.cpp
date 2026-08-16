@@ -132,22 +132,14 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
         JsErrorCode error = ChakraRTInterface::JsConvertValueToString(arguments[i], &strValue);
         if (error == JsNoError)
         {
-            AutoString str(strValue);
-            if (str.GetError() == JsNoError)
+            rust::String str;
+            if (ChakraRTInterface::JsCopyString(strValue, str) == JsNoError)
             {
                 if (i > 1)
                 {
                     std::print(" ");
                 }
-                // HACK: Manually filter out null chars since the underlying strings have embedded null chars
-                const char *s = str.GetString();
-                for (int j = 0; j < str.GetLength(); j++)
-                {
-                    if (s[j] != '\0')
-                    {
-                        std::print("{}", s[j]);
-                    }
-                }
+                std::print("{}", str.c_str());
             }
         }
 
@@ -547,7 +539,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
     else
     {
         AutoString fileContent;
-        char *fileNameNarrow = nullptr;
+        const char *fileNameNarrow = nullptr;
         AutoString fileName;
         AutoString scriptInjectType;
         char fileNameBuffer[MAX_PATH];
