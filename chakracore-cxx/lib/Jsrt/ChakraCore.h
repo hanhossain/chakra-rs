@@ -17,6 +17,7 @@
 #ifndef _CHAKRACORE_H_
 #define _CHAKRACORE_H_
 
+#include <rust/cxx.h>
 #include "ChakraCommon.h"
 #include "ChakraDebug.h"
 
@@ -527,6 +528,8 @@ namespace chakracore::jsrt
         _Out_opt_ char* buffer,
         _In_ size_t bufferSize,
         _Out_opt_ size_t* length);
+
+    JsErrorCode JsCopyString(JsValueRef value, rust::String &rStr);
 
     /// <summary>
     ///     Write string value into Utf16 string buffer

@@ -3674,12 +3674,7 @@ JsErrorCode chakracore::jsrt::JsCopyStringUtf16(
         });
 }
 
-// TODO (hanhossain): should accept a rust::String& arg instead.
-JsErrorCode chakracore::jsrt::JsCopyString(
-    _In_ JsValueRef value,
-    _Out_opt_ char* buffer,
-    _In_ size_t bufferSize,
-    _Out_opt_ size_t* length)
+JsErrorCode chakracore::jsrt::JsCopyString(JsValueRef value, rust::String &rStr)
 {
     PARAM_NOT_NULL(value);
     VALIDATE_JSREF(value);
@@ -3692,7 +3687,24 @@ JsErrorCode chakracore::jsrt::JsCopyString(
         return errorCode;
     }
 
-    rust::String rs{str, strLength};
+    rStr = {str, strLength};
+    return JsNoError;
+}
+
+// TODO (hanhossain): should accept a rust::String& arg instead.
+JsErrorCode chakracore::jsrt::JsCopyString(
+    _In_ JsValueRef value,
+    _Out_opt_ char* buffer,
+    _In_ size_t bufferSize,
+    _Out_opt_ size_t* length)
+{
+    rust::String rs;
+    JsErrorCode errorCode = JsCopyString(value, rs);
+    if (errorCode != JsNoError)
+    {
+        return errorCode;
+    }
+
     if (buffer)
     {
         std::strcpy(buffer, rs.c_str());
