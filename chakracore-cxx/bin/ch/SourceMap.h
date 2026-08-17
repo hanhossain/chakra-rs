@@ -1,14 +1,13 @@
 #pragma once
-#include "AutoString.h"
 
 struct FileNode
 {
     std::shared_ptr<std::string> data;
     std::string path;
     FileNode * next;
-    FileNode(const AutoString &path_, const AutoString &data_) :
-        data(std::make_shared<std::string>(data_.GetString(), data_.GetLength())),
-        path({path_.GetString(), path_.GetLength()}),
+    FileNode(std::string &&path, std::string &&data_) :
+        data(std::make_shared<std::string>(data_)),
+        path(std::move(path)),
         next(nullptr)
     {
     }
@@ -19,10 +18,10 @@ class SourceMap
     static FileNode *root;
 
 public:
-    static void Add(const AutoString &path, const AutoString &data)
+    static void Add(const rust::String &path, const rust::String &data)
     {
         // SourceMap lifetime == process lifetime
-        FileNode *node = new FileNode(path, data);
+        FileNode *node = new FileNode(static_cast<std::string>(path), static_cast<std::string>(data));
         if (root != nullptr)
         {
             node->next = root;

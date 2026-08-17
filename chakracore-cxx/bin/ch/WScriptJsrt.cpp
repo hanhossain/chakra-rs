@@ -1196,10 +1196,10 @@ JsValueRef WScriptJsrt::RegisterModuleSourceCallback(JsValueRef callee, bool isC
     }
     else
     {
-        AutoString fileName; // is persistent
-        AutoString data; // is persistent
-        IfJsrtErrorSetGo(fileName.Initialize(arguments[1]));
-        IfJsrtErrorSetGo(data.Initialize(arguments[2]));
+        rust::String fileName; // is persistent
+        rust::String data; // is persistent
+        IfJsrtErrorSetGo(chakracore::jsrt::JsCopyString(arguments[1], fileName));
+        IfJsrtErrorSetGo(chakracore::jsrt::JsCopyString(arguments[2], data));
 
         SourceMap::Add(fileName, data);
     }

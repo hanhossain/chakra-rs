@@ -8,7 +8,6 @@
 #include <iostream>
 #include <sys/stat.h>
 
-#include "AutoString.h"
 #include "ChakraRtInterface.h"
 #include "SourceMap.h"
 #include "WScriptJsrt.h"
