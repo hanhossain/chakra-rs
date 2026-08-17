@@ -46,12 +46,11 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
     }
 
     // check if have it registered
-    AutoString *data;
-    if (SourceMap::Find(filenameToLoad, &data) ||
-        SourceMap::Find(filenamePath.native(), &data))
+    auto data = SourceMap::Find(filenameToLoad).or_else([filenamePath] { return SourceMap::Find(filenamePath.native()); });
+    if (data)
     {
-        pRawBytesFromMap = (uint8_t*) data->GetString();
-        lengthBytes = (uint32_t) data->GetLength();
+        pRawBytesFromMap = (uint8_t*) data->get()->c_str();
+        lengthBytes = (uint32_t) data->get()->length();
     }
     else
     {

@@ -3,12 +3,14 @@
 
 struct FileNode
 {
-    AutoString data;
+    std::shared_ptr<std::string> data;
     std::string path;
     FileNode * next;
-    FileNode(const AutoString &path_, AutoString &data_):
-        data(data_), path({path_.GetString(), path_.GetLength()}), next(nullptr) {
-        data_.MakePersistent();
+    FileNode(const AutoString &path_, const AutoString &data_) :
+        data(std::make_shared<std::string>(data_.GetString(), data_.GetLength())),
+        path({path_.GetString(), path_.GetLength()}),
+        next(nullptr)
+    {
     }
 };
 
@@ -17,7 +19,7 @@ class SourceMap
     static FileNode *root;
 
 public:
-    static void Add(const AutoString &path, AutoString &data)
+    static void Add(const AutoString &path, const AutoString &data)
     {
         // SourceMap lifetime == process lifetime
         FileNode *node = new FileNode(path, data);
@@ -28,22 +30,7 @@ public:
         root = node;
     }
 
-    static bool Find(const std::string_view path, AutoString **out)
-    {
-        FileNode *node = root;
-        while (node != nullptr)
-        {
-            if (node->path == path)
-            {
-                *out = &(node->data);
-                return true;
-            }
-            node = node->next;
-        }
-        return false;
-    }
-
-    static std::optional<AutoString> Find(const std::string_view path)
+    static std::optional<std::shared_ptr<std::string>> Find(const std::string_view path)
     {
         FileNode *node = root;
         while (node != nullptr)

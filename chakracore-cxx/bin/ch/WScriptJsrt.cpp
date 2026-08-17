@@ -182,9 +182,10 @@ JsValueRef WScriptJsrt::LoadScriptFileCallback(JsValueRef callee, bool isConstru
     return LoadScriptFileHelper(callee, arguments, argumentCount, false);
 }
 
+// TODO (hanhossain): remove
 void WScriptJsrt::FinalizeFree(void* addr)
 {
-    free(addr);
+    chakra::Logger::trace("not freeing callback data");
 }
 
 JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule)
