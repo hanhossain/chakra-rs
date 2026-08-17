@@ -4,11 +4,10 @@
 struct FileNode
 {
     AutoString data;
-    AutoString path;
+    std::string path;
     FileNode * next;
-    FileNode(AutoString &path_, AutoString &data_):
-        path(path_), data(data_), next(nullptr) {
-        path_.MakePersistent();
+    FileNode(const AutoString &path_, AutoString &data_):
+        data(data_), path({path_.GetString(), path_.GetLength()}), next(nullptr) {
         data_.MakePersistent();
     }
 };
@@ -18,7 +17,7 @@ class SourceMap
     static FileNode *root;
 
 public:
-    static void Add(AutoString &path, AutoString &data)
+    static void Add(const AutoString &path, AutoString &data)
     {
         // SourceMap lifetime == process lifetime
         FileNode *node = new FileNode(path, data);
@@ -34,7 +33,7 @@ public:
         FileNode *node = root;
         while (node != nullptr)
         {
-            if (node->path.GetString() == path)
+            if (node->path == path)
             {
                 *out = &(node->data);
                 return true;
@@ -49,7 +48,7 @@ public:
         FileNode *node = root;
         while (node != nullptr)
         {
-            if (node->path.GetString() == path)
+            if (node->path == path)
             {
                 return node->data;
             }
