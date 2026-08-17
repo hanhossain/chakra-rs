@@ -547,7 +547,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
     else
     {
         AutoString fileContent;
-        char *fileNameNarrow = nullptr;
+        const char *fileNameNarrow = nullptr;
         AutoString fileName;
         AutoString scriptInjectType;
         char fileNameBuffer[MAX_PATH];
