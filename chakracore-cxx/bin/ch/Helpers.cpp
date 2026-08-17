@@ -47,8 +47,8 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
 
     // check if have it registered
     AutoString *data;
-    if (SourceMap::Find(filenameToLoad, strlen(filenameToLoad), &data) ||
-        SourceMap::Find(filenamePath, &data))
+    if (SourceMap::Find(filenameToLoad, &data) ||
+        SourceMap::Find(filenamePath.native(), &data))
     {
         pRawBytesFromMap = (uint8_t*) data->GetString();
         lengthBytes = (uint32_t) data->GetLength();
