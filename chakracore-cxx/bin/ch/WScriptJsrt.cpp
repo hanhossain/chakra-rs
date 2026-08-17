@@ -15,8 +15,8 @@
 #include <filesystem>
 #include <iostream>
 
-#include "AutoString.h"
 #include "ChakraRtInterface.h"
+#include "Codex/Utf8Helper.h"
 #include "Helpers.h"
 #include "HostConfigFlags.h"
 #include "RuntimeThreadData.h"
@@ -182,7 +182,8 @@ JsValueRef WScriptJsrt::LoadScriptFileCallback(JsValueRef callee, bool isConstru
     return LoadScriptFileHelper(callee, arguments, argumentCount, false);
 }
 
-// TODO (hanhossain): remove
+// TODO (hanhossain): Should free callback data that needs to be freed. Or maybe use refcounted strings?
+//  Or can we pass the owned object through callback data?
 void WScriptJsrt::FinalizeFree(void* addr)
 {
     chakra::Logger::trace("not freeing callback data");
@@ -541,15 +542,14 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
     }
     else
     {
-        AutoString fileContent; // is persistent
+        rust::String fileContent; // is persistent
         rust::String fileName;
         rust::String scriptInjectType;
         bool isFile = true;
 
-        IfJsrtErrorSetGo(fileContent.Initialize(arguments[1]));
+        IfJsrtErrorSetGo(chakracore::jsrt::JsCopyString(arguments[1], fileContent));
         // ExternalArrayBuffer Finalize will clean this up
         // but only if we actually register a finalizecallback for this
-        fileContent.MakePersistent();
 
         if (argumentCount > 2)
         {
@@ -570,12 +570,12 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
             }
         }
 
-        if (*fileContent)
+        if (!fileContent.empty())
         {
             // TODO: This is CESU-8. How to tell the engine?
             // TODO: How to handle this source (script) life time?
             // TODO (hanhossain): use rust string (fileName)
-            returnValue = LoadScript(callee, fileName.c_str(), *fileContent, !scriptInjectType.empty() ? scriptInjectType.c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
+            returnValue = LoadScript(callee, fileName.c_str(), fileContent.c_str(), !scriptInjectType.empty() ? scriptInjectType.c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
         }
     }
 
