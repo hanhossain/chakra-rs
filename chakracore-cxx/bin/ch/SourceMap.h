@@ -29,8 +29,6 @@ public:
         root = node;
     }
 
-    static bool Find(AutoString &path, AutoString **out) { return Find(path.GetString(), path.GetLength(), out); }
-
     static bool Find(const char *path, size_t pathLength, AutoString **out)
     {
         FileNode *node = root;
