@@ -120,40 +120,6 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
         pRawBytes[lengthBytes] = 0; // Null terminate it. Could be UTF16
     }
 
-    if (file != NULL)
-    {
-        //
-        // Read encoding to make sure it's supported
-        //
-        // Warning: The UNICODE buffer for parsing is supposed to be provided by the host.
-        // This is not a complete read of the encoding. Some encodings like UTF7, UTF1, EBCDIC, SCSU, BOCU could be
-        // wrongly classified as ANSI
-        //
-#pragma warning(push)
-        // suppressing prefast warning that "readable size is bufferLength
-        // bytes but 2 may be read" as bufferLength is clearly > 2 in the code that follows
-#pragma warning(disable:6385)
-        static_assert(sizeof(char16_t) == 2);
-        if (bufferLength > 2)
-        {
-#pragma prefast(push)
-#pragma prefast(disable:6385, "PREfast incorrectly reports this as an out-of-bound access.");
-            if ((pRawBytes[0] == 0xFE && pRawBytes[1] == 0xFF) ||
-                (pRawBytes[0] == 0xFF && pRawBytes[1] == 0xFE) ||
-                (bufferLength > 4 && pRawBytes[0] == 0x00 && pRawBytes[1] == 0x00 &&
-                    ((pRawBytes[2] == 0xFE && pRawBytes[3] == 0xFF) ||
-                    (pRawBytes[2] == 0xFF && pRawBytes[3] == 0xFE))))
-
-            {
-                // unicode unsupported
-                chakra::Logger::error("unsupported file encoding. Only ANSI and UTF8 supported");
-                IfFailGo(E_UNEXPECTED);
-            }
-#pragma prefast(pop)
-        }
-#pragma warning(pop)
-    }
-
     contents = reinterpret_cast<const char *>(pRawBytes);
 
 Error:
