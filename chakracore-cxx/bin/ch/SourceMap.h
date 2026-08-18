@@ -29,27 +29,12 @@ public:
         root = node;
     }
 
-    static bool Find(const char *path, size_t pathLength, AutoString **out)
+    static bool Find(const std::string_view path, AutoString **out)
     {
         FileNode *node = root;
         while (node != nullptr)
         {
-            if (strncmp(node->path.GetString(), path, pathLength) == 0)
-            {
-                *out = &(node->data);
-                return true;
-            }
-            node = node->next;
-        }
-        return false;
-    }
-
-    static bool Find(const std::filesystem::path &path, AutoString **out)
-    {
-        FileNode *node = root;
-        while (node != nullptr)
-        {
-            if (node->path.GetString() == path.native())
+            if (static_cast<std::string_view>(node->path) == path)
             {
                 *out = &(node->data);
                 return true;

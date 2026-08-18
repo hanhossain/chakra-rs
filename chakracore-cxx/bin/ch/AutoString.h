@@ -98,5 +98,7 @@ public:
     }
 
     const char* operator*() const { return data_; }
+
+    explicit operator std::string_view() const { return {data_, length_}; }
 };
 
