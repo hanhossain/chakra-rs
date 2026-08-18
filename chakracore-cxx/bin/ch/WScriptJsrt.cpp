@@ -1209,7 +1209,7 @@ JsValueRef WScriptJsrt::RegisterModuleSourceCallback(JsValueRef callee, bool isC
         IfJsrtErrorSetGo(fileName.Initialize(arguments[1]));
         IfJsrtErrorSetGo(data.Initialize(arguments[2]));
 
-        SourceMap::Add(fileName, data);
+        SourceMap::Add(fileName.GetString(), data);
     }
 
 Error:
