@@ -24,14 +24,7 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
                                     const std::optional<std::filesystem::path> &fullPath)
 {
     static fs::path sHostApplicationPath;
-
-    int32_t hr = S_OK;
-    uint8_t * pRawBytes = nullptr;
-    uint8_t * pRawBytesFromMap = nullptr;
-    uint32_t lengthBytes = 0;
     contents = nullptr;
-    FILE * file = NULL;
-    size_t bufferLength = 0;
 
     fs::path filenamePath = fullPath.value_or(filenameToLoad);
 
@@ -46,15 +39,19 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
     }
 
     // check if have it registered
-    auto data = SourceMap::Find(filenameToLoad).or_else([&filenamePath]
+    const auto cached = SourceMap::Find(filenameToLoad).or_else([&filenamePath]
     {
         return SourceMap::Find(filenamePath.native());
     });
 
-    if (data)
+    const char *pRawBytesFromMap = nullptr;
+    size_t lengthBytes = 0;
+    FILE *file = nullptr;
+
+    if (cached)
     {
-        pRawBytesFromMap = (uint8_t*) data.value()->c_str();
-        lengthBytes = (uint32_t) data.value()->length();
+        pRawBytesFromMap = cached.value()->c_str();
+        lengthBytes = cached.value()->length();
     }
     else
     {
@@ -62,47 +59,41 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
         // etc.
         if (fopen_s(&file, filenamePath.c_str(), "rb") != 0)
         {
-            IfFailGo(E_FAIL);
+            return E_FAIL;
         }
-    }
 
-    // TODO (hanhossain): read file with std::ifstream to std::string
-    if (file != NULL)
-    {
+        // TODO (hanhossain): read file with std::ifstream to std::string
         // Determine the file length, in bytes.
         fseek(file, 0, SEEK_END);
         lengthBytes = ftell(file);
         fseek(file, 0, SEEK_SET);
     }
 
-    if (lengthBytes != 0)
-    {
-        bufferLength = lengthBytes + sizeof(uint8_t);
-        pRawBytes = (uint8_t *)malloc(bufferLength);
-    }
-    else
-    {
-        bufferLength = 1;
-        pRawBytes = (uint8_t *)malloc(bufferLength);
-    }
-
-    if (nullptr == pRawBytes)
+    const size_t bufferLength = lengthBytes != 0 ? lengthBytes + sizeof(uint8_t) : 1;
+    const auto pRawBytes = static_cast<uint8_t *>(malloc(bufferLength));
+    if (pRawBytes == nullptr)
     {
         chakra::Logger::error("out of memory");
-        IfFailGo(E_OUTOFMEMORY);
+        if (file != nullptr)
+        {
+            fclose(file);
+        }
+        return E_OUTOFMEMORY;
     }
 
     if (lengthBytes != 0)
     {
-        if (file != NULL)
+        if (file != nullptr)
         {
             //
             // Read the entire content as a binary block.
             //
             size_t readBytes = std::fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
+            fclose(file);
             if (readBytes < lengthBytes * sizeof(uint8_t))
             {
-                IfFailGo(E_FAIL);
+                free(pRawBytes);
+                return E_FAIL;
             }
         }
         else // from module source register
@@ -115,33 +106,16 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
         }
     }
 
-    if (pRawBytes)
-    {
-        pRawBytes[lengthBytes] = 0; // Null terminate it. Could be UTF16
-    }
+    pRawBytes[lengthBytes] = 0; // Null terminate it. Could be UTF16
 
     contents = reinterpret_cast<const char *>(pRawBytes);
 
-Error:
-    if (SUCCEEDED(hr))
+    if (lengthBytesOut)
     {
-        if (lengthBytesOut)
-        {
-            *lengthBytesOut = lengthBytes;
-        }
+        *lengthBytesOut = lengthBytes;
     }
 
-    if (file != NULL)
-    {
-        fclose(file);
-    }
-
-    if (pRawBytes && reinterpret_cast<const char *>(pRawBytes) != contents)
-    {
-        free(pRawBytes);
-    }
-
-    return hr;
+    return S_OK;
 }
 
 const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
