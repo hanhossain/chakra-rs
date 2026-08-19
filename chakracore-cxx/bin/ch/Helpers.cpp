@@ -120,6 +120,13 @@ Helpers::Result Helpers::LoadScriptFromFile(const char *filenameToLoad, const ch
     return Result(S_OK);
 }
 
+Helpers::Result Helpers::LoadScriptFromFile(const char *filename, const std::optional<std::filesystem::path> &fullPath)
+{
+    const char *contents = nullptr;
+    uint32_t lengthBytes = 0;
+    return LoadScriptFromFile(filename, contents, &lengthBytes, fullPath);
+}
+
 const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
 {
     bool hasException = false;
