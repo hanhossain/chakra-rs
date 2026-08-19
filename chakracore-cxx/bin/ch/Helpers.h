@@ -66,9 +66,6 @@ public:
         Result(const char* content, size_t length) : hr(S_OK), content(content), length(length) {}
     };
 
-    static Result LoadScriptFromFile(const char *filename, const char *&contents, uint32_t *lengthBytesOut = nullptr,
-                                      const std::optional<std::filesystem::path> &fullPath = std::nullopt);
-
     static Result LoadScriptFromFile(const char *filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);
     static const char *JsErrorCodeToString(JsErrorCode jsErrorCode);
     static int32_t LoadBinaryFile(const char *filename, const char *&contents, uint32_t &lengthBytes,

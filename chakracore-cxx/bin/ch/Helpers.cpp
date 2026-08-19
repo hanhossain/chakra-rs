@@ -19,12 +19,9 @@ namespace fs = std::filesystem;
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-Helpers::Result Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&contents,
-                                    uint32_t *lengthBytesOut /*= nullptr*/,
-                                    const std::optional<std::filesystem::path> &fullPath)
+Helpers::Result Helpers::LoadScriptFromFile(const char *filenameToLoad, const std::optional<std::filesystem::path> &fullPath)
 {
     static fs::path sHostApplicationPath;
-    contents = nullptr;
 
     fs::path filenamePath = fullPath.value_or(filenameToLoad);
 
@@ -108,23 +105,10 @@ Helpers::Result Helpers::LoadScriptFromFile(const char *filenameToLoad, const ch
 
     pRawBytes[lengthBytes] = 0; // Null terminate it. Could be UTF16
 
-    contents = reinterpret_cast<const char *>(pRawBytes);
-
-    if (lengthBytesOut)
-    {
-        *lengthBytesOut = lengthBytes;
-    }
-
+    auto contents = reinterpret_cast<const char *>(pRawBytes);
     auto result = cached ? cached.value() : std::make_shared<std::string>(contents, lengthBytes);
 
     return {contents, lengthBytes};
-}
-
-Helpers::Result Helpers::LoadScriptFromFile(const char *filename, const std::optional<std::filesystem::path> &fullPath)
-{
-    const char *contents = nullptr;
-    uint32_t lengthBytes = 0;
-    return LoadScriptFromFile(filename, contents, &lengthBytes, fullPath);
 }
 
 const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
