@@ -128,27 +128,15 @@ JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, Js
 {
     for (unsigned int i = 1; i < argumentCount; i++)
     {
-        JsValueRef strValue;
-        JsErrorCode error = ChakraRTInterface::JsConvertValueToString(arguments[i], &strValue);
+        rust::String string;
+        auto error = ChakraRTInterface::JsToString(arguments[i], string);
         if (error == JsNoError)
         {
-            AutoString str(strValue);
-            if (str.GetError() == JsNoError)
+            if (i > 1)
             {
-                if (i > 1)
-                {
-                    std::print(" ");
-                }
-                // HACK: Manually filter out null chars since the underlying strings have embedded null chars
-                const char *s = str.GetString();
-                for (int j = 0; j < str.GetLength(); j++)
-                {
-                    if (s[j] != '\0')
-                    {
-                        std::print("{}", s[j]);
-                    }
-                }
+                std::print(" ");
             }
+            std::print("{}", string);
         }
 
         if (error == JsErrorScriptException)
