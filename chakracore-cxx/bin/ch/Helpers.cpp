@@ -19,7 +19,7 @@ namespace fs = std::filesystem;
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&contents,
+Helpers::Result Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&contents,
                                     uint32_t *lengthBytesOut /*= nullptr*/,
                                     const std::optional<std::filesystem::path> &fullPath)
 {
@@ -59,7 +59,7 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
         // etc.
         if (fopen_s(&file, filenamePath.c_str(), "rb") != 0)
         {
-            return E_FAIL;
+            return Result(E_FAIL);
         }
 
         // TODO (hanhossain): read file with std::ifstream to std::string
@@ -78,7 +78,7 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
         {
             fclose(file);
         }
-        return E_OUTOFMEMORY;
+        return Result(E_OUTOFMEMORY);
     }
 
     if (lengthBytes != 0)
@@ -93,7 +93,7 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
             if (readBytes < lengthBytes * sizeof(uint8_t))
             {
                 free(pRawBytes);
-                return E_FAIL;
+                return Result(E_FAIL);
             }
         }
         else // from module source register
@@ -115,7 +115,9 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
         *lengthBytesOut = lengthBytes;
     }
 
-    return S_OK;
+    auto result = cached ? cached.value() : std::make_shared<std::string>(contents, lengthBytes);
+
+    return Result(S_OK);
 }
 
 const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)

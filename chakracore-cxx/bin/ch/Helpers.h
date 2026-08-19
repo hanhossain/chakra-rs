@@ -55,7 +55,16 @@ do { \
 class Helpers
 {
 public:
-    static int32_t LoadScriptFromFile(const char *filename, const char *&contents, uint32_t *lengthBytesOut = nullptr,
+    struct Result
+    {
+        int32_t hr;
+        const char* content;
+        size_t length;
+
+        explicit Result(int32_t hr) : hr(hr), content(nullptr), length(0) {}
+    };
+
+    static Result LoadScriptFromFile(const char *filename, const char *&contents, uint32_t *lengthBytesOut = nullptr,
                                       const std::optional<std::filesystem::path> &fullPath = std::nullopt);
     static const char *JsErrorCodeToString(JsErrorCode jsErrorCode);
     static int32_t LoadBinaryFile(const char *filename, const char *&contents, uint32_t &lengthBytes,

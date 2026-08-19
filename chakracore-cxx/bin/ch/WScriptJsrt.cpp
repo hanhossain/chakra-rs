@@ -190,9 +190,10 @@ JsValueRef WScriptJsrt::LoadScriptFileCallback(JsValueRef callee, bool isConstru
     return LoadScriptFileHelper(callee, arguments, argumentCount, false);
 }
 
+// TODO (hanhossain): do I need to free anything?
 void WScriptJsrt::FinalizeFree(void* addr)
 {
-    free(addr);
+    // free(addr);
 }
 
 JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule)
@@ -221,7 +222,8 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
 
         if (errorCode == JsNoError)
         {
-            hr = Helpers::LoadScriptFromFile(*fileName, fileContent);
+            auto result = Helpers::LoadScriptFromFile(*fileName, fileContent);
+            hr = result.hr;
             if (FAILED(hr))
             {
                 chakra::Logger::error(std::format("Couldn't load file '{}'", fileName.GetString()));
@@ -1236,7 +1238,8 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
         if (errorCode == JsNoError)
         {
             uint32_t lengthBytes = 0;
-            hr = Helpers::LoadScriptFromFile(*fileName, fileContent, &lengthBytes);
+            auto result = Helpers::LoadScriptFromFile(*fileName, fileContent, &lengthBytes);
+            hr = result.hr;
 
             if (FAILED(hr))
             {
@@ -1921,12 +1924,12 @@ WScriptJsrt::ModuleMessage::~ModuleMessage()
 int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
 {
     JsErrorCode errorCode = JsNoError;
-    JsValueRef result = JS_INVALID_REFERENCE;
     int32_t hr;
     if (specifier == nullptr)
     {
         if (moduleErrMap[moduleRecord] != ErroredModule)
         {
+            JsValueRef result = JS_INVALID_REFERENCE;
             errorCode = ChakraRTInterface::JsModuleEvaluation(moduleRecord, &result);
             if (errorCode != JsNoError)
             {
@@ -1941,7 +1944,8 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
         errorCode = specifierStr.GetError();
         if (errorCode == JsNoError)
         {
-            hr = Helpers::LoadScriptFromFile(*specifierStr, fileContent, nullptr, fullPath_);
+            auto result = Helpers::LoadScriptFromFile(*specifierStr, fileContent, nullptr, fullPath_);
+            hr = result.hr;
 
             if (FAILED(hr))
             {
