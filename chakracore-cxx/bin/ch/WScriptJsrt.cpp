@@ -198,27 +198,27 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
     }
     else
     {
-        AutoString fileName(arguments[1]);
-        IfJsrtErrorSetGo(fileName.GetError());
+        rust::String fileName;
+        IfJsrtErrorSetGo(chakracore::jsrt::JsToString(arguments[1], fileName));
 
-        AutoString scriptInjectType;
+        rust::String scriptInjectType;
         if (argumentCount > 2)
         {
-            IfJsrtErrorSetGo(scriptInjectType.Initialize(arguments[2]));
+            IfJsrtErrorSetGo(chakracore::jsrt::JsToString(arguments[2], scriptInjectType));
         }
 
         if (errorCode == JsNoError)
         {
-            auto result = Helpers::LoadScriptFromFile(*fileName);
+            auto result = Helpers::LoadScriptFromFile(fileName.c_str());
             hr = result.hr;
             if (FAILED(hr))
             {
-                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName.GetString()));
+                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName));
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
                 return returnValue;
             }
 
-            returnValue = LoadScript(callee, *fileName, result.content, *scriptInjectType ? *scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
+            returnValue = LoadScript(callee, fileName.c_str(), result.content, !scriptInjectType.empty() ? scriptInjectType.c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
         }
     }
 
