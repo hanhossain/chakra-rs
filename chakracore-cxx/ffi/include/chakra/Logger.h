@@ -1,10 +1,11 @@
 #pragma once
+#include <format>
+#include <rust/cxx.h>
 #include <source_location>
 #include <string>
 
 namespace chakra
 {
-
     class Logger
     {
     public:
@@ -21,3 +22,13 @@ namespace chakra
     };
 
 } // namespace chakra
+
+template <>
+struct std::formatter<rust::String> : std::formatter<std::string_view>
+{
+    auto format(const rust::String &string, std::format_context &ctx) const
+    {
+        const auto temp = static_cast<std::string_view>(string);
+        return std::formatter<std::string_view>::format(temp, ctx);
+    }
+};
