@@ -401,17 +401,17 @@ int32_t ExecuteTest(const rust::String &filename)
 
         if (HostConfigFlags::flags.SerializedIsEnabled)
         {
-            CreateAndRunSerializedScript(fileName.c_str(), result.content, result.length, WScriptJsrt::FinalizeFree,
+            CreateAndRunSerializedScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
-            CreateParserStateAndRunScript(fileName.c_str(), result.content, result.length, WScriptJsrt::FinalizeFree,
+            CreateParserStateAndRunScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
                                           fullPath, chRuntime, jsrtAttributes);
         }
         else
         {
-            IfFailGo(RunScript(fileName.c_str(), result.content, result.length, WScriptJsrt::FinalizeFree, nullptr,
+            IfFailGo(RunScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree, nullptr,
                                fullPath, nullptr));
         }
     }

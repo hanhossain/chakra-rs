@@ -58,12 +58,16 @@ public:
     struct Result
     {
         int32_t hr;
-        const char* content;
+        const char *content;
         size_t length;
+        std::optional<std::shared_ptr<std::string>> data;
 
         Result() = default;
         explicit Result(int32_t hr) : hr(hr), content(nullptr), length(0) {}
-        Result(const char* content, size_t length) : hr(S_OK), content(content), length(length) {}
+        Result(const char *content, size_t length, std::shared_ptr<std::string> data) :
+            hr(S_OK), content(content), length(length), data(std::move(data))
+        {
+        }
     };
 
     static Result LoadScriptFromFile(const char *filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);

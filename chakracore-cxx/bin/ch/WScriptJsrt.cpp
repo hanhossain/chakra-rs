@@ -1247,7 +1247,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
             }
 
             IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(
-                result.content, result.length, &returnValue));
+                result.data.value()->c_str(), result.data.value()->length(), &returnValue));
         }
     }
 
@@ -1957,7 +1957,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
                 LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
                 goto Error;
             }
-            LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), result.content, "module", true, WScriptJsrt::FinalizeFree, true);
+            LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), result.data.value()->c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
         }
     }
 Error:
