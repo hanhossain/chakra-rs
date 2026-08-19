@@ -117,7 +117,7 @@ Helpers::Result Helpers::LoadScriptFromFile(const char *filenameToLoad, const ch
 
     auto result = cached ? cached.value() : std::make_shared<std::string>(contents, lengthBytes);
 
-    return Result(S_OK);
+    return {contents, lengthBytes};
 }
 
 Helpers::Result Helpers::LoadScriptFromFile(const char *filename, const std::optional<std::filesystem::path> &fullPath)

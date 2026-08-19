@@ -210,7 +210,6 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
     }
     else
     {
-        const char * fileContent;
         AutoString fileName(arguments[1]);
         IfJsrtErrorSetGo(fileName.GetError());
 
@@ -222,7 +221,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
 
         if (errorCode == JsNoError)
         {
-            auto result = Helpers::LoadScriptFromFile(*fileName, fileContent);
+            auto result = Helpers::LoadScriptFromFile(*fileName);
             hr = result.hr;
             if (FAILED(hr))
             {
@@ -231,7 +230,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
                 return returnValue;
             }
 
-            returnValue = LoadScript(callee, *fileName, fileContent, *scriptInjectType ? *scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
+            returnValue = LoadScript(callee, *fileName, result.content, *scriptInjectType ? *scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
         }
     }
 
@@ -1223,7 +1222,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
     int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
-    const char* fileContent = nullptr;
+    Helpers::Result result{};
 
     if (argumentCount < 2)
     {
@@ -1237,8 +1236,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
 
         if (errorCode == JsNoError)
         {
-            uint32_t lengthBytes = 0;
-            auto result = Helpers::LoadScriptFromFile(*fileName, fileContent, &lengthBytes);
+            result = Helpers::LoadScriptFromFile(*fileName);
             hr = result.hr;
 
             if (FAILED(hr))
@@ -1249,14 +1247,14 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
             }
 
             IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(
-                fileContent, lengthBytes, &returnValue));
+                result.content, result.length, &returnValue));
         }
     }
 
 Error:
-    if (fileContent)
+    if (result.content)
     {
-        free((void*)fileContent);
+        free((void*)result.content);
     }
     return returnValue;
 }
@@ -1939,12 +1937,11 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
     }
     else
     {
-        const char * fileContent = nullptr;
         AutoString specifierStr(specifier);
         errorCode = specifierStr.GetError();
         if (errorCode == JsNoError)
         {
-            auto result = Helpers::LoadScriptFromFile(*specifierStr, fileContent, nullptr, fullPath_);
+            auto result = Helpers::LoadScriptFromFile(*specifierStr, fullPath_);
             hr = result.hr;
 
             if (FAILED(hr))
@@ -1960,7 +1957,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
                 LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
                 goto Error;
             }
-            LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), fileContent, "module", true, WScriptJsrt::FinalizeFree, true);
+            LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), result.content, "module", true, WScriptJsrt::FinalizeFree, true);
         }
     }
 Error:

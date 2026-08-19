@@ -61,7 +61,9 @@ public:
         const char* content;
         size_t length;
 
+        Result() = default;
         explicit Result(int32_t hr) : hr(hr), content(nullptr), length(0) {}
+        Result(const char* content, size_t length) : hr(S_OK), content(content), length(length) {}
     };
 
     static Result LoadScriptFromFile(const char *filename, const char *&contents, uint32_t *lengthBytesOut = nullptr,
