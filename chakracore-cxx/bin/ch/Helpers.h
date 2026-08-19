@@ -58,6 +58,7 @@ public:
     struct Result
     {
         int32_t hr;
+        // TODO (hanhossain): content and length need to be removed to move strictly to data.
         const char *content;
         size_t length;
         std::optional<std::shared_ptr<std::string>> data;
