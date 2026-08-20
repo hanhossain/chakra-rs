@@ -3734,7 +3734,7 @@ JsErrorCode chakracore::jsrt::JsToString(const JsValueRef value, rust::String &s
         ec = JsConvertValueToString(value, &strValue);
         if (ec != JsNoError)
         {
-            chakra::Logger::trace(std::format("Failed to convert JsValue to JsString. JsErrorCode[{}].", static_cast<int>(ec)));
+            chakra::Logger::trace(std::format("Failed to convert JsValue(type={}) to JsString. JsErrorCode[0x{:x}].", static_cast<int>(type), static_cast<int>(ec)));
             return ec;
         }
     }
@@ -3746,7 +3746,7 @@ JsErrorCode chakracore::jsrt::JsToString(const JsValueRef value, rust::String &s
     ec = JsCopyString(strValue, string);
     if (ec != JsNoError)
     {
-        chakra::Logger::trace(std::format("Failed to copy JsString to rust::String. JsErrorCode[{}].", static_cast<int>(ec)));
+        chakra::Logger::trace(std::format("Failed to copy JsString to rust::String. JsErrorCode[0x{:x}].", static_cast<int>(ec)));
         return ec;
     }
 

@@ -537,7 +537,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
     {
         AutoString fileContent;
         rust::String fileName;
-        AutoString scriptInjectType;
+        std::optional<rust::String> scriptInjectType;
         bool isFile = true;
 
         IfJsrtErrorSetGo(fileContent.Initialize(arguments[1]));
@@ -547,7 +547,9 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
 
         if (argumentCount > 2)
         {
-            IfJsrtErrorSetGo(scriptInjectType.Initialize(arguments[2]));
+            rust::String injectType;
+            IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[2], injectType));
+            scriptInjectType = injectType;
 
             if (argumentCount > 3)
             {
@@ -568,7 +570,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
         {
             // TODO: This is CESU-8. How to tell the engine?
             // TODO: How to handle this source (script) life time?
-            returnValue = LoadScript(callee, fileName.c_str(), *fileContent, *scriptInjectType ? *scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
+            returnValue = LoadScript(callee, fileName.c_str(), *fileContent, scriptInjectType ? scriptInjectType->c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
         }
     }
 
