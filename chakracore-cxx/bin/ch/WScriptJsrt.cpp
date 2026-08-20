@@ -1193,12 +1193,12 @@ JsValueRef WScriptJsrt::RegisterModuleSourceCallback(JsValueRef callee, bool isC
     }
     else
     {
-        AutoString fileName;
-        AutoString data;
-        IfJsrtErrorSetGo(fileName.Initialize(arguments[1]));
-        IfJsrtErrorSetGo(data.Initialize(arguments[2]));
+        rust::String fileName;
+        rust::String data;
+        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[1], fileName));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[2], data));
 
-        SourceMap::Add(fileName.GetString(), data.GetString());
+        SourceMap::Add(static_cast<std::string>(fileName), static_cast<std::string>(data));
     }
 
 Error:
