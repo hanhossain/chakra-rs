@@ -1379,19 +1379,19 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
     else
     {
         const char *fileContent;
-        AutoString fileName;
+        rust::String fileName;
 
-        IfJsrtErrorSetGo(fileName.Initialize(arguments[1]));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[1], fileName));
 
         if (errorCode == JsNoError)
         {
             uint32_t lengthBytes = 0;
 
-            hr = Helpers::LoadBinaryFile(*fileName, fileContent, lengthBytes);
+            hr = Helpers::LoadBinaryFile(fileName.c_str(), fileContent, lengthBytes);
 
             if (FAILED(hr))
             {
-                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName.GetString()));
+                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName));
                 IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetUndefinedValue(&returnValue), Error);
                 return returnValue;
             }
