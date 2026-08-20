@@ -1967,16 +1967,16 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const std::optional<fs::path> &refdir)
 {
     JsModuleRecord moduleRecord = JS_INVALID_REFERENCE;
-    AutoString specifierStr;
+    rust::String specifierStr;
     *dependentModuleRecord = nullptr;
 
-    if (specifierStr.Initialize(specifier) != JsNoError)
+    if (const auto ec = ChakraRTInterface::JsToString(specifier, specifierStr); ec != JsNoError)
     {
-        return specifierStr.GetError();
+        return ec;
     }
 
     fs::path specifierFullPath = refdir.value_or(fs::path {});
-    specifierFullPath /= specifierStr.GetString();
+    specifierFullPath /= specifierStr.c_str();
 
     std::error_code ec;
     const auto fullPath = fs::absolute(specifierFullPath, ec).lexically_normal();
