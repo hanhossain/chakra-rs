@@ -1435,10 +1435,10 @@ JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, Js
 
     if (argumentCount > 1)
     {
-        AutoString cmd;
-        IfJsrtErrorSetGo(cmd.Initialize(arguments[1]));
+        rust::String cmd;
+        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[1], cmd));
 
-        const rust::Vec<rust::String> argv{{}, cmd.GetString()};
+        const rust::Vec<rust::String> argv{{}, std::move(cmd)};
         TestHooks::SetConfigFlags(argv, nullptr);
     }
 
