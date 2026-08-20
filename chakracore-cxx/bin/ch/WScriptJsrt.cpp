@@ -1218,18 +1218,18 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
     }
     else
     {
-        AutoString fileName;
+        rust::String fileName;
 
-        IfJsrtErrorSetGo(fileName.Initialize(arguments[1]));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[1], fileName));
 
         if (errorCode == JsNoError)
         {
-            result = Helpers::LoadScriptFromFile(*fileName);
+            result = Helpers::LoadScriptFromFile(fileName.c_str());
             hr = result.hr;
 
             if (FAILED(hr))
             {
-                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName.GetString()));
+                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName));
                 IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
                 return returnValue;
             }
