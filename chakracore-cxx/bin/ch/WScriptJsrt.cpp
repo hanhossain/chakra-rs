@@ -476,13 +476,13 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
     }
     else
     {
-        AutoString specifierStr(arguments[1]);
-        errorCode = specifierStr.GetError();
+        rust::String specifierStr;
+        errorCode = ChakraRTInterface::JsToString(arguments[1], specifierStr);
 
         if (errorCode == JsNoError)
         {
             std::error_code ec;
-            const fs::path fullPath = fs::absolute(specifierStr.GetString(), ec);
+            const fs::path fullPath = fs::absolute(specifierStr.c_str(), ec);
             if (ec)
             {
                 errorCode = JsErrorInvalidArgument;
