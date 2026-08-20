@@ -2044,12 +2044,12 @@ JsErrorCode WScriptJsrt::NotifyModuleReadyCallback(_In_opt_ JsModuleRecord refer
     {
         JsValueRef specifier = JS_INVALID_REFERENCE;
         ChakraRTInterface::JsGetModuleHostInfo(referencingModule, JsModuleHostInfo_Url, &specifier);
-        AutoString fileName;
+        rust::String fileName;
         if (specifier != JS_INVALID_REFERENCE)
         {
-            fileName.Initialize(specifier);
+            ChakraRTInterface::JsToString(specifier, fileName);
         }
-        std::println("NotifyModuleReadyCallback(exception) {}", fileName.GetString());
+        std::println("NotifyModuleReadyCallback(exception) {}", fileName);
     }
 
     if (moduleErrMap[referencingModule] != ErroredModule)
