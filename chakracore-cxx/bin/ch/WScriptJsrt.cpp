@@ -1688,10 +1688,10 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
     {
         if (jsErrorCode == JsErrorCode::JsErrorScriptCompile || jsErrorCode == JsErrorCode::JsErrorScriptException)
         {
-            AutoString errorMessage;
+            rust::String errorMessage;
             const std::filesystem::path path(fileName);
 
-            if (errorMessage.Initialize(exception) != JsNoError)
+            if (ChakraRTInterface::JsToString(exception, errorMessage) != JsNoError)
             {
                 std::println("ERROR attempting to coerce error to string, using alternate handler");
                 bool hasException = false;
@@ -1705,7 +1705,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("message", &messagePropertyId), false);
                 JsValueRef message = JS_INVALID_REFERENCE;
                 IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, messagePropertyId, &message), false);
-                IfJsrtErrorFail(errorMessage.Initialize(message), false);
+                IfJsrtErrorFail(ChakraRTInterface::JsToString(message, errorMessage), false);
 
                 if (jsErrorCode != JsErrorCode::JsErrorScriptCompile)
                 {
@@ -1728,11 +1728,11 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                         IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, columnPropertyId, &columnProperty), false);
                         IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
                         std::println("{}\n        at code ({}:{}:{})",
-                            errorMessage.GetString(), path.filename().string(), line + 1, column + 1);
+                            errorMessage, path.filename().string(), line + 1, column + 1);
                     }
                     else
                     {
-                        std::println("{}\n\tat code ({}:\?\?:\?\?)", errorMessage.GetString(), path.filename().string());
+                        std::println("{}\n\tat code ({}:\?\?:\?\?)", errorMessage, path.filename().string());
                     }
                     return true;
                 }
@@ -1758,7 +1758,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
 
                 std::println("{}\n\tat code ({}:{}:{})",
-                    errorMessage.GetString(), path.filename().string(), (int)line + 1,
+                    errorMessage, path.filename().string(), (int)line + 1,
                     (int)column + 1);
             }
             else
@@ -1766,7 +1766,6 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
                 JsValueType propertyType = JsUndefined;
                 JsPropertyIdRef stackPropertyId = JS_INVALID_REFERENCE;
                 JsValueRef stackProperty = JS_INVALID_REFERENCE;
-                AutoString errorStack;
 
                 JsErrorCode errorCode = ChakraRTInterface::JsCreatePropertyId("stack", &stackPropertyId);
 
@@ -1787,12 +1786,13 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
                     // do not mix char/wchar. print them separately
                     std::println("thrown at {}:\n^", filepath.filename().string());
-                    std::println("{}", errorMessage.GetString());
+                    std::println("{}", errorMessage);
                 }
                 else
                 {
-                    IfJsrtErrorFail(errorStack.Initialize(stackProperty), false);
-                    std::println("{}", errorStack.GetString());
+                    rust::String errorStack;
+                    IfJsrtErrorFail(ChakraRTInterface::JsToString(stackProperty, errorStack), false);
+                    std::println("{}", errorStack);
                 }
             }
         }
