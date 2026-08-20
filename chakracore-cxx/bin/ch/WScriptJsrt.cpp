@@ -1958,7 +1958,9 @@ JsErrorCode WScriptJsrt::ReportModuleCompletionCallback(JsModuleRecord module, J
     {
         JsValueRef specifier = JS_INVALID_REFERENCE;
         ChakraRTInterface::JsGetModuleHostInfo(module, JsModuleHostInfo_Url, &specifier);
-        PrintException(AutoString(specifier).GetString(), JsErrorCode::JsErrorScriptException, exception);
+        rust::String specifierStr;
+        ChakraRTInterface::JsToString(specifier, specifierStr);
+        PrintException(specifierStr.c_str(), JsErrorCode::JsErrorScriptException, exception);
     }
     return JsNoError;
 }
