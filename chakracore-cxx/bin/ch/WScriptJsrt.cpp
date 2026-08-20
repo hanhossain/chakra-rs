@@ -1925,11 +1925,11 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
     }
     else
     {
-        AutoString specifierStr(specifier);
-        errorCode = specifierStr.GetError();
+        rust::String specifierStr;
+        errorCode = ChakraRTInterface::JsToString(specifier, specifierStr);
         if (errorCode == JsNoError)
         {
-            auto result = Helpers::LoadScriptFromFile(*specifierStr, fullPath_);
+            const auto result = Helpers::LoadScriptFromFile(specifierStr.c_str(), fullPath_);
             hr = result.hr;
 
             if (FAILED(hr))
@@ -1939,13 +1939,13 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
                     auto actualModuleRecord = moduleRecordMap.find(fullPath_.value());
                     if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)
                     {
-                        chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr.GetString()));
+                        chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
                     }
                 }
-                LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
+                LoadScript(nullptr, !fullPath_ ? specifierStr.c_str() : fullPath_->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
                 goto Error;
             }
-            LoadScript(nullptr, !fullPath_ ? *specifierStr : fullPath_->c_str(), result.data.value()->c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
+            LoadScript(nullptr, !fullPath_ ? specifierStr.c_str() : fullPath_->c_str(), result.data.value()->c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
         }
     }
 Error:
