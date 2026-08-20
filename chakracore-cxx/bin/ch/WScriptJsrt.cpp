@@ -1519,17 +1519,15 @@ JsValueRef WScriptJsrt::ReportCallback(JsValueRef callee, bool isConstructCall, 
         JsValueRef stringRef;
         ChakraRTInterface::JsConvertValueToString(arguments[1], &stringRef);
 
-        AutoString autoStr(stringRef);
-
-        if (autoStr.GetError() == JsNoError)
+        rust::String autoStr;
+        if (ChakraRTInterface::JsToString(stringRef,autoStr) == JsNoError)
         {
-            std::string str(autoStr.GetString());
             auto& threadData = GetRuntimeThreadLocalData().threadData;
 
             if (threadData && threadData->parent)
             {
                 EnterCriticalSection(&threadData->parent->csReportQ);
-                threadData->parent->reportQ.push_back(str);
+                threadData->parent->reportQ.push_back(static_cast<std::string>(autoStr));
                 LeaveCriticalSection(&threadData->parent->csReportQ);
             }
         }
