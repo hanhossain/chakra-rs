@@ -8,7 +8,6 @@
 #include <iostream>
 #include <sys/stat.h>
 
-#include "AutoString.h"
 #include "ChakraRtInterface.h"
 #include "SourceMap.h"
 #include "WScriptJsrt.h"
@@ -19,19 +18,9 @@ namespace fs = std::filesystem;
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&contents,
-                                    uint32_t *lengthBytesOut /*= nullptr*/,
-                                    const std::optional<std::filesystem::path> &fullPath)
+Helpers::Result Helpers::LoadScriptFromFile(const char *filenameToLoad, const std::optional<std::filesystem::path> &fullPath)
 {
     static fs::path sHostApplicationPath;
-
-    int32_t hr = S_OK;
-    uint8_t * pRawBytes = nullptr;
-    uint8_t * pRawBytesFromMap = nullptr;
-    uint32_t lengthBytes = 0;
-    contents = nullptr;
-    FILE * file = NULL;
-    size_t bufferLength = 0;
 
     fs::path filenamePath = fullPath.value_or(filenameToLoad);
 
@@ -46,12 +35,19 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
     }
 
     // check if have it registered
-    AutoString *data;
-    if (SourceMap::Find(filenameToLoad, strlen(filenameToLoad), &data) ||
-        SourceMap::Find(filenamePath, &data))
+    const auto cached = SourceMap::Find(filenameToLoad).or_else([&filenamePath]
     {
-        pRawBytesFromMap = (uint8_t*) data->GetString();
-        lengthBytes = (uint32_t) data->GetLength();
+        return SourceMap::Find(filenamePath.native());
+    });
+
+    const char *pRawBytesFromMap = nullptr;
+    size_t lengthBytes = 0;
+    FILE *file = nullptr;
+
+    if (cached)
+    {
+        pRawBytesFromMap = cached.value()->c_str();
+        lengthBytes = cached.value()->length();
     }
     else
     {
@@ -59,47 +55,41 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
         // etc.
         if (fopen_s(&file, filenamePath.c_str(), "rb") != 0)
         {
-            IfFailGo(E_FAIL);
+            return Result(E_FAIL);
         }
-    }
 
-    // TODO (hanhossain): read file with std::ifstream to std::string
-    if (file != NULL)
-    {
+        // TODO (hanhossain): read file with std::ifstream to std::string
         // Determine the file length, in bytes.
         fseek(file, 0, SEEK_END);
         lengthBytes = ftell(file);
         fseek(file, 0, SEEK_SET);
     }
 
-    if (lengthBytes != 0)
-    {
-        bufferLength = lengthBytes + sizeof(uint8_t);
-        pRawBytes = (uint8_t *)malloc(bufferLength);
-    }
-    else
-    {
-        bufferLength = 1;
-        pRawBytes = (uint8_t *)malloc(bufferLength);
-    }
-
-    if (nullptr == pRawBytes)
+    const size_t bufferLength = lengthBytes != 0 ? lengthBytes + sizeof(uint8_t) : 1;
+    const auto pRawBytes = static_cast<uint8_t *>(malloc(bufferLength));
+    if (pRawBytes == nullptr)
     {
         chakra::Logger::error("out of memory");
-        IfFailGo(E_OUTOFMEMORY);
+        if (file != nullptr)
+        {
+            fclose(file);
+        }
+        return Result(E_OUTOFMEMORY);
     }
 
     if (lengthBytes != 0)
     {
-        if (file != NULL)
+        if (file != nullptr)
         {
             //
             // Read the entire content as a binary block.
             //
             size_t readBytes = std::fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
+            fclose(file);
             if (readBytes < lengthBytes * sizeof(uint8_t))
             {
-                IfFailGo(E_FAIL);
+                free(pRawBytes);
+                return Result(E_FAIL);
             }
         }
         else // from module source register
@@ -112,67 +102,12 @@ int32_t Helpers::LoadScriptFromFile(const char *filenameToLoad, const char *&con
         }
     }
 
-    if (pRawBytes)
-    {
-        pRawBytes[lengthBytes] = 0; // Null terminate it. Could be UTF16
-    }
+    pRawBytes[lengthBytes] = 0; // Null terminate it. Could be UTF16
 
-    if (file != NULL)
-    {
-        //
-        // Read encoding to make sure it's supported
-        //
-        // Warning: The UNICODE buffer for parsing is supposed to be provided by the host.
-        // This is not a complete read of the encoding. Some encodings like UTF7, UTF1, EBCDIC, SCSU, BOCU could be
-        // wrongly classified as ANSI
-        //
-#pragma warning(push)
-        // suppressing prefast warning that "readable size is bufferLength
-        // bytes but 2 may be read" as bufferLength is clearly > 2 in the code that follows
-#pragma warning(disable:6385)
-        static_assert(sizeof(char16_t) == 2);
-        if (bufferLength > 2)
-        {
-#pragma prefast(push)
-#pragma prefast(disable:6385, "PREfast incorrectly reports this as an out-of-bound access.");
-            if ((pRawBytes[0] == 0xFE && pRawBytes[1] == 0xFF) ||
-                (pRawBytes[0] == 0xFF && pRawBytes[1] == 0xFE) ||
-                (bufferLength > 4 && pRawBytes[0] == 0x00 && pRawBytes[1] == 0x00 &&
-                    ((pRawBytes[2] == 0xFE && pRawBytes[3] == 0xFF) ||
-                    (pRawBytes[2] == 0xFF && pRawBytes[3] == 0xFE))))
+    auto contents = reinterpret_cast<const char *>(pRawBytes);
+    auto result = cached ? cached.value() : std::make_shared<std::string>(contents, lengthBytes);
 
-            {
-                // unicode unsupported
-                chakra::Logger::error("unsupported file encoding. Only ANSI and UTF8 supported");
-                IfFailGo(E_UNEXPECTED);
-            }
-#pragma prefast(pop)
-        }
-#pragma warning(pop)
-    }
-
-    contents = reinterpret_cast<const char *>(pRawBytes);
-
-Error:
-    if (SUCCEEDED(hr))
-    {
-        if (lengthBytesOut)
-        {
-            *lengthBytesOut = lengthBytes;
-        }
-    }
-
-    if (file != NULL)
-    {
-        fclose(file);
-    }
-
-    if (pRawBytes && reinterpret_cast<const char *>(pRawBytes) != contents)
-    {
-        free(pRawBytes);
-    }
-
-    return hr;
+    return {contents, lengthBytes, result};
 }
 
 const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)

@@ -19,6 +19,7 @@
 
 #include "ChakraCommon.h"
 #include "ChakraDebug.h"
+#include <rust/cxx.h>
 
 // Begin ChakraCore only APIs
 
@@ -505,6 +506,9 @@ namespace chakracore::jsrt
         _In_ size_t length,
         _Out_ JsValueRef *value);
 
+    /// Converts value to rust. JsValueRef must be a JsString.
+    JsErrorCode JsCopyString(JsValueRef value, rust::String &string);
+
     /// <summary>
     ///     Write JavascriptString value into C string buffer (Utf8)
     /// </summary>
@@ -527,6 +531,9 @@ namespace chakracore::jsrt
         _Out_opt_ char* buffer,
         _In_ size_t bufferSize,
         _Out_opt_ size_t* length);
+
+    /// Converts `value` to a JsString (if necessary) then copies it to the rust `string`.
+    JsErrorCode JsToString(JsValueRef value, rust::String &string);
 
     /// <summary>
     ///     Write string value into Utf16 string buffer

@@ -375,11 +375,10 @@ int32_t ExecuteTest(const rust::String &filename)
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
     int32_t hr = S_OK;
-    const char *fileContents = nullptr;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
-    uint32_t lengthBytes = 0;
 
-    hr = Helpers::LoadScriptFromFile(fileName.c_str(), fileContents, &lengthBytes);
+    auto result = Helpers::LoadScriptFromFile(fileName.c_str());
+    hr = result.hr;
 
     IfFailGo(hr);
 
@@ -402,17 +401,17 @@ int32_t ExecuteTest(const rust::String &filename)
 
         if (HostConfigFlags::flags.SerializedIsEnabled)
         {
-            CreateAndRunSerializedScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree,
+            CreateAndRunSerializedScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
-            CreateParserStateAndRunScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree,
+            CreateParserStateAndRunScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
                                           fullPath, chRuntime, jsrtAttributes);
         }
         else
         {
-            IfFailGo(RunScript(fileName.c_str(), fileContents, lengthBytes, WScriptJsrt::FinalizeFree, nullptr,
+            IfFailGo(RunScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree, nullptr,
                                fullPath, nullptr));
         }
     }

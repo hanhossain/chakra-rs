@@ -297,8 +297,14 @@ pub fn run_test(core_config: CoreConfig, test_dir: Option<&Path>) -> (ExitStatus
 fn read_stdout<R: Read>(stream: R) -> Vec<String> {
     let mut actual = Vec::new();
     let reader = BufReader::new(stream);
-    for message in reader.lines().map(|line| line.unwrap()) {
+    for mut message in reader.lines().map(|line| line.unwrap()) {
         tracing::info!(target: "chakracore stdout", message);
+        // HACK: chakracore allows embedded nulls in its strings. This removes the nulls to allow
+        // asserting with the test baseline.
+        if message.contains('\0') {
+            tracing::warn!(message, "message contains null byte");
+            message = message.replace('\0', "");
+        }
         actual.push(message);
     }
     actual

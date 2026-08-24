@@ -19,6 +19,11 @@
 #include "cmperr.h"     // For ERRnoMemory
 #include "screrror.h"   // For CompileScriptException
 
+#include <format>
+#include <rust/cxx.h>
+
+#include "chakra/Logger.h"
+
 using namespace chakracore::jsrt;
 
 JsErrorCode RunScriptWithParserStateCore(
@@ -3671,6 +3676,22 @@ JsErrorCode chakracore::jsrt::JsCopyStringUtf16(
         });
 }
 
+JsErrorCode chakracore::jsrt::JsCopyString(const JsValueRef value, rust::String &string)
+{
+    PARAM_NOT_NULL(value);
+    VALIDATE_JSREF(value);
+
+    const char16_t* str = nullptr;
+    size_t strLength = 0;
+    if (const JsErrorCode ec = JsStringToPointer(value, &str, &strLength); ec != JsNoError)
+    {
+        return ec;
+    }
+
+    string = {str, strLength};
+    return JsNoError;
+}
+
 JsErrorCode chakracore::jsrt::JsCopyString(
     _In_ JsValueRef value,
     _Out_opt_ char* buffer,
@@ -3692,6 +3713,41 @@ JsErrorCode chakracore::jsrt::JsCopyString(
     if (length)
     {
         *length = utf8Str.Length();
+    }
+
+    return JsNoError;
+}
+
+JsErrorCode chakracore::jsrt::JsToString(const JsValueRef value, rust::String &string)
+{
+    JsValueType type;
+    auto ec = JsGetValueType(value, &type);
+    if (ec != JsNoError)
+    {
+        chakra::Logger::trace(std::format("Failed to get value type. JsErrorCode[{}].", static_cast<int>(ec)));
+        return ec;
+    }
+
+    JsValueRef strValue;
+    if (type != JsString)
+    {
+        ec = JsConvertValueToString(value, &strValue);
+        if (ec != JsNoError)
+        {
+            chakra::Logger::trace(std::format("Failed to convert JsValue(type={}) to JsString. JsErrorCode[0x{:x}].", static_cast<int>(type), static_cast<int>(ec)));
+            return ec;
+        }
+    }
+    else
+    {
+        strValue = value;
+    }
+
+    ec = JsCopyString(strValue, string);
+    if (ec != JsNoError)
+    {
+        chakra::Logger::trace(std::format("Failed to copy JsString to rust::String. JsErrorCode[0x{:x}].", static_cast<int>(ec)));
+        return ec;
     }
 
     return JsNoError;

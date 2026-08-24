@@ -55,8 +55,23 @@ do { \
 class Helpers
 {
 public:
-    static int32_t LoadScriptFromFile(const char *filename, const char *&contents, uint32_t *lengthBytesOut = nullptr,
-                                      const std::optional<std::filesystem::path> &fullPath = std::nullopt);
+    struct Result
+    {
+        int32_t hr;
+        // TODO (hanhossain): content and length need to be removed to move strictly to data.
+        const char *content;
+        size_t length;
+        std::optional<std::shared_ptr<std::string>> data;
+
+        Result() = default;
+        explicit Result(int32_t hr) : hr(hr), content(nullptr), length(0) {}
+        Result(const char *content, size_t length, std::shared_ptr<std::string> data) :
+            hr(S_OK), content(content), length(length), data(std::move(data))
+        {
+        }
+    };
+
+    static Result LoadScriptFromFile(const char *filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);
     static const char *JsErrorCodeToString(JsErrorCode jsErrorCode);
     static int32_t LoadBinaryFile(const char *filename, const char *&contents, uint32_t &lengthBytes,
                                   bool printFileOpenError = true);
