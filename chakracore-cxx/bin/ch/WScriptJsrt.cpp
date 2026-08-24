@@ -15,8 +15,8 @@
 #include <filesystem>
 #include <iostream>
 
-#include "AutoString.h"
 #include "ChakraRtInterface.h"
+#include "Codex/Utf8Helper.h"
 #include "Helpers.h"
 #include "HostConfigFlags.h"
 #include "RuntimeThreadData.h"

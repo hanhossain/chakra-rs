@@ -1,5 +1,4 @@
 #pragma once
-#include "AutoString.h"
 
 struct FileNode
 {
