@@ -535,15 +535,14 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
     }
     else
     {
-        AutoString fileContent;
+        auto *fileContent = new rust::String{};
         rust::String fileName;
         std::optional<rust::String> scriptInjectType;
         bool isFile = true;
 
-        IfJsrtErrorSetGo(fileContent.Initialize(arguments[1]));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[1], *fileContent));
         // ExternalArrayBuffer Finalize will clean this up
         // but only if we actually register a finalizecallback for this
-        fileContent.MakePersistent();
 
         if (argumentCount > 2)
         {
@@ -566,12 +565,9 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
             }
         }
 
-        if (*fileContent)
-        {
-            // TODO: This is CESU-8. How to tell the engine?
-            // TODO: How to handle this source (script) life time?
-            returnValue = LoadScript(callee, fileName.c_str(), *fileContent, scriptInjectType ? scriptInjectType->c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
-        }
+        // TODO: This is CESU-8. How to tell the engine?
+        // TODO: How to handle this source (script) life time?
+        returnValue = LoadScript(callee, fileName.c_str(), fileContent->c_str(), scriptInjectType ? scriptInjectType->c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
     }
 
 Error:
