@@ -79,7 +79,7 @@ static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext,
 
 int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLength,
                   JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue,
-                  const std::optional<std::filesystem::path> &fullPath, JsValueRef parserStateCache)
+                  const std::filesystem::path &fullPath, JsValueRef parserStateCache)
 {
     int32_t hr = S_OK;
     MessageQueue *messageQueue = new MessageQueue();
@@ -93,7 +93,7 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
 
     JsErrorCode runScript;
     JsValueRef fname;
-    IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath.value_or(""), &fname), ErrorRunFinalize);
+    IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath, &fname), ErrorRunFinalize);
 
     // memory management for serialized script case - need to define these here
     SerializedCallbackInfo serializedCallbackInfo;
@@ -135,7 +135,7 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
     }
     else if (HostConfigFlags::flags.Module)
     {
-        runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath.value_or("").c_str());
+        runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath.c_str());
     }
     else // bufferValue == nullptr && parserStateCache == nullptr
     {
