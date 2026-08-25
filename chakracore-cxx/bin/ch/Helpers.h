@@ -3,9 +3,10 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "ChakraCommon.h"
 #include <filesystem>
 #include <optional>
+#include <rust/cxx.h>
+#include "ChakraCommon.h"
 
 #define IfJsErrorFailLog(expr) \
 do { \
@@ -71,7 +72,7 @@ public:
         }
     };
 
-    static Result LoadScriptFromFile(const char *filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);
+    static Result LoadScriptFromFile(rust::Str filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);
     static const char *JsErrorCodeToString(JsErrorCode jsErrorCode);
     static int32_t LoadBinaryFile(const char *filename, const char *&contents, uint32_t &lengthBytes,
                                   bool printFileOpenError = true);

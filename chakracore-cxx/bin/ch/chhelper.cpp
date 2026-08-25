@@ -377,7 +377,7 @@ int32_t ExecuteTest(const rust::String &filename)
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
 
-    auto result = Helpers::LoadScriptFromFile(fileName.c_str());
+    auto result = Helpers::LoadScriptFromFile(filename);
     hr = result.hr;
 
     IfFailGo(hr);

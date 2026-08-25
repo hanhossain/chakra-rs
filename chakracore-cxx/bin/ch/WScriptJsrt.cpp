@@ -209,7 +209,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
 
         if (errorCode == JsNoError)
         {
-            auto result = Helpers::LoadScriptFromFile(fileName.c_str());
+            auto result = Helpers::LoadScriptFromFile(fileName);
             hr = result.hr;
             if (FAILED(hr))
             {
@@ -1218,7 +1218,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
 
         if (errorCode == JsNoError)
         {
-            result = Helpers::LoadScriptFromFile(fileName.c_str());
+            result = Helpers::LoadScriptFromFile(fileName);
             hr = result.hr;
 
             if (FAILED(hr))
@@ -1921,7 +1921,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
         errorCode = ChakraRTInterface::JsToString(specifier, specifierStr);
         if (errorCode == JsNoError)
         {
-            const auto result = Helpers::LoadScriptFromFile(specifierStr.c_str(), fullPath_);
+            const auto result = Helpers::LoadScriptFromFile(specifierStr, fullPath_);
             hr = result.hr;
 
             if (FAILED(hr))
