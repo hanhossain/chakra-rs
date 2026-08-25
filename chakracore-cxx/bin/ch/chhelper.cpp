@@ -33,15 +33,15 @@ static_assert(sizeof(ssize_t) == sizeof(long));
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
 // On success the param byteCodeBuffer will be allocated in the function.
-int32_t GetSerializedBuffer(const char *fileContents, JsFinalizeCallback fileContentFinalizeCallback,
+int32_t GetSerializedBuffer(const std::shared_ptr<std::string>& fileContents, JsFinalizeCallback fileContentFinalizeCallback,
                             JsValueRef *byteCodeBuffer)
 {
     int32_t hr = S_OK;
 
     JsValueRef scriptSource;
     IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-        const_cast<char *>(fileContents), static_cast<unsigned int>(strlen(fileContents)), fileContentFinalizeCallback,
-        const_cast<char *>(fileContents), &scriptSource));
+        fileContents->data(), fileContents->length(), fileContentFinalizeCallback,
+        fileContents->data(), &scriptSource));
     IfJsErrorFailLog(ChakraRTInterface::JsSerialize(scriptSource, byteCodeBuffer, JsParseScriptAttributeNone));
 
 Error:
@@ -316,7 +316,7 @@ Error:
     return hr;
 }
 
-int32_t CreateAndRunSerializedScript(const rust::Str fileName, const char *fileContents, size_t fileLength,
+int32_t CreateAndRunSerializedScript(const rust::Str fileName, const std::shared_ptr<std::string> &fileContents,
                                      JsFinalizeCallback fileContentsFinalizeCallback,
                                      const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
                                      const JsRuntimeAttributes jsrtAttributes)
@@ -345,15 +345,11 @@ int32_t CreateAndRunSerializedScript(const rust::Str fileName, const char *fileC
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, bufferVal, fullPath, nullptr));
+    IfFailGo(RunScript(fileName, fileContents->c_str(), fileContents->length(), fileContentsFinalizeCallback, bufferVal, fullPath, nullptr));
 
     if (false)
     {
     ErrorRunFinalize:
-        if (fileContentsFinalizeCallback != nullptr)
-        {
-            fileContentsFinalizeCallback(const_cast<char *>(fileContents));
-        }
     }
 Error:
     if (current != JS_INVALID_REFERENCE)
@@ -401,7 +397,7 @@ int32_t ExecuteTest(const rust::String &filename)
 
         if (HostConfigFlags::flags.SerializedIsEnabled)
         {
-            CreateAndRunSerializedScript(filename, result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
+            CreateAndRunSerializedScript(filename, result.data.value(), WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
