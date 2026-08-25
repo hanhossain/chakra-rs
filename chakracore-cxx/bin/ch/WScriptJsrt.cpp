@@ -219,7 +219,9 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
                 return returnValue;
             }
 
-            returnValue = LoadScript(callee, fileName, result.content, !scriptInjectType.empty() ? scriptInjectType.c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
+            // TODO (hanhossain): don't leak a string ptr
+            auto content = new std::string{*result.data.value()};
+            returnValue = LoadScript(callee, fileName, content->c_str(), !scriptInjectType.empty() ? scriptInjectType.c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
         }
     }
 
@@ -1224,10 +1226,6 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
     }
 
 Error:
-    if (result.content)
-    {
-        free((void*)result.content);
-    }
     return returnValue;
 }
 

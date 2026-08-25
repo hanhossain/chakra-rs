@@ -107,7 +107,7 @@ Helpers::Result Helpers::LoadScriptFromFile(rust::Str filenameToLoad, const std:
     auto contents = reinterpret_cast<const char *>(pRawBytes);
     auto result = cached ? cached.value() : std::make_shared<std::string>(contents, lengthBytes);
 
-    return {contents, lengthBytes, result};
+    return Result{result};
 }
 
 const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
