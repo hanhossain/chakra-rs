@@ -77,7 +77,7 @@ static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext,
     return true;
 }
 
-int32_t RunScript(const rust::Str fileName, const char *fileContents, size_t fileLength,
+int32_t RunScript(const rust::Str fileName, const std::shared_ptr<std::string> &fileContents,
                   JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue,
                   const std::filesystem::path &fullPath, JsValueRef parserStateCache)
 {
@@ -89,8 +89,6 @@ int32_t RunScript(const rust::Str fileName, const char *fileContents, size_t fil
         ChakraRTInterface::JsSetPromiseContinuationCallback(WScriptJsrt::PromiseContinuationCallback, messageQueue),
         ErrorRunFinalize);
 
-    assert(fileContents != nullptr || bufferValue != nullptr);
-
     JsErrorCode runScript;
     JsValueRef fname;
     IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath, &fname), ErrorRunFinalize);
@@ -101,33 +99,23 @@ int32_t RunScript(const rust::Str fileName, const char *fileContents, size_t fil
 
     if (bufferValue != nullptr)
     {
-        if (fileContents == nullptr)
-        {
-            // if we have no fileContents, no worry about freeing them, and the call is simple.
-            runScript = ChakraRTInterface::JsRunSerialized(bufferValue, nullptr /*JsSerializedLoadScriptCallback*/,
-                                                           0 /*SourceContext*/, fname, nullptr /*result*/
-            );
-        }
-        else // fileContents != nullptr
-        {
-            // Memory management is a little more complex here
-            serializedCallbackInfo.scriptBody = const_cast<char *>(fileContents);
-            serializedCallbackInfo.scriptBodyFinalizeCallback = fileContentsFinalizeCallback;
-            serializedCallbackInfo.freeingHandled = false;
+        // Memory management is a little more complex here
+        serializedCallbackInfo.scriptBody = const_cast<char *>(fileContents->c_str());
+        serializedCallbackInfo.scriptBodyFinalizeCallback = fileContentsFinalizeCallback;
+        serializedCallbackInfo.freeingHandled = false;
 
-            // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
-            runScript = ChakraRTInterface::JsRunSerialized(bufferValue, DummyJsSerializedScriptLoadUtf8Source,
-                                                           reinterpret_cast<JsSourceContext>(&serializedCallbackInfo),
-                                                           // Use source ptr as sourceContext
-                                                           fname, nullptr /*result*/);
-        }
+        // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
+        runScript = ChakraRTInterface::JsRunSerialized(bufferValue, DummyJsSerializedScriptLoadUtf8Source,
+                                                       reinterpret_cast<JsSourceContext>(&serializedCallbackInfo),
+                                                       // Use source ptr as sourceContext
+                                                       fname, nullptr /*result*/);
     }
     else if (parserStateCache != nullptr)
     {
         JsValueRef scriptSource;
         IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-            const_cast<char *>(fileContents), static_cast<unsigned int>(fileLength), fileContentsFinalizeCallback,
-            const_cast<char *>(fileContents), &scriptSource));
+            fileContents->data(), fileContents->length(), fileContentsFinalizeCallback,
+            fileContents->data(), &scriptSource));
 
         runScript =
             ChakraRTInterface::JsRunScriptWithParserState(scriptSource, WScriptJsrt::GetNextSourceContext(), fname,
@@ -135,14 +123,14 @@ int32_t RunScript(const rust::Str fileName, const char *fileContents, size_t fil
     }
     else if (HostConfigFlags::flags.Module)
     {
-        runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath.c_str());
+        runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents->c_str(), fullPath.c_str());
     }
     else // bufferValue == nullptr && parserStateCache == nullptr
     {
         JsValueRef scriptSource;
         IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-            const_cast<char *>(fileContents), static_cast<unsigned int>(fileLength), fileContentsFinalizeCallback,
-            const_cast<char *>(fileContents), &scriptSource));
+            fileContents->data(), fileContents->length(), fileContentsFinalizeCallback,
+            fileContents->data(), &scriptSource));
 
         runScript = ChakraRTInterface::JsRun(scriptSource, WScriptJsrt::GetNextSourceContext(), fname,
                                              JsParseScriptAttributeNone, nullptr /*result*/);
@@ -163,19 +151,9 @@ int32_t RunScript(const rust::Str fileName, const char *fileContents, size_t fil
         while (!messageQueue->IsEmpty());
     }
 
-    // free the source for the serialized script case if it's not been handed to a managed object
-    if (!serializedCallbackInfo.freeingHandled && fileContentsFinalizeCallback != nullptr)
-    {
-        fileContentsFinalizeCallback(const_cast<char *>(fileContents));
-    }
-
     if (false)
     {
     ErrorRunFinalize:
-        if (fileContentsFinalizeCallback != nullptr)
-        {
-            fileContentsFinalizeCallback(const_cast<char *>(fileContents));
-        }
     }
 Error:
     if (messageQueue != nullptr)
@@ -292,7 +270,7 @@ int32_t CreateParserStateAndRunScript(const rust::Str fileName, const std::share
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, fileContents->c_str(), fileContents->length(), fileContentsFinalizeCallback, nullptr, fullPath, bufferVal));
+    IfFailGo(RunScript(fileName, fileContents, fileContentsFinalizeCallback, nullptr, fullPath, bufferVal));
 
     if (false)
     {
@@ -341,7 +319,7 @@ int32_t CreateAndRunSerializedScript(const rust::Str fileName, const std::shared
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, fileContents->c_str(), fileContents->length(), fileContentsFinalizeCallback, bufferVal, fullPath, nullptr));
+    IfFailGo(RunScript(fileName, fileContents, fileContentsFinalizeCallback, bufferVal, fullPath, nullptr));
 
     if (false)
     {
@@ -403,7 +381,7 @@ int32_t ExecuteTest(const rust::String &filename)
         }
         else
         {
-            IfFailGo(RunScript(filename, result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree, nullptr,
+            IfFailGo(RunScript(filename, result.data.value(), WScriptJsrt::FinalizeFree, nullptr,
                                fullPath, nullptr));
         }
     }
