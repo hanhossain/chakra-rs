@@ -68,7 +68,7 @@ public:
     };
 
     static void AddMessageQueue(MessageQueue *messageQueue);
-    static void PushMessage(MessageBase *message) { messageQueue->InsertSorted(message); }
+    static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
 
     static JsErrorCode FetchImportedModule(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
     static JsErrorCode FetchImportedModuleFromScript(_In_ unsigned long dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
@@ -113,7 +113,7 @@ public:
     static bool InstallObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction);
     static void FinalizeFree(void * addr);
 private:
-    static void SetExceptionIf(JsErrorCode errorCode, std::u16string_view errorMessage);
+    static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
     static bool CreateNamedFunction(const char*, JsNativeFunction callback, JsValueRef* functionVar);
     static std::string GetDir(std::string_view fullPathNarrow);
@@ -153,8 +153,8 @@ private:
                                                  JsModuleRecord* dependentModuleRecord,
                                                  const std::optional<std::filesystem::path>& refdir = std::nullopt);
 
-    static MessageQueue *messageQueue;
-    static unsigned long sourceContext;
+    static MessageQueue *messageQueue_;
+    static unsigned long sourceContext_;
     static std::map<std::filesystem::path, JsModuleRecord> moduleRecordMap;
     static std::map<JsModuleRecord, std::filesystem::path> moduleDirMap;
     static std::map<JsModuleRecord, ModuleState> moduleErrMap;

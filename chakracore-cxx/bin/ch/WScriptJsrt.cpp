@@ -65,11 +65,11 @@ struct SerializerBlob
     std::vector<ArrayBufferTransferInfo> transferableArrays;
 };
 
-MessageQueue* WScriptJsrt::messageQueue = nullptr;
+MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
 std::map<fs::path, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
 std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;
 std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
-unsigned long WScriptJsrt::sourceContext = 0;
+unsigned long WScriptJsrt::sourceContext_ = 0;
 
 #define ERROR_MESSAGE_TO_STRING(errorMessage, errorMessageString)        \
     [[maybe_unused]] JsErrorCode errorCode = JsNoError;                                              \
@@ -95,7 +95,7 @@ unsigned long WScriptJsrt::sourceContext = 0;
 
 unsigned long WScriptJsrt::GetNextSourceContext()
 {
-    return sourceContext++;
+    return sourceContext_++;
 }
 
 bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
@@ -189,12 +189,12 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
     int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
-    std::u16string errorMessage;
+    std::string errorMessage;
 
     if (argumentCount < 2 || argumentCount > 4)
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = u"Need more or fewer arguments for WScript.LoadScript";
+        errorMessage = "Need more or fewer arguments for WScript.LoadScript";
     }
     else
     {
@@ -228,31 +228,25 @@ Error:
     return returnValue;
 }
 
-void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::u16string_view errorMessage)
+void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view errorMessage)
 {
-    if (errorCode != JsNoError)
+    if (errorCode == JsNoError)
     {
-        // If the exception is already is set - no need to create a new exception.
-        bool hasException = false;
-        if (!(ChakraRTInterface::JsHasException(&hasException) == JsNoError && hasException))
-        {
-            JsValueRef errorObject;
-            JsValueRef errorMessageString;
+        return;
+    }
 
-            if (errorMessage.empty())
-            {
-                const char * errorMessageStr = ConvertErrorCodeToMessage(errorCode);
-                errorCode = ChakraRTInterface::JsCreateString(errorMessageStr, strlen(errorMessageStr),
-                    &errorMessageString);
-            }
-            else
-            {
-                ERROR_MESSAGE_TO_STRING(errorMessage.data(), errorMessageString);
-            }
+    // If the exception is already is set - no need to create a new exception.
+    bool hasException = false;
+    if (ChakraRTInterface::JsHasException(&hasException) != JsNoError || !hasException)
+    {
+        JsValueRef errorObject;
+        JsValueRef errorMessageString;
 
-            ChakraRTInterface::JsCreateError(errorMessageString, &errorObject);
-            ChakraRTInterface::JsSetException(errorObject);
-        }
+        std::string errorMessageStr = errorMessage.empty() ? ConvertErrorCodeToMessage(errorCode) : std::string{errorMessage};
+        errorCode = ChakraRTInterface::JsCreateString(errorMessageStr, &errorMessageString);
+
+        ChakraRTInterface::JsCreateError(errorMessageString, &errorObject);
+        ChakraRTInterface::JsSetException(errorObject);
     }
 }
 
@@ -275,7 +269,7 @@ bool WriteHostObject(void * state, JsValueRef data)
 JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
-    std::u16string errorMessage;
+    std::string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     [[maybe_unused]] int32_t hr = S_OK;
     JsValueRef *transferVarsArray = nullptr;
@@ -283,7 +277,7 @@ JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall,
     if (argumentCount < 2)
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = u"Need an argument for WScript.Serialize";
+        errorMessage = "Need an argument for WScript.Serialize";
     }
     else
     {
@@ -410,14 +404,14 @@ void BufferFreeFunction(void * state)
 JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
     JsErrorCode errorCode = JsNoError;
-    std::u16string errorMessage;
+    std::string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsValueRef * transferables = nullptr;
     [[maybe_unused]] int32_t hr = S_OK;
     if (argumentCount < 2)
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = u"Need an argument for WScript.Deserialize";
+        errorMessage = "Need an argument for WScript.Deserialize";
     }
     else
     {
@@ -467,12 +461,12 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
 {
     JsErrorCode errorCode = JsNoError;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
-    std::u16string errorMessage;
+    std::string errorMessage;
 
     if (argumentCount < 2)
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = u"Need an argument for WScript.GetModuleNamespace";
+        errorMessage = "Need an argument for WScript.GetModuleNamespace";
     }
     else
     {
@@ -493,14 +487,14 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
                 if (moduleEntry == moduleRecordMap.end())
                 {
                     errorCode = JsErrorInvalidArgument;
-                    errorMessage = u"Need to supply a path for an already loaded module for WScript.GetModuleNamespace";
+                    errorMessage = "Need to supply a path for an already loaded module for WScript.GetModuleNamespace";
                 }
                 else
                 {
                     errorCode = ChakraRTInterface::JsGetModuleNamespace(moduleEntry->second, &returnValue);
                     if (errorCode == JsErrorModuleNotEvaluated)
                     {
-                        errorMessage = u"GetModuleNamespace called with un-evaluated module";
+                        errorMessage = "GetModuleNamespace called with un-evaluated module";
                     }
                 }
             }
@@ -525,13 +519,13 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
-    std::u16string errorMessage;
+    std::string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
 
     if (argumentCount < 2 || argumentCount > 4)
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = u"Need more or fewer arguments for WScript.LoadScript";
+        errorMessage = "Need more or fewer arguments for WScript.LoadScript";
     }
     else
     {
@@ -561,7 +555,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
             isFile = false;
             if (isSourceModule)
             {
-                fileName = std::format("moduleScript{}.js", static_cast<int>(sourceContext));
+                fileName = std::format("moduleScript{}.js", static_cast<int>(sourceContext_));
             }
         }
 
@@ -649,7 +643,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
-    std::u16string errorMessage = u"Internal error.";
+    std::string_view errorMessage = "Internal error.";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsContextRef currentContext = JS_INVALID_REFERENCE;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
@@ -708,7 +702,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
 
         IfJsrtErrorSetGo(ChakraRTInterface::JsSetCurrentContext(newContext));
 
-        IfJsErrorFailLog(ChakraRTInterface::JsSetPromiseContinuationCallback(PromiseContinuationCallback, (void*)messageQueue));
+        IfJsErrorFailLog(ChakraRTInterface::JsSetPromiseContinuationCallback(PromiseContinuationCallback, (void*)messageQueue_));
 
         // Initialize the host objects
         Initialize();
@@ -766,7 +760,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     else
     {
         errorCode = JsErrorInvalidArgument;
-        errorMessage = u"Unsupported argument type inject type.";
+        errorMessage = "Unsupported argument type inject type.";
     }
 
 Error:
@@ -784,7 +778,7 @@ Error:
 
 JsValueRef WScriptJsrt::MonotonicNowCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    const std::u16string errorMessage = u"invalid call to WScript.monotonicNow";
+    constexpr auto errorMessage = "invalid call to WScript.monotonicNow";
     JsErrorCode errorCode = JsNoError;
     [[maybe_unused]] int32_t hr = S_OK;
     JsValueRef result;
@@ -800,7 +794,7 @@ Error:
 
 JsValueRef WScriptJsrt::SetTimeoutCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    const std::u16string errorMessage = u"invalid call to WScript.SetTimeout";
+    constexpr std::string_view errorMessage = "invalid call to WScript.SetTimeout";
     JsErrorCode errorCode = JsNoError;
     [[maybe_unused]] int32_t hr = S_OK;
 
@@ -822,7 +816,7 @@ JsValueRef WScriptJsrt::SetTimeoutCallback(JsValueRef callee, bool isConstructCa
 
     time = static_cast<int>(tmp);
     msg = new CallbackMessage(time, function);
-    messageQueue->InsertSorted(msg);
+    messageQueue_->InsertSorted(msg);
 
     IfJsrtErrorSetGo(ChakraRTInterface::JsDoubleToNumber(static_cast<double>(msg->GetId()), &timerId));
     return timerId;
@@ -834,7 +828,7 @@ Error:
 
 JsValueRef WScriptJsrt::ClearTimeoutCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    const std::u16string errorMessage = u"invalid call to WScript.ClearTimeout";
+    constexpr std::string_view errorMessage = "invalid call to WScript.ClearTimeout";
     JsErrorCode errorCode = JsNoError;
     [[maybe_unused]] int32_t hr = S_OK;
 
@@ -851,7 +845,7 @@ JsValueRef WScriptJsrt::ClearTimeoutCallback(JsValueRef callee, bool isConstruct
     if (ChakraRTInterface::JsNumberToDouble(arguments[1], &tmp) == JsNoError)
     {
         timerId = static_cast<int>(tmp);
-        messageQueue->RemoveById(timerId);
+        messageQueue_->RemoveById(timerId);
     }
 
     IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&undef));
@@ -870,7 +864,7 @@ void QueueDebugOperation(JsValueRef function, const DebugOperationFunc& operatio
 
 JsValueRef WScriptJsrt::AttachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    const std::u16string errorMessage = u"WScript.Attach requires a function, like WScript.Attach(foo);";
+    std::string_view errorMessage = "WScript.Attach requires a function, like WScript.Attach(foo);";
     JsErrorCode errorCode = JsNoError;
     [[maybe_unused]] int32_t hr = S_OK;
     JsValueType argumentType = JsUndefined;
@@ -901,7 +895,7 @@ Error:
 
 JsValueRef WScriptJsrt::DetachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    const std::u16string errorMessage = u"WScript.Detach requires a function, like WScript.Detach(foo);";
+    const std::string_view errorMessage = "WScript.Detach requires a function, like WScript.Detach(foo);";
     JsErrorCode errorCode = JsNoError;
     [[maybe_unused]] int32_t hr = S_OK;
     JsValueType argumentType = JsUndefined;
@@ -1796,9 +1790,9 @@ bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, Js
 
 void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
 {
-    assert(messageQueue == nullptr);
+    assert(messageQueue_ == nullptr);
 
-    messageQueue = _messageQueue;
+    messageQueue_ = _messageQueue;
 }
 
 WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef function) : MessageBase(time), m_function(function)
