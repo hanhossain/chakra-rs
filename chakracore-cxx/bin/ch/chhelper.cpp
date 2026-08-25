@@ -247,15 +247,15 @@ Error:
     return hr;
 }
 
-int32_t GetParserStateBuffer(const char *fileContents, JsFinalizeCallback fileContentsFinalizeCallback,
+int32_t GetParserStateBuffer(const std::shared_ptr<std::string>& fileContents, JsFinalizeCallback fileContentsFinalizeCallback,
                              JsValueRef *parserStateBuffer)
 {
     int32_t hr = S_OK;
     JsValueRef scriptSource = nullptr;
 
     IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-        const_cast<char *>(fileContents), static_cast<unsigned int>(strlen(fileContents)), fileContentsFinalizeCallback,
-        const_cast<char *>(fileContents), &scriptSource));
+        fileContents->data(), fileContents->length(), fileContentsFinalizeCallback,
+        fileContents->data(), &scriptSource));
 
     IfJsErrorFailLog(
         ChakraRTInterface::JsSerializeParserState(scriptSource, parserStateBuffer, JsParseScriptAttributeNone));
@@ -264,7 +264,7 @@ Error:
     return hr;
 }
 
-int32_t CreateParserStateAndRunScript(const rust::Str fileName, const char *fileContents, size_t fileLength,
+int32_t CreateParserStateAndRunScript(const rust::Str fileName, const std::shared_ptr<std::string>& fileContents,
                                       JsFinalizeCallback fileContentsFinalizeCallback,
                                       const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
                                       const JsRuntimeAttributes jsrtAttributes)
@@ -292,15 +292,11 @@ int32_t CreateParserStateAndRunScript(const rust::Str fileName, const char *file
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, nullptr, fullPath, bufferVal));
+    IfFailGo(RunScript(fileName, fileContents->c_str(), fileContents->length(), fileContentsFinalizeCallback, nullptr, fullPath, bufferVal));
 
     if (false)
     {
     ErrorRunFinalize:
-        if (fileContentsFinalizeCallback != nullptr)
-        {
-            fileContentsFinalizeCallback(const_cast<char *>(fileContents));
-        }
     }
 Error:
     if (current != JS_INVALID_REFERENCE)
@@ -402,7 +398,7 @@ int32_t ExecuteTest(const rust::String &filename)
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
-            CreateParserStateAndRunScript(filename, result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
+            CreateParserStateAndRunScript(filename, result.data.value(), WScriptJsrt::FinalizeFree,
                                           fullPath, chRuntime, jsrtAttributes);
         }
         else
