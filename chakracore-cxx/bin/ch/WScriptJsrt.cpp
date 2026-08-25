@@ -218,7 +218,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
                 return returnValue;
             }
 
-            returnValue = LoadScript(callee, fileName.c_str(), result.content, !scriptInjectType.empty() ? scriptInjectType.c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
+            returnValue = LoadScript(callee, fileName, result.content, !scriptInjectType.empty() ? scriptInjectType.c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
         }
     }
 
@@ -567,7 +567,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
 
         // TODO: This is CESU-8. How to tell the engine?
         // TODO: How to handle this source (script) life time?
-        returnValue = LoadScript(callee, fileName.c_str(), fileContent->c_str(), scriptInjectType ? scriptInjectType->c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
+        returnValue = LoadScript(callee, fileName, fileContent->c_str(), scriptInjectType ? scriptInjectType->c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
     }
 
 Error:
@@ -644,7 +644,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(rust::Str fileName, const char * f
 }
 
 
-JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
+JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
@@ -656,12 +656,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, const char * fileName,
     void *callbackArg = (finalizeCallback != nullptr ? (void*)fileContent : nullptr);
     std::error_code ec;
 
-    if (fileName == nullptr)
-    {
-        fileName = "script.js";
-    }
-
-    auto fullPath = fs::absolute(fileName, ec).lexically_normal();
+    auto fullPath = fs::absolute(static_cast<std::string_view>(fileName), ec).lexically_normal();
 
     IfJsrtErrorSetGo(ChakraRTInterface::JsGetCurrentContext(&currentContext));
     IfJsrtErrorSetGo(ChakraRTInterface::JsGetRuntime(currentContext, &runtime));
@@ -1932,10 +1927,10 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
                         chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
                     }
                 }
-                LoadScript(nullptr, !fullPath_ ? specifierStr.c_str() : fullPath_->c_str(), nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
+                LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr , nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
                 goto Error;
             }
-            LoadScript(nullptr, !fullPath_ ? specifierStr.c_str() : fullPath_->c_str(), result.data.value()->c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
+            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, result.data.value()->c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
         }
     }
 Error:
