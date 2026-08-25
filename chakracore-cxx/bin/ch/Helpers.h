@@ -74,6 +74,4 @@ public:
 
     static Result LoadScriptFromFile(rust::Str filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);
     static const char *JsErrorCodeToString(JsErrorCode jsErrorCode);
-    static int32_t LoadBinaryFile(const char *filename, const char *&contents, uint32_t &lengthBytes,
-                                  bool printFileOpenError = true);
 };

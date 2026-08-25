@@ -14,6 +14,7 @@
 #include <chrono>
 #include <filesystem>
 #include <iostream>
+#include <chakracore-sys/src/filesystem.rs.h>
 
 #include "ChakraRtInterface.h"
 #include "Codex/Utf8Helper.h"
@@ -1350,62 +1351,42 @@ Error:
 JsValueRef WScriptJsrt::LoadBinaryFileCallback(JsValueRef callee,
     bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-    bool isHeapAlloc = true;
-
     if (argumentCount < 2)
     {
-        IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
+        JsValueRef returnValue;
+        ChakraRTInterface::JsGetUndefinedValue(&returnValue);
+        return returnValue;
     }
-    else
+
+    rust::String fileName;
+    if (ChakraRTInterface::JsToString(arguments[1], fileName) != JsNoError)
     {
-        const char *fileContent;
-        rust::String fileName;
-
-        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[1], fileName));
-
-        if (errorCode == JsNoError)
-        {
-            uint32_t lengthBytes = 0;
-
-            hr = Helpers::LoadBinaryFile(fileName.c_str(), fileContent, lengthBytes);
-
-            if (FAILED(hr))
-            {
-                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName));
-                IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetUndefinedValue(&returnValue), Error);
-                return returnValue;
-            }
-
-            JsValueRef arrayBuffer;
-            IfJsrtErrorSetGoLabel(ChakraRTInterface::JsCreateArrayBuffer(lengthBytes, &arrayBuffer), ErrorStillFree);
-            uint8_t* buffer;
-            unsigned int bufferLength;
-            IfJsrtErrorSetGoLabel(ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength), ErrorStillFree);
-            if (bufferLength < lengthBytes)
-            {
-                chakra::Logger::error("Array buffer size is insufficient to store the binary file.");
-            }
-            else
-            {
-                memcpy(buffer, (uint8_t*)fileContent, lengthBytes);
-                returnValue = arrayBuffer;
-            }
-ErrorStillFree:
-            if (isHeapAlloc)
-            {
-                if (fileContent)
-                {
-                    free((void *)fileContent);
-                }
-            }
-        }
+        return JS_INVALID_REFERENCE;
     }
 
-Error:
-    return returnValue;
+    auto fileContent = chakra_rs::fs::read_binary_file(fileName);
+
+    JsValueRef arrayBuffer;
+    if (ChakraRTInterface::JsCreateArrayBuffer(fileContent.size(), &arrayBuffer) != JsNoError)
+    {
+        return JS_INVALID_REFERENCE;
+    }
+
+    uint8_t *buffer;
+    unsigned int bufferLength;
+    if (ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength) != JsNoError)
+    {
+        return JS_INVALID_REFERENCE;
+    }
+
+    if (bufferLength < fileContent.size())
+    {
+        chakra::Logger::error("Array buffer size is insufficient to store the binary file.");
+        return JS_INVALID_REFERENCE;
+    }
+
+    memcpy(buffer, fileContent.data(), fileContent.size());
+    return arrayBuffer;
 }
 
 JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)

@@ -4,6 +4,7 @@ fn main() {
     let bridges = [
         "src/chhelper.rs",
         "src/config.rs",
+        "src/filesystem.rs",
         "src/host_config.rs",
         "src/logger.rs",
         "src/rt_interface.rs",
