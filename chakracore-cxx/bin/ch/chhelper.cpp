@@ -77,7 +77,7 @@ static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext,
     return true;
 }
 
-int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLength,
+int32_t RunScript(const rust::Str fileName, const char *fileContents, size_t fileLength,
                   JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue,
                   const std::filesystem::path &fullPath, JsValueRef parserStateCache)
 {
@@ -264,7 +264,7 @@ Error:
     return hr;
 }
 
-int32_t CreateParserStateAndRunScript(const char *fileName, const char *fileContents, size_t fileLength,
+int32_t CreateParserStateAndRunScript(const rust::Str fileName, const char *fileContents, size_t fileLength,
                                       JsFinalizeCallback fileContentsFinalizeCallback,
                                       const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
                                       const JsRuntimeAttributes jsrtAttributes)
@@ -316,7 +316,7 @@ Error:
     return hr;
 }
 
-int32_t CreateAndRunSerializedScript(const char *fileName, const char *fileContents, size_t fileLength,
+int32_t CreateAndRunSerializedScript(const rust::Str fileName, const char *fileContents, size_t fileLength,
                                      JsFinalizeCallback fileContentsFinalizeCallback,
                                      const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
                                      const JsRuntimeAttributes jsrtAttributes)
@@ -371,7 +371,6 @@ Error:
 
 int32_t ExecuteTest(const rust::String &filename)
 {
-    auto fileName = static_cast<std::string>(filename);
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
     int32_t hr = S_OK;
@@ -397,21 +396,22 @@ int32_t ExecuteTest(const rust::String &filename)
     }
 
     {
-        auto fullPath = std::filesystem::path(fileName).lexically_normal();
+        const rust::Str filenameView = filename;
+        auto fullPath = std::filesystem::path(static_cast<std::string_view>(filenameView)).lexically_normal();
 
         if (HostConfigFlags::flags.SerializedIsEnabled)
         {
-            CreateAndRunSerializedScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
+            CreateAndRunSerializedScript(filename, result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
-            CreateParserStateAndRunScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
+            CreateParserStateAndRunScript(filename, result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
                                           fullPath, chRuntime, jsrtAttributes);
         }
         else
         {
-            IfFailGo(RunScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree, nullptr,
+            IfFailGo(RunScript(filename, result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree, nullptr,
                                fullPath, nullptr));
         }
     }

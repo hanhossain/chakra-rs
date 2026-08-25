@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <map>
 #include <optional>
+#include <rust/cxx.h>
 
 #include "ChakraCore.h"
 #include "MessageQueue.h"
@@ -24,7 +25,7 @@ class WScriptJsrt
 public:
     static bool Initialize();
     static bool Uninitialize();
-    static JsErrorCode ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName);
+    static JsErrorCode ModuleEntryPoint(rust::Str fileName, const char * fileContent, const char * fullName);
 
     class CallbackMessage : public MessageBase
     {
@@ -36,8 +37,8 @@ public:
         CallbackMessage(unsigned int time, JsValueRef function);
         ~CallbackMessage();
 
-        int32_t Call(const char * fileName);
-        int32_t CallFunction(const char * fileName);
+        int32_t Call(rust::Str fileName);
+        int32_t CallFunction(rust::Str fileName);
         template <class Func>
         static CallbackMessage* Create(JsValueRef function, const Func& func, unsigned int time = 0)
         {
@@ -57,7 +58,7 @@ public:
     public:
         ~ModuleMessage();
 
-        virtual int32_t Call(const char * fileName) override;
+        int32_t Call(rust::Str fileName) override;
 
         static ModuleMessage* Create(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullPath = std::nullopt)
         {
@@ -104,7 +105,7 @@ public:
         }
     }
 
-    static bool PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
+    static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static JsValueRef LoadScript(JsValueRef callee, const char * fileName, const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
     static unsigned long GetNextSourceContext();
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule);
@@ -129,7 +130,7 @@ private:
     static JsValueRef CALLBACK DetachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK DumpFunctionPositionCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
 
-    static JsErrorCode CALLBACK LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName = nullptr, bool isFile = false);
+    static JsErrorCode CALLBACK LoadModuleFromString(rust::Str fileName, const char * fileContent, const char * fullName = nullptr, bool isFile = false);
 
     static JsValueRef CALLBACK LoadBinaryFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK LoadTextFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);

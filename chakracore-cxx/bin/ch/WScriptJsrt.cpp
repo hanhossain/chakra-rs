@@ -583,16 +583,16 @@ std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
     return parent;
 }
 
-JsErrorCode WScriptJsrt::ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName)
+JsErrorCode WScriptJsrt::ModuleEntryPoint(rust::Str fileName, const char * fileContent, const char * fullName)
 {
     return LoadModuleFromString(fileName, fileContent, fullName, true);
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(rust::Str fileName, const char * fileContent, const char * fullName, bool isFile)
 {
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
-    const char * moduleRecordKey = fullName ? fullName : fileName;
+    std::string_view moduleRecordKey = fullName ? fullName : static_cast<std::string_view>(fileName);
     auto moduleRecordEntry = moduleRecordMap.find(moduleRecordKey);
     JsErrorCode errorCode = JsNoError;
 
@@ -1651,7 +1651,7 @@ Error:
     return returnValue;
 }
 
-bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception)
+bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception)
 {
     const char* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);
     JsValueRef metaData = JS_INVALID_REFERENCE;
@@ -1681,7 +1681,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
         if (jsErrorCode == JsErrorCode::JsErrorScriptCompile || jsErrorCode == JsErrorCode::JsErrorScriptException)
         {
             rust::String errorMessage;
-            const std::filesystem::path path(fileName);
+            const std::filesystem::path path{static_cast<std::string_view>(fileName)};
 
             if (ChakraRTInterface::JsToString(exception, errorMessage) != JsNoError)
             {
@@ -1772,9 +1772,7 @@ bool WScriptJsrt::PrintException(const char * fileName, JsErrorCode jsErrorCode,
 
                 if (errorCode != JsErrorCode::JsNoError || propertyType == JsUndefined)
                 {
-                    const char *fName = fileName != nullptr ? fileName : "(unknown)";
-
-                    std::filesystem::path filepath(fName);
+                    std::filesystem::path filepath{static_cast<std::string_view>(fileName)};
 
                     // do not mix char/wchar. print them separately
                     std::println("thrown at {}:\n^", filepath.filename().string());
@@ -1833,12 +1831,12 @@ WScriptJsrt::CallbackMessage::~CallbackMessage()
     m_function = JS_INVALID_REFERENCE;
 }
 
-int32_t WScriptJsrt::CallbackMessage::Call(const char * fileName)
+int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName)
 {
     return CallFunction(fileName);
 }
 
-int32_t WScriptJsrt::CallbackMessage::CallFunction(const char * fileName)
+int32_t WScriptJsrt::CallbackMessage::CallFunction(rust::Str fileName)
 {
     int32_t hr = S_OK;
 
@@ -1899,7 +1897,7 @@ WScriptJsrt::ModuleMessage::~ModuleMessage()
     }
 }
 
-int32_t WScriptJsrt::ModuleMessage::Call(const char * fileName)
+int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 {
     JsErrorCode errorCode = JsNoError;
     int32_t hr;

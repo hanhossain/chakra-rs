@@ -4,6 +4,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <rust/cxx.h>
+
 #include "ChakraCommon.h"
 
 class MessageBase
@@ -24,7 +26,7 @@ public:
     unsigned int GetTime() { return m_time; };
     unsigned int GetId() { return m_id; };
 
-    virtual int32_t Call(const char * fileName) = 0;
+    virtual int32_t Call(rust::Str fileName) = 0;
 };
 
 template <typename T>
@@ -247,7 +249,7 @@ public:
         });
     }
 
-    int32_t ProcessAll(const char * fileName)
+    int32_t ProcessAll(rust::Str fileName)
     {
         while(!IsEmpty())
         {
@@ -275,7 +277,7 @@ public:
         CustomBase(time, customArg), m_func(func)
     {}
 
-    virtual int32_t Call(const char * fileName) override
+    int32_t Call(rust::Str fileName) override
     {
         return m_func(*this);
     }
