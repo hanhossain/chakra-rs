@@ -1229,7 +1229,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
             }
 
             IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(
-                result.data.value()->c_str(), result.data.value()->length(), &returnValue));
+                *result.data.value(), &returnValue));
         }
     }
 
@@ -1546,11 +1546,11 @@ JsValueRef WScriptJsrt::GetReportCallback(JsValueRef callee, bool isConstructCal
         {
             EnterCriticalSection(&threadData->csReportQ);
 
-            if (threadData->reportQ.size() > 0)
+            if (!threadData->reportQ.empty())
             {
-                auto str = threadData->reportQ.front();
+                const auto str = threadData->reportQ.front();
                 threadData->reportQ.pop_front();
-                ChakraRTInterface::JsCreateString(str.c_str(), str.size(), &returnValue);
+                ChakraRTInterface::JsCreateString(str, &returnValue);
             }
             LeaveCriticalSection(&threadData->csReportQ);
         }
@@ -1950,7 +1950,7 @@ JsErrorCode WScriptJsrt::ReportModuleCompletionCallback(JsModuleRecord module, J
         ChakraRTInterface::JsGetModuleHostInfo(module, JsModuleHostInfo_Url, &specifier);
         rust::String specifierStr;
         ChakraRTInterface::JsToString(specifier, specifierStr);
-        PrintException(specifierStr.c_str(), JsErrorCode::JsErrorScriptException, exception);
+        PrintException(specifierStr, JsErrorCode::JsErrorScriptException, exception);
     }
     return JsNoError;
 }

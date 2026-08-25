@@ -506,6 +506,9 @@ namespace chakracore::jsrt
         _In_ size_t length,
         _Out_ JsValueRef *value);
 
+    JsErrorCode JsCreateString(const std::string &content, JsValueRef *value);
+    JsErrorCode JsCreateString(const rust::String &content, JsValueRef *value);
+
     /// Converts value to rust. JsValueRef must be a JsString.
     JsErrorCode JsCopyString(JsValueRef value, rust::String &string);
 
@@ -663,6 +666,8 @@ namespace chakracore::jsrt
             _In_z_ const char *name,
             _In_ size_t length,
             _Out_ JsPropertyIdRef *propertyId);
+
+    JsErrorCode JsCreatePropertyId(const std::string &name, JsPropertyIdRef *propertyId);
 
     /// <summary>
     ///     Creates the property ID associated with the name.
