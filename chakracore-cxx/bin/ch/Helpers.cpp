@@ -40,30 +40,24 @@ Helpers::Result Helpers::LoadScriptFromFile(rust::Str filenameToLoad, const std:
         return SourceMap::Find(filenamePath.native());
     });
 
-    const char *pRawBytesFromMap = nullptr;
-    size_t lengthBytes = 0;
-    FILE *file = nullptr;
-
     if (cached)
     {
-        pRawBytesFromMap = cached.value()->c_str();
-        lengthBytes = cached.value()->length();
+        return Result{cached.value()};
     }
-    else
-    {
-        // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
-        // etc.
-        if (fopen_s(&file, filenamePath.c_str(), "rb") != 0)
-        {
-            return Result(E_FAIL);
-        }
 
-        // TODO (hanhossain): read file with std::ifstream to std::string
-        // Determine the file length, in bytes.
-        fseek(file, 0, SEEK_END);
-        lengthBytes = ftell(file);
-        fseek(file, 0, SEEK_SET);
+    // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
+    // etc.
+    FILE *file = nullptr;
+    if (fopen_s(&file, filenamePath.c_str(), "rb") != 0)
+    {
+        return Result(E_FAIL);
     }
+
+    // TODO (hanhossain): read file with std::ifstream to std::string
+    // Determine the file length, in bytes.
+    fseek(file, 0, SEEK_END);
+    size_t lengthBytes = ftell(file);
+    fseek(file, 0, SEEK_SET);
 
     const size_t bufferLength = lengthBytes != 0 ? lengthBytes + sizeof(uint8_t) : 1;
     const auto pRawBytes = static_cast<uint8_t *>(malloc(bufferLength));
@@ -79,33 +73,22 @@ Helpers::Result Helpers::LoadScriptFromFile(rust::Str filenameToLoad, const std:
 
     if (lengthBytes != 0)
     {
-        if (file != nullptr)
+        //
+        // Read the entire content as a binary block.
+        //
+        size_t readBytes = std::fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
+        fclose(file);
+        if (readBytes < lengthBytes * sizeof(uint8_t))
         {
-            //
-            // Read the entire content as a binary block.
-            //
-            size_t readBytes = std::fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
-            fclose(file);
-            if (readBytes < lengthBytes * sizeof(uint8_t))
-            {
-                free(pRawBytes);
-                return Result(E_FAIL);
-            }
-        }
-        else // from module source register
-        {
-            // Q: module source is on persistent memory. Why do we use the copy instead?
-            // A: if we use the same memory twice, ch doesn't know that during FinalizeCallback free.
-            // the copy memory will be freed by the finalizer
-            assert(pRawBytesFromMap);
-            memcpy(pRawBytes, pRawBytesFromMap, lengthBytes);
+            free(pRawBytes);
+            return Result(E_FAIL);
         }
     }
 
     pRawBytes[lengthBytes] = 0; // Null terminate it. Could be UTF16
 
     auto contents = reinterpret_cast<const char *>(pRawBytes);
-    auto result = cached ? cached.value() : std::make_shared<std::string>(contents, lengthBytes);
+    auto result = std::make_shared<std::string>(contents, lengthBytes);
 
     return Result{result};
 }
