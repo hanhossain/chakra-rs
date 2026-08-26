@@ -479,7 +479,7 @@ JsValueRef WScriptJsrt::GetModuleNamespace(JsValueRef callee, bool isConstructCa
         if (errorCode == JsNoError)
         {
             std::error_code ec;
-            const fs::path fullPath = fs::absolute(specifierStr.c_str(), ec);
+            const fs::path fullPath = fs::absolute(static_cast<std::string>(specifierStr), ec);
             if (ec)
             {
                 errorCode = JsErrorInvalidArgument;
@@ -580,16 +580,16 @@ std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
     return parent;
 }
 
-JsErrorCode WScriptJsrt::ModuleEntryPoint(rust::Str fileName, const char * fileContent, const char * fullName)
+JsErrorCode WScriptJsrt::ModuleEntryPoint(const char * fileContent, const std::string &fullName)
 {
-    return LoadModuleFromString(fileName, fileContent, fullName, true);
+    return LoadModuleFromString(fileContent, fullName, true);
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(rust::Str fileName, const char * fileContent, const char * fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileContent, const std::string &fullName, bool isFile)
 {
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
-    std::string_view moduleRecordKey = fullName ? fullName : static_cast<std::string_view>(fileName);
+    std::string_view moduleRecordKey = fullName;
     auto moduleRecordEntry = moduleRecordMap.find(moduleRecordKey);
     JsErrorCode errorCode = JsNoError;
 
@@ -598,10 +598,9 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(rust::Str fileName, const char * f
     if (moduleRecordEntry == moduleRecordMap.end())
     {
         JsValueRef specifier = nullptr;
-        if (isFile && fullName)
+        if (isFile)
         {
-            errorCode = ChakraRTInterface::JsCreateString(
-                fullName, strlen(fullName), &specifier);
+            errorCode = ChakraRTInterface::JsCreateString(fullName, &specifier);
         }
         if (errorCode == JsNoError)
         {
@@ -610,10 +609,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(rust::Str fileName, const char * f
         }
         if (errorCode == JsNoError)
         {
-            if (fullName)
-            {
-                moduleDirMap[requestModule] = fs::path(fullName).parent_path();
-            }
+            moduleDirMap[requestModule] = fs::path(fullName).parent_path();
 
             moduleRecordMap[moduleRecordKey] = requestModule;
             moduleErrMap[requestModule] = RootModule;
@@ -662,7 +658,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     // treated as a module source text instead of opening a new file.
     if (isSourceModule || scriptInjectType == "module")
     {
-        errorCode = LoadModuleFromString(fileName, fileContent, fullPath.c_str(), isFile);
+        errorCode = LoadModuleFromString(fileContent, fullPath, isFile);
     }
     else if (scriptInjectType == "self")
     {
