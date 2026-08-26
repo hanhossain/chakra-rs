@@ -346,8 +346,7 @@ int32_t ExecuteTest(const rust::String &filename)
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
 
-    auto result = Helpers::LoadScriptFromFile(filename);
-    hr = result.hr;
+    auto fileContents = Helpers::LoadScriptFromFile(filename);
 
     IfFailGo(hr);
 
@@ -371,17 +370,17 @@ int32_t ExecuteTest(const rust::String &filename)
 
         if (HostConfigFlags::flags.SerializedIsEnabled)
         {
-            CreateAndRunSerializedScript(filename, result.data.value(), WScriptJsrt::FinalizeFree,
+            CreateAndRunSerializedScript(filename, fileContents, WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
-            CreateParserStateAndRunScript(filename, result.data.value(), WScriptJsrt::FinalizeFree,
+            CreateParserStateAndRunScript(filename, fileContents, WScriptJsrt::FinalizeFree,
                                           fullPath, chRuntime, jsrtAttributes);
         }
         else
         {
-            IfFailGo(RunScript(filename, result.data.value(), WScriptJsrt::FinalizeFree, nullptr,
+            IfFailGo(RunScript(filename, fileContents, WScriptJsrt::FinalizeFree, nullptr,
                                fullPath, nullptr));
         }
     }

@@ -19,7 +19,7 @@ namespace fs = std::filesystem;
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-Helpers::Result Helpers::LoadScriptFromFile(rust::Str filenameToLoad, const std::optional<std::filesystem::path> &fullPath)
+std::shared_ptr<std::string> Helpers::LoadScriptFromFile(rust::Str filenameToLoad, const std::optional<std::filesystem::path> &fullPath)
 {
     static fs::path sHostApplicationPath;
 
@@ -43,7 +43,7 @@ Helpers::Result Helpers::LoadScriptFromFile(rust::Str filenameToLoad, const std:
 
     if (cached)
     {
-        return Result{cached.value()};
+        return cached.value();
     }
 
     // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
@@ -52,7 +52,7 @@ Helpers::Result Helpers::LoadScriptFromFile(rust::Str filenameToLoad, const std:
     auto contents = reinterpret_cast<const char *>(bytes.data());
     auto result = std::make_shared<std::string>(contents, bytes.size());
 
-    return Result{result};
+    return result;
 }
 
 const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)

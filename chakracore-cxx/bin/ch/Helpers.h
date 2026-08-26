@@ -56,16 +56,6 @@ do { \
 class Helpers
 {
 public:
-    struct Result
-    {
-        int32_t hr;
-        std::optional<std::shared_ptr<std::string>> data;
-
-        Result() = default;
-        explicit Result(int32_t hr) : hr(hr) {}
-        explicit Result(std::shared_ptr<std::string> data) : hr(S_OK), data(std::move(data)) {}
-    };
-
-    static Result LoadScriptFromFile(rust::Str filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);
+    static std::shared_ptr<std::string> LoadScriptFromFile(rust::Str filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);
     static const char *JsErrorCodeToString(JsErrorCode jsErrorCode);
 };

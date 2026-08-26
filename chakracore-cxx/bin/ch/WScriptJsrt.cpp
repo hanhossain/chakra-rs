@@ -187,7 +187,7 @@ void WScriptJsrt::FinalizeFree(void* addr)
 
 JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule)
 {
-    int32_t hr = E_FAIL;
+    [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsErrorCode errorCode = JsNoError;
     std::string errorMessage;
@@ -208,21 +208,21 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
             IfJsrtErrorSetGo(chakracore::jsrt::JsToString(arguments[2], scriptInjectType));
         }
 
-        if (errorCode == JsNoError)
+        std::shared_ptr<std::string> result;
+        try
         {
-            auto result = Helpers::LoadScriptFromFile(fileName);
-            hr = result.hr;
-            if (FAILED(hr))
-            {
-                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName));
-                IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
-                return returnValue;
-            }
-
-            // TODO (hanhossain): don't leak a string ptr
-            auto content = new std::string{*result.data.value()};
-            returnValue = LoadScript(callee, fileName, content->c_str(), !scriptInjectType.empty() ? scriptInjectType.c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
+            result = Helpers::LoadScriptFromFile(fileName);
         }
+        catch (const rust::Error &e)
+        {
+            chakra::Logger::error(std::format("Couldn't load file '{}' due to exception '{}'", fileName, e.what()));
+            IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
+            return returnValue;
+        }
+
+        // TODO (hanhossain): don't leak a string ptr
+        auto content = new std::string{*result};
+        returnValue = LoadScript(callee, fileName, content->c_str(), !scriptInjectType.empty() ? scriptInjectType.c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
     }
 
 Error:
@@ -1193,39 +1193,34 @@ Error:
 
 JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
-    int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-    Helpers::Result result{};
-
     if (argumentCount < 2)
     {
-        IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
+        JsValueRef returnValue;
+        ChakraRTInterface::JsGetUndefinedValue(&returnValue);
+        return returnValue;
     }
-    else
+
+    rust::String fileName;
+    if (ChakraRTInterface::JsToString(arguments[1], fileName) != JsNoError)
     {
-        rust::String fileName;
-
-        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[1], fileName));
-
-        if (errorCode == JsNoError)
-        {
-            result = Helpers::LoadScriptFromFile(fileName);
-            hr = result.hr;
-
-            if (FAILED(hr))
-            {
-                chakra::Logger::error(std::format("Couldn't load file '{}'", fileName));
-                IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
-                return returnValue;
-            }
-
-            IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(
-                *result.data.value(), &returnValue));
-        }
+        return JS_INVALID_REFERENCE;
     }
 
-Error:
+    std::shared_ptr<std::string> fileContent;
+    try
+    {
+        fileContent = Helpers::LoadScriptFromFile(fileName);
+    }
+    catch (const rust::Error &e)
+    {
+        chakra::Logger::error(std::format("Couldn't load file '{}' with exception '{}'", fileName, e.what()));
+        JsValueRef returnValue;
+        ChakraRTInterface::JsGetUndefinedValue(&returnValue);
+        return returnValue;
+    }
+
+    JsValueRef returnValue;
+    ChakraRTInterface::JsCreateString(*fileContent, &returnValue);
     return returnValue;
 }
 
@@ -1868,7 +1863,6 @@ WScriptJsrt::ModuleMessage::~ModuleMessage()
 int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 {
     JsErrorCode errorCode = JsNoError;
-    int32_t hr;
     if (specifier == nullptr)
     {
         if (moduleErrMap[moduleRecord] != ErroredModule)
@@ -1892,8 +1886,8 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 
         try
         {
-            const auto result = Helpers::LoadScriptFromFile(specifierStr, fullPath_);
-            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, result.data.value()->c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
+            const auto fileContent = Helpers::LoadScriptFromFile(specifierStr, fullPath_);
+            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, fileContent->c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
         }
         catch (const rust::Error &e)
         {
