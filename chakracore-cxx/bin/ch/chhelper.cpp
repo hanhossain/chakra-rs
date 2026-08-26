@@ -48,27 +48,16 @@ Error:
     return hr;
 }
 
-// Used becuase of what's likely a deficiency in the API
-typedef struct
-{
-    void *scriptBody;
-    JsFinalizeCallback scriptBodyFinalizeCallback;
-    bool freeingHandled;
-} SerializedCallbackInfo;
-
 static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext, JsValueRef *scriptBuffer,
                                                   JsParseScriptAttributes *parseAttributes)
 {
-    SerializedCallbackInfo *serializedCallbackInfo = reinterpret_cast<SerializedCallbackInfo *>(sourceContext);
-    assert(!serializedCallbackInfo->freeingHandled);
-    serializedCallbackInfo->freeingHandled = true;
-    size_t length = strlen(reinterpret_cast<const char *>(serializedCallbackInfo->scriptBody));
+    auto *scriptBody = reinterpret_cast<std::string *>(sourceContext);
 
     // sourceContext is source ptr, see RunScript below
-    if (ChakraRTInterface::JsCreateExternalArrayBuffer(serializedCallbackInfo->scriptBody,
-                                                       static_cast<unsigned int>(length),
-                                                       serializedCallbackInfo->scriptBodyFinalizeCallback,
-                                                       serializedCallbackInfo->scriptBody, scriptBuffer) != JsNoError)
+    if (ChakraRTInterface::JsCreateExternalArrayBuffer(scriptBody->data(),
+                                                       scriptBody->size(),
+                                                       nullptr,
+                                                       scriptBody->data(), scriptBuffer) != JsNoError)
     {
         return false;
     }
@@ -93,20 +82,11 @@ int32_t RunScript(const rust::Str fileName, const std::shared_ptr<std::string> &
     JsValueRef fname;
     IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath, &fname), ErrorRunFinalize);
 
-    // memory management for serialized script case - need to define these here
-    SerializedCallbackInfo serializedCallbackInfo;
-    serializedCallbackInfo.freeingHandled = true;
-
     if (bufferValue != nullptr)
     {
-        // Memory management is a little more complex here
-        serializedCallbackInfo.scriptBody = const_cast<char *>(fileContents->c_str());
-        serializedCallbackInfo.scriptBodyFinalizeCallback = fileContentsFinalizeCallback;
-        serializedCallbackInfo.freeingHandled = false;
-
         // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
         runScript = ChakraRTInterface::JsRunSerialized(bufferValue, DummyJsSerializedScriptLoadUtf8Source,
-                                                       reinterpret_cast<JsSourceContext>(&serializedCallbackInfo),
+                                                       reinterpret_cast<JsSourceContext>(fileContents.get()),
                                                        // Use source ptr as sourceContext
                                                        fname, nullptr /*result*/);
     }
