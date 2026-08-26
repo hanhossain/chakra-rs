@@ -222,7 +222,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
 
         // TODO (hanhossain): don't leak a string ptr
         auto content = new std::string{*result};
-        returnValue = LoadScript(callee, fileName, content->c_str(), !scriptInjectType.empty() ? scriptInjectType.c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
+        returnValue = LoadScript(callee, fileName, content->c_str(), !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
     }
 
 Error:
@@ -564,7 +564,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
 
         // TODO: This is CESU-8. How to tell the engine?
         // TODO: How to handle this source (script) life time?
-        returnValue = LoadScript(callee, fileName, fileContent->c_str(), scriptInjectType ? scriptInjectType->c_str() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
+        returnValue = LoadScript(callee, fileName, fileContent->c_str(), scriptInjectType ? scriptInjectType.value() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
     }
 
 Error:
@@ -642,7 +642,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(rust::Str fileName, const char * f
 
 
 JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
-    const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
+    const char * fileContent, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
@@ -660,11 +660,11 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
 
     // this is called with LoadModuleCallback method as well where caller pass in a string that should be
     // treated as a module source text instead of opening a new file.
-    if (isSourceModule || (strcmp(scriptInjectType, "module") == 0))
+    if (isSourceModule || scriptInjectType == "module")
     {
         errorCode = LoadModuleFromString(fileName, fileContent, fullPath.c_str(), isFile);
     }
-    else if (strcmp(scriptInjectType, "self") == 0)
+    else if (scriptInjectType == "self")
     {
         JsContextRef calleeContext;
         IfJsrtErrorSetGo(ChakraRTInterface::JsGetContextOfObject(callee, &calleeContext));
@@ -696,7 +696,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
 
         IfJsrtErrorSetGo(ChakraRTInterface::JsSetCurrentContext(currentContext));
     }
-    else if (strcmp(scriptInjectType, "samethread") == 0)
+    else if (scriptInjectType == "samethread")
     {
         JsValueRef newContext = JS_INVALID_REFERENCE;
 
@@ -736,7 +736,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
         // Set the context back to the old one
         ChakraRTInterface::JsSetCurrentContext(currentContext);
     }
-    else if (strcmp(scriptInjectType, "crossthread") == 0)
+    else if (scriptInjectType == "crossthread")
     {
         auto& threadData = GetRuntimeThreadLocalData().threadData;
         if (threadData == nullptr)
