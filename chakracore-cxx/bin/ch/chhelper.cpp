@@ -123,7 +123,7 @@ int32_t RunScript(const rust::Str fileName, const std::shared_ptr<std::string> &
     }
     else if (HostConfigFlags::flags.Module)
     {
-        runScript = WScriptJsrt::ModuleEntryPoint(fileContents->c_str(), fullPath);
+        runScript = WScriptJsrt::ModuleEntryPoint(*fileContents, fullPath);
     }
     else // bufferValue == nullptr && parserStateCache == nullptr
     {

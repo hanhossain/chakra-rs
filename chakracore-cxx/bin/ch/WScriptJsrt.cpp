@@ -580,12 +580,12 @@ std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
     return parent;
 }
 
-JsErrorCode WScriptJsrt::ModuleEntryPoint(const char * fileContent, const std::string &fullName)
+JsErrorCode WScriptJsrt::ModuleEntryPoint(std::string_view fileContent, const std::string &fullName)
 {
     return LoadModuleFromString(fileContent, fullName, true);
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileContent, const std::string &fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(std::optional<std::string_view> fileContent, const std::string &fullName, bool isFile)
 {
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
@@ -623,11 +623,12 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const char * fileContent, const st
     JsValueRef errorObject = JS_INVALID_REFERENCE;
 
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
-    unsigned int fileContentLength = (fileContent == nullptr) ? 0 : (unsigned int)strlen(fileContent);
+    auto content = fileContent ? fileContent.value().data() : nullptr;
+    auto fileContentLength = fileContent.transform([](const std::string_view s){ return s.length(); }).value_or(0);
 
-    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)fileContent,
+    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)content,
         fileContentLength, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
-    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent != nullptr && !HostConfigFlags::flags.IgnoreScriptErrorCode && moduleErrMap[requestModule] == RootModule)
+    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent && !HostConfigFlags::flags.IgnoreScriptErrorCode && moduleErrMap[requestModule] == RootModule)
     {
         ChakraRTInterface::JsSetException(errorObject);
         moduleErrMap[requestModule] = ErroredModule;
@@ -658,7 +659,8 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     // treated as a module source text instead of opening a new file.
     if (isSourceModule || scriptInjectType == "module")
     {
-        errorCode = LoadModuleFromString(fileContent, fullPath, isFile);
+        auto content = fileContent != nullptr ? std::optional{fileContent} : std::nullopt;
+        errorCode = LoadModuleFromString(content, fullPath, isFile);
     }
     else if (scriptInjectType == "self")
     {

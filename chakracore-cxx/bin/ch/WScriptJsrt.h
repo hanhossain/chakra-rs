@@ -25,7 +25,7 @@ class WScriptJsrt
 public:
     static bool Initialize();
     static bool Uninitialize();
-    static JsErrorCode ModuleEntryPoint(const char * fileContent, const std::string &fullName);
+    static JsErrorCode ModuleEntryPoint(std::string_view fileContent, const std::string &fullName);
 
     class CallbackMessage : public MessageBase
     {
@@ -130,7 +130,7 @@ private:
     static JsValueRef CALLBACK DetachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK DumpFunctionPositionCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
 
-    static JsErrorCode CALLBACK LoadModuleFromString(const char * fileContent, const std::string &fullName, bool isFile = false);
+    static JsErrorCode CALLBACK LoadModuleFromString(std::optional<std::string_view> fileContent, const std::string &fullName, bool isFile = false);
 
     static JsValueRef CALLBACK LoadBinaryFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK LoadTextFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
