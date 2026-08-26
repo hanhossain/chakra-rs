@@ -1,15 +1,15 @@
 use chakracore_sys::config::CoreConfig;
 use pretty_assertions::{assert_eq, assert_ne};
-use serde::Deserialize;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::fs::read_to_string;
-use std::io::{BufRead, BufReader, Read};
+use std::io::{BufRead, BufReader, Read, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitStatus, Stdio};
 use std::thread;
 use std::time::Duration;
 use tracing::dispatcher::DefaultGuard;
 use tracing_subscriber::EnvFilter;
+use tracing_subscriber::fmt::TestWriter;
 
 pub const CH_PATH: &'static str = env!("CARGO_BIN_EXE_chakracore");
 pub const SLOW_TEST_TIMEOUT: Duration = Duration::from_secs(180);
@@ -260,8 +260,7 @@ pub fn run_test(core_config: CoreConfig, test_dir: Option<&Path>) -> (ExitStatus
     ch.arg(serialized_config)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
-        .env("TZ", "America/Los_Angeles")
-        .env("CHAKRA_TEST", "true");
+        .env("TZ", "America/Los_Angeles");
 
     tracing::info!(?ch, "Running command");
 
@@ -285,8 +284,7 @@ pub fn run_test(core_config: CoreConfig, test_dir: Option<&Path>) -> (ExitStatus
     });
 
     let actual = stdout_reader.join().unwrap();
-    let err_actual = stderr_reader.join().unwrap();
-    dbg!(err_actual);
+    stderr_reader.join().unwrap();
 
     let status = child.wait().unwrap();
     tracing::info!(?status, "Child process exited");
@@ -309,107 +307,13 @@ fn read_stdout<R: Read>(stream: R) -> Vec<String> {
     actual
 }
 
-fn read_stderr<R: Read>(stream: R) -> Option<Vec<String>> {
-    let mut actual = Vec::new();
+fn read_stderr<R: Read>(stream: R) {
     let reader = BufReader::new(stream);
+    let mut writer = TestWriter::new();
     for message in reader.lines().map(|line| line.unwrap()) {
-        match serde_json::from_str::<ChildEvent>(&message) {
-            Ok(event) => propagate_child_event(event),
-            Err(err) => {
-                tracing::debug!(%err, event=message, "Failed to parse event");
-                actual.push(message);
-            }
-        }
+        writer.write_all(message.as_bytes()).unwrap();
+        writer.write(b"\n").unwrap();
     }
-    if actual.is_empty() {
-        None
-    } else {
-        Some(actual)
-    }
-}
-
-fn propagate_child_event(event: ChildEvent) {
-    let fields = &event.fields;
-    match event.level.as_str() {
-        "TRACE" => {
-            tracing::trace!(
-                target: "chakracore stderr",
-                message = fields.message,
-                fields.function_name,
-                fields.file_name,
-                fields.line,
-                thread_name = event.thread_name,
-                target = event.target,
-                span = ?event.span);
-        }
-        "DEBUG" => {
-            tracing::debug!(
-                target: "chakracore stderr",
-                message = fields.message,
-                fields.function_name,
-                fields.file_name,
-                fields.line,
-                thread_name = event.thread_name,
-                target = event.target,
-                span = ?event.span);
-        }
-        "INFO" => {
-            tracing::info!(
-                target: "chakracore stderr",
-                message = fields.message,
-                fields.function_name,
-                fields.file_name,
-                fields.line,
-                thread_name = event.thread_name,
-                target = event.target,
-                span = ?event.span);
-        }
-        "WARN" => {
-            tracing::warn!(
-                target: "chakracore stderr",
-                message = fields.message,
-                fields.function_name,
-                fields.file_name,
-                fields.line,
-                thread_name = event.thread_name,
-                target = event.target,
-                span = ?event.span);
-        }
-        "ERROR" => {
-            tracing::error!(
-                target: "chakracore stderr",
-                message = fields.message,
-                fields.function_name,
-                fields.file_name,
-                fields.line,
-                thread_name = event.thread_name,
-                target = event.target,
-                span = ?event.span);
-        }
-        _ => panic!("invalid level: {}", event.level),
-    }
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ChildEvent {
-    level: String,
-    fields: ChildEventFields,
-    target: String,
-    #[serde(rename = "threadName")]
-    thread_name: String,
-    span: Option<HashMap<String, String>>,
-    #[serde(rename = "spans")]
-    _spans: Option<Vec<HashMap<String, String>>>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct ChildEventFields {
-    message: String,
-    function_name: Option<String>,
-    file_name: Option<String>,
-    line: Option<usize>,
 }
 
 fn trim_carriage_return(s: &str) -> &str {

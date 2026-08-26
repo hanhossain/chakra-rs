@@ -3,19 +3,10 @@ use chakracore_sys::config::CoreConfig;
 use tracing_subscriber::filter::LevelFilter;
 
 fn setup_tracing() {
-    let is_chakra_test = std::env::var("CHAKRA_TEST")
-        .unwrap_or_default()
-        .parse::<bool>()
-        .unwrap_or_default();
-    let subscriber = tracing_subscriber::fmt()
+    tracing_subscriber::fmt()
         .with_max_level(LevelFilter::TRACE)
         .with_writer(std::io::stderr)
-        .with_thread_names(true);
-    if is_chakra_test {
-        subscriber.json().without_time().init();
-    } else {
-        subscriber.init();
-    }
+        .init();
 }
 
 fn main() -> anyhow::Result<()> {

@@ -4,6 +4,7 @@ use chakracore_sys::host_config::ffi::HostConfigFlags;
 use chakracore_sys::rt_interface::ffi::ChakraRTInterface;
 use cxx::Exception;
 
+#[tracing::instrument(skip(config))]
 pub fn run(config: CoreConfig) -> Result<(), Error> {
     HostConfigFlags::SetHostArgs(&config.host_args);
 
