@@ -9,7 +9,7 @@ pub mod ffi {
         include!("chhelper.h");
         include!("Util/Abstractions.h");
 
-        fn ExecuteTest(filename: &String) -> i32;
+        fn ExecuteTest(filename: &String) -> Result<i32>;
 
         type Abstractions;
         #[Self = "Abstractions"]

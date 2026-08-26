@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Helpers.h"
 
+#include <chakracore-sys/src/filesystem.rs.h>
 #include <filesystem>
 #include <iostream>
 #include <sys/stat.h>
@@ -47,48 +48,9 @@ Helpers::Result Helpers::LoadScriptFromFile(rust::Str filenameToLoad, const std:
 
     // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
     // etc.
-    FILE *file = nullptr;
-    if (fopen_s(&file, filenamePath.c_str(), "rb") != 0)
-    {
-        return Result(E_FAIL);
-    }
-
-    // TODO (hanhossain): read file with std::ifstream to std::string
-    // Determine the file length, in bytes.
-    fseek(file, 0, SEEK_END);
-    size_t lengthBytes = ftell(file);
-    fseek(file, 0, SEEK_SET);
-
-    const size_t bufferLength = lengthBytes != 0 ? lengthBytes + sizeof(uint8_t) : 1;
-    const auto pRawBytes = static_cast<uint8_t *>(malloc(bufferLength));
-    if (pRawBytes == nullptr)
-    {
-        chakra::Logger::error("out of memory");
-        if (file != nullptr)
-        {
-            fclose(file);
-        }
-        return Result(E_OUTOFMEMORY);
-    }
-
-    if (lengthBytes != 0)
-    {
-        //
-        // Read the entire content as a binary block.
-        //
-        size_t readBytes = std::fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
-        fclose(file);
-        if (readBytes < lengthBytes * sizeof(uint8_t))
-        {
-            free(pRawBytes);
-            return Result(E_FAIL);
-        }
-    }
-
-    pRawBytes[lengthBytes] = 0; // Null terminate it. Could be UTF16
-
-    auto contents = reinterpret_cast<const char *>(pRawBytes);
-    auto result = std::make_shared<std::string>(contents, lengthBytes);
+    auto bytes = chakra_rs::fs::read_binary_file(filenamePath.string());
+    auto contents = reinterpret_cast<const char *>(bytes.data());
+    auto result = std::make_shared<std::string>(contents, bytes.size());
 
     return Result{result};
 }

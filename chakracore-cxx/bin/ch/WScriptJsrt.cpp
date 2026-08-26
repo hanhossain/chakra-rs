@@ -1885,28 +1885,30 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
     {
         rust::String specifierStr;
         errorCode = ChakraRTInterface::JsToString(specifier, specifierStr);
-        if (errorCode == JsNoError)
+        if (errorCode != JsNoError)
+        {
+            return errorCode;
+        }
+
+        try
         {
             const auto result = Helpers::LoadScriptFromFile(specifierStr, fullPath_);
-            hr = result.hr;
-
-            if (FAILED(hr))
-            {
-                if (!HostConfigFlags::flags.MuteHostErrorMsgIsEnabled)
-                {
-                    auto actualModuleRecord = moduleRecordMap.find(fullPath_.value());
-                    if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)
-                    {
-                        chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
-                    }
-                }
-                LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr , nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
-                goto Error;
-            }
             LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, result.data.value()->c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
         }
+        catch (const rust::Error &e)
+        {
+            chakra::Logger::error(std::format("Caught exception: {}", e.what()));
+            if (!HostConfigFlags::flags.MuteHostErrorMsgIsEnabled)
+            {
+                auto actualModuleRecord = moduleRecordMap.find(fullPath_.value());
+                if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)
+                {
+                    chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
+                }
+            }
+            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr , nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
+        }
     }
-Error:
     return errorCode;
 }
 

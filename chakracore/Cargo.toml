@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.104"
 chakracore-sys = { path = "../chakracore-sys" }
+cxx = "1.0.199"
 serde_json = "1.0.151"
 thiserror = "2.0.20"
 tracing = "0.1.44"
