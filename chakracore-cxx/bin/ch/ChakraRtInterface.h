@@ -116,9 +116,9 @@ public:
     static JsErrorCode JsCopyString(JsValueRef value, char* buffer, size_t bufferSize, size_t* length) { return chakracore::jsrt::JsCopyString(value, buffer, bufferSize, length); }
     static JsErrorCode JsToString(JsValueRef value, rust::String &string) { return chakracore::jsrt::JsToString(value, string); }
     static JsErrorCode JsCreateString(const char *content, size_t length, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, length, value); }
-    static JsErrorCode JsCreateString(const std::string &content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content.c_str(), content.length(), value); }
-    static JsErrorCode JsCreateString(const rust::String &content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(static_cast<std::string>(content).c_str(), content.length(), value); }
-    static JsErrorCode JsCreatePropertyId(const std::string &name, JsPropertyIdRef *propertyId) { return chakracore::jsrt::JsCreatePropertyId(name.c_str(), name.length(), propertyId); }
+    static JsErrorCode JsCreateString(const std::string &content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, value); }
+    static JsErrorCode JsCreateString(const rust::String &content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, value); }
+    static JsErrorCode JsCreatePropertyId(const std::string &name, JsPropertyIdRef *propertyId) { return chakracore::jsrt::JsCreatePropertyId(name, propertyId); }
     static JsErrorCode JsCreatePropertyId(const char *name, size_t length, JsPropertyIdRef *propertyId) { return chakracore::jsrt::JsCreatePropertyId(name, length, propertyId); }
     static JsErrorCode JsCreateExternalArrayBuffer(void *data, unsigned int byteLength, JsFinalizeCallback finalizeCallback, void *callbackState, JsValueRef *result)  { return chakracore::jsrt::JsCreateExternalArrayBuffer(data, byteLength, finalizeCallback, callbackState, result); }
     static JsErrorCode JsGetProxyProperties(JsValueRef object, bool* isProxy, JsValueRef* target, JsValueRef* handler)  { return chakracore::jsrt::JsGetProxyProperties(object, isProxy, target, handler); }

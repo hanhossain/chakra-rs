@@ -5,13 +5,13 @@ edition = "2024"
 links = "chakracore-sys"
 
 [dependencies]
-cxx = "1.0.194"
+cxx = { version = "1.0.199", features = ["c++20"] }
 serde = { version = "1.0.229", features = ["derive"] }
 tracing = "0.1.44"
 
 [build-dependencies]
-cmake = "0.1.57"
-cxx-build = { version = "1.0.194", features = ["parallel"] }
+cmake = "0.1.58"
+cxx-build = { version = "1.0.199", features = ["parallel"] }
 
 [features]
 compile-cpp = []

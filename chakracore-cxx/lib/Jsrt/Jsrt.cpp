@@ -3860,6 +3860,11 @@ JsErrorCode chakracore::jsrt::JsCreatePropertyId(
     return JsGetPropertyIdFromNameInternal(wname, wname.Length(), propertyId);
 }
 
+JsErrorCode chakracore::jsrt::JsCreatePropertyId(const std::string &name, JsPropertyIdRef *propertyId)
+{
+    return JsCreatePropertyId(name.c_str(), name.length(), propertyId);
+}
+
 JsErrorCode chakracore::jsrt::JsCopyPropertyId(
     _In_ JsPropertyIdRef propertyId,
     _Out_ char* buffer,

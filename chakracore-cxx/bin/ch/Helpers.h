@@ -3,9 +3,10 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "ChakraCommon.h"
 #include <filesystem>
 #include <optional>
+#include <rust/cxx.h>
+#include "ChakraCommon.h"
 
 #define IfJsErrorFailLog(expr) \
 do { \
@@ -55,24 +56,6 @@ do { \
 class Helpers
 {
 public:
-    struct Result
-    {
-        int32_t hr;
-        // TODO (hanhossain): content and length need to be removed to move strictly to data.
-        const char *content;
-        size_t length;
-        std::optional<std::shared_ptr<std::string>> data;
-
-        Result() = default;
-        explicit Result(int32_t hr) : hr(hr), content(nullptr), length(0) {}
-        Result(const char *content, size_t length, std::shared_ptr<std::string> data) :
-            hr(S_OK), content(content), length(length), data(std::move(data))
-        {
-        }
-    };
-
-    static Result LoadScriptFromFile(const char *filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);
+    static std::shared_ptr<std::string> LoadScriptFromFile(rust::Str filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);
     static const char *JsErrorCodeToString(JsErrorCode jsErrorCode);
-    static int32_t LoadBinaryFile(const char *filename, const char *&contents, uint32_t &lengthBytes,
-                                  bool printFileOpenError = true);
 };

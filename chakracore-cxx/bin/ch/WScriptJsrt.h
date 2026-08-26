@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <map>
 #include <optional>
+#include <rust/cxx.h>
 
 #include "ChakraCore.h"
 #include "MessageQueue.h"
@@ -24,7 +25,7 @@ class WScriptJsrt
 public:
     static bool Initialize();
     static bool Uninitialize();
-    static JsErrorCode ModuleEntryPoint(const char * fileName, const char * fileContent, const char * fullName);
+    static JsErrorCode ModuleEntryPoint(std::string_view fileContent, const std::string &fullName);
 
     class CallbackMessage : public MessageBase
     {
@@ -36,8 +37,8 @@ public:
         CallbackMessage(unsigned int time, JsValueRef function);
         ~CallbackMessage();
 
-        int32_t Call(const char * fileName);
-        int32_t CallFunction(const char * fileName);
+        int32_t Call(rust::Str fileName);
+        int32_t CallFunction(rust::Str fileName);
         template <class Func>
         static CallbackMessage* Create(JsValueRef function, const Func& func, unsigned int time = 0)
         {
@@ -57,7 +58,7 @@ public:
     public:
         ~ModuleMessage();
 
-        virtual int32_t Call(const char * fileName) override;
+        int32_t Call(rust::Str fileName) override;
 
         static ModuleMessage* Create(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullPath = std::nullopt)
         {
@@ -67,7 +68,7 @@ public:
     };
 
     static void AddMessageQueue(MessageQueue *messageQueue);
-    static void PushMessage(MessageBase *message) { messageQueue->InsertSorted(message); }
+    static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
 
     static JsErrorCode FetchImportedModule(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
     static JsErrorCode FetchImportedModuleFromScript(_In_ unsigned long dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
@@ -104,15 +105,15 @@ public:
         }
     }
 
-    static bool PrintException(const char * fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
-    static JsValueRef LoadScript(JsValueRef callee, const char * fileName, const char * fileContent, const char * scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
+    static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
+    static JsValueRef LoadScript(JsValueRef callee, rust::Str fileName, const char * fileContent, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
     static unsigned long GetNextSourceContext();
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule);
     static JsValueRef LoadScriptHelper(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState, bool isSourceModule);
     static bool InstallObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction);
     static void FinalizeFree(void * addr);
 private:
-    static void SetExceptionIf(JsErrorCode errorCode, std::u16string_view errorMessage);
+    static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
     static bool CreateNamedFunction(const char*, JsNativeFunction callback, JsValueRef* functionVar);
     static std::string GetDir(std::string_view fullPathNarrow);
@@ -129,7 +130,7 @@ private:
     static JsValueRef CALLBACK DetachCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK DumpFunctionPositionCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
 
-    static JsErrorCode CALLBACK LoadModuleFromString(const char * fileName, const char * fileContent, const char * fullName = nullptr, bool isFile = false);
+    static JsErrorCode CALLBACK LoadModuleFromString(std::optional<std::string_view> fileContent, const std::string &fullName, bool isFile = false);
 
     static JsValueRef CALLBACK LoadBinaryFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
     static JsValueRef CALLBACK LoadTextFileCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState);
@@ -152,8 +153,8 @@ private:
                                                  JsModuleRecord* dependentModuleRecord,
                                                  const std::optional<std::filesystem::path>& refdir = std::nullopt);
 
-    static MessageQueue *messageQueue;
-    static unsigned long sourceContext;
+    static MessageQueue *messageQueue_;
+    static unsigned long sourceContext_;
     static std::map<std::filesystem::path, JsModuleRecord> moduleRecordMap;
     static std::map<JsModuleRecord, std::filesystem::path> moduleDirMap;
     static std::map<JsModuleRecord, ModuleState> moduleErrMap;

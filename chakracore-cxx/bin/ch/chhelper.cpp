@@ -33,42 +33,31 @@ static_assert(sizeof(ssize_t) == sizeof(long));
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
 // On success the param byteCodeBuffer will be allocated in the function.
-int32_t GetSerializedBuffer(const char *fileContents, JsFinalizeCallback fileContentFinalizeCallback,
+int32_t GetSerializedBuffer(const std::shared_ptr<std::string>& fileContents, JsFinalizeCallback fileContentFinalizeCallback,
                             JsValueRef *byteCodeBuffer)
 {
     int32_t hr = S_OK;
 
     JsValueRef scriptSource;
     IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-        const_cast<char *>(fileContents), static_cast<unsigned int>(strlen(fileContents)), fileContentFinalizeCallback,
-        const_cast<char *>(fileContents), &scriptSource));
+        fileContents->data(), fileContents->length(), fileContentFinalizeCallback,
+        fileContents->data(), &scriptSource));
     IfJsErrorFailLog(ChakraRTInterface::JsSerialize(scriptSource, byteCodeBuffer, JsParseScriptAttributeNone));
 
 Error:
     return hr;
 }
 
-// Used becuase of what's likely a deficiency in the API
-typedef struct
-{
-    void *scriptBody;
-    JsFinalizeCallback scriptBodyFinalizeCallback;
-    bool freeingHandled;
-} SerializedCallbackInfo;
-
 static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext, JsValueRef *scriptBuffer,
                                                   JsParseScriptAttributes *parseAttributes)
 {
-    SerializedCallbackInfo *serializedCallbackInfo = reinterpret_cast<SerializedCallbackInfo *>(sourceContext);
-    assert(!serializedCallbackInfo->freeingHandled);
-    serializedCallbackInfo->freeingHandled = true;
-    size_t length = strlen(reinterpret_cast<const char *>(serializedCallbackInfo->scriptBody));
+    auto *scriptBody = reinterpret_cast<std::string *>(sourceContext);
 
     // sourceContext is source ptr, see RunScript below
-    if (ChakraRTInterface::JsCreateExternalArrayBuffer(serializedCallbackInfo->scriptBody,
-                                                       static_cast<unsigned int>(length),
-                                                       serializedCallbackInfo->scriptBodyFinalizeCallback,
-                                                       serializedCallbackInfo->scriptBody, scriptBuffer) != JsNoError)
+    if (ChakraRTInterface::JsCreateExternalArrayBuffer(scriptBody->data(),
+                                                       scriptBody->size(),
+                                                       nullptr,
+                                                       scriptBody->data(), scriptBuffer) != JsNoError)
     {
         return false;
     }
@@ -77,9 +66,9 @@ static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext,
     return true;
 }
 
-int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLength,
+int32_t RunScript(const rust::Str fileName, const std::shared_ptr<std::string> &fileContents,
                   JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue,
-                  const std::optional<std::filesystem::path> &fullPath, JsValueRef parserStateCache)
+                  const std::filesystem::path &fullPath, JsValueRef parserStateCache)
 {
     int32_t hr = S_OK;
     MessageQueue *messageQueue = new MessageQueue();
@@ -89,45 +78,24 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
         ChakraRTInterface::JsSetPromiseContinuationCallback(WScriptJsrt::PromiseContinuationCallback, messageQueue),
         ErrorRunFinalize);
 
-    assert(fileContents != nullptr || bufferValue != nullptr);
-
     JsErrorCode runScript;
     JsValueRef fname;
-    IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath.value_or(""), &fname), ErrorRunFinalize);
-
-    // memory management for serialized script case - need to define these here
-    SerializedCallbackInfo serializedCallbackInfo;
-    serializedCallbackInfo.freeingHandled = true;
+    IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath, &fname), ErrorRunFinalize);
 
     if (bufferValue != nullptr)
     {
-        if (fileContents == nullptr)
-        {
-            // if we have no fileContents, no worry about freeing them, and the call is simple.
-            runScript = ChakraRTInterface::JsRunSerialized(bufferValue, nullptr /*JsSerializedLoadScriptCallback*/,
-                                                           0 /*SourceContext*/, fname, nullptr /*result*/
-            );
-        }
-        else // fileContents != nullptr
-        {
-            // Memory management is a little more complex here
-            serializedCallbackInfo.scriptBody = const_cast<char *>(fileContents);
-            serializedCallbackInfo.scriptBodyFinalizeCallback = fileContentsFinalizeCallback;
-            serializedCallbackInfo.freeingHandled = false;
-
-            // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
-            runScript = ChakraRTInterface::JsRunSerialized(bufferValue, DummyJsSerializedScriptLoadUtf8Source,
-                                                           reinterpret_cast<JsSourceContext>(&serializedCallbackInfo),
-                                                           // Use source ptr as sourceContext
-                                                           fname, nullptr /*result*/);
-        }
+        // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
+        runScript = ChakraRTInterface::JsRunSerialized(bufferValue, DummyJsSerializedScriptLoadUtf8Source,
+                                                       reinterpret_cast<JsSourceContext>(fileContents.get()),
+                                                       // Use source ptr as sourceContext
+                                                       fname, nullptr /*result*/);
     }
     else if (parserStateCache != nullptr)
     {
         JsValueRef scriptSource;
         IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-            const_cast<char *>(fileContents), static_cast<unsigned int>(fileLength), fileContentsFinalizeCallback,
-            const_cast<char *>(fileContents), &scriptSource));
+            fileContents->data(), fileContents->length(), fileContentsFinalizeCallback,
+            fileContents->data(), &scriptSource));
 
         runScript =
             ChakraRTInterface::JsRunScriptWithParserState(scriptSource, WScriptJsrt::GetNextSourceContext(), fname,
@@ -135,14 +103,14 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
     }
     else if (HostConfigFlags::flags.Module)
     {
-        runScript = WScriptJsrt::ModuleEntryPoint(fileName, fileContents, fullPath.value_or("").c_str());
+        runScript = WScriptJsrt::ModuleEntryPoint(*fileContents, fullPath);
     }
     else // bufferValue == nullptr && parserStateCache == nullptr
     {
         JsValueRef scriptSource;
         IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-            const_cast<char *>(fileContents), static_cast<unsigned int>(fileLength), fileContentsFinalizeCallback,
-            const_cast<char *>(fileContents), &scriptSource));
+            fileContents->data(), fileContents->length(), fileContentsFinalizeCallback,
+            fileContents->data(), &scriptSource));
 
         runScript = ChakraRTInterface::JsRun(scriptSource, WScriptJsrt::GetNextSourceContext(), fname,
                                              JsParseScriptAttributeNone, nullptr /*result*/);
@@ -163,19 +131,9 @@ int32_t RunScript(const char *fileName, const char *fileContents, size_t fileLen
         while (!messageQueue->IsEmpty());
     }
 
-    // free the source for the serialized script case if it's not been handed to a managed object
-    if (!serializedCallbackInfo.freeingHandled && fileContentsFinalizeCallback != nullptr)
-    {
-        fileContentsFinalizeCallback(const_cast<char *>(fileContents));
-    }
-
     if (false)
     {
     ErrorRunFinalize:
-        if (fileContentsFinalizeCallback != nullptr)
-        {
-            fileContentsFinalizeCallback(const_cast<char *>(fileContents));
-        }
     }
 Error:
     if (messageQueue != nullptr)
@@ -247,15 +205,15 @@ Error:
     return hr;
 }
 
-int32_t GetParserStateBuffer(const char *fileContents, JsFinalizeCallback fileContentsFinalizeCallback,
+int32_t GetParserStateBuffer(const std::shared_ptr<std::string>& fileContents, JsFinalizeCallback fileContentsFinalizeCallback,
                              JsValueRef *parserStateBuffer)
 {
     int32_t hr = S_OK;
     JsValueRef scriptSource = nullptr;
 
     IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-        const_cast<char *>(fileContents), static_cast<unsigned int>(strlen(fileContents)), fileContentsFinalizeCallback,
-        const_cast<char *>(fileContents), &scriptSource));
+        fileContents->data(), fileContents->length(), fileContentsFinalizeCallback,
+        fileContents->data(), &scriptSource));
 
     IfJsErrorFailLog(
         ChakraRTInterface::JsSerializeParserState(scriptSource, parserStateBuffer, JsParseScriptAttributeNone));
@@ -264,7 +222,7 @@ Error:
     return hr;
 }
 
-int32_t CreateParserStateAndRunScript(const char *fileName, const char *fileContents, size_t fileLength,
+int32_t CreateParserStateAndRunScript(const rust::Str fileName, const std::shared_ptr<std::string>& fileContents,
                                       JsFinalizeCallback fileContentsFinalizeCallback,
                                       const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
                                       const JsRuntimeAttributes jsrtAttributes)
@@ -292,15 +250,11 @@ int32_t CreateParserStateAndRunScript(const char *fileName, const char *fileCont
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, nullptr, fullPath, bufferVal));
+    IfFailGo(RunScript(fileName, fileContents, fileContentsFinalizeCallback, nullptr, fullPath, bufferVal));
 
     if (false)
     {
     ErrorRunFinalize:
-        if (fileContentsFinalizeCallback != nullptr)
-        {
-            fileContentsFinalizeCallback(const_cast<char *>(fileContents));
-        }
     }
 Error:
     if (current != JS_INVALID_REFERENCE)
@@ -316,7 +270,7 @@ Error:
     return hr;
 }
 
-int32_t CreateAndRunSerializedScript(const char *fileName, const char *fileContents, size_t fileLength,
+int32_t CreateAndRunSerializedScript(const rust::Str fileName, const std::shared_ptr<std::string> &fileContents,
                                      JsFinalizeCallback fileContentsFinalizeCallback,
                                      const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
                                      const JsRuntimeAttributes jsrtAttributes)
@@ -345,15 +299,11 @@ int32_t CreateAndRunSerializedScript(const char *fileName, const char *fileConte
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, fileContents, fileLength, fileContentsFinalizeCallback, bufferVal, fullPath, nullptr));
+    IfFailGo(RunScript(fileName, fileContents, fileContentsFinalizeCallback, bufferVal, fullPath, nullptr));
 
     if (false)
     {
     ErrorRunFinalize:
-        if (fileContentsFinalizeCallback != nullptr)
-        {
-            fileContentsFinalizeCallback(const_cast<char *>(fileContents));
-        }
     }
 Error:
     if (current != JS_INVALID_REFERENCE)
@@ -371,14 +321,12 @@ Error:
 
 int32_t ExecuteTest(const rust::String &filename)
 {
-    auto fileName = static_cast<std::string>(filename);
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
 
-    auto result = Helpers::LoadScriptFromFile(fileName.c_str());
-    hr = result.hr;
+    auto fileContents = Helpers::LoadScriptFromFile(filename);
 
     IfFailGo(hr);
 
@@ -397,21 +345,22 @@ int32_t ExecuteTest(const rust::String &filename)
     }
 
     {
-        auto fullPath = std::filesystem::path(fileName).lexically_normal();
+        const rust::Str filenameView = filename;
+        auto fullPath = std::filesystem::path(static_cast<std::string_view>(filenameView)).lexically_normal();
 
         if (HostConfigFlags::flags.SerializedIsEnabled)
         {
-            CreateAndRunSerializedScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
+            CreateAndRunSerializedScript(filename, fileContents, WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
-            CreateParserStateAndRunScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree,
+            CreateParserStateAndRunScript(filename, fileContents, WScriptJsrt::FinalizeFree,
                                           fullPath, chRuntime, jsrtAttributes);
         }
         else
         {
-            IfFailGo(RunScript(fileName.c_str(), result.data.value()->c_str(), result.data.value()->length(), WScriptJsrt::FinalizeFree, nullptr,
+            IfFailGo(RunScript(filename, fileContents, WScriptJsrt::FinalizeFree, nullptr,
                                fullPath, nullptr));
         }
     }

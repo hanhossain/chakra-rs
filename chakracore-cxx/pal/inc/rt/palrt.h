@@ -601,7 +601,6 @@ Remember to fix the errcode defintion in safecrt.h.
 #define _vsnwprintf_s _vsnwprintf_unsafe
 
 #define _wfopen_s _wfopen_unsafe
-#define fopen_s _fopen_unsafe
 
 #define _vscprintf _vscprintf_unsafe
 #define _vscwprintf _vscwprintf_unsafe
@@ -707,17 +706,6 @@ inline errno_t _wfopen_unsafe(FILE * *ff, const char16_t *fileName, const char16
         *ff = result;
         return 0;
     }
-}
-
-inline errno_t _fopen_unsafe(FILE * *ff, const char *fileName, const char *mode)
-{
-  FILE *result = PAL_fopen(fileName, mode);
-  if(result == 0) {
-    return 1;
-  } else {
-    *ff = result;
-    return 0;
-  }
 }
 
 /* _itow_s */

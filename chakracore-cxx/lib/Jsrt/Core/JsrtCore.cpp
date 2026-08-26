@@ -876,6 +876,16 @@ JsErrorCode chakracore::jsrt::JsCreateString(
     });
 }
 
+JsErrorCode chakracore::jsrt::JsCreateString(const std::string &content, JsValueRef *value)
+{
+    return JsCreateString(content.c_str(), content.length(), value);
+}
+
+JsErrorCode chakracore::jsrt::JsCreateString(const rust::String &content, JsValueRef *value)
+{
+    return JsCreateString(static_cast<const std::string &>(content), value);
+}
+
 JsErrorCode chakracore::jsrt::JsCreatePropertyString(
     _In_z_ const char *name,
     _In_ size_t length,

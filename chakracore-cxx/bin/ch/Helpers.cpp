@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Helpers.h"
 
+#include <chakracore-sys/src/filesystem.rs.h>
 #include <filesystem>
 #include <iostream>
 #include <sys/stat.h>
@@ -18,11 +19,11 @@ namespace fs = std::filesystem;
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-Helpers::Result Helpers::LoadScriptFromFile(const char *filenameToLoad, const std::optional<std::filesystem::path> &fullPath)
+std::shared_ptr<std::string> Helpers::LoadScriptFromFile(rust::Str filenameToLoad, const std::optional<std::filesystem::path> &fullPath)
 {
     static fs::path sHostApplicationPath;
 
-    fs::path filenamePath = fullPath.value_or(filenameToLoad);
+    fs::path filenamePath = fullPath.value_or(static_cast<std::string_view>(filenameToLoad));
 
     // TODO (hanhossain): this just caches the current_dir and converts filenamePath to an absolute path relative to the host
     if (sHostApplicationPath.empty())
@@ -35,79 +36,23 @@ Helpers::Result Helpers::LoadScriptFromFile(const char *filenameToLoad, const st
     }
 
     // check if have it registered
-    const auto cached = SourceMap::Find(filenameToLoad).or_else([&filenamePath]
+    const auto cached = SourceMap::Find(static_cast<std::string_view>(filenameToLoad)).or_else([&filenamePath]
     {
         return SourceMap::Find(filenamePath.native());
     });
 
-    const char *pRawBytesFromMap = nullptr;
-    size_t lengthBytes = 0;
-    FILE *file = nullptr;
-
     if (cached)
     {
-        pRawBytesFromMap = cached.value()->c_str();
-        lengthBytes = cached.value()->length();
-    }
-    else
-    {
-        // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
-        // etc.
-        if (fopen_s(&file, filenamePath.c_str(), "rb") != 0)
-        {
-            return Result(E_FAIL);
-        }
-
-        // TODO (hanhossain): read file with std::ifstream to std::string
-        // Determine the file length, in bytes.
-        fseek(file, 0, SEEK_END);
-        lengthBytes = ftell(file);
-        fseek(file, 0, SEEK_SET);
+        return cached.value();
     }
 
-    const size_t bufferLength = lengthBytes != 0 ? lengthBytes + sizeof(uint8_t) : 1;
-    const auto pRawBytes = static_cast<uint8_t *>(malloc(bufferLength));
-    if (pRawBytes == nullptr)
-    {
-        chakra::Logger::error("out of memory");
-        if (file != nullptr)
-        {
-            fclose(file);
-        }
-        return Result(E_OUTOFMEMORY);
-    }
+    // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
+    // etc.
+    auto bytes = chakra_rs::fs::read_binary_file(filenamePath.string());
+    auto contents = reinterpret_cast<const char *>(bytes.data());
+    auto result = std::make_shared<std::string>(contents, bytes.size());
 
-    if (lengthBytes != 0)
-    {
-        if (file != nullptr)
-        {
-            //
-            // Read the entire content as a binary block.
-            //
-            size_t readBytes = std::fread(pRawBytes, sizeof(uint8_t), lengthBytes, file);
-            fclose(file);
-            if (readBytes < lengthBytes * sizeof(uint8_t))
-            {
-                free(pRawBytes);
-                return Result(E_FAIL);
-            }
-        }
-        else // from module source register
-        {
-            // Q: module source is on persistent memory. Why do we use the copy instead?
-            // A: if we use the same memory twice, ch doesn't know that during FinalizeCallback free.
-            // the copy memory will be freed by the finalizer
-            assert(pRawBytesFromMap);
-            memcpy(pRawBytes, pRawBytesFromMap, lengthBytes);
-        }
-    }
-
-    pRawBytes[lengthBytes] = 0; // Null terminate it. Could be UTF16
-
-    auto contents = reinterpret_cast<const char *>(pRawBytes);
-    auto result = cached ? cached.value() : std::make_shared<std::string>(contents, lengthBytes);
-
-    return {contents, lengthBytes, result};
+    return result;
 }
 
 const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
@@ -175,63 +120,4 @@ const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
         return "<unknown>";
         break;
     }
-}
-
-int32_t Helpers::LoadBinaryFile(const char * filename, const char *& contents, uint32_t& lengthBytes, bool printFileOpenError)
-{
-    int32_t hr = S_OK;
-    contents = nullptr;
-    lengthBytes = 0;
-    size_t result;
-    FILE * file;
-
-    //
-    // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
-    // etc.
-    //
-    if (fopen_s(&file, filename, "rb") != 0)
-    {
-        if (printFileOpenError)
-        {
-            chakra::Logger::error(std::format("Error in opening file '{}'", filename));
-        }
-        return E_FAIL;
-    }
-    // file will not be nullptr if _wfopen_s succeeds
-
-    //
-    // Determine the file length, in bytes.
-    //
-    fseek(file, 0, SEEK_END);
-    lengthBytes = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    contents = (const char *)malloc(lengthBytes);
-    if (contents != nullptr)
-    {
-        memset((void *)contents, 0, lengthBytes);
-    }
-    else
-    {
-        chakra::Logger::error("out of memory");
-        IfFailGo(E_OUTOFMEMORY);
-    }
-    //
-    // Read the entire content as a binary block.
-    //
-    result = std::fread((void*)contents, sizeof(char), lengthBytes, file);
-    if (result != lengthBytes)
-    {
-        chakra::Logger::error("Read error");
-        IfFailGo(E_FAIL);
-    }
-
-Error:
-    fclose(file);
-    if (contents && FAILED(hr))
-    {
-        free((void*)contents);
-        contents = nullptr;
-    }
-
-    return hr;
 }

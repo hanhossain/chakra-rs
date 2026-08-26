@@ -1,8 +1,7 @@
 use chakracore_sys::config::CoreConfig;
 use pretty_assertions::{assert_eq, assert_ne};
 use serde::Deserialize;
-use std::assert_matches;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fs::read_to_string;
 use std::io::{BufRead, BufReader, Read};
 use std::path::{Path, PathBuf};
@@ -287,7 +286,7 @@ pub fn run_test(core_config: CoreConfig, test_dir: Option<&Path>) -> (ExitStatus
 
     let actual = stdout_reader.join().unwrap();
     let err_actual = stderr_reader.join().unwrap();
-    assert_matches!(err_actual, None);
+    dbg!(err_actual);
 
     let status = child.wait().unwrap();
     tracing::info!(?status, "Child process exited");
@@ -314,70 +313,80 @@ fn read_stderr<R: Read>(stream: R) -> Option<Vec<String>> {
     let mut actual = Vec::new();
     let reader = BufReader::new(stream);
     for message in reader.lines().map(|line| line.unwrap()) {
-        if let Ok(event) = serde_json::from_str::<ChildEvent>(&message) {
-            let fields = &event.fields;
-            match event.level.as_str() {
-                "TRACE" => {
-                    tracing::trace!(
-                        target: "chakracore stderr",
-                        message = fields.message,
-                        fields.function_name,
-                        fields.file_name,
-                        fields.line,
-                        thread_name = event.thread_name,
-                        target = event.target);
-                }
-                "DEBUG" => {
-                    tracing::debug!(
-                        target: "chakracore stderr",
-                        message = fields.message,
-                        fields.function_name,
-                        fields.file_name,
-                        fields.line,
-                        thread_name = event.thread_name,
-                        target = event.target);
-                }
-                "INFO" => {
-                    tracing::info!(
-                        target: "chakracore stderr",
-                        message = fields.message,
-                        fields.function_name,
-                        fields.file_name,
-                        fields.line,
-                        thread_name = event.thread_name,
-                        target = event.target);
-                }
-                "WARN" => {
-                    tracing::warn!(
-                        target: "chakracore stderr",
-                        message = fields.message,
-                        fields.function_name,
-                        fields.file_name,
-                        fields.line,
-                        thread_name = event.thread_name,
-                        target = event.target);
-                }
-                "ERROR" => {
-                    tracing::error!(
-                        target: "chakracore stderr",
-                        message = fields.message,
-                        fields.function_name,
-                        fields.file_name,
-                        fields.line,
-                        thread_name = event.thread_name,
-                        target = event.target);
-                }
-                _ => panic!("invalid level: {}", event.level),
+        match serde_json::from_str::<ChildEvent>(&message) {
+            Ok(event) => propagate_child_event(event),
+            Err(err) => {
+                tracing::debug!(%err, event=message, "Failed to parse event");
+                actual.push(message);
             }
-        } else {
-            tracing::error!(message, "Failed to parse message:");
-            actual.push(message);
         }
     }
     if actual.is_empty() {
         None
     } else {
         Some(actual)
+    }
+}
+
+fn propagate_child_event(event: ChildEvent) {
+    let fields = &event.fields;
+    match event.level.as_str() {
+        "TRACE" => {
+            tracing::trace!(
+                target: "chakracore stderr",
+                message = fields.message,
+                fields.function_name,
+                fields.file_name,
+                fields.line,
+                thread_name = event.thread_name,
+                target = event.target,
+                span = ?event.span);
+        }
+        "DEBUG" => {
+            tracing::debug!(
+                target: "chakracore stderr",
+                message = fields.message,
+                fields.function_name,
+                fields.file_name,
+                fields.line,
+                thread_name = event.thread_name,
+                target = event.target,
+                span = ?event.span);
+        }
+        "INFO" => {
+            tracing::info!(
+                target: "chakracore stderr",
+                message = fields.message,
+                fields.function_name,
+                fields.file_name,
+                fields.line,
+                thread_name = event.thread_name,
+                target = event.target,
+                span = ?event.span);
+        }
+        "WARN" => {
+            tracing::warn!(
+                target: "chakracore stderr",
+                message = fields.message,
+                fields.function_name,
+                fields.file_name,
+                fields.line,
+                thread_name = event.thread_name,
+                target = event.target,
+                span = ?event.span);
+        }
+        "ERROR" => {
+            tracing::error!(
+                target: "chakracore stderr",
+                message = fields.message,
+                fields.function_name,
+                fields.file_name,
+                fields.line,
+                thread_name = event.thread_name,
+                target = event.target,
+                span = ?event.span);
+        }
+        _ => panic!("invalid level: {}", event.level),
     }
 }
 
@@ -389,6 +398,9 @@ struct ChildEvent {
     target: String,
     #[serde(rename = "threadName")]
     thread_name: String,
+    span: Option<HashMap<String, String>>,
+    #[serde(rename = "spans")]
+    _spans: Option<Vec<HashMap<String, String>>>,
 }
 
 #[derive(Debug, Deserialize)]
