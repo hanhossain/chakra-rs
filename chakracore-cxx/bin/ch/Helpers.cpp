@@ -4,49 +4,45 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Helpers.h"
 
-#include <chakracore-sys/src/filesystem.rs.h>
-#include <filesystem>
-#include <iostream>
-#include <sys/stat.h>
-
 #include "ChakraRtInterface.h"
 #include "SourceMap.h"
 #include "WScriptJsrt.h"
 #include "chakra/Logger.h"
+
+#include "chakracore-sys/src/filesystem.rs.h"
+#include <filesystem>
+#include <iostream>
+#include <sys/stat.h>
 
 namespace fs = std::filesystem;
 
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-std::shared_ptr<std::string> Helpers::LoadScriptFromFile(rust::Str filename, const std::optional<std::filesystem::path> &fullPath)
+rust::String Helpers::LoadScriptFromFile(rust::Str filename, const std::optional<std::filesystem::path> &fullPath)
 {
     fs::path filenamePath = fullPath.value_or(static_cast<std::string_view>(filename));
 
     // check if have it registered
     if (auto cached = SourceMap::Find(filename))
     {
-        return cached;
+        return *cached;
     }
 
     if (fullPath)
     {
         if (auto cached = SourceMap::Find(fullPath->native()))
         {
-            return cached;
+            return *cached;
         }
     }
 
     // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
     // etc.
-    auto bytes = chakra_rs::fs::read_binary_file(filenamePath.string());
-    auto contents = reinterpret_cast<const char *>(bytes.data());
-    auto result = std::make_shared<std::string>(contents, bytes.size());
-
-    return result;
+    return chakra_rs::fs::file_to_string(filenamePath.string());
 }
 
-std::shared_ptr<std::string> Helpers::LoadScriptFromFile(rust::Str filename)
+rust::String Helpers::LoadScriptFromFile(rust::Str filename)
 {
     return LoadScriptFromFile(filename, std::nullopt);
 }

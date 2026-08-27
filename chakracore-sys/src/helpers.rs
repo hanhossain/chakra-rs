@@ -5,6 +5,6 @@ pub mod ffi {
 
         type Helpers;
         #[Self = "Helpers"]
-        fn LoadScriptFromFile(filename: &str) -> Result<SharedPtr<CxxString>>;
+        fn LoadScriptFromFile(filename: &str) -> Result<String>;
     }
 }

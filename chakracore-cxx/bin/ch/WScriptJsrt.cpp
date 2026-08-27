@@ -208,10 +208,11 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
             IfJsrtErrorSetGo(chakracore::jsrt::JsToString(arguments[2], scriptInjectType));
         }
 
-        std::shared_ptr<std::string> result;
+        // TODO (hanhossain): don't leak a string ptr
+        rust::String *content;
         try
         {
-            result = Helpers::LoadScriptFromFile(fileName);
+            content = new rust::String{Helpers::LoadScriptFromFile(fileName)};
         }
         catch (const rust::Error &e)
         {
@@ -220,8 +221,6 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
             return returnValue;
         }
 
-        // TODO (hanhossain): don't leak a string ptr
-        auto content = new std::string{*result};
         returnValue = LoadScript(callee, fileName, content->c_str(), !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
     }
 
@@ -1192,7 +1191,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
         return JS_INVALID_REFERENCE;
     }
 
-    std::shared_ptr<std::string> fileContent;
+    rust::String fileContent;
     try
     {
         fileContent = Helpers::LoadScriptFromFile(fileName);
@@ -1206,7 +1205,7 @@ JsValueRef WScriptJsrt::LoadTextFileCallback(JsValueRef callee, bool isConstruct
     }
 
     JsValueRef returnValue;
-    ChakraRTInterface::JsCreateString(*fileContent, &returnValue);
+    ChakraRTInterface::JsCreateString(fileContent, &returnValue);
     return returnValue;
 }
 
@@ -1872,8 +1871,8 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 
         try
         {
-            const auto fileContent = Helpers::LoadScriptFromFile(specifierStr, fullPath_);
-            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, fileContent->c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
+            rust::String fileContent = Helpers::LoadScriptFromFile(specifierStr, fullPath_);
+            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, fileContent.c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
         }
         catch (const rust::Error &e)
         {
