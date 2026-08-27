@@ -30,10 +30,10 @@ BreakConstructorInitializers: AfterColon
 BreakConstructorInitializersBeforeComma: false
 ColumnLimit: 120
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
-IncludeCategories: 
-  - Regex: '^<.*'
-    Priority: 1
+IncludeCategories:
   - Regex: '^".*'
+    Priority: 1
+  - Regex: '^<.*'
     Priority: 2
   - Regex: '.*'
     Priority: 3
@@ -46,7 +46,7 @@ MacroBlockEnd: ''
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
 SpaceInEmptyParentheses: false
-SpacesInAngles: false
+SpacesInAngles: Never
 SpacesInConditionalStatement: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
