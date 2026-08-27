@@ -1163,7 +1163,6 @@ bool WScriptJsrt::Uninitialize()
     return true;
 }
 
-FileNode * SourceMap::root = nullptr;
 JsValueRef WScriptJsrt::RegisterModuleSourceCallback(JsValueRef callee, bool isConstructCall,
     JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
 {
@@ -1182,7 +1181,7 @@ JsValueRef WScriptJsrt::RegisterModuleSourceCallback(JsValueRef callee, bool isC
         IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[1], fileName));
         IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[2], data));
 
-        SourceMap::Add(static_cast<std::string>(fileName), static_cast<std::string>(data));
+        SourceMap::Add(std::move(fileName), std::move(data));
     }
 
 Error:
