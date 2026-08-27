@@ -269,19 +269,10 @@ pub fn run_test(core_config: CoreConfig, test_dir: Option<&Path>) -> (ExitStatus
     let stderr = child.stderr.take().unwrap();
 
     let dispatcher = tracing::dispatcher::get_default(|dispatch| dispatch.clone());
-    let dispatcher2 = dispatcher.clone();
-
-    let stdout_span = tracing::info_span!("stdout_reader");
     let stdout_reader = thread::spawn(move || {
-        let _span = stdout_span.entered();
         tracing::dispatcher::with_default(&dispatcher, || read_stdout(stdout))
     });
-
-    let stderr_span = tracing::info_span!("stderr_reader");
-    let stderr_reader = thread::spawn(move || {
-        let _span = stderr_span.entered();
-        tracing::dispatcher::with_default(&dispatcher2, || read_stderr(stderr))
-    });
+    let stderr_reader = thread::spawn(move || read_stderr(stderr));
 
     let actual = stdout_reader.join().unwrap();
     stderr_reader.join().unwrap();
@@ -291,11 +282,12 @@ pub fn run_test(core_config: CoreConfig, test_dir: Option<&Path>) -> (ExitStatus
     (status, actual)
 }
 
+#[tracing::instrument(skip(stream))]
 fn read_stdout<R: Read>(stream: R) -> Vec<String> {
     let mut actual = Vec::new();
     let reader = BufReader::new(stream);
     for mut message in reader.lines().map(|line| line.unwrap()) {
-        tracing::info!(target: "chakracore stdout", message);
+        tracing::trace!(target: "stdout", message);
         // HACK: chakracore allows embedded nulls in its strings. This removes the nulls to allow
         // asserting with the test baseline.
         if message.contains('\0') {
