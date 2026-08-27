@@ -55,6 +55,11 @@ std::shared_ptr<std::string> Helpers::LoadScriptFromFile(rust::Str filenameToLoa
     return result;
 }
 
+std::shared_ptr<std::string> Helpers::LoadScriptFromFile(rust::Str filename)
+{
+    return LoadScriptFromFile(filename, std::nullopt);
+}
+
 const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
 {
     bool hasException = false;

@@ -5,6 +5,7 @@ fn main() {
         "src/chhelper.rs",
         "src/config.rs",
         "src/filesystem.rs",
+        "src/helpers.rs",
         "src/host_config.rs",
         "src/logger.rs",
         "src/rt_interface.rs",
