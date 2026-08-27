@@ -19,32 +19,24 @@ namespace fs = std::filesystem;
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-std::shared_ptr<std::string> Helpers::LoadScriptFromFile(rust::Str filenameToLoad, const std::optional<std::filesystem::path> &fullPath)
+std::shared_ptr<std::string> Helpers::LoadScriptFromFile(rust::Str filename, const std::optional<std::filesystem::path> &fullPath)
 {
-    static fs::path sHostApplicationPath;
-
-    fs::path filenamePath = fullPath.value_or(static_cast<std::string_view>(filenameToLoad));
-
-    // TODO (hanhossain): this just caches the current_dir and converts filenamePath to an absolute path relative to the host
-    if (sHostApplicationPath.empty())
-    {
-        sHostApplicationPath = filenamePath.parent_path();
-    }
-    else if (filenamePath.is_relative() && !fullPath) // make sure it's not a full path
-    {
-        filenamePath = sHostApplicationPath / filenamePath;
-    }
+    fs::path filenamePath = fullPath.value_or(static_cast<std::string_view>(filename));
 
     // check if have it registered
-    const auto cached = SourceMap::Find(static_cast<std::string_view>(filenameToLoad)).or_else([&filenamePath]
-    {
-        return SourceMap::Find(filenamePath.native());
-    });
-
-    if (cached)
+    if (auto cached = SourceMap::Find(static_cast<std::string_view>(filename)))
     {
         return cached.value();
     }
+
+    if (fullPath)
+    {
+        if (auto cached = SourceMap::Find(fullPath->native()))
+        {
+            return cached.value();
+        }
+    }
+
 
     // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
     // etc.

@@ -42,3 +42,13 @@ struct std::formatter<rust::String> : std::formatter<std::string_view>
         return std::formatter<std::string_view>::format(temp, ctx);
     }
 };
+
+template <>
+struct std::formatter<rust::Str> : std::formatter<std::string_view>
+{
+    auto format(const rust::Str string, std::format_context &ctx) const
+    {
+        const auto temp = static_cast<std::string_view>(string);
+        return std::formatter<std::string_view>::format(temp, ctx);
+    }
+};
