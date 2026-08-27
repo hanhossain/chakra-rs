@@ -44,7 +44,7 @@ jobs:
     env:
       CARGO_BUILD_WARNINGS: deny
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - name: Install dependencies
         run: ${{ matrix.deps }}
@@ -88,7 +88,7 @@ jobs:
             os-prefix: linux
             deps: sudo apt-get install -y ninja-build clang-19 lld-19 libc++-19-dev libc++abi-19-dev
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install dependencies
         run: ${{ matrix.deps }}
       - if: ${{ runner.os == 'Linux' }}
