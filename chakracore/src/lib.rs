@@ -23,6 +23,7 @@ pub fn run(config: CoreConfig) -> Result<(), Error> {
     Ok(())
 }
 
+#[tracing::instrument(skip(filename))]
 fn execute_test(filename: &String) -> Result<i32, Exception> {
     let file_contents = Helpers::LoadScriptFromFile(filename)?;
     ExecuteTest(filename, &file_contents)
