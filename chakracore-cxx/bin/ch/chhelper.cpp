@@ -319,17 +319,13 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTest(const rust::String &filename)
+int32_t ExecuteTest(const rust::String &filename, const std::shared_ptr<std::string>& fileContents)
 {
     auto span = chakra::Span::create();
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
-
-    auto fileContents = Helpers::LoadScriptFromFile(filename);
-
-    IfFailGo(hr);
 
     IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, &runtime));
     chRuntime = runtime;

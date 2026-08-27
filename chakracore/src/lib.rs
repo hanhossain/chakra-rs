@@ -1,5 +1,6 @@
 use chakracore_sys::chhelper::ffi::ExecuteTest;
 use chakracore_sys::config::CoreConfig;
+use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
 use chakracore_sys::rt_interface::ffi::ChakraRTInterface;
 use cxx::Exception;
@@ -11,7 +12,7 @@ pub fn run(config: CoreConfig) -> Result<(), Error> {
     // handle command line flags
     ChakraRTInterface::InitializeTestHooks(&config.args);
 
-    let res = ExecuteTest(&config.filename)?;
+    let res = execute_test(&config.filename)?;
     if res < 0 {
         tracing::error!(hresult = res, "hresult was negative. exiting.");
         return Err(Error::NegativeHResult(res));
@@ -20,6 +21,11 @@ pub fn run(config: CoreConfig) -> Result<(), Error> {
         return Err(Error::ExitCode(res as u8));
     }
     Ok(())
+}
+
+fn execute_test(filename: &String) -> Result<i32, Exception> {
+    let file_contents = Helpers::LoadScriptFromFile(filename)?;
+    ExecuteTest(filename, &file_contents)
 }
 
 #[derive(thiserror::Error, Debug)]

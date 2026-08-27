@@ -56,6 +56,7 @@ do { \
 class Helpers
 {
 public:
-    static std::shared_ptr<std::string> LoadScriptFromFile(rust::Str filename, const std::optional<std::filesystem::path> &fullPath = std::nullopt);
+    static std::shared_ptr<std::string> LoadScriptFromFile(rust::Str filename, const std::optional<std::filesystem::path> &fullPath);
+    static std::shared_ptr<std::string> LoadScriptFromFile(rust::Str filename);
     static const char *JsErrorCodeToString(JsErrorCode jsErrorCode);
 };
