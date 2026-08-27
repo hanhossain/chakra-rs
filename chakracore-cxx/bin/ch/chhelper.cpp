@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <print>
 
-#include <chakracore-sys/src/chhelper.rs.h>
+#include <chakracore-sys/src/logger.rs.h>
 #include <pthread.h>
 #include <rust/cxx.h>
 
@@ -321,6 +321,7 @@ Error:
 
 int32_t ExecuteTest(const rust::String &filename)
 {
+    auto span = chakra::Span::create();
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
     int32_t hr = S_OK;
