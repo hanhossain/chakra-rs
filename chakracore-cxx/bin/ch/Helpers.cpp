@@ -24,19 +24,18 @@ std::shared_ptr<std::string> Helpers::LoadScriptFromFile(rust::Str filename, con
     fs::path filenamePath = fullPath.value_or(static_cast<std::string_view>(filename));
 
     // check if have it registered
-    if (auto cached = SourceMap::Find(static_cast<std::string_view>(filename)))
+    if (auto cached = SourceMap::Find(filename))
     {
-        return cached.value();
+        return cached;
     }
 
     if (fullPath)
     {
         if (auto cached = SourceMap::Find(fullPath->native()))
         {
-            return cached.value();
+            return cached;
         }
     }
-
 
     // Open the file as a binary file to prevent CRT from handling encoding, line-break conversions,
     // etc.

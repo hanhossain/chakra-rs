@@ -1,41 +1,30 @@
 #pragma once
-
-struct FileNode
-{
-    std::shared_ptr<std::string> data;
-    std::string path;
-    FileNode * next;
-    FileNode(std::string path_, std::shared_ptr<std::string> data_):
-        data(std::move(data_)), path(std::move(path_)), next(nullptr) {
-    }
-};
+#include <unordered_map>
 
 class SourceMap
 {
-    static FileNode *root;
+    struct string_hash
+    {
+        using hash_type = std::hash<std::string_view>;
+        using is_transparent = void;
+
+        std::size_t operator()(std::string_view str) const { return hash_type{}(str); }
+    };
+
+    static inline std::unordered_map<std::string, std::shared_ptr<std::string>, string_hash, std::equal_to<>> store = {};
 
 public:
-    static void Add(std::string &&path, std::string &&data)
+    static void Add(rust::String &&path, rust::String &&data)
     {
         // SourceMap lifetime == process lifetime
-        FileNode *node = new FileNode(std::move(path), std::make_shared<std::string>(std::move(data)));
-        if (root != nullptr)
-        {
-            node->next = root;
-        }
-        root = node;
+        store.insert(std::make_pair(std::move(path), std::make_shared<std::string>(std::move(data))));
     }
 
-    static std::optional<std::shared_ptr<std::string>> Find(const std::string_view path)
+    static std::shared_ptr<std::string> Find(const rust::Str path)
     {
-        FileNode *node = root;
-        while (node != nullptr)
+        if (const auto search = store.find(static_cast<std::string_view>(path)); search != store.end())
         {
-            if (node->path == path)
-            {
-                return node->data;
-            }
-            node = node->next;
+            return search->second;
         }
         return {};
     }
