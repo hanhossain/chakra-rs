@@ -359,12 +359,7 @@ JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall,
     }
 Error:
     SetExceptionIf(errorCode, errorMessage);
-
-    if (transferVarsArray)
-    {
-        delete[] transferVarsArray;
-    }
-
+    delete[] transferVarsArray;
     return returnValue;
 }
 
@@ -452,11 +447,7 @@ JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsV
 
 Error:
     SetExceptionIf(errorCode, errorMessage);
-    if (transferables)
-    {
-        delete[] transferables;
-    }
-
+    delete[] transferables;
     return returnValue;
 }
 
@@ -1138,13 +1129,11 @@ bool WScriptJsrt::Uninitialize()
     auto& threadData = GetRuntimeThreadLocalData().threadData;
     if (threadData && !threadData->children.empty())
     {
-        int32_t count = (int32_t)threadData->children.size();
+        const size_t count = threadData->children.size();
         std::vector<HANDLE> childrenHandles;
 
-        //Clang does not support "for each" yet
-        for(auto i = threadData->children.begin(); i!= threadData->children.end(); i++)
+        for (const auto child : threadData->children)
         {
-            auto child = *i;
             childrenHandles.push_back(child->hThread);
             SetEvent(child->hevntShutdown);
         }
@@ -1152,9 +1141,9 @@ bool WScriptJsrt::Uninitialize()
         [[maybe_unused]] uint32_t waitRet = WaitForMultipleObjects(count, &childrenHandles[0], TRUE, INFINITE);
         assert(waitRet == WAIT_OBJECT_0);
 
-        for (auto i = threadData->children.begin(); i != threadData->children.end(); i++)
+        for (const auto &i : threadData->children)
         {
-            delete *i;
+            delete i;
         }
 
         threadData->children.clear();
