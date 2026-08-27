@@ -319,7 +319,7 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTest(const rust::String &filename, const std::shared_ptr<std::string>& fileContents)
+int32_t ExecuteTest(const rust::String &filename, const rust::String &fileContents)
 {
     auto span = chakra::Span::create();
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
@@ -345,19 +345,22 @@ int32_t ExecuteTest(const rust::String &filename, const std::shared_ptr<std::str
         const rust::Str filenameView = filename;
         auto fullPath = std::filesystem::path(static_cast<std::string_view>(filenameView)).lexically_normal();
 
+        // TODO (hanhossain): use rust string
+        auto contents = std::make_shared<std::string>(fileContents);
+
         if (HostConfigFlags::flags.SerializedIsEnabled)
         {
-            CreateAndRunSerializedScript(filename, fileContents, WScriptJsrt::FinalizeFree,
+            CreateAndRunSerializedScript(filename, contents, WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);
         }
         else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
-            CreateParserStateAndRunScript(filename, fileContents, WScriptJsrt::FinalizeFree,
+            CreateParserStateAndRunScript(filename, contents, WScriptJsrt::FinalizeFree,
                                           fullPath, chRuntime, jsrtAttributes);
         }
         else
         {
-            IfFailGo(RunScript(filename, fileContents, WScriptJsrt::FinalizeFree, nullptr,
+            IfFailGo(RunScript(filename, contents, WScriptJsrt::FinalizeFree, nullptr,
                                fullPath, nullptr));
         }
     }
