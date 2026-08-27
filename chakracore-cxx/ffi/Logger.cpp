@@ -27,4 +27,12 @@ namespace chakra
     {
         chakra_rs::log::trace(location.function_name(), location.file_name(), location.line(), message);
     }
+
+    Span::Span(rust::Box<chakra_rs::log::ForeignSpan> foreign_span) : foreign_span_(std::move(foreign_span)) {}
+
+    Span Span::create(const std::source_location &location)
+    {
+        auto span = chakra_rs::log::ForeignSpan::create(location.function_name());
+        return Span{std::move(span)};
+    }
 } // namespace chakra
