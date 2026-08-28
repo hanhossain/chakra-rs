@@ -3857,28 +3857,20 @@ JsErrorCode chakracore::jsrt::JsCopyPropertyId(
         return errorCode;
     }
 
-    utf8::WideToNarrow utf8Str(str);
+    rust::String utf8Str{str};
     if (!buffer)
     {
         if (length)
         {
-            *length = utf8Str.Length();
+            *length = utf8Str.length();
         }
     }
     else
     {
-        size_t count = min(bufferSize, utf8Str.Length());
-        // Try to copy whole characters if buffer size insufficient
-        auto maxFitChars = utf8::ByteIndexIntoCharacterIndex(
-            (LPCUTF8)(const char*)utf8Str, count,
-            utf8::DecodeOptions::doChunkedEncoding);
-        count = utf8::CharacterIndexToByteIndex(
-            (LPCUTF8)(const char*)utf8Str, utf8Str.Length(), maxFitChars);
-
-        memmove(buffer, utf8Str, sizeof(char) * count);
+        strcpy(buffer, utf8Str.c_str());
         if (length)
         {
-            *length = count;
+            *length = utf8Str.length();
         }
     }
 

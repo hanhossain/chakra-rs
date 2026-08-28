@@ -374,5 +374,4 @@ namespace utf8
     };
 
     typedef NarrowWideConverter<malloc_allocator, const char *, char16_t*, charcount_t> NarrowToWide;
-    typedef NarrowWideConverter<malloc_allocator, const char16_t*, char*, size_t> WideToNarrow;
 }
