@@ -7,6 +7,8 @@
 #include "wabtapi.h"
 #include "Codex/Utf8Helper.h"
 
+#include <rust/cxx.h>
+
 namespace Js
 {
 
@@ -138,9 +140,10 @@ Js::Var WabtInterface::EntryConvertWast2Wasm(RecyclableObject* function, CallInf
     context.allocator = &arena;
     context.scriptContext = scriptContext;
 
-    size_t origSize = string->GetLength();
-    auto allocator = [&arena](size_t size) {return (utf8char_t*)AnewArray(&arena, byte, size);};
-    utf8::WideStringToNarrow(allocator, str, origSize, &wastBuffer, &wastSize);
+    rust::String s{str};
+    wastBuffer = static_cast<char *>(std::malloc(s.length() + 1));
+    strcpy(wastBuffer, s.c_str());
+    wastSize = s.length();
     LEAVE_PINNED_SCOPE();   //  string
 
     try
