@@ -1,11 +1,13 @@
 use chakracore_sys::chhelper::ffi::Abstractions;
 use chakracore_sys::config::CoreConfig;
 use tracing_subscriber::filter::LevelFilter;
+use tracing_subscriber::fmt::format::FmtSpan;
 
 fn setup_tracing() {
     tracing_subscriber::fmt()
         .with_max_level(LevelFilter::TRACE)
         .with_writer(std::io::stderr)
+        .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE)
         .init();
 }
 

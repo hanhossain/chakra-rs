@@ -65,6 +65,7 @@ int32_t RunScript(const rust::Str fileName, const rust::String &contents,
                   JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue,
                   const std::filesystem::path &fullPath, JsValueRef parserStateCache)
 {
+    auto span = chakra::Span::create("RunScript");
     int32_t hr = S_OK;
     MessageQueue *messageQueue = new MessageQueue();
     WScriptJsrt::AddMessageQueue(messageQueue);
@@ -216,6 +217,7 @@ int32_t CreateParserStateAndRunScript(const rust::Str fileName,
                                       const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
                                       const JsRuntimeAttributes jsrtAttributes)
 {
+    auto span = chakra::Span::create("CreateParserStateAndRunScript");
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
     JsContextRef context = JS_INVALID_REFERENCE, current = JS_INVALID_REFERENCE;
@@ -264,6 +266,7 @@ int32_t CreateAndRunSerializedScript(const rust::Str fileName,
                                      const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
                                      const JsRuntimeAttributes jsrtAttributes)
 {
+    auto span = chakra::Span::create("CreateAndRunSerializedScript");
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
     JsContextRef context = JS_INVALID_REFERENCE, current = JS_INVALID_REFERENCE;
@@ -310,7 +313,7 @@ Error:
 
 int32_t ExecuteTest(const rust::String &filename, const rust::String &fileContents)
 {
-    auto span = chakra::Span::create();
+    auto span = chakra::Span::create("ExecuteTest");
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
     int32_t hr = S_OK;

@@ -28,7 +28,7 @@ namespace chakra
         rust::Box<chakra_rs::log::ForeignSpan> foreign_span_;
         explicit Span(rust::Box<chakra_rs::log::ForeignSpan> foreign_span);
     public:
-        static Span create(const std::source_location &location = std::source_location::current());
+        static Span create(const std::string &name = std::source_location::current().function_name());
     };
 
 } // namespace chakra
