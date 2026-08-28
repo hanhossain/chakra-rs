@@ -29,7 +29,7 @@ public:
     JsContextRef context;
 
 
-    std::string initialSource;
+    rust::String initialSource;
 
     RuntimeThreadData* parent;
     
