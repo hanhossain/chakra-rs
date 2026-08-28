@@ -138,19 +138,8 @@ namespace utf8
         return res;
     }
 
-    template <class Allocator, class SrcType, class DstType, class CountType>
-    class NarrowWideStringConverter
-    {
-    public:
-        static size_t Length(const SrcType& src);
-        static int32_t Convert(
-            SrcType src, size_t srcCount, DstType* dst, CountType* dstCount, size_t* allocateCount = nullptr);
-        static int32_t ConvertNoAlloc(
-            SrcType src, size_t srcCount, DstType dst, CountType dstCount, CountType* written);
-    };
-
     template <class Allocator>
-    class NarrowWideStringConverter<Allocator, const char *, char16_t*, charcount_t>
+    class NarrowWideStringConverter
     {
     public:
         // Note: Typically caller should pass in Utf8 string length. Following
@@ -167,24 +156,15 @@ namespace utf8
             return NarrowStringToWide<Allocator>(
                 sourceString, sourceCount, destStringPtr, destCount, allocateCount);
         }
-
-        static int32_t ConvertNoAlloc(
-            const char * sourceString, size_t sourceCount,
-            char16_t* destStringPtr, charcount_t destCount, charcount_t* written)
-        {
-            return NarrowStringToWideNoAlloc(
-                sourceString, sourceCount, destStringPtr, destCount, written);
-        }
     };
 
-    template <class Allocator, class SrcType, class DstType, class CountType>
+    template <class Allocator, class SrcType = const char *>
     class NarrowWideConverter
     {
-        typedef NarrowWideStringConverter<Allocator, SrcType, DstType, CountType>
-            StringConverter;
+        typedef NarrowWideStringConverter<Allocator> StringConverter;
     private:
-        DstType dst;
-        CountType dstCount;
+        char16_t * dst;
+        charcount_t dstCount;
         size_t allocateCount;
         bool freeDst;
 
@@ -197,11 +177,6 @@ namespace utf8
         NarrowWideConverter(const SrcType& src, size_t srcCount = -1): dst()
         {
             Initialize(src, srcCount);
-        }
-
-        NarrowWideConverter(const SrcType& src, size_t srcCount, DstType dst, size_t dstSize) : dst(dst), freeDst(false)
-        {
-            StringConverter::ConvertNoAlloc(src, srcCount, dst, dstSize, &dstCount);
         }
 
         void Initialize(const SrcType& src, size_t srcCount = -1)
@@ -223,14 +198,7 @@ namespace utf8
             }
         }
 
-        DstType Detach()
-        {
-            DstType result = dst;
-            dst = DstType();
-            return result;
-        }
-
-        operator DstType()
+        operator char16_t *()
         {
             return dst;
         }
@@ -241,5 +209,5 @@ namespace utf8
         }
     };
 
-    typedef NarrowWideConverter<malloc_allocator, const char *, char16_t*, charcount_t> NarrowToWide;
+    typedef NarrowWideConverter<malloc_allocator> NarrowToWide;
 }
