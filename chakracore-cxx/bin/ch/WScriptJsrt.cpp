@@ -221,7 +221,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
             return returnValue;
         }
 
-        returnValue = LoadScript(callee, fileName, content->c_str(), !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
+        returnValue = LoadScript(callee, fileName, content->c_str(), *content, !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
     }
 
 Error:
@@ -554,7 +554,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
 
         // TODO: This is CESU-8. How to tell the engine?
         // TODO: How to handle this source (script) life time?
-        returnValue = LoadScript(callee, fileName, fileContent->c_str(), scriptInjectType ? scriptInjectType.value() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
+        returnValue = LoadScript(callee, fileName, fileContent->c_str(), *fileContent, scriptInjectType ? scriptInjectType.value() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
     }
 
 Error:
@@ -570,12 +570,12 @@ std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
     return parent;
 }
 
-JsErrorCode WScriptJsrt::ModuleEntryPoint(std::string_view fileContent, const std::string &fullName)
+JsErrorCode WScriptJsrt::ModuleEntryPoint(rust::Str fileContent, const std::string &fullName)
 {
     return LoadModuleFromString(fileContent, fullName, true);
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(std::optional<std::string_view> fileContent, const std::string &fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile)
 {
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
@@ -613,11 +613,8 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(std::optional<std::string_view> fi
     JsValueRef errorObject = JS_INVALID_REFERENCE;
 
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
-    auto content = fileContent ? fileContent.value().data() : nullptr;
-    auto fileContentLength = fileContent.transform([](const std::string_view s){ return s.length(); }).value_or(0);
-
-    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)content,
-        fileContentLength, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
+    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)(fileContent ? fileContent.value().data() : nullptr),
+        fileContent ? fileContent.value().size() : 0, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
     if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent && !HostConfigFlags::flags.IgnoreScriptErrorCode && moduleErrMap[requestModule] == RootModule)
     {
         ChakraRTInterface::JsSetException(errorObject);
@@ -629,7 +626,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(std::optional<std::string_view> fi
 
 
 JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
-    const char * fileContent, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
+    const char * fileContent, const std::optional<rust::Str> &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
@@ -637,7 +634,6 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     JsContextRef currentContext = JS_INVALID_REFERENCE;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
-    void *callbackArg = (finalizeCallback != nullptr ? (void*)fileContent : nullptr);
     std::error_code ec;
 
     auto fullPath = fs::absolute(static_cast<std::string_view>(fileName), ec).lexically_normal();
@@ -649,7 +645,6 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     // treated as a module source text instead of opening a new file.
     if (isSourceModule || scriptInjectType == "module")
     {
-        auto content = fileContent != nullptr ? std::optional{fileContent} : std::nullopt;
         errorCode = LoadModuleFromString(content, fullPath, isFile);
     }
     else if (scriptInjectType == "self")
@@ -660,8 +655,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsSetCurrentContext(calleeContext));
 
         JsValueRef scriptSource;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContent,
-            (unsigned int)strlen(fileContent), finalizeCallback, callbackArg, &scriptSource));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer(*content, finalizeCallback, &scriptSource));
         JsValueRef fname;
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
@@ -699,8 +693,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
         Initialize();
 
         JsValueRef scriptSource;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer((void*)fileContent,
-            (unsigned int)strlen(fileContent), finalizeCallback, callbackArg, &scriptSource));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer(*content, finalizeCallback, &scriptSource));
         JsValueRef fname;
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
@@ -733,7 +726,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
         }
 
         RuntimeThreadData* child = new RuntimeThreadData();
-        child->initialSource = fileContent;
+        child->initialSource = rust::String{content.value().data(), content.value().size()};
         threadData->children.push_back(child);
         child->parent = threadData;
 
@@ -1872,7 +1865,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
         try
         {
             rust::String fileContent = Helpers::LoadScriptFromFile(specifierStr, fullPath_);
-            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, fileContent.c_str(), "module", true, WScriptJsrt::FinalizeFree, true);
+            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, fileContent.c_str(), fileContent, "module", true, WScriptJsrt::FinalizeFree, true);
         }
         catch (const rust::Error &e)
         {
@@ -1885,7 +1878,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
                     chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
                 }
             }
-            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr , nullptr, "module", true, WScriptJsrt::FinalizeFree, false);
+            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr , nullptr, std::nullopt, "module", true, WScriptJsrt::FinalizeFree, false);
         }
     }
     return errorCode;

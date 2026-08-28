@@ -39,9 +39,7 @@ int32_t GetSerializedBuffer(const rust::String &fileContents, JsFinalizeCallback
     int32_t hr = S_OK;
 
     JsValueRef scriptSource;
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-        const_cast<char *>(fileContents.data()), fileContents.length(), fileContentFinalizeCallback,
-        const_cast<char *>(fileContents.data()), &scriptSource));
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(fileContents, fileContentFinalizeCallback, &scriptSource));
     IfJsErrorFailLog(ChakraRTInterface::JsSerialize(scriptSource, byteCodeBuffer, JsParseScriptAttributeNone));
 
 Error:
@@ -54,10 +52,7 @@ static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext,
     auto *scriptBody = reinterpret_cast<const rust::String *>(sourceContext);
 
     // sourceContext is source ptr, see RunScript below
-    if (ChakraRTInterface::JsCreateExternalArrayBuffer(const_cast<char *>(scriptBody->data()),
-                                                       scriptBody->size(),
-                                                       nullptr,
-                                                       const_cast<char *>(scriptBody->data()), scriptBuffer) != JsNoError)
+    if (ChakraRTInterface::JsCreateExternalArrayBuffer(*scriptBody, nullptr, scriptBuffer) != JsNoError)
     {
         return false;
     }
@@ -93,9 +88,7 @@ int32_t RunScript(const rust::Str fileName, const rust::String &contents,
     else if (parserStateCache != nullptr)
     {
         JsValueRef scriptSource;
-        IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-            const_cast<char *>(contents.data()), contents.length(), fileContentsFinalizeCallback,
-            const_cast<char *>(contents.data()), &scriptSource));
+        IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(contents, fileContentsFinalizeCallback, &scriptSource));
 
         runScript =
             ChakraRTInterface::JsRunScriptWithParserState(scriptSource, WScriptJsrt::GetNextSourceContext(), fname,
@@ -104,14 +97,12 @@ int32_t RunScript(const rust::Str fileName, const rust::String &contents,
     else if (HostConfigFlags::flags.Module)
     {
         // TODO (hanhossain): convert to rust::String
-        runScript = WScriptJsrt::ModuleEntryPoint(static_cast<std::string_view>(contents), fullPath);
+        runScript = WScriptJsrt::ModuleEntryPoint(contents, fullPath);
     }
     else // bufferValue == nullptr && parserStateCache == nullptr
     {
         JsValueRef scriptSource;
-        IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-            const_cast<char *>(contents.data()), contents.length(), fileContentsFinalizeCallback,
-            const_cast<char *>(contents.data()), &scriptSource));
+        IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(contents, fileContentsFinalizeCallback, &scriptSource));
 
         runScript = ChakraRTInterface::JsRun(scriptSource, WScriptJsrt::GetNextSourceContext(), fname,
                                              JsParseScriptAttributeNone, nullptr /*result*/);
@@ -212,10 +203,7 @@ int32_t GetParserStateBuffer(const rust::String &fileContents, JsFinalizeCallbac
     int32_t hr = S_OK;
     JsValueRef scriptSource = nullptr;
 
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(
-        const_cast<char *>(fileContents.data()), fileContents.length(), fileContentsFinalizeCallback,
-        const_cast<char *>(fileContents.data()), &scriptSource));
-
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(fileContents, fileContentsFinalizeCallback, &scriptSource));
     IfJsErrorFailLog(
         ChakraRTInterface::JsSerializeParserState(scriptSource, parserStateBuffer, JsParseScriptAttributeNone));
 

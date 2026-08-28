@@ -74,8 +74,7 @@ uint32_t RuntimeThreadData::ThreadProc()
     }
 
 
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer((void*)this->initialSource.c_str(),
-        (unsigned int)this->initialSource.size(), nullptr, nullptr, &scriptSource));
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(initialSource, nullptr, &scriptSource));
 
 
     ChakraRTInterface::JsCreateString(fullPath, strlen(fullPath), &fname);
