@@ -3692,32 +3692,6 @@ JsErrorCode chakracore::jsrt::JsCopyString(const JsValueRef value, rust::String 
     return JsNoError;
 }
 
-JsErrorCode chakracore::jsrt::JsCopyString(
-    _In_ JsValueRef value,
-    _Out_opt_ char* buffer,
-    _In_ size_t bufferSize,
-    _Out_opt_ size_t* length)
-{
-    PARAM_NOT_NULL(value);
-    VALIDATE_JSREF(value);
-
-    const char16_t* str = nullptr;
-    size_t strLength = 0;
-    JsErrorCode errorCode = JsStringToPointer(value, &str, &strLength);
-    if (errorCode != JsNoError)
-    {
-        return errorCode;
-    }
-
-    utf8::WideToNarrow utf8Str(str, strLength, buffer, bufferSize);
-    if (length)
-    {
-        *length = utf8Str.Length();
-    }
-
-    return JsNoError;
-}
-
 JsErrorCode chakracore::jsrt::JsToString(const JsValueRef value, rust::String &string)
 {
     JsValueType type;
