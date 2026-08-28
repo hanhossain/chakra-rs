@@ -221,7 +221,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
             return returnValue;
         }
 
-        returnValue = LoadScript(callee, fileName, nullptr, *content, !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
+        returnValue = LoadScript(callee, fileName, *content, !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
     }
 
 Error:
@@ -552,9 +552,14 @@ JsValueRef WScriptJsrt::LoadScriptHelper(JsValueRef callee, bool isConstructCall
             }
         }
 
+        // HACK: call to c_str() somehow sets the underlying rust::Str up to be null-terminated. This prevents a segfault
+        //  down the line when chakra clones the utf8 but attempts to copy the null terminator even if it's not
+        //  null-terminated.
+        fileContent->c_str();
+
         // TODO: This is CESU-8. How to tell the engine?
         // TODO: How to handle this source (script) life time?
-        returnValue = LoadScript(callee, fileName, fileContent->c_str(), *fileContent, scriptInjectType ? scriptInjectType.value() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
+        returnValue = LoadScript(callee, fileName, *fileContent, scriptInjectType ? scriptInjectType.value() : "self", isSourceModule, WScriptJsrt::FinalizeFree, isFile);
     }
 
 Error:
@@ -626,7 +631,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fi
 
 
 JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
-    const char * fileContent, const std::optional<rust::Str> &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
+    const std::optional<rust::Str> &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
@@ -1865,7 +1870,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
         try
         {
             rust::String fileContent = Helpers::LoadScriptFromFile(specifierStr, fullPath_);
-            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, nullptr, fileContent, "module", true, WScriptJsrt::FinalizeFree, true);
+            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, fileContent, "module", true, WScriptJsrt::FinalizeFree, true);
         }
         catch (const rust::Error &e)
         {
@@ -1878,7 +1883,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
                     chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
                 }
             }
-            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr , nullptr, std::nullopt, "module", true, WScriptJsrt::FinalizeFree, false);
+            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, std::nullopt, "module", true, WScriptJsrt::FinalizeFree, false);
         }
     }
     return errorCode;
