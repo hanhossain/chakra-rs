@@ -221,7 +221,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, JsValueRef *argu
             return returnValue;
         }
 
-        returnValue = LoadScript(callee, fileName, content->c_str(), *content, !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
+        returnValue = LoadScript(callee, fileName, nullptr, *content, !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
     }
 
 Error:
@@ -1865,7 +1865,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
         try
         {
             rust::String fileContent = Helpers::LoadScriptFromFile(specifierStr, fullPath_);
-            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, fileContent.c_str(), fileContent, "module", true, WScriptJsrt::FinalizeFree, true);
+            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, nullptr, fileContent, "module", true, WScriptJsrt::FinalizeFree, true);
         }
         catch (const rust::Error &e)
         {
