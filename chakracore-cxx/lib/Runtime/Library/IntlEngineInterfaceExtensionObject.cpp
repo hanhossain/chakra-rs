@@ -272,9 +272,9 @@ namespace Js
         static_assert(N >= ULOC_FULLNAME_CAPACITY, "LocaleID must be large enough to fit the largest possible ICU localeID");
 
         UErrorCode status = U_ZERO_ERROR;
-        utf8::WideToNarrow langtag8(langtag, langtagLength);
+        rust::String langtag8{langtag, langtagLength};
         int32_t localeIDLength = 0;
-        uloc_forLanguageTag(langtag8, localeID, N, &localeIDLength, &status);
+        uloc_forLanguageTag(langtag8.c_str(), localeID, N, &localeIDLength, &status);
         ICU_ASSERT(status, localeIDLength > 0 && static_cast<size_t>(localeIDLength) < N);
     }
 
@@ -650,7 +650,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 
         UErrorCode status = U_ZERO_ERROR;
         JavascriptString *langtag = UnsafeVarTo<JavascriptString>(args[1]);
-        utf8::WideToNarrow langtag8(langtag->GetSz(), langtag->GetLength());
+        rust::String langtag8{langtag->GetSz(), langtag->GetLength()};
 
         // ICU doesn't have a full-fledged canonicalization implementation that correctly replaces all preferred values
         // and grandfathered tags, as required by #sec-canonicalizelanguagetag.
@@ -658,7 +658,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         // by replacing some(?) values, correctly capitalizing the tag, and re-ordering extensions
         int parsedLength = 0;
         char localeID[ULOC_FULLNAME_CAPACITY] = { 0 };
-        int forLangTagResultLength = uloc_forLanguageTag(langtag8, localeID, ULOC_FULLNAME_CAPACITY, &parsedLength, &status);
+        int forLangTagResultLength = uloc_forLanguageTag(langtag8.c_str(), localeID, ULOC_FULLNAME_CAPACITY, &parsedLength, &status);
         AssertOrFailFast(parsedLength >= 0);
         if (status == U_ILLEGAL_ARGUMENT_ERROR || ((charcount_t) parsedLength) < langtag->GetLength())
         {
