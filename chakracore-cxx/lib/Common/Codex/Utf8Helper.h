@@ -8,104 +8,6 @@
 
 namespace utf8
 {
-    ///
-    /// Use the codex library to encode a UTF16 string to UTF8.
-    /// The caller is responsible for freeing the memory, which is allocated
-    /// using Allocator.
-    /// The returned string is null terminated.
-    /// TODO(jahorto): This file's dependencies mean that it cannot be included in PlatformAgnostic
-    ///     Thus, this function is currently ~duplicated in PlatformAgnostic::Intl::Utf16ToUtf8 (Intl.cpp)
-    ///     As long as that function exists, it _must_ be updated alongside any updates here
-    ///
-    template <typename AllocatorFunction>
-    int32_t WideStringToNarrow(
-        _In_ AllocatorFunction allocator,
-        _In_ const char16_t* sourceString,
-        size_t sourceCount,
-        _Out_ char** destStringPtr,
-        _Out_ size_t* destCount,
-        size_t* allocateCount = nullptr)
-    {
-        size_t cchSourceString = sourceCount;
-
-        if (cchSourceString >= std::numeric_limits<uint32_t>::max())
-        {
-            return E_OUTOFMEMORY;
-        }
-
-        // Multiply by 3 for max size of encoded character, plus 1 for the null terminator (don't need 3 bytes for the null terminator)
-        size_t cbDestString = (cchSourceString * 3) + 1;
-
-        // Check for overflow- cbDestString should be >= cchSourceString
-        if (cbDestString < cchSourceString)
-        {
-            return E_OUTOFMEMORY;
-        }
-
-        utf8char_t* destString = static_cast<utf8char_t*>(allocator(cbDestString));
-        if (destString == nullptr)
-        {
-            return E_OUTOFMEMORY;
-        }
-
-        size_t cbEncoded = utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::TrueUtf8>(destString, cbDestString, sourceString, static_cast<charcount_t>(cchSourceString));
-        assert(cbEncoded <= cbDestString);
-        static_assert(sizeof(utf8char_t) == sizeof(char), "Needs to be valid for cast");
-        *destStringPtr = reinterpret_cast<char*>(destString);
-        *destCount = cbEncoded;
-        if (allocateCount != nullptr)
-        {
-            *allocateCount = cbEncoded;
-        }
-
-        return S_OK;
-    }
-
-    ///
-    /// Use the codex library to encode a UTF16 string to UTF8.
-    /// The caller is responsible for providing the buffer
-    /// The returned string is null terminated.
-    ///
-    inline int32_t WideStringToNarrowNoAlloc(
-        _In_ const char16_t* sourceString,
-        size_t sourceCount,
-        __out_ecount(destCount) char* destString,
-        size_t destCount,
-        size_t* writtenCount = nullptr)
-    {
-        size_t cchSourceString = sourceCount;
-
-        if (cchSourceString >= std::numeric_limits<uint32_t>::max())
-        {
-            return E_OUTOFMEMORY;
-        }
-
-        static_assert(sizeof(utf8char_t) == sizeof(char), "Needs to be valid for cast");
-
-        size_t cbEncoded = 0;
-        if (destString == nullptr)
-        {
-            cbEncoded = utf8::CountTrueUtf8(sourceString, static_cast<charcount_t>(cchSourceString));
-        }
-        else
-        {
-            cbEncoded = utf8::EncodeInto<utf8::Utf8EncodingKind::TrueUtf8>(reinterpret_cast<utf8char_t*>(destString), destCount, sourceString, static_cast<charcount_t>(cchSourceString));
-            assert(cbEncoded <= destCount);
-        }
-
-        if (writtenCount != nullptr)
-        {
-            *writtenCount = cbEncoded;
-        }
-
-        return S_OK;
-    }
-
-    template <class Allocator>
-    int32_t WideStringToNarrow(_In_ const char16_t* sourceString, size_t sourceCount, _Out_ char** destStringPtr, _Out_ size_t* destCount, size_t* allocateCount = nullptr)
-    {
-        return WideStringToNarrow(Allocator::allocate, sourceString, sourceCount, destStringPtr, destCount, allocateCount);
-    }
 
     inline int32_t NarrowStringToWideNoAlloc(_In_ const char * sourceString, size_t sourceCount,
         __out_ecount(destBufferCount) char16_t* destString, size_t destBufferCount, _Out_ charcount_t* destCount)
@@ -236,12 +138,6 @@ namespace utf8
         return res;
     }
 
-    inline int32_t NarrowStringToWideDynamicGetLength(_In_ const char * sourceString, _Out_ char16_t** destStringPtr, _Out_ charcount_t* destLength)
-    {
-        return NarrowStringToWide<malloc_allocator>(
-            sourceString, strlen(sourceString), destStringPtr, destLength);
-    }
-
     template <class Allocator, class SrcType, class DstType, class CountType>
     class NarrowWideStringConverter
     {
@@ -277,34 +173,6 @@ namespace utf8
             char16_t* destStringPtr, charcount_t destCount, charcount_t* written)
         {
             return NarrowStringToWideNoAlloc(
-                sourceString, sourceCount, destStringPtr, destCount, written);
-        }
-    };
-
-    template <class Allocator>
-    class NarrowWideStringConverter<Allocator, const char16_t*, char*, size_t>
-    {
-    public:
-        // Note: Typically caller should pass in char16_t string length. Following
-        // is used as fallback.
-        static size_t Length(const char16_t* src)
-        {
-            return std::u16string(src).length();
-        }
-
-        static int32_t Convert(
-            const char16_t* sourceString, size_t sourceCount,
-            char** destStringPtr, size_t* destCount, size_t* allocateCount = nullptr)
-        {
-            return WideStringToNarrow<Allocator>(
-                sourceString, sourceCount, destStringPtr, destCount, allocateCount);
-        }
-
-        static int32_t ConvertNoAlloc(
-            const char16_t* sourceString, size_t sourceCount,
-            char* destStringPtr, size_t destCount, size_t* written)
-        {
-            return WideStringToNarrowNoAlloc(
                 sourceString, sourceCount, destStringPtr, destCount, written);
         }
     };
