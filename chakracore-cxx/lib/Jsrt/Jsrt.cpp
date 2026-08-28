@@ -3724,7 +3724,7 @@ JsErrorCode chakracore::jsrt::JsToString(const JsValueRef value, rust::String &s
     auto ec = JsGetValueType(value, &type);
     if (ec != JsNoError)
     {
-        chakra::Logger::trace(std::format("Failed to get value type. JsErrorCode[{}].", static_cast<int>(ec)));
+        chakra::Logger::trace(std::format("Failed to get value type. JsErrorCode[0x{:x}].", static_cast<int>(ec)));
         return ec;
     }
 
