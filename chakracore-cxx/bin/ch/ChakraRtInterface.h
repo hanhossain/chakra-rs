@@ -113,7 +113,6 @@ public:
     static JsErrorCode JsSerialize(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return chakracore::jsrt::JsSerialize(script, buffer, parseAttributes); }
     static JsErrorCode JsRunSerialized(JsValueRef buffer, JsSerializedLoadScriptCallback scriptLoadCallback, JsSourceContext sourceContext, JsValueRef sourceUrl, JsValueRef * result) { return chakracore::jsrt::JsRunSerialized(buffer, scriptLoadCallback, sourceContext, sourceUrl, result); }
     static JsErrorCode JsGetStringLength(JsValueRef value, int *stringLength) { return chakracore::jsrt::JsGetStringLength(value, stringLength); }
-    static JsErrorCode JsCopyString(JsValueRef value, char* buffer, size_t bufferSize, size_t* length) { return chakracore::jsrt::JsCopyString(value, buffer, bufferSize, length); }
     static JsErrorCode JsToString(JsValueRef value, rust::String &string) { return chakracore::jsrt::JsToString(value, string); }
     static JsErrorCode JsCreateString(const char *content, size_t length, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, length, value); }
     static JsErrorCode JsCreateString(const std::string &content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, value); }

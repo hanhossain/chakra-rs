@@ -506,14 +506,40 @@ namespace chakracore::jsrt
         _In_ size_t length,
         _Out_ JsValueRef *value);
 
+    /// <summary>
+    /// Create JavascriptString variable from ASCII or Utf8 string
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///        Requires an active script context.
+    ///     </para>
+    ///     <para>
+    ///         Input string can be either ASCII or Utf8
+    ///     </para>
+    /// </remarks>
+    /// <param name="content">Pointer to string memory.</param>
+    /// <param name="value">JsValueRef representing the JavascriptString</param>
+    /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
     JsErrorCode JsCreateString(const std::string &content, JsValueRef *value);
-    JsErrorCode JsCreateString(const rust::String &content, JsValueRef *value);
-
-    /// Converts value to rust. JsValueRef must be a JsString.
-    JsErrorCode JsCopyString(JsValueRef value, rust::String &string);
 
     /// <summary>
-    ///     Write JavascriptString value into C string buffer (Utf8)
+    /// Create JavascriptString variable from ASCII or Utf8 string
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///        Requires an active script context.
+    ///     </para>
+    ///     <para>
+    ///         Input string can be either ASCII or Utf8
+    ///     </para>
+    /// </remarks>
+    /// <param name="content">Pointer to string memory.</param>
+    /// <param name="value">JsValueRef representing the JavascriptString</param>
+    /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
+    JsErrorCode JsCreateString(const rust::String &content, JsValueRef *value);
+
+    /// <summary>
+    ///     Write JavascriptString value into rust::String (Utf8)
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -523,17 +549,11 @@ namespace chakracore::jsrt
     ///     </para>
     /// </remarks>
     /// <param name="value">JavascriptString value</param>
-    /// <param name="buffer">Pointer to buffer</param>
-    /// <param name="bufferSize">Buffer size</param>
-    /// <param name="length">Total number of characters needed or written</param>
+    /// <param name="string">destination rust::String</param>
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    JsErrorCode JsCopyString(
-        _In_ JsValueRef value,
-        _Out_opt_ char* buffer,
-        _In_ size_t bufferSize,
-        _Out_opt_ size_t* length);
+    JsErrorCode JsCopyString(JsValueRef value, rust::String &string);
 
     /// Converts `value` to a JsString (if necessary) then copies it to the rust `string`.
     JsErrorCode JsToString(JsValueRef value, rust::String &string);

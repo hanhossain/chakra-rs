@@ -72,28 +72,6 @@ std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;
 std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
 unsigned long WScriptJsrt::sourceContext_ = 0;
 
-#define ERROR_MESSAGE_TO_STRING(errorMessage, errorMessageString)        \
-    [[maybe_unused]] JsErrorCode errorCode = JsNoError;                                              \
-    do                                                                              \
-    {                                                                               \
-        const char *outOfMemoryString =                                             \
-                                    "Failed to convert wide string. Out of memory?";\
-                                                                                    \
-        char *errorMessageNarrow;                                                   \
-        if (FAILED(utf8::WideStringToNarrowDynamic(errorMessage, &errorMessageNarrow)))   \
-        {                                                                           \
-            errorCode = ChakraRTInterface::JsCreateString(outOfMemoryString,        \
-                strlen(outOfMemoryString), &errorMessageString);                    \
-        }                                                                           \
-        else                                                                        \
-        {                                                                           \
-            errorCode = ChakraRTInterface::JsCreateString(errorMessageNarrow,       \
-                strlen(errorMessageNarrow), &errorMessageString);                   \
-            free(errorMessageNarrow);                                               \
-        }                                                                           \
-    }                                                                               \
-    while(0)
-
 unsigned long WScriptJsrt::GetNextSourceContext()
 {
     return sourceContext_++;
