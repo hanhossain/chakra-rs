@@ -169,25 +169,17 @@ namespace utf8
         bool freeDst;
 
     public:
-        NarrowWideConverter() : dst()
+        NarrowWideConverter() : dst(), dstCount(), allocateCount(), freeDst()
         {
-            // do nothing
         }
 
-        NarrowWideConverter(const SrcType& src, size_t srcCount = -1): dst()
+        explicit NarrowWideConverter(const SrcType& src) : NarrowWideConverter(src, StringConverter::Length(src))
         {
-            Initialize(src, srcCount);
         }
 
-        void Initialize(const SrcType& src, size_t srcCount = -1)
+        NarrowWideConverter(const SrcType& src, size_t srcCount) : dst(), dstCount(), allocateCount(), freeDst(true)
         {
-            if (srcCount == -1)
-            {
-                srcCount = StringConverter::Length(src);
-            }
-
             StringConverter::Convert(src, srcCount, &dst, &dstCount, &allocateCount);
-            freeDst = true;
         }
 
         ~NarrowWideConverter()

@@ -531,59 +531,6 @@ namespace chakracore::jsrt
             _In_ unsigned int objectHandle,
             _Out_ JsValueRef *handleObject);
 
-    /// <summary>
-    ///     Evaluates an expression on given frame.
-    /// </summary>
-    /// <param name="expression">
-    ///     Javascript String or ArrayBuffer (incl. ExternalArrayBuffer).
-    /// </param>
-    /// <param name="stackFrameIndex">Index of stack frame on which to evaluate the expression.</param>
-    /// <param name="parseAttributes">
-    ///     Defines how `expression` (JsValueRef) should be parsed.
-    ///     - `JsParseScriptAttributeNone` when `expression` is a Utf8 encoded ArrayBuffer and/or a Javascript String (encoding independent)
-    ///     - `JsParseScriptAttributeArrayBufferIsUtf16Encoded` when `expression` is Utf16 Encoded ArrayBuffer
-    ///     - `JsParseScriptAttributeLibraryCode` has no use for this function and has similar effect with `JsParseScriptAttributeNone`
-    /// </param>
-    /// <param name="forceSetValueProp">Forces the result to contain the raw value of the expression result.</param>
-    /// <param name="evalResult">Result of evaluation.</param>
-    /// <remarks>
-    ///     <para>
-    ///     evalResult when evaluating 'this' and return is JsNoError
-    ///     {
-    ///         "name" : "this",
-    ///         "type" : "object",
-    ///         "className" : "Object",
-    ///         "display" : "{...}",
-    ///         "propertyAttributes" : 1,
-    ///         "handle" : 18
-    ///     }
-    ///
-    ///     evalResult when evaluating a script which throws JavaScript error and return is JsErrorScriptException
-    ///     {
-    ///         "name" : "a.b.c",
-    ///         "type" : "object",
-    ///         "className" : "Error",
-    ///         "display" : "'a' is undefined",
-    ///         "propertyAttributes" : 1,
-    ///         "handle" : 18
-    ///     }
-    ///     </para>
-    /// </remarks>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, evalResult will contain the result
-    ///     The code <c>JsErrorScriptException</c> if evaluate generated a JavaScript exception, evalResult will contain the error details
-    ///     Other error code for invalid parameters or API was not called at break
-    /// </returns>
-    /// <remarks>
-    ///     The current runtime should be in debug state. This API can only be called when runtime is at a break.
-    /// </remarks>
-    JsErrorCode
-        JsDiagEvaluate(
-            _In_ JsValueRef expression,
-            _In_ unsigned int stackFrameIndex,
-            _In_ JsParseScriptAttributes parseAttributes,
-            _In_ bool forceSetValueProp,
-            _Out_ JsValueRef *evalResult);
 }
     /////////////////////
 

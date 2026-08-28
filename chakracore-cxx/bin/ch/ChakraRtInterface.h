@@ -96,7 +96,6 @@ public:
     static JsErrorCode JsDiagGetStackProperties(unsigned int stackFrameIndex, JsValueRef * properties) { return chakracore::jsrt::JsDiagGetStackProperties(stackFrameIndex, properties); }
     static JsErrorCode JsDiagGetProperties(unsigned int objectHandle, unsigned int fromCount, unsigned int totalCount, JsValueRef * propertiesObject) { return chakracore::jsrt::JsDiagGetProperties(objectHandle, fromCount, totalCount, propertiesObject); }
     static JsErrorCode JsDiagGetObjectFromHandle(unsigned int handle, JsValueRef * handleObject) { return chakracore::jsrt::JsDiagGetObjectFromHandle(handle, handleObject); }
-    static JsErrorCode JsDiagEvaluate(JsValueRef expression, unsigned int stackFrameIndex, JsParseScriptAttributes parseAttributes, bool forceSetValueProp, JsValueRef * evalResult) { return chakracore::jsrt::JsDiagEvaluate(expression, stackFrameIndex, parseAttributes, forceSetValueProp, evalResult); }
     static JsErrorCode JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext, byte* sourceText, unsigned int sourceLength, JsParseModuleSourceFlags sourceFlag, JsValueRef* exceptionValueRef) {
         return chakracore::jsrt::JsParseModuleSource(requestModule, sourceContext, sourceText, sourceLength, sourceFlag, exceptionValueRef);
     }
