@@ -577,11 +577,13 @@ std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
 
 JsErrorCode WScriptJsrt::ModuleEntryPoint(rust::Str fileContent, const std::string &fullName)
 {
+    auto span = chakra::Span::create("WScriptJsrt::ModuleEntryPoint");
     return LoadModuleFromString(fileContent, fullName, true);
 }
 
 JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile)
 {
+    auto span = chakra::Span::create("WScriptJsrt::LoadModuleFromString");
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
     std::string_view moduleRecordKey = fullName;

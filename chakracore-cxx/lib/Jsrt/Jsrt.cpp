@@ -3761,6 +3761,7 @@ inline JsErrorCode CompileRun(
     _Out_ JsValueRef *result,
     bool parseOnly)
 {
+    auto span = chakra::Span::create("CompileRun");
     PARAM_NOT_NULL(scriptVal);
     VALIDATE_JSREF(scriptVal);
     PARAM_NOT_NULL(sourceUrl);
@@ -3841,6 +3842,7 @@ JsErrorCode chakracore::jsrt::JsRun(
     _In_ JsParseScriptAttributes parseAttributes,
     _Out_ JsValueRef *result)
 {
+    auto span = chakra::Span::create("chakracore::jsrt::JsRun");
     return CompileRun(scriptVal, sourceContext, sourceUrl, parseAttributes,
         result, false);
 }
@@ -3999,6 +4001,7 @@ JsErrorCode chakracore::jsrt::JsRunSerialized(
     _In_ JsValueRef sourceUrl,
     _Out_ JsValueRef *result)
 {
+    auto span = chakra::Span::create("chakracore::jsrt::JsRunSerialized");
     PARAM_NOT_NULL(bufferVal);
     const char16_t *url;
 
@@ -4300,6 +4303,7 @@ JsErrorCode chakracore::jsrt::JsRunScriptWithParserState(
     _In_ JsValueRef parserState,
     _Out_ JsValueRef *result)
 {
+    auto span = chakra::Span::create("chakracore::jsrt::JsRunScriptWithParserState");
     char16_t *url = nullptr;
     if (sourceUrl && Js::VarIs<Js::JavascriptString>(sourceUrl))
     {
