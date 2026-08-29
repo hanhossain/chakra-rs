@@ -300,10 +300,6 @@ typedef struct _iJIT_Method_Load
                              *  regions of the same method, otherwise different
                              *  method IDs specify different methods. */
 
-    char* method_name; /**<\brief The name of the method. It can be optionally
-                        *  prefixed with its class name and appended with
-                        *  its complete signature. Can't be NULL. */
-
     void* method_load_address; /**<\brief The start virtual address of the method code
                                 *  region. If NULL, data provided with
                                 *  event are not accepted. */
