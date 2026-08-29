@@ -287,20 +287,6 @@ namespace Js
     }
 
     template <typename Callback>
-    static void ForEachUEnumeration(UEnumeration *enumeration, Callback callback)
-    {
-        int valueLength = 0;
-        UErrorCode status = U_ZERO_ERROR;
-        for (int index = 0, const char *value = uenum_next(enumeration, &valueLength, &status); value != nullptr; index++, value = uenum_next(enumeration, &valueLength, &status))
-        {
-            ICU_ASSERT(status, valueLength > 0);
-
-            // cast valueLength now since we have verified its greater than 0
-            callback(index, value, static_cast<charcount_t>(valueLength));
-        }
-    }
-
-    template <typename Callback>
     static void ForEachUEnumeration16(UEnumeration *enumeration, Callback callback)
     {
         int valueLength = 0;
