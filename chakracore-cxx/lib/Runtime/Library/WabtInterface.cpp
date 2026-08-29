@@ -6,7 +6,7 @@
 #ifdef ENABLE_WABT
 #include "wabtapi.h"
 #include "Codex/Utf8Helper.h"
-
+#include "chakra/strings.h"
 #include <rust/cxx.h>
 
 namespace Js
@@ -17,23 +17,6 @@ struct Context
     ArenaAllocator* allocator;
     ScriptContext* scriptContext;
 };
-
-char16_t* NarrowStringToWide(Context* ctx, const char* src, const size_t* srcSize = nullptr, charcount_t* dstSize = nullptr)
-{
-    auto allocator = [&ctx](size_t size) {return (char16_t*)AnewArray(ctx->allocator, char16_t, size); };
-    char16_t* dst = nullptr;
-    charcount_t size;
-    int32_t hr = utf8::NarrowStringToWide(allocator, src, srcSize ? *srcSize : strlen(src), &dst, &size);
-    if (hr != S_OK)
-    {
-        JavascriptError::ThrowOutOfMemoryError(ctx->scriptContext);
-    }
-    if (dstSize)
-    {
-        *dstSize = size;
-    }
-    return dst;
-}
 
 static PropertyId propertyMap[] = {
     Js::PropertyIds::as,
@@ -87,10 +70,10 @@ Js::Var StringToVar(const char* src, uint length, void* user_data)
 {
     Context* ctx = (Context*)user_data;
     charcount_t bufSize = 0;
-    size_t slength = (size_t)length;
-    char16_t* buf = NarrowStringToWide(ctx, src, &slength, &bufSize);
+    const std::u16string str = chakra::to_u16string(rust::Str{src, length});
+    bufSize = str.length();
     Assert(bufSize < UINT32_MAX);
-    return JavascriptString::NewCopyBuffer(buf, bufSize, ctx->scriptContext);
+    return JavascriptString::NewCopyBuffer(str.c_str(), bufSize, ctx->scriptContext);
 }
 
 Js::Var CreateBuffer(const uint8_t* buf, uint size, void* user_data)
@@ -176,7 +159,8 @@ Js::Var WabtInterface::EntryConvertWast2Wasm(RecyclableObject* function, CallInf
     }
     catch (ChakraWabt::WabtAPIError& e)
     {
-        JavascriptError::ThrowTypeErrorVar(scriptContext, WABTERR_WabtError, NarrowStringToWide(&context, e.message));
+        const auto s = chakra::to_u16string(e.message);
+        JavascriptError::ThrowTypeErrorVar(scriptContext, WABTERR_WabtError, s.c_str());
     }
 }
 }
