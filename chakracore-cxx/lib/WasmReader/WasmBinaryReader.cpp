@@ -5,7 +5,7 @@
 
 #ifdef ENABLE_WASM
 #include "WasmLimits.h"
-#include "Codex/Utf8Helper.h"
+#include "Codex/Utf8Codex.h"
 
 namespace Wasm
 {

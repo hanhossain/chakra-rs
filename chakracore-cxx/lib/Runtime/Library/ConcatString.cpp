@@ -2,7 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "Codex/Utf8Helper.h"
+#include "Codex/Utf8Codex.h"
 #include "chakra/strings.h"
 
 namespace Js

@@ -7,7 +7,7 @@
 #include "JsrtInternal.h"
 #include "ThreadContextTlsEntry.h"
 #include "JsrtDebugUtils.h"
-#include "Codex/Utf8Helper.h"
+#include "Codex/Utf8Codex.h"
 
 #define VALIDATE_IS_DEBUGGING(jsrtDebugManager) \
     if (jsrtDebugManager == nullptr || !jsrtDebugManager->IsDebugEventCallbackSet()) \

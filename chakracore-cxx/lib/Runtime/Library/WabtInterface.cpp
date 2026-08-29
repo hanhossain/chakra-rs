@@ -5,7 +5,7 @@
 
 #ifdef ENABLE_WABT
 #include "wabtapi.h"
-#include "Codex/Utf8Helper.h"
+#include "Codex/Utf8Codex.h"
 #include "chakra/strings.h"
 #include <rust/cxx.h>
 
