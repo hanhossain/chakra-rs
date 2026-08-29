@@ -818,26 +818,12 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
 
                 // OS#17172584: OOM during uloc_toUnicodeLocaleType can make this return nullptr even for known collations
                 const char *unicodeCollation = ThrowOOMIfNull(uloc_toUnicodeLocaleType("collation", collation));
-                const size_t unicodeCollationLen = strlen(unicodeCollation);
+                auto unicodeCollation16 = new std::u16string{chakra::to_u16string(unicodeCollation)};
 
-                // we only need strlen(unicodeCollation) + 1 char16s because unicodeCollation will always be ASCII (funnily enough)
-                char16_t *unicodeCollation16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, unicodeCollationLen + 1);
-                charcount_t unicodeCollation16Len = 0;
-                int32_t hr = utf8::NarrowStringToWideNoAlloc(
-                    unicodeCollation,
-                    unicodeCollationLen,
-                    unicodeCollation16,
-                    unicodeCollationLen + 1,
-                    &unicodeCollation16Len
-                );
-                AssertOrFailFastMsg(
-                    hr == S_OK && unicodeCollation16Len == unicodeCollationLen && unicodeCollation16Len < MaxCharCount,
-                    "Unicode collation char16_t conversion was unsuccessful"
-                );
                 // i + 1 to not overwrite leading null element
                 ret->SetItem(i + 1, JavascriptString::NewWithBuffer(
-                    unicodeCollation16,
-                    unicodeCollation16Len,
+                    unicodeCollation16->c_str(),
+                    unicodeCollation16->length(),
                     scriptContext
                 ), PropertyOperationFlags::PropertyOperation_None);
                 i++;
