@@ -17,6 +17,8 @@
 
 #include "PlatformAgnostic/CommonPal.h"
 #include "PlatformAgnostic/ChakraICU.h"
+#include "chakra/strings.h"
+
 using namespace PlatformAgnostic::ICUHelpers;
 
 #define INTL_TRACE(fmt, ...) Output::Trace(Js::IntlPhase, u"%S(): " fmt "\n", __func__, __VA_ARGS__)
@@ -964,12 +966,12 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
             // unumsys_open will also ensure that "native", "traditio", and "finance" are not returned, as per #sec-intl.datetimeformat-internal-slots
             ScopedUNumberingSystem numsys(unumsys_open(localeID, &status));
             ICU_ASSERT(status, true);
-            utf8::NarrowToWide numsysName(unumsys_getName(numsys));
+            auto numsysName = chakra::to_u16string(unumsys_getName(numsys));
 
             // NOTE: update the initial array length if the list of available numbering systems changes in the future!
             ret = library->CreateArray(22);
             int i = 0;
-            ret->SetItem(i++, JavascriptString::NewCopySz(numsysName, scriptContext), flag);
+            ret->SetItem(i++, JavascriptString::NewCopySz(numsysName.c_str(), scriptContext), flag);
 
             // It doesn't matter that item 0 will be in the array twice (aside for size), because item 0 is the
             // preferred numbering system for the given locale, so it has precedence over everything else
