@@ -935,23 +935,11 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
                 const char *unicodeCalendar = ThrowOOMIfNull(uloc_toUnicodeLocaleType("calendar", calendar));
                 const size_t unicodeCalendarLen = strlen(unicodeCalendar);
 
-                // we only need strlen(unicodeCalendar) + 1 char16s because unicodeCalendar will always be ASCII (funnily enough)
-                char16_t *unicodeCalendar16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, strlen(unicodeCalendar) + 1);
-                charcount_t unicodeCalendar16Len = 0;
-                int32_t hr = utf8::NarrowStringToWideNoAlloc(
-                    unicodeCalendar,
-                    unicodeCalendarLen,
-                    unicodeCalendar16,
-                    unicodeCalendarLen + 1,
-                    &unicodeCalendar16Len
-                );
-                AssertOrFailFastMsg(
-                    hr == S_OK && unicodeCalendar16Len == unicodeCalendarLen && unicodeCalendar16Len < MaxCharCount,
-                    "Unicode calendar char16_t conversion was unsuccessful"
-                );
+                std::u16string_view unicodeCalendar16 = reinterpret_cast<const char16_t *>(
+                    chakra_rs::str_helper::to_raw_u16_str({unicodeCalendar, unicodeCalendarLen}));
                 ret->SetItem(i, JavascriptString::NewWithBuffer(
-                    unicodeCalendar16,
-                    static_cast<charcount_t>(unicodeCalendar16Len),
+                    unicodeCalendar16.data(),
+                    unicodeCalendar16.length(),
                     scriptContext
                 ), flag);
                 i++;
