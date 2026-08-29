@@ -111,30 +111,4 @@ namespace utf8
     {
         return NarrowStringToWide(Allocator::allocate, sourceString, sourceCount, destStringPtr, destCount, allocateCount);
     }
-
-    class malloc_allocator
-    {
-    public:
-        static void* allocate(size_t size) { return ::malloc(size); }
-        static void free(void *ptr) { ::free(ptr); }
-    };
-
-    inline int32_t NarrowStringToWideDynamic(_In_ const char * sourceString, _Out_ char16_t** destStringPtr)
-    {
-        charcount_t unused;
-        return NarrowStringToWide<malloc_allocator>(
-            sourceString, strlen(sourceString), destStringPtr, &unused);
-    }
-
-    inline int32_t NarrowStringToWideDynamic(const char * sourceString, std::u16string &destString)
-    {
-        char16_t *destStringPtr = nullptr;
-        const auto res = NarrowStringToWideDynamic(sourceString, &destStringPtr);
-        if (destStringPtr != nullptr)
-        {
-            destString = destStringPtr;
-            free(destStringPtr);
-        }
-        return res;
-    }
-}
+} // namespace utf8

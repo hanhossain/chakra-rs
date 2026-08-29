@@ -8,6 +8,7 @@
 #include <rust/cxx.h>
 
 #include "Codex/Utf8Helper.h"
+#include "chakra/strings.h"
 
 using namespace Js;
 
@@ -626,9 +627,7 @@ int CmdLineArgsParser::Parse(const rust::Vec<rust::String> &vargs)
 
     for(int i = 1; i < vargs.size(); i++)
     {
-        rust::String r = vargs[i];
-        std::u16string s;
-        utf8::NarrowStringToWideDynamic(r.c_str(), s);
+        std::u16string s = chakra::to_u16string(vargs[i]);
         if ((err = Parse(s.c_str())) != 0)
         {
             break;
