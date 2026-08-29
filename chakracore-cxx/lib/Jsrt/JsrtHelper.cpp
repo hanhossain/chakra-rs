@@ -114,10 +114,6 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
             ConfigParser::ParseOnModuleLoad(parser);
         }
 
-    #ifdef VTUNE_PROFILING
-        VTuneChakraProfile::Register();
-    #endif
-
         ValueType::Initialize();
         ThreadContext::GlobalInitialize();
 

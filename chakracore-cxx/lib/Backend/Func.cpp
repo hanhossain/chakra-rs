@@ -2024,12 +2024,6 @@ Func::GetVtableName(long address)
 #if DBG_DUMP | defined(VTUNE_PROFILING)
 bool Func::DoRecordNativeMap() const
 {
-#if defined(VTUNE_PROFILING)
-    if (VTuneChakraProfile::isJitProfilingActive)
-    {
-        return true;
-    }
-#endif
     return false;
 }
 #endif

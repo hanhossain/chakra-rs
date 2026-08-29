@@ -3818,10 +3818,6 @@ namespace Js
         }
         TraceExecutionMode();
 
-#ifdef VTUNE_PROFILING
-        VTuneChakraProfile::LogMethodNativeLoadEvent(this, entryPointInfo);
-#endif
-
         entryPointInfo->SetNativeEntryPointProcessed();
     }
 
@@ -3880,9 +3876,6 @@ namespace Js
         {
             loopHeader->interpretCount = entryPointInfo->GetFunctionBody()->GetLoopInterpretCount(loopHeader) - 1;
         }
-#ifdef VTUNE_PROFILING
-        VTuneChakraProfile::LogLoopBodyLoadEvent(this, ((LoopEntryPointInfo*)entryPointInfo), ((uint16)loopNum));
-#endif
     }
 #endif
 
