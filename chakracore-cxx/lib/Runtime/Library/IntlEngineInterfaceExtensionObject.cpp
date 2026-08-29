@@ -671,18 +671,8 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
         ICU_ASSERT(status, toLangTagResultLength > 0);
 
         // allocate toLangTagResultLength + 1 to leave room for null terminator
-        char16_t *canonicalized16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, toLangTagResultLength + 1);
-        charcount_t canonicalized16Len = 0;
-        int32_t hr = utf8::NarrowStringToWideNoAlloc(
-            canonicalized,
-            toLangTagResultLength,
-            canonicalized16,
-            toLangTagResultLength + 1,
-            &canonicalized16Len
-        );
-        AssertOrFailFast(hr == S_OK && ((int) canonicalized16Len) == toLangTagResultLength);
-
-        return JavascriptString::NewWithBuffer(canonicalized16, toLangTagResultLength, scriptContext);
+        auto *canonicalized16 = new std::u16string{chakra::to_u16string(canonicalized)};
+        return JavascriptString::NewWithBuffer(canonicalized16->c_str(), canonicalized16->length(), scriptContext);
     }
 
     template <const char *(*GetAvailableLocalesFunc)(int), int(*CountAvailableLocalesFunc)(void)>
