@@ -8,6 +8,7 @@ links = "chakracore-sys"
 cxx = { version = "1.0.199", features = ["c++20"] }
 serde = { version = "1.0.229", features = ["derive"] }
 tracing = "0.1.44"
+widestring = "1.2.1"
 
 [build-dependencies]
 cmake = "0.1.58"
