@@ -1052,20 +1052,17 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         EngineInterfaceObject_CommonFunctionProlog(function, callInfo);
 
         UErrorCode status = U_ZERO_ERROR;
-        char defaultLangtag[ULOC_FULLNAME_CAPACITY] = { 0 };
-        char defaultLocaleID[ULOC_FULLNAME_CAPACITY] = { 0 };
+        char defaultLangtag[ULOC_FULLNAME_CAPACITY] = {};
+        char defaultLocaleID[ULOC_FULLNAME_CAPACITY] = {};
 
         int localeIDActual = uloc_getName(nullptr, defaultLocaleID, std::size(defaultLocaleID), &status);
         ICU_ASSERT(status, localeIDActual > 0 && localeIDActual < std::size(defaultLocaleID));
 
-        int langtagActual = uloc_toLanguageTag(defaultLocaleID, defaultLangtag, std::size(defaultLangtag), true, &status);
+        size_t langtagActual = uloc_toLanguageTag(defaultLocaleID, defaultLangtag, std::size(defaultLangtag), true, &status);
         ICU_ASSERT(status, langtagActual > 0 && langtagActual < std::size(defaultLangtag));
 
-        char16_t *defaultLangtag16 = RecyclerNewArrayLeaf(scriptContext->GetRecycler(), char16_t, langtagActual + 1);
-        charcount_t defaultLangtag16Actual = 0;
-        utf8::NarrowStringToWideNoAlloc(defaultLangtag, static_cast<size_t>(langtagActual), defaultLangtag16, langtagActual + 1, &defaultLangtag16Actual);
-        AssertOrFailFastMsg(defaultLangtag16Actual == static_cast<size_t>(langtagActual), "Language tags should always be ASCII");
-        return JavascriptString::NewWithBuffer(defaultLangtag16, defaultLangtag16Actual, scriptContext);
+        auto defaultLangTagView = std::u16string_view{reinterpret_cast<char16_t *>(chakra_rs::str_helper::to_raw_u16_str({defaultLangtag, langtagActual}))};
+        return JavascriptString::NewWithBuffer(defaultLangTagView.data(), defaultLangTagView.length(), scriptContext);
     }
 
     Var IntlEngineInterfaceExtensionObject::EntryIntl_GetExtensions(RecyclableObject* function, CallInfo callInfo, ...)
