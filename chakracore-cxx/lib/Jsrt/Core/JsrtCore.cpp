@@ -15,7 +15,7 @@
 #include "Library/JavascriptExceptionMetadata.h"
 #include "Base/ThreadContextTlsEntry.h"
 #include "Library/JavascriptPromise.h"
-#include "Codex/Utf8Helper.h"
+#include "Codex/Utf8Codex.h"
 #include "Language/SourceTextModuleRecord.h"
 
 JsErrorCode chakracore::jsrt::JsInitializeModuleRecord(

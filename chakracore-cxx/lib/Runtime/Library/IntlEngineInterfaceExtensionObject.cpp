@@ -13,7 +13,7 @@
 #include "ByteCode/ByteCodeSerializer.h"
 #include "errstr.h"
 #include "ByteCode/ByteCodeDumper.h"
-#include "Codex/Utf8Helper.h"
+#include "Codex/Utf8Codex.h"
 
 #include "PlatformAgnostic/CommonPal.h"
 #include "PlatformAgnostic/ChakraICU.h"

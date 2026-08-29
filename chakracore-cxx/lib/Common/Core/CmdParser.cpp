@@ -7,7 +7,7 @@
 
 #include <rust/cxx.h>
 
-#include "Codex/Utf8Helper.h"
+#include "Codex/Utf8Codex.h"
 #include "chakra/strings.h"
 
 using namespace Js;

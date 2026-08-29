@@ -17,7 +17,7 @@
 #include <chakracore-sys/src/filesystem.rs.h>
 
 #include "ChakraRtInterface.h"
-#include "Codex/Utf8Helper.h"
+#include "Codex/Utf8Codex.h"
 #include "Helpers.h"
 #include "HostConfigFlags.h"
 #include "RuntimeThreadData.h"

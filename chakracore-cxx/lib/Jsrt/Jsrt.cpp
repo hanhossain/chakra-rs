@@ -13,7 +13,7 @@
 #include "Common/ByteSwap.h"
 #include "Library/DataView.h"
 #include "Base/ThreadContextTlsEntry.h"
-#include "Codex/Utf8Helper.h"
+#include "Codex/Utf8Codex.h"
 
 // Parser Includes
 #include "cmperr.h"     // For ERRnoMemory
