@@ -23,6 +23,7 @@
 #include <rust/cxx.h>
 
 #include "chakra/Logger.h"
+#include "chakra/strings.h"
 
 using namespace chakracore::jsrt;
 
@@ -3272,14 +3273,9 @@ JsErrorCode RunScriptCore(const char *script, JsSourceContext sourceContext,
     const char *sourceUrl, bool parseOnly, JsParseScriptAttributes parseAttributes,
     bool isSourceModule, JsValueRef *result)
 {
-    utf8::NarrowToWide url((const char *)sourceUrl);
-    if (!url)
-    {
-        return JsErrorOutOfMemory;
-    }
-
+    const std::u16string url = chakra::to_u16string(sourceUrl);
     return RunScriptCore(nullptr, reinterpret_cast<const byte*>(script), strlen(script),
-        LoadScriptFlag_Utf8Source, sourceContext, url, parseOnly, parseAttributes,
+        LoadScriptFlag_Utf8Source, sourceContext, url.c_str(), parseOnly, parseAttributes,
         isSourceModule, result);
 }
 
@@ -3827,13 +3823,8 @@ JsErrorCode chakracore::jsrt::JsCreatePropertyId(
     _Out_ JsPropertyIdRef *propertyId)
 {
     PARAM_NOT_NULL(name);
-    utf8::NarrowToWide wname(name, length);
-    if (!wname)
-    {
-        return JsErrorOutOfMemory;
-    }
-
-    return JsGetPropertyIdFromNameInternal(wname, wname.Length(), propertyId);
+    const std::u16string wname = chakra::to_u16string(rust::Str{name, length});
+    return JsGetPropertyIdFromNameInternal(wname.c_str(), wname.length(), propertyId);
 }
 
 JsErrorCode chakracore::jsrt::JsCreatePropertyId(const std::string &name, JsPropertyIdRef *propertyId)
