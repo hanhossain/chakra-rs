@@ -3,7 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "Codex/Utf8Helper.h"
-
+#include "chakra/strings.h"
 
 namespace Js
 {
@@ -66,20 +66,8 @@ namespace Js
             Js::JavascriptError::ThrowOutOfMemoryError(scriptContext);
         }
 
-        Recycler * recycler = library->GetRecycler();
-        char16_t* destString = RecyclerNewArrayLeaf(recycler, char16_t, charCount + 1);
-        if (destString == nullptr)
-        {
-            Js::JavascriptError::ThrowOutOfMemoryError(scriptContext);
-        }
-
-        charcount_t cchDestString = 0;
-        int32_t result = utf8::NarrowStringToWideNoAlloc(cString, charCount, destString, charCount + 1, &cchDestString);
-
-        if (result == S_OK)
-        {
-            return (JavascriptString*) RecyclerNew(library->GetRecycler(), LiteralStringWithPropertyStringPtr, destString, cchDestString, library);
-        }
+        auto destString = new std::u16string{chakra::to_u16string({cString, charCount})};
+        return (JavascriptString*) RecyclerNew(library->GetRecycler(), LiteralStringWithPropertyStringPtr, destString->c_str(), destString->length(), library);
 
         Js::JavascriptError::ThrowOutOfMemoryError(scriptContext);
     }
