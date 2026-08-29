@@ -74,41 +74,4 @@ namespace utf8
 
         return S_OK;
     }
-
-    ///
-    /// Use the codex library to encode a UTF8 string to UTF16.
-    /// The caller is responsible for freeing the memory, which is allocated
-    /// using Allocator.
-    /// The returned string is null terminated.
-    ///
-    template <typename AllocatorFunction>
-    int32_t NarrowStringToWide(_In_ AllocatorFunction allocator,_In_ const char * sourceString,
-        size_t sourceCount, _Out_ char16_t** destStringPtr, _Out_ charcount_t* destCount, size_t* allocateCount = nullptr)
-    {
-        size_t cbDestString = (sourceCount + 1) * sizeof(char16_t);
-        if (cbDestString < sourceCount) // overflow ?
-        {
-            return E_OUTOFMEMORY;
-        }
-
-        char16_t* destString = static_cast<char16_t*>(allocator(cbDestString));
-        if (destString == nullptr)
-        {
-            return E_OUTOFMEMORY;
-        }
-
-        if (allocateCount != nullptr)
-        {
-            *allocateCount = cbDestString;
-        }
-
-        *destStringPtr = destString;
-        return NarrowStringToWideNoAlloc(sourceString, sourceCount, destString, sourceCount + 1, destCount);
-    }
-
-    template <class Allocator>
-    int32_t NarrowStringToWide(_In_ const char * sourceString, size_t sourceCount, _Out_ char16_t** destStringPtr, _Out_ charcount_t* destCount, size_t* allocateCount = nullptr)
-    {
-        return NarrowStringToWide(Allocator::allocate, sourceString, sourceCount, destStringPtr, destCount, allocateCount);
-    }
 } // namespace utf8
