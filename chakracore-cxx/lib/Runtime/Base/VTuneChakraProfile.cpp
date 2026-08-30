@@ -7,6 +7,7 @@
 
 #include "VTuneChakraProfile.h"
 #include "jitprofiling.h"
+#include "rust/cxx.h"
 
 const utf8char_t VTuneChakraProfile::DynamicCode[] = "Dynamic code";
 
@@ -29,7 +30,8 @@ utf8char_t* VTuneChakraProfile::GetUrl(Js::FunctionBody* body, size_t* urlBuffer
             utf8Url = HeapNewNoThrowArray(utf8char_t, *urlBufferLength);
             if (utf8Url)
             {
-                utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::Cesu8>(utf8Url, *urlBufferLength, url, ccUrlCharLength);
+                rust::String s{url, ccUrlCharLength};
+                memcpy(utf8Url, s.c_str(), s.length() + 1);
             }
         }
     }
