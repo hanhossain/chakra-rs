@@ -8,6 +8,7 @@
 #include "Types/PropertyIndexRanges.h"
 #include "Types/SimpleDictionaryPropertyDescriptor.h"
 #include "Types/SimpleDictionaryTypeHandler.h"
+#include "rust/cxx.h"
 #include <limits>
 
 using namespace Js;
@@ -341,7 +342,9 @@ using namespace Js;
             size_t cbUtf8Buffer = UInt32Math::MulAdd<3, 1>(sourceLength);
             LPUTF8 utf8Source = AnewArray(&tempAlloc, utf8char_t, cbUtf8Buffer);
             Assert(cchSource < std::numeric_limits<int32_t>::max());
-            size_t cbSource = utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::Cesu8>(utf8Source, cbUtf8Buffer, source, static_cast<charcount_t>(cchSource));
+            rust::String s{source, static_cast<charcount_t>(cchSource)};
+            size_t cbSource = s.length();
+            memcpy(utf8Source, s.c_str(), s.length() + 1);
             utf8Source = reinterpret_cast< LPUTF8 >( tempAlloc.Realloc(utf8Source, cbUtf8Buffer, cbSource + 1) );
 
             Parser parser(scriptContext);
