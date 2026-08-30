@@ -511,13 +511,6 @@ LSlowPath:
         _In_reads_(cchSource) const char16_t *source,
         __range(0, INT_MAX) charcount_t cchSource);
 
-    // Since we are not actually encoding, the return value is bounded on cch
-    __range(0, cch * 3)
-    size_t CountTrueUtf8(__in_ecount(cch) const char16_t *source, charcount_t cch)
-    {
-        return EncodeIntoImpl<Utf8EncodingKind::TrueUtf8, true /*count only*/>(nullptr, 0, source, cch);
-    }
-
     // Convert the character index into a byte index.
     size_t CharacterIndexToByteIndex(__in_ecount(cbLength) LPCUTF8 pch, size_t cbLength, charcount_t cchIndex, DecodeOptions options)
     {

@@ -460,10 +460,6 @@ namespace utf8
         _In_reads_(cchSource) const char16_t *source,
         __range(0, INT_MAX) charcount_t cchSource);
 
-    // Determine the number of UTF-8 bytes needed to represent a UTF16-LE sequence of cch * words (char16_t)
-    __range(0, cch * 3)
-    size_t CountTrueUtf8(__in_ecount(cch) const char16_t *source, charcount_t cch);
-
     // Returns true if the pch refers to a UTF-16LE encoding of the given UTF-8 encoding bch.
     bool CharsAreEqual(LPCOLESTR pch, LPCUTF8 bch, LPCUTF8 end, DecodeOptions options = doDefault);
 
