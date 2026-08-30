@@ -35,6 +35,7 @@
 #include "ByteCode/ByteCodeSerializer.h"
 #include "Language/SimpleDataCacheWrapper.h"
 #include "Core/CRC.h"
+#include "rust/cxx.h"
 
 #define IsTrueOrFalse(value)     ((value) ? u"True" : u"False")
 
@@ -1766,12 +1767,13 @@ namespace Js
 
             utf8Script = RecyclerNewArrayLeafTrace(this->GetRecycler(), utf8char_t, cbUtf8Buffer);
 
-            cbNeeded = utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::Cesu8>(utf8Script, cbUtf8Buffer, reinterpret_cast<const char16_t*>(script), ccLength);
+            rust::String s{reinterpret_cast<const char16_t*>(script), ccLength};
+            memcpy(utf8Script, s.c_str(), s.length() + 1);
 
             // Free unused bytes
             Assert(cbNeeded + 1 <= cbUtf8Buffer);
             *ppSourceInfo = Utf8SourceInfo::New(this, utf8Script, static_cast<int>(length),
-                cbNeeded, pSrcInfo, isLibraryCode);
+                s.length(), pSrcInfo, isLibraryCode);
         }
         else
         {
