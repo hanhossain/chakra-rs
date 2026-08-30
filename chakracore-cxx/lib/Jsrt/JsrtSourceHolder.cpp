@@ -136,7 +136,10 @@ namespace Js
                     *utf8Script = HeapNewArray(utf8char_t, cbUtf8Buffer);
                 }
 
-                *utf8Length = utf8::EncodeIntoAndNullTerminate<utf8::Utf8EncodingKind::TrueUtf8>(*utf8Script, cbUtf8Buffer, script, static_cast<charcount_t>(script_length));
+                auto s = rust::String{script, script_length};
+                *utf8Length = s.length();
+                memcpy(*utf8Script, s.c_str(), s.length() + 1);
+
                 *scriptLength = script_length;
 
                 if (utf8AllocLength != nullptr)
