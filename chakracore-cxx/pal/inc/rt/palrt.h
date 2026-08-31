@@ -600,8 +600,6 @@ Remember to fix the errcode defintion in safecrt.h.
 #define _snwprintf_s _snwprintf_unsafe
 #define _vsnwprintf_s _vsnwprintf_unsafe
 
-#define _wfopen_s _wfopen_unsafe
-
 #define _vscprintf _vscprintf_unsafe
 #define _vscwprintf _vscwprintf_unsafe
 
@@ -695,17 +693,6 @@ inline int _snwprintf_unsafe(char16_t *_Dst, size_t _SizeInWords, size_t _Count,
     ret = _vsnwprintf_unsafe(_Dst, _SizeInWords, _Count, _Format, _ArgList);
     va_end(_ArgList);
     return ret;
-}
-
-inline errno_t _wfopen_unsafe(FILE * *ff, const char16_t *fileName, const char16_t *mode)
-{
-    FILE *result = _wfopen(fileName, mode);
-    if(result == 0) {
-        return 1;
-    } else {
-        *ff = result;
-        return 0;
-    }
 }
 
 /* _itow_s */

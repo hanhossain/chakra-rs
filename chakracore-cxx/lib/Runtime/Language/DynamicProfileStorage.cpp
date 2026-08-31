@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "Language/DynamicProfileStorage.h"
+#include "rust/cxx.h"
 
 #include <filesystem>
 #include <mutex>
@@ -52,6 +53,7 @@ public:
     void Close(bool deleteFile = false);
 
 private:
+    // TODO (hanhossain): use rust::String
     char16_t const * filename;
     FILE * file;
     bool deleteNonClosed;
@@ -68,13 +70,12 @@ DynamicProfileStorageReaderWriter::~DynamicProfileStorageReaderWriter()
 bool DynamicProfileStorageReaderWriter::Init(char16_t const * filename, char16_t const * mode, bool deleteNonClosed, errno_t * err = nullptr)
 {
     AssertOrFailFast(file == nullptr);
-    errno_t e = _wfopen_s(&file, filename, mode);
-    if (e != 0)
+    rust::String filenameStr{filename};
+    rust::String modeStr{mode};
+    file = PAL_fopen(filenameStr.c_str(), modeStr.c_str());
+    if (file == nullptr)
     {
-        if (err)
-        {
-            *err = e;
-        }
+        *err = 1;
         return false;
     }
     this->filename = filename;

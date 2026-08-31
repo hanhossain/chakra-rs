@@ -1716,8 +1716,6 @@ FILE * PAL_fopen(const char *, const char *);
 int PAL_wprintf(const char16_t *, ...);
 int PAL_vwprintf(const char16_t *, va_list);
 
-FILE * _wfopen(const char16_t *, const char16_t *);
-
 #define EXCEPTION_CONTINUE_SEARCH   0
 #define EXCEPTION_EXECUTE_HANDLER   1
 #define EXCEPTION_CONTINUE_EXECUTION -1
