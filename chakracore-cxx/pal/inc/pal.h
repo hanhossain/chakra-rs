@@ -1609,7 +1609,7 @@ char16_t _WConst_return * PAL_wcsstr(const char16_t *, const char16_t *);
 char16_t PAL_towlower(char16_t);
 
 char16_t * _wcslwr(char16_t *);
-unsigned long PAL__wcstoui64(const char16_t *, char16_t **, int);
+unsigned long PAL__wcstoui64(const char16_t *, int);
 char16_t * _i64tow(long, char16_t *, int);
 char16_t * _ui64tow(unsigned long, char16_t *, int);
 
