@@ -151,7 +151,7 @@ MemoryProfiler::PrintPageMemoryData(PageMemoryData const& pageMemoryData, char c
 void
 MemoryProfiler::PrintArenaHeader(char16_t const * title)
 {
-    Output::Print(u"--------------------------------------------------------------------------------------------------------\n");
+    Output::Print("--------------------------------------------------------------------------------------------------------\n");
 
     Output::Print(u"%-20s:%7s %9s %9s %9s %6s %9s %6s %9s %5s | %5s\n",
             title,
@@ -166,7 +166,7 @@ MemoryProfiler::PrintArenaHeader(char16_t const * title)
             u"Reset",
             u"Count");
 
-    Output::Print(u"--------------------------------------------------------------------------------------------------------\n");
+    Output::Print("--------------------------------------------------------------------------------------------------------\n");
 }
 
 int MemoryProfiler::CreateArenaUsageSummary(ArenaAllocator * alloc, bool liveOnly,

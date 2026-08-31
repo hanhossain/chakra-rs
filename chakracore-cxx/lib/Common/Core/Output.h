@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include <mutex>
+#include <print>
 
 #include "Core/AutoFile.h"
 
@@ -90,6 +91,7 @@ public:
 #endif
     
 #endif // ENABLE_TRACE
+    static void Print(std::string_view s);
     static size_t Print(const char16_t *form, ...);
     static size_t Print(int column, const char16_t *form, ...);
     static size_t PrintBuffer(const char16_t * buffer, size_t size);

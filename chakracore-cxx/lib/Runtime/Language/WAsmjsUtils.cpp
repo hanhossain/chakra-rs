@@ -32,7 +32,7 @@ namespace WAsmJs
 
         void PrintNewLine()
         {
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
 
         void PrintEndCall(int hasReturn)
@@ -41,7 +41,7 @@ namespace WAsmJs
             Output::Print(u"%*s}", GetPrintCol(), u"");
             if (hasReturn)
             {
-                Output::Print(u" = ");
+                Output::Print(" = ");
             }
         }
 
@@ -233,7 +233,7 @@ namespace WAsmJs
         if (PHASE_TRACE(Js::AsmjsInterpreterStackPhase, body))
         {
             Output::Print(u"ASMFunctionInfo Stack Data for %s\n", body->GetDisplayName());
-            Output::Print(u"==========================\n");
+            Output::Print("==========================\n");
             Output::Print(u"RequiredVarConstants:%d\n", Js::AsmJsFunctionMemory::RequiredVarConstants);
         }
 #endif

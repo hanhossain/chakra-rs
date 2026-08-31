@@ -13,20 +13,20 @@ class GlobOpt;
 #if DBG_DUMP
 
 #define PRINT_GOPT_TRACE_HEADER \
-        Output::Print(u"TRACE "); \
+        Output::Print("TRACE "); \
         if (this->IsLoopPrePass()) \
         { \
             Output::Print(u"[%d, %d]", this->rootLoopPrePass->loopNumber - 1, this->prePassLoop->loopNumber - 1); \
         } \
-        Output::Print(u": "); \
+        Output::Print(": "); \
 
 #define PRINT_VALUENUMBER_TRACE_HEADER \
-        Output::Print(u"VALUE NUMBERING TRACE "); \
+        Output::Print("VALUE NUMBERING TRACE "); \
         if (this->IsLoopPrePass()) \
         { \
             Output::Print(u"[%d, %d]", this->rootLoopPrePass->loopNumber - 1, this->prePassLoop->loopNumber - 1); \
         } \
-        Output::Print(u": "); \
+        Output::Print(": "); \
 
 #define GOPT_TRACE_VALUENUMBER(opndHeader, opnd, ...) \
     if (PHASE_TRACE(Js::ValueNumberingPhase, this->func)) \
@@ -34,9 +34,9 @@ class GlobOpt;
         PRINT_VALUENUMBER_TRACE_HEADER; \
         Output::Print(opndHeader); \
         opnd->Dump(IRDumpFlags_None, this->func); \
-        Output::Print(u" : "); \
+        Output::Print(" : "); \
         Output::Print(__VA_ARGS__); \
-        Output::Print(u"\n"); \
+        Output::Print("\n"); \
         Output::Flush(); \
     }
 #define GOPT_TRACE_OPND(opnd, ...) \
@@ -44,7 +44,7 @@ class GlobOpt;
     { \
         PRINT_GOPT_TRACE_HEADER; \
         opnd->Dump(); \
-        Output::Print(u" : "); \
+        Output::Print(" : "); \
         Output::Print(__VA_ARGS__); \
         Output::Flush(); \
     }
@@ -102,7 +102,7 @@ class GlobOpt;
         } \
         Output::Print(u" - %s\n    ", Js::PhaseNames[phase]); \
         instr->Dump(); \
-        Output::Print(u"    "); \
+        Output::Print("    "); \
         Output::Print(__VA_ARGS__); \
         Output::Flush(); \
     }

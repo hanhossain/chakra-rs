@@ -535,7 +535,7 @@ namespace Js
 
         if (PHASE_TRACE1(Js::ObjectHeaderInliningPhase))
         {
-            Output::Print(u"ObjectHeaderInlining: De-optimizing the object.\n");
+            Output::Print("ObjectHeaderInlining: De-optimizing the object.\n");
             Output::Flush();
         }
 
@@ -815,7 +815,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(u"ObjectCopy: Can't copy: from obj does not have copyable type handler\n");
+                Output::Print("ObjectCopy: Can't copy: from obj does not have copyable type handler\n");
             }
             return false;
         }
@@ -823,7 +823,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(u"ObjectCopy: Can't copy: to obj has object array\n");
+                Output::Print("ObjectCopy: Can't copy: to obj has object array\n");
             }
             return false;
         }
@@ -831,7 +831,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(u"ObjectCopy: Can't copy: Don't have same inline slot offset\n");
+                Output::Print("ObjectCopy: Can't copy: Don't have same inline slot offset\n");
             }
             return false;
         }
@@ -839,7 +839,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(u"ObjectCopy: Can't copy: Prototypes don't match\n");
+                Output::Print("ObjectCopy: Can't copy: Prototypes don't match\n");
             }
             return false;
         }
@@ -847,7 +847,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(u"ObjectCopy: Can't copy: from obj is External\n");
+                Output::Print("ObjectCopy: Can't copy: from obj is External\n");
             }
             return false;
         }
@@ -855,7 +855,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(u"ObjectCopy: Can't copy: from obj is from different ScriptContext\n");
+                Output::Print("ObjectCopy: Can't copy: from obj is from different ScriptContext\n");
             }
             return false;
         }
@@ -880,7 +880,7 @@ namespace Js
         {
             if (PHASE_TRACE1(ObjectCopyPhase))
             {
-                Output::Print(u"ObjectCopy: Can't copy: failed to share type\n");
+                Output::Print("ObjectCopy: Can't copy: failed to share type\n");
             }
             return false;
         }
@@ -911,7 +911,7 @@ namespace Js
         }
         if (PHASE_TRACE1(ObjectCopyPhase))
         {
-            Output::Print(u"ObjectCopy succeeded\n");
+            Output::Print("ObjectCopy succeeded\n");
         }
 
         return true;

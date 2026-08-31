@@ -323,7 +323,7 @@ LinearScan::RegAlloc()
 #if DBG_DUMP
     if (PHASE_TRACE(Js::StackPackPhase, this->func))
     {
-        Output::Print(u"---------------------------\n");
+        Output::Print("---------------------------\n");
     }
 #endif // DBG_DUMP
     DebugOnly(this->func->allowRemoveBailOutArgInstr = true);
@@ -1404,7 +1404,7 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
 #if DBG_DUMP
     if(PHASE_DUMP(Js::BailOutPhase, this->func))
     {
-        Output::Print(u"-------------------Bailout dump -------------------------\n");
+        Output::Print("-------------------Bailout dump -------------------------\n");
         instr->Dump();
     }
 #endif
@@ -1741,9 +1741,9 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
                             {
                                 Output::Print(u"OutParam #%d: ", argSlot);
                                 sym->Dump();
-                                Output::Print(u" Copy Prop sym:");
+                                Output::Print(" Copy Prop sym:");
                                 copyStackSym->Dump();
-                                Output::Print(u"\n");
+                                Output::Print("\n");
                             }
 #endif
                             iter.RemoveCurrent(func->m_alloc);
@@ -1842,7 +1842,7 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
                     {
                         Output::Print(u"OutParam #%d: ", argSlot);
                         sym->Dump();
-                        Output::Print(u"\n");
+                        Output::Print("\n");
                     }
 #endif
                 }
@@ -2780,7 +2780,7 @@ LinearScan::SpillLiveRange(Lifetime * spilledRange, IR::Instr *insertionInstr)
 #if DBG_DUMP
     if (PHASE_TRACE(Js::LinearScanPhase, this->func))
     {
-        Output::Print(u"**** Spill: ");
+        Output::Print("**** Spill: ");
         sym->Dump();
         Output::Print(u"(%S)", RegNames[reg]);
         Output::Print(u"  SpillCount:%d  Length:%d   Cost:%d\n",
@@ -3099,7 +3099,7 @@ LinearScan::InsertStore(IR::Instr *instr, StackSym *sym, RegNum reg)
 #if DBG_DUMP
     if (PHASE_TRACE(Js::LinearScanPhase, this->func))
     {
-        Output::Print(u"...Inserting store for ");
+        Output::Print("...Inserting store for ");
         sym->Dump();
         Output::Print(u"  Cost:%d\n", this->GetSpillCost(sym->scratch.linearScan.lifetime));
     }
@@ -3167,7 +3167,7 @@ LinearScan::InsertLoad(IR::Instr *instr, StackSym *sym, RegNum reg)
 #if DBG_DUMP
     if (PHASE_TRACE(Js::LinearScanPhase, this->func))
     {
-        Output::Print(u"...Inserting load for ");
+        Output::Print("...Inserting load for ");
         sym->Dump();
         if (sym->scratch.linearScan.lifetime)
         {
@@ -3175,7 +3175,7 @@ LinearScan::InsertLoad(IR::Instr *instr, StackSym *sym, RegNum reg)
         }
         else
         {
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 #endif
@@ -4171,9 +4171,9 @@ LinearScan::ReconcileRegContent(Lifetime ** branchRegContent, Lifetime **labelRe
 #if DBG_DUMP
         if (PHASE_TRACE(Js::SecondChancePhase, this->func))
         {
-            Output::Print(u"****** Spilling reg because of bad compensation code order: ");
+            Output::Print("****** Spilling reg because of bad compensation code order: ");
             lifetime->sym->Dump();
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
 #endif
     }
@@ -4352,7 +4352,7 @@ void LinearScan::SecondChanceAllocateToReg(Lifetime *lifetime, RegNum reg)
 #if DBG_DUMP
     if (PHASE_TRACE(Js::SecondChancePhase, this->func))
     {
-        Output::Print(u"**** Second chance: ");
+        Output::Print("**** Second chance: ");
         lifetime->sym->Dump();
         Output::Print(u"\t Reg: %S  ", RegNames[reg]);
         Output::Print(u"  SpillCount:%d  Length:%d   Cost:%d  %S\n",

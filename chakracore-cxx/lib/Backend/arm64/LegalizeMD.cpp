@@ -1095,7 +1095,7 @@ void LegalizeMD::IllegalInstr(IR::Instr * instr, const char16_t * msg, ...)
 {
     va_list argptr;
     va_start(argptr, msg);
-    Output::Print(u"Illegal instruction: ");
+    Output::Print("Illegal instruction: ");
     instr->Dump();
     Output::Print(msg, argptr);
     Assert(UNREACHED);

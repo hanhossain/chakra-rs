@@ -33,7 +33,7 @@ namespace Js
         StatementReader<FunctionBody::StatementMapList> statementReader;
         statementReader.Create(dumpFunction);
         dumpFunction->DumpFullFunctionName();
-        Output::Print(u" (");
+        Output::Print(" (");
         ArgSlot inParamCount = dumpFunction->GetInParamsCount();
         for (ArgSlot paramIndex = 0; paramIndex < inParamCount; paramIndex++)
         {
@@ -43,16 +43,16 @@ namespace Js
             }
             Output::Print(u"In%hu", paramIndex);
         }
-        Output::Print(u") ");
+        Output::Print(") ");
         Output::Print(u"(size: %d [%d])\n", dumpFunction->GetByteCodeCount(), dumpFunction->GetByteCodeWithoutLDACount());
         if (dumpFunction->IsInDebugMode())
         {
-            Output::Print(u"[Bytecode was generated for debug mode]\n");
+            Output::Print("[Bytecode was generated for debug mode]\n");
         }
 #if DBG
         if (dumpFunction->IsReparsed())
         {
-            Output::Print(u"[A reparse is being done]\n");
+            Output::Print("[A reparse is being done]\n");
         }
 #endif
         Output::Print(
@@ -81,20 +81,20 @@ namespace Js
             }
             Output::Print(u"    %04x %2s", byteOffset, layoutSize == LargeLayout? u"L-" : layoutSize == MediumLayout? u"M-" : u"");
             DumpOp(op, layoutSize, reader, dumpFunction);
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
         if (statementReader.AtStatementBoundary(&reader))
         {
             dumpFunction->PrintStatementSourceLine(statementIndex);
             statementIndex = statementReader.MoveNextStatementBoundary();
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 
     void ByteCodeDumper::DumpConstantTable(FunctionBody *dumpFunction)
     {
-        Output::Print(u"    Constant Table:\n    ======== =====\n    ");
+        Output::Print("    Constant Table:\n    ======== =====\n    ");
         uint count = dumpFunction->GetConstantCount();
         for (RegSlot reg = FunctionBody::FirstRegSlot; reg < count; reg++)
         {
@@ -116,7 +116,7 @@ namespace Js
                 Output::Print(u"%-10s", OpCodeUtil::GetOpCodeName(OpCode::LdNullDisplay));
 #else
                 Output::Print(u"%-10s", OpCodeUtil::GetOpCodeName(OpCode::Ld_A));
-                Output::Print(u" (NullDisplay)");
+                Output::Print(" (NullDisplay)");
 #endif
             }
             else if (varConst == static_cast<Js::Var>(const_cast<FrameDisplay*>(&Js::StrictNullFrameDisplay)))
@@ -125,7 +125,7 @@ namespace Js
                 Output::Print(u"%-10s", OpCodeUtil::GetOpCodeName(OpCode::LdStrictNullDisplay));
 #else
                 Output::Print(u"%-10s", OpCodeUtil::GetOpCodeName(OpCode::Ld_A));
-                Output::Print(u" (StrictNullDisplay)");
+                Output::Print(" (StrictNullDisplay)");
 #endif
             }
             else
@@ -134,11 +134,11 @@ namespace Js
                 {
                 case Js::TypeIds_Undefined:
                     Output::Print(u"%-10s", OpCodeUtil::GetOpCodeName(OpCode::Ld_A));
-                    Output::Print(u" (undefined)");
+                    Output::Print(" (undefined)");
                     break;
                 case Js::TypeIds_Null:
                     Output::Print(u"%-10s", OpCodeUtil::GetOpCodeName(OpCode::Ld_A));
-                    Output::Print(u" (null)");
+                    Output::Print(" (null)");
                     break;
                 case Js::TypeIds_Boolean:
                     Output::Print(u"%-10s", OpCodeUtil::GetOpCodeName(
@@ -194,9 +194,9 @@ namespace Js
                     break;
                 }
             }
-            Output::Print(u"\n    ");
+            Output::Print("\n    ");
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
 
     void ByteCodeDumper::DumpImplicitArgIns(FunctionBody * dumpFunction)
@@ -205,7 +205,7 @@ namespace Js
         {
             return;
         }
-        Output::Print(u"    Implicit Arg Ins:\n    ======== === ===\n    ");
+        Output::Print("    Implicit Arg Ins:\n    ======== === ===\n    ");
         for (RegSlot reg = 1;
             reg < dumpFunction->GetInParamsCount(); reg++)
         {
@@ -224,7 +224,7 @@ namespace Js
 #endif
             Output::Print(u"In%d\n    ", dumpFunction->GetInParamsCount());
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
 
     void ByteCodeDumper::DumpU4(uint32_t value)
@@ -305,7 +305,7 @@ namespace Js
                     }
                     Output::Print(u"%s", pPropertyName->GetBuffer());
                 }
-                Output::Print(u"]");
+                Output::Print("]");
                 break;
             }
         }
@@ -317,7 +317,7 @@ namespace Js
         if (data->Return != Constants::NoRegister)
         {
             DumpReg(static_cast<RegSlot>(data->Return));
-            Output::Print(u"=");
+            Output::Print("=");
         }
         Output::Print(u" R%d(ArgCount: %d)", data->Function, data->ArgCount);
     }
@@ -343,7 +343,7 @@ namespace Js
                 }
                 Output::Print(u"%u", arr->elements[i]);
             }
-            Output::Print(u"]");
+            Output::Print("]");
         }
     }
 
@@ -375,7 +375,7 @@ namespace Js
                 }
                 Output::Print(u"%u", arr->elements[i]);
             }
-            Output::Print(u"]");
+            Output::Print("]");
         }
     }
 
@@ -401,7 +401,7 @@ namespace Js
                 }
                 Output::Print(u"%u", arr->elements[i]);
             }
-            Output::Print(u"]");
+            Output::Print("]");
         }
     }
 
@@ -441,7 +441,7 @@ namespace Js
                 }
                 Output::Print(u"%u", arr->elements[i]);
             }
-            Output::Print(u"]");
+            Output::Print("]");
         }
     }
 
@@ -500,11 +500,11 @@ namespace Js
                 break;
             case OpCode::GetCachedFunc:
                 DumpReg(data->R0);
-                Output::Print(u"= func(");
+                Output::Print("= func(");
                 DumpReg(data->R1);
                 Output::Print(u",");
                 DumpI4(data->C1);
-                Output::Print(u")");
+                Output::Print(")");
                 break;
             default:
                 AssertMsg(false, "Unknown OpCode for OpLayoutReg2Int1");
@@ -767,11 +767,11 @@ namespace Js
             {
                 DumpReg(data->R0);
 #if DBG
-                Output::Print(u"=");
+                Output::Print("=");
                 UnifiedRegex::DebugWriter w;
                 dumpFunction->GetLiteralRegex(data->C1)->Print(&w);
 #else
-                Output::Print(u"=<regex>");
+                Output::Print("=<regex>");
 #endif
                 break;
             }
@@ -788,7 +788,7 @@ namespace Js
             }
             default:
                 DumpReg(data->R0);
-                Output::Print(u"=");
+                Output::Print("=");
                 DumpU4(data->C1);
                 break;
         };
@@ -1372,7 +1372,7 @@ namespace Js
                     }
                     Output::Print(u"%s", info->GetDisplayName());
                 }
-                Output::Print(u"]");
+                Output::Print("]");
                 break;
             }
             default:
@@ -1427,7 +1427,7 @@ namespace Js
                 {
                     Output::Print(u", ...");
                 }
-                Output::Print(u"]");
+                Output::Print("]");
                 break;
             }
             case OpCode::NewScIntArray:
@@ -1447,7 +1447,7 @@ namespace Js
                 {
                     Output::Print(u", ...");
                 }
-                Output::Print(u"]");
+                Output::Print("]");
                 break;
             }
             case OpCode::NewScFltArray:
@@ -1467,7 +1467,7 @@ namespace Js
                 {
                     Output::Print(u", ...");
                 }
-                Output::Print(u"]");
+                Output::Print("]");
                 break;
             }
             case OpCode::NewScObject_A:
@@ -1500,7 +1500,7 @@ namespace Js
                 {
                     Output::Print(u", ...");
                 }
-                Output::Print(u"]");
+                Output::Print("]");
                 break;
             }
             default:
@@ -1531,7 +1531,7 @@ namespace Js
                 }
                 Output::Print(u"%u", arr->elements[i]);
             }
-            Output::Print(u"]");
+            Output::Print("]");
             break;
         }
         default:

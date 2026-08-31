@@ -916,7 +916,7 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
             }
             else
             {
-                Output::Print(u"null\n");
+                Output::Print("null\n");
             }
         }
 
@@ -927,11 +927,11 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
             if (stackSymToGuardedProperties)
             {
                 stackSymToGuardedProperties->Dump();
-                Output::Print(u"\n");
+                Output::Print("\n");
             }
             else
             {
-                Output::Print(u"null\n");
+                Output::Print("null\n");
             }
         }
 
@@ -941,13 +941,13 @@ BackwardPass::MergeSuccBlocksInfo(BasicBlock * block)
                 this->func->GetDebugNumberSet(debugStringBuffer), block->GetBlockNum());
             if (stackSymToWriteGuardsMap)
             {
-                Output::Print(u"\n");
+                Output::Print("\n");
                 stackSymToWriteGuardsMap->Dump();
-                Output::Print(u"\n");
+                Output::Print("\n");
             }
             else
             {
-                Output::Print(u"null\n");
+                Output::Print("null\n");
             }
         }
 #endif
@@ -1422,7 +1422,7 @@ BackwardPass::ProcessLoopCollectionPass(BasicBlock *const lastBlock)
     if (PHASE_TRACE(Js::SpeculationPropagationAnalysisPhase, this->func))
     {
         Output::Print(u"Analysis Results for loop %u:\n", collectionPassLoop->GetLoopNumber());
-        Output::Print(u"ClusterList pre-consolidation: ");
+        Output::Print("ClusterList pre-consolidation: ");
         collectionPassLoop->symClusterList->Dump();
     }
 #endif // DBG_DUMP
@@ -1430,9 +1430,9 @@ BackwardPass::ProcessLoopCollectionPass(BasicBlock *const lastBlock)
 #if DBG_DUMP
     if (PHASE_TRACE(Js::SpeculationPropagationAnalysisPhase, this->func))
     {
-        Output::Print(u"ClusterList post-consolidation: ");
+        Output::Print("ClusterList post-consolidation: ");
         collectionPassLoop->symClusterList->Dump();
-        Output::Print(u"Internally dereferenced syms pre-propagation: ");
+        Output::Print("Internally dereferenced syms pre-propagation: ");
         collectionPassLoop->internallyDereferencedSyms->Dump();
     }
 #endif // DBG_DUMP
@@ -1451,7 +1451,7 @@ BackwardPass::ProcessLoopCollectionPass(BasicBlock *const lastBlock)
 #if DBG_DUMP
     if (PHASE_TRACE(Js::SpeculationPropagationAnalysisPhase, this->func))
     {
-        Output::Print(u"Internally dereferenced syms post-propagation: ");
+        Output::Print("Internally dereferenced syms post-propagation: ");
         collectionPassLoop->internallyDereferencedSyms->Dump();
     }
 #endif // DBG_DUMP
@@ -1512,7 +1512,7 @@ BackwardPass::ProcessLoop(BasicBlock * lastBlock)
 #if DBG_DUMP
     if (this->IsTraceEnabled())
     {
-        Output::Print(u"******* PREPASS START ********\n");
+        Output::Print("******* PREPASS START ********\n");
     }
 #endif
 
@@ -1593,7 +1593,7 @@ BackwardPass::ProcessLoop(BasicBlock * lastBlock)
 #if DBG_DUMP
     if (this->IsTraceEnabled())
     {
-        Output::Print(u"******** PREPASS END *********\n");
+        Output::Print("******** PREPASS END *********\n");
     }
 #endif
 }
@@ -3516,7 +3516,7 @@ BackwardPass::ProcessBlock(BasicBlock * block)
 #if DBG_DUMP
                             if (PHASE_TRACE(Js::SpeculationPropagationAnalysisPhase, this->func))
                             {
-                                Output::Print(u"Marking instruction as safe:\n");
+                                Output::Print("Marking instruction as safe:\n");
                                 instr->highlight = 0x0f;
                                 instr->Dump();
                             }
@@ -3533,7 +3533,7 @@ BackwardPass::ProcessBlock(BasicBlock * block)
 #if DBG_DUMP
                             if (PHASE_TRACE(Js::SpeculationPropagationAnalysisPhase, this->func))
                             {
-                                Output::Print(u"Marking instruction as safe:\n");
+                                Output::Print("Marking instruction as safe:\n");
                                 instr->highlight = 0x0f;
                                 instr->Dump();
                             }
@@ -4234,11 +4234,11 @@ BackwardPass::TraceBlockUses(BasicBlock * block, bool isStart)
     {
         if (isStart)
         {
-            Output::Print(u"******************************* Before Process Block *******************************\n");
+            Output::Print("******************************* Before Process Block *******************************\n");
         }
         else
         {
-            Output::Print(u"******************************* After Process Block *******************************n");
+            Output::Print("******************************* After Process Block *******************************n");
         }
         block->DumpHeader();
         DumpBlockData(block);
@@ -5758,7 +5758,7 @@ BackwardPass::TrackAddPropertyTypes(IR::PropertySymOpnd *opnd, BasicBlock *block
 #if DBG_DUMP
     if (PHASE_TRACE(Js::ObjTypeSpecStorePhase, this->func))
     {
-        Output::Print(u"ObjTypeSpecStore: ");
+        Output::Print("ObjTypeSpecStore: ");
         this->currentInstr->Dump();
         pBucket->Dump();
     }
@@ -7381,14 +7381,14 @@ BackwardPass::EndIntOverflowDoesNotMatterRange()
                 func->GetDebugNumberSet(debugStringBuffer),
                 Js::PhaseNames[Js::BackwardPhase],
                 currentBlock->GetBlockNum());
-            Output::Print(u"    Input syms to be int-specialized (lossless): ");
+            Output::Print("    Input syms to be int-specialized (lossless): ");
             candidateSymsRequiredToBeInt->Minus(
                 currentBlock->intOverflowDoesNotMatterRange->SymsRequiredToBeInt(),
                 currentBlock->intOverflowDoesNotMatterRange->SymsRequiredToBeLossyInt()); // candidate bit-vectors are cleared below anyway
             candidateSymsRequiredToBeInt->Dump();
-            Output::Print(u"    Input syms to be converted to int (lossy):   ");
+            Output::Print("    Input syms to be converted to int (lossy):   ");
             currentBlock->intOverflowDoesNotMatterRange->SymsRequiredToBeLossyInt()->Dump();
-            Output::Print(u"    First instr: ");
+            Output::Print("    First instr: ");
             currentBlock->intOverflowDoesNotMatterRange->FirstInstr()->m_next->Dump();
             Output::Flush();
         }
@@ -7845,7 +7845,7 @@ BackwardPass::DeadStoreInstr(IR::Instr *instr)
 #if DBG_DUMP
     if (this->IsTraceEnabled())
     {
-        Output::Print(u"Deadstore instr: ");
+        Output::Print("Deadstore instr: ");
         instr->Dump();
     }
     this->numDeadStore++;
@@ -8775,10 +8775,10 @@ BackwardPass::VerifyByteCodeUpwardExposed(BasicBlock* block, Func* func, BVSpars
 
             if (!notInDeadStore->IsEmpty())
             {
-                Output::Print(u"\n\nByteCode Updward Exposed mismatch after DeadStore\n");
-                Output::Print(u"Mismatch Instr:\n");
+                Output::Print("\n\nByteCode Updward Exposed mismatch after DeadStore\n");
+                Output::Print("Mismatch Instr:\n");
                 instr->Dump();
-                Output::Print(u"  ByteCode Register list present before Backward pass missing in DeadStore pass:\n");
+                Output::Print("  ByteCode Register list present before Backward pass missing in DeadStore pass:\n");
                 FOREACH_BITSET_IN_SPARSEBV(bytecodeReg, notInDeadStore)
                 {
                     Output::Print(u"    R%u\n", bytecodeReg);

@@ -6347,7 +6347,7 @@ namespace Js
 
                     if (PHASE_TRACE1(TypeShareForChangePrototypePhase))
                     {
-                        Output::Print(u"TypeSharing: Reusing prototype object's InlineSlot cache in __proto__.\n");
+                        Output::Print("TypeSharing: Reusing prototype object's InlineSlot cache in __proto__.\n");
                         Output::Flush();
                     }
 
@@ -6365,7 +6365,7 @@ namespace Js
             prototype->SetInternalProperty(Js::InternalPropertyIds::TypeOfPrototypeObjectInlined, (Var)dynamicType, PropertyOperationFlags::PropertyOperation_Force, nullptr);
             if (PHASE_TRACE1(TypeShareForChangePrototypePhase))
             {
-                Output::Print(u"TypeSharing: Updating prototype object's InlineSlot cache in CreateObject.\n");
+                Output::Print("TypeSharing: Updating prototype object's InlineSlot cache in CreateObject.\n");
                 Output::Flush();
             }
         }

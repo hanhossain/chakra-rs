@@ -386,17 +386,17 @@ void InlineeFrameRecord::Dump() const
         DumpOffset(argOffsets[i]);
         if (floatArgs.Test(i))
         {
-            Output::Print(u"f ");
+            Output::Print("f ");
         }
         else if (losslessInt32Args.Test(i))
         {
-            Output::Print(u"i ");
+            Output::Print("i ");
         }
         Output::Print(u", ");
     }
     this->frameInfo->Dump();
 
-    Output::Print(u"func: ");
+    Output::Print("func: ");
     DumpOffset(functionOffset);
 
     if (this->parent)
@@ -419,7 +419,7 @@ void InlineeFrameRecord::DumpOffset(int offset) const
 
 void InlineeFrameInfo::Dump() const
 {
-    Output::Print(u"func: ");
+    Output::Print("func: ");
     if (this->function.type == InlineeFrameInfoValueType_Const)
     {
         Output::Print(u"%p(Var) ", this->function.constValue);
@@ -427,10 +427,10 @@ void InlineeFrameInfo::Dump() const
     else if (this->function.type == InlineeFrameInfoValueType_Sym)
     {
         this->function.sym->Dump();
-        Output::Print(u" ");
+        Output::Print(" ");
     }
 
-    Output::Print(u"args: ");
+    Output::Print("args: ");
     arguments->Map([=](uint i, InlineFrameInfoValue& value)
     {
         if (value.type == InlineeFrameInfoValueType_Const)
@@ -440,7 +440,7 @@ void InlineeFrameInfo::Dump() const
         else if (value.type == InlineeFrameInfoValueType_Sym)
         {
             value.sym->Dump();
-            Output::Print(u" ");
+            Output::Print(" ");
         }
         Output::Print(u", ");
     });

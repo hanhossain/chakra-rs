@@ -278,7 +278,7 @@ HeapAllocatorData::CheckLeaks()
             if (Js::Configuration::Global.flags.LeakStackTrace && current->stacktrace)
             {
                 // Allocation done before the flags is parse doesn't get a stack trace
-                Output::Print(u" Allocation Stack:\n");
+                Output::Print(" Allocation Stack:\n");
                 current->stacktrace->Print();
             }
 #endif
@@ -309,7 +309,7 @@ MemoryLeakCheck::~MemoryLeakCheck()
     {
         if (enableOutput)
         {
-            Output::Print(u"FATAL ERROR: Memory Leak Detected\n");
+            Output::Print("FATAL ERROR: Memory Leak Detected\n");
         }
         LeakRecord * current = head;
         do
@@ -326,7 +326,7 @@ MemoryLeakCheck::~MemoryLeakCheck()
         while (current != nullptr);
         if (enableOutput)
         {
-            Output::Print(u"-------------------------------------------------------------------------------------\n");
+            Output::Print("-------------------------------------------------------------------------------------\n");
             Output::Print(u"Total leaked: %d bytes (%d objects)\n", leakedBytes, leakedCount);
             Output::Flush();
         }

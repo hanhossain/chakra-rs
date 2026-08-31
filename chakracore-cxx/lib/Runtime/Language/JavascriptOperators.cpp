@@ -6172,7 +6172,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                     Output::Print(u"CtorCache: populated cache (0x%p) for ctor %s (%s): ", constructorCache, ctorName,
                         functionBody ? functionBody->GetDebugNumberSet(debugStringBuffer) : u"(null)");
                     constructorCache->Dump();
-                    Output::Print(u"\n");
+                    Output::Print("\n");
                     Output::Flush();
                 }
 #endif
@@ -6223,7 +6223,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 Output::Print(u"CtorCache: populated cache (0x%p) for ctor %s (%s): ", constructorCache, ctorName,
                     functionBody ? functionBody->GetDebugNumberSet(debugStringBuffer) : u"(null)");
                 constructorCache->Dump();
-                Output::Print(u"\n");
+                Output::Print("\n");
                 Output::Flush();
             }
 #endif
@@ -6242,7 +6242,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                     functionBody == nullptr ? u"function has no body" :
                     requestContext != constructorScriptContext ? u"of cross-context call" : u"constructor cache phase is off",
                     prototype, functionBody, constructorScriptContext, requestContext);
-                Output::Print(u"\n");
+                Output::Print("\n");
                 Output::Flush();
             }
 #endif
@@ -6383,7 +6383,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                             char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
                             Output::Print(u"CtorCache: %s cache (0x%p) for ctor %s (#%u) did not update because external call",
                                 constructorCache, constructorBody, ctorName, constructorBody ? constructorBody->GetDebugNumberSet(debugStringBuffer) : u"(null)");
-                            Output::Print(u"\n");
+                            Output::Print("\n");
                             Output::Flush();
                         }
                     }
@@ -6470,7 +6470,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             Output::Print(u"CtorCache: %s cache (0x%p) for ctor %s (%s): ", isHit ? u"hit" : u"missed", ctorCache, ctorName,
                 ctorBody ? ctorBody->GetDebugNumberSet(debugStringBuffer) : u"(null)");
             ctorCache->Dump();
-            Output::Print(u"\n");
+            Output::Print("\n");
             Output::Flush();
         }
 #endif
@@ -6489,7 +6489,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 ctorBody ? const_cast<Js::FunctionBody *>(ctorBody)->GetDebugNumberSet(debugStringBuffer) : u"(null)",
                 updated ? u"" : u", because" , reason);
             ctorCache->Dump();
-            Output::Print(u"\n");
+            Output::Print("\n");
             Output::Flush();
         }
 #endif

@@ -80,7 +80,7 @@ void WasmBytecodeGenerator::PrintTypeStack() const
 
 void WasmBytecodeGenerator::PrintOpBegin(WasmOp op)
 {
-    if (lastOpId == opId) Output::Print(u"\r\n");
+    if (lastOpId == opId) Output::Print("\r\n");
     lastOpId = ++opId;
     const int depth = m_blockInfos.Count() - 1;
     if (depth > 0)
@@ -91,7 +91,7 @@ void WasmBytecodeGenerator::PrintOpBegin(WasmOp op)
     {
         if (sigId < m_module->GetSignatureCount())
         {
-            Output::Print(u" ");
+            Output::Print(" ");
             WasmSignature* sig = m_module->GetSignature(sigId);
             sig->Dump(64);
         }
@@ -135,11 +135,11 @@ case wb##opname: \
             FunctionIndexTypes::Type funcType = GetReader()->m_currentNode.call.funcType;
             switch (funcType)
             {
-            case Wasm::FunctionIndexTypes::Invalid: Output::Print(u" (invalid) "); break;
-            case Wasm::FunctionIndexTypes::ImportThunk: Output::Print(u" (thunk) "); break;
-            case Wasm::FunctionIndexTypes::Function: Output::Print(u" (func) "); break;
-            case Wasm::FunctionIndexTypes::Import: Output::Print(u" (import) "); break;
-            default:  Output::Print(u" (unknown)"); break;
+            case Wasm::FunctionIndexTypes::Invalid: Output::Print(" (invalid) "); break;
+            case Wasm::FunctionIndexTypes::ImportThunk: Output::Print(" (thunk) "); break;
+            case Wasm::FunctionIndexTypes::Function: Output::Print(" (func) "); break;
+            case Wasm::FunctionIndexTypes::Import: Output::Print(" (import) "); break;
+            default:  Output::Print(" (unknown)"); break;
             }
             auto func = this->m_module->GetWasmFunctionInfo(id);
             func->GetBody()->DumpFullFunctionName();
@@ -167,7 +167,7 @@ case wb##opname: \
         switch (((!!alignment) << 1) | (!!offset))
         {
         case 0: // no alignment, no offset
-            Output::Print(u" [i]"); break;
+            Output::Print(" [i]"); break;
         case 1: // no alignment, offset
             Output::Print(u" [i + %u (0x%x)]", offset, offset); break;
         case 2: // alignment, no offset
@@ -187,9 +187,9 @@ void WasmBytecodeGenerator::PrintOpEnd()
     if (lastOpId == opId)
     {
         ++opId;
-        Output::Print(u" -> ");
+        Output::Print(" -> ");
         PrintTypeStack();
-        Output::Print(u"\r\n");
+        Output::Print("\r\n");
     }
 }
 #endif
@@ -506,9 +506,9 @@ void WasmBytecodeGenerator::GenerateFunction()
 {
     if (DO_WASM_TRACE_BYTECODE)
     {
-        Output::Print(u"Generate WebAssembly Bytecode: ");
+        Output::Print("Generate WebAssembly Bytecode: ");
         GetFunctionBody()->DumpFullFunctionName();
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
     if (PHASE_OFF(Js::WasmBytecodePhase, GetFunctionBody()))
     {

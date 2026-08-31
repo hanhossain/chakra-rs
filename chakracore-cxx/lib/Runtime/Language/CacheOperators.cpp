@@ -351,10 +351,10 @@ namespace Js
         TraceCacheCommon(methodName, propertyId, requestContext, object);
         if(inlineCache)
         {
-            Output::Print(u"Inline Cache: \n  ");
+            Output::Print("Inline Cache: \n  ");
             inlineCache->Dump();
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 

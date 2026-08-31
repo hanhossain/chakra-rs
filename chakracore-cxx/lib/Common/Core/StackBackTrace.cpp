@@ -40,9 +40,9 @@ StackBackTrace::Print()
     for(uint32_t i = 0; i < this->framesCount; i++)
     {
         void * address = this->stackBackTrace[i];
-        retValue += Output::Print(u" ");
+        retValue += Output::Print(" ");
         retValue += DbgHelpSymbolManager::PrintSymbol(address);
-        retValue += Output::Print(u"\n");
+        retValue += Output::Print("\n");
     }
 #else
     char** f = backtrace_symbols(this->stackBackTrace, this->framesCount);
@@ -56,7 +56,7 @@ StackBackTrace::Print()
     }
 #endif
 
-    retValue += Output::Print(u"\n");
+    retValue += Output::Print("\n");
     return retValue;
 }
 

@@ -127,7 +127,7 @@ void DictionaryStats::OutputStats()
 
     DictionaryStats::dictionaryTypesCriticalSection.lock();
     DictionaryType* current = dictionaryTypes;
-    Output::Print(u"PROFILE DICTIONARY\n");
+    Output::Print("PROFILE DICTIONARY\n");
     Output::Print(u"%8s  %13s  %13s  %13s  %13s  %13s  %13s  %13s  %14s  %14s  %13s  %13s  %13s    %s\n", u"Metric",u"StartSize", u"EndSize", u"Resizes", u"Items", u"MaxDepth", u"EmptyBuckets", u"Lookups", u"Collisions", u"AvgLookupDepth", u"AvgCollDepth", u"MaxLookupDepth", u"Instances", u"Type");
     while(current)
     {
@@ -203,7 +203,7 @@ void DictionaryStats::OutputStats()
         }
         current = current->pNext;
     }
-    Output::Print(u"====================================================================================\n");
+    Output::Print("====================================================================================\n");
     ClearStats();
     DictionaryStats::dictionaryTypesCriticalSection.unlock();
 }

@@ -352,7 +352,7 @@ namespace Js
 #if DBG
     void IntlEngineInterfaceExtensionObject::DumpByteCode()
     {
-        Output::Print(u"Dumping Intl Byte Code:");
+        Output::Print("Dumping Intl Byte Code:");
         Assert(this->intlByteCode);
         Js::ByteCodeDumper::DumpRecursively(intlByteCode);
     }
@@ -616,7 +616,7 @@ PROJECTED_ENUMS(PROJECTED_ENUM)
 
 #if DEBUG
 #ifdef INTL_ICU_DEBUG
-        Output::Print(u"EntryIntl_RaiseAssert\n");
+        Output::Print("EntryIntl_RaiseAssert\n");
 #endif
         JavascriptExceptionOperators::Throw(VarTo<JavascriptError>(args.Values[1]), scriptContext);
 #else
@@ -978,7 +978,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         }
 
 #if defined(INTL_ICU_DEBUG)
-        Output::Print(u"Intl::ResolveLocaleLookup returned false: EntryIntl_ResolveLocaleLookup returning null to fallback to JS\n");
+        Output::Print("Intl::ResolveLocaleLookup returned false: EntryIntl_ResolveLocaleLookup returning null to fallback to JS\n");
 #endif
         return scriptContext->GetLibrary()->GetNull();
     }

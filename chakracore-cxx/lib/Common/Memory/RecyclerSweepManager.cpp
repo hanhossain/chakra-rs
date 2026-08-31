@@ -133,7 +133,7 @@ RecyclerSweepManager::FinishSweep()
 #ifdef RECYCLER_TRACE
             if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::PartialCollectPhase))
             {
-                Output::Print(u"AdjustPartialHeuristics returned true\n");
+                Output::Print("AdjustPartialHeuristics returned true\n");
                 Output::Print(u"  partialUncollectedAllocBytes = %d\n", recycler->partialUncollectedAllocBytes);
                 Output::Print(u"  nextPartialUncollectedAllocBytes = %d\n", this->nextPartialUncollectedAllocBytes);
             }
@@ -146,7 +146,7 @@ RecyclerSweepManager::FinishSweep()
 #ifdef RECYCLER_TRACE
             if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::PartialCollectPhase))
             {
-                Output::Print(u"AdjustPartialHeuristics returned false\n");
+                Output::Print("AdjustPartialHeuristics returned false\n");
             }
 #endif
 
@@ -183,7 +183,7 @@ RecyclerSweepManager::EndSweep()
 #ifdef RECYCLER_TRACE
         if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::PartialCollectPhase))
         {
-            Output::Print(u"EndSweep for partial sweep\n");
+            Output::Print("EndSweep for partial sweep\n");
             Output::Print(u"  uncollectedAllocBytes = %d\n", recycler->autoHeap.uncollectedAllocBytes);
             Output::Print(u"  nextPartialUncollectedAllocBytes = %d\n", this->nextPartialUncollectedAllocBytes);
         }
@@ -299,7 +299,7 @@ RecyclerSweepManager::StartPartialCollectMode()
 #ifdef RECYCLER_TRACE
     if (recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::PartialCollectPhase))
     {
-        Output::Print(u"StartPartialCollectMode\n");
+        Output::Print("StartPartialCollectMode\n");
         Output::Print(u"  was inPartialCollectMode = %d\n", this->inPartialCollect);
         Output::Print(u"  lastPartialUncollectedAllocBytes = %d\n", this->lastPartialUncollectedAllocBytes);
         Output::Print(u"  uncollectedAllocBytes = %d\n", recycler->autoHeap.uncollectedAllocBytes);

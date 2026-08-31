@@ -909,7 +909,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
             }
         }
 
-        Output::Print(u"---------------------------------\n");
+        Output::Print("---------------------------------\n");
     }
 #endif
 

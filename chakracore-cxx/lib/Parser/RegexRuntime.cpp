@@ -4884,7 +4884,7 @@ namespace UnifiedRegex
             return;
         }
 
-        Output::Print(u"Regex QC");
+        Output::Print("Regex QC");
 
         static uint n = 0;
         static uint firstQcTime = 0;
@@ -4899,7 +4899,7 @@ namespace UnifiedRegex
             firstQcTime = now;
         }
 
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 

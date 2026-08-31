@@ -195,6 +195,11 @@ Output::TraceStats(Js::Phase phase, const char16_t *form, ...)
 ///
 ///----------------------------------------------------------------------------
 
+void Output::Print(std::string_view s)
+{
+    std::print("{}", s);
+}
+
 size_t
 Output::Print(const char16_t *form, ...)
 {
@@ -383,7 +388,7 @@ Output::SkipToColumn(size_t column)
     }
     if (column <= reference)
     {
-        Output::Print(u" ");
+        Output::Print(" ");
         return;
     }
 
@@ -394,7 +399,7 @@ Output::SkipToColumn(size_t column)
     // Print at least one space
     while (dist > 0)
     {
-        Output::Print(u" ");
+        Output::Print(" ");
         dist--;
     }
 }

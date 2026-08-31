@@ -20,7 +20,7 @@ BufferBuilder::TraceOutput(byte * buffer, uint32_t size) const
         {
             Output::Print(u" %02x", buffer[this->offset + i]);
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
 }
 #endif

@@ -13416,7 +13416,7 @@ void PrintFormalsWIndent(ParseNode *pnode, int indentAmt);
 
 void Indent(int indentAmt) {
     for (int i = 0; i < indentAmt; i++) {
-        Output::Print(u" ");
+        Output::Print(" ");
     }
 }
 
@@ -13425,19 +13425,19 @@ void PrintBlockType(PnodeBlockType type)
     switch (type)
     {
     case Global:
-        Output::Print(u"(Global)");
+        Output::Print("(Global)");
         break;
     case Function:
-        Output::Print(u"(Function)");
+        Output::Print("(Function)");
         break;
     case Regular:
-        Output::Print(u"(Regular)");
+        Output::Print("(Regular)");
         break;
     case Parameter:
-        Output::Print(u"(Parameter)");
+        Output::Print("(Parameter)");
         break;
     default:
-        Output::Print(u"(unknown blocktype)");
+        Output::Print("(unknown blocktype)");
         break;
     }
 }
@@ -13461,23 +13461,23 @@ void PrintScopesWIndent(ParseNode *pnode, int indentAmt) {
     if (scope) {
         Output::Print(u"[%4d, %4d): ", scope->ichMin, scope->ichLim);
         Indent(indentAmt);
-        Output::Print(u"Scopes: ");
+        Output::Print("Scopes: ");
         ParseNode *next = nullptr;
         ParseNode *syntheticBlock = nullptr;
         while (scope) {
             switch (scope->nop) {
-            case knopFncDecl: Output::Print(u"knopFncDecl"); next = scope->AsParseNodeFnc()->pnodeNext; break;
-            case knopBlock: Output::Print(u"knopBlock"); PrintBlockType(scope->AsParseNodeBlock()->blockType); next = scope->AsParseNodeBlock()->pnodeNext; break;
-            case knopCatch: Output::Print(u"knopCatch"); next = scope->AsParseNodeCatch()->pnodeNext; break;
-            case knopWith: Output::Print(u"knopWith"); next = scope->AsParseNodeWith()->pnodeNext; break;
-            default: Output::Print(u"unknown"); break;
+            case knopFncDecl: Output::Print("knopFncDecl"); next = scope->AsParseNodeFnc()->pnodeNext; break;
+            case knopBlock: Output::Print("knopBlock"); PrintBlockType(scope->AsParseNodeBlock()->blockType); next = scope->AsParseNodeBlock()->pnodeNext; break;
+            case knopCatch: Output::Print("knopCatch"); next = scope->AsParseNodeCatch()->pnodeNext; break;
+            case knopWith: Output::Print("knopWith"); next = scope->AsParseNodeWith()->pnodeNext; break;
+            default: Output::Print("unknown"); break;
             }
             if (firstOnly) {
                 next = nullptr;
                 syntheticBlock = scope;
             }
             if (scope->grfpn & fpnSyntheticNode) {
-                Output::Print(u" synthetic");
+                Output::Print(" synthetic");
                 if (scope->nop == knopBlock)
                     syntheticBlock = scope;
             }
@@ -13485,7 +13485,7 @@ void PrintScopesWIndent(ParseNode *pnode, int indentAmt) {
             if (next) Output::Print(u", ");
             scope = next;
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
         if (syntheticBlock || firstOnly) {
             PrintScopesWIndent(syntheticBlock, indentAmt + INDENT_SIZE);
         }
@@ -13505,7 +13505,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
             Output::Print(u"id: %s\n", pnode->AsParseNodeName()->pid->Psz());
         }
         else {
-            Output::Print(u"name node\n");
+            Output::Print("name node\n");
         }
         break;
         //PTNODE(knopInt        , "int const"    ,None    ,Int  ,fnopLeaf|fnopConst)
@@ -13536,147 +13536,147 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopNull       , "null"        ,Null    ,None ,fnopLeaf)
     case knopNull:
         Indent(indentAmt);
-        Output::Print(u"null\n");
+        Output::Print("null\n");
         break;
         //PTNODE(knopFalse      , "false"        ,False   ,None ,fnopLeaf)
     case knopFalse:
         Indent(indentAmt);
-        Output::Print(u"false\n");
+        Output::Print("false\n");
         break;
         //PTNODE(knopTrue       , "true"        ,True    ,None ,fnopLeaf)
     case knopTrue:
         Indent(indentAmt);
-        Output::Print(u"true\n");
+        Output::Print("true\n");
         break;
         //PTNODE(knopEmpty      , "empty"        ,Empty   ,None ,fnopLeaf)
     case knopEmpty:
         Indent(indentAmt);
-        Output::Print(u"empty\n");
+        Output::Print("empty\n");
         break;
         // Unary operators.
         //PTNODE(knopNot        , "~"            ,BitNot  ,Uni  ,fnopUni)
     case knopNot:
         Indent(indentAmt);
-        Output::Print(u"~\n");
+        Output::Print("~\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopNeg        , "unary -"    ,Neg     ,Uni  ,fnopUni)
     case knopNeg:
         Indent(indentAmt);
-        Output::Print(u"U-\n");
+        Output::Print("U-\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopPos        , "unary +"    ,Pos     ,Uni  ,fnopUni)
     case knopPos:
         Indent(indentAmt);
-        Output::Print(u"U+\n");
+        Output::Print("U+\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLogNot     , "!"            ,LogNot  ,Uni  ,fnopUni)
     case knopLogNot:
         Indent(indentAmt);
-        Output::Print(u"!\n");
+        Output::Print("!\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopEllipsis     , "..."       ,Spread  ,Uni    , fnopUni)
     case knopEllipsis:
         Indent(indentAmt);
-        Output::Print(u"...<expr>\n");
+        Output::Print("...<expr>\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopIncPost    , "++ post"    ,Inc     ,Uni  ,fnopUni|fnopAsg)
     case knopIncPost:
         Indent(indentAmt);
-        Output::Print(u"<expr>++\n");
+        Output::Print("<expr>++\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDecPost    , "-- post"    ,Dec     ,Uni  ,fnopUni|fnopAsg)
     case knopDecPost:
         Indent(indentAmt);
-        Output::Print(u"<expr>--\n");
+        Output::Print("<expr>--\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopIncPre     , "++ pre"    ,Inc     ,Uni  ,fnopUni|fnopAsg)
     case knopIncPre:
         Indent(indentAmt);
-        Output::Print(u"++<expr>\n");
+        Output::Print("++<expr>\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDecPre     , "-- pre"    ,Dec     ,Uni  ,fnopUni|fnopAsg)
     case knopDecPre:
         Indent(indentAmt);
-        Output::Print(u"--<expr>\n");
+        Output::Print("--<expr>\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopTypeof     , "typeof"    ,None    ,Uni  ,fnopUni)
     case knopTypeof:
         Indent(indentAmt);
-        Output::Print(u"typeof\n");
+        Output::Print("typeof\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopVoid       , "void"        ,Void    ,Uni  ,fnopUni)
     case knopVoid:
         Indent(indentAmt);
-        Output::Print(u"void\n");
+        Output::Print("void\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDelete     , "delete"    ,None    ,Uni  ,fnopUni)
     case knopDelete:
         Indent(indentAmt);
-        Output::Print(u"delete\n");
+        Output::Print("delete\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopArray      , "arr cnst"    ,None    ,Uni  ,fnopUni)
 
     case knopArrayPattern:
         Indent(indentAmt);
-        Output::Print(u"Array Pattern\n");
+        Output::Print("Array Pattern\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
 
     case knopObjectPattern:
         Indent(indentAmt);
-        Output::Print(u"Object Pattern\n");
+        Output::Print("Object Pattern\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
 
     case knopArray:
         Indent(indentAmt);
-        Output::Print(u"Array Literal\n");
+        Output::Print("Array Literal\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopObject     , "obj cnst"    ,None    ,Uni  ,fnopUni)
     case knopObject:
         Indent(indentAmt);
-        Output::Print(u"Object Literal\n");
+        Output::Print("Object Literal\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         // Binary and Ternary Operators
         //PTNODE(knopAdd        , "+"            ,Add     ,Bin  ,fnopBin)
     case knopAdd:
         Indent(indentAmt);
-        Output::Print(u"+\n");
+        Output::Print("+\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopSub        , "-"            ,Sub     ,Bin  ,fnopBin)
     case knopSub:
         Indent(indentAmt);
-        Output::Print(u"-\n");
+        Output::Print("-\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopMul        , "*"            ,Mul     ,Bin  ,fnopBin)
     case knopMul:
         Indent(indentAmt);
-        Output::Print(u"*\n");
+        Output::Print("*\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDiv        , "/"            ,Div     ,Bin  ,fnopBin)
     case knopExpo:
         Indent(indentAmt);
-        Output::Print(u"**\n");
+        Output::Print("**\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
@@ -13684,7 +13684,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
 
     case knopDiv:
         Indent(indentAmt);
-        Output::Print(u"/\n");
+        Output::Print("/\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
@@ -13698,112 +13698,112 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopOr         , "|"            ,BitOr   ,Bin  ,fnopBin)
     case knopOr:
         Indent(indentAmt);
-        Output::Print(u"|\n");
+        Output::Print("|\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopXor        , "^"            ,BitXor  ,Bin  ,fnopBin)
     case knopXor:
         Indent(indentAmt);
-        Output::Print(u"^\n");
+        Output::Print("^\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAnd        , "&"            ,BitAnd  ,Bin  ,fnopBin)
     case knopAnd:
         Indent(indentAmt);
-        Output::Print(u"&\n");
+        Output::Print("&\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopEq         , "=="        ,EQ      ,Bin  ,fnopBin|fnopRel)
     case knopEq:
         Indent(indentAmt);
-        Output::Print(u"==\n");
+        Output::Print("==\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopNe         , "!="        ,NE      ,Bin  ,fnopBin|fnopRel)
     case knopNe:
         Indent(indentAmt);
-        Output::Print(u"!=\n");
+        Output::Print("!=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLt         , "<"            ,LT      ,Bin  ,fnopBin|fnopRel)
     case knopLt:
         Indent(indentAmt);
-        Output::Print(u"<\n");
+        Output::Print("<\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLe         , "<="        ,LE      ,Bin  ,fnopBin|fnopRel)
     case knopLe:
         Indent(indentAmt);
-        Output::Print(u"<=\n");
+        Output::Print("<=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopGe         , ">="        ,GE      ,Bin  ,fnopBin|fnopRel)
     case knopGe:
         Indent(indentAmt);
-        Output::Print(u">=\n");
+        Output::Print(">=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopGt         , ">"            ,GT      ,Bin  ,fnopBin|fnopRel)
     case knopGt:
         Indent(indentAmt);
-        Output::Print(u">\n");
+        Output::Print(">\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopCall       , "()"        ,None    ,Bin  ,fnopBin)
     case knopCall:
         Indent(indentAmt);
-        Output::Print(u"Call\n");
+        Output::Print("Call\n");
         PrintPnodeWIndent(pnode->AsParseNodeCall()->pnodeTarget, indentAmt + INDENT_SIZE);
         PrintPnodeListWIndent(pnode->AsParseNodeCall()->pnodeArgs, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDot        , "."            ,None    ,Bin  ,fnopBin)
     case knopDot:
         Indent(indentAmt);
-        Output::Print(u".\n");
+        Output::Print(".\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsg        , "="            ,None    ,Bin  ,fnopBin|fnopAsg)
     case knopAsg:
         Indent(indentAmt);
-        Output::Print(u"=\n");
+        Output::Print("=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopInstOf     , "instanceof",InstOf  ,Bin  ,fnopBin|fnopRel)
     case knopInstOf:
         Indent(indentAmt);
-        Output::Print(u"instanceof\n");
+        Output::Print("instanceof\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopIn         , "in"        ,In      ,Bin  ,fnopBin|fnopRel)
     case knopIn:
         Indent(indentAmt);
-        Output::Print(u"in\n");
+        Output::Print("in\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopEqv        , "==="        ,Eqv     ,Bin  ,fnopBin|fnopRel)
     case knopEqv:
         Indent(indentAmt);
-        Output::Print(u"===\n");
+        Output::Print("===\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopNEqv       , "!=="        ,NEqv    ,Bin  ,fnopBin|fnopRel)
     case knopNEqv:
         Indent(indentAmt);
-        Output::Print(u"!==\n");
+        Output::Print("!==\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
@@ -13817,62 +13817,62 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopLogOr      , "||"        ,None    ,Bin  ,fnopBin)
     case knopLogOr:
         Indent(indentAmt);
-        Output::Print(u"||\n");
+        Output::Print("||\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLogAnd     , "&&"        ,None    ,Bin  ,fnopBin)
     case knopLogAnd:
         Indent(indentAmt);
-        Output::Print(u"&&\n");
+        Output::Print("&&\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
     case knopCoalesce:
         Indent(indentAmt);
-        Output::Print(u"??\n");
+        Output::Print("??\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopLsh        , "<<"        ,Lsh     ,Bin  ,fnopBin)
     case knopLsh:
         Indent(indentAmt);
-        Output::Print(u"<<\n");
+        Output::Print("<<\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopRsh        , ">>"        ,Rsh     ,Bin  ,fnopBin)
     case knopRsh:
         Indent(indentAmt);
-        Output::Print(u">>\n");
+        Output::Print(">>\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopRs2        , ">>>"        ,Rs2     ,Bin  ,fnopBin)
     case knopRs2:
         Indent(indentAmt);
-        Output::Print(u">>>\n");
+        Output::Print(">>>\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopNew        , "new"        ,None    ,Bin  ,fnopBin)
     case knopNew:
         Indent(indentAmt);
-        Output::Print(u"new\n");
+        Output::Print("new\n");
         PrintPnodeWIndent(pnode->AsParseNodeCall()->pnodeTarget, indentAmt + INDENT_SIZE);
         PrintPnodeListWIndent(pnode->AsParseNodeCall()->pnodeArgs, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopIndex      , "[]"        ,None    ,Bin  ,fnopBin)
     case knopIndex:
         Indent(indentAmt);
-        Output::Print(u"[]\n");
+        Output::Print("[]\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeListWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopQmark      , "?"            ,None    ,Tri  ,fnopBin)
     case knopQmark:
         Indent(indentAmt);
-        Output::Print(u"?:\n");
+        Output::Print("?:\n");
         PrintPnodeWIndent(pnode->AsParseNodeTri()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeTri()->pnode2, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeTri()->pnode3, indentAmt + INDENT_SIZE);
@@ -13880,28 +13880,28 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopAsgAdd     , "+="        ,Add     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgAdd:
         Indent(indentAmt);
-        Output::Print(u"+=\n");
+        Output::Print("+=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgSub     , "-="        ,Sub     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgSub:
         Indent(indentAmt);
-        Output::Print(u"-=\n");
+        Output::Print("-=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgMul     , "*="        ,Mul     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgMul:
         Indent(indentAmt);
-        Output::Print(u"*=\n");
+        Output::Print("*=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgDiv     , "/="        ,Div     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgExpo:
         Indent(indentAmt);
-        Output::Print(u"**=\n");
+        Output::Print("**=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
@@ -13909,7 +13909,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
 
     case knopAsgDiv:
         Indent(indentAmt);
-        Output::Print(u"/=\n");
+        Output::Print("/=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
@@ -13923,49 +13923,49 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopAsgAnd     , "&="        ,BitAnd  ,Bin  ,fnopBin|fnopAsg)
     case knopAsgAnd:
         Indent(indentAmt);
-        Output::Print(u"&=\n");
+        Output::Print("&=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgXor     , "^="        ,BitXor  ,Bin  ,fnopBin|fnopAsg)
     case knopAsgXor:
         Indent(indentAmt);
-        Output::Print(u"^=\n");
+        Output::Print("^=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgOr      , "|="        ,BitOr   ,Bin  ,fnopBin|fnopAsg)
     case knopAsgOr:
         Indent(indentAmt);
-        Output::Print(u"|=\n");
+        Output::Print("|=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgLsh     , "<<="        ,Lsh     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgLsh:
         Indent(indentAmt);
-        Output::Print(u"<<=\n");
+        Output::Print("<<=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgRsh     , ">>="        ,Rsh     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgRsh:
         Indent(indentAmt);
-        Output::Print(u">>=\n");
+        Output::Print(">>=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopAsgRs2     , ">>>="        ,Rs2     ,Bin  ,fnopBin|fnopAsg)
     case knopAsgRs2:
         Indent(indentAmt);
-        Output::Print(u">>>=\n");
+        Output::Print(">>>=\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
 
     case knopComputedName:
         Indent(indentAmt);
-        Output::Print(u"ComputedProperty\n");
+        Output::Print("ComputedProperty\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
     case knopParamPattern:
@@ -13976,7 +13976,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
     case knopMemberShort:
     case knopObjectPatternMember:
         Indent(indentAmt);
-        Output::Print(u":\n");
+        Output::Print(":\n");
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode1, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeBin()->pnode2, indentAmt + INDENT_SIZE);
         break;
@@ -13984,7 +13984,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopList       , "<list>"    ,None    ,Bin  ,fnopNone)
     case knopList:
         Indent(indentAmt);
-        Output::Print(u"List\n");
+        Output::Print("List\n");
         PrintPnodeListWIndent(pnode, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopVarDecl    , "varDcl"    ,None    ,Var  ,fnopNone)
@@ -14026,30 +14026,30 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         {
             Output::Print(u"[%4d, %4d): ", pnode->ichMin, pnode->ichLim);
             Indent(indentAmt + INDENT_SIZE);
-            Output::Print(u"<parse deferred body>\n");
+            Output::Print("<parse deferred body>\n");
         }
         break;
         //PTNODE(knopProg       , "program"    ,None    ,Fnc  ,fnopNone)
     case knopProg:
         Indent(indentAmt);
-        Output::Print(u"program\n");
+        Output::Print("program\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeListWIndent(pnode->AsParseNodeFnc()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopEndCode    , "<endcode>"    ,None    ,None ,fnopNone)
     case knopEndCode:
         Indent(indentAmt);
-        Output::Print(u"<endcode>\n");
+        Output::Print("<endcode>\n");
         break;
         //PTNODE(knopDebugger   , "debugger"    ,None    ,None ,fnopNone)
     case knopDebugger:
         Indent(indentAmt);
-        Output::Print(u"<debugger>\n");
+        Output::Print("<debugger>\n");
         break;
         //PTNODE(knopFor        , "for"        ,None    ,For  ,fnopBreak|fnopContinue)
     case knopFor:
         Indent(indentAmt);
-        Output::Print(u"for\n");
+        Output::Print("for\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeFor()->pnodeInit, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeFor()->pnodeCond, indentAmt + INDENT_SIZE);
@@ -14059,7 +14059,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopIf         , "if"        ,None    ,If   ,fnopNone)
     case knopIf:
         Indent(indentAmt);
-        Output::Print(u"if\n");
+        Output::Print("if\n");
         PrintPnodeWIndent(pnode->AsParseNodeIf()->pnodeCond, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeIf()->pnodeTrue, indentAmt + INDENT_SIZE);
         if (pnode->AsParseNodeIf()->pnodeFalse != NULL)
@@ -14068,21 +14068,21 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopWhile      , "while"        ,None    ,While,fnopBreak|fnopContinue)
     case knopWhile:
         Indent(indentAmt);
-        Output::Print(u"while\n");
+        Output::Print("while\n");
         PrintPnodeWIndent(pnode->AsParseNodeWhile()->pnodeCond, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeWhile()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopDoWhile    , "do-while"    ,None    ,While,fnopBreak|fnopContinue)
     case knopDoWhile:
         Indent(indentAmt);
-        Output::Print(u"do\n");
+        Output::Print("do\n");
         PrintPnodeWIndent(pnode->AsParseNodeWhile()->pnodeCond, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeWhile()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopForIn      , "for in"    ,None    ,ForIn,fnopBreak|fnopContinue|fnopCleanup)
     case knopForIn:
         Indent(indentAmt);
-        Output::Print(u"forIn\n");
+        Output::Print("forIn\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeLval, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeObj, indentAmt + INDENT_SIZE);
@@ -14090,7 +14090,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         break;
     case knopForOf:
         Indent(indentAmt);
-        Output::Print(u"forOf\n");
+        Output::Print("forOf\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeLval, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeObj, indentAmt + INDENT_SIZE);
@@ -14098,7 +14098,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         break;
     case knopForAwaitOf:
         Indent(indentAmt);
-        Output::Print(u"forAwaitOf\n");
+        Output::Print("forAwaitOf\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeLval, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeForInOrForOf()->pnodeObj, indentAmt + INDENT_SIZE);
@@ -14107,16 +14107,16 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopReturn     , "return"    ,None    ,Uni  ,fnopNone)
     case knopReturn:
         Indent(indentAmt);
-        Output::Print(u"return\n");
+        Output::Print("return\n");
         if (pnode->AsParseNodeReturn()->pnodeExpr != NULL)
             PrintPnodeWIndent(pnode->AsParseNodeReturn()->pnodeExpr, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopBlock      , "{}"        ,None    ,Block,fnopNone)
     case knopBlock:
         Indent(indentAmt);
-        Output::Print(u"block ");
+        Output::Print("block ");
         if (pnode->grfpn & fpnSyntheticNode)
-            Output::Print(u"synthetic ");
+            Output::Print("synthetic ");
         PrintBlockType(pnode->AsParseNodeBlock()->blockType);
         Output::Print(u"(%d-%d)\n", pnode->ichMin, pnode->ichLim);
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
@@ -14134,19 +14134,19 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopBreak      , "break"        ,None    ,Jump ,fnopNone)
     case knopBreak:
         Indent(indentAmt);
-        Output::Print(u"break\n");
+        Output::Print("break\n");
         // TODO: some representation of target
         break;
         //PTNODE(knopContinue   , "continue"    ,None    ,Jump ,fnopNone)
     case knopContinue:
         Indent(indentAmt);
-        Output::Print(u"continue\n");
+        Output::Print("continue\n");
         // TODO: some representation of target
         break;
         //PTNODE(knopSwitch     , "switch"    ,None    ,Switch,fnopBreak)
     case knopSwitch:
         Indent(indentAmt);
-        Output::Print(u"switch\n");
+        Output::Print("switch\n");
         PrintScopesWIndent(pnode, indentAmt + INDENT_SIZE);
         for (ParseNodeCase *pnodeT = pnode->AsParseNodeSwitch()->pnodeCases; NULL != pnodeT; pnodeT = pnodeT->pnodeNext) {
             PrintPnodeWIndent(pnodeT, indentAmt + 2);
@@ -14155,7 +14155,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopCase       , "case"        ,None    ,Case ,fnopNone)
     case knopCase:
         Indent(indentAmt);
-        Output::Print(u"case\n");
+        Output::Print("case\n");
         PrintPnodeWIndent(pnode->AsParseNodeCase()->pnodeExpr, indentAmt + INDENT_SIZE);
         PrintPnodeWIndent(pnode->AsParseNodeCase()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
@@ -14166,7 +14166,7 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         break;
     case knopFinally:
         Indent(indentAmt);
-        Output::Print(u"finally\n");
+        Output::Print("finally\n");
         PrintPnodeWIndent(pnode->AsParseNodeFinally()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopCatch      , "catch"     ,None    ,Catch,fnopNone)
@@ -14187,13 +14187,13 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         //PTNODE(knopTry        , "try"       ,None    ,Try  ,fnopCleanup)
     case knopTry:
         Indent(indentAmt);
-        Output::Print(u"try\n");
+        Output::Print("try\n");
         PrintPnodeWIndent(pnode->AsParseNodeTry()->pnodeBody, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopThrow      , "throw"     ,None    ,Uni  ,fnopNone)
     case knopThrow:
         Indent(indentAmt);
-        Output::Print(u"throw\n");
+        Output::Print("throw\n");
         PrintPnodeWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
         //PTNODE(knopClassDecl, "classDecl", None , Class, fnopLeaf)
@@ -14202,11 +14202,11 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         Output::Print(u"class %s", pnode->AsParseNodeClass()->pnodeName->pid->Psz());
         if (pnode->AsParseNodeClass()->pnodeExtends != nullptr)
         {
-            Output::Print(u" extends ");
+            Output::Print(" extends ");
             PrintPnodeWIndent(pnode->AsParseNodeClass()->pnodeExtends, 0);
         }
         else {
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
 
         PrintPnodeWIndent(pnode->AsParseNodeClass()->pnodeConstructor, indentAmt + INDENT_SIZE);
@@ -14214,28 +14214,28 @@ void PrintPnodeWIndent(ParseNode *pnode, int indentAmt) {
         break;
     case knopStrTemplate:
         Indent(indentAmt);
-        Output::Print(u"string template\n");
+        Output::Print("string template\n");
         PrintPnodeListWIndent(pnode->AsParseNodeStrTemplate()->pnodeSubstitutionExpressions, indentAmt + INDENT_SIZE);
         break;
     case knopYieldStar:
         Indent(indentAmt);
-        Output::Print(u"yield*\n");
+        Output::Print("yield*\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
     case knopYield:
     case knopYieldLeaf:
         Indent(indentAmt);
-        Output::Print(u"yield\n");
+        Output::Print("yield\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
     case knopAwait:
         Indent(indentAmt);
-        Output::Print(u"await\n");
+        Output::Print("await\n");
         PrintPnodeListWIndent(pnode->AsParseNodeUni()->pnode1, indentAmt + INDENT_SIZE);
         break;
     case knopExportDefault:
         Indent(indentAmt);
-        Output::Print(u"export default\n");
+        Output::Print("export default\n");
         PrintPnodeListWIndent(pnode->AsParseNodeExportDefault()->pnodeExpr, indentAmt + INDENT_SIZE);
         break;
     default:

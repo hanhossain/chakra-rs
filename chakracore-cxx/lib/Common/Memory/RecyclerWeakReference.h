@@ -172,7 +172,7 @@ public:
             for (current = buckets[i] ; current != nullptr; current = current->next) {
                 DumpNode(current);
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 #endif

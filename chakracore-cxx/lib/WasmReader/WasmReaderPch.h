@@ -64,7 +64,7 @@
     if (condition)\
     {\
         Output::Print(__VA_ARGS__); \
-        Output::Print(u"\n"); \
+        Output::Print("\n"); \
         Output::Flush(); \
     }
 

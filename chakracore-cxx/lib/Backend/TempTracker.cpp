@@ -282,7 +282,7 @@ TempTracker<T>::ProcessUse(StackSym * sym, BackwardPass * backwardPass)
             }
             else
             {
-                Output::Print(u"[]\n");
+                Output::Print("[]\n");
             }
         }
 #endif
@@ -433,11 +433,11 @@ TempTracker<T>::MarkTemp(StackSym * sym, BackwardPass * backwardPass)
                 {
                      Output::Print(u"%s: Loop mark temp check instr:\n", T::GetTraceName());
                      instr->DumpSimple();
-                     Output::Print(u"Transfer dependencies: ");
+                     Output::Print("Transfer dependencies: ");
                      bvTempTransferDependencies->Dump();
-                     Output::Print(u"Upward exposed Uses  : ");
+                     Output::Print("Upward exposed Uses  : ");
                      backwardPass->currentBlock->upwardExposedUses->Dump();
-                     Output::Print(u"\n");
+                     Output::Print("\n");
                 }
 #endif
 
@@ -451,7 +451,7 @@ TempTracker<T>::MarkTemp(StackSym * sym, BackwardPass * backwardPass)
                     {
                         Output::Print(u"%s: Not temp (s%-03d): ", T::GetTraceName(), sym->m_id);
                         instr->DumpSimple();
-                        Output::Print(u"       Transferred exposed uses: ");
+                        Output::Print("       Transferred exposed uses: ");
                         JitArenaAllocator tempAllocator(u"temp", this->GetAllocator()->GetPageAllocator(), Js::Throw::OutOfMemory);
                         bvTempTransferDependencies->AndNew(upwardExposedUses, &tempAllocator)->Dump();
                     }

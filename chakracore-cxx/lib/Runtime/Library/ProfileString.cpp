@@ -167,7 +167,7 @@ namespace Js
     /*static*/ void StringProfiler::PrintOneConcat( UintUintPair const& key, const ConcatMetrics& metrics)
     {
         PrintUintOrLarge(key.first);
-        Output::Print(u" ");
+        Output::Print(" ");
         PrintUintOrLarge(key.second);
         Output::Print(u" %6u", metrics.compoundStringCount);
         Output::Print(u" %6u", metrics.concatTreeCount);
@@ -178,11 +178,11 @@ namespace Js
 
     void StringProfiler::PrintAll()
     {
-        Output::Print(u"=============================================================\n");
-        Output::Print(u"String Statistics\n");
-        Output::Print(u"-------------------------------------------------------------\n");
+        Output::Print("=============================================================\n");
+        Output::Print("String Statistics\n");
+        Output::Print("-------------------------------------------------------------\n");
         Output::Print(u"    Length 7bit ASCII 8bit ASCII    Unicode      Total %%Total\n");
-        Output::Print(u" --------- ---------- ---------- ---------- ---------- ------\n");
+        Output::Print(" --------- ---------- ---------- ---------- ---------- ------\n");
 
         // Build an index for printing the histogram in descending order
         HistogramIndex index(&allocator, stringLengthMetrics.Count());
@@ -214,7 +214,7 @@ namespace Js
             }
         }
 
-        Output::Print(u"-------------------------------------------------------------\n");
+        Output::Print("-------------------------------------------------------------\n");
         Output::Print(u"    Totals %10u %10u %10u %10u (100%%)\n",
             cumulative.count7BitASCII,
             cumulative.count8BitASCII,
@@ -225,29 +225,29 @@ namespace Js
         {
             Output::Print(u"WARNING: %u strings were not counted because they were allocated on a background thread\n",discardedWrongThread);
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Print(u"Max string length is %u chars\n", maxLength);
         Output::Print(u"%u empty strings (Literals or BufferString) were requested\n", emptyStrings);
         Output::Print(u"%u single char strings (Literals or BufferString) were requested\n", singleCharStrings);
         if( this->embeddedNULStrings == 0 )
         {
-            Output::Print(u"No embedded NULs were detected\n");
+            Output::Print("No embedded NULs were detected\n");
         }
         else
         {
             Output::Print(u"Embedded NULs: %u NULs in %u strings\n", this->embeddedNULChars, this->embeddedNULStrings);
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
 
         if(stringConcatMetrics.Count() == 0)
         {
-            Output::Print(u"No string concatenations were performed\n");
+            Output::Print("No string concatenations were performed\n");
         }
         else
         {
             Output::Print(u"String concatenations (Strings %u chars or longer are treated as \"Large\")\n", k_MaxConcatLength);
-            Output::Print(u"   LHS +  RHS  SB    Concat   Buf  Other  Total\n");
-            Output::Print(u"------ ------ ------ ------ ------ ------ ------\n");
+            Output::Print("   LHS +  RHS  SB    Concat   Buf  Other  Total\n");
+            Output::Print("------ ------ ------ ------ ------ ------ ------\n");
 
             uint totalConcatenations = 0;
             uint totalConcatTree = 0;
@@ -264,7 +264,7 @@ namespace Js
                 totalOther += metrics.unknownCount;
             }
             );
-            Output::Print(u"-------------------------------------------------------\n");
+            Output::Print("-------------------------------------------------------\n");
             Output::Print(u"Total %6u %6u %6u %6u %6u\n", totalConcatenations, totalCompoundString, totalConcatTree, totalBufString, totalOther);
         }
 

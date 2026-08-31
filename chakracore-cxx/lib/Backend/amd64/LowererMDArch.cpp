@@ -2500,7 +2500,7 @@ LowererMDArch::EmitLoadInt32(IR::Instr *instrLoad, bool conversionFromObjectAllo
                 // because it won't help and the same thing will happen again. Just abort jitting this function.
                 if(PHASE_TRACE(Js::BailOutPhase, this->m_func))
                 {
-                    Output::Print(u"    Aborting JIT because EliminateArrayAccessHelperCall is already off\n");
+                    Output::Print("    Aborting JIT because EliminateArrayAccessHelperCall is already off\n");
                     Output::Flush();
                 }
                 throw Js::OperationAbortedException();

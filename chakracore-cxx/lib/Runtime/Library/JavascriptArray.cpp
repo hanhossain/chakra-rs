@@ -1663,14 +1663,14 @@ using namespace Js;
             {
                 if(PHASE_TRACE1(Js::NativeArrayConversionPhase))
                 {
-                    Output::Print(u"Conversion: Int array to Float array across ScriptContexts");
+                    Output::Print("Conversion: Int array to Float array across ScriptContexts");
                     Output::Flush();
                 }
             }
 #else
             if(PHASE_TRACE1(Js::NativeArrayConversionPhase))
             {
-                Output::Print(u"Conversion: Int array to Float array");
+                Output::Print("Conversion: Int array to Float array");
                 Output::Flush();
             }
 #endif
@@ -2118,14 +2118,14 @@ using namespace Js;
             {
                 if(PHASE_TRACE1(Js::NativeArrayConversionPhase))
                 {
-                    Output::Print(u"Conversion: Int array to Var array across ScriptContexts");
+                    Output::Print("Conversion: Int array to Var array across ScriptContexts");
                     Output::Flush();
                 }
             }
 #else
             if(PHASE_TRACE1(Js::NativeArrayConversionPhase))
             {
-                Output::Print(u"Conversion: Int array to Var array");
+                Output::Print("Conversion: Int array to Var array");
                 Output::Flush();
             }
 #endif
@@ -2331,14 +2331,14 @@ using namespace Js;
             {
                 if(PHASE_TRACE1(Js::NativeArrayConversionPhase))
                 {
-                    Output::Print(u"Conversion: Float array to Var array across ScriptContexts");
+                    Output::Print("Conversion: Float array to Var array across ScriptContexts");
                     Output::Flush();
                 }
             }
 #else
             if(PHASE_TRACE1(Js::NativeArrayConversionPhase))
             {
-                Output::Print(u"Conversion: Float array to Var array");
+                Output::Print("Conversion: Float array to Var array");
                 Output::Flush();
             }
 #endif

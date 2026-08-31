@@ -1538,7 +1538,7 @@ namespace Js
                     switch (callSiteInfo[i].u.functionData.sourceId)
                     {
                     case NoSourceId:
-                        Output::Print(u" ????");
+                        Output::Print(" ????");
                         break;
 
                     case BuiltInSourceId:
@@ -1548,15 +1548,15 @@ namespace Js
                     case InvalidSourceId:
                         if (callSiteInfo[i].u.functionData.functionId == CallSiteMixed)
                         {
-                            Output::Print(u"  mix");
+                            Output::Print("  mix");
                         }
                         else if (callSiteInfo[i].u.functionData.functionId == CallSiteCrossContext)
                         {
-                            Output::Print(u"    x");
+                            Output::Print("    x");
                         }
                         else if (callSiteInfo[i].u.functionData.functionId == CallSiteNonFunction)
                         {
-                            Output::Print(u"  !fn");
+                            Output::Print("  !fn");
                         }
                         else
                         {
@@ -1571,7 +1571,7 @@ namespace Js
                 }
                 else
                 {
-                    Output::Print(u" poly");
+                    Output::Print(" poly");
                     for (int j = 0; j < DynamicProfileInfo::maxPolymorphicInliningSize; j++)
                     {
                         if (callSiteInfo[i].u.polymorphicCallSiteInfo->functionIds[j] != CallSiteNoInfo)
@@ -1581,7 +1581,7 @@ namespace Js
                     }
                 }
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
 
             Output::Print(u"    %-16s(%2d):", u"Callsite RetType", count);
             for (uint i = 0; i < count; i++)
@@ -1592,7 +1592,7 @@ namespace Js
                 callSiteInfo[i].returnType.ToString(returnTypeStr);
                 Output::Print(u"  %S", returnTypeStr);
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 
@@ -1601,16 +1601,16 @@ namespace Js
         if (count != 0)
         {
             Output::Print(u"    %-16s(%2d):", name, count);
-            Output::Print(u"\n");
+            Output::Print("\n");
             for (uint i = 0; i < count; i++)
             {
                 Output::Print(i != 0 && (i % 10) == 0 ? u"\n                          " : u" ");
                 Output::Print(u"%4d:", i);
                 Output::Print(u"  Function Number:  %2d, CallSite Number:  %2d, IsNativeIntArray:  %2d, IsNativeFloatArray:  %2d",
                     arrayCallSiteInfo[i].functionNumber, arrayCallSiteInfo[i].callSiteNumber, !arrayCallSiteInfo[i].isNotNativeInt, !arrayCallSiteInfo[i].isNotNativeFloat);
-                Output::Print(u"\n");
+                Output::Print("\n");
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 
@@ -1627,7 +1627,7 @@ namespace Js
                 value[i].ToString(valueStr);
                 Output::Print(u"  %S", valueStr);
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 
@@ -1641,7 +1641,7 @@ namespace Js
                 Output::Print(i != 0 && (i % 10) == 0 ? u"\n                          " : u" ");
                 Output::Print(u"%2d:%-4d", i, value[i]);
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 
@@ -1663,7 +1663,7 @@ namespace Js
                 Output::Print(i != 0 && (i % 10) == 0 ? u"\n                          " : u" ");
                 Output::Print(u"%2d:%-4s", i, GetImplicitCallFlagsString(loopImplicitCallFlags[i]));
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 
@@ -1739,7 +1739,7 @@ namespace Js
             }
             else if (!header)
             {
-                Output::Print(u"\n");
+                Output::Print("\n");
             }
         });
     }
@@ -1786,7 +1786,7 @@ namespace Js
         }
         else if (!header)
         {
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 
@@ -1801,7 +1801,7 @@ namespace Js
                 Output::Print(i != 0 && (i % 10) == 0 ? u"\n                          " : u" ");
                 Output::Print(u"%2d:%-4d", i, fbody->GetLoopHeader(i)->interpretCount);
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
 
             Output::Print(u"    %-16s(%2d):", u"Loops JIT", count);
             for (uint i = 0; i < count; i++)
@@ -1809,7 +1809,7 @@ namespace Js
                 Output::Print(i != 0 && (i % 10) == 0 ? u"\n                          " : u" ");
                 Output::Print(u"%2d:%-4d", i, fbody->GetLoopHeader(i)->nativeCount);
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 
@@ -1861,7 +1861,7 @@ namespace Js
     {
         if (Configuration::Global.flags.Dump.IsEnabled(DynamicProfilePhase))
         {
-            Output::Print(u"Sources:\n");
+            Output::Print("Sources:\n");
             if (scriptContext->GetSourceContextInfoMap() != nullptr)
             {
                 scriptContext->GetSourceContextInfoMap()->Map([&](unsigned long dwHostSourceContext, SourceContextInfo * sourceContextInfo)
@@ -1892,7 +1892,7 @@ namespace Js
     {
         if (Configuration::Global.flags.Dump.IsEnabled(DynamicProfilePhase, info->GetFunctionBody()->GetSourceContextId(), info->GetFunctionBody()->GetLocalFunctionId()))
         {
-            Output::Print(u"Saving:");
+            Output::Print("Saving:");
             info->Dump(info->GetFunctionBody());
         }
     }

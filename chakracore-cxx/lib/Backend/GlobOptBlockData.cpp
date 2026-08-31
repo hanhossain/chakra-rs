@@ -1028,7 +1028,7 @@ GlobOptBlockData::MergeJsTypeValueInfo(JsTypeValueInfo * toValueInfo, JsTypeValu
 #if DBG_DUMP
     if (PHASE_TRACE(Js::ObjTypeSpecPhase, this->globOpt->func) || PHASE_TRACE(Js::EquivObjTypeSpecPhase, this->globOpt->func))
     {
-        Output::Print(u"ObjTypeSpec: Merging type value info:\n");
+        Output::Print("ObjTypeSpec: Merging type value info:\n");
         Output::Print(u"    from (shared %d): ", fromValueInfo->GetIsShared());
         fromValueInfo->Dump();
         Output::Print(u"\n    to (shared %d): ", toValueInfo->GetIsShared());
@@ -1043,7 +1043,7 @@ GlobOptBlockData::MergeJsTypeValueInfo(JsTypeValueInfo * toValueInfo, JsTypeValu
         {
             Output::Print(u"\n    result (shared %d): ", toValueInfo->GetIsShared());
             toValueInfo->Dump();
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
 #endif
         return toValueInfo;
@@ -1063,7 +1063,7 @@ GlobOptBlockData::MergeJsTypeValueInfo(JsTypeValueInfo * toValueInfo, JsTypeValu
         {
             Output::Print(u"\n    result (shared %d): ", mergedValueInfo->GetIsShared());
             mergedValueInfo->Dump();
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
 #endif
         return mergedValueInfo;
@@ -1077,7 +1077,7 @@ GlobOptBlockData::MergeJsTypeValueInfo(JsTypeValueInfo * toValueInfo, JsTypeValu
         {
             Output::Print(u"\n    result (shared %d): ", toValueInfo->GetIsShared());
             toValueInfo->Dump();
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
 #endif
         return toValueInfo;

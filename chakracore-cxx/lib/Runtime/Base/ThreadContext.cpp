@@ -3577,7 +3577,7 @@ void DumpRecyclerObjectGraph()
     ThreadContext * threadContext = ThreadContext::GetContextForCurrentThread();
     if (threadContext == nullptr)
     {
-        Output::Print(u"No thread context");
+        Output::Print("No thread context");
     }
     threadContext->GetRecycler()->DumpObjectGraph();
 }

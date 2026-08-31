@@ -297,7 +297,7 @@ using namespace Js;
         {
             if (PHASE_TRACE1(Js::EquivObjTypeSpecPhase))
             {
-                Output::Print(u"EquivObjTypeSpec: Saving type in unused slot of equiv types cache. \n");
+                Output::Print("EquivObjTypeSpec: Saving type in unused slot of equiv types cache. \n");
                 Output::Flush();
             }
             equivTypes[emptySlotIndex] = type;

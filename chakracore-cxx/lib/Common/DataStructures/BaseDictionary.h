@@ -1176,8 +1176,8 @@ namespace JsUtil
     public:
         void Dump()
         {
-            Output::Print(u"Dumping Dictionary\n");
-            Output::Print(u"-------------------\n");
+            Output::Print("Dumping Dictionary\n");
+            Output::Print("-------------------\n");
             for (uint i = 0; i < bucketCount; i++)
             {
                 Output::Print(u"Bucket value: %d\n", buckets[i]);

@@ -407,21 +407,21 @@ public:
 
             Output::Print(u"%4d  =>  ", bucket.value);
             bucket.element->Dump();
-            Output::Print(u"\n");
-            Output::Print(u"\n");
+            Output::Print("\n");
+            Output::Print("\n");
         }
         NEXT_VALUEHASHTABLE_ENTRY;
     }
 
     void Dump(void (*valueDump)(TData))
     {
-        Output::Print(u"\n-------------------------------------------------------------------------------------------------\n");
+        Output::Print("\n-------------------------------------------------------------------------------------------------\n");
         FOREACH_VALUEHASHTABLE_ENTRY(HashBucket, bucket, this)
         {
             valueDump(bucket.value);
             Output::Print(u"  =>  ", bucket.value);
             bucket.element->Dump();
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
         NEXT_VALUEHASHTABLE_ENTRY;
     }

@@ -18,12 +18,12 @@
     IR::Instr* __instr__ = instr;\
     if(__instr__) __instr__->DumpByteCodeOffset();\
     if(__instr__) Output::Print(u" (%s)", Js::OpCodeUtil::GetOpCodeName(__instr__->m_opcode));\
-    Output::Print(u"\n");\
+    Output::Print("\n");\
     Output::Flush(); \
 }
 #define TRACE_MEMOP(loop, instr, ...) \
     if (DO_MEMOP_TRACE()) {\
-        Output::Print(u"TRACE MemOp:");\
+        Output::Print("TRACE MemOp:");\
         OUTPUT_MEMOP_TRACE(loop, instr, __VA_ARGS__)\
     }
 
@@ -363,9 +363,9 @@ GlobOpt::ForwardPass()
     this->byteCodeUsesBeforeOpt = JitAnew(this->alloc, BVSparse<JitArenaAllocator>, this->alloc);
     if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::FieldCopyPropPhase) && this->DoFunctionFieldCopyProp())
     {
-        Output::Print(u"TRACE: CanDoFieldCopyProp Func: ");
+        Output::Print("TRACE: CanDoFieldCopyProp Func: ");
         this->func->DumpFullFunctionName();
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
 #endif
 
@@ -653,7 +653,7 @@ GlobOpt::OptLoops(Loop *loop)
     if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::FieldCopyPropPhase) &&
         !DoFunctionFieldCopyProp() && DoFieldCopyProp(loop))
     {
-        Output::Print(u"TRACE: CanDoFieldCopyProp Loop: ");
+        Output::Print("TRACE: CanDoFieldCopyProp Loop: ");
         this->func->DumpFullFunctionName();
         uint loopNumber = loop->GetLoopNumber();
         Assert(loopNumber != Js::LoopHeader::NoLoop);
@@ -1115,7 +1115,7 @@ BOOL GlobOpt::PRE::PreloadPRECandidate(Loop *loop, GlobHashBucket* candidate)
     {
         Output::Print(u"** TRACE: Field PRE: field pre-loaded in landing pad of loop head #%-3d: ", loop->GetHeadBlock()->GetBlockNum());
         ldInstr->Dump();
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 #endif
@@ -1148,7 +1148,7 @@ void GlobOpt::PRE::PreloadPRECandidates(Loop *loop)
             }
             if (PHASE_TRACE(Js::FieldPREPhase, this->globOpt->func))
             {
-                Output::Print(u"============================\n");
+                Output::Print("============================\n");
                 Output::Flush();
             }
         } NEXT_SLIST_ENTRY_EDITING;
@@ -3276,7 +3276,7 @@ GlobOpt::SetLoopFieldInitialValue(Loop *loop, IR::Instr *instr, PropertySym *pro
         Output::Print(u"** TRACE:  Field PRE initial value for loop head #%d. Val:%d symStore:",
             loop->GetHeadBlock()->GetBlockNum(), initialValue->GetValueNumber());
         symStore->Dump();
-        Output::Print(u"\n    Instr: ");
+        Output::Print("\n    Instr: ");
         instr->Dump();
         Output::Flush();
     }
@@ -5568,11 +5568,11 @@ GlobOpt::ValueNumberLdElemDst(IR::Instr **pInstr, Value *srcVal)
             toType == TyInt32 ? u"int32_t" : u"float64",
             dstValTypeStr);
 #if DBG_DUMP
-        Output::Print(u" (");
+        Output::Print(" (");
         dstVal->Dump();
-        Output::Print(u").\n");
+        Output::Print(").\n");
 #else
-        Output::Print(u".\n");
+        Output::Print(".\n");
 #endif
         Output::Flush();
     }
@@ -8482,7 +8482,7 @@ GlobOpt::TypeSpecializeIntUnary(
         GOPT_TRACE(u"Type specialized to INT\n");
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::AggressiveIntTypeSpecPhase))
         {
-            Output::Print(u"Type specialized to INT: ");
+            Output::Print("Type specialized to INT: ");
             Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
         }
     }
@@ -10070,7 +10070,7 @@ LOutsideSwitch:
         GOPT_TRACE(u"Type specialized to INT\n");
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::AggressiveIntTypeSpecPhase))
         {
-            Output::Print(u"Type specialized to INT: ");
+            Output::Print("Type specialized to INT: ");
             Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
         }
     }
@@ -10565,7 +10565,7 @@ GlobOpt::TypeSpecializeFloatUnary(IR::Instr **pInstr, Value *src1Val, Value **pD
 
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::FloatTypeSpecPhase))
     {
-        Output::Print(u"Type specialized to FLOAT: ");
+        Output::Print("Type specialized to FLOAT: ");
         Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
     }
 
@@ -10870,7 +10870,7 @@ GlobOpt::TypeSpecializeFloatBinary(IR::Instr *instr, Value *src1Val, Value *src2
 
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::FloatTypeSpecPhase))
     {
-        Output::Print(u"Type specialized to FLOAT: ");
+        Output::Print("Type specialized to FLOAT: ");
         Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
     }
 
@@ -11637,7 +11637,7 @@ GlobOpt::ToTypeSpecUse(IR::Instr *instr, IR::Opnd *opnd, BasicBlock *block, Valu
                                 {
                                     Output::Print(u" byteCodeReg: R%u", varSym->GetByteCodeRegSlot());
                                 }
-                                Output::Print(u" (lossless conversion from float64 to int32_t)\n");
+                                Output::Print(" (lossless conversion from float64 to int32_t)\n");
                                 Output::Flush();
                             }
 
@@ -11647,7 +11647,7 @@ GlobOpt::ToTypeSpecUse(IR::Instr *instr, IR::Opnd *opnd, BasicBlock *block, Valu
                                 // because it won't help and the same thing will happen again. Just abort jitting this function.
                                 if(PHASE_TRACE(Js::BailOutPhase, this->func))
                                 {
-                                    Output::Print(u"    Aborting JIT because AggressiveIntTypeSpec is already off\n");
+                                    Output::Print("    Aborting JIT because AggressiveIntTypeSpec is already off\n");
                                     Output::Flush();
                                 }
                                 throw Js::OperationAbortedException();
@@ -14122,7 +14122,7 @@ GlobOpt::PrepareForIgnoringIntOverflow(IR::Instr *const instr)
                         Js::PhaseNames[Js::ForwardPhase],
                         currentBlock->GetBlockNum());
                     Output::Print(u"    Input sym could not be turned into an int:   %u\n", couldNotConvertSymId);
-                    Output::Print(u"    First instr: ");
+                    Output::Print("    First instr: ");
                     instr->m_next->Dump();
                     Output::Flush();
                 }
@@ -14189,11 +14189,11 @@ GlobOpt::PrepareForIgnoringIntOverflow(IR::Instr *const instr)
             func->GetDebugNumberSet(debugStringBuffer),
             Js::PhaseNames[Js::ForwardPhase],
             currentBlock->GetBlockNum());
-        Output::Print(u"    Input syms to be int-specialized (lossless): ");
+        Output::Print("    Input syms to be int-specialized (lossless): ");
         intOverflowDoesNotMatterRange->SymsRequiredToBeInt()->Dump();
-        Output::Print(u"    Input syms to be converted to int (lossy):   ");
+        Output::Print("    Input syms to be converted to int (lossy):   ");
         intOverflowDoesNotMatterRange->SymsRequiredToBeLossyInt()->Dump();
-        Output::Print(u"    First instr: ");
+        Output::Print("    First instr: ");
         instr->m_next->Dump();
         Output::Flush();
     }
@@ -14251,7 +14251,7 @@ GlobOpt::VerifyIntSpecForIgnoringIntOverflow(IR::Instr *const instr)
 #else
         Output::Print(u"%s ", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
 #endif
-        Output::Print(u"(overflow does not matter but could not int-spec or needed bailout)\n");
+        Output::Print("(overflow does not matter but could not int-spec or needed bailout)\n");
         Output::Flush();
     }
 
@@ -14261,7 +14261,7 @@ GlobOpt::VerifyIntSpecForIgnoringIntOverflow(IR::Instr *const instr)
         // same thing will happen again and cause an infinite loop. Just abort jitting this function.
         if(PHASE_TRACE(Js::BailOutPhase, this->func))
         {
-            Output::Print(u"    Aborting JIT because TrackIntOverflow is already off\n");
+            Output::Print("    Aborting JIT because TrackIntOverflow is already off\n");
             Output::Flush();
         }
         throw Js::OperationAbortedException();
@@ -15479,13 +15479,13 @@ GlobOpt::TryHoistInvariant(
 #if DBG
         if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::InvariantsPhase, this->func->GetSourceContextId(), this->func->GetLocalFunctionId()))
         {
-            Output::Print(u" **** INVARIANT  ***   ");
+            Output::Print(" **** INVARIANT  ***   ");
             instr->Dump();
         }
 #endif
         if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::InvariantsPhase))
         {
-            Output::Print(u" **** INVARIANT  ***   ");
+            Output::Print(" **** INVARIANT  ***   ");
             Output::Print(u"%s \n", Js::OpCodeUtil::GetOpCodeName(instr->m_opcode));
         }
         Loop *loop = block->loop;
@@ -15840,9 +15840,9 @@ GlobOpt::DoArrayCheckHoist(const ValueType baseValueType, Loop* loop, IR::Instr 
     if((((loop ? loop->GetImplicitCallFlags() : func->m_fg->implicitCallFlags) & ~Js::ImplicitCall_External) == 0) &&
         Js::Configuration::Global.flags.Trace.IsEnabled(Js::HostOptPhase))
     {
-        Output::Print(u"DoArrayCheckHoist disabled for JS arrays because of external: ");
+        Output::Print("DoArrayCheckHoist disabled for JS arrays because of external: ");
         func->DumpFullFunctionName();
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 #endif
@@ -15910,9 +15910,9 @@ GlobOpt::DoTypedArraySegmentLengthHoist(Loop *const loop) const
     if((((loop ? loop->GetImplicitCallFlags() : func->m_fg->implicitCallFlags) & ~Js::ImplicitCall_External) == 0) &&
         Js::Configuration::Global.flags.Trace.IsEnabled(Js::HostOptPhase))
     {
-        Output::Print(u"DoArraySegmentLengthHoist disabled for typed arrays because of external: ");
+        Output::Print("DoArraySegmentLengthHoist disabled for typed arrays because of external: ");
         func->DumpFullFunctionName();
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 #endif
@@ -16527,7 +16527,7 @@ GlobOpt::Dump() const
 void
 GlobOpt::DumpSymToValueMap(BasicBlock const * block) const
 {
-    Output::Print(u"\n*** SymToValueMap ***\n");
+    Output::Print("\n*** SymToValueMap ***\n");
     block->globOptData.DumpSymToValueMap();
 }
 
@@ -16546,14 +16546,14 @@ GlobOpt::DumpSymVal(int index)
 
     AssertMsg(sym, "Sym not found!!!");
 
-    Output::Print(u"Sym: ");
+    Output::Print("Sym: ");
     sym->Dump();
 
-    Output::Print(u"\t\tValueNumber: ");
+    Output::Print("\t\tValueNumber: ");
     Value * pValue = CurrentBlockData()->FindValueFromMapDirect(sym->m_id);
     pValue->Dump();
 
-    Output::Print(u"\n");
+    Output::Print("\n");
 }
 
 void
@@ -16590,7 +16590,7 @@ GlobOpt::Trace(BasicBlock * block, bool before) const
 
     if (before)
     {
-        Output::Print(u"========================================================================\n");
+        Output::Print("========================================================================\n");
         Output::Print(u"Begin OptBlock: Block #%-3d", block->GetBlockNum());
         if (block->loop)
         {
@@ -16599,16 +16599,16 @@ GlobOpt::Trace(BasicBlock * block, bool before) const
                 this->prePassLoop ? this->prePassLoop->GetHeadBlock()->GetBlockNum() : 0,
                 this->IsLoopPrePass() ? u"PrePass" : u"");
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
     else
     {
-        Output::Print(u"-----------------------------------------------------------------------\n");
+        Output::Print("-----------------------------------------------------------------------\n");
         Output::Print(u"After OptBlock: Block #%-3d\n", block->GetBlockNum());
     }
     if ((typeSpecTrace || floatTypeSpecTrace) && !block->globOptData.liveVarSyms->IsEmpty())
     {
-        Output::Print(u"    Live var syms: ");
+        Output::Print("    Live var syms: ");
         block->globOptData.liveVarSyms->Dump();
     }
     if (typeSpecTrace && !block->globOptData.liveInt32Syms->IsEmpty())
@@ -16617,35 +16617,35 @@ GlobOpt::Trace(BasicBlock * block, bool before) const
         this->tempBv->Minus(block->globOptData.liveInt32Syms, block->globOptData.liveLossyInt32Syms);
         if(!this->tempBv->IsEmpty())
         {
-            Output::Print(u"    Int32 type specialized (lossless) syms: ");
+            Output::Print("    Int32 type specialized (lossless) syms: ");
             this->tempBv->Dump();
         }
         this->tempBv->ClearAll();
         if(!block->globOptData.liveLossyInt32Syms->IsEmpty())
         {
-            Output::Print(u"    Int32 converted (lossy) syms: ");
+            Output::Print("    Int32 converted (lossy) syms: ");
             block->globOptData.liveLossyInt32Syms->Dump();
         }
     }
     if (floatTypeSpecTrace && !block->globOptData.liveFloat64Syms->IsEmpty())
     {
-        Output::Print(u"    Float64 type specialized syms: ");
+        Output::Print("    Float64 type specialized syms: ");
         block->globOptData.liveFloat64Syms->Dump();
     }
     if ((fieldCopyPropTrace || objTypeSpecTrace) && this->DoFieldCopyProp(block->loop) && !block->globOptData.liveFields->IsEmpty())
     {
-        Output::Print(u"    Live field syms: ");
+        Output::Print("    Live field syms: ");
         block->globOptData.liveFields->Dump();
     }
     if (objTypeSpecTrace || valueTableTrace)
     {
-        Output::Print(u"    Value table:\n");
+        Output::Print("    Value table:\n");
         block->globOptData.DumpSymToValueMap();
     }
 
     if (before)
     {
-        Output::Print(u"-----------------------------------------------------------------------\n"); \
+        Output::Print("-----------------------------------------------------------------------\n"); \
     }
 
     Output::Flush();
@@ -16654,7 +16654,7 @@ GlobOpt::Trace(BasicBlock * block, bool before) const
 void
 GlobOpt::TraceSettings() const
 {
-    Output::Print(u"GlobOpt Settings:\r\n");
+    Output::Print("GlobOpt Settings:\r\n");
     Output::Print(u"    FloatTypeSpec: %s\r\n", this->DoFloatTypeSpec() ? u"enabled" : u"disabled");
     Output::Print(u"    AggressiveIntTypeSpec: %s\r\n", this->DoAggressiveIntTypeSpec() ? u"enabled" : u"disabled");
     Output::Print(u"    LossyIntTypeSpec: %s\r\n", this->DoLossyIntTypeSpec() ? u"enabled" : u"disabled");
@@ -17921,10 +17921,10 @@ void GlobOpt::PRE::TraceFailedPreloadInLandingPad(const Loop *const loop, Proper
             break;
         }
 
-        Output::Print(u"** TRACE: Field PRE: ");
+        Output::Print("** TRACE: Field PRE: ");
         this->globOpt->func->DumpFullFunctionName();
         Output::Print(u": Failed to pre-load (%s) in landing pad of loop #%d. Reason: %s ", propSymStr, loop->GetLoopNumber(), reason);
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
 }
 #endif

@@ -792,7 +792,7 @@ void ValueInfo::Dump()
     {
         const JITTypeHolder type(AsJsType()->GetJsType());
         type != nullptr ? Output::Print(u"type: 0x%p, ", type->GetAddr()) : Output::Print(u"type: null, ");
-        Output::Print(u"type Set: ");
+        Output::Print("type Set: ");
         Js::EquivalentTypeSet* typeSet = AsJsType()->GetJsTypeSet();
         if (typeSet != nullptr)
         {
@@ -805,7 +805,7 @@ void ValueInfo::Dump()
         }
         else
         {
-            Output::Print(u"null");
+            Output::Print("null");
         }
     }
     else if (IsArrayValueInfo())
@@ -813,24 +813,24 @@ void ValueInfo::Dump()
         const ArrayValueInfo *const arrayValueInfo = AsArrayValueInfo();
         if (arrayValueInfo->HeadSegmentSym())
         {
-            Output::Print(u" seg: ");
+            Output::Print(" seg: ");
             arrayValueInfo->HeadSegmentSym()->Dump();
         }
         if (arrayValueInfo->HeadSegmentLengthSym())
         {
-            Output::Print(u" segLen: ");
+            Output::Print(" segLen: ");
             arrayValueInfo->HeadSegmentLengthSym()->Dump();
         }
         if (arrayValueInfo->LengthSym())
         {
-            Output::Print(u" len: ");
+            Output::Print(" len: ");
             arrayValueInfo->LengthSym()->Dump();
         }
     }
 
     if (this->GetSymStore())
     {
-        Output::Print(u"\t\tsym:");
+        Output::Print("\t\tsym:");
         this->GetSymStore()->Dump();
     }
 }

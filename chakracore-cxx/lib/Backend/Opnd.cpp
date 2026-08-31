@@ -3009,7 +3009,7 @@ Opnd::DumpAddress(void *address, bool printToConsole, bool skipMaskedAddress)
         {
             return;
         }
-        Output::Print(u"0xXXXXXXXX");
+        Output::Print("0xXXXXXXXX");
     }
     else
     {
@@ -3127,7 +3127,7 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
         else if (symOpnd->IsPropertySymOpnd() && !SimpleForm)
         {
             PropertySymOpnd *propertySymOpnd = symOpnd->AsPropertySymOpnd();
-            Output::Print(u"<");
+            Output::Print("<");
             if (propertySymOpnd->HasObjTypeSpecFldInfo())
             {
                 Output::Print(u"%u,%s%s%s%s,", propertySymOpnd->GetObjTypeSpecFldId(), propertySymOpnd->IsPoly() ? u"p" : u"m",
@@ -3151,23 +3151,23 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
                 }
                 else if (propertySymOpnd->IsTypeAvailable())
                 {
-                    Output::Print(u"*");
+                    Output::Print("*");
                 }
                 if (propertySymOpnd->IsTypeDead())
                 {
-                    Output::Print(u"!");
+                    Output::Print("!");
                 }
             }
             else
             {
-                Output::Print(u"s?");
+                Output::Print("s?");
             }
             if (propertySymOpnd->m_sym->AsPropertySym()->m_writeGuardSym != nullptr)
             {
                 Output::Print(u",s%d", propertySymOpnd->m_sym->AsPropertySym()->m_writeGuardSym->m_id);
                 if (propertySymOpnd->IsWriteGuardChecked())
                 {
-                    Output::Print(u"+");
+                    Output::Print("+");
                 }
             }
             else
@@ -3198,22 +3198,22 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
 
                         if (propertyOpInfo->IsLoadedFromProto())
                         {
-                            Output::Print(u"~");
+                            Output::Print("~");
                         }
                         if (propertyOpInfo->HasFixedValue())
                         {
-                            Output::Print(u"=");
+                            Output::Print("=");
                         }
                         if (propertyOpInfo->IsBeingAdded())
                         {
-                            Output::Print(u"+");
+                            Output::Print("+");
                         }
                     }
                     NEXT_BITSET_IN_SPARSEBV;
                 }
                 else
                 {
-                    Output::Print(u"(no func)");
+                    Output::Print("(no func)");
                 }
                 Output::Print(u"}");
             }
@@ -3237,7 +3237,7 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
             {
                 Output::Print(u",t");
             }
-            Output::Print(u">");
+            Output::Print(">");
         }
 
         break;
@@ -3263,7 +3263,7 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
             }
             if (regOpnd->m_isTempLastUse)
             {
-                Output::Print(u"[isTempLastUse]");
+                Output::Print("[isTempLastUse]");
             }
 
             if(regOpnd->IsArrayRegOpnd())
@@ -3278,34 +3278,34 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
                 const ArrayRegOpnd *const arrayRegOpnd = regOpnd->AsArrayRegOpnd();
                 if(arrayRegOpnd->HeadSegmentSym())
                 {
-                    Output::Print(u"[seg: ");
+                    Output::Print("[seg: ");
                     arrayRegOpnd->HeadSegmentSym()->Dump();
-                    Output::Print(u"]");
+                    Output::Print("]");
                 }
                 if(arrayRegOpnd->HeadSegmentLengthSym())
                 {
-                    Output::Print(u"[segLen: ");
+                    Output::Print("[segLen: ");
                     arrayRegOpnd->HeadSegmentLengthSym()->Dump();
-                    Output::Print(u"]");
+                    Output::Print("]");
                 }
                 if(arrayRegOpnd->LengthSym() && arrayRegOpnd->LengthSym() != arrayRegOpnd->HeadSegmentLengthSym())
                 {
-                    Output::Print(u"[len: ");
+                    Output::Print("[len: ");
                     arrayRegOpnd->LengthSym()->Dump();
-                    Output::Print(u"]");
+                    Output::Print("]");
                 }
                 if(arrayRegOpnd->EliminatedLowerBoundCheck() || arrayRegOpnd->EliminatedUpperBoundCheck())
                 {
-                    Output::Print(u"[");
+                    Output::Print("[");
                     if(arrayRegOpnd->EliminatedLowerBoundCheck())
                     {
-                        Output::Print(u">");
+                        Output::Print(">");
                     }
                     if(arrayRegOpnd->EliminatedUpperBoundCheck())
                     {
-                        Output::Print(u"<");
+                        Output::Print("<");
                     }
-                    Output::Print(u"]");
+                    Output::Print("]");
                 }
             }
         }
@@ -3356,19 +3356,19 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
         RegOpnd * indexOpnd = indirOpnd->GetIndexOpnd();
         const int32_t offset = indirOpnd->GetOffset();
 
-        Output::Print(u"[");
+        Output::Print("[");
         if (baseOpnd != nullptr)
         {
             baseOpnd->Dump(flags, func);
         }
         else
         {
-            Output::Print(u"<null>");
+            Output::Print("<null>");
         }
 
         if (indexOpnd != nullptr)
         {
-            Output::Print(u"+");
+            Output::Print("+");
             indexOpnd->Dump(flags, func);
             if (indirOpnd->GetScale() > 0)
             {
@@ -3379,7 +3379,7 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
         {
             if (!Js::Configuration::Global.flags.DumpIRAddresses && indirOpnd->HasAddrKind())
             {
-                Output::Print(u"+XX");
+                Output::Print("+XX");
             }
             else
             {
@@ -3401,15 +3401,15 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
         if (indirOpnd->HasAddrKind())
         {
             long address = (long)indirOpnd->GetOriginalAddress();
-            Output::Print(u" <");
+            Output::Print(" <");
             const size_t BUFFER_LEN = 128;
             char16_t buffer[BUFFER_LEN];
             GetAddrDescription(buffer, BUFFER_LEN, (void *)address, indirOpnd->GetAddrKind(), AsmDumpMode, /*printToConsole */ true, func, /* skipMaskedAddress */true);
             Output::Print(u"%s", buffer);
-            Output::Print(u">");
+            Output::Print(">");
         }
 
-        Output::Print(u"]");
+        Output::Print("]");
         break;
     }
     case IR::OpndKindList:
@@ -3439,7 +3439,7 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
         LabelInstr * labelInstr = labelOpnd->GetLabel();
         if (labelInstr == nullptr)
         {
-            Output::Print(u"??");
+            Output::Print("??");
         }
         else
         {
@@ -3455,12 +3455,12 @@ Opnd::Dump(IRDumpFlags flags, Func *func)
     }
     if (!SimpleForm || this->GetType() != TyVar)
     {
-        Output::Print(u".");
+        Output::Print(".");
         IRType_Dump(this->GetType());
     }
     if (this->m_isDead && !SimpleForm)
     {
-        Output::Print(u"!");
+        Output::Print("!");
     }
 }
 
@@ -3486,13 +3486,13 @@ void
 Opnd::DumpOpndKindMemRef(bool AsmDumpMode, Func *func)
 {
     MemRefOpnd *memRefOpnd = this->AsMemRefOpnd();
-    Output::Print(u"[");
+    Output::Print("[");
     const size_t BUFFER_LEN = 128;
     char16_t buffer[BUFFER_LEN];
     // TODO: michhol, make this intptr_t
     GetAddrDescription(buffer, BUFFER_LEN, (void*)memRefOpnd->GetMemLoc(), memRefOpnd->GetAddrKind(), AsmDumpMode, true, func);
     Output::Print(u"%s", buffer);
-    Output::Print(u"]");
+    Output::Print("]");
 }
 
 /**

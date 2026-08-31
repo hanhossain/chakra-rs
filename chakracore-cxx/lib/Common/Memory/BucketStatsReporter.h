@@ -138,9 +138,9 @@ public:
         if (IsDumpEnabled())
         {
             Output::Print(u"[FRAG %d] Post-Collection State\n", ::GetTickCount());
-            Output::Print(u"---------------------------------------------------------------------------------------\n");
-            Output::Print(u"                  #Blk   #Objs    #Fin     ObjBytes   FreeBytes  TotalBytes UsedPercent\n");
-            Output::Print(u"---------------------------------------------------------------------------------------\n");
+            Output::Print("---------------------------------------------------------------------------------------\n");
+            Output::Print("                  #Blk   #Objs    #Fin     ObjBytes   FreeBytes  TotalBytes UsedPercent\n");
+            Output::Print("---------------------------------------------------------------------------------------\n");
         }
     }
 
@@ -159,7 +159,7 @@ public:
     {
         if (IsDumpEnabled())
         {
-            Output::Print(u"Large           : ");
+            Output::Print("Large           : ");
             stats.Dump();
         }
     }
@@ -168,8 +168,8 @@ public:
     {
         if (IsDumpEnabled())
         {
-            Output::Print(u"---------------------------------------------------------------------------------------\n");
-            Output::Print(u"Total           : ");
+            Output::Print("---------------------------------------------------------------------------------------\n");
+            Output::Print("Total           : ");
             total.Dump();
         }
     }

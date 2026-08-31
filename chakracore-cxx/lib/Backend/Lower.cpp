@@ -18131,7 +18131,7 @@ Lowerer::GenerateFastLdElemI(IR::Instr *& ldElem, bool *instrIsInHelperBlockRef)
                     Js::OpCodeUtil::GetOpCodeName(ldElem->m_opcode),
                     baseValueTypeStr,
                     (!dst->IsVar() ? u"specialized" : u"not specialized"));
-                Output::Print(u"\n");
+                Output::Print("\n");
                 Output::Flush();
             }
         }
@@ -18528,7 +18528,7 @@ Lowerer::GenerateFastStElemI(IR::Instr *& stElem, bool *instrIsInHelperBlockRef)
                 Js::OpCodeUtil::GetOpCodeName(stElem->m_opcode),
                 baseValueTypeStr,
                 (!src->IsVar() ? u"specialized" : u"not specialized"));
-            Output::Print(u"\n");
+            Output::Print("\n");
             Output::Flush();
         }
 
@@ -18894,7 +18894,7 @@ Lowerer::GenerateFastStElemI(IR::Instr *& stElem, bool *instrIsInHelperBlockRef)
                         // because it won't help and the same thing will happen again. Just abort jitting this function.
                         if(PHASE_TRACE(Js::BailOutPhase, this->m_func))
                         {
-                            Output::Print(u"    Aborting JIT because EliminateArrayAccessHelperCall is already off\n");
+                            Output::Print("    Aborting JIT because EliminateArrayAccessHelperCall is already off\n");
                             Output::Flush();
                         }
                         throw Js::OperationAbortedException();
@@ -28537,7 +28537,7 @@ Lowerer::ReconcileWithLowererStateOnHelperCall(IR::Instr * callInstr, IR::JnHelp
         {
             Output::Print(u"HelperMethod : %s, OpCode: %s", IR::GetMethodName(helperMethod), Js::OpCodeUtil::GetOpCodeName(m_currentInstrOpCode));
             callInstr->DumpByteCodeOffset();
-            Output::Print(u"\n");
+            Output::Print("\n");
             AssertMsg(false, "OpCode and Helper implicit call attribute mismatch");
         }
     }

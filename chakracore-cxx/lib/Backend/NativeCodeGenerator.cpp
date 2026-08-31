@@ -928,11 +928,11 @@ void NativeCodeGenerator::LogCodeGenStart(CodeGenWorkItem * workItem, LARGE_INTE
                 ExecutionModeName(workItem->GetJitMode()));
             if (body->GetIsAsmjsMode())
             {
-                Output::Print(u" (Asmjs)\n");
+                Output::Print(" (Asmjs)\n");
             }
             else
             {
-                Output::Print(u"\n");
+                Output::Print("\n");
             }
         }
         else
@@ -946,11 +946,11 @@ void NativeCodeGenerator::LogCodeGenStart(CodeGenWorkItem * workItem, LARGE_INTE
 
             if (body->GetIsAsmjsMode())
             {
-                Output::Print(u" (Asmjs)\n");
+                Output::Print(" (Asmjs)\n");
             }
             else
             {
-                Output::Print(u"\n");
+                Output::Print("\n");
             }
         }
         Output::Flush();
@@ -989,7 +989,7 @@ void NativeCodeGenerator::LogCodeGenDone(CodeGenWorkItem * workItem, LARGE_INTEG
 #if DBG_DUMP
     if (Js::Configuration::Global.flags.TestTrace.IsEnabled(Js::BackEndPhase))
     {
-        Output::Print(u"---EndBackEnd---\r\n");
+        Output::Print("---EndBackEnd---\r\n");
         Output::Flush();
     }
 #endif
@@ -1013,11 +1013,11 @@ void NativeCodeGenerator::LogCodeGenDone(CodeGenWorkItem * workItem, LARGE_INTEG
 
             if (body->GetIsAsmjsMode())
             {
-                Output::Print(u" (Asmjs)\n");
+                Output::Print(" (Asmjs)\n");
             }
             else
             {
-                Output::Print(u"\n");
+                Output::Print("\n");
             }
         }
         else
@@ -1032,11 +1032,11 @@ void NativeCodeGenerator::LogCodeGenDone(CodeGenWorkItem * workItem, LARGE_INTEG
 
             if (body->GetIsAsmjsMode())
             {
-                Output::Print(u" (Asmjs)\n");
+                Output::Print(" (Asmjs)\n");
             }
             else
             {
-                Output::Print(u"\n");
+                Output::Print("\n");
             }
         }
         Output::Flush();

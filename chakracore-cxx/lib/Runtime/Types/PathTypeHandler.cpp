@@ -2824,7 +2824,7 @@ namespace Js
 #endif
                 if (PHASE_TRACE1(TypeShareForChangePrototypePhase))
                 {
-                    Output::Print(u"TypeSharing: Updating prototype object's DictionarySlot cache in __proto__.\n");
+                    Output::Print("TypeSharing: Updating prototype object's DictionarySlot cache in __proto__.\n");
                     Output::Flush();
                 }
 
@@ -2833,7 +2833,7 @@ namespace Js
             {
                 if (PHASE_TRACE1(TypeShareForChangePrototypePhase))
                 {
-                    Output::Print(u"TypeSharing: No Typesharing because instance and newPrototype are from different scriptContext.\n");
+                    Output::Print("TypeSharing: No Typesharing because instance and newPrototype are from different scriptContext.\n");
                     Output::Flush();
                 }
             }
@@ -2843,7 +2843,7 @@ namespace Js
             Assert(cachedDynamicType->GetIsShared());
             if (PHASE_TRACE1(TypeShareForChangePrototypePhase))
             {
-                Output::Print(u"TypeSharing: Reusing prototype object's DictionarySlot cache in __proto__.\n");
+                Output::Print("TypeSharing: Reusing prototype object's DictionarySlot cache in __proto__.\n");
                 Output::Flush();
             }
         }

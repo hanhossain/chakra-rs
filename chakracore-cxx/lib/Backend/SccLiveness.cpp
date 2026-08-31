@@ -562,9 +562,9 @@ SCCLiveness::ProcessStackSymUse(StackSym * stackSym, IR::Instr * instr, int usag
 #if DBG
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
         Output::Print(u"Function: %s (%s)       ", this->func->GetJITFunctionBody()->GetDisplayName(), this->func->GetDebugNumberSet(debugStringBuffer));
-        Output::Print(u"Reg: ");
+        Output::Print("Reg: ");
         stackSym->Dump();
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
 #endif
         AnalysisAssertMsg(UNREACHED, "Uninitialized reg?");
@@ -892,7 +892,7 @@ void
 SCCLiveness::Dump()
 {
     this->func->DumpHeader();
-    Output::Print(u"************   Liveness   ************\n");
+    Output::Print("************   Liveness   ************\n");
 
     FOREACH_SLIST_ENTRY(Lifetime *, lifetime, &this->lifetimeList)
     {

@@ -193,7 +193,7 @@ namespace Js
 #if DBG
     void JsBuiltInEngineInterfaceExtensionObject::DumpByteCode(JsBuiltInFile file)
     {
-        Output::Print(u"Dumping JS Built Ins Byte Code:\n");
+        Output::Print("Dumping JS Built Ins Byte Code:\n");
         switch (file)
         {
             #define fileCase(class, type, obj) \
@@ -208,7 +208,7 @@ namespace Js
 
     void JsBuiltInEngineInterfaceExtensionObject::DumpByteCode()
     {
-        Output::Print(u"Dumping JS Built Ins Byte Code:\n");
+        Output::Print("Dumping JS Built Ins Byte Code:\n");
         #define dumpOne(class, type, obj) \
         if (this->jsBuiltIn##class##_##type##Bytecode != nullptr) \
         { \

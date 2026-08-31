@@ -125,7 +125,7 @@ namespace Js
             {
                 Output::Print(u"%p,", cache->GetInlineCaches()[i].GetType());
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     };
 

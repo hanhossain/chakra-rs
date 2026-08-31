@@ -353,16 +353,16 @@ namespace Js
         Output::Print(u"%*sAttributes: 0x%02x ", fieldIndent, padding, this->Attributes);
         if (this->Attributes != PropertyNone)
         {
-            if (this->Attributes & PropertyEnumerable) Output::Print(u"PropertyEnumerable ");
-            if (this->Attributes & PropertyConfigurable) Output::Print(u"PropertyConfigurable ");
-            if (this->Attributes & PropertyWritable) Output::Print(u"PropertyWritable ");
-            if (this->Attributes & PropertyDeleted) Output::Print(u"PropertyDeleted ");
-            if (this->Attributes & PropertyLetConstGlobal) Output::Print(u"PropertyLetConstGlobal ");
-            if (this->Attributes & PropertyDeclaredGlobal) Output::Print(u"PropertyDeclaredGlobal ");
-            if (this->Attributes & PropertyLet) Output::Print(u"PropertyLet ");
-            if (this->Attributes & PropertyConst) Output::Print(u"PropertyConst ");
+            if (this->Attributes & PropertyEnumerable) Output::Print("PropertyEnumerable ");
+            if (this->Attributes & PropertyConfigurable) Output::Print("PropertyConfigurable ");
+            if (this->Attributes & PropertyWritable) Output::Print("PropertyWritable ");
+            if (this->Attributes & PropertyDeleted) Output::Print("PropertyDeleted ");
+            if (this->Attributes & PropertyLetConstGlobal) Output::Print("PropertyLetConstGlobal ");
+            if (this->Attributes & PropertyDeclaredGlobal) Output::Print("PropertyDeclaredGlobal ");
+            if (this->Attributes & PropertyLet) Output::Print("PropertyLet ");
+            if (this->Attributes & PropertyConst) Output::Print("PropertyConst ");
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
 
         Output::Print(u"%*sData: %d\n", fieldIndent, padding, static_cast<int32_t>(this->Data));
         Output::Print(u"%*sGetter: %d\n", fieldIndent, padding, static_cast<int32_t>(this->Getter));
