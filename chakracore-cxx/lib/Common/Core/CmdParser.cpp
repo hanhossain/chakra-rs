@@ -9,6 +9,7 @@
 
 #include "Codex/Utf8Codex.h"
 #include "chakra/strings.h"
+#include <print>
 
 using namespace Js;
 
@@ -44,7 +45,7 @@ CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) char16_t* buffer, size_t
         {
             if(0 == CurChar())
             {
-                throw Exception(u"Unmatched quote");
+                throw Exception("Unmatched quote");
             }
 
             //
@@ -52,7 +53,7 @@ CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) char16_t* buffer, size_t
             //
             if (len >= ceBuffer - 1)
             {
-                throw Exception(u"String token too large to parse");
+                throw Exception("String token too large to parse");
             }
 
             out[len++] = CurChar();
@@ -89,7 +90,7 @@ CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) char16_t* buffer, size_t
             default:
                 if (len >= MaxTokenSize - 1)
                 {
-                    throw Exception(u"String token too large to parse");
+                    throw Exception("String token too large to parse");
                 }
                 out[len++] = CurChar();
                 NextChar();
@@ -99,7 +100,7 @@ CmdLineArgsParser::ParseString(__inout_ecount(ceBuffer) char16_t* buffer, size_t
 
     if(0 == len)
     {
-        throw Exception(u"String Token Expected");
+        throw Exception("String Token Expected");
     }
 
     out[len] = '\0';
@@ -181,7 +182,7 @@ CmdLineArgsParser::ParseInteger()
     }
     if(!IsDigit())
     {
-        throw Exception(u"Integer Expected");
+        throw Exception("Integer Expected");
     }
 
     int base = 10;
@@ -219,7 +220,7 @@ CmdLineArgsParser::ParseInteger()
         if(result < 0)
         {
             // overflow or underflow in case sign = -1
-            throw Exception(u"Integer too large to parse");
+            throw Exception("Integer too large to parse");
         }
 
         NextChar();
@@ -251,12 +252,12 @@ CmdLineArgsParser::ParseRange(Js::Range *pRange, Js::Range *oppositeRange)
 
         if (r1.sourceContextId > r2.sourceContextId)
         {
-            throw Exception(u"Left source index must be smaller than the Right source Index");
+            throw Exception("Left source index must be smaller than the Right source Index");
         }
         if ((r1.sourceContextId == r2.sourceContextId) &&
             (r1.functionId > r2.functionId))
         {
-            throw Exception(u"Left functionId must be smaller than the Right functionId when Source file is the same");
+            throw Exception("Left functionId must be smaller than the Right functionId when Source file is the same");
         }
 
         pRange->Add(r1, r2, oppositeRange);
@@ -272,7 +273,7 @@ CmdLineArgsParser::ParseRange(Js::Range *pRange, Js::Range *oppositeRange)
             break;
 
         default:
-            throw Exception(u"Unexpected character while parsing Range");
+            throw Exception("Unexpected character while parsing Range");
         }
         break;
 
@@ -288,7 +289,7 @@ CmdLineArgsParser::ParseRange(Js::Range *pRange, Js::Range *oppositeRange)
         break;
 
     default:
-        throw Exception(u"Unexpected character while parsing Range");
+        throw Exception("Unexpected character while parsing Range");
     }
 
 }
@@ -308,7 +309,7 @@ CmdLineArgsParser::ParseNumberRange(Js::NumberRange *pRange)
 
         if (start > end)
         {
-            throw Exception(u"Range start must be less than range end");
+            throw Exception("Range start must be less than range end");
         }
 
         pRange->Add(start, end);
@@ -324,7 +325,7 @@ CmdLineArgsParser::ParseNumberRange(Js::NumberRange *pRange)
             break;
 
         default:
-            throw Exception(u"Unexpected character while parsing Range");
+            throw Exception("Unexpected character while parsing Range");
         }
         break;
 
@@ -340,7 +341,7 @@ CmdLineArgsParser::ParseNumberRange(Js::NumberRange *pRange)
         break;
 
     default:
-        throw Exception(u"Unexpected character while parsing Range");
+        throw Exception("Unexpected character while parsing Range");
     }
 
 }
@@ -363,7 +364,7 @@ CmdLineArgsParser::ParsePhase(Js::Phases *pPhaseList, Js::Phases *oppositePhase)
     Phase phase = ConfigFlagsTable::GetPhase(ParseString(buffer));
     if(InvalidPhase == phase)
     {
-        throw Exception(u"Invalid phase :");
+        throw Exception("Invalid phase :");
     }
 
     pPhaseList->Enable(phase);
@@ -473,11 +474,11 @@ CmdLineArgsParser::ParseBoolean()
 {
     if (CurChar() == ':')
     {
-        throw Exception(u"':' not expected with a boolean flag");
+        throw Exception("':' not expected with a boolean flag");
     }
     else if (CurChar() != '-' && CurChar() != ' ' && CurChar() != 0)
     {
-        throw Exception(u"Invalid character after boolean flag");
+        throw Exception("Invalid character after boolean flag");
     }
     else
     {
@@ -501,7 +502,7 @@ CmdLineArgsParser::GetCurrentString()
         NextChar();
         return nullptr;
     default:
-        throw Exception(u"Expected ':'");
+        throw Exception("Expected ':'");
     }
 }
 
@@ -540,7 +541,7 @@ CmdLineArgsParser::ParseFlag()
                 return;
             }
         }
-        throw Exception(u"Invalid Flag");
+        throw Exception("Invalid Flag");
     }
 
 
@@ -608,7 +609,7 @@ CmdLineArgsParser::ParseFlag()
         case 0:
             break;
         default:
-            throw Exception(u"Expected ':'");
+            throw Exception("Expected ':'");
         }
     }
 }
@@ -628,7 +629,7 @@ int CmdLineArgsParser::Parse(const rust::Vec<rust::String> &vargs)
     for(int i = 1; i < vargs.size(); i++)
     {
         std::u16string s = chakra::to_u16string(vargs[i]);
-        if ((err = Parse(s.c_str())) != 0)
+        if ((err = Parse(s.c_str(), vargs[i])) != 0)
         {
             break;
         }
@@ -637,7 +638,7 @@ int CmdLineArgsParser::Parse(const rust::Vec<rust::String> &vargs)
     return err;
 }
 
-int CmdLineArgsParser::Parse(const char16_t* oneArg) throw()
+int CmdLineArgsParser::Parse(const char16_t* oneArg, const rust::String &str) throw()
 {
     int err = 0;
     char16_t buffer[MaxTokenSize];
@@ -667,7 +668,7 @@ int CmdLineArgsParser::Parse(const char16_t* oneArg) throw()
         default:
             if(NULL != this->flagTable.Filename)
             {
-                throw Exception(u"Duplicate filename entry");
+                throw Exception("Duplicate filename entry");
             }
 
             this->flagTable.Filename = ParseString(buffer, MaxTokenSize, false);
@@ -676,7 +677,7 @@ int CmdLineArgsParser::Parse(const char16_t* oneArg) throw()
     }
     catch(Exception &exp)
     {
-        Output::Print(u"%s : %s\n", exp, oneArg);
+        std::println("{} : {}", *exp, str);
         err = -1;
     }
     return err;

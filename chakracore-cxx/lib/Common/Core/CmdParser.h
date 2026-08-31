@@ -39,7 +39,7 @@ private:
 // Methods
 public:
     int Parse(const rust::Vec<rust::String> &vargs);
-    int Parse(const char16_t* token) throw();
+    int Parse(const char16_t* token, const rust::String &str) throw();
     CmdLineArgsParser(ICustomConfigFlags * pCustomConfigFlags = nullptr, Js::ConfigFlagsTable& flagTable = Js::Configuration::Global.flags);
     ~CmdLineArgsParser();
 
@@ -53,13 +53,13 @@ private:
     ///----------------------------------------------------------------------------
 
     class Exception {
-        const char16_t*        pszMsg;
+        const char*        pszMsg;
     public:
-        Exception(const char16_t* message):
+        Exception(const char* message):
             pszMsg(message)
         {}
 
-        operator const char16_t* () const
+        operator const char* () const
         {
             return this->pszMsg;
         }
