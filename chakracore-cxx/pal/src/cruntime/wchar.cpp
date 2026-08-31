@@ -28,6 +28,7 @@ Abstract:
 #include "pal/thread.hpp"
 #include "pal/threadsusp.hpp"
 #include "chakra/Logger.h"
+#include "rust/cxx.h"
 
 #include <errno.h>
 #include <limits.h>
@@ -253,55 +254,20 @@ _wcslwr(
 unsigned long
 PAL__wcstoui64(
         const char16_t *nptr,
-        char16_t **endptr,
         int base)
 {
-    char *s_nptr = 0;
-    char *s_endptr = 0;
-    unsigned long long res;
-    int size;
-
-    size = WideCharToMultiByte(nptr, -1, NULL, 0);
-    if (!size)
+    try
     {
-        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
+        rust::String str{nptr};
+        char *s_endptr = nullptr;
+        return strtoull(str.c_str(), &s_endptr, base);
+    }
+    catch (const rust::Error &ex)
+    {
+        chakra::Logger::error(std::format("Failed to convert string to rust. Exception: {}", ex.what()));
         SetLastError(ERROR_INVALID_PARAMETER);
-        res = 0;
-        goto PAL__wcstoui64Exit;
+        return 0;
     }
-    s_nptr = static_cast<char*>(malloc(size));
-    if (!s_nptr)
-    {
-        ERROR("malloc failed\n");
-        SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        res = 0;
-        goto PAL__wcstoui64Exit;
-    }
-    size = WideCharToMultiByte(nptr, -1, s_nptr, size);
-    if (!size)
-    {
-        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
-        SetLastError(ERROR_INVALID_PARAMETER);
-        res = 0;
-        goto PAL__wcstoui64Exit;
-    }
-
-    res = strtoull(s_nptr, &s_endptr, base);
-
-    /* only ASCII characters will be accepted by strtoull, and those always get
-       mapped to single-byte characters, so the first rejected character will
-       have the same index in the multibyte and widechar strings */
-    if( endptr )
-    {
-        size = s_endptr - s_nptr;
-        *endptr = const_cast<char16_t*>(&nptr[size]);
-    }
-
-PAL__wcstoui64Exit:
-    free(s_nptr);
-    LOGEXIT("_wcstoui64 returning unsigned long long %llu\n", res);
-
-    return res;
 }
 
 /*++
