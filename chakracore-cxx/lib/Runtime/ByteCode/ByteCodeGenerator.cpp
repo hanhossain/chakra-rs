@@ -1662,7 +1662,7 @@ void ByteCodeGenerator::PushFuncInfo(char16_t const * location, FuncInfo* funcIn
         {
             Output::Print(u" Top: %s", this->TopFuncInfo()->name);
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
     funcInfoStack->Push(funcInfo);
@@ -1679,7 +1679,7 @@ void ByteCodeGenerator::PopFuncInfo(char16_t const * location)
         {
             Output::Print(u" Top: %s", this->TopFuncInfo()->name);
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 }

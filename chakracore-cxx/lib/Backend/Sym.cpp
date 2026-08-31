@@ -1044,11 +1044,11 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
     {
         if (this->IsStackSym() && this->AsStackSym()->IsArgSlotSym())
         {
-            Output::Print(u"arg ");
+            Output::Print("arg ");
         }
         else if (this->IsStackSym() && this->AsStackSym()->IsParamSlotSym())
         {
-            Output::Print(u"param ");
+            Output::Print("param ");
         }
     }
     else if (this->IsStackSym())
@@ -1074,16 +1074,16 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
                 switch (stackSym->GetParamSlotNum())
                 {
                 case 1:
-                    Output::Print(u"callInfo");
+                    Output::Print("callInfo");
                     break;
                 case 2:
-                    Output::Print(u"funcInfo");
+                    Output::Print("funcInfo");
                     break;
                 case 3:
-                    Output::Print(u"genObj");
+                    Output::Print("genObj");
                     break;
                 case 4:
-                    Output::Print(u"genFrame");
+                    Output::Print("genFrame");
                     break;
                 default:
                     Output::Print(u"implPrm%d", stackSym->GetParamSlotNum());
@@ -1117,7 +1117,7 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
             {
                 if (stackSym->m_builtInIndex != Js::BuiltinFunction::None)
                 {
-                    Output::Print(u"[ffunc]");
+                    Output::Print("[ffunc]");
                 }
             }
             IR::Opnd::DumpValueType(valueType);
@@ -1157,7 +1157,7 @@ Sym::Dump(IRDumpFlags flags, const ValueType valueType) const
 
         if (!SimpleForm)
         {
-            Output::Print(u")");
+            Output::Print(")");
         }
     }
 }

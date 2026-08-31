@@ -1976,12 +1976,12 @@ GlobOpt::CopyPropPropertySymObj(IR::SymOpnd *symOpnd, IR::Instr *instr)
 #if DBG_DUMP
                 if (Js::Configuration::Global.flags.Trace.IsEnabled(Js::GlobOptPhase, this->func->GetSourceContextId(), this->func->GetLocalFunctionId()))
                 {
-                    Output::Print(u"TRACE: ");
+                    Output::Print("TRACE: ");
                     symOpnd->Dump();
-                    Output::Print(u" : ");
+                    Output::Print(" : ");
                     Output::Print(u"Copy prop obj ptr s%d, new property: ", copySym->m_id);
                     newProp->Dump();
-                    Output::Print(u"\n");
+                    Output::Print("\n");
                 }
 #endif
 

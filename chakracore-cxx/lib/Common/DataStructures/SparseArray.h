@@ -192,7 +192,7 @@ public:
                 {
                     Output::Print(u"Index %4d  =>  ", index);
                     chunk->data[index]->Dump();
-                    Output::Print(u"\n");
+                    Output::Print("\n");
                 }
             }
         }

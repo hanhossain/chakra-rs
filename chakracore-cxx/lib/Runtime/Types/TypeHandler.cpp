@@ -664,7 +664,7 @@ using namespace Js;
         // Move the last few inline slots into the aux slots
         if(PHASE_TRACE1(Js::ObjectHeaderInliningPhase))
         {
-            Output::Print(u"ObjectHeaderInlining: Moving inlined properties to aux slots.\n");
+            Output::Print("ObjectHeaderInlining: Moving inlined properties to aux slots.\n");
             Output::Flush();
         }
         Var *const oldInlineSlots =
@@ -680,7 +680,7 @@ using namespace Js;
             // overlap, with the new inline slot array starting beyond the start of the old inline slot array.
             if(PHASE_TRACE1(Js::ObjectHeaderInliningPhase))
             {
-                Output::Print(u"ObjectHeaderInlining: Moving inlined properties out of the object header.\n");
+                Output::Print("ObjectHeaderInlining: Moving inlined properties out of the object header.\n");
                 Output::Flush();
             }
             typename WriteBarrierFieldTypeTraits<Var>::Type *const newInlineSlots = reinterpret_cast<typename WriteBarrierFieldTypeTraits<Var>::Type *>(object + 1);
@@ -752,23 +752,23 @@ using namespace Js;
 
         Output::Print(u"%*sDynamicTypeHandler: 0x%p\n", indent, padding, this);
         Output::Print(u"%*spropertyTypes: 0x%02x ", fieldIndent, padding, this->propertyTypes);
-        if (this->propertyTypes & PropertyTypesReserved) Output::Print(u"PropertyTypesReserved ");
-        if (this->propertyTypes & PropertyTypesWritableDataOnly) Output::Print(u"PropertyTypesWritableDataOnly ");
-        if (this->propertyTypes & PropertyTypesHasSpecialProperties) Output::Print(u"PropertyTypesHasSpecialProperties ");
-        if (this->propertyTypes & PropertyTypesWritableDataOnlyDetection) Output::Print(u"PropertyTypesWritableDataOnlyDetection ");
-        if (this->propertyTypes & PropertyTypesInlineSlotCapacityLocked) Output::Print(u"PropertyTypesInlineSlotCapacityLocked ");
-        Output::Print(u"\n");
+        if (this->propertyTypes & PropertyTypesReserved) Output::Print("PropertyTypesReserved ");
+        if (this->propertyTypes & PropertyTypesWritableDataOnly) Output::Print("PropertyTypesWritableDataOnly ");
+        if (this->propertyTypes & PropertyTypesHasSpecialProperties) Output::Print("PropertyTypesHasSpecialProperties ");
+        if (this->propertyTypes & PropertyTypesWritableDataOnlyDetection) Output::Print("PropertyTypesWritableDataOnlyDetection ");
+        if (this->propertyTypes & PropertyTypesInlineSlotCapacityLocked) Output::Print("PropertyTypesInlineSlotCapacityLocked ");
+        Output::Print("\n");
 
         Output::Print(u"%*sflags: 0x%02x ", fieldIndent, padding, this->flags);
-        if (this->flags & IsExtensibleFlag) Output::Print(u"IsExtensibleFlag ");
-        if (this->flags & HasKnownSlot0Flag) Output::Print(u"HasKnownSlot0Flag ");
-        if (this->flags & IsLockedFlag) Output::Print(u"IsLockedFlag ");
-        if (this->flags & MayBecomeSharedFlag) Output::Print(u"MayBecomeSharedFlag ");
-        if (this->flags & IsSharedFlag) Output::Print(u"IsSharedFlag ");
-        if (this->flags & IsPrototypeFlag) Output::Print(u"IsPrototypeFlag ");
-        if (this->flags & IsSealedOnceFlag) Output::Print(u"IsSealedOnceFlag ");
-        if (this->flags & IsFrozenOnceFlag) Output::Print(u"IsFrozenOnceFlag ");
-        Output::Print(u"\n");
+        if (this->flags & IsExtensibleFlag) Output::Print("IsExtensibleFlag ");
+        if (this->flags & HasKnownSlot0Flag) Output::Print("HasKnownSlot0Flag ");
+        if (this->flags & IsLockedFlag) Output::Print("IsLockedFlag ");
+        if (this->flags & MayBecomeSharedFlag) Output::Print("MayBecomeSharedFlag ");
+        if (this->flags & IsSharedFlag) Output::Print("IsSharedFlag ");
+        if (this->flags & IsPrototypeFlag) Output::Print("IsPrototypeFlag ");
+        if (this->flags & IsSealedOnceFlag) Output::Print("IsSealedOnceFlag ");
+        if (this->flags & IsFrozenOnceFlag) Output::Print("IsFrozenOnceFlag ");
+        Output::Print("\n");
 
         Output::Print(u"%*soffsetOfInlineSlots: %u\n", fieldIndent, padding, this->offsetOfInlineSlots);
         Output::Print(u"%*sslotCapacity: %d\n", fieldIndent, padding, this->slotCapacity);

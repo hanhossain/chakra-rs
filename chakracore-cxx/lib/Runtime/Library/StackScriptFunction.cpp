@@ -712,7 +712,7 @@ namespace Js
                 stackFunction->GetFunctionProxy()->IsDeferredDeserializeFunction()?
                     u"<DeferDeserialize>" : stackFunction->GetParseableFunctionInfo()->GetDisplayName(),
                 stackFunction->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer));
-            Output::Print(u"\n");
+            Output::Print("\n");
             Output::Flush();
         }
 

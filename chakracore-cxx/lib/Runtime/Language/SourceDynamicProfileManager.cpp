@@ -193,7 +193,7 @@ namespace Js
         }
         catch (Js::OutOfMemoryException&)
         {
-            Output::Print(u"Hit OOM while saving dynamic profile info\n");
+            Output::Print("Hit OOM while saving dynamic profile info\n");
         }
     }
 
@@ -240,7 +240,7 @@ namespace Js
 #if DBG_DUMP
         if(Configuration::Global.flags.Dump.IsEnabled(DynamicProfilePhase))
         {
-            Output::Print(u"Loaded: Startup functions bit vector:");
+            Output::Print("Loaded: Startup functions bit vector:");
             startupFunctions->Dump();
         }
 #endif
@@ -280,7 +280,7 @@ namespace Js
 #if DBG_DUMP
              if(Configuration::Global.flags.Dump.IsEnabled(DynamicProfilePhase))
             {
-                Output::Print(u"Saving: Startup functions bit vector:");
+                Output::Print("Saving: Startup functions bit vector:");
                 this->startupFunctions->Dump();
             }
 #endif

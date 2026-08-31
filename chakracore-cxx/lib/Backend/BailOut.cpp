@@ -374,7 +374,7 @@ const char16_t * const falseString = u"false";
         { \
             Output::Print(u" Kind: %S", ::GetBailOutKindName(bailOutKind)); \
         } \
-        Output::Print(u"\n"); \
+        Output::Print("\n"); \
     }
 
 #define BAILOUT_TESTTRACE(functionBody, bailOutKind, ...) \
@@ -386,7 +386,7 @@ const char16_t * const falseString = u"false";
         { \
             Output::Print(u" Kind: %S", ::GetBailOutKindName(bailOutKind)); \
         } \
-        Output::Print(u"\n"); \
+        Output::Print("\n"); \
     }
 
 #define BAILOUT_FLUSH(functionBody) \
@@ -413,7 +413,7 @@ void BailOutRecord::DumpArgOffsets(uint count, int* offsets, int argOutSlotStart
 
         Output::Print(u"%s #%3d: ", name, i + regSlotOffset);
         this->DumpValue(offset, isFloat64);
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
 }
 
@@ -430,7 +430,7 @@ void BailOutRecord::DumpLocalOffsets(uint count, int argOutSlotStart)
 
         Output::Print(u"%s #%3d: ", name, row->regSlot);
         this->DumpValue(row->offset, isFloat64);
-        Output::Print(u"\n");
+        Output::Print("\n");
     });
 }
 
@@ -459,7 +459,7 @@ void BailOutRecord::DumpValue(int offset, bool isFloat64)
         }
         else if (BailOutRecord::IsArgumentsObject((uint)offset))
         {
-            Output::Print(u"Arguments object");
+            Output::Print("Arguments object");
         }
         else
         {
@@ -471,7 +471,7 @@ void BailOutRecord::DumpValue(int offset, bool isFloat64)
     }
     else
     {
-        Output::Print(u"Not live");
+        Output::Print("Not live");
     }
 }
 
@@ -479,14 +479,14 @@ void BailOutRecord::Dump()
 {
     if (this->localOffsetsCount)
     {
-        Output::Print(u"**** Locals ***\n");
+        Output::Print("**** Locals ***\n");
         DumpLocalOffsets(this->localOffsetsCount, 0);
     }
 
     uint outParamSlot = 0;
     if(this->argOutOffsetInfo)
     {
-        Output::Print(u"**** Out params ***\n");
+        Output::Print("**** Out params ***\n");
         for (uint i = 0; i < this->argOutOffsetInfo->startCallCount; i++)
         {
             uint startCallOutParamCount = this->argOutOffsetInfo->startCallOutParamCounts[i];
@@ -2264,7 +2264,7 @@ void BailOutRecord::ScheduleFunctionCodeGen(Js::ScriptFunction * function, Js::S
             {
                 Output::Print(u" (%S)", ::GetBailOutKindName(bailOutKind));
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
             Output::Flush();
         }
     }
@@ -2581,7 +2581,7 @@ void BailOutRecord::ScheduleLoopBodyCodeGen(Js::ScriptFunction * function, Js::S
             {
                 Output::Print(u" (%S)", ::GetBailOutKindName(bailOutKind));
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
             Output::Flush();
         }
     }

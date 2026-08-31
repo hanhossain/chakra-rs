@@ -449,7 +449,7 @@ FlowGraph::Build(void)
     {
         if (assignRegionsBeforeGlobopt)
         {
-            Output::Print(u"Before adding early exit edges\n");
+            Output::Print("Before adding early exit edges\n");
             FOREACH_BLOCK_ALL(block, this)
             {
                 block->DumpHeader(true);
@@ -601,7 +601,7 @@ FlowGraph::Build(void)
     {
         if (assignRegionsBeforeGlobopt)
         {
-            Output::Print(u"After adding early exit edges/Before CanonicalizeLoops\n");
+            Output::Print("After adding early exit edges/Before CanonicalizeLoops\n");
             FOREACH_BLOCK_ALL(block, this)
             {
                 block->DumpHeader(true);
@@ -647,7 +647,7 @@ FlowGraph::Build(void)
     {
         if (assignRegionsBeforeGlobopt)
         {
-            Output::Print(u"After CanonicalizeLoops\n");
+            Output::Print("After CanonicalizeLoops\n");
             FOREACH_BLOCK_ALL(block, this)
             {
                 block->DumpHeader(true);
@@ -3602,7 +3602,7 @@ Loop::CanDoFieldCopyProp()
     {
         Output::Print(u"fieldcopyprop disabled because external: loop count: %d", GetLoopNumber());
         GetFunc()->DumpFullFunctionName();
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 #endif
@@ -3992,28 +3992,28 @@ FlowGraph::Dump(bool onlyOnVerboseMode, const char16_t *form)
 void
 FlowGraph::Dump()
 {
-    Output::Print(u"\nFlowGraph\n");
+    Output::Print("\nFlowGraph\n");
     FOREACH_BLOCK(block, this)
     {
         Loop * loop = block->loop;
         while (loop)
         {
-            Output::Print(u"    ");
+            Output::Print("    ");
             loop = loop->parent;
         }
         block->DumpHeader(false);
     } NEXT_BLOCK;
 
-    Output::Print(u"\nLoopGraph\n");
+    Output::Print("\nLoopGraph\n");
 
     for (Loop *loop = this->loopList; loop; loop = loop->next)
     {
-        Output::Print(u"\nLoop\n");
+        Output::Print("\nLoop\n");
         FOREACH_BLOCK_IN_LOOP(block, loop)
         {
             block->DumpHeader(false);
         }NEXT_BLOCK_IN_LOOP;
-        Output::Print(u"Loop  Ends\n");
+        Output::Print("Loop  Ends\n");
     }
 }
 
@@ -4022,40 +4022,40 @@ BasicBlock::DumpHeader(bool insertCR)
 {
     if (insertCR)
     {
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
     Output::Print(u"BLOCK %d:", this->number);
 
     if (this->isDead)
     {
-        Output::Print(u" **** DEAD ****");
+        Output::Print(" **** DEAD ****");
     }
 
     if (this->isBreakBlock)
     {
-        Output::Print(u" **** Break Block ****");
+        Output::Print(" **** Break Block ****");
     }
     else if (this->isAirLockBlock)
     {
-        Output::Print(u" **** Air lock Block ****");
+        Output::Print(" **** Air lock Block ****");
     }
     else if (this->isBreakCompensationBlockAtSource)
     {
-        Output::Print(u" **** Break Source Compensation Code ****");
+        Output::Print(" **** Break Source Compensation Code ****");
     }
     else if (this->isBreakCompensationBlockAtSink)
     {
-        Output::Print(u" **** Break Sink Compensation Code ****");
+        Output::Print(" **** Break Sink Compensation Code ****");
     }
     else if (this->isAirLockCompensationBlock)
     {
-        Output::Print(u" **** Airlock block Compensation Code ****");
+        Output::Print(" **** Airlock block Compensation Code ****");
     }
 
     if (!this->predList.Empty())
     {
         BOOL fFirst = TRUE;
-        Output::Print(u" In(");
+        Output::Print(" In(");
         FOREACH_PREDECESSOR_BLOCK(blockPred, this)
         {
             if (!fFirst)
@@ -4066,14 +4066,14 @@ BasicBlock::DumpHeader(bool insertCR)
             fFirst = FALSE;
         }
         NEXT_PREDECESSOR_BLOCK;
-        Output::Print(u")");
+        Output::Print(")");
     }
 
 
     if (!this->succList.Empty())
     {
         BOOL fFirst = TRUE;
-        Output::Print(u" Out(");
+        Output::Print(" Out(");
         FOREACH_SUCCESSOR_BLOCK(blockSucc, this)
         {
             if (!fFirst)
@@ -4084,13 +4084,13 @@ BasicBlock::DumpHeader(bool insertCR)
             fFirst = FALSE;
         }
         NEXT_SUCCESSOR_BLOCK;
-        Output::Print(u")");
+        Output::Print(")");
     }
 
     if (!this->deadPredList.Empty())
     {
         BOOL fFirst = TRUE;
-        Output::Print(u" DeadIn(");
+        Output::Print(" DeadIn(");
         FOREACH_DEAD_PREDECESSOR_BLOCK(blockPred, this)
         {
             if (!fFirst)
@@ -4101,13 +4101,13 @@ BasicBlock::DumpHeader(bool insertCR)
             fFirst = FALSE;
         }
         NEXT_DEAD_PREDECESSOR_BLOCK;
-        Output::Print(u")");
+        Output::Print(")");
     }
 
     if (!this->deadSuccList.Empty())
     {
         BOOL fFirst = TRUE;
-        Output::Print(u" DeadOut(");
+        Output::Print(" DeadOut(");
         FOREACH_DEAD_SUCCESSOR_BLOCK(blockSucc, this)
         {
             if (!fFirst)
@@ -4118,7 +4118,7 @@ BasicBlock::DumpHeader(bool insertCR)
             fFirst = FALSE;
         }
         NEXT_DEAD_SUCCESSOR_BLOCK;
-        Output::Print(u")");
+        Output::Print(")");
     }
 
     if (this->loop)
@@ -4133,23 +4133,23 @@ BasicBlock::DumpHeader(bool insertCR)
         if (this->loop->GetHeadBlock() == this)
         {
             Output::SkipToColumn(50);
-            Output::Print(u"Call Exp/Imp: ");
+            Output::Print("Call Exp/Imp: ");
             if (this->loop->GetHasCall())
             {
-                Output::Print(u"yes/");
+                Output::Print("yes/");
             }
             else
             {
-                Output::Print(u" no/");
+                Output::Print(" no/");
             }
             Output::Print(Js::DynamicProfileInfo::GetImplicitCallFlagsString(this->loop->GetImplicitCallFlags()));
         }
     }
 
-    Output::Print(u"\n");
+    Output::Print("\n");
     if (insertCR)
     {
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
 }
 
@@ -4796,7 +4796,7 @@ BasicBlock::CheckLegalityAndFoldPathDepBranches(GlobOpt* globOpt)
             {
                 if (!branch->IsUnconditional())
                 {
-                    Output::Print(u"TRACE PathDependentBranchFolding: ");
+                    Output::Print("TRACE PathDependentBranchFolding: ");
                     Output::Print(u"Can prove retarget of branch in Block %d from Block %d to Block %d in func %s\n",
                         this->GetBlockNum(),
                         this->GetLastInstr()->IsBranchInstr() ? this->GetLastInstr()->AsBranchInstr()->GetTarget()->GetBasicBlock()->GetBlockNum() : this->GetNext()->GetBlockNum(),
@@ -4804,7 +4804,7 @@ BasicBlock::CheckLegalityAndFoldPathDepBranches(GlobOpt* globOpt)
                         this->func->GetJITFunctionBody()->GetDisplayName());
                     if (globOpt->IsLoopPrePass())
                     {
-                        Output::Print(u"In LoopPrePass\n");
+                        Output::Print("In LoopPrePass\n");
                     }
                     Output::Flush();
                 }
@@ -5178,7 +5178,7 @@ BasicBlock::MergePredBlocksValueMaps(GlobOpt* globOpt)
                 {
                     if (PHASE_TRACE(Js::GlobOptPhase, this->func) && !globOpt->IsLoopPrePass())
                     {
-                        Output::Print(u"TRACE: ");
+                        Output::Print("TRACE: ");
                         Output::Print(u"Inserting airlock block to convert syms to var between block %d and %d\n",
                             pred->GetBlockNum(), this->GetBlockNum());
                         Output::Flush();

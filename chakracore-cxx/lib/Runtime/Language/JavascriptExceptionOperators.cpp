@@ -897,7 +897,7 @@ namespace Js
         {
             return;
         }
-        Output::Print(u"\nStack trace for thrown exception\n");
+        Output::Print("\nStack trace for thrown exception\n");
 
         JavascriptExceptionContext::StackTrace *stackTrace = exceptionContext.GetStackTrace();
         for (int i=0; i < stackTrace->Count(); i++)

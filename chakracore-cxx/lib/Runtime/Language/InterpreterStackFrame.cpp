@@ -2971,7 +2971,7 @@ namespace Js
                     default:
                         break;
                     }
-                    Output::Print(u";\n");
+                    Output::Print(";\n");
                     Output::Flush();
                 }
                 return returnVar;
@@ -8834,7 +8834,7 @@ namespace Js
             Output::SkipToColumn(col);
         }
         info->GetBody()->DumpFullFunctionName();
-        Output::Print(u"(");
+        Output::Print("(");
 #endif
     }
 

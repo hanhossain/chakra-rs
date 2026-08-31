@@ -268,7 +268,7 @@ void WasmBinaryReader::SeekToFunctionBody(class WasmFunctionInfo* funcInfo)
     m_funcState.body = funcInfo->GetBody();
     if (DO_WASM_TRACE_DECODER)
     {
-        Output::Print(u"Decoding ");
+        Output::Print("Decoding ");
         m_funcState.body->DumpFullFunctionName();
         if (sizeof(intptr_t) == 8)
         {
@@ -775,7 +775,7 @@ void WasmBinaryReader::ReadSignatureTypeSection()
         {
             Output::Print(u"Signature #%u: ", i);
             sig->Dump();
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 }

@@ -18,7 +18,7 @@ namespace UnifiedRegex
     va_start(argptr, form);                                         \
     int len = _vsnwprintf_s(buf, bufLen, _TRUNCATE, form, argptr);  \
     if (len < 0 || len >= bufLen - 1)                               \
-        Output::Print(u"<not enough buffer space to format>");   \
+        Output::Print("<not enough buffer space to format>");   \
     else                                                            \
     {                                                               \
         if (len > 0)                                                \
@@ -57,7 +57,7 @@ namespace UnifiedRegex
     {
         CheckForNewline();
         if (str == 0)
-            Output::Print(u"null");
+            Output::Print("null");
         else
         {
             Output::Print(u"\"");
@@ -82,12 +82,12 @@ namespace UnifiedRegex
     void DebugWriter::PrintQuotedChar(const Char c)
     {
         CheckForNewline();
-        Output::Print(u"'");
+        Output::Print("'");
         if (c == '\'')
-            Output::Print(u"\\'");
+            Output::Print("\\'");
         else
             PrintEscapedChar(c);
-        Output::Print(u"'");
+        Output::Print("'");
     }
 
     void DebugWriter::EOL()
@@ -108,7 +108,7 @@ namespace UnifiedRegex
 
     void DebugWriter::Flush()
     {
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
         nlPending = false;
     }

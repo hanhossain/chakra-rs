@@ -1137,7 +1137,7 @@ Func::EndPhase(Js::Phase tag, bool dump)
     if(dump && (PHASE_DUMP(tag, this)
         || PHASE_DUMP(Js::BackEndPhase, this)))
     {
-        Output::Print(u"-----------------------------------------------------------------------------\n");
+        Output::Print("-----------------------------------------------------------------------------\n");
 
         if (IsLoopBody())
         {
@@ -1954,7 +1954,7 @@ Func::ShouldDoLazyBailOut() const
 void
 Func::DumpHeader()
 {
-    Output::Print(u"-----------------------------------------------------------------------------\n");
+    Output::Print("-----------------------------------------------------------------------------\n");
 
     DumpFullFunctionName();
 
@@ -1967,7 +1967,7 @@ Func::DumpHeader()
     }
     else
     {
-        Output::Print(u"\n\n");
+        Output::Print("\n\n");
     }
 }
 

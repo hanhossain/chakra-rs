@@ -4219,18 +4219,18 @@ Instr::DumpTestTrace()
 
     if (this->m_opcode == Js::OpCode::NewScFunc || this->m_opcode == Js::OpCode::NewScGenFunc)
     {
-        Output::Print(u"\n");
+        Output::Print("\n");
         return;
     }
     Opnd * src1 = this->GetSrc1();
     if (!src1)
     {
-        Output::Print(u"\n");
+        Output::Print("\n");
         return;
     }
     if (src1->GetKind() != OpndKindSym)
     {
-        Output::Print(u"\n");
+        Output::Print("\n");
         return;
     }
 
@@ -4257,7 +4257,7 @@ Instr::DumpTestTrace()
         default:
             break;
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
 }
 
@@ -4287,7 +4287,7 @@ Instr::DumpFieldCopyPropTestTrace(bool inLandingPad)
     case Js::OpCode::TypeofElem:
 
         char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-        Output::Print(u"TestTrace fieldcopyprop");
+        Output::Print("TestTrace fieldcopyprop");
         if (inLandingPad)
         {
             Output::Print(u" [%s]", u"in landing pad");
@@ -4336,7 +4336,7 @@ Instr::DumpByteCodeOffset()
     if (m_func->HasByteCodeOffset())
     {
         Output::SkipToColumn(78);
-        Output::Print(u"#");
+        Output::Print("#");
         if (this->m_number != Js::Constants::NoByteCodeOffset)
         {
             Output::Print(u"%04x", this->m_number);
@@ -4487,7 +4487,7 @@ Instr::Dump(IRDumpFlags flags)
         if ((dumpMarkTempNumber && (this->dstIsTempNumberTransferred || this->dstIsTempNumber))
             || (dumpMarkTempObject && this->dstIsTempObject))
         {
-            Output::Print(u"[");
+            Output::Print("[");
 
             if (dumpMarkTempNumber)
             {
@@ -4496,11 +4496,11 @@ Instr::Dump(IRDumpFlags flags)
                     if (this->dstIsTempNumberTransferred)
                     {
                         Assert(this->dstIsTempNumber);
-                        Output::Print(u"x");
+                        Output::Print("x");
                     }
                     else if (this->dstIsTempNumber)
                     {
-                        Output::Print(u"#");
+                        Output::Print("#");
                     }
                 }
             }
@@ -4510,23 +4510,23 @@ Instr::Dump(IRDumpFlags flags)
                 {
                     if (this->dstIsTempObject)
                     {
-                        Output::Print(u"o");
+                        Output::Print("o");
                     }
                 }
             }
 
-            Output::Print(u"tmp]");
+            Output::Print("tmp]");
         }
         if(PHASE_DUMP(Js::TrackNegativeZeroPhase, m_func->GetTopFunc()) && !ShouldCheckForNegativeZero())
         {
-            Output::Print(u"[-0]");
+            Output::Print("[-0]");
         }
         if (PHASE_DUMP(Js::TypedArrayVirtualPhase, m_func->GetTopFunc()) && (!IsDstNotAlwaysConvertedToInt32() || !IsDstNotAlwaysConvertedToNumber()))
         {
             if (!IsDstNotAlwaysConvertedToInt32())
-                Output::Print(u"[->i]");
+                Output::Print("[->i]");
             else
-                Output::Print(u"[->n]");
+                Output::Print("[->n]");
 
         }
         if(PHASE_DUMP(Js::TrackIntOverflowPhase, m_func->GetTopFunc()))
@@ -4538,19 +4538,19 @@ Instr::Dump(IRDumpFlags flags)
                 if(ShouldCheckForNon32BitOverflow())
                     Output::Print(u"[OF %d]", ignoreOverflowBitCount);
                 else
-                    Output::Print(u"[OF]");
+                    Output::Print("[OF]");
             }
         }
 
         if (this->isSafeToSpeculate)
         {
             Output::SkipToColumn(19);
-            Output::Print(u"<==");
+            Output::Print("<==");
         }
         else
         {
             Output::SkipToColumn(20);
-            Output::Print(u"=");
+            Output::Print("=");
         }
     }
 
@@ -4584,7 +4584,7 @@ Instr::Dump(IRDumpFlags flags)
             }
             else
             {
-                Output::Print(u"??");
+                Output::Print("??");
             }
         }
         else
@@ -4672,7 +4672,7 @@ PrintByteCodeOffsetEtc:
     }
     if ((flags & IRDumpFlags_SkipEndLine) == 0)
     {
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
 }
 
@@ -4716,11 +4716,11 @@ LabelInstr::Dump(IRDumpFlags flags)
     }
     if (this->isOpHelper)
     {
-        Output::Print(u" [helper]");
+        Output::Print(" [helper]");
     }
     if (this->m_isLoopTop)
     {
-        Output::Print(u" >>>>>>>>>>>>>  LOOP TOP  >>>>>>>>>>>>>");
+        Output::Print(" >>>>>>>>>>>>>  LOOP TOP  >>>>>>>>>>>>>");
     }
     if (this->IsProfiledLabelInstr())
     {
@@ -4728,13 +4728,13 @@ LabelInstr::Dump(IRDumpFlags flags)
         switch (this->AsProfiledLabelInstr()->loopImplicitCallFlags)
         {
         case Js::ImplicitCall_HasNoInfo:
-            Output::Print(u"Implicit call: ???");
+            Output::Print("Implicit call: ???");
             break;
         case Js::ImplicitCall_None:
-            Output::Print(u"Implicit call: no");
+            Output::Print("Implicit call: no");
             break;
         default:
-            Output::Print(u"Implicit call: yes");
+            Output::Print("Implicit call: yes");
             break;
         }
     }
@@ -4742,7 +4742,7 @@ LabelInstr::Dump(IRDumpFlags flags)
     {
         this->DumpByteCodeOffset();
     }
-    Output::Print(u"\n");
+    Output::Print("\n");
 }
 
 
@@ -4774,7 +4774,7 @@ Instr::Dump(int window)
     Instr * instr;
     int i;
 
-    Output::Print(u"-------------------------------------------------------------------------------");
+    Output::Print("-------------------------------------------------------------------------------");
 
     for (i = 0, instr = this; (instr->m_prev != NULL && i < window/2); instr = instr->m_prev, ++i)
     {} // Nothing
@@ -4784,7 +4784,7 @@ Instr::Dump(int window)
     {
         if (instr == this)
         {
-            Output::Print(u"=>");
+            Output::Print("=>");
         }
         instr->Dump();
     }
@@ -4813,7 +4813,7 @@ Instr::DumpString()
 void
 Instr::DumpRange(Instr *instrEnd)
 {
-    Output::Print(u"-------------------------------------------------------------------------------\n");
+    Output::Print("-------------------------------------------------------------------------------\n");
 
     FOREACH_INSTR_IN_RANGE(instr, this, instrEnd)
     {
@@ -4821,7 +4821,7 @@ Instr::DumpRange(Instr *instrEnd)
     }
     NEXT_INSTR_IN_RANGE;
 
-    Output::Print(u"-------------------------------------------------------------------------------\n");
+    Output::Print("-------------------------------------------------------------------------------\n");
 }
 
 #endif

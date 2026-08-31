@@ -47,7 +47,7 @@ typedef void* FunctionTableHandle;
                 Output::Print(u"[%s] ", this->debugName); \
             } \
             Output::Print(format, ##__VA_ARGS__);         \
-            Output::Print(u"\n"); \
+            Output::Print("\n"); \
             Output::Flush(); \
         } \
     }

@@ -348,11 +348,11 @@ void
 BVFixed::Dump() const
 {
     bool hasBits = false;
-    Output::Print(u"[  ");
+    Output::Print("[  ");
     for(BVIndex i=0; i < this->WordCount(); i++)
     {
         hasBits = this->data[i].Dump(i * BVUnit::BitsPerWord, hasBits);
     }
-    Output::Print(u"]\n");
+    Output::Print("]\n");
 }
 #endif

@@ -829,10 +829,10 @@ namespace Js
 #ifdef PROFILE_TYPES
     void ScriptContext::ProfileTypes()
     {
-        Output::Print(u"===============================================================================\n");
+        Output::Print("===============================================================================\n");
         Output::Print(u"Types Profile %s\n", this->url);
-        Output::Print(u"-------------------------------------------------------------------------------\n");
-        Output::Print(u"Dynamic Type Conversions:\n");
+        Output::Print("-------------------------------------------------------------------------------\n");
+        Output::Print("Dynamic Type Conversions:\n");
         Output::Print(u"    Null to Simple                 %8d\n", convertNullToSimpleCount);
         Output::Print(u"    Deferred to SimpleMap          %8d\n", convertDeferredToSimpleDictionaryCount);
         Output::Print(u"    Simple to Map                  %8d\n", convertSimpleToDictionaryCount);
@@ -857,7 +857,7 @@ namespace Js
         Output::Print(u"    Path Promotions                %8d\n", promoteCount);
         Output::Print(u"    Path Length (max)              %8d\n", maxPathLength);
         Output::Print(u"    PathTypeHandlers               %8d\n", pathTypeHandlerCount);
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Print(u"Type Statistics:                   %8s   %8s\n", u"Types", u"Instances");
         Output::Print(u"    Undefined                      %8d   %8d\n", typeCount[TypeIds_Undefined], instanceCount[TypeIds_Undefined]);
         Output::Print(u"    Null                           %8d   %8d\n", typeCount[TypeIds_Null], instanceCount[TypeIds_Null]);
@@ -905,7 +905,7 @@ namespace Js
         Output::Print(u"    Generator                      %8d   %8d\n", typeCount[TypeIds_Generator], instanceCount[TypeIds_Generator]);
         Output::Print(u"    AsyncGenerator                 %8d   %8d\n", typeCount[TypeIds_AsyncGenerator], instanceCount[TypeIds_AsyncGenerator]);
 #if !DBG
-        Output::Print(u"    ** Instance statistics only available on debug builds...\n");
+        Output::Print("    ** Instance statistics only available on debug builds...\n");
 #endif
         Output::Flush();
     }
@@ -915,7 +915,7 @@ namespace Js
 #ifdef PROFILE_OBJECT_LITERALS
     void ScriptContext::ProfileObjectLiteral()
     {
-        Output::Print(u"===============================================================================\n");
+        Output::Print("===============================================================================\n");
         Output::Print(u"    Object Lit Instances created.. %d\n", objectLiteralInstanceCount);
         Output::Print(u"    Object Lit Path Types......... %d\n", objectLiteralPathCount);
         Output::Print(u"    Object Lit Simple Map......... %d\n", objectLiteralSimpleDictionaryCount);

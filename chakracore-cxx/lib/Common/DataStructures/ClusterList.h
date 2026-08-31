@@ -392,7 +392,7 @@ public:
     void Dump()
     {
         bool printed = false;
-        Output::Print(u"[");
+        Output::Print("[");
         for (indexType i = 0; i < maxIndex / numPerSegment; i++)
         {
             if (backingStore[i] == nullptr)
@@ -414,7 +414,7 @@ public:
                 }
             }
         }
-        Output::Print(u"]\n");
+        Output::Print("]\n");
     }
 #endif
 };

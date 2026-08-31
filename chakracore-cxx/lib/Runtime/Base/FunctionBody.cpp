@@ -3417,7 +3417,7 @@ namespace Js
             {
                 if (Configuration::Global.flags.Dump.IsEnabled(DynamicProfilePhase, this->GetSourceContextId(), this->GetLocalFunctionId()))
                 {
-                    Output::Print(u"Loaded:");
+                    Output::Print("Loaded:");
                     this->dynamicProfileInfo->Dump(this);
                 }
             }
@@ -4456,7 +4456,7 @@ namespace Js
         }
         if( source != sourceInfoSrc )
         {
-            Output::Print(u"\nDETECTED MISMATCH:\n");
+            Output::Print("\nDETECTED MISMATCH:\n");
             Output::Print(u"GetUtf8SourceInfo()->GetSource(): 0x%08X: %.*s ...\n", sourceInfo, 16, sourceInfo);
             Output::Print(u"GetStartOfDocument():             0x%08X: %.*s ...\n", source, 16, source);
 
@@ -4484,7 +4484,7 @@ namespace Js
                 Output::Print(u"%lc", utf16Buf[i]);
             }
             HeapDeleteArray(utf8SrcEndIdx - utf8SrcStartIdx + 2, utf16Buf);
-            Output::Print(u"\n");
+            Output::Print("\n");
             Output::Print(u"  Col %4d:%s^\n", col + 1, ((col+1)<10000) ? u" " : u"");
 
             if (color != 0)
@@ -5356,7 +5356,7 @@ namespace Js
             });
         }
 
-        Output::Print(u"\n");
+        Output::Print("\n");
     }
 
     // Returns the debugger scope type in string format.
@@ -6671,7 +6671,7 @@ namespace Js
             Output::Print(u", event: %S", eventDescription);
         }
 
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 
@@ -8196,7 +8196,7 @@ namespace Js
 #if DBG
                 Output::Print(u"On stack lazy bailout. Property: %s Old IP: 0x%x New IP: 0x%x ", propertyRecord->GetBuffer(), instructionPointer, lazyBailOutThunkAddress);
                 record.Dump(functionBody);
-                Output::Print(u"\n");
+                Output::Print("\n");
 #endif
             }
         }

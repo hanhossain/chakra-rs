@@ -2721,7 +2721,7 @@ using namespace Js;
             Output::Print(u"CtorCache: before invalidating cache (0x%p) for ctor %s (%s): ", PointerValue(this->constructorCache), ctorName,
                 body ? body->GetDebugNumberSet(debugStringBuffer) : u"(null)");
             this->constructorCache->Dump();
-            Output::Print(u"\n");
+            Output::Print("\n");
             Output::Flush();
         }
 #endif
@@ -2739,7 +2739,7 @@ using namespace Js;
             Output::Print(u"CtorCache: after invalidating cache (0x%p) for ctor %s (%s): ", PointerValue(this->constructorCache), ctorName,
                 body ? body->GetDebugNumberSet(debugStringBuffer) : u"(null)");
             this->constructorCache->Dump();
-            Output::Print(u"\n");
+            Output::Print("\n");
             Output::Flush();
         }
 #endif

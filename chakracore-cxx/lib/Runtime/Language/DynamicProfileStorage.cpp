@@ -678,7 +678,7 @@ bool DynamicProfileStorage::CreateCacheCatalog()
         || !catalogFile.Write(0)) // count
     {
         DisableCacheDir();
-        Output::Print(u"ERROR: DynamicProfileStorage: Unable to create cache catalog\n");
+        Output::Print("ERROR: DynamicProfileStorage: Unable to create cache catalog\n");
         Output::Flush();
         return false;
     }
@@ -733,7 +733,7 @@ bool DynamicProfileStorage::AppendCacheCatalog(__in_z char16_t const * url)
     if (version > FileFormatVersion)
     {
         DisableCacheDir();
-        Output::Print(u"ERROR: DynamicProfileStorage: Existing cache catalog has a newer format\n");
+        Output::Print("ERROR: DynamicProfileStorage: Existing cache catalog has a newer format\n");
         Output::Flush();
         return false;
     }
@@ -802,7 +802,7 @@ bool DynamicProfileStorage::LoadCacheCatalog()
     if (version > FileFormatVersion)
     {
         DisableCacheDir();
-        Output::Print(u"ERROR: DynamicProfileStorage: Existing cache catalog has a newer format.\n");
+        Output::Print("ERROR: DynamicProfileStorage: Existing cache catalog has a newer format.\n");
         Output::Flush();
         return false;
     }
@@ -825,14 +825,14 @@ bool DynamicProfileStorage::LoadCacheCatalog()
         if (!catalogFile.Seek(lastOffset))
         {
             catalogFile.Close();
-            Output::Print(u"ERROR: DynamicProfileStorage: Unable to seek to last known offset\n");
+            Output::Print("ERROR: DynamicProfileStorage: Unable to seek to last known offset\n");
             Output::Flush();
             return CreateCacheCatalog();
         }
     }
     else if (creationTime != 0)
     {
-        Output::Print(u"WARNING: DynamicProfileStorage: Reloading full catalog\n");
+        Output::Print("WARNING: DynamicProfileStorage: Reloading full catalog\n");
         Output::Flush();
     }
 
@@ -899,7 +899,7 @@ void DynamicProfileStorage::ClearCacheCatalog()
 #if DBG_DUMP
             if (DynamicProfileStorage::DoTrace())
             {
-                Output::Print(u"TRACE: DynamicProfileStorage: Cache dir clears\n");
+                Output::Print("TRACE: DynamicProfileStorage: Cache dir clears\n");
                 Output::Flush();
             }
 #endif

@@ -586,7 +586,7 @@ namespace Js
         {
             Assert(this->u.accessor.type == 0);
             Assert(this->u.accessor.slotIndex == 0);
-            Output::Print(u"uninitialized");
+            Output::Print("uninitialized");
         }
     }
 
@@ -855,7 +855,7 @@ namespace Js
             {
                 Output::Print(u"  %d: ", i);
                 inlineCaches[i].Dump();
-                Output::Print(u"\n");
+                Output::Print("\n");
             }
         }
     }

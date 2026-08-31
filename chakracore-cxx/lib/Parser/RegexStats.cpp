@@ -189,8 +189,8 @@ namespace UnifiedRegex
     {
         RegexStats totals(0);
 
-        Output::Print(u"Regular Expression Statistics\n");
-        Output::Print(u"=============================\n");
+        Output::Print("Regular Expression Statistics\n");
+        Output::Print("=============================\n");
 
         for (int i = 0; i < map->Count(); i++)
             totals.Add(map->GetValueAt(i));

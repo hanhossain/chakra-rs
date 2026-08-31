@@ -119,7 +119,7 @@ void MarkContext::ScanMemory(void ** obj, size_t byteCount
 #if DBG_DUMP
     if (recycler->forceTraceMark || recycler->GetRecyclerFlagsTable().Trace.IsEnabled(Js::MarkPhase))
     {
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 #endif

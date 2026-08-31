@@ -639,7 +639,7 @@ using namespace Js;
 
         if(PHASE_TRACE_StringConcat)
         {
-            Output::Print(u"CompoundString::SwitchToPointerMode()\n");
+            Output::Print("CompoundString::SwitchToPointerMode()\n");
             Output::Flush();
         }
     }

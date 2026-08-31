@@ -210,7 +210,7 @@ Encoder::Encode()
                 {
                     Output::Print(u"%02X ", *current);
                 }
-                Output::Print(u"\n");
+                Output::Print("\n");
                 Output::Flush();
             }
 #endif
@@ -324,9 +324,9 @@ Encoder::Encode()
                     Output::Print(u"%s", IR::GetMethodName(opnd->AsHelperCallOpnd()->m_fnHelper));
                     break;
                 case IR::OpndKindSym:
-                    Output::Print(u"SYM(");
+                    Output::Print("SYM(");
                     opnd->Dump(IRDumpFlags_SimpleForm, localScopeFuncForLambda);
-                    Output::Print(u")");
+                    Output::Print(")");
                     break;
                 case IR::OpndKindReg:
                     Output::Print(u"%S", RegNames[opnd->AsRegOpnd()->GetReg()]);
@@ -339,7 +339,7 @@ Encoder::Encode()
                     IR::IndirOpnd* indirOpnd = opnd->AsIndirOpnd();
                     IR::RegOpnd* baseOpnd = indirOpnd->GetBaseOpnd();
                     IR::RegOpnd* indexOpnd = indirOpnd->GetIndexOpnd();
-                    Output::Print(u"[");
+                    Output::Print("[");
                     bool hasPrintedComponent = false;
                     if (baseOpnd != nullptr)
                     {
@@ -350,14 +350,14 @@ Encoder::Encode()
                     {
                         if (hasPrintedComponent)
                         {
-                            Output::Print(u" + ");
+                            Output::Print(" + ");
                         }
                         Output::Print(u"%S * %u", RegNames[indexOpnd->GetReg()], indirOpnd->GetScale());
                         hasPrintedComponent = true;
                     }
                     if (hasPrintedComponent)
                     {
-                        Output::Print(u" + ");
+                        Output::Print(" + ");
                     }
                     Output::Print(u"(%i)]", indirOpnd->GetOffset());
                     break;
@@ -1377,8 +1377,8 @@ void Encoder::CopyMaps(OffsetList **m_origInlineeFrameRecords
 #if DBG_DUMP
 void Encoder::DumpInlineeFrameMap(size_t baseAddress)
 {
-    Output::Print(u"Inlinee frame info mapping\n");
-    Output::Print(u"---------------------------------------\n");
+    Output::Print("Inlinee frame info mapping\n");
+    Output::Print("---------------------------------------\n");
     m_inlineeFrameMap->Map([=](uint index, NativeOffsetInlineeFramePair& pair) {
         Output::Print(u"%Ix", baseAddress + pair.offset);
         Output::SkipToColumn(20);
@@ -1388,9 +1388,9 @@ void Encoder::DumpInlineeFrameMap(size_t baseAddress)
         }
         else
         {
-            Output::Print(u"<NULL>");
+            Output::Print("<NULL>");
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
     });
 }
 #endif
@@ -1407,7 +1407,7 @@ Encoder::SaveToLazyBailOutRecordList(IR::Instr* instr, uint32_t currentOffset)
     {
         Output::Print(u"Offset: %u Instr: ", currentOffset);
         instr->Dump();
-        Output::Print(u"Bailout label: ");
+        Output::Print("Bailout label: ");
         bailOutInfo->bailOutInstr->Dump();
     }
 #endif

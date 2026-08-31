@@ -18,7 +18,7 @@ namespace Js
         StatementReader<FunctionBody::StatementMapList> statementReader;
         statementReader.Create(body);
         body->DumpFullFunctionName();
-        Output::Print(u" Asm.js (");
+        Output::Print(" Asm.js (");
         AsmJsFunctionInfo* funcInfo = body->GetAsmJsFunctionInfo();
         const ArgSlot argCount = funcInfo->GetArgCount();
         for (ArgSlot i = 0; i < argCount; i++)
@@ -71,7 +71,7 @@ namespace Js
             }
         }
 
-        Output::Print(u") ");
+        Output::Print(") ");
         Output::Print(u"(size: %d [%d])\n", body->GetByteCodeCount(), body->GetByteCodeWithoutLDACount());
 
         if (!typedRegister && asmFunc)
@@ -91,7 +91,7 @@ namespace Js
 
         if (typedRegister)
         {
-            Output::Print(u"    Implicit Arg Ins:\n    ======== =====\n    ");
+            Output::Print("    Implicit Arg Ins:\n    ======== =====\n    ");
             uint32_t iArgs[WAsmJs::LIMIT];
             typedRegister->GetArgumentStartIndex(iArgs);
             uint32_t iArg = iArgs[WAsmJs::INT32];
@@ -126,9 +126,9 @@ namespace Js
                 {
                     Assert(UNREACHED);
                 }
-                Output::Print(u"\n    ");
+                Output::Print("\n    ");
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
 
         uint32_t statementIndex = 0;
@@ -149,14 +149,14 @@ namespace Js
             }
             Output::Print(u"    %04x %2s", byteOffset, layoutSize == LargeLayout ? u"L-" : layoutSize == MediumLayout ? u"M-" : u"");
             DumpOp(op, layoutSize, reader, body);
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
         if (statementReader.AtStatementBoundary(&reader))
         {
             body->PrintStatementSourceLine(statementIndex);
             statementIndex = statementReader.MoveNextStatementBoundary();
         }
-        Output::Print(u"\n");
+        Output::Print("\n");
         Output::Flush();
     }
 
@@ -174,7 +174,7 @@ namespace Js
             {
                 Output::Print(u" %s%d  ", buf, i);
                 printValFunc(*constTable);
-                Output::Print(u"\n    ");
+                Output::Print("\n    ");
                 ++constTable;
             }
         }
@@ -216,7 +216,7 @@ namespace Js
                     break;
                 }
             }
-            Output::Print(u"\n");
+            Output::Print("\n");
         }
     }
 
@@ -564,7 +564,7 @@ namespace Js
         if (data->Return != Constants::NoRegister)
         {
             DumpReg((RegSlot)data->Return);
-            Output::Print(u"=");
+            Output::Print("=");
         }
         Output::Print(u" R%d(ArgCount: %d)", data->Function, data->ArgCount);
     }
@@ -575,7 +575,7 @@ namespace Js
         if (data->Return != Constants::NoRegister)
         {
             DumpReg((RegSlot)data->Return);
-            Output::Print(u"=");
+            Output::Print("=");
         }
         Output::Print(u" R%d(ArgCount: %d, profileId: %d)", data->Function, data->ArgCount, data->profileId);
     }

@@ -82,7 +82,7 @@ namespace Js {
     {
         if (CONFIG_FLAG(PrintSystemException))
         {
-            Output::Print(u"SystemException: OutOfMemory\n");
+            Output::Print("SystemException: OutOfMemory\n");
             Output::Flush();
         }
         if (JsUtil::ExternalApi::RaiseOutOfMemoryIfScriptActive())
@@ -96,7 +96,7 @@ namespace Js {
     {
         if (CONFIG_FLAG(PrintSystemException))
         {
-            Output::Print(u"SystemException: StackOverflow\n");
+            Output::Print("SystemException: StackOverflow\n");
             Output::Flush();
         }
         if (JsUtil::ExternalApi::RaiseStackOverflowIfScriptActive(scriptContext, returnAddress))

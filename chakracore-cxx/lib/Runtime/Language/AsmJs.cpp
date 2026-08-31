@@ -1123,7 +1123,7 @@ AsmJsCompilationError:
         if (PHASE_TRACE1(AsmjsPhase) || PHASE_TESTTRACE1(AsmjsPhase))
         {
             Output::PrintBuffer(buf, size);
-            Output::Print(u"\n");
+            Output::Print("\n");
             Output::Flush();
         }
     }
