@@ -87,5 +87,110 @@ namespace Js
         return aRight == 0 ? 0 : (aLeft == INT64_MIN && aRight == -1) ? INT64_MIN : aLeft % aRight;
     }
     template<> bool AsmJsMath::RemWouldTrap(unsigned long aLeft, unsigned long aRight) { return aRight == 0 || (aLeft == INT64_MIN && aRight == -1); }
+
+    int AsmJsMath::Not( int aLeft )
+    {
+        return ~aLeft;
+    }
+
+    int AsmJsMath::LogNot( int aLeft )
+    {
+        return !aLeft;
+    }
+
+    int AsmJsMath::ToBool( int aLeft )
+    {
+        return !!aLeft;
+    }
+
+    int AsmJsMath::Clz32( int value)
+    {
+        uint32_t index;
+        if (_BitScanReverse(&index, value))
+        {
+            return 31 - index;
+        }
+        return 32;
+    }
+
+    template<typename T>
+    T minCheckNan(T aLeft, T aRight)
+    {
+        if (NumberUtilities::IsNan(aLeft) || NumberUtilities::IsNan(aRight))
+        {
+            return (T)NumberConstants::NaN;
+        }
+        if (aLeft < aRight)
+        {
+            return aLeft;
+        }
+        if (aLeft == aRight)
+        {
+            if (aRight == 0 && JavascriptNumber::IsNegZero(aLeft))
+            {
+                return aLeft;
+            }
+        }
+        return aRight;
+    }
+
+    template<>
+    double AsmJsMath::Min<double>(double aLeft, double aRight)
+    {
+        return minCheckNan(aLeft, aRight);
+    }
+
+    template<>
+    float AsmJsMath::Min<float>(float aLeft, float aRight)
+    {
+        return minCheckNan(aLeft, aRight);
+    }
+
+    template<typename T>
+    T maxCheckNan(T aLeft, T aRight)
+    {
+        if (NumberUtilities::IsNan(aLeft) || NumberUtilities::IsNan(aRight))
+        {
+            return (T)NumberConstants::NaN;
+        }
+        if (aLeft > aRight)
+        {
+            return aLeft;
+        }
+        if (aLeft == aRight)
+        {
+            if (aLeft == 0 && JavascriptNumber::IsNegZero(aRight))
+            {
+                return aLeft;
+            }
+        }
+        return aRight;
+    }
+
+    template<>
+    double AsmJsMath::Max<double>(double aLeft, double aRight)
+    {
+        return maxCheckNan(aLeft, aRight);
+    }
+
+    template<>
+    float AsmJsMath::Max<float>(float aLeft, float aRight)
+    {
+        return maxCheckNan(aLeft, aRight);
+    }
+
+    template<>
+    double AsmJsMath::Abs<double>(double aLeft)
+    {
+        unsigned long x = (*(unsigned long*)(&aLeft) & 0x7FFFFFFFFFFFFFFF);
+        return *(double*)(&x);
+    }
+
+    template<>
+    float AsmJsMath::Abs<float>(float aLeft)
+    {
+        uint32_t x = (*(uint32_t*)(&aLeft) & 0x7FFFFFFF);
+        return *(float*)(&x);
+    }
 }
 #pragma prefast(pop

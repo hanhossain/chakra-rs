@@ -5,87 +5,6 @@
 
 namespace Js
 {
-
-    template<typename T>
-    inline T minCheckNan(T aLeft, T aRight)
-    {
-        if (NumberUtilities::IsNan(aLeft) || NumberUtilities::IsNan(aRight))
-        {
-            return (T)NumberConstants::NaN;
-        }
-        if (aLeft < aRight)
-        {
-            return aLeft;
-        }
-        if (aLeft == aRight)
-        {
-            if (aRight == 0 && JavascriptNumber::IsNegZero(aLeft))
-            {
-                return aLeft;
-            }
-        }
-        return aRight;
-    }
-
-    template<>
-    inline double AsmJsMath::Min<double>(double aLeft, double aRight)
-    {
-        return minCheckNan(aLeft, aRight);
-    }
-
-    template<>
-    inline float AsmJsMath::Min<float>(float aLeft, float aRight)
-    {
-        return minCheckNan(aLeft, aRight);
-    }
-
-    template<typename T>
-    inline T maxCheckNan(T aLeft, T aRight)
-    {
-        if (NumberUtilities::IsNan(aLeft) || NumberUtilities::IsNan(aRight))
-        {
-            return (T)NumberConstants::NaN;
-        }
-        if (aLeft > aRight)
-        {
-            return aLeft;
-        }
-        if (aLeft == aRight)
-        {
-            if (aLeft == 0 && JavascriptNumber::IsNegZero(aRight))
-            {
-                return aLeft;
-            }
-        }
-        return aRight;
-    }
-
-    template<>
-    inline double AsmJsMath::Max<double>(double aLeft, double aRight)
-    {
-        return maxCheckNan(aLeft, aRight);
-    }
-
-    template<>
-    inline float AsmJsMath::Max<float>(float aLeft, float aRight)
-    {
-        return maxCheckNan(aLeft, aRight);
-    }
-
-    template<>
-    inline double AsmJsMath::Abs<double>(double aLeft)
-    {
-        unsigned long x = (*(unsigned long*)(&aLeft) & 0x7FFFFFFFFFFFFFFF);
-        return *(double*)(&x);
-    }
-
-    template<>
-    inline float AsmJsMath::Abs<float>(float aLeft)
-    {
-        uint32_t x = (*(uint32_t*)(&aLeft) & 0x7FFFFFFF);
-        return *(float*)(&x);
-    }
-
     template<typename T>
     inline T AsmJsMath::Add( T aLeft, T aRight )
     {
@@ -145,30 +64,5 @@ namespace Js
     inline T AsmJsMath::Neg( T aLeft )
     {
         return -aLeft;
-    }
-
-    inline int AsmJsMath::Not( int aLeft )
-    {
-        return ~aLeft;
-    }
-
-    inline int AsmJsMath::LogNot( int aLeft )
-    {
-        return !aLeft;
-    }
-
-    inline int AsmJsMath::ToBool( int aLeft )
-    {
-        return !!aLeft;
-    }
-
-    inline int AsmJsMath::Clz32( int value)
-    {
-        uint32_t index;
-        if (_BitScanReverse(&index, value))
-        {
-            return 31 - index;
-        }
-        return 32;
     }
 }
