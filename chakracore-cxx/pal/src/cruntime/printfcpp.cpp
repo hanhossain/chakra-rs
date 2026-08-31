@@ -54,38 +54,23 @@ Function:
 
 static int Internal_Convertfwrite(const void *buffer, size_t count)
 {
-    int ret;
+    rust::String str;
+    try
+    {
+        str = {static_cast<const char16_t *>(buffer), count};
+    }
+    catch (const rust::Error& err)
+    {
+        chakra::Logger::error(std::format("Failed to convert string to rust. Exception: {}", err.what()));
+        return -1;
+    }
 
-    int nsize;
-    char *newBuff = 0;
-    nsize = WideCharToMultiByte(static_cast<const char16_t *>(buffer), count, 0, 0);
-    if (!nsize)
+    const int ret = std::fwrite(str.c_str(), 1, str.length(), stdout);
+    if (ret < str.length())
     {
-        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
+        chakra::Logger::error("Failed to write whole buffer");
         return -1;
     }
-    newBuff = static_cast<char *>(malloc(nsize));
-    if (!newBuff)
-    {
-        ERROR("malloc failed\n");
-        CorUnix::CPalThread::SetLastError(ERROR_NOT_ENOUGH_MEMORY);
-        return -1;
-    }
-    nsize = WideCharToMultiByte(static_cast<const char16_t *>(buffer), count, newBuff, nsize);
-    if (!nsize)
-    {
-        chakra::Logger::error(std::format("WideCharToMultiByte failed.  Error is {}\n", GetLastError()));
-        free(newBuff);
-        return -1;
-    }
-    ret = std::fwrite(newBuff, 1, nsize, stdout);
-    if (ret < nsize)
-    {
-        ERROR("InternalFwrite did not write the whole buffer. Error is %d\n", iError);
-        free(newBuff);
-        return -1;
-    }
-    free(newBuff);
     return ret;
 }
 
