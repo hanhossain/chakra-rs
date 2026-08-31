@@ -38,15 +38,6 @@ Function :
 --*/
 int UTF8ToUnicode(const char *lpSrcStr, int cchSrc, char16_t *lpDestStr, int cchDest);
 
-
-/*++
-Function :
-    UnicodeToUTF8
-
-    Convert a string from UTF-16 (UCS-2) to UTF-8
---*/
-int UnicodeToUTF8(const char16_t* lpSrcStr, int cchSrc, char* lpDestStr, int cchDest);
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus
