@@ -418,12 +418,6 @@ namespace Js
         const byte* ProcessWithDebuggingExtendedLargeLayoutPrefix(const byte* ip);
         const byte* ProcessAsmJsExtendedLargeLayoutPrefix(const byte* ip);
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        Var ProcessWithDebugging();
-        Var DebugProcess();
-        bool IsInDebugMode() const { return this->GetFunctionBody()->IsInDebugMode(); }
-#endif
-
         // This will be called for reseting outs when resume from break on error happened
         void ResetOut();
 

@@ -1044,22 +1044,11 @@ namespace Js
         DoThrow(exceptionObject->CloneIfStaticExceptionObject(scriptContext), scriptContext);
     }
 
+    // TODO (hanhossain): remove
     void JavascriptExceptionOperators::DispatchExceptionToDebugger(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext)
     {
         Assert(exceptionObject != NULL);
         Assert(scriptContext != NULL);
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (scriptContext->IsScriptContextInDebugMode()
-            && scriptContext->GetDebugContext()->GetProbeContainer()->HasAllowedForException(exceptionObject))
-        {
-            InterpreterHaltState haltState(STOP_EXCEPTIONTHROW, /*executingFunction*/nullptr);
-
-            haltState.exceptionObject = exceptionObject;
-
-            scriptContext->GetDebugContext()->GetProbeContainer()->DispatchExceptionBreakpoint(&haltState);
-        }
-#endif
     }
 
     void JavascriptExceptionOperators::ThrowExceptionObject(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger, void * returnAddress, bool resetStack)

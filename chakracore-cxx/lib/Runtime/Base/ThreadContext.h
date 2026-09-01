@@ -13,11 +13,6 @@ namespace Js
     class ScriptContext;
     struct InlineCache;
     class CodeGenRecyclableData;
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    class DebugManager;
-    struct ReturnedValue;
-    typedef JsUtil::List<ReturnedValue*> ReturnedValueList;
-#endif
     class DelayedFreeArrayBuffer;
 }
 
@@ -799,10 +794,6 @@ private:
     const Js::PropertyRecord * emptyStringPropertyRecord;
     bool noScriptScope;
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    Js::DebugManager * debugManager;
-#endif
-
     static uint const MaxTemporaryArenaAllocators = 5;
 
     static std::recursive_mutex s_csThreadContext;
@@ -956,11 +947,6 @@ private:
         // Used to store a mapping of string to Symbol for cross-realm Symbol registration
         // See ES6 (draft 22) 19.4.2.2
         typename WriteBarrierFieldTypeTraits<SymbolRegistrationMap*>::Type symbolRegistrationMap;
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        // Just holding the reference to the returnedValueList of the stepController. This way that list will not get recycled prematurely.
-        typename WriteBarrierFieldTypeTraits<Js::ReturnedValueList *>::Type returnedValueList;
-#endif
 
         typename WriteBarrierFieldTypeTraits<uint>::Type constructorCacheInvalidationCount;
 
@@ -1276,20 +1262,6 @@ public:
     const char16_t* GetAutoProxyName() const { return recyclableData->autoProxyName; }
     Js::PropertyId handlerPropertyId = Js::Constants::NoProperty;
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    void SetReturnedValueList(Js::ReturnedValueList *returnedValueList)
-    {
-        Assert(this->recyclableData != nullptr);
-        this->recyclableData->returnedValueList = returnedValueList;
-    }
-#if DBG
-    void EnsureNoReturnedValueList()
-    {
-        Assert(this->recyclableData == nullptr || this->recyclableData->returnedValueList == nullptr);
-    }
-#endif
-#endif
-
     uint GetScriptContextCount() const { return this->scriptContextCount; }
     Js::ScriptContext* GetScriptContextList() const { return this->scriptContextList; }
     bool WasAnyScriptContextEverRegistered() const { return this->scriptContextEverRegistered; }
@@ -1497,14 +1469,6 @@ public:
 
     Js::TempGuestArenaAllocatorObject * GetTemporaryGuestAllocator(const char16_t* name);
     void ReleaseTemporaryGuestAllocator(Js::TempGuestArenaAllocatorObject * tempAllocator);
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    // Should be called from script context, at the time when construction for scriptcontext is just done.
-    void EnsureDebugManager();
-
-    // Should be called from script context 's destructor,
-    void ReleaseDebugManager();
-#endif
 
     void RegisterScriptContext(Js::ScriptContext *scriptContext);
     void UnregisterScriptContext(Js::ScriptContext *scriptContext);
@@ -1941,10 +1905,6 @@ public:
     void SetForceOneIdleCollection();
 
     bool IsInThreadServiceCallback() const { return threadService.IsInCallback(); }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    Js::DebugManager * GetDebugManager() const { return this->debugManager; }
-#endif
 
     const NativeLibraryEntryRecord::Entry* PeekNativeLibraryEntry() const { return this->nativeLibraryEntry.Peek(); }
     void PushNativeLibraryEntry(_In_ NativeLibraryEntryRecord::Entry* entry) { this->nativeLibraryEntry.Push(entry); }

@@ -8,10 +8,6 @@
 #include "RegexCommon.h"
 
 #include "Library/RegexHelper.h"
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#include "Debug/DiagHelperMethodWrapper.h"
-#endif
 #include "Library/JavascriptGeneratorFunction.h"
 #include "WasmMath.h"
 
@@ -32,28 +28,6 @@ intptr_t const *GetHelperMethods()
     return JnHelperMethodAddresses;
 }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-static intptr_t const helperMethodWrappers[] = {
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper0),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper1),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper2),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper3),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper4),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper5),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper6),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper7),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper8),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper9),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper10),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper11),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper12),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper13),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper14),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper15),
-    reinterpret_cast<intptr_t>(&Js::HelperMethodWrapper16),
-};
-#endif
-
 ///----------------------------------------------------------------------------
 ///
 /// GetMethodAddress
@@ -66,30 +40,6 @@ intptr_t
 GetMethodAddress(ThreadContextInfo * context, IR::HelperCallOpnd* opnd)
 {
     Assert(opnd);
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#if defined(_M_ARM32_OR_ARM64)
-#define LowererMDFinal LowererMD
-#else
-#define LowererMDFinal LowererMDArch
-#endif
-
-    static_assert(std::size(helperMethodWrappers) == LowererMDFinal::MaxArgumentsToHelper + 1);
-
-    if (opnd->IsDiagHelperCallOpnd())
-    {
-        // Note: all arguments are already loaded for the original helper. Here we just return the address.
-        IR::DiagHelperCallOpnd* diagOpnd = static_cast<IR::DiagHelperCallOpnd*>(opnd);
-
-        if (0 <= diagOpnd->m_argCount && diagOpnd->m_argCount <= LowererMDFinal::MaxArgumentsToHelper)
-        {
-            return ShiftAddr(context, helperMethodWrappers[diagOpnd->m_argCount]);
-        }
-        else
-        {
-            AssertMsg(FALSE, "Unsupported arg count (need to implement).");
-        }
-    }
-#endif
     return GetMethodOriginalAddress(context, opnd->m_fnHelper);
 }
 

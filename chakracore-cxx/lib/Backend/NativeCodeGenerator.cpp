@@ -1169,13 +1169,8 @@ NativeCodeGenerator::CheckCodeGen(Js::ScriptFunction * function)
 
     if(!nativeCodeGen->Processor()->PrioritizeJob(nativeCodeGen, entryPoint, function))
     {
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-#define originalEntryPoint_IS_ProfileDeferredParsingThunk \
-            (originalEntryPoint == ProfileDeferredParsingThunk)
-#else
 #define originalEntryPoint_IS_ProfileDeferredParsingThunk \
             false
-#endif
         // Job was not yet processed
         // originalEntryPoint is the last known good entry point for the function body. Here we verify that
         // it either corresponds with this codegen episode (identified by function->entryPointIndex) of the function body

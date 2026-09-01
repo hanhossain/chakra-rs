@@ -52,13 +52,6 @@ public:
 
     virtual typename WriteBarrierFieldTypeTraits<Js::Var>::Type* GetModuleExportSlotArrayAddress(uint moduleIndex, uint slotIndex) = 0;
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    virtual intptr_t GetDebuggingFlagsAddr() const = 0;
-    virtual intptr_t GetDebugStepTypeAddr() const = 0;
-    virtual intptr_t GetDebugFrameAddressAddr() const = 0;
-    virtual intptr_t GetDebugScriptIdWhenSetAddr() const = 0;
-#endif
-
     virtual intptr_t GetChakraLibAddr() const = 0;
 
 };

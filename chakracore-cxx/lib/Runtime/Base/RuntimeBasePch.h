@@ -69,11 +69,3 @@
 #include "Exceptions/StackOverflowException.h"
 #include "Exceptions/NotImplementedException.h"
 #include "Exceptions/AsmJsParseException.h"
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#include "Debug/DebuggingFlags.h"
-#include "Debug/DiagProbe.h"
-#include "Debug/DebugManager.h"
-#include "Debug/ProbeContainer.h"
-#include "Debug/DebugContext.h"
-#endif

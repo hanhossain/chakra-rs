@@ -1347,12 +1347,7 @@ using namespace Js;
         }
 
         DebugOnly(JavascriptMethod directEntryPoint = funcBody->GetDirectEntryPoint(funcBody->GetDefaultEntryPointInfo()));
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        Assert(directEntryPoint != DefaultDeferredParsingThunk
-            && directEntryPoint != ProfileDeferredParsingThunk);
-#else // !ENABLE_SCRIPT_DEBUGGING
         Assert(directEntryPoint != DefaultDeferredParsingThunk);
-#endif
 
         JavascriptMethod thunkEntryPoint = (*functionRef)->UpdateUndeferredBody(funcBody);
 

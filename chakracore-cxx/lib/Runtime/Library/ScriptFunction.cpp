@@ -284,12 +284,7 @@ using namespace Js;
         Assert(!newFunctionInfo->IsDeferred());
 
         JavascriptMethod directEntryPoint = newFunctionInfo->GetDirectEntryPoint(newFunctionInfo->GetDefaultEntryPointInfo());
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        Assert(directEntryPoint != DefaultDeferredParsingThunk
-            && directEntryPoint != ProfileDeferredParsingThunk);
-#else
         Assert(directEntryPoint != DefaultDeferredParsingThunk);
-#endif
 
         Js::FunctionEntryPointInfo* defaultEntryPointInfo = newFunctionInfo->GetDefaultFunctionEntryPointInfo();
         JavascriptMethod thunkEntryPoint = this->UpdateThunkEntryPoint(defaultEntryPointInfo, directEntryPoint);

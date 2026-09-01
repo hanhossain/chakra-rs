@@ -12120,16 +12120,6 @@ bool Parser::CheckAsmjsModeStrPid(IdentPtr pid)
         !this->GetScanner()->IsEscapeOnLastTkStrCon() &&
         PAL_wcsncmp(pid->Psz(), u"use asm", 10) == 0);
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    if (isAsmCandidate && m_scriptContext->IsScriptContextInDebugMode())
-    {
-        // We would like to report this to debugger - they may choose to disable debugging.
-        // TODO : localization of the string?
-        m_scriptContext->RaiseMessageToDebugger(DEIT_ASMJS_IN_DEBUGGING, u"AsmJs initialization error - AsmJs disabled due to script debugger", m_sourceContextInfo && !m_sourceContextInfo->IsDynamic() ? m_sourceContextInfo->url : nullptr);
-        return false;
-    }
-#endif
-
     return isAsmCandidate && !(m_grfscr & fscrNoAsmJs);
 #else
     return false;

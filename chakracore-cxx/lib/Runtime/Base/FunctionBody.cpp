@@ -19,11 +19,6 @@
 
 #include "Language/SourceDynamicProfileManager.h"
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#include "Debug/ProbeContainer.h"
-#include "Debug/DebugContext.h"
-#endif
-
 #include "Parser.h"
 #include "RegexCommon.h"
 #include "RegexPattern.h"
@@ -208,12 +203,9 @@ namespace Js
         return this->m_cbStartOffset;
     }
 
+    // TODO (hanhossain): remove
     void ParseableFunctionInfo::RegisterFuncToDiag(ScriptContext * scriptContext, char16_t const * pszTitle)
     {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        // Register the function to the PDM as eval code (the debugger app will show file as 'eval code')
-        scriptContext->GetDebugContext()->RegisterFunction(this, pszTitle);
-#endif
     }
 
     bool ParseableFunctionInfo::IsES6ModuleCode() const
@@ -1658,13 +1650,7 @@ namespace Js
     ParseableFunctionInfo* ParseableFunctionInfo::New(ScriptContext* scriptContext, int nestedCount,
         LocalFunctionId functionId, Utf8SourceInfo* sourceInfo, const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, FunctionInfo::Attributes attributes, FunctionBodyFlags flags)
     {
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        Assert(
-            scriptContext->DeferredParsingThunk == ProfileDeferredParsingThunk ||
-            scriptContext->DeferredParsingThunk == DefaultDeferredParsingThunk);
-#else
         Assert(scriptContext->DeferredParsingThunk == DefaultDeferredParsingThunk);
-#endif
 
         uint newFunctionNumber = scriptContext->GetThreadContext()->NewFunctionNumber();
         if (!sourceInfo->GetSourceContextInfo()->IsDynamic())
@@ -3564,42 +3550,6 @@ namespace Js
 #endif
             ;
     }
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-    bool FunctionProxy::HasValidProfileEntryPoint() const
-    {
-        JavascriptMethod directEntryPoint = this->GetDefaultEntryPointInfo()->jsMethod;
-        JavascriptMethod originalEntryPoint = this->GetOriginalEntryPoint_Unchecked();
-
-        if (originalEntryPoint == DefaultDeferredParsingThunk)
-        {
-            return directEntryPoint == ProfileDeferredParsingThunk;
-        }
-        if (originalEntryPoint == DefaultDeferredDeserializeThunk)
-        {
-            return directEntryPoint == ProfileDeferredDeserializeThunk;
-        }
-        if (!this->IsFunctionBody())
-        {
-            return false;
-        }
-
-#if ENABLE_PROFILE_INFO
-        FunctionBody * functionBody = this->GetFunctionBody();
-        if (functionBody->IsInterpreterThunk() || functionBody->IsSimpleJitOriginalEntryPoint())
-        {
-            return directEntryPoint == ProfileEntryThunk || IsIntermediateCodeGenThunk(directEntryPoint);
-        }
-
-#if ENABLE_NATIVE_CODEGEN
-        // In the profiler mode, the EnsureDynamicProfileInfoThunk is valid as we would be assigning to appropriate thunk when that thunk called.
-        return functionBody->IsNativeOriginalEntryPoint() &&
-            (directEntryPoint == DynamicProfileInfo::EnsureDynamicProfileInfoThunk || directEntryPoint == ProfileEntryThunk);
-#endif
-#else
-        return true;
-#endif
-    }
-#endif
 
     bool FunctionProxy::HasValidEntryPoint() const
     {
@@ -3609,27 +3559,13 @@ namespace Js
         {
             return this->HasValidNonProfileEntryPoint();
         }
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        if (m_scriptContext->IsProfiling())
-        {
-            return this->HasValidProfileEntryPoint();
-        }
-
-        return this->HasValidNonProfileEntryPoint() || this->HasValidProfileEntryPoint();
-#else
         return this->HasValidNonProfileEntryPoint();
-#endif
     }
 
 #endif
     void ParseableFunctionInfo::SetDeferredParsingEntryPoint()
     {
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        Assert(m_scriptContext->DeferredParsingThunk == ProfileDeferredParsingThunk
-            || m_scriptContext->DeferredParsingThunk == DefaultDeferredParsingThunk);
-#else
         Assert(m_scriptContext->DeferredParsingThunk == DefaultDeferredParsingThunk);
-#endif
 
         this->SetEntryPoint(this->GetDefaultEntryPointInfo(), m_scriptContext->DeferredParsingThunk);
         this->SetOriginalEntryPoint(DefaultDeferredParsingThunk);
@@ -3637,20 +3573,10 @@ namespace Js
 
     void ParseableFunctionInfo::SetInitialDefaultEntryPoint()
     {
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        Assert(m_scriptContext->CurrentThunk == ProfileEntryThunk || m_scriptContext->CurrentThunk == DefaultEntryThunk);
-        Assert(this->GetOriginalEntryPoint_Unchecked() == DefaultDeferredParsingThunk ||
-               this->GetOriginalEntryPoint_Unchecked() == ProfileDeferredParsingThunk ||
-               this->GetOriginalEntryPoint_Unchecked() == DefaultDeferredDeserializeThunk ||
-               this->GetOriginalEntryPoint_Unchecked() == ProfileDeferredDeserializeThunk ||
-               this->GetOriginalEntryPoint_Unchecked() == DefaultEntryThunk ||
-               this->GetOriginalEntryPoint_Unchecked() == ProfileEntryThunk);
-#else
         Assert(m_scriptContext->CurrentThunk == DefaultEntryThunk);
         Assert(this->GetOriginalEntryPoint_Unchecked() == DefaultDeferredParsingThunk ||
                this->GetOriginalEntryPoint_Unchecked() == DefaultDeferredDeserializeThunk ||
                this->GetOriginalEntryPoint_Unchecked() == DefaultEntryThunk);
-#endif
         Assert(this->m_defaultEntryPointInfo != nullptr);
 
         // CONSIDER: we can optimize this to generate the dynamic interpreter thunk up front
@@ -3927,85 +3853,6 @@ namespace Js
         Assert(loopNum < GetLoopCount());
         return loopNum;
     }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    bool FunctionBody::InstallProbe(int offset)
-    {
-        if (offset < 0 || (static_cast<uint>(offset) + 1) >= byteCodeBlock->GetLength())
-        {
-            return false;
-        }
-
-        byte* pbyteCodeBlockBuffer = this->byteCodeBlock->GetBuffer();
-
-        if(!GetProbeBackingBlock())
-        {
-            // The probe backing block is set on a different thread than the main thread
-            // The recycler doesn't like allocations from a different thread, so we allocate
-            // the backing byte code block in the arena
-            ArenaAllocator *pArena = m_scriptContext->AllocatorForDiagnostics();
-            Assert(pArena);
-            ByteBlock* probeBackingBlock = ByteBlock::NewFromArena(pArena, pbyteCodeBlockBuffer, byteCodeBlock->GetLength());
-            SetProbeBackingBlock(probeBackingBlock);
-        }
-
-        // Make sure Break opcode only need one byte
-        Assert(OpCodeUtil::IsSmallEncodedOpcode(OpCode::Break));
-#if ENABLE_NATIVE_CODEGEN
-        Assert(!OpCodeAttr::HasMultiSizeLayout(OpCode::Break));
-#endif
-        *(pbyteCodeBlockBuffer + offset) = static_cast<byte>(OpCode::Break);
-
-        ++m_sourceInfo.m_probeCount;
-
-        return true;
-    }
-
-    bool FunctionBody::UninstallProbe(int offset)
-    {
-        if (offset < 0 || (static_cast<uint>(offset) + 1) >= byteCodeBlock->GetLength())
-        {
-            return false;
-        }
-        byte* pbyteCodeBlockBuffer = byteCodeBlock->GetBuffer();
-
-        Js::OpCode originalOpCode = ByteCodeReader::PeekByteOp(GetProbeBackingBlock()->GetBuffer() + offset);
-        *(pbyteCodeBlockBuffer + offset) = static_cast<byte>(originalOpCode);
-
-        --m_sourceInfo.m_probeCount;
-        AssertMsg(m_sourceInfo.m_probeCount >= 0, "Probe (Break Point) count became negative!");
-
-        return true;
-    }
-
-    bool FunctionBody::ProbeAtOffset(int offset, OpCode* pOriginalOpcode)
-    {
-        if (!GetProbeBackingBlock())
-        {
-            return false;
-        }
-
-        if (offset < 0 || (static_cast<uint>(offset) + 1) >= this->byteCodeBlock->GetLength())
-        {
-            AssertMsg(false, "ProbeAtOffset called with out of bounds offset");
-            return false;
-        }
-
-        Js::OpCode runningOpCode = ByteCodeReader::PeekByteOp(this->byteCodeBlock->GetBuffer() + offset);
-        Js::OpCode originalOpcode = ByteCodeReader::PeekByteOp(GetProbeBackingBlock()->GetBuffer() + offset);
-
-        if ( runningOpCode != originalOpcode)
-        {
-            *pOriginalOpcode = originalOpcode;
-            return true;
-        }
-        else
-        {
-            // e.g. inline break or a step hit and is checking for a bp
-            return false;
-        }
-    }
-#endif
 
     void FunctionBody::SetStackNestedFuncParent(FunctionInfo * parentFunctionInfo)
     {
@@ -4865,42 +4712,6 @@ namespace Js
         this->m_isAsmjsMode = false;
         this->m_isAsmJsFunction = false;
     }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    void FunctionBody::SetEntryToDeferParseForDebugger()
-    {
-        ProxyEntryPointInfo* defaultEntryPointInfo = this->GetDefaultEntryPointInfo();
-        if (defaultEntryPointInfo->jsMethod != DefaultDeferredParsingThunk
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-            && defaultEntryPointInfo->jsMethod != ProfileDeferredParsingThunk
-#endif
-            )
-        {
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-            // Just change the thunk, the cleanup will be done once the function gets called.
-            if (this->m_scriptContext->CurrentThunk == ProfileEntryThunk)
-            {
-                defaultEntryPointInfo->jsMethod = ProfileDeferredParsingThunk;
-            }
-            else
-#endif
-            {
-                defaultEntryPointInfo->jsMethod = DefaultDeferredParsingThunk;
-            }
-
-            this->SetOriginalEntryPoint(DefaultDeferredParsingThunk);
-            this->SetAttributes(static_cast<FunctionInfo::Attributes>(this->GetAttributes() | FunctionInfo::Attributes::DeferredParse));
-        }
-
-        // Set other state back to before parse as well
-        this->SetStackNestedFunc(false);
-        this->SetAuxPtr<AuxPointerType::StackNestedFuncParent>(nullptr);
-        this->SetReparsed(true);
-#if DBG
-        this->UnlockCounters(); // assuming background jit is stopped and allow the counter setters access again
-#endif
-    }
-#endif
 
     void FunctionBody::ClearEntryPoints()
     {
@@ -7351,41 +7162,6 @@ namespace Js
     }
 #endif
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    void FunctionBody::CheckAndRegisterFuncToDiag(ScriptContext *scriptContext)
-    {
-        // We will register function if, this is not host managed and it was not registered before.
-        if (GetHostSourceContext() == Js::Constants::NoHostSourceContext
-            && !m_isFuncRegisteredToDiag
-            && !scriptContext->GetDebugContext()->GetProbeContainer()->IsContextRegistered(GetSecondaryHostSourceContext()))
-        {
-            FunctionBody *pFunc = scriptContext->GetDebugContext()->GetProbeContainer()->GetGlobalFunc(scriptContext, GetSecondaryHostSourceContext());
-            if (pFunc)
-            {
-                // Existing behavior here is to ignore the OOM and since RegisterFuncToDiag
-                // can throw now, we simply ignore the OOM here
-                try
-                {
-                    // Register the function to the PDM as eval code (the debugger app will show file as 'eval code')
-                    pFunc->RegisterFuncToDiag(scriptContext, Constants::EvalCode);
-                }
-                catch (Js::OutOfMemoryException)
-                {
-                }
-
-                scriptContext->GetDebugContext()->GetProbeContainer()->RegisterContextToDiag(GetSecondaryHostSourceContext(), scriptContext->AllocatorForDiagnostics());
-
-                m_isFuncRegisteredToDiag = true;
-            }
-        }
-        else
-        {
-            m_isFuncRegisteredToDiag = true;
-        }
-
-    }
-#endif
-
     DebuggerScope* FunctionBody::RecordStartScopeObject(DiagExtraScopesType scopeType, int start, RegSlot scopeLocation, int* index)
     {
         Recycler* recycler = m_scriptContext->GetRecycler();
@@ -9127,13 +8903,6 @@ namespace Js
     {
         return m_hasFirstTmpRegister ? this->GetCountField(CounterFields::FirstTmpRegister) : Constants::NoRegister;
     }
-
-#if DBG && defined(ENABLE_SCRIPT_DEBUGGING)
-    Js::DebuggerMode FunctionBody::GetDebuggerMode()
-    {
-        return this->GetScriptContext()->GetDebugContext()->GetDebuggerMode();
-    }
-#endif
 }
 
 #if !DBG

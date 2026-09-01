@@ -5,11 +5,6 @@
 
 #include "Backend.h"
 #include "PlatformAgnostic/CommonPal.h"
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#include "Debug/DebuggingFlags.h"
-#include "Debug/DiagProbe.h"
-#include "Debug/DebugManager.h"
-#endif
 #include "Language/JavascriptFunctionArgIndex.h"
 #include "LazyBailOutRecord.h"
 #include "Common/InlinedFrameLayout.h"
@@ -1264,77 +1259,6 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
     // Clear the disable implicit call bit in case we bail from that region
     functionScriptContext->GetThreadContext()->ClearDisableImplicitFlags();
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    bool isInDebugMode = executeFunction->IsInDebugMode();
-
-    // Adjust bailout offset for debug mode (only scenario when we ignore exception).
-    if (isInDebugMode)
-    {
-        Js::DebugManager* debugManager = functionScriptContext->GetThreadContext()->GetDebugManager();
-        DebuggingFlags* debuggingFlags = debugManager->GetDebuggingFlags();
-        int byteCodeOffsetAfterEx = debuggingFlags->GetByteCodeOffsetAfterIgnoreException();
-
-        // Note that in case where bailout for ignore exception immediately follows regular bailout after a helper,
-        // and ignore exception happens, we would bail out with non-exception kind with exception data recorded.
-        // In this case we need to treat the bailout as ignore exception one and continue to next/set stmt.
-        // This is fine because we only set byteCodeOffsetAfterEx for helpers (HelperMethodWrapper, when enabled)
-        // and ignore exception is needed for all helpers.
-        if ((bailOutKind & IR::BailOutIgnoreException) || byteCodeOffsetAfterEx != DebuggingFlags::InvalidByteCodeOffset)
-        {
-            bool needResetData = true;
-
-            // Note: the func # in debuggingFlags still can be 0 in case actual b/o reason was not BailOutIgnoreException,
-            //       but BailOutIgnoreException was on the OR'ed values for b/o check.
-            bool isSameFunction = debuggingFlags->GetFuncNumberAfterIgnoreException() == DebuggingFlags::InvalidFuncNumber ||
-                debuggingFlags->GetFuncNumberAfterIgnoreException() == function->GetFunctionBody()->GetFunctionNumber();
-            AssertMsg(isSameFunction, "Bailout due to ignore exception in different function, can't bail out cross functions!");
-
-            if (isSameFunction)
-            {
-                Assert(!(byteCodeOffsetAfterEx == DebuggingFlags::InvalidByteCodeOffset && debuggingFlags->GetFuncNumberAfterIgnoreException() != DebuggingFlags::InvalidFuncNumber));
-
-                if (byteCodeOffsetAfterEx != DebuggingFlags::InvalidByteCodeOffset)
-                {
-                    // We got an exception in native frame, and need to bail out to interpreter
-                    if (debugManager->stepController.IsActive())
-                    {
-                        // Native frame went away, and there will be interpreter frame on its place.
-                        // Make sure that frameAddrWhenSet it less than current interpreter frame -- we use it to detect stack depth.
-                        debugManager->stepController.SetFrameAddr(0);
-                    }
-
-                    if (bailOutOffset != (uint)byteCodeOffsetAfterEx || !(bailOutKind & IR::BailOutIgnoreException))
-                    {
-                        char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-                        BAILOUT_KIND_TRACE(executeFunction, bailOutKind, u"BailOut: changing due to ignore exception: function: %s (%s) offset: #%04x -> #%04x Opcode: %s Treating as: %S", executeFunction->GetDisplayName(),
-                            executeFunction->GetDebugNumberSet(debugStringBuffer), bailOutOffset, byteCodeOffsetAfterEx, Js::OpCodeUtil::GetOpCodeName(bailOutRecord->bailOutOpcode), ::GetBailOutKindName(IR::BailOutIgnoreException));
-                        BAILOUT_TESTTRACE(executeFunction, bailOutKind, u"BailOut: changing due to ignore exception: function %s, Opcode: %s, Treating as: %S", executeFunction->GetDisplayName(),
-                            Js::OpCodeUtil::GetOpCodeName(bailOutRecord->bailOutOpcode), ::GetBailOutKindName(IR::BailOutIgnoreException));
-                    }
-
-                    // Set the byte code offset to continue from next user statement.
-                    bailOutOffset = byteCodeOffsetAfterEx;
-
-                    // Reset current call count so that we don't do StartCall for inner calls. See WinBlue 272569.
-                    // The idea is that next statement can never be set to the inner StartCall (another call as part of an ArgOut),
-                    // it will be next statement in the function.
-                    useStartCall = false;
-                }
-                else
-                {
-                    needResetData = false;
-                }
-            }
-
-            if (needResetData)
-            {
-                // Reset/correct the flag as either we processed it or we need to correct wrong flag.
-                debuggingFlags->ResetByteCodeOffsetAndFuncAfterIgnoreException();
-            }
-        }
-    }
-#endif
-
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
     BAILOUT_KIND_TRACE(executeFunction, bailOutKind, u"BailOut: function: %s (%s) offset: #%04x Opcode: %s", executeFunction->GetDisplayName(),
         executeFunction->GetDebugNumberSet(debugStringBuffer), bailOutOffset, Js::OpCodeUtil::GetOpCodeName(bailOutRecord->bailOutOpcode));
@@ -1615,11 +1539,7 @@ BailOutRecord::BailOutHelper(Js::JavascriptCallStackLayout * layout, Js::ScriptF
     {
         // Following _AddressOfReturnAddress <= real address of "returnAddress". Suffices for RemoteStackWalker to test partially initialized interpreter frame.
         Js::InterpreterStackFrame::PushPopFrameHelper pushPopFrameHelper(newInstance, returnAddress, _AddressOfReturnAddress());
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        aReturn = isInDebugMode ? newInstance->DebugProcess() : newInstance->Process();
-#else
         aReturn = newInstance->Process();
-#endif
         // Note: in debug mode we always have to bailout to debug thunk,
         //       as normal interpreter thunk expects byte code compiled w/o debugging.
     }
@@ -2639,9 +2559,6 @@ Js::Var BailOutRecord::BailOutForElidedYield(void * framePointer)
     Js::ScriptFunction ** functionRef = (Js::ScriptFunction **)&layout->functionObject;
     Js::ScriptFunction * function = *functionRef;
     Js::FunctionBody * executeFunction = function->GetFunctionBody();
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    bool isInDebugMode = executeFunction->IsInDebugMode();
-#endif
 
     Js::JavascriptGenerator* generator = static_cast<Js::JavascriptGenerator*>(layout->args[0]);
     Js::InterpreterStackFrame* frame = generator->GetFrame();
@@ -2660,11 +2577,7 @@ Js::Var BailOutRecord::BailOutForElidedYield(void * framePointer)
     {
         // Following _AddressOfReturnAddress <= real address of "returnAddress". Suffices for RemoteStackWalker to test partially initialized interpreter frame.
         Js::InterpreterStackFrame::PushPopFrameHelper pushPopFrameHelper(frame, __builtin_return_address(0), _AddressOfReturnAddress());
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        aReturn = isInDebugMode ? frame->DebugProcess() : frame->Process();
-#else
         aReturn = frame->Process();
-#endif
         // Note: in debug mode we always have to bailout to debug thunk,
         //       as normal interpreter thunk expects byte code compiled w/o debugging.
     }

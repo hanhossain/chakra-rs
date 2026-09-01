@@ -1117,9 +1117,6 @@ AsmJsCompilationError:
         {
             size = std::size(buf) - 1;  // characters written, excluding the terminating null
         }
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        scriptContext->RaiseMessageToDebugger(messageType, buf, scriptContext->GetUrl());
-#endif
         if (PHASE_TRACE1(AsmjsPhase) || PHASE_TESTTRACE1(AsmjsPhase))
         {
             Output::PrintBuffer(buf, size);

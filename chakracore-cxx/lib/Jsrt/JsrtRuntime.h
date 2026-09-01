@@ -6,9 +6,6 @@
 
 #include "ChakraCore.h"
 #include "JsrtThreadService.h"
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#include "JsrtDebugManager.h"
-#endif
 
 class JsrtContext;
 
@@ -43,12 +40,6 @@ public:
     void SetSerializeByteCodeForLibrary(bool set) { serializeByteCodeForLibrary = set; }
     bool IsSerializeByteCodeForLibrary() const { return serializeByteCodeForLibrary; }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    void EnsureJsrtDebugManager();
-    void DeleteJsrtDebugManager();
-    JsrtDebugManager * GetJsrtDebugManager();
-#endif
-
 private:
     static void RecyclerCollectCallbackStatic(void * context, RecyclerCollectCallBackFlags flags);
 
@@ -65,7 +56,4 @@ private:
     bool useIdle;
     bool dispatchExceptions;
     bool serializeByteCodeForLibrary;
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    JsrtDebugManager * jsrtDebugManager;
-#endif
 };

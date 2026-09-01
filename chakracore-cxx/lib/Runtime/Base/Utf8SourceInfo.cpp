@@ -2,13 +2,6 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#include "Debug/DiagProbe.h"
-#include "Debug/BreakpointProbe.h"
-#include "Debug/DebugDocument.h"
-#include "Debug/DebugManager.h"
-#endif
-
 namespace Js
 {
     // if m_cchLength < 0 it came from an external source.
@@ -21,9 +14,6 @@ namespace Js
         m_cchLength(cchLength),
         m_srcInfo(srcInfo),
         m_secondaryHostSourceContext(secondaryHostSourceContext),
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        m_debugDocument(nullptr),
-#endif
         m_sourceInfoId(scriptContext->GetThreadContext()->NewSourceInfoNumber()),
         m_isCesu8(false),
         m_isLibraryCode(isLibraryCode),
@@ -34,37 +24,15 @@ namespace Js
         m_deferredFunctionsDictionary(nullptr),
         m_deferredFunctionsInitialized(false),
         topLevelFunctionInfoList(nullptr),
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        debugModeSource(nullptr),
-        debugModeSourceIsEmpty(false),
-        debugModeSourceLength(0),
-        m_isInDebugMode(false),
-#endif
         callerUtf8SourceInfo(nullptr),
         boundedPropertyRecordHashSet(scriptContext->GetRecycler())
         ,sourceRef(scriptSource)
     {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (!sourceHolder->IsDeferrable())
-        {
-            this->debugModeSource = this->sourceHolder->GetSource(u"Entering Debug Mode");
-            this->debugModeSourceLength = this->sourceHolder->GetByteLength(u"Entering Debug Mode");
-            this->debugModeSourceIsEmpty = !this->HasSource() || this->debugModeSource == nullptr;
-        }
-#endif
     }
 
     LPCUTF8 Utf8SourceInfo::GetSource(const char16_t * reason) const
     {
         AssertMsg(this->sourceHolder != nullptr, "We have no source mapper.");
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->IsInDebugMode())
-        {
-            AssertMsg(this->debugModeSource != nullptr || this->debugModeSourceIsEmpty, "Debug mode source should have been set by this point.");
-            return debugModeSource;
-        }
-        else
-#endif
         {
             return sourceHolder->GetSource(reason == nullptr ? u"Utf8SourceInfo::GetSource" : reason);
         }
@@ -73,14 +41,6 @@ namespace Js
     size_t Utf8SourceInfo::GetCbLength(const char16_t * reason) const
     {
         AssertMsg(this->sourceHolder != nullptr, "We have no source mapper.");
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->IsInDebugMode())
-        {
-            AssertMsg(this->debugModeSource != nullptr || this->debugModeSourceIsEmpty, "Debug mode source should have been set by this point.");
-            return debugModeSourceLength;
-        }
-        else
-#endif
         {
             return sourceHolder->GetByteLength(reason == nullptr ? u"Utf8SourceInfo::GetSource" : reason);
         }
@@ -90,10 +50,6 @@ namespace Js
     void
     Utf8SourceInfo::Dispose(bool isShutdown)
     {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        ClearDebugDocument();
-        this->debugModeSource = nullptr;
-#endif
         this->sourceRef = nullptr;
     };
 
@@ -189,27 +145,12 @@ namespace Js
     {
         // TODO: make this finalizable? Or have a finalizable version which would HeapDelete the string? Is this needed?
         unsigned long secondaryHostSourceContext = Js::Constants::NoHostSourceContext;
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (srcInfo->sourceContextInfo->IsDynamic())
-        {
-            secondaryHostSourceContext = scriptContext->GetThreadContext()->GetDebugManager()->AllocateSecondaryHostSourceContext();
-        }
-#endif
 
         Recycler * recycler = scriptContext->GetRecycler();
 
         Utf8SourceInfo* toReturn = RecyclerNewFinalized(recycler,
             Utf8SourceInfo, sourceHolder, length, SRCINFO::Copy(recycler, srcInfo),
             secondaryHostSourceContext, scriptContext, isLibraryCode, scriptSource);
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (!isLibraryCode && scriptContext->IsScriptContextInDebugMode())
-        {
-            toReturn->debugModeSource = sourceHolder->GetSource(u"Debug Mode Loading");
-            toReturn->debugModeSourceLength = sourceHolder->GetByteLength(u"Debug Mode Loading");
-            toReturn->debugModeSourceIsEmpty = toReturn->debugModeSource == nullptr || sourceHolder->IsEmpty();
-        }
-#endif
 
         return toReturn;
     }
@@ -398,19 +339,4 @@ namespace Js
             }
         }
     }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    void Utf8SourceInfo::ClearDebugDocument(bool close)
-    {
-        if (this->m_debugDocument != nullptr)
-        {
-            if (close)
-            {
-                m_debugDocument->CloseDocument();
-            }
-
-            this->m_debugDocument = nullptr;
-        }
-    }
-#endif
 }

@@ -6,10 +6,6 @@
 
 namespace Js
 {
-#if DBG && defined(ENABLE_SCRIPT_DEBUGGING)
-    enum DebuggerMode : unsigned int;
-#endif
-
     class FunctionExecutionStateMachine
     {
     public:
@@ -127,10 +123,6 @@ namespace Js
         WriteBarrierFieldTypeTraits<bool>::Type initializedExecutionModeAndLimits;
         // Temporary debug flags for automation
         WriteBarrierFieldTypeTraits<bool>::Type hasBeenReinitialized;
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        WriteBarrierFieldTypeTraits<Js::DebuggerMode>::Type initDebuggerMode;
-        WriteBarrierFieldTypeTraits<Js::DebuggerMode>::Type reinitDebuggerMode;
-#endif
 #endif
     };
 };

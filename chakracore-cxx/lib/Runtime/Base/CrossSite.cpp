@@ -309,56 +309,8 @@ namespace Js
 
     bool CrossSite::IsThunk(JavascriptMethod thunk)
     {
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        return (thunk == CrossSite::ProfileThunk || thunk == CrossSite::DefaultThunk);
-#else
         return (thunk == CrossSite::DefaultThunk);
-#endif
     }
-
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-    Var CrossSite::ProfileThunk(RecyclableObject* callable, CallInfo callInfo, ...)
-    {
-        JavascriptFunction* function = VarTo<JavascriptFunction>(callable);
-        Assert(function->GetTypeId() == TypeIds_Function);
-        Assert(function->GetEntryPoint() == CrossSite::ProfileThunk);
-        RUNTIME_ARGUMENTS(args, callInfo);
-        ScriptContext * scriptContext = function->GetScriptContext();
-        // It is not safe to access the function body if the script context is not alive.
-        scriptContext->VerifyAliveWithHostContext(!function->IsExternal(),
-            scriptContext->GetThreadContext()->GetPreviousHostScriptContext());
-
-        JavascriptMethod entryPoint;
-        FunctionInfo *funcInfo = function->GetFunctionInfo();
-
-        ;
-
-#ifdef ENABLE_WASM
-        if (VarIs<WasmScriptFunction>(function))
-        {
-            entryPoint = Js::AsmJsExternalEntryPoint;
-        } else
-#endif
-        if (funcInfo->HasBody())
-        {
-            char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
-            entryPoint = VarTo<ScriptFunction>(function)->GetEntryPointInfo()->jsMethod;
-            if (funcInfo->IsDeferred() && scriptContext->IsProfiling())
-            {
-                // if the current entrypoint is deferred parse we need to update it appropriately for the profiler mode.
-                entryPoint = Js::ScriptContext::GetProfileModeThunk(entryPoint);
-            }
-            OUTPUT_TRACE(Js::ScriptProfilerPhase, u"CrossSite::ProfileThunk FunctionNumber : %s, Entrypoint : 0x%08X\n", funcInfo->GetFunctionProxy()->GetDebugNumberSet(debugStringBuffer), entryPoint);
-        }
-        else
-        {
-            entryPoint = ProfileEntryThunk;
-        }
-
-
-        return CommonThunk(function, entryPoint, args);
-    }
-#endif
 
     Var CrossSite::DefaultThunk(RecyclableObject* callable, CallInfo callInfo, ...)
     {
