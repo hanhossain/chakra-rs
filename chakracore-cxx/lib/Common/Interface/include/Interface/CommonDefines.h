@@ -51,8 +51,6 @@
 // Language features
 #define ENABLE_JS_BUILTINS                          // Built In functions support
 
-#define ENABLE_ES6_CHAR_CLASSIFIER                  // ES6 Unicode character classifier support
-
 #if !DISABLE_JIT
 #define ENABLE_FIXED_FIELDS 1                       // Turn on fixed fields if JIT is enabled
 #endif
