@@ -1001,49 +1001,17 @@ namespace Js
 #ifdef RECYCLER_STRESS
     void DynamicObject::Finalize(bool isShutdown)
     {
-        // If -RecyclerTrackStress is enabled, DynamicObject will be allocated as Track (and thus Finalize too).
-        // Just ignore this.
-        if (Js::Configuration::Global.flags.RecyclerTrackStress)
-        {
-            return;
-        }
-
         RecyclableObject::Finalize(isShutdown);
     }
 
     void DynamicObject::Dispose(bool isShutdown)
     {
-        // If -RecyclerTrackStress is enabled, DynamicObject will be allocated as Track (and thus Finalize too).
-        // Just ignore this.
-        if (Js::Configuration::Global.flags.RecyclerTrackStress)
-        {
-            return;
-        }
-
         RecyclableObject::Dispose(isShutdown);
     }
 
     void DynamicObject::Mark(Recycler *recycler)
     {
-        // If -RecyclerTrackStress is enabled, DynamicObject will be allocated as Track (and thus Finalize too).
         // Process the mark now.
-
-        if (Js::Configuration::Global.flags.RecyclerTrackStress)
-        {
-            size_t inlineSlotsSize = this->GetDynamicType()->GetTypeHandler()->GetInlineSlotsSize();
-            size_t objectSize = sizeof(DynamicObject) + inlineSlotsSize;
-            void ** obj = (void **)this;
-            void ** objEnd = obj + (objectSize / sizeof(void *));
-
-            do
-            {
-                recycler->TryMarkNonInterior(*obj, nullptr);
-                obj++;
-            } while (obj != objEnd);
-
-            return;
-        }
-
         RecyclableObject::Mark(recycler);
     }
 #endif

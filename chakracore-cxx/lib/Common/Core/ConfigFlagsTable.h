@@ -466,8 +466,6 @@ namespace Js
         RecyclerConcurrentStressFlag,
         RecyclerConcurrentRepeatStressFlag,
         RecyclerPartialStressFlag,
-        RecyclerTrackStressFlag,
-        RecyclerInduceFalsePositivesFlag,
         #endif // RECYCLER_STRESS
         PageHeapFlag,
         #ifdef RECYCLER_NO_PAGE_REUSE
@@ -1936,10 +1934,6 @@ namespace Js
                 Boolean RecyclerConcurrentRepeatStress;
         // TODO (hanhossain): remove flag
                 Boolean RecyclerPartialStress;
-        // TODO (hanhossain): remove flag
-            Boolean RecyclerTrackStress;
-        // TODO (hanhossain): remove flag
-            Boolean RecyclerInduceFalsePositives;
         #endif // RECYCLER_STRESS
         // todo (hanhossain): flag end
             Number PageHeap;
