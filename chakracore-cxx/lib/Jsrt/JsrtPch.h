@@ -25,7 +25,6 @@
 
 #include "ByteCode/ByteCodeReader.h"
 
-#include "Debug/RuntimeDebugPch.h"
 #include "Language/TaggedInt.h"
 
 #include "Library/RootObjectBase.h"
@@ -57,5 +56,15 @@
 #include "Library/WebAssemblyModule.h"
 #include "Library/WebAssembly.h"
 #include "Library/CustomExternalWrapperObject.h"
+
+#include "Exceptions/ExceptionBase.h"
+#include "Exceptions/JavascriptException.h"
+#include "Exceptions/OutOfMemoryException.h"
+#include "Exceptions/OperationAbortedException.h"
+#include "Exceptions/RejitException.h"
+#include "Exceptions/ScriptAbortException.h"
+#include "Exceptions/StackOverflowException.h"
+#include "Exceptions/NotImplementedException.h"
+#include "Exceptions/AsmJsParseException.h"
 
 #include "JsrtContext.h"

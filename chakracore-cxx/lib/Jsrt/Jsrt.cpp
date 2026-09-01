@@ -15,6 +15,8 @@
 #include "Base/ThreadContextTlsEntry.h"
 #include "Codex/Utf8Codex.h"
 
+#include "Library/ScriptFunction.h"
+
 // Parser Includes
 #include "cmperr.h"     // For ERRnoMemory
 #include "screrror.h"   // For CompileScriptException
