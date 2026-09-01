@@ -62,7 +62,7 @@
 
 // dep: IDebugDocumentContext
 #if !BUILD_WITHOUT_SCRIPT_DEBUG
-#define ENABLE_SCRIPT_DEBUGGING
+// #define ENABLE_SCRIPT_DEBUGGING
 #endif
 
 // JIT features
