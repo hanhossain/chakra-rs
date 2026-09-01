@@ -96,10 +96,6 @@ RecyclerHeuristic::BackgroundFinishMarkWaitTime(bool backgroundFinishMarkWaitTim
 uint32_t
 RecyclerHeuristic::FinishConcurrentCollectWaitTime(Js::ConfigFlagsTable& flags)
 {
-    if (flags.IsEnabled(Js::RecyclerThreadCollectTimeoutFlag))
-    {
-        return flags.RecyclerThreadCollectTimeout;
-    }
     return DefaultFinishConcurrentCollectWaitTime;
 }
 
@@ -107,10 +103,6 @@ RecyclerHeuristic::FinishConcurrentCollectWaitTime(Js::ConfigFlagsTable& flags)
 uint32_t
 RecyclerHeuristic::PriorityBoostTimeout(Js::ConfigFlagsTable& flags)
 {
-    if (flags.IsEnabled(Js::RecyclerPriorityBoostTimeoutFlag))
-    {
-        return flags.RecyclerPriorityBoostTimeout;
-    }
     return TickCountConcurrentPriorityBoost;
 }
 

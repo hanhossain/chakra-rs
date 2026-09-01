@@ -561,8 +561,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_DeferLoadingAvailableSource  (false)
 
-#define DEFAULT_CONFIG_RecyclerForceMarkInterior (false)
-
 #define DEFAULT_CONFIG_InduceCodeGenFailure (30) // When -InduceCodeGenFailure is passed in, 30% of JIT allocations will fail
 
 #define DEFAULT_CONFIG_SkipSplitWhenResultIgnored (false)
@@ -1045,9 +1043,6 @@ namespace Js
         u"RecyclerTrackStress",
         u"RecyclerInduceFalsePositives",
 #endif // RECYCLER_STRESS
-        u"RecyclerForceMarkInterior",
-        u"RecyclerPriorityBoostTimeout",
-        u"RecyclerThreadCollectTimeout",
         u"PageHeap",
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"RecyclerNoPageReuse",
@@ -1943,9 +1938,6 @@ namespace Js
         u"Stress tracked object handling by simulating tracked objects for regular allocations",
         u"Stress recycler by forcing false positive object marks",
 #endif // RECYCLER_STRESS
-        u"Force all the mark as interior",
-        u"Adjust priority boost timeout",
-        u"Adjust thread collect timeout",
         // todo (hanhossain): flag end
         u"Use full page for heap allocations",
 #ifdef RECYCLER_NO_PAGE_REUSE
@@ -2437,9 +2429,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #endif // RECYCLER_STRESS
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
 #ifdef RECYCLER_NO_PAGE_REUSE
@@ -2953,9 +2942,6 @@ namespace Js
         RecyclerTrackStress(false),
         RecyclerInduceFalsePositives(false),
 #endif // RECYCLER_STRESS
-        RecyclerForceMarkInterior(DEFAULT_CONFIG_RecyclerForceMarkInterior),
-        RecyclerPriorityBoostTimeout(5000),
-        RecyclerThreadCollectTimeout(1000),
         PageHeap(DEFAULT_CONFIG_PageHeap),
 #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuse(false),
@@ -4374,12 +4360,6 @@ namespace Js
         case RecyclerInduceFalsePositivesFlag:
             return FlagBoolean;
         #endif // RECYCLER_STRESS
-        case RecyclerForceMarkInteriorFlag:
-            return FlagBoolean;
-        case RecyclerPriorityBoostTimeoutFlag:
-            return FlagNumber;
-        case RecyclerThreadCollectTimeoutFlag:
-            return FlagNumber;
         case PageHeapFlag:
             return FlagNumber;
         #ifdef RECYCLER_NO_PAGE_REUSE
@@ -5218,12 +5198,6 @@ namespace Js
         case RecyclerInduceFalsePositivesFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerInduceFalsePositives));
         #endif // RECYCLER_STRESS
-        case RecyclerForceMarkInteriorFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerForceMarkInterior));
-        case RecyclerPriorityBoostTimeoutFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&RecyclerPriorityBoostTimeout));
-        case RecyclerThreadCollectTimeoutFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&RecyclerThreadCollectTimeout));
         case PageHeapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PageHeap));
         #ifdef RECYCLER_NO_PAGE_REUSE
@@ -6006,9 +5980,6 @@ namespace Js
             retValue = false;
             break;
         #endif // RECYCLER_STRESS
-        case RecyclerForceMarkInteriorFlag:
-            retValue = DEFAULT_CONFIG_RecyclerForceMarkInterior;
-            break;
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             retValue = false;
