@@ -46,10 +46,7 @@ bool MarkContext::AddTrackedObject(FinalizableObject * obj)
 }
 
 template <bool parallel, bool interior, bool doSpecialMark>
-NO_SANITIZE_ADDRESS
-inline
-void MarkContext::ScanMemory(void ** obj, size_t byteCount
-        ADDRESS_SANITIZER_APPEND(void *asanFakeStack))
+void MarkContext::ScanMemory(void ** obj, size_t byteCount)
 {
     Assert(byteCount != 0);
     Assert(byteCount % sizeof(void *) == 0);

@@ -405,10 +405,8 @@ Recycler::ScanObjectInlineInterior(void ** obj, size_t byteCount)
 }
 
 template <bool doSpecialMark, bool forceInterior>
-NO_SANITIZE_ADDRESS
 inline void
-Recycler::ScanMemoryInline(void ** obj, size_t byteCount
-            ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType scanMemoryType))
+Recycler::ScanMemoryInline(void ** obj, size_t byteCount)
 {
     // This is never called during parallel marking
     Assert(this->collectionState != CollectionStateParallelMark);
@@ -421,12 +419,12 @@ Recycler::ScanMemoryInline(void ** obj, size_t byteCount
     if (this->enableScanInteriorPointers || forceInterior)
     {
         markContext.ScanMemory<false, true, doSpecialMark>(
-                obj, byteCount ADDRESS_SANITIZER_APPEND(asanFakeStack));
+                obj, byteCount);
     }
     else
     {
         markContext.ScanMemory<false, false, doSpecialMark>(
-                obj, byteCount ADDRESS_SANITIZER_APPEND(asanFakeStack));
+                obj, byteCount);
     }
 }
 
