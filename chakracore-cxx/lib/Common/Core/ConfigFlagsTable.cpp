@@ -1048,8 +1048,6 @@ namespace Js
         u"RecyclerForceMarkInterior",
         u"RecyclerPriorityBoostTimeout",
         u"RecyclerThreadCollectTimeout",
-        u"EnableConcurrentSweepAlloc",
-        u"ecsa",
         u"PageHeap",
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"RecyclerNoPageReuse",
@@ -1948,8 +1946,6 @@ namespace Js
         u"Force all the mark as interior",
         u"Adjust priority boost timeout",
         u"Adjust thread collect timeout",
-        u"Turns off the feature to allow allocations during concurrent sweep.",
-        u"Turns off the feature to allow allocations during concurrent sweep.",
         // todo (hanhossain): flag end
         u"Use full page for heap allocations",
 #ifdef RECYCLER_NO_PAGE_REUSE
@@ -2441,8 +2437,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #endif // RECYCLER_STRESS
-        NoParentFlag,
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2962,8 +2956,6 @@ namespace Js
         RecyclerForceMarkInterior(DEFAULT_CONFIG_RecyclerForceMarkInterior),
         RecyclerPriorityBoostTimeout(5000),
         RecyclerThreadCollectTimeout(1000),
-        EnableConcurrentSweepAlloc(true),
-        ecsa(true),
         PageHeap(DEFAULT_CONFIG_PageHeap),
 #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuse(false),
@@ -3208,12 +3200,6 @@ namespace Js
         {
             Enable(FullJitAfterFlag);
             FullJitAfter = Fja;
-        }
-
-        if(!IsEnabled(EnableConcurrentSweepAllocFlag) && IsEnabled(ecsaFlag))
-        {
-            Enable(EnableConcurrentSweepAllocFlag);
-            EnableConcurrentSweepAlloc = ecsa;
         }
     }
 
@@ -4394,10 +4380,6 @@ namespace Js
             return FlagNumber;
         case RecyclerThreadCollectTimeoutFlag:
             return FlagNumber;
-        case EnableConcurrentSweepAllocFlag:
-            return FlagBoolean;
-        case ecsaFlag:
-            return FlagBoolean;
         case PageHeapFlag:
             return FlagNumber;
         #ifdef RECYCLER_NO_PAGE_REUSE
@@ -5242,10 +5224,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&RecyclerPriorityBoostTimeout));
         case RecyclerThreadCollectTimeoutFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&RecyclerThreadCollectTimeout));
-        case EnableConcurrentSweepAllocFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&EnableConcurrentSweepAlloc));
-        case ecsaFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ecsa));
         case PageHeapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PageHeap));
         #ifdef RECYCLER_NO_PAGE_REUSE
@@ -6030,12 +6008,6 @@ namespace Js
         #endif // RECYCLER_STRESS
         case RecyclerForceMarkInteriorFlag:
             retValue = DEFAULT_CONFIG_RecyclerForceMarkInterior;
-            break;
-        case EnableConcurrentSweepAllocFlag:
-            retValue = true;
-            break;
-        case ecsaFlag:
-            retValue = true;
             break;
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
