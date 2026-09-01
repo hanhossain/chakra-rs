@@ -522,11 +522,7 @@ namespace Js
 #if DBG
 #define DEFAULT_CONFIG_SkipFuncCountForBailOnNoProfile (0) //Initial Number of functions in a func body to be skipped from forcibly inserting BailOnNoProfile.
 #endif
-#define DEFAULT_CONFIG_CallsToBailoutsRatioForRejit 10   // Ratio of function calls to bailouts above which a rejit is considered
-#define DEFAULT_CONFIG_LoopIterationsToBailoutsRatioForRejit 50 // Ratio of loop iteration count to bailouts above which a rejit of the loop body is considered
 #define DEFAULT_CONFIG_MinBailOutsBeforeRejit 2         // Minimum number of bailouts for a single bailout record after which a rejit is considered
-#define DEFAULT_CONFIG_MinBailOutsBeforeRejitForLoops 2         // Minimum number of bailouts for a single bailout record after which a rejit is considered
-#define DEFAULT_CONFIG_RejitMaxBailOutCount 500         // Maximum number of bailouts for a single bailout record after which rejit is forced.
 
 #if DBG
 #define DEFAULT_CONFIG_ValidateIntRanges (false)
@@ -1024,11 +1020,7 @@ namespace Js
 #if DBG
         u"ValidateIntRanges",
 #endif
-        u"RejitMaxBailOutCount",
-        u"CallsToBailoutsRatioForRejit",
-        u"LoopIterationsToBailoutsRatioForRejit",
         u"MinBailOutsBeforeRejit",
-        u"MinBailOutsBeforeRejitForLoops",
 #ifdef RECYCLER_STRESS
         u"RecyclerStress",
 #endif // RECYCLER_STRESS
@@ -1911,12 +1903,8 @@ namespace Js
 #if DBG
         u"Validate at runtime int ranges/bounds determined by the globopt",
 #endif
-        u"Maximum number of bailouts for a bailout record after which rejit is forced",
-        u"Ratio of function calls to bailouts above which a rejit is considered",
-        u"Ratio of loop iteration count to bailouts above which a rejit of the loop body is considered",
-        u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
-        u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
         // todo (hanhossain): flag end
+        u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
 #ifdef RECYCLER_STRESS
         u"Stress the recycler by collect on every allocation call",
 #endif // RECYCLER_STRESS
@@ -2394,12 +2382,8 @@ namespace Js
 #if DBG
         NoParentFlag,
 #endif
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
 #ifdef RECYCLER_STRESS
         NoParentFlag,
 #endif // RECYCLER_STRESS
@@ -2899,11 +2883,7 @@ namespace Js
 #if DBG
         ValidateIntRanges(DEFAULT_CONFIG_ValidateIntRanges),
 #endif
-        RejitMaxBailOutCount(DEFAULT_CONFIG_RejitMaxBailOutCount),
-        CallsToBailoutsRatioForRejit(DEFAULT_CONFIG_CallsToBailoutsRatioForRejit),
-        LoopIterationsToBailoutsRatioForRejit(DEFAULT_CONFIG_LoopIterationsToBailoutsRatioForRejit),
         MinBailOutsBeforeRejit(DEFAULT_CONFIG_MinBailOutsBeforeRejit),
-        MinBailOutsBeforeRejitForLoops(DEFAULT_CONFIG_MinBailOutsBeforeRejitForLoops),
 #ifdef RECYCLER_STRESS
         RecyclerStress(false),
 #endif // RECYCLER_STRESS
@@ -4295,15 +4275,7 @@ namespace Js
         case ValidateIntRangesFlag:
             return FlagBoolean;
         #endif
-        case RejitMaxBailOutCountFlag:
-            return FlagNumber;
-        case CallsToBailoutsRatioForRejitFlag:
-            return FlagNumber;
-        case LoopIterationsToBailoutsRatioForRejitFlag:
-            return FlagNumber;
         case MinBailOutsBeforeRejitFlag:
-            return FlagNumber;
-        case MinBailOutsBeforeRejitForLoopsFlag:
             return FlagNumber;
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
@@ -5117,16 +5089,8 @@ namespace Js
         case ValidateIntRangesFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ValidateIntRanges));
         #endif
-        case RejitMaxBailOutCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&RejitMaxBailOutCount));
-        case CallsToBailoutsRatioForRejitFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&CallsToBailoutsRatioForRejit));
-        case LoopIterationsToBailoutsRatioForRejitFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&LoopIterationsToBailoutsRatioForRejit));
         case MinBailOutsBeforeRejitFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejit));
-        case MinBailOutsBeforeRejitForLoopsFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejitForLoops));
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerStress));

@@ -453,11 +453,7 @@ namespace Js
         #if DBG
         ValidateIntRangesFlag,
         #endif
-        RejitMaxBailOutCountFlag,
-        CallsToBailoutsRatioForRejitFlag,
-        LoopIterationsToBailoutsRatioForRejitFlag,
         MinBailOutsBeforeRejitFlag,
-        MinBailOutsBeforeRejitForLoopsFlag,
         #ifdef RECYCLER_STRESS
         RecyclerStressFlag,
         #endif // RECYCLER_STRESS
@@ -1905,16 +1901,8 @@ namespace Js
         // TODO (hanhossain): remove flag
             Boolean ValidateIntRanges;
         #endif
-        // TODO (hanhossain): remove flag
-        Number RejitMaxBailOutCount;
-        // TODO (hanhossain): remove flag
-        Number CallsToBailoutsRatioForRejit;
-        // TODO (hanhossain): remove flag
-        Number LoopIterationsToBailoutsRatioForRejit;
-        Number MinBailOutsBeforeRejit;
-        // TODO (hanhossain): remove flag
-        Number MinBailOutsBeforeRejitForLoops;
         // todo (hanhossain): flag end
+        Number MinBailOutsBeforeRejit;
         #ifdef RECYCLER_STRESS
             Boolean RecyclerStress;
         #endif // RECYCLER_STRESS
