@@ -34,11 +34,6 @@
     #endif
 #endif
 
-// TODO: consider removing before RTM: keep for CHK/FRETEST but remove from FRE.
-// This will cause terminate process on AV/Assert rather that letting PDM (F12/debugger scenarios) eat exceptions.
-// At least for now, enable this even in FRE builds. See ReportError.h.
-#define ENABLE_DEBUG_API_WRAPPER 1
-
 //----------------------------------------------------------------------------------------------------
 //  Define Architectures' aliases for Simplicity
 //----------------------------------------------------------------------------------------------------

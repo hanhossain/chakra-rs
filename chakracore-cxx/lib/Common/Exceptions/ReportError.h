@@ -64,22 +64,3 @@ void Debugger_AttachDetach_unrecoverable_error(int32_t hr);
 void OutOfMemory_unrecoverable_error();
 void RecyclerSingleAllocationLimit_unrecoverable_error();
 void MemGCSingleAllocationLimit_unrecoverable_error();
-
-template <class Fn>
-static int32_t DebugApiWrapper(Fn fn)
-{
-    // If an assertion or AV is hit, it triggers a SEH exception. SEH exceptions escaped here will be eaten by PDM. To prevent assertions
-    // from getting unnoticed, we install a SEH exception filter and crash the process.
-#if ENABLE_DEBUG_API_WRAPPER
-    __try
-    {
-#endif
-        return fn();
-#if ENABLE_DEBUG_API_WRAPPER
-    }
-    __except(FatalExceptionFilter(GetExceptionInformation()))
-    {
-    }
-    return E_FAIL;
-#endif
-}
