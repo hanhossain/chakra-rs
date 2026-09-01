@@ -5,6 +5,8 @@
 
 #ifdef ASMJS_PLAT
 
+#include "AsmJsMath.h"
+
 #include "CodeGenAllocators.h"
 #ifdef DBG_DUMP
 #include "ByteCode/ByteCodeDumper.h"

@@ -16,6 +16,7 @@
 #include "Library/ForInObjectEnumerator.h"
 #include "Library/AtomicsOperations.h"
 #include "WasmParseTree.h"
+#include "AsmJsMath.h"
 ///----------------------------------------------------------------------------
 ///
 /// macros PROCESS_INtoOUT

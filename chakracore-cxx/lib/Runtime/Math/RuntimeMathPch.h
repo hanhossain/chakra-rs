@@ -52,5 +52,4 @@
 #include "Library/WebAssemblyModule.h"
 #include "Library/WebAssembly.h"
 
-#include "AsmJsMath.h"
 #include "WasmMath.h"
