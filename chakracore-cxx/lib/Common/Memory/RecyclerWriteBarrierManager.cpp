@@ -275,11 +275,6 @@ RecyclerWriteBarrierManager::OnSegmentFree(_In_ char* segmentAddress, size_t num
 void
 RecyclerWriteBarrierManager::WriteBarrier(void * address)
 {
-    if (IS_ASAN_FAKE_STACK_ADDR(address))
-    {
-        return;
-    }
-
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
     const uintptr_t index = GetCardTableIndex(address);
     cardTable[index] |= DIRTYBIT;
@@ -294,11 +289,6 @@ RecyclerWriteBarrierManager::WriteBarrier(void * address)
 void
 RecyclerWriteBarrierManager::WriteBarrier(void * address, size_t bytes)
 {
-    if (IS_ASAN_FAKE_STACK_ADDR(address))
-    {
-        return;
-    }
-
 #ifdef RECYCLER_WRITE_BARRIER_BYTE
     uintptr_t startIndex = GetCardTableIndex(address);
     char * endAddress = reinterpret_cast<char*>(Math::Align<long>(reinterpret_cast<long>(static_cast<char*>(address) + bytes),

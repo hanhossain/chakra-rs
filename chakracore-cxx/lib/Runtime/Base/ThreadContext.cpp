@@ -1282,11 +1282,6 @@ ThreadContext::SetForceOneIdleCollection()
 bool
 ThreadContext::IsOnStack(void const *ptr)
 {
-    if (IS_ASAN_FAKE_STACK_ADDR(ptr))
-    {
-        return true;
-    }
-
 #if defined(_M_ARM)
     uint32_t lowLimit, highLimit;
     ::GetCurrentThreadStackLimits(&lowLimit, &highLimit);
@@ -1744,9 +1739,7 @@ ThreadContext::PushEntryExitRecord(Js::ScriptEntryExitRecord * record)
 #if defined(JSRT_VERIFY_RUNTIME_STATE) || defined(DEBUG)
             !IsOnStack(lastRecord) ||
 #endif
-            (reinterpret_cast<uintptr_t>(record) >= reinterpret_cast<uintptr_t>(lastRecord)
-                && !IS_ASAN_FAKE_STACK_ADDR(record)
-                && !IS_ASAN_FAKE_STACK_ADDR(lastRecord)))
+            reinterpret_cast<uintptr_t>(record) >= reinterpret_cast<uintptr_t>(lastRecord))
         {
             EntryExitRecord_Corrupted_unrecoverable_error();
         }
@@ -1766,9 +1759,7 @@ void ThreadContext::PopEntryExitRecord(Js::ScriptEntryExitRecord * record)
 #if defined(JSRT_VERIFY_RUNTIME_STATE) || defined(DEBUG)
         !IsOnStack(next) ||
 #endif
-        (reinterpret_cast<uintptr_t>(this->entryExitRecord) >= reinterpret_cast<uintptr_t>(next)
-            && !IS_ASAN_FAKE_STACK_ADDR(this->entryExitRecord)
-            && !IS_ASAN_FAKE_STACK_ADDR(next))))
+        reinterpret_cast<uintptr_t>(this->entryExitRecord) >= reinterpret_cast<uintptr_t>(next)))
     {
         EntryExitRecord_Corrupted_unrecoverable_error();
     }
