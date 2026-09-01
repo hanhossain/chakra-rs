@@ -17,6 +17,9 @@ constexpr int BailOnNoProfileLimit = 200;
 /// The limit of bailout on no profile info before we disable the bailouts
 constexpr uint8_t BailOnNoProfileRejitLimit = 50;
 
+/// Maximum number of bailouts for a single bailout record after which rejit is forced.
+constexpr uint8_t RejitMaxBailOutCount = 500;
+
 // In `FillBailOutRecord`, some of the fields of BailOutInfo are modified directly,
 // so simply doing a shallow copy of pointers when duplicating the BailOutInfo to
 // the helper calls for lazy bailouts will mess things up.Make a deep copies of such fields.
@@ -2516,7 +2519,7 @@ void BailOutRecord::CheckPreemptiveRejit(Js::FunctionBody* executeFunction, IR::
         bailoutRecord->bailOutCount = 0;
         callsOrIterationsCount = 0;
     }
-    else if (bailoutRecord->bailOutCount > CONFIG_FLAG(RejitMaxBailOutCount))
+    else if (bailoutRecord->bailOutCount > RejitMaxBailOutCount)
     {
         switch (bailOutKind)
         {
@@ -2536,12 +2539,12 @@ void BailOutRecord::CheckPreemptiveRejit(Js::FunctionBody* executeFunction, IR::
             if (loopNumber == -1)
             {
                 REJIT_KIND_TESTTRACE(bailOutKind, u"Force rejit as RejitMaxBailoOutCount reached for a bailout record: function: %s, bailOutKindName: (%S), bailOutCount: %d, callCount: %d RejitMaxBailoutCount: %d\r\n",
-                    executeFunction->GetDisplayName(), ::GetBailOutKindName(bailOutKind), bailoutRecord->bailOutCount, callsOrIterationsCount, CONFIG_FLAG(RejitMaxBailOutCount));
+                    executeFunction->GetDisplayName(), ::GetBailOutKindName(bailOutKind), bailoutRecord->bailOutCount, callsOrIterationsCount, RejitMaxBailOutCount);
             }
             else
             {
                 REJIT_KIND_TESTTRACE(bailOutKind, u"Force rejit as RejitMaxBailoOutCount reached for a bailout record: function: %s, loopNumber: %d, bailOutKindName: (%S), bailOutCount: %d, callCount: %d RejitMaxBailoutCount: %d\r\n",
-                    executeFunction->GetDisplayName(), loopNumber, ::GetBailOutKindName(bailOutKind), bailoutRecord->bailOutCount, callsOrIterationsCount, CONFIG_FLAG(RejitMaxBailOutCount));
+                    executeFunction->GetDisplayName(), loopNumber, ::GetBailOutKindName(bailOutKind), bailoutRecord->bailOutCount, callsOrIterationsCount, RejitMaxBailOutCount);
             }
             bailoutRecord->bailOutCount = 0;
             callsOrIterationsCount = 0;

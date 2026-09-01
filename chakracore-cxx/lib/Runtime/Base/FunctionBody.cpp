@@ -3790,10 +3790,13 @@ namespace Js
         Assert(reinterpret_cast<void*>(entryPointInfo->jsMethod) == nullptr);
         entryPointInfo->jsMethod = entryPoint;
 
+        // Minimum number of bailouts for a single bailout record after which a rejit is considered
+        constexpr uint8_t MinBailOutsBeforeRejitForLoops = 2;
+
         ((Js::LoopEntryPointInfo*)entryPointInfo)->totalJittedLoopIterations =
             static_cast<uint8_t>(
                 min(
-                    static_cast<uint>(static_cast<uint8_t>(CONFIG_FLAG(MinBailOutsBeforeRejitForLoops))) *
+                    static_cast<uint>(MinBailOutsBeforeRejitForLoops) *
                     (Js::LoopEntryPointInfo::GetDecrLoopCountPerBailout() - 1),
                     0xffu));
 

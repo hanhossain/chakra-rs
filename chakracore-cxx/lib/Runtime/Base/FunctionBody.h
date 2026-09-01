@@ -616,7 +616,9 @@ namespace Js
         virtual void ResetOnNativeCodeInstallFailure() override;
         static uint8_t GetDecrCallCountPerBailout()
         {
-            return (uint8_t)CONFIG_FLAG(CallsToBailoutsRatioForRejit) + 1;
+            // Ratio of function calls to bailouts above which a rejit is considered
+            constexpr uint8_t CallsToBailoutsRatioForRejit = 10;
+            return CallsToBailoutsRatioForRejit + 1;
         }
 #endif
 
@@ -650,7 +652,9 @@ namespace Js
         virtual void ResetOnNativeCodeInstallFailure() override;
         static uint8_t GetDecrLoopCountPerBailout()
         {
-            return (uint8_t)CONFIG_FLAG(LoopIterationsToBailoutsRatioForRejit) + 1;
+            // Ratio of loop iteration count to bailouts above which a rejit of the loop body is considered
+            constexpr uint8_t LoopIterationsToBailoutsRatioForRejit = 50;
+            return LoopIterationsToBailoutsRatioForRejit + 1;
         }
 #endif
 
