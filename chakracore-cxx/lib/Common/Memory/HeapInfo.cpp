@@ -457,13 +457,10 @@ HeapInfo::Initialize(Recycler * recycler
 
     isPageHeapEnabled = false;
     PageHeapBlockTypeFilter blockTypeFilter = PageHeapBlockTypeFilter::PageHeapBlockTypeFilterAll;
-    Js::NumberRange bucketNumberRange;
-    Js::NumberRange* pBucketNumberRange = &bucketNumberRange;
     if (pageheapmode == PageHeapMode::PageHeapModeOff)
     {
         isPageHeapEnabled = recycler->GetRecyclerFlagsTable().PageHeap != PageHeapMode::PageHeapModeOff;
         pageheapmode = static_cast<PageHeapMode>(recycler->GetRecyclerFlagsTable().PageHeap);
-        pBucketNumberRange = &recycler->GetRecyclerFlagsTable().PageHeapBucketNumber;
     }
     else
     {
@@ -490,7 +487,6 @@ HeapInfo::Initialize(Recycler * recycler
 
         for (int i = 0; i < HeapConstants::BucketCount + HeapConstants::MediumBucketCount; i++)
         {
-            if (pBucketNumberRange->InRange(i))
             {
                 if (i < HeapConstants::BucketCount)
                 {
