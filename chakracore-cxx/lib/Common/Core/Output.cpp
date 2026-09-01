@@ -175,15 +175,6 @@ Output::VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const 
 
     return retValue;
 }
-
-#ifdef BGJIT_STATS
-// TODO (hanhossain): remove
-size_t
-Output::TraceStats(Js::Phase phase, const char16_t *form, ...)
-{
-    return 0;
-}
-#endif
 #endif // ENABLE_TRACE
 
 ///----------------------------------------------------------------------------
