@@ -94,12 +94,6 @@
 #include "Library/StackScriptFunction.h"
 #include "Library/HostObjectBase.h"
 
-#ifdef ENABLE_MUTATION_BREAKPOINT
-// REVIEW: ChakraCore Dependency
-#include "activdbg_private.h"
-#include "Debug/MutationBreakpoint.h"
-#endif
-
 // SIMD
 #include "Language/SimdOps.h"
 #include "Language/SimdUtils.h"

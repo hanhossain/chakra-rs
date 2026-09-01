@@ -27,7 +27,6 @@ namespace Js
 {
     class ScriptContext;
     class ScriptEditQuery;
-    class MutationBreakpoint;
     class StringProfiler;
     class DebugContext;
     struct HaltCallback;
@@ -1393,12 +1392,6 @@ private:
     public:
         void SetNextPendingClose(ScriptContext * nextPendingClose);
         inline ScriptContext * GetNextPendingClose() const { return nextPendingClose; }
-
-#ifdef ENABLE_MUTATION_BREAKPOINT
-        // Keep track of all breakpoints in order to properly clean up on debugger detach
-        bool HasMutationBreakpoints();
-        void InsertMutationBreakpoint(Js::MutationBreakpoint *mutationBreakpoint);
-#endif
     };
 
     class AutoDynamicCodeReference

@@ -2490,12 +2490,6 @@ constexpr uint8_t ConstructorCallsRequiredToFinalizeCachedType = 2;
                     {
                         CacheOperators::CachePropertyWrite(VarTo<RecyclableObject>(receiver), isRoot, object->GetType(), propertyId, info, requestContext);
                     }
-#ifdef ENABLE_MUTATION_BREAKPOINT
-                    if (MutationBreakpoint::IsFeatureEnabled(requestContext))
-                    {
-                        MutationBreakpoint::HandleSetProperty(requestContext, object, propertyId, newValue);
-                    }
-#endif
                     JavascriptOperators::CallSetter(func, receiver, newValue, requestContext);
                 }
                 *result = TRUE;
@@ -2554,12 +2548,6 @@ constexpr uint8_t ConstructorCallsRequiredToFinalizeCachedType = 2;
             return FALSE;
         }
 
-#ifdef ENABLE_MUTATION_BREAKPOINT
-        // Break on mutation if needed
-        bool doNotUpdateCacheForMbp = MutationBreakpoint::IsFeatureEnabled(requestContext) ?
-            MutationBreakpoint::HandleSetProperty(requestContext, object, propertyId, newValue) : false;
-#endif
-
         // Get the original type before setting the property
         Type *typeWithoutProperty = object->GetType();
         BOOL didSetProperty = false;
@@ -2596,10 +2584,6 @@ constexpr uint8_t ConstructorCallsRequiredToFinalizeCachedType = 2;
         if (didSetProperty)
         {
             bool updateCache = true;
-#ifdef ENABLE_MUTATION_BREAKPOINT
-            updateCache = updateCache && !doNotUpdateCacheForMbp;
-#endif
-
             if (updateCache)
             {
                 if (!VarIs<JavascriptProxy>(receiver))
@@ -2855,14 +2839,6 @@ constexpr uint8_t ConstructorCallsRequiredToFinalizeCachedType = 2;
 
     BOOL JavascriptOperators::DeleteProperty(RecyclableObject* instance, JavascriptString *propertyNameString, PropertyOperationFlags propertyOperationFlags)
     {
-#ifdef ENABLE_MUTATION_BREAKPOINT
-        ScriptContext *scriptContext = instance->GetScriptContext();
-        if (MutationBreakpoint::IsFeatureEnabled(scriptContext)
-            && scriptContext->HasMutationBreakpoints())
-        {
-            MutationBreakpoint::HandleDeleteProperty(scriptContext, instance, propertyNameString);
-        }
-#endif
         return instance->DeleteProperty(propertyNameString, propertyOperationFlags);
     }
 
@@ -2877,14 +2853,6 @@ constexpr uint8_t ConstructorCallsRequiredToFinalizeCachedType = 2;
         {
             return false;
         }
-#ifdef ENABLE_MUTATION_BREAKPOINT
-        ScriptContext *scriptContext = instance->GetScriptContext();
-        if (MutationBreakpoint::IsFeatureEnabled(scriptContext)
-            && scriptContext->HasMutationBreakpoints())
-        {
-            MutationBreakpoint::HandleDeleteProperty(scriptContext, instance, propertyId);
-        }
-#endif
          // !unscopables will hit the return statement on the first iteration
          return instance->DeleteProperty(propertyId, propertyOperationFlags);
     }
