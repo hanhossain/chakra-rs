@@ -228,7 +228,7 @@ namespace Js
         const CallInfo callInfo = this->GetCallInfo();
 
         JavascriptFunction* function = this->GetCurrentFunction();
-        if (IsLibraryStackFrameEnabled(this->scriptContext) && !function->IsScriptFunction())
+        if (!function->IsScriptFunction())
         {
             return false; // native library code can't be global function
         }
@@ -819,25 +819,11 @@ namespace Js
         return false;
     }
 
-    /*static*/
-    bool JavascriptStackWalker::IsLibraryStackFrameEnabled(Js::ScriptContext * scriptContext)
-    {
-        Assert(scriptContext != nullptr);
-        return CONFIG_FLAG(LibraryStackFrame);
-    }
-
     // Check if a function is a display caller: user code, or native library / boundary script library code
     bool JavascriptStackWalker::IsDisplayCaller(JavascriptFunction* func)
     {
         FunctionBody* body = func->GetFunctionBody();
-        if (IsLibraryStackFrameEnabled(func->GetScriptContext()))
-        {
-            return !func->IsScriptFunction() || !body->GetUtf8SourceInfo()->GetIsLibraryCode() || body->IsPublicLibraryCode();
-        }
-        else
-        {
-            return !body->GetUtf8SourceInfo()->GetIsLibraryCode();
-        }
+        return !func->IsScriptFunction() || !body->GetUtf8SourceInfo()->GetIsLibraryCode() || body->IsPublicLibraryCode();
     }
 
     bool JavascriptStackWalker::GetDisplayCaller(_Out_opt_ JavascriptFunction ** ppFunc)
@@ -855,8 +841,7 @@ namespace Js
 
     const char16_t * JavascriptStackWalker::GetCurrentNativeLibraryEntryName() const
     {
-        Assert(IsLibraryStackFrameEnabled(this->scriptContext)
-            && this->prevNativeLibraryEntry
+        Assert(this->prevNativeLibraryEntry
             && this->prevNativeLibraryEntry->next == this->nativeLibraryEntry);
         return this->prevNativeLibraryEntry->name;
     }
@@ -950,7 +935,7 @@ namespace Js
             return true;
         }
 
-        if (IsLibraryStackFrameEnabled(this->scriptContext) && this->nativeLibraryEntry)
+        if (this->nativeLibraryEntry)
         {
             void* addressOfReturnAddress = this->currentFrame.GetAddressOfReturnAddress();
             void* nativeLibraryEntryAddress = this->nativeLibraryEntry->addr;
