@@ -72,7 +72,6 @@
 #include "Library/LazyJSONString.h"
 #include "Library/JSONStringBuilder.h"
 #include "Library/JSONStringifier.h"
-#include "Library/ProfileString.h"
 #include "Library/SingleCharString.h"
 #include "Library/SubString.h"
 #include "Library/BufferStringBuilder.h"

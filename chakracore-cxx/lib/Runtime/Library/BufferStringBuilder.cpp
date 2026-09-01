@@ -74,9 +74,6 @@ namespace Js
 
         JavascriptString* result = this->m_string;
 
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordNewString( this->m_string->GetScriptContext(), buffer, length );
-#endif
         // Prevent further calls to ToString, SetContent etc.
         this->m_string = nullptr;
 

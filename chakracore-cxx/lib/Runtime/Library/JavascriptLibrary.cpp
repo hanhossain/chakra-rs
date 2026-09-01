@@ -6443,9 +6443,6 @@ namespace Js
     JavascriptString* JavascriptLibrary::GetEmptyString() const
     {
         AssertMsg(emptyString, "Where's emptyString?");
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordEmptyStringRequest(scriptContext);
-#endif
         return emptyString;
     }
 

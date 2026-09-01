@@ -97,7 +97,6 @@ set(CRLIB_SOURCE_CODES
     MathLibrary.cpp
     ModuleRoot.cpp
     ObjectPrototypeObject.cpp
-    ProfileString.cpp
     PropertyRecordUsageCache.cpp
     PropertyString.cpp
     RegexHelper.cpp

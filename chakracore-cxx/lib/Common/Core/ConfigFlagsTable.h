@@ -436,10 +436,6 @@ namespace Js
         #ifdef PROFILE_MEM
         ProfileMemoryFlag,
         #endif
-        #ifdef PROFILE_STRINGS
-        ProfileStringsFlag,
-        #endif
-
         MinBailOutsBeforeRejitFlag,
         #ifdef RECYCLER_STRESS
         RecyclerStressFlag,
@@ -1865,10 +1861,6 @@ namespace Js
         #ifdef PROFILE_MEM
         // TODO (hanhossain): remove flag
             String ProfileMemory;
-        #endif
-        #ifdef PROFILE_STRINGS
-        // TODO (hanhossain): remove flag
-            Boolean ProfileStrings;
         #endif
         // todo (hanhossain): flag end
         Number MinBailOutsBeforeRejit;

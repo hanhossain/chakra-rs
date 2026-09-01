@@ -420,9 +420,6 @@ case_2:
             }
         }
 
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordConcatenation(GetScriptContext(), GetLength(), pstRight->GetLength(), ConcatType_ConcatTree);
-#endif
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
@@ -440,9 +437,6 @@ case_2:
         Assert(VarIs<CompoundString>(this));
         Assert(pstRight);
 
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordConcatenation(GetScriptContext(), GetLength(), pstRight->GetLength(), ConcatType_CompoundString);
-#endif
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
@@ -467,9 +461,6 @@ case_2:
         JavascriptString *const leftLeftString = leftConcatString->LeftString();
         if(VirtualTableInfo<ConcatString>::HasVirtualTable(leftLeftString))
         {
-#ifdef PROFILE_STRINGS
-            StringProfiler::RecordConcatenation(GetScriptContext(), GetLength(), pstRight->GetLength(), ConcatType_CompoundString);
-#endif
             if(PHASE_TRACE_StringConcat)
             {
                 Output::Print(
@@ -495,9 +486,6 @@ case_2:
         Assert(pstRight);
         Assert(GetLength() == 0 || pstRight->GetLength() == 0);
 
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordConcatenation(GetScriptContext(), GetLength(), pstRight->GetLength());
-#endif
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
@@ -523,9 +511,6 @@ case_2:
             pstRight->GetLength() != 0 &&
             (CompoundString::ShouldAppendChars(GetLength()) || CompoundString::ShouldAppendChars(pstRight->GetLength())));
 
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordConcatenation(GetScriptContext(), GetLength(), pstRight->GetLength(), ConcatType_CompoundString);
-#endif
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
@@ -565,9 +550,6 @@ case_2:
 
         if(pstLeft->GetLength() != 1 || pstRight->GetLength() != 1)
         {
-#ifdef PROFILE_STRINGS
-            StringProfiler::RecordConcatenation(pstLeft->GetScriptContext(), pstLeft->GetLength(), pstRight->GetLength(), ConcatType_ConcatTree);
-#endif
             if(PHASE_TRACE_StringConcat)
             {
                 Output::Print(
@@ -589,9 +571,6 @@ case_2:
         Assert(VarIs<CompoundString>(pstLeft));
         Assert(pstRight);
 
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordConcatenation(pstLeft->GetScriptContext(), pstLeft->GetLength(), pstRight->GetLength(), ConcatType_CompoundString);
-#endif
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
@@ -618,9 +597,6 @@ case_2:
         Assert(VirtualTableInfo<ConcatString>::HasVirtualTable(pstLeft));
         Assert(pstRight);
 
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordConcatenation(pstLeft->GetScriptContext(), pstLeft->GetLength(), pstRight->GetLength(), ConcatType_CompoundString);
-#endif
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
@@ -644,9 +620,6 @@ case_2:
         Assert(pstRight);
         Assert(pstLeft->GetLength() == 0 || pstRight->GetLength() == 0);
 
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordConcatenation(pstLeft->GetScriptContext(), pstLeft->GetLength(), pstRight->GetLength());
-#endif
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
@@ -671,9 +644,6 @@ case_2:
         Assert(pstRight);
         Assert(pstRight->GetLength() == 1);
 
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordConcatenation(pstLeft->GetScriptContext(), pstLeft->GetLength(), pstRight->GetLength(), ConcatType_BufferString);
-#endif
         if(PHASE_TRACE_StringConcat)
         {
             Output::Print(
