@@ -65,11 +65,6 @@ bool JsrtContext::Is(void * ref)
     return VirtualTableInfo<JsrtContextCore>::HasVirtualTable(ref);
 }
 
-void JsrtContext::OnScriptLoad(Js::JavascriptFunction * scriptFunction, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException)
-{
-    ((JsrtContextCore *)this)->OnScriptLoad(scriptFunction, utf8SourceInfo, compileException);
-}
-
 JsrtContextCore::JsrtContextCore(JsrtRuntime * runtime) :
     JsrtContext(runtime)
 {
@@ -119,11 +114,6 @@ Js::ScriptContext* JsrtContextCore::EnsureScriptContext()
     library->GetFunctionConstructor()->SetEntryPoint(&Js::JavascriptFunction::NewInstance);
 
     return this->GetScriptContext();
-}
-
-// TODO (hanhossain): remove
-void JsrtContextCore::OnScriptLoad(Js::JavascriptFunction * scriptFunction, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException)
-{
 }
 
 int32_t ChakraCoreHostScriptContext::FetchImportedModule(Js::ModuleRecordBase* referencingModule, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord)
