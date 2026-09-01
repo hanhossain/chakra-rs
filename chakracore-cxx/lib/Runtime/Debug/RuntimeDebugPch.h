@@ -55,28 +55,6 @@
 
 #include "Library/ScriptFunction.h"
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#ifdef ENABLE_MUTATION_BREAKPOINT
-// Not enabled in ChakraCore
-#include "activdbg_private.h"
-#endif
-
-#include "Debug/DebuggingFlags.h"
-#include "Debug/DiagProbe.h"
-#include "Debug/DiagObjectModel.h"
-#include "Debug/DiagStackFrame.h"
-
-#include "Debug/BreakpointProbe.h"
-#include "Debug/DebugDocument.h"
-#include "Debug/DebugManager.h"
-#include "Debug/ProbeContainer.h"
-#include "Debug/DebugContext.h"
-#include "Debug/DiagHelperMethodWrapper.h"
-
-#ifdef ENABLE_MUTATION_BREAKPOINT
-#include "Debug/MutationBreakpoint.h"
-#endif
-#endif
 #include "Exceptions/ExceptionBase.h"
 #include "Exceptions/JavascriptException.h"
 #include "Exceptions/OutOfMemoryException.h"

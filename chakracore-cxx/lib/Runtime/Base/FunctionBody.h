@@ -1098,9 +1098,6 @@ namespace Js
 
 #if DBG
         bool HasValidEntryPoint() const;
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        bool HasValidProfileEntryPoint() const;
-#endif
         bool HasValidNonProfileEntryPoint() const;
 #endif
         virtual void SetDisplayName(const char16_t* displayName, uint displayNameLength, uint displayShortNameOffset, SetDisplayNameFlags flags = SetDisplayNameFlagsNone) = 0;
@@ -2480,9 +2477,6 @@ namespace Js
     public:
 #if DBG
         int GetProfileSession() { return m_iProfileSession; }
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        Js::DebuggerMode GetDebuggerMode();
-#endif
 #endif
         void Finalize(bool isShutdown) override;
         void OnMark() override;
@@ -2957,12 +2951,6 @@ namespace Js
         void         EndExecution();
         SourceInfo * GetSourceInfo() { return &this->m_sourceInfo; }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        bool InstallProbe(int offset);
-        bool UninstallProbe(int offset);
-        bool ProbeAtOffset(int offset, OpCode* pOriginalOpcode);
-#endif
-
         uint GetInlineCacheCount() const { return GetCountField(CounterFields::InlineCacheCount); }
         void SetInlineCacheCount(uint count) { SetCountField(CounterFields::InlineCacheCount, count); }
 
@@ -3206,10 +3194,6 @@ namespace Js
 
         uint GetStatementStartOffset(const uint statementIndex);
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        void CheckAndRegisterFuncToDiag(ScriptContext *scriptContext);
-        void SetEntryToDeferParseForDebugger();
-#endif
         void ClearEntryPoints();
         void ResetEntryPoint();
         void CleanupToReparseHelper();

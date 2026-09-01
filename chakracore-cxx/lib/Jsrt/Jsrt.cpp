@@ -126,35 +126,6 @@ JsErrorCode CreateContextCore(_In_ JsRuntimeHandle runtimeHandle, _In_ bool inRe
 
     JsrtContext * context = JsrtContext::New(runtime);
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    JsrtDebugManager* jsrtDebugManager = runtime->GetJsrtDebugManager();
-
-    if(jsrtDebugManager != nullptr)
-    {
-        // JsDiagStartDebugging was called
-        threadContext->GetDebugManager()->SetLocalsDisplayFlags(Js::DebugManager::LocalsDisplayFlags::LocalsDisplayFlags_NoGroupMethods);
-
-        Js::ScriptContext* scriptContext = context->GetScriptContext();
-
-        Js::DebugContext* debugContext = scriptContext->GetDebugContext();
-        debugContext->SetHostDebugContext(jsrtDebugManager);
-
-        if (!jsrtDebugManager->IsDebugEventCallbackSet())
-        {
-            // JsDiagStopDebugging was called so we need to be in SourceRunDownMode
-            debugContext->SetDebuggerMode(Js::DebuggerMode::SourceRundown);
-        }
-        else
-        {
-            // Set Debugging mode
-            scriptContext->InitializeDebugging();
-            Js::ProbeContainer* probeContainer = debugContext->GetProbeContainer();
-            probeContainer->InitializeInlineBreakEngine(jsrtDebugManager);
-            probeContainer->InitializeDebuggerScriptOptionCallback(jsrtDebugManager);
-        }
-    }
-#endif
-
     *newContext = (JsContextRef)context;
     return JsNoError;
 }
@@ -359,31 +330,15 @@ JsErrorCode chakracore::jsrt::JsDisposeRuntime(_In_ JsRuntimeHandle runtimeHandl
                 recycler->ClearObjectBeforeCollectCallbacks();
             }
         }
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (runtime->GetJsrtDebugManager() != nullptr)
-        {
-            runtime->GetJsrtDebugManager()->ClearDebuggerObjects();
-        }
-#endif
         Js::ScriptContext *scriptContext;
         for (scriptContext = threadContext->GetScriptContextList(); scriptContext; scriptContext = scriptContext->next)
         {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            if (runtime->GetJsrtDebugManager() != nullptr)
-            {
-                runtime->GetJsrtDebugManager()->ClearDebugDocument(scriptContext);
-            }
-#endif
             scriptContext->MarkForClose();
         }
 
         // Close any open Contexts.
         // We need to do this before recycler shutdown, because ScriptEngine->Close won't work then.
         runtime->CloseContexts();
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        runtime->DeleteJsrtDebugManager();
-#endif
 
         runtime->SetBeforeCollectCallback(nullptr, nullptr);
         threadContext->CloseForJSRT();

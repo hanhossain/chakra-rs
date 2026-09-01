@@ -20,10 +20,6 @@ namespace Js
             thrownObject(object),
             isPendingExceptionObject(isPendingExceptionObject),
             scriptContext(scriptContext), tag(true),
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            isDebuggerSkip(false), byteCodeOffsetAfterDebuggerSkip(Constants::InvalidByteCodeOffset), hasDebuggerLogged(false),
-            isFirstChance(false), isExceptionCaughtInNonUserCode(false), ignoreAdvanceToNextStatement(false),
-#endif
             hostWrapperCreateFunc(nullptr),
             next(nullptr)
         {
@@ -64,68 +60,6 @@ namespace Js
 
         void FillError(JavascriptExceptionContext& exceptionContext, ScriptContext *scriptContext, HostWrapperCreateFuncType hostWrapperCreateFunc = NULL);
         void ClearError();
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        void SetDebuggerSkip(bool skip)
-        {
-            isDebuggerSkip = skip;
-        }
-
-        bool IsDebuggerSkip()
-        {
-            return isDebuggerSkip;
-        }
-
-        int GetByteCodeOffsetAfterDebuggerSkip()
-        {
-            return byteCodeOffsetAfterDebuggerSkip;
-        }
-
-        void SetByteCodeOffsetAfterDebuggerSkip(int offset)
-        {
-            byteCodeOffsetAfterDebuggerSkip = offset;
-        }
-
-        void SetDebuggerHasLogged(bool has)
-        {
-            hasDebuggerLogged = has;
-        }
-
-        bool HasDebuggerLogged()
-        {
-            return hasDebuggerLogged;
-        }
-
-        void SetIsFirstChance(bool is)
-        {
-            isFirstChance = is;
-        }
-
-        bool IsFirstChanceException()
-        {
-            return isFirstChance;
-        }
-
-        void SetIsExceptionCaughtInNonUserCode(bool is)
-        {
-            isExceptionCaughtInNonUserCode = is;
-        }
-
-        bool IsExceptionCaughtInNonUserCode()
-        {
-            return isExceptionCaughtInNonUserCode;
-        }
-
-        void SetIgnoreAdvanceToNextStatement(bool is)
-        {
-            ignoreAdvanceToNextStatement = is;
-        }
-
-        bool IsIgnoreAdvanceToNextStatement()
-        {
-            return ignoreAdvanceToNextStatement;
-        }
-#endif
 
         void SetHostWrapperCreateFunc(HostWrapperCreateFuncType hostWrapperCreateFunc)
         {
@@ -168,21 +102,9 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<Var>::Type      thrownObject;
         typename WriteBarrierFieldTypeTraits<ScriptContext *>::Type scriptContext;
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        typename WriteBarrierFieldTypeTraits<int>::Type        byteCodeOffsetAfterDebuggerSkip;
-#endif
 
         typename WriteBarrierFieldTypeTraits<const bool>::Type tag : 1;               // Tag the low bit to prevent possible GC false references
         typename WriteBarrierFieldTypeTraits<bool>::Type       isPendingExceptionObject : 1;
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        typename WriteBarrierFieldTypeTraits<bool>::Type       isDebuggerSkip : 1;
-        typename WriteBarrierFieldTypeTraits<bool>::Type       hasDebuggerLogged : 1;
-        typename WriteBarrierFieldTypeTraits<bool>::Type       isFirstChance : 1;      // Mentions whether the current exception is a handled exception or not
-        typename WriteBarrierFieldTypeTraits<bool>::Type       isExceptionCaughtInNonUserCode : 1; // Mentions if in the caller chain the exception will be handled by the non-user code.
-        typename WriteBarrierFieldTypeTraits<bool>::Type       ignoreAdvanceToNextStatement : 1;  // This will be set when user had setnext while sitting on the exception
-                                                // So the exception eating logic shouldn't try and advance to next statement again.
-#endif
 
         typename WriteBarrierFieldTypeTraits<HostWrapperCreateFuncType, _no_write_barrier_policy, _no_write_barrier_policy>::Type hostWrapperCreateFunc;
 

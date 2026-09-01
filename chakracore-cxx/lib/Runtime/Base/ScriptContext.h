@@ -375,13 +375,6 @@ namespace Js
         Js::JavascriptMethod DispatchDefaultInvoke;
         Js::JavascriptMethod DispatchProfileInvoke;
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        typedef int32_t (*GetDocumentContextFunction)(
-            Js::FunctionBody *pFunctionBody,
-            IDebugDocumentContext **ppDebugDocumentContext);
-        GetDocumentContextFunction GetDocumentContext;
-#endif // ENABLE_SCRIPT_DEBUGGING
-
         const ScriptContextBase* GetScriptContextBase() const { return static_cast<const ScriptContextBase*>(this); }
 
         void RedeferFunctionBodies(ActiveFunctionSet *pActive, uint inactiveThreshold);
@@ -410,11 +403,6 @@ namespace Js
         bool IsScriptContextInNonDebugMode() const;
         bool IsScriptContextInDebugMode() const;
         bool IsScriptContextInSourceRundownOrDebugMode() const;
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        bool IsDebuggerRecording() const;
-        void SetIsDebuggerRecording(bool isDebuggerRecording);
-#endif
 
         bool IsRunningScript() const { return this->threadContext->GetScriptEntryExit() != nullptr; }
 
@@ -471,15 +459,8 @@ namespace Js
 
         ArenaAllocator* interpreterArena;
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        ArenaAllocator* diagnosticArena;
-#endif
-
         bool startupComplete; // Indicates if the heuristic startup phase for this script context is complete
         bool isInvalidatedForHostObjects;  // Indicates that we've invalidate all objects in the host so stop calling them.
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        bool isEnumeratingRecyclerObjects; // Indicates this scriptContext is enumerating recycler objects. Used by recycler enumerating callbacks to filter out other unrelated scriptContexts.
-#endif
         bool m_enumerateNonUserFunctionsOnly; // Indicates that recycler enumeration callback will consider only non-user functions (which are built-ins, external, winrt etc).
 
         ThreadContext* threadContext;
@@ -756,17 +737,6 @@ private:
         typedef JsUtil::List<RecyclerWeakReference<Utf8SourceInfo>*, Recycler, false, Js::FreeListedRemovePolicy> SourceList;
         RecyclerRootPtr<SourceList> sourceList;
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        typedef void(*RaiseMessageToDebuggerFunctionType)(ScriptContext *, DEBUG_EVENT_INFO_TYPE, const char16_t*, const char16_t*);
-        RaiseMessageToDebuggerFunctionType raiseMessageToDebuggerFunctionType;
-
-        typedef void(*TransitionToDebugModeIfFirstSourceFn)(ScriptContext *, Utf8SourceInfo *);
-        TransitionToDebugModeIfFirstSourceFn transitionToDebugModeIfFirstSourceFn;
-
-        DebugContext* debugContext;
-        std::recursive_mutex debugContextCloseCS;
-#endif
-
         // List of weak reference dictionaries. We'll walk through them
         // and clean them up post-collection
         // IWeakReferenceDictionary objects are added to this list by calling
@@ -842,11 +812,6 @@ private:
         void SetUrl(BSTR bstr);
         time_t GetCreateTime() const { return createTime; }
         uint GetAllocId() const { return allocId; }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        bool IsDebugContextInitialized() const { return this->isDebugContextInitialized; }
-        DebugContext* GetDebugContext() const;
-#endif
 
         uint callCount;
 
@@ -1110,10 +1075,6 @@ private:
         CacheAllocator * GetEnumeratorAllocator() { return &enumeratorCacheAllocator; }
         ArenaAllocator* DynamicProfileInfoAllocator() { return &dynamicProfileInfoAllocator; }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        ArenaAllocator* AllocatorForDiagnostics();
-#endif
-
         Js::TempArenaAllocatorObject* GetTemporaryAllocator(const char16_t* name);
         void ReleaseTemporaryAllocator(Js::TempArenaAllocatorObject* tempAllocator);
         Js::TempGuestArenaAllocatorObject* GetTemporaryGuestAllocator(const char16_t* name);
@@ -1207,34 +1168,6 @@ private:
         // Do not call this directly, look for ENFORCE_ENTRYEXITRECORD_HASCALLER macro.
         void EnforceEERHasCaller() { threadContext->GetScriptEntryExit()->hasCaller = true; }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        void SetRaiseMessageToDebuggerFunction(RaiseMessageToDebuggerFunctionType function)
-        {
-            raiseMessageToDebuggerFunctionType = function;
-        }
-
-        void RaiseMessageToDebugger(DEBUG_EVENT_INFO_TYPE messageType, const char16_t* message, const char16_t* url)
-        {
-            if (raiseMessageToDebuggerFunctionType != nullptr)
-            {
-                raiseMessageToDebuggerFunctionType(this, messageType, message, url);
-            }
-        }
-
-        void SetTransitionToDebugModeIfFirstSourceFn(TransitionToDebugModeIfFirstSourceFn function)
-        {
-            transitionToDebugModeIfFirstSourceFn = function;
-        }
-
-        void TransitionToDebugModeIfFirstSource(Utf8SourceInfo *sourceInfo)
-        {
-            if (transitionToDebugModeIfFirstSourceFn != nullptr)
-            {
-                transitionToDebugModeIfFirstSourceFn(this, sourceInfo);
-            }
-        }
-#endif
-
         void AddSourceSize(size_t sourceSize)
         {
             this->sourceSize += sourceSize;
@@ -1316,27 +1249,8 @@ private:
         bool HadProfiled() const { return hadProfiled; }
 #endif
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        // Iterate through utf8sourceinfo and clear debug document if they are there.
-        void EnsureClearDebugDocument();
-        void UpdateRecyclerFunctionEntryPointsForDebugger();
-        static void RecyclerFunctionCallbackForDebugger(void *address, size_t size);
-        void SetFunctionInRecyclerToProfileMode(bool enumerateNonUserFunctionsOnly = false);
-#ifdef ASMJS_PLAT
-        void TransitionEnvironmentForDebugger(ScriptFunction * scriptFunction);
-#endif
-#endif
-
         // To be called directly only when the thread context is shutting down
         void ShutdownClearSourceLists();
-
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        void RegisterDebugThunk(bool calledDuringAttach = true);
-        void UnRegisterDebugThunk();
-        static void SetEntryPointToProfileThunk(JavascriptFunction* function);
-        static void RestoreEntryPointFromProfileThunk(JavascriptFunction* function);
-        static void RecyclerEnumClassEnumeratorCallback(void *address, size_t size);
-#endif
 
 #if ENABLE_NATIVE_CODEGEN
         int32_t RecreateNativeCodeGenerator(NativeCodeGenerator ** previousCodeGen = nullptr);
@@ -1346,33 +1260,6 @@ private:
         int32_t OnDebuggerAttachedDetached(bool attach);
 #endif
         bool IsForceNoNative();
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        int32_t OnDebuggerAttached();
-        int32_t OnDebuggerDetached();
-        void InitializeDebugging();
-        bool IsEnumeratingRecyclerObjects() const { return isEnumeratingRecyclerObjects; }
-    private:
-        class AutoEnumeratingRecyclerObjects
-        {
-        public:
-            AutoEnumeratingRecyclerObjects(ScriptContext* scriptContext):
-                m_scriptContext(scriptContext)
-            {
-                Assert(!m_scriptContext->IsEnumeratingRecyclerObjects());
-                m_scriptContext->isEnumeratingRecyclerObjects = true;
-            }
-
-            ~AutoEnumeratingRecyclerObjects()
-            {
-                Assert(m_scriptContext->IsEnumeratingRecyclerObjects());
-                m_scriptContext->isEnumeratingRecyclerObjects = false;
-            }
-
-        private:
-            ScriptContext* m_scriptContext;
-        };
-#endif
 
 #ifdef EDIT_AND_CONTINUE
     private:
@@ -1421,11 +1308,6 @@ private:
         // Thunks for deferred deserialization of function bodies from the byte code cache
         static JavascriptMethod ProfileModeDeferredDeserialize(ScriptFunction* function);
         static Var ProfileModeDeferredDeserializeThunk(RecyclableObject* function, CallInfo callInfo, ...);
-
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        static Var ProfileModeThunk_DebugModeWrapper(JavascriptFunction* function, ScriptContext* scriptContext, JavascriptMethod entryPoint, Arguments& args);
-        static JavascriptMethod GetProfileModeThunk(JavascriptMethod entryPoint);
-#endif
 
         void OnStartupComplete();
         void SaveStartupProfileAndRelease(bool isSaveOnClose = false);
@@ -1485,13 +1367,6 @@ private:
         bool GetRecyclerAllowNativeCodeBumpAllocation() const override;
         bool IsPRNGSeeded() const override;
         intptr_t GetBuiltinFunctionsBaseAddr() const override;
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        intptr_t GetDebuggingFlagsAddr() const override;
-        intptr_t GetDebugStepTypeAddr() const override;
-        intptr_t GetDebugFrameAddressAddr() const override;
-        intptr_t GetDebugScriptIdWhenSetAddr() const override;
-#endif
 
         intptr_t GetChakraLibAddr() const override;
         intptr_t GetAddr() const override;
@@ -1627,35 +1502,6 @@ private:
         Js::Phase phase;
         bool isPhaseComplete;
     };
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    // Set up a scope in which we will initialize library JS code (like Intl.js),
-    // which should not be treated as user-level JS code.
-    // We should not profile and should not log debugger information in such a scope.
-    class AutoInitLibraryCodeScope
-    {
-    private:
-        ScriptContext * const scriptContext;
-        const bool oldIsProfilingUserCode;
-        const bool oldIsDebuggerRecording;
-
-    public:
-        AutoInitLibraryCodeScope(ScriptContext *scriptContext) :
-            scriptContext(scriptContext),
-            oldIsProfilingUserCode(scriptContext->GetThreadContext()->IsProfilingUserCode()),
-            oldIsDebuggerRecording(scriptContext->IsDebuggerRecording())
-        {
-            this->scriptContext->GetThreadContext()->SetIsProfilingUserCode(false);
-            this->scriptContext->SetIsDebuggerRecording(false);
-        }
-
-        ~AutoInitLibraryCodeScope()
-        {
-            this->scriptContext->GetThreadContext()->SetIsProfilingUserCode(this->oldIsProfilingUserCode);
-            this->scriptContext->SetIsDebuggerRecording(this->oldIsDebuggerRecording);
-        }
-    };
-#endif
 }
 
 #define BEGIN_TEMP_ALLOCATOR(allocator, scriptContext, name) \

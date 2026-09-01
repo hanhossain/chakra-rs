@@ -104,14 +104,6 @@
 #include "Language/SimdOps.h"
 #include "Language/SimdUtils.h"
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#include "Debug/DebuggingFlags.h"
-#include "Debug/DiagProbe.h"
-#include "Debug/DebugManager.h"
-#include "Debug/ProbeContainer.h"
-#include "Debug/DebugContext.h"
-#endif
-
 // .inl files
 #include "Language/CacheOperators.inl"
 #include "Language/JavascriptMathOperators.inl"

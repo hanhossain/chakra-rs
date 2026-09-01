@@ -121,15 +121,9 @@ Js::ScriptContext* JsrtContextCore::EnsureScriptContext()
     return this->GetScriptContext();
 }
 
+// TODO (hanhossain): remove
 void JsrtContextCore::OnScriptLoad(Js::JavascriptFunction * scriptFunction, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException)
 {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    JsrtDebugManager* jsrtDebugManager = this->GetRuntime()->GetJsrtDebugManager();
-    if (jsrtDebugManager != nullptr)
-    {
-        jsrtDebugManager->ReportScriptCompile(scriptFunction, utf8SourceInfo, compileException);
-    }
-#endif
 }
 
 int32_t ChakraCoreHostScriptContext::FetchImportedModule(Js::ModuleRecordBase* referencingModule, LPCOLESTR specifier, Js::ModuleRecordBase** dependentModuleRecord)

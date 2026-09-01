@@ -6,11 +6,6 @@
 #include "ThreadServiceWrapper.h"
 #include "Types/TypePropertyCache.h"
 #include "Util/Pinned.h"
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#include "Debug/DebuggingFlags.h"
-#include "Debug/DiagProbe.h"
-#include "Debug/DebugManager.h"
-#endif
 #include "Chars.h"
 #include "CaseInsensitive.h"
 #include "CharSet.h"
@@ -75,9 +70,6 @@ ThreadContext::RecyclableData::RecyclableData(Recycler *const recycler) :
     propertyGuards(recycler, 128),
 #endif
     oldEntryPointInfo(nullptr),
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    returnedValueList(nullptr),
-#endif
     constructorCacheInvalidationCount(0)
 {
 }
@@ -174,9 +166,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     gcSinceLastRedeferral(0),
     gcSinceCallCountsCollected(0),
     tridentLoadAddress(nullptr)
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    , debugManager(nullptr)
-#endif
 #ifdef ENABLE_DIRECTCALL_TELEMETRY
     , directCallTelemetry(this)
 #endif
@@ -361,14 +350,6 @@ ThreadContext::~ThreadContext()
             this->recyclableData->symbolRegistrationMap = nullptr;
         }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->recyclableData->returnedValueList != nullptr)
-        {
-            this->recyclableData->returnedValueList->Clear();
-            this->recyclableData->returnedValueList = nullptr;
-        }
-#endif
-
         if (this->propertyMap != nullptr)
         {
             HeapDelete(this->propertyMap);
@@ -392,10 +373,6 @@ ThreadContext::~ThreadContext()
             scriptContext->ShutdownClearSourceLists();
         }
 #endif
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        Assert(this->debugManager == nullptr);
-#endif
-
         HeapDelete(recycler);
     }
 
@@ -1824,42 +1801,6 @@ Js::TypeId ThreadContext::CreateTypeId()
     return nextTypeId = static_cast<Js::TypeId>(nextTypeId + 1);
 }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-void ThreadContext::EnsureDebugManager()
-{
-    if (this->debugManager == nullptr)
-    {
-        this->debugManager = HeapNew(Js::DebugManager, this, this->GetAllocationPolicyManager());
-    }
-    InterlockedIncrement(&crefSContextForDiag);
-    Assert(this->debugManager != nullptr);
-}
-
-void ThreadContext::ReleaseDebugManager()
-{
-    Assert(crefSContextForDiag > 0);
-    Assert(this->debugManager != nullptr);
-
-    int32_t lref = InterlockedDecrement(&crefSContextForDiag);
-
-    if (lref == 0)
-    {
-        if (this->recyclableData != nullptr)
-        {
-            this->recyclableData->returnedValueList = nullptr;
-        }
-
-        if (this->debugManager != nullptr)
-        {
-            this->debugManager->Close();
-            HeapDelete(this->debugManager);
-            this->debugManager = nullptr;
-        }
-    }
-}
-
-#endif
-
 Js::TempArenaAllocatorObject *
 ThreadContext::GetTemporaryAllocator(const char16_t* name)
 {
@@ -2477,11 +2418,6 @@ ThreadContext::InExpirableCollectMode()
     return (expirableObjectList != nullptr &&
             numExpirableObjects > 0 &&
             expirableCollectModeGcCount >= 0
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        &&
-            (this->GetDebugManager() != nullptr &&
-            !this->GetDebugManager()->IsDebuggerAttaching())
-#endif
         );
 }
 

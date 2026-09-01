@@ -15,11 +15,6 @@
 #define ProfileEntryThunk Js::ScriptContext::DebugProfileProbeThunk
 
 #define DefaultDeferredParsingThunk Js::JavascriptFunction::DeferredParsingThunk
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-
-#define ProfileDeferredParsingThunk Js::ScriptContext::ProfileModeDeferredParsingThunk
-#endif
-
 #define DefaultDeferredDeserializeThunk Js::JavascriptFunction::DeferredDeserializeThunk
 #define ProfileDeferredDeserializeThunk Js::ScriptContext::ProfileModeDeferredDeserializeThunk
 #if ENABLE_NATIVE_CODEGEN

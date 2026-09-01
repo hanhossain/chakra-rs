@@ -13,9 +13,6 @@
 #include "ByteCode/ByteCodeApi.h"
 #include "Library/ProfileString.h"
 #include <limits>
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#include "Debug/DiagHelperMethodWrapper.h"
-#endif
 #if PROFILE_DICTIONARY
 #include "Interface/DictionaryStats.h"
 #endif
@@ -79,14 +76,6 @@ namespace Js
 #ifndef CC_LOW_MEMORY_TARGET
         integerStringMapCacheMissCount(0),
         integerStringMapCacheUseCount(0),
-#endif
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        diagnosticArena(nullptr),
-        raiseMessageToDebuggerFunctionType(nullptr),
-        transitionToDebugModeIfFirstSourceFn(nullptr),
-        debugContext(nullptr),
-        isDebugContextInitialized(false),
-        isEnumeratingRecyclerObjects(false),
 #endif
         sourceSize(0),
         deferredBody(false),
@@ -176,11 +165,6 @@ namespace Js
 #endif
         , emptyStringPropertyId(Js::PropertyIds::_none)
     {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-       // This may allocate memory and cause exception, but it is ok, as we all we have done so far
-       // are field init and those dtor will be called if exception occurs
-       threadContext->EnsureDebugManager();
-#endif
        // Don't use throwing memory allocation in ctor, as exception in ctor doesn't cause the dtor to be called
        // potentially causing memory leaks
        BEGIN_NO_EXCEPTION;
@@ -294,27 +278,7 @@ namespace Js
 #endif
         intConstPropsOnGlobalObject = Anew(GeneralAllocator(), PropIdSetForConstProp, GeneralAllocator());
         intConstPropsOnGlobalUserObject = Anew(GeneralAllocator(), PropIdSetForConstProp, GeneralAllocator());
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        this->debugContext = HeapNew(DebugContext, this);
-#endif
     }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    void ScriptContext::EnsureClearDebugDocument()
-    {
-        if (this->sourceList)
-        {
-            this->sourceList->Map([=](uint i, RecyclerWeakReference<Js::Utf8SourceInfo>* sourceInfoWeakRef) {
-                Js::Utf8SourceInfo* sourceInfo = sourceInfoWeakRef->Get();
-                if (sourceInfo)
-                {
-                    sourceInfo->ClearDebugDocument();
-                }
-            });
-        }
-    }
-#endif
 
     void ScriptContext::ShutdownClearSourceLists()
     {
@@ -331,10 +295,6 @@ namespace Js
                     functionBody->CleanupSourceInfo(true);
                 });
             }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            EnsureClearDebugDocument();
-#endif
 
             // Don't need the source list any more so ok to release
             this->sourceList.Unroot(this->GetRecycler());
@@ -433,15 +393,6 @@ namespace Js
         {
             BackgroundParser::Delete(this->backgroundParser);
             this->backgroundParser = nullptr;
-        }
-#endif
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->debugContext != nullptr)
-        {
-            Assert(this->debugContext->IsClosed());
-            HeapDelete(this->debugContext);
-            this->debugContext = nullptr;
         }
 #endif
 
@@ -577,31 +528,6 @@ namespace Js
         }
 #endif
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        this->EnsureClearDebugDocument();
-
-        if (this->debugContext != nullptr)
-        {
-            if (this->debugContext->GetProbeContainer() != nullptr)
-            {
-                this->debugContext->GetProbeContainer()->UninstallInlineBreakpointProbe(nullptr);
-                this->debugContext->GetProbeContainer()->UninstallDebuggerScriptOptionCallback();
-            }
-
-            // Guard the closing DebugContext as in meantime PDM might call OnBreakFlagChange
-            std::unique_lock autoDebugContextCloseCS(debugContextCloseCS);
-            this->debugContext->Close();
-            // Not deleting debugContext here as Close above will clear all memory debugContext allocated.
-            // Actual deletion of debugContext will happen in ScriptContext destructor
-        }
-
-        if (this->diagnosticArena != nullptr)
-        {
-            HeapDelete(this->diagnosticArena);
-            this->diagnosticArena = nullptr;
-        }
-#endif
-
         // Need to print this out before the native code gen is deleted
         // which will delete the codegenProfiler
 
@@ -652,10 +578,6 @@ namespace Js
 
         this->noSpecialPropertyRegistry.Clear(false /* isThreadClear */);
         this->onlyWritablePropertyRegistry.Clear(false /* isThreadClear */);
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        threadContext->ReleaseDebugManager();
-#endif
 
         // This can be null if the script context initialization threw
         // and InternalClose gets called in the destructor code path
@@ -1171,14 +1093,6 @@ namespace Js
 
     void ScriptContext::InitializePostGlobal()
     {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        this->GetDebugContext()->Initialize();
-
-        this->GetDebugContext()->GetProbeContainer()->Initialize(this);
-
-        isDebugContextInitialized = true;
-#endif
-
 #if defined(_M_ARM32_OR_ARM64)
         // We need to ensure that the above write to the isDebugContextInitialized is visible to the debugger thread.
         MemoryBarrier();
@@ -1304,18 +1218,6 @@ namespace Js
     {
         return count >= (InterpreterStackFrame::LocalsThreshold / (sizeof(StackScriptFunction) / sizeof(Var)));
     }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    ArenaAllocator* ScriptContext::AllocatorForDiagnostics()
-    {
-        if (this->diagnosticArena == nullptr)
-        {
-            this->diagnosticArena = HeapNew(ArenaAllocator, u"Diagnostic", this->GetThreadContext()->GetDebugManager()->GetDiagnosticPageAllocator(), Throw::OutOfMemory);
-        }
-        Assert(this->diagnosticArena != nullptr);
-        return this->diagnosticArena;
-    }
-#endif
 
     void ScriptContext::PushObject(Var object)
     {
@@ -2033,14 +1935,6 @@ namespace Js
                 TrySerializeParserState(computedSourceCRC, pszSrc, cbLength, srcInfo, *func, parserStateCacheBuffer, parserStateCacheByteCount, pDataCache);
             }
         }
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        else if (this->IsScriptContextInDebugMode() && !utf8SourceInfo->GetIsLibraryCode() && !utf8SourceInfo->IsInDebugMode())
-        {
-            // In case of syntax error, if we are in debug mode, put the utf8SourceInfo into debug mode.
-            utf8SourceInfo->SetInDebugMode(true);
-        }
-#endif
-
         return hr;
     }
 
@@ -2198,18 +2092,9 @@ namespace Js
     void ScriptContext::OnScriptStart(bool isRoot, bool isScript)
     {
         const bool isForcedEnter =
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            this->GetDebugContext() != nullptr ? this->GetDebugContext()->GetProbeContainer()->isForcedToEnterScriptStart :
-#endif
             false;
         if (this->scriptStartEventHandler != nullptr && ((isRoot && threadContext->GetCallRootLevel() == 1) || isForcedEnter))
         {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            if (this->GetDebugContext() != nullptr)
-            {
-                this->GetDebugContext()->GetProbeContainer()->isForcedToEnterScriptStart = false;
-            }
-#endif
             this->scriptStartEventHandler(this);
         }
 
@@ -2307,13 +2192,6 @@ namespace Js
     uint ScriptContext::SaveSourceNoCopy(Utf8SourceInfo* sourceInfo, int cchLength, bool isCesu8)
     {
         Assert(sourceInfo->GetScriptContext() == this);
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->IsScriptContextInDebugMode() && !sourceInfo->GetIsLibraryCode() && !sourceInfo->IsInDebugMode())
-        {
-            sourceInfo->SetInDebugMode(true);
-        }
-#endif
 
         RecyclerWeakReference<Utf8SourceInfo>* sourceWeakRef = this->GetRecycler()->CreateWeakReferenceHandle<Utf8SourceInfo>(sourceInfo);
         sourceInfo->SetIsCesu8(isCesu8);
@@ -2783,625 +2661,6 @@ namespace Js
     }
 #endif
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#if ENABLE_NATIVE_CODEGEN
-    // xplat XDataAllocator Reg/UnReg are lazy ops.
-    // Using the lazy delete class below, we let XData address unreg before old codegen is deleted
-    // This logic is also used for Windows since it works there too.
-    class OldCodeGenAutoDelete
-    {
-    public:
-        NativeCodeGenerator * oldCodegen;
-        ScriptContext * sc;
-        OldCodeGenAutoDelete(ScriptContext * s):oldCodegen(nullptr), sc(s) { }
-        ~OldCodeGenAutoDelete()
-        {
-            if (oldCodegen != nullptr)
-            {
-                sc->DeletePreviousNativeCodeGenerator(oldCodegen);
-            }
-        }
-    };
-#endif // ENABLE_NATIVE_CODEGEN
-    int32_t ScriptContext::OnDebuggerAttached()
-    {
-        OUTPUT_TRACE(Js::DebuggerPhase, u"ScriptContext::OnDebuggerAttached: start 0x%p\n", this);
-
-        Js::StepController* stepController = &this->GetThreadContext()->GetDebugManager()->stepController;
-        if (stepController->IsActive())
-        {
-            AssertMsg(stepController->GetActivatedContext() == nullptr, "StepController should not be active when we attach.");
-            stepController->Deactivate(); // Defense in depth
-        }
-
-        bool shouldPerformSourceRundown = false;
-        if (this->IsScriptContextInNonDebugMode())
-        {
-            // Today we do source rundown as a part of attach to support VS attaching without
-            // first calling PerformSourceRundown.  PerformSourceRundown will be called once
-            // by debugger host prior to attaching.
-            this->GetDebugContext()->SetDebuggerMode(Js::DebuggerMode::SourceRundown);
-
-            // Need to perform rundown only once.
-            shouldPerformSourceRundown = true;
-        }
-
-        // Rundown on all existing functions and change their thunks so that they will go to debug mode once they are called.
-
-#if ENABLE_NATIVE_CODEGEN
-        OldCodeGenAutoDelete autoDelete(this);
-        int32_t hr = OnDebuggerAttachedDetached(/*attach*/ true, &(autoDelete.oldCodegen));
-#else // ENABLE_NATIVE_CODEGEN
-        int32_t hr = OnDebuggerAttachedDetached(/*attach*/ true);
-#endif
-
-        // Debugger attach/detach failure is catastrophic, take down the process
-        DEBUGGER_ATTACHDETACH_FATAL_ERROR_IF_FAILED(hr);
-
-        // Disable QC while functions are re-parsed as this can be time consuming
-        AutoDisableInterrupt autoDisableInterrupt(this->threadContext, false /* explicitCompletion */);
-
-        hr = this->GetDebugContext()->RundownSourcesAndReparse(shouldPerformSourceRundown, /*shouldReparseFunctions*/ true);
-
-        if (this->IsClosed())
-        {
-            return hr;
-        }
-
-        // Debugger attach/detach failure is catastrophic, take down the process
-        DEBUGGER_ATTACHDETACH_FATAL_ERROR_IF_FAILED(hr);
-
-        int32_t hrEntryPointUpdate = S_OK;
-        BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
-#ifdef ASMJS_PLAT
-            TempArenaAllocatorObject* tmpAlloc = GetTemporaryAllocator(u"DebuggerTransition");
-            debugTransitionAlloc = tmpAlloc->GetAllocator();
-
-            asmJsEnvironmentMap = Anew(debugTransitionAlloc, AsmFunctionMap, debugTransitionAlloc);
-#endif
-
-            // Still do the pass on the function's entrypoint to reflect its state with the functionbody's entrypoint.
-            this->UpdateRecyclerFunctionEntryPointsForDebugger();
-
-#ifdef ASMJS_PLAT
-            auto asmEnvIter = asmJsEnvironmentMap->GetIterator();
-            while (asmEnvIter.IsValid())
-            {
-                // we are attaching, change frame setup for asm.js frame to javascript frame
-                SList<AsmJsScriptFunction *> * funcList = asmEnvIter.CurrentValue();
-                Assert(!funcList->Empty());
-                void* newEnv = AsmJsModuleInfo::ConvertFrameForJavascript(asmEnvIter.CurrentKey(), funcList->Head());
-                funcList->Iterate([&](AsmJsScriptFunction * func)
-                {
-                    func->SetEnvironment(RecyclerNewPlus(this->GetRecycler(), sizeof(void*), FrameDisplay, 1));
-                    func->GetEnvironment()->SetItem(0, newEnv);
-                });
-                asmEnvIter.MoveNext();
-            }
-
-            // walk through and clean up the asm.js fields as a discrete step, because module might be multiply linked
-            auto asmCleanupIter = asmJsEnvironmentMap->GetIterator();
-            while (asmCleanupIter.IsValid())
-            {
-                SList<AsmJsScriptFunction *> * funcList = asmCleanupIter.CurrentValue();
-                Assert(!funcList->Empty());
-                funcList->Iterate([](AsmJsScriptFunction * func)
-                {
-                    func->SetModuleEnvironment(nullptr);
-                    func->GetFunctionBody()->ResetAsmJsInfo();
-                });
-                asmCleanupIter.MoveNext();
-            }
-
-            ReleaseTemporaryAllocator(tmpAlloc);
-#endif
-        END_TRANSLATE_OOM_TO_HRESULT(hrEntryPointUpdate);
-
-        if (hrEntryPointUpdate != S_OK)
-        {
-            // should only be here for OOM
-            Assert(hrEntryPointUpdate == E_OUTOFMEMORY);
-            return hrEntryPointUpdate;
-        }
-
-        OUTPUT_TRACE(Js::DebuggerPhase, u"ScriptContext::OnDebuggerAttached: done 0x%p, hr = 0x%X\n", this, hr);
-
-        return hr;
-    }
-
-    // Reverts the script context state back to the state before debugging began.
-    int32_t ScriptContext::OnDebuggerDetached()
-    {
-        OUTPUT_TRACE(Js::DebuggerPhase, u"ScriptContext::OnDebuggerDetached: start 0x%p\n", this);
-
-        Js::StepController* stepController = &this->GetThreadContext()->GetDebugManager()->stepController;
-        if (stepController->IsActive())
-        {
-            // Normally step controller is deactivated on start of dispatch (step, async break, exception, etc),
-            // and in the beginning of interpreter loop we check for step complete (can cause check whether current bytecode belong to stmt).
-            // But since it holds to functionBody/statementMaps, we have to deactivate it as func bodies are going away/reparsed.
-            stepController->Deactivate();
-        }
-
-        // Go through all existing functions and change their thunks back to using non-debug mode versions when called
-        // and notify the script context that the debugger has detached to allow it to revert the runtime to the proper
-        // state (JIT enabled).
-
-#if ENABLE_NATIVE_CODEGEN
-        OldCodeGenAutoDelete autoDelete(this);
-        int32_t hr = OnDebuggerAttachedDetached(/*attach*/ false, &(autoDelete.oldCodegen));
-#else // ENABLE_NATIVE_CODEGEN
-        int32_t hr = OnDebuggerAttachedDetached(/*attach*/ false);
-#endif
-
-        // Debugger attach/detach failure is catastrophic, take down the process
-        DEBUGGER_ATTACHDETACH_FATAL_ERROR_IF_FAILED(hr);
-
-        // Move the debugger into source rundown mode.
-        this->GetDebugContext()->SetDebuggerMode(Js::DebuggerMode::SourceRundown);
-
-        // Disable QC while functions are re-parsed as this can be time consuming
-        AutoDisableInterrupt autoDisableInterrupt(this->threadContext, false /* explicitCompletion */);
-
-        // Force a reparse so that indirect function caches are updated.
-        hr = this->GetDebugContext()->RundownSourcesAndReparse(/*shouldPerformSourceRundown*/ false, /*shouldReparseFunctions*/ true);
-
-        if (this->IsClosed())
-        {
-            return hr;
-        }
-
-        // Debugger attach/detach failure is catastrophic, take down the process
-        DEBUGGER_ATTACHDETACH_FATAL_ERROR_IF_FAILED(hr);
-
-        int32_t hrEntryPointUpdate = S_OK;
-        BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
-        {
-            // Still do the pass on the function's entrypoint to reflect its state with the functionbody's entrypoint.
-            this->UpdateRecyclerFunctionEntryPointsForDebugger();
-        }
-        END_TRANSLATE_OOM_TO_HRESULT(hrEntryPointUpdate);
-
-        if (hrEntryPointUpdate != S_OK)
-        {
-            // should only be here for OOM
-            Assert(hrEntryPointUpdate == E_OUTOFMEMORY);
-            return hrEntryPointUpdate;
-        }
-
-        OUTPUT_TRACE(Js::DebuggerPhase, u"ScriptContext::OnDebuggerDetached: done 0x%p, hr = 0x%X\n", this, hr);
-
-        return hr;
-    }
-
-#if ENABLE_NATIVE_CODEGEN
-    int32_t ScriptContext::OnDebuggerAttachedDetached(bool attach, NativeCodeGenerator ** previousCodeGenHolder)
-#else
-    int32_t ScriptContext::OnDebuggerAttachedDetached(bool attach)
-#endif
-    {
-
-        // notify threadContext that debugger is attaching so do not do expire
-        struct AutoRestore
-        {
-            AutoRestore(ThreadContext* threadContext)
-                :threadContext(threadContext)
-            {
-                this->threadContext->GetDebugManager()->SetDebuggerAttaching(true);
-            }
-            ~AutoRestore()
-            {
-                this->threadContext->GetDebugManager()->SetDebuggerAttaching(false);
-            }
-
-        private:
-            ThreadContext* threadContext;
-
-        } autoRestore(this->GetThreadContext());
-
-        // Invalidate all the caches.
-        this->threadContext->InvalidateAllProtoInlineCaches();
-        this->threadContext->InvalidateAllStoreFieldInlineCaches();
-        this->threadContext->InvalidateAllIsInstInlineCaches();
-
-        if (!attach)
-        {
-            this->UnRegisterDebugThunk();
-
-            // Remove all breakpoint probes
-            this->GetDebugContext()->GetProbeContainer()->RemoveAllProbes();
-        }
-
-        int32_t hr = S_OK;
-
-        if (!CONFIG_FLAG(ForceDiagnosticsMode))
-        {
-#if ENABLE_NATIVE_CODEGEN
-            // Recreate the native code generator so that all pending
-            // JIT work items will be cleared.
-            hr = RecreateNativeCodeGenerator(previousCodeGenHolder);
-            if (FAILED(hr))
-            {
-                return hr;
-            }
-#endif
-            if (attach)
-            {
-                // We need to transition to debug mode after the NativeCodeGenerator is cleared/closed. Since the NativeCodeGenerator will be working on a different thread - it may
-                // be checking on the DebuggerState (from ScriptContext) while emitting code.
-                this->GetDebugContext()->SetDebuggerMode(Js::DebuggerMode::Debugging);
-#if ENABLE_NATIVE_CODEGEN
-                UpdateNativeCodeGeneratorForDebugMode(this->nativeCodeGen);
-#endif
-            }
-        }
-        else if (attach)
-        {
-            this->GetDebugContext()->SetDebuggerMode(Js::DebuggerMode::Debugging);
-        }
-
-        BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
-        {
-            // Remap all the function entry point thunks.
-            this->sourceList->Map([=](uint i, RecyclerWeakReference<Js::Utf8SourceInfo>* sourceInfoWeakRef) {
-                Js::Utf8SourceInfo* sourceInfo = sourceInfoWeakRef->Get();
-
-                if (sourceInfo != nullptr)
-                {
-                    if (!sourceInfo->GetIsLibraryCode())
-                    {
-                        sourceInfo->SetInDebugMode(attach);
-
-                        sourceInfo->MapFunction([](Js::FunctionBody* functionBody) {
-                            functionBody->SetEntryToDeferParseForDebugger();
-                        });
-                    }
-                    else
-                    {
-                        sourceInfo->MapFunction([](Js::FunctionBody* functionBody) {
-                            functionBody->ResetEntryPoint();
-                        });
-                    }
-                }
-            });
-        }
-        END_TRANSLATE_OOM_TO_HRESULT(hr);
-
-        if (FAILED(hr))
-        {
-            return hr;
-        }
-
-        if (attach)
-        {
-            this->RegisterDebugThunk();
-        }
-
-#if ENABLE_PROFILE_INFO
-        // Reset the dynamic profile list
-        if (this->Cache()->profileInfoList)
-        {
-            this->Cache()->profileInfoList->Reset();
-        }
-#endif
-        return hr;
-    }
-#endif
-
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-    // We use ProfileThunk under debugger.
-    void ScriptContext::RegisterDebugThunk(bool calledDuringAttach /*= true*/)
-    {
-        if (this->IsExceptionWrapperForBuiltInsEnabled())
-        {
-            this->CurrentThunk = ProfileEntryThunk;
-            this->CurrentCrossSiteThunk = CrossSite::ProfileThunk;
-#if ENABLE_NATIVE_CODEGEN
-            SetProfileModeNativeCodeGen(this->GetNativeCodeGenerator(), TRUE);
-#endif
-
-            // Set library to profile mode so that for built-ins all new instances of functions
-            // are created with entry point set to the ProfileThunk.
-            this->javascriptLibrary->SetProfileMode(true);
-            this->javascriptLibrary->SetDispatchProfile(true, DispatchProfileInvoke);
-
-            if (!calledDuringAttach)
-            {
-                // Update the function objects currently present in there.
-                this->SetFunctionInRecyclerToProfileMode(true/*enumerateNonUserFunctionsOnly*/);
-            }
-        }
-    }
-
-    void ScriptContext::UnRegisterDebugThunk()
-    {
-        if (!this->IsProfiling() && this->IsExceptionWrapperForBuiltInsEnabled())
-        {
-            this->CurrentThunk = DefaultEntryThunk;
-            this->CurrentCrossSiteThunk = CrossSite::DefaultThunk;
-#if ENABLE_NATIVE_CODEGEN
-            SetProfileModeNativeCodeGen(this->GetNativeCodeGenerator(), FALSE);
-#endif
-
-            if (!this->IsProfiling())
-            {
-                this->javascriptLibrary->SetProfileMode(false);
-                this->javascriptLibrary->SetDispatchProfile(false, DispatchDefaultInvoke);
-            }
-        }
-    }
-#endif // defined(ENABLE_SCRIPT_DEBUGGING)
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    void ScriptContext::SetFunctionInRecyclerToProfileMode(bool enumerateNonUserFunctionsOnly/* = false*/)
-    {
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::SetFunctionInRecyclerToProfileMode started (m_fTraceDomCall : %s)\n", IsTrueOrFalse(IsTraceDomCall()));
-
-        // Mark this script context isEnumeratingRecyclerObjects
-        AutoEnumeratingRecyclerObjects enumeratingRecyclerObjects(this);
-
-        m_enumerateNonUserFunctionsOnly = enumerateNonUserFunctionsOnly;
-
-        this->recycler->EnumerateObjects(JavascriptLibrary::EnumFunctionClass, &ScriptContext::RecyclerEnumClassEnumeratorCallback);
-
-        OUTPUT_TRACE(Js::ScriptProfilerPhase, u"ScriptContext::SetFunctionInRecyclerToProfileMode ended\n");
-    }
-
-    void ScriptContext::UpdateRecyclerFunctionEntryPointsForDebugger()
-    {
-        // Mark this script context isEnumeratingRecyclerObjects
-        AutoEnumeratingRecyclerObjects enumeratingRecyclerObjects(this);
-
-        this->recycler->EnumerateObjects(JavascriptLibrary::EnumFunctionClass, &ScriptContext::RecyclerFunctionCallbackForDebugger);
-    }
-
-#ifdef ASMJS_PLAT
-    void ScriptContext::TransitionEnvironmentForDebugger(ScriptFunction * scriptFunction)
-    {
-        FunctionBody* functionBody = scriptFunction->GetFunctionBody();
-#ifdef ENABLE_WASM
-        // Wasm functions will not get reparsed, but the jitted code will be lost
-        // Reset the entry point
-        if (functionBody->IsWasmFunction())
-        {
-            // In case we are in debugger mode, make sure we use the non profiling thunk for this new entry point
-            JavascriptMethod realThunk = CurrentThunk;
-            CurrentThunk = AsmJsDefaultEntryThunk;
-            functionBody->ResetEntryPoint();
-            CurrentThunk = realThunk;
-
-            Js::WasmLibrary::ResetFunctionBodyDefaultEntryPoint(functionBody);
-            // Make sure the function and the function body are using the same entry point
-            scriptFunction->ChangeEntryPoint(functionBody->GetDefaultEntryPointInfo(), functionBody->GetDefaultEntryPointInfo()->jsMethod);
-            Assert(scriptFunction->GetFunctionEntryPointInfo()->GetIsAsmJSFunction());
-        }
-        else
-#endif
-        if (scriptFunction->GetScriptContext()->IsScriptContextInDebugMode())
-        {
-            if (functionBody->IsInDebugMode() &&
-                scriptFunction->GetFunctionBody()->GetAsmJsFunctionInfo() != nullptr &&
-                scriptFunction->GetFunctionBody()->GetAsmJsFunctionInfo()->GetModuleFunctionBody() != nullptr)
-            {
-                AsmJsScriptFunction* asmFunc = VarTo<AsmJsScriptFunction>(scriptFunction);
-                void* env = (void*)asmFunc->GetModuleEnvironment();
-                SList<AsmJsScriptFunction*> * funcList = nullptr;
-                if (asmJsEnvironmentMap->TryGetValue(env, &funcList))
-                {
-                    funcList->Push(asmFunc);
-                }
-                else
-                {
-                    SList<AsmJsScriptFunction*> * newList = Anew(debugTransitionAlloc, SList<AsmJsScriptFunction*>, debugTransitionAlloc);
-                    asmJsEnvironmentMap->AddNew(env, newList);
-                    newList->Push(asmFunc);
-                }
-            }
-        }
-    }
-#endif
-
-    /*static*/
-    void ScriptContext::RecyclerFunctionCallbackForDebugger(void *address, size_t size)
-    {
-        JavascriptFunction *pFunction = static_cast<JavascriptFunction*>(address);
-
-        ScriptContext* scriptContext = pFunction->GetScriptContext();
-        if (scriptContext == nullptr || scriptContext->IsClosed())
-        {
-            // Can't enumerate from closed scriptcontext
-            return;
-        }
-
-        if (!scriptContext->IsEnumeratingRecyclerObjects())
-        {
-            return; // function not from enumerating script context
-        }
-
-        // Wrapped function are not allocated with the EnumClass bit
-        Assert(pFunction->GetFunctionInfo() != &JavascriptExternalFunction::EntryInfo::WrappedFunctionThunk);
-
-        FunctionInfo * info = pFunction->GetFunctionInfo();
-        FunctionProxy * proxy = info->GetFunctionProxy();
-
-        if (proxy == nullptr)
-        {
-            // Not a user defined function, we need to wrap them with try-catch for "continue after exception"
-            if (!pFunction->IsScriptFunction() && IsExceptionWrapperForBuiltInsEnabled(scriptContext))
-            {
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-                if (scriptContext->IsScriptContextInDebugMode())
-                {
-                    // We are attaching.
-                    // For built-ins, WinRT and DOM functions which are already in recycler, change entry points to route to debug/profile thunk.
-                    ScriptContext::SetEntryPointToProfileThunk(pFunction);
-                }
-                else
-                {
-                    // We are detaching.
-                    // For built-ins, WinRT and DOM functions which are already in recycler, restore entry points to original.
-                    if (!scriptContext->IsProfiling())
-                    {
-                        ScriptContext::RestoreEntryPointFromProfileThunk(pFunction);
-                    }
-                    // If we are profiling, don't change anything.
-                }
-#else
-                AssertMsg(false, "Debugging/Profiling needs to be enabled to change thunks");
-#endif
-            }
-
-            return;
-        }
-
-        Assert(proxy->GetFunctionInfo() == info);
-
-        if (!proxy->IsFunctionBody())
-        {
-            // REVIEW: why we still have function that is still deferred?
-            return;
-        }
-        Assert(pFunction->IsScriptFunction());
-
-        // Excluding the internal library code, which is not debuggable already
-        if (!proxy->GetUtf8SourceInfo()->GetIsLibraryCode())
-        {
-            // Reset the constructor cache to default, so that it will not pick up the cached type, created before debugging.
-            // Look bug: 301517
-            pFunction->ResetConstructorCacheToDefault();
-        }
-
-        if (VarIs<ScriptFunctionWithInlineCache>(pFunction))
-        {
-            VarTo<ScriptFunctionWithInlineCache>(pFunction)->ClearInlineCacheOnFunctionObject();
-        }
-
-        // We should have force parsed the function, and have a function body
-        FunctionBody * pBody = proxy->GetFunctionBody();
-
-        if (scriptContext->IsScriptContextInDebugMode() &&
-            !proxy->GetUtf8SourceInfo()->GetIsLibraryCode() &&
-#ifdef ENABLE_WASM
-            !pBody->IsWasmFunction() &&
-#endif
-            !pBody->IsInDebugMode())
-        {
-            // Identifying if any function escaped for not being in debug mode. (This can be removed as a part of TFS : 935011)
-            Throw::FatalInternalError();
-        }
-
-#ifdef ASMJS_PLAT
-        ScriptFunction * scriptFunction = VarTo<ScriptFunction>(pFunction);
-        scriptContext->TransitionEnvironmentForDebugger(scriptFunction);
-#endif
-    }
-
-#endif // ENABLE_SCRIPT_DEBUGGING
-
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-    void ScriptContext::RecyclerEnumClassEnumeratorCallback(void *address, size_t size)
-    {
-        // TODO: we are assuming its function because for now we are enumerating only on functions
-        // In future if the RecyclerNewEnumClass is used of Recyclable objects or Dynamic object, we would need a check if it is function
-        JavascriptFunction *pFunction = static_cast<JavascriptFunction*>(address);
-
-        ScriptContext* scriptContext = pFunction->GetScriptContext();
-        if (scriptContext == nullptr || scriptContext->IsClosed())
-        {
-            // Can't enumerate from closed scriptcontext
-            return;
-        }
-
-        if (!scriptContext->IsEnumeratingRecyclerObjects())
-        {
-            return; // function not from enumerating script context
-        }
-
-        if (!scriptContext->IsTraceDomCall() && (pFunction->IsExternalFunction() || pFunction->IsWinRTFunction()))
-        {
-            return;
-        }
-
-        if (scriptContext->IsEnumerateNonUserFunctionsOnly() && pFunction->IsScriptFunction())
-        {
-            return;
-        }
-
-        // Wrapped function are not allocated with the EnumClass bit
-        Assert(pFunction->GetFunctionInfo() != &JavascriptExternalFunction::EntryInfo::WrappedFunctionThunk);
-
-        JavascriptMethod entryPoint = pFunction->GetEntryPoint();
-        FunctionProxy *proxy = pFunction->GetFunctionProxy();
-
-        if (proxy != NULL)
-        {
-#if ENABLE_NATIVE_CODEGEN
-            if (!IsIntermediateCodeGenThunk(entryPoint) && entryPoint != DynamicProfileInfo::EnsureDynamicProfileInfoThunk)
-#endif
-            {
-                OUTPUT_TRACE(Js::ScriptProfilerPhase, u"\t\tJs::ScriptContext::GetProfileModeThunk : 0x%08X\n", reinterpret_cast<unsigned long>(Js::ScriptContext::GetProfileModeThunk(entryPoint)));
-
-                ScriptFunction * scriptFunction = VarTo<ScriptFunction>(pFunction);
-                scriptFunction->ChangeEntryPoint(proxy->GetDefaultEntryPointInfo(), Js::ScriptContext::GetProfileModeThunk(entryPoint));
-            }
-        }
-        else
-        {
-            ScriptContext::SetEntryPointToProfileThunk(pFunction);
-        }
-    }
-
-    // static
-    void ScriptContext::SetEntryPointToProfileThunk(JavascriptFunction* function)
-    {
-        JavascriptMethod entryPoint = function->GetEntryPoint();
-        if (entryPoint == Js::CrossSite::DefaultThunk)
-        {
-            function->SetEntryPoint(Js::CrossSite::ProfileThunk);
-        }
-        else if (entryPoint != Js::CrossSite::ProfileThunk && entryPoint != ProfileEntryThunk)
-        {
-            function->SetEntryPoint(ProfileEntryThunk);
-        }
-    }
-
-    // static
-    void ScriptContext::RestoreEntryPointFromProfileThunk(JavascriptFunction* function)
-    {
-        JavascriptMethod entryPoint = function->GetEntryPoint();
-        if (entryPoint == Js::CrossSite::ProfileThunk)
-        {
-            function->SetEntryPoint(Js::CrossSite::DefaultThunk);
-        }
-        else if (entryPoint == ProfileEntryThunk)
-        {
-            function->SetEntryPoint(function->GetFunctionInfo()->GetOriginalEntryPoint());
-        }
-    }
-
-    JavascriptMethod ScriptContext::GetProfileModeThunk(JavascriptMethod entryPoint)
-    {
-    #if ENABLE_NATIVE_CODEGEN
-        Assert(!IsIntermediateCodeGenThunk(entryPoint));
-    #endif
-        if (entryPoint == DefaultDeferredParsingThunk || entryPoint == ProfileDeferredParsingThunk)
-        {
-            return ProfileDeferredParsingThunk;
-        }
-
-        if (entryPoint == DefaultDeferredDeserializeThunk || entryPoint == ProfileDeferredDeserializeThunk)
-        {
-            return ProfileDeferredDeserializeThunk;
-        }
-
-        if (CrossSite::IsThunk(entryPoint))
-        {
-            return CrossSite::ProfileThunk;
-        }
-        return ProfileEntryThunk;
-    }
-#endif // defiend(ENABLE_SCRIPT_DEBUGGING)
-
 #if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
     // Do nothing: the implementation of ScriptContext::ProfileModeDeferredParsingThunk is declared (appropriately decorated) in
     // Language\amd64\amd64_Thunks.asm and Language\arm\arm_Thunks.asm and Language\arm64\arm64_Thunks.asm respectively.
@@ -3451,166 +2710,15 @@ namespace Js
         return forceNoNative;
     }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    void ScriptContext::InitializeDebugging()
-    {
-        if (!this->IsScriptContextInDebugMode()) // If we already in debug mode, we would have done below changes already.
-        {
-            this->GetDebugContext()->SetDebuggerMode(Js::DebuggerMode::Debugging);
-            if (this->IsScriptContextInDebugMode())
-            {
-                // Note: for this we need final IsInDebugMode and NativeCodeGen initialized,
-                //       and inside EnsureScriptContext, which seems appropriate as well,
-                //       it's too early as debugger manager is not registered, thus IsDebuggerEnvironmentAvailable is false.
-                this->RegisterDebugThunk(false/*calledDuringAttach*/);
-
-                // TODO: for launch scenario for external and WinRT functions it might be too late to register debug thunk here,
-                //       as we need the thunk registered before FunctionInfo's for built-ins, that may throw, are created.
-                //       Need to verify. If that's the case, one way would be to enumerate and fix all external/winRT thunks here.
-            }
-        }
-    }
-#endif
-
     // Combined profile/debug wrapper thunk.
     // - used when we profile to send profile events
     // - used when we debug, only used for built-in functions
     // - used when we profile and debug
+    // TODO (hanhossain): remove
     Var ScriptContext::DebugProfileProbeThunk(RecyclableObject* callable, CallInfo callInfo, ...)
     {
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-        RUNTIME_ARGUMENTS(args, callInfo);
-
-        Assert(!VarIs<WasmScriptFunction>(callable));
-        JavascriptFunction* function = VarTo<JavascriptFunction>(callable);
-        ScriptContext* scriptContext = function->GetScriptContext();
-
-        Var aReturn = NULL;
-        JavascriptMethod origEntryPoint = function->GetFunctionInfo()->GetOriginalEntryPoint();
-
-        if (scriptContext->IsEvalRestriction())
-        {
-            if (origEntryPoint == Js::GlobalObject::EntryEval)
-            {
-                origEntryPoint = Js::GlobalObject::EntryEvalRestrictedMode;
-            }
-            else if (origEntryPoint == Js::JavascriptFunction::NewInstance)
-            {
-                origEntryPoint = Js::JavascriptFunction::NewInstanceRestrictedMode;
-            }
-            else if (origEntryPoint == Js::JavascriptGeneratorFunction::NewInstance)
-            {
-                origEntryPoint = Js::JavascriptGeneratorFunction::NewInstanceRestrictedMode;
-            }
-            else if (origEntryPoint == Js::JavascriptFunction::NewAsyncFunctionInstance)
-            {
-                origEntryPoint = Js::JavascriptFunction::NewAsyncFunctionInstanceRestrictedMode;
-            }
-            else if (origEntryPoint == Js::JavascriptFunction::NewAsyncGeneratorFunctionInstance)
-            {
-                origEntryPoint = Js::JavascriptFunction::NewAsyncGeneratorFunctionInstanceRestrictedMode;
-            }
-        }
-
-        __TRY_FINALLY_BEGIN // SEH is not guaranteed, see the implementation
-        {
-            Assert(!function->IsScriptFunction() || function->GetFunctionProxy());
-
-            // No need to wrap script functions, also can't if the wrapper is already on the stack.
-            // Treat "library code" script functions, such as Intl, as built-ins:
-            // use the wrapper when calling them, and do not reset the wrapper when calling them.
-            bool isDebugWrapperEnabled = scriptContext->IsScriptContextInDebugMode() && IsExceptionWrapperForBuiltInsEnabled(scriptContext);
-            bool useDebugWrapper =
-                isDebugWrapperEnabled &&
-                function->IsLibraryCode() &&
-                !AutoRegisterIgnoreExceptionWrapper::IsRegistered(scriptContext->GetThreadContext());
-
-            ;
-
-            if (scriptContext->IsDebuggerRecording())
-            {
-                scriptContext->GetDebugContext()->GetProbeContainer()->StartRecordingCall();
-            }
-
-            if (useDebugWrapper)
-            {
-                // For native use wrapper and bail out on to ignore exception.
-                // Extract try-catch out of hot path in normal profile mode (presence of try-catch in a function is bad for perf).
-                aReturn = ProfileModeThunk_DebugModeWrapper(function, scriptContext, origEntryPoint, args);
-            }
-            else
-            {
-                if (isDebugWrapperEnabled && !function->IsLibraryCode())
-                {
-                    // We want to ignore exception and continue into closest user/script function down on the stack.
-                    // Thus, if needed, reset the wrapper for the time of this call,
-                    // so that if there is library/helper call after script function, it will use try-catch.
-                    // Can't use smart/destructor object here because of __try__finally.
-                    ThreadContext* threadContext = scriptContext->GetThreadContext();
-                    bool isOrigWrapperPresent = threadContext->GetDebugManager()->GetDebuggingFlags()->IsBuiltInWrapperPresent();
-                    if (isOrigWrapperPresent)
-                    {
-                        threadContext->GetDebugManager()->GetDebuggingFlags()->SetIsBuiltInWrapperPresent(false);
-                    }
-                    __TRY_FINALLY_BEGIN // SEH is not guaranteed, see the implementation
-                    {
-                        aReturn = scriptContext->GetThreadContext()->SafeReentrantCall([=]()->Js::Var
-                        {
-                            // This can be an apply call or a spread so we have to use the large arg count
-                            return JavascriptFunction::CallFunction<true>(function, origEntryPoint, args, /* useLargeArgCount */ true);
-                        });
-                    }
-                    __FINALLY
-                    {
-                        threadContext->GetDebugManager()->GetDebuggingFlags()->SetIsBuiltInWrapperPresent(isOrigWrapperPresent);
-                    }
-                    __TRY_FINALLY_END
-                }
-                else
-                {
-                    // Can we update return address to a thunk that sends Exit event and then jmp to entry instead of Calling it.
-                    // Saves stack space and it might be something we would be doing anyway for handling profile.Start/stop
-                    // which can come anywhere on the stack.
-                    aReturn = scriptContext->GetThreadContext()->SafeReentrantCall([=]()->Js::Var
-                    {
-                        // This can be an apply call or a spread so we have to use the large arg count
-                        return JavascriptFunction::CallFunction<true>(function, origEntryPoint, args, /* useLargeArgCount */ true);
-                    });
-                }
-            }
-        }
-        __FINALLY
-        {
-            if (scriptContext->IsDebuggerRecording())
-            {
-                scriptContext->GetDebugContext()->GetProbeContainer()->EndRecordingCall(aReturn, function);
-            }
-        }
-        __TRY_FINALLY_END
-
-        return aReturn;
-#else
         return nullptr;
-#endif // defined(ENABLE_SCRIPT_DEBUGGING)
     }
-
-#if defined(ENABLE_SCRIPT_DEBUGGING)
-    // Part of ProfileModeThunk which is called in debug mode (debug or debug & profile).
-    Var ScriptContext::ProfileModeThunk_DebugModeWrapper(JavascriptFunction* function, ScriptContext* scriptContext, JavascriptMethod entryPoint, Arguments& args)
-    {
-        AutoRegisterIgnoreExceptionWrapper autoWrapper(scriptContext->GetThreadContext());
-
-        Var aReturn = HelperOrLibraryMethodWrapper<true>(scriptContext, [=] {
-            BEGIN_SAFE_REENTRANT_CALL(scriptContext->GetThreadContext())
-            {
-                return JavascriptFunction::CallFunction<true>(function, entryPoint, args, /* useLargeArgCount */ true);
-            }
-            END_SAFE_REENTRANT_CALL
-        });
-
-        return aReturn;
-    }
-#endif
 
     Js::PropertyId ScriptContext::GetFunctionNumber(JavascriptMethod entryPoint)
     {
@@ -4063,28 +3171,6 @@ ScriptContext::GetJitFuncRangeCache()
         return reinterpret_cast<intptr_t>(GetRecycler());
     }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    intptr_t ScriptContext::GetDebuggingFlagsAddr() const
-    {
-        return this->threadContext->GetDebugManager()->GetDebuggingFlagsAddr();
-    }
-
-    intptr_t ScriptContext::GetDebugStepTypeAddr() const
-    {
-        return reinterpret_cast<intptr_t>(this->threadContext->GetDebugManager()->stepController.GetAddressOfStepType());
-    }
-
-    intptr_t ScriptContext::GetDebugFrameAddressAddr() const
-    {
-        return reinterpret_cast<intptr_t>(this->threadContext->GetDebugManager()->stepController.GetAddressOfFrameAddress());
-    }
-
-    intptr_t ScriptContext::GetDebugScriptIdWhenSetAddr() const
-    {
-        return reinterpret_cast<intptr_t>(this->threadContext->GetDebugManager()->stepController.GetAddressOfScriptIdWhenSet());
-    }
-#endif
-
     intptr_t Js::ScriptContext::GetChakraLibAddr() const
     {
         return reinterpret_cast<intptr_t>(GetLibrary()->GetChakraLib());
@@ -4433,30 +3519,9 @@ ScriptContext::GetJitFuncRangeCache()
     }
 #endif
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    DebugContext* ScriptContext::GetDebugContext() const
-    {
-        Assert(this->debugContext != nullptr);
-
-        if (this->debugContext->IsClosed())
-        {
-            // Once DebugContext is closed we should assume it's not there
-            // The actual deletion of debugContext happens in ScriptContext destructor
-            return nullptr;
-        }
-
-        return this->debugContext;
-    }
-#endif
-
+    // TODO (hanhossain): remove
     bool ScriptContext::IsScriptContextInNonDebugMode() const
     {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->GetDebugContext() != nullptr)
-        {
-            return this->GetDebugContext()->IsDebugContextInNonDebugMode();
-        }
-#endif
         return true;
     }
 
@@ -4473,46 +3538,17 @@ ScriptContext::GetJitFuncRangeCache()
         }
     }
 
+    // TODO (hanhossain): remove
     bool ScriptContext::IsScriptContextInDebugMode() const
     {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->GetDebugContext() != nullptr)
-        {
-            return this->GetDebugContext()->IsDebugContextInDebugMode();
-        }
-#endif
         return false;
     }
 
+    // TODO (hanhossain): remove
     bool ScriptContext::IsScriptContextInSourceRundownOrDebugMode() const
     {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->GetDebugContext() != nullptr)
-        {
-            return this->GetDebugContext()->IsDebugContextInSourceRundownOrDebugMode();
-        }
-#endif
         return false;
     }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    bool ScriptContext::IsDebuggerRecording() const
-    {
-        if (this->GetDebugContext() != nullptr)
-        {
-            return this->GetDebugContext()->IsDebuggerRecording();
-        }
-        return false;
-    }
-
-    void ScriptContext::SetIsDebuggerRecording(bool isDebuggerRecording)
-    {
-        if (this->GetDebugContext() != nullptr)
-        {
-            this->GetDebugContext()->SetIsDebuggerRecording(isDebuggerRecording);
-        }
-    }
-#endif
 
     bool ScriptContext::IsIntlEnabled()
     {

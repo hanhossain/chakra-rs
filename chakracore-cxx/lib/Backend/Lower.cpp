@@ -4,11 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "Backend.h"
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#include "Debug/DebuggingFlags.h"
-#include "Debug/DiagProbe.h"
-#include "Debug/DebugManager.h"
-#endif
 
 // Parser includes
 #include "RegexCommon.h"
@@ -2638,12 +2633,6 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
         case Js::OpCode::BailOnNegative:
             LowerBailOnNegative(instr);
             break;
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        case Js::OpCode::BailForDebugger:
-            instrPrev = this->LowerBailForDebugger(instr);
-            break;
-#endif
 
         case Js::OpCode::BailOnNotObject:
             instrPrev = this->LowerBailOnNotObject(instr);
@@ -12117,50 +12106,9 @@ Lowerer::LowerCondBranchCheckBailOut(IR::BranchInstr * branchInstr, IR::Instr * 
     Assert(branchInstr->m_opcode == Js::OpCode::BrTrue_A || branchInstr->m_opcode == Js::OpCode::BrFalse_A);
     if (branchInstr->HasBailOutInfo())
     {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        IR::BailOutKind debuggerBailOutKind = IR::BailOutInvalid;
-        if (branchInstr->HasAuxBailOut())
-        {
-            // We have shared debugger bailout. For branches we lower it here, not in SplitBailForDebugger.
-            // See SplitBailForDebugger for details.
-            AssertMsg(!(branchInstr->GetBailOutKind() & IR::BailOutForDebuggerBits), "There should be no debugger bits in main bailout kind.");
-
-            debuggerBailOutKind = branchInstr->GetAuxBailOutKind() & IR::BailOutForDebuggerBits;
-            AssertMsg((debuggerBailOutKind & ~(IR::BailOutIgnoreException | IR::BailOutForceByFlag)) == 0, "Only IR::BailOutIgnoreException|ForceByFlag supported here.");
-        }
-#endif
 
         IR::Instr * bailOutInstr = this->SplitBailOnImplicitCall(branchInstr, helperCall, branchInstr);
         [[maybe_unused]] IR::Instr* prevInstr = this->LowerBailOnEqualOrNotEqual(bailOutInstr, branchInstr, nullptr, nullptr, isHelper);
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (debuggerBailOutKind != IR::BailOutInvalid)
-        {
-            // Note that by this time implicit calls bailout is already lowered.
-            // What we do here is use same bailout info and lower debugger bailout which would be shared bailout.
-            BailOutInfo* bailOutInfo = bailOutInstr->GetBailOutInfo();
-            IR::BailOutInstr* debuggerBailoutInstr = IR::BailOutInstr::New(
-                Js::OpCode::BailForDebugger, debuggerBailOutKind, bailOutInfo, bailOutInfo->bailOutFunc);
-            prevInstr->InsertAfter(debuggerBailoutInstr);
-            // The result of that is:
-            // original helper op_* instr, then debugger bailout, then implicit calls bailout/etc with the branch instr.
-            // Example:
-            //    s35(eax).i32    =  CALL           Op_GreaterEqual.u32                     # -- original op_* helper
-            //    s34.i32         =  MOV            s35(eax).i32                            #
-            //                       BailForDebugger                                        # Bailout: #0042 (BailOutIgnoreException) -- the debugger bailout
-            //                       CMP            [0x0003BDE0].i8, 1 (0x1).i8             # -- implicit calls check
-            //                       JEQ            $L10                                    #
-            //$L11: [helper]                                                                #
-            //                       CALL           SaveAllRegistersAndBranchBailOut.u32    # Bailout: #0042 (BailOutOnImplicitCalls)
-            //                       JMP            $L5                                     #
-            //$L10: [helper]                                                                #
-            //                       BrFalse_A      $L3, s34.i32                            #0034 -- The BrTrue/BrFalse branch (branch instr)
-            //$L6: [helper]                                                                 #0042
-
-            this->LowerBailForDebugger(debuggerBailoutInstr, isHelper);
-            // After lowering this we will have a check which on bailout condition will JMP to $L11.
-        }
-#endif
     }
 
     return m_lowererMD.LowerCondBranch(branchInstr);
@@ -12551,186 +12499,6 @@ Lowerer::LowerBailOnNotBuiltIn(IR::Instr       *instr,
 
     return prevInstr;
 }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-IR::Instr *
-Lowerer::LowerBailForDebugger(IR::Instr* instr, bool isInsideHelper /* = false */)
-{
-    IR::Instr * prevInstr = instr->m_prev;
-
-    IR::BailOutKind bailOutKind = instr->GetBailOutKind();
-    AssertMsg(bailOutKind, "bailOutKind should not be zero at this time.");
-    AssertMsg(!(bailOutKind & IR::BailOutExplicit) || bailOutKind == IR::BailOutExplicit,
-        "BailOutExplicit cannot be combined with any other bailout flags.");
-
-    IR::LabelInstr* explicitBailOutLabel = nullptr;
-
-    if (!(bailOutKind & IR::BailOutExplicit))
-    {
-        intptr_t flags = m_func->GetScriptContextInfo()->GetDebuggingFlagsAddr();
-
-        // Check 1 (do we need to bail out?)
-        // JXX bailoutLabel
-        // Check 2 (do we need to bail out?)
-        // JXX bailoutLabel
-        // ...
-        // JMP continueLabel
-        // bailoutDocumentLabel:
-        // (determine if document boundary reached - if not, JMP to continueLabel)
-        //  NOTE: THIS BLOCK IS CONDITIONALLY GENERATED BASED ON doGenerateBailOutDocumentBlock
-        // bailoutLabel:
-        // bail out
-        // continueLabel:
-        // ...
-
-        IR::LabelInstr* bailOutDocumentLabel = IR::LabelInstr::New(Js::OpCode::Label, m_func, /*isOpHelper*/ true);
-        instr->InsertBefore(bailOutDocumentLabel);
-        IR::LabelInstr* bailOutLabel = IR::LabelInstr::New(Js::OpCode::Label, m_func, /*isOpHelper*/ true);
-        instr->InsertBefore(bailOutLabel);
-        IR::LabelInstr* continueLabel = IR::LabelInstr::New(Js::OpCode::Label, m_func, /*isOpHelper*/ isInsideHelper);
-        instr->InsertAfter(continueLabel);
-        IR::BranchInstr* continueBranchInstr = this->InsertBranch(Js::OpCode::Br, continueLabel, bailOutDocumentLabel);    // JMP continueLabel.
-
-        bool doGenerateBailOutDocumentBlock = false;
-
-        const IR::BailOutKind c_forceAndIgnoreEx = IR::BailOutForceByFlag | IR::BailOutIgnoreException;
-        if ((bailOutKind & c_forceAndIgnoreEx) == c_forceAndIgnoreEx)
-        {
-            // It's faster to check these together in 1 check rather than 2 separate checks at run time.
-            // CMP [&(flags->m_forceInterpreter, flags->m_isIgnoreException)], 0
-            // BNE bailout
-            IR::Opnd* opnd1 = IR::MemRefOpnd::New((uint8_t*)flags + DebuggingFlags::GetForceInterpreterOffset(), TyInt16, m_func);
-            IR::Opnd* opnd2 = IR::IntConstOpnd::New(0, TyInt16, m_func, /*dontEncode*/ true);
-            InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrNeq_A, bailOutLabel, continueBranchInstr);
-            bailOutKind ^= c_forceAndIgnoreEx;
-        }
-        else
-        {
-            if (bailOutKind & IR::BailOutForceByFlag)
-            {
-                // CMP [&flags->m_forceInterpreter], 0
-                // BNE bailout
-                IR::Opnd* opnd1 = IR::MemRefOpnd::New((uint8_t*)flags + DebuggingFlags::GetForceInterpreterOffset(), TyInt8, m_func);
-                IR::Opnd* opnd2 = IR::IntConstOpnd::New(0, TyInt8, m_func, /*dontEncode*/ true);
-                InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrNeq_A, bailOutLabel, continueBranchInstr);
-                bailOutKind ^= IR::BailOutForceByFlag;
-            }
-            if (bailOutKind & IR::BailOutIgnoreException)
-            {
-                // CMP [&flags->m_byteCodeOffsetAfterIgnoreException], DebuggingFlags::InvalidByteCodeOffset
-                // BNE bailout
-                IR::Opnd* opnd1 = IR::MemRefOpnd::New((uint8_t*)flags + DebuggingFlags::GetByteCodeOffsetAfterIgnoreExceptionOffset(), TyInt32, m_func);
-                IR::Opnd* opnd2 = IR::IntConstOpnd::New(DebuggingFlags::InvalidByteCodeOffset, TyInt32, m_func, /*dontEncode*/ true);
-                InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrNeq_A, bailOutLabel, continueBranchInstr);
-                bailOutKind ^= IR::BailOutIgnoreException;
-            }
-        }
-
-        if (bailOutKind & IR::BailOutBreakPointInFunction)
-        {
-            // CMP [&functionBody->m_sourceInfo.m_probeCount], 0
-            // BNE bailout
-            IR::Opnd* opnd1 = IR::MemRefOpnd::New(m_func->GetJITFunctionBody()->GetProbeCountAddr(), TyInt32, m_func);
-            IR::Opnd* opnd2 = IR::IntConstOpnd::New(0, TyInt32, m_func, /*dontEncode*/ true);
-            InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrNeq_A, bailOutLabel, continueBranchInstr);
-            bailOutKind ^= IR::BailOutBreakPointInFunction;
-        }
-
-        // on method entry
-        if(bailOutKind & IR::BailOutStep)
-        {
-            // TEST STEP_BAILOUT, [&stepController->StepType]
-            // BNE BailoutLabel
-            IR::Opnd* opnd1 = IR::MemRefOpnd::New(m_func->GetScriptContextInfo()->GetDebugStepTypeAddr(), TyInt8, m_func);
-            IR::Opnd* opnd2 = IR::IntConstOpnd::New(Js::STEP_BAILOUT, TyInt8, this->m_func, /*dontEncode*/ true);
-            InsertTestBranch(opnd1, opnd2, Js::OpCode::BrNeq_A, bailOutLabel, continueBranchInstr);
-
-            // CMP  STEP_DOCUMENT, [&stepController->StepType]
-            // BEQ BailoutDocumentLabel
-            opnd1 = IR::MemRefOpnd::New(m_func->GetScriptContextInfo()->GetDebugStepTypeAddr(), TyInt8, m_func);
-            opnd2 = IR::IntConstOpnd::New(Js::STEP_DOCUMENT, TyInt8, this->m_func, /*dontEncode*/ true);
-            InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrEq_A, /*isUnsigned*/ true, bailOutDocumentLabel, continueBranchInstr);
-
-            doGenerateBailOutDocumentBlock = true;
-
-            bailOutKind ^= IR::BailOutStep;
-        }
-
-        // on method exit
-        if (bailOutKind & IR::BailOutStackFrameBase)
-        {
-            // CMP EffectiveFrameBase, [&stepController->frameAddrWhenSet]
-            // BA bailoutLabel
-            RegNum effectiveFrameBaseReg;
-#ifdef _M_X64
-            effectiveFrameBaseReg = m_lowererMD.GetRegStackPointer();
-#else
-            effectiveFrameBaseReg = m_lowererMD.GetRegFramePointer();
-#endif
-            IR::Opnd* opnd1 = IR::RegOpnd::New(nullptr, effectiveFrameBaseReg, TyMachReg, m_func);
-            IR::Opnd* opnd2 = IR::MemRefOpnd::New(m_func->GetScriptContextInfo()->GetDebugFrameAddressAddr(), TyMachReg, m_func);
-            this->InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrGt_A, /*isUnsigned*/ true, bailOutLabel, continueBranchInstr);
-
-            // CMP  STEP_DOCUMENT, [&stepController->StepType]
-            // BEQ BailoutDocumentLabel
-            opnd1 = IR::MemRefOpnd::New(m_func->GetScriptContextInfo()->GetDebugStepTypeAddr(), TyInt8, m_func);
-            opnd2 = IR::IntConstOpnd::New(Js::STEP_DOCUMENT, TyInt8, this->m_func, /*dontEncode*/ true);
-            InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrEq_A, /*isUnsigned*/ true, bailOutDocumentLabel, continueBranchInstr);
-
-            doGenerateBailOutDocumentBlock = true;
-
-            bailOutKind ^= IR::BailOutStackFrameBase;
-        }
-
-        if (bailOutKind & IR::BailOutLocalValueChanged)
-        {
-            int32_t hasLocalVarChangedOffset = m_func->GetHasLocalVarChangedOffset();
-            if (hasLocalVarChangedOffset != Js::Constants::InvalidOffset)
-            {
-                // CMP [EBP + hasLocalVarChangedStackOffset], 0
-                // BNE bailout
-                StackSym* sym = StackSym::New(TyInt8, m_func);
-                sym->m_offset = hasLocalVarChangedOffset;
-                sym->m_allocated = true;
-                IR::Opnd* opnd1 = IR::SymOpnd::New(sym, TyInt8, m_func);
-                IR::Opnd* opnd2 = IR::IntConstOpnd::New(0, TyInt8, m_func);
-                InsertCompareBranch(opnd1, opnd2, Js::OpCode::BrNeq_A, bailOutLabel, continueBranchInstr);
-            }
-            bailOutKind ^= IR::BailOutLocalValueChanged;
-        }
-
-        if (doGenerateBailOutDocumentBlock)
-        {
-            // GENERATE the BailoutDocumentLabel
-            // bailOutDocumentLabel:
-            //   CMP CurrentScriptId, [&stepController->ScriptIdWhenSet]
-            //   BEQ ContinueLabel
-            // bailOutLabel:                // (fallthrough bailOutLabel)
-            IR::Opnd* opnd1 = IR::MemRefOpnd::New(m_func->GetJITFunctionBody()->GetScriptIdAddr(), TyInt32, m_func);
-
-            IR::Opnd* opnd2 = IR::MemRefOpnd::New(m_func->GetScriptContextInfo()->GetDebugScriptIdWhenSetAddr(), TyInt32, m_func);
-            IR::RegOpnd* reg1 = IR::RegOpnd::New(TyInt32, m_func);
-            InsertMove(reg1, opnd2, bailOutLabel);
-
-            InsertCompareBranch(opnd1, reg1, Js::OpCode::BrEq_A, /*isUnsigned*/ true, continueLabel, bailOutLabel);
-        }
-
-        AssertMsg(bailOutKind == (IR::BailOutKind)0, "Some of the bits in BailOutKind were not processed!");
-
-        // Note: at this time the 'instr' is in between bailoutLabel and continueLabel.
-    }
-    else
-    {
-        // For explicit/unconditional bailout use label which is not a helper, otherwise we would get a helper in main code path
-        // which breaks helper label consistency (you can only get to helper from a conditional branch in main code), see DbCheckPostLower.
-        explicitBailOutLabel = IR::LabelInstr::New(Js::OpCode::Label, this->m_func, false);
-    }
-
-    this->GenerateBailOut(instr, nullptr, explicitBailOutLabel);
-
-    return prevInstr;
-}
-#endif
 
 IR::Instr*
 Lowerer::LowerBailOnException(IR::Instr * instr)

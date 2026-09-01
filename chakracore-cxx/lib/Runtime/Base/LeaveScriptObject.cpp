@@ -27,10 +27,6 @@ namespace Js
         this->isCallRoot = isCallRoot;
         this->hr = NOERROR;
         this->hasForcedEnter =
-#ifdef ENABLE_SCRIPT_DEBUGGING
-         scriptContext->GetDebugContext() != nullptr ?
-            scriptContext->GetDebugContext()->GetProbeContainer()->isForcedToEnterScriptStart :
-#endif
             false;
 
         // Initialize the entry exit record

@@ -60,31 +60,7 @@ namespace Js
     } \
 }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#define BEGIN_TYPEOF_ERROR_HANDLER_DEBUGGER_THROW_IS_INTERNAL \
-    class AutoCleanup \
-    { \
-    private: \
-        ScriptContext *const scriptContext; \
-    public: \
-        AutoCleanup(ScriptContext *const scriptContext) : scriptContext(scriptContext) \
-        { \
-            if (scriptContext->IsScriptContextInDebugMode()) \
-            { \
-                scriptContext->GetDebugContext()->GetProbeContainer()->SetThrowIsInternal(true); \
-            } \
-        } \
-        ~AutoCleanup() \
-        { \
-            if (scriptContext->IsScriptContextInDebugMode()) \
-            { \
-                scriptContext->GetDebugContext()->GetProbeContainer()->SetThrowIsInternal(false); \
-            } \
-        } \
-    } autoCleanup(scriptContext);
-#else
 #define BEGIN_TYPEOF_ERROR_HANDLER_DEBUGGER_THROW_IS_INTERNAL
-#endif
 
 #define BEGIN_TYPEOF_ERROR_HANDLER(scriptContext)  \
 { \

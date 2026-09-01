@@ -42,48 +42,11 @@ namespace Js
             this->byteCodeGenerationFlags = byteCodeGenerationFlags;
         }
 
-
+        // TODO (hanhossain): remove
         bool IsInDebugMode() const
         {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            return (this->debugModeSource != nullptr || this->debugModeSourceIsEmpty) && this->m_isInDebugMode;
-#else
             return false;
-#endif
         }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        void SetInDebugMode(bool inDebugMode)
-        {
-            AssertMsg(!GetIsLibraryCode(), "Shouldn't call SetInDebugMode for Library code.");
-
-            AssertMsg(this->sourceHolder != nullptr, "We have no source holder.");
-
-            AssertMsg(this->m_isInDebugMode != inDebugMode, "Why are we setting same value");
-
-            this->m_isInDebugMode = inDebugMode;
-
-            if (!this->sourceHolder->IsDeferrable())
-            {
-                return;
-            }
-
-            if (inDebugMode)
-            {
-                this->debugModeSource = this->sourceHolder->GetSource(u"Entering Debug Mode");
-                this->debugModeSourceLength = this->sourceHolder->GetByteLength(u"Entering Debug Mode");
-                this->debugModeSourceIsEmpty = !this->HasSource() || this->debugModeSource == nullptr;
-                this->EnsureLineOffsetCache();
-            }
-            else
-            {
-                // If debugModeSourceIsEmpty is false, that means debugModeSource isn't nullptr or we aren't in debug mode.
-                this->debugModeSourceIsEmpty = false;
-                this->debugModeSource = nullptr;
-                this->debugModeSourceLength = 0;
-            }
-        }
-#endif
 
         size_t CharacterIndexToByteIndex(charcount_t cchIndex) const
         {
@@ -202,27 +165,6 @@ namespace Js
 
             return matchedFunctionBody;
         }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        bool HasDebugDocument() const
-        {
-            return m_debugDocument != nullptr;
-        }
-
-        void SetDebugDocument(DebugDocument * document)
-        {
-            Assert(!HasDebugDocument());
-            m_debugDocument = document;
-        }
-
-        DebugDocument* GetDebugDocument() const
-        {
-            Assert(HasDebugDocument());
-            return m_debugDocument;
-        }
-
-        void ClearDebugDocument(bool close = true);
-#endif
 
         void SetIsCesu8(bool isCesu8)
         {
@@ -362,17 +304,9 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<FunctionInfoList*>::Type topLevelFunctionInfoList;
         typename WriteBarrierFieldTypeTraits<BoundedPropertyRecordHashSet>::Type boundedPropertyRecordHashSet;
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        typename WriteBarrierFieldTypeTraits<DebugDocument*>::Type m_debugDocument;
-#endif
-
         typename WriteBarrierFieldTypeTraits<const SRCINFO*>::Type m_srcInfo;
         typename WriteBarrierFieldTypeTraits<unsigned long>::Type m_secondaryHostSourceContext;
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        typename WriteBarrierFieldTypeTraits<LPCUTF8>::Type debugModeSource;
-        typename WriteBarrierFieldTypeTraits<size_t>::Type debugModeSourceLength;
-#endif
         typename WriteBarrierFieldTypeTraits<ScriptContext* const>::Type m_scriptContext;   // Pointer to ScriptContext under which this source info was created
 
         // Line offset cache used for quickly finding line/column offsets.
@@ -387,10 +321,6 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<bool>::Type m_isXDomain : 1;
         // we found that m_isXDomain could cause regression without CORS, so the new flag is just for callee.caller in window.onerror
         typename WriteBarrierFieldTypeTraits<bool>::Type m_isXDomainString : 1;
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        typename WriteBarrierFieldTypeTraits<bool>::Type debugModeSourceIsEmpty : 1;
-        typename WriteBarrierFieldTypeTraits<bool>::Type m_isInDebugMode : 1;
-#endif
         typename WriteBarrierFieldTypeTraits<uint>::Type m_sourceInfoId;
 
         // Various flags preserved for Edit-and-Continue re-compile purpose

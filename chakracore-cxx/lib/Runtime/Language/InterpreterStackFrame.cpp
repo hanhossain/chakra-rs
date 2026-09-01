@@ -1937,18 +1937,6 @@ namespace Js
         Var aReturn = nullptr;
 
         {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            if (!isAsmJs && executeFunction->IsInDebugMode())
-            {
-#if DYNAMIC_INTERPRETER_THUNK
-                PushPopFrameHelper pushPopFrameHelper(newInstance, returnAddress, addressOfReturnAddress);
-                aReturn = newInstance->DebugProcess();
-#else
-                aReturn = newInstance->DebugProcessThunk(__builtin_return_address(0), _AddressOfReturnAddress());
-#endif
-            }
-            else
-#endif
             {
 #if DYNAMIC_INTERPRETER_THUNK
                 PushPopFrameHelper pushPopFrameHelper(newInstance, returnAddress, addressOfReturnAddress);
@@ -2221,66 +2209,6 @@ namespace Js
         m_outSp       = m_outParams;
         m_outSpCached = nullptr;
     }
-
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    Var InterpreterStackFrame::DebugProcessThunk(void* returnAddress, void* addressOfReturnAddress)
-    {
-        PushPopFrameHelper pushPopFrameHelper(this, returnAddress, addressOfReturnAddress);
-        return this->DebugProcess();
-    }
-
-    //
-    // Under debug mode allow the exception to be swallowed and execution to continue
-    // if the debugger has specified that behavior.
-    //
-    Var InterpreterStackFrame::DebugProcess()
-    {
-        Assert(this->returnAddress != nullptr);
-        while (true)
-        {
-            JavascriptExceptionObject *exception = nullptr;
-            try
-            {
-                return this->ProcessWithDebugging();
-            }
-            catch (const Js::JavascriptException& err)
-            {
-                JavascriptExceptionObject *exception_ = err.GetAndClear();
-                Assert(exception_);
-                exception = exception_;
-            }
-
-            if (exception)
-            {
-                bool skipException = false;
-                if (exception != scriptContext->GetThreadContext()->GetPendingSOErrorObject() &&
-                    exception != scriptContext->GetThreadContext()->GetPendingOOMErrorObject())
-                {
-                    skipException = exception->IsDebuggerSkip();
-                }
-                if (skipException)
-                {
-                    // If we are going to swallow the exception then advance to the beginning of the next user statement
-                    if (exception->IsIgnoreAdvanceToNextStatement()
-                        || this->scriptContext->GetDebugContext()->GetProbeContainer()->AdvanceToNextUserStatement(this->m_functionBody, &this->m_reader))
-                    {
-                        // We must fix up the return value to at least be undefined:
-                        this->SetReg((RegSlot)0, this->scriptContext->GetLibrary()->GetUndefined());
-
-                        // If we recover from the exception, there may be a chance the out pointers in the InterpreterStackframe are not in a proper state.
-                        // Reset them to correct the stack.
-                        ResetOut();
-
-                        // If we can successfully advance then continuing processing
-                        continue;
-                    }
-                }
-
-                JavascriptExceptionOperators::DoThrowCheckClone(exception, scriptContext);
-            }
-        }
-    }
-#endif
 
     template<typename OpCodeType, Js::OpCode(ReadOpFunc)(const byte*&), void (TracingFunc)(InterpreterStackFrame*, OpCodeType)>
     OpCodeType InterpreterStackFrame::ReadOp(const byte *& ip)
@@ -2872,22 +2800,6 @@ namespace Js
 #undef INTERPRETERLOOPNAME
 #endif
 
-// For now, always collect profile data when debugging,
-// otherwise the backend will be confused if there's no profile data.
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#define INTERPRETERLOOPNAME ProcessWithDebugging
-#define PROVIDE_DEBUGGING
-#if ENABLE_PROFILE_INFO
-#define PROVIDE_INTERPRETERPROFILE
-#endif
-#include "InterpreterLoop.inl"
-#if ENABLE_PROFILE_INFO
-#undef PROVIDE_INTERPRETERPROFILE
-#endif
-#undef PROVIDE_DEBUGGING
-#undef INTERPRETERLOOPNAME
-#endif
-
     Var InterpreterStackFrame::Process()
     {
 #if ENABLE_PROFILE_INFO
@@ -3384,13 +3296,6 @@ namespace Js
 
         RecyclableObject * function = OP_CallGetFunc(target);
 
-#if DBG && defined(ENABLE_SCRIPT_DEBUGGING)
-        if (this->IsInDebugMode())
-        {
-            JavascriptFunction::CheckValidDebugThunk(scriptContext, function);
-        }
-#endif
-
         BEGIN_SAFE_REENTRANT_REGION(this->scriptContext->GetThreadContext())
         {
             if (playout->Return == Js::Constants::NoRegister)
@@ -3425,14 +3330,6 @@ namespace Js
         ThreadContext * threadContext = scriptContext->GetThreadContext();
         Js::ImplicitCallFlags savedImplicitCallFlags = threadContext->GetImplicitCallFlags();
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-#if DBG
-        if (this->IsInDebugMode())
-        {
-            JavascriptFunction::CheckValidDebugThunk(scriptContext, function);
-        }
-#endif
-#endif
         ArgSlot argCount = playout->ArgCount;
         BEGIN_SAFE_REENTRANT_REGION(threadContext)
         {
@@ -6086,14 +5983,6 @@ namespace Js
             void * addrOfReturnAddr = _AddressOfReturnAddress();
             Js::JavascriptExceptionOperators::TryHandlerAddrOfReturnAddrStack tryHandlerAddrOfReturnAddrStack(scriptContext, addrOfReturnAddr);
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            if (this->IsInDebugMode())
-            {
-                this->ProcessWithDebugging();
-                this->TrySetRetOffset();
-            }
-            else
-#endif
             {
                 this->Process();
                 this->TrySetRetOffset();
@@ -6154,13 +6043,6 @@ namespace Js
 
     void InterpreterStackFrame::ProcessCatch()
     {
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->IsInDebugMode())
-        {
-            this->DebugProcess();
-        }
-        else
-#endif
         {
             this->Process();
         }
@@ -6171,13 +6053,6 @@ namespace Js
         this->nestedFinallyDepth++;
 
         int newOffset = 0;
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->IsInDebugMode())
-        {
-            newOffset = ::Math::PointerCastToIntegral<int>(this->DebugProcess());
-        }
-        else
-#endif
         {
             newOffset = ::Math::PointerCastToIntegral<int>(this->Process());
         }
@@ -6214,14 +6089,6 @@ namespace Js
                     Js::JavascriptExceptionOperators::AutoCatchHandlerExists autoCatchHandlerExists(scriptContext);
                 }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-                if (this->IsInDebugMode())
-                {
-                    this->ProcessWithDebugging();
-                    this->TrySetRetOffset();
-                }
-                else
-#endif
                 {
                     this->Process();
                     this->TrySetRetOffset();
@@ -6461,13 +6328,6 @@ namespace Js
     {
         this->OrFlags(InterpreterStackFrameFlags_WithinCatchBlock);
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->IsInDebugMode())
-        {
-            this->DebugProcess();
-        }
-        else
-#endif
         {
             this->Process();
         }
@@ -6500,13 +6360,6 @@ namespace Js
                 CacheSp();
             }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-            if (this->IsInDebugMode())
-            {
-                result = this->ProcessWithDebugging();
-            }
-            else
-#endif
             {
                 result = this->Process();
             }
@@ -6554,15 +6407,6 @@ namespace Js
             pExceptionObject = pExceptionObject->CloneIfStaticExceptionObject(scriptContext);
         }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (pExceptionObject && this->IsInDebugMode() &&
-            pExceptionObject != scriptContext->GetThreadContext()->GetPendingSOErrorObject())
-        {
-            // Swallowing an exception that has triggered a finally is not implemented
-            // (This appears to be the same behavior as ie8)
-            pExceptionObject->SetDebuggerSkip(false);
-        }
-#endif
 
         // Call into the finally by setting the IP, consuming the Finally, and letting the interpreter recurse.
         m_reader.SetCurrentRelativeOffset(ip, jumpOffset);
@@ -6625,13 +6469,6 @@ namespace Js
         this->OrFlags(InterpreterStackFrameFlags_WithinFinallyBlock);
 
         int newOffset = 0;
-#ifdef ENABLE_SCRIPT_DEBUGGING
-        if (this->IsInDebugMode())
-        {
-            newOffset = ::Math::PointerCastToIntegral<int>(this->DebugProcess());
-        }
-        else
-#endif
         {
             newOffset = ::Math::PointerCastToIntegral<int>(this->Process());
         }
@@ -7199,13 +7036,6 @@ namespace Js
         return constructor;
     }
 
-#ifdef ENABLE_SCRIPT_DEBUGGING
-    template <class T>
-    void InterpreterStackFrame::OP_EmitTmpRegCount(const OpLayoutT_Unsigned1<T> * playout)
-    {
-        this->scriptContext->GetDebugContext()->GetProbeContainer()->SetCurrentTmpRegCount(playout->C1);
-    }
-#endif
 
     Var InterpreterStackFrame::OP_LdHomeObj(ScriptContext * scriptContext)
     {
