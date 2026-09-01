@@ -19,7 +19,7 @@ enum Phase: unsigned short;
 #if defined(BGJIT_STATS)
 #define OUTPUT_TRACE(Phase, ...) Output::Trace((Phase), __VA_ARGS__)
 #define OUTPUT_TRACE_2(Phase, ...) Output::Trace2((Phase), __VA_ARGS__)
-#define OUTPUT_STATS(Phase, ...) Output::TraceStats((Phase), __VA_ARGS__)
+#define OUTPUT_STATS(Phase, ...)
 #define OUTPUT_FLUSH() Output::Flush()
 #else
 #define OUTPUT_TRACE(Phase, ...)
@@ -65,7 +65,6 @@ public:
     static size_t TraceWithPrefix(Js::Phase phase, const char16_t prefix[], const char16_t *form, ...);
     static size_t TraceWithFlush(Js::Phase phase, const char16_t *form, ...);
     static size_t TraceWithFlush(Js::Flag flag, const char16_t *form, ...);
-    static size_t TraceStats(Js::Phase phase, const char16_t *form, ...);
     template<class Fn>
     static size_t
     TraceWithCallback(Js::Phase phase, Fn callback, const char16_t *form, ...)
