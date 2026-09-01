@@ -81,21 +81,6 @@ public:
     static JsErrorCode JsSetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef value) { return chakracore::jsrt::JsSetIndexedProperty(object, index, value); }
     static JsErrorCode JsSetPromiseContinuationCallback(JsPromiseContinuationCallback callback, void *callbackState) { return chakracore::jsrt::JsSetPromiseContinuationCallback(callback, callbackState); }
     static JsErrorCode JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return chakracore::jsrt::JsGetContextOfObject(object, context); }
-    static JsErrorCode JsDiagStartDebugging(JsRuntimeHandle runtimeHandle, JsDiagDebugEventCallback debugEventCallback, void* callbackState) { return chakracore::jsrt::JsDiagStartDebugging(runtimeHandle, debugEventCallback, callbackState); }
-    static JsErrorCode JsDiagStopDebugging(JsRuntimeHandle runtimeHandle, void** callbackState) { return chakracore::jsrt::JsDiagStopDebugging(runtimeHandle, callbackState); }
-    static JsErrorCode JsDiagGetSource(unsigned int scriptId, JsValueRef *source) { return chakracore::jsrt::JsDiagGetSource(scriptId, source); }
-    static JsErrorCode JsDiagSetBreakpoint(unsigned int scriptId, unsigned int lineNumber, unsigned int columnNumber, JsValueRef *breakpoint) { return chakracore::jsrt::JsDiagSetBreakpoint(scriptId, lineNumber, columnNumber, breakpoint); }
-    static JsErrorCode JsDiagGetStackTrace(JsValueRef *stackTrace) { return chakracore::jsrt::JsDiagGetStackTrace(stackTrace); }
-    static JsErrorCode JsDiagGetBreakpoints(JsValueRef * breakpoints) { return chakracore::jsrt::JsDiagGetBreakpoints(breakpoints); }
-    static JsErrorCode JsDiagRemoveBreakpoint(unsigned int breakpointId) { return chakracore::jsrt::JsDiagRemoveBreakpoint(breakpointId); }
-    static JsErrorCode JsDiagSetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes exceptionAttributes) { return chakracore::jsrt::JsDiagSetBreakOnException(runtimeHandle, exceptionAttributes); }
-    static JsErrorCode JsDiagGetBreakOnException(JsRuntimeHandle runtimeHandle, JsDiagBreakOnExceptionAttributes * exceptionAttributes) { return chakracore::jsrt::JsDiagGetBreakOnException(runtimeHandle, exceptionAttributes); }
-    static JsErrorCode JsDiagSetStepType(JsDiagStepType stepType) { return chakracore::jsrt::JsDiagSetStepType(stepType); }
-    static JsErrorCode JsDiagGetScripts(JsValueRef * scriptsArray) { return chakracore::jsrt::JsDiagGetScripts(scriptsArray); }
-    static JsErrorCode JsDiagGetFunctionPosition(JsValueRef value, JsValueRef * functionPosition) { return chakracore::jsrt::JsDiagGetFunctionPosition(value, functionPosition); }
-    static JsErrorCode JsDiagGetStackProperties(unsigned int stackFrameIndex, JsValueRef * properties) { return chakracore::jsrt::JsDiagGetStackProperties(stackFrameIndex, properties); }
-    static JsErrorCode JsDiagGetProperties(unsigned int objectHandle, unsigned int fromCount, unsigned int totalCount, JsValueRef * propertiesObject) { return chakracore::jsrt::JsDiagGetProperties(objectHandle, fromCount, totalCount, propertiesObject); }
-    static JsErrorCode JsDiagGetObjectFromHandle(unsigned int handle, JsValueRef * handleObject) { return chakracore::jsrt::JsDiagGetObjectFromHandle(handle, handleObject); }
     static JsErrorCode JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext, byte* sourceText, unsigned int sourceLength, JsParseModuleSourceFlags sourceFlag, JsValueRef* exceptionValueRef) {
         return chakracore::jsrt::JsParseModuleSource(requestModule, sourceContext, sourceText, sourceLength, sourceFlag, exceptionValueRef);
     }

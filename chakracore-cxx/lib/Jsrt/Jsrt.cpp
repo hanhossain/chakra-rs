@@ -3177,8 +3177,6 @@ JsErrorCode RunScriptCore(JsValueRef scriptSource, const byte *script, size_t cb
             &si, &se, &utf8SourceInfo,
             Js::Constants::GlobalCode, loadScriptFlag, scriptSource);
 
-        JsrtContext * context = JsrtContext::GetCurrent();
-
         return JsNoError;
     });
 
@@ -3522,8 +3520,6 @@ JsErrorCode RunSerializedScriptCore(
         }
 
         function = scriptContext->GetLibrary()->CreateScriptFunction(functionBody);
-
-        JsrtContext * context = JsrtContext::GetCurrent();
 
         return JsNoError;
     });
