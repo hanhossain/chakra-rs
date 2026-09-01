@@ -472,7 +472,6 @@ namespace Js
         RecyclerForceMarkInteriorFlag,
         RecyclerPriorityBoostTimeoutFlag,
         RecyclerThreadCollectTimeoutFlag,
-        EnableConcurrentSweepAllocFlag, ecsaFlag,
         PageHeapFlag,
         #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuseFlag,
@@ -1951,8 +1950,6 @@ namespace Js
             Number RecyclerPriorityBoostTimeout;
         // TODO (hanhossain): remove flag
             Number RecyclerThreadCollectTimeout;
-        // TODO (hanhossain): remove flag
-            Boolean EnableConcurrentSweepAlloc; Boolean ecsa;
         // todo (hanhossain): flag end
             Number PageHeap;
         #ifdef RECYCLER_NO_PAGE_REUSE
