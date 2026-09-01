@@ -546,9 +546,6 @@ namespace Js
 #define DEFAULT_CONFIG_ForceJITCFGCheck (false)
 #define DEFAULT_CONFIG_UseJITTrampoline (true)
 
-#define DEFAULT_CONFIG_LibraryStackFrame            (true)
-#define DEFAULT_CONFIG_LibraryStackFrameDebugger    (false)
-
 #define DEFAULT_CONFIG_FuncObjectInlineCacheThreshold   (2) // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
 
 #define DEFAULT_CONFIG_InMemoryTrace                (false)
@@ -1032,8 +1029,6 @@ namespace Js
         u"LoopIterationsToBailoutsRatioForRejit",
         u"MinBailOutsBeforeRejit",
         u"MinBailOutsBeforeRejitForLoops",
-        u"LibraryStackFrame",
-        u"LibraryStackFrameDebugger",
 #ifdef RECYCLER_STRESS
         u"RecyclerStress",
 #endif // RECYCLER_STRESS
@@ -1921,8 +1916,6 @@ namespace Js
         u"Ratio of loop iteration count to bailouts above which a rejit of the loop body is considered",
         u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
         u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
-        u"Display library stack frame",
-        u"Assume debugger support for library stack frame",
         // todo (hanhossain): flag end
 #ifdef RECYCLER_STRESS
         u"Stress the recycler by collect on every allocation call",
@@ -2401,8 +2394,6 @@ namespace Js
 #if DBG
         NoParentFlag,
 #endif
-        NoParentFlag,
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2913,8 +2904,6 @@ namespace Js
         LoopIterationsToBailoutsRatioForRejit(DEFAULT_CONFIG_LoopIterationsToBailoutsRatioForRejit),
         MinBailOutsBeforeRejit(DEFAULT_CONFIG_MinBailOutsBeforeRejit),
         MinBailOutsBeforeRejitForLoops(DEFAULT_CONFIG_MinBailOutsBeforeRejitForLoops),
-        LibraryStackFrame(DEFAULT_CONFIG_LibraryStackFrame),
-        LibraryStackFrameDebugger(DEFAULT_CONFIG_LibraryStackFrameDebugger),
 #ifdef RECYCLER_STRESS
         RecyclerStress(false),
 #endif // RECYCLER_STRESS
@@ -4316,10 +4305,6 @@ namespace Js
             return FlagNumber;
         case MinBailOutsBeforeRejitForLoopsFlag:
             return FlagNumber;
-        case LibraryStackFrameFlag:
-            return FlagBoolean;
-        case LibraryStackFrameDebuggerFlag:
-            return FlagBoolean;
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
             return FlagBoolean;
@@ -5142,10 +5127,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejit));
         case MinBailOutsBeforeRejitForLoopsFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejitForLoops));
-        case LibraryStackFrameFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&LibraryStackFrame));
-        case LibraryStackFrameDebuggerFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&LibraryStackFrameDebugger));
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerStress));
@@ -5903,12 +5884,6 @@ namespace Js
             retValue = DEFAULT_CONFIG_ValidateIntRanges;
             break;
         #endif
-        case LibraryStackFrameFlag:
-            retValue = DEFAULT_CONFIG_LibraryStackFrame;
-            break;
-        case LibraryStackFrameDebuggerFlag:
-            retValue = DEFAULT_CONFIG_LibraryStackFrameDebugger;
-            break;
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
             retValue = false;

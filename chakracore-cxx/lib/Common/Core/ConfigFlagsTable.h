@@ -458,8 +458,6 @@ namespace Js
         LoopIterationsToBailoutsRatioForRejitFlag,
         MinBailOutsBeforeRejitFlag,
         MinBailOutsBeforeRejitForLoopsFlag,
-        LibraryStackFrameFlag,
-        LibraryStackFrameDebuggerFlag,
         #ifdef RECYCLER_STRESS
         RecyclerStressFlag,
         #endif // RECYCLER_STRESS
@@ -1916,10 +1914,6 @@ namespace Js
         Number MinBailOutsBeforeRejit;
         // TODO (hanhossain): remove flag
         Number MinBailOutsBeforeRejitForLoops;
-        // TODO (hanhossain): remove flag
-        Boolean LibraryStackFrame;
-        // TODO (hanhossain): remove flag
-        Boolean LibraryStackFrameDebugger;
         // todo (hanhossain): flag end
         #ifdef RECYCLER_STRESS
             Boolean RecyclerStress;
