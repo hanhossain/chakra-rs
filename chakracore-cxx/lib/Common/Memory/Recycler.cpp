@@ -120,7 +120,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     outOfMemoryFunc(outOfMemoryFunc),
     recyclerSweepManager(nullptr),
     inEndMarkOnLowMemory(false),
-    enableScanInteriorPointers(CUSTOM_CONFIG_FLAG(configFlagsTable, RecyclerForceMarkInterior)),
+    enableScanInteriorPointers(false),
     enableScanImplicitRoots(false),
     disableCollectOnAllocationHeuristics(false),
     skipStack(false),

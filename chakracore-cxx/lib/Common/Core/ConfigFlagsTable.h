@@ -469,9 +469,6 @@ namespace Js
         RecyclerTrackStressFlag,
         RecyclerInduceFalsePositivesFlag,
         #endif // RECYCLER_STRESS
-        RecyclerForceMarkInteriorFlag,
-        RecyclerPriorityBoostTimeoutFlag,
-        RecyclerThreadCollectTimeoutFlag,
         PageHeapFlag,
         #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuseFlag,
@@ -1944,12 +1941,6 @@ namespace Js
         // TODO (hanhossain): remove flag
             Boolean RecyclerInduceFalsePositives;
         #endif // RECYCLER_STRESS
-        // TODO (hanhossain): remove flag
-        Boolean RecyclerForceMarkInterior;
-        // TODO (hanhossain): remove flag
-            Number RecyclerPriorityBoostTimeout;
-        // TODO (hanhossain): remove flag
-            Number RecyclerThreadCollectTimeout;
         // todo (hanhossain): flag end
             Number PageHeap;
         #ifdef RECYCLER_NO_PAGE_REUSE
