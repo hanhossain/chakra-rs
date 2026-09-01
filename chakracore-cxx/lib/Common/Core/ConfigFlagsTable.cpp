@@ -1051,7 +1051,6 @@ namespace Js
         u"EnableConcurrentSweepAlloc",
         u"ecsa",
         u"PageHeap",
-        u"PageHeapAllocStack",
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"RecyclerNoPageReuse",
 #endif
@@ -1951,9 +1950,8 @@ namespace Js
         u"Adjust thread collect timeout",
         u"Turns off the feature to allow allocations during concurrent sweep.",
         u"Turns off the feature to allow allocations during concurrent sweep.",
-        u"Use full page for heap allocations",
-        u"Capture alloc stack under page heap mode",
         // todo (hanhossain): flag end
+        u"Use full page for heap allocations",
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"Do not reuse page in recycler",
 #endif
@@ -2448,9 +2446,8 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
 #ifdef RECYCLER_NO_PAGE_REUSE
         NoParentFlag,
 #endif
@@ -2968,7 +2965,6 @@ namespace Js
         EnableConcurrentSweepAlloc(true),
         ecsa(true),
         PageHeap(DEFAULT_CONFIG_PageHeap),
-        PageHeapAllocStack(DEFAULT_CONFIG_PageHeapAllocStack),
 #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuse(false),
 #endif
@@ -4404,8 +4400,6 @@ namespace Js
             return FlagBoolean;
         case PageHeapFlag:
             return FlagNumber;
-        case PageHeapAllocStackFlag:
-            return FlagBoolean;
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             return FlagBoolean;
@@ -5254,8 +5248,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ecsa));
         case PageHeapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PageHeap));
-        case PageHeapAllocStackFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&PageHeapAllocStack));
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerNoPageReuse));
@@ -6044,9 +6036,6 @@ namespace Js
             break;
         case ecsaFlag:
             retValue = true;
-            break;
-        case PageHeapAllocStackFlag:
-            retValue = DEFAULT_CONFIG_PageHeapAllocStack;
             break;
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
