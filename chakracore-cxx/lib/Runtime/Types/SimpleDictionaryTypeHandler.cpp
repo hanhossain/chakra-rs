@@ -484,9 +484,6 @@ namespace Js
     {
         DictionaryTypeHandlerBase<TPropertyIndex>* newTypeHandler = ConvertToTypeHandler<DictionaryTypeHandlerBase<TPropertyIndex>, const PropertyRecord*>(instance);
 
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertSimpleDictionaryToDictionaryCount++;
-#endif
         return newTypeHandler;
     }
 
@@ -494,10 +491,6 @@ namespace Js
     ES5ArrayTypeHandlerBase<TPropertyIndex>* SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>::ConvertToES5ArrayType(DynamicObject* instance)
     {
         ES5ArrayTypeHandlerBase<TPropertyIndex>* newTypeHandler = ConvertToTypeHandler<ES5ArrayTypeHandlerBase<TPropertyIndex>, const PropertyRecord*>(instance);
-
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertSimpleDictionaryToDictionaryCount++;
-#endif
         return newTypeHandler;
     }
 
@@ -510,10 +503,6 @@ namespace Js
             isUnordered
                 ? ConvertToSimpleDictionaryUnorderedTypeHandler<TPropertyIndex, TMapKey, IsNotExtensibleSupported>(instance)
                 : ConvertToTypeHandler<SimpleDictionaryTypeHandlerBase<TPropertyIndex, TMapKey, IsNotExtensibleSupported>, TMapKey>(instance);
-
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertSimpleSharedDictionaryToNonSharedCount++;
-#endif
         return newTypeHandler;
     }
 

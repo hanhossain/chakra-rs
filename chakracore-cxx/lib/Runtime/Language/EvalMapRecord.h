@@ -60,12 +60,6 @@ namespace Js
             NestedKey nestedKey;
             ConvertKey(key, nestedKey);
             nestedMap->Item(nestedKey, newValue);
-#ifdef PROFILE_EVALMAP
-            if (Configuration::Global.flags.ProfileEvalMap)
-            {
-                Output::Print(u"EvalMap fastcache collision:\t key = %d count = %d\n", (hash_t)key, nestedMap->Count());
-            }
-#endif
         }
 
         void Remove(const TKey& key)
@@ -186,12 +180,6 @@ namespace Js
             {
                 EntryRecord* newRecord = RecyclerNew(recycler, EntryRecord, value);
                 dictionary->Add(key, newRecord);
-#ifdef PROFILE_EVALMAP
-                if (Configuration::Global.flags.ProfileEvalMap)
-                {
-                    Output::Print(u"EvalMap fastcache set:\t key = %d \n", (hash_t)key);
-                }
-#endif
             }
         }
 

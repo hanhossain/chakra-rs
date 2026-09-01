@@ -500,45 +500,6 @@ namespace Js
 
 
 public:
-#ifdef PROFILE_TYPES
-        int convertNullToSimpleCount;
-        int convertNullToSimpleDictionaryCount;
-        int convertNullToDictionaryCount;
-        int convertDeferredToDictionaryCount;
-        int convertDeferredToSimpleDictionaryCount;
-        int convertSimpleToDictionaryCount;
-        int convertSimpleToSimpleDictionaryCount;
-        int convertPathToDictionaryExceededLengthCount;
-        int convertPathToDictionaryDeletedCount;
-        int convertPathToDictionaryAttributesCount;
-        int convertPathToDictionaryItemAttributesCount;
-        int convertPathToDictionaryAccessorsCount;
-        int convertPathToDictionaryItemAccessorsCount;
-        int convertPathToDictionaryExtensionsCount;
-        int convertPathToDictionaryProtoCount;
-        int convertPathToDictionaryNoRootCount;
-        int convertPathToDictionaryResetCount;
-        int convertPathToSimpleDictionaryCount;
-        int convertSimplePathToPathCount;
-        int convertSimpleDictionaryToDictionaryCount;
-        int convertSimpleSharedDictionaryToNonSharedCount;
-        int convertSimpleSharedToNonSharedCount;
-        int pathTypeHandlerCount;
-        int promoteCount;
-        int cacheCount;
-        int branchCount;
-        int maxPathLength;
-        int typeCount[TypeIds_Limit];
-        int instanceCount[TypeIds_Limit];
-#endif
-
-
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        long bailOutRecordBytes;
-        long bailOutOffsetBytes;
-        long codeSize;
-#endif
-
 #ifdef  PROFILE_OBJECT_LITERALS
         int objectLiteralInstanceCount;
         int objectLiteralPathCount;
@@ -820,10 +781,6 @@ private:
         static ScriptContext * New(ThreadContext * threadContext);
 
         ~ScriptContext();
-
-#ifdef PROFILE_TYPES
-        void ProfileTypes();
-#endif
 
 #ifdef PROFILE_OBJECT_LITERALS
         void ProfileObjectLiteral();

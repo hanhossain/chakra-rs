@@ -158,11 +158,6 @@ namespace Js
 #ifdef PROFILE_STRINGS
         , stringProfiler(nullptr)
 #endif
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        , codeSize(0)
-        , bailOutRecordBytes(0)
-        , bailOutOffsetBytes(0)
-#endif
         , emptyStringPropertyId(Js::PropertyIds::_none)
     {
        // Don't use throwing memory allocation in ctor, as exception in ctor doesn't cause the dtor to be called
@@ -173,38 +168,6 @@ namespace Js
 
 #ifdef BGJIT_STATS
         interpretedCount = maxFuncInterpret = funcJITCount = bytecodeJITCount = interpretedCallsHighPri = jitCodeUsed = funcJitCodeUsed = loopJITCount = speculativeJitCount = 0;
-#endif
-
-#ifdef PROFILE_TYPES
-        convertNullToSimpleCount = 0;
-        convertNullToSimpleDictionaryCount = 0;
-        convertNullToDictionaryCount = 0;
-        convertDeferredToDictionaryCount = 0;
-        convertDeferredToSimpleDictionaryCount = 0;
-        convertSimpleToDictionaryCount = 0;
-        convertSimpleToSimpleDictionaryCount = 0;
-        convertPathToDictionaryExceededLengthCount = 0;
-        convertPathToDictionaryDeletedCount = 0;
-        convertPathToDictionaryAttributesCount = 0;
-        convertPathToDictionaryItemAttributesCount = 0;
-        convertPathToDictionaryAccessorsCount = 0;
-        convertPathToDictionaryItemAccessorsCount = 0;
-        convertPathToDictionaryExtensionsCount = 0;
-        convertPathToDictionaryProtoCount = 0;
-        convertPathToDictionaryNoRootCount = 0;
-        convertPathToDictionaryResetCount = 0;
-        convertPathToSimpleDictionaryCount = 0;
-        convertSimplePathToPathCount = 0;
-        convertSimpleDictionaryToDictionaryCount = 0;
-        convertSimpleSharedDictionaryToNonSharedCount = 0;
-        convertSimpleSharedToNonSharedCount = 0;
-        pathTypeHandlerCount = 0;
-        promoteCount = 0;
-        cacheCount = 0;
-        branchCount = 0;
-        maxPathLength = 0;
-        memset(typeCount, 0, sizeof(typeCount));
-        memset(instanceCount, 0, sizeof(instanceCount));
 #endif
 
 #ifdef PROFILE_OBJECT_LITERALS
@@ -747,92 +710,6 @@ namespace Js
 
         return RecyclerNewZ(this->GetRecycler(), SRCINFO, *pSrcInfo);
     }
-
-#ifdef PROFILE_TYPES
-    void ScriptContext::ProfileTypes()
-    {
-        Output::Print(u"===============================================================================\n");
-        Output::Print(u"Types Profile %s\n", this->url);
-        Output::Print(u"-------------------------------------------------------------------------------\n");
-        Output::Print(u"Dynamic Type Conversions:\n");
-        Output::Print(u"    Null to Simple                 %8d\n", convertNullToSimpleCount);
-        Output::Print(u"    Deferred to SimpleMap          %8d\n", convertDeferredToSimpleDictionaryCount);
-        Output::Print(u"    Simple to Map                  %8d\n", convertSimpleToDictionaryCount);
-        Output::Print(u"    Simple to SimpleMap            %8d\n", convertSimpleToSimpleDictionaryCount);
-        Output::Print(u"    Path to SimpleMap (set)        %8d\n", convertPathToDictionaryExceededLengthCount);
-        Output::Print(u"    Path to SimpleMap (delete)     %8d\n", convertPathToDictionaryDeletedCount);
-        Output::Print(u"    Path to SimpleMap (attribute)  %8d\n", convertPathToDictionaryAttributesCount);
-        Output::Print(u"    Path to SimpleMap (item attr)  %8d\n", convertPathToDictionaryItemAttributesCount);
-        Output::Print(u"    Path to SimpleMap (proto)      %8d\n", convertPathToDictionaryProtoCount);
-        Output::Print(u"    Path to SimpleMap (no root)    %8d\n", convertPathToDictionaryNoRootCount);
-        Output::Print(u"    Path to SimpleMap (reset)      %8d\n", convertPathToDictionaryResetCount);
-        Output::Print(u"    Path to Map (accessor)         %8d\n", convertPathToDictionaryAccessorsCount);
-        Output::Print(u"    Path to Map (item accessor)    %8d\n", convertPathToDictionaryItemAccessorsCount);
-        Output::Print(u"    Path to Map (extensions)       %8d\n", convertPathToDictionaryExtensionsCount);
-        Output::Print(u"    Path to SimpleMap              %8d\n", convertPathToSimpleDictionaryCount);
-        Output::Print(u"    SimplePath to Path             %8d\n", convertSimplePathToPathCount);
-        Output::Print(u"    Shared SimpleMap to non-shared %8d\n", convertSimpleSharedDictionaryToNonSharedCount);
-        Output::Print(u"    Deferred to Map                %8d\n", convertDeferredToDictionaryCount);
-        Output::Print(u"    SimpleMap to Map               %8d\n", convertSimpleDictionaryToDictionaryCount);
-        Output::Print(u"    Path Cache Hits                %8d\n", cacheCount);
-        Output::Print(u"    Path Branches                  %8d\n", branchCount);
-        Output::Print(u"    Path Promotions                %8d\n", promoteCount);
-        Output::Print(u"    Path Length (max)              %8d\n", maxPathLength);
-        Output::Print(u"    PathTypeHandlers               %8d\n", pathTypeHandlerCount);
-        Output::Print(u"\n");
-        Output::Print(u"Type Statistics:                   %8s   %8s\n", u"Types", u"Instances");
-        Output::Print(u"    Undefined                      %8d   %8d\n", typeCount[TypeIds_Undefined], instanceCount[TypeIds_Undefined]);
-        Output::Print(u"    Null                           %8d   %8d\n", typeCount[TypeIds_Null], instanceCount[TypeIds_Null]);
-        Output::Print(u"    Boolean                        %8d   %8d\n", typeCount[TypeIds_Boolean], instanceCount[TypeIds_Boolean]);
-        Output::Print(u"    Integer                        %8d   %8d\n", typeCount[TypeIds_Integer], instanceCount[TypeIds_Integer]);
-        Output::Print(u"    Number                         %8d   %8d\n", typeCount[TypeIds_Number], instanceCount[TypeIds_Number]);
-        Output::Print(u"    String                         %8d   %8d\n", typeCount[TypeIds_String], instanceCount[TypeIds_String]);
-        Output::Print(u"    Object                         %8d   %8d\n", typeCount[TypeIds_Object], instanceCount[TypeIds_Object]);
-        Output::Print(u"    Function                       %8d   %8d\n", typeCount[TypeIds_Function], instanceCount[TypeIds_Function]);
-        Output::Print(u"    Array                          %8d   %8d\n", typeCount[TypeIds_Array], instanceCount[TypeIds_Array]);
-        Output::Print(u"    Date                           %8d   %8d\n", typeCount[TypeIds_Date], instanceCount[TypeIds_Date]);
-        Output::Print(u"    Symbol                         %8d   %8d\n", typeCount[TypeIds_Symbol], instanceCount[TypeIds_Symbol]);
-        Output::Print(u"    RegEx                          %8d   %8d\n", typeCount[TypeIds_RegEx], instanceCount[TypeIds_RegEx]);
-        Output::Print(u"    Error                          %8d   %8d\n", typeCount[TypeIds_Error], instanceCount[TypeIds_Error]);
-        Output::Print(u"    Proxy                          %8d   %8d\n", typeCount[TypeIds_Proxy], instanceCount[TypeIds_Proxy]);
-        Output::Print(u"    BooleanObject                  %8d   %8d\n", typeCount[TypeIds_BooleanObject], instanceCount[TypeIds_BooleanObject]);
-        Output::Print(u"    NumberObject                   %8d   %8d\n", typeCount[TypeIds_NumberObject], instanceCount[TypeIds_NumberObject]);
-        Output::Print(u"    StringObject                   %8d   %8d\n", typeCount[TypeIds_StringObject], instanceCount[TypeIds_StringObject]);
-        Output::Print(u"    SymbolObject                   %8d   %8d\n", typeCount[TypeIds_SymbolObject], instanceCount[TypeIds_SymbolObject]);
-        Output::Print(u"    GlobalObject                   %8d   %8d\n", typeCount[TypeIds_GlobalObject], instanceCount[TypeIds_GlobalObject]);
-        Output::Print(u"    Enumerator                     %8d   %8d\n", typeCount[TypeIds_Enumerator], instanceCount[TypeIds_Enumerator]);
-        Output::Print(u"    Int8Array                      %8d   %8d\n", typeCount[TypeIds_Int8Array], instanceCount[TypeIds_Int8Array]);
-        Output::Print(u"    Uint8Array                     %8d   %8d\n", typeCount[TypeIds_Uint8Array], instanceCount[TypeIds_Uint8Array]);
-        Output::Print(u"    Uint8ClampedArray              %8d   %8d\n", typeCount[TypeIds_Uint8ClampedArray], instanceCount[TypeIds_Uint8ClampedArray]);
-        Output::Print(u"    Int16Array                     %8d   %8d\n", typeCount[TypeIds_Int16Array], instanceCount[TypeIds_Int16Array]);
-        Output::Print(u"    Int16Array                     %8d   %8d\n", typeCount[TypeIds_Uint16Array], instanceCount[TypeIds_Uint16Array]);
-        Output::Print(u"    Int32Array                     %8d   %8d\n", typeCount[TypeIds_Int32Array], instanceCount[TypeIds_Int32Array]);
-        Output::Print(u"    Uint32Array                    %8d   %8d\n", typeCount[TypeIds_Uint32Array], instanceCount[TypeIds_Uint32Array]);
-        Output::Print(u"    Float32Array                   %8d   %8d\n", typeCount[TypeIds_Float32Array], instanceCount[TypeIds_Float32Array]);
-        Output::Print(u"    Float64Array                   %8d   %8d\n", typeCount[TypeIds_Float64Array], instanceCount[TypeIds_Float64Array]);
-        Output::Print(u"    DataView                       %8d   %8d\n", typeCount[TypeIds_DataView], instanceCount[TypeIds_DataView]);
-        Output::Print(u"    ModuleRoot                     %8d   %8d\n", typeCount[TypeIds_ModuleRoot], instanceCount[TypeIds_ModuleRoot]);
-        Output::Print(u"    HostObject                     %8d   %8d\n", typeCount[TypeIds_HostObject], instanceCount[TypeIds_HostObject]);
-        Output::Print(u"    HostDispatch                   %8d   %8d\n", typeCount[TypeIds_HostDispatch], instanceCount[TypeIds_HostDispatch]);
-        Output::Print(u"    Arguments                      %8d   %8d\n", typeCount[TypeIds_Arguments], instanceCount[TypeIds_Arguments]);
-        Output::Print(u"    ActivationObject               %8d   %8d\n", typeCount[TypeIds_ActivationObject], instanceCount[TypeIds_ActivationObject]);
-        Output::Print(u"    Map                            %8d   %8d\n", typeCount[TypeIds_Map], instanceCount[TypeIds_Map]);
-        Output::Print(u"    Set                            %8d   %8d\n", typeCount[TypeIds_Set], instanceCount[TypeIds_Set]);
-        Output::Print(u"    WeakMap                        %8d   %8d\n", typeCount[TypeIds_WeakMap], instanceCount[TypeIds_WeakMap]);
-        Output::Print(u"    WeakSet                        %8d   %8d\n", typeCount[TypeIds_WeakSet], instanceCount[TypeIds_WeakSet]);
-        Output::Print(u"    ArrayIterator                  %8d   %8d\n", typeCount[TypeIds_ArrayIterator], instanceCount[TypeIds_ArrayIterator]);
-        Output::Print(u"    MapIterator                    %8d   %8d\n", typeCount[TypeIds_MapIterator], instanceCount[TypeIds_MapIterator]);
-        Output::Print(u"    SetIterator                    %8d   %8d\n", typeCount[TypeIds_SetIterator], instanceCount[TypeIds_SetIterator]);
-        Output::Print(u"    StringIterator                 %8d   %8d\n", typeCount[TypeIds_StringIterator], instanceCount[TypeIds_StringIterator]);
-        Output::Print(u"    Generator                      %8d   %8d\n", typeCount[TypeIds_Generator], instanceCount[TypeIds_Generator]);
-        Output::Print(u"    AsyncGenerator                 %8d   %8d\n", typeCount[TypeIds_AsyncGenerator], instanceCount[TypeIds_AsyncGenerator]);
-#if !DBG
-        Output::Print(u"    ** Instance statistics only available on debug builds...\n");
-#endif
-        Output::Flush();
-    }
-#endif
-
 
 #ifdef PROFILE_OBJECT_LITERALS
     void ScriptContext::ProfileObjectLiteral()
@@ -2262,20 +2139,6 @@ namespace Js
         {
             return false;
         }
-#ifdef PROFILE_EVALMAP
-        if (Configuration::Global.flags.ProfileEvalMap)
-        {
-            charcount_t len = key.str.GetLength();
-            if (dict->TryGetValue(key, ppFuncScript))
-            {
-                Output::Print(u"EvalMap cache hit:\t source size = %d\n", len);
-            }
-            else
-            {
-                Output::Print(u"EvalMap cache miss:\t source size = %d\n", len);
-            }
-        }
-#endif
 
         // If eval map cleanup is false, to preserve existing behavior, add it to the eval map MRU list
         bool success = dict->TryGetValue(key, ppFuncScript);
@@ -3399,21 +3262,6 @@ ScriptContext::GetJitFuncRangeCache()
 
     void ScriptContext::PrintStats()
     {
-
-#ifdef PROFILE_TYPES
-        if (Configuration::Global.flags.ProfileTypes)
-        {
-            ProfileTypes();
-        }
-#endif
-
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        if (Configuration::Global.flags.ProfileBailOutRecordMemory)
-        {
-            Output::Print(u"CodeSize: %6d\nBailOutRecord Size: %6d\nLocalOffsets Size: %6d\n", codeSize, bailOutRecordBytes, bailOutOffsetBytes);
-        }
-#endif
-
 #ifdef PROFILE_OBJECT_LITERALS
         if (Configuration::Global.flags.ProfileObjectLiteral)
         {

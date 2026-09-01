@@ -250,9 +250,6 @@ namespace Js
     {
         SimpleTypeHandler<1>* newTypeHandler = ConvertToTypeHandler<SimpleTypeHandler<1>>(instance);
 
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertNullToSimpleCount++;
-#endif
         return newTypeHandler;
     }
 
@@ -261,9 +258,6 @@ namespace Js
     {
         SimpleDictionaryTypeHandler* newTypeHandler = ConvertToTypeHandler<SimpleDictionaryTypeHandler>(instance);
 
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertNullToSimpleDictionaryCount++;
-#endif
         return newTypeHandler;
     }
 
@@ -272,9 +266,6 @@ namespace Js
     {
         DictionaryTypeHandler* newTypeHandler = ConvertToTypeHandler<DictionaryTypeHandler>(instance);
 
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertNullToDictionaryCount++;
-#endif
         return newTypeHandler;
     }
 
@@ -283,9 +274,6 @@ namespace Js
     {
         ES5ArrayTypeHandler* newTypeHandler = ConvertToTypeHandler<ES5ArrayTypeHandler>(instance);
 
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertNullToDictionaryCount++;
-#endif
         return newTypeHandler;
     }
 

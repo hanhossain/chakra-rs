@@ -867,13 +867,6 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
         body->SetDisableInlineSpread(true);
     }
 
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-    if (Js::Configuration::Global.flags.ProfileBailOutRecordMemory)
-    {
-        scriptContext->codeSize += workItem->GetEntryPoint()->GetCodeSize();
-    }
-#endif
-
     NativeCodeGenerator::LogCodeGenDone(workItem, &start_time);
 
 #ifdef BGJIT_STATS

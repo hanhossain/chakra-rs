@@ -560,10 +560,6 @@ private:
 #endif
 #define DEFAULT_CONFIG_MinBailOutsBeforeRejit 2         // Minimum number of bailouts for a single bailout record after which a rejit is considered
 
-#if DBG
-#define DEFAULT_CONFIG_ValidateIntRanges (false)
-#endif
-
 #define DEFAULT_CONFIG_Sse                  (-1)
 
 #define DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold (0xffff)
