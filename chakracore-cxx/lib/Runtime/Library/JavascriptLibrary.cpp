@@ -18,9 +18,7 @@
 #include "Library/ForInObjectEnumerator.h"
 #include "Library/EngineInterfaceObject.h"
 #include "Library/IntlEngineInterfaceExtensionObject.h"
-#ifdef ENABLE_JS_BUILTINS
 #include "Library/JsBuiltInEngineInterfaceExtensionObject.h"
-#endif
 #include "Language/SourceTextModuleRecord.h"
 #include "Library/ThrowErrorObject.h"
 #include "Library/StackScriptFunction.h"
@@ -1666,7 +1664,6 @@ namespace Js
         IntlEngineInterfaceExtensionObject* intlExtension = RecyclerNew(recycler, IntlEngineInterfaceExtensionObject, scriptContext);
         engineInterfaceObject->SetEngineExtension(EngineInterfaceExtensionKind_Intl, intlExtension);
 
-#ifdef ENABLE_JS_BUILTINS
         chakraLibraryObject = DynamicObject::New(recycler,
             DynamicType::New(scriptContext, TypeIds_Object, nullValue, nullptr,
             DeferredTypeHandler<InitializeChakraLibraryObject>::GetDefaultInstance()));
@@ -1678,7 +1675,6 @@ namespace Js
         engineInterfaceObject->SetEngineExtension(EngineInterfaceExtensionKind_JsBuiltIn, builtInExtension);
         this->isArrayFunction = this->DefaultCreateFunction(&JavascriptArray::EntryInfo::IsArray, 1, nullptr, nullptr, PropertyIds::isArray);
         builtinFuncs[BuiltinFunction::JavascriptArray_IsArray] = this->isArrayFunction;
-#endif
 
 
         mapConstructor = CreateBuiltinConstructor(&JavascriptMap::EntryInfo::NewInstance,
@@ -1869,12 +1865,7 @@ namespace Js
         library->AddSpeciesAccessorsToLibraryObject(arrayConstructor, &JavascriptArray::EntryInfo::GetterSymbolSpecies);
         library->AddMember(arrayConstructor, PropertyIds::name, scriptContext->GetPropertyString(PropertyIds::Array), PropertyConfigurable);
 
-#ifdef ENABLE_JS_BUILTINS
         library->AddMember(arrayConstructor, PropertyIds::isArray, library->isArrayFunction);
-#else
-        library->AddFunctionToLibraryObject(arrayConstructor, PropertyIds::isArray, &JavascriptArray::EntryInfo::IsArray, 1);
-#endif
-
         library->AddFunctionToLibraryObject(arrayConstructor, PropertyIds::from, &JavascriptArray::EntryInfo::From, 1);
         library->AddFunctionToLibraryObject(arrayConstructor, PropertyIds::of, &JavascriptArray::EntryInfo::Of, 0);
 
@@ -1885,7 +1876,6 @@ namespace Js
         return true;
     }
 
-#ifdef ENABLE_JS_BUILTINS
     void EnsureBuiltInEngineIsReady(JsBuiltInFile file, ScriptContext* scriptContext)
     {
         if (scriptContext->IsJsBuiltInEnabled())
@@ -1910,11 +1900,9 @@ namespace Js
     {
         EnsureBuiltInEngineIsReady(JsBuiltInFile::Math_object, scriptContext);
     }
-#endif
 
     bool JavascriptLibrary::IsDefaultArrayValuesFunction(RecyclableObject * function, ScriptContext *scriptContext)
     {
-#ifdef ENABLE_JS_BUILTINS
         if (scriptContext->IsJsBuiltInEnabled())
         {
             ScriptFunction * scriptFunction = JavascriptOperators::TryFromVar<ScriptFunction>(function);
@@ -1924,7 +1912,6 @@ namespace Js
                 return scriptFunction->GetFunctionProxy()->IsJsBuiltInCode();
             }
         }
-#endif
         JavascriptMethod method = function->GetEntryPoint();
         return method == JavascriptArray::EntryInfo::Values.GetOriginalEntryPoint();
     }
@@ -1943,9 +1930,6 @@ namespace Js
     {
         if (arrayPrototypeKeysFunction == nullptr)
         {
-#ifndef ENABLE_JS_BUILTINS
-            arrayPrototypeKeysFunction = DefaultCreateFunction(&JavascriptArray::EntryInfo::Keys, 0, nullptr, nullptr, PropertyIds::keys);
-#else
             if (!scriptContext->IsJsBuiltInEnabled())
             {
                 arrayPrototypeKeysFunction = DefaultCreateFunction(&JavascriptArray::EntryInfo::Keys, 0, nullptr, nullptr, PropertyIds::keys);
@@ -1954,7 +1938,6 @@ namespace Js
             {
                 EnsureBuiltInEngineIsReady(JsBuiltInFile::Array_prototype, scriptContext);
             }
-#endif
         }
         return arrayPrototypeKeysFunction;
     }
@@ -1963,9 +1946,6 @@ namespace Js
     {
         if (arrayPrototypeValuesFunction == nullptr)
         {
-#ifndef ENABLE_JS_BUILTINS
-            arrayPrototypeValuesFunction = DefaultCreateFunction(&JavascriptArray::EntryInfo::Values, 0, nullptr, nullptr, PropertyIds::values);
-#else
             if (!scriptContext->IsJsBuiltInEnabled())
             {
                 arrayPrototypeValuesFunction = DefaultCreateFunction(&JavascriptArray::EntryInfo::Values, 0, nullptr, nullptr, PropertyIds::values);
@@ -1974,7 +1954,6 @@ namespace Js
             {
                 EnsureBuiltInEngineIsReady(JsBuiltInFile::Array_prototype, scriptContext);
             }
-#endif
         }
         return arrayPrototypeValuesFunction;
     }
@@ -1983,9 +1962,6 @@ namespace Js
     {
         if (arrayPrototypeEntriesFunction == nullptr)
         {
-#ifndef ENABLE_JS_BUILTINS
-            arrayPrototypeEntriesFunction = DefaultCreateFunction(&JavascriptArray::EntryInfo::Entries, 0, nullptr, nullptr, PropertyIds::entries);
-#else
             if (!scriptContext->IsJsBuiltInEnabled())
             {
                 arrayPrototypeEntriesFunction = DefaultCreateFunction(&JavascriptArray::EntryInfo::Entries, 0, nullptr, nullptr, PropertyIds::entries);
@@ -1994,7 +1970,6 @@ namespace Js
             {
                 EnsureBuiltInEngineIsReady(JsBuiltInFile::Array_prototype, scriptContext);
             }
-#endif
         }
         return arrayPrototypeEntriesFunction;
     }
@@ -2064,13 +2039,11 @@ namespace Js
             /* No inlining            Array_FindLastIndex      */ library->AddFunctionToLibraryObject(arrayPrototype, PropertyIds::findLastIndex, &JavascriptArray::EntryInfo::FindLastIndex, 1);
         }
 
-#ifdef ENABLE_JS_BUILTINS
         if (scriptContext->IsJsBuiltInEnabled())
         {
             EnsureBuiltInEngineIsReady(JsBuiltInFile::Array_prototype, scriptContext);
         }
         else
-#endif
         {
             /* No inlining                Array_Entries        */
             library->AddMember(arrayPrototype, PropertyIds::entries, library->EnsureArrayPrototypeEntriesFunction());
@@ -2304,12 +2277,10 @@ namespace Js
         ScriptContext* scriptContext = typedarrayPrototype->GetScriptContext();
         JavascriptLibrary* library = typedarrayPrototype->GetLibrary();
 
-#ifdef ENABLE_JS_BUILTINS
         if (scriptContext->IsJsBuiltInEnabled())
         {
             EnsureBuiltInEngineIsReady(JsBuiltInFile::Array_prototype, scriptContext);
         }
-#endif
 
         library->AddMember(typedarrayPrototype, PropertyIds::constructor, library->typedArrayConstructor);
         library->AddFunctionToLibraryObject(typedarrayPrototype, PropertyIds::set, &TypedArrayBase::EntryInfo::Set, 2);
@@ -3220,13 +3191,11 @@ namespace Js
 
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type* builtinFuncs = library->GetBuiltinFunctions();
 
-#ifdef ENABLE_JS_BUILTINS
         if (scriptContext->IsJsBuiltInEnabled())
         {
             EnsureBuiltInEngineIsReady(JsBuiltInFile::Math_object, scriptContext);
         }
         else
-#endif
         {
             builtinFuncs[BuiltinFunction::Math_Max] = library->AddFunctionToLibraryObject(mathObject, PropertyIds::max, &Math::EntryInfo::Max, 2);
             builtinFuncs[BuiltinFunction::Math_Min] = library->AddFunctionToLibraryObject(mathObject, PropertyIds::min, &Math::EntryInfo::Min, 2);
@@ -4092,12 +4061,10 @@ namespace Js
             propertyCount += 2;
         }
 
-#ifdef ENABLE_JS_BUILTINS
         if (scriptContext->IsJsBuiltInEnabled())
         {
             propertyCount++;
         }
-#endif
 
         typeHandler->Convert(objectConstructor, mode, propertyCount);
 
@@ -4158,12 +4125,10 @@ namespace Js
         scriptContext->SetBuiltInLibraryFunction(JavascriptObject::EntryInfo::HasOwn.GetOriginalEntryPoint(),
             library->AddFunctionToLibraryObject(objectConstructor, PropertyIds::hasOwn, &JavascriptObject::EntryInfo::HasOwn, 2));
 
-#ifdef ENABLE_JS_BUILTINS
         if (scriptContext->IsJsBuiltInEnabled())
         {
             EnsureBuiltInEngineIsReady(JsBuiltInFile::Object_constructor, scriptContext);
         }
-#endif
 
         objectConstructor->SetHasNoEnumerableProperties(true);
 
@@ -4670,9 +4635,7 @@ namespace Js
         JavascriptLibrary* library = arrayIteratorPrototype->GetLibrary();
         ScriptContext* scriptContext = library->GetScriptContext();
 
-#ifdef ENABLE_JS_BUILTINS
         Assert(!scriptContext->IsJsBuiltInEnabled());
-#endif
 
         library->arrayIteratorPrototypeBuiltinNextFunction = library->AddFunctionToLibraryObject(arrayIteratorPrototype, PropertyIds::next, &JavascriptArrayIterator::EntryInfo::Next, 0);
 
@@ -5110,7 +5073,6 @@ namespace Js
         }
     }
 
-#ifdef ENABLE_JS_BUILTINS
 
     bool JavascriptLibrary::InitializeChakraLibraryObject(DynamicObject * chakraLibraryObject, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode)
     {
@@ -5134,7 +5096,6 @@ namespace Js
         return true;
     }
 
-#endif // ENABLE_JS_BUILTINS
 
     void JavascriptLibrary::ResetIntlObject()
     {

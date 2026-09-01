@@ -1600,7 +1600,6 @@ namespace Js
     Var TypedArrayBase::GetKeysEntriesValuesHelper(Arguments& args, ScriptContext *scriptContext, const char16_t* apiName, JavascriptArrayIteratorKind kind)
     {
         TypedArrayBase* typedArrayBase = ValidateTypedArray(args, scriptContext, apiName);
-#ifdef ENABLE_JS_BUILTINS
         JavascriptLibrary * library = scriptContext->GetLibrary();
         if (scriptContext->IsJsBuiltInEnabled())
         {
@@ -1623,7 +1622,6 @@ namespace Js
             END_SAFE_REENTRANT_CALL
         }
         else
-#endif
         return scriptContext->GetLibrary()->CreateArrayIterator(typedArrayBase, kind);
     }
 

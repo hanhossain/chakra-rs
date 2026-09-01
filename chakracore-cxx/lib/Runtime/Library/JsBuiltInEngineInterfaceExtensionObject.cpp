@@ -7,7 +7,6 @@
 #include "JsBuiltInEngineInterfaceExtensionObject.h"
 #include "Types/DeferredTypeHandler.h"
 
-#ifdef ENABLE_JS_BUILTINS
 #include "ByteCode/ByteCodeSerializer.h"
 #include "errstr.h"
 #include "ByteCode/ByteCodeDumper.h"
@@ -488,4 +487,3 @@ namespace Js
         return scriptContext->GetLibrary()->GetTrue();
     }
 }
-#endif // ENABLE_JS_BUILTINS

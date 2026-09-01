@@ -167,7 +167,6 @@ namespace Js{
     bool ASMLink::CheckIsBuiltinFunction(ScriptContext* scriptContext, const Var object, PropertyId propertyId, const FunctionInfo& funcInfo)
     {
         Var mathFuncObj = JavascriptOperators::OP_GetProperty(object, propertyId, scriptContext);
-#ifdef ENABLE_JS_BUILTINS
         if (scriptContext->IsJsBuiltInEnabled())
         {
             switch (propertyId)
@@ -178,7 +177,6 @@ namespace Js{
 #include "AsmJsBuiltInNames.h"
             }
         }
-#endif
         return VarIs<JavascriptFunction>(mathFuncObj) &&
             VarTo<JavascriptFunction>(mathFuncObj)->GetFunctionInfo()->GetOriginalEntryPoint() == funcInfo.GetOriginalEntryPoint();
     }

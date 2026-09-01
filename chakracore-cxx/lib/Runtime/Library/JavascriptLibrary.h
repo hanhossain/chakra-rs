@@ -165,9 +165,7 @@ namespace Js
         friend class ExternalLibraryBase;
         friend class ActiveScriptExternalLibrary;
         friend class IntlEngineInterfaceExtensionObject;
-#ifdef ENABLE_JS_BUILTINS
         friend class JsBuiltInEngineInterfaceExtensionObject;
-#endif
         friend class ChakraHostScriptContext;
         static const char16_t* domBuiltinPropertyNames[];
 
@@ -382,9 +380,7 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type objectValueOfFunction;
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type objectToStringFunction;
 
-#ifdef ENABLE_JS_BUILTINS
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type isArrayFunction;
-#endif
 
 #ifdef ENABLE_WASM
         typename WriteBarrierFieldTypeTraits<DynamicObject*>::Type webAssemblyObject;
@@ -626,12 +622,10 @@ namespace Js
         void InitializeIntlForDatePrototype();
         void InitializeIntlForNumberPrototype();
 
-#ifdef ENABLE_JS_BUILTINS
         void EnsureArrayBuiltInsAreReady();
         void EnsureMathBuiltInsAreReady();
         static bool InitializeChakraLibraryObject(DynamicObject* chakraLibraryObject, DeferredTypeHandlerBase * typeHandler, DeferredInitializeMode mode);
 
-#endif
 
         DynamicType * GetDebugDisposableObjectType() { return debugDisposableObjectType; }
         DynamicType * GetDebugFuncExecutorInDisposeObjectType() { return debugFuncExecutorInDisposeObjectType; }

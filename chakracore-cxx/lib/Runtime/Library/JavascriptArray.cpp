@@ -8650,9 +8650,7 @@ Case0:
         ARGUMENTS(args, callInfo);
         ScriptContext* scriptContext = function->GetScriptContext();
 
-#ifdef ENABLE_JS_BUILTINS
         Assert(!scriptContext->IsJsBuiltInEnabled());
-#endif
 
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
 
@@ -8687,9 +8685,7 @@ Case0:
         ARGUMENTS(args, callInfo);
         ScriptContext* scriptContext = function->GetScriptContext();
 
-#ifdef ENABLE_JS_BUILTINS
         Assert(!scriptContext->IsJsBuiltInEnabled());
-#endif
 
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
 
@@ -8724,9 +8720,7 @@ Case0:
         ARGUMENTS(args, callInfo);
         ScriptContext* scriptContext = function->GetScriptContext();
 
-#ifdef ENABLE_JS_BUILTINS
         Assert(!scriptContext->IsJsBuiltInEnabled());
-#endif
 
         JS_REENTRANCY_LOCK(jsReentLock, scriptContext->GetThreadContext());
 
@@ -9984,9 +9978,7 @@ Case0:
 
         AUTO_TAG_NATIVE_LIBRARY_ENTRY(function, callInfo, u"Array.prototype.reduce");
 
-#ifdef ENABLE_JS_BUILTINS
         Assert(!scriptContext->IsJsBuiltInEnabled());
-#endif
 
 
         Assert(!(callInfo.Flags & CallFlags_New));
