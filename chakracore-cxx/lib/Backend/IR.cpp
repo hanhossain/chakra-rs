@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "AsmJsMath.h"
 #include "Backend.h"
+#include "WasmMath.h"
 
 namespace IR
 {

@@ -13,6 +13,7 @@
 #include "Debug/DiagHelperMethodWrapper.h"
 #endif
 #include "Library/JavascriptGeneratorFunction.h"
+#include "WasmMath.h"
 
 namespace IR
 {

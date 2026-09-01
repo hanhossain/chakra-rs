@@ -17,6 +17,7 @@
 #include "Library/AtomicsOperations.h"
 #include "WasmParseTree.h"
 #include "AsmJsMath.h"
+#include "WasmMath.h"
 ///----------------------------------------------------------------------------
 ///
 /// macros PROCESS_INtoOUT

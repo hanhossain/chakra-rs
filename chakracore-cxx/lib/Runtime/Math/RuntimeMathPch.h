@@ -51,5 +51,3 @@
 #include "Library/WebAssemblyMemory.h"
 #include "Library/WebAssemblyModule.h"
 #include "Library/WebAssembly.h"
-
-#include "WasmMath.h"
