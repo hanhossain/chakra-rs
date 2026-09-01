@@ -620,13 +620,6 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
     }
 
 #ifdef RECYCLER_STRESS
-    if (GetRecyclerFlagsTable().RecyclerTrackStress)
-    {
-        // Disable partial if we are doing track stress, since partial relies on ClientTracked processing
-        // and track stress doesn't support this.
-        this->enablePartialCollect = false;
-    }
-
     this->recyclerStress = GetRecyclerFlagsTable().RecyclerStress;
     this->recyclerBackgroundStress = GetRecyclerFlagsTable().RecyclerBackgroundStress;
     this->recyclerConcurrentStress = GetRecyclerFlagsTable().RecyclerConcurrentStress;

@@ -1040,8 +1040,6 @@ namespace Js
         u"RecyclerConcurrentStress",
         u"RecyclerConcurrentRepeatStress",
         u"RecyclerPartialStress",
-        u"RecyclerTrackStress",
-        u"RecyclerInduceFalsePositives",
 #endif // RECYCLER_STRESS
         u"PageHeap",
 #ifdef RECYCLER_NO_PAGE_REUSE
@@ -1935,8 +1933,6 @@ namespace Js
         u"Stress the concurrent recycler by concurrent collect on every allocation call",
         u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
         u"Stress the partial recycler by partial collect on every allocation call",
-        u"Stress tracked object handling by simulating tracked objects for regular allocations",
-        u"Stress recycler by forcing false positive object marks",
 #endif // RECYCLER_STRESS
         // todo (hanhossain): flag end
         u"Use full page for heap allocations",
@@ -2421,8 +2417,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #ifdef RECYCLER_STRESS
-        NoParentFlag,
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2939,8 +2933,6 @@ namespace Js
         RecyclerConcurrentStress(false),
         RecyclerConcurrentRepeatStress(false),
         RecyclerPartialStress(false),
-        RecyclerTrackStress(false),
-        RecyclerInduceFalsePositives(false),
 #endif // RECYCLER_STRESS
         PageHeap(DEFAULT_CONFIG_PageHeap),
 #ifdef RECYCLER_NO_PAGE_REUSE
@@ -4355,10 +4347,6 @@ namespace Js
             return FlagBoolean;
         case RecyclerPartialStressFlag:
             return FlagBoolean;
-        case RecyclerTrackStressFlag:
-            return FlagBoolean;
-        case RecyclerInduceFalsePositivesFlag:
-            return FlagBoolean;
         #endif // RECYCLER_STRESS
         case PageHeapFlag:
             return FlagNumber;
@@ -5193,10 +5181,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerConcurrentRepeatStress));
         case RecyclerPartialStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerPartialStress));
-        case RecyclerTrackStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerTrackStress));
-        case RecyclerInduceFalsePositivesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerInduceFalsePositives));
         #endif // RECYCLER_STRESS
         case PageHeapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PageHeap));
@@ -5971,12 +5955,6 @@ namespace Js
             retValue = false;
             break;
         case RecyclerPartialStressFlag:
-            retValue = false;
-            break;
-        case RecyclerTrackStressFlag:
-            retValue = false;
-            break;
-        case RecyclerInduceFalsePositivesFlag:
             retValue = false;
             break;
         #endif // RECYCLER_STRESS

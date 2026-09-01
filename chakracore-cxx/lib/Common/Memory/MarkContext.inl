@@ -188,17 +188,6 @@ template <bool parallel, bool interior>
 inline
 void MarkContext::ProcessMark()
 {
-#ifdef RECYCLER_STRESS
-    if (recycler->GetRecyclerFlagsTable().RecyclerInduceFalsePositives)
-    {
-        // InduceFalsePositives logic doesn't support parallel marking
-        if (!parallel)
-        {
-            recycler->heapBlockMap.InduceFalsePositives(recycler);
-        }
-    }
-#endif
-
 #ifdef RECYCLER_VISITED_HOST
     // Flip between processing the generic mark stack (conservatively traced with ScanMemory) and
     // the precise stack (precisely traced via IRecyclerVisitedObject::Trace). Each of those
