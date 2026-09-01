@@ -475,7 +475,6 @@ namespace Js
         EnableConcurrentSweepAllocFlag, ecsaFlag,
         PageHeapFlag,
         PageHeapAllocStackFlag,
-        PageHeapFreeStackFlag,
         #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuseFlag,
         #endif
@@ -1958,8 +1957,6 @@ namespace Js
             Number PageHeap;
         // TODO (hanhossain): remove flag
             Boolean PageHeapAllocStack;
-        // TODO (hanhossain): remove flag
-            Boolean PageHeapFreeStack;
         // todo (hanhossain): flag end
         #ifdef RECYCLER_NO_PAGE_REUSE
             Boolean RecyclerNoPageReuse;
