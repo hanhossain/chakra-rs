@@ -22,7 +22,7 @@ public:
     static bool Is(void * ref);
 
     virtual void Mark(Recycler * recycler) override;
-    void OnScriptLoad(Js::JavascriptFunction * scriptFunction, Js::Utf8SourceInfo* utf8SourceInfo, CompileScriptException* compileException);
+
 protected:
     DEFINE_VTABLE_CTOR_NOBASE(JsrtContext);
     JsrtContext(JsrtRuntime * runtime);
