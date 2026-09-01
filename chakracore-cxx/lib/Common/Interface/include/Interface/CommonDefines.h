@@ -48,9 +48,6 @@
 // NOTE: Disabling these might not work and are not fully supported and maintained
 // Even if it builds, it may not work properly. Disable at your own risk
 
-// Language features
-#define ENABLE_JS_BUILTINS                          // Built In functions support
-
 #if !DISABLE_JIT
 #define ENABLE_FIXED_FIELDS 1                       // Turn on fixed fields if JIT is enabled
 #endif

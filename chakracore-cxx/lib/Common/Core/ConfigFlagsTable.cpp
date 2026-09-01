@@ -382,11 +382,7 @@ namespace Js
 #define DEFAULT_CONFIG_IntlBuiltIns            (true)
 #define DEFAULT_CONFIG_IntlPlatform            (false) // Makes the EngineExtension.Intl object visible to user code as Intl.platform, meant for testing
 
-#ifdef ENABLE_JS_BUILTINS
-    #define DEFAULT_CONFIG_JsBuiltIn             (true)
-#else
-    #define DEFAULT_CONFIG_JsBuiltIn             (false)
-#endif
+#define DEFAULT_CONFIG_JsBuiltIn             (true)
 #define DEFAULT_CONFIG_JitRepro                (false)
 #define DEFAULT_CONFIG_LdChakraLib             (false)
 #define DEFAULT_CONFIG_TestChakraLib           (false)

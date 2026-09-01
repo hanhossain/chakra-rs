@@ -1340,9 +1340,7 @@ constexpr uint8_t ConstructorCallsRequiredToFinalizeCachedType = 2;
         JavascriptLibrary::CheckAndConvertCopyOnAccessNativeIntArray(aRight);
 #endif
 
-#ifdef ENABLE_JS_BUILTINS
         scriptContext->GetLibrary()->EnsureArrayBuiltInsAreReady();
-#endif
 
         RecyclableObject* function = GetIteratorFunction(aRight, scriptContext);
         JavascriptMethod method = function->GetEntryPoint();

@@ -25,10 +25,8 @@
 #define ASMJS_TYPED_ARRAY_NAMES(name, propertyName)
 #endif
 
-#ifdef ENABLE_JS_BUILTINS
 ASMJS_JSBUILTIN_MATH_FUNC_NAMES(Js::PropertyIds::min,   Min     )
 ASMJS_JSBUILTIN_MATH_FUNC_NAMES(Js::PropertyIds::max,   Max     )
-#endif
 
 ASMJS_MATH_FUNC_NAMES(sin,      sin,    Math::EntryInfo::Sin    )
 ASMJS_MATH_FUNC_NAMES(cos,      cos,    Math::EntryInfo::Cos    )

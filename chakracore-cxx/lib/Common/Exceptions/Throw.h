@@ -27,9 +27,7 @@ namespace Js {
 #if ENABLE_JS_REENTRANCY_CHECK
         static void FatalJsReentrancyError();
 #endif
-#ifdef ENABLE_JS_BUILTINS
         static void FatalJsBuiltInError();
-#endif
 
         static bool ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message);
         static void LogAssert();

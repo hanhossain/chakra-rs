@@ -351,10 +351,8 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type mathMin;
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type mathMax;
 
-#ifdef ENABLE_JS_BUILTINS
     public:
         JavascriptFunction* GetMathMinFunction() const { return mathMin; }
         JavascriptFunction* GetMathMaxFunction() const { return mathMax; }
-#endif
     };
 }
