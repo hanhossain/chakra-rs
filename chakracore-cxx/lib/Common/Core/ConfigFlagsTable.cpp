@@ -1054,7 +1054,6 @@ namespace Js
         u"PageHeap",
         u"PageHeapAllocStack",
         u"PageHeapFreeStack",
-        u"PageHeapBucketNumber",
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"RecyclerNoPageReuse",
 #endif
@@ -1957,7 +1956,6 @@ namespace Js
         u"Use full page for heap allocations",
         u"Capture alloc stack under page heap mode",
         u"Capture free stack under page heap mode",
-        u"Bucket numbers to be used for page heap allocations",
         // todo (hanhossain): flag end
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"Do not reuse page in recycler",
@@ -2448,7 +2446,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 #endif // RECYCLER_STRESS
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2977,7 +2974,6 @@ namespace Js
         PageHeap(DEFAULT_CONFIG_PageHeap),
         PageHeapAllocStack(DEFAULT_CONFIG_PageHeapAllocStack),
         PageHeapFreeStack(DEFAULT_CONFIG_PageHeapFreeStack),
-        PageHeapBucketNumber(),
 #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuse(false),
 #endif
@@ -4417,8 +4413,6 @@ namespace Js
             return FlagBoolean;
         case PageHeapFreeStackFlag:
             return FlagBoolean;
-        case PageHeapBucketNumberFlag:
-            return FlagNumberRange;
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             return FlagBoolean;
@@ -5271,8 +5265,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PageHeapAllocStack));
         case PageHeapFreeStackFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PageHeapFreeStack));
-        case PageHeapBucketNumberFlag:
-            return reinterpret_cast<void*>(const_cast<NumberRange*>(&PageHeapBucketNumber));
         #ifdef RECYCLER_NO_PAGE_REUSE
         case RecyclerNoPageReuseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerNoPageReuse));

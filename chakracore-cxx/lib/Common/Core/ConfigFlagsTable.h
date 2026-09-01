@@ -476,7 +476,6 @@ namespace Js
         PageHeapFlag,
         PageHeapAllocStackFlag,
         PageHeapFreeStackFlag,
-        PageHeapBucketNumberFlag,
         #ifdef RECYCLER_NO_PAGE_REUSE
         RecyclerNoPageReuseFlag,
         #endif
@@ -1961,8 +1960,6 @@ namespace Js
             Boolean PageHeapAllocStack;
         // TODO (hanhossain): remove flag
             Boolean PageHeapFreeStack;
-        // TODO (hanhossain): remove flag
-            NumberRange PageHeapBucketNumber;
         // todo (hanhossain): flag end
         #ifdef RECYCLER_NO_PAGE_REUSE
             Boolean RecyclerNoPageReuse;
