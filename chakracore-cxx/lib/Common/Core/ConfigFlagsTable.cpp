@@ -996,9 +996,6 @@ namespace Js
 #ifdef PROFILE_OBJECT_LITERALS
         u"ProfileObjectLiteral",
 #endif
-#ifdef PROFILE_MEM
-        u"ProfileMemory",
-#endif
         u"MinBailOutsBeforeRejit",
 #ifdef RECYCLER_STRESS
         u"RecyclerStress",
@@ -1862,9 +1859,6 @@ namespace Js
 #ifdef PROFILE_OBJECT_LITERALS
         u"Profile Object literal usage",
 #endif
-#ifdef PROFILE_MEM
-        u"Profile memory usage",
-#endif
         // todo (hanhossain): flag end
         u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
 #ifdef RECYCLER_STRESS
@@ -2322,9 +2316,6 @@ namespace Js
         NoParentFlag,
 #endif
 #ifdef PROFILE_OBJECT_LITERALS
-        NoParentFlag,
-#endif
-#ifdef PROFILE_MEM
         NoParentFlag,
 #endif
         // todo (hanhossain): flag end
@@ -2807,9 +2798,6 @@ namespace Js
 #endif
 #ifdef PROFILE_OBJECT_LITERALS
         ProfileObjectLiteral(false),
-#endif
-#ifdef PROFILE_MEM
-        ProfileMemory(),
 #endif
         MinBailOutsBeforeRejit(DEFAULT_CONFIG_MinBailOutsBeforeRejit),
 #ifdef RECYCLER_STRESS
@@ -4177,10 +4165,6 @@ namespace Js
         case ProfileObjectLiteralFlag:
             return FlagBoolean;
         #endif
-        #ifdef PROFILE_MEM
-        case ProfileMemoryFlag:
-            return FlagString;
-        #endif
         case MinBailOutsBeforeRejitFlag:
             return FlagNumber;
         #ifdef RECYCLER_STRESS
@@ -4968,10 +4952,6 @@ namespace Js
         #ifdef PROFILE_OBJECT_LITERALS
         case ProfileObjectLiteralFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileObjectLiteral));
-        #endif
-        #ifdef PROFILE_MEM
-        case ProfileMemoryFlag:
-            return reinterpret_cast<void*>(const_cast<String*>(&ProfileMemory));
         #endif
         case MinBailOutsBeforeRejitFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejit));

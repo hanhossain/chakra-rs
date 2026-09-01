@@ -230,10 +230,11 @@ int MemoryProfiler::CreateArenaUsageSummary(ArenaAllocator * alloc, bool liveOnl
     return count;
 }
 
+// TODO (hanhossain): can probably remove?
 bool
 MemoryProfiler::IsEnabled()
 {
-    return Js::Configuration::Global.flags.IsEnabled(Js::ProfileMemoryFlag);
+    return false;
 }
 
 bool
