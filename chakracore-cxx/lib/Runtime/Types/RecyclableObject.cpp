@@ -255,7 +255,7 @@ namespace Js
     }
 
 #if defined(PROFILE_RECYCLER_ALLOC) && defined(RECYCLER_DUMP_OBJECT_GRAPH)
-    bool RecyclableObject::DumpObjectFunction(type_info const * typeinfo, bool isArray, void * objectAddress)
+    bool RecyclableObject::DumpObjectFunction(std::type_info const * typeinfo, bool isArray, void * objectAddress)
     {
         if (isArray)
         {

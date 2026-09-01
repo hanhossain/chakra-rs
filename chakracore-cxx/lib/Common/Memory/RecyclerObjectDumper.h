@@ -9,16 +9,16 @@
 class RecyclerObjectDumper
 {
 public:
-    typedef bool (*DumpFunction)(type_info const * typeinfo, bool isArray, void * objectAddress);
-    static void RegisterDumper(type_info const * typeinfo, DumpFunction dumperFunction);
-    static void DumpObject(type_info const * typeinfo, bool isArray, void * objectAddress);
+    typedef bool (*DumpFunction)(std::type_info const * typeinfo, bool isArray, void * objectAddress);
+    static void RegisterDumper(std::type_info const * typeinfo, DumpFunction dumperFunction);
+    static void DumpObject(std::type_info const * typeinfo, bool isArray, void * objectAddress);
 private:
     RecyclerObjectDumper() {}
     ~RecyclerObjectDumper();
     static RecyclerObjectDumper Instance;
     static BOOL EnsureDumpFunctionMap();
 
-    typedef JsUtil::BaseDictionary<type_info const *, RecyclerObjectDumper::DumpFunction, NoCheckHeapAllocator> DumpFunctionMap;
+    typedef JsUtil::BaseDictionary<std::type_info const *, RecyclerObjectDumper::DumpFunction, NoCheckHeapAllocator> DumpFunctionMap;
     static DumpFunctionMap * dumpFunctionMap;
 };
 

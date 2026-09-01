@@ -412,7 +412,7 @@ namespace Js {
 #endif
 #if defined(PROFILE_RECYCLER_ALLOC) && defined(RECYCLER_DUMP_OBJECT_GRAPH)
     public:
-        static bool DumpObjectFunction(type_info const * typeinfo, bool isArray, void * objectAddress);
+        static bool DumpObjectFunction(std::type_info const * typeinfo, bool isArray, void * objectAddress);
 #endif
 
     private:

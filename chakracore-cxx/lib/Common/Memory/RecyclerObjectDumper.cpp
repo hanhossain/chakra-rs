@@ -38,7 +38,7 @@ RecyclerObjectDumper::EnsureDumpFunctionMap()
 }
 
 void
-RecyclerObjectDumper::RegisterDumper(type_info const * typeinfo, DumpFunction dumperFunction)
+RecyclerObjectDumper::RegisterDumper(std::type_info const * typeinfo, DumpFunction dumperFunction)
 {
     if (EnsureDumpFunctionMap())
     {
@@ -48,7 +48,7 @@ RecyclerObjectDumper::RegisterDumper(type_info const * typeinfo, DumpFunction du
 }
 
 void
-RecyclerObjectDumper::DumpObject(type_info const * typeinfo, bool isArray, void * objectAddress)
+RecyclerObjectDumper::DumpObject(std::type_info const * typeinfo, bool isArray, void * objectAddress)
 {
     if (typeinfo == nullptr)
     {
