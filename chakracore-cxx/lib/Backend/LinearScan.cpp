@@ -136,13 +136,6 @@ LinearScan::RegAlloc()
         this->globalBailOutRecordTables = NativeCodeDataNewArrayZ(nativeAllocator, GlobalBailOutRecordDataTable *,  func->m_inlineeId + 1);
         this->lastUpdatedRowIndices = JitAnewArrayZ(this->tempAlloc, uint *, func->m_inlineeId + 1);
 
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        if (Js::Configuration::Global.flags.ProfileBailOutRecordMemory)
-        {
-            this->func->GetScriptContext()->bailOutOffsetBytes += (sizeof(GlobalBailOutRecordDataTable *) * (func->m_inlineeId + 1));
-            this->func->GetScriptContext()->bailOutRecordBytes += (sizeof(GlobalBailOutRecordDataTable *) * (func->m_inlineeId + 1));
-        }
-#endif
     }
 
     m_bailOutRecordCount = 0;
@@ -300,13 +293,6 @@ LinearScan::RegAlloc()
             if (globalBailOutRecordTables[i] != nullptr)
             {
                 globalBailOutRecordTables[i]->Finalize(nativeAllocator, &tempAlloc);
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-                if (Js::Configuration::Global.flags.ProfileBailOutRecordMemory)
-                {
-                    func->GetScriptContext()->bailOutOffsetBytes += sizeof(GlobalBailOutRecordDataRow) * globalBailOutRecordTables[i]->length;
-                    func->GetScriptContext()->bailOutRecordBytes += sizeof(GlobalBailOutRecordDataRow) * globalBailOutRecordTables[i]->length;
-                }
-#endif
             }
         }
     }
@@ -1342,14 +1328,6 @@ LinearScan::EnsureGlobalBailOutRecordTable(Func *func)
             globalBailOutRecordDataTable->forInEnumeratorArrayRestoreOffset = func->GetForInEnumeratorArrayOffset() - (2 * MachPtr);
 #endif
         }
-
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        if (Js::Configuration::Global.flags.ProfileBailOutRecordMemory)
-        {
-            topFunc->GetScriptContext()->bailOutOffsetBytes += sizeof(GlobalBailOutRecordDataTable);
-            topFunc->GetScriptContext()->bailOutRecordBytes += sizeof(GlobalBailOutRecordDataTable);
-        }
-#endif
     }
     return globalBailOutRecordDataTable;
 }
@@ -1653,13 +1631,6 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
                 currentBailOutRecord->argOutOffsetInfo->argOutSymStart = 0;
                 currentBailOutRecord->argOutOffsetInfo->outParamOffsets = nullptr;
                 currentBailOutRecord->argOutOffsetInfo->startCallOutParamCounts = nullptr;
-
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-                if (Js::Configuration::Global.flags.ProfileBailOutRecordMemory)
-                {
-                    this->func->GetScriptContext()->bailOutRecordBytes += sizeof(BailOutRecord::ArgOutOffsetInfo);
-                }
-#endif
             }
 
             currentBailOutRecord->argOutOffsetInfo->startCallCount++;
@@ -1904,13 +1875,6 @@ LinearScan::FillBailOutRecord(IR::Instr * instr)
         }
 #endif
         funcBailOutData[i].Clear(this->tempAlloc);
-
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        if (Js::Configuration::Global.flags.ProfileBailOutRecordMemory)
-        {
-            this->func->GetScriptContext()->bailOutRecordBytes += sizeof(BailOutRecord);
-        }
-#endif
     }
     JitAdeleteArray(this->tempAlloc, funcCount, funcBailOutData);
 }

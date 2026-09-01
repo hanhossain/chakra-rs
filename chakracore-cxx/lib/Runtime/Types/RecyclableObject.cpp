@@ -108,34 +108,17 @@ namespace Js
         }
     }
 
-#if DBG || defined(PROFILE_TYPES)
+#if DBG
     // Used only by the GlobalObject, because it's typeHandler can't be fully initialized
     // with the globalobject which is currently being created.
     RecyclableObject::RecyclableObject(DynamicType * type, ScriptContext * scriptContext) : type(type)
     {
         Assert(type->GetTypeId() == TypeIds_GlobalObject);
-        RecordAllocation(scriptContext);
-    }
-
-    void RecyclableObject::RecordAllocation(ScriptContext * scriptContext)
-    {
-#ifdef PROFILE_TYPES
-        TypeId typeId = this->GetType()->GetTypeId();
-        if (typeId < sizeof(scriptContext->instanceCount)/sizeof(int))
-        {
-            scriptContext->instanceCount[typeId]++;
-        }
-#endif
     }
 #endif
 
     RecyclableObject::RecyclableObject(Type * type) : type(type)
     {
-#if DBG || defined(PROFILE_TYPES)
-        {
-            RecordAllocation(type->GetScriptContext());
-        }
-#endif
     }
 
     RecyclableObject* RecyclableObject::GetPrototype() const

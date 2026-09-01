@@ -25,7 +25,7 @@ namespace Js
     }
 
     DynamicObject::DynamicObject(DynamicType * type, ScriptContext * scriptContext) :
-#if DBG || defined(PROFILE_TYPES)
+#if DBG
         RecyclableObject(type, scriptContext),
 #else
         RecyclableObject(type),

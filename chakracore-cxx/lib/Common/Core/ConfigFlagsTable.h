@@ -439,20 +439,7 @@ namespace Js
         #ifdef PROFILE_STRINGS
         ProfileStringsFlag,
         #endif
-        #ifdef PROFILE_TYPES
-        ProfileTypesFlag,
-        #endif
-        #ifdef PROFILE_EVALMAP
-        ProfileEvalMapFlag,
-        #endif
 
-        #ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        ProfileBailOutRecordMemoryFlag,
-        #endif
-
-        #if DBG
-        ValidateIntRangesFlag,
-        #endif
         MinBailOutsBeforeRejitFlag,
         #ifdef RECYCLER_STRESS
         RecyclerStressFlag,
@@ -1882,24 +1869,6 @@ namespace Js
         #ifdef PROFILE_STRINGS
         // TODO (hanhossain): remove flag
             Boolean ProfileStrings;
-        #endif
-        #ifdef PROFILE_TYPES
-        // TODO (hanhossain): remove flag
-            Boolean ProfileTypes;
-        #endif
-        #ifdef PROFILE_EVALMAP
-        // TODO (hanhossain): remove flag
-            Boolean ProfileEvalMap;
-        #endif
-
-        #ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        // TODO (hanhossain): remove flag
-            Boolean ProfileBailOutRecordMemory;
-        #endif
-
-        #if DBG
-        // TODO (hanhossain): remove flag
-            Boolean ValidateIntRanges;
         #endif
         // todo (hanhossain): flag end
         Number MinBailOutsBeforeRejit;

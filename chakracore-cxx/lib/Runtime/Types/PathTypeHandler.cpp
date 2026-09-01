@@ -160,9 +160,6 @@ namespace Js
         Assert(PathTypeHandlerBase::FromTypeHandler(type->GetTypeHandler())->GetSuccessorInfo() == this);
         PathTypeHandlerBase::FromTypeHandler(type->GetTypeHandler())->SetSuccessorInfo(newInfo);
 
-#ifdef PROFILE_TYPES
-        scriptContext->convertSimplePathToPathCount++;
-#endif
     }
 
     void PathTypeSingleSuccessorInfo::ReplaceSuccessor(DynamicType * type, const PathTypeSuccessorKey key, RecyclerWeakReference<DynamicType> * typeWeakRef)
@@ -426,9 +423,6 @@ namespace Js
             currentType = predTypeHandler->GetPredecessorType();
             if (currentType == nullptr)
             {
-#ifdef PROFILE_TYPES
-                instance->GetScriptContext()->convertPathToDictionaryNoRootCount++;
-#endif
                 // This can happen if object header inlining is deoptimized, and we haven't built a full path from the root.
                 // For now, just punt this case.
 
@@ -993,9 +987,6 @@ namespace Js
             return TRUE;
         }
 
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertPathToDictionaryDeletedCount++;
-#endif
         BOOL deleteResult = TryConvertToSimpleDictionaryType(instance, pathLength)->DeleteProperty(instance, propertyId, flags);
 
         AssertMsg(deleteResult, "PathType delete property can return false, this should be handled in DeleteLastProperty as well.");
@@ -1027,9 +1018,6 @@ namespace Js
 
         if (PHASE_OFF1(ShareTypesWithAttributesPhase))
         {
-#ifdef PROFILE_TYPES
-            instance->GetScriptContext()->convertPathToDictionaryAttributesCount++;
-#endif
             return TryConvertToSimpleDictionaryType(instance, GetPathLength())->SetConfigurable(instance, propertyId, value);
         }
 
@@ -1062,9 +1050,6 @@ namespace Js
 
         if (PHASE_OFF1(ShareTypesWithAttributesPhase))
         {
-#ifdef PROFILE_TYPES
-            instance->GetScriptContext()->convertPathToDictionaryAttributesCount++;
-#endif
             return TryConvertToSimpleDictionaryType(instance, GetPathLength())->SetEnumerable(instance, propertyId, value);
         }
 
@@ -1097,9 +1082,6 @@ namespace Js
 
         if (PHASE_OFF1(ShareTypesWithAttributesPhase))
         {
-#ifdef PROFILE_TYPES
-            instance->GetScriptContext()->convertPathToDictionaryAttributesCount++;
-#endif
             return TryConvertToSimpleDictionaryType(instance, GetPathLength())->SetWritable(instance, propertyId, value);
         }
 
@@ -1132,9 +1114,6 @@ namespace Js
     {
         if (instance->GetType()->IsExternal() || instance->GetScriptContext()->IsScriptContextInDebugMode() || PHASE_OFF1(ShareAccessorTypesPhase))
         {
-#ifdef PROFILE_TYPES
-            instance->GetScriptContext()->convertPathToDictionaryAccessorsCount++;
-#endif
             return ConvertToDictionaryType(instance)->SetAccessors(instance, propertyId, getter, setter, flags);
         }
 
@@ -1148,18 +1127,12 @@ namespace Js
             PropertyRecord const* propertyRecord = scriptContext->GetPropertyName(propertyId);
             if (propertyRecord->IsNumeric())
             {
-#ifdef PROFILE_TYPES
-                instance->GetScriptContext()->convertPathToDictionaryItemAccessorsCount++;
-#endif
                 return ConvertToDictionaryType(instance)->SetItemAccessors(instance, propertyRecord->GetNumericValue(), getter, setter);
             }
 
             // We'll add 2 properties to the type, so check the limit.
             if (GetPathLength() + 2 > TypePath::MaxPathTypeHandlerLength)
             {
-#ifdef PROFILE_TYPES
-                instance->GetScriptContext()->convertPathToDictionaryAccessorsCount++;
-#endif
                 return ConvertToDictionaryType(instance)->SetAccessors(instance, propertyId, getter, setter, flags);
             }
 
@@ -1184,9 +1157,6 @@ namespace Js
                     // We'll add 1 property to the type, so check the limit.
                     if (GetPathLength() + 1 > TypePath::MaxPathTypeHandlerLength)
                     {
-#ifdef PROFILE_TYPES
-                        instance->GetScriptContext()->convertPathToDictionaryAccessorsCount++;
-#endif
                         return ConvertToDictionaryType(instance)->SetAccessors(instance, propertyId, getter, setter, flags);
                     }
                 }
@@ -1266,9 +1236,6 @@ namespace Js
 
     BOOL PathTypeHandlerBase::PreventExtensions(DynamicObject* instance)
     {
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertPathToDictionaryExtensionsCount++;
-#endif
         if (!CanConvertToSimpleDictionaryType())
         {
             return ConvertToDictionaryType(instance)->PreventExtensions(instance);
@@ -1296,9 +1263,6 @@ namespace Js
 
     BOOL PathTypeHandlerBase::Seal(DynamicObject* instance)
     {
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertPathToDictionaryExtensionsCount++;
-#endif
         // For seal we need an array with non-default attributes, which is ES5Array,
         // and in current design ES5Array goes side-by-side with DictionaryTypeHandler.
         // Note that 2 instances can have same PathTypehandler but still different objectArray items, e.g. {x:0, 0:0} and {x:0, 1:0}.
@@ -1321,9 +1285,6 @@ namespace Js
 
     BOOL PathTypeHandlerBase::FreezeImpl(DynamicObject* instance, bool isConvertedType)
     {
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertPathToDictionaryExtensionsCount++;
-#endif
         // See the comment inside Seal WRT HasObjectArray branch.
         if (instance->HasObjectArray() || !this->CanConvertToSimpleDictionaryType())
         {
@@ -1803,9 +1764,6 @@ namespace Js
         PathTypeHandlerBase::TraceFixedFieldsAfterTypeHandlerChange(instance, oldTypeHandler, newTypeHandler, oldType, instance->GetDynamicType(), oldSingletonInstance);
 #endif
 
-#ifdef PROFILE_TYPES
-        scriptContext->convertPathToSimpleDictionaryCount++;
-#endif
         return newTypeHandler;
     }
 
@@ -1813,10 +1771,6 @@ namespace Js
     {
         if (!ObjectSlotAttributesContains(attributes) || PHASE_OFF1(ShareTypesWithAttributesPhase))
         {
-#ifdef PROFILE_TYPES
-            instance->GetScriptContext()->convertPathToDictionaryAttributesCount++;
-#endif
-
             return TryConvertToSimpleDictionaryType(instance, GetPathLength() + 1)->SetPropertyWithAttributes(instance, propertyId, value, attributes, info, flags, possibleSideEffects);
         }
 
@@ -1828,10 +1782,6 @@ namespace Js
     {
         if (!ObjectSlotAttributesContains(attributes) || PHASE_OFF1(ShareTypesWithAttributesPhase))
         {
-#ifdef PROFILE_TYPES
-            instance->GetScriptContext()->convertPathToDictionaryAttributesCount++;
-#endif
-
             return TryConvertToSimpleDictionaryType(instance, GetPathLength())->SetAttributes(instance, propertyId, attributes);
         }
 
@@ -2026,9 +1976,6 @@ namespace Js
                     newTypePath = GetTypePath()->Branch<false>(recycler, GetPathLength(), false);
                 }
 
-#ifdef PROFILE_TYPES
-                scriptContext->branchCount++;
-#endif
 #ifdef PROFILE_OBJECT_LITERALS
                 if (isObjectLiteral)
                 {
@@ -2175,10 +2122,6 @@ namespace Js
                 nextPath->hasInternalProperty = true;
             }
 
-#ifdef PROFILE_TYPES
-            scriptContext->maxPathLength = max(GetPathLength() + 1, scriptContext->maxPathLength);
-#endif
-
             if (isObjectLiteral)
             {
                 // The new type isn't shared yet.  We will make it shared when the second instance attains it.
@@ -2203,9 +2146,6 @@ namespace Js
             Assert(!FixPropsOnPathTypes() || shareType || nextPath->GetPathLength() > newTypePath->GetMaxInitializedLength());
             TraceFixedFieldsAfterTypeHandlerChange(instance, this, nextPath, oldType, nextType, oldSingletonInstance);
 #endif
-#ifdef PROFILE_TYPES
-            scriptContext->promoteCount++;
-#endif
 #ifdef PROFILE_OBJECT_LITERALS
             if (isObjectLiteral)
             {
@@ -2215,10 +2155,6 @@ namespace Js
         }
         else
         {
-#ifdef PROFILE_TYPES
-            scriptContext->cacheCount++;
-#endif
-
             // Now that the second (or subsequent) instance reached this type, make sure that it's shared.
             nextPath = (PathTypeHandlerBase *)nextType->GetTypeHandler();
             Assert(nextPath->GetIsInlineSlotCapacityLocked() == this->GetIsInlineSlotCapacityLocked());
@@ -2313,9 +2249,6 @@ namespace Js
     void
     PathTypeHandlerBase::ResetTypeHandler(DynamicObject * instance)
     {
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertPathToDictionaryResetCount++;
-#endif
         // The type path is allocated in the type allocator associated with the script context.
         // So we can't reuse it in other context.  Just convert the type to a simple dictionary type
         this->TryConvertToSimpleDictionaryType(instance, GetPathLength());
@@ -2379,9 +2312,6 @@ namespace Js
     {
         if (!ObjectSlotAttributesContains(attributes))
         {
-#ifdef PROFILE_TYPES
-            instance->GetScriptContext()->convertPathToDictionaryAttributesCount++;
-#endif
             // Setting an attribute that PathTypeHandler can't express
             return TryConvertToSimpleDictionaryType(instance, GetPathLength() + 1)->SetPropertyWithAttributes(instance, propertyId, value, attributes, info, flags, possibleSideEffects);
         }
@@ -2403,9 +2333,6 @@ namespace Js
 
         if (GetPathLength() >= TypePath::MaxPathTypeHandlerLength)
         {
-#ifdef PROFILE_TYPES
-            scriptContext->convertPathToDictionaryExceededLengthCount++;
-#endif
             return TryConvertToSimpleDictionaryType(instance, GetPathLength() + 1)->SetPropertyWithAttributes(instance, propertyId, value, ObjectSlotAttributesToPropertyAttributes(attr), info, PropertyOperation_None, possibleSideEffects);
         }
 
@@ -2429,9 +2356,6 @@ namespace Js
 
     DynamicTypeHandler* PathTypeHandlerBase::ConvertToTypeWithItemAttributes(DynamicObject* instance)
     {
-#ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertPathToDictionaryItemAttributesCount++;
-#endif
         return JavascriptArray::IsNonES5Array(instance) ?
             ConvertToES5ArrayType(instance) : ConvertToDictionaryType(instance);
     }
@@ -2726,9 +2650,6 @@ namespace Js
         // No typesharing for ExternalType
         if (instance->GetType()->IsExternal())
         {
-#ifdef PROFILE_TYPES
-            instance->GetScriptContext()->convertPathToDictionaryProtoCount++;
-#endif
             TryConvertToSimpleDictionaryType(instance, GetPathLength())->SetPrototype(instance, newPrototype);
             return;
         }
@@ -2874,9 +2795,6 @@ namespace Js
             // In that case the type handler change below won't change the type on the object, so we have to force it.
 
             DynamicType* oldType = instance->GetDynamicType();
-#ifdef PROFILE_TYPES
-            instance->GetScriptContext()->convertPathToDictionaryProtoCount++;
-#endif
             TryConvertToSimpleDictionaryType(instance, GetPathLength());
 
             if (instance->GetDynamicType() == oldType)
@@ -3315,9 +3233,6 @@ namespace Js
     PathTypeHandlerNoAttr * PathTypeHandlerNoAttr::New(ScriptContext * scriptContext, TypePath* typePath, uint16 pathLength, const PropertyIndex slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots, bool isLocked, bool isShared, DynamicType* predecessorType)
     {
         Assert(typePath != nullptr);
-#ifdef PROFILE_TYPES
-        scriptContext->pathTypeHandlerCount++;
-#endif
         return RecyclerNew(scriptContext->GetRecycler(), PathTypeHandlerNoAttr, typePath, pathLength, slotCapacity, inlineSlotCapacity, offsetOfInlineSlots, isLocked, isShared, predecessorType);
     }
 
@@ -3340,9 +3255,6 @@ namespace Js
     PathTypeHandlerWithAttr * PathTypeHandlerWithAttr::New(ScriptContext * scriptContext, TypePath* typePath, ObjectSlotAttributes * attributes, PathTypeSetterSlotIndex * setters, PathTypeSetterSlotIndex setterCount, uint16 pathLength, const PropertyIndex slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots, bool isLocked, bool isShared, DynamicType* predecessorType)
     {
         Assert(typePath != nullptr);
-#ifdef PROFILE_TYPES
-        scriptContext->pathTypeHandlerCount++;
-#endif
         return RecyclerNew(scriptContext->GetRecycler(), PathTypeHandlerWithAttr, typePath, attributes, setters, setterCount, pathLength, slotCapacity, inlineSlotCapacity, offsetOfInlineSlots, isLocked, isShared, predecessorType);
     }
 

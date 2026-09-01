@@ -236,12 +236,9 @@ namespace Js {
     public:
         DECLARE_VALIDATE_VTABLE_REGISTERED_NOBASE(RecyclableObject);
 #endif
-#if DBG || defined(PROFILE_TYPES)
+#if DBG
     protected:
         RecyclableObject(DynamicType * type, ScriptContext * scriptContext);
-
-    private:
-        void RecordAllocation(ScriptContext * scriptContext);
 #endif
     protected:
         typename WriteBarrierFieldTypeTraits<Type *>::Type type;

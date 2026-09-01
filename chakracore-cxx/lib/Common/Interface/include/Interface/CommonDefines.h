@@ -140,10 +140,7 @@
 #define EXCEPTION_CHECK                     // Check exception handling.
 // todo: implement this for clang x86
 #define PROFILE_MEM
-#define PROFILE_TYPES
-#define PROFILE_EVALMAP
 #define PROFILE_OBJECT_LITERALS
-#define PROFILE_BAILOUT_RECORD_MEMORY
 #define MEMSPECT_TRACKING
 
 #define PROFILE_RECYCLER_ALLOC
@@ -202,7 +199,6 @@
 // #define PROFILE_EXEC
 // #define PROFILE_MEM
 // #define PROFILE_STRINGS
-// #define PROFILE_TYPES
 // #define PROFILE_OBJECT_LITERALS
 // #define PROFILE_RECYCLER_ALLOC
 // #define MEMSPECT_TRACKING

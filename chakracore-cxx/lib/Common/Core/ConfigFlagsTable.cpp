@@ -524,10 +524,6 @@ namespace Js
 #endif
 #define DEFAULT_CONFIG_MinBailOutsBeforeRejit 2         // Minimum number of bailouts for a single bailout record after which a rejit is considered
 
-#if DBG
-#define DEFAULT_CONFIG_ValidateIntRanges (false)
-#endif
-
 #define DEFAULT_CONFIG_Sse                  (-1)
 
 #define DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold (0xffff)
@@ -1005,20 +1001,6 @@ namespace Js
 #endif
 #ifdef PROFILE_STRINGS
         u"ProfileStrings",
-#endif
-#ifdef PROFILE_TYPES
-        u"ProfileTypes",
-#endif
-#ifdef PROFILE_EVALMAP
-        u"ProfileEvalMap",
-#endif
-
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        u"ProfileBailOutRecordMemory",
-#endif
-
-#if DBG
-        u"ValidateIntRanges",
 #endif
         u"MinBailOutsBeforeRejit",
 #ifdef RECYCLER_STRESS
@@ -1889,20 +1871,6 @@ namespace Js
 #ifdef PROFILE_STRINGS
         u"Profile string statistics",
 #endif
-#ifdef PROFILE_TYPES
-        u"Profile type statistics",
-#endif
-#ifdef PROFILE_EVALMAP
-        u"Profile eval map statistics",
-#endif
-
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        u"Profile bailout record memory statistics",
-#endif
-
-#if DBG
-        u"Validate at runtime int ranges/bounds determined by the globopt",
-#endif
         // todo (hanhossain): flag end
         u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
 #ifdef RECYCLER_STRESS
@@ -2366,20 +2334,6 @@ namespace Js
         NoParentFlag,
 #endif
 #ifdef PROFILE_STRINGS
-        NoParentFlag,
-#endif
-#ifdef PROFILE_TYPES
-        NoParentFlag,
-#endif
-#ifdef PROFILE_EVALMAP
-        NoParentFlag,
-#endif
-
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        NoParentFlag,
-#endif
-
-#if DBG
         NoParentFlag,
 #endif
         // todo (hanhossain): flag end
@@ -2868,20 +2822,6 @@ namespace Js
 #endif
 #ifdef PROFILE_STRINGS
         ProfileStrings(false),
-#endif
-#ifdef PROFILE_TYPES
-        ProfileTypes(false),
-#endif
-#ifdef PROFILE_EVALMAP
-        ProfileEvalMap(false),
-#endif
-
-#ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        ProfileBailOutRecordMemory(false),
-#endif
-
-#if DBG
-        ValidateIntRanges(DEFAULT_CONFIG_ValidateIntRanges),
 #endif
         MinBailOutsBeforeRejit(DEFAULT_CONFIG_MinBailOutsBeforeRejit),
 #ifdef RECYCLER_STRESS
@@ -4257,24 +4197,6 @@ namespace Js
         case ProfileStringsFlag:
             return FlagBoolean;
         #endif
-        #ifdef PROFILE_TYPES
-        case ProfileTypesFlag:
-            return FlagBoolean;
-        #endif
-        #ifdef PROFILE_EVALMAP
-        case ProfileEvalMapFlag:
-            return FlagBoolean;
-        #endif
-
-        #ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        case ProfileBailOutRecordMemoryFlag:
-            return FlagBoolean;
-        #endif
-
-        #if DBG
-        case ValidateIntRangesFlag:
-            return FlagBoolean;
-        #endif
         case MinBailOutsBeforeRejitFlag:
             return FlagNumber;
         #ifdef RECYCLER_STRESS
@@ -5071,24 +4993,6 @@ namespace Js
         case ProfileStringsFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileStrings));
         #endif
-        #ifdef PROFILE_TYPES
-        case ProfileTypesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileTypes));
-        #endif
-        #ifdef PROFILE_EVALMAP
-        case ProfileEvalMapFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileEvalMap));
-        #endif
-
-        #ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        case ProfileBailOutRecordMemoryFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileBailOutRecordMemory));
-        #endif
-
-        #if DBG
-        case ValidateIntRangesFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ValidateIntRanges));
-        #endif
         case MinBailOutsBeforeRejitFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejit));
         #ifdef RECYCLER_STRESS
@@ -5824,28 +5728,6 @@ namespace Js
         #ifdef PROFILE_STRINGS
         case ProfileStringsFlag:
             retValue = false;
-            break;
-        #endif
-        #ifdef PROFILE_TYPES
-        case ProfileTypesFlag:
-            retValue = false;
-            break;
-        #endif
-        #ifdef PROFILE_EVALMAP
-        case ProfileEvalMapFlag:
-            retValue = false;
-            break;
-        #endif
-
-        #ifdef PROFILE_BAILOUT_RECORD_MEMORY
-        case ProfileBailOutRecordMemoryFlag:
-            retValue = false;
-            break;
-        #endif
-
-        #if DBG
-        case ValidateIntRangesFlag:
-            retValue = DEFAULT_CONFIG_ValidateIntRanges;
             break;
         #endif
         #ifdef RECYCLER_STRESS

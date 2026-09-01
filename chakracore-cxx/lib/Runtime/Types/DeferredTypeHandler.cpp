@@ -143,9 +143,6 @@ namespace Js
 
         SimpleDictionaryTypeHandler* newTypeHandler = ConvertToTypeHandler<SimpleDictionaryTypeHandler>(instance, initSlotCapacity, isProto);
 
-    #ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertDeferredToSimpleDictionaryCount++;
-    #endif
         return newTypeHandler;
     }
 
@@ -156,9 +153,6 @@ namespace Js
 
         DictionaryTypeHandler* newTypeHandler = ConvertToTypeHandler<DictionaryTypeHandler>(instance, initSlotCapacity, isProto);
 
-    #ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertDeferredToDictionaryCount++;
-    #endif
         return newTypeHandler;
     }
 
@@ -169,9 +163,6 @@ namespace Js
 
         ES5ArrayTypeHandler* newTypeHandler = ConvertToTypeHandler<ES5ArrayTypeHandler>(instance, initSlotCapacity);
 
-    #ifdef PROFILE_TYPES
-        instance->GetScriptContext()->convertDeferredToDictionaryCount++;
-    #endif
         return newTypeHandler;
     }
 };
