@@ -3453,22 +3453,6 @@ ScriptContext::GetJitFuncRangeCache()
         this->nextPendingClose = nextPendingClose;
     }
 
-#ifdef ENABLE_MUTATION_BREAKPOINT
-    bool ScriptContext::HasMutationBreakpoints()
-    {
-        if (this->GetDebugContext() != nullptr && this->GetDebugContext()->GetProbeContainer() != nullptr)
-        {
-            return this->GetDebugContext()->GetProbeContainer()->HasMutationBreakpoints();
-        }
-        return false;
-    }
-
-    void ScriptContext::InsertMutationBreakpoint(Js::MutationBreakpoint *mutationBreakpoint)
-    {
-        this->GetDebugContext()->GetProbeContainer()->InsertMutationBreakpoint(mutationBreakpoint);
-    }
-#endif
-
 #ifdef REJIT_STATS
     void ScriptContext::LogRejit(Js::FunctionBody *body, RejitReason reason)
     {

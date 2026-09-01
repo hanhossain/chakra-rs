@@ -29,7 +29,6 @@ add_library (ChakraCoreStatic STATIC
   $<TARGET_OBJECTS:Chakra.Common.Util>
   $<TARGET_OBJECTS:Chakra.Runtime.Base>
   $<TARGET_OBJECTS:Chakra.Runtime.ByteCode>
-  $<TARGET_OBJECTS:Chakra.Runtime.Debug>
   $<TARGET_OBJECTS:Chakra.Runtime.Language>
   $<TARGET_OBJECTS:Chakra.Runtime.Library>
   $<TARGET_OBJECTS:Chakra.Runtime.Math>
