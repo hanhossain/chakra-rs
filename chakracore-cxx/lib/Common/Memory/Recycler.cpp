@@ -155,9 +155,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     partialUncollectedAllocBytes(0),
     uncollectedNewPageCountPartialCollect(static_cast<size_t>(-1)),
     partialConcurrentNextCollection(false),
-#ifdef RECYCLER_STRESS
-    forcePartialScanStack(false),
-#endif
 #if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(CHECK_MEMORY_LEAK)
     isPrimaryMarkContextInitialized(false),
 #endif
@@ -274,10 +271,6 @@ Recycler::SetMemProtectMode()
     this->disableCollectOnAllocationHeuristics = true;
 #ifdef RECYCLER_STRESS
     this->recyclerStress = false;
-    this->recyclerBackgroundStress = false;
-    this->recyclerConcurrentStress = false;
-    this->recyclerConcurrentRepeatStress = false;
-    this->recyclerPartialStress = false;
 #endif
 }
 
@@ -294,10 +287,6 @@ Recycler::SetDisableConcurrentThreadExitedCheck()
     disableConcurrentThreadExitedCheck = true;
 #ifdef RECYCLER_STRESS
     this->recyclerStress = false;
-    this->recyclerBackgroundStress = false;
-    this->recyclerConcurrentStress = false;
-    this->recyclerConcurrentRepeatStress = false;
-    this->recyclerPartialStress = false;
 #endif
 }
 #endif
@@ -621,10 +610,6 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
 
 #ifdef RECYCLER_STRESS
     this->recyclerStress = GetRecyclerFlagsTable().RecyclerStress;
-    this->recyclerBackgroundStress = GetRecyclerFlagsTable().RecyclerBackgroundStress;
-    this->recyclerConcurrentStress = GetRecyclerFlagsTable().RecyclerConcurrentStress;
-    this->recyclerConcurrentRepeatStress = GetRecyclerFlagsTable().RecyclerConcurrentRepeatStress;
-    this->recyclerPartialStress = GetRecyclerFlagsTable().RecyclerPartialStress;
 #endif
 
     // Default to non-concurrent
@@ -3115,23 +3100,6 @@ Recycler::DoCollect(CollectionFlags flags)
 #endif
     BOOL partial = flags & CollectMode_Partial;
 
-#if DBG && defined(RECYCLER_DUMP_OBJECT_GRAPH)
-    // Can't pass in RecyclerPartialStress and DumpObjectGraphOnCollect or call CollectGarbage with DumpObjectGraph
-    if (GetRecyclerFlagsTable().RecyclerPartialStress) {
-        Assert(!GetRecyclerFlagsTable().DumpObjectGraphOnCollect && !this->dumpObjectOnceOnCollect);
-    } else if (GetRecyclerFlagsTable().DumpObjectGraphOnCollect || this->dumpObjectOnceOnCollect) {
-        Assert(!GetRecyclerFlagsTable().RecyclerPartialStress);
-    }
-#endif
-
-#ifdef RECYCLER_STRESS
-    if (partial && GetRecyclerFlagsTable().RecyclerPartialStress)
-    {
-        this->inPartialCollectMode = true;
-        this->forcePartialScanStack = true;
-    }
-#endif
-
 #ifdef RECYCLER_DUMP_OBJECT_GRAPH
     if (dumpObjectOnceOnCollect || GetRecyclerFlagsTable().DumpObjectGraphOnCollect)
     {
@@ -3355,15 +3323,6 @@ Recycler::PartialCollect(bool concurrent)
         }
         this->RevertPrepareBackgroundFindRoots();
     }
-
-#ifdef RECYCLER_STRESS
-    if (forcePartialScanStack)
-    {
-        // Mark the roots since they need not have been marked
-        // in RecyclerPartialStress mode
-        this->RootMark(collectionState);
-    }
-#endif
 
 #ifdef RECYCLER_TRACE
     PrintCollectTrace(Js::PartialCollectPhase);
@@ -6315,31 +6274,6 @@ Recycler::StressCollectNow()
     if (this->recyclerStress)
     {
         this->CollectNow<CollectStress>();
-        return true;
-    }
-    else if (this->recyclerBackgroundStress)
-    {
-        this->CollectNow<CollectBackgroundStress>();
-        return true;
-    }
-    else if ((this->enableConcurrentMark || this->enableConcurrentSweep)
-        && (this->recyclerConcurrentStress
-        || this->recyclerConcurrentRepeatStress))
-    {
-        if (this->recyclerPartialStress)
-        {
-            this->CollectNow<CollectConcurrentPartialStress>();
-            return true;
-        }
-        else
-        {
-            this->CollectNow<CollectConcurrentStress>();
-            return true;
-        }
-    }
-    else if (this->recyclerPartialStress)
-    {
-        this->CollectNow<CollectPartialStress>();
         return true;
     }
     return false;
