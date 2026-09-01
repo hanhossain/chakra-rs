@@ -857,12 +857,7 @@ private:
     bool hasBackgroundFinishPartial;
     bool partialConcurrentNextCollection;
 #ifdef RECYCLER_STRESS
-    bool forcePartialScanStack;
     bool recyclerStress;
-    bool recyclerBackgroundStress;
-    bool recyclerConcurrentStress;
-    bool recyclerConcurrentRepeatStress;
-    bool recyclerPartialStress;
 #endif
 #if DBG
     bool isExternalStackSkippingGC;

@@ -462,10 +462,6 @@ namespace Js
         LibraryStackFrameDebuggerFlag,
         #ifdef RECYCLER_STRESS
         RecyclerStressFlag,
-        RecyclerBackgroundStressFlag,
-        RecyclerConcurrentStressFlag,
-        RecyclerConcurrentRepeatStressFlag,
-        RecyclerPartialStressFlag,
         #endif // RECYCLER_STRESS
         PageHeapFlag,
         #ifdef RECYCLER_NO_PAGE_REUSE
@@ -1924,18 +1920,10 @@ namespace Js
         Boolean LibraryStackFrame;
         // TODO (hanhossain): remove flag
         Boolean LibraryStackFrameDebugger;
+        // todo (hanhossain): flag end
         #ifdef RECYCLER_STRESS
             Boolean RecyclerStress;
-        // TODO (hanhossain): remove flag
-                Boolean RecyclerBackgroundStress;
-        // TODO (hanhossain): remove flag
-                Boolean RecyclerConcurrentStress;
-        // TODO (hanhossain): remove flag
-                Boolean RecyclerConcurrentRepeatStress;
-        // TODO (hanhossain): remove flag
-                Boolean RecyclerPartialStress;
         #endif // RECYCLER_STRESS
-        // todo (hanhossain): flag end
             Number PageHeap;
         #ifdef RECYCLER_NO_PAGE_REUSE
             Boolean RecyclerNoPageReuse;

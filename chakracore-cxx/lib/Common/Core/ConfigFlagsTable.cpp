@@ -1036,10 +1036,6 @@ namespace Js
         u"LibraryStackFrameDebugger",
 #ifdef RECYCLER_STRESS
         u"RecyclerStress",
-        u"RecyclerBackgroundStress",
-        u"RecyclerConcurrentStress",
-        u"RecyclerConcurrentRepeatStress",
-        u"RecyclerPartialStress",
 #endif // RECYCLER_STRESS
         u"PageHeap",
 #ifdef RECYCLER_NO_PAGE_REUSE
@@ -1927,14 +1923,10 @@ namespace Js
         u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
         u"Display library stack frame",
         u"Assume debugger support for library stack frame",
+        // todo (hanhossain): flag end
 #ifdef RECYCLER_STRESS
         u"Stress the recycler by collect on every allocation call",
-        u"Stress the recycler by collect in the background thread on every allocation call",
-        u"Stress the concurrent recycler by concurrent collect on every allocation call",
-        u"Stress the concurrent recycler by concurrent collect on every allocation call and repeat mark and rescan in the background thread",
-        u"Stress the partial recycler by partial collect on every allocation call",
 #endif // RECYCLER_STRESS
-        // todo (hanhossain): flag end
         u"Use full page for heap allocations",
 #ifdef RECYCLER_NO_PAGE_REUSE
         u"Do not reuse page in recycler",
@@ -2416,14 +2408,10 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
+        // todo (hanhossain): flag end
 #ifdef RECYCLER_STRESS
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
 #endif // RECYCLER_STRESS
-        // todo (hanhossain): flag end
         NoParentFlag,
 #ifdef RECYCLER_NO_PAGE_REUSE
         NoParentFlag,
@@ -2929,10 +2917,6 @@ namespace Js
         LibraryStackFrameDebugger(DEFAULT_CONFIG_LibraryStackFrameDebugger),
 #ifdef RECYCLER_STRESS
         RecyclerStress(false),
-        RecyclerBackgroundStress(false),
-        RecyclerConcurrentStress(false),
-        RecyclerConcurrentRepeatStress(false),
-        RecyclerPartialStress(false),
 #endif // RECYCLER_STRESS
         PageHeap(DEFAULT_CONFIG_PageHeap),
 #ifdef RECYCLER_NO_PAGE_REUSE
@@ -4339,14 +4323,6 @@ namespace Js
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
             return FlagBoolean;
-        case RecyclerBackgroundStressFlag:
-            return FlagBoolean;
-        case RecyclerConcurrentStressFlag:
-            return FlagBoolean;
-        case RecyclerConcurrentRepeatStressFlag:
-            return FlagBoolean;
-        case RecyclerPartialStressFlag:
-            return FlagBoolean;
         #endif // RECYCLER_STRESS
         case PageHeapFlag:
             return FlagNumber;
@@ -5173,14 +5149,6 @@ namespace Js
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerStress));
-        case RecyclerBackgroundStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerBackgroundStress));
-        case RecyclerConcurrentStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerConcurrentStress));
-        case RecyclerConcurrentRepeatStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerConcurrentRepeatStress));
-        case RecyclerPartialStressFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&RecyclerPartialStress));
         #endif // RECYCLER_STRESS
         case PageHeapFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&PageHeap));
@@ -5943,18 +5911,6 @@ namespace Js
             break;
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
-            retValue = false;
-            break;
-        case RecyclerBackgroundStressFlag:
-            retValue = false;
-            break;
-        case RecyclerConcurrentStressFlag:
-            retValue = false;
-            break;
-        case RecyclerConcurrentRepeatStressFlag:
-            retValue = false;
-            break;
-        case RecyclerPartialStressFlag:
             retValue = false;
             break;
         #endif // RECYCLER_STRESS
