@@ -5,18 +5,6 @@
 #pragma once
 
 #include "Interface/CommonDefines.h"
-#ifndef __has_feature
-#define __has_feature(f) 0
-#endif
-
-#if __has_feature(address_sanitizer)
-#define ADDRESS_SANITIZER_APPEND(x) , x
-#define NO_SANITIZE_ADDRESS __attribute__((no_sanitize("address")))
-#define NO_SANITIZE_ADDRESS_FIXVC
-#else
-#define ADDRESS_SANITIZER_APPEND(x)
-#define NO_SANITIZE_ADDRESS
-#endif
 
 // AddressSanitizer: check if an address is in asan fake stack
 #if __has_feature(address_sanitizer)

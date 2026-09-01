@@ -1471,8 +1471,7 @@ private:
     inline void ScanObjectInlineInterior(void ** obj, size_t byteCount);
 
     template <bool doSpecialMark, bool forceInterior = false>
-    void ScanMemoryInline(void ** obj, size_t byteCount
-        ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType scanMemoryType = RecyclerScanMemoryType::General));
+    void ScanMemoryInline(void ** obj, size_t byteCount);
 
     template <bool doSpecialMark>
     void ScanMemory(void ** obj, size_t byteCount) { if (byteCount != 0) { ScanMemoryInline<doSpecialMark>(obj, byteCount); } }

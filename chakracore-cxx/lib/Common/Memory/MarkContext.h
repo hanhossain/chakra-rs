@@ -51,8 +51,7 @@ public:
     void ScanObject(void ** obj, size_t byteCount);
 
     template <bool parallel, bool interior, bool doSpecialMark>
-    void ScanMemory(void ** obj, size_t byteCount
-            ADDRESS_SANITIZER_APPEND(void *asanFakeStack = nullptr));
+    void ScanMemory(void ** obj, size_t byteCount);
 
     template <bool parallel, bool interior>
     void ProcessMark();

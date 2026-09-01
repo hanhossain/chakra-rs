@@ -1348,8 +1348,6 @@ Recycler::ExpectStackSkip() const
 
 #pragma warning(push)
 #pragma warning(disable:4731) // 'pointer' : frame pointer register 'register' modified by inline assembly code
-// disable address sanitizer, since it doesn't handle custom stack walks well
-NO_SANITIZE_ADDRESS
 size_t
 Recycler::ScanStack()
 {
@@ -1392,14 +1390,12 @@ Recycler::ScanStack()
         if (doSpecialMark)
         {
             ScanMemoryInline<true>(
-                this->savedThreadContext.GetRegisters(), sizeof(void*) * SavedRegisterState::NumRegistersToSave
-                ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
+                this->savedThreadContext.GetRegisters(), sizeof(void*) * SavedRegisterState::NumRegistersToSave);
         }
         else
         {
             ScanMemoryInline<false>(
-                this->savedThreadContext.GetRegisters(), sizeof(void*) * SavedRegisterState::NumRegistersToSave
-                ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
+                this->savedThreadContext.GetRegisters(), sizeof(void*) * SavedRegisterState::NumRegistersToSave);
         }
     }
     else
@@ -1409,13 +1405,11 @@ Recycler::ScanStack()
         // GC while running a script or when we have a host who allocates objects on the Chakra heap.
         if (doSpecialMark)
         {
-            ScanMemoryInline<true, true /* forceInterior */>(this->savedThreadContext.GetRegisters(), sizeof(void*) * SavedRegisterState::NumRegistersToSave
-                ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
+            ScanMemoryInline<true, true /* forceInterior */>(this->savedThreadContext.GetRegisters(), sizeof(void*) * SavedRegisterState::NumRegistersToSave);
         }
         else
         {
-            ScanMemoryInline<false, true /* forceInterior */>(this->savedThreadContext.GetRegisters(), sizeof(void*) * SavedRegisterState::NumRegistersToSave
-                ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
+            ScanMemoryInline<false, true /* forceInterior */>(this->savedThreadContext.GetRegisters(), sizeof(void*) * SavedRegisterState::NumRegistersToSave);
         }
     }
     END_DUMP_OBJECT(this);
@@ -1426,13 +1420,11 @@ Recycler::ScanStack()
     {
         if (doSpecialMark)
         {
-            ScanMemoryInline<true>(static_cast<void**>(stackTop), stackScanned
-                ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
+            ScanMemoryInline<true>(static_cast<void**>(stackTop), stackScanned);
         }
         else
         {
-            ScanMemoryInline<false>(static_cast<void**>(stackTop), stackScanned
-                ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
+            ScanMemoryInline<false>(static_cast<void**>(stackTop), stackScanned);
         }
     }
     else
@@ -1442,13 +1434,11 @@ Recycler::ScanStack()
         // GC while running a script or when we have a host who allocates objects on the Chakra heap.
         if (doSpecialMark)
         {
-            ScanMemoryInline<true, true /* forceInterior */>(static_cast<void**>(stackTop), stackScanned
-                ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
+            ScanMemoryInline<true, true /* forceInterior */>(static_cast<void**>(stackTop), stackScanned);
         }
         else
         {
-            ScanMemoryInline<false, true /* forceInterior */>(static_cast<void**>(stackTop), stackScanned
-                ADDRESS_SANITIZER_APPEND(RecyclerScanMemoryType::Stack));
+            ScanMemoryInline<false, true /* forceInterior */>(static_cast<void**>(stackTop), stackScanned);
         }
     }
     END_DUMP_OBJECT(this);
