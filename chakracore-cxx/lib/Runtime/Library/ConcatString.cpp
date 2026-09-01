@@ -264,9 +264,6 @@ namespace Js
     {
         Assert(left);
 
-#ifdef PROFILE_STRINGS
-       StringProfiler::RecordConcatenation( left->GetScriptContext(), left->GetLength(), right->GetLength(), ConcatType_ConcatTree);
-#endif
         Recycler* recycler = left->GetScriptContext()->GetRecycler();
         return RecyclerNew(recycler, ConcatString, left, right);
     }

@@ -148,8 +148,6 @@
 // Just needs strings converted
 #define PROFILE_DICTIONARY 1
 
-#define PROFILE_STRINGS
-
 #define RECYCLER_SLOW_CHECK_ENABLED          // This can be disabled to speed up the debug build's GC
 #define RECYCLER_STRESS
 #define RECYCLER_STATS
@@ -198,7 +196,6 @@
 // Profile defines that can be enabled in release build
 // #define PROFILE_EXEC
 // #define PROFILE_MEM
-// #define PROFILE_STRINGS
 // #define PROFILE_OBJECT_LITERALS
 // #define PROFILE_RECYCLER_ALLOC
 // #define MEMSPECT_TRACKING

@@ -999,9 +999,6 @@ namespace Js
 #ifdef PROFILE_MEM
         u"ProfileMemory",
 #endif
-#ifdef PROFILE_STRINGS
-        u"ProfileStrings",
-#endif
         u"MinBailOutsBeforeRejit",
 #ifdef RECYCLER_STRESS
         u"RecyclerStress",
@@ -1868,9 +1865,6 @@ namespace Js
 #ifdef PROFILE_MEM
         u"Profile memory usage",
 #endif
-#ifdef PROFILE_STRINGS
-        u"Profile string statistics",
-#endif
         // todo (hanhossain): flag end
         u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
 #ifdef RECYCLER_STRESS
@@ -2331,9 +2325,6 @@ namespace Js
         NoParentFlag,
 #endif
 #ifdef PROFILE_MEM
-        NoParentFlag,
-#endif
-#ifdef PROFILE_STRINGS
         NoParentFlag,
 #endif
         // todo (hanhossain): flag end
@@ -2819,9 +2810,6 @@ namespace Js
 #endif
 #ifdef PROFILE_MEM
         ProfileMemory(),
-#endif
-#ifdef PROFILE_STRINGS
-        ProfileStrings(false),
 #endif
         MinBailOutsBeforeRejit(DEFAULT_CONFIG_MinBailOutsBeforeRejit),
 #ifdef RECYCLER_STRESS
@@ -4193,10 +4181,6 @@ namespace Js
         case ProfileMemoryFlag:
             return FlagString;
         #endif
-        #ifdef PROFILE_STRINGS
-        case ProfileStringsFlag:
-            return FlagBoolean;
-        #endif
         case MinBailOutsBeforeRejitFlag:
             return FlagNumber;
         #ifdef RECYCLER_STRESS
@@ -4989,10 +4973,6 @@ namespace Js
         case ProfileMemoryFlag:
             return reinterpret_cast<void*>(const_cast<String*>(&ProfileMemory));
         #endif
-        #ifdef PROFILE_STRINGS
-        case ProfileStringsFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileStrings));
-        #endif
         case MinBailOutsBeforeRejitFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejit));
         #ifdef RECYCLER_STRESS
@@ -5722,11 +5702,6 @@ namespace Js
             break;
         #ifdef PROFILE_OBJECT_LITERALS
         case ProfileObjectLiteralFlag:
-            retValue = false;
-            break;
-        #endif
-        #ifdef PROFILE_STRINGS
-        case ProfileStringsFlag:
             retValue = false;
             break;
         #endif

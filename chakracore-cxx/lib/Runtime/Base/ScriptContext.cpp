@@ -11,7 +11,6 @@
 #include "RegexStats.h"
 
 #include "ByteCode/ByteCodeApi.h"
-#include "Library/ProfileString.h"
 #include <limits>
 #if PROFILE_DICTIONARY
 #include "Interface/DictionaryStats.h"
@@ -155,9 +154,6 @@ namespace Js
         , nextPendingClose(nullptr)
         , intConstPropsOnGlobalObject(nullptr)
         , intConstPropsOnGlobalUserObject(nullptr)
-#ifdef PROFILE_STRINGS
-        , stringProfiler(nullptr)
-#endif
         , emptyStringPropertyId(Js::PropertyIds::_none)
     {
        // Don't use throwing memory allocation in ctor, as exception in ctor doesn't cause the dtor to be called
@@ -231,13 +227,6 @@ namespace Js
         rejitReasonCountsCap = AnewArrayZ(GeneralAllocator(), uint, NumRejitReasons);
         bailoutReasonCounts = Anew(GeneralAllocator(), BailoutStatsMap, GeneralAllocator());
         bailoutReasonCountsCap = Anew(GeneralAllocator(), BailoutStatsMap, GeneralAllocator());
-#endif
-
-#ifdef PROFILE_STRINGS
-        if (Js::Configuration::Global.flags.ProfileStrings)
-        {
-            stringProfiler = Anew(MiscAllocator(), StringProfiler, threadContext->GetPageAllocator());
-        }
 #endif
         intConstPropsOnGlobalObject = Anew(GeneralAllocator(), PropIdSetForConstProp, GeneralAllocator());
         intConstPropsOnGlobalUserObject = Anew(GeneralAllocator(), PropIdSetForConstProp, GeneralAllocator());
@@ -2599,13 +2588,6 @@ namespace Js
         javascriptLibrary->BindReference(addr);
     }
 
-#ifdef PROFILE_STRINGS
-    StringProfiler* ScriptContext::GetStringProfiler()
-    {
-        return stringProfiler;
-    }
-#endif
-
     void ScriptContext::FreeFunctionEntryPoint(Js::JavascriptMethod codeAddress, Js::JavascriptMethod thunkAddress)
     {
 #if ENABLE_NATIVE_CODEGEN
@@ -3266,15 +3248,6 @@ ScriptContext::GetJitFuncRangeCache()
         if (Configuration::Global.flags.ProfileObjectLiteral)
         {
             ProfileObjectLiteral();
-        }
-#endif
-
-#ifdef PROFILE_STRINGS
-        if (stringProfiler != nullptr)
-        {
-            stringProfiler->PrintAll();
-            Adelete(MiscAllocator(), stringProfiler);
-            stringProfiler = nullptr;
         }
 #endif
 

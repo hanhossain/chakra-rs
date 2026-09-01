@@ -11,10 +11,6 @@ namespace Js
     {
         m_buff[0] = ch;
         m_buff[1] = u'\0';
-
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordNewString( this->GetScriptContext(), this->m_buff, 1 );
-#endif
     }
 
     /*static*/ SingleCharString* SingleCharString::New(char16_t ch, ScriptContext* scriptContext)

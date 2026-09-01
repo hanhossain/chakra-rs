@@ -14,9 +14,6 @@ namespace Js
     LiteralString::LiteralString(StaticType * type, const char16_t* content, charcount_t charLength) :
         JavascriptString(type, charLength, content)
     {
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordNewString( type->GetScriptContext(), content, charLength );
-#endif
     }
 
     LiteralString* LiteralString::New(StaticType* type, const char16_t* content, charcount_t charLength, Recycler* recycler)

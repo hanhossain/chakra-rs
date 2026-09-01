@@ -10,7 +10,7 @@
 #include "Common/RejitReason.h"
 #include "Core/ProfileInstrument.h"
 
-#if DBG || ENABLE_REGEX_CONFIG_OPTIONS || defined(PROFILE_STRINGS)
+#if DBG || ENABLE_REGEX_CONFIG_OPTIONS
 #define NEED_MISC_ALLOCATOR
 #endif
 
@@ -494,10 +494,6 @@ namespace Js
 
         Profiler * CreateProfiler();
 #endif
-#ifdef PROFILE_STRINGS
-        StringProfiler* stringProfiler;
-#endif
-
 
 public:
 #ifdef  PROFILE_OBJECT_LITERALS
@@ -1284,10 +1280,6 @@ private:
         void ProfileResume(Js::Profiler::SuspendRecord * suspendRecord);
         void ProfilePrint();
         bool IsProfilerCreated() const { return isProfilerCreated; }
-#endif
-
-#ifdef PROFILE_STRINGS
-        StringProfiler * GetStringProfiler(); // May be null if string profiling not enabled
 #endif
 
     public:

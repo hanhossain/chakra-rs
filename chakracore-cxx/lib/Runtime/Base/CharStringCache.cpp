@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "Library/ProfileString.h"
 #include "Library/SingleCharString.h"
 
 using namespace Js;
@@ -35,9 +34,6 @@ using namespace Js;
     JavascriptString* CharStringCache::GetStringForChar(char16_t c)
     {
         JIT_HELPER_NOT_REENTRANT_NOLOCK_HEADER(GetStringForChar);
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordSingleCharStringRequest(JavascriptLibrary::FromCharStringCache(this)->GetScriptContext());
-#endif
         if (JavascriptString::IsASCII7BitChar(c))
         {
             return GetStringForCharA(JavascriptString::ToASCII7BitChar(c));

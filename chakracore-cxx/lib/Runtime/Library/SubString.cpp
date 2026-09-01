@@ -13,10 +13,6 @@ namespace Js
         this->SetBuffer(subString);
         this->originalFullStringReference = originalFullStringReference;
         this->SetLength(length);
-
-#ifdef PROFILE_STRINGS
-        StringProfiler::RecordNewString( scriptContext, this->UnsafeGetBuffer(), this->GetLength() );
-#endif
     }
 
     JavascriptString* SubString::New(JavascriptString* string, charcount_t start, charcount_t length)
