@@ -473,7 +473,6 @@ HeapInfo::Initialize(Recycler * recycler
         this->captureFreeCallStack = captureFreeCallStack;
 
         this->captureAllocCallStack = captureAllocCallStack || recycler->GetRecyclerFlagsTable().PageHeapAllocStack;
-        this->captureFreeCallStack = captureFreeCallStack || recycler->GetRecyclerFlagsTable().PageHeapFreeStack;
     }
 
     if (IsPageHeapEnabled())

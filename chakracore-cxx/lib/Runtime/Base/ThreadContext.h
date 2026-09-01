@@ -392,7 +392,6 @@ private:
 
 #define DEFAULT_CONFIG_PageHeap             ((Js::Number) PageHeapMode::PageHeapModeOff)
 #define DEFAULT_CONFIG_PageHeapAllocStack   (false)
-#define DEFAULT_CONFIG_PageHeapFreeStack    (false)
 
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
 #define DEFAULT_CONFIG_MaxLoopsPerFunction  (10)
