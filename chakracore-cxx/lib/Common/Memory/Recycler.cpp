@@ -398,7 +398,7 @@ Recycler::~Recycler()
 #ifdef PROFILE_RECYCLER_ALLOC
     if (trackerDictionary != nullptr)
     {
-        this->trackerDictionary->Map([](type_info const *, TrackerItem * item)
+        this->trackerDictionary->Map([](std::type_info const *, TrackerItem * item)
         {
             NoCheckHeapDelete(item);
         });
@@ -6291,7 +6291,7 @@ void
 Recycler::DumpObjectDescription(void *objectAddress)
 {
 #ifdef PROFILE_RECYCLER_ALLOC
-    type_info const * typeinfo = nullptr;
+    std::type_info const * typeinfo = nullptr;
     bool isArray = false;
 
     if (this->trackerDictionary)

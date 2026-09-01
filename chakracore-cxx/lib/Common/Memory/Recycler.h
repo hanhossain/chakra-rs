@@ -1660,12 +1660,12 @@ private:
 
     struct TrackerData
     {
-        TrackerData(type_info const * typeinfo, bool isArray) : typeinfo(typeinfo), isArray(isArray),
+        TrackerData(std::type_info const * typeinfo, bool isArray) : typeinfo(typeinfo), isArray(isArray),
             ItemSize(0), ItemCount(0), AllocCount(0), ReqSize(0), AllocSize(0), FreeCount(0), FreeSize(0), TraceLifetime(false)
         {
         }
 
-        type_info const * typeinfo;
+        std::type_info const * typeinfo;
         bool isArray;
 #ifdef TRACE_OBJECT_LIFETIME
         bool TraceLifetime;
@@ -1687,13 +1687,13 @@ private:
 
     struct TrackerItem
     {
-        TrackerItem(type_info const * typeinfo) : instanceData(typeinfo, false), arrayData(typeinfo, true)
+        TrackerItem(std::type_info const * typeinfo) : instanceData(typeinfo, false), arrayData(typeinfo, true)
         {}
         TrackerData instanceData;
         TrackerData arrayData;
     };
 
-    typedef JsUtil::BaseDictionary<type_info const *, TrackerItem *, NoCheckHeapAllocator, PrimeSizePolicy, DefaultComparer, JsUtil::SimpleDictionaryEntry, JsUtil::NoResizeLock> TypeInfotoTrackerItemMap;
+    typedef JsUtil::BaseDictionary<std::type_info const *, TrackerItem *, NoCheckHeapAllocator, PrimeSizePolicy, DefaultComparer, JsUtil::SimpleDictionaryEntry, JsUtil::NoResizeLock> TypeInfotoTrackerItemMap;
     typedef JsUtil::BaseDictionary<void *, TrackerData *, NoCheckHeapAllocator, PrimeSizePolicy, RecyclerPointerComparer, JsUtil::SimpleDictionaryEntry, JsUtil::NoResizeLock> PointerToTrackerDataMap;
 
     TypeInfotoTrackerItemMap * trackerDictionary;

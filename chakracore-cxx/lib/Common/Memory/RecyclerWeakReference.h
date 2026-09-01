@@ -41,7 +41,7 @@ protected:
     typename WriteBarrierFieldTypeTraits<HeapBlock *, _no_write_barrier_policy, _no_write_barrier_policy>::Type weakRefHeapBlock;
     typename WriteBarrierFieldTypeTraits<RecyclerWeakReferenceBase*, _no_write_barrier_policy, _no_write_barrier_policy>::Type next;
 #if DBG
-    typename WriteBarrierFieldTypeTraits<type_info const *, _no_write_barrier_policy, _no_write_barrier_policy>::Type typeInfo;
+    typename WriteBarrierFieldTypeTraits<std::type_info const *, _no_write_barrier_policy, _no_write_barrier_policy>::Type typeInfo;
 #endif
 };
 

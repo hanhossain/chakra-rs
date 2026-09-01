@@ -35,7 +35,7 @@ public:
     void * dumpObject;
 
 #ifdef PROFILE_RECYCLER_ALLOC
-    type_info const * dumpObjectTypeInfo;
+    std::type_info const * dumpObjectTypeInfo;
     bool dumpObjectIsArray;
 #endif
 

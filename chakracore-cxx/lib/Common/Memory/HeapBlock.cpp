@@ -830,7 +830,7 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
     {
         // need KeepRecyclerTrackData flag to have the tracker data and show following detailed info
 #if  defined(__clang__)
-        auto getDemangledName = [](const type_info* typeinfo) ->const char*
+        auto getDemangledName = [](const std::type_info* typeinfo) ->const char*
         {
             int status;
             char buffer[1024];

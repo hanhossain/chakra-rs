@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include <typeinfo>
 
 #include "Exceptions/Throw.h"
 #include "Exceptions/ExceptionCheck.h"
@@ -42,11 +43,11 @@ struct TrackAllocData
 {
     void Clear() { typeinfo = nullptr; plusSize = 0; count = 0; }
     bool IsEmpty() { return typeinfo == nullptr && plusSize == 0 && count == 0; }
-    type_info const * GetTypeInfo() const { return typeinfo; }
+    std::type_info const * GetTypeInfo() const { return typeinfo; }
     size_t GetPlusSize() const { return plusSize; }
     size_t GetCount() const { return count; }
 
-    static TrackAllocData CreateTrackAllocData(type_info const& typeinfo, size_t size, size_t count, char const * const filename, uint32_t line)
+    static TrackAllocData CreateTrackAllocData(std::type_info const& typeinfo, size_t size, size_t count, char const * const filename, uint32_t line)
     {
         TrackAllocData data;
         data.typeinfo = &typeinfo;
@@ -58,7 +59,7 @@ struct TrackAllocData
         return data;
     };
 
-    type_info const * typeinfo;
+    std::type_info const * typeinfo;
     size_t plusSize;
     size_t count;
     char const * filename;

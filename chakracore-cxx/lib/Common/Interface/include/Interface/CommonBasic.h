@@ -6,10 +6,5 @@
 
 #include "Interface/CommonDefines.h"
 
-#ifdef __clang__
-#include <typeinfo>
-using std::type_info;
-#endif
-
 #include "PlatformAgnostic/CommonPal.h"
 #include "PlatformAgnostic/CommonTypedefs.h"
