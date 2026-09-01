@@ -3384,7 +3384,7 @@ namespace Js
 
         RecyclableObject * function = OP_CallGetFunc(target);
 
-#if DBG
+#if DBG && defined(ENABLE_SCRIPT_DEBUGGING)
         if (this->IsInDebugMode())
         {
             JavascriptFunction::CheckValidDebugThunk(scriptContext, function);
