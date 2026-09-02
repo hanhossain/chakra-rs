@@ -20,9 +20,6 @@
 std::recursive_mutex Output::s_mutex;
 #ifdef ENABLE_TRACE
 Js::ILogger*        Output::s_inMemoryLogger = nullptr;
-#ifdef STACK_BACK_TRACE
-Js::IStackTraceHelper* Output::s_stackTraceHelper = nullptr;
-#endif
 unsigned int Output::s_traceEntryId = 0;
 #endif
 
@@ -130,49 +127,6 @@ Output::VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const 
 
     retValue += Output::Print(shortPrefixFormat, prefix);
     retValue += Output::VPrint(form, argptr);
-
-#ifdef STACK_BACK_TRACE
-    // Print stack trace.
-    if (s_stackTraceHelper)
-    {
-        const uint32_t c_framesToSkip = 2; // Skip 2 frames -- Output::VTrace and Output::Trace.
-        const uint32_t c_frameCount = 10;  // TODO: make it configurable.
-        const char16_t callStackPrefix[] = u"call stack:";
-        if (s_inMemoryLogger)
-        {
-            // Trace just addresses of functions, avoid symbol info as it takes too much memory.
-            // One line for whole stack trace for easier parsing on the jd side.
-            const size_t c_msgCharCount = std::size(callStackPrefix) + (1 + sizeof(void*) * 2) * c_frameCount; // 2 hexadecimal digits per byte + 1 for space.
-            char16_t callStackMsg[c_msgCharCount];
-            void* frames[c_frameCount];
-            size_t start = 0;
-            size_t temp;
-
-            temp = _snwprintf_s(callStackMsg, std::size(callStackMsg), _TRUNCATE, u"%s", callStackPrefix);
-            Assert(temp != -1);
-            start += temp;
-
-            uint32_t framesObtained = s_stackTraceHelper->GetStackTrace(c_framesToSkip, c_frameCount, frames);
-            Assert(framesObtained <= c_frameCount);
-            for (uint32_t i = 0; i < framesObtained && i < c_frameCount; ++i)
-            {
-                Assert(std::size(callStackMsg) >= start);
-                temp = _snwprintf_s(callStackMsg + start, std::size(callStackMsg) - start, _TRUNCATE, u" %p", frames[i]);
-                Assert(temp != -1);
-                start += temp;
-            }
-
-            retValue += Output::Print(u"%s\n", callStackMsg);
-        }
-        else
-        {
-            // Trace with full symbol info.
-            retValue += Output::Print(u"%s\n", callStackPrefix);
-            retValue += s_stackTraceHelper->PrintStackTrace(c_framesToSkip, c_frameCount);
-        }
-    }
-#endif
-
     return retValue;
 }
 #endif // ENABLE_TRACE
@@ -397,15 +351,6 @@ Output::SetInMemoryLogger(Js::ILogger* logger)
     AssertMsg(s_inMemoryLogger == nullptr, "This cannot be called more than once.");
     s_inMemoryLogger = logger;
 }
-
-#ifdef STACK_BACK_TRACE
-void
-Output::SetStackTraceHelper(Js::IStackTraceHelper* helper)
-{
-    AssertMsg(s_stackTraceHelper == nullptr, "This cannot be called more than once.");
-    s_stackTraceHelper = helper;
-}
-#endif
 
 #endif // ENABLE_TRACE
 

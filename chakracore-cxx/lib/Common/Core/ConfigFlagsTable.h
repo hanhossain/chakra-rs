@@ -410,11 +410,7 @@ namespace Js
         #ifdef ENABLE_TRACE
         InMemoryTraceFlag,
         InMemoryTraceBufferSizeFlag,
-        #ifdef STACK_BACK_TRACE
-        TraceWithStackFlag,
-        #endif // STACK_BACK_TRACE
         #endif // ENABLE_TRACE
-        PrintRunTimeDataCollectionTraceFlag,
         #ifdef ENABLE_PREJIT
         PrejitFlag,
         #endif
@@ -1812,13 +1808,7 @@ namespace Js
             Boolean InMemoryTrace;
         // TODO (hanhossain): remove flag
             Number InMemoryTraceBufferSize;
-            #ifdef STACK_BACK_TRACE
-        // TODO (hanhossain): remove flag
-                Boolean TraceWithStack;
-            #endif // STACK_BACK_TRACE
         #endif // ENABLE_TRACE
-        // TODO (hanhossain): remove flag
-        Boolean PrintRunTimeDataCollectionTrace;
         // todo (hanhossain): flag end
         #ifdef ENABLE_PREJIT
             Boolean Prejit;

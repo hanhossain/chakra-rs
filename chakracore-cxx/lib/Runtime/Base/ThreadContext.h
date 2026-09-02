@@ -578,7 +578,6 @@ private:
 #define DEFAULT_CONFIG_InMemoryTrace                (false)
 #define DEFAULT_CONFIG_InMemoryTraceBufferSize      (1024)
 #define DEFAULT_CONFIG_RichTraceFormat              (false)
-#define DEFAULT_CONFIG_TraceWithStack               (false)
 
 #define DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameError (0)
 #define DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameErrorType (0)

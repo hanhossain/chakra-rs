@@ -543,7 +543,6 @@ namespace Js
 #define DEFAULT_CONFIG_InMemoryTrace                (false)
 #define DEFAULT_CONFIG_InMemoryTraceBufferSize      (1024)
 #define DEFAULT_CONFIG_RichTraceFormat              (false)
-#define DEFAULT_CONFIG_TraceWithStack               (false)
 
 #define DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameError (0)
 #define DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameErrorType (0)
@@ -973,11 +972,7 @@ namespace Js
 #ifdef ENABLE_TRACE
         u"InMemoryTrace",
         u"InMemoryTraceBufferSize",
-#ifdef STACK_BACK_TRACE
-        u"TraceWithStack",
-#endif // STACK_BACK_TRACE
 #endif // ENABLE_TRACE
-        u"PrintRunTimeDataCollectionTrace",
 #ifdef ENABLE_PREJIT
         u"Prejit",
 #endif
@@ -1824,11 +1819,7 @@ namespace Js
 #ifdef ENABLE_TRACE
         u"Enable in-memory trace (investigate crash using trace in dump file). Use !jd.dumptrace to print it.",
         u"The size of circular buffer for in-memory trace (the units used is: number of trace calls). ",
-#ifdef STACK_BACK_TRACE
-        u"Whether the trace need to include stack trace (for each trace entry).",
-#endif // STACK_BACK_TRACE
 #endif // ENABLE_TRACE
-        u"Print traces needed for runtime data collection",
         // todo (hanhossain): flag end
 #ifdef ENABLE_PREJIT
         u"Prejit everything, including things that are not called, ignoring limits (default: false)",
@@ -2271,11 +2262,7 @@ namespace Js
 #ifdef ENABLE_TRACE
         NoParentFlag,
         NoParentFlag,
-#ifdef STACK_BACK_TRACE
-        NoParentFlag,
-#endif // STACK_BACK_TRACE
 #endif // ENABLE_TRACE
-        NoParentFlag,
         // todo (hanhossain): flag end
 #ifdef ENABLE_PREJIT
         NoParentFlag,
@@ -2740,11 +2727,7 @@ namespace Js
 #ifdef ENABLE_TRACE
         InMemoryTrace(DEFAULT_CONFIG_InMemoryTrace),
         InMemoryTraceBufferSize(DEFAULT_CONFIG_InMemoryTraceBufferSize),
-#ifdef STACK_BACK_TRACE
-        TraceWithStack(DEFAULT_CONFIG_TraceWithStack),
-#endif // STACK_BACK_TRACE
 #endif // ENABLE_TRACE
-        PrintRunTimeDataCollectionTrace(false),
 #ifdef ENABLE_PREJIT
         Prejit(DEFAULT_CONFIG_Prejit),
 #endif
@@ -4084,13 +4067,7 @@ namespace Js
             return FlagBoolean;
         case InMemoryTraceBufferSizeFlag:
             return FlagNumber;
-        #ifdef STACK_BACK_TRACE
-        case TraceWithStackFlag:
-            return FlagBoolean;
-        #endif // STACK_BACK_TRACE
         #endif // ENABLE_TRACE
-        case PrintRunTimeDataCollectionTraceFlag:
-            return FlagBoolean;
         #ifdef ENABLE_PREJIT
         case PrejitFlag:
             return FlagBoolean;
@@ -4854,13 +4831,7 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&InMemoryTrace));
         case InMemoryTraceBufferSizeFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&InMemoryTraceBufferSize));
-        #ifdef STACK_BACK_TRACE
-        case TraceWithStackFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceWithStack));
-        #endif // STACK_BACK_TRACE
         #endif // ENABLE_TRACE
-        case PrintRunTimeDataCollectionTraceFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintRunTimeDataCollectionTrace));
         #ifdef ENABLE_PREJIT
         case PrejitFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&Prejit));
@@ -5571,15 +5542,7 @@ namespace Js
         case InMemoryTraceFlag:
             retValue = DEFAULT_CONFIG_InMemoryTrace;
             break;
-        #ifdef STACK_BACK_TRACE
-        case TraceWithStackFlag:
-            retValue = DEFAULT_CONFIG_TraceWithStack;
-            break;
-        #endif // STACK_BACK_TRACE
         #endif // ENABLE_TRACE
-        case PrintRunTimeDataCollectionTraceFlag:
-            retValue = false;
-            break;
         #ifdef ENABLE_PREJIT
         case PrejitFlag:
             retValue = DEFAULT_CONFIG_Prejit;
