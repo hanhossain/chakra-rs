@@ -485,7 +485,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_MinTemplatizedJitRunCount      (100)     // Minimum number of times a function needs to be interpreted before it is jitted
 #define DEFAULT_CONFIG_MinAsmJsInterpreterRunCount      (10)     // Minimum number of times a function needs to be Asm interpreted before it is jitted
-#define DEFAULT_CONFIG_MinTemplatizedJitLoopRunCount      (500)     // Minimum number of times a function needs to be interpreted before it is jitted
 #define DEFAULT_CONFIG_MaxTemplatizedJitRunCount      (-1)     // Maximum number of times a function can be TJ before it is jitted
 #define DEFAULT_CONFIG_MaxAsmJsInterpreterRunCount      (-1)     // Maximum number of times a function can be Asm interpreted before it is jitted
 
@@ -901,7 +900,6 @@ namespace Js
         u"MinTemplatizedJitRunCount",
         u"MinAsmJsInterpreterRunCount",
 
-        u"MinTemplatizedJitLoopRunCount",
         u"MaxTemplatizedJitRunCount",
         u"Mtjrc",
         u"MaxAsmJsInterpreterRunCount",
@@ -1725,7 +1723,6 @@ namespace Js
         u"Minimum number of times a function must be Templatized Jitted",
         u"Minimum number of times a function must be Asm Interpreted",
 
-        u"Minimum LoopCount run of the Templatized Jit function to run FullJited",
         // todo (hanhossain): flag end
         u"Maximum number of times a function must be templatized jit",
         u"Maximum number of times a function must be templatized jit",
@@ -2146,7 +2143,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
 
-        NoParentFlag,
         // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
@@ -2589,7 +2585,6 @@ namespace Js
         MinTemplatizedJitRunCount(DEFAULT_CONFIG_MinTemplatizedJitRunCount),
         MinAsmJsInterpreterRunCount(DEFAULT_CONFIG_MinAsmJsInterpreterRunCount),
 
-        MinTemplatizedJitLoopRunCount(DEFAULT_CONFIG_MinTemplatizedJitLoopRunCount),
         MaxTemplatizedJitRunCount(DEFAULT_CONFIG_MaxTemplatizedJitRunCount),
         Mtjrc(DEFAULT_CONFIG_MaxTemplatizedJitRunCount),
         MaxAsmJsInterpreterRunCount(DEFAULT_CONFIG_MaxAsmJsInterpreterRunCount),
@@ -3834,8 +3829,6 @@ namespace Js
         case MinAsmJsInterpreterRunCountFlag:
             return FlagNumber;
 
-        case MinTemplatizedJitLoopRunCountFlag:
-            return FlagNumber;
         case MaxTemplatizedJitRunCountFlag:
             return FlagNumber;
         case MtjrcFlag:
@@ -4557,8 +4550,6 @@ namespace Js
         case MinAsmJsInterpreterRunCountFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinAsmJsInterpreterRunCount));
 
-        case MinTemplatizedJitLoopRunCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MinTemplatizedJitLoopRunCount));
         case MaxTemplatizedJitRunCountFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxTemplatizedJitRunCount));
         case MtjrcFlag:

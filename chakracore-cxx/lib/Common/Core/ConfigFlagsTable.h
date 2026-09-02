@@ -363,7 +363,6 @@ namespace Js
         MinTemplatizedJitRunCountFlag,
         MinAsmJsInterpreterRunCountFlag,
 
-        MinTemplatizedJitLoopRunCountFlag,
         MaxTemplatizedJitRunCountFlag, MtjrcFlag,
         MaxAsmJsInterpreterRunCountFlag, MaicFlag,
 
@@ -1713,8 +1712,6 @@ namespace Js
         // TODO (hanhossain): remove flag
         Number MinAsmJsInterpreterRunCount;
 
-        // TODO (hanhossain): remove flag
-        Number MinTemplatizedJitLoopRunCount;
         // todo (hanhossain): flag end
         Number MaxTemplatizedJitRunCount; Number Mtjrc;
         Number MaxAsmJsInterpreterRunCount; Number Maic;

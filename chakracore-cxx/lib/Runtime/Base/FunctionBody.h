@@ -2367,8 +2367,10 @@ namespace Js
 #ifdef ASMJS_PLAT
         bool IsHotAsmJsLoop()
         {
-            // Negative MinTemplatizedJitLoopRunCount treats all loops as hot asm loop
-            if (CONFIG_FLAG(MinTemplatizedJitLoopRunCount) < 0 || m_asmJsTotalLoopCount > static_cast<uint>(CONFIG_FLAG(MinTemplatizedJitLoopRunCount)))
+            // Minimum number of times a function needs to be interpreted before it is jitted
+            constexpr uint32_t MinTemplatizedJitLoopRunCount = 500;
+
+            if (m_asmJsTotalLoopCount > MinTemplatizedJitLoopRunCount)
             {
                 return true;
             }
