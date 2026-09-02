@@ -824,7 +824,7 @@ SwitchIRBuilder::BuildMultiBrCaseInstrForStrings(uint32_t targetOffset)
     char16_t maxChar = 0;
 
     // Either the jump table is within the limit (<= 128) or it is dense (<= 2 * case Count)
-    uint const maxJumpTableSize = max<uint>(CONFIG_FLAG(MaxSingleCharStrJumpTableSize), CONFIG_FLAG(MaxSingleCharStrJumpTableRatio) * caseCount);
+    uint const maxJumpTableSize = max<uint>(CONFIG_FLAG(MaxSingleCharStrJumpTableSize), 2 * caseCount);
     if (this->m_seenOnlySingleCharStrCaseNodes)
     {
         generateDictionary = false;
