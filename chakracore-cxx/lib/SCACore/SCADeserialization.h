@@ -20,8 +20,6 @@ namespace Js
         using typename ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader> >::Src;
         using typename ClonerBase<scaposition_t, Var, SCATypeId, DeserializationCloner<Reader> >::SrcTypeId;
     private:
-        //AutoCOMPtr<ISCAHost> m_pSCAHost;
-        //AutoCOMPtr<ISCAContext> m_pSCAContext;
         Reader* m_reader;
         mutable char16_t* m_buffer;
         mutable charcount_t m_bufferLength;
