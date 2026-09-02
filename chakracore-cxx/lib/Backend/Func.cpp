@@ -160,7 +160,7 @@ Func::Func(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     AssertOrFailFast(!UInt32Math::Add(GetJITFunctionBody()->GetConstCount(), GetJITFunctionBody()->GetVarCount(), &tmpResult));
     AssertOrFailFast(GetJITFunctionBody()->IsAsmJsMode() || GetJITFunctionBody()->GetFirstTmpReg() <= GetJITFunctionBody()->GetLocalsCount());
     AssertOrFailFast(!IsLoopBody() || m_workItem->GetLoopNumber() < GetJITFunctionBody()->GetLoopCount());
-    AssertOrFailFast(CONFIG_FLAG(Prejit) || CONFIG_ISENABLED(Js::ForceNativeFlag) || GetJITFunctionBody()->GetByteCodeLength() < (uint)CONFIG_FLAG(MaxJITFunctionBytecodeByteLength));
+    AssertOrFailFast(CONFIG_FLAG(Prejit) || CONFIG_ISENABLED(Js::ForceNativeFlag) || GetJITFunctionBody()->GetByteCodeLength() < 4800000);
     GetJITFunctionBody()->EnsureConsistentConstCount();
 
     if (this->IsTopFunc())

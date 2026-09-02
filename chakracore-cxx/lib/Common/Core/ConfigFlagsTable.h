@@ -389,7 +389,6 @@ namespace Js
         #if DBG
         SkipFuncCountForBailOnNoProfileFlag,
         #endif
-        MaxJITFunctionBytecodeByteLengthFlag,
         NoDeferParseFlag,
         OOPJITMissingOptsFlag,
         ForceJITCFGCheckFlag,
@@ -1760,8 +1759,6 @@ namespace Js
         // TODO (hanhossain): remove flag
             Number SkipFuncCountForBailOnNoProfile;
         #endif
-        // TODO (hanhossain): remove flag
-        Number MaxJITFunctionBytecodeByteLength;
         // todo (hanhossain): flag end
         Boolean NoDeferParse;
         Boolean OOPJITMissingOpts;
