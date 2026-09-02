@@ -951,7 +951,6 @@ namespace Js
         u"MaxLoopsPerFunction",
         u"FuncObjectInlineCacheThreshold",
         u"NoDeferParse",
-        u"NoLogo",
         u"OOPJITMissingOpts",
         u"ForceJITCFGCheck",
         u"UseJITTrampoline",
@@ -1787,9 +1786,8 @@ namespace Js
         u"The biggest function we'll JIT (bytecode count)",
         u"Maximum number of loops in any function in the script",
         u"Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object",
-        u"Disable deferred parsing",
-        u"No logo, which we don't display anyways",
         // todo (hanhossain): flag end
+        u"Disable deferred parsing",
         u"Use optimizations that are missing from OOP JIT",
         u"Have JIT code always do CFG check even if range check succeeded",
         u"Use trampoline for JIT entry points and emit range checks for it",
@@ -2220,9 +2218,8 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2676,7 +2673,6 @@ namespace Js
         MaxLoopsPerFunction(DEFAULT_CONFIG_MaxLoopsPerFunction),
         FuncObjectInlineCacheThreshold(DEFAULT_CONFIG_FuncObjectInlineCacheThreshold),
         NoDeferParse(false),
-        NoLogo(false),
         OOPJITMissingOpts(DEFAULT_CONFIG_OOPJITMissingOpts),
         ForceJITCFGCheck(DEFAULT_CONFIG_ForceJITCFGCheck),
         UseJITTrampoline(DEFAULT_CONFIG_UseJITTrampoline),
@@ -3991,8 +3987,6 @@ namespace Js
             return FlagNumber;
         case NoDeferParseFlag:
             return FlagBoolean;
-        case NoLogoFlag:
-            return FlagBoolean;
         case OOPJITMissingOptsFlag:
             return FlagBoolean;
         case ForceJITCFGCheckFlag:
@@ -4737,8 +4731,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&FuncObjectInlineCacheThreshold));
         case NoDeferParseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&NoDeferParse));
-        case NoLogoFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&NoLogo));
         case OOPJITMissingOptsFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&OOPJITMissingOpts));
         case ForceJITCFGCheckFlag:
@@ -5428,9 +5420,6 @@ namespace Js
             break;
 
         case NoDeferParseFlag:
-            retValue = false;
-            break;
-        case NoLogoFlag:
             retValue = false;
             break;
         case OOPJITMissingOptsFlag:
