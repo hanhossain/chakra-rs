@@ -735,7 +735,7 @@ Func::AjustLocalVarSlotOffset()
 bool
 Func::DoSimpleJitDynamicProfile() const
 {
-    return IsSimpleJit() && !PHASE_OFF(Js::SimpleJitDynamicProfilePhase, GetTopFunc()) && !CONFIG_FLAG(NewSimpleJit);
+    return IsSimpleJit() && !PHASE_OFF(Js::SimpleJitDynamicProfilePhase, GetTopFunc());
 }
 
 void
@@ -746,7 +746,7 @@ Func::SetDoFastPaths()
 
     bool doFastPaths = false;
 
-    if(!PHASE_OFF(Js::FastPathPhase, this) && (!IsSimpleJit() || CONFIG_FLAG(NewSimpleJit)))
+    if(!PHASE_OFF(Js::FastPathPhase, this) && !IsSimpleJit())
     {
         doFastPaths = true;
     }

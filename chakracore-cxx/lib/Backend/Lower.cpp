@@ -4603,7 +4603,6 @@ Lowerer::LowerNewScObject(IR::Instr *newObjInstr, bool callCtor, bool hasArgs, b
         if (newObjInstr->IsJitProfilingInstr())
         {
             Assert(m_func->IsSimpleJit());
-            Assert(!CONFIG_FLAG(NewSimpleJit));
 
             // This path skipped calling the Ctor, which skips calling LowerCallI with newObjInstr, meaning that the call will not be profiled.
             //   So we insert it manually here.

@@ -162,7 +162,7 @@ public:
     bool DoLoopFastPaths() const
     {
         return
-            (!IsSimpleJit() || CONFIG_FLAG(NewSimpleJit)) &&
+            !IsSimpleJit() &&
             !PHASE_OFF(Js::FastPathPhase, this) &&
             !PHASE_OFF(Js::LoopFastPathPhase, this);
     }

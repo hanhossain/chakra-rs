@@ -605,7 +605,6 @@ LowererMD::LowerCallI(IR::Instr * callInstr, ushort callFlags, bool isHelper, IR
     if (callInstr->IsJitProfilingInstr())
     {
         Assert(callInstr->m_func->IsSimpleJit());
-        Assert(!CONFIG_FLAG(NewSimpleJit));
 
         if(finalDst &&
             finalDst->IsRegOpnd() &&

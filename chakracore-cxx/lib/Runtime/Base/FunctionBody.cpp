@@ -6497,11 +6497,8 @@ namespace Js
 #ifdef ASMJS_PLAT
             !GetIsAsmjsMode() &&
 #endif
-            !GetScriptContext()->GetConfig()->IsNoNative() &&
-            !GetScriptContext()->IsScriptContextInDebugMode() &&
-            DoInterpreterProfile() &&
-#pragma warning(suppress: 6235) // (<non-zero constant> || <expression>) is always a non-zero constant.
-            (!CONFIG_FLAG(NewSimpleJit) || DoInterpreterAutoProfile());
+            !GetScriptContext()->GetConfig()->IsNoNative() && !GetScriptContext()->IsScriptContextInDebugMode() &&
+            DoInterpreterProfile();
     }
 
     bool FunctionBody::DoSimpleJitWithLock() const
@@ -6511,18 +6508,14 @@ namespace Js
 #ifdef ASMJS_PLAT
             !GetIsAsmjsMode() &&
 #endif
-            !GetScriptContext()->GetConfig()->IsNoNative() &&
-            !this->IsInDebugMode() &&
-            DoInterpreterProfileWithLock() &&
-#pragma warning(suppress: 6235) // (<non-zero constant> || <expression>) is always a non-zero constant.
-            (!CONFIG_FLAG(NewSimpleJit) || DoInterpreterAutoProfile());
+            !GetScriptContext()->GetConfig()->IsNoNative() && !this->IsInDebugMode() && DoInterpreterProfileWithLock();
     }
 
     bool FunctionBody::DoSimpleJitDynamicProfile() const
     {
         Assert(DoSimpleJitWithLock());
 
-        return !PHASE_OFF(Js::SimpleJitDynamicProfilePhase, this) && !CONFIG_FLAG(NewSimpleJit);
+        return !PHASE_OFF(Js::SimpleJitDynamicProfilePhase, this);
     }
 
     bool FunctionBody::DoInterpreterProfile() const
@@ -6584,7 +6577,7 @@ namespace Js
             uint16 fullJitThreshold = executionState.GetFullJitThreshold();
             if(fullJitThreshold > 1)
             {
-                executionState.SetFullJitThreshold(fullJitThreshold / 2, !CONFIG_FLAG(NewSimpleJit));
+                executionState.SetFullJitThreshold(fullJitThreshold / 2, true);
             }
         }
 
@@ -6637,11 +6630,7 @@ namespace Js
 
     uint16 FunctionBody::GetMinProfileIterations()
     {
-        return
-            static_cast<uint>(
-                CONFIG_FLAG(NewSimpleJit)
-                    ? DEFAULT_CONFIG_MinProfileIterations
-                    : DEFAULT_CONFIG_MinProfileIterations_OldSimpleJit);
+        return static_cast<uint>(DEFAULT_CONFIG_MinProfileIterations_OldSimpleJit);
     }
 
     uint16 FunctionBody::GetMinFunctionProfileIterations()
