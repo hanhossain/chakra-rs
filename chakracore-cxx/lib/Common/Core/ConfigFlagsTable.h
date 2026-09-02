@@ -397,7 +397,6 @@ namespace Js
         NoLogoFlag,
         OOPJITMissingOptsFlag,
         CrashOnOOPJITFailureFlag,
-        OOPCFGRegistrationFlag,
         ForceJITCFGCheckFlag,
         UseJITTrampolineFlag,
         NoNativeFlag,
@@ -1780,8 +1779,6 @@ namespace Js
         Boolean OOPJITMissingOpts;
         // TODO (hanhossain): remove flag
         Boolean CrashOnOOPJITFailure;
-        // TODO (hanhossain): remove flag
-        Boolean OOPCFGRegistration;
         // todo (hanhossain): flag end
         Boolean ForceJITCFGCheck;
         Boolean UseJITTrampoline;

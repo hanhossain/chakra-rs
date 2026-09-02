@@ -800,17 +800,6 @@ NativeCodeGenerator::CodeGen(PageAllocator * pageAllocator, CodeGenWorkItem* wor
     XDataAllocator::Register(xdataInfo, jitWriteData.codeAddress, jitWriteData.codeSize);
     epInfo->GetNativeEntryPointData()->SetXDataInfo(xdataInfo);
 
-    if (!CONFIG_FLAG(OOPCFGRegistration))
-    {
-        if (jitWriteData.thunkAddress)
-        {
-            scriptContext->GetThreadContext()->SetValidCallTargetForCFG((void *)jitWriteData.thunkAddress);
-        }
-        else
-        {
-            scriptContext->GetThreadContext()->SetValidCallTargetForCFG((void *)jitWriteData.codeAddress);
-        }
-    }
     if (workItem->Type() == JsLoopBodyWorkItemType)
     {
         Assert(jitWriteData.thunkAddress == NULL);

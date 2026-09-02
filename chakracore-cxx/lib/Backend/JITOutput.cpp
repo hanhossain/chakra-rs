@@ -203,7 +203,7 @@ JITOutput::FinalizeNativeCode()
 
     }
     m_outputData->thunkAddress = allocation->thunkAddress;
-    if (!allocation->thunkAddress && CONFIG_FLAG(OOPCFGRegistration))
+    if (!allocation->thunkAddress)
     {
         void * callTarget = (void *)m_outputData->codeAddress;
         {
