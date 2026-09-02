@@ -1847,9 +1847,6 @@ namespace Js
         bool check__proto__;
         if (UsePathTypeHandlerForObjectLiteral(propIds, &check__proto__))
         {
-#ifdef PROFILE_OBJECT_LITERALS
-            scriptContext->objectLiteralCount[count]++;
-#endif
             for (uint i = 0; i < count; i++)
             {
                 PathTypeHandlerBase *pathHandler = (PathTypeHandlerBase *)PointerValue(type->typeHandler);
@@ -1862,15 +1859,6 @@ namespace Js
                     continue;
                 }
 
-#ifdef PROFILE_OBJECT_LITERALS
-                {
-                    RecyclerWeakReference<DynamicType>* nextTypeWeakRef;
-                    if (!pathHandler->GetSuccessor(PathTypeSuccessorKey(propertyId, ObjectSlotAttr_Default), &nextTypeWeakRef) || nextTypeWeakRef->Get() == nullptr)
-                    {
-                        scriptContext->objectLiteralPathCount++;
-                    }
-                }
-#endif
                 type = pathHandler->PromoteType<true>(type, PathTypeSuccessorKey(propertyId, ObjectSlotAttr_Default), shareType, scriptContext, nullptr, &propertyIndex);
             }
         }
@@ -1918,10 +1906,6 @@ namespace Js
             typeHandler->Add(propertyRecord, attributes, scriptContext);
         }
         AssertMsg((typeHandler->GetFlags() & IsPrototypeFlag) == 0, "Why does a newly created type handler have the IsPrototypeFlag set?");
-
- #ifdef PROFILE_OBJECT_LITERALS
-        scriptContext->objectLiteralSimpleDictionaryCount++;
- #endif
 
         type = RecyclerNew(recycler, DynamicType, type, typeHandler, /* isLocked = */ true, /* isShared = */ true);
 
@@ -1975,13 +1959,6 @@ namespace Js
                 {
                     newTypePath = GetTypePath()->Branch<false>(recycler, GetPathLength(), false);
                 }
-
-#ifdef PROFILE_OBJECT_LITERALS
-                if (isObjectLiteral)
-                {
-                    scriptContext->objectLiteralBranchCount++;
-                }
-#endif
 
                 if (key.GetAttributes() != ObjectSlotAttr_Default || oldAttributes != nullptr)
                 {
@@ -2145,12 +2122,6 @@ namespace Js
 #if ENABLE_FIXED_FIELDS
             Assert(!FixPropsOnPathTypes() || shareType || nextPath->GetPathLength() > newTypePath->GetMaxInitializedLength());
             TraceFixedFieldsAfterTypeHandlerChange(instance, this, nextPath, oldType, nextType, oldSingletonInstance);
-#endif
-#ifdef PROFILE_OBJECT_LITERALS
-            if (isObjectLiteral)
-            {
-                scriptContext->objectLiteralPromoteCount++;
-            }
 #endif
         }
         else

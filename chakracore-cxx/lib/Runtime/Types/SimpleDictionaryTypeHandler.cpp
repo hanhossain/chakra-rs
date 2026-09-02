@@ -335,10 +335,6 @@ namespace Js
 
         Assert((typeHandler->GetFlags() & IsPrototypeFlag) == 0);
 
-#ifdef PROFILE_OBJECT_LITERALS
-        scriptContext->objectLiteralSimpleDictionaryCount++;
-#endif
-
         return RecyclerNew(recycler, DynamicType, type, typeHandler, /* isLocked = */ true, /* isShared = */ shareType);
     }
 
