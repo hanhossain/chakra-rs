@@ -365,14 +365,6 @@ ThreadContext::~ThreadContext()
 #endif
         // Unpin the memory for leak report so we don't report this as a leak.
         recyclableData.Unroot(recycler);
-
-#if defined(CHECK_MEMORY_LEAK)
-        for (Js::ScriptContext *scriptContext = scriptContextList; scriptContext; scriptContext = scriptContext->next)
-        {
-            scriptContext->ClearSourceContextInfoMaps();
-            scriptContext->ShutdownClearSourceLists();
-        }
-#endif
         HeapDelete(recycler);
     }
 

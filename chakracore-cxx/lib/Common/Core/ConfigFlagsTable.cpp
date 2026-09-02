@@ -876,10 +876,6 @@ namespace Js
         u"PolymorphicInlineThreshold",
         u"PrimeRecycler",
         u"TraceEngineRefcount",
-#if defined(CHECK_MEMORY_LEAK)
-        u"LeakStackTrace",
-        u"ForceMemoryLeak",
-#endif
         u"DumpAfterFinalGC",
         u"ForceOldDateAPI",
 
@@ -1739,10 +1735,6 @@ namespace Js
         u"Maximum size in bytecodes of a polymorphic inline candidate",
         u"Prime the recycler first",
         u"Output traces for ScriptEngine AddRef/Release to debug lifetime management",
-#if defined(CHECK_MEMORY_LEAK)
-        u"Include stack trace on leaked pinned object and heap objects",
-        u"Fake leak some memory to test leak report and check memory leak",
-#endif
         u"Collect a process dump after calling finalgc",
         u"Force Chakra to use old dates API regardless of availability of a new one",
 
@@ -2198,10 +2190,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-#if defined(CHECK_MEMORY_LEAK)
-        NoParentFlag,
-        NoParentFlag,
-#endif
         NoParentFlag,
         NoParentFlag,
 
@@ -2679,10 +2667,6 @@ namespace Js
         PolymorphicInlineThreshold(DEFAULT_CONFIG_PolymorphicInlineThreshold),
         PrimeRecycler(DEFAULT_CONFIG_PrimeRecycler),
         TraceEngineRefcount(false),
-#if defined(CHECK_MEMORY_LEAK)
-        LeakStackTrace(false),
-        ForceMemoryLeak(false),
-#endif
         DumpAfterFinalGC(false),
         ForceOldDateAPI(DEFAULT_CONFIG_ForceOldDateAPI),
 
@@ -3958,12 +3942,6 @@ namespace Js
             return FlagBoolean;
         case TraceEngineRefcountFlag:
             return FlagBoolean;
-        #if defined(CHECK_MEMORY_LEAK)
-        case LeakStackTraceFlag:
-            return FlagBoolean;
-        case ForceMemoryLeakFlag:
-            return FlagBoolean;
-        #endif
         case DumpAfterFinalGCFlag:
             return FlagBoolean;
         case ForceOldDateAPIFlag:
@@ -4746,12 +4724,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrimeRecycler));
         case TraceEngineRefcountFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&TraceEngineRefcount));
-        #if defined(CHECK_MEMORY_LEAK)
-        case LeakStackTraceFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&LeakStackTrace));
-        case ForceMemoryLeakFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceMemoryLeak));
-        #endif
         case DumpAfterFinalGCFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&DumpAfterFinalGC));
         case ForceOldDateAPIFlag:
@@ -5553,14 +5525,6 @@ namespace Js
         case TraceEngineRefcountFlag:
             retValue = false;
             break;
-        #if defined(CHECK_MEMORY_LEAK)
-        case LeakStackTraceFlag:
-            retValue = false;
-            break;
-        case ForceMemoryLeakFlag:
-            retValue = false;
-            break;
-        #endif
         case DumpAfterFinalGCFlag:
             retValue = false;
             break;

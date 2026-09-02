@@ -72,36 +72,3 @@ HeapAllocator::HeapAllocator(bool useAllocMemProtect)
 HeapAllocator::~HeapAllocator()
 {
 }
-
-#ifdef CHECK_MEMORY_LEAK
-MemoryLeakCheck::~MemoryLeakCheck()
-{
-    if (head != nullptr)
-    {
-        if (enableOutput)
-        {
-            Output::Print(u"FATAL ERROR: Memory Leak Detected\n");
-        }
-        LeakRecord * current = head;
-        do
-        {
-            if (enableOutput)
-            {
-                Output::PrintBuffer(current->dump, std::u16string(current->dump).length());
-            }
-            LeakRecord * prev = current;
-            current = current->next;
-            free(const_cast<void*>(static_cast<const void*>(prev->dump)));
-            NoCheckHeapDelete(prev);
-        }
-        while (current != nullptr);
-        if (enableOutput)
-        {
-            Output::Print(u"-------------------------------------------------------------------------------------\n");
-            Output::Print(u"Total leaked: %d bytes (%d objects)\n", leakedBytes, leakedCount);
-            Output::Flush();
-        }
-    }
-}
-
-#endif

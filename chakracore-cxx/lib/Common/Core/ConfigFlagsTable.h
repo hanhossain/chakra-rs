@@ -321,10 +321,6 @@ namespace Js
         PolymorphicInlineThresholdFlag,
         PrimeRecyclerFlag,
         TraceEngineRefcountFlag,
-        #if defined(CHECK_MEMORY_LEAK)
-        LeakStackTraceFlag,
-        ForceMemoryLeakFlag,
-        #endif
         DumpAfterFinalGCFlag,
         ForceOldDateAPIFlag,
 
@@ -1684,12 +1680,6 @@ namespace Js
         Boolean PrimeRecycler;
         // TODO (hanhossain): remove flag
         Boolean TraceEngineRefcount;
-        #if defined(CHECK_MEMORY_LEAK)
-        // TODO (hanhossain): remove flag
-            Boolean LeakStackTrace;
-        // TODO (hanhossain): remove flag
-            Boolean ForceMemoryLeak;
-        #endif
         // TODO (hanhossain): remove flag
         Boolean DumpAfterFinalGC;
         Boolean ForceOldDateAPI;

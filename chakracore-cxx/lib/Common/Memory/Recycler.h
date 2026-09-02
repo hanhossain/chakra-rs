@@ -665,33 +665,7 @@ private:
 
     HeapBlockMap heapBlockMap;
 
-#if defined(CHECK_MEMORY_LEAK)
-    struct PinRecord
-    {
-#ifdef STACK_BACK_TRACE
-        PinRecord() : refCount(0), stackBackTraces(nullptr) {}
-#else
-        PinRecord() : refCount(0) {}
-#endif
-        PinRecord& operator=(uint newRefCount)
-        {
-#ifdef STACK_BACK_TRACE
-            Assert(stackBackTraces == nullptr);
-#endif
-            Assert(newRefCount == 0); refCount = 0; return *this;
-        }
-        PinRecord& operator++() { ++refCount; return *this; }
-        PinRecord& operator--() { --refCount; return *this; }
-        operator uint() const { return refCount; }
-#ifdef STACK_BACK_TRACE
-        StackBackTraceNode * stackBackTraces;
-#endif
-    private:
-        uint refCount;
-    };
-#else
     typedef uint PinRecord;
-#endif
 
     typedef SimpleHashTable<void *, PinRecord, HeapAllocator, DefaultComparer, true, PrimePolicy> PinnedObjectHashTable;
     PinnedObjectHashTable pinnedObjectMap;
@@ -701,12 +675,6 @@ private:
     SList<RecyclerWeakReferenceRegion, HeapAllocator> weakReferenceRegionList;
 
     void * transientPinnedObject;
-#if defined(CHECK_MEMORY_LEAK)
-#ifdef STACK_BACK_TRACE
-    StackBackTrace * transientPinnedObjectStackBackTrace;
-#endif
-#endif
-
     struct GuestArenaAllocator : public ArenaAllocator
     {
         GuestArenaAllocator(__in_z char16_t const*  name, PageAllocator * pageAllocator, void (*outOfMemoryFunc)())
@@ -1672,15 +1640,9 @@ private:
     void BeginNonCollectingMark();
     void EndNonCollectingMark();
 
-#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(CHECK_MEMORY_LEAK)
+#if defined(RECYCLER_DUMP_OBJECT_GRAPH)
     bool isPrimaryMarkContextInitialized;
 #endif
-#if defined(CHECK_MEMORY_LEAK)
-#ifdef STACK_BACK_TRACE
-    void PrintPinnedObjectStackTraces();
-#endif
-#endif
-
 public:
     typedef void (CALLBACK *ObjectBeforeCollectCallback)(void* object, void* callbackState); // same as jsrt JsObjectBeforeCollectCallback
     // same as jsrt JsObjectBeforeCollectCallbackWrapper

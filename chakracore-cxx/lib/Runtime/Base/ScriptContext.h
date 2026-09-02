@@ -850,15 +850,6 @@ private:
         SourceContextInfo * CreateSourceContextInfo(unsigned long hostSourceContext, char16_t const * url, size_t len,
             SimpleDataCacheWrapper* dataCacheWrapper, char16_t const * sourceMapUrl = nullptr, size_t sourceMapUrlLen = 0);
 
-#if defined(CHECK_MEMORY_LEAK)
-        void ClearSourceContextInfoMaps()
-        {
-#if ENABLE_PROFILE_INFO
-              this->referencesSharedDynamicSourceContextInfo = false;
-#endif
-        }
-#endif
-
 #if ENABLE_PROFILE_INFO
         void ClearDynamicProfileList()
         {

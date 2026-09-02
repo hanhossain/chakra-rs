@@ -165,8 +165,6 @@
 #define MEMORY_ALLOCATION_ALIGNMENT 8
 #endif
 
-#define CHECK_MEMORY_LEAK
-
 #define ERROR_TRACE
 #define DEBUGGER_TRACE
 
@@ -207,7 +205,6 @@
 // #define PAGEALLOCATOR_PROTECT_FREEPAGE
 // #define ARENA_MEMORY_VERIFY
 // #define SEPARATE_ARENA
-// #define CHECK_MEMORY_LEAK
 
 #if defined(DUMP_FRAGMENTATION_STATS)
 #define ENABLE_MEM_STATS 1
@@ -272,12 +269,6 @@
 // (STACK_BACK_TRACE is enabled on release build, used by RECYCLER_PAGE_HEAP.)
 #if defined(STACK_BACK_TRACE)
 #define ENABLE_DEBUG_STACK_BACK_TRACE 1
-#endif
-
-// TODO (hanhossain): remove
-#if defined(CHECK_MEMORY_LEAK)
-#define RECYCLER_DUMP_OBJECT_GRAPH
-#define RECYCLER_STATS
 #endif
 
 #if defined(USED_IN_STATIC_LIB)
