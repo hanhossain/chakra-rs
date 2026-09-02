@@ -655,14 +655,14 @@ namespace Js
         return AsmJsFunctionDeclaration::SupportsArgCall(argCount, args, retType) || (mOverload && mOverload->SupportsArgCall(argCount, args, retType));
     }
 
-    bool AsmJsMathFunction::SupportsMathCall(ArgSlot argCount, AsmJsType* args, OpCodeAsmJs& op, AsmJsRetType& retType )
+    bool AsmJsMathFunction::SupportsMathCall(std::vector<AsmJsType> args, OpCodeAsmJs& op, AsmJsRetType& retType )
     {
-        if (AsmJsFunctionDeclaration::SupportsArgCall(argCount, args, retType))
+        if (AsmJsFunctionDeclaration::SupportsArgCall(args.size(), args.data(), retType))
         {
             op = mOpCode;
             return true;
         }
-        return mOverload && mOverload->SupportsMathCall(argCount, args, op, retType);
+        return mOverload && mOverload->SupportsMathCall(args, op, retType);
     }
 
     bool AsmJsMathFunction::IsFround(AsmJsFunctionDeclaration* sym)
