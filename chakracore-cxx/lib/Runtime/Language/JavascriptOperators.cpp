@@ -5501,15 +5501,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         Assert(propIds->count != 0);
         Assert(!propIds->hadDuplicates);        // duplicates are removed by parser
 
-#ifdef PROFILE_OBJECT_LITERALS
-        // Empty objects not counted in the object literal counts
-        scriptContext->objectLiteralInstanceCount++;
-        if (propIds->count > scriptContext->objectLiteralMaxLength)
-        {
-            scriptContext->objectLiteralMaxLength = propIds->count;
-        }
-#endif
-
         DynamicType* newType = EnsureObjectLiteralType(scriptContext, propIds, literalType);
         DynamicObject* instance = DynamicObject::New(scriptContext->GetRecycler(), newType);
 
@@ -5519,12 +5510,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             newType->GetTypeHandler()->SetSingletonInstanceIfNeeded(instance);
 #endif
         }
-#ifdef PROFILE_OBJECT_LITERALS
-        else
-        {
-            scriptContext->objectLiteralCacheCount++;
-        }
-#endif
         // can't auto-proxy here as object literal is not exactly "new" object and cannot be intercepted as proxy.
         return instance;
     }
@@ -5566,15 +5551,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
             VarTo<JavascriptGeneratorFunction>(varFunc)->GetGeneratorVirtualScriptFunction() :
             VarTo<ScriptFunction>(varFunc);
 
-#ifdef PROFILE_OBJECT_LITERALS
-        // Empty objects not counted in the object literal counts
-        scriptContext->objectLiteralInstanceCount++;
-        if (propIds->count > scriptContext->objectLiteralMaxLength)
-        {
-            scriptContext->objectLiteralMaxLength = propIds->count;
-        }
-#endif
-
         PropertyId cachedFuncCount = ActivationObjectEx::GetCachedFuncCount(propIds);
         PropertyId firstFuncSlot = ActivationObjectEx::GetFirstFuncSlot(propIds);
         PropertyId firstVarSlot = ActivationObjectEx::GetFirstVarSlot(propIds);
@@ -5593,13 +5569,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
         }
 
         DynamicType *type = *literalType;
-        if (type != nullptr)
-        {
-#ifdef PROFILE_OBJECT_LITERALS
-            scriptContext->objectLiteralCacheCount++;
-#endif
-        }
-        else
+        if (type == nullptr)
         {
             type = scriptContext->GetLibrary()->GetActivationObjectType();
             if (formalsAreLetDecls)

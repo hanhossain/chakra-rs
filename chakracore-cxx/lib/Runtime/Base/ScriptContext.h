@@ -496,16 +496,6 @@ namespace Js
 #endif
 
 public:
-#ifdef  PROFILE_OBJECT_LITERALS
-        int objectLiteralInstanceCount;
-        int objectLiteralPathCount;
-        int objectLiteralCount[TypePath::MaxPathTypeHandlerLength];
-        int objectLiteralSimpleDictionaryCount;
-        uint32_t objectLiteralMaxLength;
-        int objectLiteralPromoteCount;
-        int objectLiteralCacheCount;
-        int objectLiteralBranchCount;
-#endif
 #if DBG_DUMP
         uint byteCodeDataSize;
         uint byteCodeAuxiliaryDataSize;
@@ -777,10 +767,6 @@ private:
         static ScriptContext * New(ThreadContext * threadContext);
 
         ~ScriptContext();
-
-#ifdef PROFILE_OBJECT_LITERALS
-        void ProfileObjectLiteral();
-#endif
 
         //
         // Regex helpers

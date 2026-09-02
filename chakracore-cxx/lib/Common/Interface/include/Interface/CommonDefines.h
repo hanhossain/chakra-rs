@@ -138,7 +138,6 @@
 #define FIELD_ACCESS_STATS
 #define MISSING_PROPERTY_STATS
 #define EXCEPTION_CHECK                     // Check exception handling.
-#define PROFILE_OBJECT_LITERALS
 #define MEMSPECT_TRACKING
 // Needs to compile in debug mode
 // Just needs strings converted
@@ -188,7 +187,6 @@
 
 // Profile defines that can be enabled in release build
 // #define PROFILE_EXEC
-// #define PROFILE_OBJECT_LITERALS
 // #define MEMSPECT_TRACKING
 
 // Recycler defines that can be enabled in release build

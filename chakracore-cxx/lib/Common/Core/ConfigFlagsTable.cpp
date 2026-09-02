@@ -989,9 +989,6 @@ namespace Js
         u"Profile",
         u"ProfileThreshold",
 #endif
-#ifdef PROFILE_OBJECT_LITERALS
-        u"ProfileObjectLiteral",
-#endif
         u"MinBailOutsBeforeRejit",
 #ifdef RECYCLER_STRESS
         u"RecyclerStress",
@@ -1848,9 +1845,6 @@ namespace Js
         u"Profile the given phase",
         u"A phase is displayed in the profiler report only if its contribution is more than this threshold",
 #endif
-#ifdef PROFILE_OBJECT_LITERALS
-        u"Profile Object literal usage",
-#endif
         // todo (hanhossain): flag end
         u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
 #ifdef RECYCLER_STRESS
@@ -2301,9 +2295,6 @@ namespace Js
 #endif
 #ifdef PROFILE_EXEC
         NoParentFlag,
-        NoParentFlag,
-#endif
-#ifdef PROFILE_OBJECT_LITERALS
         NoParentFlag,
 #endif
         // todo (hanhossain): flag end
@@ -2779,9 +2770,6 @@ namespace Js
 #ifdef PROFILE_EXEC
         Profile(),
         ProfileThreshold(0),
-#endif
-#ifdef PROFILE_OBJECT_LITERALS
-        ProfileObjectLiteral(false),
 #endif
         MinBailOutsBeforeRejit(DEFAULT_CONFIG_MinBailOutsBeforeRejit),
 #ifdef RECYCLER_STRESS
@@ -4139,10 +4127,6 @@ namespace Js
         case ProfileThresholdFlag:
             return FlagNumber;
         #endif
-        #ifdef PROFILE_OBJECT_LITERALS
-        case ProfileObjectLiteralFlag:
-            return FlagBoolean;
-        #endif
         case MinBailOutsBeforeRejitFlag:
             return FlagNumber;
         #ifdef RECYCLER_STRESS
@@ -4921,10 +4905,6 @@ namespace Js
         case ProfileThresholdFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&ProfileThreshold));
         #endif
-        #ifdef PROFILE_OBJECT_LITERALS
-        case ProfileObjectLiteralFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&ProfileObjectLiteral));
-        #endif
         case MinBailOutsBeforeRejitFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejit));
         #ifdef RECYCLER_STRESS
@@ -5644,11 +5624,6 @@ namespace Js
         case PrintSrcInDumpFlag:
             retValue = true;
             break;
-        #ifdef PROFILE_OBJECT_LITERALS
-        case ProfileObjectLiteralFlag:
-            retValue = false;
-            break;
-        #endif
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
             retValue = false;

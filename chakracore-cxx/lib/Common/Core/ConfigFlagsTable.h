@@ -426,9 +426,6 @@ namespace Js
         ProfileFlag,
         ProfileThresholdFlag,
         #endif
-        #ifdef PROFILE_OBJECT_LITERALS
-        ProfileObjectLiteralFlag,
-        #endif
         MinBailOutsBeforeRejitFlag,
         #ifdef RECYCLER_STRESS
         RecyclerStressFlag,
@@ -1840,10 +1837,6 @@ namespace Js
             Phases Profile;
         // TODO (hanhossain): remove flag
             Number ProfileThreshold;
-        #endif
-        #ifdef PROFILE_OBJECT_LITERALS
-        // TODO (hanhossain): remove flag
-            Boolean ProfileObjectLiteral;
         #endif
         // todo (hanhossain): flag end
         Number MinBailOutsBeforeRejit;

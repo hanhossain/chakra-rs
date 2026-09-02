@@ -166,16 +166,6 @@ namespace Js
         interpretedCount = maxFuncInterpret = funcJITCount = bytecodeJITCount = interpretedCallsHighPri = jitCodeUsed = funcJitCodeUsed = loopJITCount = speculativeJitCount = 0;
 #endif
 
-#ifdef PROFILE_OBJECT_LITERALS
-        objectLiteralInstanceCount = 0;
-        objectLiteralPathCount = 0;
-        memset(objectLiteralCount, 0, sizeof(objectLiteralCount));
-        objectLiteralSimpleDictionaryCount = 0;
-        objectLiteralMaxLength = 0;
-        objectLiteralPromoteCount = 0;
-        objectLiteralCacheCount = 0;
-        objectLiteralBranchCount = 0;
-#endif
 #if DBG_DUMP
         byteCodeDataSize = 0;
         byteCodeAuxiliaryDataSize = 0;
@@ -699,30 +689,6 @@ namespace Js
 
         return RecyclerNewZ(this->GetRecycler(), SRCINFO, *pSrcInfo);
     }
-
-#ifdef PROFILE_OBJECT_LITERALS
-    void ScriptContext::ProfileObjectLiteral()
-    {
-        Output::Print(u"===============================================================================\n");
-        Output::Print(u"    Object Lit Instances created.. %d\n", objectLiteralInstanceCount);
-        Output::Print(u"    Object Lit Path Types......... %d\n", objectLiteralPathCount);
-        Output::Print(u"    Object Lit Simple Map......... %d\n", objectLiteralSimpleDictionaryCount);
-        Output::Print(u"    Object Lit Max # of properties %d\n", objectLiteralMaxLength);
-        Output::Print(u"    Object Lit Promote count...... %d\n", objectLiteralPromoteCount);
-        Output::Print(u"    Object Lit Cache Hits......... %d\n", objectLiteralCacheCount);
-        Output::Print(u"    Object Lit Branch count....... %d\n", objectLiteralBranchCount);
-
-        for (int i = 0; i < TypePath::MaxPathTypeHandlerLength; i++)
-        {
-            if (objectLiteralCount[i] != 0)
-            {
-                Output::Print(u"    Object Lit properties [ %2d] .. %d\n", i, objectLiteralCount[i]);
-            }
-        }
-
-        Output::Flush();
-    }
-#endif
 
     //
     // Regex helpers
@@ -3244,13 +3210,6 @@ ScriptContext::GetJitFuncRangeCache()
 
     void ScriptContext::PrintStats()
     {
-#ifdef PROFILE_OBJECT_LITERALS
-        if (Configuration::Global.flags.ProfileObjectLiteral)
-        {
-            ProfileObjectLiteral();
-        }
-#endif
-
 #if ENABLE_NATIVE_CODEGEN
 #ifdef REJIT_STATS
         this->ClearBailoutReasonCountsMap();
