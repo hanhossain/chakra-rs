@@ -4751,7 +4751,7 @@ LabelInstr::Dump(IRDumpFlags flags)
 void
 PragmaInstr::Dump(IRDumpFlags flags)
 {
-    if (Js::Configuration::Global.flags.PrintSrcInDump && this->m_opcode == Js::OpCode::StatementBoundary)
+    if (this->m_opcode == Js::OpCode::StatementBoundary)
     {
         Js::FunctionBody *functionBody = ((Js::FunctionBody*)m_func->GetJITFunctionBody()->GetAddr());
         if (functionBody && !functionBody->GetUtf8SourceInfo()->GetIsLibraryCode())
