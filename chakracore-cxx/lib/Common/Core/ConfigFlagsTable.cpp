@@ -535,8 +535,6 @@ namespace Js
 #define DEFAULT_CONFIG_ForceJITCFGCheck (false)
 #define DEFAULT_CONFIG_UseJITTrampoline (true)
 
-#define DEFAULT_CONFIG_FuncObjectInlineCacheThreshold   (2) // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
-
 #define DEFAULT_CONFIG_RichTraceFormat              (false)
 
 #define DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameError (0)
@@ -949,7 +947,6 @@ namespace Js
         u"MaxJITFunctionBytecodeByteLength",
         u"MaxJITFunctionBytecodeCount",
         u"MaxLoopsPerFunction",
-        u"FuncObjectInlineCacheThreshold",
         u"NoDeferParse",
         u"OOPJITMissingOpts",
         u"ForceJITCFGCheck",
@@ -1785,7 +1782,6 @@ namespace Js
         u"The biggest function we'll JIT (bytecode bytelength)",
         u"The biggest function we'll JIT (bytecode count)",
         u"Maximum number of loops in any function in the script",
-        u"Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object",
         // todo (hanhossain): flag end
         u"Disable deferred parsing",
         u"Use optimizations that are missing from OOP JIT",
@@ -2214,7 +2210,6 @@ namespace Js
 #if DBG
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2671,7 +2666,6 @@ namespace Js
         MaxJITFunctionBytecodeByteLength(DEFAULT_CONFIG_MaxJITFunctionBytecodeByteLength),
         MaxJITFunctionBytecodeCount(DEFAULT_CONFIG_MaxJITFunctionBytecodeCount),
         MaxLoopsPerFunction(DEFAULT_CONFIG_MaxLoopsPerFunction),
-        FuncObjectInlineCacheThreshold(DEFAULT_CONFIG_FuncObjectInlineCacheThreshold),
         NoDeferParse(false),
         OOPJITMissingOpts(DEFAULT_CONFIG_OOPJITMissingOpts),
         ForceJITCFGCheck(DEFAULT_CONFIG_ForceJITCFGCheck),
@@ -3983,8 +3977,6 @@ namespace Js
             return FlagNumber;
         case MaxLoopsPerFunctionFlag:
             return FlagNumber;
-        case FuncObjectInlineCacheThresholdFlag:
-            return FlagNumber;
         case NoDeferParseFlag:
             return FlagBoolean;
         case OOPJITMissingOptsFlag:
@@ -4727,8 +4719,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxJITFunctionBytecodeCount));
         case MaxLoopsPerFunctionFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxLoopsPerFunction));
-        case FuncObjectInlineCacheThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&FuncObjectInlineCacheThreshold));
         case NoDeferParseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&NoDeferParse));
         case OOPJITMissingOptsFlag:

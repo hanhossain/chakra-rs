@@ -392,7 +392,6 @@ namespace Js
         MaxJITFunctionBytecodeByteLengthFlag,
         MaxJITFunctionBytecodeCountFlag,
         MaxLoopsPerFunctionFlag,
-        FuncObjectInlineCacheThresholdFlag,
         NoDeferParseFlag,
         OOPJITMissingOptsFlag,
         ForceJITCFGCheckFlag,
@@ -1769,8 +1768,6 @@ namespace Js
         Number MaxJITFunctionBytecodeCount;
         // TODO (hanhossain): remove flag
         Number MaxLoopsPerFunction;
-        // TODO (hanhossain): remove flag
-        Number FuncObjectInlineCacheThreshold;
         // todo (hanhossain): flag end
         Boolean NoDeferParse;
         Boolean OOPJITMissingOpts;
