@@ -306,7 +306,8 @@ namespace Js
             if(node->ChildExistsAt(i))
             {
                 UnitData *data = node->GetChildAt(i)->GetValue();
-                if( static_cast<int>(data->incl * 100 / base->incl) >= Configuration::Global.flags.ProfileThreshold) // threshold
+                constexpr int ProfileThreshold = 0;
+                if( static_cast<int>(data->incl * 100 / base->incl) >= ProfileThreshold) // threshold
                 {
 
                     Output::SkipToColumn(column);
