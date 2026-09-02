@@ -8659,11 +8659,6 @@ namespace Js
         uint loads = funcBody->regAllocLoadCount;
         uint stores = funcBody->regAllocStoreCount;
 
-        if (Js::Configuration::Global.flags.NormalizeStats)
-        {
-            loads /= this->callCountStats;
-            stores /= this->callCountStats;
-        }
         funcBody->DumpFullFunctionName();
         Output::SkipToColumn(55);
         Output::Print(u"Calls:%6d  Loads:%9d  Stores:%9d  Total refs:%9d\n", this->callCountStats,

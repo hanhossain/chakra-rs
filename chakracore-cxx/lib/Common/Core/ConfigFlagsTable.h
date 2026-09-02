@@ -401,9 +401,6 @@ namespace Js
         ForceJITCFGCheckFlag,
         UseJITTrampolineFlag,
         NoNativeFlag,
-        NopFrequencyFlag,
-        NoStrictModeFlag,
-        NormalizeStatsFlag,
         OffFlag,
         OnFlag,
         #ifdef ENABLE_PREJIT
@@ -1785,16 +1782,10 @@ namespace Js
         Boolean CrashOnOOPJITFailure;
         // TODO (hanhossain): remove flag
         Boolean OOPCFGRegistration;
+        // todo (hanhossain): flag end
         Boolean ForceJITCFGCheck;
         Boolean UseJITTrampoline;
         Boolean NoNative;
-        // TODO (hanhossain): remove flag
-        Number NopFrequency;
-        // TODO (hanhossain): remove flag
-        Boolean NoStrictMode;
-        // TODO (hanhossain): remove flag
-        Boolean NormalizeStats;
-        // todo (hanhossain): flag end
         Phases Off;
         Phases On;
         #ifdef ENABLE_PREJIT

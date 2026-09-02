@@ -12088,9 +12088,6 @@ bool Parser::CheckForDirective(bool* pIsUseStrict, bool *pIsUseAsm, bool* pIsOct
 
 bool Parser::CheckStrictModeStrPid(IdentPtr pid)
 {
-    if (Js::Configuration::Global.flags.NoStrictMode)
-        return false;
-
     return pid != nullptr &&
         pid->Cch() == 10 &&
         !this->GetScanner()->IsEscapeOnLastTkStrCon() &&
