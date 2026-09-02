@@ -507,7 +507,6 @@ namespace Js
 #define DEFAULT_CONFIG_NewSimpleJit (false)
 
 #define DEFAULT_CONFIG_MaxLinearIntCaseCount     (3)       // Maximum number of cases (in switch statement) for which instructions can be generated linearly.
-#define DEFAULT_CONFIG_MaxSingleCharStrJumpTableSize  (128)       // Maximum single char string jump table size
 #define DEFAULT_CONFIG_MinSwitchJumpTableSize   (9)     // Minimum number of case target entries in the jump table(this may also include values that are missing in the consecutive set of integer case arms)
 #define DEFAULT_CONFIG_MaxLinearStringCaseCount (4)     // Maximum number of String cases (in switch statement) for which instructions can be generated linearly.
 
@@ -926,7 +925,6 @@ namespace Js
         u"NewSimpleJit",
 
         u"MaxLinearIntCaseCount",
-        u"MaxSingleCharStrJumpTableSize",
         u"MinSwitchJumpTableSize",
         u"MaxLinearStringCaseCount",
         u"NoDeferParse",
@@ -1751,10 +1749,9 @@ namespace Js
         u"Number of calls to a function after which to full-JIT the function. The function will be profiled for every iteration.",
 
         u"Uses the new simple JIT",
+        // todo (hanhossain): flag end
 
         u"Maximum number of cases(in switch statement) for which instructions can be generated linearly",
-        u"Maximum single char string jump table size",
-        // todo (hanhossain): flag end
         u"Minimum size of the jump table, that is created for consecutive integer case arms in a Switch Statement",
         u"Maximum number of string cases(in switch statement) for which instructions can be generated linearly",
         u"Disable deferred parsing",
@@ -2174,10 +2171,9 @@ namespace Js
         NoParentFlag,
 
         NoParentFlag,
+        // todo (hanhossain): flag end
 
         NoParentFlag,
-        NoParentFlag,
-        // todo (hanhossain): flag end
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2621,7 +2617,6 @@ namespace Js
         NewSimpleJit(DEFAULT_CONFIG_NewSimpleJit),
 
         MaxLinearIntCaseCount(DEFAULT_CONFIG_MaxLinearIntCaseCount),
-        MaxSingleCharStrJumpTableSize(DEFAULT_CONFIG_MaxSingleCharStrJumpTableSize),
         MinSwitchJumpTableSize(DEFAULT_CONFIG_MinSwitchJumpTableSize),
         MaxLinearStringCaseCount(DEFAULT_CONFIG_MaxLinearStringCaseCount),
         NoDeferParse(false),
@@ -3915,8 +3910,6 @@ namespace Js
 
         case MaxLinearIntCaseCountFlag:
             return FlagNumber;
-        case MaxSingleCharStrJumpTableSizeFlag:
-            return FlagNumber;
         case MinSwitchJumpTableSizeFlag:
             return FlagNumber;
         case MaxLinearStringCaseCountFlag:
@@ -4643,8 +4636,6 @@ namespace Js
 
         case MaxLinearIntCaseCountFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxLinearIntCaseCount));
-        case MaxSingleCharStrJumpTableSizeFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxSingleCharStrJumpTableSize));
         case MinSwitchJumpTableSizeFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinSwitchJumpTableSize));
         case MaxLinearStringCaseCountFlag:

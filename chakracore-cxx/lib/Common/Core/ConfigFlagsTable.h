@@ -381,7 +381,6 @@ namespace Js
         NewSimpleJitFlag,
 
         MaxLinearIntCaseCountFlag,
-        MaxSingleCharStrJumpTableSizeFlag,
         MinSwitchJumpTableSizeFlag,
         MaxLinearStringCaseCountFlag,
         NoDeferParseFlag,
@@ -1740,11 +1739,9 @@ namespace Js
 
         // TODO (hanhossain): remove flag
         Boolean NewSimpleJit;
+        // todo (hanhossain): flag end
 
         Number MaxLinearIntCaseCount;
-        // TODO (hanhossain): remove flag
-        Number MaxSingleCharStrJumpTableSize;
-        // todo (hanhossain): flag end
         Number MinSwitchJumpTableSize;
         Number MaxLinearStringCaseCount;
         Boolean NoDeferParse;
