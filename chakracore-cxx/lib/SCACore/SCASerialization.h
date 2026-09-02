@@ -19,9 +19,7 @@ namespace Js
         using typename ClonerBase<Var, scaposition_t, TypeId, SerializationCloner<Writer> >::SrcTypeId;
 
     private:
-        //AutoCOMPtr<ISCAContext> m_pSCAContext;
         Writer* m_writer;
-        // AutoCOMPtr<ISCASerializable> m_pSCASerializable; // Temporary, QI from a host object
         JsUtil::List<SharedContents*, HeapAllocator>* m_sharedContentsrList;
 
     private:
