@@ -381,7 +381,7 @@ namespace Js
             END_SAFE_REENTRANT_CALL
         }
 
-#if DBG_DUMP || defined(PROFILE_EXEC) || defined(PROFILE_MEM)
+#if DBG_DUMP || defined(PROFILE_EXEC)
         calleeHostScriptContext->EnsureParentInfo(callerHostScriptContext->GetScriptContext());
 #endif
 

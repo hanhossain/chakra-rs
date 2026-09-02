@@ -38,38 +38,7 @@ namespace Memory
     template<typename> class WriteBarrierPtr;
     template<typename> class NoWriteBarrierPtr;
 
-#ifdef TRACK_ALLOC
-struct TrackAllocData
-{
-    void Clear() { typeinfo = nullptr; plusSize = 0; count = 0; }
-    bool IsEmpty() { return typeinfo == nullptr && plusSize == 0 && count == 0; }
-    std::type_info const * GetTypeInfo() const { return typeinfo; }
-    size_t GetPlusSize() const { return plusSize; }
-    size_t GetCount() const { return count; }
-
-    static TrackAllocData CreateTrackAllocData(std::type_info const& typeinfo, size_t size, size_t count, char const * const filename, uint32_t line)
-    {
-        TrackAllocData data;
-        data.typeinfo = &typeinfo;
-        data.plusSize = size;
-        data.count = count;
-        data.filename = filename;
-        data.line = line;
-
-        return data;
-    };
-
-    std::type_info const * typeinfo;
-    size_t plusSize;
-    size_t count;
-    char const * filename;
-    uint32_t line;
-};
-
-#define TRACK_ALLOC_INFO(alloc, T, AllocatorType, size, count) static_cast<AllocatorType *>((alloc)->TrackAllocInfo(TrackAllocData::CreateTrackAllocData(typeid(T), size, count, __FILE__, __LINE__)))
-#else
 #define TRACK_ALLOC_INFO(alloc, T, AllocatorType, size, count) static_cast<AllocatorType *>(alloc)
-#endif
 
 #define VALIDATE_OBJECT(T, obj) obj
 
@@ -320,9 +289,6 @@ inline T * AllocateArray(TAllocator * allocator, char * (TAllocator::*AllocFunc)
 {
     if (count == 0 && TAllocator::FakeZeroLengthArray)
     {
-#ifdef TRACK_ALLOC
-        allocator->ClearTrackAllocInfo();
-#endif
         // C++ standard requires allocator to return non-null if it isn't out of memory
         // Just return some small number so we will still AV if someone try to use the memory
         return (T *)ZERO_LENGTH_ARRAY;

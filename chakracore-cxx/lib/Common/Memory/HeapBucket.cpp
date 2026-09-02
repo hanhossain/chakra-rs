@@ -120,7 +120,7 @@ HeapBucketT<TBlockType>::Initialize(HeapInfo * heapInfo, uint sizeCat)
     this->isPageHeapEnabled = heapInfo->IsPageHeapEnabledForBlock<typename TBlockType::HeapBlockAttributes>(sizeCat);
     this->sizeCat = sizeCat;
     allocatorHead.Initialize();
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY)
+#if defined(RECYCLER_MEMORY_VERIFY)
     allocatorHead.bucket = this;
 #endif
     this->lastExplicitFreeListAllocator = &allocatorHead;
@@ -193,7 +193,7 @@ HeapBucketT<TBlockType>::AddAllocator(TBlockAllocatorType * allocator)
     allocator->prev = &this->allocatorHead;
     allocator->next->prev = allocator;
     this->allocatorHead.next = allocator;
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY)
+#if defined(RECYCLER_MEMORY_VERIFY)
     allocator->bucket = this;
 #endif
 }

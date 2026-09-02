@@ -25,7 +25,7 @@ public:
         , bool captureAllocCallStack = false
         , bool captureFreeCallStack = false
         );
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
+#if defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     void Initialize(Recycler * recycler, void(*trackNativeAllocCallBack)(Recycler *, void *, size_t)
         , PageHeapMode pageheapmode = PageHeapMode::PageHeapModeOff
         , bool captureAllocCallStack = false

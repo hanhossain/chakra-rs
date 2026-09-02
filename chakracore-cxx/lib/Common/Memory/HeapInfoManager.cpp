@@ -62,7 +62,7 @@ void HeapInfoManager::Initialize(Recycler * recycler
     });
 }
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
+#if defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
 void HeapInfoManager::Initialize(Recycler * recycler, void(*trackNativeAllocCallBack)(Recycler *, void *, size_t)
     , PageHeapMode pageheapmode
     , bool captureAllocCallStack

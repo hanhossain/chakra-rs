@@ -7,7 +7,6 @@
 #include <print>
 
 #include "Memory/RecyclerWatsonTelemetry.h"
-#include "Memory/RecyclerObjectDumper.h"
 #include "chakra/Logger.h"
 
 #ifdef _M_AMD64
@@ -30,19 +29,6 @@
 
 /// Max size (in MB) in single allocation
 constexpr size_t MaxSingleAllocSizeInMB = 2048;
-
-#ifdef PROFILE_RECYCLER_ALLOC
-struct UnallocatedPortionOfBumpAllocatedBlock
-{
-};
-
-struct ExplicitFreeListedObject
-{
-};
-
-Recycler::TrackerData Recycler::TrackerData::EmptyData(&typeid(UnallocatedPortionOfBumpAllocatedBlock), false);
-Recycler::TrackerData Recycler::TrackerData::ExplicitFreeListObjectData(&typeid(ExplicitFreeListedObject), false);
-#endif
 
 DefaultRecyclerCollectionWrapper DefaultRecyclerCollectionWrapper::Instance;
 
@@ -190,9 +176,6 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
 #ifdef RECYCLER_DUMP_OBJECT_GRAPH
     , objectGraphDumper(nullptr)
     , dumpObjectOnceOnCollect(false)
-#endif
-#ifdef PROFILE_RECYCLER_ALLOC
-    , trackerDictionary(nullptr)
 #endif
     , isPageHeapEnabled(false)
     , capturePageHeapAllocStack(false)
@@ -384,18 +367,6 @@ Recycler::~Recycler()
 
     clientTrackedObjectList.Clear(&this->clientTrackedObjectAllocator);
 
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (trackerDictionary != nullptr)
-    {
-        this->trackerDictionary->Map([](std::type_info const *, TrackerItem * item)
-        {
-            NoCheckHeapDelete(item);
-        });
-        NoCheckHeapDelete(this->trackerDictionary);
-        this->trackerDictionary = nullptr;
-    }
-#endif
-
 #if DBG
     // Disable idle decommit asserts
     autoHeap.ShutdownIdleDecommit();
@@ -542,9 +513,6 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
     , bool captureFreeCallStack
 )
 {
-#ifdef PROFILE_RECYCLER_ALLOC
-    this->InitializeProfileAllocTracker();
-#endif
     this->disableCollection = CUSTOM_PHASE_OFF1(GetRecyclerFlagsTable(), Js::RecyclerPhase);
     this->skipStack = false;
 
@@ -558,12 +526,8 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
     collectionParam.domCollect = false;
 #endif
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
+#if defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     bool dontNeedDetailedTracking = false;
-
-#if defined(PROFILE_RECYCLER_ALLOC)
-    dontNeedDetailedTracking = dontNeedDetailedTracking || this->trackerDictionary == nullptr;
-#endif
 
 #if defined(RECYCLER_MEMORY_VERIFY)
     dontNeedDetailedTracking = dontNeedDetailedTracking || !this->verifyEnabled;
@@ -1004,13 +968,6 @@ bool Recycler::ExplicitFreeInternal(void* buffer, size_t size, size_t sizeCat)
         memset(static_cast<char*>(buffer) + sizeof(FreeObject), expectedFill, fillSize);
     }
 
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (this->trackerDictionary != nullptr)
-    {
-        this->SetTrackerData(buffer, &TrackerData::ExplicitFreeListObjectData);
-    }
-#endif
-
     return true;
 }
 
@@ -1185,15 +1142,6 @@ void Recycler::GetNormalHeapBlockAllocatorInfoForNativeAllocation(size_t allocSi
 
 bool Recycler::AllowNativeCodeBumpAllocation()
 {
-    // In debug builds, if we need to track allocation info, we pretend there is no pointer-bump-allocation space
-    // on this page, so that we always fail the check in native code and go to helper, which does the tracking.
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (this->trackerDictionary != nullptr)
-    {
-        return false;
-    }
-#endif
-
 #ifdef RECYCLER_MEMORY_VERIFY
     if (this->verifyEnabled)
     {
@@ -1215,15 +1163,7 @@ void Recycler::TrackNativeAllocatedMemoryBlock(Recycler * recycler, void * memBl
     Assert(HeapInfo::IsAlignedSize(sizeCat));
     Assert(HeapInfo::IsSmallObject(sizeCat));
 
-#ifdef PROFILE_RECYCLER_ALLOC
-    AssertMsg(!Recycler::DoProfileAllocTracker(), "Why did we register allocation tracking callback if all allocations are forced to slow path?");
-#endif
-
     RecyclerMemoryTracking::ReportAllocation(recycler, memBlock, sizeCat);
-    ;
-    ;
-    ;
-
 #ifdef RECYCLER_MEMORY_VERIFY
     AssertMsg(!recycler->VerifyEnabled(), "Why did we register allocation tracking callback if all allocations are forced to slow path?");
 #endif
@@ -2633,17 +2573,6 @@ Recycler::DisposeObjects()
 
     this->inDispose = true;
 
-#ifdef PROFILE_RECYCLER_ALLOC
-    // finalizer may allocate memory and dispose object can happen in the middle of allocation
-    // save and restore the tracked object info
-    TrackAllocData oldAllocData = { 0 };
-    if (trackerDictionary != nullptr)
-    {
-        oldAllocData = nextAllocData;
-        nextAllocData.Clear();
-    }
-#endif
-
     if (GetRecyclerFlagsTable().Trace.IsEnabled(Js::RecyclerPhase))
     {
         Output::Print(u"Disposing objects\n");
@@ -2659,14 +2588,6 @@ Recycler::DisposeObjects()
         AUTO_TIMESTAMP(dispose);
         autoHeap.DisposeObjects();
     }
-
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (trackerDictionary != nullptr)
-    {
-        Assert(nextAllocData.IsEmpty());
-        nextAllocData = oldAllocData;
-    }
-#endif
 
     Assert(this->inDispose);
 
@@ -5104,14 +5025,6 @@ Recycler::Realloc(void* buffer, size_t existingBytes, size_t requestedBytes, boo
 bool
 Recycler::ForceSweepObject()
 {
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (trackerDictionary != nullptr)
-    {
-        // Need to sweep object if we are tracing recycler allocs
-        return true;
-    }
-#endif
-
 #if DBG
     // Force sweeping the object so we can assert that we are not sweeping objects that are still implicit roots
     if (this->enableScanImplicitRoots)
@@ -6242,27 +6155,7 @@ bool Recycler::DumpObjectGraph(RecyclerObjectGraphDumper::Param * param)
 void
 Recycler::DumpObjectDescription(void *objectAddress)
 {
-#ifdef PROFILE_RECYCLER_ALLOC
-    std::type_info const * typeinfo = nullptr;
-    bool isArray = false;
-
-    if (this->trackerDictionary)
-    {
-        TrackerData * trackerData = GetTrackerData(objectAddress);
-        if (trackerData != nullptr)
-        {
-            typeinfo = trackerData->typeinfo;
-            isArray = trackerData->isArray;
-        }
-        else
-        {
-            Assert(false);
-        }
-    }
-    RecyclerObjectDumper::DumpObject(typeinfo, isArray, objectAddress);
-#else
     Output::Print(u"Address %p", objectAddress);
-#endif
 }
 #endif
 
@@ -6279,208 +6172,6 @@ Recycler::StressCollectNow()
     return false;
 }
 #endif // RECYCLER_STRESS
-
-#ifdef TRACK_ALLOC
-
-Recycler *
-Recycler::TrackAllocInfo(TrackAllocData const& data)
-{
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (this->trackerDictionary != nullptr)
-    {
-        Assert(nextAllocData.IsEmpty());
-        nextAllocData = data;
-    }
-#endif
-    return this;
-}
-
-void
-Recycler::ClearTrackAllocInfo(TrackAllocData* data/* = NULL*/)
-{
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (this->trackerDictionary != nullptr)
-    {
-        AssertMsg(!nextAllocData.IsEmpty(), "Missing tracking information for this allocation, are you not using the macros?");
-        if (data)
-        {
-            *data = nextAllocData;
-        }
-        nextAllocData.Clear();
-    }
-#endif
-}
-
-#ifdef PROFILE_RECYCLER_ALLOC
-bool
-Recycler::DoProfileAllocTracker()
-{
-    bool doTracker = false;
-#ifdef RECYCLER_DUMP_OBJECT_GRAPH
-    doTracker = Js::Configuration::Global.flags.DumpObjectGraphOnExit
-        || Js::Configuration::Global.flags.DumpObjectGraphOnCollect
-        || Js::Configuration::Global.flags.DumpObjectGraphOnEnum;
-#endif
-    return doTracker || MemoryProfiler::DoTrackRecyclerAllocation();
-}
-
-void
-Recycler::InitializeProfileAllocTracker()
-{
-    if (DoProfileAllocTracker())
-    {
-        trackerDictionary = NoCheckHeapNew(TypeInfotoTrackerItemMap, &NoCheckHeapAllocator::Instance, 163);
-#pragma prefast(suppress:6031, "InitializeCriticalSectionAndSpinCount always succeed since Vista. No need to check return value");
-    }
-
-    nextAllocData.Clear();
-}
-
-void
-Recycler::TrackAllocCore(void * object, size_t size, const TrackAllocData& trackAllocData, bool traceLifetime)
-{
-    auto&& typeInfo = trackAllocData.GetTypeInfo();
-
-    Assert(GetTrackerData(object) == nullptr || GetTrackerData(object) == &TrackerData::ExplicitFreeListObjectData);
-    Assert(typeInfo != nullptr);
-    TrackerItem * item;
-    size_t allocCount = trackAllocData.GetCount();
-    size_t itemSize = (size - trackAllocData.GetPlusSize());
-    bool isArray;
-    if (allocCount != static_cast<size_t>(-1))
-    {
-        isArray = true;
-        itemSize = itemSize / allocCount;
-    }
-    else
-    {
-        isArray = false;
-        allocCount = 1;
-    }
-
-    if (!trackerDictionary->TryGetValue(typeInfo, &item))
-    {
-        item = NoCheckHeapNew(TrackerItem, typeInfo);
-
-        item->instanceData.ItemSize = itemSize;
-        item->arrayData.ItemSize = itemSize;
-        trackerDictionary->Item(typeInfo, item);
-    }
-    else
-    {
-        Assert(item->instanceData.typeinfo == typeInfo);
-        Assert(item->instanceData.ItemSize == itemSize);
-        Assert(item->arrayData.ItemSize == itemSize);
-    }
-    TrackerData& data = (isArray)? item->arrayData : item->instanceData;
-        data.ItemCount += allocCount;
-        data.AllocCount++;
-        data.ReqSize += size;
-        data.AllocSize += HeapInfo::GetAlignedSizeNoCheck(size);
-#ifdef TRACE_OBJECT_LIFETIME
-    data.TraceLifetime = traceLifetime;
-
-    if (traceLifetime)
-    {
-        Output::Print(data.isArray ? u"Allocated %S[] %p\n" : u"Allocated %S %p\n", data.typeinfo->name(), object);
-    }
-#endif
-
-    SetTrackerData(object, &data);
-}
-
-void* Recycler::TrackAlloc(void* object, size_t size, const TrackAllocData& trackAllocData, bool traceLifetime)
-{
-    if (this->trackerDictionary != nullptr)
-    {
-        Assert(nextAllocData.IsEmpty()); // should have been cleared
-        std::unique_lock lock(trackerCriticalSection);
-        TrackAllocCore(object, size, trackAllocData);
-    }
-    return object;
-}
-
-void
-Recycler::TrackIntegrate(__in_ecount(blockSize) char * blockAddress, size_t blockSize, size_t allocSize, size_t objectSize, const TrackAllocData& trackAllocData)
-{
-    if (this->trackerDictionary != nullptr)
-    {
-        Assert(nextAllocData.IsEmpty()); // should have been cleared
-        std::unique_lock lock(trackerCriticalSection);
-
-        char * address = blockAddress;
-        char * blockEnd = blockAddress + blockSize;
-        while (address + allocSize <= blockEnd)
-        {
-            TrackAllocCore(address, objectSize, trackAllocData);
-            address += allocSize;
-        }
-    }
-}
-
-BOOL Recycler::TrackFree(const char* address, size_t size)
-{
-    if (this->trackerDictionary != nullptr)
-    {
-        std::unique_lock lock(trackerCriticalSection);
-        TrackerData * data = GetTrackerData(const_cast<char*>(address));
-        if (data != nullptr)
-        {
-            if (data != &TrackerData::EmptyData)
-            {
-                data->FreeSize += size;
-                data->FreeCount++;
-#ifdef TRACE_OBJECT_LIFETIME
-                if (data->TraceLifetime)
-                {
-                    Output::Print(data->isArray ? u"Freed %S[] %p\n" : u"Freed %S %p\n", data->typeinfo->name(), address);
-                }
-#endif
-            }
-            SetTrackerData(const_cast<char*>(address), nullptr);
-        }
-        else
-        {
-            Assert(false);
-        }
-    }
-    return true;
-}
-
-
-Recycler::TrackerData *
-Recycler::GetTrackerData(void * address)
-{
-    HeapBlock * heapBlock = this->FindHeapBlock(address);
-    Assert(heapBlock != nullptr);
-    return static_cast<Recycler::TrackerData*>(heapBlock->GetTrackerData(address));
-}
-
-void
-Recycler::SetTrackerData(void * address, TrackerData * data)
-{
-    HeapBlock * heapBlock = this->FindHeapBlock(address);
-    Assert(heapBlock != nullptr);
-    heapBlock->SetTrackerData(address, data);
-}
-
-void
-Recycler::TrackUnallocated(char* address, char *endAddress, size_t sizeCat)
-{
-    if (this->trackerDictionary != nullptr)
-    {
-        std::unique_lock lock(trackerCriticalSection);
-        while (address + sizeCat <= endAddress)
-        {
-            Assert(GetTrackerData(address) == nullptr);
-            SetTrackerData(address, &TrackerData::EmptyData);
-            address += sizeCat;
-        }
-    }
-}
-
-#endif // PROFILE_RECYCLER_ALLOC
-#endif // TRACK_ALLOC
 
 #ifdef RECYCLER_VERIFY_MARK
 void
@@ -6854,10 +6545,6 @@ Recycler::NotifyFree(char *address, size_t size)
     {
         VerifyCheckPad(address, size);
     }
-#endif
-
-#ifdef PROFILE_RECYCLER_ALLOC
-    TrackFree(address, size);
 #endif
 
 #ifdef RECYCLER_STATS

@@ -62,39 +62,6 @@
 
 namespace Memory
 {
-#ifdef HEAP_TRACK_ALLOC
-
-struct HeapAllocatorData;
-struct HeapAllocRecord
-{
-    HeapAllocRecord * prev;
-    HeapAllocRecord * next;
-    size_t            allocId;
-    size_t            size;
-    TrackAllocData    allocData;
-    HeapAllocatorData* data;
-#if defined(CHECK_MEMORY_LEAK)
-#ifdef STACK_BACK_TRACE
-    StackBackTrace * stacktrace;
-#endif
-#endif
-};
-struct HeapAllocatorData
-{
-    void LogAlloc(HeapAllocRecord * record, size_t requestedBytes, TrackAllocData const& data);
-    void LogFree(HeapAllocRecord * record);
-
-    bool CheckLeaks();
-
-    HeapAllocRecord * head;
-    size_t allocCount;
-    size_t deleteCount;
-    size_t outstandingBytes;
-
-    static uint const StackTraceDepth = 10;
-};
-#endif
-
 struct HeapAllocator
 {
     template<typename T>
@@ -196,28 +163,6 @@ private:
     HANDLE m_privateHeap;
 
 public:
-
-#ifdef TRACK_ALLOC
-    // Doesn't support tracking information, dummy implementation
-    HeapAllocator * TrackAllocInfo(TrackAllocData const& data);
-    void ClearTrackAllocInfo(TrackAllocData* data = NULL);
-
-
-#ifdef HEAP_TRACK_ALLOC
-
-    static void InitializeThread()
-    {
-        memset(&nextAllocData, 0, sizeof(nextAllocData));
-    }
-
-    static bool CheckLeaks();
-
-    thread_local static TrackAllocData nextAllocData;
-    HeapAllocatorData data;
-    static std::recursive_mutex cs;
-#endif // HEAP_TRACK_ALLOC
-#endif // TRACK_ALLOC
-
     HeapAllocator(bool useAllocMemProtect = true);
     ~HeapAllocator();
 }; // HeapAllocator.
@@ -242,12 +187,6 @@ public:
     }
 
     static NoThrowHeapAllocator Instance;
-
-#ifdef TRACK_ALLOC
-    // Doesn't support tracking information, dummy implementation
-    NoThrowHeapAllocator * TrackAllocInfo(TrackAllocData const& data);
-    void ClearTrackAllocInfo(TrackAllocData* data = NULL);
-#endif
 };
 
 class NoCheckHeapAllocator
@@ -277,12 +216,6 @@ public:
     {
         if (buffer != nullptr) { free(buffer); }
     }
-
-#ifdef TRACK_ALLOC
-    // Doesn't support tracking information, dummy implementation
-    NoCheckHeapAllocator * TrackAllocInfo(TrackAllocData const& data) { return this; }
-    void ClearTrackAllocInfo(TrackAllocData* data = NULL) {}
-#endif
     static NoCheckHeapAllocator Instance;
 };
 

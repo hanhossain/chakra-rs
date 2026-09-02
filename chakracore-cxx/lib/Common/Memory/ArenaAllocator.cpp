@@ -50,9 +50,6 @@ ArenaAllocatorBase(const char16_t* name, PageAllocator * pageAllocator, void(*ou
     cacheBlockEnd(nullptr),
     blockState(0)
 {
-#ifdef PROFILE_MEM
-    this->name = name;
-#endif
 #if DBG
     needsDelayFreeList = false;
 #endif
@@ -93,11 +90,6 @@ Move(ArenaAllocatorBase *srcAllocator)
     AllocatorFieldMove(this, srcAllocator, fullBlocks);
     AllocatorFieldMove(this, srcAllocator, blockState);
     AllocatorFieldMove(this, srcAllocator, freeList);
-
-#ifdef PROFILE_MEM
-    this->name = srcAllocator->name;
-    srcAllocator->name = nullptr;
-#endif
 }
 
 template <class TFreeListPolicy, size_t ObjectAlignmentBitShiftArg, bool RequireObjectAlignment, size_t MaxObjectSize>

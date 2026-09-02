@@ -178,18 +178,4 @@ namespace Js
     {
         return offsetof(Type, prototype);
     }
-
-#if defined(PROFILE_RECYCLER_ALLOC) && defined(RECYCLER_DUMP_OBJECT_GRAPH)
-    bool Type::DumpObjectFunction(std::type_info const * typeinfo, bool isArray, void * objectAddress)
-    {
-        if (isArray)
-        {
-            // Don't deal with array
-            return false;
-        }
-
-        Output::Print(u"%S{%x} %p", typeinfo->name(), ((Type *)objectAddress)->GetTypeId(), objectAddress);
-        return true;
-    }
-#endif
 }

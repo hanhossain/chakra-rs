@@ -7,7 +7,6 @@ add_library (Chakra.Common.Core OBJECT
     CRC.cpp
     Output.cpp
     ProfileInstrument.cpp
-    ProfileMemory.cpp
     StackBackTrace.cpp
     SysInfo.cpp
 )

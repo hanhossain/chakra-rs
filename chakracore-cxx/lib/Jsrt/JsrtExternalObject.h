@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include "Memory/RecyclerObjectDumper.h"
 #include "ChakraCommon.h"
 
 
@@ -44,7 +43,6 @@ private:
     typename WriteBarrierFieldTypeTraits<JsFinalizeCallback const, _no_write_barrier_policy, _no_write_barrier_policy>::Type jsFinalizeCallback;
     typename WriteBarrierFieldTypeTraits<JsTraceCallback const, _no_write_barrier_policy, _no_write_barrier_policy>::Type jsTraceCallback;
 };
-AUTO_REGISTER_RECYCLER_OBJECT_DUMPER(JsrtExternalType, &Js::Type::DumpObjectFunction);
 
 class JsrtExternalObject : public Js::DynamicObject
 {
@@ -103,7 +101,6 @@ private:
     typename WriteBarrierFieldTypeTraits<SlotInfo>::Type u;
 
 };
-AUTO_REGISTER_RECYCLER_OBJECT_DUMPER(JsrtExternalObject, &Js::RecyclableObject::DumpObjectFunction);
 
 template <> inline bool Js::VarIsImpl<JsrtExternalObject>(Js::RecyclableObject* obj)
 {

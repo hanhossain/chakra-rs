@@ -79,12 +79,6 @@ public:
         DataChunk * lastChunkList; // used to maintain the allocation order in the list
         unsigned int totalSize;
         unsigned int allocCount;
-
-#ifdef TRACK_ALLOC
-        // Doesn't support tracking information, dummy implementation
-        Allocator * TrackAllocInfo(TrackAllocData const& data) { return this; }
-        void ClearTrackAllocInfo(TrackAllocData* data = NULL) {}
-#endif
     private:
 #if DBG
         bool finalized;

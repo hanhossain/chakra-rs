@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Memory/RecyclerObjectDumper.h"
 
 namespace Js {
     class JsrtExternalArrayBuffer : public ExternalArrayBuffer
@@ -44,4 +43,3 @@ namespace Js {
         };
     };
 }
-AUTO_REGISTER_RECYCLER_OBJECT_DUMPER(Js::JsrtExternalArrayBuffer, &Js::RecyclableObject::DumpObjectFunction);

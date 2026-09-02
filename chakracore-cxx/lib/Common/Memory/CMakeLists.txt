@@ -18,7 +18,6 @@ set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
     PageAllocator.cpp
     Recycler.cpp
     RecyclerHeuristic.cpp
-    RecyclerObjectDumper.cpp
     RecyclerObjectGraphDumper.cpp
     RecyclerPageAllocator.cpp
     RecyclerSweep.cpp

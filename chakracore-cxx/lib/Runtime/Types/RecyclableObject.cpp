@@ -237,20 +237,6 @@ namespace Js
         }
     }
 
-#if defined(PROFILE_RECYCLER_ALLOC) && defined(RECYCLER_DUMP_OBJECT_GRAPH)
-    bool RecyclableObject::DumpObjectFunction(std::type_info const * typeinfo, bool isArray, void * objectAddress)
-    {
-        if (isArray)
-        {
-            // Don't deal with array
-            return false;
-        }
-
-        Output::Print(u"%S{%x} %p", typeinfo->name(), ((RecyclableObject *)objectAddress)->GetTypeId(), objectAddress);
-        return true;
-    }
-#endif
-
     BOOL RecyclableObject::SetPropertyWithAttributes(PropertyId propertyId, Var value, PropertyAttributes attributes, PropertyValueInfo* info, PropertyOperationFlags flags, SideEffects possibleSideEffects)
     {
         // TODO: It appears as though this is never called. Some types (such as JavascriptNumber) don't override this, but they

@@ -101,9 +101,5 @@ namespace Js
         static InternalString NumberTypeNameString;
         static InternalString StringTypeNameString;
         static InternalString FunctionTypeNameString;
-
-#if defined(PROFILE_RECYCLER_ALLOC) && defined(RECYCLER_DUMP_OBJECT_GRAPH)
-        static bool DumpObjectFunction(std::type_info const * typeinfo, bool isArray, void * objectAddress);
-#endif
     };
 };

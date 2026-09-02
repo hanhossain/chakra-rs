@@ -11,10 +11,6 @@
 #include "DataStructures/BitVector.h"
 #include "Core/SysInfo.h"
 
-#ifdef PROFILE_MEM
-struct PageMemoryData;
-#endif
-
 namespace Memory
 {
 typedef void* FunctionTableHandle;

@@ -34,11 +34,6 @@ public:
     char16_t tempObjectName[256];
     void * dumpObject;
 
-#ifdef PROFILE_RECYCLER_ALLOC
-    std::type_info const * dumpObjectTypeInfo;
-    bool dumpObjectIsArray;
-#endif
-
     bool isOutOfMemory;
 };
 #endif

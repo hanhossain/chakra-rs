@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Memory/RecyclerObjectDumper.h"
 
 namespace Js
 {
@@ -15,7 +14,6 @@ namespace Js
         ES5ArrayType(DynamicType * type);
     };
 }
-AUTO_REGISTER_RECYCLER_OBJECT_DUMPER(Js::ES5ArrayType, &Js::RecyclableObject::DumpObjectFunction);
 
 namespace Js
 {
@@ -109,4 +107,3 @@ namespace Js
         return JavascriptOperators::GetTypeId(instance) == TypeIds_ES5Array;
     }
 }
-AUTO_REGISTER_RECYCLER_OBJECT_DUMPER(Js::ES5Array, &Js::RecyclableObject::DumpObjectFunction);
