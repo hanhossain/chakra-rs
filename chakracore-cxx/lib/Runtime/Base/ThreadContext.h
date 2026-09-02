@@ -515,8 +515,6 @@ private:
 #define DEFAULT_CONFIG_ForcePostLowerGlobOptInstrString (false)
 #define DEFAULT_CONFIG_EnumerateSpecialPropertiesInDebugger (true)
 
-#define DEFAULT_CONFIG_MaxJITFunctionBytecodeByteLength (4800000)
-
 #define DEFAULT_CONFIG_JitQueueThreshold      (6)
 
 #define DEFAULT_CONFIG_FullJitRequeueThreshold (25)     // Minimum number of times a function needs to be executed before it is re-added to the jit queue
