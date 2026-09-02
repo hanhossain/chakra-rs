@@ -540,8 +540,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_FuncObjectInlineCacheThreshold   (2) // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
 
-#define DEFAULT_CONFIG_InMemoryTrace                (false)
-#define DEFAULT_CONFIG_InMemoryTraceBufferSize      (1024)
 #define DEFAULT_CONFIG_RichTraceFormat              (false)
 
 #define DEFAULT_CONFIG_InjectPartiallyInitializedInterpreterFrameError (0)
@@ -969,10 +967,6 @@ namespace Js
         u"Off",
         u"OffProfiledByteCode",
         u"On",
-#ifdef ENABLE_TRACE
-        u"InMemoryTrace",
-        u"InMemoryTraceBufferSize",
-#endif // ENABLE_TRACE
 #ifdef ENABLE_PREJIT
         u"Prejit",
 #endif
@@ -1815,12 +1809,8 @@ namespace Js
         u"When dumping stats, do some normalization (used with -instrument:linearscan)",
         u"Turn off specific phases or feature.(Might not work for all phases)",
         u"Turn off specific byte code for phases or feature.(Might not work for all phases)",
-        u"Turn on specific phases or feature.(Might not work for all phases)",
-#ifdef ENABLE_TRACE
-        u"Enable in-memory trace (investigate crash using trace in dump file). Use !jd.dumptrace to print it.",
-        u"The size of circular buffer for in-memory trace (the units used is: number of trace calls). ",
-#endif // ENABLE_TRACE
         // todo (hanhossain): flag end
+        u"Turn on specific phases or feature.(Might not work for all phases)",
 #ifdef ENABLE_PREJIT
         u"Prejit everything, including things that are not called, ignoring limits (default: false)",
 #endif
@@ -2258,12 +2248,8 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-#ifdef ENABLE_TRACE
-        NoParentFlag,
-        NoParentFlag,
-#endif // ENABLE_TRACE
         // todo (hanhossain): flag end
+        NoParentFlag,
 #ifdef ENABLE_PREJIT
         NoParentFlag,
 #endif
@@ -2724,10 +2710,6 @@ namespace Js
         Off(),
         OffProfiledByteCode(),
         On(),
-#ifdef ENABLE_TRACE
-        InMemoryTrace(DEFAULT_CONFIG_InMemoryTrace),
-        InMemoryTraceBufferSize(DEFAULT_CONFIG_InMemoryTraceBufferSize),
-#endif // ENABLE_TRACE
 #ifdef ENABLE_PREJIT
         Prejit(DEFAULT_CONFIG_Prejit),
 #endif
@@ -4062,12 +4044,6 @@ namespace Js
             return FlagPhases;
         case OnFlag:
             return FlagPhases;
-        #ifdef ENABLE_TRACE
-        case InMemoryTraceFlag:
-            return FlagBoolean;
-        case InMemoryTraceBufferSizeFlag:
-            return FlagNumber;
-        #endif // ENABLE_TRACE
         #ifdef ENABLE_PREJIT
         case PrejitFlag:
             return FlagBoolean;
@@ -4826,12 +4802,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Phases*>(&OffProfiledByteCode));
         case OnFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&On));
-        #ifdef ENABLE_TRACE
-        case InMemoryTraceFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&InMemoryTrace));
-        case InMemoryTraceBufferSizeFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&InMemoryTraceBufferSize));
-        #endif // ENABLE_TRACE
         #ifdef ENABLE_PREJIT
         case PrejitFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&Prejit));
@@ -5538,11 +5508,6 @@ namespace Js
         case NormalizeStatsFlag:
             retValue = false;
             break;
-        #ifdef ENABLE_TRACE
-        case InMemoryTraceFlag:
-            retValue = DEFAULT_CONFIG_InMemoryTrace;
-            break;
-        #endif // ENABLE_TRACE
         #ifdef ENABLE_PREJIT
         case PrejitFlag:
             retValue = DEFAULT_CONFIG_Prejit;

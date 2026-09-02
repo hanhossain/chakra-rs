@@ -13,7 +13,6 @@ set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
     LargeHeapBlock.cpp
     LargeHeapBucket.cpp
         MarkContext.cpp
-    MemoryLogger.cpp
     MemoryTracking.cpp
     PageAllocator.cpp
     Recycler.cpp

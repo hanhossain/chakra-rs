@@ -407,10 +407,6 @@ namespace Js
         OffFlag,
         OffProfiledByteCodeFlag,
         OnFlag,
-        #ifdef ENABLE_TRACE
-        InMemoryTraceFlag,
-        InMemoryTraceBufferSizeFlag,
-        #endif // ENABLE_TRACE
         #ifdef ENABLE_PREJIT
         PrejitFlag,
         #endif
@@ -1802,14 +1798,8 @@ namespace Js
         Phases Off;
         // TODO (hanhossain): remove flag
         Phases OffProfiledByteCode;
-        Phases On;
-        #ifdef ENABLE_TRACE
-        // TODO (hanhossain): remove flag
-            Boolean InMemoryTrace;
-        // TODO (hanhossain): remove flag
-            Number InMemoryTraceBufferSize;
-        #endif // ENABLE_TRACE
         // todo (hanhossain): flag end
+        Phases On;
         #ifdef ENABLE_PREJIT
             Boolean Prejit;
         #endif

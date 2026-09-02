@@ -82,8 +82,7 @@ public:
         }
 
         return retValue;
-    }    
-    static void     SetInMemoryLogger(Js::ILogger* logger);
+    }
 #endif // ENABLE_TRACE
     static size_t Print(const char16_t *form, ...);
     static size_t Print(int column, const char16_t *form, ...);
@@ -105,8 +104,6 @@ private:
     static std::recursive_mutex s_mutex;
 
 #ifdef ENABLE_TRACE
-    static Js::ILogger* s_inMemoryLogger;       // Used to trace into memory so that when process crashes, you can see tracing in crash dump file.
-    static unsigned int s_traceEntryId;         // Sequential id of trace entry for rich output format.
     static size_t VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const char16_t *form, va_list argptr);
 #endif // ENABLE_TRACE
 
