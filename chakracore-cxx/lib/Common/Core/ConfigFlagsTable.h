@@ -1715,23 +1715,17 @@ namespace Js
 
         // TODO (hanhossain): remove flag
         Number MinTemplatizedJitLoopRunCount;
+        // todo (hanhossain): flag end
         Number MaxTemplatizedJitRunCount; Number Mtjrc;
         Number MaxAsmJsInterpreterRunCount; Number Maic;
 
-        // TODO (hanhossain): remove flag
         Number AutoProfilingInterpreter0Limit;
-        // TODO (hanhossain): remove flag
         Number ProfilingInterpreter0Limit;
-        // TODO (hanhossain): remove flag
         Number AutoProfilingInterpreter1Limit;
-        // TODO (hanhossain): remove flag
         Number SimpleJitLimit;
-        // TODO (hanhossain): remove flag
         Number ProfilingInterpreter1Limit;
 
-        // TODO (hanhossain): remove flag
         Boolean EnforceExecutionModeLimits; Boolean Eeml;
-        // todo (hanhossain): flag end
 
         Number SimpleJitAfter; Number Sja;
         Number FullJitAfter; Number Fja;
