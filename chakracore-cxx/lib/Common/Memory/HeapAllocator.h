@@ -218,29 +218,6 @@ public:
     }
     static NoCheckHeapAllocator Instance;
 };
-
-#ifdef CHECK_MEMORY_LEAK
-class MemoryLeakCheck
-{
-public:
-    MemoryLeakCheck() : head(NULL), tail(NULL), leakedBytes(0), leakedCount(0), enableOutput(true) {}
-    ~MemoryLeakCheck();
-private:
-    struct LeakRecord
-    {
-        char16_t const * dump;
-        LeakRecord * next;
-    };
-
-    std::recursive_mutex cs;
-    LeakRecord * head;
-    LeakRecord * tail;
-    size_t leakedBytes;
-    size_t leakedCount;
-
-    bool enableOutput;
-};
-#endif
 } // namespace Memory
 
 typedef NoThrowHeapAllocator NoThrowNoMemProtectHeapAllocator;

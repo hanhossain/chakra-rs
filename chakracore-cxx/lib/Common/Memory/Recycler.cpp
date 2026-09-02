@@ -141,7 +141,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     partialUncollectedAllocBytes(0),
     uncollectedNewPageCountPartialCollect(static_cast<size_t>(-1)),
     partialConcurrentNextCollection(false),
-#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(CHECK_MEMORY_LEAK)
+#if defined(RECYCLER_DUMP_OBJECT_GRAPH)
     isPrimaryMarkContextInitialized(false),
 #endif
     allowDispose(false),
@@ -389,15 +389,6 @@ Recycler::RootAddRef(void* obj, uint *count)
             this->scanPinnedObjectMap = true;
             ;
         }
-#if defined(CHECK_MEMORY_LEAK)
-#ifdef STACK_BACK_TRACE
-        if (GetRecyclerFlagsTable().LeakStackTrace)
-        {
-            StackBackTraceNode::Prepend(&NoCheckHeapAllocator::Instance, refCount.stackBackTraces,
-                transientPinnedObjectStackBackTrace);
-        }
-#endif
-#endif
     }
 
     if (count != nullptr)
@@ -407,15 +398,6 @@ Recycler::RootAddRef(void* obj, uint *count)
     }
 
     transientPinnedObject = obj;
-
-#if defined(CHECK_MEMORY_LEAK)
-#ifdef STACK_BACK_TRACE
-    if (GetRecyclerFlagsTable().LeakStackTrace)
-    {
-        transientPinnedObjectStackBackTrace = StackBackTrace::Capture(&NoCheckHeapAllocator::Instance);
-    }
-#endif
-#endif
 }
 
 void
@@ -432,15 +414,6 @@ Recycler::RootRelease(void* obj, uint *count)
             PinRecord *refCount = pinnedObjectMap.TryGetReference(obj);
             *count = (refCount != nullptr) ? *refCount : 0;
         }
-
-#if defined(CHECK_MEMORY_LEAK)
-#ifdef STACK_BACK_TRACE
-        if (GetRecyclerFlagsTable().LeakStackTrace)
-        {
-            transientPinnedObjectStackBackTrace->Delete(&NoCheckHeapAllocator::Instance);
-        }
-#endif
-#endif
     }
     else
     {
@@ -465,23 +438,8 @@ Recycler::RootRelease(void* obj, uint *count)
 
         if (newRefCount != 0)
         {
-#if defined(CHECK_MEMORY_LEAK)
-#ifdef STACK_BACK_TRACE
-            if (GetRecyclerFlagsTable().LeakStackTrace)
-            {
-                StackBackTraceNode::Prepend(&NoCheckHeapAllocator::Instance, refCount->stackBackTraces,
-                    StackBackTrace::Capture(&NoCheckHeapAllocator::Instance));
-            }
-#endif
-#endif
             return;
         }
-#if defined(CHECK_MEMORY_LEAK)
-#ifdef STACK_BACK_TRACE
-        StackBackTraceNode::DeleteAll(&NoCheckHeapAllocator::Instance, refCount->stackBackTraces);
-        refCount->stackBackTraces = nullptr;
-#endif
-#endif
         // Don't delete the entry if we are in concurrent find root state
         // We will delete it later on in-thread find root
         if (this->hasPendingConcurrentFindRoot)
@@ -561,7 +519,7 @@ Recycler::Initialize(const bool forceInThread, JsUtil::ThreadService *threadServ
 
     markContext.Init(Recycler::PrimaryMarkStackReservedPageCount);
 
-#if defined(RECYCLER_DUMP_OBJECT_GRAPH) || defined(CHECK_MEMORY_LEAK)
+#if defined(RECYCLER_DUMP_OBJECT_GRAPH)
     isPrimaryMarkContextInitialized = true;
 #endif
 
@@ -1393,11 +1351,6 @@ size_t Recycler::ScanPinnedObjects()
             {
                 if (refCount == 0)
                 {
-#if defined(CHECK_MEMORY_LEAK)
-#ifdef STACK_BACK_TRACE
-                    Assert(refCount.stackBackTraces == nullptr);
-#endif
-#endif
                     // Only remove if we are not doing this in the background.
                     return !background;
                 }
@@ -2746,10 +2699,6 @@ template BOOL Recycler::CollectNow<CollectNowDefault>();
 template BOOL Recycler::CollectNow<CollectOnSuspendCleanup>();
 template BOOL Recycler::CollectNow<CollectNowDefaultLSCleanup>();
 
-#if defined(CHECK_MEMORY_LEAK)
-template BOOL Recycler::CollectNow<CollectNowFinalGC>();
-#endif
-
 template BOOL Recycler::CollectNow<CollectNowExhaustiveSkipStack>();
 
 template <CollectionFlags flags>
@@ -3866,11 +3815,6 @@ Recycler::CleanupPendingUnroot()
     {
         pinnedObjectMap.MapAndRemoveIf([](void * obj, PinRecord const &refCount)
         {
-#if defined(CHECK_MEMORY_LEAK)
-#ifdef STACK_BACK_TRACE
-            Assert(refCount != 0 || refCount.stackBackTraces == nullptr);
-#endif
-#endif
             return refCount == 0;
         });
         hasPendingUnpinnedObject = false;
@@ -6331,23 +6275,6 @@ Recycler::DeleteGuestArena(ArenaAllocator * arenaAllocator)
     // candidate GC to indicate this fact
     this->CollectNow<CollectExhaustiveCandidate>();
 }
-
-#if defined(CHECK_MEMORY_LEAK)
-
-#ifdef STACK_BACK_TRACE
-void
-Recycler::PrintPinnedObjectStackTraces()
-{
-    pinnedObjectMap.Map([this](void * object, PinRecord const& pinRecord)
-        {
-            this->DumpObjectDescription(object);
-            Output::Print(u"\n");
-            StackBackTraceNode::PrintAll(pinRecord.stackBackTraces);
-        }
-    );
-}
-#endif
-#endif
 
 #ifdef PROFILE_EXEC
 ArenaAllocator *
