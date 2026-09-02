@@ -507,7 +507,6 @@ namespace Js
 #define DEFAULT_CONFIG_NewSimpleJit (false)
 
 #define DEFAULT_CONFIG_MaxLinearIntCaseCount     (3)       // Maximum number of cases (in switch statement) for which instructions can be generated linearly.
-#define DEFAULT_CONFIG_MaxSingleCharStrJumpTableRatio  (2)       // Maximum single char string jump table size as multiples of the actual case arm
 #define DEFAULT_CONFIG_MaxSingleCharStrJumpTableSize  (128)       // Maximum single char string jump table size
 #define DEFAULT_CONFIG_MinSwitchJumpTableSize   (9)     // Minimum number of case target entries in the jump table(this may also include values that are missing in the consecutive set of integer case arms)
 #define DEFAULT_CONFIG_MaxLinearStringCaseCount (4)     // Maximum number of String cases (in switch statement) for which instructions can be generated linearly.
@@ -928,7 +927,6 @@ namespace Js
 
         u"MaxLinearIntCaseCount",
         u"MaxSingleCharStrJumpTableSize",
-        u"MaxSingleCharStrJumpTableRatio",
         u"MinSwitchJumpTableSize",
         u"MaxLinearStringCaseCount",
         u"NoDeferParse",
@@ -1756,10 +1754,9 @@ namespace Js
 
         u"Maximum number of cases(in switch statement) for which instructions can be generated linearly",
         u"Maximum single char string jump table size",
-        u"Maximum single char string jump table size as multiples of the actual case arm",
+        // todo (hanhossain): flag end
         u"Minimum size of the jump table, that is created for consecutive integer case arms in a Switch Statement",
         u"Maximum number of string cases(in switch statement) for which instructions can be generated linearly",
-        // todo (hanhossain): flag end
         u"Disable deferred parsing",
         u"Use optimizations that are missing from OOP JIT",
         u"Have JIT code always do CFG check even if range check succeeded",
@@ -2180,10 +2177,9 @@ namespace Js
 
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
+        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2626,7 +2622,6 @@ namespace Js
 
         MaxLinearIntCaseCount(DEFAULT_CONFIG_MaxLinearIntCaseCount),
         MaxSingleCharStrJumpTableSize(DEFAULT_CONFIG_MaxSingleCharStrJumpTableSize),
-        MaxSingleCharStrJumpTableRatio(DEFAULT_CONFIG_MaxSingleCharStrJumpTableRatio),
         MinSwitchJumpTableSize(DEFAULT_CONFIG_MinSwitchJumpTableSize),
         MaxLinearStringCaseCount(DEFAULT_CONFIG_MaxLinearStringCaseCount),
         NoDeferParse(false),
@@ -3922,8 +3917,6 @@ namespace Js
             return FlagNumber;
         case MaxSingleCharStrJumpTableSizeFlag:
             return FlagNumber;
-        case MaxSingleCharStrJumpTableRatioFlag:
-            return FlagNumber;
         case MinSwitchJumpTableSizeFlag:
             return FlagNumber;
         case MaxLinearStringCaseCountFlag:
@@ -4652,8 +4645,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxLinearIntCaseCount));
         case MaxSingleCharStrJumpTableSizeFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxSingleCharStrJumpTableSize));
-        case MaxSingleCharStrJumpTableRatioFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxSingleCharStrJumpTableRatio));
         case MinSwitchJumpTableSizeFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinSwitchJumpTableSize));
         case MaxLinearStringCaseCountFlag:

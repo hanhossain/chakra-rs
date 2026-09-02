@@ -382,7 +382,6 @@ namespace Js
 
         MaxLinearIntCaseCountFlag,
         MaxSingleCharStrJumpTableSizeFlag,
-        MaxSingleCharStrJumpTableRatioFlag,
         MinSwitchJumpTableSizeFlag,
         MaxLinearStringCaseCountFlag,
         NoDeferParseFlag,
@@ -1745,11 +1744,9 @@ namespace Js
         Number MaxLinearIntCaseCount;
         // TODO (hanhossain): remove flag
         Number MaxSingleCharStrJumpTableSize;
-        // TODO (hanhossain): remove flag
-        Number MaxSingleCharStrJumpTableRatio;
+        // todo (hanhossain): flag end
         Number MinSwitchJumpTableSize;
         Number MaxLinearStringCaseCount;
-        // todo (hanhossain): flag end
         Boolean NoDeferParse;
         Boolean OOPJITMissingOpts;
         Boolean ForceJITCFGCheck;
