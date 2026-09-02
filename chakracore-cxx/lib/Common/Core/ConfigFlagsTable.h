@@ -396,7 +396,6 @@ namespace Js
         NoDeferParseFlag,
         NoLogoFlag,
         OOPJITMissingOptsFlag,
-        CrashOnOOPJITFailureFlag,
         ForceJITCFGCheckFlag,
         UseJITTrampolineFlag,
         NoNativeFlag,
@@ -1776,10 +1775,8 @@ namespace Js
         Boolean NoDeferParse;
         // TODO (hanhossain): remove flag
         Boolean NoLogo;
-        Boolean OOPJITMissingOpts;
-        // TODO (hanhossain): remove flag
-        Boolean CrashOnOOPJITFailure;
         // todo (hanhossain): flag end
+        Boolean OOPJITMissingOpts;
         Boolean ForceJITCFGCheck;
         Boolean UseJITTrampoline;
         Boolean NoNative;
