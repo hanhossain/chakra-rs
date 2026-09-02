@@ -419,9 +419,6 @@ namespace Js
         PrejitFlag,
         #endif
         PrintSrcInDumpFlag,
-        #if PROFILE_DICTIONARY
-        ProfileDictionaryFlag,
-        #endif
         #ifdef PROFILE_EXEC
         ProfileFlag,
         #endif
@@ -1828,10 +1825,6 @@ namespace Js
         #endif
         // TODO (hanhossain): remove flag
         Boolean PrintSrcInDump;
-        #if PROFILE_DICTIONARY
-        // TODO (hanhossain): remove flag
-            Number ProfileDictionary;
-        #endif
         // todo (hanhossain): flag end
         #ifdef PROFILE_EXEC
             Phases Profile;

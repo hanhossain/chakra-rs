@@ -35,9 +35,6 @@ class SimpleHashTable
     uint freecount;
     bool disableResize;
     int modFunctionIndex;
-#if PROFILE_DICTIONARY
-    DictionaryStats *stats;
-#endif
 public:
     SimpleHashTable(TAllocator *allocator) :
         allocator(allocator),
@@ -64,9 +61,6 @@ public:
         disableResize = false;
         free = nullptr;
         table = AllocatorNewArrayZ(TAllocator, allocator, EntryType*, size);
-#if PROFILE_DICTIONARY
-        stats = DictionaryStats::Create(typeid(this).name(), size);
-#endif
     }
 
     ~SimpleHashTable()
@@ -151,10 +145,6 @@ public:
                 }
 
                 FreeEntry(current);
-#if PROFILE_DICTIONARY
-                if (stats)
-                    stats->Remove(table[val] == nullptr);
-#endif
                 break;
             }
             prev = &current->next;
@@ -354,15 +344,6 @@ private:
         table[targetBucket] = entry;
         count++;
 
-#if PROFILE_DICTIONARY
-        uint depth = 0;
-        for (EntryType * current = table[targetBucket] ; current != nullptr; current = current->next)
-        {
-            ++depth;
-        }
-        if (stats)
-            stats->Insert(depth);
-#endif
         return entry;
     }
 
@@ -387,20 +368,5 @@ private:
         AllocatorDeleteArray(TAllocator, allocator, this->size, this->table);
         this->size = newSize;
         this->table = newTable;
-#if PROFILE_DICTIONARY
-        if (stats)
-        {
-            uint emptyBuckets  = 0 ;
-            for (uint i=0; i < size; i++)
-            {
-                if(table[i] == nullptr)
-                {
-                    emptyBuckets++;
-                }
-            }
-            stats->Resize(newSize, emptyBuckets);
-        }
-#endif
-
     }
 };

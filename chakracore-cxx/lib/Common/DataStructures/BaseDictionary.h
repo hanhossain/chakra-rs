@@ -33,10 +33,6 @@
 #include "DataStructures/DefaultContainerLockPolicy.h"
 #include "Memory/RecyclerPointers.h"
 
-#if PROFILE_DICTIONARY
-#include "Interface/DictionaryStats.h"
-#endif
-
 #pragma warning(push)
 #pragma warning(disable:__WARNING_CALLER_FAILING_TO_HOLD_MEDIUM_CONFIDENCE)
 #pragma warning(disable:__WARNING_FAILING_TO_RELEASE_MEDIUM_CONFIDENCE)
@@ -117,9 +113,6 @@ namespace JsUtil
 
         static const int FreeListSentinel = -2;
 
-#if PROFILE_DICTIONARY
-        typename WriteBarrierFieldTypeTraits<DictionaryStats*, _no_write_barrier_policy, _no_write_barrier_policy>::Type stats;
-#endif
         enum InsertOperations
         {
             Insert_Add   ,          // FatalInternalError if the item already exist in debug build
@@ -147,9 +140,6 @@ namespace JsUtil
             modFunctionIndex(UNKNOWN_MOD_INDEX)
         {
             Assert(allocator);
-#if PROFILE_DICTIONARY
-            stats = nullptr;
-#endif
             // If initial capacity is negative or 0, lazy initialization on
             // the first insert operation is performed.
             if (capacity > 0)
@@ -171,9 +161,6 @@ namespace JsUtil
                 freeCount = 0;
                 modFunctionIndex = UNKNOWN_MOD_INDEX;
 
-#if PROFILE_DICTIONARY
-                stats = nullptr;
-#endif
                 return;
             }
 
@@ -205,9 +192,6 @@ namespace JsUtil
             CopyArray<EntryType, typename WriteBarrierFieldTypeTraits<ValueType, TAllocator>::Type, TAllocator>(
                 entries, size, other.entries, size);
 
-#if PROFILE_DICTIONARY
-            stats = DictionaryStats::Create(typeid(this).name(), size);
-#endif
         }
 
         ~BaseDictionary()
@@ -302,10 +286,6 @@ namespace JsUtil
                 memset(entries, 0, sizeof(EntryType) * size);
                 count = 0;
                 freeCount = 0;
-#if PROFILE_DICTIONARY
-                // To not loose previously collected data, we will treat cleared dictionary as a separate instance for stats tracking purpose
-                stats = DictionaryStats::Create(typeid(this).name(), size);
-#endif
             }
         }
 
@@ -704,9 +684,6 @@ namespace JsUtil
             Assert(!entries);
             Assert(count == 0);
             Assert(freeCount == 0);
-#if PROFILE_DICTIONARY
-            Assert(!stats);
-#endif
 
             if(other->Count() == 0)
             {
@@ -742,9 +719,6 @@ namespace JsUtil
             CopyArray<EntryType, typename WriteBarrierFieldTypeTraits<ValueType, TAllocator>::Type, TAllocator>(
                 entries, size, other->entries, size);
 
-#if PROFILE_DICTIONARY
-            stats = DictionaryStats::Create(typeid(this).name(), size);
-#endif
         }
 
     protected:
@@ -821,9 +795,6 @@ namespace JsUtil
         template <typename LookupType>
         inline int FindEntryWithKey(const LookupType& key) const
         {
-#if PROFILE_DICTIONARY
-            uint depth = 0;
-#endif
             int * localBuckets = buckets;
             if (localBuckets != nullptr)
             {
@@ -834,23 +805,12 @@ namespace JsUtil
                 {
                     if (localEntries[i].template KeyEquals<Comparer<TKey>>(key, hashCode))
                     {
-#if PROFILE_DICTIONARY
-                        if (stats)
-                            stats->Lookup(depth);
-#endif
                         return i;
                     }
 
-#if PROFILE_DICTIONARY
-                    depth += 1;
-#endif
                 }
             }
 
-#if PROFILE_DICTIONARY
-            if (stats)
-                stats->Lookup(depth);
-#endif
             return -1;
         }
 
@@ -862,9 +822,6 @@ namespace JsUtil
         template <typename LookupType>
         inline bool FindEntryWithKey(const LookupType& key, int *const i, int *const last, uint *const targetBucket)
         {
-#if PROFILE_DICTIONARY
-            uint depth = 0;
-#endif
             int * localBuckets = buckets;
             if (localBuckets != nullptr)
             {
@@ -876,21 +833,10 @@ namespace JsUtil
                 {
                     if (localEntries[*i].template KeyEquals<Comparer<TKey>>(key, hashCode))
                     {
-#if PROFILE_DICTIONARY
-                        if (stats)
-                            stats->Lookup(depth);
-#endif
                         return true;
                     }
-#if PROFILE_DICTIONARY
-                    depth += 1;
-#endif
                 }
             }
-#if PROFILE_DICTIONARY
-            if (stats)
-                stats->Lookup(depth);
-#endif
             return false;
         }
 
@@ -913,9 +859,6 @@ namespace JsUtil
             this->size = initSize;
             this->modFunctionIndex = modIndex;
             Assert(this->freeCount == 0);
-#if PROFILE_DICTIONARY
-            stats = DictionaryStats::Create(typeid(this).name(), size);
-#endif
         }
 
         template <InsertOperations op>
@@ -928,7 +871,7 @@ namespace JsUtil
                 localBuckets = buckets;
             }
 
-#if DBG || PROFILE_DICTIONARY
+#if DBG
             // Always search and verify
             const bool needSearch = true;
 #else
@@ -938,18 +881,11 @@ namespace JsUtil
             uint targetBucket = this->GetBucket(hashCode);
             if (needSearch)
             {
-#if PROFILE_DICTIONARY
-                uint depth = 0;
-#endif
                 EntryType * localEntries = entries;
                 for (int i = localBuckets[targetBucket]; i >= 0; i = localEntries[i].next)
                 {
                     if (localEntries[i].template KeyEquals<Comparer<TKey>>(key, hashCode))
                     {
-#if PROFILE_DICTIONARY
-                        if (stats)
-                            stats->Lookup(depth);
-#endif
                         Assert(op != Insert_Add);
                         if (op == Insert_Item)
                         {
@@ -958,15 +894,7 @@ namespace JsUtil
                         }
                         return -1;
                     }
-#if PROFILE_DICTIONARY
-                    depth += 1;
-#endif
                 }
-
-#if PROFILE_DICTIONARY
-                if (stats)
-                    stats->Lookup(depth);
-#endif
             }
 
             // Ideally we'd do cleanup only if weak references have been collected since the last resize
@@ -1020,18 +948,6 @@ namespace JsUtil
             entries[index].Set(key, value, hashCode);
             entries[index].next = buckets[targetBucket];
             buckets[targetBucket] = index;
-
-#if PROFILE_DICTIONARY
-            int profileIndex = index;
-            uint depth = 1;  // need to recalculate depth in case there was a resize (also 1-based for stats->Insert)
-            while(entries[profileIndex].next != -1)
-            {
-                profileIndex = entries[profileIndex].next;
-                ++depth;
-            }
-            if (stats)
-                stats->Insert(depth);
-#endif
             return index;
         }
 
@@ -1082,10 +998,6 @@ namespace JsUtil
             DeleteBuckets(buckets, bucketCount);
             DeleteEntries(entries, size);
 
-#if PROFILE_DICTIONARY
-            if (stats)
-                stats->Resize(newSize, /*emptyBuckets=*/ newSize - size);
-#endif
             this->buckets = newBuckets;
             this->entries = newEntries;
             bucketCount = newBucketCount;
@@ -1166,10 +1078,6 @@ namespace JsUtil
             SetNextFreeEntryIndex(entries[i], freeCount == 0 ? -1 : freeList);
             freeList = i;
             freeCount++;
-#if PROFILE_DICTIONARY
-            if (stats)
-                stats->Remove(buckets[targetBucket] == -1);
-#endif
         }
 
 #if DBG_DUMP

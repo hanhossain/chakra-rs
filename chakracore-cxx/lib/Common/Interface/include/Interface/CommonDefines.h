@@ -141,7 +141,6 @@
 #define MEMSPECT_TRACKING
 // Needs to compile in debug mode
 // Just needs strings converted
-#define PROFILE_DICTIONARY 1
 
 #define RECYCLER_SLOW_CHECK_ENABLED          // This can be disabled to speed up the debug build's GC
 #define RECYCLER_STRESS
@@ -287,8 +286,4 @@
 #define ENABLE_JS_REENTRANCY_CHECK 1
 #else
 #define ENABLE_JS_REENTRANCY_CHECK 0
-#endif
-
-#ifndef PROFILE_DICTIONARY
-#define PROFILE_DICTIONARY 0
 #endif
