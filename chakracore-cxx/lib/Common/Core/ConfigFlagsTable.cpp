@@ -504,7 +504,6 @@ namespace Js
 #define DEFAULT_CONFIG_MinProfileIterations (16)
 #define DEFAULT_CONFIG_MinProfileIterations_OldSimpleJit (25)
 #define DEFAULT_CONFIG_MinSimpleJitIterations (16)
-#define DEFAULT_CONFIG_NewSimpleJit (false)
 
 #define DEFAULT_CONFIG_MaxLinearIntCaseCount     (3)       // Maximum number of cases (in switch statement) for which instructions can be generated linearly.
 #define DEFAULT_CONFIG_MinSwitchJumpTableSize   (9)     // Minimum number of case target entries in the jump table(this may also include values that are missing in the consecutive set of integer case arms)
@@ -921,8 +920,6 @@ namespace Js
         u"Sja",
         u"FullJitAfter",
         u"Fja",
-
-        u"NewSimpleJit",
 
         u"MaxLinearIntCaseCount",
         u"MinSwitchJumpTableSize",
@@ -1742,14 +1739,13 @@ namespace Js
 
         u"Enforces the execution mode limits such that they are never exceeded.",
         u"Enforces the execution mode limits such that they are never exceeded.",
-
-        u"Number of calls to a function after which to simple-JIT the function",
-        u"Number of calls to a function after which to simple-JIT the function",
-        u"Number of calls to a function after which to full-JIT the function. The function will be profiled for every iteration.",
-        u"Number of calls to a function after which to full-JIT the function. The function will be profiled for every iteration.",
-
-        u"Uses the new simple JIT",
         // todo (hanhossain): flag end
+
+        u"Number of calls to a function after which to simple-JIT the function",
+        u"Number of calls to a function after which to simple-JIT the function",
+        u"Number of calls to a function after which to full-JIT the function. The function will be profiled for every iteration.",
+        u"Number of calls to a function after which to full-JIT the function. The function will be profiled for every iteration.",
+
 
         u"Maximum number of cases(in switch statement) for which instructions can be generated linearly",
         u"Minimum size of the jump table, that is created for consecutive integer case arms in a Switch Statement",
@@ -2164,14 +2160,13 @@ namespace Js
 
         NoParentFlag,
         NoParentFlag,
-
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-
-        NoParentFlag,
         // todo (hanhossain): flag end
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
 
         NoParentFlag,
         NoParentFlag,
@@ -2614,8 +2609,6 @@ namespace Js
         FullJitAfter(0),
         Fja(0),
 
-        NewSimpleJit(DEFAULT_CONFIG_NewSimpleJit),
-
         MaxLinearIntCaseCount(DEFAULT_CONFIG_MaxLinearIntCaseCount),
         MinSwitchJumpTableSize(DEFAULT_CONFIG_MinSwitchJumpTableSize),
         MaxLinearStringCaseCount(DEFAULT_CONFIG_MaxLinearStringCaseCount),
@@ -3003,21 +2996,18 @@ namespace Js
                 break;
             }
 
-            if(!NewSimpleJit)
-            {
-                // Use the defaults for old simple JIT. The flags are not enabled here because the values can be changed later
-                // based on other flags, only the defaults values are adjusted here.
-                AutoProfilingInterpreter0Limit = DEFAULT_CONFIG_AutoProfilingInterpreter0Limit;
-                ProfilingInterpreter0Limit = DEFAULT_CONFIG_ProfilingInterpreter0Limit;
-                static_assert(
-                    DEFAULT_CONFIG_AutoProfilingInterpreter0Limit <= DEFAULT_CONFIG_AutoProfilingInterpreterLimit_OldSimpleJit);
-                AutoProfilingInterpreter1Limit =
-                    DEFAULT_CONFIG_AutoProfilingInterpreterLimit_OldSimpleJit - DEFAULT_CONFIG_AutoProfilingInterpreter0Limit;
-                static_assert(DEFAULT_CONFIG_ProfilingInterpreter0Limit <= DEFAULT_CONFIG_SimpleJitLimit_OldSimpleJit);
-                SimpleJitLimit = DEFAULT_CONFIG_SimpleJitLimit_OldSimpleJit - DEFAULT_CONFIG_ProfilingInterpreter0Limit;
-                ProfilingInterpreter1Limit = 0;
-                VerifyExecutionModeLimits();
-            }
+            // Use the defaults for old simple JIT. The flags are not enabled here because the values can be changed later
+            // based on other flags, only the defaults values are adjusted here.
+            AutoProfilingInterpreter0Limit = DEFAULT_CONFIG_AutoProfilingInterpreter0Limit;
+            ProfilingInterpreter0Limit = DEFAULT_CONFIG_ProfilingInterpreter0Limit;
+            static_assert(
+                DEFAULT_CONFIG_AutoProfilingInterpreter0Limit <= DEFAULT_CONFIG_AutoProfilingInterpreterLimit_OldSimpleJit);
+            AutoProfilingInterpreter1Limit =
+                DEFAULT_CONFIG_AutoProfilingInterpreterLimit_OldSimpleJit - DEFAULT_CONFIG_AutoProfilingInterpreter0Limit;
+            static_assert(DEFAULT_CONFIG_ProfilingInterpreter0Limit <= DEFAULT_CONFIG_SimpleJitLimit_OldSimpleJit);
+            SimpleJitLimit = DEFAULT_CONFIG_SimpleJitLimit_OldSimpleJit - DEFAULT_CONFIG_ProfilingInterpreter0Limit;
+            ProfilingInterpreter1Limit = 0;
+            VerifyExecutionModeLimits();
 
             if (IsEnabled(SimpleJitAfterFlag))
             {
@@ -3042,24 +3032,12 @@ namespace Js
                     Assert(SimpleJitAfter <= FullJitAfter);
                     Js::Number iterationsNeeded = FullJitAfter - SimpleJitAfter;
                     Js::Number profilingIterationsNeeded =
-                        min(NewSimpleJit
-                                ? DEFAULT_CONFIG_MinProfileIterations
-                                : DEFAULT_CONFIG_MinProfileIterations_OldSimpleJit,
+                        min(DEFAULT_CONFIG_MinProfileIterations_OldSimpleJit,
                             FullJitAfter) -
                         ProfilingInterpreter0Limit;
-                    if(NewSimpleJit)
-                    {
-                        ProfilingInterpreter1Limit = min(ProfilingInterpreter1Limit, iterationsNeeded);
-                        iterationsNeeded -= ProfilingInterpreter1Limit;
-                        profilingIterationsNeeded -= ProfilingInterpreter1Limit;
-                        SimpleJitLimit = iterationsNeeded;
-                    }
-                    else
-                    {
-                        SimpleJitLimit = iterationsNeeded;
-                        profilingIterationsNeeded -= min(SimpleJitLimit, profilingIterationsNeeded);
-                        ProfilingInterpreter1Limit = 0;
-                    }
+                    SimpleJitLimit = iterationsNeeded;
+                    profilingIterationsNeeded -= min(SimpleJitLimit, profilingIterationsNeeded);
+                    ProfilingInterpreter1Limit = 0;
 
                     if(profilingIterationsNeeded != 0)
                     {
@@ -3106,24 +3084,11 @@ namespace Js
                 Enable(EnforceExecutionModeLimitsFlag);
 
                 Js::Number iterationsNeeded = FullJitAfter;
-                if(NewSimpleJit)
-                {
-                    ProfilingInterpreter1Limit = min(ProfilingInterpreter1Limit, iterationsNeeded);
-                    iterationsNeeded -= ProfilingInterpreter1Limit;
-                }
-                else
-                {
-                    ProfilingInterpreter1Limit = 0;
-                    SimpleJitLimit = min(SimpleJitLimit, iterationsNeeded);
-                    iterationsNeeded -= SimpleJitLimit;
-                }
+                ProfilingInterpreter1Limit = 0;
+                SimpleJitLimit = min(SimpleJitLimit, iterationsNeeded);
+                iterationsNeeded -= SimpleJitLimit;
                 ProfilingInterpreter0Limit = min(ProfilingInterpreter0Limit, iterationsNeeded);
                 iterationsNeeded -= ProfilingInterpreter0Limit;
-                if(NewSimpleJit)
-                {
-                    SimpleJitLimit = min(SimpleJitLimit, iterationsNeeded);
-                    iterationsNeeded -= SimpleJitLimit;
-                }
                 AutoProfilingInterpreter0Limit = min(AutoProfilingInterpreter0Limit, iterationsNeeded);
                 iterationsNeeded -= AutoProfilingInterpreter0Limit;
                 AutoProfilingInterpreter1Limit = iterationsNeeded;
@@ -3905,9 +3870,6 @@ namespace Js
         case FjaFlag:
             return FlagNumber;
 
-        case NewSimpleJitFlag:
-            return FlagBoolean;
-
         case MaxLinearIntCaseCountFlag:
             return FlagNumber;
         case MinSwitchJumpTableSizeFlag:
@@ -4631,9 +4593,6 @@ namespace Js
         case FjaFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&Fja));
 
-        case NewSimpleJitFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&NewSimpleJit));
-
         case MaxLinearIntCaseCountFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxLinearIntCaseCount));
         case MinSwitchJumpTableSizeFlag:
@@ -5324,10 +5283,6 @@ namespace Js
             break;
         case EemlFlag:
             retValue = false;
-            break;
-
-        case NewSimpleJitFlag:
-            retValue = DEFAULT_CONFIG_NewSimpleJit;
             break;
 
         case NoDeferParseFlag:

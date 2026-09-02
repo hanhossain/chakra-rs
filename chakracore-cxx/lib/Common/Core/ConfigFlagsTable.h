@@ -378,8 +378,6 @@ namespace Js
         SimpleJitAfterFlag, SjaFlag,
         FullJitAfterFlag, FjaFlag,
 
-        NewSimpleJitFlag,
-
         MaxLinearIntCaseCountFlag,
         MinSwitchJumpTableSizeFlag,
         MaxLinearStringCaseCountFlag,
@@ -1733,13 +1731,11 @@ namespace Js
 
         // TODO (hanhossain): remove flag
         Boolean EnforceExecutionModeLimits; Boolean Eeml;
+        // todo (hanhossain): flag end
 
         Number SimpleJitAfter; Number Sja;
         Number FullJitAfter; Number Fja;
 
-        // TODO (hanhossain): remove flag
-        Boolean NewSimpleJit;
-        // todo (hanhossain): flag end
 
         Number MaxLinearIntCaseCount;
         Number MinSwitchJumpTableSize;

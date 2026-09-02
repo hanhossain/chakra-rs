@@ -540,7 +540,6 @@ private:
 #define DEFAULT_CONFIG_MinProfileIterations (16)
 #define DEFAULT_CONFIG_MinProfileIterations_OldSimpleJit (25)
 #define DEFAULT_CONFIG_MinSimpleJitIterations (16)
-#define DEFAULT_CONFIG_NewSimpleJit (false)
 
 #define DEFAULT_CONFIG_MaxLinearIntCaseCount     (3)       // Maximum number of cases (in switch statement) for which instructions can be generated linearly.
 #define DEFAULT_CONFIG_MinSwitchJumpTableSize   (9)     // Minimum number of case target entries in the jump table(this may also include values that are missing in the consecutive set of integer case arms)
