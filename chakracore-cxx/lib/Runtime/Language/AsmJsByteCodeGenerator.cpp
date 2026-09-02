@@ -18,6 +18,7 @@
 #include "Language/AsmJsByteCodeGenerator.h"
 
 #include <filesystem>
+#include <vector>
 
 namespace Js
 {
@@ -1184,46 +1185,40 @@ namespace Js
             return emitInfo;
         }
 
-        AutoArrayPtr<AsmJsType> types(nullptr, 0);
-        AutoArrayPtr<EmitExpressionInfo> argsInfo(nullptr, 0);
-        if( argCount > 0 )
+        std::vector<AsmJsType> types{argCount};
+        std::vector<EmitExpressionInfo> argsInfo{argCount};
+        for(ArgSlot i = 0; i < argCount; i++)
         {
-            types.Set(HeapNewArray(AsmJsType, argCount), argCount);
-            argsInfo.Set(HeapNewArray(EmitExpressionInfo, argCount), argCount);
-
-            for(ArgSlot i = 0; i < argCount; i++)
+            // Get i arg node
+            ParseNode* arg = argNode;
+            // Special case for fround(abs()) call
+            if (argNode->nop == knopCall && isFRound)
             {
-                // Get i arg node
-                ParseNode* arg = argNode;
-                // Special case for fround(abs()) call
-                if (argNode->nop == knopCall && isFRound)
+                // Emit argument
+                const EmitExpressionInfo& argInfo = EmitCall(arg, AsmJsRetType::Float);
+                types[i] = argInfo.type;
+                argsInfo[i].type = argInfo.type;
+                argsInfo[i].location = argInfo.location;
+            }
+            else
+            {
+                if (argNode->nop == knopList)
                 {
-                    // Emit argument
-                    const EmitExpressionInfo& argInfo = EmitCall(arg, AsmJsRetType::Float);
-                    types[i] = argInfo.type;
-                    argsInfo[i].type = argInfo.type;
-                    argsInfo[i].location = argInfo.location;
+                    arg = ParserWrapper::GetBinaryLeft(argNode);
+                    argNode = ParserWrapper::GetBinaryRight(argNode);
                 }
-                else
-                {
-                    if (argNode->nop == knopList)
-                    {
-                        arg = ParserWrapper::GetBinaryLeft(argNode);
-                        argNode = ParserWrapper::GetBinaryRight(argNode);
-                    }
-                    // Emit argument
-                    const EmitExpressionInfo& argInfo = Emit(arg);
-                    types[i] = argInfo.type;
-                    argsInfo[i].type = argInfo.type;
-                    argsInfo[i].location = argInfo.location;
-                }
+                // Emit argument
+                const EmitExpressionInfo& argInfo = Emit(arg);
+                types[i] = argInfo.type;
+                argsInfo[i].type = argInfo.type;
+                argsInfo[i].location = argInfo.location;
             }
         }
         StartStatement(pnode);
         // Check if this function supports the type of these arguments
         AsmJsRetType retType;
         OpCodeAsmJs op;
-        const bool supported = mathFunction->SupportsMathCall( argCount, types, op, retType );
+        const bool supported = mathFunction->SupportsMathCall(types, op, retType );
         if( !supported )
         {
             throw AsmJsCompilationException( u"Math builtin function doesn't support arguments" );
@@ -1306,10 +1301,8 @@ namespace Js
             throw AsmJsCompilationException(u"Math builtin function doesn't support arguments");
         }
 
-        AutoArrayPtr<AsmJsType> types(nullptr, 0);
-        AutoArrayPtr<EmitExpressionInfo> argsInfo(nullptr, 0);
-        types.Set(HeapNewArray(AsmJsType, mathFunction->GetArgCount()), mathFunction->GetArgCount());
-        argsInfo.Set(HeapNewArray(EmitExpressionInfo, mathFunction->GetArgCount()), mathFunction->GetArgCount());
+        std::vector<AsmJsType> types{mathFunction->GetArgCount()};
+        std::vector<EmitExpressionInfo> argsInfo{mathFunction->GetArgCount()};
 
         ParseNode * arg = ParserWrapper::GetBinaryLeft(argNode);
         argNode = ParserWrapper::GetBinaryRight(argNode);
@@ -1336,7 +1329,7 @@ namespace Js
             // Check if this function supports the type of these arguments
             AsmJsRetType retType;
             OpCodeAsmJs op;
-            const bool supported = mathFunction->SupportsMathCall(mathFunction->GetArgCount(), types, op, retType);
+            const bool supported = mathFunction->SupportsMathCall(types, op, retType);
             if (!supported)
             {
                 throw AsmJsCompilationException(u"Math builtin function doesn't support arguments");

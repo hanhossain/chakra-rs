@@ -23,6 +23,7 @@
 
 #pragma once
 #include "Language/WAsmjsUtils.h"
+#include <vector>
 
 #ifdef ASMJS_PLAT
 namespace Wasm
@@ -666,7 +667,7 @@ namespace Js
         void SetOverload( AsmJsMathFunction* val );
         AsmJSMathBuiltinFunction GetMathBuiltInFunction(){ return mBuiltIn; };
         virtual bool CheckAndSetReturnType( Js::AsmJsRetType val ) override;
-        bool SupportsMathCall(ArgSlot argCount, AsmJsType* args, OpCodeAsmJs& op, AsmJsRetType& retType);
+        bool SupportsMathCall(std::vector<AsmJsType> args, OpCodeAsmJs& op, AsmJsRetType& retType);
         static bool IsFround(AsmJsFunctionDeclaration* sym);
     private:
         virtual bool SupportsArgCall(ArgSlot argCount, AsmJsType* args, AsmJsRetType& retType ) override;

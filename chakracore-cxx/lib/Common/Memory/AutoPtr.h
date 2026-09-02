@@ -34,66 +34,6 @@ private:
 };
 
 template <typename T>
-class AutoArrayPtr : public BasePtr<T>
-{
-protected:
-    size_t m_elementCount;
-public:
-    AutoArrayPtr(T * ptr, size_t elementCount) : BasePtr<T>(ptr), m_elementCount(elementCount) {}
-    ~AutoArrayPtr()
-    {
-        Clear();
-    }
-
-    void Set(T* ptr, int elementCount)
-    {
-        Clear();
-        this->ptr = ptr;
-        this->m_elementCount = elementCount;
-    }
-
-private:
-    void Clear()
-    {
-        if (this->ptr != nullptr)
-        {
-            HeapDeleteArray(m_elementCount, this->ptr);
-            this->ptr = nullptr;
-        }
-    }
-};
-
-template <typename T>
-class AutoArrayAndItemsPtr : public AutoArrayPtr<T>
-{
-public:
-    AutoArrayAndItemsPtr(T * ptr, size_t elementCount) : AutoArrayPtr<T>(ptr, elementCount) {}
-
-    ~AutoArrayAndItemsPtr()
-    {
-        Clear();
-    }
-
-private:
-    void Clear()
-    {
-        if (this->ptr != nullptr){
-            for (size_t i = 0; i < this->m_elementCount; i++)
-            {
-                if (this->ptr[i] != nullptr)
-                {
-                    this->ptr[i]->CleanUp();
-                    this->ptr[i] = nullptr;
-                }
-            }
-
-            HeapDeleteArray(this->m_elementCount, this->ptr);
-            this->ptr = nullptr;
-        }
-    }
-};
-
-template <typename T>
 class AutoReleasePtr : public BasePtr<T>
 {
     using BasePtr<T>::ptr;
