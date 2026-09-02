@@ -385,7 +385,6 @@ namespace Js
         MaxSingleCharStrJumpTableRatioFlag,
         MinSwitchJumpTableSizeFlag,
         MaxLinearStringCaseCountFlag,
-        MinDeferredFuncTokenCountFlag,
         NoDeferParseFlag,
         OOPJITMissingOptsFlag,
         ForceJITCFGCheckFlag,
@@ -1750,8 +1749,6 @@ namespace Js
         Number MaxSingleCharStrJumpTableRatio;
         Number MinSwitchJumpTableSize;
         Number MaxLinearStringCaseCount;
-        // TODO (hanhossain): remove flag
-        Number MinDeferredFuncTokenCount;
         // todo (hanhossain): flag end
         Boolean NoDeferParse;
         Boolean OOPJITMissingOpts;
