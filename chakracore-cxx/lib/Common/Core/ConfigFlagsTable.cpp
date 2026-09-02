@@ -987,7 +987,6 @@ namespace Js
 #endif
 #ifdef PROFILE_EXEC
         u"Profile",
-        u"ProfileThreshold",
 #endif
         u"MinBailOutsBeforeRejit",
 #ifdef RECYCLER_STRESS
@@ -1841,11 +1840,10 @@ namespace Js
 #if PROFILE_DICTIONARY
         u"Profile dictionary usage. Only dictionaries with max depth of <number> or above are displayed (0=no filter).",
 #endif
+        // todo (hanhossain): flag end
 #ifdef PROFILE_EXEC
         u"Profile the given phase",
-        u"A phase is displayed in the profiler report only if its contribution is more than this threshold",
 #endif
-        // todo (hanhossain): flag end
         u"Minimum number of bailouts for a single bailout record after which a rejit is considered",
 #ifdef RECYCLER_STRESS
         u"Stress the recycler by collect on every allocation call",
@@ -2293,11 +2291,10 @@ namespace Js
 #if PROFILE_DICTIONARY
         NoParentFlag,
 #endif
+        // todo (hanhossain): flag end
 #ifdef PROFILE_EXEC
         NoParentFlag,
-        NoParentFlag,
 #endif
-        // todo (hanhossain): flag end
         NoParentFlag,
 #ifdef RECYCLER_STRESS
         NoParentFlag,
@@ -2769,7 +2766,6 @@ namespace Js
 #endif
 #ifdef PROFILE_EXEC
         Profile(),
-        ProfileThreshold(0),
 #endif
         MinBailOutsBeforeRejit(DEFAULT_CONFIG_MinBailOutsBeforeRejit),
 #ifdef RECYCLER_STRESS
@@ -4124,8 +4120,6 @@ namespace Js
         #ifdef PROFILE_EXEC
         case ProfileFlag:
             return FlagPhases;
-        case ProfileThresholdFlag:
-            return FlagNumber;
         #endif
         case MinBailOutsBeforeRejitFlag:
             return FlagNumber;
@@ -4902,8 +4896,6 @@ namespace Js
         #ifdef PROFILE_EXEC
         case ProfileFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&Profile));
-        case ProfileThresholdFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&ProfileThreshold));
         #endif
         case MinBailOutsBeforeRejitFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MinBailOutsBeforeRejit));

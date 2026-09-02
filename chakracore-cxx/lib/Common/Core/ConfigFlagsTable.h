@@ -424,7 +424,6 @@ namespace Js
         #endif
         #ifdef PROFILE_EXEC
         ProfileFlag,
-        ProfileThresholdFlag,
         #endif
         MinBailOutsBeforeRejitFlag,
         #ifdef RECYCLER_STRESS
@@ -1833,12 +1832,10 @@ namespace Js
         // TODO (hanhossain): remove flag
             Number ProfileDictionary;
         #endif
+        // todo (hanhossain): flag end
         #ifdef PROFILE_EXEC
             Phases Profile;
-        // TODO (hanhossain): remove flag
-            Number ProfileThreshold;
         #endif
-        // todo (hanhossain): flag end
         Number MinBailOutsBeforeRejit;
         #ifdef RECYCLER_STRESS
             Boolean RecyclerStress;
