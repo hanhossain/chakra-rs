@@ -5,8 +5,6 @@
 #pragma once
 #include <mutex>
 
-#include "Core/AutoFile.h"
-
 // xplat-todo: error: ISO C++ forbids forward references to 'enum' types
 #if defined(ENABLE_TRACE) 
 namespace Js

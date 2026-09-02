@@ -22,7 +22,6 @@
 #include "Core/AllocSizeMath.h"
 
 #include "Core/BasePtr.h"
-#include "Core/AutoFile.h"
 #include "Core/Output.h"
 
 // Memory Management
