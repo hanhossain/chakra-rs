@@ -359,7 +359,6 @@ namespace Js
 
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
 #define DEFAULT_CONFIG_MaxLoopsPerFunction  (10)
-#define DEFAULT_CONFIG_NopFrequency         (8)
 #define DEFAULT_CONFIG_ProfileBasedSpeculationCap (1600)
 #define DEFAULT_CONFIG_ForceStrictMode      (false)
 #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
@@ -961,9 +960,6 @@ namespace Js
         u"ForceJITCFGCheck",
         u"UseJITTrampoline",
         u"NoNative",
-        u"NopFrequency",
-        u"NoStrictMode",
-        u"NormalizeStats",
         u"Off",
         u"On",
 #ifdef ENABLE_PREJIT
@@ -1800,13 +1796,10 @@ namespace Js
         u"Use optimizations that are missing from OOP JIT",
         u"Crash runtime process if JIT process crashes",
         u"Do CFG registration OOP (under OOP JIT)",
+        // todo (hanhossain): flag end
         u"Have JIT code always do CFG check even if range check succeeded",
         u"Use trampoline for JIT entry points and emit range checks for it",
         u"Disable native codegen",
-        u"Frequency of NOPs inserted by NOP insertion phase.  A NOP is guaranteed to be inserted within a range of (1<<n) instrs (default=8)",
-        u"Disable strict mode checks on all functions",
-        u"When dumping stats, do some normalization (used with -instrument:linearscan)",
-        // todo (hanhossain): flag end
         u"Turn off specific phases or feature.(Might not work for all phases)",
         u"Turn on specific phases or feature.(Might not work for all phases)",
 #ifdef ENABLE_PREJIT
@@ -2238,13 +2231,10 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
 #ifdef ENABLE_PREJIT
@@ -2701,9 +2691,6 @@ namespace Js
         ForceJITCFGCheck(DEFAULT_CONFIG_ForceJITCFGCheck),
         UseJITTrampoline(DEFAULT_CONFIG_UseJITTrampoline),
         NoNative(false),
-        NopFrequency(DEFAULT_CONFIG_NopFrequency),
-        NoStrictMode(false),
-        NormalizeStats(false),
         Off(),
         On(),
 #ifdef ENABLE_PREJIT
@@ -4028,12 +4015,6 @@ namespace Js
             return FlagBoolean;
         case NoNativeFlag:
             return FlagBoolean;
-        case NopFrequencyFlag:
-            return FlagNumber;
-        case NoStrictModeFlag:
-            return FlagBoolean;
-        case NormalizeStatsFlag:
-            return FlagBoolean;
         case OffFlag:
             return FlagPhases;
         case OnFlag:
@@ -4784,12 +4765,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&UseJITTrampoline));
         case NoNativeFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&NoNative));
-        case NopFrequencyFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&NopFrequency));
-        case NoStrictModeFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&NoStrictMode));
-        case NormalizeStatsFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&NormalizeStats));
         case OffFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&Off));
         case OnFlag:
@@ -5492,12 +5467,6 @@ namespace Js
             retValue = DEFAULT_CONFIG_UseJITTrampoline;
             break;
         case NoNativeFlag:
-            retValue = false;
-            break;
-        case NoStrictModeFlag:
-            retValue = false;
-            break;
-        case NormalizeStatsFlag:
             retValue = false;
             break;
         #ifdef ENABLE_PREJIT

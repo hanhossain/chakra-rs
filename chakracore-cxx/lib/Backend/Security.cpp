@@ -120,7 +120,7 @@ Security::EncodeLargeConstants()
 int
 Security::GetNextNOPInsertPoint()
 {
-    uint frequency = (1 << CONFIG_FLAG(NopFrequency)) - 1;
+    uint frequency = (1 << 8) - 1;
     return (Math::Rand() & frequency) + 1;
 }
 
