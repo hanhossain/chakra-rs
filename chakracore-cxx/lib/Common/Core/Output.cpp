@@ -18,10 +18,6 @@
 #pragma init_seg(".CRT$XCAM")
 
 std::recursive_mutex Output::s_mutex;
-#ifdef ENABLE_TRACE
-Js::ILogger*        Output::s_inMemoryLogger = nullptr;
-unsigned int Output::s_traceEntryId = 0;
-#endif
 
 thread_local size_t   Output::s_Column  = 0;
 thread_local uint16_t     Output::s_color = 0;
@@ -267,22 +263,7 @@ Output::PrintBuffer(const char16_t * buf, size_t size)
         endbuf = PAL_wcschr(endbuf + 1, '\n');
     }
 
-    bool useConsoleOrFile = true;
-    if (!Output::s_capture)
-    {
-#ifdef ENABLE_TRACE
-        if (Output::s_inMemoryLogger)
-        {
-            s_inMemoryLogger->Write(buf);
-            useConsoleOrFile = false;
-        }
-#endif
-    }
-
-    if (useConsoleOrFile)
-    {
-        DirectPrint(buf);
-    }
+    DirectPrint(buf);
 
     Output::Flush();
 
@@ -343,16 +324,6 @@ Output::SkipToColumn(size_t column)
         dist--;
     }
 }
-
-#ifdef ENABLE_TRACE
-void
-Output::SetInMemoryLogger(Js::ILogger* logger)
-{
-    AssertMsg(s_inMemoryLogger == nullptr, "This cannot be called more than once.");
-    s_inMemoryLogger = logger;
-}
-
-#endif // ENABLE_TRACE
 
 //
 // Sets the foreground color and returns the old color. Returns 0 on failure
