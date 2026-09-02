@@ -54,6 +54,8 @@
 #include "JsrtContext.h"
 #include "JsrtContextCore.h"
 
+#include <memory>
+
 JsrtContext *JsrtContext::New(JsrtRuntime * runtime)
 {
     return JsrtContextCore::New(runtime);
@@ -97,14 +99,14 @@ Js::ScriptContext* JsrtContextCore::EnsureScriptContext()
 
     ThreadContext* localThreadContext = this->GetRuntime()->GetThreadContext();
 
-    AutoPtr<Js::ScriptContext> newScriptContext(Js::ScriptContext::New(localThreadContext));
+    std::unique_ptr<Js::ScriptContext> newScriptContext{Js::ScriptContext::New(localThreadContext)};
 
     newScriptContext->Initialize();
 
-    hostContext = HeapNew(ChakraCoreHostScriptContext, newScriptContext);
+    hostContext = HeapNew(ChakraCoreHostScriptContext, newScriptContext.get());
     newScriptContext->SetHostScriptContext(hostContext);
 
-    this->SetJavascriptLibrary(newScriptContext.Detach()->GetLibrary());
+    SetJavascriptLibrary(newScriptContext.release()->GetLibrary());
 
     Js::JavascriptLibrary *library = this->GetScriptContext()->GetLibrary();
     Assert(library != nullptr);
