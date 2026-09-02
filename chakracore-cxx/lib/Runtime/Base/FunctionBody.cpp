@@ -5725,8 +5725,9 @@ namespace Js
         {
             return false;
         }
-        // Negative FuncObjectInlineCacheThreshold will disable inline cache on function object.
-        if (CONFIG_FLAG(FuncObjectInlineCacheThreshold) < 0 || totalCacheCount > static_cast<uint>(CONFIG_FLAG(FuncObjectInlineCacheThreshold)) || totalCacheCount == 0)
+        // Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object.
+        constexpr uint32_t FuncObjectInlineCacheThreshold = 2;
+        if (totalCacheCount > FuncObjectInlineCacheThreshold || totalCacheCount == 0)
         {
             return false;
         }
