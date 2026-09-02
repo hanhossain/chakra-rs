@@ -1726,20 +1726,20 @@ namespace Js
         u"Minimum number of times a function must be Asm Interpreted",
 
         u"Minimum LoopCount run of the Templatized Jit function to run FullJited",
-        u"Maximum number of times a function must be templatized jit",
-        u"Maximum number of times a function must be templatized jit",
-        u"Maximum number of times a function must be interpreted in asmjs",
-        u"Maximum number of times a function must be interpreted in asmjs",
-
-        u"Limit after which to transition to the next execution mode",
-        u"Limit after which to transition to the next execution mode",
-        u"Limit after which to transition to the next execution mode",
-        u"Limit after which to transition to the next execution mode",
-        u"Limit after which to transition to the next execution mode",
-
-        u"Enforces the execution mode limits such that they are never exceeded.",
-        u"Enforces the execution mode limits such that they are never exceeded.",
         // todo (hanhossain): flag end
+        u"Maximum number of times a function must be templatized jit",
+        u"Maximum number of times a function must be templatized jit",
+        u"Maximum number of times a function must be interpreted in asmjs",
+        u"Maximum number of times a function must be interpreted in asmjs",
+
+        u"Limit after which to transition to the next execution mode",
+        u"Limit after which to transition to the next execution mode",
+        u"Limit after which to transition to the next execution mode",
+        u"Limit after which to transition to the next execution mode",
+        u"Limit after which to transition to the next execution mode",
+
+        u"Enforces the execution mode limits such that they are never exceeded.",
+        u"Enforces the execution mode limits such that they are never exceeded.",
 
         u"Number of calls to a function after which to simple-JIT the function",
         u"Number of calls to a function after which to simple-JIT the function",
@@ -2147,20 +2147,20 @@ namespace Js
         NoParentFlag,
 
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
-
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+        NoParentFlag,
+
+        NoParentFlag,
+        NoParentFlag,
 
         NoParentFlag,
         NoParentFlag,
