@@ -532,7 +532,6 @@ namespace Js
 #define DEFAULT_CONFIG_DisableRentalThreading (false)
 #define DEFAULT_CONFIG_PerfHintLevel (1)
 #define DEFAULT_CONFIG_OOPJITMissingOpts (false)
-#define DEFAULT_CONFIG_CrashOnOOPJITFailure (false)
 #define DEFAULT_CONFIG_ForceJITCFGCheck (false)
 #define DEFAULT_CONFIG_UseJITTrampoline (true)
 
@@ -954,7 +953,6 @@ namespace Js
         u"NoDeferParse",
         u"NoLogo",
         u"OOPJITMissingOpts",
-        u"CrashOnOOPJITFailure",
         u"ForceJITCFGCheck",
         u"UseJITTrampoline",
         u"NoNative",
@@ -1791,9 +1789,8 @@ namespace Js
         u"Maximum number of inline caches a function body may have to allow for inline caches to be allocated on the function object",
         u"Disable deferred parsing",
         u"No logo, which we don't display anyways",
-        u"Use optimizations that are missing from OOP JIT",
-        u"Crash runtime process if JIT process crashes",
         // todo (hanhossain): flag end
+        u"Use optimizations that are missing from OOP JIT",
         u"Have JIT code always do CFG check even if range check succeeded",
         u"Use trampoline for JIT entry points and emit range checks for it",
         u"Disable native codegen",
@@ -2225,9 +2222,8 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2682,7 +2678,6 @@ namespace Js
         NoDeferParse(false),
         NoLogo(false),
         OOPJITMissingOpts(DEFAULT_CONFIG_OOPJITMissingOpts),
-        CrashOnOOPJITFailure(DEFAULT_CONFIG_CrashOnOOPJITFailure),
         ForceJITCFGCheck(DEFAULT_CONFIG_ForceJITCFGCheck),
         UseJITTrampoline(DEFAULT_CONFIG_UseJITTrampoline),
         NoNative(false),
@@ -4000,8 +3995,6 @@ namespace Js
             return FlagBoolean;
         case OOPJITMissingOptsFlag:
             return FlagBoolean;
-        case CrashOnOOPJITFailureFlag:
-            return FlagBoolean;
         case ForceJITCFGCheckFlag:
             return FlagBoolean;
         case UseJITTrampolineFlag:
@@ -4748,8 +4741,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&NoLogo));
         case OOPJITMissingOptsFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&OOPJITMissingOpts));
-        case CrashOnOOPJITFailureFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&CrashOnOOPJITFailure));
         case ForceJITCFGCheckFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&ForceJITCFGCheck));
         case UseJITTrampolineFlag:
@@ -5444,9 +5435,6 @@ namespace Js
             break;
         case OOPJITMissingOptsFlag:
             retValue = DEFAULT_CONFIG_OOPJITMissingOpts;
-            break;
-        case CrashOnOOPJITFailureFlag:
-            retValue = DEFAULT_CONFIG_CrashOnOOPJITFailure;
             break;
         case ForceJITCFGCheckFlag:
             retValue = DEFAULT_CONFIG_ForceJITCFGCheck;
