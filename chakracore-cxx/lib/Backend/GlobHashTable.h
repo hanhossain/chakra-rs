@@ -4,10 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#if PROFILE_DICTIONARY
-#include "Interface/DictionaryStats.h"
-#endif
-
 template <typename TData, typename TElement>
 class HashBucket
 {
@@ -97,9 +93,6 @@ public:
         uint key = Key::Get(value);
         uint hash = this->Hash(key);
 
-#if PROFILE_DICTIONARY
-        uint depth = 1;
-#endif
         // Keep sorted
         FOREACH_SLISTBASE_ENTRY_EDITING(HashBucket, bucket, &this->table[hash], iter)
         {
@@ -111,17 +104,10 @@ public:
                 }
                 break;
             }
-#if PROFILE_DICTIONARY
-            ++depth;
-#endif
         } NEXT_SLISTBASE_ENTRY_EDITING;
 
         HashBucket * newBucket = iter.InsertNodeBefore(this->alloc);
         newBucket->value = value;
-#if PROFILE_DICTIONARY
-        if (stats)
-            stats->Insert(depth);
-#endif
         return &newBucket->element;
     }
 
@@ -130,9 +116,6 @@ public:
         uint key = Key::Get(value);
         uint hash = this->Hash(key);
 
-#if PROFILE_DICTIONARY
-        uint depth = 1;
-#endif
         // Keep sorted
         FOREACH_SLISTBASE_ENTRY_EDITING(HashBucket, bucket, &this->table[hash], iter)
         {
@@ -144,9 +127,6 @@ public:
                 }
                 break;
             }
-#if PROFILE_DICTIONARY
-            ++depth;
-#endif
         } NEXT_SLISTBASE_ENTRY_EDITING;
 
         HashBucket * newBucket = iter.InsertNodeBeforeNoThrow(this->alloc);
@@ -155,10 +135,6 @@ public:
             return nullptr;
         }
         newBucket->value = value;
-#if PROFILE_DICTIONARY
-        if (stats)
-            stats->Insert(depth);
-#endif
         return &newBucket->element;
     }
 
@@ -167,9 +143,6 @@ public:
         uint key = Key::Get(value);
         uint hash = this->Hash(key);
 
-#if PROFILE_DICTIONARY
-        uint depth = 1;
-#endif
         // Keep sorted
         FOREACH_SLISTBASE_ENTRY_EDITING(HashBucket, bucket, &this->table[hash], iter)
         {
@@ -181,19 +154,12 @@ public:
                 }
                 break;
             }
-#if PROFILE_DICTIONARY
-            ++depth;
-#endif
         } NEXT_SLISTBASE_ENTRY_EDITING;
 
         HashBucket * newBucket = iter.InsertNodeBefore(this->alloc);
         Assert(newBucket != nullptr);
         newBucket->value = value;
         newBucket->element = element;
-#if PROFILE_DICTIONARY
-        if (stats)
-            stats->Insert(depth);
-#endif
         return NULL;
     }
 
@@ -247,9 +213,6 @@ public:
         uint hash = this->Hash(key);
         SListBase<HashBucket> * list = &this->table[hash];
 
-#if PROFILE_DICTIONARY
-        bool first = true;
-#endif
         // Assumes sorted lists
         FOREACH_SLISTBASE_ENTRY_EDITING(HashBucket, bucket, list, iter)
         {
@@ -259,17 +222,10 @@ public:
                 {
                     TElement retVal = bucket.element;
                     iter.RemoveCurrent(this->alloc);
-#if PROFILE_DICTIONARY
-                    if (stats)
-                        stats->Remove(first && !(iter.Next()));
-#endif
                     return retVal;
                 }
                 break;
             }
-#if PROFILE_DICTIONARY
-            first = false;
-#endif
         } NEXT_SLISTBASE_ENTRY_EDITING;
         return nullptr;
     }
@@ -280,9 +236,6 @@ public:
         SListBase<HashBucket> * list = &this->table[hash];
 
         // Assumes sorted lists
-#if PROFILE_DICTIONARY
-        bool first = true;
-#endif
         FOREACH_SLISTBASE_ENTRY_EDITING(HashBucket, bucket, list, iter)
         {
             if (Key::Get(bucket.value) <= key)
@@ -290,16 +243,9 @@ public:
                 if (Key::Get(bucket.value) == key)
                 {
                     iter.RemoveCurrent(this->alloc);
-#if PROFILE_DICTIONARY
-                    if (stats)
-                        stats->Remove(first && !(iter.Next()));
-#endif
                 }
                 return;
             }
-#if PROFILE_DICTIONARY
-        first = false;
-#endif
         } NEXT_SLISTBASE_ENTRY_EDITING;
     }
 
@@ -319,10 +265,6 @@ public:
                 if (!iter2.IsValid() || bucket.value != iter2.Data().value || bucket.element != iter2.Data().element)
                 {
                     iter.RemoveCurrent(this->alloc);
-#if PROFILE_DICTIONARY
-                    if (stats)
-                        stats->Remove(false);
-#endif
                     continue;
                 }
                 else
@@ -380,10 +322,6 @@ public:
         {
             this->table[i].template CopyTo<HashBucket::Copy>(this->alloc, newTable->table[i]);
         }
-#if PROFILE_DICTIONARY
-        if (stats)
-            newTable->stats = stats->Clone();
-#endif
         return newTable;
     }
 
@@ -393,10 +331,6 @@ public:
         {
             this->table[i].Clear(this->alloc);
         }
-#if PROFILE_DICTIONARY
-        // To not lose previously collected data, we will treat cleared dictionary as a separate instance for stats tracking purpose
-        stats = DictionaryStats::Create(typeid(this).name(), tableSize);
-#endif
     }
 
 #if DBG_DUMP
@@ -431,9 +365,6 @@ protected:
     ValueHashTable(JitArenaAllocator * allocator, uint tableSize) : alloc(allocator), tableSize(tableSize)
     {
         Init();
-#if PROFILE_DICTIONARY
-        stats = DictionaryStats::Create(typeid(this).name(), tableSize);
-#endif
     }
     void Init()
     {
@@ -447,8 +378,5 @@ protected:
 private:
     uint         Hash(uint key) { return (key % this->tableSize); }
 
-#if PROFILE_DICTIONARY
-    DictionaryStats *stats;
-#endif
 };
 

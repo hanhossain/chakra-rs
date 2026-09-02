@@ -371,9 +371,6 @@ public:
         uint32_t luHash,
         IdentPtr **pppInsert,
         int32_t *pBucketCount
-#if PROFILE_DICTIONARY
-        , int& depth
-#endif
         );
 
     NoReleaseAllocator* GetAllocator() {return &m_noReleaseAllocator;}
@@ -478,8 +475,5 @@ private:
     { return (unsigned int)tk < tkLimKwd ? g_mptkkwd + tk : nullptr; }
 
     static void OutOfMemory();
-#if PROFILE_DICTIONARY
-    DictionaryStats *stats;
-#endif
 };
 

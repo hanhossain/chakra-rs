@@ -2,11 +2,6 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#if PROFILE_DICTIONARY
-#include "Interface/DictionaryStats.h"
-#endif
-
-
 const HashTbl::KWD HashTbl::g_mptkkwd[tkLimKwd] =
 {
     { knopNone,0,knopNone,0 },
@@ -48,10 +43,6 @@ BOOL HashTbl::Init(uint cidHash)
     if (nullptr == (m_prgpidName = static_cast<Ident**>(m_noReleaseAllocator.Alloc(cb))))
         return FALSE;
     memset(m_prgpidName, 0, cb);
-
-#if PROFILE_DICTIONARY
-    stats = DictionaryStats::Create(typeid(this).name(), cidHash);
-#endif
 
     return TRUE;
 }
@@ -97,21 +88,6 @@ void HashTbl::Grow()
     // Update the table fields.
     m_prgpidName = n_prgpidName;
     m_luMask= n_luMask;
-
-#if PROFILE_DICTIONARY
-    if(stats)
-    {
-        int emptyBuckets = 0;
-        for (uint i = 0; i < n_cidHash; i++)
-        {
-            if(m_prgpidName[i] == nullptr)
-            {
-                emptyBuckets++;
-            }
-        }
-        stats->Resize(n_cidHash, emptyBuckets);
-    }
-#endif
 }
 
 #if DEBUG
@@ -264,16 +240,7 @@ IdentPtr HashTbl::PidHashNameLenWithHash(_In_reads_(cch) CharType const * prgch,
     int32_t cb;
     int32_t bucketCount;
 
-
-#if PROFILE_DICTIONARY
-    int depth = 0;
-#endif
-
-    pid = this->FindExistingPid(prgch, end, cch, luHash, &ppid, &bucketCount
-#if PROFILE_DICTIONARY
-                                , depth
-#endif
-        );
+    pid = this->FindExistingPid(prgch, end, cch, luHash, &ppid, &bucketCount);
     if (pid)
     {
         return pid;
@@ -293,13 +260,6 @@ IdentPtr HashTbl::PidHashNameLenWithHash(_In_reads_(cch) CharType const * prgch,
         while (*ppid)
             ppid = &(*ppid)->m_pidNext;
     }
-
-
-#if PROFILE_DICTIONARY
-    ++depth;
-    if (stats)
-        stats->Insert(depth);
-#endif
 
     //Windows OS Bug 1795286 : CENTRAL PREFAST RUN: inetcore\scriptengines\src\src\core\hash.cpp :
     //               'sizeof((*pid))+((cch+1))*sizeof(OLECHAR)' may be smaller than
@@ -351,9 +311,6 @@ IdentPtr HashTbl::FindExistingPid(
     uint32_t luHash,
     IdentPtr **pppInsert,
     int32_t *pBucketCount
-#if PROFILE_DICTIONARY
-    , int& depth
-#endif
     )
 {
     int32_t bucketCount;
@@ -368,9 +325,6 @@ IdentPtr HashTbl::FindExistingPid(
         {
             return pid;
         }
-#if PROFILE_DICTIONARY
-        ++depth;
-#endif
     }
 
     if (pBucketCount)
@@ -387,21 +341,12 @@ IdentPtr HashTbl::FindExistingPid(
 
 template IdentPtr HashTbl::FindExistingPid<utf8char_t>(
     utf8char_t const * prgch, utf8char_t const * end, int32_t cch, uint32_t luHash, IdentPtr **pppInsert, int32_t *pBucketCount
-#if PROFILE_DICTIONARY
-    , int& depth
-#endif
     );
 template IdentPtr HashTbl::FindExistingPid<char>(
     char const * prgch, char const * end, int32_t cch, uint32_t luHash, IdentPtr **pppInsert, int32_t *pBucketCount
-#if PROFILE_DICTIONARY
-    , int& depth
-#endif
     );
 template IdentPtr HashTbl::FindExistingPid<char16_t>(
     char16_t const * prgch, char16_t const * end, int32_t cch, uint32_t luHash, IdentPtr **pppInsert, int32_t *pBucketCount
-#if PROFILE_DICTIONARY
-    , int& depth
-#endif
     );
 
 bool HashTbl::Contains(_In_reads_(cch) LPCOLESTR prgch, int32_t cch)

@@ -982,9 +982,6 @@ namespace Js
         u"Prejit",
 #endif
         u"PrintSrcInDump",
-#if PROFILE_DICTIONARY
-        u"ProfileDictionary",
-#endif
 #ifdef PROFILE_EXEC
         u"Profile",
 #endif
@@ -1837,9 +1834,6 @@ namespace Js
         u"Prejit everything, including things that are not called, ignoring limits (default: false)",
 #endif
         u"Print the lineno and the source code in the intermediate dumps",
-#if PROFILE_DICTIONARY
-        u"Profile dictionary usage. Only dictionaries with max depth of <number> or above are displayed (0=no filter).",
-#endif
         // todo (hanhossain): flag end
 #ifdef PROFILE_EXEC
         u"Profile the given phase",
@@ -2288,9 +2282,6 @@ namespace Js
         NoParentFlag,
 #endif
         NoParentFlag,
-#if PROFILE_DICTIONARY
-        NoParentFlag,
-#endif
         // todo (hanhossain): flag end
 #ifdef PROFILE_EXEC
         NoParentFlag,
@@ -2761,9 +2752,6 @@ namespace Js
         Prejit(DEFAULT_CONFIG_Prejit),
 #endif
         PrintSrcInDump(true),
-#if PROFILE_DICTIONARY
-        ProfileDictionary(-1),
-#endif
 #ifdef PROFILE_EXEC
         Profile(),
 #endif
@@ -4113,10 +4101,6 @@ namespace Js
         #endif
         case PrintSrcInDumpFlag:
             return FlagBoolean;
-        #if PROFILE_DICTIONARY
-        case ProfileDictionaryFlag:
-            return FlagNumber;
-        #endif
         #ifdef PROFILE_EXEC
         case ProfileFlag:
             return FlagPhases;
@@ -4889,10 +4873,6 @@ namespace Js
         #endif
         case PrintSrcInDumpFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSrcInDump));
-        #if PROFILE_DICTIONARY
-        case ProfileDictionaryFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&ProfileDictionary));
-        #endif
         #ifdef PROFILE_EXEC
         case ProfileFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&Profile));

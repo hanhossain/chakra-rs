@@ -22,10 +22,6 @@ enum PageHeapMode : byte
     PageHeapModeBlockEnd = 2    // Allocate the object at the end of the page
 };
 
-#if PROFILE_DICTIONARY
-#include "Interface/DictionaryStats.h"
-#endif
-
 #if DBG || defined(RECYCLER_FREE_MEM_FILL)
 #define DbgMemFill 0XFE
 #endif

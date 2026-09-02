@@ -1847,9 +1847,6 @@ void Parser::BindPidRefs(BlockInfoStack *blockInfo, uint maxBlockId)
         {
             ParseNodePtr pnode = sym->GetDecl();
             IdentPtr pid;
-#if PROFILE_DICTIONARY
-            int depth = 0;
-#endif
             Assert(pnode);
             switch (pnode->nop)
             {
@@ -1860,9 +1857,6 @@ void Parser::BindPidRefs(BlockInfoStack *blockInfo, uint maxBlockId)
                 if (backgroundPidRef)
                 {
                     pid = this->GetHashTbl()->FindExistingPid(pid->Psz(), pid->Psz() + pid->Cch(), pid->Cch(), pid->Hash(), nullptr, nullptr
-#if PROFILE_DICTIONARY
-                        , depth
-#endif
                     );
                     if (pid == nullptr)
                     {
@@ -1876,9 +1870,6 @@ void Parser::BindPidRefs(BlockInfoStack *blockInfo, uint maxBlockId)
                 if (backgroundPidRef)
                 {
                     pid = this->GetHashTbl()->FindExistingPid(pid->Psz(), pid->Psz() + pid->Cch(), pid->Cch(), pid->Hash(), nullptr, nullptr
-#if PROFILE_DICTIONARY
-                        , depth
-#endif
                     );
                     if (pid == nullptr)
                     {

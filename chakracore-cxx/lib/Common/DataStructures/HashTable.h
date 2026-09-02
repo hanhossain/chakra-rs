@@ -4,10 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#if PROFILE_DICTIONARY
-#include "Interface/DictionaryStats.h"
-#endif
-
 template<typename T>
 class Bucket
 {
@@ -62,9 +58,6 @@ public:
     {
         uint hash = this->Hash(value);
 
-#if PROFILE_DICTIONARY
-        uint depth = 1;
-#endif
         // Keep sorted
         FOREACH_SLISTBASE_ENTRY_EDITING(Bucket<T>, bucket, &this->table[hash], iter)
         {
@@ -76,17 +69,10 @@ public:
                 }
                 break;
             }
-#if PROFILE_DICTIONARY
-            ++depth;
-#endif
         } NEXT_SLISTBASE_ENTRY_EDITING;
 
         Bucket<T> * newBucket = iter.InsertNodeBefore(this->alloc);
         newBucket->value = value;
-#if PROFILE_DICTIONARY
-        if (stats)
-            stats->Insert(depth);
-#endif
         return &newBucket->element;
     }
 
@@ -94,9 +80,6 @@ public:
     {
         uint hash = this->Hash(value);
 
-#if PROFILE_DICTIONARY
-        uint depth = 1;
-#endif
         // Keep sorted
         FOREACH_SLISTBASE_ENTRY_EDITING(Bucket<T>, bucket, &this->table[hash], iter)
         {
@@ -108,9 +91,6 @@ public:
                 }
                 break;
             }
-#if PROFILE_DICTIONARY
-            ++depth;
-#endif
         } NEXT_SLISTBASE_ENTRY_EDITING;
 
         Bucket<T> * newBucket = iter.InsertNodeBeforeNoThrow(this->alloc);
@@ -119,10 +99,6 @@ public:
             return nullptr;
         }
         newBucket->value = value;
-#if PROFILE_DICTIONARY
-        if (stats)
-            stats->Insert(depth);
-#endif
         return &newBucket->element;
     }
 
@@ -130,9 +106,6 @@ public:
     {
         uint hash = this->Hash(value);
 
-#if PROFILE_DICTIONARY
-        uint depth = 1;
-#endif
         // Keep sorted
         FOREACH_SLISTBASE_ENTRY_EDITING(Bucket<T>, bucket, &this->table[hash], iter)
         {
@@ -144,19 +117,12 @@ public:
                 }
                 break;
             }
-#if PROFILE_DICTIONARY
-            ++depth;
-#endif
         } NEXT_SLISTBASE_ENTRY_EDITING;
 
         Bucket<T> * newBucket = iter.InsertNodeBefore(this->alloc);
         Assert(newBucket != nullptr);
         newBucket->value = value;
         newBucket->element = element;
-#if PROFILE_DICTIONARY
-        if (stats)
-            stats->Insert(depth);
-#endif
         return nullptr;
     }
 
@@ -182,9 +148,6 @@ public:
     {
         SListBase<Bucket<T>> * list = &this->table[this->Hash(value)];
 
-#if PROFILE_DICTIONARY
-        bool first = true;
-#endif
         // Assumes sorted lists
         FOREACH_SLISTBASE_ENTRY_EDITING(Bucket<T>, bucket, list, iter)
         {
@@ -194,17 +157,10 @@ public:
                 {
                     T retVal = bucket.element;
                     iter.RemoveCurrent(this->alloc);
-#if PROFILE_DICTIONARY
-                    if (stats)
-                        stats->Remove(first && !(iter.Next()));
-#endif
                     return retVal;
                 }
                 break;
             }
-#if PROFILE_DICTIONARY
-        first = false;
-#endif
         } NEXT_SLISTBASE_ENTRY_EDITING;
         return T();
     }
@@ -214,9 +170,6 @@ public:
         SListBase<Bucket<T>> * list = &this->table[this->Hash(value)];
 
         // Assumes sorted lists
-#if PROFILE_DICTIONARY
-        bool first = true;
-#endif
         FOREACH_SLISTBASE_ENTRY_EDITING(Bucket<T>, bucket, list, iter)
         {
             if (bucket.value <= value)
@@ -224,16 +177,9 @@ public:
                 if (bucket.value == value)
                 {
                     iter.RemoveCurrent(this->alloc);
-#if PROFILE_DICTIONARY
-                    if (stats)
-                        stats->Remove(first && !(iter.Next()));
-#endif
                 }
                 return;
             }
-#if PROFILE_DICTIONARY
-        first = false;
-#endif
         } NEXT_SLISTBASE_ENTRY_EDITING;
     }
 
@@ -253,10 +199,6 @@ public:
                 if (!iter2.IsValid() || bucket.value != iter2.Data().value || bucket.element != iter2.Data().element)
                 {
                     iter.RemoveCurrent(this->alloc);
-#if PROFILE_DICTIONARY
-                    if (stats)
-                        stats->Remove(false);
-#endif
                     continue;
                 }
                 else
@@ -290,10 +232,6 @@ public:
                     // Skipping a this value.
                     fnFixupFrom(bucket);
                     iter.RemoveCurrent(this->alloc);
-#if PROFILE_DICTIONARY
-                    if (stats)
-                        stats->Remove(false);
-#endif
                     continue;
                 }
                 else
@@ -357,10 +295,6 @@ public:
         {
             this->table[i].template CopyTo<Bucket<T>::Copy>(this->alloc, newTable->table[i]);
         }
-#if PROFILE_DICTIONARY
-        if (stats)
-            newTable->stats = stats->Clone();
-#endif
         return newTable;
     }
 
@@ -370,10 +304,6 @@ public:
         {
             this->table[i].Clear(this->alloc);
         }
-#if PROFILE_DICTIONARY
-        // To not lose previously collected data, we will treat cleared dictionary as a separate instance for stats tracking purpose
-        stats = DictionaryStats::Create(typeid(this).name(), tableSize);
-#endif
     }
 
 #if DBG_DUMP
@@ -385,9 +315,6 @@ protected:
     HashTable(TAllocator * allocator, uint tableSize) : alloc(allocator), tableSize(tableSize)
     {
         Init();
-#if PROFILE_DICTIONARY
-        stats = DictionaryStats::Create(typeid(this).name(), tableSize);
-#endif
     }
     void Init()
     {
@@ -401,9 +328,6 @@ protected:
 private:
     uint         Hash(int value) { return (value % this->tableSize); }
 
-#if PROFILE_DICTIONARY
-    DictionaryStats *stats;
-#endif
 };
 
 template <typename T, uint size, typename TAllocator = ArenaAllocator>

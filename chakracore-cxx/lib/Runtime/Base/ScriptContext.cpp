@@ -12,9 +12,6 @@
 
 #include "ByteCode/ByteCodeApi.h"
 #include <limits>
-#if PROFILE_DICTIONARY
-#include "Interface/DictionaryStats.h"
-#endif
 
 #include "Base/ScriptContextProfiler.h"
 
