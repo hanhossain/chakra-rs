@@ -386,9 +386,6 @@ namespace Js
         MinSwitchJumpTableSizeFlag,
         MaxLinearStringCaseCountFlag,
         MinDeferredFuncTokenCountFlag,
-        #if DBG
-        SkipFuncCountForBailOnNoProfileFlag,
-        #endif
         NoDeferParseFlag,
         OOPJITMissingOptsFlag,
         ForceJITCFGCheckFlag,
@@ -1755,10 +1752,6 @@ namespace Js
         Number MaxLinearStringCaseCount;
         // TODO (hanhossain): remove flag
         Number MinDeferredFuncTokenCount;
-        #if DBG
-        // TODO (hanhossain): remove flag
-            Number SkipFuncCountForBailOnNoProfile;
-        #endif
         // todo (hanhossain): flag end
         Boolean NoDeferParse;
         Boolean OOPJITMissingOpts;

@@ -6441,9 +6441,7 @@ IRBuilder::BuildProfiledCallI(Js::OpCode opcode, uint32_t offset, Js::RegSlot re
                         AssertOrFailFast(profileId < inlinerData->GetInlineesBV()->Length());
                         if (!inlinerData->GetInlineesBV()->Test(profileId)
 #if DBG
-                            || (PHASE_STRESS(Js::BailOnNoProfilePhase, this->m_func->GetTopFunc())
-                                && (CONFIG_FLAG(SkipFuncCountForBailOnNoProfile) < 0
-                                    || this->m_func->m_callSiteCount >= (uint)CONFIG_FLAG(SkipFuncCountForBailOnNoProfile)))
+                            || PHASE_STRESS(Js::BailOnNoProfilePhase, this->m_func->GetTopFunc())
 #endif
                             )
                         {
