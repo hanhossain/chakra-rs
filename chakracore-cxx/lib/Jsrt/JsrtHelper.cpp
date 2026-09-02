@@ -139,10 +139,6 @@ void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollect
         if (s_threadWasEntered) return;
         s_threadWasEntered = true;
 
-    #ifdef HEAP_TRACK_ALLOC
-        HeapAllocator::InitializeThread();
-    #endif
-
         // put something into key to make sure destructor is going to be called
         pthread_setspecific(s_threadLocalDummy, malloc(1));
     }

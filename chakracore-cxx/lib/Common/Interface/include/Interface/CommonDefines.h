@@ -138,13 +138,8 @@
 #define FIELD_ACCESS_STATS
 #define MISSING_PROPERTY_STATS
 #define EXCEPTION_CHECK                     // Check exception handling.
-// todo: implement this for clang x86
-// TODO (hanhossain): remove
-// #define PROFILE_MEM
 #define PROFILE_OBJECT_LITERALS
 #define MEMSPECT_TRACKING
-// TODO (hanhossain): remove
-// #define PROFILE_RECYCLER_ALLOC
 // Needs to compile in debug mode
 // Just needs strings converted
 #define PROFILE_DICTIONARY 1
@@ -170,8 +165,6 @@
 #define MEMORY_ALLOCATION_ALIGNMENT 8
 #endif
 
-// TODO (hanhossain): remove
-// #define HEAP_TRACK_ALLOC
 #define CHECK_MEMORY_LEAK
 
 #define ERROR_TRACE
@@ -197,12 +190,8 @@
 
 // Profile defines that can be enabled in release build
 // #define PROFILE_EXEC
-// #define PROFILE_MEM
 // #define PROFILE_OBJECT_LITERALS
-// #define PROFILE_RECYCLER_ALLOC
 // #define MEMSPECT_TRACKING
-
-// #define HEAP_TRACK_ALLOC
 
 // Recycler defines that can be enabled in release build
 // #define RECYCLER_STRESS
@@ -285,36 +274,14 @@
 #define ENABLE_DEBUG_STACK_BACK_TRACE 1
 #endif
 
-// CHECK_MEMORY_LEAK requires RECYCLER_DUMP_OBJECT_GRAPH
-// HEAP_TRACK_ALLOC and RECYCLER_STATS
+// TODO (hanhossain): remove
 #if defined(CHECK_MEMORY_LEAK)
 #define RECYCLER_DUMP_OBJECT_GRAPH
-// TODO (hanhossain): remove
-// #define HEAP_TRACK_ALLOC
 #define RECYCLER_STATS
-#endif
-
-// PROFILE_RECYCLER_ALLOC requires PROFILE_MEM
-#if defined(PROFILE_RECYCLER_ALLOC) && !defined(PROFILE_MEM)
-// TODO (hanhossain): remove
-// #define PROFILE_MEM
-#endif
-
-// RECYCLER_DUMP_OBJECT_GRAPH is needed when using PROFILE_RECYCLER_ALLOC
-#if defined(PROFILE_RECYCLER_ALLOC) && !defined(RECYCLER_DUMP_OBJECT_GRAPH)
-#define RECYCLER_DUMP_OBJECT_GRAPH
-#endif
-
-
-#if defined(HEAP_TRACK_ALLOC) || defined(PROFILE_RECYCLER_ALLOC)
-
-#define TRACK_ALLOC
-#define TRACE_OBJECT_LIFETIME           // track a particular object's lifetime
 #endif
 
 #if defined(USED_IN_STATIC_LIB)
 #undef RECYCLER_DUMP_OBJECT_GRAPH
-#undef HEAP_TRACK_ALLOC
 #undef RECYCLER_STATS
 #endif
 

@@ -4,7 +4,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Core/ProfileMemory.h"
+#include "HeapBlock.h"
+#include "Recycler.h"
 
 template <ObjectInfoBits attributes>
 bool
@@ -21,14 +22,6 @@ Recycler::IntegrateBlock(char * blockAddress, PageSegment * segment, size_t allo
     Assert(this->collectionState == Collection_PreCollection);
 
     bool success = this->GetHeapInfoForAllocation<attributes>()->IntegrateBlock<attributes>(blockAddress, segment, this, allocSize);
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (success)
-    {
-        TrackAllocData trackAllocData;
-        ClearTrackAllocInfo(&trackAllocData);
-        TrackIntegrate(blockAddress, SmallAllocationBlockAttributes::PageCount * AutoSystemInfo::PageSize, allocSize, objectSize, trackAllocData);
-    }
-#endif
     return success;
 }
 
@@ -66,11 +59,6 @@ Recycler::AllocWithAttributesInlined(size_t size)
     // There are some cases where we allow allocation during heap enum that doesn't affect the enumeration
     // Those should be really rare and not rely upon.
     Assert(!isHeapEnumInProgress || allowAllocationDuringHeapEnum);
-#ifdef PROFILE_RECYCLER_ALLOC
-    TrackAllocData trackAllocData;
-    ClearTrackAllocInfo(&trackAllocData);
-#endif
-
     size_t allocSize = size;
 #ifdef RECYCLER_MEMORY_VERIFY
     if (this->VerifyEnabled())
@@ -115,26 +103,7 @@ Recycler::AllocWithAttributesInlined(size_t size)
         }
     }
 
-#ifdef PROFILE_RECYCLER_ALLOC
-    TrackAlloc(memBlock, size, trackAllocData, false);
-#endif
     RecyclerMemoryTracking::ReportAllocation(this, memBlock, size);
-    ;
-    ;
-    ;
-
-    if (HeapInfo::IsSmallBlockAllocation(HeapInfo::GetAlignedSizeNoCheck(allocSize)))
-    {
-        ;
-        ;
-        ;
-    }
-    else
-    {
-        ;
-        ;
-        ;
-    }
 
 #ifdef RECYCLER_MEMORY_VERIFY
     size_t alignedSize = HeapInfo::GetAlignedSizeNoCheck(allocSize);

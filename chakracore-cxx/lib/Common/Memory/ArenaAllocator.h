@@ -6,10 +6,6 @@
 #include "Memory/PageAllocator.h"
 #include "Memory/MemoryTracking.h"
 
-#ifdef PROFILE_MEM
-struct ArenaMemoryData;
-#endif
-
 namespace Memory
 {
 // Arena allocator
@@ -152,10 +148,6 @@ private:
     size_t largestHole;
     uint blockState;        // 0 = no block, 1 = one big block, other more then one big block or have malloc blocks
 
-#ifdef PROFILE_MEM
-    const char16_t* name;
-#endif
-
 #if DBG
     bool needsDelayFreeList;
 #endif
@@ -240,11 +232,6 @@ public:
         needsDelayFreeList = true;
     }
     void MergeDelayFreeList();
-#endif
-#ifdef TRACK_ALLOC
-    // Doesn't support tracking information, dummy implementation
-    ArenaAllocatorBase * TrackAllocInfo(TrackAllocData const& data) { return this; }
-    void ClearTrackAllocInfo(TrackAllocData* data = nullptr) {}
 #endif
 
 protected:

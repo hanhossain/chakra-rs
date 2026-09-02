@@ -3,7 +3,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include "Memory/RecyclerObjectDumper.h"
 
 namespace Js
 {
@@ -228,8 +227,3 @@ namespace Js
     }
 
 }
-
-#ifndef __APPLE__ // TODO: for some reason on OSX builds this initialization happens before PAL initialization
-AUTO_REGISTER_RECYCLER_OBJECT_DUMPER(Js::CustomExternalWrapperType, &Js::Type::DumpObjectFunction);
-AUTO_REGISTER_RECYCLER_OBJECT_DUMPER(Js::CustomExternalWrapperObject, &Js::RecyclableObject::DumpObjectFunction);
-#endif

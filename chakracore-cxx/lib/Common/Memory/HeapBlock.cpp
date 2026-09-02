@@ -81,12 +81,6 @@ SmallHeapBlockT<TBlockAttributes>::GetAllocPlusSize(uint objectCount)
     //      <Small*HeapBlock>
 
     size_t allocPlusSize = Math::Align<size_t>(sizeof(unsigned char) * objectCount, sizeof(size_t));
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (Recycler::DoProfileAllocTracker())
-    {
-        allocPlusSize += objectCount * sizeof(void *);
-    }
-#endif
     return allocPlusSize;
 }
 
@@ -800,118 +794,6 @@ void HeapBlock::PrintVerifyMarkFailure(Recycler* recycler, char* objectAddress, 
     {
         return;
     }
-
-#ifdef TRACK_ALLOC
-    Recycler::TrackerData* trackerData = nullptr;
-    Recycler::TrackerData* targetTrackerData = nullptr;
-    const char* typeName = nullptr;
-    const char* targetTypeName = nullptr;
-    uint offset = 0;
-    uint targetOffset = 0;
-    char* objectStartAddress = nullptr;
-    char* targetStartAddress = nullptr;
-
-    if (targetBlock->IsLargeHeapBlock())
-    {
-        targetOffset = static_cast<uint>(target - reinterpret_cast<char*>(static_cast<LargeHeapBlock*>(targetBlock)->GetRealAddressFromInterior(target)));
-    }
-    else
-    {
-        targetOffset = static_cast<uint>(target - targetBlock->GetAddress()) % targetBlock->GetObjectSize(nullptr);
-    }
-
-    if (targetOffset != 0)
-    {
-        // "target" points to internal of an object. This is not a GC pointer.
-        return;
-    }
-
-    if (Recycler::DoProfileAllocTracker())
-    {
-        // need KeepRecyclerTrackData flag to have the tracker data and show following detailed info
-#if  defined(__clang__)
-        auto getDemangledName = [](const std::type_info* typeinfo) ->const char*
-        {
-            int status;
-            char buffer[1024];
-            size_t buflen = 1024;
-            char* name = abi::__cxa_demangle(typeinfo->name(), buffer, &buflen, &status);
-            if (status != 0)
-            {
-                Output::Print(u"Demangle failed: result=%d, buflen=%d\n", status, buflen);
-            }
-            char* demangledName = static_cast<char*>(malloc(buflen));
-            memcpy(demangledName, name, buflen);
-            return demangledName;
-        };
-#else
-        auto getDemangledName = [](const type_info* typeinfo) ->const char*
-        {
-            return typeinfo->name();
-        };
-#endif
-
-        if (block->IsLargeHeapBlock())
-        {
-            offset = static_cast<uint>(objectAddress - reinterpret_cast<char*>(static_cast<LargeHeapBlock*>(block)->GetRealAddressFromInterior(objectAddress)));
-        }
-        else
-        {
-            offset = static_cast<uint>(objectAddress - block->address) % block->GetObjectSize(objectAddress);
-        }
-        objectStartAddress = objectAddress - offset;
-        trackerData = static_cast<Recycler::TrackerData*>(block->GetTrackerData(objectStartAddress));
-        if (trackerData)
-        {
-            typeName = getDemangledName(trackerData->typeinfo);
-            if (trackerData->isArray)
-            {
-                Output::Print(u"Missing Barrier\nOn array of %S\n", typeName);
-            }
-            else
-            {
-                auto dumpFalsePositive = [&]()
-                {
-                };
-
-                if (IsLikelyRuntimeFalseReference(objectStartAddress, offset, typeName))
-                {
-                    dumpFalsePositive();
-                    return;
-                }
-
-                //TODO: (leish)(swb) analyze pdb to check if the field is a pointer field or not
-                Output::Print(u"Missing Barrier\nOn type %S+0x%x\n", typeName, offset);
-            }
-        }
-
-
-        targetStartAddress = target - targetOffset;
-        targetTrackerData = static_cast<Recycler::TrackerData*>(targetBlock->GetTrackerData(targetStartAddress));
-
-
-        if (targetTrackerData)
-        {
-            targetTypeName = getDemangledName(targetTrackerData->typeinfo);
-            if (targetTrackerData->isArray)
-            {
-                Output::Print(u"Target type (missing barrier field type) is array item of %S\n", targetTypeName);
-#ifdef STACK_BACK_TRACE
-#endif
-            }
-            else if (targetOffset == 0)
-            {
-                Output::Print(u"Target type (missing barrier field type) is %S\n", targetTypeName);
-            }
-            else
-            {
-                Output::Print(u"Target type (missing barrier field type) is pointing to %S+0x%x\n", targetTypeName, targetOffset);
-            }
-        }
-
-        Output::Print(u"---------------------------------\n");
-    }
-#endif
 
     Output::Print(u"Missing barrier on 0x%p, target is 0x%p\n", objectAddress, target);
     AssertMsg(false, "Missing barrier.");
@@ -1926,40 +1808,6 @@ SmallHeapBlockT<TBlockAttributes>::AggregateBlockStats(HeapBucketStats& stats, b
         }
     }
 #endif
-}
-#endif
-
-#ifdef PROFILE_RECYCLER_ALLOC
-template <class TBlockAttributes>
-void *
-SmallHeapBlockT<TBlockAttributes>::GetTrackerData(void * address)
-{
-    Assert(Recycler::DoProfileAllocTracker());
-    ushort index = this->GetAddressIndex(address);
-    Assert(index != SmallHeapBlockT<TBlockAttributes>::InvalidAddressBit);
-    return this->GetTrackerDataArray()[index];
-}
-
-template <class TBlockAttributes>
-void
-SmallHeapBlockT<TBlockAttributes>::SetTrackerData(void * address, void * data)
-{
-    Assert(Recycler::DoProfileAllocTracker());
-    ushort index = this->GetAddressIndex(address);
-    Assert(index != SmallHeapBlockT<TBlockAttributes>::InvalidAddressBit);
-
-    void* existingTrackerData = this->GetTrackerDataArray()[index];
-    Assert((existingTrackerData == nullptr || data == nullptr) ||
-        (existingTrackerData == &Recycler::TrackerData::ExplicitFreeListObjectData || data == &Recycler::TrackerData::ExplicitFreeListObjectData));
-    this->GetTrackerDataArray()[index] = data;
-}
-
-template <class TBlockAttributes>
-void **
-SmallHeapBlockT<TBlockAttributes>::GetTrackerDataArray()
-{
-    // See SmallHeapBlockT<TBlockAttributes>::GetAllocPlusSize for layout description
-    return reinterpret_cast<void**>(reinterpret_cast<char*>(this) - SmallHeapBlockT<TBlockAttributes>::GetAllocPlusSize(this->objectCount));
 }
 #endif
 

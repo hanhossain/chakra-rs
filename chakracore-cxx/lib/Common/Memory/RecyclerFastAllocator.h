@@ -13,16 +13,6 @@ class RecyclerFastAllocator
 {
     typedef typename SmallHeapBlockType<(ObjectInfoBits)(attributes & GetBlockTypeBitMask), SmallAllocationBlockAttributes>::BlockType BlockType;
 public:
-#ifdef TRACK_ALLOC
-    RecyclerFastAllocator * TrackAllocInfo(TrackAllocData const& data)
-    {
-#ifdef PROFILE_RECYCLER_ALLOC
-        recycler->TrackAllocInfo(data);
-#endif
-        return this;
-    }
-#endif
-
     void Initialize(Recycler * recycler)
     {
         this->recycler = recycler;
@@ -44,10 +34,6 @@ public:
         Assert(!recycler->IsHeapEnumInProgress() || recycler->AllowAllocationDuringHeapEnum());
         Assert(size == sizeof(T));
 
-#ifdef PROFILE_RECYCLER_ALLOC
-        TrackAllocData trackAllocData;
-        recycler->ClearTrackAllocInfo(&trackAllocData);
-#endif
         size_t sizeCat = GetAlignedAllocSize();
         Assert(HeapInfo::IsSmallObject(sizeCat));
 
@@ -61,18 +47,7 @@ public:
             Assert(memBlock != nullptr);
         }
 
-#ifdef PROFILE_RECYCLER_ALLOC
-        recycler->TrackAlloc(memBlock, sizeof(T), trackAllocData);
-#endif
         RecyclerMemoryTracking::ReportAllocation(this->recycler, memBlock, sizeof(T));
-        ;
-        ;
-        ;
-
-        ;
-        ;
-        ;
-
 #ifdef RECYCLER_MEMORY_VERIFY
         recycler->FillCheckPad(memBlock, sizeof(T), sizeCat);
 #endif
@@ -106,7 +81,7 @@ public:
         allocator.SetFreeObjectList(freeObject);
     }
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
+#if defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     RecyclerFastAllocator()
     {
         allocator.SetTrackNativeAllocatedObjectCallBack(&TrackNativeAllocatedObject);
@@ -114,19 +89,7 @@ public:
 
     static void TrackNativeAllocatedObject(Recycler * recycler, void * memBlock, size_t sizeCat)
     {
-#ifdef PROFILE_RECYCLER_ALLOC
-        TrackAllocData trackAllocData = { &typeid(T), 0, (size_t)-1, NULL, 0 };
-        recycler->TrackAlloc(memBlock, sizeof(T), trackAllocData);
-#endif
         RecyclerMemoryTracking::ReportAllocation(recycler, memBlock, sizeof(T));
-        ;
-        ;
-        ;
-
-        ;
-        ;
-        ;
-
 #ifdef RECYCLER_MEMORY_VERIFY
         recycler->FillCheckPad(memBlock, sizeof(T), sizeCat, true);
 #endif

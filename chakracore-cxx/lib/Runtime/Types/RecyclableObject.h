@@ -407,11 +407,6 @@ namespace Js {
         virtual bool DbgIsDynamicObject() const { return false; }
         virtual BOOL DbgSkipsPrototype() const { return FALSE; }
 #endif
-#if defined(PROFILE_RECYCLER_ALLOC) && defined(RECYCLER_DUMP_OBJECT_GRAPH)
-    public:
-        static bool DumpObjectFunction(std::type_info const * typeinfo, bool isArray, void * objectAddress);
-#endif
-
     private:
 
         friend class LowererMD;

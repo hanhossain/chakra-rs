@@ -40,7 +40,7 @@ class MarkContext;
 #endif
 #endif  // ENABLE_MEM_STATS
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
+#if defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
 #define RECYCLER_TRACK_NATIVE_ALLOCATED_OBJECTS
 #endif
 
@@ -370,10 +370,6 @@ public:
 #ifdef RECYCLER_VERIFY_MARK
     virtual bool VerifyMark(void * objectAddress, void * target) = 0;
 #endif
-#ifdef PROFILE_RECYCLER_ALLOC
-    virtual void * GetTrackerData(void * address) = 0;
-    virtual void SetTrackerData(void * address, void * data) = 0;
-#endif
     bool isForceSweeping;
 };
 
@@ -675,10 +671,6 @@ public:
     void VerifyMark();
     virtual bool VerifyMark(void * objectAddress, void * target) override;
 #endif
-#ifdef PROFILE_RECYCLER_ALLOC
-    virtual void * GetTrackerData(void * address) override;
-    virtual void SetTrackerData(void * address, void * data) override;
-#endif
 
     static ushort GetAddressBitIndex(void * objectAddress);
     static void * GetRealAddressFromInterior(void * objectAddress, uint objectSize, byte bucketIndex);
@@ -743,11 +735,6 @@ protected:
 
 #if DBG
     uint GetMarkCountOnHeapBlockMap() const;
-#endif
-
-private:
-#ifdef PROFILE_RECYCLER_ALLOC
-    void ** GetTrackerDataArray();
 #endif
 };
 

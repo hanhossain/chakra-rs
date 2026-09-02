@@ -249,7 +249,7 @@ public:
     void SetReportModuleCompletionCallback(ReportModuleCompletionCallback processCallback) { this->reportModuleCompletionCallback = processCallback; }
     ReportModuleCompletionCallback GetReportModuleCompletionCallback() const { return this->reportModuleCompletionCallback; }
 
-#if DBG_DUMP || defined(PROFILE_EXEC) || defined(PROFILE_MEM)
+#if DBG_DUMP || defined(PROFILE_EXEC)
     void EnsureParentInfo(Js::ScriptContext* scriptContext = NULL) override
     {
         // nothing to do in jsrt.

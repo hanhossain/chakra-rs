@@ -186,7 +186,7 @@ public:
     Js::ScriptContext* GetScriptContext() { return scriptContext; }
 
     virtual bool SetCrossSiteForFunctionType(Js::JavascriptFunction * function) = 0;
-#if DBG_DUMP || defined(PROFILE_EXEC) || defined(PROFILE_MEM)
+#if DBG_DUMP || defined(PROFILE_EXEC)
     virtual void EnsureParentInfo(Js::ScriptContext* scriptContext = NULL) = 0;
 #endif
 #if DBG

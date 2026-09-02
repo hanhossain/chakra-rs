@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RecyclerObjectGraphDumper.h"
-#include "Memory/RecyclerObjectDumper.h"
 
 #ifdef RECYCLER_DUMP_OBJECT_GRAPH
 
@@ -14,9 +13,6 @@ RecyclerObjectGraphDumper::RecyclerObjectGraphDumper(Recycler * recycler, Recycl
     dumpObjectName(nullptr),
     dumpObject(nullptr),
     isOutOfMemory(false)
-#ifdef PROFILE_RECYCLER_ALLOC
-    , dumpObjectTypeInfo(nullptr)
-#endif
 {
     recycler->objectGraphDumper = this;
 }
@@ -46,24 +42,6 @@ void RecyclerObjectGraphDumper::BeginDumpObject(void * objectAddress)
     Assert(dumpObjectName == nullptr);
     Assert(dumpObject == nullptr);
     this->dumpObject = objectAddress;
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (recycler->trackerDictionary)
-    {
-        Recycler::TrackerData * trackerData = recycler->GetTrackerData(objectAddress);
-
-        if (trackerData != nullptr)
-        {
-            this->dumpObjectTypeInfo = trackerData->typeinfo;
-            this->dumpObjectIsArray = trackerData->isArray;
-        }
-        else
-        {
-            Assert(false);
-            this->dumpObjectTypeInfo = nullptr;
-            this->dumpObjectIsArray = false;
-        }
-    }
-#endif
 }
 
 void RecyclerObjectGraphDumper::EndDumpObject()
@@ -89,11 +67,7 @@ void RecyclerObjectGraphDumper::DumpObjectReference(void * objectAddress, bool r
         else
         {
             Assert(this->dumpObject != nullptr);
-#ifdef PROFILE_RECYCLER_ALLOC
-            RecyclerObjectDumper::DumpObject(this->dumpObjectTypeInfo, this->dumpObjectIsArray, this->dumpObject);
-#else
             Output::Print(u"Address %p", objectAddress);
-#endif
         }
 
         Output::Print(remark? u"\" => \"" : u"\" -> \"");

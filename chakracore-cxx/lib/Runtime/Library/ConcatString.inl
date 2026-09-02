@@ -112,12 +112,7 @@ namespace Js
         Recycler* recycler = inner->GetRecycler();
         //return RecyclerNew(recycler, ConcatStringWrapping<L, R>, inner);
         // Expand the RecyclerNew macro as it breaks for more than one template arguments.
-#ifdef TRACK_ALLOC
-        return new (recycler->TrackAllocInfo(TrackAllocData::CreateTrackAllocData(typeid(ConcatStringWrapping<L, R>), 0, (size_t)-1, __FILE__, __LINE__)),
-            &Recycler::Alloc) ConcatStringWrapping<L, R>(inner);
-#else
         return new (recycler, &Recycler::Alloc) ConcatStringWrapping<L, R>(inner);
-#endif
     }
 
     template<char16_t L, char16_t R>

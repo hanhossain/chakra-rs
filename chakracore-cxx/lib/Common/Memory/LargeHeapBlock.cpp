@@ -120,12 +120,6 @@ LargeHeapBlock::GetAllocPlusSize(uint objectCount)
     //      LargeObjectHeader * [objectCount]
     //      TrackerData *       [objectCount] (Optional)
     size_t allocPlusSize = objectCount * (sizeof(LargeObjectHeader *));
-#ifdef PROFILE_RECYCLER_ALLOC
-    if (Recycler::DoProfileAllocTracker())
-    {
-        allocPlusSize += objectCount * sizeof(void *);
-    }
-#endif
     return allocPlusSize;
 }
 
@@ -2119,40 +2113,6 @@ LargeHeapBlock::GetMarkCount()
 
     return markCount;
 }
-
-#ifdef PROFILE_RECYCLER_ALLOC
-void *
-LargeHeapBlock::GetTrackerData(void * address)
-{
-    Assert(Recycler::DoProfileAllocTracker());
-    LargeObjectHeader * header = GetHeader(address);
-    Assert(reinterpret_cast<char*>(header) >= this->address);
-    uint index = header->objectIndex;
-    Assert(index < this->allocCount);
-    Assert(this->HeaderList()[index] == header);
-    return this->GetTrackerDataArray()[index];
-}
-
-void
-LargeHeapBlock::SetTrackerData(void * address, void * data)
-{
-    Assert(Recycler::DoProfileAllocTracker());
-    LargeObjectHeader * header = GetHeader(address);
-    Assert(reinterpret_cast<char*>(header) >= this->address);
-    uint index = header->objectIndex;
-    Assert(index < this->allocCount);
-    Assert(this->HeaderList()[index] == header);
-    this->GetTrackerDataArray()[index] = data;
-}
-
-void **
-LargeHeapBlock::GetTrackerDataArray()
-{
-    // See LargeHeapBlock::GetAllocPlusSize for layout description
-    return reinterpret_cast<void**>(reinterpret_cast<char*>(this + 1) + LargeHeapBlock::GetAllocPlusSize(this->objectCount) - this
-        ->objectCount * sizeof(void*));
-}
-#endif
 
 void
 LargeHeapBlock::PageHeapLockPages()

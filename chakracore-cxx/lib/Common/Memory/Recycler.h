@@ -34,10 +34,6 @@ class StackBackTraceNode;
 class ScriptEngineBase;
 class JavascriptThreadService;
 
-#ifdef PROFILE_MEM
-struct RecyclerMemoryData;
-#endif
-
 class ThreadContext;
 
 namespace Memory
@@ -227,20 +223,6 @@ private:
 #define RecyclerAllocLeaf(recycler,size) (TRACK_ALLOC_INFO(recycler, DummyVTableObject, Recycler, size, (size_t)-1))->AllocVisitedHost<LeafBit>(size)
 #endif
 
-#ifdef TRACE_OBJECT_LIFETIME
-#define RecyclerNewLeafTrace(recycler,T,...) AllocatorNewBase(Recycler, recycler, AllocLeafTrace, T, __VA_ARGS__)
-#define RecyclerNewLeafZTrace(recycler,T,...) AllocatorNewBase(Recycler, recycler, AllocLeafZeroTrace, T, __VA_ARGS__)
-#define RecyclerNewPlusLeafTrace(recycler,size,T,...) AllocatorNewPlusBase(Recycler, recycler, AllocLeafTrace, size, T, __VA_ARGS__)
-#define RecyclerNewArrayLeafZTrace(recycler,T,count) AllocatorNewArrayBase(Recycler, recycler, AllocLeafZeroTrace, T, count)
-#define RecyclerNewArrayTrace(recycler,T,count) AllocatorNewArrayBase(Recycler, recycler, AllocTrace, T, count)
-#define RecyclerNewArrayZTrace(recycler,T,count) AllocatorNewArrayBase(Recycler, recycler, AllocZeroTrace, T, count)
-#define RecyclerNewArrayLeafTrace(recycler,T,count) AllocatorNewArrayBase(Recycler, recycler, AllocLeafTrace, T, count)
-#define RecyclerNewFinalizedTrace(recycler,T,...) static_cast<T *>(static_cast<FinalizableObject *>(AllocatorNewBase(Recycler, recycler, AllocFinalizedTrace, T, __VA_ARGS__)))
-#define RecyclerNewFinalizedLeafTrace(recycler,T,...) static_cast<T *>(static_cast<FinalizableObject *>(AllocatorNewBase(Recycler, recycler, AllocFinalizedLeafTrace, T, __VA_ARGS__)))
-#define RecyclerNewFinalizedPlusTrace(recycler, size, T,...) static_cast<T *>(static_cast<FinalizableObject *>(AllocatorNewPlusBase(Recycler, recycler, AllocFinalizedTrace, size, T, __VA_ARGS__)))
-#define RecyclerNewTrackedTrace(recycler,T,...) static_cast<T *>(static_cast<FinalizableObject *>(AllocatorNewBase(Recycler, recycler, AllocTrackedTrace, T, __VA_ARGS__)))
-#define RecyclerNewTrackedLeafTrace(recycler,T,...) static_cast<T *>(static_cast<FinalizableObject *>(AllocatorNewBase(Recycler, recycler, AllocTrackedLeafTrace, T, __VA_ARGS__)))
-#else
 #define RecyclerNewLeafTrace RecyclerNewLeaf
 #define RecyclerNewLeafZTrace  RecyclerNewLeafZ
 #define RecyclerNewPlusLeafTrace RecyclerNewPlusLeaf
@@ -253,7 +235,6 @@ private:
 #define RecyclerNewFinalizedPlusTrace RecyclerNewFinalizedPlus
 #define RecyclerNewTrackedTrace RecyclerNewTracked
 #define RecyclerNewTrackedLeafTrace RecyclerNewTrackedLeaf
-#endif
 
 #define RecyclerHeapNew(recycler,heapInfo,T,...) new (recycler, heapInfo) T(__VA_ARGS__)
 #define RecyclerHeapDelete(recycler,heapInfo,addr) (static_cast<Recycler *>(recycler)->HeapFree(heapInfo,addr))
@@ -1122,15 +1103,7 @@ public:
     template <typename ExternalAllocFunc>
     bool DoExternalAllocation(size_t size, ExternalAllocFunc externalAllocFunc);
 
-#ifdef TRACE_OBJECT_LIFETIME
-#define DEFINE_RECYCLER_ALLOC_TRACE(AllocFunc, AllocWithAttributesFunc, attributes) \
-    inline char* AllocFunc##Trace(size_t size) \
-    { \
-        return AllocWithAttributesFunc<static_cast<ObjectInfoBits>(attributes | TraceBit), /* nothrow = */ false>(size); \
-    }
-#else
 #define DEFINE_RECYCLER_ALLOC_TRACE(AllocFunc, AllocWithAttributeFunc, attributes)
-#endif
 #define DEFINE_RECYCLER_ALLOC_BASE(AllocFunc, AllocWithAttributesFunc, attributes) \
     inline char * AllocFunc(size_t size) \
     { \
@@ -1637,66 +1610,6 @@ private:
     // while we have debug only flag for each of the two scenarios.
     bool isCollectionDisabled;
 
-#ifdef TRACK_ALLOC
-public:
-    Recycler * TrackAllocInfo(TrackAllocData const& data);
-    void ClearTrackAllocInfo(TrackAllocData* data = NULL);
-
-#ifdef PROFILE_RECYCLER_ALLOC
-private:
-    static bool DoProfileAllocTracker();
-    void InitializeProfileAllocTracker();
-    void TrackUnallocated(char* address, char *endAddress, size_t sizeCat);
-    void TrackAllocCore(void * object, size_t size, const TrackAllocData& trackAllocData, bool traceLifetime = false);
-    void* TrackAlloc(void * object, size_t size, const TrackAllocData& trackAllocData, bool traceLifetime = false);
-
-    void TrackIntegrate(__in_ecount(blockSize) char * blockAddress, size_t blockSize, size_t allocSize, size_t objectSize, const TrackAllocData& trackAllocData);
-    BOOL TrackFree(const char* address, size_t size);
-
-    struct TrackerData
-    {
-        TrackerData(std::type_info const * typeinfo, bool isArray) : typeinfo(typeinfo), isArray(isArray),
-            ItemSize(0), ItemCount(0), AllocCount(0), ReqSize(0), AllocSize(0), FreeCount(0), FreeSize(0), TraceLifetime(false)
-        {
-        }
-
-        std::type_info const * typeinfo;
-        bool isArray;
-#ifdef TRACE_OBJECT_LIFETIME
-        bool TraceLifetime;
-#endif
-
-        size_t ItemSize;
-        size_t ItemCount;
-        int AllocCount;
-        long ReqSize;
-        long AllocSize;
-        int FreeCount;
-        long FreeSize;
-
-        static TrackerData EmptyData;
-        static TrackerData ExplicitFreeListObjectData;
-    };
-    TrackerData * GetTrackerData(void * address);
-    void SetTrackerData(void * address, TrackerData * data);
-
-    struct TrackerItem
-    {
-        TrackerItem(std::type_info const * typeinfo) : instanceData(typeinfo, false), arrayData(typeinfo, true)
-        {}
-        TrackerData instanceData;
-        TrackerData arrayData;
-    };
-
-    typedef JsUtil::BaseDictionary<std::type_info const *, TrackerItem *, NoCheckHeapAllocator, PrimeSizePolicy, DefaultComparer, JsUtil::SimpleDictionaryEntry, JsUtil::NoResizeLock> TypeInfotoTrackerItemMap;
-    typedef JsUtil::BaseDictionary<void *, TrackerData *, NoCheckHeapAllocator, PrimeSizePolicy, RecyclerPointerComparer, JsUtil::SimpleDictionaryEntry, JsUtil::NoResizeLock> PointerToTrackerDataMap;
-
-    TypeInfotoTrackerItemMap * trackerDictionary;
-    std::recursive_mutex trackerCriticalSection;
-#endif
-    TrackAllocData nextAllocData;
-#endif
-
 public:
     // Enumeration
     class AutoSetupRecyclerForNonCollectingMark
@@ -2004,10 +1917,6 @@ public:
     virtual void SetObjectMarkedBit(void* objectAddress) override { Assert(false); }
 #ifdef RECYCLER_VERIFY_MARK
     virtual bool VerifyMark(void * objectAddress, void * target) override { Assert(false); return false; }
-#endif
-#ifdef PROFILE_RECYCLER_ALLOC
-    virtual void * GetTrackerData(void * address) override { Assert(false); return nullptr; }
-    virtual void SetTrackerData(void * address, void * data) override { Assert(false); }
 #endif
     static CollectedRecyclerWeakRefHeapBlock Instance;
 private:

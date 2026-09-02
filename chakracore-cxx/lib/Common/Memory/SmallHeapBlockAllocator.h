@@ -42,7 +42,7 @@ public:
     FreeObject *GetFreeObjectList() { return freeObjectList; }
     void SetFreeObjectList(FreeObject *freeObject) { freeObjectList = freeObject; }
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
+#if defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     void SetTrackNativeAllocatedObjectCallBack(void (*pfnCallBack)(Recycler *, void *, size_t))
     {
         pfnTrackNativeAllocatedObjectCallBack = pfnCallBack;
@@ -85,7 +85,7 @@ private:
     template <class TBlockAttributes>
     friend class SmallHeapBlockT;
 #endif
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY)
+#if defined(RECYCLER_MEMORY_VERIFY)
     HeapBucket * bucket;
 #endif
 
@@ -93,7 +93,7 @@ private:
     char * lastNonNativeBumpAllocatedBlock;
     void TrackNativeAllocatedObjects();
 #endif
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
+#if defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     void (*pfnTrackNativeAllocatedObjectCallBack)(Recycler * recycler, void *, size_t sizeCat);
 #endif
 };

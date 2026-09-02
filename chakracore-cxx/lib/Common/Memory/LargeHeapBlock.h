@@ -183,10 +183,6 @@ public:
     void VerifyMark();
     virtual bool VerifyMark(void * objectAddress, void * target) override;
 #endif
-#ifdef PROFILE_RECYCLER_ALLOC
-    virtual void * GetTrackerData(void * address) override;
-    virtual void SetTrackerData(void * address, void * data) override;
-#endif
 private:
     friend class LargeHeapBucket;
 #ifdef RECYCLER_MEMORY_VERIFY
@@ -284,10 +280,6 @@ public:
     uint expectedSweepCount;
 #endif
     friend class ::ScriptMemoryDumper;
-#ifdef PROFILE_RECYCLER_ALLOC
-    void ** GetTrackerDataArray();
-#endif
-
 #if DBG
 private:
     static std::recursive_mutex wbVerifyBitsLock;

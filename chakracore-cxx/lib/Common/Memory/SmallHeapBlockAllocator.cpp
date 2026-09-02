@@ -62,10 +62,6 @@ SmallHeapBlockAllocator<TBlockType>::Clear()
             TrackNativeAllocatedObjects();
             lastNonNativeBumpAllocatedBlock = nullptr;
 #endif
-#ifdef PROFILE_RECYCLER_ALLOC
-            // Need to tell the tracker
-            this->bucket->heapInfo->recycler->TrackUnallocated(reinterpret_cast<char*>(this->freeObjectList), this->endAddress, this->bucket->sizeCat);
-#endif
             RecyclerMemoryTracking::ReportUnallocated(this->heapBlock->heapBucket->heapInfo->recycler, reinterpret_cast<char*>(this->freeObjectList), this->endAddress, heapBlock->heapBucket->sizeCat);
             Assert(heapBlock->freeObjectList == nullptr);
             this->endAddress = nullptr;
@@ -185,7 +181,7 @@ SmallHeapBlockAllocator<TBlockType>::TrackNativeAllocatedObjects()
     Assert(this->freeObjectList != nullptr && endAddress != nullptr);
     Assert(this->heapBlock != nullptr);
 
-#if defined(PROFILE_RECYCLER_ALLOC) || defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
+#if defined(RECYCLER_MEMORY_VERIFY) || defined(MEMSPECT_TRACKING)
     if (pfnTrackNativeAllocatedObjectCallBack == nullptr)
     {
         return;
