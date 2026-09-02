@@ -391,7 +391,6 @@ namespace Js
         #endif
         MaxJITFunctionBytecodeByteLengthFlag,
         MaxJITFunctionBytecodeCountFlag,
-        MaxLoopsPerFunctionFlag,
         NoDeferParseFlag,
         OOPJITMissingOptsFlag,
         ForceJITCFGCheckFlag,
@@ -1766,8 +1765,6 @@ namespace Js
         Number MaxJITFunctionBytecodeByteLength;
         // TODO (hanhossain): remove flag
         Number MaxJITFunctionBytecodeCount;
-        // TODO (hanhossain): remove flag
-        Number MaxLoopsPerFunction;
         // todo (hanhossain): flag end
         Boolean NoDeferParse;
         Boolean OOPJITMissingOpts;

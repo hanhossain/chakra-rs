@@ -358,7 +358,6 @@ namespace Js
 #define DEFAULT_CONFIG_PageHeapAllocStack   (false)
 
 #define DEFAULT_CONFIG_MaxCodeFill          (500)
-#define DEFAULT_CONFIG_MaxLoopsPerFunction  (10)
 #define DEFAULT_CONFIG_ProfileBasedSpeculationCap (1600)
 #define DEFAULT_CONFIG_ForceStrictMode      (false)
 #define DEFAULT_CONFIG_ExpirableCollectionGCCount (5)  // Number of GCs during which entry point profiling occurs
@@ -946,7 +945,6 @@ namespace Js
 #endif
         u"MaxJITFunctionBytecodeByteLength",
         u"MaxJITFunctionBytecodeCount",
-        u"MaxLoopsPerFunction",
         u"NoDeferParse",
         u"OOPJITMissingOpts",
         u"ForceJITCFGCheck",
@@ -1781,7 +1779,6 @@ namespace Js
 #endif
         u"The biggest function we'll JIT (bytecode bytelength)",
         u"The biggest function we'll JIT (bytecode count)",
-        u"Maximum number of loops in any function in the script",
         // todo (hanhossain): flag end
         u"Disable deferred parsing",
         u"Use optimizations that are missing from OOP JIT",
@@ -2210,7 +2207,6 @@ namespace Js
 #if DBG
         NoParentFlag,
 #endif
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         // todo (hanhossain): flag end
@@ -2665,7 +2661,6 @@ namespace Js
 #endif
         MaxJITFunctionBytecodeByteLength(DEFAULT_CONFIG_MaxJITFunctionBytecodeByteLength),
         MaxJITFunctionBytecodeCount(DEFAULT_CONFIG_MaxJITFunctionBytecodeCount),
-        MaxLoopsPerFunction(DEFAULT_CONFIG_MaxLoopsPerFunction),
         NoDeferParse(false),
         OOPJITMissingOpts(DEFAULT_CONFIG_OOPJITMissingOpts),
         ForceJITCFGCheck(DEFAULT_CONFIG_ForceJITCFGCheck),
@@ -3975,8 +3970,6 @@ namespace Js
             return FlagNumber;
         case MaxJITFunctionBytecodeCountFlag:
             return FlagNumber;
-        case MaxLoopsPerFunctionFlag:
-            return FlagNumber;
         case NoDeferParseFlag:
             return FlagBoolean;
         case OOPJITMissingOptsFlag:
@@ -4717,8 +4710,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxJITFunctionBytecodeByteLength));
         case MaxJITFunctionBytecodeCountFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxJITFunctionBytecodeCount));
-        case MaxLoopsPerFunctionFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MaxLoopsPerFunction));
         case NoDeferParseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&NoDeferParse));
         case OOPJITMissingOptsFlag:
