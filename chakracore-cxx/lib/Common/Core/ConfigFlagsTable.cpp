@@ -512,8 +512,6 @@ namespace Js
 #define DEFAULT_CONFIG_MinSwitchJumpTableSize   (9)     // Minimum number of case target entries in the jump table(this may also include values that are missing in the consecutive set of integer case arms)
 #define DEFAULT_CONFIG_MaxLinearStringCaseCount (4)     // Maximum number of String cases (in switch statement) for which instructions can be generated linearly.
 
-#define DEFAULT_CONFIG_MinDeferredFuncTokenCount (20)   // Minimum size in tokens of a defer-parsed function
-
 #define DEFAULT_CONFIG_MinBailOutsBeforeRejit 2         // Minimum number of bailouts for a single bailout record after which a rejit is considered
 
 #define DEFAULT_CONFIG_Sse                  (-1)
@@ -933,7 +931,6 @@ namespace Js
         u"MaxSingleCharStrJumpTableRatio",
         u"MinSwitchJumpTableSize",
         u"MaxLinearStringCaseCount",
-        u"MinDeferredFuncTokenCount",
         u"NoDeferParse",
         u"OOPJITMissingOpts",
         u"ForceJITCFGCheck",
@@ -1762,7 +1759,6 @@ namespace Js
         u"Maximum single char string jump table size as multiples of the actual case arm",
         u"Minimum size of the jump table, that is created for consecutive integer case arms in a Switch Statement",
         u"Maximum number of string cases(in switch statement) for which instructions can be generated linearly",
-        u"Minimum length in tokens of defer-parsed function",
         // todo (hanhossain): flag end
         u"Disable deferred parsing",
         u"Use optimizations that are missing from OOP JIT",
@@ -2182,7 +2178,6 @@ namespace Js
 
         NoParentFlag,
 
-        NoParentFlag,
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
@@ -2634,7 +2629,6 @@ namespace Js
         MaxSingleCharStrJumpTableRatio(DEFAULT_CONFIG_MaxSingleCharStrJumpTableRatio),
         MinSwitchJumpTableSize(DEFAULT_CONFIG_MinSwitchJumpTableSize),
         MaxLinearStringCaseCount(DEFAULT_CONFIG_MaxLinearStringCaseCount),
-        MinDeferredFuncTokenCount(DEFAULT_CONFIG_MinDeferredFuncTokenCount),
         NoDeferParse(false),
         OOPJITMissingOpts(DEFAULT_CONFIG_OOPJITMissingOpts),
         ForceJITCFGCheck(DEFAULT_CONFIG_ForceJITCFGCheck),
@@ -3934,8 +3928,6 @@ namespace Js
             return FlagNumber;
         case MaxLinearStringCaseCountFlag:
             return FlagNumber;
-        case MinDeferredFuncTokenCountFlag:
-            return FlagNumber;
         case NoDeferParseFlag:
             return FlagBoolean;
         case OOPJITMissingOptsFlag:
@@ -4666,8 +4658,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Number*>(&MinSwitchJumpTableSize));
         case MaxLinearStringCaseCountFlag:
             return reinterpret_cast<void*>(const_cast<Number*>(&MaxLinearStringCaseCount));
-        case MinDeferredFuncTokenCountFlag:
-            return reinterpret_cast<void*>(const_cast<Number*>(&MinDeferredFuncTokenCount));
         case NoDeferParseFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&NoDeferParse));
         case OOPJITMissingOptsFlag:

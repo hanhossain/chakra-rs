@@ -5843,9 +5843,12 @@ void Parser::ParseFncDeclHelper(ParseNodeFnc * pnodeFnc, LPCOLESTR pNameHint, us
                 PHASE_FORCE_RAW(Js::ScanAheadPhase, m_sourceContextInfo->sourceContextId, pnodeFnc->functionId)
                 ))
         {
+            // Minimum size in tokens of a defer-parsed function
+            constexpr uint32_t MinDeferredFuncTokenCount = 20;
+
             // Try to scan ahead to the end of the function. If we get there before we've scanned a minimum
             // number of tokens, don't bother deferring, because it's too small.
-            if (this->ScanAheadToFunctionEnd(CONFIG_FLAG(MinDeferredFuncTokenCount)))
+            if (this->ScanAheadToFunctionEnd(MinDeferredFuncTokenCount))
             {
                 isTopLevelDeferredFunc = false;
             }
