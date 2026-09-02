@@ -66,13 +66,6 @@ void ConfigParser::ProcessConfiguration()
             CONFIG_FLAG(InMemoryTraceBufferSize) * 3));   // With stack each trace is 3 entries (header, msg, stack).
         hasOutput = true;
     }
-
-#ifdef STACK_BACK_TRACE
-    if (CONFIG_FLAG(TraceWithStack))
-    {
-        Output::SetStackTraceHelper(Js::StackTraceHelper::Create(::GetOutputAllocator2()));
-    }
-#endif // STACK_BACK_TRACE
 #endif // ENABLE_TRACE
 
     if (Js::Configuration::Global.flags.ForceSerialized)

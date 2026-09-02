@@ -84,10 +84,6 @@ public:
         return retValue;
     }    
     static void     SetInMemoryLogger(Js::ILogger* logger);
-#ifdef STACK_BACK_TRACE
-    static void     SetStackTraceHelper(Js::IStackTraceHelper* helper);
-#endif
-    
 #endif // ENABLE_TRACE
     static size_t Print(const char16_t *form, ...);
     static size_t Print(int column, const char16_t *form, ...);
@@ -111,9 +107,6 @@ private:
 #ifdef ENABLE_TRACE
     static Js::ILogger* s_inMemoryLogger;       // Used to trace into memory so that when process crashes, you can see tracing in crash dump file.
     static unsigned int s_traceEntryId;         // Sequential id of trace entry for rich output format.
-#ifdef STACK_BACK_TRACE
-    static Js::IStackTraceHelper* s_stackTraceHelper; // Used for capturing stack trace.
-#endif
     static size_t VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const char16_t *form, va_list argptr);
 #endif // ENABLE_TRACE
 
