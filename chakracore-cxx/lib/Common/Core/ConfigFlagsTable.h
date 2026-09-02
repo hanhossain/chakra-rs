@@ -405,7 +405,6 @@ namespace Js
         NoStrictModeFlag,
         NormalizeStatsFlag,
         OffFlag,
-        OffProfiledByteCodeFlag,
         OnFlag,
         #ifdef ENABLE_PREJIT
         PrejitFlag,
@@ -1795,10 +1794,8 @@ namespace Js
         Boolean NoStrictMode;
         // TODO (hanhossain): remove flag
         Boolean NormalizeStats;
-        Phases Off;
-        // TODO (hanhossain): remove flag
-        Phases OffProfiledByteCode;
         // todo (hanhossain): flag end
+        Phases Off;
         Phases On;
         #ifdef ENABLE_PREJIT
             Boolean Prejit;
@@ -1925,10 +1922,6 @@ namespace Js
 #define CUSTOM_CONFIG_FLAG(flags, flag) (flags.flag)
 #define CONFIG_FLAG_RELEASE(flag)   CONFIG_FLAG(flag)
 #define CONFIG_FLAG_CONTAINS(flag, func)  (Js::Configuration::Global.flags.##flag.Contains((func)->GetLocalFunctionId()))
-
-#define PHASE_OFF_PROFILED_BYTE_CODE(phase, func) Js::Configuration::Global.flags.OffProfiledByteCode.IsEnabled((phase),(func)->GetSourceContextId(),(func)->GetLocalFunctionId())
-#define PHASE_OFF_PROFILED_BYTE_CODE_ALL(phase) Js::Configuration::Global.flags.OffProfiledByteCode.IsEnabledForAll((phase))
-#define PHASE_OFF_PROFILED_BYTE_CODE_OPTFUNC(phase, func) ((func) ? PHASE_OFF_PROFILED_BYTE_CODE(phase, func) : PHASE_OFF_PROFILED_BYTE_CODE_ALL(phase))
 
 #define PHASE_OFF1(phase)           Js::Configuration::Global.flags.Off.IsEnabled((phase))
 #define CUSTOM_PHASE_OFF1(flags, phase)           flags.Off.IsEnabled((phase))

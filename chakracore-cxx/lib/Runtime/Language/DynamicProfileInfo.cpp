@@ -266,15 +266,14 @@ namespace Js
         case Phase::ArrayCheckHoistPhase:
         case Phase::SwitchOptPhase:
         case Phase::FixedNewObjPhase:
-            return !PHASE_OFF_PROFILED_BYTE_CODE_OPTFUNC(phase, functionBody);
+            return true;
 
         case Phase::NativeArrayPhase:
         case Phase::FloatTypeSpecPhase:
-            return !PHASE_OFF_PROFILED_BYTE_CODE_OPTFUNC(phase, functionBody)
-                ;
+            return true;
 
         case Phase::InlinePhase:
-            return !PHASE_OFF_PROFILED_BYTE_CODE_OPTFUNC(Phase::InlinePhase, functionBody);
+            return true;
         }
         return false;
     }

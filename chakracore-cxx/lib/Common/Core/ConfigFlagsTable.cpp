@@ -965,7 +965,6 @@ namespace Js
         u"NoStrictMode",
         u"NormalizeStats",
         u"Off",
-        u"OffProfiledByteCode",
         u"On",
 #ifdef ENABLE_PREJIT
         u"Prejit",
@@ -1807,9 +1806,8 @@ namespace Js
         u"Frequency of NOPs inserted by NOP insertion phase.  A NOP is guaranteed to be inserted within a range of (1<<n) instrs (default=8)",
         u"Disable strict mode checks on all functions",
         u"When dumping stats, do some normalization (used with -instrument:linearscan)",
-        u"Turn off specific phases or feature.(Might not work for all phases)",
-        u"Turn off specific byte code for phases or feature.(Might not work for all phases)",
         // todo (hanhossain): flag end
+        u"Turn off specific phases or feature.(Might not work for all phases)",
         u"Turn on specific phases or feature.(Might not work for all phases)",
 #ifdef ENABLE_PREJIT
         u"Prejit everything, including things that are not called, ignoring limits (default: false)",
@@ -2246,9 +2244,8 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-        NoParentFlag,
         // todo (hanhossain): flag end
+        NoParentFlag,
         NoParentFlag,
 #ifdef ENABLE_PREJIT
         NoParentFlag,
@@ -2708,7 +2705,6 @@ namespace Js
         NoStrictMode(false),
         NormalizeStats(false),
         Off(),
-        OffProfiledByteCode(),
         On(),
 #ifdef ENABLE_PREJIT
         Prejit(DEFAULT_CONFIG_Prejit),
@@ -4040,8 +4036,6 @@ namespace Js
             return FlagBoolean;
         case OffFlag:
             return FlagPhases;
-        case OffProfiledByteCodeFlag:
-            return FlagPhases;
         case OnFlag:
             return FlagPhases;
         #ifdef ENABLE_PREJIT
@@ -4798,8 +4792,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<Boolean*>(&NormalizeStats));
         case OffFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&Off));
-        case OffProfiledByteCodeFlag:
-            return reinterpret_cast<void*>(const_cast<Phases*>(&OffProfiledByteCode));
         case OnFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&On));
         #ifdef ENABLE_PREJIT
