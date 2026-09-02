@@ -1349,11 +1349,13 @@ NativeCodeGenerator::AfterWaitForJob(Js::EntryPointInfo *const entryPoint) const
 bool
 NativeCodeGenerator::WorkItemExceedsJITLimits(CodeGenWorkItem *const codeGenWork)
 {
+    // The biggest function we'll JIT (bytecode count)
+    constexpr uint32_t MaxJITFunctionBytecodeCount = 120000;
     return
         (codeGenWork->GetScriptContext()->GetThreadContext()->GetCodeSize() >= Js::Constants::MaxThreadJITCodeHeapSize) ||
         (ThreadContext::GetProcessCodeSize() >= Js::Constants::MaxProcessJITCodeHeapSize) ||
         (codeGenWork->GetByteCodeLength() >= (uint)CONFIG_FLAG(MaxJITFunctionBytecodeByteLength)) ||
-        (codeGenWork->GetByteCodeCount() >= (uint)CONFIG_FLAG(MaxJITFunctionBytecodeCount));
+        (codeGenWork->GetByteCodeCount() >= MaxJITFunctionBytecodeCount);
 }
 bool
 NativeCodeGenerator::Process(JsUtil::Job *const job, JsUtil::ParallelThreadData *threadData)

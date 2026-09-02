@@ -516,7 +516,6 @@ private:
 #define DEFAULT_CONFIG_EnumerateSpecialPropertiesInDebugger (true)
 
 #define DEFAULT_CONFIG_MaxJITFunctionBytecodeByteLength (4800000)
-#define DEFAULT_CONFIG_MaxJITFunctionBytecodeCount (120000)
 
 #define DEFAULT_CONFIG_JitQueueThreshold      (6)
 
