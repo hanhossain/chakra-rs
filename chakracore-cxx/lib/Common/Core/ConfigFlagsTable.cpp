@@ -981,7 +981,6 @@ namespace Js
 #ifdef ENABLE_PREJIT
         u"Prejit",
 #endif
-        u"PrintSrcInDump",
 #ifdef PROFILE_EXEC
         u"Profile",
 #endif
@@ -1830,11 +1829,10 @@ namespace Js
 #endif // STACK_BACK_TRACE
 #endif // ENABLE_TRACE
         u"Print traces needed for runtime data collection",
+        // todo (hanhossain): flag end
 #ifdef ENABLE_PREJIT
         u"Prejit everything, including things that are not called, ignoring limits (default: false)",
 #endif
-        u"Print the lineno and the source code in the intermediate dumps",
-        // todo (hanhossain): flag end
 #ifdef PROFILE_EXEC
         u"Profile the given phase",
 #endif
@@ -2278,11 +2276,10 @@ namespace Js
 #endif // STACK_BACK_TRACE
 #endif // ENABLE_TRACE
         NoParentFlag,
+        // todo (hanhossain): flag end
 #ifdef ENABLE_PREJIT
         NoParentFlag,
 #endif
-        NoParentFlag,
-        // todo (hanhossain): flag end
 #ifdef PROFILE_EXEC
         NoParentFlag,
 #endif
@@ -2751,7 +2748,6 @@ namespace Js
 #ifdef ENABLE_PREJIT
         Prejit(DEFAULT_CONFIG_Prejit),
 #endif
-        PrintSrcInDump(true),
 #ifdef PROFILE_EXEC
         Profile(),
 #endif
@@ -4099,8 +4095,6 @@ namespace Js
         case PrejitFlag:
             return FlagBoolean;
         #endif
-        case PrintSrcInDumpFlag:
-            return FlagBoolean;
         #ifdef PROFILE_EXEC
         case ProfileFlag:
             return FlagPhases;
@@ -4871,8 +4865,6 @@ namespace Js
         case PrejitFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&Prejit));
         #endif
-        case PrintSrcInDumpFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&PrintSrcInDump));
         #ifdef PROFILE_EXEC
         case ProfileFlag:
             return reinterpret_cast<void*>(const_cast<Phases*>(&Profile));
@@ -5593,9 +5585,6 @@ namespace Js
             retValue = DEFAULT_CONFIG_Prejit;
             break;
         #endif
-        case PrintSrcInDumpFlag:
-            retValue = true;
-            break;
         #ifdef RECYCLER_STRESS
         case RecyclerStressFlag:
             retValue = false;

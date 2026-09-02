@@ -418,7 +418,6 @@ namespace Js
         #ifdef ENABLE_PREJIT
         PrejitFlag,
         #endif
-        PrintSrcInDumpFlag,
         #ifdef PROFILE_EXEC
         ProfileFlag,
         #endif
@@ -1820,12 +1819,10 @@ namespace Js
         #endif // ENABLE_TRACE
         // TODO (hanhossain): remove flag
         Boolean PrintRunTimeDataCollectionTrace;
+        // todo (hanhossain): flag end
         #ifdef ENABLE_PREJIT
             Boolean Prejit;
         #endif
-        // TODO (hanhossain): remove flag
-        Boolean PrintSrcInDump;
-        // todo (hanhossain): flag end
         #ifdef PROFILE_EXEC
             Phases Profile;
         #endif
