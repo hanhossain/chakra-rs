@@ -19,6 +19,7 @@
 #include "Language/JavascriptStackWalker.h"
 #include "Base/ScriptMemoryDumper.h"
 #include "Memory/RecyclerWatsonTelemetry.h"
+#include <memory>
 
 const int TotalNumberOfBuiltInProperties = Js::PropertyIds::_countJSOnlyProperty;
 
@@ -462,16 +463,30 @@ void ThreadContext::ValidateThreadContext()
 #endif
 }
 
-class AutoRecyclerPtr : public AutoPtr<Recycler>
+class AutoRecyclerPtr
 {
+    std::unique_ptr<Recycler> recycler_;
 public:
-    AutoRecyclerPtr(Recycler * ptr) : AutoPtr<Recycler>(ptr) {}
+    AutoRecyclerPtr(Recycler * ptr) : recycler_(ptr) {}
     ~AutoRecyclerPtr()
     {
-        if (ptr != nullptr)
+        if (recycler_ != nullptr)
         {
-            ptr->ShutdownThread();
+            recycler_->ShutdownThread();
         }
+    }
+
+    Recycler * release()
+    {
+        return recycler_.release();
+    }
+
+    Recycler * operator->() const {
+        return recycler_.get();
+    }
+
+    operator Recycler *const() {
+        return recycler_.get();
     }
 };
 
@@ -518,7 +533,7 @@ uint ThreadContext::ThreadContextRecyclerTelemetryHostInterface::GetClosedContex
 
 Recycler* ThreadContext::EnsureRecycler()
 {
-    if (recycler == NULL)
+    if (recycler == nullptr)
     {
         AutoRecyclerPtr newRecycler(HeapNew(Recycler, GetAllocationPolicyManager(), &pageAllocator, Js::Throw::OutOfMemory, Js::Configuration::Global.flags, &recyclerTelemetryHostInterface));
         newRecycler->Initialize(isOptimizedForManyInstances, &threadService); // use in-thread GC when optimizing for many instances
@@ -529,7 +544,7 @@ Recycler* ThreadContext::EnsureRecycler()
         // Assign the recycler to the ThreadContext after everything is initialized, because an OOM during initialization would
         // result in only partial initialization, so the 'recycler' member variable should remain null to cause full
         // reinitialization when requested later. Anything that happens after the Detach must have special cleanup code.
-        this->recycler = newRecycler.Detach();
+        this->recycler = newRecycler.release();
 
         try
         {
