@@ -30,15 +30,17 @@
 #include "Core/CRC.h"
 #include "rust/cxx.h"
 
+#include <memory>
+
 #define IsTrueOrFalse(value)     ((value) ? u"True" : u"False")
 
 namespace Js
 {
     ScriptContext * ScriptContext::New(ThreadContext * threadContext)
     {
-        AutoPtr<ScriptContext> scriptContext(HeapNew(ScriptContext, threadContext));
+        std::unique_ptr<ScriptContext> scriptContext = std::unique_ptr<ScriptContext>(new ScriptContext(threadContext));
         scriptContext->InitializeAllocations();
-        return scriptContext.Detach();
+        return scriptContext.release();
     }
 
 #if ENABLE_NATIVE_CODEGEN
