@@ -80,6 +80,7 @@ fn main() {
                 .define("CMAKE_CXX_COMPILER", "clang++")
                 .define("CMAKE_C_COMPILER", "clang")
                 .define("CMAKE_COLOR_DIAGNOSTICS", "ON")
+                .env("CLICOLOR_FORCE", "1")
                 .profile(build_type)
                 .build_target("chhelper");
 
