@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include <memory>
 
 namespace Js
 {
@@ -287,7 +288,7 @@ namespace Js
     ArrayBufferDetachedStateBase* ArrayBuffer::DetachAndGetState(bool queueForDelayFree/* = true*/)
     {
         // Save the state before detaching
-        AutoPtr<ArrayBufferDetachedStateBase> arrayBufferState(this->CreateDetachedState(this->bufferContent, this->bufferLength));
+        std::unique_ptr<ArrayBufferDetachedStateBase> arrayBufferState{this->CreateDetachedState(this->bufferContent, this->bufferLength)};
         Detach();
 
         // Now put this bufferContent to the queue so that we can manage the lifetime of the buffer later.
@@ -297,7 +298,7 @@ namespace Js
             local->Push(this->CopyBufferContentForDelayedFree(arrayBufferState->buffer, arrayBufferState->bufferLength));
         }
 
-        return arrayBufferState.Detach();
+        return arrayBufferState.release();
     }
 
     void ArrayBuffer::AddParent(ArrayBufferParent* parent)
