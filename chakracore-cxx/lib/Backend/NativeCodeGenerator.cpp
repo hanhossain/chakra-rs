@@ -9,6 +9,8 @@
 #include "NativeEntryPointData.h"
 #include "JitTransferData.h"
 
+#include <memory>
+
 #if DBG
 Js::JavascriptMethod checkCodeGenThunk;
 #endif
@@ -168,10 +170,9 @@ void NativeCodeGenerator::Close()
 extern Func *CurrentFunc;
 #endif
 
-JsFunctionCodeGen *
-NativeCodeGenerator::NewFunctionCodeGen(Js::FunctionBody *functionBody, Js::EntryPointInfo* info)
+JsFunctionCodeGen *NativeCodeGenerator::NewFunctionCodeGen(Js::FunctionBody *functionBody, Js::EntryPointInfo* info)
 {
-    return HeapNewNoThrow(JsFunctionCodeGen, this, functionBody, info, functionBody->IsInDebugMode());
+    return new JsFunctionCodeGen(this, functionBody, info, functionBody->IsInDebugMode());
 }
 
 JsLoopBodyCodeGen *
@@ -259,33 +260,6 @@ void ArmInsertThumbImmediate16(unsigned short * address, unsigned short immediat
     address[1] = opcode1;
 }
 #endif
-
-class AutoRestoreDefaultEntryPoint
-{
-public:
-    AutoRestoreDefaultEntryPoint(Js::FunctionBody* functionBody):
-        functionBody(functionBody)
-    {
-        this->oldDefaultEntryPoint = functionBody->GetDefaultFunctionEntryPointInfo();
-        this->oldOriginalEntryPoint = functionBody->GetOriginalEntryPoint();
-
-        this->newEntryPoint = functionBody->CreateNewDefaultEntryPoint();
-    }
-
-    ~AutoRestoreDefaultEntryPoint()
-    {
-        if (newEntryPoint && !newEntryPoint->IsCodeGenDone())
-        {
-            functionBody->RestoreOldDefaultEntryPoint(oldDefaultEntryPoint, oldOriginalEntryPoint, newEntryPoint);
-        }
-    }
-
-private:
-    Js::FunctionBody* functionBody;
-    Js::FunctionEntryPointInfo* oldDefaultEntryPoint;
-    Js::JavascriptMethod oldOriginalEntryPoint;
-    Js::FunctionEntryPointInfo* newEntryPoint;
-};
 
 //static
 void NativeCodeGenerator::Jit_TransitionFromSimpleJit(void *const framePointer)
@@ -385,8 +359,8 @@ NativeCodeGenerator::GenerateFunction(Js::FunctionBody *fn, Js::ScriptFunction *
     }
 
     // Create a work item with null entry point- we'll set it once its allocated
-    AutoPtr<JsFunctionCodeGen> workItemAutoPtr(this->NewFunctionCodeGen(fn, nullptr));
-    if ((JsFunctionCodeGen*) workItemAutoPtr == nullptr)
+    std::unique_ptr<JsFunctionCodeGen> workItemAutoPtr{this->NewFunctionCodeGen(fn, nullptr)};
+    if (workItemAutoPtr == nullptr)
     {
         // OOM, just skip this work item and return.
         return false;
@@ -432,7 +406,7 @@ NativeCodeGenerator::GenerateFunction(Js::FunctionBody *fn, Js::ScriptFunction *
         }
     }
 
-    JsFunctionCodeGen * workitem = workItemAutoPtr.Detach();
+    JsFunctionCodeGen * workitem = workItemAutoPtr.release();
     workitem->SetEntryPointInfo(entryPointInfo);
 
     entryPointInfo->SetCodeGenPending(workitem);
