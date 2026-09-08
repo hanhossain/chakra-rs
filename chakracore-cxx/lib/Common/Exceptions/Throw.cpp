@@ -21,7 +21,6 @@
 #include "Common/MathUtil.h"
 #include "Core/AllocSizeMath.h"
 
-#include "Core/BasePtr.h"
 #include "Core/Output.h"
 
 // Memory Management

@@ -19,9 +19,6 @@
 
 #include "rterror.h"
 
-// Other Memory headers
-#include "Memory/AutoPtr.h"
-
 // Other core headers
 #include "Core/FinalizableObject.h"
 #include "Core/ProfileInstrument.h"

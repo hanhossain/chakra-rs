@@ -5,7 +5,6 @@
 
 #include <string>
 
-#include "Memory/AutoPtr.h"
 #include "Common/Event.h"
 #include "Base/ThreadContextTlsEntry.h"
 #include "Base/ThreadBoundThreadContextManager.h"

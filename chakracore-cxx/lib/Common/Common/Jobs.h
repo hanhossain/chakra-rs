@@ -15,8 +15,6 @@
 #undef AddJob
 #undef GetJob
 
-#include "Memory/AutoPtr.h"
-
 class Parser;
 class CompileScriptException;
 namespace Js
