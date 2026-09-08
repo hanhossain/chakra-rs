@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
+#include <memory>
+
 #define ASSERT_THREAD() AssertMsg(mainThreadId == GetCurrentThreadContextId(), \
     "Cannot use this member of BackgroundParser from thread other than the creating context's current thread")
 
@@ -150,7 +152,7 @@ void BackgroundParser::OnDecommit(JsUtil::ParallelThreadData *threadData)
 
 BackgroundParseItem * BackgroundParser::NewBackgroundParseItem(Parser *parser, ParseNodeFnc *parseNode, bool isDeferred)
 {
-    BackgroundParseItem *item = Anew(parser->GetAllocator(), BackgroundParseItem, this, parser, parseNode, isDeferred);
+    BackgroundParseItem *item = new BackgroundParseItem(this, parser, parseNode, isDeferred);
     parser->AddBackgroundParseItem(item);
     return item;
 }
@@ -159,8 +161,8 @@ bool BackgroundParser::ParseBackgroundItem(Parser *parser, ParseNodeFnc *parseNo
 {
     ASSERT_THREAD();
 
-    AutoPtr<BackgroundParseItem> workItemAutoPtr(this->NewBackgroundParseItem(parser, parseNode, isDeferred));
-    if (static_cast<BackgroundParseItem*>(workItemAutoPtr) == nullptr)
+    std::unique_ptr<BackgroundParseItem> workItemAutoPtr{this->NewBackgroundParseItem(parser, parseNode, isDeferred)};
+    if (workItemAutoPtr == nullptr)
     {
         // OOM, just skip this work item and return.
         // TODO: Raise an OOM parse-time exception.
@@ -169,7 +171,7 @@ bool BackgroundParser::ParseBackgroundItem(Parser *parser, ParseNodeFnc *parseNo
 
     parser->PrepareForBackgroundParse();
 
-    BackgroundParseItem * backgroundItem = workItemAutoPtr.Detach();
+    BackgroundParseItem * backgroundItem = workItemAutoPtr.release();
     this->AddToParseQueue(backgroundItem, false, this->Processor()->ProcessesInBackground());
 
     return true;
