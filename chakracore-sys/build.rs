@@ -90,7 +90,7 @@ fn main() {
                     .define("ICU_INCLUDE_PATH", icu_include_path);
             }
 
-            config.always_configure(true);
+            config.always_configure(false);
             let mut dst = config.build();
             dst.push("build");
             let chakra_build = dst.to_str().unwrap();
