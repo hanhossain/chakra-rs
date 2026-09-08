@@ -25,7 +25,7 @@ class NativeCodeGenerator : public JsUtil::WaitableJobManager
 
 public:
     NativeCodeGenerator(Js::ScriptContext * scriptContext);
-    ~NativeCodeGenerator();
+    ~NativeCodeGenerator() override;
     void Close();
 
     JsFunctionCodeGen * NewFunctionCodeGen(Js::FunctionBody *functionBody, Js::EntryPointInfo* info);

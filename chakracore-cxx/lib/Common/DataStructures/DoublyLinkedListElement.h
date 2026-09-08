@@ -14,6 +14,7 @@ namespace JsUtil
         typename WriteBarrierFieldTypeTraits<T*, TAllocator>::Type next;
 
     public:
+        virtual ~DoublyLinkedListElement() = default;
         DoublyLinkedListElement();
 
     public:
