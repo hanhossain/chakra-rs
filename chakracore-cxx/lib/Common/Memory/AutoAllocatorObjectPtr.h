@@ -47,7 +47,7 @@ protected:
     AllocatorType* m_allocator;
 
 public:
-    AutoAllocatorArrayPtr(T * ptr, size_t elementCount, AllocatorType* allocator) : BasePtr(ptr), m_elementCount(elementCount), m_allocator(allocator)
+    AutoAllocatorArrayPtr(T * ptr, size_t elementCount, AllocatorType* allocator) : BasePtr<T>(ptr), m_elementCount(elementCount), m_allocator(allocator)
     {
         Assert(allocator);
     }
@@ -85,7 +85,7 @@ class AutoAllocatorObjectArrayPtr : public AutoAllocatorArrayPtr<T*, ArrayAlloca
     
 public:
     AutoAllocatorObjectArrayPtr(T** ptr, size_t elementCount, typename Base::AllocatorType* allocator) :
-        AutoAllocatorArrayPtr(ptr, elementCount, allocator)
+        AutoAllocatorArrayPtr<T*, ArrayAllocator>(ptr, elementCount, allocator)
     {
     }
 
