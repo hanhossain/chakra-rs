@@ -2262,7 +2262,7 @@ namespace Js
             }
             else
             {
-                bool isDebugReparse = m_scriptContext->IsScriptContextInSourceRundownOrDebugMode() && !this->GetUtf8SourceInfo()->GetIsLibraryCode();
+                bool isDebugReparse = false;
                 bool isAsmJsReparse = m_isAsmjsMode && !isDebugReparse;
 
                 isDebugOrAsmJsReparse = isAsmJsReparse || isDebugReparse;
@@ -2278,7 +2278,6 @@ namespace Js
 #if DBG
                     Assert(
                         funcBody->IsReparsed()
-                        || m_scriptContext->IsScriptContextInSourceRundownOrDebugMode()
                         || m_isAsmjsMode);
 #endif
                     OUTPUT_TRACE(Js::DebuggerPhase, u"Full nested reparse of function: %s (%s)\n", funcBody->GetDisplayName(), funcBody->GetDebugNumberSet(debugStringBuffer));

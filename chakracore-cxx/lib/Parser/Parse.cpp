@@ -11687,12 +11687,7 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
     bool isModuleSource = (grfscr & fscrIsModuleCode) != 0;
     bool isGlobalCode = (grfscr & fscrGlobalCode) != 0;
 
-    if (!isGlobalCode &&
-        (
-            PHASE_OFF1(Js::Phase::DeferEventHandlersPhase) ||
-            this->m_scriptContext->IsScriptContextInSourceRundownOrDebugMode()
-            )
-        )
+    if (!isGlobalCode && (PHASE_OFF1(Js::Phase::DeferEventHandlersPhase)))
     {
         // Don't defer event handlers in debug/rundown mode, because we need to register the document,
         // so we need to create a full FunctionBody for the script body.
