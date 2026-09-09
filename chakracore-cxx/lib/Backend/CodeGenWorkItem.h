@@ -149,12 +149,6 @@ public:
         return isInJitQueue;
     }
 
-    // TODO (hanhossain): remove
-    bool IsJitInDebugMode() const
-    {
-        return false;
-    }
-
     void OnWorkItemProcessFail(NativeCodeGenerator *codeGen);
 
     void RecordNativeThrowMap(Js::SmallSpanSequenceIter& iter, uint32_t nativeOffset, uint32_t statementIndex)

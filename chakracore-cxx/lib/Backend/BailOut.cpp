@@ -273,12 +273,6 @@ BailOutInfo::FinalizeBailOutRecord(Func * func)
         }
     }
 #else
-    if (func->IsJitInDebugMode())
-    {
-        // Turn positive SP-relative base locals offset into negative frame-pointer-relative offset
-        func->AjustLocalVarSlotOffset();
-    }
-
     currentBailOutRecord = bailOutRecord;
     int32_t inlineeArgStackSize = func->GetInlineeArgumentStackSize();
     do

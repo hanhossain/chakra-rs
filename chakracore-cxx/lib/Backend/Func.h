@@ -262,7 +262,6 @@ public:
 
     int32_t GetLocalVarSlotOffset(int32_t slotId);
     int32_t GetHasLocalVarChangedOffset();
-    bool IsJitInDebugMode() const;
     bool IsNonTempLocalVar(uint32_t slotIndex);
     void OnAddSym(Sym* sym);
 

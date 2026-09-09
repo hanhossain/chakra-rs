@@ -506,32 +506,8 @@ GlobOpt::OptBlock(BasicBlock *block)
     FOREACH_INSTR_IN_BLOCK_EDITING(instr, instrNext, block)
     {
         GOPT_TRACE_INSTRTRACE(instr);
-        BailOutInfo* oldBailOutInfo = nullptr;
-        bool isCheckAuxBailoutNeeded = this->func->IsJitInDebugMode() && !this->IsLoopPrePass();
-        if (isCheckAuxBailoutNeeded && instr->HasAuxBailOut() && !instr->HasBailOutInfo())
-        {
-            oldBailOutInfo = instr->GetBailOutInfo();
-            Assert(oldBailOutInfo);
-        }
         bool isInstrRemoved = false;
         instrNext = this->OptInstr(instr, &isInstrRemoved);
-
-        // If we still have instrs with only aux bail out, convert aux bail out back to regular bail out and fill it.
-        // During OptInstr some instr can be moved out to a different block, in this case bailout info is going to be replaced
-        // with e.g. loop bailout info which is filled as part of processing that block, thus we don't need to fill it here.
-        if (isCheckAuxBailoutNeeded && !isInstrRemoved && instr->HasAuxBailOut() && !instr->HasBailOutInfo())
-        {
-            if (instr->GetBailOutInfo() == oldBailOutInfo)
-            {
-                instr->PromoteAuxBailOut();
-                FillBailOutInfo(block, instr);
-            }
-            else
-            {
-                AssertMsg(instr->GetBailOutInfo(), "With aux bailout, the bailout info should not be removed by OptInstr.");
-            }
-        }
-
     } NEXT_INSTR_IN_BLOCK_EDITING;
 
     GOPT_TRACE_BLOCK(block, false);
@@ -1538,7 +1514,7 @@ GlobOpt::OptArguments(IR::Instr *instr)
     if ((instr->m_opcode == Js::OpCode::Ld_A || instr->m_opcode == Js::OpCode::BytecodeArgOutCapture) && (src1->IsRegOpnd() && CurrentBlockData()->IsArgumentsOpnd(src1)))
     {
         // In the debug mode, we don't want to optimize away the aliases. Since we may have to show them on the inspection.
-        if (((!AreFromSameBytecodeFunc(src1->AsRegOpnd(), dst->AsRegOpnd()) || this->currentBlock->loop) && instr->m_opcode != Js::OpCode::BytecodeArgOutCapture) || this->func->IsJitInDebugMode())
+        if (((!AreFromSameBytecodeFunc(src1->AsRegOpnd(), dst->AsRegOpnd()) || this->currentBlock->loop) && instr->m_opcode != Js::OpCode::BytecodeArgOutCapture))
         {
             CannotAllocateArgumentsObjectOnStack(instr->m_func);
             return;
@@ -2718,11 +2694,8 @@ GlobOpt::OptInstr(IR::Instr *&instr, bool* isInstrRemoved)
         this->PreLowerCanonicalize(instr, &src1Val, &src2Val);
     }
 
-    if (!PHASE_OFF(Js::MemOpPhase, this->func) &&
-        !isHoisted &&
-        !(instr->IsJitProfilingInstr()) &&
+    if (!PHASE_OFF(Js::MemOpPhase, this->func) && !isHoisted && !(instr->IsJitProfilingInstr()) &&
         this->currentBlock->loop && !IsLoopPrePass() &&
-        !func->IsJitInDebugMode() &&
         !func->IsMemOpDisabled() &&
         this->currentBlock->loop->doMemOp)
     {
@@ -3072,11 +3045,9 @@ GlobOpt::OptDst(
         else if (dstVal)
         {
             opnd->SetValueType(dstVal->GetValueInfo()->Type());
-            if (currentBlock->loop &&
-                !IsLoopPrePass() &&
+            if (currentBlock->loop && !IsLoopPrePass() &&
                 (instr->m_opcode == Js::OpCode::Ld_A || instr->m_opcode == Js::OpCode::Ld_I4) &&
-                instr->GetSrc1()->IsRegOpnd() &&
-                !func->IsJitInDebugMode())
+                instr->GetSrc1()->IsRegOpnd())
             {
                 // Look for the following patterns:
                 //
@@ -15700,7 +15671,7 @@ GlobOpt::DoConstFold() const
 bool
 GlobOpt::IsTypeSpecPhaseOff(Func const *func)
 {
-    return PHASE_OFF(Js::TypeSpecPhase, func) || func->IsJitInDebugMode();
+    return PHASE_OFF(Js::TypeSpecPhase, func);
 }
 
 bool
@@ -15800,8 +15771,7 @@ GlobOpt::DoArrayCheckHoist(Func const * const func)
     Assert(func->IsTopFunc());
     return
         !PHASE_OFF(Js::ArrayCheckHoistPhase, func) &&
-        !func->IsArrayCheckHoistDisabled() &&
-        !func->IsJitInDebugMode(); // StElemI fast path is not allowed when in debug mode, so it cannot have bailout
+        !func->IsArrayCheckHoistDisabled();
 }
 
 bool

@@ -53,44 +53,6 @@ Lowerer::Lower()
 
     AllocStackForInObjectEnumeratorArray();
 
-    if (m_func->IsJitInDebugMode())
-    {
-        // Initialize metadata of local var slots.
-        // Too late to wait until Register Allocator, as we need the offset when lowerering bailout for debugger.
-        int32_t hasLocalVarChangedOffset = m_func->GetHasLocalVarChangedOffset();
-        if (hasLocalVarChangedOffset != Js::Constants::InvalidOffset)
-        {
-            // MOV [EBP + m_func->GetHasLocalVarChangedOffset()], 0
-            StackSym* sym = StackSym::New(TyInt8, m_func);
-            sym->m_offset = hasLocalVarChangedOffset;
-            sym->m_allocated = true;
-            IR::Opnd* opnd1 = IR::SymOpnd::New(sym, TyInt8, m_func);
-            IR::Opnd* opnd2 = IR::IntConstOpnd::New(0, TyInt8, m_func);
-            Lowerer::InsertMove(opnd1, opnd2, m_func->GetFunctionEntryInsertionPoint());
-
-#ifdef DBG
-            // Pre-fill all local slots with a pattern. This will help identify non-initialized/garbage var values.
-            // Note that in the beginning of the function in bytecode we should initialize all locals to undefined.
-            uint32_t localSlotCount = m_func->GetJITFunctionBody()->GetEndNonTempLocalIndex() - m_func->GetJITFunctionBody()->GetFirstNonTempLocalIndex();
-            for (uint i = 0; i < localSlotCount; ++i)
-            {
-                int offset = m_func->GetLocalVarSlotOffset(i);
-
-                IRType opnd1Type = TyInt64;
-                opnd2 = IR::IntConstOpnd::New(Func::c_debugFillPattern8, opnd1Type, m_func);
-
-                sym = StackSym::New(opnd1Type, m_func);
-                sym->m_offset = offset;
-                sym->m_allocated = true;
-                opnd1 = IR::SymOpnd::New(sym, opnd1Type, m_func);
-                Lowerer::InsertMove(opnd1, opnd2, m_func->GetFunctionEntryInsertionPoint());
-            }
-#endif
-        }
-
-        Assert(!m_func->HasAnyStackNestedFunc());
-    }
-
     this->LowerRange(m_func->m_headInstr, m_func->m_tailInstr, defaultDoFastPath, loopFastPath);
 
     this->m_func->ClearCloneMap();
@@ -135,18 +97,6 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
         IR::Instr * verifyLegalizeInstrNext = instr->m_next;
         m_currentInstrOpCode = instr->m_opcode;
 #endif
-
-        // If we have debugger bailout as part of real instr (not separate BailForDebugger instr),
-        // extract/split out BailOutForDebugger into separate instr, if needed.
-        // The instr can have just debugger bailout, or debugger bailout + other shared bailout.
-        // Note that by the time we get here, we should not have aux-only bailout (in globopt we promote it to normal bailout).
-        if (m_func->IsJitInDebugMode() && instr->HasBailOutInfo() &&
-            (((instr->GetBailOutKind() & IR::BailOutForDebuggerBits) && instr->m_opcode != Js::OpCode::BailForDebugger) ||
-            instr->HasAuxBailOut()))
-        {
-            instr = this->SplitBailForDebugger(instr);  // Change instr, as returned is the one we need to lower next.
-            instrPrev = instr->m_prev;                  // Change just in case if instr got changed.
-        }
 
 #if DBG_DUMP
         if (!instr->IsLowered() && !instr->IsLabelInstr()
@@ -1518,7 +1468,7 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
         {
             // Note: under debugger (Fast F12) don't let GenerateFastStElemI which calls into ToNumber_Helper
             //       which takes double, and currently our helper wrapper doesn't support double.
-            bool fastPath = !noMathFastPath && !m_func->IsJitInDebugMode();
+            bool fastPath = !noMathFastPath;
             if (!fastPath && instr->HasBailOutInfo())
             {
                 // Some bailouts are generated around the helper call, and will work even if the fast path is disabled. Other
@@ -11870,7 +11820,7 @@ Lowerer::HasSideEffects(IR::Instr *instr)
 }
 
 bool Lowerer::IsArgSaveRequired(Func *func) {
-    return (!func->IsTrueLeaf() || func->IsJitInDebugMode() ||
+    return (!func->IsTrueLeaf() ||
         // GetHasImplicitParamLoad covers generators, asmjs,
         // and other javascript functions that implicitly read from the arg stack slots
         func->GetHasThrow() || func->GetHasImplicitParamLoad() || func->HasThis() || func->argInsCount > 0);
@@ -13416,8 +13366,8 @@ Lowerer::SplitBailOnImplicitCall(IR::Instr * instr, IR::Instr * helperCall, IR::
 //   - real instr with BailOutInfo w/o debugger bailout, then debuggerBailout, then sharedBailout -- in case bailout for debugger was shared w/some other b.o.
 IR::Instr* Lowerer::SplitBailForDebugger(IR::Instr* instr)
 {
-    Assert(m_func->IsJitInDebugMode() && instr->m_opcode != Js::OpCode::BailForDebugger);
-
+    // TODO (hanhossain): remove
+    Assert(false && instr->m_opcode != Js::OpCode::BailForDebugger);
     IR::BailOutKind debuggerBailOutKind;    // Used for splitted instr.
     BailOutInfo* bailOutInfo = instr->GetBailOutInfo();
     IR::Instr* sharedBailoutInstr = nullptr;
@@ -24200,16 +24150,6 @@ Lowerer::CreateHelperCallOpnd(IR::JnHelperMethod helperMethod, int helperArgCoun
     Assert(func);
 
     IR::HelperCallOpnd* helperCallOpnd;
-    if (CONFIG_FLAG(EnableContinueAfterExceptionWrappersForHelpers) &&
-        func->IsJitInDebugMode() &&
-        HelperMethodAttributes::CanThrow(helperMethod))
-    {
-        // Create DiagHelperCallOpnd to indicate that it's needed to wrap original helper with try-catch wrapper,
-        // so that we can ignore exception and bailout to next stmt in debugger.
-        // For details, see: Lib\Runtime\Debug\DiagHelperMethodWrapper.{h,cpp}.
-        helperCallOpnd = IR::DiagHelperCallOpnd::New(helperMethod, func, helperArgCount);
-    }
-    else
     {
          helperCallOpnd = IR::HelperCallOpnd::New(helperMethod, func);
     }
@@ -27098,11 +27038,6 @@ IR::LabelInstr* Lowerer::InsertContinueAfterExceptionLabelForDebugger(Func* func
     Assert(insertAfterInstr);
 
     IR::LabelInstr* continueAfterExLabel = nullptr;
-    if (func->IsJitInDebugMode())
-    {
-        continueAfterExLabel = IR::LabelInstr::New(Js::OpCode::Label, func, isHelper);
-        insertAfterInstr->InsertAfter(continueAfterExLabel);
-    }
     return continueAfterExLabel;
 }
 

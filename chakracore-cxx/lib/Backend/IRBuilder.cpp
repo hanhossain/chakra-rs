@@ -23,7 +23,6 @@ IRBuilder::AddStatementBoundary(uint statementIndex, uint offset)
     // We insert additional instrs in between statements, such as ProfiledLoopStart, for these bytecode reader acts as
     // there is "unknown" stmt boundary with statementIndex == -1. Don't add stmt boundary for that as later
     // it may cause issues, e.g. see WinBlue 218307.
-    if (!(statementIndex == Js::Constants::NoStatementIndex && this->m_func->IsJitInDebugMode()))
     {
         IR::PragmaInstr* pragmaInstr = IR::PragmaInstr::New(Js::OpCode::StatementBoundary, statementIndex, m_func);
         this->AddInstr(pragmaInstr, offset);
@@ -57,7 +56,8 @@ IRBuilder::AddStatementBoundary(uint statementIndex, uint offset)
 void
 IRBuilder::InsertBailOutForDebugger(uint byteCodeOffset, IR::BailOutKind kind, IR::Instr* insertBeforeInstr /* default nullptr */)
 {
-    Assert(m_func->IsJitInDebugMode());
+    // TODO (hanhossain): remove
+    Assert(false);
     Assert(byteCodeOffset != Js::Constants::NoByteCodeOffset);
 
     BailOutInfo * bailOutInfo = JitAnew(m_func->m_alloc, BailOutInfo, byteCodeOffset, m_func);
@@ -422,15 +422,6 @@ IRBuilder::Build()
         this->BuildArgInRest();
     }
 
-    // This is first bailout in the function, the locals at stack have not initialized to undefined, so do not restore them.
-    // Note that for generators, we insert the bailout after the jump table to allow
-    // the generator's execution to proceed before bailing out. Otherwise, we would always
-    // bail to the beginning of the function in the interpreter, creating an infinite loop.
-    if (m_func->IsJitInDebugMode() && (!this->m_func->GetJITFunctionBody()->IsCoroutine() || this->IsLoopBody()))
-    {
-        this->InsertBailOutForDebugger(m_functionStartOffset, IR::BailOutForceByFlag | IR::BailOutBreakPointInFunction | IR::BailOutStep, nullptr);
-    }
-
     // Start bailout inject after the constant and arg load. We don't bailout before that
     IR::Instr * lastInstr = m_lastInstr;
 
@@ -483,17 +474,6 @@ IRBuilder::Build()
         // so that they don't go away once this jit'd frame is popped off.
 
         lastInstr = this->m_generatorJumpTable.BuildJumpTable();
-
-        // When debugging generators, insert bail-out after the jump table so that we can
-        // get to the right point before going back to the interpreter.
-        // This bailout is equivalent to the one inserted above for non-generator functions.
-        // Additionally, we also need to insert bailouts on each resume point and right
-        // after the bail-in code since this bailout is only for the very first time
-        // we are in the generator.
-        if (m_func->IsJitInDebugMode() && this->m_func->GetJITFunctionBody()->IsCoroutine())
-        {
-            this->InsertBailOutForDebugger(m_functionStartOffset, IR::BailOutForceByFlag | IR::BailOutBreakPointInFunction | IR::BailOutStep, nullptr);
-        }
 
         Js::RegSlot funcExprScopeReg = m_func->GetJITFunctionBody()->GetFuncExprScopeReg();
         IR::RegOpnd *frameDisplayOpnd = nullptr;
@@ -754,59 +734,6 @@ IRBuilder::Build()
 
         offset = m_jnReader.GetCurrentOffset();
 
-        if (m_func->IsJitInDebugMode())
-        {
-            bool needBailoutForHelper = CONFIG_FLAG(EnableContinueAfterExceptionWrappersForHelpers) &&
-                (OpCodeAttr::NeedsPostOpDbgBailOut(newOpcode) ||
-                    (m_lastInstr->m_opcode == Js::OpCode::CallHelper && m_lastInstr->GetSrc1() &&
-                    HelperMethodAttributes::CanThrow(m_lastInstr->GetSrc1()->AsHelperCallOpnd()->m_fnHelper)));
-
-            if (needBailoutForHelper)
-            {
-                // Insert bailout after return from a helper call.
-                // For now use offset of next instr, when we get & ignore exception, we replace this with next statement offset.
-                if (m_lastInstr->IsBranchInstr())
-                {
-                    // Debugger bailout on branches goes to different block which can become dead. Keep bailout with real instr.
-                    // Can't convert to bailout at this time, can do that only after branches are finalized, remember for later.
-                    ignoreExBranchInstrToOffsetMap.Add(m_lastInstr, offset);
-                }
-                else if (
-                    m_lastInstr->m_opcode == Js::OpCode::Throw ||
-                    m_lastInstr->m_opcode == Js::OpCode::RuntimeReferenceError ||
-                    m_lastInstr->m_opcode == Js::OpCode::RuntimeTypeError)
-                {
-                    uint32_t lastInstrOffset = m_lastInstr->GetByteCodeOffset();
-
-                    AssertOrFailFast(lastInstrOffset < m_offsetToInstructionCount);
-#if DBG
-#endif
-                    bool isLastInstrUpdateNeeded = m_offsetToInstruction[lastInstrOffset] == m_lastInstr;
-
-                    BailOutInfo * bailOutInfo = JitAnew(this->m_func->m_alloc, BailOutInfo, offset, this->m_func);
-                    m_lastInstr = m_lastInstr->ConvertToBailOutInstr(bailOutInfo, c_debuggerBaseBailOutKindForHelper, true);
-
-                    if (isLastInstrUpdateNeeded)
-                    {
-                        m_offsetToInstruction[lastInstrOffset] = m_lastInstr;
-                    }
-                }
-                else
-                {
-                    IR::BailOutKind bailOutKind = c_debuggerBaseBailOutKindForHelper;
-                    if (OpCodeAttr::HasImplicitCall(newOpcode) || OpCodeAttr::OpndHasImplicitCall(newOpcode))
-                    {
-                        // When we get out of e.g. valueOf called by a helper (e.g. Add_A) during stepping,
-                        // we need to bail out to continue debugging calling function in interpreter,
-                        // essentially this is similar to bail out on return from a method.
-                        bailOutKind |= c_debuggerBailOutKindForCall;
-                    }
-
-                    this->InsertBailOutForDebugger(offset, bailOutKind);
-                }
-            }
-        }
-
         while (m_statementReader.AtStatementBoundary(&m_jnReader))
         {
             statementIndex = this->AddStatementBoundary(statementIndex, offset);
@@ -967,13 +894,6 @@ IRBuilder::InsertLabels()
         {
             bool wasLoopTop = labelInstr->m_isLoopTop;
             labelInstr->m_isLoopTop = true;
-
-            if (m_func->IsJitInDebugMode())
-            {
-                // Add bailout for Async Break.
-                IR::BranchInstr* backEdgeBranchInstr = reloc->GetBranchInstr();
-                this->InsertBailOutForDebugger(backEdgeBranchInstr->GetByteCodeOffset(), IR::BailOutForceByFlag | IR::BailOutBreakPointInFunction, backEdgeBranchInstr);
-            }
 
             if (!wasLoopTop && m_loopCounterSym)
             {
@@ -1855,11 +1775,6 @@ IRBuilder::BuildReg2(Js::OpCode newOpcode, uint32_t offset, Js::RegSlot R0, Js::
         IR::Instr* resumeYield = IR::Instr::New(Js::OpCode::GeneratorResumeYield, dstOpnd, m_func);
         this->AddInstr(resumeYield, offset);
 
-        if (this->m_func->IsJitInDebugMode())
-        {
-            this->InsertBailOutForDebugger(offset, IR::BailOutForceByFlag | IR::BailOutBreakPointInFunction | IR::BailOutStep);
-        }
-
         return;
     }
 
@@ -2699,7 +2614,7 @@ IRBuilder::BuildUnsigned1(Js::OpCode newOpcode, uint32_t offset, uint32_t num)
         case Js::OpCode::EmitTmpRegCount:
             // Note: EmitTmpRegCount is inserted when debugging, not needed for jit.
             //       It's only needed by the debugger to see how many tmp regs are active.
-            Assert(m_func->IsJitInDebugMode());
+            Assert(false);
             return;
 
         case Js::OpCode::NewBlockScope:
@@ -2950,7 +2865,7 @@ IRBuilder::BuildProfiledReg1Unsigned1(Js::OpCode newOpcode, uint32_t offset, Js:
         arrayInfo = m_func->GetReadOnlyProfileInfo()->GetArrayCallSiteInfo(profileId);
     }
     Js::TypeId arrayTypeId = Js::TypeIds_Array;
-    if (arrayInfo && !m_func->IsJitInDebugMode() && Js::JavascriptArray::HasInlineHeadSegment(value))
+    if (arrayInfo && Js::JavascriptArray::HasInlineHeadSegment(value))
     {
         if (arrayInfo->IsNativeIntArray())
         {
@@ -5208,7 +5123,7 @@ IRBuilder::BuildAuxiliary(Js::OpCode newOpcode, uint32_t offset)
 
             instr = IR::Instr::New(newOpcode, dstOpnd, src1Opnd, m_func);
 
-            const Js::TypeId arrayTypeId = m_func->IsJitInDebugMode() ? Js::TypeIds_Array : Js::TypeIds_NativeIntArray;
+            const Js::TypeId arrayTypeId = Js::TypeIds_NativeIntArray;
             dstOpnd->SetValueType(
                 ValueType::GetObject(ObjectType::Array).SetHasNoMissingValues(true).SetArrayTypeId(arrayTypeId));
             dstOpnd->SetValueTypeFixed();
@@ -5226,7 +5141,7 @@ IRBuilder::BuildAuxiliary(Js::OpCode newOpcode, uint32_t offset)
 
             instr = IR::Instr::New(newOpcode, dstOpnd, src1Opnd, m_func);
 
-            const Js::TypeId arrayTypeId = m_func->IsJitInDebugMode() ? Js::TypeIds_Array : Js::TypeIds_NativeFloatArray;
+            const Js::TypeId arrayTypeId = Js::TypeIds_NativeFloatArray;
             dstOpnd->SetValueType(
                 ValueType::GetObject(ObjectType::Array).SetHasNoMissingValues(true).SetArrayTypeId(arrayTypeId));
             dstOpnd->SetValueTypeFixed();
@@ -5336,7 +5251,7 @@ IRBuilder::BuildProfiledAuxiliary(Js::OpCode newOpcode, uint32_t offset)
                 instr = IR::ProfiledInstr::New(newOpcode, dstOpnd, src1Opnd, m_func);
                 instr->AsProfiledInstr()->u.profileId = profileId;
                 arrayInfo = m_func->GetReadOnlyProfileInfo()->GetArrayCallSiteInfo(profileId);
-                if (arrayInfo && !m_func->IsJitInDebugMode())
+                if (arrayInfo)
                 {
                     if (arrayInfo->IsNativeIntArray())
                     {
@@ -6542,7 +6457,7 @@ IRBuilder::BuildProfiled2CallI(Js::OpCode opcode, uint32_t offset, Js::RegSlot r
         {
             arrayCallSiteInfo = m_func->GetReadOnlyProfileInfo()->GetArrayCallSiteInfo(profileId2);
         }
-        if (arrayCallSiteInfo && !m_func->IsJitInDebugMode())
+        if (arrayCallSiteInfo)
         {
             if (arrayCallSiteInfo->IsNativeIntArray())
             {
@@ -6766,14 +6681,6 @@ IRBuilder::BuildCallCommon(IR::Instr * instr, StackSym * symDst, Js::ArgSlot arg
         Assert(m_argsOnStack == argCount);
 #endif
     m_argsOnStack -= argCount;
-
-    if (m_func->IsJitInDebugMode())
-    {
-        // Insert bailout after return from a call, script or library function call.
-        this->InsertBailOutForDebugger(
-            m_jnReader.GetCurrentOffset(), // bailout will resume at the offset of next instr.
-            c_debuggerBailOutKindForCall);
-    }
 }
 
 
@@ -7015,12 +6922,6 @@ IRBuilder::BuildEmpty(Js::OpCode newOpcode, uint32_t offset)
         break;
 
     case Js::OpCode::Break:
-        if (m_func->IsJitInDebugMode())
-        {
-            // Add explicit bailout.
-            this->InsertBailOutForDebugger(offset, IR::BailOutExplicit);
-        }
-        else
         {
             // Default behavior, let's keep it for now, removed in lowerer.
             this->AddInstr(instr, offset);
@@ -7758,8 +7659,8 @@ IRBuilder::DoLoadInstructionArrayProfileInfo()
 bool
 IRBuilder::AllowNativeArrayProfileInfo()
 {
-    return !((!(m_func->GetTopFunc()->HasTry() && !m_func->GetTopFunc()->DoOptimizeTry()) && m_func->GetWeakFuncRef() && !m_func->HasArrayInfo()) ||
-        m_func->IsJitInDebugMode());
+    return !((!(m_func->GetTopFunc()->HasTry() && !m_func->GetTopFunc()->DoOptimizeTry()) && m_func->GetWeakFuncRef() &&
+              !m_func->HasArrayInfo()));
 }
 
 #if DBG_DUMP || defined(ENABLE_IR_VIEWER)

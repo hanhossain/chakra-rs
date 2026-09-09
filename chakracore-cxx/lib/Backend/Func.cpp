@@ -196,7 +196,6 @@ Func::Func(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     if (doStackNestedFunc && GetJITFunctionBody()->GetNestedCount() != 0 &&
         (this->IsTopFunc() || this->GetTopFunc()->m_workItem->Type() != JsLoopBodyWorkItemType)) // make sure none of the functions inlined in a jitted loop body allocate nested functions on the stack
     {
-        Assert(!(this->IsJitInDebugMode() && !GetJITFunctionBody()->IsLibraryCode()));
         stackNestedFunc = true;
         this->GetTopFunc()->hasAnyStackNestedFunc = true;
     }
@@ -243,11 +242,6 @@ Func::Func(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
     m_argsSize = -1;
     m_savedRegSize = -1;
 #endif
-
-    if (this->IsJitInDebugMode())
-    {
-        m_nonTempLocalVars = Anew(this->m_alloc, BVSparse<JitArenaAllocator>, this->m_alloc);
-    }
 
     if (GetJITFunctionBody()->IsCoroutine())
     {
@@ -387,8 +381,6 @@ Func::Codegen(JitArenaAllocator *alloc, JITTimeWorkItem * workItem,
 void
 Func::TryCodegen()
 {
-    Assert(!IsJitInDebugMode() || !GetJITFunctionBody()->HasTry());
-
     BEGIN_CODEGEN_PHASE(this, Js::BackEndPhase);
     {
         // IRBuilder
@@ -602,10 +594,11 @@ Func::SetArgOffset(StackSym *stackSym, int32_t offset)
 ///     (for local non-temp vars we write-through memory so that locals inspection can make use of that.).
 //      On stack, after local slots we allocate space for metadata (in particular, whether any the locals was changed in debugger).
 ///
+// TODO (hanhossain): remove
 void
 Func::EnsureLocalVarSlots()
 {
-    Assert(IsJitInDebugMode());
+    Assert(false);
 
     if (!this->HasLocalVarSlotCreated())
     {
@@ -672,11 +665,6 @@ Func::GetLocalVarSlotOffset(int32_t slotId)
 void Func::OnAddSym(Sym* sym)
 {
     Assert(sym);
-    if (this->IsJitInDebugMode() && this->IsNonTempLocalVar(sym->m_id))
-    {
-        Assert(m_nonTempLocalVars);
-        m_nonTempLocalVars->Set(sym->m_id);
-    }
 }
 
 ///
@@ -688,12 +676,6 @@ Func::GetHasLocalVarChangedOffset()
 {
     this->EnsureLocalVarSlots();
     return m_hasLocalVarChangedOffset;
-}
-
-bool
-Func::IsJitInDebugMode() const
-{
-    return m_workItem->IsJitInDebugMode();
 }
 
 bool

@@ -788,13 +788,6 @@ SCCLiveness::InsertLifetime(StackSym *stackSym, RegNum reg, IR::Instr *const cur
 
     iter.InsertBefore(newLlifetime);
 
-    // let's say 'var a = 10;'. if a is not used in the function, we still want to have the instr, otherwise the write-through will not happen and upon debug bailout
-    // we would not be able to restore the values to see in locals window.
-    if (this->func->IsJitInDebugMode() && stackSym->HasByteCodeRegSlot() && this->func->IsNonTempLocalVar(stackSym->GetByteCodeRegSlot()))
-    {
-        newLlifetime->isDeadStore = false;
-    }
-
     stackSym->scratch.linearScan.lifetime = newLlifetime;
     return newLlifetime;
 }
