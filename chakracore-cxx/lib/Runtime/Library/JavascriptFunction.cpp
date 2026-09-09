@@ -708,14 +708,6 @@ using namespace Js;
         return JavascriptFunction::CallRootFunction(this, args, scriptContext, inScript);
     }
 
-#if DBG
-    /*static*/
-    void JavascriptFunction::CheckValidDebugThunk(ScriptContext* scriptContext, RecyclableObject *function)
-    {
-        // TODO (hanhossain): remove
-    }
-#endif
-
     Var JavascriptFunction::CallAsConstructor(Var v, Var overridingNewTarget, Arguments args, ScriptContext* scriptContext, const Js::AuxArray<uint32_t> *spreadIndices)
     {
         Assert(v);
