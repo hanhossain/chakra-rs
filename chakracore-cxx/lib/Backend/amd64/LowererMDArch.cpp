@@ -1184,82 +1184,73 @@ LowererMDArch::LowerAsmJsLdElemHelper(IR::Instr * instr, bool isSimdLoad /*= fal
 #endif
 
     // xplat: Always do bound check. We don't support out-of-bound access violation recovery.
-    // TODO (hanhossain): remove condition since we always do the bounds check
-    if (true)
+    IR::LabelInstr * helperLabel = Lowerer::InsertLabel(true, instr);
+    IR::LabelInstr * loadLabel = Lowerer::InsertLabel(false, instr);
+    IR::LabelInstr * doneLabel = Lowerer::InsertLabel(false, instr);
+    IR::Opnd *cmpOpnd;
+    if (indexOpnd)
     {
-        IR::LabelInstr * helperLabel = Lowerer::InsertLabel(true, instr);
-        IR::LabelInstr * loadLabel = Lowerer::InsertLabel(false, instr);
-        IR::LabelInstr * doneLabel = Lowerer::InsertLabel(false, instr);
-        IR::Opnd *cmpOpnd;
-        if (indexOpnd)
-        {
-            cmpOpnd = indexOpnd;
-        }
-        else
-        {
-            cmpOpnd = IR::IntConstOpnd::New(src1->AsIndirOpnd()->GetOffset(), TyUint32, m_func);
-        }
+        cmpOpnd = indexOpnd;
+    }
+    else
+    {
+        cmpOpnd = IR::IntConstOpnd::New(src1->AsIndirOpnd()->GetOffset(), TyUint32, m_func);
+    }
 
-        // if dataWidth != byte per element, we need to check end offset
-        if (checkEndOffset)
+    // if dataWidth != byte per element, we need to check end offset
+    if (checkEndOffset)
+    {
+        IR::RegOpnd *tmp = IR::RegOpnd::New(cmpOpnd->GetType(), m_func);
+        // MOV tmp, cmpOnd
+        Lowerer::InsertMove(tmp, cmpOpnd, helperLabel);
+        // ADD tmp, dataWidth
+        Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)dataWidth, tmp->GetType(), m_func, true), helperLabel);
+        // JB helper
+        Lowerer::InsertBranch(Js::OpCode::JB, helperLabel, helperLabel);
+        // CMP tmp, size
+        // JG  $helper
+        lowererMD->m_lowerer->InsertCompareBranch(tmp, instr->UnlinkSrc2(), Js::OpCode::BrGt_A, true, helperLabel, helperLabel);
+    }
+    else
+    {
+#ifdef ENABLE_WASM_SIMD
+        if (m_func->GetJITFunctionBody()->IsWasmFunction() && src1->AsIndirOpnd()->GetOffset()) //WASM
         {
             IR::RegOpnd *tmp = IR::RegOpnd::New(cmpOpnd->GetType(), m_func);
             // MOV tmp, cmpOnd
             Lowerer::InsertMove(tmp, cmpOpnd, helperLabel);
-            // ADD tmp, dataWidth
-            Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)dataWidth, tmp->GetType(), m_func, true), helperLabel);
+            // ADD tmp, offset
+            Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)src1->AsIndirOpnd()->GetOffset(), tmp->GetType(), m_func), helperLabel);
             // JB helper
             Lowerer::InsertBranch(Js::OpCode::JB, helperLabel, helperLabel);
-            // CMP tmp, size
-            // JG  $helper
-            lowererMD->m_lowerer->InsertCompareBranch(tmp, instr->UnlinkSrc2(), Js::OpCode::BrGt_A, true, helperLabel, helperLabel);
+            lowererMD->m_lowerer->InsertCompareBranch(tmp, instr->UnlinkSrc2(), Js::OpCode::BrGe_A, true, helperLabel, helperLabel);
         }
         else
-        {
-#ifdef ENABLE_WASM_SIMD
-            if (m_func->GetJITFunctionBody()->IsWasmFunction() && src1->AsIndirOpnd()->GetOffset()) //WASM
-            {
-                IR::RegOpnd *tmp = IR::RegOpnd::New(cmpOpnd->GetType(), m_func);
-                // MOV tmp, cmpOnd
-                Lowerer::InsertMove(tmp, cmpOpnd, helperLabel);
-                // ADD tmp, offset
-                Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)src1->AsIndirOpnd()->GetOffset(), tmp->GetType(), m_func), helperLabel);
-                // JB helper
-                Lowerer::InsertBranch(Js::OpCode::JB, helperLabel, helperLabel);
-                lowererMD->m_lowerer->InsertCompareBranch(tmp, instr->UnlinkSrc2(), Js::OpCode::BrGe_A, true, helperLabel, helperLabel);
-            }
-            else
 #endif
-            {
-                lowererMD->m_lowerer->InsertCompareBranch(cmpOpnd, instr->UnlinkSrc2(), Js::OpCode::BrGe_A, true, helperLabel, helperLabel);
-            }
-        }
-        Lowerer::InsertBranch(Js::OpCode::Br, loadLabel, helperLabel);
-
-        if (isSimdLoad)
         {
-            lowererMD->m_lowerer->GenerateRuntimeError(loadLabel, JSERR_ArgumentOutOfRange, IR::HelperOp_RuntimeRangeError);
+            lowererMD->m_lowerer->InsertCompareBranch(cmpOpnd, instr->UnlinkSrc2(), Js::OpCode::BrGe_A, true, helperLabel, helperLabel);
         }
-        else
-        {
-            if (IRType_IsFloat(type))
-            {
-                Lowerer::InsertMove(instr->UnlinkDst(), IR::FloatConstOpnd::New(Js::NumberConstants::NaN, type, m_func), loadLabel);
-            }
-            else
-            {
-                Lowerer::InsertMove(instr->UnlinkDst(), IR::IntConstOpnd::New(0, TyInt8, m_func), loadLabel);
-            }
-        }
+    }
+    Lowerer::InsertBranch(Js::OpCode::Br, loadLabel, helperLabel);
 
-        Lowerer::InsertBranch(Js::OpCode::Br, doneLabel, loadLabel);
-        done = doneLabel;
+    if (isSimdLoad)
+    {
+        lowererMD->m_lowerer->GenerateRuntimeError(loadLabel, JSERR_ArgumentOutOfRange, IR::HelperOp_RuntimeRangeError);
     }
     else
     {
-        Assert(!instr->GetSrc2());
-        done = instr;
+        if (IRType_IsFloat(type))
+        {
+            Lowerer::InsertMove(instr->UnlinkDst(), IR::FloatConstOpnd::New(Js::NumberConstants::NaN, type, m_func), loadLabel);
+        }
+        else
+        {
+            Lowerer::InsertMove(instr->UnlinkDst(), IR::IntConstOpnd::New(0, TyInt8, m_func), loadLabel);
+        }
     }
+
+    Lowerer::InsertBranch(Js::OpCode::Br, doneLabel, loadLabel);
+    done = doneLabel;
     return done;
 }
 
@@ -1274,71 +1265,62 @@ LowererMDArch::LowerAsmJsStElemHelper(IR::Instr * instr, bool isSimdStore /*= fa
     Assert(isSimdStore == false || dataWidth == 4 || dataWidth == 8 || dataWidth == 12 || dataWidth == 16);
 
     // xplat: Always do bound check. We don't support out-of-bound access violation recovery.
-    // TODO (hanhossain): remove condition since we always do the bounds check
-    if (true)
+    IR::LabelInstr * helperLabel = Lowerer::InsertLabel(true, instr);
+    IR::LabelInstr * storeLabel = Lowerer::InsertLabel(false, instr);
+    IR::LabelInstr * doneLabel = Lowerer::InsertLabel(false, instr);
+    IR::Opnd * cmpOpnd;
+    if (indexOpnd)
     {
-        IR::LabelInstr * helperLabel = Lowerer::InsertLabel(true, instr);
-        IR::LabelInstr * storeLabel = Lowerer::InsertLabel(false, instr);
-        IR::LabelInstr * doneLabel = Lowerer::InsertLabel(false, instr);
-        IR::Opnd * cmpOpnd;
-        if (indexOpnd)
-        {
-            cmpOpnd = dst->AsIndirOpnd()->GetIndexOpnd();
-        }
-        else
-        {
-            cmpOpnd = IR::IntConstOpnd::New(dst->AsIndirOpnd()->GetOffset(), TyUint32, m_func);
-        }
+        cmpOpnd = dst->AsIndirOpnd()->GetIndexOpnd();
+    }
+    else
+    {
+        cmpOpnd = IR::IntConstOpnd::New(dst->AsIndirOpnd()->GetOffset(), TyUint32, m_func);
+    }
 
-        // if dataWidth != byte per element, we need to check end offset
-        if (checkEndOffset)
+    // if dataWidth != byte per element, we need to check end offset
+    if (checkEndOffset)
+    {
+        IR::RegOpnd *tmp = IR::RegOpnd::New(cmpOpnd->GetType(), m_func);
+        // MOV tmp, cmpOnd
+        Lowerer::InsertMove(tmp, cmpOpnd, helperLabel);
+        // ADD tmp, dataWidth
+        Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)dataWidth, tmp->GetType(), m_func, true), helperLabel);
+        // JB helper
+        Lowerer::InsertBranch(Js::OpCode::JB, helperLabel, helperLabel);
+        // CMP tmp, size
+        // JG  $helper
+        lowererMD->m_lowerer->InsertCompareBranch(tmp, instr->UnlinkSrc2(), Js::OpCode::BrGt_A, true, helperLabel, helperLabel);
+    }
+    else
+    {
+#ifdef ENABLE_WASM_SIMD
+        if (m_func->GetJITFunctionBody()->IsWasmFunction() && dst->AsIndirOpnd()->GetOffset()) //WASM
         {
             IR::RegOpnd *tmp = IR::RegOpnd::New(cmpOpnd->GetType(), m_func);
             // MOV tmp, cmpOnd
             Lowerer::InsertMove(tmp, cmpOpnd, helperLabel);
-            // ADD tmp, dataWidth
-            Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)dataWidth, tmp->GetType(), m_func, true), helperLabel);
+            // ADD tmp, offset
+            Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)dst->AsIndirOpnd()->GetOffset(), tmp->GetType(), m_func), helperLabel);
             // JB helper
             Lowerer::InsertBranch(Js::OpCode::JB, helperLabel, helperLabel);
-            // CMP tmp, size
-            // JG  $helper
-            lowererMD->m_lowerer->InsertCompareBranch(tmp, instr->UnlinkSrc2(), Js::OpCode::BrGt_A, true, helperLabel, helperLabel);
+            lowererMD->m_lowerer->InsertCompareBranch(tmp, instr->UnlinkSrc2(), Js::OpCode::BrGe_A, true, helperLabel, helperLabel);
         }
         else
-        {
-#ifdef ENABLE_WASM_SIMD
-            if (m_func->GetJITFunctionBody()->IsWasmFunction() && dst->AsIndirOpnd()->GetOffset()) //WASM
-            {
-                IR::RegOpnd *tmp = IR::RegOpnd::New(cmpOpnd->GetType(), m_func);
-                // MOV tmp, cmpOnd
-                Lowerer::InsertMove(tmp, cmpOpnd, helperLabel);
-                // ADD tmp, offset
-                Lowerer::InsertAdd(true, tmp, tmp, IR::IntConstOpnd::New((uint32_t)dst->AsIndirOpnd()->GetOffset(), tmp->GetType(), m_func), helperLabel);
-                // JB helper
-                Lowerer::InsertBranch(Js::OpCode::JB, helperLabel, helperLabel);
-                lowererMD->m_lowerer->InsertCompareBranch(tmp, instr->UnlinkSrc2(), Js::OpCode::BrGe_A, true, helperLabel, helperLabel);
-            }
-            else
 #endif
-            {
-                lowererMD->m_lowerer->InsertCompareBranch(cmpOpnd, instr->UnlinkSrc2(), Js::OpCode::BrGe_A, true, helperLabel, helperLabel);
-            }
-        }
-        Lowerer::InsertBranch(Js::OpCode::Br, storeLabel, helperLabel);
-
-        if (isSimdStore)
         {
-            lowererMD->m_lowerer->GenerateRuntimeError(storeLabel, JSERR_ArgumentOutOfRange, IR::HelperOp_RuntimeRangeError);
+            lowererMD->m_lowerer->InsertCompareBranch(cmpOpnd, instr->UnlinkSrc2(), Js::OpCode::BrGe_A, true, helperLabel, helperLabel);
         }
+    }
+    Lowerer::InsertBranch(Js::OpCode::Br, storeLabel, helperLabel);
 
-        Lowerer::InsertBranch(Js::OpCode::Br, doneLabel, storeLabel);
-        done = doneLabel;
-    }
-    else
+    if (isSimdStore)
     {
-        Assert(!instr->GetSrc2());
-        done = instr;
+        lowererMD->m_lowerer->GenerateRuntimeError(storeLabel, JSERR_ArgumentOutOfRange, IR::HelperOp_RuntimeRangeError);
     }
+
+    Lowerer::InsertBranch(Js::OpCode::Br, doneLabel, storeLabel);
+    done = doneLabel;
 
     return done;
 }
