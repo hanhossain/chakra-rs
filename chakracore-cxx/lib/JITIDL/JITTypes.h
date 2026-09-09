@@ -682,7 +682,6 @@ typedef struct PolymorphicInlineCacheInfoIDL
 typedef struct CodeGenWorkItemIDL
 {
     boolean hasSharedPropGuards;
-    boolean isJitInDebugMode;  // Whether JIT is in debug mode for this work item.
     byte type;
     char jitMode;
 

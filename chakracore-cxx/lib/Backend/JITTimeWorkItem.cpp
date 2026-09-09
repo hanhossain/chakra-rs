@@ -38,10 +38,11 @@ JITTimeWorkItem::IsLoopBody() const
     return Type() == JsLoopBodyWorkItemType;
 }
 
+// TODO (hanhossain): remove
 bool
 JITTimeWorkItem::IsJitInDebugMode() const
 {
-    return m_workItemData->isJitInDebugMode;
+    return false;
 }
 
 intptr_t

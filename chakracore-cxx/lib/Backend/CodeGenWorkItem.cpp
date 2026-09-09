@@ -13,7 +13,6 @@ CodeGenWorkItem::CodeGenWorkItem(
     JsUtil::JobManager *const manager,
     Js::FunctionBody *const functionBody,
     Js::EntryPointInfo* entryPointInfo,
-    bool isJitInDebugMode,
     CodeGenWorkItemType type)
     : JsUtil::Job(manager)
     , functionBody(functionBody)
@@ -27,7 +26,6 @@ CodeGenWorkItem::CodeGenWorkItem(
     this->jitData = {0};
     // work item data
     this->jitData.type = type;
-    this->jitData.isJitInDebugMode = isJitInDebugMode;
     ResetJitMode();
 }
 

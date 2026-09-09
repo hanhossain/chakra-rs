@@ -1027,8 +1027,6 @@ namespace Js
         ScriptContext* GetScriptContext() const;
         Utf8SourceInfo* GetUtf8SourceInfo() const { return this->m_utf8SourceInfo; }
         void SetUtf8SourceInfo(Utf8SourceInfo* utf8SourceInfo) { m_utf8SourceInfo = utf8SourceInfo; }
-        // TODO (hanhossain): remove
-        bool IsInDebugMode() const { return false; }
 
         unsigned long GetSecondaryHostSourceContext() const;
         unsigned long GetHostSourceContext() const;
