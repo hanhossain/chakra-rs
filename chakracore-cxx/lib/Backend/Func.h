@@ -260,8 +260,6 @@ public:
     int32_t StackAllocate(StackSym *stackSym, int size);
     void SetArgOffset(StackSym *stackSym, int32_t offset);
 
-    int32_t GetLocalVarSlotOffset(int32_t slotId);
-    int32_t GetHasLocalVarChangedOffset();
     bool IsNonTempLocalVar(uint32_t slotIndex);
     void OnAddSym(Sym* sym);
 
@@ -974,7 +972,6 @@ private:
     ObjTypeSpecFldInfo ** m_globalObjTypeSpecFldInfoArray;
     IR::SymOpnd *GetInlineeOpndAtOffset(int32_t offset);
     bool HasLocalVarSlotCreated() const { return m_localVarSlotsOffset != Js::Constants::InvalidOffset; }
-    void EnsureLocalVarSlots();
     SList<IR::RegOpnd *> constantAddressRegOpnd;
     IR::Instr * lastConstantAddressRegLoadInstr;
     bool canHoistConstantAddressLoad;

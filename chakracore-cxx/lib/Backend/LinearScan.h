@@ -147,9 +147,6 @@ private:
     uint                GetSpillCost(Lifetime * lifetime);
     bool                RemoveDeadStores(IR::Instr *instr);
 
-    // This helper function is used to save bytecode stack sym value to memory / local slots on stack so that we can read it for the locals inspection.
-    void                WriteThroughForLocal(IR::RegOpnd* regOpnd, Lifetime* lifetime, IR::Instr* instrInsertAfter);
-    int32_t               GetStackOffset(Js::RegSlot regSlotId);
     bool                IsSymNonTempLocalVar(StackSym *sym);
     bool                NeedsWriteThrough(StackSym * sym);
     bool                NeedsWriteThroughForEH(StackSym * sym);

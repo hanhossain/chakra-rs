@@ -52,26 +52,6 @@ IRBuilder::AddStatementBoundary(uint statementIndex, uint offset)
     return m_statementReader.MoveNextStatementBoundary();
 }
 
-// Add conditional bailout for breaking into interpreter debug thunk - for fast F12.
-void
-IRBuilder::InsertBailOutForDebugger(uint byteCodeOffset, IR::BailOutKind kind, IR::Instr* insertBeforeInstr /* default nullptr */)
-{
-    // TODO (hanhossain): remove
-    Assert(false);
-    Assert(byteCodeOffset != Js::Constants::NoByteCodeOffset);
-
-    BailOutInfo * bailOutInfo = JitAnew(m_func->m_alloc, BailOutInfo, byteCodeOffset, m_func);
-    IR::BailOutInstr * instr = IR::BailOutInstr::New(Js::OpCode::BailForDebugger, kind, bailOutInfo, bailOutInfo->bailOutFunc);
-    if (insertBeforeInstr)
-    {
-        InsertInstr(instr, insertBeforeInstr);
-    }
-    else
-    {
-        this->AddInstr(instr, m_lastInstr->GetByteCodeOffset());
-    }
-}
-
 bool
 IRBuilder::DoBailOnNoProfile()
 {
