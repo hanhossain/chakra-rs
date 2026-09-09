@@ -60,9 +60,7 @@ public:
 
     uint GetByteCodeLength() const
     {
-        return this->functionBody->IsInDebugMode()
-            ? this->functionBody->GetOriginalByteCode()->GetLength()
-            : this->functionBody->GetByteCode()->GetLength();
+        return this->functionBody->GetByteCode()->GetLength();
     }
 
     Js::FunctionBody* GetFunctionBody() const

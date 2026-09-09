@@ -411,7 +411,6 @@ namespace Js
         {
             return
                 !PHASE_OFF(NativeArrayPhase, m_functionWrite) &&
-                !m_functionWrite->IsInDebugMode() &&
                 (op == OpCode::NewScObjArray || op == OpCode::NewScObjArraySpread);
         }
 
@@ -420,7 +419,6 @@ namespace Js
             return
                 !PHASE_OFF(NativeArrayPhase, m_functionWrite) &&
                 !PHASE_OFF(NativeNewScArrayPhase, m_functionWrite) &&
-                !m_functionWrite->IsInDebugMode() &&
                 (op == OpCode::NewScIntArray || op == OpCode::NewScFltArray || op == OpCode::NewScArray);
         }
 

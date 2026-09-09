@@ -2112,7 +2112,7 @@ namespace Js
         Assert(!pfuncScript->GetFunctionInfo()->IsGenerator());
 
         Js::Utf8SourceInfo* utf8SourceInfo = pfuncScript->GetFunctionBody()->GetUtf8SourceInfo();
-        if (this->IsScriptContextInDebugMode() && !utf8SourceInfo->GetIsLibraryCode() && !utf8SourceInfo->IsInDebugMode())
+        if (this->IsScriptContextInDebugMode() && !utf8SourceInfo->GetIsLibraryCode())
         {
             // Identifying if any non library function escaped for not being in debug mode.
             Throw::FatalInternalError();

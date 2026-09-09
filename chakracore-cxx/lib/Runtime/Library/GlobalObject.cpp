@@ -267,7 +267,7 @@ using namespace Js;
         else
         {
             Js::Utf8SourceInfo* utf8SourceInfo = pfuncScript->GetFunctionBody()->GetUtf8SourceInfo();
-            if (scriptContext->IsScriptContextInDebugMode() && !utf8SourceInfo->GetIsLibraryCode() && !utf8SourceInfo->IsInDebugMode())
+            if (scriptContext->IsScriptContextInDebugMode() && !utf8SourceInfo->GetIsLibraryCode())
             {
                 // Identifying if any non library function escaped for not being in debug mode.
                 Throw::FatalInternalError();
@@ -530,7 +530,6 @@ using namespace Js;
 
             if (registerDocument)
             {
-                funcBody->RegisterFuncToDiag(scriptContext, pszTitle);
                 funcBody = funcBody->GetParseableFunctionInfo(); // RegisterFunction may parse and update function body
             }
 

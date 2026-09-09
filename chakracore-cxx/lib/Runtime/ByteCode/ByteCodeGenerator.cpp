@@ -790,9 +790,10 @@ bool ByteCodeGenerator::IsSuper(ParseNode* pnode)
 }
 
 // ByteCodeGenerator debug mode means we are generating debug mode user-code. Library code is always in non-debug mode.
+// TODO (hanhossain): remove
 bool ByteCodeGenerator::IsInDebugMode() const
 {
-    return m_utf8SourceInfo->IsInDebugMode();
+    return false;
 }
 
 // ByteCodeGenerator non-debug mode means we are not debugging, or we are generating library code which is always in non-debug mode.

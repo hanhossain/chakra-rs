@@ -1027,7 +1027,8 @@ namespace Js
         ScriptContext* GetScriptContext() const;
         Utf8SourceInfo* GetUtf8SourceInfo() const { return this->m_utf8SourceInfo; }
         void SetUtf8SourceInfo(Utf8SourceInfo* utf8SourceInfo) { m_utf8SourceInfo = utf8SourceInfo; }
-        bool IsInDebugMode() const { return this->m_utf8SourceInfo->IsInDebugMode(); }
+        // TODO (hanhossain): remove
+        bool IsInDebugMode() const { return false; }
 
         unsigned long GetSecondaryHostSourceContext() const;
         unsigned long GetHostSourceContext() const;
@@ -1747,7 +1748,6 @@ namespace Js
         void SetDeferredStubs(DeferredFunctionStub *stub) { this->SetAuxPtr<AuxPointerType::DeferredStubs>(stub); }
         PrintOffsets* GetPrintOffsets() const { return this->GetAuxPtr<AuxPointerType::PrintOffsets>(); }
         void SetPrintOffsets(PrintOffsets* offsets) { this->SetAuxPtr<AuxPointerType::PrintOffsets>(offsets); }
-        void RegisterFuncToDiag(ScriptContext * scriptContext, char16_t const * pszTitle);
         bool IsES6ModuleCode() const;
     private:
         RecyclerWeakReference<JavascriptString> * GetCachedSourceStringWeakRef();
@@ -3207,9 +3207,6 @@ namespace Js
 
         void AddDeferParseAttribute();
         void RemoveDeferParseAttribute();
-#if DBG
-        void MustBeInDebugMode();
-#endif
 
         static bool IsDummyGlobalRetStatement(const regex::Interval *sourceSpan)
         {
