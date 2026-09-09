@@ -167,7 +167,6 @@ namespace Js
         uint32_t m_tmpRegCount;
         bool m_doJitLoopBodies;
         bool m_hasLoop;
-        bool m_isInDebugMode;
         bool m_doInterruptProbe;
     public:
         struct CacheIdUnit {
@@ -222,9 +221,7 @@ namespace Js
 
         void Create();
         void InitData(ArenaAllocator* alloc, int32_t initCodeBufferSize);
-        void Begin(FunctionBody* functionWrite, ArenaAllocator* alloc, bool doJitLoopBodies, bool hasLoop,
-            // TODO (hanhossain): remove
-            bool inDebugMode);
+        void Begin(FunctionBody* functionWrite, ArenaAllocator* alloc, bool doJitLoopBodies, bool hasLoop);
 #ifdef LOG_BYTECODE_AST_RATIO
         void End(int32_t currentAstSize, int32_t maxAstSize);
 #else

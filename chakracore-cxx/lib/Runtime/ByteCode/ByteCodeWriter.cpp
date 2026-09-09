@@ -64,9 +64,7 @@ namespace Js
     ///
     ///----------------------------------------------------------------------------
 
-    void ByteCodeWriter::Begin(FunctionBody* functionWrite, ArenaAllocator* alloc, bool doJitLoopBodies, bool hasLoop,
-        // TODO (hanhossain): remove
-        bool inDebugMode)
+    void ByteCodeWriter::Begin(FunctionBody* functionWrite, ArenaAllocator* alloc, bool doJitLoopBodies, bool hasLoop)
     {
         Assert(!isInUse);
         AssertMsg(m_functionWrite == nullptr, "Cannot nest Begin() calls");
@@ -79,7 +77,6 @@ namespace Js
         m_doJitLoopBodies = doJitLoopBodies;
         m_doInterruptProbe = functionWrite->GetScriptContext()->GetThreadContext()->DoInterruptProbe(functionWrite);
         m_hasLoop = hasLoop;
-        m_isInDebugMode = inDebugMode;
     }
 
     template <typename T>
@@ -2933,12 +2930,6 @@ StoreCommon:
         }
         m_pMatchingNode = node;
         m_beginCodeSpan = m_byteCodeData.GetCurrentOffset();
-
-        if (m_isInDebugMode && m_tmpRegCount != tmpRegCount)
-        {
-            Unsigned1(OpCode::EmitTmpRegCount, tmpRegCount);
-            m_tmpRegCount = tmpRegCount;
-        }
     }
 
     void ByteCodeWriter::EndStatement(ParseNode* node)
@@ -2956,69 +2947,25 @@ StoreCommon:
 
         if (m_byteCodeData.GetCurrentOffset() != m_beginCodeSpan)
         {
-            if (m_isInDebugMode)
-            {
-                FunctionBody::StatementMap* pCurrentStatement = FunctionBody::StatementMap::New(this->m_functionWrite->GetScriptContext()->GetRecycler());
+            StatementData currentStatement;
 
-                if (pCurrentStatement)
-                {
-                    pCurrentStatement->sourceSpan.begin = node->ichMin;
-                    pCurrentStatement->sourceSpan.end = node->ichLim;
+            currentStatement.sourceBegin = node->ichMin;
+            currentStatement.bytecodeBegin = m_beginCodeSpan;
 
-                    pCurrentStatement->byteCodeSpan.begin = m_beginCodeSpan;
-                    pCurrentStatement->byteCodeSpan.end = m_byteCodeData.GetCurrentOffset() - 1;
-
-                    m_functionWrite->RecordStatementMap(pCurrentStatement);
-                }
-            }
-            else
-            {
-                StatementData currentStatement;
-
-                currentStatement.sourceBegin = node->ichMin;
-                currentStatement.bytecodeBegin = m_beginCodeSpan;
-
-                m_functionWrite->RecordStatementMap(spanIter, &currentStatement);
-            }
+            m_functionWrite->RecordStatementMap(spanIter, &currentStatement);
         }
         m_pMatchingNode = nullptr;
     }
 
+    // TODO (hanhossain): remove
     void ByteCodeWriter::StartSubexpression(ParseNode* node)
     {
-        if (!m_isInDebugMode || !m_pMatchingNode) // Subexpression not in debug mode or not enclosed in regular statement
-        {
-            return;
-        }
-        // If we are going to emit a branch island, it should be before the statement start
-        this->EnsureLongBranch(Js::OpCode::StatementBoundary);
-        m_subexpressionNodesStack->Push(SubexpressionNode(node, m_byteCodeData.GetCurrentOffset()));
+        // Subexpression not in debug mode or not enclosed in regular statement
     }
 
+    // TODO (hanhossain): remove
     void ByteCodeWriter::EndSubexpression(ParseNode* node)
     {
-        if (!m_isInDebugMode || m_subexpressionNodesStack->Empty() || m_subexpressionNodesStack->Peek().node != node)
-        {
-            return;
-        }
-
-        if (m_byteCodeData.GetCurrentOffset() != m_beginCodeSpan)
-        {
-            FunctionBody::StatementMap* pCurrentStatement = FunctionBody::StatementMap::New(this->m_functionWrite->GetScriptContext()->GetRecycler());
-
-            if (pCurrentStatement)
-            {
-                pCurrentStatement->sourceSpan.begin = node->ichMin;
-                pCurrentStatement->sourceSpan.end = node->ichLim;
-
-                SubexpressionNode subexpressionNode = m_subexpressionNodesStack->Pop();
-                pCurrentStatement->byteCodeSpan.begin = subexpressionNode.beginCodeSpan;
-                pCurrentStatement->byteCodeSpan.end = m_byteCodeData.GetCurrentOffset() - 1;
-                pCurrentStatement->isSubexpression = true;
-
-                m_functionWrite->RecordStatementMap(pCurrentStatement);
-            }
-        }
     }
 
     // Pushes a new debugger scope onto the stack. This information is used when determining
@@ -3075,26 +3022,6 @@ StoreCommon:
         }
 
         debuggerScope->AddProperty(location, propertyId, flags);
-
-        // Only need to update properties in debug mode (even for slot array, which is tracked in non-debug mode,
-        // since the offset is only used for debugging).
-        if (this->m_isInDebugMode && isFunctionDeclaration)
-        {
-            AssertMsg(this->m_currentDebuggerScope, "Function declarations can only be added in a block scope.");
-            AssertMsg(debuggerScope == this->m_currentDebuggerScope
-                || debuggerScope == this->m_currentDebuggerScope->siblingScope,
-                "Function declarations should always be added to the current scope.");
-
-            // If this is a function declaration, it doesn't have a dead zone region so
-            // we just update its byte code initialization offset to the start of the block.
-            this->UpdateDebuggerPropertyInitializationOffset(
-                debuggerScope,
-                location,
-                propertyId,
-                false /*shouldConsumeRegister*/, // Register would have already been consumed above, if needed.
-                debuggerScope->GetStart(),
-                isFunctionDeclaration);
-        }
     }
 
     void ByteCodeWriter::RecordEndScopeObject()
@@ -3105,6 +3032,7 @@ StoreCommon:
         PopDebuggerScope();
     }
 
+    // TODO (hanhossain): remove
     void ByteCodeWriter::UpdateDebuggerPropertyInitializationOffset(
         Js::DebuggerScope* currentDebuggerScope,
         Js::RegSlot location,
@@ -3114,7 +3042,7 @@ StoreCommon:
         bool isFunctionDeclaration /*= false*/)
     {
 #if DBG
-        AssertMsg(m_isInDebugMode, "Property offsets should only ever be updated in debug mode (not used in non-debug).");
+        AssertMsg(false, "Property offsets should only ever be updated in debug mode (not used in non-debug).");
 #endif // DBG
 
         Assert(currentDebuggerScope);
@@ -3156,28 +3084,19 @@ StoreCommon:
         m_functionWrite->RecordObjectRegister(slot);
     }
 
+    // TODO (hanhossain): remove
     void ByteCodeWriter::RecordStatementAdjustment(FunctionBody::StatementAdjustmentType type)
     {
-        if (m_isInDebugMode)
-        {
-            m_functionWrite->RecordStatementAdjustment(m_byteCodeData.GetCurrentOffset(), type);
-        }
     }
 
+    // TODO (hanhossain): remove
     void ByteCodeWriter::RecordCrossFrameEntryExitRecord(bool isEnterBlock)
     {
-        if (m_isInDebugMode)
-        {
-            m_functionWrite->RecordCrossFrameEntryExitRecord(m_byteCodeData.GetCurrentOffset(), isEnterBlock);
-        }
     }
 
+    // TODO (hanhossain): remove
     void ByteCodeWriter::RecordForInOrOfCollectionScope()
     {
-        if (m_isInDebugMode && this->m_currentDebuggerScope != nullptr)
-        {
-            this->m_currentDebuggerScope->UpdatePropertiesInForInOrOfCollectionScope();
-        }
     }
 
     uint ByteCodeWriter::EnterLoop(Js::ByteCodeLabel loopEntrance)

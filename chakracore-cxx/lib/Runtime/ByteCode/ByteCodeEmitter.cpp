@@ -2730,7 +2730,7 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
         byteCodeFunction->AllocateLiteralRegexArray();
         m_callSiteId = 0;
         m_callApplyCallSiteCount = 0;
-        m_writer.Begin(byteCodeFunction, alloc, this->DoJitLoopBodies(funcInfo), funcInfo->hasLoop, false);
+        m_writer.Begin(byteCodeFunction, alloc, this->DoJitLoopBodies(funcInfo), funcInfo->hasLoop);
         this->PushFuncInfo(u"EmitOneFunction", funcInfo);
 
         this->inPrologue = true;

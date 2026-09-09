@@ -29,7 +29,7 @@ void WasmByteCodeWriter::Reset()
 }
 void WasmByteCodeWriter::Begin(FunctionBody* functionWrite, ArenaAllocator* alloc)
 {
-    ByteCodeWriter::Begin(functionWrite, alloc, true, true, false);
+    ByteCodeWriter::Begin(functionWrite, alloc, true, true);
 }
 ByteCodeLabel WasmByteCodeWriter::DefineLabel()
 {
