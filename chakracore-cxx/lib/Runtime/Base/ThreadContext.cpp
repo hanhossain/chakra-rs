@@ -174,7 +174,6 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     , noJsReentrancy(false)
 #endif
     , emptyStringPropertyRecord(nullptr)
-    , recyclerTelemetryHostInterface(this)
     , reentrancySafeOrHandled(false)
     , isInReentrancySafeRegion(false)
     , closedScriptContextCount(0)
@@ -490,52 +489,11 @@ public:
     }
 };
 
-LPFILETIME ThreadContext::ThreadContextRecyclerTelemetryHostInterface::GetLastScriptExecutionEndTime() const
-{
-    return nullptr;
-}
-
-bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::TransmitGCTelemetryStats(RecyclerTelemetryInfo& rti)
-{
-    return false;
-}
-
-bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::TransmitHeapUsage(size_t totalHeapBytes, size_t usedHeapBytes, double heapUsedRatio)
-{
-    return false;
-}
-
-bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::IsTelemetryProviderEnabled() const
-{
-    return false;
-}
-
-bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::TransmitTelemetryError(const RecyclerTelemetryInfo& rti, const char * msg)
-{
-    return false;
-}
-
-bool ThreadContext::ThreadContextRecyclerTelemetryHostInterface::IsThreadBound() const
-{
-    return this->tc->IsThreadBound();
-}
-
-
-uint32_t ThreadContext::ThreadContextRecyclerTelemetryHostInterface::GetCurrentScriptThreadID() const
-{
-    return this->tc->GetCurrentThreadId();
-}
-
-uint ThreadContext::ThreadContextRecyclerTelemetryHostInterface::GetClosedContextCount() const
-{
-    return this->tc->closedScriptContextCount;
-}
-
 Recycler* ThreadContext::EnsureRecycler()
 {
     if (recycler == nullptr)
     {
-        AutoRecyclerPtr newRecycler(HeapNew(Recycler, GetAllocationPolicyManager(), &pageAllocator, Js::Throw::OutOfMemory, Js::Configuration::Global.flags, &recyclerTelemetryHostInterface));
+        AutoRecyclerPtr newRecycler(HeapNew(Recycler, GetAllocationPolicyManager(), &pageAllocator, Js::Throw::OutOfMemory, Js::Configuration::Global.flags));
         newRecycler->Initialize(isOptimizedForManyInstances, &threadService); // use in-thread GC when optimizing for many instances
         newRecycler->SetCollectionWrapper(this);
 

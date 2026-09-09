@@ -7,7 +7,6 @@
 #include <string_view>
 
 #include "CollectionState.h"
-#include "RecyclerTelemetryInfo.h"
 #include "RecyclerWaitReason.h"
 #include "Common/ObservableValue.h"
 #include "CollectionFlags.h"
@@ -956,7 +955,7 @@ public:
 #endif
 public:
 
-    Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllocator * pageAllocator, void(*outOfMemoryFunc)(), Js::ConfigFlagsTable& flags, RecyclerTelemetryHostInterface* hostInterface);
+    Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllocator * pageAllocator, void(*outOfMemoryFunc)(), Js::ConfigFlagsTable& flags);
 
     ~Recycler();
 

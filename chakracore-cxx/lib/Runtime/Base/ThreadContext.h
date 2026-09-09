@@ -2001,29 +2001,6 @@ public:
             --loopDepth;
         }
     }
-
-private:
-    class ThreadContextRecyclerTelemetryHostInterface : public RecyclerTelemetryHostInterface
-    {
-    public:
-        ThreadContextRecyclerTelemetryHostInterface(ThreadContext* tc) :
-            tc(tc)
-        {
-        }
-
-        LPFILETIME GetLastScriptExecutionEndTime() const override;
-        bool TransmitGCTelemetryStats(RecyclerTelemetryInfo& rti) override;
-        bool TransmitTelemetryError(const RecyclerTelemetryInfo& rti, const char * msg) override;
-        bool TransmitHeapUsage(size_t totalHeapBytes, size_t usedHeapBytes, double heapUsedRatio) override;
-        bool IsThreadBound() const override;
-        uint32_t GetCurrentScriptThreadID() const override;
-        bool IsTelemetryProviderEnabled() const override;
-        uint GetClosedContextCount() const override;
-
-    private:
-        ThreadContext * tc;
-    };
-    ThreadContextRecyclerTelemetryHostInterface recyclerTelemetryHostInterface;
 };
 
 extern void(*InitializeAdditionalProperties)(ThreadContext *threadContext);

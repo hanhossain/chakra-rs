@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Common/Event.h"
+#include "Common/Tick.h"
 #include "Base/ThreadContextTlsEntry.h"
 #include "Base/ThreadBoundThreadContextManager.h"
 #include "Base/Utf8SourceInfo.h"
