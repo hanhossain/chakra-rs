@@ -369,8 +369,6 @@ namespace Js
         DebuggerScope* GetCurrentDebuggerScope() const { return m_currentDebuggerScope; }
         FunctionBody * GetFunctionWrite() const { return m_functionWrite; }
 
-        void RecordStatementAdjustment(FunctionBody::StatementAdjustmentType type);
-
         uint EnterLoop(Js::ByteCodeLabel loopEntrance);
         void ExitLoop(uint loopId);
         void SetCurrentLoopHasYield();

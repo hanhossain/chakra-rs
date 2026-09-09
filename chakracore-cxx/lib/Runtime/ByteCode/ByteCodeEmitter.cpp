@@ -9564,7 +9564,6 @@ void EmitForInOrForOf(ParseNodeForInOrForOf *loopNode, ByteCodeGenerator *byteCo
     // but currently ForIn stmt starts at the condition part, which is needed for correct handling of break point on ForIn
     // (break every time on the loop back edge) and correct display of current statement under debugger.
     // See WinBlue 231880 for details.
-    byteCodeGenerator->Writer()->RecordStatementAdjustment(Js::FunctionBody::SAT_All);
     Js::ByteCodeLabel loopEntrance = byteCodeGenerator->Writer()->DefineLabel();
     Js::ByteCodeLabel continuePastLoop = byteCodeGenerator->Writer()->DefineLabel();
 
@@ -11503,9 +11502,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
         byteCodeGenerator->Writer()->Reg2(Js::OpCode::Ld_A, pnode->location, pnode->AsParseNodeTri()->pnode2->location);
         funcInfo->ReleaseLoc(pnode->AsParseNodeTri()->pnode2);
 
-        // Record the branch bytecode offset
-        byteCodeGenerator->Writer()->RecordStatementAdjustment(Js::FunctionBody::SAT_FromCurrentToNext);
-
         byteCodeGenerator->Writer()->Br(skipLabel);
 
         byteCodeGenerator->Writer()->MarkLabel(falseLabel);
@@ -11660,8 +11656,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
         ENDSTATEMENET_IFTOPLEVEL(isTopLevel, pnode);
         break;
     case knopEndCode:
-        byteCodeGenerator->Writer()->RecordStatementAdjustment(Js::FunctionBody::SAT_All);
-
         // load undefined for the fallthrough case:
         if (!funcInfo->IsGlobalFunction())
         {
@@ -11744,9 +11738,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
         {
             // has else clause
             Js::ByteCodeLabel skipLabel = byteCodeGenerator->Writer()->DefineLabel();
-
-            // Record the branch bytecode offset
-            byteCodeGenerator->Writer()->RecordStatementAdjustment(Js::FunctionBody::SAT_FromCurrentToNext);
 
             // then clause skips else clause
             byteCodeGenerator->Writer()->Br(skipLabel);

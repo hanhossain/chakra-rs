@@ -3033,11 +3033,6 @@ StoreCommon:
         m_functionWrite->RecordObjectRegister(slot);
     }
 
-    // TODO (hanhossain): remove
-    void ByteCodeWriter::RecordStatementAdjustment(FunctionBody::StatementAdjustmentType type)
-    {
-    }
-
     uint ByteCodeWriter::EnterLoop(Js::ByteCodeLabel loopEntrance)
     {
         if (useBranchIsland)
