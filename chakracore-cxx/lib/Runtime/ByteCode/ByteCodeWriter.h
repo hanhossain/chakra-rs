@@ -353,8 +353,6 @@ namespace Js
         void MarkLabel(ByteCodeLabel labelID);
         void StartStatement(ParseNode* node, uint32_t tmpRegCount);
         void EndStatement(ParseNode* node);
-        void StartSubexpression(ParseNode* node);
-        void EndSubexpression(ParseNode* node);
         void RecordFrameDisplayRegister(RegSlot slot);
         void RecordObjectRegister(RegSlot slot);
         uint GetCurrentOffset() const { return m_byteCodeData.GetCurrentOffset(); }

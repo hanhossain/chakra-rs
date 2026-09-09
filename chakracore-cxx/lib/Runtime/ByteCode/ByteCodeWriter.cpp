@@ -2957,17 +2957,6 @@ StoreCommon:
         m_pMatchingNode = nullptr;
     }
 
-    // TODO (hanhossain): remove
-    void ByteCodeWriter::StartSubexpression(ParseNode* node)
-    {
-        // Subexpression not in debug mode or not enclosed in regular statement
-    }
-
-    // TODO (hanhossain): remove
-    void ByteCodeWriter::EndSubexpression(ParseNode* node)
-    {
-    }
-
     // Pushes a new debugger scope onto the stack. This information is used when determining
     // what the current scope is for tracking of let/const initialization offsets (for detecting
     // dead zones).

@@ -421,8 +421,6 @@ public:
 
     void StartStatement(ParseNode* node);
     void EndStatement(ParseNode* node);
-    void StartSubexpression(ParseNode* node);
-    void EndSubexpression(ParseNode* node);
 
     // Debugger methods.
     void TrackSlotArrayPropertyForDebugger(Js::DebuggerScope *debuggerScope, Symbol* symbol, Js::PropertyId propertyId, Js::DebuggerScopePropertyFlags flags = Js::DebuggerScopePropertyFlags_None, bool isFunctionDeclaration = false);
