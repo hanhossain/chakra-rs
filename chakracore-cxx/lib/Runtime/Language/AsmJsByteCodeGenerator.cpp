@@ -2155,9 +2155,6 @@ namespace Js
             // has else clause
             Js::ByteCodeLabel skipLabel = mWriter.DefineLabel();
 
-            // Record the branch bytecode offset
-            mWriter.RecordStatementAdjustment( Js::FunctionBody::SAT_FromCurrentToNext );
-
             // then clause skips else clause
             mWriter.AsmBr( skipLabel );
             // generate code for else clause
