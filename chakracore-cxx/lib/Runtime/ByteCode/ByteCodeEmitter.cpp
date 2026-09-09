@@ -305,6 +305,7 @@ Js::OpCode ByteCodeGenerator::ToChkUndeclOp(Js::OpCode op) const
     }
 }
 
+// TODO (hanhossain): remove
 void ByteCodeGenerator::TrackActivationObjectPropertyForDebugger(
     Js::DebuggerScope *debuggerScope,
     Symbol *symbol,
@@ -313,23 +314,6 @@ void ByteCodeGenerator::TrackActivationObjectPropertyForDebugger(
 {
     Assert(debuggerScope);
     Assert(symbol);
-
-    // Only need to track activation object properties in debug mode.
-    if (ShouldTrackDebuggerMetadata() && !symbol->GetIsTrackedForDebugger())
-    {
-        Js::RegSlot location = symbol->GetLocation();
-        Js::PropertyId propertyId = symbol->EnsurePosition(this);
-
-        this->Writer()->AddPropertyToDebuggerScope(
-            debuggerScope,
-            location,
-            propertyId,
-            /*shouldConsumeRegister*/ false,
-            flags,
-            isFunctionDeclaration);
-
-        symbol->SetIsTrackedForDebugger(true);
-    }
 }
 
 void ByteCodeGenerator::TrackSlotArrayPropertyForDebugger(
@@ -1234,18 +1218,6 @@ Js::RegSlot ByteCodeGenerator::DefineOneFunction(ParseNodeFnc *pnodeFnc, FuncInf
                 Assert(funcInfoParent->GetBodyScope() != nullptr && funcSymbol->GetScope() != nullptr);
                 bool isFunctionDeclarationInBlock = funcSymbol->GetIsBlockVar();
 
-                // Track all vars/lets/consts register slot function declarations.
-                if (ShouldTrackDebuggerMetadata()
-                    // If this is a let binding function declaration at global level, we want to
-                    // be sure to track the register location as well.
-                    && !(funcInfoParent->IsGlobalFunction() && !isFunctionDeclarationInBlock))
-                {
-                    if (!funcSymbol->IsInSlot(this, funcInfoParent))
-                    {
-                        funcInfoParent->byteCodeFunction->GetFunctionBody()->InsertSymbolToRegSlotList(funcSymbol->GetName(), pnodeFnc->location, funcInfoParent->varRegsCount);
-                    }
-                }
-
                 if (isFunctionDeclarationInBlock)
                 {
                     // We only track inner let bindings for the debugger side.
@@ -1276,13 +1248,11 @@ void ByteCodeGenerator::DefineUserVars(FuncInfo *funcInfo)
     // by an existing initialization.
 
     BOOL fGlobal = funcInfo->IsGlobalFunction();
-    ParseNode *pnode;
-    Js::FunctionBody *byteCodeFunction = funcInfo->GetParsedFunctionBody();
     // Global declarations need a temp register to hold the init value, but the node shouldn't get a register.
     // Just assign one on the fly and re-use it for all initializations.
     Js::RegSlot tmpReg = fGlobal ? funcInfo->AcquireTmpRegister() : Js::Constants::NoRegister;
 
-    for (pnode = funcInfo->root->pnodeVars; pnode; pnode = pnode->AsParseNodeVar()->pnodeNext)
+    for (ParseNode *pnode = funcInfo->root->pnodeVars; pnode; pnode = pnode->AsParseNodeVar()->pnodeNext)
     {
         Symbol* sym = pnode->AsParseNodeVar()->sym;
 
@@ -1298,11 +1268,6 @@ void ByteCodeGenerator::DefineUserVars(FuncInfo *funcInfo)
                 if (!funcInfo->root->HasNonSimpleParameterList())
                 {
                     EmitPropStoreForSpecialSymbol(sym->GetLocation(), sym, sym->GetPid(), funcInfo, true);
-
-                    if (ShouldTrackDebuggerMetadata() && !sym->IsInSlot(this, funcInfo))
-                    {
-                        byteCodeFunction->InsertSymbolToRegSlotList(sym->GetName(), sym->GetLocation(), funcInfo->varRegsCount);
-                    }
                 }
 
                 continue;
@@ -1388,23 +1353,7 @@ void ByteCodeGenerator::DefineUserVars(FuncInfo *funcInfo)
                         this->m_writer.Reg1(Js::OpCode::LdUndef, reg);
                         this->EmitLocalPropInit(reg, sym, funcInfo);
 
-                        if (ShouldTrackDebuggerMetadata() && !sym->GetHasInit() && !sym->IsInSlot(this, funcInfo))
-                        {
-                            byteCodeFunction->InsertSymbolToRegSlotList(sym->GetName(), reg, funcInfo->varRegsCount);
-                        }
-
                         funcInfo->ReleaseTmpRegister(reg);
-                    }
-                }
-                else if (ShouldTrackDebuggerMetadata())
-                {
-                    if (!sym->GetHasInit() && !sym->IsInSlot(this, funcInfo))
-                    {
-                        Js::RegSlot reg = sym->GetLocation();
-                        if (reg != Js::Constants::NoRegister)
-                        {
-                            byteCodeFunction->InsertSymbolToRegSlotList(sym->GetName(), reg, funcInfo->varRegsCount);
-                        }
                     }
                 }
                 sym->SetHasInit(TRUE);
@@ -2048,10 +1997,6 @@ void ByteCodeGenerator::LoadAllConstants(FuncInfo *funcInfo)
                                           sym->GetScopeSlot() + Js::ScopeSlots::FirstSlotIndex);
                 }
             }
-            else if (ShouldTrackDebuggerMetadata())
-            {
-                funcInfo->byteCodeFunction->GetFunctionBody()->InsertSymbolToRegSlotList(sym->GetName(), sym->GetLocation(), funcInfo->varRegsCount);
-            }
         }
     }
 }
@@ -2352,25 +2297,6 @@ void ByteCodeGenerator::EmitLoadFormalIntoRegister(ParseNode *pnodeFormal, Js::R
 
 void ByteCodeGenerator::HomeArguments(FuncInfo *funcInfo)
 {
-    if (ShouldTrackDebuggerMetadata())
-    {
-        // Add formals to the debugger propertyidcontainer for reg slots
-        auto addFormalsToPropertyIdContainer = [this, funcInfo](ParseNode *pnodeFormal)
-        {
-            if (pnodeFormal->IsVarLetOrConst())
-            {
-                Symbol* formal = pnodeFormal->AsParseNodeVar()->sym;
-                if (!formal->IsInSlot(this, funcInfo))
-                {
-                    Assert(!formal->GetHasInit());
-                    funcInfo->GetParsedFunctionBody()->InsertSymbolToRegSlotList(formal->GetName(), formal->GetLocation(), funcInfo->varRegsCount);
-                }
-            }
-        };
-
-        MapFormals(funcInfo->root, addFormalsToPropertyIdContainer);
-    }
-
     // Transfer formal parameters to their home locations on the local frame.
     if (funcInfo->GetHasArguments())
     {
@@ -2558,7 +2484,7 @@ void ByteCodeGenerator::InsertPropertyToDebuggerScope(FuncInfo* funcInfo, Js::De
         Js::FunctionBody* funcBody = funcInfo->GetParsedFunctionBody();
         Js::DebuggerScopePropertyFlags flag = Js::DebuggerScopePropertyFlags_None;
         Js::RegSlot location = sym->GetLocation();
-        if (ShouldTrackDebuggerMetadata() && !funcInfo->IsBodyAndParamScopeMerged() && funcInfo->bodyScope->FindLocalSymbol(sym->GetName()) != nullptr)
+        if (!funcInfo->IsBodyAndParamScopeMerged() && funcInfo->bodyScope->FindLocalSymbol(sym->GetName()) != nullptr)
         {
             flag |= Js::DebuggerScopePropertyFlags_HasDuplicateInBody;
             location = funcBody->MapRegSlot(location);
@@ -2880,10 +2806,6 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
                     if (sym != nullptr && sym->IsSpecialSymbol())
                     {
                         EmitPropStoreForSpecialSymbol(sym->GetLocation(), sym, sym->GetPid(), funcInfo, true);
-                        if (ShouldTrackDebuggerMetadata() && !sym->IsInSlot(this, funcInfo))
-                        {
-                            byteCodeFunction->InsertSymbolToRegSlotList(sym->GetName(), sym->GetLocation(), funcInfo->varRegsCount);
-                        }
                     }
                     else
                     {
@@ -2973,7 +2895,6 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
             MapFormalsWithoutRest(pnodeFnc, [&](ParseNode *pnodeArg) { EmitPropStore(pnodeArg->AsParseNodeVar()->sym->GetLocation(), pnodeArg->AsParseNodeVar()->sym, pnodeArg->AsParseNodeVar()->pid, funcInfo); });
         }
 
-        Js::RegSlot formalsUpperBound = Js::Constants::NoRegister; // Needed for tracking the last RegSlot in the param scope
         if (!funcInfo->IsBodyAndParamScopeMerged())
         {
             // Emit bytecode to copy the initial values from param names to their corresponding body bindings.
@@ -3018,21 +2939,8 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
                         Assert(param->IsArguments());
                     }
                 }
-
-                if (ShouldTrackDebuggerMetadata() && param->GetLocation() != Js::Constants::NoRegister)
-                {
-                    if (formalsUpperBound == Js::Constants::NoRegister || formalsUpperBound < param->GetLocation())
-                    {
-                        formalsUpperBound = param->GetLocation();
-                    }
-                }
             });
         }
-        if (ShouldTrackDebuggerMetadata() && byteCodeFunction->GetPropertyIdOnRegSlotsContainer())
-        {
-            byteCodeFunction->GetPropertyIdOnRegSlotsContainer()->formalsUpperBound = formalsUpperBound;
-        }
-
         if (pnodeFnc->pnodeBodyScope != nullptr)
         {
             ::BeginEmitBlock(pnodeFnc->pnodeBodyScope, this, funcInfo);
@@ -4707,12 +4615,6 @@ void ByteCodeGenerator::EmitPropStore(Js::RegSlot rhsLocation, Symbol *sym, Iden
             this->m_writer.SlotI2(op, rhsLocation, scope->GetInnerScopeIndex(),
                 slot + (sym->GetScope()->GetIsObject() ? 0 : Js::ScopeSlots::FirstSlotIndex));
         }
-
-        if (this->ShouldTrackDebuggerMetadata() && (isLetDecl || isConstDecl))
-        {
-            Js::PropertyId location = scope->GetIsObject() ? sym->GetLocation() : slot;
-            this->UpdateDebuggerPropertyInitializationOffset(location, sym->GetPosition(), false);
-        }
     }
     else
     {
@@ -4725,11 +4627,6 @@ void ByteCodeGenerator::EmitPropStore(Js::RegSlot rhsLocation, Symbol *sym, Iden
         if (rhsLocation != sym->GetLocation())
         {
             this->m_writer.Reg2(Js::OpCode::Ld_A, sym->GetLocation(), rhsLocation);
-
-            if (this->ShouldTrackDebuggerMetadata() && (isLetDecl || isConstDecl))
-            {
-                this->UpdateDebuggerPropertyInitializationOffset(sym->GetLocation(), sym->GetPosition());
-            }
         }
     }
 
@@ -12082,12 +11979,7 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
             scope->SetLocation(pnodeWith->location);
             byteCodeGenerator->PushScope(scope);
 
-            Js::DebuggerScope *debuggerScope = byteCodeGenerator->RecordStartScopeObject(pnodeWith, Js::DiagExtraScopesType::DiagWithScope, regVal);
-
-            if (byteCodeGenerator->ShouldTrackDebuggerMetadata())
-            {
-                byteCodeGenerator->Writer()->AddPropertyToDebuggerScope(debuggerScope, regVal, Js::Constants::NoProperty, /*shouldConsumeRegister*/ true, Js::DebuggerScopePropertyFlags_WithObject);
-            }
+            byteCodeGenerator->RecordStartScopeObject(pnodeWith, Js::DiagExtraScopesType::DiagWithScope, regVal);
 
             Emit(pnodeWith->pnodeBody, byteCodeGenerator, funcInfo, fReturnValue);
             funcInfo->ReleaseLoc(pnodeWith->pnodeBody);

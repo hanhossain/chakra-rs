@@ -788,13 +788,6 @@ bool ByteCodeGenerator::IsSuper(ParseNode* pnode)
     return pnode->nop == knopName && pnode->AsParseNodeName()->IsSpecialName() && pnode->AsParseNodeSpecialName()->isSuper;
 }
 
-
-// TODO (hanhossain): remove
-bool ByteCodeGenerator::ShouldTrackDebuggerMetadata() const
-{
-    return false;
-}
-
 void ByteCodeGenerator::SetRootFuncInfo(FuncInfo* func)
 {
     Assert(pRootFunc == nullptr || pRootFunc == func->byteCodeFunction);
@@ -3360,9 +3353,7 @@ void VisitNestedScopes(ParseNode* pnodeScopeList, ParseNode* pnodeParent, ByteCo
                     // Note that this can't be done for globals.
                     byteCodeGenerator->SetCurrentTopStatement(pnode->AsParseNodeBin()->pnode1);
                     Visit(pnode->AsParseNodeBin()->pnode1, byteCodeGenerator, prefix, postfix);
-                    if (!funcInfo->GetCallsEval() && !funcInfo->GetChildCallsEval() &&
-                        // So that it will not be marked as init thus it will be added to the diagnostics symbols container.
-                        !(byteCodeGenerator->ShouldTrackDebuggerMetadata()))
+                    if (!funcInfo->GetCallsEval() && !funcInfo->GetChildCallsEval())
                     {
                         MarkInit(pnode->AsParseNodeBin()->pnode1);
                     }
