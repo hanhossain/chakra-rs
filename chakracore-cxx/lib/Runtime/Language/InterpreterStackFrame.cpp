@@ -1206,10 +1206,12 @@ namespace Js
 #if ENABLE_NATIVE_CODEGEN
         bool doJITLoopBody =
             !this->executeFunction->GetScriptContext()->GetConfig()->IsNoNative() &&
-            !(this->executeFunction->GetHasTry() && (PHASE_OFF((Js::JITLoopBodyInTryCatchPhase), this->executeFunction))) &&
-            !(this->executeFunction->GetHasFinally() && (PHASE_OFF((Js::JITLoopBodyInTryFinallyPhase), this->executeFunction))) &&
+            !(this->executeFunction->GetHasTry() &&
+              (PHASE_OFF((Js::JITLoopBodyInTryCatchPhase), this->executeFunction))) &&
+            !(this->executeFunction->GetHasFinally() &&
+              (PHASE_OFF((Js::JITLoopBodyInTryFinallyPhase), this->executeFunction))) &&
             (this->executeFunction->ForceJITLoopBody() || this->executeFunction->IsJitLoopBodyPhaseEnabled()) &&
-            !this->executeFunction->IsInDebugMode() && this->executeFunction->GetLoopHeaderArray() != nullptr;
+                this->executeFunction->GetLoopHeaderArray() != nullptr;
 #endif
 
         // Pick a version of the LoopBodyStart OpCode handlers that is hardcoded to do loop body JIT and
@@ -1334,12 +1336,6 @@ namespace Js
             memset(newInstance->m_localSlots, 0, sizeof(Js::Var) * localCount);
         }
 #else
-        if (newInstance->m_functionBody->IsInDebugMode())
-        {
-            // In the debug mode zero out the local slot, so this could prevent locals being uninitialized in the case of setNextStatement.
-            memset(newInstance->m_localSlots, 0, sizeof(Js::Var) * localCount);
-        }
-        else
         {
             Js::RegSlot varCount = function->GetFunctionBody()->GetVarCount();
             if (varCount)
@@ -1668,8 +1664,7 @@ namespace Js
     bool InterpreterStackFrame::ShouldDoProfile(FunctionBody* executeFunction)
     {
 #if ENABLE_PROFILE_INFO
-        const bool doProfile = executeFunction->GetInterpreterExecutionMode(false) == ExecutionMode::ProfilingInterpreter ||
-            (executeFunction->IsInDebugMode() && DynamicProfileInfo::IsEnabled(executeFunction));
+        const bool doProfile = executeFunction->GetInterpreterExecutionMode(false) == ExecutionMode::ProfilingInterpreter;
         return doProfile;
 #else
         return false;
@@ -1755,17 +1750,6 @@ namespace Js
         Assert(threadContext->IsInScript());
 
         FunctionBody* executeFunction = function->GetFunctionBody();
-        if (!isAsmJs && executeFunction->IsInDebugMode() != functionScriptContext->IsScriptContextInDebugMode()) // debug mode mismatch
-        {
-            if (executeFunction->GetUtf8SourceInfo()->GetIsLibraryCode())
-            {
-                Assert(!executeFunction->IsInDebugMode()); // Library script byteCode is never in debug mode
-            }
-            else
-            {
-                Throw::FatalInternalError();
-            }
-        }
 
         if (executeFunction->GetInterpretedCount() == 0)
         {
@@ -2517,8 +2501,7 @@ namespace Js
         ScriptFunction * funcObj = GetJavascriptFunction();
         ScriptFunction::ReparseAsmJsModule(&funcObj);
         const bool doProfile =
-            funcObj->GetFunctionBody()->GetInterpreterExecutionMode(false) == ExecutionMode::ProfilingInterpreter ||
-            (funcObj->GetFunctionBody()->IsInDebugMode() && DynamicProfileInfo::IsEnabled(funcObj->GetFunctionBody()));
+            funcObj->GetFunctionBody()->GetInterpreterExecutionMode(false) == ExecutionMode::ProfilingInterpreter;
 
         DynamicProfileInfo * dynamicProfileInfo = nullptr;
         if (doProfile)

@@ -203,11 +203,6 @@ namespace Js
         return this->m_cbStartOffset;
     }
 
-    // TODO (hanhossain): remove
-    void ParseableFunctionInfo::RegisterFuncToDiag(ScriptContext * scriptContext, char16_t const * pszTitle)
-    {
-    }
-
     bool ParseableFunctionInfo::IsES6ModuleCode() const
     {
         return (GetGrfscr() & fscrIsModuleCode) == fscrIsModuleCode;
@@ -316,7 +311,7 @@ namespace Js
     bool
     FunctionBody::IsGeneratorAndJitIsDisabled() const
     {
-        return this->IsCoroutine() && !(CONFIG_FLAG(JitES6Generators) && !this->GetHasTry() && !this->IsInDebugMode() && !this->IsModule());
+        return this->IsCoroutine() && !(CONFIG_FLAG(JitES6Generators) && !this->GetHasTry() && !this->IsModule());
     }
 
     ScriptContext* EntryPointInfo::GetScriptContext()
@@ -3145,12 +3140,13 @@ namespace Js
         return true;
     }
 
+    // TODO (hanhossain): remove
     bool FunctionBody::GetStatementIndexAndLengthAt(int byteCodeOffset, uint32_t* statementIndex, uint32_t* statementLength)
     {
         Assert(statementIndex != nullptr);
         Assert(statementLength != nullptr);
 
-        Assert(this->IsInDebugMode());
+        Assert(false);
 
         StatementMap * statement = GetEnclosingStatementMapFromByteCode(byteCodeOffset, false);
         Assert(statement != nullptr);
@@ -4515,15 +4511,6 @@ namespace Js
         }
         this->GetPropertyIdOnRegSlotsContainer()->SetFormalArgs(formalArgs);
     }
-
-#if DBG
-    void FunctionBody::MustBeInDebugMode()
-    {
-        Assert(GetUtf8SourceInfo()->IsInDebugMode());
-        Assert(m_sourceInfo.pSpanSequence == nullptr);
-        Assert(this->GetStatementMaps() != nullptr);
-    }
-#endif
 
     void ParseableFunctionInfo::CleanupToReparse()
     {
@@ -6508,7 +6495,7 @@ namespace Js
 #ifdef ASMJS_PLAT
             !GetIsAsmjsMode() &&
 #endif
-            !GetScriptContext()->GetConfig()->IsNoNative() && !this->IsInDebugMode() && DoInterpreterProfileWithLock();
+            !GetScriptContext()->GetConfig()->IsNoNative() && DoInterpreterProfileWithLock();
     }
 
     bool FunctionBody::DoSimpleJitDynamicProfile() const
@@ -6544,7 +6531,7 @@ namespace Js
         if (this->GetIsAsmjsMode()) return false;
 #endif
 
-        return !PHASE_OFF(InterpreterAutoProfilePhase, this) && !this->IsInDebugMode();
+        return !PHASE_OFF(InterpreterAutoProfilePhase, this);
     }
 
     bool FunctionBody::WasCalledFromLoop() const

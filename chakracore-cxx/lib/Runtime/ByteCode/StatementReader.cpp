@@ -93,10 +93,6 @@ namespace Js
 
         SmallSpanSequence* statementMap = functionRead->GetStatementMapSpanSequence();
         FunctionBody::StatementMapList* fullMap = nullptr;
-        if (statementMap == nullptr && functionRead->IsInDebugMode())
-        {
-            fullMap = functionRead->GetStatementMaps();
-        }
         Create(pblkByteCode->GetBuffer(), startOffset, statementMap, fullMap);
     }
 

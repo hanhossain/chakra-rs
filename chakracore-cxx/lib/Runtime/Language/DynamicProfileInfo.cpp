@@ -221,10 +221,7 @@ namespace Js
 
         return
             !PHASE_OFF_OPTFUNC(DynamicProfilePhase, functionBody) &&
-            (
-                PHASE_FORCE_OPTFUNC(DynamicProfilePhase, functionBody) ||
-                !scriptContext->GetConfig()->IsNoNative() ||
-                (functionBody && functionBody->IsInDebugMode())
+            (PHASE_FORCE_OPTFUNC(DynamicProfilePhase, functionBody) || !scriptContext->GetConfig()->IsNoNative()
 #ifdef DYNAMIC_PROFILE_STORAGE
                 || DynamicProfileStorage::DoCollectInfo()
 #endif

@@ -603,11 +603,6 @@ BailOutRecord::RestoreValues(IR::BailOutKind bailOutKind, Js::JavascriptCallStac
             ;
         }
 
-        if (functionBody->IsInDebugMode())
-        {
-            this->AdjustOffsetsForDiagMode(layout, newInstance->GetJavascriptFunction());
-        }
-
         this->RestoreValues(bailOutKind, layout, this->localOffsetsCount,
             nullptr, 0, newInstance->m_localSlots, scriptContext, fromLoopBody, registerSaves, newInstance, pArgumentsObject);
     }
@@ -662,49 +657,6 @@ BailOutRecord::RestoreValues(IR::BailOutKind bailOutKind, Js::JavascriptCallStac
 }
 
 void
-BailOutRecord::AdjustOffsetsForDiagMode(Js::JavascriptCallStackLayout * layout, Js::ScriptFunction * function) const
-{
-    // In this function we are going to do
-    // 1. Check if the value got changed (by checking at the particular location at the stack)
-    // 2. In that case update the offset to point to the stack offset
-
-    Js::FunctionBody *functionBody =  function->GetFunctionBody();
-    Assert(functionBody != nullptr);
-
-    Assert(functionBody->IsInDebugMode());
-
-    Js::FunctionEntryPointInfo *entryPointInfo = functionBody->GetDefaultFunctionEntryPointInfo();
-    Assert(entryPointInfo != nullptr);
-
-    // Note: the offset may be not initialized/InvalidOffset when there are no non-temp local vars.
-    if (entryPointInfo->localVarChangedOffset != Js::Constants::InvalidOffset)
-    {
-        Assert(functionBody->GetNonTempLocalVarCount() != 0);
-
-        char * valueChangeOffset = layout->GetValueChangeOffset(entryPointInfo->localVarChangedOffset);
-        if (*valueChangeOffset == Js::FunctionBody::LocalsChangeDirtyValue)
-        {
-            // The value got changed due to debugger, lets read values from the stack position
-            // Get the corresponding offset on the stack related to the frame.
-
-            globalBailOutRecordTable->IterateGlobalBailOutRecordTableRows(m_bailOutRecordId, [=](GlobalBailOutRecordDataRow *row) {
-                [[maybe_unused]] int32_t offset = row->offset;
-                // offset is zero, is it possible that a locals is not living in the debug mode?
-                Assert(offset != 0);
-                int32_t slotOffset;
-                if (functionBody->GetSlotOffset(row->regSlot, &slotOffset))
-                {
-                    slotOffset = entryPointInfo->localVarSlotsOffset + slotOffset;
-                    // If it was taken from the stack location, we should have arrived to the same stack location.
-                    Assert(offset > 0 || offset == slotOffset);
-                    row->offset = slotOffset;
-                }
-            });
-        }
-    }
-}
-
-void
 BailOutRecord::IsOffsetNativeIntOrFloat(uint offsetIndex, int argOutSlotStart, bool * pIsFloat64, bool * pIsInt32) const
 {
     bool isFloat64 = this->argOutOffsetInfo->argOutFloat64Syms->Test(argOutSlotStart + offsetIndex) != 0;
@@ -741,10 +693,6 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
             else
             {
                 value = layout->GetOffset(offset);
-                AssertMsg(!(newInstance->function->GetFunctionBody()->IsInDebugMode() &&
-                    newInstance->function->GetFunctionBody()->IsNonTempLocalVar(regSlot) &&
-                    value == (Js::Var)Func::c_debugFillPattern),
-                    "Uninitialized value (debug mode only)? Try -trace:bailout -verbose and check last traced reg in byte code.");
             }
         }
         else if (!isLocal)
@@ -758,14 +706,7 @@ BailOutRecord::RestoreValue(IR::BailOutKind bailOutKind, Js::JavascriptCallStack
             Assert(!isFloat64 && !isInt32);
 
             value = *((Js::Var *)(((char *)argoutRestoreAddress) + regSlot * MachPtr));
-            AssertMsg(!(newInstance->function->GetFunctionBody()->IsInDebugMode() &&
-                newInstance->function->GetFunctionBody()->IsNonTempLocalVar(regSlot) &&
-                value == (Js::Var)Func::c_debugFillPattern),
-                "Uninitialized value (debug mode only)? Try -trace:bailout -verbose and check last traced reg in byte code.");
-
         }
-
-        ;
     }
     else if (offset > 0)
     {

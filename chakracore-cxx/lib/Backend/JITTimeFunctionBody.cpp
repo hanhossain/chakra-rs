@@ -65,36 +65,6 @@ JITTimeFunctionBody::InitializeJITFunctionData(
 
     Js::SmallSpanSequence * statementMap = functionBody->GetStatementMapSpanSequence();
 
-    // REVIEW: OOP JIT, is it possible for this to not match with isJitInDebugMode?
-    if (functionBody->IsInDebugMode())
-    {
-        Assert(!statementMap);
-
-        jitBody->byteCodeLength = functionBody->GetOriginalByteCode()->GetLength();
-        jitBody->byteCodeBuffer = functionBody->GetOriginalByteCode()->GetBuffer();
-
-        auto fullStatementMaps = functionBody->GetStatementMaps();
-        jitBody->fullStatementMapCount = fullStatementMaps->Count();
-        jitBody->fullStatementMaps = AnewArrayZ(arena, StatementMapIDL, jitBody->fullStatementMapCount);
-        fullStatementMaps->Map([jitBody](int index, Js::FunctionBody::StatementMap * map) {
-
-            jitBody->fullStatementMaps[index] = *(StatementMapIDL*)map;
-
-            Assert(jitBody->fullStatementMaps[index].byteCodeSpanBegin == map->byteCodeSpan.Begin());
-            Assert(jitBody->fullStatementMaps[index].byteCodeSpanEnd == map->byteCodeSpan.End());
-            Assert(jitBody->fullStatementMaps[index].sourceSpanBegin == map->sourceSpan.Begin());
-            Assert(jitBody->fullStatementMaps[index].sourceSpanEnd == map->sourceSpan.End());
-            Assert((jitBody->fullStatementMaps[index].isSubExpression != FALSE) == map->isSubexpression);
-        });
-
-        Js::PropertyIdOnRegSlotsContainer * propOnRegSlots = functionBody->GetPropertyIdOnRegSlotsContainerWithLock();
-        if (propOnRegSlots)
-        {
-            jitBody->propertyIdsForRegSlotsCount = propOnRegSlots->length;
-            jitBody->propertyIdsForRegSlots = propOnRegSlots->propertyIdsForRegSlots;
-        }
-    }
-    else
     {
         jitBody->byteCodeLength = functionBody->GetByteCode()->GetLength();
         jitBody->byteCodeBuffer = functionBody->GetByteCode()->GetBuffer();

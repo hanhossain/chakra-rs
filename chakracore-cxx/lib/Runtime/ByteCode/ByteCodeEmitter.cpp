@@ -3216,18 +3216,6 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
     byteCodeFunction->SetInitialDefaultEntryPoint();
     byteCodeFunction->SetCompileCount(UInt32Math::Add(byteCodeFunction->GetCompileCount(), 1));
 
-    if (byteCodeFunction->IsInDebugMode() != scriptContext->IsScriptContextInDebugMode()) // debug mode mismatch
-    {
-        if (m_utf8SourceInfo->GetIsLibraryCode())
-        {
-            Assert(!byteCodeFunction->IsInDebugMode()); // Library script byteCode is never in debug mode
-        }
-        else
-        {
-            Js::Throw::FatalInternalError();
-        }
-    }
-
 #if DBG_DUMP
     if (this->Trace() || PHASE_DUMP(Js::ByteCodePhase, funcInfo->byteCodeFunction))
     {

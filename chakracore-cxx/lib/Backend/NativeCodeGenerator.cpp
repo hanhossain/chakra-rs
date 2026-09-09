@@ -206,7 +206,7 @@ NativeCodeGenerator::GenerateAllFunctions(Js::FunctionBody * fn)
 
     if (DoBackEnd(fn))
     {
-        if (fn->GetLoopCount() != 0 && fn->ForceJITLoopBody() && !fn->IsInDebugMode())
+        if (fn->GetLoopCount() != 0 && fn->ForceJITLoopBody())
         {
             // Only jit the loop body with /force:JITLoopBody
 
@@ -337,13 +337,6 @@ NativeCodeGenerator::GenerateFunction(Js::FunctionBody *fn, Js::ScriptFunction *
         return false;
     }
 
-    if (fn->IsInDebugMode() && fn->GetHasTry())
-    {
-        // Under debug mode disable JIT for functions that:
-        // - have try
-        return false;
-    }
-
     if (Js::Configuration::Global.flags.Interpret &&
         fn->GetDisplayName() &&
         ::PAL_wcsstr(Js::Configuration::Global.flags.Interpret, fn->GetDisplayName()))
@@ -351,7 +344,7 @@ NativeCodeGenerator::GenerateFunction(Js::FunctionBody *fn, Js::ScriptFunction *
         return false;
     }
 
-    if (fn->GetLoopCount() != 0 && fn->ForceJITLoopBody() && !fn->IsInDebugMode())
+    if (fn->GetLoopCount() != 0 && fn->ForceJITLoopBody())
     {
         // Don't code gen the function if the function has loop, ForceJITLoopBody is on,
         // unless we are in debug mode in which case JIT loop body is disabled, even if it's forced.
@@ -1851,8 +1844,6 @@ NativeCodeGenerator::GatherCodeGenData(
                             // WinBlue 170722: Disable ObjTypeSpec optimization for activation object in debug mode,
                             // as it can result in BailOutFailedTypeCheck before locals are set to undefined,
                             // which can result in using garbage object during bailout/restore values.
-                            if (!(functionBody->IsInDebugMode() && inlineCache->GetType() &&
-                                inlineCache->GetType()->GetTypeId() == Js::TypeIds_ActivationObject))
                             {
                                 objTypeSpecFldInfo = ObjTypeSpecFldInfo::CreateFrom(objTypeSpecFldInfoList->Count(), inlineCache, i, entryPoint, topFunctionBody, functionBody, InlineCacheStatsArg(jitTimeData));
                                 if (objTypeSpecFldInfo)
@@ -1959,8 +1950,6 @@ NativeCodeGenerator::GatherCodeGenData(
                             // WinBlue 170722: Disable ObjTypeSpec optimization for activation object in debug mode,
                             // as it can result in BailOutFailedTypeCheck before locals are set to undefined,
                             // which can result in using garbage object during bailout/restore values.
-                            if (!(functionBody->IsInDebugMode() && inlineCache->GetType() &&
-                                inlineCache->GetType()->GetTypeId() == Js::TypeIds_ActivationObject))
                             {
                                 objTypeSpecFldInfo = ObjTypeSpecFldInfo::CreateFrom(objTypeSpecFldInfoList->Count(), inlineCache, i, entryPoint, topFunctionBody, functionBody, InlineCacheStatsArg(jitTimeData));
                                 if (objTypeSpecFldInfo)
@@ -2473,7 +2462,7 @@ NativeCodeGenerator::GatherCodeGenData(Js::FunctionBody *const topFunctionBody, 
     const auto recycler = scriptContext->GetRecycler();
     {
         const auto jitTimeData = Js::FunctionCodeGenJitTimeData::New(recycler, functionBody->GetFunctionInfo(), entryPoint);
-        InliningDecider inliningDecider(functionBody, workItem->Type() == JsLoopBodyWorkItemType, functionBody->IsInDebugMode(), workItem->GetJitMode());
+        InliningDecider inliningDecider(functionBody, workItem->Type() == JsLoopBodyWorkItemType, false, workItem->GetJitMode());
 
         BEGIN_TEMP_ALLOCATOR(gatherCodeGenDataAllocator, scriptContext, u"GatherCodeGenData");
 
