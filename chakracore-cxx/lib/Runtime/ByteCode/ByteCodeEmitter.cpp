@@ -5808,17 +5808,6 @@ void ByteCodeGenerator::EndStatement(ParseNode* node)
     m_writer.EndStatement(node);
 }
 
-void ByteCodeGenerator::StartSubexpression(ParseNode* node)
-{
-    Assert(TopFuncInfo() != nullptr);
-    m_writer.StartSubexpression(node);
-}
-
-void ByteCodeGenerator::EndSubexpression(ParseNode* node)
-{
-    m_writer.EndSubexpression(node);
-}
-
 void EmitReference(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator, FuncInfo *funcInfo)
 {
     // Generate code for the LHS of an assignment.
@@ -8704,9 +8693,7 @@ void EmitObjectInitializers(ParseNode *memberList, Js::RegSlot objectLocation, B
             ParseNode *memberNode = memberList->AsParseNodeBin()->pnode1;
             if (memberNode->nop == knopEllipsis) 
             {
-                byteCodeGenerator->StartSubexpression(memberNode);
                 EmitObjectSpreadNode(memberNode, objectLocation, byteCodeGenerator, funcInfo);
-                byteCodeGenerator->EndSubexpression(memberNode);
             }
             else
             {
@@ -8715,14 +8702,11 @@ void EmitObjectInitializers(ParseNode *memberList, Js::RegSlot objectLocation, B
                     useStore = true;
                 }
 
-                byteCodeGenerator->StartSubexpression(memberNode);
                 EmitMemberNode(memberNode, objectLocation, byteCodeGenerator, funcInfo, nullptr, useStore);
-                byteCodeGenerator->EndSubexpression(memberNode);
             }
             memberList = memberList->AsParseNodeBin()->pnode2;
         }
 
-        byteCodeGenerator->StartSubexpression(memberList);
         if (memberList->nop == knopEllipsis)
         {
             EmitObjectSpreadNode(memberList, objectLocation, byteCodeGenerator, funcInfo);
@@ -8731,7 +8715,6 @@ void EmitObjectInitializers(ParseNode *memberList, Js::RegSlot objectLocation, B
         {
             EmitMemberNode(memberList, objectLocation, byteCodeGenerator, funcInfo, nullptr, useStore);
         }
-        byteCodeGenerator->EndSubexpression(memberList);
     }
 }
 
