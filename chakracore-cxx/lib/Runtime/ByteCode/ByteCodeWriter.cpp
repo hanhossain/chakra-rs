@@ -64,7 +64,9 @@ namespace Js
     ///
     ///----------------------------------------------------------------------------
 
-    void ByteCodeWriter::Begin(FunctionBody* functionWrite, ArenaAllocator* alloc, bool doJitLoopBodies, bool hasLoop, bool inDebugMode)
+    void ByteCodeWriter::Begin(FunctionBody* functionWrite, ArenaAllocator* alloc, bool doJitLoopBodies, bool hasLoop,
+        // TODO (hanhossain): remove
+        bool inDebugMode)
     {
         Assert(!isInUse);
         AssertMsg(m_functionWrite == nullptr, "Cannot nest Begin() calls");

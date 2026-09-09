@@ -222,7 +222,9 @@ namespace Js
 
         void Create();
         void InitData(ArenaAllocator* alloc, int32_t initCodeBufferSize);
-        void Begin(FunctionBody* functionWrite, ArenaAllocator* alloc, bool doJitLoopBodies, bool hasLoop, bool inDebugMode);
+        void Begin(FunctionBody* functionWrite, ArenaAllocator* alloc, bool doJitLoopBodies, bool hasLoop,
+            // TODO (hanhossain): remove
+            bool inDebugMode);
 #ifdef LOG_BYTECODE_AST_RATIO
         void End(int32_t currentAstSize, int32_t maxAstSize);
 #else

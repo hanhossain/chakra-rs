@@ -1771,7 +1771,7 @@ void ByteCodeGenerator::FinalizeRegisters(FuncInfo* funcInfo, Js::FunctionBody* 
 
     this->SetClosureRegisters(funcInfo, byteCodeFunction);
 
-    if (this->IsInDebugMode() || byteCodeFunction->IsCoroutine())
+    if (byteCodeFunction->IsCoroutine())
     {
         // Give permanent registers to the inner scopes in debug mode.
         // TODO: We create seperate debuggerscopes for each block which has own scope. These are stored in the var registers
@@ -2813,7 +2813,7 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
         // Bug : 301517
         // In the debug mode the hasOnlyThis optimization needs to be disabled, since user can break in this function
         // and do operation on 'this' and its property, which may not be defined yet.
-        if (funcInfo->root->HasOnlyThisStmts() && !IsInDebugMode())
+        if (funcInfo->root->HasOnlyThisStmts())
         {
             byteCodeFunction->SetHasOnlyThisStmts(true);
         }
@@ -2861,7 +2861,7 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
         // and see different lifetimes. (Note that debug mode requires permanent registers. See FinalizeRegisters.)
         // Need to revisit the condition when enabling JitES6Generators.
         uint innerScopeCount = funcInfo->InnerScopeCount();
-        if (!this->IsInDebugMode() && !byteCodeFunction->IsCoroutine())
+        if (!byteCodeFunction->IsCoroutine())
         {
             byteCodeFunction->SetInnerScopeCount(innerScopeCount);
             if (innerScopeCount)
@@ -2894,7 +2894,7 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
         byteCodeFunction->AllocateLiteralRegexArray();
         m_callSiteId = 0;
         m_callApplyCallSiteCount = 0;
-        m_writer.Begin(byteCodeFunction, alloc, this->DoJitLoopBodies(funcInfo), funcInfo->hasLoop, this->IsInDebugMode());
+        m_writer.Begin(byteCodeFunction, alloc, this->DoJitLoopBodies(funcInfo), funcInfo->hasLoop, false);
         this->PushFuncInfo(u"EmitOneFunction", funcInfo);
 
         this->inPrologue = true;
@@ -3127,7 +3127,6 @@ void ByteCodeGenerator::EmitOneFunction(ParseNodeFnc *pnodeFnc)
         }
         ::EndEmitBlock(pnodeFnc->pnodeScopes, this, funcInfo);
 
-        if (!this->IsInDebugMode())
         {
             // Release the temp registers that we reserved for inner scopes above.
             if (innerScopeCount)
@@ -3550,14 +3549,10 @@ void ByteCodeGenerator::StartEmitFunction(ParseNodeFnc *pnodeFnc)
             {
                 // Win8 908700: Disable under F12 debugger because there are too many cached scopes holding onto locals.
                 funcInfo->SetHasCachedScope(
-                    !PHASE_OFF(Js::CachedScopePhase, funcInfo->byteCodeFunction) &&
-                    !funcInfo->Escapes() &&
-                    funcInfo->frameObjRegister != Js::Constants::NoRegister &&
-                    !ApplyEnclosesArgs(pnodeFnc, this) &&
+                    !PHASE_OFF(Js::CachedScopePhase, funcInfo->byteCodeFunction) && !funcInfo->Escapes() &&
+                    funcInfo->frameObjRegister != Js::Constants::NoRegister && !ApplyEnclosesArgs(pnodeFnc, this) &&
                     funcInfo->IsBodyAndParamScopeMerged() && // There is eval in the param scope
-                    !pnodeFnc->HasDefaultArguments() &&
-                    !pnodeFnc->HasDestructuredParams() &&
-                    (PHASE_FORCE(Js::CachedScopePhase, funcInfo->byteCodeFunction) || !IsInDebugMode())
+                    !pnodeFnc->HasDefaultArguments() && !pnodeFnc->HasDestructuredParams()
                     && !funcInfo->byteCodeFunction->IsCoroutine()
                 );
 
@@ -9518,8 +9513,7 @@ void EmitLoop(
         {
             byteCodeGenerator->Writer()->MarkLabel(loopNode->continueLabel);
         }
-        if (!ByteCodeGenerator::IsFalse(cond) ||
-            byteCodeGenerator->IsInDebugMode())
+        if (!ByteCodeGenerator::IsFalse(cond))
         {
             EmitBooleanExpression(cond, loopEntrance, continuePastLoop, byteCodeGenerator, funcInfo, false, false);
         }

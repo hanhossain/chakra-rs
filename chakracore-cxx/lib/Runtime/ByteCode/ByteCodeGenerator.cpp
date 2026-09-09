@@ -121,7 +121,7 @@ void EndVisitBlock(ParseNodeBlock *pnode, ByteCodeGenerator *byteCodeGenerator)
         Scope *scope = pnode->scope;
         FuncInfo *func = scope->GetFunc();
 
-        if (!(byteCodeGenerator->IsInDebugMode() || func->byteCodeFunction->IsCoroutine())
+        if (!(func->byteCodeFunction->IsCoroutine())
             && scope->HasInnerScopeIndex())
         {
             // In debug mode (or for the generator/async function), don't release the current index, as we're giving each scope a unique index, regardless
@@ -159,7 +159,7 @@ void EndVisitCatch(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator)
     Scope *scope = pnode->AsParseNodeCatch()->scope;
     FuncInfo *func = scope->GetFunc();
 
-    if (scope->HasInnerScopeIndex() && !(byteCodeGenerator->IsInDebugMode() || func->byteCodeFunction->IsCoroutine()))
+    if (scope->HasInnerScopeIndex() && !func->byteCodeFunction->IsCoroutine())
     {
         // In debug mode (or for the generator/async function), don't release the current index, as we're giving each scope a unique index,
         // regardless of nesting.
@@ -178,7 +178,6 @@ bool CreateNativeArrays(ByteCodeGenerator *byteCodeGenerator, FuncInfo *funcInfo
 
     return
         !PHASE_OFF_OPTFUNC(Js::NativeArrayPhase, functionBody) &&
-        !byteCodeGenerator->IsInDebugMode() &&
         (
             functionBody
                 ? Js::DynamicProfileInfo::IsEnabled(Js::NativeArrayPhase, functionBody)
@@ -789,22 +788,16 @@ bool ByteCodeGenerator::IsSuper(ParseNode* pnode)
     return pnode->nop == knopName && pnode->AsParseNodeName()->IsSpecialName() && pnode->AsParseNodeSpecialName()->isSuper;
 }
 
-// ByteCodeGenerator debug mode means we are generating debug mode user-code. Library code is always in non-debug mode.
-// TODO (hanhossain): remove
-bool ByteCodeGenerator::IsInDebugMode() const
-{
-    return false;
-}
-
 // ByteCodeGenerator non-debug mode means we are not debugging, or we are generating library code which is always in non-debug mode.
 bool ByteCodeGenerator::IsInNonDebugMode() const
 {
     return scriptContext->IsScriptContextInNonDebugMode() || m_utf8SourceInfo->GetIsLibraryCode();
 }
 
+// TODO (hanhossain): remove
 bool ByteCodeGenerator::ShouldTrackDebuggerMetadata() const
 {
-    return IsInDebugMode();
+    return false;
 }
 
 void ByteCodeGenerator::SetRootFuncInfo(FuncInfo* func)
@@ -1873,7 +1866,7 @@ bool ByteCodeGenerator::CanStackNestedFunc(FuncInfo * funcInfo, bool trace)
 {
     char16_t debugStringBuffer[MAX_FUNCTION_BODY_DEBUG_STRING_SIZE];
     Assert(!funcInfo->IsGlobalFunction());
-    bool const doStackNestedFunc = !funcInfo->HasMaybeEscapedNestedFunc() && !IsInDebugMode()
+    bool const doStackNestedFunc = !funcInfo->HasMaybeEscapedNestedFunc()
         && !funcInfo->byteCodeFunction->IsCoroutine()
         && !funcInfo->byteCodeFunction->IsModule()
         && !Js::ScriptContext::ExceedsStackNestedFuncCount(funcInfo->root->nestedCount);
@@ -2551,8 +2544,7 @@ FuncInfo* PreVisitFunction(ParseNodeFnc* pnodeFnc, ByteCodeGenerator* byteCodeGe
 #endif
 
                 //With statements - need scope object to be present.
-                if ((doStackArgsOpt && pnodeFnc->funcInfo->GetParamScope()->Count() > 1) && ((byteCodeGenerator->GetFlags() & fscrEval) ||
-                    pnodeFnc->HasWithStmt() || byteCodeGenerator->IsInDebugMode() || PHASE_OFF1(Js::StackArgFormalsOptPhase) || PHASE_OFF1(Js::StackArgOptPhase)))
+                if ((doStackArgsOpt && pnodeFnc->funcInfo->GetParamScope()->Count() > 1) && ((byteCodeGenerator->GetFlags() & fscrEval) || pnodeFnc->HasWithStmt() || PHASE_OFF1(Js::StackArgFormalsOptPhase) || PHASE_OFF1(Js::StackArgOptPhase)))
                 {
                     doStackArgsOpt = false;
 #ifdef PERF_HINT
@@ -2852,11 +2844,7 @@ FuncInfo* PostVisitFunction(ParseNodeFnc* pnodeFnc, ByteCodeGenerator* byteCodeG
                 // 1. it calls eval;
                 // 2. it has a child function.
                 // 3. When has arguments and in debug mode. So that frame display be there along with frame object register.
-                if (top->GetCallsEval() ||
-                    pnodeFnc->nestedCount != 0
-                    || (top->GetHasArguments()
-                        && (pnodeFnc->pnodeParams != nullptr)
-                        && byteCodeGenerator->IsInDebugMode()))
+                if (top->GetCallsEval() || pnodeFnc->nestedCount != 0)
                 {
                     byteCodeGenerator->SetNeedEnvRegister(); // This to ensure that Env should be there when the FrameDisplay register is there.
                     byteCodeGenerator->AssignFrameDisplayRegister();
@@ -3143,12 +3131,8 @@ void ByteCodeGenerator::ProcessCapturedSym(Symbol *sym)
 
     // If this is not a local property, or not all its references can be tracked, or
     // it's not scoped to the function, or we're in debug mode, disable the delayed capture optimization.
-    if (funcHome->IsGlobalFunction() ||
-        funcHome->GetCallsEval() ||
-        funcHome->GetChildCallsEval() ||
-        funcChild == nullptr ||
-        sym->GetScope() != funcHome->GetBodyScope() ||
-        this->IsInDebugMode() ||
+    if (funcHome->IsGlobalFunction() || funcHome->GetCallsEval() || funcHome->GetChildCallsEval() ||
+        funcChild == nullptr || sym->GetScope() != funcHome->GetBodyScope() ||
         PHASE_OFF(Js::DelayCapturePhase, funcHome->byteCodeFunction))
     {
         sym->SetIsCommittedToSlot();
@@ -5080,8 +5064,7 @@ void AssignRegisters(ParseNode *pnode, ByteCodeGenerator *byteCodeGenerator)
     case knopFor:
         if ((pnode->AsParseNodeFor()->pnodeBody != nullptr) && (pnode->AsParseNodeFor()->pnodeBody->nop == knopBlock) &&
             (pnode->AsParseNodeFor()->pnodeBody->AsParseNodeBlock()->pnodeStmt != nullptr) &&
-            (pnode->AsParseNodeFor()->pnodeBody->AsParseNodeBlock()->pnodeStmt->nop == knopFor) &&
-            (!byteCodeGenerator->IsInDebugMode()))
+            (pnode->AsParseNodeFor()->pnodeBody->AsParseNodeBlock()->pnodeStmt->nop == knopFor))
         {
                 FuncInfo *funcInfo = byteCodeGenerator->TopFuncInfo();
             pnode->AsParseNodeFor()->pnodeInverted = InvertLoop(pnode, byteCodeGenerator, funcInfo);
@@ -5237,12 +5220,6 @@ void PostCheckApplyEnclosesArgs(ParseNode* pnode, ByteCodeGenerator* byteCodeGen
 void CheckApplyEnclosesArgs(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, ApplyCheck* applyCheck);
 bool ApplyEnclosesArgs(ParseNode* fncDecl, ByteCodeGenerator* byteCodeGenerator)
 {
-    if (byteCodeGenerator->IsInDebugMode())
-    {
-        // Inspection of the arguments object will be messed up if we do ApplyArgs.
-        return false;
-    }
-
     if (!fncDecl->HasVarArguments()
         && fncDecl->AsParseNodeFnc()->pnodeParams == nullptr
         && fncDecl->AsParseNodeFnc()->pnodeRest == nullptr
