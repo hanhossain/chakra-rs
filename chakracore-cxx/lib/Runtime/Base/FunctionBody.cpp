@@ -3140,37 +3140,6 @@ namespace Js
         return true;
     }
 
-    // TODO (hanhossain): remove
-    bool FunctionBody::GetStatementIndexAndLengthAt(int byteCodeOffset, uint32_t* statementIndex, uint32_t* statementLength)
-    {
-        Assert(statementIndex != nullptr);
-        Assert(statementLength != nullptr);
-
-        Assert(false);
-
-        StatementMap * statement = GetEnclosingStatementMapFromByteCode(byteCodeOffset, false);
-        Assert(statement != nullptr);
-
-        // Bailout if we are unable to find a statement.
-        // We shouldn't be missing these when a debugger is attached but we don't want to AV on retail builds.
-        if (statement == nullptr)
-        {
-            return false;
-        }
-
-        Assert(m_utf8SourceInfo);
-        const SRCINFO * srcInfo = GetUtf8SourceInfo()->GetSrcInfo();
-
-        // Offset from the beginning of the document minus any host-supplied source characters.
-        // Host supplied characters are inserted (for example) around onload:
-        //      onload="foo('somestring', 0)" -> function onload(event).{.foo('somestring', 0).}
-        uint32_t offsetFromDocumentBegin = srcInfo ? srcInfo->ulCharOffset - srcInfo->ichMinHost : 0;
-
-        *statementIndex = statement->sourceSpan.Begin() + offsetFromDocumentBegin;
-        *statementLength = statement->sourceSpan.End() - statement->sourceSpan.Begin();
-        return true;
-    }
-
     void FunctionBody::RecordFrameDisplayRegister(RegSlot slot)
     {
         AssertMsg(slot != 0, "The assumption that the Frame Display Register cannot be at the 0 slot is wrong.");

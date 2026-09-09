@@ -139,7 +139,6 @@ namespace Js
         static bool IsErrorInstance(Var thrownObject);
 
         static bool CrawlStackForWER(Js::ScriptContext& scriptContext);
-        static void DispatchExceptionToDebugger(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext);
     };
 
 } // namespace Js

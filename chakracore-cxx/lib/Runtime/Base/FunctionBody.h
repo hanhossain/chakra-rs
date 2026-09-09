@@ -2565,9 +2565,6 @@ namespace Js
         bool GetLineCharOffset(int byteCodeOffset, uint32_t* line, int32_t* charOffset, bool canAllocateLineCache = true);
         bool GetLineCharOffsetFromStartChar(int startCharOfStatement, uint32_t* _line, int32_t* _charOffset, bool canAllocateLineCache = true);
 
-        // Given bytecode position, returns the start position of the statement and length of the statement.
-        bool GetStatementIndexAndLengthAt(int byteCodeOffset, uint32_t* statementIndex, uint32_t* statementLength);
-
         // skip any utf-8/utf-16 byte-order-mark. Returns the number of chars skipped.
         static charcount_t SkipByteOrderMark(__in_bcount_z(4) LPCUTF8& documentStart)
         {

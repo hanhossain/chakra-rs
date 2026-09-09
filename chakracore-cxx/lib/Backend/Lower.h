@@ -608,8 +608,6 @@ private:
     IR::Instr *     SplitBailOnImplicitCall(IR::Instr *& instr);
     IR::Instr *     SplitBailOnImplicitCall(IR::Instr * instr, IR::Instr * helperCall, IR::Instr * insertBeforeInstr);
 
-    IR::Instr *     SplitBailForDebugger(IR::Instr* instr);
-
     IR::Instr *     SplitBailOnResultCondition(IR::Instr *const instr) const;
     void            LowerBailOnResultCondition(IR::Instr *const instr, IR::LabelInstr * *const bailOutLabel, IR::LabelInstr * *const skipBailOutLabel);
     void            PreserveSourcesForBailOnResultCondition(IR::Instr *const instr, IR::LabelInstr *const skipBailOutLabel) const;
