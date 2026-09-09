@@ -367,12 +367,10 @@ namespace Js
         void AddPropertyToDebuggerScope(DebuggerScope* debuggerScope, RegSlot location, Js::PropertyId propertyId, bool shouldConsumeRegister = true, DebuggerScopePropertyFlags flags = DebuggerScopePropertyFlags_None, bool isFunctionDeclaration = false);
         void RecordEndScopeObject();
         DebuggerScope* GetCurrentDebuggerScope() const { return m_currentDebuggerScope; }
-        void UpdateDebuggerPropertyInitializationOffset(Js::DebuggerScope* currentDebuggerScope, Js::RegSlot location, Js::PropertyId propertyId, bool shouldConsumeRegister = true, int byteCodeOffset = Constants::InvalidOffset, bool isFunctionDeclaration = false);
-        FunctionBody* GetFunctionWrite() const { return m_functionWrite; }
+        FunctionBody * GetFunctionWrite() const { return m_functionWrite; }
 
         void RecordStatementAdjustment(FunctionBody::StatementAdjustmentType type);
         void RecordCrossFrameEntryExitRecord(bool isEnterBlock);
-        void RecordForInOrOfCollectionScope();
 
         uint EnterLoop(Js::ByteCodeLabel loopEntrance);
         void ExitLoop(uint loopId);

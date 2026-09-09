@@ -3021,46 +3021,6 @@ StoreCommon:
         PopDebuggerScope();
     }
 
-    // TODO (hanhossain): remove
-    void ByteCodeWriter::UpdateDebuggerPropertyInitializationOffset(
-        Js::DebuggerScope* currentDebuggerScope,
-        Js::RegSlot location,
-        Js::PropertyId propertyId,
-        bool shouldConsumeRegister/* = true*/,
-        int byteCodeOffset/* = Constants::InvalidOffset*/,
-        bool isFunctionDeclaration /*= false*/)
-    {
-#if DBG
-        AssertMsg(false, "Property offsets should only ever be updated in debug mode (not used in non-debug).");
-#endif // DBG
-
-        Assert(currentDebuggerScope);
-
-        if (shouldConsumeRegister)
-        {
-            Assert(location != Js::Constants::NoRegister);
-            location = ConsumeReg(location);
-        }
-
-        if (byteCodeOffset == Constants::InvalidOffset)
-        {
-            // Use the current offset if no offset is passed in.
-            byteCodeOffset = this->m_byteCodeData.GetCurrentOffset();
-        }
-
-        // Search through the scope chain starting with the current up through the parents to see if the
-        // property can be found and updated.
-        while (currentDebuggerScope != nullptr)
-        {
-            if (currentDebuggerScope->UpdatePropertyInitializationOffset(location, propertyId, byteCodeOffset, isFunctionDeclaration))
-            {
-                break;
-            }
-
-            currentDebuggerScope = currentDebuggerScope->GetParentScope();
-        }
-    }
-
     void ByteCodeWriter::RecordFrameDisplayRegister(RegSlot slot)
     {
         slot = ConsumeReg(slot);
@@ -3080,11 +3040,6 @@ StoreCommon:
 
     // TODO (hanhossain): remove
     void ByteCodeWriter::RecordCrossFrameEntryExitRecord(bool isEnterBlock)
-    {
-    }
-
-    // TODO (hanhossain): remove
-    void ByteCodeWriter::RecordForInOrOfCollectionScope()
     {
     }
 
