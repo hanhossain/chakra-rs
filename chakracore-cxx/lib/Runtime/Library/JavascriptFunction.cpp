@@ -2057,7 +2057,7 @@ using namespace Js;
         else
         {
             JavascriptMethod originalEntryPoint = this->GetFunctionInfo()->GetOriginalEntryPoint();
-            Assert(callEntryPoint == originalEntryPoint || callEntryPoint == ProfileEntryThunk
+            Assert(callEntryPoint == originalEntryPoint
                 || (this->GetScriptContext()->GetHostScriptContext()
                     && this->GetScriptContext()->GetHostScriptContext()->IsHostCrossSiteThunk(callEntryPoint))
                 );

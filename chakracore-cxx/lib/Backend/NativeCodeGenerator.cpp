@@ -992,11 +992,6 @@ void NativeCodeGenerator::LogCodeGenDone(CodeGenWorkItem * workItem, LARGE_INTEG
     }
 }
 
-void NativeCodeGenerator::SetProfileMode(BOOL fSet)
-{
-    this->SetNativeEntryPoint = fSet? Js::FunctionBody::ProfileSetNativeEntryPoint : Js::FunctionBody::DefaultSetNativeEntryPoint;
-}
-
 #if _M_X64 || _M_ARM || _M_ARM64
     // Do nothing: the implementation of NativeCodeGenerator::CheckCodeGenThunk is declared (appropriately decorated) in
     // Backend\amd64\Thunks.asm and Backend\arm\Thunks.asm and Backend\arm64\Thunks.asm respectively.
@@ -1138,7 +1133,7 @@ NativeCodeGenerator::CheckCodeGen(Js::ScriptFunction * function)
                 )
             ) ||
             functionBody->GetDefaultFunctionEntryPointInfo()->entryPointIndex > function->GetFunctionEntryPointInfo()->entryPointIndex);
-        return (scriptContext->CurrentThunk == ProfileEntryThunk) ? ProfileEntryThunk : originalEntryPoint;
+        return originalEntryPoint;
     }
 
     return CheckCodeGenDone(functionBody, entryPoint, function);
@@ -1194,8 +1189,7 @@ NativeCodeGenerator::CheckCodeGenDone(
         }
 
         // Do not profile WebAssembly functions
-        jsMethod = (functionBody->GetScriptContext()->CurrentThunk == ProfileEntryThunk
-                    && !functionBody->IsWasmFunction()) ? ProfileEntryThunk : functionBody->GetOriginalEntryPoint();
+        jsMethod = functionBody->GetOriginalEntryPoint();
         entryPointInfo->jsMethod = jsMethod;
     }
     else

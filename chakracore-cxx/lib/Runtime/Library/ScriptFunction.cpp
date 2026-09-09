@@ -308,15 +308,7 @@ using namespace Js;
         // So just call the original entry point if our direct entry is the profile entry thunk
         // Otherwise, call the directEntryPoint which may have additional processing to do (e.g. ensure dynamic profile)
         Assert(this->IsCrossSiteObject());
-        if (entryPoint != ProfileEntryThunk)
-        {
-            return entryPoint;
-        }
-        // Based on the comment below, this shouldn't be a defer deserialization function as it would have a deferred thunk
-        FunctionBody * functionBody = this->GetFunctionBody();
-        // The original entry point should be an interpreter thunk or the native entry point;
-        Assert(functionBody->IsInterpreterThunk() || functionBody->IsNativeOriginalEntryPoint());
-        return functionBody->GetOriginalEntryPoint();
+        return entryPoint;
     }
 
     bool ScriptFunction::IsNewEntryPointAvailable()

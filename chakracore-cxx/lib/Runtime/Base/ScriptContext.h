@@ -1179,8 +1179,6 @@ private:
         void ShutdownClearSourceLists();
 
 #if ENABLE_NATIVE_CODEGEN
-        int32_t RecreateNativeCodeGenerator(NativeCodeGenerator ** previousCodeGen = nullptr);
-        void DeletePreviousNativeCodeGenerator(NativeCodeGenerator * codeGen);
         int32_t OnDebuggerAttachedDetached(bool attach, NativeCodeGenerator ** previousCodeGenHolder = nullptr);
 #else
         int32_t OnDebuggerAttachedDetached(bool attach);
@@ -1205,7 +1203,6 @@ private:
         void ReleaseDynamicAsmJsInterpreterThunk(uint8_t* address, bool addtoFreeList);
 #endif
 
-        static Var DebugProfileProbeThunk(RecyclableObject* function, CallInfo callInfo, ...);
         static JavascriptMethod ProfileModeDeferredParse(ScriptFunction **function);
         static Var ProfileModeDeferredParsingThunk(RecyclableObject* function, CallInfo callInfo, ...);
 

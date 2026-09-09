@@ -2424,43 +2424,6 @@ namespace Js
     }
 #endif
 
-    // Shuts down and recreates the native code generator.  This is used when
-    // attaching and detaching the debugger in order to clear the list of work
-    // items that are pending in the JIT job queue.
-    // Alloc first and then free so that the native code generator is at a different address
-#if ENABLE_NATIVE_CODEGEN
-    int32_t ScriptContext::RecreateNativeCodeGenerator(NativeCodeGenerator ** previousCodeGen)
-    {
-        NativeCodeGenerator* oldCodeGen = this->nativeCodeGen;
-
-        int32_t hr = S_OK;
-        BEGIN_TRANSLATE_OOM_TO_HRESULT_NESTED
-        this->nativeCodeGen = NewNativeCodeGenerator(this);
-        SetProfileModeNativeCodeGen(this->GetNativeCodeGenerator(), this->IsProfiling());
-        END_TRANSLATE_OOM_TO_HRESULT(hr);
-
-        // Delete the native code generator and recreate so that all jobs get cleared properly
-        // and re-jitted.
-        CloseNativeCodeGenerator(oldCodeGen);
-        if (previousCodeGen == nullptr)
-        {
-            DeleteNativeCodeGenerator(oldCodeGen);
-        }
-        else
-        {
-            *previousCodeGen = oldCodeGen;
-        }
-
-        return hr;
-    }
-
-    void ScriptContext::DeletePreviousNativeCodeGenerator(NativeCodeGenerator * codeGen)
-    {
-        Assert(codeGen != nullptr);
-        DeleteNativeCodeGenerator(codeGen);
-    }
-#endif
-
 #if defined(_M_X64) || defined(_M_ARM32_OR_ARM64)
     // Do nothing: the implementation of ScriptContext::ProfileModeDeferredParsingThunk is declared (appropriately decorated) in
     // Language\amd64\amd64_Thunks.asm and Language\arm\arm_Thunks.asm and Language\arm64\arm64_Thunks.asm respectively.
@@ -2504,16 +2467,6 @@ namespace Js
     {
         bool forceNoNative = false;
         return forceNoNative;
-    }
-
-    // Combined profile/debug wrapper thunk.
-    // - used when we profile to send profile events
-    // - used when we debug, only used for built-in functions
-    // - used when we profile and debug
-    // TODO (hanhossain): remove
-    Var ScriptContext::DebugProfileProbeThunk(RecyclableObject* callable, CallInfo callInfo, ...)
-    {
-        return nullptr;
     }
 
     Js::PropertyId ScriptContext::GetFunctionNumber(JavascriptMethod entryPoint)

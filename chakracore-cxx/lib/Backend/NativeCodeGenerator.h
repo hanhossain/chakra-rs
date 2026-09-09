@@ -40,7 +40,6 @@ public:
     bool DoBackEnd(Js::FunctionBody * fn);
 #endif
 
-void SetProfileMode(BOOL fSet);
 public:
     static Js::Var CheckCodeGenThunk(Js::RecyclableObject* function, Js::CallInfo callInfo, ...);
 

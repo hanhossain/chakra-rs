@@ -28,11 +28,6 @@ IsClosedNativeCodeGenerator(NativeCodeGenerator * nativeCodeGen)
     return nativeCodeGen->IsClosed();
 }
 
-void SetProfileModeNativeCodeGen(NativeCodeGenerator *pNativeCodeGen, BOOL fSet)
-{
-    pNativeCodeGen->SetProfileMode(fSet);
-}
-
 void UpdateNativeCodeGeneratorForDebugMode(NativeCodeGenerator* nativeCodeGen)
 {
     nativeCodeGen->UpdateQueueForDebugMode();
