@@ -399,7 +399,6 @@ namespace Js
         ScriptContextPrivilegeLevel GetPrivilegeLevel() { return this->scriptContextPrivilegeLevel; }
         void SetIsDiagnosticsScriptContext(bool);
         bool IsDiagnosticsScriptContext() const { return this->isDiagnosticsScriptContext; }
-        bool IsScriptContextInSourceRundownOrDebugMode() const;
 
         bool IsRunningScript() const { return this->threadContext->GetScriptEntryExit() != nullptr; }
 

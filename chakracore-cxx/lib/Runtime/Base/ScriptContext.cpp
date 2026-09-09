@@ -2503,10 +2503,6 @@ namespace Js
     bool ScriptContext::IsForceNoNative()
     {
         bool forceNoNative = false;
-        if (this->IsScriptContextInSourceRundownOrDebugMode())
-        {
-            forceNoNative = this->IsInterpreted();
-        }
         return forceNoNative;
     }
 
@@ -3275,12 +3271,6 @@ ScriptContext::GetJitFuncRangeCache()
         {
             this->scriptContextPrivilegeLevel = ScriptContextPrivilegeLevel::Low;
         }
-    }
-
-    // TODO (hanhossain): remove
-    bool ScriptContext::IsScriptContextInSourceRundownOrDebugMode() const
-    {
-        return false;
     }
 
     bool ScriptContext::IsIntlEnabled()
