@@ -3306,11 +3306,6 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
             memset((buffer),0,(*bufferSize));
         }
 
-        if (scriptContext->IsScriptContextInDebugMode())
-        {
-            return JsErrorCannotSerializeDebugScript;
-        }
-
         SourceContextInfo * sourceContextInfo = scriptContext->GetSourceContextInfo(JS_SOURCE_CONTEXT_NONE, nullptr);
         Assert(sourceContextInfo != nullptr);
         sourceContextInfo->nextLocalFunctionId = 0;
@@ -3979,11 +3974,6 @@ JsErrorCode JsSerializeParserStateCore(
         {
             PARAM_NOT_NULL(buffer);
             memset((buffer),0,(*bufferSize));
-        }
-
-        if (scriptContext->IsScriptContextInDebugMode())
-        {
-            return JsErrorCannotSerializeDebugScript;
         }
 
         SourceContextInfo * sourceContextInfo = scriptContext->GetSourceContextInfo(JS_SOURCE_CONTEXT_NONE, nullptr);

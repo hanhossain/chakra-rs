@@ -789,9 +789,10 @@ bool ByteCodeGenerator::IsSuper(ParseNode* pnode)
 }
 
 // ByteCodeGenerator non-debug mode means we are not debugging, or we are generating library code which is always in non-debug mode.
+// TODO (hanhossain): remove
 bool ByteCodeGenerator::IsInNonDebugMode() const
 {
-    return scriptContext->IsScriptContextInNonDebugMode() || m_utf8SourceInfo->GetIsLibraryCode();
+    return true;
 }
 
 // TODO (hanhossain): remove

@@ -42,12 +42,6 @@ namespace Js
             this->byteCodeGenerationFlags = byteCodeGenerationFlags;
         }
 
-        // TODO (hanhossain): remove
-        bool IsInDebugMode() const
-        {
-            return false;
-        }
-
         size_t CharacterIndexToByteIndex(charcount_t cchIndex) const
         {
             return cchIndex < m_cchLength ? (GetCbLength(u"CharacterIndexToByteIndex") == m_cchLength ?  cchIndex : utf8::CharacterIndexToByteIndex(this->GetSource(u"CharacterIndexToByteIndex"), GetCbLength(u"CharacterIndexToByteIndex"), cchIndex, utf8::doAllowThreeByteSurrogates)) : m_cchLength;

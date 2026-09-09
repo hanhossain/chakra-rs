@@ -2343,7 +2343,6 @@ using namespace Js;
             }
 #endif
 
-            if(fArray->GetScriptContext()->IsScriptContextInNonDebugMode())
             {
                 Assert(!arrayInfo->IsNativeIntArray());
             }

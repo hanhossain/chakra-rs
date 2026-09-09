@@ -11687,18 +11687,7 @@ ParseNodeProg * Parser::Parse(LPCUTF8 pszSrc, size_t offset, size_t length, char
     bool isModuleSource = (grfscr & fscrIsModuleCode) != 0;
     bool isGlobalCode = (grfscr & fscrGlobalCode) != 0;
 
-    if (this->m_scriptContext->IsScriptContextInDebugMode()
-#ifdef ENABLE_PREJIT
-        || Js::Configuration::Global.flags.Prejit
-#endif
-        || ((grfscr & fscrNoDeferParse) != 0)
-        )
-    {
-        // Don't do deferred parsing if debugger is attached or feature is disabled
-        // by command-line switch.
-        grfscr &= ~fscrWillDeferFncParse;
-    }
-    else if (!isGlobalCode &&
+    if (!isGlobalCode &&
         (
             PHASE_OFF1(Js::Phase::DeferEventHandlersPhase) ||
             this->m_scriptContext->IsScriptContextInSourceRundownOrDebugMode()

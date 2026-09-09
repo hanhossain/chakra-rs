@@ -6292,8 +6292,6 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                             requestContext->RegisterConstructorCache(typeHandler->GetPropertyId(requestContext, pi), constructorCache);
                         }
 
-                        Assert(constructorBody->GetUtf8SourceInfo()->GetIsLibraryCode() || !constructor->GetScriptContext()->IsScriptContextInDebugMode());
-
                         if (constructorCache->TryUpdateAfterConstructor(type, constructor->GetScriptContext()))
                         {
 #if DBG_DUMP
@@ -7103,7 +7101,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 StackScriptFunction::EnsureBoxed(BOX_PARAM(funcCallee, nullptr, u"callee")), scriptContext);
         }
 
-        AssertMsg(argsObj->GetTypeHandler() == typeHandler || scriptContext->IsScriptContextInDebugMode(), "type handler should not transition because we initialized it correctly");
+        AssertMsg(argsObj->GetTypeHandler() == typeHandler, "type handler should not transition because we initialized it correctly");
 
         return argsObj;
     }
