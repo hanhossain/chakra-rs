@@ -4,8 +4,9 @@
 //-------------------------------------------------------------------------------------------------------
 
 #pragma once
-#include "Language/AsmJsTypes.h"
+#include "Common/Tick.h"
 #include "DataStructures/Queue.h"
+#include "Language/AsmJsTypes.h"
 
 #ifdef ASMJS_PLAT
 #define ASMMATH_BUILTIN_SIZE (32)
