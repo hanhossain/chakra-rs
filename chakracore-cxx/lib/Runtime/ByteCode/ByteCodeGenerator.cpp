@@ -788,12 +788,6 @@ bool ByteCodeGenerator::IsSuper(ParseNode* pnode)
     return pnode->nop == knopName && pnode->AsParseNodeName()->IsSpecialName() && pnode->AsParseNodeSpecialName()->isSuper;
 }
 
-// ByteCodeGenerator non-debug mode means we are not debugging, or we are generating library code which is always in non-debug mode.
-// TODO (hanhossain): remove
-bool ByteCodeGenerator::IsInNonDebugMode() const
-{
-    return true;
-}
 
 // TODO (hanhossain): remove
 bool ByteCodeGenerator::ShouldTrackDebuggerMetadata() const
@@ -803,7 +797,7 @@ bool ByteCodeGenerator::ShouldTrackDebuggerMetadata() const
 
 void ByteCodeGenerator::SetRootFuncInfo(FuncInfo* func)
 {
-    Assert(pRootFunc == nullptr || pRootFunc == func->byteCodeFunction || !IsInNonDebugMode());
+    Assert(pRootFunc == nullptr || pRootFunc == func->byteCodeFunction);
 
     if ((this->flags & fscrImplicitThis) && !this->HasParentScopeInfo())
     {
@@ -1120,14 +1114,7 @@ FuncInfo * ByteCodeGenerator::StartBindGlobalStatements(ParseNodeProg *pnode)
 
     Js::FunctionBody * byteCodeFunction;
 
-    if (!IsInNonDebugMode() && this->pCurrentFunction != nullptr && this->pCurrentFunction->GetIsGlobalFunc() && !this->pCurrentFunction->IsFakeGlobalFunc(flags))
-    {
-        // we will re-use the global FunctionBody which was created before deferred parse.
-        byteCodeFunction = this->pCurrentFunction;
-        byteCodeFunction->RemoveDeferParseAttribute();
-        byteCodeFunction->ResetByteCodeGenVisitState();
-    }
-    else if ((this->flags & fscrDeferredFnc))
+    if ((this->flags & fscrDeferredFnc))
     {
         byteCodeFunction = this->EnsureFakeGlobalFuncForUndefer(pnode);
     }
@@ -1346,7 +1333,7 @@ FuncInfo * ByteCodeGenerator::StartBindFunction(const char16_t *name, uint nameL
             pnodeFnc->pnodeName->nop == knopVarDecl;
         *pfuncExprWithName = funcExprWithName;
 
-        Assert(parsedFunctionBody->GetLocalFunctionId() == pnodeFnc->functionId || !IsInNonDebugMode());
+        Assert(parsedFunctionBody->GetLocalFunctionId() == pnodeFnc->functionId);
 
         // Some state may be tracked on the function body during the visit pass. Since the previous visit pass may have failed,
         // we need to reset the state on the function body.
@@ -2163,7 +2150,7 @@ void ByteCodeGenerator::Begin(
     this->flags = grfscr;
     this->pRootFunc = pRootFunc;
     this->pCurrentFunction = pRootFunc ? pRootFunc->GetFunctionBody() : nullptr;
-    if (this->pCurrentFunction && this->pCurrentFunction->GetIsGlobalFunc() && IsInNonDebugMode())
+    if (this->pCurrentFunction && this->pCurrentFunction->GetIsGlobalFunc())
     {
         // This is the deferred parse case (not due to debug mode), in which case the global function will not be marked to compiled again.
         this->pCurrentFunction = nullptr;
@@ -3293,31 +3280,7 @@ void VisitNestedScopes(ParseNode* pnodeScopeList, ParseNode* pnodeParent, ByteCo
             ParseNodeFnc * pnodeFnc = pnodeScope->AsParseNodeFnc();
             if (pLastReuseFunc)
             {
-                if (!byteCodeGenerator->IsInNonDebugMode())
-                {
-                    // Here we are trying to match the inner sub-tree as well with already created inner function.
-
-                    if ((pLastReuseFunc->GetIsGlobalFunc() && parentFunc->GetIsGlobalFunc())
-                        || (!pLastReuseFunc->GetIsGlobalFunc() && !parentFunc->GetIsGlobalFunc()))
-                    {
-                        Assert(pLastReuseFunc->StartInDocument() == pnodeParent->ichMin);
-                        Assert(pLastReuseFunc->LengthInChars() == pnodeParent->LengthInCodepoints());
-                        Assert(pLastReuseFunc->GetNestedCount() == parentFunc->GetNestedCount());
-
-                        // If the current function is not parsed yet, its function body is not generated yet.
-                        // Reset pCurrentFunction to null so that it will not be able re-use anything.
-                        Js::FunctionProxy* proxy = pLastReuseFunc->GetNestedFunctionProxy((*pIndex));
-                        if (proxy && proxy->IsFunctionBody())
-                        {
-                            byteCodeGenerator->pCurrentFunction = proxy->GetFunctionBody();
-                        }
-                        else
-                        {
-                            byteCodeGenerator->pCurrentFunction = nullptr;
-                        }
-                    }
-                }
-                else if (!parentFunc->GetIsGlobalFunc())
+                if (!parentFunc->GetIsGlobalFunc())
                 {
                     // In the deferred parsing mode, we will be reusing the only one function (which is asked when on ::Begin) all inner function will be created.
                     byteCodeGenerator->pCurrentFunction = nullptr;
@@ -3333,15 +3296,6 @@ void VisitNestedScopes(ParseNode* pnodeScopeList, ParseNode* pnodeParent, ByteCo
                 if (info && info->HasParseableInfo())
                 {
                     reuseNestedFunc = info->GetParseableFunctionInfo();
-
-                    // If parentFunc was redeferred, try to set pCurrentFunction to this FunctionBody,
-                    // and cleanup to reparse (as previous cleanup stops at redeferred parentFunc).
-                    if (!byteCodeGenerator->IsInNonDebugMode()
-                        && !byteCodeGenerator->pCurrentFunction
-                        && reuseNestedFunc->IsFunctionBody())
-                    {
-                        byteCodeGenerator->pCurrentFunction = reuseNestedFunc->GetFunctionBody();
-                    }
                 }
             }
             PreVisitFunction(pnodeFnc, byteCodeGenerator, reuseNestedFunc);
@@ -3351,18 +3305,6 @@ void VisitNestedScopes(ParseNode* pnodeScopeList, ParseNode* pnodeParent, ByteCo
 
             if (pnodeFnc->pnodeBody)
             {
-                if (!byteCodeGenerator->IsInNonDebugMode() && pLastReuseFunc != nullptr && byteCodeGenerator->pCurrentFunction == nullptr)
-                {
-                    // Patch current non-parsed function's FunctionBodyImpl with the new generated function body.
-                    // So that the function object (pointing to the old function body) can able to get to the new one.
-
-                    Js::FunctionProxy* proxy = pLastReuseFunc->GetNestedFunctionProxy((*pIndex));
-                    if (proxy && !proxy->IsFunctionBody())
-                    {
-                        proxy->UpdateFunctionBodyImpl(funcInfo->byteCodeFunction->GetFunctionBody());
-                    }
-                }
-
                 Scope *paramScope = funcInfo->GetParamScope();
                 Scope *bodyScope = funcInfo->GetBodyScope();
 

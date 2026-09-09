@@ -2023,17 +2023,6 @@ void ByteCodeGenerator::LoadAllConstants(FuncInfo *funcInfo)
         }
 
     }
-    else if (!funcInfo->IsGlobalFunction() && !IsInNonDebugMode())
-    {
-        uint count = funcInfo->inArgsCount + (funcInfo->root->pnodeRest != nullptr ? 1 : 0) - 1;
-        if (count != 0)
-        {
-            Js::PropertyIdArray *propIds = RecyclerNewPlus(scriptContext->GetRecycler(), UInt32Math::Mul(count, sizeof(Js::PropertyId)), Js::PropertyIdArray, count, 0);
-
-            GetFormalArgsArray(this, funcInfo, propIds);
-            byteCodeFunction->SetPropertyIdsOfFormals(propIds);
-        }
-    }
 
     // Class constructors do not have a [[call]] slot but we don't implement a generic way to express this.
     // What we do is emit a check for the new flag here. If we don't have CallFlags_New set, the opcode will throw.
