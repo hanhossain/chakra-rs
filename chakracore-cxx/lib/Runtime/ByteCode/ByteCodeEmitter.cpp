@@ -368,26 +368,6 @@ void ByteCodeGenerator::TrackFunctionDeclarationPropertyForDebugger(Symbol *func
     }
 }
 
-// Updates the byte code offset of the property with the passed in location and ID.
-// Used to track let/const variables that are in the dead zone debugger side.
-// location                 - The activation object, scope slot index, or register location for the property.
-// propertyId               - The ID of the property to update.
-// shouldConsumeRegister    - Whether or not the a register should be consumed (used for reg slot locations).
-void ByteCodeGenerator::UpdateDebuggerPropertyInitializationOffset(Js::RegSlot location, Js::PropertyId propertyId, bool shouldConsumeRegister)
-{
-    Assert(this->Writer());
-    Js::DebuggerScope* currentDebuggerScope = this->Writer()->GetCurrentDebuggerScope();
-    Assert(currentDebuggerScope);
-    if (currentDebuggerScope != nullptr)
-    {
-        this->Writer()->UpdateDebuggerPropertyInitializationOffset(
-            currentDebuggerScope,
-            location,
-            propertyId,
-            shouldConsumeRegister);
-    }
-}
-
 void ByteCodeGenerator::LoadHeapArguments(FuncInfo *funcInfo)
 {
     if (funcInfo->GetHasCachedScope())
@@ -9590,10 +9570,6 @@ void EmitForInOrForOf(ParseNodeForInOrForOf *loopNode, ByteCodeGenerator *byteCo
     // (break every time on the loop back edge) and correct display of current statement under debugger.
     // See WinBlue 231880 for details.
     byteCodeGenerator->Writer()->RecordStatementAdjustment(Js::FunctionBody::SAT_All);
-    if (loopNode->pnodeBlock->HasBlockScopedContent())
-    {
-        byteCodeGenerator->Writer()->RecordForInOrOfCollectionScope();
-    }
     Js::ByteCodeLabel loopEntrance = byteCodeGenerator->Writer()->DefineLabel();
     Js::ByteCodeLabel continuePastLoop = byteCodeGenerator->Writer()->DefineLabel();
 
