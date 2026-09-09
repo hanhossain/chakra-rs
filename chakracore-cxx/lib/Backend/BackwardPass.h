@@ -15,8 +15,6 @@ public:
     BackwardPass(Func * func, GlobOpt * globOpt, Js::Phase tag);
     void Optimize();
 
-    static bool DoDeadStore(Func* func, StackSym* sym);
-
 private:
     void CleanupBackwardPassInfoInFlowGraph();
     void OptBlock(BasicBlock * block);

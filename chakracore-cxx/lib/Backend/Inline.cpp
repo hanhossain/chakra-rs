@@ -23,9 +23,7 @@ Inline::Optimize(Func *func, __in_ecount_opt(callerArgOutCount) IR::Instr *calle
     const FunctionJITTimeInfo * inlinerData = func->GetWorkItem()->GetJITTimeInfo();
 
     bool doInline = (inlinerData->GetInlineeCount() > 0 || inlinerData->IsLdFldInlineePresent());
-    if (PHASE_OFF(Js::InlinePhase, this->topFunc) ||
-        PHASE_OFF(Js::InlinePhase, func) ||
-        func->IsJitInDebugMode())
+    if (PHASE_OFF(Js::InlinePhase, this->topFunc) || PHASE_OFF(Js::InlinePhase, func))
     {
         doInline = false;
     }
