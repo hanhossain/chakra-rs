@@ -716,11 +716,6 @@ namespace Js
     {
         Assert(!this->IsClosed());
 
-        if (!this->IsScriptContextInNonDebugMode())
-        {
-            return;
-        }
-
         // For each active function, collect call counts, update inactive counts, and redefer if appropriate.
         // In the redeferral case, we require 2 passes over the set of FunctionBody's.
         // This is because a function inlined in a non-redeferred function cannot itself be redeferred.
@@ -1709,10 +1704,8 @@ namespace Js
         bool isCesu8 = !fOriginalUTF8Code;
         ParseNodeProg * parseTree = nullptr;
         SourceContextInfo * sourceContextInfo = srcInfo->sourceContextInfo;
-        bool fUseParserStateCache = ((grfscr & fscrCreateParserState) == fscrCreateParserState)
-            && CONFIG_FLAG(ParserStateCache)
-            && pDataCache != nullptr
-            && !this->IsScriptContextInDebugMode();
+        bool fUseParserStateCache = ((grfscr & fscrCreateParserState) == fscrCreateParserState) &&
+            CONFIG_FLAG(ParserStateCache) && pDataCache != nullptr;
         byte* parserStateCacheBuffer = nullptr;
         uint32_t parserStateCacheByteCount = 0;
         uint computedSourceCRC = 0;
@@ -2110,13 +2103,6 @@ namespace Js
     void ScriptContext::AddToEvalMap(FastEvalMapString & key, BOOL isIndirect, ScriptFunction *pfuncScript)
     {
         Assert(!pfuncScript->GetFunctionInfo()->IsGenerator());
-
-        Js::Utf8SourceInfo* utf8SourceInfo = pfuncScript->GetFunctionBody()->GetUtf8SourceInfo();
-        if (this->IsScriptContextInDebugMode() && !utf8SourceInfo->GetIsLibraryCode())
-        {
-            // Identifying if any non library function escaped for not being in debug mode.
-            Throw::FatalInternalError();
-        }
 
         this->AddToEvalMapHelper(key, isIndirect, pfuncScript);
     }
@@ -2688,7 +2674,6 @@ namespace Js
 
         // The eval map is not re-entrant, so make sure it's not in the middle of adding an entry
         // Also, don't clean the eval map if the debugger is attached
-        if (!this->IsScriptContextInDebugMode())
         {
             if (this->Cache()->evalCacheDictionary != nullptr)
             {
@@ -3279,12 +3264,6 @@ ScriptContext::GetJitFuncRangeCache()
     }
 #endif
 
-    // TODO (hanhossain): remove
-    bool ScriptContext::IsScriptContextInNonDebugMode() const
-    {
-        return true;
-    }
-
     void ScriptContext::SetIsDiagnosticsScriptContext(bool set)
     {
         this->isDiagnosticsScriptContext = set;
@@ -3296,12 +3275,6 @@ ScriptContext::GetJitFuncRangeCache()
         {
             this->scriptContextPrivilegeLevel = ScriptContextPrivilegeLevel::Low;
         }
-    }
-
-    // TODO (hanhossain): remove
-    bool ScriptContext::IsScriptContextInDebugMode() const
-    {
-        return false;
     }
 
     // TODO (hanhossain): remove

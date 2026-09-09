@@ -52,10 +52,6 @@ namespace Js
         }
 
         m_previousCatchHandlerToUserCodeStatus = m_threadContext->IsUserCode();
-        if (scriptContext->IsScriptContextInDebugMode())
-        {
-            FetchNonUserCodeStatus(scriptContext);
-        }
     }
 
     JavascriptExceptionOperators::AutoCatchHandlerExists::~AutoCatchHandlerExists()

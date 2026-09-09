@@ -3518,9 +3518,7 @@ namespace Js
 
     bool FunctionProxy::HasValidEntryPoint() const
     {
-        if (this->IsWasmFunction() ||
-            (!m_scriptContext->HadProfiled() &&
-            !(this->m_scriptContext->IsScriptContextInDebugMode() && m_scriptContext->IsExceptionWrapperForBuiltInsEnabled())))
+        if (this->IsWasmFunction() || !m_scriptContext->HadProfiled())
         {
             return this->HasValidNonProfileEntryPoint();
         }
@@ -6453,7 +6451,7 @@ namespace Js
 #ifdef ASMJS_PLAT
             !GetIsAsmjsMode() &&
 #endif
-            !GetScriptContext()->GetConfig()->IsNoNative() && !GetScriptContext()->IsScriptContextInDebugMode() &&
+            !GetScriptContext()->GetConfig()->IsNoNative() &&
             DoInterpreterProfile();
     }
 

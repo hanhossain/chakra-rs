@@ -44,14 +44,7 @@ namespace Js
         Js::Var errorObject = exceptionObject->GetThrownObject(nullptr); \
         if (JavascriptError::ShouldTypeofErrorBeReThrown(errorObject)) \
         { \
-            if (scriptContext->IsScriptContextInDebugMode()) \
-            { \
-                JavascriptExceptionOperators::ThrowExceptionObject(exceptionObject, scriptContext, true); \
-            } \
-            else \
-            { \
-                JavascriptExceptionOperators::DoThrowCheckClone(exceptionObject, scriptContext); \
-            } \
+            JavascriptExceptionOperators::DoThrowCheckClone(exceptionObject, scriptContext); \
         } \
     } \
     if (scriptContext->IsUndeclBlockVar(var)) \

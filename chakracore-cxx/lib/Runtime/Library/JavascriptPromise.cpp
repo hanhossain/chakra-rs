@@ -1249,18 +1249,6 @@ namespace Js
         {
 
             bool isPromiseRejectionHandled = true;
-            if (scriptContext->IsScriptContextInDebugMode())
-            {
-                // only necessary to determine if false if debugger is attached.  This way we'll
-                // correctly break on exceptions raised in promises that result in uhandled rejection
-                // notifications
-                Var promiseVar = promiseCapability->GetPromise();
-                if (VarIs<JavascriptPromise>(promiseVar))
-                {
-                    JavascriptPromise* promise = VarTo<JavascriptPromise>(promiseVar);
-                    isPromiseRejectionHandled = !promise->WillRejectionBeUnhandled();
-                }
-            }
 
             Js::JavascriptExceptionOperators::AutoCatchHandlerExists autoCatchHandlerExists(scriptContext, isPromiseRejectionHandled);
             try
@@ -1525,13 +1513,6 @@ namespace Js
 
         {
             bool isPromiseRejectionHandled = true;
-            if (scriptContext->IsScriptContextInDebugMode())
-            {
-                // only necessary to determine if false if debugger is attached.  This way we'll
-                // correctly break on exceptions raised in promises that result in uhandled rejections
-                isPromiseRejectionHandled = !promise->WillRejectionBeUnhandled();
-            }
-
             Js::JavascriptExceptionOperators::AutoCatchHandlerExists autoCatchHandlerExists(scriptContext, isPromiseRejectionHandled);
             try
             {

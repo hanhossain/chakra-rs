@@ -264,15 +264,6 @@ using namespace Js;
                 scriptContext->AddToEvalMap(key, isIndirect, pfuncScript);
             }
         }
-        else
-        {
-            Js::Utf8SourceInfo* utf8SourceInfo = pfuncScript->GetFunctionBody()->GetUtf8SourceInfo();
-            if (scriptContext->IsScriptContextInDebugMode() && !utf8SourceInfo->GetIsLibraryCode())
-            {
-                // Identifying if any non library function escaped for not being in debug mode.
-                Throw::FatalInternalError();
-            }
-        }
 
         //We shouldn't be serializing eval functions; unless with -ForceSerialized flag
         if (CONFIG_FLAG(ForceSerialized)) {

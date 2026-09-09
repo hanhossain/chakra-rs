@@ -712,29 +712,7 @@ using namespace Js;
     /*static*/
     void JavascriptFunction::CheckValidDebugThunk(ScriptContext* scriptContext, RecyclableObject *function)
     {
-        Assert(scriptContext != nullptr);
-        Assert(function != nullptr);
-
-        if (scriptContext->IsScriptContextInDebugMode()
-            && !scriptContext->IsInterpreted() && !CONFIG_FLAG(ForceDiagnosticsMode)    // Does not work nicely if we change the default settings.
-            && function->GetEntryPoint() != scriptContext->CurrentThunk
-            && !CrossSite::IsThunk(function->GetEntryPoint())
-            && VarIs<JavascriptFunction>(function))
-        {
-
-            JavascriptFunction *jsFunction = VarTo<JavascriptFunction>(function);
-            if (!jsFunction->IsBoundFunction()
-                && !jsFunction->GetFunctionInfo()->IsDeferred()
-                && (jsFunction->GetFunctionInfo()->GetAttributes() & FunctionInfo::DoNotProfile) != FunctionInfo::DoNotProfile
-                && jsFunction->GetFunctionInfo() != &JavascriptExternalFunction::EntryInfo::WrappedFunctionThunk)
-            {
-                Js::FunctionProxy *proxy = jsFunction->GetFunctionProxy();
-                if (proxy)
-                {
-                    AssertMsg(proxy->HasValidEntryPoint(), "Function does not have valid entrypoint");
-                }
-            }
-        }
+        // TODO (hanhossain): remove
     }
 #endif
 
@@ -830,13 +808,6 @@ using namespace Js;
             JavascriptProxy* proxy = VarTo<JavascriptProxy>(v);
             return proxy->ConstructorTrap(newArgs, scriptContext, spreadIndices);
         }
-
-#if DBG
-        if (scriptContext->IsScriptContextInDebugMode())
-        {
-            CheckValidDebugThunk(scriptContext, functionObj);
-        }
-#endif
 
         Var functionResult;
         if (spreadIndices != nullptr)

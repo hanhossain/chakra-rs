@@ -1112,7 +1112,7 @@ namespace Js
 
     BOOL PathTypeHandlerBase::SetAccessorsHelper(DynamicObject* instance, PropertyId propertyId, ObjectSlotAttributes * attributes, PathTypeSetterSlotIndex * setters, Var getter, Var setter, PropertyOperationFlags flags)
     {
-        if (instance->GetType()->IsExternal() || instance->GetScriptContext()->IsScriptContextInDebugMode() || PHASE_OFF1(ShareAccessorTypesPhase))
+        if (instance->GetType()->IsExternal() || PHASE_OFF1(ShareAccessorTypesPhase))
         {
             return ConvertToDictionaryType(instance)->SetAccessors(instance, propertyId, getter, setter, flags);
         }
