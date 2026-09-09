@@ -3481,7 +3481,7 @@ namespace Js
     // directEntryPoint:
     //      if (!profiled) - DefaultDeferredParsingThunk, DefaultDeferredDeserializeThunk, DefaultEntryThunk, CheckCodeGenThunk,
     //                       dynamic interpreter thunk, native entry point
-    //      if (profiling) - ProfileDeferredParsingThunk, ProfileDeferredDeserializeThunk, ProfileEntryThunk, CheckCodeGenThunk
+    //      if (profiling) - ProfileDeferredParsingThunk, ProfileDeferredDeserializeThunk, DebugProfileProbeThunk, CheckCodeGenThunk
     bool FunctionProxy::HasValidNonProfileEntryPoint() const
     {
         JavascriptMethod directEntryPoint = this->GetDefaultEntryPointInfo()->jsMethod;
@@ -3624,13 +3624,6 @@ namespace Js
             GenerateDynamicInterpreterThunk();
             this->SetEntryPoint(entryPointInfo, this->GetOriginalEntryPoint_Unchecked());
         }
-        else if (this->GetEntryPoint(entryPointInfo) == ProfileEntryThunk)
-        {
-            // We are not doing codegen on this function, just change the entry point directly
-            // Don't replace the profile entry thunk
-            Assert(InterpreterStackFrame::IsDelayDynamicInterpreterThunk(this->GetOriginalEntryPoint_Unchecked()));
-            GenerateDynamicInterpreterThunk();
-        }
         else if (InterpreterStackFrame::IsDelayDynamicInterpreterThunk(this->GetOriginalEntryPoint_Unchecked()))
         {
             JsUtil::JobProcessor * jobProcessor = this->GetScriptContext()->GetThreadContext()->GetJobProcessor();
@@ -3713,21 +3706,6 @@ namespace Js
     {
         Assert(functionBody->m_scriptContext->CurrentThunk == DefaultEntryThunk);
         functionBody->SetNativeEntryPoint(entryPointInfo, entryPoint, entryPoint);
-    }
-
-
-    void FunctionBody::ProfileSetNativeEntryPoint(FunctionEntryPointInfo* entryPointInfo, FunctionBody * functionBody, JavascriptMethod entryPoint)
-    {
-#ifdef ENABLE_WASM
-        // Do not profile WebAssembly functions
-        if (functionBody->IsWasmFunction())
-        {
-            functionBody->SetNativeEntryPoint(entryPointInfo, entryPoint, entryPoint);
-            return;
-        }
-#endif
-        Assert(functionBody->m_scriptContext->CurrentThunk == ProfileEntryThunk);
-        functionBody->SetNativeEntryPoint(entryPointInfo, entryPoint, ProfileEntryThunk);
     }
 
     Js::JavascriptMethod FunctionBody::GetLoopBodyEntryPoint(Js::LoopHeader * loopHeader, int entryPointIndex)

@@ -1202,12 +1202,12 @@ namespace Js
 
     DynamicType * JavascriptLibrary::CreateDeferredFunctionType(JavascriptMethod entrypoint)
     {
-        return CreateDeferredFunctionTypeNoProfileThunk(this->inDispatchProfileMode ? ProfileEntryThunk : entrypoint);
+        return CreateDeferredFunctionTypeNoProfileThunk(entrypoint);
     }
 
     DynamicType * JavascriptLibrary::CreateDeferredPrototypeFunctionType(JavascriptMethod entrypoint)
     {
-        return CreateDeferredPrototypeFunctionTypeNoProfileThunk(this->inDispatchProfileMode ? ProfileEntryThunk : entrypoint);
+        return CreateDeferredPrototypeFunctionTypeNoProfileThunk(entrypoint);
     }
 
     DynamicType * JavascriptLibrary::CreateDeferredFunctionTypeNoProfileThunk(JavascriptMethod entryPoint, bool isShared)
@@ -1280,7 +1280,7 @@ namespace Js
     {
         Assert(!functionInfo->HasBody());
         return DynamicType::New(scriptContext, TypeIds_Function, prototype,
-            this->inProfileMode? ProfileEntryThunk : functionInfo->GetOriginalEntryPoint(),
+            functionInfo->GetOriginalEntryPoint(),
             &SharedFunctionWithConfigurableLengthTypeHandler);
     }
 
@@ -1288,7 +1288,7 @@ namespace Js
     {
         Assert(!functionInfo->HasBody());
         return DynamicType::New(scriptContext, TypeIds_Function, prototype,
-            this->inProfileMode? ProfileEntryThunk : functionInfo->GetOriginalEntryPoint(),
+            functionInfo->GetOriginalEntryPoint(),
             &SharedFunctionWithLengthTypeHandler);
     }
 
@@ -1296,7 +1296,7 @@ namespace Js
     {
         Assert(!functionInfo->HasBody());
         return DynamicType::New(scriptContext, TypeIds_Function, prototype,
-            this->inProfileMode ? ProfileEntryThunk : functionInfo->GetOriginalEntryPoint(),
+            functionInfo->GetOriginalEntryPoint(),
             &SharedFunctionWithLengthAndNameTypeHandler);
     }
 
@@ -1304,7 +1304,7 @@ namespace Js
     {
         Assert(!functionInfo->HasBody());
         return DynamicType::New(scriptContext, TypeIds_Function, prototype,
-            this->inProfileMode? ProfileEntryThunk : functionInfo->GetOriginalEntryPoint(),
+            functionInfo->GetOriginalEntryPoint(),
             SimpleDictionaryTypeHandler::New(scriptContext, FunctionWithLengthAndPrototypeTypeDescriptors, std::size(FunctionWithLengthAndPrototypeTypeDescriptors), 0, 0));
     }
 
@@ -5183,37 +5183,7 @@ namespace Js
         }
     }
 
-    void JavascriptLibrary::SetProfileMode(bool fSet)
-    {
-        inProfileMode = fSet;
-    }
-
-    void JavascriptLibrary::SetDispatchProfile(bool fSet, JavascriptMethod dispatchInvoke)
-    {
-        if (!fSet)
-        {
-            this->inDispatchProfileMode = false;
-            if (dispatchInvoke != nullptr)
-            {
-                this->GetScriptContext()->GetHostScriptContext()->SetDispatchInvoke(dispatchInvoke);
-            }
-            idMappedFunctionWithPrototypeType->SetEntryPoint(JavascriptExternalFunction::ExternalFunctionThunk);
-            externalFunctionWithDeferredPrototypeType->SetEntryPoint(JavascriptExternalFunction::ExternalFunctionThunk);
-            stdCallFunctionWithDeferredPrototypeType->SetEntryPoint(JavascriptExternalFunction::StdCallExternalFunctionThunk);
-        }
-        else
-        {
-            this->inDispatchProfileMode = true;
-            if (dispatchInvoke != nullptr)
-            {
-                this->GetScriptContext()->GetHostScriptContext()->SetDispatchInvoke(dispatchInvoke);
-            }
-            idMappedFunctionWithPrototypeType->SetEntryPoint(ProfileEntryThunk);
-            externalFunctionWithDeferredPrototypeType->SetEntryPoint(ProfileEntryThunk);
-            stdCallFunctionWithDeferredPrototypeType->SetEntryPoint(ProfileEntryThunk);
-        }
-    }
-    JavascriptString* JavascriptLibrary::CreateEmptyString()
+    JavascriptString * JavascriptLibrary::CreateEmptyString()
     {
         return LiteralStringWithPropertyStringPtr::CreateEmptyString(this);
     }
@@ -5696,8 +5666,7 @@ namespace Js
         bool isReject)
     {
         FunctionInfo* functionInfo = RecyclerNew(GetRecycler(), FunctionInfo, entryPoint);
-        DynamicType* type = CreateDeferredPrototypeFunctionType(
-            this->inDispatchProfileMode ? ProfileEntryThunk : entryPoint);
+        DynamicType* type = CreateDeferredPrototypeFunctionType(entryPoint);
 
         return RecyclerNewEnumClass(
             GetRecycler(),

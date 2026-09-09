@@ -12,8 +12,6 @@
 #define DefaultEntryThunk Js::InterpreterStackFrame::InterpreterThunk
 #endif
 
-#define ProfileEntryThunk Js::ScriptContext::DebugProfileProbeThunk
-
 #define DefaultDeferredParsingThunk Js::JavascriptFunction::DeferredParsingThunk
 #define DefaultDeferredDeserializeThunk Js::JavascriptFunction::DeferredDeserializeThunk
 #define ProfileDeferredDeserializeThunk Js::ScriptContext::ProfileModeDeferredDeserializeThunk
@@ -45,7 +43,6 @@ NativeCodeGenerator * NewNativeCodeGenerator(Js::ScriptContext * nativeCodeGen);
 void DeleteNativeCodeGenerator(NativeCodeGenerator * nativeCodeGen);
 void CloseNativeCodeGenerator(NativeCodeGenerator* nativeCodeGen);
 bool IsClosedNativeCodeGenerator(NativeCodeGenerator* nativeCodeGen);
-void SetProfileModeNativeCodeGen(NativeCodeGenerator *pNativeCodeGen, BOOL fSet);
 void UpdateNativeCodeGeneratorForDebugMode(NativeCodeGenerator* nativeCodeGen);
 
 bool TryReleaseNonHiPriWorkItem(Js::ScriptContext* scriptContext, CodeGenWorkItem* workItem);

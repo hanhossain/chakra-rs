@@ -301,20 +301,13 @@ namespace Js
         if (directEntryPoint == DynamicProfileInfo::EnsureDynamicProfileInfoThunk)
         {
             functionBody->EnsureDynamicProfileInfo();
-            if (functionBody->GetScriptContext()->CurrentThunk == ProfileEntryThunk)
-            {
-                directEntryPoint = ProfileEntryThunk;
-            }
-            else
-            {
-                directEntryPoint = entryPoint->GetNativeEntrypoint();
-            }
+            directEntryPoint = entryPoint->GetNativeEntrypoint();
 
             entryPoint->jsMethod = directEntryPoint;
         }
         else
         {
-            Assert(directEntryPoint == ProfileEntryThunk || functionBody->GetScriptContext()->IsNativeAddress((void*)directEntryPoint));
+            Assert(functionBody->GetScriptContext()->IsNativeAddress((void*)directEntryPoint));
             Assert(functionBody->HasExecutionDynamicProfileInfo());
         }
 

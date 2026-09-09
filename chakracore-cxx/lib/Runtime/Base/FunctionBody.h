@@ -2685,7 +2685,6 @@ namespace Js
 
         typedef void (*SetNativeEntryPointFuncType)(FunctionEntryPointInfo* entryPointInfo, Js::FunctionBody * functionBody, Js::JavascriptMethod entryPoint);
         static void DefaultSetNativeEntryPoint(FunctionEntryPointInfo* entryPointInfo, FunctionBody * functionBody, JavascriptMethod entryPoint);
-        static void ProfileSetNativeEntryPoint(FunctionEntryPointInfo* entryPointInfo, FunctionBody * functionBody, JavascriptMethod entryPoint);
 
         bool GetNativeEntryPointUsed() const { return m_nativeEntryPointUsed; }
         void SetNativeEntryPointUsed(bool nativeEntryPointUsed) { this->m_nativeEntryPointUsed = nativeEntryPointUsed; }

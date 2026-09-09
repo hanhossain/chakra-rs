@@ -482,8 +482,6 @@ namespace Js
 
         typename WriteBarrierFieldTypeTraits<unsigned long>::Type randSeed0, randSeed1;
         typename WriteBarrierFieldTypeTraits<bool>::Type isPRNGSeeded;
-        typename WriteBarrierFieldTypeTraits<bool>::Type inProfileMode;
-        typename WriteBarrierFieldTypeTraits<bool>::Type inDispatchProfileMode;
         typename WriteBarrierFieldTypeTraits<bool>::Type arrayObjectHasUserDefinedSpecies;
 
         JavascriptFunction * AddFunctionToLibraryObjectWithPrototype(DynamicObject * object, PropertyId propertyId, FunctionInfo * functionInfo, int length, DynamicObject * prototype = nullptr, DynamicType * functionType = nullptr);
@@ -537,8 +535,6 @@ namespace Js
 
         JavascriptLibrary(GlobalObject* globalObject, Recycler * recycler) :
             JavascriptLibraryBase(globalObject),
-            inProfileMode(false),
-            inDispatchProfileMode(false),
             propertyStringMap(nullptr),
             symbolMap(nullptr),
             parseIntFunctionObject(nullptr),
@@ -1026,8 +1022,6 @@ namespace Js
         void SetRandSeed0(unsigned long rs) { randSeed0 = rs;}
         void SetRandSeed1(unsigned long rs) { randSeed1 = rs; }
 
-        void SetProfileMode(bool fSet);
-        void SetDispatchProfile(bool fSet, JavascriptMethod dispatchInvoke);
         int32_t ProfilerRegisterBuiltIns();
 
 #if ENABLE_COPYONACCESS_ARRAY
