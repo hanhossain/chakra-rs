@@ -305,17 +305,6 @@ Js::OpCode ByteCodeGenerator::ToChkUndeclOp(Js::OpCode op) const
     }
 }
 
-// TODO (hanhossain): remove
-void ByteCodeGenerator::TrackActivationObjectPropertyForDebugger(
-    Js::DebuggerScope *debuggerScope,
-    Symbol *symbol,
-    Js::DebuggerScopePropertyFlags flags /*= Js::DebuggerScopePropertyFlags_None*/,
-    bool isFunctionDeclaration /*= false*/)
-{
-    Assert(debuggerScope);
-    Assert(symbol);
-}
-
 void ByteCodeGenerator::TrackSlotArrayPropertyForDebugger(
     Js::DebuggerScope *debuggerScope,
     Symbol* symbol,
@@ -361,11 +350,6 @@ void ByteCodeGenerator::TrackFunctionDeclarationPropertyForDebugger(Symbol *func
     {
         if (functionDeclarationSymbol->GetScope()->GetIsObject())
         {
-            this->TrackActivationObjectPropertyForDebugger(
-                this->Writer()->GetCurrentDebuggerScope(),
-                functionDeclarationSymbol,
-                Js::DebuggerScopePropertyFlags_None,
-                true /*isFunctionDeclaration*/);
         }
         else
         {
@@ -610,8 +594,6 @@ void ByteCodeGenerator::InitBlockScopedContent(ParseNodeBlock *pnodeBlock, Js::D
 
                     this->m_writer.ElementPIndexed(op, ByteCodeGenerator::ReturnRegister, scope->GetInnerScopeIndex(), cacheId);
                 }
-
-                TrackActivationObjectPropertyForDebugger(debuggerScope, sym, pnode->nop == knopConstDecl ? Js::DebuggerScopePropertyFlags_Const : Js::DebuggerScopePropertyFlags_None);
             }
             else
             {
@@ -12183,8 +12165,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
                     Js::PropertyId propertyId = sym->EnsurePosition(byteCodeGenerator);
                     uint cacheId = funcInfo->FindOrAddInlineCacheId(funcInfo->InnerScopeToRegSlot(scope), propertyId, false, true);
                     byteCodeGenerator->Writer()->ElementPIndexed(op, location, scope->GetInnerScopeIndex(), cacheId);
-
-                    byteCodeGenerator->TrackActivationObjectPropertyForDebugger(debuggerScope, sym, debuggerPropertyFlags);
                 }
                 else
                 {
