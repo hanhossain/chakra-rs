@@ -295,7 +295,6 @@ private:
     IR::Instr *         CreateLoopBodyReturnIPInstr(uint targetOffset, uint offset);
     StackSym *          EnsureStackFuncPtrSym();
 
-    void                InsertBailOutForDebugger(uint offset, IR::BailOutKind kind, IR::Instr* insertBeforeInstr = nullptr);
     void                InsertBailOnNoProfile(uint offset);
     void                InsertBailOnNoProfile(IR::Instr *const insertBeforeInstr);
     bool                DoBailOnNoProfile();

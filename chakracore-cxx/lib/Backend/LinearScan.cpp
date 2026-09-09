@@ -972,37 +972,6 @@ LinearScan::SetDstReg(IR::Instr *instr)
     }
 }
 
-// Get the stack offset of the non temp locals from the stack.
-int32_t LinearScan::GetStackOffset(Js::RegSlot regSlotId)
-{
-    int32_t stackSlotId = regSlotId - this->func->GetJITFunctionBody()->GetFirstNonTempLocalIndex();
-    Assert(stackSlotId >= 0);
-    return this->func->GetLocalVarSlotOffset(stackSlotId);
-}
-
-
-//
-// This helper function is used for saving bytecode stack sym value to memory / local slots on stack so that we can read it for the locals inspection.
-void
-LinearScan::WriteThroughForLocal(IR::RegOpnd* regOpnd, Lifetime* lifetime, IR::Instr* instrInsertAfter)
-{
-    Assert(regOpnd);
-    Assert(lifetime);
-    Assert(instrInsertAfter);
-
-    StackSym* sym = regOpnd->m_sym;
-    Assert(IsSymNonTempLocalVar(sym));
-
-    Js::RegSlot slotIndex = sym->GetByteCodeRegSlot();
-
-    // First we insert the write through moves
-
-    sym->m_offset = GetStackOffset(slotIndex);
-    sym->m_allocated = true;
-    // Save the value on reg to local var slot.
-    this->InsertStore(instrInsertAfter, sym, lifetime->reg);
-}
-
 bool
 LinearScan::NeedsWriteThrough(StackSym * sym)
 {
@@ -2019,12 +1988,6 @@ LinearScan::RecordDef(Lifetime *const lifetime, IR::Instr *const instr, const ui
 
     if (this->NeedsWriteThrough(sym))
     {
-        if (this->IsSymNonTempLocalVar(sym))
-        {
-            // In the debug mode, we will write through on the stack location.
-            WriteThroughForLocal(regOpnd, lifetime, instr);
-        }
-        else
         {
             // If this is a write-through sym, it should be live on the entry to 'try' and should have already
             // been allocated when we spilled all active lifetimes there.
@@ -2812,19 +2775,6 @@ LinearScan::AllocateStackSpace(Lifetime *spilledRange)
     }
 
     uint32_t size = TySize[spilledRange->sym->GetType()];
-
-    // For the bytecodereg syms instead of spilling to the any other location lets re-use the already created slot.
-    if (IsSymNonTempLocalVar(spilledRange->sym))
-    {
-        Js::RegSlot slotIndex = spilledRange->sym->GetByteCodeRegSlot();
-
-        // Get the offset which is already allocated from this local, and always spill on that location.
-
-        spilledRange->sym->m_offset = GetStackOffset(slotIndex);
-        spilledRange->sym->m_allocated = true;
-
-        return;
-    }
 
     StackSlot * newStackSlot = nullptr;
 

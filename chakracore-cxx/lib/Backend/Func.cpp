@@ -588,36 +588,6 @@ Func::SetArgOffset(StackSym *stackSym, int32_t offset)
     stackSym->m_allocated = true;
 }
 
-///
-/// Ensures that local var slots are created, if the function has locals.
-///     Allocate stack space for locals used for debugging
-///     (for local non-temp vars we write-through memory so that locals inspection can make use of that.).
-//      On stack, after local slots we allocate space for metadata (in particular, whether any the locals was changed in debugger).
-///
-// TODO (hanhossain): remove
-void
-Func::EnsureLocalVarSlots()
-{
-    Assert(false);
-
-    if (!this->HasLocalVarSlotCreated())
-    {
-        uint32_t localSlotCount = GetJITFunctionBody()->GetNonTempLocalVarCount();
-        if (localSlotCount && m_localVarSlotsOffset == Js::Constants::InvalidOffset)
-        {
-            // Allocate the slots.
-            int32_t size = localSlotCount * GetDiagLocalSlotSize();
-            m_localVarSlotsOffset = StackAllocate(size);
-            m_hasLocalVarChangedOffset = StackAllocate(max(1, MachStackAlignment)); // Can't alloc less than StackAlignment bytes.
-
-            Assert(m_workItem->Type() == JsFunctionType);
-
-            m_output.SetVarSlotsOffset(AdjustOffsetValue(m_localVarSlotsOffset));
-            m_output.SetVarChangedOffset(AdjustOffsetValue(m_hasLocalVarChangedOffset));
-        }
-    }
-}
-
 void Func::SetFirstArgOffset(IR::Instr* inlineeStart)
 {
     Assert(inlineeStart->m_func == this);
@@ -651,31 +621,9 @@ void Func::SetFirstArgOffset(IR::Instr* inlineeStart)
     this->firstActualStackOffset = firstActualStackOffset;
 }
 
-int32_t
-Func::GetLocalVarSlotOffset(int32_t slotId)
-{
-    this->EnsureLocalVarSlots();
-    Assert(m_localVarSlotsOffset != Js::Constants::InvalidOffset);
-
-    int32_t slotOffset = slotId * GetDiagLocalSlotSize();
-
-    return m_localVarSlotsOffset + slotOffset;
-}
-
 void Func::OnAddSym(Sym* sym)
 {
     Assert(sym);
-}
-
-///
-/// Returns offset of the flag (1 byte) whether any local was changed (in debugger).
-/// If the function does not have any locals, returns -1.
-///
-int32_t
-Func::GetHasLocalVarChangedOffset()
-{
-    this->EnsureLocalVarSlots();
-    return m_hasLocalVarChangedOffset;
 }
 
 bool
