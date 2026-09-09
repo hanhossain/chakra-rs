@@ -9,6 +9,9 @@
 #include "Memory/RecyclerWatsonTelemetry.h"
 #include "chakra/Logger.h"
 
+#include <functional>
+#include <memory>
+
 #ifdef _M_AMD64
 #include "Interface/amd64.h"
 #endif
@@ -22,10 +25,7 @@
 #endif
 
 #include "Common/ThreadService.h"
-#include "Memory/AutoAllocatorObjectPtr.h"
 #include "Common/Tick.h"
-
-;
 
 /// Max size (in MB) in single allocation
 constexpr size_t MaxSingleAllocSizeInMB = 2048;
@@ -6372,8 +6372,10 @@ bool Recycler::ProcessObjectBeforeCollectCallbacks(bool atShutdown/*= false*/)
 
     // The callbacks may register/unregister callbacks while we are enumerating the current map. To avoid
     // conflicting usage of the callback map, we swap it out. New registration will go to a new map.
-    AutoAllocatorObjectPtr<ObjectBeforeCollectCallbackList, ArenaAllocator> oldCallbackList(
-        this->objectBeforeCollectCallbackList, &this->objectBeforeCollectCallbackArena);
+    std::unique_ptr<ObjectBeforeCollectCallbackList, std::function<void(ObjectBeforeCollectCallbackList *)>> oldCallbackList{objectBeforeCollectCallbackList, [this](ObjectBeforeCollectCallbackList * callbackList)
+    {
+        DeleteObject<ArenaAllocator>(&objectBeforeCollectCallbackArena, callbackList);
+    }};
     this->objectBeforeCollectCallbackList = nullptr;
 
     bool hasRemainingCallbacks = false;
@@ -6411,13 +6413,16 @@ bool Recycler::ProcessObjectBeforeCollectCallbacks(bool atShutdown/*= false*/)
     {
         if (this->objectBeforeCollectCallbackList == nullptr)
         {
-            this->objectBeforeCollectCallbackList = oldCallbackList.Detach();
+            this->objectBeforeCollectCallbackList = oldCallbackList.release();
         }
         else
         {
             // Swap back, since old list is likely larger
-            ObjectBeforeCollectCallbackList* tmp = oldCallbackList.Detach();
-            *&oldCallbackList = this->objectBeforeCollectCallbackList;
+            ObjectBeforeCollectCallbackList* tmp = oldCallbackList.release();
+            oldCallbackList = std::unique_ptr<ObjectBeforeCollectCallbackList, std::function<void(ObjectBeforeCollectCallbackList *)>>{this->objectBeforeCollectCallbackList, [this](ObjectBeforeCollectCallbackList * callbackList)
+            {
+                DeleteObject<ArenaAllocator>(&objectBeforeCollectCallbackArena, callbackList);
+            }};
             this->objectBeforeCollectCallbackList = tmp;
 
             try
