@@ -425,7 +425,6 @@ public:
     void EndSubexpression(ParseNode* node);
 
     // Debugger methods.
-    bool IsInDebugMode() const;
     bool IsInNonDebugMode() const;
     bool ShouldTrackDebuggerMetadata() const;
     void TrackRegisterPropertyForDebugger(Js::DebuggerScope *debuggerScope, Symbol *symbol, FuncInfo *funcInfo, Js::DebuggerScopePropertyFlags flags = Js::DebuggerScopePropertyFlags_None, bool isFunctionDeclaration = false);
