@@ -1508,9 +1508,6 @@ namespace Js
         reflectObject = nullptr;
         debugEval = nullptr;
         getStackTrace = nullptr;
-#ifdef EDIT_AND_CONTINUE
-        editSource = nullptr;
-#endif
 
         symbolConstructor = CreateBuiltinConstructor(&JavascriptSymbol::EntryInfo::NewInstance,
             DeferredTypeHandler<InitializeSymbolConstructor>::GetDefaultInstance());

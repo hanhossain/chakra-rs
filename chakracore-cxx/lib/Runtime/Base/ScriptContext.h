@@ -1190,28 +1190,6 @@ private:
 #endif
         bool IsForceNoNative();
 
-#ifdef EDIT_AND_CONTINUE
-    private:
-        ScriptEditQuery* activeScriptEditQuery;
-
-        void BeginScriptEditEnumFunctions(ScriptEditQuery* scriptEditQuery) { Assert(!activeScriptEditQuery); activeScriptEditQuery = scriptEditQuery; }
-        void EndScriptEditEnumFunctions() { Assert(activeScriptEditQuery); activeScriptEditQuery = nullptr; }
-    public:
-        ScriptEditQuery* GetActiveScriptEditQuery() const { return activeScriptEditQuery; }
-
-        class AutoScriptEditEnumFunctions
-        {
-        public:
-            AutoScriptEditEnumFunctions(ScriptContext* scriptContext, ScriptEditQuery* scriptEditQuery) : m_scriptContext(scriptContext)
-            {
-                scriptContext->BeginScriptEditEnumFunctions(scriptEditQuery);
-            }
-            ~AutoScriptEditEnumFunctions() { m_scriptContext->EndScriptEditEnumFunctions(); }
-        private:
-            ScriptContext* m_scriptContext;
-        };
-#endif
-
     private:
         typedef JsUtil::BaseDictionary<JavascriptMethod, Js::PropertyId, ArenaAllocator, PrimeSizePolicy> BuiltinFunctionIdDictionary;
         BuiltinFunctionIdDictionary *m_pBuiltinFunctionIdMap;

@@ -147,9 +147,6 @@ namespace Js
         , webWorkerId(Js::Constants::NonWebWorkerContextId)
         , url(u"")
         , startupComplete(false)
-#ifdef EDIT_AND_CONTINUE
-        , activeScriptEditQuery(nullptr)
-#endif
         , nextPendingClose(nullptr)
         , intConstPropsOnGlobalObject(nullptr)
         , intConstPropsOnGlobalUserObject(nullptr)

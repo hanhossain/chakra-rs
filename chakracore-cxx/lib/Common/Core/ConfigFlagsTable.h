@@ -110,9 +110,6 @@ namespace Js
         DynamicProfileCacheDirFlag,
         DynamicProfileInputFlag, DpiFlag,
         #endif
-        #ifdef EDIT_AND_CONTINUE
-        EditTestFlag,
-        #endif
         WininetProfileCacheFlag,
         NoDynamicProfileInMemoryCacheFlag,
         ProfileBasedSpeculativeJitFlag,
@@ -1332,10 +1329,6 @@ namespace Js
             String DynamicProfileInput;
         // TODO (hanhossain): remove flag
         String Dpi;
-        #endif
-        #ifdef EDIT_AND_CONTINUE
-        // TODO (hanhossain): remove flag
-            Boolean EditTest;
         #endif
         // TODO (hanhossain): remove flag
         Boolean WininetProfileCache;
