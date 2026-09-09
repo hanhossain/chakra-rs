@@ -305,54 +305,6 @@ Js::OpCode ByteCodeGenerator::ToChkUndeclOp(Js::OpCode op) const
     }
 }
 
-// Tracks a register slot let/const property for the passed in debugger block/catch scope.
-// debuggerScope         - The scope to add the variable to.
-// symbol                - The symbol that represents the register property.
-// funcInfo              - The function info used to store the property into the tracked debugger register slot list.
-// flags                 - The flags to assign to the property.
-// isFunctionDeclaration - Whether or not the register is a function declaration, which requires that its byte code offset be updated immediately.
-void ByteCodeGenerator::TrackRegisterPropertyForDebugger(
-    Js::DebuggerScope *debuggerScope,
-    Symbol *symbol,
-    FuncInfo *funcInfo,
-    Js::DebuggerScopePropertyFlags flags /*= Js::DebuggerScopePropertyFlags_None*/,
-    bool isFunctionDeclaration /*= false*/)
-{
-    Assert(debuggerScope);
-    Assert(symbol);
-    Assert(funcInfo);
-
-    Js::RegSlot location = symbol->GetLocation();
-
-    Js::DebuggerScope *correctDebuggerScope = debuggerScope;
-    if (debuggerScope->scopeType != Js::DiagExtraScopesType::DiagBlockScopeDirect && debuggerScope->scopeType != Js::DiagExtraScopesType::DiagCatchScopeDirect)
-    {
-        // We have to get the appropriate scope and add property over there.
-        // Make sure the scope is created whether we're in debug mode or not, because we
-        // need the empty scopes present during reparsing for debug mode.
-        correctDebuggerScope = debuggerScope->GetSiblingScope(location, Writer()->GetFunctionWrite());
-    }
-
-    if (this->ShouldTrackDebuggerMetadata() && !symbol->GetIsTrackedForDebugger())
-    {
-        // Only track the property if we're in debug mode since it's only needed by the debugger.
-        Js::PropertyId propertyId = symbol->EnsurePosition(this);
-
-        this->Writer()->AddPropertyToDebuggerScope(
-            correctDebuggerScope,
-            location,
-            propertyId,
-            /*shouldConsumeRegister*/ true,
-            flags,
-            isFunctionDeclaration);
-
-        Js::FunctionBody *byteCodeFunction = funcInfo->GetParsedFunctionBody();
-        byteCodeFunction->InsertSymbolToRegSlotList(location, propertyId, funcInfo->varRegsCount);
-
-        symbol->SetIsTrackedForDebugger(true);
-    }
-}
-
 void ByteCodeGenerator::TrackActivationObjectPropertyForDebugger(
     Js::DebuggerScope *debuggerScope,
     Symbol *symbol,
@@ -445,15 +397,6 @@ void ByteCodeGenerator::TrackFunctionDeclarationPropertyForDebugger(Symbol *func
                 Js::DebuggerScopePropertyFlags_None,
                 true /*isFunctionDeclaration*/);
         }
-    }
-    else
-    {
-        this->TrackRegisterPropertyForDebugger(
-            this->Writer()->GetCurrentDebuggerScope(),
-            functionDeclarationSymbol,
-            funcInfoParent,
-            Js::DebuggerScopePropertyFlags_None,
-            true /*isFunctionDeclaration*/);
     }
 }
 
@@ -711,10 +654,6 @@ void ByteCodeGenerator::InitBlockScopedContent(ParseNodeBlock *pnodeBlock, Js::D
             if (sym->NeedsSlotAlloc(this, funcInfo))
             {
                 TrackSlotArrayPropertyForDebugger(debuggerScope, sym, sym->EnsurePosition(this), pnode->nop == knopConstDecl ? Js::DebuggerScopePropertyFlags_Const : Js::DebuggerScopePropertyFlags_None);
-            }
-            else
-            {
-                TrackRegisterPropertyForDebugger(debuggerScope, sym, funcInfo, pnode->nop == knopConstDecl ? Js::DebuggerScopePropertyFlags_Const : Js::DebuggerScopePropertyFlags_None);
             }
         }
     };
@@ -12373,7 +12312,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
             }
             else
             {
-                byteCodeGenerator->TrackRegisterPropertyForDebugger(debuggerScope, sym, funcInfo, debuggerPropertyFlags);
                 if (initializeParam)
                 {
                     byteCodeGenerator->EmitLocalPropInit(location, sym, funcInfo);
