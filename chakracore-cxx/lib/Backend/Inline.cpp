@@ -1410,7 +1410,6 @@ Inline::BuildInlinee(JITTimeFunctionBody* funcBody, const FunctionJITTimeInfo * 
 
     CodeGenWorkItemIDL * workItemData = JitAnewStruct(this->topFunc->m_alloc, CodeGenWorkItemIDL);
 
-    workItemData->isJitInDebugMode = this->topFunc->IsJitInDebugMode();
     workItemData->type = JsFunctionType;
     workItemData->jitMode = static_cast<char>(this->topFunc->GetWorkItem()->GetJitMode());
     workItemData->nativeDataAddr = this->topFunc->GetWorkItem()->GetWorkItemData()->nativeDataAddr;
@@ -3056,7 +3055,6 @@ Inline::InlineCallApplyTarget_Shared(
     // inlinee
     CodeGenWorkItemIDL * workItemData = JitAnewStruct(this->topFunc->m_alloc, CodeGenWorkItemIDL);
 
-    workItemData->isJitInDebugMode = this->topFunc->IsJitInDebugMode();
     workItemData->type = JsFunctionType;
     workItemData->jitMode = static_cast<char>(this->topFunc->GetWorkItem()->GetJitMode());
     workItemData->nativeDataAddr = this->topFunc->GetWorkItem()->GetWorkItemData()->nativeDataAddr;
@@ -3873,7 +3871,6 @@ Inline::InlineGetterSetterFunction(IR::Instr *accessorInstr, const FunctionJITTi
     // inlinee
     CodeGenWorkItemIDL * workItemData = JitAnewStruct(this->topFunc->m_alloc, CodeGenWorkItemIDL);
 
-    workItemData->isJitInDebugMode = this->topFunc->IsJitInDebugMode();
     workItemData->type = JsFunctionType;
     workItemData->jitMode = static_cast<char>(this->topFunc->GetWorkItem()->GetJitMode());
     workItemData->nativeDataAddr = this->topFunc->GetWorkItem()->GetWorkItemData()->nativeDataAddr;
@@ -4120,7 +4117,6 @@ Inline::InlineScriptFunction(IR::Instr *callInstr, const FunctionJITTimeInfo *co
 
     CodeGenWorkItemIDL * workItemData = JitAnewStruct(this->topFunc->m_alloc, CodeGenWorkItemIDL);
 
-    workItemData->isJitInDebugMode = this->topFunc->IsJitInDebugMode();
     workItemData->type = JsFunctionType;
     workItemData->jitMode = static_cast<char>(this->topFunc->GetWorkItem()->GetJitMode());
     workItemData->nativeDataAddr = this->topFunc->GetWorkItem()->GetWorkItemData()->nativeDataAddr;

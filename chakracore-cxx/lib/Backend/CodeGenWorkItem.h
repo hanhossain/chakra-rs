@@ -13,7 +13,6 @@ protected:
         JsUtil::JobManager *const manager,
         Js::FunctionBody *const functionBody,
         Js::EntryPointInfo* entryPointInfo,
-        bool isJitInDebugMode,
         CodeGenWorkItemType type);
     ~CodeGenWorkItem();
 
@@ -150,9 +149,10 @@ public:
         return isInJitQueue;
     }
 
+    // TODO (hanhossain): remove
     bool IsJitInDebugMode() const
     {
-        return jitData.isJitInDebugMode != 0;
+        return false;
     }
 
     void OnWorkItemProcessFail(NativeCodeGenerator *codeGen);
@@ -171,9 +171,8 @@ struct JsFunctionCodeGen : public CodeGenWorkItem
     JsFunctionCodeGen(
         JsUtil::JobManager *const manager,
         Js::FunctionBody *const functionBody,
-        Js::EntryPointInfo* entryPointInfo,
-        bool isJitInDebugMode)
-        : CodeGenWorkItem(manager, functionBody, entryPointInfo, isJitInDebugMode, JsFunctionType)
+        Js::EntryPointInfo* entryPointInfo)
+        : CodeGenWorkItem(manager, functionBody, entryPointInfo, JsFunctionType)
     {
         this->jitData.loopNumber = GetLoopNumber();
     }
@@ -239,8 +238,9 @@ struct JsLoopBodyCodeGen : public CodeGenWorkItem
 {
     JsLoopBodyCodeGen(
         JsUtil::JobManager *const manager, Js::FunctionBody *const functionBody,
-        Js::EntryPointInfo* entryPointInfo, bool isJitInDebugMode, Js::LoopHeader * loopHeader) :
-        CodeGenWorkItem(manager, functionBody, entryPointInfo, isJitInDebugMode, JsLoopBodyWorkItemType),
+        Js::EntryPointInfo* entryPointInfo,
+        Js::LoopHeader * loopHeader) :
+        CodeGenWorkItem(manager, functionBody, entryPointInfo, JsLoopBodyWorkItemType),
         codeAddress(NULL),
         loopHeader(loopHeader)
     {

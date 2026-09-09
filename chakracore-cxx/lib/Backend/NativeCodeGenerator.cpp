@@ -172,13 +172,13 @@ extern Func *CurrentFunc;
 
 JsFunctionCodeGen *NativeCodeGenerator::NewFunctionCodeGen(Js::FunctionBody *functionBody, Js::EntryPointInfo* info)
 {
-    return new JsFunctionCodeGen(this, functionBody, info, functionBody->IsInDebugMode());
+    return new JsFunctionCodeGen(this, functionBody, info);
 }
 
 JsLoopBodyCodeGen *
 NativeCodeGenerator::NewLoopBodyCodeGen(Js::FunctionBody *functionBody, Js::EntryPointInfo* info, Js::LoopHeader * loopHeader)
 {
-    return HeapNewNoThrow(JsLoopBodyCodeGen, this, functionBody, info, functionBody->IsInDebugMode(), loopHeader);
+    return HeapNewNoThrow(JsLoopBodyCodeGen, this, functionBody, info, loopHeader);
 }
 
 #ifdef ENABLE_PREJIT
