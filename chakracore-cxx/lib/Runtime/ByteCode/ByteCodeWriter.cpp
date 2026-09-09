@@ -3038,11 +3038,6 @@ StoreCommon:
     {
     }
 
-    // TODO (hanhossain): remove
-    void ByteCodeWriter::RecordCrossFrameEntryExitRecord(bool isEnterBlock)
-    {
-    }
-
     uint ByteCodeWriter::EnterLoop(Js::ByteCodeLabel loopEntrance)
     {
         if (useBranchIsland)

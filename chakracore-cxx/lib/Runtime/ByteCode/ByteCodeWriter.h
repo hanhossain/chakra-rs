@@ -370,7 +370,6 @@ namespace Js
         FunctionBody * GetFunctionWrite() const { return m_functionWrite; }
 
         void RecordStatementAdjustment(FunctionBody::StatementAdjustmentType type);
-        void RecordCrossFrameEntryExitRecord(bool isEnterBlock);
 
         uint EnterLoop(Js::ByteCodeLabel loopEntrance);
         void ExitLoop(uint loopId);
