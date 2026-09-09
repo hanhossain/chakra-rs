@@ -255,10 +255,6 @@ public:
     charcount_t ichMin;         // start offset into the original source buffer
     charcount_t ichLim;         // end offset into the original source buffer
     Js::RegSlot location;
-
-#ifdef EDIT_AND_CONTINUE
-    ParseNodePtr parent;
-#endif
 };
 
 #define DISABLE_SELF_CAST(T) private: T * As##T()

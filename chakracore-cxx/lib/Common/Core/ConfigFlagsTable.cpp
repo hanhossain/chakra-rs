@@ -625,9 +625,6 @@ namespace Js
         u"DynamicProfileInput",
         u"Dpi",
 #endif
-#ifdef EDIT_AND_CONTINUE
-        u"EditTest",
-#endif
         u"WininetProfileCache",
         u"NoDynamicProfileInMemoryCache",
         u"ProfileBasedSpeculativeJit",
@@ -1448,9 +1445,6 @@ namespace Js
         u"Read only file containing dynamic profile information",
         u"Read only file containing dynamic profile information",
 #endif
-#ifdef EDIT_AND_CONTINUE
-        u"Enable edit and continue test tools",
-#endif
         u"Use the WININET cache to save the profile information",
         u"Enable in-memory cache for dynamic sources",
         u"Enable dynamic profile based speculative JIT",
@@ -1866,9 +1860,6 @@ namespace Js
         NoParentFlag,
         NoParentFlag,
         NoParentFlag,
-        NoParentFlag,
-#endif
-#ifdef EDIT_AND_CONTINUE
         NoParentFlag,
 #endif
         NoParentFlag,
@@ -2309,9 +2300,6 @@ namespace Js
         DynamicProfileCacheDir(nullptr),
         DynamicProfileInput(nullptr),
         Dpi(nullptr),
-#endif
-#ifdef EDIT_AND_CONTINUE
-        EditTest(false),
 #endif
         WininetProfileCache(DEFAULT_CONFIG_WininetProfileCache),
         NoDynamicProfileInMemoryCache(false),
@@ -3371,10 +3359,6 @@ namespace Js
         case DpiFlag:
             return FlagString;
         #endif
-        #ifdef EDIT_AND_CONTINUE
-        case EditTestFlag:
-            return FlagBoolean;
-        #endif
         case WininetProfileCacheFlag:
             return FlagBoolean;
         case NoDynamicProfileInMemoryCacheFlag:
@@ -4082,10 +4066,6 @@ namespace Js
             return reinterpret_cast<void*>(const_cast<String*>(&DynamicProfileInput));
         case DpiFlag:
             return reinterpret_cast<void*>(const_cast<String*>(&Dpi));
-        #endif
-        #ifdef EDIT_AND_CONTINUE
-        case EditTestFlag:
-            return reinterpret_cast<void*>(const_cast<Boolean*>(&EditTest));
         #endif
         case WininetProfileCacheFlag:
             return reinterpret_cast<void*>(const_cast<Boolean*>(&WininetProfileCache));
@@ -4814,11 +4794,6 @@ namespace Js
         case DumpObjectGraphOnEnumFlag:
             retValue = false;
             break;
-        #ifdef EDIT_AND_CONTINUE
-        case EditTestFlag:
-            retValue = false;
-            break;
-        #endif
         case WininetProfileCacheFlag:
             retValue = DEFAULT_CONFIG_WininetProfileCache;
             break;

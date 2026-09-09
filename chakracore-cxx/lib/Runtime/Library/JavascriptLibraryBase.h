@@ -92,9 +92,6 @@ namespace Js
         JavascriptFunction* GetObjectFreeze() const { return objectFreezeFunction; }
         JavascriptFunction* GetDebugEval() const { return debugEval; }
         JavascriptFunction* GetStackTraceFunction() const { return getStackTrace; }
-#ifdef EDIT_AND_CONTINUE
-        JavascriptFunction* GetEditSource() const { return editSource; }
-#endif
 
         JavascriptFunction* GetArrayPrototypeForEachFunction() const { return arrayPrototypeForEachFunction; }
         JavascriptFunction* GetArrayPrototypeKeysFunction() const { return arrayPrototypeKeysFunction; }
@@ -345,9 +342,6 @@ namespace Js
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type arrayPrototypeEntriesFunction;
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type debugEval;
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type getStackTrace;
-#ifdef EDIT_AND_CONTINUE
-        typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type editSource;
-#endif
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type mathMin;
         typename WriteBarrierFieldTypeTraits<JavascriptFunction*>::Type mathMax;
 
