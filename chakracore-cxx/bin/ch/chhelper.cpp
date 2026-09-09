@@ -311,15 +311,13 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTest(const rust::String &filename, const rust::String &fileContents)
+int32_t ExecuteTest(JsRuntimeHandle &runtime, const rust::String &filename, const rust::String &fileContents)
 {
     auto span = chakra::Span::create("ExecuteTest");
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
     JsRuntimeAttributes jsrtAttributes = JsRuntimeAttributeNone;
     int32_t hr = S_OK;
-    JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
 
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, &runtime));
     chRuntime = runtime;
 
     {
@@ -355,11 +353,6 @@ int32_t ExecuteTest(const rust::String &filename, const rust::String &fileConten
     }
 Error:
     ChakraRTInterface::JsSetCurrentContext(nullptr);
-
-    if (runtime != JS_INVALID_RUNTIME_HANDLE)
-    {
-        ChakraRTInterface::JsDisposeRuntime(runtime);
-    }
 
     fflush(NULL);
 

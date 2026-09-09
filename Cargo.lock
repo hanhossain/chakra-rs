@@ -64,6 +64,7 @@ dependencies = [
  "cxx",
  "cxx-build",
  "serde",
+ "thiserror",
  "tracing",
  "widestring",
 ]

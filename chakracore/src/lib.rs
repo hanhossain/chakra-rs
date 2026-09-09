@@ -2,7 +2,8 @@ use chakracore_sys::chhelper::ffi::ExecuteTest;
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
-use chakracore_sys::rt_interface::ffi::ChakraRTInterface;
+use chakracore_sys::rt_interface::ffi::{ChakraRTInterface, JsRuntimeAttributes};
+use chakracore_sys::rt_interface::{JsError, JsErrorExt, JsRuntimeHandle};
 use cxx::Exception;
 
 #[tracing::instrument(skip(config))]
@@ -12,7 +13,23 @@ pub fn run(config: CoreConfig) -> Result<(), Error> {
     // handle command line flags
     ChakraRTInterface::InitializeTestHooks(&config.args);
 
-    let res = execute_test(&config.filename)?;
+    execute_test(&config.filename)?;
+    Ok(())
+}
+
+#[tracing::instrument(skip(filename))]
+fn execute_test(filename: &String) -> Result<(), Error> {
+    let file_contents = Helpers::LoadScriptFromFile(filename)?;
+    let mut runtime = JsRuntimeHandle::default();
+    unsafe {
+        ChakraRTInterface::JsCreateRuntime(
+            JsRuntimeAttributes::JsRuntimeAttributeNone,
+            &raw mut runtime,
+        )
+        .as_result()?;
+    }
+    let res = ExecuteTest(&mut runtime, filename, &file_contents)?;
+
     if res < 0 {
         tracing::error!(hresult = res, "hresult was negative. exiting.");
         return Err(Error::NegativeHResult(res));
@@ -20,13 +37,12 @@ pub fn run(config: CoreConfig) -> Result<(), Error> {
     if res > 0 {
         return Err(Error::ExitCode(res as u8));
     }
-    Ok(())
-}
 
-#[tracing::instrument(skip(filename))]
-fn execute_test(filename: &String) -> Result<i32, Exception> {
-    let file_contents = Helpers::LoadScriptFromFile(filename)?;
-    ExecuteTest(filename, &file_contents)
+    if !runtime.is_invalid() {
+        ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
+    }
+
+    Ok(())
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -37,4 +53,6 @@ pub enum Error {
     NegativeHResult(i32),
     #[error("Exception propagated from c++")]
     Exception(#[from] Exception),
+    #[error(transparent)]
+    JsError(#[from] JsError),
 }
