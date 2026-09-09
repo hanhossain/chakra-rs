@@ -6512,9 +6512,6 @@ void EmitIteratorTopLevelFinally(
     Js::ByteCodeLabel afterFinallyBlockLabel = byteCodeGenerator->Writer()->DefineLabel();
     byteCodeGenerator->Writer()->Empty(Js::OpCode::Leave);
 
-    byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(false);
-    byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(true);
-
     byteCodeGenerator->Writer()->Br(afterFinallyBlockLabel);
     byteCodeGenerator->Writer()->MarkLabel(finallyLabel);
     byteCodeGenerator->Writer()->Empty(Js::OpCode::Finally);
@@ -6539,7 +6536,6 @@ void EmitIteratorTopLevelFinally(
         funcInfo->ReleaseTmpRegister(yieldExceptionLocation);
     }
 
-    byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(false);
     byteCodeGenerator->Writer()->Empty(Js::OpCode::LeaveNull);
     byteCodeGenerator->Writer()->MarkLabel(afterFinallyBlockLabel);
 }
@@ -6640,7 +6636,6 @@ void EmitDestructuredArray(
     // Insert try node here
     Js::ByteCodeLabel finallyLabel = byteCodeGenerator->Writer()->DefineLabel();
     Js::ByteCodeLabel catchLabel = byteCodeGenerator->Writer()->DefineLabel();
-    byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(true);
 
     if (isCoroutine)
     {
@@ -9652,7 +9647,6 @@ void EmitForInOrForOf(ParseNodeForInOrForOf *loopNode, ByteCodeGenerator *byteCo
     // The whole loop is surrounded with try..catch..finally - in order to capture the abrupt completion.
     Js::ByteCodeLabel finallyLabel = byteCodeGenerator->Writer()->DefineLabel();
     Js::ByteCodeLabel catchLabel = byteCodeGenerator->Writer()->DefineLabel();
-    byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(true);
 
     byteCodeGenerator->Writer()->Reg1(Js::OpCode::LdFalse, shouldCallReturnFunctionLocation);
     byteCodeGenerator->Writer()->Reg1(Js::OpCode::LdFalse, shouldCallReturnFunctionLocationFinally);
@@ -12050,7 +12044,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
 
         // Note: try uses OpCode::Leave which causes a return to parent interpreter thunk,
         // same for catch block. Thus record cross interpreter frame entry/exit records for them.
-        byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(/* isEnterBlock = */ true);
 
         byteCodeGenerator->Writer()->Br(Js::OpCode::TryCatch, catchLabel);
 
@@ -12059,8 +12052,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
         byteCodeGenerator->PopJumpCleanup();
 
         funcInfo->ReleaseLoc(pnodeTry->pnodeBody);
-
-        byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(/* isEnterBlock = */ false);
 
         byteCodeGenerator->Writer()->Empty(Js::OpCode::Leave);
         byteCodeGenerator->Writer()->Br(pnodeTryCatch->breakLabel);
@@ -12169,7 +12160,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
                 }
                 ParamTrackAndInitialization(item->AsParseNodeVar()->sym, false /*initializeParam*/, itemLocation);
             });
-            byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(true);
 
             // Now emitting bytecode for destructuring pattern
             byteCodeGenerator->StartStatement(pnodeCatch);
@@ -12190,7 +12180,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
                 {
                     sym->SetIsGlobalCatch(true);
                 }
-                byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(true);
             }
 
             // Allow a debugger to stop on the 'catch'
@@ -12214,7 +12203,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
             funcInfo->ReleaseLoc(tempLocationNode);
         }
 
-        byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(false);
 
         byteCodeGenerator->Writer()->Empty(Js::OpCode::Leave);
         byteCodeGenerator->Writer()->MarkLabel(pnodeTryCatch->breakLabel);
@@ -12237,7 +12225,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
         Js::RegSlot regOffset = Js::Constants::NoRegister;
 
         finallyLabel = byteCodeGenerator->Writer()->DefineLabel();
-        byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(true);
 
         // [CONSIDER][aneeshd] Ideally the TryFinallyWithYield opcode needs to be used only if there is a yield expression.
         // For now, if the function is generator we are using the TryFinallyWithYield.
@@ -12266,12 +12253,10 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
 
         byteCodeGenerator->PopJumpCleanup();
         byteCodeGenerator->Writer()->Empty(Js::OpCode::Leave);
-        byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(false);
 
         // Note: although we don't use OpCode::Leave for finally block,
         // OpCode::LeaveNull causes a return to parent interpreter thunk.
         // This has to be on offset prior to offset of 1st statement of finally.
-        byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(true);
 
         byteCodeGenerator->Writer()->Br(pnodeTryFinally->breakLabel);
         byteCodeGenerator->Writer()->MarkLabel(finallyLabel);
@@ -12295,8 +12280,6 @@ void Emit(ParseNode* pnode, ByteCodeGenerator* byteCodeGenerator, FuncInfo* func
         byteCodeGenerator->PopJumpCleanup();
 
         funcInfo->EndRecordingOutArgs(1);
-
-        byteCodeGenerator->Writer()->RecordCrossFrameEntryExitRecord(false);
 
         byteCodeGenerator->Writer()->Empty(Js::OpCode::LeaveNull);
 
