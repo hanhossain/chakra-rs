@@ -838,7 +838,7 @@ LinearScan::SetDstReg(IR::Instr *instr)
 
         if (lifetime->isSpilled)
         {
-            if (stackSym->IsConst() && !IsSymNonTempLocalVar(stackSym))
+            if (stackSym->IsConst())
             {
                 // We will reload the constant (but in debug mode, we still need to process this if this is a user var).
                 return;
@@ -975,7 +975,7 @@ LinearScan::SetDstReg(IR::Instr *instr)
 bool
 LinearScan::NeedsWriteThrough(StackSym * sym)
 {
-    return this->NeedsWriteThroughForEH(sym) || this->IsSymNonTempLocalVar(sym);
+    return this->NeedsWriteThroughForEH(sym);
 }
 
 bool
@@ -989,17 +989,6 @@ LinearScan::NeedsWriteThroughForEH(StackSym * sym)
     Assert(this->currentRegion);
     return this->currentRegion->writeThroughSymbolsSet && this->currentRegion->writeThroughSymbolsSet->Test(sym->m_id);
 }
-
-// Helper routine to check if current sym belongs to non temp bytecodereg
-// TODO (hanhossain): remove
-bool
-LinearScan::IsSymNonTempLocalVar(StackSym *sym)
-{
-    Assert(sym);
-
-    return false;
-}
-
 
 // LinearScan::SetSrcRegs
 // Set the reg on each RegOpnd use.
@@ -2608,7 +2597,7 @@ LinearScan::SpillLiveRange(Lifetime * spilledRange, IR::Instr *insertionInstr)
     spilledRange->reg = RegNOREG;
 
     // Don't allocate stack space for const, we always reload them. (For debugm mode, allocate on the stack)
-    if (!sym->IsAllocated() && (!sym->IsConst() || IsSymNonTempLocalVar(sym)))
+    if (!sym->IsAllocated() && !sym->IsConst())
     {
        this->AllocateStackSpace(spilledRange);
     }
@@ -2616,9 +2605,6 @@ LinearScan::SpillLiveRange(Lifetime * spilledRange, IR::Instr *insertionInstr)
     // No need to insert loads or stores if there are no uses.
     if (!spilledRange->isDeadStore)
     {
-        // In the debug mode, don't do insertstore for this stacksym, as we want to retain the IsConst for the sym,
-        // and later we are going to find the reg for it.
-        if (!IsSymNonTempLocalVar(sym))
         {
             this->InsertStores(spilledRange, reg, insertionInstr);
         }
@@ -2929,7 +2915,7 @@ LinearScan::InsertStore(IR::Instr *instr, StackSym *sym, RegNum reg)
 
     // In the debug mode, if the current sym belongs to the byte code locals, then do not unlink this instruction, as we need to have this instruction to be there
     // to produce the write-through instruction.
-    if (sym->IsConst() && !IsSymNonTempLocalVar(sym))
+    if (sym->IsConst())
     {
         // Let's just delete the def.  We'll reload the constant.
         // We can't just delete the instruction however since the
@@ -2977,7 +2963,7 @@ LinearScan::InsertLoad(IR::Instr *instr, StackSym *sym, RegNum reg)
     bool isMovSDZero = false;
     if (sym->IsConst())
     {
-        Assert(!sym->IsAllocated() || IsSymNonTempLocalVar(sym));
+        Assert(!sym->IsAllocated());
         // For an intConst, reload the constant instead of using the stack.
         // Create a new StackSym to make sure the old sym remains singleDef
         src = sym->GetConstOpnd();

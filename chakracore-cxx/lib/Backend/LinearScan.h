@@ -147,7 +147,6 @@ private:
     uint                GetSpillCost(Lifetime * lifetime);
     bool                RemoveDeadStores(IR::Instr *instr);
 
-    bool                IsSymNonTempLocalVar(StackSym *sym);
     bool                NeedsWriteThrough(StackSym * sym);
     bool                NeedsWriteThroughForEH(StackSym * sym);
 

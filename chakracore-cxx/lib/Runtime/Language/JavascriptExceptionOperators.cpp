@@ -1015,11 +1015,6 @@ namespace Js
             );
 
             threadContext->ClearDisableImplicitFlags();
-
-            if (fillExceptionContext && considerPassingToDebugger)
-            {
-                DispatchExceptionToDebugger(exceptionObject, scriptContext);
-            }
         }
 
         if (exceptionObject->IsPendingExceptionObject())
@@ -1042,13 +1037,6 @@ namespace Js
     void JavascriptExceptionOperators::DoThrowCheckClone(JavascriptExceptionObject* exceptionObject, ScriptContext* scriptContext)
     {
         DoThrow(exceptionObject->CloneIfStaticExceptionObject(scriptContext), scriptContext);
-    }
-
-    // TODO (hanhossain): remove
-    void JavascriptExceptionOperators::DispatchExceptionToDebugger(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext)
-    {
-        Assert(exceptionObject != NULL);
-        Assert(scriptContext != NULL);
     }
 
     void JavascriptExceptionOperators::ThrowExceptionObject(Js::JavascriptExceptionObject * exceptionObject, ScriptContext* scriptContext, bool considerPassingToDebugger, void * returnAddress, bool resetStack)
