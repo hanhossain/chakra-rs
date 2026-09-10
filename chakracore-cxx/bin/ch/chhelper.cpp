@@ -103,22 +103,7 @@ int32_t RunScript(const rust::Str fileName, const rust::String &contents,
         while (!messageQueue->IsEmpty());
     }
 
-    if (false)
-    {
-    ErrorRunFinalize:
-    }
+ErrorRunFinalize:
 Error:
-    if (messageQueue != nullptr)
-    {
-        messageQueue->RemoveAll();
-        // clean up possible pinned exception object on exit to avoid potential leak
-        bool hasException;
-        if (ChakraRTInterface::JsHasException(&hasException) == JsNoError && hasException)
-        {
-            JsValueRef exception = JS_INVALID_REFERENCE;
-            ChakraRTInterface::JsGetAndClearException(&exception);
-        }
-    }
-
     return hr;
 }

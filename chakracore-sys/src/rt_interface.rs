@@ -91,6 +91,12 @@ pub mod ffi {
             buffer: *mut JsValueRef,
             parse_attributes: JsParseScriptAttributes,
         ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsHasException(hasException: *mut bool) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetAndClearException(exception: *mut JsValueRef) -> JsErrorCode;
     }
 
     #[derive(Debug)]

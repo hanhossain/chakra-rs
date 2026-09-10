@@ -4,7 +4,7 @@ use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
 use chakracore_sys::rt_interface::ffi::{
-    ChakraRTInterface, JsParseScriptAttributes, JsRuntimeAttributes,
+    ChakraRTInterface, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
 };
 use chakracore_sys::rt_interface::{
     JsContextRef, JsError, JsErrorExt, JsRuntimeHandle, JsValueRef,
@@ -187,7 +187,7 @@ fn run_script(
     full_path: &String,
     parser_state_cache: JsValueRef,
 ) -> Result<(), Error> {
-    let message_queue = MessageQueue::New();
+    let mut message_queue = MessageQueue::New();
     hresult_to_result(RunScript(
         filename,
         contents,
@@ -196,6 +196,19 @@ fn run_script(
         parser_state_cache,
         &message_queue,
     ))?;
+
+    message_queue.pin_mut().RemoveAll();
+
+    // clean up possible pinned exception object on exit to avoid potential leak
+    let mut has_exception = false;
+    unsafe {
+        if ChakraRTInterface::JsHasException(&raw mut has_exception) == JsErrorCode::JsNoError
+            && has_exception
+        {
+            let mut exception = JsValueRef::default();
+            ChakraRTInterface::JsGetAndClearException(&raw mut exception);
+        }
+    }
 
     // We only call RunScript() once, safe to Uninitialize()
     WScriptJsrt::Uninitialize();

@@ -29,6 +29,8 @@ pub mod ffi {
         type MessageQueue;
         #[Self = "MessageQueue"]
         fn New() -> UniquePtr<MessageQueue>;
+
+        fn RemoveAll(self: Pin<&mut MessageQueue>);
     }
 }
 
