@@ -62,10 +62,11 @@ static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext,
 }
 
 int32_t RunScript(const rust::Str fileName, const rust::String &contents,
-                  JsFinalizeCallback fileContentsFinalizeCallback, JsValueRef bufferValue,
-                  const std::filesystem::path &fullPath, JsValueRef parserStateCache)
+                  JsValueRef bufferValue,
+                  const rust::String &fullPath, JsValueRef parserStateCache)
 {
     auto span = chakra::Span::create("RunScript");
+    JsFinalizeCallback fileContentsFinalizeCallback = WScriptJsrt::FinalizeFree;
     int32_t hr = S_OK;
     MessageQueue *messageQueue = new MessageQueue();
     WScriptJsrt::AddMessageQueue(messageQueue);
@@ -98,7 +99,7 @@ int32_t RunScript(const rust::Str fileName, const rust::String &contents,
     else if (HostConfigFlags::flags.Module)
     {
         // TODO (hanhossain): convert to rust::String
-        runScript = WScriptJsrt::ModuleEntryPoint(contents, fullPath);
+        runScript = WScriptJsrt::ModuleEntryPoint(contents, static_cast<std::string>(fullPath));
     }
     else // bufferValue == nullptr && parserStateCache == nullptr
     {
@@ -241,7 +242,7 @@ int32_t CreateParserStateAndRunScript(const rust::Str fileName,
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, contents, WScriptJsrt::FinalizeFree, nullptr, static_cast<std::string>(fullPath), bufferVal));
+    IfFailGo(RunScript(fileName, contents, nullptr, fullPath, bufferVal));
 
     if (false)
     {
@@ -291,7 +292,7 @@ int32_t CreateAndRunSerializedScript(const rust::Str fileName,
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, contents, WScriptJsrt::FinalizeFree, bufferVal, static_cast<std::string>(fullPath), nullptr));
+    IfFailGo(RunScript(fileName, contents, bufferVal, fullPath, nullptr));
 
     if (false)
     {
@@ -307,24 +308,6 @@ Error:
     {
         ChakraRTInterface::JsDisposeRuntime(runtime);
     }
-
-    return hr;
-}
-
-int32_t ExecuteTest(const rust::String &filename, const rust::String &fileContents)
-{
-    auto span = chakra::Span::create("ExecuteTest");
-    int32_t hr = S_OK;
-
-    {
-        const rust::Str filenameView = filename;
-        auto fullPath = std::filesystem::path(static_cast<std::string_view>(filenameView)).lexically_normal();
-
-        IfFailGo(RunScript(filename, fileContents, WScriptJsrt::FinalizeFree, nullptr,
-                           fullPath, nullptr));
-    }
-Error:
-    fflush(NULL);
 
     return hr;
 }

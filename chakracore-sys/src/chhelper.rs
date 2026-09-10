@@ -9,8 +9,6 @@ pub mod ffi {
         include!("chhelper.h");
         include!("Util/Abstractions.h");
 
-        fn ExecuteTest(filename: &String, fileContents: &String) -> Result<i32>;
-
         fn CreateAndRunSerializedScript(
             fileName: &str,
             contents: &String,
@@ -27,12 +25,21 @@ pub mod ffi {
             jsrtAttributes: JsRuntimeAttributes,
         ) -> i32;
 
+        fn RunScript(
+            fileName: &str,
+            contents: &String,
+            bufferValue: JsValueRef,
+            fullPath: &String,
+            parserStateCache: JsValueRef,
+        ) -> i32;
+
         type Abstractions;
         #[Self = "Abstractions"]
         fn IsDebuggerPresent() -> bool;
 
         type JsRuntimeHandle = crate::rt_interface::JsRuntimeHandle;
         type JsRuntimeAttributes = crate::rt_interface::ffi::JsRuntimeAttributes;
+        type JsValueRef = crate::rt_interface::JsValueRef;
     }
 }
 

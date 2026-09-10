@@ -1,11 +1,13 @@
 use chakracore_sys::chhelper::ffi::{
-    CreateAndRunSerializedScript, CreateParserStateAndRunScript, ExecuteTest,
+    CreateAndRunSerializedScript, CreateParserStateAndRunScript, RunScript,
 };
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
 use chakracore_sys::rt_interface::ffi::{ChakraRTInterface, JsRuntimeAttributes};
-use chakracore_sys::rt_interface::{JsContextRef, JsError, JsErrorExt, JsRuntimeHandle};
+use chakracore_sys::rt_interface::{
+    JsContextRef, JsError, JsErrorExt, JsRuntimeHandle, JsValueRef,
+};
 use chakracore_sys::wscript_jsrt::ffi::WScriptJsrt;
 use cxx::Exception;
 
@@ -63,7 +65,13 @@ fn execute_test(config: &CoreConfig) -> Result<(), Error> {
             jsrt_attributes,
         )
     } else {
-        ExecuteTest(&config.filename, &file_contents)?
+        RunScript(
+            &config.filename,
+            &file_contents,
+            JsValueRef::default(),
+            &path,
+            JsValueRef::default(),
+        )
     };
 
     if res < 0 {

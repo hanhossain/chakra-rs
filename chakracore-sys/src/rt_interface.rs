@@ -2,18 +2,12 @@ use crate::rt_interface::ffi::JsErrorCode;
 use std::ffi::c_void;
 
 #[repr(transparent)]
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Default)]
 pub struct JsRuntimeHandle(*mut c_void);
 
 unsafe impl cxx::ExternType for JsRuntimeHandle {
     type Id = cxx::type_id!("JsRuntimeHandle");
     type Kind = cxx::kind::Trivial;
-}
-
-impl Default for JsRuntimeHandle {
-    fn default() -> Self {
-        Self(std::ptr::null_mut())
-    }
 }
 
 impl JsRuntimeHandle {
@@ -23,6 +17,7 @@ impl JsRuntimeHandle {
 }
 
 #[repr(transparent)]
+#[derive(Default)]
 pub struct JsContextRef(*mut c_void);
 
 unsafe impl cxx::ExternType for JsContextRef {
@@ -30,10 +25,13 @@ unsafe impl cxx::ExternType for JsContextRef {
     type Kind = cxx::kind::Trivial;
 }
 
-impl Default for JsContextRef {
-    fn default() -> Self {
-        Self(std::ptr::null_mut())
-    }
+#[repr(transparent)]
+#[derive(Default)]
+pub struct JsValueRef(*mut c_void);
+
+unsafe impl cxx::ExternType for JsValueRef {
+    type Id = cxx::type_id!("JsValueRef");
+    type Kind = cxx::kind::Trivial;
 }
 
 #[cxx::bridge]
