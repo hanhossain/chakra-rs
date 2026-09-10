@@ -70,6 +70,9 @@ pub mod ffi {
         fn JsSetCurrentContext(context: JsContextRef) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetCurrentContext(context: *mut JsContextRef) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateExternalArrayBuffer(
             content: &str,
             result: *mut JsValueRef,

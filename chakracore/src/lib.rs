@@ -1,6 +1,4 @@
-use chakracore_sys::chhelper::ffi::{
-    CreateAndRunSerializedScript, CreateParserStateAndRunScript, RunScript,
-};
+use chakracore_sys::chhelper::ffi::{CreateParserStateAndRunScript, RunScript};
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
@@ -42,8 +40,7 @@ fn execute_test(config: &CoreConfig) -> Result<(), Error> {
     }
     ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
     if !WScriptJsrt::Initialize() {
-        let fail = 0x80004005u32 as i32;
-        return Err(Error::NegativeHResult(fail));
+        return Err(Error::hresult_fail());
     }
 
     let path = std::fs::canonicalize(&config.filename)?;
@@ -102,17 +99,34 @@ fn create_and_run_serialized_script(
 
     // Bytecode buffer is created in one runtime and will be executed on a different runtime.
     let mut runtime = JsRuntimeHandle::default();
-    unsafe {
+    let old_context = unsafe {
         ChakraRTInterface::JsCreateRuntime(jsrt_attributes, &raw mut runtime).as_result()?;
+
+        let mut new_context = JsContextRef::default();
+        ChakraRTInterface::JsCreateContext(runtime, &raw mut new_context).as_result()?;
+
+        let mut old_context = JsContextRef::default();
+        ChakraRTInterface::JsGetCurrentContext(&raw mut old_context).as_result()?;
+        ChakraRTInterface::JsSetCurrentContext(new_context).as_result()?;
+        old_context
+    };
+
+    // initialize the WScript object on the new context
+    if !WScriptJsrt::Initialize() {
+        return Err(Error::hresult_fail());
     }
 
-    hresult_to_result(CreateAndRunSerializedScript(
+    hresult_to_result(RunScript(
         filename,
         contents,
-        full_path,
-        &mut runtime,
         buffer_val,
+        full_path,
+        JsValueRef::default(),
     ))?;
+
+    ChakraRTInterface::JsSetCurrentContext(old_context).as_result()?;
+    ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
+
     Ok(())
 }
 
@@ -145,4 +159,12 @@ pub enum Error {
     JsError(#[from] JsError),
     #[error(transparent)]
     Io(#[from] std::io::Error),
+}
+
+impl Error {
+    /// Returns an HRESULT E_FAIL
+    fn hresult_fail() -> Self {
+        let fail = 0x80004005u32 as i32;
+        Error::NegativeHResult(fail)
+    }
 }

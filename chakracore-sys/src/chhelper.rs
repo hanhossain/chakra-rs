@@ -9,14 +9,6 @@ pub mod ffi {
         include!("chhelper.h");
         include!("Util/Abstractions.h");
 
-        fn CreateAndRunSerializedScript(
-            fileName: &str,
-            contents: &String,
-            fullPath: &String,
-            runtime: &mut JsRuntimeHandle,
-            bufferVal: JsValueRef,
-        ) -> i32;
-
         fn CreateParserStateAndRunScript(
             fileName: &str,
             contents: &String,
