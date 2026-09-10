@@ -194,7 +194,7 @@ fn run_script(
         buffer_value,
         full_path,
         parser_state_cache,
-        message_queue,
+        &message_queue,
     ))?;
 
     // We only call RunScript() once, safe to Uninitialize()

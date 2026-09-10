@@ -41,7 +41,8 @@ static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext,
 
 int32_t RunScript(const rust::Str fileName, const rust::String &contents,
                   JsValueRef bufferValue,
-                  const rust::String &fullPath, JsValueRef parserStateCache, std::unique_ptr<MessageQueue> messageQueue)
+                  const rust::String &fullPath, JsValueRef parserStateCache,
+                  const std::unique_ptr<MessageQueue> &messageQueue)
 {
     auto span = chakra::Span::create("RunScript");
     JsFinalizeCallback fileContentsFinalizeCallback = WScriptJsrt::FinalizeFree;

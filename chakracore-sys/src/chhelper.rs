@@ -15,7 +15,7 @@ pub mod ffi {
             bufferValue: JsValueRef,
             fullPath: &String,
             parserStateCache: JsValueRef,
-            messageQueue: UniquePtr<MessageQueue>,
+            messageQueue: &UniquePtr<MessageQueue>,
         ) -> i32;
 
         type Abstractions;
