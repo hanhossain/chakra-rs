@@ -1,4 +1,4 @@
-use chakracore_sys::chhelper::ffi::ExecuteTest;
+use chakracore_sys::chhelper::ffi::{CreateAndRunSerializedScript, ExecuteTest};
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
@@ -40,7 +40,20 @@ fn execute_test(filename: &String, serialized: bool) -> Result<(), Error> {
         return Err(Error::NegativeHResult(fail));
     }
 
-    let res = ExecuteTest(&mut runtime, filename, &file_contents, serialized)?;
+    let path = std::fs::canonicalize(filename)?;
+    let path = path.to_str().unwrap().to_owned();
+    let mut ch_runtime = runtime;
+    let res = if serialized {
+        CreateAndRunSerializedScript(
+            filename,
+            &file_contents,
+            &path,
+            &mut ch_runtime,
+            JsRuntimeAttributes::JsRuntimeAttributeNone,
+        )
+    } else {
+        ExecuteTest(&mut runtime, filename, &file_contents)?
+    };
 
     if res < 0 {
         tracing::error!(hresult = res, "hresult was negative. exiting.");
@@ -69,4 +82,6 @@ pub enum Error {
     Exception(#[from] Exception),
     #[error(transparent)]
     JsError(#[from] JsError),
+    #[error(transparent)]
+    Io(#[from] std::io::Error),
 }

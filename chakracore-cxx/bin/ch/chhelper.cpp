@@ -262,8 +262,8 @@ Error:
 }
 
 int32_t CreateAndRunSerializedScript(const rust::Str fileName,
-                                     const rust::String &contents, JsFinalizeCallback fileContentsFinalizeCallback,
-                                     const std::filesystem::path &fullPath, JsRuntimeHandle &chRuntime,
+                                     const rust::String &contents,
+                                     const rust::String &fullPath, JsRuntimeHandle &chRuntime,
                                      const JsRuntimeAttributes jsrtAttributes)
 {
     auto span = chakra::Span::create("CreateAndRunSerializedScript");
@@ -291,7 +291,7 @@ int32_t CreateAndRunSerializedScript(const rust::Str fileName,
     }
 
     // This is our last call to use fileContents, so pass in the finalizeCallback
-    IfFailGo(RunScript(fileName, contents, fileContentsFinalizeCallback, bufferVal, fullPath, nullptr));
+    IfFailGo(RunScript(fileName, contents, WScriptJsrt::FinalizeFree, bufferVal, static_cast<std::string>(fullPath), nullptr));
 
     if (false)
     {
@@ -311,7 +311,7 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTest(JsRuntimeHandle &runtime, const rust::String &filename, const rust::String &fileContents, bool serialized)
+int32_t ExecuteTest(JsRuntimeHandle &runtime, const rust::String &filename, const rust::String &fileContents)
 {
     auto span = chakra::Span::create("ExecuteTest");
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
@@ -324,12 +324,7 @@ int32_t ExecuteTest(JsRuntimeHandle &runtime, const rust::String &filename, cons
         const rust::Str filenameView = filename;
         auto fullPath = std::filesystem::path(static_cast<std::string_view>(filenameView)).lexically_normal();
 
-        if (serialized)
-        {
-            CreateAndRunSerializedScript(filename, fileContents, WScriptJsrt::FinalizeFree,
-                                         fullPath, chRuntime, jsrtAttributes);
-        }
-        else if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
+        if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
         {
             CreateParserStateAndRunScript(filename, fileContents, WScriptJsrt::FinalizeFree,
                                           fullPath, chRuntime, jsrtAttributes);

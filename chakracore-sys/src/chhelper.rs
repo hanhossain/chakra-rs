@@ -13,14 +13,22 @@ pub mod ffi {
             runtime: &mut JsRuntimeHandle,
             filename: &String,
             fileContents: &String,
-            serialized: bool,
         ) -> Result<i32>;
+
+        fn CreateAndRunSerializedScript(
+            fileName: &str,
+            contents: &String,
+            fullPath: &String,
+            chRuntime: &mut JsRuntimeHandle,
+            jsrtAttributes: JsRuntimeAttributes,
+        ) -> i32;
 
         type Abstractions;
         #[Self = "Abstractions"]
         fn IsDebuggerPresent() -> bool;
 
         type JsRuntimeHandle = crate::rt_interface::JsRuntimeHandle;
+        type JsRuntimeAttributes = crate::rt_interface::ffi::JsRuntimeAttributes;
     }
 }
 
