@@ -1264,6 +1264,7 @@ fn bug_os17530048_js(#[case] variant: Variant) {
             "-parserstatecache",
             "-useparserstatecache",
         ],
+        use_parser_state_cache: true,
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1282,6 +1283,7 @@ fn skipping_nested_deferred_incorrect_function_id_js(#[case] variant: Variant) {
             "-parserstatecache",
             "-useparserstatecache",
         ],
+        use_parser_state_cache: true,
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1367,6 +1369,7 @@ fn deferred_stub_bugs_js(#[case] variant: Variant) {
             "-parserstatecache",
             "-useparserstatecache",
         ],
+        use_parser_state_cache: true,
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1413,6 +1416,7 @@ fn function_id_destructured_reparse_js(#[case] variant: Variant) {
             "-parserstatecache",
             "-force:deferparse",
         ],
+        use_parser_state_cache: true,
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

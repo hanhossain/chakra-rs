@@ -1,4 +1,6 @@
-use chakracore_sys::chhelper::ffi::{CreateAndRunSerializedScript, ExecuteTest};
+use chakracore_sys::chhelper::ffi::{
+    CreateAndRunSerializedScript, CreateParserStateAndRunScript, ExecuteTest,
+};
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
@@ -14,13 +16,13 @@ pub fn run(config: CoreConfig) -> Result<(), Error> {
     // handle command line flags
     ChakraRTInterface::InitializeTestHooks(&config.args);
 
-    execute_test(&config.filename, config.serialized)?;
+    execute_test(&config)?;
     Ok(())
 }
 
-#[tracing::instrument(skip(filename))]
-fn execute_test(filename: &String, serialized: bool) -> Result<(), Error> {
-    let file_contents = Helpers::LoadScriptFromFile(filename)?;
+#[tracing::instrument(skip(config))]
+fn execute_test(config: &CoreConfig) -> Result<(), Error> {
+    let file_contents = Helpers::LoadScriptFromFile(&config.filename)?;
     let mut runtime = JsRuntimeHandle::default();
     unsafe {
         ChakraRTInterface::JsCreateRuntime(
@@ -40,19 +42,28 @@ fn execute_test(filename: &String, serialized: bool) -> Result<(), Error> {
         return Err(Error::NegativeHResult(fail));
     }
 
-    let path = std::fs::canonicalize(filename)?;
+    let path = std::fs::canonicalize(&config.filename)?;
     let path = path.to_str().unwrap().to_owned();
     let mut ch_runtime = runtime;
-    let res = if serialized {
+    let jsrt_attributes = JsRuntimeAttributes::JsRuntimeAttributeNone;
+    let res = if config.serialized {
         CreateAndRunSerializedScript(
-            filename,
+            &config.filename,
             &file_contents,
             &path,
             &mut ch_runtime,
-            JsRuntimeAttributes::JsRuntimeAttributeNone,
+            jsrt_attributes,
+        )
+    } else if config.use_parser_state_cache {
+        CreateParserStateAndRunScript(
+            &config.filename,
+            &file_contents,
+            &path,
+            &mut ch_runtime,
+            jsrt_attributes,
         )
     } else {
-        ExecuteTest(&mut runtime, filename, &file_contents)?
+        ExecuteTest(&config.filename, &file_contents)?
     };
 
     if res < 0 {

@@ -754,6 +754,7 @@ fn verify_parser_state_js(#[case] variant: Variant) {
             "-Force:DeferParse",
             "-Trace:CreateParserState",
         ],
+        use_parser_state_cache: true,
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -775,6 +776,7 @@ fn verify_skip_nested_deferred_js(#[case] variant: Variant) {
             "-Force:DeferParse",
             "-Trace:SkipNestedDeferred",
         ],
+        use_parser_state_cache: true,
         tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -796,6 +798,7 @@ fn bug_os17542375_js(#[case] variant: Variant) {
             "-Force:DeferParse",
             "-pageheap:2",
         ],
+        use_parser_state_cache: true,
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -818,6 +821,7 @@ fn bug_os16855035_js(#[case] variant: Variant) {
             "-Force:Redeferral",
             "-CollectGarbage",
         ],
+        use_parser_state_cache: true,
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };

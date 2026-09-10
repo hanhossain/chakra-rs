@@ -9,13 +9,17 @@ pub mod ffi {
         include!("chhelper.h");
         include!("Util/Abstractions.h");
 
-        fn ExecuteTest(
-            runtime: &mut JsRuntimeHandle,
-            filename: &String,
-            fileContents: &String,
-        ) -> Result<i32>;
+        fn ExecuteTest(filename: &String, fileContents: &String) -> Result<i32>;
 
         fn CreateAndRunSerializedScript(
+            fileName: &str,
+            contents: &String,
+            fullPath: &String,
+            chRuntime: &mut JsRuntimeHandle,
+            jsrtAttributes: JsRuntimeAttributes,
+        ) -> i32;
+
+        fn CreateParserStateAndRunScript(
             fileName: &str,
             contents: &String,
             fullPath: &String,

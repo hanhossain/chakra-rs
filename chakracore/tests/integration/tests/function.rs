@@ -691,6 +691,7 @@ fn to_string_all_js_defer_parse_parser_state_cache(#[case] variant: Variant) {
             "-UseParserStateCache",
             "-ParserStateCache",
         ],
+        use_parser_state_cache: true,
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1272,6 +1273,7 @@ fn bug_os17698041_js(#[case] variant: Variant) {
             "-parserstatecache",
             "-useparserstatecache",
         ],
+        use_parser_state_cache: true,
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
