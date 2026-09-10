@@ -32,20 +32,6 @@ static_assert(sizeof(ssize_t) == sizeof(long));
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-// On success the param byteCodeBuffer will be allocated in the function.
-int32_t GetSerializedBuffer(const rust::String &fileContents, JsValueRef *byteCodeBuffer)
-{
-    int32_t hr = S_OK;
-
-    JsValueRef scriptSource;
-    // We don't want this to free fileContents when it completes, so the finalizeCallback is nullptr
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(fileContents, nullptr, &scriptSource));
-    IfJsErrorFailLog(ChakraRTInterface::JsSerialize(scriptSource, byteCodeBuffer, JsParseScriptAttributeNone));
-
-Error:
-    return hr;
-}
-
 static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext, JsValueRef *scriptBuffer,
                                                   JsParseScriptAttributes *parseAttributes)
 {

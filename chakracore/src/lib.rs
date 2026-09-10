@@ -1,10 +1,12 @@
 use chakracore_sys::chhelper::ffi::{
-    CreateAndRunSerializedScript, CreateParserStateAndRunScript, GetSerializedBuffer, RunScript,
+    CreateAndRunSerializedScript, CreateParserStateAndRunScript, RunScript,
 };
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
-use chakracore_sys::rt_interface::ffi::{ChakraRTInterface, JsRuntimeAttributes};
+use chakracore_sys::rt_interface::ffi::{
+    ChakraRTInterface, JsParseScriptAttributes, JsRuntimeAttributes,
+};
 use chakracore_sys::rt_interface::{
     JsContextRef, JsError, JsErrorExt, JsRuntimeHandle, JsValueRef,
 };
@@ -48,44 +50,48 @@ fn execute_test(config: &CoreConfig) -> Result<(), Error> {
     let path = path.to_str().unwrap().to_owned();
     let mut ch_runtime = runtime;
     let jsrt_attributes = JsRuntimeAttributes::JsRuntimeAttributeNone;
-    let res = if config.serialized {
+    if config.serialized {
         create_and_run_serialized_script(
             &config.filename,
             &file_contents,
             &path,
             &mut ch_runtime,
             jsrt_attributes,
-        )
+        )?;
     } else if config.use_parser_state_cache {
-        CreateParserStateAndRunScript(
+        hresult_to_result(CreateParserStateAndRunScript(
             &config.filename,
             &file_contents,
             &path,
             &mut ch_runtime,
             jsrt_attributes,
-        )
+        ))?;
     } else {
-        RunScript(
+        hresult_to_result(RunScript(
             &config.filename,
             &file_contents,
             JsValueRef::default(),
             &path,
             JsValueRef::default(),
-        )
+        ))?;
     };
-
-    if res < 0 {
-        tracing::error!(hresult = res, "hresult was negative. exiting.");
-        return Err(Error::NegativeHResult(res));
-    }
-    if res > 0 {
-        return Err(Error::ExitCode(res as u8));
-    }
 
     ChakraRTInterface::JsSetCurrentContext(JsContextRef::default()).as_result()?;
 
     if !runtime.is_invalid() {
         ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
+    }
+
+    Ok(())
+}
+
+#[tracing::instrument(err)]
+fn hresult_to_result(res: i32) -> Result<(), Error> {
+    if res < 0 {
+        return Err(Error::NegativeHResult(res));
+    }
+    if res > 0 {
+        return Err(Error::ExitCode(res as u8));
     }
 
     Ok(())
@@ -98,22 +104,33 @@ fn create_and_run_serialized_script(
     full_path: &String,
     ch_runtime: &mut JsRuntimeHandle,
     jsrt_attributes: JsRuntimeAttributes,
-) -> i32 {
-    let mut buffer_val = JsValueRef::default();
-    unsafe {
-        let res = GetSerializedBuffer(contents, &raw mut buffer_val);
-        if res < 0 {
-            return res;
-        }
-    }
-    CreateAndRunSerializedScript(
+) -> Result<(), Error> {
+    let buffer_val = get_serialized_buffer(contents)?;
+    hresult_to_result(CreateAndRunSerializedScript(
         filename,
         contents,
         full_path,
         ch_runtime,
         jsrt_attributes,
         buffer_val,
-    )
+    ))
+}
+
+#[tracing::instrument(skip(file_contents), err)]
+fn get_serialized_buffer(file_contents: &String) -> Result<JsValueRef, JsError> {
+    let mut script_source = JsValueRef::default();
+    unsafe {
+        ChakraRTInterface::JsCreateExternalArrayBuffer(file_contents, &raw mut script_source)
+            .as_result()?;
+        let mut byte_code_buffer = JsValueRef::default();
+        ChakraRTInterface::JsSerialize(
+            script_source,
+            &raw mut byte_code_buffer,
+            JsParseScriptAttributes::JsParseScriptAttributeNone,
+        )
+        .as_result()?;
+        Ok(byte_code_buffer)
+    }
 }
 
 #[derive(thiserror::Error, Debug)]

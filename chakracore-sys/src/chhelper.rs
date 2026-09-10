@@ -34,11 +34,6 @@ pub mod ffi {
             parserStateCache: JsValueRef,
         ) -> i32;
 
-        unsafe fn GetSerializedBuffer(
-            fileContents: &String,
-            byteCodeBuffer: *mut JsValueRef,
-        ) -> i32;
-
         type Abstractions;
         #[Self = "Abstractions"]
         fn IsDebuggerPresent() -> bool;

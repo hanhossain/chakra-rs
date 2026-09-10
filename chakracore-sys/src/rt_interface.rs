@@ -46,8 +46,10 @@ pub mod ffi {
 
         type JsErrorCode;
         type JsRuntimeAttributes;
+        type JsParseScriptAttributes;
         type JsRuntimeHandle = super::JsRuntimeHandle;
         type JsContextRef = super::JsContextRef;
+        type JsValueRef = super::JsValueRef;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateRuntime(
@@ -66,6 +68,19 @@ pub mod ffi {
 
         #[Self = "ChakraRTInterface"]
         fn JsSetCurrentContext(context: JsContextRef) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsCreateExternalArrayBuffer(
+            content: &str,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsSerialize(
+            script: JsValueRef,
+            buffer: *mut JsValueRef,
+            parseAttributes: JsParseScriptAttributes,
+        ) -> JsErrorCode;
     }
 
     #[derive(Debug)]
@@ -223,6 +238,19 @@ pub mod ffi {
         JsRuntimeAttributeDisableExecutablePageAllocation = 0x00000100,
         /// Runtime will generate bytecode buffer by treating current file as library file.
         JsRuntimeAttributeSerializeLibraryByteCode = 0x8000000,
+    }
+
+    #[repr(i32)]
+    enum JsParseScriptAttributes {
+        /// Default attribute
+        JsParseScriptAttributeNone = 0x0,
+        /// Specified script is internal and non-user code. Hidden from debugger
+        JsParseScriptAttributeLibraryCode = 0x1,
+        /// ChakraCore assumes ExternalArrayBuffer is Utf8 by default.
+        /// This one needs to be set for Utf16
+        JsParseScriptAttributeArrayBufferIsUtf16Encoded = 0x2,
+        /// Script should be parsed in strict mode
+        JsParseScriptAttributeStrictMode = 0x4,
     }
 }
 
