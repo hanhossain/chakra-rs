@@ -51,13 +51,7 @@ fn execute_test(config: &CoreConfig) -> Result<(), Error> {
     let mut ch_runtime = runtime;
     let jsrt_attributes = JsRuntimeAttributes::JsRuntimeAttributeNone;
     if config.serialized {
-        create_and_run_serialized_script(
-            &config.filename,
-            &file_contents,
-            &path,
-            &mut ch_runtime,
-            jsrt_attributes,
-        )?;
+        create_and_run_serialized_script(&config.filename, &file_contents, &path, jsrt_attributes)?;
     } else if config.use_parser_state_cache {
         hresult_to_result(CreateParserStateAndRunScript(
             &config.filename,
@@ -97,23 +91,29 @@ fn hresult_to_result(res: i32) -> Result<(), Error> {
     Ok(())
 }
 
-#[tracing::instrument(skip(contents, ch_runtime))]
+#[tracing::instrument(skip(contents))]
 fn create_and_run_serialized_script(
     filename: &str,
     contents: &String,
     full_path: &String,
-    ch_runtime: &mut JsRuntimeHandle,
     jsrt_attributes: JsRuntimeAttributes,
 ) -> Result<(), Error> {
     let buffer_val = get_serialized_buffer(contents)?;
+
+    // Bytecode buffer is created in one runtime and will be executed on a different runtime.
+    let mut runtime = JsRuntimeHandle::default();
+    unsafe {
+        ChakraRTInterface::JsCreateRuntime(jsrt_attributes, &raw mut runtime).as_result()?;
+    }
+
     hresult_to_result(CreateAndRunSerializedScript(
         filename,
         contents,
         full_path,
-        ch_runtime,
-        jsrt_attributes,
+        &mut runtime,
         buffer_val,
-    ))
+    ))?;
+    Ok(())
 }
 
 #[tracing::instrument(skip(file_contents), err)]

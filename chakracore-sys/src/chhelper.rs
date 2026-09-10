@@ -13,8 +13,7 @@ pub mod ffi {
             fileName: &str,
             contents: &String,
             fullPath: &String,
-            chRuntime: &mut JsRuntimeHandle,
-            jsrtAttributes: JsRuntimeAttributes,
+            runtime: &mut JsRuntimeHandle,
             bufferVal: JsValueRef,
         ) -> i32;
 

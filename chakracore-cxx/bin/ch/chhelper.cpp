@@ -250,18 +250,12 @@ Error:
 
 int32_t CreateAndRunSerializedScript(const rust::Str fileName,
                                      const rust::String &contents,
-                                     const rust::String &fullPath, JsRuntimeHandle &chRuntime,
-                                     const JsRuntimeAttributes jsrtAttributes, JsValueRef bufferVal)
+                                     const rust::String &fullPath, JsRuntimeHandle &runtime,
+                                     JsValueRef bufferVal)
 {
     auto span = chakra::Span::create("CreateAndRunSerializedScript");
     int32_t hr = S_OK;
-    JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
     JsContextRef context = JS_INVALID_REFERENCE, current = JS_INVALID_REFERENCE;
-
-    // Bytecode buffer is created in one runtime and will be executed on different runtime.
-
-    IfFailedGoLabel(CreateRuntime(&runtime, jsrtAttributes), ErrorRunFinalize);
-    chRuntime = runtime;
 
     IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateContext(runtime, &context), ErrorRunFinalize);
     IfJsErrorFailLogLabel(ChakraRTInterface::JsGetCurrentContext(&current), ErrorRunFinalize);
