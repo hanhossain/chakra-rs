@@ -9,5 +9,9 @@ pub mod ffi {
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
+
+        type MessageQueue = crate::chhelper::ffi::MessageQueue;
+        #[Self = "WScriptJsrt"]
+        unsafe fn AddMessageQueue(messageQueue: *mut MessageQueue);
     }
 }

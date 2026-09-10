@@ -188,6 +188,9 @@ fn run_script(
     parser_state_cache: JsValueRef,
 ) -> Result<(), Error> {
     let mut message_queue = MessageQueue::New();
+    unsafe {
+        WScriptJsrt::AddMessageQueue(message_queue.as_mut_ptr());
+    }
     hresult_to_result(RunScript(
         filename,
         contents,

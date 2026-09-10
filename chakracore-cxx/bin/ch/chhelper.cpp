@@ -47,7 +47,6 @@ int32_t RunScript(const rust::Str fileName, const rust::String &contents,
     auto span = chakra::Span::create("RunScript");
     JsFinalizeCallback fileContentsFinalizeCallback = WScriptJsrt::FinalizeFree;
     int32_t hr = S_OK;
-    WScriptJsrt::AddMessageQueue(messageQueue.get());
 
     IfJsErrorFailLogLabel(
         ChakraRTInterface::JsSetPromiseContinuationCallback(WScriptJsrt::PromiseContinuationCallback, messageQueue.get()),
