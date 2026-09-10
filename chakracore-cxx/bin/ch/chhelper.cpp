@@ -17,12 +17,6 @@
 #include "MessageQueue.h"
 #include "chakra/Logger.h"
 
-#ifdef __linux__
-#include <sys/sysinfo.h>
-#elif defined(__APPLE__)
-#include <sys/sysctl.h>
-#endif
-
 unsigned int MessageBase::s_messageCount = 0;
 
 static_assert(sizeof(ssize_t) == sizeof(long));
