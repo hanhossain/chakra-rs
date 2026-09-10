@@ -33,13 +33,13 @@ static_assert(sizeof(ssize_t) == sizeof(long));
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
 // On success the param byteCodeBuffer will be allocated in the function.
-int32_t GetSerializedBuffer(const rust::String &fileContents, JsFinalizeCallback fileContentFinalizeCallback,
-                            JsValueRef *byteCodeBuffer)
+int32_t GetSerializedBuffer(const rust::String &fileContents, JsValueRef *byteCodeBuffer)
 {
     int32_t hr = S_OK;
 
     JsValueRef scriptSource;
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(fileContents, fileContentFinalizeCallback, &scriptSource));
+    // We don't want this to free fileContents when it completes, so the finalizeCallback is nullptr
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(fileContents, nullptr, &scriptSource));
     IfJsErrorFailLog(ChakraRTInterface::JsSerialize(scriptSource, byteCodeBuffer, JsParseScriptAttributeNone));
 
 Error:
@@ -265,16 +265,12 @@ Error:
 int32_t CreateAndRunSerializedScript(const rust::Str fileName,
                                      const rust::String &contents,
                                      const rust::String &fullPath, JsRuntimeHandle &chRuntime,
-                                     const JsRuntimeAttributes jsrtAttributes)
+                                     const JsRuntimeAttributes jsrtAttributes, JsValueRef bufferVal)
 {
     auto span = chakra::Span::create("CreateAndRunSerializedScript");
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
     JsContextRef context = JS_INVALID_REFERENCE, current = JS_INVALID_REFERENCE;
-    JsValueRef bufferVal;
-
-    // We don't want this to free fileContents when it completes, so the finalizeCallback is nullptr
-    IfFailedGoLabel(GetSerializedBuffer(contents, nullptr, &bufferVal), ErrorRunFinalize);
 
     // Bytecode buffer is created in one runtime and will be executed on different runtime.
 

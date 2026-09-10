@@ -190,6 +190,7 @@ pub mod ffi {
         JsTransferableAlreadyDetached,
     }
 
+    #[derive(Debug)]
     enum JsRuntimeAttributes {
         /// No special attributes.
         JsRuntimeAttributeNone = 0x00000000,

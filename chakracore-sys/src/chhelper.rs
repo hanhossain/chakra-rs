@@ -15,6 +15,7 @@ pub mod ffi {
             fullPath: &String,
             chRuntime: &mut JsRuntimeHandle,
             jsrtAttributes: JsRuntimeAttributes,
+            bufferVal: JsValueRef,
         ) -> i32;
 
         fn CreateParserStateAndRunScript(
@@ -31,6 +32,11 @@ pub mod ffi {
             bufferValue: JsValueRef,
             fullPath: &String,
             parserStateCache: JsValueRef,
+        ) -> i32;
+
+        unsafe fn GetSerializedBuffer(
+            fileContents: &String,
+            byteCodeBuffer: *mut JsValueRef,
         ) -> i32;
 
         type Abstractions;

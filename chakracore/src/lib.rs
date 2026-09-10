@@ -1,5 +1,5 @@
 use chakracore_sys::chhelper::ffi::{
-    CreateAndRunSerializedScript, CreateParserStateAndRunScript, RunScript,
+    CreateAndRunSerializedScript, CreateParserStateAndRunScript, GetSerializedBuffer, RunScript,
 };
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
@@ -49,7 +49,7 @@ fn execute_test(config: &CoreConfig) -> Result<(), Error> {
     let mut ch_runtime = runtime;
     let jsrt_attributes = JsRuntimeAttributes::JsRuntimeAttributeNone;
     let res = if config.serialized {
-        CreateAndRunSerializedScript(
+        create_and_run_serialized_script(
             &config.filename,
             &file_contents,
             &path,
@@ -89,6 +89,31 @@ fn execute_test(config: &CoreConfig) -> Result<(), Error> {
     }
 
     Ok(())
+}
+
+#[tracing::instrument(skip(contents, ch_runtime))]
+fn create_and_run_serialized_script(
+    filename: &str,
+    contents: &String,
+    full_path: &String,
+    ch_runtime: &mut JsRuntimeHandle,
+    jsrt_attributes: JsRuntimeAttributes,
+) -> i32 {
+    let mut buffer_val = JsValueRef::default();
+    unsafe {
+        let res = GetSerializedBuffer(contents, &raw mut buffer_val);
+        if res < 0 {
+            return res;
+        }
+    }
+    CreateAndRunSerializedScript(
+        filename,
+        contents,
+        full_path,
+        ch_runtime,
+        jsrt_attributes,
+        buffer_val,
+    )
 }
 
 #[derive(thiserror::Error, Debug)]
