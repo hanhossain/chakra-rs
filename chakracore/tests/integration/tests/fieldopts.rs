@@ -424,7 +424,7 @@ fn fieldhoist_negzero_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "fieldhoist_negzero.js",
         baseline_path: Some("fieldhoist_negzero.baseline"),
-        compile_flags: vec!["-Serialized"],
+        serialized: true,
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

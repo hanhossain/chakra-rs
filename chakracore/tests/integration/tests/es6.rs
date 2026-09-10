@@ -2206,7 +2206,8 @@ fn generators_deferred_js_serialized(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "generators-deferred.js",
-        compile_flags: vec!["-ES6Generators", "-serialized"],
+        compile_flags: vec!["-ES6Generators"],
+        serialized: true,
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

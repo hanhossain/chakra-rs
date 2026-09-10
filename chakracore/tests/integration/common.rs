@@ -23,6 +23,7 @@ pub struct Test {
     pub compile_flags: Vec<&'static str>,
     pub host_args: Vec<&'static str>,
     pub tags: HashSet<&'static str>,
+    pub serialized: bool,
 }
 
 impl Test {
@@ -209,6 +210,7 @@ pub fn run_test_variant<const N: usize>(
     let core_config = CoreConfig {
         filename,
         args,
+        serialized: test.serialized,
         host_args: test.host_args.into_iter().map(String::from).collect(),
     };
     let (status, actual) = run_test(core_config, Some(test_dir.as_path()));

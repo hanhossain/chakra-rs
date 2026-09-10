@@ -124,7 +124,7 @@ fn array_init2_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "array_init2.js",
         baseline_path: Some("array_init2.baseline"),
-        compile_flags: vec!["-Serialized"],
+        serialized: true,
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

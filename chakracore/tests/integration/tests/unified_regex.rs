@@ -340,7 +340,8 @@ fn property_string_serialized_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "propertyString.js",
         baseline_path: Some("propertyString.baseline"),
-        compile_flags: vec!["-CollectGarbage", "-Serialized"],
+        compile_flags: vec!["-CollectGarbage"],
+        serialized: true,
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

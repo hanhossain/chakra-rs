@@ -311,7 +311,7 @@ Error:
     return hr;
 }
 
-int32_t ExecuteTest(JsRuntimeHandle &runtime, const rust::String &filename, const rust::String &fileContents)
+int32_t ExecuteTest(JsRuntimeHandle &runtime, const rust::String &filename, const rust::String &fileContents, bool serialized)
 {
     auto span = chakra::Span::create("ExecuteTest");
     JsRuntimeHandle chRuntime = JS_INVALID_RUNTIME_HANDLE;
@@ -324,7 +324,7 @@ int32_t ExecuteTest(JsRuntimeHandle &runtime, const rust::String &filename, cons
         const rust::Str filenameView = filename;
         auto fullPath = std::filesystem::path(static_cast<std::string_view>(filenameView)).lexically_normal();
 
-        if (HostConfigFlags::flags.SerializedIsEnabled)
+        if (serialized)
         {
             CreateAndRunSerializedScript(filename, fileContents, WScriptJsrt::FinalizeFree,
                                          fullPath, chRuntime, jsrtAttributes);

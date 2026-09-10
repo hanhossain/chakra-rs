@@ -406,7 +406,7 @@ fn define_property_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "defineProperty.js",
         baseline_path: Some("defineProperty.baseline"),
-        compile_flags: vec!["-Serialized"],
+        serialized: true,
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };
@@ -438,7 +438,7 @@ fn define_index_property_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "defineIndexProperty.js",
         baseline_path: Some("defineIndexProperty.baseline"),
-        compile_flags: vec!["-Serialized"],
+        serialized: true,
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

@@ -13,6 +13,7 @@ pub mod ffi {
             runtime: &mut JsRuntimeHandle,
             filename: &String,
             fileContents: &String,
+            serialized: bool,
         ) -> Result<i32>;
 
         type Abstractions;

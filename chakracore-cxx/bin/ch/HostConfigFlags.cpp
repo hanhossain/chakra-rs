@@ -49,7 +49,6 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 
 HostConfigFlags::HostConfigFlags() :
     UseParserStateCache(false), UseParserStateCacheIsEnabled(false),
-    Serialized(nullptr), SerializedIsEnabled(false),
     OOPJIT(false), OOPJITIsEnabled(false),
     IgnoreScriptErrorCode(false), IgnoreScriptErrorCodeIsEnabled(false),
     MuteHostErrorMsg(false), MuteHostErrorMsgIsEnabled(false),
@@ -67,12 +66,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
     {
         this->UseParserStateCacheIsEnabled = true;
         Parse<bool>(parser, &this->UseParserStateCache);
-        return true;
-    }
-    if (chakra_rs::str_helper::to_lowercase(u"Serialized") == flagStringsNormalized)
-    {
-        this->SerializedIsEnabled = true;
-        Parse<BSTR>(parser, &this->Serialized);
         return true;
     }
     if (chakra_rs::str_helper::to_lowercase(u"OOPJIT") == flagStringsNormalized)

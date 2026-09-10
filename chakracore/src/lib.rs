@@ -14,12 +14,12 @@ pub fn run(config: CoreConfig) -> Result<(), Error> {
     // handle command line flags
     ChakraRTInterface::InitializeTestHooks(&config.args);
 
-    execute_test(&config.filename)?;
+    execute_test(&config.filename, config.serialized)?;
     Ok(())
 }
 
 #[tracing::instrument(skip(filename))]
-fn execute_test(filename: &String) -> Result<(), Error> {
+fn execute_test(filename: &String, serialized: bool) -> Result<(), Error> {
     let file_contents = Helpers::LoadScriptFromFile(filename)?;
     let mut runtime = JsRuntimeHandle::default();
     unsafe {
@@ -40,7 +40,7 @@ fn execute_test(filename: &String) -> Result<(), Error> {
         return Err(Error::NegativeHResult(fail));
     }
 
-    let res = ExecuteTest(&mut runtime, filename, &file_contents)?;
+    let res = ExecuteTest(&mut runtime, filename, &file_contents, serialized)?;
 
     if res < 0 {
         tracing::error!(hresult = res, "hresult was negative. exiting.");
