@@ -9,15 +9,6 @@ pub mod ffi {
         include!("chhelper.h");
         include!("Util/Abstractions.h");
 
-        fn CreateParserStateAndRunScript(
-            fileName: &str,
-            contents: &String,
-            fullPath: &String,
-            chRuntime: &mut JsRuntimeHandle,
-            jsrtAttributes: JsRuntimeAttributes,
-            bufferVal: JsValueRef,
-        ) -> i32;
-
         fn RunScript(
             fileName: &str,
             contents: &String,

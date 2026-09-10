@@ -1,5 +1,5 @@
 use crate::{Error, hresult_to_result};
-use chakracore_sys::chhelper::ffi::{CreateParserStateAndRunScript, RunScript};
+use chakracore_sys::chhelper::ffi::RunScript;
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
@@ -39,7 +39,6 @@ pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
 
     let path = std::fs::canonicalize(&config.filename)?;
     let path = path.to_str().unwrap().to_owned();
-    let mut ch_runtime = runtime;
     let jsrt_attributes = JsRuntimeAttributes::JsRuntimeAttributeNone;
     if config.serialized {
         create_and_run_serialized_script(&config.filename, &file_contents, &path, jsrt_attributes)?;
@@ -48,7 +47,6 @@ pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
             &config.filename,
             &file_contents,
             &path,
-            &mut ch_runtime,
             jsrt_attributes,
         )?;
     } else {
@@ -70,23 +68,44 @@ pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
     Ok(())
 }
 
-#[tracing::instrument(skip(contents, ch_runtime))]
+#[tracing::instrument(skip(contents))]
 fn create_parser_state_and_run_script(
     filename: &str,
     contents: &String,
     full_path: &String,
-    ch_runtime: &mut JsRuntimeHandle,
     jsrt_attributes: JsRuntimeAttributes,
 ) -> Result<(), Error> {
     let buffer = get_parser_state_buffer(contents)?;
-    hresult_to_result(CreateParserStateAndRunScript(
+
+    // Bytecode buffer is created in one runtime and will be executed on different runtime.
+    let mut runtime = JsRuntimeHandle::default();
+    let old_context = unsafe {
+        ChakraRTInterface::JsCreateRuntime(jsrt_attributes, &raw mut runtime).as_result()?;
+
+        let mut new_context = JsContextRef::default();
+        ChakraRTInterface::JsCreateContext(runtime, &raw mut new_context).as_result()?;
+
+        let mut old_context = JsContextRef::default();
+        ChakraRTInterface::JsGetCurrentContext(&raw mut old_context).as_result()?;
+        ChakraRTInterface::JsSetCurrentContext(new_context).as_result()?;
+        old_context
+    };
+
+    // initialize the WScript object on the new context
+    if !WScriptJsrt::Initialize() {
+        return Err(Error::hresult_fail());
+    }
+
+    hresult_to_result(RunScript(
         filename,
         contents,
+        JsValueRef::default(),
         full_path,
-        ch_runtime,
-        jsrt_attributes,
         buffer,
     ))?;
+
+    ChakraRTInterface::JsSetCurrentContext(old_context).as_result()?;
+    ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
     Ok(())
 }
 
