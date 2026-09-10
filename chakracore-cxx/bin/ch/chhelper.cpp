@@ -320,12 +320,6 @@ int32_t ExecuteTest(JsRuntimeHandle &runtime, const rust::String &filename, cons
 
     chRuntime = runtime;
 
-    {
-        JsContextRef context = JS_INVALID_REFERENCE;
-        IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context));
-        IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
-    }
-
     if (!WScriptJsrt::Initialize())
     {
         IfFailGo(E_FAIL);
@@ -352,8 +346,6 @@ int32_t ExecuteTest(JsRuntimeHandle &runtime, const rust::String &filename, cons
         }
     }
 Error:
-    ChakraRTInterface::JsSetCurrentContext(nullptr);
-
     fflush(NULL);
 
     return hr;

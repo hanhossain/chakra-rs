@@ -1,7 +1,9 @@
 use crate::rt_interface::ffi::JsErrorCode;
+use std::ffi::c_void;
 
 #[repr(transparent)]
-pub struct JsRuntimeHandle(*mut std::ffi::c_void);
+#[derive(Copy, Clone)]
+pub struct JsRuntimeHandle(*mut c_void);
 
 unsafe impl cxx::ExternType for JsRuntimeHandle {
     type Id = cxx::type_id!("JsRuntimeHandle");
@@ -20,6 +22,20 @@ impl JsRuntimeHandle {
     }
 }
 
+#[repr(transparent)]
+pub struct JsContextRef(*mut c_void);
+
+unsafe impl cxx::ExternType for JsContextRef {
+    type Id = cxx::type_id!("JsContextRef");
+    type Kind = cxx::kind::Trivial;
+}
+
+impl Default for JsContextRef {
+    fn default() -> Self {
+        Self(std::ptr::null_mut())
+    }
+}
+
 #[cxx::bridge]
 pub mod ffi {
     unsafe extern "C++" {
@@ -33,6 +49,7 @@ pub mod ffi {
         type JsErrorCode;
         type JsRuntimeAttributes;
         type JsRuntimeHandle = super::JsRuntimeHandle;
+        type JsContextRef = super::JsContextRef;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateRuntime(
@@ -42,6 +59,15 @@ pub mod ffi {
 
         #[Self = "ChakraRTInterface"]
         fn JsDisposeRuntime(runtime: JsRuntimeHandle) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsCreateContext(
+            runtime: JsRuntimeHandle,
+            context: *mut JsContextRef,
+        ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        fn JsSetCurrentContext(context: JsContextRef) -> JsErrorCode;
     }
 
     #[derive(Debug)]

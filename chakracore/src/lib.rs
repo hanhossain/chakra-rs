@@ -3,7 +3,7 @@ use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
 use chakracore_sys::rt_interface::ffi::{ChakraRTInterface, JsRuntimeAttributes};
-use chakracore_sys::rt_interface::{JsError, JsErrorExt, JsRuntimeHandle};
+use chakracore_sys::rt_interface::{JsContextRef, JsError, JsErrorExt, JsRuntimeHandle};
 use cxx::Exception;
 
 #[tracing::instrument(skip(config))]
@@ -28,6 +28,12 @@ fn execute_test(filename: &String) -> Result<(), Error> {
         )
         .as_result()?;
     }
+
+    let mut context = JsContextRef::default();
+    unsafe {
+        ChakraRTInterface::JsCreateContext(runtime, &raw mut context).as_result()?;
+    }
+    ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
     let res = ExecuteTest(&mut runtime, filename, &file_contents)?;
 
     if res < 0 {
@@ -37,6 +43,8 @@ fn execute_test(filename: &String) -> Result<(), Error> {
     if res > 0 {
         return Err(Error::ExitCode(res as u8));
     }
+
+    ChakraRTInterface::JsSetCurrentContext(JsContextRef::default()).as_result()?;
 
     if !runtime.is_invalid() {
         ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
