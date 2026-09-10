@@ -185,33 +185,15 @@ Error:
     return hr;
 }
 
-int32_t GetParserStateBuffer(const rust::String &fileContents, JsFinalizeCallback fileContentsFinalizeCallback,
-                             JsValueRef *parserStateBuffer)
-{
-    int32_t hr = S_OK;
-    JsValueRef scriptSource = nullptr;
-
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(fileContents, fileContentsFinalizeCallback, &scriptSource));
-    IfJsErrorFailLog(
-        ChakraRTInterface::JsSerializeParserState(scriptSource, parserStateBuffer, JsParseScriptAttributeNone));
-
-Error:
-    return hr;
-}
-
 int32_t CreateParserStateAndRunScript(const rust::Str fileName,
                                       const rust::String &contents,
                                       const rust::String &fullPath, JsRuntimeHandle &chRuntime,
-                                      const JsRuntimeAttributes jsrtAttributes)
+                                      const JsRuntimeAttributes jsrtAttributes, JsValueRef bufferVal)
 {
     auto span = chakra::Span::create("CreateParserStateAndRunScript");
     int32_t hr = S_OK;
     JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
     JsContextRef context = JS_INVALID_REFERENCE, current = JS_INVALID_REFERENCE;
-    JsValueRef bufferVal;
-
-    // We don't want this to free fileContents when it completes, so the finalizeCallback is nullptr
-    IfFailedGoLabel(GetParserStateBuffer(contents, nullptr, &bufferVal), ErrorRunFinalize);
 
     // Bytecode buffer is created in one runtime and will be executed on different runtime.
     IfFailedGoLabel(CreateRuntime(&runtime, jsrtAttributes), ErrorRunFinalize);

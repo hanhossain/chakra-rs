@@ -44,13 +44,13 @@ pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
     if config.serialized {
         create_and_run_serialized_script(&config.filename, &file_contents, &path, jsrt_attributes)?;
     } else if config.use_parser_state_cache {
-        hresult_to_result(CreateParserStateAndRunScript(
+        create_parser_state_and_run_script(
             &config.filename,
             &file_contents,
             &path,
             &mut ch_runtime,
             jsrt_attributes,
-        ))?;
+        )?;
     } else {
         hresult_to_result(RunScript(
             &config.filename,
@@ -67,6 +67,26 @@ pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
         ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
     }
 
+    Ok(())
+}
+
+#[tracing::instrument(skip(contents, ch_runtime))]
+fn create_parser_state_and_run_script(
+    filename: &str,
+    contents: &String,
+    full_path: &String,
+    ch_runtime: &mut JsRuntimeHandle,
+    jsrt_attributes: JsRuntimeAttributes,
+) -> Result<(), Error> {
+    let buffer = get_parser_state_buffer(contents)?;
+    hresult_to_result(CreateParserStateAndRunScript(
+        filename,
+        contents,
+        full_path,
+        ch_runtime,
+        jsrt_attributes,
+        buffer,
+    ))?;
     Ok(())
 }
 
@@ -126,5 +146,22 @@ fn get_serialized_buffer(file_contents: &String) -> Result<JsValueRef, JsError> 
         )
         .as_result()?;
         Ok(byte_code_buffer)
+    }
+}
+
+fn get_parser_state_buffer(file_contents: &str) -> Result<JsValueRef, Error> {
+    let mut script_source = JsValueRef::default();
+    unsafe {
+        // We don't want this to free fileContents when it completes, so the finalizeCallback is nullptr
+        ChakraRTInterface::JsCreateExternalArrayBuffer(file_contents, &raw mut script_source)
+            .as_result()?;
+        let mut buffer = JsValueRef::default();
+        ChakraRTInterface::JsSerializeParserState(
+            script_source,
+            &raw mut buffer,
+            JsParseScriptAttributes::JsParseScriptAttributeNone,
+        )
+        .as_result()?;
+        Ok(buffer)
     }
 }

@@ -15,6 +15,7 @@ pub mod ffi {
             fullPath: &String,
             chRuntime: &mut JsRuntimeHandle,
             jsrtAttributes: JsRuntimeAttributes,
+            bufferVal: JsValueRef,
         ) -> i32;
 
         fn RunScript(
