@@ -15,6 +15,7 @@ pub mod ffi {
             bufferValue: JsValueRef,
             fullPath: &String,
             parserStateCache: JsValueRef,
+            messageQueue: UniquePtr<MessageQueue>,
         ) -> i32;
 
         type Abstractions;
@@ -24,6 +25,10 @@ pub mod ffi {
         type JsRuntimeHandle = crate::rt_interface::JsRuntimeHandle;
         type JsRuntimeAttributes = crate::rt_interface::ffi::JsRuntimeAttributes;
         type JsValueRef = crate::rt_interface::JsValueRef;
+
+        type MessageQueue;
+        #[Self = "MessageQueue"]
+        fn New() -> UniquePtr<MessageQueue>;
     }
 }
 

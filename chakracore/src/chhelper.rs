@@ -1,5 +1,5 @@
 use crate::{Error, hresult_to_result};
-use chakracore_sys::chhelper::ffi::RunScript;
+use chakracore_sys::chhelper::ffi::{MessageQueue, RunScript};
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
@@ -50,13 +50,13 @@ pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
             jsrt_attributes,
         )?;
     } else {
-        hresult_to_result(RunScript(
+        run_script(
             &config.filename,
             &file_contents,
             JsValueRef::default(),
             &path,
             JsValueRef::default(),
-        ))?;
+        )?;
     };
 
     ChakraRTInterface::JsSetCurrentContext(JsContextRef::default()).as_result()?;
@@ -96,13 +96,7 @@ fn create_parser_state_and_run_script(
         return Err(Error::hresult_fail());
     }
 
-    hresult_to_result(RunScript(
-        filename,
-        contents,
-        JsValueRef::default(),
-        full_path,
-        buffer,
-    ))?;
+    run_script(filename, contents, JsValueRef::default(), full_path, buffer)?;
 
     ChakraRTInterface::JsSetCurrentContext(old_context).as_result()?;
     ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
@@ -137,13 +131,13 @@ fn create_and_run_serialized_script(
         return Err(Error::hresult_fail());
     }
 
-    hresult_to_result(RunScript(
+    run_script(
         filename,
         contents,
         buffer_val,
         full_path,
         JsValueRef::default(),
-    ))?;
+    )?;
 
     ChakraRTInterface::JsSetCurrentContext(old_context).as_result()?;
     ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
@@ -183,4 +177,27 @@ fn get_parser_state_buffer(file_contents: &str) -> Result<JsValueRef, Error> {
         .as_result()?;
         Ok(buffer)
     }
+}
+
+#[tracing::instrument(skip_all)]
+fn run_script(
+    filename: &str,
+    contents: &String,
+    buffer_value: JsValueRef,
+    full_path: &String,
+    parser_state_cache: JsValueRef,
+) -> Result<(), Error> {
+    let message_queue = MessageQueue::New();
+    hresult_to_result(RunScript(
+        filename,
+        contents,
+        buffer_value,
+        full_path,
+        parser_state_cache,
+        message_queue,
+    ))?;
+
+    // We only call RunScript() once, safe to Uninitialize()
+    WScriptJsrt::Uninitialize();
+    Ok(())
 }

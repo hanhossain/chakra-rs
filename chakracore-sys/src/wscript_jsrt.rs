@@ -6,5 +6,8 @@ pub mod ffi {
 
         #[Self = "WScriptJsrt"]
         fn Initialize() -> bool;
+
+        #[Self = "WScriptJsrt"]
+        fn Uninitialize() -> bool;
     }
 }

@@ -41,16 +41,15 @@ static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext,
 
 int32_t RunScript(const rust::Str fileName, const rust::String &contents,
                   JsValueRef bufferValue,
-                  const rust::String &fullPath, JsValueRef parserStateCache)
+                  const rust::String &fullPath, JsValueRef parserStateCache, std::unique_ptr<MessageQueue> messageQueue)
 {
     auto span = chakra::Span::create("RunScript");
     JsFinalizeCallback fileContentsFinalizeCallback = WScriptJsrt::FinalizeFree;
     int32_t hr = S_OK;
-    MessageQueue *messageQueue = new MessageQueue();
-    WScriptJsrt::AddMessageQueue(messageQueue);
+    WScriptJsrt::AddMessageQueue(messageQueue.get());
 
     IfJsErrorFailLogLabel(
-        ChakraRTInterface::JsSetPromiseContinuationCallback(WScriptJsrt::PromiseContinuationCallback, messageQueue),
+        ChakraRTInterface::JsSetPromiseContinuationCallback(WScriptJsrt::PromiseContinuationCallback, messageQueue.get()),
         ErrorRunFinalize);
 
     JsErrorCode runScript;
@@ -118,11 +117,7 @@ Error:
             JsValueRef exception = JS_INVALID_REFERENCE;
             ChakraRTInterface::JsGetAndClearException(&exception);
         }
-        delete messageQueue;
     }
-
-    // We only call RunScript() once, safe to Uninitialize()
-    WScriptJsrt::Uninitialize();
 
     return hr;
 }
