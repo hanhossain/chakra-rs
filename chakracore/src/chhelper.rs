@@ -71,7 +71,7 @@ pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
 }
 
 #[tracing::instrument(skip(contents))]
-pub fn create_and_run_serialized_script(
+fn create_and_run_serialized_script(
     filename: &str,
     contents: &String,
     full_path: &String,
@@ -113,7 +113,7 @@ pub fn create_and_run_serialized_script(
 }
 
 #[tracing::instrument(skip(file_contents), err)]
-pub fn get_serialized_buffer(file_contents: &String) -> Result<JsValueRef, JsError> {
+fn get_serialized_buffer(file_contents: &String) -> Result<JsValueRef, JsError> {
     let mut script_source = JsValueRef::default();
     unsafe {
         ChakraRTInterface::JsCreateExternalArrayBuffer(file_contents, &raw mut script_source)
