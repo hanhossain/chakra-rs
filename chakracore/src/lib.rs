@@ -4,6 +4,7 @@ use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
 use chakracore_sys::rt_interface::ffi::{ChakraRTInterface, JsRuntimeAttributes};
 use chakracore_sys::rt_interface::{JsContextRef, JsError, JsErrorExt, JsRuntimeHandle};
+use chakracore_sys::wscript_jsrt::ffi::WScriptJsrt;
 use cxx::Exception;
 
 #[tracing::instrument(skip(config))]
@@ -34,6 +35,11 @@ fn execute_test(filename: &String) -> Result<(), Error> {
         ChakraRTInterface::JsCreateContext(runtime, &raw mut context).as_result()?;
     }
     ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
+    if !WScriptJsrt::Initialize() {
+        let fail = 0x80004005u32 as i32;
+        return Err(Error::NegativeHResult(fail));
+    }
+
     let res = ExecuteTest(&mut runtime, filename, &file_contents)?;
 
     if res < 0 {

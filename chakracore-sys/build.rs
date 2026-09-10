@@ -10,6 +10,7 @@ fn main() {
         "src/logger.rs",
         "src/rt_interface.rs",
         "src/str_helper.rs",
+        "src/wscript_jsrt.rs",
     ];
     let mut cxx_bridge = cxx_build::bridges(bridges);
 

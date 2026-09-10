@@ -320,11 +320,6 @@ int32_t ExecuteTest(JsRuntimeHandle &runtime, const rust::String &filename, cons
 
     chRuntime = runtime;
 
-    if (!WScriptJsrt::Initialize())
-    {
-        IfFailGo(E_FAIL);
-    }
-
     {
         const rust::Str filenameView = filename;
         auto fullPath = std::filesystem::path(static_cast<std::string_view>(filenameView)).lexically_normal();
