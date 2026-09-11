@@ -20,6 +20,8 @@ mod ffi {
         mute_host_error_msg: bool,
         /// Output traces for host callbacks
         trace_host_callback: bool,
+        /// load Test262 harness
+        test262: bool,
     }
 
     #[derive(Debug, Clone, Default, Serialize, Deserialize)]

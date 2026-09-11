@@ -1049,10 +1049,10 @@ bool WScriptJsrt::Initialize()
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_InitializeImportMetaCallback, (void*)WScriptJsrt::InitializeImportMetaCallback), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_ReportModuleCompletionCallback, (void*)WScriptJsrt::ReportModuleCompletionCallback), false);
 
-    // When the command-line argument `-Test262` is set,
+    // When the host config `Test262` is set,
     // WScript will have the extra support API below and $262 will be
     // added to global scope
-    if (HostConfigFlags::flags.Test262)
+    if (HostConfigFlags::GetConfig().host.test262)
     {
         IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Broadcast", BroadcastCallback));
         IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "ReceiveBroadcast", ReceiveBroadcastCallback));

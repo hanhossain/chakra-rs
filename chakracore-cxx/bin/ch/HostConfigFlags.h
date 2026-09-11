@@ -12,8 +12,6 @@
 class HostConfigFlags : public ICustomConfigFlags
 {
 public:
-    bool Test262; bool Test262IsEnabled;
-
     static HostConfigFlags flags;
     static rust::Vec<rust::String> vargsVal;
     static chakra_rs::ConfigContext configContext;

@@ -49,7 +49,6 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 }
 
 HostConfigFlags::HostConfigFlags() :
-    Test262(false), Test262IsEnabled(false),
     nDummy(0)
 {
 }
@@ -57,18 +56,11 @@ HostConfigFlags::HostConfigFlags() :
 bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
 {
     const auto flagStringsNormalized = chakra_rs::str_helper::to_lowercase(flagsString);
-    if (chakra_rs::str_helper::to_lowercase(u"Test262") == flagStringsNormalized)
-    {
-        this->Test262IsEnabled = true;
-        Parse<bool>(parser, &this->Test262);
-        return true;
-    }
     return false;
 }
 
 void HostConfigFlags::PrintUsageString()
 {
-    std::println("{:>20}          \t{}", "Test262", "\"load Test262 harness\"");
 }
 
 void HostConfigFlags::SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::ConfigContext &config)
