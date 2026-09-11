@@ -98,3 +98,19 @@ jobs:
       - run: cargo check
       - run: cmake --preset ${{ matrix.os-prefix}}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
       - run: cmake --build build-${{ matrix.os-prefix}}-${{ matrix.build-type }}
+  clippy:
+    name: clippy / ${{ matrix.os-image }}
+    runs-on: ${{ matrix.os-image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os-image:
+          - macos-latest
+          - ubuntu-latest
+    env:
+      CARGO_BUILD_WARNINGS: deny
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo clippy --all-targets
+      - run: cargo clippy --features optimized-tests --all-targets
