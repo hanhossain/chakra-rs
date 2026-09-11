@@ -1426,7 +1426,11 @@ fn bug_5585_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_5585.js",
-        compile_flags: vec!["-esdynamicimport", "-mutehosterrormsg"],
+        compile_flags: vec!["-esdynamicimport"],
+        host_config: HostConfig {
+            mute_host_error_msg: true,
+            ..Default::default()
+        },
         host_args: vec!["summary"],
         ..Default::default()
     };

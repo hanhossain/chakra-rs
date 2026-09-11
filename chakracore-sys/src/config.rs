@@ -16,6 +16,8 @@ mod ffi {
         module: bool,
         /// Don't return error code on script error
         ignore_script_error_code: bool,
+        /// Mute host error output, e.g. module load failures
+        mute_host_error_msg: bool,
     }
 
     #[derive(Debug, Clone, Default, Serialize, Deserialize)]

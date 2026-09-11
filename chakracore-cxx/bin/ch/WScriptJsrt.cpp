@@ -1581,7 +1581,7 @@ bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, Js
 
     }
 
-    if (HostConfigFlags::flags.MuteHostErrorMsgIsEnabled)
+    if (HostConfigFlags::GetConfig().host.mute_host_error_msg)
     {
         return false;
     }
@@ -1839,7 +1839,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
         catch (const rust::Error &e)
         {
             chakra::Logger::error(std::format("Caught exception: {}", e.what()));
-            if (!HostConfigFlags::flags.MuteHostErrorMsgIsEnabled)
+            if (!HostConfigFlags::GetConfig().host.mute_host_error_msg)
             {
                 auto actualModuleRecord = moduleRecordMap.find(fullPath_.value());
                 if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)

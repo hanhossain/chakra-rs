@@ -1,6 +1,5 @@
 use crate::common;
 use crate::common::Variant;
-#[cfg(not(feature = "optimized-tests"))]
 use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
@@ -177,7 +176,10 @@ fn labels_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Labels.js",
-        compile_flags: vec!["-MuteHostErrorMsg"],
+        host_config: HostConfig {
+            mute_host_error_msg: true,
+            ..Default::default()
+        },
         host_args: vec!["summary"],
         ..Default::default()
     };

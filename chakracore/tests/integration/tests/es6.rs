@@ -1,5 +1,7 @@
 use crate::common;
 use crate::common::Variant;
+#[cfg(feature = "optimized-tests")]
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 #[cfg(feature = "optimized-tests")]
@@ -3284,7 +3286,11 @@ fn await_futreserved_only_in_modules_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "await-futreserved-only-in-modules.js",
-        compile_flags: vec!["-MuteHostErrorMsg", "-ES6Module"],
+        compile_flags: vec!["-ES6Module"],
+        host_config: HostConfig {
+            mute_host_error_msg: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_dynapogo"]),
         ..Default::default()
     };
@@ -3768,7 +3774,10 @@ fn bug_issue_5994_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_issue_5994.js",
         baseline_path: Some("bug_issue_5994.baseline"),
-        compile_flags: vec!["-MuteHostErrorMsg"],
+        host_config: HostConfig {
+            mute_host_error_msg: true,
+            ..Default::default()
+        },
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
