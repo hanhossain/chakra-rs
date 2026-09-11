@@ -1,5 +1,7 @@
 use crate::common;
 use crate::common::Variant;
+#[cfg(not(feature = "optimized-tests"))]
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -754,7 +756,10 @@ fn verify_parser_state_js(#[case] variant: Variant) {
             "-Force:DeferParse",
             "-Trace:CreateParserState",
         ],
-        use_parser_state_cache: true,
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -776,7 +781,10 @@ fn verify_skip_nested_deferred_js(#[case] variant: Variant) {
             "-Force:DeferParse",
             "-Trace:SkipNestedDeferred",
         ],
-        use_parser_state_cache: true,
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -798,7 +806,10 @@ fn bug_os17542375_js(#[case] variant: Variant) {
             "-Force:DeferParse",
             "-pageheap:2",
         ],
-        use_parser_state_cache: true,
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -821,7 +832,10 @@ fn bug_os16855035_js(#[case] variant: Variant) {
             "-Force:Redeferral",
             "-CollectGarbage",
         ],
-        use_parser_state_cache: true,
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };

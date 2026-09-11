@@ -1,5 +1,7 @@
 use crate::common;
 use crate::common::Variant;
+#[cfg(feature = "optimized-tests")]
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -531,7 +533,10 @@ fn test05_arguments_js_serialized_strict_mode(#[case] variant: Variant) {
         source_path: "05.arguments.js",
         baseline_path: Some("05.arguments_sm.baseline"),
         compile_flags: vec!["-ForceStrictMode"],
-        serialized: true,
+        host_config: HostConfig {
+            serialized: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };
@@ -580,7 +585,10 @@ fn test05_arguments_sm_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "05.arguments_sm.js",
         baseline_path: Some("05.arguments_sm.baseline"),
-        serialized: true,
+        host_config: HostConfig {
+            serialized: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

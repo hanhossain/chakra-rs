@@ -23,9 +23,7 @@ pub struct Test {
     pub compile_flags: Vec<&'static str>,
     pub host_args: Vec<&'static str>,
     pub tags: HashSet<&'static str>,
-    pub serialized: bool,
-    pub use_parser_state_cache: bool,
-    pub module: bool,
+    pub host_config: HostConfig,
 }
 
 impl Test {
@@ -210,11 +208,7 @@ pub fn run_test_variant<const N: usize>(
     args.extend(variant_config.compile_flags.into_iter().map(String::from));
 
     let config_context = ConfigContext {
-        host: HostConfig {
-            serialized: test.serialized,
-            use_parser_state_cache: test.use_parser_state_cache,
-            module: test.module,
-        },
+        host: test.host_config.clone(),
         core: CoreConfig {
             filename,
             args,

@@ -1,5 +1,6 @@
 use crate::common;
 use crate::common::Variant;
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -457,7 +458,10 @@ fn passmodule_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "passmodule.js",
-        module: true,
+        host_config: HostConfig {
+            module: true,
+            ..Default::default()
+        },
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -521,7 +525,10 @@ fn top_level_await_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "top-level-await.js",
         compile_flags: vec!["-ESDynamicImport", "-ESTopLevelAwait"],
-        module: true,
+        host_config: HostConfig {
+            module: true,
+            ..Default::default()
+        },
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

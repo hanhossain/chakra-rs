@@ -2207,7 +2207,10 @@ fn generators_deferred_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "generators-deferred.js",
         compile_flags: vec!["-ES6Generators"],
-        serialized: true,
+        host_config: chakracore_sys::config::HostConfig {
+            serialized: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

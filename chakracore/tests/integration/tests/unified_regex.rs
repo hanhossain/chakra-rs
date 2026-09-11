@@ -1,5 +1,6 @@
 use crate::common;
 use crate::common::Variant;
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -341,7 +342,10 @@ fn property_string_serialized_js(#[case] variant: Variant) {
         source_path: "propertyString.js",
         baseline_path: Some("propertyString.baseline"),
         compile_flags: vec!["-CollectGarbage"],
-        serialized: true,
+        host_config: HostConfig {
+            serialized: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };
