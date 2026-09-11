@@ -291,7 +291,7 @@ fn invalcachedscope_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "invalcachedscope.js",
         baseline_path: Some("invalcachedscope.baseline"),
-        compile_flags: vec!["-Serialized"],
+        serialized: true,
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

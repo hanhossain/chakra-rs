@@ -24,6 +24,7 @@ int32_t ChakraRTInterface::ParseConfigFlags(const rust::Vec<rust::String> &vargs
     {
         chakra_rs::chhelper::print_usage();
         m_usageStringPrinted = true;
+        return hr;
     }
 
     return S_OK;

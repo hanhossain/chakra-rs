@@ -530,7 +530,8 @@ fn test05_arguments_js_serialized_strict_mode(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "05.arguments.js",
         baseline_path: Some("05.arguments_sm.baseline"),
-        compile_flags: vec!["-Serialized", "-ForceStrictMode"],
+        compile_flags: vec!["-ForceStrictMode"],
+        serialized: true,
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };
@@ -579,7 +580,7 @@ fn test05_arguments_sm_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "05.arguments_sm.js",
         baseline_path: Some("05.arguments_sm.baseline"),
-        compile_flags: vec!["-Serialized"],
+        serialized: true,
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

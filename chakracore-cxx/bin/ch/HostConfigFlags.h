@@ -6,27 +6,28 @@
 #pragma once
 
 #include <rust/cxx.h>
+#include <chakracore-sys/src/config.rs.h>
 
 #include "Core/ICustomConfigFlags.h"
 class HostConfigFlags : public ICustomConfigFlags
 {
 public:
     bool UseParserStateCache; bool UseParserStateCacheIsEnabled;
-    BSTR Serialized; bool SerializedIsEnabled;
     bool OOPJIT; bool OOPJITIsEnabled;
     bool IgnoreScriptErrorCode; bool IgnoreScriptErrorCodeIsEnabled;
     bool MuteHostErrorMsg; bool MuteHostErrorMsgIsEnabled;
     bool TraceHostCallback; bool TraceHostCallbackIsEnabled;
     bool Test262; bool Test262IsEnabled;
-    bool Module; bool ModuleIsEnabled;
 
     static HostConfigFlags flags;
     static rust::Vec<rust::String> vargsVal;
+    static chakra_rs::config::CoreConfig coreConfig;
 
     virtual bool ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser) override;
     virtual void PrintUsage() override;
     static void PrintUsageString();
-    static void SetHostArgs(const rust::Vec<rust::String> &hostArgs);
+    static void SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::config::CoreConfig &coreConfig);
+    static const chakra_rs::config::CoreConfig &GetCoreConfig();
 
 private:
     int nDummy;

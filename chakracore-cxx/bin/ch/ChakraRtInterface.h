@@ -23,6 +23,7 @@ public:
     static int32_t InitializeTestHooks(const rust::Vec<rust::String> &vargs);
 
     static JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, threadService, runtime); }
+    static JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, nullptr, runtime); }
     static JsErrorCode JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return chakracore::jsrt::JsCreateContext(runtime, newContext); }
     static JsErrorCode JsSetObjectBeforeCollectCallback(JsRef ref, void* callbackState, JsObjectBeforeCollectCallback objectBeforeCollectCallback) { return chakracore::jsrt::JsSetObjectBeforeCollectCallback(ref, callbackState, objectBeforeCollectCallback); }
     static JsErrorCode JsSetRuntimeDomWrapperTracingCallbacks(JsRuntimeHandle runtime, JsRef wrapperTracingState, JsDOMWrapperTracingCallback wrapperTracingCallback, JsDOMWrapperTracingDoneCallback wrapperTracingDoneCallback, JsDOMWrapperTracingEnterFinalPauseCallback enterFinalPauseCallback) { return chakracore::jsrt::JsSetRuntimeDomWrapperTracingCallbacks(runtime, wrapperTracingState, wrapperTracingCallback, wrapperTracingDoneCallback, enterFinalPauseCallback); }
@@ -80,6 +81,7 @@ public:
     static JsErrorCode JsGetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef *value) { return chakracore::jsrt::JsGetIndexedProperty(object, index, value); }
     static JsErrorCode JsSetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef value) { return chakracore::jsrt::JsSetIndexedProperty(object, index, value); }
     static JsErrorCode JsSetPromiseContinuationCallback(JsPromiseContinuationCallback callback, void *callbackState) { return chakracore::jsrt::JsSetPromiseContinuationCallback(callback, callbackState); }
+    static JsErrorCode JsSetPromiseContinuationCallback(rust::Fn<void(JsValueRef task, void *callbackState)> callback, void *callbackState) { return chakracore::jsrt::JsSetPromiseContinuationCallback(callback, callbackState); }
     static JsErrorCode JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return chakracore::jsrt::JsGetContextOfObject(object, context); }
     static JsErrorCode JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext, byte* sourceText, unsigned int sourceLength, JsParseModuleSourceFlags sourceFlag, JsValueRef* exceptionValueRef) {
         return chakracore::jsrt::JsParseModuleSource(requestModule, sourceContext, sourceText, sourceLength, sourceFlag, exceptionValueRef);
@@ -96,6 +98,14 @@ public:
     static JsErrorCode JsParse(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return chakracore::jsrt::JsParse(script, sourceContext, sourceUrl, parseAttributes, result); }
     static JsErrorCode JsSerialize(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return chakracore::jsrt::JsSerialize(script, buffer, parseAttributes); }
     static JsErrorCode JsRunSerialized(JsValueRef buffer, JsSerializedLoadScriptCallback scriptLoadCallback, JsSourceContext sourceContext, JsValueRef sourceUrl, JsValueRef * result) { return chakracore::jsrt::JsRunSerialized(buffer, scriptLoadCallback, sourceContext, sourceUrl, result); }
+    static JsErrorCode JsRunSerialized(
+        JsValueRef buffer,
+        rust::Fn<bool(JsSourceContext sourceContext, JsValueRef *value, JsParseScriptAttributes *parseAttributes)>
+            scriptLoadCallback,
+        JsSourceContext sourceContext, JsValueRef sourceUrl, JsValueRef *result)
+    {
+        return chakracore::jsrt::JsRunSerialized(buffer, scriptLoadCallback, sourceContext, sourceUrl, result);
+    }
     static JsErrorCode JsGetStringLength(JsValueRef value, int *stringLength) { return chakracore::jsrt::JsGetStringLength(value, stringLength); }
     static JsErrorCode JsToString(JsValueRef value, rust::String &string) { return chakracore::jsrt::JsToString(value, string); }
     static JsErrorCode JsCreateString(const char *content, size_t length, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, length, value); }
@@ -105,6 +115,7 @@ public:
     static JsErrorCode JsCreatePropertyId(const char *name, size_t length, JsPropertyIdRef *propertyId) { return chakracore::jsrt::JsCreatePropertyId(name, length, propertyId); }
     static JsErrorCode JsCreateExternalArrayBuffer(void *data, unsigned int byteLength, JsFinalizeCallback finalizeCallback, void *callbackState, JsValueRef *result)  { return chakracore::jsrt::JsCreateExternalArrayBuffer(data, byteLength, finalizeCallback, callbackState, result); }
     static JsErrorCode JsCreateExternalArrayBuffer(const rust::Str content, JsFinalizeCallback finalizeCallback, JsValueRef *result)  { return chakracore::jsrt::JsCreateExternalArrayBuffer(const_cast<char *>(content.data()), content.length(), finalizeCallback, const_cast<char *>(content.data()), result); }
+    static JsErrorCode JsCreateExternalArrayBuffer(const rust::Str content, JsValueRef *result)  { return chakracore::jsrt::JsCreateExternalArrayBuffer(const_cast<char *>(content.data()), content.length(), nullptr, const_cast<char *>(content.data()), result); }
     static JsErrorCode JsGetProxyProperties(JsValueRef object, bool* isProxy, JsValueRef* target, JsValueRef* handler)  { return chakracore::jsrt::JsGetProxyProperties(object, isProxy, target, handler); }
 
     static JsErrorCode JsSerializeParserState(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return chakracore::jsrt::JsSerializeParserState(script, buffer, parseAttributes); }

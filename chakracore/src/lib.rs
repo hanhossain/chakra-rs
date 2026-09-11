@@ -1,32 +1,25 @@
-use chakracore_sys::chhelper::ffi::ExecuteTest;
+mod chhelper;
+
+use crate::chhelper::execute_test;
 use chakracore_sys::config::CoreConfig;
-use chakracore_sys::helpers::ffi::Helpers;
-use chakracore_sys::host_config::ffi::HostConfigFlags;
-use chakracore_sys::rt_interface::ffi::ChakraRTInterface;
+use chakracore_sys::rt_interface::JsError;
 use cxx::Exception;
 
 #[tracing::instrument(skip(config))]
 pub fn run(config: CoreConfig) -> Result<(), Error> {
-    HostConfigFlags::SetHostArgs(&config.host_args);
+    execute_test(&config)?;
+    Ok(())
+}
 
-    // handle command line flags
-    ChakraRTInterface::InitializeTestHooks(&config.args);
-
-    let res = execute_test(&config.filename)?;
+fn hresult_to_result(res: i32) -> Result<(), Error> {
     if res < 0 {
-        tracing::error!(hresult = res, "hresult was negative. exiting.");
         return Err(Error::NegativeHResult(res));
     }
     if res > 0 {
         return Err(Error::ExitCode(res as u8));
     }
-    Ok(())
-}
 
-#[tracing::instrument(skip(filename))]
-fn execute_test(filename: &String) -> Result<i32, Exception> {
-    let file_contents = Helpers::LoadScriptFromFile(filename)?;
-    ExecuteTest(filename, &file_contents)
+    Ok(())
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -37,4 +30,18 @@ pub enum Error {
     NegativeHResult(i32),
     #[error("Exception propagated from c++")]
     Exception(#[from] Exception),
+    #[error(transparent)]
+    JsError(#[from] JsError),
+    #[error(transparent)]
+    Io(#[from] std::io::Error),
+    #[error(transparent)]
+    InteriorNull(#[from] std::ffi::NulError),
+}
+
+impl Error {
+    /// Returns an HRESULT E_FAIL
+    fn hresult_fail() -> Self {
+        let fail = 0x80004005u32 as i32;
+        Error::NegativeHResult(fail)
+    }
 }

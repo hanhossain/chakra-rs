@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 #include <rust/cxx.h>
+#include <memory>
 
 #include "ChakraCommon.h"
 
@@ -260,6 +261,11 @@ public:
             delete msg;
         }
         return S_OK;
+    }
+
+    static std::unique_ptr<MessageQueue> New()
+    {
+        return std::make_unique<MessageQueue>();
     }
 };
 

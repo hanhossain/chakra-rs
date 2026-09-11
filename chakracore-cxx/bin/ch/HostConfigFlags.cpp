@@ -13,6 +13,7 @@
 
 HostConfigFlags HostConfigFlags::flags;
 rust::Vec<rust::String> HostConfigFlags::vargsVal;
+chakra_rs::config::CoreConfig HostConfigFlags::coreConfig;
 
 template <>
 void HostConfigFlags::Parse<bool>(ICmdLineArgsParser * parser, bool * value)
@@ -49,13 +50,11 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 
 HostConfigFlags::HostConfigFlags() :
     UseParserStateCache(false), UseParserStateCacheIsEnabled(false),
-    Serialized(nullptr), SerializedIsEnabled(false),
     OOPJIT(false), OOPJITIsEnabled(false),
     IgnoreScriptErrorCode(false), IgnoreScriptErrorCodeIsEnabled(false),
     MuteHostErrorMsg(false), MuteHostErrorMsgIsEnabled(false),
     TraceHostCallback(false), TraceHostCallbackIsEnabled(false),
     Test262(false), Test262IsEnabled(false),
-    Module(false), ModuleIsEnabled(false),
     nDummy(0)
 {
 }
@@ -67,12 +66,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
     {
         this->UseParserStateCacheIsEnabled = true;
         Parse<bool>(parser, &this->UseParserStateCache);
-        return true;
-    }
-    if (chakra_rs::str_helper::to_lowercase(u"Serialized") == flagStringsNormalized)
-    {
-        this->SerializedIsEnabled = true;
-        Parse<BSTR>(parser, &this->Serialized);
         return true;
     }
     if (chakra_rs::str_helper::to_lowercase(u"OOPJIT") == flagStringsNormalized)
@@ -105,12 +98,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
         Parse<bool>(parser, &this->Test262);
         return true;
     }
-    if (chakra_rs::str_helper::to_lowercase(u"Module") == flagStringsNormalized)
-    {
-        this->ModuleIsEnabled = true;
-        Parse<bool>(parser, &this->Module);
-        return true;
-    }
     return false;
 }
 
@@ -126,9 +113,15 @@ void HostConfigFlags::PrintUsageString()
     std::println("{:>20}          \t{}", "Module", "\"load the script as a module\"");
 }
 
-void HostConfigFlags::SetHostArgs(const rust::Vec<rust::String> &hostArgs)
+void HostConfigFlags::SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::config::CoreConfig &coreConfig)
 {
     HostConfigFlags::vargsVal = hostArgs;
+    HostConfigFlags::coreConfig = coreConfig;
+}
+
+const chakra_rs::config::CoreConfig &HostConfigFlags::GetCoreConfig()
+{
+    return HostConfigFlags::coreConfig;
 }
 
 void HostConfigFlags::PrintUsage()

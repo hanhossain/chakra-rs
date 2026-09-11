@@ -6,3 +6,4 @@ pub mod host_config;
 mod logger;
 pub mod rt_interface;
 pub mod str_helper;
+pub mod wscript_jsrt;

@@ -25,7 +25,7 @@ class WScriptJsrt
 public:
     static bool Initialize();
     static bool Uninitialize();
-    static JsErrorCode ModuleEntryPoint(rust::Str fileContent, const std::string &fullName);
+    static JsErrorCode ModuleEntryPoint(rust::Str fileContent, const rust::String &fullName);
 
     class CallbackMessage : public MessageBase
     {
@@ -107,7 +107,7 @@ public:
 
     static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static JsValueRef LoadScript(JsValueRef callee, rust::Str fileName, const std::optional<rust::Str> &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
-    static unsigned long GetNextSourceContext();
+    static std::size_t GetNextSourceContext();
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, JsValueRef *arguments, unsigned short argumentCount, bool isSourceModule);
     static JsValueRef LoadScriptHelper(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState, bool isSourceModule);
     static bool InstallObjectsOnObject(JsValueRef object, const char* name, JsNativeFunction nativeFunction);
@@ -153,7 +153,7 @@ private:
                                                  const std::optional<std::filesystem::path>& refdir = std::nullopt);
 
     static MessageQueue *messageQueue_;
-    static unsigned long sourceContext_;
+    static std::size_t sourceContext_;
     static std::map<std::filesystem::path, JsModuleRecord> moduleRecordMap;
     static std::map<JsModuleRecord, std::filesystem::path> moduleDirMap;
     static std::map<JsModuleRecord, ModuleState> moduleErrMap;

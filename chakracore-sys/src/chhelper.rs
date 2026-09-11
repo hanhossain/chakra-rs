@@ -6,14 +6,25 @@ pub mod ffi {
     }
 
     unsafe extern "C++" {
-        include!("chhelper.h");
+        include!("ChakraCommon.h");
+        include!("MessageQueue.h");
         include!("Util/Abstractions.h");
-
-        fn ExecuteTest(filename: &String, fileContents: &String) -> Result<i32>;
 
         type Abstractions;
         #[Self = "Abstractions"]
         fn IsDebuggerPresent() -> bool;
+
+        type JsRuntimeHandle = crate::rt_interface::JsRuntimeHandle;
+        type JsRuntimeAttributes = crate::rt_interface::ffi::JsRuntimeAttributes;
+        type JsValueRef = crate::rt_interface::JsValueRef;
+
+        type MessageQueue;
+        #[Self = "MessageQueue"]
+        fn New() -> UniquePtr<MessageQueue>;
+
+        fn RemoveAll(self: Pin<&mut MessageQueue>);
+        fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
+        fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
     }
 }
 

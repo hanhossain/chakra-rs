@@ -457,7 +457,7 @@ fn passmodule_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "passmodule.js",
-        compile_flags: vec!["-module"],
+        module: true,
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -520,7 +520,8 @@ fn top_level_await_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "top-level-await.js",
-        compile_flags: vec!["-ESDynamicImport", "-ESTopLevelAwait", "-module"],
+        compile_flags: vec!["-ESDynamicImport", "-ESTopLevelAwait"],
+        module: true,
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

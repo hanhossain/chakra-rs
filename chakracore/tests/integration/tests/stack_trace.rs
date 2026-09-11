@@ -17,6 +17,7 @@ fn simple_throw_js_stack_trace_disabled(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost", "-errorStackTrace-"],
         host_args: vec!["runTest"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -65,6 +66,7 @@ fn simple_throw_js(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         host_args: vec!["runTest"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -81,6 +83,7 @@ fn long_call_stack_throw_js_args5(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         host_args: vec!["runTest", "5"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -97,6 +100,7 @@ fn long_call_stack_throw_js_args6(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         host_args: vec!["runTest", "6"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
@@ -113,6 +117,7 @@ fn long_call_stack_throw_js_args7(#[case] variant: Variant) {
         compile_flags: vec!["-ExtendedErrorStackForTestHost"],
         host_args: vec!["runTest", "7"],
         tags: HashSet::from(["StackTrace"]),
+        ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
 }
