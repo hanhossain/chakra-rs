@@ -8,12 +8,12 @@ pub mod ffi {
         #[Self = "HostConfigFlags"]
         fn PrintUsageString();
 
-        #[namespace = "chakra_rs::config"]
-        type CoreConfig = crate::config::CoreConfig;
+        #[namespace = "chakra_rs"]
+        type ConfigContext = crate::config::ConfigContext;
         #[Self = "HostConfigFlags"]
-        fn SetHostArgs(args: &Vec<String>, core_config: &CoreConfig);
+        fn SetHostArgs(args: &Vec<String>, config: &ConfigContext);
 
         #[Self = "HostConfigFlags"]
-        fn GetCoreConfig() -> &'static CoreConfig;
+        fn GetConfig() -> &'static ConfigContext;
     }
 }

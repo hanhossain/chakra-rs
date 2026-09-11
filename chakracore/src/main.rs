@@ -1,5 +1,5 @@
 use chakracore_sys::chhelper::ffi::Abstractions;
-use chakracore_sys::config::CoreConfig;
+use chakracore_sys::config::ConfigContext;
 use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::fmt::format::FmtSpan;
 
@@ -69,7 +69,7 @@ fn print_version() {
 struct ChakraArgs {
     version: bool,
     help: bool,
-    config: CoreConfig,
+    config: ConfigContext,
 }
 
 impl ChakraArgs {
@@ -94,12 +94,12 @@ impl ChakraArgs {
             }
         }
 
-        let mut core_config: CoreConfig = serde_json::from_str(&args[1]).unwrap();
+        let mut config_context: ConfigContext = serde_json::from_str(&args[1]).unwrap();
         // TODO (hanhossain): remove this insert
         // insert exe name since c++ code expects it still
-        core_config.args.insert(0, args[0].clone());
+        config_context.core.args.insert(0, args[0].clone());
         Some(ChakraArgs {
-            config: core_config,
+            config: config_context,
             ..Default::default()
         })
     }

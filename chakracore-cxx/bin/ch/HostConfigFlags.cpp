@@ -13,7 +13,7 @@
 
 HostConfigFlags HostConfigFlags::flags;
 rust::Vec<rust::String> HostConfigFlags::vargsVal;
-chakra_rs::config::CoreConfig HostConfigFlags::coreConfig;
+chakra_rs::ConfigContext HostConfigFlags::configContext;
 
 template <>
 void HostConfigFlags::Parse<bool>(ICmdLineArgsParser * parser, bool * value)
@@ -113,15 +113,15 @@ void HostConfigFlags::PrintUsageString()
     std::println("{:>20}          \t{}", "Module", "\"load the script as a module\"");
 }
 
-void HostConfigFlags::SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::config::CoreConfig &coreConfig)
+void HostConfigFlags::SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::ConfigContext &config)
 {
     HostConfigFlags::vargsVal = hostArgs;
-    HostConfigFlags::coreConfig = coreConfig;
+    HostConfigFlags::configContext = config;
 }
 
-const chakra_rs::config::CoreConfig &HostConfigFlags::GetCoreConfig()
+const chakra_rs::ConfigContext &HostConfigFlags::GetConfig()
 {
-    return HostConfigFlags::coreConfig;
+    return HostConfigFlags::configContext;
 }
 
 void HostConfigFlags::PrintUsage()

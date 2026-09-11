@@ -1,12 +1,12 @@
 mod chhelper;
 
 use crate::chhelper::execute_test;
-use chakracore_sys::config::CoreConfig;
+use chakracore_sys::config::ConfigContext;
 use chakracore_sys::rt_interface::JsError;
 use cxx::Exception;
 
 #[tracing::instrument(skip(config))]
-pub fn run(config: CoreConfig) -> Result<(), Error> {
+pub fn run(config: ConfigContext) -> Result<(), Error> {
     execute_test(&config)?;
     Ok(())
 }

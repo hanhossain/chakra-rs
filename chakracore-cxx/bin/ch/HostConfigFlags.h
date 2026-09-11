@@ -21,13 +21,13 @@ public:
 
     static HostConfigFlags flags;
     static rust::Vec<rust::String> vargsVal;
-    static chakra_rs::config::CoreConfig coreConfig;
+    static chakra_rs::ConfigContext configContext;
 
     virtual bool ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser) override;
     virtual void PrintUsage() override;
     static void PrintUsageString();
-    static void SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::config::CoreConfig &coreConfig);
-    static const chakra_rs::config::CoreConfig &GetCoreConfig();
+    static void SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::ConfigContext &config);
+    static const chakra_rs::ConfigContext &GetConfig();
 
 private:
     int nDummy;
