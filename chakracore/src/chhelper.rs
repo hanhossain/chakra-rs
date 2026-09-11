@@ -188,7 +188,7 @@ fn run_script(
     parser_state_cache: JsValueRef,
 ) -> Result<(), Error> {
     let mut message_queue = MessageQueue::New();
-    unsafe {
+    let fname = unsafe {
         WScriptJsrt::AddMessageQueue(message_queue.as_mut_ptr());
         ChakraRTInterface::JsSetPromiseContinuationCallback(
             |task, callback_state| {
@@ -197,7 +197,11 @@ fn run_script(
             message_queue.as_mut_ptr() as *mut _,
         )
         .as_result()?;
-    }
+        let mut fname = JsValueRef::default();
+        ChakraRTInterface::JsCreateString(full_path, &raw mut fname).as_result()?;
+        fname
+    };
+
     hresult_to_result(RunScript(
         filename,
         contents,
@@ -205,6 +209,7 @@ fn run_script(
         full_path,
         parser_state_cache,
         &message_queue,
+        fname,
     ))?;
 
     message_queue.pin_mut().RemoveAll();

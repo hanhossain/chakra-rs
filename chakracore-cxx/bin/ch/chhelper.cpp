@@ -42,15 +42,13 @@ static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext,
 int32_t RunScript(const rust::Str fileName, const rust::String &contents,
                   JsValueRef bufferValue,
                   const rust::String &fullPath, JsValueRef parserStateCache,
-                  const std::unique_ptr<MessageQueue> &messageQueue)
+                  const std::unique_ptr<MessageQueue> &messageQueue, JsValueRef fname)
 {
     auto span = chakra::Span::create("RunScript");
     JsFinalizeCallback fileContentsFinalizeCallback = WScriptJsrt::FinalizeFree;
     int32_t hr = S_OK;
 
     JsErrorCode runScript;
-    JsValueRef fname;
-    IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath, &fname), ErrorRunFinalize);
 
     if (bufferValue != nullptr)
     {
@@ -98,7 +96,6 @@ int32_t RunScript(const rust::Str fileName, const rust::String &contents,
         while (!messageQueue->IsEmpty());
     }
 
-ErrorRunFinalize:
 Error:
     return hr;
 }

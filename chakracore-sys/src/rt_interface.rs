@@ -104,6 +104,9 @@ pub mod ffi {
             callback: unsafe fn(task: JsValueRef, callbackState: *mut CVoid),
             callbackState: *mut CVoid,
         ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsCreateString(content: &String, value: *mut JsValueRef) -> JsErrorCode;
     }
 
     #[derive(Debug)]
