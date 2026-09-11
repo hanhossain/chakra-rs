@@ -495,7 +495,6 @@ fn bug612012_js(#[case] variant: Variant) {
             "-maxinterpretcount:1",
             "-loopinterpretcount:1",
             "-ForceArrayBTree",
-            "-oopjit-",
         ],
         ..Default::default()
     };

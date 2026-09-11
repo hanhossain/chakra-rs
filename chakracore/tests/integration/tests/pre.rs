@@ -14,7 +14,7 @@ fn pre1_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "pre1.js",
         baseline_path: Some("pre1.baseline"),
-        compile_flags: vec!["-testtrace:fieldcopyprop", "-oopjit-"],
+        compile_flags: vec!["-testtrace:fieldcopyprop"],
         tags: HashSet::from([
             "exclude_forceserialized",
             "exclude_dynapogo",

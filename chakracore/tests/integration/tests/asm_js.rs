@@ -482,7 +482,7 @@ fn write_fix_offset_js(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -492,7 +492,7 @@ fn array_view_js2(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "ArrayView.js",
         baseline_path: Some("ArrayView.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -500,7 +500,7 @@ fn array_view_js2(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -510,7 +510,7 @@ fn basic_branching_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "BasicBranching.js",
         baseline_path: Some("BasicBranching.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -518,7 +518,7 @@ fn basic_branching_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -528,7 +528,7 @@ fn basic_comparison_double_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "basicComparisonDouble.js",
         baseline_path: Some("basicComparisonDouble.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -536,7 +536,7 @@ fn basic_comparison_double_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -546,7 +546,7 @@ fn basic_comparison_int_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "basicComparisonInt.js",
         baseline_path: Some("basicComparisonInt.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -554,7 +554,7 @@ fn basic_comparison_int_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -564,7 +564,7 @@ fn basic_comparison_uint_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "basicComparisonUInt.js",
         baseline_path: Some("basicComparisonUInt.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -572,7 +572,7 @@ fn basic_comparison_uint_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -582,7 +582,7 @@ fn basic_looping_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "BasicLooping.js",
         baseline_path: Some("BasicLooping.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -590,7 +590,7 @@ fn basic_looping_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -600,7 +600,7 @@ fn basic_math_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "basicMath.js",
         baseline_path: Some("basicMath.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -608,7 +608,7 @@ fn basic_math_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -618,7 +618,7 @@ fn basic_math_int_specific_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "basicMathIntSpecific.js",
         baseline_path: Some("basicMathIntSpecific.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -626,7 +626,7 @@ fn basic_math_int_specific_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -636,7 +636,7 @@ fn basic_math_unary_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "basicMathUnary.js",
         baseline_path: Some("basicMathUnary.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -644,7 +644,7 @@ fn basic_math_unary_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -654,7 +654,7 @@ fn basic_switch_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "BasicSwitch.js",
         baseline_path: Some("BasicSwitch.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -662,7 +662,7 @@ fn basic_switch_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -672,7 +672,7 @@ fn composition_math_unary_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "CompositionMathUnary.js",
         baseline_path: Some("CompositionMathUnary.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -680,7 +680,7 @@ fn composition_math_unary_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -690,7 +690,7 @@ fn function_calls_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "FunctionCalls.js",
         baseline_path: Some("FunctionCalls.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -698,7 +698,7 @@ fn function_calls_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -708,7 +708,7 @@ fn functiontablecalls_js2(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "functiontablecalls.js",
         baseline_path: Some("functiontablecalls.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -716,7 +716,7 @@ fn functiontablecalls_js2(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -726,7 +726,7 @@ fn math_builtins_call_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "MathBuiltinsCall.js",
         baseline_path: Some("MathBuiltinsCall.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -734,7 +734,7 @@ fn math_builtins_call_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -744,7 +744,7 @@ fn module_var_read_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "ModuleVarRead.js",
         baseline_path: Some("ModuleVarRead.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -752,7 +752,7 @@ fn module_var_read_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -762,7 +762,7 @@ fn module_var_write_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "ModuleVarWrite.js",
         baseline_path: Some("ModuleVarWrite.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -770,7 +770,7 @@ fn module_var_write_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -780,7 +780,7 @@ fn read_array_view_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "ReadArrayView.js",
         baseline_path: Some("ReadArrayView.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -788,7 +788,7 @@ fn read_array_view_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -798,7 +798,7 @@ fn read_fix_offset_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "ReadFixOffset.js",
         baseline_path: Some("ReadFixOffset.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -806,7 +806,7 @@ fn read_fix_offset_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -816,7 +816,7 @@ fn write_array_view_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "WriteArrayView.js",
         baseline_path: Some("WriteArrayView.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -824,7 +824,7 @@ fn write_array_view_js3(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -834,7 +834,7 @@ fn write_fix_offset_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "WriteFixOffset.js",
         baseline_path: Some("WriteFixOffset.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -1388,7 +1388,7 @@ fn const_test_js2(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1398,7 +1398,7 @@ fn const_test_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "constTest.js",
         baseline_path: Some("constTest.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -1726,7 +1726,7 @@ fn unitybug_js2(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1736,7 +1736,7 @@ fn unitybug_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "unitybug.js",
         baseline_path: Some("unitybug.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };
@@ -1808,7 +1808,7 @@ fn clz32_js2(#[case] variant: Variant) {
 }
 
 // TODO: After removing -simdjs this test fail with -on:asmjsjittemplate. Investigate and enable
-// <compile-flags>-testtrace:asmjs -oopjit- -on:asmjsjittemplate -off:fulljit</compile-flags>
+// <compile-flags>-testtrace:asmjs -on:asmjsjittemplate -off:fulljit</compile-flags>
 #[cfg(all(not(target_arch = "x86_64"), feature = "optimized-tests"))]
 #[rstest]
 #[case::interpreted(Variant::Interpreted)]
@@ -1818,7 +1818,7 @@ fn clz32_js3(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "clz32.js",
         baseline_path: Some("clz32.baseline"),
-        compile_flags: vec!["-testtrace:asmjs", "-oopjit-", "-off:fulljit"],
+        compile_flags: vec!["-testtrace:asmjs", "-off:fulljit"],
         tags: HashSet::from(["exclude_x64"]),
         ..Default::default()
     };

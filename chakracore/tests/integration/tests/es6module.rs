@@ -62,7 +62,6 @@ fn test002_js(#[case] variant: Variant) {
             "-force:fixdataprops",
             "-off:stackargopt",
             "-force:atom",
-            "-oopjit-",
             "-force:ScriptFunctionWithInlineCache",
             "-off:lossyinttypespec",
             "-ForceArrayBTree",

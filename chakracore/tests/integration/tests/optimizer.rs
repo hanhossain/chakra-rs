@@ -3828,7 +3828,6 @@ fn noedgebug_js(#[case] variant: Variant) {
         compile_flags: vec![
             "-maxinterpretcount:1",
             "-maxsimplejitruncount:1",
-            "-oopjit-",
             "-off:bailonnoprofile",
             "-loopinterpretcount:0",
             "-OOPJITMissingOpts-",
@@ -3847,13 +3846,7 @@ fn mul_rejit_bug_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "mul_rejit_bug.js",
         baseline_path: Some("mul_rejit_bug.baseline"),
-        compile_flags: vec![
-            "-mic:1",
-            "-oopjit-",
-            "-bgJit-",
-            "-off:simplejit",
-            "-trace:rejit",
-        ],
+        compile_flags: vec!["-mic:1", "-bgJit-", "-off:simplejit", "-trace:rejit"],
         tags: HashSet::from([
             "require_backend",
             "exclude_dynapogo",
@@ -3876,7 +3869,6 @@ fn testsimplepathbrfold_js(#[case] variant: Variant) {
         compile_flags: vec![
             "-maxinterpretcount:1",
             "-maxsimplejitruncount:1",
-            "-oopjit-",
             "-trace:pathdepbranchfolding",
             "-bgjit-",
         ],
@@ -3895,11 +3887,7 @@ fn bugsimplepathbrfold_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bugsimplepathbrfold.js",
         baseline_path: Some("bugsimplepathbrfold.baseline"),
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-maxsimplejitruncount:1",
-            "-oopjit-",
-        ],
+        compile_flags: vec!["-maxinterpretcount:1", "-maxsimplejitruncount:1"],
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
@@ -3914,11 +3902,7 @@ fn bugsimplepathbrfold1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bugsimplepathbrfold1.js",
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-maxsimplejitruncount:1",
-            "-oopjit-",
-        ],
+        compile_flags: vec!["-maxinterpretcount:1", "-maxsimplejitruncount:1"],
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
@@ -3937,7 +3921,6 @@ fn bugsimplepathbrfold3_js(#[case] variant: Variant) {
             "-maxsimplejitruncount:1",
             "-maxinterpretcount:1",
             "-forcejitloopbody",
-            "-oopjit-",
         ],
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
@@ -3958,7 +3941,6 @@ fn bugsimplepathbrfold4_js(#[case] variant: Variant) {
             "-bgjit-",
             "-maxsimplejitruncount:1",
             "-maxinterpretcount:1",
-            "-oopjit-",
         ],
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
@@ -4005,7 +3987,6 @@ fn bugconstfoldundefined_js(#[case] variant: Variant) {
             "-maxinterpretcount:6",
             "-maxsimplejitruncount:4",
             "-werexceptionsupport",
-            "-oopjit-",
             "-mic:1",
             "-off:simplejit",
             "-forcejitloopbody",
@@ -4043,7 +4024,6 @@ fn rembug_js(#[case] variant: Variant) {
             "-maxinterpretcount:1",
             "-maxsimplejitruncount:1",
             "-loopinterpretcount:1",
-            "-oopjit-",
             "-bgjit-",
         ],
         tags: HashSet::from(["require_backend"]),

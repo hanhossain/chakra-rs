@@ -870,7 +870,6 @@ fn math_abs_type_spec_on_int_min_js(#[case] variant: Variant) {
             "-bgjit-",
             "-maxsimplejitruncount:1",
             "-maxinterpretcount:1",
-            "-oopjit-",
         ],
         ..Default::default()
     };
@@ -900,7 +899,7 @@ fn miss_to_generate_st_st_slot_for_jitloop_body_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "MissToGenerateStStSlotForJITLoopBody.js",
-        compile_flags: vec!["-mic:1", "-off:simplejit", "-oopjit-", "-bgjit-"],
+        compile_flags: vec!["-mic:1", "-off:simplejit", "-bgjit-"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1508,7 +1507,6 @@ fn bug19767482_js(#[case] variant: Variant) {
         compile_flags: vec![
             "-maxinterpretcount:1",
             "-bgjit-",
-            "-oopjit-",
             "-loopinterpretcount:1",
             "-maxsimplejitruncount:2",
         ],
@@ -1528,7 +1526,6 @@ fn bug19948792_js(#[case] variant: Variant) {
         compile_flags: vec![
             "-maxinterpretcount:1",
             "-bgjit-",
-            "-oopjit-",
             "-loopinterpretcount:1",
             "-maxsimplejitruncount:2",
         ],

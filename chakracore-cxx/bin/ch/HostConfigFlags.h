@@ -12,7 +12,6 @@
 class HostConfigFlags : public ICustomConfigFlags
 {
 public:
-    bool OOPJIT; bool OOPJITIsEnabled;
     bool IgnoreScriptErrorCode; bool IgnoreScriptErrorCodeIsEnabled;
     bool MuteHostErrorMsg; bool MuteHostErrorMsgIsEnabled;
     bool TraceHostCallback; bool TraceHostCallbackIsEnabled;
