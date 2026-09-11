@@ -13,10 +13,9 @@ class HostConfigFlags : public ICustomConfigFlags
 {
 public:
     static HostConfigFlags flags;
-    static rust::Vec<rust::String> vargsVal;
     static chakra_rs::ConfigContext configContext;
 
     void PrintUsage() override;
-    static void SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::ConfigContext &config);
+    static void SetConfig(const chakra_rs::ConfigContext &config);
     static const chakra_rs::ConfigContext &GetConfig();
 };

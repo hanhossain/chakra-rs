@@ -4,6 +4,7 @@ mod ffi {
     struct ConfigContext {
         host: HostConfig,
         core: CoreConfig,
+        host_args: Vec<String>,
     }
 
     #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -28,7 +29,6 @@ mod ffi {
     struct CoreConfig {
         filename: String,
         args: Vec<String>,
-        host_args: Vec<String>,
     }
 }
 

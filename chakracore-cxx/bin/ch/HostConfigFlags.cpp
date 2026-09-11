@@ -6,17 +6,14 @@
 
 #include <chakracore-sys/src/chhelper.rs.h>
 #include <print>
-#include <rust/cxx.h>
 
 #include "TestHooks.h"
 
 HostConfigFlags HostConfigFlags::flags;
-rust::Vec<rust::String> HostConfigFlags::vargsVal;
 chakra_rs::ConfigContext HostConfigFlags::configContext;
 
-void HostConfigFlags::SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::ConfigContext &config)
+void HostConfigFlags::SetConfig(const chakra_rs::ConfigContext &config)
 {
-    HostConfigFlags::vargsVal = hostArgs;
     HostConfigFlags::configContext = config;
 }
 

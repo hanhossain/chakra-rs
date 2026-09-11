@@ -209,11 +209,8 @@ pub fn run_test_variant<const N: usize>(
 
     let config_context = ConfigContext {
         host: test.host_config.clone(),
-        core: CoreConfig {
-            filename,
-            args,
-            host_args: test.host_args.into_iter().map(String::from).collect(),
-        },
+        core: CoreConfig { filename, args },
+        host_args: test.host_args.into_iter().map(String::from).collect(),
     };
 
     let (status, actual) = run_test(config_context, Some(test_dir.as_path()));

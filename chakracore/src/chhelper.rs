@@ -15,7 +15,7 @@ use std::str::FromStr;
 
 #[tracing::instrument(skip(config))]
 pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
-    HostConfigFlags::SetHostArgs(&config.core.host_args, &config);
+    HostConfigFlags::SetConfig(&config);
 
     // handle command line flags
     hresult_to_result(ChakraRTInterface::InitializeTestHooks(&config.core.args))?;

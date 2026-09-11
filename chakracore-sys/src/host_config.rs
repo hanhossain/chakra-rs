@@ -8,7 +8,7 @@ pub mod ffi {
         #[namespace = "chakra_rs"]
         type ConfigContext = crate::config::ConfigContext;
         #[Self = "HostConfigFlags"]
-        fn SetHostArgs(args: &Vec<String>, config: &ConfigContext);
+        fn SetConfig(config: &ConfigContext);
 
         #[Self = "HostConfigFlags"]
         fn GetConfig() -> &'static ConfigContext;

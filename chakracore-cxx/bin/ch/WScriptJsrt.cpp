@@ -85,14 +85,14 @@ bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
     assert(argsObject);
     *argsObject = nullptr;
 
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateArray(HostConfigFlags::vargsVal.size(), &retArr), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreateArray(HostConfigFlags::GetConfig().host_args.size(), &retArr), false);
 
-    for (int i = 0; i < HostConfigFlags::vargsVal.size(); i++)
+    for (int i = 0; i < HostConfigFlags::GetConfig().host_args.size(); i++)
     {
         JsValueRef value;
         JsValueRef index;
 
-        JsErrorCode errCode = ChakraRTInterface::JsCreateString(HostConfigFlags::vargsVal[i], &value);
+        JsErrorCode errCode = ChakraRTInterface::JsCreateString(HostConfigFlags::GetConfig().host_args[i], &value);
         IfJsrtErrorFail(errCode, false);
 
         IfJsrtErrorFail(ChakraRTInterface::JsDoubleToNumber(i, &index), false);
