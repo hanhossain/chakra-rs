@@ -10,6 +10,8 @@ use chakracore_sys::rt_interface::{
     JsContextRef, JsError, JsErrorExt, JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
 use chakracore_sys::wscript_jsrt::ffi::WScriptJsrt;
+use std::ffi::{CStr, CString, c_char};
+use std::str::FromStr;
 
 #[tracing::instrument(skip(config))]
 pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
@@ -204,7 +206,19 @@ fn run_script(
 
     let run_script_result = if !buffer_value.is_null() {
         // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
-        chakracore_sys::chhelper::run_serialized(buffer_value, contents, fname)
+        let contents = CString::from_str(&contents)?;
+
+        // Use source ptr as sourceContext
+        let source_context = JsSourceContext(contents.into_raw() as usize);
+        unsafe {
+            ChakraRTInterface::JsRunSerialized(
+                buffer_value,
+                dummy_js_serialized_script_load_utf8_source,
+                source_context,
+                fname,
+                std::ptr::null_mut(),
+            )
+        }
     } else if !parser_state_cache.is_null() {
         let mut script_source = JsValueRef::default();
         unsafe {
@@ -212,7 +226,7 @@ fn run_script(
                 .as_result()?;
             ChakraRTInterface::JsRunScriptWithParserState(
                 script_source,
-                JsSourceContext(WScriptJsrt::GetNextSourceContext() as usize),
+                JsSourceContext(WScriptJsrt::GetNextSourceContext()),
                 fname,
                 JsParseScriptAttributes::JsParseScriptAttributeNone,
                 parser_state_cache,
@@ -228,7 +242,7 @@ fn run_script(
                 .as_result()?;
             ChakraRTInterface::JsRun(
                 script_source,
-                JsSourceContext(WScriptJsrt::GetNextSourceContext() as usize),
+                JsSourceContext(WScriptJsrt::GetNextSourceContext()),
                 fname,
                 JsParseScriptAttributes::JsParseScriptAttributeNone,
                 std::ptr::null_mut(),
@@ -262,4 +276,28 @@ fn run_script(
     // We only call RunScript() once, safe to Uninitialize()
     WScriptJsrt::Uninitialize();
     Ok(())
+}
+
+#[tracing::instrument(skip_all)]
+fn dummy_js_serialized_script_load_utf8_source(
+    source_context: JsSourceContext,
+    script_buffer: *mut JsValueRef,
+    parse_attributes: *mut JsParseScriptAttributes,
+) -> bool {
+    let script_body = source_context.0 as *mut c_char;
+    unsafe {
+        let script_body = CStr::from_ptr(script_body);
+
+        // sourceContext is source ptr, see run_serialized below
+        if ChakraRTInterface::JsCreateExternalArrayBuffer(
+            script_body.to_str().unwrap(),
+            script_buffer,
+        ) != JsErrorCode::JsNoError
+        {
+            return false;
+        }
+
+        *parse_attributes = JsParseScriptAttributes::JsParseScriptAttributeNone;
+        true
+    }
 }

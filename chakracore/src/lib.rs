@@ -34,6 +34,8 @@ pub enum Error {
     JsError(#[from] JsError),
     #[error(transparent)]
     Io(#[from] std::io::Error),
+    #[error(transparent)]
+    InteriorNull(#[from] std::ffi::NulError),
 }
 
 impl Error {

@@ -66,6 +66,7 @@ struct SerializerBlob
     std::vector<ArrayBufferTransferInfo> transferableArrays;
 };
 
+unsigned int MessageBase::s_messageCount = 0;
 MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
 std::map<fs::path, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
 std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;

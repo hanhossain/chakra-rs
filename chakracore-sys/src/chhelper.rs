@@ -1,34 +1,14 @@
-use crate::rt_interface::ffi::{ChakraRTInterface, JsErrorCode, JsParseScriptAttributes};
-use crate::rt_interface::{JsSourceContext, JsValueRef};
-use std::ffi::{CStr, CString, c_char};
-use std::str::FromStr;
-
 #[cxx::bridge]
 pub mod ffi {
     #[namespace = "chakra_rs::chhelper"]
     extern "Rust" {
         fn print_usage();
-
-        fn run_serialized(
-            buffer_value: JsValueRef,
-            contents: &String,
-            fname: JsValueRef,
-        ) -> JsErrorCode;
     }
 
     unsafe extern "C++" {
-        include!("chhelper.h");
+        include!("ChakraCommon.h");
+        include!("MessageQueue.h");
         include!("Util/Abstractions.h");
-
-        fn RunScript(
-            fileName: &str,
-            contents: &String,
-            bufferValue: JsValueRef,
-            fullPath: &String,
-            parserStateCache: JsValueRef,
-            messageQueue: &UniquePtr<MessageQueue>,
-            fname: JsValueRef,
-        ) -> i32;
 
         type Abstractions;
         #[Self = "Abstractions"]
@@ -45,7 +25,6 @@ pub mod ffi {
         fn RemoveAll(self: Pin<&mut MessageQueue>);
         fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
         fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
-        type JsErrorCode = crate::rt_interface::ffi::JsErrorCode;
     }
 }
 
@@ -66,53 +45,5 @@ pub fn print_usage() {
         );
         println!("\t-v|--version\t\tDisplays version info");
         println!("\t-h|--help|-?\t\tDisplays this help message");
-    }
-}
-
-#[tracing::instrument(skip_all)]
-fn dummy_js_serialized_script_load_utf8_source(
-    source_context: JsSourceContext,
-    script_buffer: *mut JsValueRef,
-    parse_attributes: *mut JsParseScriptAttributes,
-) -> bool {
-    let script_body = source_context.0 as *mut c_char;
-    unsafe {
-        let script_body = CStr::from_ptr(script_body);
-
-        // sourceContext is source ptr, see run_serialized below
-        if ChakraRTInterface::JsCreateExternalArrayBuffer(
-            script_body.to_str().unwrap(),
-            script_buffer,
-        ) != JsErrorCode::JsNoError
-        {
-            return false;
-        }
-
-        *parse_attributes = JsParseScriptAttributes::JsParseScriptAttributeNone;
-        true
-    }
-}
-
-// TODO: this method's temporarily here while I port the rest of RunScript
-#[tracing::instrument(skip_all)]
-pub fn run_serialized(
-    buffer_value: JsValueRef,
-    contents: &String,
-    fname: JsValueRef,
-) -> JsErrorCode {
-    let Ok(contents) = CString::from_str(&contents) else {
-        return JsErrorCode::JsErrorFatal;
-    };
-
-    // Use source ptr as sourceContext
-    let source_context = JsSourceContext(contents.into_raw() as usize);
-    unsafe {
-        ChakraRTInterface::JsRunSerialized(
-            buffer_value,
-            dummy_js_serialized_script_load_utf8_source,
-            source_context,
-            fname,
-            std::ptr::null_mut(),
-        )
     }
 }

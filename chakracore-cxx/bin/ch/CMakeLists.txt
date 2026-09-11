@@ -1,5 +1,4 @@
 add_library(chhelper
-    chhelper.cpp
     ChakraRtInterface.cpp
     Helpers.cpp
     HostConfigFlags.cpp
