@@ -336,7 +336,7 @@ Js::WebAssemblyModule* WasmModuleGenerator::GenerateModule()
         auto offSimpleJit = std::format("-off:simplejit:{}", range);
         auto offLoopJit = std::format("-off:jitloopbody:{}", range);
         const rust::Vec<rust::String> argv = { {}, offFullJit, offSimpleJit, offLoopJit };
-        CmdLineArgsParser parser(nullptr);
+        CmdLineArgsParser parser{};
         parser.Parse(argv);
     }
 

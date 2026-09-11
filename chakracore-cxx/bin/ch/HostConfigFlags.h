@@ -5,17 +5,13 @@
 
 #pragma once
 
-#include <rust/cxx.h>
 #include <chakracore-sys/src/config.rs.h>
 
-#include "Core/ICustomConfigFlags.h"
-class HostConfigFlags : public ICustomConfigFlags
+class HostConfigFlags
 {
 public:
-    static HostConfigFlags flags;
     static chakra_rs::ConfigContext configContext;
 
-    void PrintUsage() override;
     static void SetConfig(const chakra_rs::ConfigContext &config);
     static const chakra_rs::ConfigContext &GetConfig();
 };

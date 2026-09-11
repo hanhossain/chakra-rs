@@ -4,12 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "HostConfigFlags.h"
 
-#include <chakracore-sys/src/chhelper.rs.h>
-#include <print>
-
-#include "TestHooks.h"
-
-HostConfigFlags HostConfigFlags::flags;
 chakra_rs::ConfigContext HostConfigFlags::configContext;
 
 void HostConfigFlags::SetConfig(const chakra_rs::ConfigContext &config)
@@ -20,12 +14,4 @@ void HostConfigFlags::SetConfig(const chakra_rs::ConfigContext &config)
 const chakra_rs::ConfigContext &HostConfigFlags::GetConfig()
 {
     return HostConfigFlags::configContext;
-}
-
-void HostConfigFlags::PrintUsage()
-{
-    chakra_rs::chhelper::print_usage();
-
-    std::println();
-    TestHooks::PrintConfigFlagsUsageString();
 }

@@ -1,3 +1,5 @@
+pub use ffi::{ConfigContext, CoreConfig, HostConfig};
+
 #[cxx::bridge(namespace = "chakra_rs")]
 mod ffi {
     #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -31,5 +33,3 @@ mod ffi {
         args: Vec<String>,
     }
 }
-
-pub use ffi::{ConfigContext, CoreConfig, HostConfig};

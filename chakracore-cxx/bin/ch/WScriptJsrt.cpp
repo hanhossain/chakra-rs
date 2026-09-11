@@ -1343,7 +1343,7 @@ JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, Js
         IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[1], cmd));
 
         const rust::Vec<rust::String> argv{{}, std::move(cmd)};
-        TestHooks::SetConfigFlags(argv, nullptr);
+        TestHooks::SetConfigFlags(argv);
     }
 
 Error:

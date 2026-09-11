@@ -11,9 +11,3 @@ interface ICmdLineArgsParser
     virtual bool GetCurrentBoolean() = 0;
     virtual int GetCurrentInt() = 0;
 };
-
-
-interface ICustomConfigFlags
-{
-    virtual void PrintUsage() = 0;
-};
