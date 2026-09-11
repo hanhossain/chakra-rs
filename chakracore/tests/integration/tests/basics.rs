@@ -751,7 +751,6 @@ fn verify_parser_state_js(#[case] variant: Variant) {
         source_path: "VerifyParserState.js",
         baseline_path: Some("VerifyParserState.baseline"),
         compile_flags: vec![
-            "-UseParserStateCache",
             "-ParserStateCache",
             "-Force:DeferParse",
             "-Trace:CreateParserState",
@@ -776,7 +775,6 @@ fn verify_skip_nested_deferred_js(#[case] variant: Variant) {
         source_path: "VerifySkipNestedDeferred.js",
         baseline_path: Some("VerifySkipNestedDeferred.baseline"),
         compile_flags: vec![
-            "-UseParserStateCache",
             "-ParserStateCache",
             "-Force:DeferParse",
             "-Trace:SkipNestedDeferred",
@@ -800,12 +798,7 @@ fn bug_os17542375_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_os17542375.js",
-        compile_flags: vec![
-            "-UseParserStateCache",
-            "-ParserStateCache",
-            "-Force:DeferParse",
-            "-pageheap:2",
-        ],
+        compile_flags: vec!["-ParserStateCache", "-Force:DeferParse", "-pageheap:2"],
         host_config: HostConfig {
             use_parser_state_cache: true,
             ..Default::default()
@@ -826,7 +819,6 @@ fn bug_os16855035_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_os16855035.js",
         compile_flags: vec![
-            "-UseParserStateCache",
             "-ParserStateCache",
             "-Force:DeferParse",
             "-Force:Redeferral",

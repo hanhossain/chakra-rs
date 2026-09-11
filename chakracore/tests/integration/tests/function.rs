@@ -688,11 +688,7 @@ fn to_string_all_js_defer_parse_parser_state_cache(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "toStringAll.js",
         baseline_path: Some("toStringAll.baseline"),
-        compile_flags: vec![
-            "-force:DeferParse",
-            "-UseParserStateCache",
-            "-ParserStateCache",
-        ],
+        compile_flags: vec!["-force:DeferParse", "-ParserStateCache"],
         host_config: HostConfig {
             use_parser_state_cache: true,
             ..Default::default()
@@ -1276,7 +1272,6 @@ fn bug_os17698041_js(#[case] variant: Variant) {
             "-force:redeferral",
             "-collectgarbage",
             "-parserstatecache",
-            "-useparserstatecache",
         ],
         host_config: HostConfig {
             use_parser_state_cache: true,

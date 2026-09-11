@@ -646,7 +646,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
 
-        if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
+        if (HostConfigFlags::GetConfig().host.use_parser_state_cache)
         {
             JsValueRef parserState;
             IfJsrtErrorSetGo(ChakraRTInterface::JsSerializeParserState(scriptSource, &parserState, JsParseScriptAttributeNone));
@@ -684,7 +684,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
 
-        if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
+        if (HostConfigFlags::GetConfig().host.use_parser_state_cache)
         {
             JsValueRef parserState;
             IfJsrtErrorSetGo(ChakraRTInterface::JsSerializeParserState(scriptSource, &parserState, JsParseScriptAttributeNone));

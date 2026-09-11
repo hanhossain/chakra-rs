@@ -12,7 +12,6 @@
 class HostConfigFlags : public ICustomConfigFlags
 {
 public:
-    bool UseParserStateCache; bool UseParserStateCacheIsEnabled;
     bool OOPJIT; bool OOPJITIsEnabled;
     bool IgnoreScriptErrorCode; bool IgnoreScriptErrorCodeIsEnabled;
     bool MuteHostErrorMsg; bool MuteHostErrorMsgIsEnabled;

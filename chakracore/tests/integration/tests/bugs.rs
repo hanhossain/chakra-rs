@@ -1260,11 +1260,7 @@ fn bug_os17530048_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS17530048.js",
-        compile_flags: vec![
-            "-force:deferparse",
-            "-parserstatecache",
-            "-useparserstatecache",
-        ],
+        compile_flags: vec!["-force:deferparse", "-parserstatecache"],
         host_config: HostConfig {
             use_parser_state_cache: true,
             ..Default::default()
@@ -1282,11 +1278,7 @@ fn skipping_nested_deferred_incorrect_function_id_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "skipping_nested_deferred_incorrect_function_id.js",
-        compile_flags: vec![
-            "-force:deferparse",
-            "-parserstatecache",
-            "-useparserstatecache",
-        ],
+        compile_flags: vec!["-force:deferparse", "-parserstatecache"],
         host_config: HostConfig {
             use_parser_state_cache: true,
             ..Default::default()
@@ -1371,11 +1363,7 @@ fn deferred_stub_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "deferredStubBugs.js",
-        compile_flags: vec![
-            "-force:deferparse",
-            "-parserstatecache",
-            "-useparserstatecache",
-        ],
+        compile_flags: vec!["-force:deferparse", "-parserstatecache"],
         host_config: HostConfig {
             use_parser_state_cache: true,
             ..Default::default()
@@ -1421,11 +1409,7 @@ fn function_id_destructured_reparse_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "function_id_destructured_reparse.js",
-        compile_flags: vec![
-            "-useparserstatecache",
-            "-parserstatecache",
-            "-force:deferparse",
-        ],
+        compile_flags: vec!["-parserstatecache", "-force:deferparse"],
         host_config: HostConfig {
             use_parser_state_cache: true,
             ..Default::default()

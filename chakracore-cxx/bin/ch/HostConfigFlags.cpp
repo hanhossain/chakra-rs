@@ -49,7 +49,6 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 }
 
 HostConfigFlags::HostConfigFlags() :
-    UseParserStateCache(false), UseParserStateCacheIsEnabled(false),
     OOPJIT(false), OOPJITIsEnabled(false),
     IgnoreScriptErrorCode(false), IgnoreScriptErrorCodeIsEnabled(false),
     MuteHostErrorMsg(false), MuteHostErrorMsgIsEnabled(false),
@@ -62,12 +61,6 @@ HostConfigFlags::HostConfigFlags() :
 bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
 {
     const auto flagStringsNormalized = chakra_rs::str_helper::to_lowercase(flagsString);
-    if (chakra_rs::str_helper::to_lowercase(u"UseParserStateCache") == flagStringsNormalized)
-    {
-        this->UseParserStateCacheIsEnabled = true;
-        Parse<bool>(parser, &this->UseParserStateCache);
-        return true;
-    }
     if (chakra_rs::str_helper::to_lowercase(u"OOPJIT") == flagStringsNormalized)
     {
         this->OOPJITIsEnabled = true;
@@ -103,14 +96,11 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
 
 void HostConfigFlags::PrintUsageString()
 {
-    std::println("{:>20}          \t{}", "UseParserStateCache", "\"Create parser state cache while parsing and use it during script execution\"");
-    std::println("{:>20}          \t{}", "Serialized", "\"If source is UTF8, deserializes from bytecode file\"");
     std::println("{:>20}          \t{}", "OOPJIT", "\"Run JIT in a separate process\"");
     std::println("{:>20}          \t{}", "IgnoreScriptErrorCode", "\"Don't return error code on script error\"");
     std::println("{:>20}          \t{}", "MuteHostErrorMsg", "\"Mute host error output, e.g. module load failures\"");
     std::println("{:>20}          \t{}", "TraceHostCallback", "\"Output traces for host callbacks\"");
     std::println("{:>20}          \t{}", "Test262", "\"load Test262 harness\"");
-    std::println("{:>20}          \t{}", "Module", "\"load the script as a module\"");
 }
 
 void HostConfigFlags::SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::ConfigContext &config)
