@@ -12,7 +12,6 @@
 class HostConfigFlags : public ICustomConfigFlags
 {
 public:
-    bool TraceHostCallback; bool TraceHostCallbackIsEnabled;
     bool Test262; bool Test262IsEnabled;
 
     static HostConfigFlags flags;

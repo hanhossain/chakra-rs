@@ -49,7 +49,6 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 }
 
 HostConfigFlags::HostConfigFlags() :
-    TraceHostCallback(false), TraceHostCallbackIsEnabled(false),
     Test262(false), Test262IsEnabled(false),
     nDummy(0)
 {
@@ -58,12 +57,6 @@ HostConfigFlags::HostConfigFlags() :
 bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
 {
     const auto flagStringsNormalized = chakra_rs::str_helper::to_lowercase(flagsString);
-    if (chakra_rs::str_helper::to_lowercase(u"TraceHostCallback") == flagStringsNormalized)
-    {
-        this->TraceHostCallbackIsEnabled = true;
-        Parse<bool>(parser, &this->TraceHostCallback);
-        return true;
-    }
     if (chakra_rs::str_helper::to_lowercase(u"Test262") == flagStringsNormalized)
     {
         this->Test262IsEnabled = true;
@@ -75,7 +68,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
 
 void HostConfigFlags::PrintUsageString()
 {
-    std::println("{:>20}          \t{}", "TraceHostCallback", "\"Output traces for host callbacks\"");
     std::println("{:>20}          \t{}", "Test262", "\"load Test262 harness\"");
 }
 

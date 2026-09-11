@@ -337,10 +337,11 @@ fn bug_os12095746_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_OS12095746.js",
         baseline_path: Some("bug_OS12095746.baseline"),
-        compile_flags: vec!["-TraceHostCallback", "-ES6Module", "-ESDynamicImport"],
+        compile_flags: vec!["-ES6Module", "-ESDynamicImport"],
         host_config: HostConfig {
             ignore_script_error_code: true,
             mute_host_error_msg: true,
+            trace_host_callback: true,
             ..Default::default()
         },
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),

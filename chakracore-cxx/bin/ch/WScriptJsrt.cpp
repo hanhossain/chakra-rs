@@ -1943,7 +1943,7 @@ JsErrorCode WScriptJsrt::FetchImportedModuleFromScript(_In_ JsSourceContext dwRe
 // Callback from chakraCore when the module resolution is finished, either successfully or unsuccessfully.
 JsErrorCode WScriptJsrt::NotifyModuleReadyCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar)
 {
-    if (exceptionVar != nullptr && HostConfigFlags::flags.TraceHostCallbackIsEnabled)
+    if (exceptionVar != nullptr && HostConfigFlags::GetConfig().host.trace_host_callback)
     {
         JsValueRef specifier = JS_INVALID_REFERENCE;
         ChakraRTInterface::JsGetModuleHostInfo(referencingModule, JsModuleHostInfo_Url, &specifier);
