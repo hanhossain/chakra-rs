@@ -533,13 +533,6 @@ CmdLineArgsParser::ParseFlag()
     Flag flag = ConfigFlagsTable::GetFlag(flagString);
     if(InvalidFlag == flag)
     {
-        if (pCustomConfigFlags != nullptr)
-        {
-            if (pCustomConfigFlags->ParseFlag(flagString, this))
-            {
-                return;
-            }
-        }
         throw Exception(u"Invalid Flag");
     }
 

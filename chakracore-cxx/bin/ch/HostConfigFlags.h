@@ -16,16 +16,7 @@ public:
     static rust::Vec<rust::String> vargsVal;
     static chakra_rs::ConfigContext configContext;
 
-    virtual bool ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser) override;
-    virtual void PrintUsage() override;
-    static void PrintUsageString();
+    void PrintUsage() override;
     static void SetHostArgs(const rust::Vec<rust::String> &hostArgs, const chakra_rs::ConfigContext &config);
     static const chakra_rs::ConfigContext &GetConfig();
-
-private:
-    int nDummy;
-    HostConfigFlags();
-
-    template <typename T>
-    void Parse(ICmdLineArgsParser * parser, T * value);
 };

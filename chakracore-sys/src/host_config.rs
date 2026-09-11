@@ -5,9 +5,6 @@ pub mod ffi {
 
         type HostConfigFlags;
 
-        #[Self = "HostConfigFlags"]
-        fn PrintUsageString();
-
         #[namespace = "chakra_rs"]
         type ConfigContext = crate::config::ConfigContext;
         #[Self = "HostConfigFlags"]
