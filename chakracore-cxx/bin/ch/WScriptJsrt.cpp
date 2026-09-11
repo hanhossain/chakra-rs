@@ -601,7 +601,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fi
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
     errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)(fileContent ? fileContent.value().data() : nullptr),
         fileContent ? fileContent.value().size() : 0, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
-    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent && !HostConfigFlags::flags.IgnoreScriptErrorCode && moduleErrMap[requestModule] == RootModule)
+    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent && !HostConfigFlags::GetConfig().host.ignore_script_error_code && moduleErrMap[requestModule] == RootModule)
     {
         ChakraRTInterface::JsSetException(errorObject);
         moduleErrMap[requestModule] = ErroredModule;

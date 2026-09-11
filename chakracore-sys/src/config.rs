@@ -14,6 +14,8 @@ mod ffi {
         use_parser_state_cache: bool,
         /// load the script as a module
         module: bool,
+        /// Don't return error code on script error
+        ignore_script_error_code: bool,
     }
 
     #[derive(Debug, Clone, Default, Serialize, Deserialize)]

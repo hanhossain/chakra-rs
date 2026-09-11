@@ -49,7 +49,6 @@ void HostConfigFlags::Parse<BSTR>(ICmdLineArgsParser * parser, BSTR * bstr)
 }
 
 HostConfigFlags::HostConfigFlags() :
-    IgnoreScriptErrorCode(false), IgnoreScriptErrorCodeIsEnabled(false),
     MuteHostErrorMsg(false), MuteHostErrorMsgIsEnabled(false),
     TraceHostCallback(false), TraceHostCallbackIsEnabled(false),
     Test262(false), Test262IsEnabled(false),
@@ -60,12 +59,6 @@ HostConfigFlags::HostConfigFlags() :
 bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser * parser)
 {
     const auto flagStringsNormalized = chakra_rs::str_helper::to_lowercase(flagsString);
-    if (chakra_rs::str_helper::to_lowercase(u"IgnoreScriptErrorCode") == flagStringsNormalized)
-    {
-        this->IgnoreScriptErrorCodeIsEnabled = true;
-        Parse<bool>(parser, &this->IgnoreScriptErrorCode);
-        return true;
-    }
     if (chakra_rs::str_helper::to_lowercase(u"MuteHostErrorMsg") == flagStringsNormalized)
     {
         this->MuteHostErrorMsgIsEnabled = true;
@@ -89,7 +82,6 @@ bool HostConfigFlags::ParseFlag(const char16_t* flagsString, ICmdLineArgsParser 
 
 void HostConfigFlags::PrintUsageString()
 {
-    std::println("{:>20}          \t{}", "IgnoreScriptErrorCode", "\"Don't return error code on script error\"");
     std::println("{:>20}          \t{}", "MuteHostErrorMsg", "\"Mute host error output, e.g. module load failures\"");
     std::println("{:>20}          \t{}", "TraceHostCallback", "\"Output traces for host callbacks\"");
     std::println("{:>20}          \t{}", "Test262", "\"load Test262 harness\"");

@@ -319,11 +319,14 @@ fn bug_os12095746_js(#[case] variant: Variant) {
         baseline_path: Some("bug_OS12095746.baseline"),
         compile_flags: vec![
             "-MuteHostErrorMsg",
-            "-IgnoreScriptErrorCode",
             "-TraceHostCallback",
             "-ES6Module",
             "-ESDynamicImport",
         ],
+        host_config: HostConfig {
+            ignore_script_error_code: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_dynapogo", "exclude_sanitize_address"]),
         ..Default::default()
     };
