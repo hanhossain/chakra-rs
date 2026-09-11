@@ -21,6 +21,8 @@
 #include "ChakraDebug.h"
 #include <rust/cxx.h>
 
+using CVoid = void;
+
 // Begin ChakraCore only APIs
 
 /// <summary>

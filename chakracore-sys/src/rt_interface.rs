@@ -97,6 +97,13 @@ pub mod ffi {
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsGetAndClearException(exception: *mut JsValueRef) -> JsErrorCode;
+
+        type CVoid;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsSetPromiseContinuationCallback(
+            callback: unsafe fn(task: JsValueRef, callbackState: *mut CVoid),
+            callbackState: *mut CVoid,
+        ) -> JsErrorCode;
     }
 
     #[derive(Debug)]

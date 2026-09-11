@@ -48,10 +48,6 @@ int32_t RunScript(const rust::Str fileName, const rust::String &contents,
     JsFinalizeCallback fileContentsFinalizeCallback = WScriptJsrt::FinalizeFree;
     int32_t hr = S_OK;
 
-    IfJsErrorFailLogLabel(
-        ChakraRTInterface::JsSetPromiseContinuationCallback(WScriptJsrt::PromiseContinuationCallback, messageQueue.get()),
-        ErrorRunFinalize);
-
     JsErrorCode runScript;
     JsValueRef fname;
     IfJsErrorFailLogLabel(ChakraRTInterface::JsCreateString(fullPath, &fname), ErrorRunFinalize);

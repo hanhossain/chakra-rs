@@ -37,6 +37,7 @@
 #define _Out_writes_(size)
 #define _Out_writes_to_opt_(byteLength, byteLength2)
 
+#include <functional>
 #include <stddef.h>  // for size_t
 #include <stdint.h>  // for uintptr_t
 typedef uintptr_t ChakraCookie;
@@ -721,7 +722,7 @@ typedef unsigned short char16_t;
     /// </remarks>
     /// <param name="task">The task, represented as a JavaScript function.</param>
     /// <param name="callbackState">The data argument to be passed to the callback.</param>
-    typedef void (*JsPromiseContinuationCallback)(_In_ JsValueRef task, _In_opt_ void *callbackState);
+    using JsPromiseContinuationCallback = std::function<void(JsValueRef task, void *callbackState)>;
 
 namespace chakracore::jsrt
 {

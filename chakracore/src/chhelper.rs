@@ -190,6 +190,13 @@ fn run_script(
     let mut message_queue = MessageQueue::New();
     unsafe {
         WScriptJsrt::AddMessageQueue(message_queue.as_mut_ptr());
+        ChakraRTInterface::JsSetPromiseContinuationCallback(
+            |task, callback_state| {
+                WScriptJsrt::PromiseContinuationCallback(task, callback_state);
+            },
+            message_queue.as_mut_ptr() as *mut _,
+        )
+        .as_result()?;
     }
     hresult_to_result(RunScript(
         filename,
