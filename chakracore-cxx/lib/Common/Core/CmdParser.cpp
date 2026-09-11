@@ -533,13 +533,6 @@ CmdLineArgsParser::ParseFlag()
     Flag flag = ConfigFlagsTable::GetFlag(flagString);
     if(InvalidFlag == flag)
     {
-        if (pCustomConfigFlags != nullptr)
-        {
-            if (pCustomConfigFlags->ParseFlag(flagString, this))
-            {
-                return;
-            }
-        }
         throw Exception(u"Invalid Flag");
     }
 
@@ -657,11 +650,6 @@ int CmdLineArgsParser::Parse(const char16_t* oneArg) throw()
             }
             //fallthrough
             NextChar();
-            if('?' == CurChar())
-            {
-                PrintUsage();
-                return -1;
-            }
             ParseFlag();
             break;
         default:
@@ -691,8 +679,7 @@ int CmdLineArgsParser::Parse(const char16_t* oneArg) throw()
 ///
 ///----------------------------------------------------------------------------
 
-CmdLineArgsParser::CmdLineArgsParser(ICustomConfigFlags * pCustomConfigFlags, Js::ConfigFlagsTable& flagTable) :
-    flagTable(flagTable), pCustomConfigFlags(pCustomConfigFlags)
+CmdLineArgsParser::CmdLineArgsParser(Js::ConfigFlagsTable& flagTable) : flagTable(flagTable)
 {
     this->pszCurrentArg = nullptr;
 }
@@ -700,14 +687,4 @@ CmdLineArgsParser::CmdLineArgsParser(ICustomConfigFlags * pCustomConfigFlags, Js
 CmdLineArgsParser::~CmdLineArgsParser()
 {
     flagTable.FinalizeConfiguration();
-}
-
-void CmdLineArgsParser::PrintUsage()
-{
-    if (pCustomConfigFlags)
-    {
-        pCustomConfigFlags->PrintUsage();
-        return;
-    }
-    Js::ConfigFlagsTable::PrintUsageString();
 }

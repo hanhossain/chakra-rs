@@ -1,5 +1,7 @@
 use crate::common;
 use crate::common::Variant;
+#[cfg(feature = "optimized-tests")]
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 #[cfg(feature = "optimized-tests")]
@@ -124,7 +126,10 @@ fn array_init2_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "array_init2.js",
         baseline_path: Some("array_init2.baseline"),
-        serialized: true,
+        host_config: HostConfig {
+            serialized: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };
@@ -490,7 +495,6 @@ fn bug612012_js(#[case] variant: Variant) {
             "-maxinterpretcount:1",
             "-loopinterpretcount:1",
             "-ForceArrayBTree",
-            "-oopjit-",
         ],
         ..Default::default()
     };

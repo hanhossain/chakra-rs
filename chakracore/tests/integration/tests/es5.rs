@@ -1,5 +1,7 @@
 use crate::common;
 use crate::common::Variant;
+#[cfg(feature = "optimized-tests")]
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -406,7 +408,10 @@ fn define_property_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "defineProperty.js",
         baseline_path: Some("defineProperty.baseline"),
-        serialized: true,
+        host_config: HostConfig {
+            serialized: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };
@@ -438,7 +443,10 @@ fn define_index_property_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "defineIndexProperty.js",
         baseline_path: Some("defineIndexProperty.baseline"),
-        serialized: true,
+        host_config: HostConfig {
+            serialized: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

@@ -53,20 +53,14 @@
 #include "Core/ConfigParser.h"
 #include "TestHooks.h"
 
-int32_t TestHooks::SetConfigFlags(const rust::Vec<rust::String> &vargs, ICustomConfigFlags* customConfigFlags)
+int32_t TestHooks::SetConfigFlags(const rust::Vec<rust::String> &vargs)
 {
-    CmdLineArgsParser parser(customConfigFlags);
+    CmdLineArgsParser parser{};
     if (parser.Parse(vargs) != 0)
     {
         return E_FAIL;
     }
 
-    return S_OK;
-}
-
-int32_t TestHooks::PrintConfigFlagsUsageString()
-{
-    Js::ConfigFlagsTable::PrintUsageString();
     return S_OK;
 }
 

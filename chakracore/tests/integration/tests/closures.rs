@@ -1,5 +1,7 @@
 use crate::common;
 use crate::common::Variant;
+#[cfg(feature = "optimized-tests")]
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -291,7 +293,10 @@ fn invalcachedscope_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "invalcachedscope.js",
         baseline_path: Some("invalcachedscope.baseline"),
-        serialized: true,
+        host_config: HostConfig {
+            serialized: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

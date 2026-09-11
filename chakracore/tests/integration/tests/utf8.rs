@@ -82,7 +82,7 @@ fn unicode_sequence_serialized_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "unicode_sequence_serialized.js",
-        compile_flags: vec!["-forceserialized", "-oopjit-"],
+        compile_flags: vec!["-forceserialized"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

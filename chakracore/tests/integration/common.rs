@@ -1,4 +1,4 @@
-use chakracore_sys::config::CoreConfig;
+use chakracore_sys::config::{ConfigContext, CoreConfig, HostConfig};
 use pretty_assertions::{assert_eq, assert_ne};
 use std::collections::HashSet;
 use std::fs::read_to_string;
@@ -23,9 +23,7 @@ pub struct Test {
     pub compile_flags: Vec<&'static str>,
     pub host_args: Vec<&'static str>,
     pub tags: HashSet<&'static str>,
-    pub serialized: bool,
-    pub use_parser_state_cache: bool,
-    pub module: bool,
+    pub host_config: HostConfig,
 }
 
 impl Test {
@@ -209,15 +207,13 @@ pub fn run_test_variant<const N: usize>(
     args.extend(test.compile_flags.into_iter().map(String::from));
     args.extend(variant_config.compile_flags.into_iter().map(String::from));
 
-    let core_config = CoreConfig {
-        filename,
-        args,
-        serialized: test.serialized,
+    let config_context = ConfigContext {
+        host: test.host_config.clone(),
+        core: CoreConfig { filename, args },
         host_args: test.host_args.into_iter().map(String::from).collect(),
-        use_parser_state_cache: test.use_parser_state_cache,
-        module: test.module,
     };
-    let (status, actual) = run_test(core_config, Some(test_dir.as_path()));
+
+    let (status, actual) = run_test(config_context, Some(test_dir.as_path()));
 
     match test.baseline_path {
         Some(baseline_path) => {
@@ -253,10 +249,13 @@ pub fn run_test_variant<const N: usize>(
 }
 
 #[tracing::instrument(skip_all)]
-pub fn run_test(core_config: CoreConfig, test_dir: Option<&Path>) -> (ExitStatus, Vec<String>) {
-    tracing::info!(?core_config);
+pub fn run_test(
+    config_context: ConfigContext,
+    test_dir: Option<&Path>,
+) -> (ExitStatus, Vec<String>) {
+    tracing::info!(?config_context);
 
-    let serialized_config = serde_json::to_string(&core_config).unwrap();
+    let serialized_config = serde_json::to_string(&config_context).unwrap();
     let mut ch = Command::new(CH_PATH);
 
     if let Some(test_dir) = test_dir {

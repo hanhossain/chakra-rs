@@ -1,6 +1,6 @@
 use crate::{Error, hresult_to_result};
 use chakracore_sys::chhelper::ffi::MessageQueue;
-use chakracore_sys::config::CoreConfig;
+use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
 use chakracore_sys::rt_interface::ffi::{
@@ -14,13 +14,13 @@ use std::ffi::{CStr, CString, c_char};
 use std::str::FromStr;
 
 #[tracing::instrument(skip(config))]
-pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
-    HostConfigFlags::SetHostArgs(&config.host_args, &config);
+pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
+    HostConfigFlags::SetConfig(&config);
 
     // handle command line flags
-    hresult_to_result(ChakraRTInterface::InitializeTestHooks(&config.args))?;
+    hresult_to_result(ChakraRTInterface::InitializeTestHooks(&config.core.args))?;
 
-    let file_contents = Helpers::LoadScriptFromFile(&config.filename)?;
+    let file_contents = Helpers::LoadScriptFromFile(&config.core.filename)?;
     let mut runtime = JsRuntimeHandle::default();
     unsafe {
         ChakraRTInterface::JsCreateRuntime(
@@ -39,21 +39,26 @@ pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
         return Err(Error::hresult_fail());
     }
 
-    let path = std::fs::canonicalize(&config.filename)?;
+    let path = std::fs::canonicalize(&config.core.filename)?;
     let path = path.to_str().unwrap().to_owned();
     let jsrt_attributes = JsRuntimeAttributes::JsRuntimeAttributeNone;
-    if config.serialized {
-        create_and_run_serialized_script(&config.filename, &file_contents, &path, jsrt_attributes)?;
-    } else if config.use_parser_state_cache {
+    if config.host.serialized {
+        create_and_run_serialized_script(
+            &config.core.filename,
+            &file_contents,
+            &path,
+            jsrt_attributes,
+        )?;
+    } else if config.host.use_parser_state_cache {
         create_parser_state_and_run_script(
-            &config.filename,
+            &config.core.filename,
             &file_contents,
             &path,
             jsrt_attributes,
         )?;
     } else {
         run_script(
-            &config.filename,
+            &config.core.filename,
             &file_contents,
             JsValueRef::default(),
             &path,
@@ -233,7 +238,7 @@ fn run_script(
                 std::ptr::null_mut(),
             )
         }
-    } else if HostConfigFlags::GetCoreConfig().module {
+    } else if HostConfigFlags::GetConfig().host.module {
         WScriptJsrt::ModuleEntryPoint(contents, full_path)
     } else {
         let mut script_source = JsValueRef::default();

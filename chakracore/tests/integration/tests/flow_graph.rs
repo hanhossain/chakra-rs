@@ -14,13 +14,7 @@ fn mic1msjrc1_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "mic1msjrc1.js",
-        compile_flags: vec![
-            "-mic:1",
-            "-msjrc:1",
-            "-oopjit-",
-            "-bgjit-",
-            "-loopinterpretcount:1",
-        ],
+        compile_flags: vec!["-mic:1", "-msjrc:1", "-bgjit-", "-loopinterpretcount:1"],
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };
@@ -38,7 +32,6 @@ fn weird1_js(#[case] variant: Variant) {
         compile_flags: vec![
             "-maxinterpretcount:1",
             "-maxsimplejitruncount:1",
-            "-oopjit-",
             "-off:bailonnoprofile",
             "-off:cachedScope",
         ],
@@ -61,7 +54,6 @@ fn weird2_js(#[case] variant: Variant) {
             "-maxsimplejitruncount:1",
             "-bgjit-",
             "-loopinterpretcount:1",
-            "-oopjit-",
             "-off:simplejit",
             "-force:inline",
         ],
@@ -83,7 +75,6 @@ fn for_of_try_catch_js(#[case] variant: Variant) {
             "-maxinterpretcount:1",
             "-maxsimplejitruncount:1",
             "-bgjit-",
-            "-oopjit-",
             "-off:jitloopbody",
         ],
         tags: HashSet::from(["require_backend"]),
@@ -100,12 +91,7 @@ fn byte_code_upward_exposed_used_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "byteCodeUpwardExposedUsed.js",
-        compile_flags: vec![
-            "-maxinterpretcount:1",
-            "-maxsimplejitruncount:1",
-            "-bgjit-",
-            "-oopjit-",
-        ],
+        compile_flags: vec!["-maxinterpretcount:1", "-maxsimplejitruncount:1", "-bgjit-"],
         tags: HashSet::from(["require_backend"]),
         ..Default::default()
     };

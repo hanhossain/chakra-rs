@@ -1,5 +1,6 @@
 use crate::common;
 use crate::common::Variant;
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -175,7 +176,10 @@ fn labels_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "Labels.js",
-        compile_flags: vec!["-MuteHostErrorMsg"],
+        host_config: HostConfig {
+            mute_host_error_msg: true,
+            ..Default::default()
+        },
         host_args: vec!["summary"],
         ..Default::default()
     };
@@ -749,12 +753,14 @@ fn verify_parser_state_js(#[case] variant: Variant) {
         source_path: "VerifyParserState.js",
         baseline_path: Some("VerifyParserState.baseline"),
         compile_flags: vec![
-            "-UseParserStateCache",
             "-ParserStateCache",
             "-Force:DeferParse",
             "-Trace:CreateParserState",
         ],
-        use_parser_state_cache: true,
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -771,12 +777,14 @@ fn verify_skip_nested_deferred_js(#[case] variant: Variant) {
         source_path: "VerifySkipNestedDeferred.js",
         baseline_path: Some("VerifySkipNestedDeferred.baseline"),
         compile_flags: vec![
-            "-UseParserStateCache",
             "-ParserStateCache",
             "-Force:DeferParse",
             "-Trace:SkipNestedDeferred",
         ],
-        use_parser_state_cache: true,
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_test", "exclude_dynapogo"]),
         ..Default::default()
     };
@@ -792,13 +800,11 @@ fn bug_os17542375_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_os17542375.js",
-        compile_flags: vec![
-            "-UseParserStateCache",
-            "-ParserStateCache",
-            "-Force:DeferParse",
-            "-pageheap:2",
-        ],
-        use_parser_state_cache: true,
+        compile_flags: vec!["-ParserStateCache", "-Force:DeferParse", "-pageheap:2"],
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
@@ -815,13 +821,15 @@ fn bug_os16855035_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "bug_os16855035.js",
         compile_flags: vec![
-            "-UseParserStateCache",
             "-ParserStateCache",
             "-Force:DeferParse",
             "-Force:Redeferral",
             "-CollectGarbage",
         ],
-        use_parser_state_cache: true,
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };

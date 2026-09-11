@@ -1,11 +1,14 @@
 use crate::common::{init_tracing, run_test};
-use chakracore_sys::config::CoreConfig;
+use chakracore_sys::config::{ConfigContext, CoreConfig};
 
 #[test]
 fn hello() {
     let source = "../chakracore-cxx/test/Basics/hello.js";
-    let config = CoreConfig {
-        filename: source.to_owned(),
+    let config = ConfigContext {
+        core: CoreConfig {
+            filename: source.to_owned(),
+            ..Default::default()
+        },
         ..Default::default()
     };
 

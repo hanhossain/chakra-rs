@@ -1,5 +1,7 @@
 use crate::common;
 use crate::common::Variant;
+#[cfg(feature = "optimized-tests")]
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -686,12 +688,11 @@ fn to_string_all_js_defer_parse_parser_state_cache(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "toStringAll.js",
         baseline_path: Some("toStringAll.baseline"),
-        compile_flags: vec![
-            "-force:DeferParse",
-            "-UseParserStateCache",
-            "-ParserStateCache",
-        ],
-        use_parser_state_cache: true,
+        compile_flags: vec!["-force:DeferParse", "-ParserStateCache"],
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1271,9 +1272,11 @@ fn bug_os17698041_js(#[case] variant: Variant) {
             "-force:redeferral",
             "-collectgarbage",
             "-parserstatecache",
-            "-useparserstatecache",
         ],
-        use_parser_state_cache: true,
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);

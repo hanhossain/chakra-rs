@@ -1,5 +1,6 @@
 use crate::common;
 use crate::common::Variant;
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -285,7 +286,10 @@ fn jit_module_loop_body_js(#[case] variant: Variant) {
         source_path: "jit-module-loop-body.js",
         baseline_path: Some("jit-module-loop-body.baseline"),
         compile_flags: vec!["-testtrace:Backend"],
-        module: true,
+        host_config: HostConfig {
+            module: true,
+            ..Default::default()
+        },
         tags: HashSet::from([
             "require_backend",
             "exclude_test",
@@ -306,7 +310,10 @@ fn jit_module_loop_body_js2(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "jit-module-loop-body.js",
         baseline_path: Some("jit-module-loop-body-2.baseline"),
-        module: true,
+        host_config: HostConfig {
+            module: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };

@@ -34,13 +34,12 @@ private:
 
     Js::ConfigFlagsTable& flagTable;
     const char16_t *pszCurrentArg;
-    ICustomConfigFlags * pCustomConfigFlags;
 
 // Methods
 public:
     int Parse(const rust::Vec<rust::String> &vargs);
     int Parse(const char16_t* token) throw();
-    CmdLineArgsParser(ICustomConfigFlags * pCustomConfigFlags = nullptr, Js::ConfigFlagsTable& flagTable = Js::Configuration::Global.flags);
+    CmdLineArgsParser(Js::ConfigFlagsTable& flagTable = Js::Configuration::Global.flags);
     ~CmdLineArgsParser();
 
 // Helper Classes
@@ -78,7 +77,6 @@ private:
             void                       ParseNumberSet(Js::NumberSet * numberSet);
             void                       ParseNumberPairSet(Js::NumberPairSet * numberPairSet);
             void                       ParseNumberTrioSet(Js::NumberTrioSet * numberTrioSet);
-            void                       PrintUsage();
 
             char16_t CurChar() const
             {

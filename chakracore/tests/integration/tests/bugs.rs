@@ -1,5 +1,6 @@
 use crate::common;
 use crate::common::Variant;
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -869,7 +870,6 @@ fn math_abs_type_spec_on_int_min_js(#[case] variant: Variant) {
             "-bgjit-",
             "-maxsimplejitruncount:1",
             "-maxinterpretcount:1",
-            "-oopjit-",
         ],
         ..Default::default()
     };
@@ -899,7 +899,7 @@ fn miss_to_generate_st_st_slot_for_jitloop_body_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "MissToGenerateStStSlotForJITLoopBody.js",
-        compile_flags: vec!["-mic:1", "-off:simplejit", "-oopjit-", "-bgjit-"],
+        compile_flags: vec!["-mic:1", "-off:simplejit", "-bgjit-"],
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1259,12 +1259,11 @@ fn bug_os17530048_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_OS17530048.js",
-        compile_flags: vec![
-            "-force:deferparse",
-            "-parserstatecache",
-            "-useparserstatecache",
-        ],
-        use_parser_state_cache: true,
+        compile_flags: vec!["-force:deferparse", "-parserstatecache"],
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1278,12 +1277,11 @@ fn skipping_nested_deferred_incorrect_function_id_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "skipping_nested_deferred_incorrect_function_id.js",
-        compile_flags: vec![
-            "-force:deferparse",
-            "-parserstatecache",
-            "-useparserstatecache",
-        ],
-        use_parser_state_cache: true,
+        compile_flags: vec!["-force:deferparse", "-parserstatecache"],
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1364,12 +1362,11 @@ fn deferred_stub_bugs_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "deferredStubBugs.js",
-        compile_flags: vec![
-            "-force:deferparse",
-            "-parserstatecache",
-            "-useparserstatecache",
-        ],
-        use_parser_state_cache: true,
+        compile_flags: vec!["-force:deferparse", "-parserstatecache"],
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1411,12 +1408,11 @@ fn function_id_destructured_reparse_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "function_id_destructured_reparse.js",
-        compile_flags: vec![
-            "-useparserstatecache",
-            "-parserstatecache",
-            "-force:deferparse",
-        ],
-        use_parser_state_cache: true,
+        compile_flags: vec!["-parserstatecache", "-force:deferparse"],
+        host_config: HostConfig {
+            use_parser_state_cache: true,
+            ..Default::default()
+        },
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -1430,7 +1426,11 @@ fn bug_5585_js(#[case] variant: Variant) {
     let test = common::Test {
         directory: DIRECTORY,
         source_path: "bug_5585.js",
-        compile_flags: vec!["-esdynamicimport", "-mutehosterrormsg"],
+        compile_flags: vec!["-esdynamicimport"],
+        host_config: HostConfig {
+            mute_host_error_msg: true,
+            ..Default::default()
+        },
         host_args: vec!["summary"],
         ..Default::default()
     };
@@ -1511,7 +1511,6 @@ fn bug19767482_js(#[case] variant: Variant) {
         compile_flags: vec![
             "-maxinterpretcount:1",
             "-bgjit-",
-            "-oopjit-",
             "-loopinterpretcount:1",
             "-maxsimplejitruncount:2",
         ],
@@ -1531,7 +1530,6 @@ fn bug19948792_js(#[case] variant: Variant) {
         compile_flags: vec![
             "-maxinterpretcount:1",
             "-bgjit-",
-            "-oopjit-",
             "-loopinterpretcount:1",
             "-maxsimplejitruncount:2",
         ],

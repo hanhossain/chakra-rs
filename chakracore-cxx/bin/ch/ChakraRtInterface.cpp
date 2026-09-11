@@ -19,7 +19,7 @@ bool ChakraRTInterface::m_usageStringPrinted = false;
 int32_t ChakraRTInterface::ParseConfigFlags(const rust::Vec<rust::String> &vargs)
 {
     TestHooks::SetAssertToConsoleFlag(true);
-    int32_t hr = TestHooks::SetConfigFlags(vargs, &HostConfigFlags::flags);
+    int32_t hr = TestHooks::SetConfigFlags(vargs);
     if (hr != S_OK && !m_usageStringPrinted)
     {
         chakra_rs::chhelper::print_usage();

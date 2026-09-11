@@ -1,5 +1,6 @@
 use crate::common;
 use crate::common::Variant;
+use chakracore_sys::config::HostConfig;
 use rstest::rstest;
 use std::collections::HashSet;
 
@@ -424,7 +425,10 @@ fn fieldhoist_negzero_js_serialized(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "fieldhoist_negzero.js",
         baseline_path: Some("fieldhoist_negzero.baseline"),
-        serialized: true,
+        host_config: HostConfig {
+            serialized: true,
+            ..Default::default()
+        },
         tags: HashSet::from(["exclude_forceserialized"]),
         ..Default::default()
     };

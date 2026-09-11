@@ -1380,6 +1380,9 @@ namespace Js
     //
     // Description of flags
     //
+// HACK (hanhossain): retaining just so I can use the description for flag comments later
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-const-variable"
     const char16_t* const FlagDescriptions[FlagCount + 1] =
     {
 #if DBG
@@ -1798,6 +1801,7 @@ namespace Js
 
         NULL
     };
+#pragma clang diagnostic pop
 
     //
     // Parent flag categorization of flags
@@ -3181,58 +3185,6 @@ namespace Js
             }
         }
         return InvalidPhase;
-    }
-
-    void
-    ConfigFlagsTable::PrintUsageString()
-    {
-        Output::Print(u"List of Phases:\n");
-        for(int i = 0; i < PhaseCount; i++)
-        {
-            if (i % 4 == 0)
-            {
-                Output::Print(u"\n  ");
-            }
-            Output::Print(u"%-40ls ", PhaseNames[i]);
-        }
-
-        Output::Print(u"\n\nList of flags:\n\n");
-        for(int i = 0; i < FlagCount; i++)
-        {
-            Output::Print(u"%60ls ", FlagNames[i]);
-            switch(GetFlagType(static_cast<Flag>(i)))
-            {
-            case InvalidFlagType:
-                break;
-            case FlagString:
-                Output::Print(u"[:String]        ");
-                break;
-            case FlagPhases:
-                Output::Print(u"[:Phase]         ");
-                break;
-            case FlagNumber:
-                Output::Print(u"[:Number]        ");
-                break;
-            case FlagBoolean:
-                Output::Print(u"                 ");
-                break;
-            case FlagNumberSet:
-                Output::Print(u"[:NumberSet]     ");
-                break;
-            case FlagNumberPairSet:
-                Output::Print(u"[:NumberPairSet] ");
-                break;
-            case FlagNumberTrioSet:
-                Output::Print(u"[:NumberTrioSet] ");
-                break;
-            case FlagNumberRange:
-                Output::Print(u"[:NumberRange]   ");
-                break;
-            default:
-                Assert(false);
-            }
-            Output::Print(u"%ls\n", FlagDescriptions[i]);
-        }
     }
 
     ///----------------------------------------------------------------------------

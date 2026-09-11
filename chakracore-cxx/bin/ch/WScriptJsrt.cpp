@@ -85,14 +85,14 @@ bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
     assert(argsObject);
     *argsObject = nullptr;
 
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateArray(HostConfigFlags::vargsVal.size(), &retArr), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreateArray(HostConfigFlags::GetConfig().host_args.size(), &retArr), false);
 
-    for (int i = 0; i < HostConfigFlags::vargsVal.size(); i++)
+    for (int i = 0; i < HostConfigFlags::GetConfig().host_args.size(); i++)
     {
         JsValueRef value;
         JsValueRef index;
 
-        JsErrorCode errCode = ChakraRTInterface::JsCreateString(HostConfigFlags::vargsVal[i], &value);
+        JsErrorCode errCode = ChakraRTInterface::JsCreateString(HostConfigFlags::GetConfig().host_args[i], &value);
         IfJsrtErrorFail(errCode, false);
 
         IfJsrtErrorFail(ChakraRTInterface::JsDoubleToNumber(i, &index), false);
@@ -601,7 +601,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fi
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
     errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)(fileContent ? fileContent.value().data() : nullptr),
         fileContent ? fileContent.value().size() : 0, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
-    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent && !HostConfigFlags::flags.IgnoreScriptErrorCode && moduleErrMap[requestModule] == RootModule)
+    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent && !HostConfigFlags::GetConfig().host.ignore_script_error_code && moduleErrMap[requestModule] == RootModule)
     {
         ChakraRTInterface::JsSetException(errorObject);
         moduleErrMap[requestModule] = ErroredModule;
@@ -646,7 +646,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
 
-        if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
+        if (HostConfigFlags::GetConfig().host.use_parser_state_cache)
         {
             JsValueRef parserState;
             IfJsrtErrorSetGo(ChakraRTInterface::JsSerializeParserState(scriptSource, &parserState, JsParseScriptAttributeNone));
@@ -684,7 +684,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
         JsSourceContext sourceContext = GetNextSourceContext();
 
-        if (HostConfigFlags::flags.UseParserStateCacheIsEnabled)
+        if (HostConfigFlags::GetConfig().host.use_parser_state_cache)
         {
             JsValueRef parserState;
             IfJsrtErrorSetGo(ChakraRTInterface::JsSerializeParserState(scriptSource, &parserState, JsParseScriptAttributeNone));
@@ -1049,10 +1049,10 @@ bool WScriptJsrt::Initialize()
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_InitializeImportMetaCallback, (void*)WScriptJsrt::InitializeImportMetaCallback), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_ReportModuleCompletionCallback, (void*)WScriptJsrt::ReportModuleCompletionCallback), false);
 
-    // When the command-line argument `-Test262` is set,
+    // When the host config `Test262` is set,
     // WScript will have the extra support API below and $262 will be
     // added to global scope
-    if (HostConfigFlags::flags.Test262)
+    if (HostConfigFlags::GetConfig().host.test262)
     {
         IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Broadcast", BroadcastCallback));
         IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "ReceiveBroadcast", ReceiveBroadcastCallback));
@@ -1343,7 +1343,7 @@ JsValueRef WScriptJsrt::FlagCallback(JsValueRef callee, bool isConstructCall, Js
         IfJsrtErrorSetGo(ChakraRTInterface::JsToString(arguments[1], cmd));
 
         const rust::Vec<rust::String> argv{{}, std::move(cmd)};
-        TestHooks::SetConfigFlags(argv, nullptr);
+        TestHooks::SetConfigFlags(argv);
     }
 
 Error:
@@ -1581,7 +1581,7 @@ bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, Js
 
     }
 
-    if (HostConfigFlags::flags.MuteHostErrorMsgIsEnabled)
+    if (HostConfigFlags::GetConfig().host.mute_host_error_msg)
     {
         return false;
     }
@@ -1839,7 +1839,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
         catch (const rust::Error &e)
         {
             chakra::Logger::error(std::format("Caught exception: {}", e.what()));
-            if (!HostConfigFlags::flags.MuteHostErrorMsgIsEnabled)
+            if (!HostConfigFlags::GetConfig().host.mute_host_error_msg)
             {
                 auto actualModuleRecord = moduleRecordMap.find(fullPath_.value());
                 if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)
@@ -1943,7 +1943,7 @@ JsErrorCode WScriptJsrt::FetchImportedModuleFromScript(_In_ JsSourceContext dwRe
 // Callback from chakraCore when the module resolution is finished, either successfully or unsuccessfully.
 JsErrorCode WScriptJsrt::NotifyModuleReadyCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar)
 {
-    if (exceptionVar != nullptr && HostConfigFlags::flags.TraceHostCallbackIsEnabled)
+    if (exceptionVar != nullptr && HostConfigFlags::GetConfig().host.trace_host_callback)
     {
         JsValueRef specifier = JS_INVALID_REFERENCE;
         ChakraRTInterface::JsGetModuleHostInfo(referencingModule, JsModuleHostInfo_Url, &specifier);
