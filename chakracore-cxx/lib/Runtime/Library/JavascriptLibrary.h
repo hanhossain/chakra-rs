@@ -7,6 +7,7 @@
 
 #include "DataStructures/Cache.h"
 #include "Memory/RecyclerFastAllocator.h"
+#include <functional>
 
 #define InlineSlotCountIncrement (HeapConstants::ObjectGranularity / sizeof(Var))
 
@@ -208,7 +209,7 @@ namespace Js
         static uint32_t GetRandSeed0Offset() { return offsetof(JavascriptLibrary, randSeed0); }
         static uint32_t GetRandSeed1Offset() { return offsetof(JavascriptLibrary, randSeed1); }
         static uint32_t GetTypeDisplayStringsOffset() { return offsetof(JavascriptLibrary, typeDisplayStrings); }
-        typedef bool (CALLBACK *PromiseContinuationCallback)(Var task, void *callbackState);
+        using PromiseContinuationCallback = std::function<void(Var task, void *callbackState)>;
 
         Var GetUndeclBlockVar() const { return undeclBlockVarSentinel; }
         bool IsUndeclBlockVar(Var var) const { return var == undeclBlockVarSentinel; }

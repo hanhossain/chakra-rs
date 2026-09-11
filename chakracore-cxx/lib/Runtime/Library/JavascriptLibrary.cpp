@@ -5,6 +5,8 @@
 //-------------------------------------------------------------------------------------------------------
 
 
+#include <utility>
+
 #include "Library/JSON.h"
 #include "Types/MissingPropertyTypeHandler.h"
 #include "Types/NullTypeHandler.h"
@@ -5002,7 +5004,7 @@ namespace Js
 
     void JavascriptLibrary::SetNativeHostPromiseContinuationFunction(PromiseContinuationCallback function, void *state)
     {
-        this->nativeHostPromiseContinuationFunction = function;
+        this->nativeHostPromiseContinuationFunction = std::move(function);
         this->nativeHostPromiseContinuationFunctionState = state;
     }
 
