@@ -1,5 +1,5 @@
 use crate::{Error, hresult_to_result};
-use chakracore_sys::chhelper::ffi::{MessageQueue, RunScript};
+use chakracore_sys::chhelper::ffi::MessageQueue;
 use chakracore_sys::config::CoreConfig;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
@@ -7,13 +7,13 @@ use chakracore_sys::rt_interface::ffi::{
     ChakraRTInterface, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
 };
 use chakracore_sys::rt_interface::{
-    JsContextRef, JsError, JsErrorExt, JsRuntimeHandle, JsValueRef,
+    JsContextRef, JsError, JsErrorExt, JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
 use chakracore_sys::wscript_jsrt::ffi::WScriptJsrt;
 
 #[tracing::instrument(skip(config))]
 pub fn execute_test(config: &CoreConfig) -> Result<(), Error> {
-    HostConfigFlags::SetHostArgs(&config.host_args);
+    HostConfigFlags::SetHostArgs(&config.host_args, &config);
 
     // handle command line flags
     hresult_to_result(ChakraRTInterface::InitializeTestHooks(&config.args))?;
@@ -202,15 +202,49 @@ fn run_script(
         fname
     };
 
-    hresult_to_result(RunScript(
-        filename,
-        contents,
-        buffer_value,
-        full_path,
-        parser_state_cache,
-        &message_queue,
-        fname,
-    ))?;
+    let run_script_result = if !buffer_value.is_null() {
+        // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
+        chakracore_sys::chhelper::run_serialized(buffer_value, contents, fname)
+    } else if !parser_state_cache.is_null() {
+        let mut script_source = JsValueRef::default();
+        unsafe {
+            ChakraRTInterface::JsCreateExternalArrayBuffer(contents, &raw mut script_source)
+                .as_result()?;
+            ChakraRTInterface::JsRunScriptWithParserState(
+                script_source,
+                JsSourceContext(WScriptJsrt::GetNextSourceContext() as usize),
+                fname,
+                JsParseScriptAttributes::JsParseScriptAttributeNone,
+                parser_state_cache,
+                std::ptr::null_mut(),
+            )
+        }
+    } else if HostConfigFlags::GetCoreConfig().module {
+        WScriptJsrt::ModuleEntryPoint(contents, full_path)
+    } else {
+        let mut script_source = JsValueRef::default();
+        unsafe {
+            ChakraRTInterface::JsCreateExternalArrayBuffer(contents, &raw mut script_source)
+                .as_result()?;
+            ChakraRTInterface::JsRun(
+                script_source,
+                JsSourceContext(WScriptJsrt::GetNextSourceContext() as usize),
+                fname,
+                JsParseScriptAttributes::JsParseScriptAttributeNone,
+                std::ptr::null_mut(),
+            )
+        }
+    };
+
+    if run_script_result != JsErrorCode::JsNoError {
+        WScriptJsrt::PrintException(filename, run_script_result, JsValueRef::default());
+    } else {
+        // Repeatedly flush the message queue until it's empty. It is necessary to loop on this
+        // because setTimeout can add scripts to execute.
+        while !message_queue.pin_mut().IsEmpty() {
+            message_queue.pin_mut().ProcessAll(filename);
+        }
+    }
 
     message_queue.pin_mut().RemoveAll();
 

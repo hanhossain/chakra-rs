@@ -284,7 +284,8 @@ fn jit_module_loop_body_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "jit-module-loop-body.js",
         baseline_path: Some("jit-module-loop-body.baseline"),
-        compile_flags: vec!["-testtrace:Backend", "-module"],
+        compile_flags: vec!["-testtrace:Backend"],
+        module: true,
         tags: HashSet::from([
             "require_backend",
             "exclude_test",
@@ -305,7 +306,7 @@ fn jit_module_loop_body_js2(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "jit-module-loop-body.js",
         baseline_path: Some("jit-module-loop-body-2.baseline"),
-        compile_flags: vec!["-module"],
+        module: true,
         tags: HashSet::from(["require_backend", "exclude_nonative"]),
         ..Default::default()
     };

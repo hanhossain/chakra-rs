@@ -51,10 +51,9 @@ int32_t RunScript(const rust::Str fileName, const rust::String &contents,
             ChakraRTInterface::JsRunScriptWithParserState(scriptSource, WScriptJsrt::GetNextSourceContext(), fname,
                                                           JsParseScriptAttributeNone, parserStateCache, nullptr);
     }
-    else if (HostConfigFlags::flags.Module)
+    else if (HostConfigFlags::coreConfig.module)
     {
-        // TODO (hanhossain): convert to rust::String
-        runScript = WScriptJsrt::ModuleEntryPoint(contents, static_cast<std::string>(fullPath));
+        runScript = WScriptJsrt::ModuleEntryPoint(contents, fullPath);
     }
     else // bufferValue == nullptr && parserStateCache == nullptr
     {

@@ -18,5 +18,15 @@ pub mod ffi {
         type CVoid = crate::rt_interface::ffi::CVoid;
         #[Self = "WScriptJsrt"]
         unsafe fn PromiseContinuationCallback(task: JsValueRef, callbackState: *mut CVoid);
+
+        #[Self = "WScriptJsrt"]
+        fn GetNextSourceContext() -> usize;
+
+        type JsErrorCode = crate::rt_interface::ffi::JsErrorCode;
+        #[Self = "WScriptJsrt"]
+        fn ModuleEntryPoint(fileContent: &str, fullName: &String) -> JsErrorCode;
+
+        #[Self = "WScriptJsrt"]
+        fn PrintException(filname: &str, jsErrorCode: JsErrorCode, exception: JsValueRef) -> bool;
     }
 }

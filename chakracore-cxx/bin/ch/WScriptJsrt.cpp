@@ -70,9 +70,9 @@ MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
 std::map<fs::path, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
 std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;
 std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
-unsigned long WScriptJsrt::sourceContext_ = 0;
+std::size_t WScriptJsrt::sourceContext_ = 0;
 
-unsigned long WScriptJsrt::GetNextSourceContext()
+std::size_t WScriptJsrt::GetNextSourceContext()
 {
     return sourceContext_++;
 }
@@ -553,10 +553,10 @@ std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
     return parent;
 }
 
-JsErrorCode WScriptJsrt::ModuleEntryPoint(rust::Str fileContent, const std::string &fullName)
+JsErrorCode WScriptJsrt::ModuleEntryPoint(rust::Str fileContent, const rust::String &fullName)
 {
     auto span = chakra::Span::create("WScriptJsrt::ModuleEntryPoint");
-    return LoadModuleFromString(fileContent, fullName, true);
+    return LoadModuleFromString(fileContent, static_cast<std::string>(fullName), true);
 }
 
 JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile)

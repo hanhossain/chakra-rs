@@ -48,6 +48,14 @@ unsafe impl cxx::ExternType for JsSourceContext {
     type Kind = cxx::kind::Trivial;
 }
 
+#[repr(transparent)]
+pub struct CULong(pub std::ffi::c_ulong);
+
+unsafe impl cxx::ExternType for CULong {
+    type Id = cxx::type_id!("CULong");
+    type Kind = cxx::kind::Trivial;
+}
+
 #[cxx::bridge]
 pub mod ffi {
     unsafe extern "C++" {
@@ -65,6 +73,7 @@ pub mod ffi {
         type JsContextRef = super::JsContextRef;
         type JsValueRef = super::JsValueRef;
         type JsSourceContext = super::JsSourceContext;
+        type CULong = super::CULong;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateRuntime(
@@ -108,6 +117,16 @@ pub mod ffi {
         ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
+        unsafe fn JsRunScriptWithParserState(
+            script: JsValueRef,
+            sourceContext: JsSourceContext,
+            sourceUrl: JsValueRef,
+            parseAttributes: JsParseScriptAttributes,
+            parserState: JsValueRef,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
         unsafe fn JsHasException(hasException: *mut bool) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
@@ -133,6 +152,15 @@ pub mod ffi {
             ) -> bool,
             sourceContext: JsSourceContext,
             sourceUrl: JsValueRef,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsRun(
+            script: JsValueRef,
+            sourceContext: JsSourceContext,
+            sourceUrl: JsValueRef,
+            parseAttributes: JsParseScriptAttributes,
             result: *mut JsValueRef,
         ) -> JsErrorCode;
     }

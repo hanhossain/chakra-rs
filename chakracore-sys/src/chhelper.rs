@@ -43,6 +43,8 @@ pub mod ffi {
         fn New() -> UniquePtr<MessageQueue>;
 
         fn RemoveAll(self: Pin<&mut MessageQueue>);
+        fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
+        fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
         type JsErrorCode = crate::rt_interface::ffi::JsErrorCode;
     }
 }
@@ -93,7 +95,11 @@ fn dummy_js_serialized_script_load_utf8_source(
 
 // TODO: this method's temporarily here while I port the rest of RunScript
 #[tracing::instrument(skip_all)]
-fn run_serialized(buffer_value: JsValueRef, contents: &String, fname: JsValueRef) -> JsErrorCode {
+pub fn run_serialized(
+    buffer_value: JsValueRef,
+    contents: &String,
+    fname: JsValueRef,
+) -> JsErrorCode {
     let Ok(contents) = CString::from_str(&contents) else {
         return JsErrorCode::JsErrorFatal;
     };

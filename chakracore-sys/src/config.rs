@@ -7,6 +7,7 @@ mod ffi {
         args: Vec<String>,
         host_args: Vec<String>,
         use_parser_state_cache: bool,
+        module: bool,
     }
 }
 
