@@ -20,6 +20,7 @@
 #include "ChakraCommon.h"
 #include "ChakraDebug.h"
 #include <rust/cxx.h>
+#include <functional>
 
 using CVoid = void;
 
@@ -480,9 +481,8 @@ namespace chakracore::jsrt
 /// <returns>
 ///     true if the operation succeeded, false otherwise.
 /// </returns>
-typedef bool (* JsSerializedLoadScriptCallback)
-    (JsSourceContext sourceContext, _Out_ JsValueRef *value,
-    _Out_ JsParseScriptAttributes *parseAttributes);
+using JsSerializedLoadScriptCallback = std::function<bool(JsSourceContext sourceContext, _Out_ JsValueRef *value,
+                                                _Out_ JsParseScriptAttributes *parseAttributes)>;
 
 namespace chakracore::jsrt
 {

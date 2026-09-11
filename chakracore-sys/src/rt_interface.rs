@@ -34,6 +34,20 @@ unsafe impl cxx::ExternType for JsValueRef {
     type Kind = cxx::kind::Trivial;
 }
 
+impl JsValueRef {
+    pub fn is_null(&self) -> bool {
+        self.0.is_null()
+    }
+}
+
+#[repr(transparent)]
+pub struct JsSourceContext(pub usize);
+
+unsafe impl cxx::ExternType for JsSourceContext {
+    type Id = cxx::type_id!("JsSourceContext");
+    type Kind = cxx::kind::Trivial;
+}
+
 #[cxx::bridge]
 pub mod ffi {
     unsafe extern "C++" {
@@ -50,6 +64,7 @@ pub mod ffi {
         type JsRuntimeHandle = super::JsRuntimeHandle;
         type JsContextRef = super::JsContextRef;
         type JsValueRef = super::JsValueRef;
+        type JsSourceContext = super::JsSourceContext;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateRuntime(
@@ -107,6 +122,19 @@ pub mod ffi {
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateString(content: &String, value: *mut JsValueRef) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsRunSerialized(
+            buffer: JsValueRef,
+            callback: unsafe fn(
+                sourceContext: JsSourceContext,
+                value: *mut JsValueRef,
+                parseAttributes: *mut JsParseScriptAttributes,
+            ) -> bool,
+            sourceContext: JsSourceContext,
+            sourceUrl: JsValueRef,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
     }
 
     #[derive(Debug)]

@@ -98,6 +98,14 @@ public:
     static JsErrorCode JsParse(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return chakracore::jsrt::JsParse(script, sourceContext, sourceUrl, parseAttributes, result); }
     static JsErrorCode JsSerialize(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return chakracore::jsrt::JsSerialize(script, buffer, parseAttributes); }
     static JsErrorCode JsRunSerialized(JsValueRef buffer, JsSerializedLoadScriptCallback scriptLoadCallback, JsSourceContext sourceContext, JsValueRef sourceUrl, JsValueRef * result) { return chakracore::jsrt::JsRunSerialized(buffer, scriptLoadCallback, sourceContext, sourceUrl, result); }
+    static JsErrorCode JsRunSerialized(
+        JsValueRef buffer,
+        rust::Fn<bool(JsSourceContext sourceContext, JsValueRef *value, JsParseScriptAttributes *parseAttributes)>
+            scriptLoadCallback,
+        JsSourceContext sourceContext, JsValueRef sourceUrl, JsValueRef *result)
+    {
+        return chakracore::jsrt::JsRunSerialized(buffer, scriptLoadCallback, sourceContext, sourceUrl, result);
+    }
     static JsErrorCode JsGetStringLength(JsValueRef value, int *stringLength) { return chakracore::jsrt::JsGetStringLength(value, stringLength); }
     static JsErrorCode JsToString(JsValueRef value, rust::String &string) { return chakracore::jsrt::JsToString(value, string); }
     static JsErrorCode JsCreateString(const char *content, size_t length, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, length, value); }

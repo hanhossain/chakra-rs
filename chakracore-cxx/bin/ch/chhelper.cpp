@@ -17,27 +17,14 @@
 #include "MessageQueue.h"
 #include "chakra/Logger.h"
 
+#include <chakracore-sys/src/chhelper.rs.h>
+
 unsigned int MessageBase::s_messageCount = 0;
 
 static_assert(sizeof(ssize_t) == sizeof(long));
 
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
-
-static bool DummyJsSerializedScriptLoadUtf8Source(JsSourceContext sourceContext, JsValueRef *scriptBuffer,
-                                                  JsParseScriptAttributes *parseAttributes)
-{
-    auto *scriptBody = reinterpret_cast<const rust::String *>(sourceContext);
-
-    // sourceContext is source ptr, see RunScript below
-    if (ChakraRTInterface::JsCreateExternalArrayBuffer(*scriptBody, nullptr, scriptBuffer) != JsNoError)
-    {
-        return false;
-    }
-
-    *parseAttributes = JsParseScriptAttributeNone;
-    return true;
-}
 
 int32_t RunScript(const rust::Str fileName, const rust::String &contents,
                   JsValueRef bufferValue,
@@ -53,10 +40,7 @@ int32_t RunScript(const rust::Str fileName, const rust::String &contents,
     if (bufferValue != nullptr)
     {
         // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
-        runScript = ChakraRTInterface::JsRunSerialized(bufferValue, DummyJsSerializedScriptLoadUtf8Source,
-                                                       reinterpret_cast<JsSourceContext>(&contents),
-                                                       // Use source ptr as sourceContext
-                                                       fname, nullptr /*result*/);
+        runScript = chakra_rs::chhelper::run_serialized(bufferValue, contents, fname);
     }
     else if (parserStateCache != nullptr)
     {
