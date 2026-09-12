@@ -163,6 +163,9 @@ pub mod ffi {
             parseAttributes: JsParseScriptAttributes,
             result: *mut JsValueRef,
         ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
     }
 
     #[derive(Debug)]

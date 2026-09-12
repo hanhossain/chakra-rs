@@ -37,11 +37,3 @@ pub enum Error {
     #[error(transparent)]
     InteriorNull(#[from] std::ffi::NulError),
 }
-
-impl Error {
-    /// Returns an HRESULT E_FAIL
-    fn hresult_fail() -> Self {
-        let fail = 0x80004005u32 as i32;
-        Error::NegativeHResult(fail)
-    }
-}

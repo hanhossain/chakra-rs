@@ -5,7 +5,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "WScriptJsrt.h"
 
-#include "PlatformAgnostic/ChakraICU.h"
 #include <vector>
 #include <ctime>
 #include <ratio>
@@ -24,6 +23,8 @@
 #include "SourceMap.h"
 #include "TestHooks.h"
 #include "chakra/Logger.h"
+
+#include <chakracore-sys/src/wscript_jsrt.rs.h>
 
 namespace fs = std::filesystem;
 
@@ -664,7 +665,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
         IfJsErrorFailLog(ChakraRTInterface::JsSetPromiseContinuationCallback(PromiseContinuationCallback, (void*)messageQueue_));
 
         // Initialize the host objects
-        Initialize();
+        chakra_rs::WScript::initialize();
 
         JsValueRef scriptSource;
         IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer(*content, finalizeCallback, &scriptSource));
@@ -907,14 +908,10 @@ bool WScriptJsrt::InstallObjectsOnObject(JsValueRef object, const char* name,
     return true;
 }
 
-bool WScriptJsrt::Initialize()
+bool WScriptJsrt::Initialize(int icuVersion, JsValueRef wscript)
 {
     int32_t hr = S_OK;
     const char* LINK_TYPE = "static";
-    int icuVersion = PlatformAgnostic::ICUHelpers::GetICUMajorVersion();
-
-    JsValueRef wscript;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateObject(&wscript), false);
 
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "monotonicNow", MonotonicNowCallback));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Echo", EchoCallback));

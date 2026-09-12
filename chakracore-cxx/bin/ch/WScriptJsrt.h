@@ -23,7 +23,7 @@ enum ModuleState
 class WScriptJsrt
 {
 public:
-    static bool Initialize();
+    static bool Initialize(int icuVersion, JsValueRef wscript);
     static bool Uninitialize();
     static JsErrorCode ModuleEntryPoint(rust::Str fileContent, const rust::String &fullName);
 
