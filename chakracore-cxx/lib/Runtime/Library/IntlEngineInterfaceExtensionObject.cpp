@@ -1349,7 +1349,7 @@ DEFINE_ISXLOCALEAVAILABLE(PR, uloc)
         typename WriteBarrierFieldTypeTraits<ScriptContext *>::Type sc;
         typename WriteBarrierFieldTypeTraits<UNumberFormatFields *>::Type fields;
 
-        static const UNumberFormatFields UnsetField = static_cast<UNumberFormatFields>(0xFFFFFFFF);
+        static constexpr uint32_t UnsetField = std::numeric_limits<uint32_t>::max();
 
         JavascriptString *GetPartTypeString(UNumberFormatFields field)
         {
