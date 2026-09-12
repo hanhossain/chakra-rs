@@ -351,13 +351,12 @@ JsErrorCode chakracore::jsrt::JsVarSerializerDetachArrayBuffer(_In_ JsVarSeriali
 
 JsErrorCode chakracore::jsrt::JsVarSerializerSetTransferableVars(
     _In_ JsVarSerializerHandle serializerHandle,
-    _In_opt_ JsValueRef *transferableVars,
-    _In_ size_t transferableVarsCount)
+    _In_opt_ const std::vector<JsValueRef> &transferableVars)
 {
     PARAM_NOT_NULL(serializerHandle);
     return ContextAPINoScriptWrapper_NoRecord([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
         ChakraCoreStreamWriter* streamWriter = reinterpret_cast<ChakraCoreStreamWriter*>(serializerHandle);
-        return streamWriter->SetTransferableVars(transferableVars, transferableVarsCount);
+        return streamWriter->SetTransferableVars(transferableVars);
     });
 
 }
@@ -431,12 +430,12 @@ JsErrorCode chakracore::jsrt::JsVarDeserializerReadValue(_In_ JsVarDeserializerH
     });
 }
 
-JsErrorCode chakracore::jsrt::JsVarDeserializerSetTransferableVars(_In_ JsVarDeserializerHandle deserializerHandle, _In_opt_ JsValueRef *transferableVars, _In_ size_t transferableVarsCount)
+JsErrorCode chakracore::jsrt::JsVarDeserializerSetTransferableVars(_In_ JsVarDeserializerHandle deserializerHandle, _In_opt_ const std::vector<JsValueRef> &transferableVars)
 {
     PARAM_NOT_NULL(deserializerHandle);
     return ContextAPINoScriptWrapper_NoRecord([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
         ChakraHostDeserializerHandle* deserializer = reinterpret_cast<ChakraHostDeserializerHandle*>(deserializerHandle);
-        return deserializer->SetTransferableVars(transferableVars, transferableVarsCount);
+        return deserializer->SetTransferableVars(transferableVars);
     });
 }
 

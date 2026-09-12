@@ -122,13 +122,13 @@ public:
     static JsErrorCode JsRunScriptWithParserState(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef * result) { return chakracore::jsrt::JsRunScriptWithParserState(script, sourceContext, sourceUrl, parseAttributes, parserState, result); }
 
     static JsErrorCode JsVarSerializer(ReallocateBufferMemoryFunc reallocateBufferMemory, WriteHostObjectFunc writeHostObject, void * callbackState, JsVarSerializerHandle *serializerHandle) { return chakracore::jsrt::JsVarSerializer(reallocateBufferMemory, writeHostObject, callbackState, serializerHandle); }
-    static JsErrorCode JsVarSerializerSetTransferableVars(JsVarSerializerHandle serializerHandle, JsValueRef *transferableVars, size_t transferableVarsCount) { return chakracore::jsrt::JsVarSerializerSetTransferableVars(serializerHandle, transferableVars, transferableVarsCount); }
+    static JsErrorCode JsVarSerializerSetTransferableVars(JsVarSerializerHandle serializerHandle, const std::vector<JsValueRef> &transferableVars) { return chakracore::jsrt::JsVarSerializerSetTransferableVars(serializerHandle, transferableVars); }
     static JsErrorCode JsVarSerializerWriteValue(JsVarSerializerHandle serializerHandle, JsValueRef rootObject) { return chakracore::jsrt::JsVarSerializerWriteValue(serializerHandle, rootObject); }
     static JsErrorCode JsVarSerializerReleaseData(JsVarSerializerHandle serializerHandle, byte** data, size_t *dataLength) { return chakracore::jsrt::JsVarSerializerReleaseData(serializerHandle, data, dataLength); }
     static JsErrorCode JsVarSerializerFree(JsVarSerializerHandle serializerHandle) { return chakracore::jsrt::JsVarSerializerFree(serializerHandle); }
 
     static JsErrorCode JsVarDeserializer(void *data, size_t dataLength, ReadHostObjectFunc readHostObject, GetSharedArrayBufferFromIdFunc getSharedArrayBufferFromId, void* callbackState, JsVarDeserializerHandle *deserializerHandle) { return chakracore::jsrt::JsVarDeserializer(data, dataLength, readHostObject, getSharedArrayBufferFromId, callbackState, deserializerHandle); }
-    static JsErrorCode JsVarDeserializerSetTransferableVars(JsVarDeserializerHandle deserializerHandle, JsValueRef* transferableVars, size_t transferableVarsCount) { return chakracore::jsrt::JsVarDeserializerSetTransferableVars(deserializerHandle, transferableVars, transferableVarsCount); }
+    static JsErrorCode JsVarDeserializerSetTransferableVars(JsVarDeserializerHandle deserializerHandle, const std::vector<JsValueRef> &transferableVars) { return chakracore::jsrt::JsVarDeserializerSetTransferableVars(deserializerHandle, transferableVars); }
     static JsErrorCode JsVarDeserializerReadValue(JsVarDeserializerHandle deserializerHandle, JsValueRef* value) { return chakracore::jsrt::JsVarDeserializerReadValue(deserializerHandle, value); }
     static JsErrorCode JsVarDeserializerFree(JsVarDeserializerHandle deserializerHandle) { return chakracore::jsrt::JsVarDeserializerFree(deserializerHandle); }
 

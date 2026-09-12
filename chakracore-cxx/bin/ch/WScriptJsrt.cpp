@@ -253,8 +253,7 @@ JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall,
     std::string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
     [[maybe_unused]] int32_t hr = S_OK;
-    JsValueRef *transferVarsArray = nullptr;
-    int transferVarsCount = 0;
+    std::vector<JsValueRef> transferVarsArray;
     if (argumentCount < 2)
     {
         errorCode = JsErrorInvalidArgument;
@@ -286,12 +285,7 @@ JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall,
                 IfJsrtErrorSetGo(ChakraRTInterface::JsNumberToInt(arrayLengthObj, &arrayLength));
                 if (arrayLength > 0)
                 {
-                    transferVarsArray = new JsValueRef[arrayLength];
-                    if (transferVarsArray == nullptr)
-                    {
-                        errorCode = JsErrorOutOfMemory;
-                        goto Error;
-                    }
+                    transferVarsArray = std::vector<JsValueRef>(arrayLength);
 
                     for (int i = 0; i < arrayLength; i++)
                     {
@@ -304,8 +298,7 @@ JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall,
                         IfJsrtErrorSetGo(ChakraRTInterface::JsGetValueType(value, &jsType));
                         if (jsType == JsArrayBuffer)
                         {
-                            *(transferVarsArray + transferVarsCount) = value;
-                            transferVarsCount++;
+                            transferVarsArray.push_back(value);
                         }
                     }
                 }
@@ -317,13 +310,12 @@ JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall,
         // This memory will be claimed at WScriptJsrt::Deserialize.
         SerializerBlob *blob = new SerializerBlob();
         IfJsrtErrorSetGo(ChakraRTInterface::JsVarSerializer(ReallocateBufferMemory, WriteHostObject, nullptr, &serializerHandle));
-        IfJsrtErrorSetGo(ChakraRTInterface::JsVarSerializerSetTransferableVars(serializerHandle, transferVarsArray, transferVarsCount));
+        IfJsrtErrorSetGo(ChakraRTInterface::JsVarSerializerSetTransferableVars(serializerHandle, transferVarsArray));
         IfJsrtErrorSetGo(ChakraRTInterface::JsVarSerializerWriteValue(serializerHandle, rootObject));
         IfJsrtErrorSetGo(ChakraRTInterface::JsVarSerializerReleaseData(serializerHandle, (byte**)&blob->data, &blob->dataLength));
 
-        for (int i = 0; i < transferVarsCount; i++)
+        for (const auto arrayBuffer : transferVarsArray)
         {
-            JsValueRef arrayBuffer = transferVarsArray[i];
             ArrayBufferTransferInfo bufferInfo;
             IfJsrtErrorSetGo(ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &bufferInfo.buffer, &bufferInfo.length));
             IfJsrtErrorSetGo(ChakraRTInterface::JsExternalizeArrayBuffer(arrayBuffer));
@@ -337,7 +329,6 @@ JsValueRef WScriptJsrt::SerializeObject(JsValueRef callee, bool isConstructCall,
     }
 Error:
     SetExceptionIf(errorCode, errorMessage);
-    delete[] transferVarsArray;
     return returnValue;
 }
 
@@ -382,7 +373,6 @@ JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsV
     JsErrorCode errorCode = JsNoError;
     std::string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsValueRef * transferables = nullptr;
     [[maybe_unused]] int32_t hr = S_OK;
     if (argumentCount < 2)
     {
@@ -399,22 +389,21 @@ JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsV
         JsVarDeserializerHandle deserializerHandle = nullptr;
         IfJsrtErrorSetGo(ChakraRTInterface::JsVarDeserializer(blob->data, blob->dataLength, ReadHostObject, GetSharedArrayBufferFromId, nullptr, &deserializerHandle));
 
-        size_t arraySize = blob->transferableArrays.size();
-        if (arraySize > 0)
+        if (!blob->transferableArrays.empty())
         {
-            transferables = new JsValueRef[arraySize];
+            std::vector<JsValueRef> transferables;
 
-            for (size_t i = 0; i < arraySize; ++i)
+            for (const auto &transferableArray : blob->transferableArrays)
             {
                 JsValueRef result = nullptr;
                 BufferFreeFunctionState* bufferFreeState = new BufferFreeFunctionState();
-                bufferFreeState->buffer = blob->transferableArrays[i].buffer;
-                bufferFreeState->freeFn = blob->transferableArrays[i].freeFn;
-                IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer(blob->transferableArrays[i].buffer, blob->transferableArrays[i].length, BufferFreeFunction, bufferFreeState, &result));
-                transferables[i] = result;
+                bufferFreeState->buffer = transferableArray.buffer;
+                bufferFreeState->freeFn = transferableArray.freeFn;
+                IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer(transferableArray.buffer, transferableArray.length, BufferFreeFunction, bufferFreeState, &result));
+                transferables.push_back(result);
             }
 
-            IfJsrtErrorSetGo(ChakraRTInterface::JsVarDeserializerSetTransferableVars(deserializerHandle, transferables, arraySize));
+            IfJsrtErrorSetGo(ChakraRTInterface::JsVarDeserializerSetTransferableVars(deserializerHandle, transferables));
         }
 
         IfJsrtErrorSetGo(ChakraRTInterface::JsVarDeserializerReadValue(deserializerHandle, &returnValue));
@@ -425,7 +414,6 @@ JsValueRef WScriptJsrt::Deserialize(JsValueRef callee, bool isConstructCall, JsV
 
 Error:
     SetExceptionIf(errorCode, errorMessage);
-    delete[] transferables;
     return returnValue;
 }
 

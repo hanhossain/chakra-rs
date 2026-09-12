@@ -1823,16 +1823,14 @@ namespace chakracore::jsrt
     /// <summary>
     ///     Host provides all the objects which has transferable semantics (Such as ArrayBuffers).
     /// </summary>
-    /// <param name="transferableVars">An array of transferable objects</param>
-    /// <param name="transferableVarsCount">Length of transferableVars array </param>
+    /// <param name="transferableVars">A vector of transferable objects</param>
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
     JsErrorCode
     JsVarSerializerSetTransferableVars(
         _In_ JsVarSerializerHandle serializerHandle,
-        _In_opt_ JsValueRef *transferableVars,
-        _In_ size_t transferableVarsCount);
+        _In_opt_ const std::vector<JsValueRef> &transferableVars);
 
     /// <summary>
     ///     Free current object (which was created upon JsVarSerializer) when the serialization is done. SerializerHandleBase object should not be used further after FreeSelf call.
@@ -1917,13 +1915,12 @@ namespace chakracore::jsrt
     /// <summary>
     ///     Host provides all the objects which has transferable semantics (Such as ArrayBuffers).
     /// </summary>
-    /// <param name="transferableVars">An array of transferable objects</param>
-    /// <param name="transferableVarsCount">Length of transferableVars array </param>
+    /// <param name="transferableVars">A vector of transferable objects</param>
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
     JsErrorCode
-    JsVarDeserializerSetTransferableVars(_In_ JsVarDeserializerHandle deserializerHandle, _In_opt_ JsValueRef *transferableVars, _In_ size_t transferableVarsCount);
+    JsVarDeserializerSetTransferableVars(_In_ JsVarDeserializerHandle deserializerHandle, _In_opt_ const std::vector<JsValueRef> &transferableVars);
 
     /// <summary>
     ///     Free current object (which was created upon JsVarSerializer) when the serialization is done. JsVarSerializerHandle object should not be used further after FreeSelf call.

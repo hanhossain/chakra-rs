@@ -29,14 +29,12 @@ namespace Js
 
         Cloner* m_cloner;
         ClonedObjectDictionary* m_clonedObjects;
-        Var* m_transferableVars;
-        size_t m_cTransferableVars;
+        std::vector<Var> m_transferableVars;
 
     private:
-        SCAEngine(Cloner* cloner, Var* m_transferableVars, size_t cTransferableVars)
+        SCAEngine(Cloner* cloner, const std::vector<Var> &m_transferableVars)
             : m_cloner(cloner),
-            m_transferableVars(m_transferableVars),
-            m_cTransferableVars(cTransferableVars)
+            m_transferableVars(m_transferableVars)
         {
             Recycler* recycler = cloner->GetScriptContext()->GetRecycler();
             m_clonedObjects = RecyclerNew(recycler, ClonedObjectDictionary, recycler);
@@ -108,14 +106,14 @@ namespace Js
             return m_clonedObjects->TryGetValue(src, dst);
         }
 
-        bool TryGetTransferredOrShared(Var source, size_t* outDestination)
+        bool TryGetTransferredOrShared(Var source, size_t* outDestination) const
         {
-            if (m_transferableVars == nullptr)
+            if (m_transferableVars.empty())
             {
                 return false;
             }
 
-            for (size_t i = 0; i < m_cTransferableVars; i++)
+            for (size_t i = 0; i < m_transferableVars.size(); i++)
             {
                 if (m_transferableVars[i] == source)
                 {
@@ -133,15 +131,15 @@ namespace Js
 
         Dst ClaimTransferable(size_t index, JavascriptLibrary* library)
         {
-            AssertMsg(index < this->m_cTransferableVars, "Index out of range.");
+            AssertMsg(index < this->m_transferableVars.size(), "Index out of range.");
             ArrayBuffer *ab = VarTo<ArrayBuffer>(m_transferableVars[index]);
 
             return ab;
         }
 
-        static Dst Clone(Src root, Cloner* cloner, Var* transferableVars, size_t cTransferableVars)
+        static Dst Clone(Src root, Cloner* cloner, const std::vector<Var> &transferableVars)
         {
-            SCAEngine<Src, Dst, Cloner> engine(cloner, transferableVars, cTransferableVars);
+            SCAEngine<Src, Dst, Cloner> engine{cloner, transferableVars};
             Dst dst;
             engine.Clone(root, &dst);
             return dst;
