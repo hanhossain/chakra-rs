@@ -880,7 +880,7 @@ JsErrorCode chakracore::jsrt::JsCreateString(const std::string &content, JsValue
     return JsCreateString(content.c_str(), content.length(), value);
 }
 
-JsErrorCode chakracore::jsrt::JsCreateString(const rust::String &content, JsValueRef *value)
+JsErrorCode chakracore::jsrt::JsCreateString(const rust::Str content, JsValueRef *value)
 {
     return JsCreateString(content.data(), content.size(), value);
 }

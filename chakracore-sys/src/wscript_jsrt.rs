@@ -35,8 +35,50 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         fn PrintException(filname: &str, jsErrorCode: JsErrorCode, exception: JsValueRef) -> bool;
 
+        #[namespace = "chakra_rs"]
+        type JsNativeFunctionArgs<'a> = crate::jsrt::JsNativeFunctionArgs<'a>;
+        #[Self = "WScriptJsrt"]
+        fn InstallObjectsOnObject(
+            object: &mut JsValueRef,
+            name: &str,
+            native_functions: fn(&JsNativeFunctionArgs) -> JsValueRef,
+        ) -> JsErrorCode;
+
         #[namespace = "PlatformAgnostic::ICUHelpers"]
         fn GetICUMajorVersion() -> i32;
+
+        #[Self = "WScriptJsrt"]
+        fn MonotonicNowCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn EchoCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn QuitCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn LoadScriptFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn LoadScriptCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn LoadModuleCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn SetTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn ClearTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn AttachCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn DetachCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn LoadTextFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn FlagCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn RegisterModuleSourceCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn GetModuleNamespace(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn GetProxyPropertiesCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
     }
 
     #[namespace = "chakra_rs"]
@@ -60,7 +102,94 @@ impl WScript {
             ChakraRTInterface::JsCreateObject(&raw mut wscript_object).as_result()?;
         }
 
-        if !ffi::WScriptJsrt::Initialize(icu_version, wscript_object) {
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "monotonicNow",
+            WScriptJsrt::MonotonicNowCallback,
+        )
+        .as_result()?;
+
+        WScriptJsrt::InstallObjectsOnObject(&mut wscript_object, "Echo", WScriptJsrt::EchoCallback)
+            .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(&mut wscript_object, "Quit", WScriptJsrt::QuitCallback)
+            .as_result()?;
+
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "LoadScriptFile",
+            WScriptJsrt::LoadScriptFileCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "LoadScript",
+            WScriptJsrt::LoadScriptCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "LoadModule",
+            WScriptJsrt::LoadModuleCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "SetTimeout",
+            WScriptJsrt::SetTimeoutCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "ClearTimeout",
+            WScriptJsrt::ClearTimeoutCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "Attach",
+            WScriptJsrt::AttachCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "Detach",
+            WScriptJsrt::DetachCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "LoadBinaryFile",
+            WScriptJsrt::LoadBinaryFileCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "LoadTextFile",
+            WScriptJsrt::LoadTextFileCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(&mut wscript_object, "Flag", WScriptJsrt::FlagCallback)
+            .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "RegisterModuleSource",
+            WScriptJsrt::RegisterModuleSourceCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "GetModuleNamespace",
+            WScriptJsrt::GetModuleNamespace,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "GetProxyProperties",
+            WScriptJsrt::GetProxyPropertiesCallback,
+        )
+        .as_result()?;
+
+        if !WScriptJsrt::Initialize(icu_version, wscript_object) {
             return Err(JsError::JsErrorFatal);
         }
 

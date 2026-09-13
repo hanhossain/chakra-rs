@@ -538,7 +538,7 @@ namespace chakracore::jsrt
     /// <param name="content">Pointer to string memory.</param>
     /// <param name="value">JsValueRef representing the JavascriptString</param>
     /// <returns>The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.</returns>
-    JsErrorCode JsCreateString(const rust::String &content, JsValueRef *value);
+    JsErrorCode JsCreateString(rust::Str content, JsValueRef *value);
 
     /// <summary>
     ///     Write JavascriptString value into rust::String (Utf8)
@@ -690,6 +690,7 @@ namespace chakracore::jsrt
             _Out_ JsPropertyIdRef *propertyId);
 
     JsErrorCode JsCreatePropertyId(const std::string &name, JsPropertyIdRef *propertyId);
+    JsErrorCode JsCreatePropertyId(rust::Str name, JsPropertyIdRef *propertyId);
 
     /// <summary>
     ///     Creates the property ID associated with the name.

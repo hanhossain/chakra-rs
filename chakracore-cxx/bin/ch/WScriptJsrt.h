@@ -112,12 +112,14 @@ public:
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, const std::vector<JsValueRef> &arguments, bool isSourceModule);
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
     static bool InstallObjectsOnObject(JsValueRef object, const char* name, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction);
+    static JsErrorCode InstallObjectsOnObject(JsValueRef &object, rust::Str name, rust::Fn<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction);
     static void FinalizeFree(void * addr);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
     static bool CreateArgumentsObject(JsValueRef *argsObject);
-    static bool CreateNamedFunction(const char*, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)>callback, JsValueRef *functionVar);
+    static JsErrorCode CreateNamedFunction(rust::Str nameString, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)>callback, JsValueRef *functionVar);
     static std::string GetDir(std::string_view fullPathNarrow);
+public:
     static JsValueRef CALLBACK EchoCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK QuitCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK LoadScriptFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
@@ -149,6 +151,7 @@ private:
     static JsValueRef CALLBACK SerializeObject(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK Deserialize(const chakra_rs::JsNativeFunctionArgs &args);
 
+private:
     static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier,
                                                  JsModuleRecord* dependentModuleRecord,
                                                  const std::optional<std::filesystem::path>& refdir = std::nullopt);

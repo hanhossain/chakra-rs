@@ -882,13 +882,16 @@ Error:
     return JS_INVALID_REFERENCE;
 }
 
-bool WScriptJsrt::CreateNamedFunction(const char* nameString, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> callback, JsValueRef *functionVar)
+JsErrorCode WScriptJsrt::CreateNamedFunction(const rust::Str nameString, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> callback, JsValueRef *functionVar)
 {
     JsValueRef nameVar;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
-        nameString, strlen(nameString), &nameVar), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateNamedFunction(nameVar, std::move(callback), functionVar), false);
-    return true;
+    JsErrorCode res = ChakraRTInterface::JsCreateString(nameString, &nameVar);
+    if (res != JsNoError)
+    {
+        return res;
+    }
+    res = ChakraRTInterface::JsCreateNamedFunction(nameVar, std::move(callback), functionVar);
+    return res;
 }
 
 bool WScriptJsrt::InstallObjectsOnObject(JsValueRef object, const char* name,
@@ -897,36 +900,35 @@ bool WScriptJsrt::InstallObjectsOnObject(JsValueRef object, const char* name,
     JsValueRef propertyValueRef;
     JsPropertyIdRef propertyId;
     IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId(name, &propertyId), false);
-    if (!CreateNamedFunction(name, std::move(nativeFunction), &propertyValueRef))
-    {
-        return false;
-    }
+    IfJsrtErrorFail(CreateNamedFunction(name, std::move(nativeFunction), &propertyValueRef), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(object, propertyId,
         propertyValueRef, true), false);
     return true;
+}
+
+JsErrorCode WScriptJsrt::InstallObjectsOnObject(JsValueRef &object, const rust::Str name,
+    rust::Fn<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction)
+{
+    JsValueRef propertyValueRef;
+    JsPropertyIdRef propertyId;
+    JsErrorCode err = ChakraRTInterface::JsCreatePropertyId(static_cast<std::string_view>(name), &propertyId);
+    if (err != JsNoError)
+    {
+        return err;
+    }
+    err = CreateNamedFunction(name, nativeFunction, &propertyValueRef);
+    if (err != JsNoError)
+    {
+        return err;
+    }
+    err = ChakraRTInterface::JsSetProperty(object, propertyId, propertyValueRef, true);
+    return err;
 }
 
 bool WScriptJsrt::Initialize(int icuVersion, JsValueRef wscript)
 {
     int32_t hr = S_OK;
     const char* LINK_TYPE = "static";
-
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "monotonicNow", MonotonicNowCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Echo", EchoCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Quit", QuitCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadScriptFile", LoadScriptFileCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadScript", LoadScriptCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadModule", LoadModuleCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "SetTimeout", SetTimeoutCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "ClearTimeout", ClearTimeoutCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Attach", AttachCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Detach", DetachCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadBinaryFile", LoadBinaryFileCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "LoadTextFile", LoadTextFileCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Flag", FlagCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "RegisterModuleSource", RegisterModuleSourceCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "GetModuleNamespace", GetModuleNamespace));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "GetProxyProperties", GetProxyPropertiesCallback));
 
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "SerializeObject", SerializeObject));
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Deserialize", Deserialize));
