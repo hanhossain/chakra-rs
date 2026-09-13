@@ -45,7 +45,6 @@ public:
     static JsErrorCode JsGetIteratorPrototype(JsValueRef * result) { return chakracore::jsrt::JsGetIteratorPrototype(result); }
     static JsErrorCode JsCreateFunction(JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateFunction(std::move(nativeFunction), callbackState, function); }
     static JsErrorCode JsCreateEnhancedFunction(JsEnhancedNativeFunction nativeFunction, JsValueRef metadata, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateEnhancedFunction(nativeFunction, metadata, callbackState, function); }
-    static JsErrorCode JsCreateNamedFunction(JsValueRef name, JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateNamedFunction(name, std::move(nativeFunction), callbackState, function); }
     static JsErrorCode JsCreateNamedFunction(JsValueRef name, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &args)> callback, JsValueRef *function)
     {
         auto trampoline = [func = std::move(callback)](JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *) -> JsValueRef
