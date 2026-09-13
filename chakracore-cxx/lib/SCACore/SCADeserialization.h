@@ -164,6 +164,6 @@ namespace Js
         typedef DeserializationCloner<StreamReader> StreamDeserializationCloner;
 
     public:
-        static Var Deserialize(StreamReader* reader, Var* transferableVars, size_t cTransferableVars);
+        static Var Deserialize(StreamReader* reader, const std::vector<Var> &transferableVars);
     };
 }

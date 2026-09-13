@@ -556,7 +556,7 @@ namespace Js
 
     template class DeserializationCloner<StreamReader>;
 
-    Var SCADeserializationEngine::Deserialize(StreamReader* reader, Var* transferableVars, size_t cTransferableVars)
+    Var SCADeserializationEngine::Deserialize(StreamReader* reader, const std::vector<Var> &transferableVars)
     {
         ScriptContext* scriptContext = reader->GetScriptContext();
         StreamDeserializationCloner cloner(scriptContext, reader);
@@ -568,7 +568,7 @@ namespace Js
         {
             cloner.ThrowSCANewVersion();
         }
-        Var value = SCAEngine<scaposition_t, Var, StreamDeserializationCloner>::Clone(reader->GetPosition(), &cloner, transferableVars, cTransferableVars);
+        Var value = SCAEngine<scaposition_t, Var, StreamDeserializationCloner>::Clone(reader->GetPosition(), &cloner, transferableVars);
         if (!value)
         {
             cloner.ThrowSCADataCorrupt();

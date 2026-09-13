@@ -17,7 +17,7 @@ namespace Js
             {
             }
 
-            int32_t SetTransferableVars(Var *vars, size_t count);
+            int32_t SetTransferableVars(const std::vector<Var> &vars);
 
             void WriteRawBytes(const void* source, size_t length);
             bool WriteValue(Var rootObject);
@@ -27,8 +27,7 @@ namespace Js
 
         private:
             StreamWriter m_streamWriter;
-            Var* m_transferableVars = nullptr;
-            size_t m_cTransferableVars = 0;
+            std::vector<Var> m_transferableVars{};
         };
 
         class Deserializer
@@ -39,7 +38,7 @@ namespace Js
             {
             }
 
-            int32_t SetTransferableVars(Var *vars, size_t count);
+            int32_t SetTransferableVars(const std::vector<Var> &vars);
 
             bool ReadRawBytes(size_t length, void **data);
             bool ReadBytes(size_t length, void **data);
@@ -47,8 +46,7 @@ namespace Js
 
         private:
             StreamReader m_streamReader;
-            Var* m_transferableVars = nullptr;
-            size_t m_cTransferableVars = 0;
+            std::vector<Var> m_transferableVars{};
         };
     }
 

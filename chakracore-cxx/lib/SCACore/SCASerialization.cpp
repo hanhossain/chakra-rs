@@ -622,7 +622,7 @@ namespace Js
         return false;
     }
 
-    void SCASerializationEngine::Serialize(Var root, StreamWriter* writer, Var* transferableVars, size_t cTransferableVars,
+    void SCASerializationEngine::Serialize(Var root, StreamWriter* writer, const std::vector<Var> &transferableVars,
         JsUtil::List<Js::SharedContents*, HeapAllocator>* sharedContentsList)
     {
         ScriptContext* scriptContext = writer->GetScriptContext();
@@ -631,6 +631,6 @@ namespace Js
         writer->Write(static_cast<uint32_t>(SCA_FORMAT_VERSION));
 
         StreamSerializationCloner cloner(scriptContext, writer, sharedContentsList);
-        SCAEngine<Var, scaposition_t, StreamSerializationCloner>::Clone(root, &cloner, transferableVars, cTransferableVars);
+        SCAEngine<Var, scaposition_t, StreamSerializationCloner>::Clone(root, &cloner, transferableVars);
     }
 }

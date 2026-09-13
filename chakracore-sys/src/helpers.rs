@@ -1,5 +1,7 @@
+pub use ffi::Helpers;
+
 #[cxx::bridge]
-pub mod ffi {
+mod ffi {
     unsafe extern "C++" {
         include!("Helpers.h");
 

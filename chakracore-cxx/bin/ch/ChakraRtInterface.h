@@ -6,8 +6,11 @@
 #pragma once
 #include <rust/cxx.h>
 
+#include <utility>
+
 #include "ChakraCommon.h"
 #include "ChakraCore.h"
+#include "chakracore-sys/src/jsrt.rs.h"
 
 class ChakraRTInterface
 {
@@ -40,9 +43,24 @@ public:
     static JsErrorCode JsGetPropertyIdSymbolIterator(JsPropertyIdRef * propertyId) { return chakracore::jsrt::JsGetPropertyIdSymbolIterator(propertyId); }
     static JsErrorCode JsGetErrorPrototype(JsValueRef * result) { return chakracore::jsrt::JsGetErrorPrototype(result); }
     static JsErrorCode JsGetIteratorPrototype(JsValueRef * result) { return chakracore::jsrt::JsGetIteratorPrototype(result); }
-    static JsErrorCode JsCreateFunction(JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateFunction(nativeFunction, callbackState, function); }
+    static JsErrorCode JsCreateFunction(JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateFunction(std::move(nativeFunction), callbackState, function); }
     static JsErrorCode JsCreateEnhancedFunction(JsEnhancedNativeFunction nativeFunction, JsValueRef metadata, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateEnhancedFunction(nativeFunction, metadata, callbackState, function); }
-    static JsErrorCode JsCreateNamedFunction(JsValueRef name, JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateNamedFunction(name, nativeFunction, callbackState, function); }
+    static JsErrorCode JsCreateNamedFunction(JsValueRef name, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &args)> callback, JsValueRef *function)
+    {
+        auto trampoline = [func = std::move(callback)](JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *) -> JsValueRef
+        {
+            std::vector<JsValueRef> args{};
+            args.reserve(argumentCount);
+            for (int i = 0; i < argumentCount; i++)
+            {
+                args.push_back(arguments[i]);
+            }
+            const chakra_rs::JsNativeFunctionArgs nativeFuncArgs{
+                .callee = callee, .is_construct_call = isConstructCall, .arguments = args};
+            return func(nativeFuncArgs);
+        };
+        return chakracore::jsrt::JsCreateNamedFunction(name, trampoline, nullptr, function);
+    }
     static JsErrorCode JsSetProperty(JsValueRef object, JsPropertyIdRef property, JsValueRef value, bool useStrictRules) { return chakracore::jsrt::JsSetProperty(object, property, value, useStrictRules); }
     static JsErrorCode JsGetGlobalObject(JsValueRef *globalObject) { return chakracore::jsrt::JsGetGlobalObject(globalObject); }
     static JsErrorCode JsGetUndefinedValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetUndefinedValue(globalObject); }
@@ -122,13 +140,13 @@ public:
     static JsErrorCode JsRunScriptWithParserState(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef parserState, JsValueRef * result) { return chakracore::jsrt::JsRunScriptWithParserState(script, sourceContext, sourceUrl, parseAttributes, parserState, result); }
 
     static JsErrorCode JsVarSerializer(ReallocateBufferMemoryFunc reallocateBufferMemory, WriteHostObjectFunc writeHostObject, void * callbackState, JsVarSerializerHandle *serializerHandle) { return chakracore::jsrt::JsVarSerializer(reallocateBufferMemory, writeHostObject, callbackState, serializerHandle); }
-    static JsErrorCode JsVarSerializerSetTransferableVars(JsVarSerializerHandle serializerHandle, JsValueRef *transferableVars, size_t transferableVarsCount) { return chakracore::jsrt::JsVarSerializerSetTransferableVars(serializerHandle, transferableVars, transferableVarsCount); }
+    static JsErrorCode JsVarSerializerSetTransferableVars(JsVarSerializerHandle serializerHandle, const std::vector<JsValueRef> &transferableVars) { return chakracore::jsrt::JsVarSerializerSetTransferableVars(serializerHandle, transferableVars); }
     static JsErrorCode JsVarSerializerWriteValue(JsVarSerializerHandle serializerHandle, JsValueRef rootObject) { return chakracore::jsrt::JsVarSerializerWriteValue(serializerHandle, rootObject); }
     static JsErrorCode JsVarSerializerReleaseData(JsVarSerializerHandle serializerHandle, byte** data, size_t *dataLength) { return chakracore::jsrt::JsVarSerializerReleaseData(serializerHandle, data, dataLength); }
     static JsErrorCode JsVarSerializerFree(JsVarSerializerHandle serializerHandle) { return chakracore::jsrt::JsVarSerializerFree(serializerHandle); }
 
     static JsErrorCode JsVarDeserializer(void *data, size_t dataLength, ReadHostObjectFunc readHostObject, GetSharedArrayBufferFromIdFunc getSharedArrayBufferFromId, void* callbackState, JsVarDeserializerHandle *deserializerHandle) { return chakracore::jsrt::JsVarDeserializer(data, dataLength, readHostObject, getSharedArrayBufferFromId, callbackState, deserializerHandle); }
-    static JsErrorCode JsVarDeserializerSetTransferableVars(JsVarDeserializerHandle deserializerHandle, JsValueRef* transferableVars, size_t transferableVarsCount) { return chakracore::jsrt::JsVarDeserializerSetTransferableVars(deserializerHandle, transferableVars, transferableVarsCount); }
+    static JsErrorCode JsVarDeserializerSetTransferableVars(JsVarDeserializerHandle deserializerHandle, const std::vector<JsValueRef> &transferableVars) { return chakracore::jsrt::JsVarDeserializerSetTransferableVars(deserializerHandle, transferableVars); }
     static JsErrorCode JsVarDeserializerReadValue(JsVarDeserializerHandle deserializerHandle, JsValueRef* value) { return chakracore::jsrt::JsVarDeserializerReadValue(deserializerHandle, value); }
     static JsErrorCode JsVarDeserializerFree(JsVarDeserializerHandle deserializerHandle) { return chakracore::jsrt::JsVarDeserializerFree(deserializerHandle); }
 

@@ -1,4 +1,4 @@
-use chakracore_sys::chhelper::ffi::Abstractions;
+use chakracore_sys::chhelper::Abstractions;
 use chakracore_sys::config::ConfigContext;
 use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::fmt::format::FmtSpan;
