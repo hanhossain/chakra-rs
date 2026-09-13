@@ -1,4 +1,4 @@
-pub use ffi::{JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes};
+pub use ffi::{CVoid, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes};
 use std::ffi::c_void;
 
 #[repr(transparent)]
@@ -60,6 +60,8 @@ unsafe impl cxx::ExternType for CULong {
 mod ffi {
     extern "C++" {
         include!("ChakraCore.h");
+
+        type CVoid;
 
         type JsRuntimeHandle = super::JsRuntimeHandle;
         type JsContextRef = super::JsContextRef;

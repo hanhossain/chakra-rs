@@ -1,16 +1,14 @@
 use crate::{Error, hresult_to_result};
-use chakracore_sys::chhelper::ffi::MessageQueue;
+use chakracore_sys::chhelper::MessageQueue;
 use chakracore_sys::config::ConfigContext;
-use chakracore_sys::helpers::ffi::Helpers;
-use chakracore_sys::host_config::ffi::HostConfigFlags;
+use chakracore_sys::helpers::Helpers;
+use chakracore_sys::host_config::HostConfigFlags;
 use chakracore_sys::jsrt::{
-    JsContextRef, JsError, JsErrorExt, JsRuntimeHandle, JsSourceContext, JsValueRef,
+    JsContextRef, JsError, JsErrorCode, JsErrorExt, JsParseScriptAttributes, JsRuntimeAttributes,
+    JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
-use chakracore_sys::rt_interface::ffi::{
-    ChakraRTInterface, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
-};
-use chakracore_sys::wscript_jsrt::WScript;
-use chakracore_sys::wscript_jsrt::ffi::WScriptJsrt;
+use chakracore_sys::rt_interface::ChakraRTInterface;
+use chakracore_sys::wscript_jsrt::{WScript, WScriptJsrt};
 use std::ffi::{CStr, CString, c_char};
 use std::str::FromStr;
 

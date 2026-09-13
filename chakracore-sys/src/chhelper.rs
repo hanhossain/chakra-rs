@@ -1,5 +1,7 @@
+pub use ffi::{Abstractions, MessageQueue};
+
 #[cxx::bridge]
-pub mod ffi {
+mod ffi {
     #[namespace = "chakra_rs::chhelper"]
     extern "Rust" {
         fn print_usage();
@@ -15,7 +17,7 @@ pub mod ffi {
         fn IsDebuggerPresent() -> bool;
 
         type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
-        type JsRuntimeAttributes = crate::rt_interface::ffi::JsRuntimeAttributes;
+        type JsRuntimeAttributes = crate::jsrt::JsRuntimeAttributes;
         type JsValueRef = crate::jsrt::JsValueRef;
 
         type MessageQueue;

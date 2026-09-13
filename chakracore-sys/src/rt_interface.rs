@@ -1,5 +1,7 @@
+pub use ffi::ChakraRTInterface;
+
 #[cxx::bridge]
-pub mod ffi {
+mod ffi {
     unsafe extern "C++" {
         include!("ChakraRtInterface.h");
 
@@ -16,6 +18,7 @@ pub mod ffi {
         type JsValueRef = crate::jsrt::JsValueRef;
         type JsSourceContext = crate::jsrt::JsSourceContext;
         type CULong = crate::jsrt::CULong;
+        type CVoid = crate::jsrt::CVoid;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateRuntime(
@@ -74,7 +77,6 @@ pub mod ffi {
         #[Self = "ChakraRTInterface"]
         unsafe fn JsGetAndClearException(exception: *mut JsValueRef) -> JsErrorCode;
 
-        type CVoid;
         #[Self = "ChakraRTInterface"]
         unsafe fn JsSetPromiseContinuationCallback(
             callback: unsafe fn(task: JsValueRef, callbackState: *mut CVoid),
@@ -113,8 +115,8 @@ pub mod ffi {
 
 #[cfg(test)]
 mod tests {
-    use crate::jsrt::JsRuntimeHandle;
-    use crate::rt_interface::ffi::{ChakraRTInterface, JsErrorCode, JsRuntimeAttributes};
+    use crate::jsrt::{JsErrorCode, JsRuntimeAttributes, JsRuntimeHandle};
+    use crate::rt_interface::ChakraRTInterface;
 
     #[test]
     fn create_and_dispose_runtime() {

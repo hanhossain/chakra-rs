@@ -1,8 +1,9 @@
 use crate::jsrt::{JsError, JsErrorExt, JsValueRef};
-use crate::rt_interface::ffi::ChakraRTInterface;
+use crate::rt_interface::ChakraRTInterface;
+pub use ffi::WScriptJsrt;
 
 #[cxx::bridge]
-pub mod ffi {
+mod ffi {
     unsafe extern "C++" {
         include!("WScriptJsrt.h");
         include!("PlatformAgnostic/ChakraICU.h");
@@ -15,19 +16,19 @@ pub mod ffi {
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
 
-        type MessageQueue = crate::chhelper::ffi::MessageQueue;
+        type MessageQueue = crate::chhelper::MessageQueue;
         #[Self = "WScriptJsrt"]
         unsafe fn AddMessageQueue(messageQueue: *mut MessageQueue);
 
         type JsValueRef = crate::jsrt::JsValueRef;
-        type CVoid = crate::rt_interface::ffi::CVoid;
+        type CVoid = crate::jsrt::CVoid;
         #[Self = "WScriptJsrt"]
         unsafe fn PromiseContinuationCallback(task: JsValueRef, callbackState: *mut CVoid);
 
         #[Self = "WScriptJsrt"]
         fn GetNextSourceContext() -> usize;
 
-        type JsErrorCode = crate::rt_interface::ffi::JsErrorCode;
+        type JsErrorCode = crate::jsrt::JsErrorCode;
         #[Self = "WScriptJsrt"]
         fn ModuleEntryPoint(fileContent: &str, fullName: &String) -> JsErrorCode;
 
