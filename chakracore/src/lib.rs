@@ -2,7 +2,7 @@ mod chhelper;
 
 use crate::chhelper::execute_test;
 use chakracore_sys::config::ConfigContext;
-use chakracore_sys::rt_interface::JsError;
+use chakracore_sys::jsrt::JsError;
 use cxx::Exception;
 
 #[tracing::instrument(skip(config))]

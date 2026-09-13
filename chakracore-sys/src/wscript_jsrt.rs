@@ -1,5 +1,5 @@
+use crate::jsrt::{JsError, JsErrorExt, JsValueRef};
 use crate::rt_interface::ffi::ChakraRTInterface;
-use crate::rt_interface::{JsError, JsErrorExt, JsValueRef};
 
 #[cxx::bridge]
 pub mod ffi {
@@ -19,7 +19,7 @@ pub mod ffi {
         #[Self = "WScriptJsrt"]
         unsafe fn AddMessageQueue(messageQueue: *mut MessageQueue);
 
-        type JsValueRef = crate::rt_interface::JsValueRef;
+        type JsValueRef = crate::jsrt::JsValueRef;
         type CVoid = crate::rt_interface::ffi::CVoid;
         #[Self = "WScriptJsrt"]
         unsafe fn PromiseContinuationCallback(task: JsValueRef, callbackState: *mut CVoid);

@@ -3,11 +3,11 @@ use chakracore_sys::chhelper::ffi::MessageQueue;
 use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers::ffi::Helpers;
 use chakracore_sys::host_config::ffi::HostConfigFlags;
+use chakracore_sys::jsrt::{
+    JsContextRef, JsError, JsErrorExt, JsRuntimeHandle, JsSourceContext, JsValueRef,
+};
 use chakracore_sys::rt_interface::ffi::{
     ChakraRTInterface, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
-};
-use chakracore_sys::rt_interface::{
-    JsContextRef, JsError, JsErrorExt, JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
 use chakracore_sys::wscript_jsrt::WScript;
 use chakracore_sys::wscript_jsrt::ffi::WScriptJsrt;

@@ -14,9 +14,9 @@ pub mod ffi {
         #[Self = "Abstractions"]
         fn IsDebuggerPresent() -> bool;
 
-        type JsRuntimeHandle = crate::rt_interface::JsRuntimeHandle;
+        type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
         type JsRuntimeAttributes = crate::rt_interface::ffi::JsRuntimeAttributes;
-        type JsValueRef = crate::rt_interface::JsValueRef;
+        type JsValueRef = crate::jsrt::JsValueRef;
 
         type MessageQueue;
         #[Self = "MessageQueue"]
