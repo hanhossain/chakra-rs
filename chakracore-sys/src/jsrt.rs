@@ -1,4 +1,6 @@
-pub use ffi::{CVoid, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes};
+pub use ffi::{
+    CVoid, JsErrorCode, JsNativeFunctionArgs, JsParseScriptAttributes, JsRuntimeAttributes,
+};
 use std::ffi::c_void;
 
 #[repr(transparent)]
@@ -242,6 +244,16 @@ mod ffi {
         JsParseScriptAttributeArrayBufferIsUtf16Encoded = 0x2,
         /// Script should be parsed in strict mode
         JsParseScriptAttributeStrictMode = 0x4,
+    }
+
+    #[namespace = "chakra_rs"]
+    struct JsNativeFunctionArgs<'a> {
+        /// A function object that represents the function being invoked.
+        callee: JsValueRef,
+        /// Indicates whether this is a regular call or a 'new' call.
+        is_construct_call: bool,
+        /// The arguments to the call.
+        arguments: &'a CxxVector<JsValueRef>,
     }
 }
 

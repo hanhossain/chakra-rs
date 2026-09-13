@@ -2509,29 +2509,14 @@ JsValueRef CALLBACK JsNativeFunctionWrapper(JsValueRef callee, JsValueRef *argum
     return result;
 }
 
-template <bool wrapNativeFunction, class T>
-JsErrorCode JsCreateEnhancedFunctionHelper(_In_ T nativeFunction, _In_opt_ JsValueRef metadata, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
+JsErrorCode JsCreateEnhancedFunctionHelper(_In_ Js::StdCallJavascriptMethod nativeFunction, _In_opt_ JsValueRef metadata, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
 {
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
-        ;
         PARAM_NOT_NULL(nativeFunction);
         PARAM_NOT_NULL(function);
         *function = nullptr;
 
-        Js::StdCallJavascriptMethod method;
-
-        if (wrapNativeFunction)
-        {
-            JsNativeFunctionWrapperHolder *wrapperHolder = RecyclerNewStruct(scriptContext->GetRecycler(), JsNativeFunctionWrapperHolder);
-            wrapperHolder->callbackState = callbackState;
-            wrapperHolder->nativeFunction = (JsNativeFunction)nativeFunction;
-            callbackState = wrapperHolder;
-            method = (Js::StdCallJavascriptMethod)JsNativeFunctionWrapper;
-        }
-        else
-        {
-            method = (Js::StdCallJavascriptMethod)nativeFunction;
-        }
+        Js::StdCallJavascriptMethod method = nativeFunction;
 
         if (metadata != JS_INVALID_REFERENCE)
         {
@@ -2546,7 +2531,37 @@ JsErrorCode JsCreateEnhancedFunctionHelper(_In_ T nativeFunction, _In_opt_ JsVal
         Js::JavascriptExternalFunction *externalFunction = scriptContext->GetLibrary()->CreateStdCallExternalFunction(method, metadata, callbackState);
         *function = (JsValueRef)externalFunction;
 
-        ;
+        return JsNoError;
+    });
+}
+
+JsErrorCode JsCreateFunctionHelper(_In_ JsNativeFunction nativeFunction, _In_opt_ JsValueRef metadata, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
+{
+    return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        PARAM_NOT_NULL(nativeFunction);
+        PARAM_NOT_NULL(function);
+        *function = nullptr;
+
+        Js::StdCallJavascriptMethod method;
+
+        JsNativeFunctionWrapperHolder *wrapperHolder = RecyclerNewStruct(scriptContext->GetRecycler(), JsNativeFunctionWrapperHolder);
+        wrapperHolder->callbackState = callbackState;
+        wrapperHolder->nativeFunction = std::move(nativeFunction);
+        callbackState = wrapperHolder;
+        method = (Js::StdCallJavascriptMethod)JsNativeFunctionWrapper;
+
+        if (metadata != JS_INVALID_REFERENCE)
+        {
+            VALIDATE_INCOMING_REFERENCE(metadata, scriptContext);
+            metadata = Js::JavascriptConversion::ToString(metadata, scriptContext);
+        }
+        else
+        {
+            metadata = scriptContext->GetLibrary()->GetEmptyString();
+        }
+
+        Js::JavascriptExternalFunction *externalFunction = scriptContext->GetLibrary()->CreateStdCallExternalFunction(method, metadata, callbackState);
+        *function = (JsValueRef)externalFunction;
 
         return JsNoError;
     });
@@ -2554,17 +2569,17 @@ JsErrorCode JsCreateEnhancedFunctionHelper(_In_ T nativeFunction, _In_opt_ JsVal
 
 JsErrorCode chakracore::jsrt::JsCreateEnhancedFunction(_In_ JsEnhancedNativeFunction nativeFunction, _In_opt_ JsValueRef metadata, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
 {
-    return JsCreateEnhancedFunctionHelper<false>(nativeFunction, metadata, callbackState, function);
+    return JsCreateEnhancedFunctionHelper(reinterpret_cast<Js::StdCallJavascriptMethod>(nativeFunction), metadata, callbackState, function);
 }
 
 JsErrorCode chakracore::jsrt::JsCreateFunction(_In_ JsNativeFunction nativeFunction, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
 {
-    return JsCreateEnhancedFunctionHelper<true>(nativeFunction, JS_INVALID_REFERENCE, callbackState, function);
+    return JsCreateFunctionHelper(std::move(nativeFunction), JS_INVALID_REFERENCE, callbackState, function);
 }
 
 JsErrorCode chakracore::jsrt::JsCreateNamedFunction(_In_ JsValueRef name, _In_ JsNativeFunction nativeFunction, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
 {
-    return JsCreateEnhancedFunctionHelper<true>(nativeFunction, name, callbackState, function);
+    return JsCreateFunctionHelper(std::move(nativeFunction), name, callbackState, function);
 }
 
 void SetErrorMessage(Js::ScriptContext *scriptContext, Js::JavascriptError *newError, JsValueRef message)

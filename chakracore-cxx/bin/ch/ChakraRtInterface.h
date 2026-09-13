@@ -6,8 +6,11 @@
 #pragma once
 #include <rust/cxx.h>
 
+#include <utility>
+
 #include "ChakraCommon.h"
 #include "ChakraCore.h"
+#include "chakracore-sys/src/jsrt.rs.h"
 
 class ChakraRTInterface
 {
@@ -40,9 +43,25 @@ public:
     static JsErrorCode JsGetPropertyIdSymbolIterator(JsPropertyIdRef * propertyId) { return chakracore::jsrt::JsGetPropertyIdSymbolIterator(propertyId); }
     static JsErrorCode JsGetErrorPrototype(JsValueRef * result) { return chakracore::jsrt::JsGetErrorPrototype(result); }
     static JsErrorCode JsGetIteratorPrototype(JsValueRef * result) { return chakracore::jsrt::JsGetIteratorPrototype(result); }
-    static JsErrorCode JsCreateFunction(JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateFunction(nativeFunction, callbackState, function); }
+    static JsErrorCode JsCreateFunction(JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateFunction(std::move(nativeFunction), callbackState, function); }
     static JsErrorCode JsCreateEnhancedFunction(JsEnhancedNativeFunction nativeFunction, JsValueRef metadata, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateEnhancedFunction(nativeFunction, metadata, callbackState, function); }
-    static JsErrorCode JsCreateNamedFunction(JsValueRef name, JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateNamedFunction(name, nativeFunction, callbackState, function); }
+    static JsErrorCode JsCreateNamedFunction(JsValueRef name, JsNativeFunction nativeFunction, void *callbackState, JsValueRef *function) { return chakracore::jsrt::JsCreateNamedFunction(name, std::move(nativeFunction), callbackState, function); }
+    static JsErrorCode JsCreateNamedFunction(JsValueRef name, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &args)> callback, JsValueRef *function)
+    {
+        auto trampoline = [func = std::move(callback)](JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *) -> JsValueRef
+        {
+            std::vector<JsValueRef> args{};
+            args.reserve(argumentCount);
+            for (int i = 0; i < argumentCount; i++)
+            {
+                args.push_back(arguments[i]);
+            }
+            const chakra_rs::JsNativeFunctionArgs nativeFuncArgs{
+                .callee = callee, .is_construct_call = isConstructCall, .arguments = args};
+            return func(nativeFuncArgs);
+        };
+        return chakracore::jsrt::JsCreateNamedFunction(name, trampoline, nullptr, function);
+    }
     static JsErrorCode JsSetProperty(JsValueRef object, JsPropertyIdRef property, JsValueRef value, bool useStrictRules) { return chakracore::jsrt::JsSetProperty(object, property, value, useStrictRules); }
     static JsErrorCode JsGetGlobalObject(JsValueRef *globalObject) { return chakracore::jsrt::JsGetGlobalObject(globalObject); }
     static JsErrorCode JsGetUndefinedValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetUndefinedValue(globalObject); }

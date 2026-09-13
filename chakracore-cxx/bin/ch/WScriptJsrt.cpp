@@ -105,12 +105,12 @@ bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
     return true;
 }
 
-JsValueRef WScriptJsrt::EchoCallback(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount, void *callbackState)
+JsValueRef WScriptJsrt::EchoCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
-    for (unsigned int i = 1; i < argumentCount; i++)
+    for (unsigned int i = 1; i < args.arguments.size(); i++)
     {
         rust::String string;
-        auto error = ChakraRTInterface::JsToString(arguments[i], string);
+        auto error = ChakraRTInterface::JsToString(args.arguments[i], string);
         if (error == JsNoError)
         {
             if (i > 1)
@@ -888,8 +888,17 @@ bool WScriptJsrt::CreateNamedFunction(const char* nameString, JsNativeFunction c
     JsValueRef nameVar;
     IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
         nameString, strlen(nameString), &nameVar), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateNamedFunction(nameVar, callback,
+    IfJsrtErrorFail(ChakraRTInterface::JsCreateNamedFunction(nameVar, std::move(callback),
         nullptr, functionVar), false);
+    return true;
+}
+
+bool WScriptJsrt::CreateNamedFunction(const char* nameString, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> callback, JsValueRef *functionVar)
+{
+    JsValueRef nameVar;
+    IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
+        nameString, strlen(nameString), &nameVar), false);
+    IfJsrtErrorFail(ChakraRTInterface::JsCreateNamedFunction(nameVar, std::move(callback), functionVar), false);
     return true;
 }
 
@@ -899,7 +908,22 @@ bool WScriptJsrt::InstallObjectsOnObject(JsValueRef object, const char* name,
     JsValueRef propertyValueRef;
     JsPropertyIdRef propertyId;
     IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId(name, &propertyId), false);
-    if (!CreateNamedFunction(name, nativeFunction, &propertyValueRef))
+    if (!CreateNamedFunction(name, std::move(nativeFunction), &propertyValueRef))
+    {
+        return false;
+    }
+    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(object, propertyId,
+        propertyValueRef, true), false);
+    return true;
+}
+
+bool WScriptJsrt::InstallObjectsOnObject(JsValueRef object, const char* name,
+    std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction)
+{
+    JsValueRef propertyValueRef;
+    JsPropertyIdRef propertyId;
+    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId(name, &propertyId), false);
+    if (!CreateNamedFunction(name, std::move(nativeFunction), &propertyValueRef))
     {
         return false;
     }
