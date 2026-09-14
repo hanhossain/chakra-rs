@@ -23,8 +23,8 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         fn Initialize(
             icu_version: i32,
-            wscript: JsValueRef,
-            platformObject: JsValueRef,
+            wscript: &mut JsValueRef,
+            platformObject: &mut JsValueRef,
             platformProperty: JsPropertyIdRef,
         ) -> bool;
 
@@ -222,19 +222,23 @@ impl WScript {
         let platform_property = ChakraRt::create_property_id("Platform")?;
 
         // Set CPU arch
-        let arch_property = ChakraRt::create_property_id("ARCH")?;
-        let arch_value = ChakraRt::create_string(CPU_ARCH_TEXT)?;
-        ChakraRt::set_property(&mut platform_object, arch_property, arch_value, true)?;
+        platform_object.set_property(
+            ChakraRt::create_property_id("ARCH")?,
+            ChakraRt::create_string(CPU_ARCH_TEXT)?,
+            true,
+        )?;
 
         // Set Build Type
-        let build_property = ChakraRt::create_property_id("BUILD_TYPE")?;
-        let build_value = ChakraRt::create_string(BUILD_TYPE_STRING)?;
-        ChakraRt::set_property(&mut platform_object, build_property, build_value, true)?;
+        platform_object.set_property(
+            ChakraRt::create_property_id("BUILD_TYPE")?,
+            ChakraRt::create_string(BUILD_TYPE_STRING)?,
+            true,
+        )?;
 
         if !WScriptJsrt::Initialize(
             icu_version,
-            wscript_object,
-            platform_object,
+            &mut wscript_object,
+            &mut platform_object,
             platform_property,
         ) {
             return Err(JsError::JsErrorFatal);

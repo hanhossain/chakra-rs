@@ -3,16 +3,17 @@ mod ffi;
 
 pub use error::*;
 pub use ffi::*;
+use std::ops::{Deref, DerefMut};
 
 pub struct ChakraRt;
 
 impl ChakraRt {
-    pub fn create_object() -> Result<JsValueRef, JsError> {
+    pub fn create_object() -> Result<JsObject, JsError> {
         let mut object = JsValueRef::default();
         unsafe {
             bridge::JsCreateObject(&raw mut object).as_result()?;
         }
-        Ok(object)
+        Ok(JsObject(object))
     }
 
     pub fn create_property_id(name: &str) -> Result<JsPropertyIdRef, JsError> {
@@ -31,13 +32,31 @@ impl ChakraRt {
         }
         Ok(value)
     }
+}
 
+pub struct JsObject(JsValueRef);
+
+impl JsObject {
     pub fn set_property(
-        object: &mut JsValueRef,
+        &mut self,
         property_id: JsPropertyIdRef,
         value: JsValueRef,
         use_strict_rules: bool,
     ) -> Result<(), JsError> {
-        bridge::JsSetProperty(object.clone(), property_id, value, use_strict_rules).as_result()
+        bridge::JsSetProperty(self.0.clone(), property_id, value, use_strict_rules).as_result()
+    }
+}
+
+impl Deref for JsObject {
+    type Target = JsValueRef;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for JsObject {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
     }
 }

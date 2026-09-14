@@ -925,7 +925,7 @@ JsErrorCode WScriptJsrt::InstallObjectsOnObject(JsValueRef &object, const rust::
     return err;
 }
 
-bool WScriptJsrt::Initialize(int icuVersion, JsValueRef wscript,JsValueRef platformObject, JsPropertyIdRef platformProperty)
+bool WScriptJsrt::Initialize(int icuVersion, JsValueRef &wscript, JsValueRef &platformObject, JsPropertyIdRef platformProperty)
 {
     int32_t hr = S_OK;
     const char* LINK_TYPE = "static";
