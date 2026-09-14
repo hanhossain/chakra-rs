@@ -906,27 +906,9 @@ JsErrorCode WScriptJsrt::InstallObjectsOnObject(JsValueRef &object, const rust::
     return err;
 }
 
-bool WScriptJsrt::Initialize(JsValueRef &wscript)
+bool WScriptJsrt::Initialize(JsValueRef &wscript, JsValueRef &global)
 {
     int32_t hr = S_OK;
-
-    JsValueRef argsObject;
-
-    if (!CreateArgumentsObject(&argsObject))
-    {
-        return false;
-    }
-
-    JsPropertyIdRef argsName;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("Arguments", &argsName), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(wscript, argsName, argsObject, true), false);
-
-    JsPropertyIdRef wscriptName;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("WScript", &wscriptName), false);
-
-    JsValueRef global;
-    IfJsrtErrorFail(ChakraRTInterface::JsGetGlobalObject(&global), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(global, wscriptName, wscript, true), false);
 
     IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "print", EchoCallback));
 

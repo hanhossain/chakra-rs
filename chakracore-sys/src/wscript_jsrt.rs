@@ -1,4 +1,4 @@
-use crate::jsrt::{ChakraRt, JsError, JsErrorExt};
+use crate::jsrt::{ChakraRt, JsError, JsErrorExt, JsValueRef};
 pub use ffi::WScriptJsrt;
 
 #[cfg(target_arch = "aarch64")]
@@ -26,7 +26,7 @@ mod ffi {
 
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
         #[Self = "WScriptJsrt"]
-        fn Initialize(wscript: &mut JsValueRef) -> bool;
+        fn Initialize(wscript: &mut JsValueRef, global: &mut JsValueRef) -> bool;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
@@ -98,6 +98,9 @@ mod ffi {
         fn SerializeObject(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn Deserialize(args: &JsNativeFunctionArgs) -> JsValueRef;
+
+        #[Self = "WScriptJsrt"]
+        unsafe fn CreateArgumentsObject(argsObject: *mut JsValueRef) -> bool;
     }
 
     #[namespace = "chakra_rs"]
@@ -224,46 +227,66 @@ impl WScript {
         // Set CPU arch
         platform_object.set_property(
             ChakraRt::create_property_id("ARCH")?,
-            ChakraRt::create_string(CPU_ARCH_TEXT)?,
+            &ChakraRt::create_string(CPU_ARCH_TEXT)?,
             true,
         )?;
 
         // Set Build Type
         platform_object.set_property(
             ChakraRt::create_property_id("BUILD_TYPE")?,
-            ChakraRt::create_string(BUILD_TYPE_STRING)?,
+            &ChakraRt::create_string(BUILD_TYPE_STRING)?,
             true,
         )?;
 
         // Set Link Type [static / shared]
         platform_object.set_property(
             ChakraRt::create_property_id("LINK_TYPE")?,
-            ChakraRt::create_string("static")?,
+            &ChakraRt::create_string("static")?,
             true,
         )?;
 
         // Set destination OS
         platform_object.set_property(
             ChakraRt::create_property_id("OS")?,
-            ChakraRt::create_string(DEST_PLATFORM_TEXT)?,
+            &ChakraRt::create_string(DEST_PLATFORM_TEXT)?,
             true,
         )?;
 
         // set Internationalization library
         platform_object.set_property(
             ChakraRt::create_property_id("INTL_LIBRARY")?,
-            ChakraRt::create_string("icu")?,
+            &ChakraRt::create_string("icu")?,
             true,
         )?;
         platform_object.set_property(
             ChakraRt::create_property_id("ICU_VERSION")?,
-            ChakraRt::int_to_number(icu_version)?,
+            &ChakraRt::int_to_number(icu_version)?,
             false,
         )?;
 
-        wscript_object.set_property(platform_property, platform_object, true)?;
+        wscript_object.set_property(platform_property, &platform_object, true)?;
 
-        if !WScriptJsrt::Initialize(&mut wscript_object) {
+        let mut args_array = JsValueRef::default();
+        unsafe {
+            if !WScriptJsrt::CreateArgumentsObject(&raw mut args_array) {
+                return Err(JsError::JsErrorFatal);
+            }
+        }
+
+        wscript_object.set_property(
+            ChakraRt::create_property_id("Arguments")?,
+            &args_array,
+            true,
+        )?;
+
+        let mut global_object = ChakraRt::get_global_object()?;
+        global_object.set_property(
+            ChakraRt::create_property_id("WScript")?,
+            &wscript_object,
+            true,
+        )?;
+
+        if !WScriptJsrt::Initialize(&mut wscript_object, &mut global_object) {
             return Err(JsError::JsErrorFatal);
         }
 

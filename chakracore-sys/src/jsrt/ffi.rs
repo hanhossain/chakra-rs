@@ -98,6 +98,7 @@ pub(super) mod bridge {
             useStrictRules: bool,
         ) -> JsErrorCode;
         unsafe fn JsIntToNumber(int_value: i32, value: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsGetGlobalObject(global_object: *mut JsValueRef) -> JsErrorCode;
     }
 
     #[derive(Debug)]

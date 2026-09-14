@@ -16,6 +16,14 @@ impl ChakraRt {
         Ok(JsObject(object))
     }
 
+    pub fn get_global_object() -> Result<JsObject, JsError> {
+        let mut object = JsValueRef::default();
+        unsafe {
+            bridge::JsGetGlobalObject(&raw mut object).as_result()?;
+        }
+        Ok(JsObject(object))
+    }
+
     pub fn create_property_id(name: &str) -> Result<JsPropertyIdRef, JsError> {
         let mut property = JsPropertyIdRef::default();
         unsafe {
@@ -45,13 +53,13 @@ impl ChakraRt {
 pub struct JsObject(JsValueRef);
 
 impl JsObject {
-    pub fn set_property<T: Into<JsValueRef>>(
+    pub fn set_property(
         &mut self,
         property_id: JsPropertyIdRef,
-        value: T,
+        value: &JsValueRef,
         use_strict_rules: bool,
     ) -> Result<(), JsError> {
-        bridge::JsSetProperty(self.0.clone(), property_id, value.into(), use_strict_rules)
+        bridge::JsSetProperty(self.0.clone(), property_id, value.clone(), use_strict_rules)
             .as_result()
     }
 }

@@ -24,7 +24,7 @@ enum ModuleState
 class WScriptJsrt
 {
 public:
-    static bool Initialize(JsValueRef &wscript);
+    static bool Initialize(JsValueRef &wscript, JsValueRef &global);
     static bool Uninitialize();
     static JsErrorCode ModuleEntryPoint(rust::Str fileContent, const rust::String &fullName);
 
@@ -116,10 +116,11 @@ public:
     static void FinalizeFree(void * addr);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
-    static bool CreateArgumentsObject(JsValueRef *argsObject);
     static JsErrorCode CreateNamedFunction(rust::Str nameString, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)>callback, JsValueRef *functionVar);
     static std::string GetDir(std::string_view fullPathNarrow);
 public:
+    static bool CreateArgumentsObject(JsValueRef *argsObject);
+
     static JsValueRef CALLBACK EchoCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK QuitCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK LoadScriptFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
