@@ -1,3 +1,4 @@
+use crate::host_config::HostConfigFlags;
 use crate::jsrt::{ChakraRt, JsError, JsErrorExt, JsValueRef};
 pub use ffi::WScriptJsrt;
 
@@ -26,7 +27,7 @@ mod ffi {
 
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
         #[Self = "WScriptJsrt"]
-        fn Initialize(wscript: &mut JsValueRef) -> bool;
+        fn Initialize() -> bool;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
@@ -100,6 +101,19 @@ mod ffi {
         fn Deserialize(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn ReadLineStdinCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+
+        #[Self = "WScriptJsrt"]
+        fn BroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn ReceiveBroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn ReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn GetReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn LeavingCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn SleepCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
         unsafe fn CreateArgumentsObject(argsObject: *mut JsValueRef) -> bool;
@@ -325,7 +339,50 @@ impl WScript {
             return Err(JsError::JsErrorFatal);
         }
 
-        if !WScriptJsrt::Initialize(&mut wscript_object) {
+        // When the host config `Test262` is set,
+        // WScript will have the extra support API below and $262 will be
+        // added to global scope
+        if HostConfigFlags::GetConfig().host.test262 {
+            WScriptJsrt::InstallObjectsOnObject(
+                &mut wscript_object,
+                "Broadcast",
+                WScriptJsrt::BroadcastCallback,
+            )
+            .as_result()?;
+
+            WScriptJsrt::InstallObjectsOnObject(
+                &mut wscript_object,
+                "ReceiveBroadcast",
+                WScriptJsrt::ReceiveBroadcastCallback,
+            )
+            .as_result()?;
+            WScriptJsrt::InstallObjectsOnObject(
+                &mut wscript_object,
+                "Report",
+                WScriptJsrt::ReportCallback,
+            )
+            .as_result()?;
+            WScriptJsrt::InstallObjectsOnObject(
+                &mut wscript_object,
+                "GetReport",
+                WScriptJsrt::GetReportCallback,
+            )
+            .as_result()?;
+            WScriptJsrt::InstallObjectsOnObject(
+                &mut wscript_object,
+                "Leaving",
+                WScriptJsrt::LeavingCallback,
+            )
+            .as_result()?;
+            WScriptJsrt::InstallObjectsOnObject(
+                &mut wscript_object,
+                "Sleep",
+                WScriptJsrt::SleepCallback,
+            )
+            .as_result()?;
+        }
+
+        if !WScriptJsrt::Initialize() {
             return Err(JsError::JsErrorFatal);
         }
 

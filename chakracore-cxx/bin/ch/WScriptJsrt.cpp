@@ -916,7 +916,7 @@ bool WScriptJsrt::SetModuleHostInfoCallbacks()
     return true;
 }
 
-bool WScriptJsrt::Initialize(JsValueRef &wscript)
+bool WScriptJsrt::Initialize()
 {
     int32_t hr = S_OK;
 
@@ -925,13 +925,6 @@ bool WScriptJsrt::Initialize(JsValueRef &wscript)
     // added to global scope
     if (HostConfigFlags::GetConfig().host.test262)
     {
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Broadcast", BroadcastCallback));
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "ReceiveBroadcast", ReceiveBroadcastCallback));
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Report", ReportCallback));
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "GetReport", GetReportCallback));
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Leaving", LeavingCallback));
-        IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Sleep", SleepCallback));
-
         // $262
         const char Test262[] =
             #include "262.js"
@@ -945,7 +938,6 @@ bool WScriptJsrt::Initialize(JsValueRef &wscript)
         IfJsrtErrorFailLogAndRetFalse(ChakraRTInterface::JsRun(Test262ScriptRef, WScriptJsrt::GetNextSourceContext(), fname, JsParseScriptAttributeNone, nullptr));
     }
 
-Error:
     return hr == S_OK;
 }
 
