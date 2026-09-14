@@ -3,6 +3,7 @@ pub mod config;
 mod filesystem;
 pub mod helpers;
 pub mod host_config;
+pub mod jsrt;
 mod logger;
 pub mod rt_interface;
 pub mod str_helper;

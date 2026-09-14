@@ -10,6 +10,7 @@
 #include "Helpers.h"
 #include "WScriptJsrt.h"
 #include "chakra/Logger.h"
+#include "chakracore-sys/src/wscript_jsrt.rs.h"
 
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
@@ -56,6 +57,7 @@ RuntimeThreadData::~RuntimeThreadData()
 
 uint32_t RuntimeThreadData::ThreadProc()
 {
+    auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
     JsValueRef scriptSource;
     JsValueRef fname;
     const char* fullPath = "agent source";
@@ -67,15 +69,17 @@ uint32_t RuntimeThreadData::ThreadProc()
     IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context));
     IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
 
-
-    if (!WScriptJsrt::Initialize())
+    try
     {
+        chakra_rs::WScript::initialize();
+    }
+    catch (const rust::Error &err)
+    {
+        chakra::Logger::error(std::format("Caught exception from rust: {}", err.what()));
         IfFailGo(E_FAIL);
     }
 
-
     IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(initialSource, nullptr, &scriptSource));
-
 
     ChakraRTInterface::JsCreateString(fullPath, strlen(fullPath), &fname);
 

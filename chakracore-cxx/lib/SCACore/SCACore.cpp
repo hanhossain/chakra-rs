@@ -7,11 +7,11 @@ namespace Js
 {
     namespace SCACore
     {
-        int32_t ValidateTransferableVars(Var *vars, size_t count)
+        int32_t ValidateTransferableVars(const std::vector<Var> &vars)
         {
-            for (size_t i = 0; i < count; i++)
+            for (const auto var : vars)
             {
-                Js::TypeId typeId = Js::JavascriptOperators::GetTypeId(vars[i]);
+                Js::TypeId typeId = Js::JavascriptOperators::GetTypeId(var);
                 if (typeId != TypeIds_ArrayBuffer)
                 {
 
@@ -19,7 +19,7 @@ namespace Js
                     return E_SCA_TRANSFERABLE_UNSUPPORTED;
                 }
 
-                if (Js::JavascriptOperators::IsObjectDetached(vars[i]))
+                if (Js::JavascriptOperators::IsObjectDetached(var))
                 {
                     return E_SCA_TRANSFERABLE_NEUTERED;
                 }
@@ -28,22 +28,21 @@ namespace Js
         }
 
 
-        int32_t Serializer::SetTransferableVars(Var *vars, size_t count)
+        int32_t Serializer::SetTransferableVars(const std::vector<Var> &vars)
         {
-            if (m_transferableVars != nullptr)
+            if (!m_transferableVars.empty())
             {
                 Assert(false);
                 return E_FAIL;
             }
-            else if (count > 0)
+            else if (!vars.empty())
             {
-                int32_t hr = ValidateTransferableVars(vars, count);
+                int32_t hr = ValidateTransferableVars(vars);
                 if (hr != S_OK)
                 {
                     return hr;
                 }
                 m_transferableVars = vars;
-                m_cTransferableVars = count;
             }
             return S_OK;
         }
@@ -53,7 +52,7 @@ namespace Js
             ScriptContext *scriptContext = m_streamWriter.GetScriptContext();
             BEGIN_JS_RUNTIME_CALL(scriptContext)
             {
-                Js::SCASerializationEngine::Serialize(rootObject, &m_streamWriter, m_transferableVars, m_cTransferableVars, nullptr /*TBD*/);
+                Js::SCASerializationEngine::Serialize(rootObject, &m_streamWriter, m_transferableVars, nullptr /*TBD*/);
             }
             END_JS_RUNTIME_CALL(scriptContext)
                 return true;
@@ -100,28 +99,27 @@ namespace Js
             ScriptContext *scriptContext = m_streamReader.GetScriptContext();
             BEGIN_JS_RUNTIME_CALL(scriptContext)
             {
-                returnedValue = Js::SCADeserializationEngine::Deserialize(&m_streamReader, m_transferableVars, m_cTransferableVars);
+                returnedValue = Js::SCADeserializationEngine::Deserialize(&m_streamReader, m_transferableVars);
             }
             END_JS_RUNTIME_CALL(scriptContext)
                 return returnedValue;
         }
 
-        int32_t Deserializer::SetTransferableVars(Var *vars, size_t count)
+        int32_t Deserializer::SetTransferableVars(const std::vector<Var> &vars)
         {
-            if (m_transferableVars != nullptr)
+            if (!m_transferableVars.empty())
             {
                 Assert(false);
                 return E_FAIL;
             }
-            else if (count > 0)
+            else if (!vars.empty())
             {
-                int32_t hr = ValidateTransferableVars(vars, count);
+                int32_t hr = ValidateTransferableVars(vars);
                 if (hr != S_OK)
                 {
                     return hr;
                 }
                 m_transferableVars = vars;
-                m_cTransferableVars = count;
             }
             return S_OK;
         }

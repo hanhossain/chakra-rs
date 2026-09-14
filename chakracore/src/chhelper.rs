@@ -1,15 +1,14 @@
 use crate::{Error, hresult_to_result};
-use chakracore_sys::chhelper::ffi::MessageQueue;
+use chakracore_sys::chhelper::MessageQueue;
 use chakracore_sys::config::ConfigContext;
-use chakracore_sys::helpers::ffi::Helpers;
-use chakracore_sys::host_config::ffi::HostConfigFlags;
-use chakracore_sys::rt_interface::ffi::{
-    ChakraRTInterface, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
+use chakracore_sys::helpers::Helpers;
+use chakracore_sys::host_config::HostConfigFlags;
+use chakracore_sys::jsrt::{
+    JsContextRef, JsError, JsErrorCode, JsErrorExt, JsParseScriptAttributes, JsRuntimeAttributes,
+    JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
-use chakracore_sys::rt_interface::{
-    JsContextRef, JsError, JsErrorExt, JsRuntimeHandle, JsSourceContext, JsValueRef,
-};
-use chakracore_sys::wscript_jsrt::ffi::WScriptJsrt;
+use chakracore_sys::rt_interface::ChakraRTInterface;
+use chakracore_sys::wscript_jsrt::{WScript, WScriptJsrt};
 use std::ffi::{CStr, CString, c_char};
 use std::str::FromStr;
 
@@ -35,9 +34,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
         ChakraRTInterface::JsCreateContext(runtime, &raw mut context).as_result()?;
     }
     ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
-    if !WScriptJsrt::Initialize() {
-        return Err(Error::hresult_fail());
-    }
+    WScript::initialize()?;
 
     let path = std::fs::canonicalize(&config.core.filename)?;
     let path = path.to_str().unwrap().to_owned();
@@ -99,9 +96,7 @@ fn create_parser_state_and_run_script(
     };
 
     // initialize the WScript object on the new context
-    if !WScriptJsrt::Initialize() {
-        return Err(Error::hresult_fail());
-    }
+    WScript::initialize()?;
 
     run_script(filename, contents, JsValueRef::default(), full_path, buffer)?;
 
@@ -134,9 +129,7 @@ fn create_and_run_serialized_script(
     };
 
     // initialize the WScript object on the new context
-    if !WScriptJsrt::Initialize() {
-        return Err(Error::hresult_fail());
-    }
+    WScript::initialize()?;
 
     run_script(
         filename,

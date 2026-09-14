@@ -709,7 +709,8 @@ typedef unsigned short char16_t;
     ///     The state passed to <c>JsCreateFunction</c>.
     /// </param>
     /// <returns>The result of the call, if any.</returns>
-    typedef _Ret_maybenull_ JsValueRef(* JsNativeFunction)(_In_ JsValueRef callee, _In_ bool isConstructCall, _In_ JsValueRef *arguments, _In_ unsigned short argumentCount, _In_opt_ void *callbackState);
+    using JsNativeFunction = std::function<JsValueRef(JsValueRef callee, bool isConstructCall, JsValueRef *arguments,
+                                                      unsigned short argumentCount, void *callbackState)>;
 
     /// <summary>
     ///     A promise continuation callback.

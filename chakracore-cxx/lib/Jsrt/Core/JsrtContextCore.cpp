@@ -265,10 +265,10 @@ bool ChakraCoreStreamWriter::DetachArrayBuffer()
     return m_serializerCore->DetachArrayBuffer();
 }
 
-JsErrorCode ChakraCoreStreamWriter::SetTransferableVars(JsValueRef *transferableVars, size_t transferableVarsCount)
+JsErrorCode ChakraCoreStreamWriter::SetTransferableVars(const std::vector<JsValueRef> &transferableVars)
 {
     Assert(m_serializerCore);
-    int32_t hr = m_serializerCore->SetTransferableVars((Js::Var *)transferableVars, transferableVarsCount);
+    int32_t hr = m_serializerCore->SetTransferableVars(transferableVars);
     if (hr == S_OK)
     {
         return JsNoError;
@@ -317,10 +317,10 @@ JsValueRef ChakraHostDeserializerHandle::ReadValue()
     return m_deserializer->ReadValue();
 }
 
-JsErrorCode ChakraHostDeserializerHandle::SetTransferableVars(JsValueRef *transferableVars, size_t transferableVarsCount)
+JsErrorCode ChakraHostDeserializerHandle::SetTransferableVars(const std::vector<JsValueRef> &transferableVars)
 {
     Assert(m_deserializer);
-    int32_t hr = m_deserializer->SetTransferableVars((Js::Var *)transferableVars, transferableVarsCount);
+    int32_t hr = m_deserializer->SetTransferableVars(transferableVars);
     if (hr == S_OK)
     {
         return JsNoError;

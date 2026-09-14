@@ -61,7 +61,7 @@ public:
     bool WriteValue(JsValueRef root);
     bool ReleaseData(byte** data, size_t *dataLength);
     bool DetachArrayBuffer();
-    JsErrorCode SetTransferableVars(JsValueRef *transferableVars, size_t transferableVarsCount);
+    JsErrorCode SetTransferableVars(const std::vector<JsValueRef> &transferableVars);
     void FreeSelf();
 
     bool WriteHostObject(void* data) override;
@@ -86,7 +86,7 @@ public:
     void SetDeserializer(Js::SCACore::Deserializer *deserializer);
     bool ReadRawBytes(size_t length, void **data);
     virtual bool ReadBytes(size_t length, void **data);
-    virtual JsErrorCode SetTransferableVars(JsValueRef *transferableVars, size_t transferableVarsCount);
+    virtual JsErrorCode SetTransferableVars(const std::vector<JsValueRef> &transferableVars);
     JsValueRef ReadValue();
     void FreeSelf();
 

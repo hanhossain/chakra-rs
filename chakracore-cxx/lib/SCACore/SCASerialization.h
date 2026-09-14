@@ -331,7 +331,7 @@ namespace Js
         typedef SerializationCloner<StreamWriter> StreamSerializationCloner;
 
     public:
-        static void Serialize(Var root, StreamWriter* writer, Var* transferableVars, size_t cTransferableVars,
+        static void Serialize(Var root, StreamWriter* writer, const std::vector<Var> &transferableVars,
             JsUtil::List<Js::SharedContents*, HeapAllocator>* sharedContentsList);
     };
 }

@@ -2,7 +2,7 @@ mod chhelper;
 
 use crate::chhelper::execute_test;
 use chakracore_sys::config::ConfigContext;
-use chakracore_sys::rt_interface::JsError;
+use chakracore_sys::jsrt::JsError;
 use cxx::Exception;
 
 #[tracing::instrument(skip(config))]
@@ -36,12 +36,4 @@ pub enum Error {
     Io(#[from] std::io::Error),
     #[error(transparent)]
     InteriorNull(#[from] std::ffi::NulError),
-}
-
-impl Error {
-    /// Returns an HRESULT E_FAIL
-    fn hresult_fail() -> Self {
-        let fail = 0x80004005u32 as i32;
-        Error::NegativeHResult(fail)
-    }
 }

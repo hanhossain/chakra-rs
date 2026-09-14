@@ -1,5 +1,7 @@
+pub use ffi::HostConfigFlags;
+
 #[cxx::bridge]
-pub mod ffi {
+mod ffi {
     unsafe extern "C++" {
         include!("HostConfigFlags.h");
 
