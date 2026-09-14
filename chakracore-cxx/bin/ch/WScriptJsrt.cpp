@@ -60,32 +60,6 @@ std::size_t WScriptJsrt::GetNextSourceContext()
     return sourceContext_++;
 }
 
-bool WScriptJsrt::CreateArgumentsObject(JsValueRef *argsObject)
-{
-    JsValueRef retArr;
-
-    assert(argsObject);
-    *argsObject = nullptr;
-
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateArray(HostConfigFlags::GetConfig().host_args.size(), &retArr), false);
-
-    for (int i = 0; i < HostConfigFlags::GetConfig().host_args.size(); i++)
-    {
-        JsValueRef value;
-        JsValueRef index;
-
-        JsErrorCode errCode = ChakraRTInterface::JsCreateString(HostConfigFlags::GetConfig().host_args[i], &value);
-        IfJsrtErrorFail(errCode, false);
-
-        IfJsrtErrorFail(ChakraRTInterface::JsDoubleToNumber(i, &index), false);
-        IfJsrtErrorFail(ChakraRTInterface::JsSetIndexedProperty(retArr, index, value), false);
-    }
-
-    *argsObject = retArr;
-
-    return true;
-}
-
 JsValueRef WScriptJsrt::EchoCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
     for (unsigned int i = 1; i < args.arguments.size(); i++)

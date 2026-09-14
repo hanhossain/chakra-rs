@@ -1,6 +1,6 @@
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, JsError, JsErrorExt, JsParseScriptAttributes, JsSourceContext, JsValueRef,
+    ChakraRt, JsArray, JsError, JsErrorExt, JsParseScriptAttributes, JsSourceContext,
 };
 use crate::rt_interface::ChakraRTInterface;
 pub use ffi::WScriptJsrt;
@@ -107,8 +107,6 @@ mod ffi {
         fn SleepCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
-        unsafe fn CreateArgumentsObject(argsObject: *mut JsValueRef) -> bool;
-        #[Self = "WScriptJsrt"]
         fn SetModuleHostInfoCallbacks() -> bool;
     }
 
@@ -124,6 +122,20 @@ mod ffi {
 pub struct WScript;
 
 impl WScript {
+    fn create_arguments_array() -> Result<JsArray, JsError> {
+        let host_args = &HostConfigFlags::GetConfig().host_args;
+
+        let mut args_array = ChakraRt::create_array(host_args.len() as u32)?;
+
+        for (i, arg) in host_args.iter().enumerate() {
+            let value = ChakraRt::create_string(arg)?;
+            let index = ChakraRt::int_to_number(i as i32)?;
+            args_array.set_indexed_property(&index, &value)?;
+        }
+
+        Ok(args_array)
+    }
+
     #[tracing::instrument(err)]
     pub fn initialize() -> Result<(), JsError> {
         let icu_version = ffi::GetICUMajorVersion();
@@ -275,16 +287,9 @@ impl WScript {
 
         wscript_object.set_property(platform_property, &platform_object, true)?;
 
-        let mut args_array = JsValueRef::default();
-        unsafe {
-            if !WScriptJsrt::CreateArgumentsObject(&raw mut args_array) {
-                return Err(JsError::JsErrorFatal);
-            }
-        }
-
         wscript_object.set_property(
             ChakraRt::create_property_id("Arguments")?,
-            &args_array,
+            &WScript::create_arguments_array()?,
             true,
         )?;
 

@@ -42,6 +42,12 @@ impl JsValueRef {
     }
 }
 
+impl AsRef<JsValueRef> for JsValueRef {
+    fn as_ref(&self) -> &JsValueRef {
+        &self
+    }
+}
+
 #[repr(transparent)]
 #[derive(Default)]
 pub struct JsPropertyIdRef(*mut c_void);
@@ -91,11 +97,17 @@ pub(super) mod bridge {
         unsafe fn JsCreateString(content: &str, value: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreatePropertyId(name: &str, object: *mut JsPropertyIdRef) -> JsErrorCode;
+        unsafe fn JsCreateArray(length: u32, array: *mut JsValueRef) -> JsErrorCode;
         fn JsSetProperty(
             object: JsValueRef,
             property: JsPropertyIdRef,
             value: JsValueRef,
             useStrictRules: bool,
+        ) -> JsErrorCode;
+        fn JsSetIndexedProperty(
+            object: JsValueRef,
+            index: JsValueRef,
+            value: JsValueRef,
         ) -> JsErrorCode;
         unsafe fn JsIntToNumber(int_value: i32, value: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsGetGlobalObject(global_object: *mut JsValueRef) -> JsErrorCode;
