@@ -32,6 +32,14 @@ impl ChakraRt {
         }
         Ok(value)
     }
+
+    pub fn int_to_number(value: i32) -> Result<JsValueRef, JsError> {
+        let mut value_ref = JsValueRef::default();
+        unsafe {
+            bridge::JsIntToNumber(value, &raw mut value_ref).as_result()?;
+        }
+        Ok(value_ref)
+    }
 }
 
 pub struct JsObject(JsValueRef);

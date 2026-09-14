@@ -28,24 +28,6 @@
 
 namespace fs = std::filesystem;
 
-#if defined(_AMD64_) || defined(_IA64_) || defined(_M_AMD64) || defined(_M_IA64)
-#define CPU_ARCH_TEXT "x86_64"
-#elif defined(_ARM_) || defined(_M_ARM)
-#define CPU_ARCH_TEXT "ARM"
-#elif defined(_ARM64_) || defined(_M_ARM64)
-#define CPU_ARCH_TEXT "ARM64"
-#endif
-
-// do not change the order below
-// otherwise, i.e. android system can be marked as posix? etc..
-#if defined(__APPLE__)
-#define DEST_PLATFORM_TEXT "darwin"
-#elif defined(__linux__)
-#define DEST_PLATFORM_TEXT "posix"
-#elif defined(__FreeBSD__) || defined(__unix__)
-#define DEST_PLATFORM_TEXT "bsd"
-#endif // FreeBSD or unix ?
-
 #define IfJsrtErrorFail(expr, ret) do { if ((expr) != JsNoError) return ret; } while (0)
 #define IfJsrtErrorHR(expr) do { if((expr) != JsNoError) { hr = E_FAIL; goto Error; } } while(0)
 #define IfJsrtErrorSetGo(expr) do { errorCode = (expr); if(errorCode != JsNoError) { hr = E_FAIL; goto Error; } } while(0)
@@ -53,7 +35,6 @@ namespace fs = std::filesystem;
 #define IfFalseGo(expr) do { if(!(expr)) { hr = E_FAIL; goto Error; } } while(0)
 
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
-#define INTL_LIBRARY_TEXT "icu"
 
 struct ArrayBufferTransferInfo {
     byte* buffer;
@@ -925,40 +906,11 @@ JsErrorCode WScriptJsrt::InstallObjectsOnObject(JsValueRef &object, const rust::
     return err;
 }
 
-bool WScriptJsrt::Initialize(int icuVersion, JsValueRef &wscript, JsValueRef &platformObject, JsPropertyIdRef platformProperty)
+bool WScriptJsrt::Initialize(JsValueRef &wscript, JsValueRef &platformObject, JsPropertyIdRef platformProperty)
 {
     int32_t hr = S_OK;
-    const char* LINK_TYPE = "static";
-
-    // Set Link Type [static / shared]
-    JsPropertyIdRef linkProperty;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("LINK_TYPE", &linkProperty), false);
-    JsValueRef linkValue;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
-        LINK_TYPE, strlen(LINK_TYPE), &linkValue), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(platformObject, linkProperty,
-      linkValue, true), false);
-
-    // Set destination OS
-    JsPropertyIdRef osProperty;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("OS", &osProperty), false);
-    JsValueRef osValue;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
-        DEST_PLATFORM_TEXT, strlen(DEST_PLATFORM_TEXT), &osValue), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(platformObject, osProperty,
-        osValue, true), false);
 
     // set Internationalization library
-    JsPropertyIdRef intlLibraryProp;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("INTL_LIBRARY", &intlLibraryProp), false);
-    JsValueRef intlLibraryStr;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateString(INTL_LIBRARY_TEXT, strlen(INTL_LIBRARY_TEXT), &intlLibraryStr), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(platformObject, intlLibraryProp, intlLibraryStr, true), false);
-    JsPropertyIdRef icuVersionProp;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("ICU_VERSION", &icuVersionProp), false);
-    JsValueRef icuVersionNum;
-    IfJsrtErrorFail(ChakraRTInterface::JsIntToNumber(icuVersion, &icuVersionNum), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(platformObject, icuVersionProp, icuVersionNum, true), false);
 
     IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(wscript, platformProperty,
         platformObject, true), false);

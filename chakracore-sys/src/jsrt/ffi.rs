@@ -69,7 +69,7 @@ unsafe impl cxx::ExternType for CULong {
 
 #[cxx::bridge]
 pub(super) mod bridge {
-    unsafe extern "C++" {
+    extern "C++" {
         include!("ChakraCore.h");
 
         type CVoid;
@@ -84,23 +84,20 @@ pub(super) mod bridge {
         type JsErrorCode;
         type JsRuntimeAttributes;
         type JsParseScriptAttributes;
+    }
 
-        #[namespace = "chakracore::jsrt"]
+    #[namespace = "chakracore::jsrt"]
+    unsafe extern "C++" {
         unsafe fn JsCreateString(content: &str, value: *mut JsValueRef) -> JsErrorCode;
-
-        #[namespace = "chakracore::jsrt"]
         unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
-
-        #[namespace = "chakracore::jsrt"]
         unsafe fn JsCreatePropertyId(name: &str, object: *mut JsPropertyIdRef) -> JsErrorCode;
-
-        #[namespace = "chakracore::jsrt"]
         fn JsSetProperty(
             object: JsValueRef,
             property: JsPropertyIdRef,
             value: JsValueRef,
             useStrictRules: bool,
         ) -> JsErrorCode;
+        unsafe fn JsIntToNumber(int_value: i32, value: *mut JsValueRef) -> JsErrorCode;
     }
 
     #[derive(Debug)]

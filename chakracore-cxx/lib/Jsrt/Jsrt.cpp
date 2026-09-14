@@ -811,24 +811,8 @@ JsErrorCode chakracore::jsrt::JsIntToNumber(_In_ int intValue, _Out_ JsValueRef 
 {
     PARAM_NOT_NULL(asValue);
     //If number is not heap allocated then we don't need to record/track the creation for time-travel
-    if (Js::JavascriptNumber::TryToVarFast(intValue, asValue))
-    {
-        return JsNoError;
-    }
-
-    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
-#if !INT32VAR
-        ;
-#endif
-
-        *asValue = Js::JavascriptNumber::ToVar(intValue, scriptContext);
-
-#if !INT32VAR
-        ;
-#endif
-
-        return JsNoError;
-    });
+    Js::JavascriptNumber::TryToVarFast(intValue, asValue);
+    return JsNoError;
 }
 
 JsErrorCode chakracore::jsrt::JsNumberToDouble(_In_ JsValueRef value, _Out_ double *asDouble)

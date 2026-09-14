@@ -11,6 +11,11 @@ const BUILD_TYPE_STRING: &str = "Debug";
 #[cfg(not(debug_assertions))]
 const BUILD_TYPE_STRING: &str = "Test";
 
+#[cfg(target_os = "macos")]
+const DEST_PLATFORM_TEXT: &str = "darwin";
+#[cfg(target_os = "linux")]
+const DEST_PLATFORM_TEXT: &str = "posix";
+
 #[cxx::bridge]
 mod ffi {
     unsafe extern "C++" {
@@ -22,7 +27,6 @@ mod ffi {
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
         #[Self = "WScriptJsrt"]
         fn Initialize(
-            icu_version: i32,
             wscript: &mut JsValueRef,
             platformObject: &mut JsValueRef,
             platformProperty: JsPropertyIdRef,
@@ -235,12 +239,33 @@ impl WScript {
             true,
         )?;
 
-        if !WScriptJsrt::Initialize(
-            icu_version,
-            &mut wscript_object,
-            &mut platform_object,
-            platform_property,
-        ) {
+        // Set Link Type [static / shared]
+        platform_object.set_property(
+            ChakraRt::create_property_id("LINK_TYPE")?,
+            ChakraRt::create_string("static")?,
+            true,
+        )?;
+
+        // Set destination OS
+        platform_object.set_property(
+            ChakraRt::create_property_id("OS")?,
+            ChakraRt::create_string(DEST_PLATFORM_TEXT)?,
+            true,
+        )?;
+
+        // set Internationalization library
+        platform_object.set_property(
+            ChakraRt::create_property_id("INTL_LIBRARY")?,
+            ChakraRt::create_string("icu")?,
+            true,
+        )?;
+        platform_object.set_property(
+            ChakraRt::create_property_id("ICU_VERSION")?,
+            ChakraRt::int_to_number(icu_version)?,
+            false,
+        )?;
+
+        if !WScriptJsrt::Initialize(&mut wscript_object, &mut platform_object, platform_property) {
             return Err(JsError::JsErrorFatal);
         }
 
