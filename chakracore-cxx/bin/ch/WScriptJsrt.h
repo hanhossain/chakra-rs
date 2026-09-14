@@ -113,6 +113,7 @@ public:
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
     static bool InstallObjectsOnObject(JsValueRef object, const char* name, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction);
     static JsErrorCode InstallObjectsOnObject(JsValueRef &object, rust::Str name, rust::Fn<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction);
+    static bool SetModuleHostInfoCallbacks();
     static void FinalizeFree(void * addr);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);

@@ -103,6 +103,8 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         unsafe fn CreateArgumentsObject(argsObject: *mut JsValueRef) -> bool;
+        #[Self = "WScriptJsrt"]
+        fn SetModuleHostInfoCallbacks() -> bool;
     }
 
     #[namespace = "chakra_rs"]
@@ -318,6 +320,10 @@ impl WScript {
             &console_object,
             true,
         )?;
+
+        if !WScriptJsrt::SetModuleHostInfoCallbacks() {
+            return Err(JsError::JsErrorFatal);
+        }
 
         if !WScriptJsrt::Initialize(&mut wscript_object) {
             return Err(JsError::JsErrorFatal);

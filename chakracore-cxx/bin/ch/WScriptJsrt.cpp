@@ -906,15 +906,19 @@ JsErrorCode WScriptJsrt::InstallObjectsOnObject(JsValueRef &object, const rust::
     return err;
 }
 
-bool WScriptJsrt::Initialize(JsValueRef &wscript)
+bool WScriptJsrt::SetModuleHostInfoCallbacks()
 {
-    int32_t hr = S_OK;
-
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_FetchImportedModuleCallback, (void*)WScriptJsrt::FetchImportedModule), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_FetchImportedModuleFromScriptCallback, (void*)WScriptJsrt::FetchImportedModuleFromScript), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_NotifyModuleReadyCallback, (void*)WScriptJsrt::NotifyModuleReadyCallback), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_InitializeImportMetaCallback, (void*)WScriptJsrt::InitializeImportMetaCallback), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_ReportModuleCompletionCallback, (void*)WScriptJsrt::ReportModuleCompletionCallback), false);
+    return true;
+}
+
+bool WScriptJsrt::Initialize(JsValueRef &wscript)
+{
+    int32_t hr = S_OK;
 
     // When the host config `Test262` is set,
     // WScript will have the extra support API below and $262 will be
