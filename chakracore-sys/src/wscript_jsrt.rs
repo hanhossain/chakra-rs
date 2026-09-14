@@ -1,5 +1,8 @@
 use crate::host_config::HostConfigFlags;
-use crate::jsrt::{ChakraRt, JsError, JsErrorExt, JsValueRef};
+use crate::jsrt::{
+    ChakraRt, JsError, JsErrorExt, JsParseScriptAttributes, JsSourceContext, JsValueRef,
+};
+use crate::rt_interface::ChakraRTInterface;
 pub use ffi::WScriptJsrt;
 
 #[cfg(target_arch = "aarch64")]
@@ -26,8 +29,6 @@ mod ffi {
         type WScriptJsrt;
 
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
-        #[Self = "WScriptJsrt"]
-        fn Initialize() -> bool;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
@@ -380,10 +381,26 @@ impl WScript {
                 WScriptJsrt::SleepCallback,
             )
             .as_result()?;
-        }
 
-        if !WScriptJsrt::Initialize() {
-            return Err(JsError::JsErrorFatal);
+            // $262
+            let test262 = include_str!(concat!(
+                env!("CARGO_MANIFEST_DIR"),
+                "/../chakracore-cxx/bin/ch/262.js"
+            ));
+
+            let test262_script_ref = ChakraRt::create_string(test262)?;
+            let fname = ChakraRt::create_string("262")?;
+
+            unsafe {
+                ChakraRTInterface::JsRun(
+                    test262_script_ref,
+                    JsSourceContext(WScriptJsrt::GetNextSourceContext()),
+                    fname,
+                    JsParseScriptAttributes::JsParseScriptAttributeNone,
+                    std::ptr::null_mut(),
+                )
+                .as_result()?;
+            }
         }
 
         Ok(())

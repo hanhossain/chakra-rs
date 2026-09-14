@@ -3,6 +3,7 @@ use pretty_assertions::{assert_eq, assert_ne};
 use std::collections::HashSet;
 use std::fs::read_to_string;
 use std::io::{BufRead, BufReader, Read, Write};
+use std::os::unix::process::ExitStatusExt;
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitStatus, Stdio};
 use std::thread;
@@ -283,7 +284,19 @@ pub fn run_test(
     stderr_reader.join().unwrap();
 
     let status = child.wait().unwrap();
-    tracing::info!(?status, "Child process exited");
+    if status.success() {
+        tracing::info!(?status, "Child process exited successfully");
+    } else {
+        let exit_code_hex = status.code().map(|val| format!("{val:#x}"));
+        tracing::error!(
+            ?status,
+            signal = ?status.signal(),
+            core_dumped = status.core_dumped(),
+            exit_code = ?status.code(),
+            ?exit_code_hex,
+            "Child process exited with failure"
+        );
+    }
     (status, actual)
 }
 

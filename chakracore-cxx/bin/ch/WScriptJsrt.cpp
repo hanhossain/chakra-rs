@@ -916,31 +916,6 @@ bool WScriptJsrt::SetModuleHostInfoCallbacks()
     return true;
 }
 
-bool WScriptJsrt::Initialize()
-{
-    int32_t hr = S_OK;
-
-    // When the host config `Test262` is set,
-    // WScript will have the extra support API below and $262 will be
-    // added to global scope
-    if (HostConfigFlags::GetConfig().host.test262)
-    {
-        // $262
-        const char Test262[] =
-            #include "262.js"
-        ;
-
-        JsValueRef Test262ScriptRef;
-        IfJsrtErrorFailLogAndRetFalse(ChakraRTInterface::JsCreateString(Test262, strlen(Test262), &Test262ScriptRef));
-
-        JsValueRef fname;
-        IfJsrtErrorFailLogAndRetFalse(ChakraRTInterface::JsCreateString("262", strlen("262"), &fname));
-        IfJsrtErrorFailLogAndRetFalse(ChakraRTInterface::JsRun(Test262ScriptRef, WScriptJsrt::GetNextSourceContext(), fname, JsParseScriptAttributeNone, nullptr));
-    }
-
-    return hr == S_OK;
-}
-
 bool WScriptJsrt::Uninitialize()
 {
     // moduleRecordMap is a global std::map, its destructor may access overridden
