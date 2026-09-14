@@ -911,7 +911,7 @@ JsErrorCode WScriptJsrt::InstallObjectsOnObject(JsValueRef &object, const rust::
 {
     JsValueRef propertyValueRef;
     JsPropertyIdRef propertyId;
-    JsErrorCode err = ChakraRTInterface::JsCreatePropertyId(static_cast<std::string_view>(name), &propertyId);
+    JsErrorCode err = ChakraRTInterface::JsCreatePropertyId(name, &propertyId);
     if (err != JsNoError)
     {
         return err;
@@ -925,43 +925,10 @@ JsErrorCode WScriptJsrt::InstallObjectsOnObject(JsValueRef &object, const rust::
     return err;
 }
 
-bool WScriptJsrt::Initialize(int icuVersion, JsValueRef wscript)
+bool WScriptJsrt::Initialize(int icuVersion, JsValueRef wscript,JsValueRef platformObject, JsPropertyIdRef platformProperty)
 {
     int32_t hr = S_OK;
     const char* LINK_TYPE = "static";
-
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "SerializeObject", SerializeObject));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(wscript, "Deserialize", Deserialize));
-
-    // Platform
-    JsValueRef platformObject;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateObject(&platformObject), false);
-    JsPropertyIdRef platformProperty;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("Platform", &platformProperty), false);
-
-    // Set CPU arch
-    JsPropertyIdRef archProperty;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("ARCH", &archProperty), false);
-    JsValueRef archValue;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
-        CPU_ARCH_TEXT, strlen(CPU_ARCH_TEXT), &archValue), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(platformObject, archProperty,
-        archValue, true), false);
-
-    // Set Build Type
-    JsPropertyIdRef buildProperty;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("BUILD_TYPE", &buildProperty), false);
-    JsValueRef buildValue;
-#ifdef _DEBUG
-#define BUILD_TYPE_STRING_CH "Debug" // (O0)
-#else
-#define BUILD_TYPE_STRING_CH "Test" // (O3 with debug config options)
-#endif
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
-        BUILD_TYPE_STRING_CH, strlen(BUILD_TYPE_STRING_CH), &buildValue), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(platformObject, buildProperty,
-        buildValue, true), false);
-#undef BUILD_TYPE_STRING_CH
 
     // Set Link Type [static / shared]
     JsPropertyIdRef linkProperty;

@@ -130,7 +130,7 @@ public:
     static JsErrorCode JsCreateString(const std::string &content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, value); }
     static JsErrorCode JsCreateString(const rust::String &content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, value); }
     static JsErrorCode JsCreateString(const rust::Str content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, value); }
-    static JsErrorCode JsCreatePropertyId(std::string_view name, JsPropertyIdRef *propertyId) { return chakracore::jsrt::JsCreatePropertyId(name.data(), name.size(), propertyId); }
+    static JsErrorCode JsCreatePropertyId(rust::Str name, JsPropertyIdRef *propertyId) { return chakracore::jsrt::JsCreatePropertyId(name, propertyId); }
     static JsErrorCode JsCreatePropertyId(const char *name, size_t length, JsPropertyIdRef *propertyId) { return chakracore::jsrt::JsCreatePropertyId(name, length, propertyId); }
     static JsErrorCode JsCreateExternalArrayBuffer(void *data, unsigned int byteLength, JsFinalizeCallback finalizeCallback, void *callbackState, JsValueRef *result)  { return chakracore::jsrt::JsCreateExternalArrayBuffer(data, byteLength, finalizeCallback, callbackState, result); }
     static JsErrorCode JsCreateExternalArrayBuffer(const rust::Str content, JsFinalizeCallback finalizeCallback, JsValueRef *result)  { return chakracore::jsrt::JsCreateExternalArrayBuffer(const_cast<char *>(content.data()), content.length(), finalizeCallback, const_cast<char *>(content.data()), result); }

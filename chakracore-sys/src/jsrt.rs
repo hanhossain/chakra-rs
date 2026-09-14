@@ -28,7 +28,7 @@ unsafe impl cxx::ExternType for JsContextRef {
 }
 
 #[repr(transparent)]
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct JsValueRef(*mut c_void);
 
 unsafe impl cxx::ExternType for JsValueRef {
@@ -40,6 +40,15 @@ impl JsValueRef {
     pub fn is_null(&self) -> bool {
         self.0.is_null()
     }
+}
+
+#[repr(transparent)]
+#[derive(Default)]
+pub struct JsPropertyIdRef(*mut c_void);
+
+unsafe impl cxx::ExternType for JsPropertyIdRef {
+    type Id = cxx::type_id!("JsPropertyIdRef");
+    type Kind = cxx::kind::Trivial;
 }
 
 #[repr(transparent)]
@@ -60,7 +69,7 @@ unsafe impl cxx::ExternType for CULong {
 
 #[cxx::bridge]
 mod ffi {
-    extern "C++" {
+    unsafe extern "C++" {
         include!("ChakraCore.h");
 
         type CVoid;
@@ -68,12 +77,30 @@ mod ffi {
         type JsRuntimeHandle = super::JsRuntimeHandle;
         type JsContextRef = super::JsContextRef;
         type JsValueRef = super::JsValueRef;
+        type JsPropertyIdRef = super::JsPropertyIdRef;
         type JsSourceContext = super::JsSourceContext;
         type CULong = super::CULong;
 
         type JsErrorCode;
         type JsRuntimeAttributes;
         type JsParseScriptAttributes;
+
+        #[namespace = "chakracore::jsrt"]
+        unsafe fn JsCreateString(content: &str, value: *mut JsValueRef) -> JsErrorCode;
+
+        #[namespace = "chakracore::jsrt"]
+        unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
+
+        #[namespace = "chakracore::jsrt"]
+        unsafe fn JsCreatePropertyId(name: &str, object: *mut JsPropertyIdRef) -> JsErrorCode;
+
+        #[namespace = "chakracore::jsrt"]
+        fn JsSetProperty(
+            object: JsValueRef,
+            property: JsPropertyIdRef,
+            value: JsValueRef,
+            useStrictRules: bool,
+        ) -> JsErrorCode;
     }
 
     #[derive(Debug)]
@@ -507,5 +534,43 @@ impl JsErrorExt for JsErrorCode {
             }
             _ => unimplemented!(),
         }
+    }
+}
+
+pub struct ChakraRt;
+
+impl ChakraRt {
+    pub fn create_object() -> Result<JsValueRef, JsError> {
+        let mut object = JsValueRef::default();
+        unsafe {
+            ffi::JsCreateObject(&raw mut object).as_result()?;
+        }
+        Ok(object)
+    }
+
+    pub fn create_property_id(name: &str) -> Result<JsPropertyIdRef, JsError> {
+        let mut property = JsPropertyIdRef::default();
+        unsafe {
+            ffi::JsCreatePropertyId(name, &raw mut property).as_result()?;
+        }
+
+        Ok(property)
+    }
+
+    pub fn create_string(name: &str) -> Result<JsValueRef, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            ffi::JsCreateString(name, &raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
+
+    pub fn set_property(
+        object: &mut JsValueRef,
+        property_id: JsPropertyIdRef,
+        value: JsValueRef,
+        use_strict_rules: bool,
+    ) -> Result<(), JsError> {
+        ffi::JsSetProperty(object.clone(), property_id, value, use_strict_rules).as_result()
     }
 }

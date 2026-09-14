@@ -16,6 +16,7 @@ mod ffi {
         type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
         type JsContextRef = crate::jsrt::JsContextRef;
         type JsValueRef = crate::jsrt::JsValueRef;
+        type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
         type JsSourceContext = crate::jsrt::JsSourceContext;
         type CULong = crate::jsrt::CULong;
         type CVoid = crate::jsrt::CVoid;
@@ -107,9 +108,6 @@ mod ffi {
             parseAttributes: JsParseScriptAttributes,
             result: *mut JsValueRef,
         ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
     }
 }
 

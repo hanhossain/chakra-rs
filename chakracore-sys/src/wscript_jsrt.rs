@@ -1,6 +1,15 @@
-use crate::jsrt::{JsError, JsErrorExt, JsValueRef};
-use crate::rt_interface::ChakraRTInterface;
+use crate::jsrt::{ChakraRt, JsError, JsErrorExt};
 pub use ffi::WScriptJsrt;
+
+#[cfg(target_arch = "aarch64")]
+const CPU_ARCH_TEXT: &str = "ARM64";
+#[cfg(target_arch = "x86_64")]
+const CPU_ARCH_TEXT: &str = "x86_64";
+
+#[cfg(debug_assertions)]
+const BUILD_TYPE_STRING: &str = "Debug";
+#[cfg(not(debug_assertions))]
+const BUILD_TYPE_STRING: &str = "Test";
 
 #[cxx::bridge]
 mod ffi {
@@ -10,8 +19,14 @@ mod ffi {
 
         type WScriptJsrt;
 
+        type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
         #[Self = "WScriptJsrt"]
-        fn Initialize(icu_version: i32, wscript: JsValueRef) -> bool;
+        fn Initialize(
+            icu_version: i32,
+            wscript: JsValueRef,
+            platformObject: JsValueRef,
+            platformProperty: JsPropertyIdRef,
+        ) -> bool;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
@@ -79,6 +94,10 @@ mod ffi {
         fn GetModuleNamespace(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn GetProxyPropertiesCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn SerializeObject(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn Deserialize(args: &JsNativeFunctionArgs) -> JsValueRef;
     }
 
     #[namespace = "chakra_rs"]
@@ -97,10 +116,7 @@ impl WScript {
     pub fn initialize() -> Result<(), JsError> {
         let icu_version = ffi::GetICUMajorVersion();
 
-        let mut wscript_object = JsValueRef::default();
-        unsafe {
-            ChakraRTInterface::JsCreateObject(&raw mut wscript_object).as_result()?;
-        }
+        let mut wscript_object = ChakraRt::create_object()?;
 
         WScriptJsrt::InstallObjectsOnObject(
             &mut wscript_object,
@@ -188,8 +204,39 @@ impl WScript {
             WScriptJsrt::GetProxyPropertiesCallback,
         )
         .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "SerializeObject",
+            WScriptJsrt::SerializeObject,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut wscript_object,
+            "Deserialize",
+            WScriptJsrt::Deserialize,
+        )
+        .as_result()?;
 
-        if !WScriptJsrt::Initialize(icu_version, wscript_object) {
+        // Platform
+        let mut platform_object = ChakraRt::create_object()?;
+        let platform_property = ChakraRt::create_property_id("Platform")?;
+
+        // Set CPU arch
+        let arch_property = ChakraRt::create_property_id("ARCH")?;
+        let arch_value = ChakraRt::create_string(CPU_ARCH_TEXT)?;
+        ChakraRt::set_property(&mut platform_object, arch_property, arch_value, true)?;
+
+        // Set Build Type
+        let build_property = ChakraRt::create_property_id("BUILD_TYPE")?;
+        let build_value = ChakraRt::create_string(BUILD_TYPE_STRING)?;
+        ChakraRt::set_property(&mut platform_object, build_property, build_value, true)?;
+
+        if !WScriptJsrt::Initialize(
+            icu_version,
+            wscript_object,
+            platform_object,
+            platform_property,
+        ) {
             return Err(JsError::JsErrorFatal);
         }
 
