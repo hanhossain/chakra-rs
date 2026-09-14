@@ -906,14 +906,9 @@ JsErrorCode WScriptJsrt::InstallObjectsOnObject(JsValueRef &object, const rust::
     return err;
 }
 
-bool WScriptJsrt::Initialize(JsValueRef &wscript, JsValueRef &platformObject, JsPropertyIdRef platformProperty)
+bool WScriptJsrt::Initialize(JsValueRef &wscript)
 {
     int32_t hr = S_OK;
-
-    // set Internationalization library
-
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(wscript, platformProperty,
-        platformObject, true), false);
 
     JsValueRef argsObject;
 

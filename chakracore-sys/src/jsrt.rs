@@ -45,13 +45,20 @@ impl ChakraRt {
 pub struct JsObject(JsValueRef);
 
 impl JsObject {
-    pub fn set_property(
+    pub fn set_property<T: Into<JsValueRef>>(
         &mut self,
         property_id: JsPropertyIdRef,
-        value: JsValueRef,
+        value: T,
         use_strict_rules: bool,
     ) -> Result<(), JsError> {
-        bridge::JsSetProperty(self.0.clone(), property_id, value, use_strict_rules).as_result()
+        bridge::JsSetProperty(self.0.clone(), property_id, value.into(), use_strict_rules)
+            .as_result()
+    }
+}
+
+impl From<JsObject> for JsValueRef {
+    fn from(value: JsObject) -> Self {
+        value.0
     }
 }
 

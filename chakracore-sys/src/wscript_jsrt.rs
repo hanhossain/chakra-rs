@@ -26,11 +26,7 @@ mod ffi {
 
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
         #[Self = "WScriptJsrt"]
-        fn Initialize(
-            wscript: &mut JsValueRef,
-            platformObject: &mut JsValueRef,
-            platformProperty: JsPropertyIdRef,
-        ) -> bool;
+        fn Initialize(wscript: &mut JsValueRef) -> bool;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
@@ -265,7 +261,9 @@ impl WScript {
             false,
         )?;
 
-        if !WScriptJsrt::Initialize(&mut wscript_object, &mut platform_object, platform_property) {
+        wscript_object.set_property(platform_property, platform_object, true)?;
+
+        if !WScriptJsrt::Initialize(&mut wscript_object) {
             return Err(JsError::JsErrorFatal);
         }
 
