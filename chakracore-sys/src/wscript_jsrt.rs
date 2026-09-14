@@ -26,7 +26,7 @@ mod ffi {
 
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
         #[Self = "WScriptJsrt"]
-        fn Initialize(wscript: &mut JsValueRef, global: &mut JsValueRef) -> bool;
+        fn Initialize(wscript: &mut JsValueRef) -> bool;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
@@ -98,6 +98,8 @@ mod ffi {
         fn SerializeObject(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn Deserialize(args: &JsNativeFunctionArgs) -> JsValueRef;
+        #[Self = "WScriptJsrt"]
+        fn ReadLineStdinCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
         unsafe fn CreateArgumentsObject(argsObject: *mut JsValueRef) -> bool;
@@ -286,7 +288,38 @@ impl WScript {
             true,
         )?;
 
-        if !WScriptJsrt::Initialize(&mut wscript_object, &mut global_object) {
+        WScriptJsrt::InstallObjectsOnObject(&mut global_object, "print", WScriptJsrt::EchoCallback)
+            .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut global_object,
+            "read",
+            WScriptJsrt::LoadTextFileCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut global_object,
+            "readbuffer",
+            WScriptJsrt::LoadBinaryFileCallback,
+        )
+        .as_result()?;
+        WScriptJsrt::InstallObjectsOnObject(
+            &mut global_object,
+            "readline",
+            WScriptJsrt::ReadLineStdinCallback,
+        )
+        .as_result()?;
+
+        let mut console_object = ChakraRt::create_object()?;
+        WScriptJsrt::InstallObjectsOnObject(&mut console_object, "log", WScriptJsrt::EchoCallback)
+            .as_result()?;
+
+        global_object.set_property(
+            ChakraRt::create_property_id("console")?,
+            &console_object,
+            true,
+        )?;
+
+        if !WScriptJsrt::Initialize(&mut wscript_object) {
             return Err(JsError::JsErrorFatal);
         }
 

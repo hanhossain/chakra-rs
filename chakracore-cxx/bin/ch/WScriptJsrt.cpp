@@ -906,23 +906,9 @@ JsErrorCode WScriptJsrt::InstallObjectsOnObject(JsValueRef &object, const rust::
     return err;
 }
 
-bool WScriptJsrt::Initialize(JsValueRef &wscript, JsValueRef &global)
+bool WScriptJsrt::Initialize(JsValueRef &wscript)
 {
     int32_t hr = S_OK;
-
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "print", EchoCallback));
-
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "read", LoadTextFileCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "readbuffer", LoadBinaryFileCallback));
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(global, "readline", ReadLineStdinCallback));
-
-    JsValueRef console;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreateObject(&console), false);
-    IfFalseGo(WScriptJsrt::InstallObjectsOnObject(console, "log", EchoCallback));
-
-    JsPropertyIdRef consoleName;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("console", &consoleName), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(global, consoleName, console, true), false);
 
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_FetchImportedModuleCallback, (void*)WScriptJsrt::FetchImportedModule), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_FetchImportedModuleFromScriptCallback, (void*)WScriptJsrt::FetchImportedModuleFromScript), false);
