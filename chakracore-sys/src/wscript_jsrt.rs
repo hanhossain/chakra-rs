@@ -5,20 +5,10 @@ use crate::jsrt::{
 use crate::rt_interface::ChakraRTInterface;
 pub use ffi::WScriptJsrt;
 
-#[cfg(target_arch = "aarch64")]
-const CPU_ARCH_TEXT: &str = "ARM64";
-#[cfg(target_arch = "x86_64")]
-const CPU_ARCH_TEXT: &str = "x86_64";
-
 #[cfg(debug_assertions)]
 const BUILD_TYPE_STRING: &str = "Debug";
 #[cfg(not(debug_assertions))]
 const BUILD_TYPE_STRING: &str = "Test";
-
-#[cfg(target_os = "macos")]
-const DEST_PLATFORM_TEXT: &str = "darwin";
-#[cfg(target_os = "linux")]
-const DEST_PLATFORM_TEXT: &str = "posix";
 
 #[cxx::bridge]
 mod ffi {
@@ -246,7 +236,7 @@ impl WScript {
         // Set CPU arch
         platform_object.set_property(
             ChakraRt::create_property_id("ARCH")?,
-            &ChakraRt::create_string(CPU_ARCH_TEXT)?,
+            &ChakraRt::create_string(std::env::consts::ARCH)?,
             true,
         )?;
 
@@ -267,7 +257,7 @@ impl WScript {
         // Set destination OS
         platform_object.set_property(
             ChakraRt::create_property_id("OS")?,
-            &ChakraRt::create_string(DEST_PLATFORM_TEXT)?,
+            &ChakraRt::create_string(std::env::consts::OS)?,
             true,
         )?;
 
