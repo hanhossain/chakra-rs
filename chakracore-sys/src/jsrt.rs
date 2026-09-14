@@ -64,12 +64,6 @@ impl JsObject {
     }
 }
 
-impl From<JsObject> for JsValueRef {
-    fn from(value: JsObject) -> Self {
-        value.0
-    }
-}
-
 impl Deref for JsObject {
     type Target = JsValueRef;
 
