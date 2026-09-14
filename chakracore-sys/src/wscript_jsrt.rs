@@ -373,10 +373,7 @@ impl WScript {
             .as_result()?;
 
             // $262
-            let test262 = include_str!(concat!(
-                env!("CARGO_MANIFEST_DIR"),
-                "/../chakracore-cxx/bin/ch/262.js"
-            ));
+            let test262 = include_str!("ch/262.js");
 
             let test262_script_ref = ChakraRt::create_string(test262)?;
             let fname = ChakraRt::create_string("262")?;
