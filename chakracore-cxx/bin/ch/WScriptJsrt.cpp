@@ -802,18 +802,6 @@ Error:
     return JS_INVALID_REFERENCE;
 }
 
-JsErrorCode WScriptJsrt::CreateNamedFunction(const rust::Str nameString, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> callback, JsValueRef *functionVar)
-{
-    JsValueRef nameVar;
-    JsErrorCode res = ChakraRTInterface::JsCreateString(nameString, &nameVar);
-    if (res != JsNoError)
-    {
-        return res;
-    }
-    res = ChakraRTInterface::JsCreateNamedFunction(nameVar, std::move(callback), functionVar);
-    return res;
-}
-
 bool WScriptJsrt::SetModuleHostInfoCallbacks()
 {
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_FetchImportedModuleCallback, (void*)WScriptJsrt::FetchImportedModule), false);

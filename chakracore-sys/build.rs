@@ -7,7 +7,6 @@ fn main() {
         "src/filesystem.rs",
         "src/helpers.rs",
         "src/host_config.rs",
-        "src/jsrt/chakra_rust.rs",
         "src/jsrt/ffi.rs",
         "src/logger.rs",
         "src/rt_interface.rs",

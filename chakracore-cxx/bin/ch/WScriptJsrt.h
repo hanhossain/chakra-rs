@@ -114,7 +114,6 @@ public:
     static void FinalizeFree(void * addr);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
-    static JsErrorCode CreateNamedFunction(rust::Str nameString, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)>callback, JsValueRef *functionVar);
     static std::string GetDir(std::string_view fullPathNarrow);
 public:
     static JsValueRef CALLBACK QuitCallback(const chakra_rs::JsNativeFunctionArgs &args);

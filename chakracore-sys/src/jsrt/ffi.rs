@@ -121,6 +121,19 @@ pub(super) mod bridge {
         unsafe fn JsIntToNumber(int_value: i32, value: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsGetGlobalObject(global_object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsGetUndefinedValue(value: *mut JsValueRef) -> JsErrorCode;
+
+        unsafe fn JsCreateNamedFunction(
+            name: &JsValueRef,
+            native_function: unsafe fn(
+                JsValueRef,
+                bool,
+                *mut JsValueRef,
+                u16,
+                *mut CVoid,
+            ) -> JsValueRef,
+            callback_state: *mut CVoid,
+            function: *mut JsValueRef,
+        ) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}

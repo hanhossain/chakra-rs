@@ -1,7 +1,7 @@
-mod chakra_rust;
 mod error;
 mod ffi;
 
+use cxx::CxxVector;
 pub use error::*;
 pub use ffi::*;
 use std::ops::{Deref, DerefMut};
@@ -50,16 +50,32 @@ impl ChakraRt {
         Ok(JsArray(value))
     }
 
-    pub fn create_named_function(
-        name: &str,
-        native_function: fn(&JsNativeFunctionArgs) -> JsValueRef,
-    ) -> Result<JsFunction, JsError> {
+    pub fn create_named_function<T>(name: &str, native_function: T) -> Result<JsFunction, JsError>
+    where
+        T: FnMut(&JsNativeFunctionArgs) -> JsValueRef,
+    {
+        let boxed_func = Box::new(native_function);
         let name_obj = ChakraRt::create_string(name)?;
         let mut value = JsValueRef::default();
         unsafe {
-            chakra_rust::bridge::JsCreateNamedFunction(
-                name_obj.as_ref().clone(),
-                native_function,
+            bridge::JsCreateNamedFunction(
+                name_obj.as_ref(),
+                |callee, is_construct_call, args, arg_count, state| {
+                    let mut arguments = CxxVector::new();
+
+                    for x in std::slice::from_raw_parts(args, arg_count as usize) {
+                        arguments.pin_mut().push(x.clone());
+                    }
+
+                    let function_args = JsNativeFunctionArgs {
+                        arguments: &arguments,
+                        callee,
+                        is_construct_call,
+                    };
+                    let func: &mut T = &mut *std::mem::transmute::<*mut CVoid, *mut T>(state);
+                    func(&function_args)
+                },
+                Box::into_raw(boxed_func) as *mut CVoid,
                 &raw mut value,
             )
             .as_result()?;
