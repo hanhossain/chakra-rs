@@ -33,12 +33,12 @@ impl ChakraRt {
         Ok(property)
     }
 
-    pub fn create_string(name: &str) -> Result<JsValueRef, JsError> {
+    pub fn create_string(name: &str) -> Result<JsString, JsError> {
         let mut value = JsValueRef::default();
         unsafe {
             bridge::JsCreateString(name, &raw mut value).as_result()?;
         }
-        Ok(value)
+        Ok(JsString(value))
     }
 
     pub fn create_array(length: u32) -> Result<JsArray, JsError> {
@@ -98,15 +98,40 @@ impl AsRef<JsValueRef> for JsObject {
     }
 }
 
+pub struct JsString(JsValueRef);
+
+impl AsRef<JsValueRef> for JsString {
+    fn as_ref(&self) -> &JsValueRef {
+        &self.0
+    }
+}
+
+// TODO: this is temporary while other functions are ported. Don't actually want to deref to
+//  JsValueRef.
+impl Deref for JsString {
+    type Target = JsValueRef;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl DerefMut for JsString {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
 pub struct JsArray(JsValueRef);
 
 impl JsArray {
-    pub fn set_indexed_property(
+    pub fn set_indexed_property<T: AsRef<JsValueRef>>(
         &mut self,
         index: &JsValueRef,
-        value: &JsValueRef,
+        value: T,
     ) -> Result<(), JsError> {
-        bridge::JsSetIndexedProperty(self.0.clone(), index.clone(), value.clone()).as_result()
+        bridge::JsSetIndexedProperty(self.0.clone(), index.clone(), value.as_ref().clone())
+            .as_result()
     }
 }
 

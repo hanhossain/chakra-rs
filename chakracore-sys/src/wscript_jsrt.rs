@@ -385,9 +385,9 @@ impl WScript {
 
             unsafe {
                 ChakraRTInterface::JsRun(
-                    test262_script_ref,
+                    test262_script_ref.clone(),
                     JsSourceContext(WScriptJsrt::GetNextSourceContext()),
-                    fname,
+                    fname.clone(),
                     JsParseScriptAttributes::JsParseScriptAttributeNone,
                     std::ptr::null_mut(),
                 )
