@@ -1,7 +1,6 @@
 mod error;
 mod ffi;
 
-use cxx::CxxVector;
 pub use error::*;
 pub use ffi::*;
 use std::ops::{Deref, DerefMut};
