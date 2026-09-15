@@ -18,7 +18,6 @@
 #define _CHAKRACORE_H_
 
 #include "ChakraCommon.h"
-#include "ChakraDebug.h"
 #include <rust/cxx.h>
 #include <functional>
 
