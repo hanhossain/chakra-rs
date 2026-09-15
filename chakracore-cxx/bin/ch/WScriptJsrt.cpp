@@ -849,37 +849,6 @@ JsErrorCode WScriptJsrt::CreateNamedFunction(const rust::Str nameString, std::fu
     return res;
 }
 
-bool WScriptJsrt::InstallObjectsOnObject(JsValueRef object, const char* name,
-    std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction)
-{
-    JsValueRef propertyValueRef;
-    JsPropertyIdRef propertyId;
-    IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId(name, &propertyId), false);
-    IfJsrtErrorFail(CreateNamedFunction(name, std::move(nativeFunction), &propertyValueRef), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(object, propertyId,
-        propertyValueRef, true), false);
-    return true;
-}
-
-JsErrorCode WScriptJsrt::InstallObjectsOnObject(JsValueRef &object, const rust::Str name,
-    rust::Fn<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction)
-{
-    JsValueRef propertyValueRef;
-    JsPropertyIdRef propertyId;
-    JsErrorCode err = ChakraRTInterface::JsCreatePropertyId(name, &propertyId);
-    if (err != JsNoError)
-    {
-        return err;
-    }
-    err = CreateNamedFunction(name, nativeFunction, &propertyValueRef);
-    if (err != JsNoError)
-    {
-        return err;
-    }
-    err = ChakraRTInterface::JsSetProperty(object, propertyId, propertyValueRef, true);
-    return err;
-}
-
 bool WScriptJsrt::SetModuleHostInfoCallbacks()
 {
     IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_FetchImportedModuleCallback, (void*)WScriptJsrt::FetchImportedModule), false);

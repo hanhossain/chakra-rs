@@ -40,6 +40,7 @@
 #include <functional>
 #include <stddef.h>  // for size_t
 #include <stdint.h>  // for uintptr_t
+#include <rust/cxx.h>
 typedef uintptr_t ChakraCookie;
 typedef unsigned char* ChakraBytePtr;
 

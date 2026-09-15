@@ -110,8 +110,6 @@ public:
     static std::size_t GetNextSourceContext();
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, const std::vector<JsValueRef> &arguments, bool isSourceModule);
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
-    static bool InstallObjectsOnObject(JsValueRef object, const char* name, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction);
-    static JsErrorCode InstallObjectsOnObject(JsValueRef &object, rust::Str name, rust::Fn<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction);
     static bool SetModuleHostInfoCallbacks();
     static void FinalizeFree(void * addr);
 private:

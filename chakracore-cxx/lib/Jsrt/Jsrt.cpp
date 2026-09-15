@@ -2,6 +2,7 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include "ChakraRust.h"
 #include "Library/JavascriptProxy.h"
 #include "JsrtInternal.h"
 #include "JsrtExternalObject.h"
@@ -2564,6 +2565,28 @@ JsErrorCode chakracore::jsrt::JsCreateFunction(_In_ JsNativeFunction nativeFunct
 JsErrorCode chakracore::jsrt::JsCreateNamedFunction(_In_ JsValueRef name, _In_ JsNativeFunction nativeFunction, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
 {
     return JsCreateFunctionHelper(std::move(nativeFunction), name, callbackState, function);
+}
+
+JsErrorCode chakracore::jsrt::JsCreateNamedFunction(JsValueRef name, rust::Fn<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction, JsValueRef *function)
+{
+    auto trampoline = [nativeFunction](JsValueRef callee, bool isConstructCall, JsValueRef *arguments,
+                                       unsigned short argumentCount, void *) -> JsValueRef
+    {
+        std::vector<JsValueRef> args{};
+        args.reserve(argumentCount);
+        for (int i = 0; i < argumentCount; i++)
+        {
+            args.push_back(arguments[i]);
+        }
+        const chakra_rs::JsNativeFunctionArgs nativeFuncArgs
+        {
+            .callee = callee,
+            .is_construct_call = isConstructCall,
+            .arguments = args
+        };
+        return nativeFunction(nativeFuncArgs);
+    };
+    return JsCreateNamedFunction(name, trampoline, nullptr, function);
 }
 
 void SetErrorMessage(Js::ScriptContext *scriptContext, Js::JavascriptError *newError, JsValueRef message)

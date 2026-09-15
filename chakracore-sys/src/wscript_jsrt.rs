@@ -44,12 +44,6 @@ mod ffi {
 
         #[namespace = "chakra_rs"]
         type JsNativeFunctionArgs<'a> = crate::jsrt::JsNativeFunctionArgs<'a>;
-        #[Self = "WScriptJsrt"]
-        fn InstallObjectsOnObject(
-            object: &mut JsValueRef,
-            name: &str,
-            native_functions: fn(&JsNativeFunctionArgs) -> JsValueRef,
-        ) -> JsErrorCode;
 
         #[namespace = "PlatformAgnostic::ICUHelpers"]
         fn GetICUMajorVersion() -> i32;
@@ -142,104 +136,32 @@ impl WScript {
 
         let mut wscript_object = ChakraRt::create_object()?;
 
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "monotonicNow",
-            WScriptJsrt::MonotonicNowCallback,
-        )
-        .as_result()?;
+        wscript_object.set_named_function("monotonicNow", WScriptJsrt::MonotonicNowCallback)?;
 
-        WScriptJsrt::InstallObjectsOnObject(&mut wscript_object, "Echo", WScriptJsrt::EchoCallback)
-            .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(&mut wscript_object, "Quit", WScriptJsrt::QuitCallback)
-            .as_result()?;
+        wscript_object.set_named_function("Echo", WScriptJsrt::EchoCallback)?;
+        wscript_object.set_named_function("Quit", WScriptJsrt::QuitCallback)?;
 
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "LoadScriptFile",
-            WScriptJsrt::LoadScriptFileCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "LoadScript",
-            WScriptJsrt::LoadScriptCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "LoadModule",
-            WScriptJsrt::LoadModuleCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "SetTimeout",
-            WScriptJsrt::SetTimeoutCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "ClearTimeout",
-            WScriptJsrt::ClearTimeoutCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "Attach",
-            WScriptJsrt::AttachCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "Detach",
-            WScriptJsrt::DetachCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "LoadBinaryFile",
-            WScriptJsrt::LoadBinaryFileCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "LoadTextFile",
-            WScriptJsrt::LoadTextFileCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(&mut wscript_object, "Flag", WScriptJsrt::FlagCallback)
-            .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
+        wscript_object.set_named_function("LoadScriptFile", WScriptJsrt::LoadScriptFileCallback)?;
+        wscript_object.set_named_function("LoadScript", WScriptJsrt::LoadScriptCallback)?;
+        wscript_object.set_named_function("LoadModule", WScriptJsrt::LoadModuleCallback)?;
+        wscript_object.set_named_function("SetTimeout", WScriptJsrt::SetTimeoutCallback)?;
+        wscript_object.set_named_function("ClearTimeout", WScriptJsrt::ClearTimeoutCallback)?;
+        wscript_object.set_named_function("Attach", WScriptJsrt::AttachCallback)?;
+        wscript_object.set_named_function("Detach", WScriptJsrt::DetachCallback)?;
+        wscript_object.set_named_function("LoadBinaryFile", WScriptJsrt::LoadBinaryFileCallback)?;
+        wscript_object.set_named_function("LoadTextFile", WScriptJsrt::LoadTextFileCallback)?;
+        wscript_object.set_named_function("Flag", WScriptJsrt::FlagCallback)?;
+        wscript_object.set_named_function(
             "RegisterModuleSource",
             WScriptJsrt::RegisterModuleSourceCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "GetModuleNamespace",
-            WScriptJsrt::GetModuleNamespace,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
+        )?;
+        wscript_object.set_named_function("GetModuleNamespace", WScriptJsrt::GetModuleNamespace)?;
+        wscript_object.set_named_function(
             "GetProxyProperties",
             WScriptJsrt::GetProxyPropertiesCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "SerializeObject",
-            WScriptJsrt::SerializeObject,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "Deserialize",
-            WScriptJsrt::Deserialize,
-        )
-        .as_result()?;
+        )?;
+        wscript_object.set_named_function("SerializeObject", WScriptJsrt::SerializeObject)?;
+        wscript_object.set_named_function("Deserialize", WScriptJsrt::Deserialize)?;
 
         // Platform
         let mut platform_object = ChakraRt::create_object()?;
@@ -300,30 +222,13 @@ impl WScript {
             true,
         )?;
 
-        WScriptJsrt::InstallObjectsOnObject(&mut global_object, "print", WScriptJsrt::EchoCallback)
-            .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut global_object,
-            "read",
-            WScriptJsrt::LoadTextFileCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut global_object,
-            "readbuffer",
-            WScriptJsrt::LoadBinaryFileCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut global_object,
-            "readline",
-            WScriptJsrt::ReadLineStdinCallback,
-        )
-        .as_result()?;
+        global_object.set_named_function("print", WScriptJsrt::EchoCallback)?;
+        global_object.set_named_function("read", WScriptJsrt::LoadTextFileCallback)?;
+        global_object.set_named_function("readbuffer", WScriptJsrt::LoadBinaryFileCallback)?;
+        global_object.set_named_function("readline", WScriptJsrt::ReadLineStdinCallback)?;
 
         let mut console_object = ChakraRt::create_object()?;
-        WScriptJsrt::InstallObjectsOnObject(&mut console_object, "log", WScriptJsrt::EchoCallback)
-            .as_result()?;
+        console_object.set_named_function("log", WScriptJsrt::EchoCallback)?;
 
         global_object.set_property(
             ChakraRt::create_property_id("console")?,
@@ -339,43 +244,14 @@ impl WScript {
         // WScript will have the extra support API below and $262 will be
         // added to global scope
         if HostConfigFlags::GetConfig().host.test262 {
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "Broadcast",
-                WScriptJsrt::BroadcastCallback,
-            )
-            .as_result()?;
+            wscript_object.set_named_function("Broadcast", WScriptJsrt::BroadcastCallback)?;
 
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "ReceiveBroadcast",
-                WScriptJsrt::ReceiveBroadcastCallback,
-            )
-            .as_result()?;
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "Report",
-                WScriptJsrt::ReportCallback,
-            )
-            .as_result()?;
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "GetReport",
-                WScriptJsrt::GetReportCallback,
-            )
-            .as_result()?;
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "Leaving",
-                WScriptJsrt::LeavingCallback,
-            )
-            .as_result()?;
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "Sleep",
-                WScriptJsrt::SleepCallback,
-            )
-            .as_result()?;
+            wscript_object
+                .set_named_function("ReceiveBroadcast", WScriptJsrt::ReceiveBroadcastCallback)?;
+            wscript_object.set_named_function("Report", WScriptJsrt::ReportCallback)?;
+            wscript_object.set_named_function("GetReport", WScriptJsrt::GetReportCallback)?;
+            wscript_object.set_named_function("Leaving", WScriptJsrt::LeavingCallback)?;
+            wscript_object.set_named_function("Sleep", WScriptJsrt::SleepCallback)?;
 
             // $262
             let test262 = include_str!("ch/262.js");

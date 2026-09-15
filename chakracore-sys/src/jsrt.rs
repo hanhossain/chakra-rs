@@ -1,3 +1,4 @@
+mod chakra_rust;
 mod error;
 mod ffi;
 
@@ -49,6 +50,23 @@ impl ChakraRt {
         Ok(JsArray(value))
     }
 
+    pub fn create_named_function(
+        name: &str,
+        native_function: fn(&JsNativeFunctionArgs) -> JsValueRef,
+    ) -> Result<JsFunction, JsError> {
+        let name_obj = ChakraRt::create_string(name)?;
+        let mut value = JsValueRef::default();
+        unsafe {
+            chakra_rust::bridge::JsCreateNamedFunction(
+                name_obj.as_ref().clone(),
+                native_function,
+                &raw mut value,
+            )
+            .as_result()?;
+        }
+        Ok(JsFunction(value))
+    }
+
     pub fn int_to_number(value: i32) -> Result<JsValueRef, JsError> {
         let mut value_ref = JsValueRef::default();
         unsafe {
@@ -75,9 +93,22 @@ impl JsObject {
         )
         .as_result()
     }
+
+    pub fn set_named_function(
+        &mut self,
+        name: &str,
+        func: fn(&JsNativeFunctionArgs) -> JsValueRef,
+    ) -> Result<(), JsError> {
+        self.set_property(
+            ChakraRt::create_property_id(name)?,
+            ChakraRt::create_named_function(name, func)?,
+            true,
+        )
+    }
 }
 
-// TODO: remove once WScriptJsrt::InstallObjectsOnObject is ported
+// TODO: this is temporary while other functions are ported. Don't actually want to deref to
+//  JsValueRef.
 impl Deref for JsObject {
     type Target = JsValueRef;
 
@@ -136,6 +167,14 @@ impl JsArray {
 }
 
 impl AsRef<JsValueRef> for JsArray {
+    fn as_ref(&self) -> &JsValueRef {
+        &self.0
+    }
+}
+
+pub struct JsFunction(JsValueRef);
+
+impl AsRef<JsValueRef> for JsFunction {
     fn as_ref(&self) -> &JsValueRef {
         &self.0
     }
