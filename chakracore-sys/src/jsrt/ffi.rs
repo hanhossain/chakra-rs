@@ -98,6 +98,7 @@ pub(super) mod bridge {
         unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreatePropertyId(name: &str, object: *mut JsPropertyIdRef) -> JsErrorCode;
         unsafe fn JsCreateArray(length: u32, array: *mut JsValueRef) -> JsErrorCode;
+        fn JsToString(value: &JsValueRef, string: &mut String) -> JsErrorCode;
         fn JsSetProperty(
             object: JsValueRef,
             property: JsPropertyIdRef,
@@ -111,7 +112,10 @@ pub(super) mod bridge {
         ) -> JsErrorCode;
         unsafe fn JsIntToNumber(int_value: i32, value: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsGetGlobalObject(global_object: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsGetUndefinedValue(value: *mut JsValueRef) -> JsErrorCode;
     }
+
+    impl CxxVector<JsValueRef> {}
 
     #[derive(Debug)]
     enum JsErrorCode {

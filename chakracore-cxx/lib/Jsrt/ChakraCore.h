@@ -557,7 +557,7 @@ namespace chakracore::jsrt
     JsErrorCode JsCopyString(JsValueRef value, rust::String &string);
 
     /// Converts `value` to a JsString (if necessary) then copies it to the rust `string`.
-    JsErrorCode JsToString(JsValueRef value, rust::String &string);
+    JsErrorCode JsToString(const JsValueRef &value, rust::String &string);
 
     /// <summary>
     ///     Write string value into Utf16 string buffer

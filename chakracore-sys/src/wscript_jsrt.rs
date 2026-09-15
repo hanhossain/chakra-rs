@@ -1,6 +1,7 @@
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, JsArray, JsError, JsErrorExt, JsParseScriptAttributes, JsSourceContext,
+    ChakraRt, JsArray, JsError, JsErrorExt, JsNativeFunctionArgs, JsParseScriptAttributes,
+    JsSourceContext, JsValueRef, JsValueRefExt,
 };
 use crate::rt_interface::ChakraRTInterface;
 pub use ffi::WScriptJsrt;
@@ -50,8 +51,6 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         fn MonotonicNowCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn EchoCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn QuitCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
@@ -138,7 +137,7 @@ impl WScript {
 
         wscript_object.set_named_function("monotonicNow", WScriptJsrt::MonotonicNowCallback)?;
 
-        wscript_object.set_named_function("Echo", WScriptJsrt::EchoCallback)?;
+        wscript_object.set_named_function("Echo", WScript::echo_callback)?;
         wscript_object.set_named_function("Quit", WScriptJsrt::QuitCallback)?;
 
         wscript_object.set_named_function("LoadScriptFile", WScriptJsrt::LoadScriptFileCallback)?;
@@ -222,13 +221,13 @@ impl WScript {
             true,
         )?;
 
-        global_object.set_named_function("print", WScriptJsrt::EchoCallback)?;
+        global_object.set_named_function("print", WScript::echo_callback)?;
         global_object.set_named_function("read", WScriptJsrt::LoadTextFileCallback)?;
         global_object.set_named_function("readbuffer", WScriptJsrt::LoadBinaryFileCallback)?;
         global_object.set_named_function("readline", WScriptJsrt::ReadLineStdinCallback)?;
 
         let mut console_object = ChakraRt::create_object()?;
-        console_object.set_named_function("log", WScriptJsrt::EchoCallback)?;
+        console_object.set_named_function("log", WScript::echo_callback)?;
 
         global_object.set_property(
             ChakraRt::create_property_id("console")?,
@@ -272,5 +271,20 @@ impl WScript {
         }
 
         Ok(())
+    }
+
+    fn echo_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
+        for (i, arg) in args.arguments.iter().skip(1).enumerate() {
+            let Ok(string) = arg.to_string() else {
+                return JsValueRef::default();
+            };
+            if i > 0 {
+                print!(" ");
+            }
+            print!("{string}");
+        }
+
+        println!();
+        ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }

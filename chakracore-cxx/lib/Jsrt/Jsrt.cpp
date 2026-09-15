@@ -3656,7 +3656,7 @@ JsErrorCode chakracore::jsrt::JsCopyString(const JsValueRef value, rust::String 
     return JsNoError;
 }
 
-JsErrorCode chakracore::jsrt::JsToString(const JsValueRef value, rust::String &string)
+JsErrorCode chakracore::jsrt::JsToString(const JsValueRef &value, rust::String &string)
 {
     JsValueType type;
     auto ec = JsGetValueType(value, &type);

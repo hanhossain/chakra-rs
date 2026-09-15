@@ -60,41 +60,6 @@ std::size_t WScriptJsrt::GetNextSourceContext()
     return sourceContext_++;
 }
 
-JsValueRef WScriptJsrt::EchoCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    for (unsigned int i = 1; i < args.arguments.size(); i++)
-    {
-        rust::String string;
-        auto error = ChakraRTInterface::JsToString(args.arguments[i], string);
-        if (error == JsNoError)
-        {
-            if (i > 1)
-            {
-                std::print(" ");
-            }
-            std::print("{}", string);
-        }
-
-        if (error == JsErrorScriptException)
-        {
-            return nullptr;
-        }
-    }
-
-    std::println();
-    fflush(stdout);
-
-    JsValueRef undefinedValue;
-    if (ChakraRTInterface::JsGetUndefinedValue(&undefinedValue) == JsNoError)
-    {
-        return undefinedValue;
-    }
-    else
-    {
-        return nullptr;
-    }
-}
-
 JsValueRef WScriptJsrt::QuitCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
     int exitCode = 0;

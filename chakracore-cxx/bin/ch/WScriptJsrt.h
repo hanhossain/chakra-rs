@@ -117,7 +117,6 @@ private:
     static JsErrorCode CreateNamedFunction(rust::Str nameString, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)>callback, JsValueRef *functionVar);
     static std::string GetDir(std::string_view fullPathNarrow);
 public:
-    static JsValueRef CALLBACK EchoCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK QuitCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK LoadScriptFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK LoadScriptCallback(const chakra_rs::JsNativeFunctionArgs &args);

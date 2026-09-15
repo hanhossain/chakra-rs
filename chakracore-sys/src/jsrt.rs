@@ -74,6 +74,27 @@ impl ChakraRt {
         }
         Ok(value_ref)
     }
+
+    pub fn get_undefined_value() -> Result<JsValueRef, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            bridge::JsGetUndefinedValue(&raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
+}
+
+pub trait JsValueRefExt {
+    fn to_string(&self) -> Result<String, JsError>;
+}
+
+impl<T: AsRef<JsValueRef>> JsValueRefExt for T {
+    #[tracing::instrument(level = "trace", skip_all, err)]
+    fn to_string(&self) -> Result<String, JsError> {
+        let mut s = String::new();
+        bridge::JsToString(self.as_ref(), &mut s).as_result()?;
+        Ok(s)
+    }
 }
 
 pub struct JsObject(JsValueRef);
