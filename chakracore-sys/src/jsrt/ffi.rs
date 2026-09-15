@@ -1,3 +1,4 @@
+use crate::jsrt::JsError;
 pub use bridge::{
     CVoid, JsErrorCode, JsNativeFunctionArgs, JsParseScriptAttributes, JsRuntimeAttributes,
 };
@@ -39,6 +40,13 @@ unsafe impl cxx::ExternType for JsValueRef {
 impl JsValueRef {
     pub fn is_null(&self) -> bool {
         self.0.is_null()
+    }
+
+    #[tracing::instrument(level = "trace", skip_all, err)]
+    pub fn to_string(&self) -> Result<String, JsError> {
+        let mut s = String::new();
+        bridge::JsToString(self.as_ref(), &mut s).as_result()?;
+        Ok(s)
     }
 }
 
@@ -295,5 +303,86 @@ pub(super) mod bridge {
         is_construct_call: bool,
         /// The arguments to the call.
         arguments: &'a CxxVector<JsValueRef>,
+    }
+}
+
+impl JsErrorCode {
+    pub fn as_result(&self) -> Result<(), JsError> {
+        match *self {
+            JsErrorCode::JsNoError => Ok(()),
+            JsErrorCode::JsErrorCategoryUsage => Err(JsError::JsErrorCategoryUsage),
+            JsErrorCode::JsErrorInvalidArgument => Err(JsError::JsErrorInvalidArgument),
+            JsErrorCode::JsErrorNullArgument => Err(JsError::JsErrorNullArgument),
+            JsErrorCode::JsErrorNoCurrentContext => Err(JsError::JsErrorNoCurrentContext),
+            JsErrorCode::JsErrorInExceptionState => Err(JsError::JsErrorInExceptionState),
+            JsErrorCode::JsErrorNotImplemented => Err(JsError::JsErrorNotImplemented),
+            JsErrorCode::JsErrorWrongThread => Err(JsError::JsErrorWrongThread),
+            JsErrorCode::JsErrorRuntimeInUse => Err(JsError::JsErrorRuntimeInUse),
+            JsErrorCode::JsErrorBadSerializedScript => Err(JsError::JsErrorBadSerializedScript),
+            JsErrorCode::JsErrorInDisabledState => Err(JsError::JsErrorInDisabledState),
+            JsErrorCode::JsErrorCannotDisableExecution => {
+                Err(JsError::JsErrorCannotDisableExecution)
+            }
+            JsErrorCode::JsErrorHeapEnumInProgress => Err(JsError::JsErrorHeapEnumInProgress),
+            JsErrorCode::JsErrorArgumentNotObject => Err(JsError::JsErrorArgumentNotObject),
+            JsErrorCode::JsErrorInProfileCallback => Err(JsError::JsErrorInProfileCallback),
+            JsErrorCode::JsErrorInThreadServiceCallback => {
+                Err(JsError::JsErrorInThreadServiceCallback)
+            }
+            JsErrorCode::JsErrorCannotSerializeDebugScript => {
+                Err(JsError::JsErrorCannotSerializeDebugScript)
+            }
+            JsErrorCode::JsErrorAlreadyDebuggingContext => {
+                Err(JsError::JsErrorAlreadyDebuggingContext)
+            }
+            JsErrorCode::JsErrorAlreadyProfilingContext => {
+                Err(JsError::JsErrorAlreadyProfilingContext)
+            }
+            JsErrorCode::JsErrorIdleNotEnabled => Err(JsError::JsErrorIdleNotEnabled),
+            JsErrorCode::JsCannotSetProjectionEnqueueCallback => {
+                Err(JsError::JsCannotSetProjectionEnqueueCallback)
+            }
+            JsErrorCode::JsErrorCannotStartProjection => Err(JsError::JsErrorCannotStartProjection),
+            JsErrorCode::JsErrorInObjectBeforeCollectCallback => {
+                Err(JsError::JsErrorInObjectBeforeCollectCallback)
+            }
+            JsErrorCode::JsErrorObjectNotInspectable => Err(JsError::JsErrorObjectNotInspectable),
+            JsErrorCode::JsErrorPropertyNotSymbol => Err(JsError::JsErrorPropertyNotSymbol),
+            JsErrorCode::JsErrorPropertyNotString => Err(JsError::JsErrorPropertyNotString),
+            JsErrorCode::JsErrorInvalidContext => Err(JsError::JsErrorInvalidContext),
+            JsErrorCode::JsInvalidModuleHostInfoKind => Err(JsError::JsInvalidModuleHostInfoKind),
+            JsErrorCode::JsErrorModuleParsed => Err(JsError::JsErrorModuleParsed),
+            JsErrorCode::JsNoWeakRefRequired => Err(JsError::JsNoWeakRefRequired),
+            JsErrorCode::JsErrorPromisePending => Err(JsError::JsErrorPromisePending),
+            JsErrorCode::JsErrorModuleNotEvaluated => Err(JsError::JsErrorModuleNotEvaluated),
+            JsErrorCode::JsErrorCategoryEngine => Err(JsError::JsErrorCategoryEngine),
+            JsErrorCode::JsErrorOutOfMemory => Err(JsError::JsErrorOutOfMemory),
+            JsErrorCode::JsErrorBadFPUState => Err(JsError::JsErrorBadFPUState),
+            JsErrorCode::JsErrorCategoryScript => Err(JsError::JsErrorCategoryScript),
+            JsErrorCode::JsErrorScriptException => Err(JsError::JsErrorScriptException),
+            JsErrorCode::JsErrorScriptCompile => Err(JsError::JsErrorScriptCompile),
+            JsErrorCode::JsErrorScriptTerminated => Err(JsError::JsErrorScriptTerminated),
+            JsErrorCode::JsErrorScriptEvalDisabled => Err(JsError::JsErrorScriptEvalDisabled),
+            JsErrorCode::JsErrorCategoryFatal => Err(JsError::JsErrorCategoryFatal),
+            JsErrorCode::JsErrorFatal => Err(JsError::JsErrorFatal),
+            JsErrorCode::JsErrorWrongRuntime => Err(JsError::JsErrorWrongRuntime),
+            JsErrorCode::JsErrorCategoryDiagError => Err(JsError::JsErrorCategoryDiagError),
+            JsErrorCode::JsErrorDiagAlreadyInDebugMode => {
+                Err(JsError::JsErrorDiagAlreadyInDebugMode)
+            }
+            JsErrorCode::JsErrorDiagNotInDebugMode => Err(JsError::JsErrorDiagNotInDebugMode),
+            JsErrorCode::JsErrorDiagNotAtBreak => Err(JsError::JsErrorDiagNotAtBreak),
+            JsErrorCode::JsErrorDiagInvalidHandle => Err(JsError::JsErrorDiagInvalidHandle),
+            JsErrorCode::JsErrorDiagObjectNotFound => Err(JsError::JsErrorDiagObjectNotFound),
+            JsErrorCode::JsErrorDiagUnableToPerformAction => {
+                Err(JsError::JsErrorDiagUnableToPerformAction)
+            }
+            JsErrorCode::JsSerializerNotSupported => Err(JsError::JsSerializerNotSupported),
+            JsErrorCode::JsTransferableNotSupported => Err(JsError::JsTransferableNotSupported),
+            JsErrorCode::JsTransferableAlreadyDetached => {
+                Err(JsError::JsTransferableAlreadyDetached)
+            }
+            _ => unimplemented!(),
+        }
     }
 }

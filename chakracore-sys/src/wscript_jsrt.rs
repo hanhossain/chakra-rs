@@ -1,7 +1,7 @@
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, JsArray, JsError, JsErrorExt, JsNativeFunctionArgs, JsParseScriptAttributes,
-    JsSourceContext, JsValueRef, JsValueRefExt,
+    ChakraRt, JsArray, JsError, JsNativeFunctionArgs, JsParseScriptAttributes, JsSourceContext,
+    JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 pub use ffi::WScriptJsrt;

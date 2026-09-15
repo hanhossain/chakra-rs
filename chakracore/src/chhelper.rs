@@ -4,7 +4,7 @@ use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers::Helpers;
 use chakracore_sys::host_config::HostConfigFlags;
 use chakracore_sys::jsrt::{
-    JsContextRef, JsError, JsErrorCode, JsErrorExt, JsParseScriptAttributes, JsRuntimeAttributes,
+    JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
     JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
 use chakracore_sys::rt_interface::ChakraRTInterface;

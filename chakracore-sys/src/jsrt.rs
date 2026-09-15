@@ -84,19 +84,6 @@ impl ChakraRt {
     }
 }
 
-pub trait JsValueRefExt {
-    fn to_string(&self) -> Result<String, JsError>;
-}
-
-impl<T: AsRef<JsValueRef>> JsValueRefExt for T {
-    #[tracing::instrument(level = "trace", skip_all, err)]
-    fn to_string(&self) -> Result<String, JsError> {
-        let mut s = String::new();
-        bridge::JsToString(self.as_ref(), &mut s).as_result()?;
-        Ok(s)
-    }
-}
-
 pub struct JsObject(JsValueRef);
 
 impl JsObject {
