@@ -52,7 +52,7 @@ impl ChakraRt {
 
     pub fn create_named_function<T>(name: &str, native_function: T) -> Result<JsFunction, JsError>
     where
-        T: FnMut(&JsNativeFunctionArgs) -> JsValueRef,
+        T: Fn(&JsNativeFunctionArgs) -> JsValueRef,
     {
         let boxed_func = Box::new(native_function);
         let name_obj = ChakraRt::create_string(name)?;
@@ -61,11 +61,7 @@ impl ChakraRt {
             bridge::JsCreateNamedFunction(
                 name_obj.as_ref(),
                 |callee, is_construct_call, args, arg_count, state| {
-                    let mut arguments = CxxVector::new();
-
-                    for x in std::slice::from_raw_parts(args, arg_count as usize) {
-                        arguments.pin_mut().push(x.clone());
-                    }
+                    let arguments = std::slice::from_raw_parts(args, arg_count as usize);
 
                     let function_args = JsNativeFunctionArgs {
                         arguments: &arguments,
@@ -118,11 +114,10 @@ impl JsObject {
         .as_result()
     }
 
-    pub fn set_named_function(
-        &mut self,
-        name: &str,
-        func: fn(&JsNativeFunctionArgs) -> JsValueRef,
-    ) -> Result<(), JsError> {
+    pub fn set_named_function<T>(&mut self, name: &str, func: T) -> Result<(), JsError>
+    where
+        T: Fn(&JsNativeFunctionArgs) -> JsValueRef,
+    {
         self.set_property(
             ChakraRt::create_property_id(name)?,
             ChakraRt::create_named_function(name, func)?,

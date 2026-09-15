@@ -108,7 +108,7 @@ public:
     static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static JsValueRef LoadScript(JsValueRef callee, rust::Str fileName, const std::optional<rust::Str> &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
     static std::size_t GetNextSourceContext();
-    static JsValueRef LoadScriptFileHelper(JsValueRef callee, const std::vector<JsValueRef> &arguments, bool isSourceModule);
+    static JsValueRef LoadScriptFileHelper(JsValueRef callee, const rust::Slice<JsValueRef const> &arguments, bool isSourceModule);
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
     static bool SetModuleHostInfoCallbacks();
     static void FinalizeFree(void * addr);

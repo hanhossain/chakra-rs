@@ -315,7 +315,7 @@ pub(super) mod bridge {
         /// Indicates whether this is a regular call or a 'new' call.
         is_construct_call: bool,
         /// The arguments to the call.
-        arguments: &'a CxxVector<JsValueRef>,
+        arguments: &'a [JsValueRef],
     }
 }
 
