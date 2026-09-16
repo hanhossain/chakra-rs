@@ -72,12 +72,6 @@ mod ffi {
         fn GetModuleNamespace(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn GetProxyPropertiesCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn SerializeObject(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn Deserialize(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn ReadLineStdinCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
         fn BroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
@@ -138,8 +132,6 @@ impl WScript {
         wscript_object.set_named_function("LoadModule", WScriptJsrt::LoadModuleCallback)?;
         wscript_object.set_named_function("SetTimeout", WScriptJsrt::SetTimeoutCallback)?;
         wscript_object.set_named_function("ClearTimeout", WScriptJsrt::ClearTimeoutCallback)?;
-        wscript_object.set_named_function("LoadBinaryFile", WScriptJsrt::LoadBinaryFileCallback)?;
-        wscript_object.set_named_function("LoadTextFile", WScriptJsrt::LoadTextFileCallback)?;
         wscript_object.set_named_function("Flag", WScriptJsrt::FlagCallback)?;
         wscript_object.set_named_function(
             "RegisterModuleSource",
@@ -150,8 +142,6 @@ impl WScript {
             "GetProxyProperties",
             WScriptJsrt::GetProxyPropertiesCallback,
         )?;
-        wscript_object.set_named_function("SerializeObject", WScriptJsrt::SerializeObject)?;
-        wscript_object.set_named_function("Deserialize", WScriptJsrt::Deserialize)?;
 
         // Platform
         let mut platform_object = ChakraRt::create_object()?;
@@ -215,7 +205,6 @@ impl WScript {
         global_object.set_named_function("print", WScript::echo_callback)?;
         global_object.set_named_function("read", WScriptJsrt::LoadTextFileCallback)?;
         global_object.set_named_function("readbuffer", WScriptJsrt::LoadBinaryFileCallback)?;
-        global_object.set_named_function("readline", WScriptJsrt::ReadLineStdinCallback)?;
 
         let mut console_object = ChakraRt::create_object()?;
         console_object.set_named_function("log", WScript::echo_callback)?;

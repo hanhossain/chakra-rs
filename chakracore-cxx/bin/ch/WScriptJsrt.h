@@ -129,7 +129,6 @@ public:
     static JsValueRef CALLBACK LoadTextFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK RegisterModuleSourceCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK FlagCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK ReadLineStdinCallback(const chakra_rs::JsNativeFunctionArgs &args);
 
     static JsValueRef CALLBACK BroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ReceiveBroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args);
@@ -138,9 +137,6 @@ public:
     static JsValueRef CALLBACK LeavingCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK SleepCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK GetProxyPropertiesCallback(const chakra_rs::JsNativeFunctionArgs &args);
-
-    static JsValueRef CALLBACK SerializeObject(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK Deserialize(const chakra_rs::JsNativeFunctionArgs &args);
 
 private:
     static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier,
