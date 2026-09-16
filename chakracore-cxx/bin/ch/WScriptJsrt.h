@@ -122,8 +122,6 @@ public:
     static JsValueRef CALLBACK GetModuleNamespace(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK SetTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK AttachCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK DetachCallback(const chakra_rs::JsNativeFunctionArgs &args);
 
     static JsErrorCode CALLBACK LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile = false);
 

@@ -61,10 +61,6 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         fn ClearTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
-        fn AttachCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn DetachCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
         fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn LoadTextFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
@@ -142,8 +138,6 @@ impl WScript {
         wscript_object.set_named_function("LoadModule", WScriptJsrt::LoadModuleCallback)?;
         wscript_object.set_named_function("SetTimeout", WScriptJsrt::SetTimeoutCallback)?;
         wscript_object.set_named_function("ClearTimeout", WScriptJsrt::ClearTimeoutCallback)?;
-        wscript_object.set_named_function("Attach", WScriptJsrt::AttachCallback)?;
-        wscript_object.set_named_function("Detach", WScriptJsrt::DetachCallback)?;
         wscript_object.set_named_function("LoadBinaryFile", WScriptJsrt::LoadBinaryFileCallback)?;
         wscript_object.set_named_function("LoadTextFile", WScriptJsrt::LoadTextFileCallback)?;
         wscript_object.set_named_function("Flag", WScriptJsrt::FlagCallback)?;
