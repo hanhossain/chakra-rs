@@ -1,4 +1,3 @@
-use crate::helpers::Helpers;
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, JsArray, JsError, JsNativeFunctionArgs, JsParseScriptAttributes, JsSourceContext,
@@ -91,7 +90,7 @@ mod ffi {
     unsafe extern "C++" {
         include!("SourceMap.h");
 
-        type SourceMap;
+        type SourceMap = crate::helpers::SourceMap;
         #[Self = "SourceMap"]
         fn Add(path: &String, data: &String);
     }
@@ -304,7 +303,7 @@ impl WScript {
         }
 
         let filename = args.arguments[1].to_string()?;
-        let file_content = Helpers::LoadScriptFromFile(&filename)?;
+        let file_content = crate::helpers::load_script_from_file(&filename)?;
         let value = ChakraRt::create_string(&file_content)?;
         Ok(value)
     }

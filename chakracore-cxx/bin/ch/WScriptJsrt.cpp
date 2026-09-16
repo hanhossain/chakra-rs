@@ -23,6 +23,7 @@
 #include "TestHooks.h"
 #include "chakra/Logger.h"
 
+#include <chakracore-sys/src/helpers.rs.h>
 #include <chakracore-sys/src/wscript_jsrt.rs.h>
 
 namespace fs = std::filesystem;
@@ -85,7 +86,7 @@ JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, const rust::Slic
         rust::String *content;
         try
         {
-            content = new rust::String{Helpers::LoadScriptFromFile(fileName)};
+            content = new rust::String{chakra_rs::helpers::load_script_from_file(fileName)};
         }
         catch (const rust::Error &e)
         {
@@ -1095,8 +1096,11 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 
         try
         {
-            rust::String fileContent = Helpers::LoadScriptFromFile(specifierStr, fullPath_);
-            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, fileContent, "module", true, WScriptJsrt::FinalizeFree, true);
+            rust::String fileContent = fullPath_
+                ? chakra_rs::helpers::load_script_with_full_path(specifierStr, fullPath_->native())
+                : chakra_rs::helpers::load_script_from_file(specifierStr);
+            LoadScript(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, fileContent, "module", true,
+                       WScriptJsrt::FinalizeFree, true);
         }
         catch (const rust::Error &e)
         {

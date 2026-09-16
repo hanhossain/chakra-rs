@@ -1,7 +1,6 @@
 use crate::{Error, hresult_to_result};
 use chakracore_sys::chhelper::MessageQueue;
 use chakracore_sys::config::ConfigContext;
-use chakracore_sys::helpers::Helpers;
 use chakracore_sys::host_config::HostConfigFlags;
 use chakracore_sys::jsrt::{
     JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
@@ -19,7 +18,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     // handle command line flags
     hresult_to_result(ChakraRTInterface::InitializeTestHooks(&config.core.args))?;
 
-    let file_contents = Helpers::LoadScriptFromFile(&config.core.filename)?;
+    let file_contents = chakracore_sys::helpers::load_script_from_file(&config.core.filename)?;
     let mut runtime = JsRuntimeHandle::default();
     unsafe {
         ChakraRTInterface::JsCreateRuntime(
