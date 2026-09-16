@@ -97,6 +97,14 @@ impl ChakraRt {
         }
         Ok(value)
     }
+
+    pub fn number_to_int(number: &JsValueRef) -> Result<i32, JsError> {
+        let mut value = 0;
+        unsafe {
+            bridge::JsNumberToInt(number.clone(), &raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
 }
 
 pub struct JsObject(JsValueRef);

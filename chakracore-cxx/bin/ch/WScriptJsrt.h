@@ -116,7 +116,6 @@ private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
     static std::string GetDir(std::string_view fullPathNarrow);
 public:
-    static JsValueRef CALLBACK QuitCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK LoadScriptFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK LoadScriptCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK LoadModuleCallback(const chakra_rs::JsNativeFunctionArgs &args);

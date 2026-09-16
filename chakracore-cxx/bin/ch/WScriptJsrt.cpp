@@ -60,20 +60,6 @@ std::size_t WScriptJsrt::GetNextSourceContext()
     return sourceContext_++;
 }
 
-JsValueRef WScriptJsrt::QuitCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    int exitCode = 0;
-
-    if (args.arguments.size() > 1)
-    {
-        double exitCodeDouble;
-        IfJsrtErrorFail(ChakraRTInterface::JsNumberToDouble(args.arguments[1], &exitCodeDouble), JS_INVALID_REFERENCE);
-        exitCode = (int)exitCodeDouble;
-    }
-
-    exit(exitCode);
-}
-
 JsValueRef WScriptJsrt::LoadScriptFileCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
     return LoadScriptFileHelper(args.callee, args.arguments, false);

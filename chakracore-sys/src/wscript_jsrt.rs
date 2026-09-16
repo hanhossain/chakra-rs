@@ -1,7 +1,6 @@
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, JsArray, JsError, JsNativeFunctionArgs, JsParseScriptAttributes, JsSourceContext,
-    JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 pub use ffi::WScriptJsrt;
@@ -51,8 +50,6 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         fn MonotonicNowCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn QuitCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn LoadScriptFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
@@ -138,7 +135,7 @@ impl WScript {
         wscript_object.set_named_function("monotonicNow", WScriptJsrt::MonotonicNowCallback)?;
 
         wscript_object.set_named_function("Echo", WScript::echo_callback)?;
-        wscript_object.set_named_function("Quit", WScriptJsrt::QuitCallback)?;
+        wscript_object.set_named_function("Quit", WScript::quit_callback)?;
 
         wscript_object.set_named_function("LoadScriptFile", WScriptJsrt::LoadScriptFileCallback)?;
         wscript_object.set_named_function("LoadScript", WScriptJsrt::LoadScriptCallback)?;
@@ -284,5 +281,14 @@ impl WScript {
 
         println!();
         Ok(())
+    }
+
+    fn quit_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        let exit_code = if args.arguments.len() > 1 {
+            ChakraRt::number_to_int(&args.arguments[1])?
+        } else {
+            0
+        };
+        std::process::exit(exit_code)
     }
 }
