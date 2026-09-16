@@ -273,11 +273,9 @@ impl WScript {
         Ok(())
     }
 
-    fn echo_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
+    fn echo_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         for (i, arg) in args.arguments.iter().skip(1).enumerate() {
-            let Ok(string) = arg.to_string() else {
-                return JsValueRef::default();
-            };
+            let string = arg.to_string()?;
             if i > 0 {
                 print!(" ");
             }
@@ -285,6 +283,6 @@ impl WScript {
         }
 
         println!();
-        ChakraRt::get_undefined_value().unwrap_or_default()
+        Ok(())
     }
 }

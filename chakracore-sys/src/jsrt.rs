@@ -49,9 +49,13 @@ impl ChakraRt {
         Ok(JsArray(value))
     }
 
-    pub fn create_named_function<T>(name: &str, native_function: T) -> Result<JsFunction, JsError>
+    pub fn create_named_function<T, R>(
+        name: &str,
+        native_function: T,
+    ) -> Result<JsFunction, JsError>
     where
-        T: Fn(&JsNativeFunctionArgs) -> JsValueRef,
+        T: Fn(&JsNativeFunctionArgs) -> R,
+        R: FuncRetVal,
     {
         let boxed_func = Box::new(native_function);
         let name_obj = ChakraRt::create_string(name)?;
@@ -68,7 +72,7 @@ impl ChakraRt {
                         is_construct_call,
                     };
                     let func: &mut T = &mut *std::mem::transmute::<*mut CVoid, *mut T>(state);
-                    func(&function_args)
+                    func(&function_args).to_return()
                 },
                 Box::into_raw(boxed_func) as *mut CVoid,
                 &raw mut value,
@@ -113,9 +117,10 @@ impl JsObject {
         .as_result()
     }
 
-    pub fn set_named_function<T>(&mut self, name: &str, func: T) -> Result<(), JsError>
+    pub fn set_named_function<T, R>(&mut self, name: &str, func: T) -> Result<(), JsError>
     where
-        T: Fn(&JsNativeFunctionArgs) -> JsValueRef,
+        T: Fn(&JsNativeFunctionArgs) -> R,
+        R: FuncRetVal,
     {
         self.set_property(
             ChakraRt::create_property_id(name)?,
@@ -195,5 +200,34 @@ pub struct JsFunction(JsValueRef);
 impl AsRef<JsValueRef> for JsFunction {
     fn as_ref(&self) -> &JsValueRef {
         &self.0
+    }
+}
+
+/// Defines the return value for a JavaScript function callback.
+pub trait FuncRetVal {
+    fn to_return(self) -> JsValueRef;
+}
+
+impl FuncRetVal for JsValueRef {
+    fn to_return(self) -> JsValueRef {
+        self
+    }
+}
+
+impl FuncRetVal for Result<JsValueRef, JsError> {
+    fn to_return(self) -> JsValueRef {
+        self.unwrap_or_else(|_| ChakraRt::get_undefined_value().unwrap_or_default())
+    }
+}
+
+impl FuncRetVal for Result<(), JsError> {
+    fn to_return(self) -> JsValueRef {
+        ChakraRt::get_undefined_value().unwrap_or_default()
+    }
+}
+
+impl FuncRetVal for () {
+    fn to_return(self) -> JsValueRef {
+        ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }
