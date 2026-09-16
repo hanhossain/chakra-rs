@@ -127,7 +127,6 @@ public:
 
     static JsValueRef CALLBACK LoadBinaryFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK LoadTextFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK RegisterModuleSourceCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK FlagCallback(const chakra_rs::JsNativeFunctionArgs &args);
 
     static JsValueRef CALLBACK BroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args);

@@ -4,6 +4,7 @@ use crate::jsrt::{
     JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
+use crate::wscript_jsrt::ffi::SourceMap;
 pub use ffi::WScriptJsrt;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -67,8 +68,6 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         fn FlagCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
-        fn RegisterModuleSourceCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
         fn GetModuleNamespace(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn GetProxyPropertiesCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
@@ -88,6 +87,14 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         fn SetModuleHostInfoCallbacks() -> bool;
+    }
+
+    unsafe extern "C++" {
+        include!("SourceMap.h");
+
+        type SourceMap;
+        #[Self = "SourceMap"]
+        fn Add(path: &String, data: &String);
     }
 
     #[namespace = "chakra_rs"]
@@ -135,7 +142,7 @@ impl WScript {
         wscript_object.set_named_function("Flag", WScriptJsrt::FlagCallback)?;
         wscript_object.set_named_function(
             "RegisterModuleSource",
-            WScriptJsrt::RegisterModuleSourceCallback,
+            WScript::register_module_source_callback,
         )?;
         wscript_object.set_named_function("GetModuleNamespace", WScriptJsrt::GetModuleNamespace)?;
         wscript_object.set_named_function(
@@ -279,5 +286,16 @@ impl WScript {
         let ms = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
         let res = ChakraRt::double_to_number(ms as f64)?;
         Ok(res)
+    }
+
+    fn register_module_source_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() < 3 {
+            return Ok(());
+        }
+
+        let filename = args.arguments[1].to_string()?;
+        let data = args.arguments[2].to_string()?;
+        SourceMap::Add(&filename, &data);
+        Ok(())
     }
 }

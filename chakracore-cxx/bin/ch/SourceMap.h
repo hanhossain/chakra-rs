@@ -14,10 +14,10 @@ class SourceMap
     static inline std::unordered_map<std::string, std::shared_ptr<std::string>, string_hash, std::equal_to<>> store = {};
 
 public:
-    static void Add(rust::String &&path, rust::String &&data)
+    static void Add(const rust::String &path, const rust::String& data)
     {
         // SourceMap lifetime == process lifetime
-        store.insert(std::make_pair(std::move(path), std::make_shared<std::string>(std::move(data))));
+        store.insert(std::make_pair(path, std::make_shared<std::string>(data)));
     }
 
     static std::shared_ptr<std::string> Find(const rust::Str path)

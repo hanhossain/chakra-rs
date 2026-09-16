@@ -615,30 +615,6 @@ bool WScriptJsrt::Uninitialize()
     return true;
 }
 
-JsValueRef WScriptJsrt::RegisterModuleSourceCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    [[maybe_unused]] int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-
-    if (args.arguments.size() < 3)
-    {
-        IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
-    }
-    else
-    {
-        rust::String fileName;
-        rust::String data;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[1], fileName));
-        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[2], data));
-
-        SourceMap::Add(std::move(fileName), std::move(data));
-    }
-
-Error:
-    return returnValue;
-}
-
 JsValueRef WScriptJsrt::LoadTextFileCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
     if (args.arguments.size() < 2)
