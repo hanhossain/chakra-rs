@@ -35,18 +35,6 @@ namespace fs = std::filesystem;
 
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
 
-struct ArrayBufferTransferInfo {
-    byte* buffer;
-    uint length;
-    ArrayBufferFreeFn freeFn;
-};
-struct SerializerBlob
-{
-    void *data;
-    size_t dataLength;
-    std::vector<ArrayBufferTransferInfo> transferableArrays;
-};
-
 unsigned int MessageBase::s_messageCount = 0;
 MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
 std::map<fs::path, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
@@ -135,58 +123,6 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view e
         ChakraRTInterface::JsCreateError(errorMessageString, &errorObject);
         ChakraRTInterface::JsSetException(errorObject);
     }
-}
-
-byte * ReallocateBufferMemory(void * state, byte *oldBuffer, size_t newSize, size_t *allocatedSize)
-{
-    void* data = realloc((void*)oldBuffer, newSize);
-    if (allocatedSize)
-    {
-        *allocatedSize = newSize;
-    }
-    return (byte*)data;
-}
-
-bool WriteHostObject(void * state, JsValueRef data)
-{
-    // Not implemented
-    return true;
-}
-
-JsValueRef ReadHostObject(void * state)
-{
-    assert(false); // TBD
-    return nullptr;
-}
-
-JsValueRef GetSharedArrayBufferFromId(void * state, uint32_t id)
-{
-    assert(false); // TBD
-    return nullptr;
-}
-JsValueRef GetWasmModuleFromId(void * state, uint32_t transfer_id)
-{
-    assert(false); // TBD
-    return nullptr;
-}
-
-struct BufferFreeFunctionState {
-    ArrayBufferFreeFn freeFn;
-    void* buffer;
-};
-
-void BufferFreeFunction(void * state)
-{
-    BufferFreeFunctionState* bufferState = (BufferFreeFunctionState*)state;
-    if (!bufferState)
-    {
-        return;
-    }
-    if (bufferState->freeFn)
-    {
-        bufferState->freeFn(bufferState->buffer);
-    }
-    delete bufferState;
 }
 
 JsValueRef WScriptJsrt::GetModuleNamespace(const chakra_rs::JsNativeFunctionArgs &args)
