@@ -1,9 +1,11 @@
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, JsArray, JsError, JsNativeFunctionArgs, JsParseScriptAttributes, JsSourceContext,
+    JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 pub use ffi::WScriptJsrt;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 #[cfg(debug_assertions)]
 const BUILD_TYPE_STRING: &str = "Debug";
@@ -48,8 +50,6 @@ mod ffi {
         #[namespace = "PlatformAgnostic::ICUHelpers"]
         fn GetICUMajorVersion() -> i32;
 
-        #[Self = "WScriptJsrt"]
-        fn MonotonicNowCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn LoadScriptFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
@@ -132,7 +132,7 @@ impl WScript {
 
         let mut wscript_object = ChakraRt::create_object()?;
 
-        wscript_object.set_named_function("monotonicNow", WScriptJsrt::MonotonicNowCallback)?;
+        wscript_object.set_named_function("monotonicNow", WScript::monotonic_now_callback)?;
 
         wscript_object.set_named_function("Echo", WScript::echo_callback)?;
         wscript_object.set_named_function("Quit", WScript::quit_callback)?;
@@ -290,5 +290,13 @@ impl WScript {
             0
         };
         std::process::exit(exit_code)
+    }
+
+    fn monotonic_now_callback(
+        _: &JsNativeFunctionArgs,
+    ) -> Result<JsValueRef, Box<dyn std::error::Error>> {
+        let ms = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
+        let res = ChakraRt::double_to_number(ms as f64)?;
+        Ok(res)
     }
 }

@@ -120,7 +120,6 @@ public:
     static JsValueRef CALLBACK LoadScriptCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK LoadModuleCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK GetModuleNamespace(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK MonotonicNowCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK SetTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK AttachCallback(const chakra_rs::JsNativeFunctionArgs &args);

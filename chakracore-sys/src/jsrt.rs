@@ -90,6 +90,14 @@ impl ChakraRt {
         Ok(value_ref)
     }
 
+    pub fn double_to_number(value: f64) -> Result<JsValueRef, JsError> {
+        let mut value_ref = JsValueRef::default();
+        unsafe {
+            bridge::JsDoubleToNumber(value, &raw mut value_ref).as_result()?;
+        }
+        Ok(value_ref)
+    }
+
     pub fn get_undefined_value() -> Result<JsValueRef, JsError> {
         let mut value = JsValueRef::default();
         unsafe {
@@ -222,13 +230,13 @@ impl FuncRetVal for JsValueRef {
     }
 }
 
-impl FuncRetVal for Result<JsValueRef, JsError> {
+impl<E> FuncRetVal for Result<JsValueRef, E> {
     fn to_return(self) -> JsValueRef {
         self.unwrap_or_else(|_| ChakraRt::get_undefined_value().unwrap_or_default())
     }
 }
 
-impl FuncRetVal for Result<(), JsError> {
+impl<E> FuncRetVal for Result<(), E> {
     fn to_return(self) -> JsValueRef {
         ChakraRt::get_undefined_value().unwrap_or_default()
     }

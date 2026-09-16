@@ -10,7 +10,6 @@
 #include <ratio>
 #include <print>
 
-#include <chrono>
 #include <filesystem>
 #include <iostream>
 #include <chakracore-sys/src/filesystem.rs.h>
@@ -639,22 +638,6 @@ Error:
     fflush(NULL);
 
     return value;
-}
-
-JsValueRef WScriptJsrt::MonotonicNowCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    constexpr auto errorMessage = "invalid call to WScript.monotonicNow";
-    JsErrorCode errorCode = JsNoError;
-    [[maybe_unused]] int32_t hr = S_OK;
-    JsValueRef result;
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsDoubleToNumber(static_cast<double>(std::chrono::steady_clock::now().time_since_epoch().count()) / 1e6 /* ns in ms */, &result));
-
-    return result;
-
-Error:
-    SetExceptionIf(errorCode, errorMessage);
-    return JS_INVALID_REFERENCE;
 }
 
 JsValueRef WScriptJsrt::SetTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args)

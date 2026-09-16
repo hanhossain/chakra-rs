@@ -119,6 +119,7 @@ pub(super) mod bridge {
             value: JsValueRef,
         ) -> JsErrorCode;
         unsafe fn JsIntToNumber(int_value: i32, value: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsDoubleToNumber(double_value: f64, value: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsNumberToInt(js_number: JsValueRef, value: *mut i32) -> JsErrorCode;
         unsafe fn JsGetGlobalObject(global_object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsGetUndefinedValue(value: *mut JsValueRef) -> JsErrorCode;
