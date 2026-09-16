@@ -3,6 +3,7 @@ mod ffi;
 
 pub use error::*;
 pub use ffi::*;
+use std::fmt::Debug;
 use std::ops::{Deref, DerefMut};
 
 pub struct ChakraRt;
@@ -230,14 +231,20 @@ impl FuncRetVal for JsValueRef {
     }
 }
 
-impl<E> FuncRetVal for Result<JsValueRef, E> {
+impl<E: Debug> FuncRetVal for Result<JsValueRef, E> {
     fn to_return(self) -> JsValueRef {
-        self.unwrap_or_else(|_| ChakraRt::get_undefined_value().unwrap_or_default())
+        self.unwrap_or_else(|err| {
+            tracing::error!(?err, "The callback returned an error");
+            ChakraRt::get_undefined_value().unwrap_or_default()
+        })
     }
 }
 
-impl<E> FuncRetVal for Result<(), E> {
+impl<E: Debug> FuncRetVal for Result<(), E> {
     fn to_return(self) -> JsValueRef {
+        if let Err(err) = self {
+            tracing::error!(?err, "The callback returned an error");
+        }
         ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }

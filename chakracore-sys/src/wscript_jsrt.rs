@@ -275,9 +275,7 @@ impl WScript {
         std::process::exit(exit_code)
     }
 
-    fn monotonic_now_callback(
-        _: &JsNativeFunctionArgs,
-    ) -> Result<JsValueRef, Box<dyn std::error::Error>> {
+    fn monotonic_now_callback(_: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
         let ms = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
         let res = ChakraRt::double_to_number(ms as f64)?;
         Ok(res)
