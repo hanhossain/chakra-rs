@@ -1,7 +1,8 @@
+use crate::helpers::Helpers;
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, JsArray, JsError, JsNativeFunctionArgs, JsParseScriptAttributes, JsSourceContext,
-    JsValueRef,
+    JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::ffi::SourceMap;
@@ -63,8 +64,6 @@ mod ffi {
         fn ClearTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn LoadTextFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn FlagCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
@@ -210,7 +209,7 @@ impl WScript {
         )?;
 
         global_object.set_named_function("print", WScript::echo_callback)?;
-        global_object.set_named_function("read", WScriptJsrt::LoadTextFileCallback)?;
+        global_object.set_named_function("read", WScript::load_text_file_callback)?;
         global_object.set_named_function("readbuffer", WScriptJsrt::LoadBinaryFileCallback)?;
 
         let mut console_object = ChakraRt::create_object()?;
@@ -297,5 +296,16 @@ impl WScript {
         let data = args.arguments[2].to_string()?;
         SourceMap::Add(&filename, &data);
         Ok(())
+    }
+
+    fn load_text_file_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsString> {
+        if args.arguments.len() < 2 {
+            anyhow::bail!("Incorrect number of arguments.");
+        }
+
+        let filename = args.arguments[1].to_string()?;
+        let file_content = Helpers::LoadScriptFromFile(&filename)?;
+        let value = ChakraRt::create_string(&file_content)?;
+        Ok(value)
     }
 }

@@ -615,39 +615,6 @@ bool WScriptJsrt::Uninitialize()
     return true;
 }
 
-JsValueRef WScriptJsrt::LoadTextFileCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    if (args.arguments.size() < 2)
-    {
-        JsValueRef returnValue;
-        ChakraRTInterface::JsGetUndefinedValue(&returnValue);
-        return returnValue;
-    }
-
-    rust::String fileName;
-    if (ChakraRTInterface::JsToString(args.arguments[1], fileName) != JsNoError)
-    {
-        return JS_INVALID_REFERENCE;
-    }
-
-    rust::String fileContent;
-    try
-    {
-        fileContent = Helpers::LoadScriptFromFile(fileName);
-    }
-    catch (const rust::Error &e)
-    {
-        chakra::Logger::error(std::format("Couldn't load file '{}' with exception '{}'", fileName, e.what()));
-        JsValueRef returnValue;
-        ChakraRTInterface::JsGetUndefinedValue(&returnValue);
-        return returnValue;
-    }
-
-    JsValueRef returnValue;
-    ChakraRTInterface::JsCreateString(fileContent, &returnValue);
-    return returnValue;
-}
-
 JsValueRef WScriptJsrt::LoadBinaryFileCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
     if (args.arguments.size() < 2)

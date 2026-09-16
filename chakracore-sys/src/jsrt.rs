@@ -231,12 +231,19 @@ impl FuncRetVal for JsValueRef {
     }
 }
 
-impl<E: Debug> FuncRetVal for Result<JsValueRef, E> {
+impl<T, E> FuncRetVal for Result<T, E>
+where
+    T: AsRef<JsValueRef>,
+    E: Debug,
+{
     fn to_return(self) -> JsValueRef {
-        self.unwrap_or_else(|err| {
-            tracing::error!(?err, "The callback returned an error");
-            ChakraRt::get_undefined_value().unwrap_or_default()
-        })
+        match self {
+            Ok(x) => x.as_ref().clone(),
+            Err(err) => {
+                tracing::error!(?err, "The callback returned an error");
+                ChakraRt::get_undefined_value().unwrap_or_default()
+            }
+        }
     }
 }
 
