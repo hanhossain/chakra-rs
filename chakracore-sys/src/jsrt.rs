@@ -3,7 +3,6 @@ mod ffi;
 
 pub use error::*;
 pub use ffi::*;
-use std::fmt::Debug;
 use std::ops::{Deref, DerefMut};
 
 pub struct ChakraRt;
@@ -56,7 +55,7 @@ impl ChakraRt {
     ) -> Result<JsFunction, JsError>
     where
         T: Fn(&JsNativeFunctionArgs) -> R,
-        R: FuncRetVal,
+        R: IntoResponse,
     {
         let boxed_func = Box::new(native_function);
         let name_obj = ChakraRt::create_string(name)?;
@@ -73,7 +72,7 @@ impl ChakraRt {
                         is_construct_call,
                     };
                     let func: &mut T = &mut *std::mem::transmute::<*mut CVoid, *mut T>(state);
-                    func(&function_args).to_return()
+                    func(&function_args).into_response()
                 },
                 Box::into_raw(boxed_func) as *mut CVoid,
                 &raw mut value,
@@ -137,7 +136,7 @@ impl JsObject {
     pub fn set_named_function<T, R>(&mut self, name: &str, func: T) -> Result<(), JsError>
     where
         T: Fn(&JsNativeFunctionArgs) -> R,
-        R: FuncRetVal,
+        R: IntoResponse,
     {
         self.set_property(
             ChakraRt::create_property_id(name)?,
@@ -221,43 +220,41 @@ impl AsRef<JsValueRef> for JsFunction {
 }
 
 /// Defines the return value for a JavaScript function callback.
-pub trait FuncRetVal {
-    fn to_return(self) -> JsValueRef;
+pub trait IntoResponse {
+    fn into_response(self) -> JsValueRef;
 }
 
-impl FuncRetVal for JsValueRef {
-    fn to_return(self) -> JsValueRef {
-        self
-    }
-}
-
-impl<T, E> FuncRetVal for Result<T, E>
-where
-    T: AsRef<JsValueRef>,
-    E: Debug,
-{
-    fn to_return(self) -> JsValueRef {
-        match self {
-            Ok(x) => x.as_ref().clone(),
-            Err(err) => {
-                tracing::error!(?err, "The callback returned an error");
-                ChakraRt::get_undefined_value().unwrap_or_default()
-            }
-        }
-    }
-}
-
-impl<E: Debug> FuncRetVal for Result<(), E> {
-    fn to_return(self) -> JsValueRef {
-        if let Err(err) = self {
-            tracing::error!(?err, "The callback returned an error");
-        }
+impl IntoResponse for () {
+    fn into_response(self) -> JsValueRef {
         ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }
 
-impl FuncRetVal for () {
-    fn to_return(self) -> JsValueRef {
+impl<T> IntoResponse for T
+where
+    T: AsRef<JsValueRef>,
+{
+    fn into_response(self) -> JsValueRef {
+        self.as_ref().clone()
+    }
+}
+
+impl<T, E> IntoResponse for Result<T, E>
+where
+    T: IntoResponse,
+    E: IntoResponse,
+{
+    fn into_response(self) -> JsValueRef {
+        match self {
+            Ok(x) => x.into_response(),
+            Err(err) => err.into_response(),
+        }
+    }
+}
+
+impl IntoResponse for JsError {
+    fn into_response(self) -> JsValueRef {
+        tracing::error!(?self, "The callback returned an error");
         ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }

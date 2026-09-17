@@ -1,8 +1,8 @@
 use crate::helpers::ScriptCache;
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, JsArray, JsError, JsNativeFunctionArgs, JsParseScriptAttributes, JsSourceContext,
-    JsString, JsValueRef,
+    ChakraRt, IntoResponse, JsArray, JsError, JsNativeFunctionArgs, JsParseScriptAttributes,
+    JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 pub use ffi::WScriptJsrt;
@@ -314,5 +314,12 @@ impl WScript {
 
     fn load_module_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
         WScriptJsrt::LoadScriptHelper(args, true)
+    }
+}
+
+impl IntoResponse for anyhow::Error {
+    fn into_response(self) -> JsValueRef {
+        tracing::error!(?self);
+        ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }
