@@ -13,7 +13,7 @@ fn read_binary_file(path: &str) -> std::io::Result<Vec<u8>> {
 }
 
 #[tracing::instrument(err)]
-fn file_to_string(path: &str) -> std::io::Result<String> {
+pub(crate) fn file_to_string(path: &str) -> std::io::Result<String> {
     let bytes = std::fs::read(path)?;
     Ok(String::from_utf8_lossy(&bytes).into())
 }

@@ -1,14 +1,13 @@
 use crate::{Error, hresult_to_result};
-use chakracore_sys::chhelper::MessageQueue;
 use chakracore_sys::config::ConfigContext;
-use chakracore_sys::helpers::Helpers;
+use chakracore_sys::helpers::ScriptCache;
 use chakracore_sys::host_config::HostConfigFlags;
 use chakracore_sys::jsrt::{
-    JsContextRef, JsError, JsErrorCode, JsErrorExt, JsParseScriptAttributes, JsRuntimeAttributes,
+    JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
     JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
 use chakracore_sys::rt_interface::ChakraRTInterface;
-use chakracore_sys::wscript_jsrt::{WScript, WScriptJsrt};
+use chakracore_sys::wscript_jsrt::{MessageQueue, WScript, WScriptJsrt};
 use std::ffi::{CStr, CString, c_char};
 use std::str::FromStr;
 
@@ -19,7 +18,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     // handle command line flags
     hresult_to_result(ChakraRTInterface::InitializeTestHooks(&config.core.args))?;
 
-    let file_contents = Helpers::LoadScriptFromFile(&config.core.filename)?;
+    let file_contents = ScriptCache::load_script_from_file(&config.core.filename)?;
     let mut runtime = JsRuntimeHandle::default();
     unsafe {
         ChakraRTInterface::JsCreateRuntime(
@@ -192,7 +191,7 @@ fn run_script(
         WScriptJsrt::AddMessageQueue(message_queue.as_mut_ptr());
         ChakraRTInterface::JsSetPromiseContinuationCallback(
             |task, callback_state| {
-                WScriptJsrt::PromiseContinuationCallback(task, callback_state);
+                WScript::promise_continuation_callback(task, callback_state);
             },
             message_queue.as_mut_ptr() as *mut _,
         )

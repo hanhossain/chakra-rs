@@ -7,6 +7,7 @@
 #include <list>
 #include <filesystem>
 #include <map>
+#include <memory>
 #include <optional>
 #include <rust/cxx.h>
 
@@ -39,10 +40,13 @@ public:
 
         int32_t Call(rust::Str fileName);
         int32_t CallFunction(rust::Str fileName);
-        template <class Func>
-        static CallbackMessage* Create(JsValueRef function, const Func& func, unsigned int time = 0)
+        static std::unique_ptr<CallbackMessage> New(unsigned int time, JsValueRef function)
         {
-            return new CustomMessage<Func, CallbackMessage>(time, function, func);
+            return std::make_unique<CallbackMessage>(time, function);
+        }
+        static std::unique_ptr<MessageBase> Upcast(std::unique_ptr<CallbackMessage> msg)
+        {
+            return msg;
         }
     };
 
@@ -75,7 +79,6 @@ public:
     static JsErrorCode NotifyModuleReadyCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar);
     static JsErrorCode ReportModuleCompletionCallback(JsModuleRecord module, JsValueRef exception);
     static JsErrorCode CALLBACK InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar);
-    static void CALLBACK PromiseContinuationCallback(JsValueRef task, void *callbackState);
 
     static const char * ConvertErrorCodeToMessage(JsErrorCode errorCode)
     {
@@ -108,49 +111,26 @@ public:
     static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static JsValueRef LoadScript(JsValueRef callee, rust::Str fileName, const std::optional<rust::Str> &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
     static std::size_t GetNextSourceContext();
-    static JsValueRef LoadScriptFileHelper(JsValueRef callee, const std::vector<JsValueRef> &arguments, bool isSourceModule);
+    static JsValueRef LoadScriptFileHelper(JsValueRef callee, rust::Slice<JsValueRef const> arguments, bool isSourceModule);
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
-    static bool InstallObjectsOnObject(JsValueRef object, const char* name, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction);
-    static JsErrorCode InstallObjectsOnObject(JsValueRef &object, rust::Str name, rust::Fn<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)> nativeFunction);
     static bool SetModuleHostInfoCallbacks();
     static void FinalizeFree(void * addr);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
-    static JsErrorCode CreateNamedFunction(rust::Str nameString, std::function<JsValueRef(const chakra_rs::JsNativeFunctionArgs &)>callback, JsValueRef *functionVar);
-    static std::string GetDir(std::string_view fullPathNarrow);
 public:
-    static bool CreateArgumentsObject(JsValueRef *argsObject);
-
-    static JsValueRef CALLBACK EchoCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK QuitCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK LoadScriptFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK LoadScriptCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK LoadModuleCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK GetModuleNamespace(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK MonotonicNowCallback(const chakra_rs::JsNativeFunctionArgs &args);
+    static bool GetModuleRecord(rust::Str path, JsModuleRecord *record);
     static JsValueRef CALLBACK SetTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK AttachCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK DetachCallback(const chakra_rs::JsNativeFunctionArgs &args);
 
     static JsErrorCode CALLBACK LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile = false);
 
     static JsValueRef CALLBACK LoadBinaryFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK LoadTextFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK RegisterModuleSourceCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK FlagCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK ReadLineStdinCallback(const chakra_rs::JsNativeFunctionArgs &args);
 
     static JsValueRef CALLBACK BroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ReceiveBroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK GetReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK LeavingCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK SleepCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK GetProxyPropertiesCallback(const chakra_rs::JsNativeFunctionArgs &args);
-
-    static JsValueRef CALLBACK SerializeObject(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK Deserialize(const chakra_rs::JsNativeFunctionArgs &args);
 
 private:
     static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier,
@@ -163,3 +143,6 @@ private:
     static std::map<JsModuleRecord, std::filesystem::path> moduleDirMap;
     static std::map<JsModuleRecord, ModuleState> moduleErrMap;
 };
+
+// type aliases for rust ffi
+using WScriptJsrt_CallbackMessage = WScriptJsrt::CallbackMessage;

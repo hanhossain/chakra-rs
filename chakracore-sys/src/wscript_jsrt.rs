@@ -1,24 +1,19 @@
+use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, JsError, JsErrorExt, JsParseScriptAttributes, JsSourceContext, JsValueRef,
+    ChakraRt, IntoResponse, JsArray, JsError, JsModuleRecord, JsNativeFunctionArgs,
+    JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
-pub use ffi::WScriptJsrt;
-
-#[cfg(target_arch = "aarch64")]
-const CPU_ARCH_TEXT: &str = "ARM64";
-#[cfg(target_arch = "x86_64")]
-const CPU_ARCH_TEXT: &str = "x86_64";
+use crate::wscript_jsrt::ffi::{CVoid, WScriptJsrt_CallbackMessage};
+pub use ffi::{MessageQueue, WScriptJsrt};
+use std::pin::Pin;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 #[cfg(debug_assertions)]
 const BUILD_TYPE_STRING: &str = "Debug";
 #[cfg(not(debug_assertions))]
 const BUILD_TYPE_STRING: &str = "Test";
-
-#[cfg(target_os = "macos")]
-const DEST_PLATFORM_TEXT: &str = "darwin";
-#[cfg(target_os = "linux")]
-const DEST_PLATFORM_TEXT: &str = "posix";
 
 #[cxx::bridge]
 mod ffi {
@@ -29,18 +24,27 @@ mod ffi {
         type WScriptJsrt;
 
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
+        type JsModuleRecord = crate::jsrt::JsModuleRecord;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
 
-        type MessageQueue = crate::chhelper::MessageQueue;
+        type MessageQueue;
+        type MessageBase;
+
+        #[Self = "MessageQueue"]
+        fn New() -> UniquePtr<MessageQueue>;
+
+        fn RemoveAll(self: Pin<&mut MessageQueue>);
+        fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
+        fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
+        unsafe fn InsertSorted(self: Pin<&mut MessageQueue>, message: *mut MessageBase);
+
         #[Self = "WScriptJsrt"]
         unsafe fn AddMessageQueue(messageQueue: *mut MessageQueue);
 
         type JsValueRef = crate::jsrt::JsValueRef;
         type CVoid = crate::jsrt::CVoid;
-        #[Self = "WScriptJsrt"]
-        unsafe fn PromiseContinuationCallback(task: JsValueRef, callbackState: *mut CVoid);
 
         #[Self = "WScriptJsrt"]
         fn GetNextSourceContext() -> usize;
@@ -54,54 +58,18 @@ mod ffi {
 
         #[namespace = "chakra_rs"]
         type JsNativeFunctionArgs<'a> = crate::jsrt::JsNativeFunctionArgs<'a>;
-        #[Self = "WScriptJsrt"]
-        fn InstallObjectsOnObject(
-            object: &mut JsValueRef,
-            name: &str,
-            native_functions: fn(&JsNativeFunctionArgs) -> JsValueRef,
-        ) -> JsErrorCode;
 
         #[namespace = "PlatformAgnostic::ICUHelpers"]
         fn GetICUMajorVersion() -> i32;
 
         #[Self = "WScriptJsrt"]
-        fn MonotonicNowCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn EchoCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn QuitCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn LoadScriptFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn LoadScriptCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn LoadModuleCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
         fn SetTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn ClearTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
-        fn AttachCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn DetachCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
         fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
-        fn LoadTextFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn FlagCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn RegisterModuleSourceCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn GetModuleNamespace(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
         fn GetProxyPropertiesCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn SerializeObject(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn Deserialize(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn ReadLineStdinCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
         fn BroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
@@ -111,15 +79,39 @@ mod ffi {
         fn ReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn GetReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn LeavingCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn SleepCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
-        unsafe fn CreateArgumentsObject(argsObject: *mut JsValueRef) -> bool;
-        #[Self = "WScriptJsrt"]
         fn SetModuleHostInfoCallbacks() -> bool;
+
+        #[Self = "WScriptJsrt"]
+        fn LoadScriptFileHelper(
+            callee: JsValueRef,
+            arguments: &[JsValueRef],
+            is_source_module: bool,
+        ) -> JsValueRef;
+
+        #[Self = "WScriptJsrt"]
+        fn LoadScriptHelper(args: &JsNativeFunctionArgs, is_source_module: bool) -> JsValueRef;
+
+        #[Self = "WScriptJsrt"]
+        unsafe fn GetModuleRecord(path: &str, record: *mut JsModuleRecord) -> bool;
+
+        #[cxx_name = "WScriptJsrt_CallbackMessage"]
+        type WScriptJsrt_CallbackMessage;
+        #[Self = "WScriptJsrt_CallbackMessage"]
+        fn New(time: u32, function: JsValueRef) -> UniquePtr<WScriptJsrt_CallbackMessage>;
+
+        #[Self = "WScriptJsrt_CallbackMessage"]
+        fn Upcast(msg: UniquePtr<WScriptJsrt_CallbackMessage>) -> UniquePtr<MessageBase>;
+    }
+
+    unsafe extern "C++" {
+        include!("RuntimeThreadData.h");
+
+        type RuntimeThreadData;
+        fn GetCurrentRuntimeThreadData(dummy: &mut i32) -> Pin<&mut RuntimeThreadData>;
+
+        fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
     }
 
     #[namespace = "chakra_rs"]
@@ -128,116 +120,55 @@ mod ffi {
 
         #[Self = "WScript"]
         fn initialize() -> Result<()>;
+
+        #[Self = "WScript"]
+        unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid);
     }
 }
 
 pub struct WScript;
 
 impl WScript {
+    fn create_arguments_array() -> Result<JsArray, JsError> {
+        let host_args = &HostConfigFlags::GetConfig().host_args;
+
+        let mut args_array = ChakraRt::create_array(host_args.len() as u32)?;
+
+        for (i, arg) in host_args.iter().enumerate() {
+            let value = ChakraRt::create_string(arg)?;
+            let index = ChakraRt::int_to_number(i as i32)?;
+            args_array.set_indexed_property(&index, &value)?;
+        }
+
+        Ok(args_array)
+    }
+
     #[tracing::instrument(err)]
     pub fn initialize() -> Result<(), JsError> {
         let icu_version = ffi::GetICUMajorVersion();
 
         let mut wscript_object = ChakraRt::create_object()?;
 
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "monotonicNow",
-            WScriptJsrt::MonotonicNowCallback,
-        )
-        .as_result()?;
+        wscript_object.set_named_function("monotonicNow", WScript::monotonic_now_callback)?;
 
-        WScriptJsrt::InstallObjectsOnObject(&mut wscript_object, "Echo", WScriptJsrt::EchoCallback)
-            .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(&mut wscript_object, "Quit", WScriptJsrt::QuitCallback)
-            .as_result()?;
+        wscript_object.set_named_function("Echo", WScript::echo_callback)?;
+        wscript_object.set_named_function("Quit", WScript::quit_callback)?;
 
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "LoadScriptFile",
-            WScriptJsrt::LoadScriptFileCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "LoadScript",
-            WScriptJsrt::LoadScriptCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "LoadModule",
-            WScriptJsrt::LoadModuleCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "SetTimeout",
-            WScriptJsrt::SetTimeoutCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "ClearTimeout",
-            WScriptJsrt::ClearTimeoutCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "Attach",
-            WScriptJsrt::AttachCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "Detach",
-            WScriptJsrt::DetachCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "LoadBinaryFile",
-            WScriptJsrt::LoadBinaryFileCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "LoadTextFile",
-            WScriptJsrt::LoadTextFileCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(&mut wscript_object, "Flag", WScriptJsrt::FlagCallback)
-            .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
+        wscript_object.set_named_function("LoadScriptFile", WScript::load_script_file_callback)?;
+        wscript_object.set_named_function("LoadScript", WScript::load_script_callback)?;
+        wscript_object.set_named_function("LoadModule", WScript::load_module_callback)?;
+        wscript_object.set_named_function("SetTimeout", WScriptJsrt::SetTimeoutCallback)?;
+        wscript_object.set_named_function("ClearTimeout", WScriptJsrt::ClearTimeoutCallback)?;
+        wscript_object.set_named_function("Flag", WScript::flag_callback)?;
+        wscript_object.set_named_function(
             "RegisterModuleSource",
-            WScriptJsrt::RegisterModuleSourceCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "GetModuleNamespace",
-            WScriptJsrt::GetModuleNamespace,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
+            WScript::register_module_source_callback,
+        )?;
+        wscript_object.set_named_function("GetModuleNamespace", WScript::get_module_namespace)?;
+        wscript_object.set_named_function(
             "GetProxyProperties",
             WScriptJsrt::GetProxyPropertiesCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "SerializeObject",
-            WScriptJsrt::SerializeObject,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut wscript_object,
-            "Deserialize",
-            WScriptJsrt::Deserialize,
-        )
-        .as_result()?;
+        )?;
 
         // Platform
         let mut platform_object = ChakraRt::create_object()?;
@@ -246,7 +177,7 @@ impl WScript {
         // Set CPU arch
         platform_object.set_property(
             ChakraRt::create_property_id("ARCH")?,
-            &ChakraRt::create_string(CPU_ARCH_TEXT)?,
+            &ChakraRt::create_string(std::env::consts::ARCH)?,
             true,
         )?;
 
@@ -267,7 +198,7 @@ impl WScript {
         // Set destination OS
         platform_object.set_property(
             ChakraRt::create_property_id("OS")?,
-            &ChakraRt::create_string(DEST_PLATFORM_TEXT)?,
+            &ChakraRt::create_string(std::env::consts::OS)?,
             true,
         )?;
 
@@ -285,16 +216,9 @@ impl WScript {
 
         wscript_object.set_property(platform_property, &platform_object, true)?;
 
-        let mut args_array = JsValueRef::default();
-        unsafe {
-            if !WScriptJsrt::CreateArgumentsObject(&raw mut args_array) {
-                return Err(JsError::JsErrorFatal);
-            }
-        }
-
         wscript_object.set_property(
             ChakraRt::create_property_id("Arguments")?,
-            &args_array,
+            &WScript::create_arguments_array()?,
             true,
         )?;
 
@@ -305,30 +229,12 @@ impl WScript {
             true,
         )?;
 
-        WScriptJsrt::InstallObjectsOnObject(&mut global_object, "print", WScriptJsrt::EchoCallback)
-            .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut global_object,
-            "read",
-            WScriptJsrt::LoadTextFileCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut global_object,
-            "readbuffer",
-            WScriptJsrt::LoadBinaryFileCallback,
-        )
-        .as_result()?;
-        WScriptJsrt::InstallObjectsOnObject(
-            &mut global_object,
-            "readline",
-            WScriptJsrt::ReadLineStdinCallback,
-        )
-        .as_result()?;
+        global_object.set_named_function("print", WScript::echo_callback)?;
+        global_object.set_named_function("read", WScript::load_text_file_callback)?;
+        global_object.set_named_function("readbuffer", WScriptJsrt::LoadBinaryFileCallback)?;
 
         let mut console_object = ChakraRt::create_object()?;
-        WScriptJsrt::InstallObjectsOnObject(&mut console_object, "log", WScriptJsrt::EchoCallback)
-            .as_result()?;
+        console_object.set_named_function("log", WScript::echo_callback)?;
 
         global_object.set_property(
             ChakraRt::create_property_id("console")?,
@@ -344,58 +250,26 @@ impl WScript {
         // WScript will have the extra support API below and $262 will be
         // added to global scope
         if HostConfigFlags::GetConfig().host.test262 {
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "Broadcast",
-                WScriptJsrt::BroadcastCallback,
-            )
-            .as_result()?;
+            wscript_object.set_named_function("Broadcast", WScriptJsrt::BroadcastCallback)?;
 
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "ReceiveBroadcast",
-                WScriptJsrt::ReceiveBroadcastCallback,
-            )
-            .as_result()?;
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "Report",
-                WScriptJsrt::ReportCallback,
-            )
-            .as_result()?;
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "GetReport",
-                WScriptJsrt::GetReportCallback,
-            )
-            .as_result()?;
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "Leaving",
-                WScriptJsrt::LeavingCallback,
-            )
-            .as_result()?;
-            WScriptJsrt::InstallObjectsOnObject(
-                &mut wscript_object,
-                "Sleep",
-                WScriptJsrt::SleepCallback,
-            )
-            .as_result()?;
+            wscript_object
+                .set_named_function("ReceiveBroadcast", WScriptJsrt::ReceiveBroadcastCallback)?;
+            wscript_object.set_named_function("Report", WScriptJsrt::ReportCallback)?;
+            wscript_object.set_named_function("GetReport", WScriptJsrt::GetReportCallback)?;
+            wscript_object.set_named_function("Leaving", WScript::leaving_callback)?;
+            wscript_object.set_named_function("Sleep", WScript::sleep_callback)?;
 
             // $262
-            let test262 = include_str!(concat!(
-                env!("CARGO_MANIFEST_DIR"),
-                "/../chakracore-cxx/bin/ch/262.js"
-            ));
+            let test262 = include_str!("ch/262.js");
 
             let test262_script_ref = ChakraRt::create_string(test262)?;
             let fname = ChakraRt::create_string("262")?;
 
             unsafe {
                 ChakraRTInterface::JsRun(
-                    test262_script_ref,
+                    test262_script_ref.clone(),
                     JsSourceContext(WScriptJsrt::GetNextSourceContext()),
-                    fname,
+                    fname.clone(),
                     JsParseScriptAttributes::JsParseScriptAttributeNone,
                     std::ptr::null_mut(),
                 )
@@ -404,5 +278,156 @@ impl WScript {
         }
 
         Ok(())
+    }
+
+    fn echo_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        for (i, arg) in args.arguments.iter().skip(1).enumerate() {
+            let string = arg.to_string()?;
+            if i > 0 {
+                print!(" ");
+            }
+            print!("{string}");
+        }
+
+        println!();
+        Ok(())
+    }
+
+    fn quit_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        let exit_code = if args.arguments.len() > 1 {
+            ChakraRt::number_to_int(&args.arguments[1])?
+        } else {
+            0
+        };
+        std::process::exit(exit_code)
+    }
+
+    fn monotonic_now_callback(_: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        let ms = SystemTime::now().duration_since(UNIX_EPOCH)?.as_millis();
+        let res = ChakraRt::double_to_number(ms as f64)?;
+        Ok(res)
+    }
+
+    fn register_module_source_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() < 3 {
+            return Ok(());
+        }
+
+        let filename = args.arguments[1].to_string()?;
+        let data = args.arguments[2].to_string()?;
+        ScriptCache::add_script(filename, data);
+        Ok(())
+    }
+
+    fn load_text_file_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsString> {
+        if args.arguments.len() < 2 {
+            anyhow::bail!("Incorrect number of arguments.");
+        }
+
+        let filename = args.arguments[1].to_string()?;
+        let file_content = ScriptCache::load_script_from_file(&filename)?;
+        let value = ChakraRt::create_string(&file_content)?;
+        Ok(value)
+    }
+
+    fn load_script_file_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
+        WScriptJsrt::LoadScriptFileHelper(args.callee.clone(), args.arguments, false)
+    }
+
+    fn load_script_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
+        WScriptJsrt::LoadScriptHelper(args, false)
+    }
+
+    fn load_module_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
+        WScriptJsrt::LoadScriptHelper(args, true)
+    }
+
+    fn flag_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() <= 1 {
+            return Ok(());
+        }
+
+        let cmd = args.arguments[1].to_string()?;
+        let argv = vec![String::new(), cmd];
+
+        TestHooks::SetConfigFlags(&argv);
+        Ok(())
+    }
+
+    fn sleep_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() > 1 {
+            let timeout = ChakraRt::number_to_double(&args.arguments[1])?;
+            std::thread::sleep(Duration::from_millis(timeout as u64));
+        }
+
+        Ok(())
+    }
+
+    fn leaving_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if !args.arguments.is_empty() {
+            let mut v = 42;
+            let runtime_thread_data = ffi::GetCurrentRuntimeThreadData(&mut v);
+            runtime_thread_data.set_leaving(true);
+        }
+
+        Ok(())
+    }
+
+    #[tracing::instrument(skip_all, err)]
+    fn get_module_namespace(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        anyhow::ensure!(
+            args.arguments.len() >= 2,
+            "Need an argument for WScript.GetModuleNamespace"
+        );
+        let specifier_str = args.arguments[1].to_string()?;
+        let full_path = std::path::absolute(specifier_str)?;
+        let mut module_record = JsModuleRecord::default();
+        unsafe {
+            if !WScriptJsrt::GetModuleRecord(full_path.to_str().unwrap(), &raw mut module_record) {
+                anyhow::bail!(
+                    "Need to supply a path for an already loaded module for WScript.GetModuleNamespace"
+                );
+            }
+        }
+
+        match ChakraRt::get_module_namespace(&module_record) {
+            Ok(module_namespace) => Ok(module_namespace),
+            Err(JsError::JsErrorModuleNotEvaluated) => {
+                anyhow::bail!("GetModuleNamespace called with un-evaluated module")
+            }
+            Err(x) => Err(anyhow::Error::new(x)),
+        }
+    }
+
+    pub unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid) {
+        assert!(!task.is_null());
+        assert!(!callback_state.is_null());
+
+        unsafe {
+            let message_queue =
+                std::mem::transmute::<*mut CVoid, *mut MessageQueue>(callback_state);
+            let msg = WScriptJsrt_CallbackMessage::New(0, task);
+            let msg = WScriptJsrt_CallbackMessage::Upcast(msg);
+
+            Pin::new_unchecked(&mut *message_queue).InsertSorted(msg.into_raw());
+        }
+    }
+}
+
+impl IntoResponse for anyhow::Error {
+    fn into_response(self) -> JsValueRef {
+        tracing::error!(?self);
+
+        // If the exception is already is set - no need to create a new exception.
+        let has_exception = ChakraRt::has_exception();
+        if has_exception.is_err() || !has_exception.unwrap() {
+            if let Err(err) = ChakraRt::create_string(&self.to_string())
+                .and_then(|msg| ChakraRt::create_error(msg))
+                .and_then(|error| ChakraRt::set_exception(error))
+            {
+                tracing::error!(?err, "Failed to set an exception");
+            }
+        }
+        ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }

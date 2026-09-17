@@ -31,6 +31,11 @@ RuntimeThreadLocalData& GetRuntimeThreadLocalData()
     return threadLocalData;
 }
 
+RuntimeThreadData &GetCurrentRuntimeThreadData([[maybe_unused]] int &dummy)
+{
+    return *threadLocalData.threadData;
+}
+
 RuntimeThreadData::RuntimeThreadData() :
     semaphore(std::nullopt),
     hThread(nullptr),
@@ -137,6 +142,11 @@ Error:
     ChakraRTInterface::JsDisposeRuntime(runtime);
     threadLocalData.Uninitialize();
     return 0;
+}
+
+void RuntimeThreadData::set_leaving(bool mLeaving)
+{
+    leaving = mLeaving;
 }
 
 void RuntimeThreadData::set_initial_script_completed()

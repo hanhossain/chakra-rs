@@ -5,6 +5,7 @@ edition = "2024"
 links = "chakracore-sys"
 
 [dependencies]
+anyhow = "1.0.104"
 cxx = { version = "1.0.199", features = ["c++20"] }
 serde = { version = "1.0.229", features = ["derive"] }
 thiserror = "2.0.20"

@@ -1,3 +1,4 @@
+use crate::jsrt::JsError;
 pub use bridge::{
     CVoid, JsErrorCode, JsNativeFunctionArgs, JsParseScriptAttributes, JsRuntimeAttributes,
 };
@@ -40,6 +41,19 @@ impl JsValueRef {
     pub fn is_null(&self) -> bool {
         self.0.is_null()
     }
+
+    #[tracing::instrument(level = "trace", skip_all, err)]
+    pub fn to_string(&self) -> Result<String, JsError> {
+        let mut s = String::new();
+        bridge::JsToString(self.as_ref(), &mut s).as_result()?;
+        Ok(s)
+    }
+}
+
+impl AsRef<JsValueRef> for JsValueRef {
+    fn as_ref(&self) -> &JsValueRef {
+        &self
+    }
 }
 
 #[repr(transparent)]
@@ -56,6 +70,15 @@ pub struct JsSourceContext(pub usize);
 
 unsafe impl cxx::ExternType for JsSourceContext {
     type Id = cxx::type_id!("JsSourceContext");
+    type Kind = cxx::kind::Trivial;
+}
+
+#[repr(transparent)]
+#[derive(Default, Clone)]
+pub struct JsModuleRecord(*mut CVoid);
+
+unsafe impl cxx::ExternType for JsModuleRecord {
+    type Id = cxx::type_id!("JsModuleRecord");
     type Kind = cxx::kind::Trivial;
 }
 
@@ -79,6 +102,7 @@ pub(super) mod bridge {
         type JsValueRef = super::JsValueRef;
         type JsPropertyIdRef = super::JsPropertyIdRef;
         type JsSourceContext = super::JsSourceContext;
+        type JsModuleRecord = super::JsModuleRecord;
         type CULong = super::CULong;
 
         type JsErrorCode;
@@ -91,15 +115,49 @@ pub(super) mod bridge {
         unsafe fn JsCreateString(content: &str, value: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreatePropertyId(name: &str, object: *mut JsPropertyIdRef) -> JsErrorCode;
+        unsafe fn JsCreateArray(length: u32, array: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsCreateError(message: JsValueRef, error: *mut JsValueRef) -> JsErrorCode;
+        fn JsToString(value: &JsValueRef, string: &mut String) -> JsErrorCode;
         fn JsSetProperty(
             object: JsValueRef,
             property: JsPropertyIdRef,
             value: JsValueRef,
             useStrictRules: bool,
         ) -> JsErrorCode;
+        fn JsSetIndexedProperty(
+            object: JsValueRef,
+            index: JsValueRef,
+            value: JsValueRef,
+        ) -> JsErrorCode;
         unsafe fn JsIntToNumber(int_value: i32, value: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsDoubleToNumber(double_value: f64, value: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsNumberToInt(js_number: JsValueRef, value: *mut i32) -> JsErrorCode;
+        unsafe fn JsNumberToDouble(js_number: JsValueRef, value: *mut f64) -> JsErrorCode;
         unsafe fn JsGetGlobalObject(global_object: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsGetUndefinedValue(value: *mut JsValueRef) -> JsErrorCode;
+
+        unsafe fn JsCreateNamedFunction(
+            name: &JsValueRef,
+            native_function: unsafe fn(
+                JsValueRef,
+                bool,
+                *mut JsValueRef,
+                u16,
+                *mut CVoid,
+            ) -> JsValueRef,
+            callback_state: *mut CVoid,
+            function: *mut JsValueRef,
+        ) -> JsErrorCode;
+
+        fn JsSetException(exception: JsValueRef) -> JsErrorCode;
+        unsafe fn JsHasException(has_exception: *mut bool) -> JsErrorCode;
+        unsafe fn JsGetModuleNamespace(
+            request_module: JsModuleRecord,
+            module_namespace: *mut JsValueRef,
+        ) -> JsErrorCode;
     }
+
+    impl CxxVector<JsValueRef> {}
 
     #[derive(Debug)]
     enum JsErrorCode {
@@ -278,6 +336,87 @@ pub(super) mod bridge {
         /// Indicates whether this is a regular call or a 'new' call.
         is_construct_call: bool,
         /// The arguments to the call.
-        arguments: &'a CxxVector<JsValueRef>,
+        arguments: &'a [JsValueRef],
+    }
+}
+
+impl JsErrorCode {
+    pub fn as_result(&self) -> Result<(), JsError> {
+        match *self {
+            JsErrorCode::JsNoError => Ok(()),
+            JsErrorCode::JsErrorCategoryUsage => Err(JsError::JsErrorCategoryUsage),
+            JsErrorCode::JsErrorInvalidArgument => Err(JsError::JsErrorInvalidArgument),
+            JsErrorCode::JsErrorNullArgument => Err(JsError::JsErrorNullArgument),
+            JsErrorCode::JsErrorNoCurrentContext => Err(JsError::JsErrorNoCurrentContext),
+            JsErrorCode::JsErrorInExceptionState => Err(JsError::JsErrorInExceptionState),
+            JsErrorCode::JsErrorNotImplemented => Err(JsError::JsErrorNotImplemented),
+            JsErrorCode::JsErrorWrongThread => Err(JsError::JsErrorWrongThread),
+            JsErrorCode::JsErrorRuntimeInUse => Err(JsError::JsErrorRuntimeInUse),
+            JsErrorCode::JsErrorBadSerializedScript => Err(JsError::JsErrorBadSerializedScript),
+            JsErrorCode::JsErrorInDisabledState => Err(JsError::JsErrorInDisabledState),
+            JsErrorCode::JsErrorCannotDisableExecution => {
+                Err(JsError::JsErrorCannotDisableExecution)
+            }
+            JsErrorCode::JsErrorHeapEnumInProgress => Err(JsError::JsErrorHeapEnumInProgress),
+            JsErrorCode::JsErrorArgumentNotObject => Err(JsError::JsErrorArgumentNotObject),
+            JsErrorCode::JsErrorInProfileCallback => Err(JsError::JsErrorInProfileCallback),
+            JsErrorCode::JsErrorInThreadServiceCallback => {
+                Err(JsError::JsErrorInThreadServiceCallback)
+            }
+            JsErrorCode::JsErrorCannotSerializeDebugScript => {
+                Err(JsError::JsErrorCannotSerializeDebugScript)
+            }
+            JsErrorCode::JsErrorAlreadyDebuggingContext => {
+                Err(JsError::JsErrorAlreadyDebuggingContext)
+            }
+            JsErrorCode::JsErrorAlreadyProfilingContext => {
+                Err(JsError::JsErrorAlreadyProfilingContext)
+            }
+            JsErrorCode::JsErrorIdleNotEnabled => Err(JsError::JsErrorIdleNotEnabled),
+            JsErrorCode::JsCannotSetProjectionEnqueueCallback => {
+                Err(JsError::JsCannotSetProjectionEnqueueCallback)
+            }
+            JsErrorCode::JsErrorCannotStartProjection => Err(JsError::JsErrorCannotStartProjection),
+            JsErrorCode::JsErrorInObjectBeforeCollectCallback => {
+                Err(JsError::JsErrorInObjectBeforeCollectCallback)
+            }
+            JsErrorCode::JsErrorObjectNotInspectable => Err(JsError::JsErrorObjectNotInspectable),
+            JsErrorCode::JsErrorPropertyNotSymbol => Err(JsError::JsErrorPropertyNotSymbol),
+            JsErrorCode::JsErrorPropertyNotString => Err(JsError::JsErrorPropertyNotString),
+            JsErrorCode::JsErrorInvalidContext => Err(JsError::JsErrorInvalidContext),
+            JsErrorCode::JsInvalidModuleHostInfoKind => Err(JsError::JsInvalidModuleHostInfoKind),
+            JsErrorCode::JsErrorModuleParsed => Err(JsError::JsErrorModuleParsed),
+            JsErrorCode::JsNoWeakRefRequired => Err(JsError::JsNoWeakRefRequired),
+            JsErrorCode::JsErrorPromisePending => Err(JsError::JsErrorPromisePending),
+            JsErrorCode::JsErrorModuleNotEvaluated => Err(JsError::JsErrorModuleNotEvaluated),
+            JsErrorCode::JsErrorCategoryEngine => Err(JsError::JsErrorCategoryEngine),
+            JsErrorCode::JsErrorOutOfMemory => Err(JsError::JsErrorOutOfMemory),
+            JsErrorCode::JsErrorBadFPUState => Err(JsError::JsErrorBadFPUState),
+            JsErrorCode::JsErrorCategoryScript => Err(JsError::JsErrorCategoryScript),
+            JsErrorCode::JsErrorScriptException => Err(JsError::JsErrorScriptException),
+            JsErrorCode::JsErrorScriptCompile => Err(JsError::JsErrorScriptCompile),
+            JsErrorCode::JsErrorScriptTerminated => Err(JsError::JsErrorScriptTerminated),
+            JsErrorCode::JsErrorScriptEvalDisabled => Err(JsError::JsErrorScriptEvalDisabled),
+            JsErrorCode::JsErrorCategoryFatal => Err(JsError::JsErrorCategoryFatal),
+            JsErrorCode::JsErrorFatal => Err(JsError::JsErrorFatal),
+            JsErrorCode::JsErrorWrongRuntime => Err(JsError::JsErrorWrongRuntime),
+            JsErrorCode::JsErrorCategoryDiagError => Err(JsError::JsErrorCategoryDiagError),
+            JsErrorCode::JsErrorDiagAlreadyInDebugMode => {
+                Err(JsError::JsErrorDiagAlreadyInDebugMode)
+            }
+            JsErrorCode::JsErrorDiagNotInDebugMode => Err(JsError::JsErrorDiagNotInDebugMode),
+            JsErrorCode::JsErrorDiagNotAtBreak => Err(JsError::JsErrorDiagNotAtBreak),
+            JsErrorCode::JsErrorDiagInvalidHandle => Err(JsError::JsErrorDiagInvalidHandle),
+            JsErrorCode::JsErrorDiagObjectNotFound => Err(JsError::JsErrorDiagObjectNotFound),
+            JsErrorCode::JsErrorDiagUnableToPerformAction => {
+                Err(JsError::JsErrorDiagUnableToPerformAction)
+            }
+            JsErrorCode::JsSerializerNotSupported => Err(JsError::JsSerializerNotSupported),
+            JsErrorCode::JsTransferableNotSupported => Err(JsError::JsTransferableNotSupported),
+            JsErrorCode::JsTransferableAlreadyDetached => {
+                Err(JsError::JsTransferableAlreadyDetached)
+            }
+            _ => unimplemented!(),
+        }
     }
 }

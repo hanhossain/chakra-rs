@@ -47,7 +47,7 @@ fn main() {
 
     let out_dir = std::env::var("OUT_DIR").unwrap();
     let target = std::env::var("TARGET").unwrap();
-    if !out_dir.contains(&target) {
+    if !out_dir.contains(&target) && std::env::var("RUSTC_WRAPPER").is_err() {
         let cxx_header = format!("{out_dir}/cxxbridge/include/rust/cxx.h");
         let docker_cxx_header = PathBuf::from("../target/docker/rust/cxx.h");
         dbg!(&cxx_header, &docker_cxx_header);

@@ -2561,9 +2561,14 @@ JsErrorCode chakracore::jsrt::JsCreateFunction(_In_ JsNativeFunction nativeFunct
     return JsCreateFunctionHelper(std::move(nativeFunction), JS_INVALID_REFERENCE, callbackState, function);
 }
 
-JsErrorCode chakracore::jsrt::JsCreateNamedFunction(_In_ JsValueRef name, _In_ JsNativeFunction nativeFunction, _In_opt_ void *callbackState, _Out_ JsValueRef *function)
+JsErrorCode chakracore::jsrt::JsCreateNamedFunction(
+    _In_ const JsValueRef &name,
+    _In_ rust::Fn<JsValueRef(JsValueRef callee, bool isConstructCall, JsValueRef *arguments, unsigned short argumentCount,
+                             void *callbackState)>
+        nativeFunction,
+    _In_opt_ void *callbackState, _Out_ JsValueRef *function)
 {
-    return JsCreateFunctionHelper(std::move(nativeFunction), name, callbackState, function);
+    return JsCreateFunctionHelper(nativeFunction, name, callbackState, function);
 }
 
 void SetErrorMessage(Js::ScriptContext *scriptContext, Js::JavascriptError *newError, JsValueRef message)
@@ -3633,7 +3638,7 @@ JsErrorCode chakracore::jsrt::JsCopyString(const JsValueRef value, rust::String 
     return JsNoError;
 }
 
-JsErrorCode chakracore::jsrt::JsToString(const JsValueRef value, rust::String &string)
+JsErrorCode chakracore::jsrt::JsToString(const JsValueRef &value, rust::String &string)
 {
     JsValueType type;
     auto ec = JsGetValueType(value, &type);
