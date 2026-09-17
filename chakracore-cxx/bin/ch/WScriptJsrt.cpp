@@ -576,27 +576,6 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(const chakra_rs::JsNativeFunction
     return arrayBuffer;
 }
 
-JsValueRef WScriptJsrt::FlagCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    [[maybe_unused]] int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
-
-    if (args.arguments.size() > 1)
-    {
-        rust::String cmd;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[1], cmd));
-
-        const rust::Vec<rust::String> argv{{}, std::move(cmd)};
-        TestHooks::SetConfigFlags(argv);
-    }
-
-Error:
-    return returnValue;
-}
-
 JsValueRef WScriptJsrt::BroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;

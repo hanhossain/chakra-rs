@@ -1,4 +1,4 @@
-use crate::helpers::ScriptCache;
+use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsError, JsNativeFunctionArgs, JsParseScriptAttributes,
@@ -57,8 +57,6 @@ mod ffi {
         fn ClearTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn FlagCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn GetModuleNamespace(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
@@ -133,7 +131,7 @@ impl WScript {
         wscript_object.set_named_function("LoadModule", WScript::load_module_callback)?;
         wscript_object.set_named_function("SetTimeout", WScriptJsrt::SetTimeoutCallback)?;
         wscript_object.set_named_function("ClearTimeout", WScriptJsrt::ClearTimeoutCallback)?;
-        wscript_object.set_named_function("Flag", WScriptJsrt::FlagCallback)?;
+        wscript_object.set_named_function("Flag", WScript::flag_callback)?;
         wscript_object.set_named_function(
             "RegisterModuleSource",
             WScript::register_module_source_callback,
@@ -314,6 +312,18 @@ impl WScript {
 
     fn load_module_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
         WScriptJsrt::LoadScriptHelper(args, true)
+    }
+
+    fn flag_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() <= 1 {
+            return Ok(());
+        }
+
+        let cmd = args.arguments[1].to_string()?;
+        let argv = vec![String::new(), cmd];
+
+        TestHooks::SetConfigFlags(&argv);
+        Ok(())
     }
 }
 
