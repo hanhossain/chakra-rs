@@ -1,10 +1,10 @@
+use crate::helpers::ScriptCache;
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, JsArray, JsError, JsNativeFunctionArgs, JsParseScriptAttributes, JsSourceContext,
     JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
-use crate::wscript_jsrt::ffi::SourceMap;
 pub use ffi::WScriptJsrt;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -85,14 +85,6 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         fn SetModuleHostInfoCallbacks() -> bool;
-    }
-
-    unsafe extern "C++" {
-        include!("SourceMap.h");
-
-        type SourceMap = crate::helpers::SourceMap;
-        #[Self = "SourceMap"]
-        fn Add(path: &String, data: &String);
     }
 
     #[namespace = "chakra_rs"]
@@ -293,7 +285,7 @@ impl WScript {
 
         let filename = args.arguments[1].to_string()?;
         let data = args.arguments[2].to_string()?;
-        SourceMap::Add(&filename, &data);
+        ScriptCache::add_script(filename, data);
         Ok(())
     }
 
@@ -303,7 +295,7 @@ impl WScript {
         }
 
         let filename = args.arguments[1].to_string()?;
-        let file_content = crate::helpers::load_script_from_file(&filename)?;
+        let file_content = ScriptCache::load_script_from_file(&filename)?;
         let value = ChakraRt::create_string(&file_content)?;
         Ok(value)
     }
