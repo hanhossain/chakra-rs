@@ -115,7 +115,7 @@ public:
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
 public:
-    static JsValueRef CALLBACK GetModuleNamespace(const chakra_rs::JsNativeFunctionArgs &args);
+    static bool GetModuleRecord(rust::Str path, JsModuleRecord *record);
     static JsValueRef CALLBACK SetTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
 

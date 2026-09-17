@@ -74,6 +74,15 @@ unsafe impl cxx::ExternType for JsSourceContext {
 }
 
 #[repr(transparent)]
+#[derive(Default, Clone)]
+pub struct JsModuleRecord(*mut CVoid);
+
+unsafe impl cxx::ExternType for JsModuleRecord {
+    type Id = cxx::type_id!("JsModuleRecord");
+    type Kind = cxx::kind::Trivial;
+}
+
+#[repr(transparent)]
 pub struct CULong(pub std::ffi::c_ulong);
 
 unsafe impl cxx::ExternType for CULong {
@@ -93,6 +102,7 @@ pub(super) mod bridge {
         type JsValueRef = super::JsValueRef;
         type JsPropertyIdRef = super::JsPropertyIdRef;
         type JsSourceContext = super::JsSourceContext;
+        type JsModuleRecord = super::JsModuleRecord;
         type CULong = super::CULong;
 
         type JsErrorCode;
@@ -140,6 +150,11 @@ pub(super) mod bridge {
         ) -> JsErrorCode;
 
         fn JsSetException(exception: JsValueRef) -> JsErrorCode;
+        unsafe fn JsHasException(has_exception: *mut bool) -> JsErrorCode;
+        unsafe fn JsGetModuleNamespace(
+            request_module: JsModuleRecord,
+            module_namespace: *mut JsValueRef,
+        ) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}

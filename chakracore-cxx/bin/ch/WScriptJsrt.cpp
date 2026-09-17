@@ -120,52 +120,17 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view e
     }
 }
 
-JsValueRef WScriptJsrt::GetModuleNamespace(const chakra_rs::JsNativeFunctionArgs &args)
+bool WScriptJsrt::GetModuleRecord(rust::Str path, JsModuleRecord *record)
 {
-    JsErrorCode errorCode = JsNoError;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    std::string errorMessage;
-
-    if (args.arguments.size() < 2)
+    fs::path fullPath{static_cast<std::string_view>(path)};
+    auto moduleEntry = moduleRecordMap.find(fullPath);
+    if (moduleEntry == moduleRecordMap.end())
     {
-        errorCode = JsErrorInvalidArgument;
-        errorMessage = "Need an argument for WScript.GetModuleNamespace";
-    }
-    else
-    {
-        rust::String specifierStr;
-        errorCode = ChakraRTInterface::JsToString(args.arguments[1], specifierStr);
-
-        if (errorCode == JsNoError)
-        {
-            std::error_code ec;
-            const fs::path fullPath = fs::absolute(static_cast<std::string>(specifierStr), ec);
-            if (ec)
-            {
-                errorCode = JsErrorInvalidArgument;
-            }
-            else
-            {
-                auto moduleEntry = moduleRecordMap.find(fullPath);
-                if (moduleEntry == moduleRecordMap.end())
-                {
-                    errorCode = JsErrorInvalidArgument;
-                    errorMessage = "Need to supply a path for an already loaded module for WScript.GetModuleNamespace";
-                }
-                else
-                {
-                    errorCode = ChakraRTInterface::JsGetModuleNamespace(moduleEntry->second, &returnValue);
-                    if (errorCode == JsErrorModuleNotEvaluated)
-                    {
-                        errorMessage = "GetModuleNamespace called with un-evaluated module";
-                    }
-                }
-            }
-        }
+        return false;
     }
 
-    SetExceptionIf(errorCode, errorMessage);
-    return returnValue;
+    *record = moduleEntry->second;
+    return true;
 }
 
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule)

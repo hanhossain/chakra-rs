@@ -133,6 +133,22 @@ impl ChakraRt {
     pub fn set_exception(error: JsErrorObject) -> Result<(), JsError> {
         bridge::JsSetException(error.as_ref().clone()).as_result()
     }
+
+    pub fn has_exception() -> Result<bool, JsError> {
+        let mut value = false;
+        unsafe {
+            bridge::JsHasException(&raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
+
+    pub fn get_module_namespace(request_module: &JsModuleRecord) -> Result<JsValueRef, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            bridge::JsGetModuleNamespace(request_module.clone(), &raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
 }
 
 pub struct JsObject(JsValueRef);
@@ -297,11 +313,14 @@ impl IntoResponse for JsError {
     fn into_response(self) -> JsValueRef {
         tracing::error!(?self, "The callback returned an error");
 
-        if let Ok(msg) = ChakraRt::create_string(&self.to_string()) {
-            if let Ok(error) = ChakraRt::create_error(msg) {
-                if let Err(err) = ChakraRt::set_exception(error) {
-                    tracing::error!(?err, "Failed to set exception");
-                }
+        // If the exception is already is set - no need to create a new exception.
+        let has_exception = ChakraRt::has_exception();
+        if has_exception.is_err() || !has_exception.unwrap() {
+            if let Err(err) = ChakraRt::create_string(&self.to_string())
+                .and_then(|msg| ChakraRt::create_error(msg))
+                .and_then(|error| ChakraRt::set_exception(error))
+            {
+                tracing::error!(?err, "Failed to set an exception");
             }
         }
 

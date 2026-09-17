@@ -1,8 +1,8 @@
 use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsError, JsNativeFunctionArgs, JsParseScriptAttributes,
-    JsSourceContext, JsString, JsValueRef,
+    ChakraRt, IntoResponse, JsArray, JsError, JsModuleRecord, JsNativeFunctionArgs,
+    JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 pub use ffi::WScriptJsrt;
@@ -22,6 +22,7 @@ mod ffi {
         type WScriptJsrt;
 
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
+        type JsModuleRecord = crate::jsrt::JsModuleRecord;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
@@ -58,8 +59,6 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
-        fn GetModuleNamespace(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
         fn GetProxyPropertiesCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
@@ -83,6 +82,9 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         fn LoadScriptHelper(args: &JsNativeFunctionArgs, is_source_module: bool) -> JsValueRef;
+
+        #[Self = "WScriptJsrt"]
+        unsafe fn GetModuleRecord(path: &str, record: *mut JsModuleRecord) -> bool;
     }
 
     unsafe extern "C++" {
@@ -141,7 +143,7 @@ impl WScript {
             "RegisterModuleSource",
             WScript::register_module_source_callback,
         )?;
-        wscript_object.set_named_function("GetModuleNamespace", WScriptJsrt::GetModuleNamespace)?;
+        wscript_object.set_named_function("GetModuleNamespace", WScript::get_module_namespace)?;
         wscript_object.set_named_function(
             "GetProxyProperties",
             WScriptJsrt::GetProxyPropertiesCallback,
@@ -349,11 +351,48 @@ impl WScript {
 
         Ok(())
     }
+
+    #[tracing::instrument(skip_all, err)]
+    fn get_module_namespace(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        anyhow::ensure!(
+            args.arguments.len() >= 2,
+            "Need an argument for WScript.GetModuleNamespace"
+        );
+        let specifier_str = args.arguments[1].to_string()?;
+        let full_path = std::path::absolute(specifier_str)?;
+        let mut module_record = JsModuleRecord::default();
+        unsafe {
+            if !WScriptJsrt::GetModuleRecord(full_path.to_str().unwrap(), &raw mut module_record) {
+                anyhow::bail!(
+                    "Need to supply a path for an already loaded module for WScript.GetModuleNamespace"
+                );
+            }
+        }
+
+        match ChakraRt::get_module_namespace(&module_record) {
+            Ok(module_namespace) => Ok(module_namespace),
+            Err(JsError::JsErrorModuleNotEvaluated) => {
+                anyhow::bail!("GetModuleNamespace called with un-evaluated module")
+            }
+            Err(x) => Err(anyhow::Error::new(x)),
+        }
+    }
 }
 
 impl IntoResponse for anyhow::Error {
     fn into_response(self) -> JsValueRef {
         tracing::error!(?self);
+
+        // If the exception is already is set - no need to create a new exception.
+        let has_exception = ChakraRt::has_exception();
+        if has_exception.is_err() || !has_exception.unwrap() {
+            if let Err(err) = ChakraRt::create_string(&self.to_string())
+                .and_then(|msg| ChakraRt::create_error(msg))
+                .and_then(|error| ChakraRt::set_exception(error))
+            {
+                tracing::error!(?err, "Failed to set an exception");
+            }
+        }
         ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }
