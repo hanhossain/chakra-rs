@@ -42,6 +42,7 @@ public:
 
 
     uint32_t ThreadProc();
+    void set_leaving(bool mLeaving);
     void set_initial_script_completed();
     void reset_initial_script_completed();
     void wait_initial_script_completed();
@@ -62,3 +63,5 @@ struct RuntimeThreadLocalData
 };
 
 RuntimeThreadLocalData& GetRuntimeThreadLocalData();
+
+RuntimeThreadData &GetCurrentRuntimeThreadData(int &dummy);

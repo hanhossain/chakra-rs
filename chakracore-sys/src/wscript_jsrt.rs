@@ -70,8 +70,6 @@ mod ffi {
         fn ReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn GetReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn LeavingCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
         fn SetModuleHostInfoCallbacks() -> bool;
@@ -85,6 +83,15 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         fn LoadScriptHelper(args: &JsNativeFunctionArgs, is_source_module: bool) -> JsValueRef;
+    }
+
+    unsafe extern "C++" {
+        include!("RuntimeThreadData.h");
+
+        type RuntimeThreadData;
+        fn GetCurrentRuntimeThreadData(dummy: &mut i32) -> Pin<&mut RuntimeThreadData>;
+
+        fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
     }
 
     #[namespace = "chakra_rs"]
@@ -226,7 +233,7 @@ impl WScript {
                 .set_named_function("ReceiveBroadcast", WScriptJsrt::ReceiveBroadcastCallback)?;
             wscript_object.set_named_function("Report", WScriptJsrt::ReportCallback)?;
             wscript_object.set_named_function("GetReport", WScriptJsrt::GetReportCallback)?;
-            wscript_object.set_named_function("Leaving", WScriptJsrt::LeavingCallback)?;
+            wscript_object.set_named_function("Leaving", WScript::leaving_callback)?;
             wscript_object.set_named_function("Sleep", WScript::sleep_callback)?;
 
             // $262
@@ -328,6 +335,16 @@ impl WScript {
         if args.arguments.len() > 1 {
             let timeout = ChakraRt::number_to_double(&args.arguments[1])?;
             std::thread::sleep(Duration::from_millis(timeout as u64));
+        }
+
+        Ok(())
+    }
+
+    fn leaving_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if !args.arguments.is_empty() {
+            let mut v = 42;
+            let runtime_thread_data = ffi::GetCurrentRuntimeThreadData(&mut v);
+            runtime_thread_data.set_leaving(true);
         }
 
         Ok(())

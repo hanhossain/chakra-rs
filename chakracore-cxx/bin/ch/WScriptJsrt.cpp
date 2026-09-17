@@ -688,27 +688,6 @@ Error:
     return returnValue;
 }
 
-JsValueRef WScriptJsrt::LeavingCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    [[maybe_unused]] int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
-
-    if (args.arguments.size() > 0)
-    {
-        auto& threadData = GetRuntimeThreadLocalData().threadData;
-        if (threadData)
-        {
-            threadData->leaving = true;
-        }
-    }
-
-Error:
-    return returnValue;
-}
-
 JsValueRef WScriptJsrt::GetProxyPropertiesCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
