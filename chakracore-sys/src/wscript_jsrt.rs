@@ -5,7 +5,9 @@ use crate::jsrt::{
     JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
-pub use ffi::WScriptJsrt;
+use crate::wscript_jsrt::ffi::{CVoid, WScriptJsrt_CallbackMessage};
+pub use ffi::{MessageQueue, WScriptJsrt};
+use std::pin::Pin;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 #[cfg(debug_assertions)]
@@ -27,14 +29,22 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
 
-        type MessageQueue = crate::chhelper::MessageQueue;
+        type MessageQueue;
+        type MessageBase;
+
+        #[Self = "MessageQueue"]
+        fn New() -> UniquePtr<MessageQueue>;
+
+        fn RemoveAll(self: Pin<&mut MessageQueue>);
+        fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
+        fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
+        unsafe fn InsertSorted(self: Pin<&mut MessageQueue>, message: *mut MessageBase);
+
         #[Self = "WScriptJsrt"]
         unsafe fn AddMessageQueue(messageQueue: *mut MessageQueue);
 
         type JsValueRef = crate::jsrt::JsValueRef;
         type CVoid = crate::jsrt::CVoid;
-        #[Self = "WScriptJsrt"]
-        unsafe fn PromiseContinuationCallback(task: JsValueRef, callbackState: *mut CVoid);
 
         #[Self = "WScriptJsrt"]
         fn GetNextSourceContext() -> usize;
@@ -85,6 +95,14 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         unsafe fn GetModuleRecord(path: &str, record: *mut JsModuleRecord) -> bool;
+
+        #[cxx_name = "WScriptJsrt_CallbackMessage"]
+        type WScriptJsrt_CallbackMessage;
+        #[Self = "WScriptJsrt_CallbackMessage"]
+        fn New(time: u32, function: JsValueRef) -> UniquePtr<WScriptJsrt_CallbackMessage>;
+
+        #[Self = "WScriptJsrt_CallbackMessage"]
+        fn Upcast(msg: UniquePtr<WScriptJsrt_CallbackMessage>) -> UniquePtr<MessageBase>;
     }
 
     unsafe extern "C++" {
@@ -102,6 +120,9 @@ mod ffi {
 
         #[Self = "WScript"]
         fn initialize() -> Result<()>;
+
+        #[Self = "WScript"]
+        unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid);
     }
 }
 
@@ -375,6 +396,20 @@ impl WScript {
                 anyhow::bail!("GetModuleNamespace called with un-evaluated module")
             }
             Err(x) => Err(anyhow::Error::new(x)),
+        }
+    }
+
+    pub unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid) {
+        assert!(!task.is_null());
+        assert!(!callback_state.is_null());
+
+        unsafe {
+            let message_queue =
+                std::mem::transmute::<*mut CVoid, *mut MessageQueue>(callback_state);
+            let msg = WScriptJsrt_CallbackMessage::New(0, task);
+            let msg = WScriptJsrt_CallbackMessage::Upcast(msg);
+
+            Pin::new_unchecked(&mut *message_queue).InsertSorted(msg.into_raw());
         }
     }
 }

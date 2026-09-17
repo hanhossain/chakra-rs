@@ -7,6 +7,7 @@
 #include <list>
 #include <filesystem>
 #include <map>
+#include <memory>
 #include <optional>
 #include <rust/cxx.h>
 
@@ -39,10 +40,13 @@ public:
 
         int32_t Call(rust::Str fileName);
         int32_t CallFunction(rust::Str fileName);
-        template <class Func>
-        static CallbackMessage* Create(JsValueRef function, const Func& func, unsigned int time = 0)
+        static std::unique_ptr<CallbackMessage> New(unsigned int time, JsValueRef function)
         {
-            return new CustomMessage<Func, CallbackMessage>(time, function, func);
+            return std::make_unique<CallbackMessage>(time, function);
+        }
+        static std::unique_ptr<MessageBase> Upcast(std::unique_ptr<CallbackMessage> msg)
+        {
+            return msg;
         }
     };
 
@@ -75,7 +79,6 @@ public:
     static JsErrorCode NotifyModuleReadyCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar);
     static JsErrorCode ReportModuleCompletionCallback(JsModuleRecord module, JsValueRef exception);
     static JsErrorCode CALLBACK InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar);
-    static void CALLBACK PromiseContinuationCallback(JsValueRef task, void *callbackState);
 
     static const char * ConvertErrorCodeToMessage(JsErrorCode errorCode)
     {
@@ -140,3 +143,6 @@ private:
     static std::map<JsModuleRecord, std::filesystem::path> moduleDirMap;
     static std::map<JsModuleRecord, ModuleState> moduleErrMap;
 };
+
+// type aliases for rust ffi
+using WScriptJsrt_CallbackMessage = WScriptJsrt::CallbackMessage;

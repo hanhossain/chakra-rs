@@ -311,7 +311,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
 
         IfJsrtErrorSetGo(ChakraRTInterface::JsSetCurrentContext(newContext));
 
-        IfJsErrorFailLog(ChakraRTInterface::JsSetPromiseContinuationCallback(PromiseContinuationCallback, (void*)messageQueue_));
+        IfJsErrorFailLog(ChakraRTInterface::JsSetPromiseContinuationCallback(chakra_rs::WScript::promise_continuation_callback, (void*)messageQueue_));
 
         // Initialize the host objects
         chakra_rs::WScript::initialize();
@@ -1129,14 +1129,4 @@ JsErrorCode WScriptJsrt::InitializeImportMetaCallback(_In_opt_ JsModuleRecord re
     }
 
     return JsNoError;
-}
-
-void WScriptJsrt::PromiseContinuationCallback(JsValueRef task, void *callbackState)
-{
-    assert(task != JS_INVALID_REFERENCE);
-    assert(callbackState != JS_INVALID_REFERENCE);
-    MessageQueue * messageQueue = (MessageQueue *)callbackState;
-
-    WScriptJsrt::CallbackMessage *msg = new WScriptJsrt::CallbackMessage(0, task);
-    messageQueue->InsertSorted(msg);
 }

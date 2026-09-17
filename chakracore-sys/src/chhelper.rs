@@ -1,4 +1,4 @@
-pub use ffi::{Abstractions, MessageQueue};
+pub use ffi::Abstractions;
 
 #[cxx::bridge]
 mod ffi {
@@ -9,7 +9,6 @@ mod ffi {
 
     unsafe extern "C++" {
         include!("ChakraCommon.h");
-        include!("MessageQueue.h");
         include!("Util/Abstractions.h");
 
         type Abstractions;
@@ -19,14 +18,6 @@ mod ffi {
         type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
         type JsRuntimeAttributes = crate::jsrt::JsRuntimeAttributes;
         type JsValueRef = crate::jsrt::JsValueRef;
-
-        type MessageQueue;
-        #[Self = "MessageQueue"]
-        fn New() -> UniquePtr<MessageQueue>;
-
-        fn RemoveAll(self: Pin<&mut MessageQueue>);
-        fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
-        fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
     }
 }
 
