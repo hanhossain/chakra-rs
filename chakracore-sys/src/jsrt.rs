@@ -49,6 +49,14 @@ impl ChakraRt {
         Ok(JsArray(value))
     }
 
+    pub fn create_error(message: JsString) -> Result<JsErrorObject, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            bridge::JsCreateError(message.as_ref().clone(), &raw mut value).as_result()?;
+        }
+        Ok(JsErrorObject(value))
+    }
+
     pub fn create_named_function<T, R>(
         name: &str,
         native_function: T,
@@ -112,6 +120,10 @@ impl ChakraRt {
             bridge::JsNumberToInt(number.clone(), &raw mut value).as_result()?;
         }
         Ok(value)
+    }
+
+    pub fn set_exception(error: JsErrorObject) -> Result<(), JsError> {
+        bridge::JsSetException(error.as_ref().clone()).as_result()
     }
 }
 
@@ -192,6 +204,12 @@ impl DerefMut for JsString {
     }
 }
 
+impl IntoResponse for JsString {
+    fn into_response(self) -> JsValueRef {
+        self.0
+    }
+}
+
 pub struct JsArray(JsValueRef);
 
 impl JsArray {
@@ -211,6 +229,14 @@ impl AsRef<JsValueRef> for JsArray {
     }
 }
 
+pub struct JsErrorObject(JsValueRef);
+
+impl AsRef<JsValueRef> for JsErrorObject {
+    fn as_ref(&self) -> &JsValueRef {
+        &self.0
+    }
+}
+
 pub struct JsFunction(JsValueRef);
 
 impl AsRef<JsValueRef> for JsFunction {
@@ -224,18 +250,25 @@ pub trait IntoResponse {
     fn into_response(self) -> JsValueRef;
 }
 
+impl IntoResponse for JsValueRef {
+    fn into_response(self) -> JsValueRef {
+        self
+    }
+}
+
 impl IntoResponse for () {
     fn into_response(self) -> JsValueRef {
         ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }
 
-impl<T> IntoResponse for T
+impl<T> IntoResponse for Option<T>
 where
-    T: AsRef<JsValueRef>,
+    T: IntoResponse,
 {
     fn into_response(self) -> JsValueRef {
-        self.as_ref().clone()
+        self.map(|x| x.into_response())
+            .unwrap_or_else(|| ChakraRt::get_undefined_value().unwrap_or_default())
     }
 }
 
@@ -255,6 +288,15 @@ where
 impl IntoResponse for JsError {
     fn into_response(self) -> JsValueRef {
         tracing::error!(?self, "The callback returned an error");
+
+        if let Ok(msg) = ChakraRt::create_string(&self.to_string()) {
+            if let Ok(error) = ChakraRt::create_error(msg) {
+                if let Err(err) = ChakraRt::set_exception(error) {
+                    tracing::error!(?err, "Failed to set exception");
+                }
+            }
+        }
+
         ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }

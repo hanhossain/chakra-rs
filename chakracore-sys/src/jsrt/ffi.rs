@@ -106,6 +106,7 @@ pub(super) mod bridge {
         unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreatePropertyId(name: &str, object: *mut JsPropertyIdRef) -> JsErrorCode;
         unsafe fn JsCreateArray(length: u32, array: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsCreateError(message: JsValueRef, error: *mut JsValueRef) -> JsErrorCode;
         fn JsToString(value: &JsValueRef, string: &mut String) -> JsErrorCode;
         fn JsSetProperty(
             object: JsValueRef,
@@ -136,6 +137,8 @@ pub(super) mod bridge {
             callback_state: *mut CVoid,
             function: *mut JsValueRef,
         ) -> JsErrorCode;
+
+        fn JsSetException(exception: JsValueRef) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}
