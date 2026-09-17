@@ -122,6 +122,14 @@ impl ChakraRt {
         Ok(value)
     }
 
+    pub fn number_to_double(number: &JsValueRef) -> Result<f64, JsError> {
+        let mut value = 0.;
+        unsafe {
+            bridge::JsNumberToDouble(number.clone(), &raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
+
     pub fn set_exception(error: JsErrorObject) -> Result<(), JsError> {
         bridge::JsSetException(error.as_ref().clone()).as_result()
     }

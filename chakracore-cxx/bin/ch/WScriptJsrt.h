@@ -128,7 +128,6 @@ public:
     static JsValueRef CALLBACK ReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK GetReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK LeavingCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK SleepCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK GetProxyPropertiesCallback(const chakra_rs::JsNativeFunctionArgs &args);
 
 private:

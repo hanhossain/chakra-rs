@@ -6,7 +6,7 @@ use crate::jsrt::{
 };
 use crate::rt_interface::ChakraRTInterface;
 pub use ffi::WScriptJsrt;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 #[cfg(debug_assertions)]
 const BUILD_TYPE_STRING: &str = "Debug";
@@ -72,8 +72,6 @@ mod ffi {
         fn GetReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn LeavingCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn SleepCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
         fn SetModuleHostInfoCallbacks() -> bool;
@@ -229,7 +227,7 @@ impl WScript {
             wscript_object.set_named_function("Report", WScriptJsrt::ReportCallback)?;
             wscript_object.set_named_function("GetReport", WScriptJsrt::GetReportCallback)?;
             wscript_object.set_named_function("Leaving", WScriptJsrt::LeavingCallback)?;
-            wscript_object.set_named_function("Sleep", WScriptJsrt::SleepCallback)?;
+            wscript_object.set_named_function("Sleep", WScript::sleep_callback)?;
 
             // $262
             let test262 = include_str!("ch/262.js");
@@ -323,6 +321,15 @@ impl WScript {
         let argv = vec![String::new(), cmd];
 
         TestHooks::SetConfigFlags(&argv);
+        Ok(())
+    }
+
+    fn sleep_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() > 1 {
+            let timeout = ChakraRt::number_to_double(&args.arguments[1])?;
+            std::thread::sleep(Duration::from_millis(timeout as u64));
+        }
+
         Ok(())
     }
 }

@@ -709,25 +709,6 @@ Error:
     return returnValue;
 }
 
-JsValueRef WScriptJsrt::SleepCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    [[maybe_unused]] int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
-
-    if (args.arguments.size() > 1)
-    {
-        double timeout = 0.0;
-        ChakraRTInterface::JsNumberToDouble(args.arguments[1], &timeout);
-        Sleep((uint32_t)timeout);
-    }
-
-Error:
-    return returnValue;
-}
-
 JsValueRef WScriptJsrt::GetProxyPropertiesCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
