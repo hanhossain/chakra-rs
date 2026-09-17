@@ -52,12 +52,6 @@ mod ffi {
         fn GetICUMajorVersion() -> i32;
 
         #[Self = "WScriptJsrt"]
-        fn LoadScriptFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn LoadScriptCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn LoadModuleCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
         fn SetTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn ClearTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
@@ -85,6 +79,16 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         fn SetModuleHostInfoCallbacks() -> bool;
+
+        #[Self = "WScriptJsrt"]
+        fn LoadScriptFileHelper(
+            callee: JsValueRef,
+            arguments: &[JsValueRef],
+            is_source_module: bool,
+        ) -> JsValueRef;
+
+        #[Self = "WScriptJsrt"]
+        fn LoadScriptHelper(args: &JsNativeFunctionArgs, is_source_module: bool) -> JsValueRef;
     }
 
     #[namespace = "chakra_rs"]
@@ -124,9 +128,9 @@ impl WScript {
         wscript_object.set_named_function("Echo", WScript::echo_callback)?;
         wscript_object.set_named_function("Quit", WScript::quit_callback)?;
 
-        wscript_object.set_named_function("LoadScriptFile", WScriptJsrt::LoadScriptFileCallback)?;
-        wscript_object.set_named_function("LoadScript", WScriptJsrt::LoadScriptCallback)?;
-        wscript_object.set_named_function("LoadModule", WScriptJsrt::LoadModuleCallback)?;
+        wscript_object.set_named_function("LoadScriptFile", WScript::load_script_file_callback)?;
+        wscript_object.set_named_function("LoadScript", WScript::load_script_callback)?;
+        wscript_object.set_named_function("LoadModule", WScript::load_module_callback)?;
         wscript_object.set_named_function("SetTimeout", WScriptJsrt::SetTimeoutCallback)?;
         wscript_object.set_named_function("ClearTimeout", WScriptJsrt::ClearTimeoutCallback)?;
         wscript_object.set_named_function("Flag", WScriptJsrt::FlagCallback)?;
@@ -298,5 +302,17 @@ impl WScript {
         let file_content = ScriptCache::load_script_from_file(&filename)?;
         let value = ChakraRt::create_string(&file_content)?;
         Ok(value)
+    }
+
+    fn load_script_file_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
+        WScriptJsrt::LoadScriptFileHelper(args.callee.clone(), args.arguments, false)
+    }
+
+    fn load_script_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
+        WScriptJsrt::LoadScriptHelper(args, false)
+    }
+
+    fn load_module_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
+        WScriptJsrt::LoadScriptHelper(args, true)
     }
 }

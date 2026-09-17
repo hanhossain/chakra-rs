@@ -47,18 +47,13 @@ std::size_t WScriptJsrt::GetNextSourceContext()
     return sourceContext_++;
 }
 
-JsValueRef WScriptJsrt::LoadScriptFileCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    return LoadScriptFileHelper(args.callee, args.arguments, false);
-}
-
 // TODO (hanhossain): do I need to free anything?
 void WScriptJsrt::FinalizeFree(void* addr)
 {
     // free(addr);
 }
 
-JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, const rust::Slice<JsValueRef const> &arguments, bool isSourceModule)
+JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, const rust::Slice<JsValueRef const> arguments, bool isSourceModule)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
@@ -171,16 +166,6 @@ JsValueRef WScriptJsrt::GetModuleNamespace(const chakra_rs::JsNativeFunctionArgs
 
     SetExceptionIf(errorCode, errorMessage);
     return returnValue;
-}
-
-JsValueRef WScriptJsrt::LoadScriptCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    return LoadScriptHelper(args, false);
-}
-
-JsValueRef WScriptJsrt::LoadModuleCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    return LoadScriptHelper(args, true);
 }
 
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule)
