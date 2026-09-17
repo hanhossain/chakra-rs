@@ -227,14 +227,6 @@ Error:
     return returnValue;
 }
 
-std::string WScriptJsrt::GetDir(const std::string_view fullPathNarrow)
-{
-    const std::filesystem::path path = fullPathNarrow;
-    const auto parent = path.parent_path();
-
-    return parent;
-}
-
 JsErrorCode WScriptJsrt::ModuleEntryPoint(rust::Str fileContent, const rust::String &fullName)
 {
     auto span = chakra::Span::create("WScriptJsrt::ModuleEntryPoint");
