@@ -994,19 +994,6 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
     return errorCode;
 }
 
-JsErrorCode WScriptJsrt::ReportModuleCompletionCallback(JsModuleRecord module, JsValueRef exception)
-{
-    if (exception != nullptr)
-    {
-        JsValueRef specifier = JS_INVALID_REFERENCE;
-        ChakraRTInterface::JsGetModuleHostInfo(module, JsModuleHostInfo_Url, &specifier);
-        rust::String specifierStr;
-        ChakraRTInterface::JsToString(specifier, specifierStr);
-        PrintException(specifierStr, JsErrorCode::JsErrorScriptException, exception);
-    }
-    return JsNoError;
-}
-
 JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingModule,
     JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const std::optional<fs::path> &refdir)
 {
