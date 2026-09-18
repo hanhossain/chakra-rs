@@ -133,6 +133,11 @@ bool WScriptJsrt::GetModuleRecord(rust::Str path, JsModuleRecord *record)
     return true;
 }
 
+ModuleState WScriptJsrt::GetModuleError(const JsModuleRecord &referencingModule)
+{
+    return moduleErrMap[referencingModule];
+}
+
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
@@ -446,16 +451,6 @@ JsValueRef WScriptJsrt::ClearTimeoutCallback(const chakra_rs::JsNativeFunctionAr
 Error:
     SetExceptionIf(errorCode, errorMessage);
     return JS_INVALID_REFERENCE;
-}
-
-bool WScriptJsrt::SetModuleHostInfoCallbacks()
-{
-    IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_FetchImportedModuleCallback, (void*)WScriptJsrt::FetchImportedModule), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_FetchImportedModuleFromScriptCallback, (void*)WScriptJsrt::FetchImportedModuleFromScript), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_NotifyModuleReadyCallback, (void*)WScriptJsrt::NotifyModuleReadyCallback), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_InitializeImportMetaCallback, (void*)WScriptJsrt::InitializeImportMetaCallback), false);
-    IfJsrtErrorFail(ChakraRTInterface::JsSetModuleHostInfo(nullptr, JsModuleHostInfo_ReportModuleCompletionCallback, (void*)WScriptJsrt::ReportModuleCompletionCallback), false);
-    return true;
 }
 
 bool WScriptJsrt::Uninitialize()
@@ -999,19 +994,6 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
     return errorCode;
 }
 
-JsErrorCode WScriptJsrt::ReportModuleCompletionCallback(JsModuleRecord module, JsValueRef exception)
-{
-    if (exception != nullptr)
-    {
-        JsValueRef specifier = JS_INVALID_REFERENCE;
-        ChakraRTInterface::JsGetModuleHostInfo(module, JsModuleHostInfo_Url, &specifier);
-        rust::String specifierStr;
-        ChakraRTInterface::JsToString(specifier, specifierStr);
-        PrintException(specifierStr, JsErrorCode::JsErrorScriptException, exception);
-    }
-    return JsNoError;
-}
-
 JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingModule,
     JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const std::optional<fs::path> &refdir)
 {
@@ -1084,49 +1066,4 @@ JsErrorCode WScriptJsrt::FetchImportedModuleFromScript(_In_ JsSourceContext dwRe
     _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord)
 {
     return FetchImportedModuleHelper(nullptr, specifier, dependentModuleRecord);
-}
-
-// Callback from chakraCore when the module resolution is finished, either successfully or unsuccessfully.
-JsErrorCode WScriptJsrt::NotifyModuleReadyCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar)
-{
-    if (exceptionVar != nullptr && HostConfigFlags::GetConfig().host.trace_host_callback)
-    {
-        JsValueRef specifier = JS_INVALID_REFERENCE;
-        ChakraRTInterface::JsGetModuleHostInfo(referencingModule, JsModuleHostInfo_Url, &specifier);
-        rust::String fileName;
-        if (specifier != JS_INVALID_REFERENCE)
-        {
-            ChakraRTInterface::JsToString(specifier, fileName);
-        }
-        std::println("NotifyModuleReadyCallback(exception) {}", fileName);
-    }
-
-    if (moduleErrMap[referencingModule] != ErroredModule)
-    {
-        WScriptJsrt::ModuleMessage* moduleMessage =
-            WScriptJsrt::ModuleMessage::Create(referencingModule, nullptr);
-        if (moduleMessage == nullptr)
-        {
-            return JsErrorOutOfMemory;
-        }
-        WScriptJsrt::PushMessage(moduleMessage);
-    }
-    return JsNoError;
-}
-
-JsErrorCode WScriptJsrt::InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar)
-{
-    if (importMetaVar != nullptr)
-    {
-        JsValueRef specifier = JS_INVALID_REFERENCE;
-        ChakraRTInterface::JsGetModuleHostInfo(referencingModule, JsModuleHostInfo_Url, &specifier);
-
-        JsPropertyIdRef urlPropId;
-        if (JsNoError == ChakraRTInterface::JsCreatePropertyId("url", &urlPropId))
-        {
-            ChakraRTInterface::JsSetProperty(importMetaVar, urlPropId, specifier, false);
-        }
-    }
-
-    return JsNoError;
 }

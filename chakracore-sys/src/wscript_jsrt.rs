@@ -1,11 +1,13 @@
 use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsError, JsModuleRecord, JsNativeFunctionArgs,
-    JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
+    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModuleHostInfoKind, JsModuleRecord,
+    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
-use crate::wscript_jsrt::ffi::{CVoid, WScriptJsrt_CallbackMessage};
+use crate::wscript_jsrt::ffi::{
+    CVoid, ModuleState, WScriptJsrt_CallbackMessage, WScriptJsrt_ModuleMessage,
+};
 pub use ffi::{MessageQueue, WScriptJsrt};
 use std::pin::Pin;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
@@ -25,6 +27,7 @@ mod ffi {
 
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
+        type JsSourceContext = crate::jsrt::JsSourceContext;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
@@ -81,9 +84,6 @@ mod ffi {
         fn GetReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
-        fn SetModuleHostInfoCallbacks() -> bool;
-
-        #[Self = "WScriptJsrt"]
         fn LoadScriptFileHelper(
             callee: JsValueRef,
             arguments: &[JsValueRef],
@@ -96,6 +96,20 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         unsafe fn GetModuleRecord(path: &str, record: *mut JsModuleRecord) -> bool;
 
+        #[Self = "WScriptJsrt"]
+        unsafe fn FetchImportedModule(
+            referencing_module: JsModuleRecord,
+            specifier: JsValueRef,
+            dependent_module_record: *mut JsModuleRecord,
+        ) -> JsErrorCode;
+
+        #[Self = "WScriptJsrt"]
+        unsafe fn FetchImportedModuleFromScript(
+            dwReferencingSourceContext: JsSourceContext,
+            specifier: JsValueRef,
+            dependentModuleRecord: *mut JsModuleRecord,
+        ) -> JsErrorCode;
+
         #[cxx_name = "WScriptJsrt_CallbackMessage"]
         type WScriptJsrt_CallbackMessage;
         #[Self = "WScriptJsrt_CallbackMessage"]
@@ -103,6 +117,22 @@ mod ffi {
 
         #[Self = "WScriptJsrt_CallbackMessage"]
         fn Upcast(msg: UniquePtr<WScriptJsrt_CallbackMessage>) -> UniquePtr<MessageBase>;
+
+        type ModuleState;
+        #[Self = WScriptJsrt]
+        fn GetModuleError(referencingModule: &JsModuleRecord) -> ModuleState;
+
+        type WScriptJsrt_ModuleMessage;
+        #[Self = "WScriptJsrt_ModuleMessage"]
+        fn New(
+            module: JsModuleRecord,
+            specifier: JsValueRef,
+        ) -> UniquePtr<WScriptJsrt_ModuleMessage>;
+        #[Self = "WScriptJsrt_ModuleMessage"]
+        fn Upcast(msg: UniquePtr<WScriptJsrt_ModuleMessage>) -> UniquePtr<MessageBase>;
+
+        #[Self = "WScriptJsrt"]
+        unsafe fn PushMessage(message: *mut MessageBase);
     }
 
     unsafe extern "C++" {
@@ -123,6 +153,13 @@ mod ffi {
 
         #[Self = "WScript"]
         unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid);
+    }
+
+    #[repr(i32)]
+    enum ModuleState {
+        RootModule,
+        ImportedModule,
+        ErroredModule,
     }
 }
 
@@ -242,9 +279,7 @@ impl WScript {
             true,
         )?;
 
-        if !WScriptJsrt::SetModuleHostInfoCallbacks() {
-            return Err(JsError::JsErrorFatal);
-        }
+        WScript::set_module_host_info_callbacks()?;
 
         // When the host config `Test262` is set,
         // WScript will have the extra support API below and $262 will be
@@ -411,6 +446,123 @@ impl WScript {
 
             Pin::new_unchecked(&mut *message_queue).InsertSorted(msg.into_raw());
         }
+    }
+
+    fn set_module_host_info_callbacks() -> Result<(), JsError> {
+        unsafe {
+            ChakraRTInterface::JsSetModuleHostInfo(
+                JsModuleRecord::default(),
+                JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleCallback,
+                WScriptJsrt::FetchImportedModule as _,
+            )
+            .as_result()?;
+            ChakraRTInterface::JsSetModuleHostInfo(
+                JsModuleRecord::default(),
+                JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleFromScriptCallback,
+                WScriptJsrt::FetchImportedModuleFromScript as _,
+            )
+            .as_result()?;
+            ChakraRTInterface::JsSetModuleHostInfo(
+                JsModuleRecord::default(),
+                JsModuleHostInfoKind::JsModuleHostInfo_NotifyModuleReadyCallback,
+                WScript::notify_module_ready_callback as _,
+            )
+            .as_result()?;
+            ChakraRTInterface::JsSetModuleHostInfo(
+                JsModuleRecord::default(),
+                JsModuleHostInfoKind::JsModuleHostInfo_InitializeImportMetaCallback,
+                WScript::initialize_import_meta_callback as _,
+            )
+            .as_result()?;
+            ChakraRTInterface::JsSetModuleHostInfo(
+                JsModuleRecord::default(),
+                JsModuleHostInfoKind::JsModuleHostInfo_ReportModuleCompletionCallback,
+                WScript::report_module_completion_callback as _,
+            )
+            .as_result()?;
+        }
+
+        Ok(())
+    }
+
+    /// Callback from chakraCore when the module resolution is finished, either successfully or unsuccessfully.
+    #[tracing::instrument(skip_all)]
+    fn notify_module_ready_callback(
+        referencing_module: JsModuleRecord,
+        exception_var: JsValueRef,
+    ) -> JsErrorCode {
+        if !exception_var.is_null() && HostConfigFlags::GetConfig().host.trace_host_callback {
+            let mut specifier = JsValueRef::default();
+            unsafe {
+                ChakraRTInterface::JsGetModuleHostInfo(
+                    referencing_module.clone(),
+                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
+                    &raw mut specifier as *mut _,
+                );
+                let mut filename = String::new();
+                if !specifier.is_null() {
+                    filename = specifier.to_string().unwrap_or_default();
+                }
+                println!("NotifyModuleReadyCallback(exception) {filename}");
+            }
+        }
+
+        if WScriptJsrt::GetModuleError(&referencing_module) != ModuleState::ErroredModule {
+            let module_message =
+                WScriptJsrt_ModuleMessage::New(referencing_module, JsValueRef::default());
+            let msg = WScriptJsrt_ModuleMessage::Upcast(module_message);
+            unsafe {
+                WScriptJsrt::PushMessage(msg.into_raw());
+            }
+        }
+        JsErrorCode::JsNoError
+    }
+
+    fn initialize_import_meta_callback(
+        referencing_module: JsModuleRecord,
+        import_meta_var: JsValueRef,
+    ) -> JsErrorCode {
+        if !import_meta_var.is_null() {
+            let mut specifier = JsValueRef::default();
+            unsafe {
+                ChakraRTInterface::JsGetModuleHostInfo(
+                    referencing_module,
+                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
+                    &raw mut specifier as _,
+                );
+                if let Ok(url_prop_id) = ChakraRt::create_property_id("url") {
+                    let mut import_meta_var = JsObject::new(import_meta_var);
+                    let _ = import_meta_var.set_property(url_prop_id, specifier, false);
+                }
+            }
+        }
+
+        JsErrorCode::JsNoError
+    }
+
+    fn report_module_completion_callback(
+        module: JsModuleRecord,
+        exception: JsValueRef,
+    ) -> JsErrorCode {
+        if !exception.is_null() {
+            let mut specifier = JsValueRef::default();
+            unsafe {
+                ChakraRTInterface::JsGetModuleHostInfo(
+                    module,
+                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
+                    &raw mut specifier as _,
+                );
+                if let Ok(specifier) = specifier.to_string() {
+                    WScriptJsrt::PrintException(
+                        &specifier,
+                        JsErrorCode::JsErrorScriptException,
+                        exception,
+                    );
+                }
+            }
+        }
+
+        JsErrorCode::JsNoError
     }
 }
 
