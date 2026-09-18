@@ -1,6 +1,7 @@
 use crate::jsrt::JsError;
 pub use bridge::{
-    CVoid, JsErrorCode, JsNativeFunctionArgs, JsParseScriptAttributes, JsRuntimeAttributes,
+    CVoid, JsErrorCode, JsModuleHostInfoKind, JsNativeFunctionArgs, JsParseScriptAttributes,
+    JsRuntimeAttributes,
 };
 use std::ffi::c_void;
 
@@ -108,6 +109,7 @@ pub(super) mod bridge {
         type JsErrorCode;
         type JsRuntimeAttributes;
         type JsParseScriptAttributes;
+        type JsModuleHostInfoKind;
     }
 
     #[namespace = "chakracore::jsrt"]
@@ -327,6 +329,26 @@ pub(super) mod bridge {
         JsParseScriptAttributeArrayBufferIsUtf16Encoded = 0x2,
         /// Script should be parsed in strict mode
         JsParseScriptAttributeStrictMode = 0x4,
+    }
+
+    #[repr(i32)]
+    enum JsModuleHostInfoKind {
+        /// An exception object - e.g. if the module file cannot be found.
+        JsModuleHostInfo_Exception = 0x01,
+        /// Host defined info.
+        JsModuleHostInfo_HostDefined = 0x02,
+        /// Callback for receiving notification when module is ready.
+        JsModuleHostInfo_NotifyModuleReadyCallback = 0x3,
+        /// Callback for receiving notification to fetch a dependent module.
+        JsModuleHostInfo_FetchImportedModuleCallback = 0x4,
+        /// Callback for receiving notification for calls to ```import()```
+        JsModuleHostInfo_FetchImportedModuleFromScriptCallback = 0x5,
+        /// URL for use in error stack traces and debugging.
+        JsModuleHostInfo_Url = 0x6,
+        /// Callback to allow host to initialize import.meta object properties.
+        JsModuleHostInfo_InitializeImportMetaCallback = 0x7,
+        /// Callback to report module completion or exception thrown when evaluating a module.
+        JsModuleHostInfo_ReportModuleCompletionCallback = 0x8,
     }
 
     #[namespace = "chakra_rs"]
