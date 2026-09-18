@@ -133,6 +133,11 @@ bool WScriptJsrt::GetModuleRecord(rust::Str path, JsModuleRecord *record)
     return true;
 }
 
+ModuleState WScriptJsrt::GetModuleError(const JsModuleRecord &referencingModule)
+{
+    return moduleErrMap[referencingModule];
+}
+
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
@@ -1074,34 +1079,6 @@ JsErrorCode WScriptJsrt::FetchImportedModuleFromScript(_In_ JsSourceContext dwRe
     _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord)
 {
     return FetchImportedModuleHelper(nullptr, specifier, dependentModuleRecord);
-}
-
-// Callback from chakraCore when the module resolution is finished, either successfully or unsuccessfully.
-JsErrorCode WScriptJsrt::NotifyModuleReadyCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar)
-{
-    if (exceptionVar != nullptr && HostConfigFlags::GetConfig().host.trace_host_callback)
-    {
-        JsValueRef specifier = JS_INVALID_REFERENCE;
-        ChakraRTInterface::JsGetModuleHostInfo(referencingModule, JsModuleHostInfo_Url, &specifier);
-        rust::String fileName;
-        if (specifier != JS_INVALID_REFERENCE)
-        {
-            ChakraRTInterface::JsToString(specifier, fileName);
-        }
-        std::println("NotifyModuleReadyCallback(exception) {}", fileName);
-    }
-
-    if (moduleErrMap[referencingModule] != ErroredModule)
-    {
-        WScriptJsrt::ModuleMessage* moduleMessage =
-            WScriptJsrt::ModuleMessage::Create(referencingModule, nullptr);
-        if (moduleMessage == nullptr)
-        {
-            return JsErrorOutOfMemory;
-        }
-        WScriptJsrt::PushMessage(moduleMessage);
-    }
-    return JsNoError;
 }
 
 JsErrorCode WScriptJsrt::InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar)
