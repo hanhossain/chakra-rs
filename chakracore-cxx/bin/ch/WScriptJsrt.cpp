@@ -1080,20 +1080,3 @@ JsErrorCode WScriptJsrt::FetchImportedModuleFromScript(_In_ JsSourceContext dwRe
 {
     return FetchImportedModuleHelper(nullptr, specifier, dependentModuleRecord);
 }
-
-JsErrorCode WScriptJsrt::InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar)
-{
-    if (importMetaVar != nullptr)
-    {
-        JsValueRef specifier = JS_INVALID_REFERENCE;
-        ChakraRTInterface::JsGetModuleHostInfo(referencingModule, JsModuleHostInfo_Url, &specifier);
-
-        JsPropertyIdRef urlPropId;
-        if (JsNoError == ChakraRTInterface::JsCreatePropertyId("url", &urlPropId))
-        {
-            ChakraRTInterface::JsSetProperty(importMetaVar, urlPropId, specifier, false);
-        }
-    }
-
-    return JsNoError;
-}

@@ -154,6 +154,10 @@ impl ChakraRt {
 pub struct JsObject(JsValueRef);
 
 impl JsObject {
+    pub fn new(value: JsValueRef) -> Self {
+        JsObject(value)
+    }
+
     pub fn set_property<T: AsRef<JsValueRef>>(
         &mut self,
         property_id: JsPropertyIdRef,
