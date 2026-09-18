@@ -1,11 +1,13 @@
 use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsError, JsModuleHostInfoKind, JsModuleRecord,
+    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModuleHostInfoKind, JsModuleRecord,
     JsNativeFunctionArgs, JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
-use crate::wscript_jsrt::ffi::{CVoid, WScriptJsrt_CallbackMessage};
+use crate::wscript_jsrt::ffi::{
+    CVoid, ModuleState, WScriptJsrt_CallbackMessage, WScriptJsrt_ModuleMessage,
+};
 pub use ffi::{MessageQueue, WScriptJsrt};
 use std::pin::Pin;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
@@ -108,11 +110,6 @@ mod ffi {
             dependentModuleRecord: *mut JsModuleRecord,
         ) -> JsErrorCode;
         #[Self = "WScriptJsrt"]
-        fn NotifyModuleReadyCallback(
-            referencingModule: JsModuleRecord,
-            exceptionVar: JsValueRef,
-        ) -> JsErrorCode;
-        #[Self = "WScriptJsrt"]
         fn InitializeImportMetaCallback(
             referencingModule: JsModuleRecord,
             importMetaVar: JsValueRef,
@@ -130,6 +127,22 @@ mod ffi {
 
         #[Self = "WScriptJsrt_CallbackMessage"]
         fn Upcast(msg: UniquePtr<WScriptJsrt_CallbackMessage>) -> UniquePtr<MessageBase>;
+
+        type ModuleState;
+        #[Self = WScriptJsrt]
+        fn GetModuleError(referencingModule: &JsModuleRecord) -> ModuleState;
+
+        type WScriptJsrt_ModuleMessage;
+        #[Self = "WScriptJsrt_ModuleMessage"]
+        fn New(
+            module: JsModuleRecord,
+            specifier: JsValueRef,
+        ) -> UniquePtr<WScriptJsrt_ModuleMessage>;
+        #[Self = "WScriptJsrt_ModuleMessage"]
+        fn Upcast(msg: UniquePtr<WScriptJsrt_ModuleMessage>) -> UniquePtr<MessageBase>;
+
+        #[Self = "WScriptJsrt"]
+        unsafe fn PushMessage(message: *mut MessageBase);
     }
 
     unsafe extern "C++" {
@@ -150,6 +163,13 @@ mod ffi {
 
         #[Self = "WScript"]
         unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid);
+    }
+
+    #[repr(i32)]
+    enum ModuleState {
+        RootModule,
+        ImportedModule,
+        ErroredModule,
     }
 }
 
@@ -455,7 +475,7 @@ impl WScript {
             ChakraRTInterface::JsSetModuleHostInfo(
                 JsModuleRecord::default(),
                 JsModuleHostInfoKind::JsModuleHostInfo_NotifyModuleReadyCallback,
-                WScriptJsrt::NotifyModuleReadyCallback as _,
+                WScript::notify_module_ready_callback as _,
             )
             .as_result()?;
             ChakraRTInterface::JsSetModuleHostInfo(
@@ -473,6 +493,39 @@ impl WScript {
         }
 
         Ok(())
+    }
+
+    /// Callback from chakraCore when the module resolution is finished, either successfully or unsuccessfully.
+    #[tracing::instrument(skip_all)]
+    fn notify_module_ready_callback(
+        referencing_module: JsModuleRecord,
+        exception_var: JsValueRef,
+    ) -> JsErrorCode {
+        if !exception_var.is_null() && HostConfigFlags::GetConfig().host.trace_host_callback {
+            let mut specifier = JsValueRef::default();
+            unsafe {
+                ChakraRTInterface::JsGetModuleHostInfo(
+                    referencing_module.clone(),
+                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
+                    &raw mut specifier as *mut _,
+                );
+                let mut filename = String::new();
+                if !specifier.is_null() {
+                    filename = specifier.to_string().unwrap_or_default();
+                }
+                println!("NotifyModuleReadyCallback(exception) {filename}");
+            }
+        }
+
+        if WScriptJsrt::GetModuleError(&referencing_module) != ModuleState::ErroredModule {
+            let module_message =
+                WScriptJsrt_ModuleMessage::New(referencing_module, JsValueRef::default());
+            let msg = WScriptJsrt_ModuleMessage::Upcast(module_message);
+            unsafe {
+                WScriptJsrt::PushMessage(msg.into_raw());
+            }
+        }
+        JsErrorCode::JsNoError
     }
 }
 

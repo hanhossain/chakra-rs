@@ -57,18 +57,25 @@ public:
         JsValueRef specifier;
         std::optional<std::filesystem::path> fullPath_;
 
-        ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullpath);
-
     public:
+        ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullpath);
         ~ModuleMessage();
 
         int32_t Call(rust::Str fileName) override;
 
-        static ModuleMessage* Create(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullPath = std::nullopt)
+        static ModuleMessage* Create(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullPath)
         {
             return new ModuleMessage(module, specifier, fullPath);
         }
 
+        static std::unique_ptr<ModuleMessage> New(JsModuleRecord module, JsValueRef specifier)
+        {
+            return std::make_unique<ModuleMessage>(module, specifier, std::nullopt);
+        }
+        static std::unique_ptr<MessageBase> Upcast(std::unique_ptr<ModuleMessage> msg)
+        {
+            return msg;
+        }
     };
 
     static void AddMessageQueue(MessageQueue *messageQueue);
@@ -76,7 +83,6 @@ public:
 
     static JsErrorCode FetchImportedModule(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
     static JsErrorCode FetchImportedModuleFromScript(_In_ JsSourceContext dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
-    static JsErrorCode NotifyModuleReadyCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar);
     static JsErrorCode ReportModuleCompletionCallback(JsModuleRecord module, JsValueRef exception);
     static JsErrorCode CALLBACK InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar);
 
@@ -118,6 +124,7 @@ private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
 public:
     static bool GetModuleRecord(rust::Str path, JsModuleRecord *record);
+    static ModuleState GetModuleError(const JsModuleRecord &referencingModule);
     static JsValueRef CALLBACK SetTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
 
@@ -145,3 +152,4 @@ private:
 
 // type aliases for rust ffi
 using WScriptJsrt_CallbackMessage = WScriptJsrt::CallbackMessage;
+using WScriptJsrt_ModuleMessage = WScriptJsrt::ModuleMessage;
