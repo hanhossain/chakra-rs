@@ -1,8 +1,8 @@
 use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsError, JsModuleRecord, JsNativeFunctionArgs,
-    JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
+    ChakraRt, IntoResponse, JsArray, JsError, JsModuleHostInfoKind, JsModuleRecord,
+    JsNativeFunctionArgs, JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::ffi::{CVoid, WScriptJsrt_CallbackMessage};
@@ -25,6 +25,7 @@ mod ffi {
 
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
+        type JsSourceContext = crate::jsrt::JsSourceContext;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
@@ -81,9 +82,6 @@ mod ffi {
         fn GetReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
-        fn SetModuleHostInfoCallbacks() -> bool;
-
-        #[Self = "WScriptJsrt"]
         fn LoadScriptFileHelper(
             callee: JsValueRef,
             arguments: &[JsValueRef],
@@ -95,6 +93,35 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         unsafe fn GetModuleRecord(path: &str, record: *mut JsModuleRecord) -> bool;
+
+        #[Self = "WScriptJsrt"]
+        unsafe fn FetchImportedModule(
+            referencing_module: JsModuleRecord,
+            specifier: JsValueRef,
+            dependent_module_record: *mut JsModuleRecord,
+        ) -> JsErrorCode;
+
+        #[Self = "WScriptJsrt"]
+        unsafe fn FetchImportedModuleFromScript(
+            dwReferencingSourceContext: JsSourceContext,
+            specifier: JsValueRef,
+            dependentModuleRecord: *mut JsModuleRecord,
+        ) -> JsErrorCode;
+        #[Self = "WScriptJsrt"]
+        fn NotifyModuleReadyCallback(
+            referencingModule: JsModuleRecord,
+            exceptionVar: JsValueRef,
+        ) -> JsErrorCode;
+        #[Self = "WScriptJsrt"]
+        fn InitializeImportMetaCallback(
+            referencingModule: JsModuleRecord,
+            importMetaVar: JsValueRef,
+        ) -> JsErrorCode;
+        #[Self = "WScriptJsrt"]
+        fn ReportModuleCompletionCallback(
+            referencingModule: JsModuleRecord,
+            exception: JsValueRef,
+        ) -> JsErrorCode;
 
         #[cxx_name = "WScriptJsrt_CallbackMessage"]
         type WScriptJsrt_CallbackMessage;
@@ -242,9 +269,7 @@ impl WScript {
             true,
         )?;
 
-        if !WScriptJsrt::SetModuleHostInfoCallbacks() {
-            return Err(JsError::JsErrorFatal);
-        }
+        WScript::set_module_host_info_callbacks()?;
 
         // When the host config `Test262` is set,
         // WScript will have the extra support API below and $262 will be
@@ -411,6 +436,43 @@ impl WScript {
 
             Pin::new_unchecked(&mut *message_queue).InsertSorted(msg.into_raw());
         }
+    }
+
+    fn set_module_host_info_callbacks() -> Result<(), JsError> {
+        unsafe {
+            ChakraRTInterface::JsSetModuleHostInfo(
+                JsModuleRecord::default(),
+                JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleCallback,
+                WScriptJsrt::FetchImportedModule as _,
+            )
+            .as_result()?;
+            ChakraRTInterface::JsSetModuleHostInfo(
+                JsModuleRecord::default(),
+                JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleFromScriptCallback,
+                WScriptJsrt::FetchImportedModuleFromScript as _,
+            )
+            .as_result()?;
+            ChakraRTInterface::JsSetModuleHostInfo(
+                JsModuleRecord::default(),
+                JsModuleHostInfoKind::JsModuleHostInfo_NotifyModuleReadyCallback,
+                WScriptJsrt::NotifyModuleReadyCallback as _,
+            )
+            .as_result()?;
+            ChakraRTInterface::JsSetModuleHostInfo(
+                JsModuleRecord::default(),
+                JsModuleHostInfoKind::JsModuleHostInfo_InitializeImportMetaCallback,
+                WScriptJsrt::InitializeImportMetaCallback as _,
+            )
+            .as_result()?;
+            ChakraRTInterface::JsSetModuleHostInfo(
+                JsModuleRecord::default(),
+                JsModuleHostInfoKind::JsModuleHostInfo_ReportModuleCompletionCallback,
+                WScriptJsrt::ReportModuleCompletionCallback as _,
+            )
+            .as_result()?;
+        }
+
+        Ok(())
     }
 }
 

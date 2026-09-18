@@ -75,7 +75,7 @@ public:
     static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
 
     static JsErrorCode FetchImportedModule(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
-    static JsErrorCode FetchImportedModuleFromScript(_In_ unsigned long dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
+    static JsErrorCode FetchImportedModuleFromScript(_In_ JsSourceContext dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
     static JsErrorCode NotifyModuleReadyCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar);
     static JsErrorCode ReportModuleCompletionCallback(JsModuleRecord module, JsValueRef exception);
     static JsErrorCode CALLBACK InitializeImportMetaCallback(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar);
@@ -113,7 +113,6 @@ public:
     static std::size_t GetNextSourceContext();
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, rust::Slice<JsValueRef const> arguments, bool isSourceModule);
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
-    static bool SetModuleHostInfoCallbacks();
     static void FinalizeFree(void * addr);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
