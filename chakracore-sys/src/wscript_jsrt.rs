@@ -2,7 +2,7 @@ use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModuleHostInfoKind, JsModuleRecord,
-    JsNativeFunctionArgs, JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
+    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::ffi::{
@@ -108,11 +108,6 @@ mod ffi {
             dwReferencingSourceContext: JsSourceContext,
             specifier: JsValueRef,
             dependentModuleRecord: *mut JsModuleRecord,
-        ) -> JsErrorCode;
-        #[Self = "WScriptJsrt"]
-        fn InitializeImportMetaCallback(
-            referencingModule: JsModuleRecord,
-            importMetaVar: JsValueRef,
         ) -> JsErrorCode;
         #[Self = "WScriptJsrt"]
         fn ReportModuleCompletionCallback(
@@ -481,7 +476,7 @@ impl WScript {
             ChakraRTInterface::JsSetModuleHostInfo(
                 JsModuleRecord::default(),
                 JsModuleHostInfoKind::JsModuleHostInfo_InitializeImportMetaCallback,
-                WScriptJsrt::InitializeImportMetaCallback as _,
+                WScript::initialize_import_meta_callback as _,
             )
             .as_result()?;
             ChakraRTInterface::JsSetModuleHostInfo(
@@ -525,6 +520,28 @@ impl WScript {
                 WScriptJsrt::PushMessage(msg.into_raw());
             }
         }
+        JsErrorCode::JsNoError
+    }
+
+    fn initialize_import_meta_callback(
+        referencing_module: JsModuleRecord,
+        import_meta_var: JsValueRef,
+    ) -> JsErrorCode {
+        if !import_meta_var.is_null() {
+            let mut specifier = JsValueRef::default();
+            unsafe {
+                ChakraRTInterface::JsGetModuleHostInfo(
+                    referencing_module,
+                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
+                    &raw mut specifier as _,
+                );
+                if let Ok(url_prop_id) = ChakraRt::create_property_id("url") {
+                    let mut import_meta_var = JsObject::new(import_meta_var);
+                    let _ = import_meta_var.set_property(url_prop_id, specifier, false);
+                }
+            }
+        }
+
         JsErrorCode::JsNoError
     }
 }
