@@ -109,11 +109,6 @@ mod ffi {
             specifier: JsValueRef,
             dependentModuleRecord: *mut JsModuleRecord,
         ) -> JsErrorCode;
-        #[Self = "WScriptJsrt"]
-        fn ReportModuleCompletionCallback(
-            referencingModule: JsModuleRecord,
-            exception: JsValueRef,
-        ) -> JsErrorCode;
 
         #[cxx_name = "WScriptJsrt_CallbackMessage"]
         type WScriptJsrt_CallbackMessage;
@@ -482,7 +477,7 @@ impl WScript {
             ChakraRTInterface::JsSetModuleHostInfo(
                 JsModuleRecord::default(),
                 JsModuleHostInfoKind::JsModuleHostInfo_ReportModuleCompletionCallback,
-                WScriptJsrt::ReportModuleCompletionCallback as _,
+                WScript::report_module_completion_callback as _,
             )
             .as_result()?;
         }
@@ -538,6 +533,31 @@ impl WScript {
                 if let Ok(url_prop_id) = ChakraRt::create_property_id("url") {
                     let mut import_meta_var = JsObject::new(import_meta_var);
                     let _ = import_meta_var.set_property(url_prop_id, specifier, false);
+                }
+            }
+        }
+
+        JsErrorCode::JsNoError
+    }
+
+    fn report_module_completion_callback(
+        module: JsModuleRecord,
+        exception: JsValueRef,
+    ) -> JsErrorCode {
+        if !exception.is_null() {
+            let mut specifier = JsValueRef::default();
+            unsafe {
+                ChakraRTInterface::JsGetModuleHostInfo(
+                    module,
+                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
+                    &raw mut specifier as _,
+                );
+                if let Ok(specifier) = specifier.to_string() {
+                    WScriptJsrt::PrintException(
+                        &specifier,
+                        JsErrorCode::JsErrorScriptException,
+                        exception,
+                    );
                 }
             }
         }
