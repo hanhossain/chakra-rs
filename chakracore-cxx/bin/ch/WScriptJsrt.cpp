@@ -39,7 +39,6 @@ unsigned int MessageBase::s_messageCount = 0;
 MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
 std::map<fs::path, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
 std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;
-std::map<JsModuleRecord, ModuleState>  WScriptJsrt::moduleErrMap;
 std::size_t WScriptJsrt::sourceContext_ = 0;
 
 std::size_t WScriptJsrt::GetNextSourceContext()
@@ -131,11 +130,6 @@ bool WScriptJsrt::GetModuleRecord(rust::Str path, JsModuleRecord *record)
 
     *record = moduleEntry->second;
     return true;
-}
-
-ModuleState WScriptJsrt::GetModuleError(const JsModuleRecord &referencingModule)
-{
-    return moduleErrMap[referencingModule];
 }
 
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule)
@@ -231,7 +225,8 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fi
             moduleDirMap[requestModule] = fs::path(fullName).parent_path();
 
             moduleRecordMap[moduleRecordKey] = requestModule;
-            moduleErrMap[requestModule] = RootModule;
+            auto module_error_map = chakra_rs::get_module_error_map();
+            module_error_map->insert(requestModule, RootModule);
         }
     }
     else
@@ -244,11 +239,16 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fi
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
     errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)(fileContent ? fileContent.value().data() : nullptr),
         fileContent ? fileContent.value().size() : 0, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
-    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent && !HostConfigFlags::GetConfig().host.ignore_script_error_code && moduleErrMap[requestModule] == RootModule)
+    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent &&
+        !HostConfigFlags::GetConfig().host.ignore_script_error_code)
     {
-        ChakraRTInterface::JsSetException(errorObject);
-        moduleErrMap[requestModule] = ErroredModule;
-        return errorCode;
+        if (auto [exists, state] = chakra_rs::get_module_error_map()->get(requestModule); exists && state == RootModule)
+        {
+            ChakraRTInterface::JsSetException(errorObject);
+            auto module_error_map = chakra_rs::get_module_error_map();
+            module_error_map->insert(requestModule, ErroredModule);
+            return errorCode;
+        }
     }
     return JsNoError;
 }
@@ -460,7 +460,7 @@ bool WScriptJsrt::Uninitialize()
     // to avoid worrying about global destructor order.
     moduleRecordMap.clear();
     moduleDirMap.clear();
-    moduleErrMap.clear();
+    chakra_rs::get_module_error_map()->clear();
 
     auto& threadData = GetRuntimeThreadLocalData().threadData;
     if (threadData && !threadData->children.empty())
@@ -950,7 +950,8 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
     JsErrorCode errorCode = JsNoError;
     if (specifier == nullptr)
     {
-        if (moduleErrMap[moduleRecord] != ErroredModule)
+        if (auto [exists, state] = chakra_rs::get_module_error_map()->get(moduleRecord);
+            exists && state != ErroredModule)
         {
             JsValueRef result = JS_INVALID_REFERENCE;
             errorCode = ChakraRTInterface::JsModuleEvaluation(moduleRecord, &result);
@@ -983,7 +984,8 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
             if (!HostConfigFlags::GetConfig().host.mute_host_error_msg)
             {
                 auto actualModuleRecord = moduleRecordMap.find(fullPath_.value());
-                if (actualModuleRecord == moduleRecordMap.end() || moduleErrMap[actualModuleRecord->second] == RootModule)
+                auto error_map_content = chakra_rs::get_module_error_map()->get(actualModuleRecord->second);
+                if (actualModuleRecord == moduleRecordMap.end() || (error_map_content.exists && error_map_content.content == RootModule))
                 {
                     chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
                 }
@@ -1029,7 +1031,8 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     {
         moduleDirMap[moduleRecord] = fullPath.parent_path();
         moduleRecordMap[fullPath] = moduleRecord;
-        moduleErrMap[moduleRecord] = ImportedModule;
+        auto module_error_map = chakra_rs::get_module_error_map();
+        module_error_map->insert(moduleRecord, ImportedModule);
         ModuleMessage* moduleMessage = WScriptJsrt::ModuleMessage::Create(referencingModule, specifier, fullPath);
         if (moduleMessage == nullptr)
         {

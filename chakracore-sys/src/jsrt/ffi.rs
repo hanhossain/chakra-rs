@@ -75,13 +75,16 @@ unsafe impl cxx::ExternType for JsSourceContext {
 }
 
 #[repr(transparent)]
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Eq, PartialEq, Hash)]
 pub struct JsModuleRecord(*mut CVoid);
 
 unsafe impl cxx::ExternType for JsModuleRecord {
     type Id = cxx::type_id!("JsModuleRecord");
     type Kind = cxx::kind::Trivial;
 }
+
+unsafe impl Send for JsModuleRecord {}
+unsafe impl Sync for JsModuleRecord {}
 
 #[repr(transparent)]
 pub struct CULong(pub std::ffi::c_ulong);
