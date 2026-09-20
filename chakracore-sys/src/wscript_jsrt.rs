@@ -21,6 +21,7 @@ const BUILD_TYPE_STRING: &str = "Debug";
 const BUILD_TYPE_STRING: &str = "Test";
 
 static MODULE_ERROR_MAP: LazyLock<ModuleErrorMap> = LazyLock::new(|| ModuleErrorMap::new());
+static MODULE_RECORD_MAP: LazyLock<ModuleRecordMap> = LazyLock::new(|| ModuleRecordMap::new());
 
 #[cxx::bridge]
 mod ffi {
@@ -99,9 +100,6 @@ mod ffi {
         fn LoadScriptHelper(args: &JsNativeFunctionArgs, is_source_module: bool) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
-        unsafe fn GetModuleRecord(path: &str, record: *mut JsModuleRecord) -> bool;
-
-        #[Self = "WScriptJsrt"]
         unsafe fn FetchImportedModule(
             referencing_module: JsModuleRecord,
             specifier: JsValueRef,
@@ -161,8 +159,13 @@ mod ffi {
         fn get_module_error_map() -> Box<ModuleErrorMap>;
         fn insert(self: &ModuleErrorMap, key: JsModuleRecord, value: ModuleState);
         fn clear(self: &ModuleErrorMap);
-
         fn get(self: &ModuleErrorMap, key: &JsModuleRecord) -> ModuleErrorMapContent;
+
+        type ModuleRecordMap;
+        fn get_module_record_map() -> Box<ModuleRecordMap>;
+        fn insert(self: &ModuleRecordMap, key: String, value: ModuleRecordEntry);
+        fn clear(self: &ModuleRecordMap);
+        fn get(self: &ModuleRecordMap, key: &str) -> ModuleRecordMapContent;
     }
 
     #[repr(i32)]
@@ -172,9 +175,23 @@ mod ffi {
         ErroredModule,
     }
 
+    #[namespace = "chakra_rs"]
     struct ModuleErrorMapContent {
         exists: bool,
         content: ModuleState,
+    }
+
+    #[namespace = "chakra_rs"]
+    #[derive(Clone, Default)]
+    struct ModuleRecordEntry {
+        record: JsModuleRecord,
+    }
+
+    #[namespace = "chakra_rs"]
+    #[derive(Clone, Default)]
+    struct ModuleRecordMapContent {
+        exists: bool,
+        content: ModuleRecordEntry,
     }
 }
 
@@ -431,16 +448,14 @@ impl WScript {
         );
         let specifier_str = args.arguments[1].to_string()?;
         let full_path = std::path::absolute(specifier_str)?;
-        let mut module_record = JsModuleRecord::default();
-        unsafe {
-            if !WScriptJsrt::GetModuleRecord(full_path.to_str().unwrap(), &raw mut module_record) {
-                anyhow::bail!(
-                    "Need to supply a path for an already loaded module for WScript.GetModuleNamespace"
-                );
-            }
-        }
+        let guard = MODULE_RECORD_MAP.0.read().unwrap();
+        let Some(module_record_entry) = guard.get(full_path.to_str().unwrap()) else {
+            anyhow::bail!(
+                "Need to supply a path for an already loaded module for WScript.GetModuleNamespace"
+            );
+        };
 
-        match ChakraRt::get_module_namespace(&module_record) {
+        match ChakraRt::get_module_namespace(&module_record_entry.record) {
             Ok(module_namespace) => Ok(module_namespace),
             Err(JsError::JsErrorModuleNotEvaluated) => {
                 anyhow::bail!("GetModuleNamespace called with un-evaluated module")
@@ -602,7 +617,9 @@ impl IntoResponse for anyhow::Error {
     }
 }
 
+// TODO: error can be a field in ModuleRecordEntry instead of its own hashmap
 type ModuleErrorMap = ConcurrentMap<JsModuleRecord, ModuleState>;
+type ModuleRecordMap = ConcurrentMap<String, ffi::ModuleRecordEntry>;
 
 #[derive(Clone)]
 struct ConcurrentMap<K, V>(Arc<RwLock<HashMap<K, V>>>);
@@ -642,6 +659,22 @@ impl ModuleErrorMap {
     }
 }
 
+impl ModuleRecordMap {
+    fn get(&self, key: &str) -> ffi::ModuleRecordMapContent {
+        let guard = self.0.read().unwrap();
+        guard
+            .get(key)
+            .map(|x| ffi::ModuleRecordMapContent {
+                exists: true,
+                content: x.clone(),
+            })
+            .unwrap_or_default()
+    }
+}
+
 fn get_module_error_map() -> Box<ModuleErrorMap> {
     Box::new(MODULE_ERROR_MAP.clone())
+}
+fn get_module_record_map() -> Box<ModuleRecordMap> {
+    Box::new(MODULE_RECORD_MAP.clone())
 }
