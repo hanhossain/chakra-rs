@@ -9,13 +9,18 @@ use crate::wscript_jsrt::ffi::{
     CVoid, ModuleState, WScriptJsrt_CallbackMessage, WScriptJsrt_ModuleMessage,
 };
 pub use ffi::{MessageQueue, WScriptJsrt};
+use std::collections::HashMap;
+use std::hash::Hash;
 use std::pin::Pin;
+use std::sync::{Arc, LazyLock, RwLock};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 #[cfg(debug_assertions)]
 const BUILD_TYPE_STRING: &str = "Debug";
 #[cfg(not(debug_assertions))]
 const BUILD_TYPE_STRING: &str = "Test";
+
+static MODULE_ERROR_MAP: LazyLock<ModuleErrorMap> = LazyLock::new(|| ModuleErrorMap::new());
 
 #[cxx::bridge]
 mod ffi {
@@ -119,8 +124,6 @@ mod ffi {
         fn Upcast(msg: UniquePtr<WScriptJsrt_CallbackMessage>) -> UniquePtr<MessageBase>;
 
         type ModuleState;
-        #[Self = WScriptJsrt]
-        fn GetModuleError(referencingModule: &JsModuleRecord) -> ModuleState;
 
         type WScriptJsrt_ModuleMessage;
         #[Self = "WScriptJsrt_ModuleMessage"]
@@ -153,6 +156,13 @@ mod ffi {
 
         #[Self = "WScript"]
         unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid);
+
+        type ModuleErrorMap;
+        fn get_module_error_map() -> Box<ModuleErrorMap>;
+        fn insert(self: &ModuleErrorMap, key: JsModuleRecord, value: ModuleState);
+        fn clear(self: &ModuleErrorMap);
+
+        fn get(self: &ModuleErrorMap, key: &JsModuleRecord) -> ModuleErrorMapContent;
     }
 
     #[repr(i32)]
@@ -160,6 +170,11 @@ mod ffi {
         RootModule,
         ImportedModule,
         ErroredModule,
+    }
+
+    struct ModuleErrorMapContent {
+        exists: bool,
+        content: ModuleState,
     }
 }
 
@@ -507,7 +522,10 @@ impl WScript {
             }
         }
 
-        if WScriptJsrt::GetModuleError(&referencing_module) != ModuleState::ErroredModule {
+        let guard = MODULE_ERROR_MAP.0.read().unwrap();
+        if let Some(module_error) = guard.get(&referencing_module)
+            && *module_error != ModuleState::ErroredModule
+        {
             let module_message =
                 WScriptJsrt_ModuleMessage::New(referencing_module, JsValueRef::default());
             let msg = WScriptJsrt_ModuleMessage::Upcast(module_message);
@@ -582,4 +600,48 @@ impl IntoResponse for anyhow::Error {
         }
         ChakraRt::get_undefined_value().unwrap_or_default()
     }
+}
+
+type ModuleErrorMap = ConcurrentMap<JsModuleRecord, ModuleState>;
+
+#[derive(Clone)]
+struct ConcurrentMap<K, V>(Arc<RwLock<HashMap<K, V>>>);
+
+impl<K, V> ConcurrentMap<K, V>
+where
+    K: Eq + Hash,
+{
+    fn new() -> Self {
+        ConcurrentMap(Arc::new(RwLock::new(HashMap::new())))
+    }
+
+    fn insert(&self, key: K, value: V) {
+        let mut guard = self.0.write().unwrap();
+        guard.insert(key, value);
+    }
+
+    fn clear(&self) {
+        let mut guard = self.0.write().unwrap();
+        guard.clear();
+    }
+}
+
+impl ModuleErrorMap {
+    fn get(&self, key: &JsModuleRecord) -> ffi::ModuleErrorMapContent {
+        let guard = self.0.read().unwrap();
+        match guard.get(key) {
+            Some(x) => ffi::ModuleErrorMapContent {
+                exists: true,
+                content: *x,
+            },
+            None => ffi::ModuleErrorMapContent {
+                exists: false,
+                content: ModuleState::RootModule,
+            },
+        }
+    }
+}
+
+fn get_module_error_map() -> Box<ModuleErrorMap> {
+    Box::new(MODULE_ERROR_MAP.clone())
 }

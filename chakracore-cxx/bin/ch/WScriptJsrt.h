@@ -122,7 +122,6 @@ private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
 public:
     static bool GetModuleRecord(rust::Str path, JsModuleRecord *record);
-    static ModuleState GetModuleError(const JsModuleRecord &referencingModule);
     static JsValueRef CALLBACK SetTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
 
@@ -145,7 +144,6 @@ private:
     static std::size_t sourceContext_;
     static std::map<std::filesystem::path, JsModuleRecord> moduleRecordMap;
     static std::map<JsModuleRecord, std::filesystem::path> moduleDirMap;
-    static std::map<JsModuleRecord, ModuleState> moduleErrMap;
 };
 
 // type aliases for rust ffi
