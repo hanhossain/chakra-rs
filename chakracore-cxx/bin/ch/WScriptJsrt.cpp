@@ -37,7 +37,6 @@ namespace fs = std::filesystem;
 
 unsigned int MessageBase::s_messageCount = 0;
 MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
-std::map<fs::path, JsModuleRecord>  WScriptJsrt::moduleRecordMap;
 std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;
 std::size_t WScriptJsrt::sourceContext_ = 0;
 
@@ -119,19 +118,6 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view e
     }
 }
 
-bool WScriptJsrt::GetModuleRecord(rust::Str path, JsModuleRecord *record)
-{
-    fs::path fullPath{static_cast<std::string_view>(path)};
-    auto moduleEntry = moduleRecordMap.find(fullPath);
-    if (moduleEntry == moduleRecordMap.end())
-    {
-        return false;
-    }
-
-    *record = moduleEntry->second;
-    return true;
-}
-
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
@@ -202,13 +188,13 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fi
     auto span = chakra::Span::create("WScriptJsrt::LoadModuleFromString");
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
-    std::string_view moduleRecordKey = fullName;
-    auto moduleRecordEntry = moduleRecordMap.find(moduleRecordKey);
+    const std::string& moduleRecordKey = fullName;
+    auto moduleRecordMapContent = chakra_rs::get_module_record_map()->get(moduleRecordKey);
     JsErrorCode errorCode = JsNoError;
 
     // we need to create a new moduleRecord if the specifier (fileName) is not found;
     // otherwise we'll use the old one.
-    if (moduleRecordEntry == moduleRecordMap.end())
+    if (!moduleRecordMapContent.exists)
     {
         JsValueRef specifier = nullptr;
         if (isFile)
@@ -224,14 +210,14 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fi
         {
             moduleDirMap[requestModule] = fs::path(fullName).parent_path();
 
-            moduleRecordMap[moduleRecordKey] = requestModule;
+            chakra_rs::get_module_record_map()->insert(moduleRecordKey, chakra_rs::ModuleRecordEntry { requestModule });
             auto module_error_map = chakra_rs::get_module_error_map();
             module_error_map->insert(requestModule, RootModule);
         }
     }
     else
     {
-        requestModule = moduleRecordEntry->second;
+        requestModule = moduleRecordMapContent.content.record;
     }
     IfJsrtErrorFailLogAndRetErrorCode(errorCode);
     JsValueRef errorObject = JS_INVALID_REFERENCE;
@@ -458,7 +444,7 @@ bool WScriptJsrt::Uninitialize()
     // moduleRecordMap is a global std::map, its destructor may access overridden
     // "operator delete" / global HeapAllocator::Instance. Clear it manually here
     // to avoid worrying about global destructor order.
-    moduleRecordMap.clear();
+    chakra_rs::get_module_record_map()->clear();
     moduleDirMap.clear();
     chakra_rs::get_module_error_map()->clear();
 
@@ -983,9 +969,9 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
             chakra::Logger::error(std::format("Caught exception: {}", e.what()));
             if (!HostConfigFlags::GetConfig().host.mute_host_error_msg)
             {
-                auto actualModuleRecord = moduleRecordMap.find(fullPath_.value());
-                auto error_map_content = chakra_rs::get_module_error_map()->get(actualModuleRecord->second);
-                if (actualModuleRecord == moduleRecordMap.end() || (error_map_content.exists && error_map_content.content == RootModule))
+                auto actualModuleRecord = chakra_rs::get_module_record_map()->get(fullPath_.value().native());
+                auto error_map_content = chakra_rs::get_module_error_map()->get(actualModuleRecord.content.record);
+                if (!actualModuleRecord.exists || (error_map_content.exists && error_map_content.content == RootModule))
                 {
                     chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
                 }
@@ -1019,10 +1005,11 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
         return JsErrorInvalidArgument;
     }
 
-    auto moduleEntry = moduleRecordMap.find(fullPath);
-    if (moduleEntry != moduleRecordMap.end())
+    auto moduleEntry = chakra_rs::get_module_record_map()->get(fullPath.native());
+    // auto moduleEntry = moduleRecordMap.find(fullPath);
+    if (moduleEntry.exists)
     {
-        *dependentModuleRecord = moduleEntry->second;
+        *dependentModuleRecord = moduleEntry.content.record;
         return JsNoError;
     }
 
@@ -1030,7 +1017,7 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     if (errorCode == JsNoError)
     {
         moduleDirMap[moduleRecord] = fullPath.parent_path();
-        moduleRecordMap[fullPath] = moduleRecord;
+        chakra_rs::get_module_record_map()->insert(fullPath.native(), chakra_rs::ModuleRecordEntry { moduleRecord });
         auto module_error_map = chakra_rs::get_module_error_map();
         module_error_map->insert(moduleRecord, ImportedModule);
         ModuleMessage* moduleMessage = WScriptJsrt::ModuleMessage::Create(referencingModule, specifier, fullPath);

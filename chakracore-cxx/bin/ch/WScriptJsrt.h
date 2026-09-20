@@ -121,7 +121,6 @@ public:
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
 public:
-    static bool GetModuleRecord(rust::Str path, JsModuleRecord *record);
     static JsValueRef CALLBACK SetTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
 
@@ -142,7 +141,6 @@ private:
 
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;
-    static std::map<std::filesystem::path, JsModuleRecord> moduleRecordMap;
     static std::map<JsModuleRecord, std::filesystem::path> moduleDirMap;
 };
 
