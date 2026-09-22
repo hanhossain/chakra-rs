@@ -102,13 +102,6 @@ mod ffi {
         fn LoadScriptHelper(args: &JsNativeFunctionArgs, is_source_module: bool) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
-        unsafe fn FetchImportedModule(
-            referencing_module: JsModuleRecord,
-            specifier: JsValueRef,
-            dependent_module_record: *mut JsModuleRecord,
-        ) -> JsErrorCode;
-
-        #[Self = "WScriptJsrt"]
         unsafe fn FetchImportedModuleHelper(
             referencing_module: JsModuleRecord,
             specifier: JsValueRef,
@@ -174,7 +167,6 @@ mod ffi {
         fn get_module_directory_map() -> Box<ModuleDirectoryMap>;
         fn insert(self: &ModuleDirectoryMap, key: JsModuleRecord, value: String);
         fn clear(self: &ModuleDirectoryMap);
-        fn get(self: &ModuleDirectoryMap, key: &JsModuleRecord) -> ModuleDirectoryMapContent;
     }
 
     #[repr(i32)]
@@ -201,13 +193,6 @@ mod ffi {
     struct ModuleRecordMapContent {
         exists: bool,
         content: ModuleRecordEntry,
-    }
-
-    #[namespace = "chakra_rs"]
-    #[derive(Clone, Default)]
-    struct ModuleDirectoryMapContent {
-        exists: bool,
-        content: String,
     }
 }
 
@@ -499,7 +484,7 @@ impl WScript {
             ChakraRTInterface::JsSetModuleHostInfo(
                 JsModuleRecord::default(),
                 JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleCallback,
-                WScriptJsrt::FetchImportedModule as _,
+                WScript::fetch_imported_module as _,
             )
             .as_result()?;
             ChakraRTInterface::JsSetModuleHostInfo(
@@ -632,6 +617,32 @@ impl WScript {
             )
         }
     }
+
+    /// Callback from chakracore to fetch dependent module. In the test harness,
+    /// we are not doing any translation, just treat the specifier as fileName.
+    /// While this call will come back directly from ParseModuleSource, the additional
+    /// task are treated as Promise that will be executed later.
+    unsafe fn fetch_imported_module(
+        referencing_module: JsModuleRecord,
+        specifier: JsValueRef,
+        dependent_module_record: *mut JsModuleRecord,
+    ) -> JsErrorCode {
+        let directory = {
+            let guard = MODULE_DIRECTORY_MAP.0.read().unwrap();
+            guard
+                .get(&referencing_module)
+                .map(|x| x.clone())
+                .unwrap_or_default()
+        };
+        unsafe {
+            WScriptJsrt::FetchImportedModuleHelper(
+                JsModuleRecord::default(),
+                specifier,
+                dependent_module_record,
+                &directory,
+            )
+        }
+    }
 }
 
 impl IntoResponse for anyhow::Error {
@@ -703,19 +714,6 @@ impl ModuleRecordMap {
             .map(|x| ffi::ModuleRecordMapContent {
                 exists: true,
                 content: x.clone(),
-            })
-            .unwrap_or_default()
-    }
-}
-
-impl ModuleDirectoryMap {
-    fn get(&self, key: &JsModuleRecord) -> ffi::ModuleDirectoryMapContent {
-        let guard = self.0.read().unwrap();
-        guard
-            .get(key)
-            .map(|s| ffi::ModuleDirectoryMapContent {
-                exists: true,
-                content: s.clone(),
             })
             .unwrap_or_default()
     }

@@ -1027,14 +1027,3 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     }
     return errorCode;
 }
-
-// Callback from chakracore to fetch dependent module. In the test harness,
-// we are not doing any translation, just treat the specifier as fileName.
-// While this call will come back directly from ParseModuleSource, the additional
-// task are treated as Promise that will be executed later.
-JsErrorCode WScriptJsrt::FetchImportedModule(_In_ JsModuleRecord referencingModule,
-    _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord)
-{
-    auto result = chakra_rs::get_module_directory_map()->get(referencingModule);
-    return FetchImportedModuleHelper(referencingModule, specifier, dependentModuleRecord, result.exists ? result.content : "");
-}

@@ -81,8 +81,6 @@ public:
     static void AddMessageQueue(MessageQueue *messageQueue);
     static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
 
-    static JsErrorCode FetchImportedModule(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
-
     static const char * ConvertErrorCodeToMessage(JsErrorCode errorCode)
     {
         switch (errorCode)
