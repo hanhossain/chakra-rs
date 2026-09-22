@@ -82,7 +82,6 @@ public:
     static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
 
     static JsErrorCode FetchImportedModule(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
-    static JsErrorCode FetchImportedModuleFromScript(_In_ JsSourceContext dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
 
     static const char * ConvertErrorCodeToMessage(JsErrorCode errorCode)
     {
@@ -134,11 +133,10 @@ public:
     static JsValueRef CALLBACK GetReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK GetProxyPropertiesCallback(const chakra_rs::JsNativeFunctionArgs &args);
 
-private:
     static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier,
                                                  JsModuleRecord* dependentModuleRecord,
                                                  rust::Str refdir);
-
+private:
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;
 };
