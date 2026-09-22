@@ -109,10 +109,11 @@ mod ffi {
         ) -> JsErrorCode;
 
         #[Self = "WScriptJsrt"]
-        unsafe fn FetchImportedModuleFromScript(
-            dwReferencingSourceContext: JsSourceContext,
+        unsafe fn FetchImportedModuleHelper(
+            referencing_module: JsModuleRecord,
             specifier: JsValueRef,
             dependentModuleRecord: *mut JsModuleRecord,
+            refdir: &str,
         ) -> JsErrorCode;
 
         #[cxx_name = "WScriptJsrt_CallbackMessage"]
@@ -504,7 +505,7 @@ impl WScript {
             ChakraRTInterface::JsSetModuleHostInfo(
                 JsModuleRecord::default(),
                 JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleFromScriptCallback,
-                WScriptJsrt::FetchImportedModuleFromScript as _,
+                WScript::fetch_imported_module_from_script as _,
             )
             .as_result()?;
             ChakraRTInterface::JsSetModuleHostInfo(
@@ -611,6 +612,25 @@ impl WScript {
         }
 
         JsErrorCode::JsNoError
+    }
+
+    /// Callback from chakracore to fetch module dynamically during runtime. In the test harness,
+    /// we are not doing any translation, just treat the specifier as fileName.
+    /// While this call will come back directly from runtime script or module code, the additional
+    /// task can be scheduled asynchronously that executed later.
+    unsafe fn fetch_imported_module_from_script(
+        #[allow(unused_variables)] referencing_source_context: JsSourceContext,
+        specifier: JsValueRef,
+        dependent_module_record: *mut JsModuleRecord,
+    ) -> JsErrorCode {
+        unsafe {
+            WScriptJsrt::FetchImportedModuleHelper(
+                JsModuleRecord::default(),
+                specifier,
+                dependent_module_record,
+                "",
+            )
+        }
     }
 }
 
