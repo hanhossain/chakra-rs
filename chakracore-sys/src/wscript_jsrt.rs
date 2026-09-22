@@ -22,6 +22,8 @@ const BUILD_TYPE_STRING: &str = "Test";
 
 static MODULE_ERROR_MAP: LazyLock<ModuleErrorMap> = LazyLock::new(|| ModuleErrorMap::new());
 static MODULE_RECORD_MAP: LazyLock<ModuleRecordMap> = LazyLock::new(|| ModuleRecordMap::new());
+static MODULE_DIRECTORY_MAP: LazyLock<ModuleDirectoryMap> =
+    LazyLock::new(|| ModuleDirectoryMap::new());
 
 #[cxx::bridge]
 mod ffi {
@@ -166,6 +168,12 @@ mod ffi {
         fn insert(self: &ModuleRecordMap, key: String, value: ModuleRecordEntry);
         fn clear(self: &ModuleRecordMap);
         fn get(self: &ModuleRecordMap, key: &str) -> ModuleRecordMapContent;
+
+        type ModuleDirectoryMap;
+        fn get_module_directory_map() -> Box<ModuleDirectoryMap>;
+        fn insert(self: &ModuleDirectoryMap, key: JsModuleRecord, value: String);
+        fn clear(self: &ModuleDirectoryMap);
+        fn get(self: &ModuleDirectoryMap, key: &JsModuleRecord) -> ModuleDirectoryMapContent;
     }
 
     #[repr(i32)]
@@ -192,6 +200,13 @@ mod ffi {
     struct ModuleRecordMapContent {
         exists: bool,
         content: ModuleRecordEntry,
+    }
+
+    #[namespace = "chakra_rs"]
+    #[derive(Clone, Default)]
+    struct ModuleDirectoryMapContent {
+        exists: bool,
+        content: String,
     }
 }
 
@@ -620,6 +635,7 @@ impl IntoResponse for anyhow::Error {
 // TODO: error can be a field in ModuleRecordEntry instead of its own hashmap
 type ModuleErrorMap = ConcurrentMap<JsModuleRecord, ModuleState>;
 type ModuleRecordMap = ConcurrentMap<String, ffi::ModuleRecordEntry>;
+type ModuleDirectoryMap = ConcurrentMap<JsModuleRecord, String>;
 
 #[derive(Clone)]
 struct ConcurrentMap<K, V>(Arc<RwLock<HashMap<K, V>>>);
@@ -672,9 +688,27 @@ impl ModuleRecordMap {
     }
 }
 
+impl ModuleDirectoryMap {
+    fn get(&self, key: &JsModuleRecord) -> ffi::ModuleDirectoryMapContent {
+        let guard = self.0.read().unwrap();
+        guard
+            .get(key)
+            .map(|s| ffi::ModuleDirectoryMapContent {
+                exists: true,
+                content: s.clone(),
+            })
+            .unwrap_or_default()
+    }
+}
+
 fn get_module_error_map() -> Box<ModuleErrorMap> {
     Box::new(MODULE_ERROR_MAP.clone())
 }
+
 fn get_module_record_map() -> Box<ModuleRecordMap> {
     Box::new(MODULE_RECORD_MAP.clone())
+}
+
+fn get_module_directory_map() -> Box<ModuleDirectoryMap> {
+    Box::new(MODULE_DIRECTORY_MAP.clone())
 }

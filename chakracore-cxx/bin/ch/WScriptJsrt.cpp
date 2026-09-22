@@ -37,7 +37,6 @@ namespace fs = std::filesystem;
 
 unsigned int MessageBase::s_messageCount = 0;
 MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
-std::map<JsModuleRecord, fs::path> WScriptJsrt::moduleDirMap;
 std::size_t WScriptJsrt::sourceContext_ = 0;
 
 std::size_t WScriptJsrt::GetNextSourceContext()
@@ -208,8 +207,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fi
         }
         if (errorCode == JsNoError)
         {
-            moduleDirMap[requestModule] = fs::path(fullName).parent_path();
-
+            chakra_rs::get_module_directory_map()->insert(requestModule, fs::path(fullName).parent_path().native());
             chakra_rs::get_module_record_map()->insert(moduleRecordKey, chakra_rs::ModuleRecordEntry { requestModule });
             auto module_error_map = chakra_rs::get_module_error_map();
             module_error_map->insert(requestModule, RootModule);
@@ -445,7 +443,7 @@ bool WScriptJsrt::Uninitialize()
     // "operator delete" / global HeapAllocator::Instance. Clear it manually here
     // to avoid worrying about global destructor order.
     chakra_rs::get_module_record_map()->clear();
-    moduleDirMap.clear();
+    chakra_rs::get_module_directory_map()->clear();
     chakra_rs::get_module_error_map()->clear();
 
     auto& threadData = GetRuntimeThreadLocalData().threadData;
@@ -983,7 +981,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 }
 
 JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingModule,
-    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const std::optional<fs::path> &refdir)
+    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, rust::Str refdir)
 {
     JsModuleRecord moduleRecord = JS_INVALID_REFERENCE;
     rust::String specifierStr;
@@ -994,7 +992,7 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
         return ec;
     }
 
-    fs::path specifierFullPath = refdir.value_or(fs::path {});
+    fs::path specifierFullPath = static_cast<std::string_view>(refdir);
     specifierFullPath /= specifierStr.c_str();
 
     std::error_code ec;
@@ -1006,7 +1004,6 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     }
 
     auto moduleEntry = chakra_rs::get_module_record_map()->get(fullPath.native());
-    // auto moduleEntry = moduleRecordMap.find(fullPath);
     if (moduleEntry.exists)
     {
         *dependentModuleRecord = moduleEntry.content.record;
@@ -1016,7 +1013,7 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     JsErrorCode errorCode = ChakraRTInterface::JsInitializeModuleRecord(referencingModule, specifier, &moduleRecord);
     if (errorCode == JsNoError)
     {
-        moduleDirMap[moduleRecord] = fullPath.parent_path();
+        chakra_rs::get_module_directory_map()->insert(moduleRecord, fullPath.parent_path().native());
         chakra_rs::get_module_record_map()->insert(fullPath.native(), chakra_rs::ModuleRecordEntry { moduleRecord });
         auto module_error_map = chakra_rs::get_module_error_map();
         module_error_map->insert(moduleRecord, ImportedModule);
@@ -1038,14 +1035,8 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
 JsErrorCode WScriptJsrt::FetchImportedModule(_In_ JsModuleRecord referencingModule,
     _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord)
 {
-    auto moduleDirEntry = moduleDirMap.find(referencingModule);
-    if (moduleDirEntry != moduleDirMap.end())
-    {
-        auto dir = moduleDirEntry->second;
-        return FetchImportedModuleHelper(referencingModule, specifier, dependentModuleRecord, dir);
-    }
-
-    return FetchImportedModuleHelper(referencingModule, specifier, dependentModuleRecord);
+    auto result = chakra_rs::get_module_directory_map()->get(referencingModule);
+    return FetchImportedModuleHelper(referencingModule, specifier, dependentModuleRecord, result.exists ? result.content : "");
 }
 
 // Callback from chakracore to fetch module dynamically during runtime. In the test harness,
@@ -1055,5 +1046,5 @@ JsErrorCode WScriptJsrt::FetchImportedModule(_In_ JsModuleRecord referencingModu
 JsErrorCode WScriptJsrt::FetchImportedModuleFromScript(_In_ JsSourceContext dwReferencingSourceContext,
     _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord)
 {
-    return FetchImportedModuleHelper(nullptr, specifier, dependentModuleRecord);
+    return FetchImportedModuleHelper(nullptr, specifier, dependentModuleRecord, "");
 }

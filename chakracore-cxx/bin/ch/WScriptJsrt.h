@@ -137,11 +137,10 @@ public:
 private:
     static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier,
                                                  JsModuleRecord* dependentModuleRecord,
-                                                 const std::optional<std::filesystem::path>& refdir = std::nullopt);
+                                                 rust::Str refdir);
 
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;
-    static std::map<JsModuleRecord, std::filesystem::path> moduleDirMap;
 };
 
 // type aliases for rust ffi
