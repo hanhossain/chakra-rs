@@ -102,15 +102,6 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         fn LoadScriptHelper(args: &JsNativeFunctionArgs, is_source_module: bool) -> JsValueRef;
 
-        #[Self = "WScriptJsrt"]
-        unsafe fn FetchImportedModuleHelper(
-            referencing_module: JsModuleRecord,
-            specifier: JsValueRef,
-            dependentModuleRecord: *mut JsModuleRecord,
-            specifier_full_path: &String,
-            specifier_parent_path: &String,
-        ) -> JsErrorCode;
-
         #[cxx_name = "WScriptJsrt_CallbackMessage"]
         type WScriptJsrt_CallbackMessage;
         #[Self = "WScriptJsrt_CallbackMessage"]
@@ -126,6 +117,12 @@ mod ffi {
         fn New(
             module: JsModuleRecord,
             specifier: JsValueRef,
+        ) -> UniquePtr<WScriptJsrt_ModuleMessage>;
+        #[Self = "WScriptJsrt_ModuleMessage"]
+        fn NewWithPath(
+            module: JsModuleRecord,
+            specifier: JsValueRef,
+            full_path: &str,
         ) -> UniquePtr<WScriptJsrt_ModuleMessage>;
         #[Self = "WScriptJsrt_ModuleMessage"]
         fn Upcast(msg: UniquePtr<WScriptJsrt_ModuleMessage>) -> UniquePtr<MessageBase>;
@@ -766,15 +763,54 @@ unsafe fn fetch_imported_module_helper(
         .unwrap_or_default()
         .to_owned();
 
+    {
+        let lease = MODULE_RECORD_MAP.0.read().unwrap();
+        if let Some(entry) = lease.get(abs_path.to_str().unwrap_or_default()) {
+            unsafe {
+                *dependent_module_record = entry.record.clone();
+                return Ok(());
+            }
+        }
+    }
+
+    let mut module_record = JsModuleRecord::default();
     unsafe {
-        WScriptJsrt::FetchImportedModuleHelper(
-            referencing_module,
-            specifier,
-            dependent_module_record,
-            &abs_path.to_str().unwrap_or_default().to_owned(),
-            &parent_path,
+        ChakraRTInterface::JsInitializeModuleRecord(
+            referencing_module.clone(),
+            specifier.clone(),
+            &raw mut module_record,
         )
         .as_result()?;
+    }
+
+    MODULE_DIRECTORY_MAP
+        .0
+        .write()
+        .unwrap()
+        .insert(module_record.clone(), parent_path);
+
+    MODULE_RECORD_MAP.0.write().unwrap().insert(
+        abs_path.to_str().unwrap_or_default().to_owned(),
+        ffi::ModuleRecordEntry {
+            record: module_record.clone(),
+        },
+    );
+
+    MODULE_ERROR_MAP
+        .0
+        .write()
+        .unwrap()
+        .insert(module_record.clone(), ModuleState::ImportedModule);
+
+    let module_message = WScriptJsrt_ModuleMessage::NewWithPath(
+        referencing_module,
+        specifier,
+        abs_path.to_str().unwrap_or_default(),
+    );
+    let module_message = WScriptJsrt_ModuleMessage::Upcast(module_message);
+    unsafe {
+        WScriptJsrt::PushMessage(module_message.into_raw());
+        *dependent_module_record = module_record;
     }
 
     Ok(())
