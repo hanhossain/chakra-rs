@@ -981,29 +981,12 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 }
 
 JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingModule,
-    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, rust::Str refdir)
+    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const rust::String &specifierFullPath, const rust::String &specifierParentPath)
 {
+    auto span = chakra::Span::create();
     JsModuleRecord moduleRecord = JS_INVALID_REFERENCE;
-    rust::String specifierStr;
-    *dependentModuleRecord = nullptr;
 
-    if (const auto ec = ChakraRTInterface::JsToString(specifier, specifierStr); ec != JsNoError)
-    {
-        return ec;
-    }
-
-    fs::path specifierFullPath = static_cast<std::string_view>(refdir);
-    specifierFullPath /= specifierStr.c_str();
-
-    std::error_code ec;
-    const auto fullPath = fs::absolute(specifierFullPath, ec).lexically_normal();
-
-    if (ec)
-    {
-        return JsErrorInvalidArgument;
-    }
-
-    auto moduleEntry = chakra_rs::get_module_record_map()->get(fullPath.native());
+    auto moduleEntry = chakra_rs::get_module_record_map()->get(specifierFullPath);
     if (moduleEntry.exists)
     {
         *dependentModuleRecord = moduleEntry.content.record;
@@ -1013,11 +996,11 @@ JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingMod
     JsErrorCode errorCode = ChakraRTInterface::JsInitializeModuleRecord(referencingModule, specifier, &moduleRecord);
     if (errorCode == JsNoError)
     {
-        chakra_rs::get_module_directory_map()->insert(moduleRecord, fullPath.parent_path().native());
-        chakra_rs::get_module_record_map()->insert(fullPath.native(), chakra_rs::ModuleRecordEntry { moduleRecord });
+        chakra_rs::get_module_directory_map()->insert(moduleRecord, specifierParentPath);
+        chakra_rs::get_module_record_map()->insert(specifierFullPath, chakra_rs::ModuleRecordEntry { moduleRecord });
         auto module_error_map = chakra_rs::get_module_error_map();
         module_error_map->insert(moduleRecord, ImportedModule);
-        ModuleMessage* moduleMessage = WScriptJsrt::ModuleMessage::Create(referencingModule, specifier, fullPath);
+        ModuleMessage* moduleMessage = WScriptJsrt::ModuleMessage::Create(referencingModule, specifier, static_cast<std::string>(specifierFullPath));
         if (moduleMessage == nullptr)
         {
             return JsErrorOutOfMemory;
