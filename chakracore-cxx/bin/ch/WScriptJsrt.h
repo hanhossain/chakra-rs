@@ -133,7 +133,7 @@ public:
 
     static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier,
                                                  JsModuleRecord* dependentModuleRecord,
-                                                 rust::Str refdir);
+                                                 const rust::String &specifierFullPath, const rust::String &specifierParentPath);
 private:
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;

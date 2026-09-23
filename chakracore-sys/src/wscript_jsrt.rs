@@ -11,6 +11,7 @@ use crate::wscript_jsrt::ffi::{
 pub use ffi::{MessageQueue, WScriptJsrt};
 use std::collections::HashMap;
 use std::hash::Hash;
+use std::path::PathBuf;
 use std::pin::Pin;
 use std::sync::{Arc, LazyLock, RwLock};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
@@ -106,7 +107,8 @@ mod ffi {
             referencing_module: JsModuleRecord,
             specifier: JsValueRef,
             dependentModuleRecord: *mut JsModuleRecord,
-            refdir: &str,
+            specifier_full_path: &String,
+            specifier_parent_path: &String,
         ) -> JsErrorCode;
 
         #[cxx_name = "WScriptJsrt_CallbackMessage"]
@@ -609,12 +611,16 @@ impl WScript {
         dependent_module_record: *mut JsModuleRecord,
     ) -> JsErrorCode {
         unsafe {
-            WScriptJsrt::FetchImportedModuleHelper(
+            match fetch_imported_module_helper(
                 JsModuleRecord::default(),
                 specifier,
                 dependent_module_record,
                 "",
-            )
+            ) {
+                Ok(()) => JsErrorCode::JsNoError,
+                Err(FetchImportedModuleHelperError::JsError(err)) => err.into(),
+                Err(FetchImportedModuleHelperError::IoError(_)) => JsErrorCode::JsErrorFatal,
+            }
         }
     }
 
@@ -635,12 +641,16 @@ impl WScript {
                 .unwrap_or_default()
         };
         unsafe {
-            WScriptJsrt::FetchImportedModuleHelper(
+            match fetch_imported_module_helper(
                 JsModuleRecord::default(),
                 specifier,
                 dependent_module_record,
                 &directory,
-            )
+            ) {
+                Ok(()) => JsErrorCode::JsNoError,
+                Err(FetchImportedModuleHelperError::JsError(err)) => err.into(),
+                Err(FetchImportedModuleHelperError::IoError(_)) => JsErrorCode::JsErrorFatal,
+            }
         }
     }
 }
@@ -729,4 +739,51 @@ fn get_module_record_map() -> Box<ModuleRecordMap> {
 
 fn get_module_directory_map() -> Box<ModuleDirectoryMap> {
     Box::new(MODULE_DIRECTORY_MAP.clone())
+}
+
+#[tracing::instrument(skip_all, fields(ref_dir), err)]
+unsafe fn fetch_imported_module_helper(
+    referencing_module: JsModuleRecord,
+    specifier: JsValueRef,
+    dependent_module_record: *mut JsModuleRecord,
+    ref_dir: &str,
+) -> Result<(), FetchImportedModuleHelperError> {
+    unsafe {
+        *dependent_module_record = JsModuleRecord::default();
+    }
+    let specifier_str = specifier.to_string()?;
+    let mut specifier_full_path = PathBuf::from(ref_dir);
+    specifier_full_path.push(&specifier_str);
+    let abs_path = std::fs::canonicalize(&specifier_full_path).or_else(|err| {
+        tracing::warn!(?specifier_full_path, ?err, "Falling back to absolute path.");
+        std::path::absolute(&specifier_full_path)
+    })?;
+    tracing::trace!(specifier_str, ?abs_path);
+    let parent_path = abs_path
+        .parent()
+        .map(|x| x.to_str())
+        .flatten()
+        .unwrap_or_default()
+        .to_owned();
+
+    unsafe {
+        WScriptJsrt::FetchImportedModuleHelper(
+            referencing_module,
+            specifier,
+            dependent_module_record,
+            &abs_path.to_str().unwrap_or_default().to_owned(),
+            &parent_path,
+        )
+        .as_result()?;
+    }
+
+    Ok(())
+}
+
+#[derive(thiserror::Error, Debug)]
+enum FetchImportedModuleHelperError {
+    #[error(transparent)]
+    JsError(#[from] JsError),
+    #[error(transparent)]
+    IoError(#[from] std::io::Error),
 }
