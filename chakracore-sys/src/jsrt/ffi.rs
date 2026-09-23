@@ -445,3 +445,70 @@ impl JsErrorCode {
         }
     }
 }
+
+impl From<JsError> for JsErrorCode {
+    fn from(value: JsError) -> Self {
+        match value {
+            JsError::JsErrorCategoryUsage => JsErrorCode::JsErrorCategoryUsage,
+            JsError::JsErrorInvalidArgument => JsErrorCode::JsErrorInvalidArgument,
+            JsError::JsErrorNullArgument => JsErrorCode::JsErrorNullArgument,
+            JsError::JsErrorNoCurrentContext => JsErrorCode::JsErrorNoCurrentContext,
+            JsError::JsErrorInExceptionState => JsErrorCode::JsErrorInExceptionState,
+            JsError::JsErrorNotImplemented => JsErrorCode::JsErrorNotImplemented,
+            JsError::JsErrorWrongThread => JsErrorCode::JsErrorWrongThread,
+            JsError::JsErrorRuntimeInUse => JsErrorCode::JsErrorRuntimeInUse,
+            JsError::JsErrorBadSerializedScript => JsErrorCode::JsErrorBadSerializedScript,
+            JsError::JsErrorInDisabledState => JsErrorCode::JsErrorInDisabledState,
+            JsError::JsErrorCannotDisableExecution => JsErrorCode::JsErrorCannotDisableExecution,
+            JsError::JsErrorHeapEnumInProgress => JsErrorCode::JsErrorHeapEnumInProgress,
+            JsError::JsErrorArgumentNotObject => JsErrorCode::JsErrorArgumentNotObject,
+            JsError::JsErrorInProfileCallback => JsErrorCode::JsErrorInProfileCallback,
+            JsError::JsErrorInThreadServiceCallback => JsErrorCode::JsErrorInThreadServiceCallback,
+            JsError::JsErrorCannotSerializeDebugScript => {
+                JsErrorCode::JsErrorCannotSerializeDebugScript
+            }
+            JsError::JsErrorAlreadyDebuggingContext => JsErrorCode::JsErrorAlreadyDebuggingContext,
+            JsError::JsErrorAlreadyProfilingContext => JsErrorCode::JsErrorAlreadyProfilingContext,
+            JsError::JsErrorIdleNotEnabled => JsErrorCode::JsErrorIdleNotEnabled,
+            JsError::JsCannotSetProjectionEnqueueCallback => {
+                JsErrorCode::JsCannotSetProjectionEnqueueCallback
+            }
+            JsError::JsErrorCannotStartProjection => JsErrorCode::JsErrorCannotStartProjection,
+            JsError::JsErrorInObjectBeforeCollectCallback => {
+                JsErrorCode::JsErrorInObjectBeforeCollectCallback
+            }
+            JsError::JsErrorObjectNotInspectable => JsErrorCode::JsErrorObjectNotInspectable,
+            JsError::JsErrorPropertyNotSymbol => JsErrorCode::JsErrorPropertyNotSymbol,
+            JsError::JsErrorPropertyNotString => JsErrorCode::JsErrorPropertyNotString,
+            JsError::JsErrorInvalidContext => JsErrorCode::JsErrorInvalidContext,
+            JsError::JsInvalidModuleHostInfoKind => JsErrorCode::JsInvalidModuleHostInfoKind,
+            JsError::JsErrorModuleParsed => JsErrorCode::JsErrorModuleParsed,
+            JsError::JsNoWeakRefRequired => JsErrorCode::JsNoWeakRefRequired,
+            JsError::JsErrorPromisePending => JsErrorCode::JsErrorPromisePending,
+            JsError::JsErrorModuleNotEvaluated => JsErrorCode::JsErrorModuleNotEvaluated,
+            JsError::JsErrorCategoryEngine => JsErrorCode::JsErrorCategoryEngine,
+            JsError::JsErrorOutOfMemory => JsErrorCode::JsErrorOutOfMemory,
+            JsError::JsErrorBadFPUState => JsErrorCode::JsErrorBadFPUState,
+            JsError::JsErrorCategoryScript => JsErrorCode::JsErrorCategoryScript,
+            JsError::JsErrorScriptException => JsErrorCode::JsErrorScriptException,
+            JsError::JsErrorScriptCompile => JsErrorCode::JsErrorScriptCompile,
+            JsError::JsErrorScriptTerminated => JsErrorCode::JsErrorScriptTerminated,
+            JsError::JsErrorScriptEvalDisabled => JsErrorCode::JsErrorScriptEvalDisabled,
+            JsError::JsErrorCategoryFatal => JsErrorCode::JsErrorCategoryFatal,
+            JsError::JsErrorFatal => JsErrorCode::JsErrorFatal,
+            JsError::JsErrorWrongRuntime => JsErrorCode::JsErrorWrongRuntime,
+            JsError::JsErrorCategoryDiagError => JsErrorCode::JsErrorCategoryDiagError,
+            JsError::JsErrorDiagAlreadyInDebugMode => JsErrorCode::JsErrorDiagAlreadyInDebugMode,
+            JsError::JsErrorDiagNotInDebugMode => JsErrorCode::JsErrorDiagNotInDebugMode,
+            JsError::JsErrorDiagNotAtBreak => JsErrorCode::JsErrorDiagNotAtBreak,
+            JsError::JsErrorDiagInvalidHandle => JsErrorCode::JsErrorDiagInvalidHandle,
+            JsError::JsErrorDiagObjectNotFound => JsErrorCode::JsErrorDiagObjectNotFound,
+            JsError::JsErrorDiagUnableToPerformAction => {
+                JsErrorCode::JsErrorDiagUnableToPerformAction
+            }
+            JsError::JsSerializerNotSupported => JsErrorCode::JsSerializerNotSupported,
+            JsError::JsTransferableNotSupported => JsErrorCode::JsTransferableNotSupported,
+            JsError::JsTransferableAlreadyDetached => JsErrorCode::JsTransferableAlreadyDetached,
+        }
+    }
+}
