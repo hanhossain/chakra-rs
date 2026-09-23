@@ -72,6 +72,10 @@ public:
         {
             return std::make_unique<ModuleMessage>(module, specifier, std::nullopt);
         }
+        static std::unique_ptr<ModuleMessage> NewWithPath(JsModuleRecord module, JsValueRef specifier, const rust::Str fullPath)
+        {
+            return std::make_unique<ModuleMessage>(module, specifier, static_cast<std::string_view>(fullPath));
+        }
         static std::unique_ptr<MessageBase> Upcast(std::unique_ptr<ModuleMessage> msg)
         {
             return msg;
@@ -130,10 +134,6 @@ public:
     static JsValueRef CALLBACK ReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK GetReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK GetProxyPropertiesCallback(const chakra_rs::JsNativeFunctionArgs &args);
-
-    static JsErrorCode FetchImportedModuleHelper(JsModuleRecord referencingModule, JsValueRef specifier,
-                                                 JsModuleRecord* dependentModuleRecord,
-                                                 const rust::String &specifierFullPath, const rust::String &specifierParentPath);
 private:
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;

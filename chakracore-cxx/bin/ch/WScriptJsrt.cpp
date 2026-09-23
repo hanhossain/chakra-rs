@@ -979,34 +979,3 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
     }
     return errorCode;
 }
-
-JsErrorCode WScriptJsrt::FetchImportedModuleHelper(JsModuleRecord referencingModule,
-    JsValueRef specifier, JsModuleRecord* dependentModuleRecord, const rust::String &specifierFullPath, const rust::String &specifierParentPath)
-{
-    auto span = chakra::Span::create();
-    JsModuleRecord moduleRecord = JS_INVALID_REFERENCE;
-
-    auto moduleEntry = chakra_rs::get_module_record_map()->get(specifierFullPath);
-    if (moduleEntry.exists)
-    {
-        *dependentModuleRecord = moduleEntry.content.record;
-        return JsNoError;
-    }
-
-    JsErrorCode errorCode = ChakraRTInterface::JsInitializeModuleRecord(referencingModule, specifier, &moduleRecord);
-    if (errorCode == JsNoError)
-    {
-        chakra_rs::get_module_directory_map()->insert(moduleRecord, specifierParentPath);
-        chakra_rs::get_module_record_map()->insert(specifierFullPath, chakra_rs::ModuleRecordEntry { moduleRecord });
-        auto module_error_map = chakra_rs::get_module_error_map();
-        module_error_map->insert(moduleRecord, ImportedModule);
-        ModuleMessage* moduleMessage = WScriptJsrt::ModuleMessage::Create(referencingModule, specifier, static_cast<std::string>(specifierFullPath));
-        if (moduleMessage == nullptr)
-        {
-            return JsErrorOutOfMemory;
-        }
-        WScriptJsrt::PushMessage(moduleMessage);
-        *dependentModuleRecord = moduleRecord;
-    }
-    return errorCode;
-}

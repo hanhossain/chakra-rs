@@ -123,6 +123,13 @@ mod ffi {
             module_host_info: JsModuleHostInfoKind,
             host_info: *mut *mut CVoid,
         ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsInitializeModuleRecord(
+            referencing_module: JsModuleRecord,
+            normalized_specifier: JsValueRef,
+            module_record: *mut JsModuleRecord,
+        ) -> JsErrorCode;
     }
 }
 
