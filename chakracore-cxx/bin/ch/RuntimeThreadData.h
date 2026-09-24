@@ -35,7 +35,7 @@ public:
     
     std::list<RuntimeThreadData*> children;
 
-    CRITICAL_SECTION csReportQ;
+    std::mutex csReportQ {};
     std::list<std::string> reportQ;
 
     bool leaving;

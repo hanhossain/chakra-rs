@@ -592,9 +592,8 @@ JsValueRef WScriptJsrt::ReportCallback(const chakra_rs::JsNativeFunctionArgs &ar
 
             if (threadData && threadData->parent)
             {
-                EnterCriticalSection(&threadData->parent->csReportQ);
+                std::unique_lock lease{threadData->parent->csReportQ};
                 threadData->parent->reportQ.push_back(static_cast<std::string>(autoStr));
-                LeaveCriticalSection(&threadData->parent->csReportQ);
             }
         }
     }
@@ -616,15 +615,13 @@ JsValueRef WScriptJsrt::GetReportCallback(const chakra_rs::JsNativeFunctionArgs 
         auto& threadData = GetRuntimeThreadLocalData().threadData;
         if (threadData)
         {
-            EnterCriticalSection(&threadData->csReportQ);
-
+            std::unique_lock lease{threadData->csReportQ};
             if (!threadData->reportQ.empty())
             {
                 const auto str = threadData->reportQ.front();
                 threadData->reportQ.pop_front();
                 ChakraRTInterface::JsCreateString(str, &returnValue);
             }
-            LeaveCriticalSection(&threadData->csReportQ);
         }
     }
 
