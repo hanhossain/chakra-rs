@@ -5,6 +5,7 @@
 #include "RuntimeThreadData.h"
 
 #include <format>
+#include <utility>
 
 #include "ChakraRtInterface.h"
 #include "Helpers.h"
@@ -165,4 +166,23 @@ void RuntimeThreadData::wait_initial_script_completed()
 {
     std::unique_lock lock(initial_script_completed_mtx_);
     initial_script_completed_cv_.wait(lock, [this] { return initial_script_completed_; });
+}
+
+void RuntimeThreadData::enqueue_report(rust::String report)
+{
+    std::unique_lock lease{csReportQ_};
+    reportQ_.push_back(std::move(report));
+}
+
+bool RuntimeThreadData::dequeue_report(rust::String &report)
+{
+    std::unique_lock lease{csReportQ_};
+    if (reportQ_.empty())
+    {
+        return false;
+    }
+
+    report = reportQ_.front();
+    reportQ_.pop_front();
+    return true;
 }
