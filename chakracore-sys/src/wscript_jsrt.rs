@@ -80,8 +80,6 @@ mod ffi {
         fn ClearTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn GetProxyPropertiesCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
         fn BroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
@@ -234,10 +232,8 @@ impl WScript {
             WScript::register_module_source_callback,
         )?;
         wscript_object.set_named_function("GetModuleNamespace", WScript::get_module_namespace)?;
-        wscript_object.set_named_function(
-            "GetProxyProperties",
-            WScriptJsrt::GetProxyPropertiesCallback,
-        )?;
+        wscript_object
+            .set_named_function("GetProxyProperties", WScript::get_proxy_properties_callback)?;
 
         // Platform
         let mut platform_object = ChakraRt::create_object()?;
@@ -462,6 +458,51 @@ impl WScript {
             }
             Err(x) => Err(anyhow::Error::new(x)),
         }
+    }
+
+    fn get_proxy_properties_callback(
+        args: &JsNativeFunctionArgs,
+    ) -> Result<Option<JsObject>, JsError> {
+        if args.arguments.len() <= 1 {
+            return Ok(None);
+        }
+
+        let mut is_proxy = false;
+        let mut target = JsValueRef::default();
+        let mut handler = JsValueRef::default();
+        unsafe {
+            ChakraRTInterface::JsGetProxyProperties(
+                args.arguments[1].clone(),
+                &raw mut is_proxy,
+                &raw mut target,
+                &raw mut handler,
+            )
+            .as_result()?;
+        }
+
+        if !is_proxy {
+            return Ok(None);
+        }
+
+        let target_property = ChakraRt::create_property_id("target")?;
+        let handler_property = ChakraRt::create_property_id("handler")?;
+        let revoked_property = ChakraRt::create_property_id("revoked")?;
+        let mut obj = ChakraRt::create_object()?;
+        let mut revoked = JsValueRef::default();
+
+        unsafe {
+            if target.is_null() {
+                ChakraRTInterface::JsGetTrueValue(&raw mut revoked).as_result()?;
+                target = ChakraRt::get_undefined_value()?;
+                handler = ChakraRt::get_undefined_value()?;
+            } else {
+                ChakraRTInterface::JsGetFalseValue(&raw mut revoked).as_result()?;
+            }
+        }
+        obj.set_property(handler_property, handler, true)?;
+        obj.set_property(target_property, target, true)?;
+        obj.set_property(revoked_property, revoked, true)?;
+        Ok(Some(obj))
     }
 
     pub unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid) {

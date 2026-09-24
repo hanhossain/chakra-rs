@@ -208,6 +208,12 @@ impl AsRef<JsValueRef> for JsObject {
     }
 }
 
+impl IntoResponse for JsObject {
+    fn into_response(self) -> JsValueRef {
+        self.0
+    }
+}
+
 pub struct JsString(JsValueRef);
 
 impl AsRef<JsValueRef> for JsString {

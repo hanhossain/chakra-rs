@@ -130,6 +130,19 @@ mod ffi {
             normalized_specifier: JsValueRef,
             module_record: *mut JsModuleRecord,
         ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetProxyProperties(
+            object: JsValueRef,
+            is_proxy: *mut bool,
+            target: *mut JsValueRef,
+            handler: *mut JsValueRef,
+        ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetTrueValue(true_value: *mut JsValueRef) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetFalseValue(false_value: *mut JsValueRef) -> JsErrorCode;
     }
 }
 
