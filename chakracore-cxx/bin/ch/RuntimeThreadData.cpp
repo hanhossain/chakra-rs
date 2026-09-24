@@ -48,8 +48,6 @@ RuntimeThreadData::RuntimeThreadData() :
 {
     this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
     this->hevntShutdown = CreateEventW(TRUE, FALSE);
-
-    InitializeCriticalSection(&csReportQ);
 }
 
 RuntimeThreadData::~RuntimeThreadData()
@@ -57,7 +55,6 @@ RuntimeThreadData::~RuntimeThreadData()
     CloseHandle(this->hevntReceivedBroadcast);
     CloseHandle(this->hevntShutdown);
     CloseHandle(this->hThread);
-    DeleteCriticalSection(&csReportQ);
 }
 
 uint32_t RuntimeThreadData::ThreadProc()
