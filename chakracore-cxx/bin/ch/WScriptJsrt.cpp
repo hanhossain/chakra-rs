@@ -338,8 +338,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
             threadData = new RuntimeThreadData();
         }
 
-        RuntimeThreadData* child = new RuntimeThreadData();
-        child->initialSource = rust::String{content.value().data(), content.value().size()};
+        RuntimeThreadData* child = new RuntimeThreadData(rust::String{content.value().data(), content.value().size()});
         threadData->children.push_back(child);
         child->parent = threadData;
 

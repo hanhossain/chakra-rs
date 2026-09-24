@@ -37,7 +37,7 @@ RuntimeThreadData &GetCurrentRuntimeThreadData([[maybe_unused]] int &dummy)
     return *threadLocalData.threadData;
 }
 
-RuntimeThreadData::RuntimeThreadData() :
+RuntimeThreadData::RuntimeThreadData(rust::String initialSource) :
     semaphore(std::nullopt),
     hThread(nullptr),
     sharedContent(nullptr),
@@ -45,10 +45,15 @@ RuntimeThreadData::RuntimeThreadData() :
     runtime(nullptr),
     context(nullptr),
     parent(nullptr),
-    leaving(false)
+    leaving_(false),
+    initialSource_(std::move(initialSource))
 {
     this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
     this->hevntShutdown = CreateEventW(TRUE, FALSE);
+}
+
+RuntimeThreadData::RuntimeThreadData() : RuntimeThreadData(rust::String{})
+{
 }
 
 RuntimeThreadData::~RuntimeThreadData()
@@ -82,7 +87,7 @@ uint32_t RuntimeThreadData::ThreadProc()
         IfFailGo(E_FAIL);
     }
 
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(initialSource, nullptr, &scriptSource));
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(initialSource_, nullptr, &scriptSource));
 
     ChakraRTInterface::JsCreateString(fullPath, strlen(fullPath), &fname);
 
@@ -113,7 +118,7 @@ uint32_t RuntimeThreadData::ThreadProc()
             }
         }
 
-        if (waitRet == WAIT_OBJECT_0 + 1 || this->leaving)
+        if (waitRet == WAIT_OBJECT_0 + 1 || leaving_)
         {
             WScriptJsrt::Uninitialize();
 
@@ -142,9 +147,9 @@ Error:
     return 0;
 }
 
-void RuntimeThreadData::set_leaving(bool mLeaving)
+void RuntimeThreadData::set_leaving(bool leaving)
 {
-    leaving = mLeaving;
+    leaving_ = leaving;
 }
 
 void RuntimeThreadData::set_initial_script_completed()
