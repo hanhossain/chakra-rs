@@ -632,57 +632,6 @@ Error:
     return returnValue;
 }
 
-JsValueRef WScriptJsrt::GetProxyPropertiesCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    [[maybe_unused]] int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsValueRef undefined = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&undefined));
-
-    returnValue = undefined;
-
-    if (args.arguments.size() > 1)
-    {
-        bool isProxy = false;
-        JsValueRef target;
-        JsValueRef handler;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsGetProxyProperties(args.arguments[1], &isProxy, &target, &handler));
-
-        if (isProxy)
-        {
-            JsPropertyIdRef targetProperty;
-            JsPropertyIdRef handlerProperty;
-            JsPropertyIdRef revokedProperty;
-
-            IfJsrtErrorSetGo(ChakraRTInterface::JsCreatePropertyId("target", &targetProperty));
-            IfJsrtErrorSetGo(ChakraRTInterface::JsCreatePropertyId("handler", &handlerProperty));
-            IfJsrtErrorSetGo(ChakraRTInterface::JsCreatePropertyId("revoked", &revokedProperty));
-            IfJsrtErrorSetGo(ChakraRTInterface::JsCreateObject(&returnValue));
-
-            JsValueRef revoked = JS_INVALID_REFERENCE;
-
-            if (target == JS_INVALID_REFERENCE)
-            {
-                IfJsrtErrorSetGo(ChakraRTInterface::JsGetTrueValue(&revoked));
-                target = undefined;
-                handler = undefined;
-            }
-            else
-            {
-                IfJsrtErrorSetGo(ChakraRTInterface::JsGetFalseValue(&revoked));
-            }
-
-            IfJsrtErrorSetGo(ChakraRTInterface::JsSetProperty(returnValue, handlerProperty, handler, true));
-            IfJsrtErrorSetGo(ChakraRTInterface::JsSetProperty(returnValue, targetProperty, target, true));
-            IfJsrtErrorSetGo(ChakraRTInterface::JsSetProperty(returnValue, revokedProperty, revoked, true));
-        }
-    }
-Error:
-    return returnValue;
-}
-
 bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception)
 {
     const char* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);

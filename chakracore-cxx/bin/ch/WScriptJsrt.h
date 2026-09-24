@@ -133,7 +133,6 @@ public:
     static JsValueRef CALLBACK ReceiveBroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK ReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
     static JsValueRef CALLBACK GetReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK GetProxyPropertiesCallback(const chakra_rs::JsNativeFunctionArgs &args);
 private:
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;

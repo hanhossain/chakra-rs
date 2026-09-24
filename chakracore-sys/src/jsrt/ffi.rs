@@ -61,6 +61,12 @@ impl AsRef<JsValueRef> for JsValueRef {
 #[derive(Default)]
 pub struct JsPropertyIdRef(*mut c_void);
 
+impl JsPropertyIdRef {
+    pub fn is_null(&self) -> bool {
+        self.0.is_null()
+    }
+}
+
 unsafe impl cxx::ExternType for JsPropertyIdRef {
     type Id = cxx::type_id!("JsPropertyIdRef");
     type Kind = cxx::kind::Trivial;
