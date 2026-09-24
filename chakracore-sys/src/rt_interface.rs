@@ -143,6 +143,8 @@ mod ffi {
         unsafe fn JsGetTrueValue(true_value: *mut JsValueRef) -> JsErrorCode;
         #[Self = "ChakraRTInterface"]
         unsafe fn JsGetFalseValue(false_value: *mut JsValueRef) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetNullValue(value: *mut JsValueRef) -> JsErrorCode;
     }
 }
 

@@ -601,30 +601,6 @@ Error:
     return returnValue;
 }
 
-JsValueRef WScriptJsrt::GetReportCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    [[maybe_unused]] int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetNullValue(&returnValue));
-
-    if (args.arguments.size() > 0)
-    {
-        auto& threadData = GetRuntimeThreadLocalData().threadData;
-        if (threadData)
-        {
-            if (rust::String str{}; threadData->dequeue_report(str))
-            {
-                ChakraRTInterface::JsCreateString(str, &returnValue);
-            }
-        }
-    }
-
-Error:
-    return returnValue;
-}
-
 bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception)
 {
     const char* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);

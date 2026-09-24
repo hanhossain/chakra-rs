@@ -87,8 +87,6 @@ mod ffi {
         fn ReceiveBroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn ReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn GetReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
         fn LoadScriptFileHelper(
@@ -136,6 +134,7 @@ mod ffi {
         fn GetCurrentRuntimeThreadData(dummy: &mut i32) -> Pin<&mut RuntimeThreadData>;
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
+        fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
     }
 
     #[namespace = "chakra_rs"]
@@ -318,7 +317,7 @@ impl WScript {
             wscript_object
                 .set_named_function("ReceiveBroadcast", WScriptJsrt::ReceiveBroadcastCallback)?;
             wscript_object.set_named_function("Report", WScriptJsrt::ReportCallback)?;
-            wscript_object.set_named_function("GetReport", WScriptJsrt::GetReportCallback)?;
+            wscript_object.set_named_function("GetReport", WScript::get_report_callback)?;
             wscript_object.set_named_function("Leaving", WScript::leaving_callback)?;
             wscript_object.set_named_function("Sleep", WScript::sleep_callback)?;
 
@@ -690,6 +689,27 @@ impl WScript {
                 Err(FetchImportedModuleHelperError::IoError(_)) => JsErrorCode::JsErrorFatal,
             }
         }
+    }
+
+    fn get_report_callback(args: &JsNativeFunctionArgs) -> Result<JsValueRef, JsError> {
+        let mut return_value = JsValueRef::default();
+        unsafe {
+            ChakraRTInterface::JsGetNullValue(&raw mut return_value).as_result()?;
+        }
+
+        if !args.arguments.is_empty() {
+            let mut v = 42;
+            let thread_data = ffi::GetCurrentRuntimeThreadData(&mut v);
+            let mut report = String::new();
+            if thread_data.dequeue_report(&mut report) {
+                unsafe {
+                    ChakraRTInterface::JsCreateString(&report, &raw mut return_value)
+                        .as_result()?;
+                }
+            }
+        }
+
+        Ok(return_value)
     }
 }
 
