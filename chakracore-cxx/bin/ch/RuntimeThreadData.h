@@ -9,7 +9,7 @@
 #include <list>
 #include <optional>
 #include <semaphore>
-#include <string>
+#include <rust/cxx.h>
 
 class RuntimeThreadData
 {
@@ -35,9 +35,6 @@ public:
     
     std::list<RuntimeThreadData*> children;
 
-    std::mutex csReportQ {};
-    std::list<std::string> reportQ;
-
     bool leaving;
 
 
@@ -46,11 +43,16 @@ public:
     void set_initial_script_completed();
     void reset_initial_script_completed();
     void wait_initial_script_completed();
+    void enqueue_report(rust::String report);
+    bool dequeue_report(rust::String &report);
 
 private:
     bool initial_script_completed_;
     std::condition_variable initial_script_completed_cv_;
     std::mutex initial_script_completed_mtx_;
+
+    std::mutex csReportQ_{};
+    std::list<rust::String> reportQ_{};
 };
 
 struct RuntimeThreadLocalData
