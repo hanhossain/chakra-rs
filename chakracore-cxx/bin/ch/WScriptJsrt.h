@@ -125,8 +125,6 @@ private:
 public:
     static JsErrorCode CALLBACK LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile = false);
 
-    static JsValueRef CALLBACK LoadBinaryFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
-
 private:
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;
