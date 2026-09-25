@@ -48,6 +48,14 @@ mod ffi {
             content: &str,
             result: *mut JsValueRef,
         ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsCreateArrayBuffer(byte_length: u32, result: *mut JsValueRef) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetArrayBufferStorage(
+            instance: JsValueRef,
+            buffer: *mut *mut u8,
+            buffer_length: *mut u32,
+        ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsSerialize(

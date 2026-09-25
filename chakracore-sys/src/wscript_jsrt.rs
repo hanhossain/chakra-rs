@@ -82,9 +82,6 @@ mod ffi {
         fn GetICUMajorVersion() -> i32;
 
         #[Self = "WScriptJsrt"]
-        fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-
-        #[Self = "WScriptJsrt"]
         fn LoadScriptFileHelper(
             callee: JsValueRef,
             arguments: &[JsValueRef],
@@ -306,7 +303,7 @@ impl WScript {
 
         global_object.set_named_function("print", WScript::echo_callback)?;
         global_object.set_named_function("read", WScript::load_text_file_callback)?;
-        global_object.set_named_function("readbuffer", WScriptJsrt::LoadBinaryFileCallback)?;
+        global_object.set_named_function("readbuffer", WScript::load_binary_file_callback)?;
 
         let mut console_object = ChakraRt::create_object()?;
         console_object.set_named_function("log", WScript::echo_callback)?;
@@ -817,6 +814,44 @@ impl WScript {
         }
 
         Ok(())
+    }
+
+    #[tracing::instrument(skip_all, err)]
+    fn load_binary_file_callback(
+        args: &JsNativeFunctionArgs,
+    ) -> anyhow::Result<Option<JsValueRef>> {
+        if args.arguments.len() < 2 {
+            return Ok(None);
+        }
+
+        let filename = args.arguments[1].to_string()?;
+        let file_content = std::fs::read(filename)?;
+        let mut array_buffer = JsValueRef::default();
+        unsafe {
+            ChakraRTInterface::JsCreateArrayBuffer(
+                file_content.len() as u32,
+                &raw mut array_buffer,
+            )
+            .as_result()?;
+        }
+
+        unsafe {
+            let mut buffer: *mut u8 = std::ptr::null_mut();
+            let mut buffer_length = 0;
+            ChakraRTInterface::JsGetArrayBufferStorage(
+                array_buffer.clone(),
+                &raw mut buffer,
+                &raw mut buffer_length,
+            )
+            .as_result()?;
+            anyhow::ensure!(
+                (buffer_length as usize) >= file_content.len(),
+                "Array buffer size is insufficient to store the binary file."
+            );
+            buffer.copy_from(file_content.as_ptr(), file_content.len());
+        }
+
+        Ok(Some(array_buffer))
     }
 }
 

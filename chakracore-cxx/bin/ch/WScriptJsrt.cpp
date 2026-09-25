@@ -407,46 +407,6 @@ bool WScriptJsrt::Uninitialize()
     return true;
 }
 
-JsValueRef WScriptJsrt::LoadBinaryFileCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    if (args.arguments.size() < 2)
-    {
-        JsValueRef returnValue;
-        ChakraRTInterface::JsGetUndefinedValue(&returnValue);
-        return returnValue;
-    }
-
-    rust::String fileName;
-    if (ChakraRTInterface::JsToString(args.arguments[1], fileName) != JsNoError)
-    {
-        return JS_INVALID_REFERENCE;
-    }
-
-    auto fileContent = chakra_rs::fs::read_binary_file(fileName);
-
-    JsValueRef arrayBuffer;
-    if (ChakraRTInterface::JsCreateArrayBuffer(fileContent.size(), &arrayBuffer) != JsNoError)
-    {
-        return JS_INVALID_REFERENCE;
-    }
-
-    uint8_t *buffer;
-    unsigned int bufferLength;
-    if (ChakraRTInterface::JsGetArrayBufferStorage(arrayBuffer, &buffer, &bufferLength) != JsNoError)
-    {
-        return JS_INVALID_REFERENCE;
-    }
-
-    if (bufferLength < fileContent.size())
-    {
-        chakra::Logger::error("Array buffer size is insufficient to store the binary file.");
-        return JS_INVALID_REFERENCE;
-    }
-
-    memcpy(buffer, fileContent.data(), fileContent.size());
-    return arrayBuffer;
-}
-
 bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception)
 {
     const char* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);
