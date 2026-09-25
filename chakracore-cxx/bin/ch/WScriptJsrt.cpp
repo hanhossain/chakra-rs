@@ -526,16 +526,10 @@ JsValueRef WScriptJsrt::BroadcastCallback(const chakra_rs::JsNativeFunctionArgs 
         {
             ChakraRTInterface::JsGetSharedArrayBufferContent(args.arguments[1], &threadData->sharedContent);
 
-            std::size_t count = threadData->children.size();
-            threadData->semaphore.emplace(count);
-
             for (const auto child : threadData->children)
             {
                 SetEvent(child->hevntReceivedBroadcast);
             }
-
-            threadData->semaphore->acquire();
-            threadData->semaphore.reset();
 
             ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(threadData->sharedContent);
         }

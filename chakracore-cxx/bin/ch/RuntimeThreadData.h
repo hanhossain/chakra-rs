@@ -19,7 +19,6 @@ public:
     ~RuntimeThreadData();
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
-    std::optional<std::binary_semaphore> semaphore;
     HANDLE hThread;
 
     JsSharedArrayBufferContentHandle sharedContent;
