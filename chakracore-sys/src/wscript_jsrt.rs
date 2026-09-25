@@ -82,10 +82,12 @@ mod ffi {
         fn GetICUMajorVersion() -> i32;
 
         #[Self = "WScriptJsrt"]
-        fn LoadScriptFileHelper(
+        unsafe fn LoadScriptFileHelper(
             callee: JsValueRef,
-            arguments: &[JsValueRef],
             is_source_module: bool,
+            filename: &str,
+            script_inject_type: &str,
+            content: &str,
         ) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
@@ -400,8 +402,41 @@ impl WScript {
         Ok(value)
     }
 
-    fn load_script_file_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
-        WScriptJsrt::LoadScriptFileHelper(args.callee.clone(), args.arguments, false)
+    #[tracing::instrument(skip_all, err)]
+    fn load_script_file_helper(
+        callee: JsValueRef,
+        arguments: &[JsValueRef],
+        is_source_module: bool,
+    ) -> anyhow::Result<JsValueRef> {
+        anyhow::ensure!(
+            arguments.len() >= 2 && arguments.len() <= 4,
+            "Need more or fewer arguments for WScript.LoadScript"
+        );
+
+        let filename = arguments[1].to_string()?;
+
+        let script_inject_type = if arguments.len() > 2 {
+            arguments[2].to_string()?
+        } else {
+            String::new()
+        };
+
+        let content = ScriptCache::load_script_from_file(&filename)?.into_boxed_str();
+        // TODO (hanhossain): don't leak a string ptr
+        let content = Box::into_raw(content);
+        unsafe {
+            Ok(WScriptJsrt::LoadScriptFileHelper(
+                callee,
+                is_source_module,
+                &filename,
+                &script_inject_type,
+                &*content,
+            ))
+        }
+    }
+
+    fn load_script_file_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        WScript::load_script_file_helper(args.callee.clone(), args.arguments, false)
     }
 
     fn load_script_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
