@@ -2,7 +2,8 @@ use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModuleHostInfoKind, JsModuleRecord,
-    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
+    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSharedArrayBufferContentHandle,
+    JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::ffi::{
@@ -83,8 +84,6 @@ mod ffi {
         fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
-        fn BroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
         fn ReceiveBroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
@@ -130,11 +129,20 @@ mod ffi {
         include!("RuntimeThreadData.h");
 
         type RuntimeThreadData;
+        type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
         fn GetCurrentRuntimeThreadData(dummy: &mut i32) -> Pin<&mut RuntimeThreadData>;
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
         fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
         fn enqueue_report_to_parent(self: Pin<&mut RuntimeThreadData>, report: String);
+        fn set_shared_content(
+            self: Pin<&mut RuntimeThreadData>,
+            shared_content: JsSharedArrayBufferContentHandle,
+        );
+        fn get_shared_content(
+            self: Pin<&mut RuntimeThreadData>,
+        ) -> JsSharedArrayBufferContentHandle;
+        fn broadcast_to_children(self: Pin<&mut RuntimeThreadData>);
     }
 
     #[namespace = "chakra_rs"]
@@ -312,7 +320,7 @@ impl WScript {
         // WScript will have the extra support API below and $262 will be
         // added to global scope
         if HostConfigFlags::GetConfig().host.test262 {
-            wscript_object.set_named_function("Broadcast", WScriptJsrt::BroadcastCallback)?;
+            wscript_object.set_named_function("Broadcast", WScript::broadcast_callback)?;
 
             wscript_object
                 .set_named_function("ReceiveBroadcast", WScriptJsrt::ReceiveBroadcastCallback)?;
@@ -718,6 +726,27 @@ impl WScript {
             let mut dummy = 0;
             let runtime_thread_data = GetCurrentRuntimeThreadData(&mut dummy);
             runtime_thread_data.enqueue_report_to_parent(auto_str);
+        }
+        Ok(())
+    }
+
+    fn broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() > 1 {
+            let mut dummy = 0;
+            let mut thread_data = GetCurrentRuntimeThreadData(&mut dummy);
+            let mut shared_content = JsSharedArrayBufferContentHandle::default();
+            unsafe {
+                ChakraRTInterface::JsGetSharedArrayBufferContent(
+                    args.arguments[1].clone(),
+                    &raw mut shared_content,
+                );
+            }
+
+            thread_data.as_mut().set_shared_content(shared_content);
+            thread_data.as_mut().broadcast_to_children();
+            ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(
+                thread_data.get_shared_content(),
+            );
         }
         Ok(())
     }

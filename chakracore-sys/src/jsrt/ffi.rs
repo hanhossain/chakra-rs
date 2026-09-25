@@ -100,6 +100,15 @@ unsafe impl cxx::ExternType for CULong {
     type Kind = cxx::kind::Trivial;
 }
 
+#[derive(Default)]
+#[repr(transparent)]
+pub struct JsSharedArrayBufferContentHandle(*mut CVoid);
+
+unsafe impl cxx::ExternType for JsSharedArrayBufferContentHandle {
+    type Id = cxx::type_id!("JsSharedArrayBufferContentHandle");
+    type Kind = cxx::kind::Trivial;
+}
+
 #[cxx::bridge]
 pub(super) mod bridge {
     extern "C++" {
@@ -114,6 +123,7 @@ pub(super) mod bridge {
         type JsSourceContext = super::JsSourceContext;
         type JsModuleRecord = super::JsModuleRecord;
         type CULong = super::CULong;
+        type JsSharedArrayBufferContentHandle = super::JsSharedArrayBufferContentHandle;
 
         type JsErrorCode;
         type JsRuntimeAttributes;

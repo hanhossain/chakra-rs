@@ -511,34 +511,6 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(const chakra_rs::JsNativeFunction
     return arrayBuffer;
 }
 
-JsValueRef WScriptJsrt::BroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    [[maybe_unused]] int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
-
-    if (args.arguments.size() > 1)
-    {
-        auto& threadData = GetRuntimeThreadLocalData().threadData;
-        if (threadData)
-        {
-            ChakraRTInterface::JsGetSharedArrayBufferContent(args.arguments[1], &threadData->sharedContent);
-
-            for (const auto child : threadData->children)
-            {
-                SetEvent(child->hevntReceivedBroadcast);
-            }
-
-            ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(threadData->sharedContent);
-        }
-    }
-
-Error:
-    return returnValue;
-}
-
 JsValueRef WScriptJsrt::ReceiveBroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;

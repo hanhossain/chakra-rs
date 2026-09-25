@@ -21,7 +21,7 @@ public:
     HANDLE hevntShutdown;
     HANDLE hThread;
 
-    JsSharedArrayBufferContentHandle sharedContent;
+    JsSharedArrayBufferContentHandle sharedContent_;
     JsValueRef receiveBroadcastCallbackFunc;
 
 
@@ -41,6 +41,9 @@ public:
     void wait_initial_script_completed();
     void enqueue_report_to_parent(rust::String report);
     bool dequeue_report(rust::String &report);
+    void broadcast_to_children();
+    void set_shared_content(JsSharedArrayBufferContentHandle shared_content);
+    JsSharedArrayBufferContentHandle get_shared_content();
 
 private:
     bool initial_script_completed_{};
