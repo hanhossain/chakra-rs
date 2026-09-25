@@ -511,32 +511,6 @@ JsValueRef WScriptJsrt::LoadBinaryFileCallback(const chakra_rs::JsNativeFunction
     return arrayBuffer;
 }
 
-JsValueRef WScriptJsrt::ReceiveBroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    [[maybe_unused]] int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
-
-    if (args.arguments.size() > 1)
-    {
-        auto& threadData = GetRuntimeThreadLocalData().threadData;
-        if (threadData)
-        {
-            if (threadData->receiveBroadcastCallbackFunc)
-            {
-                ChakraRTInterface::JsRelease(threadData->receiveBroadcastCallbackFunc, nullptr);
-            }
-            threadData->receiveBroadcastCallbackFunc = args.arguments[1];
-            ChakraRTInterface::JsAddRef(threadData->receiveBroadcastCallbackFunc, nullptr);
-        }
-    }
-
-Error:
-    return returnValue;
-}
-
 bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception)
 {
     const char* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);

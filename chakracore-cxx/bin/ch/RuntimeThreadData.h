@@ -44,6 +44,8 @@ public:
     void broadcast_to_children();
     void set_shared_content(JsSharedArrayBufferContentHandle shared_content);
     JsSharedArrayBufferContentHandle get_shared_content();
+    JsValueRef get_receive_broadcast_callback_func() const;
+    void set_receive_broadcast_callback_func(JsValueRef value);
 
 private:
     bool initial_script_completed_{};
