@@ -39,7 +39,7 @@ RuntimeThreadData &GetCurrentRuntimeThreadData([[maybe_unused]] int &dummy)
 
 RuntimeThreadData::RuntimeThreadData(rust::String initialSource) :
     hThread(nullptr),
-    sharedContent(nullptr),
+    sharedContent_(nullptr),
     receiveBroadcastCallbackFunc(nullptr),
     runtime(nullptr),
     context(nullptr),
@@ -105,7 +105,7 @@ uint32_t RuntimeThreadData::ThreadProc()
         {
             JsValueRef args[3];
             ChakraRTInterface::JsGetGlobalObject(&args[0]);
-            ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(this->parent->sharedContent, &args[1]);
+            ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(this->parent->get_shared_content(), &args[1]);
             ChakraRTInterface::JsDoubleToNumber(1, &args[2]);
 
             if (this->receiveBroadcastCallbackFunc)
@@ -189,4 +189,22 @@ bool RuntimeThreadData::dequeue_report(rust::String &report)
     report = reportQ_.front();
     reportQ_.pop_front();
     return true;
+}
+
+void RuntimeThreadData::broadcast_to_children()
+{
+    for (const auto child : children)
+    {
+        SetEvent(child->hevntReceivedBroadcast);
+    }
+}
+
+void RuntimeThreadData::set_shared_content(JsSharedArrayBufferContentHandle shared_content)
+{
+    sharedContent_ = shared_content;
+}
+
+JsSharedArrayBufferContentHandle RuntimeThreadData::get_shared_content()
+{
+    return sharedContent_;
 }

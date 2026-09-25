@@ -111,6 +111,8 @@ mod ffi {
 
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
         type JsModuleHostInfoKind = crate::jsrt::JsModuleHostInfoKind;
+        type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
+
         #[Self = "ChakraRTInterface"]
         unsafe fn JsSetModuleHostInfo(
             request_module: JsModuleRecord,
@@ -145,6 +147,15 @@ mod ffi {
         unsafe fn JsGetFalseValue(false_value: *mut JsValueRef) -> JsErrorCode;
         #[Self = "ChakraRTInterface"]
         unsafe fn JsGetNullValue(value: *mut JsValueRef) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetSharedArrayBufferContent(
+            shared_array_buffer: JsValueRef,
+            shared_contents: *mut JsSharedArrayBufferContentHandle,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        fn JsReleaseSharedArrayBufferContentHandle(
+            shared_content: JsSharedArrayBufferContentHandle,
+        ) -> JsErrorCode;
     }
 }
 
