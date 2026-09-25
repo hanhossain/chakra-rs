@@ -34,9 +34,10 @@ Abstract:
 #include <mach/mach.h>
 #endif // defined(__APPLE__)
 
-#include "threadsusp.hpp"
 #include "synchobjects.hpp"
+#include "threadsusp.hpp"
 #include <errno.h>
+#include <functional>
 
 namespace CorUnix
 {
@@ -53,7 +54,7 @@ namespace CorUnix
     InternalCreateThread(
         CPalThread *pThread,
         LPSECURITY_ATTRIBUTES lpThreadAttributes,
-        LPTHREAD_START_ROUTINE lpStartAddress,
+        std::function<uint32_t(void *)> lpStartAddress,
         void * lpParameter,
         uint32_t dwCreationFlags,
         PalThreadType eThreadType,
@@ -218,7 +219,7 @@ namespace CorUnix
             CorUnix::InternalCreateThread(
                 CPalThread *,
                 LPSECURITY_ATTRIBUTES,
-                LPTHREAD_START_ROUTINE,
+                std::function<uint32_t(void *)>,
                 void *,
                 uint32_t,
                 PalThreadType,
@@ -298,7 +299,7 @@ namespace CorUnix
         // Start info
         //
 
-        LPTHREAD_START_ROUTINE m_lpStartAddress;
+        std::function<uint32_t(void *)> m_lpStartAddress;
         void * m_lpStartParameter;
         BOOL m_bCreateSuspended;
 
@@ -373,7 +374,7 @@ namespace CorUnix
             m_machPortSelf(0),
 #endif
             m_hardwareExceptionHolderCount(0),
-            m_lpStartAddress(NULL),
+            m_lpStartAddress(nullptr),
             m_lpStartParameter(NULL),
             m_bCreateSuspended(FALSE),
             m_iThreadPriority(THREAD_PRIORITY_NORMAL),
@@ -540,11 +541,7 @@ namespace CorUnix
             return m_hardwareExceptionHolderCount > 0;
         }
 
-        LPTHREAD_START_ROUTINE
-        GetStartAddress(
-            void
-            )
-        {
+        std::function<uint32_t(void *)> GetStartAddress() {
             return m_lpStartAddress;
         };
 
