@@ -84,6 +84,7 @@ public:
 
     static void AddMessageQueue(MessageQueue *messageQueue);
     static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
+    static MessageQueue *GetMessageQueue() { return messageQueue_; }
 
     static const char * ConvertErrorCodeToMessage(JsErrorCode errorCode)
     {
@@ -122,8 +123,6 @@ public:
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
 public:
-    static JsValueRef CALLBACK ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
-
     static JsErrorCode CALLBACK LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile = false);
 
     static JsValueRef CALLBACK LoadBinaryFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
