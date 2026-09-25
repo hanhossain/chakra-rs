@@ -50,49 +50,9 @@ void WScriptJsrt::FinalizeFree(void* addr)
     // free(addr);
 }
 
-JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, const rust::Slice<JsValueRef const> arguments, bool isSourceModule)
+JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, bool isSourceModule, rust::Str filename, rust::Str scriptInjectType, rust::Str content)
 {
-    [[maybe_unused]] int32_t hr = E_FAIL;
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsErrorCode errorCode = JsNoError;
-    std::string errorMessage;
-
-    if (arguments.size() < 2 || arguments.size() > 4)
-    {
-        errorCode = JsErrorInvalidArgument;
-        errorMessage = "Need more or fewer arguments for WScript.LoadScript";
-    }
-    else
-    {
-        rust::String fileName;
-        IfJsrtErrorSetGo(chakracore::jsrt::JsToString(arguments[1], fileName));
-
-        rust::String scriptInjectType;
-        if (arguments.size() > 2)
-        {
-            IfJsrtErrorSetGo(chakracore::jsrt::JsToString(arguments[2], scriptInjectType));
-        }
-
-        // TODO (hanhossain): don't leak a string ptr
-        rust::String *content;
-        try
-        {
-            content = new rust::String{chakra_rs::helpers::ScriptCache::load_script_from_file(fileName)};
-        }
-        catch (const rust::Error &e)
-        {
-            chakra::Logger::error(std::format("Couldn't load file '{}' due to exception '{}'", fileName, e.what()));
-            IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&returnValue));
-            return returnValue;
-        }
-
-        returnValue = LoadScript(callee, fileName, *content, !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
-    }
-
-Error:
-
-    SetExceptionIf(errorCode, errorMessage);
-    return returnValue;
+    return LoadScript(callee, filename, content, !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, WScriptJsrt::FinalizeFree, true);
 }
 
 void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view errorMessage)
