@@ -20,6 +20,7 @@ mod ffi {
         type JsSourceContext = crate::jsrt::JsSourceContext;
         type CULong = crate::jsrt::CULong;
         type CVoid = crate::jsrt::CVoid;
+        type JsRef = crate::jsrt::JsRef;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateRuntime(
@@ -156,6 +157,10 @@ mod ffi {
         fn JsReleaseSharedArrayBufferContentHandle(
             shared_content: JsSharedArrayBufferContentHandle,
         ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsRelease(jsref: JsRef, count: *mut u32) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsAddRef(jsref: JsRef, count: *mut u32) -> JsErrorCode;
     }
 }
 

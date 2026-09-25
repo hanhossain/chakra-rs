@@ -208,3 +208,12 @@ JsSharedArrayBufferContentHandle RuntimeThreadData::get_shared_content()
 {
     return sharedContent_;
 }
+JsValueRef RuntimeThreadData::get_receive_broadcast_callback_func() const
+{
+    return receiveBroadcastCallbackFunc;
+}
+
+void RuntimeThreadData::set_receive_broadcast_callback_func(JsValueRef value)
+{
+    receiveBroadcastCallbackFunc = value;
+}

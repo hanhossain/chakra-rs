@@ -84,9 +84,6 @@ mod ffi {
         fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
-        fn ReceiveBroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-
-        #[Self = "WScriptJsrt"]
         fn LoadScriptFileHelper(
             callee: JsValueRef,
             arguments: &[JsValueRef],
@@ -143,6 +140,11 @@ mod ffi {
             self: Pin<&mut RuntimeThreadData>,
         ) -> JsSharedArrayBufferContentHandle;
         fn broadcast_to_children(self: Pin<&mut RuntimeThreadData>);
+        fn get_receive_broadcast_callback_func(self: &RuntimeThreadData) -> JsValueRef;
+        fn set_receive_broadcast_callback_func(
+            self: Pin<&mut RuntimeThreadData>,
+            value: JsValueRef,
+        );
     }
 
     #[namespace = "chakra_rs"]
@@ -323,7 +325,7 @@ impl WScript {
             wscript_object.set_named_function("Broadcast", WScript::broadcast_callback)?;
 
             wscript_object
-                .set_named_function("ReceiveBroadcast", WScriptJsrt::ReceiveBroadcastCallback)?;
+                .set_named_function("ReceiveBroadcast", WScript::receive_broadcast_callback)?;
             wscript_object.set_named_function("Report", WScript::report_callback)?;
             wscript_object.set_named_function("GetReport", WScript::get_report_callback)?;
             wscript_object.set_named_function("Leaving", WScript::leaving_callback)?;
@@ -747,6 +749,37 @@ impl WScript {
             ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(
                 thread_data.get_shared_content(),
             );
+        }
+        Ok(())
+    }
+
+    fn receive_broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() > 1 {
+            let mut dummy = 0;
+            let mut thread_data = GetCurrentRuntimeThreadData(&mut dummy);
+            if !thread_data.get_receive_broadcast_callback_func().is_null() {
+                unsafe {
+                    ChakraRTInterface::JsRelease(
+                        thread_data
+                            .get_receive_broadcast_callback_func()
+                            .as_js_ref(),
+                        std::ptr::null_mut(),
+                    )
+                    .as_result()?;
+                }
+            }
+            thread_data
+                .as_mut()
+                .set_receive_broadcast_callback_func(args.arguments[1].clone());
+            unsafe {
+                ChakraRTInterface::JsAddRef(
+                    thread_data
+                        .get_receive_broadcast_callback_func()
+                        .as_js_ref(),
+                    std::ptr::null_mut(),
+                )
+                .as_result()?;
+            }
         }
         Ok(())
     }

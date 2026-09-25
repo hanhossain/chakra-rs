@@ -49,6 +49,10 @@ impl JsValueRef {
         bridge::JsToString(self.as_ref(), &mut s).as_result()?;
         Ok(s)
     }
+
+    pub fn as_js_ref(&self) -> JsRef {
+        JsRef(self.0)
+    }
 }
 
 impl AsRef<JsValueRef> for JsValueRef {
@@ -82,7 +86,7 @@ unsafe impl cxx::ExternType for JsSourceContext {
 
 #[repr(transparent)]
 #[derive(Default, Clone, Eq, PartialEq, Hash)]
-pub struct JsModuleRecord(*mut CVoid);
+pub struct JsModuleRecord(*mut c_void);
 
 unsafe impl cxx::ExternType for JsModuleRecord {
     type Id = cxx::type_id!("JsModuleRecord");
@@ -102,10 +106,18 @@ unsafe impl cxx::ExternType for CULong {
 
 #[derive(Default)]
 #[repr(transparent)]
-pub struct JsSharedArrayBufferContentHandle(*mut CVoid);
+pub struct JsSharedArrayBufferContentHandle(*mut c_void);
 
 unsafe impl cxx::ExternType for JsSharedArrayBufferContentHandle {
     type Id = cxx::type_id!("JsSharedArrayBufferContentHandle");
+    type Kind = cxx::kind::Trivial;
+}
+
+#[repr(transparent)]
+pub struct JsRef(*mut c_void);
+
+unsafe impl cxx::ExternType for JsRef {
+    type Id = cxx::type_id!("JsRef");
     type Kind = cxx::kind::Trivial;
 }
 
@@ -124,6 +136,7 @@ pub(super) mod bridge {
         type JsModuleRecord = super::JsModuleRecord;
         type CULong = super::CULong;
         type JsSharedArrayBufferContentHandle = super::JsSharedArrayBufferContentHandle;
+        type JsRef = super::JsRef;
 
         type JsErrorCode;
         type JsRuntimeAttributes;
