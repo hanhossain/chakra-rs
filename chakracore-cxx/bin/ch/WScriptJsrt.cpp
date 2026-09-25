@@ -372,40 +372,6 @@ Error:
     return value;
 }
 
-JsValueRef WScriptJsrt::SetTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    constexpr std::string_view errorMessage = "invalid call to WScript.SetTimeout";
-    JsErrorCode errorCode = JsNoError;
-    [[maybe_unused]] int32_t hr = S_OK;
-
-    JsValueRef function;
-    JsValueRef timerId;
-    unsigned int time;
-    double tmp;
-    CallbackMessage *msg = nullptr;
-
-    if (args.arguments.size() != 3)
-    {
-        errorCode = JsErrorInvalidArgument;
-        goto Error;
-    }
-
-    function = args.arguments[1];
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsNumberToDouble(args.arguments[2], &tmp));
-
-    time = static_cast<int>(tmp);
-    msg = new CallbackMessage(time, function);
-    messageQueue_->InsertSorted(msg);
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsDoubleToNumber(static_cast<double>(msg->GetId()), &timerId));
-    return timerId;
-
-Error:
-    SetExceptionIf(errorCode, errorMessage);
-    return JS_INVALID_REFERENCE;
-}
-
 JsValueRef WScriptJsrt::ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args)
 {
     constexpr std::string_view errorMessage = "invalid call to WScript.ClearTimeout";

@@ -25,7 +25,7 @@ public:
 
     void BeginTimer() { m_time += GetTickCount(); };
     unsigned int GetTime() { return m_time; };
-    unsigned int GetId() { return m_id; };
+    unsigned int GetId() const { return m_id; };
 
     virtual int32_t Call(rust::Str fileName) = 0;
 };
