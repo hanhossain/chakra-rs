@@ -6,7 +6,8 @@ use crate::jsrt::{
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::ffi::{
-    CVoid, ModuleState, WScriptJsrt_CallbackMessage, WScriptJsrt_ModuleMessage,
+    CVoid, GetCurrentRuntimeThreadData, ModuleState, WScriptJsrt_CallbackMessage,
+    WScriptJsrt_ModuleMessage,
 };
 pub use ffi::{MessageQueue, WScriptJsrt};
 use std::collections::HashMap;
@@ -85,8 +86,6 @@ mod ffi {
         fn BroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn ReceiveBroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn ReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
         fn LoadScriptFileHelper(
@@ -135,6 +134,7 @@ mod ffi {
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
         fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
+        fn enqueue_report_to_parent(self: Pin<&mut RuntimeThreadData>, report: String);
     }
 
     #[namespace = "chakra_rs"]
@@ -316,7 +316,7 @@ impl WScript {
 
             wscript_object
                 .set_named_function("ReceiveBroadcast", WScriptJsrt::ReceiveBroadcastCallback)?;
-            wscript_object.set_named_function("Report", WScriptJsrt::ReportCallback)?;
+            wscript_object.set_named_function("Report", WScript::report_callback)?;
             wscript_object.set_named_function("GetReport", WScript::get_report_callback)?;
             wscript_object.set_named_function("Leaving", WScript::leaving_callback)?;
             wscript_object.set_named_function("Sleep", WScript::sleep_callback)?;
@@ -710,6 +710,16 @@ impl WScript {
         }
 
         Ok(return_value)
+    }
+
+    fn report_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() > 1 {
+            let auto_str = args.arguments[1].to_string()?;
+            let mut dummy = 0;
+            let runtime_thread_data = GetCurrentRuntimeThreadData(&mut dummy);
+            runtime_thread_data.enqueue_report_to_parent(auto_str);
+        }
+        Ok(())
     }
 }
 
