@@ -372,36 +372,6 @@ Error:
     return value;
 }
 
-JsValueRef WScriptJsrt::ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args)
-{
-    constexpr std::string_view errorMessage = "invalid call to WScript.ClearTimeout";
-    JsErrorCode errorCode = JsNoError;
-    [[maybe_unused]] int32_t hr = S_OK;
-
-    if (args.arguments.size() != 2)
-    {
-        errorCode = JsErrorInvalidArgument;
-        goto Error;
-    }
-
-    unsigned int timerId;
-    double tmp;
-    JsValueRef undef;
-
-    if (ChakraRTInterface::JsNumberToDouble(args.arguments[1], &tmp) == JsNoError)
-    {
-        timerId = static_cast<int>(tmp);
-        messageQueue_->RemoveById(timerId);
-    }
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetUndefinedValue(&undef));
-    return undef;
-
-Error:
-    SetExceptionIf(errorCode, errorMessage);
-    return JS_INVALID_REFERENCE;
-}
-
 bool WScriptJsrt::Uninitialize()
 {
     // moduleRecordMap is a global std::map, its destructor may access overridden

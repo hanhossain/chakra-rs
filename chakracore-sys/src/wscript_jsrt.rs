@@ -55,9 +55,12 @@ mod ffi {
         fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
         fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
         unsafe fn InsertSorted(self: Pin<&mut MessageQueue>, message: *mut MessageBase);
+        fn RemoveById(self: Pin<&mut MessageQueue>, id: u32);
 
         #[Self = "WScriptJsrt"]
         unsafe fn AddMessageQueue(messageQueue: *mut MessageQueue);
+        #[Self = "WScriptJsrt"]
+        fn GetMessageQueue() -> *mut MessageQueue;
 
         type JsValueRef = crate::jsrt::JsValueRef;
         type CVoid = crate::jsrt::CVoid;
@@ -78,8 +81,6 @@ mod ffi {
         #[namespace = "PlatformAgnostic::ICUHelpers"]
         fn GetICUMajorVersion() -> i32;
 
-        #[Self = "WScriptJsrt"]
-        fn ClearTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
 
@@ -234,7 +235,7 @@ impl WScript {
         wscript_object.set_named_function("LoadScript", WScript::load_script_callback)?;
         wscript_object.set_named_function("LoadModule", WScript::load_module_callback)?;
         wscript_object.set_named_function("SetTimeout", WScript::set_timeout_callback)?;
-        wscript_object.set_named_function("ClearTimeout", WScriptJsrt::ClearTimeoutCallback)?;
+        wscript_object.set_named_function("ClearTimeout", WScript::clear_timeout_callback)?;
         wscript_object.set_named_function("Flag", WScript::flag_callback)?;
         wscript_object.set_named_function(
             "RegisterModuleSource",
@@ -799,6 +800,23 @@ impl WScript {
         }
         let timer_id = ChakraRt::double_to_number(msg_id as f64)?;
         Ok(timer_id)
+    }
+
+    #[tracing::instrument(skip(args), err)]
+    fn clear_timeout_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<()> {
+        anyhow::ensure!(
+            args.arguments.len() == 2,
+            "invalid call to WScript.ClearTimeout"
+        );
+
+        if let Ok(timer_id) = ChakraRt::number_to_double(&args.arguments[1]).map(|x| x as u32) {
+            unsafe {
+                let message_queue = Pin::new_unchecked(&mut *WScriptJsrt::GetMessageQueue());
+                message_queue.RemoveById(timer_id);
+            }
+        }
+
+        Ok(())
     }
 }
 
