@@ -46,6 +46,8 @@ mod ffi {
         type MessageQueue;
         type MessageBase;
 
+        fn GetId(self: &MessageBase) -> u32;
+
         #[Self = "MessageQueue"]
         fn New() -> UniquePtr<MessageQueue>;
 
@@ -76,8 +78,6 @@ mod ffi {
         #[namespace = "PlatformAgnostic::ICUHelpers"]
         fn GetICUMajorVersion() -> i32;
 
-        #[Self = "WScriptJsrt"]
-        fn SetTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
         fn ClearTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
         #[Self = "WScriptJsrt"]
@@ -233,7 +233,7 @@ impl WScript {
         wscript_object.set_named_function("LoadScriptFile", WScript::load_script_file_callback)?;
         wscript_object.set_named_function("LoadScript", WScript::load_script_callback)?;
         wscript_object.set_named_function("LoadModule", WScript::load_module_callback)?;
-        wscript_object.set_named_function("SetTimeout", WScriptJsrt::SetTimeoutCallback)?;
+        wscript_object.set_named_function("SetTimeout", WScript::set_timeout_callback)?;
         wscript_object.set_named_function("ClearTimeout", WScriptJsrt::ClearTimeoutCallback)?;
         wscript_object.set_named_function("Flag", WScript::flag_callback)?;
         wscript_object.set_named_function(
@@ -782,6 +782,23 @@ impl WScript {
             }
         }
         Ok(())
+    }
+
+    fn set_timeout_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        if args.arguments.len() != 3 {
+            anyhow::bail!("invalid call to WScript.SetTimeout");
+        }
+
+        let function = args.arguments[1].clone();
+        let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
+        let msg = WScriptJsrt_CallbackMessage::New(time, function);
+        let msg = WScriptJsrt_CallbackMessage::Upcast(msg);
+        let msg_id = msg.GetId();
+        unsafe {
+            WScriptJsrt::PushMessage(msg.into_raw());
+        }
+        let timer_id = ChakraRt::double_to_number(msg_id as f64)?;
+        Ok(timer_id)
     }
 }
 
