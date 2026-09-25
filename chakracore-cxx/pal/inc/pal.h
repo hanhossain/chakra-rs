@@ -37,6 +37,7 @@ Abstract:
 #define __PAL_H__
 
 #include <cstdio>
+#include <functional>
 
 #ifdef PAL_STDCPP_COMPAT
 #include <stddef.h>
@@ -160,9 +161,6 @@ extern "C" {
 #define DLL_THREAD_ATTACH  2
 #define DLL_THREAD_DETACH  3
 #define DLL_PROCESS_DETACH 0
-
-typedef uint32_t (*PTHREAD_START_ROUTINE)(void * lpThreadParameter);
-typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
 
 /******************* PAL-Specific Entrypoints *****************************/
 
@@ -358,7 +356,7 @@ Sleep(
 HANDLE
 CreateThread(
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    LPTHREAD_START_ROUTINE lpStartAddress,
+    std::function<uint32_t(void *)> lpStartAddress,
     void * lpParameter,
     uint32_t dwCreationFlags,
     uint32_t * lpThreadId);
