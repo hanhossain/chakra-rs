@@ -173,10 +173,13 @@ void RuntimeThreadData::wait_initial_script_completed()
     initial_script_completed_cv_.wait(lock, [this] { return initial_script_completed_; });
 }
 
-void RuntimeThreadData::enqueue_report(rust::String report)
+void RuntimeThreadData::enqueue_report_to_parent(rust::String report)
 {
-    std::unique_lock lease{csReportQ_};
-    reportQ_.push_back(std::move(report));
+    if (parent)
+    {
+        std::unique_lock lease{parent->csReportQ_};
+        parent->reportQ_.push_back(std::move(report));
+    }
 }
 
 bool RuntimeThreadData::dequeue_report(rust::String &report)

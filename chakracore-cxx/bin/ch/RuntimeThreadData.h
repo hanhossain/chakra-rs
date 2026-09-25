@@ -40,7 +40,7 @@ public:
     void set_initial_script_completed();
     void reset_initial_script_completed();
     void wait_initial_script_completed();
-    void enqueue_report(rust::String report);
+    void enqueue_report_to_parent(rust::String report);
     bool dequeue_report(rust::String &report);
 
 private:
