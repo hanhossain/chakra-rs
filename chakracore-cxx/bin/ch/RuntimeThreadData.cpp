@@ -38,7 +38,6 @@ RuntimeThreadData &GetCurrentRuntimeThreadData([[maybe_unused]] int &dummy)
 }
 
 RuntimeThreadData::RuntimeThreadData(rust::String initialSource) :
-    semaphore(std::nullopt),
     hThread(nullptr),
     sharedContent(nullptr),
     receiveBroadcastCallbackFunc(nullptr),
@@ -108,9 +107,6 @@ uint32_t RuntimeThreadData::ThreadProc()
             ChakraRTInterface::JsGetGlobalObject(&args[0]);
             ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(this->parent->sharedContent, &args[1]);
             ChakraRTInterface::JsDoubleToNumber(1, &args[2]);
-
-            // notify the parent we received the data
-            parent->semaphore->release();
 
             if (this->receiveBroadcastCallbackFunc)
             {
