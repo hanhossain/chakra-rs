@@ -13,7 +13,8 @@
 
 #include "ChakraCore.h"
 #include "MessageQueue.h"
-#include "chakracore-sys/src/jsrt/ffi.rs.h"
+#include <chakracore-sys/src/jsrt/ffi.rs.h>
+#include <chakracore-sys/src/str_helper.rs.h>
 
 enum ModuleState
 {
@@ -115,7 +116,7 @@ public:
     }
 
     static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
-    static JsValueRef LoadScript(JsValueRef callee, rust::Str fileName, const std::optional<rust::Str> &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
+    static JsValueRef LoadScript(JsValueRef callee, rust::Str fileName, const chakra_rs::OptionalString &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
     static std::size_t GetNextSourceContext();
     static JsValueRef LoadScriptFileHelper(JsValueRef callee, bool isSourceModule, rust::Str filename, rust::Str scriptInjectType, rust::Str content);
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
@@ -123,7 +124,7 @@ public:
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
 public:
-    static JsErrorCode CALLBACK LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile = false);
+    static JsErrorCode CALLBACK LoadModuleFromString(const chakra_rs::OptionalString &fileContent, const std::string &fullName, bool isFile = false);
 
 private:
     static MessageQueue *messageQueue_;

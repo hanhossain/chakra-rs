@@ -1,3 +1,4 @@
+pub use ffi::OptionalString;
 use widestring::U16CString;
 use widestring::error::ContainsNul;
 
@@ -7,6 +8,13 @@ mod ffi {
         fn to_lowercase(s: &String) -> String;
         fn to_raw_u16_str(s: &str) -> Result<*mut u16>;
         unsafe fn free_raw_str(p: *mut u16);
+    }
+
+    #[namespace = "chakra_rs"]
+    #[derive(Debug, Clone)]
+    struct OptionalString {
+        has_value: bool,
+        value: String,
     }
 }
 
