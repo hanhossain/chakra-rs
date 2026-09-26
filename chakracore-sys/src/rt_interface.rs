@@ -20,6 +20,7 @@ mod ffi {
         type JsSourceContext = crate::jsrt::JsSourceContext;
         type CULong = crate::jsrt::CULong;
         type CVoid = crate::jsrt::CVoid;
+        type JsRef = crate::jsrt::JsRef;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateRuntime(
@@ -46,6 +47,14 @@ mod ffi {
         unsafe fn JsCreateExternalArrayBuffer(
             content: &str,
             result: *mut JsValueRef,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsCreateArrayBuffer(byte_length: u32, result: *mut JsValueRef) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetArrayBufferStorage(
+            instance: JsValueRef,
+            buffer: *mut *mut u8,
+            buffer_length: *mut u32,
         ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
@@ -111,6 +120,8 @@ mod ffi {
 
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
         type JsModuleHostInfoKind = crate::jsrt::JsModuleHostInfoKind;
+        type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
+
         #[Self = "ChakraRTInterface"]
         unsafe fn JsSetModuleHostInfo(
             request_module: JsModuleRecord,
@@ -130,6 +141,34 @@ mod ffi {
             normalized_specifier: JsValueRef,
             module_record: *mut JsModuleRecord,
         ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetProxyProperties(
+            object: JsValueRef,
+            is_proxy: *mut bool,
+            target: *mut JsValueRef,
+            handler: *mut JsValueRef,
+        ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetTrueValue(true_value: *mut JsValueRef) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetFalseValue(false_value: *mut JsValueRef) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetNullValue(value: *mut JsValueRef) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetSharedArrayBufferContent(
+            shared_array_buffer: JsValueRef,
+            shared_contents: *mut JsSharedArrayBufferContentHandle,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        fn JsReleaseSharedArrayBufferContentHandle(
+            shared_content: JsSharedArrayBufferContentHandle,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsRelease(jsref: JsRef, count: *mut u32) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsAddRef(jsref: JsRef, count: *mut u32) -> JsErrorCode;
     }
 }
 

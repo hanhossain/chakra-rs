@@ -13,7 +13,8 @@
 
 #include "ChakraCore.h"
 #include "MessageQueue.h"
-#include "chakracore-sys/src/jsrt/ffi.rs.h"
+#include <chakracore-sys/src/jsrt/ffi.rs.h>
+#include <chakracore-sys/src/str_helper.rs.h>
 
 enum ModuleState
 {
@@ -26,7 +27,6 @@ class WScriptJsrt
 {
 public:
     static bool Uninitialize();
-    static JsErrorCode ModuleEntryPoint(rust::Str fileContent, const rust::String &fullName);
 
     class CallbackMessage : public MessageBase
     {
@@ -84,6 +84,7 @@ public:
 
     static void AddMessageQueue(MessageQueue *messageQueue);
     static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
+    static MessageQueue *GetMessageQueue() { return messageQueue_; }
 
     static const char * ConvertErrorCodeToMessage(JsErrorCode errorCode)
     {
@@ -114,26 +115,16 @@ public:
     }
 
     static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
-    static JsValueRef LoadScript(JsValueRef callee, rust::Str fileName, const std::optional<rust::Str> &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
+    static JsValueRef LoadScript(JsValueRef callee, rust::Str fileName, const chakra_rs::OptionalString &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile);
     static std::size_t GetNextSourceContext();
-    static JsValueRef LoadScriptFileHelper(JsValueRef callee, rust::Slice<JsValueRef const> arguments, bool isSourceModule);
+    static JsValueRef LoadScriptFileHelper(JsValueRef callee, bool isSourceModule, rust::Str filename, rust::Str scriptInjectType, rust::Str content);
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
     static void FinalizeFree(void * addr);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
 public:
-    static JsValueRef CALLBACK SetTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK ClearTimeoutCallback(const chakra_rs::JsNativeFunctionArgs &args);
+    static JsErrorCode CALLBACK LoadModuleFromString(const chakra_rs::OptionalString &fileContent, const rust::String &fullName, bool isFile = false);
 
-    static JsErrorCode CALLBACK LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile = false);
-
-    static JsValueRef CALLBACK LoadBinaryFileCallback(const chakra_rs::JsNativeFunctionArgs &args);
-
-    static JsValueRef CALLBACK BroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK ReceiveBroadcastCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK ReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK GetReportCallback(const chakra_rs::JsNativeFunctionArgs &args);
-    static JsValueRef CALLBACK GetProxyPropertiesCallback(const chakra_rs::JsNativeFunctionArgs &args);
 private:
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;

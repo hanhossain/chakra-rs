@@ -2,11 +2,14 @@ use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModuleHostInfoKind, JsModuleRecord,
-    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
+    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSharedArrayBufferContentHandle,
+    JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
+use crate::str_helper::OptionalString;
 use crate::wscript_jsrt::ffi::{
-    CVoid, ModuleState, WScriptJsrt_CallbackMessage, WScriptJsrt_ModuleMessage,
+    CVoid, GetCurrentRuntimeThreadData, ModuleState, WScriptJsrt_CallbackMessage,
+    WScriptJsrt_ModuleMessage,
 };
 pub use ffi::{MessageQueue, WScriptJsrt};
 use std::collections::HashMap;
@@ -44,6 +47,8 @@ mod ffi {
         type MessageQueue;
         type MessageBase;
 
+        fn GetId(self: &MessageBase) -> u32;
+
         #[Self = "MessageQueue"]
         fn New() -> UniquePtr<MessageQueue>;
 
@@ -51,9 +56,12 @@ mod ffi {
         fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
         fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
         unsafe fn InsertSorted(self: Pin<&mut MessageQueue>, message: *mut MessageBase);
+        fn RemoveById(self: Pin<&mut MessageQueue>, id: u32);
 
         #[Self = "WScriptJsrt"]
         unsafe fn AddMessageQueue(messageQueue: *mut MessageQueue);
+        #[Self = "WScriptJsrt"]
+        fn GetMessageQueue() -> *mut MessageQueue;
 
         type JsValueRef = crate::jsrt::JsValueRef;
         type CVoid = crate::jsrt::CVoid;
@@ -62,8 +70,6 @@ mod ffi {
         fn GetNextSourceContext() -> usize;
 
         type JsErrorCode = crate::jsrt::JsErrorCode;
-        #[Self = "WScriptJsrt"]
-        fn ModuleEntryPoint(fileContent: &str, fullName: &String) -> JsErrorCode;
 
         #[Self = "WScriptJsrt"]
         fn PrintException(filname: &str, jsErrorCode: JsErrorCode, exception: JsValueRef) -> bool;
@@ -75,28 +81,12 @@ mod ffi {
         fn GetICUMajorVersion() -> i32;
 
         #[Self = "WScriptJsrt"]
-        fn SetTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn ClearTimeoutCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn LoadBinaryFileCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn GetProxyPropertiesCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-
-        #[Self = "WScriptJsrt"]
-        fn BroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn ReceiveBroadcastCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn ReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-        #[Self = "WScriptJsrt"]
-        fn GetReportCallback(args: &JsNativeFunctionArgs) -> JsValueRef;
-
-        #[Self = "WScriptJsrt"]
-        fn LoadScriptFileHelper(
+        unsafe fn LoadScriptFileHelper(
             callee: JsValueRef,
-            arguments: &[JsValueRef],
             is_source_module: bool,
+            filename: &str,
+            script_inject_type: &str,
+            content: &str,
         ) -> JsValueRef;
 
         #[Self = "WScriptJsrt"]
@@ -129,15 +119,40 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         unsafe fn PushMessage(message: *mut MessageBase);
+
+        #[namespace = "chakra_rs"]
+        type OptionalString = crate::str_helper::OptionalString;
+        #[Self = "WScriptJsrt"]
+        fn LoadModuleFromString(
+            file_content: &OptionalString,
+            full_name: &String,
+            is_file: bool,
+        ) -> JsErrorCode;
     }
 
     unsafe extern "C++" {
         include!("RuntimeThreadData.h");
 
         type RuntimeThreadData;
+        type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
         fn GetCurrentRuntimeThreadData(dummy: &mut i32) -> Pin<&mut RuntimeThreadData>;
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
+        fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
+        fn enqueue_report_to_parent(self: Pin<&mut RuntimeThreadData>, report: String);
+        fn set_shared_content(
+            self: Pin<&mut RuntimeThreadData>,
+            shared_content: JsSharedArrayBufferContentHandle,
+        );
+        fn get_shared_content(
+            self: Pin<&mut RuntimeThreadData>,
+        ) -> JsSharedArrayBufferContentHandle;
+        fn broadcast_to_children(self: Pin<&mut RuntimeThreadData>);
+        fn get_receive_broadcast_callback_func(self: &RuntimeThreadData) -> JsValueRef;
+        fn set_receive_broadcast_callback_func(
+            self: Pin<&mut RuntimeThreadData>,
+            value: JsValueRef,
+        );
     }
 
     #[namespace = "chakra_rs"]
@@ -149,6 +164,13 @@ mod ffi {
 
         #[Self = "WScript"]
         unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid);
+
+        #[Self = "WScript"]
+        fn load_module_from_string(
+            file_content: &OptionalString,
+            full_name: &String,
+            is_file: bool,
+        ) -> JsErrorCode;
 
         type ModuleErrorMap;
         fn get_module_error_map() -> Box<ModuleErrorMap>;
@@ -226,18 +248,16 @@ impl WScript {
         wscript_object.set_named_function("LoadScriptFile", WScript::load_script_file_callback)?;
         wscript_object.set_named_function("LoadScript", WScript::load_script_callback)?;
         wscript_object.set_named_function("LoadModule", WScript::load_module_callback)?;
-        wscript_object.set_named_function("SetTimeout", WScriptJsrt::SetTimeoutCallback)?;
-        wscript_object.set_named_function("ClearTimeout", WScriptJsrt::ClearTimeoutCallback)?;
+        wscript_object.set_named_function("SetTimeout", WScript::set_timeout_callback)?;
+        wscript_object.set_named_function("ClearTimeout", WScript::clear_timeout_callback)?;
         wscript_object.set_named_function("Flag", WScript::flag_callback)?;
         wscript_object.set_named_function(
             "RegisterModuleSource",
             WScript::register_module_source_callback,
         )?;
         wscript_object.set_named_function("GetModuleNamespace", WScript::get_module_namespace)?;
-        wscript_object.set_named_function(
-            "GetProxyProperties",
-            WScriptJsrt::GetProxyPropertiesCallback,
-        )?;
+        wscript_object
+            .set_named_function("GetProxyProperties", WScript::get_proxy_properties_callback)?;
 
         // Platform
         let mut platform_object = ChakraRt::create_object()?;
@@ -300,7 +320,7 @@ impl WScript {
 
         global_object.set_named_function("print", WScript::echo_callback)?;
         global_object.set_named_function("read", WScript::load_text_file_callback)?;
-        global_object.set_named_function("readbuffer", WScriptJsrt::LoadBinaryFileCallback)?;
+        global_object.set_named_function("readbuffer", WScript::load_binary_file_callback)?;
 
         let mut console_object = ChakraRt::create_object()?;
         console_object.set_named_function("log", WScript::echo_callback)?;
@@ -317,12 +337,12 @@ impl WScript {
         // WScript will have the extra support API below and $262 will be
         // added to global scope
         if HostConfigFlags::GetConfig().host.test262 {
-            wscript_object.set_named_function("Broadcast", WScriptJsrt::BroadcastCallback)?;
+            wscript_object.set_named_function("Broadcast", WScript::broadcast_callback)?;
 
             wscript_object
-                .set_named_function("ReceiveBroadcast", WScriptJsrt::ReceiveBroadcastCallback)?;
-            wscript_object.set_named_function("Report", WScriptJsrt::ReportCallback)?;
-            wscript_object.set_named_function("GetReport", WScriptJsrt::GetReportCallback)?;
+                .set_named_function("ReceiveBroadcast", WScript::receive_broadcast_callback)?;
+            wscript_object.set_named_function("Report", WScript::report_callback)?;
+            wscript_object.set_named_function("GetReport", WScript::get_report_callback)?;
             wscript_object.set_named_function("Leaving", WScript::leaving_callback)?;
             wscript_object.set_named_function("Sleep", WScript::sleep_callback)?;
 
@@ -397,8 +417,41 @@ impl WScript {
         Ok(value)
     }
 
-    fn load_script_file_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
-        WScriptJsrt::LoadScriptFileHelper(args.callee.clone(), args.arguments, false)
+    #[tracing::instrument(skip_all, err)]
+    fn load_script_file_helper(
+        callee: JsValueRef,
+        arguments: &[JsValueRef],
+        is_source_module: bool,
+    ) -> anyhow::Result<JsValueRef> {
+        anyhow::ensure!(
+            arguments.len() >= 2 && arguments.len() <= 4,
+            "Need more or fewer arguments for WScript.LoadScript"
+        );
+
+        let filename = arguments[1].to_string()?;
+
+        let script_inject_type = if arguments.len() > 2 {
+            arguments[2].to_string()?
+        } else {
+            String::new()
+        };
+
+        let content = ScriptCache::load_script_from_file(&filename)?.into_boxed_str();
+        // TODO (hanhossain): don't leak a string ptr
+        let content = Box::into_raw(content);
+        unsafe {
+            Ok(WScriptJsrt::LoadScriptFileHelper(
+                callee,
+                is_source_module,
+                &filename,
+                &script_inject_type,
+                &*content,
+            ))
+        }
+    }
+
+    fn load_script_file_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        WScript::load_script_file_helper(args.callee.clone(), args.arguments, false)
     }
 
     fn load_script_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
@@ -462,6 +515,51 @@ impl WScript {
             }
             Err(x) => Err(anyhow::Error::new(x)),
         }
+    }
+
+    fn get_proxy_properties_callback(
+        args: &JsNativeFunctionArgs,
+    ) -> Result<Option<JsObject>, JsError> {
+        if args.arguments.len() <= 1 {
+            return Ok(None);
+        }
+
+        let mut is_proxy = false;
+        let mut target = JsValueRef::default();
+        let mut handler = JsValueRef::default();
+        unsafe {
+            ChakraRTInterface::JsGetProxyProperties(
+                args.arguments[1].clone(),
+                &raw mut is_proxy,
+                &raw mut target,
+                &raw mut handler,
+            )
+            .as_result()?;
+        }
+
+        if !is_proxy {
+            return Ok(None);
+        }
+
+        let target_property = ChakraRt::create_property_id("target")?;
+        let handler_property = ChakraRt::create_property_id("handler")?;
+        let revoked_property = ChakraRt::create_property_id("revoked")?;
+        let mut obj = ChakraRt::create_object()?;
+        let mut revoked = JsValueRef::default();
+
+        unsafe {
+            if target.is_null() {
+                ChakraRTInterface::JsGetTrueValue(&raw mut revoked).as_result()?;
+                target = ChakraRt::get_undefined_value()?;
+                handler = ChakraRt::get_undefined_value()?;
+            } else {
+                ChakraRTInterface::JsGetFalseValue(&raw mut revoked).as_result()?;
+            }
+        }
+        obj.set_property(handler_property, handler, true)?;
+        obj.set_property(target_property, target, true)?;
+        obj.set_property(revoked_property, revoked, true)?;
+        Ok(Some(obj))
     }
 
     pub unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid) {
@@ -649,6 +747,182 @@ impl WScript {
                 Err(FetchImportedModuleHelperError::IoError(_)) => JsErrorCode::JsErrorFatal,
             }
         }
+    }
+
+    fn get_report_callback(args: &JsNativeFunctionArgs) -> Result<JsValueRef, JsError> {
+        let mut return_value = JsValueRef::default();
+        unsafe {
+            ChakraRTInterface::JsGetNullValue(&raw mut return_value).as_result()?;
+        }
+
+        if !args.arguments.is_empty() {
+            let mut v = 42;
+            let thread_data = ffi::GetCurrentRuntimeThreadData(&mut v);
+            let mut report = String::new();
+            if thread_data.dequeue_report(&mut report) {
+                unsafe {
+                    ChakraRTInterface::JsCreateString(&report, &raw mut return_value)
+                        .as_result()?;
+                }
+            }
+        }
+
+        Ok(return_value)
+    }
+
+    fn report_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() > 1 {
+            let auto_str = args.arguments[1].to_string()?;
+            let mut dummy = 0;
+            let runtime_thread_data = GetCurrentRuntimeThreadData(&mut dummy);
+            runtime_thread_data.enqueue_report_to_parent(auto_str);
+        }
+        Ok(())
+    }
+
+    fn broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() > 1 {
+            let mut dummy = 0;
+            let mut thread_data = GetCurrentRuntimeThreadData(&mut dummy);
+            let mut shared_content = JsSharedArrayBufferContentHandle::default();
+            unsafe {
+                ChakraRTInterface::JsGetSharedArrayBufferContent(
+                    args.arguments[1].clone(),
+                    &raw mut shared_content,
+                );
+            }
+
+            thread_data.as_mut().set_shared_content(shared_content);
+            thread_data.as_mut().broadcast_to_children();
+            ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(
+                thread_data.get_shared_content(),
+            );
+        }
+        Ok(())
+    }
+
+    fn receive_broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+        if args.arguments.len() > 1 {
+            let mut dummy = 0;
+            let mut thread_data = GetCurrentRuntimeThreadData(&mut dummy);
+            if !thread_data.get_receive_broadcast_callback_func().is_null() {
+                unsafe {
+                    ChakraRTInterface::JsRelease(
+                        thread_data
+                            .get_receive_broadcast_callback_func()
+                            .as_js_ref(),
+                        std::ptr::null_mut(),
+                    )
+                    .as_result()?;
+                }
+            }
+            thread_data
+                .as_mut()
+                .set_receive_broadcast_callback_func(args.arguments[1].clone());
+            unsafe {
+                ChakraRTInterface::JsAddRef(
+                    thread_data
+                        .get_receive_broadcast_callback_func()
+                        .as_js_ref(),
+                    std::ptr::null_mut(),
+                )
+                .as_result()?;
+            }
+        }
+        Ok(())
+    }
+
+    fn set_timeout_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        if args.arguments.len() != 3 {
+            anyhow::bail!("invalid call to WScript.SetTimeout");
+        }
+
+        let function = args.arguments[1].clone();
+        let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
+        let msg = WScriptJsrt_CallbackMessage::New(time, function);
+        let msg = WScriptJsrt_CallbackMessage::Upcast(msg);
+        let msg_id = msg.GetId();
+        unsafe {
+            WScriptJsrt::PushMessage(msg.into_raw());
+        }
+        let timer_id = ChakraRt::double_to_number(msg_id as f64)?;
+        Ok(timer_id)
+    }
+
+    #[tracing::instrument(skip(args), err)]
+    fn clear_timeout_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<()> {
+        anyhow::ensure!(
+            args.arguments.len() == 2,
+            "invalid call to WScript.ClearTimeout"
+        );
+
+        if let Ok(timer_id) = ChakraRt::number_to_double(&args.arguments[1]).map(|x| x as u32) {
+            unsafe {
+                let message_queue = Pin::new_unchecked(&mut *WScriptJsrt::GetMessageQueue());
+                message_queue.RemoveById(timer_id);
+            }
+        }
+
+        Ok(())
+    }
+
+    #[tracing::instrument(skip_all, err)]
+    fn load_binary_file_callback(
+        args: &JsNativeFunctionArgs,
+    ) -> anyhow::Result<Option<JsValueRef>> {
+        if args.arguments.len() < 2 {
+            return Ok(None);
+        }
+
+        let filename = args.arguments[1].to_string()?;
+        let file_content = std::fs::read(filename)?;
+        let mut array_buffer = JsValueRef::default();
+        unsafe {
+            ChakraRTInterface::JsCreateArrayBuffer(
+                file_content.len() as u32,
+                &raw mut array_buffer,
+            )
+            .as_result()?;
+        }
+
+        unsafe {
+            let mut buffer: *mut u8 = std::ptr::null_mut();
+            let mut buffer_length = 0;
+            ChakraRTInterface::JsGetArrayBufferStorage(
+                array_buffer.clone(),
+                &raw mut buffer,
+                &raw mut buffer_length,
+            )
+            .as_result()?;
+            anyhow::ensure!(
+                (buffer_length as usize) >= file_content.len(),
+                "Array buffer size is insufficient to store the binary file."
+            );
+            buffer.copy_from(file_content.as_ptr(), file_content.len());
+        }
+
+        Ok(Some(array_buffer))
+    }
+
+    #[tracing::instrument(skip_all)]
+    pub fn module_entry_point(file_content: &str, full_name: &String) -> JsErrorCode {
+        WScript::load_module_from_string(
+            &OptionalString {
+                has_value: true,
+                value: file_content.to_owned(),
+            },
+            full_name,
+            true,
+        )
+    }
+
+    #[tracing::instrument(skip_all)]
+    fn load_module_from_string(
+        file_content: &OptionalString,
+        full_name: &String,
+        is_file: bool,
+    ) -> JsErrorCode {
+        WScriptJsrt::LoadModuleFromString(file_content, full_name, is_file)
     }
 }
 

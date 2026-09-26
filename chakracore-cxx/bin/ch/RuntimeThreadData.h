@@ -9,19 +9,19 @@
 #include <list>
 #include <optional>
 #include <semaphore>
-#include <string>
+#include <rust/cxx.h>
 
 class RuntimeThreadData
 {
 public:
     RuntimeThreadData();
+    RuntimeThreadData(rust::String initialSource);
     ~RuntimeThreadData();
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
-    std::optional<std::binary_semaphore> semaphore;
     HANDLE hThread;
 
-    JsSharedArrayBufferContentHandle sharedContent;
+    JsSharedArrayBufferContentHandle sharedContent_;
     JsValueRef receiveBroadcastCallbackFunc;
 
 
@@ -29,28 +29,33 @@ public:
     JsContextRef context;
 
 
-    rust::String initialSource;
 
     RuntimeThreadData* parent;
-    
+
     std::list<RuntimeThreadData*> children;
 
-    CRITICAL_SECTION csReportQ;
-    std::list<std::string> reportQ;
-
-    bool leaving;
-
-
     uint32_t ThreadProc();
-    void set_leaving(bool mLeaving);
+    void set_leaving(bool leaving);
     void set_initial_script_completed();
     void reset_initial_script_completed();
     void wait_initial_script_completed();
+    void enqueue_report_to_parent(rust::String report);
+    bool dequeue_report(rust::String &report);
+    void broadcast_to_children();
+    void set_shared_content(JsSharedArrayBufferContentHandle shared_content);
+    JsSharedArrayBufferContentHandle get_shared_content();
+    JsValueRef get_receive_broadcast_callback_func() const;
+    void set_receive_broadcast_callback_func(JsValueRef value);
 
 private:
-    bool initial_script_completed_;
+    bool initial_script_completed_{};
     std::condition_variable initial_script_completed_cv_;
     std::mutex initial_script_completed_mtx_;
+
+    std::mutex csReportQ_{};
+    std::list<rust::String> reportQ_{};
+    bool leaving_;
+    rust::String initialSource_;
 };
 
 struct RuntimeThreadLocalData

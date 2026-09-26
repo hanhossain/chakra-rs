@@ -5,6 +5,7 @@
 #include "RuntimeThreadData.h"
 
 #include <format>
+#include <utility>
 
 #include "ChakraRtInterface.h"
 #include "Helpers.h"
@@ -36,20 +37,22 @@ RuntimeThreadData &GetCurrentRuntimeThreadData([[maybe_unused]] int &dummy)
     return *threadLocalData.threadData;
 }
 
-RuntimeThreadData::RuntimeThreadData() :
-    semaphore(std::nullopt),
+RuntimeThreadData::RuntimeThreadData(rust::String initialSource) :
     hThread(nullptr),
-    sharedContent(nullptr),
+    sharedContent_(nullptr),
     receiveBroadcastCallbackFunc(nullptr),
     runtime(nullptr),
     context(nullptr),
     parent(nullptr),
-    leaving(false)
+    leaving_(false),
+    initialSource_(std::move(initialSource))
 {
     this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
     this->hevntShutdown = CreateEventW(TRUE, FALSE);
+}
 
-    InitializeCriticalSection(&csReportQ);
+RuntimeThreadData::RuntimeThreadData() : RuntimeThreadData(rust::String{})
+{
 }
 
 RuntimeThreadData::~RuntimeThreadData()
@@ -57,7 +60,6 @@ RuntimeThreadData::~RuntimeThreadData()
     CloseHandle(this->hevntReceivedBroadcast);
     CloseHandle(this->hevntShutdown);
     CloseHandle(this->hThread);
-    DeleteCriticalSection(&csReportQ);
 }
 
 uint32_t RuntimeThreadData::ThreadProc()
@@ -84,7 +86,7 @@ uint32_t RuntimeThreadData::ThreadProc()
         IfFailGo(E_FAIL);
     }
 
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(initialSource, nullptr, &scriptSource));
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(initialSource_, nullptr, &scriptSource));
 
     ChakraRTInterface::JsCreateString(fullPath, strlen(fullPath), &fname);
 
@@ -103,11 +105,8 @@ uint32_t RuntimeThreadData::ThreadProc()
         {
             JsValueRef args[3];
             ChakraRTInterface::JsGetGlobalObject(&args[0]);
-            ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(this->parent->sharedContent, &args[1]);
+            ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(this->parent->get_shared_content(), &args[1]);
             ChakraRTInterface::JsDoubleToNumber(1, &args[2]);
-
-            // notify the parent we received the data
-            parent->semaphore->release();
 
             if (this->receiveBroadcastCallbackFunc)
             {
@@ -115,7 +114,7 @@ uint32_t RuntimeThreadData::ThreadProc()
             }
         }
 
-        if (waitRet == WAIT_OBJECT_0 + 1 || this->leaving)
+        if (waitRet == WAIT_OBJECT_0 + 1 || leaving_)
         {
             WScriptJsrt::Uninitialize();
 
@@ -144,9 +143,9 @@ Error:
     return 0;
 }
 
-void RuntimeThreadData::set_leaving(bool mLeaving)
+void RuntimeThreadData::set_leaving(bool leaving)
 {
-    leaving = mLeaving;
+    leaving_ = leaving;
 }
 
 void RuntimeThreadData::set_initial_script_completed()
@@ -168,4 +167,53 @@ void RuntimeThreadData::wait_initial_script_completed()
 {
     std::unique_lock lock(initial_script_completed_mtx_);
     initial_script_completed_cv_.wait(lock, [this] { return initial_script_completed_; });
+}
+
+void RuntimeThreadData::enqueue_report_to_parent(rust::String report)
+{
+    if (parent)
+    {
+        std::unique_lock lease{parent->csReportQ_};
+        parent->reportQ_.push_back(std::move(report));
+    }
+}
+
+bool RuntimeThreadData::dequeue_report(rust::String &report)
+{
+    std::unique_lock lease{csReportQ_};
+    if (reportQ_.empty())
+    {
+        return false;
+    }
+
+    report = reportQ_.front();
+    reportQ_.pop_front();
+    return true;
+}
+
+void RuntimeThreadData::broadcast_to_children()
+{
+    for (const auto child : children)
+    {
+        SetEvent(child->hevntReceivedBroadcast);
+    }
+}
+
+void RuntimeThreadData::set_shared_content(JsSharedArrayBufferContentHandle shared_content)
+{
+    sharedContent_ = shared_content;
+}
+
+JsSharedArrayBufferContentHandle RuntimeThreadData::get_shared_content()
+{
+    return sharedContent_;
+}
+JsValueRef RuntimeThreadData::get_receive_broadcast_callback_func() const
+{
+    return receiveBroadcastCallbackFunc;
+}
+
+void RuntimeThreadData::set_receive_broadcast_callback_func(JsValueRef value)
+{
+    receiveBroadcastCallbackFunc = value;
 }

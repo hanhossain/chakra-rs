@@ -42,6 +42,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #include "pal/virtual.h"
 #include "chakra/Logger.h"
 #include <format>
+#include <utility>
 
 #if defined(__NetBSD__) && !defined(__linux__)
 #include <sys/cdefs.h>
@@ -349,7 +350,7 @@ See MSDN doc.
 HANDLE
 CreateThread(
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    LPTHREAD_START_ROUTINE lpStartAddress,
+    std::function<uint32_t(void *)> lpStartAddress,
     void * lpParameter,
     uint32_t dwCreationFlags,
     uint32_t * lpThreadId)
@@ -364,7 +365,7 @@ CreateThread(
     palError = InternalCreateThread(
         pThread,
         lpThreadAttributes,
-        lpStartAddress,
+        std::move(lpStartAddress),
         lpParameter,
         dwCreationFlags,
         UserCreatedThread,
@@ -389,7 +390,7 @@ PAL_ERROR
 CorUnix::InternalCreateThread(
     CPalThread *pThread,
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    LPTHREAD_START_ROUTINE lpStartAddress,
+    std::function<uint32_t(void *)> lpStartAddress,
     void * lpParameter,
     uint32_t dwCreationFlags,
     PalThreadType eThreadType,
@@ -441,7 +442,7 @@ CorUnix::InternalCreateThread(
         goto EXIT;
     }
 
-    pNewThread->m_lpStartAddress = lpStartAddress;
+    pNewThread->m_lpStartAddress = std::move(lpStartAddress);
     pNewThread->m_lpStartParameter = lpParameter;
     pNewThread->m_bCreateSuspended = (dwCreationFlags & CREATE_SUSPENDED) == CREATE_SUSPENDED;
     pNewThread->m_eThreadType = eThreadType;
@@ -1199,7 +1200,7 @@ GetThreadTimesInternalExit:
 void *CPalThread::ThreadEntry(CPalThread *pThread)
 {
     PAL_ERROR palError;
-    PTHREAD_START_ROUTINE pfnStartRoutine;
+    std::function<uint32_t(void *)> pfnStartRoutine;
     void * pvPar;
     uint32_t retValue;
 
@@ -1256,7 +1257,7 @@ void *CPalThread::ThreadEntry(CPalThread *pThread)
     pfnStartRoutine = pThread->GetStartAddress();
     pvPar = pThread->GetStartParameter();
 
-    retValue = (*pfnStartRoutine)(pvPar);
+    retValue = pfnStartRoutine(pvPar);
 
     TRACE("Thread exited (%u)\n", retValue);
     ExitThread(retValue);
