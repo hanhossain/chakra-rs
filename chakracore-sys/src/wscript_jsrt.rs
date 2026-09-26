@@ -6,6 +6,7 @@ use crate::jsrt::{
     JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
+use crate::str_helper::OptionalString;
 use crate::wscript_jsrt::ffi::{
     CVoid, GetCurrentRuntimeThreadData, ModuleState, WScriptJsrt_CallbackMessage,
     WScriptJsrt_ModuleMessage,
@@ -69,8 +70,6 @@ mod ffi {
         fn GetNextSourceContext() -> usize;
 
         type JsErrorCode = crate::jsrt::JsErrorCode;
-        #[Self = "WScriptJsrt"]
-        fn ModuleEntryPoint(fileContent: &str, fullName: &String) -> JsErrorCode;
 
         #[Self = "WScriptJsrt"]
         fn PrintException(filname: &str, jsErrorCode: JsErrorCode, exception: JsValueRef) -> bool;
@@ -120,6 +119,15 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         unsafe fn PushMessage(message: *mut MessageBase);
+
+        #[namespace = "chakra_rs"]
+        type OptionalString = crate::str_helper::OptionalString;
+        #[Self = "WScriptJsrt"]
+        fn LoadModuleFromString(
+            file_content: &OptionalString,
+            full_name: &String,
+            is_file: bool,
+        ) -> JsErrorCode;
     }
 
     unsafe extern "C++" {
@@ -156,6 +164,13 @@ mod ffi {
 
         #[Self = "WScript"]
         unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid);
+
+        #[Self = "WScript"]
+        fn load_module_from_string(
+            file_content: &OptionalString,
+            full_name: &String,
+            is_file: bool,
+        ) -> JsErrorCode;
 
         type ModuleErrorMap;
         fn get_module_error_map() -> Box<ModuleErrorMap>;
@@ -887,6 +902,27 @@ impl WScript {
         }
 
         Ok(Some(array_buffer))
+    }
+
+    #[tracing::instrument(skip_all)]
+    pub fn module_entry_point(file_content: &str, full_name: &String) -> JsErrorCode {
+        WScript::load_module_from_string(
+            &OptionalString {
+                has_value: true,
+                value: file_content.to_owned(),
+            },
+            full_name,
+            true,
+        )
+    }
+
+    #[tracing::instrument(skip_all)]
+    fn load_module_from_string(
+        file_content: &OptionalString,
+        full_name: &String,
+        is_file: bool,
+    ) -> JsErrorCode {
+        WScriptJsrt::LoadModuleFromString(file_content, full_name, is_file)
     }
 }
 

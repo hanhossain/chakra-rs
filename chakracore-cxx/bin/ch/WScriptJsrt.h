@@ -27,7 +27,6 @@ class WScriptJsrt
 {
 public:
     static bool Uninitialize();
-    static JsErrorCode ModuleEntryPoint(rust::Str fileContent, const rust::String &fullName);
 
     class CallbackMessage : public MessageBase
     {
@@ -124,7 +123,7 @@ public:
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
 public:
-    static JsErrorCode CALLBACK LoadModuleFromString(const chakra_rs::OptionalString &fileContent, const std::string &fullName, bool isFile = false);
+    static JsErrorCode CALLBACK LoadModuleFromString(const chakra_rs::OptionalString &fileContent, const rust::String &fullName, bool isFile = false);
 
 private:
     static MessageQueue *messageQueue_;

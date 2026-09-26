@@ -136,18 +136,12 @@ Error:
     return returnValue;
 }
 
-JsErrorCode WScriptJsrt::ModuleEntryPoint(rust::Str fileContent, const rust::String &fullName)
-{
-    auto span = chakra::Span::create("WScriptJsrt::ModuleEntryPoint");
-    return LoadModuleFromString(chakra_rs::OptionalString{.has_value=true, .value={fileContent.data(), fileContent.size()}}, static_cast<std::string>(fullName), true);
-}
-
-JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalString &fileContent, const std::string &fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalString &fileContent, const rust::String &fullName, bool isFile)
 {
     auto span = chakra::Span::create("WScriptJsrt::LoadModuleFromString");
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
-    const std::string& moduleRecordKey = fullName;
+    const auto& moduleRecordKey = fullName;
     auto moduleRecordMapContent = chakra_rs::get_module_record_map()->get(moduleRecordKey);
     JsErrorCode errorCode = JsNoError;
 
@@ -167,7 +161,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalString &f
         }
         if (errorCode == JsNoError)
         {
-            chakra_rs::get_module_directory_map()->insert(requestModule, fs::path(fullName).parent_path().native());
+            chakra_rs::get_module_directory_map()->insert(requestModule, fs::path(static_cast<std::string_view>(fullName)).parent_path().native());
             chakra_rs::get_module_record_map()->insert(moduleRecordKey, chakra_rs::ModuleRecordEntry { requestModule });
             auto module_error_map = chakra_rs::get_module_error_map();
             module_error_map->insert(requestModule, RootModule);
@@ -218,7 +212,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     // treated as a module source text instead of opening a new file.
     if (isSourceModule || scriptInjectType == "module")
     {
-        errorCode = LoadModuleFromString(content, fullPath, isFile);
+        errorCode = chakra_rs::WScript::load_module_from_string(content, fullPath.native(), isFile);
     }
     else if (scriptInjectType == "self")
     {
