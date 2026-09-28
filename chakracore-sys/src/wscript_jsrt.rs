@@ -6,6 +6,7 @@ use crate::jsrt::{
     JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
+use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::ffi::{
     CVoid, GetCurrentRuntimeThreadData, ModuleState, WScriptJsrt_CallbackMessage,
     WScriptJsrt_ModuleMessage,
@@ -69,8 +70,14 @@ mod ffi {
         fn GetNextSourceContext() -> usize;
 
         type JsErrorCode = crate::jsrt::JsErrorCode;
+        #[namespace = "chakra_rs"]
+        type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
         #[Self = "WScriptJsrt"]
-        fn ModuleEntryPoint(fileContent: &str, fullName: &String) -> JsErrorCode;
+        fn LoadModuleFromString(
+            file_content: &OptionalStr,
+            full_name: &String,
+            is_file: bool,
+        ) -> JsErrorCode;
 
         #[Self = "WScriptJsrt"]
         fn PrintException(filname: &str, jsErrorCode: JsErrorCode, exception: JsValueRef) -> bool;
@@ -887,6 +894,18 @@ impl WScript {
         }
 
         Ok(Some(array_buffer))
+    }
+
+    #[tracing::instrument]
+    pub fn module_entry_point(file_content: &str, full_name: &String) -> JsErrorCode {
+        WScriptJsrt::LoadModuleFromString(
+            &OptionalStr {
+                has_value: true,
+                value: file_content,
+            },
+            full_name,
+            true,
+        )
     }
 }
 
