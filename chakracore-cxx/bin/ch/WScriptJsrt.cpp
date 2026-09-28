@@ -136,14 +136,11 @@ Error:
     return returnValue;
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalStr &fileContent, JsSourceContext dwSourceCookie, JsModuleRecord requestModule)
+JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalStr &fileContent, JsModuleRecord requestModule,
+                                              JsErrorCode errorCode, JsValueRef errorObject)
 {
     auto span = chakra::Span::create("WScriptJsrt::LoadModuleFromString");
-    JsErrorCode errorCode = JsNoError;
-    JsValueRef errorObject = JS_INVALID_REFERENCE;
 
-    // ParseModuleSource is sync, while additional fetch & evaluation are async.
-    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, fileContent, &errorObject);
     if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent.has_value &&
         !HostConfigFlags::GetConfig().host.ignore_script_error_code)
     {

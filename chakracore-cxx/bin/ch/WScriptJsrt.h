@@ -123,7 +123,9 @@ public:
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
 public:
-    static JsErrorCode CALLBACK LoadModuleFromString(const chakra_rs::OptionalStr &fileContent, JsSourceContext dwSourceCookie, JsModuleRecord requestModule);
+    static JsErrorCode CALLBACK LoadModuleFromString(const chakra_rs::OptionalStr &fileContent,
+                                                     JsModuleRecord requestModule, JsErrorCode errorCode,
+                                                     JsValueRef errorObject);
 
 private:
     static MessageQueue *messageQueue_;

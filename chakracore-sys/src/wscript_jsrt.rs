@@ -75,8 +75,9 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         fn LoadModuleFromString(
             file_content: &OptionalStr,
-            source_cookie: JsSourceContext,
             request_module: JsModuleRecord,
+            error_code: JsErrorCode,
+            error_object: JsValueRef,
         ) -> JsErrorCode;
 
         #[Self = "WScriptJsrt"]
@@ -981,7 +982,18 @@ impl WScript {
             }
         };
 
-        WScriptJsrt::LoadModuleFromString(file_content, source_context, request_module)
+        // ParseModuleSource is sync, while additional fetch & evaluation are async.
+        let mut error_object = JsValueRef::default();
+        let error_code = unsafe {
+            ChakraRTInterface::JsParseModuleSource(
+                &request_module,
+                &source_context,
+                file_content,
+                &raw mut error_object,
+            )
+        };
+
+        WScriptJsrt::LoadModuleFromString(file_content, request_module, error_code, error_object)
             .as_result()?;
         Ok(())
     }
