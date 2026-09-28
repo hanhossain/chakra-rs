@@ -143,8 +143,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalStr &file
     JsValueRef errorObject = JS_INVALID_REFERENCE;
 
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
-    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)(fileContent.has_value ? fileContent.value.data() : nullptr),
-        fileContent.has_value ? fileContent.value.size() : 0, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
+    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, fileContent, &errorObject);
     if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent.has_value &&
         !HostConfigFlags::GetConfig().host.ignore_script_error_code)
     {

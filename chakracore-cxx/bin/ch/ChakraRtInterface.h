@@ -10,7 +10,9 @@
 
 #include "ChakraCommon.h"
 #include "ChakraCore.h"
-#include "chakracore-sys/src/jsrt/ffi.rs.h"
+
+#include <chakracore-sys/src/jsrt/ffi.rs.h>
+#include <chakracore-sys/src/str_helper.rs.h>
 
 class ChakraRTInterface
 {
@@ -85,8 +87,15 @@ public:
     static JsErrorCode JsSetPromiseContinuationCallback(JsPromiseContinuationCallback callback, void *callbackState) { return chakracore::jsrt::JsSetPromiseContinuationCallback(callback, callbackState); }
     static JsErrorCode JsSetPromiseContinuationCallback(rust::Fn<void(JsValueRef task, void *callbackState)> callback, void *callbackState) { return chakracore::jsrt::JsSetPromiseContinuationCallback(callback, callbackState); }
     static JsErrorCode JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return chakracore::jsrt::JsGetContextOfObject(object, context); }
-    static JsErrorCode JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext, byte* sourceText, unsigned int sourceLength, JsParseModuleSourceFlags sourceFlag, JsValueRef* exceptionValueRef) {
+    static JsErrorCode JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext, uint8_t* sourceText, unsigned int sourceLength, JsParseModuleSourceFlags sourceFlag, JsValueRef* exceptionValueRef) {
         return chakracore::jsrt::JsParseModuleSource(requestModule, sourceContext, sourceText, sourceLength, sourceFlag, exceptionValueRef);
+    }
+    static JsErrorCode JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext,
+                                           const chakra_rs::OptionalStr &sourceText, JsValueRef *exceptionValueRef) {
+        return chakracore::jsrt::JsParseModuleSource(
+            requestModule, sourceContext,
+            sourceText.has_value ? reinterpret_cast<const uint8_t *>(sourceText.value.data()) : nullptr,
+            sourceText.value.size(), JsParseModuleSourceFlags::JsParseModuleSourceFlags_DataIsUTF8, exceptionValueRef);
     }
     static JsErrorCode JsModuleEvaluation(JsModuleRecord requestModule, JsValueRef* result) { return chakracore::jsrt::JsModuleEvaluation(requestModule, result); }
     static JsErrorCode JsGetModuleNamespace(JsModuleRecord requestModule, JsValueRef *moduleNamespace) { return chakracore::jsrt::JsGetModuleNamespace(requestModule, moduleNamespace); }

@@ -46,8 +46,8 @@ JsErrorCode chakracore::jsrt::JsInitializeModuleRecord(
 JsErrorCode chakracore::jsrt::JsParseModuleSource(
     _In_ JsModuleRecord requestModule,
     _In_ JsSourceContext sourceContext,
-    _In_ byte* sourceText,
-    _In_ unsigned int sourceLength,
+    _In_ const uint8_t *script,
+    _In_ size_t scriptLength,
     _In_ JsParseModuleSourceFlags sourceFlag,
     _Outptr_result_maybenull_ JsValueRef* exceptionValueRef)
 {
@@ -90,12 +90,12 @@ JsErrorCode chakracore::jsrt::JsParseModuleSource(
             /* ulColumnHost        */ 0,
             /* lnMinHost           */ 0,
             /* ichMinHost          */ 0,
-            /* ichLimHost          */ static_cast<uint32_t>(sourceLength),
+            /* ichLimHost          */ static_cast<uint32_t>(scriptLength),
             /* ulCharOffset        */ 0,
             /* mod                 */ 0,
             /* grfsi               */ 0
         };
-        hr = moduleRecord->ParseSource(sourceText, sourceLength, &si, exceptionValueRef, sourceFlag == JsParseModuleSourceFlags_DataIsUTF8 ? true : false);
+        hr = moduleRecord->ParseSource(script, scriptLength, &si, exceptionValueRef, sourceFlag == JsParseModuleSourceFlags_DataIsUTF8);
         if (FAILED(hr))
         {
             return JsErrorScriptCompile;
