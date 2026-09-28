@@ -21,6 +21,8 @@ mod ffi {
         type CULong = crate::jsrt::CULong;
         type CVoid = crate::jsrt::CVoid;
         type JsRef = crate::jsrt::JsRef;
+        #[namespace = "chakra_rs"]
+        type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateRuntime(
@@ -169,6 +171,13 @@ mod ffi {
         unsafe fn JsRelease(jsref: JsRef, count: *mut u32) -> JsErrorCode;
         #[Self = "ChakraRTInterface"]
         unsafe fn JsAddRef(jsref: JsRef, count: *mut u32) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsParseModuleSource<'a>(
+            request_module: &JsModuleRecord,
+            source_context: &JsSourceContext,
+            source_text: &'a OptionalStr<'a>,
+            exception_value_ref: *mut JsValueRef,
+        ) -> JsErrorCode;
     }
 }
 

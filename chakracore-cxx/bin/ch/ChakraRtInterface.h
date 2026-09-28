@@ -90,7 +90,7 @@ public:
     static JsErrorCode JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext, uint8_t* sourceText, unsigned int sourceLength, JsParseModuleSourceFlags sourceFlag, JsValueRef* exceptionValueRef) {
         return chakracore::jsrt::JsParseModuleSource(requestModule, sourceContext, sourceText, sourceLength, sourceFlag, exceptionValueRef);
     }
-    static JsErrorCode JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext,
+    static JsErrorCode JsParseModuleSource(const JsModuleRecord &requestModule, const JsSourceContext &sourceContext,
                                            const chakra_rs::OptionalStr &sourceText, JsValueRef *exceptionValueRef) {
         return chakracore::jsrt::JsParseModuleSource(
             requestModule, sourceContext,
