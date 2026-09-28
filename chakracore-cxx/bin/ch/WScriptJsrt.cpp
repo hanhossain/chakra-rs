@@ -139,10 +139,10 @@ Error:
 JsErrorCode WScriptJsrt::ModuleEntryPoint(rust::Str fileContent, const rust::String &fullName)
 {
     auto span = chakra::Span::create("WScriptJsrt::ModuleEntryPoint");
-    return LoadModuleFromString(fileContent, static_cast<std::string>(fullName), true);
+    return LoadModuleFromString(chakra_rs::OptionalStr{.has_value=true, .value=fileContent}, static_cast<std::string>(fullName), true);
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalStr &fileContent, const std::string &fullName, bool isFile)
 {
     auto span = chakra::Span::create("WScriptJsrt::LoadModuleFromString");
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
@@ -181,9 +181,9 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const std::optional<rust::Str> &fi
     JsValueRef errorObject = JS_INVALID_REFERENCE;
 
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
-    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)(fileContent ? fileContent.value().data() : nullptr),
-        fileContent ? fileContent.value().size() : 0, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
-    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent &&
+    errorCode = ChakraRTInterface::JsParseModuleSource(requestModule, dwSourceCookie, (uint8_t *)(fileContent.has_value ? fileContent.value.data() : nullptr),
+        fileContent.has_value ? fileContent.value.size() : 0, JsParseModuleSourceFlags_DataIsUTF8, &errorObject);
+    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent.has_value &&
         !HostConfigFlags::GetConfig().host.ignore_script_error_code)
     {
         if (auto [exists, state] = chakra_rs::get_module_error_map()->get(requestModule); exists && state == RootModule)
@@ -218,7 +218,8 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     // treated as a module source text instead of opening a new file.
     if (isSourceModule || scriptInjectType == "module")
     {
-        errorCode = LoadModuleFromString(content, fullPath, isFile);
+        auto contentStr = chakra_rs::OptionalStr{.has_value = content.has_value(), .value = content.value_or("")};
+        errorCode = LoadModuleFromString(contentStr, fullPath, isFile);
     }
     else if (scriptInjectType == "self")
     {
