@@ -371,8 +371,8 @@ namespace chakracore::jsrt
     JsErrorCode JsParseModuleSource(
         _In_ JsModuleRecord requestModule,
         _In_ JsSourceContext sourceContext,
-        _In_ uint8_t* script,
-        _In_ unsigned int scriptLength,
+        _In_ const uint8_t* script,
+        _In_ size_t scriptLength,
         _In_ JsParseModuleSourceFlags sourceFlag,
         _Outptr_result_maybenull_ JsValueRef* exceptionValueRef);
 
