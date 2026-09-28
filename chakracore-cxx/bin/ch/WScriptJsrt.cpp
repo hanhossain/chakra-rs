@@ -136,42 +136,10 @@ Error:
     return returnValue;
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalStr &fileContent, const rust::String &fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalStr &fileContent, JsSourceContext dwSourceCookie, JsModuleRecord requestModule)
 {
     auto span = chakra::Span::create("WScriptJsrt::LoadModuleFromString");
-    unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
-    JsModuleRecord requestModule = JS_INVALID_REFERENCE;
-    const auto& moduleRecordKey = fullName;
-    auto moduleRecordMapContent = chakra_rs::get_module_record_map()->get(moduleRecordKey);
     JsErrorCode errorCode = JsNoError;
-
-    // we need to create a new moduleRecord if the specifier (fileName) is not found;
-    // otherwise we'll use the old one.
-    if (!moduleRecordMapContent.exists)
-    {
-        JsValueRef specifier = nullptr;
-        if (isFile)
-        {
-            errorCode = ChakraRTInterface::JsCreateString(fullName, &specifier);
-        }
-        if (errorCode == JsNoError)
-        {
-            errorCode = ChakraRTInterface::JsInitializeModuleRecord(
-                nullptr, specifier, &requestModule);
-        }
-        if (errorCode == JsNoError)
-        {
-            chakra_rs::get_module_directory_map()->insert(requestModule, fs::path(static_cast<std::string_view>(fullName)).parent_path().native());
-            chakra_rs::get_module_record_map()->insert(moduleRecordKey, chakra_rs::ModuleRecordEntry { requestModule });
-            auto module_error_map = chakra_rs::get_module_error_map();
-            module_error_map->insert(requestModule, RootModule);
-        }
-    }
-    else
-    {
-        requestModule = moduleRecordMapContent.content.record;
-    }
-    IfJsrtErrorFailLogAndRetErrorCode(errorCode);
     JsValueRef errorObject = JS_INVALID_REFERENCE;
 
     // ParseModuleSource is sync, while additional fetch & evaluation are async.
@@ -213,7 +181,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     if (isSourceModule || scriptInjectType == "module")
     {
         auto contentStr = chakra_rs::OptionalStr{.has_value = content.has_value(), .value = content.value_or("")};
-        errorCode = LoadModuleFromString(contentStr, static_cast<std::string>(fullPath), isFile);
+        errorCode = chakra_rs::WScript::load_module_from_string(contentStr, static_cast<std::string>(fullPath), isFile);
     }
     else if (scriptInjectType == "self")
     {

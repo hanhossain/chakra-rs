@@ -75,8 +75,8 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         fn LoadModuleFromString(
             file_content: &OptionalStr,
-            full_name: &String,
-            is_file: bool,
+            source_cookie: JsSourceContext,
+            request_module: JsModuleRecord,
         ) -> JsErrorCode;
 
         #[Self = "WScriptJsrt"]
@@ -163,6 +163,13 @@ mod ffi {
 
         #[Self = "WScript"]
         unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid);
+
+        #[Self = "WScript"]
+        fn load_module_from_string(
+            file_content: &OptionalStr,
+            full_name: &String,
+            is_file: bool,
+        ) -> JsErrorCode;
 
         type ModuleErrorMap;
         fn get_module_error_map() -> Box<ModuleErrorMap>;
@@ -896,9 +903,9 @@ impl WScript {
         Ok(Some(array_buffer))
     }
 
-    #[tracing::instrument]
+    #[tracing::instrument(skip(file_content))]
     pub fn module_entry_point(file_content: &str, full_name: &String) -> JsErrorCode {
-        WScriptJsrt::LoadModuleFromString(
+        Self::load_module_from_string(
             &OptionalStr {
                 has_value: true,
                 value: file_content,
@@ -906,6 +913,77 @@ impl WScript {
             full_name,
             true,
         )
+    }
+
+    fn load_module_from_string(
+        file_content: &OptionalStr,
+        full_name: &String,
+        is_file: bool,
+    ) -> JsErrorCode {
+        match Self::internal_load_module_from_string(file_content, full_name, is_file) {
+            Ok(()) => JsErrorCode::JsNoError,
+            Err(err) => err.into(),
+        }
+    }
+
+    #[tracing::instrument(skip(file_content), err)]
+    fn internal_load_module_from_string(
+        file_content: &OptionalStr,
+        full_name: &String,
+        is_file: bool,
+    ) -> Result<(), JsError> {
+        let source_context = JsSourceContext(WScriptJsrt::GetNextSourceContext());
+        let module_record_key = full_name;
+        let request_module = {
+            let lease = MODULE_RECORD_MAP.0.read().unwrap();
+            lease.get(module_record_key).map(|x| x.record.clone())
+        };
+        let request_module = match request_module {
+            Some(x) => x,
+            None => {
+                let specifier = if is_file {
+                    Some(ChakraRt::create_string(full_name)?)
+                } else {
+                    None
+                };
+                let mut request_module = JsModuleRecord::default();
+                unsafe {
+                    ChakraRTInterface::JsInitializeModuleRecord(
+                        JsModuleRecord::default(),
+                        specifier.unwrap_or_default().into(),
+                        &raw mut request_module,
+                    )
+                    .as_result()?;
+                }
+                let parent_path = std::path::Path::new(full_name)
+                    .parent()
+                    .map(|x| x.to_str())
+                    .flatten()
+                    .unwrap_or_default();
+                {
+                    let mut lease = MODULE_DIRECTORY_MAP.0.write().unwrap();
+                    lease.insert(request_module.clone(), parent_path.into());
+                }
+                {
+                    let mut lease = MODULE_RECORD_MAP.0.write().unwrap();
+                    lease.insert(
+                        module_record_key.to_owned(),
+                        ffi::ModuleRecordEntry {
+                            record: request_module.clone(),
+                        },
+                    );
+                }
+                {
+                    let mut lease = MODULE_ERROR_MAP.0.write().unwrap();
+                    lease.insert(request_module.clone(), ModuleState::RootModule);
+                }
+                request_module
+            }
+        };
+
+        WScriptJsrt::LoadModuleFromString(file_content, source_context, request_module)
+            .as_result()?;
+        Ok(())
     }
 }
 

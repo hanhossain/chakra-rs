@@ -214,6 +214,7 @@ impl IntoResponse for JsObject {
     }
 }
 
+#[derive(Default)]
 pub struct JsString(JsValueRef);
 
 impl AsRef<JsValueRef> for JsString {
@@ -235,6 +236,12 @@ impl Deref for JsString {
 impl DerefMut for JsString {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
+    }
+}
+
+impl From<JsString> for JsValueRef {
+    fn from(value: JsString) -> Self {
+        value.0
     }
 }
 
