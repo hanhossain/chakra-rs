@@ -122,12 +122,6 @@ public:
     static void FinalizeFree(void * addr);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
-public:
-    static JsErrorCode CALLBACK LoadModuleFromString(const chakra_rs::OptionalStr &fileContent,
-                                                     JsModuleRecord requestModule, JsErrorCode errorCode,
-                                                     JsValueRef errorObject);
-
-private:
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;
 };

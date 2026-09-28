@@ -136,26 +136,6 @@ Error:
     return returnValue;
 }
 
-JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalStr &fileContent, JsModuleRecord requestModule,
-                                              JsErrorCode errorCode, JsValueRef errorObject)
-{
-    auto span = chakra::Span::create("WScriptJsrt::LoadModuleFromString");
-
-    if ((errorCode != JsNoError) && errorObject != JS_INVALID_REFERENCE && fileContent.has_value &&
-        !HostConfigFlags::GetConfig().host.ignore_script_error_code)
-    {
-        if (auto [exists, state] = chakra_rs::get_module_error_map()->get(requestModule); exists && state == RootModule)
-        {
-            ChakraRTInterface::JsSetException(errorObject);
-            auto module_error_map = chakra_rs::get_module_error_map();
-            module_error_map->insert(requestModule, ErroredModule);
-            return errorCode;
-        }
-    }
-    return JsNoError;
-}
-
-
 JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     const std::optional<rust::Str> &content, rust::Str scriptInjectType, bool isSourceModule, JsFinalizeCallback finalizeCallback, bool isFile)
 {
