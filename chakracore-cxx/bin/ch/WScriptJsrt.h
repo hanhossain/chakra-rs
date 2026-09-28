@@ -13,7 +13,8 @@
 
 #include "ChakraCore.h"
 #include "MessageQueue.h"
-#include "chakracore-sys/src/jsrt/ffi.rs.h"
+#include <chakracore-sys/src/jsrt/ffi.rs.h>
+#include <chakracore-sys/src/str_helper.rs.h>
 
 enum ModuleState
 {
@@ -123,7 +124,7 @@ public:
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
 public:
-    static JsErrorCode CALLBACK LoadModuleFromString(const std::optional<rust::Str> &fileContent, const std::string &fullName, bool isFile = false);
+    static JsErrorCode CALLBACK LoadModuleFromString(const chakra_rs::OptionalStr &fileContent, const std::string &fullName, bool isFile = false);
 
 private:
     static MessageQueue *messageQueue_;
