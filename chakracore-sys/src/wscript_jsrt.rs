@@ -72,13 +72,6 @@ mod ffi {
         type JsErrorCode = crate::jsrt::JsErrorCode;
         #[namespace = "chakra_rs"]
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
-        #[Self = "WScriptJsrt"]
-        fn LoadModuleFromString(
-            file_content: &OptionalStr,
-            request_module: JsModuleRecord,
-            error_code: JsErrorCode,
-            error_object: JsValueRef,
-        ) -> JsErrorCode;
 
         #[Self = "WScriptJsrt"]
         fn PrintException(filname: &str, jsErrorCode: JsErrorCode, exception: JsValueRef) -> bool;
@@ -993,8 +986,24 @@ impl WScript {
             )
         };
 
-        WScriptJsrt::LoadModuleFromString(file_content, request_module, error_code, error_object)
-            .as_result()?;
+        if error_code != JsErrorCode::JsNoError
+            && !error_object.is_null()
+            && file_content.has_value
+            && !HostConfigFlags::GetConfig().host.ignore_script_error_code
+        {
+            let state = {
+                let lease = MODULE_ERROR_MAP.0.read().unwrap();
+                lease.get(&request_module).map(|x| x.clone())
+            };
+            if let Some(state) = state {
+                if state == ModuleState::RootModule {
+                    let _ = ChakraRt::set_exception(error_object.into());
+                    let mut lease = MODULE_ERROR_MAP.0.write().unwrap();
+                    lease.insert(request_module, ModuleState::ErroredModule);
+                }
+            }
+        }
+
         Ok(())
     }
 }

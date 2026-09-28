@@ -278,6 +278,12 @@ impl AsRef<JsValueRef> for JsErrorObject {
     }
 }
 
+impl From<JsValueRef> for JsErrorObject {
+    fn from(value: JsValueRef) -> Self {
+        JsErrorObject(value)
+    }
+}
+
 pub struct JsFunction(JsValueRef);
 
 impl AsRef<JsValueRef> for JsFunction {
