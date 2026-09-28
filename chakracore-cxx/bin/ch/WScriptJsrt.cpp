@@ -136,18 +136,12 @@ Error:
     return returnValue;
 }
 
-JsErrorCode WScriptJsrt::ModuleEntryPoint(rust::Str fileContent, const rust::String &fullName)
-{
-    auto span = chakra::Span::create("WScriptJsrt::ModuleEntryPoint");
-    return LoadModuleFromString(chakra_rs::OptionalStr{.has_value=true, .value=fileContent}, static_cast<std::string>(fullName), true);
-}
-
-JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalStr &fileContent, const std::string &fullName, bool isFile)
+JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalStr &fileContent, const rust::String &fullName, bool isFile)
 {
     auto span = chakra::Span::create("WScriptJsrt::LoadModuleFromString");
     unsigned long dwSourceCookie = WScriptJsrt::GetNextSourceContext();
     JsModuleRecord requestModule = JS_INVALID_REFERENCE;
-    const std::string& moduleRecordKey = fullName;
+    const auto& moduleRecordKey = fullName;
     auto moduleRecordMapContent = chakra_rs::get_module_record_map()->get(moduleRecordKey);
     JsErrorCode errorCode = JsNoError;
 
@@ -167,7 +161,7 @@ JsErrorCode WScriptJsrt::LoadModuleFromString(const chakra_rs::OptionalStr &file
         }
         if (errorCode == JsNoError)
         {
-            chakra_rs::get_module_directory_map()->insert(requestModule, fs::path(fullName).parent_path().native());
+            chakra_rs::get_module_directory_map()->insert(requestModule, fs::path(static_cast<std::string_view>(fullName)).parent_path().native());
             chakra_rs::get_module_record_map()->insert(moduleRecordKey, chakra_rs::ModuleRecordEntry { requestModule });
             auto module_error_map = chakra_rs::get_module_error_map();
             module_error_map->insert(requestModule, RootModule);
@@ -219,7 +213,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName,
     if (isSourceModule || scriptInjectType == "module")
     {
         auto contentStr = chakra_rs::OptionalStr{.has_value = content.has_value(), .value = content.value_or("")};
-        errorCode = LoadModuleFromString(contentStr, fullPath, isFile);
+        errorCode = LoadModuleFromString(contentStr, static_cast<std::string>(fullPath), isFile);
     }
     else if (scriptInjectType == "self")
     {
