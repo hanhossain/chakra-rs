@@ -182,6 +182,12 @@ mod ffi {
             source_text: &'a OptionalStr<'a>,
             exception_value_ref: *mut JsValueRef,
         ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetContextOfObject(
+            object: JsValueRef,
+            context: *mut JsContextRef,
+        ) -> JsErrorCode;
     }
 }
 

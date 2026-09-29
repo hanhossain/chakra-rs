@@ -131,9 +131,8 @@ Error:
     return returnValue;
 }
 
-JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName, const chakra_rs::OptionalStr &content,
-                                   rust::Str scriptInjectType, bool isSourceModule, bool isFile, JsContextRef currentContext,
-                                   JsRuntimeHandle runtime)
+JsValueRef WScriptJsrt::LoadScript(rust::Str fileName, const chakra_rs::OptionalStr &content,
+                                   rust::Str scriptInjectType, JsContextRef currentContext, JsRuntimeHandle runtime)
 {
     std::function<void(void *data)> finalizeCallback = WScriptJsrt::FinalizeFree;
     [[maybe_unused]] int32_t hr = E_FAIL;
@@ -144,38 +143,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName, const 
 
     auto fullPath = fs::absolute(static_cast<std::string_view>(fileName), ec).lexically_normal();
 
-    if (scriptInjectType == "self")
-    {
-        JsContextRef calleeContext;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsGetContextOfObject(callee, &calleeContext));
-
-        IfJsrtErrorSetGo(ChakraRTInterface::JsSetCurrentContext(calleeContext));
-
-        JsValueRef scriptSource;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer(content.value, finalizeCallback, &scriptSource));
-        JsValueRef fname;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
-        JsSourceContext sourceContext = GetNextSourceContext();
-
-        if (HostConfigFlags::GetConfig().host.use_parser_state_cache)
-        {
-            JsValueRef parserState;
-            IfJsrtErrorSetGo(ChakraRTInterface::JsSerializeParserState(scriptSource, &parserState, JsParseScriptAttributeNone));
-            errorCode = ChakraRTInterface::JsRunScriptWithParserState(scriptSource, sourceContext, fname, JsParseScriptAttributeNone, parserState, &returnValue);
-        }
-        else
-        {
-            errorCode = ChakraRTInterface::JsRun(scriptSource, sourceContext, fname, JsParseScriptAttributeNone, &returnValue);
-        }
-
-        if(errorCode == JsNoError)
-        {
-            errorCode = ChakraRTInterface::JsGetGlobalObject(&returnValue);
-        }
-
-        IfJsrtErrorSetGo(ChakraRTInterface::JsSetCurrentContext(currentContext));
-    }
-    else if (scriptInjectType == "samethread")
+    if (scriptInjectType == "samethread")
     {
         JsValueRef newContext = JS_INVALID_REFERENCE;
 
