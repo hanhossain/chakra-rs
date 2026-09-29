@@ -7,7 +7,7 @@
 namespace Js
 {
     typedef void (*JsTraceCallback)(void * data);
-    typedef void (*JsFinalizeCallback)(void * data);
+    using JsFinalizeCallback = std::function<void(void *data)>;
 
     typedef struct _JsGetterSetterInterceptor {
         typename WriteBarrierFieldTypeTraits<void *>::Type getTrap;

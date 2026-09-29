@@ -4773,7 +4773,7 @@ namespace Js
 
     JsrtExternalType* JavascriptLibrary::GetCachedJsrtExternalType(
         uintptr_t traceCallback,
-        uintptr_t finalizeCallback,
+        std::function<void(void *)> finalizeCallback,
         uintptr_t prototype)
     {
         RecyclerWeakReference<DynamicType>* dynamicTypeWeakRef = nullptr;
@@ -4794,12 +4794,12 @@ namespace Js
         return (JsrtExternalType*)dynamicType;
     }
 
-    void JavascriptLibrary::CacheJsrtExternalType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t prototype, JsrtExternalType* dynamicTypeToCache)
+    void JavascriptLibrary::CacheJsrtExternalType(uintptr_t traceCallback, std::function<void(void *)> finalizeCallback, uintptr_t prototype, JsrtExternalType* dynamicTypeToCache)
     {
         jsrtExternalTypesCache->Item(JsrtExternalCallbacks(traceCallback, finalizeCallback, prototype), recycler->CreateWeakReferenceHandle<DynamicType>((DynamicType*)dynamicTypeToCache));
     }
 
-    DynamicType* JavascriptLibrary::GetCachedCustomExternalWrapperType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t interceptors, uintptr_t prototype)
+    DynamicType* JavascriptLibrary::GetCachedCustomExternalWrapperType(uintptr_t traceCallback, std::function<void(void *)> finalizeCallback, uintptr_t interceptors, uintptr_t prototype)
     {
         RecyclerWeakReference<DynamicType>* dynamicTypeWeakRef = nullptr;
         DynamicType* dynamicType = nullptr;
@@ -4816,7 +4816,7 @@ namespace Js
         return dynamicType;
     }
 
-    void JavascriptLibrary::CacheCustomExternalWrapperType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t interceptors, uintptr_t prototype, DynamicType* dynamicTypeToCache)
+    void JavascriptLibrary::CacheCustomExternalWrapperType(uintptr_t traceCallback, std::function<void(void *)> finalizeCallback, uintptr_t interceptors, uintptr_t prototype, DynamicType* dynamicTypeToCache)
     {
         customExternalWrapperTypesCache->Item(CustomExternalWrapperCallbacks(traceCallback, finalizeCallback, interceptors, prototype), recycler->CreateWeakReferenceHandle<DynamicType>(dynamicTypeToCache));
     }
