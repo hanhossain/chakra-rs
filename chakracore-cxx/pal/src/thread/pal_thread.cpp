@@ -92,19 +92,6 @@ using namespace CorUnix;
 /* ------------------- Definitions ------------------------------*/
 SET_DEFAULT_DEBUG_CHANNEL(THREAD);
 
-// The default stack size of a newly created thread (currently 256KB)
-// when the dwStackSize parameter of PAL_CreateThread()
-// is zero. This value can be set by setting the
-// environment variable PAL_THREAD_DEFAULT_STACK_SIZE
-// (the value should be in bytes and in hex).
-uint32_t CPalThread::s_dwDefaultThreadStackSize = 256*1024;
-
-/* list of free CPalThread objects */
-static Volatile<CPalThread*> free_threads_list __attribute__((init_priority(200))) = NULL;
-
-/* lock to access list of free THREAD structures */
-static std::mutex free_threads_spinlock;
-
 /* lock to access iEndingThreads counter, condition variable to signal shutdown
 thread when any remaining threads have died, and count of exiting threads that
 can't be suspended. */
@@ -170,95 +157,6 @@ BOOL TLSInitialize()
     }
 
     return TRUE;
-}
-
-/*++
-Function:
-    AllocTHREAD
-
-Abstract:
-    Allocate CPalThread instance
-
-Return:
-    The fresh thread structure, NULL otherwise
---*/
-CPalThread* AllocTHREAD()
-{
-    CPalThread* pThread = NULL;
-
-    free_threads_spinlock.lock();
-
-    pThread = free_threads_list;
-    if (pThread != NULL)
-    {
-        free_threads_list = pThread->GetNext();
-    }
-
-    free_threads_spinlock.unlock();
-
-    if (pThread == NULL)
-    {
-        pThread = new CPalThread();
-    }
-    else
-    {
-        pThread = new (pThread) CPalThread;
-    }
-
-    return pThread;
-}
-
-/*++
-Function:
-    FreeTHREAD
-
-Abstract:
-    Free THREAD structure
-
---*/
-static void FreeTHREAD(CPalThread *pThread)
-{
-    //
-    // Run the destructors for this object
-    //
-
-    pThread->~CPalThread();
-
-#ifdef _DEBUG
-    // Fill value so we can find code re-using threads after they're dead. We
-    // check against pThread->dwGuard when getting the current thread's data.
-    memset(static_cast<void*>(pThread), 0xcc, sizeof(*pThread));
-#endif
-
-    // We SHOULD be doing the following, but it causes massive problems. See the
-    // comment below.
-    //pthread_setspecific(thObjKey, NULL); // Make sure any TLS entry is removed.
-
-    //
-    // Never actually free the THREAD structure to make the TLS lookaside cache work.
-    // THREAD* for terminated thread can be stuck in the lookaside cache code for an
-    // arbitrary amount of time. The unused THREAD* structures has to remain in a
-    // valid memory and thus can't be returned to the heap.
-    //
-    // TODO: is this really true? Why would the entry remain in the cache for
-    // an indefinite period of time after we've flushed it?
-    //
-
-    /* NOTE: can't use a CRITICAL_SECTION here: EnterCriticalSection(&cs,TRUE) and
-       LeaveCriticalSection(&cs,TRUE) need to access the thread private data
-       stored in the very THREAD structure that we just destroyed. Entering and
-       leaving the critical section with internal==FALSE leads to possible hangs
-       in the PROCSuspendOtherThreads logic, at shutdown time
-
-       Update: [TODO] PROCSuspendOtherThreads has been removed. Can this
-       code be changed?*/
-
-    free_threads_spinlock.lock();
-
-    pThread->SetNext(free_threads_list);
-    free_threads_list = pThread;
-
-    free_threads_spinlock.unlock();
 }
 
 /*++
@@ -396,7 +294,7 @@ CorUnix::InternalCreateThread(CPalThread *pThread, std::function<uint32_t(void *
     // Create the CPalThread for the thread
     //
 
-    pNewThread = AllocTHREAD();
+    pNewThread = new CPalThread{};
     if (nullptr == pNewThread)
     {
         palError = ERROR_OUTOFMEMORY;
@@ -1270,7 +1168,7 @@ CorUnix::CreateThreadData(
     CPalThread *pThread = NULL;
 
     /* Create the thread object */
-    pThread = AllocTHREAD();
+    pThread = new CPalThread{};
 
     if (NULL == pThread)
     {
@@ -1624,7 +1522,7 @@ CPalThread::ReleaseThreadReference(
     _ASSERT_MSG(lRefCount >= 0, "Released a thread and ended with a negative refcount (%ld)\n", lRefCount);
     if (0 == lRefCount)
     {
-        FreeTHREAD(this);
+        delete this;
     }
 
 }

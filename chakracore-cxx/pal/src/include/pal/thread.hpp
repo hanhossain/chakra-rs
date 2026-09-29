@@ -303,13 +303,6 @@ namespace CorUnix
         bool m_fStartStatus;
         bool m_fStartStatusSet;
 
-        // The default stack size of a newly created thread (currently 256KB)
-        // when the dwStackSize parameter of PAL_CreateThread()
-        // is zero. This value can be set by setting the
-        // environment variable PAL_THREAD_DEFAULT_STACK_SIZE
-        // (the value should be in bytes and in hex).
-        static uint32_t s_dwDefaultThreadStackSize;
-
         //
         // The thread entry routine (called from InternalCreateThread)
         //
