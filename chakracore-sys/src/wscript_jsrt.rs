@@ -1061,6 +1061,7 @@ impl WScript {
         })
     }
 
+    #[tracing::instrument(skip(callee, content), err)]
     fn internal_load_script(
         callee: JsValueRef,
         file_name: &str,
@@ -1075,16 +1076,32 @@ impl WScript {
             ChakraRTInterface::JsGetCurrentContext(&raw mut current_context).as_result()?;
             ChakraRTInterface::JsGetRuntime(current_context, &raw mut runtime).as_result()?;
         }
-        Ok(WScriptJsrt::LoadScript(
-            callee,
-            file_name,
-            content,
-            script_inject_type,
-            is_source_module,
-            is_file,
-            current_context,
-            runtime,
-        ))
+        let full_path = std::path::absolute(file_name);
+        tracing::trace!(?full_path);
+        let full_path = full_path.unwrap_or_default();
+
+        // this is called with LoadModuleCallback method as well where caller pass in a string that should be
+        // treated as a module source text instead of opening a new file.
+        if is_source_module || script_inject_type == "module" {
+            Self::load_module_from_string(
+                content,
+                &full_path.to_str().unwrap_or_default().to_owned(),
+                is_file,
+            )
+            .as_result()?;
+            Ok(JsValueRef::default())
+        } else {
+            Ok(WScriptJsrt::LoadScript(
+                callee,
+                file_name,
+                content,
+                script_inject_type,
+                is_source_module,
+                is_file,
+                current_context,
+                runtime,
+            ))
+        }
     }
 }
 

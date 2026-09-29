@@ -144,13 +144,7 @@ JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName, const 
 
     auto fullPath = fs::absolute(static_cast<std::string_view>(fileName), ec).lexically_normal();
 
-    // this is called with LoadModuleCallback method as well where caller pass in a string that should be
-    // treated as a module source text instead of opening a new file.
-    if (isSourceModule || scriptInjectType == "module")
-    {
-        errorCode = chakra_rs::WScript::load_module_from_string(content, static_cast<std::string>(fullPath), isFile);
-    }
-    else if (scriptInjectType == "self")
+    if (scriptInjectType == "self")
     {
         JsContextRef calleeContext;
         IfJsrtErrorSetGo(ChakraRTInterface::JsGetContextOfObject(callee, &calleeContext));
