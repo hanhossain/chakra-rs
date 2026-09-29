@@ -116,7 +116,7 @@ public:
     }
 
     static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
-    static JsValueRef LoadScript(RuntimeThreadData *threadData, RuntimeThreadData *child);
+    static void LoadScript(RuntimeThreadData *child);
     static std::size_t GetNextSourceContext();
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
     static void FinalizeFree(void * addr);

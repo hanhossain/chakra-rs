@@ -115,10 +115,7 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         unsafe fn PushMessage(message: *mut MessageBase);
         #[Self = "WScriptJsrt"]
-        unsafe fn LoadScript(
-            thread_data: *mut RuntimeThreadData,
-            child: *mut RuntimeThreadData,
-        ) -> JsValueRef;
+        unsafe fn LoadScript(child: *mut RuntimeThreadData);
     }
 
     unsafe extern "C++" {
@@ -149,6 +146,7 @@ mod ffi {
             value: JsValueRef,
         );
         fn reset_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
+        fn wait_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
         unsafe fn add_child(self: Pin<&mut RuntimeThreadData>, child: *mut RuntimeThreadData);
         unsafe fn set_parent(self: Pin<&mut RuntimeThreadData>, parent: *mut RuntimeThreadData);
     }
@@ -1233,12 +1231,13 @@ impl WScript {
                 data.set_parent(thread_data);
             }
             unsafe {
-                let thread_data = Pin::new_unchecked(&mut *thread_data);
-                // TODO: need to add a switch in case we don't need to wait for
-                // child initial script completion
-                thread_data.reset_initial_script_completed();
+                let mut thread_data = Pin::new_unchecked(&mut *thread_data);
+                // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
+                thread_data.as_mut().reset_initial_script_completed();
+                WScriptJsrt::LoadScript(child);
+                thread_data.as_mut().wait_initial_script_completed();
             }
-            unsafe { Ok(WScriptJsrt::LoadScript(thread_data, child)) }
+            Ok(JsValueRef::default())
         } else {
             Err(LoadScriptError::JsErrorWithMessage {
                 error: JsError::JsErrorInvalidArgument,
