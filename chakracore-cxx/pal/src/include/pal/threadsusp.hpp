@@ -44,10 +44,9 @@ Abstract:
 #include <sched.h>
 
 // We have a variety of options for synchronizing thread suspensions and resumptions between the requestor and
-// target threads. Analyze the various capabilities given to us by configure and define one of three macros
+// target threads. Analyze the various capabilities given to us by configure and define one of two macros
 // here for simplicity:
 //  USE_POSIX_SEMAPHORES
-//  USE_SYSV_SEMAPHORES
 //  USE_PTHREAD_CONDVARS
 #if defined(__linux__)
 
@@ -65,14 +64,6 @@ Abstract:
 
 #include <pthread.h>
 
-#else
-
-// SYSV semaphores are our last choice since they're shared across processes so it's possible to leak them
-// on abnormal process termination.
-#define USE_SYSV_SEMAPHORES 1
-
-#include <sys/sem.h>
-#include <sys/types.h>
 #endif // defined(__linux__)
 
 #include <stdarg.h>
@@ -106,12 +97,6 @@ namespace CorUnix
             sem_t m_semSusp; // suspension semaphore
             sem_t m_semResume; // resumption semaphore
             BOOL m_fSemaphoresInitialized;
-#elif USE_SYSV_SEMAPHORES
-            // necessary id's and sembuf structures for SysV semaphores
-            int m_nSemsuspid; // id for the suspend semaphore
-            int m_nSemrespid; // id for the resume semaphore
-            struct sembuf m_sbSemwait; // struct representing a wait operation
-            struct sembuf m_sbSempost; // struct representing a post operation
 #elif USE_PTHREAD_CONDVARS
             pthread_cond_t m_condSusp; // suspension condition variable
             pthread_mutex_t m_mutexSusp; // mutex associated with the condition above
@@ -183,22 +168,6 @@ namespace CorUnix
                 )
             {
                 return &m_semResume;
-            };
-#elif USE_SYSV_SEMAPHORES
-            int
-            GetSuspendSemaphoreId(
-                void
-                )
-            {
-                return m_nSemsuspid;
-            };
-
-            sembuf*
-            GetSemaphorePostBuffer(
-                void
-                )
-            {
-                return &m_sbSempost;
             };
 #endif // USE_POSIX_SEMAPHORES
 
@@ -310,12 +279,6 @@ namespace CorUnix
             };
 #endif // _DEBUG
 
-#if USE_SYSV_SEMAPHORES
-            void
-            DestroySemaphoreIds(
-                void
-            );
-#endif
             void
             SetSuspendedForShutdown(
                 BOOL fSuspendedForShutdown

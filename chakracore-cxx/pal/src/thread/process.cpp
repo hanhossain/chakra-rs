@@ -539,36 +539,4 @@ PROCProcessUnlock(
     InternalLeaveCriticalSection(pThread, &g_csProcess);
 }
 
-#if USE_SYSV_SEMAPHORES
-/*++
-Function:
-  PROCCleanupThreadSemIds
-
-Abstract
-  Cleanup SysV semaphore ids for all threads
-
-(no parameters, no return value)
---*/
-void
-PROCCleanupThreadSemIds(void)
-{
-    //
-    // When using SysV semaphores, the semaphore ids used by PAL threads must be removed
-    // so they can be used again.
-    //
-
-    PROCProcessLock();
-
-    CPalThread *pTargetThread = pGThreadList;
-    while (NULL != pTargetThread)
-    {
-        pTargetThread->suspensionInfo.DestroySemaphoreIds();
-        pTargetThread = pTargetThread->GetNext();
-    }
-
-    PROCProcessUnlock();
-
-}
-#endif // USE_SYSV_SEMAPHORES
-
 /* Internal function definitions **********************************************/

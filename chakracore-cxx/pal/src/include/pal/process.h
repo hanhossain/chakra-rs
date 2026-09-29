@@ -63,19 +63,6 @@ Notes :
 --*/
 BOOL  PROCCreateInitialProcess(char16_t* lpwstrCmdLine, char16_t* lpwstrFullPath);
 
-#if USE_SYSV_SEMAPHORES
-/*++
-Function:
-  PROCCleanupThreadSemIds(void);
-
-Abstract
-  Cleanup SysV semaphore ids for all threads.
-
-(no parameters, no return value)
---*/
-void PROCCleanupThreadSemIds(void);
-#endif
-
 /*++
 Function:
   PROCProcessLock

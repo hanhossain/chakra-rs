@@ -519,11 +519,6 @@ CThreadSuspensionInfo::PostOnSuspendSemaphore()
     {
         chakra::Logger::error(std::format("sem_post returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
-#elif USE_SYSV_SEMAPHORES
-    if (semop(m_nSemsuspid, &m_sbSempost, 1) == -1)
-    {
-        chakra::Logger::error(std::format("semop - post returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
-    }
 #elif USE_PTHREAD_CONDVARS
     int status;
 
@@ -575,11 +570,6 @@ CThreadSuspensionInfo::WaitOnSuspendSemaphore()
     {
         chakra::Logger::error(std::format("sem_wait returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
-#elif USE_SYSV_SEMAPHORES
-    while (semop(m_nSemsuspid, &m_sbSemwait, 1) == -1)
-    {
-        chakra::Logger::error(std::format("semop wait returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
-    }
 #elif USE_PTHREAD_CONDVARS
     int status;
 
@@ -628,11 +618,6 @@ CThreadSuspensionInfo::PostOnResumeSemaphore()
     if (sem_post(&m_semResume) == -1)
     {
         chakra::Logger::error(std::format("sem_post returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
-    }
-#elif USE_SYSV_SEMAPHORES
-    if (semop(m_nSemrespid, &m_sbSempost, 1) == -1)
-    {
-        chakra::Logger::error(std::format("semop - post returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
 #elif USE_PTHREAD_CONDVARS
     int status;
@@ -684,11 +669,6 @@ CThreadSuspensionInfo::WaitOnResumeSemaphore()
     while (sem_wait(&m_semResume) == -1)
     {
         chakra::Logger::error(std::format("sem_wait returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
-    }
-#elif USE_SYSV_SEMAPHORES
-    while (semop(m_nSemrespid, &m_sbSemwait, 1) == -1)
-    {
-        chakra::Logger::error(std::format("semop wait returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
     }
 #elif USE_PTHREAD_CONDVARS
     int status;
@@ -783,54 +763,6 @@ CThreadSuspensionInfo::InitializePreCreate()
 
     m_fSemaphoresInitialized = TRUE;
 
-#elif USE_SYSV_SEMAPHORES
-    // preparing to initialize the SysV semaphores.
-    union semun semunData;
-    m_nSemsuspid = semget(IPC_PRIVATE, 1, IPC_CREAT | 0666);
-    if (m_nSemsuspid == -1)
-    {
-        chakra::Logger::error(std::format("semget for suspension sem id returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
-        goto InitializePreCreateExit;
-    }
-
-    m_nSemrespid = semget(IPC_PRIVATE, 1, IPC_CREAT | 0666);
-    if (m_nSemrespid == -1)
-    {
-        chakra::Logger::error(std::format("semget for resumption sem id returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
-        goto InitializePreCreateExit;
-    }
-
-    if (m_nSemsuspid == m_nSemrespid)
-    {
-        chakra::Logger::error("Suspension and Resumption Semaphores have the same id\n");
-        goto InitializePreCreateExit;
-    }
-
-    semunData.val = 0;
-    iError = semctl(m_nSemsuspid, 0, SETVAL, semunData);
-    if (iError == -1)
-    {
-        chakra::Logger::error(std::format("semctl for suspension sem id returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
-        goto InitializePreCreateExit;
-    }
-
-    semunData.val = 0;
-    iError = semctl(m_nSemrespid, 0, SETVAL, semunData);
-    if (iError == -1)
-    {
-        chakra::Logger::error(std::format("semctl for resumption sem id returned -1 and set errno to {} ({})\n", errno, strerror(errno)));
-        goto InitializePreCreateExit;
-    }
-
-    // initialize suspend semaphore
-    m_sbSemwait.sem_num = 0;
-    m_sbSemwait.sem_op = -1;
-    m_sbSemwait.sem_flg = 0;
-
-    // initialize resume semaphore
-    m_sbSempost.sem_num = 0;
-    m_sbSempost.sem_op = 1;
-    m_sbSempost.sem_flg = 0;
 #elif USE_PTHREAD_CONDVARS
     iError = pthread_cond_init(&m_condSusp, NULL);
     if (iError != 0)
@@ -911,8 +843,6 @@ CThreadSuspensionInfo::~CThreadSuspensionInfo()
         iError = sem_destroy(&m_semResume);
         _ASSERT_MSG(0 == iError, "sem_destroy failed and set errno to %d (%s)\n", errno, strerror(errno));
     }
-#elif USE_SYSV_SEMAPHORES
-    DestroySemaphoreIds();
 #elif USE_PTHREAD_CONDVARS
     if (m_fSemaphoresInitialized)
     {
@@ -932,45 +862,3 @@ CThreadSuspensionInfo::~CThreadSuspensionInfo()
     }
 #endif  // USE_POSIX_SEMAPHORES
 }
-
-#if USE_SYSV_SEMAPHORES
-/*++
-Function:
-  DestroySemaphoreIds
-
-DestroySemaphoreIds is called from the CThreadSuspensionInfo destructor and
-from PROCCleanupThreadSemIds. If a thread exits before shutdown or is suspended
-during shutdown, its destructor will be invoked and the semaphore ids destroyed.
-In assert or exceptions situations that are suspension unsafe,
-PROCCleanupThreadSemIds is called, which uses DestroySemaphoreIds.
---*/
-void
-CThreadSuspensionInfo::DestroySemaphoreIds()
-{
-    union semun semunData;
-    if (m_nSemsuspid != 0)
-    {
-        semunData.val = 0;
-        if (0 != semctl(m_nSemsuspid, 0, IPC_RMID, semunData))
-        {
-            ERROR("semctl(Semsuspid) failed and set errno to %d (%s)\n", errno, strerror(errno));
-        }
-        else
-        {
-            m_nSemsuspid = 0;
-        }
-    }
-    if (this->m_nSemrespid)
-    {
-        semunData.val = 0;
-        if (0 != semctl(m_nSemrespid, 0, IPC_RMID, semunData))
-        {
-            ERROR("semctl(Semrespid) failed and set errno to %d (%s)\n", errno, strerror(errno));
-        }
-        else
-        {
-            m_nSemrespid = 0;
-        }
-    }
-}
-#endif // USE_SYSV_SEMAPHORES
