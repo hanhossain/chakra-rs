@@ -13,6 +13,7 @@
 
 #include "ChakraCore.h"
 #include "MessageQueue.h"
+#include "RuntimeThreadData.h"
 #include <chakracore-sys/src/jsrt/ffi.rs.h>
 #include <chakracore-sys/src/str_helper.rs.h>
 
@@ -115,7 +116,7 @@ public:
     }
 
     static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
-    static JsValueRef LoadScript(const chakra_rs::OptionalStr &content);
+    static JsValueRef LoadScript(RuntimeThreadData *threadData, RuntimeThreadData *child);
     static std::size_t GetNextSourceContext();
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
     static void FinalizeFree(void * addr);

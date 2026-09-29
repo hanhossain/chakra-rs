@@ -131,22 +131,8 @@ Error:
     return returnValue;
 }
 
-JsValueRef WScriptJsrt::LoadScript(const chakra_rs::OptionalStr &content)
+JsValueRef WScriptJsrt::LoadScript(RuntimeThreadData *threadData, RuntimeThreadData *child)
 {
-    auto& threadData = GetRuntimeThreadLocalData().threadData;
-    if (threadData == nullptr)
-    {
-        threadData = new RuntimeThreadData();
-    }
-
-    RuntimeThreadData* child = new RuntimeThreadData(rust::String{content.value.data(), content.value.size()});
-    threadData->children.push_back(child);
-    child->parent = threadData;
-
-    // TODO: need to add a switch in case we don't need to wait for
-    // child initial script completion
-    threadData->reset_initial_script_completed();
-
     child->hThread = ::CreateThread(NULL, [](void* param) -> uint32_t
     {
         return ((RuntimeThreadData*)param)->ThreadProc();

@@ -37,6 +37,14 @@ RuntimeThreadData &GetCurrentRuntimeThreadData([[maybe_unused]] int &dummy)
     return *threadLocalData.threadData;
 }
 
+RuntimeThreadData *GetCurrentRuntimeThreadDataPtr() {
+    if (!threadLocalData.threadData) {
+        auto threadData = new RuntimeThreadData{};
+        threadLocalData.Initialize(threadData);
+    }
+    return threadLocalData.threadData;
+}
+
 RuntimeThreadData::RuntimeThreadData(rust::String initialSource) :
     hThread(nullptr),
     sharedContent_(nullptr),
@@ -60,6 +68,10 @@ RuntimeThreadData::~RuntimeThreadData()
     CloseHandle(this->hevntReceivedBroadcast);
     CloseHandle(this->hevntShutdown);
     CloseHandle(this->hThread);
+}
+
+RuntimeThreadData *RuntimeThreadData::NewWithInitialSource(rust::Str initialSource) {
+    return new RuntimeThreadData{rust::String{initialSource.data(), initialSource.size()}};
 }
 
 uint32_t RuntimeThreadData::ThreadProc()
@@ -216,4 +228,11 @@ JsValueRef RuntimeThreadData::get_receive_broadcast_callback_func() const
 void RuntimeThreadData::set_receive_broadcast_callback_func(JsValueRef value)
 {
     receiveBroadcastCallbackFunc = value;
+}
+
+void RuntimeThreadData::add_child(RuntimeThreadData *child) {
+    children.push_back(child);
+}
+void RuntimeThreadData::set_parent(RuntimeThreadData *parentThread) {
+    parent = parentThread;
 }
