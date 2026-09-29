@@ -34,6 +34,10 @@ mod ffi {
         fn JsDisposeRuntime(runtime: JsRuntimeHandle) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetRuntime(context: JsContextRef, runtime: *mut JsRuntimeHandle)
+        -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateContext(
             runtime: JsRuntimeHandle,
             context: *mut JsContextRef,

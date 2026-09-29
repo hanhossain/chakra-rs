@@ -21,7 +21,7 @@ impl JsRuntimeHandle {
 }
 
 #[repr(transparent)]
-#[derive(Default)]
+#[derive(Default, Copy, Clone)]
 pub struct JsContextRef(*mut c_void);
 
 unsafe impl cxx::ExternType for JsContextRef {
