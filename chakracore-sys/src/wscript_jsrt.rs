@@ -121,6 +121,15 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         unsafe fn PushMessage(message: *mut MessageBase);
+        #[Self = "WScriptJsrt"]
+        fn LoadScript(
+            callee: JsValueRef,
+            file_name: &str,
+            content: &OptionalStr,
+            script_inject_type: &str,
+            is_source_module: bool,
+            is_file: bool,
+        ) -> JsValueRef;
     }
 
     unsafe extern "C++" {
@@ -164,6 +173,16 @@ mod ffi {
             full_name: &String,
             is_file: bool,
         ) -> JsErrorCode;
+
+        #[Self = "WScript"]
+        fn load_script(
+            callee: JsValueRef,
+            file_name: &str,
+            content: &OptionalStr,
+            script_inject_type: &str,
+            is_source_module: bool,
+            is_file: bool,
+        ) -> JsValueRef;
 
         type ModuleErrorMap;
         fn get_module_error_map() -> Box<ModuleErrorMap>;
@@ -1005,6 +1024,24 @@ impl WScript {
         }
 
         Ok(())
+    }
+
+    fn load_script(
+        callee: JsValueRef,
+        file_name: &str,
+        content: &OptionalStr,
+        script_inject_type: &str,
+        is_source_module: bool,
+        is_file: bool,
+    ) -> JsValueRef {
+        WScriptJsrt::LoadScript(
+            callee,
+            file_name,
+            content,
+            script_inject_type,
+            is_source_module,
+            is_file,
+        )
     }
 }
 
