@@ -82,12 +82,12 @@ JsrtExternalObject* JsrtExternalObject::Create(void *data, uint inlineSlotSize, 
     }
     if (type == nullptr)
     {
-        type = scriptContext->GetLibrary()->GetCachedJsrtExternalType(reinterpret_cast<uintptr_t>(traceCallback), reinterpret_cast<uintptr_t>(finalizeCallback), reinterpret_cast<uintptr_t>(prototype));
+        type = scriptContext->GetLibrary()->GetCachedJsrtExternalType(reinterpret_cast<uintptr_t>(traceCallback), finalizeCallback, reinterpret_cast<uintptr_t>(prototype));
 
         if (type == nullptr)
         {
             type = RecyclerNew(scriptContext->GetRecycler(), JsrtExternalType, scriptContext, traceCallback, finalizeCallback, prototype);
-            scriptContext->GetLibrary()->CacheJsrtExternalType(reinterpret_cast<uintptr_t>(traceCallback), reinterpret_cast<uintptr_t>(finalizeCallback), reinterpret_cast<uintptr_t>(prototype), type);
+            scriptContext->GetLibrary()->CacheJsrtExternalType(reinterpret_cast<uintptr_t>(traceCallback), finalizeCallback, reinterpret_cast<uintptr_t>(prototype), type);
         }
     }
 
@@ -118,12 +118,12 @@ JsrtExternalObject* JsrtExternalObject::Create(void *data, uint inlineSlotSize, 
     }
     if (type == nullptr)
     {
-        type = scriptContext->GetLibrary()->GetCachedJsrtExternalType(0, reinterpret_cast<uintptr_t>(finalizeCallback), reinterpret_cast<uintptr_t>(prototype));
+        type = scriptContext->GetLibrary()->GetCachedJsrtExternalType(0, finalizeCallback, reinterpret_cast<uintptr_t>(prototype));
 
         if (type == nullptr)
         {
             type = RecyclerNew(scriptContext->GetRecycler(), JsrtExternalType, scriptContext, finalizeCallback, prototype);
-            scriptContext->GetLibrary()->CacheJsrtExternalType(0, reinterpret_cast<uintptr_t>(finalizeCallback), reinterpret_cast<uintptr_t>(prototype), type);
+            scriptContext->GetLibrary()->CacheJsrtExternalType(0, finalizeCallback, reinterpret_cast<uintptr_t>(prototype), type);
         }
     }
 

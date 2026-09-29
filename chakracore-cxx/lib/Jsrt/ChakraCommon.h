@@ -695,7 +695,7 @@ typedef unsigned short char16_t;
     /// <param name="data">
     ///     The external data that was passed in when creating the object being finalized.
     /// </param>
-    typedef void (*JsFinalizeCallback)(_In_opt_ void *data);
+    using JsFinalizeCallback = std::function<void(void *data)>;
 
     /// <summary>
     ///     A function callback.

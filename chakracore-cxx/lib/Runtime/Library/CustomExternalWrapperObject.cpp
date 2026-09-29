@@ -71,12 +71,12 @@ CustomExternalWrapperObject* CustomExternalWrapperObject::Create(void *data, uin
         prototype = scriptContext->GetLibrary()->GetObjectPrototype();
     }
 
-    Js::DynamicType * dynamicType = scriptContext->GetLibrary()->GetCachedCustomExternalWrapperType(reinterpret_cast<uintptr_t>(traceCallback), reinterpret_cast<uintptr_t>(finalizeCallback), reinterpret_cast<uintptr_t>(*getterSetterInterceptor), reinterpret_cast<uintptr_t>(prototype));
+    Js::DynamicType * dynamicType = scriptContext->GetLibrary()->GetCachedCustomExternalWrapperType(reinterpret_cast<uintptr_t>(traceCallback), finalizeCallback, reinterpret_cast<uintptr_t>(*getterSetterInterceptor), reinterpret_cast<uintptr_t>(prototype));
     if (dynamicType == nullptr)
     {
         dynamicType = RecyclerNew(scriptContext->GetRecycler(), CustomExternalWrapperType, scriptContext, traceCallback, finalizeCallback, prototype);
         *getterSetterInterceptor = reinterpret_cast<CustomExternalWrapperType *>(dynamicType)->GetJsGetterSetterInterceptor();
-        scriptContext->GetLibrary()->CacheCustomExternalWrapperType(reinterpret_cast<uintptr_t>(traceCallback), reinterpret_cast<uintptr_t>(finalizeCallback), reinterpret_cast<uintptr_t>(*getterSetterInterceptor), reinterpret_cast<uintptr_t>(prototype), dynamicType);
+        scriptContext->GetLibrary()->CacheCustomExternalWrapperType(reinterpret_cast<uintptr_t>(traceCallback), finalizeCallback, reinterpret_cast<uintptr_t>(*getterSetterInterceptor), reinterpret_cast<uintptr_t>(prototype), dynamicType);
     }
     else
     {

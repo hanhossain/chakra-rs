@@ -440,13 +440,14 @@ namespace Js
         struct JsrtExternalCallbacks
         {
             JsrtExternalCallbacks() : traceCallback(0), finalizeCallback(0), prototype(0) {}
-            JsrtExternalCallbacks(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t prototype) : traceCallback(traceCallback), finalizeCallback(finalizeCallback), prototype(prototype) {}
+            JsrtExternalCallbacks(uintptr_t traceCallback, std::function<void(void *)> finalizeCallback, uintptr_t prototype) : traceCallback(traceCallback), finalizeCallback(finalizeCallback), prototype(prototype) {}
 
             uintptr_t traceCallback;
-            uintptr_t finalizeCallback;
+            std::function<void(void *)> finalizeCallback;
             uintptr_t prototype;
 
-            operator hash_t() const { return (hash_t)(traceCallback ^ finalizeCallback ^ prototype); }
+            // operator hash_t() const { return (hash_t)(traceCallback ^ finalizeCallback ^ prototype); }
+            operator hash_t() const { return (hash_t)(traceCallback ^ prototype); }
         };
         typedef JsUtil::WeakReferenceDictionary<JsrtExternalCallbacks, DynamicType, DictionarySizePolicy<PowerOf2Policy, 1>> JsrtExternalTypesCache;
 
@@ -464,13 +465,14 @@ namespace Js
         struct CustomExternalWrapperCallbacks
         {
             CustomExternalWrapperCallbacks() : traceCallback(0), finalizeCallback(0), interceptors(0), prototype(0) {}
-            CustomExternalWrapperCallbacks(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t interceptors, uintptr_t prototype) : traceCallback(traceCallback), finalizeCallback(finalizeCallback), interceptors(interceptors), prototype(prototype) {}
+            CustomExternalWrapperCallbacks(uintptr_t traceCallback, std::function<void(void *)> finalizeCallback, uintptr_t interceptors, uintptr_t prototype) : traceCallback(traceCallback), finalizeCallback(finalizeCallback), interceptors(interceptors), prototype(prototype) {}
             uintptr_t traceCallback;
-            uintptr_t finalizeCallback;
+            std::function<void(void *)> finalizeCallback;
             uintptr_t interceptors;
             uintptr_t prototype;
 
-            operator hash_t() const { return (hash_t)(traceCallback ^ finalizeCallback ^ interceptors ^ prototype); }
+            // operator hash_t() const { return (hash_t)(traceCallback ^ finalizeCallback ^ interceptors ^ prototype); }
+            operator hash_t() const { return (hash_t)(traceCallback ^ interceptors ^ prototype); }
         };
         typedef JsUtil::WeakReferenceDictionary<CustomExternalWrapperCallbacks, DynamicType, DictionarySizePolicy<PowerOf2Policy, 1>> CustomExternalWrapperTypesCache;
 
@@ -860,11 +862,11 @@ namespace Js
         JavascriptExternalFunction* CreateIdMappedExternalFunction(MethodType entryPoint, DynamicType *pPrototypeType);
         JavascriptExternalFunction* CreateExternalConstructor(Js::ExternalMethod entryPoint, PropertyId nameId, RecyclableObject * prototype);
         JavascriptExternalFunction* CreateExternalConstructor(Js::ExternalMethod entryPoint, PropertyId nameId, InitializeMethod method, unsigned short deferredTypeSlots, bool hasAccessors);
-        DynamicType* GetCachedCustomExternalWrapperType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t interceptors, uintptr_t prototype);
-        void CacheCustomExternalWrapperType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t interceptors, uintptr_t prototype, DynamicType* dynamicType);
+        DynamicType* GetCachedCustomExternalWrapperType(uintptr_t traceCallback, std::function<void(void *)> finalizeCallback, uintptr_t interceptors, uintptr_t prototype);
+        void CacheCustomExternalWrapperType(uintptr_t traceCallback, std::function<void(void *)> finalizeCallback, uintptr_t interceptors, uintptr_t prototype, DynamicType* dynamicType);
 
-        JsrtExternalType* GetCachedJsrtExternalType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t prototype);
-        void CacheJsrtExternalType(uintptr_t traceCallback, uintptr_t finalizeCallback, uintptr_t prototype, JsrtExternalType* dynamicType);
+        JsrtExternalType* GetCachedJsrtExternalType(uintptr_t traceCallback, std::function<void(void *)> finalizeCallback, uintptr_t prototype);
+        void CacheJsrtExternalType(uintptr_t traceCallback, std::function<void(void *)> finalizeCallback, uintptr_t prototype, JsrtExternalType* dynamicType);
         static DynamicTypeHandler * GetDeferredPrototypeGeneratorFunctionTypeHandler(ScriptContext* scriptContext);
         static DynamicTypeHandler * GetDeferredPrototypeAsyncFunctionTypeHandler(ScriptContext* scriptContext);
         DynamicType * CreateDeferredPrototypeAsyncGeneratorFunctionType(JavascriptMethod entrypoint, bool isAnonymousFunction, bool isShared = false);
