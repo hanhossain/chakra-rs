@@ -116,12 +116,9 @@ mod ffi {
         unsafe fn PushMessage(message: *mut MessageBase);
         #[Self = "WScriptJsrt"]
         fn LoadScript(
-            callee: JsValueRef,
             file_name: &str,
             content: &OptionalStr,
             script_inject_type: &str,
-            is_source_module: bool,
-            is_file: bool,
             current_context: JsContextRef,
             runtime: JsRuntimeHandle,
         ) -> JsValueRef;
@@ -161,13 +158,6 @@ mod ffi {
 
         #[Self = "WScript"]
         unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid);
-
-        #[Self = "WScript"]
-        fn load_module_from_string(
-            file_content: &OptionalStr,
-            full_name: &String,
-            is_file: bool,
-        ) -> JsErrorCode;
 
         #[Self = "WScript"]
         fn load_script(
@@ -931,6 +921,7 @@ impl WScript {
         )
     }
 
+    // TODO: can now use Option<&str> since this is no longer exposed to C++.
     fn load_module_from_string(
         file_content: &OptionalStr,
         full_name: &String,
@@ -1090,14 +1081,73 @@ impl WScript {
             )
             .as_result()?;
             Ok(JsValueRef::default())
+        } else if script_inject_type == "self" {
+            let mut callee_context = JsContextRef::default();
+            unsafe {
+                ChakraRTInterface::JsGetContextOfObject(callee, &raw mut callee_context)
+                    .as_result()?;
+                ChakraRTInterface::JsSetCurrentContext(callee_context).as_result()?;
+            }
+
+            let mut script_source = JsValueRef::default();
+            unsafe {
+                // TODO: consider passing in the finalize callback
+                ChakraRTInterface::JsCreateExternalArrayBuffer(
+                    content.value,
+                    &raw mut script_source,
+                )
+                .as_result()?;
+            }
+
+            let fname = ChakraRt::create_string(full_path.to_str().unwrap_or_default())?;
+            let source_context = JsSourceContext(WScriptJsrt::GetNextSourceContext());
+
+            let mut return_value = JsValueRef::default();
+            let error_code = if HostConfigFlags::GetConfig().host.use_parser_state_cache {
+                let mut parser_state = JsValueRef::default();
+                unsafe {
+                    ChakraRTInterface::JsSerializeParserState(
+                        script_source,
+                        &raw mut parser_state,
+                        JsParseScriptAttributes::JsParseScriptAttributeNone,
+                    )
+                    .as_result()?;
+                    ChakraRTInterface::JsRunScriptWithParserState(
+                        script_source,
+                        source_context,
+                        *fname,
+                        JsParseScriptAttributes::JsParseScriptAttributeNone,
+                        parser_state,
+                        &raw mut return_value,
+                    )
+                    .as_result()
+                }
+            } else {
+                unsafe {
+                    ChakraRTInterface::JsRun(
+                        script_source,
+                        source_context,
+                        *fname,
+                        JsParseScriptAttributes::JsParseScriptAttributeNone,
+                        &raw mut return_value,
+                    )
+                    .as_result()
+                }
+            };
+
+            if error_code.is_ok() {
+                let global_object = ChakraRt::get_global_object()?;
+                return_value = *global_object;
+            }
+
+            ChakraRTInterface::JsSetCurrentContext(current_context).as_result()?;
+
+            Ok(return_value)
         } else {
             Ok(WScriptJsrt::LoadScript(
-                callee,
                 file_name,
                 content,
                 script_inject_type,
-                is_source_module,
-                is_file,
                 current_context,
                 runtime,
             ))

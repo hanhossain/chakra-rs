@@ -30,7 +30,7 @@ unsafe impl cxx::ExternType for JsContextRef {
 }
 
 #[repr(transparent)]
-#[derive(Default, Clone)]
+#[derive(Default, Copy, Clone)]
 pub struct JsValueRef(*mut c_void);
 
 unsafe impl cxx::ExternType for JsValueRef {
