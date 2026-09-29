@@ -348,11 +348,7 @@ See MSDN doc.
 
 --*/
 HANDLE
-CreateThread(
-    LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    std::function<uint32_t(void *)> lpStartAddress,
-    void *lpParameter,
-    uint32_t dwCreationFlags)
+CreateThread(std::function<uint32_t(void *)> lpStartAddress, void *lpParameter, uint32_t dwCreationFlags)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -360,8 +356,8 @@ CreateThread(
 
     pThread = InternalGetCurrentThread();
 
-    palError = InternalCreateThread(pThread, lpThreadAttributes, std::move(lpStartAddress), lpParameter,
-                                    dwCreationFlags, UserCreatedThread, &hNewThread);
+    palError = InternalCreateThread(pThread, std::move(lpStartAddress), lpParameter, dwCreationFlags, UserCreatedThread,
+                                    &hNewThread);
 
     if (NO_ERROR != palError)
     {
@@ -373,8 +369,7 @@ CreateThread(
 }
 
 PAL_ERROR
-CorUnix::InternalCreateThread(CPalThread *pThread, LPSECURITY_ATTRIBUTES lpThreadAttributes,
-                              std::function<uint32_t(void *)> lpStartAddress, void *lpParameter,
+CorUnix::InternalCreateThread(CPalThread *pThread, std::function<uint32_t(void *)> lpStartAddress, void *lpParameter,
                               uint32_t dwCreationFlags, PalThreadType eThreadType, HANDLE *phThread)
 {
     PAL_ERROR palError;
@@ -386,13 +381,6 @@ CorUnix::InternalCreateThread(CPalThread *pThread, LPSECURITY_ATTRIBUTES lpThrea
     bool fHoldingProcessLock = false;
 
     /* Validate parameters */
-    if (lpThreadAttributes != NULL)
-    {
-        chakra::Logger::error(std::format("lpThreadAttributes parameter must be NULL ({})\n",
-               static_cast<void *>(lpThreadAttributes)));
-        palError = ERROR_INVALID_PARAMETER;
-        goto EXIT;
-    }
 
     // Ignore the STACK_SIZE_PARAM_IS_A_RESERVATION flag
     dwCreationFlags &= ~STACK_SIZE_PARAM_IS_A_RESERVATION;

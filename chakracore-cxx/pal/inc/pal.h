@@ -175,12 +175,6 @@ extern errno_t _ui64tow_s(unsigned long long inValue, char16_t* outBuffer, size_
 
 /******************* winbase.h Entrypoints and defines ************************/
 
-typedef struct _SECURITY_ATTRIBUTES {
-            uint32_t nLength;
-            void * lpSecurityDescriptor;
-            BOOL bInheritHandle;
-} SECURITY_ATTRIBUTES, *LPSECURITY_ATTRIBUTES;
-
 #define _SH_DENYWR      0x20    /* deny write mode */
 
 #define GENERIC_READ               (0x80000000L)
@@ -354,8 +348,7 @@ Sleep(
 #define STACK_SIZE_PARAM_IS_A_RESERVATION 0x00010000
 
 HANDLE
-CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttributes, std::function<uint32_t(void *)> lpStartAddress,
-             void *lpParameter, uint32_t dwCreationFlags);
+CreateThread(std::function<uint32_t(void *)> lpStartAddress, void *lpParameter, uint32_t dwCreationFlags);
 
 __attribute__((noreturn))
 void
