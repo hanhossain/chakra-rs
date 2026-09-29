@@ -354,12 +354,8 @@ Sleep(
 #define STACK_SIZE_PARAM_IS_A_RESERVATION 0x00010000
 
 HANDLE
-CreateThread(
-    LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    std::function<uint32_t(void *)> lpStartAddress,
-    void * lpParameter,
-    uint32_t dwCreationFlags,
-    uint32_t * lpThreadId);
+CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttributes, std::function<uint32_t(void *)> lpStartAddress,
+             void *lpParameter, uint32_t dwCreationFlags);
 
 __attribute__((noreturn))
 void

@@ -131,12 +131,9 @@ Error:
     return returnValue;
 }
 
-void WScriptJsrt::LoadScript(RuntimeThreadData *child)
-{
-    child->hThread = ::CreateThread(NULL, [](void* param) -> uint32_t
-    {
-        return ((RuntimeThreadData*)param)->ThreadProc();
-    }, (void*)child, NULL, NULL);
+void WScriptJsrt::LoadScript(RuntimeThreadData *child) {
+    child->hThread = ::CreateThread(
+        NULL, [](void *param) -> uint32_t { return ((RuntimeThreadData *)param)->ThreadProc(); }, (void *)child, NULL);
 }
 
 bool WScriptJsrt::Uninitialize()
