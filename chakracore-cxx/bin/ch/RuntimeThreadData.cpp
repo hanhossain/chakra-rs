@@ -236,3 +236,6 @@ void RuntimeThreadData::add_child(RuntimeThreadData *child) {
 void RuntimeThreadData::set_parent(RuntimeThreadData *parentThread) {
     parent = parentThread;
 }
+void RuntimeThreadData::set_thread_handle(HANDLE thread) {
+    hThread = thread;
+}

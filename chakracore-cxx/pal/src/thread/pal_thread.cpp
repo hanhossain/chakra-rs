@@ -40,6 +40,7 @@ SET_DEFAULT_DEBUG_CHANNEL(THREAD); // some headers have code with asserts, so do
 #include "pal/init.h"
 #include "pal/utils.h"
 #include "pal/virtual.h"
+#include "pal_ffi/pal_thread_ffi.h"
 #include "chakra/Logger.h"
 #include <format>
 #include <utility>
@@ -264,6 +265,10 @@ CreateThread(std::function<uint32_t(void *)> lpStartAddress, void *lpParameter, 
     LOGEXIT("CreateThread returns HANDLE %p\n", hNewThread);
 
     return hNewThread;
+}
+
+HANDLE pal_ffi::CreateThread(rust::Fn<uint32_t(void *)> func, void *param, uint32_t creationFlags) {
+    return ::CreateThread(func, param, creationFlags);
 }
 
 PAL_ERROR
