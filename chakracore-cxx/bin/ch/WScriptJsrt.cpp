@@ -131,18 +131,12 @@ Error:
     return returnValue;
 }
 
-JsValueRef WScriptJsrt::LoadScript(RuntimeThreadData *threadData, RuntimeThreadData *child)
+void WScriptJsrt::LoadScript(RuntimeThreadData *child)
 {
     child->hThread = ::CreateThread(NULL, [](void* param) -> uint32_t
     {
         return ((RuntimeThreadData*)param)->ThreadProc();
     }, (void*)child, NULL, NULL);
-
-    threadData->wait_initial_script_completed();
-
-    fflush(NULL);
-
-    return JS_INVALID_REFERENCE;
 }
 
 bool WScriptJsrt::Uninitialize()
