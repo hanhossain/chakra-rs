@@ -17,6 +17,7 @@ public:
     RuntimeThreadData();
     RuntimeThreadData(rust::String initialSource);
     ~RuntimeThreadData();
+    static RuntimeThreadData *NewWithInitialSource(rust::Str initialSource);
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
     HANDLE hThread;
@@ -46,6 +47,8 @@ public:
     JsSharedArrayBufferContentHandle get_shared_content();
     JsValueRef get_receive_broadcast_callback_func() const;
     void set_receive_broadcast_callback_func(JsValueRef value);
+    void add_child(RuntimeThreadData *child);
+    void set_parent(RuntimeThreadData *parentThread);
 
 private:
     bool initial_script_completed_{};
@@ -70,3 +73,4 @@ struct RuntimeThreadLocalData
 RuntimeThreadLocalData& GetRuntimeThreadLocalData();
 
 RuntimeThreadData &GetCurrentRuntimeThreadData(int &dummy);
+RuntimeThreadData *GetCurrentRuntimeThreadDataPtr();

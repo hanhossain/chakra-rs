@@ -8,8 +8,8 @@ use crate::jsrt::{
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::ffi::{
-    CVoid, GetCurrentRuntimeThreadData, ModuleState, WScriptJsrt_CallbackMessage,
-    WScriptJsrt_ModuleMessage,
+    CVoid, GetCurrentRuntimeThreadData, ModuleState, RuntimeThreadData,
+    WScriptJsrt_CallbackMessage, WScriptJsrt_ModuleMessage,
 };
 pub use ffi::{MessageQueue, WScriptJsrt};
 use std::collections::HashMap;
@@ -115,7 +115,10 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         unsafe fn PushMessage(message: *mut MessageBase);
         #[Self = "WScriptJsrt"]
-        fn LoadScript(content: &OptionalStr) -> JsValueRef;
+        unsafe fn LoadScript(
+            thread_data: *mut RuntimeThreadData,
+            child: *mut RuntimeThreadData,
+        ) -> JsValueRef;
     }
 
     unsafe extern "C++" {
@@ -124,6 +127,10 @@ mod ffi {
         type RuntimeThreadData;
         type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
         fn GetCurrentRuntimeThreadData(dummy: &mut i32) -> Pin<&mut RuntimeThreadData>;
+        fn GetCurrentRuntimeThreadDataPtr() -> *mut RuntimeThreadData;
+
+        #[Self = "RuntimeThreadData"]
+        fn NewWithInitialSource(initialSource: &str) -> *mut RuntimeThreadData;
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
         fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
@@ -141,6 +148,9 @@ mod ffi {
             self: Pin<&mut RuntimeThreadData>,
             value: JsValueRef,
         );
+        fn reset_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
+        unsafe fn add_child(self: Pin<&mut RuntimeThreadData>, child: *mut RuntimeThreadData);
+        unsafe fn set_parent(self: Pin<&mut RuntimeThreadData>, parent: *mut RuntimeThreadData);
     }
 
     #[namespace = "chakra_rs"]
@@ -1212,7 +1222,23 @@ impl WScript {
 
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
-            Ok(WScriptJsrt::LoadScript(content))
+            let thread_data = ffi::GetCurrentRuntimeThreadDataPtr();
+            let child = RuntimeThreadData::NewWithInitialSource(content.value);
+            unsafe {
+                let data = Pin::new_unchecked(&mut *thread_data);
+                data.add_child(child);
+            }
+            unsafe {
+                let data = Pin::new_unchecked(&mut *child);
+                data.set_parent(thread_data);
+            }
+            unsafe {
+                let thread_data = Pin::new_unchecked(&mut *thread_data);
+                // TODO: need to add a switch in case we don't need to wait for
+                // child initial script completion
+                thread_data.reset_initial_script_completed();
+            }
+            unsafe { Ok(WScriptJsrt::LoadScript(thread_data, child)) }
         } else {
             Err(LoadScriptError::JsErrorWithMessage {
                 error: JsError::JsErrorInvalidArgument,
