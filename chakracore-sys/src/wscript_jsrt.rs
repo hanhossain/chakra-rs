@@ -29,6 +29,14 @@ static MODULE_RECORD_MAP: LazyLock<ModuleRecordMap> = LazyLock::new(|| ModuleRec
 static MODULE_DIRECTORY_MAP: LazyLock<ModuleDirectoryMap> =
     LazyLock::new(|| ModuleDirectoryMap::new());
 
+#[repr(transparent)]
+pub struct Handle(*mut std::ffi::c_void);
+
+unsafe impl cxx::ExternType for Handle {
+    type Id = cxx::type_id!("HANDLE");
+    type Kind = cxx::kind::Trivial;
+}
+
 #[cxx::bridge]
 mod ffi {
     unsafe extern "C++" {
@@ -114,8 +122,6 @@ mod ffi {
 
         #[Self = "WScriptJsrt"]
         unsafe fn PushMessage(message: *mut MessageBase);
-        #[Self = "WScriptJsrt"]
-        unsafe fn LoadScript(child: *mut RuntimeThreadData);
     }
 
     unsafe extern "C++" {
@@ -149,6 +155,20 @@ mod ffi {
         fn wait_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
         unsafe fn add_child(self: Pin<&mut RuntimeThreadData>, child: *mut RuntimeThreadData);
         unsafe fn set_parent(self: Pin<&mut RuntimeThreadData>, parent: *mut RuntimeThreadData);
+        fn ThreadProc(self: Pin<&mut RuntimeThreadData>) -> u32;
+        fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
+    }
+
+    unsafe extern "C++" {
+        include!("pal_ffi/pal_thread_ffi.h");
+        #[cxx_name = "HANDLE"]
+        type Handle = super::Handle;
+        #[namespace = "pal_ffi"]
+        unsafe fn CreateThread(
+            func: unsafe fn(*mut CVoid) -> u32,
+            param: *mut CVoid,
+            creation_flags: u32,
+        ) -> Handle;
     }
 
     #[namespace = "chakra_rs"]
@@ -1234,7 +1254,16 @@ impl WScript {
                 let mut thread_data = Pin::new_unchecked(&mut *thread_data);
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
                 thread_data.as_mut().reset_initial_script_completed();
-                WScriptJsrt::LoadScript(child);
+                let thread_handle = ffi::CreateThread(
+                    |param| {
+                        let param =
+                            std::mem::transmute::<*mut CVoid, *mut RuntimeThreadData>(param);
+                        Pin::new_unchecked(&mut *param).ThreadProc()
+                    },
+                    child as _,
+                    0,
+                );
+                Pin::new_unchecked(&mut *child).set_thread_handle(thread_handle);
                 thread_data.as_mut().wait_initial_script_completed();
             }
             Ok(JsValueRef::default())

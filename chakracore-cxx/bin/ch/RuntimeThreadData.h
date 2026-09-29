@@ -49,6 +49,7 @@ public:
     void set_receive_broadcast_callback_func(JsValueRef value);
     void add_child(RuntimeThreadData *child);
     void set_parent(RuntimeThreadData *parentThread);
+    void set_thread_handle(HANDLE thread);
 
 private:
     bool initial_script_completed_{};
