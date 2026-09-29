@@ -131,58 +131,12 @@ Error:
     return returnValue;
 }
 
-JsValueRef WScriptJsrt::LoadScript(rust::Str fileName, const chakra_rs::OptionalStr &content,
-                                   rust::Str scriptInjectType, JsContextRef currentContext, JsRuntimeHandle runtime)
+JsValueRef WScriptJsrt::LoadScript(const chakra_rs::OptionalStr &content, rust::Str scriptInjectType)
 {
-    std::function<void(void *data)> finalizeCallback = WScriptJsrt::FinalizeFree;
-    [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
     std::string_view errorMessage = "Internal error.";
-    JsValueRef returnValue = JS_INVALID_REFERENCE;
-    std::error_code ec;
 
-    auto fullPath = fs::absolute(static_cast<std::string_view>(fileName), ec).lexically_normal();
-
-    if (scriptInjectType == "samethread")
-    {
-        JsValueRef newContext = JS_INVALID_REFERENCE;
-
-        // Create a new context and set it as the current context
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateContext(runtime, &newContext));
-
-        IfJsrtErrorSetGo(ChakraRTInterface::JsSetCurrentContext(newContext));
-
-        IfJsErrorFailLog(ChakraRTInterface::JsSetPromiseContinuationCallback(chakra_rs::WScript::promise_continuation_callback, (void*)messageQueue_));
-
-        // Initialize the host objects
-        chakra_rs::WScript::initialize();
-
-        JsValueRef scriptSource;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateExternalArrayBuffer(content.value, finalizeCallback, &scriptSource));
-        JsValueRef fname;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsCreateString(fullPath, &fname));
-        JsSourceContext sourceContext = GetNextSourceContext();
-
-        if (HostConfigFlags::GetConfig().host.use_parser_state_cache)
-        {
-            JsValueRef parserState;
-            IfJsrtErrorSetGo(ChakraRTInterface::JsSerializeParserState(scriptSource, &parserState, JsParseScriptAttributeNone));
-            errorCode = ChakraRTInterface::JsRunScriptWithParserState(scriptSource, sourceContext, fname, JsParseScriptAttributeNone, parserState, &returnValue);
-        }
-        else
-        {
-            errorCode = ChakraRTInterface::JsRun(scriptSource, sourceContext, fname, JsParseScriptAttributeNone, &returnValue);
-        }
-
-        if (errorCode == JsNoError)
-        {
-            errorCode = ChakraRTInterface::JsGetGlobalObject(&returnValue);
-        }
-
-        // Set the context back to the old one
-        ChakraRTInterface::JsSetCurrentContext(currentContext);
-    }
-    else if (scriptInjectType == "crossthread")
+    if (scriptInjectType == "crossthread")
     {
         auto& threadData = GetRuntimeThreadLocalData().threadData;
         if (threadData == nullptr)
@@ -211,8 +165,7 @@ JsValueRef WScriptJsrt::LoadScript(rust::Str fileName, const chakra_rs::Optional
         errorMessage = "Unsupported argument type inject type.";
     }
 
-Error:
-    JsValueRef value = returnValue;
+    JsValueRef value = JS_INVALID_REFERENCE;
     if (errorCode != JsNoError)
     {
         SetExceptionIf(errorCode, errorMessage);

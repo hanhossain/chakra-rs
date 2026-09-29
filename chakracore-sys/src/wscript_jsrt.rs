@@ -115,13 +115,7 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         unsafe fn PushMessage(message: *mut MessageBase);
         #[Self = "WScriptJsrt"]
-        fn LoadScript(
-            file_name: &str,
-            content: &OptionalStr,
-            script_inject_type: &str,
-            current_context: JsContextRef,
-            runtime: JsRuntimeHandle,
-        ) -> JsValueRef;
+        fn LoadScript(content: &OptionalStr, script_inject_type: &str) -> JsValueRef;
     }
 
     unsafe extern "C++" {
@@ -1143,14 +1137,78 @@ impl WScript {
             ChakraRTInterface::JsSetCurrentContext(current_context).as_result()?;
 
             Ok(return_value)
+        } else if script_inject_type == "samethread" {
+            let mut new_context = JsContextRef::default();
+            unsafe {
+                ChakraRTInterface::JsCreateContext(runtime, &raw mut new_context).as_result()?;
+                ChakraRTInterface::JsSetCurrentContext(new_context).as_result()?;
+                ChakraRTInterface::JsSetPromiseContinuationCallback(
+                    |task, callback_state| {
+                        Self::promise_continuation_callback(task, callback_state)
+                    },
+                    WScriptJsrt::GetMessageQueue() as _,
+                )
+                .as_result()?;
+            }
+
+            // Initialize the host objects
+            Self::initialize()?;
+
+            let mut script_source = JsValueRef::default();
+            unsafe {
+                ChakraRTInterface::JsCreateExternalArrayBuffer(
+                    content.value,
+                    &raw mut script_source,
+                )
+                .as_result()?;
+            }
+
+            let fname = ChakraRt::create_string(full_path.to_str().unwrap_or_default())?;
+            let source_context = JsSourceContext(WScriptJsrt::GetNextSourceContext());
+
+            let mut return_value = JsValueRef::default();
+            let error_code = if HostConfigFlags::GetConfig().host.use_parser_state_cache {
+                let mut parser_state = JsValueRef::default();
+                unsafe {
+                    ChakraRTInterface::JsSerializeParserState(
+                        script_source,
+                        &raw mut parser_state,
+                        JsParseScriptAttributes::JsParseScriptAttributeNone,
+                    )
+                    .as_result()?;
+                    ChakraRTInterface::JsRunScriptWithParserState(
+                        script_source,
+                        source_context,
+                        *fname,
+                        JsParseScriptAttributes::JsParseScriptAttributeNone,
+                        parser_state,
+                        &raw mut return_value,
+                    )
+                    .as_result()
+                }
+            } else {
+                unsafe {
+                    ChakraRTInterface::JsRun(
+                        script_source,
+                        source_context,
+                        *fname,
+                        JsParseScriptAttributes::JsParseScriptAttributeNone,
+                        &raw mut return_value,
+                    )
+                    .as_result()
+                }
+            };
+
+            if error_code.is_ok() {
+                let global_object = ChakraRt::get_global_object()?;
+                return_value = *global_object;
+            }
+
+            ChakraRTInterface::JsSetCurrentContext(current_context).as_result()?;
+
+            Ok(return_value)
         } else {
-            Ok(WScriptJsrt::LoadScript(
-                file_name,
-                content,
-                script_inject_type,
-                current_context,
-                runtime,
-            ))
+            Ok(WScriptJsrt::LoadScript(content, script_inject_type))
         }
     }
 }
