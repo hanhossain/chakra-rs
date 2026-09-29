@@ -132,21 +132,17 @@ Error:
 }
 
 JsValueRef WScriptJsrt::LoadScript(JsValueRef callee, rust::Str fileName, const chakra_rs::OptionalStr &content,
-                                   rust::Str scriptInjectType, bool isSourceModule, bool isFile)
+                                   rust::Str scriptInjectType, bool isSourceModule, bool isFile, JsContextRef currentContext,
+                                   JsRuntimeHandle runtime)
 {
     std::function<void(void *data)> finalizeCallback = WScriptJsrt::FinalizeFree;
     [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
     std::string_view errorMessage = "Internal error.";
     JsValueRef returnValue = JS_INVALID_REFERENCE;
-    JsContextRef currentContext = JS_INVALID_REFERENCE;
-    JsRuntimeHandle runtime = JS_INVALID_RUNTIME_HANDLE;
     std::error_code ec;
 
     auto fullPath = fs::absolute(static_cast<std::string_view>(fileName), ec).lexically_normal();
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetCurrentContext(&currentContext));
-    IfJsrtErrorSetGo(ChakraRTInterface::JsGetRuntime(currentContext, &runtime));
 
     // this is called with LoadModuleCallback method as well where caller pass in a string that should be
     // treated as a module source text instead of opening a new file.

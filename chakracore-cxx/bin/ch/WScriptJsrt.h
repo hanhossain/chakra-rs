@@ -116,7 +116,7 @@ public:
 
     static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static JsValueRef LoadScript(JsValueRef callee, rust::Str fileName, const chakra_rs::OptionalStr &content,
-                                 rust::Str scriptInjectType, bool isSourceModule, bool isFile);
+                                 rust::Str scriptInjectType, bool isSourceModule, bool isFile, JsContextRef currentContext, JsRuntimeHandle runtime);
     static std::size_t GetNextSourceContext();
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
     static void FinalizeFree(void * addr);

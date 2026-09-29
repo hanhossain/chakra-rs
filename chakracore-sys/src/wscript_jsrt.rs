@@ -1,9 +1,9 @@
 use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModuleHostInfoKind, JsModuleRecord,
-    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSharedArrayBufferContentHandle,
-    JsSourceContext, JsString, JsValueRef,
+    ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode, JsModuleHostInfoKind,
+    JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
+    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
@@ -40,6 +40,8 @@ mod ffi {
         type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
         type JsSourceContext = crate::jsrt::JsSourceContext;
+        type JsContextRef = crate::jsrt::JsContextRef;
+        type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
 
         #[Self = "WScriptJsrt"]
         fn Uninitialize() -> bool;
@@ -120,6 +122,8 @@ mod ffi {
             script_inject_type: &str,
             is_source_module: bool,
             is_file: bool,
+            current_context: JsContextRef,
+            runtime: JsRuntimeHandle,
         ) -> JsValueRef;
     }
 
@@ -1065,6 +1069,12 @@ impl WScript {
         is_source_module: bool,
         is_file: bool,
     ) -> Result<JsValueRef, JsError> {
+        let mut current_context = JsContextRef::default();
+        let mut runtime = JsRuntimeHandle::default();
+        unsafe {
+            ChakraRTInterface::JsGetCurrentContext(&raw mut current_context).as_result()?;
+            ChakraRTInterface::JsGetRuntime(current_context, &raw mut runtime).as_result()?;
+        }
         Ok(WScriptJsrt::LoadScript(
             callee,
             file_name,
@@ -1072,6 +1082,8 @@ impl WScript {
             script_inject_type,
             is_source_module,
             is_file,
+            current_context,
+            runtime,
         ))
     }
 }
