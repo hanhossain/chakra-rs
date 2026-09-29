@@ -1033,7 +1033,7 @@ impl WScript {
         is_source_module: bool,
         is_file: bool,
     ) -> JsValueRef {
-        WScriptJsrt::LoadScript(
+        Self::internal_load_script(
             callee,
             file_name,
             content,
@@ -1041,6 +1041,38 @@ impl WScript {
             is_source_module,
             is_file,
         )
+        .unwrap_or_else(|error| {
+            let error_code = JsErrorCode::from(error);
+            let value = ChakraRt::double_to_number(error_code.repr as f64).unwrap_or_default();
+            let has_exception = ChakraRt::has_exception();
+            if has_exception.is_err() || !has_exception.unwrap() {
+                if let Err(err) = ChakraRt::create_string("Internal error.")
+                    .and_then(|msg| ChakraRt::create_error(msg))
+                    .and_then(|err_obj| ChakraRt::set_exception(err_obj))
+                {
+                    tracing::error!(?err, "Failed to set or create an exception");
+                }
+            }
+            value
+        })
+    }
+
+    fn internal_load_script(
+        callee: JsValueRef,
+        file_name: &str,
+        content: &OptionalStr,
+        script_inject_type: &str,
+        is_source_module: bool,
+        is_file: bool,
+    ) -> Result<JsValueRef, JsError> {
+        Ok(WScriptJsrt::LoadScript(
+            callee,
+            file_name,
+            content,
+            script_inject_type,
+            is_source_module,
+            is_file,
+        ))
     }
 }
 
