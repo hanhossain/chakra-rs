@@ -118,7 +118,6 @@ public:
     static JsValueRef LoadScript(JsValueRef callee, rust::Str fileName, const chakra_rs::OptionalStr &content,
                                  rust::Str scriptInjectType, bool isSourceModule, bool isFile);
     static std::size_t GetNextSourceContext();
-    static JsValueRef LoadScriptFileHelper(JsValueRef callee, bool isSourceModule, rust::Str filename, rust::Str scriptInjectType, rust::Str content);
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
     static void FinalizeFree(void * addr);
 private:

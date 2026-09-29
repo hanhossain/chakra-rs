@@ -50,11 +50,6 @@ void WScriptJsrt::FinalizeFree(void* addr)
     // free(addr);
 }
 
-JsValueRef WScriptJsrt::LoadScriptFileHelper(JsValueRef callee, bool isSourceModule, rust::Str filename, rust::Str scriptInjectType, rust::Str content)
-{
-    return chakra_rs::WScript::load_script(callee, filename, chakra_rs::OptionalStr{.has_value = true, .value = content}, !scriptInjectType.empty() ? scriptInjectType : "self", isSourceModule, true);
-}
-
 void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view errorMessage)
 {
     if (errorCode == JsNoError)
