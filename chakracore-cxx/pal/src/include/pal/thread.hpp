@@ -51,16 +51,9 @@ namespace CorUnix
     };
 
     PAL_ERROR
-    InternalCreateThread(
-        CPalThread *pThread,
-        LPSECURITY_ATTRIBUTES lpThreadAttributes,
-        std::function<uint32_t(void *)> lpStartAddress,
-        void * lpParameter,
-        uint32_t dwCreationFlags,
-        PalThreadType eThreadType,
-        size_t* pThreadId,
-        HANDLE *phThread
-        );
+    InternalCreateThread(CPalThread *pThread, LPSECURITY_ATTRIBUTES lpThreadAttributes,
+                         std::function<uint32_t(void *)> lpStartAddress, void *lpParameter, uint32_t dwCreationFlags,
+                         PalThreadType eThreadType, HANDLE *phThread);
 
     PAL_ERROR
     InternalGetThreadPriority(
@@ -216,16 +209,9 @@ namespace CorUnix
     {
         friend
             PAL_ERROR
-            CorUnix::InternalCreateThread(
-                CPalThread *,
-                LPSECURITY_ATTRIBUTES,
-                std::function<uint32_t(void *)>,
-                void *,
-                uint32_t,
-                PalThreadType,
-                size_t*,
-                HANDLE*
-                );
+            CorUnix::InternalCreateThread(CPalThread *, LPSECURITY_ATTRIBUTES,
+                                                       std::function<uint32_t(void *)>, void *, uint32_t, PalThreadType,
+                                                       HANDLE *);
 
         friend
             PAL_ERROR

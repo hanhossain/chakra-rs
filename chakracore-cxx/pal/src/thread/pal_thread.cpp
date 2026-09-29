@@ -351,9 +351,8 @@ HANDLE
 CreateThread(
     LPSECURITY_ATTRIBUTES lpThreadAttributes,
     std::function<uint32_t(void *)> lpStartAddress,
-    void * lpParameter,
-    uint32_t dwCreationFlags,
-    uint32_t * lpThreadId)
+    void *lpParameter,
+    uint32_t dwCreationFlags)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -361,25 +360,12 @@ CreateThread(
 
     pThread = InternalGetCurrentThread();
 
-    size_t osThreadId = 0;
-    palError = InternalCreateThread(
-        pThread,
-        lpThreadAttributes,
-        std::move(lpStartAddress),
-        lpParameter,
-        dwCreationFlags,
-        UserCreatedThread,
-        &osThreadId,
-        &hNewThread
-        );
+    palError = InternalCreateThread(pThread, lpThreadAttributes, std::move(lpStartAddress), lpParameter,
+                                    dwCreationFlags, UserCreatedThread, &hNewThread);
 
     if (NO_ERROR != palError)
     {
         CorUnix::CPalThread::SetLastError(palError);
-    }
-    if(lpThreadId != nullptr)
-    {
-        *lpThreadId = osThreadId;
     }
     LOGEXIT("CreateThread returns HANDLE %p\n", hNewThread);
 
@@ -387,16 +373,9 @@ CreateThread(
 }
 
 PAL_ERROR
-CorUnix::InternalCreateThread(
-    CPalThread *pThread,
-    LPSECURITY_ATTRIBUTES lpThreadAttributes,
-    std::function<uint32_t(void *)> lpStartAddress,
-    void * lpParameter,
-    uint32_t dwCreationFlags,
-    PalThreadType eThreadType,
-    size_t* pThreadId,
-    HANDLE *phThread
-    )
+CorUnix::InternalCreateThread(CPalThread *pThread, LPSECURITY_ATTRIBUTES lpThreadAttributes,
+                              std::function<uint32_t(void *)> lpStartAddress, void *lpParameter,
+                              uint32_t dwCreationFlags, PalThreadType eThreadType, HANDLE *phThread)
 {
     PAL_ERROR palError;
     CPalThread *pNewThread = NULL;
@@ -492,15 +471,9 @@ CorUnix::InternalCreateThread(
     if (pNewThread->WaitForStartStatus())
     {
         //
-        // Everything succeeded. Store the handle for the new thread and
-        // the thread's ID in the out params
+        // Everything succeeded. Store the handle for the new thread in the out params
         //
         *phThread = hNewThread;
-
-        if (nullptr != pThreadId)
-        {
-            *pThreadId = pNewThread->GetThreadId();
-        }
     }
     else
     {
