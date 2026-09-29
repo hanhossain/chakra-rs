@@ -132,8 +132,8 @@ Error:
 }
 
 void WScriptJsrt::LoadScript(RuntimeThreadData *child) {
-    child->hThread = ::CreateThread(
-        NULL, [](void *param) -> uint32_t { return ((RuntimeThreadData *)param)->ThreadProc(); }, (void *)child, NULL);
+    child->hThread = ::CreateThread([](void *param) -> uint32_t { return ((RuntimeThreadData *)param)->ThreadProc(); },
+                                    (void *)child, NULL);
 }
 
 bool WScriptJsrt::Uninitialize()
