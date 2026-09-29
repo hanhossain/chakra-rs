@@ -133,13 +133,6 @@ Error:
 
 bool WScriptJsrt::Uninitialize()
 {
-    // moduleRecordMap is a global std::map, its destructor may access overridden
-    // "operator delete" / global HeapAllocator::Instance. Clear it manually here
-    // to avoid worrying about global destructor order.
-    chakra_rs::get_module_record_map()->clear();
-    chakra_rs::get_module_directory_map()->clear();
-    chakra_rs::get_module_error_map()->clear();
-
     auto& threadData = GetRuntimeThreadLocalData().threadData;
     if (threadData && !threadData->children.empty())
     {

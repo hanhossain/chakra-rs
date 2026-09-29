@@ -194,19 +194,15 @@ mod ffi {
         type ModuleErrorMap;
         fn get_module_error_map() -> Box<ModuleErrorMap>;
         fn insert(self: &ModuleErrorMap, key: JsModuleRecord, value: ModuleState);
-        fn clear(self: &ModuleErrorMap);
         fn get(self: &ModuleErrorMap, key: &JsModuleRecord) -> ModuleErrorMapContent;
 
         type ModuleRecordMap;
         fn get_module_record_map() -> Box<ModuleRecordMap>;
         fn insert(self: &ModuleRecordMap, key: String, value: ModuleRecordEntry);
-        fn clear(self: &ModuleRecordMap);
         fn get(self: &ModuleRecordMap, key: &str) -> ModuleRecordMapContent;
 
         type ModuleDirectoryMap;
-        fn get_module_directory_map() -> Box<ModuleDirectoryMap>;
         fn insert(self: &ModuleDirectoryMap, key: JsModuleRecord, value: String);
-        fn clear(self: &ModuleDirectoryMap);
     }
 
     #[repr(i32)]
@@ -1325,11 +1321,6 @@ where
         let mut guard = self.0.write().unwrap();
         guard.insert(key, value);
     }
-
-    fn clear(&self) {
-        let mut guard = self.0.write().unwrap();
-        guard.clear();
-    }
 }
 
 impl ModuleErrorMap {
@@ -1367,10 +1358,6 @@ fn get_module_error_map() -> Box<ModuleErrorMap> {
 
 fn get_module_record_map() -> Box<ModuleRecordMap> {
     Box::new(MODULE_RECORD_MAP.clone())
-}
-
-fn get_module_directory_map() -> Box<ModuleDirectoryMap> {
-    Box::new(MODULE_DIRECTORY_MAP.clone())
 }
 
 #[tracing::instrument(skip_all, fields(ref_dir), err)]
