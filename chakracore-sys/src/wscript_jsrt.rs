@@ -83,15 +83,6 @@ mod ffi {
         fn GetICUMajorVersion() -> i32;
 
         #[Self = "WScriptJsrt"]
-        unsafe fn LoadScriptFileHelper(
-            callee: JsValueRef,
-            is_source_module: bool,
-            filename: &str,
-            script_inject_type: &str,
-            content: &str,
-        ) -> JsValueRef;
-
-        #[Self = "WScriptJsrt"]
         fn LoadScriptHelper(args: &JsNativeFunctionArgs, is_source_module: bool) -> JsValueRef;
 
         #[cxx_name = "WScriptJsrt_CallbackMessage"]
@@ -452,12 +443,20 @@ impl WScript {
         // TODO (hanhossain): don't leak a string ptr
         let content = Box::into_raw(content);
         unsafe {
-            Ok(WScriptJsrt::LoadScriptFileHelper(
+            Ok(Self::load_script(
                 callee,
-                is_source_module,
                 &filename,
-                &script_inject_type,
-                &*content,
+                &OptionalStr {
+                    has_value: true,
+                    value: &*content,
+                },
+                if !script_inject_type.is_empty() {
+                    &script_inject_type
+                } else {
+                    "self"
+                },
+                is_source_module,
+                true,
             ))
         }
     }
