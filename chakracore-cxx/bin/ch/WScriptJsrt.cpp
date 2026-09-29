@@ -44,12 +44,6 @@ std::size_t WScriptJsrt::GetNextSourceContext()
     return sourceContext_++;
 }
 
-// TODO (hanhossain): do I need to free anything?
-void WScriptJsrt::FinalizeFree(void* addr)
-{
-    // free(addr);
-}
-
 void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view errorMessage)
 {
     if (errorCode == JsNoError)
