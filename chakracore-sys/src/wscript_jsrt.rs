@@ -115,7 +115,7 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         unsafe fn PushMessage(message: *mut MessageBase);
         #[Self = "WScriptJsrt"]
-        fn LoadScript(content: &OptionalStr, script_inject_type: &str) -> JsValueRef;
+        fn LoadScript(content: &OptionalStr) -> JsValueRef;
     }
 
     unsafe extern "C++" {
@@ -1031,11 +1031,15 @@ impl WScript {
             is_file,
         )
         .unwrap_or_else(|error| {
-            let error_code = JsErrorCode::from(error);
-            let value = ChakraRt::double_to_number(error_code.repr as f64).unwrap_or_default();
+            let (error, error_message) = match error {
+                LoadScriptError::JsError(err) => (err, "Internal error."),
+                LoadScriptError::JsErrorWithMessage { error, message } => (error, message),
+            };
+            let value = ChakraRt::double_to_number(JsErrorCode::from(error).repr as f64)
+                .unwrap_or_default();
             let has_exception = ChakraRt::has_exception();
             if has_exception.is_err() || !has_exception.unwrap() {
-                if let Err(err) = ChakraRt::create_string("Internal error.")
+                if let Err(err) = ChakraRt::create_string(error_message)
                     .and_then(|msg| ChakraRt::create_error(msg))
                     .and_then(|err_obj| ChakraRt::set_exception(err_obj))
                 {
@@ -1054,7 +1058,7 @@ impl WScript {
         script_inject_type: &str,
         is_source_module: bool,
         is_file: bool,
-    ) -> Result<JsValueRef, JsError> {
+    ) -> Result<JsValueRef, LoadScriptError> {
         let mut current_context = JsContextRef::default();
         let mut runtime = JsRuntimeHandle::default();
         unsafe {
@@ -1207,10 +1211,26 @@ impl WScript {
             ChakraRTInterface::JsSetCurrentContext(current_context).as_result()?;
 
             Ok(return_value)
+        } else if script_inject_type == "crossthread" {
+            Ok(WScriptJsrt::LoadScript(content))
         } else {
-            Ok(WScriptJsrt::LoadScript(content, script_inject_type))
+            Err(LoadScriptError::JsErrorWithMessage {
+                error: JsError::JsErrorInvalidArgument,
+                message: "Unsupported argument type inject type.",
+            })
         }
     }
+}
+
+#[derive(thiserror::Error, Debug)]
+enum LoadScriptError {
+    #[error(transparent)]
+    JsError(#[from] JsError),
+    #[error("{message}")]
+    JsErrorWithMessage {
+        error: JsError,
+        message: &'static str,
+    },
 }
 
 impl IntoResponse for anyhow::Error {

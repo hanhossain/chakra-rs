@@ -131,50 +131,32 @@ Error:
     return returnValue;
 }
 
-JsValueRef WScriptJsrt::LoadScript(const chakra_rs::OptionalStr &content, rust::Str scriptInjectType)
+JsValueRef WScriptJsrt::LoadScript(const chakra_rs::OptionalStr &content)
 {
-    JsErrorCode errorCode = JsNoError;
-    std::string_view errorMessage = "Internal error.";
-
-    if (scriptInjectType == "crossthread")
+    auto& threadData = GetRuntimeThreadLocalData().threadData;
+    if (threadData == nullptr)
     {
-        auto& threadData = GetRuntimeThreadLocalData().threadData;
-        if (threadData == nullptr)
-        {
-            threadData = new RuntimeThreadData();
-        }
-
-        RuntimeThreadData* child = new RuntimeThreadData(rust::String{content.value.data(), content.value.size()});
-        threadData->children.push_back(child);
-        child->parent = threadData;
-
-        // TODO: need to add a switch in case we don't need to wait for
-        // child initial script completion
-        threadData->reset_initial_script_completed();
-
-        child->hThread = ::CreateThread(NULL, [](void* param) -> uint32_t
-        {
-            return ((RuntimeThreadData*)param)->ThreadProc();
-        }, (void*)child, NULL, NULL);
-
-        threadData->wait_initial_script_completed();
-    }
-    else
-    {
-        errorCode = JsErrorInvalidArgument;
-        errorMessage = "Unsupported argument type inject type.";
+        threadData = new RuntimeThreadData();
     }
 
-    JsValueRef value = JS_INVALID_REFERENCE;
-    if (errorCode != JsNoError)
+    RuntimeThreadData* child = new RuntimeThreadData(rust::String{content.value.data(), content.value.size()});
+    threadData->children.push_back(child);
+    child->parent = threadData;
+
+    // TODO: need to add a switch in case we don't need to wait for
+    // child initial script completion
+    threadData->reset_initial_script_completed();
+
+    child->hThread = ::CreateThread(NULL, [](void* param) -> uint32_t
     {
-        SetExceptionIf(errorCode, errorMessage);
-        ChakraRTInterface::JsDoubleToNumber(errorCode, &value);
-    }
+        return ((RuntimeThreadData*)param)->ThreadProc();
+    }, (void*)child, NULL, NULL);
+
+    threadData->wait_initial_script_completed();
 
     fflush(NULL);
 
-    return value;
+    return JS_INVALID_REFERENCE;
 }
 
 bool WScriptJsrt::Uninitialize()
