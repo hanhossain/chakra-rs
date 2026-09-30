@@ -47,32 +47,9 @@ std::size_t WScriptJsrt::GetSourceContext() {
     return sourceContext_;
 }
 
-void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view errorMessage)
-{
-    if (errorCode == JsNoError)
-    {
-        return;
-    }
-
-    // If the exception is already is set - no need to create a new exception.
-    bool hasException = false;
-    if (ChakraRTInterface::JsHasException(&hasException) != JsNoError || !hasException)
-    {
-        JsValueRef errorObject;
-        JsValueRef errorMessageString;
-
-        std::string errorMessageStr = errorMessage.empty() ? ConvertErrorCodeToMessage(errorCode) : std::string{errorMessage};
-        errorCode = ChakraRTInterface::JsCreateString(errorMessageStr, &errorMessageString);
-
-        ChakraRTInterface::JsCreateError(errorMessageString, &errorObject);
-        ChakraRTInterface::JsSetException(errorObject);
-    }
-}
-
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
-    JsErrorCode errorCode = JsNoError;
     std::string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
 
@@ -87,8 +64,6 @@ JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &
         // TODO: How to handle this source (script) life time?
         returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContentPtr}, scriptInjectType, isSourceModule, isFile);
     }
-
-    SetExceptionIf(errorCode, errorMessage);
     return returnValue;
 }
 

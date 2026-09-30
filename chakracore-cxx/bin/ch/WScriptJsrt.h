@@ -120,7 +120,6 @@ public:
     static std::size_t GetSourceContext();
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile);
 private:
-    static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;
 };
