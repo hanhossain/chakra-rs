@@ -477,12 +477,23 @@ impl WScript {
         WScript::load_script_file_helper(args.callee.clone(), args.arguments, false)
     }
 
-    fn load_script_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
-        WScriptJsrt::LoadScriptHelper(args, false)
+    #[tracing::instrument(skip(args), err)]
+    fn load_script_helper(
+        args: &JsNativeFunctionArgs,
+        is_source_module: bool,
+    ) -> anyhow::Result<JsValueRef> {
+        if args.arguments.len() < 2 || args.arguments.len() > 4 {
+            anyhow::bail!("Need more or fewer arguments for WScript.LoadScript");
+        }
+        Ok(WScriptJsrt::LoadScriptHelper(args, is_source_module))
     }
 
-    fn load_module_callback(args: &JsNativeFunctionArgs) -> JsValueRef {
-        WScriptJsrt::LoadScriptHelper(args, true)
+    fn load_script_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        Self::load_script_helper(args, false)
+    }
+
+    fn load_module_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        Self::load_script_helper(args, true)
     }
 
     fn flag_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
