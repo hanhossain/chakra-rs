@@ -18,7 +18,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     // handle command line flags
     hresult_to_result(ChakraRTInterface::InitializeTestHooks(&config.core.args))?;
 
-    let file_contents = ScriptCache::load_script_from_file(&config.core.filename)?;
+    let file_contents = ScriptCache::get_script(&config.core.filename)?;
     let mut runtime = JsRuntimeHandle::default();
     unsafe {
         ChakraRTInterface::JsCreateRuntime(

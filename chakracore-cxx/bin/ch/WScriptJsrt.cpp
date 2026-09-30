@@ -369,8 +369,8 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
         try
         {
             rust::String fileContent = fullPath_
-                ? chakra_rs::helpers::ScriptCache::load_script_with_full_path(specifierStr, fullPath_->native())
-                : chakra_rs::helpers::ScriptCache::load_script_from_file(specifierStr);
+                ? chakra_rs::helpers::ScriptCache::get_script_with_full_path(specifierStr, fullPath_->native())
+                : chakra_rs::helpers::ScriptCache::get_script(specifierStr);
             chakra_rs::WScript::load_script(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, chakra_rs::OptionalStr{.has_value = true, .value = fileContent}, "module", true, true);
         }
         catch (const rust::Error &e)

@@ -437,7 +437,7 @@ impl WScript {
         }
 
         let filename = args.arguments[1].to_string()?;
-        let file_content = ScriptCache::load_script_from_file(&filename)?;
+        let file_content = ScriptCache::get_script(&filename)?;
         let value = ChakraRt::create_string(&file_content)?;
         Ok(value)
     }
@@ -461,7 +461,7 @@ impl WScript {
             String::new()
         };
 
-        let content = ScriptCache::load_script_from_file(&filename)?.into_boxed_str();
+        let content = ScriptCache::get_script(&filename)?.into_boxed_str();
         // TODO (hanhossain): don't leak a string ptr
         let content = Box::into_raw(content);
         unsafe {
