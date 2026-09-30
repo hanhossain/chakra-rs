@@ -97,6 +97,7 @@ mod ffi {
             args: &JsNativeFunctionArgs,
             is_source_module: bool,
             file_content: String,
+            script_inject_type: &str,
         ) -> JsValueRef;
 
         #[cxx_name = "WScriptJsrt_CallbackMessage"]
@@ -491,11 +492,17 @@ impl WScript {
         }
 
         let file_content = args.arguments[1].to_string()?;
+        let script_inject_type = if args.arguments.len() > 2 {
+            args.arguments[2].to_string()?
+        } else {
+            String::from("self")
+        };
 
         Ok(WScriptJsrt::LoadScriptHelper(
             args,
             is_source_module,
             file_content,
+            &script_inject_type,
         ))
     }
 
