@@ -43,6 +43,10 @@ std::size_t WScriptJsrt::GetNextSourceContext()
     return sourceContext_++;
 }
 
+std::size_t WScriptJsrt::GetSourceContext() {
+    return sourceContext_;
+}
+
 void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view errorMessage)
 {
     if (errorCode == JsNoError)
@@ -65,29 +69,12 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view e
     }
 }
 
-JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType)
+JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
     std::string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
-
-    rust::String fileName;
-    bool isFile = true;
-
-    if (args.arguments.size() > 3)
-    {
-        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[3], fileName));
-    }
-
-    if (fileName.empty())
-    {
-        isFile = false;
-        if (isSourceModule)
-        {
-            fileName = std::format("moduleScript{}.js", static_cast<int>(sourceContext_));
-        }
-    }
 
     {
         // HACK: call to c_str() somehow sets the underlying rust::Str up to be null-terminated. This prevents a segfault
@@ -101,7 +88,6 @@ JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &
         returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContentPtr}, scriptInjectType, isSourceModule, isFile);
     }
 
-Error:
     SetExceptionIf(errorCode, errorMessage);
     return returnValue;
 }
