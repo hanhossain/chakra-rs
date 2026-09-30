@@ -20,10 +20,10 @@ mod ffi {
         type ScriptCache;
 
         #[Self = "ScriptCache"]
-        fn load_script_from_file(filename: &str) -> Result<String>;
+        fn get_script(filename: &str) -> Result<String>;
 
         #[Self = "ScriptCache"]
-        fn load_script_with_full_path(filename: &str, full_path: &str) -> Result<String>;
+        fn get_script_with_full_path(filename: &str, full_path: &str) -> Result<String>;
     }
 }
 
@@ -31,7 +31,7 @@ pub struct ScriptCache;
 
 impl ScriptCache {
     #[tracing::instrument(err)]
-    pub fn load_script_from_file(filename: &str) -> std::io::Result<String> {
+    pub fn get_script(filename: &str) -> std::io::Result<String> {
         let store = STORE.read().unwrap();
         if let Some(entry) = store.get(filename) {
             return Ok(entry.clone());
@@ -41,7 +41,7 @@ impl ScriptCache {
     }
 
     #[tracing::instrument(err)]
-    fn load_script_with_full_path(filename: &str, full_path: &str) -> std::io::Result<String> {
+    fn get_script_with_full_path(filename: &str, full_path: &str) -> std::io::Result<String> {
         // TODO: This is a port of the original code. Instead, we should see if this works if we search
         //  full_path first then filename.
         let store = STORE.read().unwrap();
