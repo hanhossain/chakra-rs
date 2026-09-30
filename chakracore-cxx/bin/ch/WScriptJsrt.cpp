@@ -371,7 +371,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
             rust::String fileContent = fullPath_
                 ? chakra_rs::helpers::ScriptCache::get_script_with_full_path(specifierStr, fullPath_->native())
                 : chakra_rs::helpers::ScriptCache::get_script(specifierStr);
-            chakra_rs::WScript::load_script(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, chakra_rs::OptionalStr{.has_value = true, .value = fileContent}, "module", true, true);
+            chakra_rs::WScript::load_module_from_string(chakra_rs::OptionalStr{.has_value = true, .value = fileContent}, fullPath_ ? fullPath_.value().string() : specifierStr, true);
         }
         catch (const rust::Error &e)
         {
@@ -385,7 +385,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
                     chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
                 }
             }
-            chakra_rs::WScript::load_script(nullptr, fullPath_ ? fullPath_.value().string() : specifierStr, chakra_rs::OptionalStr{}, "module", true, false);
+            chakra_rs::WScript::load_module_from_string(chakra_rs::OptionalStr{}, fullPath_ ? fullPath_.value().string() : specifierStr, false);
         }
     }
     return errorCode;
