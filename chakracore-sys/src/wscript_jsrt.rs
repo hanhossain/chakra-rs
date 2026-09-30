@@ -93,7 +93,11 @@ mod ffi {
         fn GetICUMajorVersion() -> i32;
 
         #[Self = "WScriptJsrt"]
-        fn LoadScriptHelper(args: &JsNativeFunctionArgs, is_source_module: bool) -> JsValueRef;
+        fn LoadScriptHelper(
+            args: &JsNativeFunctionArgs,
+            is_source_module: bool,
+            file_content: String,
+        ) -> JsValueRef;
 
         #[cxx_name = "WScriptJsrt_CallbackMessage"]
         type WScriptJsrt_CallbackMessage;
@@ -485,7 +489,14 @@ impl WScript {
         if args.arguments.len() < 2 || args.arguments.len() > 4 {
             anyhow::bail!("Need more or fewer arguments for WScript.LoadScript");
         }
-        Ok(WScriptJsrt::LoadScriptHelper(args, is_source_module))
+
+        let file_content = args.arguments[1].to_string()?;
+
+        Ok(WScriptJsrt::LoadScriptHelper(
+            args,
+            is_source_module,
+            file_content,
+        ))
     }
 
     fn load_script_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
