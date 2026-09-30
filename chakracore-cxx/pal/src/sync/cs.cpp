@@ -189,7 +189,7 @@ static size_t ObtainCurrentThreadIdImpl(CPalThread *pCurrentThread)
     {
         threadId = GetCurrentThreadId();
     }
-    assert(0 != threadId);
+    assert(-1 != threadId);
 
     return threadId;
 }

@@ -170,12 +170,6 @@ PathCharString* gSharedFilesPath = nullptr;
 
 static_assert(CLR_SEM_MAX_NAMELEN <= MAX_PATH, "CLR_SEM_MAX_NAMELEN > MAX_PATH");
 
-//
-// Key used for associating CPalThread's with the underlying pthread
-// (through pthread_setspecific)
-//
-pthread_key_t CorUnix::thObjKey;
-
 PAL_ERROR
 CorUnix::InitializeProcessData(
     void

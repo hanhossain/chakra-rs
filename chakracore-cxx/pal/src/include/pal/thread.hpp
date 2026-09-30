@@ -41,8 +41,6 @@ Abstract:
 
 namespace CorUnix
 {
-    extern pthread_key_t thObjKey;
-
     enum PalThreadType
     {
         UserCreatedThread,
@@ -632,9 +630,37 @@ namespace CorUnix
     extern "C" CPalThread *CreateCurrentThreadData();
 #endif // FEATURE_PAL_SXS
 
+    class CPalThreadLocal {
+    private:
+        CPalThread *thread_data_;
+    public:
+        CPalThreadLocal() : thread_data_(nullptr) {}
+        ~CPalThreadLocal() {
+            if (thread_data_) {
+                CorUnix::InternalEndCurrentThread(thread_data_);
+            }
+        }
+
+        void set_thread(CPalThread *thread_data) {
+            thread_data_ = thread_data;
+        }
+
+        CPalThread *get_thread() const {
+            return thread_data_;
+        }
+
+        static CPalThreadLocal &singleton() {
+            thread_local CPalThreadLocal instance;
+            return instance;
+        }
+    };
+
+    // // Associates CPalThread with the underlying pthread
+    // thread_local CPalThreadLocal current_thread;
+
     inline CPalThread *GetCurrentPalThread()
     {
-        return reinterpret_cast<CPalThread*>(pthread_getspecific(thObjKey));
+        return CPalThreadLocal::singleton().get_thread();
     }
 
     inline CPalThread *InternalGetCurrentThread()
@@ -676,11 +702,6 @@ namespace CorUnix
 
     extern CObjectType otThread;
 }
-
-BOOL
-TLSInitialize(
-    void
-    );
 
 /*++
 Macro:

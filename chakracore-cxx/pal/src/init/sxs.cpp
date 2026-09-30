@@ -74,7 +74,7 @@ AllocatePalThread(CPalThread **ppThread)
     palError = CreateThreadObject(pThread, pThread, &hThread);
     if (NO_ERROR != palError)
     {
-        pthread_setspecific(thObjKey, NULL);
+        CorUnix::CPalThreadLocal::singleton().set_thread(nullptr);
         pThread->ReleaseThreadReference();
         goto exit;
     }
