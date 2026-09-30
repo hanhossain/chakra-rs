@@ -71,52 +71,44 @@ JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &
     std::string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
 
-    if (args.arguments.size() < 2 || args.arguments.size() > 4)
+    auto *fileContent = new rust::String{};
+    rust::String fileName;
+    std::optional<rust::String> scriptInjectType;
+    bool isFile = true;
+
+    IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[1], *fileContent));
+    // ExternalArrayBuffer Finalize will clean this up
+    // but only if we actually register a finalizecallback for this
+
+    if (args.arguments.size() > 2)
     {
-        errorCode = JsErrorInvalidArgument;
-        errorMessage = "Need more or fewer arguments for WScript.LoadScript";
+        rust::String injectType;
+        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[2], injectType));
+        scriptInjectType = injectType;
+
+        if (args.arguments.size() > 3)
+        {
+            IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[3], fileName));
+        }
     }
-    else
+
+    if (fileName.empty())
     {
-        auto *fileContent = new rust::String{};
-        rust::String fileName;
-        std::optional<rust::String> scriptInjectType;
-        bool isFile = true;
-
-        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[1], *fileContent));
-        // ExternalArrayBuffer Finalize will clean this up
-        // but only if we actually register a finalizecallback for this
-
-        if (args.arguments.size() > 2)
+        isFile = false;
+        if (isSourceModule)
         {
-            rust::String injectType;
-            IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[2], injectType));
-            scriptInjectType = injectType;
-
-            if (args.arguments.size() > 3)
-            {
-                IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[3], fileName));
-            }
+            fileName = std::format("moduleScript{}.js", static_cast<int>(sourceContext_));
         }
-
-        if (fileName.empty())
-        {
-            isFile = false;
-            if (isSourceModule)
-            {
-                fileName = std::format("moduleScript{}.js", static_cast<int>(sourceContext_));
-            }
-        }
-
-        // HACK: call to c_str() somehow sets the underlying rust::Str up to be null-terminated. This prevents a segfault
-        //  down the line when chakra clones the utf8 but attempts to copy the null terminator even if it's not
-        //  null-terminated.
-        fileContent->c_str();
-
-        // TODO: This is CESU-8. How to tell the engine?
-        // TODO: How to handle this source (script) life time?
-        returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContent}, scriptInjectType ? scriptInjectType.value() : "self", isSourceModule, isFile);
     }
+
+    // HACK: call to c_str() somehow sets the underlying rust::Str up to be null-terminated. This prevents a segfault
+    //  down the line when chakra clones the utf8 but attempts to copy the null terminator even if it's not
+    //  null-terminated.
+    fileContent->c_str();
+
+    // TODO: This is CESU-8. How to tell the engine?
+    // TODO: How to handle this source (script) life time?
+    returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContent}, scriptInjectType ? scriptInjectType.value() : "self", isSourceModule, isFile);
 
 Error:
     SetExceptionIf(errorCode, errorMessage);
