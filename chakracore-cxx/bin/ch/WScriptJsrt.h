@@ -117,7 +117,7 @@ public:
 
     static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static std::size_t GetNextSourceContext();
-    static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule);
+    static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent);
 private:
     static void SetExceptionIf(JsErrorCode errorCode, std::string_view errorMessage);
     static MessageQueue *messageQueue_;

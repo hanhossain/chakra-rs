@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "WScriptJsrt.h"
 
+#include <utility>
 #include <vector>
 #include <ctime>
 #include <ratio>
@@ -64,21 +65,16 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view e
     }
 }
 
-JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule)
+JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
     std::string errorMessage;
     JsValueRef returnValue = JS_INVALID_REFERENCE;
 
-    auto *fileContent = new rust::String{};
     rust::String fileName;
     std::optional<rust::String> scriptInjectType;
     bool isFile = true;
-
-    IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[1], *fileContent));
-    // ExternalArrayBuffer Finalize will clean this up
-    // but only if we actually register a finalizecallback for this
 
     if (args.arguments.size() > 2)
     {
@@ -101,14 +97,17 @@ JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &
         }
     }
 
-    // HACK: call to c_str() somehow sets the underlying rust::Str up to be null-terminated. This prevents a segfault
-    //  down the line when chakra clones the utf8 but attempts to copy the null terminator even if it's not
-    //  null-terminated.
-    fileContent->c_str();
+    {
+        // HACK: call to c_str() somehow sets the underlying rust::Str up to be null-terminated. This prevents a segfault
+        //  down the line when chakra clones the utf8 but attempts to copy the null terminator even if it's not
+        //  null-terminated.
+        auto *fileContentPtr = new rust::String{std::move(fileContent)};
+        fileContentPtr->c_str();
 
-    // TODO: This is CESU-8. How to tell the engine?
-    // TODO: How to handle this source (script) life time?
-    returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContent}, scriptInjectType ? scriptInjectType.value() : "self", isSourceModule, isFile);
+        // TODO: This is CESU-8. How to tell the engine?
+        // TODO: How to handle this source (script) life time?
+        returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContentPtr}, scriptInjectType ? scriptInjectType.value() : "self", isSourceModule, isFile);
+    }
 
 Error:
     SetExceptionIf(errorCode, errorMessage);
