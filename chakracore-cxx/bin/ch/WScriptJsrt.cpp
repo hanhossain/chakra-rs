@@ -65,7 +65,7 @@ void WScriptJsrt::SetExceptionIf(JsErrorCode errorCode, const std::string_view e
     }
 }
 
-JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent)
+JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType)
 {
     [[maybe_unused]] int32_t hr = E_FAIL;
     JsErrorCode errorCode = JsNoError;
@@ -73,19 +73,11 @@ JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &
     JsValueRef returnValue = JS_INVALID_REFERENCE;
 
     rust::String fileName;
-    std::optional<rust::String> scriptInjectType;
     bool isFile = true;
 
-    if (args.arguments.size() > 2)
+    if (args.arguments.size() > 3)
     {
-        rust::String injectType;
-        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[2], injectType));
-        scriptInjectType = injectType;
-
-        if (args.arguments.size() > 3)
-        {
-            IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[3], fileName));
-        }
+        IfJsrtErrorSetGo(ChakraRTInterface::JsToString(args.arguments[3], fileName));
     }
 
     if (fileName.empty())
@@ -106,7 +98,7 @@ JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &
 
         // TODO: This is CESU-8. How to tell the engine?
         // TODO: How to handle this source (script) life time?
-        returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContentPtr}, scriptInjectType ? scriptInjectType.value() : "self", isSourceModule, isFile);
+        returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContentPtr}, scriptInjectType, isSourceModule, isFile);
     }
 
 Error:
