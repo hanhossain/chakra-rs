@@ -79,6 +79,9 @@ mod ffi {
         #[Self = "WScriptJsrt"]
         fn GetNextSourceContext() -> usize;
 
+        #[Self = "WScriptJsrt"]
+        fn GetSourceContext() -> usize;
+
         type JsErrorCode = crate::jsrt::JsErrorCode;
         #[namespace = "chakra_rs"]
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
@@ -98,6 +101,8 @@ mod ffi {
             is_source_module: bool,
             file_content: String,
             script_inject_type: &str,
+            filename: String,
+            is_file: bool,
         ) -> JsValueRef;
 
         #[cxx_name = "WScriptJsrt_CallbackMessage"]
@@ -498,11 +503,28 @@ impl WScript {
             String::from("self")
         };
 
+        let mut filename = args
+            .arguments
+            .get(3)
+            .map(|x| x.to_string())
+            .transpose()?
+            .unwrap_or_default();
+
+        let mut is_file = true;
+        if filename.is_empty() {
+            is_file = false;
+            if is_source_module {
+                filename = format!("moduleScript{}.js", WScriptJsrt::GetSourceContext());
+            }
+        }
+
         Ok(WScriptJsrt::LoadScriptHelper(
             args,
             is_source_module,
             file_content,
             &script_inject_type,
+            filename,
+            is_file,
         ))
     }
 
