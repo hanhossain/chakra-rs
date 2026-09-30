@@ -201,6 +201,13 @@ mod ffi {
             is_file: bool,
         ) -> JsValueRef;
 
+        #[Self = "WScript"]
+        fn load_module_from_string(
+            file_content: &OptionalStr,
+            full_name: &String,
+            is_file: bool,
+        ) -> JsErrorCode;
+
         type ModuleErrorMap;
         fn get_module_error_map() -> Box<ModuleErrorMap>;
         fn insert(self: &ModuleErrorMap, key: JsModuleRecord, value: ModuleState);
