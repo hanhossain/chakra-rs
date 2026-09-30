@@ -161,12 +161,6 @@ Initialize()
     {
         fFirstTimeInit = true;
 
-        // Initialize the TLS lookaside cache
-        if (FALSE == TLSInitialize())
-        {
-            goto done;
-        }
-
 #if _DEBUG
         // Verify that our page size is what we think it is. If it's
         // different, we can't run.

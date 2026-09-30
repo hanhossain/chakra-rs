@@ -116,52 +116,6 @@ CAllowedObjectTypes aotThread __attribute__((init_priority(200))) (otiThread);
 
 /*++
 Function:
-  InternalEndCurrentThreadWrapper
-
-  Destructor for the thread-specific data representing the current PAL thread.
-  Called from pthread_exit.  (pthread_exit is not called from the thread on which
-  main() was first invoked.  This is not a problem, though, since when main()
-  returns, this results in an implicit call to exit().)
-
-  arg: the PAL thread
-*/
-static void InternalEndCurrentThreadWrapper(void *arg)
-{
-    CPalThread *pThread = static_cast<CPalThread*>(arg);
-
-    // When pthread_exit calls us, it has already removed the PAL thread
-    // from TLS.  Since InternalEndCurrentThread calls functions that assert
-    // that the current thread is known to this PAL, and that pThread
-    // actually is the current PAL thread, put it back in TLS temporarily.
-    pthread_setspecific(thObjKey, pThread);
-
-    // PAL_Leave will be called just before we release the thread reference
-    // in InternalEndCurrentThread.
-    InternalEndCurrentThread(pThread);
-    pthread_setspecific(thObjKey, NULL);
-}
-
-/*++
-Function:
-  TLSInitialize
-
-  Initialize the TLS subsystem
---*/
-BOOL TLSInitialize()
-{
-    /* Create the pthread key for thread objects, which we use
-       for fast access to the current thread object. */
-    if (pthread_key_create(&thObjKey, InternalEndCurrentThreadWrapper))
-    {
-        ERROR("Couldn't create the thread object key\n");
-        return FALSE;
-    }
-
-    return TRUE;
-}
-
-/*++
-Function:
   GetThreadId
 
 See MSDN doc.
@@ -1543,12 +1497,7 @@ CPalThread::RunPostCreateInitializers(
     // Call the post-create initializers for embedded classes
     //
 
-    if (pthread_setspecific(thObjKey, this))
-    {
-        chakra::Logger::error("Unable to set the thread object key's value\n");
-        palError = ERROR_INTERNAL_ERROR;
-        goto RunPostCreateInitializersExit;
-    }
+    CorUnix::CPalThreadLocal::singleton().set_thread(this);
 
     palError = synchronizationInfo.InitializePostCreate(this);
     if (NO_ERROR != palError)
