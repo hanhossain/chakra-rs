@@ -149,6 +149,22 @@ impl ChakraRt {
         }
         Ok(value)
     }
+
+    /// If the exception is already is set - no need to create a new exception.
+    #[tracing::instrument("warn")]
+    pub(crate) fn create_and_set_exception(exception_msg: &str) {
+        let has_exception = Self::has_exception();
+        if has_exception.is_err() || !has_exception.unwrap() {
+            if let Err(err) = ChakraRt::create_string(exception_msg)
+                .inspect_err(|err| tracing::error!(?err, "Failed to create string"))
+                .and_then(ChakraRt::create_error)
+                .inspect_err(|err| tracing::error!(?err, "Failed to create error"))
+                .and_then(ChakraRt::set_exception)
+            {
+                tracing::error!(?err, "Failed to set an exception");
+            }
+        }
+    }
 }
 
 pub struct JsObject(JsValueRef);
@@ -335,18 +351,7 @@ where
 impl IntoResponse for JsError {
     fn into_response(self) -> JsValueRef {
         tracing::error!(?self, "The callback returned an error");
-
-        // If the exception is already is set - no need to create a new exception.
-        let has_exception = ChakraRt::has_exception();
-        if has_exception.is_err() || !has_exception.unwrap() {
-            if let Err(err) = ChakraRt::create_string(&self.to_string())
-                .and_then(|msg| ChakraRt::create_error(msg))
-                .and_then(|error| ChakraRt::set_exception(error))
-            {
-                tracing::error!(?err, "Failed to set an exception");
-            }
-        }
-
+        ChakraRt::create_and_set_exception(&self.to_string());
         ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }

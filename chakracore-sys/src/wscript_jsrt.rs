@@ -1089,6 +1089,7 @@ impl WScript {
         Ok(())
     }
 
+    #[tracing::instrument(skip_all)]
     fn load_script(
         callee: JsValueRef,
         file_name: &str,
@@ -1112,15 +1113,7 @@ impl WScript {
             };
             let value = ChakraRt::double_to_number(JsErrorCode::from(error).repr as f64)
                 .unwrap_or_default();
-            let has_exception = ChakraRt::has_exception();
-            if has_exception.is_err() || !has_exception.unwrap() {
-                if let Err(err) = ChakraRt::create_string(error_message)
-                    .and_then(|msg| ChakraRt::create_error(msg))
-                    .and_then(|err_obj| ChakraRt::set_exception(err_obj))
-                {
-                    tracing::error!(?err, "Failed to set or create an exception");
-                }
-            }
+            ChakraRt::create_and_set_exception(error_message);
             value
         })
     }
@@ -1338,16 +1331,8 @@ impl IntoResponse for anyhow::Error {
     fn into_response(self) -> JsValueRef {
         tracing::error!(?self);
 
-        // If the exception is already is set - no need to create a new exception.
-        let has_exception = ChakraRt::has_exception();
-        if has_exception.is_err() || !has_exception.unwrap() {
-            if let Err(err) = ChakraRt::create_string(&self.to_string())
-                .and_then(|msg| ChakraRt::create_error(msg))
-                .and_then(|error| ChakraRt::set_exception(error))
-            {
-                tracing::error!(?err, "Failed to set an exception");
-            }
-        }
+        // TODO: should this pass the debug representation instead?
+        ChakraRt::create_and_set_exception(&self.to_string());
         ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }
