@@ -17,7 +17,7 @@ public:
     RuntimeThreadData();
     RuntimeThreadData(rust::String initialSource);
     ~RuntimeThreadData();
-    static RuntimeThreadData *NewWithInitialSource(rust::Str initialSource);
+    static RuntimeThreadData *NewWithInitialSource(const rust::String &initialSource);
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
     HANDLE hThread;

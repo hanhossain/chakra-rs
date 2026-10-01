@@ -70,8 +70,8 @@ RuntimeThreadData::~RuntimeThreadData()
     CloseHandle(this->hThread);
 }
 
-RuntimeThreadData *RuntimeThreadData::NewWithInitialSource(rust::Str initialSource) {
-    return new RuntimeThreadData{rust::String{initialSource.data(), initialSource.size()}};
+RuntimeThreadData *RuntimeThreadData::NewWithInitialSource(const rust::String &initialSource) {
+    return new RuntimeThreadData{initialSource};
 }
 
 uint32_t RuntimeThreadData::ThreadProc()

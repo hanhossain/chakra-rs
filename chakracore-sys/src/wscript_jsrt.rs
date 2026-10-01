@@ -143,7 +143,7 @@ mod ffi {
         fn GetCurrentRuntimeThreadDataPtr() -> *mut RuntimeThreadData;
 
         #[Self = "RuntimeThreadData"]
-        fn NewWithInitialSource(initialSource: &str) -> *mut RuntimeThreadData;
+        fn NewWithInitialSource(initialSource: &String) -> *mut RuntimeThreadData;
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
         fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
@@ -1288,7 +1288,7 @@ impl WScript {
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
             let thread_data = ffi::GetCurrentRuntimeThreadDataPtr();
-            let child = RuntimeThreadData::NewWithInitialSource(content.value);
+            let child = RuntimeThreadData::NewWithInitialSource(&content.value.to_owned());
             unsafe {
                 let data = Pin::new_unchecked(&mut *thread_data);
                 data.add_child(child);
