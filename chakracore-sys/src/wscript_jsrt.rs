@@ -143,7 +143,7 @@ mod ffi {
         fn GetCurrentRuntimeThreadDataPtr() -> *mut RuntimeThreadData;
 
         #[Self = "RuntimeThreadData"]
-        fn NewWithInitialSource(initialSource: &str) -> *mut RuntimeThreadData;
+        fn NewWithInitialSource(initialSource: &String) -> *mut RuntimeThreadData;
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
         fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
@@ -195,7 +195,7 @@ mod ffi {
         fn load_script(
             callee: JsValueRef,
             file_name: &str,
-            content: &OptionalStr,
+            content: OptionalStr,
             script_inject_type: &str,
             is_source_module: bool,
             is_file: bool,
@@ -203,7 +203,7 @@ mod ffi {
 
         #[Self = "WScript"]
         fn load_module_from_string(
-            file_content: &OptionalStr,
+            file_content: OptionalStr,
             full_name: &String,
             is_file: bool,
         ) -> JsErrorCode;
@@ -475,10 +475,7 @@ impl WScript {
             Ok(Self::load_script(
                 callee,
                 &filename,
-                &OptionalStr {
-                    has_value: true,
-                    value: &*content,
-                },
+                Some(&*content).into(),
                 if !script_inject_type.is_empty() {
                     &script_inject_type
                 } else {
@@ -988,7 +985,7 @@ impl WScript {
     #[tracing::instrument(skip(file_content))]
     pub fn module_entry_point(file_content: &str, full_name: &String) -> JsErrorCode {
         Self::load_module_from_string(
-            &OptionalStr {
+            OptionalStr {
                 has_value: true,
                 value: file_content,
             },
@@ -999,19 +996,19 @@ impl WScript {
 
     // TODO: can now use Option<&str> since this is no longer exposed to C++.
     fn load_module_from_string(
-        file_content: &OptionalStr,
+        file_content: OptionalStr,
         full_name: &String,
         is_file: bool,
     ) -> JsErrorCode {
-        match Self::internal_load_module_from_string(file_content, full_name, is_file) {
+        match Self::internal_load_module_from_string(file_content.into(), full_name, is_file) {
             Ok(()) => JsErrorCode::JsNoError,
             Err(err) => err.into(),
         }
     }
 
-    #[tracing::instrument(skip(file_content), err)]
+    #[tracing::instrument(err)]
     fn internal_load_module_from_string(
-        file_content: &OptionalStr,
+        file_content: Option<&str>,
         full_name: &String,
         is_file: bool,
     ) -> Result<(), JsError> {
@@ -1070,14 +1067,14 @@ impl WScript {
             ChakraRTInterface::JsParseModuleSource(
                 &request_module,
                 &source_context,
-                file_content,
+                file_content.into(),
                 &raw mut error_object,
             )
         };
 
         if error_code != JsErrorCode::JsNoError
             && !error_object.is_null()
-            && file_content.has_value
+            && file_content.is_some()
             && !HostConfigFlags::GetConfig().host.ignore_script_error_code
         {
             let state = {
@@ -1100,7 +1097,7 @@ impl WScript {
     fn load_script(
         callee: JsValueRef,
         file_name: &str,
-        content: &OptionalStr,
+        content: OptionalStr,
         script_inject_type: &str,
         is_source_module: bool,
         is_file: bool,
@@ -1108,7 +1105,7 @@ impl WScript {
         Self::internal_load_script(
             callee,
             file_name,
-            content,
+            content.into(),
             script_inject_type,
             is_source_module,
             is_file,
@@ -1125,11 +1122,11 @@ impl WScript {
         })
     }
 
-    #[tracing::instrument(skip(callee, content), err)]
-    fn internal_load_script(
+    #[tracing::instrument(err)]
+    fn internal_load_script<'a>(
         callee: JsValueRef,
         file_name: &str,
-        content: &OptionalStr,
+        content: Option<&'a str>,
         script_inject_type: &str,
         is_source_module: bool,
         is_file: bool,
@@ -1147,12 +1144,11 @@ impl WScript {
         // this is called with LoadModuleCallback method as well where caller pass in a string that should be
         // treated as a module source text instead of opening a new file.
         if is_source_module || script_inject_type == "module" {
-            Self::load_module_from_string(
+            Self::internal_load_module_from_string(
                 content,
                 &full_path.to_str().unwrap_or_default().to_owned(),
                 is_file,
-            )
-            .as_result()?;
+            )?;
             Ok(JsValueRef::default())
         } else if script_inject_type == "self" {
             let mut callee_context = JsContextRef::default();
@@ -1166,7 +1162,7 @@ impl WScript {
             unsafe {
                 // TODO: consider passing in the finalize callback
                 ChakraRTInterface::JsCreateExternalArrayBuffer(
-                    content.value,
+                    content.unwrap(),
                     &raw mut script_source,
                 )
                 .as_result()?;
@@ -1236,7 +1232,7 @@ impl WScript {
             let mut script_source = JsValueRef::default();
             unsafe {
                 ChakraRTInterface::JsCreateExternalArrayBuffer(
-                    content.value,
+                    content.unwrap(),
                     &raw mut script_source,
                 )
                 .as_result()?;
@@ -1288,7 +1284,7 @@ impl WScript {
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
             let thread_data = ffi::GetCurrentRuntimeThreadDataPtr();
-            let child = RuntimeThreadData::NewWithInitialSource(content.value);
+            let child = RuntimeThreadData::NewWithInitialSource(&content.unwrap().to_owned());
             unsafe {
                 let data = Pin::new_unchecked(&mut *thread_data);
                 data.add_child(child);

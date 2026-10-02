@@ -51,8 +51,14 @@ fn main() {
         let cxx_header = format!("{out_dir}/cxxbridge/include/rust/cxx.h");
         let docker_cxx_header = PathBuf::from("../target/docker/rust/cxx.h");
         dbg!(&cxx_header, &docker_cxx_header);
-        std::fs::create_dir_all(docker_cxx_header.parent().unwrap()).unwrap();
-        std::fs::copy(cxx_header, docker_cxx_header).unwrap();
+        let cxx_header_content = std::fs::read(&cxx_header).unwrap();
+        let docker_header_content = std::fs::read(&docker_cxx_header)
+            .inspect_err(|err| eprintln!("Failed to read file: {err}"))
+            .unwrap_or_default();
+        if cxx_header_content != docker_header_content {
+            std::fs::create_dir_all(docker_cxx_header.parent().unwrap()).unwrap();
+            std::fs::copy(cxx_header, docker_cxx_header).unwrap();
+        }
     }
 
     if cfg!(feature = "compile-cpp") {

@@ -11,10 +11,31 @@ mod ffi {
     }
 
     #[namespace = "chakra_rs"]
-    #[derive(Debug, Clone)]
+    #[derive(Debug, Clone, Default)]
     struct OptionalStr<'a> {
         has_value: bool,
         value: &'a str,
+    }
+}
+
+impl<'a> From<OptionalStr<'a>> for Option<&'a str> {
+    fn from(value: OptionalStr<'a>) -> Self {
+        if value.has_value {
+            Some(value.value)
+        } else {
+            None
+        }
+    }
+}
+
+impl<'a> From<Option<&'a str>> for OptionalStr<'a> {
+    fn from(value: Option<&'a str>) -> Self {
+        value
+            .map(|x| Self {
+                has_value: true,
+                value: x,
+            })
+            .unwrap_or_default()
     }
 }
 
