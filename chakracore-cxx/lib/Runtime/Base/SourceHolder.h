@@ -98,21 +98,4 @@ namespace Js
             return CONFIG_FLAG(DeferLoadingAvailableSource);
         }
     };
-
-    class HeapSourceHolder : public SimpleSourceHolder
-    {
-    public:
-        HeapSourceHolder(LPCUTF8 source, size_t byteLength, uint8_t* originalSourceBuffer):
-            SimpleSourceHolder(source, byteLength),
-            shouldFreeSource(true),
-            originalSourceBuffer(originalSourceBuffer)
-        { }
-
-        void Unload() override;
-        void Dispose(bool isShutdown) override;
-
-    private:
-        bool shouldFreeSource;
-        uint8_t* originalSourceBuffer;
-    };
 }
