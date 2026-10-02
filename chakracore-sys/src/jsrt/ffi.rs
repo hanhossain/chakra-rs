@@ -4,6 +4,7 @@ pub use bridge::{
     JsRuntimeAttributes,
 };
 use std::ffi::c_void;
+use std::fmt::Formatter;
 
 #[repr(transparent)]
 #[derive(Copy, Clone, Default)]
@@ -52,6 +53,17 @@ impl JsValueRef {
 
     pub fn as_js_ref(&self) -> JsRef {
         JsRef(self.0)
+    }
+}
+
+impl std::fmt::Debug for JsValueRef {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let content = if self.is_null() {
+            None
+        } else {
+            Some(self.to_string())
+        };
+        f.debug_tuple("JsValueRef").field(&content).finish()
     }
 }
 

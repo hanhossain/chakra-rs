@@ -179,7 +179,7 @@ mod ffi {
         unsafe fn JsParseModuleSource<'a>(
             request_module: &JsModuleRecord,
             source_context: &JsSourceContext,
-            source_text: &'a OptionalStr<'a>,
+            source_text: OptionalStr<'a>,
             exception_value_ref: *mut JsValueRef,
         ) -> JsErrorCode;
 

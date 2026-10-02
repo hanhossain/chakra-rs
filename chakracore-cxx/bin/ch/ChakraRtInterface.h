@@ -91,7 +91,7 @@ public:
         return chakracore::jsrt::JsParseModuleSource(requestModule, sourceContext, sourceText, sourceLength, sourceFlag, exceptionValueRef);
     }
     static JsErrorCode JsParseModuleSource(const JsModuleRecord &requestModule, const JsSourceContext &sourceContext,
-                                           const chakra_rs::OptionalStr &sourceText, JsValueRef *exceptionValueRef) {
+                                           chakra_rs::OptionalStr sourceText, JsValueRef *exceptionValueRef) {
         return chakracore::jsrt::JsParseModuleSource(
             requestModule, sourceContext,
             sourceText.has_value ? reinterpret_cast<const uint8_t *>(sourceText.value.data()) : nullptr,
