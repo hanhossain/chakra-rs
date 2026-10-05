@@ -97,11 +97,6 @@ bool WScriptJsrt::Uninitialize()
 
 bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception, rust::Str errorTypeString, JsValueRef metaData)
 {
-    if (HostConfigFlags::GetConfig().host.mute_host_error_msg)
-    {
-        return false;
-    }
-
     if (exception != nullptr)
     {
         if (jsErrorCode == JsErrorCode::JsErrorScriptCompile || jsErrorCode == JsErrorCode::JsErrorScriptException)

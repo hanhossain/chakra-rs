@@ -1369,6 +1369,10 @@ impl WScript {
                 }
             }
         }
+
+        if HostConfigFlags::GetConfig().host.mute_host_error_msg {
+            return Ok(());
+        }
         WScriptJsrt::PrintException(
             filename,
             js_error_code,
