@@ -95,64 +95,38 @@ bool WScriptJsrt::Uninitialize()
     return true;
 }
 
-bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception, rust::Str errorMessage)
+bool WScriptJsrt::PrintException(rust::Str fileName, JsValueRef exception, rust::Str errorMessage)
 {
     const std::filesystem::path path{static_cast<std::string_view>(fileName)};
 
-    if (jsErrorCode == JsErrorCode::JsErrorScriptCompile)
+    JsValueType propertyType = JsUndefined;
+    JsPropertyIdRef stackPropertyId = JS_INVALID_REFERENCE;
+    JsValueRef stackProperty = JS_INVALID_REFERENCE;
+
+    JsErrorCode errorCode = ChakraRTInterface::JsCreatePropertyId("stack", &stackPropertyId);
+
+    if (errorCode == JsErrorCode::JsNoError)
     {
-        JsPropertyIdRef linePropertyId = JS_INVALID_REFERENCE;
-        JsValueRef lineProperty = JS_INVALID_REFERENCE;
+        errorCode = ChakraRTInterface::JsGetProperty(exception, stackPropertyId, &stackProperty);
+        if (errorCode == JsErrorCode::JsNoError)
+        {
+            errorCode = ChakraRTInterface::JsGetValueType(stackProperty, &propertyType);
+        }
+    }
 
-        JsPropertyIdRef columnPropertyId = JS_INVALID_REFERENCE;
-        JsValueRef columnProperty = JS_INVALID_REFERENCE;
+    if (errorCode != JsErrorCode::JsNoError || propertyType == JsUndefined)
+    {
+        std::filesystem::path filepath{static_cast<std::string_view>(fileName)};
 
-        int line;
-        int column;
-
-        IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("line", &linePropertyId), false);
-        IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, linePropertyId, &lineProperty), false);
-        IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(lineProperty, &line), false);
-
-        IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("column", &columnPropertyId), false);
-        IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, columnPropertyId, &columnProperty), false);
-        IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
-
-        std::println("{}\n\tat code ({}:{}:{})",
-            errorMessage, path.filename().string(), (int)line + 1,
-            (int)column + 1);
+        // do not mix char/wchar. print them separately
+        std::println("thrown at {}:\n^", filepath.filename().string());
+        std::println("{}", errorMessage);
     }
     else
     {
-        JsValueType propertyType = JsUndefined;
-        JsPropertyIdRef stackPropertyId = JS_INVALID_REFERENCE;
-        JsValueRef stackProperty = JS_INVALID_REFERENCE;
-
-        JsErrorCode errorCode = ChakraRTInterface::JsCreatePropertyId("stack", &stackPropertyId);
-
-        if (errorCode == JsErrorCode::JsNoError)
-        {
-            errorCode = ChakraRTInterface::JsGetProperty(exception, stackPropertyId, &stackProperty);
-            if (errorCode == JsErrorCode::JsNoError)
-            {
-                errorCode = ChakraRTInterface::JsGetValueType(stackProperty, &propertyType);
-            }
-        }
-
-        if (errorCode != JsErrorCode::JsNoError || propertyType == JsUndefined)
-        {
-            std::filesystem::path filepath{static_cast<std::string_view>(fileName)};
-
-            // do not mix char/wchar. print them separately
-            std::println("thrown at {}:\n^", filepath.filename().string());
-            std::println("{}", errorMessage);
-        }
-        else
-        {
-            rust::String errorStack;
-            IfJsrtErrorFail(ChakraRTInterface::JsToString(stackProperty, errorStack), false);
-            std::println("{}", errorStack);
-        }
+        rust::String errorStack;
+        IfJsrtErrorFail(ChakraRTInterface::JsToString(stackProperty, errorStack), false);
+        std::println("{}", errorStack);
     }
     return true;
 }

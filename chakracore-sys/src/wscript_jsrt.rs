@@ -87,12 +87,7 @@ mod ffi {
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
 
         #[Self = "WScriptJsrt"]
-        fn PrintException(
-            filname: &str,
-            jsErrorCode: JsErrorCode,
-            exception: JsValueRef,
-            errorMessage: &str,
-        ) -> bool;
+        fn PrintException(filname: &str, exception: JsValueRef, errorMessage: &str) -> bool;
 
         #[namespace = "chakra_rs"]
         type JsNativeFunctionArgs<'a> = crate::jsrt::JsNativeFunctionArgs<'a>;
@@ -1385,6 +1380,7 @@ impl WScript {
             .file_name()
             .unwrap_or_default()
             .display();
+        let exception = JsObject::new(exception);
 
         let error_message = match exception.to_string() {
             Ok(x) => x,
@@ -1397,9 +1393,7 @@ impl WScript {
                     }
                 }
                 let message_property_id = ChakraRt::create_property_id("message")?;
-                let error_message = JsObject::new(exception)
-                    .get_property(message_property_id)?
-                    .to_string()?;
+                let error_message = exception.get_property(message_property_id)?.to_string()?;
 
                 if js_error_code != JsErrorCode::JsErrorScriptCompile {
                     if !metadata.is_null() {
@@ -1431,7 +1425,23 @@ impl WScript {
             }
         };
 
-        WScriptJsrt::PrintException(filename, js_error_code, exception, &error_message);
+        if js_error_code == JsErrorCode::JsErrorScriptCompile {
+            let line_property = exception.get_property(ChakraRt::create_property_id("line")?)?;
+            let line = ChakraRt::number_to_int(&line_property)?;
+            let column_property =
+                exception.get_property(ChakraRt::create_property_id("column")?)?;
+            let column = ChakraRt::number_to_int(&column_property)?;
+            println!(
+                "{}\n\tat code ({}:{}:{})",
+                error_message,
+                path,
+                line + 1,
+                column + 1
+            );
+            return Ok(());
+        }
+
+        WScriptJsrt::PrintException(filename, *exception, &error_message);
         Ok(())
     }
 }
