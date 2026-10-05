@@ -91,7 +91,6 @@ mod ffi {
             filname: &str,
             jsErrorCode: JsErrorCode,
             exception: JsValueRef,
-            error_type_string: &str,
             metadata: JsValueRef,
         ) -> bool;
 
@@ -1373,13 +1372,16 @@ impl WScript {
         if HostConfigFlags::GetConfig().host.mute_host_error_msg {
             return Ok(());
         }
-        WScriptJsrt::PrintException(
-            filename,
-            js_error_code,
-            exception,
-            error_type_string,
-            metadata,
-        );
+
+        if exception.is_null()
+            || (js_error_code != JsErrorCode::JsErrorScriptCompile
+                && js_error_code != JsErrorCode::JsErrorScriptException)
+        {
+            tracing::error!("Error : {error_type_string}");
+            return Ok(());
+        }
+
+        WScriptJsrt::PrintException(filename, js_error_code, exception, metadata);
         Ok(())
     }
 }
