@@ -91,7 +91,7 @@ mod ffi {
             filname: &str,
             jsErrorCode: JsErrorCode,
             exception: JsValueRef,
-            metadata: JsValueRef,
+            errorMessage: &str,
         ) -> bool;
 
         #[namespace = "chakra_rs"]
@@ -1381,7 +1381,57 @@ impl WScript {
             return Ok(());
         }
 
-        WScriptJsrt::PrintException(filename, js_error_code, exception, metadata);
+        let path = std::path::Path::new(filename)
+            .file_name()
+            .unwrap_or_default()
+            .display();
+
+        let error_message = match exception.to_string() {
+            Ok(x) => x,
+            Err(_) => {
+                println!("ERROR attempting to coerce error to string, using alternate handler");
+                if ChakraRt::has_exception().unwrap_or_default() {
+                    unsafe {
+                        let mut discard = JsValueRef::default();
+                        ChakraRTInterface::JsGetAndClearException(&raw mut discard);
+                    }
+                }
+                let message_property_id = ChakraRt::create_property_id("message")?;
+                let error_message = JsObject::new(exception)
+                    .get_property(message_property_id)?
+                    .to_string()?;
+
+                if js_error_code != JsErrorCode::JsErrorScriptCompile {
+                    if !metadata.is_null() {
+                        let metadata = JsObject::new(metadata);
+                        let line = {
+                            let property_id = ChakraRt::create_property_id("line")?;
+                            let property = metadata.get_property(property_id)?;
+                            ChakraRt::number_to_int(&property)?
+                        };
+                        let column = {
+                            let property_id = ChakraRt::create_property_id("column")?;
+                            let property = metadata.get_property(property_id)?;
+                            ChakraRt::number_to_int(&property)?
+                        };
+                        println!(
+                            "{}\n        at code ({}:{}:{})",
+                            error_message,
+                            path,
+                            line + 1,
+                            column + 1,
+                        );
+                    } else {
+                        println!("{}\n\tat code ({}:??:??)", error_message, path);
+                    }
+
+                    return Ok(());
+                }
+                error_message
+            }
+        };
+
+        WScriptJsrt::PrintException(filename, js_error_code, exception, &error_message);
         Ok(())
     }
 }

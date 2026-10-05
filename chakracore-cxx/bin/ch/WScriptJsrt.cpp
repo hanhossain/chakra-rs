@@ -95,57 +95,9 @@ bool WScriptJsrt::Uninitialize()
     return true;
 }
 
-bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception, JsValueRef metaData)
+bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception, rust::Str errorMessage)
 {
-    rust::String errorMessage;
     const std::filesystem::path path{static_cast<std::string_view>(fileName)};
-
-    if (ChakraRTInterface::JsToString(exception, errorMessage) != JsNoError)
-    {
-        std::println("ERROR attempting to coerce error to string, using alternate handler");
-        bool hasException = false;
-        ChakraRTInterface::JsHasException(&hasException);
-        if (hasException)
-        {
-            JsValueRef throwAway = JS_INVALID_REFERENCE;
-            ChakraRTInterface::JsGetAndClearException(&throwAway);
-        }
-        JsPropertyIdRef messagePropertyId = JS_INVALID_REFERENCE;
-        IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("message", &messagePropertyId), false);
-        JsValueRef message = JS_INVALID_REFERENCE;
-        IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(exception, messagePropertyId, &message), false);
-        IfJsrtErrorFail(ChakraRTInterface::JsToString(message, errorMessage), false);
-
-        if (jsErrorCode != JsErrorCode::JsErrorScriptCompile)
-        {
-            if (metaData != JS_INVALID_REFERENCE)
-            {
-                JsPropertyIdRef linePropertyId = JS_INVALID_REFERENCE;
-                JsValueRef lineProperty = JS_INVALID_REFERENCE;
-
-                JsPropertyIdRef columnPropertyId = JS_INVALID_REFERENCE;
-                JsValueRef columnProperty = JS_INVALID_REFERENCE;
-
-                int line;
-                int column;
-
-                IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("line", &linePropertyId), false);
-                IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, linePropertyId, &lineProperty), false);
-                IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(lineProperty, &line), false);
-
-                IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("column", &columnPropertyId), false);
-                IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, columnPropertyId, &columnProperty), false);
-                IfJsrtErrorFail(ChakraRTInterface::JsNumberToInt(columnProperty, &column), false);
-                std::println("{}\n        at code ({}:{}:{})",
-                    errorMessage, path.filename().string(), line + 1, column + 1);
-            }
-            else
-            {
-                std::println("{}\n\tat code ({}:\?\?:\?\?)", errorMessage, path.filename().string());
-            }
-            return true;
-        }
-    }
 
     if (jsErrorCode == JsErrorCode::JsErrorScriptCompile)
     {
