@@ -95,9 +95,8 @@ bool WScriptJsrt::Uninitialize()
     return true;
 }
 
-bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception)
+bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception, rust::Str errorTypeString)
 {
-    const char* errorTypeString = ConvertErrorCodeToMessage(jsErrorCode);
     JsValueRef metaData = JS_INVALID_REFERENCE;
 
     if (exception == nullptr)

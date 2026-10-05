@@ -87,7 +87,12 @@ mod ffi {
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
 
         #[Self = "WScriptJsrt"]
-        fn PrintException(filname: &str, jsErrorCode: JsErrorCode, exception: JsValueRef) -> bool;
+        fn PrintException(
+            filname: &str,
+            jsErrorCode: JsErrorCode,
+            exception: JsValueRef,
+            error_type_string: &str,
+        ) -> bool;
 
         #[namespace = "chakra_rs"]
         type JsNativeFunctionArgs<'a> = crate::jsrt::JsNativeFunctionArgs<'a>;
@@ -1321,9 +1326,25 @@ impl WScript {
         }
     }
 
+    fn convert_error_code_to_message(error_code: JsErrorCode) -> &'static str {
+        match error_code {
+            JsErrorCode::JsErrorInvalidArgument => "TypeError: InvalidArgument",
+            JsErrorCode::JsErrorNullArgument => "TypeError: NullArgument",
+            JsErrorCode::JsErrorArgumentNotObject => "TypeError: ArgumentNotAnObject",
+            JsErrorCode::JsErrorOutOfMemory => "OutOfMemory",
+            JsErrorCode::JsErrorScriptException => "ScriptError",
+            JsErrorCode::JsErrorScriptCompile => "SyntaxError",
+            JsErrorCode::JsErrorFatal => "FatalError",
+            JsErrorCode::JsErrorInExceptionState => "ErrorInExceptionState",
+            JsErrorCode::JsErrorBadSerializedScript => "ErrorBadSerializedScript ",
+            _ => panic!("Unexpected JsErrorCode"),
+        }
+    }
+
     #[tracing::instrument]
     pub fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef) {
-        WScriptJsrt::PrintException(filename, js_error_code, exception);
+        let error_type_string = Self::convert_error_code_to_message(js_error_code);
+        WScriptJsrt::PrintException(filename, js_error_code, exception, error_type_string);
     }
 }
 

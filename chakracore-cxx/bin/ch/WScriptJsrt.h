@@ -87,35 +87,7 @@ public:
     static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
     static MessageQueue *GetMessageQueue() { return messageQueue_; }
 
-    static const char * ConvertErrorCodeToMessage(JsErrorCode errorCode)
-    {
-        switch (errorCode)
-        {
-        case (JsErrorCode::JsErrorInvalidArgument) :
-            return "TypeError: InvalidArgument";
-        case (JsErrorCode::JsErrorNullArgument) :
-            return "TypeError: NullArgument";
-        case (JsErrorCode::JsErrorArgumentNotObject) :
-            return "TypeError: ArgumentNotAnObject";
-        case (JsErrorCode::JsErrorOutOfMemory) :
-            return "OutOfMemory";
-        case (JsErrorCode::JsErrorScriptException) :
-            return "ScriptError";
-        case (JsErrorCode::JsErrorScriptCompile) :
-            return "SyntaxError";
-        case (JsErrorCode::JsErrorFatal) :
-            return "FatalError";
-        case (JsErrorCode::JsErrorInExceptionState) :
-            return "ErrorInExceptionState";
-        case (JsErrorCode::JsErrorBadSerializedScript):
-            return "ErrorBadSerializedScript ";
-        default:
-            assert(false && "Unexpected JsErrorCode");
-            return nullptr;
-        }
-    }
-
-    static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
+    static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception, rust::Str errorTypeString);
     static std::size_t GetNextSourceContext();
     static std::size_t GetSourceContext();
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile);
