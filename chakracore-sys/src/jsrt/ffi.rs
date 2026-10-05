@@ -1,7 +1,7 @@
 use crate::jsrt::JsError;
 pub use bridge::{
     CVoid, JsErrorCode, JsModuleHostInfoKind, JsNativeFunctionArgs, JsParseScriptAttributes,
-    JsRuntimeAttributes,
+    JsRuntimeAttributes, JsValueType,
 };
 use std::ffi::c_void;
 use std::fmt::Formatter;
@@ -53,6 +53,14 @@ impl JsValueRef {
 
     pub fn as_js_ref(&self) -> JsRef {
         JsRef(self.0)
+    }
+
+    pub fn get_value_type(&self) -> Result<JsValueType, JsError> {
+        let mut value_type = JsValueType::JsUndefined;
+        unsafe {
+            bridge::JsGetValueType(*self, &raw mut value_type).as_result()?;
+        }
+        Ok(value_type)
     }
 }
 
@@ -154,6 +162,7 @@ pub(super) mod bridge {
         type JsRuntimeAttributes;
         type JsParseScriptAttributes;
         type JsModuleHostInfoKind;
+        type JsValueType;
     }
 
     #[namespace = "chakracore::jsrt"]
@@ -206,6 +215,7 @@ pub(super) mod bridge {
             request_module: JsModuleRecord,
             module_namespace: *mut JsValueRef,
         ) -> JsErrorCode;
+        unsafe fn JsGetValueType(value: JsValueRef, value_type: *mut JsValueType) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}
@@ -398,6 +408,36 @@ pub(super) mod bridge {
         JsModuleHostInfo_InitializeImportMetaCallback = 0x7,
         /// Callback to report module completion or exception thrown when evaluating a module.
         JsModuleHostInfo_ReportModuleCompletionCallback = 0x8,
+    }
+
+    #[repr(i32)]
+    enum JsValueType {
+        /// The value is the `undefined` value.
+        JsUndefined = 0,
+        /// The value is the `null` value.
+        JsNull = 1,
+        /// The value is a JavaScript number value.
+        JsNumber = 2,
+        /// The value is a JavaScript string value.
+        JsString = 3,
+        /// The value is a JavaScript Boolean value.
+        JsBoolean = 4,
+        /// The value is a JavaScript object value.
+        JsObject = 5,
+        /// The value is a JavaScript function object value.
+        JsFunction = 6,
+        /// The value is a JavaScript error object value.
+        JsError = 7,
+        /// The value is a JavaScript array object value.
+        JsArray = 8,
+        /// The value is a JavaScript symbol value.
+        JsSymbol = 9,
+        /// The value is a JavaScript ArrayBuffer object value.
+        JsArrayBuffer = 10,
+        /// The value is a JavaScript typed array object value.
+        JsTypedArray = 11,
+        /// The value is a JavaScript DataView object value.
+        JsDataView = 12,
     }
 
     #[namespace = "chakra_rs"]

@@ -3,7 +3,7 @@ use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode, JsModuleHostInfoKind,
     JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
-    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef,
+    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
@@ -85,9 +85,6 @@ mod ffi {
         type JsErrorCode = crate::jsrt::JsErrorCode;
         #[namespace = "chakra_rs"]
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
-
-        #[Self = "WScriptJsrt"]
-        fn PrintException(filname: &str, exception: JsValueRef, errorMessage: &str) -> bool;
 
         #[namespace = "chakra_rs"]
         type JsNativeFunctionArgs<'a> = crate::jsrt::JsNativeFunctionArgs<'a>;
@@ -1441,7 +1438,22 @@ impl WScript {
             return Ok(());
         }
 
-        WScriptJsrt::PrintException(filename, *exception, &error_message);
+        let res = ChakraRt::create_property_id("stack")
+            .map(|id| exception.get_property(id))
+            .flatten()
+            .map(|prop| prop.get_value_type().map(|value_type| (prop, value_type)))
+            .flatten();
+        match res {
+            Ok((_, JsValueType::JsUndefined)) | Err(_) => {
+                println!("thrown at {path}:\n^");
+                println!("{error_message}");
+            }
+            Ok((stack_property, _)) => {
+                let error_stack = stack_property.to_string()?;
+                println!("{error_stack}");
+            }
+        }
+
         Ok(())
     }
 }

@@ -95,42 +95,6 @@ bool WScriptJsrt::Uninitialize()
     return true;
 }
 
-bool WScriptJsrt::PrintException(rust::Str fileName, JsValueRef exception, rust::Str errorMessage)
-{
-    const std::filesystem::path path{static_cast<std::string_view>(fileName)};
-
-    JsValueType propertyType = JsUndefined;
-    JsPropertyIdRef stackPropertyId = JS_INVALID_REFERENCE;
-    JsValueRef stackProperty = JS_INVALID_REFERENCE;
-
-    JsErrorCode errorCode = ChakraRTInterface::JsCreatePropertyId("stack", &stackPropertyId);
-
-    if (errorCode == JsErrorCode::JsNoError)
-    {
-        errorCode = ChakraRTInterface::JsGetProperty(exception, stackPropertyId, &stackProperty);
-        if (errorCode == JsErrorCode::JsNoError)
-        {
-            errorCode = ChakraRTInterface::JsGetValueType(stackProperty, &propertyType);
-        }
-    }
-
-    if (errorCode != JsErrorCode::JsNoError || propertyType == JsUndefined)
-    {
-        std::filesystem::path filepath{static_cast<std::string_view>(fileName)};
-
-        // do not mix char/wchar. print them separately
-        std::println("thrown at {}:\n^", filepath.filename().string());
-        std::println("{}", errorMessage);
-    }
-    else
-    {
-        rust::String errorStack;
-        IfJsrtErrorFail(ChakraRTInterface::JsToString(stackProperty, errorStack), false);
-        std::println("{}", errorStack);
-    }
-    return true;
-}
-
 void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
 {
     assert(messageQueue_ == nullptr);
