@@ -6,21 +6,15 @@
 #include "WScriptJsrt.h"
 
 #include <utility>
-#include <vector>
-#include <ctime>
-#include <ratio>
 #include <print>
 
 #include <filesystem>
-#include <iostream>
 #include <chakracore-sys/src/filesystem.rs.h>
 
 #include "ChakraRtInterface.h"
 #include "Codex/Utf8Codex.h"
-#include "Helpers.h"
 #include "HostConfigFlags.h"
 #include "RuntimeThreadData.h"
-#include "TestHooks.h"
 #include "chakra/Logger.h"
 
 #include <chakracore-sys/src/helpers.rs.h>
@@ -65,34 +59,6 @@ JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &
         returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContentPtr}, scriptInjectType, isSourceModule, isFile);
     }
     return returnValue;
-}
-
-bool WScriptJsrt::Uninitialize()
-{
-    auto& threadData = GetRuntimeThreadLocalData().threadData;
-    if (threadData && !threadData->children.empty())
-    {
-        const size_t count = threadData->children.size();
-        std::vector<HANDLE> childrenHandles;
-
-        for (const auto child : threadData->children)
-        {
-            childrenHandles.push_back(child->hThread);
-            SetEvent(child->hevntShutdown);
-        }
-
-        [[maybe_unused]] uint32_t waitRet = WaitForMultipleObjects(count, &childrenHandles[0], TRUE, INFINITE);
-        assert(waitRet == WAIT_OBJECT_0);
-
-        for (const auto &i : threadData->children)
-        {
-            delete i;
-        }
-
-        threadData->children.clear();
-    }
-
-    return true;
 }
 
 void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)

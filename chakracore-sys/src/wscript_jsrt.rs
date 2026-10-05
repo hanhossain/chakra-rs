@@ -42,6 +42,7 @@ mod ffi {
     unsafe extern "C++" {
         include!("WScriptJsrt.h");
         include!("PlatformAgnostic/ChakraICU.h");
+        include!("chakracore-sys/src/str_helper.rs.h");
 
         type WScriptJsrt;
 
@@ -50,9 +51,6 @@ mod ffi {
         type JsSourceContext = crate::jsrt::JsSourceContext;
         type JsContextRef = crate::jsrt::JsContextRef;
         type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
-
-        #[Self = "WScriptJsrt"]
-        fn Uninitialize() -> bool;
 
         type MessageQueue;
         type MessageBase;
@@ -138,6 +136,7 @@ mod ffi {
         type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
         fn GetCurrentRuntimeThreadData(dummy: &mut i32) -> Pin<&mut RuntimeThreadData>;
         fn GetCurrentRuntimeThreadDataPtr() -> *mut RuntimeThreadData;
+        fn UninitializeRuntimeThreadLocalData();
 
         #[Self = "RuntimeThreadData"]
         fn NewWithInitialSource(initialSource: &String) -> *mut RuntimeThreadData;
@@ -1455,6 +1454,10 @@ impl WScript {
         }
 
         Ok(())
+    }
+
+    pub fn uninitialize() {
+        ffi::UninitializeRuntimeThreadLocalData();
     }
 }
 

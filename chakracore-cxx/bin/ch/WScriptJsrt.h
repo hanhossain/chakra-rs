@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include <list>
 #include <filesystem>
 #include <map>
 #include <memory>
@@ -13,9 +12,7 @@
 
 #include "ChakraCore.h"
 #include "MessageQueue.h"
-#include "RuntimeThreadData.h"
 #include <chakracore-sys/src/jsrt/ffi.rs.h>
-#include <chakracore-sys/src/str_helper.rs.h>
 
 enum ModuleState
 {
@@ -27,8 +24,6 @@ enum ModuleState
 class WScriptJsrt
 {
 public:
-    static bool Uninitialize();
-
     class CallbackMessage : public MessageBase
     {
         JsValueRef m_function;

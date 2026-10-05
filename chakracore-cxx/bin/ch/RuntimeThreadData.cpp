@@ -21,15 +21,31 @@ void RuntimeThreadLocalData::Initialize(RuntimeThreadData* threadData)
     this->threadData = threadData;
 }
 
-void RuntimeThreadLocalData::Uninitialize()
-{
+void RuntimeThreadLocalData::Uninitialize() const {
+    if (threadData && !threadData->children.empty()) {
+        std::vector<HANDLE> childrenHandles;
+
+        for (const auto &child : threadData->children) {
+            childrenHandles.push_back(child->hThread);
+            SetEvent(child->hevntShutdown);
+        }
+
+        uint32_t waitRet = WaitForMultipleObjects(childrenHandles.size(), childrenHandles.data(), TRUE, INFINITE);
+        assert(waitRet == WAIT_OBJECT_0);
+
+        for (const auto &child : threadData->children) {
+            delete child;
+        }
+
+        threadData->children.clear();
+    }
 }
 
 thread_local RuntimeThreadLocalData threadLocalData;
 
-RuntimeThreadLocalData& GetRuntimeThreadLocalData()
+void UninitializeRuntimeThreadLocalData()
 {
-    return threadLocalData;
+    threadLocalData.Uninitialize();
 }
 
 RuntimeThreadData &GetCurrentRuntimeThreadData([[maybe_unused]] int &dummy)
@@ -128,7 +144,7 @@ uint32_t RuntimeThreadData::ThreadProc()
 
         if (waitRet == WAIT_OBJECT_0 + 1 || leaving_)
         {
-            WScriptJsrt::Uninitialize();
+            threadLocalData.Uninitialize();
 
             if (this->receiveBroadcastCallbackFunc)
             {
@@ -136,8 +152,6 @@ uint32_t RuntimeThreadData::ThreadProc()
             }
             ChakraRTInterface::JsSetCurrentContext(nullptr);
             ChakraRTInterface::JsDisposeRuntime(runtime);
-
-            threadLocalData.Uninitialize();
             return 0;
         }
         else if (waitRet != WAIT_OBJECT_0)
@@ -151,7 +165,6 @@ Error:
 
     ChakraRTInterface::JsSetCurrentContext(nullptr);
     ChakraRTInterface::JsDisposeRuntime(runtime);
-    threadLocalData.Uninitialize();
     return 0;
 }
 

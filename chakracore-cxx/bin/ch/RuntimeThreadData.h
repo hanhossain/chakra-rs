@@ -7,8 +7,6 @@
 
 #include <condition_variable>
 #include <list>
-#include <optional>
-#include <semaphore>
 #include <rust/cxx.h>
 
 class RuntimeThreadData
@@ -67,11 +65,10 @@ struct RuntimeThreadLocalData
     // can't use ctor/dtor because it's not supported in VS2012
     // error C2483: 'threadLocalData' : object with constructor or destructor cannot be declared 'thread' 
     void Initialize(RuntimeThreadData* threadData);
-    void Uninitialize();
+    void Uninitialize() const;
     RuntimeThreadData* threadData;
 };
 
-RuntimeThreadLocalData& GetRuntimeThreadLocalData();
-
+void UninitializeRuntimeThreadLocalData();
 RuntimeThreadData &GetCurrentRuntimeThreadData(int &dummy);
 RuntimeThreadData *GetCurrentRuntimeThreadDataPtr();
