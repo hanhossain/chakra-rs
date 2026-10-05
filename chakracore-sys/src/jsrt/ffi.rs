@@ -170,6 +170,11 @@ pub(super) mod bridge {
             value: JsValueRef,
             useStrictRules: bool,
         ) -> JsErrorCode;
+        unsafe fn JsGetProperty(
+            object: JsValueRef,
+            property: JsPropertyIdRef,
+            value: *mut JsValueRef,
+        ) -> JsErrorCode;
         fn JsSetIndexedProperty(
             object: JsValueRef,
             index: JsValueRef,

@@ -188,6 +188,9 @@ mod ffi {
             object: JsValueRef,
             context: *mut JsContextRef,
         ) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsGetAndClearExceptionWithMetadata(metadata: *mut JsValueRef) -> JsErrorCode;
     }
 }
 

@@ -200,6 +200,14 @@ impl JsObject {
             true,
         )
     }
+
+    pub fn get_property(&self, property_id: JsPropertyIdRef) -> Result<JsValueRef, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            bridge::JsGetProperty(self.0, property_id, &raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
 }
 
 // TODO: this is temporary while other functions are ported. Don't actually want to deref to

@@ -92,6 +92,7 @@ mod ffi {
             jsErrorCode: JsErrorCode,
             exception: JsValueRef,
             error_type_string: &str,
+            metadata: JsValueRef,
         ) -> bool;
 
         #[namespace = "chakra_rs"]
@@ -1341,10 +1342,41 @@ impl WScript {
         }
     }
 
-    #[tracing::instrument]
     pub fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef) {
+        let _ = Self::internal_print_exception(filename, js_error_code, exception);
+    }
+
+    #[tracing::instrument(err)]
+    fn internal_print_exception(
+        filename: &str,
+        js_error_code: JsErrorCode,
+        mut exception: JsValueRef,
+    ) -> Result<(), JsError> {
         let error_type_string = Self::convert_error_code_to_message(js_error_code);
-        WScriptJsrt::PrintException(filename, js_error_code, exception, error_type_string);
+        let mut metadata = JsValueRef::default();
+
+        unsafe {
+            if exception.is_null() {
+                if ChakraRTInterface::JsGetAndClearExceptionWithMetadata(&raw mut metadata)
+                    .as_result()
+                    .is_ok()
+                {
+                    let exception_id = ChakraRt::create_property_id("exception")?;
+                    let metadata = JsObject::new(metadata);
+                    exception = metadata.get_property(exception_id)?;
+                } else {
+                    ChakraRTInterface::JsGetAndClearException(&raw mut exception).as_result()?;
+                }
+            }
+        }
+        WScriptJsrt::PrintException(
+            filename,
+            js_error_code,
+            exception,
+            error_type_string,
+            metadata,
+        );
+        Ok(())
     }
 }
 

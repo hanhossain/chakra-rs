@@ -87,7 +87,7 @@ public:
     static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
     static MessageQueue *GetMessageQueue() { return messageQueue_; }
 
-    static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception, rust::Str errorTypeString);
+    static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception, rust::Str errorTypeString, JsValueRef metaData);
     static std::size_t GetNextSourceContext();
     static std::size_t GetSourceContext();
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile);

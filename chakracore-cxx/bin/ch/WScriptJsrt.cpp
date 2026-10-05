@@ -95,25 +95,8 @@ bool WScriptJsrt::Uninitialize()
     return true;
 }
 
-bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception, rust::Str errorTypeString)
+bool WScriptJsrt::PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception, rust::Str errorTypeString, JsValueRef metaData)
 {
-    JsValueRef metaData = JS_INVALID_REFERENCE;
-
-    if (exception == nullptr)
-    {
-        if (ChakraRTInterface::JsGetAndClearExceptionWithMetadata(&metaData) == JsNoError)
-        {
-            JsPropertyIdRef exceptionId = JS_INVALID_REFERENCE;
-            IfJsrtErrorFail(ChakraRTInterface::JsCreatePropertyId("exception", &exceptionId), false);
-            IfJsrtErrorFail(ChakraRTInterface::JsGetProperty(metaData, exceptionId, &exception), false);
-        }
-        else
-        {
-            IfJsrtErrorFail(ChakraRTInterface::JsGetAndClearException(&exception), false);
-        }
-
-    }
-
     if (HostConfigFlags::GetConfig().host.mute_host_error_msg)
     {
         return false;
