@@ -17,6 +17,7 @@
 #include "Library/JavascriptPromise.h"
 #include "Codex/Utf8Codex.h"
 #include "Language/SourceTextModuleRecord.h"
+#include "chakra/Logger.h"
 
 JsErrorCode chakracore::jsrt::JsInitializeModuleRecord(
     _In_opt_ JsModuleRecord referencingModule,
@@ -51,6 +52,7 @@ JsErrorCode chakracore::jsrt::JsParseModuleSource(
     _In_ JsParseModuleSourceFlags sourceFlag,
     _Outptr_result_maybenull_ JsValueRef* exceptionValueRef)
 {
+    auto span = chakra::Span::create("chakracore::jsrt::JsParseModuleSource");
     PARAM_NOT_NULL(requestModule);
     PARAM_NOT_NULL(exceptionValueRef);
     if (sourceFlag > JsParseModuleSourceFlags_DataIsUTF8)

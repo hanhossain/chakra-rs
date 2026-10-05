@@ -4,7 +4,6 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
-#include <list>
 #include <filesystem>
 #include <map>
 #include <memory>
@@ -13,9 +12,7 @@
 
 #include "ChakraCore.h"
 #include "MessageQueue.h"
-#include "RuntimeThreadData.h"
 #include <chakracore-sys/src/jsrt/ffi.rs.h>
-#include <chakracore-sys/src/str_helper.rs.h>
 
 enum ModuleState
 {
@@ -27,8 +24,6 @@ enum ModuleState
 class WScriptJsrt
 {
 public:
-    static bool Uninitialize();
-
     class CallbackMessage : public MessageBase
     {
         JsValueRef m_function;
@@ -87,35 +82,6 @@ public:
     static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
     static MessageQueue *GetMessageQueue() { return messageQueue_; }
 
-    static const char * ConvertErrorCodeToMessage(JsErrorCode errorCode)
-    {
-        switch (errorCode)
-        {
-        case (JsErrorCode::JsErrorInvalidArgument) :
-            return "TypeError: InvalidArgument";
-        case (JsErrorCode::JsErrorNullArgument) :
-            return "TypeError: NullArgument";
-        case (JsErrorCode::JsErrorArgumentNotObject) :
-            return "TypeError: ArgumentNotAnObject";
-        case (JsErrorCode::JsErrorOutOfMemory) :
-            return "OutOfMemory";
-        case (JsErrorCode::JsErrorScriptException) :
-            return "ScriptError";
-        case (JsErrorCode::JsErrorScriptCompile) :
-            return "SyntaxError";
-        case (JsErrorCode::JsErrorFatal) :
-            return "FatalError";
-        case (JsErrorCode::JsErrorInExceptionState) :
-            return "ErrorInExceptionState";
-        case (JsErrorCode::JsErrorBadSerializedScript):
-            return "ErrorBadSerializedScript ";
-        default:
-            assert(false && "Unexpected JsErrorCode");
-            return nullptr;
-        }
-    }
-
-    static bool PrintException(rust::Str fileName, JsErrorCode jsErrorCode, JsValueRef exception = nullptr);
     static std::size_t GetNextSourceContext();
     static std::size_t GetSourceContext();
     static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile);

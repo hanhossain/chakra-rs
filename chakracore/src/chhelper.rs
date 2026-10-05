@@ -248,7 +248,7 @@ fn run_script(
     };
 
     if run_script_result != JsErrorCode::JsNoError {
-        WScriptJsrt::PrintException(filename, run_script_result, JsValueRef::default());
+        WScript::print_exception(filename, run_script_result, JsValueRef::default());
     } else {
         // Repeatedly flush the message queue until it's empty. It is necessary to loop on this
         // because setTimeout can add scripts to execute.
@@ -271,7 +271,7 @@ fn run_script(
     }
 
     // We only call RunScript() once, safe to Uninitialize()
-    WScriptJsrt::Uninitialize();
+    WScript::uninitialize();
     Ok(())
 }
 

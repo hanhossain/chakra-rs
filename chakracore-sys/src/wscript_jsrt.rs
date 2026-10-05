@@ -3,7 +3,7 @@ use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode, JsModuleHostInfoKind,
     JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
-    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef,
+    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
@@ -42,6 +42,7 @@ mod ffi {
     unsafe extern "C++" {
         include!("WScriptJsrt.h");
         include!("PlatformAgnostic/ChakraICU.h");
+        include!("chakracore-sys/src/str_helper.rs.h");
 
         type WScriptJsrt;
 
@@ -50,9 +51,6 @@ mod ffi {
         type JsSourceContext = crate::jsrt::JsSourceContext;
         type JsContextRef = crate::jsrt::JsContextRef;
         type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
-
-        #[Self = "WScriptJsrt"]
-        fn Uninitialize() -> bool;
 
         type MessageQueue;
         type MessageBase;
@@ -85,9 +83,6 @@ mod ffi {
         type JsErrorCode = crate::jsrt::JsErrorCode;
         #[namespace = "chakra_rs"]
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
-
-        #[Self = "WScriptJsrt"]
-        fn PrintException(filname: &str, jsErrorCode: JsErrorCode, exception: JsValueRef) -> bool;
 
         #[namespace = "chakra_rs"]
         type JsNativeFunctionArgs<'a> = crate::jsrt::JsNativeFunctionArgs<'a>;
@@ -141,9 +136,10 @@ mod ffi {
         type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
         fn GetCurrentRuntimeThreadData(dummy: &mut i32) -> Pin<&mut RuntimeThreadData>;
         fn GetCurrentRuntimeThreadDataPtr() -> *mut RuntimeThreadData;
+        fn UninitializeRuntimeThreadLocalData();
 
         #[Self = "RuntimeThreadData"]
-        fn NewWithInitialSource(initialSource: &str) -> *mut RuntimeThreadData;
+        fn NewWithInitialSource(initialSource: &String) -> *mut RuntimeThreadData;
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
         fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
@@ -195,7 +191,7 @@ mod ffi {
         fn load_script(
             callee: JsValueRef,
             file_name: &str,
-            content: &OptionalStr,
+            content: OptionalStr,
             script_inject_type: &str,
             is_source_module: bool,
             is_file: bool,
@@ -203,10 +199,13 @@ mod ffi {
 
         #[Self = "WScript"]
         fn load_module_from_string(
-            file_content: &OptionalStr,
+            file_content: OptionalStr,
             full_name: &String,
             is_file: bool,
         ) -> JsErrorCode;
+
+        #[Self = "WScript"]
+        fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef);
 
         type ModuleErrorMap;
         fn get_module_error_map() -> Box<ModuleErrorMap>;
@@ -475,10 +474,7 @@ impl WScript {
             Ok(Self::load_script(
                 callee,
                 &filename,
-                &OptionalStr {
-                    has_value: true,
-                    value: &*content,
-                },
+                Some(&*content).into(),
                 if !script_inject_type.is_empty() {
                     &script_inject_type
                 } else {
@@ -765,7 +761,7 @@ impl WScript {
                     &raw mut specifier as _,
                 );
                 if let Ok(specifier) = specifier.to_string() {
-                    WScriptJsrt::PrintException(
+                    Self::print_exception(
                         &specifier,
                         JsErrorCode::JsErrorScriptException,
                         exception,
@@ -988,7 +984,7 @@ impl WScript {
     #[tracing::instrument(skip(file_content))]
     pub fn module_entry_point(file_content: &str, full_name: &String) -> JsErrorCode {
         Self::load_module_from_string(
-            &OptionalStr {
+            OptionalStr {
                 has_value: true,
                 value: file_content,
             },
@@ -999,19 +995,19 @@ impl WScript {
 
     // TODO: can now use Option<&str> since this is no longer exposed to C++.
     fn load_module_from_string(
-        file_content: &OptionalStr,
+        file_content: OptionalStr,
         full_name: &String,
         is_file: bool,
     ) -> JsErrorCode {
-        match Self::internal_load_module_from_string(file_content, full_name, is_file) {
+        match Self::internal_load_module_from_string(file_content.into(), full_name, is_file) {
             Ok(()) => JsErrorCode::JsNoError,
             Err(err) => err.into(),
         }
     }
 
-    #[tracing::instrument(skip(file_content), err)]
+    #[tracing::instrument(err)]
     fn internal_load_module_from_string(
-        file_content: &OptionalStr,
+        file_content: Option<&str>,
         full_name: &String,
         is_file: bool,
     ) -> Result<(), JsError> {
@@ -1070,14 +1066,14 @@ impl WScript {
             ChakraRTInterface::JsParseModuleSource(
                 &request_module,
                 &source_context,
-                file_content,
+                file_content.into(),
                 &raw mut error_object,
             )
         };
 
         if error_code != JsErrorCode::JsNoError
             && !error_object.is_null()
-            && file_content.has_value
+            && file_content.is_some()
             && !HostConfigFlags::GetConfig().host.ignore_script_error_code
         {
             let state = {
@@ -1100,7 +1096,7 @@ impl WScript {
     fn load_script(
         callee: JsValueRef,
         file_name: &str,
-        content: &OptionalStr,
+        content: OptionalStr,
         script_inject_type: &str,
         is_source_module: bool,
         is_file: bool,
@@ -1108,7 +1104,7 @@ impl WScript {
         Self::internal_load_script(
             callee,
             file_name,
-            content,
+            content.into(),
             script_inject_type,
             is_source_module,
             is_file,
@@ -1125,11 +1121,11 @@ impl WScript {
         })
     }
 
-    #[tracing::instrument(skip(callee, content), err)]
-    fn internal_load_script(
+    #[tracing::instrument(err)]
+    fn internal_load_script<'a>(
         callee: JsValueRef,
         file_name: &str,
-        content: &OptionalStr,
+        content: Option<&'a str>,
         script_inject_type: &str,
         is_source_module: bool,
         is_file: bool,
@@ -1147,12 +1143,11 @@ impl WScript {
         // this is called with LoadModuleCallback method as well where caller pass in a string that should be
         // treated as a module source text instead of opening a new file.
         if is_source_module || script_inject_type == "module" {
-            Self::load_module_from_string(
+            Self::internal_load_module_from_string(
                 content,
                 &full_path.to_str().unwrap_or_default().to_owned(),
                 is_file,
-            )
-            .as_result()?;
+            )?;
             Ok(JsValueRef::default())
         } else if script_inject_type == "self" {
             let mut callee_context = JsContextRef::default();
@@ -1166,7 +1161,7 @@ impl WScript {
             unsafe {
                 // TODO: consider passing in the finalize callback
                 ChakraRTInterface::JsCreateExternalArrayBuffer(
-                    content.value,
+                    content.unwrap(),
                     &raw mut script_source,
                 )
                 .as_result()?;
@@ -1236,7 +1231,7 @@ impl WScript {
             let mut script_source = JsValueRef::default();
             unsafe {
                 ChakraRTInterface::JsCreateExternalArrayBuffer(
-                    content.value,
+                    content.unwrap(),
                     &raw mut script_source,
                 )
                 .as_result()?;
@@ -1288,7 +1283,7 @@ impl WScript {
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
             let thread_data = ffi::GetCurrentRuntimeThreadDataPtr();
-            let child = RuntimeThreadData::NewWithInitialSource(content.value);
+            let child = RuntimeThreadData::NewWithInitialSource(&content.unwrap().to_owned());
             unsafe {
                 let data = Pin::new_unchecked(&mut *thread_data);
                 data.add_child(child);
@@ -1320,6 +1315,149 @@ impl WScript {
                 message: "Unsupported argument type inject type.",
             })
         }
+    }
+
+    fn convert_error_code_to_message(error_code: JsErrorCode) -> &'static str {
+        match error_code {
+            JsErrorCode::JsErrorInvalidArgument => "TypeError: InvalidArgument",
+            JsErrorCode::JsErrorNullArgument => "TypeError: NullArgument",
+            JsErrorCode::JsErrorArgumentNotObject => "TypeError: ArgumentNotAnObject",
+            JsErrorCode::JsErrorOutOfMemory => "OutOfMemory",
+            JsErrorCode::JsErrorScriptException => "ScriptError",
+            JsErrorCode::JsErrorScriptCompile => "SyntaxError",
+            JsErrorCode::JsErrorFatal => "FatalError",
+            JsErrorCode::JsErrorInExceptionState => "ErrorInExceptionState",
+            JsErrorCode::JsErrorBadSerializedScript => "ErrorBadSerializedScript ",
+            _ => panic!("Unexpected JsErrorCode"),
+        }
+    }
+
+    pub fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef) {
+        let _ = Self::internal_print_exception(filename, js_error_code, exception);
+    }
+
+    #[tracing::instrument(err)]
+    fn internal_print_exception(
+        filename: &str,
+        js_error_code: JsErrorCode,
+        mut exception: JsValueRef,
+    ) -> Result<(), JsError> {
+        let error_type_string = Self::convert_error_code_to_message(js_error_code);
+        let mut metadata = JsValueRef::default();
+
+        unsafe {
+            if exception.is_null() {
+                if ChakraRTInterface::JsGetAndClearExceptionWithMetadata(&raw mut metadata)
+                    .as_result()
+                    .is_ok()
+                {
+                    let exception_id = ChakraRt::create_property_id("exception")?;
+                    let metadata = JsObject::new(metadata);
+                    exception = metadata.get_property(exception_id)?;
+                } else {
+                    ChakraRTInterface::JsGetAndClearException(&raw mut exception).as_result()?;
+                }
+            }
+        }
+
+        if HostConfigFlags::GetConfig().host.mute_host_error_msg {
+            return Ok(());
+        }
+
+        if exception.is_null()
+            || (js_error_code != JsErrorCode::JsErrorScriptCompile
+                && js_error_code != JsErrorCode::JsErrorScriptException)
+        {
+            tracing::error!("Error : {error_type_string}");
+            return Ok(());
+        }
+
+        let path = std::path::Path::new(filename)
+            .file_name()
+            .unwrap_or_default()
+            .display();
+        let exception = JsObject::new(exception);
+
+        let error_message = match exception.to_string() {
+            Ok(x) => x,
+            Err(_) => {
+                println!("ERROR attempting to coerce error to string, using alternate handler");
+                if ChakraRt::has_exception().unwrap_or_default() {
+                    unsafe {
+                        let mut discard = JsValueRef::default();
+                        ChakraRTInterface::JsGetAndClearException(&raw mut discard);
+                    }
+                }
+                let message_property_id = ChakraRt::create_property_id("message")?;
+                let error_message = exception.get_property(message_property_id)?.to_string()?;
+
+                if js_error_code != JsErrorCode::JsErrorScriptCompile {
+                    if !metadata.is_null() {
+                        let metadata = JsObject::new(metadata);
+                        let line = {
+                            let property_id = ChakraRt::create_property_id("line")?;
+                            let property = metadata.get_property(property_id)?;
+                            ChakraRt::number_to_int(&property)?
+                        };
+                        let column = {
+                            let property_id = ChakraRt::create_property_id("column")?;
+                            let property = metadata.get_property(property_id)?;
+                            ChakraRt::number_to_int(&property)?
+                        };
+                        println!(
+                            "{}\n        at code ({}:{}:{})",
+                            error_message,
+                            path,
+                            line + 1,
+                            column + 1,
+                        );
+                    } else {
+                        println!("{}\n\tat code ({}:??:??)", error_message, path);
+                    }
+
+                    return Ok(());
+                }
+                error_message
+            }
+        };
+
+        if js_error_code == JsErrorCode::JsErrorScriptCompile {
+            let line_property = exception.get_property(ChakraRt::create_property_id("line")?)?;
+            let line = ChakraRt::number_to_int(&line_property)?;
+            let column_property =
+                exception.get_property(ChakraRt::create_property_id("column")?)?;
+            let column = ChakraRt::number_to_int(&column_property)?;
+            println!(
+                "{}\n\tat code ({}:{}:{})",
+                error_message,
+                path,
+                line + 1,
+                column + 1
+            );
+            return Ok(());
+        }
+
+        let res = ChakraRt::create_property_id("stack")
+            .map(|id| exception.get_property(id))
+            .flatten()
+            .map(|prop| prop.get_value_type().map(|value_type| (prop, value_type)))
+            .flatten();
+        match res {
+            Ok((_, JsValueType::JsUndefined)) | Err(_) => {
+                println!("thrown at {path}:\n^");
+                println!("{error_message}");
+            }
+            Ok((stack_property, _)) => {
+                let error_stack = stack_property.to_string()?;
+                println!("{error_stack}");
+            }
+        }
+
+        Ok(())
+    }
+
+    pub fn uninitialize() {
+        ffi::UninitializeRuntimeThreadLocalData();
     }
 }
 
