@@ -185,9 +185,6 @@ mod ffi {
         fn initialize() -> Result<()>;
 
         #[Self = "WScript"]
-        unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid);
-
-        #[Self = "WScript"]
         fn load_script(
             callee: JsValueRef,
             file_name: &str,
