@@ -268,7 +268,7 @@ WScriptJsrt::CallbackMessage::~CallbackMessage()
     ChakraRTInterface::JsHasException(&hasException);
     if (hasException)
     {
-        WScriptJsrt::PrintException("", JsErrorScriptException);
+        chakra_rs::WScript::print_exception("", JsErrorScriptException, nullptr);
     }
     [[maybe_unused]] JsErrorCode errorCode = ChakraRTInterface::JsRelease(m_function, nullptr);
     assert(errorCode == JsNoError);
@@ -312,7 +312,7 @@ int32_t WScriptJsrt::CallbackMessage::CallFunction(rust::Str fileName)
     if (errorCode != JsNoError)
     {
         hr = E_FAIL;
-        PrintException(fileName, errorCode);
+        chakra_rs::WScript::print_exception(fileName, errorCode, nullptr);
     }
 
 Error:
@@ -353,7 +353,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
             errorCode = ChakraRTInterface::JsModuleEvaluation(moduleRecord, &result);
             if (errorCode != JsNoError)
             {
-                PrintException(fileName, errorCode); // this should not be called
+                chakra_rs::WScript::print_exception(fileName, errorCode, nullptr); // this should not be called
             }
         }
     }

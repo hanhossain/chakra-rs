@@ -208,6 +208,9 @@ mod ffi {
             is_file: bool,
         ) -> JsErrorCode;
 
+        #[Self = "WScript"]
+        fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef);
+
         type ModuleErrorMap;
         fn get_module_error_map() -> Box<ModuleErrorMap>;
         fn insert(self: &ModuleErrorMap, key: JsModuleRecord, value: ModuleState);
@@ -762,7 +765,7 @@ impl WScript {
                     &raw mut specifier as _,
                 );
                 if let Ok(specifier) = specifier.to_string() {
-                    WScriptJsrt::PrintException(
+                    Self::print_exception(
                         &specifier,
                         JsErrorCode::JsErrorScriptException,
                         exception,
@@ -1316,6 +1319,11 @@ impl WScript {
                 message: "Unsupported argument type inject type.",
             })
         }
+    }
+
+    #[tracing::instrument]
+    pub fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef) {
+        WScriptJsrt::PrintException(filename, js_error_code, exception);
     }
 }
 

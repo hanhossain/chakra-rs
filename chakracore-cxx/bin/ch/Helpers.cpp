@@ -5,7 +5,7 @@
 #include "Helpers.h"
 
 #include "ChakraRtInterface.h"
-#include "WScriptJsrt.h"
+#include "chakracore-sys/src/wscript_jsrt.rs.h"
 
 const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
 {
@@ -13,7 +13,7 @@ const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
     ChakraRTInterface::JsHasException(&hasException);
     if (hasException)
     {
-        WScriptJsrt::PrintException("", JsErrorScriptException);
+        chakra_rs::WScript::print_exception("", JsErrorScriptException, nullptr);
     }
 
     switch (jsErrorCode)
