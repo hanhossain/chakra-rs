@@ -17,11 +17,11 @@ private:
 
     static unsigned int s_messageCount;
 
-    MessageBase(const MessageBase&);
 
 public:
-    MessageBase(unsigned int time) : m_time(time), m_id(s_messageCount++) { }
-    virtual ~MessageBase() { }
+    explicit MessageBase(unsigned int time) : m_time(time), m_id(s_messageCount++) { }
+    MessageBase(const MessageBase &) = delete;
+    virtual ~MessageBase() = default;
 
     void BeginTimer() { m_time += GetTickCount(); };
     unsigned int GetTime() { return m_time; };
@@ -266,25 +266,5 @@ public:
     static std::unique_ptr<MessageQueue> New()
     {
         return std::make_unique<MessageQueue>();
-    }
-};
-
-//
-// A custom message helper class to assist defining messages handled by callback functions.
-//
-template <class Func, class CustomBase>
-class CustomMessage : public CustomBase
-{
-private:
-    Func m_func;
-
-public:
-    CustomMessage(unsigned int time, JsValueRef customArg, const Func& func) :
-        CustomBase(time, customArg), m_func(func)
-    {}
-
-    int32_t Call(rust::Str fileName) override
-    {
-        return m_func(*this);
     }
 };

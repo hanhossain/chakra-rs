@@ -28,13 +28,12 @@ public:
     {
         JsValueRef m_function;
 
-        CallbackMessage(CallbackMessage const&);
-
     public:
         CallbackMessage(unsigned int time, JsValueRef function);
-        ~CallbackMessage();
+        CallbackMessage(CallbackMessage const&) = delete;
+        ~CallbackMessage() override;
 
-        int32_t Call(rust::Str fileName);
+        int32_t Call(rust::Str fileName) override;
         int32_t CallFunction(rust::Str fileName);
         static std::unique_ptr<CallbackMessage> New(unsigned int time, JsValueRef function)
         {
@@ -55,7 +54,7 @@ public:
 
     public:
         ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullpath);
-        ~ModuleMessage();
+        ~ModuleMessage() override;
 
         int32_t Call(rust::Str fileName) override;
 
