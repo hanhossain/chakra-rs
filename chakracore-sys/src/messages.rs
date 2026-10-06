@@ -30,6 +30,19 @@ mod ffi {
 
     #[namespace = "chakra_rs"]
     extern "Rust" {
+        type Message;
+        #[Self = "Message"]
+        fn new_callback(msg: Box<CallbackMessage>) -> Box<Message>;
+        #[Self = "Message"]
+        fn new_module(msg: Box<ModuleMessage>) -> Box<Message>;
+        fn call(&self, filename: &str);
+        fn get_time(&self) -> u32;
+        fn begin_timer(&mut self);
+        fn get_id(&self) -> u32;
+    }
+
+    #[namespace = "chakra_rs"]
+    extern "Rust" {
         type CallbackMessage;
         #[Self = "CallbackMessage"]
         fn boxed_new(time: u32, function: JsValueRef) -> Box<CallbackMessage>;
@@ -56,6 +69,44 @@ mod ffi {
         fn get_time(&self) -> u32;
         fn begin_timer(&mut self);
         fn get_id(&self) -> u32;
+    }
+}
+
+enum Message {
+    Callback(Box<CallbackMessage>),
+    Module(Box<ModuleMessage>),
+}
+
+impl Message {
+    fn new_callback(msg: Box<CallbackMessage>) -> Box<Self> {
+        Box::new(Message::Callback(msg))
+    }
+    fn new_module(msg: Box<ModuleMessage>) -> Box<Self> {
+        Box::new(Message::Module(msg))
+    }
+    fn call(&self, filename: &str) {
+        match self {
+            Message::Callback(msg) => msg.call(filename),
+            Message::Module(msg) => msg.call(filename),
+        }
+    }
+    fn get_time(&self) -> u32 {
+        match self {
+            Message::Callback(msg) => msg.get_time(),
+            Message::Module(msg) => msg.get_time(),
+        }
+    }
+    fn begin_timer(&mut self) {
+        match self {
+            Message::Callback(msg) => msg.begin_timer(),
+            Message::Module(msg) => msg.begin_timer(),
+        }
+    }
+    fn get_id(&self) -> u32 {
+        match self {
+            Message::Callback(msg) => msg.get_id(),
+            Message::Module(msg) => msg.get_id(),
+        }
     }
 }
 

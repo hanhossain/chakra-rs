@@ -88,3 +88,12 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 void WScriptJsrt::ModuleMessage::BeginTimer() { module_message_->begin_timer(); }
 unsigned int WScriptJsrt::ModuleMessage::GetTime() const { return module_message_->get_time(); }
 unsigned int WScriptJsrt::ModuleMessage::GetId() const { return module_message_->get_id(); }
+
+WScriptJsrt::CustomMessage::CustomMessage(rust::Box<chakra_rs::Message> message) : message_(std::move(message)) {}
+void WScriptJsrt::CustomMessage::BeginTimer() { message_->begin_timer(); }
+unsigned int WScriptJsrt::CustomMessage::GetTime() const { return message_->get_time(); }
+unsigned int WScriptJsrt::CustomMessage::GetId() const { return message_->get_id(); }
+int32_t WScriptJsrt::CustomMessage::Call(rust::Str fileName) {
+    message_->call(fileName);
+    return JsNoError;
+}

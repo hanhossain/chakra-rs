@@ -76,6 +76,16 @@ public:
         unsigned int GetId() const override;
     };
 
+    class CustomMessage final : public MessageBase {
+        rust::Box<chakra_rs::Message> message_;
+    public:
+        explicit CustomMessage(rust::Box<chakra_rs::Message> message);
+        void BeginTimer() override;
+        unsigned int GetTime() const override;
+        unsigned int GetId() const override;
+        int32_t Call(rust::Str fileName) override;
+    };
+
     static void AddMessageQueue(MessageQueue *messageQueue);
     static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
     static MessageQueue *GetMessageQueue() { return messageQueue_; }
