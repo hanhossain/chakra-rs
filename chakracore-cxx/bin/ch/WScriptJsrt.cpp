@@ -73,7 +73,7 @@ int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName) {
 }
 
 WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<fs::path> &fullpath)
-    : MessageBase(0)
+    : MessageBase(0), module_message_(chakra_rs::ModuleMessage::boxed_new(module, specifier))
 {
     ChakraRTInterface::JsAddRef(module, nullptr);
     if (specifier != nullptr)
@@ -82,28 +82,27 @@ WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef spec
         // nullptr specifier means a Promise to execute; non-nullptr means a "fetch" operation.
         ChakraRTInterface::JsAddRef(specifier, nullptr);
     }
-    module_message_ = chakra_rs::ModuleMessage::boxed_new(module, specifier);
 }
 
 WScriptJsrt::ModuleMessage::~ModuleMessage()
 {
-    ChakraRTInterface::JsRelease(module_message_.value()->get_module_record(), nullptr);
-    if (module_message_.value()->get_specifier() != nullptr)
+    ChakraRTInterface::JsRelease(module_message_->get_module_record(), nullptr);
+    if (module_message_->get_specifier() != nullptr)
     {
-        ChakraRTInterface::JsRelease(module_message_.value()->get_specifier(), nullptr);
+        ChakraRTInterface::JsRelease(module_message_->get_specifier(), nullptr);
     }
 }
 
 int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 {
     JsErrorCode errorCode = JsNoError;
-    if (module_message_.value()->get_specifier() == nullptr)
+    if (module_message_->get_specifier() == nullptr)
     {
-        if (auto [exists, state] = chakra_rs::get_module_error_map()->get(module_message_.value()->get_module_record());
+        if (auto [exists, state] = chakra_rs::get_module_error_map()->get(module_message_->get_module_record());
             exists && state != ErroredModule)
         {
             JsValueRef result = JS_INVALID_REFERENCE;
-            errorCode = ChakraRTInterface::JsModuleEvaluation(module_message_.value()->get_module_record(), &result);
+            errorCode = ChakraRTInterface::JsModuleEvaluation(module_message_->get_module_record(), &result);
             if (errorCode != JsNoError)
             {
                 chakra_rs::WScript::print_exception(fileName, errorCode, nullptr); // this should not be called
@@ -113,7 +112,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
     else
     {
         rust::String specifierStr;
-        errorCode = ChakraRTInterface::JsToString(module_message_.value()->get_specifier(), specifierStr);
+        errorCode = ChakraRTInterface::JsToString(module_message_->get_specifier(), specifierStr);
         if (errorCode != JsNoError)
         {
             return errorCode;
