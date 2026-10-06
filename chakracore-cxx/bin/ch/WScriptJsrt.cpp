@@ -72,13 +72,12 @@ int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName) {
     return S_OK;
 }
 
-WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<fs::path> &fullpath)
-    : MessageBase(0), module_message_(chakra_rs::ModuleMessage::boxed_new(module, specifier))
+WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, chakra_rs::OptionalStr fullpath)
+    : MessageBase(0), module_message_(chakra_rs::ModuleMessage::boxed_new(module, specifier, fullpath))
 {
     ChakraRTInterface::JsAddRef(module, nullptr);
     if (specifier != nullptr)
     {
-        fullPath_ = fullpath;
         // nullptr specifier means a Promise to execute; non-nullptr means a "fetch" operation.
         ChakraRTInterface::JsAddRef(specifier, nullptr);
     }
@@ -120,24 +119,24 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 
         try
         {
-            rust::String fileContent = fullPath_
-                ? chakra_rs::helpers::ScriptCache::get_script_with_full_path(specifierStr, fullPath_->native())
+            rust::String fileContent = module_message_->has_full_path()
+                ? chakra_rs::helpers::ScriptCache::get_script_with_full_path(specifierStr, module_message_->get_full_path())
                 : chakra_rs::helpers::ScriptCache::get_script(specifierStr);
-            chakra_rs::WScript::load_module_from_string(chakra_rs::OptionalStr{.has_value = true, .value = fileContent}, fullPath_ ? fullPath_.value().string() : specifierStr, true);
+            chakra_rs::WScript::load_module_from_string(chakra_rs::OptionalStr{.has_value = true, .value = fileContent}, module_message_->has_full_path() ? module_message_->get_full_path() : specifierStr, true);
         }
         catch (const rust::Error &e)
         {
             chakra::Logger::error(std::format("Caught exception: {}", e.what()));
             if (!HostConfigFlags::GetConfig().host.mute_host_error_msg)
             {
-                auto actualModuleRecord = chakra_rs::get_module_record_map()->get(fullPath_.value().native());
+                auto actualModuleRecord = chakra_rs::get_module_record_map()->get(module_message_->get_full_path());
                 auto error_map_content = chakra_rs::get_module_error_map()->get(actualModuleRecord.content.record);
                 if (!actualModuleRecord.exists || (error_map_content.exists && error_map_content.content == RootModule))
                 {
                     chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
                 }
             }
-            chakra_rs::WScript::load_module_from_string(chakra_rs::OptionalStr{}, fullPath_ ? fullPath_.value().string() : specifierStr, false);
+            chakra_rs::WScript::load_module_from_string(chakra_rs::OptionalStr{}, module_message_->has_full_path() ? module_message_->get_full_path() : specifierStr, false);
         }
     }
     return errorCode;

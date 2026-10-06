@@ -3,7 +3,9 @@ use crate::jsrt::{
     JsValueRef, JsValueType,
 };
 use crate::rt_interface::ChakraRTInterface;
+use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::WScript;
+use std::path::PathBuf;
 
 #[cxx::bridge]
 mod ffi {
@@ -12,6 +14,12 @@ mod ffi {
         include!("ChakraCore.h");
         type JsValueRef = crate::jsrt::JsValueRef;
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
+    }
+
+    #[namespace = "chakra_rs"]
+    extern "C++" {
+        include!("chakracore-sys/src/str_helper.rs.h");
+        type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
     }
 
     #[namespace = "chakra_rs"]
@@ -26,9 +34,15 @@ mod ffi {
     extern "Rust" {
         type ModuleMessage;
         #[Self = "ModuleMessage"]
-        fn boxed_new(module_record: JsModuleRecord, specifier: JsValueRef) -> Box<ModuleMessage>;
+        fn boxed_new(
+            module_record: JsModuleRecord,
+            specifier: JsValueRef,
+            full_path: OptionalStr,
+        ) -> Box<ModuleMessage>;
         fn get_specifier(&self) -> JsValueRef;
         fn get_module_record(&self) -> JsModuleRecord;
+        fn has_full_path(&self) -> bool;
+        fn get_full_path(&self) -> String;
     }
 }
 
@@ -114,18 +128,28 @@ impl Drop for CallbackMessage {
 struct ModuleMessage {
     module_record: JsModuleRecord,
     specifier: JsValueRef,
+    full_path: Option<PathBuf>,
 }
 
 impl ModuleMessage {
-    fn new(module_record: JsModuleRecord, specifier: JsValueRef) -> Self {
+    fn new(module_record: JsModuleRecord, specifier: JsValueRef, full_path: Option<&str>) -> Self {
+        let mut path: Option<PathBuf> = None;
+        if !specifier.is_null() {
+            path = full_path.map(|x| PathBuf::from(x))
+        }
         Self {
             module_record,
             specifier,
+            full_path: path,
         }
     }
 
-    fn boxed_new(module_record: JsModuleRecord, specifier: JsValueRef) -> Box<Self> {
-        Box::new(Self::new(module_record, specifier))
+    fn boxed_new(
+        module_record: JsModuleRecord,
+        specifier: JsValueRef,
+        full_path: OptionalStr,
+    ) -> Box<Self> {
+        Box::new(Self::new(module_record, specifier, full_path.into()))
     }
 
     fn get_specifier(&self) -> JsValueRef {
@@ -134,5 +158,17 @@ impl ModuleMessage {
 
     fn get_module_record(&self) -> JsModuleRecord {
         self.module_record
+    }
+
+    fn has_full_path(&self) -> bool {
+        self.full_path.is_some()
+    }
+
+    fn get_full_path(&self) -> String {
+        self.full_path
+            .as_ref()
+            .map(|x| x.to_str().map(|x| x.to_owned()))
+            .flatten()
+            .unwrap()
     }
 }

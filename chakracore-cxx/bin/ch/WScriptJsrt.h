@@ -48,27 +48,21 @@ public:
     class ModuleMessage : public MessageBase
     {
     private:
-        std::optional<std::filesystem::path> fullPath_;
         rust::Box<chakra_rs::ModuleMessage> module_message_;
 
     public:
-        ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullpath);
+        ModuleMessage(JsModuleRecord module, JsValueRef specifier, chakra_rs::OptionalStr fullpath);
         ~ModuleMessage() override;
 
         int32_t Call(rust::Str fileName) override;
 
-        static ModuleMessage* Create(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullPath)
-        {
-            return new ModuleMessage(module, specifier, fullPath);
-        }
-
         static std::unique_ptr<ModuleMessage> New(JsModuleRecord module, JsValueRef specifier)
         {
-            return std::make_unique<ModuleMessage>(module, specifier, std::nullopt);
+            return std::make_unique<ModuleMessage>(module, specifier, chakra_rs::OptionalStr{});
         }
         static std::unique_ptr<ModuleMessage> NewWithPath(JsModuleRecord module, JsValueRef specifier, const rust::Str fullPath)
         {
-            return std::make_unique<ModuleMessage>(module, specifier, static_cast<std::string_view>(fullPath));
+            return std::make_unique<ModuleMessage>(module, specifier, chakra_rs::OptionalStr{.has_value = true, .value = fullPath});
         }
         static std::unique_ptr<MessageBase> Upcast(std::unique_ptr<ModuleMessage> msg)
         {
