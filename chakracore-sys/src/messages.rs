@@ -19,6 +19,13 @@ mod ffi {
         fn boxed_new(function: JsValueRef) -> Box<CallbackMessage>;
         fn call(&self, filename: &str);
     }
+
+    #[namespace = "chakra_rs"]
+    extern "Rust" {
+        type ModuleMessage;
+        #[Self = "ModuleMessage"]
+        fn boxed_new() -> Box<ModuleMessage>;
+    }
 }
 
 struct CallbackMessage {
@@ -97,5 +104,17 @@ impl Drop for CallbackMessage {
                 .as_result()
                 .unwrap();
         }
+    }
+}
+
+struct ModuleMessage;
+
+impl ModuleMessage {
+    fn new() -> Self {
+        Self
+    }
+
+    fn boxed_new() -> Box<Self> {
+        Box::new(Self::new())
     }
 }

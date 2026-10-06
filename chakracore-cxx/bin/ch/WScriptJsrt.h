@@ -51,6 +51,7 @@ public:
         JsModuleRecord moduleRecord;
         JsValueRef specifier;
         std::optional<std::filesystem::path> fullPath_;
+        std::optional<rust::Box<chakra_rs::ModuleMessage>> module_message_;
 
     public:
         ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<std::filesystem::path> &fullpath);
