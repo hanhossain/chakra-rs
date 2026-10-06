@@ -48,8 +48,6 @@ public:
     class ModuleMessage : public MessageBase
     {
     private:
-        JsModuleRecord moduleRecord;
-        JsValueRef specifier;
         std::optional<std::filesystem::path> fullPath_;
         std::optional<rust::Box<chakra_rs::ModuleMessage>> module_message_;
 

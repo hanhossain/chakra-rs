@@ -1,6 +1,6 @@
 use crate::jsrt::{
-    ChakraRt, JsError, JsErrorCode, JsParseScriptAttributes, JsSourceContext, JsValueRef,
-    JsValueType,
+    ChakraRt, JsError, JsErrorCode, JsModuleRecord, JsParseScriptAttributes, JsSourceContext,
+    JsValueRef, JsValueType,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::WScript;
@@ -9,7 +9,9 @@ use crate::wscript_jsrt::WScript;
 mod ffi {
     extern "C++" {
         include!("MessageQueue.h");
+        include!("ChakraCore.h");
         type JsValueRef = crate::jsrt::JsValueRef;
+        type JsModuleRecord = crate::jsrt::JsModuleRecord;
     }
 
     #[namespace = "chakra_rs"]
@@ -24,7 +26,9 @@ mod ffi {
     extern "Rust" {
         type ModuleMessage;
         #[Self = "ModuleMessage"]
-        fn boxed_new() -> Box<ModuleMessage>;
+        fn boxed_new(module_record: JsModuleRecord, specifier: JsValueRef) -> Box<ModuleMessage>;
+        fn get_specifier(&self) -> JsValueRef;
+        fn get_module_record(&self) -> JsModuleRecord;
     }
 }
 
@@ -107,14 +111,28 @@ impl Drop for CallbackMessage {
     }
 }
 
-struct ModuleMessage;
+struct ModuleMessage {
+    module_record: JsModuleRecord,
+    specifier: JsValueRef,
+}
 
 impl ModuleMessage {
-    fn new() -> Self {
-        Self
+    fn new(module_record: JsModuleRecord, specifier: JsValueRef) -> Self {
+        Self {
+            module_record,
+            specifier,
+        }
     }
 
-    fn boxed_new() -> Box<Self> {
-        Box::new(Self::new())
+    fn boxed_new(module_record: JsModuleRecord, specifier: JsValueRef) -> Box<Self> {
+        Box::new(Self::new(module_record, specifier))
+    }
+
+    fn get_specifier(&self) -> JsValueRef {
+        self.specifier
+    }
+
+    fn get_module_record(&self) -> JsModuleRecord {
+        self.module_record
     }
 }

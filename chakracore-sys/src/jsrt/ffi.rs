@@ -105,7 +105,7 @@ unsafe impl cxx::ExternType for JsSourceContext {
 }
 
 #[repr(transparent)]
-#[derive(Default, Clone, Eq, PartialEq, Hash)]
+#[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct JsModuleRecord(*mut c_void);
 
 unsafe impl cxx::ExternType for JsModuleRecord {
