@@ -134,8 +134,15 @@ struct ModuleMessage {
 impl ModuleMessage {
     fn new(module_record: JsModuleRecord, specifier: JsValueRef, full_path: Option<&str>) -> Self {
         let mut path: Option<PathBuf> = None;
+        unsafe {
+            ChakraRTInterface::JsAddRef(module_record.as_js_ref(), std::ptr::null_mut());
+        }
         if !specifier.is_null() {
-            path = full_path.map(|x| PathBuf::from(x))
+            path = full_path.map(|x| PathBuf::from(x));
+            // nullptr specifier means a Promise to execute; non-nullptr means a "fetch" operation.
+            unsafe {
+                ChakraRTInterface::JsAddRef(specifier.as_js_ref(), std::ptr::null_mut());
+            }
         }
         Self {
             module_record,

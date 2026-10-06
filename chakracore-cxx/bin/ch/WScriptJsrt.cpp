@@ -75,12 +75,6 @@ int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName) {
 WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, chakra_rs::OptionalStr fullpath)
     : MessageBase(0), module_message_(chakra_rs::ModuleMessage::boxed_new(module, specifier, fullpath))
 {
-    ChakraRTInterface::JsAddRef(module, nullptr);
-    if (specifier != nullptr)
-    {
-        // nullptr specifier means a Promise to execute; non-nullptr means a "fetch" operation.
-        ChakraRTInterface::JsAddRef(specifier, nullptr);
-    }
 }
 
 WScriptJsrt::ModuleMessage::~ModuleMessage()

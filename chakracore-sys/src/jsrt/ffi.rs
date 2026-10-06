@@ -108,6 +108,12 @@ unsafe impl cxx::ExternType for JsSourceContext {
 #[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct JsModuleRecord(*mut c_void);
 
+impl JsModuleRecord {
+    pub fn as_js_ref(&self) -> JsRef {
+        JsRef(self.0)
+    }
+}
+
 unsafe impl cxx::ExternType for JsModuleRecord {
     type Id = cxx::type_id!("JsModuleRecord");
     type Kind = cxx::kind::Trivial;
