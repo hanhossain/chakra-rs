@@ -71,43 +71,9 @@ void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
 WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef function)
     : MessageBase(time), callback_message_(chakra_rs::CallbackMessage::boxed_new(function)) {}
 
-int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName)
-{
-    int32_t hr = S_OK;
-
-    JsValueRef global;
-    JsValueRef result;
-    JsValueRef stringValue;
-    JsValueType type;
-    JsErrorCode errorCode = JsNoError;
-
-    IfJsrtErrorHR(ChakraRTInterface::JsGetGlobalObject(&global));
-    IfJsrtErrorHR(ChakraRTInterface::JsGetValueType(callback_message_->get_function(), &type));
-
-    if (type == JsString)
-    {
-        IfJsrtErrorHR(ChakraRTInterface::JsConvertValueToString(callback_message_->get_function(), &stringValue));
-
-        JsValueRef fname;
-        ChakraRTInterface::JsCreateString("", strlen(""), &fname);
-        // Run the code
-        errorCode = ChakraRTInterface::JsRun(stringValue, JS_SOURCE_CONTEXT_NONE,
-          fname, JsParseScriptAttributeArrayBufferIsUtf16Encoded,
-          nullptr /*no result needed*/);
-    }
-    else
-    {
-        errorCode = ChakraRTInterface::JsCallFunction(callback_message_->get_function(), &global, 1, &result);
-    }
-
-    if (errorCode != JsNoError)
-    {
-        hr = E_FAIL;
-        chakra_rs::WScript::print_exception(fileName, errorCode, nullptr);
-    }
-
-Error:
-    return hr;
+int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName) {
+    callback_message_->call(fileName);
+    return S_OK;
 }
 
 WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<fs::path> &fullpath)

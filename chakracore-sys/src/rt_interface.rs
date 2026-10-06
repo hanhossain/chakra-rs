@@ -191,6 +191,19 @@ mod ffi {
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsGetAndClearExceptionWithMetadata(metadata: *mut JsValueRef) -> JsErrorCode;
+
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsConvertValueToString(
+            value: JsValueRef,
+            string_value: *mut JsValueRef,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsCallFunction(
+            function: JsValueRef,
+            arguments: *mut JsValueRef,
+            argument_count: u16,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
     }
 }
 
