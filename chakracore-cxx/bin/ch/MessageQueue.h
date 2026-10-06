@@ -11,20 +11,14 @@
 
 class MessageBase
 {
-private:
-    unsigned int m_id;
-
-    static unsigned int s_messageCount;
-
-
 public:
-    MessageBase() : m_id(s_messageCount++) { }
+    MessageBase() = default;
     MessageBase(const MessageBase &) = delete;
     virtual ~MessageBase() = default;
 
     virtual void BeginTimer() = 0;
     virtual unsigned int GetTime() const = 0;
-    unsigned int GetId() const { return m_id; };
+    virtual unsigned int GetId() const = 0;
 
     virtual int32_t Call(rust::Str fileName) = 0;
 };

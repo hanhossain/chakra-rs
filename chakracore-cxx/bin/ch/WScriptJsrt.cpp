@@ -24,7 +24,6 @@ namespace fs = std::filesystem;
 
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
 
-unsigned int MessageBase::s_messageCount = 0;
 MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
 std::size_t WScriptJsrt::sourceContext_ = 0;
 
@@ -73,7 +72,8 @@ int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName) {
 }
 
 void WScriptJsrt::CallbackMessage::BeginTimer() { callback_message_->begin_timer(); }
-unsigned WScriptJsrt::CallbackMessage::GetTime() const { return callback_message_->get_time(); }
+unsigned int WScriptJsrt::CallbackMessage::GetTime() const { return callback_message_->get_time(); }
+unsigned int WScriptJsrt::CallbackMessage::GetId() const { return callback_message_->get_id(); }
 
 WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, chakra_rs::OptionalStr fullpath)
     : module_message_(chakra_rs::ModuleMessage::boxed_new(module, specifier, fullpath))
@@ -86,4 +86,5 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
     return JsNoError;
 }
 void WScriptJsrt::ModuleMessage::BeginTimer() { module_message_->begin_timer(); }
-unsigned WScriptJsrt::ModuleMessage::GetTime() const { return module_message_->get_time(); }
+unsigned int WScriptJsrt::ModuleMessage::GetTime() const { return module_message_->get_time(); }
+unsigned int WScriptJsrt::ModuleMessage::GetId() const { return module_message_->get_id(); }

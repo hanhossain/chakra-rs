@@ -44,7 +44,8 @@ public:
             return msg;
         }
         void BeginTimer() override;
-        unsigned GetTime() const override;
+        unsigned int GetTime() const override;
+        unsigned int GetId() const override;
     };
 
     class ModuleMessage final : public MessageBase
@@ -71,7 +72,8 @@ public:
             return msg;
         }
         void BeginTimer() override;
-        unsigned GetTime() const override;
+        unsigned int GetTime() const override;
+        unsigned int GetId() const override;
     };
 
     static void AddMessageQueue(MessageQueue *messageQueue);

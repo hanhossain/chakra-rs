@@ -7,6 +7,9 @@ use crate::jsrt::{
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
+use std::sync::atomic::{AtomicU32, Ordering};
+
+static MESSAGE_COUNT: AtomicU32 = AtomicU32::new(0);
 
 #[cxx::bridge]
 mod ffi {
@@ -33,6 +36,7 @@ mod ffi {
         fn call(&self, filename: &str);
         fn get_time(&self) -> u32;
         fn begin_timer(&mut self);
+        fn get_id(&self) -> u32;
     }
 
     #[namespace = "chakra_rs"]
@@ -51,22 +55,25 @@ mod ffi {
         fn call(&self, filename: &str);
         fn get_time(&self) -> u32;
         fn begin_timer(&mut self);
+        fn get_id(&self) -> u32;
     }
 }
 
 struct CallbackMessage {
     function: JsValueRef,
     time: u32,
+    id: u32,
 }
 
 impl CallbackMessage {
     fn new(time: u32, function: JsValueRef) -> Self {
+        let id = MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed);
         unsafe {
             ChakraRTInterface::JsAddRef(function.as_js_ref(), std::ptr::null_mut())
                 .as_result()
                 .unwrap();
         }
-        Self { time, function }
+        Self { time, function, id }
     }
 
     fn boxed_new(time: u32, function: JsValueRef) -> Box<Self> {
@@ -122,6 +129,10 @@ impl CallbackMessage {
     fn begin_timer(&mut self) {
         self.time += ffi::GetTickCount();
     }
+
+    fn get_id(&self) -> u32 {
+        self.id
+    }
 }
 
 impl Drop for CallbackMessage {
@@ -147,10 +158,12 @@ struct ModuleMessage {
     specifier: JsValueRef,
     full_path: Option<String>,
     time: u32,
+    id: u32,
 }
 
 impl ModuleMessage {
     fn new(module_record: JsModuleRecord, specifier: JsValueRef, full_path: Option<&str>) -> Self {
+        let id = MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed);
         let mut path: Option<String> = None;
         unsafe {
             ChakraRTInterface::JsAddRef(module_record.as_js_ref(), std::ptr::null_mut());
@@ -167,6 +180,7 @@ impl ModuleMessage {
             specifier,
             full_path: path,
             time: 0,
+            id,
         }
     }
 
@@ -273,6 +287,10 @@ impl ModuleMessage {
 
     fn begin_timer(&mut self) {
         self.time += ffi::GetTickCount();
+    }
+
+    fn get_id(&self) -> u32 {
+        self.id
     }
 }
 
