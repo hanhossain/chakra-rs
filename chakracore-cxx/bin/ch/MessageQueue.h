@@ -12,19 +12,18 @@
 class MessageBase
 {
 private:
-    unsigned int m_time;
     unsigned int m_id;
 
     static unsigned int s_messageCount;
 
 
 public:
-    explicit MessageBase(unsigned int time) : m_time(time), m_id(s_messageCount++) { }
+    MessageBase() : m_id(s_messageCount++) { }
     MessageBase(const MessageBase &) = delete;
     virtual ~MessageBase() = default;
 
-    void BeginTimer() { m_time += GetTickCount(); };
-    unsigned int GetTime() { return m_time; };
+    virtual void BeginTimer() = 0;
+    virtual unsigned int GetTime() const = 0;
     unsigned int GetId() const { return m_id; };
 
     virtual int32_t Call(rust::Str fileName) = 0;

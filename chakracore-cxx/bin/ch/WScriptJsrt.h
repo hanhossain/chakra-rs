@@ -13,7 +13,7 @@
 #include "ChakraCore.h"
 #include "MessageQueue.h"
 #include <chakracore-sys/src/jsrt/ffi.rs.h>
-#include <chakracore-sys/src/messages.rs.h>
+#include "chakracore-sys/src/messages.rs.h"
 
 enum ModuleState
 {
@@ -25,7 +25,7 @@ enum ModuleState
 class WScriptJsrt
 {
 public:
-    class CallbackMessage : public MessageBase
+    class CallbackMessage final : public MessageBase
     {
         rust::Box<chakra_rs::CallbackMessage> callback_message_;
 
@@ -43,9 +43,11 @@ public:
         {
             return msg;
         }
+        void BeginTimer() override;
+        unsigned GetTime() const override;
     };
 
-    class ModuleMessage : public MessageBase
+    class ModuleMessage final : public MessageBase
     {
     private:
         rust::Box<chakra_rs::ModuleMessage> module_message_;
@@ -68,6 +70,8 @@ public:
         {
             return msg;
         }
+        void BeginTimer() override;
+        unsigned GetTime() const override;
     };
 
     static void AddMessageQueue(MessageQueue *messageQueue);

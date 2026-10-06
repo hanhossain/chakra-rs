@@ -10,11 +10,13 @@ use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScr
 
 #[cxx::bridge]
 mod ffi {
-    extern "C++" {
+    unsafe extern "C++" {
         include!("MessageQueue.h");
         include!("ChakraCore.h");
         type JsValueRef = crate::jsrt::JsValueRef;
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
+        /// Get the number of milliseconds since the system has started.
+        fn GetTickCount() -> u32;
     }
 
     #[namespace = "chakra_rs"]
@@ -27,8 +29,10 @@ mod ffi {
     extern "Rust" {
         type CallbackMessage;
         #[Self = "CallbackMessage"]
-        fn boxed_new(function: JsValueRef) -> Box<CallbackMessage>;
+        fn boxed_new(time: u32, function: JsValueRef) -> Box<CallbackMessage>;
         fn call(&self, filename: &str);
+        fn get_time(&self) -> u32;
+        fn begin_timer(&mut self);
     }
 
     #[namespace = "chakra_rs"]
@@ -45,25 +49,28 @@ mod ffi {
         fn has_full_path(&self) -> bool;
         fn get_full_path(&self) -> String;
         fn call(&self, filename: &str);
+        fn get_time(&self) -> u32;
+        fn begin_timer(&mut self);
     }
 }
 
 struct CallbackMessage {
     function: JsValueRef,
+    time: u32,
 }
 
 impl CallbackMessage {
-    fn new(function: JsValueRef) -> Self {
+    fn new(time: u32, function: JsValueRef) -> Self {
         unsafe {
             ChakraRTInterface::JsAddRef(function.as_js_ref(), std::ptr::null_mut())
                 .as_result()
                 .unwrap();
         }
-        Self { function }
+        Self { time, function }
     }
 
-    fn boxed_new(function: JsValueRef) -> Box<Self> {
-        Box::new(Self::new(function))
+    fn boxed_new(time: u32, function: JsValueRef) -> Box<Self> {
+        Box::new(Self::new(time, function))
     }
 
     #[tracing::instrument(skip(self), err)]
@@ -107,6 +114,14 @@ impl CallbackMessage {
     fn call(&self, filename: &str) {
         let _ = self.internal_call(filename);
     }
+
+    fn get_time(&self) -> u32 {
+        self.time
+    }
+
+    fn begin_timer(&mut self) {
+        self.time += ffi::GetTickCount();
+    }
 }
 
 impl Drop for CallbackMessage {
@@ -131,6 +146,7 @@ struct ModuleMessage {
     module_record: JsModuleRecord,
     specifier: JsValueRef,
     full_path: Option<String>,
+    time: u32,
 }
 
 impl ModuleMessage {
@@ -150,6 +166,7 @@ impl ModuleMessage {
             module_record,
             specifier,
             full_path: path,
+            time: 0,
         }
     }
 
@@ -248,6 +265,14 @@ impl ModuleMessage {
             return;
         };
         WScript::print_exception(filename, err.into(), JsValueRef::default());
+    }
+
+    fn get_time(&self) -> u32 {
+        self.time
+    }
+
+    fn begin_timer(&mut self) {
+        self.time += ffi::GetTickCount();
     }
 }
 
