@@ -77,15 +77,6 @@ WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef spec
 {
 }
 
-WScriptJsrt::ModuleMessage::~ModuleMessage()
-{
-    ChakraRTInterface::JsRelease(module_message_->get_module_record(), nullptr);
-    if (module_message_->get_specifier() != nullptr)
-    {
-        ChakraRTInterface::JsRelease(module_message_->get_specifier(), nullptr);
-    }
-}
-
 int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 {
     JsErrorCode errorCode = JsNoError;

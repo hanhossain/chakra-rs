@@ -52,7 +52,7 @@ public:
 
     public:
         ModuleMessage(JsModuleRecord module, JsValueRef specifier, chakra_rs::OptionalStr fullpath);
-        ~ModuleMessage() override;
+        ~ModuleMessage() override = default;
 
         int32_t Call(rust::Str fileName) override;
 

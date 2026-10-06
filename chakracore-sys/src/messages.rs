@@ -179,3 +179,14 @@ impl ModuleMessage {
             .unwrap()
     }
 }
+
+impl Drop for ModuleMessage {
+    fn drop(&mut self) {
+        unsafe {
+            ChakraRTInterface::JsRelease(self.module_record.as_js_ref(), std::ptr::null_mut());
+            if !self.specifier.is_null() {
+                ChakraRTInterface::JsRelease(self.specifier.as_js_ref(), std::ptr::null_mut());
+            }
+        }
+    }
+}
