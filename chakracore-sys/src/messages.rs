@@ -4,7 +4,7 @@ use crate::jsrt::{
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
-use crate::wscript_jsrt::WScript;
+use crate::wscript_jsrt::{MODULE_ERROR_MAP, ModuleState, WScript};
 use std::path::PathBuf;
 
 #[cxx::bridge]
@@ -43,6 +43,7 @@ mod ffi {
         fn get_module_record(&self) -> JsModuleRecord;
         fn has_full_path(&self) -> bool;
         fn get_full_path(&self) -> String;
+        fn call(&self, filename: &str);
     }
 }
 
@@ -177,6 +178,37 @@ impl ModuleMessage {
             .map(|x| x.to_str().map(|x| x.to_owned()))
             .flatten()
             .unwrap()
+    }
+
+    #[tracing::instrument(skip(self), err)]
+    fn internal_call(&self) -> Result<(), JsError> {
+        if self.specifier.is_null() {
+            let state = {
+                let error_map = MODULE_ERROR_MAP.0.read().unwrap();
+                error_map.get(&self.module_record).map(|x| *x)
+            };
+            let Some(state) = state else {
+                return Ok(());
+            };
+            if state != ModuleState::ErroredModule {
+                let mut module_res = JsValueRef::default();
+                unsafe {
+                    ChakraRTInterface::JsModuleEvaluation(self.module_record, &raw mut module_res)
+                        .as_result()?;
+                }
+            }
+            return Ok(());
+        }
+
+        Ok(())
+    }
+
+    #[tracing::instrument(skip(self))]
+    fn call(&self, filename: &str) {
+        let Err(err) = self.internal_call() else {
+            return;
+        };
+        WScript::print_exception(filename, err.into(), JsValueRef::default());
     }
 }
 

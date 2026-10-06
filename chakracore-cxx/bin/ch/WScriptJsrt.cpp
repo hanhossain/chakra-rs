@@ -82,16 +82,7 @@ int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
     JsErrorCode errorCode = JsNoError;
     if (module_message_->get_specifier() == nullptr)
     {
-        if (auto [exists, state] = chakra_rs::get_module_error_map()->get(module_message_->get_module_record());
-            exists && state != ErroredModule)
-        {
-            JsValueRef result = JS_INVALID_REFERENCE;
-            errorCode = ChakraRTInterface::JsModuleEvaluation(module_message_->get_module_record(), &result);
-            if (errorCode != JsNoError)
-            {
-                chakra_rs::WScript::print_exception(fileName, errorCode, nullptr); // this should not be called
-            }
-        }
+        module_message_->call(fileName);
     }
     else
     {

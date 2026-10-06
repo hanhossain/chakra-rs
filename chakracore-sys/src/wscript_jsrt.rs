@@ -8,10 +8,10 @@ use crate::jsrt::{
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::ffi::{
-    CVoid, GetCurrentRuntimeThreadData, ModuleState, RuntimeThreadData,
-    WScriptJsrt_CallbackMessage, WScriptJsrt_ModuleMessage,
+    CVoid, GetCurrentRuntimeThreadData, RuntimeThreadData, WScriptJsrt_CallbackMessage,
+    WScriptJsrt_ModuleMessage,
 };
-pub use ffi::{MessageQueue, WScriptJsrt};
+pub use ffi::{MessageQueue, ModuleState, WScriptJsrt};
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::path::PathBuf;
@@ -24,9 +24,11 @@ const BUILD_TYPE_STRING: &str = "Debug";
 #[cfg(not(debug_assertions))]
 const BUILD_TYPE_STRING: &str = "Test";
 
-static MODULE_ERROR_MAP: LazyLock<ModuleErrorMap> = LazyLock::new(|| ModuleErrorMap::new());
-static MODULE_RECORD_MAP: LazyLock<ModuleRecordMap> = LazyLock::new(|| ModuleRecordMap::new());
-static MODULE_DIRECTORY_MAP: LazyLock<ModuleDirectoryMap> =
+pub(crate) static MODULE_ERROR_MAP: LazyLock<ModuleErrorMap> =
+    LazyLock::new(|| ModuleErrorMap::new());
+pub(crate) static MODULE_RECORD_MAP: LazyLock<ModuleRecordMap> =
+    LazyLock::new(|| ModuleRecordMap::new());
+pub(crate) static MODULE_DIRECTORY_MAP: LazyLock<ModuleDirectoryMap> =
     LazyLock::new(|| ModuleDirectoryMap::new());
 
 #[repr(transparent)]
@@ -1485,7 +1487,7 @@ type ModuleRecordMap = ConcurrentMap<String, ffi::ModuleRecordEntry>;
 type ModuleDirectoryMap = ConcurrentMap<JsModuleRecord, String>;
 
 #[derive(Clone)]
-struct ConcurrentMap<K, V>(Arc<RwLock<HashMap<K, V>>>);
+pub(crate) struct ConcurrentMap<K, V>(pub(crate) Arc<RwLock<HashMap<K, V>>>);
 
 impl<K, V> ConcurrentMap<K, V>
 where

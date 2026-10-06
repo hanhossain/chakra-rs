@@ -204,6 +204,11 @@ mod ffi {
             argument_count: u16,
             result: *mut JsValueRef,
         ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsModuleEvaluation(
+            request_module: JsModuleRecord,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
     }
 }
 
