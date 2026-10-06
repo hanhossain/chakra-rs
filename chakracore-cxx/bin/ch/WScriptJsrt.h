@@ -35,7 +35,6 @@ public:
         ~CallbackMessage() override = default;
 
         int32_t Call(rust::Str fileName) override;
-        int32_t CallFunction(rust::Str fileName);
         static std::unique_ptr<CallbackMessage> New(unsigned int time, JsValueRef function)
         {
             return std::make_unique<CallbackMessage>(time, function);

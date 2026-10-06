@@ -73,11 +73,6 @@ WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef func
 
 int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName)
 {
-    return CallFunction(fileName);
-}
-
-int32_t WScriptJsrt::CallbackMessage::CallFunction(rust::Str fileName)
-{
     int32_t hr = S_OK;
 
     JsValueRef global;
