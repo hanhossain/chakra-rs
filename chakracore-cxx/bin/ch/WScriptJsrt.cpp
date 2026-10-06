@@ -68,30 +68,8 @@ void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
     messageQueue_ = _messageQueue;
 }
 
-WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef function) : MessageBase(time), m_function(function)
-{
-    JsErrorCode error = ChakraRTInterface::JsAddRef(m_function, nullptr);
-    if (error != JsNoError)
-    {
-        // Simply report a fatal error and exit because continuing from this point would result in inconsistent state
-        // and FailFast telemetry would not be useful.
-        std::println("FATAL ERROR: ChakraRTInterface::JsAddRef failed in WScriptJsrt::CallbackMessage::`ctor`. error=0x{:x}", static_cast<int>(error));
-        exit(1);
-    }
-}
-
-WScriptJsrt::CallbackMessage::~CallbackMessage()
-{
-    bool hasException = false;
-    ChakraRTInterface::JsHasException(&hasException);
-    if (hasException)
-    {
-        chakra_rs::WScript::print_exception("", JsErrorScriptException, nullptr);
-    }
-    [[maybe_unused]] JsErrorCode errorCode = ChakraRTInterface::JsRelease(m_function, nullptr);
-    assert(errorCode == JsNoError);
-    m_function = JS_INVALID_REFERENCE;
-}
+WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef function)
+    : MessageBase(time), callback_message_(chakra_rs::CallbackMessage::boxed_new(function)) {}
 
 int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName)
 {
@@ -109,11 +87,11 @@ int32_t WScriptJsrt::CallbackMessage::CallFunction(rust::Str fileName)
     JsErrorCode errorCode = JsNoError;
 
     IfJsrtErrorHR(ChakraRTInterface::JsGetGlobalObject(&global));
-    IfJsrtErrorHR(ChakraRTInterface::JsGetValueType(m_function, &type));
+    IfJsrtErrorHR(ChakraRTInterface::JsGetValueType(callback_message_->get_function(), &type));
 
     if (type == JsString)
     {
-        IfJsrtErrorHR(ChakraRTInterface::JsConvertValueToString(m_function, &stringValue));
+        IfJsrtErrorHR(ChakraRTInterface::JsConvertValueToString(callback_message_->get_function(), &stringValue));
 
         JsValueRef fname;
         ChakraRTInterface::JsCreateString("", strlen(""), &fname);
@@ -124,7 +102,7 @@ int32_t WScriptJsrt::CallbackMessage::CallFunction(rust::Str fileName)
     }
     else
     {
-        errorCode = ChakraRTInterface::JsCallFunction(m_function, &global, 1, &result);
+        errorCode = ChakraRTInterface::JsCallFunction(callback_message_->get_function(), &global, 1, &result);
     }
 
     if (errorCode != JsNoError)

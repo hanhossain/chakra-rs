@@ -13,6 +13,7 @@
 #include "ChakraCore.h"
 #include "MessageQueue.h"
 #include <chakracore-sys/src/jsrt/ffi.rs.h>
+#include <chakracore-sys/src/messages.rs.h>
 
 enum ModuleState
 {
@@ -26,12 +27,12 @@ class WScriptJsrt
 public:
     class CallbackMessage : public MessageBase
     {
-        JsValueRef m_function;
+        rust::Box<chakra_rs::CallbackMessage> callback_message_;
 
     public:
         CallbackMessage(unsigned int time, JsValueRef function);
         CallbackMessage(CallbackMessage const&) = delete;
-        ~CallbackMessage() override;
+        ~CallbackMessage() override = default;
 
         int32_t Call(rust::Str fileName) override;
         int32_t CallFunction(rust::Str fileName);
