@@ -64,30 +64,10 @@ void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
 }
 
 WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef function)
-    : callback_message_(chakra_rs::CallbackMessage::boxed_new(time, function)) {}
-
-int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName) {
-    callback_message_->call(fileName);
-    return S_OK;
-}
-
-void WScriptJsrt::CallbackMessage::BeginTimer() { callback_message_->begin_timer(); }
-unsigned int WScriptJsrt::CallbackMessage::GetTime() const { return callback_message_->get_time(); }
-unsigned int WScriptJsrt::CallbackMessage::GetId() const { return callback_message_->get_id(); }
+    : CustomMessage(chakra_rs::Message::new_callback(chakra_rs::CallbackMessage::boxed_new(time, function))) {}
 
 WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, chakra_rs::OptionalStr fullpath)
-    : module_message_(chakra_rs::ModuleMessage::boxed_new(module, specifier, fullpath))
-{
-}
-
-int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
-{
-    module_message_->call(fileName);
-    return JsNoError;
-}
-void WScriptJsrt::ModuleMessage::BeginTimer() { module_message_->begin_timer(); }
-unsigned int WScriptJsrt::ModuleMessage::GetTime() const { return module_message_->get_time(); }
-unsigned int WScriptJsrt::ModuleMessage::GetId() const { return module_message_->get_id(); }
+    : CustomMessage(chakra_rs::Message::new_module(chakra_rs::ModuleMessage::boxed_new(module, specifier, fullpath))) {}
 
 WScriptJsrt::CustomMessage::CustomMessage(rust::Box<chakra_rs::Message> message) : message_(std::move(message)) {}
 void WScriptJsrt::CustomMessage::BeginTimer() { message_->begin_timer(); }

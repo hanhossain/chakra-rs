@@ -25,16 +25,22 @@ enum ModuleState
 class WScriptJsrt
 {
 public:
-    class CallbackMessage final : public MessageBase
-    {
-        rust::Box<chakra_rs::CallbackMessage> callback_message_;
+    class CustomMessage : public MessageBase {
+        rust::Box<chakra_rs::Message> message_;
+    public:
+        explicit CustomMessage(rust::Box<chakra_rs::Message> message);
+        void BeginTimer() override;
+        unsigned int GetTime() const override;
+        unsigned int GetId() const override;
+        int32_t Call(rust::Str fileName) override;
+    };
 
+    class CallbackMessage final : public CustomMessage
+    {
     public:
         CallbackMessage(unsigned int time, JsValueRef function);
         CallbackMessage(CallbackMessage const&) = delete;
-        ~CallbackMessage() override = default;
 
-        int32_t Call(rust::Str fileName) override;
         static std::unique_ptr<CallbackMessage> New(unsigned int time, JsValueRef function)
         {
             return std::make_unique<CallbackMessage>(time, function);
@@ -43,21 +49,13 @@ public:
         {
             return msg;
         }
-        void BeginTimer() override;
-        unsigned int GetTime() const override;
-        unsigned int GetId() const override;
     };
 
-    class ModuleMessage final : public MessageBase
+    class ModuleMessage final : public CustomMessage
     {
-    private:
-        rust::Box<chakra_rs::ModuleMessage> module_message_;
-
     public:
         ModuleMessage(JsModuleRecord module, JsValueRef specifier, chakra_rs::OptionalStr fullpath);
-        ~ModuleMessage() override = default;
-
-        int32_t Call(rust::Str fileName) override;
+        ModuleMessage(ModuleMessage const&) = delete;
 
         static std::unique_ptr<ModuleMessage> New(JsModuleRecord module, JsValueRef specifier)
         {
@@ -71,19 +69,6 @@ public:
         {
             return msg;
         }
-        void BeginTimer() override;
-        unsigned int GetTime() const override;
-        unsigned int GetId() const override;
-    };
-
-    class CustomMessage final : public MessageBase {
-        rust::Box<chakra_rs::Message> message_;
-    public:
-        explicit CustomMessage(rust::Box<chakra_rs::Message> message);
-        void BeginTimer() override;
-        unsigned int GetTime() const override;
-        unsigned int GetId() const override;
-        int32_t Call(rust::Str fileName) override;
     };
 
     static void AddMessageQueue(MessageQueue *messageQueue);
