@@ -79,41 +79,6 @@ WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef spec
 
 int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
 {
-    JsErrorCode errorCode = JsNoError;
-    if (module_message_->get_specifier() == nullptr)
-    {
-        module_message_->call(fileName);
-    }
-    else
-    {
-        rust::String specifierStr;
-        errorCode = ChakraRTInterface::JsToString(module_message_->get_specifier(), specifierStr);
-        if (errorCode != JsNoError)
-        {
-            return errorCode;
-        }
-
-        try
-        {
-            rust::String fileContent = module_message_->has_full_path()
-                ? chakra_rs::helpers::ScriptCache::get_script_with_full_path(specifierStr, module_message_->get_full_path())
-                : chakra_rs::helpers::ScriptCache::get_script(specifierStr);
-            chakra_rs::WScript::load_module_from_string(chakra_rs::OptionalStr{.has_value = true, .value = fileContent}, module_message_->has_full_path() ? module_message_->get_full_path() : specifierStr, true);
-        }
-        catch (const rust::Error &e)
-        {
-            chakra::Logger::error(std::format("Caught exception: {}", e.what()));
-            if (!HostConfigFlags::GetConfig().host.mute_host_error_msg)
-            {
-                auto actualModuleRecord = chakra_rs::get_module_record_map()->get(module_message_->get_full_path());
-                auto error_map_content = chakra_rs::get_module_error_map()->get(actualModuleRecord.content.record);
-                if (!actualModuleRecord.exists || (error_map_content.exists && error_map_content.content == RootModule))
-                {
-                    chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
-                }
-            }
-            chakra_rs::WScript::load_module_from_string(chakra_rs::OptionalStr{}, module_message_->has_full_path() ? module_message_->get_full_path() : specifierStr, false);
-        }
-    }
-    return errorCode;
+    module_message_->call(fileName);
+    return JsNoError;
 }

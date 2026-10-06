@@ -41,7 +41,7 @@ impl ScriptCache {
     }
 
     #[tracing::instrument(err)]
-    fn get_script_with_full_path(filename: &str, full_path: &str) -> std::io::Result<String> {
+    pub fn get_script_with_full_path(filename: &str, full_path: &str) -> std::io::Result<String> {
         // TODO: This is a port of the original code. Instead, we should see if this works if we search
         //  full_path first then filename.
         let store = STORE.read().unwrap();

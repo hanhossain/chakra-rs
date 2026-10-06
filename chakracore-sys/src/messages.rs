@@ -1,11 +1,12 @@
+use crate::helpers::ScriptCache;
+use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, JsError, JsErrorCode, JsModuleRecord, JsParseScriptAttributes, JsSourceContext,
     JsValueRef, JsValueType,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
-use crate::wscript_jsrt::{MODULE_ERROR_MAP, ModuleState, WScript};
-use std::path::PathBuf;
+use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
 
 #[cxx::bridge]
 mod ffi {
@@ -129,17 +130,17 @@ impl Drop for CallbackMessage {
 struct ModuleMessage {
     module_record: JsModuleRecord,
     specifier: JsValueRef,
-    full_path: Option<PathBuf>,
+    full_path: Option<String>,
 }
 
 impl ModuleMessage {
     fn new(module_record: JsModuleRecord, specifier: JsValueRef, full_path: Option<&str>) -> Self {
-        let mut path: Option<PathBuf> = None;
+        let mut path: Option<String> = None;
         unsafe {
             ChakraRTInterface::JsAddRef(module_record.as_js_ref(), std::ptr::null_mut());
         }
         if !specifier.is_null() {
-            path = full_path.map(|x| PathBuf::from(x));
+            path = full_path.map(|x| x.to_owned());
             // nullptr specifier means a Promise to execute; non-nullptr means a "fetch" operation.
             unsafe {
                 ChakraRTInterface::JsAddRef(specifier.as_js_ref(), std::ptr::null_mut());
@@ -173,11 +174,7 @@ impl ModuleMessage {
     }
 
     fn get_full_path(&self) -> String {
-        self.full_path
-            .as_ref()
-            .map(|x| x.to_str().map(|x| x.to_owned()))
-            .flatten()
-            .unwrap()
+        self.full_path.clone().unwrap()
     }
 
     #[tracing::instrument(skip(self), err)]
@@ -199,6 +196,48 @@ impl ModuleMessage {
             }
             return Ok(());
         }
+
+        let specifier = self.specifier.to_string()?;
+
+        let file_content = match &self.full_path {
+            Some(path) => ScriptCache::get_script_with_full_path(&specifier, path),
+            None => ScriptCache::get_script(&specifier),
+        };
+
+        let Err(err) = file_content.map(|content| {
+            let content = Some(content.as_str()).into();
+            let path = self.full_path.as_ref().unwrap_or(&specifier);
+            WScript::load_module_from_string(content, path, true).as_result()
+        }) else {
+            return Ok(());
+        };
+
+        if !HostConfigFlags::GetConfig().host.mute_host_error_msg {
+            let actual_record = MODULE_RECORD_MAP
+                .0
+                .read()
+                .unwrap()
+                .get(self.full_path.as_ref().unwrap())
+                .cloned();
+            let state = actual_record
+                .map(|entry| {
+                    MODULE_ERROR_MAP
+                        .0
+                        .read()
+                        .unwrap()
+                        .get(&entry.record)
+                        .cloned()
+                })
+                .flatten();
+            match state {
+                Some(ModuleState::RootModule) | None => {
+                    tracing::error!(?err, specifier, "Couldn't load file");
+                }
+                _ => {}
+            };
+        }
+        let path = self.full_path.as_ref().unwrap_or(&specifier);
+        WScript::load_module_from_string(None.into(), path, false);
 
         Ok(())
     }

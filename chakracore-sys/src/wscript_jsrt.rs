@@ -197,27 +197,7 @@ mod ffi {
         ) -> JsValueRef;
 
         #[Self = "WScript"]
-        fn load_module_from_string(
-            file_content: OptionalStr,
-            full_name: &String,
-            is_file: bool,
-        ) -> JsErrorCode;
-
-        #[Self = "WScript"]
         fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef);
-
-        type ModuleErrorMap;
-        fn get_module_error_map() -> Box<ModuleErrorMap>;
-        fn insert(self: &ModuleErrorMap, key: JsModuleRecord, value: ModuleState);
-        fn get(self: &ModuleErrorMap, key: &JsModuleRecord) -> ModuleErrorMapContent;
-
-        type ModuleRecordMap;
-        fn get_module_record_map() -> Box<ModuleRecordMap>;
-        fn insert(self: &ModuleRecordMap, key: String, value: ModuleRecordEntry);
-        fn get(self: &ModuleRecordMap, key: &str) -> ModuleRecordMapContent;
-
-        type ModuleDirectoryMap;
-        fn insert(self: &ModuleDirectoryMap, key: JsModuleRecord, value: String);
     }
 
     #[repr(i32)]
@@ -226,25 +206,11 @@ mod ffi {
         ImportedModule,
         ErroredModule,
     }
+}
 
-    #[namespace = "chakra_rs"]
-    struct ModuleErrorMapContent {
-        exists: bool,
-        content: ModuleState,
-    }
-
-    #[namespace = "chakra_rs"]
-    #[derive(Clone, Default)]
-    struct ModuleRecordEntry {
-        record: JsModuleRecord,
-    }
-
-    #[namespace = "chakra_rs"]
-    #[derive(Clone, Default)]
-    struct ModuleRecordMapContent {
-        exists: bool,
-        content: ModuleRecordEntry,
-    }
+#[derive(Clone, Default)]
+pub(crate) struct ModuleRecordEntry {
+    pub(crate) record: JsModuleRecord,
 }
 
 pub struct WScript;
@@ -993,7 +959,7 @@ impl WScript {
     }
 
     // TODO: can now use Option<&str> since this is no longer exposed to C++.
-    fn load_module_from_string(
+    pub(crate) fn load_module_from_string(
         file_content: OptionalStr,
         full_name: &String,
         is_file: bool,
@@ -1046,7 +1012,7 @@ impl WScript {
                     let mut lease = MODULE_RECORD_MAP.0.write().unwrap();
                     lease.insert(
                         module_record_key.to_owned(),
-                        ffi::ModuleRecordEntry {
+                        ModuleRecordEntry {
                             record: request_module.clone(),
                         },
                     );
@@ -1483,7 +1449,7 @@ impl IntoResponse for anyhow::Error {
 
 // TODO: error can be a field in ModuleRecordEntry instead of its own hashmap
 type ModuleErrorMap = ConcurrentMap<JsModuleRecord, ModuleState>;
-type ModuleRecordMap = ConcurrentMap<String, ffi::ModuleRecordEntry>;
+type ModuleRecordMap = ConcurrentMap<String, ModuleRecordEntry>;
 type ModuleDirectoryMap = ConcurrentMap<JsModuleRecord, String>;
 
 #[derive(Clone)]
@@ -1496,48 +1462,6 @@ where
     fn new() -> Self {
         ConcurrentMap(Arc::new(RwLock::new(HashMap::new())))
     }
-
-    fn insert(&self, key: K, value: V) {
-        let mut guard = self.0.write().unwrap();
-        guard.insert(key, value);
-    }
-}
-
-impl ModuleErrorMap {
-    fn get(&self, key: &JsModuleRecord) -> ffi::ModuleErrorMapContent {
-        let guard = self.0.read().unwrap();
-        match guard.get(key) {
-            Some(x) => ffi::ModuleErrorMapContent {
-                exists: true,
-                content: *x,
-            },
-            None => ffi::ModuleErrorMapContent {
-                exists: false,
-                content: ModuleState::RootModule,
-            },
-        }
-    }
-}
-
-impl ModuleRecordMap {
-    fn get(&self, key: &str) -> ffi::ModuleRecordMapContent {
-        let guard = self.0.read().unwrap();
-        guard
-            .get(key)
-            .map(|x| ffi::ModuleRecordMapContent {
-                exists: true,
-                content: x.clone(),
-            })
-            .unwrap_or_default()
-    }
-}
-
-fn get_module_error_map() -> Box<ModuleErrorMap> {
-    Box::new(MODULE_ERROR_MAP.clone())
-}
-
-fn get_module_record_map() -> Box<ModuleRecordMap> {
-    Box::new(MODULE_RECORD_MAP.clone())
 }
 
 #[tracing::instrument(skip_all, fields(ref_dir), err)]
@@ -1593,7 +1517,7 @@ unsafe fn fetch_imported_module_helper(
 
     MODULE_RECORD_MAP.0.write().unwrap().insert(
         abs_path.to_str().unwrap_or_default().to_owned(),
-        ffi::ModuleRecordEntry {
+        ModuleRecordEntry {
             record: module_record.clone(),
         },
     );
