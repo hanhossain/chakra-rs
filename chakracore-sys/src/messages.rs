@@ -46,10 +46,6 @@ mod ffi {
         type CallbackMessage;
         #[Self = "CallbackMessage"]
         fn boxed_new(time: u32, function: JsValueRef) -> Box<CallbackMessage>;
-        fn call(&self, filename: &str);
-        fn get_time(&self) -> u32;
-        fn begin_timer(&mut self);
-        fn get_id(&self) -> u32;
     }
 
     #[namespace = "chakra_rs"]
@@ -61,14 +57,6 @@ mod ffi {
             specifier: JsValueRef,
             full_path: OptionalStr,
         ) -> Box<ModuleMessage>;
-        fn get_specifier(&self) -> JsValueRef;
-        fn get_module_record(&self) -> JsModuleRecord;
-        fn has_full_path(&self) -> bool;
-        fn get_full_path(&self) -> String;
-        fn call(&self, filename: &str);
-        fn get_time(&self) -> u32;
-        fn begin_timer(&mut self);
-        fn get_id(&self) -> u32;
     }
 }
 
@@ -241,22 +229,6 @@ impl ModuleMessage {
         full_path: OptionalStr,
     ) -> Box<Self> {
         Box::new(Self::new(module_record, specifier, full_path.into()))
-    }
-
-    fn get_specifier(&self) -> JsValueRef {
-        self.specifier
-    }
-
-    fn get_module_record(&self) -> JsModuleRecord {
-        self.module_record
-    }
-
-    fn has_full_path(&self) -> bool {
-        self.full_path.is_some()
-    }
-
-    fn get_full_path(&self) -> String {
-        self.full_path.clone().unwrap()
     }
 
     #[tracing::instrument(skip(self), err)]
