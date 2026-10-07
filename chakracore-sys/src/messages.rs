@@ -5,7 +5,6 @@ use crate::jsrt::{
     JsValueRef, JsValueType,
 };
 use crate::rt_interface::ChakraRTInterface;
-use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
 use std::sync::atomic::{AtomicU32, Ordering};
 
@@ -32,38 +31,18 @@ mod ffi {
     extern "Rust" {
         #[derive(ExternType)]
         type Message;
-        #[Self = "Message"]
-        fn new_callback(msg: Box<CallbackMessage>) -> Box<Message>;
-        #[Self = "Message"]
-        fn new_module(msg: Box<ModuleMessage>) -> Box<Message>;
         fn call(&self, filename: &str);
         fn get_time(&self) -> u32;
         fn begin_timer(&mut self);
         fn get_id(&self) -> u32;
     }
 
-    #[namespace = "chakra_rs"]
-    extern "Rust" {
-        type CallbackMessage;
-        #[Self = "CallbackMessage"]
-        fn boxed_new(time: u32, function: JsValueRef) -> Box<CallbackMessage>;
-    }
-
-    #[namespace = "chakra_rs"]
-    extern "Rust" {
-        type ModuleMessage;
-        #[Self = "ModuleMessage"]
-        fn boxed_new(
-            module_record: JsModuleRecord,
-            specifier: JsValueRef,
-            full_path: OptionalStr,
-        ) -> Box<ModuleMessage>;
-    }
+    impl Box<Message> {}
 }
 
 enum MessageInner {
-    Callback(Box<CallbackMessage>),
-    Module(Box<ModuleMessage>),
+    Callback(CallbackMessage),
+    Module(ModuleMessage),
 }
 
 pub(crate) struct Message {
@@ -71,12 +50,12 @@ pub(crate) struct Message {
 }
 
 impl Message {
-    pub(crate) fn new_callback(msg: Box<CallbackMessage>) -> Box<Self> {
+    pub(crate) fn new_callback(msg: CallbackMessage) -> Box<Self> {
         Box::new(Self {
             msg: MessageInner::Callback(msg),
         })
     }
-    pub(crate) fn new_module(msg: Box<ModuleMessage>) -> Box<Self> {
+    pub(crate) fn new_module(msg: ModuleMessage) -> Box<Self> {
         Box::new(Self {
             msg: MessageInner::Module(msg),
         })
@@ -114,7 +93,7 @@ pub(crate) struct CallbackMessage {
 }
 
 impl CallbackMessage {
-    fn new(time: u32, function: JsValueRef) -> Self {
+    pub(crate) fn new(time: u32, function: JsValueRef) -> Self {
         let id = MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed);
         unsafe {
             ChakraRTInterface::JsAddRef(function.as_js_ref(), std::ptr::null_mut())
@@ -122,10 +101,6 @@ impl CallbackMessage {
                 .unwrap();
         }
         Self { time, function, id }
-    }
-
-    pub(crate) fn boxed_new(time: u32, function: JsValueRef) -> Box<Self> {
-        Box::new(Self::new(time, function))
     }
 
     #[tracing::instrument(skip(self), err)]
@@ -234,14 +209,6 @@ impl ModuleMessage {
             time: 0,
             id,
         }
-    }
-
-    pub(crate) fn boxed_new(
-        module_record: JsModuleRecord,
-        specifier: JsValueRef,
-        full_path: OptionalStr,
-    ) -> Box<Self> {
-        Box::new(Self::new(module_record, specifier, full_path.into()))
     }
 
     #[tracing::instrument(skip(self), err)]

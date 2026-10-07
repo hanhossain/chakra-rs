@@ -594,7 +594,7 @@ impl WScript {
         unsafe {
             let message_queue =
                 std::mem::transmute::<*mut CVoid, *mut MessageQueue>(callback_state);
-            let msg = Message::new_callback(CallbackMessage::boxed_new(0, task));
+            let msg = Message::new_callback(CallbackMessage::new(0, task));
             let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(msg));
 
             Pin::new_unchecked(&mut *message_queue).InsertSorted(msg.into_raw());
@@ -664,10 +664,10 @@ impl WScript {
         if let Some(module_error) = guard.get(&referencing_module)
             && *module_error != ModuleState::ErroredModule
         {
-            let module_message = Message::new_module(ModuleMessage::boxed_new(
+            let module_message = Message::new_module(ModuleMessage::new(
                 referencing_module,
                 JsValueRef::default(),
-                OptionalStr::default(),
+                None,
             ));
             let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(module_message));
             unsafe {
@@ -867,7 +867,7 @@ impl WScript {
 
         let function = args.arguments[1].clone();
         let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
-        let msg = Message::new_callback(CallbackMessage::boxed_new(time, function));
+        let msg = Message::new_callback(CallbackMessage::new(time, function));
         let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(msg));
         let msg_id = msg.GetId();
         unsafe {
@@ -1513,11 +1513,11 @@ unsafe fn fetch_imported_module_helper(
         .write()
         .unwrap()
         .insert(module_record.clone(), ModuleState::ImportedModule);
-    let module_message = Message::new_module(Box::new(ModuleMessage::new(
+    let module_message = Message::new_module(ModuleMessage::new(
         referencing_module,
         specifier,
         abs_path.to_str(),
-    )));
+    ));
     let module_message = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(module_message));
     unsafe {
         WScriptJsrt::PushMessage(module_message.into_raw());
