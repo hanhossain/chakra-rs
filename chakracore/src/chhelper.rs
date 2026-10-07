@@ -7,7 +7,7 @@ use chakracore_sys::jsrt::{
     JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
 use chakracore_sys::rt_interface::ChakraRTInterface;
-use chakracore_sys::wscript_jsrt::{MessageQueue, WScript, WScriptJsrt};
+use chakracore_sys::wscript_jsrt::{MessageQueue, WScript};
 use std::ffi::{CStr, CString, c_char};
 use std::str::FromStr;
 
@@ -188,7 +188,7 @@ fn run_script(
 ) -> Result<(), Error> {
     let mut message_queue = MessageQueue::New();
     let fname = unsafe {
-        WScriptJsrt::AddMessageQueue(message_queue.as_mut_ptr());
+        WScript::add_message_queue(&message_queue);
         ChakraRTInterface::JsSetPromiseContinuationCallback(
             |task, callback_state| {
                 WScript::promise_continuation_callback(task, callback_state);
@@ -223,7 +223,7 @@ fn run_script(
                 .as_result()?;
             ChakraRTInterface::JsRunScriptWithParserState(
                 script_source,
-                JsSourceContext(WScriptJsrt::GetNextSourceContext()),
+                JsSourceContext(WScript::get_next_source_context()),
                 fname,
                 JsParseScriptAttributes::JsParseScriptAttributeNone,
                 parser_state_cache,
@@ -239,7 +239,7 @@ fn run_script(
                 .as_result()?;
             ChakraRTInterface::JsRun(
                 script_source,
-                JsSourceContext(WScriptJsrt::GetNextSourceContext()),
+                JsSourceContext(WScript::get_next_source_context()),
                 fname,
                 JsParseScriptAttributes::JsParseScriptAttributeNone,
                 std::ptr::null_mut(),

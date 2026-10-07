@@ -8,27 +8,8 @@
 #include <memory>
 
 #include "ChakraCommon.h"
-
-class MessageBase
-{
-private:
-    unsigned int m_time;
-    unsigned int m_id;
-
-    static unsigned int s_messageCount;
-
-    MessageBase(const MessageBase&);
-
-public:
-    MessageBase(unsigned int time) : m_time(time), m_id(s_messageCount++) { }
-    virtual ~MessageBase() { }
-
-    void BeginTimer() { m_time += GetTickCount(); };
-    unsigned int GetTime() { return m_time; };
-    unsigned int GetId() const { return m_id; };
-
-    virtual int32_t Call(rust::Str fileName) = 0;
-};
+#include "chakra/Logger.h"
+#include "chakracore-sys/src/messages.rs.h"
 
 template <typename T>
 class SortedList 
@@ -41,8 +22,8 @@ class SortedList
         DListNode<U>* next;
 
     public:
-        DListNode(const U& data) :
-            data(data),
+        DListNode(U data) :
+            data(std::move(data)),
             prev(nullptr),
             next(nullptr)
         { }
@@ -65,10 +46,10 @@ public:
     // Scan through the sorted list
     // Insert before the first node that satisfies the LessThan function
     // This function maintains the invariant that the list is always sorted
-    void Insert(const T& data)
+    void Insert(T data)
     {
         DListNode<T>* curr = head;
-        DListNode<T>* node = new DListNode<T>(data);
+        DListNode<T>* node = new DListNode<T>(std::move(data));
         DListNode<T>* prev = nullptr; 
 
         // Now, if we have to insert, we have to insert *after* some node
@@ -87,7 +68,7 @@ public:
 
     T Pop()
     {
-        T data = head->data;
+        T data = std::move(head->data);
         Remove(head);
         return data;
     }
@@ -181,11 +162,11 @@ class MessageQueue
     struct ListEntry
     {
         unsigned int time;
-        MessageBase* message;
+        rust::Box<chakra_rs::Message> message;
 
-        ListEntry(unsigned int time, MessageBase* message):
+        ListEntry(unsigned int time, rust::Box<chakra_rs::Message> message):
             time(time),
-            message(message)
+            message(std::move(message))
         { }
 
         static bool LessThan(const ListEntry& first, const ListEntry& second)
@@ -197,21 +178,23 @@ class MessageQueue
     SortedList<ListEntry> m_queue;
 
 public:
-    void InsertSorted(MessageBase *message)
+    void InsertSorted(rust::Box<chakra_rs::Message> message)
     {
-        message->BeginTimer();
-        unsigned int time = message->GetTime();
-        m_queue.Insert(ListEntry(time, message));
+        auto span = chakra::Span::create("MessageQueue::InsertSorted");
+        message->begin_timer();
+        unsigned int time = message->get_time();
+        m_queue.Insert(ListEntry(time, std::move(message)));
     }
 
-    MessageBase* PopAndWait()
+    rust::Box<chakra_rs::Message> PopAndWait()
     {
+        auto span = chakra::Span::create("MessageQueue::PopAndWait");
         assert(!m_queue.IsEmpty());
 
         ListEntry entry = m_queue.Pop();
-        MessageBase *tmp = entry.message;
+        rust::Box<chakra_rs::Message> tmp = std::move(entry.message);
 
-        int waitTime = tmp->GetTime() - GetTickCount();
+        int waitTime = tmp->get_time() - GetTickCount();
         if(waitTime > 0)
         {
             Sleep(waitTime);
@@ -222,19 +205,20 @@ public:
 
     bool IsEmpty()
     {
+        auto span = chakra::Span::create("MessageQueue::IsEmpty");
         return m_queue.IsEmpty();
     }
 
     void RemoveById(unsigned int id)
     {
+        auto span = chakra::Span::create(std::format("MessageQueue::RemoveById[id={}]", id));
         // Search for the message with the correct id, and delete it. Can be updated
         // to a hash to improve speed, if necessary.
         m_queue.Remove([id](const ListEntry& entry) 
         {
-            MessageBase *msg = entry.message;
-            if(msg->GetId() == id)
+            const auto &msg = entry.message;
+            if(msg->get_id() == id)
             {
-                delete msg;
                 return true;
             }
 
@@ -244,21 +228,19 @@ public:
 
     void RemoveAll()
     {
-        m_queue.RemoveAll([](const ListEntry& entry) { 
-            MessageBase* msg = entry.message;
-            delete msg;
-        });
+        auto span = chakra::Span::create("MessageQueue::RemoveAll");
+        m_queue.RemoveAll([](const ListEntry& _) {});
     }
 
     int32_t ProcessAll(rust::Str fileName)
     {
+        auto span = chakra::Span::create(std::format("MessageQueue::ProcessAll[filename={}]", fileName));
         while(!IsEmpty())
         {
-            MessageBase *msg = PopAndWait();
+            rust::Box<chakra_rs::Message> msg = PopAndWait();
 
             // Omit checking return value for async function, since it shouldn't affect others.
-            msg->Call(fileName);
-            delete msg;
+            msg->call(fileName);
         }
         return S_OK;
     }
@@ -266,25 +248,5 @@ public:
     static std::unique_ptr<MessageQueue> New()
     {
         return std::make_unique<MessageQueue>();
-    }
-};
-
-//
-// A custom message helper class to assist defining messages handled by callback functions.
-//
-template <class Func, class CustomBase>
-class CustomMessage : public CustomBase
-{
-private:
-    Func m_func;
-
-public:
-    CustomMessage(unsigned int time, JsValueRef customArg, const Func& func) :
-        CustomBase(time, customArg), m_func(func)
-    {}
-
-    int32_t Call(rust::Str fileName) override
-    {
-        return m_func(*this);
     }
 };

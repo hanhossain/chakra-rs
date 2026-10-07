@@ -8,38 +8,14 @@
 #include <utility>
 #include <print>
 
-#include <filesystem>
-#include <chakracore-sys/src/filesystem.rs.h>
+#include "chakracore-sys/src/filesystem.rs.h"
 
 #include "ChakraRtInterface.h"
 #include "Codex/Utf8Codex.h"
-#include "HostConfigFlags.h"
 #include "RuntimeThreadData.h"
-#include "chakra/Logger.h"
-
-#include <chakracore-sys/src/helpers.rs.h>
-#include <chakracore-sys/src/wscript_jsrt.rs.h>
-
-namespace fs = std::filesystem;
-
-#define IfJsrtErrorFail(expr, ret) do { if ((expr) != JsNoError) return ret; } while (0)
-#define IfJsrtErrorHR(expr) do { if((expr) != JsNoError) { hr = E_FAIL; goto Error; } } while(0)
-#define IfJsrtErrorSetGo(expr) do { errorCode = (expr); if(errorCode != JsNoError) { hr = E_FAIL; goto Error; } } while(0)
+#include "chakracore-sys/src/wscript_jsrt.rs.h"
 
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
-
-unsigned int MessageBase::s_messageCount = 0;
-MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
-std::size_t WScriptJsrt::sourceContext_ = 0;
-
-std::size_t WScriptJsrt::GetNextSourceContext()
-{
-    return sourceContext_++;
-}
-
-std::size_t WScriptJsrt::GetSourceContext() {
-    return sourceContext_;
-}
 
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile)
 {
@@ -59,152 +35,4 @@ JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &
         returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContentPtr}, scriptInjectType, isSourceModule, isFile);
     }
     return returnValue;
-}
-
-void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
-{
-    assert(messageQueue_ == nullptr);
-
-    messageQueue_ = _messageQueue;
-}
-
-WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef function) : MessageBase(time), m_function(function)
-{
-    JsErrorCode error = ChakraRTInterface::JsAddRef(m_function, nullptr);
-    if (error != JsNoError)
-    {
-        // Simply report a fatal error and exit because continuing from this point would result in inconsistent state
-        // and FailFast telemetry would not be useful.
-        std::println("FATAL ERROR: ChakraRTInterface::JsAddRef failed in WScriptJsrt::CallbackMessage::`ctor`. error=0x{:x}", static_cast<int>(error));
-        exit(1);
-    }
-}
-
-WScriptJsrt::CallbackMessage::~CallbackMessage()
-{
-    bool hasException = false;
-    ChakraRTInterface::JsHasException(&hasException);
-    if (hasException)
-    {
-        chakra_rs::WScript::print_exception("", JsErrorScriptException, nullptr);
-    }
-    [[maybe_unused]] JsErrorCode errorCode = ChakraRTInterface::JsRelease(m_function, nullptr);
-    assert(errorCode == JsNoError);
-    m_function = JS_INVALID_REFERENCE;
-}
-
-int32_t WScriptJsrt::CallbackMessage::Call(rust::Str fileName)
-{
-    return CallFunction(fileName);
-}
-
-int32_t WScriptJsrt::CallbackMessage::CallFunction(rust::Str fileName)
-{
-    int32_t hr = S_OK;
-
-    JsValueRef global;
-    JsValueRef result;
-    JsValueRef stringValue;
-    JsValueType type;
-    JsErrorCode errorCode = JsNoError;
-
-    IfJsrtErrorHR(ChakraRTInterface::JsGetGlobalObject(&global));
-    IfJsrtErrorHR(ChakraRTInterface::JsGetValueType(m_function, &type));
-
-    if (type == JsString)
-    {
-        IfJsrtErrorHR(ChakraRTInterface::JsConvertValueToString(m_function, &stringValue));
-
-        JsValueRef fname;
-        ChakraRTInterface::JsCreateString("", strlen(""), &fname);
-        // Run the code
-        errorCode = ChakraRTInterface::JsRun(stringValue, JS_SOURCE_CONTEXT_NONE,
-          fname, JsParseScriptAttributeArrayBufferIsUtf16Encoded,
-          nullptr /*no result needed*/);
-    }
-    else
-    {
-        errorCode = ChakraRTInterface::JsCallFunction(m_function, &global, 1, &result);
-    }
-
-    if (errorCode != JsNoError)
-    {
-        hr = E_FAIL;
-        chakra_rs::WScript::print_exception(fileName, errorCode, nullptr);
-    }
-
-Error:
-    return hr;
-}
-
-WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, const std::optional<fs::path> &fullpath)
-    : MessageBase(0), moduleRecord(module), specifier(specifier)
-{
-    fullPath_ = std::nullopt;
-    ChakraRTInterface::JsAddRef(module, nullptr);
-    if (specifier != nullptr)
-    {
-        fullPath_ = fullpath;
-        // nullptr specifier means a Promise to execute; non-nullptr means a "fetch" operation.
-        ChakraRTInterface::JsAddRef(specifier, nullptr);
-    }
-}
-
-WScriptJsrt::ModuleMessage::~ModuleMessage()
-{
-    ChakraRTInterface::JsRelease(moduleRecord, nullptr);
-    if (specifier != nullptr)
-    {
-        ChakraRTInterface::JsRelease(specifier, nullptr);
-    }
-}
-
-int32_t WScriptJsrt::ModuleMessage::Call(rust::Str fileName)
-{
-    JsErrorCode errorCode = JsNoError;
-    if (specifier == nullptr)
-    {
-        if (auto [exists, state] = chakra_rs::get_module_error_map()->get(moduleRecord);
-            exists && state != ErroredModule)
-        {
-            JsValueRef result = JS_INVALID_REFERENCE;
-            errorCode = ChakraRTInterface::JsModuleEvaluation(moduleRecord, &result);
-            if (errorCode != JsNoError)
-            {
-                chakra_rs::WScript::print_exception(fileName, errorCode, nullptr); // this should not be called
-            }
-        }
-    }
-    else
-    {
-        rust::String specifierStr;
-        errorCode = ChakraRTInterface::JsToString(specifier, specifierStr);
-        if (errorCode != JsNoError)
-        {
-            return errorCode;
-        }
-
-        try
-        {
-            rust::String fileContent = fullPath_
-                ? chakra_rs::helpers::ScriptCache::get_script_with_full_path(specifierStr, fullPath_->native())
-                : chakra_rs::helpers::ScriptCache::get_script(specifierStr);
-            chakra_rs::WScript::load_module_from_string(chakra_rs::OptionalStr{.has_value = true, .value = fileContent}, fullPath_ ? fullPath_.value().string() : specifierStr, true);
-        }
-        catch (const rust::Error &e)
-        {
-            chakra::Logger::error(std::format("Caught exception: {}", e.what()));
-            if (!HostConfigFlags::GetConfig().host.mute_host_error_msg)
-            {
-                auto actualModuleRecord = chakra_rs::get_module_record_map()->get(fullPath_.value().native());
-                auto error_map_content = chakra_rs::get_module_error_map()->get(actualModuleRecord.content.record);
-                if (!actualModuleRecord.exists || (error_map_content.exists && error_map_content.content == RootModule))
-                {
-                    chakra::Logger::error(std::format("Couldn't load file '{}'", specifierStr));
-                }
-            }
-            chakra_rs::WScript::load_module_from_string(chakra_rs::OptionalStr{}, fullPath_ ? fullPath_.value().string() : specifierStr, false);
-        }
-    }
-    return errorCode;
 }

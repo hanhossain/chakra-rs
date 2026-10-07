@@ -118,7 +118,7 @@ uint32_t RuntimeThreadData::ThreadProc()
 
     ChakraRTInterface::JsCreateString(fullPath, strlen(fullPath), &fname);
 
-    ChakraRTInterface::JsRun(scriptSource, WScriptJsrt::GetNextSourceContext(), fname, JsParseScriptAttributeNone, nullptr);
+    ChakraRTInterface::JsRun(scriptSource, chakra_rs::WScript::get_next_source_context(), fname, JsParseScriptAttributeNone, nullptr);
 
     this->parent->set_initial_script_completed();
 

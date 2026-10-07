@@ -44,7 +44,6 @@ impl JsValueRef {
         self.0.is_null()
     }
 
-    #[tracing::instrument(level = "trace", skip_all, err)]
     pub fn to_string(&self) -> Result<String, JsError> {
         let mut s = String::new();
         bridge::JsToString(self.as_ref(), &mut s).as_result()?;
@@ -105,8 +104,14 @@ unsafe impl cxx::ExternType for JsSourceContext {
 }
 
 #[repr(transparent)]
-#[derive(Default, Clone, Eq, PartialEq, Hash)]
+#[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct JsModuleRecord(*mut c_void);
+
+impl JsModuleRecord {
+    pub fn as_js_ref(&self) -> JsRef {
+        JsRef(self.0)
+    }
+}
 
 unsafe impl cxx::ExternType for JsModuleRecord {
     type Id = cxx::type_id!("JsModuleRecord");
