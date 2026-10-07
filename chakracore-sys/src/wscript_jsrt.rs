@@ -9,7 +9,7 @@ use crate::messages::{CallbackMessage, Message, ModuleMessage};
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::ffi::{CVoid, GetCurrentRuntimeThreadData, RuntimeThreadData};
-pub use ffi::{MessageQueue, ModuleState, WScriptJsrt};
+pub use ffi::{MessageQueue, WScriptJsrt};
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::path::PathBuf;
@@ -99,7 +99,6 @@ mod ffi {
 
         #[namespace = "chakra_rs"]
         type Message = crate::messages::Message;
-        type ModuleState;
 
         #[Self = "WScriptJsrt"]
         unsafe fn PushMessage(message: Box<Message>);
@@ -173,13 +172,13 @@ mod ffi {
         #[Self = "WScript"]
         fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef);
     }
+}
 
-    #[repr(i32)]
-    enum ModuleState {
-        RootModule,
-        ImportedModule,
-        ErroredModule,
-    }
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
+pub(crate) enum ModuleState {
+    RootModule,
+    ImportedModule,
+    ErroredModule,
 }
 
 #[derive(Clone, Default)]

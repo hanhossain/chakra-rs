@@ -15,13 +15,6 @@
 #include <chakracore-sys/src/jsrt/ffi.rs.h>
 #include "chakracore-sys/src/messages.rs.h"
 
-enum ModuleState
-{
-    RootModule,
-    ImportedModule,
-    ErroredModule
-};
-
 class WScriptJsrt
 {
 public:
