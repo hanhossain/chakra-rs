@@ -8,23 +8,14 @@
 #include <utility>
 #include <print>
 
-#include <filesystem>
-#include <chakracore-sys/src/filesystem.rs.h>
+#include "chakracore-sys/src/filesystem.rs.h"
 
 #include "ChakraRtInterface.h"
 #include "Codex/Utf8Codex.h"
-#include "HostConfigFlags.h"
 #include "RuntimeThreadData.h"
-#include "chakra/Logger.h"
-
-#include <chakracore-sys/src/helpers.rs.h>
-#include <chakracore-sys/src/wscript_jsrt.rs.h>
-
-namespace fs = std::filesystem;
+#include "chakracore-sys/src/wscript_jsrt.rs.h"
 
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
-
-MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
 
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile)
 {
@@ -44,11 +35,4 @@ JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &
         returnValue = chakra_rs::WScript::load_script(args.callee, fileName, chakra_rs::OptionalStr{.has_value = true, .value = *fileContentPtr}, scriptInjectType, isSourceModule, isFile);
     }
     return returnValue;
-}
-
-void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
-{
-    assert(messageQueue_ == nullptr);
-
-    messageQueue_ = _messageQueue;
 }

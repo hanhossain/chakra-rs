@@ -1,14 +1,16 @@
 use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode, JsModuleHostInfoKind,
-    JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
-    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
+    CVoid, ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode,
+    JsModuleHostInfoKind, JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes,
+    JsRuntimeHandle, JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef,
+    JsValueType,
 };
 use crate::messages::{CallbackMessage, Message, ModuleMessage};
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
-use crate::wscript_jsrt::ffi::{CVoid, GetCurrentRuntimeThreadData, RuntimeThreadData};
+use crate::wscript_jsrt::ffi::{GetCurrentRuntimeThreadData, RuntimeThreadData};
+use cxx::UniquePtr;
 pub use ffi::{MessageQueue, WScriptJsrt};
 use std::collections::HashMap;
 use std::hash::Hash;
@@ -24,6 +26,7 @@ const BUILD_TYPE_STRING: &str = "Debug";
 const BUILD_TYPE_STRING: &str = "Test";
 
 static SOURCE_CONTEXT: AtomicUsize = AtomicUsize::new(0);
+static mut MESSAGE_QUEUE: *mut MessageQueue = std::ptr::null_mut();
 
 pub(crate) static MODULE_ERROR_MAP: LazyLock<ModuleErrorMap> =
     LazyLock::new(|| ModuleErrorMap::new());
@@ -56,6 +59,8 @@ mod ffi {
         type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
 
         type MessageQueue;
+        #[namespace = "chakra_rs"]
+        type Message = crate::messages::Message;
 
         #[Self = "MessageQueue"]
         fn New() -> UniquePtr<MessageQueue>;
@@ -65,11 +70,6 @@ mod ffi {
         fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
         fn InsertSorted(self: Pin<&mut MessageQueue>, message: Box<Message>);
         fn RemoveById(self: Pin<&mut MessageQueue>, id: u32);
-
-        #[Self = "WScriptJsrt"]
-        unsafe fn AddMessageQueue(messageQueue: *mut MessageQueue);
-        #[Self = "WScriptJsrt"]
-        fn GetMessageQueue() -> *mut MessageQueue;
 
         type JsValueRef = crate::jsrt::JsValueRef;
         type CVoid = crate::jsrt::CVoid;
@@ -93,12 +93,6 @@ mod ffi {
             filename: String,
             is_file: bool,
         ) -> JsValueRef;
-
-        #[namespace = "chakra_rs"]
-        type Message = crate::messages::Message;
-
-        #[Self = "WScriptJsrt"]
-        unsafe fn PushMessage(message: Box<Message>);
     }
 
     unsafe extern "C++" {
@@ -659,7 +653,7 @@ impl WScript {
                 None,
             ));
             unsafe {
-                WScriptJsrt::PushMessage(msg);
+                Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);
             }
         }
         JsErrorCode::JsNoError
@@ -858,7 +852,7 @@ impl WScript {
         let msg = Message::new_callback(CallbackMessage::new(time, function));
         let msg_id = msg.get_id();
         unsafe {
-            WScriptJsrt::PushMessage(msg);
+            Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);
         }
         let timer_id = ChakraRt::double_to_number(msg_id as f64)?;
         Ok(timer_id)
@@ -873,7 +867,7 @@ impl WScript {
 
         if let Ok(timer_id) = ChakraRt::number_to_double(&args.arguments[1]).map(|x| x as u32) {
             unsafe {
-                let message_queue = Pin::new_unchecked(&mut *WScriptJsrt::GetMessageQueue());
+                let message_queue = Pin::new_unchecked(&mut *MESSAGE_QUEUE);
                 message_queue.RemoveById(timer_id);
             }
         }
@@ -1158,7 +1152,7 @@ impl WScript {
                     |task, callback_state| {
                         Self::promise_continuation_callback(task, callback_state)
                     },
-                    WScriptJsrt::GetMessageQueue() as _,
+                    MESSAGE_QUEUE as _,
                 )
                 .as_result()?;
             }
@@ -1401,6 +1395,12 @@ impl WScript {
     pub fn get_next_source_context() -> usize {
         SOURCE_CONTEXT.fetch_add(1, Ordering::Relaxed)
     }
+
+    pub fn add_message_queue(message_queue: &UniquePtr<MessageQueue>) {
+        unsafe {
+            MESSAGE_QUEUE = message_queue.as_mut_ptr();
+        }
+    }
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -1510,7 +1510,7 @@ unsafe fn fetch_imported_module_helper(
         abs_path.to_str(),
     ));
     unsafe {
-        WScriptJsrt::PushMessage(module_message);
+        Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(module_message);
         *dependent_module_record = module_record;
     }
 
