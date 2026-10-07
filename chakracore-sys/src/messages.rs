@@ -45,7 +45,7 @@ enum MessageInner {
     Module(ModuleMessage),
 }
 
-pub(crate) struct Message {
+pub struct Message {
     msg: MessageInner,
 }
 

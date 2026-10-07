@@ -62,9 +62,3 @@ void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
 
     messageQueue_ = _messageQueue;
 }
-
-CustomMessage::CustomMessage(rust::Box<chakra_rs::Message> message) : MessageBase(std::move(message)) {}
-std::unique_ptr<CustomMessage> CustomMessage::New(rust::Box<chakra_rs::Message> message) {
-    return std::make_unique<CustomMessage>(std::move(message));
-}
-std::unique_ptr<MessageBase> CustomMessage::Upcast(std::unique_ptr<CustomMessage> msg) { return msg; }

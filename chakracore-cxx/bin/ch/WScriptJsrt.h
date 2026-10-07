@@ -22,13 +22,6 @@ enum ModuleState
     ErroredModule
 };
 
-class CustomMessage : public MessageBase {
-public:
-    explicit CustomMessage(rust::Box<chakra_rs::Message> message);
-    static std::unique_ptr<CustomMessage> New(rust::Box<chakra_rs::Message> message);
-    static std::unique_ptr<MessageBase> Upcast(std::unique_ptr<CustomMessage> msg);
-};
-
 class WScriptJsrt
 {
 public:

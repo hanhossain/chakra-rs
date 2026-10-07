@@ -27,6 +27,10 @@ public:
     unsigned int GetId() const { return message_->get_id(); }
 
     void Call(rust::Str fileName) { message_->call(fileName); }
+
+    static std::unique_ptr<MessageBase> New(rust::Box<chakra_rs::Message> message) {
+        return std::make_unique<MessageBase>(std::move(message));
+    }
 };
 
 template <typename T>

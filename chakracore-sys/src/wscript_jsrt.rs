@@ -100,13 +100,10 @@ mod ffi {
             is_file: bool,
         ) -> JsValueRef;
 
-        type CustomMessage;
         #[namespace = "chakra_rs"]
         type Message = crate::messages::Message;
-        #[Self = "CustomMessage"]
-        fn New(msg: Box<Message>) -> UniquePtr<CustomMessage>;
-        #[Self = "CustomMessage"]
-        fn Upcast(msg: UniquePtr<CustomMessage>) -> UniquePtr<MessageBase>;
+        #[Self = "MessageBase"]
+        fn New(msg: Box<Message>) -> UniquePtr<MessageBase>;
 
         type ModuleState;
 
@@ -595,7 +592,7 @@ impl WScript {
             let message_queue =
                 std::mem::transmute::<*mut CVoid, *mut MessageQueue>(callback_state);
             let msg = Message::new_callback(CallbackMessage::new(0, task));
-            let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(msg));
+            let msg = ffi::MessageBase::New(msg);
 
             Pin::new_unchecked(&mut *message_queue).InsertSorted(msg);
         }
@@ -669,7 +666,7 @@ impl WScript {
                 JsValueRef::default(),
                 None,
             ));
-            let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(module_message));
+            let msg = ffi::MessageBase::New(module_message);
             unsafe {
                 WScriptJsrt::PushMessage(msg);
             }
@@ -868,7 +865,7 @@ impl WScript {
         let function = args.arguments[1].clone();
         let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
         let msg = Message::new_callback(CallbackMessage::new(time, function));
-        let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(msg));
+        let msg = ffi::MessageBase::New(msg);
         let msg_id = msg.GetId();
         unsafe {
             WScriptJsrt::PushMessage(msg);
@@ -1518,7 +1515,7 @@ unsafe fn fetch_imported_module_helper(
         specifier,
         abs_path.to_str(),
     ));
-    let module_message = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(module_message));
+    let module_message = ffi::MessageBase::New(module_message);
     unsafe {
         WScriptJsrt::PushMessage(module_message);
         *dependent_module_record = module_record;
