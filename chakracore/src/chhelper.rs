@@ -223,7 +223,7 @@ fn run_script(
                 .as_result()?;
             ChakraRTInterface::JsRunScriptWithParserState(
                 script_source,
-                JsSourceContext(WScriptJsrt::GetNextSourceContext()),
+                JsSourceContext(WScript::get_next_source_context()),
                 fname,
                 JsParseScriptAttributes::JsParseScriptAttributeNone,
                 parser_state_cache,
@@ -239,7 +239,7 @@ fn run_script(
                 .as_result()?;
             ChakraRTInterface::JsRun(
                 script_source,
-                JsSourceContext(WScriptJsrt::GetNextSourceContext()),
+                JsSourceContext(WScript::get_next_source_context()),
                 fname,
                 JsParseScriptAttributes::JsParseScriptAttributeNone,
                 std::ptr::null_mut(),

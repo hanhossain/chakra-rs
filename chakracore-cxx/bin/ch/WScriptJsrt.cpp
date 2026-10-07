@@ -25,16 +25,6 @@ namespace fs = std::filesystem;
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
 
 MessageQueue* WScriptJsrt::messageQueue_ = nullptr;
-std::size_t WScriptJsrt::sourceContext_ = 0;
-
-std::size_t WScriptJsrt::GetNextSourceContext()
-{
-    return sourceContext_++;
-}
-
-std::size_t WScriptJsrt::GetSourceContext() {
-    return sourceContext_;
-}
 
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile)
 {

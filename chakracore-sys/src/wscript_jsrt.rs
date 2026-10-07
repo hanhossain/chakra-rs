@@ -14,6 +14,7 @@ use std::collections::HashMap;
 use std::hash::Hash;
 use std::path::PathBuf;
 use std::pin::Pin;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, LazyLock, RwLock};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
@@ -21,6 +22,8 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 const BUILD_TYPE_STRING: &str = "Debug";
 #[cfg(not(debug_assertions))]
 const BUILD_TYPE_STRING: &str = "Test";
+
+static SOURCE_CONTEXT: AtomicUsize = AtomicUsize::new(0);
 
 pub(crate) static MODULE_ERROR_MAP: LazyLock<ModuleErrorMap> =
     LazyLock::new(|| ModuleErrorMap::new());
@@ -70,12 +73,6 @@ mod ffi {
 
         type JsValueRef = crate::jsrt::JsValueRef;
         type CVoid = crate::jsrt::CVoid;
-
-        #[Self = "WScriptJsrt"]
-        fn GetNextSourceContext() -> usize;
-
-        #[Self = "WScriptJsrt"]
-        fn GetSourceContext() -> usize;
 
         type JsErrorCode = crate::jsrt::JsErrorCode;
         #[namespace = "chakra_rs"]
@@ -171,6 +168,9 @@ mod ffi {
 
         #[Self = "WScript"]
         fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef);
+
+        #[Self = "WScript"]
+        fn get_next_source_context() -> usize;
     }
 }
 
@@ -324,7 +324,7 @@ impl WScript {
             unsafe {
                 ChakraRTInterface::JsRun(
                     test262_script_ref.clone(),
-                    JsSourceContext(WScriptJsrt::GetNextSourceContext()),
+                    JsSourceContext(WScript::get_next_source_context()),
                     fname.clone(),
                     JsParseScriptAttributes::JsParseScriptAttributeNone,
                     std::ptr::null_mut(),
@@ -455,7 +455,7 @@ impl WScript {
         if filename.is_empty() {
             is_file = false;
             if is_source_module {
-                filename = format!("moduleScript{}.js", WScriptJsrt::GetSourceContext());
+                filename = format!("moduleScript{}.js", SOURCE_CONTEXT.load(Ordering::Relaxed));
             }
         }
 
@@ -949,7 +949,7 @@ impl WScript {
         full_name: &String,
         is_file: bool,
     ) -> Result<(), JsError> {
-        let source_context = JsSourceContext(WScriptJsrt::GetNextSourceContext());
+        let source_context = JsSourceContext(WScript::get_next_source_context());
         let module_record_key = full_name;
         let request_module = {
             let lease = MODULE_RECORD_MAP.0.read().unwrap();
@@ -1106,7 +1106,7 @@ impl WScript {
             }
 
             let fname = ChakraRt::create_string(full_path.to_str().unwrap_or_default())?;
-            let source_context = JsSourceContext(WScriptJsrt::GetNextSourceContext());
+            let source_context = JsSourceContext(WScript::get_next_source_context());
 
             let mut return_value = JsValueRef::default();
             let error_code = if HostConfigFlags::GetConfig().host.use_parser_state_cache {
@@ -1176,7 +1176,7 @@ impl WScript {
             }
 
             let fname = ChakraRt::create_string(full_path.to_str().unwrap_or_default())?;
-            let source_context = JsSourceContext(WScriptJsrt::GetNextSourceContext());
+            let source_context = JsSourceContext(WScript::get_next_source_context());
 
             let mut return_value = JsValueRef::default();
             let error_code = if HostConfigFlags::GetConfig().host.use_parser_state_cache {
@@ -1396,6 +1396,10 @@ impl WScript {
 
     pub fn uninitialize() {
         ffi::UninitializeRuntimeThreadLocalData();
+    }
+
+    pub fn get_next_source_context() -> usize {
+        SOURCE_CONTEXT.fetch_add(1, Ordering::Relaxed)
     }
 }
 
