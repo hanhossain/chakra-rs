@@ -26,7 +26,7 @@ class WScriptJsrt
 {
 public:
     static void AddMessageQueue(MessageQueue *messageQueue);
-    static void PushMessage(std::unique_ptr<MessageBase> message) { messageQueue_->InsertSorted(std::move(message)); }
+    static void PushMessage(rust::Box<chakra_rs::Message> message) { messageQueue_->InsertSorted(std::move(message)); }
     static MessageQueue *GetMessageQueue() { return messageQueue_; }
 
     static std::size_t GetNextSourceContext();

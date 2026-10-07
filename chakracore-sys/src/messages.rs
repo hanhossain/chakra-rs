@@ -62,25 +62,30 @@ impl Message {
             msg: MessageInner::Module(msg),
         })
     }
+
+    #[tracing::instrument(skip(self))]
     fn call(&self, filename: &str) {
         match &self.msg {
             MessageInner::Callback(msg) => msg.call(filename),
             MessageInner::Module(msg) => msg.call(filename),
         }
     }
+    #[tracing::instrument(skip(self))]
     fn get_time(&self) -> u32 {
         match &self.msg {
             MessageInner::Callback(msg) => msg.get_time(),
             MessageInner::Module(msg) => msg.get_time(),
         }
     }
+    #[tracing::instrument(skip(self))]
     fn begin_timer(&mut self) {
         match &mut self.msg {
             MessageInner::Callback(msg) => msg.begin_timer(),
             MessageInner::Module(msg) => msg.begin_timer(),
         }
     }
-    fn get_id(&self) -> u32 {
+    #[tracing::instrument(skip(self))]
+    pub(crate) fn get_id(&self) -> u32 {
         match &self.msg {
             MessageInner::Callback(msg) => msg.get_id(),
             MessageInner::Module(msg) => msg.get_id(),

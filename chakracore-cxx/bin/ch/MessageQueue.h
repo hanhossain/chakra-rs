@@ -8,30 +8,8 @@
 #include <memory>
 
 #include "ChakraCommon.h"
+#include "chakra/Logger.h"
 #include "chakracore-sys/src/messages.rs.h"
-
-
-class MessageBase
-{
-private:
-    rust::Box<chakra_rs::Message> message_;
-public:
-    explicit MessageBase(rust::Box<chakra_rs::Message> message) : message_(std::move(message)) {}
-    MessageBase(const MessageBase &) = delete;
-    ~MessageBase() = default;
-
-    void BeginTimer() {
-        message_->begin_timer();
-    }
-    unsigned int GetTime() const { return message_->get_time(); }
-    unsigned int GetId() const { return message_->get_id(); }
-
-    void Call(rust::Str fileName) { message_->call(fileName); }
-
-    static std::unique_ptr<MessageBase> New(rust::Box<chakra_rs::Message> message) {
-        return std::make_unique<MessageBase>(std::move(message));
-    }
-};
 
 template <typename T>
 class SortedList 
@@ -184,9 +162,9 @@ class MessageQueue
     struct ListEntry
     {
         unsigned int time;
-        std::unique_ptr<MessageBase> message;
+        rust::Box<chakra_rs::Message> message;
 
-        ListEntry(unsigned int time, std::unique_ptr<MessageBase> message):
+        ListEntry(unsigned int time, rust::Box<chakra_rs::Message> message):
             time(time),
             message(std::move(message))
         { }
@@ -200,21 +178,23 @@ class MessageQueue
     SortedList<ListEntry> m_queue;
 
 public:
-    void InsertSorted(std::unique_ptr<MessageBase> message)
+    void InsertSorted(rust::Box<chakra_rs::Message> message)
     {
-        message->BeginTimer();
-        unsigned int time = message->GetTime();
+        auto span = chakra::Span::create("MessageQueue::InsertSorted");
+        message->begin_timer();
+        unsigned int time = message->get_time();
         m_queue.Insert(ListEntry(time, std::move(message)));
     }
 
-    std::unique_ptr<MessageBase> PopAndWait()
+    rust::Box<chakra_rs::Message> PopAndWait()
     {
+        auto span = chakra::Span::create("MessageQueue::PopAndWait");
         assert(!m_queue.IsEmpty());
 
         ListEntry entry = m_queue.Pop();
-        std::unique_ptr<MessageBase> tmp = std::move(entry.message);
+        rust::Box<chakra_rs::Message> tmp = std::move(entry.message);
 
-        int waitTime = tmp->GetTime() - GetTickCount();
+        int waitTime = tmp->get_time() - GetTickCount();
         if(waitTime > 0)
         {
             Sleep(waitTime);
@@ -225,17 +205,19 @@ public:
 
     bool IsEmpty()
     {
+        auto span = chakra::Span::create("MessageQueue::IsEmpty");
         return m_queue.IsEmpty();
     }
 
     void RemoveById(unsigned int id)
     {
+        auto span = chakra::Span::create(std::format("MessageQueue::RemoveById[id={}]", id));
         // Search for the message with the correct id, and delete it. Can be updated
         // to a hash to improve speed, if necessary.
         m_queue.Remove([id](const ListEntry& entry) 
         {
             const auto &msg = entry.message;
-            if(msg->GetId() == id)
+            if(msg->get_id() == id)
             {
                 return true;
             }
@@ -246,17 +228,19 @@ public:
 
     void RemoveAll()
     {
+        auto span = chakra::Span::create("MessageQueue::RemoveAll");
         m_queue.RemoveAll([](const ListEntry& _) {});
     }
 
     int32_t ProcessAll(rust::Str fileName)
     {
+        auto span = chakra::Span::create(std::format("MessageQueue::ProcessAll[filename={}]", fileName));
         while(!IsEmpty())
         {
-            std::unique_ptr<MessageBase> msg = PopAndWait();
+            rust::Box<chakra_rs::Message> msg = PopAndWait();
 
             // Omit checking return value for async function, since it shouldn't affect others.
-            msg->Call(fileName);
+            msg->call(fileName);
         }
         return S_OK;
     }

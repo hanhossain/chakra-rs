@@ -53,9 +53,6 @@ mod ffi {
         type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
 
         type MessageQueue;
-        type MessageBase;
-
-        fn GetId(self: &MessageBase) -> u32;
 
         #[Self = "MessageQueue"]
         fn New() -> UniquePtr<MessageQueue>;
@@ -63,7 +60,7 @@ mod ffi {
         fn RemoveAll(self: Pin<&mut MessageQueue>);
         fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
         fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
-        unsafe fn InsertSorted(self: Pin<&mut MessageQueue>, message: UniquePtr<MessageBase>);
+        fn InsertSorted(self: Pin<&mut MessageQueue>, message: Box<Message>);
         fn RemoveById(self: Pin<&mut MessageQueue>, id: u32);
 
         #[Self = "WScriptJsrt"]
@@ -102,13 +99,10 @@ mod ffi {
 
         #[namespace = "chakra_rs"]
         type Message = crate::messages::Message;
-        #[Self = "MessageBase"]
-        fn New(msg: Box<Message>) -> UniquePtr<MessageBase>;
-
         type ModuleState;
 
         #[Self = "WScriptJsrt"]
-        unsafe fn PushMessage(message: UniquePtr<MessageBase>);
+        unsafe fn PushMessage(message: Box<Message>);
     }
 
     unsafe extern "C++" {
@@ -592,7 +586,6 @@ impl WScript {
             let message_queue =
                 std::mem::transmute::<*mut CVoid, *mut MessageQueue>(callback_state);
             let msg = Message::new_callback(CallbackMessage::new(0, task));
-            let msg = ffi::MessageBase::New(msg);
 
             Pin::new_unchecked(&mut *message_queue).InsertSorted(msg);
         }
@@ -661,12 +654,11 @@ impl WScript {
         if let Some(module_error) = guard.get(&referencing_module)
             && *module_error != ModuleState::ErroredModule
         {
-            let module_message = Message::new_module(ModuleMessage::new(
+            let msg = Message::new_module(ModuleMessage::new(
                 referencing_module,
                 JsValueRef::default(),
                 None,
             ));
-            let msg = ffi::MessageBase::New(module_message);
             unsafe {
                 WScriptJsrt::PushMessage(msg);
             }
@@ -865,8 +857,7 @@ impl WScript {
         let function = args.arguments[1].clone();
         let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
         let msg = Message::new_callback(CallbackMessage::new(time, function));
-        let msg = ffi::MessageBase::New(msg);
-        let msg_id = msg.GetId();
+        let msg_id = msg.get_id();
         unsafe {
             WScriptJsrt::PushMessage(msg);
         }
@@ -1515,7 +1506,6 @@ unsafe fn fetch_imported_module_helper(
         specifier,
         abs_path.to_str(),
     ));
-    let module_message = ffi::MessageBase::New(module_message);
     unsafe {
         WScriptJsrt::PushMessage(module_message);
         *dependent_module_record = module_record;
