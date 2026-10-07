@@ -13,18 +13,11 @@ static MESSAGE_COUNT: AtomicU32 = AtomicU32::new(0);
 #[cxx::bridge]
 mod ffi {
     unsafe extern "C++" {
-        include!("MessageQueue.h");
         include!("ChakraCore.h");
         type JsValueRef = crate::jsrt::JsValueRef;
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
         /// Get the number of milliseconds since the system has started.
         fn GetTickCount() -> u32;
-    }
-
-    #[namespace = "chakra_rs"]
-    extern "C++" {
-        include!("chakracore-sys/src/str_helper.rs.h");
-        type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
     }
 
     #[namespace = "chakra_rs"]
