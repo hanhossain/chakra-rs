@@ -210,7 +210,11 @@ pub(crate) struct ModuleMessage {
 }
 
 impl ModuleMessage {
-    fn new(module_record: JsModuleRecord, specifier: JsValueRef, full_path: Option<&str>) -> Self {
+    pub(crate) fn new(
+        module_record: JsModuleRecord,
+        specifier: JsValueRef,
+        full_path: Option<&str>,
+    ) -> Self {
         let id = MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed);
         let mut path: Option<String> = None;
         unsafe {

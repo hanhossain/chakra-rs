@@ -37,26 +37,6 @@ public:
 class WScriptJsrt
 {
 public:
-    class ModuleMessage final : public CustomMessage
-    {
-    public:
-        ModuleMessage(JsModuleRecord module, JsValueRef specifier, chakra_rs::OptionalStr fullpath);
-        ModuleMessage(ModuleMessage const&) = delete;
-
-        static std::unique_ptr<ModuleMessage> New(JsModuleRecord module, JsValueRef specifier)
-        {
-            return std::make_unique<ModuleMessage>(module, specifier, chakra_rs::OptionalStr{});
-        }
-        static std::unique_ptr<ModuleMessage> NewWithPath(JsModuleRecord module, JsValueRef specifier, const rust::Str fullPath)
-        {
-            return std::make_unique<ModuleMessage>(module, specifier, chakra_rs::OptionalStr{.has_value = true, .value = fullPath});
-        }
-        static std::unique_ptr<MessageBase> Upcast(std::unique_ptr<ModuleMessage> msg)
-        {
-            return msg;
-        }
-    };
-
     static void AddMessageQueue(MessageQueue *messageQueue);
     static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
     static MessageQueue *GetMessageQueue() { return messageQueue_; }
@@ -68,6 +48,3 @@ private:
     static MessageQueue *messageQueue_;
     static std::size_t sourceContext_;
 };
-
-// type aliases for rust ffi
-using WScriptJsrt_ModuleMessage = WScriptJsrt::ModuleMessage;

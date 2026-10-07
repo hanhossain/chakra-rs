@@ -5,12 +5,10 @@ use crate::jsrt::{
     JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
     JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
 };
-use crate::messages::{CallbackMessage, Message};
+use crate::messages::{CallbackMessage, Message, ModuleMessage};
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
-use crate::wscript_jsrt::ffi::{
-    CVoid, GetCurrentRuntimeThreadData, RuntimeThreadData, WScriptJsrt_ModuleMessage,
-};
+use crate::wscript_jsrt::ffi::{CVoid, GetCurrentRuntimeThreadData, RuntimeThreadData};
 pub use ffi::{MessageQueue, ModuleState, WScriptJsrt};
 use std::collections::HashMap;
 use std::hash::Hash;
@@ -111,21 +109,6 @@ mod ffi {
         fn Upcast(msg: UniquePtr<CustomMessage>) -> UniquePtr<MessageBase>;
 
         type ModuleState;
-
-        type WScriptJsrt_ModuleMessage;
-        #[Self = "WScriptJsrt_ModuleMessage"]
-        fn New(
-            module: JsModuleRecord,
-            specifier: JsValueRef,
-        ) -> UniquePtr<WScriptJsrt_ModuleMessage>;
-        #[Self = "WScriptJsrt_ModuleMessage"]
-        fn NewWithPath(
-            module: JsModuleRecord,
-            specifier: JsValueRef,
-            full_path: &str,
-        ) -> UniquePtr<WScriptJsrt_ModuleMessage>;
-        #[Self = "WScriptJsrt_ModuleMessage"]
-        fn Upcast(msg: UniquePtr<WScriptJsrt_ModuleMessage>) -> UniquePtr<MessageBase>;
 
         #[Self = "WScriptJsrt"]
         unsafe fn PushMessage(message: *mut MessageBase);
@@ -681,9 +664,12 @@ impl WScript {
         if let Some(module_error) = guard.get(&referencing_module)
             && *module_error != ModuleState::ErroredModule
         {
-            let module_message =
-                WScriptJsrt_ModuleMessage::New(referencing_module, JsValueRef::default());
-            let msg = WScriptJsrt_ModuleMessage::Upcast(module_message);
+            let module_message = Message::new_module(ModuleMessage::boxed_new(
+                referencing_module,
+                JsValueRef::default(),
+                OptionalStr::default(),
+            ));
+            let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(module_message));
             unsafe {
                 WScriptJsrt::PushMessage(msg.into_raw());
             }
@@ -1527,13 +1513,12 @@ unsafe fn fetch_imported_module_helper(
         .write()
         .unwrap()
         .insert(module_record.clone(), ModuleState::ImportedModule);
-
-    let module_message = WScriptJsrt_ModuleMessage::NewWithPath(
+    let module_message = Message::new_module(Box::new(ModuleMessage::new(
         referencing_module,
         specifier,
-        abs_path.to_str().unwrap_or_default(),
-    );
-    let module_message = WScriptJsrt_ModuleMessage::Upcast(module_message);
+        abs_path.to_str(),
+    )));
+    let module_message = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(module_message));
     unsafe {
         WScriptJsrt::PushMessage(module_message.into_raw());
         *dependent_module_record = module_record;

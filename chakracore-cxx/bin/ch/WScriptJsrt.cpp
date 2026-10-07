@@ -63,9 +63,6 @@ void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
     messageQueue_ = _messageQueue;
 }
 
-WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, chakra_rs::OptionalStr fullpath)
-    : CustomMessage(chakra_rs::Message::new_module(chakra_rs::ModuleMessage::boxed_new(module, specifier, fullpath))) {}
-
 CustomMessage::CustomMessage(rust::Box<chakra_rs::Message> message) : message_(std::move(message)) {}
 void CustomMessage::BeginTimer() { message_->begin_timer(); }
 unsigned int CustomMessage::GetTime() const { return message_->get_time(); }
