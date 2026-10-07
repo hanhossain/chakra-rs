@@ -40,8 +40,8 @@ class SortedList
         DListNode<U>* next;
 
     public:
-        DListNode(const U& data) :
-            data(data),
+        DListNode(U data) :
+            data(std::move(data)),
             prev(nullptr),
             next(nullptr)
         { }
@@ -64,10 +64,10 @@ public:
     // Scan through the sorted list
     // Insert before the first node that satisfies the LessThan function
     // This function maintains the invariant that the list is always sorted
-    void Insert(const T& data)
+    void Insert(T data)
     {
         DListNode<T>* curr = head;
-        DListNode<T>* node = new DListNode<T>(data);
+        DListNode<T>* node = new DListNode<T>(std::move(data));
         DListNode<T>* prev = nullptr; 
 
         // Now, if we have to insert, we have to insert *after* some node
@@ -86,7 +86,7 @@ public:
 
     T Pop()
     {
-        T data = head->data;
+        T data = std::move(head->data);
         Remove(head);
         return data;
     }
@@ -180,11 +180,11 @@ class MessageQueue
     struct ListEntry
     {
         unsigned int time;
-        MessageBase* message;
+        std::unique_ptr<MessageBase> message;
 
-        ListEntry(unsigned int time, MessageBase* message):
+        ListEntry(unsigned int time, std::unique_ptr<MessageBase> message):
             time(time),
-            message(message)
+            message(std::move(message))
         { }
 
         static bool LessThan(const ListEntry& first, const ListEntry& second)
@@ -196,19 +196,19 @@ class MessageQueue
     SortedList<ListEntry> m_queue;
 
 public:
-    void InsertSorted(MessageBase *message)
+    void InsertSorted(std::unique_ptr<MessageBase> message)
     {
         message->BeginTimer();
         unsigned int time = message->GetTime();
-        m_queue.Insert(ListEntry(time, message));
+        m_queue.Insert(ListEntry(time, std::move(message)));
     }
 
-    MessageBase* PopAndWait()
+    std::unique_ptr<MessageBase> PopAndWait()
     {
         assert(!m_queue.IsEmpty());
 
         ListEntry entry = m_queue.Pop();
-        MessageBase *tmp = entry.message;
+        std::unique_ptr<MessageBase> tmp = std::move(entry.message);
 
         int waitTime = tmp->GetTime() - GetTickCount();
         if(waitTime > 0)
@@ -230,10 +230,9 @@ public:
         // to a hash to improve speed, if necessary.
         m_queue.Remove([id](const ListEntry& entry) 
         {
-            MessageBase *msg = entry.message;
+            const auto &msg = entry.message;
             if(msg->GetId() == id)
             {
-                delete msg;
                 return true;
             }
 
@@ -243,21 +242,17 @@ public:
 
     void RemoveAll()
     {
-        m_queue.RemoveAll([](const ListEntry& entry) { 
-            MessageBase* msg = entry.message;
-            delete msg;
-        });
+        m_queue.RemoveAll([](const ListEntry& _) {});
     }
 
     int32_t ProcessAll(rust::Str fileName)
     {
         while(!IsEmpty())
         {
-            MessageBase *msg = PopAndWait();
+            std::unique_ptr<MessageBase> msg = PopAndWait();
 
             // Omit checking return value for async function, since it shouldn't affect others.
             msg->Call(fileName);
-            delete msg;
         }
         return S_OK;
     }

@@ -63,7 +63,7 @@ mod ffi {
         fn RemoveAll(self: Pin<&mut MessageQueue>);
         fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
         fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
-        unsafe fn InsertSorted(self: Pin<&mut MessageQueue>, message: *mut MessageBase);
+        unsafe fn InsertSorted(self: Pin<&mut MessageQueue>, message: UniquePtr<MessageBase>);
         fn RemoveById(self: Pin<&mut MessageQueue>, id: u32);
 
         #[Self = "WScriptJsrt"]
@@ -111,7 +111,7 @@ mod ffi {
         type ModuleState;
 
         #[Self = "WScriptJsrt"]
-        unsafe fn PushMessage(message: *mut MessageBase);
+        unsafe fn PushMessage(message: UniquePtr<MessageBase>);
     }
 
     unsafe extern "C++" {
@@ -597,7 +597,7 @@ impl WScript {
             let msg = Message::new_callback(CallbackMessage::new(0, task));
             let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(msg));
 
-            Pin::new_unchecked(&mut *message_queue).InsertSorted(msg.into_raw());
+            Pin::new_unchecked(&mut *message_queue).InsertSorted(msg);
         }
     }
 
@@ -671,7 +671,7 @@ impl WScript {
             ));
             let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(module_message));
             unsafe {
-                WScriptJsrt::PushMessage(msg.into_raw());
+                WScriptJsrt::PushMessage(msg);
             }
         }
         JsErrorCode::JsNoError
@@ -871,7 +871,7 @@ impl WScript {
         let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(msg));
         let msg_id = msg.GetId();
         unsafe {
-            WScriptJsrt::PushMessage(msg.into_raw());
+            WScriptJsrt::PushMessage(msg);
         }
         let timer_id = ChakraRt::double_to_number(msg_id as f64)?;
         Ok(timer_id)
@@ -1520,7 +1520,7 @@ unsafe fn fetch_imported_module_helper(
     ));
     let module_message = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(module_message));
     unsafe {
-        WScriptJsrt::PushMessage(module_message.into_raw());
+        WScriptJsrt::PushMessage(module_message);
         *dependent_module_record = module_record;
     }
 

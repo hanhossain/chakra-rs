@@ -50,11 +50,13 @@ pub(crate) struct Message {
 }
 
 impl Message {
+    #[tracing::instrument]
     pub(crate) fn new_callback(msg: CallbackMessage) -> Box<Self> {
         Box::new(Self {
             msg: MessageInner::Callback(msg),
         })
     }
+    #[tracing::instrument(skip(msg))]
     pub(crate) fn new_module(msg: ModuleMessage) -> Box<Self> {
         Box::new(Self {
             msg: MessageInner::Module(msg),
@@ -86,6 +88,7 @@ impl Message {
     }
 }
 
+#[derive(Debug)]
 pub(crate) struct CallbackMessage {
     function: JsValueRef,
     time: u32,

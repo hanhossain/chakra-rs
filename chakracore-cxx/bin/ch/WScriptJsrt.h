@@ -33,7 +33,7 @@ class WScriptJsrt
 {
 public:
     static void AddMessageQueue(MessageQueue *messageQueue);
-    static void PushMessage(MessageBase *message) { messageQueue_->InsertSorted(message); }
+    static void PushMessage(std::unique_ptr<MessageBase> message) { messageQueue_->InsertSorted(std::move(message)); }
     static MessageQueue *GetMessageQueue() { return messageQueue_; }
 
     static std::size_t GetNextSourceContext();
