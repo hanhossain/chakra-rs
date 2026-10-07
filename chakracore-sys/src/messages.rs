@@ -30,6 +30,7 @@ mod ffi {
 
     #[namespace = "chakra_rs"]
     extern "Rust" {
+        #[derive(ExternType)]
         type Message;
         #[Self = "Message"]
         fn new_callback(msg: Box<CallbackMessage>) -> Box<Message>;
@@ -60,45 +61,53 @@ mod ffi {
     }
 }
 
-enum Message {
+enum MessageInner {
     Callback(Box<CallbackMessage>),
     Module(Box<ModuleMessage>),
 }
 
+pub(crate) struct Message {
+    msg: MessageInner,
+}
+
 impl Message {
-    fn new_callback(msg: Box<CallbackMessage>) -> Box<Self> {
-        Box::new(Message::Callback(msg))
+    pub(crate) fn new_callback(msg: Box<CallbackMessage>) -> Box<Self> {
+        Box::new(Self {
+            msg: MessageInner::Callback(msg),
+        })
     }
-    fn new_module(msg: Box<ModuleMessage>) -> Box<Self> {
-        Box::new(Message::Module(msg))
+    pub(crate) fn new_module(msg: Box<ModuleMessage>) -> Box<Self> {
+        Box::new(Self {
+            msg: MessageInner::Module(msg),
+        })
     }
     fn call(&self, filename: &str) {
-        match self {
-            Message::Callback(msg) => msg.call(filename),
-            Message::Module(msg) => msg.call(filename),
+        match &self.msg {
+            MessageInner::Callback(msg) => msg.call(filename),
+            MessageInner::Module(msg) => msg.call(filename),
         }
     }
     fn get_time(&self) -> u32 {
-        match self {
-            Message::Callback(msg) => msg.get_time(),
-            Message::Module(msg) => msg.get_time(),
+        match &self.msg {
+            MessageInner::Callback(msg) => msg.get_time(),
+            MessageInner::Module(msg) => msg.get_time(),
         }
     }
     fn begin_timer(&mut self) {
-        match self {
-            Message::Callback(msg) => msg.begin_timer(),
-            Message::Module(msg) => msg.begin_timer(),
+        match &mut self.msg {
+            MessageInner::Callback(msg) => msg.begin_timer(),
+            MessageInner::Module(msg) => msg.begin_timer(),
         }
     }
     fn get_id(&self) -> u32 {
-        match self {
-            Message::Callback(msg) => msg.get_id(),
-            Message::Module(msg) => msg.get_id(),
+        match &self.msg {
+            MessageInner::Callback(msg) => msg.get_id(),
+            MessageInner::Module(msg) => msg.get_id(),
         }
     }
 }
 
-struct CallbackMessage {
+pub(crate) struct CallbackMessage {
     function: JsValueRef,
     time: u32,
     id: u32,
@@ -115,7 +124,7 @@ impl CallbackMessage {
         Self { time, function, id }
     }
 
-    fn boxed_new(time: u32, function: JsValueRef) -> Box<Self> {
+    pub(crate) fn boxed_new(time: u32, function: JsValueRef) -> Box<Self> {
         Box::new(Self::new(time, function))
     }
 
@@ -192,7 +201,7 @@ impl Drop for CallbackMessage {
     }
 }
 
-struct ModuleMessage {
+pub(crate) struct ModuleMessage {
     module_record: JsModuleRecord,
     specifier: JsValueRef,
     full_path: Option<String>,
@@ -223,7 +232,7 @@ impl ModuleMessage {
         }
     }
 
-    fn boxed_new(
+    pub(crate) fn boxed_new(
         module_record: JsModuleRecord,
         specifier: JsValueRef,
         full_path: OptionalStr,

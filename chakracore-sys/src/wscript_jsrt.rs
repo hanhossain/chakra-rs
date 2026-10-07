@@ -5,11 +5,11 @@ use crate::jsrt::{
     JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
     JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
 };
+use crate::messages::{CallbackMessage, Message};
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::ffi::{
-    CVoid, GetCurrentRuntimeThreadData, RuntimeThreadData, WScriptJsrt_CallbackMessage,
-    WScriptJsrt_ModuleMessage,
+    CVoid, GetCurrentRuntimeThreadData, RuntimeThreadData, WScriptJsrt_ModuleMessage,
 };
 pub use ffi::{MessageQueue, ModuleState, WScriptJsrt};
 use std::collections::HashMap;
@@ -102,13 +102,13 @@ mod ffi {
             is_file: bool,
         ) -> JsValueRef;
 
-        #[cxx_name = "WScriptJsrt_CallbackMessage"]
-        type WScriptJsrt_CallbackMessage;
-        #[Self = "WScriptJsrt_CallbackMessage"]
-        fn New(time: u32, function: JsValueRef) -> UniquePtr<WScriptJsrt_CallbackMessage>;
-
-        #[Self = "WScriptJsrt_CallbackMessage"]
-        fn Upcast(msg: UniquePtr<WScriptJsrt_CallbackMessage>) -> UniquePtr<MessageBase>;
+        type CustomMessage;
+        #[namespace = "chakra_rs"]
+        type Message = crate::messages::Message;
+        #[Self = "CustomMessage"]
+        fn New(msg: Box<Message>) -> UniquePtr<CustomMessage>;
+        #[Self = "CustomMessage"]
+        fn Upcast(msg: UniquePtr<CustomMessage>) -> UniquePtr<MessageBase>;
 
         type ModuleState;
 
@@ -611,8 +611,8 @@ impl WScript {
         unsafe {
             let message_queue =
                 std::mem::transmute::<*mut CVoid, *mut MessageQueue>(callback_state);
-            let msg = WScriptJsrt_CallbackMessage::New(0, task);
-            let msg = WScriptJsrt_CallbackMessage::Upcast(msg);
+            let msg = Message::new_callback(CallbackMessage::boxed_new(0, task));
+            let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(msg));
 
             Pin::new_unchecked(&mut *message_queue).InsertSorted(msg.into_raw());
         }
@@ -881,8 +881,8 @@ impl WScript {
 
         let function = args.arguments[1].clone();
         let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
-        let msg = WScriptJsrt_CallbackMessage::New(time, function);
-        let msg = WScriptJsrt_CallbackMessage::Upcast(msg);
+        let msg = Message::new_callback(CallbackMessage::boxed_new(time, function));
+        let msg = ffi::CustomMessage::Upcast(ffi::CustomMessage::New(msg));
         let msg_id = msg.GetId();
         unsafe {
             WScriptJsrt::PushMessage(msg.into_raw());

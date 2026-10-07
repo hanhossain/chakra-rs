@@ -22,35 +22,21 @@ enum ModuleState
     ErroredModule
 };
 
+class CustomMessage : public MessageBase {
+    rust::Box<chakra_rs::Message> message_;
+public:
+    explicit CustomMessage(rust::Box<chakra_rs::Message> message);
+    void BeginTimer() override;
+    unsigned int GetTime() const override;
+    unsigned int GetId() const override;
+    int32_t Call(rust::Str fileName) override;
+    static std::unique_ptr<CustomMessage> New(rust::Box<chakra_rs::Message> message);
+    static std::unique_ptr<MessageBase> Upcast(std::unique_ptr<CustomMessage> msg);
+};
+
 class WScriptJsrt
 {
 public:
-    class CustomMessage : public MessageBase {
-        rust::Box<chakra_rs::Message> message_;
-    public:
-        explicit CustomMessage(rust::Box<chakra_rs::Message> message);
-        void BeginTimer() override;
-        unsigned int GetTime() const override;
-        unsigned int GetId() const override;
-        int32_t Call(rust::Str fileName) override;
-    };
-
-    class CallbackMessage final : public CustomMessage
-    {
-    public:
-        CallbackMessage(unsigned int time, JsValueRef function);
-        CallbackMessage(CallbackMessage const&) = delete;
-
-        static std::unique_ptr<CallbackMessage> New(unsigned int time, JsValueRef function)
-        {
-            return std::make_unique<CallbackMessage>(time, function);
-        }
-        static std::unique_ptr<MessageBase> Upcast(std::unique_ptr<CallbackMessage> msg)
-        {
-            return msg;
-        }
-    };
-
     class ModuleMessage final : public CustomMessage
     {
     public:
@@ -84,5 +70,4 @@ private:
 };
 
 // type aliases for rust ffi
-using WScriptJsrt_CallbackMessage = WScriptJsrt::CallbackMessage;
 using WScriptJsrt_ModuleMessage = WScriptJsrt::ModuleMessage;

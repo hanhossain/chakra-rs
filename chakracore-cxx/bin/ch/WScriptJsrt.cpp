@@ -63,17 +63,18 @@ void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
     messageQueue_ = _messageQueue;
 }
 
-WScriptJsrt::CallbackMessage::CallbackMessage(unsigned int time, JsValueRef function)
-    : CustomMessage(chakra_rs::Message::new_callback(chakra_rs::CallbackMessage::boxed_new(time, function))) {}
-
 WScriptJsrt::ModuleMessage::ModuleMessage(JsModuleRecord module, JsValueRef specifier, chakra_rs::OptionalStr fullpath)
     : CustomMessage(chakra_rs::Message::new_module(chakra_rs::ModuleMessage::boxed_new(module, specifier, fullpath))) {}
 
-WScriptJsrt::CustomMessage::CustomMessage(rust::Box<chakra_rs::Message> message) : message_(std::move(message)) {}
-void WScriptJsrt::CustomMessage::BeginTimer() { message_->begin_timer(); }
-unsigned int WScriptJsrt::CustomMessage::GetTime() const { return message_->get_time(); }
-unsigned int WScriptJsrt::CustomMessage::GetId() const { return message_->get_id(); }
-int32_t WScriptJsrt::CustomMessage::Call(rust::Str fileName) {
+CustomMessage::CustomMessage(rust::Box<chakra_rs::Message> message) : message_(std::move(message)) {}
+void CustomMessage::BeginTimer() { message_->begin_timer(); }
+unsigned int CustomMessage::GetTime() const { return message_->get_time(); }
+unsigned int CustomMessage::GetId() const { return message_->get_id(); }
+int32_t CustomMessage::Call(rust::Str fileName) {
     message_->call(fileName);
     return JsNoError;
 }
+std::unique_ptr<CustomMessage> CustomMessage::New(rust::Box<chakra_rs::Message> message) {
+    return std::make_unique<CustomMessage>(std::move(message));
+}
+std::unique_ptr<MessageBase> CustomMessage::Upcast(std::unique_ptr<CustomMessage> msg) { return msg; }
