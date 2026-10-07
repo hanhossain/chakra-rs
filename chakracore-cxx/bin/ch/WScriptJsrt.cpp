@@ -63,14 +63,7 @@ void WScriptJsrt::AddMessageQueue(MessageQueue *_messageQueue)
     messageQueue_ = _messageQueue;
 }
 
-CustomMessage::CustomMessage(rust::Box<chakra_rs::Message> message) : message_(std::move(message)) {}
-void CustomMessage::BeginTimer() { message_->begin_timer(); }
-unsigned int CustomMessage::GetTime() const { return message_->get_time(); }
-unsigned int CustomMessage::GetId() const { return message_->get_id(); }
-int32_t CustomMessage::Call(rust::Str fileName) {
-    message_->call(fileName);
-    return JsNoError;
-}
+CustomMessage::CustomMessage(rust::Box<chakra_rs::Message> message) : MessageBase(std::move(message)) {}
 std::unique_ptr<CustomMessage> CustomMessage::New(rust::Box<chakra_rs::Message> message) {
     return std::make_unique<CustomMessage>(std::move(message));
 }

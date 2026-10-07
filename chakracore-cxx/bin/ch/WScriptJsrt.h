@@ -23,13 +23,8 @@ enum ModuleState
 };
 
 class CustomMessage : public MessageBase {
-    rust::Box<chakra_rs::Message> message_;
 public:
     explicit CustomMessage(rust::Box<chakra_rs::Message> message);
-    void BeginTimer() override;
-    unsigned int GetTime() const override;
-    unsigned int GetId() const override;
-    int32_t Call(rust::Str fileName) override;
     static std::unique_ptr<CustomMessage> New(rust::Box<chakra_rs::Message> message);
     static std::unique_ptr<MessageBase> Upcast(std::unique_ptr<CustomMessage> msg);
 };

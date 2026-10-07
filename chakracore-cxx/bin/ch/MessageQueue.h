@@ -8,19 +8,25 @@
 #include <memory>
 
 #include "ChakraCommon.h"
+#include "chakracore-sys/src/messages.rs.h"
+
 
 class MessageBase
 {
+private:
+    rust::Box<chakra_rs::Message> message_;
 public:
-    MessageBase() = default;
+    explicit MessageBase(rust::Box<chakra_rs::Message> message) : message_(std::move(message)) {}
     MessageBase(const MessageBase &) = delete;
-    virtual ~MessageBase() = default;
+    ~MessageBase() = default;
 
-    virtual void BeginTimer() = 0;
-    virtual unsigned int GetTime() const = 0;
-    virtual unsigned int GetId() const = 0;
+    void BeginTimer() {
+        message_->begin_timer();
+    }
+    unsigned int GetTime() const { return message_->get_time(); }
+    unsigned int GetId() const { return message_->get_id(); }
 
-    virtual int32_t Call(rust::Str fileName) = 0;
+    void Call(rust::Str fileName) { message_->call(fileName); }
 };
 
 template <typename T>
