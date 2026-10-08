@@ -130,8 +130,8 @@ typedef enum _JsPromiseState
 ///     User implemented callback to fetch additional imported modules in ES modules.
 /// </summary>
 /// <remarks>
-///     The callback is invoked on the current runtime execution thread, therefore execution is blocked until 
-///     the callback completes. Notify the host to fetch the dependent module. This is the "import" part 
+///     The callback is invoked on the current runtime execution thread, therefore execution is blocked until
+///     the callback completes. Notify the host to fetch the dependent module. This is the "import" part
 ///     before HostResolveImportedModule in ES6 spec. This notifies the host that the referencing module has
 ///     the specified module dependency, and the host needs to retrieve the module back.
 ///
@@ -143,14 +143,15 @@ typedef enum _JsPromiseState
 /// </remarks>
 /// <param name="referencingModule">The referencing module that is requesting the dependent module.</param>
 /// <param name="specifier">The specifier coming from the module source code.</param>
-/// <param name="dependentModuleRecord">The ModuleRecord of the dependent module. If the module was requested 
+/// <param name="dependentModuleRecord">The ModuleRecord of the dependent module. If the module was requested
 ///                                     before from other source, return the existing ModuleRecord, otherwise
 ///                                     return a newly created ModuleRecord.</param>
 /// <returns>
 ///     Returns a <c>JsNoError</c> if the operation succeeded an error code otherwise.
 /// </returns>
-using FetchImportedModuleCallBack = std::function<JsErrorCode(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier,
-                                                    _Outptr_result_maybenull_ JsModuleRecord *dependentModuleRecord)>;
+using FetchImportedModuleCallBack =
+    std::function<JsErrorCode(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier,
+                              _Outptr_result_maybenull_ JsModuleRecord *dependentModuleRecord, void *callbackData)>;
 
 /// <summary>
 ///     User implemented callback to fetch imported modules dynamically in scripts.
@@ -175,7 +176,7 @@ using FetchImportedModuleCallBack = std::function<JsErrorCode(_In_ JsModuleRecor
 /// </returns>
 using FetchImportedModuleFromScriptCallBack =
     std::function<JsErrorCode(_In_ JsSourceContext dwReferencingSourceContext, _In_ JsValueRef specifier,
-                              _Outptr_result_maybenull_ JsModuleRecord *dependentModuleRecord)>;
+                              _Outptr_result_maybenull_ JsModuleRecord *dependentModuleRecord, void *callbackData)>;
 
 /// <summary>
 ///     User implemented callback to get notification when the module is ready.
@@ -192,8 +193,8 @@ using FetchImportedModuleFromScriptCallBack =
 /// <returns>
 ///     Returns a JsErrorCode - note, the return value is ignored.
 /// </returns>
-using NotifyModuleReadyCallback =
-    std::function<JsErrorCode(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar)>;
+using NotifyModuleReadyCallback = std::function<JsErrorCode(_In_opt_ JsModuleRecord referencingModule,
+                                                            _In_opt_ JsValueRef exceptionVar, void *callbackData)>;
 
 /// <summary>
 ///     User implemented callback to fill in module properties for the import.meta object.
@@ -209,8 +210,8 @@ using NotifyModuleReadyCallback =
 /// <returns>
 ///     Returns a JsErrorCode - note, the return value is ignored.
 /// </returns>
-using InitializeImportMetaCallback =
-    std::function<JsErrorCode(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar)>;
+using InitializeImportMetaCallback = std::function<JsErrorCode(_In_opt_ JsModuleRecord referencingModule,
+                                                               _In_opt_ JsValueRef importMetaVar, void *callbackData)>;
 
 /// <summary>
 ///     User implemented callback to report completion of module execution.
@@ -227,11 +228,12 @@ using InitializeImportMetaCallback =
 ///     However in all cases the exception will be set on the JsModuleRecord.
 /// </remarks>
 /// <param name="module">The root module that has completed either with an exception or normally.</param>
-/// <param name="exception">The exception object which was thrown or nullptr if the module had a normal completion.</param>
-/// <returns>
+/// <param name="exception">The exception object which was thrown or nullptr if the module had a normal
+/// completion.</param> <returns>
 ///     Returns a JsErrorCode: JsNoError if successful.
 /// </returns>
-using ReportModuleCompletionCallback = std::function<JsErrorCode(_In_ JsModuleRecord module, _In_opt_ JsValueRef exception)>;
+using ReportModuleCompletionCallback =
+    std::function<JsErrorCode(_In_ JsModuleRecord module, _In_opt_ JsValueRef exception, void *callbackData)>;
 
 /// <summary>
 ///     A structure containing information about a native function callback.
@@ -440,23 +442,28 @@ namespace chakracore::jsrt
 
     JsErrorCode JsModuleHostInfoSetFetchImportedModuleCallback(
         _In_opt_ JsModuleRecord requestModule,
-        _In_ FetchImportedModuleCallBack hostInfo);
+        _In_ FetchImportedModuleCallBack callback,
+        void *callbackData);
 
     JsErrorCode JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
         _In_opt_ JsModuleRecord requestModule,
-        _In_ FetchImportedModuleFromScriptCallBack hostInfo);
+        _In_ FetchImportedModuleFromScriptCallBack callback,
+        void *callbackData);
 
     JsErrorCode JsModuleHostInfoSetNotifyModuleReadyCallback(
         _In_opt_ JsModuleRecord requestModule,
-        _In_ NotifyModuleReadyCallback hostInfo);
+        _In_ NotifyModuleReadyCallback callback,
+        void *callbackData);
 
     JsErrorCode JsModuleHostInfoSetInitializeImportMetaCallback(
         _In_opt_ JsModuleRecord requestModule,
-        _In_ InitializeImportMetaCallback hostInfo);
+        _In_ InitializeImportMetaCallback callback,
+        void *callbackData);
 
     JsErrorCode JsModuleHostInfoSetReportModuleCompletionCallback(
         _In_opt_ JsModuleRecord requestModule,
-        _In_ ReportModuleCompletionCallback hostInfo);
+        _In_ ReportModuleCompletionCallback callback,
+        void *callbackData);
 
     JsErrorCode JsModuleHostInfoSetUrl(
         _In_opt_ JsModuleRecord requestModule,

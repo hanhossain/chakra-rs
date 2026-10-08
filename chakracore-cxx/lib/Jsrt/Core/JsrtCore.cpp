@@ -221,7 +221,8 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetHostDefined(
 
 JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleCallback(
     _In_opt_ JsModuleRecord requestModule,
-    _In_ FetchImportedModuleCallBack hostInfo)
+    _In_ FetchImportedModuleCallBack callback,
+    void *callbackData)
 {
     Js::ScriptContext* scriptContext;
     Js::SourceTextModuleRecord* moduleRecord;
@@ -237,7 +238,7 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleCallback(
     JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
     JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
         JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
-        currentContext->GetHostScriptContext()->SetFetchImportedModuleCallback(hostInfo);
+        currentContext->GetHostScriptContext()->SetFetchImportedModuleCallback(callback, callbackData);
         return JsNoError;
     });
     return errorCode;
@@ -245,7 +246,8 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleCallback(
 
 JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
     _In_opt_ JsModuleRecord requestModule,
-    _In_ FetchImportedModuleFromScriptCallBack hostInfo)
+    _In_ FetchImportedModuleFromScriptCallBack callback,
+    void *callbackData)
 {
     Js::ScriptContext* scriptContext;
     if (!Js::SourceTextModuleRecord::Is(requestModule))
@@ -260,7 +262,7 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleFromScriptCa
     JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
     JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
         JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
-        currentContext->GetHostScriptContext()->SetFetchImportedModuleFromScriptCallback(hostInfo);
+        currentContext->GetHostScriptContext()->SetFetchImportedModuleFromScriptCallback(callback, callbackData);
         return JsNoError;
     });
     return errorCode;
@@ -268,7 +270,8 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleFromScriptCa
 
 JsErrorCode chakracore::jsrt::JsModuleHostInfoSetNotifyModuleReadyCallback(
     _In_opt_ JsModuleRecord requestModule,
-    _In_ NotifyModuleReadyCallback hostInfo)
+    _In_ NotifyModuleReadyCallback callback,
+    void *callbackData)
 {
     Js::ScriptContext* scriptContext;
     Js::SourceTextModuleRecord* moduleRecord;
@@ -284,7 +287,7 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetNotifyModuleReadyCallback(
     JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
     JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
         JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
-        currentContext->GetHostScriptContext()->SetNotifyModuleReadyCallback(hostInfo);
+        currentContext->GetHostScriptContext()->SetNotifyModuleReadyCallback(callback, callbackData);
         return JsNoError;
     });
     return errorCode;
@@ -292,7 +295,8 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetNotifyModuleReadyCallback(
 
 JsErrorCode chakracore::jsrt::JsModuleHostInfoSetInitializeImportMetaCallback(
     _In_opt_ JsModuleRecord requestModule,
-    _In_ InitializeImportMetaCallback hostInfo)
+    _In_ InitializeImportMetaCallback callback,
+    void *callbackData)
 {
     Js::ScriptContext* scriptContext;
     if (!Js::SourceTextModuleRecord::Is(requestModule))
@@ -307,7 +311,7 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetInitializeImportMetaCallback(
     JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
     JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
         JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
-        currentContext->GetHostScriptContext()->SetInitializeImportMetaCallback(hostInfo);
+        currentContext->GetHostScriptContext()->SetInitializeImportMetaCallback(callback, callbackData);
         return JsNoError;
     });
     return errorCode;
@@ -315,7 +319,8 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetInitializeImportMetaCallback(
 
 JsErrorCode chakracore::jsrt::JsModuleHostInfoSetReportModuleCompletionCallback(
     _In_opt_ JsModuleRecord requestModule,
-    _In_ ReportModuleCompletionCallback hostInfo)
+    _In_ ReportModuleCompletionCallback callback,
+    void *callbackData)
 {
     Js::ScriptContext* scriptContext;
     if (!Js::SourceTextModuleRecord::Is(requestModule))
@@ -330,7 +335,7 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetReportModuleCompletionCallback(
     JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
     JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
         JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
-        currentContext->GetHostScriptContext()->SetReportModuleCompletionCallback(hostInfo);
+        currentContext->GetHostScriptContext()->SetReportModuleCompletionCallback(callback, callbackData);
         return JsNoError;
     });
     return errorCode;

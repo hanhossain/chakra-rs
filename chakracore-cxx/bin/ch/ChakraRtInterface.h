@@ -110,24 +110,29 @@ public:
         return chakracore::jsrt::JsModuleHostInfoSetHostDefined(requestModule, hostInfo);
     }
     static JsErrorCode JsModuleHostInfoSetFetchImportedModuleCallback(JsModuleRecord requestModule,
-        rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef specifier, JsModuleRecord *dependentModuleRecord)> callback) {
-        return chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleCallback(requestModule, callback);
+        rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef specifier, JsModuleRecord *dependentModuleRecord, void *data)> callback,
+        void *callbackData) {
+        return chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleCallback(requestModule, callback, callbackData);
     }
     static JsErrorCode JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(JsModuleRecord requestModule,
-        rust::Fn<JsErrorCode(JsSourceContext dwReferencingSourceContext, JsValueRef specifier, JsModuleRecord *dependentModuleRecord)> callback) {
-        return chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(requestModule, callback);
+        rust::Fn<JsErrorCode(JsSourceContext dwReferencingSourceContext, JsValueRef specifier, JsModuleRecord *dependentModuleRecord, void *data)> callback,
+        void *callbackData) {
+        return chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(requestModule, callback, callbackData);
     }
     static JsErrorCode JsModuleHostInfoSetNotifyModuleReadyCallback(JsModuleRecord requestModule,
-        rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef exceptionVar)> callback) {
-        return chakracore::jsrt::JsModuleHostInfoSetNotifyModuleReadyCallback(requestModule, callback);
+        rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef exceptionVar, void *data)> callback,
+        void *callbackData) {
+        return chakracore::jsrt::JsModuleHostInfoSetNotifyModuleReadyCallback(requestModule, callback, callbackData);
     }
     static JsErrorCode JsModuleHostInfoSetInitializeImportMetaCallback(JsModuleRecord requestModule,
-        rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef importMetaVar)> callback) {
-        return chakracore::jsrt::JsModuleHostInfoSetInitializeImportMetaCallback(requestModule, callback);
+        rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef importMetaVar, void *data)> callback,
+        void *callbackData) {
+        return chakracore::jsrt::JsModuleHostInfoSetInitializeImportMetaCallback(requestModule, callback, callbackData);
     }
     static JsErrorCode JsModuleHostInfoSetReportModuleCompletionCallback(JsModuleRecord requestModule,
-        rust::Fn<JsErrorCode(JsModuleRecord module, JsValueRef exception)> callback) {
-        return chakracore::jsrt::JsModuleHostInfoSetReportModuleCompletionCallback(requestModule, callback);
+        rust::Fn<JsErrorCode(JsModuleRecord module, JsValueRef exception, void *data)> callback,
+        void *callbackData) {
+        return chakracore::jsrt::JsModuleHostInfoSetReportModuleCompletionCallback(requestModule, callback, callbackData);
     }
     static JsErrorCode JsModuleHostInfoSetUrl(JsModuleRecord requestModule, void *hostInfo) {
         return chakracore::jsrt::JsModuleHostInfoSetUrl(requestModule, hostInfo);
