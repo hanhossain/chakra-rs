@@ -953,7 +953,11 @@ impl WScript {
     }
 
     #[tracing::instrument(skip(file_content))]
-    pub fn module_entry_point(file_content: &str, full_name: &String) -> JsErrorCode {
+    pub fn module_entry_point(
+        file_content: &str,
+        full_name: &String,
+        config_context: &ConfigContext,
+    ) -> JsErrorCode {
         Self::load_module_from_string(
             OptionalStr {
                 has_value: true,
@@ -961,6 +965,7 @@ impl WScript {
             },
             full_name,
             true,
+            config_context,
         )
     }
 
@@ -969,8 +974,14 @@ impl WScript {
         file_content: OptionalStr,
         full_name: &String,
         is_file: bool,
+        config_context: &ConfigContext,
     ) -> JsErrorCode {
-        match Self::internal_load_module_from_string(file_content.into(), full_name, is_file) {
+        match Self::internal_load_module_from_string(
+            file_content.into(),
+            full_name,
+            is_file,
+            config_context,
+        ) {
             Ok(()) => JsErrorCode::JsNoError,
             Err(err) => err.into(),
         }
@@ -981,6 +992,7 @@ impl WScript {
         file_content: Option<&str>,
         full_name: &String,
         is_file: bool,
+        config_context: &ConfigContext,
     ) -> Result<(), JsError> {
         let source_context = JsSourceContext(WScript::get_next_source_context());
         let module_record_key = full_name;
@@ -1045,7 +1057,7 @@ impl WScript {
         if error_code != JsErrorCode::JsNoError
             && !error_object.is_null()
             && file_content.is_some()
-            && !HostConfigFlags::GetConfig().host.ignore_script_error_code
+            && !config_context.host.ignore_script_error_code
         {
             let state = {
                 let lease = MODULE_ERROR_MAP.0.read().unwrap();
@@ -1121,6 +1133,7 @@ impl WScript {
                 content,
                 &full_path.to_str().unwrap_or_default().to_owned(),
                 is_file,
+                config_context,
             )?;
             Ok(JsValueRef::default())
         } else if script_inject_type == "self" {
@@ -1145,7 +1158,7 @@ impl WScript {
             let source_context = JsSourceContext(WScript::get_next_source_context());
 
             let mut return_value = JsValueRef::default();
-            let error_code = if HostConfigFlags::GetConfig().host.use_parser_state_cache {
+            let error_code = if config_context.host.use_parser_state_cache {
                 let mut parser_state = JsValueRef::default();
                 unsafe {
                     ChakraRTInterface::JsSerializeParserState(
@@ -1215,7 +1228,7 @@ impl WScript {
             let source_context = JsSourceContext(WScript::get_next_source_context());
 
             let mut return_value = JsValueRef::default();
-            let error_code = if HostConfigFlags::GetConfig().host.use_parser_state_cache {
+            let error_code = if config_context.host.use_parser_state_cache {
                 let mut parser_state = JsValueRef::default();
                 unsafe {
                     ChakraRTInterface::JsSerializeParserState(

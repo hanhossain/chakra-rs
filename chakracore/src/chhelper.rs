@@ -61,6 +61,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
             JsValueRef::default(),
             &path,
             JsValueRef::default(),
+            config,
         )?;
     };
 
@@ -100,7 +101,14 @@ fn create_parser_state_and_run_script(
     // initialize the WScript object on the new context
     WScript::initialize(config_context)?;
 
-    run_script(filename, contents, JsValueRef::default(), full_path, buffer)?;
+    run_script(
+        filename,
+        contents,
+        JsValueRef::default(),
+        full_path,
+        buffer,
+        config_context,
+    )?;
 
     ChakraRTInterface::JsSetCurrentContext(old_context).as_result()?;
     ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
@@ -140,6 +148,7 @@ fn create_and_run_serialized_script(
         buffer_val,
         full_path,
         JsValueRef::default(),
+        config_context,
     )?;
 
     ChakraRTInterface::JsSetCurrentContext(old_context).as_result()?;
@@ -189,6 +198,7 @@ fn run_script(
     buffer_value: JsValueRef,
     full_path: &String,
     parser_state_cache: JsValueRef,
+    config_context: &ConfigContext,
 ) -> Result<(), Error> {
     let mut message_queue = MessageQueue::New();
     let fname = unsafe {
@@ -235,7 +245,7 @@ fn run_script(
             )
         }
     } else if HostConfigFlags::GetConfig().host.module {
-        WScript::module_entry_point(contents, full_path)
+        WScript::module_entry_point(contents, full_path, config_context)
     } else {
         let mut script_source = JsValueRef::default();
         unsafe {

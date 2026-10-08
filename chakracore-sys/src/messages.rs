@@ -245,7 +245,7 @@ impl ModuleMessage {
         let Err(err) = file_content.map(|content| {
             let content = Some(content.as_str()).into();
             let path = self.full_path.as_ref().unwrap_or(&specifier);
-            WScript::load_module_from_string(content, path, true).as_result()
+            WScript::load_module_from_string(content, path, true, &self.config_context).as_result()
         }) else {
             return Ok(());
         };
@@ -275,7 +275,7 @@ impl ModuleMessage {
             };
         }
         let path = self.full_path.as_ref().unwrap_or(&specifier);
-        WScript::load_module_from_string(None.into(), path, false);
+        WScript::load_module_from_string(None.into(), path, false, &self.config_context);
 
         Ok(())
     }
