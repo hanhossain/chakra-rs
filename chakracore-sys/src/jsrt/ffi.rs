@@ -221,6 +221,58 @@ pub(super) mod bridge {
             module_namespace: *mut JsValueRef,
         ) -> JsErrorCode;
         unsafe fn JsGetValueType(value: JsValueRef, value_type: *mut JsValueType) -> JsErrorCode;
+
+        unsafe fn JsModuleHostInfoSetFetchImportedModuleCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                referencingModule: JsModuleRecord,
+                specifier: JsValueRef,
+                dependentModuleRecord: *mut JsModuleRecord,
+                data: *mut CVoid,
+            ) -> JsErrorCode,
+            callback_data: *mut CVoid,
+        ) -> JsErrorCode;
+
+        unsafe fn JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                dwReferencingSourceContext: JsSourceContext,
+                specifier: JsValueRef,
+                dependentModuleRecord: *mut JsModuleRecord,
+                data: *mut CVoid,
+            ) -> JsErrorCode,
+            callback_data: *mut CVoid,
+        ) -> JsErrorCode;
+
+        unsafe fn JsModuleHostInfoSetNotifyModuleReadyCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                referencingModule: JsModuleRecord,
+                exceptionVar: JsValueRef,
+                data: *mut CVoid,
+            ) -> JsErrorCode,
+            callback_data: *mut CVoid,
+        ) -> JsErrorCode;
+
+        unsafe fn JsModuleHostInfoSetInitializeImportMetaCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                referencingModule: JsModuleRecord,
+                importMetaVar: JsValueRef,
+                data: *mut CVoid,
+            ) -> JsErrorCode,
+            callback_data: *mut CVoid,
+        ) -> JsErrorCode;
+
+        unsafe fn JsModuleHostInfoSetReportModuleCompletionCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                module: JsModuleRecord,
+                exception: JsValueRef,
+                data: *mut CVoid,
+            ) -> JsErrorCode,
+            callback_data: *mut CVoid,
+        ) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}

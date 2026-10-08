@@ -442,27 +442,33 @@ namespace chakracore::jsrt
 
     JsErrorCode JsModuleHostInfoSetFetchImportedModuleCallback(
         _In_opt_ JsModuleRecord requestModule,
-        _In_ FetchImportedModuleCallBack callback,
+        _In_ rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef specifier,
+                                       JsModuleRecord *dependentModuleRecord, void *callbackData)>
+            callback,
         void *callbackData);
 
     JsErrorCode JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
         _In_opt_ JsModuleRecord requestModule,
-        _In_ FetchImportedModuleFromScriptCallBack callback,
+        _In_ rust::Fn<JsErrorCode(JsSourceContext dwReferencingSourceContext, JsValueRef specifier,
+                                       JsModuleRecord *dependentModuleRecord, void *callbackData)>
+            callback,
         void *callbackData);
 
     JsErrorCode JsModuleHostInfoSetNotifyModuleReadyCallback(
         _In_opt_ JsModuleRecord requestModule,
-        _In_ NotifyModuleReadyCallback callback,
+        _In_ rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef exceptionVar, void *callbackData)>
+            callback,
         void *callbackData);
 
     JsErrorCode JsModuleHostInfoSetInitializeImportMetaCallback(
         _In_opt_ JsModuleRecord requestModule,
-        _In_ InitializeImportMetaCallback callback,
+        _In_ rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef importMetaVar, void *callbackData)>
+            callback,
         void *callbackData);
 
     JsErrorCode JsModuleHostInfoSetReportModuleCompletionCallback(
         _In_opt_ JsModuleRecord requestModule,
-        _In_ ReportModuleCompletionCallback callback,
+        _In_ rust::Fn<JsErrorCode(JsModuleRecord module, JsValueRef exception, void *callbackData)> callback,
         void *callbackData);
 
     JsErrorCode JsModuleHostInfoSetUrl(

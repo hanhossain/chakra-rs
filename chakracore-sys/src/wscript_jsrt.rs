@@ -610,38 +610,26 @@ impl WScript {
     }
 
     fn set_module_host_info_callbacks() -> Result<(), JsError> {
-        unsafe {
-            ChakraRTInterface::JsModuleHostInfoSetFetchImportedModuleCallback(
-                JsModuleRecord::default(),
-                WScript::fetch_imported_module,
-                std::ptr::null_mut(),
-            )
-            .as_result()?;
-            ChakraRTInterface::JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
-                JsModuleRecord::default(),
-                WScript::fetch_imported_module_from_script,
-                std::ptr::null_mut(),
-            )
-            .as_result()?;
-            ChakraRTInterface::JsModuleHostInfoSetNotifyModuleReadyCallback(
-                JsModuleRecord::default(),
-                WScript::notify_module_ready_callback,
-                std::ptr::null_mut(),
-            )
-            .as_result()?;
-            ChakraRTInterface::JsModuleHostInfoSetInitializeImportMetaCallback(
-                JsModuleRecord::default(),
-                WScript::initialize_import_meta_callback,
-                std::ptr::null_mut(),
-            )
-            .as_result()?;
-            ChakraRTInterface::JsModuleHostInfoSetReportModuleCompletionCallback(
-                JsModuleRecord::default(),
-                WScript::report_module_completion_callback,
-                std::ptr::null_mut(),
-            )
-            .as_result()?;
-        }
+        ChakraRt::js_module_host_info_set_fetch_imported_module_callback(
+            JsModuleRecord::default(),
+            WScript::fetch_imported_module,
+        )?;
+        ChakraRt::js_module_host_info_set_fetch_imported_module_from_script_callback(
+            JsModuleRecord::default(),
+            WScript::fetch_imported_module_from_script,
+        )?;
+        ChakraRt::js_module_host_info_set_notify_module_ready_callback(
+            JsModuleRecord::default(),
+            WScript::notify_module_ready_callback,
+        )?;
+        ChakraRt::js_module_host_info_set_initialize_import_meta_callback(
+            JsModuleRecord::default(),
+            WScript::initialize_import_meta_callback,
+        )?;
+        ChakraRt::js_module_host_info_set_report_module_completion_callback(
+            JsModuleRecord::default(),
+            WScript::report_module_completion_callback,
+        )?;
 
         Ok(())
     }
@@ -651,7 +639,6 @@ impl WScript {
     fn notify_module_ready_callback(
         referencing_module: JsModuleRecord,
         exception_var: JsValueRef,
-        callback: *mut CVoid,
     ) -> JsErrorCode {
         if !exception_var.is_null() && HostConfigFlags::GetConfig().host.trace_host_callback {
             let mut specifier = JsValueRef::default();
@@ -688,7 +675,6 @@ impl WScript {
     fn initialize_import_meta_callback(
         referencing_module: JsModuleRecord,
         import_meta_var: JsValueRef,
-        callback: *mut CVoid,
     ) -> JsErrorCode {
         if !import_meta_var.is_null() {
             let mut specifier = JsValueRef::default();
@@ -711,7 +697,6 @@ impl WScript {
     fn report_module_completion_callback(
         module: JsModuleRecord,
         exception: JsValueRef,
-        callback: *mut CVoid,
     ) -> JsErrorCode {
         if !exception.is_null() {
             let mut specifier = JsValueRef::default();
@@ -742,7 +727,6 @@ impl WScript {
         #[allow(unused_variables)] referencing_source_context: JsSourceContext,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
-        callback: *mut CVoid,
     ) -> JsErrorCode {
         unsafe {
             match fetch_imported_module_helper(
@@ -766,7 +750,6 @@ impl WScript {
         referencing_module: JsModuleRecord,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
-        callback: *mut CVoid,
     ) -> JsErrorCode {
         let directory = {
             let guard = MODULE_DIRECTORY_MAP.0.read().unwrap();

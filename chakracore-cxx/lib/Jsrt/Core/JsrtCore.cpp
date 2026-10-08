@@ -221,7 +221,7 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetHostDefined(
 
 JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleCallback(
     _In_opt_ JsModuleRecord requestModule,
-    _In_ FetchImportedModuleCallBack callback,
+    _In_ rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef specifier, JsModuleRecord *dependentModuleRecord, void *callbackData)> callback,
     void *callbackData)
 {
     Js::ScriptContext* scriptContext;
@@ -246,7 +246,9 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleCallback(
 
 JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
     _In_opt_ JsModuleRecord requestModule,
-    _In_ FetchImportedModuleFromScriptCallBack callback,
+    _In_ rust::Fn<JsErrorCode(JsSourceContext dwReferencingSourceContext, JsValueRef specifier,
+                                   JsModuleRecord *dependentModuleRecord, void *callbackData)>
+        callback,
     void *callbackData)
 {
     Js::ScriptContext* scriptContext;
@@ -270,7 +272,8 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleFromScriptCa
 
 JsErrorCode chakracore::jsrt::JsModuleHostInfoSetNotifyModuleReadyCallback(
     _In_opt_ JsModuleRecord requestModule,
-    _In_ NotifyModuleReadyCallback callback,
+    _In_ rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef exceptionVar, void *callbackData)>
+        callback,
     void *callbackData)
 {
     Js::ScriptContext* scriptContext;
@@ -295,7 +298,8 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetNotifyModuleReadyCallback(
 
 JsErrorCode chakracore::jsrt::JsModuleHostInfoSetInitializeImportMetaCallback(
     _In_opt_ JsModuleRecord requestModule,
-    _In_ InitializeImportMetaCallback callback,
+    _In_ rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef importMetaVar, void *callbackData)>
+        callback,
     void *callbackData)
 {
     Js::ScriptContext* scriptContext;
@@ -319,7 +323,7 @@ JsErrorCode chakracore::jsrt::JsModuleHostInfoSetInitializeImportMetaCallback(
 
 JsErrorCode chakracore::jsrt::JsModuleHostInfoSetReportModuleCompletionCallback(
     _In_opt_ JsModuleRecord requestModule,
-    _In_ ReportModuleCompletionCallback callback,
+    _In_ rust::Fn<JsErrorCode(JsModuleRecord module, JsValueRef exception, void *callbackData)> callback,
     void *callbackData)
 {
     Js::ScriptContext* scriptContext;
