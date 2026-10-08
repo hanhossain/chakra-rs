@@ -162,7 +162,6 @@ JsErrorCode chakracore::jsrt::JsSetModuleHostInfo(
     }
     JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
     JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
-        JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
         switch (moduleHostInfo)
         {
         case JsModuleHostInfo_Exception:
@@ -173,27 +172,184 @@ JsErrorCode chakracore::jsrt::JsSetModuleHostInfo(
         case JsModuleHostInfo_HostDefined:
             moduleRecord->SetHostDefined(hostInfo);
             break;
-        case JsModuleHostInfo_FetchImportedModuleCallback:
-            currentContext->GetHostScriptContext()->SetFetchImportedModuleCallback(reinterpret_cast<FetchImportedModuleCallBack>(hostInfo));
-            break;
-        case JsModuleHostInfo_FetchImportedModuleFromScriptCallback:
-            currentContext->GetHostScriptContext()->SetFetchImportedModuleFromScriptCallback(reinterpret_cast<FetchImportedModuleFromScriptCallBack>(hostInfo));
-            break;
-        case JsModuleHostInfo_NotifyModuleReadyCallback:
-            currentContext->GetHostScriptContext()->SetNotifyModuleReadyCallback(reinterpret_cast<NotifyModuleReadyCallback>(hostInfo));
-            break;
-        case JsModuleHostInfo_InitializeImportMetaCallback:
-            currentContext->GetHostScriptContext()->SetInitializeImportMetaCallback(reinterpret_cast<InitializeImportMetaCallback>(hostInfo));
-            break;
-        case JsModuleHostInfo_ReportModuleCompletionCallback:
-            currentContext->GetHostScriptContext()->SetReportModuleCompletionCallback(reinterpret_cast<ReportModuleCompletionCallback>(hostInfo));
-            break;
         case JsModuleHostInfo_Url:
             moduleRecord->SetSpecifier(hostInfo);
             break;
         default:
             return JsInvalidModuleHostInfoKind;
         };
+        return JsNoError;
+    });
+    return errorCode;
+}
+
+JsErrorCode chakracore::jsrt::JsModuleHostInfoSetException(
+    _In_opt_ JsModuleRecord requestModule,
+    _In_ void* hostInfo)
+{
+    if (!Js::SourceTextModuleRecord::Is(requestModule))
+    {
+        return JsErrorInvalidArgument;
+    }
+    Js::SourceTextModuleRecord *moduleRecord = Js::SourceTextModuleRecord::FromHost(requestModule);
+    Js::ScriptContext *scriptContext = moduleRecord->GetScriptContext();
+    JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
+    JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        int32_t hr = moduleRecord->OnHostException(hostInfo);
+        return (hr == NOERROR) ? JsNoError : JsErrorInvalidArgument;
+    });
+    return errorCode;
+}
+
+JsErrorCode chakracore::jsrt::JsModuleHostInfoSetHostDefined(
+    _In_opt_ JsModuleRecord requestModule,
+    _In_ void* hostInfo)
+{
+    if (!Js::SourceTextModuleRecord::Is(requestModule))
+    {
+        return JsErrorInvalidArgument;
+    }
+    Js::SourceTextModuleRecord *moduleRecord = Js::SourceTextModuleRecord::FromHost(requestModule);
+    Js::ScriptContext *scriptContext = moduleRecord->GetScriptContext();
+    JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
+    JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        moduleRecord->SetHostDefined(hostInfo);
+        return JsNoError;
+    });
+    return errorCode;
+}
+
+JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleCallback(
+    _In_opt_ JsModuleRecord requestModule,
+    _In_ FetchImportedModuleCallBack hostInfo)
+{
+    Js::ScriptContext* scriptContext;
+    Js::SourceTextModuleRecord* moduleRecord;
+    if (!Js::SourceTextModuleRecord::Is(requestModule))
+    {
+        scriptContext = JsrtContext::GetCurrent()->GetScriptContext();
+    }
+    else
+    {
+        moduleRecord = Js::SourceTextModuleRecord::FromHost(requestModule);
+        scriptContext = moduleRecord->GetScriptContext();
+    }
+    JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
+    JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
+        currentContext->GetHostScriptContext()->SetFetchImportedModuleCallback(hostInfo);
+        return JsNoError;
+    });
+    return errorCode;
+}
+
+JsErrorCode chakracore::jsrt::JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
+    _In_opt_ JsModuleRecord requestModule,
+    _In_ FetchImportedModuleFromScriptCallBack hostInfo)
+{
+    Js::ScriptContext* scriptContext;
+    if (!Js::SourceTextModuleRecord::Is(requestModule))
+    {
+        scriptContext = JsrtContext::GetCurrent()->GetScriptContext();
+    }
+    else
+    {
+        Js::SourceTextModuleRecord *moduleRecord = Js::SourceTextModuleRecord::FromHost(requestModule);
+        scriptContext = moduleRecord->GetScriptContext();
+    }
+    JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
+    JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
+        currentContext->GetHostScriptContext()->SetFetchImportedModuleFromScriptCallback(hostInfo);
+        return JsNoError;
+    });
+    return errorCode;
+}
+
+JsErrorCode chakracore::jsrt::JsModuleHostInfoSetNotifyModuleReadyCallback(
+    _In_opt_ JsModuleRecord requestModule,
+    _In_ NotifyModuleReadyCallback hostInfo)
+{
+    Js::ScriptContext* scriptContext;
+    Js::SourceTextModuleRecord* moduleRecord;
+    if (!Js::SourceTextModuleRecord::Is(requestModule))
+    {
+        scriptContext = JsrtContext::GetCurrent()->GetScriptContext();
+    }
+    else
+    {
+        moduleRecord = Js::SourceTextModuleRecord::FromHost(requestModule);
+        scriptContext = moduleRecord->GetScriptContext();
+    }
+    JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
+    JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
+        currentContext->GetHostScriptContext()->SetNotifyModuleReadyCallback(hostInfo);
+        return JsNoError;
+    });
+    return errorCode;
+}
+
+JsErrorCode chakracore::jsrt::JsModuleHostInfoSetInitializeImportMetaCallback(
+    _In_opt_ JsModuleRecord requestModule,
+    _In_ InitializeImportMetaCallback hostInfo)
+{
+    Js::ScriptContext* scriptContext;
+    if (!Js::SourceTextModuleRecord::Is(requestModule))
+    {
+        scriptContext = JsrtContext::GetCurrent()->GetScriptContext();
+    }
+    else
+    {
+        Js::SourceTextModuleRecord *moduleRecord = Js::SourceTextModuleRecord::FromHost(requestModule);
+        scriptContext = moduleRecord->GetScriptContext();
+    }
+    JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
+    JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
+        currentContext->GetHostScriptContext()->SetInitializeImportMetaCallback(hostInfo);
+        return JsNoError;
+    });
+    return errorCode;
+}
+
+JsErrorCode chakracore::jsrt::JsModuleHostInfoSetReportModuleCompletionCallback(
+    _In_opt_ JsModuleRecord requestModule,
+    _In_ ReportModuleCompletionCallback hostInfo)
+{
+    Js::ScriptContext* scriptContext;
+    if (!Js::SourceTextModuleRecord::Is(requestModule))
+    {
+        scriptContext = JsrtContext::GetCurrent()->GetScriptContext();
+    }
+    else
+    {
+        Js::SourceTextModuleRecord *moduleRecord = Js::SourceTextModuleRecord::FromHost(requestModule);
+        scriptContext = moduleRecord->GetScriptContext();
+    }
+    JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
+    JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
+        currentContext->GetHostScriptContext()->SetReportModuleCompletionCallback(hostInfo);
+        return JsNoError;
+    });
+    return errorCode;
+}
+
+JsErrorCode chakracore::jsrt::JsModuleHostInfoSetUrl(
+    _In_opt_ JsModuleRecord requestModule,
+    _In_ void* hostInfo)
+{
+    if (!Js::SourceTextModuleRecord::Is(requestModule))
+    {
+        return JsErrorInvalidArgument;
+    }
+
+    Js::SourceTextModuleRecord *moduleRecord = Js::SourceTextModuleRecord::FromHost(requestModule);
+    Js::ScriptContext *scriptContext = moduleRecord->GetScriptContext();
+    JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
+    JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
+        moduleRecord->SetSpecifier(hostInfo);
         return JsNoError;
     });
     return errorCode;
@@ -213,7 +369,6 @@ JsErrorCode chakracore::jsrt::JsGetModuleHostInfo(
     Js::ScriptContext* scriptContext = moduleRecord->GetScriptContext();
     JsrtContext* jsrtContext = (JsrtContext*)scriptContext->GetLibrary()->GetJsrtContext();
     JsErrorCode errorCode = SetContextAPIWrapper(jsrtContext, [&](Js::ScriptContext *scriptContext) -> JsErrorCode {
-        JsrtContextCore* currentContext = static_cast<JsrtContextCore*>(JsrtContextCore::GetCurrent());
         switch (moduleHostInfo)
         {
         case JsModuleHostInfo_Exception:
@@ -224,21 +379,6 @@ JsErrorCode chakracore::jsrt::JsGetModuleHostInfo(
             break;
         case JsModuleHostInfo_HostDefined:
             *hostInfo = moduleRecord->GetHostDefined();
-            break;
-        case JsModuleHostInfo_FetchImportedModuleCallback:
-            *hostInfo = reinterpret_cast<void*>(currentContext->GetHostScriptContext()->GetFetchImportedModuleCallback());
-            break;
-        case JsModuleHostInfo_FetchImportedModuleFromScriptCallback:
-            *hostInfo = reinterpret_cast<void*>(currentContext->GetHostScriptContext()->GetFetchImportedModuleFromScriptCallback());
-            break;
-        case JsModuleHostInfo_NotifyModuleReadyCallback:
-            *hostInfo = reinterpret_cast<void*>(currentContext->GetHostScriptContext()->GetNotifyModuleReadyCallback());
-            break;
-        case JsModuleHostInfo_InitializeImportMetaCallback:
-            *hostInfo = reinterpret_cast<void*>(currentContext->GetHostScriptContext()->GetInitializeImportMetaCallback());
-            break;
-        case JsModuleHostInfo_ReportModuleCompletionCallback:
-            *hostInfo = reinterpret_cast<void*>(currentContext->GetHostScriptContext()->GetReportModuleCompletionCallback());
             break;
         case JsModuleHostInfo_Url:
             *hostInfo = reinterpret_cast<void*>(moduleRecord->GetSpecifier());

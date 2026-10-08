@@ -129,9 +129,57 @@ mod ffi {
         type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsSetModuleHostInfo(
+        unsafe fn JsModuleHostInfoSetException(
             request_module: JsModuleRecord,
-            module_host_info: JsModuleHostInfoKind,
+            host_info: *mut CVoid,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsModuleHostInfoSetHostDefined(
+            request_module: JsModuleRecord,
+            host_info: *mut CVoid,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        fn JsModuleHostInfoSetFetchImportedModuleCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                referencingModule: JsModuleRecord,
+                specifier: JsValueRef,
+                dependentModuleRecord: *mut JsModuleRecord,
+            ) -> JsErrorCode,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        fn JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                dwReferencingSourceContext: JsSourceContext,
+                specifier: JsValueRef,
+                dependentModuleRecord: *mut JsModuleRecord,
+            ) -> JsErrorCode,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        fn JsModuleHostInfoSetNotifyModuleReadyCallback(
+            request_module: JsModuleRecord,
+            callback: fn(
+                referencingModule: JsModuleRecord,
+                exceptionVar: JsValueRef,
+            ) -> JsErrorCode,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        fn JsModuleHostInfoSetInitializeImportMetaCallback(
+            request_module: JsModuleRecord,
+            callback: fn(
+                referencingModule: JsModuleRecord,
+                importMetaVar: JsValueRef,
+            ) -> JsErrorCode,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        fn JsModuleHostInfoSetReportModuleCompletionCallback(
+            request_module: JsModuleRecord,
+            callback: fn(module: JsModuleRecord, exception: JsValueRef) -> JsErrorCode,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
+        unsafe fn JsModuleHostInfoSetUrl(
+            request_module: JsModuleRecord,
             host_info: *mut CVoid,
         ) -> JsErrorCode;
         #[Self = "ChakraRTInterface"]

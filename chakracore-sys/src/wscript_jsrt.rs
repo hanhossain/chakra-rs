@@ -610,38 +610,31 @@ impl WScript {
     }
 
     fn set_module_host_info_callbacks() -> Result<(), JsError> {
-        unsafe {
-            ChakraRTInterface::JsSetModuleHostInfo(
-                JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleCallback,
-                WScript::fetch_imported_module as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
-                JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleFromScriptCallback,
-                WScript::fetch_imported_module_from_script as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
-                JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_NotifyModuleReadyCallback,
-                WScript::notify_module_ready_callback as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
-                JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_InitializeImportMetaCallback,
-                WScript::initialize_import_meta_callback as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
-                JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_ReportModuleCompletionCallback,
-                WScript::report_module_completion_callback as _,
-            )
-            .as_result()?;
-        }
+        ChakraRTInterface::JsModuleHostInfoSetFetchImportedModuleCallback(
+            JsModuleRecord::default(),
+            WScript::fetch_imported_module,
+        )
+        .as_result()?;
+        ChakraRTInterface::JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
+            JsModuleRecord::default(),
+            WScript::fetch_imported_module_from_script,
+        )
+        .as_result()?;
+        ChakraRTInterface::JsModuleHostInfoSetNotifyModuleReadyCallback(
+            JsModuleRecord::default(),
+            WScript::notify_module_ready_callback,
+        )
+        .as_result()?;
+        ChakraRTInterface::JsModuleHostInfoSetInitializeImportMetaCallback(
+            JsModuleRecord::default(),
+            WScript::initialize_import_meta_callback,
+        )
+        .as_result()?;
+        ChakraRTInterface::JsModuleHostInfoSetReportModuleCompletionCallback(
+            JsModuleRecord::default(),
+            WScript::report_module_completion_callback,
+        )
+        .as_result()?;
 
         Ok(())
     }
@@ -735,7 +728,7 @@ impl WScript {
     /// we are not doing any translation, just treat the specifier as fileName.
     /// While this call will come back directly from runtime script or module code, the additional
     /// task can be scheduled asynchronously that executed later.
-    unsafe fn fetch_imported_module_from_script(
+    fn fetch_imported_module_from_script(
         #[allow(unused_variables)] referencing_source_context: JsSourceContext,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
@@ -758,7 +751,7 @@ impl WScript {
     /// we are not doing any translation, just treat the specifier as fileName.
     /// While this call will come back directly from ParseModuleSource, the additional
     /// task are treated as Promise that will be executed later.
-    unsafe fn fetch_imported_module(
+    fn fetch_imported_module(
         referencing_module: JsModuleRecord,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
