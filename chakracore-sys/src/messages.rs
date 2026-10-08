@@ -1,5 +1,5 @@
+use crate::config::ConfigContext;
 use crate::helpers::ScriptCache;
-use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, JsError, JsErrorCode, JsModuleRecord, JsParseScriptAttributes, JsSourceContext,
     JsValueRef, JsValueType,
@@ -183,6 +183,7 @@ pub(crate) struct ModuleMessage {
     full_path: Option<String>,
     time: u32,
     id: u32,
+    config_context: ConfigContext,
 }
 
 impl ModuleMessage {
@@ -190,6 +191,7 @@ impl ModuleMessage {
         module_record: JsModuleRecord,
         specifier: JsValueRef,
         full_path: Option<&str>,
+        config_context: &ConfigContext,
     ) -> Self {
         let id = MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed);
         let mut path: Option<String> = None;
@@ -209,6 +211,7 @@ impl ModuleMessage {
             full_path: path,
             time: 0,
             id,
+            config_context: config_context.clone(),
         }
     }
 
@@ -247,7 +250,7 @@ impl ModuleMessage {
             return Ok(());
         };
 
-        if !HostConfigFlags::GetConfig().host.mute_host_error_msg {
+        if !self.config_context.host.mute_host_error_msg {
             let actual_record = MODULE_RECORD_MAP
                 .0
                 .read()

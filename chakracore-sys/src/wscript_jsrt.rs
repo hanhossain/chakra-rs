@@ -306,7 +306,7 @@ impl WScript {
             true,
         )?;
 
-        WScript::set_module_host_info_callbacks()?;
+        WScript::set_module_host_info_callbacks(config_context)?;
 
         // When the host config `Test262` is set,
         // WScript will have the extra support API below and $262 will be
@@ -609,18 +609,38 @@ impl WScript {
         }
     }
 
-    fn set_module_host_info_callbacks() -> Result<(), JsError> {
+    fn set_module_host_info_callbacks(config_context: &ConfigContext) -> Result<(), JsError> {
         ChakraRt::js_module_host_info_set_fetch_imported_module_callback(
             JsModuleRecord::default(),
-            WScript::fetch_imported_module,
+            |referencing_module, specifier, dependent_module_record| {
+                WScript::fetch_imported_module(
+                    referencing_module,
+                    specifier,
+                    dependent_module_record,
+                    config_context,
+                )
+            },
         )?;
         ChakraRt::js_module_host_info_set_fetch_imported_module_from_script_callback(
             JsModuleRecord::default(),
-            WScript::fetch_imported_module_from_script,
+            |referencing_source_context, specifier, dependent_module_record| {
+                WScript::fetch_imported_module_from_script(
+                    referencing_source_context,
+                    specifier,
+                    dependent_module_record,
+                    config_context,
+                )
+            },
         )?;
         ChakraRt::js_module_host_info_set_notify_module_ready_callback(
             JsModuleRecord::default(),
-            WScript::notify_module_ready_callback,
+            |referencing_module, exception_var| {
+                WScript::notify_module_ready_callback(
+                    referencing_module,
+                    exception_var,
+                    config_context,
+                )
+            },
         )?;
         ChakraRt::js_module_host_info_set_initialize_import_meta_callback(
             JsModuleRecord::default(),
@@ -639,8 +659,9 @@ impl WScript {
     fn notify_module_ready_callback(
         referencing_module: JsModuleRecord,
         exception_var: JsValueRef,
+        config_context: &ConfigContext,
     ) -> JsErrorCode {
-        if !exception_var.is_null() && HostConfigFlags::GetConfig().host.trace_host_callback {
+        if !exception_var.is_null() && config_context.host.trace_host_callback {
             let mut specifier = JsValueRef::default();
             unsafe {
                 ChakraRTInterface::JsGetModuleHostInfo(
@@ -664,6 +685,7 @@ impl WScript {
                 referencing_module,
                 JsValueRef::default(),
                 None,
+                config_context,
             ));
             unsafe {
                 Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);
@@ -727,6 +749,7 @@ impl WScript {
         #[allow(unused_variables)] referencing_source_context: JsSourceContext,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
+        config_context: &ConfigContext,
     ) -> JsErrorCode {
         unsafe {
             match fetch_imported_module_helper(
@@ -734,6 +757,7 @@ impl WScript {
                 specifier,
                 dependent_module_record,
                 "",
+                config_context,
             ) {
                 Ok(()) => JsErrorCode::JsNoError,
                 Err(FetchImportedModuleHelperError::JsError(err)) => err.into(),
@@ -750,6 +774,7 @@ impl WScript {
         referencing_module: JsModuleRecord,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
+        config_context: &ConfigContext,
     ) -> JsErrorCode {
         let directory = {
             let guard = MODULE_DIRECTORY_MAP.0.read().unwrap();
@@ -764,6 +789,7 @@ impl WScript {
                 specifier,
                 dependent_module_record,
                 &directory,
+                config_context,
             ) {
                 Ok(()) => JsErrorCode::JsNoError,
                 Err(FetchImportedModuleHelperError::JsError(err)) => err.into(),
@@ -1474,6 +1500,7 @@ unsafe fn fetch_imported_module_helper(
     specifier: JsValueRef,
     dependent_module_record: *mut JsModuleRecord,
     ref_dir: &str,
+    config_context: &ConfigContext,
 ) -> Result<(), FetchImportedModuleHelperError> {
     unsafe {
         *dependent_module_record = JsModuleRecord::default();
@@ -1535,6 +1562,7 @@ unsafe fn fetch_imported_module_helper(
         referencing_module,
         specifier,
         abs_path.to_str(),
+        config_context,
     ));
     unsafe {
         Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(module_message);
