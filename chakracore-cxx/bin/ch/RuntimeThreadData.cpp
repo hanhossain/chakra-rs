@@ -90,7 +90,7 @@ RuntimeThreadData *RuntimeThreadData::NewWithInitialSource(const rust::String &i
     return new RuntimeThreadData{initialSource};
 }
 
-uint32_t RuntimeThreadData::ThreadProc()
+uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::ConfigContext &configContext)
 {
     auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
     JsValueRef scriptSource;
@@ -106,7 +106,7 @@ uint32_t RuntimeThreadData::ThreadProc()
 
     try
     {
-        chakra_rs::WScript::initialize();
+        chakra_rs::WScript::initialize(configContext);
     }
     catch (const rust::Error &err)
     {

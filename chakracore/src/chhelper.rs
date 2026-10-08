@@ -33,7 +33,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
         ChakraRTInterface::JsCreateContext(runtime, &raw mut context).as_result()?;
     }
     ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
-    WScript::initialize()?;
+    WScript::initialize(config)?;
 
     let path = std::fs::canonicalize(&config.core.filename)?;
     let path = path.to_str().unwrap().to_owned();
@@ -44,6 +44,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
             &file_contents,
             &path,
             jsrt_attributes,
+            config,
         )?;
     } else if config.host.use_parser_state_cache {
         create_parser_state_and_run_script(
@@ -51,6 +52,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
             &file_contents,
             &path,
             jsrt_attributes,
+            config,
         )?;
     } else {
         run_script(
@@ -71,12 +73,13 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     Ok(())
 }
 
-#[tracing::instrument(skip(contents))]
+#[tracing::instrument(skip(contents, config_context))]
 fn create_parser_state_and_run_script(
     filename: &str,
     contents: &String,
     full_path: &String,
     jsrt_attributes: JsRuntimeAttributes,
+    config_context: &ConfigContext,
 ) -> Result<(), Error> {
     let buffer = get_parser_state_buffer(contents)?;
 
@@ -95,7 +98,7 @@ fn create_parser_state_and_run_script(
     };
 
     // initialize the WScript object on the new context
-    WScript::initialize()?;
+    WScript::initialize(config_context)?;
 
     run_script(filename, contents, JsValueRef::default(), full_path, buffer)?;
 
@@ -104,12 +107,13 @@ fn create_parser_state_and_run_script(
     Ok(())
 }
 
-#[tracing::instrument(skip(contents))]
+#[tracing::instrument(skip(contents, config_context))]
 fn create_and_run_serialized_script(
     filename: &str,
     contents: &String,
     full_path: &String,
     jsrt_attributes: JsRuntimeAttributes,
+    config_context: &ConfigContext,
 ) -> Result<(), Error> {
     let buffer_val = get_serialized_buffer(contents)?;
 
@@ -128,7 +132,7 @@ fn create_and_run_serialized_script(
     };
 
     // initialize the WScript object on the new context
-    WScript::initialize()?;
+    WScript::initialize(config_context)?;
 
     run_script(
         filename,

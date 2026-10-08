@@ -8,6 +8,7 @@
 #include <condition_variable>
 #include <list>
 #include <rust/cxx.h>
+#include "chakracore-sys/src/config.rs.h"
 
 class RuntimeThreadData
 {
@@ -33,7 +34,7 @@ public:
 
     std::list<RuntimeThreadData*> children;
 
-    uint32_t ThreadProc();
+    uint32_t ThreadProc(const chakra_rs::ConfigContext &configContext);
     void set_leaving(bool leaving);
     void set_initial_script_completed();
     void reset_initial_script_completed();

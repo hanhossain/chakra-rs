@@ -1,3 +1,4 @@
+use crate::config::ConfigContext;
 use crate::helpers::{ScriptCache, TestHooks};
 use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
@@ -48,6 +49,7 @@ mod ffi {
     unsafe extern "C++" {
         include!("WScriptJsrt.h");
         include!("PlatformAgnostic/ChakraICU.h");
+        include!("chakracore-sys/src/config.rs.h");
         include!("chakracore-sys/src/str_helper.rs.h");
 
         type WScriptJsrt;
@@ -61,6 +63,8 @@ mod ffi {
         type MessageQueue;
         #[namespace = "chakra_rs"]
         type Message = crate::messages::Message;
+        #[namespace = "chakra_rs"]
+        type ConfigContext = crate::config::ConfigContext;
 
         #[Self = "MessageQueue"]
         fn New() -> UniquePtr<MessageQueue>;
@@ -92,6 +96,7 @@ mod ffi {
             script_inject_type: &str,
             filename: String,
             is_file: bool,
+            config_context: &ConfigContext,
         ) -> JsValueRef;
     }
 
@@ -127,7 +132,7 @@ mod ffi {
         fn wait_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
         unsafe fn add_child(self: Pin<&mut RuntimeThreadData>, child: *mut RuntimeThreadData);
         unsafe fn set_parent(self: Pin<&mut RuntimeThreadData>, parent: *mut RuntimeThreadData);
-        fn ThreadProc(self: Pin<&mut RuntimeThreadData>) -> u32;
+        fn ThreadProc(self: Pin<&mut RuntimeThreadData>, config_context: &ConfigContext) -> u32;
         fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
     }
 
@@ -148,7 +153,7 @@ mod ffi {
         type WScript;
 
         #[Self = "WScript"]
-        fn initialize() -> Result<()>;
+        fn initialize(config_context: &ConfigContext) -> Result<()>;
 
         #[Self = "WScript"]
         fn load_script(
@@ -158,6 +163,7 @@ mod ffi {
             script_inject_type: &str,
             is_source_module: bool,
             is_file: bool,
+            config_context: &ConfigContext,
         ) -> JsValueRef;
 
         #[Self = "WScript"]
@@ -183,8 +189,8 @@ pub(crate) struct ModuleRecordEntry {
 pub struct WScript;
 
 impl WScript {
-    fn create_arguments_array() -> Result<JsArray, JsError> {
-        let host_args = &HostConfigFlags::GetConfig().host_args;
+    fn create_arguments_array(config_context: &ConfigContext) -> Result<JsArray, JsError> {
+        let host_args = &config_context.host_args;
 
         let mut args_array = ChakraRt::create_array(host_args.len() as u32)?;
 
@@ -198,7 +204,7 @@ impl WScript {
     }
 
     #[tracing::instrument(err)]
-    pub fn initialize() -> Result<(), JsError> {
+    pub fn initialize(config_context: &ConfigContext) -> Result<(), JsError> {
         let icu_version = ffi::GetICUMajorVersion();
 
         let mut wscript_object = ChakraRt::create_object()?;
@@ -208,9 +214,15 @@ impl WScript {
         wscript_object.set_named_function("Echo", WScript::echo_callback)?;
         wscript_object.set_named_function("Quit", WScript::quit_callback)?;
 
-        wscript_object.set_named_function("LoadScriptFile", WScript::load_script_file_callback)?;
-        wscript_object.set_named_function("LoadScript", WScript::load_script_callback)?;
-        wscript_object.set_named_function("LoadModule", WScript::load_module_callback)?;
+        wscript_object.set_named_function("LoadScriptFile", |args| {
+            WScript::load_script_file_callback(args, config_context)
+        })?;
+        wscript_object.set_named_function("LoadScript", |args| {
+            WScript::load_script_callback(args, config_context)
+        })?;
+        wscript_object.set_named_function("LoadModule", |args| {
+            WScript::load_module_callback(args, config_context)
+        })?;
         wscript_object.set_named_function("SetTimeout", WScript::set_timeout_callback)?;
         wscript_object.set_named_function("ClearTimeout", WScript::clear_timeout_callback)?;
         wscript_object.set_named_function("Flag", WScript::flag_callback)?;
@@ -270,7 +282,7 @@ impl WScript {
 
         wscript_object.set_property(
             ChakraRt::create_property_id("Arguments")?,
-            &WScript::create_arguments_array()?,
+            &WScript::create_arguments_array(config_context)?,
             true,
         )?;
 
@@ -299,7 +311,7 @@ impl WScript {
         // When the host config `Test262` is set,
         // WScript will have the extra support API below and $262 will be
         // added to global scope
-        if HostConfigFlags::GetConfig().host.test262 {
+        if config_context.host.test262 {
             wscript_object.set_named_function("Broadcast", WScript::broadcast_callback)?;
 
             wscript_object
@@ -385,6 +397,7 @@ impl WScript {
         callee: JsValueRef,
         arguments: &[JsValueRef],
         is_source_module: bool,
+        config_context: &ConfigContext,
     ) -> anyhow::Result<JsValueRef> {
         anyhow::ensure!(
             arguments.len() >= 2 && arguments.len() <= 4,
@@ -414,18 +427,23 @@ impl WScript {
                 },
                 is_source_module,
                 true,
+                config_context,
             ))
         }
     }
 
-    fn load_script_file_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
-        WScript::load_script_file_helper(args.callee.clone(), args.arguments, false)
+    fn load_script_file_callback(
+        args: &JsNativeFunctionArgs,
+        config_context: &ConfigContext,
+    ) -> anyhow::Result<JsValueRef> {
+        WScript::load_script_file_helper(args.callee.clone(), args.arguments, false, config_context)
     }
 
     #[tracing::instrument(skip(args), err)]
     fn load_script_helper(
         args: &JsNativeFunctionArgs,
         is_source_module: bool,
+        config_context: &ConfigContext,
     ) -> anyhow::Result<JsValueRef> {
         if args.arguments.len() < 2 || args.arguments.len() > 4 {
             anyhow::bail!("Need more or fewer arguments for WScript.LoadScript");
@@ -460,15 +478,22 @@ impl WScript {
             &script_inject_type,
             filename,
             is_file,
+            config_context,
         ))
     }
 
-    fn load_script_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
-        Self::load_script_helper(args, false)
+    fn load_script_callback(
+        args: &JsNativeFunctionArgs,
+        config_context: &ConfigContext,
+    ) -> anyhow::Result<JsValueRef> {
+        Self::load_script_helper(args, false, config_context)
     }
 
-    fn load_module_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
-        Self::load_script_helper(args, true)
+    fn load_module_callback(
+        args: &JsNativeFunctionArgs,
+        config_context: &ConfigContext,
+    ) -> anyhow::Result<JsValueRef> {
+        Self::load_script_helper(args, true, config_context)
     }
 
     fn flag_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
@@ -1032,6 +1057,7 @@ impl WScript {
         script_inject_type: &str,
         is_source_module: bool,
         is_file: bool,
+        config_context: &ConfigContext,
     ) -> JsValueRef {
         Self::internal_load_script(
             callee,
@@ -1040,6 +1066,7 @@ impl WScript {
             script_inject_type,
             is_source_module,
             is_file,
+            config_context,
         )
         .unwrap_or_else(|error| {
             let (error, error_message) = match error {
@@ -1053,7 +1080,7 @@ impl WScript {
         })
     }
 
-    #[tracing::instrument(err)]
+    #[tracing::instrument(skip(config_context), err)]
     fn internal_load_script<'a>(
         callee: JsValueRef,
         file_name: &str,
@@ -1061,6 +1088,7 @@ impl WScript {
         script_inject_type: &str,
         is_source_module: bool,
         is_file: bool,
+        config_context: &ConfigContext,
     ) -> Result<JsValueRef, LoadScriptError> {
         let mut current_context = JsContextRef::default();
         let mut runtime = JsRuntimeHandle::default();
@@ -1158,7 +1186,7 @@ impl WScript {
             }
 
             // Initialize the host objects
-            Self::initialize()?;
+            Self::initialize(config_context)?;
 
             let mut script_source = JsValueRef::default();
             unsafe {
@@ -1225,16 +1253,22 @@ impl WScript {
                 data.set_parent(thread_data);
             }
             unsafe {
+                let thread_data_context = Box::new(ThreadDataContext {
+                    config_context,
+                    runtime_thread_data: child,
+                });
                 let mut thread_data = Pin::new_unchecked(&mut *thread_data);
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
                 thread_data.as_mut().reset_initial_script_completed();
                 let thread_handle = ffi::CreateThread(
                     |param| {
                         let param =
-                            std::mem::transmute::<*mut CVoid, *mut RuntimeThreadData>(param);
-                        Pin::new_unchecked(&mut *param).ThreadProc()
+                            std::mem::transmute::<*mut CVoid, *mut ThreadDataContext>(param);
+                        let thread_data_context = Box::from_raw(param);
+                        Pin::new_unchecked(&mut *thread_data_context.runtime_thread_data)
+                            .ThreadProc(thread_data_context.config_context)
                     },
-                    child as _,
+                    Box::into_raw(thread_data_context) as _,
                     0,
                 );
                 Pin::new_unchecked(&mut *child).set_thread_handle(thread_handle);
@@ -1401,6 +1435,11 @@ impl WScript {
             MESSAGE_QUEUE = message_queue.as_mut_ptr();
         }
     }
+}
+
+struct ThreadDataContext<'a> {
+    config_context: &'a ConfigContext,
+    runtime_thread_data: *mut RuntimeThreadData,
 }
 
 #[derive(thiserror::Error, Debug)]
