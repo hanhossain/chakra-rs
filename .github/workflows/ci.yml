@@ -34,7 +34,8 @@ jobs:
             os-image: macos-latest
             deps: brew install ninja --quiet
           - os: ubuntu
-            os-image: ubuntu-latest
+            # TODO: use ubuntu-latest again
+            os-image: ubuntu-26.04
             deps: sudo apt-get install -y ninja-build clang-19 lld-19 libc++-19-dev libc++abi-19-dev
           - build-type: debug
             features: "--features compile-cpp"
@@ -82,7 +83,8 @@ jobs:
             os-prefix: macos
             deps: brew install ninja --quiet
           - os: ubuntu
-            os-image: ubuntu-latest
+            # TODO: use ubuntu-latest again
+            os-image: ubuntu-26.04
             os-prefix: linux
             deps: sudo apt-get install -y ninja-build clang-19 lld-19 libc++-19-dev libc++abi-19-dev
     steps:
