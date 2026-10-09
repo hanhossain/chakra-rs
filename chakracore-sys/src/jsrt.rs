@@ -199,6 +199,24 @@ impl ChakraRt {
         Ok(())
     }
 
+    pub fn set_promise_continuation_callback<T>(callback: T) -> Result<Box<T>, JsError>
+    where
+        T: FnMut(JsValueRef),
+    {
+        let mut callback = Box::new(callback);
+        unsafe {
+            bridge::JsSetPromiseContinuationCallback(
+                |task, state| {
+                    let func = &mut *std::mem::transmute::<*mut CVoid, *mut T>(state);
+                    func(task);
+                },
+                Box::as_mut_ptr(&mut callback) as _,
+            )
+            .as_result()?;
+        }
+        Ok(callback)
+    }
+
     pub fn int_to_number(value: i32) -> Result<JsValueRef, JsError> {
         let mut value_ref = JsValueRef::default();
         unsafe {

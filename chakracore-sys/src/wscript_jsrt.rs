@@ -582,15 +582,15 @@ impl WScript {
         Ok(Some(obj))
     }
 
-    pub unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid) {
+    pub unsafe fn promise_continuation_callback(
+        &self,
+        task: JsValueRef,
+        message_queue: *mut MessageQueue,
+    ) {
         assert!(!task.is_null());
-        assert!(!callback_state.is_null());
 
         unsafe {
-            let message_queue =
-                std::mem::transmute::<*mut CVoid, *mut MessageQueue>(callback_state);
             let msg = Message::new_callback(CallbackMessage::new(0, task));
-
             Pin::new_unchecked(&mut *message_queue).InsertSorted(msg);
         }
     }
@@ -1165,17 +1165,13 @@ impl WScript {
             Ok(return_value)
         } else if script_inject_type == "samethread" {
             let mut new_context = JsContextRef::default();
-            unsafe {
+            let callback = unsafe {
                 ChakraRTInterface::JsCreateContext(runtime, &raw mut new_context).as_result()?;
                 ChakraRTInterface::JsSetCurrentContext(new_context).as_result()?;
-                ChakraRTInterface::JsSetPromiseContinuationCallback(
-                    |task, callback_state| {
-                        Self::promise_continuation_callback(task, callback_state)
-                    },
-                    MESSAGE_QUEUE as _,
-                )
-                .as_result()?;
-            }
+                ChakraRt::set_promise_continuation_callback(|task| {
+                    self.promise_continuation_callback(task, MESSAGE_QUEUE)
+                })?
+            };
 
             // Initialize the host objects
             self.initialize()?;
@@ -1230,6 +1226,7 @@ impl WScript {
                 return_value = *global_object;
             }
 
+            drop(callback);
             ChakraRTInterface::JsSetCurrentContext(current_context).as_result()?;
 
             Ok(return_value)

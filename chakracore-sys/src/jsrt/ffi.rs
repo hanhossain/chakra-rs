@@ -273,6 +273,11 @@ pub(super) mod bridge {
             ) -> JsErrorCode,
             callback_data: *mut CVoid,
         ) -> JsErrorCode;
+
+        unsafe fn JsSetPromiseContinuationCallback(
+            promise_continuation_callback: unsafe fn(task: JsValueRef, callback_state: *mut CVoid),
+            callback_state: *mut CVoid,
+        ) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}

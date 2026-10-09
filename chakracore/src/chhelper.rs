@@ -3,7 +3,7 @@ use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers::ScriptCache;
 use chakracore_sys::host_config::HostConfigFlags;
 use chakracore_sys::jsrt::{
-    JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
+    ChakraRt, JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
     JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
 use chakracore_sys::rt_interface::ChakraRTInterface;
@@ -202,18 +202,14 @@ fn run_script(
     wscript: &WScript,
 ) -> Result<(), Error> {
     let mut message_queue = MessageQueue::New();
-    let fname = unsafe {
+    let (fname, _callback) = unsafe {
         WScript::add_message_queue(&message_queue);
-        ChakraRTInterface::JsSetPromiseContinuationCallback(
-            |task, callback_state| {
-                WScript::promise_continuation_callback(task, callback_state);
-            },
-            message_queue.as_mut_ptr() as *mut _,
-        )
-        .as_result()?;
+        let callback = ChakraRt::set_promise_continuation_callback(|task| {
+            wscript.promise_continuation_callback(task, message_queue.as_mut_ptr())
+        })?;
         let mut fname = JsValueRef::default();
         ChakraRTInterface::JsCreateString(full_path, &raw mut fname).as_result()?;
-        fname
+        (fname, callback)
     };
 
     let run_script_result = if !buffer_value.is_null() {

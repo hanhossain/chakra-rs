@@ -2411,7 +2411,7 @@ namespace chakracore::jsrt
     /// </returns>
     JsErrorCode
         JsSetPromiseContinuationCallback(
-            _In_opt_ JsPromiseContinuationCallback promiseContinuationCallback,
+            _In_opt_ rust::Fn<void(JsValueRef task, void *callbackState)> promiseContinuationCallback,
             _In_opt_ void *callbackState);
 
     /// <summary>

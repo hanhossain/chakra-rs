@@ -3116,7 +3116,8 @@ JsErrorCode chakracore::jsrt::JsIdle(_Out_opt_ unsigned int *nextIdleTick)
     });
 }
 
-JsErrorCode chakracore::jsrt::JsSetPromiseContinuationCallback(_In_opt_ JsPromiseContinuationCallback promiseContinuationCallback, _In_opt_ void *callbackState)
+JsErrorCode chakracore::jsrt::JsSetPromiseContinuationCallback(
+    _In_opt_ rust::Fn<void(JsValueRef task, void *callbackState)> promiseContinuationCallback, _In_opt_ void *callbackState)
 {
     return ContextAPINoScriptWrapper_NoRecord([&](Js::ScriptContext * scriptContext) -> JsErrorCode {
         scriptContext->GetLibrary()->SetNativeHostPromiseContinuationFunction(promiseContinuationCallback, callbackState);
