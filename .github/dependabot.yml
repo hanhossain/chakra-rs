@@ -21,3 +21,10 @@ updates:
       dependencies:
         patterns:
           - "*"
+        update-types:
+          - major
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-patch
+          - version-update:semver-minor
