@@ -1206,7 +1206,7 @@ impl WScript {
             let source_context = JsSourceContext(WScript::get_next_source_context());
 
             let mut return_value = JsValueRef::default();
-            let error_code = if HostConfigFlags::GetConfig().host.use_parser_state_cache {
+            let error_code = if self.config.host.use_parser_state_cache {
                 let mut parser_state = JsValueRef::default();
                 unsafe {
                     ChakraRTInterface::JsSerializeParserState(
@@ -1272,7 +1272,7 @@ impl WScript {
             let source_context = JsSourceContext(WScript::get_next_source_context());
 
             let mut return_value = JsValueRef::default();
-            let error_code = if HostConfigFlags::GetConfig().host.use_parser_state_cache {
+            let error_code = if self.config.host.use_parser_state_cache {
                 let mut parser_state = JsValueRef::default();
                 unsafe {
                     ChakraRTInterface::JsSerializeParserState(
