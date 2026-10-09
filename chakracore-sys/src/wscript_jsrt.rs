@@ -1,6 +1,5 @@
 use crate::config::ConfigContext;
 use crate::helpers::{ScriptCache, TestHooks};
-use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     CVoid, ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode,
     JsModuleHostInfoKind, JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes,
@@ -160,8 +159,12 @@ mod ffi {
             is_file: bool,
         ) -> JsValueRef;
 
-        #[Self = "WScript"]
-        fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef);
+        fn print_exception(
+            &self,
+            filename: &str,
+            js_error_code: JsErrorCode,
+            exception: JsValueRef,
+        );
 
         #[Self = "WScript"]
         fn get_next_source_context() -> usize;
@@ -219,7 +222,7 @@ impl WScript {
         })?;
         wscript_object.set_named_function("LoadScript", |args| self.load_script_callback(args))?;
         wscript_object.set_named_function("LoadModule", |args| self.load_module_callback(args))?;
-        wscript_object.set_named_function("SetTimeout", WScript::set_timeout_callback)?;
+        wscript_object.set_named_function("SetTimeout", |args| self.set_timeout_callback(args))?;
         wscript_object.set_named_function("ClearTimeout", WScript::clear_timeout_callback)?;
         wscript_object.set_named_function("Flag", WScript::flag_callback)?;
         wscript_object.set_named_function(
@@ -590,7 +593,7 @@ impl WScript {
         assert!(!task.is_null());
 
         unsafe {
-            let msg = Message::new_callback(CallbackMessage::new(0, task));
+            let msg = Message::new_callback(CallbackMessage::new(0, task, &self));
             Pin::new_unchecked(&mut *message_queue).InsertSorted(msg);
         }
     }
@@ -631,7 +634,7 @@ impl WScript {
             )?;
             ChakraRt::js_module_host_info_set_report_module_completion_callback(
                 JsModuleRecord::default(),
-                |module, exception| WScript::report_module_completion_callback(module, exception),
+                |module, exception| self.report_module_completion_callback(module, exception),
             )?;
         }
 
@@ -701,6 +704,7 @@ impl WScript {
     }
 
     fn report_module_completion_callback(
+        &self,
         module: JsModuleRecord,
         exception: JsValueRef,
     ) -> JsErrorCode {
@@ -713,7 +717,7 @@ impl WScript {
                     &raw mut specifier as _,
                 );
                 if let Ok(specifier) = specifier.to_string() {
-                    Self::print_exception(
+                    self.print_exception(
                         &specifier,
                         JsErrorCode::JsErrorScriptException,
                         exception,
@@ -941,14 +945,14 @@ impl WScript {
         Ok(())
     }
 
-    fn set_timeout_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+    fn set_timeout_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
         if args.arguments.len() != 3 {
             anyhow::bail!("invalid call to WScript.SetTimeout");
         }
 
         let function = args.arguments[1].clone();
         let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
-        let msg = Message::new_callback(CallbackMessage::new(time, function));
+        let msg = Message::new_callback(CallbackMessage::new(time, function, &self));
         let msg_id = msg.get_id();
         unsafe {
             Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);
@@ -1370,12 +1374,18 @@ impl WScript {
         }
     }
 
-    pub fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef) {
-        let _ = Self::internal_print_exception(filename, js_error_code, exception);
+    pub fn print_exception(
+        &self,
+        filename: &str,
+        js_error_code: JsErrorCode,
+        exception: JsValueRef,
+    ) {
+        let _ = self.internal_print_exception(filename, js_error_code, exception);
     }
 
-    #[tracing::instrument(err)]
+    #[tracing::instrument(skip(self), err)]
     fn internal_print_exception(
+        &self,
         filename: &str,
         js_error_code: JsErrorCode,
         mut exception: JsValueRef,
@@ -1398,7 +1408,7 @@ impl WScript {
             }
         }
 
-        if HostConfigFlags::GetConfig().host.mute_host_error_msg {
+        if self.config.host.mute_host_error_msg {
             return Ok(());
         }
 

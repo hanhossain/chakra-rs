@@ -33,7 +33,7 @@ mod ffi {
 }
 
 enum MessageInner<'a> {
-    Callback(CallbackMessage),
+    Callback(CallbackMessage<'a>),
     Module(ModuleMessage<'a>),
 }
 
@@ -42,8 +42,8 @@ pub struct Message<'a> {
 }
 
 impl<'a> Message<'a> {
-    #[tracing::instrument]
-    pub(crate) fn new_callback(msg: CallbackMessage) -> Box<Self> {
+    #[tracing::instrument(skip(msg))]
+    pub(crate) fn new_callback(msg: CallbackMessage<'a>) -> Box<Self> {
         Box::new(Self {
             msg: MessageInner::Callback(msg),
         })
@@ -85,22 +85,27 @@ impl<'a> Message<'a> {
     }
 }
 
-#[derive(Debug)]
-pub(crate) struct CallbackMessage {
+pub(crate) struct CallbackMessage<'a> {
     function: JsValueRef,
     time: u32,
     id: u32,
+    wscript: &'a WScript,
 }
 
-impl CallbackMessage {
-    pub(crate) fn new(time: u32, function: JsValueRef) -> Self {
+impl<'a> CallbackMessage<'a> {
+    pub(crate) fn new(time: u32, function: JsValueRef, wscript: &'a WScript) -> Self {
         let id = MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed);
         unsafe {
             ChakraRTInterface::JsAddRef(function.as_js_ref(), std::ptr::null_mut())
                 .as_result()
                 .unwrap();
         }
-        Self { time, function, id }
+        Self {
+            time,
+            function,
+            id,
+            wscript,
+        }
     }
 
     #[tracing::instrument(skip(self), err)]
@@ -135,7 +140,8 @@ impl CallbackMessage {
         };
 
         if let Err(err) = res {
-            WScript::print_exception(filename, err.into(), JsValueRef::default());
+            self.wscript
+                .print_exception(filename, err.into(), JsValueRef::default());
         }
 
         Ok(())
@@ -158,10 +164,10 @@ impl CallbackMessage {
     }
 }
 
-impl Drop for CallbackMessage {
+impl<'a> Drop for CallbackMessage<'a> {
     fn drop(&mut self) {
         if ChakraRt::has_exception().unwrap_or_default() {
-            WScript::print_exception(
+            self.wscript.print_exception(
                 "",
                 JsErrorCode::JsErrorScriptException,
                 JsValueRef::default(),
@@ -287,7 +293,8 @@ impl<'a> ModuleMessage<'a> {
         let Err(err) = self.internal_call() else {
             return;
         };
-        WScript::print_exception(filename, err.into(), JsValueRef::default());
+        self.wscript
+            .print_exception(filename, err.into(), JsValueRef::default());
     }
 
     fn get_time(&self) -> u32 {

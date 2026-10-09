@@ -8,26 +8,21 @@
 #include <rust/cxx.h>
 #include "ChakraCommon.h"
 
-#define IfJsErrorFailLog(expr) \
-do { \
-    JsErrorCode jsErrorCode = expr; \
-    if ((jsErrorCode) != JsNoError) { \
-        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
-        goto Error; \
-    } \
-} while (0)
+namespace chakra_rs {
+    struct WScript;
+}
 
-#define IfJsrtErrorFailLogAndRetErrorCode(expr) \
+#define IfJsErrorFailLog(expr, wscript) \
 do { \
     JsErrorCode jsErrorCode = expr; \
     if ((jsErrorCode) != JsNoError) { \
-        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode))); \
-        return (jsErrorCode); \
+        chakra::Logger::error(std::format("ERROR: {} failed. JsErrorCode=0x{:x} ({})", #expr, static_cast<int>(jsErrorCode), Helpers::JsErrorCodeToString(jsErrorCode, wscript))); \
+        goto Error; \
     } \
 } while (0)
 
 class Helpers
 {
 public:
-    static const char *JsErrorCodeToString(JsErrorCode jsErrorCode);
+    static const char *JsErrorCodeToString(JsErrorCode jsErrorCode, const chakra_rs::WScript &wscript);
 };

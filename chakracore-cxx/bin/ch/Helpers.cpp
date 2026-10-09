@@ -7,13 +7,13 @@
 #include "ChakraRtInterface.h"
 #include "chakracore-sys/src/wscript_jsrt.rs.h"
 
-const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode)
+const char* Helpers::JsErrorCodeToString(JsErrorCode jsErrorCode, const chakra_rs::WScript &wscript)
 {
     bool hasException = false;
     ChakraRTInterface::JsHasException(&hasException);
     if (hasException)
     {
-        chakra_rs::WScript::print_exception("", JsErrorScriptException, nullptr);
+        wscript.print_exception("", JsErrorScriptException, nullptr);
     }
 
     switch (jsErrorCode)
