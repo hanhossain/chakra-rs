@@ -1012,9 +1012,9 @@ impl WScript {
         Ok(Some(array_buffer))
     }
 
-    #[tracing::instrument(skip(file_content))]
-    pub fn module_entry_point(file_content: &str, full_name: &String) -> JsErrorCode {
-        Self::load_module_from_string(
+    #[tracing::instrument(skip(self, file_content))]
+    pub fn module_entry_point(&self, file_content: &str, full_name: &String) -> JsErrorCode {
+        self.load_module_from_string(
             OptionalStr {
                 has_value: true,
                 value: file_content,
@@ -1026,18 +1026,20 @@ impl WScript {
 
     // TODO: can now use Option<&str> since this is no longer exposed to C++.
     pub(crate) fn load_module_from_string(
+        &self,
         file_content: OptionalStr,
         full_name: &String,
         is_file: bool,
     ) -> JsErrorCode {
-        match Self::internal_load_module_from_string(file_content.into(), full_name, is_file) {
+        match self.internal_load_module_from_string(file_content.into(), full_name, is_file) {
             Ok(()) => JsErrorCode::JsNoError,
             Err(err) => err.into(),
         }
     }
 
-    #[tracing::instrument(err)]
+    #[tracing::instrument(skip(self), err)]
     fn internal_load_module_from_string(
+        &self,
         file_content: Option<&str>,
         full_name: &String,
         is_file: bool,
@@ -1105,7 +1107,7 @@ impl WScript {
         if error_code != JsErrorCode::JsNoError
             && !error_object.is_null()
             && file_content.is_some()
-            && !HostConfigFlags::GetConfig().host.ignore_script_error_code
+            && !self.config.host.ignore_script_error_code
         {
             let state = {
                 let lease = MODULE_ERROR_MAP.0.read().unwrap();
@@ -1176,7 +1178,7 @@ impl WScript {
         // this is called with LoadModuleCallback method as well where caller pass in a string that should be
         // treated as a module source text instead of opening a new file.
         if is_source_module || script_inject_type == "module" {
-            Self::internal_load_module_from_string(
+            self.internal_load_module_from_string(
                 content,
                 &full_path.to_str().unwrap_or_default().to_owned(),
                 is_file,

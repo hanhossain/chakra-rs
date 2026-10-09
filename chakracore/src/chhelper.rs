@@ -242,7 +242,7 @@ fn run_script(
             )
         }
     } else if wscript.config.host.module {
-        WScript::module_entry_point(contents, full_path)
+        wscript.module_entry_point(contents, full_path)
     } else {
         let mut script_source = JsValueRef::default();
         unsafe {
