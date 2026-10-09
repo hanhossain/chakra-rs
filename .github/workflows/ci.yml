@@ -36,7 +36,7 @@ jobs:
             deps: brew install ninja --quiet
           - os: ubuntu
             os-image: ubuntu-latest
-            deps: sudo apt-get install -y ninja-build clang-19 lld-19 libc++-19-dev libc++abi-19-dev
+            deps: sudo apt-get install -y ninja-build clang-20 lld-20 libc++-20-dev libc++abi-20-dev
           - build-type: debug
             features: "--features compile-cpp"
           - build-type: test
@@ -50,8 +50,8 @@ jobs:
         run: ${{ matrix.deps }}
       - if: ${{ runner.os == 'Linux' }}
         run: |
-          sudo ln -sf /usr/bin/clang++-19 /usr/bin/clang++
-          sudo ln -sf /usr/bin/clang-19 /usr/bin/clang
+          sudo ln -sf /usr/bin/clang++-20 /usr/bin/clang++
+          sudo ln -sf /usr/bin/clang-20 /usr/bin/clang
       - name: Install cargo-nextest
         uses: taiki-e/install-action@v2
         with:
@@ -86,15 +86,15 @@ jobs:
           - os: ubuntu
             os-image: ubuntu-latest
             os-prefix: linux
-            deps: sudo apt-get install -y ninja-build clang-19 lld-19 libc++-19-dev libc++abi-19-dev
+            deps: sudo apt-get install -y ninja-build clang-20 lld-20 libc++-20-dev libc++abi-20-dev
     steps:
       - uses: actions/checkout@v6
       - name: Install dependencies
         run: ${{ matrix.deps }}
       - if: ${{ runner.os == 'Linux' }}
         run: |
-          sudo ln -sf /usr/bin/clang++-19 /usr/bin/clang++
-          sudo ln -sf /usr/bin/clang-19 /usr/bin/clang
+          sudo ln -sf /usr/bin/clang++-20 /usr/bin/clang++
+          sudo ln -sf /usr/bin/clang-20 /usr/bin/clang
       - run: cargo check
       - run: cmake --preset ${{ matrix.os-prefix}}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
       - run: cmake --build build-${{ matrix.os-prefix}}-${{ matrix.build-type }}
