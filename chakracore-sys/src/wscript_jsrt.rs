@@ -302,7 +302,7 @@ impl WScript {
             true,
         )?;
 
-        WScript::set_module_host_info_callbacks()?;
+        self.set_module_host_info_callbacks()?;
 
         // When the host config `Test262` is set,
         // WScript will have the extra support API below and $262 will be
@@ -595,7 +595,7 @@ impl WScript {
         }
     }
 
-    fn set_module_host_info_callbacks() -> Result<(), JsError> {
+    fn set_module_host_info_callbacks(&self) -> Result<(), JsError> {
         unsafe {
             ChakraRt::js_module_host_info_set_fetch_imported_module_callback(
                 JsModuleRecord::default(),
@@ -620,7 +620,7 @@ impl WScript {
             ChakraRt::js_module_host_info_set_notify_module_ready_callback(
                 JsModuleRecord::default(),
                 |referencing_module, exception_var| {
-                    WScript::notify_module_ready_callback(referencing_module, exception_var)
+                    self.notify_module_ready_callback(referencing_module, exception_var)
                 },
             )?;
             ChakraRt::js_module_host_info_set_initialize_import_meta_callback(
@@ -641,10 +641,11 @@ impl WScript {
     /// Callback from chakraCore when the module resolution is finished, either successfully or unsuccessfully.
     #[tracing::instrument(skip_all)]
     fn notify_module_ready_callback(
+        &self,
         referencing_module: JsModuleRecord,
         exception_var: JsValueRef,
     ) -> JsErrorCode {
-        if !exception_var.is_null() && HostConfigFlags::GetConfig().host.trace_host_callback {
+        if !exception_var.is_null() && self.config.host.trace_host_callback {
             let mut specifier = JsValueRef::default();
             unsafe {
                 ChakraRTInterface::JsGetModuleHostInfo(
