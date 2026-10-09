@@ -1,7 +1,6 @@
 add_library(chhelper
     ChakraRtInterface.cpp
     Helpers.cpp
-    HostConfigFlags.cpp
     WScriptJsrt.cpp
     RuntimeThreadData.cpp
     ../ChakraCore/TestHooks.cpp

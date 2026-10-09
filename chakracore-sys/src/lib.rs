@@ -2,7 +2,6 @@ pub mod chhelper;
 pub mod config;
 mod filesystem;
 pub mod helpers;
-pub mod host_config;
 pub mod jsrt;
 mod logger;
 mod messages;

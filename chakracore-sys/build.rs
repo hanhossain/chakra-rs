@@ -6,7 +6,6 @@ fn main() {
         "src/config.rs",
         "src/filesystem.rs",
         "src/helpers.rs",
-        "src/host_config.rs",
         "src/jsrt/ffi.rs",
         "src/logger.rs",
         "src/messages.rs",

@@ -8,7 +8,6 @@
 #include <chakracore-sys/src/chhelper.rs.h>
 #include <dlfcn.h>
 
-#include "HostConfigFlags.h"
 #include "TestHooks.h"
 
 bool ChakraRTInterface::m_testHooksSetup = false;

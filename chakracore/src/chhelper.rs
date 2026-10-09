@@ -1,7 +1,6 @@
 use crate::{Error, hresult_to_result};
 use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers::ScriptCache;
-use chakracore_sys::host_config::HostConfigFlags;
 use chakracore_sys::jsrt::{
     ChakraRt, JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
     JsRuntimeHandle, JsSourceContext, JsValueRef,
@@ -13,8 +12,6 @@ use std::str::FromStr;
 
 #[tracing::instrument(skip(config))]
 pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
-    HostConfigFlags::SetConfig(&config);
-
     // handle command line flags
     hresult_to_result(ChakraRTInterface::InitializeTestHooks(&config.core.args))?;
 
