@@ -33,7 +33,8 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
         ChakraRTInterface::JsCreateContext(runtime, &raw mut context).as_result()?;
     }
     ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
-    WScript::initialize()?;
+    let wscript = WScript::new(config);
+    wscript.initialize()?;
 
     let path = std::fs::canonicalize(&config.core.filename)?;
     let path = path.to_str().unwrap().to_owned();
@@ -44,7 +45,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
             &file_contents,
             &path,
             jsrt_attributes,
-            config,
+            &wscript,
         )?;
     } else if config.host.use_parser_state_cache {
         create_parser_state_and_run_script(
@@ -52,7 +53,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
             &file_contents,
             &path,
             jsrt_attributes,
-            config,
+            &wscript,
         )?;
     } else {
         run_script(
@@ -61,7 +62,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
             JsValueRef::default(),
             &path,
             JsValueRef::default(),
-            config,
+            &wscript,
         )?;
     };
 
@@ -74,13 +75,13 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     Ok(())
 }
 
-#[tracing::instrument(skip(contents, config))]
+#[tracing::instrument(skip(contents, wscript))]
 fn create_parser_state_and_run_script(
     filename: &str,
     contents: &String,
     full_path: &String,
     jsrt_attributes: JsRuntimeAttributes,
-    config: &ConfigContext,
+    wscript: &WScript,
 ) -> Result<(), Error> {
     let buffer = get_parser_state_buffer(contents)?;
 
@@ -99,7 +100,7 @@ fn create_parser_state_and_run_script(
     };
 
     // initialize the WScript object on the new context
-    WScript::initialize()?;
+    wscript.initialize()?;
 
     run_script(
         filename,
@@ -107,7 +108,7 @@ fn create_parser_state_and_run_script(
         JsValueRef::default(),
         full_path,
         buffer,
-        config,
+        &wscript,
     )?;
 
     ChakraRTInterface::JsSetCurrentContext(old_context).as_result()?;
@@ -115,13 +116,13 @@ fn create_parser_state_and_run_script(
     Ok(())
 }
 
-#[tracing::instrument(skip(contents, config))]
+#[tracing::instrument(skip(contents, wscript))]
 fn create_and_run_serialized_script(
     filename: &str,
     contents: &String,
     full_path: &String,
     jsrt_attributes: JsRuntimeAttributes,
-    config: &ConfigContext,
+    wscript: &WScript,
 ) -> Result<(), Error> {
     let buffer_val = get_serialized_buffer(contents)?;
 
@@ -140,7 +141,7 @@ fn create_and_run_serialized_script(
     };
 
     // initialize the WScript object on the new context
-    WScript::initialize()?;
+    wscript.initialize()?;
 
     run_script(
         filename,
@@ -148,7 +149,7 @@ fn create_and_run_serialized_script(
         buffer_val,
         full_path,
         JsValueRef::default(),
-        config,
+        wscript,
     )?;
 
     ChakraRTInterface::JsSetCurrentContext(old_context).as_result()?;
@@ -198,7 +199,7 @@ fn run_script(
     buffer_value: JsValueRef,
     full_path: &String,
     parser_state_cache: JsValueRef,
-    config: &ConfigContext,
+    wscript: &WScript,
 ) -> Result<(), Error> {
     let mut message_queue = MessageQueue::New();
     let fname = unsafe {
@@ -244,7 +245,7 @@ fn run_script(
                 std::ptr::null_mut(),
             )
         }
-    } else if config.host.module {
+    } else if wscript.config.host.module {
         WScript::module_entry_point(contents, full_path)
     } else {
         let mut script_source = JsValueRef::default();

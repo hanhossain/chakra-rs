@@ -9,6 +9,10 @@
 #include <list>
 #include <rust/cxx.h>
 
+namespace chakra_rs {
+    struct WScript;
+}
+
 class RuntimeThreadData
 {
 public:
@@ -33,7 +37,7 @@ public:
 
     std::list<RuntimeThreadData*> children;
 
-    uint32_t ThreadProc();
+    uint32_t ThreadProc(const chakra_rs::WScript &wscript);
     void set_leaving(bool leaving);
     void set_initial_script_completed();
     void reset_initial_script_completed();
