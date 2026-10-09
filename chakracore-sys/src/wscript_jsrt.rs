@@ -61,7 +61,7 @@ mod ffi {
 
         type MessageQueue;
         #[namespace = "chakra_rs"]
-        type Message = crate::messages::Message;
+        type Message<'a> = crate::messages::Message<'a>;
 
         #[Self = "MessageQueue"]
         fn New() -> UniquePtr<MessageQueue>;
@@ -600,7 +600,7 @@ impl WScript {
             ChakraRt::js_module_host_info_set_fetch_imported_module_callback(
                 JsModuleRecord::default(),
                 |referencing_module, specifier, dependent_module_record| {
-                    WScript::fetch_imported_module(
+                    self.fetch_imported_module(
                         referencing_module,
                         specifier,
                         dependent_module_record,
@@ -610,7 +610,7 @@ impl WScript {
             ChakraRt::js_module_host_info_set_fetch_imported_module_from_script_callback(
                 JsModuleRecord::default(),
                 |referencing_source_context, specifier, dependent_module_record| {
-                    WScript::fetch_imported_module_from_script(
+                    self.fetch_imported_module_from_script(
                         referencing_source_context,
                         specifier,
                         dependent_module_record,
@@ -669,6 +669,7 @@ impl WScript {
                 referencing_module,
                 JsValueRef::default(),
                 None,
+                &self,
             ));
             unsafe {
                 Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);
@@ -729,12 +730,13 @@ impl WScript {
     /// While this call will come back directly from runtime script or module code, the additional
     /// task can be scheduled asynchronously that executed later.
     unsafe fn fetch_imported_module_from_script(
+        &self,
         #[allow(unused_variables)] referencing_source_context: JsSourceContext,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
     ) -> JsErrorCode {
         unsafe {
-            match fetch_imported_module_helper(
+            match self.fetch_imported_module_helper(
                 JsModuleRecord::default(),
                 specifier,
                 dependent_module_record,
@@ -752,6 +754,7 @@ impl WScript {
     /// While this call will come back directly from ParseModuleSource, the additional
     /// task are treated as Promise that will be executed later.
     unsafe fn fetch_imported_module(
+        &self,
         referencing_module: JsModuleRecord,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
@@ -764,7 +767,7 @@ impl WScript {
                 .unwrap_or_default()
         };
         unsafe {
-            match fetch_imported_module_helper(
+            match self.fetch_imported_module_helper(
                 JsModuleRecord::default(),
                 specifier,
                 dependent_module_record,
@@ -775,6 +778,84 @@ impl WScript {
                 Err(FetchImportedModuleHelperError::IoError(_)) => JsErrorCode::JsErrorFatal,
             }
         }
+    }
+
+    #[tracing::instrument(skip_all, fields(ref_dir), err)]
+    unsafe fn fetch_imported_module_helper(
+        &self,
+        referencing_module: JsModuleRecord,
+        specifier: JsValueRef,
+        dependent_module_record: *mut JsModuleRecord,
+        ref_dir: &str,
+    ) -> Result<(), FetchImportedModuleHelperError> {
+        unsafe {
+            *dependent_module_record = JsModuleRecord::default();
+        }
+        let specifier_str = specifier.to_string()?;
+        let mut specifier_full_path = PathBuf::from(ref_dir);
+        specifier_full_path.push(&specifier_str);
+        let abs_path = std::fs::canonicalize(&specifier_full_path).or_else(|err| {
+            tracing::warn!(?specifier_full_path, ?err, "Falling back to absolute path.");
+            std::path::absolute(&specifier_full_path)
+        })?;
+        tracing::trace!(specifier_str, ?abs_path);
+        let parent_path = abs_path
+            .parent()
+            .map(|x| x.to_str())
+            .flatten()
+            .unwrap_or_default()
+            .to_owned();
+
+        {
+            let lease = MODULE_RECORD_MAP.0.read().unwrap();
+            if let Some(entry) = lease.get(abs_path.to_str().unwrap_or_default()) {
+                unsafe {
+                    *dependent_module_record = entry.record.clone();
+                    return Ok(());
+                }
+            }
+        }
+
+        let mut module_record = JsModuleRecord::default();
+        unsafe {
+            ChakraRTInterface::JsInitializeModuleRecord(
+                referencing_module.clone(),
+                specifier.clone(),
+                &raw mut module_record,
+            )
+            .as_result()?;
+        }
+
+        MODULE_DIRECTORY_MAP
+            .0
+            .write()
+            .unwrap()
+            .insert(module_record.clone(), parent_path);
+
+        MODULE_RECORD_MAP.0.write().unwrap().insert(
+            abs_path.to_str().unwrap_or_default().to_owned(),
+            ModuleRecordEntry {
+                record: module_record.clone(),
+            },
+        );
+
+        MODULE_ERROR_MAP
+            .0
+            .write()
+            .unwrap()
+            .insert(module_record.clone(), ModuleState::ImportedModule);
+        let module_message = Message::new_module(ModuleMessage::new(
+            referencing_module,
+            specifier,
+            abs_path.to_str(),
+            self,
+        ));
+        unsafe {
+            Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(module_message);
+            *dependent_module_record = module_record;
+        }
+
+        Ok(())
     }
 
     fn get_report_callback(args: &JsNativeFunctionArgs) -> Result<JsValueRef, JsError> {
@@ -1467,82 +1548,6 @@ where
     fn new() -> Self {
         ConcurrentMap(Arc::new(RwLock::new(HashMap::new())))
     }
-}
-
-#[tracing::instrument(skip_all, fields(ref_dir), err)]
-unsafe fn fetch_imported_module_helper(
-    referencing_module: JsModuleRecord,
-    specifier: JsValueRef,
-    dependent_module_record: *mut JsModuleRecord,
-    ref_dir: &str,
-) -> Result<(), FetchImportedModuleHelperError> {
-    unsafe {
-        *dependent_module_record = JsModuleRecord::default();
-    }
-    let specifier_str = specifier.to_string()?;
-    let mut specifier_full_path = PathBuf::from(ref_dir);
-    specifier_full_path.push(&specifier_str);
-    let abs_path = std::fs::canonicalize(&specifier_full_path).or_else(|err| {
-        tracing::warn!(?specifier_full_path, ?err, "Falling back to absolute path.");
-        std::path::absolute(&specifier_full_path)
-    })?;
-    tracing::trace!(specifier_str, ?abs_path);
-    let parent_path = abs_path
-        .parent()
-        .map(|x| x.to_str())
-        .flatten()
-        .unwrap_or_default()
-        .to_owned();
-
-    {
-        let lease = MODULE_RECORD_MAP.0.read().unwrap();
-        if let Some(entry) = lease.get(abs_path.to_str().unwrap_or_default()) {
-            unsafe {
-                *dependent_module_record = entry.record.clone();
-                return Ok(());
-            }
-        }
-    }
-
-    let mut module_record = JsModuleRecord::default();
-    unsafe {
-        ChakraRTInterface::JsInitializeModuleRecord(
-            referencing_module.clone(),
-            specifier.clone(),
-            &raw mut module_record,
-        )
-        .as_result()?;
-    }
-
-    MODULE_DIRECTORY_MAP
-        .0
-        .write()
-        .unwrap()
-        .insert(module_record.clone(), parent_path);
-
-    MODULE_RECORD_MAP.0.write().unwrap().insert(
-        abs_path.to_str().unwrap_or_default().to_owned(),
-        ModuleRecordEntry {
-            record: module_record.clone(),
-        },
-    );
-
-    MODULE_ERROR_MAP
-        .0
-        .write()
-        .unwrap()
-        .insert(module_record.clone(), ModuleState::ImportedModule);
-    let module_message = Message::new_module(ModuleMessage::new(
-        referencing_module,
-        specifier,
-        abs_path.to_str(),
-    ));
-    unsafe {
-        Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(module_message);
-        *dependent_module_record = module_record;
-    }
-
-    Ok(())
 }
 
 #[derive(thiserror::Error, Debug)]
