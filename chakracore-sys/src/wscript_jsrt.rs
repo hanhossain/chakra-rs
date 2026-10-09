@@ -1504,10 +1504,6 @@ impl WScript {
         Ok(())
     }
 
-    pub fn uninitialize() {
-        ffi::UninitializeRuntimeThreadLocalData();
-    }
-
     pub fn get_next_source_context() -> usize {
         SOURCE_CONTEXT.fetch_add(1, Ordering::Relaxed)
     }
@@ -1516,6 +1512,12 @@ impl WScript {
         unsafe {
             MESSAGE_QUEUE = message_queue.as_mut_ptr();
         }
+    }
+}
+
+impl Drop for WScript {
+    fn drop(&mut self) {
+        ffi::UninitializeRuntimeThreadLocalData();
     }
 }
 

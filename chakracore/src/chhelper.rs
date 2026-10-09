@@ -278,8 +278,6 @@ fn run_script(
         }
     }
 
-    // We only call RunScript() once, safe to Uninitialize()
-    WScript::uninitialize();
     Ok(())
 }
 
