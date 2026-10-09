@@ -191,12 +191,10 @@ impl WScript {
         }
     }
 
-    fn create_arguments_array() -> Result<JsArray, JsError> {
-        let host_args = &HostConfigFlags::GetConfig().host_args;
+    fn create_arguments_array(&self) -> Result<JsArray, JsError> {
+        let mut args_array = ChakraRt::create_array(self.config.host_args.len() as u32)?;
 
-        let mut args_array = ChakraRt::create_array(host_args.len() as u32)?;
-
-        for (i, arg) in host_args.iter().enumerate() {
+        for (i, arg) in self.config.host_args.iter().enumerate() {
             let value = ChakraRt::create_string(arg)?;
             let index = ChakraRt::int_to_number(i as i32)?;
             args_array.set_indexed_property(&index, &value)?;
@@ -280,7 +278,7 @@ impl WScript {
 
         wscript_object.set_property(
             ChakraRt::create_property_id("Arguments")?,
-            &WScript::create_arguments_array()?,
+            &self.create_arguments_array()?,
             true,
         )?;
 
@@ -309,7 +307,7 @@ impl WScript {
         // When the host config `Test262` is set,
         // WScript will have the extra support API below and $262 will be
         // added to global scope
-        if HostConfigFlags::GetConfig().host.test262 {
+        if self.config.host.test262 {
             wscript_object.set_named_function("Broadcast", WScript::broadcast_callback)?;
 
             wscript_object
