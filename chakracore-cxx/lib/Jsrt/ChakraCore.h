@@ -91,29 +91,9 @@ typedef enum JsModuleHostInfoKind
     /// </summary>
     JsModuleHostInfo_HostDefined = 0x02,
     /// <summary>
-    ///     Callback for receiving notification when module is ready.
-    /// </summary>
-    JsModuleHostInfo_NotifyModuleReadyCallback = 0x3,
-    /// <summary>
-    ///     Callback for receiving notification to fetch a dependent module.
-    /// </summary>
-    JsModuleHostInfo_FetchImportedModuleCallback = 0x4,
-    /// <summary>
-    ///     Callback for receiving notification for calls to ```import()```
-    /// </summary>
-    JsModuleHostInfo_FetchImportedModuleFromScriptCallback = 0x5,
-    /// <summary>
     ///     URL for use in error stack traces and debugging.
     /// </summary>
     JsModuleHostInfo_Url = 0x6,
-    /// <summary>
-    ///     Callback to allow host to initialize import.meta object properties.
-    /// </summary>
-    JsModuleHostInfo_InitializeImportMetaCallback = 0x7,
-    /// <summary>
-    ///     Callback to report module completion or exception thrown when evaluating a module.
-    /// </summary>
-    JsModuleHostInfo_ReportModuleCompletionCallback = 0x8
 } JsModuleHostInfoKind;
 
 /// <summary>
@@ -149,7 +129,8 @@ typedef enum _JsPromiseState
 /// <returns>
 ///     Returns a <c>JsNoError</c> if the operation succeeded an error code otherwise.
 /// </returns>
-typedef JsErrorCode(* FetchImportedModuleCallBack)(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
+using FetchImportedModuleCallBack = std::function<JsErrorCode(_In_ JsModuleRecord referencingModule, _In_ JsValueRef specifier,
+                                                    _Outptr_result_maybenull_ JsModuleRecord *dependentModuleRecord, void *callbackData)>;
 
 /// <summary>
 ///     User implemented callback to fetch imported modules dynamically in scripts.
@@ -172,7 +153,9 @@ typedef JsErrorCode(* FetchImportedModuleCallBack)(_In_ JsModuleRecord referenci
 /// <returns>
 ///     Returns <c>JsNoError</c> if the operation succeeded or an error code otherwise.
 /// </returns>
-typedef JsErrorCode(* FetchImportedModuleFromScriptCallBack)(_In_ JsSourceContext dwReferencingSourceContext, _In_ JsValueRef specifier, _Outptr_result_maybenull_ JsModuleRecord* dependentModuleRecord);
+using FetchImportedModuleFromScriptCallBack =
+    std::function<JsErrorCode(_In_ JsSourceContext dwReferencingSourceContext, _In_ JsValueRef specifier,
+                    _Outptr_result_maybenull_ JsModuleRecord *dependentModuleRecord, void *callbackData)>;
 
 /// <summary>
 ///     User implemented callback to get notification when the module is ready.
@@ -187,7 +170,8 @@ typedef JsErrorCode(* FetchImportedModuleFromScriptCallBack)(_In_ JsSourceContex
 /// <returns>
 ///     Returns a JsErrorCode - note, the return value is ignored.
 /// </returns>
-typedef JsErrorCode(* NotifyModuleReadyCallback)(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef exceptionVar);
+using NotifyModuleReadyCallback = std::function<JsErrorCode(_In_opt_ JsModuleRecord referencingModule,
+                                                  _In_opt_ JsValueRef exceptionVar, void *callbackData)>;
 
 /// <summary>
 ///     User implemented callback to fill in module properties for the import.meta object.
@@ -203,7 +187,8 @@ typedef JsErrorCode(* NotifyModuleReadyCallback)(_In_opt_ JsModuleRecord referen
 /// <returns>
 ///     Returns a JsErrorCode - note, the return value is ignored.
 /// </returns>
-typedef JsErrorCode(* InitializeImportMetaCallback)(_In_opt_ JsModuleRecord referencingModule, _In_opt_ JsValueRef importMetaVar);
+using InitializeImportMetaCallback = std::function<JsErrorCode(_In_opt_ JsModuleRecord referencingModule,
+                                                     _In_opt_ JsValueRef importMetaVar, void *callbackData)>;
 
 /// <summary>
 ///     User implemented callback to report completion of module execution.
@@ -224,7 +209,7 @@ typedef JsErrorCode(* InitializeImportMetaCallback)(_In_opt_ JsModuleRecord refe
 /// <returns>
 ///     Returns a JsErrorCode: JsNoError if successful.
 /// </returns>
-typedef JsErrorCode(* ReportModuleCompletionCallback)(_In_ JsModuleRecord module, _In_opt_ JsValueRef exception);
+using ReportModuleCompletionCallback = std::function<JsErrorCode(_In_ JsModuleRecord module, _In_opt_ JsValueRef exception, void *callbackData)>;
 
 /// <summary>
 ///     A structure containing information about a native function callback.
@@ -422,6 +407,117 @@ namespace chakracore::jsrt
         _In_opt_ JsModuleRecord requestModule,
         _In_ JsModuleHostInfoKind moduleHostInfo,
         _In_ void* hostInfo);
+
+    /// <summary>
+    ///     For the specified module, sets the callback for receiving notification to fetch a dependent module.
+    /// </summary>
+    /// <remarks>
+    ///     Sets up the callback for module loading - note this is actually
+    ///         set on the module's Context not the module itself so only have to be set
+    ///         for the first root module in any given context.
+    ///         Alternatively you can set these on the currentContext by supplying a nullptr
+    ///         as the requestModule
+    /// </remarks>
+    /// <param name="requestModule">The request module, optional.</param>
+    /// <param name="callback">The callback to be set.</param>
+    /// <param name="callbackData">The data to pass to the callback.</param>
+    /// <returns>
+    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+    /// </returns>
+    JsErrorCode JsModuleHostInfoSetFetchImportedModuleCallback(
+        _In_opt_ JsModuleRecord requestModule,
+        _In_ rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef specifier,
+                                       JsModuleRecord *dependentModuleRecord, void *callbackData)>
+            callback,
+        void *callbackData);
+
+    /// <summary>
+    ///     For the specified module, sets the callback for receiving notification for calls to ```import()```
+    /// </summary>
+    /// <remarks>
+    ///     Sets up the callback for module loading - note this is actually
+    ///         set on the module's Context not the module itself so only have to be set
+    ///         for the first root module in any given context.
+    ///         Alternatively you can set these on the currentContext by supplying a nullptr
+    ///         as the requestModule
+    /// </remarks>
+    /// <param name="requestModule">The request module, optional.</param>
+    /// <param name="callback">The callback to be set.</param>
+    /// <param name="callbackData">The data to pass to the callback.</param>
+    /// <returns>
+    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+    /// </returns>
+    JsErrorCode JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
+        _In_opt_ JsModuleRecord requestModule,
+        _In_ rust::Fn<JsErrorCode(JsSourceContext dwReferencingSourceContext, JsValueRef specifier,
+                                       JsModuleRecord *dependentModuleRecord, void *callbackData)>
+            callback,
+        void *callbackData);
+
+    /// <summary>
+    ///     For the specified module, sets the callback for receiving notification when module is ready.
+    /// </summary>
+    /// <remarks>
+    ///     Sets up the callback for module loading - note this is actually
+    ///         set on the module's Context not the module itself so only have to be set
+    ///         for the first root module in any given context.
+    ///         Alternatively you can set these on the currentContext by supplying a nullptr
+    ///         as the requestModule
+    /// </remarks>
+    /// <param name="requestModule">The request module, optional.</param>
+    /// <param name="callback">The callback to be set.</param>
+    /// <param name="callbackData">The data to pass to the callback.</param>
+    /// <returns>
+    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+    /// </returns>
+    JsErrorCode JsModuleHostInfoSetNotifyModuleReadyCallback(
+        _In_opt_ JsModuleRecord requestModule,
+        _In_ rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef exceptionVar, void *callbackData)>
+            callback,
+        void *callbackData);
+
+    /// <summary>
+    ///     For the specified module, sets the callback to allow host to initialize import.meta object properties.
+    /// </summary>
+    /// <remarks>
+    ///     Sets up the callback for module loading - note this is actually
+    ///         set on the module's Context not the module itself so only have to be set
+    ///         for the first root module in any given context.
+    ///         Alternatively you can set these on the currentContext by supplying a nullptr
+    ///         as the requestModule
+    /// </remarks>
+    /// <param name="requestModule">The request module, optional.</param>
+    /// <param name="callback">The callback to be set.</param>
+    /// <param name="callbackData">The data to pass to the callback.</param>
+    /// <returns>
+    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+    /// </returns>
+    JsErrorCode JsModuleHostInfoSetInitializeImportMetaCallback(
+        _In_opt_ JsModuleRecord requestModule,
+        _In_ rust::Fn<JsErrorCode(JsModuleRecord referencingModule, JsValueRef importMetaVar, void *callbackData)>
+            callback,
+        void *callbackData);
+
+    /// <summary>
+    ///     For the specified module, sets the callback to report module completion or exception thrown when evaluating a module.
+    /// </summary>
+    /// <remarks>
+    ///     Sets up the callback for module loading - note this is actually
+    ///         set on the module's Context not the module itself so only have to be set
+    ///         for the first root module in any given context.
+    ///         Alternatively you can set these on the currentContext by supplying a nullptr
+    ///         as the requestModule
+    /// </remarks>
+    /// <param name="requestModule">The request module, optional.</param>
+    /// <param name="callback">The callback to be set.</param>
+    /// <param name="callbackData">The data to pass to the callback.</param>
+    /// <returns>
+    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+    /// </returns>
+    JsErrorCode JsModuleHostInfoSetReportModuleCompletionCallback(
+        _In_opt_ JsModuleRecord requestModule,
+        _In_ rust::Fn<JsErrorCode(JsModuleRecord module, JsValueRef exception, void *callbackData)> callback,
+        void *callbackData);
 
     /// <summary>
     ///     Retrieve the host info for the specified module.

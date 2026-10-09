@@ -128,7 +128,7 @@ int32_t ChakraCoreHostScriptContext::FetchImportedModule(Js::ModuleRecordBase* r
     JsModuleRecord dependentRecord = JS_INVALID_REFERENCE;
     {
         AUTO_NO_EXCEPTION_REGION;
-        JsErrorCode errorCode = fetchImportedModuleCallback(referencingModule, specifierVar, &dependentRecord);
+        JsErrorCode errorCode = fetchImportedModuleCallback(referencingModule, specifierVar, &dependentRecord, fetchImportedModuleCallbackData);
         if (errorCode == JsNoError)
         {
             *dependentModuleRecord = static_cast<Js::ModuleRecordBase*>(dependentRecord);
@@ -148,7 +148,7 @@ int32_t ChakraCoreHostScriptContext::FetchImportedModuleFromScript(JsSourceConte
     JsModuleRecord dependentRecord = JS_INVALID_REFERENCE;
     {
         AUTO_NO_EXCEPTION_REGION;
-        JsErrorCode errorCode = fetchImportedModuleFromScriptCallback(dwReferencingSourceContext, specifierVar, &dependentRecord);
+        JsErrorCode errorCode = fetchImportedModuleFromScriptCallback(dwReferencingSourceContext, specifierVar, &dependentRecord, fetchImportedModuleFromScriptCallbackData);
         if (errorCode == JsNoError)
         {
             *dependentModuleRecord = static_cast<Js::ModuleRecordBase*>(dependentRecord);
@@ -166,7 +166,7 @@ int32_t ChakraCoreHostScriptContext::NotifyHostAboutModuleReady(Js::ModuleRecord
     }
     {
         AUTO_NO_EXCEPTION_REGION;
-        JsErrorCode errorCode = notifyModuleReadyCallback(referencingModule, exceptionVar);
+        JsErrorCode errorCode = notifyModuleReadyCallback(referencingModule, exceptionVar, notifyModuleReadyCallbackData);
         if (errorCode == JsNoError)
         {
             return NOERROR;
@@ -183,7 +183,7 @@ int32_t ChakraCoreHostScriptContext::InitializeImportMeta(Js::ModuleRecordBase* 
     }
     {
         AUTO_NO_EXCEPTION_REGION;
-        JsErrorCode errorCode = initializeImportMetaCallback(referencingModule, importMetaObject);
+        JsErrorCode errorCode = initializeImportMetaCallback(referencingModule, importMetaObject, initializeImportMetaCallbackData);
         if (errorCode == JsNoError)
         {
             return NOERROR;
@@ -200,7 +200,7 @@ bool ChakraCoreHostScriptContext::ReportModuleCompletion(Js::ModuleRecordBase* m
     }
     {
         AUTO_NO_EXCEPTION_REGION;
-        JsErrorCode errorCode = reportModuleCompletionCallback(module, exception);
+        JsErrorCode errorCode = reportModuleCompletionCallback(module, exception, reportModuleCompletionCallbackData);
         if (errorCode == JsNoError)
         {
             return true;

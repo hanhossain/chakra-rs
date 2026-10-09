@@ -597,36 +597,42 @@ impl WScript {
 
     fn set_module_host_info_callbacks() -> Result<(), JsError> {
         unsafe {
-            ChakraRTInterface::JsSetModuleHostInfo(
+            ChakraRt::js_module_host_info_set_fetch_imported_module_callback(
                 JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleCallback,
-                WScript::fetch_imported_module as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
+                |referencing_module, specifier, dependent_module_record| {
+                    WScript::fetch_imported_module(
+                        referencing_module,
+                        specifier,
+                        dependent_module_record,
+                    )
+                },
+            )?;
+            ChakraRt::js_module_host_info_set_fetch_imported_module_from_script_callback(
                 JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleFromScriptCallback,
-                WScript::fetch_imported_module_from_script as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
+                |referencing_source_context, specifier, dependent_module_record| {
+                    WScript::fetch_imported_module_from_script(
+                        referencing_source_context,
+                        specifier,
+                        dependent_module_record,
+                    )
+                },
+            )?;
+            ChakraRt::js_module_host_info_set_notify_module_ready_callback(
                 JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_NotifyModuleReadyCallback,
-                WScript::notify_module_ready_callback as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
+                |referencing_module, exception_var| {
+                    WScript::notify_module_ready_callback(referencing_module, exception_var)
+                },
+            )?;
+            ChakraRt::js_module_host_info_set_initialize_import_meta_callback(
                 JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_InitializeImportMetaCallback,
-                WScript::initialize_import_meta_callback as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
+                |referencing_module, import_meta_var| {
+                    WScript::initialize_import_meta_callback(referencing_module, import_meta_var)
+                },
+            )?;
+            ChakraRt::js_module_host_info_set_report_module_completion_callback(
                 JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_ReportModuleCompletionCallback,
-                WScript::report_module_completion_callback as _,
-            )
-            .as_result()?;
+                |module, exception| WScript::report_module_completion_callback(module, exception),
+            )?;
         }
 
         Ok(())
