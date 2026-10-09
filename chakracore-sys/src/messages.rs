@@ -1,5 +1,4 @@
 use crate::helpers::ScriptCache;
-use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     ChakraRt, JsError, JsErrorCode, JsModuleRecord, JsParseScriptAttributes, JsSourceContext,
     JsValueRef, JsValueType,
@@ -23,34 +22,34 @@ mod ffi {
     #[namespace = "chakra_rs"]
     extern "Rust" {
         #[derive(ExternType)]
-        type Message;
+        type Message<'a>;
         fn call(&self, filename: &str);
         fn get_time(&self) -> u32;
         fn begin_timer(&mut self);
         fn get_id(&self) -> u32;
     }
 
-    impl Box<Message> {}
+    impl<'a> Box<Message<'a>> {}
 }
 
-enum MessageInner {
-    Callback(CallbackMessage),
-    Module(ModuleMessage),
+enum MessageInner<'a> {
+    Callback(CallbackMessage<'a>),
+    Module(ModuleMessage<'a>),
 }
 
-pub struct Message {
-    msg: MessageInner,
+pub struct Message<'a> {
+    msg: MessageInner<'a>,
 }
 
-impl Message {
-    #[tracing::instrument]
-    pub(crate) fn new_callback(msg: CallbackMessage) -> Box<Self> {
+impl<'a> Message<'a> {
+    #[tracing::instrument(skip(msg))]
+    pub(crate) fn new_callback(msg: CallbackMessage<'a>) -> Box<Self> {
         Box::new(Self {
             msg: MessageInner::Callback(msg),
         })
     }
     #[tracing::instrument(skip(msg))]
-    pub(crate) fn new_module(msg: ModuleMessage) -> Box<Self> {
+    pub(crate) fn new_module(msg: ModuleMessage<'a>) -> Box<Self> {
         Box::new(Self {
             msg: MessageInner::Module(msg),
         })
@@ -86,22 +85,27 @@ impl Message {
     }
 }
 
-#[derive(Debug)]
-pub(crate) struct CallbackMessage {
+pub(crate) struct CallbackMessage<'a> {
     function: JsValueRef,
     time: u32,
     id: u32,
+    wscript: &'a WScript,
 }
 
-impl CallbackMessage {
-    pub(crate) fn new(time: u32, function: JsValueRef) -> Self {
+impl<'a> CallbackMessage<'a> {
+    pub(crate) fn new(time: u32, function: JsValueRef, wscript: &'a WScript) -> Self {
         let id = MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed);
         unsafe {
             ChakraRTInterface::JsAddRef(function.as_js_ref(), std::ptr::null_mut())
                 .as_result()
                 .unwrap();
         }
-        Self { time, function, id }
+        Self {
+            time,
+            function,
+            id,
+            wscript,
+        }
     }
 
     #[tracing::instrument(skip(self), err)]
@@ -136,7 +140,8 @@ impl CallbackMessage {
         };
 
         if let Err(err) = res {
-            WScript::print_exception(filename, err.into(), JsValueRef::default());
+            self.wscript
+                .print_exception(filename, err.into(), JsValueRef::default());
         }
 
         Ok(())
@@ -159,10 +164,10 @@ impl CallbackMessage {
     }
 }
 
-impl Drop for CallbackMessage {
+impl<'a> Drop for CallbackMessage<'a> {
     fn drop(&mut self) {
         if ChakraRt::has_exception().unwrap_or_default() {
-            WScript::print_exception(
+            self.wscript.print_exception(
                 "",
                 JsErrorCode::JsErrorScriptException,
                 JsValueRef::default(),
@@ -177,19 +182,21 @@ impl Drop for CallbackMessage {
     }
 }
 
-pub(crate) struct ModuleMessage {
+pub(crate) struct ModuleMessage<'a> {
     module_record: JsModuleRecord,
     specifier: JsValueRef,
     full_path: Option<String>,
     time: u32,
     id: u32,
+    wscript: &'a WScript,
 }
 
-impl ModuleMessage {
+impl<'a> ModuleMessage<'a> {
     pub(crate) fn new(
         module_record: JsModuleRecord,
         specifier: JsValueRef,
         full_path: Option<&str>,
+        wscript: &'a WScript,
     ) -> Self {
         let id = MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed);
         let mut path: Option<String> = None;
@@ -209,6 +216,7 @@ impl ModuleMessage {
             full_path: path,
             time: 0,
             id,
+            wscript,
         }
     }
 
@@ -242,12 +250,14 @@ impl ModuleMessage {
         let Err(err) = file_content.map(|content| {
             let content = Some(content.as_str()).into();
             let path = self.full_path.as_ref().unwrap_or(&specifier);
-            WScript::load_module_from_string(content, path, true).as_result()
+            self.wscript
+                .load_module_from_string(content, path, true)
+                .as_result()
         }) else {
             return Ok(());
         };
 
-        if !HostConfigFlags::GetConfig().host.mute_host_error_msg {
+        if !self.wscript.config.host.mute_host_error_msg {
             let actual_record = MODULE_RECORD_MAP
                 .0
                 .read()
@@ -272,7 +282,8 @@ impl ModuleMessage {
             };
         }
         let path = self.full_path.as_ref().unwrap_or(&specifier);
-        WScript::load_module_from_string(None.into(), path, false);
+        self.wscript
+            .load_module_from_string(None.into(), path, false);
 
         Ok(())
     }
@@ -282,7 +293,8 @@ impl ModuleMessage {
         let Err(err) = self.internal_call() else {
             return;
         };
-        WScript::print_exception(filename, err.into(), JsValueRef::default());
+        self.wscript
+            .print_exception(filename, err.into(), JsValueRef::default());
     }
 
     fn get_time(&self) -> u32 {
@@ -298,7 +310,7 @@ impl ModuleMessage {
     }
 }
 
-impl Drop for ModuleMessage {
+impl<'a> Drop for ModuleMessage<'a> {
     fn drop(&mut self) {
         unsafe {
             ChakraRTInterface::JsRelease(self.module_record.as_js_ref(), std::ptr::null_mut());

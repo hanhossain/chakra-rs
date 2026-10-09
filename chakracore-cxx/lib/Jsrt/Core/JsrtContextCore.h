@@ -234,19 +234,34 @@ public:
     int32_t InitializeImportMeta(Js::ModuleRecordBase* referencingModule, Js::Var importMetaObject) override;
     bool ReportModuleCompletion(Js::ModuleRecordBase* module, Js::Var exception) override;
 
-    void SetNotifyModuleReadyCallback(NotifyModuleReadyCallback notifyCallback) { this->notifyModuleReadyCallback = notifyCallback; }
+    void SetNotifyModuleReadyCallback(NotifyModuleReadyCallback notifyCallback, void *callbackData) {
+        this->notifyModuleReadyCallback = notifyCallback;
+        this->notifyModuleReadyCallbackData = callbackData;
+    }
     NotifyModuleReadyCallback GetNotifyModuleReadyCallback() const { return this->notifyModuleReadyCallback; }
 
-    void SetFetchImportedModuleCallback(FetchImportedModuleCallBack fetchCallback) { this->fetchImportedModuleCallback = fetchCallback ; }
+    void SetFetchImportedModuleCallback(FetchImportedModuleCallBack fetchCallback, void *callbackData) {
+        this->fetchImportedModuleCallback = fetchCallback;
+        this->fetchImportedModuleCallbackData = callbackData;
+    }
     FetchImportedModuleCallBack GetFetchImportedModuleCallback() const { return this->fetchImportedModuleCallback; }
 
-    void SetFetchImportedModuleFromScriptCallback(FetchImportedModuleFromScriptCallBack fetchCallback) { this->fetchImportedModuleFromScriptCallback = fetchCallback; }
+    void SetFetchImportedModuleFromScriptCallback(FetchImportedModuleFromScriptCallBack fetchCallback, void *callbackData) {
+        this->fetchImportedModuleFromScriptCallback = fetchCallback;
+        this->fetchImportedModuleFromScriptCallbackData = callbackData;
+    }
     FetchImportedModuleFromScriptCallBack GetFetchImportedModuleFromScriptCallback() const { return this->fetchImportedModuleFromScriptCallback; }
 
-    void SetInitializeImportMetaCallback(InitializeImportMetaCallback initializeCallback) { this->initializeImportMetaCallback = initializeCallback; }
+    void SetInitializeImportMetaCallback(InitializeImportMetaCallback initializeCallback, void *callbackData) {
+        this->initializeImportMetaCallback = initializeCallback;
+        this->initializeImportMetaCallbackData = callbackData;
+    }
     InitializeImportMetaCallback GetInitializeImportMetaCallback() const { return this->initializeImportMetaCallback; }
 
-    void SetReportModuleCompletionCallback(ReportModuleCompletionCallback processCallback) { this->reportModuleCompletionCallback = processCallback; }
+    void SetReportModuleCompletionCallback(ReportModuleCompletionCallback processCallback, void *callbackData) {
+        this->reportModuleCompletionCallback = processCallback;
+        this->reportModuleCompletionCallbackData = callbackData;
+    }
     ReportModuleCompletionCallback GetReportModuleCompletionCallback() const { return this->reportModuleCompletionCallback; }
 
 #if DBG_DUMP || defined(PROFILE_EXEC)
@@ -259,8 +274,13 @@ public:
 
 private:
     FetchImportedModuleCallBack fetchImportedModuleCallback;
+    void *fetchImportedModuleCallbackData;
     FetchImportedModuleFromScriptCallBack fetchImportedModuleFromScriptCallback;
+    void *fetchImportedModuleFromScriptCallbackData;
     NotifyModuleReadyCallback notifyModuleReadyCallback;
+    void *notifyModuleReadyCallbackData;
     InitializeImportMetaCallback initializeImportMetaCallback;
+    void *initializeImportMetaCallbackData;
     ReportModuleCompletionCallback reportModuleCompletionCallback;
+    void *reportModuleCompletionCallbackData;
 };

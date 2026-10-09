@@ -90,7 +90,7 @@ RuntimeThreadData *RuntimeThreadData::NewWithInitialSource(const rust::String &i
     return new RuntimeThreadData{initialSource};
 }
 
-uint32_t RuntimeThreadData::ThreadProc()
+uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript)
 {
     auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
     JsValueRef scriptSource;
@@ -100,13 +100,13 @@ uint32_t RuntimeThreadData::ThreadProc()
 
     threadLocalData.Initialize(this);
 
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(JsRuntimeAttributeNone, nullptr, &runtime));
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context));
-    IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context));
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(JsRuntimeAttributeNone, nullptr, &runtime), wscript);
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context), wscript);
+    IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context), wscript);
 
     try
     {
-        chakra_rs::WScript::initialize();
+        wscript.initialize();
     }
     catch (const rust::Error &err)
     {
@@ -114,7 +114,7 @@ uint32_t RuntimeThreadData::ThreadProc()
         IfFailGo(E_FAIL);
     }
 
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(initialSource_, nullptr, &scriptSource));
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(initialSource_, nullptr, &scriptSource), wscript);
 
     ChakraRTInterface::JsCreateString(fullPath, strlen(fullPath), &fname);
 

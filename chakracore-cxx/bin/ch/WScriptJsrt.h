@@ -8,10 +8,16 @@
 
 #include "ChakraCore.h"
 #include "MessageQueue.h"
-#include <chakracore-sys/src/jsrt/ffi.rs.h>
 
-class WScriptJsrt
-{
+#include "chakracore-sys/src/jsrt/ffi.rs.h"
+
+namespace chakra_rs {
+    struct WScript;
+}
+
+class WScriptJsrt {
 public:
-    static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile);
+    static JsValueRef LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule,
+                                       rust::String fileContent, rust::Str scriptInjectType, rust::String fileName,
+                                       bool isFile, const chakra_rs::WScript &wscript);
 };

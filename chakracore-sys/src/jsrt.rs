@@ -90,6 +90,133 @@ impl ChakraRt {
         Ok(JsFunction(value))
     }
 
+    pub fn js_module_host_info_set_fetch_imported_module_callback<T>(
+        request_module: JsModuleRecord,
+        callback: T,
+    ) -> Result<(), JsError>
+    where
+        T: FnMut(JsModuleRecord, JsValueRef, *mut JsModuleRecord) -> JsErrorCode,
+    {
+        unsafe {
+            bridge::JsModuleHostInfoSetFetchImportedModuleCallback(
+                request_module,
+                |referencing_module, specifier, dependent_module_record, data| {
+                    let callback = &mut *std::mem::transmute::<*mut CVoid, *mut T>(data);
+                    callback(referencing_module, specifier, dependent_module_record)
+                },
+                Box::into_raw(Box::new(callback)) as _,
+            )
+            .as_result()?;
+        }
+        Ok(())
+    }
+
+    pub fn js_module_host_info_set_fetch_imported_module_from_script_callback<T>(
+        request_module: JsModuleRecord,
+        callback: T,
+    ) -> Result<(), JsError>
+    where
+        T: FnMut(JsSourceContext, JsValueRef, *mut JsModuleRecord) -> JsErrorCode,
+    {
+        unsafe {
+            bridge::JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
+                request_module,
+                |referencing_source_context, specifier, dependent_module_record, data| {
+                    let callback = &mut *std::mem::transmute::<*mut CVoid, *mut T>(data);
+                    callback(
+                        referencing_source_context,
+                        specifier,
+                        dependent_module_record,
+                    )
+                },
+                Box::into_raw(Box::new(callback)) as _,
+            )
+            .as_result()?;
+        }
+        Ok(())
+    }
+
+    pub fn js_module_host_info_set_notify_module_ready_callback<T>(
+        request_module: JsModuleRecord,
+        callback: T,
+    ) -> Result<(), JsError>
+    where
+        T: FnMut(JsModuleRecord, JsValueRef) -> JsErrorCode,
+    {
+        unsafe {
+            bridge::JsModuleHostInfoSetNotifyModuleReadyCallback(
+                request_module,
+                |referencing_module, exception_var, data| {
+                    let callback = &mut *std::mem::transmute::<*mut CVoid, *mut T>(data);
+                    callback(referencing_module, exception_var)
+                },
+                Box::into_raw(Box::new(callback)) as _,
+            )
+            .as_result()?;
+        }
+        Ok(())
+    }
+
+    pub fn js_module_host_info_set_initialize_import_meta_callback<T>(
+        request_module: JsModuleRecord,
+        callback: T,
+    ) -> Result<(), JsError>
+    where
+        T: FnMut(JsModuleRecord, JsValueRef) -> JsErrorCode,
+    {
+        unsafe {
+            bridge::JsModuleHostInfoSetInitializeImportMetaCallback(
+                request_module,
+                |referencing_module, import_meta_var, data| {
+                    let callback = &mut *std::mem::transmute::<*mut CVoid, *mut T>(data);
+                    callback(referencing_module, import_meta_var)
+                },
+                Box::into_raw(Box::new(callback)) as _,
+            )
+            .as_result()?;
+        }
+        Ok(())
+    }
+
+    pub fn js_module_host_info_set_report_module_completion_callback<T>(
+        request_module: JsModuleRecord,
+        callback: T,
+    ) -> Result<(), JsError>
+    where
+        T: FnMut(JsModuleRecord, JsValueRef) -> JsErrorCode,
+    {
+        unsafe {
+            bridge::JsModuleHostInfoSetReportModuleCompletionCallback(
+                request_module,
+                |module, exception, data| {
+                    let callback = &mut *std::mem::transmute::<*mut CVoid, *mut T>(data);
+                    callback(module, exception)
+                },
+                Box::into_raw(Box::new(callback)) as _,
+            )
+            .as_result()?;
+        }
+        Ok(())
+    }
+
+    pub fn set_promise_continuation_callback<T>(callback: T) -> Result<Box<T>, JsError>
+    where
+        T: FnMut(JsValueRef),
+    {
+        let mut callback = Box::new(callback);
+        unsafe {
+            bridge::JsSetPromiseContinuationCallback(
+                |task, state| {
+                    let func = &mut *std::mem::transmute::<*mut CVoid, *mut T>(state);
+                    func(task);
+                },
+                Box::as_mut_ptr(&mut callback) as _,
+            )
+            .as_result()?;
+        }
+        Ok(callback)
+    }
+
     pub fn int_to_number(value: i32) -> Result<JsValueRef, JsError> {
         let mut value_ref = JsValueRef::default();
         unsafe {

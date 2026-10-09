@@ -1,5 +1,5 @@
+use crate::config::ConfigContext;
 use crate::helpers::{ScriptCache, TestHooks};
-use crate::host_config::HostConfigFlags;
 use crate::jsrt::{
     CVoid, ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode,
     JsModuleHostInfoKind, JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes,
@@ -60,7 +60,7 @@ mod ffi {
 
         type MessageQueue;
         #[namespace = "chakra_rs"]
-        type Message = crate::messages::Message;
+        type Message<'a> = crate::messages::Message<'a>;
 
         #[Self = "MessageQueue"]
         fn New() -> UniquePtr<MessageQueue>;
@@ -92,6 +92,7 @@ mod ffi {
             script_inject_type: &str,
             filename: String,
             is_file: bool,
+            wscript: &WScript,
         ) -> JsValueRef;
     }
 
@@ -127,7 +128,7 @@ mod ffi {
         fn wait_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
         unsafe fn add_child(self: Pin<&mut RuntimeThreadData>, child: *mut RuntimeThreadData);
         unsafe fn set_parent(self: Pin<&mut RuntimeThreadData>, parent: *mut RuntimeThreadData);
-        fn ThreadProc(self: Pin<&mut RuntimeThreadData>) -> u32;
+        fn ThreadProc(self: Pin<&mut RuntimeThreadData>, wscript: &WScript) -> u32;
         fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
     }
 
@@ -146,12 +147,10 @@ mod ffi {
     #[namespace = "chakra_rs"]
     extern "Rust" {
         type WScript;
+        fn initialize(&self) -> Result<()>;
 
-        #[Self = "WScript"]
-        fn initialize() -> Result<()>;
-
-        #[Self = "WScript"]
         fn load_script(
+            &self,
             callee: JsValueRef,
             file_name: &str,
             content: OptionalStr,
@@ -160,8 +159,12 @@ mod ffi {
             is_file: bool,
         ) -> JsValueRef;
 
-        #[Self = "WScript"]
-        fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef);
+        fn print_exception(
+            &self,
+            filename: &str,
+            js_error_code: JsErrorCode,
+            exception: JsValueRef,
+        );
 
         #[Self = "WScript"]
         fn get_next_source_context() -> usize;
@@ -180,15 +183,21 @@ pub(crate) struct ModuleRecordEntry {
     pub(crate) record: JsModuleRecord,
 }
 
-pub struct WScript;
+pub struct WScript {
+    pub config: ConfigContext,
+}
 
 impl WScript {
-    fn create_arguments_array() -> Result<JsArray, JsError> {
-        let host_args = &HostConfigFlags::GetConfig().host_args;
+    pub fn new(config: &ConfigContext) -> Self {
+        Self {
+            config: config.clone(),
+        }
+    }
 
-        let mut args_array = ChakraRt::create_array(host_args.len() as u32)?;
+    fn create_arguments_array(&self) -> Result<JsArray, JsError> {
+        let mut args_array = ChakraRt::create_array(self.config.host_args.len() as u32)?;
 
-        for (i, arg) in host_args.iter().enumerate() {
+        for (i, arg) in self.config.host_args.iter().enumerate() {
             let value = ChakraRt::create_string(arg)?;
             let index = ChakraRt::int_to_number(i as i32)?;
             args_array.set_indexed_property(&index, &value)?;
@@ -197,8 +206,8 @@ impl WScript {
         Ok(args_array)
     }
 
-    #[tracing::instrument(err)]
-    pub fn initialize() -> Result<(), JsError> {
+    #[tracing::instrument(skip_all, err)]
+    pub fn initialize(&self) -> Result<(), JsError> {
         let icu_version = ffi::GetICUMajorVersion();
 
         let mut wscript_object = ChakraRt::create_object()?;
@@ -208,10 +217,12 @@ impl WScript {
         wscript_object.set_named_function("Echo", WScript::echo_callback)?;
         wscript_object.set_named_function("Quit", WScript::quit_callback)?;
 
-        wscript_object.set_named_function("LoadScriptFile", WScript::load_script_file_callback)?;
-        wscript_object.set_named_function("LoadScript", WScript::load_script_callback)?;
-        wscript_object.set_named_function("LoadModule", WScript::load_module_callback)?;
-        wscript_object.set_named_function("SetTimeout", WScript::set_timeout_callback)?;
+        wscript_object.set_named_function("LoadScriptFile", |args| {
+            self.load_script_file_callback(args)
+        })?;
+        wscript_object.set_named_function("LoadScript", |args| self.load_script_callback(args))?;
+        wscript_object.set_named_function("LoadModule", |args| self.load_module_callback(args))?;
+        wscript_object.set_named_function("SetTimeout", |args| self.set_timeout_callback(args))?;
         wscript_object.set_named_function("ClearTimeout", WScript::clear_timeout_callback)?;
         wscript_object.set_named_function("Flag", WScript::flag_callback)?;
         wscript_object.set_named_function(
@@ -270,7 +281,7 @@ impl WScript {
 
         wscript_object.set_property(
             ChakraRt::create_property_id("Arguments")?,
-            &WScript::create_arguments_array()?,
+            &self.create_arguments_array()?,
             true,
         )?;
 
@@ -294,12 +305,12 @@ impl WScript {
             true,
         )?;
 
-        WScript::set_module_host_info_callbacks()?;
+        self.set_module_host_info_callbacks()?;
 
         // When the host config `Test262` is set,
         // WScript will have the extra support API below and $262 will be
         // added to global scope
-        if HostConfigFlags::GetConfig().host.test262 {
+        if self.config.host.test262 {
             wscript_object.set_named_function("Broadcast", WScript::broadcast_callback)?;
 
             wscript_object
@@ -382,6 +393,7 @@ impl WScript {
 
     #[tracing::instrument(skip_all, err)]
     fn load_script_file_helper(
+        &self,
         callee: JsValueRef,
         arguments: &[JsValueRef],
         is_source_module: bool,
@@ -403,7 +415,7 @@ impl WScript {
         // TODO (hanhossain): don't leak a string ptr
         let content = Box::into_raw(content);
         unsafe {
-            Ok(Self::load_script(
+            Ok(self.load_script(
                 callee,
                 &filename,
                 Some(&*content).into(),
@@ -418,12 +430,13 @@ impl WScript {
         }
     }
 
-    fn load_script_file_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
-        WScript::load_script_file_helper(args.callee.clone(), args.arguments, false)
+    fn load_script_file_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        self.load_script_file_helper(args.callee.clone(), args.arguments, false)
     }
 
-    #[tracing::instrument(skip(args), err)]
+    #[tracing::instrument(skip(self, args), err)]
     fn load_script_helper(
+        &self,
         args: &JsNativeFunctionArgs,
         is_source_module: bool,
     ) -> anyhow::Result<JsValueRef> {
@@ -460,15 +473,16 @@ impl WScript {
             &script_inject_type,
             filename,
             is_file,
+            self,
         ))
     }
 
-    fn load_script_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
-        Self::load_script_helper(args, false)
+    fn load_script_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        self.load_script_helper(args, false)
     }
 
-    fn load_module_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
-        Self::load_script_helper(args, true)
+    fn load_module_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+        self.load_script_helper(args, true)
     }
 
     fn flag_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
@@ -571,51 +585,57 @@ impl WScript {
         Ok(Some(obj))
     }
 
-    pub unsafe fn promise_continuation_callback(task: JsValueRef, callback_state: *mut CVoid) {
+    pub unsafe fn promise_continuation_callback(
+        &self,
+        task: JsValueRef,
+        message_queue: *mut MessageQueue,
+    ) {
         assert!(!task.is_null());
-        assert!(!callback_state.is_null());
 
         unsafe {
-            let message_queue =
-                std::mem::transmute::<*mut CVoid, *mut MessageQueue>(callback_state);
-            let msg = Message::new_callback(CallbackMessage::new(0, task));
-
+            let msg = Message::new_callback(CallbackMessage::new(0, task, &self));
             Pin::new_unchecked(&mut *message_queue).InsertSorted(msg);
         }
     }
 
-    fn set_module_host_info_callbacks() -> Result<(), JsError> {
+    fn set_module_host_info_callbacks(&self) -> Result<(), JsError> {
         unsafe {
-            ChakraRTInterface::JsSetModuleHostInfo(
+            ChakraRt::js_module_host_info_set_fetch_imported_module_callback(
                 JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleCallback,
-                WScript::fetch_imported_module as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
+                |referencing_module, specifier, dependent_module_record| {
+                    self.fetch_imported_module(
+                        referencing_module,
+                        specifier,
+                        dependent_module_record,
+                    )
+                },
+            )?;
+            ChakraRt::js_module_host_info_set_fetch_imported_module_from_script_callback(
                 JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_FetchImportedModuleFromScriptCallback,
-                WScript::fetch_imported_module_from_script as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
+                |referencing_source_context, specifier, dependent_module_record| {
+                    self.fetch_imported_module_from_script(
+                        referencing_source_context,
+                        specifier,
+                        dependent_module_record,
+                    )
+                },
+            )?;
+            ChakraRt::js_module_host_info_set_notify_module_ready_callback(
                 JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_NotifyModuleReadyCallback,
-                WScript::notify_module_ready_callback as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
+                |referencing_module, exception_var| {
+                    self.notify_module_ready_callback(referencing_module, exception_var)
+                },
+            )?;
+            ChakraRt::js_module_host_info_set_initialize_import_meta_callback(
                 JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_InitializeImportMetaCallback,
-                WScript::initialize_import_meta_callback as _,
-            )
-            .as_result()?;
-            ChakraRTInterface::JsSetModuleHostInfo(
+                |referencing_module, import_meta_var| {
+                    WScript::initialize_import_meta_callback(referencing_module, import_meta_var)
+                },
+            )?;
+            ChakraRt::js_module_host_info_set_report_module_completion_callback(
                 JsModuleRecord::default(),
-                JsModuleHostInfoKind::JsModuleHostInfo_ReportModuleCompletionCallback,
-                WScript::report_module_completion_callback as _,
-            )
-            .as_result()?;
+                |module, exception| self.report_module_completion_callback(module, exception),
+            )?;
         }
 
         Ok(())
@@ -624,10 +644,11 @@ impl WScript {
     /// Callback from chakraCore when the module resolution is finished, either successfully or unsuccessfully.
     #[tracing::instrument(skip_all)]
     fn notify_module_ready_callback(
+        &self,
         referencing_module: JsModuleRecord,
         exception_var: JsValueRef,
     ) -> JsErrorCode {
-        if !exception_var.is_null() && HostConfigFlags::GetConfig().host.trace_host_callback {
+        if !exception_var.is_null() && self.config.host.trace_host_callback {
             let mut specifier = JsValueRef::default();
             unsafe {
                 ChakraRTInterface::JsGetModuleHostInfo(
@@ -651,6 +672,7 @@ impl WScript {
                 referencing_module,
                 JsValueRef::default(),
                 None,
+                &self,
             ));
             unsafe {
                 Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);
@@ -682,6 +704,7 @@ impl WScript {
     }
 
     fn report_module_completion_callback(
+        &self,
         module: JsModuleRecord,
         exception: JsValueRef,
     ) -> JsErrorCode {
@@ -694,7 +717,7 @@ impl WScript {
                     &raw mut specifier as _,
                 );
                 if let Ok(specifier) = specifier.to_string() {
-                    Self::print_exception(
+                    self.print_exception(
                         &specifier,
                         JsErrorCode::JsErrorScriptException,
                         exception,
@@ -711,12 +734,13 @@ impl WScript {
     /// While this call will come back directly from runtime script or module code, the additional
     /// task can be scheduled asynchronously that executed later.
     unsafe fn fetch_imported_module_from_script(
+        &self,
         #[allow(unused_variables)] referencing_source_context: JsSourceContext,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
     ) -> JsErrorCode {
         unsafe {
-            match fetch_imported_module_helper(
+            match self.fetch_imported_module_helper(
                 JsModuleRecord::default(),
                 specifier,
                 dependent_module_record,
@@ -734,6 +758,7 @@ impl WScript {
     /// While this call will come back directly from ParseModuleSource, the additional
     /// task are treated as Promise that will be executed later.
     unsafe fn fetch_imported_module(
+        &self,
         referencing_module: JsModuleRecord,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
@@ -746,7 +771,7 @@ impl WScript {
                 .unwrap_or_default()
         };
         unsafe {
-            match fetch_imported_module_helper(
+            match self.fetch_imported_module_helper(
                 JsModuleRecord::default(),
                 specifier,
                 dependent_module_record,
@@ -757,6 +782,84 @@ impl WScript {
                 Err(FetchImportedModuleHelperError::IoError(_)) => JsErrorCode::JsErrorFatal,
             }
         }
+    }
+
+    #[tracing::instrument(skip_all, fields(ref_dir), err)]
+    unsafe fn fetch_imported_module_helper(
+        &self,
+        referencing_module: JsModuleRecord,
+        specifier: JsValueRef,
+        dependent_module_record: *mut JsModuleRecord,
+        ref_dir: &str,
+    ) -> Result<(), FetchImportedModuleHelperError> {
+        unsafe {
+            *dependent_module_record = JsModuleRecord::default();
+        }
+        let specifier_str = specifier.to_string()?;
+        let mut specifier_full_path = PathBuf::from(ref_dir);
+        specifier_full_path.push(&specifier_str);
+        let abs_path = std::fs::canonicalize(&specifier_full_path).or_else(|err| {
+            tracing::warn!(?specifier_full_path, ?err, "Falling back to absolute path.");
+            std::path::absolute(&specifier_full_path)
+        })?;
+        tracing::trace!(specifier_str, ?abs_path);
+        let parent_path = abs_path
+            .parent()
+            .map(|x| x.to_str())
+            .flatten()
+            .unwrap_or_default()
+            .to_owned();
+
+        {
+            let lease = MODULE_RECORD_MAP.0.read().unwrap();
+            if let Some(entry) = lease.get(abs_path.to_str().unwrap_or_default()) {
+                unsafe {
+                    *dependent_module_record = entry.record.clone();
+                    return Ok(());
+                }
+            }
+        }
+
+        let mut module_record = JsModuleRecord::default();
+        unsafe {
+            ChakraRTInterface::JsInitializeModuleRecord(
+                referencing_module.clone(),
+                specifier.clone(),
+                &raw mut module_record,
+            )
+            .as_result()?;
+        }
+
+        MODULE_DIRECTORY_MAP
+            .0
+            .write()
+            .unwrap()
+            .insert(module_record.clone(), parent_path);
+
+        MODULE_RECORD_MAP.0.write().unwrap().insert(
+            abs_path.to_str().unwrap_or_default().to_owned(),
+            ModuleRecordEntry {
+                record: module_record.clone(),
+            },
+        );
+
+        MODULE_ERROR_MAP
+            .0
+            .write()
+            .unwrap()
+            .insert(module_record.clone(), ModuleState::ImportedModule);
+        let module_message = Message::new_module(ModuleMessage::new(
+            referencing_module,
+            specifier,
+            abs_path.to_str(),
+            self,
+        ));
+        unsafe {
+            Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(module_message);
+            *dependent_module_record = module_record;
+        }
+
+        Ok(())
     }
 
     fn get_report_callback(args: &JsNativeFunctionArgs) -> Result<JsValueRef, JsError> {
@@ -842,14 +945,14 @@ impl WScript {
         Ok(())
     }
 
-    fn set_timeout_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
+    fn set_timeout_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
         if args.arguments.len() != 3 {
             anyhow::bail!("invalid call to WScript.SetTimeout");
         }
 
         let function = args.arguments[1].clone();
         let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
-        let msg = Message::new_callback(CallbackMessage::new(time, function));
+        let msg = Message::new_callback(CallbackMessage::new(time, function, &self));
         let msg_id = msg.get_id();
         unsafe {
             Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);
@@ -913,9 +1016,9 @@ impl WScript {
         Ok(Some(array_buffer))
     }
 
-    #[tracing::instrument(skip(file_content))]
-    pub fn module_entry_point(file_content: &str, full_name: &String) -> JsErrorCode {
-        Self::load_module_from_string(
+    #[tracing::instrument(skip(self, file_content))]
+    pub fn module_entry_point(&self, file_content: &str, full_name: &String) -> JsErrorCode {
+        self.load_module_from_string(
             OptionalStr {
                 has_value: true,
                 value: file_content,
@@ -927,18 +1030,20 @@ impl WScript {
 
     // TODO: can now use Option<&str> since this is no longer exposed to C++.
     pub(crate) fn load_module_from_string(
+        &self,
         file_content: OptionalStr,
         full_name: &String,
         is_file: bool,
     ) -> JsErrorCode {
-        match Self::internal_load_module_from_string(file_content.into(), full_name, is_file) {
+        match self.internal_load_module_from_string(file_content.into(), full_name, is_file) {
             Ok(()) => JsErrorCode::JsNoError,
             Err(err) => err.into(),
         }
     }
 
-    #[tracing::instrument(err)]
+    #[tracing::instrument(skip(self), err)]
     fn internal_load_module_from_string(
+        &self,
         file_content: Option<&str>,
         full_name: &String,
         is_file: bool,
@@ -1006,7 +1111,7 @@ impl WScript {
         if error_code != JsErrorCode::JsNoError
             && !error_object.is_null()
             && file_content.is_some()
-            && !HostConfigFlags::GetConfig().host.ignore_script_error_code
+            && !self.config.host.ignore_script_error_code
         {
             let state = {
                 let lease = MODULE_ERROR_MAP.0.read().unwrap();
@@ -1026,6 +1131,7 @@ impl WScript {
 
     #[tracing::instrument(skip_all)]
     fn load_script(
+        &self,
         callee: JsValueRef,
         file_name: &str,
         content: OptionalStr,
@@ -1033,7 +1139,7 @@ impl WScript {
         is_source_module: bool,
         is_file: bool,
     ) -> JsValueRef {
-        Self::internal_load_script(
+        self.internal_load_script(
             callee,
             file_name,
             content.into(),
@@ -1053,8 +1159,9 @@ impl WScript {
         })
     }
 
-    #[tracing::instrument(err)]
+    #[tracing::instrument(skip(self), err)]
     fn internal_load_script<'a>(
+        &self,
         callee: JsValueRef,
         file_name: &str,
         content: Option<&'a str>,
@@ -1075,7 +1182,7 @@ impl WScript {
         // this is called with LoadModuleCallback method as well where caller pass in a string that should be
         // treated as a module source text instead of opening a new file.
         if is_source_module || script_inject_type == "module" {
-            Self::internal_load_module_from_string(
+            self.internal_load_module_from_string(
                 content,
                 &full_path.to_str().unwrap_or_default().to_owned(),
                 is_file,
@@ -1103,7 +1210,7 @@ impl WScript {
             let source_context = JsSourceContext(WScript::get_next_source_context());
 
             let mut return_value = JsValueRef::default();
-            let error_code = if HostConfigFlags::GetConfig().host.use_parser_state_cache {
+            let error_code = if self.config.host.use_parser_state_cache {
                 let mut parser_state = JsValueRef::default();
                 unsafe {
                     ChakraRTInterface::JsSerializeParserState(
@@ -1145,20 +1252,16 @@ impl WScript {
             Ok(return_value)
         } else if script_inject_type == "samethread" {
             let mut new_context = JsContextRef::default();
-            unsafe {
+            let callback = unsafe {
                 ChakraRTInterface::JsCreateContext(runtime, &raw mut new_context).as_result()?;
                 ChakraRTInterface::JsSetCurrentContext(new_context).as_result()?;
-                ChakraRTInterface::JsSetPromiseContinuationCallback(
-                    |task, callback_state| {
-                        Self::promise_continuation_callback(task, callback_state)
-                    },
-                    MESSAGE_QUEUE as _,
-                )
-                .as_result()?;
-            }
+                ChakraRt::set_promise_continuation_callback(|task| {
+                    self.promise_continuation_callback(task, MESSAGE_QUEUE)
+                })?
+            };
 
             // Initialize the host objects
-            Self::initialize()?;
+            self.initialize()?;
 
             let mut script_source = JsValueRef::default();
             unsafe {
@@ -1173,7 +1276,7 @@ impl WScript {
             let source_context = JsSourceContext(WScript::get_next_source_context());
 
             let mut return_value = JsValueRef::default();
-            let error_code = if HostConfigFlags::GetConfig().host.use_parser_state_cache {
+            let error_code = if self.config.host.use_parser_state_cache {
                 let mut parser_state = JsValueRef::default();
                 unsafe {
                     ChakraRTInterface::JsSerializeParserState(
@@ -1210,6 +1313,7 @@ impl WScript {
                 return_value = *global_object;
             }
 
+            drop(callback);
             ChakraRTInterface::JsSetCurrentContext(current_context).as_result()?;
 
             Ok(return_value)
@@ -1225,16 +1329,22 @@ impl WScript {
                 data.set_parent(thread_data);
             }
             unsafe {
+                let thread_data_context = ThreadDataContext {
+                    wscript: &self,
+                    runtime_thread_data: child,
+                };
                 let mut thread_data = Pin::new_unchecked(&mut *thread_data);
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
                 thread_data.as_mut().reset_initial_script_completed();
                 let thread_handle = ffi::CreateThread(
                     |param| {
                         let param =
-                            std::mem::transmute::<*mut CVoid, *mut RuntimeThreadData>(param);
-                        Pin::new_unchecked(&mut *param).ThreadProc()
+                            std::mem::transmute::<*mut CVoid, *mut ThreadDataContext>(param);
+                        let thread_data_context = Box::from_raw(param);
+                        Pin::new_unchecked(&mut *thread_data_context.runtime_thread_data)
+                            .ThreadProc(thread_data_context.wscript)
                     },
-                    child as _,
+                    Box::into_raw(Box::new(thread_data_context)) as _,
                     0,
                 );
                 Pin::new_unchecked(&mut *child).set_thread_handle(thread_handle);
@@ -1264,12 +1374,18 @@ impl WScript {
         }
     }
 
-    pub fn print_exception(filename: &str, js_error_code: JsErrorCode, exception: JsValueRef) {
-        let _ = Self::internal_print_exception(filename, js_error_code, exception);
+    pub fn print_exception(
+        &self,
+        filename: &str,
+        js_error_code: JsErrorCode,
+        exception: JsValueRef,
+    ) {
+        let _ = self.internal_print_exception(filename, js_error_code, exception);
     }
 
-    #[tracing::instrument(err)]
+    #[tracing::instrument(skip(self), err)]
     fn internal_print_exception(
+        &self,
         filename: &str,
         js_error_code: JsErrorCode,
         mut exception: JsValueRef,
@@ -1292,7 +1408,7 @@ impl WScript {
             }
         }
 
-        if HostConfigFlags::GetConfig().host.mute_host_error_msg {
+        if self.config.host.mute_host_error_msg {
             return Ok(());
         }
 
@@ -1388,10 +1504,6 @@ impl WScript {
         Ok(())
     }
 
-    pub fn uninitialize() {
-        ffi::UninitializeRuntimeThreadLocalData();
-    }
-
     pub fn get_next_source_context() -> usize {
         SOURCE_CONTEXT.fetch_add(1, Ordering::Relaxed)
     }
@@ -1401,6 +1513,17 @@ impl WScript {
             MESSAGE_QUEUE = message_queue.as_mut_ptr();
         }
     }
+}
+
+impl Drop for WScript {
+    fn drop(&mut self) {
+        ffi::UninitializeRuntimeThreadLocalData();
+    }
+}
+
+struct ThreadDataContext<'a> {
+    wscript: &'a WScript,
+    runtime_thread_data: *mut RuntimeThreadData,
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -1439,82 +1562,6 @@ where
     fn new() -> Self {
         ConcurrentMap(Arc::new(RwLock::new(HashMap::new())))
     }
-}
-
-#[tracing::instrument(skip_all, fields(ref_dir), err)]
-unsafe fn fetch_imported_module_helper(
-    referencing_module: JsModuleRecord,
-    specifier: JsValueRef,
-    dependent_module_record: *mut JsModuleRecord,
-    ref_dir: &str,
-) -> Result<(), FetchImportedModuleHelperError> {
-    unsafe {
-        *dependent_module_record = JsModuleRecord::default();
-    }
-    let specifier_str = specifier.to_string()?;
-    let mut specifier_full_path = PathBuf::from(ref_dir);
-    specifier_full_path.push(&specifier_str);
-    let abs_path = std::fs::canonicalize(&specifier_full_path).or_else(|err| {
-        tracing::warn!(?specifier_full_path, ?err, "Falling back to absolute path.");
-        std::path::absolute(&specifier_full_path)
-    })?;
-    tracing::trace!(specifier_str, ?abs_path);
-    let parent_path = abs_path
-        .parent()
-        .map(|x| x.to_str())
-        .flatten()
-        .unwrap_or_default()
-        .to_owned();
-
-    {
-        let lease = MODULE_RECORD_MAP.0.read().unwrap();
-        if let Some(entry) = lease.get(abs_path.to_str().unwrap_or_default()) {
-            unsafe {
-                *dependent_module_record = entry.record.clone();
-                return Ok(());
-            }
-        }
-    }
-
-    let mut module_record = JsModuleRecord::default();
-    unsafe {
-        ChakraRTInterface::JsInitializeModuleRecord(
-            referencing_module.clone(),
-            specifier.clone(),
-            &raw mut module_record,
-        )
-        .as_result()?;
-    }
-
-    MODULE_DIRECTORY_MAP
-        .0
-        .write()
-        .unwrap()
-        .insert(module_record.clone(), parent_path);
-
-    MODULE_RECORD_MAP.0.write().unwrap().insert(
-        abs_path.to_str().unwrap_or_default().to_owned(),
-        ModuleRecordEntry {
-            record: module_record.clone(),
-        },
-    );
-
-    MODULE_ERROR_MAP
-        .0
-        .write()
-        .unwrap()
-        .insert(module_record.clone(), ModuleState::ImportedModule);
-    let module_message = Message::new_module(ModuleMessage::new(
-        referencing_module,
-        specifier,
-        abs_path.to_str(),
-    ));
-    unsafe {
-        Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(module_message);
-        *dependent_module_record = module_record;
-    }
-
-    Ok(())
 }
 
 #[derive(thiserror::Error, Debug)]

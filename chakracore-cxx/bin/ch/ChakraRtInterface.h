@@ -84,7 +84,6 @@ public:
     static JsErrorCode JsGetValueType(JsValueRef value, JsValueType *type) { return chakracore::jsrt::JsGetValueType(value, type); }
     static JsErrorCode JsGetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef *value) { return chakracore::jsrt::JsGetIndexedProperty(object, index, value); }
     static JsErrorCode JsSetIndexedProperty(JsValueRef object, JsValueRef index, JsValueRef value) { return chakracore::jsrt::JsSetIndexedProperty(object, index, value); }
-    static JsErrorCode JsSetPromiseContinuationCallback(JsPromiseContinuationCallback callback, void *callbackState) { return chakracore::jsrt::JsSetPromiseContinuationCallback(callback, callbackState); }
     static JsErrorCode JsSetPromiseContinuationCallback(rust::Fn<void(JsValueRef task, void *callbackState)> callback, void *callbackState) { return chakracore::jsrt::JsSetPromiseContinuationCallback(callback, callbackState); }
     static JsErrorCode JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return chakracore::jsrt::JsGetContextOfObject(object, context); }
     static JsErrorCode JsParseModuleSource(JsModuleRecord requestModule, JsSourceContext sourceContext, uint8_t* sourceText, unsigned int sourceLength, JsParseModuleSourceFlags sourceFlag, JsValueRef* exceptionValueRef) {

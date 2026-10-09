@@ -221,6 +221,63 @@ pub(super) mod bridge {
             module_namespace: *mut JsValueRef,
         ) -> JsErrorCode;
         unsafe fn JsGetValueType(value: JsValueRef, value_type: *mut JsValueType) -> JsErrorCode;
+
+        unsafe fn JsModuleHostInfoSetFetchImportedModuleCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                referencing_module: JsModuleRecord,
+                specifier: JsValueRef,
+                dependent_module_record: *mut JsModuleRecord,
+                data: *mut CVoid,
+            ) -> JsErrorCode,
+            callback_data: *mut CVoid,
+        ) -> JsErrorCode;
+
+        unsafe fn JsModuleHostInfoSetFetchImportedModuleFromScriptCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                referencing_source_context: JsSourceContext,
+                specifier: JsValueRef,
+                dependent_module_record: *mut JsModuleRecord,
+                data: *mut CVoid,
+            ) -> JsErrorCode,
+            callback_data: *mut CVoid,
+        ) -> JsErrorCode;
+
+        unsafe fn JsModuleHostInfoSetNotifyModuleReadyCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                referencing_module: JsModuleRecord,
+                exception_var: JsValueRef,
+                data: *mut CVoid,
+            ) -> JsErrorCode,
+            callback_data: *mut CVoid,
+        ) -> JsErrorCode;
+
+        unsafe fn JsModuleHostInfoSetInitializeImportMetaCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                referencing_module: JsModuleRecord,
+                import_meta_var: JsValueRef,
+                data: *mut CVoid,
+            ) -> JsErrorCode,
+            callback_data: *mut CVoid,
+        ) -> JsErrorCode;
+
+        unsafe fn JsModuleHostInfoSetReportModuleCompletionCallback(
+            request_module: JsModuleRecord,
+            callback: unsafe fn(
+                module: JsModuleRecord,
+                exception: JsValueRef,
+                data: *mut CVoid,
+            ) -> JsErrorCode,
+            callback_data: *mut CVoid,
+        ) -> JsErrorCode;
+
+        unsafe fn JsSetPromiseContinuationCallback(
+            promise_continuation_callback: unsafe fn(task: JsValueRef, callback_state: *mut CVoid),
+            callback_state: *mut CVoid,
+        ) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}
@@ -401,18 +458,8 @@ pub(super) mod bridge {
         JsModuleHostInfo_Exception = 0x01,
         /// Host defined info.
         JsModuleHostInfo_HostDefined = 0x02,
-        /// Callback for receiving notification when module is ready.
-        JsModuleHostInfo_NotifyModuleReadyCallback = 0x3,
-        /// Callback for receiving notification to fetch a dependent module.
-        JsModuleHostInfo_FetchImportedModuleCallback = 0x4,
-        /// Callback for receiving notification for calls to ```import()```
-        JsModuleHostInfo_FetchImportedModuleFromScriptCallback = 0x5,
         /// URL for use in error stack traces and debugging.
         JsModuleHostInfo_Url = 0x6,
-        /// Callback to allow host to initialize import.meta object properties.
-        JsModuleHostInfo_InitializeImportMetaCallback = 0x7,
-        /// Callback to report module completion or exception thrown when evaluating a module.
-        JsModuleHostInfo_ReportModuleCompletionCallback = 0x8,
     }
 
     #[repr(i32)]
