@@ -19,7 +19,7 @@ public:
     RuntimeThreadData();
     RuntimeThreadData(rust::String initialSource);
     ~RuntimeThreadData();
-    static RuntimeThreadData *NewWithInitialSource(const rust::String &initialSource);
+    static std::shared_ptr<RuntimeThreadData> NewWithInitialSource(const rust::String &initialSource);
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
     HANDLE hThread;
@@ -35,7 +35,7 @@ public:
 
     RuntimeThreadData* parent;
 
-    std::list<RuntimeThreadData*> children;
+    std::vector<std::shared_ptr<RuntimeThreadData>> children_;
 
     uint32_t ThreadProc(const chakra_rs::WScript &wscript);
     void set_leaving(bool leaving);
@@ -49,7 +49,7 @@ public:
     JsSharedArrayBufferContentHandle get_shared_content();
     JsValueRef get_receive_broadcast_callback_func() const;
     void set_receive_broadcast_callback_func(JsValueRef value);
-    void add_child(RuntimeThreadData *child);
+    void add_child(const std::shared_ptr<RuntimeThreadData> &child);
     void set_parent(RuntimeThreadData *parentThread);
     void set_thread_handle(HANDLE thread);
 

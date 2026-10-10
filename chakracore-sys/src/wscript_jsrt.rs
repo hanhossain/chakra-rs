@@ -106,7 +106,7 @@ mod ffi {
         fn UninitializeRuntimeThreadLocalData();
 
         #[Self = "RuntimeThreadData"]
-        fn NewWithInitialSource(initialSource: &String) -> *mut RuntimeThreadData;
+        fn NewWithInitialSource(initialSource: &String) -> SharedPtr<RuntimeThreadData>;
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
         fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
@@ -126,7 +126,10 @@ mod ffi {
         );
         fn reset_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
         fn wait_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
-        unsafe fn add_child(self: Pin<&mut RuntimeThreadData>, child: *mut RuntimeThreadData);
+        unsafe fn add_child(
+            self: Pin<&mut RuntimeThreadData>,
+            child: &SharedPtr<RuntimeThreadData>,
+        );
         unsafe fn set_parent(self: Pin<&mut RuntimeThreadData>, parent: *mut RuntimeThreadData);
         fn ThreadProc(self: Pin<&mut RuntimeThreadData>, wscript: &WScript) -> u32;
         fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
@@ -1319,19 +1322,19 @@ impl WScript {
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
             let thread_data = ffi::GetCurrentRuntimeThreadDataPtr();
-            let child = RuntimeThreadData::NewWithInitialSource(&content.unwrap().to_owned());
+            let mut child = RuntimeThreadData::NewWithInitialSource(&content.unwrap().to_owned());
             unsafe {
                 let data = Pin::new_unchecked(&mut *thread_data);
-                data.add_child(child);
+                data.add_child(&child);
             }
             unsafe {
-                let data = Pin::new_unchecked(&mut *child);
+                let data = child.pin_mut_unchecked();
                 data.set_parent(thread_data);
             }
             unsafe {
                 let thread_data_context = ThreadDataContext {
                     wscript: &self,
-                    runtime_thread_data: child,
+                    runtime_thread_data: child.as_mut_ptr(),
                 };
                 let mut thread_data = Pin::new_unchecked(&mut *thread_data);
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
@@ -1347,7 +1350,7 @@ impl WScript {
                     Box::into_raw(Box::new(thread_data_context)) as _,
                     0,
                 );
-                Pin::new_unchecked(&mut *child).set_thread_handle(thread_handle);
+                child.pin_mut_unchecked().set_thread_handle(thread_handle);
                 thread_data.as_mut().wait_initial_script_completed();
             }
             Ok(JsValueRef::default())
