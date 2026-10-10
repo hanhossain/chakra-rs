@@ -27,13 +27,10 @@ public:
     JsSharedArrayBufferContentHandle sharedContent_;
     JsValueRef receiveBroadcastCallbackFunc;
 
-
     JsRuntimeHandle runtime;
     JsContextRef context;
 
-
-
-    RuntimeThreadData* parent;
+    std::weak_ptr<RuntimeThreadData> parent_;
 
     std::vector<std::shared_ptr<RuntimeThreadData>> children_;
 
@@ -50,7 +47,7 @@ public:
     JsValueRef get_receive_broadcast_callback_func() const;
     void set_receive_broadcast_callback_func(JsValueRef value);
     void add_child(const std::shared_ptr<RuntimeThreadData> &child);
-    void set_parent(RuntimeThreadData *parentThread);
+    void set_parent(const std::weak_ptr<RuntimeThreadData> &parentThread);
     void set_thread_handle(HANDLE thread);
 
 private:
@@ -68,11 +65,12 @@ struct RuntimeThreadLocalData
 {
     // can't use ctor/dtor because it's not supported in VS2012
     // error C2483: 'threadLocalData' : object with constructor or destructor cannot be declared 'thread' 
-    void Initialize(RuntimeThreadData* threadData);
+    void Initialize(const std::shared_ptr<RuntimeThreadData> &threadData);
     void Uninitialize() const;
-    RuntimeThreadData* threadData;
+    std::shared_ptr<RuntimeThreadData> threadData;
 };
 
 void UninitializeRuntimeThreadLocalData();
+void InitializeRuntimeThreadLocalData(const std::shared_ptr<RuntimeThreadData> &threadData);
 RuntimeThreadData &GetCurrentRuntimeThreadData(int &dummy);
-RuntimeThreadData *GetCurrentRuntimeThreadDataPtr();
+std::shared_ptr<RuntimeThreadData> GetCurrentRuntimeThreadDataPtr();
