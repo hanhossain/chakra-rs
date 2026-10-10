@@ -16,16 +16,16 @@
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-void RuntimeThreadLocalData::Initialize(RuntimeThreadData* threadData)
+void RuntimeThreadLocalData::Initialize(const std::shared_ptr<RuntimeThreadData> &threadData)
 {
     this->threadData = threadData;
 }
 
 void RuntimeThreadLocalData::Uninitialize() const {
-    if (threadData && !threadData->children.empty()) {
+    if (threadData && !threadData->children_.empty()) {
         std::vector<HANDLE> childrenHandles;
 
-        for (const auto &child : threadData->children) {
+        for (const auto &child : threadData->children_) {
             childrenHandles.push_back(child->hThread);
             SetEvent(child->hevntShutdown);
         }
@@ -33,11 +33,7 @@ void RuntimeThreadLocalData::Uninitialize() const {
         uint32_t waitRet = WaitForMultipleObjects(childrenHandles.size(), childrenHandles.data(), TRUE, INFINITE);
         assert(waitRet == WAIT_OBJECT_0);
 
-        for (const auto &child : threadData->children) {
-            delete child;
-        }
-
-        threadData->children.clear();
+        threadData->children_.clear();
     }
 }
 
@@ -48,15 +44,19 @@ void UninitializeRuntimeThreadLocalData()
     threadLocalData.Uninitialize();
 }
 
+void InitializeRuntimeThreadLocalData(const std::shared_ptr<RuntimeThreadData> &threadData) {
+    threadLocalData.Initialize(threadData);
+}
+
+
 RuntimeThreadData &GetCurrentRuntimeThreadData([[maybe_unused]] int &dummy)
 {
     return *threadLocalData.threadData;
 }
 
-RuntimeThreadData *GetCurrentRuntimeThreadDataPtr() {
+std::shared_ptr<RuntimeThreadData> GetCurrentRuntimeThreadDataPtr() {
     if (!threadLocalData.threadData) {
-        auto threadData = new RuntimeThreadData{};
-        threadLocalData.Initialize(threadData);
+        threadLocalData.Initialize(std::make_shared<RuntimeThreadData>());
     }
     return threadLocalData.threadData;
 }
@@ -67,7 +67,6 @@ RuntimeThreadData::RuntimeThreadData(rust::String initialSource) :
     receiveBroadcastCallbackFunc(nullptr),
     runtime(nullptr),
     context(nullptr),
-    parent(nullptr),
     leaving_(false),
     initialSource_(std::move(initialSource))
 {
@@ -86,8 +85,8 @@ RuntimeThreadData::~RuntimeThreadData()
     CloseHandle(this->hThread);
 }
 
-RuntimeThreadData *RuntimeThreadData::NewWithInitialSource(const rust::String &initialSource) {
-    return new RuntimeThreadData{initialSource};
+std::shared_ptr<RuntimeThreadData> RuntimeThreadData::NewWithInitialSource(const rust::String &initialSource) {
+    return std::make_shared<RuntimeThreadData>(initialSource);
 }
 
 uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript)
@@ -98,7 +97,7 @@ uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript)
     const char* fullPath = "agent source";
     int32_t hr = S_OK;
 
-    threadLocalData.Initialize(this);
+    // threadLocalData.Initialize(this);
 
     IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(JsRuntimeAttributeNone, nullptr, &runtime), wscript);
     IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context), wscript);
@@ -120,7 +119,10 @@ uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript)
 
     ChakraRTInterface::JsRun(scriptSource, chakra_rs::WScript::get_next_source_context(), fname, JsParseScriptAttributeNone, nullptr);
 
-    this->parent->set_initial_script_completed();
+    {
+        auto parent = parent_.lock();
+        parent->set_initial_script_completed();
+    }
 
     // loop waiting for work;
 
@@ -133,7 +135,10 @@ uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript)
         {
             JsValueRef args[3];
             ChakraRTInterface::JsGetGlobalObject(&args[0]);
-            ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(this->parent->get_shared_content(), &args[1]);
+            {
+                auto parent = parent_.lock();
+                ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(parent->get_shared_content(), &args[1]);
+            }
             ChakraRTInterface::JsDoubleToNumber(1, &args[2]);
 
             if (this->receiveBroadcastCallbackFunc)
@@ -196,6 +201,7 @@ void RuntimeThreadData::wait_initial_script_completed()
 
 void RuntimeThreadData::enqueue_report_to_parent(rust::String report)
 {
+    auto parent = parent_.lock();
     if (parent)
     {
         std::unique_lock lease{parent->csReportQ_};
@@ -218,7 +224,7 @@ bool RuntimeThreadData::dequeue_report(rust::String &report)
 
 void RuntimeThreadData::broadcast_to_children()
 {
-    for (const auto child : children)
+    for (const auto &child : children_)
     {
         SetEvent(child->hevntReceivedBroadcast);
     }
@@ -243,11 +249,11 @@ void RuntimeThreadData::set_receive_broadcast_callback_func(JsValueRef value)
     receiveBroadcastCallbackFunc = value;
 }
 
-void RuntimeThreadData::add_child(RuntimeThreadData *child) {
-    children.push_back(child);
+void RuntimeThreadData::add_child(const std::shared_ptr<RuntimeThreadData> &child) {
+    children_.push_back(child);
 }
-void RuntimeThreadData::set_parent(RuntimeThreadData *parentThread) {
-    parent = parentThread;
+void RuntimeThreadData::set_parent(const std::weak_ptr<RuntimeThreadData> &parentThread) {
+    parent_ = parentThread;
 }
 void RuntimeThreadData::set_thread_handle(HANDLE thread) {
     hThread = thread;

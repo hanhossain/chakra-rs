@@ -19,7 +19,7 @@ public:
     RuntimeThreadData();
     RuntimeThreadData(rust::String initialSource);
     ~RuntimeThreadData();
-    static RuntimeThreadData *NewWithInitialSource(const rust::String &initialSource);
+    static std::shared_ptr<RuntimeThreadData> NewWithInitialSource(const rust::String &initialSource);
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
     HANDLE hThread;
@@ -27,15 +27,12 @@ public:
     JsSharedArrayBufferContentHandle sharedContent_;
     JsValueRef receiveBroadcastCallbackFunc;
 
-
     JsRuntimeHandle runtime;
     JsContextRef context;
 
+    std::weak_ptr<RuntimeThreadData> parent_;
 
-
-    RuntimeThreadData* parent;
-
-    std::list<RuntimeThreadData*> children;
+    std::vector<std::shared_ptr<RuntimeThreadData>> children_;
 
     uint32_t ThreadProc(const chakra_rs::WScript &wscript);
     void set_leaving(bool leaving);
@@ -49,8 +46,8 @@ public:
     JsSharedArrayBufferContentHandle get_shared_content();
     JsValueRef get_receive_broadcast_callback_func() const;
     void set_receive_broadcast_callback_func(JsValueRef value);
-    void add_child(RuntimeThreadData *child);
-    void set_parent(RuntimeThreadData *parentThread);
+    void add_child(const std::shared_ptr<RuntimeThreadData> &child);
+    void set_parent(const std::weak_ptr<RuntimeThreadData> &parentThread);
     void set_thread_handle(HANDLE thread);
 
 private:
@@ -68,11 +65,12 @@ struct RuntimeThreadLocalData
 {
     // can't use ctor/dtor because it's not supported in VS2012
     // error C2483: 'threadLocalData' : object with constructor or destructor cannot be declared 'thread' 
-    void Initialize(RuntimeThreadData* threadData);
+    void Initialize(const std::shared_ptr<RuntimeThreadData> &threadData);
     void Uninitialize() const;
-    RuntimeThreadData* threadData;
+    std::shared_ptr<RuntimeThreadData> threadData;
 };
 
 void UninitializeRuntimeThreadLocalData();
+void InitializeRuntimeThreadLocalData(const std::shared_ptr<RuntimeThreadData> &threadData);
 RuntimeThreadData &GetCurrentRuntimeThreadData(int &dummy);
-RuntimeThreadData *GetCurrentRuntimeThreadDataPtr();
+std::shared_ptr<RuntimeThreadData> GetCurrentRuntimeThreadDataPtr();
