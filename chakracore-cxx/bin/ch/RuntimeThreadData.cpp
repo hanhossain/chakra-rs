@@ -97,8 +97,6 @@ uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript)
     const char* fullPath = "agent source";
     int32_t hr = S_OK;
 
-    // threadLocalData.Initialize(this);
-
     IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(JsRuntimeAttributeNone, nullptr, &runtime), wscript);
     IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context), wscript);
     IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context), wscript);
