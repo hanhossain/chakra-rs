@@ -49,7 +49,7 @@ namespace CorUnix
     };
 
     PAL_ERROR
-    InternalCreateThread(CPalThread *pThread, std::function<uint32_t(void *)> lpStartAddress, void *lpParameter,
+    InternalCreateThread(CPalThread *pThread, std::function<uint32_t(void *, HANDLE)> lpStartAddress, void *lpParameter,
                          uint32_t dwCreationFlags, PalThreadType eThreadType, HANDLE *phThread);
 
     PAL_ERROR
@@ -206,7 +206,7 @@ namespace CorUnix
     {
         friend
             PAL_ERROR
-            CorUnix::InternalCreateThread(CPalThread *, std::function<uint32_t(void *)>, void *, uint32_t,
+            CorUnix::InternalCreateThread(CPalThread *, std::function<uint32_t(void *, HANDLE)>, void *, uint32_t,
                                                        PalThreadType, HANDLE *);
 
         friend
@@ -281,7 +281,7 @@ namespace CorUnix
         // Start info
         //
 
-        std::function<uint32_t(void *)> m_lpStartAddress;
+        std::function<uint32_t(void *, HANDLE)> m_lpStartAddress;
         void * m_lpStartParameter;
         BOOL m_bCreateSuspended;
 
@@ -305,7 +305,7 @@ namespace CorUnix
         // The thread entry routine (called from InternalCreateThread)
         //
 
-        static void* ThreadEntry(CPalThread *pThread);
+        static void* ThreadEntry(CPalThread *pThread, HANDLE threadHandle);
 
 #ifdef FEATURE_PAL_SXS
         //
@@ -516,7 +516,7 @@ namespace CorUnix
             return m_hardwareExceptionHolderCount > 0;
         }
 
-        std::function<uint32_t(void *)> GetStartAddress() {
+        std::function<uint32_t(void *, HANDLE)> GetStartAddress() {
             return m_lpStartAddress;
         };
 

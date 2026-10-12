@@ -21,7 +21,7 @@ class Thread
     static const uintptr_t InvalidHandle = static_cast<uintptr_t>(-1);
 
     static ThreadHandle Create(
-        unsigned int ( *start_address )( void * ),
+        unsigned int ( *start_address )(void *, void *),
         void* arg_list,
         ThreadInitFlag init_flag,
         const char16_t* description);

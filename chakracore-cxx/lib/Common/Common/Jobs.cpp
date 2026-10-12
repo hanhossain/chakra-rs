@@ -1240,7 +1240,7 @@ namespace JsUtil
         }
     }
 
-    unsigned int BackgroundJobProcessor::StaticThreadProc(void *lpParam)
+    unsigned int BackgroundJobProcessor::StaticThreadProc(void *lpParam, HANDLE threadHandle)
     {
         Assert(lpParam);
         Memory::RecyclerWriteBarrierManager::OnThreadInit();

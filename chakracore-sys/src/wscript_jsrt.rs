@@ -152,7 +152,7 @@ mod ffi {
         type Handle = super::Handle;
         #[namespace = "pal_ffi"]
         unsafe fn CreateThread(
-            func: unsafe fn(*mut CVoid) -> u32,
+            func: unsafe fn(*mut CVoid, Handle) -> u32,
             param: *mut CVoid,
             creation_flags: u32,
         ) -> Handle;
@@ -1333,42 +1333,46 @@ impl WScript {
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
             let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
-            let mut child = RuntimeThreadData::NewWithInitialSource(&content.unwrap().to_owned());
             unsafe {
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
-                let thread_handle = ffi::CreateThread(
-                    |param| {
+                ffi::CreateThread(
+                    |param, thread_handle| {
                         let param =
                             std::mem::transmute::<*mut CVoid, *mut ThreadDataContext>(param);
                         let mut thread_data_context = Box::from_raw(param);
 
+                        let mut child = RuntimeThreadData::NewWithInitialSource(
+                            &thread_data_context.content.to_owned(),
+                        );
+
                         thread_data_context
                             .parent
                             .pin_mut_unchecked()
-                            .add_child(&thread_data_context.child);
+                            .add_child(&child);
 
-                        thread_data_context
-                            .child
+                        {
+                            let mut child = child.pin_mut_unchecked();
+                            child
+                                .as_mut()
+                                .set_parent(&thread_data_context.parent.downgrade());
+                            child.as_mut().set_thread_handle(thread_handle);
+                        }
+
+                        THREAD_DATA.set(child.clone());
+                        child
                             .pin_mut_unchecked()
-                            .set_parent(&thread_data_context.parent.downgrade());
-
-                        THREAD_DATA.set(thread_data_context.child.clone());
-                        thread_data_context.child.pin_mut_unchecked().ThreadProc(
-                            thread_data_context.wscript,
-                            || {
+                            .ThreadProc(thread_data_context.wscript, || {
                                 THREAD_DATA
                                     .with_borrow_mut(|td| td.pin_mut_unchecked().uninitialize())
-                            },
-                        )
+                            })
                     },
                     Box::into_raw(Box::new(ThreadDataContext {
                         wscript: &self,
-                        child: child.clone(),
                         parent: thread_data.clone(),
+                        content: content.unwrap(),
                     })) as _,
                     0,
                 );
-                child.pin_mut_unchecked().set_thread_handle(thread_handle);
                 thread_data
                     .pin_mut_unchecked()
                     .wait_initial_script_completed();
@@ -1548,8 +1552,8 @@ impl Drop for WScript {
 
 struct ThreadDataContext<'a> {
     wscript: &'a WScript,
-    child: cxx::SharedPtr<RuntimeThreadData>,
     parent: cxx::SharedPtr<RuntimeThreadData>,
+    content: &'a str,
 }
 
 #[derive(thiserror::Error, Debug)]
