@@ -16,17 +16,11 @@
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
-// TODO: moving runtime thread local data to rust
-void RuntimeThreadLocalData::Initialize(const std::shared_ptr<RuntimeThreadData> &threadData)
-{
-    this->threadData = threadData;
-}
-
-void RuntimeThreadLocalData::Uninitialize() const {
-    if (threadData && !threadData->children_.empty()) {
+void RuntimeThreadData::uninitialize() {
+    if (!children_.empty()) {
         std::vector<HANDLE> childrenHandles;
 
-        for (const auto &child : threadData->children_) {
+        for (const auto &child : children_) {
             childrenHandles.push_back(child->hThread);
             SetEvent(child->hevntShutdown);
         }
@@ -34,32 +28,8 @@ void RuntimeThreadLocalData::Uninitialize() const {
         uint32_t waitRet = WaitForMultipleObjects(childrenHandles.size(), childrenHandles.data(), TRUE, INFINITE);
         assert(waitRet == WAIT_OBJECT_0);
 
-        threadData->children_.clear();
+        children_.clear();
     }
-}
-
-thread_local RuntimeThreadLocalData threadLocalData;
-
-void UninitializeRuntimeThreadLocalData()
-{
-    threadLocalData.Uninitialize();
-}
-
-void InitializeRuntimeThreadLocalData(const std::shared_ptr<RuntimeThreadData> &threadData) {
-    threadLocalData.Initialize(threadData);
-}
-
-
-RuntimeThreadData &GetCurrentRuntimeThreadData([[maybe_unused]] int &dummy)
-{
-    return *threadLocalData.threadData;
-}
-
-std::shared_ptr<RuntimeThreadData> GetCurrentRuntimeThreadDataPtr() {
-    if (!threadLocalData.threadData) {
-        threadLocalData.Initialize(std::make_shared<RuntimeThreadData>());
-    }
-    return threadLocalData.threadData;
 }
 
 RuntimeThreadData::RuntimeThreadData(rust::String initialSource) :
@@ -90,7 +60,11 @@ std::shared_ptr<RuntimeThreadData> RuntimeThreadData::NewWithInitialSource(const
     return std::make_shared<RuntimeThreadData>(initialSource);
 }
 
-uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript)
+std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
+    return std::make_shared<RuntimeThreadData>();
+}
+
+uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript, rust::Fn<void()> uninitializeThreadLocal)
 {
     auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
     JsValueRef scriptSource;
@@ -148,7 +122,8 @@ uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript)
 
         if (waitRet == WAIT_OBJECT_0 + 1 || leaving_)
         {
-            threadLocalData.Uninitialize();
+            // TODO (hanhossain): don't know I actually need to call this, or if it'll correctly uninit automatically when the thread is exited
+            uninitializeThreadLocal();
 
             if (this->receiveBroadcastCallbackFunc)
             {

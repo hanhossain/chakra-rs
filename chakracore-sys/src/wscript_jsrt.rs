@@ -9,9 +9,10 @@ use crate::jsrt::{
 use crate::messages::{CallbackMessage, Message, ModuleMessage};
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
-use crate::wscript_jsrt::ffi::{GetCurrentRuntimeThreadData, RuntimeThreadData};
-use cxx::UniquePtr;
+use crate::wscript_jsrt::ffi::RuntimeThreadData;
+use cxx::{SharedPtr, UniquePtr};
 pub use ffi::{MessageQueue, WScriptJsrt};
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::path::PathBuf;
@@ -34,6 +35,10 @@ pub(crate) static MODULE_RECORD_MAP: LazyLock<ModuleRecordMap> =
     LazyLock::new(|| ModuleRecordMap::new());
 pub(crate) static MODULE_DIRECTORY_MAP: LazyLock<ModuleDirectoryMap> =
     LazyLock::new(|| ModuleDirectoryMap::new());
+
+thread_local! {
+    static THREAD_DATA: RefCell<SharedPtr<RuntimeThreadData>> = RefCell::new(RuntimeThreadData::New());
+}
 
 #[repr(transparent)]
 pub struct Handle(*mut std::ffi::c_void);
@@ -101,13 +106,12 @@ mod ffi {
 
         type RuntimeThreadData;
         type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
-        fn GetCurrentRuntimeThreadData(dummy: &mut i32) -> Pin<&mut RuntimeThreadData>;
-        fn GetCurrentRuntimeThreadDataPtr() -> SharedPtr<RuntimeThreadData>;
-        fn UninitializeRuntimeThreadLocalData();
-        fn InitializeRuntimeThreadLocalData(data: &SharedPtr<RuntimeThreadData>);
 
         #[Self = "RuntimeThreadData"]
         fn NewWithInitialSource(initialSource: &String) -> SharedPtr<RuntimeThreadData>;
+        #[Self = "RuntimeThreadData"]
+        fn New() -> SharedPtr<RuntimeThreadData>;
+        fn uninitialize(self: Pin<&mut RuntimeThreadData>);
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
         fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
@@ -135,7 +139,11 @@ mod ffi {
             self: Pin<&mut RuntimeThreadData>,
             parent: &WeakPtr<RuntimeThreadData>,
         );
-        fn ThreadProc(self: Pin<&mut RuntimeThreadData>, wscript: &WScript) -> u32;
+        fn ThreadProc(
+            self: Pin<&mut RuntimeThreadData>,
+            wscript: &WScript,
+            uninitialize_thread_local: fn(),
+        ) -> u32;
         fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
     }
 
@@ -515,9 +523,9 @@ impl WScript {
 
     fn leaving_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if !args.arguments.is_empty() {
-            let mut v = 42;
-            let runtime_thread_data = ffi::GetCurrentRuntimeThreadData(&mut v);
-            runtime_thread_data.set_leaving(true);
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let thread_data = unsafe { thread_data.pin_mut_unchecked() };
+            thread_data.set_leaving(true);
         }
 
         Ok(())
@@ -876,8 +884,8 @@ impl WScript {
         }
 
         if !args.arguments.is_empty() {
-            let mut v = 42;
-            let thread_data = ffi::GetCurrentRuntimeThreadData(&mut v);
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let thread_data = unsafe { thread_data.pin_mut_unchecked() };
             let mut report = String::new();
             if thread_data.dequeue_report(&mut report) {
                 unsafe {
@@ -893,17 +901,17 @@ impl WScript {
     fn report_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if args.arguments.len() > 1 {
             let auto_str = args.arguments[1].to_string()?;
-            let mut dummy = 0;
-            let runtime_thread_data = GetCurrentRuntimeThreadData(&mut dummy);
-            runtime_thread_data.enqueue_report_to_parent(auto_str);
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let thread_data = unsafe { thread_data.pin_mut_unchecked() };
+            thread_data.enqueue_report_to_parent(auto_str);
         }
         Ok(())
     }
 
     fn broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if args.arguments.len() > 1 {
-            let mut dummy = 0;
-            let mut thread_data = GetCurrentRuntimeThreadData(&mut dummy);
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let mut thread_data = unsafe { thread_data.pin_mut_unchecked() };
             let mut shared_content = JsSharedArrayBufferContentHandle::default();
             unsafe {
                 ChakraRTInterface::JsGetSharedArrayBufferContent(
@@ -923,8 +931,8 @@ impl WScript {
 
     fn receive_broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if args.arguments.len() > 1 {
-            let mut dummy = 0;
-            let mut thread_data = GetCurrentRuntimeThreadData(&mut dummy);
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let mut thread_data = unsafe { thread_data.pin_mut_unchecked() };
             if !thread_data.get_receive_broadcast_callback_func().is_null() {
                 unsafe {
                     ChakraRTInterface::JsRelease(
@@ -1325,7 +1333,7 @@ impl WScript {
 
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
-            let mut thread_data = ffi::GetCurrentRuntimeThreadDataPtr();
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
             let mut child = RuntimeThreadData::NewWithInitialSource(&content.unwrap().to_owned());
             unsafe {
                 thread_data
@@ -1348,11 +1356,14 @@ impl WScript {
                             .pin_mut_unchecked()
                             .set_parent(&thread_data_context.parent.downgrade());
 
-                        ffi::InitializeRuntimeThreadLocalData(&thread_data_context.child);
-                        thread_data_context
-                            .child
-                            .pin_mut_unchecked()
-                            .ThreadProc(thread_data_context.wscript)
+                        THREAD_DATA.set(thread_data_context.child.clone());
+                        thread_data_context.child.pin_mut_unchecked().ThreadProc(
+                            thread_data_context.wscript,
+                            || {
+                                THREAD_DATA
+                                    .with_borrow_mut(|td| td.pin_mut_unchecked().uninitialize())
+                            },
+                        )
                     },
                     Box::into_raw(Box::new(ThreadDataContext {
                         wscript: &self,
@@ -1533,7 +1544,9 @@ impl WScript {
 
 impl Drop for WScript {
     fn drop(&mut self) {
-        ffi::UninitializeRuntimeThreadLocalData();
+        THREAD_DATA.with_borrow_mut(|td| unsafe {
+            td.pin_mut_unchecked().uninitialize();
+        })
     }
 }
 

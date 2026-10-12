@@ -20,6 +20,8 @@ public:
     RuntimeThreadData(rust::String initialSource);
     ~RuntimeThreadData();
     static std::shared_ptr<RuntimeThreadData> NewWithInitialSource(const rust::String &initialSource);
+    static std::shared_ptr<RuntimeThreadData> New();
+    void uninitialize();
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
     HANDLE hThread;
@@ -34,7 +36,7 @@ public:
 
     std::vector<std::shared_ptr<RuntimeThreadData>> children_;
 
-    uint32_t ThreadProc(const chakra_rs::WScript &wscript);
+    uint32_t ThreadProc(const chakra_rs::WScript &wscript, rust::Fn<void()> uninitializeThreadLocal);
     void set_leaving(bool leaving);
     void set_initial_script_completed();
     void reset_initial_script_completed();
@@ -60,17 +62,3 @@ private:
     bool leaving_;
     rust::String initialSource_;
 };
-
-struct RuntimeThreadLocalData
-{
-    // can't use ctor/dtor because it's not supported in VS2012
-    // error C2483: 'threadLocalData' : object with constructor or destructor cannot be declared 'thread' 
-    void Initialize(const std::shared_ptr<RuntimeThreadData> &threadData);
-    void Uninitialize() const;
-    std::shared_ptr<RuntimeThreadData> threadData;
-};
-
-void UninitializeRuntimeThreadLocalData();
-void InitializeRuntimeThreadLocalData(const std::shared_ptr<RuntimeThreadData> &threadData);
-RuntimeThreadData &GetCurrentRuntimeThreadData(int &dummy);
-std::shared_ptr<RuntimeThreadData> GetCurrentRuntimeThreadDataPtr();
