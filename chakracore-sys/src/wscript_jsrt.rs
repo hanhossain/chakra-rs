@@ -1,3 +1,5 @@
+mod tls;
+
 use crate::config::ConfigContext;
 use crate::helpers::{ScriptCache, TestHooks};
 use crate::jsrt::{
@@ -10,7 +12,8 @@ use crate::messages::{CallbackMessage, Message, ModuleMessage};
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::ffi::RuntimeThreadData;
-use cxx::{SharedPtr, UniquePtr};
+use crate::wscript_jsrt::tls::ThreadData;
+use cxx::UniquePtr;
 pub use ffi::{MessageQueue, WScriptJsrt};
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -37,7 +40,7 @@ pub(crate) static MODULE_DIRECTORY_MAP: LazyLock<ModuleDirectoryMap> =
     LazyLock::new(|| ModuleDirectoryMap::new());
 
 thread_local! {
-    static THREAD_DATA: RefCell<SharedPtr<RuntimeThreadData>> = RefCell::new(RuntimeThreadData::New());
+    static THREAD_DATA: RefCell<ThreadData> = RefCell::new(ThreadData::new());
 }
 
 #[repr(transparent)]
@@ -522,7 +525,7 @@ impl WScript {
 
     fn leaving_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if !args.arguments.is_empty() {
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
             let thread_data = unsafe { thread_data.pin_mut_unchecked() };
             thread_data.set_leaving(true);
         }
@@ -883,7 +886,7 @@ impl WScript {
         }
 
         if !args.arguments.is_empty() {
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
             let thread_data = unsafe { thread_data.pin_mut_unchecked() };
             let mut report = String::new();
             if thread_data.dequeue_report(&mut report) {
@@ -900,7 +903,7 @@ impl WScript {
     fn report_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if args.arguments.len() > 1 {
             let auto_str = args.arguments[1].to_string()?;
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
             let thread_data = unsafe { thread_data.pin_mut_unchecked() };
             thread_data.enqueue_report_to_parent(auto_str);
         }
@@ -909,7 +912,7 @@ impl WScript {
 
     fn broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if args.arguments.len() > 1 {
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
             let mut thread_data = unsafe { thread_data.pin_mut_unchecked() };
             let mut shared_content = JsSharedArrayBufferContentHandle::default();
             unsafe {
@@ -930,7 +933,7 @@ impl WScript {
 
     fn receive_broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if args.arguments.len() > 1 {
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
             let mut thread_data = unsafe { thread_data.pin_mut_unchecked() };
             if !thread_data.get_receive_broadcast_callback_func().is_null() {
                 unsafe {
@@ -1332,7 +1335,7 @@ impl WScript {
 
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
+            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
             unsafe {
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
                 ffi::CreateThread(
@@ -1341,30 +1344,35 @@ impl WScript {
                             std::mem::transmute::<*mut CVoid, *mut ThreadDataContext>(param);
                         let mut thread_data_context = Box::from_raw(param);
 
-                        let mut child = RuntimeThreadData::NewWithInitialSource(
-                            &thread_data_context.content.to_owned(),
-                        );
+                        let mut child =
+                            ThreadData::new_with_initial_source(thread_data_context.content);
 
                         thread_data_context
                             .parent
                             .pin_mut_unchecked()
-                            .add_child(&child);
+                            .add_child(&child.inner);
 
                         {
-                            let mut child = child.pin_mut_unchecked();
+                            let mut child = child.inner.pin_mut_unchecked();
                             child
                                 .as_mut()
                                 .set_parent(&thread_data_context.parent.downgrade());
                             child.as_mut().set_thread_handle(thread_handle);
                         }
 
-                        THREAD_DATA.set(child.clone());
-                        child
-                            .pin_mut_unchecked()
-                            .ThreadProc(thread_data_context.wscript, || {
-                                THREAD_DATA
-                                    .with_borrow_mut(|td| td.pin_mut_unchecked().uninitialize())
-                            })
+                        THREAD_DATA.set(child);
+                        THREAD_DATA.with_borrow(|child| {
+                            let mut child = child.inner.clone();
+                            child.pin_mut_unchecked().ThreadProc(
+                                thread_data_context.wscript,
+                                || {
+                                    THREAD_DATA.with_borrow(|td| {
+                                        let mut td = td.inner.clone();
+                                        td.pin_mut_unchecked().uninitialize()
+                                    })
+                                },
+                            )
+                        })
                     },
                     Box::into_raw(Box::new(ThreadDataContext {
                         wscript: &self,
@@ -1545,7 +1553,7 @@ impl WScript {
 impl Drop for WScript {
     fn drop(&mut self) {
         THREAD_DATA.with_borrow_mut(|td| unsafe {
-            td.pin_mut_unchecked().uninitialize();
+            td.inner.pin_mut_unchecked().uninitialize();
         })
     }
 }
