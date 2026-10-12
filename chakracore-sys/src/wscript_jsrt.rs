@@ -1328,40 +1328,43 @@ impl WScript {
             let mut thread_data = ffi::GetCurrentRuntimeThreadDataPtr();
             let mut child = RuntimeThreadData::NewWithInitialSource(&content.unwrap().to_owned());
             unsafe {
-                let data = thread_data.pin_mut_unchecked();
-                data.add_child(&child);
-            }
-            unsafe {
-                let data = child.pin_mut_unchecked();
-                data.set_parent(&thread_data.downgrade());
-            }
-            unsafe {
-                let thread_data_context = ThreadDataContext {
-                    wscript: &self,
-                    runtime_thread_data: child.clone(),
-                };
-                let mut thread_data = thread_data.pin_mut_unchecked();
+                thread_data
+                    .pin_mut_unchecked()
+                    .reset_initial_script_completed();
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
-                thread_data.as_mut().reset_initial_script_completed();
                 let thread_handle = ffi::CreateThread(
                     |param| {
                         let param =
                             std::mem::transmute::<*mut CVoid, *mut ThreadDataContext>(param);
                         let mut thread_data_context = Box::from_raw(param);
 
-                        ffi::InitializeRuntimeThreadLocalData(
-                            &thread_data_context.runtime_thread_data,
-                        );
                         thread_data_context
-                            .runtime_thread_data
+                            .parent
+                            .pin_mut_unchecked()
+                            .add_child(&thread_data_context.child);
+
+                        thread_data_context
+                            .child
+                            .pin_mut_unchecked()
+                            .set_parent(&thread_data_context.parent.downgrade());
+
+                        ffi::InitializeRuntimeThreadLocalData(&thread_data_context.child);
+                        thread_data_context
+                            .child
                             .pin_mut_unchecked()
                             .ThreadProc(thread_data_context.wscript)
                     },
-                    Box::into_raw(Box::new(thread_data_context)) as _,
+                    Box::into_raw(Box::new(ThreadDataContext {
+                        wscript: &self,
+                        child: child.clone(),
+                        parent: thread_data.clone(),
+                    })) as _,
                     0,
                 );
                 child.pin_mut_unchecked().set_thread_handle(thread_handle);
-                thread_data.as_mut().wait_initial_script_completed();
+                thread_data
+                    .pin_mut_unchecked()
+                    .wait_initial_script_completed();
             }
             Ok(JsValueRef::default())
         } else {
@@ -1536,7 +1539,8 @@ impl Drop for WScript {
 
 struct ThreadDataContext<'a> {
     wscript: &'a WScript,
-    runtime_thread_data: cxx::SharedPtr<RuntimeThreadData>,
+    child: cxx::SharedPtr<RuntimeThreadData>,
+    parent: cxx::SharedPtr<RuntimeThreadData>,
 }
 
 #[derive(thiserror::Error, Debug)]

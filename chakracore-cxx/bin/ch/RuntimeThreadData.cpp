@@ -16,6 +16,7 @@
 #define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
 #define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
+// TODO: moving runtime thread local data to rust
 void RuntimeThreadLocalData::Initialize(const std::shared_ptr<RuntimeThreadData> &threadData)
 {
     this->threadData = threadData;
