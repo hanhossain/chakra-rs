@@ -8,6 +8,8 @@ fn setup_tracing() {
         .with_max_level(LevelFilter::TRACE)
         .with_writer(std::io::stderr)
         .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE)
+        .with_thread_names(true)
+        .with_thread_ids(true)
         .init();
 }
 
