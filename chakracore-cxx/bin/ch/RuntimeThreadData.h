@@ -39,7 +39,6 @@ public:
     uint32_t ThreadProc(const chakra_rs::WScript &wscript, rust::Fn<void()> uninitializeThreadLocal);
     void set_leaving(bool leaving);
     void set_initial_script_completed();
-    void reset_initial_script_completed();
     void wait_initial_script_completed();
     void enqueue_report_to_parent(rust::String report);
     bool dequeue_report(rust::String &report);

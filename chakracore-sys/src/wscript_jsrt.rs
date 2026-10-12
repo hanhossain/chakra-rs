@@ -129,7 +129,6 @@ mod ffi {
             self: Pin<&mut RuntimeThreadData>,
             value: JsValueRef,
         );
-        fn reset_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
         fn wait_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
         unsafe fn add_child(
             self: Pin<&mut RuntimeThreadData>,
@@ -1336,9 +1335,6 @@ impl WScript {
             let mut thread_data = THREAD_DATA.with_borrow(|x| x.clone());
             let mut child = RuntimeThreadData::NewWithInitialSource(&content.unwrap().to_owned());
             unsafe {
-                thread_data
-                    .pin_mut_unchecked()
-                    .reset_initial_script_completed();
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
                 let thread_handle = ffi::CreateThread(
                     |param| {

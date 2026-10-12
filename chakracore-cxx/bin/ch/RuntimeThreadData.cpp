@@ -161,12 +161,6 @@ void RuntimeThreadData::set_initial_script_completed()
     initial_script_completed_cv_.notify_all();
 }
 
-void RuntimeThreadData::reset_initial_script_completed()
-{
-    std::unique_lock lock(initial_script_completed_mtx_);
-    initial_script_completed_ = false;
-}
-
 void RuntimeThreadData::wait_initial_script_completed()
 {
     std::unique_lock lock(initial_script_completed_mtx_);
