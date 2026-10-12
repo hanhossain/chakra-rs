@@ -64,7 +64,7 @@ std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
     return std::make_shared<RuntimeThreadData>();
 }
 
-uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript, rust::Fn<void()> uninitializeThreadLocal)
+uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript)
 {
     auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
     JsValueRef scriptSource;
@@ -122,9 +122,6 @@ uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript, rust::
 
         if (waitRet == WAIT_OBJECT_0 + 1 || leaving_)
         {
-            // TODO (hanhossain): don't know I actually need to call this, or if it'll correctly uninit automatically when the thread is exited
-            uninitializeThreadLocal();
-
             if (this->receiveBroadcastCallbackFunc)
             {
                 ChakraRTInterface::JsRelease(this->receiveBroadcastCallbackFunc, nullptr);
