@@ -1331,7 +1331,6 @@ impl WScript {
 
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
             unsafe {
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
                 ffi::CreateThread(
@@ -1366,14 +1365,12 @@ impl WScript {
                     },
                     Box::into_raw(Box::new(ThreadDataContext {
                         wscript: &self,
-                        parent: thread_data.clone(),
+                        parent: THREAD_DATA.with_borrow(|x| x.inner.clone()),
                         content: content.unwrap(),
                     })) as _,
                     0,
                 );
-                thread_data
-                    .pin_mut_unchecked()
-                    .wait_initial_script_completed();
+                THREAD_DATA.with_borrow(|td| td.wait_initial_script_completed());
             }
             Ok(JsValueRef::default())
         } else {

@@ -15,4 +15,11 @@ impl ThreadData {
         let inner = RuntimeThreadData::NewWithInitialSource(&source.to_owned());
         Self { inner }
     }
+
+    pub(super) fn wait_initial_script_completed(&self) {
+        let mut inner = self.inner.clone();
+        unsafe {
+            inner.pin_mut_unchecked().wait_initial_script_completed();
+        }
+    }
 }
