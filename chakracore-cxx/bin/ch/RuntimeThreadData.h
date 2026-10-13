@@ -9,10 +9,6 @@
 #include <list>
 #include <rust/cxx.h>
 
-namespace chakra_rs {
-    struct WScript;
-}
-
 class RuntimeThreadData
 {
 public:
