@@ -109,8 +109,7 @@ void RuntimeThreadData::set_shared_content(JsSharedArrayBufferContentHandle shar
     sharedContent_ = shared_content;
 }
 
-JsSharedArrayBufferContentHandle RuntimeThreadData::get_shared_content()
-{
+JsSharedArrayBufferContentHandle RuntimeThreadData::get_shared_content() const {
     return sharedContent_;
 }
 JsValueRef RuntimeThreadData::get_receive_broadcast_callback_func() const

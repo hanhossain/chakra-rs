@@ -119,9 +119,7 @@ mod ffi {
             self: Pin<&mut RuntimeThreadData>,
             shared_content: JsSharedArrayBufferContentHandle,
         );
-        fn get_shared_content(
-            self: Pin<&mut RuntimeThreadData>,
-        ) -> JsSharedArrayBufferContentHandle;
+        fn get_shared_content(self: &RuntimeThreadData) -> JsSharedArrayBufferContentHandle;
         fn broadcast_to_children(self: &RuntimeThreadData);
         fn get_receive_broadcast_callback_func(self: &RuntimeThreadData) -> JsValueRef;
         fn set_receive_broadcast_callback_func(
@@ -886,23 +884,24 @@ impl WScript {
     }
 
     fn broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
-        if args.arguments.len() > 1 {
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
-            let mut thread_data = unsafe { thread_data.pin_mut_unchecked() };
-            let mut shared_content = JsSharedArrayBufferContentHandle::default();
-            unsafe {
-                ChakraRTInterface::JsGetSharedArrayBufferContent(
-                    args.arguments[1].clone(),
-                    &raw mut shared_content,
-                );
-            }
-
-            thread_data.as_mut().set_shared_content(shared_content);
-            thread_data.broadcast_to_children();
-            ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(
-                thread_data.get_shared_content(),
-            );
+        if args.arguments.len() <= 1 {
+            return Ok(());
         }
+
+        let thread_data = THREAD_DATA.with_borrow(|x| Rc::clone(x));
+        unsafe {
+            let mut shared_content = JsSharedArrayBufferContentHandle::default();
+            ChakraRTInterface::JsGetSharedArrayBufferContent(
+                args.arguments[1].clone(),
+                &raw mut shared_content,
+            );
+            let mut td = thread_data.inner.clone();
+            td.pin_mut_unchecked().set_shared_content(shared_content);
+        }
+        thread_data.inner.broadcast_to_children();
+        ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(
+            thread_data.inner.get_shared_content(),
+        );
         Ok(())
     }
 

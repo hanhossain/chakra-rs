@@ -28,7 +28,7 @@ public:
     void set_leaving(bool leaving);
     void broadcast_to_children() const;
     void set_shared_content(JsSharedArrayBufferContentHandle shared_content);
-    JsSharedArrayBufferContentHandle get_shared_content();
+    JsSharedArrayBufferContentHandle get_shared_content() const;
     JsValueRef get_receive_broadcast_callback_func() const;
     void set_receive_broadcast_callback_func(JsValueRef value);
     void add_child(const std::shared_ptr<RuntimeThreadData> &child);
