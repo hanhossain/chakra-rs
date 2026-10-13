@@ -1324,8 +1324,7 @@ impl WScript {
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
                 ffi::CreateThread(
                     |param, thread_handle| {
-                        let param =
-                            std::mem::transmute::<*mut CVoid, *mut ThreadDataContext>(param);
+                        let param: *mut ThreadDataContext = std::mem::transmute(param);
                         let mut thread_data_context = Box::from_raw(param);
 
                         let mut child =
