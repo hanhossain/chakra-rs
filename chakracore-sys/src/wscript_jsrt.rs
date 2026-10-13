@@ -141,7 +141,8 @@ mod ffi {
             self: Pin<&mut RuntimeThreadData>,
             parent: &WeakPtr<RuntimeThreadData>,
         );
-        fn ThreadProc(self: Pin<&mut RuntimeThreadData>, wscript: &WScript) -> u32;
+        fn ThreadProc(self: &RuntimeThreadData, wscript: &WScript, runtime: JsRuntimeHandle)
+        -> u32;
         fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
     }
 
@@ -1357,10 +1358,12 @@ impl WScript {
 
                         THREAD_DATA.set(child);
                         THREAD_DATA.with_borrow(|child| {
-                            let mut child = child.inner.clone();
                             child
-                                .pin_mut_unchecked()
-                                .ThreadProc(thread_data_context.wscript)
+                                .thread_proc(thread_data_context.wscript)
+                                .unwrap_or_else(|_| {
+                                    // fail with HRESULT::E_FAIL
+                                    0x80004005
+                                })
                         })
                     },
                     Box::into_raw(Box::new(ThreadDataContext {

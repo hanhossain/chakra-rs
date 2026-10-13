@@ -28,15 +28,11 @@ public:
 
     JsSharedArrayBufferContentHandle sharedContent_;
     JsValueRef receiveBroadcastCallbackFunc;
-
-    JsRuntimeHandle runtime;
-    JsContextRef context;
-
     std::weak_ptr<RuntimeThreadData> parent_;
 
     std::vector<std::shared_ptr<RuntimeThreadData>> children_;
 
-    uint32_t ThreadProc(const chakra_rs::WScript &wscript);
+    uint32_t ThreadProc(const chakra_rs::WScript &wscript, JsRuntimeHandle runtime) const;
     void set_leaving(bool leaving);
     void set_initial_script_completed();
     void wait_initial_script_completed();

@@ -36,8 +36,6 @@ RuntimeThreadData::RuntimeThreadData(rust::String initialSource) :
     hThread(nullptr),
     sharedContent_(nullptr),
     receiveBroadcastCallbackFunc(nullptr),
-    runtime(nullptr),
-    context(nullptr),
     leaving_(false),
     initialSource_(std::move(initialSource))
 {
@@ -64,27 +62,12 @@ std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
     return std::make_shared<RuntimeThreadData>();
 }
 
-uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript)
-{
+uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript, JsRuntimeHandle runtime) const {
     auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
     JsValueRef scriptSource;
     JsValueRef fname;
     const char* fullPath = "agent source";
     int32_t hr = S_OK;
-
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(JsRuntimeAttributeNone, nullptr, &runtime), wscript);
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateContext(runtime, &context), wscript);
-    IfJsErrorFailLog(ChakraRTInterface::JsSetCurrentContext(context), wscript);
-
-    try
-    {
-        wscript.initialize();
-    }
-    catch (const rust::Error &err)
-    {
-        chakra::Logger::error(std::format("Caught exception from rust: {}", err.what()));
-        IfFailGo(E_FAIL);
-    }
 
     IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(initialSource_, nullptr, &scriptSource), wscript);
 
