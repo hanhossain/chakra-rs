@@ -21,6 +21,7 @@ public:
     ~RuntimeThreadData();
     static std::shared_ptr<RuntimeThreadData> NewWithInitialSource(const rust::String &initialSource);
     static std::shared_ptr<RuntimeThreadData> New();
+    std::weak_ptr<RuntimeThreadData> get_parent() const;
     void uninitialize();
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;

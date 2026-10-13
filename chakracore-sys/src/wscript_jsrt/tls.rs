@@ -37,6 +37,13 @@ impl ThreadData {
         }
     }
 
+    fn set_initial_script_completed(&self) {
+        let mut parent = self.inner.get_parent().upgrade();
+        unsafe {
+            parent.pin_mut_unchecked().set_initial_script_completed();
+        }
+    }
+
     #[tracing::instrument(skip(self, wscript), err)]
     pub(super) fn thread_proc(&self, wscript: &WScript) -> Result<u32, JsError> {
         let mut runtime = JsRuntimeHandle::default();
@@ -75,6 +82,9 @@ impl ThreadData {
             )
             .as_result()?;
         }
+
+        self.set_initial_script_completed();
+
         let res = self.inner.ThreadProc(runtime);
         Ok(res)
     }

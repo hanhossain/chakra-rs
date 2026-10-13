@@ -143,6 +143,8 @@ mod ffi {
         );
         fn ThreadProc(self: &RuntimeThreadData, runtime: JsRuntimeHandle) -> u32;
         fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
+        fn get_parent(self: &RuntimeThreadData) -> WeakPtr<RuntimeThreadData>;
+        fn set_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
     }
 
     unsafe extern "C++" {

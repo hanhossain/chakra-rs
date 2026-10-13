@@ -62,13 +62,12 @@ std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
     return std::make_shared<RuntimeThreadData>();
 }
 
+std::weak_ptr<RuntimeThreadData> RuntimeThreadData::get_parent() const {
+    return parent_;
+}
+
 uint32_t RuntimeThreadData::ThreadProc(JsRuntimeHandle runtime) const {
     auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
-
-    {
-        auto parent = parent_.lock();
-        parent->set_initial_script_completed();
-    }
 
     // loop waiting for work;
 
