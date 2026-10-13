@@ -4,17 +4,12 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeThreadData.h"
 
-#include <format>
 #include <utility>
 
 #include "ChakraRtInterface.h"
-#include "Helpers.h"
 #include "WScriptJsrt.h"
 #include "chakra/Logger.h"
 #include "chakracore-sys/src/wscript_jsrt.rs.h"
-
-#define IfFailedGoLabel(expr, label) do { hr = (expr); if (FAILED(hr)) { goto label; } } while (FALSE)
-#define IfFailGo(expr) IfFailedGoLabel(hr = (expr), Error)
 
 void RuntimeThreadData::uninitialize() {
     if (!children_.empty()) {
