@@ -141,8 +141,7 @@ mod ffi {
             self: Pin<&mut RuntimeThreadData>,
             parent: &WeakPtr<RuntimeThreadData>,
         );
-        fn ThreadProc(self: &RuntimeThreadData, wscript: &WScript, runtime: JsRuntimeHandle)
-        -> u32;
+        fn ThreadProc(self: &RuntimeThreadData, runtime: JsRuntimeHandle) -> u32;
         fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
     }
 

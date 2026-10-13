@@ -1,4 +1,7 @@
-use crate::jsrt::{JsContextRef, JsError, JsRuntimeAttributes, JsRuntimeHandle};
+use crate::jsrt::{
+    ChakraRt, JsContextRef, JsError, JsParseScriptAttributes, JsRuntimeAttributes, JsRuntimeHandle,
+    JsSourceContext, JsValueRef,
+};
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::WScript;
 use crate::wscript_jsrt::ffi::RuntimeThreadData;
@@ -6,17 +9,25 @@ use cxx::SharedPtr;
 
 pub(super) struct ThreadData {
     pub(super) inner: SharedPtr<RuntimeThreadData>,
+    initial_source: String,
 }
 
 impl ThreadData {
     pub(super) fn new() -> Self {
         let inner = RuntimeThreadData::New();
-        Self { inner }
+        Self {
+            inner,
+            initial_source: String::new(),
+        }
     }
 
     pub(super) fn new_with_initial_source(source: &str) -> Self {
-        let inner = RuntimeThreadData::NewWithInitialSource(&source.to_owned());
-        Self { inner }
+        let initial_source = source.to_owned();
+        let inner = RuntimeThreadData::NewWithInitialSource(&initial_source);
+        Self {
+            inner,
+            initial_source,
+        }
     }
 
     pub(super) fn wait_initial_script_completed(&self) {
@@ -43,7 +54,28 @@ impl ThreadData {
             ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
         }
         wscript.initialize()?;
-        let res = self.inner.ThreadProc(wscript, runtime);
+
+        let mut script_source = JsValueRef::default();
+        unsafe {
+            ChakraRTInterface::JsCreateExternalArrayBuffer(
+                &self.initial_source,
+                &raw mut script_source,
+            )
+            .as_result()?;
+        }
+        let full_path = ChakraRt::create_string("agent source")?;
+
+        unsafe {
+            ChakraRTInterface::JsRun(
+                script_source,
+                JsSourceContext(WScript::get_next_source_context()),
+                *full_path,
+                JsParseScriptAttributes::JsParseScriptAttributeNone,
+                std::ptr::null_mut(),
+            )
+            .as_result()?;
+        }
+        let res = self.inner.ThreadProc(runtime);
         Ok(res)
     }
 }

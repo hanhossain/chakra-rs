@@ -62,18 +62,8 @@ std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
     return std::make_shared<RuntimeThreadData>();
 }
 
-uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript, JsRuntimeHandle runtime) const {
+uint32_t RuntimeThreadData::ThreadProc(JsRuntimeHandle runtime) const {
     auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
-    JsValueRef scriptSource;
-    JsValueRef fname;
-    const char* fullPath = "agent source";
-    int32_t hr = S_OK;
-
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateExternalArrayBuffer(initialSource_, nullptr, &scriptSource), wscript);
-
-    ChakraRTInterface::JsCreateString(fullPath, strlen(fullPath), &fname);
-
-    ChakraRTInterface::JsRun(scriptSource, chakra_rs::WScript::get_next_source_context(), fname, JsParseScriptAttributeNone, nullptr);
 
     {
         auto parent = parent_.lock();
@@ -119,8 +109,6 @@ uint32_t RuntimeThreadData::ThreadProc(const chakra_rs::WScript &wscript, JsRunt
             break;
         }
     }
-
-Error:
 
     ChakraRTInterface::JsSetCurrentContext(nullptr);
     ChakraRTInterface::JsDisposeRuntime(runtime);

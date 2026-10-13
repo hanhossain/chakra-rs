@@ -32,7 +32,7 @@ public:
 
     std::vector<std::shared_ptr<RuntimeThreadData>> children_;
 
-    uint32_t ThreadProc(const chakra_rs::WScript &wscript, JsRuntimeHandle runtime) const;
+    uint32_t ThreadProc(JsRuntimeHandle runtime) const;
     void set_leaving(bool leaving);
     void set_initial_script_completed();
     void wait_initial_script_completed();
