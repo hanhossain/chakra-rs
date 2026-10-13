@@ -19,7 +19,6 @@ public:
     RuntimeThreadData();
     ~RuntimeThreadData();
     static std::shared_ptr<RuntimeThreadData> New();
-    void uninitialize();
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
     HANDLE hThread;

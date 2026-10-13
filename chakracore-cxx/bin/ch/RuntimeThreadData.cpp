@@ -11,7 +11,18 @@
 #include "chakra/Logger.h"
 #include "chakracore-sys/src/wscript_jsrt.rs.h"
 
-void RuntimeThreadData::uninitialize() {
+RuntimeThreadData::RuntimeThreadData() :
+    hThread(nullptr),
+    sharedContent_(nullptr),
+    receiveBroadcastCallbackFunc(nullptr),
+    leaving_(false)
+{
+    this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
+    this->hevntShutdown = CreateEventW(TRUE, FALSE);
+}
+
+RuntimeThreadData::~RuntimeThreadData()
+{
     if (!children_.empty()) {
         std::vector<HANDLE> childrenHandles;
 
@@ -25,20 +36,7 @@ void RuntimeThreadData::uninitialize() {
 
         children_.clear();
     }
-}
 
-RuntimeThreadData::RuntimeThreadData() :
-    hThread(nullptr),
-    sharedContent_(nullptr),
-    receiveBroadcastCallbackFunc(nullptr),
-    leaving_(false)
-{
-    this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
-    this->hevntShutdown = CreateEventW(TRUE, FALSE);
-}
-
-RuntimeThreadData::~RuntimeThreadData()
-{
     CloseHandle(this->hevntReceivedBroadcast);
     CloseHandle(this->hevntShutdown);
     CloseHandle(this->hThread);

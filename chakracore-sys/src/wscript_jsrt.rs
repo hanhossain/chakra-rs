@@ -113,7 +113,6 @@ mod ffi {
 
         #[Self = "RuntimeThreadData"]
         fn New() -> SharedPtr<RuntimeThreadData>;
-        fn uninitialize(self: Pin<&mut RuntimeThreadData>);
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
         fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
@@ -1530,14 +1529,6 @@ impl WScript {
         unsafe {
             MESSAGE_QUEUE = message_queue.as_mut_ptr();
         }
-    }
-}
-
-impl Drop for WScript {
-    fn drop(&mut self) {
-        THREAD_DATA.with_borrow_mut(|td| unsafe {
-            td.inner.pin_mut_unchecked().uninitialize();
-        })
     }
 }
 
