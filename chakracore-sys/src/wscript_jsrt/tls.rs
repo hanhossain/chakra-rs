@@ -24,7 +24,7 @@ impl ThreadData {
 
     pub(super) fn new_with_initial_source(source: &str) -> Self {
         let initial_source = source.to_owned();
-        let inner = RuntimeThreadData::NewWithInitialSource(&initial_source);
+        let inner = RuntimeThreadData::New();
         Self {
             inner,
             initial_source,

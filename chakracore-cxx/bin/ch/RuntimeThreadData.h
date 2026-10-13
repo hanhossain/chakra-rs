@@ -17,9 +17,7 @@ class RuntimeThreadData
 {
 public:
     RuntimeThreadData();
-    RuntimeThreadData(rust::String initialSource);
     ~RuntimeThreadData();
-    static std::shared_ptr<RuntimeThreadData> NewWithInitialSource(const rust::String &initialSource);
     static std::shared_ptr<RuntimeThreadData> New();
     void uninitialize();
     HANDLE hevntReceivedBroadcast;
@@ -49,5 +47,4 @@ private:
     std::mutex csReportQ_{};
     std::list<rust::String> reportQ_{};
     bool leaving_;
-    rust::String initialSource_;
 };

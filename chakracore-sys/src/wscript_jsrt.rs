@@ -112,8 +112,6 @@ mod ffi {
         type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
 
         #[Self = "RuntimeThreadData"]
-        fn NewWithInitialSource(initialSource: &String) -> SharedPtr<RuntimeThreadData>;
-        #[Self = "RuntimeThreadData"]
         fn New() -> SharedPtr<RuntimeThreadData>;
         fn uninitialize(self: Pin<&mut RuntimeThreadData>);
 

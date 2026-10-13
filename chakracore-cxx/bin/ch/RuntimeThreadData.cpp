@@ -27,19 +27,14 @@ void RuntimeThreadData::uninitialize() {
     }
 }
 
-RuntimeThreadData::RuntimeThreadData(rust::String initialSource) :
+RuntimeThreadData::RuntimeThreadData() :
     hThread(nullptr),
     sharedContent_(nullptr),
     receiveBroadcastCallbackFunc(nullptr),
-    leaving_(false),
-    initialSource_(std::move(initialSource))
+    leaving_(false)
 {
     this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
     this->hevntShutdown = CreateEventW(TRUE, FALSE);
-}
-
-RuntimeThreadData::RuntimeThreadData() : RuntimeThreadData(rust::String{})
-{
 }
 
 RuntimeThreadData::~RuntimeThreadData()
@@ -47,10 +42,6 @@ RuntimeThreadData::~RuntimeThreadData()
     CloseHandle(this->hevntReceivedBroadcast);
     CloseHandle(this->hevntShutdown);
     CloseHandle(this->hThread);
-}
-
-std::shared_ptr<RuntimeThreadData> RuntimeThreadData::NewWithInitialSource(const rust::String &initialSource) {
-    return std::make_shared<RuntimeThreadData>(initialSource);
 }
 
 std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
