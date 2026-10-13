@@ -26,7 +26,7 @@ public:
 
     uint32_t ThreadProc(JsRuntimeHandle runtime) const;
     void set_leaving(bool leaving);
-    void broadcast_to_children();
+    void broadcast_to_children() const;
     void set_shared_content(JsSharedArrayBufferContentHandle shared_content);
     JsSharedArrayBufferContentHandle get_shared_content();
     JsValueRef get_receive_broadcast_callback_func() const;

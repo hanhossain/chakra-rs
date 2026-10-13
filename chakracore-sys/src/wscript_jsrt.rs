@@ -122,7 +122,7 @@ mod ffi {
         fn get_shared_content(
             self: Pin<&mut RuntimeThreadData>,
         ) -> JsSharedArrayBufferContentHandle;
-        fn broadcast_to_children(self: Pin<&mut RuntimeThreadData>);
+        fn broadcast_to_children(self: &RuntimeThreadData);
         fn get_receive_broadcast_callback_func(self: &RuntimeThreadData) -> JsValueRef;
         fn set_receive_broadcast_callback_func(
             self: Pin<&mut RuntimeThreadData>,
@@ -898,7 +898,7 @@ impl WScript {
             }
 
             thread_data.as_mut().set_shared_content(shared_content);
-            thread_data.as_mut().broadcast_to_children();
+            thread_data.broadcast_to_children();
             ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(
                 thread_data.get_shared_content(),
             );

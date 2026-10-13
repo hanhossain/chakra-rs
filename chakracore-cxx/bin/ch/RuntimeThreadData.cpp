@@ -97,8 +97,7 @@ void RuntimeThreadData::set_leaving(bool leaving)
     leaving_ = leaving;
 }
 
-void RuntimeThreadData::broadcast_to_children()
-{
+void RuntimeThreadData::broadcast_to_children() const {
     for (const auto &child : children_)
     {
         SetEvent(child->hevntReceivedBroadcast);
