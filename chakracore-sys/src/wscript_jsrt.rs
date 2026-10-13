@@ -160,8 +160,6 @@ mod ffi {
     #[namespace = "chakra_rs"]
     extern "Rust" {
         type WScript;
-        fn initialize(&self) -> Result<()>;
-
         fn load_script(
             &self,
             callee: JsValueRef,
@@ -171,16 +169,6 @@ mod ffi {
             is_source_module: bool,
             is_file: bool,
         ) -> JsValueRef;
-
-        fn print_exception(
-            &self,
-            filename: &str,
-            js_error_code: JsErrorCode,
-            exception: JsValueRef,
-        );
-
-        #[Self = "WScript"]
-        fn get_next_source_context() -> usize;
     }
 }
 
