@@ -3,10 +3,9 @@ mod tls;
 use crate::config::ConfigContext;
 use crate::helpers::{ScriptCache, TestHooks};
 use crate::jsrt::{
-    CVoid, ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode,
-    JsModuleHostInfoKind, JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes,
-    JsRuntimeHandle, JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef,
-    JsValueType,
+    ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode, JsModuleHostInfoKind,
+    JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
+    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
 };
 use crate::messages::{CallbackMessage, Message, ModuleMessage};
 use crate::rt_interface::ChakraRTInterface;
@@ -20,6 +19,7 @@ use std::collections::HashMap;
 use std::hash::Hash;
 use std::path::PathBuf;
 use std::pin::Pin;
+use std::rc::Rc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, LazyLock, RwLock};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
@@ -41,7 +41,7 @@ pub(crate) static MODULE_DIRECTORY_MAP: LazyLock<ModuleDirectoryMap> =
     LazyLock::new(|| ModuleDirectoryMap::new());
 
 thread_local! {
-    static THREAD_DATA: RefCell<ThreadData> = RefCell::new(ThreadData::new());
+    static THREAD_DATA: RefCell<Rc<ThreadData>> = RefCell::new(Rc::new(ThreadData::new()));
 }
 
 #[repr(transparent)]
@@ -1343,7 +1343,7 @@ impl WScript {
                             child.as_mut().set_thread_handle(thread_handle);
                         }
 
-                        THREAD_DATA.set(child);
+                        THREAD_DATA.set(Rc::new(child));
                         THREAD_DATA.with_borrow(|child| {
                             child
                                 .thread_proc(
