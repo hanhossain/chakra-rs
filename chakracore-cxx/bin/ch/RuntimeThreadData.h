@@ -21,7 +21,6 @@ public:
     ~RuntimeThreadData();
     static std::shared_ptr<RuntimeThreadData> NewWithInitialSource(const rust::String &initialSource);
     static std::shared_ptr<RuntimeThreadData> New();
-    std::weak_ptr<RuntimeThreadData> get_parent() const;
     void uninitialize();
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
@@ -35,8 +34,6 @@ public:
 
     uint32_t ThreadProc(JsRuntimeHandle runtime) const;
     void set_leaving(bool leaving);
-    void set_initial_script_completed();
-    void wait_initial_script_completed();
     void enqueue_report_to_parent(rust::String report);
     bool dequeue_report(rust::String &report);
     void broadcast_to_children();
@@ -49,10 +46,6 @@ public:
     void set_thread_handle(HANDLE thread);
 
 private:
-    bool initial_script_completed_{};
-    std::condition_variable initial_script_completed_cv_;
-    std::mutex initial_script_completed_mtx_;
-
     std::mutex csReportQ_{};
     std::list<rust::String> reportQ_{};
     bool leaving_;

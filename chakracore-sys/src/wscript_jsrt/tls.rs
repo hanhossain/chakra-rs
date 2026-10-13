@@ -6,6 +6,7 @@ use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::WScript;
 use crate::wscript_jsrt::ffi::RuntimeThreadData;
 use cxx::SharedPtr;
+use tokio::sync::oneshot;
 
 pub(super) struct ThreadData {
     pub(super) inner: SharedPtr<RuntimeThreadData>,
@@ -30,22 +31,12 @@ impl ThreadData {
         }
     }
 
-    pub(super) fn wait_initial_script_completed(&self) {
-        let mut inner = self.inner.clone();
-        unsafe {
-            inner.pin_mut_unchecked().wait_initial_script_completed();
-        }
-    }
-
-    fn set_initial_script_completed(&self) {
-        let mut parent = self.inner.get_parent().upgrade();
-        unsafe {
-            parent.pin_mut_unchecked().set_initial_script_completed();
-        }
-    }
-
     #[tracing::instrument(skip(self, wscript), err)]
-    pub(super) fn thread_proc(&self, wscript: &WScript) -> Result<u32, JsError> {
+    pub(super) fn thread_proc(
+        &self,
+        wscript: &WScript,
+        tx_initial_script_completed: oneshot::Sender<()>,
+    ) -> Result<u32, ThreadProcError> {
         let mut runtime = JsRuntimeHandle::default();
         unsafe {
             ChakraRTInterface::JsCreateRuntime(
@@ -83,9 +74,19 @@ impl ThreadData {
             .as_result()?;
         }
 
-        self.set_initial_script_completed();
+        tx_initial_script_completed
+            .send(())
+            .map_err(|_| ThreadProcError::NotificationFailed)?;
 
         let res = self.inner.ThreadProc(runtime);
         Ok(res)
     }
+}
+
+#[derive(thiserror::Error, Debug)]
+pub(super) enum ThreadProcError {
+    #[error(transparent)]
+    JsError(#[from] JsError),
+    #[error("Failed to notify parent of initial script completion")]
+    NotificationFailed,
 }

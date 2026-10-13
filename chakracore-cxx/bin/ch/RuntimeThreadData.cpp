@@ -62,10 +62,6 @@ std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
     return std::make_shared<RuntimeThreadData>();
 }
 
-std::weak_ptr<RuntimeThreadData> RuntimeThreadData::get_parent() const {
-    return parent_;
-}
-
 uint32_t RuntimeThreadData::ThreadProc(JsRuntimeHandle runtime) const {
     auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
 
@@ -117,21 +113,6 @@ uint32_t RuntimeThreadData::ThreadProc(JsRuntimeHandle runtime) const {
 void RuntimeThreadData::set_leaving(bool leaving)
 {
     leaving_ = leaving;
-}
-
-void RuntimeThreadData::set_initial_script_completed()
-{
-    {
-        std::lock_guard lock(initial_script_completed_mtx_);
-        initial_script_completed_ = true;
-    }
-    initial_script_completed_cv_.notify_all();
-}
-
-void RuntimeThreadData::wait_initial_script_completed()
-{
-    std::unique_lock lock(initial_script_completed_mtx_);
-    initial_script_completed_cv_.wait(lock, [this] { return initial_script_completed_; });
 }
 
 void RuntimeThreadData::enqueue_report_to_parent(rust::String report)

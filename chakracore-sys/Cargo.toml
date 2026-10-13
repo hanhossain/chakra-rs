@@ -9,6 +9,7 @@ anyhow = "1.0.104"
 cxx = { version = "1.0.199", features = ["c++20"] }
 serde = { version = "1.0.229", features = ["derive"] }
 thiserror = "2.0.20"
+tokio = { version = "1.53.2", features = ["sync"] }
 tracing = "0.1.44"
 widestring = "1.2.1"
 

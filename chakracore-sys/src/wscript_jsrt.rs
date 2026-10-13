@@ -23,6 +23,7 @@ use std::pin::Pin;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, LazyLock, RwLock};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use tokio::sync::oneshot;
 
 #[cfg(debug_assertions)]
 const BUILD_TYPE_STRING: &str = "Debug";
@@ -132,7 +133,6 @@ mod ffi {
             self: Pin<&mut RuntimeThreadData>,
             value: JsValueRef,
         );
-        fn wait_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
         unsafe fn add_child(
             self: Pin<&mut RuntimeThreadData>,
             child: &SharedPtr<RuntimeThreadData>,
@@ -143,8 +143,6 @@ mod ffi {
         );
         fn ThreadProc(self: &RuntimeThreadData, runtime: JsRuntimeHandle) -> u32;
         fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
-        fn get_parent(self: &RuntimeThreadData) -> WeakPtr<RuntimeThreadData>;
-        fn set_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
     }
 
     unsafe extern "C++" {
@@ -1166,6 +1164,9 @@ impl WScript {
             let (error, error_message) = match error {
                 LoadScriptError::JsError(err) => (err, "Internal error."),
                 LoadScriptError::JsErrorWithMessage { error, message } => (error, message),
+                LoadScriptError::OneshotRecvError(_) => {
+                    (JsError::JsErrorFatal, "Oneshot recv error.")
+                }
             };
             let value = ChakraRt::double_to_number(JsErrorCode::from(error).repr as f64)
                 .unwrap_or_default();
@@ -1333,6 +1334,7 @@ impl WScript {
 
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
+            let (tx_initial_script_complete, rx_initial_script_complete) = oneshot::channel();
             unsafe {
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
                 ffi::CreateThread(
@@ -1360,7 +1362,10 @@ impl WScript {
                         THREAD_DATA.set(child);
                         THREAD_DATA.with_borrow(|child| {
                             child
-                                .thread_proc(thread_data_context.wscript)
+                                .thread_proc(
+                                    thread_data_context.wscript,
+                                    thread_data_context.sender,
+                                )
                                 .unwrap_or_else(|_| {
                                     // fail with HRESULT::E_FAIL
                                     0x80004005
@@ -1371,11 +1376,12 @@ impl WScript {
                         wscript: &self,
                         parent: THREAD_DATA.with_borrow(|x| x.inner.clone()),
                         content: content.unwrap(),
+                        sender: tx_initial_script_complete,
                     })) as _,
                     0,
                 );
-                THREAD_DATA.with_borrow(|td| td.wait_initial_script_completed());
             }
+            rx_initial_script_complete.blocking_recv()?;
             Ok(JsValueRef::default())
         } else {
             Err(LoadScriptError::JsErrorWithMessage {
@@ -1553,6 +1559,7 @@ struct ThreadDataContext<'a> {
     wscript: &'a WScript,
     parent: cxx::SharedPtr<RuntimeThreadData>,
     content: &'a str,
+    sender: oneshot::Sender<()>,
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -1564,6 +1571,8 @@ enum LoadScriptError {
         error: JsError,
         message: &'static str,
     },
+    #[error(transparent)]
+    OneshotRecvError(#[from] oneshot::error::RecvError),
 }
 
 impl IntoResponse for anyhow::Error {
