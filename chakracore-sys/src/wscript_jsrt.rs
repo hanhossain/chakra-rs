@@ -21,7 +21,7 @@ use std::path::PathBuf;
 use std::pin::Pin;
 use std::rc::Rc;
 use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::{Arc, LazyLock, RwLock};
+use std::sync::{Arc, LazyLock, RwLock, mpsc};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use tokio::sync::oneshot;
 
@@ -115,8 +115,6 @@ mod ffi {
         fn New() -> SharedPtr<RuntimeThreadData>;
 
         fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
-        fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
-        fn enqueue_report_to_parent(self: Pin<&mut RuntimeThreadData>, report: String);
         fn set_shared_content(
             self: Pin<&mut RuntimeThreadData>,
             shared_content: JsSharedArrayBufferContentHandle,
@@ -860,33 +858,29 @@ impl WScript {
         Ok(())
     }
 
-    fn get_report_callback(args: &JsNativeFunctionArgs) -> Result<JsValueRef, JsError> {
+    fn get_report_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
         let mut return_value = JsValueRef::default();
         unsafe {
             ChakraRTInterface::JsGetNullValue(&raw mut return_value).as_result()?;
         }
 
         if !args.arguments.is_empty() {
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
-            let thread_data = unsafe { thread_data.pin_mut_unchecked() };
-            let mut report = String::new();
-            if thread_data.dequeue_report(&mut report) {
-                unsafe {
-                    ChakraRTInterface::JsCreateString(&report, &raw mut return_value)
-                        .as_result()?;
-                }
+            let Some(report) = THREAD_DATA.with_borrow(|x| x.try_dequeue_report())? else {
+                return Ok(return_value);
+            };
+
+            unsafe {
+                ChakraRTInterface::JsCreateString(&report, &raw mut return_value).as_result()?;
             }
         }
 
         Ok(return_value)
     }
 
-    fn report_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+    fn report_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<()> {
         if args.arguments.len() > 1 {
             let auto_str = args.arguments[1].to_string()?;
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
-            let thread_data = unsafe { thread_data.pin_mut_unchecked() };
-            thread_data.enqueue_report_to_parent(auto_str);
+            THREAD_DATA.with_borrow(|x| x.enqueue_report_to_parent(auto_str))?;
         }
         Ok(())
     }
@@ -1320,6 +1314,13 @@ impl WScript {
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
             let (tx_initial_script_complete, rx_initial_script_complete) = oneshot::channel();
+            let context = THREAD_DATA.with_borrow(|x| ThreadDataContext {
+                wscript: &self,
+                parent: x.inner.clone(),
+                content: content.unwrap(),
+                sender: tx_initial_script_complete,
+                parent_report_tx: x.report_queue_tx.clone(),
+            });
             unsafe {
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
                 ffi::CreateThread(
@@ -1327,8 +1328,10 @@ impl WScript {
                         let param: *mut ThreadDataContext = std::mem::transmute(param);
                         let mut thread_data_context = Box::from_raw(param);
 
-                        let mut child =
-                            ThreadData::new_with_initial_source(thread_data_context.content);
+                        let mut child = ThreadData::new_with_initial_source(
+                            thread_data_context.content,
+                            thread_data_context.parent_report_tx.clone(),
+                        );
 
                         thread_data_context
                             .parent
@@ -1356,12 +1359,7 @@ impl WScript {
                                 })
                         })
                     },
-                    Box::into_raw(Box::new(ThreadDataContext {
-                        wscript: &self,
-                        parent: THREAD_DATA.with_borrow(|x| x.inner.clone()),
-                        content: content.unwrap(),
-                        sender: tx_initial_script_complete,
-                    })) as _,
+                    Box::into_raw(Box::new(context)) as _,
                     0,
                 );
             }
@@ -1536,6 +1534,7 @@ struct ThreadDataContext<'a> {
     parent: cxx::SharedPtr<RuntimeThreadData>,
     content: &'a str,
     sender: oneshot::Sender<()>,
+    parent_report_tx: mpsc::Sender<String>,
 }
 
 #[derive(thiserror::Error, Debug)]

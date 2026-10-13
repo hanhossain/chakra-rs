@@ -4,8 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #include "RuntimeThreadData.h"
 
-#include <utility>
-
 #include "ChakraRtInterface.h"
 #include "WScriptJsrt.h"
 #include "chakra/Logger.h"
@@ -97,29 +95,6 @@ uint32_t RuntimeThreadData::ThreadProc(JsRuntimeHandle runtime) const {
 void RuntimeThreadData::set_leaving(bool leaving)
 {
     leaving_ = leaving;
-}
-
-void RuntimeThreadData::enqueue_report_to_parent(rust::String report)
-{
-    auto parent = parent_.lock();
-    if (parent)
-    {
-        std::unique_lock lease{parent->csReportQ_};
-        parent->reportQ_.push_back(std::move(report));
-    }
-}
-
-bool RuntimeThreadData::dequeue_report(rust::String &report)
-{
-    std::unique_lock lease{csReportQ_};
-    if (reportQ_.empty())
-    {
-        return false;
-    }
-
-    report = reportQ_.front();
-    reportQ_.pop_front();
-    return true;
 }
 
 void RuntimeThreadData::broadcast_to_children()

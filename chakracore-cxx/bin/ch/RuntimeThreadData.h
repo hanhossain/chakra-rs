@@ -6,7 +6,6 @@
 #include "ChakraCore.h"
 
 #include <condition_variable>
-#include <list>
 #include <rust/cxx.h>
 
 class RuntimeThreadData
@@ -27,8 +26,6 @@ public:
 
     uint32_t ThreadProc(JsRuntimeHandle runtime) const;
     void set_leaving(bool leaving);
-    void enqueue_report_to_parent(rust::String report);
-    bool dequeue_report(rust::String &report);
     void broadcast_to_children();
     void set_shared_content(JsSharedArrayBufferContentHandle shared_content);
     JsSharedArrayBufferContentHandle get_shared_content();
@@ -39,7 +36,5 @@ public:
     void set_thread_handle(HANDLE thread);
 
 private:
-    std::mutex csReportQ_{};
-    std::list<rust::String> reportQ_{};
     bool leaving_;
 };
