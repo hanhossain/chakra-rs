@@ -47,6 +47,12 @@ thread_local! {
 #[derive(Default, Clone)]
 pub struct Handle(*mut std::ffi::c_void);
 
+impl Handle {
+    fn is_null(&self) -> bool {
+        self.0.is_null()
+    }
+}
+
 unsafe impl cxx::ExternType for Handle {
     type Id = cxx::type_id!("HANDLE");
     type Kind = cxx::kind::Trivial;
@@ -113,8 +119,6 @@ mod ffi {
 
         #[Self = "RuntimeThreadData"]
         fn New() -> SharedPtr<RuntimeThreadData>;
-        #[Self = "RuntimeThreadData"]
-        fn NewWithHandle(thread_handle: Handle) -> SharedPtr<RuntimeThreadData>;
 
         fn set_shared_content(
             self: Pin<&mut RuntimeThreadData>,
@@ -135,6 +139,8 @@ mod ffi {
         ) -> Handle;
         #[namespace = "pal_ffi"]
         fn WaitForMultipleObjects(handles: &[Handle], wait_all: bool) -> u32;
+        #[namespace = "pal_ffi"]
+        fn CloseHandle(handle: &Handle) -> bool;
     }
 
     #[namespace = "chakra_rs"]

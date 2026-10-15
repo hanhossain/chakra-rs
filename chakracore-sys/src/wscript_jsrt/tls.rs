@@ -3,7 +3,7 @@ use crate::jsrt::{
     JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
-use crate::wscript_jsrt::ffi::{RuntimeThreadData, WaitForMultipleObjects};
+use crate::wscript_jsrt::ffi::{CloseHandle, RuntimeThreadData, WaitForMultipleObjects};
 use crate::wscript_jsrt::{Handle, WScript};
 use cxx::SharedPtr;
 use std::cell::Cell;
@@ -58,7 +58,7 @@ impl ThreadData {
         events_rx: mpsc::Receiver<ThreadEvent>,
     ) -> Self {
         let initial_source = source.to_owned();
-        let inner = RuntimeThreadData::NewWithHandle(thread_handle.clone());
+        let inner = RuntimeThreadData::New();
         let (tx, rx) = mpsc::channel();
         Self {
             inner,
@@ -237,6 +237,10 @@ impl Drop for ThreadData {
 
             let ret = WaitForMultipleObjects(&child_handles, true);
             debug_assert_eq!(ret, 0);
+        }
+
+        if !self.thread_handle.is_null() {
+            CloseHandle(&self.thread_handle);
         }
     }
 }

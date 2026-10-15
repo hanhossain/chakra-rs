@@ -13,11 +13,8 @@ class RuntimeThreadData
 {
 public:
     RuntimeThreadData();
-    explicit RuntimeThreadData(HANDLE thread);
     ~RuntimeThreadData();
     static std::shared_ptr<RuntimeThreadData> New();
-    static std::shared_ptr<RuntimeThreadData> NewWithHandle(HANDLE thread);
-    HANDLE hThread;
 
     JsSharedArrayBufferContentHandle sharedContent_;
 
