@@ -57,6 +57,7 @@ impl ChakraRt {
         Ok(JsErrorObject(value))
     }
 
+    #[tracing::instrument(skip(native_function), err)]
     pub fn create_named_function<T, R>(
         name: &str,
         native_function: T,

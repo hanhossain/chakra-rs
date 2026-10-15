@@ -43,7 +43,6 @@ fn to_lowercase(s: &String) -> String {
     s.to_lowercase()
 }
 
-#[tracing::instrument(level = "trace")]
 fn to_raw_u16_str(s: &str) -> Result<*mut u16, ContainsNul<u16>> {
     Ok(U16CString::from_str(s)?.into_raw())
 }

@@ -1,24 +1,28 @@
+mod tls;
+
 use crate::config::ConfigContext;
 use crate::helpers::{ScriptCache, TestHooks};
 use crate::jsrt::{
-    CVoid, ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode,
-    JsModuleHostInfoKind, JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes,
-    JsRuntimeHandle, JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef,
-    JsValueType,
+    ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode, JsModuleHostInfoKind,
+    JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
+    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
 };
 use crate::messages::{CallbackMessage, Message, ModuleMessage};
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
-use crate::wscript_jsrt::ffi::{GetCurrentRuntimeThreadData, RuntimeThreadData};
+use crate::wscript_jsrt::tls::ThreadData;
 use cxx::UniquePtr;
 pub use ffi::{MessageQueue, WScriptJsrt};
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::path::PathBuf;
 use std::pin::Pin;
+use std::rc::{Rc, Weak};
 use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::{Arc, LazyLock, RwLock};
+use std::sync::{Arc, LazyLock, RwLock, mpsc};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use tokio::sync::oneshot;
 
 #[cfg(debug_assertions)]
 const BUILD_TYPE_STRING: &str = "Debug";
@@ -35,8 +39,19 @@ pub(crate) static MODULE_RECORD_MAP: LazyLock<ModuleRecordMap> =
 pub(crate) static MODULE_DIRECTORY_MAP: LazyLock<ModuleDirectoryMap> =
     LazyLock::new(|| ModuleDirectoryMap::new());
 
+thread_local! {
+    static THREAD_DATA: RefCell<Rc<ThreadData>> = RefCell::new(Rc::new(ThreadData::new()));
+}
+
 #[repr(transparent)]
+#[derive(Default, Clone)]
 pub struct Handle(*mut std::ffi::c_void);
+
+impl Handle {
+    fn is_null(&self) -> bool {
+        self.0.is_null()
+    }
+}
 
 unsafe impl cxx::ExternType for Handle {
     type Id = cxx::type_id!("HANDLE");
@@ -97,58 +112,24 @@ mod ffi {
     }
 
     unsafe extern "C++" {
-        include!("RuntimeThreadData.h");
-
-        type RuntimeThreadData;
-        type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
-        fn GetCurrentRuntimeThreadData(dummy: &mut i32) -> Pin<&mut RuntimeThreadData>;
-        fn GetCurrentRuntimeThreadDataPtr() -> *mut RuntimeThreadData;
-        fn UninitializeRuntimeThreadLocalData();
-
-        #[Self = "RuntimeThreadData"]
-        fn NewWithInitialSource(initialSource: &String) -> *mut RuntimeThreadData;
-
-        fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
-        fn dequeue_report(self: Pin<&mut RuntimeThreadData>, report: &mut String) -> bool;
-        fn enqueue_report_to_parent(self: Pin<&mut RuntimeThreadData>, report: String);
-        fn set_shared_content(
-            self: Pin<&mut RuntimeThreadData>,
-            shared_content: JsSharedArrayBufferContentHandle,
-        );
-        fn get_shared_content(
-            self: Pin<&mut RuntimeThreadData>,
-        ) -> JsSharedArrayBufferContentHandle;
-        fn broadcast_to_children(self: Pin<&mut RuntimeThreadData>);
-        fn get_receive_broadcast_callback_func(self: &RuntimeThreadData) -> JsValueRef;
-        fn set_receive_broadcast_callback_func(
-            self: Pin<&mut RuntimeThreadData>,
-            value: JsValueRef,
-        );
-        fn reset_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
-        fn wait_initial_script_completed(self: Pin<&mut RuntimeThreadData>);
-        unsafe fn add_child(self: Pin<&mut RuntimeThreadData>, child: *mut RuntimeThreadData);
-        unsafe fn set_parent(self: Pin<&mut RuntimeThreadData>, parent: *mut RuntimeThreadData);
-        fn ThreadProc(self: Pin<&mut RuntimeThreadData>, wscript: &WScript) -> u32;
-        fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
-    }
-
-    unsafe extern "C++" {
         include!("pal_ffi/pal_thread_ffi.h");
         #[cxx_name = "HANDLE"]
         type Handle = super::Handle;
         #[namespace = "pal_ffi"]
         unsafe fn CreateThread(
-            func: unsafe fn(*mut CVoid) -> u32,
+            func: unsafe fn(*mut CVoid, Handle) -> u32,
             param: *mut CVoid,
             creation_flags: u32,
         ) -> Handle;
+        #[namespace = "pal_ffi"]
+        fn WaitForMultipleObjects(handles: &[Handle], wait_all: bool) -> u32;
+        #[namespace = "pal_ffi"]
+        fn CloseHandle(handle: &Handle) -> bool;
     }
 
     #[namespace = "chakra_rs"]
     extern "Rust" {
         type WScript;
-        fn initialize(&self) -> Result<()>;
-
         fn load_script(
             &self,
             callee: JsValueRef,
@@ -158,16 +139,6 @@ mod ffi {
             is_source_module: bool,
             is_file: bool,
         ) -> JsValueRef;
-
-        fn print_exception(
-            &self,
-            filename: &str,
-            js_error_code: JsErrorCode,
-            exception: JsValueRef,
-        );
-
-        #[Self = "WScript"]
-        fn get_next_source_context() -> usize;
     }
 }
 
@@ -508,9 +479,7 @@ impl WScript {
 
     fn leaving_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if !args.arguments.is_empty() {
-            let mut v = 42;
-            let runtime_thread_data = ffi::GetCurrentRuntimeThreadData(&mut v);
-            runtime_thread_data.set_leaving(true);
+            THREAD_DATA.with_borrow(|x| x.set_leaving(true));
         }
 
         Ok(())
@@ -862,84 +831,65 @@ impl WScript {
         Ok(())
     }
 
-    fn get_report_callback(args: &JsNativeFunctionArgs) -> Result<JsValueRef, JsError> {
+    fn get_report_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
         let mut return_value = JsValueRef::default();
         unsafe {
             ChakraRTInterface::JsGetNullValue(&raw mut return_value).as_result()?;
         }
 
         if !args.arguments.is_empty() {
-            let mut v = 42;
-            let thread_data = ffi::GetCurrentRuntimeThreadData(&mut v);
-            let mut report = String::new();
-            if thread_data.dequeue_report(&mut report) {
-                unsafe {
-                    ChakraRTInterface::JsCreateString(&report, &raw mut return_value)
-                        .as_result()?;
-                }
+            let Some(report) = THREAD_DATA.with_borrow(|x| x.try_dequeue_report())? else {
+                return Ok(return_value);
+            };
+
+            unsafe {
+                ChakraRTInterface::JsCreateString(&report, &raw mut return_value).as_result()?;
             }
         }
 
         Ok(return_value)
     }
 
-    fn report_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+    fn report_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<()> {
         if args.arguments.len() > 1 {
             let auto_str = args.arguments[1].to_string()?;
-            let mut dummy = 0;
-            let runtime_thread_data = GetCurrentRuntimeThreadData(&mut dummy);
-            runtime_thread_data.enqueue_report_to_parent(auto_str);
+            THREAD_DATA.with_borrow(|x| x.enqueue_report_to_parent(auto_str))?;
         }
         Ok(())
     }
 
-    fn broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
-        if args.arguments.len() > 1 {
-            let mut dummy = 0;
-            let mut thread_data = GetCurrentRuntimeThreadData(&mut dummy);
-            let mut shared_content = JsSharedArrayBufferContentHandle::default();
-            unsafe {
-                ChakraRTInterface::JsGetSharedArrayBufferContent(
-                    args.arguments[1].clone(),
-                    &raw mut shared_content,
-                );
-            }
+    fn broadcast_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<()> {
+        if args.arguments.len() <= 1 {
+            return Ok(());
+        }
 
-            thread_data.as_mut().set_shared_content(shared_content);
-            thread_data.as_mut().broadcast_to_children();
-            ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(
-                thread_data.get_shared_content(),
+        let thread_data = THREAD_DATA.with_borrow(|x| Rc::clone(x));
+        let mut shared_content = JsSharedArrayBufferContentHandle::default();
+        unsafe {
+            ChakraRTInterface::JsGetSharedArrayBufferContent(
+                args.arguments[1].clone(),
+                &raw mut shared_content,
             );
         }
+        thread_data.broadcast_to_children(shared_content.clone());
+        ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(shared_content);
         Ok(())
     }
 
     fn receive_broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if args.arguments.len() > 1 {
-            let mut dummy = 0;
-            let mut thread_data = GetCurrentRuntimeThreadData(&mut dummy);
-            if !thread_data.get_receive_broadcast_callback_func().is_null() {
+            let thread_data = THREAD_DATA.with_borrow(|x| Rc::clone(x));
+            if let Some(callback_func) = thread_data.get_receive_broadcast_callback_func() {
                 unsafe {
-                    ChakraRTInterface::JsRelease(
-                        thread_data
-                            .get_receive_broadcast_callback_func()
-                            .as_js_ref(),
-                        std::ptr::null_mut(),
-                    )
-                    .as_result()?;
+                    ChakraRTInterface::JsRelease(callback_func.as_js_ref(), std::ptr::null_mut())
+                        .as_result()?;
                 }
             }
-            thread_data
-                .as_mut()
-                .set_receive_broadcast_callback_func(args.arguments[1].clone());
+            let callback_func = args.arguments[1];
+            thread_data.set_receive_broadcast_callback_func(callback_func);
             unsafe {
-                ChakraRTInterface::JsAddRef(
-                    thread_data
-                        .get_receive_broadcast_callback_func()
-                        .as_js_ref(),
-                    std::ptr::null_mut(),
-                )
-                .as_result()?;
+                ChakraRTInterface::JsAddRef(callback_func.as_js_ref(), std::ptr::null_mut())
+                    .as_result()?;
             }
         }
         Ok(())
@@ -1151,6 +1101,9 @@ impl WScript {
             let (error, error_message) = match error {
                 LoadScriptError::JsError(err) => (err, "Internal error."),
                 LoadScriptError::JsErrorWithMessage { error, message } => (error, message),
+                LoadScriptError::OneshotRecvError(_) => {
+                    (JsError::JsErrorFatal, "Oneshot recv error.")
+                }
             };
             let value = ChakraRt::double_to_number(JsErrorCode::from(error).repr as f64)
                 .unwrap_or_default();
@@ -1318,38 +1271,52 @@ impl WScript {
 
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
-            let thread_data = ffi::GetCurrentRuntimeThreadDataPtr();
-            let child = RuntimeThreadData::NewWithInitialSource(&content.unwrap().to_owned());
+            let (tx_initial_script_complete, rx_initial_script_complete) = oneshot::channel();
+            let context = THREAD_DATA.with_borrow(|x| ThreadDataContext {
+                wscript: &self,
+                parent: Rc::downgrade(x),
+                content: content.unwrap(),
+                sender: tx_initial_script_complete,
+                parent_report_tx: x.report_queue_tx.clone(),
+            });
             unsafe {
-                let data = Pin::new_unchecked(&mut *thread_data);
-                data.add_child(child);
-            }
-            unsafe {
-                let data = Pin::new_unchecked(&mut *child);
-                data.set_parent(thread_data);
-            }
-            unsafe {
-                let thread_data_context = ThreadDataContext {
-                    wscript: &self,
-                    runtime_thread_data: child,
-                };
-                let mut thread_data = Pin::new_unchecked(&mut *thread_data);
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
-                thread_data.as_mut().reset_initial_script_completed();
-                let thread_handle = ffi::CreateThread(
-                    |param| {
-                        let param =
-                            std::mem::transmute::<*mut CVoid, *mut ThreadDataContext>(param);
+                ffi::CreateThread(
+                    |param, thread_handle| {
+                        let param: *mut ThreadDataContext = std::mem::transmute(param);
                         let thread_data_context = Box::from_raw(param);
-                        Pin::new_unchecked(&mut *thread_data_context.runtime_thread_data)
-                            .ThreadProc(thread_data_context.wscript)
+                        let (events_tx, events_rx) = mpsc::channel();
+
+                        let child = Rc::new(ThreadData::new_with_initial_source(
+                            thread_data_context.content,
+                            thread_data_context.parent_report_tx.clone(),
+                            thread_handle,
+                            events_rx,
+                        ));
+
+                        {
+                            let parent = thread_data_context.parent.upgrade().unwrap();
+                            parent.add_child(Rc::clone(&child), events_tx);
+                        }
+
+                        THREAD_DATA.set(child);
+                        THREAD_DATA.with_borrow(|child| {
+                            child
+                                .thread_proc(
+                                    thread_data_context.wscript,
+                                    thread_data_context.sender,
+                                )
+                                .unwrap_or_else(|_| {
+                                    // fail with HRESULT::E_FAIL
+                                    0x80004005
+                                })
+                        })
                     },
-                    Box::into_raw(Box::new(thread_data_context)) as _,
+                    Box::into_raw(Box::new(context)) as _,
                     0,
                 );
-                Pin::new_unchecked(&mut *child).set_thread_handle(thread_handle);
-                thread_data.as_mut().wait_initial_script_completed();
             }
+            rx_initial_script_complete.blocking_recv()?;
             Ok(JsValueRef::default())
         } else {
             Err(LoadScriptError::JsErrorWithMessage {
@@ -1515,15 +1482,12 @@ impl WScript {
     }
 }
 
-impl Drop for WScript {
-    fn drop(&mut self) {
-        ffi::UninitializeRuntimeThreadLocalData();
-    }
-}
-
 struct ThreadDataContext<'a> {
     wscript: &'a WScript,
-    runtime_thread_data: *mut RuntimeThreadData,
+    parent: Weak<ThreadData>,
+    content: &'a str,
+    sender: oneshot::Sender<()>,
+    parent_report_tx: mpsc::Sender<String>,
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -1535,6 +1499,8 @@ enum LoadScriptError {
         error: JsError,
         message: &'static str,
     },
+    #[error(transparent)]
+    OneshotRecvError(#[from] oneshot::error::RecvError),
 }
 
 impl IntoResponse for anyhow::Error {

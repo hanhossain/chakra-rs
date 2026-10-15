@@ -201,7 +201,7 @@ See MSDN doc.
 
 --*/
 HANDLE
-CreateThread(std::function<uint32_t(void *)> lpStartAddress, void *lpParameter, uint32_t dwCreationFlags)
+CreateThread(std::function<uint32_t(void *, HANDLE)> lpStartAddress, void *lpParameter, uint32_t dwCreationFlags)
 {
     PAL_ERROR palError;
     CPalThread *pThread;
@@ -221,12 +221,20 @@ CreateThread(std::function<uint32_t(void *)> lpStartAddress, void *lpParameter, 
     return hNewThread;
 }
 
-HANDLE pal_ffi::CreateThread(rust::Fn<uint32_t(void *)> func, void *param, uint32_t creationFlags) {
+HANDLE pal_ffi::CreateThread(rust::Fn<uint32_t(void *, HANDLE)> func, void *param, uint32_t creationFlags) {
     return ::CreateThread(func, param, creationFlags);
 }
 
+uint32_t pal_ffi::WaitForMultipleObjects(rust::Slice<const HANDLE> handles, bool bWaitAll) {
+    return ::WaitForMultipleObjects(handles.size(), handles.data(), bWaitAll);
+}
+
+bool pal_ffi::CloseHandle(const HANDLE &hObject) {
+    return ::CloseHandle(hObject);
+}
+
 PAL_ERROR
-CorUnix::InternalCreateThread(CPalThread *pThread, std::function<uint32_t(void *)> lpStartAddress, void *lpParameter,
+CorUnix::InternalCreateThread(CPalThread *pThread, std::function<uint32_t(void *, HANDLE)> lpStartAddress, void *lpParameter,
                               uint32_t dwCreationFlags, PalThreadType eThreadType, HANDLE *phThread)
 {
     PAL_ERROR palError;
@@ -306,7 +314,7 @@ CorUnix::InternalCreateThread(CPalThread *pThread, std::function<uint32_t(void *
     //
     // Spawn the new pthread
     //
-    thread = std::thread(CPalThread::ThreadEntry, pNewThread);
+    thread = std::thread(CPalThread::ThreadEntry, pNewThread, hNewThread);
     thread.detach();
 
     //
@@ -1015,10 +1023,10 @@ GetThreadTimesInternalExit:
     return retval;
 }
 
-void *CPalThread::ThreadEntry(CPalThread *pThread)
+void *CPalThread::ThreadEntry(CPalThread *pThread, HANDLE threadHandle)
 {
     PAL_ERROR palError;
-    std::function<uint32_t(void *)> pfnStartRoutine;
+    std::function<uint32_t(void *, HANDLE)> pfnStartRoutine;
     void * pvPar;
     uint32_t retValue;
 
@@ -1075,7 +1083,7 @@ void *CPalThread::ThreadEntry(CPalThread *pThread)
     pfnStartRoutine = pThread->GetStartAddress();
     pvPar = pThread->GetStartParameter();
 
-    retValue = pfnStartRoutine(pvPar);
+    retValue = pfnStartRoutine(pvPar, threadHandle);
 
     TRACE("Thread exited (%u)\n", retValue);
     ExitThread(retValue);

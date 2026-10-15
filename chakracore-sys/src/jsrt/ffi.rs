@@ -129,7 +129,7 @@ unsafe impl cxx::ExternType for CULong {
     type Kind = cxx::kind::Trivial;
 }
 
-#[derive(Default)]
+#[derive(Default, Clone, Eq, PartialEq)]
 #[repr(transparent)]
 pub struct JsSharedArrayBufferContentHandle(*mut c_void);
 

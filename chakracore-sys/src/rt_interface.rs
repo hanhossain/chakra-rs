@@ -162,6 +162,11 @@ mod ffi {
             shared_contents: *mut JsSharedArrayBufferContentHandle,
         ) -> JsErrorCode;
         #[Self = "ChakraRTInterface"]
+        unsafe fn JsCreateSharedArrayBufferWithSharedContent(
+            shared_content: JsSharedArrayBufferContentHandle,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
+        #[Self = "ChakraRTInterface"]
         fn JsReleaseSharedArrayBufferContentHandle(
             shared_content: JsSharedArrayBufferContentHandle,
         ) -> JsErrorCode;

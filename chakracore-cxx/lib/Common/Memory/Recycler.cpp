@@ -4641,7 +4641,7 @@ Recycler::FinishTransferSwept(CollectionFlags flags)
 }
 
 unsigned int
-Recycler::StaticThreadProc(void * lpParameter)
+Recycler::StaticThreadProc(void * lpParameter, void *threadHandle)
 {
     uint32_t ret = static_cast<uint32_t>(-1);
         Recycler * recycler = static_cast<Recycler*>(lpParameter);
@@ -5211,7 +5211,7 @@ RecyclerParallelThread::Shutdown()
 
 // static
 unsigned int
-RecyclerParallelThread::StaticThreadProc(void * lpParameter)
+RecyclerParallelThread::StaticThreadProc(void * lpParameter, void *threadHandle)
 {
     uint32_t ret = static_cast<uint32_t>(-1);
         RecyclerParallelThread * parallelThread = static_cast<RecyclerParallelThread*>(lpParameter);

@@ -326,8 +326,7 @@ uint32_t
 WaitForMultipleObjects(
                 uint32_t nCount,
                 const HANDLE *lpHandles,
-                BOOL bWaitAll,
-                uint32_t dwMilliseconds);
+                bool bWaitAll);
 
 uint32_t
 WaitForMultipleObjectsEx(
@@ -348,7 +347,7 @@ Sleep(
 #define STACK_SIZE_PARAM_IS_A_RESERVATION 0x00010000
 
 HANDLE
-CreateThread(std::function<uint32_t(void *)> lpStartAddress, void *lpParameter, uint32_t dwCreationFlags);
+CreateThread(std::function<uint32_t(void *, HANDLE)> lpStartAddress, void *lpParameter, uint32_t dwCreationFlags);
 
 __attribute__((noreturn))
 void
