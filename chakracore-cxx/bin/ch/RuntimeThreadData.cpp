@@ -47,7 +47,8 @@ std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
 uint32_t RuntimeThreadData::ThreadProc(
     JsRuntimeHandle runtime,
     rust::Fn<void(const std::weak_ptr<RuntimeThreadData> &parent, const JsValueRef &receiveBroadcastCallbackFunc)>
-        onReceiveBroadcast) const {
+        onReceiveBroadcast,
+    rust::Fn<void(const JsValueRef &receiveBroadcastCallbackFunc, JsRuntimeHandle runtime)> onShutdown) const {
     auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
 
     // loop waiting for work;
@@ -64,12 +65,7 @@ uint32_t RuntimeThreadData::ThreadProc(
 
         if (waitRet == WAIT_OBJECT_0 + 1 || leaving_)
         {
-            if (this->receiveBroadcastCallbackFunc)
-            {
-                ChakraRTInterface::JsRelease(this->receiveBroadcastCallbackFunc, nullptr);
-            }
-            ChakraRTInterface::JsSetCurrentContext(nullptr);
-            ChakraRTInterface::JsDisposeRuntime(runtime);
+            onShutdown(receiveBroadcastCallbackFunc, runtime);
             return 0;
         }
         else if (waitRet != WAIT_OBJECT_0)

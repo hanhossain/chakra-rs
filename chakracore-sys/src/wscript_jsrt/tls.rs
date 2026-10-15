@@ -93,9 +93,13 @@ impl ThreadData {
             .send(())
             .map_err(|_| ThreadProcError::NotificationFailed)?;
 
-        let res = self.inner.ThreadProc(runtime, |parent, callback| {
-            let _ = Self::on_receive_broadcast(parent, callback);
-        });
+        let res = self.inner.ThreadProc(
+            runtime,
+            |parent, callback| {
+                let _ = Self::on_receive_broadcast(parent, callback);
+            },
+            Self::on_shutdown,
+        );
         Ok(res)
     }
 
@@ -127,6 +131,19 @@ impl ThreadData {
         }
 
         Ok(())
+    }
+
+    fn on_shutdown(receive_broadcast_callback_func: &JsValueRef, runtime: JsRuntimeHandle) {
+        if !receive_broadcast_callback_func.is_null() {
+            unsafe {
+                ChakraRTInterface::JsRelease(
+                    receive_broadcast_callback_func.as_js_ref(),
+                    std::ptr::null_mut(),
+                );
+            }
+        }
+        ChakraRTInterface::JsSetCurrentContext(JsContextRef::default());
+        ChakraRTInterface::JsDisposeRuntime(runtime);
     }
 
     pub(super) fn enqueue_report_to_parent(&self, report: String) -> Result<(), ReportQueueError> {

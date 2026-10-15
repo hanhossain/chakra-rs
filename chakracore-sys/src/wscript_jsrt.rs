@@ -141,6 +141,7 @@ mod ffi {
                 parent: &WeakPtr<RuntimeThreadData>,
                 receive_broadcast_callback_func: &JsValueRef,
             ),
+            on_shutdown: fn(receive_broadcast_callback_func: &JsValueRef, runtime: JsRuntimeHandle),
         ) -> u32;
         fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
     }

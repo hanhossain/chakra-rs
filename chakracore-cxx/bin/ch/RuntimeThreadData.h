@@ -28,7 +28,8 @@ public:
     uint32_t ThreadProc(
         JsRuntimeHandle runtime,
         rust::Fn<void(const std::weak_ptr<RuntimeThreadData> &parent, const JsValueRef &receiveBroadcastCallbackFunc)>
-            onReceiveBroadcast) const;
+            onReceiveBroadcast,
+        rust::Fn<void(const JsValueRef &receiveBroadcastCallbackFunc, JsRuntimeHandle runtime)> onShutdown) const;
     void set_leaving(bool leaving);
     void broadcast_to_children() const;
     void set_shared_content(JsSharedArrayBufferContentHandle shared_content);
