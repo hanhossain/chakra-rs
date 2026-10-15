@@ -44,7 +44,10 @@ std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
     return std::make_shared<RuntimeThreadData>();
 }
 
-uint32_t RuntimeThreadData::ThreadProc(JsRuntimeHandle runtime) const {
+uint32_t RuntimeThreadData::ThreadProc(
+    JsRuntimeHandle runtime,
+    rust::Fn<void(const std::weak_ptr<RuntimeThreadData> &parent, const JsValueRef &receiveBroadcastCallbackFunc)>
+        onReceiveBroadcast) const {
     auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
 
     // loop waiting for work;
@@ -56,18 +59,7 @@ uint32_t RuntimeThreadData::ThreadProc(JsRuntimeHandle runtime) const {
 
         if (waitRet == WAIT_OBJECT_0)
         {
-            JsValueRef args[3];
-            ChakraRTInterface::JsGetGlobalObject(&args[0]);
-            {
-                auto parent = parent_.lock();
-                ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(parent->get_shared_content(), &args[1]);
-            }
-            ChakraRTInterface::JsDoubleToNumber(1, &args[2]);
-
-            if (this->receiveBroadcastCallbackFunc)
-            {
-                ChakraRTInterface::JsCallFunction(this->receiveBroadcastCallbackFunc, args, 3, nullptr);
-            }
+            onReceiveBroadcast(parent_, receiveBroadcastCallbackFunc);
         }
 
         if (waitRet == WAIT_OBJECT_0 + 1 || leaving_)

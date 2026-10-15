@@ -6,6 +6,7 @@
 #include "ChakraCore.h"
 
 #include <condition_variable>
+#include <memory>
 #include <rust/cxx.h>
 
 class RuntimeThreadData
@@ -24,7 +25,10 @@ public:
 
     std::vector<std::shared_ptr<RuntimeThreadData>> children_;
 
-    uint32_t ThreadProc(JsRuntimeHandle runtime) const;
+    uint32_t ThreadProc(
+        JsRuntimeHandle runtime,
+        rust::Fn<void(const std::weak_ptr<RuntimeThreadData> &parent, const JsValueRef &receiveBroadcastCallbackFunc)>
+            onReceiveBroadcast) const;
     void set_leaving(bool leaving);
     void broadcast_to_children() const;
     void set_shared_content(JsSharedArrayBufferContentHandle shared_content);

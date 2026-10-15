@@ -5,7 +5,7 @@ use crate::jsrt::{
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::WScript;
 use crate::wscript_jsrt::ffi::RuntimeThreadData;
-use cxx::SharedPtr;
+use cxx::{SharedPtr, WeakPtr};
 use std::sync::mpsc;
 use tokio::sync::oneshot;
 
@@ -93,8 +93,40 @@ impl ThreadData {
             .send(())
             .map_err(|_| ThreadProcError::NotificationFailed)?;
 
-        let res = self.inner.ThreadProc(runtime);
+        let res = self.inner.ThreadProc(runtime, |parent, callback| {
+            let _ = Self::on_receive_broadcast(parent, callback);
+        });
         Ok(res)
+    }
+
+    fn on_receive_broadcast(
+        parent: &WeakPtr<RuntimeThreadData>,
+        receive_broadcast_callback_func: &JsValueRef,
+    ) -> Result<(), JsError> {
+        let global = ChakraRt::get_global_object()?;
+        let mut shared_buffer = JsValueRef::default();
+        unsafe {
+            let parent = parent.upgrade();
+            let shared_content = parent.get_shared_content();
+            ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(
+                shared_content,
+                &raw mut shared_buffer,
+            );
+        }
+        let shared_content_length = ChakraRt::double_to_number(1.)?;
+        let mut args = [*global, shared_buffer, shared_content_length];
+        if !receive_broadcast_callback_func.is_null() {
+            unsafe {
+                ChakraRTInterface::JsCallFunction(
+                    *receive_broadcast_callback_func,
+                    args.as_mut_ptr(),
+                    3,
+                    std::ptr::null_mut(),
+                );
+            }
+        }
+
+        Ok(())
     }
 
     pub(super) fn enqueue_report_to_parent(&self, report: String) -> Result<(), ReportQueueError> {
