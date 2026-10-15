@@ -3,11 +3,10 @@ use crate::jsrt::{
     JsSharedArrayBufferContentHandle, JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
-use crate::wscript_jsrt::ffi::{CloseHandle, RuntimeThreadData, WaitForMultipleObjects};
+use crate::wscript_jsrt::ffi::{CloseHandle, WaitForMultipleObjects};
 use crate::wscript_jsrt::{Handle, WScript};
-use cxx::SharedPtr;
 use std::cell::Cell;
-use std::rc::{Rc, Weak};
+use std::rc::Rc;
 use std::sync::{Mutex, mpsc};
 use tokio::sync::oneshot;
 
@@ -18,14 +17,12 @@ pub(super) enum ThreadEvent {
 }
 
 pub(super) struct ThreadData {
-    pub(super) inner: SharedPtr<RuntimeThreadData>,
     initial_source: String,
     pub(super) report_queue_tx: mpsc::Sender<String>,
     report_queue_rx: mpsc::Receiver<String>,
     parent_report_tx: Option<mpsc::Sender<String>>,
     leaving: Cell<bool>,
     thread_handle: Handle,
-    parent: Weak<ThreadData>,
     receive_broadcast_callback_func: Cell<Option<JsValueRef>>,
     children: Mutex<Vec<(Rc<ThreadData>, mpsc::Sender<ThreadEvent>)>>,
     events: Option<mpsc::Receiver<ThreadEvent>>,
@@ -33,17 +30,14 @@ pub(super) struct ThreadData {
 
 impl ThreadData {
     pub(super) fn new() -> Self {
-        let inner = RuntimeThreadData::New();
         let (tx, rx) = mpsc::channel();
         Self {
-            inner,
             initial_source: String::new(),
             report_queue_tx: tx,
             report_queue_rx: rx,
             parent_report_tx: None,
             leaving: Cell::new(false),
             thread_handle: Handle::default(),
-            parent: Weak::new(),
             receive_broadcast_callback_func: Cell::default(),
             children: Mutex::default(),
             events: None,
@@ -54,21 +48,17 @@ impl ThreadData {
         source: &str,
         parent_report_tx: mpsc::Sender<String>,
         thread_handle: Handle,
-        parent: Weak<ThreadData>,
         events_rx: mpsc::Receiver<ThreadEvent>,
     ) -> Self {
         let initial_source = source.to_owned();
-        let inner = RuntimeThreadData::New();
         let (tx, rx) = mpsc::channel();
         Self {
-            inner,
             initial_source,
             report_queue_tx: tx,
             report_queue_rx: rx,
             parent_report_tx: Some(parent_report_tx),
             leaving: Cell::new(false),
             thread_handle,
-            parent,
             receive_broadcast_callback_func: Cell::default(),
             children: Mutex::default(),
             events: Some(events_rx),

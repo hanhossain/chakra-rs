@@ -112,22 +112,6 @@ mod ffi {
     }
 
     unsafe extern "C++" {
-        include!("RuntimeThreadData.h");
-
-        type RuntimeThreadData;
-        type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
-
-        #[Self = "RuntimeThreadData"]
-        fn New() -> SharedPtr<RuntimeThreadData>;
-
-        fn set_shared_content(
-            self: Pin<&mut RuntimeThreadData>,
-            shared_content: JsSharedArrayBufferContentHandle,
-        );
-        fn get_shared_content(self: &RuntimeThreadData) -> JsSharedArrayBufferContentHandle;
-    }
-
-    unsafe extern "C++" {
         include!("pal_ffi/pal_thread_ffi.h");
         #[cxx_name = "HANDLE"]
         type Handle = super::Handle;
@@ -156,8 +140,6 @@ mod ffi {
             is_file: bool,
         ) -> JsValueRef;
     }
-
-    impl WeakPtr<RuntimeThreadData> {}
 }
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
@@ -1309,7 +1291,6 @@ impl WScript {
                             thread_data_context.content,
                             thread_data_context.parent_report_tx.clone(),
                             thread_handle,
-                            thread_data_context.parent.clone(),
                             events_rx,
                         ));
 

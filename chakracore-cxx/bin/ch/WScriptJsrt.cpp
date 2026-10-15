@@ -12,7 +12,6 @@
 
 #include "ChakraRtInterface.h"
 #include "Codex/Utf8Codex.h"
-#include "RuntimeThreadData.h"
 #include "chakracore-sys/src/wscript_jsrt.rs.h"
 
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
