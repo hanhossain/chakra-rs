@@ -19,6 +19,7 @@ pub(super) struct ThreadData {
     parent_report_tx: Option<mpsc::Sender<String>>,
     leaving: Cell<bool>,
     parent: Weak<ThreadData>,
+    receive_broadcast_callback_func: Cell<Option<JsValueRef>>,
 }
 
 impl ThreadData {
@@ -33,6 +34,7 @@ impl ThreadData {
             parent_report_tx: None,
             leaving: Cell::new(false),
             parent: Weak::new(),
+            receive_broadcast_callback_func: Cell::default(),
         }
     }
 
@@ -53,6 +55,7 @@ impl ThreadData {
             parent_report_tx: Some(parent_report_tx),
             leaving: Cell::new(false),
             parent,
+            receive_broadcast_callback_func: Cell::default(),
         }
     }
 
@@ -113,11 +116,11 @@ impl ThreadData {
             let wait = WaitForMultipleObjects(&handles, false);
 
             if wait == 0 {
-                self.on_receive_broadcast(&self.inner.get_receive_broadcast_callback_func())?;
+                self.on_receive_broadcast()?;
             }
 
             if wait == 1 || self.leaving.get() {
-                Self::on_shutdown(&self.inner.get_receive_broadcast_callback_func(), runtime);
+                self.on_shutdown(runtime);
                 return Ok(0);
             }
 
@@ -127,10 +130,7 @@ impl ThreadData {
         }
     }
 
-    fn on_receive_broadcast(
-        &self,
-        receive_broadcast_callback_func: &JsValueRef,
-    ) -> Result<(), JsError> {
+    fn on_receive_broadcast(&self) -> Result<(), JsError> {
         let global = ChakraRt::get_global_object()?;
         let mut shared_buffer = JsValueRef::default();
         unsafe {
@@ -143,10 +143,10 @@ impl ThreadData {
         }
         let shared_content_length = ChakraRt::double_to_number(1.)?;
         let mut args = [*global, shared_buffer, shared_content_length];
-        if !receive_broadcast_callback_func.is_null() {
+        if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
             unsafe {
                 ChakraRTInterface::JsCallFunction(
-                    *receive_broadcast_callback_func,
+                    callback_func,
                     args.as_mut_ptr(),
                     3,
                     std::ptr::null_mut(),
@@ -157,13 +157,10 @@ impl ThreadData {
         Ok(())
     }
 
-    fn on_shutdown(receive_broadcast_callback_func: &JsValueRef, runtime: JsRuntimeHandle) {
-        if !receive_broadcast_callback_func.is_null() {
+    fn on_shutdown(&self, runtime: JsRuntimeHandle) {
+        if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
             unsafe {
-                ChakraRTInterface::JsRelease(
-                    receive_broadcast_callback_func.as_js_ref(),
-                    std::ptr::null_mut(),
-                );
+                ChakraRTInterface::JsRelease(callback_func.as_js_ref(), std::ptr::null_mut());
             }
         }
         ChakraRTInterface::JsSetCurrentContext(JsContextRef::default());
@@ -188,6 +185,14 @@ impl ThreadData {
 
     pub(super) fn set_leaving(&self, leaving: bool) {
         self.leaving.set(leaving);
+    }
+
+    pub(super) fn set_receive_broadcast_callback_func(&self, func: JsValueRef) {
+        self.receive_broadcast_callback_func.set(Some(func));
+    }
+
+    pub(super) fn get_receive_broadcast_callback_func(&self) -> Option<JsValueRef> {
+        self.receive_broadcast_callback_func.get()
     }
 }
 

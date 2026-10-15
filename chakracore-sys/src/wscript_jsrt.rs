@@ -122,11 +122,6 @@ mod ffi {
         );
         fn get_shared_content(self: &RuntimeThreadData) -> JsSharedArrayBufferContentHandle;
         fn broadcast_to_children(self: &RuntimeThreadData);
-        fn get_receive_broadcast_callback_func(self: &RuntimeThreadData) -> JsValueRef;
-        fn set_receive_broadcast_callback_func(
-            self: Pin<&mut RuntimeThreadData>,
-            value: JsValueRef,
-        );
         unsafe fn add_child(
             self: Pin<&mut RuntimeThreadData>,
             child: &SharedPtr<RuntimeThreadData>,
@@ -906,30 +901,18 @@ impl WScript {
 
     fn receive_broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if args.arguments.len() > 1 {
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
-            let mut thread_data = unsafe { thread_data.pin_mut_unchecked() };
-            if !thread_data.get_receive_broadcast_callback_func().is_null() {
+            let thread_data = THREAD_DATA.with_borrow(|x| Rc::clone(x));
+            if let Some(callback_func) = thread_data.get_receive_broadcast_callback_func() {
                 unsafe {
-                    ChakraRTInterface::JsRelease(
-                        thread_data
-                            .get_receive_broadcast_callback_func()
-                            .as_js_ref(),
-                        std::ptr::null_mut(),
-                    )
-                    .as_result()?;
+                    ChakraRTInterface::JsRelease(callback_func.as_js_ref(), std::ptr::null_mut())
+                        .as_result()?;
                 }
             }
-            thread_data
-                .as_mut()
-                .set_receive_broadcast_callback_func(args.arguments[1].clone());
+            let callback_func = args.arguments[1];
+            thread_data.set_receive_broadcast_callback_func(callback_func);
             unsafe {
-                ChakraRTInterface::JsAddRef(
-                    thread_data
-                        .get_receive_broadcast_callback_func()
-                        .as_js_ref(),
-                    std::ptr::null_mut(),
-                )
-                .as_result()?;
+                ChakraRTInterface::JsAddRef(callback_func.as_js_ref(), std::ptr::null_mut())
+                    .as_result()?;
             }
         }
         Ok(())

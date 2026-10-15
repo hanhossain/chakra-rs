@@ -12,8 +12,7 @@ RuntimeThreadData::RuntimeThreadData() : RuntimeThreadData(nullptr) {}
 
 RuntimeThreadData::RuntimeThreadData(HANDLE thread) :
     hThread(thread),
-    sharedContent_(nullptr),
-    receiveBroadcastCallbackFunc(nullptr)
+    sharedContent_(nullptr)
 {
     this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
     this->hevntShutdown = CreateEventW(TRUE, FALSE);
@@ -62,15 +61,6 @@ void RuntimeThreadData::set_shared_content(JsSharedArrayBufferContentHandle shar
 
 JsSharedArrayBufferContentHandle RuntimeThreadData::get_shared_content() const {
     return sharedContent_;
-}
-JsValueRef RuntimeThreadData::get_receive_broadcast_callback_func() const
-{
-    return receiveBroadcastCallbackFunc;
-}
-
-void RuntimeThreadData::set_receive_broadcast_callback_func(JsValueRef value)
-{
-    receiveBroadcastCallbackFunc = value;
 }
 
 void RuntimeThreadData::add_child(const std::shared_ptr<RuntimeThreadData> &child) {
