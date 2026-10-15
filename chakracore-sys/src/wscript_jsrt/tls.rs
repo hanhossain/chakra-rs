@@ -3,13 +3,19 @@ use crate::jsrt::{
     JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
-use crate::wscript_jsrt::ffi::{RuntimeThreadData, SetEvent, WaitForMultipleObjects};
+use crate::wscript_jsrt::ffi::{RuntimeThreadData, WaitForMultipleObjects};
 use crate::wscript_jsrt::{Handle, WScript};
 use cxx::SharedPtr;
 use std::cell::Cell;
 use std::rc::{Rc, Weak};
 use std::sync::{Mutex, mpsc};
 use tokio::sync::oneshot;
+
+#[derive(Eq, PartialEq)]
+pub(super) enum ThreadEvent {
+    Broadcast,
+    Shutdown,
+}
 
 pub(super) struct ThreadData {
     pub(super) inner: SharedPtr<RuntimeThreadData>,
@@ -21,7 +27,8 @@ pub(super) struct ThreadData {
     thread_handle: Handle,
     parent: Weak<ThreadData>,
     receive_broadcast_callback_func: Cell<Option<JsValueRef>>,
-    children: Mutex<Vec<Rc<ThreadData>>>,
+    children: Mutex<Vec<(Rc<ThreadData>, mpsc::Sender<ThreadEvent>)>>,
+    events: Option<mpsc::Receiver<ThreadEvent>>,
 }
 
 impl ThreadData {
@@ -39,6 +46,7 @@ impl ThreadData {
             parent: Weak::new(),
             receive_broadcast_callback_func: Cell::default(),
             children: Mutex::default(),
+            events: None,
         }
     }
 
@@ -47,6 +55,7 @@ impl ThreadData {
         parent_report_tx: mpsc::Sender<String>,
         thread_handle: Handle,
         parent: Weak<ThreadData>,
+        events_rx: mpsc::Receiver<ThreadEvent>,
     ) -> Self {
         let initial_source = source.to_owned();
         let inner = RuntimeThreadData::NewWithHandle(thread_handle.clone());
@@ -62,6 +71,7 @@ impl ThreadData {
             parent,
             receive_broadcast_callback_func: Cell::default(),
             children: Mutex::default(),
+            events: Some(events_rx),
         }
     }
 
@@ -112,28 +122,28 @@ impl ThreadData {
             .send(())
             .map_err(|_| ThreadProcError::NotificationFailed)?;
 
-        let handles = [
-            self.inner.get_received_broadcast_event(),
-            self.inner.get_shutdown_event(),
-        ];
-
         // loop waiting for work
-        loop {
-            let wait = WaitForMultipleObjects(&handles, false);
+        let Some(events) = &self.events else {
+            return Ok(0);
+        };
 
-            if wait == 0 {
-                self.on_receive_broadcast()?;
-            }
-
-            if wait == 1 || self.leaving.get() {
-                self.on_shutdown(runtime);
-                return Ok(0);
-            }
-
-            if wait != 0 {
-                unreachable!();
+        for event in events {
+            match event {
+                ThreadEvent::Broadcast => {
+                    self.on_receive_broadcast()?;
+                    if self.leaving.get() {
+                        self.on_shutdown(runtime);
+                        return Ok(0);
+                    }
+                }
+                ThreadEvent::Shutdown => {
+                    self.on_shutdown(runtime);
+                    return Ok(0);
+                }
             }
         }
+
+        Ok(0)
     }
 
     fn on_receive_broadcast(&self) -> Result<(), JsError> {
@@ -201,16 +211,17 @@ impl ThreadData {
         self.receive_broadcast_callback_func.get()
     }
 
-    pub(super) fn add_child(&self, child: Rc<ThreadData>) {
+    pub(super) fn add_child(&self, child: Rc<ThreadData>, events_tx: mpsc::Sender<ThreadEvent>) {
         let mut children = self.children.lock().unwrap();
-        children.push(child);
+        children.push((child, events_tx));
     }
 
-    pub(super) fn broadcast_to_children(&self) {
+    pub(super) fn broadcast_to_children(&self) -> anyhow::Result<()> {
         let children = self.children.lock().unwrap();
-        for child in children.iter() {
-            child.inner.broadcast();
+        for (_, tx) in children.iter() {
+            tx.send(ThreadEvent::Broadcast)?;
         }
+        Ok(())
     }
 }
 
@@ -219,9 +230,9 @@ impl Drop for ThreadData {
         let children = self.children.lock().unwrap();
         if !children.is_empty() {
             let mut child_handles = Vec::new();
-            for child in children.iter() {
+            for (child, tx) in children.iter() {
                 child_handles.push(child.thread_handle.clone());
-                SetEvent(child.inner.get_shutdown_event());
+                tx.send(ThreadEvent::Shutdown).unwrap();
             }
 
             let ret = WaitForMultipleObjects(&child_handles, true);

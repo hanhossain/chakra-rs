@@ -14,14 +14,10 @@ RuntimeThreadData::RuntimeThreadData(HANDLE thread) :
     hThread(thread),
     sharedContent_(nullptr)
 {
-    this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
-    this->hevntShutdown = CreateEventW(TRUE, FALSE);
 }
 
 RuntimeThreadData::~RuntimeThreadData()
 {
-    CloseHandle(this->hevntReceivedBroadcast);
-    CloseHandle(this->hevntShutdown);
     CloseHandle(this->hThread);
 }
 
@@ -33,10 +29,6 @@ std::shared_ptr<RuntimeThreadData> RuntimeThreadData::NewWithHandle(HANDLE threa
     return std::make_shared<RuntimeThreadData>(thread);
 }
 
-void RuntimeThreadData::broadcast() const {
-    SetEvent(hevntReceivedBroadcast);
-}
-
 void RuntimeThreadData::set_shared_content(JsSharedArrayBufferContentHandle shared_content)
 {
     sharedContent_ = shared_content;
@@ -44,11 +36,4 @@ void RuntimeThreadData::set_shared_content(JsSharedArrayBufferContentHandle shar
 
 JsSharedArrayBufferContentHandle RuntimeThreadData::get_shared_content() const {
     return sharedContent_;
-}
-
-HANDLE RuntimeThreadData::get_received_broadcast_event() const {
-    return hevntReceivedBroadcast;
-}
-HANDLE RuntimeThreadData::get_shutdown_event() const {
-    return hevntShutdown;
 }

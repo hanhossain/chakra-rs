@@ -121,9 +121,6 @@ mod ffi {
             shared_content: JsSharedArrayBufferContentHandle,
         );
         fn get_shared_content(self: &RuntimeThreadData) -> JsSharedArrayBufferContentHandle;
-        fn broadcast(self: &RuntimeThreadData);
-        fn get_received_broadcast_event(self: &RuntimeThreadData) -> Handle;
-        fn get_shutdown_event(self: &RuntimeThreadData) -> Handle;
     }
 
     unsafe extern "C++" {
@@ -138,8 +135,6 @@ mod ffi {
         ) -> Handle;
         #[namespace = "pal_ffi"]
         fn WaitForMultipleObjects(handles: &[Handle], wait_all: bool) -> u32;
-        #[namespace = "pal_ffi"]
-        fn SetEvent(handle: Handle) -> bool;
     }
 
     #[namespace = "chakra_rs"]
@@ -875,7 +870,7 @@ impl WScript {
         Ok(())
     }
 
-    fn broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+    fn broadcast_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<()> {
         if args.arguments.len() <= 1 {
             return Ok(());
         }
@@ -890,7 +885,7 @@ impl WScript {
             let mut td = thread_data.inner.clone();
             td.pin_mut_unchecked().set_shared_content(shared_content);
         }
-        thread_data.broadcast_to_children();
+        thread_data.broadcast_to_children()?;
         ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(
             thread_data.inner.get_shared_content(),
         );
@@ -1306,17 +1301,19 @@ impl WScript {
                     |param, thread_handle| {
                         let param: *mut ThreadDataContext = std::mem::transmute(param);
                         let thread_data_context = Box::from_raw(param);
+                        let (events_tx, events_rx) = mpsc::channel();
 
                         let child = Rc::new(ThreadData::new_with_initial_source(
                             thread_data_context.content,
                             thread_data_context.parent_report_tx.clone(),
                             thread_handle,
                             thread_data_context.parent.clone(),
+                            events_rx,
                         ));
 
                         {
                             let parent = thread_data_context.parent.upgrade().unwrap();
-                            parent.add_child(Rc::clone(&child));
+                            parent.add_child(Rc::clone(&child), events_tx);
                         }
 
                         THREAD_DATA.set(child);

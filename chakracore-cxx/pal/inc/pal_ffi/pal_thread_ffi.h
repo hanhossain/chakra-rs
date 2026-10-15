@@ -5,5 +5,4 @@
 namespace pal_ffi {
     HANDLE CreateThread(rust::Fn<uint32_t(void *, HANDLE)> func, void *param, uint32_t creationFlags);
     uint32_t WaitForMultipleObjects(rust::Slice<const HANDLE> handles, bool bWaitAll);
-    bool SetEvent(HANDLE hEvent);
 }

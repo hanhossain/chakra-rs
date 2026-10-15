@@ -229,10 +229,6 @@ uint32_t pal_ffi::WaitForMultipleObjects(rust::Slice<const HANDLE> handles, bool
     return ::WaitForMultipleObjects(handles.size(), handles.data(), bWaitAll);
 }
 
-bool pal_ffi::SetEvent(HANDLE hEvent) {
-    return ::SetEvent(hEvent);
-}
-
 PAL_ERROR
 CorUnix::InternalCreateThread(CPalThread *pThread, std::function<uint32_t(void *, HANDLE)> lpStartAddress, void *lpParameter,
                               uint32_t dwCreationFlags, PalThreadType eThreadType, HANDLE *phThread)
