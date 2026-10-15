@@ -1,6 +1,6 @@
 use crate::jsrt::{
     ChakraRt, JsContextRef, JsError, JsParseScriptAttributes, JsRuntimeAttributes, JsRuntimeHandle,
-    JsSourceContext, JsValueRef,
+    JsSharedArrayBufferContentHandle, JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::ffi::{CloseHandle, RuntimeThreadData, WaitForMultipleObjects};
@@ -13,7 +13,7 @@ use tokio::sync::oneshot;
 
 #[derive(Eq, PartialEq)]
 pub(super) enum ThreadEvent {
-    Broadcast,
+    Broadcast(JsSharedArrayBufferContentHandle),
     Shutdown,
 }
 
@@ -129,8 +129,8 @@ impl ThreadData {
 
         for event in events {
             match event {
-                ThreadEvent::Broadcast => {
-                    self.on_receive_broadcast()?;
+                ThreadEvent::Broadcast(shared_content) => {
+                    self.on_receive_broadcast(shared_content)?;
                     if self.leaving.get() {
                         self.on_shutdown(runtime);
                         return Ok(0);
@@ -146,12 +146,13 @@ impl ThreadData {
         Ok(0)
     }
 
-    fn on_receive_broadcast(&self) -> Result<(), JsError> {
+    fn on_receive_broadcast(
+        &self,
+        shared_content: JsSharedArrayBufferContentHandle,
+    ) -> Result<(), JsError> {
         let global = ChakraRt::get_global_object()?;
         let mut shared_buffer = JsValueRef::default();
         unsafe {
-            let parent = self.parent.upgrade().unwrap();
-            let shared_content = parent.inner.get_shared_content();
             ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(
                 shared_content,
                 &raw mut shared_buffer,
@@ -216,12 +217,12 @@ impl ThreadData {
         children.push((child, events_tx));
     }
 
-    pub(super) fn broadcast_to_children(&self) -> anyhow::Result<()> {
+    pub(super) fn broadcast_to_children(&self, shared_content: JsSharedArrayBufferContentHandle) {
         let children = self.children.lock().unwrap();
         for (_, tx) in children.iter() {
-            tx.send(ThreadEvent::Broadcast)?;
+            tx.send(ThreadEvent::Broadcast(shared_content.clone()))
+                .unwrap();
         }
-        Ok(())
     }
 }
 

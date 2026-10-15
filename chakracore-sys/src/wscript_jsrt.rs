@@ -882,19 +882,15 @@ impl WScript {
         }
 
         let thread_data = THREAD_DATA.with_borrow(|x| Rc::clone(x));
+        let mut shared_content = JsSharedArrayBufferContentHandle::default();
         unsafe {
-            let mut shared_content = JsSharedArrayBufferContentHandle::default();
             ChakraRTInterface::JsGetSharedArrayBufferContent(
                 args.arguments[1].clone(),
                 &raw mut shared_content,
             );
-            let mut td = thread_data.inner.clone();
-            td.pin_mut_unchecked().set_shared_content(shared_content);
         }
-        thread_data.broadcast_to_children()?;
-        ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(
-            thread_data.inner.get_shared_content(),
-        );
+        thread_data.broadcast_to_children(shared_content.clone());
+        ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(shared_content);
         Ok(())
     }
 
