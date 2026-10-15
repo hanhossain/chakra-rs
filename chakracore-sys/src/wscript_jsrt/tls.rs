@@ -3,12 +3,12 @@ use crate::jsrt::{
     JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
-use crate::wscript_jsrt::ffi::{RuntimeThreadData, WaitForMultipleObjects};
+use crate::wscript_jsrt::ffi::{RuntimeThreadData, SetEvent, WaitForMultipleObjects};
 use crate::wscript_jsrt::{Handle, WScript};
 use cxx::SharedPtr;
 use std::cell::Cell;
-use std::rc::Weak;
-use std::sync::mpsc;
+use std::rc::{Rc, Weak};
+use std::sync::{Mutex, mpsc};
 use tokio::sync::oneshot;
 
 pub(super) struct ThreadData {
@@ -18,8 +18,10 @@ pub(super) struct ThreadData {
     report_queue_rx: mpsc::Receiver<String>,
     parent_report_tx: Option<mpsc::Sender<String>>,
     leaving: Cell<bool>,
+    thread_handle: Handle,
     parent: Weak<ThreadData>,
     receive_broadcast_callback_func: Cell<Option<JsValueRef>>,
+    children: Mutex<Vec<Rc<ThreadData>>>,
 }
 
 impl ThreadData {
@@ -33,8 +35,10 @@ impl ThreadData {
             report_queue_rx: rx,
             parent_report_tx: None,
             leaving: Cell::new(false),
+            thread_handle: Handle::default(),
             parent: Weak::new(),
             receive_broadcast_callback_func: Cell::default(),
+            children: Mutex::default(),
         }
     }
 
@@ -45,7 +49,7 @@ impl ThreadData {
         parent: Weak<ThreadData>,
     ) -> Self {
         let initial_source = source.to_owned();
-        let inner = RuntimeThreadData::NewWithHandle(thread_handle);
+        let inner = RuntimeThreadData::NewWithHandle(thread_handle.clone());
         let (tx, rx) = mpsc::channel();
         Self {
             inner,
@@ -54,8 +58,10 @@ impl ThreadData {
             report_queue_rx: rx,
             parent_report_tx: Some(parent_report_tx),
             leaving: Cell::new(false),
+            thread_handle,
             parent,
             receive_broadcast_callback_func: Cell::default(),
+            children: Mutex::default(),
         }
     }
 
@@ -193,6 +199,34 @@ impl ThreadData {
 
     pub(super) fn get_receive_broadcast_callback_func(&self) -> Option<JsValueRef> {
         self.receive_broadcast_callback_func.get()
+    }
+
+    pub(super) fn add_child(&self, child: Rc<ThreadData>) {
+        let mut children = self.children.lock().unwrap();
+        children.push(child);
+    }
+
+    pub(super) fn broadcast_to_children(&self) {
+        let children = self.children.lock().unwrap();
+        for child in children.iter() {
+            child.inner.broadcast();
+        }
+    }
+}
+
+impl Drop for ThreadData {
+    fn drop(&mut self) {
+        let children = self.children.lock().unwrap();
+        if !children.is_empty() {
+            let mut child_handles = Vec::new();
+            for child in children.iter() {
+                child_handles.push(child.thread_handle.clone());
+                SetEvent(child.inner.get_shutdown_event());
+            }
+
+            let ret = WaitForMultipleObjects(&child_handles, true);
+            debug_assert_eq!(ret, 0);
+        }
     }
 }
 

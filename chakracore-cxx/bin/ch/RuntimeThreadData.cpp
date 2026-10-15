@@ -20,20 +20,6 @@ RuntimeThreadData::RuntimeThreadData(HANDLE thread) :
 
 RuntimeThreadData::~RuntimeThreadData()
 {
-    if (!children_.empty()) {
-        std::vector<HANDLE> childrenHandles;
-
-        for (const auto &child : children_) {
-            childrenHandles.push_back(child->hThread);
-            SetEvent(child->hevntShutdown);
-        }
-
-        uint32_t waitRet = WaitForMultipleObjects(childrenHandles.size(), childrenHandles.data(), true);
-        assert(waitRet == WAIT_OBJECT_0);
-
-        children_.clear();
-    }
-
     CloseHandle(this->hevntReceivedBroadcast);
     CloseHandle(this->hevntShutdown);
     CloseHandle(this->hThread);
@@ -47,11 +33,8 @@ std::shared_ptr<RuntimeThreadData> RuntimeThreadData::NewWithHandle(HANDLE threa
     return std::make_shared<RuntimeThreadData>(thread);
 }
 
-void RuntimeThreadData::broadcast_to_children() const {
-    for (const auto &child : children_)
-    {
-        SetEvent(child->hevntReceivedBroadcast);
-    }
+void RuntimeThreadData::broadcast() const {
+    SetEvent(hevntReceivedBroadcast);
 }
 
 void RuntimeThreadData::set_shared_content(JsSharedArrayBufferContentHandle shared_content)
@@ -63,9 +46,6 @@ JsSharedArrayBufferContentHandle RuntimeThreadData::get_shared_content() const {
     return sharedContent_;
 }
 
-void RuntimeThreadData::add_child(const std::shared_ptr<RuntimeThreadData> &child) {
-    children_.push_back(child);
-}
 HANDLE RuntimeThreadData::get_received_broadcast_event() const {
     return hevntReceivedBroadcast;
 }

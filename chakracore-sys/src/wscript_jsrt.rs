@@ -44,7 +44,7 @@ thread_local! {
 }
 
 #[repr(transparent)]
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Handle(*mut std::ffi::c_void);
 
 unsafe impl cxx::ExternType for Handle {
@@ -121,11 +121,7 @@ mod ffi {
             shared_content: JsSharedArrayBufferContentHandle,
         );
         fn get_shared_content(self: &RuntimeThreadData) -> JsSharedArrayBufferContentHandle;
-        fn broadcast_to_children(self: &RuntimeThreadData);
-        unsafe fn add_child(
-            self: Pin<&mut RuntimeThreadData>,
-            child: &SharedPtr<RuntimeThreadData>,
-        );
+        fn broadcast(self: &RuntimeThreadData);
         fn get_received_broadcast_event(self: &RuntimeThreadData) -> Handle;
         fn get_shutdown_event(self: &RuntimeThreadData) -> Handle;
     }
@@ -142,6 +138,8 @@ mod ffi {
         ) -> Handle;
         #[namespace = "pal_ffi"]
         fn WaitForMultipleObjects(handles: &[Handle], wait_all: bool) -> u32;
+        #[namespace = "pal_ffi"]
+        fn SetEvent(handle: Handle) -> bool;
     }
 
     #[namespace = "chakra_rs"]
@@ -892,7 +890,7 @@ impl WScript {
             let mut td = thread_data.inner.clone();
             td.pin_mut_unchecked().set_shared_content(shared_content);
         }
-        thread_data.inner.broadcast_to_children();
+        thread_data.broadcast_to_children();
         ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(
             thread_data.inner.get_shared_content(),
         );
@@ -1309,20 +1307,19 @@ impl WScript {
                         let param: *mut ThreadDataContext = std::mem::transmute(param);
                         let thread_data_context = Box::from_raw(param);
 
-                        let child = ThreadData::new_with_initial_source(
+                        let child = Rc::new(ThreadData::new_with_initial_source(
                             thread_data_context.content,
                             thread_data_context.parent_report_tx.clone(),
                             thread_handle,
                             thread_data_context.parent.clone(),
-                        );
+                        ));
 
                         {
                             let parent = thread_data_context.parent.upgrade().unwrap();
-                            let mut parent = parent.inner.clone();
-                            parent.pin_mut_unchecked().add_child(&child.inner);
+                            parent.add_child(Rc::clone(&child));
                         }
 
-                        THREAD_DATA.set(Rc::new(child));
+                        THREAD_DATA.set(child);
                         THREAD_DATA.with_borrow(|child| {
                             child
                                 .thread_proc(

@@ -23,12 +23,9 @@ public:
 
     JsSharedArrayBufferContentHandle sharedContent_;
 
-    std::vector<std::shared_ptr<RuntimeThreadData>> children_;
-
-    void broadcast_to_children() const;
+    void broadcast() const;
     void set_shared_content(JsSharedArrayBufferContentHandle shared_content);
     JsSharedArrayBufferContentHandle get_shared_content() const;
-    void add_child(const std::shared_ptr<RuntimeThreadData> &child);
     HANDLE get_received_broadcast_event() const;
     HANDLE get_shutdown_event() const;
 };
