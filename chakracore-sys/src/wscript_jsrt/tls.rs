@@ -4,8 +4,9 @@ use crate::jsrt::{
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::WScript;
-use crate::wscript_jsrt::ffi::RuntimeThreadData;
+use crate::wscript_jsrt::ffi::{RuntimeThreadData, WaitForMultipleObjects};
 use cxx::{SharedPtr, WeakPtr};
+use std::cell::Cell;
 use std::sync::mpsc;
 use tokio::sync::oneshot;
 
@@ -15,6 +16,7 @@ pub(super) struct ThreadData {
     pub(super) report_queue_tx: mpsc::Sender<String>,
     report_queue_rx: mpsc::Receiver<String>,
     parent_report_tx: Option<mpsc::Sender<String>>,
+    leaving: Cell<bool>,
 }
 
 impl ThreadData {
@@ -27,6 +29,7 @@ impl ThreadData {
             report_queue_tx: tx,
             report_queue_rx: rx,
             parent_report_tx: None,
+            leaving: Cell::new(false),
         }
     }
 
@@ -43,6 +46,7 @@ impl ThreadData {
             report_queue_tx: tx,
             report_queue_rx: rx,
             parent_report_tx: Some(parent_report_tx),
+            leaving: Cell::new(false),
         }
     }
 
@@ -93,14 +97,31 @@ impl ThreadData {
             .send(())
             .map_err(|_| ThreadProcError::NotificationFailed)?;
 
-        let res = self.inner.ThreadProc(
-            runtime,
-            |parent, callback| {
-                let _ = Self::on_receive_broadcast(parent, callback);
-            },
-            Self::on_shutdown,
-        );
-        Ok(res)
+        let handles = [
+            self.inner.get_received_broadcast_event(),
+            self.inner.get_shutdown_event(),
+        ];
+
+        // loop waiting for work
+        loop {
+            let wait = WaitForMultipleObjects(&handles, false);
+
+            if wait == 0 {
+                Self::on_receive_broadcast(
+                    &self.inner.get_parent(),
+                    &self.inner.get_receive_broadcast_callback_func(),
+                )?;
+            }
+
+            if wait == 1 || self.leaving.get() {
+                Self::on_shutdown(&self.inner.get_receive_broadcast_callback_func(), runtime);
+                return Ok(0);
+            }
+
+            if wait != 0 {
+                unreachable!();
+            }
+        }
     }
 
     fn on_receive_broadcast(
@@ -160,6 +181,10 @@ impl ThreadData {
             Err(mpsc::TryRecvError::Empty) => Ok(None),
             Err(x) => Err(ReportQueueError::ReportRecvError(x)),
         }
+    }
+
+    pub(super) fn set_leaving(&self, leaving: bool) {
+        self.leaving.set(leaving);
     }
 }
 

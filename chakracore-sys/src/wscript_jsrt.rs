@@ -114,7 +114,6 @@ mod ffi {
         #[Self = "RuntimeThreadData"]
         fn New() -> SharedPtr<RuntimeThreadData>;
 
-        fn set_leaving(self: Pin<&mut RuntimeThreadData>, mLeaving: bool);
         fn set_shared_content(
             self: Pin<&mut RuntimeThreadData>,
             shared_content: JsSharedArrayBufferContentHandle,
@@ -134,16 +133,10 @@ mod ffi {
             self: Pin<&mut RuntimeThreadData>,
             parent: &WeakPtr<RuntimeThreadData>,
         );
-        fn ThreadProc(
-            self: &RuntimeThreadData,
-            runtime: JsRuntimeHandle,
-            on_received_broadcast: fn(
-                parent: &WeakPtr<RuntimeThreadData>,
-                receive_broadcast_callback_func: &JsValueRef,
-            ),
-            on_shutdown: fn(receive_broadcast_callback_func: &JsValueRef, runtime: JsRuntimeHandle),
-        ) -> u32;
+        fn get_parent(self: &RuntimeThreadData) -> WeakPtr<RuntimeThreadData>;
         fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
+        fn get_received_broadcast_event(self: &RuntimeThreadData) -> Handle;
+        fn get_shutdown_event(self: &RuntimeThreadData) -> Handle;
     }
 
     unsafe extern "C++" {
@@ -156,6 +149,8 @@ mod ffi {
             param: *mut CVoid,
             creation_flags: u32,
         ) -> Handle;
+        #[namespace = "pal_ffi"]
+        fn WaitForMultipleObjects(handles: &[Handle], wait_all: bool) -> u32;
     }
 
     #[namespace = "chakra_rs"]
@@ -510,9 +505,7 @@ impl WScript {
 
     fn leaving_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if !args.arguments.is_empty() {
-            let mut thread_data = THREAD_DATA.with_borrow(|x| x.inner.clone());
-            let thread_data = unsafe { thread_data.pin_mut_unchecked() };
-            thread_data.set_leaving(true);
+            THREAD_DATA.with_borrow(|x| x.set_leaving(true));
         }
 
         Ok(())

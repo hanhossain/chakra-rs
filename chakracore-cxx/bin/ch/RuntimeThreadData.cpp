@@ -6,14 +6,12 @@
 
 #include "ChakraRtInterface.h"
 #include "WScriptJsrt.h"
-#include "chakra/Logger.h"
 #include "chakracore-sys/src/wscript_jsrt.rs.h"
 
 RuntimeThreadData::RuntimeThreadData() :
     hThread(nullptr),
     sharedContent_(nullptr),
-    receiveBroadcastCallbackFunc(nullptr),
-    leaving_(false)
+    receiveBroadcastCallbackFunc(nullptr)
 {
     this->hevntReceivedBroadcast = CreateEventW(FALSE, FALSE);
     this->hevntShutdown = CreateEventW(TRUE, FALSE);
@@ -29,7 +27,7 @@ RuntimeThreadData::~RuntimeThreadData()
             SetEvent(child->hevntShutdown);
         }
 
-        uint32_t waitRet = WaitForMultipleObjects(childrenHandles.size(), childrenHandles.data(), TRUE, INFINITE);
+        uint32_t waitRet = WaitForMultipleObjects(childrenHandles.size(), childrenHandles.data(), true);
         assert(waitRet == WAIT_OBJECT_0);
 
         children_.clear();
@@ -42,47 +40,6 @@ RuntimeThreadData::~RuntimeThreadData()
 
 std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
     return std::make_shared<RuntimeThreadData>();
-}
-
-uint32_t RuntimeThreadData::ThreadProc(
-    JsRuntimeHandle runtime,
-    rust::Fn<void(const std::weak_ptr<RuntimeThreadData> &parent, const JsValueRef &receiveBroadcastCallbackFunc)>
-        onReceiveBroadcast,
-    rust::Fn<void(const JsValueRef &receiveBroadcastCallbackFunc, JsRuntimeHandle runtime)> onShutdown) const {
-    auto span = chakra::Span::create("RuntimeThreadData::ThreadProc");
-
-    // loop waiting for work;
-
-    while (true)
-    {
-        HANDLE handles[] = { this->hevntReceivedBroadcast, this->hevntShutdown };
-        uint32_t waitRet = WaitForMultipleObjects(std::size(handles), handles, false, INFINITE);
-
-        if (waitRet == WAIT_OBJECT_0)
-        {
-            onReceiveBroadcast(parent_, receiveBroadcastCallbackFunc);
-        }
-
-        if (waitRet == WAIT_OBJECT_0 + 1 || leaving_)
-        {
-            onShutdown(receiveBroadcastCallbackFunc, runtime);
-            return 0;
-        }
-        else if (waitRet != WAIT_OBJECT_0)
-        {
-            assert(false);
-            break;
-        }
-    }
-
-    ChakraRTInterface::JsSetCurrentContext(nullptr);
-    ChakraRTInterface::JsDisposeRuntime(runtime);
-    return 0;
-}
-
-void RuntimeThreadData::set_leaving(bool leaving)
-{
-    leaving_ = leaving;
 }
 
 void RuntimeThreadData::broadcast_to_children() const {
@@ -116,6 +73,15 @@ void RuntimeThreadData::add_child(const std::shared_ptr<RuntimeThreadData> &chil
 void RuntimeThreadData::set_parent(const std::weak_ptr<RuntimeThreadData> &parentThread) {
     parent_ = parentThread;
 }
+std::weak_ptr<RuntimeThreadData> RuntimeThreadData::get_parent() const {
+    return parent_;
+}
 void RuntimeThreadData::set_thread_handle(HANDLE thread) {
     hThread = thread;
+}
+HANDLE RuntimeThreadData::get_received_broadcast_event() const {
+    return hevntReceivedBroadcast;
+}
+HANDLE RuntimeThreadData::get_shutdown_event() const {
+    return hevntShutdown;
 }

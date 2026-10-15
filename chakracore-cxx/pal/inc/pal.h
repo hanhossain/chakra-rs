@@ -326,8 +326,7 @@ uint32_t
 WaitForMultipleObjects(
                 uint32_t nCount,
                 const HANDLE *lpHandles,
-                BOOL bWaitAll,
-                uint32_t dwMilliseconds);
+                bool bWaitAll);
 
 uint32_t
 WaitForMultipleObjectsEx(

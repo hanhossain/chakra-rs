@@ -78,15 +78,14 @@ See MSDN doc.
 uint32_t
 WaitForMultipleObjects( uint32_t nCount,
                         const HANDLE *lpHandles,
-                        BOOL bWaitAll,
-                        uint32_t dwMilliseconds)
+                        bool bWaitAll)
 {
     uint32_t dwRet;
 
     CPalThread * pThread = InternalGetCurrentThread();
 
     dwRet = InternalWaitForMultipleObjectsEx(pThread, nCount, lpHandles,
-                                             bWaitAll, dwMilliseconds, FALSE);
+                                             bWaitAll, INFINITE, FALSE);
 
     LOGEXIT("WaitForMultipleObjects returns DWORD %u\n", dwRet);
     return dwRet;
