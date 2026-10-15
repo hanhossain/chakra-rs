@@ -132,11 +132,6 @@ mod ffi {
             self: Pin<&mut RuntimeThreadData>,
             child: &SharedPtr<RuntimeThreadData>,
         );
-        unsafe fn set_parent(
-            self: Pin<&mut RuntimeThreadData>,
-            parent: &WeakPtr<RuntimeThreadData>,
-        );
-        fn get_parent(self: &RuntimeThreadData) -> WeakPtr<RuntimeThreadData>;
         fn get_received_broadcast_event(self: &RuntimeThreadData) -> Handle;
         fn get_shutdown_event(self: &RuntimeThreadData) -> Handle;
     }
@@ -168,6 +163,8 @@ mod ffi {
             is_file: bool,
         ) -> JsValueRef;
     }
+
+    impl WeakPtr<RuntimeThreadData> {}
 }
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
@@ -1330,21 +1327,17 @@ impl WScript {
                         let param: *mut ThreadDataContext = std::mem::transmute(param);
                         let mut thread_data_context = Box::from_raw(param);
 
-                        let mut child = ThreadData::new_with_initial_source(
+                        let child = ThreadData::new_with_initial_source(
                             thread_data_context.content,
                             thread_data_context.parent_report_tx.clone(),
                             thread_handle,
+                            &thread_data_context.parent.downgrade(),
                         );
 
                         thread_data_context
                             .parent
                             .pin_mut_unchecked()
                             .add_child(&child.inner);
-
-                        {
-                            let child = child.inner.pin_mut_unchecked();
-                            child.set_parent(&thread_data_context.parent.downgrade());
-                        }
 
                         THREAD_DATA.set(Rc::new(child));
                         THREAD_DATA.with_borrow(|child| {

@@ -17,6 +17,7 @@ pub(super) struct ThreadData {
     report_queue_rx: mpsc::Receiver<String>,
     parent_report_tx: Option<mpsc::Sender<String>>,
     leaving: Cell<bool>,
+    parent: Option<WeakPtr<RuntimeThreadData>>,
 }
 
 impl ThreadData {
@@ -30,6 +31,7 @@ impl ThreadData {
             report_queue_rx: rx,
             parent_report_tx: None,
             leaving: Cell::new(false),
+            parent: None,
         }
     }
 
@@ -37,6 +39,7 @@ impl ThreadData {
         source: &str,
         parent_report_tx: mpsc::Sender<String>,
         thread_handle: Handle,
+        parent: &WeakPtr<RuntimeThreadData>,
     ) -> Self {
         let initial_source = source.to_owned();
         let inner = RuntimeThreadData::NewWithHandle(thread_handle);
@@ -48,6 +51,7 @@ impl ThreadData {
             report_queue_rx: rx,
             parent_report_tx: Some(parent_report_tx),
             leaving: Cell::new(false),
+            parent: Some(parent.clone()),
         }
     }
 
@@ -109,7 +113,7 @@ impl ThreadData {
 
             if wait == 0 {
                 Self::on_receive_broadcast(
-                    &self.inner.get_parent(),
+                    self.parent.as_ref().unwrap(),
                     &self.inner.get_receive_broadcast_callback_func(),
                 )?;
             }

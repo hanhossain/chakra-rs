@@ -76,12 +76,6 @@ void RuntimeThreadData::set_receive_broadcast_callback_func(JsValueRef value)
 void RuntimeThreadData::add_child(const std::shared_ptr<RuntimeThreadData> &child) {
     children_.push_back(child);
 }
-void RuntimeThreadData::set_parent(const std::weak_ptr<RuntimeThreadData> &parentThread) {
-    parent_ = parentThread;
-}
-std::weak_ptr<RuntimeThreadData> RuntimeThreadData::get_parent() const {
-    return parent_;
-}
 HANDLE RuntimeThreadData::get_received_broadcast_event() const {
     return hevntReceivedBroadcast;
 }

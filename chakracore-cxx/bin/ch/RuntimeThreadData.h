@@ -23,7 +23,6 @@ public:
 
     JsSharedArrayBufferContentHandle sharedContent_;
     JsValueRef receiveBroadcastCallbackFunc;
-    std::weak_ptr<RuntimeThreadData> parent_;
 
     std::vector<std::shared_ptr<RuntimeThreadData>> children_;
 
@@ -33,8 +32,6 @@ public:
     JsValueRef get_receive_broadcast_callback_func() const;
     void set_receive_broadcast_callback_func(JsValueRef value);
     void add_child(const std::shared_ptr<RuntimeThreadData> &child);
-    void set_parent(const std::weak_ptr<RuntimeThreadData> &parentThread);
-    std::weak_ptr<RuntimeThreadData> get_parent() const;
     HANDLE get_received_broadcast_event() const;
     HANDLE get_shutdown_event() const;
 };
