@@ -13,8 +13,10 @@ class RuntimeThreadData
 {
 public:
     RuntimeThreadData();
+    explicit RuntimeThreadData(HANDLE thread);
     ~RuntimeThreadData();
     static std::shared_ptr<RuntimeThreadData> New();
+    static std::shared_ptr<RuntimeThreadData> NewWithHandle(HANDLE thread);
     HANDLE hevntReceivedBroadcast;
     HANDLE hevntShutdown;
     HANDLE hThread;
@@ -33,7 +35,6 @@ public:
     void add_child(const std::shared_ptr<RuntimeThreadData> &child);
     void set_parent(const std::weak_ptr<RuntimeThreadData> &parentThread);
     std::weak_ptr<RuntimeThreadData> get_parent() const;
-    void set_thread_handle(HANDLE thread);
     HANDLE get_received_broadcast_event() const;
     HANDLE get_shutdown_event() const;
 };

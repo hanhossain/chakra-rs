@@ -45,6 +45,7 @@ thread_local! {
 }
 
 #[repr(transparent)]
+#[derive(Default)]
 pub struct Handle(*mut std::ffi::c_void);
 
 unsafe impl cxx::ExternType for Handle {
@@ -113,6 +114,8 @@ mod ffi {
 
         #[Self = "RuntimeThreadData"]
         fn New() -> SharedPtr<RuntimeThreadData>;
+        #[Self = "RuntimeThreadData"]
+        fn NewWithHandle(thread_handle: Handle) -> SharedPtr<RuntimeThreadData>;
 
         fn set_shared_content(
             self: Pin<&mut RuntimeThreadData>,
@@ -134,7 +137,6 @@ mod ffi {
             parent: &WeakPtr<RuntimeThreadData>,
         );
         fn get_parent(self: &RuntimeThreadData) -> WeakPtr<RuntimeThreadData>;
-        fn set_thread_handle(self: Pin<&mut RuntimeThreadData>, thread: Handle);
         fn get_received_broadcast_event(self: &RuntimeThreadData) -> Handle;
         fn get_shutdown_event(self: &RuntimeThreadData) -> Handle;
     }
@@ -1331,6 +1333,7 @@ impl WScript {
                         let mut child = ThreadData::new_with_initial_source(
                             thread_data_context.content,
                             thread_data_context.parent_report_tx.clone(),
+                            thread_handle,
                         );
 
                         thread_data_context
@@ -1339,11 +1342,8 @@ impl WScript {
                             .add_child(&child.inner);
 
                         {
-                            let mut child = child.inner.pin_mut_unchecked();
-                            child
-                                .as_mut()
-                                .set_parent(&thread_data_context.parent.downgrade());
-                            child.as_mut().set_thread_handle(thread_handle);
+                            let child = child.inner.pin_mut_unchecked();
+                            child.set_parent(&thread_data_context.parent.downgrade());
                         }
 
                         THREAD_DATA.set(Rc::new(child));

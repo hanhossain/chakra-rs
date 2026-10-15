@@ -8,8 +8,10 @@
 #include "WScriptJsrt.h"
 #include "chakracore-sys/src/wscript_jsrt.rs.h"
 
-RuntimeThreadData::RuntimeThreadData() :
-    hThread(nullptr),
+RuntimeThreadData::RuntimeThreadData() : RuntimeThreadData(nullptr) {}
+
+RuntimeThreadData::RuntimeThreadData(HANDLE thread) :
+    hThread(thread),
     sharedContent_(nullptr),
     receiveBroadcastCallbackFunc(nullptr)
 {
@@ -40,6 +42,10 @@ RuntimeThreadData::~RuntimeThreadData()
 
 std::shared_ptr<RuntimeThreadData> RuntimeThreadData::New() {
     return std::make_shared<RuntimeThreadData>();
+}
+
+std::shared_ptr<RuntimeThreadData> RuntimeThreadData::NewWithHandle(HANDLE thread) {
+    return std::make_shared<RuntimeThreadData>(thread);
 }
 
 void RuntimeThreadData::broadcast_to_children() const {
@@ -75,9 +81,6 @@ void RuntimeThreadData::set_parent(const std::weak_ptr<RuntimeThreadData> &paren
 }
 std::weak_ptr<RuntimeThreadData> RuntimeThreadData::get_parent() const {
     return parent_;
-}
-void RuntimeThreadData::set_thread_handle(HANDLE thread) {
-    hThread = thread;
 }
 HANDLE RuntimeThreadData::get_received_broadcast_event() const {
     return hevntReceivedBroadcast;

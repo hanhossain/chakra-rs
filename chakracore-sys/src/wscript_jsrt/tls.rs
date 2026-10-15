@@ -3,8 +3,8 @@ use crate::jsrt::{
     JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
-use crate::wscript_jsrt::WScript;
 use crate::wscript_jsrt::ffi::{RuntimeThreadData, WaitForMultipleObjects};
+use crate::wscript_jsrt::{Handle, WScript};
 use cxx::{SharedPtr, WeakPtr};
 use std::cell::Cell;
 use std::sync::mpsc;
@@ -36,9 +36,10 @@ impl ThreadData {
     pub(super) fn new_with_initial_source(
         source: &str,
         parent_report_tx: mpsc::Sender<String>,
+        thread_handle: Handle,
     ) -> Self {
         let initial_source = source.to_owned();
-        let inner = RuntimeThreadData::New();
+        let inner = RuntimeThreadData::NewWithHandle(thread_handle);
         let (tx, rx) = mpsc::channel();
         Self {
             inner,
