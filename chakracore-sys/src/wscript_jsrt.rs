@@ -10,7 +10,6 @@ use crate::jsrt::{
 use crate::messages::{CallbackMessage, Message, ModuleMessage};
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
-use crate::wscript_jsrt::ffi::RuntimeThreadData;
 use crate::wscript_jsrt::tls::ThreadData;
 use cxx::UniquePtr;
 pub use ffi::{MessageQueue, WScriptJsrt};
@@ -19,7 +18,7 @@ use std::collections::HashMap;
 use std::hash::Hash;
 use std::path::PathBuf;
 use std::pin::Pin;
-use std::rc::Rc;
+use std::rc::{Rc, Weak};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, LazyLock, RwLock, mpsc};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
@@ -1315,7 +1314,7 @@ impl WScript {
             let (tx_initial_script_complete, rx_initial_script_complete) = oneshot::channel();
             let context = THREAD_DATA.with_borrow(|x| ThreadDataContext {
                 wscript: &self,
-                parent: x.inner.clone(),
+                parent: Rc::downgrade(x),
                 content: content.unwrap(),
                 sender: tx_initial_script_complete,
                 parent_report_tx: x.report_queue_tx.clone(),
@@ -1325,19 +1324,20 @@ impl WScript {
                 ffi::CreateThread(
                     |param, thread_handle| {
                         let param: *mut ThreadDataContext = std::mem::transmute(param);
-                        let mut thread_data_context = Box::from_raw(param);
+                        let thread_data_context = Box::from_raw(param);
 
                         let child = ThreadData::new_with_initial_source(
                             thread_data_context.content,
                             thread_data_context.parent_report_tx.clone(),
                             thread_handle,
-                            &thread_data_context.parent.downgrade(),
+                            thread_data_context.parent.clone(),
                         );
 
-                        thread_data_context
-                            .parent
-                            .pin_mut_unchecked()
-                            .add_child(&child.inner);
+                        {
+                            let parent = thread_data_context.parent.upgrade().unwrap();
+                            let mut parent = parent.inner.clone();
+                            parent.pin_mut_unchecked().add_child(&child.inner);
+                        }
 
                         THREAD_DATA.set(Rc::new(child));
                         THREAD_DATA.with_borrow(|child| {
@@ -1524,7 +1524,7 @@ impl WScript {
 
 struct ThreadDataContext<'a> {
     wscript: &'a WScript,
-    parent: cxx::SharedPtr<RuntimeThreadData>,
+    parent: Weak<ThreadData>,
     content: &'a str,
     sender: oneshot::Sender<()>,
     parent_report_tx: mpsc::Sender<String>,

@@ -5,8 +5,9 @@ use crate::jsrt::{
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::ffi::{RuntimeThreadData, WaitForMultipleObjects};
 use crate::wscript_jsrt::{Handle, WScript};
-use cxx::{SharedPtr, WeakPtr};
+use cxx::SharedPtr;
 use std::cell::Cell;
+use std::rc::Weak;
 use std::sync::mpsc;
 use tokio::sync::oneshot;
 
@@ -17,7 +18,7 @@ pub(super) struct ThreadData {
     report_queue_rx: mpsc::Receiver<String>,
     parent_report_tx: Option<mpsc::Sender<String>>,
     leaving: Cell<bool>,
-    parent: Option<WeakPtr<RuntimeThreadData>>,
+    parent: Weak<ThreadData>,
 }
 
 impl ThreadData {
@@ -31,7 +32,7 @@ impl ThreadData {
             report_queue_rx: rx,
             parent_report_tx: None,
             leaving: Cell::new(false),
-            parent: None,
+            parent: Weak::new(),
         }
     }
 
@@ -39,7 +40,7 @@ impl ThreadData {
         source: &str,
         parent_report_tx: mpsc::Sender<String>,
         thread_handle: Handle,
-        parent: &WeakPtr<RuntimeThreadData>,
+        parent: Weak<ThreadData>,
     ) -> Self {
         let initial_source = source.to_owned();
         let inner = RuntimeThreadData::NewWithHandle(thread_handle);
@@ -51,7 +52,7 @@ impl ThreadData {
             report_queue_rx: rx,
             parent_report_tx: Some(parent_report_tx),
             leaving: Cell::new(false),
-            parent: Some(parent.clone()),
+            parent,
         }
     }
 
@@ -112,10 +113,7 @@ impl ThreadData {
             let wait = WaitForMultipleObjects(&handles, false);
 
             if wait == 0 {
-                Self::on_receive_broadcast(
-                    self.parent.as_ref().unwrap(),
-                    &self.inner.get_receive_broadcast_callback_func(),
-                )?;
+                self.on_receive_broadcast(&self.inner.get_receive_broadcast_callback_func())?;
             }
 
             if wait == 1 || self.leaving.get() {
@@ -130,14 +128,14 @@ impl ThreadData {
     }
 
     fn on_receive_broadcast(
-        parent: &WeakPtr<RuntimeThreadData>,
+        &self,
         receive_broadcast_callback_func: &JsValueRef,
     ) -> Result<(), JsError> {
         let global = ChakraRt::get_global_object()?;
         let mut shared_buffer = JsValueRef::default();
         unsafe {
-            let parent = parent.upgrade();
-            let shared_content = parent.get_shared_content();
+            let parent = self.parent.upgrade().unwrap();
+            let shared_content = parent.inner.get_shared_content();
             ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(
                 shared_content,
                 &raw mut shared_buffer,
