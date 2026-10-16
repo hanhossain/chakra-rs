@@ -140,35 +140,3 @@ public:
     static JsErrorCode JsGetArrayBufferFreeFunction(JsValueRef buffer, ArrayBufferFreeFn* freeFn) { return chakracore::jsrt::JsGetArrayBufferFreeFunction(buffer, freeFn); }
     static JsErrorCode JsExternalizeArrayBuffer(JsValueRef buffer) { return chakracore::jsrt::JsExternalizeArrayBuffer(buffer); }
 };
-
-class AutoRestoreContext
-{
-public:
-    AutoRestoreContext(JsContextRef newContext)
-    {
-        JsErrorCode errorCode = ChakraRTInterface::JsGetCurrentContext(&oldContext);
-        assert(errorCode == JsNoError);
-
-        if (oldContext != newContext)
-        {
-            errorCode = ChakraRTInterface::JsSetCurrentContext(newContext);
-            assert(errorCode == JsNoError);
-            contextChanged = true;
-        }
-        else
-        {
-            contextChanged = false;
-        }
-    }
-
-    ~AutoRestoreContext()
-    {
-        if (contextChanged && oldContext != JS_INVALID_REFERENCE)
-        {
-            ChakraRTInterface::JsSetCurrentContext(oldContext);
-        }
-    }
-private:
-    JsContextRef oldContext;
-    bool contextChanged;
-};
