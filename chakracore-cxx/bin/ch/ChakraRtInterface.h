@@ -16,17 +16,7 @@
 
 class ChakraRTInterface
 {
-private:
-    static bool m_testHooksSetup;
-    static bool m_testHooksInitialized;
-    static bool m_usageStringPrinted;
-
-private:
-    static int32_t ParseConfigFlags(const rust::Vec<rust::String> &vargs);
-
 public:
-    static int32_t InitializeTestHooks(const rust::Vec<rust::String> &vargs);
-
     static JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, threadService, runtime); }
     static JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, nullptr, runtime); }
     static JsErrorCode JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return chakracore::jsrt::JsCreateContext(runtime, newContext); }

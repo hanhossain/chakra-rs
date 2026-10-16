@@ -1,6 +1,6 @@
 use crate::{Error, hresult_to_result};
 use chakracore_sys::config::ConfigContext;
-use chakracore_sys::helpers::ScriptCache;
+use chakracore_sys::helpers::{ScriptCache, TestHooks};
 use chakracore_sys::jsrt::{
     ChakraRt, JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
     JsRuntimeHandle, JsSourceContext, JsValueRef,
@@ -13,7 +13,7 @@ use std::str::FromStr;
 #[tracing::instrument(skip(config))]
 pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     // handle command line flags
-    hresult_to_result(ChakraRTInterface::InitializeTestHooks(&config.core.args))?;
+    parse_config_flags(&config.core.args)?;
 
     let file_contents = ScriptCache::get_script(&config.core.filename)?;
     let mut runtime = JsRuntimeHandle::default();
@@ -70,6 +70,36 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     }
 
     Ok(())
+}
+
+pub fn print_usage() {
+    #[cfg(debug_assertions)]
+    {
+        println!("\nUsage: ch [-v|--version] [-h|--help] [-?] [flaglist] <source file>");
+        println!("\t-v|--version\t\tDisplays version info");
+        println!("\t-h|--help\t\tDisplays this help message");
+        println!("\t-?\t\t\tDisplays this help message with complete [flaglist] info");
+    }
+
+    #[cfg(not(debug_assertions))]
+    {
+        println!("\nUsage: ch [-v|--version] [-h|--help|-?] <source file>");
+        println!(
+            "Note: [flaglist] is not supported in Release builds; try a Debug or Test build to enable these flags."
+        );
+        println!("\t-v|--version\t\tDisplays version info");
+        println!("\t-h|--help|-?\t\tDisplays this help message");
+    }
+}
+
+fn parse_config_flags(args: &Vec<String>) -> Result<(), Error> {
+    TestHooks::SetAssertToConsoleFlag(true);
+    let Err(err) = hresult_to_result(TestHooks::SetConfigFlags(args)) else {
+        return Ok(());
+    };
+
+    print_usage();
+    Err(err)
 }
 
 #[tracing::instrument(skip(contents, wscript))]

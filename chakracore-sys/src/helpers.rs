@@ -13,6 +13,9 @@ mod ffi {
 
         #[Self = "TestHooks"]
         fn SetConfigFlags(vargs: &Vec<String>) -> i32;
+
+        #[Self = "TestHooks"]
+        fn SetAssertToConsoleFlag(flag: bool) -> i32;
     }
 
     #[namespace = "chakra_rs::helpers"]

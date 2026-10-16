@@ -1,5 +1,4 @@
 add_library(chhelper
-    ChakraRtInterface.cpp
     WScriptJsrt.cpp
     ../ChakraCore/TestHooks.cpp
 )

@@ -7,9 +7,6 @@ mod ffi {
 
         type ChakraRTInterface;
 
-        #[Self = "ChakraRTInterface"]
-        fn InitializeTestHooks(vargs: &Vec<String>) -> i32;
-
         type JsErrorCode = crate::jsrt::JsErrorCode;
         type JsRuntimeAttributes = crate::jsrt::JsRuntimeAttributes;
         type JsParseScriptAttributes = crate::jsrt::JsParseScriptAttributes;

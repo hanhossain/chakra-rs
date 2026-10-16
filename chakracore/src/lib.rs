@@ -1,4 +1,4 @@
-mod chhelper;
+pub mod chhelper;
 
 use crate::chhelper::execute_test;
 use chakracore_sys::config::ConfigContext;
