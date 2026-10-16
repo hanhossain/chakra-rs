@@ -7,7 +7,7 @@ use crate::jsrt::{
     JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
     JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
 };
-use crate::messages::{CallbackMessage, Message, ModuleMessage};
+use crate::messages::Message;
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::tls::ThreadData;
@@ -562,7 +562,7 @@ impl WScript {
         assert!(!task.is_null());
 
         unsafe {
-            let msg = Message::new_callback(CallbackMessage::new(0, task, &self));
+            let msg = Message::new_callback(0, task, &self);
             Pin::new_unchecked(&mut *message_queue).InsertSorted(msg);
         }
     }
@@ -637,12 +637,7 @@ impl WScript {
         if let Some(module_error) = guard.get(&referencing_module)
             && *module_error != ModuleState::ErroredModule
         {
-            let msg = Message::new_module(ModuleMessage::new(
-                referencing_module,
-                JsValueRef::default(),
-                None,
-                &self,
-            ));
+            let msg = Message::new_module(referencing_module, JsValueRef::default(), None, &self);
             unsafe {
                 Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);
             }
@@ -817,12 +812,8 @@ impl WScript {
             .write()
             .unwrap()
             .insert(module_record.clone(), ModuleState::ImportedModule);
-        let module_message = Message::new_module(ModuleMessage::new(
-            referencing_module,
-            specifier,
-            abs_path.to_str(),
-            self,
-        ));
+        let module_message =
+            Message::new_module(referencing_module, specifier, abs_path.to_str(), self);
         unsafe {
             Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(module_message);
             *dependent_module_record = module_record;
@@ -902,7 +893,7 @@ impl WScript {
 
         let function = args.arguments[1].clone();
         let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
-        let msg = Message::new_callback(CallbackMessage::new(time, function, &self));
+        let msg = Message::new_callback(time, function, &self);
         let msg_id = msg.get_id();
         unsafe {
             Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);

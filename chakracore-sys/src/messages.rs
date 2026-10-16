@@ -39,19 +39,36 @@ enum MessageInner<'a> {
 
 pub struct Message<'a> {
     msg: MessageInner<'a>,
+    time: u32,
+    id: u32,
 }
 
 impl<'a> Message<'a> {
-    #[tracing::instrument(skip(msg))]
-    pub(crate) fn new_callback(msg: CallbackMessage<'a>) -> Box<Self> {
+    fn new_id() -> u32 {
+        MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed)
+    }
+    pub(crate) fn new_callback(time: u32, function: JsValueRef, wscript: &'a WScript) -> Box<Self> {
         Box::new(Self {
-            msg: MessageInner::Callback(msg),
+            msg: MessageInner::Callback(CallbackMessage::new(function, wscript)),
+            time,
+            id: Self::new_id(),
         })
     }
-    #[tracing::instrument(skip(msg))]
-    pub(crate) fn new_module(msg: ModuleMessage<'a>) -> Box<Self> {
+    pub(crate) fn new_module(
+        module_record: JsModuleRecord,
+        specifier: JsValueRef,
+        full_path: Option<&str>,
+        wscript: &'a WScript,
+    ) -> Box<Self> {
         Box::new(Self {
-            msg: MessageInner::Module(msg),
+            msg: MessageInner::Module(ModuleMessage::new(
+                module_record,
+                specifier,
+                full_path,
+                wscript,
+            )),
+            time: 0,
+            id: Self::new_id(),
         })
     }
 
@@ -62,50 +79,30 @@ impl<'a> Message<'a> {
             MessageInner::Module(msg) => msg.call(filename),
         }
     }
-    #[tracing::instrument(skip(self))]
     fn get_time(&self) -> u32 {
-        match &self.msg {
-            MessageInner::Callback(msg) => msg.get_time(),
-            MessageInner::Module(msg) => msg.get_time(),
-        }
+        self.time
     }
-    #[tracing::instrument(skip(self))]
     fn begin_timer(&mut self) {
-        match &mut self.msg {
-            MessageInner::Callback(msg) => msg.begin_timer(),
-            MessageInner::Module(msg) => msg.begin_timer(),
-        }
+        self.time += ffi::GetTickCount();
     }
-    #[tracing::instrument(skip(self))]
     pub(crate) fn get_id(&self) -> u32 {
-        match &self.msg {
-            MessageInner::Callback(msg) => msg.get_id(),
-            MessageInner::Module(msg) => msg.get_id(),
-        }
+        self.id
     }
 }
 
-pub(crate) struct CallbackMessage<'a> {
+struct CallbackMessage<'a> {
     function: JsValueRef,
-    time: u32,
-    id: u32,
     wscript: &'a WScript,
 }
 
 impl<'a> CallbackMessage<'a> {
-    pub(crate) fn new(time: u32, function: JsValueRef, wscript: &'a WScript) -> Self {
-        let id = MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed);
+    fn new(function: JsValueRef, wscript: &'a WScript) -> Self {
         unsafe {
             ChakraRTInterface::JsAddRef(function.as_js_ref(), std::ptr::null_mut())
                 .as_result()
                 .unwrap();
         }
-        Self {
-            time,
-            function,
-            id,
-            wscript,
-        }
+        Self { function, wscript }
     }
 
     #[tracing::instrument(skip(self), err)]
@@ -150,18 +147,6 @@ impl<'a> CallbackMessage<'a> {
     fn call(&self, filename: &str) {
         let _ = self.internal_call(filename);
     }
-
-    fn get_time(&self) -> u32 {
-        self.time
-    }
-
-    fn begin_timer(&mut self) {
-        self.time += ffi::GetTickCount();
-    }
-
-    fn get_id(&self) -> u32 {
-        self.id
-    }
 }
 
 impl<'a> Drop for CallbackMessage<'a> {
@@ -182,23 +167,20 @@ impl<'a> Drop for CallbackMessage<'a> {
     }
 }
 
-pub(crate) struct ModuleMessage<'a> {
+struct ModuleMessage<'a> {
     module_record: JsModuleRecord,
     specifier: JsValueRef,
     full_path: Option<String>,
-    time: u32,
-    id: u32,
     wscript: &'a WScript,
 }
 
 impl<'a> ModuleMessage<'a> {
-    pub(crate) fn new(
+    fn new(
         module_record: JsModuleRecord,
         specifier: JsValueRef,
         full_path: Option<&str>,
         wscript: &'a WScript,
     ) -> Self {
-        let id = MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed);
         let mut path: Option<String> = None;
         unsafe {
             ChakraRTInterface::JsAddRef(module_record.as_js_ref(), std::ptr::null_mut());
@@ -214,8 +196,6 @@ impl<'a> ModuleMessage<'a> {
             module_record,
             specifier,
             full_path: path,
-            time: 0,
-            id,
             wscript,
         }
     }
@@ -295,18 +275,6 @@ impl<'a> ModuleMessage<'a> {
         };
         self.wscript
             .print_exception(filename, err.into(), JsValueRef::default());
-    }
-
-    fn get_time(&self) -> u32 {
-        self.time
-    }
-
-    fn begin_timer(&mut self) {
-        self.time += ffi::GetTickCount();
-    }
-
-    fn get_id(&self) -> u32 {
-        self.id
     }
 }
 
