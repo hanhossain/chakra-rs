@@ -1,6 +1,8 @@
 use crate::common;
 use crate::common::Variant;
 use rstest::rstest;
+#[cfg(not(feature = "optimized-tests"))]
+use std::collections::HashSet;
 
 const DIRECTORY: &str = "../chakracore-cxx/test/Miscellaneous";
 
@@ -30,7 +32,7 @@ fn long_string_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "longstring.js",
         compile_flags: vec!["-recyclerVerify"],
-        tags: std::collections::HashSet::from(["exclude_test"]),
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
@@ -61,6 +63,22 @@ fn set_timeout_js(#[case] variant: Variant) {
         directory: DIRECTORY,
         source_path: "SetTimeout.js",
         baseline_path: Some("SetTimeout.baseline"),
+        ..Default::default()
+    };
+    common::run_test_variant(test, variant, common::DEFAULT_TAGS);
+}
+
+#[cfg(not(feature = "optimized-tests"))]
+#[rstest]
+#[case::interpreted(Variant::Interpreted)]
+#[case::dynapogo(Variant::Dynapogo)]
+#[case::disable_jit(Variant::DisableJit)]
+fn clear_timeout_js(#[case] variant: Variant) {
+    let test = common::Test {
+        directory: DIRECTORY,
+        source_path: "ClearTimeout.js",
+        baseline_path: Some("ClearTimeout.baseline"),
+        tags: HashSet::from(["exclude_test"]),
         ..Default::default()
     };
     common::run_test_variant(test, variant, common::DEFAULT_TAGS);
