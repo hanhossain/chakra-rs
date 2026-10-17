@@ -1,7 +1,7 @@
 use crate::helpers::ScriptCache;
 use crate::jsrt::{
-    ChakraRt, JsError, JsErrorCode, JsModuleRecord, JsParseScriptAttributes, JsSourceContext,
-    JsValueRef, JsValueType,
+    ChakraRt, JsError, JsModuleRecord, JsParseScriptAttributes, JsSourceContext, JsValueRef,
+    JsValueType,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
@@ -151,14 +151,6 @@ impl<'a> CallbackMessage<'a> {
 
 impl<'a> Drop for CallbackMessage<'a> {
     fn drop(&mut self) {
-        if ChakraRt::has_exception().unwrap_or_default() {
-            self.wscript.print_exception(
-                "",
-                JsErrorCode::JsErrorScriptException,
-                JsValueRef::default(),
-            );
-        }
-
         unsafe {
             ChakraRTInterface::JsRelease(self.function.as_js_ref(), std::ptr::null_mut())
                 .as_result()
