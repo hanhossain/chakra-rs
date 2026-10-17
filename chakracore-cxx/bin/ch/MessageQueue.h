@@ -245,8 +245,8 @@ public:
         return S_OK;
     }
 
-    static std::unique_ptr<MessageQueue> New()
+    static std::shared_ptr<MessageQueue> New()
     {
-        return std::make_unique<MessageQueue>();
+        return std::make_shared<MessageQueue>();
     }
 };

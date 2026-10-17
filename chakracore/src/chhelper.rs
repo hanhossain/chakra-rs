@@ -6,7 +6,7 @@ use chakracore_sys::jsrt::{
     JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
 use chakracore_sys::rt_interface::ChakraRTInterface;
-use chakracore_sys::wscript_jsrt::{MessageQueue, WScript};
+use chakracore_sys::wscript_jsrt::WScript;
 use std::ffi::{CStr, CString, c_char};
 use std::str::FromStr;
 
@@ -228,11 +228,9 @@ fn run_script(
     parser_state_cache: JsValueRef,
     wscript: &WScript,
 ) -> Result<(), Error> {
-    let mut message_queue = MessageQueue::New();
     let (fname, _callback) = unsafe {
-        WScript::add_message_queue(&message_queue);
         let callback = ChakraRt::set_promise_continuation_callback(|task| {
-            wscript.promise_continuation_callback(task, message_queue.as_mut_ptr())
+            wscript.promise_continuation_callback(task)
         })?;
         let mut fname = JsValueRef::default();
         ChakraRTInterface::JsCreateString(full_path, &raw mut fname).as_result()?;
@@ -290,12 +288,19 @@ fn run_script(
     } else {
         // Repeatedly flush the message queue until it's empty. It is necessary to loop on this
         // because setTimeout can add scripts to execute.
-        while !message_queue.pin_mut().IsEmpty() {
-            message_queue.pin_mut().ProcessAll(filename);
+        let mut message_queue = wscript.message_queue.clone();
+        unsafe {
+            let mut message_queue = message_queue.pin_mut_unchecked();
+            while !message_queue.as_mut().IsEmpty() {
+                message_queue.as_mut().ProcessAll(filename);
+            }
         }
     }
 
-    message_queue.pin_mut().RemoveAll();
+    unsafe {
+        let mut message_queue = wscript.message_queue.clone();
+        message_queue.pin_mut_unchecked().RemoveAll();
+    }
 
     // clean up possible pinned exception object on exit to avoid potential leak
     let mut has_exception = false;

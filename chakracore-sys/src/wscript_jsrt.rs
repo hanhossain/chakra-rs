@@ -11,13 +11,12 @@ use crate::messages::Message;
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::tls::ThreadData;
-use cxx::UniquePtr;
+use cxx::SharedPtr;
 pub use ffi::{MessageQueue, WScriptJsrt};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::hash::Hash;
 use std::path::PathBuf;
-use std::pin::Pin;
 use std::rc::{Rc, Weak};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, LazyLock, RwLock, mpsc};
@@ -30,7 +29,6 @@ const BUILD_TYPE_STRING: &str = "Debug";
 const BUILD_TYPE_STRING: &str = "Test";
 
 static SOURCE_CONTEXT: AtomicUsize = AtomicUsize::new(0);
-static mut MESSAGE_QUEUE: *mut MessageQueue = std::ptr::null_mut();
 
 pub(crate) static MODULE_ERROR_MAP: LazyLock<ModuleErrorMap> =
     LazyLock::new(|| ModuleErrorMap::new());
@@ -78,7 +76,7 @@ mod ffi {
         type Message<'a> = crate::messages::Message<'a>;
 
         #[Self = "MessageQueue"]
-        fn New() -> UniquePtr<MessageQueue>;
+        fn New() -> SharedPtr<MessageQueue>;
 
         fn RemoveAll(self: Pin<&mut MessageQueue>);
         fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
@@ -156,12 +154,15 @@ pub(crate) struct ModuleRecordEntry {
 
 pub struct WScript {
     pub config: ConfigContext,
+    pub message_queue: SharedPtr<MessageQueue>,
 }
 
 impl WScript {
     pub fn new(config: &ConfigContext) -> Self {
+        let message_queue = MessageQueue::New();
         Self {
             config: config.clone(),
+            message_queue,
         }
     }
 
@@ -194,7 +195,8 @@ impl WScript {
         wscript_object.set_named_function("LoadScript", |args| self.load_script_callback(args))?;
         wscript_object.set_named_function("LoadModule", |args| self.load_module_callback(args))?;
         wscript_object.set_named_function("SetTimeout", |args| self.set_timeout_callback(args))?;
-        wscript_object.set_named_function("ClearTimeout", WScript::clear_timeout_callback)?;
+        wscript_object
+            .set_named_function("ClearTimeout", |args| self.clear_timeout_callback(args))?;
         wscript_object.set_named_function("Flag", WScript::flag_callback)?;
         wscript_object.set_named_function(
             "RegisterModuleSource",
@@ -554,16 +556,13 @@ impl WScript {
         Ok(Some(obj))
     }
 
-    pub unsafe fn promise_continuation_callback(
-        &self,
-        task: JsValueRef,
-        message_queue: *mut MessageQueue,
-    ) {
+    pub unsafe fn promise_continuation_callback(&self, task: JsValueRef) {
         assert!(!task.is_null());
 
         unsafe {
             let msg = Message::new_callback(0, task, &self);
-            Pin::new_unchecked(&mut *message_queue).InsertSorted(msg);
+            let mut queue = self.message_queue.clone();
+            queue.pin_mut_unchecked().InsertSorted(msg);
         }
     }
 
@@ -639,7 +638,8 @@ impl WScript {
         {
             let msg = Message::new_module(referencing_module, JsValueRef::default(), None, &self);
             unsafe {
-                Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);
+                let mut message_queue = self.message_queue.clone();
+                message_queue.pin_mut_unchecked().InsertSorted(msg);
             }
         }
         JsErrorCode::JsNoError
@@ -815,7 +815,10 @@ impl WScript {
         let module_message =
             Message::new_module(referencing_module, specifier, abs_path.to_str(), self);
         unsafe {
-            Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(module_message);
+            let mut message_queue = self.message_queue.clone();
+            message_queue
+                .pin_mut_unchecked()
+                .InsertSorted(module_message);
             *dependent_module_record = module_record;
         }
 
@@ -896,14 +899,15 @@ impl WScript {
         let msg = Message::new_callback(time, function, &self);
         let msg_id = msg.get_id();
         unsafe {
-            Pin::new_unchecked(&mut *MESSAGE_QUEUE).InsertSorted(msg);
+            let mut message_queue = self.message_queue.clone();
+            message_queue.pin_mut_unchecked().InsertSorted(msg);
         }
         let timer_id = ChakraRt::double_to_number(msg_id as f64)?;
         Ok(timer_id)
     }
 
-    #[tracing::instrument(skip(args), err)]
-    fn clear_timeout_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<()> {
+    #[tracing::instrument(skip(self, args), err)]
+    fn clear_timeout_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<()> {
         anyhow::ensure!(
             args.arguments.len() == 2,
             "invalid call to WScript.ClearTimeout"
@@ -911,8 +915,8 @@ impl WScript {
 
         if let Ok(timer_id) = ChakraRt::number_to_double(&args.arguments[1]).map(|x| x as u32) {
             unsafe {
-                let message_queue = Pin::new_unchecked(&mut *MESSAGE_QUEUE);
-                message_queue.RemoveById(timer_id);
+                let mut message_queue = self.message_queue.clone();
+                message_queue.pin_mut_unchecked().RemoveById(timer_id);
             }
         }
 
@@ -1200,7 +1204,7 @@ impl WScript {
                 ChakraRTInterface::JsCreateContext(runtime, &raw mut new_context).as_result()?;
                 ChakraRTInterface::JsSetCurrentContext(new_context).as_result()?;
                 ChakraRt::set_promise_continuation_callback(|task| {
-                    self.promise_continuation_callback(task, MESSAGE_QUEUE)
+                    self.promise_continuation_callback(task)
                 })?
             };
 
@@ -1464,12 +1468,6 @@ impl WScript {
 
     pub fn get_next_source_context() -> usize {
         SOURCE_CONTEXT.fetch_add(1, Ordering::Relaxed)
-    }
-
-    pub fn add_message_queue(message_queue: &UniquePtr<MessageQueue>) {
-        unsafe {
-            MESSAGE_QUEUE = message_queue.as_mut_ptr();
-        }
     }
 }
 
