@@ -115,6 +115,7 @@ mod ffi {
 
     #[namespace = "chakra_rs"]
     extern "Rust" {
+        #[derive(ExternType)]
         type WScript;
         fn load_script(
             &self,
@@ -548,7 +549,7 @@ impl WScript {
         assert!(!task.is_null());
 
         unsafe {
-            let msg = Message::new_callback(0, task, &self);
+            let msg = Message::new_callback(0, task);
             let mut queue = self.message_queue.clone();
             queue.pin_mut_unchecked().InsertSorted(msg);
         }
@@ -624,7 +625,7 @@ impl WScript {
         if let Some(module_error) = guard.get(&referencing_module)
             && *module_error != ModuleState::ErroredModule
         {
-            let msg = Message::new_module(referencing_module, JsValueRef::default(), None, &self);
+            let msg = Message::new_module(referencing_module, JsValueRef::default(), None);
             unsafe {
                 let mut message_queue = self.message_queue.clone();
                 message_queue.pin_mut_unchecked().InsertSorted(msg);
@@ -800,8 +801,7 @@ impl WScript {
             .write()
             .unwrap()
             .insert(module_record.clone(), ModuleState::ImportedModule);
-        let module_message =
-            Message::new_module(referencing_module, specifier, abs_path.to_str(), self);
+        let module_message = Message::new_module(referencing_module, specifier, abs_path.to_str());
         unsafe {
             let mut message_queue = self.message_queue.clone();
             message_queue
@@ -884,7 +884,7 @@ impl WScript {
 
         let function = args.arguments[1].clone();
         let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
-        let msg = Message::new_callback(time, function, &self);
+        let msg = Message::new_callback(time, function);
         let msg_id = msg.get_id();
         unsafe {
             let mut message_queue = self.message_queue.clone();

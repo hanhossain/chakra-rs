@@ -232,7 +232,7 @@ public:
         m_queue.RemoveAll([](const ListEntry& _) {});
     }
 
-    int32_t ProcessAll(rust::Str fileName)
+    int32_t ProcessAll(rust::Str fileName, const chakra_rs::WScript &wscript)
     {
         auto span = chakra::Span::create(std::format("MessageQueue::ProcessAll[filename={}]", fileName));
         while(!IsEmpty())
@@ -240,7 +240,7 @@ public:
             rust::Box<chakra_rs::Message> msg = PopAndWait();
 
             // Omit checking return value for async function, since it shouldn't affect others.
-            msg->call(fileName);
+            msg->call(fileName, wscript);
         }
         return S_OK;
     }

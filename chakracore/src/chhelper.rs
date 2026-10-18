@@ -292,7 +292,7 @@ fn run_script(
         unsafe {
             let mut message_queue = message_queue.pin_mut_unchecked();
             while !message_queue.as_mut().IsEmpty() {
-                message_queue.as_mut().ProcessAll(filename);
+                message_queue.as_mut().ProcessAll(filename, wscript);
             }
         }
     }
