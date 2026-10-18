@@ -41,8 +41,6 @@ jobs:
             features: "--features compile-cpp"
           - build-type: test
             features: "--features compile-cpp,optimized-tests"
-    env:
-      CARGO_BUILD_WARNINGS: deny
     steps:
       - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
@@ -59,7 +57,7 @@ jobs:
           tool: cargo-nextest
       - uses: Swatinem/rust-cache@v2
       - name: Build
-        run: cargo build ${{ matrix.features }} --all-targets -vv
+        run: cargo build ${{ matrix.features }} --all-targets
       # TODO: don't fail fast
       - name: Run tests
         run: cargo nextest run ${{ matrix.features }} --retries 1
@@ -89,6 +87,8 @@ jobs:
             os-image: ubuntu-26.04
             os-prefix: linux
             deps: sudo apt-get install -y ninja-build clang-19 lld-19 libc++-19-dev libc++abi-19-dev
+    env:
+      CARGO_BUILD_WARNINGS: deny
     steps:
       - uses: actions/checkout@v7
       - name: Install dependencies

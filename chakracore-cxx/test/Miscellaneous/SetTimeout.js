@@ -5,6 +5,9 @@
 
 WScript.SetTimeout(function() {
     WScript.Echo("OK");
+    WScript.SetTimeout(() => {
+        WScript.Echo("This is nested");
+    }, 50);
 }, 10);
 WScript.SetTimeout(function() {
     this.is.an.exception = null;

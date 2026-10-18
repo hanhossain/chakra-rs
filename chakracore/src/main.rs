@@ -1,3 +1,4 @@
+use chakracore::chhelper;
 use chakracore_sys::chhelper::Abstractions;
 use chakracore_sys::config::ConfigContext;
 use tracing_subscriber::filter::LevelFilter;
@@ -41,7 +42,7 @@ fn main() -> anyhow::Result<()> {
 
     let args: Vec<_> = std::env::args().collect();
     let Some(chakra_args) = ChakraArgs::new(args) else {
-        chakracore_sys::chhelper::print_usage();
+        chhelper::print_usage();
         anyhow::bail!("invalid arguments");
     };
 
@@ -51,7 +52,7 @@ fn main() -> anyhow::Result<()> {
     }
 
     if chakra_args.help {
-        chakracore_sys::chhelper::print_usage();
+        chhelper::print_usage();
         return Ok(());
     }
 

@@ -16,17 +16,7 @@
 
 class ChakraRTInterface
 {
-private:
-    static bool m_testHooksSetup;
-    static bool m_testHooksInitialized;
-    static bool m_usageStringPrinted;
-
-private:
-    static int32_t ParseConfigFlags(const rust::Vec<rust::String> &vargs);
-
 public:
-    static int32_t InitializeTestHooks(const rust::Vec<rust::String> &vargs);
-
     static JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsThreadServiceCallback threadService, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, threadService, runtime); }
     static JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, nullptr, runtime); }
     static JsErrorCode JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return chakracore::jsrt::JsCreateContext(runtime, newContext); }
@@ -149,36 +139,4 @@ public:
 
     static JsErrorCode JsGetArrayBufferFreeFunction(JsValueRef buffer, ArrayBufferFreeFn* freeFn) { return chakracore::jsrt::JsGetArrayBufferFreeFunction(buffer, freeFn); }
     static JsErrorCode JsExternalizeArrayBuffer(JsValueRef buffer) { return chakracore::jsrt::JsExternalizeArrayBuffer(buffer); }
-};
-
-class AutoRestoreContext
-{
-public:
-    AutoRestoreContext(JsContextRef newContext)
-    {
-        JsErrorCode errorCode = ChakraRTInterface::JsGetCurrentContext(&oldContext);
-        assert(errorCode == JsNoError);
-
-        if (oldContext != newContext)
-        {
-            errorCode = ChakraRTInterface::JsSetCurrentContext(newContext);
-            assert(errorCode == JsNoError);
-            contextChanged = true;
-        }
-        else
-        {
-            contextChanged = false;
-        }
-    }
-
-    ~AutoRestoreContext()
-    {
-        if (contextChanged && oldContext != JS_INVALID_REFERENCE)
-        {
-            ChakraRTInterface::JsSetCurrentContext(oldContext);
-        }
-    }
-private:
-    JsContextRef oldContext;
-    bool contextChanged;
 };

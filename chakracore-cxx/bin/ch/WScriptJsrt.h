@@ -7,8 +7,6 @@
 #include <rust/cxx.h>
 
 #include "ChakraCore.h"
-#include "MessageQueue.h"
-
 #include "chakracore-sys/src/jsrt/ffi.rs.h"
 
 namespace chakra_rs {

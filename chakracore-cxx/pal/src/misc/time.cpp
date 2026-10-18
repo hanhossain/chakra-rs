@@ -263,81 +263,6 @@ EXIT:
     return retval;
 }
 
-static unsigned long
-GetTickCount64Fallback()
-{
-    unsigned long retval = 0;
-
-    // The `__APPLE__` below is unlikely. However, if osx future version
-    // supports one of the clock types below, we may miss that and
-    // break backward compatibility.
-#if !defined(__APPLE__)
-    {
-        clockid_t clockType =
-            CLOCK_MONOTONIC_COARSE; // good enough resolution, fastest speed
-        struct timespec ts;
-        if (clock_gettime(clockType, &ts) != 0)
-        {
-            chakra::Logger::error(std::format("clock_gettime(CLOCK_MONOTONIC*) failed; errno is {} ({})\n", errno, strerror(errno)));
-            goto EXIT;
-        }
-        retval = (ts.tv_sec * tccSecondsToMillieSeconds)+(ts.tv_nsec / tccMillieSecondsToNanoSeconds);
-    }
-#else
-    {
-        // use denom == 0 to indicate that s_TimebaseInfo is uninitialised.
-        if (s_TimebaseInfo.denom == 0)
-        {
-            chakra::Logger::error("s_TimebaseInfo is uninitialized.\n");
-            goto EXIT;
-        }
-        retval = (mach_absolute_time() * s_TimebaseInfo.numer / s_TimebaseInfo.denom) / tccMillieSecondsToNanoSeconds;
-    }
-#endif
-EXIT:
-    return retval;
-}
-
-#if defined(__AMD64__) || defined(__x86_64__)
-inline unsigned long rdtsc()
-{
-    unsigned long H, L;
-    __asm volatile ("rdtsc":"=a"(L), "=d"(H));
-    return (H << 32) | L;
-}
-
-static double CPUFreq()
-{
-    struct timeval tstart, tend;
-    unsigned long start, end;
-
-    struct timezone tzone;
-    memset(&tzone, 0, sizeof(tzone));
-
-    start = rdtsc();
-    gettimeofday(&tstart, &tzone);
-
-    usleep(2000); // 2ms
-
-    end = rdtsc();
-    gettimeofday(&tend, &tzone);
-
-    unsigned long usec = ((tend.tv_sec - tstart.tv_sec)*1e6)
-                + (tend.tv_usec - tstart.tv_usec);
-
-    if (!usec) return 0;
-    return (end - start) / usec;
-}
-
-static unsigned long cpu_speed = CPUFreq() * 1e3; // 1000 * 1e6 => ns to ms
-typedef unsigned long (*GetTickCount64FallbackCB)(void);
-inline unsigned long FastTickCount()
-{
-  return rdtsc() / cpu_speed;
-}
-static GetTickCount64FallbackCB getTickCount64FallbackCB = cpu_speed ? FastTickCount : GetTickCount64Fallback;
-#endif
-
 /*++
 Function:
   GetTickCount64
@@ -347,12 +272,8 @@ to return monotonically increasing counts and avoid being affected by changes
 to the system clock (either due to drift or due to explicit changes to system
 time).
 --*/
-unsigned long
-GetTickCount64()
+unsigned long GetTickCount64()
 {
-#if defined(__AMD64__) || defined(__x86_64__)
-    return getTickCount64FallbackCB();
-#else
-    return GetTickCount64Fallback();
-#endif
+    const auto now = std::chrono::steady_clock::now();
+    return std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
 }
