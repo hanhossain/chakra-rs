@@ -1,7 +1,31 @@
 use crate::messages::Message;
 use crate::wscript_jsrt::WScript;
+use std::cmp::Ordering;
+use std::collections::BinaryHeap;
+use std::sync::Mutex;
+use std::time::Instant;
 
-pub struct MessageQueue;
+#[derive(Eq, PartialEq)]
+struct Entry {
+    message: Message,
+    scheduled_time: Instant,
+}
+
+impl PartialOrd for Entry {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Entry {
+    fn cmp(&self, other: &Self) -> Ordering {
+        other.scheduled_time.cmp(&self.scheduled_time)
+    }
+}
+
+pub struct MessageQueue {
+    queue: Mutex<BinaryHeap<Entry>>,
+}
 
 impl MessageQueue {
     pub(crate) fn new() -> Self {

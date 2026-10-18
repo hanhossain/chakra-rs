@@ -16,31 +16,15 @@ mod ffi {
         /// Get the number of milliseconds since the system has started.
         fn GetTickCount() -> u32;
     }
-
-    #[namespace = "chakra_rs"]
-    unsafe extern "C++" {
-        include!("chakracore-sys/src/wscript_jsrt.rs.h");
-        type WScript = crate::wscript_jsrt::WScript;
-    }
-
-    #[namespace = "chakra_rs"]
-    extern "Rust" {
-        #[derive(ExternType)]
-        type Message;
-        fn call(&self, filename: &str, wscript: &WScript);
-        fn get_time(&self) -> u32;
-        fn begin_timer(&mut self);
-        fn get_id(&self) -> u32;
-    }
-
-    impl Box<Message> {}
 }
 
+#[derive(Eq, PartialEq)]
 enum MessageInner {
     Callback(CallbackMessage),
     Module(ModuleMessage),
 }
 
+#[derive(Eq, PartialEq)]
 pub struct Message {
     msg: MessageInner,
     time: u32,
@@ -88,6 +72,7 @@ impl Message {
     }
 }
 
+#[derive(Eq, PartialEq)]
 struct CallbackMessage {
     function: JsValueRef,
 }
@@ -155,6 +140,7 @@ impl Drop for CallbackMessage {
     }
 }
 
+#[derive(Eq, PartialEq)]
 struct ModuleMessage {
     module_record: JsModuleRecord,
     specifier: JsValueRef,
