@@ -4,6 +4,7 @@ mod filesystem;
 pub mod helpers;
 pub mod jsrt;
 mod logger;
+pub mod message_queue;
 mod messages;
 pub mod rt_interface;
 pub mod str_helper;

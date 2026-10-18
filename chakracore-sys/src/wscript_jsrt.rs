@@ -7,12 +7,13 @@ use crate::jsrt::{
     JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
     JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
 };
+use crate::message_queue::MessageQueue;
 use crate::messages::Message;
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
+use crate::wscript_jsrt::ffi::WScriptJsrt;
 use crate::wscript_jsrt::tls::ThreadData;
 use cxx::SharedPtr;
-pub use ffi::{MessageQueue, WScriptJsrt};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::hash::Hash;
@@ -70,19 +71,6 @@ mod ffi {
         type JsSourceContext = crate::jsrt::JsSourceContext;
         type JsContextRef = crate::jsrt::JsContextRef;
         type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
-
-        type MessageQueue;
-        #[namespace = "chakra_rs"]
-        type Message<'a> = crate::messages::Message<'a>;
-
-        #[Self = "MessageQueue"]
-        fn New() -> SharedPtr<MessageQueue>;
-
-        fn RemoveAll(self: Pin<&mut MessageQueue>);
-        fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
-        fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str) -> i32;
-        fn InsertSorted(self: Pin<&mut MessageQueue>, message: Box<Message>);
-        fn RemoveById(self: Pin<&mut MessageQueue>, id: u32);
 
         type JsValueRef = crate::jsrt::JsValueRef;
         type CVoid = crate::jsrt::CVoid;

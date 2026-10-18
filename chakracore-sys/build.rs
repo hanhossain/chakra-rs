@@ -8,6 +8,7 @@ fn main() {
         "src/helpers.rs",
         "src/jsrt/ffi.rs",
         "src/logger.rs",
+        "src/message_queue.rs",
         "src/messages.rs",
         "src/rt_interface.rs",
         "src/str_helper.rs",
