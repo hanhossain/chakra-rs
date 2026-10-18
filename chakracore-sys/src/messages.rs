@@ -9,15 +9,6 @@ use std::sync::atomic::{AtomicU32, Ordering};
 
 static MESSAGE_COUNT: AtomicU32 = AtomicU32::new(0);
 
-#[cxx::bridge]
-mod ffi {
-    unsafe extern "C++" {
-        include!("ChakraCore.h");
-        /// Get the number of milliseconds since the system has started.
-        fn GetTickCount() -> u32;
-    }
-}
-
 #[derive(Eq, PartialEq)]
 enum MessageInner {
     Callback(CallbackMessage),
@@ -63,9 +54,6 @@ impl Message {
     }
     pub(crate) fn get_delay_ms(&self) -> u32 {
         self.delay_ms
-    }
-    fn begin_timer(&mut self) {
-        self.delay_ms += ffi::GetTickCount();
     }
     pub(crate) fn get_id(&self) -> u32 {
         self.id
