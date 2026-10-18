@@ -27,7 +27,7 @@ enum MessageInner {
 #[derive(Eq, PartialEq)]
 pub struct Message {
     msg: MessageInner,
-    time: u32,
+    delay_ms: u32,
     id: u32,
 }
 
@@ -35,37 +35,37 @@ impl Message {
     fn new_id() -> u32 {
         MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed)
     }
-    pub(crate) fn new_callback(time: u32, function: JsValueRef) -> Box<Self> {
-        Box::new(Self {
+    pub(crate) fn new_callback(delay_ms: u32, function: JsValueRef) -> Self {
+        Self {
             msg: MessageInner::Callback(CallbackMessage::new(function)),
-            time,
+            delay_ms,
             id: Self::new_id(),
-        })
+        }
     }
     pub(crate) fn new_module(
         module_record: JsModuleRecord,
         specifier: JsValueRef,
         full_path: Option<&str>,
-    ) -> Box<Self> {
-        Box::new(Self {
+    ) -> Self {
+        Self {
             msg: MessageInner::Module(ModuleMessage::new(module_record, specifier, full_path)),
-            time: 0,
+            delay_ms: 0,
             id: Self::new_id(),
-        })
+        }
     }
 
     #[tracing::instrument(skip(self, wscript))]
-    fn call(&self, filename: &str, wscript: &WScript) {
+    pub(crate) fn call(&self, filename: &str, wscript: &WScript) {
         match &self.msg {
             MessageInner::Callback(msg) => msg.call(filename, wscript),
             MessageInner::Module(msg) => msg.call(filename, wscript),
         }
     }
-    fn get_time(&self) -> u32 {
-        self.time
+    pub(crate) fn get_delay_ms(&self) -> u32 {
+        self.delay_ms
     }
     fn begin_timer(&mut self) {
-        self.time += ffi::GetTickCount();
+        self.delay_ms += ffi::GetTickCount();
     }
     pub(crate) fn get_id(&self) -> u32 {
         self.id
