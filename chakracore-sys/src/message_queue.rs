@@ -1,25 +1,30 @@
-pub use ffi::MessageQueue;
+use crate::messages::Message;
+use crate::wscript_jsrt::WScript;
 
-#[cxx::bridge]
-mod ffi {
-    unsafe extern "C++" {
-        include!("MessageQueue.h");
+pub struct MessageQueue;
 
-        type MessageQueue;
-
-        #[Self = "MessageQueue"]
-        fn New() -> SharedPtr<MessageQueue>;
-
-        fn RemoveAll(self: Pin<&mut MessageQueue>);
-        fn IsEmpty(self: Pin<&mut MessageQueue>) -> bool;
-        fn ProcessAll(self: Pin<&mut MessageQueue>, filename: &str, wscript: &WScript) -> i32;
-        fn InsertSorted(self: Pin<&mut MessageQueue>, message: Box<Message>);
-        fn RemoveById(self: Pin<&mut MessageQueue>, id: u32);
+impl MessageQueue {
+    pub(crate) fn new() -> Self {
+        todo!()
     }
 
-    #[namespace = "chakra_rs"]
-    unsafe extern "C++" {
-        type Message = crate::messages::Message;
-        type WScript = crate::wscript_jsrt::WScript;
+    pub(crate) fn insert_sorted(&self, msg: Box<Message>) {
+        todo!()
+    }
+
+    pub(crate) fn remove_by_id(&self, timer_id: u32) {
+        todo!()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        todo!()
+    }
+
+    pub fn process_all(&self, filename: &str, wscript: &WScript) {
+        todo!()
+    }
+
+    pub fn remove_all(&self) {
+        todo!()
     }
 }

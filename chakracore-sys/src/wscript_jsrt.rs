@@ -13,7 +13,6 @@ use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::ffi::WScriptJsrt;
 use crate::wscript_jsrt::tls::ThreadData;
-use cxx::SharedPtr;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::hash::Hash;
@@ -143,12 +142,12 @@ pub(crate) struct ModuleRecordEntry {
 
 pub struct WScript {
     pub config: ConfigContext,
-    pub message_queue: SharedPtr<MessageQueue>,
+    pub message_queue: MessageQueue,
 }
 
 impl WScript {
     pub fn new(config: &ConfigContext) -> Self {
-        let message_queue = MessageQueue::New();
+        let message_queue = MessageQueue::new();
         Self {
             config: config.clone(),
             message_queue,
@@ -548,11 +547,8 @@ impl WScript {
     pub unsafe fn promise_continuation_callback(&self, task: JsValueRef) {
         assert!(!task.is_null());
 
-        unsafe {
-            let msg = Message::new_callback(0, task);
-            let mut queue = self.message_queue.clone();
-            queue.pin_mut_unchecked().InsertSorted(msg);
-        }
+        let msg = Message::new_callback(0, task);
+        self.message_queue.insert_sorted(msg);
     }
 
     fn set_module_host_info_callbacks(&self) -> Result<(), JsError> {
@@ -626,10 +622,7 @@ impl WScript {
             && *module_error != ModuleState::ErroredModule
         {
             let msg = Message::new_module(referencing_module, JsValueRef::default(), None);
-            unsafe {
-                let mut message_queue = self.message_queue.clone();
-                message_queue.pin_mut_unchecked().InsertSorted(msg);
-            }
+            self.message_queue.insert_sorted(msg);
         }
         JsErrorCode::JsNoError
     }
@@ -802,11 +795,8 @@ impl WScript {
             .unwrap()
             .insert(module_record.clone(), ModuleState::ImportedModule);
         let module_message = Message::new_module(referencing_module, specifier, abs_path.to_str());
+        self.message_queue.insert_sorted(module_message);
         unsafe {
-            let mut message_queue = self.message_queue.clone();
-            message_queue
-                .pin_mut_unchecked()
-                .InsertSorted(module_message);
             *dependent_module_record = module_record;
         }
 
@@ -886,10 +876,7 @@ impl WScript {
         let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
         let msg = Message::new_callback(time, function);
         let msg_id = msg.get_id();
-        unsafe {
-            let mut message_queue = self.message_queue.clone();
-            message_queue.pin_mut_unchecked().InsertSorted(msg);
-        }
+        self.message_queue.insert_sorted(msg);
         let timer_id = ChakraRt::double_to_number(msg_id as f64)?;
         Ok(timer_id)
     }
@@ -902,10 +889,7 @@ impl WScript {
         );
 
         if let Ok(timer_id) = ChakraRt::number_to_double(&args.arguments[1]).map(|x| x as u32) {
-            unsafe {
-                let mut message_queue = self.message_queue.clone();
-                message_queue.pin_mut_unchecked().RemoveById(timer_id);
-            }
+            self.message_queue.remove_by_id(timer_id);
         }
 
         Ok(())

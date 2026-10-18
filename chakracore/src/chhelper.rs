@@ -288,19 +288,12 @@ fn run_script(
     } else {
         // Repeatedly flush the message queue until it's empty. It is necessary to loop on this
         // because setTimeout can add scripts to execute.
-        let mut message_queue = wscript.message_queue.clone();
-        unsafe {
-            let mut message_queue = message_queue.pin_mut_unchecked();
-            while !message_queue.as_mut().IsEmpty() {
-                message_queue.as_mut().ProcessAll(filename, wscript);
-            }
+        while !wscript.message_queue.is_empty() {
+            wscript.message_queue.process_all(filename, wscript);
         }
     }
 
-    unsafe {
-        let mut message_queue = wscript.message_queue.clone();
-        message_queue.pin_mut_unchecked().RemoveAll();
-    }
+    wscript.message_queue.remove_all();
 
     // clean up possible pinned exception object on exit to avoid potential leak
     let mut has_exception = false;
