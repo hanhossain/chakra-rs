@@ -293,8 +293,6 @@ fn run_script(
         }
     }
 
-    wscript.message_queue.remove_all();
-
     // clean up possible pinned exception object on exit to avoid potential leak
     let mut has_exception = false;
     unsafe {

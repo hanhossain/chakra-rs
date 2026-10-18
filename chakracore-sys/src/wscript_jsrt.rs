@@ -547,8 +547,8 @@ impl WScript {
     pub unsafe fn promise_continuation_callback(&self, task: JsValueRef) {
         assert!(!task.is_null());
 
-        let msg = Message::new_callback(0, task);
-        self.message_queue.insert_sorted(msg);
+        let msg = Message::new_callback(task);
+        self.message_queue.schedule_task(msg, Duration::ZERO);
     }
 
     fn set_module_host_info_callbacks(&self) -> Result<(), JsError> {
@@ -622,7 +622,7 @@ impl WScript {
             && *module_error != ModuleState::ErroredModule
         {
             let msg = Message::new_module(referencing_module, JsValueRef::default(), None);
-            self.message_queue.insert_sorted(msg);
+            self.message_queue.schedule_task(msg, Duration::ZERO);
         }
         JsErrorCode::JsNoError
     }
@@ -795,7 +795,8 @@ impl WScript {
             .unwrap()
             .insert(module_record.clone(), ModuleState::ImportedModule);
         let module_message = Message::new_module(referencing_module, specifier, abs_path.to_str());
-        self.message_queue.insert_sorted(module_message);
+        self.message_queue
+            .schedule_task(module_message, Duration::ZERO);
         unsafe {
             *dependent_module_record = module_record;
         }
@@ -873,10 +874,11 @@ impl WScript {
         }
 
         let function = args.arguments[1].clone();
-        let time = ChakraRt::number_to_double(&args.arguments[2])? as u32;
-        let msg = Message::new_callback(time, function);
-        let msg_id = msg.get_id();
-        self.message_queue.insert_sorted(msg);
+        let time = ChakraRt::number_to_double(&args.arguments[2])?;
+        let msg = Message::new_callback(function);
+        let msg_id = self
+            .message_queue
+            .schedule_task(msg, Duration::from_millis(time as u64));
         let timer_id = ChakraRt::double_to_number(msg_id as f64)?;
         Ok(timer_id)
     }

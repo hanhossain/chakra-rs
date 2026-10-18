@@ -1,9 +1,10 @@
 use crate::messages::Message;
 use crate::wscript_jsrt::WScript;
 use std::cell::Cell;
-use std::cmp::Ordering;
+use std::cmp;
 use std::collections::BinaryHeap;
 use std::sync::Mutex;
+use std::sync::atomic::{AtomicU32, Ordering};
 use std::time::{Duration, Instant};
 
 #[derive(Eq, PartialEq)]
@@ -15,33 +16,33 @@ struct Entry {
 }
 
 impl PartialOrd for Entry {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+    fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
         Some(self.cmp(other))
     }
 }
 
 impl Ord for Entry {
-    fn cmp(&self, other: &Self) -> Ordering {
+    fn cmp(&self, other: &Self) -> cmp::Ordering {
         other.scheduled_time.cmp(&self.scheduled_time)
     }
 }
 
 pub struct MessageQueue {
     messages: Mutex<BinaryHeap<Entry>>,
+    id_counter: AtomicU32,
 }
 
 impl MessageQueue {
     pub(crate) fn new() -> Self {
         Self {
             messages: Mutex::default(),
+            id_counter: AtomicU32::new(0),
         }
     }
 
-    #[tracing::instrument(skip_all)]
-    pub(crate) fn insert_sorted(&self, msg: Message) -> u32 {
-        // TODO: remove get_id from message. id should only be here.
-        let id = msg.get_id();
-        let delay = Duration::from_millis(msg.get_delay_ms() as u64);
+    #[tracing::instrument(skip(self, msg))]
+    pub(crate) fn schedule_task(&self, msg: Message, delay: Duration) -> u32 {
+        let id = self.id_counter.fetch_add(1, Ordering::Relaxed);
         let scheduled = Instant::now() + delay;
         let entry = Entry {
             message: msg,
@@ -94,12 +95,5 @@ impl MessageQueue {
             };
             entry.message.call(filename, wscript);
         }
-    }
-
-    // TODO: don't need remove_all since the queue will clear on drop
-    #[tracing::instrument(skip_all)]
-    pub fn remove_all(&self) {
-        let mut lease = self.messages.lock().unwrap();
-        lease.clear();
     }
 }

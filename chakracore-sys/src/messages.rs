@@ -5,9 +5,6 @@ use crate::jsrt::{
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
-use std::sync::atomic::{AtomicU32, Ordering};
-
-static MESSAGE_COUNT: AtomicU32 = AtomicU32::new(0);
 
 #[derive(Eq, PartialEq)]
 enum MessageInner {
@@ -18,19 +15,12 @@ enum MessageInner {
 #[derive(Eq, PartialEq)]
 pub struct Message {
     msg: MessageInner,
-    delay_ms: u32,
-    id: u32,
 }
 
 impl Message {
-    fn new_id() -> u32 {
-        MESSAGE_COUNT.fetch_add(1, Ordering::Relaxed)
-    }
-    pub(crate) fn new_callback(delay_ms: u32, function: JsValueRef) -> Self {
+    pub(crate) fn new_callback(function: JsValueRef) -> Self {
         Self {
             msg: MessageInner::Callback(CallbackMessage::new(function)),
-            delay_ms,
-            id: Self::new_id(),
         }
     }
     pub(crate) fn new_module(
@@ -40,8 +30,6 @@ impl Message {
     ) -> Self {
         Self {
             msg: MessageInner::Module(ModuleMessage::new(module_record, specifier, full_path)),
-            delay_ms: 0,
-            id: Self::new_id(),
         }
     }
 
@@ -51,12 +39,6 @@ impl Message {
             MessageInner::Callback(msg) => msg.call(filename, wscript),
             MessageInner::Module(msg) => msg.call(filename, wscript),
         }
-    }
-    pub(crate) fn get_delay_ms(&self) -> u32 {
-        self.delay_ms
-    }
-    pub(crate) fn get_id(&self) -> u32 {
-        self.id
     }
 }
 
