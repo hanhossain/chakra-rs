@@ -1,7 +1,8 @@
+pub mod cache;
 mod tls;
 
 use crate::config::ConfigContext;
-use crate::helpers::{ScriptCache, TestHooks};
+use crate::helpers::TestHooks;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode, JsModuleHostInfoKind,
     JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
@@ -11,6 +12,7 @@ use crate::message_queue::MessageQueue;
 use crate::messages::Message;
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
+use crate::wscript_jsrt::cache::ScriptCache;
 use crate::wscript_jsrt::ffi::WScriptJsrt;
 use crate::wscript_jsrt::tls::ThreadData;
 use std::cell::RefCell;
@@ -143,14 +145,15 @@ pub(crate) struct ModuleRecordEntry {
 pub struct WScript {
     pub config: ConfigContext,
     pub message_queue: MessageQueue,
+    pub cache: ScriptCache,
 }
 
 impl WScript {
-    pub fn new(config: &ConfigContext) -> Self {
-        let message_queue = MessageQueue::new();
+    pub fn new(config: &ConfigContext, cache: ScriptCache) -> Self {
         Self {
             config: config.clone(),
-            message_queue,
+            message_queue: MessageQueue::new(),
+            cache,
         }
     }
 
@@ -186,10 +189,9 @@ impl WScript {
         wscript_object
             .set_named_function("ClearTimeout", |args| self.clear_timeout_callback(args))?;
         wscript_object.set_named_function("Flag", WScript::flag_callback)?;
-        wscript_object.set_named_function(
-            "RegisterModuleSource",
-            WScript::register_module_source_callback,
-        )?;
+        wscript_object.set_named_function("RegisterModuleSource", |args| {
+            self.register_module_source_callback(args)
+        })?;
         wscript_object.set_named_function("GetModuleNamespace", WScript::get_module_namespace)?;
         wscript_object
             .set_named_function("GetProxyProperties", WScript::get_proxy_properties_callback)?;
@@ -254,7 +256,7 @@ impl WScript {
         )?;
 
         global_object.set_named_function("print", WScript::echo_callback)?;
-        global_object.set_named_function("read", WScript::load_text_file_callback)?;
+        global_object.set_named_function("read", |args| self.load_text_file_callback(args))?;
         global_object.set_named_function("readbuffer", WScript::load_binary_file_callback)?;
 
         let mut console_object = ChakraRt::create_object()?;
@@ -330,24 +332,24 @@ impl WScript {
         Ok(res)
     }
 
-    fn register_module_source_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
+    fn register_module_source_callback(&self, args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if args.arguments.len() < 3 {
             return Ok(());
         }
 
         let filename = args.arguments[1].to_string()?;
         let data = args.arguments[2].to_string()?;
-        ScriptCache::add_script(filename, data);
+        self.cache.add_script(filename, data);
         Ok(())
     }
 
-    fn load_text_file_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsString> {
+    fn load_text_file_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<JsString> {
         if args.arguments.len() < 2 {
             anyhow::bail!("Incorrect number of arguments.");
         }
 
         let filename = args.arguments[1].to_string()?;
-        let file_content = ScriptCache::get_script(&filename)?;
+        let file_content = self.cache.get_script(&filename)?;
         let value = ChakraRt::create_string(&file_content)?;
         Ok(value)
     }
@@ -372,7 +374,7 @@ impl WScript {
             String::new()
         };
 
-        let content = ScriptCache::get_script(&filename)?.into_boxed_str();
+        let content = self.cache.get_script(&filename)?.into_boxed_str();
         // TODO (hanhossain): don't leak a string ptr
         let content = Box::into_raw(content);
         unsafe {
