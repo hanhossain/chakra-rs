@@ -376,10 +376,10 @@ impl WScript {
         // TODO (hanhossain): don't leak a string ptr
         let content = Box::into_raw(content);
         unsafe {
-            Ok(self.load_script(
+            Ok(self.internal_load_script(
                 callee,
                 &filename,
-                Some(&*content).into(),
+                Some(&*content),
                 if !script_inject_type.is_empty() {
                     &script_inject_type
                 } else {
@@ -387,7 +387,7 @@ impl WScript {
                 },
                 is_source_module,
                 true,
-            ))
+            )?)
         }
     }
 
