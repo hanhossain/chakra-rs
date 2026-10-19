@@ -17,17 +17,6 @@ mod ffi {
         #[Self = "TestHooks"]
         fn SetAssertToConsoleFlag(flag: bool) -> i32;
     }
-
-    #[namespace = "chakra_rs::helpers"]
-    extern "Rust" {
-        type ScriptCache;
-
-        #[Self = "ScriptCache"]
-        fn get_script(filename: &str) -> Result<String>;
-
-        #[Self = "ScriptCache"]
-        fn get_script_with_full_path(filename: &str, full_path: &str) -> Result<String>;
-    }
 }
 
 pub struct ScriptCache;
