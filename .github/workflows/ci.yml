@@ -95,6 +95,7 @@ jobs:
       CARGO_BUILD_WARNINGS: deny
     steps:
       - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
       - name: Install dependencies
         run: ${{ matrix.deps }}
         timeout-minutes: 2
