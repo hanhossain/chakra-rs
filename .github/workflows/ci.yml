@@ -58,6 +58,8 @@ jobs:
         with:
           tool: cargo-nextest
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.build-type }}
       - name: Build
         run: cargo build ${{ matrix.profile }} ${{ matrix.features }} --all-targets
       # TODO: don't fail fast
@@ -97,6 +99,8 @@ jobs:
         run: ${{ matrix.deps }}
         timeout-minutes: 2
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.build-type }}
       - if: ${{ runner.os == 'Linux' }}
         run: |
           sudo ln -sf /usr/bin/clang++-19 /usr/bin/clang++
