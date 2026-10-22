@@ -1,4 +1,3 @@
-use crate::helpers::ScriptCache;
 use crate::jsrt::{
     ChakraRt, JsError, JsModuleRecord, JsParseScriptAttributes, JsSourceContext, JsValueRef,
     JsValueType,
@@ -160,8 +159,8 @@ impl ModuleMessage {
         let specifier = self.specifier.to_string()?;
 
         let file_content = match &self.full_path {
-            Some(path) => ScriptCache::get_script_with_full_path(&specifier, path),
-            None => ScriptCache::get_script(&specifier),
+            Some(path) => wscript.cache.get_script_with_full_path(&specifier, path),
+            None => wscript.cache.get_script(&specifier),
         };
 
         let Err(err) = file_content.map(|content| {

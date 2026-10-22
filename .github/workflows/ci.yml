@@ -41,6 +41,8 @@ jobs:
             features: "--features compile-cpp"
           - build-type: test
             features: "--features compile-cpp,optimized-tests"
+            profile: "--profile opt"
+            test-profile: "--cargo-profile opt"
     steps:
       - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
@@ -56,14 +58,16 @@ jobs:
         with:
           tool: cargo-nextest
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.build-type }}
       - name: Build
-        run: cargo build ${{ matrix.features }} --all-targets
+        run: cargo build ${{ matrix.profile }} ${{ matrix.features }} --all-targets
       # TODO: don't fail fast
       - name: Run tests
-        run: cargo nextest run ${{ matrix.features }} --retries 1
+        run: cargo nextest run ${{ matrix.test-profile }} ${{ matrix.features }} --retries 1
       # TODO: don't fail fast
       - name: Run slow tests
-        run: cargo nextest run ${{ matrix.features }} --retries 1 -- --ignored
+        run: cargo nextest run ${{ matrix.test-profile }} ${{ matrix.features }} --retries 1 -- --ignored
         env:
           CHAKRA_TEST_SLOW: true
   build-cpp:
@@ -91,10 +95,13 @@ jobs:
       CARGO_BUILD_WARNINGS: deny
     steps:
       - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
       - name: Install dependencies
         run: ${{ matrix.deps }}
         timeout-minutes: 2
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.build-type }}
       - if: ${{ runner.os == 'Linux' }}
         run: |
           sudo ln -sf /usr/bin/clang++-19 /usr/bin/clang++

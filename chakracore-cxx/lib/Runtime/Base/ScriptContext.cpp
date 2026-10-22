@@ -29,6 +29,7 @@
 #include "Language/SimpleDataCacheWrapper.h"
 #include "Core/CRC.h"
 #include "rust/cxx.h"
+#include "chakra/Logger.h"
 
 #include <memory>
 
@@ -1584,6 +1585,7 @@ namespace Js
         uint* sourceIndex,
         Js::Var scriptSource)
     {
+        auto span = chakra::Span::create("ScriptContext::ParseScript");
         if (pSrcInfo == nullptr)
         {
             pSrcInfo = this->Cache()->noContextGlobalSourceInfo;
@@ -1813,6 +1815,7 @@ namespace Js
         SRCINFO const * pSrcInfo, CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
         const char16_t *rootDisplayName, LoadScriptFlag loadScriptFlag, Js::Var scriptSource)
     {
+        auto span = chakra::Span::create("ScriptContext::LoadScriptInternal");
         uint sourceIndex = Constants::InvalidSourceIndex;
         JavascriptFunction * pFunction = nullptr;
 
@@ -1848,6 +1851,7 @@ namespace Js
         SRCINFO const * pSrcInfo, CompileScriptException * pse, Utf8SourceInfo** ppSourceInfo,
         const char16_t *rootDisplayName, LoadScriptFlag loadScriptFlag, Js::Var scriptSource)
     {
+        auto span = chakra::Span::create("ScriptContext::LoadScript");
         Assert(!this->threadContext->IsScriptActive());
         Assert(pse != nullptr);
         int32_t hr = NOERROR;
@@ -1872,6 +1876,7 @@ namespace Js
 
     JavascriptFunction* ScriptContext::GenerateRootFunction(ParseNodeProg * parseTree, uint sourceIndex, Parser* parser, uint32_t grfscr, CompileScriptException * pse, const char16_t *rootDisplayName)
     {
+        auto span = chakra::Span::create("ScriptContext::GenerateRootFunction");
         int32_t hr;
 
         // Get the source code to keep it alive during the bytecode generation process
@@ -2034,6 +2039,7 @@ namespace Js
 
     void ScriptContext::RemoveSource(uint index)
     {
+        auto span = chakra::Span::create("ScriptContext::RemoveSource");
         Assert(this->sourceList->IsItemValid(index)); // This assert should be a subset of info != null- if info was null, in the last collect, we'd have invalidated the item
         this->sourceList->RemoveAt(index);
     }

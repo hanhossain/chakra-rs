@@ -110,7 +110,7 @@ namespace Js
         }
 
         // Host indicates that the current module failed to load.
-        if (sourceText == nullptr)
+        if (sourceText == nullptr || sourceLength == 0)
         {
             Assert(sourceLength == 0);
             OUTPUT_TRACE_DEBUGONLY(Js::ModulePhase, u"Failed to load: %s\n", this->GetSpecifierSz());

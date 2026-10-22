@@ -1,12 +1,13 @@
 use crate::{Error, hresult_to_result};
 use chakracore_sys::config::ConfigContext;
-use chakracore_sys::helpers::{ScriptCache, TestHooks};
+use chakracore_sys::helpers::TestHooks;
 use chakracore_sys::jsrt::{
     ChakraRt, JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
     JsRuntimeHandle, JsSourceContext, JsValueRef,
 };
 use chakracore_sys::rt_interface::ChakraRTInterface;
 use chakracore_sys::wscript_jsrt::WScript;
+use chakracore_sys::wscript_jsrt::cache::ScriptCache;
 use std::ffi::{CStr, CString, c_char};
 use std::str::FromStr;
 
@@ -15,7 +16,8 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     // handle command line flags
     parse_config_flags(&config.core.args)?;
 
-    let file_contents = ScriptCache::get_script(&config.core.filename)?;
+    let script_cache = ScriptCache::new();
+    let file_contents = script_cache.get_script(&config.core.filename)?;
     let mut runtime = JsRuntimeHandle::default();
     unsafe {
         ChakraRTInterface::JsCreateRuntime(
@@ -30,7 +32,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
         ChakraRTInterface::JsCreateContext(runtime, &raw mut context).as_result()?;
     }
     ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
-    let wscript = WScript::new(config);
+    let wscript = WScript::new(config, script_cache);
     wscript.initialize()?;
 
     let path = std::fs::canonicalize(&config.core.filename)?;

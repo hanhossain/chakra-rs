@@ -11,6 +11,7 @@ fn setup_tracing() {
         .with_span_events(FmtSpan::NEW | FmtSpan::CLOSE)
         .with_thread_names(true)
         .with_thread_ids(true)
+        .pretty()
         .init();
 }
 

@@ -6,15 +6,15 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.104"
 chakracore-sys = { path = "../chakracore-sys" }
-cxx = "1.0.199"
-serde_json = "1.0.151"
-thiserror = "2.0.20"
+cxx = "1.0.205"
+serde_json = "1.0.154"
+thiserror = "2.0.21"
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
-rstest = "0.27.0"
+rstest = "0.28.0"
 
 [features]
 compile-cpp = ["chakracore-sys/compile-cpp"]
