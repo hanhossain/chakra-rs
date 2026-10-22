@@ -7,19 +7,17 @@
 
 #include <utility>
 
-#include "chakracore-sys/src/filesystem.rs.h"
 #include "ChakraRtInterface.h"
+#include "chakra/Logger.h"
+#include "chakracore-sys/src/filesystem.rs.h"
 #include "chakracore-sys/src/wscript_jsrt.rs.h"
 
 #pragma prefast(disable:26444, "This warning unfortunately raises false positives when auto is used for declaring the type of an iterator in a loop.")
 
 JsValueRef WScriptJsrt::LoadScriptHelper(const chakra_rs::JsNativeFunctionArgs &args, bool isSourceModule, rust::String fileContent, rust::Str scriptInjectType, rust::String fileName, bool isFile, const chakra_rs::WScript &wscript)
 {
-    // HACK: call to c_str() somehow sets the underlying rust::Str up to be null-terminated. This prevents a segfault
-    //  down the line when chakra clones the utf8 but attempts to copy the null terminator even if it's not
-    //  null-terminated.
+    auto span = chakra::Span::create("WScriptJsrt::LoadScriptHelper");
     auto *fileContentPtr = new rust::String{std::move(fileContent)};
-    fileContentPtr->c_str();
 
     // TODO: This is CESU-8. How to tell the engine?
     // TODO: How to handle this source (script) life time?
