@@ -3131,6 +3131,7 @@ JsErrorCode RunScriptCore(JsValueRef scriptSource, const byte *script, size_t cb
     const char16_t *sourceUrl, bool parseOnly, JsParseScriptAttributes parseAttributes,
     bool isSourceModule, JsValueRef *result)
 {
+    auto span = chakra::Span::create("chakracore::jsrt::RunScriptCore");
     Js::JavascriptFunction *scriptFunction;
     CompileScriptException se;
 
@@ -3682,7 +3683,7 @@ inline JsErrorCode CompileRun(
     _Out_ JsValueRef *result,
     bool parseOnly)
 {
-    auto span = chakra::Span::create("CompileRun");
+    auto span = chakra::Span::create("chakracore::jsrt::CompileRun");
     PARAM_NOT_NULL(scriptVal);
     VALIDATE_JSREF(scriptVal);
     PARAM_NOT_NULL(sourceUrl);

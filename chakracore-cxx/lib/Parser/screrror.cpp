@@ -5,6 +5,7 @@
 #include <string>
 #pragma hdrstop
 #include "errstr.h"
+#include "chakra/Logger.h"
 
 void CopyException (EXCEPINFO *peiDest, const EXCEPINFO *peiSource)
 {
@@ -242,6 +243,7 @@ void CompileScriptException::CopyInto(CompileScriptException* pse)
 
 int32_t  CompileScriptException::ProcessError(IScanner * pScan, int32_t hr, ParseNode * pnodeBase, const char16_t* stringOne, const char16_t* stringTwo)
 {
+    auto span = chakra::Span::create("CompileScriptException::ProcessError");
     // fill in the ScriptException structure
     Free();
     ei.scode = GetScode(MapHr(hr));
