@@ -13,7 +13,6 @@ use crate::messages::Message;
 use crate::rt_interface::ChakraRTInterface;
 use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::cache::ScriptCache;
-use crate::wscript_jsrt::ffi::WScriptJsrt;
 use crate::wscript_jsrt::tls::ThreadData;
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -61,41 +60,12 @@ unsafe impl cxx::ExternType for Handle {
 #[cxx::bridge]
 mod ffi {
     unsafe extern "C++" {
-        include!("WScriptJsrt.h");
+        include!("ChakraCore.h");
         include!("PlatformAgnostic/ChakraICU.h");
-        include!("chakracore-sys/src/str_helper.rs.h");
-
-        type WScriptJsrt;
-
-        type JsPropertyIdRef = crate::jsrt::JsPropertyIdRef;
-        type JsModuleRecord = crate::jsrt::JsModuleRecord;
-        type JsSourceContext = crate::jsrt::JsSourceContext;
-        type JsContextRef = crate::jsrt::JsContextRef;
-        type JsRuntimeHandle = crate::jsrt::JsRuntimeHandle;
-
-        type JsValueRef = crate::jsrt::JsValueRef;
         type CVoid = crate::jsrt::CVoid;
-
-        type JsErrorCode = crate::jsrt::JsErrorCode;
-        #[namespace = "chakra_rs"]
-        type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
-
-        #[namespace = "chakra_rs"]
-        type JsNativeFunctionArgs<'a> = crate::jsrt::JsNativeFunctionArgs<'a>;
 
         #[namespace = "PlatformAgnostic::ICUHelpers"]
         fn GetICUMajorVersion() -> i32;
-
-        #[Self = "WScriptJsrt"]
-        fn LoadScriptHelper(
-            args: &JsNativeFunctionArgs,
-            is_source_module: bool,
-            file_content: String,
-            script_inject_type: &str,
-            filename: String,
-            is_file: bool,
-            wscript: &WScript,
-        ) -> JsValueRef;
     }
 
     unsafe extern "C++" {
@@ -112,21 +82,6 @@ mod ffi {
         fn WaitForMultipleObjects(handles: &[Handle], wait_all: bool) -> u32;
         #[namespace = "pal_ffi"]
         fn CloseHandle(handle: &Handle) -> bool;
-    }
-
-    #[namespace = "chakra_rs"]
-    extern "Rust" {
-        #[derive(ExternType)]
-        type WScript;
-        fn load_script(
-            &self,
-            callee: JsValueRef,
-            file_name: &str,
-            content: OptionalStr,
-            script_inject_type: &str,
-            is_source_module: bool,
-            is_file: bool,
-        ) -> JsValueRef;
     }
 }
 
@@ -378,7 +333,7 @@ impl WScript {
         // TODO (hanhossain): don't leak a string ptr
         let content = Box::into_raw(content);
         unsafe {
-            Ok(self.internal_load_script(
+            Ok(self.load_script(
                 callee,
                 &filename,
                 Some(&*content),
@@ -429,15 +384,20 @@ impl WScript {
             }
         }
 
-        Ok(WScriptJsrt::LoadScriptHelper(
-            args,
-            is_source_module,
-            file_content,
-            &script_inject_type,
-            filename,
-            is_file,
-            self,
-        ))
+        // TODO (hanhossain): don't leak a string ptr
+        //  without leaking, this fails with:
+        //  - tests::wasm_spec::jsapi_js3::case_1_interpreted
+        let content = Box::into_raw(file_content.into_boxed_str());
+        unsafe {
+            Ok(self.load_script(
+                args.callee,
+                &filename,
+                Some(&*content),
+                &script_inject_type,
+                is_source_module,
+                is_file,
+            )?)
+        }
     }
 
     fn load_script_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
@@ -1050,41 +1010,9 @@ impl WScript {
         Ok(())
     }
 
-    #[tracing::instrument(skip_all)]
-    fn load_script(
-        &self,
-        callee: JsValueRef,
-        file_name: &str,
-        content: OptionalStr,
-        script_inject_type: &str,
-        is_source_module: bool,
-        is_file: bool,
-    ) -> JsValueRef {
-        self.internal_load_script(
-            callee,
-            file_name,
-            content.into(),
-            script_inject_type,
-            is_source_module,
-            is_file,
-        )
-        .unwrap_or_else(|error| {
-            let (error, error_message) = match error {
-                LoadScriptError::JsError(err) => (err, "Internal error."),
-                LoadScriptError::JsErrorWithMessage { error, message } => (error, message),
-                LoadScriptError::OneshotRecvError(_) => {
-                    (JsError::JsErrorFatal, "Oneshot recv error.")
-                }
-            };
-            let value = ChakraRt::double_to_number(JsErrorCode::from(error).repr as f64)
-                .unwrap_or_default();
-            ChakraRt::create_and_set_exception(error_message);
-            value
-        })
-    }
-
+    // TODO: rename to load_script
     #[tracing::instrument(skip(self), err)]
-    fn internal_load_script<'a>(
+    fn load_script<'a>(
         &self,
         callee: JsValueRef,
         file_name: &str,
