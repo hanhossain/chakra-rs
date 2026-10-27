@@ -30,7 +30,6 @@ fn main() {
         .flag("-fms-extensions")
         .define("PAL_STDCPP_COMPAT", None)
         .include("../chakracore-cxx/bin/ch")
-        .include("../chakracore-cxx/bin/ChakraCore")
         .include("../chakracore-cxx/ffi/include")
         .include("../chakracore-cxx/lib/Common")
         .include("../chakracore-cxx/lib/Common/Interface/include")
