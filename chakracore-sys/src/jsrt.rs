@@ -293,6 +293,14 @@ impl ChakraRt {
             }
         }
     }
+
+    pub(crate) fn module_evaluation(request_module: JsModuleRecord) -> Result<(), JsError> {
+        let mut module_res = JsValueRef::default();
+        unsafe {
+            bridge::JsModuleEvaluation(request_module, &raw mut module_res).as_result()?;
+        }
+        Ok(())
+    }
 }
 
 pub struct JsObject(JsValueRef);

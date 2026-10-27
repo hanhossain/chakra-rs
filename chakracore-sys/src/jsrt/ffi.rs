@@ -216,6 +216,10 @@ pub(super) mod bridge {
 
         fn JsSetException(exception: JsValueRef) -> JsErrorCode;
         unsafe fn JsHasException(has_exception: *mut bool) -> JsErrorCode;
+        unsafe fn JsModuleEvaluation(
+            request_module: JsModuleRecord,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
         unsafe fn JsGetModuleNamespace(
             request_module: JsModuleRecord,
             module_namespace: *mut JsValueRef,

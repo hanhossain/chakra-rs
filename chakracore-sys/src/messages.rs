@@ -147,11 +147,7 @@ impl ModuleMessage {
                 return Ok(());
             };
             if state != ModuleState::ErroredModule {
-                let mut module_res = JsValueRef::default();
-                unsafe {
-                    ChakraRTInterface::JsModuleEvaluation(self.module_record, &raw mut module_res)
-                        .as_result()?;
-                }
+                ChakraRt::module_evaluation(self.module_record)?;
             }
             return Ok(());
         }
