@@ -95,7 +95,6 @@ pub fn print_usage() {
 }
 
 fn parse_config_flags(args: &Vec<String>) -> Result<(), Error> {
-    TestHooks::SetAssertToConsoleFlag(true);
     let Err(err) = hresult_to_result(TestHooks::SetConfigFlags(args)) else {
         return Ok(());
     };

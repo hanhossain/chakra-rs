@@ -12,7 +12,6 @@
 
 // AutoDebug functions that are only available in DEBUG builds
 extern int AssertCount;
-extern int AssertsToConsole;
 
 extern thread_local int IsInAssert;
 

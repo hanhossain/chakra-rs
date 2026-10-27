@@ -5,7 +5,6 @@
 #include "Core/Api.h"
 
 int AssertCount = 0;
-int AssertsToConsole = false;
 
 thread_local int IsInAssert = false;
 

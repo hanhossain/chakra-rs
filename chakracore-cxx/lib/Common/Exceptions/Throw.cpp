@@ -119,12 +119,7 @@ namespace Js {
 
     bool Throw::ReportAssert(const char * fileName, uint lineNumber, const char * error, const char * message)
     {
-        if (AssertsToConsole)
-        {
-            chakra::Logger::error(std::format("ASSERTION {}: ({}, line {}) {}\n Failure: {}\n", getpid(), fileName, lineNumber, message, error));
-            return false;
-        }
-
+        chakra::Logger::error(std::format("ASSERTION {}: ({}, line {}) {}\n Failure: {}\n", getpid(), fileName, lineNumber, message, error));
         return false;
     }
 
