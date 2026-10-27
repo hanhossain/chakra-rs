@@ -46,6 +46,7 @@ target_compile_definitions(ChakraCoreStatic PUBLIC
 
 if(CC_TARGET_OS_OSX)
   target_link_libraries(ChakraCoreStatic
+    Chakra.Ffi
     "-framework CoreFoundation"
     "-framework Security"
     )
@@ -53,6 +54,7 @@ else()
   set(PTHREAD "pthread")
 
   target_link_libraries(ChakraCoreStatic
+    Chakra.Ffi
     ${PTHREAD}
     "dl"
     )
