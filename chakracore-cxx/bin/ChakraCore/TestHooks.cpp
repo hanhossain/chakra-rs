@@ -63,11 +63,3 @@ int32_t TestHooks::SetConfigFlags(const rust::Vec<rust::String> &vargs)
 
     return S_OK;
 }
-
-int32_t TestHooks::SetAssertToConsoleFlag(bool flag)
-{
-#ifdef DBG
-    AssertsToConsole = flag;
-#endif
-    return S_OK;
-}
