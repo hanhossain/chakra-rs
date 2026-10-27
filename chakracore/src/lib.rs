@@ -2,6 +2,7 @@ pub mod chhelper;
 
 use crate::chhelper::execute_test;
 use chakracore_sys::config::ConfigContext;
+use chakracore_sys::helpers;
 use chakracore_sys::jsrt::JsError;
 use cxx::Exception;
 
@@ -11,23 +12,8 @@ pub fn run(config: ConfigContext) -> Result<(), Error> {
     Ok(())
 }
 
-fn hresult_to_result(res: i32) -> Result<(), Error> {
-    if res < 0 {
-        return Err(Error::NegativeHResult(res));
-    }
-    if res > 0 {
-        return Err(Error::ExitCode(res as u8));
-    }
-
-    Ok(())
-}
-
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
-    #[error("exit code")]
-    ExitCode(u8),
-    #[error("hresult was negative")]
-    NegativeHResult(i32),
     #[error("Exception propagated from c++")]
     Exception(#[from] Exception),
     #[error(transparent)]
@@ -36,4 +22,6 @@ pub enum Error {
     Io(#[from] std::io::Error),
     #[error(transparent)]
     InteriorNull(#[from] std::ffi::NulError),
+    #[error(transparent)]
+    Helpers(#[from] helpers::Error),
 }

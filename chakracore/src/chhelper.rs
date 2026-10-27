@@ -1,6 +1,6 @@
-use crate::{Error, hresult_to_result};
+use crate::Error;
 use chakracore_sys::config::ConfigContext;
-use chakracore_sys::helpers::TestHooks;
+use chakracore_sys::helpers;
 use chakracore_sys::jsrt::{
     ChakraRt, JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
     JsRuntimeHandle, JsSourceContext, JsValueRef,
@@ -94,8 +94,8 @@ pub fn print_usage() {
     }
 }
 
-fn parse_config_flags(args: &Vec<String>) -> Result<(), Error> {
-    let Err(err) = hresult_to_result(TestHooks::SetConfigFlags(args)) else {
+fn parse_config_flags(args: &Vec<String>) -> Result<(), helpers::Error> {
+    let Err(err) = helpers::set_config_flags(args) else {
         return Ok(());
     };
 

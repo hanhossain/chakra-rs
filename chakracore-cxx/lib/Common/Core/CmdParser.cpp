@@ -678,9 +678,8 @@ int CmdLineArgsParser::Parse(const char16_t* oneArg) throw()
 /// Constructor
 ///
 ///----------------------------------------------------------------------------
-
-CmdLineArgsParser::CmdLineArgsParser(Js::ConfigFlagsTable& flagTable) : flagTable(flagTable)
-{
+CmdLineArgsParser::CmdLineArgsParser() : CmdLineArgsParser(Js::Configuration::Global.flags) {}
+CmdLineArgsParser::CmdLineArgsParser(Js::ConfigFlagsTable &flagTable) : flagTable(flagTable) {
     this->pszCurrentArg = nullptr;
 }
 
@@ -688,3 +687,4 @@ CmdLineArgsParser::~CmdLineArgsParser()
 {
     flagTable.FinalizeConfiguration();
 }
+std::unique_ptr<CmdLineArgsParser> CmdLineArgsParser::New() { return std::make_unique<CmdLineArgsParser>(); }

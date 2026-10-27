@@ -2,7 +2,7 @@ pub mod cache;
 mod tls;
 
 use crate::config::ConfigContext;
-use crate::helpers::TestHooks;
+use crate::helpers;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode, JsModuleHostInfoKind,
     JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
@@ -416,7 +416,7 @@ impl WScript {
         let cmd = args.arguments[1].to_string()?;
         let argv = vec![String::new(), cmd];
 
-        TestHooks::SetConfigFlags(&argv);
+        let _ = helpers::set_config_flags(&argv);
         Ok(())
     }
 
