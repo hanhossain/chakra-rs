@@ -23,7 +23,6 @@ InsertNewlineAtEOF: true
 MacroBlockBegin: ''
 MacroBlockEnd: ''
 MaxEmptyLinesToKeep: 1
-NamespaceIndentation: All
 SpaceInEmptyParentheses: false
 SpacesInAngles: Never
 SpacesInConditionalStatement: false
