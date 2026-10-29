@@ -233,8 +233,7 @@ fn run_script(
         let callback = ChakraRt::set_promise_continuation_callback(|task| {
             wscript.promise_continuation_callback(task)
         })?;
-        let mut fname = JsValueRef::default();
-        ChakraRTInterface::JsCreateString(full_path, &raw mut fname).as_result()?;
+        let fname = ChakraRt::create_string(full_path)?;
         (fname, callback)
     };
 
@@ -249,7 +248,7 @@ fn run_script(
                 buffer_value,
                 dummy_js_serialized_script_load_utf8_source,
                 source_context,
-                fname,
+                *fname,
                 std::ptr::null_mut(),
             )
         }
@@ -261,7 +260,7 @@ fn run_script(
             ChakraRTInterface::JsRunScriptWithParserState(
                 script_source,
                 JsSourceContext(WScript::get_next_source_context()),
-                fname,
+                *fname,
                 JsParseScriptAttributes::JsParseScriptAttributeNone,
                 parser_state_cache,
                 std::ptr::null_mut(),
@@ -277,7 +276,7 @@ fn run_script(
             ChakraRTInterface::JsRun(
                 script_source,
                 JsSourceContext(WScript::get_next_source_context()),
-                fname,
+                *fname,
                 JsParseScriptAttributes::JsParseScriptAttributeNone,
                 std::ptr::null_mut(),
             )

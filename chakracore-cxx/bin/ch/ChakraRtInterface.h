@@ -62,7 +62,6 @@ public:
     {
         return chakracore::jsrt::JsRunSerialized(buffer, scriptLoadCallback, sourceContext, sourceUrl, result);
     }
-    static JsErrorCode JsCreateString(const rust::String &content, JsValueRef *value) { return chakracore::jsrt::JsCreateString(content, value); }
     static JsErrorCode JsCreateExternalArrayBuffer(const rust::Str content, JsValueRef *result)  { return chakracore::jsrt::JsCreateExternalArrayBuffer(const_cast<char *>(content.data()), content.length(), nullptr, const_cast<char *>(content.data()), result); }
     static JsErrorCode JsGetProxyProperties(JsValueRef object, bool* isProxy, JsValueRef* target, JsValueRef* handler)  { return chakracore::jsrt::JsGetProxyProperties(object, isProxy, target, handler); }
 

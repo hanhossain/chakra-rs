@@ -777,9 +777,8 @@ impl WScript {
                 return Ok(return_value);
             };
 
-            unsafe {
-                ChakraRTInterface::JsCreateString(&report, &raw mut return_value).as_result()?;
-            }
+            let value = ChakraRt::create_string(&report)?;
+            return Ok(*value);
         }
 
         Ok(return_value)
