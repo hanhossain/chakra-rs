@@ -1044,7 +1044,7 @@ impl WScript {
             unsafe {
                 ChakraRTInterface::JsGetContextOfObject(callee, &raw mut callee_context)
                     .as_result()?;
-                ChakraRTInterface::JsSetCurrentContext(callee_context).as_result()?;
+                ChakraRt::set_current_context(callee_context)?;
             }
 
             let mut script_source = JsValueRef::default();
@@ -1098,13 +1098,13 @@ impl WScript {
                 return_value = *global_object;
             }
 
-            ChakraRTInterface::JsSetCurrentContext(current_context).as_result()?;
+            ChakraRt::set_current_context(current_context)?;
 
             Ok(return_value)
         } else if script_inject_type == "samethread" {
             let new_context = ChakraRt::create_context(runtime)?;
             let callback = unsafe {
-                ChakraRTInterface::JsSetCurrentContext(new_context).as_result()?;
+                ChakraRt::set_current_context(new_context)?;
                 ChakraRt::set_promise_continuation_callback(|task| {
                     self.promise_continuation_callback(task)
                 })?
@@ -1164,7 +1164,7 @@ impl WScript {
             }
 
             drop(callback);
-            ChakraRTInterface::JsSetCurrentContext(current_context).as_result()?;
+            ChakraRt::set_current_context(current_context)?;
 
             Ok(return_value)
         } else if script_inject_type == "crossthread" {

@@ -21,7 +21,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     let runtime = ChakraRt::create_runtime(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
 
     let context = ChakraRt::create_context(runtime)?;
-    ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
+    ChakraRt::set_current_context(context)?;
     let wscript = WScript::new(config, script_cache);
     wscript.initialize()?;
 
@@ -55,7 +55,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
         )?;
     };
 
-    ChakraRTInterface::JsSetCurrentContext(JsContextRef::default()).as_result()?;
+    ChakraRt::set_current_context(JsContextRef::default())?;
 
     if !runtime.is_invalid() {
         ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
@@ -109,7 +109,7 @@ fn create_parser_state_and_run_script(
         let new_context = ChakraRt::create_context(runtime)?;
         let mut old_context = JsContextRef::default();
         ChakraRTInterface::JsGetCurrentContext(&raw mut old_context).as_result()?;
-        ChakraRTInterface::JsSetCurrentContext(new_context).as_result()?;
+        ChakraRt::set_current_context(new_context)?;
         old_context
     };
 
@@ -125,7 +125,7 @@ fn create_parser_state_and_run_script(
         &wscript,
     )?;
 
-    ChakraRTInterface::JsSetCurrentContext(old_context).as_result()?;
+    ChakraRt::set_current_context(old_context)?;
     ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
     Ok(())
 }
@@ -147,7 +147,7 @@ fn create_and_run_serialized_script(
 
         let mut old_context = JsContextRef::default();
         ChakraRTInterface::JsGetCurrentContext(&raw mut old_context).as_result()?;
-        ChakraRTInterface::JsSetCurrentContext(new_context).as_result()?;
+        ChakraRt::set_current_context(new_context)?;
         old_context
     };
 
@@ -163,7 +163,7 @@ fn create_and_run_serialized_script(
         wscript,
     )?;
 
-    ChakraRTInterface::JsSetCurrentContext(old_context).as_result()?;
+    ChakraRt::set_current_context(old_context)?;
     ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
 
     Ok(())

@@ -74,7 +74,7 @@ impl ThreadData {
         let runtime = ChakraRt::create_runtime(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
 
         let context = ChakraRt::create_context(runtime)?;
-        ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
+        ChakraRt::set_current_context(context)?;
         wscript.initialize()?;
 
         let mut script_source = JsValueRef::default();
@@ -154,13 +154,16 @@ impl ThreadData {
         Ok(())
     }
 
+    #[tracing::instrument(skip_all)]
     fn on_shutdown(&self, runtime: JsRuntimeHandle) {
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
             unsafe {
                 ChakraRTInterface::JsRelease(callback_func.as_js_ref(), std::ptr::null_mut());
             }
         }
-        ChakraRTInterface::JsSetCurrentContext(JsContextRef::default());
+        if let Err(err) = ChakraRt::set_current_context(JsContextRef::default()) {
+            tracing::warn!(?err, "failed to reset context")
+        }
         ChakraRTInterface::JsDisposeRuntime(runtime);
     }
 
