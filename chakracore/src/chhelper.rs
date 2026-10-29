@@ -58,7 +58,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     ChakraRt::set_current_context(JsContextRef::default())?;
 
     if !runtime.is_invalid() {
-        ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
+        ChakraRt::dispose_runtime(runtime)?;
     }
 
     Ok(())
@@ -122,7 +122,7 @@ fn create_parser_state_and_run_script(
     )?;
 
     ChakraRt::set_current_context(old_context)?;
-    ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
+    ChakraRt::dispose_runtime(runtime)?;
     Ok(())
 }
 
@@ -155,7 +155,7 @@ fn create_and_run_serialized_script(
     )?;
 
     ChakraRt::set_current_context(old_context)?;
-    ChakraRTInterface::JsDisposeRuntime(runtime).as_result()?;
+    ChakraRt::dispose_runtime(runtime)?;
 
     Ok(())
 }

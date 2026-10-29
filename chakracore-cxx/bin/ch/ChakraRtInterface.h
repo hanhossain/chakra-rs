@@ -17,7 +17,6 @@
 class ChakraRTInterface
 {
 public:
-    static JsErrorCode JsDisposeRuntime(JsRuntimeHandle runtime) { return chakracore::jsrt::JsDisposeRuntime(runtime); }
     static JsErrorCode JsGetNullValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetNullValue(globalObject); }
     static JsErrorCode JsGetTrueValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetTrueValue(globalObject); }
     static JsErrorCode JsGetFalseValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetFalseValue(globalObject); }

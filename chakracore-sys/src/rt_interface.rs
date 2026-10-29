@@ -22,9 +22,6 @@ mod ffi {
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
 
         #[Self = "ChakraRTInterface"]
-        fn JsDisposeRuntime(runtime: JsRuntimeHandle) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsGetRuntime(context: JsContextRef, runtime: *mut JsRuntimeHandle)
         -> JsErrorCode;
 

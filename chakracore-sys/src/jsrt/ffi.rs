@@ -176,6 +176,7 @@ pub(super) mod bridge {
             attributes: JsRuntimeAttributes,
             runtime: *mut JsRuntimeHandle,
         ) -> JsErrorCode;
+        fn JsDisposeRuntime(runtime: JsRuntimeHandle) -> JsErrorCode;
         unsafe fn JsCreateContext(
             runtime: JsRuntimeHandle,
             context: *mut JsContextRef,
