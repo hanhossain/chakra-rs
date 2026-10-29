@@ -1102,9 +1102,8 @@ impl WScript {
 
             Ok(return_value)
         } else if script_inject_type == "samethread" {
-            let mut new_context = JsContextRef::default();
+            let new_context = ChakraRt::create_context(runtime)?;
             let callback = unsafe {
-                ChakraRTInterface::JsCreateContext(runtime, &raw mut new_context).as_result()?;
                 ChakraRTInterface::JsSetCurrentContext(new_context).as_result()?;
                 ChakraRt::set_promise_continuation_callback(|task| {
                     self.promise_continuation_callback(task)

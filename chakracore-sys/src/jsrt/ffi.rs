@@ -176,6 +176,10 @@ pub(super) mod bridge {
             attributes: JsRuntimeAttributes,
             runtime: *mut JsRuntimeHandle,
         ) -> JsErrorCode;
+        unsafe fn JsCreateContext(
+            runtime: JsRuntimeHandle,
+            context: *mut JsContextRef,
+        ) -> JsErrorCode;
         unsafe fn JsCreateString(content: &str, value: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreatePropertyId(name: &str, object: *mut JsPropertyIdRef) -> JsErrorCode;

@@ -16,6 +16,14 @@ impl ChakraRt {
         Ok(obj)
     }
 
+    pub fn create_context(runtime: JsRuntimeHandle) -> Result<JsContextRef, JsError> {
+        let mut context = JsContextRef::default();
+        unsafe {
+            bridge::JsCreateContext(runtime, &raw mut context).as_result()?;
+        }
+        Ok(context)
+    }
+
     pub fn create_object() -> Result<JsObject, JsError> {
         let mut object = JsValueRef::default();
         unsafe {

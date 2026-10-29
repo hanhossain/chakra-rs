@@ -29,12 +29,6 @@ mod ffi {
         -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsCreateContext(
-            runtime: JsRuntimeHandle,
-            context: *mut JsContextRef,
-        ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         fn JsSetCurrentContext(context: JsContextRef) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
