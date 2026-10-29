@@ -3,7 +3,7 @@ use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers;
 use chakracore_sys::jsrt::{
     ChakraRt, JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
-    JsRuntimeHandle, JsSourceContext, JsValueRef,
+    JsSourceContext, JsValueRef,
 };
 use chakracore_sys::rt_interface::ChakraRTInterface;
 use chakracore_sys::wscript_jsrt::WScript;
@@ -18,14 +18,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
 
     let script_cache = ScriptCache::new();
     let file_contents = script_cache.get_script(&config.core.filename)?;
-    let mut runtime = JsRuntimeHandle::default();
-    unsafe {
-        ChakraRTInterface::JsCreateRuntime(
-            JsRuntimeAttributes::JsRuntimeAttributeNone,
-            &raw mut runtime,
-        )
-        .as_result()?;
-    }
+    let runtime = ChakraRt::create_runtime(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
 
     let mut context = JsContextRef::default();
     unsafe {
@@ -114,10 +107,8 @@ fn create_parser_state_and_run_script(
     let buffer = get_parser_state_buffer(contents)?;
 
     // Bytecode buffer is created in one runtime and will be executed on different runtime.
-    let mut runtime = JsRuntimeHandle::default();
+    let runtime = ChakraRt::create_runtime(jsrt_attributes)?;
     let old_context = unsafe {
-        ChakraRTInterface::JsCreateRuntime(jsrt_attributes, &raw mut runtime).as_result()?;
-
         let mut new_context = JsContextRef::default();
         ChakraRTInterface::JsCreateContext(runtime, &raw mut new_context).as_result()?;
 
@@ -155,10 +146,8 @@ fn create_and_run_serialized_script(
     let buffer_val = get_serialized_buffer(contents)?;
 
     // Bytecode buffer is created in one runtime and will be executed on a different runtime.
-    let mut runtime = JsRuntimeHandle::default();
+    let runtime = ChakraRt::create_runtime(jsrt_attributes)?;
     let old_context = unsafe {
-        ChakraRTInterface::JsCreateRuntime(jsrt_attributes, &raw mut runtime).as_result()?;
-
         let mut new_context = JsContextRef::default();
         ChakraRTInterface::JsCreateContext(runtime, &raw mut new_context).as_result()?;
 

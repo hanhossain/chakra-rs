@@ -172,6 +172,10 @@ pub(super) mod bridge {
 
     #[namespace = "chakracore::jsrt"]
     unsafe extern "C++" {
+        unsafe fn JsCreateRuntime(
+            attributes: JsRuntimeAttributes,
+            runtime: *mut JsRuntimeHandle,
+        ) -> JsErrorCode;
         unsafe fn JsCreateString(content: &str, value: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreatePropertyId(name: &str, object: *mut JsPropertyIdRef) -> JsErrorCode;
