@@ -162,9 +162,11 @@ impl ThreadData {
             }
         }
         if let Err(err) = ChakraRt::set_current_context(JsContextRef::default()) {
-            tracing::warn!(?err, "failed to reset context")
+            tracing::warn!(?err, "failed to reset context");
         }
-        ChakraRTInterface::JsDisposeRuntime(runtime);
+        if let Err(err) = ChakraRt::dispose_runtime(runtime) {
+            tracing::warn!(?err, "failed to dispose runtime");
+        }
     }
 
     pub(super) fn enqueue_report_to_parent(&self, report: String) -> Result<(), ReportQueueError> {

@@ -16,6 +16,11 @@ impl ChakraRt {
         Ok(obj)
     }
 
+    // TODO: this should be a method on a JsRuntime instead, or it should be in the drop
+    pub fn dispose_runtime(runtime: JsRuntimeHandle) -> Result<(), JsError> {
+        bridge::JsDisposeRuntime(runtime).as_result()
+    }
+
     pub fn create_context(runtime: JsRuntimeHandle) -> Result<JsContextRef, JsError> {
         let mut context = JsContextRef::default();
         unsafe {
