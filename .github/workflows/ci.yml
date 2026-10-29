@@ -32,7 +32,7 @@ jobs:
         include:
           - os: macos
             os-image: macos-latest
-            deps: brew install ninja --quiet
+            deps: brew install ninja icu4c@78 --quiet
           - os: ubuntu
             # TODO: use ubuntu-latest again
             os-image: ubuntu-26.04
@@ -85,7 +85,7 @@ jobs:
           - os: macos
             os-image: macos-latest
             os-prefix: macos
-            deps: brew install ninja --quiet
+            deps: brew install ninja icu4c@78 --quiet
           - os: ubuntu
             # TODO: use ubuntu-latest again
             os-image: ubuntu-26.04

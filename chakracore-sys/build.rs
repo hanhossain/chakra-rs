@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 fn main() {
     let bridges = [
@@ -20,7 +20,7 @@ fn main() {
 
     let c_compiler = cxx_bridge.clone();
 
-    let icu_include_path = "/opt/homebrew/opt/icu4c/include";
+    let icu_path = Path::new("/opt/homebrew/opt/icu4c@78");
 
     cxx_bridge
         .std("c++23")
@@ -40,7 +40,7 @@ fn main() {
         .include("../chakracore-cxx/pal/inc");
 
     if cfg!(target_os = "macos") {
-        cxx_bridge.include(icu_include_path);
+        cxx_bridge.include(icu_path.join("include"));
     }
     cxx_bridge.compile("binding");
 
@@ -94,7 +94,7 @@ fn main() {
             if cfg!(target_os = "macos") {
                 config
                     .define("DISABLE_JIT", "ON")
-                    .define("ICU_INCLUDE_PATH", icu_include_path);
+                    .define("ICU_INCLUDE_PATH", icu_path.join("include"));
             }
 
             config.always_configure(false);
@@ -111,7 +111,7 @@ fn main() {
         println!("cargo::rustc-link-lib=Chakra.Ffi");
 
         if cfg!(target_os = "macos") {
-            println!("cargo::rustc-link-search=native=/opt/homebrew/opt/icu4c/lib");
+            println!("cargo::rustc-link-search=native={}/lib", icu_path.display());
 
             println!("cargo::rustc-link-lib=framework=CoreFoundation");
         }
