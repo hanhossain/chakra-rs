@@ -105,13 +105,9 @@ fn create_parser_state_and_run_script(
 
     // Bytecode buffer is created in one runtime and will be executed on different runtime.
     let runtime = ChakraRt::create_runtime(jsrt_attributes)?;
-    let old_context = unsafe {
-        let new_context = ChakraRt::create_context(runtime)?;
-        let mut old_context = JsContextRef::default();
-        ChakraRTInterface::JsGetCurrentContext(&raw mut old_context).as_result()?;
-        ChakraRt::set_current_context(new_context)?;
-        old_context
-    };
+    let new_context = ChakraRt::create_context(runtime)?;
+    let old_context = ChakraRt::get_current_context()?;
+    ChakraRt::set_current_context(new_context)?;
 
     // initialize the WScript object on the new context
     wscript.initialize()?;
@@ -142,14 +138,9 @@ fn create_and_run_serialized_script(
 
     // Bytecode buffer is created in one runtime and will be executed on a different runtime.
     let runtime = ChakraRt::create_runtime(jsrt_attributes)?;
-    let old_context = unsafe {
-        let new_context = ChakraRt::create_context(runtime)?;
-
-        let mut old_context = JsContextRef::default();
-        ChakraRTInterface::JsGetCurrentContext(&raw mut old_context).as_result()?;
-        ChakraRt::set_current_context(new_context)?;
-        old_context
-    };
+    let new_context = ChakraRt::create_context(runtime)?;
+    let old_context = ChakraRt::get_current_context()?;
+    ChakraRt::set_current_context(new_context)?;
 
     // initialize the WScript object on the new context
     wscript.initialize()?;

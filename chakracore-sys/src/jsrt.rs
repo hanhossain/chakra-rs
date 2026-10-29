@@ -28,6 +28,14 @@ impl ChakraRt {
         bridge::JsSetCurrentContext(context).as_result()
     }
 
+    pub fn get_current_context() -> Result<JsContextRef, JsError> {
+        let mut context = JsContextRef::default();
+        unsafe {
+            bridge::JsGetCurrentContext(&raw mut context).as_result()?;
+        }
+        Ok(context)
+    }
+
     pub fn create_object() -> Result<JsObject, JsError> {
         let mut object = JsValueRef::default();
         unsafe {

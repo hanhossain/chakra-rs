@@ -1020,10 +1020,9 @@ impl WScript {
         is_source_module: bool,
         is_file: bool,
     ) -> Result<JsValueRef, LoadScriptError> {
-        let mut current_context = JsContextRef::default();
         let mut runtime = JsRuntimeHandle::default();
+        let current_context = ChakraRt::get_current_context()?;
         unsafe {
-            ChakraRTInterface::JsGetCurrentContext(&raw mut current_context).as_result()?;
             ChakraRTInterface::JsGetRuntime(current_context, &raw mut runtime).as_result()?;
         }
         let full_path = std::path::absolute(file_name);
