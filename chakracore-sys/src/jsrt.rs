@@ -8,6 +8,14 @@ use std::ops::{Deref, DerefMut};
 pub struct ChakraRt;
 
 impl ChakraRt {
+    pub fn create_runtime(attributes: JsRuntimeAttributes) -> Result<JsRuntimeHandle, JsError> {
+        let mut obj = JsRuntimeHandle::default();
+        unsafe {
+            bridge::JsCreateRuntime(attributes, &raw mut obj).as_result()?;
+        }
+        Ok(obj)
+    }
+
     pub fn create_object() -> Result<JsObject, JsError> {
         let mut object = JsValueRef::default();
         unsafe {

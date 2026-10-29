@@ -22,12 +22,6 @@ mod ffi {
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsCreateRuntime(
-            attributes: JsRuntimeAttributes,
-            runtime: *mut JsRuntimeHandle,
-        ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         fn JsDisposeRuntime(runtime: JsRuntimeHandle) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
@@ -197,28 +191,5 @@ mod ffi {
             argument_count: u16,
             result: *mut JsValueRef,
         ) -> JsErrorCode;
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::jsrt::{JsErrorCode, JsRuntimeAttributes, JsRuntimeHandle};
-    use crate::rt_interface::ChakraRTInterface;
-
-    #[test]
-    fn create_and_dispose_runtime() {
-        let mut runtime = JsRuntimeHandle::default();
-        unsafe {
-            let res = ChakraRTInterface::JsCreateRuntime(
-                JsRuntimeAttributes::JsRuntimeAttributeNone,
-                &raw mut runtime,
-            );
-            assert_eq!(res, JsErrorCode::JsNoError);
-
-            assert!(!runtime.is_invalid());
-
-            let res = ChakraRTInterface::JsDisposeRuntime(runtime);
-            assert_eq!(res, JsErrorCode::JsNoError);
-        }
     }
 }

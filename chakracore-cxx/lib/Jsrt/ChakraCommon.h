@@ -745,6 +745,20 @@ namespace chakracore::jsrt
             _In_opt_ JsThreadServiceCallback threadService,
             _Out_ JsRuntimeHandle *runtime);
 
+/// <summary>
+///     Creates a new runtime.
+/// </summary>
+/// <param name="attributes">The attributes of the runtime to be created.</param>
+/// <param name="runtime">The runtime created.</param>
+/// <remarks>
+///     In the edge-mode binary, chakra.dll, this function lacks the <c>runtimeVersion</c>
+///     parameter (compare to jsrt9.h).
+/// </remarks>
+/// <returns>
+///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+/// </returns>
+JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *runtime);
+
     /// <summary>
     ///     Performs a full garbage collection.
     /// </summary>

@@ -17,7 +17,6 @@
 class ChakraRTInterface
 {
 public:
-    static JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *runtime) { return chakracore::jsrt::JsCreateRuntime(attributes, nullptr, runtime); }
     static JsErrorCode JsCreateContext(JsRuntimeHandle runtime, JsContextRef *newContext) { return chakracore::jsrt::JsCreateContext(runtime, newContext); }
     static JsErrorCode JsSetCurrentContext(JsContextRef context) { return chakracore::jsrt::JsSetCurrentContext(context); }
     static JsErrorCode JsGetCurrentContext(JsContextRef* context) { return chakracore::jsrt::JsGetCurrentContext(context); }

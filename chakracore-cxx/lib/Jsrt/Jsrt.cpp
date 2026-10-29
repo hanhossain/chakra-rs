@@ -235,6 +235,10 @@ JsErrorCode chakracore::jsrt::JsCreateRuntime(_In_ JsRuntimeAttributes attribute
                              /*optLogLength*/);
 }
 
+JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *runtimeHandle) {
+    return JsCreateRuntime(attributes, nullptr, runtimeHandle);
+}
+
 template <CollectionFlags flags>
 JsErrorCode JsCollectGarbageCommon(JsRuntimeHandle runtimeHandle)
 {
