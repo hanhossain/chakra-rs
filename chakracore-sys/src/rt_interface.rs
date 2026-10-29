@@ -29,9 +29,6 @@ mod ffi {
         -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetCurrentContext(context: *mut JsContextRef) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateExternalArrayBuffer(
             content: &str,
             result: *mut JsValueRef,
