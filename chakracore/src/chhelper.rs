@@ -1,6 +1,7 @@
 use crate::Error;
 use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers;
+use chakracore_sys::jsrt::runtime::JsRuntime;
 use chakracore_sys::jsrt::{
     ChakraRt, JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
     JsSourceContext, JsValueRef,
@@ -18,9 +19,9 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
 
     let script_cache = ScriptCache::new();
     let file_contents = script_cache.get_script(&config.core.filename)?;
-    let runtime = ChakraRt::create_runtime(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
+    let runtime = JsRuntime::create(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
 
-    let context = ChakraRt::create_context(runtime)?;
+    let context = ChakraRt::create_context(runtime.handle)?;
     ChakraRt::set_current_context(context)?;
     let wscript = WScript::new(config, script_cache);
     wscript.initialize()?;
@@ -56,10 +57,6 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     };
 
     ChakraRt::set_current_context(JsContextRef::default())?;
-
-    if !runtime.is_invalid() {
-        ChakraRt::dispose_runtime(runtime)?;
-    }
 
     Ok(())
 }
@@ -104,8 +101,8 @@ fn create_parser_state_and_run_script(
     let buffer = get_parser_state_buffer(contents)?;
 
     // Bytecode buffer is created in one runtime and will be executed on different runtime.
-    let runtime = ChakraRt::create_runtime(jsrt_attributes)?;
-    let new_context = ChakraRt::create_context(runtime)?;
+    let runtime = JsRuntime::create(jsrt_attributes)?;
+    let new_context = ChakraRt::create_context(runtime.handle)?;
     let old_context = ChakraRt::get_current_context()?;
     ChakraRt::set_current_context(new_context)?;
 
@@ -122,7 +119,6 @@ fn create_parser_state_and_run_script(
     )?;
 
     ChakraRt::set_current_context(old_context)?;
-    ChakraRt::dispose_runtime(runtime)?;
     Ok(())
 }
 
@@ -137,8 +133,8 @@ fn create_and_run_serialized_script(
     let buffer_val = get_serialized_buffer(contents)?;
 
     // Bytecode buffer is created in one runtime and will be executed on a different runtime.
-    let runtime = ChakraRt::create_runtime(jsrt_attributes)?;
-    let new_context = ChakraRt::create_context(runtime)?;
+    let runtime = JsRuntime::create(jsrt_attributes)?;
+    let new_context = ChakraRt::create_context(runtime.handle)?;
     let old_context = ChakraRt::get_current_context()?;
     ChakraRt::set_current_context(new_context)?;
 
@@ -155,7 +151,6 @@ fn create_and_run_serialized_script(
     )?;
 
     ChakraRt::set_current_context(old_context)?;
-    ChakraRt::dispose_runtime(runtime)?;
 
     Ok(())
 }

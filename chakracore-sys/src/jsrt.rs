@@ -1,5 +1,6 @@
 mod error;
 mod ffi;
+pub mod runtime;
 
 pub use error::*;
 pub use ffi::*;
@@ -8,19 +9,6 @@ use std::ops::{Deref, DerefMut};
 pub struct ChakraRt;
 
 impl ChakraRt {
-    pub fn create_runtime(attributes: JsRuntimeAttributes) -> Result<JsRuntimeHandle, JsError> {
-        let mut obj = JsRuntimeHandle::default();
-        unsafe {
-            bridge::JsCreateRuntime(attributes, &raw mut obj).as_result()?;
-        }
-        Ok(obj)
-    }
-
-    // TODO: this should be a method on a JsRuntime instead, or it should be in the drop
-    pub fn dispose_runtime(runtime: JsRuntimeHandle) -> Result<(), JsError> {
-        bridge::JsDisposeRuntime(runtime).as_result()
-    }
-
     pub fn create_context(runtime: JsRuntimeHandle) -> Result<JsContextRef, JsError> {
         let mut context = JsContextRef::default();
         unsafe {

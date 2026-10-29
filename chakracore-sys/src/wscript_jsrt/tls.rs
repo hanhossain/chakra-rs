@@ -1,5 +1,6 @@
+use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
-    ChakraRt, JsContextRef, JsError, JsParseScriptAttributes, JsRuntimeAttributes, JsRuntimeHandle,
+    ChakraRt, JsContextRef, JsError, JsParseScriptAttributes, JsRuntimeAttributes,
     JsSharedArrayBufferContentHandle, JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
@@ -71,9 +72,9 @@ impl ThreadData {
         wscript: &WScript,
         tx_initial_script_completed: oneshot::Sender<()>,
     ) -> Result<u32, ThreadProcError> {
-        let runtime = ChakraRt::create_runtime(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
+        let runtime = JsRuntime::create(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
 
-        let context = ChakraRt::create_context(runtime)?;
+        let context = ChakraRt::create_context(runtime.handle)?;
         ChakraRt::set_current_context(context)?;
         wscript.initialize()?;
 
@@ -155,7 +156,7 @@ impl ThreadData {
     }
 
     #[tracing::instrument(skip_all)]
-    fn on_shutdown(&self, runtime: JsRuntimeHandle) {
+    fn on_shutdown(&self, runtime: JsRuntime) {
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
             unsafe {
                 ChakraRTInterface::JsRelease(callback_func.as_js_ref(), std::ptr::null_mut());
@@ -164,9 +165,7 @@ impl ThreadData {
         if let Err(err) = ChakraRt::set_current_context(JsContextRef::default()) {
             tracing::warn!(?err, "failed to reset context");
         }
-        if let Err(err) = ChakraRt::dispose_runtime(runtime) {
-            tracing::warn!(?err, "failed to dispose runtime");
-        }
+        drop(runtime);
     }
 
     pub(super) fn enqueue_report_to_parent(&self, report: String) -> Result<(), ReportQueueError> {
