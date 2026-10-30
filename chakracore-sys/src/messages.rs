@@ -60,12 +60,10 @@ impl CallbackMessage {
     fn internal_call(&self, filename: &str, wscript: &WScript) -> Result<(), JsError> {
         let res = if self.function.get_value_type()? == JsValueType::JsString {
             unsafe {
-                let mut string_value = JsValueRef::default();
-                ChakraRTInterface::JsConvertValueToString(self.function, &raw mut string_value)
-                    .as_result()?;
+                let string_value = self.function.to_string_value()?;
                 let fname = ChakraRt::create_string("")?;
                 ChakraRTInterface::JsRun(
-                    string_value,
+                    *string_value,
                     JsSourceContext(usize::MAX),
                     *fname,
                     JsParseScriptAttributes::JsParseScriptAttributeArrayBufferIsUtf16Encoded,
