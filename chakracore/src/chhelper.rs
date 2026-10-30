@@ -21,10 +21,10 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     let file_contents = script_cache.get_script(&config.core.filename)?;
     let runtime = JsRuntime::create(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
 
-    let context = ChakraRt::create_context(runtime.handle)?;
+    let context = runtime.create_context()?;
     ChakraRt::set_current_context(context)?;
     let wscript = WScript::new(config, script_cache);
-    wscript.initialize()?;
+    wscript.initialize(&runtime)?;
 
     let path = std::fs::canonicalize(&config.core.filename)?;
     let path = path.to_str().unwrap().to_owned();
@@ -102,12 +102,12 @@ fn create_parser_state_and_run_script(
 
     // Bytecode buffer is created in one runtime and will be executed on different runtime.
     let runtime = JsRuntime::create(jsrt_attributes)?;
-    let new_context = ChakraRt::create_context(runtime.handle)?;
+    let new_context = runtime.create_context()?;
     let old_context = ChakraRt::get_current_context()?;
     ChakraRt::set_current_context(new_context)?;
 
     // initialize the WScript object on the new context
-    wscript.initialize()?;
+    wscript.initialize(&runtime)?;
 
     run_script(
         filename,
@@ -134,12 +134,12 @@ fn create_and_run_serialized_script(
 
     // Bytecode buffer is created in one runtime and will be executed on a different runtime.
     let runtime = JsRuntime::create(jsrt_attributes)?;
-    let new_context = ChakraRt::create_context(runtime.handle)?;
+    let new_context = runtime.create_context()?;
     let old_context = ChakraRt::get_current_context()?;
     ChakraRt::set_current_context(new_context)?;
 
     // initialize the WScript object on the new context
-    wscript.initialize()?;
+    wscript.initialize(&runtime)?;
 
     run_script(
         filename,

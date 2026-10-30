@@ -73,10 +73,9 @@ impl ThreadData {
         tx_initial_script_completed: oneshot::Sender<()>,
     ) -> Result<u32, ThreadProcError> {
         let runtime = JsRuntime::create(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
-
-        let context = ChakraRt::create_context(runtime.handle)?;
+        let context = runtime.create_context()?;
         ChakraRt::set_current_context(context)?;
-        wscript.initialize()?;
+        wscript.initialize(&runtime)?;
 
         let mut script_source = JsValueRef::default();
         unsafe {

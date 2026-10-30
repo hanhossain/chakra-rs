@@ -3,9 +3,10 @@ mod tls;
 
 use crate::config::ConfigContext;
 use crate::helpers;
+use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode, JsModuleHostInfoKind,
-    JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsRuntimeHandle,
+    JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes,
     JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
 };
 use crate::message_queue::MessageQueue;
@@ -125,7 +126,7 @@ impl WScript {
     }
 
     #[tracing::instrument(skip_all, err)]
-    pub fn initialize(&self) -> Result<(), JsError> {
+    pub fn initialize(&self, runtime: &JsRuntime) -> Result<(), JsError> {
         let icu_version = ffi::GetICUMajorVersion();
 
         let mut wscript_object = ChakraRt::create_object()?;
@@ -136,10 +137,14 @@ impl WScript {
         wscript_object.set_named_function("Quit", WScript::quit_callback)?;
 
         wscript_object.set_named_function("LoadScriptFile", |args| {
-            self.load_script_file_callback(args)
+            self.load_script_file_callback(args, runtime)
         })?;
-        wscript_object.set_named_function("LoadScript", |args| self.load_script_callback(args))?;
-        wscript_object.set_named_function("LoadModule", |args| self.load_module_callback(args))?;
+        wscript_object.set_named_function("LoadScript", |args| {
+            self.load_script_callback(args, runtime)
+        })?;
+        wscript_object.set_named_function("LoadModule", |args| {
+            self.load_module_callback(args, runtime)
+        })?;
         wscript_object.set_named_function("SetTimeout", |args| self.set_timeout_callback(args))?;
         wscript_object
             .set_named_function("ClearTimeout", |args| self.clear_timeout_callback(args))?;
@@ -315,6 +320,7 @@ impl WScript {
         callee: JsValueRef,
         arguments: &[JsValueRef],
         is_source_module: bool,
+        runtime: &JsRuntime,
     ) -> anyhow::Result<JsValueRef> {
         anyhow::ensure!(
             arguments.len() >= 2 && arguments.len() <= 4,
@@ -344,19 +350,25 @@ impl WScript {
                 },
                 is_source_module,
                 true,
+                runtime,
             )?)
         }
     }
 
-    fn load_script_file_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
-        self.load_script_file_helper(args.callee.clone(), args.arguments, false)
+    fn load_script_file_callback(
+        &self,
+        args: &JsNativeFunctionArgs,
+        runtime: &JsRuntime,
+    ) -> anyhow::Result<JsValueRef> {
+        self.load_script_file_helper(args.callee.clone(), args.arguments, false, runtime)
     }
 
-    #[tracing::instrument(skip(self, args), err)]
+    #[tracing::instrument(skip(self, args, runtime), err)]
     fn load_script_helper(
         &self,
         args: &JsNativeFunctionArgs,
         is_source_module: bool,
+        runtime: &JsRuntime,
     ) -> anyhow::Result<JsValueRef> {
         if args.arguments.len() < 2 || args.arguments.len() > 4 {
             anyhow::bail!("Need more or fewer arguments for WScript.LoadScript");
@@ -396,16 +408,25 @@ impl WScript {
                 &script_inject_type,
                 is_source_module,
                 is_file,
+                runtime,
             )?)
         }
     }
 
-    fn load_script_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
-        self.load_script_helper(args, false)
+    fn load_script_callback(
+        &self,
+        args: &JsNativeFunctionArgs,
+        runtime: &JsRuntime,
+    ) -> anyhow::Result<JsValueRef> {
+        self.load_script_helper(args, false, runtime)
     }
 
-    fn load_module_callback(&self, args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
-        self.load_script_helper(args, true)
+    fn load_module_callback(
+        &self,
+        args: &JsNativeFunctionArgs,
+        runtime: &JsRuntime,
+    ) -> anyhow::Result<JsValueRef> {
+        self.load_script_helper(args, true, runtime)
     }
 
     fn flag_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
@@ -1009,8 +1030,7 @@ impl WScript {
         Ok(())
     }
 
-    // TODO: rename to load_script
-    #[tracing::instrument(skip(self), err)]
+    #[tracing::instrument(skip(self, runtime), err)]
     fn load_script<'a>(
         &self,
         callee: JsValueRef,
@@ -1019,12 +1039,9 @@ impl WScript {
         script_inject_type: &str,
         is_source_module: bool,
         is_file: bool,
+        runtime: &JsRuntime,
     ) -> Result<JsValueRef, LoadScriptError> {
-        let mut runtime = JsRuntimeHandle::default();
         let current_context = ChakraRt::get_current_context()?;
-        unsafe {
-            ChakraRTInterface::JsGetRuntime(current_context, &raw mut runtime).as_result()?;
-        }
         let full_path = std::path::absolute(file_name);
         tracing::trace!(?full_path);
         let full_path = full_path.unwrap_or_default();
@@ -1101,7 +1118,7 @@ impl WScript {
 
             Ok(return_value)
         } else if script_inject_type == "samethread" {
-            let new_context = ChakraRt::create_context(runtime)?;
+            let new_context = runtime.create_context()?;
             let callback = unsafe {
                 ChakraRt::set_current_context(new_context)?;
                 ChakraRt::set_promise_continuation_callback(|task| {
@@ -1110,7 +1127,7 @@ impl WScript {
             };
 
             // Initialize the host objects
-            self.initialize()?;
+            self.initialize(runtime)?;
 
             let mut script_source = JsValueRef::default();
             unsafe {

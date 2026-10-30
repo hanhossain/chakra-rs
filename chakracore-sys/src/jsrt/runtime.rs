@@ -1,9 +1,8 @@
 use crate::jsrt::ffi::bridge;
-use crate::jsrt::{JsError, JsRuntimeAttributes, JsRuntimeHandle};
+use crate::jsrt::{JsContextRef, JsError, JsRuntimeAttributes, JsRuntimeHandle};
 
 pub struct JsRuntime {
-    // TODO: don't expose handle
-    pub handle: JsRuntimeHandle,
+    handle: JsRuntimeHandle,
 }
 
 impl JsRuntime {
@@ -13,6 +12,14 @@ impl JsRuntime {
             bridge::JsCreateRuntime(attributes, &raw mut handle).as_result()?;
         }
         Ok(Self { handle })
+    }
+
+    pub fn create_context(&self) -> Result<JsContextRef, JsError> {
+        let mut context = JsContextRef::default();
+        unsafe {
+            bridge::JsCreateContext(self.handle, &raw mut context).as_result()?;
+        }
+        Ok(context)
     }
 }
 
