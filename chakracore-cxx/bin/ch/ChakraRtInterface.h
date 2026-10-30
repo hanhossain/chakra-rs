@@ -17,9 +17,6 @@
 class ChakraRTInterface
 {
 public:
-    static JsErrorCode JsGetNullValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetNullValue(globalObject); }
-    static JsErrorCode JsGetTrueValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetTrueValue(globalObject); }
-    static JsErrorCode JsGetFalseValue(JsValueRef *globalObject) { return chakracore::jsrt::JsGetFalseValue(globalObject); }
     static JsErrorCode JsConvertValueToString(JsValueRef value, JsValueRef *stringValue) { return chakracore::jsrt::JsConvertValueToString(value, stringValue); }
     static JsErrorCode JsCallFunction(JsValueRef function, JsValueRef* arguments, unsigned short argumentCount, JsValueRef *result) { return chakracore::jsrt::JsCallFunction(function, arguments, argumentCount, result); }
     static JsErrorCode JsCreateArrayBuffer(unsigned int byteLength, JsValueRef *result) { return chakracore::jsrt::JsCreateArrayBuffer(byteLength, result); }

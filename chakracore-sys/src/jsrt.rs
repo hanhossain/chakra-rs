@@ -113,6 +113,30 @@ impl ChakraRt {
         Ok(JsFunction(value))
     }
 
+    pub fn get_true_value() -> Result<JsValueRef, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            bridge::JsGetTrueValue(&raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
+
+    pub fn get_false_value() -> Result<JsValueRef, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            bridge::JsGetFalseValue(&raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
+
+    pub fn get_null_value() -> Result<JsValueRef, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            bridge::JsGetNullValue(&raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
+
     pub fn js_module_host_info_set_fetch_imported_module_callback<T>(
         request_module: JsModuleRecord,
         callback: T,

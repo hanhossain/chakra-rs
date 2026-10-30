@@ -120,12 +120,6 @@ mod ffi {
         ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetTrueValue(true_value: *mut JsValueRef) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetFalseValue(false_value: *mut JsValueRef) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetNullValue(value: *mut JsValueRef) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsGetSharedArrayBufferContent(
             shared_array_buffer: JsValueRef,
             shared_contents: *mut JsSharedArrayBufferContentHandle,
