@@ -1,6 +1,6 @@
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
-    ChakraRt, JsContextGuard, JsError, JsParseScriptAttributes, JsRuntimeAttributes,
+    ChakraRt, JsContextGuard, JsError, JsFunction, JsParseScriptAttributes, JsRuntimeAttributes,
     JsSharedArrayBufferContentHandle, JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
@@ -24,7 +24,7 @@ pub(super) struct ThreadData {
     parent_report_tx: Option<mpsc::Sender<String>>,
     leaving: Cell<bool>,
     thread_handle: Handle,
-    receive_broadcast_callback_func: Cell<Option<JsValueRef>>,
+    receive_broadcast_callback_func: Cell<Option<JsFunction>>,
     children: Mutex<Vec<(Rc<ThreadData>, mpsc::Sender<ThreadEvent>)>>,
     events: Option<mpsc::Receiver<ThreadEvent>>,
 }
@@ -141,7 +141,7 @@ impl ThreadData {
         let shared_content_length = ChakraRt::double_to_number(1.)?;
         let mut args = [*global, shared_buffer, shared_content_length];
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
-            ChakraRt::call_function(callback_func, &mut args)?;
+            callback_func.call_function(&mut args)?;
         }
 
         Ok(())
@@ -151,7 +151,10 @@ impl ThreadData {
     fn on_shutdown(&self, runtime: JsRuntime, context_guard: JsContextGuard) {
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
             unsafe {
-                ChakraRTInterface::JsRelease(callback_func.as_js_ref(), std::ptr::null_mut());
+                ChakraRTInterface::JsRelease(
+                    callback_func.as_ref().as_js_ref(),
+                    std::ptr::null_mut(),
+                );
             }
         }
         drop(context_guard);
@@ -178,11 +181,11 @@ impl ThreadData {
         self.leaving.set(leaving);
     }
 
-    pub(super) fn set_receive_broadcast_callback_func(&self, func: JsValueRef) {
+    pub(super) fn set_receive_broadcast_callback_func(&self, func: JsFunction) {
         self.receive_broadcast_callback_func.set(Some(func));
     }
 
-    pub(super) fn get_receive_broadcast_callback_func(&self) -> Option<JsValueRef> {
+    pub(super) fn get_receive_broadcast_callback_func(&self) -> Option<JsFunction> {
         self.receive_broadcast_callback_func.get()
     }
 
