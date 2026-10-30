@@ -22,10 +22,6 @@ mod ffi {
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetRuntime(context: JsContextRef, runtime: *mut JsRuntimeHandle)
-        -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateExternalArrayBuffer(
             content: &str,
             result: *mut JsValueRef,
