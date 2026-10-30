@@ -2,6 +2,7 @@ mod array;
 mod error;
 mod error_object;
 mod ffi;
+mod function;
 mod object;
 pub mod runtime;
 mod string;
@@ -10,6 +11,7 @@ pub use array::*;
 pub use error::*;
 pub use error_object::*;
 pub use ffi::*;
+pub use function::*;
 pub use object::*;
 pub use string::*;
 
@@ -327,14 +329,6 @@ impl ChakraRt {
 impl From<JsString> for JsValueRef {
     fn from(value: JsString) -> Self {
         *value
-    }
-}
-
-pub struct JsFunction(JsValueRef);
-
-impl AsRef<JsValueRef> for JsFunction {
-    fn as_ref(&self) -> &JsValueRef {
-        &self.0
     }
 }
 
