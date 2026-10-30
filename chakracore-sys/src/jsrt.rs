@@ -9,14 +9,6 @@ use std::ops::{Deref, DerefMut};
 pub struct ChakraRt;
 
 impl ChakraRt {
-    pub fn create_context(runtime: JsRuntimeHandle) -> Result<JsContextRef, JsError> {
-        let mut context = JsContextRef::default();
-        unsafe {
-            bridge::JsCreateContext(runtime, &raw mut context).as_result()?;
-        }
-        Ok(context)
-    }
-
     pub fn set_current_context(context: JsContextRef) -> Result<(), JsError> {
         bridge::JsSetCurrentContext(context).as_result()
     }
