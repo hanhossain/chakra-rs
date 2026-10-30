@@ -1,4 +1,4 @@
-use crate::jsrt::{JsContext, JsError};
+use crate::jsrt::{JsContext, JsError, JsString};
 pub use bridge::{
     CVoid, JsErrorCode, JsModuleHostInfoKind, JsNativeFunctionArgs, JsParseScriptAttributes,
     JsRuntimeAttributes, JsValueType,
@@ -54,6 +54,14 @@ impl JsValueRef {
         let mut s = String::new();
         bridge::JsToString(self.as_ref(), &mut s).as_result()?;
         Ok(s)
+    }
+
+    pub fn to_string_value(&self) -> Result<JsString, JsError> {
+        let mut string_value = JsValueRef::default();
+        unsafe {
+            bridge::JsConvertValueToString(*self, &raw mut string_value).as_result()?;
+        }
+        Ok(JsString::new(string_value))
     }
 
     pub fn as_js_ref(&self) -> JsRef {
@@ -229,6 +237,11 @@ pub(super) mod bridge {
         unsafe fn JsNumberToDouble(js_number: JsValueRef, value: *mut f64) -> JsErrorCode;
         unsafe fn JsGetGlobalObject(global_object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsGetUndefinedValue(value: *mut JsValueRef) -> JsErrorCode;
+
+        unsafe fn JsConvertValueToString(
+            value: JsValueRef,
+            string_value: *mut JsValueRef,
+        ) -> JsErrorCode;
 
         unsafe fn JsCreateNamedFunction(
             name: &JsValueRef,
