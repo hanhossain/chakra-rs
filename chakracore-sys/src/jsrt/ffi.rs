@@ -256,6 +256,12 @@ pub(super) mod bridge {
             function: *mut JsValueRef,
         ) -> JsErrorCode;
 
+        unsafe fn JsCallFunction(
+            function: JsValueRef,
+            arguments: &mut [JsValueRef],
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
+
         fn JsSetException(exception: JsValueRef) -> JsErrorCode;
         unsafe fn JsHasException(has_exception: *mut bool) -> JsErrorCode;
         unsafe fn JsModuleEvaluation(
