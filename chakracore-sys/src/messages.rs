@@ -72,16 +72,11 @@ impl CallbackMessage {
                 .as_result()
             }
         } else {
-            let mut global = ChakraRt::get_global_object()?;
+            let global = ChakraRt::get_global_object()?;
             let mut result = JsValueRef::default();
             unsafe {
-                ChakraRTInterface::JsCallFunction(
-                    self.function,
-                    &raw mut *global,
-                    1,
-                    &raw mut result,
-                )
-                .as_result()
+                ChakraRTInterface::JsCallFunction(self.function, &mut [*global], &raw mut result)
+                    .as_result()
             }
         };
 

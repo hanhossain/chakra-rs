@@ -2413,7 +2413,7 @@ JsErrorCode chakracore::jsrt::JsSetExternalData(_In_ JsValueRef object, _In_opt_
     END_JSRT_NO_EXCEPTION
 }
 
-JsErrorCode chakracore::jsrt::JsCallFunction(_In_ JsValueRef function, _In_reads_(cargs) JsValueRef *args, _In_ ushort cargs, _Out_opt_ JsValueRef *result)
+JsErrorCode chakracore::jsrt::JsCallFunction(_In_ JsValueRef function, rust::Slice<JsValueRef> arguments, _Out_opt_ JsValueRef *result)
 {
     if(result != nullptr)
     {
@@ -2423,19 +2423,18 @@ JsErrorCode chakracore::jsrt::JsCallFunction(_In_ JsValueRef function, _In_reads
     return ContextAPIWrapper<JSRT_MAYBE_TRUE>([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
         VALIDATE_INCOMING_FUNCTION(function, scriptContext);
 
-        if(cargs == 0 || args == nullptr)
+        if(arguments.empty())
         {
             return JsErrorInvalidArgument;
         }
 
-        for(int index = 0; index < cargs; index++)
-        {
-            VALIDATE_INCOMING_REFERENCE(args[index], scriptContext);
+        for(auto &argument : arguments) {
+            VALIDATE_INCOMING_REFERENCE(argument, scriptContext);
         }
 
         Js::JavascriptFunction *jsFunction = Js::VarTo<Js::JavascriptFunction>(function);
-        Js::CallInfo callInfo(cargs);
-        Js::Arguments jsArgs(callInfo, reinterpret_cast<Js::Var *>(args));
+        Js::CallInfo callInfo(arguments.size());
+        Js::Arguments jsArgs(callInfo, reinterpret_cast<Js::Var *>(arguments.data()));
 
         Js::Var varResult = jsFunction->CallRootFunction(jsArgs, scriptContext, true);
         if(result != nullptr)

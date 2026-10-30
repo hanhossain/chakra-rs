@@ -141,12 +141,7 @@ impl ThreadData {
         let mut args = [*global, shared_buffer, shared_content_length];
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
             unsafe {
-                ChakraRTInterface::JsCallFunction(
-                    callback_func,
-                    args.as_mut_ptr(),
-                    3,
-                    std::ptr::null_mut(),
-                );
+                ChakraRTInterface::JsCallFunction(callback_func, &mut args, std::ptr::null_mut());
             }
         }
 
