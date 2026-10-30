@@ -1,6 +1,6 @@
 use crate::jsrt::{
-    ChakraRt, JsError, JsModuleRecord, JsParseScriptAttributes, JsSourceContext, JsValueRef,
-    JsValueType,
+    ChakraRt, JsError, JsFunction, JsModuleRecord, JsParseScriptAttributes, JsSourceContext,
+    JsValueRef, JsValueType,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
@@ -56,16 +56,14 @@ impl CallbackMessage {
         Self { function }
     }
 
-    #[tracing::instrument(skip(self, wscript), err)]
-    fn internal_call(&self, filename: &str, wscript: &WScript) -> Result<(), JsError> {
-        let res = if self.function.get_value_type()? == JsValueType::JsString {
+    #[tracing::instrument(skip(self), err)]
+    fn internal_call(&self) -> Result<(), JsError> {
+        if self.function.get_value_type()? == JsValueType::JsString {
             unsafe {
-                let mut string_value = JsValueRef::default();
-                ChakraRTInterface::JsConvertValueToString(self.function, &raw mut string_value)
-                    .as_result()?;
+                let string_value = self.function.to_string_value()?;
                 let fname = ChakraRt::create_string("")?;
                 ChakraRTInterface::JsRun(
-                    string_value,
+                    *string_value,
                     JsSourceContext(usize::MAX),
                     *fname,
                     JsParseScriptAttributes::JsParseScriptAttributeArrayBufferIsUtf16Encoded,
@@ -74,28 +72,18 @@ impl CallbackMessage {
                 .as_result()
             }
         } else {
-            let mut global = ChakraRt::get_global_object()?;
-            let mut result = JsValueRef::default();
-            unsafe {
-                ChakraRTInterface::JsCallFunction(
-                    self.function,
-                    &raw mut *global,
-                    1,
-                    &raw mut result,
-                )
-                .as_result()
-            }
-        };
-
-        if let Err(err) = res {
-            wscript.print_exception(filename, err.into(), JsValueRef::default());
+            let global = ChakraRt::get_global_object()?;
+            let func = JsFunction::from(self.function);
+            func.call_function(&mut [*global])?;
+            Ok(())
         }
-
-        Ok(())
     }
 
+    #[tracing::instrument(skip(self, wscript))]
     fn call(&self, filename: &str, wscript: &WScript) {
-        let _ = self.internal_call(filename, wscript);
+        if let Err(err) = self.internal_call() {
+            wscript.print_exception(filename, err.into(), JsValueRef::default());
+        }
     }
 }
 
@@ -147,11 +135,7 @@ impl ModuleMessage {
                 return Ok(());
             };
             if state != ModuleState::ErroredModule {
-                let mut module_res = JsValueRef::default();
-                unsafe {
-                    ChakraRTInterface::JsModuleEvaluation(self.module_record, &raw mut module_res)
-                        .as_result()?;
-                }
+                ChakraRt::module_evaluation(self.module_record)?;
             }
             return Ok(());
         }

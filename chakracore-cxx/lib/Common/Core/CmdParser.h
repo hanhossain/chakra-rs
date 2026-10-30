@@ -5,10 +5,21 @@
 #pragma once
 
 #include <rust/cxx.h>
-#include <string>
+#include <memory>
 #include <vector>
 
 #include "Core/ICustomConfigFlags.h"
+
+namespace Js {
+class ConfigFlagsTable;
+struct SourceFunctionNode;
+class Phases;
+class Range;
+class NumberRange;
+class NumberSet;
+class NumberPairSet;
+class NumberTrioSet;
+}
 
 ///----------------------------------------------------------------------------
 ///----------------------------------------------------------------------------
@@ -26,7 +37,7 @@
 ///----------------------------------------------------------------------------
 ///----------------------------------------------------------------------------
 
-class CmdLineArgsParser : private ICmdLineArgsParser
+class CmdLineArgsParser final : private ICmdLineArgsParser
 {
 // Data
 private:
@@ -39,8 +50,11 @@ private:
 public:
     int Parse(const rust::Vec<rust::String> &vargs);
     int Parse(const char16_t* token) throw();
-    CmdLineArgsParser(Js::ConfigFlagsTable& flagTable = Js::Configuration::Global.flags);
+    CmdLineArgsParser();
+    CmdLineArgsParser(Js::ConfigFlagsTable& flagTable);
     ~CmdLineArgsParser();
+
+    static std::unique_ptr<CmdLineArgsParser> New();
 
 // Helper Classes
 private:

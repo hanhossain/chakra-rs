@@ -745,6 +745,20 @@ namespace chakracore::jsrt
             _In_opt_ JsThreadServiceCallback threadService,
             _Out_ JsRuntimeHandle *runtime);
 
+/// <summary>
+///     Creates a new runtime.
+/// </summary>
+/// <param name="attributes">The attributes of the runtime to be created.</param>
+/// <param name="runtime">The runtime created.</param>
+/// <remarks>
+///     In the edge-mode binary, chakra.dll, this function lacks the <c>runtimeVersion</c>
+///     parameter (compare to jsrt9.h).
+/// </remarks>
+/// <returns>
+///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+/// </returns>
+JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *runtime);
+
     /// <summary>
     ///     Performs a full garbage collection.
     /// </summary>
@@ -2094,7 +2108,6 @@ namespace chakracore::jsrt
     /// </remarks>
     /// <param name="function">The function to invoke.</param>
     /// <param name="arguments">The arguments to the call.</param>
-    /// <param name="argumentCount">The number of arguments being passed in to the function.</param>
     /// <param name="result">The value returned from the function invocation, if any.</param>
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
@@ -2102,8 +2115,7 @@ namespace chakracore::jsrt
     JsErrorCode
         JsCallFunction(
             _In_ JsValueRef function,
-            _In_reads_(argumentCount) JsValueRef *arguments,
-            _In_ unsigned short argumentCount,
+            rust::Slice<JsValueRef> arguments,
             _Out_opt_ JsValueRef *result);
 
     /// <summary>

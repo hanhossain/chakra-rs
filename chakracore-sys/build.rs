@@ -30,7 +30,6 @@ fn main() {
         .flag("-fms-extensions")
         .define("PAL_STDCPP_COMPAT", None)
         .include("../chakracore-cxx/bin/ch")
-        .include("../chakracore-cxx/bin/ChakraCore")
         .include("../chakracore-cxx/ffi/include")
         .include("../chakracore-cxx/lib/Common")
         .include("../chakracore-cxx/lib/Common/Interface/include")
@@ -62,9 +61,6 @@ fn main() {
 
     if cfg!(feature = "compile-cpp") {
         if let Ok(chakra_build) = std::env::var("CHAKRA_BUILD") {
-            update_local_link_search(&chakra_build, "chakracore-cxx/bin/ch");
-            println!("cargo::rerun-if-changed={chakra_build}/chakracore-cxx/bin/ch");
-
             update_local_link_search(&chakra_build, "chakracore-cxx/lib");
             println!("cargo::rerun-if-changed={chakra_build}/chakracore-cxx/lib");
 
@@ -89,7 +85,7 @@ fn main() {
                 .define("CMAKE_COLOR_DIAGNOSTICS", "ON")
                 .env("CLICOLOR_FORCE", "1")
                 .profile(build_type)
-                .build_target("chhelper");
+                .build_target("ChakraCoreStatic");
 
             if cfg!(target_os = "macos") {
                 config
@@ -101,12 +97,10 @@ fn main() {
             let mut dst = config.build();
             dst.push("build");
             let chakra_build = dst.to_str().unwrap();
-            update_local_link_search(chakra_build, "chakracore-cxx/bin/ch");
             update_local_link_search(chakra_build, "chakracore-cxx/lib");
             update_local_link_search(chakra_build, "chakracore-cxx/ffi");
         }
 
-        println!("cargo::rustc-link-lib=chhelper");
         println!("cargo::rustc-link-lib=ChakraCoreStatic");
         println!("cargo::rustc-link-lib=Chakra.Ffi");
 

@@ -245,5 +245,3 @@ add_subdirectory(ffi)
 add_subdirectory(pal)
 
 add_subdirectory(lib)
-
-add_subdirectory(bin)

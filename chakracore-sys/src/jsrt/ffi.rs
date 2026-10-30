@@ -1,4 +1,4 @@
-use crate::jsrt::JsError;
+use crate::jsrt::{JsContext, JsError, JsString};
 pub use bridge::{
     CVoid, JsErrorCode, JsModuleHostInfoKind, JsNativeFunctionArgs, JsParseScriptAttributes,
     JsRuntimeAttributes, JsValueType,
@@ -25,6 +25,12 @@ impl JsRuntimeHandle {
 #[derive(Default, Copy, Clone)]
 pub struct JsContextRef(*mut c_void);
 
+impl JsContextRef {
+    pub fn is_null(&self) -> bool {
+        self.0.is_null()
+    }
+}
+
 unsafe impl cxx::ExternType for JsContextRef {
     type Id = cxx::type_id!("JsContextRef");
     type Kind = cxx::kind::Trivial;
@@ -50,6 +56,14 @@ impl JsValueRef {
         Ok(s)
     }
 
+    pub fn to_string_value(&self) -> Result<JsString, JsError> {
+        let mut string_value = JsValueRef::default();
+        unsafe {
+            bridge::JsConvertValueToString(*self, &raw mut string_value).as_result()?;
+        }
+        Ok(JsString::new(string_value))
+    }
+
     pub fn as_js_ref(&self) -> JsRef {
         JsRef(self.0)
     }
@@ -60,6 +74,14 @@ impl JsValueRef {
             bridge::JsGetValueType(*self, &raw mut value_type).as_result()?;
         }
         Ok(value_type)
+    }
+
+    pub fn get_context(&self) -> Result<JsContext, JsError> {
+        let mut context = JsContextRef::default();
+        unsafe {
+            bridge::JsGetContextOfObject(*self, &raw mut context).as_result()?;
+        }
+        Ok(JsContext(context))
     }
 }
 
@@ -172,6 +194,21 @@ pub(super) mod bridge {
 
     #[namespace = "chakracore::jsrt"]
     unsafe extern "C++" {
+        unsafe fn JsCreateRuntime(
+            attributes: JsRuntimeAttributes,
+            runtime: *mut JsRuntimeHandle,
+        ) -> JsErrorCode;
+        fn JsDisposeRuntime(runtime: JsRuntimeHandle) -> JsErrorCode;
+        unsafe fn JsCreateContext(
+            runtime: JsRuntimeHandle,
+            context: *mut JsContextRef,
+        ) -> JsErrorCode;
+        fn JsSetCurrentContext(context: JsContextRef) -> JsErrorCode;
+        unsafe fn JsGetCurrentContext(context: *mut JsContextRef) -> JsErrorCode;
+        unsafe fn JsGetContextOfObject(
+            object: JsValueRef,
+            context: *mut JsContextRef,
+        ) -> JsErrorCode;
         unsafe fn JsCreateString(content: &str, value: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreatePropertyId(name: &str, object: *mut JsPropertyIdRef) -> JsErrorCode;
@@ -201,6 +238,11 @@ pub(super) mod bridge {
         unsafe fn JsGetGlobalObject(global_object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsGetUndefinedValue(value: *mut JsValueRef) -> JsErrorCode;
 
+        unsafe fn JsConvertValueToString(
+            value: JsValueRef,
+            string_value: *mut JsValueRef,
+        ) -> JsErrorCode;
+
         unsafe fn JsCreateNamedFunction(
             name: &JsValueRef,
             native_function: unsafe fn(
@@ -214,13 +256,26 @@ pub(super) mod bridge {
             function: *mut JsValueRef,
         ) -> JsErrorCode;
 
+        unsafe fn JsCallFunction(
+            function: JsValueRef,
+            arguments: &mut [JsValueRef],
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
+
         fn JsSetException(exception: JsValueRef) -> JsErrorCode;
         unsafe fn JsHasException(has_exception: *mut bool) -> JsErrorCode;
+        unsafe fn JsModuleEvaluation(
+            request_module: JsModuleRecord,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
         unsafe fn JsGetModuleNamespace(
             request_module: JsModuleRecord,
             module_namespace: *mut JsValueRef,
         ) -> JsErrorCode;
         unsafe fn JsGetValueType(value: JsValueRef, value_type: *mut JsValueType) -> JsErrorCode;
+        unsafe fn JsGetTrueValue(true_value: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsGetFalseValue(false_value: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsGetNullValue(value: *mut JsValueRef) -> JsErrorCode;
 
         unsafe fn JsModuleHostInfoSetFetchImportedModuleCallback(
             request_module: JsModuleRecord,

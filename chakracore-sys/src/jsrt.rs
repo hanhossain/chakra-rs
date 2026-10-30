@@ -1,9 +1,21 @@
+mod array;
+mod context;
 mod error;
+mod error_object;
 mod ffi;
+mod function;
+mod object;
+pub mod runtime;
+mod string;
 
+pub use array::*;
+pub use context::*;
 pub use error::*;
+pub use error_object::*;
 pub use ffi::*;
-use std::ops::{Deref, DerefMut};
+pub use function::*;
+pub use object::*;
+pub use string::*;
 
 pub struct ChakraRt;
 
@@ -13,7 +25,7 @@ impl ChakraRt {
         unsafe {
             bridge::JsCreateObject(&raw mut object).as_result()?;
         }
-        Ok(JsObject(object))
+        Ok(JsObject::new(object))
     }
 
     pub fn get_global_object() -> Result<JsObject, JsError> {
@@ -21,7 +33,7 @@ impl ChakraRt {
         unsafe {
             bridge::JsGetGlobalObject(&raw mut object).as_result()?;
         }
-        Ok(JsObject(object))
+        Ok(JsObject::new(object))
     }
 
     pub fn create_property_id(name: &str) -> Result<JsPropertyIdRef, JsError> {
@@ -38,7 +50,7 @@ impl ChakraRt {
         unsafe {
             bridge::JsCreateString(name, &raw mut value).as_result()?;
         }
-        Ok(JsString(value))
+        Ok(JsString::new(value))
     }
 
     pub fn create_array(length: u32) -> Result<JsArray, JsError> {
@@ -46,7 +58,7 @@ impl ChakraRt {
         unsafe {
             bridge::JsCreateArray(length, &raw mut value).as_result()?;
         }
-        Ok(JsArray(value))
+        Ok(JsArray::new(value))
     }
 
     pub fn create_error(message: JsString) -> Result<JsErrorObject, JsError> {
@@ -54,7 +66,7 @@ impl ChakraRt {
         unsafe {
             bridge::JsCreateError(message.as_ref().clone(), &raw mut value).as_result()?;
         }
-        Ok(JsErrorObject(value))
+        Ok(JsErrorObject::from(value))
     }
 
     #[tracing::instrument(skip(native_function), err)]
@@ -89,6 +101,30 @@ impl ChakraRt {
             .as_result()?;
         }
         Ok(JsFunction(value))
+    }
+
+    pub fn get_true_value() -> Result<JsValueRef, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            bridge::JsGetTrueValue(&raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
+
+    pub fn get_false_value() -> Result<JsValueRef, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            bridge::JsGetFalseValue(&raw mut value).as_result()?;
+        }
+        Ok(value)
+    }
+
+    pub fn get_null_value() -> Result<JsValueRef, JsError> {
+        let mut value = JsValueRef::default();
+        unsafe {
+            bridge::JsGetNullValue(&raw mut value).as_result()?;
+        }
+        Ok(value)
     }
 
     pub fn js_module_host_info_set_fetch_imported_module_callback<T>(
@@ -293,154 +329,20 @@ impl ChakraRt {
             }
         }
     }
-}
 
-pub struct JsObject(JsValueRef);
-
-impl JsObject {
-    pub fn new(value: JsValueRef) -> Self {
-        JsObject(value)
-    }
-
-    pub fn set_property<T: AsRef<JsValueRef>>(
-        &mut self,
-        property_id: JsPropertyIdRef,
-        value: T,
-        use_strict_rules: bool,
-    ) -> Result<(), JsError> {
-        bridge::JsSetProperty(
-            self.0.clone(),
-            property_id,
-            value.as_ref().clone(),
-            use_strict_rules,
-        )
-        .as_result()
-    }
-
-    pub fn set_named_function<T, R>(&mut self, name: &str, func: T) -> Result<(), JsError>
-    where
-        T: Fn(&JsNativeFunctionArgs) -> R,
-        R: IntoResponse,
-    {
-        self.set_property(
-            ChakraRt::create_property_id(name)?,
-            ChakraRt::create_named_function(name, func)?,
-            true,
-        )
-    }
-
-    pub fn get_property(&self, property_id: JsPropertyIdRef) -> Result<JsValueRef, JsError> {
-        let mut value = JsValueRef::default();
+    pub(crate) fn module_evaluation(request_module: JsModuleRecord) -> Result<(), JsError> {
+        let mut module_res = JsValueRef::default();
         unsafe {
-            bridge::JsGetProperty(self.0, property_id, &raw mut value).as_result()?;
+            bridge::JsModuleEvaluation(request_module, &raw mut module_res).as_result()?;
         }
-        Ok(value)
+        Ok(())
     }
 }
 
-// TODO: this is temporary while other functions are ported. Don't actually want to deref to
-//  JsValueRef.
-impl Deref for JsObject {
-    type Target = JsValueRef;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl DerefMut for JsObject {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-
-impl AsRef<JsValueRef> for JsObject {
-    fn as_ref(&self) -> &JsValueRef {
-        &self.0
-    }
-}
-
-impl IntoResponse for JsObject {
-    fn into_response(self) -> JsValueRef {
-        self.0
-    }
-}
-
-#[derive(Default)]
-pub struct JsString(JsValueRef);
-
-impl AsRef<JsValueRef> for JsString {
-    fn as_ref(&self) -> &JsValueRef {
-        &self.0
-    }
-}
-
-// TODO: this is temporary while other functions are ported. Don't actually want to deref to
-//  JsValueRef.
-impl Deref for JsString {
-    type Target = JsValueRef;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl DerefMut for JsString {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-
+// TODO: can I remove this?
 impl From<JsString> for JsValueRef {
     fn from(value: JsString) -> Self {
-        value.0
-    }
-}
-
-impl IntoResponse for JsString {
-    fn into_response(self) -> JsValueRef {
-        self.0
-    }
-}
-
-pub struct JsArray(JsValueRef);
-
-impl JsArray {
-    pub fn set_indexed_property<T: AsRef<JsValueRef>>(
-        &mut self,
-        index: &JsValueRef,
-        value: T,
-    ) -> Result<(), JsError> {
-        bridge::JsSetIndexedProperty(self.0.clone(), index.clone(), value.as_ref().clone())
-            .as_result()
-    }
-}
-
-impl AsRef<JsValueRef> for JsArray {
-    fn as_ref(&self) -> &JsValueRef {
-        &self.0
-    }
-}
-
-pub struct JsErrorObject(JsValueRef);
-
-impl AsRef<JsValueRef> for JsErrorObject {
-    fn as_ref(&self) -> &JsValueRef {
-        &self.0
-    }
-}
-
-impl From<JsValueRef> for JsErrorObject {
-    fn from(value: JsValueRef) -> Self {
-        JsErrorObject(value)
-    }
-}
-
-pub struct JsFunction(JsValueRef);
-
-impl AsRef<JsValueRef> for JsFunction {
-    fn as_ref(&self) -> &JsValueRef {
-        &self.0
+        *value
     }
 }
 

@@ -1,5 +1,6 @@
+use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
-    ChakraRt, JsContextRef, JsError, JsParseScriptAttributes, JsRuntimeAttributes, JsRuntimeHandle,
+    ChakraRt, JsContextGuard, JsError, JsFunction, JsParseScriptAttributes, JsRuntimeAttributes,
     JsSharedArrayBufferContentHandle, JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
@@ -23,7 +24,7 @@ pub(super) struct ThreadData {
     parent_report_tx: Option<mpsc::Sender<String>>,
     leaving: Cell<bool>,
     thread_handle: Handle,
-    receive_broadcast_callback_func: Cell<Option<JsValueRef>>,
+    receive_broadcast_callback_func: Cell<Option<JsFunction>>,
     children: Mutex<Vec<(Rc<ThreadData>, mpsc::Sender<ThreadEvent>)>>,
     events: Option<mpsc::Receiver<ThreadEvent>>,
 }
@@ -71,21 +72,9 @@ impl ThreadData {
         wscript: &WScript,
         tx_initial_script_completed: oneshot::Sender<()>,
     ) -> Result<u32, ThreadProcError> {
-        let mut runtime = JsRuntimeHandle::default();
-        unsafe {
-            ChakraRTInterface::JsCreateRuntime(
-                JsRuntimeAttributes::JsRuntimeAttributeNone,
-                &raw mut runtime,
-            )
-            .as_result()?;
-        }
-
-        let mut context = JsContextRef::default();
-        unsafe {
-            ChakraRTInterface::JsCreateContext(runtime, &raw mut context).as_result()?;
-            ChakraRTInterface::JsSetCurrentContext(context).as_result()?;
-        }
-        wscript.initialize()?;
+        let runtime = JsRuntime::create(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
+        let context = runtime.create_context()?.set_current()?;
+        wscript.initialize(&runtime)?;
 
         let mut script_source = JsValueRef::default();
         unsafe {
@@ -122,12 +111,12 @@ impl ThreadData {
                 ThreadEvent::Broadcast(shared_content) => {
                     self.on_receive_broadcast(shared_content)?;
                     if self.leaving.get() {
-                        self.on_shutdown(runtime);
+                        self.on_shutdown(runtime, context);
                         return Ok(0);
                     }
                 }
                 ThreadEvent::Shutdown => {
-                    self.on_shutdown(runtime);
+                    self.on_shutdown(runtime, context);
                     return Ok(0);
                 }
             }
@@ -136,6 +125,7 @@ impl ThreadData {
         Ok(0)
     }
 
+    #[tracing::instrument(skip_all, err)]
     fn on_receive_broadcast(
         &self,
         shared_content: JsSharedArrayBufferContentHandle,
@@ -151,27 +141,24 @@ impl ThreadData {
         let shared_content_length = ChakraRt::double_to_number(1.)?;
         let mut args = [*global, shared_buffer, shared_content_length];
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
-            unsafe {
-                ChakraRTInterface::JsCallFunction(
-                    callback_func,
-                    args.as_mut_ptr(),
-                    3,
-                    std::ptr::null_mut(),
-                );
-            }
+            callback_func.call_function(&mut args)?;
         }
 
         Ok(())
     }
 
-    fn on_shutdown(&self, runtime: JsRuntimeHandle) {
+    #[tracing::instrument(skip_all)]
+    fn on_shutdown(&self, runtime: JsRuntime, context_guard: JsContextGuard) {
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
             unsafe {
-                ChakraRTInterface::JsRelease(callback_func.as_js_ref(), std::ptr::null_mut());
+                ChakraRTInterface::JsRelease(
+                    callback_func.as_ref().as_js_ref(),
+                    std::ptr::null_mut(),
+                );
             }
         }
-        ChakraRTInterface::JsSetCurrentContext(JsContextRef::default());
-        ChakraRTInterface::JsDisposeRuntime(runtime);
+        drop(context_guard);
+        drop(runtime);
     }
 
     pub(super) fn enqueue_report_to_parent(&self, report: String) -> Result<(), ReportQueueError> {
@@ -194,11 +181,11 @@ impl ThreadData {
         self.leaving.set(leaving);
     }
 
-    pub(super) fn set_receive_broadcast_callback_func(&self, func: JsValueRef) {
+    pub(super) fn set_receive_broadcast_callback_func(&self, func: JsFunction) {
         self.receive_broadcast_callback_func.set(Some(func));
     }
 
-    pub(super) fn get_receive_broadcast_callback_func(&self) -> Option<JsValueRef> {
+    pub(super) fn get_receive_broadcast_callback_func(&self) -> Option<JsFunction> {
         self.receive_broadcast_callback_func.get()
     }
 

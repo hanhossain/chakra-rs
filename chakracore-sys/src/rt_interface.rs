@@ -22,31 +22,6 @@ mod ffi {
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsCreateRuntime(
-            attributes: JsRuntimeAttributes,
-            runtime: *mut JsRuntimeHandle,
-        ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        fn JsDisposeRuntime(runtime: JsRuntimeHandle) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetRuntime(context: JsContextRef, runtime: *mut JsRuntimeHandle)
-        -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsCreateContext(
-            runtime: JsRuntimeHandle,
-            context: *mut JsContextRef,
-        ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        fn JsSetCurrentContext(context: JsContextRef) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetCurrentContext(context: *mut JsContextRef) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsCreateExternalArrayBuffer(
             content: &str,
             result: *mut JsValueRef,
@@ -89,9 +64,6 @@ mod ffi {
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsGetAndClearException(exception: *mut JsValueRef) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsCreateString(content: &String, value: *mut JsValueRef) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsRunSerialized(
@@ -148,12 +120,6 @@ mod ffi {
         ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetTrueValue(true_value: *mut JsValueRef) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetFalseValue(false_value: *mut JsValueRef) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetNullValue(value: *mut JsValueRef) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsGetSharedArrayBufferContent(
             shared_array_buffer: JsValueRef,
             shared_contents: *mut JsSharedArrayBufferContentHandle,
@@ -180,53 +146,6 @@ mod ffi {
         ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetContextOfObject(
-            object: JsValueRef,
-            context: *mut JsContextRef,
-        ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsGetAndClearExceptionWithMetadata(metadata: *mut JsValueRef) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsConvertValueToString(
-            value: JsValueRef,
-            string_value: *mut JsValueRef,
-        ) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsCallFunction(
-            function: JsValueRef,
-            arguments: *mut JsValueRef,
-            argument_count: u16,
-            result: *mut JsValueRef,
-        ) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsModuleEvaluation(
-            request_module: JsModuleRecord,
-            result: *mut JsValueRef,
-        ) -> JsErrorCode;
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::jsrt::{JsErrorCode, JsRuntimeAttributes, JsRuntimeHandle};
-    use crate::rt_interface::ChakraRTInterface;
-
-    #[test]
-    fn create_and_dispose_runtime() {
-        let mut runtime = JsRuntimeHandle::default();
-        unsafe {
-            let res = ChakraRTInterface::JsCreateRuntime(
-                JsRuntimeAttributes::JsRuntimeAttributeNone,
-                &raw mut runtime,
-            );
-            assert_eq!(res, JsErrorCode::JsNoError);
-
-            assert!(!runtime.is_invalid());
-
-            let res = ChakraRTInterface::JsDisposeRuntime(runtime);
-            assert_eq!(res, JsErrorCode::JsNoError);
-        }
     }
 }
