@@ -5,9 +5,9 @@ use crate::config::ConfigContext;
 use crate::helpers;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsContextRef, JsError, JsErrorCode, JsModuleHostInfoKind,
-    JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes,
-    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
+    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModuleHostInfoKind, JsModuleRecord,
+    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSharedArrayBufferContentHandle,
+    JsSourceContext, JsString, JsValueRef, JsValueType,
 };
 use crate::message_queue::MessageQueue;
 use crate::messages::Message;
@@ -1034,7 +1034,6 @@ impl WScript {
         is_file: bool,
         runtime: &JsRuntime,
     ) -> Result<JsValueRef, LoadScriptError> {
-        let current_context = ChakraRt::get_current_context()?;
         let full_path = std::path::absolute(file_name);
         tracing::trace!(?full_path);
         let full_path = full_path.unwrap_or_default();
@@ -1049,12 +1048,7 @@ impl WScript {
             )?;
             Ok(JsValueRef::default())
         } else if script_inject_type == "self" {
-            let mut callee_context = JsContextRef::default();
-            unsafe {
-                ChakraRTInterface::JsGetContextOfObject(callee, &raw mut callee_context)
-                    .as_result()?;
-                ChakraRt::set_current_context(callee_context)?;
-            }
+            let _callee_context = callee.get_context()?.set_current()?;
 
             let mut script_source = JsValueRef::default();
             unsafe {
@@ -1107,13 +1101,10 @@ impl WScript {
                 return_value = *global_object;
             }
 
-            ChakraRt::set_current_context(current_context)?;
-
             Ok(return_value)
         } else if script_inject_type == "samethread" {
-            let new_context = runtime.create_context()?;
+            let _new_context = runtime.create_context()?.set_current()?;
             let callback = unsafe {
-                ChakraRt::set_current_context(new_context)?;
                 ChakraRt::set_promise_continuation_callback(|task| {
                     self.promise_continuation_callback(task)
                 })?
@@ -1173,8 +1164,6 @@ impl WScript {
             }
 
             drop(callback);
-            ChakraRt::set_current_context(current_context)?;
-
             Ok(return_value)
         } else if script_inject_type == "crossthread" {
             let (tx_initial_script_complete, rx_initial_script_complete) = oneshot::channel();

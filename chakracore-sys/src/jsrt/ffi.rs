@@ -1,4 +1,4 @@
-use crate::jsrt::JsError;
+use crate::jsrt::{JsContext, JsError};
 pub use bridge::{
     CVoid, JsErrorCode, JsModuleHostInfoKind, JsNativeFunctionArgs, JsParseScriptAttributes,
     JsRuntimeAttributes, JsValueType,
@@ -24,6 +24,12 @@ impl JsRuntimeHandle {
 #[repr(transparent)]
 #[derive(Default, Copy, Clone)]
 pub struct JsContextRef(*mut c_void);
+
+impl JsContextRef {
+    pub fn is_null(&self) -> bool {
+        self.0.is_null()
+    }
+}
 
 unsafe impl cxx::ExternType for JsContextRef {
     type Id = cxx::type_id!("JsContextRef");
@@ -60,6 +66,14 @@ impl JsValueRef {
             bridge::JsGetValueType(*self, &raw mut value_type).as_result()?;
         }
         Ok(value_type)
+    }
+
+    pub fn get_context(&self) -> Result<JsContext, JsError> {
+        let mut context = JsContextRef::default();
+        unsafe {
+            bridge::JsGetContextOfObject(*self, &raw mut context).as_result()?;
+        }
+        Ok(JsContext(context))
     }
 }
 
@@ -183,6 +197,10 @@ pub(super) mod bridge {
         ) -> JsErrorCode;
         fn JsSetCurrentContext(context: JsContextRef) -> JsErrorCode;
         unsafe fn JsGetCurrentContext(context: *mut JsContextRef) -> JsErrorCode;
+        unsafe fn JsGetContextOfObject(
+            object: JsValueRef,
+            context: *mut JsContextRef,
+        ) -> JsErrorCode;
         unsafe fn JsCreateString(content: &str, value: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreateObject(object: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsCreatePropertyId(name: &str, object: *mut JsPropertyIdRef) -> JsErrorCode;

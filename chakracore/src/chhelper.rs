@@ -3,8 +3,8 @@ use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers;
 use chakracore_sys::jsrt::runtime::JsRuntime;
 use chakracore_sys::jsrt::{
-    ChakraRt, JsContextRef, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes,
-    JsSourceContext, JsValueRef,
+    ChakraRt, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes, JsSourceContext,
+    JsValueRef,
 };
 use chakracore_sys::rt_interface::ChakraRTInterface;
 use chakracore_sys::wscript_jsrt::WScript;
@@ -21,8 +21,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
     let file_contents = script_cache.get_script(&config.core.filename)?;
     let runtime = JsRuntime::create(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
 
-    let context = runtime.create_context()?;
-    ChakraRt::set_current_context(context)?;
+    let _context = runtime.create_context()?.set_current()?;
     let wscript = WScript::new(config, script_cache);
     wscript.initialize(&runtime)?;
 
@@ -55,8 +54,6 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
             &wscript,
         )?;
     };
-
-    ChakraRt::set_current_context(JsContextRef::default())?;
 
     Ok(())
 }
@@ -102,9 +99,7 @@ fn create_parser_state_and_run_script(
 
     // Bytecode buffer is created in one runtime and will be executed on different runtime.
     let runtime = JsRuntime::create(jsrt_attributes)?;
-    let new_context = runtime.create_context()?;
-    let old_context = ChakraRt::get_current_context()?;
-    ChakraRt::set_current_context(new_context)?;
+    let _new_context = runtime.create_context()?.set_current()?;
 
     // initialize the WScript object on the new context
     wscript.initialize(&runtime)?;
@@ -117,8 +112,6 @@ fn create_parser_state_and_run_script(
         buffer,
         &wscript,
     )?;
-
-    ChakraRt::set_current_context(old_context)?;
     Ok(())
 }
 
@@ -134,9 +127,7 @@ fn create_and_run_serialized_script(
 
     // Bytecode buffer is created in one runtime and will be executed on a different runtime.
     let runtime = JsRuntime::create(jsrt_attributes)?;
-    let new_context = runtime.create_context()?;
-    let old_context = ChakraRt::get_current_context()?;
-    ChakraRt::set_current_context(new_context)?;
+    let _new_context = runtime.create_context()?.set_current()?;
 
     // initialize the WScript object on the new context
     wscript.initialize(&runtime)?;
@@ -149,8 +140,6 @@ fn create_and_run_serialized_script(
         JsValueRef::default(),
         wscript,
     )?;
-
-    ChakraRt::set_current_context(old_context)?;
 
     Ok(())
 }
