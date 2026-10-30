@@ -1,5 +1,6 @@
 mod array;
 mod error;
+mod error_object;
 mod ffi;
 mod object;
 pub mod runtime;
@@ -7,6 +8,7 @@ mod string;
 
 pub use array::*;
 pub use error::*;
+pub use error_object::*;
 pub use ffi::*;
 pub use object::*;
 pub use string::*;
@@ -72,7 +74,7 @@ impl ChakraRt {
         unsafe {
             bridge::JsCreateError(message.as_ref().clone(), &raw mut value).as_result()?;
         }
-        Ok(JsErrorObject(value))
+        Ok(JsErrorObject::from(value))
     }
 
     #[tracing::instrument(skip(native_function), err)]
@@ -325,20 +327,6 @@ impl ChakraRt {
 impl From<JsString> for JsValueRef {
     fn from(value: JsString) -> Self {
         *value
-    }
-}
-
-pub struct JsErrorObject(JsValueRef);
-
-impl AsRef<JsValueRef> for JsErrorObject {
-    fn as_ref(&self) -> &JsValueRef {
-        &self.0
-    }
-}
-
-impl From<JsValueRef> for JsErrorObject {
-    fn from(value: JsValueRef) -> Self {
-        JsErrorObject(value)
     }
 }
 
