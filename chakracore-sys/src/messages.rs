@@ -56,9 +56,9 @@ impl CallbackMessage {
         Self { function }
     }
 
-    #[tracing::instrument(skip(self, wscript), err)]
-    fn internal_call(&self, filename: &str, wscript: &WScript) -> Result<(), JsError> {
-        let res = if self.function.get_value_type()? == JsValueType::JsString {
+    #[tracing::instrument(skip(self), err)]
+    fn internal_call(&self) -> Result<(), JsError> {
+        if self.function.get_value_type()? == JsValueType::JsString {
             unsafe {
                 let string_value = self.function.to_string_value()?;
                 let fname = ChakraRt::create_string("")?;
@@ -73,19 +73,16 @@ impl CallbackMessage {
             }
         } else {
             let global = ChakraRt::get_global_object()?;
-            let mut result = JsValueRef::default();
-            ChakraRt::call_function(self.function, &mut [*global], Some(&mut result))
-        };
-
-        if let Err(err) = res {
-            wscript.print_exception(filename, err.into(), JsValueRef::default());
+            ChakraRt::call_function(self.function, &mut [*global])?;
+            Ok(())
         }
-
-        Ok(())
     }
 
+    #[tracing::instrument(skip(self, wscript))]
     fn call(&self, filename: &str, wscript: &WScript) {
-        let _ = self.internal_call(filename, wscript);
+        if let Err(err) = self.internal_call() {
+            wscript.print_exception(filename, err.into(), JsValueRef::default());
+        }
     }
 }
 
