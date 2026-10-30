@@ -1,6 +1,6 @@
 use crate::jsrt::{
-    ChakraRt, JsError, JsModuleRecord, JsParseScriptAttributes, JsSourceContext, JsValueRef,
-    JsValueType,
+    ChakraRt, JsError, JsFunction, JsModuleRecord, JsParseScriptAttributes, JsSourceContext,
+    JsValueRef, JsValueType,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
@@ -73,7 +73,8 @@ impl CallbackMessage {
             }
         } else {
             let global = ChakraRt::get_global_object()?;
-            ChakraRt::call_function(self.function, &mut [*global])?;
+            let func = JsFunction::from(self.function);
+            func.call_function(&mut [*global])?;
             Ok(())
         }
     }

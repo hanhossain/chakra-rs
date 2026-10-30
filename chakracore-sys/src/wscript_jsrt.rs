@@ -829,12 +829,15 @@ impl WScript {
             let thread_data = THREAD_DATA.with_borrow(|x| Rc::clone(x));
             if let Some(callback_func) = thread_data.get_receive_broadcast_callback_func() {
                 unsafe {
-                    ChakraRTInterface::JsRelease(callback_func.as_js_ref(), std::ptr::null_mut())
-                        .as_result()?;
+                    ChakraRTInterface::JsRelease(
+                        callback_func.as_ref().as_js_ref(),
+                        std::ptr::null_mut(),
+                    )
+                    .as_result()?;
                 }
             }
             let callback_func = args.arguments[1];
-            thread_data.set_receive_broadcast_callback_func(callback_func);
+            thread_data.set_receive_broadcast_callback_func(callback_func.into());
             unsafe {
                 ChakraRTInterface::JsAddRef(callback_func.as_js_ref(), std::ptr::null_mut())
                     .as_result()?;
