@@ -151,8 +151,7 @@ mod ffi {
         #[Self = "ChakraRTInterface"]
         unsafe fn JsCallFunction(
             function: JsValueRef,
-            arguments: *mut JsValueRef,
-            argument_count: u16,
+            arguments: &mut [JsValueRef],
             result: *mut JsValueRef,
         ) -> JsErrorCode;
     }

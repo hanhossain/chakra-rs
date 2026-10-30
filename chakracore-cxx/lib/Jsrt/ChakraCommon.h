@@ -2108,7 +2108,6 @@ JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *run
     /// </remarks>
     /// <param name="function">The function to invoke.</param>
     /// <param name="arguments">The arguments to the call.</param>
-    /// <param name="argumentCount">The number of arguments being passed in to the function.</param>
     /// <param name="result">The value returned from the function invocation, if any.</param>
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
@@ -2116,8 +2115,7 @@ JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *run
     JsErrorCode
         JsCallFunction(
             _In_ JsValueRef function,
-            _In_reads_(argumentCount) JsValueRef *arguments,
-            _In_ unsigned short argumentCount,
+            rust::Slice<JsValueRef> arguments,
             _Out_opt_ JsValueRef *result);
 
     /// <summary>
