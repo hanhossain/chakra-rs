@@ -1,9 +1,11 @@
+mod array;
 mod error;
 mod ffi;
 mod object;
 pub mod runtime;
 mod string;
 
+pub use array::*;
 pub use error::*;
 pub use ffi::*;
 pub use object::*;
@@ -62,7 +64,7 @@ impl ChakraRt {
         unsafe {
             bridge::JsCreateArray(length, &raw mut value).as_result()?;
         }
-        Ok(JsArray(value))
+        Ok(JsArray::new(value))
     }
 
     pub fn create_error(message: JsString) -> Result<JsErrorObject, JsError> {
@@ -323,25 +325,6 @@ impl ChakraRt {
 impl From<JsString> for JsValueRef {
     fn from(value: JsString) -> Self {
         *value
-    }
-}
-
-pub struct JsArray(JsValueRef);
-
-impl JsArray {
-    pub fn set_indexed_property<T: AsRef<JsValueRef>>(
-        &mut self,
-        index: &JsValueRef,
-        value: T,
-    ) -> Result<(), JsError> {
-        bridge::JsSetIndexedProperty(self.0.clone(), index.clone(), value.as_ref().clone())
-            .as_result()
-    }
-}
-
-impl AsRef<JsValueRef> for JsArray {
-    fn as_ref(&self) -> &JsValueRef {
-        &self.0
     }
 }
 
