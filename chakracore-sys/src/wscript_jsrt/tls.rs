@@ -141,7 +141,7 @@ impl ThreadData {
         let shared_content_length = ChakraRt::double_to_number(1.)?;
         let mut args = [*global, shared_buffer, shared_content_length];
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
-            ChakraRt::call_function(callback_func, &mut args, None)?;
+            ChakraRt::call_function(callback_func, &mut args)?;
         }
 
         Ok(())

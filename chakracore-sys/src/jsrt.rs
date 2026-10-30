@@ -106,14 +106,16 @@ impl ChakraRt {
     pub(crate) fn call_function(
         function: JsValueRef,
         arguments: &mut [JsValueRef],
-        result: Option<&mut JsValueRef>,
-    ) -> Result<(), JsError> {
+    ) -> Result<Option<JsValueRef>, JsError> {
+        let mut result = JsValueRef::default();
         unsafe {
-            match result {
-                Some(result) => bridge::JsCallFunction(function, arguments, result as *mut _),
-                None => bridge::JsCallFunction(function, arguments, std::ptr::null_mut()),
-            }
-            .as_result()
+            bridge::JsCallFunction(function, arguments, &raw mut result).as_result()?;
+        }
+
+        if result.is_null() {
+            Ok(None)
+        } else {
+            Ok(Some(result))
         }
     }
 
