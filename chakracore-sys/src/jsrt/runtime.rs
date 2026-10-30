@@ -1,5 +1,5 @@
 use crate::jsrt::ffi::bridge;
-use crate::jsrt::{JsContextRef, JsError, JsRuntimeAttributes, JsRuntimeHandle};
+use crate::jsrt::{JsContext, JsContextRef, JsError, JsRuntimeAttributes, JsRuntimeHandle};
 
 pub struct JsRuntime {
     handle: JsRuntimeHandle,
@@ -14,12 +14,12 @@ impl JsRuntime {
         Ok(Self { handle })
     }
 
-    pub fn create_context(&self) -> Result<JsContextRef, JsError> {
+    pub fn create_context(&self) -> Result<JsContext, JsError> {
         let mut context = JsContextRef::default();
         unsafe {
             bridge::JsCreateContext(self.handle, &raw mut context).as_result()?;
         }
-        Ok(context)
+        Ok(JsContext(context))
     }
 }
 

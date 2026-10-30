@@ -1,4 +1,5 @@
 mod array;
+mod context;
 mod error;
 mod error_object;
 mod ffi;
@@ -8,6 +9,7 @@ pub mod runtime;
 mod string;
 
 pub use array::*;
+pub use context::*;
 pub use error::*;
 pub use error_object::*;
 pub use ffi::*;
@@ -18,18 +20,6 @@ pub use string::*;
 pub struct ChakraRt;
 
 impl ChakraRt {
-    pub fn set_current_context(context: JsContextRef) -> Result<(), JsError> {
-        bridge::JsSetCurrentContext(context).as_result()
-    }
-
-    pub fn get_current_context() -> Result<JsContextRef, JsError> {
-        let mut context = JsContextRef::default();
-        unsafe {
-            bridge::JsGetCurrentContext(&raw mut context).as_result()?;
-        }
-        Ok(context)
-    }
-
     pub fn create_object() -> Result<JsObject, JsError> {
         let mut object = JsValueRef::default();
         unsafe {

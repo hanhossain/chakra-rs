@@ -29,7 +29,6 @@ public:
     static JsErrorCode JsGetAndClearExceptionWithMetadata(JsValueRef * metadata) { return chakracore::jsrt::JsGetAndClearExceptionWithMetadata(metadata); }
     static JsErrorCode JsRelease(JsRef ref, unsigned int* count) { return chakracore::jsrt::JsRelease(ref, count); }
     static JsErrorCode JsAddRef(JsRef ref, unsigned int* count) { return chakracore::jsrt::JsAddRef(ref, count); }
-    static JsErrorCode JsGetContextOfObject(JsValueRef object, JsContextRef* context) { return chakracore::jsrt::JsGetContextOfObject(object, context); }
     static JsErrorCode JsParseModuleSource(const JsModuleRecord &requestModule, const JsSourceContext &sourceContext,
                                            chakra_rs::OptionalStr sourceText, JsValueRef *exceptionValueRef) {
         return chakracore::jsrt::JsParseModuleSource(

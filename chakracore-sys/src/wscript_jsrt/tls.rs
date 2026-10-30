@@ -1,6 +1,6 @@
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
-    ChakraRt, JsContextRef, JsError, JsParseScriptAttributes, JsRuntimeAttributes,
+    ChakraRt, JsContextGuard, JsError, JsParseScriptAttributes, JsRuntimeAttributes,
     JsSharedArrayBufferContentHandle, JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
@@ -73,8 +73,7 @@ impl ThreadData {
         tx_initial_script_completed: oneshot::Sender<()>,
     ) -> Result<u32, ThreadProcError> {
         let runtime = JsRuntime::create(JsRuntimeAttributes::JsRuntimeAttributeNone)?;
-        let context = runtime.create_context()?;
-        ChakraRt::set_current_context(context)?;
+        let context = runtime.create_context()?.set_current()?;
         wscript.initialize(&runtime)?;
 
         let mut script_source = JsValueRef::default();
@@ -112,12 +111,12 @@ impl ThreadData {
                 ThreadEvent::Broadcast(shared_content) => {
                     self.on_receive_broadcast(shared_content)?;
                     if self.leaving.get() {
-                        self.on_shutdown(runtime);
+                        self.on_shutdown(runtime, context);
                         return Ok(0);
                     }
                 }
                 ThreadEvent::Shutdown => {
-                    self.on_shutdown(runtime);
+                    self.on_shutdown(runtime, context);
                     return Ok(0);
                 }
             }
@@ -155,15 +154,13 @@ impl ThreadData {
     }
 
     #[tracing::instrument(skip_all)]
-    fn on_shutdown(&self, runtime: JsRuntime) {
+    fn on_shutdown(&self, runtime: JsRuntime, context_guard: JsContextGuard) {
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
             unsafe {
                 ChakraRTInterface::JsRelease(callback_func.as_js_ref(), std::ptr::null_mut());
             }
         }
-        if let Err(err) = ChakraRt::set_current_context(JsContextRef::default()) {
-            tracing::warn!(?err, "failed to reset context");
-        }
+        drop(context_guard);
         drop(runtime);
     }
 
