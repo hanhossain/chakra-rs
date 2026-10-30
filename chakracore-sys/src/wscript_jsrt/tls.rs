@@ -125,6 +125,7 @@ impl ThreadData {
         Ok(0)
     }
 
+    #[tracing::instrument(skip_all, err)]
     fn on_receive_broadcast(
         &self,
         shared_content: JsSharedArrayBufferContentHandle,
@@ -140,9 +141,7 @@ impl ThreadData {
         let shared_content_length = ChakraRt::double_to_number(1.)?;
         let mut args = [*global, shared_buffer, shared_content_length];
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
-            unsafe {
-                ChakraRTInterface::JsCallFunction(callback_func, &mut args, std::ptr::null_mut());
-            }
+            ChakraRt::call_function(callback_func, &mut args, None)?;
         }
 
         Ok(())

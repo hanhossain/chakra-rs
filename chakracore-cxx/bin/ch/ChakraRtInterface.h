@@ -17,7 +17,6 @@
 class ChakraRTInterface
 {
 public:
-    static JsErrorCode JsCallFunction(JsValueRef function, rust::Slice<JsValueRef> arguments, JsValueRef *result) { return chakracore::jsrt::JsCallFunction(function, arguments, result); }
     static JsErrorCode JsCreateArrayBuffer(unsigned int byteLength, JsValueRef *result) { return chakracore::jsrt::JsCreateArrayBuffer(byteLength, result); }
     static JsErrorCode JsCreateSharedArrayBufferWithSharedContent(JsSharedArrayBufferContentHandle sharedContent, JsValueRef *result) { return chakracore::jsrt::JsCreateSharedArrayBufferWithSharedContent(sharedContent, result); }
     static JsErrorCode JsGetSharedArrayBufferContent(JsValueRef sharedArrayBuffer, JsSharedArrayBufferContentHandle *sharedContents) { return chakracore::jsrt::JsGetSharedArrayBufferContent(sharedArrayBuffer, sharedContents); }
