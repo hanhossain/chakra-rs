@@ -236,6 +236,9 @@ pub(super) mod bridge {
             module_namespace: *mut JsValueRef,
         ) -> JsErrorCode;
         unsafe fn JsGetValueType(value: JsValueRef, value_type: *mut JsValueType) -> JsErrorCode;
+        unsafe fn JsGetTrueValue(true_value: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsGetFalseValue(false_value: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsGetNullValue(value: *mut JsValueRef) -> JsErrorCode;
 
         unsafe fn JsModuleHostInfoSetFetchImportedModuleCallback(
             request_module: JsModuleRecord,

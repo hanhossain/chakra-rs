@@ -510,17 +510,13 @@ impl WScript {
         let handler_property = ChakraRt::create_property_id("handler")?;
         let revoked_property = ChakraRt::create_property_id("revoked")?;
         let mut obj = ChakraRt::create_object()?;
-        let mut revoked = JsValueRef::default();
-
-        unsafe {
-            if target.is_null() {
-                ChakraRTInterface::JsGetTrueValue(&raw mut revoked).as_result()?;
-                target = ChakraRt::get_undefined_value()?;
-                handler = ChakraRt::get_undefined_value()?;
-            } else {
-                ChakraRTInterface::JsGetFalseValue(&raw mut revoked).as_result()?;
-            }
-        }
+        let revoked = if target.is_null() {
+            target = ChakraRt::get_undefined_value()?;
+            handler = ChakraRt::get_undefined_value()?;
+            ChakraRt::get_true_value()?
+        } else {
+            ChakraRt::get_false_value()?
+        };
         obj.set_property(handler_property, handler, true)?;
         obj.set_property(target_property, target, true)?;
         obj.set_property(revoked_property, revoked, true)?;
@@ -788,10 +784,7 @@ impl WScript {
     }
 
     fn get_report_callback(args: &JsNativeFunctionArgs) -> anyhow::Result<JsValueRef> {
-        let mut return_value = JsValueRef::default();
-        unsafe {
-            ChakraRTInterface::JsGetNullValue(&raw mut return_value).as_result()?;
-        }
+        let return_value = ChakraRt::get_null_value()?;
 
         if !args.arguments.is_empty() {
             let Some(report) = THREAD_DATA.with_borrow(|x| x.try_dequeue_report())? else {
