@@ -18,6 +18,7 @@
 #define _CHAKRACORE_H_
 
 #include "ChakraCommon.h"
+#include "chakracore-sys/src/str_helper.rs.h"
 #include <rust/cxx.h>
 #include <functional>
 
@@ -345,8 +346,6 @@ namespace chakracore::jsrt
     /// <param name="requestModule">The ModuleRecord being parsed.</param>
     /// <param name="sourceContext">A cookie identifying the script that can be used by debuggable script contexts.</param>
     /// <param name="script">The source script to be parsed, but not executed in this code.</param>
-    /// <param name="scriptLength">The length of sourceText in bytes. As the input might contain a embedded null.</param>
-    /// <param name="sourceFlag">The type of the source code passed in. It could be utf16 or utf8 at this time.</param>
     /// <param name="exceptionValueRef">The error object if there is parse error.</param>
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
@@ -354,9 +353,7 @@ namespace chakracore::jsrt
     JsErrorCode JsParseModuleSource(
         _In_ JsModuleRecord requestModule,
         _In_ JsSourceContext sourceContext,
-        _In_ const uint8_t* script,
-        _In_ size_t scriptLength,
-        _In_ JsParseModuleSourceFlags sourceFlag,
+        _In_ chakra_rs::OptionalStr script,
         _Outptr_result_maybenull_ JsValueRef* exceptionValueRef);
 
     /// <summary>
