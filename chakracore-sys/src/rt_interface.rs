@@ -105,12 +105,6 @@ mod ffi {
         ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsInitializeModuleRecord(
-            normalized_specifier: JsValueRef,
-            module_record: *mut JsModuleRecord,
-        ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsGetProxyProperties(
             object: JsValueRef,
             is_proxy: *mut bool,

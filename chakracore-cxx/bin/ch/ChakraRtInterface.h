@@ -34,9 +34,6 @@ public:
             sourceText.has_value ? reinterpret_cast<const uint8_t *>(sourceText.value.data()) : nullptr,
             sourceText.value.size(), JsParseModuleSourceFlags::JsParseModuleSourceFlags_DataIsUTF8, exceptionValueRef);
     }
-    static JsErrorCode JsInitializeModuleRecord(JsValueRef normalizedSpecifier, JsModuleRecord* moduleRecord) {
-        return chakracore::jsrt::JsInitializeModuleRecord(normalizedSpecifier, moduleRecord);
-    }
     static JsErrorCode JsSetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void* hostInfo) { return chakracore::jsrt::JsSetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
     static JsErrorCode JsGetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void** hostInfo) { return chakracore::jsrt::JsGetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
 
