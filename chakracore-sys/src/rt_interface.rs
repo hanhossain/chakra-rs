@@ -106,7 +106,6 @@ mod ffi {
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsInitializeModuleRecord(
-            referencing_module: JsModuleRecord,
             normalized_specifier: JsValueRef,
             module_record: *mut JsModuleRecord,
         ) -> JsErrorCode;

@@ -20,7 +20,6 @@
 #include "chakra/Logger.h"
 
 JsErrorCode chakracore::jsrt::JsInitializeModuleRecord(
-    _In_opt_ JsModuleRecord referencingModule,
     _In_opt_ JsValueRef normalizedSpecifier,
     _Outptr_result_maybenull_ JsModuleRecord* moduleRecord)
 {

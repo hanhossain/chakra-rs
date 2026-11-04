@@ -324,14 +324,12 @@ namespace chakracore::jsrt
     /// <remarks>
     ///     Bootstrap the module loading process by creating a new module record.
     /// </remarks>
-    /// <param name="referencingModule">Unused parameter - exists for backwards compatability, supply nullptr</param>
     /// <param name="normalizedSpecifier">The normalized specifier or url for the module - used in script errors, optional.</param>
     /// <param name="moduleRecord">The new module record.</param>
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
     JsErrorCode JsInitializeModuleRecord(
-        _In_opt_ JsModuleRecord referencingModule,
         _In_opt_ JsValueRef normalizedSpecifier,
         _Outptr_result_maybenull_ JsModuleRecord* moduleRecord);
 
