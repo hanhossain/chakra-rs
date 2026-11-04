@@ -5,9 +5,9 @@ use crate::config::ConfigContext;
 use crate::helpers;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModuleHostInfoKind, JsModuleRecord,
-    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSharedArrayBufferContentHandle,
-    JsSourceContext, JsString, JsValueRef, JsValueType,
+    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModule, JsModuleHostInfoKind,
+    JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes,
+    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
 };
 use crate::message_queue::MessageQueue;
 use crate::messages::Message;
@@ -745,22 +745,18 @@ impl WScript {
             }
         }
 
-        let mut module_record = JsModuleRecord::default();
-        unsafe {
-            ChakraRTInterface::JsInitializeModuleRecord(specifier.clone(), &raw mut module_record)
-                .as_result()?;
-        }
+        let module_record = JsModule::initialize(specifier)?;
 
         MODULE_DIRECTORY_MAP
             .0
             .write()
             .unwrap()
-            .insert(module_record.clone(), parent_path);
+            .insert(module_record.record, parent_path);
 
         MODULE_RECORD_MAP.0.write().unwrap().insert(
             abs_path.to_str().unwrap_or_default().to_owned(),
             ModuleRecordEntry {
-                record: module_record.clone(),
+                record: module_record.record,
             },
         );
 
@@ -768,12 +764,12 @@ impl WScript {
             .0
             .write()
             .unwrap()
-            .insert(module_record.clone(), ModuleState::ImportedModule);
+            .insert(module_record.record, ModuleState::ImportedModule);
         let module_message = Message::new_module(referencing_module, specifier, abs_path.to_str());
         self.message_queue
             .schedule_task(module_message, Duration::ZERO);
         unsafe {
-            *dependent_module_record = module_record;
+            *dependent_module_record = module_record.record;
         }
 
         Ok(())
@@ -955,14 +951,7 @@ impl WScript {
                 } else {
                     None
                 };
-                let mut request_module = JsModuleRecord::default();
-                unsafe {
-                    ChakraRTInterface::JsInitializeModuleRecord(
-                        specifier.unwrap_or_default().into(),
-                        &raw mut request_module,
-                    )
-                    .as_result()?;
-                }
+                let request_module = JsModule::initialize(specifier.unwrap_or_default().into())?;
                 let parent_path = std::path::Path::new(full_name)
                     .parent()
                     .map(|x| x.to_str())
@@ -970,22 +959,22 @@ impl WScript {
                     .unwrap_or_default();
                 {
                     let mut lease = MODULE_DIRECTORY_MAP.0.write().unwrap();
-                    lease.insert(request_module.clone(), parent_path.into());
+                    lease.insert(request_module.record, parent_path.into());
                 }
                 {
                     let mut lease = MODULE_RECORD_MAP.0.write().unwrap();
                     lease.insert(
                         module_record_key.to_owned(),
                         ModuleRecordEntry {
-                            record: request_module.clone(),
+                            record: request_module.record,
                         },
                     );
                 }
                 {
                     let mut lease = MODULE_ERROR_MAP.0.write().unwrap();
-                    lease.insert(request_module.clone(), ModuleState::RootModule);
+                    lease.insert(request_module.record, ModuleState::RootModule);
                 }
-                request_module
+                request_module.record
             }
         };
 
