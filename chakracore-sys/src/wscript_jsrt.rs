@@ -747,12 +747,8 @@ impl WScript {
 
         let mut module_record = JsModuleRecord::default();
         unsafe {
-            ChakraRTInterface::JsInitializeModuleRecord(
-                referencing_module.clone(),
-                specifier.clone(),
-                &raw mut module_record,
-            )
-            .as_result()?;
+            ChakraRTInterface::JsInitializeModuleRecord(specifier.clone(), &raw mut module_record)
+                .as_result()?;
         }
 
         MODULE_DIRECTORY_MAP
@@ -962,7 +958,6 @@ impl WScript {
                 let mut request_module = JsModuleRecord::default();
                 unsafe {
                     ChakraRTInterface::JsInitializeModuleRecord(
-                        JsModuleRecord::default(),
                         specifier.unwrap_or_default().into(),
                         &raw mut request_module,
                     )
