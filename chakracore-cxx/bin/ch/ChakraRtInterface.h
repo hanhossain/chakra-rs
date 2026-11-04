@@ -29,10 +29,7 @@ public:
     static JsErrorCode JsAddRef(JsRef ref, unsigned int* count) { return chakracore::jsrt::JsAddRef(ref, count); }
     static JsErrorCode JsParseModuleSource(const JsModuleRecord &requestModule, const JsSourceContext &sourceContext,
                                            chakra_rs::OptionalStr sourceText, JsValueRef *exceptionValueRef) {
-        return chakracore::jsrt::JsParseModuleSource(
-            requestModule, sourceContext,
-            sourceText.has_value ? reinterpret_cast<const uint8_t *>(sourceText.value.data()) : nullptr,
-            sourceText.value.size(), JsParseModuleSourceFlags::JsParseModuleSourceFlags_DataIsUTF8, exceptionValueRef);
+        return chakracore::jsrt::JsParseModuleSource(requestModule, sourceContext, sourceText, exceptionValueRef);
     }
     static JsErrorCode JsSetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void* hostInfo) { return chakracore::jsrt::JsSetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
     static JsErrorCode JsGetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void** hostInfo) { return chakracore::jsrt::JsGetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
