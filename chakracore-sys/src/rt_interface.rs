@@ -27,8 +27,6 @@ mod ffi {
             result: *mut JsValueRef,
         ) -> JsErrorCode;
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsCreateArrayBuffer(byte_length: u32, result: *mut JsValueRef) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsGetArrayBufferStorage(
             instance: JsValueRef,
             buffer: *mut *mut u8,

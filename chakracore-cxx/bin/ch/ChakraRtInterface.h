@@ -17,7 +17,6 @@
 class ChakraRTInterface
 {
 public:
-    static JsErrorCode JsCreateArrayBuffer(unsigned int byteLength, JsValueRef *result) { return chakracore::jsrt::JsCreateArrayBuffer(byteLength, result); }
     static JsErrorCode JsCreateSharedArrayBufferWithSharedContent(JsSharedArrayBufferContentHandle sharedContent, JsValueRef *result) { return chakracore::jsrt::JsCreateSharedArrayBufferWithSharedContent(sharedContent, result); }
     static JsErrorCode JsGetSharedArrayBufferContent(JsValueRef sharedArrayBuffer, JsSharedArrayBufferContentHandle *sharedContents) { return chakracore::jsrt::JsGetSharedArrayBufferContent(sharedArrayBuffer, sharedContents); }
     static JsErrorCode JsReleaseSharedArrayBufferContentHandle(JsSharedArrayBufferContentHandle sharedContent) { return chakracore::jsrt::JsReleaseSharedArrayBufferContentHandle(sharedContent); }

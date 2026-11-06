@@ -1,4 +1,5 @@
 mod array;
+pub mod buffer;
 mod context;
 mod error;
 mod error_object;

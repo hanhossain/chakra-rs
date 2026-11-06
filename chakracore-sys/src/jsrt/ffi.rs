@@ -338,6 +338,8 @@ pub(super) mod bridge {
             normalized_specifier: JsValueRef,
             module_record: *mut JsModuleRecord,
         ) -> JsErrorCode;
+
+        unsafe fn JsCreateArrayBuffer(byte_length: u32, result: *mut JsValueRef) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}
