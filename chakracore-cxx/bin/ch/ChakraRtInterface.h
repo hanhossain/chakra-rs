@@ -17,7 +17,6 @@
 class ChakraRTInterface
 {
 public:
-    static JsErrorCode JsCreateArrayBuffer(unsigned int byteLength, JsValueRef *result) { return chakracore::jsrt::JsCreateArrayBuffer(byteLength, result); }
     static JsErrorCode JsCreateSharedArrayBufferWithSharedContent(JsSharedArrayBufferContentHandle sharedContent, JsValueRef *result) { return chakracore::jsrt::JsCreateSharedArrayBufferWithSharedContent(sharedContent, result); }
     static JsErrorCode JsGetSharedArrayBufferContent(JsValueRef sharedArrayBuffer, JsSharedArrayBufferContentHandle *sharedContents) { return chakracore::jsrt::JsGetSharedArrayBufferContent(sharedArrayBuffer, sharedContents); }
     static JsErrorCode JsReleaseSharedArrayBufferContentHandle(JsSharedArrayBufferContentHandle sharedContent) { return chakracore::jsrt::JsReleaseSharedArrayBufferContentHandle(sharedContent); }
@@ -29,17 +28,8 @@ public:
     static JsErrorCode JsAddRef(JsRef ref, unsigned int* count) { return chakracore::jsrt::JsAddRef(ref, count); }
     static JsErrorCode JsParseModuleSource(const JsModuleRecord &requestModule, const JsSourceContext &sourceContext,
                                            chakra_rs::OptionalStr sourceText, JsValueRef *exceptionValueRef) {
-        return chakracore::jsrt::JsParseModuleSource(
-            requestModule, sourceContext,
-            sourceText.has_value ? reinterpret_cast<const uint8_t *>(sourceText.value.data()) : nullptr,
-            sourceText.value.size(), JsParseModuleSourceFlags::JsParseModuleSourceFlags_DataIsUTF8, exceptionValueRef);
+        return chakracore::jsrt::JsParseModuleSource(requestModule, sourceContext, sourceText, exceptionValueRef);
     }
-    static JsErrorCode JsInitializeModuleRecord(JsModuleRecord referencingModule, JsValueRef normalizedSpecifier, JsModuleRecord* moduleRecord) {
-        return chakracore::jsrt::JsInitializeModuleRecord(referencingModule, normalizedSpecifier, moduleRecord);
-    }
-    static JsErrorCode JsSetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void* hostInfo) { return chakracore::jsrt::JsSetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
-    static JsErrorCode JsGetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void** hostInfo) { return chakracore::jsrt::JsGetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
-
     static JsErrorCode JsRun(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return chakracore::jsrt::JsRun(script, sourceContext, sourceUrl, parseAttributes, result); }
     static JsErrorCode JsSerialize(JsValueRef script, JsValueRef *buffer, JsParseScriptAttributes parseAttributes) { return chakracore::jsrt::JsSerialize(script, buffer, parseAttributes); }
     static JsErrorCode JsRunSerialized(

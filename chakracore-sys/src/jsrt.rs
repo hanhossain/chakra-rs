@@ -1,9 +1,11 @@
 mod array;
+pub mod buffer;
 mod context;
 mod error;
 mod error_object;
 mod ffi;
 mod function;
+mod module;
 mod object;
 pub mod runtime;
 mod string;
@@ -14,6 +16,7 @@ pub use error::*;
 pub use error_object::*;
 pub use ffi::*;
 pub use function::*;
+pub use module::*;
 pub use object::*;
 pub use string::*;
 

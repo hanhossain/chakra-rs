@@ -333,6 +333,19 @@ pub(super) mod bridge {
             promise_continuation_callback: unsafe fn(task: JsValueRef, callback_state: *mut CVoid),
             callback_state: *mut CVoid,
         ) -> JsErrorCode;
+
+        unsafe fn JsInitializeModuleRecord(
+            normalized_specifier: JsValueRef,
+            module_record: *mut JsModuleRecord,
+        ) -> JsErrorCode;
+
+        unsafe fn JsCreateArrayBuffer(byte_length: u32, result: *mut JsValueRef) -> JsErrorCode;
+
+        unsafe fn JsGetModuleHostInfo(
+            request_module: JsModuleRecord,
+            module_host_info: JsModuleHostInfoKind,
+            host_info: *mut *mut CVoid,
+        ) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}

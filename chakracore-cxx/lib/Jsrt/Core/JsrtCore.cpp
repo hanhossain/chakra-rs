@@ -20,7 +20,6 @@
 #include "chakra/Logger.h"
 
 JsErrorCode chakracore::jsrt::JsInitializeModuleRecord(
-    _In_opt_ JsModuleRecord referencingModule,
     _In_opt_ JsValueRef normalizedSpecifier,
     _Outptr_result_maybenull_ JsModuleRecord* moduleRecord)
 {
@@ -47,18 +46,12 @@ JsErrorCode chakracore::jsrt::JsInitializeModuleRecord(
 JsErrorCode chakracore::jsrt::JsParseModuleSource(
     _In_ JsModuleRecord requestModule,
     _In_ JsSourceContext sourceContext,
-    _In_ const uint8_t *script,
-    _In_ size_t scriptLength,
-    _In_ JsParseModuleSourceFlags sourceFlag,
+    _In_ chakra_rs::OptionalStr script,
     _Outptr_result_maybenull_ JsValueRef* exceptionValueRef)
 {
     auto span = chakra::Span::create("chakracore::jsrt::JsParseModuleSource");
     PARAM_NOT_NULL(requestModule);
     PARAM_NOT_NULL(exceptionValueRef);
-    if (sourceFlag > JsParseModuleSourceFlags_DataIsUTF8)
-    {
-        return JsErrorInvalidArgument;
-    }
 
     *exceptionValueRef = JS_INVALID_REFERENCE;
     int32_t hr;
@@ -92,12 +85,14 @@ JsErrorCode chakracore::jsrt::JsParseModuleSource(
             /* ulColumnHost        */ 0,
             /* lnMinHost           */ 0,
             /* ichMinHost          */ 0,
-            /* ichLimHost          */ static_cast<uint32_t>(scriptLength),
+            /* ichLimHost          */ static_cast<uint32_t>(script.value.size()),
             /* ulCharOffset        */ 0,
             /* mod                 */ 0,
             /* grfsi               */ 0
         };
-        hr = moduleRecord->ParseSource(script, scriptLength, &si, exceptionValueRef, sourceFlag == JsParseModuleSourceFlags_DataIsUTF8);
+        hr = moduleRecord->ParseSource(
+            reinterpret_cast<const uint8_t *>(script.has_value ? script.value.data() : nullptr), script.value.size(),
+            &si, exceptionValueRef, true);
         if (FAILED(hr))
         {
             return JsErrorScriptCompile;

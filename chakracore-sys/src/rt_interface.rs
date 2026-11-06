@@ -27,8 +27,6 @@ mod ffi {
             result: *mut JsValueRef,
         ) -> JsErrorCode;
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsCreateArrayBuffer(byte_length: u32, result: *mut JsValueRef) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsGetArrayBufferStorage(
             instance: JsValueRef,
             buffer: *mut *mut u8,
@@ -90,26 +88,6 @@ mod ffi {
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
         type JsModuleHostInfoKind = crate::jsrt::JsModuleHostInfoKind;
         type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsSetModuleHostInfo(
-            request_module: JsModuleRecord,
-            module_host_info: JsModuleHostInfoKind,
-            host_info: *mut CVoid,
-        ) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetModuleHostInfo(
-            request_module: JsModuleRecord,
-            module_host_info: JsModuleHostInfoKind,
-            host_info: *mut *mut CVoid,
-        ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsInitializeModuleRecord(
-            referencing_module: JsModuleRecord,
-            normalized_specifier: JsValueRef,
-            module_record: *mut JsModuleRecord,
-        ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
         unsafe fn JsGetProxyProperties(

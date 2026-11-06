@@ -3,9 +3,10 @@ mod tls;
 
 use crate::config::ConfigContext;
 use crate::helpers;
+use crate::jsrt::buffer::JsArrayBuffer;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModuleHostInfoKind, JsModuleRecord,
+    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModule, JsModuleRecord,
     JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSharedArrayBufferContentHandle,
     JsSourceContext, JsString, JsValueRef, JsValueType,
 };
@@ -581,19 +582,14 @@ impl WScript {
         exception_var: JsValueRef,
     ) -> JsErrorCode {
         if !exception_var.is_null() && self.config.host.trace_host_callback {
-            let mut specifier = JsValueRef::default();
-            unsafe {
-                ChakraRTInterface::JsGetModuleHostInfo(
-                    referencing_module.clone(),
-                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
-                    &raw mut specifier as *mut _,
-                );
-                let mut filename = String::new();
-                if !specifier.is_null() {
-                    filename = specifier.to_string().unwrap_or_default();
-                }
-                println!("NotifyModuleReadyCallback(exception) {filename}");
+            let specifier = JsModule::new(referencing_module)
+                .get_host_info_url()
+                .unwrap_or_default();
+            let mut filename = String::new();
+            if !specifier.is_null() {
+                filename = specifier.to_string().unwrap_or_default();
             }
+            println!("NotifyModuleReadyCallback(exception) {filename}");
         }
 
         let guard = MODULE_ERROR_MAP.0.read().unwrap();
@@ -611,17 +607,12 @@ impl WScript {
         import_meta_var: JsValueRef,
     ) -> JsErrorCode {
         if !import_meta_var.is_null() {
-            let mut specifier = JsValueRef::default();
-            unsafe {
-                ChakraRTInterface::JsGetModuleHostInfo(
-                    referencing_module,
-                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
-                    &raw mut specifier as _,
-                );
-                if let Ok(url_prop_id) = ChakraRt::create_property_id("url") {
-                    let mut import_meta_var = JsObject::new(import_meta_var);
-                    let _ = import_meta_var.set_property(url_prop_id, specifier, false);
-                }
+            let specifier = JsModule::new(referencing_module)
+                .get_host_info_url()
+                .unwrap_or_default();
+            if let Ok(url_prop_id) = ChakraRt::create_property_id("url") {
+                let mut import_meta_var = JsObject::new(import_meta_var);
+                let _ = import_meta_var.set_property(url_prop_id, specifier, false);
             }
         }
 
@@ -634,20 +625,12 @@ impl WScript {
         exception: JsValueRef,
     ) -> JsErrorCode {
         if !exception.is_null() {
-            let mut specifier = JsValueRef::default();
-            unsafe {
-                ChakraRTInterface::JsGetModuleHostInfo(
-                    module,
-                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
-                    &raw mut specifier as _,
-                );
-                if let Ok(specifier) = specifier.to_string() {
-                    self.print_exception(
-                        &specifier,
-                        JsErrorCode::JsErrorScriptException,
-                        exception,
-                    );
-                }
+            if let Ok(specifier) = JsModule::new(module)
+                .get_host_info_url()
+                .unwrap_or_default()
+                .to_string()
+            {
+                self.print_exception(&specifier, JsErrorCode::JsErrorScriptException, exception);
             }
         }
 
@@ -745,26 +728,18 @@ impl WScript {
             }
         }
 
-        let mut module_record = JsModuleRecord::default();
-        unsafe {
-            ChakraRTInterface::JsInitializeModuleRecord(
-                referencing_module.clone(),
-                specifier.clone(),
-                &raw mut module_record,
-            )
-            .as_result()?;
-        }
+        let module_record = JsModule::initialize(specifier)?;
 
         MODULE_DIRECTORY_MAP
             .0
             .write()
             .unwrap()
-            .insert(module_record.clone(), parent_path);
+            .insert(module_record.record, parent_path);
 
         MODULE_RECORD_MAP.0.write().unwrap().insert(
             abs_path.to_str().unwrap_or_default().to_owned(),
             ModuleRecordEntry {
-                record: module_record.clone(),
+                record: module_record.record,
             },
         );
 
@@ -772,12 +747,12 @@ impl WScript {
             .0
             .write()
             .unwrap()
-            .insert(module_record.clone(), ModuleState::ImportedModule);
+            .insert(module_record.record, ModuleState::ImportedModule);
         let module_message = Message::new_module(referencing_module, specifier, abs_path.to_str());
         self.message_queue
             .schedule_task(module_message, Duration::ZERO);
         unsafe {
-            *dependent_module_record = module_record;
+            *dependent_module_record = module_record.record;
         }
 
         Ok(())
@@ -878,27 +853,20 @@ impl WScript {
     #[tracing::instrument(skip_all, err)]
     fn load_binary_file_callback(
         args: &JsNativeFunctionArgs,
-    ) -> anyhow::Result<Option<JsValueRef>> {
+    ) -> anyhow::Result<Option<JsArrayBuffer>> {
         if args.arguments.len() < 2 {
             return Ok(None);
         }
 
         let filename = args.arguments[1].to_string()?;
         let file_content = std::fs::read(filename)?;
-        let mut array_buffer = JsValueRef::default();
-        unsafe {
-            ChakraRTInterface::JsCreateArrayBuffer(
-                file_content.len() as u32,
-                &raw mut array_buffer,
-            )
-            .as_result()?;
-        }
+        let array_buffer = JsArrayBuffer::create(file_content.len() as u32)?;
 
         unsafe {
             let mut buffer: *mut u8 = std::ptr::null_mut();
             let mut buffer_length = 0;
             ChakraRTInterface::JsGetArrayBufferStorage(
-                array_buffer.clone(),
+                *array_buffer.as_ref(),
                 &raw mut buffer,
                 &raw mut buffer_length,
             )
@@ -959,15 +927,7 @@ impl WScript {
                 } else {
                     None
                 };
-                let mut request_module = JsModuleRecord::default();
-                unsafe {
-                    ChakraRTInterface::JsInitializeModuleRecord(
-                        JsModuleRecord::default(),
-                        specifier.unwrap_or_default().into(),
-                        &raw mut request_module,
-                    )
-                    .as_result()?;
-                }
+                let request_module = JsModule::initialize(specifier.unwrap_or_default().into())?;
                 let parent_path = std::path::Path::new(full_name)
                     .parent()
                     .map(|x| x.to_str())
@@ -975,22 +935,22 @@ impl WScript {
                     .unwrap_or_default();
                 {
                     let mut lease = MODULE_DIRECTORY_MAP.0.write().unwrap();
-                    lease.insert(request_module.clone(), parent_path.into());
+                    lease.insert(request_module.record, parent_path.into());
                 }
                 {
                     let mut lease = MODULE_RECORD_MAP.0.write().unwrap();
                     lease.insert(
                         module_record_key.to_owned(),
                         ModuleRecordEntry {
-                            record: request_module.clone(),
+                            record: request_module.record,
                         },
                     );
                 }
                 {
                     let mut lease = MODULE_ERROR_MAP.0.write().unwrap();
-                    lease.insert(request_module.clone(), ModuleState::RootModule);
+                    lease.insert(request_module.record, ModuleState::RootModule);
                 }
-                request_module
+                request_module.record
             }
         };
 
