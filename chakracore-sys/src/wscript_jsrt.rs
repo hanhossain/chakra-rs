@@ -3,6 +3,7 @@ mod tls;
 
 use crate::config::ConfigContext;
 use crate::helpers;
+use crate::jsrt::buffer::JsArrayBuffer;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModule, JsModuleHostInfoKind,
@@ -870,27 +871,20 @@ impl WScript {
     #[tracing::instrument(skip_all, err)]
     fn load_binary_file_callback(
         args: &JsNativeFunctionArgs,
-    ) -> anyhow::Result<Option<JsValueRef>> {
+    ) -> anyhow::Result<Option<JsArrayBuffer>> {
         if args.arguments.len() < 2 {
             return Ok(None);
         }
 
         let filename = args.arguments[1].to_string()?;
         let file_content = std::fs::read(filename)?;
-        let mut array_buffer = JsValueRef::default();
-        unsafe {
-            ChakraRTInterface::JsCreateArrayBuffer(
-                file_content.len() as u32,
-                &raw mut array_buffer,
-            )
-            .as_result()?;
-        }
+        let array_buffer = JsArrayBuffer::create(file_content.len() as u32)?;
 
         unsafe {
             let mut buffer: *mut u8 = std::ptr::null_mut();
             let mut buffer_length = 0;
             ChakraRTInterface::JsGetArrayBufferStorage(
-                array_buffer.clone(),
+                *array_buffer.as_ref(),
                 &raw mut buffer,
                 &raw mut buffer_length,
             )
