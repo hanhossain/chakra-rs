@@ -90,12 +90,6 @@ mod ffi {
         type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsSetModuleHostInfo(
-            request_module: JsModuleRecord,
-            module_host_info: JsModuleHostInfoKind,
-            host_info: *mut CVoid,
-        ) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsGetModuleHostInfo(
             request_module: JsModuleRecord,
             module_host_info: JsModuleHostInfoKind,

@@ -30,7 +30,6 @@ public:
                                            chakra_rs::OptionalStr sourceText, JsValueRef *exceptionValueRef) {
         return chakracore::jsrt::JsParseModuleSource(requestModule, sourceContext, sourceText, exceptionValueRef);
     }
-    static JsErrorCode JsSetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void* hostInfo) { return chakracore::jsrt::JsSetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
     static JsErrorCode JsGetModuleHostInfo(JsModuleRecord requestModule, JsModuleHostInfoKind moduleHostInfo, void** hostInfo) { return chakracore::jsrt::JsGetModuleHostInfo(requestModule, moduleHostInfo, hostInfo); }
 
     static JsErrorCode JsRun(JsValueRef script, JsSourceContext sourceContext, JsValueRef sourceUrl, JsParseScriptAttributes parseAttributes, JsValueRef *result) { return chakracore::jsrt::JsRun(script, sourceContext, sourceUrl, parseAttributes, result); }
