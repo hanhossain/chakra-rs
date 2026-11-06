@@ -340,6 +340,12 @@ pub(super) mod bridge {
         ) -> JsErrorCode;
 
         unsafe fn JsCreateArrayBuffer(byte_length: u32, result: *mut JsValueRef) -> JsErrorCode;
+
+        unsafe fn JsGetModuleHostInfo(
+            request_module: JsModuleRecord,
+            module_host_info: JsModuleHostInfoKind,
+            host_info: *mut *mut CVoid,
+        ) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}
