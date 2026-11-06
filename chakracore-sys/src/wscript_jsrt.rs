@@ -6,9 +6,9 @@ use crate::helpers;
 use crate::jsrt::buffer::JsArrayBuffer;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModule, JsModuleHostInfoKind,
-    JsModuleRecord, JsNativeFunctionArgs, JsObject, JsParseScriptAttributes,
-    JsSharedArrayBufferContentHandle, JsSourceContext, JsString, JsValueRef, JsValueType,
+    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModule, JsModuleRecord,
+    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSharedArrayBufferContentHandle,
+    JsSourceContext, JsString, JsValueRef, JsValueType,
 };
 use crate::message_queue::MessageQueue;
 use crate::messages::Message;
@@ -582,19 +582,14 @@ impl WScript {
         exception_var: JsValueRef,
     ) -> JsErrorCode {
         if !exception_var.is_null() && self.config.host.trace_host_callback {
-            let mut specifier = JsValueRef::default();
-            unsafe {
-                ChakraRTInterface::JsGetModuleHostInfo(
-                    referencing_module.clone(),
-                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
-                    &raw mut specifier as *mut _,
-                );
-                let mut filename = String::new();
-                if !specifier.is_null() {
-                    filename = specifier.to_string().unwrap_or_default();
-                }
-                println!("NotifyModuleReadyCallback(exception) {filename}");
+            let specifier = JsModule::new(referencing_module)
+                .get_host_info_url()
+                .unwrap_or_default();
+            let mut filename = String::new();
+            if !specifier.is_null() {
+                filename = specifier.to_string().unwrap_or_default();
             }
+            println!("NotifyModuleReadyCallback(exception) {filename}");
         }
 
         let guard = MODULE_ERROR_MAP.0.read().unwrap();
@@ -612,17 +607,12 @@ impl WScript {
         import_meta_var: JsValueRef,
     ) -> JsErrorCode {
         if !import_meta_var.is_null() {
-            let mut specifier = JsValueRef::default();
-            unsafe {
-                ChakraRTInterface::JsGetModuleHostInfo(
-                    referencing_module,
-                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
-                    &raw mut specifier as _,
-                );
-                if let Ok(url_prop_id) = ChakraRt::create_property_id("url") {
-                    let mut import_meta_var = JsObject::new(import_meta_var);
-                    let _ = import_meta_var.set_property(url_prop_id, specifier, false);
-                }
+            let specifier = JsModule::new(referencing_module)
+                .get_host_info_url()
+                .unwrap_or_default();
+            if let Ok(url_prop_id) = ChakraRt::create_property_id("url") {
+                let mut import_meta_var = JsObject::new(import_meta_var);
+                let _ = import_meta_var.set_property(url_prop_id, specifier, false);
             }
         }
 
@@ -635,20 +625,12 @@ impl WScript {
         exception: JsValueRef,
     ) -> JsErrorCode {
         if !exception.is_null() {
-            let mut specifier = JsValueRef::default();
-            unsafe {
-                ChakraRTInterface::JsGetModuleHostInfo(
-                    module,
-                    JsModuleHostInfoKind::JsModuleHostInfo_Url,
-                    &raw mut specifier as _,
-                );
-                if let Ok(specifier) = specifier.to_string() {
-                    self.print_exception(
-                        &specifier,
-                        JsErrorCode::JsErrorScriptException,
-                        exception,
-                    );
-                }
+            if let Ok(specifier) = JsModule::new(module)
+                .get_host_info_url()
+                .unwrap_or_default()
+                .to_string()
+            {
+                self.print_exception(&specifier, JsErrorCode::JsErrorScriptException, exception);
             }
         }
 
