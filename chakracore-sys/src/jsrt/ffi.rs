@@ -731,3 +731,12 @@ impl From<JsError> for JsErrorCode {
         }
     }
 }
+
+impl<T> From<Result<T, JsError>> for JsErrorCode {
+    fn from(value: Result<T, JsError>) -> Self {
+        match value {
+            Ok(_) => JsErrorCode::JsNoError,
+            Err(err) => err.into(),
+        }
+    }
+}

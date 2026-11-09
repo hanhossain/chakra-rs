@@ -13,7 +13,6 @@ use crate::jsrt::{
 use crate::message_queue::MessageQueue;
 use crate::messages::Message;
 use crate::rt_interface::ChakraRTInterface;
-use crate::str_helper::OptionalStr;
 use crate::wscript_jsrt::cache::ScriptCache;
 use crate::wscript_jsrt::tls::ThreadData;
 use std::cell::RefCell;
@@ -883,31 +882,12 @@ impl WScript {
 
     #[tracing::instrument(skip(self, file_content))]
     pub fn module_entry_point(&self, file_content: &str, full_name: &String) -> JsErrorCode {
-        self.load_module_from_string(
-            OptionalStr {
-                has_value: true,
-                value: file_content,
-            },
-            full_name,
-            true,
-        )
-    }
-
-    // TODO: can now use Option<&str> since this is no longer exposed to C++.
-    pub(crate) fn load_module_from_string(
-        &self,
-        file_content: OptionalStr,
-        full_name: &String,
-        is_file: bool,
-    ) -> JsErrorCode {
-        match self.internal_load_module_from_string(file_content.into(), full_name, is_file) {
-            Ok(()) => JsErrorCode::JsNoError,
-            Err(err) => err.into(),
-        }
+        self.load_module_from_string(Some(file_content), full_name, true)
+            .into()
     }
 
     #[tracing::instrument(skip(self), err)]
-    fn internal_load_module_from_string(
+    pub(crate) fn load_module_from_string(
         &self,
         file_content: Option<&str>,
         full_name: &String,
@@ -996,7 +976,7 @@ impl WScript {
         // this is called with LoadModuleCallback method as well where caller pass in a string that should be
         // treated as a module source text instead of opening a new file.
         if is_source_module || script_inject_type == "module" {
-            self.internal_load_module_from_string(
+            self.load_module_from_string(
                 content,
                 &full_path.to_str().unwrap_or_default().to_owned(),
                 is_file,

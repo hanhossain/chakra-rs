@@ -148,11 +148,8 @@ impl ModuleMessage {
         };
 
         let Err(err) = file_content.map(|content| {
-            let content = Some(content.as_str()).into();
             let path = self.full_path.as_ref().unwrap_or(&specifier);
-            wscript
-                .load_module_from_string(content, path, true)
-                .as_result()
+            wscript.load_module_from_string(Some(&content), path, true)
         }) else {
             return Ok(());
         };
@@ -182,7 +179,7 @@ impl ModuleMessage {
             };
         }
         let path = self.full_path.as_ref().unwrap_or(&specifier);
-        wscript.load_module_from_string(None.into(), path, false);
+        wscript.load_module_from_string(None, path, false)?;
 
         Ok(())
     }
