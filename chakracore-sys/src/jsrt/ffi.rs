@@ -118,6 +118,7 @@ unsafe impl cxx::ExternType for JsPropertyIdRef {
 }
 
 #[repr(transparent)]
+#[derive(Copy, Clone)]
 pub struct JsSourceContext(pub usize);
 
 unsafe impl cxx::ExternType for JsSourceContext {
@@ -190,6 +191,11 @@ pub(super) mod bridge {
         type JsParseScriptAttributes;
         type JsModuleHostInfoKind;
         type JsValueType;
+    }
+
+    extern "C++" {
+        #[namespace = "chakra_rs"]
+        type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
     }
 
     #[namespace = "chakracore::jsrt"]
@@ -345,6 +351,13 @@ pub(super) mod bridge {
             request_module: JsModuleRecord,
             module_host_info: JsModuleHostInfoKind,
             host_info: *mut *mut CVoid,
+        ) -> JsErrorCode;
+
+        unsafe fn JsParseModuleSource<'a>(
+            request_module: JsModuleRecord,
+            source_context: JsSourceContext,
+            source_text: OptionalStr<'a>,
+            exception_value_ref: *mut JsValueRef,
         ) -> JsErrorCode;
     }
 

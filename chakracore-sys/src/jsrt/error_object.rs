@@ -1,5 +1,6 @@
 use crate::jsrt::JsValueRef;
 
+#[derive(Debug)]
 pub struct JsErrorObject(JsValueRef);
 
 impl AsRef<JsValueRef> for JsErrorObject {

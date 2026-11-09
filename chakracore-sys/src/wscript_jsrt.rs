@@ -8,7 +8,7 @@ use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModule, JsModuleRecord,
     JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSharedArrayBufferContentHandle,
-    JsSourceContext, JsString, JsValueRef, JsValueType,
+    JsSourceContext, JsString, JsValueRef, JsValueType, ParseScriptError,
 };
 use crate::message_queue::MessageQueue;
 use crate::messages::Message;
@@ -955,28 +955,20 @@ impl WScript {
         };
 
         // ParseModuleSource is sync, while additional fetch & evaluation are async.
-        let mut error_object = JsValueRef::default();
-        let error_code = unsafe {
-            ChakraRTInterface::JsParseModuleSource(
-                &request_module,
-                &source_context,
-                file_content.into(),
-                &raw mut error_object,
-            )
+        let Err(ParseScriptError::ScriptCompile(error_object)) =
+            JsModule::new(request_module).parse_source(&source_context, file_content)
+        else {
+            return Ok(());
         };
 
-        if error_code != JsErrorCode::JsNoError
-            && !error_object.is_null()
-            && file_content.is_some()
-            && !self.config.host.ignore_script_error_code
-        {
+        if !self.config.host.ignore_script_error_code {
             let state = {
                 let lease = MODULE_ERROR_MAP.0.read().unwrap();
                 lease.get(&request_module).map(|x| x.clone())
             };
             if let Some(state) = state {
                 if state == ModuleState::RootModule {
-                    let _ = ChakraRt::set_exception(error_object.into());
+                    let _ = ChakraRt::set_exception(error_object);
                     let mut lease = MODULE_ERROR_MAP.0.write().unwrap();
                     lease.insert(request_module, ModuleState::ErroredModule);
                 }
