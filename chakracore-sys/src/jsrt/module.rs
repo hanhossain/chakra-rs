@@ -52,6 +52,9 @@ impl JsModule {
         let Err(err) = res else {
             return Ok(());
         };
+        if err == JsError::JsErrorModuleParsed {
+            return Err(ParseScriptError::ModuleAlreadyParsed);
+        }
         if err == JsError::JsErrorScriptCompile && !error.is_null() && source_text.is_some() {
             return Err(ParseScriptError::ScriptCompile(error.into()));
         }
@@ -63,6 +66,8 @@ impl JsModule {
 pub enum ParseScriptError {
     #[error(transparent)]
     ParseFailed(#[from] JsError),
+    #[error("Module was already parsed")]
+    ModuleAlreadyParsed,
     #[error("Script failed to compile")]
     ScriptCompile(JsErrorObject),
 }
