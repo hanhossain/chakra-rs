@@ -11,8 +11,6 @@
 #include "ChakraCommon.h"
 #include "ChakraCore.h"
 
-#include <chakracore-sys/src/jsrt/ffi.rs.h>
-
 class ChakraRTInterface
 {
 public:

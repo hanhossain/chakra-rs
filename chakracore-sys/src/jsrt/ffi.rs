@@ -1,7 +1,7 @@
 use crate::jsrt::{JsContext, JsError, JsString};
 pub use bridge::{
-    CVoid, JsErrorCode, JsModuleHostInfoKind, JsNativeFunctionArgs, JsParseScriptAttributes,
-    JsRuntimeAttributes, JsValueType,
+    CVoid, JsErrorCode, JsModuleHostInfoKind, JsParseScriptAttributes, JsRuntimeAttributes,
+    JsValueType,
 };
 use std::ffi::c_void;
 use std::fmt::Formatter;
@@ -571,16 +571,6 @@ pub(super) mod bridge {
         JsTypedArray = 11,
         /// The value is a JavaScript DataView object value.
         JsDataView = 12,
-    }
-
-    #[namespace = "chakra_rs"]
-    struct JsNativeFunctionArgs<'a> {
-        /// A function object that represents the function being invoked.
-        callee: JsValueRef,
-        /// Indicates whether this is a regular call or a 'new' call.
-        is_construct_call: bool,
-        /// The arguments to the call.
-        arguments: &'a [JsValueRef],
     }
 }
 

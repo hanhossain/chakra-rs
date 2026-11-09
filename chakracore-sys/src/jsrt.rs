@@ -342,6 +342,15 @@ impl ChakraRt {
     }
 }
 
+pub struct JsNativeFunctionArgs<'a> {
+    /// A function object that represents the function being invoked.
+    pub callee: JsValueRef,
+    /// Indicates whether this is a regular call or a 'new' call.
+    pub is_construct_call: bool,
+    /// The arguments to the call.
+    pub arguments: &'a [JsValueRef],
+}
+
 // TODO: can I remove this?
 impl From<JsString> for JsValueRef {
     fn from(value: JsString) -> Self {
