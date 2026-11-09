@@ -1,5 +1,7 @@
 use crate::jsrt::ffi::bridge;
-use crate::jsrt::{JsError, JsModuleHostInfoKind, JsModuleRecord, JsValueRef};
+use crate::jsrt::{
+    JsError, JsErrorObject, JsModuleHostInfoKind, JsModuleRecord, JsSourceContext, JsValueRef,
+};
 
 #[derive(Eq, PartialEq, Hash, Copy, Clone)]
 pub struct JsModule {
@@ -31,4 +33,36 @@ impl JsModule {
         }
         Ok(url)
     }
+
+    pub fn parse_source(
+        &self,
+        source_context: &JsSourceContext,
+        source_text: Option<&str>,
+    ) -> Result<(), ParseScriptError> {
+        let mut error = JsValueRef::default();
+        let res = unsafe {
+            bridge::JsParseModuleSource(
+                self.record,
+                *source_context,
+                source_text.into(),
+                &raw mut error,
+            )
+            .as_result()
+        };
+        let Err(err) = res else {
+            return Ok(());
+        };
+        if err == JsError::JsErrorScriptCompile && !error.is_null() && source_text.is_some() {
+            return Err(ParseScriptError::ScriptCompile(error.into()));
+        }
+        Err(ParseScriptError::ParseFailed(err))
+    }
+}
+
+#[derive(thiserror::Error, Debug)]
+pub enum ParseScriptError {
+    #[error(transparent)]
+    ParseFailed(#[from] JsError),
+    #[error("Script failed to compile")]
+    ScriptCompile(JsErrorObject),
 }

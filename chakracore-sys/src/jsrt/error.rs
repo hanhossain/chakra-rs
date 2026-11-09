@@ -1,4 +1,4 @@
-#[derive(thiserror::Error, Debug)]
+#[derive(thiserror::Error, Debug, Eq, PartialEq)]
 pub enum JsError {
     /// Category of errors that relates to incorrect usage of the API itself.
     #[error("JsErrorCategoryUsage")]
