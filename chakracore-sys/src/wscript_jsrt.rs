@@ -935,27 +935,29 @@ impl WScript {
         };
 
         // ParseModuleSource is sync, while additional fetch & evaluation are async.
-        let Err(ParseScriptError::ScriptCompile(error_object)) =
-            JsModule::new(request_module).parse_source(&source_context, file_content)
-        else {
-            return Ok(());
-        };
-
-        if !self.config.host.ignore_script_error_code {
-            let state = {
-                let lease = MODULE_ERROR_MAP.0.read().unwrap();
-                lease.get(&request_module).map(|x| x.clone())
-            };
-            if let Some(state) = state {
-                if state == ModuleState::RootModule {
-                    let _ = ChakraRt::set_exception(error_object);
-                    let mut lease = MODULE_ERROR_MAP.0.write().unwrap();
-                    lease.insert(request_module, ModuleState::ErroredModule);
+        let res = JsModule::new(request_module).parse_source(&source_context, file_content);
+        match res {
+            Ok(()) => Ok(()),
+            Err(ParseScriptError::ParseFailed(err)) => Err(err),
+            Err(ParseScriptError::ModuleAlreadyParsed) => Ok(()),
+            Err(ParseScriptError::ScriptCompile(err_obj)) => {
+                if !self.config.host.ignore_script_error_code {
+                    let state = {
+                        let lease = MODULE_ERROR_MAP.0.read().unwrap();
+                        lease.get(&request_module).map(|x| x.clone())
+                    };
+                    if let Some(state) = state {
+                        if state == ModuleState::RootModule {
+                            let _ = ChakraRt::set_exception(err_obj);
+                            let mut lease = MODULE_ERROR_MAP.0.write().unwrap();
+                            lease.insert(request_module, ModuleState::ErroredModule);
+                        }
+                    }
                 }
+
+                Err(JsError::JsErrorScriptCompile)
             }
         }
-
-        Ok(())
     }
 
     #[tracing::instrument(skip(self, runtime), err)]
