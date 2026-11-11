@@ -361,6 +361,7 @@ pub(super) mod bridge {
         ) -> JsErrorCode;
 
         unsafe fn JsGetAndClearException(exception: *mut JsValueRef) -> JsErrorCode;
+        unsafe fn JsGetAndClearExceptionWithMetadata(metadata: *mut JsValueRef) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}

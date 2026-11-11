@@ -1190,18 +1190,16 @@ impl WScript {
         mut exception: JsValueRef,
     ) -> Result<(), JsError> {
         let error_type_string = Self::convert_error_code_to_message(js_error_code);
-        let mut metadata = JsValueRef::default();
+        let mut metadata: Option<JsObject> = None;
 
-        unsafe {
-            if exception.is_null() {
-                if ChakraRTInterface::JsGetAndClearExceptionWithMetadata(&raw mut metadata)
-                    .as_result()
-                    .is_ok()
-                {
+        if exception.is_null() {
+            match ChakraRt::get_and_clear_exception_with_metadata() {
+                Ok(m) => {
                     let exception_id = ChakraRt::create_property_id("exception")?;
-                    let metadata = JsObject::new(metadata);
-                    exception = metadata.get_property(exception_id)?;
-                } else {
+                    exception = m.get_property(exception_id)?;
+                    metadata = Some(m);
+                }
+                Err(_) => {
                     exception = *ChakraRt::get_and_clear_exception()?.as_ref();
                 }
             }
@@ -1236,28 +1234,28 @@ impl WScript {
                 let error_message = exception.get_property(message_property_id)?.to_string()?;
 
                 if js_error_code != JsErrorCode::JsErrorScriptCompile {
-                    if !metadata.is_null() {
-                        let metadata = JsObject::new(metadata);
-                        let line = {
-                            let property_id = ChakraRt::create_property_id("line")?;
-                            let property = metadata.get_property(property_id)?;
-                            ChakraRt::number_to_int(&property)?
-                        };
-                        let column = {
-                            let property_id = ChakraRt::create_property_id("column")?;
-                            let property = metadata.get_property(property_id)?;
-                            ChakraRt::number_to_int(&property)?
-                        };
-                        println!(
-                            "{}\n        at code ({}:{}:{})",
-                            error_message,
-                            path,
-                            line + 1,
-                            column + 1,
-                        );
-                    } else {
-                        println!("{}\n\tat code ({}:??:??)", error_message, path);
-                    }
+                    match metadata {
+                        Some(metadata) => {
+                            let line = {
+                                let property_id = ChakraRt::create_property_id("line")?;
+                                let property = metadata.get_property(property_id)?;
+                                ChakraRt::number_to_int(&property)?
+                            };
+                            let column = {
+                                let property_id = ChakraRt::create_property_id("column")?;
+                                let property = metadata.get_property(property_id)?;
+                                ChakraRt::number_to_int(&property)?
+                            };
+                            println!(
+                                "{}\n        at code ({}:{}:{})",
+                                error_message,
+                                path,
+                                line + 1,
+                                column + 1,
+                            );
+                        }
+                        None => println!("{}\n\tat code ({}:??:??)", error_message, path),
+                    };
 
                     return Ok(());
                 }

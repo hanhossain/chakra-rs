@@ -107,8 +107,5 @@ mod ffi {
         unsafe fn JsRelease(jsref: JsRef, count: *mut u32) -> JsErrorCode;
         #[Self = "ChakraRTInterface"]
         unsafe fn JsAddRef(jsref: JsRef, count: *mut u32) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetAndClearExceptionWithMetadata(metadata: *mut JsValueRef) -> JsErrorCode;
     }
 }
