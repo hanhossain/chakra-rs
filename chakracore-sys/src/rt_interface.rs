@@ -20,13 +20,6 @@ mod ffi {
         type JsRef = crate::jsrt::JsRef;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetArrayBufferStorage(
-            instance: JsValueRef,
-            buffer: *mut *mut u8,
-            buffer_length: *mut u32,
-        ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsSerialize(
             script: JsValueRef,
             buffer: *mut JsValueRef,

@@ -861,21 +861,12 @@ impl WScript {
         let file_content = std::fs::read(filename)?;
         let array_buffer = JsArrayBuffer::create(file_content.len() as u32)?;
 
-        unsafe {
-            let mut buffer: *mut u8 = std::ptr::null_mut();
-            let mut buffer_length = 0;
-            ChakraRTInterface::JsGetArrayBufferStorage(
-                *array_buffer.as_ref(),
-                &raw mut buffer,
-                &raw mut buffer_length,
-            )
-            .as_result()?;
-            anyhow::ensure!(
-                (buffer_length as usize) >= file_content.len(),
-                "Array buffer size is insufficient to store the binary file."
-            );
-            buffer.copy_from(file_content.as_ptr(), file_content.len());
-        }
+        let buffer = array_buffer.storage_mut()?;
+        anyhow::ensure!(
+            buffer.len() >= file_content.len(),
+            "Array buffer size is insufficient to store the binary file."
+        );
+        buffer.copy_from_slice(&file_content);
 
         Ok(Some(array_buffer))
     }
