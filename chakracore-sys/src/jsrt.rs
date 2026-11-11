@@ -317,6 +317,14 @@ impl ChakraRt {
         Ok(exception.into())
     }
 
+    pub fn get_and_clear_exception_with_metadata() -> Result<JsObject, JsError> {
+        let mut metadata = JsValueRef::default();
+        unsafe {
+            bridge::JsGetAndClearExceptionWithMetadata(&raw mut metadata).as_result()?;
+        }
+        Ok(JsObject::new(metadata))
+    }
+
     pub fn get_module_namespace(request_module: &JsModuleRecord) -> Result<JsValueRef, JsError> {
         let mut value = JsValueRef::default();
         unsafe {
