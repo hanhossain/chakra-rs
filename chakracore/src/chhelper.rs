@@ -202,13 +202,13 @@ fn run_script(
         // Use source ptr as sourceContext
         let source_context = JsSourceContext(contents.into_raw() as usize);
         unsafe {
-            ChakraRTInterface::JsRunSerialized(
+            ChakraRt::run_serialized(
                 buffer_value,
                 dummy_js_serialized_script_load_utf8_source,
                 source_context,
                 *fname,
-                std::ptr::null_mut(),
             )
+            .map(|_| ())
         }
     } else if !parser_state_cache.is_null() {
         let mut script_source = JsValueRef::default();
@@ -223,9 +223,10 @@ fn run_script(
                 parser_state_cache,
                 std::ptr::null_mut(),
             )
+            .as_result()
         }
     } else if wscript.config.host.module {
-        wscript.module_entry_point(contents, full_path)
+        wscript.module_entry_point(contents, full_path).as_result()
     } else {
         let mut script_source = JsValueRef::default();
         unsafe {
@@ -238,11 +239,11 @@ fn run_script(
                 JsParseScriptAttributes::JsParseScriptAttributeNone,
                 std::ptr::null_mut(),
             )
+            .as_result()
         }
     };
-
-    if run_script_result != JsErrorCode::JsNoError {
-        wscript.print_exception(filename, run_script_result, JsValueRef::default());
+    if let Err(err) = run_script_result {
+        wscript.print_exception(filename, err.into(), JsValueRef::default());
     } else {
         // Repeatedly flush the message queue until it's empty. It is necessary to loop on this
         // because setTimeout can add scripts to execute.
@@ -263,8 +264,8 @@ fn run_script(
 #[tracing::instrument(skip_all)]
 fn dummy_js_serialized_script_load_utf8_source(
     source_context: JsSourceContext,
-    script_buffer: *mut JsValueRef,
-    parse_attributes: *mut JsParseScriptAttributes,
+    script_buffer: &mut JsValueRef,
+    parse_attributes: &mut JsParseScriptAttributes,
 ) -> bool {
     let script_body = source_context.0 as *mut c_char;
     unsafe {

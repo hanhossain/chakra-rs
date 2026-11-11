@@ -3946,6 +3946,17 @@ JsErrorCode chakracore::jsrt::JsRunSerialized(
         buffer, arrayBuffer, sourceContext, url, 0, false, false, result, Js::Constants::InvalidSourceIndex);
 }
 
+JsErrorCode chakracore::jsrt::JsRunSerialized(JsValueRef buffer,
+                            rust::Fn<bool(JsSourceContext, JsValueRef &, JsParseScriptAttributes &)> scriptLoadCallback,
+                            JsSourceContext sourceContext, JsValueRef sourceUrl, JsValueRef *result) {
+    auto callback = [scriptLoadCallback](JsSourceContext context, JsValueRef *value, JsParseScriptAttributes *parseAttributes) -> bool {
+        JsParseScriptAttributes attributes{};
+        auto res = scriptLoadCallback(context, *value, attributes);
+        *parseAttributes = attributes;
+        return res;
+    };
+    return JsRunSerialized(buffer, callback, sourceContext, sourceUrl, result);
+}
 
 JsErrorCode chakracore::jsrt::JsCopyStringOneByte(
     _In_ JsValueRef value,

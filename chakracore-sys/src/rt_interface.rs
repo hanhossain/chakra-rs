@@ -56,19 +56,6 @@ mod ffi {
         ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsRunSerialized(
-            buffer: JsValueRef,
-            callback: unsafe fn(
-                sourceContext: JsSourceContext,
-                value: *mut JsValueRef,
-                parseAttributes: *mut JsParseScriptAttributes,
-            ) -> bool,
-            sourceContext: JsSourceContext,
-            sourceUrl: JsValueRef,
-            result: *mut JsValueRef,
-        ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsRun(
             script: JsValueRef,
             sourceContext: JsSourceContext,

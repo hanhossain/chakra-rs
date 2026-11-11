@@ -356,6 +356,26 @@ impl ChakraRt {
         }
         Ok(())
     }
+
+    pub unsafe fn run_serialized(
+        buffer: JsValueRef,
+        callback: fn(JsSourceContext, &mut JsValueRef, &mut JsParseScriptAttributes) -> bool,
+        source_context: JsSourceContext,
+        source_url: JsValueRef,
+    ) -> Result<JsValueRef, JsError> {
+        let mut result = JsValueRef::default();
+        unsafe {
+            bridge::JsRunSerialized(
+                buffer,
+                callback,
+                source_context,
+                source_url,
+                &raw mut result,
+            )
+            .as_result()?;
+        }
+        Ok(result)
+    }
 }
 
 pub struct JsNativeFunctionArgs<'a> {
