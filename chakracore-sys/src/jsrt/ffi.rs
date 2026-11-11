@@ -374,6 +374,11 @@ pub(super) mod bridge {
             sourceUrl: JsValueRef,
             result: *mut JsValueRef,
         ) -> JsErrorCode;
+
+        unsafe fn JsCreateExternalArrayBuffer(
+            content: &str,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}

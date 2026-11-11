@@ -376,6 +376,15 @@ impl ChakraRt {
         }
         Ok(result)
     }
+
+    // TODO: should prob create a JsExternalArrayBuffer struct
+    pub fn create_external_array_buffer(content: &str) -> Result<JsValueRef, JsError> {
+        let mut res = JsValueRef::default();
+        unsafe {
+            bridge::JsCreateExternalArrayBuffer(content, &raw mut res).as_result()?;
+        }
+        Ok(res)
+    }
 }
 
 pub struct JsNativeFunctionArgs<'a> {

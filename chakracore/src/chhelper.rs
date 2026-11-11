@@ -3,8 +3,7 @@ use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers;
 use chakracore_sys::jsrt::runtime::JsRuntime;
 use chakracore_sys::jsrt::{
-    ChakraRt, JsError, JsErrorCode, JsParseScriptAttributes, JsRuntimeAttributes, JsSourceContext,
-    JsValueRef,
+    ChakraRt, JsError, JsParseScriptAttributes, JsRuntimeAttributes, JsSourceContext, JsValueRef,
 };
 use chakracore_sys::rt_interface::ChakraRTInterface;
 use chakracore_sys::wscript_jsrt::WScript;
@@ -146,10 +145,8 @@ fn create_and_run_serialized_script(
 
 #[tracing::instrument(skip(file_contents), err)]
 fn get_serialized_buffer(file_contents: &String) -> Result<JsValueRef, JsError> {
-    let mut script_source = JsValueRef::default();
+    let script_source = ChakraRt::create_external_array_buffer(file_contents)?;
     unsafe {
-        ChakraRTInterface::JsCreateExternalArrayBuffer(file_contents, &raw mut script_source)
-            .as_result()?;
         let mut byte_code_buffer = JsValueRef::default();
         ChakraRTInterface::JsSerialize(
             script_source,
@@ -162,11 +159,9 @@ fn get_serialized_buffer(file_contents: &String) -> Result<JsValueRef, JsError> 
 }
 
 fn get_parser_state_buffer(file_contents: &str) -> Result<JsValueRef, Error> {
-    let mut script_source = JsValueRef::default();
+    // We don't want this to free fileContents when it completes, so the finalizeCallback is nullptr
+    let script_source = ChakraRt::create_external_array_buffer(file_contents)?;
     unsafe {
-        // We don't want this to free fileContents when it completes, so the finalizeCallback is nullptr
-        ChakraRTInterface::JsCreateExternalArrayBuffer(file_contents, &raw mut script_source)
-            .as_result()?;
         let mut buffer = JsValueRef::default();
         ChakraRTInterface::JsSerializeParserState(
             script_source,
@@ -211,10 +206,8 @@ fn run_script(
             .map(|_| ())
         }
     } else if !parser_state_cache.is_null() {
-        let mut script_source = JsValueRef::default();
+        let script_source = ChakraRt::create_external_array_buffer(contents)?;
         unsafe {
-            ChakraRTInterface::JsCreateExternalArrayBuffer(contents, &raw mut script_source)
-                .as_result()?;
             ChakraRTInterface::JsRunScriptWithParserState(
                 script_source,
                 JsSourceContext(WScript::get_next_source_context()),
@@ -228,10 +221,8 @@ fn run_script(
     } else if wscript.config.host.module {
         wscript.module_entry_point(contents, full_path).as_result()
     } else {
-        let mut script_source = JsValueRef::default();
+        let script_source = ChakraRt::create_external_array_buffer(contents)?;
         unsafe {
-            ChakraRTInterface::JsCreateExternalArrayBuffer(contents, &raw mut script_source)
-                .as_result()?;
             ChakraRTInterface::JsRun(
                 script_source,
                 JsSourceContext(WScript::get_next_source_context()),
@@ -268,19 +259,14 @@ fn dummy_js_serialized_script_load_utf8_source(
     parse_attributes: &mut JsParseScriptAttributes,
 ) -> bool {
     let script_body = source_context.0 as *mut c_char;
-    unsafe {
-        let script_body = CStr::from_ptr(script_body);
+    let script_body = unsafe { CStr::from_ptr(script_body) };
 
-        // sourceContext is source ptr, see run_serialized below
-        if ChakraRTInterface::JsCreateExternalArrayBuffer(
-            script_body.to_str().unwrap(),
-            script_buffer,
-        ) != JsErrorCode::JsNoError
-        {
-            return false;
-        }
+    // sourceContext is source ptr, see run_serialized below
+    let Ok(buffer) = ChakraRt::create_external_array_buffer(script_body.to_str().unwrap()) else {
+        return false;
+    };
+    *script_buffer = buffer;
 
-        *parse_attributes = JsParseScriptAttributes::JsParseScriptAttributeNone;
-        true
-    }
+    *parse_attributes = JsParseScriptAttributes::JsParseScriptAttributeNone;
+    true
 }
