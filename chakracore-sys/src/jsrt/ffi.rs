@@ -359,6 +359,8 @@ pub(super) mod bridge {
             source_text: OptionalStr<'a>,
             exception_value_ref: *mut JsValueRef,
         ) -> JsErrorCode;
+
+        unsafe fn JsGetAndClearException(exception: *mut JsValueRef) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}

@@ -56,9 +56,6 @@ mod ffi {
         ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetAndClearException(exception: *mut JsValueRef) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsRunSerialized(
             buffer: JsValueRef,
             callback: unsafe fn(

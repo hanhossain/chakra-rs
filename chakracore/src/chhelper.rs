@@ -253,10 +253,8 @@ fn run_script(
 
     // clean up possible pinned exception object on exit to avoid potential leak
     if ChakraRt::has_exception().unwrap_or_default() {
-        let mut exception = JsValueRef::default();
-        unsafe {
-            ChakraRTInterface::JsGetAndClearException(&raw mut exception);
-        }
+        // don't care about the actual exception, just want to clear it
+        let _ = ChakraRt::get_and_clear_exception()?;
     }
 
     Ok(())
