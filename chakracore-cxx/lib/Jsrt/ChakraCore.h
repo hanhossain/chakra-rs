@@ -934,6 +934,40 @@ namespace chakracore::jsrt
             _In_ JsValueRef sourceUrl,
             _Out_ JsValueRef *result);
 
+/// <summary>
+///     Runs a serialized script.
+///     Provides the ability to lazy load the script source only if/when it is needed.
+/// </summary>
+/// <remarks>
+///     <para>
+///     Requires an active script context.
+///     </para>
+///     <para>
+///     The runtime will detach the data from the buffer and hold on to it until all
+///     instances of any functions created from the buffer are garbage collected.
+///     </para>
+/// </remarks>
+/// <param name="buffer">The serialized script as an ArrayBuffer (preferably ExternalArrayBuffer).</param>
+/// <param name="scriptLoadCallback">Callback called when the source code of the script needs to be loaded.</param>
+/// <param name="sourceContext">
+///     A cookie identifying the script that can be used by debuggable script contexts.
+///     This context will passed into scriptLoadCallback.
+/// </param>
+/// <param name="sourceUrl">The location the script came from.</param>
+/// <param name="result">
+///     The result of running the script, if any. This parameter can be null.
+/// </param>
+/// <returns>
+///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+/// </returns>
+JsErrorCode
+    JsRunSerialized(
+        _In_ JsValueRef buffer,
+        _In_ rust::Fn<bool(JsSourceContext, JsValueRef &, JsParseScriptAttributes &)> scriptLoadCallback,
+        _In_ JsSourceContext sourceContext,
+        _In_ JsValueRef sourceUrl,
+        _Out_ JsValueRef *result);
+
     /// <summary>
     ///     Gets the state of a given Promise object.
     /// </summary>
