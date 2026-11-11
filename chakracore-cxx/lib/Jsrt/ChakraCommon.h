@@ -1952,6 +1952,17 @@ JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *run
             _In_opt_ void *callbackState,
             _Out_ JsValueRef *result);
 
+/// <summary>
+///     Creates a Javascript ArrayBuffer object to access external memory.
+/// </summary>
+/// <remarks>Requires an active script context.</remarks>
+/// <param name="content">A pointer to the external memory.</param>
+/// <param name="result">The new ArrayBuffer object.</param>
+/// <returns>
+///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+/// </returns>
+JsErrorCode JsCreateExternalArrayBuffer(rust::Str content, JsValueRef *result);
+
     /// <summary>
     ///     Creates a Javascript typed array object.
     /// </summary>

@@ -987,15 +987,8 @@ impl WScript {
         } else if script_inject_type == "self" {
             let _callee_context = callee.get_context()?.set_current()?;
 
-            let mut script_source = JsValueRef::default();
-            unsafe {
-                // TODO: consider passing in the finalize callback
-                ChakraRTInterface::JsCreateExternalArrayBuffer(
-                    content.unwrap(),
-                    &raw mut script_source,
-                )
-                .as_result()?;
-            }
+            // TODO: consider passing in the finalize callback
+            let script_source = ChakraRt::create_external_array_buffer(content.unwrap())?;
 
             let fname = ChakraRt::create_string(full_path.to_str().unwrap_or_default())?;
             let source_context = JsSourceContext(WScript::get_next_source_context());
@@ -1050,14 +1043,7 @@ impl WScript {
             // Initialize the host objects
             self.initialize(runtime)?;
 
-            let mut script_source = JsValueRef::default();
-            unsafe {
-                ChakraRTInterface::JsCreateExternalArrayBuffer(
-                    content.unwrap(),
-                    &raw mut script_source,
-                )
-                .as_result()?;
-            }
+            let script_source = ChakraRt::create_external_array_buffer(content.unwrap())?;
 
             let fname = ChakraRt::create_string(full_path.to_str().unwrap_or_default())?;
             let source_context = JsSourceContext(WScript::get_next_source_context());

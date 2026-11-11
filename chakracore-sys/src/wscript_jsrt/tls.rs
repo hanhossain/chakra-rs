@@ -76,14 +76,7 @@ impl ThreadData {
         let context = runtime.create_context()?.set_current()?;
         wscript.initialize(&runtime)?;
 
-        let mut script_source = JsValueRef::default();
-        unsafe {
-            ChakraRTInterface::JsCreateExternalArrayBuffer(
-                &self.initial_source,
-                &raw mut script_source,
-            )
-            .as_result()?;
-        }
+        let script_source = ChakraRt::create_external_array_buffer(&self.initial_source)?;
         let full_path = ChakraRt::create_string("agent source")?;
 
         unsafe {

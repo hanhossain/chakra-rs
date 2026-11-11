@@ -1743,6 +1743,11 @@ JsErrorCode chakracore::jsrt::JsCreateExternalArrayBuffer(void *data, _In_ unsig
     });
 }
 
+JsErrorCode chakracore::jsrt::JsCreateExternalArrayBuffer(rust::Str content, JsValueRef *result) {
+    return JsCreateExternalArrayBuffer(const_cast<char *>(content.data()), content.length(), nullptr,
+                                       const_cast<char *>(content.data()), result);
+}
+
 JsErrorCode chakracore::jsrt::JsCreateTypedArray(_In_ JsTypedArrayType arrayType, _In_ JsValueRef baseArray, _In_ unsigned int byteOffset,
     _In_ unsigned int elementLength, _Out_ JsValueRef *result)
 {
