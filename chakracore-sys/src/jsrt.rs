@@ -309,6 +309,14 @@ impl ChakraRt {
         Ok(value)
     }
 
+    pub fn get_and_clear_exception() -> Result<JsErrorObject, JsError> {
+        let mut exception = JsValueRef::default();
+        unsafe {
+            bridge::JsGetAndClearException(&raw mut exception).as_result()?;
+        }
+        Ok(exception.into())
+    }
+
     pub fn get_module_namespace(request_module: &JsModuleRecord) -> Result<JsValueRef, JsError> {
         let mut value = JsValueRef::default();
         unsafe {

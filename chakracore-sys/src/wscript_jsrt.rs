@@ -1202,7 +1202,7 @@ impl WScript {
                     let metadata = JsObject::new(metadata);
                     exception = metadata.get_property(exception_id)?;
                 } else {
-                    ChakraRTInterface::JsGetAndClearException(&raw mut exception).as_result()?;
+                    exception = *ChakraRt::get_and_clear_exception()?.as_ref();
                 }
             }
         }
@@ -1230,10 +1230,7 @@ impl WScript {
             Err(_) => {
                 println!("ERROR attempting to coerce error to string, using alternate handler");
                 if ChakraRt::has_exception().unwrap_or_default() {
-                    unsafe {
-                        let mut discard = JsValueRef::default();
-                        ChakraRTInterface::JsGetAndClearException(&raw mut discard);
-                    }
+                    let _ = ChakraRt::get_and_clear_exception()?;
                 }
                 let message_property_id = ChakraRt::create_property_id("message")?;
                 let error_message = exception.get_property(message_property_id)?.to_string()?;
