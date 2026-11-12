@@ -351,6 +351,10 @@ pub(super) mod bridge {
             buffer: *mut *mut u8,
             buffer_length: *mut u32,
         ) -> JsErrorCode;
+        unsafe fn JsCreateExternalArrayBuffer(
+            content: &str,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
 
         unsafe fn JsGetModuleHostInfo(
             request_module: JsModuleRecord,
@@ -377,11 +381,6 @@ pub(super) mod bridge {
             ) -> bool,
             sourceContext: JsSourceContext,
             sourceUrl: JsValueRef,
-            result: *mut JsValueRef,
-        ) -> JsErrorCode;
-
-        unsafe fn JsCreateExternalArrayBuffer(
-            content: &str,
             result: *mut JsValueRef,
         ) -> JsErrorCode;
     }
