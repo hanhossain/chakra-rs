@@ -1,7 +1,8 @@
+use crate::jsrt::buffer::JsSharedArrayBufferContent;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
     ChakraRt, JsContextGuard, JsError, JsFunction, JsParseScriptAttributes, JsRuntimeAttributes,
-    JsSharedArrayBufferContentHandle, JsSourceContext, JsValueRef,
+    JsSourceContext, JsValueRef,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::ffi::{CloseHandle, WaitForMultipleObjects};
@@ -13,7 +14,7 @@ use tokio::sync::oneshot;
 
 #[derive(Eq, PartialEq)]
 pub(super) enum ThreadEvent {
-    Broadcast(JsSharedArrayBufferContentHandle),
+    Broadcast(JsSharedArrayBufferContent),
     Shutdown,
 }
 
@@ -121,16 +122,10 @@ impl ThreadData {
     #[tracing::instrument(skip_all, err)]
     fn on_receive_broadcast(
         &self,
-        shared_content: JsSharedArrayBufferContentHandle,
+        shared_content: JsSharedArrayBufferContent,
     ) -> Result<(), JsError> {
         let global = ChakraRt::get_global_object()?;
-        let mut shared_buffer = JsValueRef::default();
-        unsafe {
-            ChakraRTInterface::JsCreateSharedArrayBufferWithSharedContent(
-                shared_content,
-                &raw mut shared_buffer,
-            );
-        }
+        let shared_buffer = shared_content.create_shared_array_buffer()?;
         let shared_content_length = ChakraRt::double_to_number(1.)?;
         let mut args = [*global, shared_buffer, shared_content_length];
         if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
@@ -187,12 +182,14 @@ impl ThreadData {
         children.push((child, events_tx));
     }
 
-    pub(super) fn broadcast_to_children(&self, shared_content: JsSharedArrayBufferContentHandle) {
+    pub(super) fn broadcast_to_children(&self, content: JsValueRef) -> Result<(), JsError> {
         let children = self.children.lock().unwrap();
         for (_, tx) in children.iter() {
-            tx.send(ThreadEvent::Broadcast(shared_content.clone()))
-                .unwrap();
+            let shared_content = JsSharedArrayBufferContent::try_from(content)?;
+            tx.send(ThreadEvent::Broadcast(shared_content)).unwrap();
         }
+
+        Ok(())
     }
 }
 

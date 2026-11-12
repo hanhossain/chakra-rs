@@ -65,20 +65,6 @@ mod ffi {
         ) -> JsErrorCode;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetSharedArrayBufferContent(
-            shared_array_buffer: JsValueRef,
-            shared_contents: *mut JsSharedArrayBufferContentHandle,
-        ) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsCreateSharedArrayBufferWithSharedContent(
-            shared_content: JsSharedArrayBufferContentHandle,
-            result: *mut JsValueRef,
-        ) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
-        fn JsReleaseSharedArrayBufferContentHandle(
-            shared_content: JsSharedArrayBufferContentHandle,
-        ) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsRelease(jsref: JsRef, count: *mut u32) -> JsErrorCode;
         #[Self = "ChakraRTInterface"]
         unsafe fn JsAddRef(jsref: JsRef, count: *mut u32) -> JsErrorCode;

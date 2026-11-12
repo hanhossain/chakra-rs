@@ -356,6 +356,18 @@ pub(super) mod bridge {
             result: *mut JsValueRef,
         ) -> JsErrorCode;
 
+        unsafe fn JsGetSharedArrayBufferContent(
+            shared_array_buffer: JsValueRef,
+            shared_contents: *mut JsSharedArrayBufferContentHandle,
+        ) -> JsErrorCode;
+        fn JsReleaseSharedArrayBufferContentHandle(
+            shared_content: JsSharedArrayBufferContentHandle,
+        ) -> JsErrorCode;
+        unsafe fn JsCreateSharedArrayBufferWithSharedContent(
+            shared_content: JsSharedArrayBufferContentHandle,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
+
         unsafe fn JsGetModuleHostInfo(
             request_module: JsModuleRecord,
             module_host_info: JsModuleHostInfoKind,
