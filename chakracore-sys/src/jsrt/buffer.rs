@@ -1,5 +1,5 @@
 use crate::jsrt::ffi::bridge;
-use crate::jsrt::{IntoResponse, JsError, JsValueRef};
+use crate::jsrt::{IntoResponse, JsError, JsSharedArrayBufferContentHandle, JsValueRef};
 
 pub struct JsArrayBuffer(JsValueRef);
 
@@ -33,5 +33,44 @@ impl AsRef<JsValueRef> for JsArrayBuffer {
 impl IntoResponse for JsArrayBuffer {
     fn into_response(self) -> JsValueRef {
         self.0
+    }
+}
+
+#[derive(Eq, PartialEq)]
+pub struct JsSharedArrayBufferContent {
+    handle: JsSharedArrayBufferContentHandle,
+}
+
+impl JsSharedArrayBufferContent {
+    pub fn create_shared_array_buffer(&self) -> Result<JsValueRef, JsError> {
+        let mut shared_buffer = JsValueRef::default();
+        unsafe {
+            bridge::JsCreateSharedArrayBufferWithSharedContent(
+                self.handle.clone(),
+                &raw mut shared_buffer,
+            )
+            .as_result()?;
+        }
+        Ok(shared_buffer)
+    }
+}
+
+impl TryFrom<JsValueRef> for JsSharedArrayBufferContent {
+    type Error = JsError;
+
+    fn try_from(value: JsValueRef) -> Result<Self, Self::Error> {
+        let mut handle = JsSharedArrayBufferContentHandle::default();
+        unsafe {
+            bridge::JsGetSharedArrayBufferContent(value, &raw mut handle).as_result()?;
+        }
+        Ok(Self { handle })
+    }
+}
+
+impl Drop for JsSharedArrayBufferContent {
+    fn drop(&mut self) {
+        bridge::JsReleaseSharedArrayBufferContentHandle(self.handle.clone())
+            .as_result()
+            .unwrap();
     }
 }

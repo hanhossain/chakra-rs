@@ -7,8 +7,8 @@ use crate::jsrt::buffer::JsArrayBuffer;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModule, JsModuleRecord,
-    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSharedArrayBufferContentHandle,
-    JsSourceContext, JsString, JsValueRef, JsValueType, ParseScriptError,
+    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
+    JsValueType, ParseScriptError,
 };
 use crate::message_queue::MessageQueue;
 use crate::messages::Message;
@@ -786,15 +786,7 @@ impl WScript {
         }
 
         let thread_data = THREAD_DATA.with_borrow(|x| Rc::clone(x));
-        let mut shared_content = JsSharedArrayBufferContentHandle::default();
-        unsafe {
-            ChakraRTInterface::JsGetSharedArrayBufferContent(
-                args.arguments[1].clone(),
-                &raw mut shared_content,
-            );
-        }
-        thread_data.broadcast_to_children(shared_content.clone());
-        ChakraRTInterface::JsReleaseSharedArrayBufferContentHandle(shared_content);
+        thread_data.broadcast_to_children(args.arguments[1])?;
         Ok(())
     }
 
