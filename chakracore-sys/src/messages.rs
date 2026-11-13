@@ -1,7 +1,7 @@
 use crate::jsrt::run::JsRun;
 use crate::jsrt::{
-    ChakraRt, JsError, JsFunction, JsModuleRecord, JsParseScriptAttributes, JsSourceContext,
-    JsValueRef, JsValueType,
+    ChakraRt, JsError, JsFunction, JsModuleRecord, JsParseScriptAttributes, JsRef, JsRefGuard,
+    JsSourceContext, JsValueRef, JsValueType,
 };
 use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
@@ -18,10 +18,10 @@ pub struct Message {
 }
 
 impl Message {
-    pub(crate) fn new_callback(function: JsValueRef) -> Self {
-        Self {
-            msg: MessageInner::Callback(CallbackMessage::new(function)),
-        }
+    pub(crate) fn new_callback(function: JsValueRef) -> Result<Self, JsError> {
+        Ok(Self {
+            msg: MessageInner::Callback(CallbackMessage::new(function)?),
+        })
     }
     pub(crate) fn new_module(
         module_record: JsModuleRecord,
@@ -45,16 +45,16 @@ impl Message {
 #[derive(Eq, PartialEq)]
 struct CallbackMessage {
     function: JsValueRef,
+    function_guard: JsRefGuard,
 }
 
 impl CallbackMessage {
-    fn new(function: JsValueRef) -> Self {
-        unsafe {
-            ChakraRTInterface::JsAddRef(function.as_js_ref(), std::ptr::null_mut())
-                .as_result()
-                .unwrap();
-        }
-        Self { function }
+    fn new(function: JsValueRef) -> Result<Self, JsError> {
+        let function_guard = JsRef::add_ref(&function)?;
+        Ok(Self {
+            function,
+            function_guard,
+        })
     }
 
     #[tracing::instrument(skip(self), err)]
@@ -79,16 +79,6 @@ impl CallbackMessage {
     fn call(&self, filename: &str, wscript: &WScript) {
         if let Err(err) = self.internal_call() {
             wscript.print_exception(filename, err.into(), JsValueRef::default());
-        }
-    }
-}
-
-impl Drop for CallbackMessage {
-    fn drop(&mut self) {
-        unsafe {
-            ChakraRTInterface::JsRelease(self.function.as_js_ref(), std::ptr::null_mut())
-                .as_result()
-                .unwrap();
         }
     }
 }

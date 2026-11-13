@@ -931,6 +931,20 @@ JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *run
             _In_ JsRef ref,
             _Out_opt_ unsigned int *count);
 
+/// <summary>
+///     Adds a reference to a garbage collected object.
+/// </summary>
+/// <remarks>
+///     This only needs to be called on <c>JsRef</c> handles that are not going to be stored
+///     somewhere on the stack. Calling <c>JsAddRef</c> ensures that the object the <c>JsRef</c>
+///     refers to will not be freed until <c>JsRelease</c> is called.
+/// </remarks>
+/// <param name="ref">The object to add a reference to.</param>
+/// <returns>
+///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+/// </returns>
+JsErrorCode JsAddRef(const JsRef &ref);
+
     /// <summary>
     ///     Releases a reference to a garbage collected object.
     /// </summary>
@@ -946,6 +960,18 @@ JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *run
         JsRelease(
             _In_ JsRef ref,
             _Out_opt_ unsigned int *count);
+
+/// <summary>
+///     Releases a reference to a garbage collected object.
+/// </summary>
+/// <remarks>
+///     Removes a reference to a <c>JsRef</c> handle that was created by <c>JsAddRef</c>.
+/// </remarks>
+/// <param name="ref">The object to remove the reference from.</param>
+/// <returns>
+///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
+/// </returns>
+JsErrorCode JsRelease(const JsRef &ref);
 
     /// <summary>
     ///     Sets a callback function that is called by the runtime before garbage collection of

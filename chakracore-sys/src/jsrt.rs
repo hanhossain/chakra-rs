@@ -422,3 +422,12 @@ impl IntoResponse for JsError {
         ChakraRt::get_undefined_value().unwrap_or_default()
     }
 }
+
+#[derive(Eq, PartialEq)]
+pub struct JsRefGuard(JsRef);
+
+impl Drop for JsRefGuard {
+    fn drop(&mut self) {
+        bridge::JsRelease(&self.0).as_result().unwrap();
+    }
+}

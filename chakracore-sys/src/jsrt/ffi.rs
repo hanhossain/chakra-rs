@@ -1,10 +1,11 @@
-use crate::jsrt::{JsContext, JsError, JsString};
+use crate::jsrt::{JsContext, JsError, JsRefGuard, JsString};
 pub use bridge::{
     CVoid, JsErrorCode, JsModuleHostInfoKind, JsParseScriptAttributes, JsRuntimeAttributes,
     JsValueType,
 };
 use std::ffi::c_void;
 use std::fmt::Formatter;
+use std::ops::Deref;
 
 #[repr(transparent)]
 #[derive(Copy, Clone, Default)]
@@ -102,6 +103,17 @@ impl AsRef<JsValueRef> for JsValueRef {
     }
 }
 
+impl Deref for JsValueRef {
+    type Target = JsRef;
+
+    fn deref(&self) -> &Self::Target {
+        // SAFETY: Casting to JsRef is safe because its internal representation is the same
+        // `*const c_void`. We can dereference the pointer because it comes from a reference. The
+        // final reference has the same lifetime bounds as the source reference.
+        unsafe { &*(self as *const JsValueRef as *const JsRef) }
+    }
+}
+
 #[repr(transparent)]
 #[derive(Default)]
 pub struct JsPropertyIdRef(*mut c_void);
@@ -162,11 +174,19 @@ unsafe impl cxx::ExternType for JsSharedArrayBufferContentHandle {
 }
 
 #[repr(transparent)]
+#[derive(Eq, PartialEq)]
 pub struct JsRef(*mut c_void);
 
 unsafe impl cxx::ExternType for JsRef {
     type Id = cxx::type_id!("JsRef");
     type Kind = cxx::kind::Trivial;
+}
+
+impl JsRef {
+    pub fn add_ref(value: &JsRef) -> Result<JsRefGuard, JsError> {
+        bridge::JsAddRef(value).as_result()?;
+        Ok(JsRefGuard(JsRef(value.0)))
+    }
 }
 
 #[cxx::bridge]
@@ -420,6 +440,9 @@ pub(super) mod bridge {
             parseAttributes: JsParseScriptAttributes,
             result: *mut JsValueRef,
         ) -> JsErrorCode;
+
+        fn JsAddRef(jsref: &JsRef) -> JsErrorCode;
+        fn JsRelease(jsref: &JsRef) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}
