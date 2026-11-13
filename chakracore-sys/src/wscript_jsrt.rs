@@ -249,16 +249,12 @@ impl WScript {
             let test262_script_ref = ChakraRt::create_string(test262)?;
             let fname = ChakraRt::create_string("262")?;
 
-            unsafe {
-                ChakraRTInterface::JsRun(
-                    test262_script_ref.clone(),
-                    JsSourceContext(WScript::get_next_source_context()),
-                    fname.clone(),
-                    JsParseScriptAttributes::JsParseScriptAttributeNone,
-                    std::ptr::null_mut(),
-                )
-                .as_result()?;
-            }
+            ChakraRt::run(
+                test262_script_ref.clone(),
+                JsSourceContext(WScript::get_next_source_context()),
+                fname.clone(),
+                JsParseScriptAttributes::JsParseScriptAttributeNone,
+            )?;
         }
 
         Ok(())
@@ -986,23 +982,18 @@ impl WScript {
                     JsParseScriptAttributes::JsParseScriptAttributeNone,
                     &parser_state,
                 )
+                .map(|_| ())
             } else {
-                unsafe {
-                    let mut return_value = JsValueRef::default();
-                    ChakraRTInterface::JsRun(
-                        script_source,
-                        source_context,
-                        *fname,
-                        JsParseScriptAttributes::JsParseScriptAttributeNone,
-                        &raw mut return_value,
-                    )
-                    .as_result()
-                    .map(|_| JsValueRef::default())
-                }
+                ChakraRt::run(
+                    script_source,
+                    source_context,
+                    *fname,
+                    JsParseScriptAttributes::JsParseScriptAttributeNone,
+                )
             };
 
             match res {
-                Ok(_) => Ok(*ChakraRt::get_global_object()?),
+                Ok(()) => Ok(*ChakraRt::get_global_object()?),
                 Err(_) => Ok(JsValueRef::default()),
             }
         } else if script_inject_type == "samethread" {
@@ -1031,23 +1022,18 @@ impl WScript {
                     JsParseScriptAttributes::JsParseScriptAttributeNone,
                     &parser_state,
                 )
+                .map(|_| ())
             } else {
-                unsafe {
-                    let mut res = JsValueRef::default();
-                    ChakraRTInterface::JsRun(
-                        script_source,
-                        source_context,
-                        *fname,
-                        JsParseScriptAttributes::JsParseScriptAttributeNone,
-                        &raw mut res,
-                    )
-                    .as_result()
-                    .map(|_| res)
-                }
+                ChakraRt::run(
+                    script_source,
+                    source_context,
+                    *fname,
+                    JsParseScriptAttributes::JsParseScriptAttributeNone,
+                )
             };
 
             match res {
-                Ok(_) => Ok(*ChakraRt::get_global_object()?),
+                Ok(()) => Ok(*ChakraRt::get_global_object()?),
                 Err(_) => Ok(JsValueRef::default()),
             }
         } else if script_inject_type == "crossthread" {

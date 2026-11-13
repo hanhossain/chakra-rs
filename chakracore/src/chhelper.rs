@@ -6,7 +6,6 @@ use chakracore_sys::jsrt::runtime::JsRuntime;
 use chakracore_sys::jsrt::{
     ChakraRt, JsError, JsParseScriptAttributes, JsRuntimeAttributes, JsSourceContext, JsValueRef,
 };
-use chakracore_sys::rt_interface::ChakraRTInterface;
 use chakracore_sys::wscript_jsrt::WScript;
 use chakracore_sys::wscript_jsrt::cache::ScriptCache;
 use std::ffi::{CStr, CString, c_char};
@@ -197,16 +196,12 @@ fn run_script(
         wscript.module_entry_point(contents, full_path).as_result()
     } else {
         let script_source = ChakraRt::create_external_array_buffer(contents)?;
-        unsafe {
-            ChakraRTInterface::JsRun(
-                script_source,
-                JsSourceContext(WScript::get_next_source_context()),
-                *fname,
-                JsParseScriptAttributes::JsParseScriptAttributeNone,
-                std::ptr::null_mut(),
-            )
-            .as_result()
-        }
+        ChakraRt::run(
+            script_source,
+            JsSourceContext(WScript::get_next_source_context()),
+            *fname,
+            JsParseScriptAttributes::JsParseScriptAttributeNone,
+        )
     };
     if let Err(err) = run_script_result {
         wscript.print_exception(filename, err.into(), JsValueRef::default());

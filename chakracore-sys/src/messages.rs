@@ -59,24 +59,20 @@ impl CallbackMessage {
     #[tracing::instrument(skip(self), err)]
     fn internal_call(&self) -> Result<(), JsError> {
         if self.function.get_value_type()? == JsValueType::JsString {
-            unsafe {
-                let string_value = self.function.to_string_value()?;
-                let fname = ChakraRt::create_string("")?;
-                ChakraRTInterface::JsRun(
-                    *string_value,
-                    JsSourceContext(usize::MAX),
-                    *fname,
-                    JsParseScriptAttributes::JsParseScriptAttributeArrayBufferIsUtf16Encoded,
-                    std::ptr::null_mut(),
-                )
-                .as_result()
-            }
+            let string_value = self.function.to_string_value()?;
+            let fname = ChakraRt::create_string("")?;
+            ChakraRt::run(
+                *string_value,
+                JsSourceContext(usize::MAX),
+                *fname,
+                JsParseScriptAttributes::JsParseScriptAttributeArrayBufferIsUtf16Encoded,
+            )?;
         } else {
             let global = ChakraRt::get_global_object()?;
             let func = JsFunction::from(self.function);
             func.call_function(&mut [*global])?;
-            Ok(())
         }
+        Ok(())
     }
 
     #[tracing::instrument(skip(self, wscript))]
