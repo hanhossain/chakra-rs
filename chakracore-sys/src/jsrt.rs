@@ -378,6 +378,28 @@ impl ChakraRt {
         Ok(result)
     }
 
+    pub fn run_script_with_parser_state(
+        script: JsValueRef,
+        source_context: JsSourceContext,
+        source_url: JsValueRef,
+        parse_attributes: JsParseScriptAttributes,
+        parser_state: &JsArrayBuffer,
+    ) -> Result<JsValueRef, JsError> {
+        let mut result = JsValueRef::default();
+        unsafe {
+            bridge::JsRunScriptWithParserState(
+                script,
+                source_context,
+                source_url,
+                parse_attributes,
+                *parser_state.as_ref(),
+                &raw mut result,
+            )
+            .as_result()?;
+        }
+        Ok(result)
+    }
+
     // TODO: should prob create a JsExternalArrayBuffer struct
     pub fn create_external_array_buffer(content: &str) -> Result<JsValueRef, JsError> {
         let mut res = JsValueRef::default();

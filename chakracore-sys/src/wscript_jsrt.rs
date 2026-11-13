@@ -976,23 +976,19 @@ impl WScript {
             let fname = ChakraRt::create_string(full_path.to_str().unwrap_or_default())?;
             let source_context = JsSourceContext(WScript::get_next_source_context());
 
-            let mut return_value = JsValueRef::default();
-            let error_code = if self.config.host.use_parser_state_cache {
+            let res = if self.config.host.use_parser_state_cache {
                 let parser_state = script_source
                     .serialize_parser_state(JsParseScriptAttributes::JsParseScriptAttributeNone)?;
-                unsafe {
-                    ChakraRTInterface::JsRunScriptWithParserState(
-                        script_source,
-                        source_context,
-                        *fname,
-                        JsParseScriptAttributes::JsParseScriptAttributeNone,
-                        *parser_state.as_ref(),
-                        &raw mut return_value,
-                    )
-                    .as_result()
-                }
+                ChakraRt::run_script_with_parser_state(
+                    script_source,
+                    source_context,
+                    *fname,
+                    JsParseScriptAttributes::JsParseScriptAttributeNone,
+                    &parser_state,
+                )
             } else {
                 unsafe {
+                    let mut return_value = JsValueRef::default();
                     ChakraRTInterface::JsRun(
                         script_source,
                         source_context,
@@ -1001,18 +997,17 @@ impl WScript {
                         &raw mut return_value,
                     )
                     .as_result()
+                    .map(|_| JsValueRef::default())
                 }
             };
 
-            if error_code.is_ok() {
-                let global_object = ChakraRt::get_global_object()?;
-                return_value = *global_object;
+            match res {
+                Ok(_) => Ok(*ChakraRt::get_global_object()?),
+                Err(_) => Ok(JsValueRef::default()),
             }
-
-            Ok(return_value)
         } else if script_inject_type == "samethread" {
             let _new_context = runtime.create_context()?.set_current()?;
-            let callback = unsafe {
+            let _callback = unsafe {
                 ChakraRt::set_promise_continuation_callback(|task| {
                     self.promise_continuation_callback(task)
                 })?
@@ -1026,41 +1021,35 @@ impl WScript {
             let fname = ChakraRt::create_string(full_path.to_str().unwrap_or_default())?;
             let source_context = JsSourceContext(WScript::get_next_source_context());
 
-            let mut return_value = JsValueRef::default();
-            let error_code = if self.config.host.use_parser_state_cache {
+            let res = if self.config.host.use_parser_state_cache {
                 let parser_state = script_source
                     .serialize_parser_state(JsParseScriptAttributes::JsParseScriptAttributeNone)?;
-                unsafe {
-                    ChakraRTInterface::JsRunScriptWithParserState(
-                        script_source,
-                        source_context,
-                        *fname,
-                        JsParseScriptAttributes::JsParseScriptAttributeNone,
-                        *parser_state.as_ref(),
-                        &raw mut return_value,
-                    )
-                    .as_result()
-                }
+                ChakraRt::run_script_with_parser_state(
+                    script_source,
+                    source_context,
+                    *fname,
+                    JsParseScriptAttributes::JsParseScriptAttributeNone,
+                    &parser_state,
+                )
             } else {
                 unsafe {
+                    let mut res = JsValueRef::default();
                     ChakraRTInterface::JsRun(
                         script_source,
                         source_context,
                         *fname,
                         JsParseScriptAttributes::JsParseScriptAttributeNone,
-                        &raw mut return_value,
+                        &raw mut res,
                     )
                     .as_result()
+                    .map(|_| res)
                 }
             };
 
-            if error_code.is_ok() {
-                let global_object = ChakraRt::get_global_object()?;
-                return_value = *global_object;
+            match res {
+                Ok(_) => Ok(*ChakraRt::get_global_object()?),
+                Err(_) => Ok(JsValueRef::default()),
             }
-
-            drop(callback);
-            Ok(return_value)
         } else if script_inject_type == "crossthread" {
             let (tx_initial_script_complete, rx_initial_script_complete) = oneshot::channel();
             let context = THREAD_DATA.with_borrow(|x| ThreadDataContext {

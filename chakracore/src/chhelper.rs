@@ -50,7 +50,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
             &file_contents,
             None,
             &path,
-            JsValueRef::default(),
+            None,
             &wscript,
         )?;
     };
@@ -104,14 +104,7 @@ fn create_parser_state_and_run_script(
     // initialize the WScript object on the new context
     wscript.initialize(&runtime)?;
 
-    run_script(
-        filename,
-        contents,
-        None,
-        full_path,
-        *buffer.as_ref(),
-        &wscript,
-    )?;
+    run_script(filename, contents, None, full_path, Some(buffer), &wscript)?;
     Ok(())
 }
 
@@ -137,7 +130,7 @@ fn create_and_run_serialized_script(
         contents,
         Some(buffer_val),
         full_path,
-        JsValueRef::default(),
+        None,
         wscript,
     )?;
 
@@ -166,7 +159,7 @@ fn run_script(
     contents: &String,
     buffer_value: Option<JsArrayBuffer>,
     full_path: &String,
-    parser_state_cache: JsValueRef,
+    parser_state_cache: Option<JsArrayBuffer>,
     wscript: &WScript,
 ) -> Result<(), Error> {
     let (fname, _callback) = unsafe {
@@ -192,19 +185,16 @@ fn run_script(
             )
             .map(|_| ())
         }
-    } else if !parser_state_cache.is_null() {
+    } else if let Some(parser_state_cache) = parser_state_cache {
         let script_source = ChakraRt::create_external_array_buffer(contents)?;
-        unsafe {
-            ChakraRTInterface::JsRunScriptWithParserState(
-                script_source,
-                JsSourceContext(WScript::get_next_source_context()),
-                *fname,
-                JsParseScriptAttributes::JsParseScriptAttributeNone,
-                parser_state_cache,
-                std::ptr::null_mut(),
-            )
-            .as_result()
-        }
+        ChakraRt::run_script_with_parser_state(
+            script_source,
+            JsSourceContext(WScript::get_next_source_context()),
+            *fname,
+            JsParseScriptAttributes::JsParseScriptAttributeNone,
+            &parser_state_cache,
+        )
+        .map(|_| ())
     } else if wscript.config.host.module {
         wscript.module_entry_point(contents, full_path).as_result()
     } else {
