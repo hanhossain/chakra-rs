@@ -1,3 +1,4 @@
+use crate::jsrt::buffer::JsArrayBuffer;
 use crate::jsrt::{JsContext, JsError, JsString};
 pub use bridge::{
     CVoid, JsErrorCode, JsModuleHostInfoKind, JsParseScriptAttributes, JsRuntimeAttributes,
@@ -82,6 +83,14 @@ impl JsValueRef {
             bridge::JsGetContextOfObject(*self, &raw mut context).as_result()?;
         }
         Ok(JsContext(context))
+    }
+
+    pub fn serialize(&self, attributes: JsParseScriptAttributes) -> Result<JsArrayBuffer, JsError> {
+        let mut buffer = JsValueRef::default();
+        unsafe {
+            bridge::JsSerialize(*self, &raw mut buffer, attributes).as_result()?;
+        }
+        Ok(JsArrayBuffer::new(buffer))
     }
 }
 
@@ -384,6 +393,11 @@ pub(super) mod bridge {
         unsafe fn JsGetAndClearException(exception: *mut JsValueRef) -> JsErrorCode;
         unsafe fn JsGetAndClearExceptionWithMetadata(metadata: *mut JsValueRef) -> JsErrorCode;
 
+        unsafe fn JsSerialize(
+            script: JsValueRef,
+            buffer: *mut JsValueRef,
+            parseAttributes: JsParseScriptAttributes,
+        ) -> JsErrorCode;
         unsafe fn JsRunSerialized(
             buffer: JsValueRef,
             callback: unsafe fn(
