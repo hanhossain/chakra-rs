@@ -67,3 +67,25 @@ pub trait JsRun: AsRef<JsValueRef> {
         Ok(result)
     }
 }
+
+pub trait JsRunSerialized: AsRef<JsValueRef> {
+    fn run_serialized(
+        &self,
+        callback: fn(JsSourceContext, &mut JsValueRef, &mut JsParseScriptAttributes) -> bool,
+        source_context: JsSourceContext,
+        source_url: JsValueRef,
+    ) -> Result<JsValueRef, JsError> {
+        let mut result = JsValueRef::default();
+        unsafe {
+            bridge::JsRunSerialized(
+                *self.as_ref(),
+                callback,
+                source_context,
+                source_url,
+                &raw mut result,
+            )
+            .as_result()?;
+        }
+        Ok(result)
+    }
+}
