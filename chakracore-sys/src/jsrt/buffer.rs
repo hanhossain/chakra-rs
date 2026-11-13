@@ -1,4 +1,5 @@
 use crate::jsrt::ffi::bridge;
+use crate::jsrt::run::JsRun;
 use crate::jsrt::{IntoResponse, JsError, JsSharedArrayBufferContentHandle, JsValueRef};
 
 pub struct JsArrayBuffer(JsValueRef);
@@ -78,3 +79,23 @@ impl Drop for JsSharedArrayBufferContent {
             .unwrap();
     }
 }
+
+pub struct JsExternalArrayBuffer(JsValueRef);
+
+impl JsExternalArrayBuffer {
+    pub fn create(content: &str) -> Result<Self, JsError> {
+        let mut res = JsValueRef::default();
+        unsafe {
+            bridge::JsCreateExternalArrayBuffer(content, &raw mut res).as_result()?;
+        }
+        Ok(Self(res))
+    }
+}
+
+impl AsRef<JsValueRef> for JsExternalArrayBuffer {
+    fn as_ref(&self) -> &JsValueRef {
+        &self.0
+    }
+}
+
+impl JsRun for JsExternalArrayBuffer {}

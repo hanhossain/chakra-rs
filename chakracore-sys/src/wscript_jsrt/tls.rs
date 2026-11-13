@@ -1,4 +1,5 @@
-use crate::jsrt::buffer::JsSharedArrayBufferContent;
+use crate::jsrt::buffer::{JsExternalArrayBuffer, JsSharedArrayBufferContent};
+use crate::jsrt::run::JsRun;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
     ChakraRt, JsContextGuard, JsError, JsFunction, JsParseScriptAttributes, JsRuntimeAttributes,
@@ -77,13 +78,12 @@ impl ThreadData {
         let context = runtime.create_context()?.set_current()?;
         wscript.initialize(&runtime)?;
 
-        let script_source = ChakraRt::create_external_array_buffer(&self.initial_source)?;
+        let script_source = JsExternalArrayBuffer::create(&self.initial_source)?;
         let full_path = ChakraRt::create_string("agent source")?;
 
-        ChakraRt::run(
-            script_source,
+        script_source.run(
             JsSourceContext(WScript::get_next_source_context()),
-            *full_path,
+            &full_path,
             JsParseScriptAttributes::JsParseScriptAttributeNone,
         )?;
 

@@ -7,6 +7,7 @@ mod ffi;
 mod function;
 mod module;
 mod object;
+pub mod run;
 pub mod runtime;
 mod string;
 
@@ -376,59 +377,6 @@ impl ChakraRt {
             .as_result()?;
         }
         Ok(result)
-    }
-
-    pub fn run_script_with_parser_state(
-        script: JsValueRef,
-        source_context: JsSourceContext,
-        source_url: JsValueRef,
-        parse_attributes: JsParseScriptAttributes,
-        parser_state: &JsArrayBuffer,
-    ) -> Result<JsValueRef, JsError> {
-        let mut result = JsValueRef::default();
-        unsafe {
-            bridge::JsRunScriptWithParserState(
-                script,
-                source_context,
-                source_url,
-                parse_attributes,
-                *parser_state.as_ref(),
-                &raw mut result,
-            )
-            .as_result()?;
-        }
-        Ok(result)
-    }
-
-    pub fn run(
-        script: JsValueRef,
-        source_context: JsSourceContext,
-        source_url: JsValueRef,
-        parse_attributes: JsParseScriptAttributes,
-    ) -> Result<(), JsError> {
-        unsafe {
-            // If we pass a JsValueRef here to capture the result, Jsrt::RunScriptCore loads the
-            // script as an expression and the final bytecode changes to include a return value
-            // (i.e. return undefined).
-            bridge::JsRun(
-                script,
-                source_context,
-                source_url,
-                parse_attributes,
-                std::ptr::null_mut(),
-            )
-            .as_result()?;
-        }
-        Ok(())
-    }
-
-    // TODO: should prob create a JsExternalArrayBuffer struct
-    pub fn create_external_array_buffer(content: &str) -> Result<JsValueRef, JsError> {
-        let mut res = JsValueRef::default();
-        unsafe {
-            bridge::JsCreateExternalArrayBuffer(content, &raw mut res).as_result()?;
-        }
-        Ok(res)
     }
 }
 

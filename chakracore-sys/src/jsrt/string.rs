@@ -1,3 +1,4 @@
+use crate::jsrt::run::JsRun;
 use crate::jsrt::{IntoResponse, JsValueRef};
 use std::ops::{Deref, DerefMut};
 
@@ -37,3 +38,5 @@ impl IntoResponse for JsString {
         self.0
     }
 }
+
+impl JsRun for JsString {}
