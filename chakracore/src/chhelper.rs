@@ -162,13 +162,10 @@ fn run_script(
     parser_state_cache: Option<JsArrayBuffer>,
     wscript: &WScript,
 ) -> Result<(), Error> {
-    let (fname, _callback) = unsafe {
-        let callback = ChakraRt::set_promise_continuation_callback(|task| {
-            wscript.promise_continuation_callback(task)
-        })?;
-        let fname = ChakraRt::create_string(full_path)?;
-        (fname, callback)
-    };
+    let _callback = ChakraRt::set_promise_continuation_callback(|task| {
+        let _ = wscript.promise_continuation_callback(task);
+    })?;
+    let fname = ChakraRt::create_string(full_path)?;
 
     let run_script_result = if let Some(buffer_value) = buffer_value {
         // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
@@ -176,21 +173,23 @@ fn run_script(
 
         // Use source ptr as sourceContext
         let source_context = JsSourceContext(contents.into_raw() as usize);
-        buffer_value.run_serialized(
-            dummy_js_serialized_script_load_utf8_source,
-            source_context,
-            *fname,
-        )
-        .map(|_| ())
+        buffer_value
+            .run_serialized(
+                dummy_js_serialized_script_load_utf8_source,
+                source_context,
+                *fname,
+            )
+            .map(|_| ())
     } else if let Some(parser_state_cache) = parser_state_cache {
         let script_source = JsExternalArrayBuffer::create(contents)?;
-        script_source.run_script_with_parser_state(
-            JsSourceContext(WScript::get_next_source_context()),
-            *fname,
-            JsParseScriptAttributes::JsParseScriptAttributeNone,
-            &parser_state_cache,
-        )
-        .map(|_| ())
+        script_source
+            .run_script_with_parser_state(
+                JsSourceContext(WScript::get_next_source_context()),
+                *fname,
+                JsParseScriptAttributes::JsParseScriptAttributeNone,
+                &parser_state_cache,
+            )
+            .map(|_| ())
     } else if wscript.config.host.module {
         wscript.module_entry_point(contents, full_path).as_result()
     } else {

@@ -519,11 +519,13 @@ impl WScript {
         Ok(Some(obj))
     }
 
-    pub unsafe fn promise_continuation_callback(&self, task: JsValueRef) {
+    #[tracing::instrument(skip(self), err)]
+    pub fn promise_continuation_callback(&self, task: JsValueRef) -> Result<(), JsError> {
         assert!(!task.is_null());
 
-        let msg = Message::new_callback(task);
+        let msg = Message::new_callback(task)?;
         self.message_queue.schedule_task(msg, Duration::ZERO);
+        Ok(())
     }
 
     fn set_module_host_info_callbacks(&self) -> Result<(), JsError> {
@@ -815,7 +817,7 @@ impl WScript {
 
         let function = args.arguments[1].clone();
         let time = ChakraRt::number_to_double(&args.arguments[2])?;
-        let msg = Message::new_callback(function);
+        let msg = Message::new_callback(function)?;
         let msg_id = self
             .message_queue
             .schedule_task(msg, Duration::from_millis(time as u64));
@@ -975,13 +977,14 @@ impl WScript {
             let res = if self.config.host.use_parser_state_cache {
                 let parser_state = script_source
                     .serialize_parser_state(JsParseScriptAttributes::JsParseScriptAttributeNone)?;
-                script_source.run_script_with_parser_state(
-                    source_context,
-                    *fname,
-                    JsParseScriptAttributes::JsParseScriptAttributeNone,
-                    &parser_state,
-                )
-                .map(|_| ())
+                script_source
+                    .run_script_with_parser_state(
+                        source_context,
+                        *fname,
+                        JsParseScriptAttributes::JsParseScriptAttributeNone,
+                        &parser_state,
+                    )
+                    .map(|_| ())
             } else {
                 script_source.run(
                     source_context,
@@ -996,11 +999,9 @@ impl WScript {
             }
         } else if script_inject_type == "samethread" {
             let _new_context = runtime.create_context()?.set_current()?;
-            let _callback = unsafe {
-                ChakraRt::set_promise_continuation_callback(|task| {
-                    self.promise_continuation_callback(task)
-                })?
-            };
+            let _callback = ChakraRt::set_promise_continuation_callback(|task| {
+                let _ = self.promise_continuation_callback(task);
+            })?;
 
             // Initialize the host objects
             self.initialize(runtime)?;
@@ -1013,13 +1014,14 @@ impl WScript {
             let res = if self.config.host.use_parser_state_cache {
                 let parser_state = script_source
                     .serialize_parser_state(JsParseScriptAttributes::JsParseScriptAttributeNone)?;
-                script_source.run_script_with_parser_state(
-                    source_context,
-                    *fname,
-                    JsParseScriptAttributes::JsParseScriptAttributeNone,
-                    &parser_state,
-                )
-                .map(|_| ())
+                script_source
+                    .run_script_with_parser_state(
+                        source_context,
+                        *fname,
+                        JsParseScriptAttributes::JsParseScriptAttributeNone,
+                        &parser_state,
+                    )
+                    .map(|_| ())
             } else {
                 script_source.run(
                     source_context,

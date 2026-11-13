@@ -407,6 +407,8 @@ JsErrorCode chakracore::jsrt::JsAddRef(_In_ JsRef ref, _Out_opt_ unsigned int *c
     }
 }
 
+JsErrorCode chakracore::jsrt::JsAddRef(const JsRef &ref) { return JsAddRef(ref, nullptr); }
+
 JsErrorCode chakracore::jsrt::JsRelease(_In_ JsRef ref, _Out_opt_ unsigned int *count)
 {
     VALIDATE_JSREF(ref);
@@ -456,6 +458,8 @@ JsErrorCode chakracore::jsrt::JsRelease(_In_ JsRef ref, _Out_opt_ unsigned int *
         });
     }
 }
+
+JsErrorCode chakracore::jsrt::JsRelease(const JsRef &ref) { return JsRelease(ref, nullptr); }
 
 JsErrorCode chakracore::jsrt::JsSetObjectBeforeCollectCallback(_In_ JsRef ref, _In_opt_ void *callbackState, _In_ JsObjectBeforeCollectCallback objectBeforeCollectCallback)
 {
