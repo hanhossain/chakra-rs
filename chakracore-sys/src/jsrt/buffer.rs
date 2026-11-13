@@ -4,6 +4,10 @@ use crate::jsrt::{IntoResponse, JsError, JsSharedArrayBufferContentHandle, JsVal
 pub struct JsArrayBuffer(JsValueRef);
 
 impl JsArrayBuffer {
+    pub(super) fn new(value: JsValueRef) -> Self {
+        Self(value)
+    }
+
     pub fn create(length: u32) -> Result<Self, JsError> {
         let mut value = JsValueRef::default();
         unsafe {

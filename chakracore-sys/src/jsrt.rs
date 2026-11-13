@@ -10,6 +10,7 @@ mod object;
 pub mod runtime;
 mod string;
 
+use crate::jsrt::buffer::JsArrayBuffer;
 pub use array::*;
 pub use context::*;
 pub use error::*;
@@ -358,7 +359,7 @@ impl ChakraRt {
     }
 
     pub unsafe fn run_serialized(
-        buffer: JsValueRef,
+        buffer: JsArrayBuffer,
         callback: fn(JsSourceContext, &mut JsValueRef, &mut JsParseScriptAttributes) -> bool,
         source_context: JsSourceContext,
         source_url: JsValueRef,
@@ -366,7 +367,7 @@ impl ChakraRt {
         let mut result = JsValueRef::default();
         unsafe {
             bridge::JsRunSerialized(
-                buffer,
+                *buffer.as_ref(),
                 callback,
                 source_context,
                 source_url,

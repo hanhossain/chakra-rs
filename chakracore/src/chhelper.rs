@@ -1,6 +1,7 @@
 use crate::Error;
 use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers;
+use chakracore_sys::jsrt::buffer::JsArrayBuffer;
 use chakracore_sys::jsrt::runtime::JsRuntime;
 use chakracore_sys::jsrt::{
     ChakraRt, JsError, JsParseScriptAttributes, JsRuntimeAttributes, JsSourceContext, JsValueRef,
@@ -47,7 +48,7 @@ pub fn execute_test(config: &ConfigContext) -> Result<(), Error> {
         run_script(
             &config.core.filename,
             &file_contents,
-            JsValueRef::default(),
+            None,
             &path,
             JsValueRef::default(),
             &wscript,
@@ -103,14 +104,7 @@ fn create_parser_state_and_run_script(
     // initialize the WScript object on the new context
     wscript.initialize(&runtime)?;
 
-    run_script(
-        filename,
-        contents,
-        JsValueRef::default(),
-        full_path,
-        buffer,
-        &wscript,
-    )?;
+    run_script(filename, contents, None, full_path, buffer, &wscript)?;
     Ok(())
 }
 
@@ -134,7 +128,7 @@ fn create_and_run_serialized_script(
     run_script(
         filename,
         contents,
-        buffer_val,
+        Some(buffer_val),
         full_path,
         JsValueRef::default(),
         wscript,
@@ -144,18 +138,11 @@ fn create_and_run_serialized_script(
 }
 
 #[tracing::instrument(skip(file_contents), err)]
-fn get_serialized_buffer(file_contents: &String) -> Result<JsValueRef, JsError> {
+fn get_serialized_buffer(file_contents: &String) -> Result<JsArrayBuffer, JsError> {
     let script_source = ChakraRt::create_external_array_buffer(file_contents)?;
-    unsafe {
-        let mut byte_code_buffer = JsValueRef::default();
-        ChakraRTInterface::JsSerialize(
-            script_source,
-            &raw mut byte_code_buffer,
-            JsParseScriptAttributes::JsParseScriptAttributeNone,
-        )
-        .as_result()?;
-        Ok(byte_code_buffer)
-    }
+    let byte_code_buffer =
+        script_source.serialize(JsParseScriptAttributes::JsParseScriptAttributeNone)?;
+    Ok(byte_code_buffer)
 }
 
 fn get_parser_state_buffer(file_contents: &str) -> Result<JsValueRef, Error> {
@@ -177,7 +164,7 @@ fn get_parser_state_buffer(file_contents: &str) -> Result<JsValueRef, Error> {
 fn run_script(
     filename: &str,
     contents: &String,
-    buffer_value: JsValueRef,
+    buffer_value: Option<JsArrayBuffer>,
     full_path: &String,
     parser_state_cache: JsValueRef,
     wscript: &WScript,
@@ -190,7 +177,7 @@ fn run_script(
         (fname, callback)
     };
 
-    let run_script_result = if !buffer_value.is_null() {
+    let run_script_result = if let Some(buffer_value) = buffer_value {
         // Now we can run our script, with this serializedCallbackInfo as the sourcecontext
         let contents = CString::from_str(&contents)?;
 
