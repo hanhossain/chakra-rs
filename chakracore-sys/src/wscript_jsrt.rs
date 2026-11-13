@@ -3,7 +3,8 @@ mod tls;
 
 use crate::config::ConfigContext;
 use crate::helpers;
-use crate::jsrt::buffer::JsArrayBuffer;
+use crate::jsrt::buffer::{JsArrayBuffer, JsExternalArrayBuffer};
+use crate::jsrt::run::JsRun;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModule, JsModuleRecord,
@@ -249,8 +250,7 @@ impl WScript {
             let test262_script_ref = ChakraRt::create_string(test262)?;
             let fname = ChakraRt::create_string("262")?;
 
-            ChakraRt::run(
-                test262_script_ref.clone(),
+            test262_script_ref.run(
                 JsSourceContext(WScript::get_next_source_context()),
                 fname.clone(),
                 JsParseScriptAttributes::JsParseScriptAttributeNone,
@@ -967,7 +967,7 @@ impl WScript {
             let _callee_context = callee.get_context()?.set_current()?;
 
             // TODO: consider passing in the finalize callback
-            let script_source = ChakraRt::create_external_array_buffer(content.unwrap())?;
+            let script_source = JsExternalArrayBuffer::create(content.unwrap())?;
 
             let fname = ChakraRt::create_string(full_path.to_str().unwrap_or_default())?;
             let source_context = JsSourceContext(WScript::get_next_source_context());
@@ -975,8 +975,7 @@ impl WScript {
             let res = if self.config.host.use_parser_state_cache {
                 let parser_state = script_source
                     .serialize_parser_state(JsParseScriptAttributes::JsParseScriptAttributeNone)?;
-                ChakraRt::run_script_with_parser_state(
-                    script_source,
+                script_source.run_script_with_parser_state(
                     source_context,
                     *fname,
                     JsParseScriptAttributes::JsParseScriptAttributeNone,
@@ -984,8 +983,7 @@ impl WScript {
                 )
                 .map(|_| ())
             } else {
-                ChakraRt::run(
-                    script_source,
+                script_source.run(
                     source_context,
                     *fname,
                     JsParseScriptAttributes::JsParseScriptAttributeNone,
@@ -1007,7 +1005,7 @@ impl WScript {
             // Initialize the host objects
             self.initialize(runtime)?;
 
-            let script_source = ChakraRt::create_external_array_buffer(content.unwrap())?;
+            let script_source = JsExternalArrayBuffer::create(content.unwrap())?;
 
             let fname = ChakraRt::create_string(full_path.to_str().unwrap_or_default())?;
             let source_context = JsSourceContext(WScript::get_next_source_context());
@@ -1015,8 +1013,7 @@ impl WScript {
             let res = if self.config.host.use_parser_state_cache {
                 let parser_state = script_source
                     .serialize_parser_state(JsParseScriptAttributes::JsParseScriptAttributeNone)?;
-                ChakraRt::run_script_with_parser_state(
-                    script_source,
+                script_source.run_script_with_parser_state(
                     source_context,
                     *fname,
                     JsParseScriptAttributes::JsParseScriptAttributeNone,
@@ -1024,8 +1021,7 @@ impl WScript {
                 )
                 .map(|_| ())
             } else {
-                ChakraRt::run(
-                    script_source,
+                script_source.run(
                     source_context,
                     *fname,
                     JsParseScriptAttributes::JsParseScriptAttributeNone,

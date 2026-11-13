@@ -1,3 +1,4 @@
+use crate::jsrt::run::JsRun;
 use crate::jsrt::{
     ChakraRt, JsError, JsFunction, JsModuleRecord, JsParseScriptAttributes, JsSourceContext,
     JsValueRef, JsValueType,
@@ -61,8 +62,7 @@ impl CallbackMessage {
         if self.function.get_value_type()? == JsValueType::JsString {
             let string_value = self.function.to_string_value()?;
             let fname = ChakraRt::create_string("")?;
-            ChakraRt::run(
-                *string_value,
+            string_value.run(
                 JsSourceContext(usize::MAX),
                 *fname,
                 JsParseScriptAttributes::JsParseScriptAttributeArrayBufferIsUtf16Encoded,
