@@ -2,7 +2,7 @@ use crate::Error;
 use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers;
 use chakracore_sys::jsrt::buffer::{JsArrayBuffer, JsExternalArrayBuffer};
-use chakracore_sys::jsrt::run::JsRun;
+use chakracore_sys::jsrt::run::{JsRun, JsRunSerialized};
 use chakracore_sys::jsrt::runtime::JsRuntime;
 use chakracore_sys::jsrt::{
     ChakraRt, JsError, JsParseScriptAttributes, JsRuntimeAttributes, JsSourceContext, JsValueRef,
@@ -176,8 +176,7 @@ fn run_script(
 
         // Use source ptr as sourceContext
         let source_context = JsSourceContext(contents.into_raw() as usize);
-        ChakraRt::run_serialized(
-            buffer_value,
+        buffer_value.run_serialized(
             dummy_js_serialized_script_load_utf8_source,
             source_context,
             *fname,

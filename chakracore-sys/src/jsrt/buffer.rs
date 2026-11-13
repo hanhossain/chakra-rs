@@ -1,5 +1,5 @@
 use crate::jsrt::ffi::bridge;
-use crate::jsrt::run::JsRun;
+use crate::jsrt::run::{JsRun, JsRunSerialized};
 use crate::jsrt::{IntoResponse, JsError, JsSharedArrayBufferContentHandle, JsValueRef};
 
 pub struct JsArrayBuffer(JsValueRef);
@@ -40,6 +40,8 @@ impl IntoResponse for JsArrayBuffer {
         self.0
     }
 }
+
+impl JsRunSerialized for JsArrayBuffer {}
 
 #[derive(Eq, PartialEq)]
 pub struct JsSharedArrayBufferContent {
@@ -99,3 +101,4 @@ impl AsRef<JsValueRef> for JsExternalArrayBuffer {
 }
 
 impl JsRun for JsExternalArrayBuffer {}
+impl JsRunSerialized for JsExternalArrayBuffer {}
