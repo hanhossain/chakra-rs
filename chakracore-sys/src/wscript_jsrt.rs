@@ -978,20 +978,15 @@ impl WScript {
 
             let mut return_value = JsValueRef::default();
             let error_code = if self.config.host.use_parser_state_cache {
-                let mut parser_state = JsValueRef::default();
+                let parser_state = script_source
+                    .serialize_parser_state(JsParseScriptAttributes::JsParseScriptAttributeNone)?;
                 unsafe {
-                    ChakraRTInterface::JsSerializeParserState(
-                        script_source,
-                        &raw mut parser_state,
-                        JsParseScriptAttributes::JsParseScriptAttributeNone,
-                    )
-                    .as_result()?;
                     ChakraRTInterface::JsRunScriptWithParserState(
                         script_source,
                         source_context,
                         *fname,
                         JsParseScriptAttributes::JsParseScriptAttributeNone,
-                        parser_state,
+                        *parser_state.as_ref(),
                         &raw mut return_value,
                     )
                     .as_result()
@@ -1033,20 +1028,15 @@ impl WScript {
 
             let mut return_value = JsValueRef::default();
             let error_code = if self.config.host.use_parser_state_cache {
-                let mut parser_state = JsValueRef::default();
+                let parser_state = script_source
+                    .serialize_parser_state(JsParseScriptAttributes::JsParseScriptAttributeNone)?;
                 unsafe {
-                    ChakraRTInterface::JsSerializeParserState(
-                        script_source,
-                        &raw mut parser_state,
-                        JsParseScriptAttributes::JsParseScriptAttributeNone,
-                    )
-                    .as_result()?;
                     ChakraRTInterface::JsRunScriptWithParserState(
                         script_source,
                         source_context,
                         *fname,
                         JsParseScriptAttributes::JsParseScriptAttributeNone,
-                        parser_state,
+                        *parser_state.as_ref(),
                         &raw mut return_value,
                     )
                     .as_result()

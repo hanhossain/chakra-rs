@@ -104,7 +104,14 @@ fn create_parser_state_and_run_script(
     // initialize the WScript object on the new context
     wscript.initialize(&runtime)?;
 
-    run_script(filename, contents, None, full_path, buffer, &wscript)?;
+    run_script(
+        filename,
+        contents,
+        None,
+        full_path,
+        *buffer.as_ref(),
+        &wscript,
+    )?;
     Ok(())
 }
 
@@ -145,19 +152,12 @@ fn get_serialized_buffer(file_contents: &String) -> Result<JsArrayBuffer, JsErro
     Ok(byte_code_buffer)
 }
 
-fn get_parser_state_buffer(file_contents: &str) -> Result<JsValueRef, Error> {
+fn get_parser_state_buffer(file_contents: &str) -> Result<JsArrayBuffer, Error> {
     // We don't want this to free fileContents when it completes, so the finalizeCallback is nullptr
     let script_source = ChakraRt::create_external_array_buffer(file_contents)?;
-    unsafe {
-        let mut buffer = JsValueRef::default();
-        ChakraRTInterface::JsSerializeParserState(
-            script_source,
-            &raw mut buffer,
-            JsParseScriptAttributes::JsParseScriptAttributeNone,
-        )
-        .as_result()?;
-        Ok(buffer)
-    }
+    let buffer = script_source
+        .serialize_parser_state(JsParseScriptAttributes::JsParseScriptAttributeNone)?;
+    Ok(buffer)
 }
 
 #[tracing::instrument(skip_all)]
