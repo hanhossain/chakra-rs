@@ -433,6 +433,13 @@ pub(super) mod bridge {
             parserState: JsValueRef,
             result: *mut JsValueRef,
         ) -> JsErrorCode;
+        unsafe fn JsRun(
+            script: JsValueRef,
+            sourceContext: JsSourceContext,
+            sourceUrl: JsValueRef,
+            parseAttributes: JsParseScriptAttributes,
+            result: *mut JsValueRef,
+        ) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}

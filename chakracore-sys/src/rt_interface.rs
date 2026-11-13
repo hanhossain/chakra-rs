@@ -19,15 +19,6 @@ mod ffi {
         type CVoid = crate::jsrt::CVoid;
         type JsRef = crate::jsrt::JsRef;
 
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsRun(
-            script: JsValueRef,
-            sourceContext: JsSourceContext,
-            sourceUrl: JsValueRef,
-            parseAttributes: JsParseScriptAttributes,
-            result: *mut JsValueRef,
-        ) -> JsErrorCode;
-
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
         type JsModuleHostInfoKind = crate::jsrt::JsModuleHostInfoKind;
         type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;

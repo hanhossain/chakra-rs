@@ -80,16 +80,12 @@ impl ThreadData {
         let script_source = ChakraRt::create_external_array_buffer(&self.initial_source)?;
         let full_path = ChakraRt::create_string("agent source")?;
 
-        unsafe {
-            ChakraRTInterface::JsRun(
-                script_source,
-                JsSourceContext(WScript::get_next_source_context()),
-                *full_path,
-                JsParseScriptAttributes::JsParseScriptAttributeNone,
-                std::ptr::null_mut(),
-            )
-            .as_result()?;
-        }
+        ChakraRt::run(
+            script_source,
+            JsSourceContext(WScript::get_next_source_context()),
+            *full_path,
+            JsParseScriptAttributes::JsParseScriptAttributeNone,
+        )?;
 
         tx_initial_script_completed
             .send(())
