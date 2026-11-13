@@ -20,16 +20,6 @@ mod ffi {
         type JsRef = crate::jsrt::JsRef;
 
         #[Self = "ChakraRTInterface"]
-        unsafe fn JsRunScriptWithParserState(
-            script: JsValueRef,
-            sourceContext: JsSourceContext,
-            sourceUrl: JsValueRef,
-            parseAttributes: JsParseScriptAttributes,
-            parserState: JsValueRef,
-            result: *mut JsValueRef,
-        ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
         unsafe fn JsRun(
             script: JsValueRef,
             sourceContext: JsSourceContext,
