@@ -92,6 +92,17 @@ impl JsValueRef {
         }
         Ok(JsArrayBuffer::new(buffer))
     }
+
+    pub fn serialize_parser_state(
+        &self,
+        attributes: JsParseScriptAttributes,
+    ) -> Result<JsArrayBuffer, JsError> {
+        let mut buffer = JsValueRef::default();
+        unsafe {
+            bridge::JsSerializeParserState(*self, &raw mut buffer, attributes).as_result()?;
+        }
+        Ok(JsArrayBuffer::new(buffer))
+    }
 }
 
 impl std::fmt::Debug for JsValueRef {
@@ -397,6 +408,11 @@ pub(super) mod bridge {
             script: JsValueRef,
             buffer: *mut JsValueRef,
             parseAttributes: JsParseScriptAttributes,
+        ) -> JsErrorCode;
+        unsafe fn JsSerializeParserState(
+            script: JsValueRef,
+            buffer: *mut JsValueRef,
+            parse_attributes: JsParseScriptAttributes,
         ) -> JsErrorCode;
         unsafe fn JsRunSerialized(
             buffer: JsValueRef,
