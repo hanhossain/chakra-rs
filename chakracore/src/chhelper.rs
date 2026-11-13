@@ -176,15 +176,13 @@ fn run_script(
 
         // Use source ptr as sourceContext
         let source_context = JsSourceContext(contents.into_raw() as usize);
-        unsafe {
-            ChakraRt::run_serialized(
-                buffer_value,
-                dummy_js_serialized_script_load_utf8_source,
-                source_context,
-                *fname,
-            )
-            .map(|_| ())
-        }
+        ChakraRt::run_serialized(
+            buffer_value,
+            dummy_js_serialized_script_load_utf8_source,
+            source_context,
+            *fname,
+        )
+        .map(|_| ())
     } else if let Some(parser_state_cache) = parser_state_cache {
         let script_source = ChakraRt::create_external_array_buffer(contents)?;
         ChakraRt::run_script_with_parser_state(

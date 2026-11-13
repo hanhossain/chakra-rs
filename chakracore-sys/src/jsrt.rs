@@ -358,7 +358,7 @@ impl ChakraRt {
         Ok(())
     }
 
-    pub unsafe fn run_serialized(
+    pub fn run_serialized(
         buffer: JsArrayBuffer,
         callback: fn(JsSourceContext, &mut JsValueRef, &mut JsParseScriptAttributes) -> bool,
         source_context: JsSourceContext,
