@@ -575,13 +575,11 @@ impl WScript {
     #[tracing::instrument(skip_all, err)]
     fn notify_module_ready_callback(
         &self,
-        referencing_module: JsModuleRecord,
+        referencing_module: JsModule,
         exception_var: JsValueRef,
     ) -> Result<(), JsError> {
         if !exception_var.is_null() && self.config.host.trace_host_callback {
-            let specifier = JsModule::new(referencing_module)
-                .get_host_info_url()
-                .unwrap_or_default();
+            let specifier = referencing_module.get_host_info_url().unwrap_or_default();
             let mut filename = String::new();
             if !specifier.is_null() {
                 filename = specifier.to_string().unwrap_or_default();
@@ -593,45 +591,28 @@ impl WScript {
         if let Some(module_error) = guard.get(&referencing_module)
             && *module_error != ModuleState::ErroredModule
         {
-            let msg = Message::new_module(referencing_module, JsValueRef::default(), None)?;
+            let msg = Message::new_module(Some(referencing_module), JsValueRef::default(), None)?;
             self.message_queue.schedule_task(msg, Duration::ZERO);
         }
         Ok(())
     }
 
-    fn initialize_import_meta_callback(
-        referencing_module: JsModuleRecord,
-        import_meta_var: JsValueRef,
-    ) -> JsErrorCode {
+    fn initialize_import_meta_callback(referencing_module: JsModule, import_meta_var: JsValueRef) {
         if !import_meta_var.is_null() {
-            let specifier = JsModule::new(referencing_module)
-                .get_host_info_url()
-                .unwrap_or_default();
+            let specifier = referencing_module.get_host_info_url().unwrap_or_default();
             if let Ok(url_prop_id) = ChakraRt::create_property_id("url") {
                 let mut import_meta_var = JsObject::new(import_meta_var);
                 let _ = import_meta_var.set_property(url_prop_id, specifier, false);
             }
         }
-
-        JsErrorCode::JsNoError
     }
 
-    fn report_module_completion_callback(
-        &self,
-        module: JsModuleRecord,
-        exception: JsValueRef,
-    ) -> JsErrorCode {
+    fn report_module_completion_callback(&self, module: JsModule, exception: JsValueRef) {
         if !exception.is_null() {
-            if let Ok(specifier) = JsModule::new(module)
-                .get_host_info_url()
-                .unwrap_or_default()
-                .to_string()
-            {
+            if let Ok(specifier) = module.get_host_info_url().unwrap_or_default().to_string() {
                 self.print_exception(&specifier, JsErrorCode::JsErrorScriptException, exception);
             }
         }
-
-        JsErrorCode::JsNoError
     }
 
     /// Callback from chakracore to fetch module dynamically during runtime. In the test harness,
@@ -645,12 +626,7 @@ impl WScript {
         dependent_module_record: *mut JsModuleRecord,
     ) -> JsErrorCode {
         unsafe {
-            match self.fetch_imported_module_helper(
-                JsModuleRecord::default(),
-                specifier,
-                dependent_module_record,
-                "",
-            ) {
+            match self.fetch_imported_module_helper(specifier, dependent_module_record, "") {
                 Ok(()) => JsErrorCode::JsNoError,
                 Err(FetchImportedModuleHelperError::JsError(err)) => err.into(),
                 Err(FetchImportedModuleHelperError::IoError(_)) => JsErrorCode::JsErrorFatal,
@@ -676,12 +652,8 @@ impl WScript {
                 .unwrap_or_default()
         };
         unsafe {
-            match self.fetch_imported_module_helper(
-                JsModuleRecord::default(),
-                specifier,
-                dependent_module_record,
-                &directory,
-            ) {
+            match self.fetch_imported_module_helper(specifier, dependent_module_record, &directory)
+            {
                 Ok(()) => JsErrorCode::JsNoError,
                 Err(FetchImportedModuleHelperError::JsError(err)) => err.into(),
                 Err(FetchImportedModuleHelperError::IoError(_)) => JsErrorCode::JsErrorFatal,
@@ -692,7 +664,6 @@ impl WScript {
     #[tracing::instrument(skip_all, fields(ref_dir), err)]
     unsafe fn fetch_imported_module_helper(
         &self,
-        referencing_module: JsModuleRecord,
         specifier: JsValueRef,
         dependent_module_record: *mut JsModuleRecord,
         ref_dir: &str,
@@ -745,7 +716,7 @@ impl WScript {
             .write()
             .unwrap()
             .insert(module_record.record, ModuleState::ImportedModule);
-        let module_message = Message::new_module(referencing_module, specifier, abs_path.to_str())?;
+        let module_message = Message::new_module(None, specifier, abs_path.to_str())?;
         self.message_queue
             .schedule_task(module_message, Duration::ZERO);
         unsafe {
@@ -881,7 +852,7 @@ impl WScript {
             lease.get(module_record_key).map(|x| x.record.clone())
         };
         let request_module = match request_module {
-            Some(x) => x,
+            Some(x) => JsModule::new(x)?,
             None => {
                 let specifier = if is_file {
                     Some(ChakraRt::create_string(full_name)?)
@@ -911,12 +882,12 @@ impl WScript {
                     let mut lease = MODULE_ERROR_MAP.0.write().unwrap();
                     lease.insert(request_module.record, ModuleState::RootModule);
                 }
-                request_module.record
+                request_module
             }
         };
 
         // ParseModuleSource is sync, while additional fetch & evaluation are async.
-        let res = JsModule::new(request_module).parse_source(&source_context, file_content);
+        let res = request_module.parse_source(&source_context, file_content);
         match res {
             Ok(()) => Ok(()),
             Err(ParseScriptError::ParseFailed(err)) => Err(err),
@@ -931,7 +902,7 @@ impl WScript {
                         if state == ModuleState::RootModule {
                             let _ = ChakraRt::set_exception(err_obj);
                             let mut lease = MODULE_ERROR_MAP.0.write().unwrap();
-                            lease.insert(request_module, ModuleState::ErroredModule);
+                            lease.insert(*request_module, ModuleState::ErroredModule);
                         }
                     }
                 }

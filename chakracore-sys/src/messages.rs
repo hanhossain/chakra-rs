@@ -1,6 +1,6 @@
 use crate::jsrt::run::JsRun;
 use crate::jsrt::{
-    ChakraRt, JsError, JsFunction, JsModuleRecord, JsParseScriptAttributes, JsRef, JsRefGuard,
+    ChakraRt, JsError, JsFunction, JsModule, JsParseScriptAttributes, JsRef, JsRefGuard,
     JsSourceContext, JsValueRef, JsValueType,
 };
 use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
@@ -23,7 +23,7 @@ impl Message {
         })
     }
     pub(crate) fn new_module(
-        module_record: JsModuleRecord,
+        module_record: Option<JsModule>,
         specifier: JsValueRef,
         full_path: Option<&str>,
     ) -> Result<Self, JsError> {
@@ -84,21 +84,19 @@ impl CallbackMessage {
 
 #[derive(Eq, PartialEq)]
 struct ModuleMessage {
-    module_record: JsModuleRecord,
+    module_record: Option<JsModule>,
     specifier: JsValueRef,
     full_path: Option<String>,
     specifier_guard: Option<JsRefGuard>,
-    module_record_guard: JsRefGuard,
 }
 
 impl ModuleMessage {
     fn new(
-        module_record: JsModuleRecord,
+        module_record: Option<JsModule>,
         specifier: JsValueRef,
         full_path: Option<&str>,
     ) -> Result<Self, JsError> {
         let mut path: Option<String> = None;
-        let module_record_guard = JsRef::add_ref(&module_record)?;
         let mut specifier_guard: Option<JsRefGuard> = None;
         if !specifier.is_null() {
             path = full_path.map(|x| x.to_owned());
@@ -110,7 +108,6 @@ impl ModuleMessage {
             specifier,
             full_path: path,
             specifier_guard,
-            module_record_guard,
         })
     }
 
@@ -119,13 +116,16 @@ impl ModuleMessage {
         if self.specifier.is_null() {
             let state = {
                 let error_map = MODULE_ERROR_MAP.0.read().unwrap();
-                error_map.get(&self.module_record).map(|x| *x)
+                self.module_record
+                    .as_ref()
+                    .and_then(|record| error_map.get(record))
+                    .map(|x| *x)
             };
             let Some(state) = state else {
                 return Ok(());
             };
             if state != ModuleState::ErroredModule {
-                ChakraRt::module_evaluation(self.module_record)?;
+                self.module_record.as_ref().unwrap().evaluate()?;
             }
             return Ok(());
         }
