@@ -5,7 +5,6 @@ use crate::jsrt::{
     ChakraRt, JsContextGuard, JsError, JsFunction, JsParseScriptAttributes, JsRuntimeAttributes,
     JsSourceContext, JsValueRef,
 };
-use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::ffi::{CloseHandle, WaitForMultipleObjects};
 use crate::wscript_jsrt::{Handle, WScript};
 use std::cell::Cell;
@@ -124,23 +123,22 @@ impl ThreadData {
         let shared_buffer = shared_content.create_shared_array_buffer()?;
         let shared_content_length = ChakraRt::double_to_number(1.)?;
         let mut args = [*global, shared_buffer, shared_content_length];
-        if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
-            callback_func.call_function(&mut args)?;
-        }
+
+        // We can acquire the callback func and wait to set it until after we use it because each
+        // thread has its own callback func.
+        let Some(callback_func) = self.receive_broadcast_callback_func.take() else {
+            return Ok(());
+        };
+        callback_func.call_function(&mut args)?;
+        self.receive_broadcast_callback_func
+            .set(Some(callback_func));
 
         Ok(())
     }
 
     #[tracing::instrument(skip_all)]
     fn on_shutdown(&self, runtime: JsRuntime, context_guard: JsContextGuard) {
-        if let Some(callback_func) = self.receive_broadcast_callback_func.get() {
-            unsafe {
-                ChakraRTInterface::JsRelease(
-                    callback_func.as_ref().as_js_ref(),
-                    std::ptr::null_mut(),
-                );
-            }
-        }
+        let _ = self.receive_broadcast_callback_func.take();
         drop(context_guard);
         drop(runtime);
     }
@@ -163,14 +161,6 @@ impl ThreadData {
 
     pub(super) fn set_leaving(&self, leaving: bool) {
         self.leaving.set(leaving);
-    }
-
-    pub(super) fn set_receive_broadcast_callback_func(&self, func: JsFunction) {
-        self.receive_broadcast_callback_func.set(Some(func));
-    }
-
-    pub(super) fn get_receive_broadcast_callback_func(&self) -> Option<JsFunction> {
-        self.receive_broadcast_callback_func.get()
     }
 
     pub(super) fn add_child(&self, child: Rc<ThreadData>, events_tx: mpsc::Sender<ThreadEvent>) {

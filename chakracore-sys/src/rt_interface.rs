@@ -30,10 +30,5 @@ mod ffi {
             target: *mut JsValueRef,
             handler: *mut JsValueRef,
         ) -> JsErrorCode;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsRelease(jsref: JsRef, count: *mut u32) -> JsErrorCode;
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsAddRef(jsref: JsRef, count: *mut u32) -> JsErrorCode;
     }
 }

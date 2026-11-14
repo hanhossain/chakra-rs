@@ -104,7 +104,7 @@ impl ChakraRt {
             )
             .as_result()?;
         }
-        Ok(JsFunction(value))
+        Ok(JsFunction::new(value))
     }
 
     pub fn get_true_value() -> Result<JsValueRef, JsError> {
@@ -257,12 +257,13 @@ impl ChakraRt {
 
     pub fn set_promise_continuation_callback<T>(callback: T) -> Result<Box<T>, JsError>
     where
-        T: FnMut(JsValueRef),
+        T: FnMut(JsFunction),
     {
         let mut callback = Box::new(callback);
         unsafe {
             bridge::JsSetPromiseContinuationCallback(
                 |task, state| {
+                    let task = JsFunction::new_ref(task).unwrap();
                     let func = &mut *std::mem::transmute::<*mut CVoid, *mut T>(state);
                     func(task);
                 },
