@@ -8,7 +8,6 @@ fn main() {
         "src/helpers.rs",
         "src/jsrt/ffi.rs",
         "src/logger.rs",
-        "src/rt_interface.rs",
         "src/str_helper.rs",
         "src/wscript_jsrt.rs",
     ];
@@ -29,7 +28,6 @@ fn main() {
         .warnings(false)
         .flag("-fms-extensions")
         .define("PAL_STDCPP_COMPAT", None)
-        .include("../chakracore-cxx/bin/ch")
         .include("../chakracore-cxx/ffi/include")
         .include("../chakracore-cxx/lib/Common")
         .include("../chakracore-cxx/lib/Common/Interface/include")
@@ -114,7 +112,6 @@ fn main() {
         println!("cargo::rustc-link-lib=icui18n");
     }
 
-    println!("cargo::rerun-if-changed=../chakracore-cxx/bin/");
     println!("cargo::rerun-if-changed=../chakracore-cxx/ffi/");
     println!("cargo::rerun-if-changed=../chakracore-cxx/lib/");
     println!("cargo::rerun-if-changed=../chakracore-cxx/pal/");
