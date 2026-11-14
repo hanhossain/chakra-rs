@@ -163,7 +163,7 @@ fn run_script(
     wscript: &WScript,
 ) -> Result<(), Error> {
     let _callback = ChakraRt::set_promise_continuation_callback(|task| {
-        let _ = wscript.promise_continuation_callback(task);
+        wscript.promise_continuation_callback(task);
     })?;
     let fname = ChakraRt::create_string(full_path)?;
 

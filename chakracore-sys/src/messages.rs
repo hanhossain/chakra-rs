@@ -17,10 +17,10 @@ pub struct Message {
 }
 
 impl Message {
-    pub(crate) fn new_callback(function: JsValueRef) -> Result<Self, JsError> {
-        Ok(Self {
-            msg: MessageInner::Callback(CallbackMessage::new(function)?),
-        })
+    pub(crate) fn new_callback(function: JsFunction) -> Self {
+        Self {
+            msg: MessageInner::Callback(CallbackMessage::new(function)),
+        }
     }
     pub(crate) fn new_module(
         module_record: Option<JsModule>,
@@ -43,17 +43,12 @@ impl Message {
 
 #[derive(Eq, PartialEq)]
 struct CallbackMessage {
-    function: JsValueRef,
-    function_guard: JsRefGuard,
+    function: JsFunction,
 }
 
 impl CallbackMessage {
-    fn new(function: JsValueRef) -> Result<Self, JsError> {
-        let function_guard = JsRef::add_ref(&function)?;
-        Ok(Self {
-            function,
-            function_guard,
-        })
+    fn new(function: JsFunction) -> Self {
+        Self { function }
     }
 
     #[tracing::instrument(skip(self), err)]
@@ -68,8 +63,7 @@ impl CallbackMessage {
             )?;
         } else {
             let global = ChakraRt::get_global_object()?;
-            let func = JsFunction::from(self.function);
-            func.call_function(&mut [*global])?;
+            self.function.call_function(&mut [*global])?;
         }
         Ok(())
     }

@@ -7,7 +7,7 @@ use crate::jsrt::buffer::{JsArrayBuffer, JsExternalArrayBuffer};
 use crate::jsrt::run::JsRun;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsModule, JsModuleRecord,
+    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsFunction, JsModule, JsModuleRecord,
     JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
     JsValueType, ParseScriptError,
 };
@@ -519,13 +519,12 @@ impl WScript {
         Ok(Some(obj))
     }
 
-    #[tracing::instrument(skip(self), err)]
-    pub fn promise_continuation_callback(&self, task: JsValueRef) -> Result<(), JsError> {
+    #[tracing::instrument(skip(self))]
+    pub fn promise_continuation_callback(&self, task: JsFunction) {
         assert!(!task.is_null());
 
-        let msg = Message::new_callback(task)?;
+        let msg = Message::new_callback(task);
         self.message_queue.schedule_task(msg, Duration::ZERO);
-        Ok(())
     }
 
     fn set_module_host_info_callbacks(&self) -> Result<(), JsError> {
@@ -762,21 +761,11 @@ impl WScript {
     fn receive_broadcast_callback(args: &JsNativeFunctionArgs) -> Result<(), JsError> {
         if args.arguments.len() > 1 {
             let thread_data = THREAD_DATA.with_borrow(|x| Rc::clone(x));
-            if let Some(callback_func) = thread_data.get_receive_broadcast_callback_func() {
-                unsafe {
-                    ChakraRTInterface::JsRelease(
-                        callback_func.as_ref().as_js_ref(),
-                        std::ptr::null_mut(),
-                    )
-                    .as_result()?;
-                }
-            }
-            let callback_func = args.arguments[1];
-            thread_data.set_receive_broadcast_callback_func(callback_func.into());
-            unsafe {
-                ChakraRTInterface::JsAddRef(callback_func.as_js_ref(), std::ptr::null_mut())
-                    .as_result()?;
-            }
+            let _ = thread_data.receive_broadcast_callback_func.take();
+            let callback_func = JsFunction::new_ref(args.arguments[1])?;
+            thread_data
+                .receive_broadcast_callback_func
+                .set(Some(callback_func));
         }
         Ok(())
     }
@@ -786,9 +775,9 @@ impl WScript {
             anyhow::bail!("invalid call to WScript.SetTimeout");
         }
 
-        let function = args.arguments[1].clone();
+        let function = JsFunction::new_ref(args.arguments[1])?;
         let time = ChakraRt::number_to_double(&args.arguments[2])?;
-        let msg = Message::new_callback(function)?;
+        let msg = Message::new_callback(function);
         let msg_id = self
             .message_queue
             .schedule_task(msg, Duration::from_millis(time as u64));
@@ -971,7 +960,7 @@ impl WScript {
         } else if script_inject_type == "samethread" {
             let _new_context = runtime.create_context()?.set_current()?;
             let _callback = ChakraRt::set_promise_continuation_callback(|task| {
-                let _ = self.promise_continuation_callback(task);
+                self.promise_continuation_callback(task);
             })?;
 
             // Initialize the host objects
