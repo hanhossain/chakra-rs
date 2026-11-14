@@ -34,6 +34,7 @@ impl JsModule {
         Ok(url)
     }
 
+    #[tracing::instrument(skip_all, err)]
     pub fn parse_source(
         &self,
         source_context: &JsSourceContext,

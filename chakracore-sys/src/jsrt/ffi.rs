@@ -142,15 +142,20 @@ unsafe impl cxx::ExternType for JsSourceContext {
 #[derive(Default, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct JsModuleRecord(*mut c_void);
 
-impl JsModuleRecord {
-    pub fn as_js_ref(&self) -> JsRef {
-        JsRef(self.0)
-    }
-}
-
 unsafe impl cxx::ExternType for JsModuleRecord {
     type Id = cxx::type_id!("JsModuleRecord");
     type Kind = cxx::kind::Trivial;
+}
+
+impl Deref for JsModuleRecord {
+    type Target = JsRef;
+
+    fn deref(&self) -> &Self::Target {
+        // SAFETY: Casting to JsRef is safe because its internal representation is the same
+        // `*const c_void`. We can dereference the pointer because it comes from a reference. The
+        // final reference has the same lifetime bounds as the source reference.
+        unsafe { &*(self as *const JsModuleRecord as *const JsRef) }
+    }
 }
 
 unsafe impl Send for JsModuleRecord {}
