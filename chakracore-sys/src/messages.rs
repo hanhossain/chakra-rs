@@ -3,7 +3,6 @@ use crate::jsrt::{
     ChakraRt, JsError, JsFunction, JsModuleRecord, JsParseScriptAttributes, JsRef, JsRefGuard,
     JsSourceContext, JsValueRef, JsValueType,
 };
-use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
 
 #[derive(Eq, PartialEq)]
@@ -89,6 +88,7 @@ struct ModuleMessage {
     specifier: JsValueRef,
     full_path: Option<String>,
     specifier_guard: Option<JsRefGuard>,
+    module_record_guard: JsRefGuard,
 }
 
 impl ModuleMessage {
@@ -98,9 +98,7 @@ impl ModuleMessage {
         full_path: Option<&str>,
     ) -> Result<Self, JsError> {
         let mut path: Option<String> = None;
-        unsafe {
-            ChakraRTInterface::JsAddRef(module_record.as_js_ref(), std::ptr::null_mut());
-        }
+        let module_record_guard = JsRef::add_ref(&module_record)?;
         let mut specifier_guard: Option<JsRefGuard> = None;
         if !specifier.is_null() {
             path = full_path.map(|x| x.to_owned());
@@ -112,6 +110,7 @@ impl ModuleMessage {
             specifier,
             full_path: path,
             specifier_guard,
+            module_record_guard,
         })
     }
 
@@ -181,13 +180,5 @@ impl ModuleMessage {
             return;
         };
         wscript.print_exception(filename, err.into(), JsValueRef::default());
-    }
-}
-
-impl Drop for ModuleMessage {
-    fn drop(&mut self) {
-        unsafe {
-            ChakraRTInterface::JsRelease(self.module_record.as_js_ref(), std::ptr::null_mut());
-        }
     }
 }
