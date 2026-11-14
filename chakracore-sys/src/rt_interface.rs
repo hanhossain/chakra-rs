@@ -22,13 +22,5 @@ mod ffi {
         type JsModuleRecord = crate::jsrt::JsModuleRecord;
         type JsModuleHostInfoKind = crate::jsrt::JsModuleHostInfoKind;
         type JsSharedArrayBufferContentHandle = crate::jsrt::JsSharedArrayBufferContentHandle;
-
-        #[Self = "ChakraRTInterface"]
-        unsafe fn JsGetProxyProperties(
-            object: JsValueRef,
-            is_proxy: *mut bool,
-            target: *mut JsValueRef,
-            handler: *mut JsValueRef,
-        ) -> JsErrorCode;
     }
 }
