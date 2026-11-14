@@ -365,6 +365,31 @@ impl ChakraRt {
             }
         }
     }
+
+    pub fn get_proxy_properties(object: JsValueRef) -> Result<Option<JsProxyProperties>, JsError> {
+        let mut is_proxy = false;
+        let mut target = JsValueRef::default();
+        let mut handler = JsValueRef::default();
+        unsafe {
+            bridge::JsGetProxyProperties(
+                object,
+                &raw mut is_proxy,
+                &raw mut target,
+                &raw mut handler,
+            )
+            .as_result()?;
+        }
+        if !is_proxy {
+            return Ok(None);
+        }
+
+        Ok(Some(JsProxyProperties { target, handler }))
+    }
+}
+
+pub struct JsProxyProperties {
+    pub target: JsValueRef,
+    pub handler: JsValueRef,
 }
 
 pub struct JsNativeFunctionArgs<'a> {

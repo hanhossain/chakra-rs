@@ -8,12 +8,11 @@ use crate::jsrt::run::JsRun;
 use crate::jsrt::runtime::JsRuntime;
 use crate::jsrt::{
     ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsFunction, JsModule, JsModuleRecord,
-    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsSourceContext, JsString, JsValueRef,
-    JsValueType, ParseScriptError,
+    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsProxyProperties, JsSourceContext,
+    JsString, JsValueRef, JsValueType, ParseScriptError,
 };
 use crate::message_queue::MessageQueue;
 use crate::messages::Message;
-use crate::rt_interface::ChakraRTInterface;
 use crate::wscript_jsrt::cache::ScriptCache;
 use crate::wscript_jsrt::tls::ThreadData;
 use std::cell::RefCell;
@@ -485,22 +484,13 @@ impl WScript {
             return Ok(None);
         }
 
-        let mut is_proxy = false;
-        let mut target = JsValueRef::default();
-        let mut handler = JsValueRef::default();
-        unsafe {
-            ChakraRTInterface::JsGetProxyProperties(
-                args.arguments[1].clone(),
-                &raw mut is_proxy,
-                &raw mut target,
-                &raw mut handler,
-            )
-            .as_result()?;
-        }
-
-        if !is_proxy {
+        let Some(JsProxyProperties {
+            mut target,
+            mut handler,
+        }) = ChakraRt::get_proxy_properties(args.arguments[1])?
+        else {
             return Ok(None);
-        }
+        };
 
         let target_property = ChakraRt::create_property_id("target")?;
         let handler_property = ChakraRt::create_property_id("handler")?;

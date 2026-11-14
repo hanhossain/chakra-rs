@@ -448,6 +448,13 @@ pub(super) mod bridge {
 
         fn JsAddRef(jsref: &JsRef) -> JsErrorCode;
         fn JsRelease(jsref: &JsRef) -> JsErrorCode;
+
+        unsafe fn JsGetProxyProperties(
+            object: JsValueRef,
+            is_proxy: *mut bool,
+            target: *mut JsValueRef,
+            handler: *mut JsValueRef,
+        ) -> JsErrorCode;
     }
 
     impl CxxVector<JsValueRef> {}
