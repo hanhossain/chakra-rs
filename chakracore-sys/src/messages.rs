@@ -27,10 +27,10 @@ impl Message {
         module_record: JsModuleRecord,
         specifier: JsValueRef,
         full_path: Option<&str>,
-    ) -> Self {
-        Self {
-            msg: MessageInner::Module(ModuleMessage::new(module_record, specifier, full_path)),
-        }
+    ) -> Result<Self, JsError> {
+        Ok(Self {
+            msg: MessageInner::Module(ModuleMessage::new(module_record, specifier, full_path)?),
+        })
     }
 
     #[tracing::instrument(skip(self, wscript))]
@@ -88,26 +88,31 @@ struct ModuleMessage {
     module_record: JsModuleRecord,
     specifier: JsValueRef,
     full_path: Option<String>,
+    specifier_guard: Option<JsRefGuard>,
 }
 
 impl ModuleMessage {
-    fn new(module_record: JsModuleRecord, specifier: JsValueRef, full_path: Option<&str>) -> Self {
+    fn new(
+        module_record: JsModuleRecord,
+        specifier: JsValueRef,
+        full_path: Option<&str>,
+    ) -> Result<Self, JsError> {
         let mut path: Option<String> = None;
         unsafe {
             ChakraRTInterface::JsAddRef(module_record.as_js_ref(), std::ptr::null_mut());
         }
+        let mut specifier_guard: Option<JsRefGuard> = None;
         if !specifier.is_null() {
             path = full_path.map(|x| x.to_owned());
             // nullptr specifier means a Promise to execute; non-nullptr means a "fetch" operation.
-            unsafe {
-                ChakraRTInterface::JsAddRef(specifier.as_js_ref(), std::ptr::null_mut());
-            }
+            specifier_guard = Some(JsRef::add_ref(&specifier)?);
         }
-        Self {
+        Ok(Self {
             module_record,
             specifier,
             full_path: path,
-        }
+            specifier_guard,
+        })
     }
 
     #[tracing::instrument(skip(self, wscript), err)]
@@ -183,9 +188,6 @@ impl Drop for ModuleMessage {
     fn drop(&mut self) {
         unsafe {
             ChakraRTInterface::JsRelease(self.module_record.as_js_ref(), std::ptr::null_mut());
-            if !self.specifier.is_null() {
-                ChakraRTInterface::JsRelease(self.specifier.as_js_ref(), std::ptr::null_mut());
-            }
         }
     }
 }

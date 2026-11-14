@@ -572,12 +572,12 @@ impl WScript {
     }
 
     /// Callback from chakraCore when the module resolution is finished, either successfully or unsuccessfully.
-    #[tracing::instrument(skip_all)]
+    #[tracing::instrument(skip_all, err)]
     fn notify_module_ready_callback(
         &self,
         referencing_module: JsModuleRecord,
         exception_var: JsValueRef,
-    ) -> JsErrorCode {
+    ) -> Result<(), JsError> {
         if !exception_var.is_null() && self.config.host.trace_host_callback {
             let specifier = JsModule::new(referencing_module)
                 .get_host_info_url()
@@ -593,10 +593,10 @@ impl WScript {
         if let Some(module_error) = guard.get(&referencing_module)
             && *module_error != ModuleState::ErroredModule
         {
-            let msg = Message::new_module(referencing_module, JsValueRef::default(), None);
+            let msg = Message::new_module(referencing_module, JsValueRef::default(), None)?;
             self.message_queue.schedule_task(msg, Duration::ZERO);
         }
-        JsErrorCode::JsNoError
+        Ok(())
     }
 
     fn initialize_import_meta_callback(
@@ -745,7 +745,7 @@ impl WScript {
             .write()
             .unwrap()
             .insert(module_record.record, ModuleState::ImportedModule);
-        let module_message = Message::new_module(referencing_module, specifier, abs_path.to_str());
+        let module_message = Message::new_module(referencing_module, specifier, abs_path.to_str())?;
         self.message_queue
             .schedule_task(module_message, Duration::ZERO);
         unsafe {

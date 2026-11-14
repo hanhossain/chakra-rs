@@ -26,7 +26,7 @@ pub(super) struct ThreadData {
     parent_report_tx: Option<mpsc::Sender<String>>,
     leaving: Cell<bool>,
     thread_handle: Handle,
-    receive_broadcast_callback_func: Cell<Option<JsFunction>>,
+    pub(super) receive_broadcast_callback_func: Cell<Option<JsFunction>>,
     children: Mutex<Vec<(Rc<ThreadData>, mpsc::Sender<ThreadEvent>)>>,
     events: Option<mpsc::Receiver<ThreadEvent>>,
 }

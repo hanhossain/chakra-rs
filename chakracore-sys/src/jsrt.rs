@@ -177,19 +177,20 @@ impl ChakraRt {
         Ok(())
     }
 
-    pub fn js_module_host_info_set_notify_module_ready_callback<T>(
+    pub fn js_module_host_info_set_notify_module_ready_callback<T, E>(
         request_module: JsModuleRecord,
         callback: T,
     ) -> Result<(), JsError>
     where
-        T: FnMut(JsModuleRecord, JsValueRef) -> JsErrorCode,
+        T: FnMut(JsModuleRecord, JsValueRef) -> E,
+        E: Into<JsErrorCode>,
     {
         unsafe {
             bridge::JsModuleHostInfoSetNotifyModuleReadyCallback(
                 request_module,
                 |referencing_module, exception_var, data| {
                     let callback = &mut *std::mem::transmute::<*mut CVoid, *mut T>(data);
-                    callback(referencing_module, exception_var)
+                    callback(referencing_module, exception_var).into()
                 },
                 Box::into_raw(Box::new(callback)) as _,
             )
