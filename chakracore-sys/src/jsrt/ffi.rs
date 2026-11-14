@@ -819,3 +819,9 @@ impl<T> From<Result<T, JsError>> for JsErrorCode {
         }
     }
 }
+
+impl From<()> for JsErrorCode {
+    fn from(_: ()) -> Self {
+        JsErrorCode::JsNoError
+    }
+}

@@ -1,11 +1,13 @@
 use crate::jsrt::ffi::bridge;
 use crate::jsrt::{
-    JsError, JsErrorObject, JsModuleHostInfoKind, JsModuleRecord, JsSourceContext, JsValueRef,
+    JsError, JsErrorObject, JsModuleHostInfoKind, JsModuleRecord, JsRef, JsRefGuard,
+    JsSourceContext, JsValueRef,
 };
 
-#[derive(Eq, PartialEq, Hash, Copy, Clone)]
+#[derive(Eq, PartialEq)]
 pub struct JsModule {
     pub(crate) record: JsModuleRecord,
+    guard: JsRefGuard,
 }
 
 impl JsModule {
@@ -14,11 +16,15 @@ impl JsModule {
         unsafe {
             bridge::JsInitializeModuleRecord(specifier, &raw mut record).as_result()?;
         }
-        Ok(JsModule { record })
+        Self::new(record)
     }
 
-    pub(crate) fn new(module: JsModuleRecord) -> Self {
-        Self { record: module }
+    pub(crate) fn new(module: JsModuleRecord) -> Result<Self, JsError> {
+        let guard = JsRef::add_ref(&module)?;
+        Ok(Self {
+            record: module,
+            guard,
+        })
     }
 
     pub fn get_host_info_url(&self) -> Result<JsValueRef, JsError> {
@@ -60,6 +66,22 @@ impl JsModule {
             return Err(ParseScriptError::ScriptCompile(error.into()));
         }
         Err(ParseScriptError::ParseFailed(err))
+    }
+
+    pub fn evaluate(&self) -> Result<JsValueRef, JsError> {
+        let mut module_res = JsValueRef::default();
+        unsafe {
+            bridge::JsModuleEvaluation(self.record, &raw mut module_res).as_result()?;
+        }
+        Ok(module_res)
+    }
+}
+
+impl std::ops::Deref for JsModule {
+    type Target = JsModuleRecord;
+
+    fn deref(&self) -> &Self::Target {
+        &self.record
     }
 }
 

@@ -182,13 +182,17 @@ impl ChakraRt {
         callback: T,
     ) -> Result<(), JsError>
     where
-        T: FnMut(JsModuleRecord, JsValueRef) -> E,
+        T: FnMut(JsModule, JsValueRef) -> E,
         E: Into<JsErrorCode>,
     {
         unsafe {
             bridge::JsModuleHostInfoSetNotifyModuleReadyCallback(
                 request_module,
                 |referencing_module, exception_var, data| {
+                    let referencing_module = match JsModule::new(referencing_module) {
+                        Ok(x) => x,
+                        Err(err) => return err.into(),
+                    };
                     let callback = &mut *std::mem::transmute::<*mut CVoid, *mut T>(data);
                     callback(referencing_module, exception_var).into()
                 },
@@ -199,19 +203,24 @@ impl ChakraRt {
         Ok(())
     }
 
-    pub fn js_module_host_info_set_initialize_import_meta_callback<T>(
+    pub fn js_module_host_info_set_initialize_import_meta_callback<T, E>(
         request_module: JsModuleRecord,
         callback: T,
     ) -> Result<(), JsError>
     where
-        T: FnMut(JsModuleRecord, JsValueRef) -> JsErrorCode,
+        T: FnMut(JsModule, JsValueRef) -> E,
+        E: Into<JsErrorCode>,
     {
         unsafe {
             bridge::JsModuleHostInfoSetInitializeImportMetaCallback(
                 request_module,
                 |referencing_module, import_meta_var, data| {
+                    let referencing_module = match JsModule::new(referencing_module) {
+                        Ok(x) => x,
+                        Err(err) => return err.into(),
+                    };
                     let callback = &mut *std::mem::transmute::<*mut CVoid, *mut T>(data);
-                    callback(referencing_module, import_meta_var)
+                    callback(referencing_module, import_meta_var).into()
                 },
                 Box::into_raw(Box::new(callback)) as _,
             )
@@ -220,19 +229,24 @@ impl ChakraRt {
         Ok(())
     }
 
-    pub fn js_module_host_info_set_report_module_completion_callback<T>(
+    pub fn js_module_host_info_set_report_module_completion_callback<T, E>(
         request_module: JsModuleRecord,
         callback: T,
     ) -> Result<(), JsError>
     where
-        T: FnMut(JsModuleRecord, JsValueRef) -> JsErrorCode,
+        T: FnMut(JsModule, JsValueRef) -> E,
+        E: Into<JsErrorCode>,
     {
         unsafe {
             bridge::JsModuleHostInfoSetReportModuleCompletionCallback(
                 request_module,
                 |module, exception, data| {
+                    let module = match JsModule::new(module) {
+                        Ok(x) => x,
+                        Err(err) => return err.into(),
+                    };
                     let callback = &mut *std::mem::transmute::<*mut CVoid, *mut T>(data);
-                    callback(module, exception)
+                    callback(module, exception).into()
                 },
                 Box::into_raw(Box::new(callback)) as _,
             )
@@ -349,14 +363,6 @@ impl ChakraRt {
                 tracing::error!(?err, "Failed to set an exception");
             }
         }
-    }
-
-    pub(crate) fn module_evaluation(request_module: JsModuleRecord) -> Result<(), JsError> {
-        let mut module_res = JsValueRef::default();
-        unsafe {
-            bridge::JsModuleEvaluation(request_module, &raw mut module_res).as_result()?;
-        }
-        Ok(())
     }
 }
 
