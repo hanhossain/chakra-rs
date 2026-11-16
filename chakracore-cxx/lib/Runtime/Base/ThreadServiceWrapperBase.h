@@ -30,7 +30,6 @@ protected:
 
     ThreadServiceWrapperBase();
 
-    bool Initialize(ThreadContext *newThreadContext);
     void Shutdown();
 
     bool IdleCollect();

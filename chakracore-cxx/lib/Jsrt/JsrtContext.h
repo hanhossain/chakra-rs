@@ -23,6 +23,8 @@ public:
 
     virtual void Mark(Recycler * recycler) override;
 
+    void DisposeNoUnlink();
+
 protected:
     DEFINE_VTABLE_CTOR_NOBASE(JsrtContext);
     JsrtContext(JsrtRuntime * runtime);

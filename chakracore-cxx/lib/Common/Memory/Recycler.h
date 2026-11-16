@@ -1643,14 +1643,9 @@ private:
     bool isPrimaryMarkContextInitialized;
 #endif
 public:
-    typedef void (CALLBACK *ObjectBeforeCollectCallback)(void* object, void* callbackState); // same as jsrt JsObjectBeforeCollectCallback
+    typedef void (CALLBACK *ObjectBeforeCollectCallback)(void* object, void* callbackState);
     // same as jsrt JsObjectBeforeCollectCallbackWrapper
     typedef void (CALLBACK *ObjectBeforeCollectCallbackWrapper)(ObjectBeforeCollectCallback callback, void* object, void* callbackState, void* threadContext);
-    void SetObjectBeforeCollectCallback(void* object,
-        ObjectBeforeCollectCallback callback,
-        void* callbackState,
-        ObjectBeforeCollectCallbackWrapper callbackWrapper,
-        void* threadContext);
     void ClearObjectBeforeCollectCallbacks();
     void SetDOMWrapperTracingCallback(void * state, DOMWrapperTracingCallback tracingCallback, DOMWrapperTracingDoneCallback tracingDoneCallback, DOMWrapperTracingEnterFinalPauseCallback enterFinalPauseCallback);
     void ClearDOMWrapperTracingCallback();

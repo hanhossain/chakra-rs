@@ -1269,32 +1269,6 @@ namespace chakracore::jsrt
             _Out_ JsValueRef *object);
 
     /// <summary>
-    ///     Creates a new object (with prototype) that stores some data.
-    /// </summary>
-    /// <remarks>
-    ///     Requires an active script context.
-    /// </remarks>
-    /// <param name="data">External data that the object will represent. May be null.</param>
-    /// <param name="traceCallback">
-    ///     A callback for when the object is traced. May be null.
-    /// <param name="finalizeCallback">
-    ///     A callback for when the object is finalized. May be null.
-    /// </param>
-    /// <param name="prototype">Prototype object or nullptr.</param>
-    /// <param name="object">The new object.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode
-    JsCreateTracedExternalObject(
-        _In_opt_ void *data,
-        _In_opt_ size_t inlineSlotSize,
-        _In_opt_ JsTraceCallback traceCallback,
-        _In_opt_ JsFinalizeCallback finalizeCallback,
-        _In_opt_ JsValueRef prototype,
-        _Out_ JsValueRef *object);
-
-    /// <summary>
     ///     Creates a new object (with prototype) that stores some external data and also supports interceptors.
     /// </summary>
     /// <remarks>
@@ -1823,38 +1797,7 @@ namespace chakracore::jsrt
             _In_ JsValueRef parserState,
             _Out_ JsValueRef* result);
 }
-typedef void (*JsBeforeSweepCallback)(_In_opt_ void *callbackState);
 
-namespace chakracore::jsrt
-{
-    JsErrorCode
-        JsSetRuntimeBeforeSweepCallback(
-            _In_ JsRuntimeHandle runtimeHandle,
-            _In_opt_ void *callbackState,
-            _In_ JsBeforeSweepCallback beforeSweepCallback);
-
-    JsErrorCode
-    JsSetRuntimeDomWrapperTracingCallbacks(
-        _In_ JsRuntimeHandle runtimeHandle,
-        _In_ JsRef wrapperTracingState,
-        _In_ JsDOMWrapperTracingCallback wrapperTracingCallback,
-        _In_ JsDOMWrapperTracingDoneCallback wrapperTracingDoneCallback,
-        _In_ JsDOMWrapperTracingEnterFinalPauseCallback enterFinalPauseCallback);
-
-    JsErrorCode
-    JsTraceExternalReference(
-            _In_ JsRuntimeHandle runtimeHandle,
-            _In_ JsValueRef value
-        );
-
-    JsErrorCode
-    JsAllocRawData(
-        _In_ JsRuntimeHandle runtimeHandle,
-        _In_ size_t sizeInBytes,
-        _In_ bool zeroed,
-        _Out_ JsRef * buffer
-    );
-}
 /// <summary>
 ///     A callback function to ask host to re-allocated buffer to the new size when the current buffer is full
 /// </summary>

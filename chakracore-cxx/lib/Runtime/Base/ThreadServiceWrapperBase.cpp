@@ -14,17 +14,6 @@ ThreadServiceWrapperBase::ThreadServiceWrapperBase() :
 {
 }
 
-bool ThreadServiceWrapperBase::Initialize(ThreadContext *newThreadContext)
-{
-    if (newThreadContext == nullptr)
-    {
-        return false;
-    }
-    threadContext = newThreadContext;
-    threadContext->SetThreadServiceWrapper(this);
-    return true;
-}
-
 void ThreadServiceWrapperBase::Shutdown()
 {
     if (hasScheduledIdleCollect)

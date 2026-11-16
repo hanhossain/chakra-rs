@@ -12,7 +12,6 @@ public:
     JsrtThreadService();
     ~JsrtThreadService();
 
-    bool Initialize(ThreadContext *threadContext);
     unsigned int Idle();
 
     // Does nothing, we don't force idle collection for JSRT

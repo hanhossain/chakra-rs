@@ -24,40 +24,19 @@ void JsrtContext::SetJavascriptLibrary(Js::JavascriptLibrary * library)
 void JsrtContext::Link()
 {
     // Link this new JsrtContext up in the JsrtRuntime's context list
-    this->next = runtime->contextList;
-    this->previous = nullptr;
-
-    if (runtime->contextList != nullptr)
-    {
-        Assert(runtime->contextList->previous == nullptr);
-        runtime->contextList->previous = this;
-    }
-
-    runtime->contextList = this;
+    runtime->Link(this);
 }
 
 void JsrtContext::Unlink()
 {
     // Unlink from JsrtRuntime JsrtContext list
-    if (this->previous == nullptr)
-    {
-        // Have to check this because if we failed while creating, it might
-        // never have gotten linked in to the runtime at all.
-        if (this->runtime->contextList == this)
-        {
-            this->runtime->contextList = this->next;
-        }
-    }
-    else
-    {
-        Assert(this->previous->next == this);
-        this->previous->next = this->next;
-    }
+    runtime->Unlink(this);
+}
 
-    if (this->next != nullptr)
+void JsrtContext::DisposeNoUnlink() {
+    if (GetJavascriptLibrary())
     {
-        Assert(this->next->previous == this);
-        this->next->previous = this->previous;
+        SetJavascriptLibrary(nullptr);
     }
 }
 

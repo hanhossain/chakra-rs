@@ -4,12 +4,15 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+class ThreadContext;
+class JsrtContext;
+
 class JsrtCallbackState
 {
 public:
     JsrtCallbackState(ThreadContext* currentThreadContext);
     ~JsrtCallbackState();
-    static void ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollectCallback callback, void* object, void* callbackState, void* threadContext);
+
 private:
     ThreadContext* originalThreadContext;
     JsrtContext* originalJsrtContext;

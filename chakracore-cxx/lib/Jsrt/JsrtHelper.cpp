@@ -18,16 +18,6 @@
 #include "Core/ConfigParser.h"
 #include "Base/ThreadBoundThreadContextManager.h"
 
-bool ConfigParserAPI::FillConsoleTitle(__ecount(cchBufferSize) char16_t* buffer, size_t cchBufferSize, char16_t* moduleName)
-{
-    return false;
-}
-
-const char16_t* JsUtil::ExternalApi::GetFeatureKeyName()
-{
-    return u"";
-}
-
 JsrtCallbackState::JsrtCallbackState(ThreadContext* currentThreadContext)
 {
     if (currentThreadContext == nullptr)
@@ -66,13 +56,7 @@ JsrtCallbackState::~JsrtCallbackState()
     }
 }
 
-void JsrtCallbackState::ObjectBeforeCallectCallbackWrapper(JsObjectBeforeCollectCallback callback, void* object, void* callbackState, void* threadContext)
-{
-    JsrtCallbackState scope(reinterpret_cast<ThreadContext*>(threadContext));
-    callback(object, callbackState);
-}
-
-    void ChakraBinaryAutoSystemInfoInit(AutoSystemInfo * autoSystemInfo)
+void ChakraBinaryAutoSystemInfoInit(AutoSystemInfo * autoSystemInfo)
     {
         autoSystemInfo->buildDateHash = JsUtil::CharacterBuffer<char>::StaticGetHashCode(__DATE__, std::size(__DATE__));
         autoSystemInfo->buildTimeHash = JsUtil::CharacterBuffer<char>::StaticGetHashCode(__TIME__, std::size(__TIME__));
