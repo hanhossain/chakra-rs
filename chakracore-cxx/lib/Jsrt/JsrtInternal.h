@@ -41,7 +41,7 @@
 
 #define VALIDATE_INCOMING_RUNTIME_HANDLE(p) \
         { \
-            if (p == JS_INVALID_RUNTIME_HANDLE) \
+            if (p == nullptr) \
             { \
                 return JsErrorInvalidArgument; \
             } \

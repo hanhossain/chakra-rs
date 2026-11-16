@@ -27,6 +27,8 @@
 #include "chakra/Logger.h"
 #include "chakra/strings.h"
 
+#include <memory>
+
 using namespace chakracore::jsrt;
 
 JsErrorCode RunScriptWithParserStateCore(
@@ -105,9 +107,8 @@ JsErrorCode CheckContext(JsrtContext *currentContext, bool verifyRuntimeState,
 /////////////////////
 
 //A create context function that we can funnel to for regular and record or debug aware creation
-JsErrorCode CreateContextCore(_In_ JsRuntimeHandle runtimeHandle, _In_ bool inRecordMode, _In_ bool activelyRecording, _In_ bool inReplayMode, _Out_ JsContextRef *newContext)
+JsErrorCode CreateContextCore(_In_ JsrtRuntime *runtime, _In_ bool inRecordMode, _In_ bool activelyRecording, _In_ bool inReplayMode, _Out_ JsContextRef *newContext)
 {
-    JsrtRuntime * runtime = JsrtRuntime::FromHandle(runtimeHandle);
     ThreadContext * threadContext = runtime->GetThreadContext();
 
     if(threadContext->GetRecycler() && threadContext->GetRecycler()->IsHeapEnumInProgress())
@@ -132,27 +133,18 @@ JsErrorCode CreateContextCore(_In_ JsRuntimeHandle runtimeHandle, _In_ bool inRe
     return JsNoError;
 }
 
-//A create runtime function that we can funnel to for regular and record or debug aware creation
-JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
-                              _In_opt_ JsThreadServiceCallback threadService,
-                              _Out_ JsRuntimeHandle *runtimeHandle)
+// A create runtime function that we can funnel to for regular and record or debug aware creation
+static JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtime)
 {
-    VALIDATE_ENTER_CURRENT_THREAD();
-
-    PARAM_NOT_NULL(runtimeHandle);
-    *runtimeHandle = nullptr;
-
     JsErrorCode runtimeResult = GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
         const JsRuntimeAttributes JsRuntimeAttributesAll =
             (JsRuntimeAttributes)(
             JsRuntimeAttributeDisableBackgroundWork |
             JsRuntimeAttributeAllowScriptInterrupt |
-            JsRuntimeAttributeEnableIdleProcessing |
             JsRuntimeAttributeDisableEval |
             JsRuntimeAttributeDisableNativeCodeGeneration |
             JsRuntimeAttributeDisableExecutablePageAllocation |
             JsRuntimeAttributeEnableExperimentalFeatures |
-            JsRuntimeAttributeDispatchSetExceptionsToDebugger |
             JsRuntimeAttributeDisableFatalOnOOM
             | JsRuntimeAttributeSerializeLibraryByteCode
         );
@@ -164,7 +156,7 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
         }
         AllocationPolicyManager * policyManager = HeapNew(AllocationPolicyManager, (attributes & JsRuntimeAttributeDisableBackgroundWork) == 0);
         bool enableExperimentalFeatures = (attributes & JsRuntimeAttributeEnableExperimentalFeatures) != 0;
-        ThreadContext * threadContext = HeapNew(ThreadContext, policyManager, threadService, enableExperimentalFeatures);
+        auto threadContext = std::make_unique<ThreadContext>(policyManager, nullptr, enableExperimentalFeatures);
 
         if ((attributes & JsRuntimeAttributeDisableBackgroundWork) != 0)
         {
@@ -212,12 +204,8 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
             threadContext->EnsureRecycler()->Prime();
         }
 
-        bool enableIdle = (attributes & JsRuntimeAttributeEnableIdleProcessing) == JsRuntimeAttributeEnableIdleProcessing;
-        bool dispatchExceptions = (attributes & JsRuntimeAttributeDispatchSetExceptionsToDebugger) == JsRuntimeAttributeDispatchSetExceptionsToDebugger;
-
-        JsrtRuntime * runtime = HeapNew(JsrtRuntime, threadContext, enableIdle, dispatchExceptions);
         threadContext->SetCurrentThreadId(ThreadContext::NoThread);
-        *runtimeHandle = runtime->ToHandle();
+        runtime = std::make_unique<JsrtRuntime>(std::move(threadContext));
 
         return JsNoError;
     });
@@ -225,66 +213,8 @@ JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes,
     return runtimeResult;
 }
 
-/////////////////////
-
-JsErrorCode chakracore::jsrt::JsCreateRuntime(_In_ JsRuntimeAttributes attributes, _In_opt_ JsThreadServiceCallback threadService, _Out_ JsRuntimeHandle *runtimeHandle)
-{
-    return CreateRuntimeCore(attributes,
-                             threadService, runtimeHandle
-                             /*optSnapInterval*/
-                             /*optLogLength*/);
-}
-
-JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *runtimeHandle) {
-    return JsCreateRuntime(attributes, nullptr, runtimeHandle);
-}
-
-template <CollectionFlags flags>
-JsErrorCode JsCollectGarbageCommon(JsRuntimeHandle runtimeHandle)
-{
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
-        VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-        ThreadContext * threadContext = JsrtRuntime::FromHandle(runtimeHandle)->GetThreadContext();
-
-        if (threadContext->GetRecycler() && threadContext->GetRecycler()->IsHeapEnumInProgress())
-        {
-            return JsErrorHeapEnumInProgress;
-        }
-        else if (threadContext->IsInThreadServiceCallback())
-        {
-            return JsErrorInThreadServiceCallback;
-        }
-
-        ThreadContextScope scope(threadContext);
-
-        if (!scope.IsValid())
-        {
-            return JsErrorWrongThread;
-        }
-
-        Recycler* recycler = threadContext->EnsureRecycler();
-        if (flags & CollectOverride_SkipStack)
-        {
-            Recycler::AutoEnterExternalStackSkippingGCMode autoGC(recycler);
-            recycler->CollectNow<flags>();
-        }
-        else
-        {
-            recycler->CollectNow<flags>();
-        }
-        return JsNoError;
-    });
-}
-
-JsErrorCode chakracore::jsrt::JsCollectGarbage(_In_ JsRuntimeHandle runtimeHandle)
-{
-    return JsCollectGarbageCommon<CollectNowExhaustive>(runtimeHandle);
-}
-
-JsErrorCode JsPrivateCollectGarbageSkipStack(_In_ JsRuntimeHandle runtimeHandle)
-{
-    return JsCollectGarbageCommon<CollectNowExhaustiveSkipStack>(runtimeHandle);
+JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtimeHandle) {
+    return CreateRuntimeCore(attributes, runtimeHandle);
 }
 
 JsErrorCode JsPrivateDetachArrayBuffer(_In_ JsValueRef ref, _Out_ void** detachedState)
@@ -303,57 +233,6 @@ JsErrorCode JsPrivateFreeDetachedArrayBuffer(_In_ void* detachedState)
     {
         auto state = reinterpret_cast<Js::ArrayBufferDetachedStateBase*>(detachedState);
         state->CleanUp();
-        return JsNoError;
-    });
-}
-
-JsErrorCode chakracore::jsrt::JsDisposeRuntime(_In_ JsRuntimeHandle runtimeHandle)
-{
-    return GlobalAPIWrapper_NoRecord([&] () -> JsErrorCode {
-        VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-        JsrtRuntime * runtime = JsrtRuntime::FromHandle(runtimeHandle);
-        ThreadContext * threadContext = runtime->GetThreadContext();
-        ThreadContextScope scope(threadContext);
-
-        // We should not dispose if the runtime is being used.
-        if (!scope.IsValid() ||
-            scope.WasInUse() ||
-            (threadContext->GetRecycler() && threadContext->GetRecycler()->IsHeapEnumInProgress()))
-        {
-            return JsErrorRuntimeInUse;
-        }
-        else if (threadContext->IsInThreadServiceCallback())
-        {
-            return JsErrorInThreadServiceCallback;
-        }
-
-        // Invoke and clear the callbacks while the contexts and runtime are still available
-        {
-            Recycler* recycler = threadContext->GetRecycler();
-            if (recycler != nullptr)
-            {
-                recycler->ClearObjectBeforeCollectCallbacks();
-            }
-        }
-        Js::ScriptContext *scriptContext;
-        for (scriptContext = threadContext->GetScriptContextList(); scriptContext; scriptContext = scriptContext->next)
-        {
-            scriptContext->MarkForClose();
-        }
-
-        // Close any open Contexts.
-        // We need to do this before recycler shutdown, because ScriptEngine->Close won't work then.
-        runtime->CloseContexts();
-
-        runtime->SetBeforeCollectCallback(nullptr, nullptr);
-        threadContext->CloseForJSRT();
-        HeapDelete(threadContext);
-
-        HeapDelete(runtime);
-
-        scope.Invalidate();
-
         return JsNoError;
     });
 }
@@ -461,49 +340,7 @@ JsErrorCode chakracore::jsrt::JsRelease(_In_ JsRef ref, _Out_opt_ unsigned int *
 
 JsErrorCode chakracore::jsrt::JsRelease(const JsRef &ref) { return JsRelease(ref, nullptr); }
 
-JsErrorCode chakracore::jsrt::JsSetObjectBeforeCollectCallback(_In_ JsRef ref, _In_opt_ void *callbackState, _In_ JsObjectBeforeCollectCallback objectBeforeCollectCallback)
-{
-    VALIDATE_JSREF(ref);
-
-    if (Js::TaggedNumber::Is(ref))
-    {
-        return JsErrorInvalidArgument;
-    }
-
-    if (JsrtContext::Is(ref))
-    {
-        return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
-        {
-            ThreadContext* threadContext = static_cast<JsrtContext *>(ref)->GetRuntime()->GetThreadContext();
-            Recycler * recycler = threadContext->GetRecycler();
-            recycler->SetObjectBeforeCollectCallback(ref, reinterpret_cast<Recycler::ObjectBeforeCollectCallback>(objectBeforeCollectCallback), callbackState,
-                reinterpret_cast<Recycler::ObjectBeforeCollectCallbackWrapper>(JsrtCallbackState::ObjectBeforeCallectCallbackWrapper), threadContext);
-            return JsNoError;
-        });
-    }
-    else
-    {
-        ThreadContext* threadContext = ThreadContext::GetContextForCurrentThread();
-        if (threadContext == nullptr)
-        {
-            return JsErrorNoCurrentContext;
-        }
-        Recycler * recycler = threadContext->GetRecycler();
-        return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode
-        {
-            if (!recycler->IsValidObject(ref))
-            {
-                return JsErrorInvalidArgument;
-            }
-
-            recycler->SetObjectBeforeCollectCallback(ref, reinterpret_cast<Recycler::ObjectBeforeCollectCallback>(objectBeforeCollectCallback), callbackState,
-                reinterpret_cast<Recycler::ObjectBeforeCollectCallbackWrapper>(JsrtCallbackState::ObjectBeforeCallectCallbackWrapper), threadContext);
-            return JsNoError;
-        });
-    }
-}
-
-JsErrorCode chakracore::jsrt::JsCreateContext(_In_ JsRuntimeHandle runtimeHandle, _Out_ JsContextRef *newContext)
+JsErrorCode chakracore::jsrt::JsCreateContext(_In_ JsrtRuntime *runtimeHandle, _Out_ JsContextRef *newContext)
 {
     return GlobalAPIWrapper([&]() -> JsErrorCode {
         PARAM_NOT_NULL(newContext);
@@ -2825,154 +2662,21 @@ JsErrorCode chakracore::jsrt::JsGetAndClearException(_Out_ JsValueRef *exception
 JsErrorCode chakracore::jsrt::JsSetException(_In_ JsValueRef exception)
 {
     return ContextAPINoScriptWrapper([&](Js::ScriptContext* scriptContext) -> JsErrorCode {
-        JsrtContext * context = JsrtContext::GetCurrent();
-        JsrtRuntime * runtime = context->GetRuntime();
-
-        ;
-
         VALIDATE_INCOMING_REFERENCE(exception, scriptContext);
 
-        Js::JavascriptExceptionObject *exceptionObject;
-        exceptionObject = RecyclerNew(scriptContext->GetRecycler(), Js::JavascriptExceptionObject, exception, scriptContext, nullptr);
+        Js::JavascriptExceptionObject *exceptionObject =
+            RecyclerNew(scriptContext->GetRecycler(), Js::JavascriptExceptionObject, exception, scriptContext, nullptr);
 
-        scriptContext->RecordException(exceptionObject, runtime->DispatchExceptions());
+        scriptContext->RecordException(exceptionObject, false);
 
         return JsNoError;
     });
-}
-
-JsErrorCode chakracore::jsrt::JsGetRuntimeMemoryUsage(_In_ JsRuntimeHandle runtimeHandle, _Out_ size_t * memoryUsage)
-{
-    VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-    PARAM_NOT_NULL(memoryUsage);
-    *memoryUsage = 0;
-
-    ThreadContext * threadContext = JsrtRuntime::FromHandle(runtimeHandle)->GetThreadContext();
-    AllocationPolicyManager * allocPolicyManager = threadContext->GetAllocationPolicyManager();
-
-    *memoryUsage = allocPolicyManager->GetUsage();
-
-    return JsNoError;
-}
-
-JsErrorCode chakracore::jsrt::JsSetRuntimeMemoryLimit(_In_ JsRuntimeHandle runtimeHandle, _In_ size_t memoryLimit)
-{
-    VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-    ThreadContext * threadContext = JsrtRuntime::FromHandle(runtimeHandle)->GetThreadContext();
-    AllocationPolicyManager * allocPolicyManager = threadContext->GetAllocationPolicyManager();
-
-    allocPolicyManager->SetLimit(memoryLimit);
-
-    return JsNoError;
-}
-
-JsErrorCode chakracore::jsrt::JsGetRuntimeMemoryLimit(_In_ JsRuntimeHandle runtimeHandle, _Out_ size_t * memoryLimit)
-{
-    VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-    PARAM_NOT_NULL(memoryLimit);
-    *memoryLimit = 0;
-
-    ThreadContext * threadContext = JsrtRuntime::FromHandle(runtimeHandle)->GetThreadContext();
-    AllocationPolicyManager * allocPolicyManager = threadContext->GetAllocationPolicyManager();
-
-    *memoryLimit = allocPolicyManager->GetLimit();
-
-    return JsNoError;
 }
 
 static_assert(JsMemoryAllocate == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryAllocate);
 static_assert(JsMemoryFree == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryFree);
 static_assert(JsMemoryFailure == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryFailure);
 static_assert(JsMemoryFailure == (_JsMemoryEventType) AllocationPolicyManager::MemoryAllocateEvent::MemoryMax);
-
-JsErrorCode chakracore::jsrt::JsSetRuntimeMemoryAllocationCallback(_In_ JsRuntimeHandle runtime, _In_opt_ void *callbackState, _In_ JsMemoryAllocationCallback allocationCallback)
-{
-    VALIDATE_INCOMING_RUNTIME_HANDLE(runtime);
-
-    ThreadContext* threadContext = JsrtRuntime::FromHandle(runtime)->GetThreadContext();
-    AllocationPolicyManager * allocPolicyManager = threadContext->GetAllocationPolicyManager();
-
-    allocPolicyManager->SetMemoryAllocationCallback(callbackState, (AllocationPolicyManager::PageAllocatorMemoryAllocationCallback)allocationCallback);
-
-    return JsNoError;
-}
-
-JsErrorCode chakracore::jsrt::JsSetRuntimeBeforeCollectCallback(_In_ JsRuntimeHandle runtime, _In_opt_ void *callbackState, _In_ JsBeforeCollectCallback beforeCollectCallback)
-{
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
-        VALIDATE_INCOMING_RUNTIME_HANDLE(runtime);
-
-        JsrtRuntime::FromHandle(runtime)->SetBeforeCollectCallback(beforeCollectCallback, callbackState);
-        return JsNoError;
-    });
-}
-
-JsErrorCode chakracore::jsrt::JsDisableRuntimeExecution(_In_ JsRuntimeHandle runtimeHandle)
-{
-    VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-    ThreadContext * threadContext = JsrtRuntime::FromHandle(runtimeHandle)->GetThreadContext();
-    if (!threadContext->TestThreadContextFlag(ThreadContextFlagCanDisableExecution))
-    {
-        return JsErrorCannotDisableExecution;
-    }
-
-    if (threadContext->GetRecycler() && threadContext->GetRecycler()->IsHeapEnumInProgress())
-    {
-        return JsErrorHeapEnumInProgress;
-    }
-    else if (threadContext->IsInThreadServiceCallback())
-    {
-        return JsErrorInThreadServiceCallback;
-    }
-
-    threadContext->DisableExecution();
-    return JsNoError;
-}
-
-JsErrorCode chakracore::jsrt::JsEnableRuntimeExecution(_In_ JsRuntimeHandle runtimeHandle)
-{
-    return GlobalAPIWrapper_NoRecord([&] () -> JsErrorCode {
-        VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-        ThreadContext * threadContext = JsrtRuntime::FromHandle(runtimeHandle)->GetThreadContext();
-        if (!threadContext->TestThreadContextFlag(ThreadContextFlagCanDisableExecution))
-        {
-            return JsNoError;
-        }
-
-        if (threadContext->GetRecycler() && threadContext->GetRecycler()->IsHeapEnumInProgress())
-        {
-            return JsErrorHeapEnumInProgress;
-        }
-        else if (threadContext->IsInThreadServiceCallback())
-        {
-            return JsErrorInThreadServiceCallback;
-        }
-
-        ThreadContextScope scope(threadContext);
-
-        if (!scope.IsValid())
-        {
-            return JsErrorWrongThread;
-        }
-
-        threadContext->EnableExecution();
-        return JsNoError;
-    });
-}
-
-JsErrorCode chakracore::jsrt::JsIsRuntimeExecutionDisabled(_In_ JsRuntimeHandle runtimeHandle, _Out_ bool *isDisabled)
-{
-    VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-    PARAM_NOT_NULL(isDisabled);
-    *isDisabled = false;
-
-    ThreadContext* threadContext = JsrtRuntime::FromHandle(runtimeHandle)->GetThreadContext();
-    *isDisabled = threadContext->IsExecutionDisabled();
-    return JsNoError;
-}
 
 inline JsErrorCode JsGetPropertyIdFromNameInternal(_In_z_ const char16_t *name, size_t cPropertyNameLength, _Out_ JsPropertyIdRef *propertyId)
 {
@@ -3075,56 +2779,6 @@ JsErrorCode chakracore::jsrt::JsGetPropertyIdType(_In_ JsPropertyIdRef propertyI
             *propertyIdType = JsPropertyIdTypeString;
         }
         return JsNoError;
-    });
-}
-
-
-JsErrorCode chakracore::jsrt::JsGetRuntime(_In_ JsContextRef context, _Out_ JsRuntimeHandle *runtime)
-{
-    VALIDATE_JSREF(context);
-    PARAM_NOT_NULL(runtime);
-
-    *runtime = nullptr;
-
-    if (!JsrtContext::Is(context))
-    {
-        return JsErrorInvalidArgument;
-    }
-
-    *runtime = static_cast<JsrtContext *>(context)->GetRuntime();
-    return JsNoError;
-}
-
-JsErrorCode chakracore::jsrt::JsIdle(_Out_opt_ unsigned int *nextIdleTick)
-{
-    PARAM_NOT_NULL(nextIdleTick);
-
-    return ContextAPINoScriptWrapper_NoRecord([&] (Js::ScriptContext * scriptContext) -> JsErrorCode {
-
-            *nextIdleTick = 0;
-
-            if (scriptContext->GetThreadContext()->GetRecycler() && scriptContext->GetThreadContext()->GetRecycler()->IsHeapEnumInProgress())
-            {
-                return JsErrorHeapEnumInProgress;
-            }
-            else if (scriptContext->GetThreadContext()->IsInThreadServiceCallback())
-            {
-                return JsErrorInThreadServiceCallback;
-            }
-
-            JsrtContext * context = JsrtContext::GetCurrent();
-            JsrtRuntime * runtime = context->GetRuntime();
-
-            if (!runtime->UseIdle())
-            {
-                return JsErrorIdleNotEnabled;
-            }
-
-            unsigned int ticks = runtime->Idle();
-
-            *nextIdleTick = ticks;
-
-            return JsNoError;
     });
 }
 
@@ -3340,19 +2994,9 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
             /* mod                 */ kmodGlobal,
             /* grfsi               */ 0
         };
-        bool isSerializeByteCodeForLibrary = false;
-        isSerializeByteCodeForLibrary = JsrtContext::GetCurrent()->GetRuntime()->IsSerializeByteCodeForLibrary();
-
         Js::Utf8SourceInfo* sourceInfo = nullptr;
         loadScriptFlag = (LoadScriptFlag)(loadScriptFlag | LoadScriptFlag_disableDeferredParse);
-        if (isSerializeByteCodeForLibrary)
-        {
-            loadScriptFlag = (LoadScriptFlag)(loadScriptFlag | LoadScriptFlag_isByteCodeBufferForLibrary);
-        }
-        else
-        {
-            loadScriptFlag = (LoadScriptFlag)(loadScriptFlag | LoadScriptFlag_Expression);
-        }
+        loadScriptFlag = (LoadScriptFlag)(loadScriptFlag | LoadScriptFlag_Expression);
         function = scriptContext->LoadScript(script, cb, &si, &se, &sourceInfo,
             Js::Constants::GlobalCode, loadScriptFlag, scriptSource);
         return JsNoError;
@@ -3385,8 +3029,6 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
         }
 
         LPCUTF8 utf8Code = sourceInfo->GetSource(u"JsSerializeScript");
-        uint32_t dwFlags = 0;
-        dwFlags = JsrtContext::GetCurrent()->GetRuntime()->IsSerializeByteCodeForLibrary() ? GENERATE_BYTE_CODE_BUFFER_LIBRARY : 0;
 
         BEGIN_TEMP_ALLOCATOR(tempAllocator, scriptContext, u"ByteCodeSerializer");
         // We cast buffer size to uint32_t* because on Windows, uint32_t = unsigned long = unsigned int
@@ -3395,7 +3037,7 @@ JsErrorCode JsSerializeScriptCore(const byte *script, size_t cb,
         int32_t hr = Js::ByteCodeSerializer::SerializeToBuffer(scriptContext,
             tempAllocator, static_cast<uint32_t>(cSourceCodeLength), utf8Code,
             functionBody, functionBody->GetHostSrcInfo(), &buffer,
-            (uint32_t*) bufferSize, dwFlags);
+            (uint32_t*) bufferSize);
         END_TEMP_ALLOCATOR(tempAllocator, scriptContext);
 
         if (SUCCEEDED(hr))

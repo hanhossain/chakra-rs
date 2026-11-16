@@ -5,55 +5,44 @@
 #pragma once
 
 #include "ChakraCore.h"
-#include "JsrtThreadService.h"
+
+#include <list>
+#include <memory>
 
 class JsrtContext;
+class ThreadContext;
 
+/// <summary>
+///     A Chakra runtime.
+/// </summary>
+/// <remarks>
+///     <para>
+///     Each Chakra runtime has its own independent execution engine, JIT compiler, and garbage
+///     collected heap. As such, each runtime is completely isolated from other runtimes.
+///     </para>
+///     <para>
+///     Runtimes can be used on any thread, but only one thread can call into a runtime at any
+///     time.
+///     </para>
+/// </remarks>
 class JsrtRuntime
 {
-    friend class JsrtContext;
-
 public:
-    JsrtRuntime(ThreadContext * threadContext, bool useIdle, bool dispatchExceptions);
+    JsrtRuntime(std::unique_ptr<ThreadContext> threadContext);
     ~JsrtRuntime();
 
-    ThreadContext * GetThreadContext() { return this->threadContext; }
+    ThreadContext * GetThreadContext() { return this->threadContext.get(); }
 
-    JsRuntimeHandle ToHandle() { return static_cast<JsRuntimeHandle>(this); }
-    static JsrtRuntime * FromHandle(JsRuntimeHandle runtimeHandle)
-    {
-        JsrtRuntime * runtime = static_cast<JsrtRuntime *>(runtimeHandle);
-        runtime->threadContext->ValidateThreadContext();
-        return runtime;
-    }
     static void Uninitialize();
 
-    bool UseIdle() const { return useIdle; }
-    unsigned int Idle();
+    // JsrtContext *GetFirstContext() { return contextList; }
+    // void SetFirstContext(JsrtContext *context) { contextList = context; }
 
-    bool DispatchExceptions() const { return dispatchExceptions; }
+    void Link(JsrtContext *context);
+    void Unlink(JsrtContext *context);
 
+private:
     void CloseContexts();
-    void SetBeforeCollectCallback(JsBeforeCollectCallback beforeCollectCallback, void * callbackContext);
-    void SetBeforeSweepCallback(JsBeforeSweepCallback beforeCollectCallback, void * callbackContext);
-
-    void SetSerializeByteCodeForLibrary(bool set) { serializeByteCodeForLibrary = set; }
-    bool IsSerializeByteCodeForLibrary() const { return serializeByteCodeForLibrary; }
-
-private:
-    static void RecyclerCollectCallbackStatic(void * context, RecyclerCollectCallBackFlags flags);
-
-private:
-    ThreadContext * threadContext;
-    AllocationPolicyManager* allocationPolicyManager;
-    JsrtContext * contextList;
-    ThreadContext::CollectCallBack * collectCallback;
-    JsBeforeCollectCallback beforeCollectCallback;
-    JsBeforeSweepCallback beforeSweepCallback;
-    void * beforeSweepCallbackContext;
-    JsrtThreadService threadService;
-    void * beforeCollectCallbackContext;
-    bool useIdle;
-    bool dispatchExceptions;
-    bool serializeByteCodeForLibrary;
+    std::unique_ptr<ThreadContext> threadContext;
+    std::list<JsrtContext *> contextList{};
 };

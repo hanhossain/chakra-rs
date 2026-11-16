@@ -6,20 +6,6 @@
 #include "JsrtExternalObject.h"
 #include "Types/PathTypeHandler.h"
 
-JsrtExternalType::JsrtExternalType(Js::ScriptContext* scriptContext, JsTraceCallback traceCallback, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype)
-    : Js::DynamicType(
-        scriptContext,
-        Js::TypeIds_Object,
-        prototype,
-        nullptr,
-        Js::PathTypeHandlerNoAttr::New(scriptContext, scriptContext->GetLibrary()->GetRootPath(), 0, 0, 0, true, true),
-        true,
-        true)
-    , jsTraceCallback(traceCallback)
-    , jsFinalizeCallback(finalizeCallback)
-{
-    this->flags |= TypeFlagMask_JsrtExternal;
-}
 JsrtExternalType::JsrtExternalType(Js::ScriptContext* scriptContext, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype)
     : Js::DynamicType(
         scriptContext,
@@ -29,7 +15,6 @@ JsrtExternalType::JsrtExternalType(Js::ScriptContext* scriptContext, JsFinalizeC
         Js::PathTypeHandlerNoAttr::New(scriptContext, scriptContext->GetLibrary()->GetRootPath(), 0, 0, 0, true, true),
         true,
         true)
-    , jsTraceCallback(nullptr)
     , jsFinalizeCallback(finalizeCallback)
 {
     this->flags |= TypeFlagMask_JsrtExternal;
@@ -74,42 +59,6 @@ JsrtExternalObject::JsrtExternalObject(JsrtExternalObject* instance, bool deepCo
 }
 
 /* static */
-JsrtExternalObject* JsrtExternalObject::Create(void *data, uint inlineSlotSize, JsTraceCallback traceCallback, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype, Js::ScriptContext *scriptContext, JsrtExternalType * type)
-{
-    if (prototype == nullptr)
-    {
-        prototype = scriptContext->GetLibrary()->GetObjectPrototype();
-    }
-    if (type == nullptr)
-    {
-        type = scriptContext->GetLibrary()->GetCachedJsrtExternalType(reinterpret_cast<uintptr_t>(traceCallback), finalizeCallback, reinterpret_cast<uintptr_t>(prototype));
-
-        if (type == nullptr)
-        {
-            type = RecyclerNew(scriptContext->GetRecycler(), JsrtExternalType, scriptContext, traceCallback, finalizeCallback, prototype);
-            scriptContext->GetLibrary()->CacheJsrtExternalType(reinterpret_cast<uintptr_t>(traceCallback), finalizeCallback, reinterpret_cast<uintptr_t>(prototype), type);
-        }
-    }
-
-    Assert(type->IsJsrtExternal());
-
-    JsrtExternalObject * externalObject;
-    if (traceCallback != nullptr)
-    {
-        externalObject = RecyclerNewTrackedPlus(scriptContext->GetRecycler(), inlineSlotSize, JsrtExternalObject, static_cast<JsrtExternalType*>(type), data, inlineSlotSize);
-    }
-    else if (finalizeCallback != nullptr) 
-    {
-        externalObject = RecyclerNewFinalizedPlus(scriptContext->GetRecycler(), inlineSlotSize, JsrtExternalObject, static_cast<JsrtExternalType*>(type), data, inlineSlotSize);
-    }
-    else
-    {
-        externalObject = RecyclerNewPlus(scriptContext->GetRecycler(), inlineSlotSize, JsrtExternalObject, static_cast<JsrtExternalType*>(type), data, inlineSlotSize);
-    }
-
-    return externalObject;
-}
-/* static */
 JsrtExternalObject* JsrtExternalObject::Create(void *data, uint inlineSlotSize, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype, Js::ScriptContext *scriptContext, JsrtExternalType * type)
 {
     if (prototype == nullptr)
@@ -148,11 +97,6 @@ JsrtExternalObject* JsrtExternalObject::Copy(bool deepCopy)
     JsrtExternalType* type = this->GetExternalType();
     int inlineSlotSize = this->GetInlineSlotSize();
 
-    if (type->GetJsTraceCallback() != nullptr)
-    {
-        return RecyclerNewTrackedPlus(recycler, inlineSlotSize, JsrtExternalObject, this, deepCopy);
-    }
-
     if (type->GetJsFinalizeCallback() != nullptr)
     {
         return RecyclerNewFinalizedPlus(recycler, inlineSlotSize, JsrtExternalObject, this, deepCopy);
@@ -161,27 +105,19 @@ JsrtExternalObject* JsrtExternalObject::Copy(bool deepCopy)
     return RecyclerNewPlus(recycler, inlineSlotSize, JsrtExternalObject, this, deepCopy);
 }
 
-void JsrtExternalObject::Mark(Recycler * recycler) 
+void JsrtExternalObject::Mark(Recycler *)
 {
-    recycler->SetNeedExternalWrapperTracing();
-    JsTraceCallback traceCallback = this->GetExternalType()->GetJsTraceCallback();
-    Assert(nullptr != traceCallback);
-    JsrtCallbackState scope(nullptr);
-    traceCallback(this->GetSlotData());
 }
 
-void JsrtExternalObject::Finalize(bool isShutdown)
+void JsrtExternalObject::Finalize(bool)
 {
     JsFinalizeCallback finalizeCallback = this->GetExternalType()->GetJsFinalizeCallback();
-    Assert(this->GetExternalType()->GetJsTraceCallback() != nullptr || finalizeCallback != nullptr);
-    if (nullptr != finalizeCallback)
-    {
-        JsrtCallbackState scope(nullptr);
-        finalizeCallback(this->GetSlotData());
-    }
+    Assert(finalizeCallback != nullptr);
+    JsrtCallbackState scope(nullptr);
+    finalizeCallback(this->GetSlotData());
 }
 
-void JsrtExternalObject::Dispose(bool isShutdown)
+void JsrtExternalObject::Dispose(bool)
 {
 }
 

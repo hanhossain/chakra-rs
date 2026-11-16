@@ -52,7 +52,10 @@ typedef uint8_t byte;
 typedef unsigned short char16_t;
 #endif
 
+#include <memory>
 #include <stdint.h>
+
+class JsrtRuntime;
 
     /// <summary>
     ///     An error code returned from a Chakra hosting API.
@@ -285,35 +288,6 @@ typedef unsigned short char16_t;
     } JsErrorCode;
 
     /// <summary>
-    ///     A handle to a Chakra runtime.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///     Each Chakra runtime has its own independent execution engine, JIT compiler, and garbage
-    ///     collected heap. As such, each runtime is completely isolated from other runtimes.
-    ///     </para>
-    ///     <para>
-    ///     Runtimes can be used on any thread, but only one thread can call into a runtime at any
-    ///     time.
-    ///     </para>
-    ///     <para>
-    ///     NOTE: A <c>JsRuntimeHandle</c>, unlike other object references in the Chakra hosting API,
-    ///     is not garbage collected since it contains the garbage collected heap itself. A runtime
-    ///     will continue to exist until <c>JsDisposeRuntime</c> is called.
-    ///     </para>
-    /// </remarks>
-    typedef void *JsRuntimeHandle;
-
-    /// <summary>
-    ///     An invalid runtime handle.
-    /// </summary>
-#ifdef __cplusplus
-    const JsRuntimeHandle JS_INVALID_RUNTIME_HANDLE = 0;
-#else
-    #define JS_INVALID_RUNTIME_HANDLE (JsRuntimeHandle)0
-#endif
-
-    /// <summary>
     ///     A reference to an object owned by the Chakra garbage collector.
     /// </summary>
     /// <remarks>
@@ -402,11 +376,6 @@ typedef unsigned short char16_t;
         /// </summary>
         JsRuntimeAttributeAllowScriptInterrupt = 0x00000002,
         /// <summary>
-        ///     Host will call <c>JsIdle</c>, so enable idle processing. Otherwise, the runtime will
-        ///     manage memory slightly more aggressively.
-        /// </summary>
-        JsRuntimeAttributeEnableIdleProcessing = 0x00000004,
-        /// <summary>
         ///     Runtime will not generate native code.
         /// </summary>
         JsRuntimeAttributeDisableNativeCodeGeneration = 0x00000008,
@@ -418,11 +387,6 @@ typedef unsigned short char16_t;
         ///     Runtime will enable all experimental features.
         /// </summary>
         JsRuntimeAttributeEnableExperimentalFeatures = 0x00000020,
-        /// <summary>
-        ///     Calling <c>JsSetException</c> will also dispatch the exception to the script debugger
-        ///     (if any) giving the debugger a chance to break on the exception.
-        /// </summary>
-        JsRuntimeAttributeDispatchSetExceptionsToDebugger = 0x00000040,
         /// <summary>
         ///     Disable Failfast fatal error on OOM
         /// </summary>
@@ -650,16 +614,6 @@ typedef unsigned short char16_t;
     typedef void (*JsBeforeCollectCallback)(_In_opt_ void *callbackState);
 
     /// <summary>
-    ///     A callback called before collecting an object.
-    /// </summary>
-    /// <remarks>
-    ///     Use <c>JsSetObjectBeforeCollectCallback</c> to register this callback.
-    /// </remarks>
-    /// <param name="ref">The object to be collected.</param>
-    /// <param name="callbackState">The state passed to <c>JsSetObjectBeforeCollectCallback</c>.</param>
-    typedef void (*JsObjectBeforeCollectCallback)(_In_ JsRef ref, _In_opt_ void *callbackState);
-
-    /// <summary>
     ///     A background work item callback.
     /// </summary>
     /// <remarks>
@@ -728,190 +682,20 @@ typedef unsigned short char16_t;
 
 namespace chakracore::jsrt
 {
+
     /// <summary>
     ///     Creates a new runtime.
     /// </summary>
     /// <param name="attributes">The attributes of the runtime to be created.</param>
-    /// <param name="threadService">The thread service for the runtime. Can be null.</param>
     /// <param name="runtime">The runtime created.</param>
-    /// <remarks>In the edge-mode binary, chakra.dll, this function lacks the <c>runtimeVersion</c>
-    /// parameter (compare to jsrt9.h).</remarks>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode 
-        JsCreateRuntime(
-            _In_ JsRuntimeAttributes attributes,
-            _In_opt_ JsThreadServiceCallback threadService,
-            _Out_ JsRuntimeHandle *runtime);
-
-/// <summary>
-///     Creates a new runtime.
-/// </summary>
-/// <param name="attributes">The attributes of the runtime to be created.</param>
-/// <param name="runtime">The runtime created.</param>
-/// <remarks>
-///     In the edge-mode binary, chakra.dll, this function lacks the <c>runtimeVersion</c>
-///     parameter (compare to jsrt9.h).
-/// </remarks>
-/// <returns>
-///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-/// </returns>
-JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, JsRuntimeHandle *runtime);
-
-    /// <summary>
-    ///     Performs a full garbage collection.
-    /// </summary>
-    /// <param name="runtime">The runtime in which the garbage collection will be performed.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode 
-        JsCollectGarbage(
-            _In_ JsRuntimeHandle runtime);
-
-    /// <summary>
-    ///     Disposes a runtime.
-    /// </summary>
     /// <remarks>
-    ///     Once a runtime has been disposed, all resources owned by it are invalid and cannot be used.
-    ///     If the runtime is active (i.e. it is set to be current on a particular thread), it cannot
-    ///     be disposed.
+    ///     In the edge-mode binary, chakra.dll, this function lacks the <c>runtimeVersion</c>
+    ///     parameter (compare to jsrt9.h).
     /// </remarks>
-    /// <param name="runtime">The runtime to dispose.</param>
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-    JsErrorCode 
-        JsDisposeRuntime(
-            _In_ JsRuntimeHandle runtime);
-
-    /// <summary>
-    ///     Gets the current memory usage for a runtime.
-    /// </summary>
-    /// <remarks>
-    ///     Memory usage can be always be retrieved, regardless of whether or not the runtime is active
-    ///     on another thread.
-    /// </remarks>
-    /// <param name="runtime">The runtime whose memory usage is to be retrieved.</param>
-    /// <param name="memoryUsage">The runtime's current memory usage, in bytes.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode 
-        JsGetRuntimeMemoryUsage(
-            _In_ JsRuntimeHandle runtime,
-            _Out_ size_t *memoryUsage);
-
-    /// <summary>
-    ///     Gets the current memory limit for a runtime.
-    /// </summary>
-    /// <remarks>
-    ///     The memory limit of a runtime can be always be retrieved, regardless of whether or not the
-    ///     runtime is active on another thread.
-    /// </remarks>
-    /// <param name="runtime">The runtime whose memory limit is to be retrieved.</param>
-    /// <param name="memoryLimit">
-    ///     The runtime's current memory limit, in bytes, or -1 if no limit has been set.
-    /// </param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode 
-        JsGetRuntimeMemoryLimit(
-            _In_ JsRuntimeHandle runtime,
-            _Out_ size_t *memoryLimit);
-
-    /// <summary>
-    ///     Sets the current memory limit for a runtime.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///     A memory limit will cause any operation which exceeds the limit to fail with an "out of
-    ///     memory" error. Setting a runtime's memory limit to -1 means that the runtime has no memory
-    ///     limit. New runtimes  default to having no memory limit. If the new memory limit exceeds
-    ///     current usage, the call will succeed and any future allocations in this runtime will fail
-    ///     until the runtime's memory usage drops below the limit.
-    ///     </para>
-    ///     <para>
-    ///     A runtime's memory limit can be always be set, regardless of whether or not the runtime is
-    ///     active on another thread.
-    ///     </para>
-    /// </remarks>
-    /// <param name="runtime">The runtime whose memory limit is to be set.</param>
-    /// <param name="memoryLimit">
-    ///     The new runtime memory limit, in bytes, or -1 for no memory limit.
-    /// </param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode 
-        JsSetRuntimeMemoryLimit(
-            _In_ JsRuntimeHandle runtime,
-            _In_ size_t memoryLimit);
-
-    /// <summary>
-    ///     Sets a memory allocation callback for specified runtime
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///     Registering a memory allocation callback will cause the runtime to call back to the host
-    ///     whenever it acquires memory from, or releases memory to, the OS. The callback routine is
-    ///     called before the runtime memory manager allocates a block of memory. The allocation will
-    ///     be rejected if the callback returns false. The runtime memory manager will also invoke the
-    ///     callback routine after freeing a block of memory, as well as after allocation failures.
-    ///     </para>
-    ///     <para>
-    ///     The callback is invoked on the current runtime execution thread, therefore execution is
-    ///     blocked until the callback completes.
-    ///     </para>
-    ///     <para>
-    ///     The return value of the callback is not stored; previously rejected allocations will not
-    ///     prevent the runtime from invoking the callback again later for new memory allocations.
-    ///     </para>
-    /// </remarks>
-    /// <param name="runtime">The runtime for which to register the allocation callback.</param>
-    /// <param name="callbackState">
-    ///     User provided state that will be passed back to the callback.
-    /// </param>
-    /// <param name="allocationCallback">
-    ///     Memory allocation callback to be called for memory allocation events.
-    /// </param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode 
-        JsSetRuntimeMemoryAllocationCallback(
-            _In_ JsRuntimeHandle runtime,
-            _In_opt_ void *callbackState,
-            _In_ JsMemoryAllocationCallback allocationCallback);
-
-    /// <summary>
-    ///     Sets a callback function that is called by the runtime before garbage collection.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///     The callback is invoked on the current runtime execution thread, therefore execution is
-    ///     blocked until the callback completes.
-    ///     </para>
-    ///     <para>
-    ///     The callback can be used by hosts to prepare for garbage collection. For example, by
-    ///     releasing unnecessary references on Chakra objects.
-    ///     </para>
-    /// </remarks>
-    /// <param name="runtime">The runtime for which to register the allocation callback.</param>
-    /// <param name="callbackState">
-    ///     User provided state that will be passed back to the callback.
-    /// </param>
-    /// <param name="beforeCollectCallback">The callback function being set.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode 
-        JsSetRuntimeBeforeCollectCallback(
-            _In_ JsRuntimeHandle runtime,
-            _In_opt_ void *callbackState,
-            _In_ JsBeforeCollectCallback beforeCollectCallback);
+JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtime);
 
     /// <summary>
     ///     Adds a reference to a garbage collected object.
@@ -974,31 +758,6 @@ JsErrorCode JsAddRef(const JsRef &ref);
 JsErrorCode JsRelease(const JsRef &ref);
 
     /// <summary>
-    ///     Sets a callback function that is called by the runtime before garbage collection of
-    ///     an object.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///     The callback is invoked on the current runtime execution thread, therefore execution is
-    ///     blocked until the callback completes.
-    ///     </para>
-    /// </remarks>
-    /// <param name="ref">The object for which to register the callback.</param>
-    /// <param name="callbackState">
-    ///     User provided state that will be passed back to the callback.
-    /// </param>
-    /// <param name="objectBeforeCollectCallback">The callback function being set. Use null to clear
-    ///     previously registered callback.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode 
-        JsSetObjectBeforeCollectCallback(
-            _In_ JsRef ref,
-            _In_opt_ void *callbackState,
-            _In_ JsObjectBeforeCollectCallback objectBeforeCollectCallback);
-
-    /// <summary>
     ///     Creates a script context for running scripts.
     /// </summary>
     /// <remarks>
@@ -1012,7 +771,7 @@ JsErrorCode JsRelease(const JsRef &ref);
     /// </returns>
     JsErrorCode 
         JsCreateContext(
-            _In_ JsRuntimeHandle runtime,
+            _In_ JsrtRuntime *runtime,
             _Out_ JsContextRef *newContext);
 
     /// <summary>
@@ -1077,48 +836,6 @@ JsErrorCode JsRelease(const JsRef &ref);
         JsSetContextData(
             _In_ JsContextRef context,
             _In_ void *data);
-
-    /// <summary>
-    ///     Gets the runtime that the context belongs to.
-    /// </summary>
-    /// <param name="context">The context to get the runtime from.</param>
-    /// <param name="runtime">The runtime the context belongs to.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode 
-        JsGetRuntime(
-            _In_ JsContextRef context,
-            _Out_ JsRuntimeHandle *runtime);
-
-    /// <summary>
-    ///     Tells the runtime to do any idle processing it needs to do.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///     If idle processing has been enabled for the current runtime, calling <c>JsIdle</c> will
-    ///     inform the current runtime that the host is idle and that the runtime can perform
-    ///     memory cleanup tasks.
-    ///     </para>
-    ///     <para>
-    ///     <c>JsIdle</c> can also return the number of system ticks until there will be more idle work
-    ///     for the runtime to do. Calling <c>JsIdle</c> before this number of ticks has passed will do
-    ///     no work.
-    ///     </para>
-    ///     <para>
-    ///     Requires an active script context.
-    ///     </para>
-    /// </remarks>
-    /// <param name="nextIdleTick">
-    ///     The next system tick when there will be more idle work to do. Can be null. Returns the
-    ///     maximum number of ticks if there no upcoming idle work to do.
-    /// </param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode 
-        JsIdle(
-            _Out_opt_ unsigned int *nextIdleTick);
 
     /// <summary>
     ///     Gets the symbol associated with the property ID.
@@ -2388,59 +2105,6 @@ JsErrorCode JsCreateExternalArrayBuffer(rust::Str content, JsValueRef *result);
     JsErrorCode
         JsSetException(
             _In_ JsValueRef exception);
-
-    /// <summary>
-    ///     Suspends script execution and terminates any running scripts in a runtime.
-    /// </summary>
-    /// <remarks>
-    ///     <para>
-    ///     Calls to a suspended runtime will fail until <c>JsEnableRuntimeExecution</c> is called.
-    ///     </para>
-    ///     <para>
-    ///     This API does not have to be called on the thread the runtime is active on. Although the
-    ///     runtime will be set into a suspended state, an executing script may not be suspended
-    ///     immediately; a running script will be terminated with an uncatchable exception as soon as
-    ///     possible.
-    ///     </para>
-    ///     <para>
-    ///     Suspending execution in a runtime that is already suspended is a no-op.
-    ///     </para>
-    /// </remarks>
-    /// <param name="runtime">The runtime to be suspended.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode
-        JsDisableRuntimeExecution(
-            _In_ JsRuntimeHandle runtime);
-
-    /// <summary>
-    ///     Enables script execution in a runtime.
-    /// </summary>
-    /// <remarks>
-    ///     Enabling script execution in a runtime that already has script execution enabled is a
-    ///     no-op.
-    /// </remarks>
-    /// <param name="runtime">The runtime to be enabled.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode
-        JsEnableRuntimeExecution(
-            _In_ JsRuntimeHandle runtime);
-
-    /// <summary>
-    ///     Returns a value that indicates whether script execution is disabled in the runtime.
-    /// </summary>
-    /// <param name="runtime">Specifies the runtime to check if execution is disabled.</param>
-    /// <param name="isDisabled">If execution is disabled, <c>true</c>, <c>false</c> otherwise.</param>
-    /// <returns>
-    ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
-    /// </returns>
-    JsErrorCode
-        JsIsRuntimeExecutionDisabled(
-            _In_ JsRuntimeHandle runtime,
-            _Out_ bool *isDisabled);
 
     /// <summary>
     ///     Sets a promise continuation callback function that is called by the context when a task

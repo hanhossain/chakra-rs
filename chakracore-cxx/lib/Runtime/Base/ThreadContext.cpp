@@ -157,7 +157,7 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     dynamicObjectEnumeratorCacheMap(&HeapAllocator::Instance, 16),
     //threadContextFlags(ThreadContextFlagNoFlag),
     configuration(enableExperimentalFeatures),
-    jsrtRuntime(nullptr),
+    isJsrtRuntime_(false),
     propertyMap(nullptr),
     rootPendingClose(nullptr),
     exceptionCode(0),
@@ -296,6 +296,10 @@ void ThreadContext::GlobalInitialize()
 
 ThreadContext::~ThreadContext()
 {
+    if (isJsrtRuntime_) {
+        CloseForJSRT();
+    }
+
     {
         std::unique_lock autocs(ThreadContext::GetMutex());
         ThreadContext::Unlink(this, &ThreadContext::globalListFirst, &ThreadContext::globalListLast);
@@ -417,16 +421,22 @@ ThreadContext::~ThreadContext()
 }
 
 void
-ThreadContext::SetJSRTRuntime(void* runtime)
+ThreadContext::SetJSRTRuntime(bool isJsrtRuntime)
 {
-    Assert(jsrtRuntime == nullptr);
-    jsrtRuntime = runtime;
+    assert(!isJsrtRuntime_);
+    isJsrtRuntime_ = isJsrtRuntime;
+}
+
+void ThreadContext::MarkContextsForClose() {
+    for (auto *scriptContext = GetScriptContextList(); scriptContext; scriptContext = scriptContext->next) {
+        scriptContext->MarkForClose();
+    }
 }
 
 void ThreadContext::CloseForJSRT()
 {
     // This is used for JSRT APIs only.
-    Assert(this->jsrtRuntime);
+    assert(isJsrtRuntime_);
     ShutdownThreads();
 }
 

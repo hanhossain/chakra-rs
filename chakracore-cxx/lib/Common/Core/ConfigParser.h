@@ -11,10 +11,6 @@
 class ConfigParserAPI
 {
 public:
-    // If the -Console flag is passed in, this method is called with a buffer
-    // The implementor will fill in the buffer and return true if a custom Console window title is desired
-    // To not change the console title, return false
-    static bool FillConsoleTitle(__ecount(cchBufferSize) char16_t* buffer, size_t cchBufferSize, char16_t* moduleName);
 };
 
 class ConfigParser

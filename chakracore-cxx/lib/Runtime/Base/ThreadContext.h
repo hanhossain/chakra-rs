@@ -1058,7 +1058,7 @@ private:
     // We report library code to profiler only if called directly by user code. Not if called by library implementation.
     bool isProfilingUserCode;
 
-    void* jsrtRuntime;
+    bool isJsrtRuntime_;
 
     bool hasUnhandledException;
     bool hasCatchHandler;
@@ -1262,6 +1262,7 @@ public:
     };
 
     ~ThreadContext();
+    void MarkContextsForClose();
     void CloseForJSRT();
 
     //Call back is called for one or more handles
@@ -1904,8 +1905,7 @@ public:
     }
 #endif
 
-    void* GetJSRTRuntime() const { return jsrtRuntime; }
-    void SetJSRTRuntime(void* runtime);
+    void SetJSRTRuntime(bool isJsrtRuntime);
 
 private:
     BOOL ExecuteRecyclerCollectionFunctionCommon(Recycler * recycler, CollectionFunction function, CollectionFlags flags);

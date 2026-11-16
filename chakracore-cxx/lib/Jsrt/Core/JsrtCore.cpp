@@ -767,37 +767,6 @@ JsErrorCode chakracore::jsrt::JsCreateCustomExternalObject(
     });
 }
 
-JsErrorCode chakracore::jsrt::JsCreateTracedExternalObject(
-    _In_opt_ void *data,
-    _In_opt_ size_t inlineSlotSize,
-    _In_opt_ JsTraceCallback traceCallback,
-    _In_opt_ JsFinalizeCallback finalizeCallback,
-    _In_opt_ JsValueRef prototype,
-    _Out_ JsValueRef *object)
-{
-    return ContextAPINoScriptWrapper([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
-        ;
-
-        PARAM_NOT_NULL(object);
-
-        Js::RecyclableObject * prototypeObject = nullptr;
-        if (prototype != JS_INVALID_REFERENCE)
-        {
-            VALIDATE_INCOMING_OBJECT_OR_NULL(prototype, scriptContext);
-            prototypeObject = Js::VarTo<Js::RecyclableObject>(prototype);
-        }
-        if (inlineSlotSize > UINT32_MAX)
-        {
-            return JsErrorInvalidArgument;
-        }
-        *object = JsrtExternalObject::Create(data, (uint)inlineSlotSize, traceCallback, finalizeCallback, prototypeObject, scriptContext, nullptr);
-
-        ;
-
-        return JsNoError;
-    });
-}
-
 JsErrorCode chakracore::jsrt::JsPrivateHasProperty(
     _In_ JsValueRef object,
     _In_ JsValueRef key,
@@ -1302,40 +1271,6 @@ JsErrorCode chakracore::jsrt::JsGetProxyProperties(_In_ JsValueRef object, _Out_
         /*allowInObjectBeforeCollectCallback*/true);
 }
 
-JsErrorCode chakracore::jsrt::JsSetRuntimeBeforeSweepCallback(_In_ JsRuntimeHandle runtimeHandle, _In_opt_ void *callbackState, _In_ JsBeforeSweepCallback beforeSweepCallback)
-{
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
-        VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-        JsrtRuntime::FromHandle(runtimeHandle)->SetBeforeSweepCallback(beforeSweepCallback, callbackState);
-        return JsNoError;
-    });
-}
-
-JsErrorCode chakracore::jsrt::JsSetRuntimeDomWrapperTracingCallbacks(
-    _In_ JsRuntimeHandle runtimeHandle,
-    _In_ JsRef wrapperTracingState,
-    _In_ JsDOMWrapperTracingCallback wrapperTracingCallback,
-    _In_ JsDOMWrapperTracingDoneCallback wrapperTracingDoneCallback,
-    _In_ JsDOMWrapperTracingEnterFinalPauseCallback enterFinalPauseCallback)
-{
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
-        VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-        ThreadContext * threadContext = JsrtRuntime::FromHandle(runtimeHandle)->GetThreadContext();
-        ThreadContextScope scope(threadContext);
-
-        if (!scope.IsValid())
-        {
-            return JsErrorWrongThread;
-        }
-
-        Recycler * recycler = threadContext->GetRecycler();
-        recycler->SetDOMWrapperTracingCallback(wrapperTracingState, reinterpret_cast<DOMWrapperTracingCallback>(wrapperTracingCallback), reinterpret_cast<DOMWrapperTracingDoneCallback>(wrapperTracingDoneCallback), reinterpret_cast<DOMWrapperTracingEnterFinalPauseCallback>(enterFinalPauseCallback));
-        return JsNoError;
-    });
-}
-
 JsErrorCode chakracore::jsrt::JsGetArrayForEachFunction(_Out_ JsValueRef * result)
 {
     return ContextAPINoScriptWrapper_NoRecord([&](Js::ScriptContext *scriptContext) -> JsErrorCode {
@@ -1427,48 +1362,6 @@ JsErrorCode chakracore::jsrt::JsGetIteratorPrototype(_Out_ JsValueRef * result)
         return JsNoError;
     },
         /*allowInObjectBeforeCollectCallback*/true);
-}
-
-JsErrorCode chakracore::jsrt::JsTraceExternalReference(_In_ JsRuntimeHandle runtimeHandle, _In_ JsValueRef value)
-{
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
-        VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-        ThreadContext * threadContext = JsrtRuntime::FromHandle(runtimeHandle)->GetThreadContext();
-        ThreadContextScope scope(threadContext);
-
-        if (!scope.IsValid())
-        {
-            return JsErrorWrongThread;
-        }
-
-        Recycler * recycler = threadContext->GetRecycler();
-        recycler->TryExternalMarkNonInterior(value);
-        return JsNoError;
-    });
-}
-
-JsErrorCode chakracore::jsrt::JsAllocRawData(_In_ JsRuntimeHandle runtimeHandle, _In_ size_t sizeInBytes, _In_ bool zeroed, _Out_ JsRef * buffer)
-{
-    PARAM_NOT_NULL(buffer);
-
-    return GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
-        VALIDATE_INCOMING_RUNTIME_HANDLE(runtimeHandle);
-
-        ThreadContext * threadContext = JsrtRuntime::FromHandle(runtimeHandle)->GetThreadContext();
-        ThreadContextScope scope(threadContext);
-
-        if (!scope.IsValid())
-        {
-            return JsErrorWrongThread;
-        }
-
-        Recycler * recycler = threadContext->GetRecycler();
-        *buffer = zeroed
-            ? RecyclerNewArrayZ(recycler, char, sizeInBytes)
-            : RecyclerNewArray(recycler, char, sizeInBytes);
-        return JsNoError;
-    });
 }
 
 JsErrorCode chakracore::jsrt::JsIsCallable(_In_ JsValueRef object, _Out_ bool *isCallable)

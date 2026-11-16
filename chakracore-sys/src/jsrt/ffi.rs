@@ -1,26 +1,11 @@
 use crate::jsrt::{JsContext, JsError, JsRefGuard, JsString};
 pub use bridge::{
     CVoid, JsErrorCode, JsModuleHostInfoKind, JsParseScriptAttributes, JsRuntimeAttributes,
-    JsValueType,
+    JsValueType, JsrtRuntime,
 };
 use std::ffi::c_void;
 use std::fmt::Formatter;
 use std::ops::Deref;
-
-#[repr(transparent)]
-#[derive(Copy, Clone, Default)]
-pub struct JsRuntimeHandle(*mut c_void);
-
-unsafe impl cxx::ExternType for JsRuntimeHandle {
-    type Id = cxx::type_id!("JsRuntimeHandle");
-    type Kind = cxx::kind::Trivial;
-}
-
-impl JsRuntimeHandle {
-    pub fn is_invalid(&self) -> bool {
-        self.0 == std::ptr::null_mut()
-    }
-}
 
 #[repr(transparent)]
 #[derive(Default, Copy, Clone)]
@@ -203,8 +188,6 @@ pub(super) mod bridge {
 
     extern "C++" {
         include!("ChakraCore.h");
-
-        type JsRuntimeHandle = super::JsRuntimeHandle;
         type JsContextRef = super::JsContextRef;
         type JsValueRef = super::JsValueRef;
         type JsPropertyIdRef = super::JsPropertyIdRef;
@@ -226,15 +209,19 @@ pub(super) mod bridge {
         type OptionalStr<'a> = crate::str_helper::OptionalStr<'a>;
     }
 
+    extern "C++" {
+        include!("JsrtRuntime.h");
+        type JsrtRuntime;
+    }
+
     #[namespace = "chakracore::jsrt"]
     unsafe extern "C++" {
-        unsafe fn JsCreateRuntime(
+        fn JsCreateRuntime(
             attributes: JsRuntimeAttributes,
-            runtime: *mut JsRuntimeHandle,
+            runtime: &mut UniquePtr<JsrtRuntime>,
         ) -> JsErrorCode;
-        fn JsDisposeRuntime(runtime: JsRuntimeHandle) -> JsErrorCode;
         unsafe fn JsCreateContext(
-            runtime: JsRuntimeHandle,
+            runtime: *mut JsrtRuntime,
             context: *mut JsContextRef,
         ) -> JsErrorCode;
         fn JsSetCurrentContext(context: JsContextRef) -> JsErrorCode;
@@ -460,6 +447,12 @@ pub(super) mod bridge {
         ) -> JsErrorCode;
     }
 
+    unsafe extern "C++" {
+        include!("jsrtHelper.h");
+
+        fn VALIDATE_ENTER_CURRENT_THREAD();
+    }
+
     impl CxxVector<JsValueRef> {}
 
     #[derive(Debug)]
@@ -584,7 +577,7 @@ pub(super) mod bridge {
         JsTransferableAlreadyDetached,
     }
 
-    #[derive(Debug)]
+    #[derive(Debug, BitAnd, BitOr)]
     enum JsRuntimeAttributes {
         /// No special attributes.
         JsRuntimeAttributeNone = 0x00000000,
@@ -594,18 +587,12 @@ pub(super) mod bridge {
         /// places where the runtime will check for a script interrupt request at the cost of a
         /// small amount of runtime performance.
         JsRuntimeAttributeAllowScriptInterrupt = 0x00000002,
-        /// Host will call <c>JsIdle</c>, so enable idle processing. Otherwise, the runtime will
-        /// manage memory slightly more aggressively.
-        JsRuntimeAttributeEnableIdleProcessing = 0x00000004,
         /// Runtime will not generate native code.
         JsRuntimeAttributeDisableNativeCodeGeneration = 0x00000008,
         /// Using `eval` or function constructor will throw an exception.
         JsRuntimeAttributeDisableEval = 0x00000010,
         /// Runtime will enable all experimental features.
         JsRuntimeAttributeEnableExperimentalFeatures = 0x00000020,
-        /// Calling JsSetException will also dispatch the exception to the script debugger
-        /// (if any) giving the debugger a chance to break on the exception.
-        JsRuntimeAttributeDispatchSetExceptionsToDebugger = 0x00000040,
         /// Disable Failfast fatal error on OOM
         JsRuntimeAttributeDisableFatalOnOOM = 0x00000080,
         /// Runtime will not allocate executable code pages.

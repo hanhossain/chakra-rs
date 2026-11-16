@@ -19,11 +19,6 @@ JsrtThreadService::~JsrtThreadService()
     Shutdown();
 }
 
-bool JsrtThreadService::Initialize(ThreadContext *threadContext)
-{
-    return ThreadServiceWrapperBase::Initialize(threadContext);
-}
-
 unsigned int JsrtThreadService::Idle()
 {
     unsigned int currentTicks = GetTickCount();

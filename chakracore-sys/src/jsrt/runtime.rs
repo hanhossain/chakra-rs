@@ -1,32 +1,24 @@
 use crate::jsrt::ffi::bridge;
-use crate::jsrt::{JsContext, JsContextRef, JsError, JsRuntimeAttributes, JsRuntimeHandle};
+use crate::jsrt::{JsContext, JsContextRef, JsError, JsRuntimeAttributes, JsrtRuntime};
+use cxx::UniquePtr;
 
 pub struct JsRuntime {
-    handle: JsRuntimeHandle,
+    handle: UniquePtr<JsrtRuntime>,
 }
 
 impl JsRuntime {
     pub fn create(attributes: JsRuntimeAttributes) -> Result<Self, JsError> {
-        let mut handle = JsRuntimeHandle::default();
-        unsafe {
-            bridge::JsCreateRuntime(attributes, &raw mut handle).as_result()?;
-        }
+        bridge::VALIDATE_ENTER_CURRENT_THREAD();
+        let mut handle = UniquePtr::null();
+        bridge::JsCreateRuntime(attributes, &mut handle).as_result()?;
         Ok(Self { handle })
     }
 
     pub fn create_context(&self) -> Result<JsContext, JsError> {
         let mut context = JsContextRef::default();
         unsafe {
-            bridge::JsCreateContext(self.handle, &raw mut context).as_result()?;
+            bridge::JsCreateContext(self.handle.as_mut_ptr(), &raw mut context).as_result()?;
         }
         Ok(JsContext(context))
-    }
-}
-
-impl Drop for JsRuntime {
-    fn drop(&mut self) {
-        if let Err(err) = bridge::JsDisposeRuntime(self.handle).as_result() {
-            tracing::warn!(?err, "Failed to dispose runtime");
-        }
     }
 }

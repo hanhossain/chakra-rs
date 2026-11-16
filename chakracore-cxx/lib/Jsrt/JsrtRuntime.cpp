@@ -6,31 +6,30 @@
 #include "jsrtHelper.h"
 #include "Base/ThreadContextTlsEntry.h"
 #include "Base/ThreadBoundThreadContextManager.h"
-JsrtRuntime::JsrtRuntime(ThreadContext * threadContext, bool useIdle, bool dispatchExceptions)
+JsrtRuntime::JsrtRuntime(std::unique_ptr<ThreadContext> threadContext)
 {
-    Assert(threadContext != NULL);
-    this->threadContext = threadContext;
-    this->contextList = NULL;
-    this->collectCallback = NULL;
-    this->beforeCollectCallback = NULL;
-    this->beforeCollectCallbackContext = NULL;
-    this->beforeSweepCallback = NULL;
-    this->beforeSweepCallbackContext = NULL;
-    this->allocationPolicyManager = threadContext->GetAllocationPolicyManager();
-    this->useIdle = useIdle;
-    this->dispatchExceptions = dispatchExceptions;
-    if (useIdle)
-    {
-        this->threadService.Initialize(threadContext);
-    }
-    threadContext->SetJSRTRuntime(this);
-
-    serializeByteCodeForLibrary = false;
+    this->threadContext = std::move(threadContext);
+    this->threadContext->SetJSRTRuntime(true);
 }
 
-JsrtRuntime::~JsrtRuntime()
-{
-    HeapDelete(allocationPolicyManager);
+JsrtRuntime::~JsrtRuntime() {
+    ThreadContextScope scope{threadContext.get()};
+
+    // Invoke and clear the callbacks while the contexts and runtime are still available
+    {
+        Recycler *recycler = threadContext->GetRecycler();
+        if (recycler != nullptr) {
+            recycler->ClearObjectBeforeCollectCallbacks();
+        }
+    }
+
+    threadContext->MarkContextsForClose();
+
+    // Close any open Contexts.
+    // We need to do this before recycler shutdown, because ScriptEngine->Close won't work then.
+    CloseContexts();
+    threadContext.reset();
+    scope.Invalidate();
 }
 
 // This is called at process detach.
@@ -56,106 +55,17 @@ void JsrtRuntime::Uninitialize()
     }
 }
 
+void JsrtRuntime::Link(JsrtContext *context) {
+    contextList.push_front(context);
+}
+void JsrtRuntime::Unlink(JsrtContext *context) {
+    contextList.remove(context);
+}
+
 void JsrtRuntime::CloseContexts()
 {
-    while (this->contextList != NULL)
-    {
-        this->contextList->Dispose(false);
-        // This will remove it from the list
+    for (auto *context : contextList) {
+        context->DisposeNoUnlink();
     }
-}
-
-void JsrtRuntime::SetBeforeCollectCallback(JsBeforeCollectCallback beforeCollectCallback, void * callbackContext)
-{
-    if (beforeCollectCallback != nullptr)
-    {
-        if (this->collectCallback == nullptr)
-        {
-            this->collectCallback = this->threadContext->AddRecyclerCollectCallBack(RecyclerCollectCallbackStatic, this);
-        }
-
-        this->beforeCollectCallback = beforeCollectCallback;
-        this->beforeCollectCallbackContext = callbackContext;
-    }
-    else
-    {
-        if (this->collectCallback != nullptr
-            && this->beforeSweepCallback == nullptr
-            )
-        {
-            this->threadContext->RemoveRecyclerCollectCallBack(this->collectCallback);
-            this->collectCallback = nullptr;
-        }
-
-        this->beforeCollectCallback = nullptr;
-        this->beforeCollectCallbackContext = nullptr;
-    }
-}
-
-void JsrtRuntime::SetBeforeSweepCallback(JsBeforeSweepCallback afterCollectCallback, void * callbackContext)
-{
-    if (afterCollectCallback != nullptr)
-    {
-        if (this->collectCallback == nullptr)
-        {
-            this->collectCallback = this->threadContext->AddRecyclerCollectCallBack(RecyclerCollectCallbackStatic, this);
-        }
-
-        this->beforeSweepCallback = afterCollectCallback;
-        this->beforeSweepCallbackContext = callbackContext;
-    }
-    else
-    {
-        if (this->collectCallback != nullptr && this->beforeCollectCallback == nullptr)
-        {
-            this->threadContext->RemoveRecyclerCollectCallBack(this->collectCallback);
-            this->collectCallback = nullptr;
-        }
-
-        this->beforeSweepCallback = nullptr;
-        this->beforeSweepCallbackContext = nullptr;
-    }
-}
-
-void JsrtRuntime::RecyclerCollectCallbackStatic(void * context, RecyclerCollectCallBackFlags flags)
-{
-    if (flags & Collect_Begin)
-    {
-        JsrtRuntime * _this = reinterpret_cast<JsrtRuntime *>(context);
-        if (_this->beforeCollectCallback == nullptr) 
-        {
-            return;
-        }
-        try
-        {
-            JsrtCallbackState scope(reinterpret_cast<ThreadContext*>(_this->GetThreadContext()));
-            _this->beforeCollectCallback(_this->beforeCollectCallbackContext);
-        }
-        catch (...)
-        {
-            AssertMsg(false, "Unexpected non-engine exception.");
-        }
-    }
-    else if (flags & Collect_Begin_Sweep)
-    {
-        JsrtRuntime * _this = reinterpret_cast<JsrtRuntime *>(context);
-        if (_this->beforeSweepCallback == nullptr)
-        {
-            return;
-        }
-        try
-        {
-            JsrtCallbackState scope(reinterpret_cast<ThreadContext*>(_this->GetThreadContext()));
-            _this->beforeSweepCallback(_this->beforeSweepCallbackContext);
-        }
-        catch (...)
-        {
-            AssertMsg(false, "Unexpected non-engine exception.");
-        }
-    }
-}
-
-unsigned int JsrtRuntime::Idle()
-{
-    return this->threadService.Idle();
+    contextList.clear();
 }

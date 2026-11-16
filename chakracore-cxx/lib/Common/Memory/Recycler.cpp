@@ -6298,47 +6298,6 @@ Recycler::SetProfiler(Js::Profiler * profiler, Js::Profiler * backgroundProfiler
 }
 #endif
 
-void Recycler::SetObjectBeforeCollectCallback(void* object,
-    ObjectBeforeCollectCallback callback,
-    void* callbackState,
-    ObjectBeforeCollectCallbackWrapper callbackWrapper,
-    void* threadContext)
-{
-    if (objectBeforeCollectCallbackState == ObjectBeforeCollectCallback_Shutdown)
-    {
-        return; // NOP at shutdown
-    }
-
-    if (this->objectBeforeCollectCallbackList == nullptr)
-    {
-        if (callback == nullptr) return;
-        this->objectBeforeCollectCallbackList = Anew(&this->objectBeforeCollectCallbackArena, ObjectBeforeCollectCallbackList, &this->objectBeforeCollectCallbackArena);
-    }
-
-    if (callback)
-    {
-        this->objectBeforeCollectCallbackList->Push(ObjectBeforeCollectCallbackData(object, callbackWrapper, callback, callbackState, threadContext));
-
-        if (this->IsInObjectBeforeCollectCallback()) // revive
-        {
-            this->ScanMemory<false>(&object, sizeof(object));
-            this->ProcessMark(/*background*/false);
-        }
-    }
-    else
-    {
-        // null callback means unregister
-        FOREACH_SLIST_ENTRY_EDITING(ObjectBeforeCollectCallbackData, callbackData, this->objectBeforeCollectCallbackList, iter)
-        {
-            if (callbackData.object == object)
-            {
-                iter.RemoveCurrent();
-            }
-        } NEXT_SLIST_ENTRY_EDITING;
-    }
-
-}
-
 void Recycler::SetDOMWrapperTracingCallback(void * state, DOMWrapperTracingCallback tracingCallback, DOMWrapperTracingDoneCallback tracingDoneCallback, DOMWrapperTracingEnterFinalPauseCallback enterFinalPauseCallback)
 {
     Assert(state);

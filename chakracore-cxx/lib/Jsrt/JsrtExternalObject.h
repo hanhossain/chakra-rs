@@ -30,18 +30,13 @@ class JsrtExternalType : public Js::DynamicType
 public:
     JsrtExternalType(JsrtExternalType *type) :
         Js::DynamicType(type),
-        jsTraceCallback(type->jsTraceCallback),
         jsFinalizeCallback(type->jsFinalizeCallback) {}
-    JsrtExternalType(Js::ScriptContext* scriptContext, JsTraceCallback traceCallback, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype);
     JsrtExternalType(Js::ScriptContext* scriptContext, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype);
 
-    //Js::PropertyId GetNameId() const { return ((Js::PropertyRecord *)typeDescription.className)->GetPropertyId(); }
-    JsTraceCallback GetJsTraceCallback() const { return this->jsTraceCallback; }
     JsFinalizeCallback GetJsFinalizeCallback() const { return this->jsFinalizeCallback; }
 
 private:
     typename WriteBarrierFieldTypeTraits<JsFinalizeCallback const, _no_write_barrier_policy, _no_write_barrier_policy>::Type jsFinalizeCallback;
-    typename WriteBarrierFieldTypeTraits<JsTraceCallback const, _no_write_barrier_policy, _no_write_barrier_policy>::Type jsTraceCallback;
 };
 
 class JsrtExternalObject : public Js::DynamicObject
@@ -61,7 +56,6 @@ public:
     JsrtExternalObject(JsrtExternalType * type, void *data, uint inlineSlotSize);
     JsrtExternalObject(JsrtExternalObject* instance, bool deepCopy);
 
-    static JsrtExternalObject * Create(void *data, uint inlineSlotSize, JsTraceCallback traceCallback, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype, Js::ScriptContext *scriptContext, JsrtExternalType * type);
     static JsrtExternalObject * Create(void *data, uint inlineSlotSize, JsFinalizeCallback finalizeCallback, Js::RecyclableObject * prototype, Js::ScriptContext *scriptContext, JsrtExternalType * type);
 
     virtual JsrtExternalObject* Copy(bool deepCopy) override;
