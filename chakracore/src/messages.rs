@@ -1,9 +1,9 @@
-use crate::jsrt::run::JsRun;
-use crate::jsrt::{
+use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
+use chakracore_sys::jsrt::run::JsRun;
+use chakracore_sys::jsrt::{
     ChakraRt, JsError, JsFunction, JsModule, JsParseScriptAttributes, JsRef, JsRefGuard,
     JsSourceContext, JsValueRef, JsValueType,
 };
-use crate::wscript_jsrt::{MODULE_ERROR_MAP, MODULE_RECORD_MAP, ModuleState, WScript};
 
 #[derive(Eq, PartialEq)]
 enum MessageInner {

@@ -1,12 +1,12 @@
-use crate::jsrt::buffer::{JsExternalArrayBuffer, JsSharedArrayBufferContent};
-use crate::jsrt::run::JsRun;
-use crate::jsrt::runtime::JsRuntime;
-use crate::jsrt::{
+use crate::wscript_jsrt::WScript;
+use crate::wscript_jsrt::pal::{CloseHandle, Handle, WaitForMultipleObjects};
+use chakracore_sys::jsrt::buffer::{JsExternalArrayBuffer, JsSharedArrayBufferContent};
+use chakracore_sys::jsrt::run::JsRun;
+use chakracore_sys::jsrt::runtime::JsRuntime;
+use chakracore_sys::jsrt::{
     ChakraRt, JsContextGuard, JsError, JsFunction, JsParseScriptAttributes, JsRuntimeAttributes,
     JsSourceContext, JsValueRef,
 };
-use crate::wscript_jsrt::ffi::{CloseHandle, WaitForMultipleObjects};
-use crate::wscript_jsrt::{Handle, WScript};
 use std::cell::Cell;
 use std::rc::Rc;
 use std::sync::{Mutex, mpsc};

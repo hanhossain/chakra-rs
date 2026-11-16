@@ -22,8 +22,6 @@
 #include <rust/cxx.h>
 #include <functional>
 
-using CVoid = void;
-
 // Begin ChakraCore only APIs
 
 /// <summary>

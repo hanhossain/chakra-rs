@@ -1,4 +1,8 @@
 pub mod chhelper;
+mod filesystem;
+mod message_queue;
+mod messages;
+mod wscript_jsrt;
 
 use crate::chhelper::execute_test;
 use chakracore_sys::config::ConfigContext;

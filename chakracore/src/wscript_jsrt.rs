@@ -1,20 +1,21 @@
 pub mod cache;
 mod tls;
 
-use crate::config::ConfigContext;
-use crate::helpers;
-use crate::jsrt::buffer::{JsArrayBuffer, JsExternalArrayBuffer};
-use crate::jsrt::run::JsRun;
-use crate::jsrt::runtime::JsRuntime;
-use crate::jsrt::{
-    ChakraRt, IntoResponse, JsArray, JsError, JsErrorCode, JsFunction, JsModule, JsModuleRecord,
-    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsProxyProperties, JsSourceContext,
-    JsString, JsValueRef, JsValueType, ParseScriptError,
-};
 use crate::message_queue::MessageQueue;
 use crate::messages::Message;
 use crate::wscript_jsrt::cache::ScriptCache;
 use crate::wscript_jsrt::tls::ThreadData;
+use chakracore_sys::config::ConfigContext;
+use chakracore_sys::jsrt::buffer::{JsArrayBuffer, JsExternalArrayBuffer};
+use chakracore_sys::jsrt::run::JsRun;
+use chakracore_sys::jsrt::runtime::JsRuntime;
+use chakracore_sys::jsrt::{
+    ChakraRt, JsArray, JsError, JsErrorCode, JsFunction, JsModule, JsModuleRecord,
+    JsNativeFunctionArgs, JsObject, JsParseScriptAttributes, JsProxyProperties, JsSourceContext,
+    JsString, JsValueRef, JsValueType, ParseScriptError,
+};
+use chakracore_sys::runtime::platform_agnostic;
+use chakracore_sys::{helpers, pal};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::hash::Hash;
@@ -41,49 +42,6 @@ pub(crate) static MODULE_DIRECTORY_MAP: LazyLock<ModuleDirectoryMap> =
 
 thread_local! {
     static THREAD_DATA: RefCell<Rc<ThreadData>> = RefCell::new(Rc::new(ThreadData::new()));
-}
-
-#[repr(transparent)]
-#[derive(Default, Clone)]
-pub struct Handle(*mut std::ffi::c_void);
-
-impl Handle {
-    fn is_null(&self) -> bool {
-        self.0.is_null()
-    }
-}
-
-unsafe impl cxx::ExternType for Handle {
-    type Id = cxx::type_id!("HANDLE");
-    type Kind = cxx::kind::Trivial;
-}
-
-#[cxx::bridge]
-mod ffi {
-    unsafe extern "C++" {
-        include!("ChakraCore.h");
-        include!("PlatformAgnostic/ChakraICU.h");
-        type CVoid = crate::jsrt::CVoid;
-
-        #[namespace = "PlatformAgnostic::ICUHelpers"]
-        fn GetICUMajorVersion() -> i32;
-    }
-
-    unsafe extern "C++" {
-        include!("pal_ffi/pal_thread_ffi.h");
-        #[cxx_name = "HANDLE"]
-        type Handle = super::Handle;
-        #[namespace = "pal_ffi"]
-        unsafe fn CreateThread(
-            func: unsafe fn(*mut CVoid, Handle) -> u32,
-            param: *mut CVoid,
-            creation_flags: u32,
-        ) -> Handle;
-        #[namespace = "pal_ffi"]
-        fn WaitForMultipleObjects(handles: &[Handle], wait_all: bool) -> u32;
-        #[namespace = "pal_ffi"]
-        fn CloseHandle(handle: &Handle) -> bool;
-    }
 }
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
@@ -127,7 +85,7 @@ impl WScript {
 
     #[tracing::instrument(skip_all, err)]
     pub fn initialize(&self, runtime: &JsRuntime) -> Result<(), JsError> {
-        let icu_version = ffi::GetICUMajorVersion();
+        let icu_version = platform_agnostic::GetICUMajorVersion();
 
         let mut wscript_object = ChakraRt::create_object()?;
 
@@ -995,7 +953,7 @@ impl WScript {
             });
             unsafe {
                 // TODO (existing): need to add a switch in case we don't need to wait for child initial script completion
-                ffi::CreateThread(
+                pal::CreateThread(
                     |param, thread_handle| {
                         let param: *mut ThreadDataContext = std::mem::transmute(param);
                         let thread_data_context = Box::from_raw(param);
@@ -1204,16 +1162,6 @@ enum LoadScriptError {
     },
     #[error(transparent)]
     OneshotRecvError(#[from] oneshot::error::RecvError),
-}
-
-impl IntoResponse for anyhow::Error {
-    fn into_response(self) -> JsValueRef {
-        tracing::error!(?self);
-
-        // TODO: should this pass the debug representation instead?
-        ChakraRt::create_and_set_exception(&self.to_string());
-        ChakraRt::get_undefined_value().unwrap_or_default()
-    }
 }
 
 // TODO: error can be a field in ModuleRecordEntry instead of its own hashmap
