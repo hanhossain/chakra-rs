@@ -197,9 +197,12 @@ impl JsRef {
 #[cxx::bridge]
 pub(super) mod bridge {
     extern "C++" {
-        include!("ChakraCore.h");
-
+        include!("chakracore-sys/include/ffi_types.h");
         type CVoid;
+    }
+
+    extern "C++" {
+        include!("ChakraCore.h");
 
         type JsRuntimeHandle = super::JsRuntimeHandle;
         type JsContextRef = super::JsContextRef;

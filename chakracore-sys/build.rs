@@ -2,14 +2,14 @@ use std::path::{Path, PathBuf};
 
 fn main() {
     let bridges = [
-        "src/chhelper.rs",
+        "src/common/util.rs",
         "src/config.rs",
-        "src/filesystem.rs",
         "src/helpers.rs",
         "src/jsrt/ffi.rs",
         "src/logger.rs",
+        "src/pal.rs",
+        "src/runtime/platform_agnostic.rs",
         "src/str_helper.rs",
-        "src/wscript_jsrt.rs",
     ];
     let mut cxx_bridge = cxx_build::bridges(bridges);
 

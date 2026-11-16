@@ -1,4 +1,6 @@
 use crate::Error;
+use crate::wscript_jsrt::WScript;
+use crate::wscript_jsrt::cache::ScriptCache;
 use chakracore_sys::config::ConfigContext;
 use chakracore_sys::helpers;
 use chakracore_sys::jsrt::buffer::{JsArrayBuffer, JsExternalArrayBuffer};
@@ -7,8 +9,6 @@ use chakracore_sys::jsrt::runtime::JsRuntime;
 use chakracore_sys::jsrt::{
     ChakraRt, JsError, JsParseScriptAttributes, JsRuntimeAttributes, JsSourceContext, JsValueRef,
 };
-use chakracore_sys::wscript_jsrt::WScript;
-use chakracore_sys::wscript_jsrt::cache::ScriptCache;
 use std::ffi::{CStr, CString, c_char};
 use std::str::FromStr;
 

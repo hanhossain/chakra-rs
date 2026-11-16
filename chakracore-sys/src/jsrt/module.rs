@@ -6,7 +6,8 @@ use crate::jsrt::{
 
 #[derive(Eq, PartialEq)]
 pub struct JsModule {
-    pub(crate) record: JsModuleRecord,
+    // TODO: remove pub
+    pub record: JsModuleRecord,
     guard: JsRefGuard,
 }
 
@@ -19,7 +20,8 @@ impl JsModule {
         Self::new(record)
     }
 
-    pub(crate) fn new(module: JsModuleRecord) -> Result<Self, JsError> {
+    // TODO: remove pub
+    pub fn new(module: JsModuleRecord) -> Result<Self, JsError> {
         let guard = JsRef::add_ref(&module)?;
         Ok(Self {
             record: module,

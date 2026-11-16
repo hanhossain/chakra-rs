@@ -413,6 +413,16 @@ pub trait IntoResponse {
     fn into_response(self) -> JsValueRef;
 }
 
+impl IntoResponse for anyhow::Error {
+    fn into_response(self) -> JsValueRef {
+        tracing::error!(?self);
+
+        // TODO: should this pass the debug representation instead?
+        ChakraRt::create_and_set_exception(&self.to_string());
+        ChakraRt::get_undefined_value().unwrap_or_default()
+    }
+}
+
 impl IntoResponse for JsValueRef {
     fn into_response(self) -> JsValueRef {
         self
