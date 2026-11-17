@@ -1402,7 +1402,7 @@ LargeHeapBlock::RescanMultiPage(Recycler * recycler, RescanFlags flags)
 
                 // We're interested in only rescanning the parts of the object that have changed, not the whole
                 // object. So just queue that up for marking
-                char * checkEnd = min(pageStart + AutoSystemInfo::PageSize, objectAddressEnd);
+                char * checkEnd = std::min(pageStart + AutoSystemInfo::PageSize, objectAddressEnd);
 
 #ifdef RECYCLER_VISITED_HOST
                 if (tracedObject)

@@ -397,7 +397,7 @@ RecyclerSweepManager::AdjustPartialHeuristics()
     const size_t estimatedPartialReuseBlocks = static_cast<size_t>(static_cast<double>(this->reuseHeapBlockCount) * (1.0 - collectEfficacy));
     const size_t estimatedPartialReuseBytes = estimatedPartialReuseBlocks * AutoSystemInfo::PageSize;
 
-    const size_t newRescanRootBytes = max(this->rescanRootBytes, estimatedPartialReuseBytes);
+    const size_t newRescanRootBytes = std::max(this->rescanRootBytes, estimatedPartialReuseBytes);
 
     RECYCLER_STATS_SET(recycler, estimatedPartialReuseBytes, estimatedPartialReuseBytes);
 

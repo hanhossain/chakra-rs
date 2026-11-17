@@ -296,7 +296,7 @@ using namespace Js;
             return false;
         }
         uint32_t val = static_cast<uint32_t>(str[0] - u'0');
-        int calcLen = min(length, 9);
+        int calcLen = std::min(length, 9);
         for (int i = 1; i < calcLen; i++)
         {
             if ((str[i] < u'0')|| (str[i] > u'9'))

@@ -193,7 +193,7 @@ SetCacheBlock(BigBlock * newCacheBlock)
         }
         else
         {
-            largestHole = max(largestHole, static_cast<size_t>(cacheBlockRemainBytes));
+            largestHole = std::max(largestHole, static_cast<size_t>(cacheBlockRemainBytes));
         }
     }
     cacheBlockCurrent = newCacheBlock->GetBytes() + newCacheBlock->currentByte;
@@ -248,7 +248,7 @@ SnailAlloc(size_t nbytes)
 
                 return(p);
             }
-            currentLargestHole = max(currentLargestHole, remainingBytes);
+            currentLargestHole = std::max(currentLargestHole, remainingBytes);
             if (--giveUpAfter == 0)
             {
                 break;
@@ -833,7 +833,7 @@ bool StandAloneFreeListPolicy::TryEnsureFreeListEntry(StandAloneFreeListPolicy *
             Assert(_this->used == _this->allocated);
 
             StandAloneFreeListPolicy * oldThis = _this;
-            uint entries = oldThis->allocated + min(oldThis->allocated, MaxEntriesGrowth);
+            uint entries = oldThis->allocated + std::min(oldThis->allocated, MaxEntriesGrowth);
             StandAloneFreeListPolicy * newThis = NewInternal(entries);
             if (NULL != newThis)
             {

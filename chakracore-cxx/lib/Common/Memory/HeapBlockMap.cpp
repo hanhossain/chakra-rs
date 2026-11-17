@@ -48,7 +48,7 @@ HeapBlockMap32::EnsureHeapBlock(void * address, uint pageCount)
     uint id1 = GetLevel1Id(address);
     uint id2 = GetLevel2Id(address);
 
-    uint currentPageCount = min(pageCount, L2Count - id2);
+    uint currentPageCount = std::min(pageCount, L2Count - id2);
 
     while (true)
     {
@@ -75,7 +75,7 @@ HeapBlockMap32::EnsureHeapBlock(void * address, uint pageCount)
 
         id2 = 0;
         id1++;
-        currentPageCount = min(pageCount, L2Count);
+        currentPageCount = std::min(pageCount, L2Count);
     }
 
     return true;
@@ -87,7 +87,7 @@ HeapBlockMap32::SetHeapBlockNoCheck(void * address, uint pageCount, HeapBlock * 
     uint id1 = GetLevel1Id(address);
     uint id2 = GetLevel2Id(address);
 
-    uint currentPageCount = min(pageCount, L2Count - id2);
+    uint currentPageCount = std::min(pageCount, L2Count - id2);
 
     while (true)
     {
@@ -103,7 +103,7 @@ HeapBlockMap32::SetHeapBlockNoCheck(void * address, uint pageCount, HeapBlock * 
 
         id2 = 0;
         id1++;
-        currentPageCount = min(pageCount, Memory::HeapBlockMap32::L2Count);
+        currentPageCount = std::min(pageCount, Memory::HeapBlockMap32::L2Count);
     }
 }
 
@@ -128,7 +128,7 @@ HeapBlockMap32::ClearHeapBlock(void * address, uint pageCount)
     uint id1 = GetLevel1Id(address);
     uint id2 = GetLevel2Id(address);
 
-    uint currentPageCount = min(pageCount, L2Count - id2);
+    uint currentPageCount = std::min(pageCount, L2Count - id2);
 
     while (true)
     {
@@ -144,7 +144,7 @@ HeapBlockMap32::ClearHeapBlock(void * address, uint pageCount)
 
         id2 = 0;
         id1++;
-        currentPageCount = min(pageCount, L2Count);
+        currentPageCount = std::min(pageCount, L2Count);
     }
 }
 

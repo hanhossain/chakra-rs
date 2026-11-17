@@ -171,7 +171,7 @@ Recycler::AllocZeroWithAttributesInlined(size_t size)
 #ifdef RECYCLER_MEMORY_VERIFY
     if (this->VerifyEnabled())
     {
-        memset(obj, 0, min(size, sizeof(FreeObject *)));
+        memset(obj, 0, std::min(size, sizeof(FreeObject *)));
     }
     else
 #endif
@@ -190,7 +190,7 @@ Recycler::AllocZeroWithAttributesInlined(size_t size)
         if (IsPageHeapEnabled())
         {
             // don't corrupt the page heap filled pattern
-            memset((void*)obj, 0, min(size, sizeof(void*)));
+            memset((void*)obj, 0, std::min(size, sizeof(void*)));
         }
         else
         {

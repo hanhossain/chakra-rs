@@ -8,6 +8,8 @@
 #include "DataStructures/Dictionary.h"
 #include "Library/DelayFreeArrayBufferHelper.h"
 
+#include <memory>
+
 namespace Js
 {
     class ScriptContext;
@@ -1289,6 +1291,7 @@ public:
     static std::recursive_mutex& GetMutex() { return s_csThreadContext; }
 
     ThreadContext(AllocationPolicyManager * allocationPolicyManager = nullptr, JsUtil::ThreadService::ThreadServiceCallback threadServiceCallback = nullptr, bool enableExperimentalFeatures = false);
+    ThreadContext(std::unique_ptr<AllocationPolicyManager> allocationPolicyManager, bool enableExperimentalFeatures);
     static void Add(ThreadContext *threadContext);
 
     ThreadConfiguration const * GetConfig() const { return &configuration; }

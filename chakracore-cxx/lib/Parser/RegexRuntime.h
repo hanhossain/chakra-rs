@@ -202,8 +202,8 @@ namespace UnifiedRegex
 
         inline void Lub(const CountDomain& other)
         {
-            lower = min(lower, other.lower);
-            upper = upper == CharCountFlag || other.upper == CharCountFlag ? CharCountFlag : max(upper, other.upper);
+            lower = std::min(lower, other.lower);
+            upper = upper == CharCountFlag || other.upper == CharCountFlag ? CharCountFlag : std::max(upper, other.upper);
         }
 
         inline void Add(const CountDomain& other)

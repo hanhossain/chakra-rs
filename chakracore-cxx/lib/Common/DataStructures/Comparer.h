@@ -4,6 +4,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Interface/CommonBasic.h"
 
 typedef uint hash_t;
 #define TAGHASH(hash) ((static_cast<hash_t>(hash) << 1) | 1)

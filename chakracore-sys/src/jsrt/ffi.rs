@@ -186,6 +186,13 @@ pub(super) mod bridge {
         type CVoid;
     }
 
+    unsafe extern "C++" {
+        include!("Memory/AllocationPolicyManager.h");
+        type AllocationPolicyManager;
+        #[Self = AllocationPolicyManager]
+        fn FfiNew(needConcurrencySupport: bool) -> UniquePtr<AllocationPolicyManager>;
+    }
+
     extern "C++" {
         include!("ChakraCore.h");
         type JsContextRef = super::JsContextRef;
@@ -219,6 +226,7 @@ pub(super) mod bridge {
         fn JsCreateRuntime(
             attributes: JsRuntimeAttributes,
             runtime: &mut UniquePtr<JsrtRuntime>,
+            policyManager: UniquePtr<AllocationPolicyManager>,
         ) -> JsErrorCode;
         unsafe fn JsCreateContext(
             runtime: *mut JsrtRuntime,
@@ -820,5 +828,11 @@ impl<T> From<Result<T, JsError>> for JsErrorCode {
 impl From<()> for JsErrorCode {
     fn from(_: ()) -> Self {
         JsErrorCode::JsNoError
+    }
+}
+
+impl JsRuntimeAttributes {
+    pub(crate) fn contains(&self, attribute: JsRuntimeAttributes) -> bool {
+        (*self & attribute) == attribute
     }
 }

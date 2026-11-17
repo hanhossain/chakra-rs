@@ -228,7 +228,7 @@ X64WriteBarrierCardTableManager::Initialize()
         else
         {
             // Safest option : Max RSS can be beyond what we can allocate, aim the smaller one
-            memoryLimit = min(memoryLimit, reinterpret_cast<size_t>(AutoSystemInfo::Data.lpMaximumApplicationAddress));
+            memoryLimit = std::min(memoryLimit, reinterpret_cast<size_t>(AutoSystemInfo::Data.lpMaximumApplicationAddress));
         }
         const unsigned long maxUmProcessAddressSpace = static_cast<long>(memoryLimit);
 

@@ -409,7 +409,7 @@ HeapInfoManager::LeaveIdleDecommit(bool allowTimer)
     ForEachHeapInfo([&idleDecommitSignal, allowTimer](HeapInfo& heapInfo)
     {
         IdleDecommitSignal signal = heapInfo.LeaveIdleDecommit(allowTimer);
-        idleDecommitSignal = max(idleDecommitSignal, signal);
+        idleDecommitSignal = std::max(idleDecommitSignal, signal);
     });
     return idleDecommitSignal;
 }
@@ -421,7 +421,7 @@ HeapInfoManager::IdleDecommit()
     ForEachHeapInfo([&](HeapInfo& heapInfo)
     {
         uint32_t heapInfoWaitTime = heapInfo.IdleDecommit();
-        waitTime = min(waitTime, heapInfoWaitTime);
+        waitTime = std::min(waitTime, heapInfoWaitTime);
     });
     return waitTime;
 }

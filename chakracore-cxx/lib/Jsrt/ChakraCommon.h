@@ -695,7 +695,7 @@ namespace chakracore::jsrt
     /// <returns>
     ///     The code <c>JsNoError</c> if the operation succeeded, a failure code otherwise.
     /// </returns>
-JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtime);
+JsErrorCode JsCreateRuntime(JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtime, std::unique_ptr<AllocationPolicyManager> policyManager);
 
     /// <summary>
     ///     Adds a reference to a garbage collected object.
