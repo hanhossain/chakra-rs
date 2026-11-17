@@ -215,6 +215,9 @@ ThreadContext::ThreadContext(AllocationPolicyManager * allocationPolicyManager, 
     srand(arrayMutationSeed);
 #endif
 }
+ThreadContext::ThreadContext(std::unique_ptr<AllocationPolicyManager> allocationPolicyManager,
+                             bool enableExperimentalFeatures)
+    : ThreadContext(allocationPolicyManager.release(), nullptr, enableExperimentalFeatures) {}
 
 void ThreadContext::SetStackProber(StackProber * stackProber)
 {

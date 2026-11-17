@@ -61,7 +61,7 @@ namespace JsUtil
             charcount_t hashLength = length;
             if (fastHash)
             {
-                hashLength = min(length, MAX_FAST_HASH_LENGTH);
+                hashLength = std::min(length, MAX_FAST_HASH_LENGTH);
             }
             for (charcount_t i = 0; i < hashLength; i++)
             {

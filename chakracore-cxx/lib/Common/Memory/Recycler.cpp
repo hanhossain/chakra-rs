@@ -231,7 +231,7 @@ Recycler::Recycler(AllocationPolicyManager * policyManager, IdleDecommitPageAllo
     constexpr size_t maxMarkStackPageCount = -1;
 
     // recycler requires at least Recycler::PrimaryMarkStackReservedPageCount to function properly for the main mark context
-    this->markContext.SetMaxPageCount(max(maxMarkStackPageCount, static_cast<size_t>(Recycler::PrimaryMarkStackReservedPageCount)));
+    this->markContext.SetMaxPageCount(std::max(maxMarkStackPageCount, static_cast<size_t>(Recycler::PrimaryMarkStackReservedPageCount)));
     this->parallelMarkContext1.SetMaxPageCount(maxMarkStackPageCount);
     this->parallelMarkContext2.SetMaxPageCount(maxMarkStackPageCount);
     this->parallelMarkContext3.SetMaxPageCount(maxMarkStackPageCount);

@@ -1807,7 +1807,7 @@ PageAllocatorBase<TVirtualAlloc, TSegment, TPageSegment>::DecommitNow(bool all)
         newFreePageCount = this->freePageCount - (this->minFreePageCount / 2);
 
         // Ensure we don't decommit down to fewer than our partial decommit minimum
-        newFreePageCount = max(newFreePageCount, static_cast<size_t>(MinPartialDecommitFreePageCount));
+        newFreePageCount = std::max(newFreePageCount, static_cast<size_t>(MinPartialDecommitFreePageCount));
 
         PAGE_ALLOC_TRACE_AND_STATS_0(u"Partial decommit");
     }

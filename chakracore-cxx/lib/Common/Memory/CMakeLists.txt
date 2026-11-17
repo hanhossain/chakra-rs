@@ -1,4 +1,5 @@
 set (CCM_SOURCE_FILES ${CCM_SOURCE_FILES}
+    AllocationPolicyManager.cpp
     ArenaAllocator.cpp
     CustomHeap.cpp
     ForcedMemoryConstraints.cpp

@@ -5,6 +5,7 @@
 #pragma once
 #include "PageAllocatorDefines.h"
 #include "Exceptions/ExceptionBase.h"
+#include "Core/ConfigFlagsTable.h"
 #include "Memory/AllocationPolicyManager.h"
 #include "Memory/VirtualAllocWrapper.h"
 #include "DataStructures/DList.h"

@@ -134,8 +134,8 @@ JsErrorCode CreateContextCore(_In_ JsrtRuntime *runtime, _In_ bool inRecordMode,
 }
 
 // A create runtime function that we can funnel to for regular and record or debug aware creation
-static JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtime)
-{
+static JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtime,
+                                     std::unique_ptr<AllocationPolicyManager> policyManager) {
     JsErrorCode runtimeResult = GlobalAPIWrapper_NoRecord([&]() -> JsErrorCode {
         const JsRuntimeAttributes JsRuntimeAttributesAll =
             (JsRuntimeAttributes)(
@@ -154,9 +154,8 @@ static JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes, std::u
         {
             return JsErrorInvalidArgument;
         }
-        AllocationPolicyManager * policyManager = HeapNew(AllocationPolicyManager, (attributes & JsRuntimeAttributeDisableBackgroundWork) == 0);
         bool enableExperimentalFeatures = (attributes & JsRuntimeAttributeEnableExperimentalFeatures) != 0;
-        auto threadContext = std::make_unique<ThreadContext>(policyManager, nullptr, enableExperimentalFeatures);
+        auto threadContext = std::make_unique<ThreadContext>(std::move(policyManager), enableExperimentalFeatures);
 
         if ((attributes & JsRuntimeAttributeDisableBackgroundWork) != 0)
         {
@@ -213,8 +212,8 @@ static JsErrorCode CreateRuntimeCore(_In_ JsRuntimeAttributes attributes, std::u
     return runtimeResult;
 }
 
-JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtimeHandle) {
-    return CreateRuntimeCore(attributes, runtimeHandle);
+JsErrorCode chakracore::jsrt::JsCreateRuntime(JsRuntimeAttributes attributes, std::unique_ptr<JsrtRuntime> &runtimeHandle, std::unique_ptr<AllocationPolicyManager> policyManager) {
+    return CreateRuntimeCore(attributes, runtimeHandle, std::move(policyManager));
 }
 
 JsErrorCode JsPrivateDetachArrayBuffer(_In_ JsValueRef ref, _Out_ void** detachedState)

@@ -144,7 +144,7 @@ void HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMap(Vali
             ushort pageIndex = static_cast<ushort>(objectAddress / AutoSystemInfo::PageSize);
 
             (*blockInfoRow)[pageIndex].pageObjectCount++;
-            (*blockInfoRow)[pageIndex].lastObjectIndexOnPage = max(j, (*blockInfoRow)[pageIndex].lastObjectIndexOnPage);
+            (*blockInfoRow)[pageIndex].lastObjectIndexOnPage = std::max(j, (*blockInfoRow)[pageIndex].lastObjectIndexOnPage);
 
             invalidBitVector->Clear(j * stride);
         }
@@ -157,7 +157,7 @@ void HeapInfo::ValidPointersMap<TBlockAttributes>::GenerateValidPointersMap(Vali
             for (ushort j = 0; j < maxObjectCountForBucket; j++)
             {
                 uint start = j * stride;
-                uint end = min(start + stride, TBlockAttributes::MaxSmallObjectCount);
+                uint end = std::min(start + stride, TBlockAttributes::MaxSmallObjectCount);
                 for (uint k = start; k < end; k++)
                 {
                     validInteriorPointers[k] = j;
@@ -1631,7 +1631,7 @@ HeapInfo::LeaveIdleDecommit(bool allowTimer)
     ForEachPageAllocator([&idleDecommitSignal, allowTimer](IdleDecommitPageAllocator * pageAlloc)
     {
         IdleDecommitSignal signal = pageAlloc->LeaveIdleDecommit(allowTimer);
-        idleDecommitSignal = max(idleDecommitSignal, signal);
+        idleDecommitSignal = std::max(idleDecommitSignal, signal);
     });
     return idleDecommitSignal;
 }
@@ -1642,7 +1642,7 @@ uint32_t HeapInfo::IdleDecommit()
     ForEachPageAllocator([&](IdleDecommitPageAllocator * pageAlloc)
     {
         uint32_t pageAllocatorWaitTime = pageAlloc->IdleDecommit();
-        waitTime = min(waitTime, pageAllocatorWaitTime);
+        waitTime = std::min(waitTime, pageAllocatorWaitTime);
     });
     return waitTime;
 }

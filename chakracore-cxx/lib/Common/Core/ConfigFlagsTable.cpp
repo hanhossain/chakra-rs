@@ -3005,7 +3005,7 @@ namespace Js
 
                 {
                     Js::Number iterationsNeeded = SimpleJitAfter;
-                    ProfilingInterpreter0Limit = min(ProfilingInterpreter0Limit, iterationsNeeded);
+                    ProfilingInterpreter0Limit = std::min(ProfilingInterpreter0Limit, iterationsNeeded);
                     iterationsNeeded -= ProfilingInterpreter0Limit;
                     AutoProfilingInterpreter0Limit = iterationsNeeded;
                     AutoProfilingInterpreter1Limit = 0;
@@ -3019,21 +3019,21 @@ namespace Js
                     Assert(SimpleJitAfter <= FullJitAfter);
                     Js::Number iterationsNeeded = FullJitAfter - SimpleJitAfter;
                     Js::Number profilingIterationsNeeded =
-                        min(DEFAULT_CONFIG_MinProfileIterations_OldSimpleJit,
+                        std::min(DEFAULT_CONFIG_MinProfileIterations_OldSimpleJit,
                             FullJitAfter) -
                         ProfilingInterpreter0Limit;
                     SimpleJitLimit = iterationsNeeded;
-                    profilingIterationsNeeded -= min(SimpleJitLimit, profilingIterationsNeeded);
+                    profilingIterationsNeeded -= std::min(SimpleJitLimit, profilingIterationsNeeded);
                     ProfilingInterpreter1Limit = 0;
 
                     if(profilingIterationsNeeded != 0)
                     {
-                        Js::Number iterationsToMove = min(AutoProfilingInterpreter1Limit, profilingIterationsNeeded);
+                        Js::Number iterationsToMove = std::min(AutoProfilingInterpreter1Limit, profilingIterationsNeeded);
                         AutoProfilingInterpreter1Limit -= iterationsToMove;
                         ProfilingInterpreter0Limit += iterationsToMove;
                         profilingIterationsNeeded -= iterationsToMove;
 
-                        iterationsToMove = min(AutoProfilingInterpreter0Limit, profilingIterationsNeeded);
+                        iterationsToMove = std::min(AutoProfilingInterpreter0Limit, profilingIterationsNeeded);
                         AutoProfilingInterpreter0Limit -= iterationsToMove;
                         ProfilingInterpreter0Limit += iterationsToMove;
                         profilingIterationsNeeded -= iterationsToMove;
@@ -3072,11 +3072,11 @@ namespace Js
 
                 Js::Number iterationsNeeded = FullJitAfter;
                 ProfilingInterpreter1Limit = 0;
-                SimpleJitLimit = min(SimpleJitLimit, iterationsNeeded);
+                SimpleJitLimit = std::min(SimpleJitLimit, iterationsNeeded);
                 iterationsNeeded -= SimpleJitLimit;
-                ProfilingInterpreter0Limit = min(ProfilingInterpreter0Limit, iterationsNeeded);
+                ProfilingInterpreter0Limit = std::min(ProfilingInterpreter0Limit, iterationsNeeded);
                 iterationsNeeded -= ProfilingInterpreter0Limit;
-                AutoProfilingInterpreter0Limit = min(AutoProfilingInterpreter0Limit, iterationsNeeded);
+                AutoProfilingInterpreter0Limit = std::min(AutoProfilingInterpreter0Limit, iterationsNeeded);
                 iterationsNeeded -= AutoProfilingInterpreter0Limit;
                 AutoProfilingInterpreter1Limit = iterationsNeeded;
 
