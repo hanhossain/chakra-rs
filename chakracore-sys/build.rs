@@ -14,7 +14,8 @@ fn main() {
     let mut cxx_bridge = cxx_build::bridges(bridges);
 
     if !cxx_bridge.get_compiler().is_like_clang() {
-        cxx_bridge.compiler("clang");
+        println!("cargo::error=Must use a clang compiler");
+        return;
     }
 
     let c_compiler = cxx_bridge.clone();
@@ -78,8 +79,6 @@ fn main() {
                 .init_c_cfg(c_compiler.clone())
                 .init_cxx_cfg(c_compiler)
                 .generator("Ninja")
-                .define("CMAKE_CXX_COMPILER", "clang++")
-                .define("CMAKE_C_COMPILER", "clang")
                 .define("CMAKE_COLOR_DIAGNOSTICS", "ON")
                 .env("CLICOLOR_FORCE", "1")
                 .profile(build_type)
