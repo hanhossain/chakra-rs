@@ -37,6 +37,7 @@ jobs:
             # TODO: use ubuntu-latest again
             os-image: ubuntu-26.04
             deps: sudo apt-get install -y ninja-build clang-19 lld-19 libc++-19-dev libc++abi-19-dev
+            compiler: CXX=/usr/bin/clang++-19 CC=/usr/bin/clang-19
           - build-type: debug
             features: "--features compile-cpp"
           - build-type: test
@@ -49,10 +50,6 @@ jobs:
       - name: Install dependencies
         run: ${{ matrix.deps }}
         timeout-minutes: 2
-      - if: ${{ runner.os == 'Linux' }}
-        run: |
-          sudo ln -sf /usr/bin/clang++-19 /usr/bin/clang++
-          sudo ln -sf /usr/bin/clang-19 /usr/bin/clang
       - name: Install cargo-nextest
         uses: taiki-e/install-action@v2
         with:
@@ -61,13 +58,13 @@ jobs:
         with:
           key: ${{ matrix.build-type }}
       - name: Build
-        run: cargo build ${{ matrix.profile }} ${{ matrix.features }} --all-targets
+        run: ${{ matrix.compiler }} cargo build ${{ matrix.profile }} ${{ matrix.features }} --all-targets
       # TODO: don't fail fast
       - name: Run tests
-        run: cargo nextest run ${{ matrix.test-profile }} ${{ matrix.features }} --retries 1
+        run: ${{ matrix.compiler }} cargo nextest run ${{ matrix.test-profile }} ${{ matrix.features }} --retries 1
       # TODO: don't fail fast
       - name: Run slow tests
-        run: cargo nextest run ${{ matrix.test-profile }} ${{ matrix.features }} --retries 1 -- --ignored
+        run: ${{ matrix.compiler }} cargo nextest run ${{ matrix.test-profile }} ${{ matrix.features }} --retries 1 -- --ignored
         env:
           CHAKRA_TEST_SLOW: true
   build-cpp:
@@ -91,6 +88,7 @@ jobs:
             os-image: ubuntu-26.04
             os-prefix: linux
             deps: sudo apt-get install -y ninja-build clang-19 lld-19 libc++-19-dev libc++abi-19-dev
+            compiler: CXX=/usr/bin/clang++-19 CC=/usr/bin/clang-19
     env:
       CARGO_BUILD_WARNINGS: deny
     steps:
@@ -102,10 +100,6 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.build-type }}
-      - if: ${{ runner.os == 'Linux' }}
-        run: |
-          sudo ln -sf /usr/bin/clang++-19 /usr/bin/clang++
-          sudo ln -sf /usr/bin/clang-19 /usr/bin/clang
-      - run: cargo check
-      - run: cmake --preset ${{ matrix.os-prefix}}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
-      - run: cmake --build build-${{ matrix.os-prefix}}-${{ matrix.build-type }}
+      - run: ${{ matrix.compiler }} cargo check
+      - run: ${{ matrix.compiler }} cmake --preset ${{ matrix.os-prefix}}-${{ matrix.build-type }} -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
+      - run: ${{ matrix.compiler }} cmake --build build-${{ matrix.os-prefix}}-${{ matrix.build-type }}

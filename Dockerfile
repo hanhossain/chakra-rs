@@ -1,20 +1,17 @@
 #FROM --platform=linux/amd64 mcr.microsoft.com/devcontainers/rust:latest
-FROM --platform=linux/amd64 ubuntu:24.04
+FROM --platform=linux/amd64 ubuntu:26.04
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update  \
     && apt-get -y install \
     build-essential \
-    gcc-14 g++-14 \
     curl \
     git \
     cmake \
     ninja-build \
     clang-19 lld-19 \
     gdb \
-    libc++-19-dev libc++abi-19-dev
-
-RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 10
-RUN update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 10
+    libc++-19-dev libc++abi-19-dev \
+    libicu-dev
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
