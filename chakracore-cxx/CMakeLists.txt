@@ -31,7 +31,7 @@ else ()
     message(FATAL_ERROR "Unsupported target processor: ${CMAKE_SYSTEM_PROCESSOR}")
 endif ()
 
-add_compile_definitions(PROFILE_EXEC)
+add_compile_definitions(PROFILE_EXEC ENABLE_JS_REENTRANCY_CHECK)
 
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
     set(CC_TARGET_OS_LINUX 1)
@@ -191,11 +191,12 @@ if (CMAKE_BUILD_TYPE STREQUAL Release)
 endif ()
 
 if (CMAKE_BUILD_TYPE STREQUAL Debug)
-    add_definitions(
-        -DDBG=1
-        -DDEBUG=1
-        -D_DEBUG=1 # for PAL
-        -DDBG_DUMP=1
+    add_compile_definitions(
+        DBG=1
+        DEBUG=1
+        _DEBUG=1 # for PAL
+        DBG_DUMP=1
+        EXCEPTION_CHECK
     )
 else ()
     add_compile_definitions(NDEBUG)

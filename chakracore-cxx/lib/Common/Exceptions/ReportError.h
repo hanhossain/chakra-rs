@@ -6,6 +6,9 @@
 
 #include "Util/Abstractions.h"
 
+#include <cstddef>
+#include <cstdint>
+
 enum ErrorReason
 {
     JavascriptDispatch_OUTOFMEMORY = 1,

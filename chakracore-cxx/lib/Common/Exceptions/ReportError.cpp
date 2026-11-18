@@ -2,16 +2,18 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include "Util/Abstractions.h"
 #include "Exceptions/ReportError.h"
+
+#include "Util/Abstractions.h"
+#include "palrt.h"
 
 #include <cstdlib>
 
 // Disable inline so that __builtin_return_address(0) will get the address of the calling function.
 void ReportFatalException(
-    size_t context,
-    int32_t exceptionCode,
-    ErrorReason reasonCode,
+    [[maybe_unused]] size_t context,
+    [[maybe_unused]] int32_t exceptionCode,
+    [[maybe_unused]] ErrorReason reasonCode,
     size_t scenario)
 {
     // avoid the error text methods to be optimized out.
