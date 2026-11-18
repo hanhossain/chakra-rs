@@ -5,6 +5,8 @@
 #pragma once
 
 #pragma intrinsic(memcpy)
+#include "sal.h"
+#include <cstddef>
 extern void js_memcpy_s(__bcount(sizeInBytes) void *dst, size_t sizeInBytes, __in_bcount(count) const void *src, size_t count);
 extern void js_wmemcpy_s(__ecount(sizeInWords) char16_t *dst, size_t sizeInWords, __in_ecount(count) const char16_t *src, size_t count);
 
@@ -39,7 +41,7 @@ namespace JsUtil
         static bool RaiseOnIntOverflow();
         static void RecoverUnusedMemory();
 #if DBG || defined(EXCEPTION_CHECK)
-        static BOOL IsScriptActiveOnCurrentThreadContext();
+        static bool IsScriptActiveOnCurrentThreadContext();
 #endif
     };
 };

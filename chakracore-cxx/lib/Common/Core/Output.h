@@ -6,13 +6,11 @@
 #include <mutex>
 
 // xplat-todo: error: ISO C++ forbids forward references to 'enum' types
-#if defined(ENABLE_TRACE) 
 namespace Js
 {
 enum Flag: unsigned short;
 enum Phase: unsigned short;
 };
-#endif
 
 #if defined(BGJIT_STATS)
 #define OUTPUT_TRACE(Phase, ...) Output::Trace((Phase), __VA_ARGS__)
@@ -57,7 +55,6 @@ namespace Js
 class Output
 {
 public:
-#ifdef ENABLE_TRACE
     static size_t Trace(Js::Phase phase, const char16_t *form, ...);
     static size_t Trace2(Js::Phase phase, const char16_t *form, ...);
     static size_t TraceWithPrefix(Js::Phase phase, const char16_t prefix[], const char16_t *form, ...);
@@ -81,7 +78,6 @@ public:
 
         return retValue;
     }
-#endif // ENABLE_TRACE
     static size_t Print(const char16_t *form, ...);
     static size_t Print(int column, const char16_t *form, ...);
     static size_t PrintBuffer(const char16_t * buffer, size_t size);
@@ -101,9 +97,7 @@ private:
 
     static std::recursive_mutex s_mutex;
 
-#ifdef ENABLE_TRACE
     static size_t VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const char16_t *form, va_list argptr);
-#endif // ENABLE_TRACE
 
     thread_local static bool hasDoneAlignPrefixForThisLine;
     thread_local static bool usingCustomAlignAndPrefix;

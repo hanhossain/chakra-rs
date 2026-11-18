@@ -8,6 +8,9 @@
 //----------------------------------------------------------------------------
 #pragma once
 
+#include "PlatformAgnostic/CommonTypedefs.h"
+#include "pal.h"
+
 class AutoSystemInfo : public SYSTEM_INFO
 {
     friend void ChakraBinaryAutoSystemInfoInit(AutoSystemInfo *);  // The hosting DLL provides the implementation of this function.

@@ -22,6 +22,7 @@ if (CC_USES_SYSTEM_ARCH OR NOT CHAKRACORE_BUILD)
 endif ()
 
 if (CC_TARGETS_AMD64)
+    add_compile_definitions(STACK_BACK_TRACE ENABLE_DEBUG_STACK_BACK_TRACE=1)
 elseif (CC_TARGETS_ARM64)
     add_definitions(-D_ARM64_=1)
     add_definitions(-D__arm64__=1)
@@ -29,6 +30,8 @@ elseif (CC_TARGETS_ARM64)
 else ()
     message(FATAL_ERROR "Unsupported target processor: ${CMAKE_SYSTEM_PROCESSOR}")
 endif ()
+
+add_compile_definitions(PROFILE_EXEC)
 
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
     set(CC_TARGET_OS_LINUX 1)

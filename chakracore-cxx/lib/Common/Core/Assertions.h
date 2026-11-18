@@ -5,6 +5,10 @@
 #pragma once
 #include "PlatformAgnostic/CommonPal.h"
 
+#ifndef DBG
+#include "Exceptions/Throw.h"
+#endif
+
 #undef AssertMsg
 #undef Assert
 

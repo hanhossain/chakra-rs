@@ -3,6 +3,11 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "SysInfo.h"
+#include "rt/palrt.h"
+#include "Assertions.h"
+#include "ConfigFlagsTable.h"
+#include "Interface/ChakraCoreVersion.h"
+
 #ifdef __APPLE__
 #include <sys/sysctl.h> // sysctl*
 #elif defined(__linux__)

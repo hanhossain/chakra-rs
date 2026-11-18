@@ -5,6 +5,7 @@
 #pragma once
 
 #ifdef PROFILE_EXEC
+#include "Core/ConfigFlagsTable.h"
 #include "DataStructures/FixedStack.h"
 #include "DataStructures/Tree.h"
 namespace Js

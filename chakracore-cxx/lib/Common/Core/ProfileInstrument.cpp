@@ -5,6 +5,8 @@
 
 #ifdef PROFILE_EXEC
 #include "Core/ProfileInstrument.h"
+#include "Core/Output.h"
+#include "Memory/ArenaAllocator.h"
 
 #define HIRES_PROFILER
 namespace Js

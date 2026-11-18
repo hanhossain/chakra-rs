@@ -54,7 +54,7 @@ namespace Js {
     {
         if (!result)
         {
-            Assert(false);
+            assert(false);
             Js::Throw::FatalProjectionError();
         }
     }

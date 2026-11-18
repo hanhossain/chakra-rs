@@ -2,8 +2,15 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include "CRC.h"
 
-#include "Core/CRC.h"
+#include "SysInfo.h"
+
+#include <cstddef>
+
+#if defined(__SSE4_2__)
+#include <crc32intrin.h>
+#endif
 
 unsigned int CalculateCRC32(unsigned int bufferCRC, size_t data)
 {

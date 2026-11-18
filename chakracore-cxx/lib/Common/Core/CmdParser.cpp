@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Core/ICustomConfigFlags.h"
 #include "Core/CmdParser.h"
+#include "Core/ConfigFlagsTable.h"
+#include "Core/Output.h"
 
 #include <rust/cxx.h>
 

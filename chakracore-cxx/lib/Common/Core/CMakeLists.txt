@@ -23,5 +23,3 @@ target_include_directories (Chakra.Common.Core PUBLIC
 target_compile_definitions(Chakra.Common.Core PUBLIC
     PAL_STDCPP_COMPAT
 )
-
-target_precompile_headers(Chakra.Common.Core PUBLIC CommonCorePch.h)
