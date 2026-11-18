@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "PlatformAgnostic/CommonTypedefs.h"
+
 enum class RejitReason : byte
 {
 #define REJIT_REASON(n) n,

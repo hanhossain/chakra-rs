@@ -3,6 +3,9 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "RejitReason.h"
+
+#include "Core/Assertions.h"
+
 #include <iterator>
 
 const char *const RejitReasonNames[] =

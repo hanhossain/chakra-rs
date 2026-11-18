@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #include "Common/Event.h"
 
+#include "Exceptions/Throw.h"
+
 Event::Event(const bool autoReset, const bool signaled) : handle(CreateEventW(!autoReset, signaled))
 {
     if(!handle)

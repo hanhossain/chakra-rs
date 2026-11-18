@@ -19,7 +19,7 @@ static errno_t GetFPUControl(unsigned int *pctrl)
     return 0;
 }
 
-static errno_t SetFPUControl(unsigned int fpctrl)
+static errno_t SetFPUControl()
 {
     return 0;
 }
@@ -79,7 +79,7 @@ SmartFPUControlT<enabled>::RestoreFPUControl()
     {
         if (m_oldFpuControl != INVALID_FPUCONTROL)
         {
-            m_err = SetFPUControl(m_oldFpuControl);
+            m_err = SetFPUControl();
             m_oldFpuControl = INVALID_FPUCONTROL; // Only restore once
         }
     }

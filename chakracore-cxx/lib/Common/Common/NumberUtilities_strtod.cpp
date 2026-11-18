@@ -2,6 +2,11 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include "NumberUtilities.h"
+
+#include "Codex/Utf8Codex.h"
+#include "Core/Api.h"
+#include "Core/Assertions.h"
 #include "DataStructures/BigUInt.h"
 
 namespace Js

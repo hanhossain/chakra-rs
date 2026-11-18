@@ -4,6 +4,11 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "MathUtil.h"
+#include "no_sal2.h"
+
+#include <cstdint>
+
 class UInt32Math
 {
 public:

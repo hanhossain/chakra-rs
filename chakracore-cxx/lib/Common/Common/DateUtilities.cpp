@@ -3,10 +3,11 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #define ENABLE_INTSAFE_SIGNED_FUNCTIONS 1
-#include <intsafe.h>
+#include "intsafe.h"
 
 #include "Common/DateUtilities.h"
 #include "Common/Int64Math.h"
+#include "Core/Assertions.h"
 
 namespace Js
 {
@@ -194,7 +195,7 @@ namespace Js
     /// We then use DayFromYear to adjust if necessary.
     ///------------------------------------------------------------------------------
     void
-    DateUtilities::GetYmdFromTv(double tv, DateTime::YMD *pymd)
+    DateUtilities::GetYmdFromTv(double tv, PlatformAgnostic::DateTime::YMD *pymd)
     {
 //      Assert(pymd);
 

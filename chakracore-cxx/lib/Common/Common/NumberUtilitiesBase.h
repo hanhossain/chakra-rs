@@ -7,6 +7,7 @@
 // consistent and try not to change its size. We need to have matching host if the size is changed here.
 /////////////////////////////////////////////////////////
 #pragma once
+#include <cstdint>
 namespace Js
 {
     class NumberConstantsBase

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #pragma once
+#include "Core/Assertions.h"
 
 ///---------------------------------------------------------------------------
 ///
@@ -43,7 +44,7 @@ public:
         return value;
     }
 
-    static bool     FitsInDWord(int32_t value) { return true; }
+    static bool     FitsInDWord(int32_t) { return true; }
     static bool     FitsInDWord(size_t value) { return (static_cast<size_t>(static_cast<signed int>(value & 0xFFFFFFFF)) == value); }
     static bool     FitsInDWord(long value) { return (static_cast<long>(static_cast<signed int>(value & 0xFFFFFFFF)) == value); }
 
