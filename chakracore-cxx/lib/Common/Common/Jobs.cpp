@@ -22,7 +22,6 @@
 #include "Common/ThreadService.h"
 #include "Common/Jobs.h"
 #include "Common/Jobs.inl"
-#include "Core/CommonMinMax.h"
 #include "Memory/RecyclerWriteBarrierManager.h"
 #include "Memory/XDataAllocator.h"
 
