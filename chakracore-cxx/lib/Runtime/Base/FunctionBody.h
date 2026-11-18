@@ -7,7 +7,7 @@
 
 #include "AuxPtrs.h"
 #include "CompactCounters.h"
-#include "Core/CommonMinMax.h"
+#include "Interface/CommonBasic.h"
 #include "DataStructures/Interval.h"
 #include "DataStructures/GrowingArray.h"
 
