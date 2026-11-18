@@ -212,7 +212,7 @@ public:
     {
         return Alloc(byteSize);
     }
-    void Free(void * buffer, size_t byteSize)
+    void Free(void * buffer, size_t)
     {
         if (buffer != nullptr) { free(buffer); }
     }
@@ -226,13 +226,13 @@ typedef NoThrowHeapAllocator NoThrowNoMemProtectHeapAllocator;
 // HeapAllocator overrides
 //----------------------------------------
 inline void
-operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*AllocFunc)(size_t))
+operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*)(size_t))
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 inline void
-operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*AllocFunc)(size_t), size_t plusSize)
+operator delete(void * obj, HeapAllocator * alloc, char * (HeapAllocator::*)(size_t), size_t)
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }
@@ -262,13 +262,13 @@ operator new(size_t byteSize, NoThrowHeapAllocator * alloc, char * (NoThrowHeapA
 }
 
 inline void
-operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t))
+operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*)(size_t))
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 inline void
-operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
+operator delete(void * obj, NoThrowHeapAllocator * alloc, char * (NoThrowHeapAllocator::*)(size_t), size_t)
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }
@@ -303,13 +303,13 @@ operator new[](size_t byteSize, NoCheckHeapAllocator * alloc, char * (NoCheckHea
 }
 
 inline void
-operator delete(void * obj, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t))
+operator delete(void * obj, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*)(size_t))
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }
 
 inline void
-operator delete(void * obj, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*AllocFunc)(size_t), size_t plusSize)
+operator delete(void * obj, NoCheckHeapAllocator * alloc, char * (NoCheckHeapAllocator::*)(size_t), size_t)
 {
     alloc->Free(obj, static_cast<size_t>(-1));
 }

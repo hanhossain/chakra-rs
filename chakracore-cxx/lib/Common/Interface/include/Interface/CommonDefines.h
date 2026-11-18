@@ -134,7 +134,6 @@
 #define INLINE_CACHE_STATS
 #define FIELD_ACCESS_STATS
 #define MISSING_PROPERTY_STATS
-#define EXCEPTION_CHECK                     // Check exception handling.
 #define MEMSPECT_TRACKING
 // Needs to compile in debug mode
 // Just needs strings converted
@@ -262,11 +261,4 @@
 //----------------------------------------------------------------------------------------------------
 #ifndef JS_PROFILE_DATA_INTERFACE
 #define JS_PROFILE_DATA_INTERFACE 0
-#endif
-
-#define JS_REENTRANCY_FAILFAST 1
-#if DBG || JS_REENTRANCY_FAILFAST
-#define ENABLE_JS_REENTRANCY_CHECK 1
-#else
-#define ENABLE_JS_REENTRANCY_CHECK 0
 #endif

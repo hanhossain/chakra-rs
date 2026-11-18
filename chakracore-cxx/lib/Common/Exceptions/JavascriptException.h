@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Exceptions/ExceptionBase.h"
+
 class ThreadContext;
 
 namespace Js

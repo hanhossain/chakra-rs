@@ -4,6 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include "Exceptions/ExceptionBase.h"
+
 namespace Js {
 
     class NotImplementedException : public ExceptionBase
