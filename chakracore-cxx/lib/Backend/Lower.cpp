@@ -3692,7 +3692,7 @@ Lowerer::GenerateArrayAllocHelper(IR::Instr *instr, uint32_t * psize, Js::ArrayC
         // that this size is still not larger than INLINE_CHUNK_SIZE size because the head segment is still inlined. This
         // keeps consistency with the definition of HasInlineHeadSegment and maintained in the assert below.
         uint inlineChunkSize = Js::SparseArraySegmentBase::INLINE_CHUNK_SIZE;
-        alignedHeadSegmentSize = min(alignedHeadSegmentSize, inlineChunkSize);
+        alignedHeadSegmentSize = std::min(alignedHeadSegmentSize, inlineChunkSize);
 
         Assert(ArrayType::HasInlineHeadSegment(alignedHeadSegmentSize));
 
@@ -26584,7 +26584,7 @@ Lowerer::LowerNewScopeSlots(IR::Instr * instr, bool doStackSlots)
     IR::RegOpnd * dst = instr->UnlinkDst()->AsRegOpnd();
 
     // dst = RecyclerAlloc(allocSize)
-    // dst[EncodedSlotCountSlotIndex] = min(actualSlotCount, MaxEncodedSlotCount);
+    // dst[EncodedSlotCountSlotIndex] = std::min(actualSlotCount, MaxEncodedSlotCount);
     // dst[ScopeMetadataSlotIndex] = FunctionBody;
     // mov undefinedOpnd, undefined
     // dst[FirstSlotIndex..count] = undefinedOpnd;
@@ -26597,7 +26597,7 @@ Lowerer::LowerNewScopeSlots(IR::Instr * instr, bool doStackSlots)
     }
 
     m_lowererMD.GenerateMemInit(dst, Js::ScopeSlots::EncodedSlotCountSlotIndex * sizeof(Js::Var),
-            (size_t)min<uint>(actualSlotCount, Js::ScopeSlots::MaxEncodedSlotCount), instr, !doStackSlots);
+            (size_t)std::min<uint>(actualSlotCount, Js::ScopeSlots::MaxEncodedSlotCount), instr, !doStackSlots);
 
     IR::Opnd * functionInfoOpnd = this->LoadFunctionInfoOpnd(instr);
     GenerateMemInit(dst, Js::ScopeSlots::ScopeMetadataSlotIndex * sizeof(Js::Var),
@@ -27030,8 +27030,8 @@ void Lowerer::GenerateSwitchStringLookup(IR::Instr * instr)
     instr->AsBranchInstr()->AsMultiBrInstr()->GetBranchDictionary()->dictionary.Map([&](JITJavascriptString * str, void *)
     {
         charcount_t len = str->GetLength();
-        minLength = min(minLength, str->GetLength());
-        maxLength = max(maxLength, str->GetLength());
+        minLength = std::min(minLength, str->GetLength());
+        maxLength = std::max(maxLength, str->GetLength());
         if (len < 32)
         {
             bvLength.Set(len);

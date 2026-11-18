@@ -481,7 +481,7 @@ inline void NoWriteBarrierSet(WriteBarrierPtr<T>& dst, const WriteBarrierPtr<T>&
 
 }  // namespace Memory
 
-
+// TODO (hanhossain): remove these
 template<class T> inline
 const T& min(const T& a, const NoWriteBarrierField<T>& b) { return a < b ? a : b; }
 

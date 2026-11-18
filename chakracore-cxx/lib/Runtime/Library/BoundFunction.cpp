@@ -83,7 +83,7 @@ namespace Js
 
         // Reduce length number of bound args
         len = len - this->count;
-        len = max(len, 0);
+        len = std::max(len, 0);
 
         SetPropertyWithAttributes(PropertyIds::length, TaggedInt::ToVarUnchecked(len), PropertyConfigurable, nullptr, PropertyOperation_None, SideEffects_None);
     }

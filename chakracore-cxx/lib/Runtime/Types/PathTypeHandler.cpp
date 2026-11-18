@@ -2053,7 +2053,7 @@ namespace Js
             }
 
             const PropertyIndex newPropertyCount = GetPathLength() + 1;
-            const PropertyIndex newSlotCapacity = max(newPropertyCount, static_cast<PropertyIndex>(GetSlotCapacity()));
+            const PropertyIndex newSlotCapacity = std::max(newPropertyCount, static_cast<PropertyIndex>(GetSlotCapacity()));
             PropertyIndex newInlineSlotCapacity = GetInlineSlotCapacity();
             uint16 newOffsetOfInlineSlots = GetOffsetOfInlineSlots();
             if(IsObjectHeaderInlinedTypeHandler() && newSlotCapacity > GetSlotCapacity())
@@ -2176,7 +2176,7 @@ namespace Js
         else
         {
             // In branching cases, the new type path may be shorter than the old.
-            initStart = min(newTypePathSize, oldPathSize);
+            initStart = std::min(newTypePathSize, oldPathSize);
             memcpy(newAttributes, oldAttributes, sizeof(ObjectSlotAttributes) * initStart);
         }
         for (uint8_t i = initStart; i < newTypePathSize; i++)
@@ -2199,7 +2199,7 @@ namespace Js
         {
             uint16 pathLength = GetPathLength();
             // In branching cases, the new type path may be shorter than the old.
-            initStart = min(newTypePathSize, oldPathSize);
+            initStart = std::min(newTypePathSize, oldPathSize);
             for (uint8_t i = 0; i < initStart; i++)
             {
                 // Only copy setter indices that refer to the part of the path contained by this handler already.
@@ -3198,7 +3198,7 @@ namespace Js
 
     PathTypeHandlerNoAttr * PathTypeHandlerNoAttr::New(ScriptContext * scriptContext, TypePath* typePath, uint16 pathLength, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots, bool isLocked, bool isShared, DynamicType* predecessorType)
     {
-        return New(scriptContext, typePath, pathLength, max(pathLength, inlineSlotCapacity), inlineSlotCapacity, offsetOfInlineSlots, isLocked, isShared, predecessorType);
+        return New(scriptContext, typePath, pathLength, std::max(pathLength, inlineSlotCapacity), inlineSlotCapacity, offsetOfInlineSlots, isLocked, isShared, predecessorType);
     }
 
     PathTypeHandlerNoAttr * PathTypeHandlerNoAttr::New(ScriptContext * scriptContext, TypePath* typePath, uint16 pathLength, const PropertyIndex slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots, bool isLocked, bool isShared, DynamicType* predecessorType)
@@ -3220,7 +3220,7 @@ namespace Js
 
     PathTypeHandlerWithAttr * PathTypeHandlerWithAttr::New(ScriptContext * scriptContext, TypePath* typePath, ObjectSlotAttributes * attributes, PathTypeSetterSlotIndex * setters, PathTypeSetterSlotIndex setterCount, uint16 pathLength, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots, bool isLocked, bool isShared, DynamicType* predecessorType)
     {
-        return New(scriptContext, typePath, attributes, setters, setterCount, pathLength, max(pathLength, inlineSlotCapacity), inlineSlotCapacity, offsetOfInlineSlots, isLocked, isShared, predecessorType);
+        return New(scriptContext, typePath, attributes, setters, setterCount, pathLength, std::max(pathLength, inlineSlotCapacity), inlineSlotCapacity, offsetOfInlineSlots, isLocked, isShared, predecessorType);
     }
 
     PathTypeHandlerWithAttr * PathTypeHandlerWithAttr::New(ScriptContext * scriptContext, TypePath* typePath, ObjectSlotAttributes * attributes, PathTypeSetterSlotIndex * setters, PathTypeSetterSlotIndex setterCount, uint16 pathLength, const PropertyIndex slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots, bool isLocked, bool isShared, DynamicType* predecessorType)

@@ -1344,7 +1344,7 @@ namespace Js
     void DynamicProfileInfo::RecordThisInfo(Var object, ThisType thisType)
     {
         this->thisInfo.valueType = this->thisInfo.valueType.Merge(object);
-        this->thisInfo.thisType = max(this->thisInfo.thisType, thisType);
+        this->thisInfo.thisType = std::max(this->thisInfo.thisType, thisType);
     }
 
     ThisInfo DynamicProfileInfo::GetThisInfo() const

@@ -3305,7 +3305,7 @@ LinearScan::GetSpillCost(Lifetime *lifetime)
     // When comparing 2 lifetimes, we don't really care about the actual length of the lifetimes.
     // What matters is how much longer will they use the register.
     const uint start = currentInstr->GetNumber();
-    uint end = max(start, lifetime->end);
+    uint end = std::max(start, lifetime->end);
     uint lifetimeTotalOpHelperFullVisitedLength = lifetime->totalOpHelperLengthByEnd;
 
     if (this->curLoop && this->curLoop->regAlloc.loopEnd < end && !PHASE_OFF(Js::RegionUseCountPhase, this->func))
@@ -4316,7 +4316,7 @@ uint LinearScan::GetRemainingHelperLength(Lifetime *const lifetime)
     uint helperLength = 0;
     SList<OpHelperBlock>::Iterator it(opHelperBlockIter);
     Assert(it.IsValid());
-    const uint end = max(currentInstr->GetNumber(), lifetime->end);
+    const uint end = std::max(currentInstr->GetNumber(), lifetime->end);
     do
     {
         const OpHelperBlock &helper = it.Data();
@@ -4326,7 +4326,7 @@ uint LinearScan::GetRemainingHelperLength(Lifetime *const lifetime)
             break;
         }
 
-        const uint helperEnd = min(end, helper.opHelperEndInstr->GetNumber());
+        const uint helperEnd = std::min(end, helper.opHelperEndInstr->GetNumber());
         helperLength += helperEnd - helperStart;
         if(helperEnd != helper.opHelperEndInstr->GetNumber() || !helper.opHelperEndInstr->IsLabelInstr())
         {

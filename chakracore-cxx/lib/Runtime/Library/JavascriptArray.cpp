@@ -2195,7 +2195,7 @@ using namespace Js;
                     {
                         limit = JavascriptArray::MaxArrayLength;
                     }
-                    seg->size = min(newSize, limit - seg->left);
+                    seg->size = std::min(newSize, limit - seg->left);
                     seg->CheckLengthvsSize();
                 }
             }
@@ -2361,7 +2361,7 @@ using namespace Js;
     // Note: Spec calls out a few rules for these parameters:
     // 1. if (arg > length) { return length; }
     // clamp to length, not length-1
-    // 2. if (arg < 0) { return max(0, length + arg); }
+    // 2. if (arg < 0) { return std::max(0, length + arg); }
     // treat negative arg as index from the end of the array (with -1 mapping to length-1)
     // Effectively, this function will return a value between 0 and length, inclusive.
     long JavascriptArray::GetIndexFromVar(Js::Var arg, long length, ScriptContext* scriptContext)
@@ -2374,7 +2374,7 @@ using namespace Js;
 
             if (intValue < 0)
             {
-                index = max<long>(0, length + intValue);
+                index = std::max<long>(0, length + intValue);
             }
             else
             {
@@ -2400,7 +2400,7 @@ using namespace Js;
 
             if (index < 0)
             {
-                index = max<long>(0, index + length);
+                index = std::max<long>(0, index + length);
             }
         }
 
@@ -3853,7 +3853,7 @@ using namespace Js;
 
             if (intValue >= 0)
             {
-                fromIndex = min<long>(intValue, length - 1);
+                fromIndex = std::min<long>(intValue, length - 1);
             }
             else if ((uint32_t)-intValue > length)
             {
@@ -3870,7 +3870,7 @@ using namespace Js;
 
             if (value >= 0)
             {
-                fromIndex = (long)min(value, (double)(length - 1));
+                fromIndex = (long)std::min(value, (double)(length - 1));
             }
             else if (value + length < 0)
             {
@@ -4606,7 +4606,7 @@ using namespace Js;
 CaseDefault:
                 bool hasSeparator = (separator->GetLength() != 0);
                 const charcount_t estimatedAppendCount =
-                    min(
+                    std::min(
                         Join_MaxEstimatedAppendCount,
                         static_cast<charcount_t>(arrLength + (hasSeparator ? arrLength - 1 : 0)));
                 CompoundString *const cs =
@@ -4704,7 +4704,7 @@ CaseDefault:
                 bool hasSeparator = (separator->GetLength() != 0);
                 BOOL gotItem;
                 const charcount_t estimatedAppendCount =
-                    min(
+                    std::min(
                         Join_MaxEstimatedAppendCount,
                         static_cast<charcount_t>(cSrcLength + (hasSeparator ? cSrcLength - 1 : 0)));
                 CompoundString *const cs =
@@ -7146,7 +7146,7 @@ Case0:
         uint32_t relativeStart    = start - seg->left;  // This will be different from start when head->left is non zero -
                                                       //(Missing elements at the beginning)
 
-        uint32_t headDeleteLen    = min(start + deleteLen , seg->left + seg->length) - start;   // actual number of elements to delete in
+        uint32_t headDeleteLen    = std::min(start + deleteLen , seg->left + seg->length) - start;   // actual number of elements to delete in
                                                                                               // head if deleteLen overflows the length of head
 
         uint32_t newHeadLen       = seg->length - headDeleteLen + insertLen;     // new length of the head after splice
@@ -8904,7 +8904,7 @@ Case0:
         if (typedArrayBase)
         {
             AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-            uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
+            uint32_t end = (uint32_t)std::min(length, (T)typedArrayBase->GetLength());
 
             for (uint32_t k = 0; k < end; k++)
             {
@@ -9051,7 +9051,7 @@ Case0:
         if (typedArrayBase)
         {
             AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-            uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
+            uint32_t end = (uint32_t)std::min(length, (T)typedArrayBase->GetLength());
 
             for (uint32_t k = 0; k < end; k++)
             {
@@ -9271,7 +9271,7 @@ Case0:
         // Make sure we won't underflow during the count calculation
         Assert(finalVal > fromVal && length > toVal);
 
-        long count = min(finalVal - fromVal, length - toVal);
+        long count = std::min(finalVal - fromVal, length - toVal);
 
         // We shouldn't have made it here if the count was going to be zero
         Assert(count > 0);
@@ -9482,7 +9482,7 @@ Case0:
 
         if (k < MaxArrayLength)
         {
-            long end = min<long>(finalVal, MaxArrayLength);
+            long end = std::min<long>(finalVal, MaxArrayLength);
             uint32_t u32k = static_cast<uint32_t>(k);
 
             while (u32k < end)
@@ -9738,7 +9738,7 @@ Case0:
             }
 
             Assert(length <= UINT_MAX);
-            uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
+            uint32_t end = (uint32_t)std::min(length, (T)typedArrayBase->GetLength());
 
             for (uint32_t k = 0; k < end; k++)
             {
@@ -10053,7 +10053,7 @@ Case0:
             if (typedArrayBase)
             {
                 AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-                uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
+                uint32_t end = (uint32_t)std::min(length, (T)typedArrayBase->GetLength());
 
                 for (; k < end && bPresent == false; k++)
                 {
@@ -10098,7 +10098,7 @@ Case0:
         if (typedArrayBase)
         {
             AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-            uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
+            uint32_t end = (uint32_t)std::min(length, (T)typedArrayBase->GetLength());
 
             for (; k < end; k++)
             {
@@ -10235,7 +10235,7 @@ Case0:
             if (typedArrayBase)
             {
                 AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-                uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
+                uint32_t end = (uint32_t)std::min(length, (T)typedArrayBase->GetLength());
 
                 for (; k < end && bPresent == false; k++)
                 {
@@ -10271,7 +10271,7 @@ Case0:
         if (typedArrayBase)
         {
             AssertAndFailFast(VarIsCorrectType(typedArrayBase));
-            uint32_t end = (uint32_t)min(length, (T)typedArrayBase->GetLength());
+            uint32_t end = (uint32_t)std::min(length, (T)typedArrayBase->GetLength());
 
             for (; k < end; k++)
             {
@@ -10884,7 +10884,7 @@ Case0:
     // ArrayElementEnumerator to enumerate array elements (not including elements from prototypes).
     //
     JavascriptArray::ArrayElementEnumerator::ArrayElementEnumerator(JavascriptArray* arr, uint32_t start, uint32_t end)
-        : start(start), end(min(end, arr->length))
+        : start(start), end(std::min(end, arr->length))
     {
         Init(arr);
     }
@@ -10911,8 +10911,8 @@ Case0:
             else
             {
                 // set index to be at target index - 1, so MoveNext will move to target
-                index = max(seg->left, start) - seg->left - 1;
-                endIndex = min(end - seg->left, seg->length);
+                index = std::max(seg->left, start) - seg->left - 1;
+                endIndex = std::min(end - seg->left, seg->length);
             }
         }
     }
@@ -10946,7 +10946,7 @@ Case0:
                 else
                 {
                     index = static_cast<uint32_t>(-1);
-                    endIndex = min(end - seg->left, seg->length);
+                    endIndex = std::min(end - seg->left, seg->length);
                 }
             }
         }
@@ -11369,7 +11369,7 @@ Case0:
     //
     void JavascriptArray::CopyArrayElements(JavascriptArray* dstArray, uint32_t dstIndex, JavascriptArray* srcArray, uint32_t start, uint32_t end)
     {
-        end = min(end, srcArray->length);
+        end = std::min(end, srcArray->length);
         if (start < end)
         {
             Assert(end - start <= MaxArrayLength - dstIndex);
@@ -11410,7 +11410,7 @@ Case0:
     //
     void JavascriptArray::CopyNativeIntArrayElementsToVar(JavascriptArray* dstArray, uint32_t dstIndex, JavascriptNativeIntArray* srcArray, uint32_t start, uint32_t end)
     {
-        end = min(end, srcArray->length);
+        end = std::min(end, srcArray->length);
         if (start < end)
         {
             Assert(end - start <= MaxArrayLength - dstIndex);
@@ -11420,7 +11420,7 @@ Case0:
 
     bool JavascriptArray::CopyNativeIntArrayElements(JavascriptNativeIntArray* dstArray, uint32_t dstIndex, JavascriptNativeIntArray* srcArray, uint32_t start, uint32_t end)
     {
-        end = min(end, srcArray->length);
+        end = std::min(end, srcArray->length);
         if (start >= end)
         {
             return false;
@@ -11453,7 +11453,7 @@ Case0:
 
     bool JavascriptArray::CopyNativeIntArrayElementsToFloat(JavascriptNativeFloatArray* dstArray, uint32_t dstIndex, JavascriptNativeIntArray* srcArray, uint32_t start, uint32_t end)
     {
-        end = min(end, srcArray->length);
+        end = std::min(end, srcArray->length);
         if (start >= end)
         {
             return false;
@@ -11489,7 +11489,7 @@ Case0:
     //
     void JavascriptArray::CopyNativeFloatArrayElementsToVar(JavascriptArray* dstArray, uint32_t dstIndex, JavascriptNativeFloatArray* srcArray, uint32_t start, uint32_t end)
     {
-        end = min(end, srcArray->length);
+        end = std::min(end, srcArray->length);
         if (start < end)
         {
             Assert(end - start <= MaxArrayLength - dstIndex);
@@ -11499,7 +11499,7 @@ Case0:
 
     bool JavascriptArray::CopyNativeFloatArrayElements(JavascriptNativeFloatArray* dstArray, uint32_t dstIndex, JavascriptNativeFloatArray* srcArray, uint32_t start, uint32_t end)
     {
-        end = min(end, srcArray->length);
+        end = std::min(end, srcArray->length);
         if (start >= end)
         {
             return false;
@@ -11961,7 +11961,7 @@ Case0:
             dst->left = src->left;
             dst->length = src->length;
             uint inlineChunkSize = SparseArraySegmentBase::INLINE_CHUNK_SIZE;
-            dst->size = min(src->size, inlineChunkSize);
+            dst->size = std::min(src->size, inlineChunkSize);
             sourceSize = dst->size;
         }
         else

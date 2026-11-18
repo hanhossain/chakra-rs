@@ -214,7 +214,7 @@ namespace Js
         // Try to move the segment leftwards if it overshoots next segment
         if (next && size > next->left - left)
         {
-            size = min(size, next->left - (prev->left + prev->size));
+            size = std::min(size, next->left - (prev->left + prev->size));
             left = next->left - size;
         }
 
@@ -408,7 +408,7 @@ namespace Js
         Assert(maxValue <= JavascriptArray::MaxArrayLength - (left + size));
         AssertMsg(minValue <= maxValue, "Invalid values to GrowByMinMax");
 
-        return GrowBy(recycler, max(minValue,min(maxValue, GetGrowByFactor())));
+        return GrowBy(recycler, std::max(minValue,std::min(maxValue, GetGrowByFactor())));
     }
 
     template<>
@@ -496,7 +496,7 @@ namespace Js
         Assert(n <= left);
         Assert(size + n > size);
 
-        n = min(n, GetGrowByFactor());
+        n = std::min(n, GetGrowByFactor());
 
         if (size + n <= size)
         {

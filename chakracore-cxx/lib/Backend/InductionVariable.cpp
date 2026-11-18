@@ -187,6 +187,6 @@ void InductionVariable::Merge(const InductionVariable &other)
 
     changeBounds =
         IntConstantBounds(
-            min(changeBounds.LowerBound(), other.changeBounds.LowerBound()),
-            max(changeBounds.UpperBound(), other.changeBounds.UpperBound()));
+            std::min(changeBounds.LowerBound(), other.changeBounds.LowerBound()),
+            std::max(changeBounds.UpperBound(), other.changeBounds.UpperBound()));
 }

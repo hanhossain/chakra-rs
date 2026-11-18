@@ -1505,7 +1505,7 @@ Recycler::TryMarkBigBlockListWithWriteWatch(BigBlock * memoryBlocks)
             size_t count = 1;
             if (::GetWriteWatch(writeWatchFlags, currentPageStart, AutoSystemInfo::PageSize, &written, &count, &pageSize) != 0 || count == 1)
             {
-                char * currentEnd = min(currentPageStart + pageSize, endAddress);
+                char * currentEnd = std::min(currentPageStart + pageSize, endAddress);
                 size_t byteCount = (size_t)(currentEnd - currentAddress);
                 scanRootBytes += byteCount;
                 this->ScanMemory<false>((void **)currentAddress, byteCount);

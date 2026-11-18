@@ -7276,7 +7276,7 @@ BackwardPass::TransferCompoundedAddSubUsesToSrcs(IR::Instr *const instr, const i
             // Since a src may be compounded through different chains of add/sub instructions, the greater number must be
             // preserved
             srcSym->scratch.globOpt.numCompoundedAddSubUses =
-                max(srcSym->scratch.globOpt.numCompoundedAddSubUses, addSubUses);
+                std::max(srcSym->scratch.globOpt.numCompoundedAddSubUses, addSubUses);
         }
         else
         {

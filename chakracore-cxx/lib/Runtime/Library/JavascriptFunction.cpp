@@ -2737,7 +2737,7 @@ using namespace Js;
 
                     size_t decodedCount = utf8::DecodeUnitsInto(stringBuilder->AllocBufferSpace(count), pbStart, pbStart + cbLength, options);
                     Assert(decodedCount < MaxCharCount);
-                    stringBuilder->IncreaseCount(min(DIAG_MAX_FUNCTION_STRING, (charcount_t)decodedCount));
+                    stringBuilder->IncreaseCount(std::min(DIAG_MAX_FUNCTION_STRING, (charcount_t)decodedCount));
                     return TRUE;
                 }
             }

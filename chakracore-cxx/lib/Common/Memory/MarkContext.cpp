@@ -90,7 +90,7 @@ uint MarkContext::Split(uint targetCount, __in_ecount(targetCount) MarkContext *
     const uint markStackSplitCount = this->markStack.Split(targetCount, targetMarkStacks);
 #ifdef RECYCLER_VISITED_HOST
     const uint preciseStackSplitCount = this->preciseStack.Split(targetCount, targetPreciseStacks);
-    return max(markStackSplitCount, preciseStackSplitCount);
+    return std::max(markStackSplitCount, preciseStackSplitCount);
 #else
     return markStackSplitCount;
 #endif

@@ -1798,7 +1798,7 @@ namespace Js
         executeFunction->IncreaseInterpretedCount();
 #ifdef BGJIT_STATS
         functionScriptContext->interpretedCount++;
-        functionScriptContext->maxFuncInterpret = max(functionScriptContext->maxFuncInterpret, executeFunction->GetInterpretedCount());
+        functionScriptContext->maxFuncInterpret = std::max(functionScriptContext->maxFuncInterpret, executeFunction->GetInterpretedCount());
 #endif
 
         AssertMsg(!executeFunction->IsDeferredParseFunction(),
@@ -5547,7 +5547,7 @@ namespace Js
                     // Reset the totalJittedLoopIterations for the next invocation of this loop entry point
                     entryPointInfo->totalJittedLoopIterations =
                         static_cast<uint8_t>(
-                            min(
+                            std::min(
                                 static_cast<uint>(static_cast<uint8_t>(CONFIG_FLAG(MinBailOutsBeforeRejit))) *
                                 (Js::LoopEntryPointInfo::GetDecrLoopCountPerBailout() - 1),
                                 entryPointInfo->totalJittedLoopIterations));

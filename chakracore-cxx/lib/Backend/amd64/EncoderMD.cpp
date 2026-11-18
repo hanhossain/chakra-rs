@@ -1205,7 +1205,7 @@ EncoderMD::Encode(IR::Instr *instr, uint8_t *pc, uint8_t* beginCodeAddress)
                     Assert(instr->GetSrc1()->IsIntConstOpnd() && instr->GetSrc1()->GetType() == TyInt8);
                     unsigned nopSize = instr->GetSrc1()->AsIntConstOpnd()->AsUint32();
                     Assert(nopSize >= 2 && nopSize <= 4);
-                    nopSize = max(2u, min(4u, nopSize)); // satisfy oacr
+                    nopSize = std::max(2u, std::min(4u, nopSize)); // satisfy oacr
                     const uint8_t *nopEncoding = Nop[nopSize - 1];
                     opcodeByte = nopEncoding[0];
                     for (unsigned i = 1; i < nopSize; i++)

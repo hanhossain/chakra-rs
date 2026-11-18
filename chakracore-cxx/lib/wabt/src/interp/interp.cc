@@ -1275,7 +1275,7 @@ ValueTypeRep<T> FloatMin(ValueTypeRep<T> lhs_rep, ValueTypeRep<T> rhs_rep) {
     return rhs_rep | Traits::kQuietNanBit;
   } else if (__builtin_expect(!!(Traits::IsZero(lhs_rep, 0)) &&
                            Traits::IsZero(rhs_rep))) {
-    // min(0.0, -0.0) == -0.0, but std::min won't produce the correct result.
+    // std::min(0.0, -0.0) == -0.0, but std::min won't produce the correct result.
     // We can instead compare using the unsigned integer representation, but
     // just max instead (since the sign bit makes the value larger).
     return std::max(lhs_rep, rhs_rep);
@@ -1295,7 +1295,7 @@ ValueTypeRep<T> FloatMax(ValueTypeRep<T> lhs_rep, ValueTypeRep<T> rhs_rep) {
     return rhs_rep | Traits::kQuietNanBit;
   } else if (__builtin_expect(!!(Traits::IsZero(lhs_rep, 0)) &&
                            Traits::IsZero(rhs_rep))) {
-    // min(0.0, -0.0) == -0.0, but std::min won't produce the correct result.
+    // std::min(0.0, -0.0) == -0.0, but std::min won't produce the correct result.
     // We can instead compare using the unsigned integer representation, but
     // just max instead (since the sign bit makes the value larger).
     return std::min(lhs_rep, rhs_rep);

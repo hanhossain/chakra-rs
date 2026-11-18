@@ -372,7 +372,7 @@ namespace Js
     {
         if (requestedSlotCount > 0)
         {
-            m_slotCount = min(requestedSlotCount, this->c_maxChunkSlotCount);
+            m_slotCount = std::min(requestedSlotCount, this->c_maxChunkSlotCount);
             m_slots = RecyclerNewArray(this->GetScriptContext()->GetRecycler(), typename WriteBarrierFieldTypeTraits<JavascriptString*>::Type, m_slotCount);
         }
         else

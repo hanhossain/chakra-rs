@@ -2742,7 +2742,7 @@ StoreCommon:
         if (Js::Configuration::Global.flags.IsEnabled(Js::ByteCodeBranchLimitFlag))
         {
             // minimum 64
-            return min(max(Js::Configuration::Global.flags.ByteCodeBranchLimit, 64), SHRT_MAX + 1);
+            return std::min(std::max(Js::Configuration::Global.flags.ByteCodeBranchLimit, 64), SHRT_MAX + 1);
         }
 #endif
 
@@ -3312,7 +3312,7 @@ StoreCommon:
 
         // For some data elements i.e. bytecode we have a good initial size and
         // therefore, we use a conservative growth strategy - and grow by a fixed size.
-        uint newSize = fixedGrowthPolicy ? max(byteSize, static_cast<uint>(3 * AutoSystemInfo::PageSize)) : max(byteSize, static_cast<uint>(current->GetSize() * 2));
+        uint newSize = fixedGrowthPolicy ? std::max(byteSize, static_cast<uint>(3 * AutoSystemInfo::PageSize)) : std::max(byteSize, static_cast<uint>(current->GetSize() * 2));
 
         DataChunk* newChunk = Anew(tempAllocator, DataChunk, tempAllocator, newSize);
         current->nextChunk = newChunk;

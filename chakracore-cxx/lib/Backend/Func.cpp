@@ -542,14 +542,14 @@ Func::StackAllocate(int size)
 
 #ifdef MD_GROW_LOCALS_AREA_UP
     // Locals have positive offsets and are allocated from bottom to top.
-    m_localStackHeight = Math::Align(m_localStackHeight, min(size, MachStackAlignment));
+    m_localStackHeight = Math::Align(m_localStackHeight, std::min(size, MachStackAlignment));
 
     offset = m_localStackHeight;
     m_localStackHeight += size;
 #else
     // Locals have negative offsets and are allocated from top to bottom.
     m_localStackHeight += size;
-    m_localStackHeight = Math::Align(m_localStackHeight, min(size, MachStackAlignment));
+    m_localStackHeight = Math::Align(m_localStackHeight, std::min(size, MachStackAlignment));
 
     offset = -m_localStackHeight;
 #endif
@@ -1809,7 +1809,7 @@ void
 Func::UpdateForInLoopMaxDepth(uint forInLoopMaxDepth)
 {
     Assert(this->IsTopFunc());
-    this->m_forInLoopMaxDepth = max(this->m_forInLoopMaxDepth, forInLoopMaxDepth);
+    this->m_forInLoopMaxDepth = std::max(this->m_forInLoopMaxDepth, forInLoopMaxDepth);
 }
 
 int

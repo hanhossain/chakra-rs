@@ -432,7 +432,7 @@ namespace JsUtil
         void Initialize(int capacity)
         {
             // minimum capacity is 4
-            int initSize = max(capacity, 4);
+            int initSize = std::max(capacity, 4);
             int modIndex = UNKNOWN_MOD_INDEX;
             uint initBucketCount = SizePolicy::GetBucketSize(initSize, &modIndex);
             AssertMsg(initBucketCount > 0, "Size returned by policy should be greater than 0");

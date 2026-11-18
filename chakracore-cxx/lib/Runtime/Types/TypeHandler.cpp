@@ -57,7 +57,7 @@ using namespace Js;
             slotCapacity <= PropertyIndexRanges<PropertyIndex>::MaxValue
                 ? PropertyIndexRanges<PropertyIndex>::MaxValue
                 : PropertyIndexRanges<BigPropertyIndex>::MaxValue;
-        return min(maxSlotCapacity, inlineSlotCapacity + auxSlotCapacity);
+        return std::min(maxSlotCapacity, inlineSlotCapacity + auxSlotCapacity);
     }
 
     DynamicTypeHandler::DynamicTypeHandler(int slotCapacity, uint16 inlineSlotCapacity, uint16 offsetOfInlineSlots, uint8_t flags) :

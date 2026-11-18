@@ -804,7 +804,7 @@ namespace UnifiedRegex
     {
         if (litbufLen - litbufNext < size)
         {
-            CharCount newLen = max(litbufLen, initLitbufSize);
+            CharCount newLen = std::max(litbufLen, initLitbufSize);
             while (newLen < litbufNext + size)
                 newLen *= 2;
             litbuf = reinterpret_cast<Char*>(ctAllocator->Realloc(litbuf, litbufLen * sizeof(Char), newLen * sizeof(Char)));

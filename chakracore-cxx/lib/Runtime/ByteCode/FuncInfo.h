@@ -617,7 +617,7 @@ public:
         {
             Js::Throw::OutOfMemory();
         }
-        outArgsMaxDepth = max(outArgsMaxDepth, outArgsCurrentExpr);
+        outArgsMaxDepth = std::max(outArgsMaxDepth, outArgsCurrentExpr);
     }
 
     void EndRecordingOutArgs(Js::ArgSlot argCount)
@@ -637,7 +637,7 @@ public:
     uint AcquireForInLoopLevel()
     {
         uint forInLoopLevel = this->nextForInLoopLevel++;
-        this->maxForInLoopLevel = max(this->maxForInLoopLevel, this->nextForInLoopLevel);
+        this->maxForInLoopLevel = std::max(this->maxForInLoopLevel, this->nextForInLoopLevel);
         return forInLoopLevel;
     }
 

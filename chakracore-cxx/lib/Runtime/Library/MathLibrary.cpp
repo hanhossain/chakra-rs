@@ -532,7 +532,7 @@ namespace Js
             hasOnlyIntegerArgs = TaggedInt::OnlyContainsTaggedInt(args);
             if (hasOnlyIntegerArgs && args.Info.Count == 3)
             {
-                return TaggedInt::ToVarUnchecked(max(TaggedInt::ToInt32(args[1]), TaggedInt::ToInt32(args[2])));
+                return TaggedInt::ToVarUnchecked(std::max(TaggedInt::ToInt32(args[1]), TaggedInt::ToInt32(args[2])));
             }
         }
 
@@ -619,7 +619,7 @@ namespace Js
             hasOnlyIntegerArgs = TaggedInt::OnlyContainsTaggedInt(args);
             if (hasOnlyIntegerArgs && args.Info.Count == 3)
             {
-                return TaggedInt::ToVarUnchecked(min(TaggedInt::ToInt32(args[1]), TaggedInt::ToInt32(args[2])));
+                return TaggedInt::ToVarUnchecked(std::min(TaggedInt::ToInt32(args[1]), TaggedInt::ToInt32(args[2])));
             }
         }
 

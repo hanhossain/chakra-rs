@@ -555,7 +555,7 @@ namespace UnifiedRegex
         {
             if (children[i] == nullptr)
                 // Caution: Part of the range for this child may overlap with direct vector
-                result.SetRange(allocator, UTC(max(base, directSize)), UTC(base + delta - 1));
+                result.SetRange(allocator, UTC(std::max(base, directSize)), UTC(base + delta - 1));
             else
                 children[i]->ToComplement(allocator, level, base, result);
             base += delta;
@@ -1035,7 +1035,7 @@ namespace UnifiedRegex
         {
             if (lowerValue < CharSetNode::directSize)
             {
-                uint maxDirectValue = min(higherValue, CharSetNode::directSize - 1);
+                uint maxDirectValue = std::min(higherValue, CharSetNode::directSize - 1);
                 rep.full.direct.ClearRange(lowerValue, maxDirectValue);
             }
 
@@ -1414,7 +1414,7 @@ namespace UnifiedRegex
         if (!IsCompact())
             return -1;
 
-        uint count = min(max, this->GetCompactLength());
+        uint count = std::min(max, this->GetCompactLength());
         for (uint i = 0; i < count; i++)
         {
             // Bug in oacr. it can't figure out count is less than or equal to max

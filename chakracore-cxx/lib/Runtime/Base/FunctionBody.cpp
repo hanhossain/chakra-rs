@@ -3692,7 +3692,7 @@ namespace Js
             Assert(isAsmJs || GetExecutionMode() == ExecutionMode::FullJit);
             entryPointInfo->callsCount =
                 static_cast<uint8_t>(
-                    min(
+                    std::min(
                         static_cast<uint>(static_cast<uint8_t>(CONFIG_FLAG(MinBailOutsBeforeRejit))) *
                             (Js::FunctionEntryPointInfo::GetDecrCallCountPerBailout() - 1),
                         0xffu));
@@ -3735,7 +3735,7 @@ namespace Js
 
         ((Js::LoopEntryPointInfo*)entryPointInfo)->totalJittedLoopIterations =
             static_cast<uint8_t>(
-                min(
+                std::min(
                     static_cast<uint>(MinBailOutsBeforeRejitForLoops) *
                     (Js::LoopEntryPointInfo::GetDecrLoopCountPerBailout() - 1),
                     0xffu));
@@ -6331,7 +6331,7 @@ namespace Js
         Assert(GetDefaultFunctionEntryPointInfo() == GetSimpleJitEntryPointInfo());
 
         // Simple JIT counts down and transitions on overflow
-        const uint8_t limit = static_cast<uint8_t>(min(0xffui16, simpleJitLimit));
+        const uint8_t limit = static_cast<uint8_t>(std::min(0xffui16, simpleJitLimit));
         GetSimpleJitEntryPointInfo()->callsCount = limit == 0 ? 0 : limit - 1;
     }
 
@@ -6571,7 +6571,7 @@ namespace Js
 
     uint FunctionBody::GetMinLoopProfileIterations(const uint loopInterpreterLimit)
     {
-        return min(static_cast<uint>(GetMinProfileIterations()), loopInterpreterLimit);
+        return std::min(static_cast<uint>(GetMinProfileIterations()), loopInterpreterLimit);
     }
 
     uint FunctionBody::GetLoopProfileThreshold(const uint loopInterpreterLimit) const
@@ -6591,7 +6591,7 @@ namespace Js
         {
             return loopInterpretCount;
         }
-        return max(loopInterpretCount / 3, GetMinLoopProfileIterations(loopInterpretCount));
+        return std::max(loopInterpretCount / 3, GetMinLoopProfileIterations(loopInterpretCount));
     }
 
     uint FunctionBody::GetLoopInterpretCount(LoopHeader* loopHeader) const

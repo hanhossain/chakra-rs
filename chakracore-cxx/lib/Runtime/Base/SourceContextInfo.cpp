@@ -20,7 +20,7 @@ void SourceContextInfo::EnsureInitialized()
     }
 
     // Match the dictionaries resize policy in calculating the amount to grow by
-    uint newFunctionBodyCount = max(this->nextLocalFunctionId, UInt32Math::Add(oldFunctionBodyArraySize, oldFunctionBodyArraySize / 3));
+    uint newFunctionBodyCount = std::max(this->nextLocalFunctionId, UInt32Math::Add(oldFunctionBodyArraySize, oldFunctionBodyArraySize / 3));
 
     if(sourceDynamicProfileManager)
     {

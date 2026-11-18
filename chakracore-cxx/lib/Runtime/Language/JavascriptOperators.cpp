@@ -5483,7 +5483,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                     ?   scriptContext->GetLibrary()->GetObjectHeaderInlinedLiteralType((uint16)propIds->count)
                     :   scriptContext->GetLibrary()->GetObjectLiteralType(
                             static_cast<PropertyIndex>(
-                                min(propIds->count, static_cast<uint32_t>(MaxPreInitializedObjectTypeInlineSlotCount))));
+                                std::min(propIds->count, static_cast<uint32_t>(MaxPreInitializedObjectTypeInlineSlotCount))));
             newType = PathTypeHandlerBase::CreateTypeForNewScObject(scriptContext, objectType, propIds, false);
             *literalType = newType;
         }
@@ -5533,7 +5533,7 @@ SetElementIHelper_INDEX_TYPE_IS_NUMBER:
                 ?   DynamicTypeHandler::RoundUpObjectHeaderInlinedInlineSlotCapacity(static_cast<PropertyIndex>(propIds->count))
                 :   DynamicTypeHandler::RoundUpInlineSlotCapacity(
                         static_cast<PropertyIndex>(
-                            min(propIds->count, static_cast<uint32_t>(MaxPreInitializedObjectTypeInlineSlotCount))));
+                            std::min(propIds->count, static_cast<uint32_t>(MaxPreInitializedObjectTypeInlineSlotCount))));
     }
 
     Var JavascriptOperators::OP_InitCachedScope(Var varFunc, const Js::PropertyIdArray *propIds, typename WriteBarrierFieldTypeTraits<DynamicType*>::Type* literalType, bool formalsAreLetDecls, ScriptContext *scriptContext)

@@ -118,7 +118,7 @@ void DbCheckPostLower::Check(IR::Opnd *opnd)
         IRType symType = opnd->AsSymOpnd()->m_sym->AsStackSym()->GetType();
         if (symType != TyMisc)
         {
-            uint symSize = static_cast<uint>(max(TySize[symType], MachRegInt));
+            uint symSize = static_cast<uint>(std::max(TySize[symType], MachRegInt));
             AssertMsg(static_cast<uint>(TySize[opnd->AsSymOpnd()->GetType()]) + opnd->AsSymOpnd()->m_offset <= symSize, "SymOpnd cannot refer to a size greater than Sym's reference");
         }
     }

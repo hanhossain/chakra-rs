@@ -548,11 +548,11 @@ namespace Js
 
             if (value < 0)
             {
-                fromIndex = addWithLength ? (T)max(0i64, (long)(value + length)) : 0;
+                fromIndex = addWithLength ? (T)std::max(0i64, (long)(value + length)) : 0;
             }
             else
             {
-                fromIndex = (T)min(value, (double)length);
+                fromIndex = (T)std::min(value, (double)length);
             }
             return fromIndex;
         }
