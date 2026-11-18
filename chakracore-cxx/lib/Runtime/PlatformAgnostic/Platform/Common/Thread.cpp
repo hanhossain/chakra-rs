@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 
 #include "PlatformAgnostic/CommonPal.h"
+#include "Core/Assertions.h"
 
 #include <stdint.h>
 

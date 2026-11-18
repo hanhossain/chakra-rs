@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
+#include <cstdint>
 #include <limits.h>
 
 typedef unsigned int uint;

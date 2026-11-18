@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
+#include "Core/Assertions.h"
 #include "UnicodeText.h"
 #include "UnicodeTextInternal.h"
 #include "ChakraICU.h"
