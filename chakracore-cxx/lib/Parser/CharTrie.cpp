@@ -70,7 +70,7 @@ namespace UnifiedRegex
         {
             if (capacity <= count)
             {
-                int newCapacity = max(capacity * 2, initCapacity);
+                int newCapacity = std::max(capacity * 2, initCapacity);
                 children = reinterpret_cast<CharTrieEntry*>(allocator->Realloc(children, capacity * sizeof(CharTrieEntry),
                                                                                newCapacity * sizeof(CharTrieEntry)));
                 capacity = newCapacity;

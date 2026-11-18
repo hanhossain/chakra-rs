@@ -552,7 +552,7 @@ LowererMDArch::LowerCallArgs(IR::Instr *callInstr, ushort callFlags, Js::ArgSlot
     startCallInstr = this->LowerStartCall(startCallInstr);
 
     const uint32_t argSlots = argCount + 1 + extraParams; // + 1 for call flags
-    this->m_func->m_argSlotsForFunctionsCalled = max(this->m_func->m_argSlotsForFunctionsCalled, argSlots);
+    this->m_func->m_argSlotsForFunctionsCalled = std::max(this->m_func->m_argSlotsForFunctionsCalled, argSlots);
 
     if (m_func->GetJITFunctionBody()->IsAsmJsMode())
     {
@@ -931,7 +931,7 @@ LowererMDArch::LowerCall(IR::Instr * callInstr, uint32_t argCount)
     {
         const int callArgCount = this->helperCallArgsCount + static_cast<int>(argCount);
 
-        int argRegs = min(callArgCount, static_cast<int>(XmmArgRegsCount));
+        int argRegs = std::min(callArgCount, static_cast<int>(XmmArgRegsCount));
 
         for (int i = argRegs; i > 0; i--)
         {
@@ -999,7 +999,7 @@ LowererMDArch::LowerCall(IR::Instr * callInstr, uint32_t argCount)
     // Reset the call
     //
 
-    this->m_func->m_argSlotsForFunctionsCalled  = max(this->m_func->m_argSlotsForFunctionsCalled , (uint32_t)this->helperCallArgsCount);
+    this->m_func->m_argSlotsForFunctionsCalled  = std::max(this->m_func->m_argSlotsForFunctionsCalled , (uint32_t)this->helperCallArgsCount);
     this->helperCallArgsCount = 0;
 
     return retInstr;

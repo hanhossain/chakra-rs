@@ -824,7 +824,7 @@ SwitchIRBuilder::BuildMultiBrCaseInstrForStrings(uint32_t targetOffset)
     char16_t maxChar = 0;
 
     // Either the jump table is within the limit (<= 128) or it is dense (<= 2 * case Count)
-    uint const maxJumpTableSize = max<uint>(128, 2 * caseCount);
+    uint const maxJumpTableSize = std::max<uint>(128, 2 * caseCount);
     if (this->m_seenOnlySingleCharStrCaseNodes)
     {
         generateDictionary = false;
@@ -833,8 +833,8 @@ SwitchIRBuilder::BuildMultiBrCaseInstrForStrings(uint32_t targetOffset)
             JITJavascriptString * str = m_caseNodes->Item(i)->GetUpperBoundStringConstLocal();
             Assert(str->GetLength() == 1);
             char16_t currChar = str->GetString()[0];
-            minChar = min(minChar, currChar);
-            maxChar = max(maxChar, currChar);
+            minChar = std::min(minChar, currChar);
+            maxChar = std::max(maxChar, currChar);
             if ((uint)(maxChar - minChar) > maxJumpTableSize)
             {
                 generateDictionary = true;

@@ -301,7 +301,7 @@ uint32_t WasmSignature::WriteSignatureToString(_Out_writes_(maxlen) char16_t* ou
 void WasmSignature::Dump(uint32_t maxlen)
 {
     char16_t buf[512] = { 0 };
-    this->WriteSignatureToString(buf, min(maxlen, 512u));
+    this->WriteSignatureToString(buf, std::min(maxlen, 512u));
     Output::Print(buf);
 }
 

@@ -129,7 +129,7 @@ namespace Js
             - If the size is < 100, scale by 1.4
             - If the size is >= 100, scale by 1.6
             */
-            const uint loopPercentage = owner->GetByteCodeInLoopCount() * 100 / max(1u, owner->GetByteCodeCount());
+            const uint loopPercentage = owner->GetByteCodeInLoopCount() * 100 / std::max(1u, owner->GetByteCodeCount());
             const int byteCodeSizeThresholdForInlineCandidate = CONFIG_FLAG(LoopInlineThreshold);
             bool delayFullJITThisFunc =
                 (CONFIG_FLAG(DelayFullJITSmallFunc) > 0) && (owner->GetByteCodeWithoutLDACount() <= static_cast<uint>(byteCodeSizeThresholdForInlineCandidate));
@@ -308,7 +308,7 @@ namespace Js
         Assert(owner->GetDefaultFunctionEntryPointInfo() == owner->GetSimpleJitEntryPointInfo());
 
         // Simple JIT counts down and transitions on overflow
-        const uint8_t limit = static_cast<uint8_t>(min(0xffui16, simpleJitLimit));
+        const uint8_t limit = static_cast<uint8_t>(std::min(0xffui16, simpleJitLimit));
         owner->GetSimpleJitEntryPointInfo()->callsCount = limit == 0 ? 0 : limit - 1;
     }
 
@@ -333,7 +333,7 @@ namespace Js
         const auto ScaleLimit = [&](uint16 &limit) -> bool
         {
             Assert(scale != 0);
-            const int limitScale = max(-static_cast<int>(limit), scale);
+            const int limitScale = std::max(-static_cast<int>(limit), scale);
             const int newLimit = limit + limitScale;
             Assert(static_cast<int>(static_cast<uint16>(newLimit)) == newLimit);
             limit = static_cast<uint16>(newLimit);
@@ -346,7 +346,7 @@ namespace Js
                 if (owner->GetDefaultFunctionEntryPointInfo() == simpleJitEntryPointInfo)
                 {
                     Assert(GetExecutionMode() == ExecutionMode::SimpleJit);
-                    const int newSimpleJitCallCount = max(0, static_cast<int>(simpleJitEntryPointInfo->callsCount) + limitScale);
+                    const int newSimpleJitCallCount = std::max(0, static_cast<int>(simpleJitEntryPointInfo->callsCount) + limitScale);
                     Assert(static_cast<int>(static_cast<uint16>(newSimpleJitCallCount)) == newSimpleJitCallCount);
                     SetSimpleJitCallCount(static_cast<uint16>(newSimpleJitCallCount));
                 }

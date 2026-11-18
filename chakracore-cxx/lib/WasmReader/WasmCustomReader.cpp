@@ -45,7 +45,7 @@ void WasmCustomReader::AddNode(WasmNode node)
 
 uint32_t WasmCustomReader::EstimateCurrentFunctionBytecodeSize() const
 {
-    uint32_t count = min(static_cast<uint32_t>(m_nodes.Count()), static_cast<uint32_t>(AutoSystemInfo::PageSize));
+    uint32_t count = std::min(static_cast<uint32_t>(m_nodes.Count()), static_cast<uint32_t>(AutoSystemInfo::PageSize));
     // On average each node takes between 3 - 7 bytes to encode
     return count * 5;
 }

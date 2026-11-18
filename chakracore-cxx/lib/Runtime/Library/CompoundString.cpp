@@ -257,7 +257,7 @@ using namespace Js;
     uint CompoundString::Block::GrowSizeForChaining(const uint size)
     {
         const uint newSize = GrowSize(size);
-        return min(MaxChainedBlockSize, newSize);
+        return std::min(MaxChainedBlockSize, newSize);
     }
 
     CompoundString::Block *CompoundString::Block::Chain(Recycler *const recycler)
@@ -793,7 +793,7 @@ using namespace Js;
         {
             const CharCount blockCharLength = LastBlockCharLength();
             const CharCount copyCharLength =
-                min(LastBlockCharCapacity() - blockCharLength, appendCharLength - copiedCharLength);
+                std::min(LastBlockCharCapacity() - blockCharLength, appendCharLength - copiedCharLength);
             CopyHelper(&LastBlockChars()[blockCharLength], &s[copiedCharLength], copyCharLength);
             SetLastBlockCharLength(blockCharLength + copyCharLength);
             copiedCharLength += copyCharLength;

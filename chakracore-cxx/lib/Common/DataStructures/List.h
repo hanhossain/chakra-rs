@@ -250,7 +250,7 @@ namespace JsUtil
         {
             if (this->buffer == nullptr)
             {
-                int32_t newSize = max(requiredCapacity, increment);
+                int32_t newSize = std::max(requiredCapacity, increment);
 
                 this->buffer = AllocArray(newSize);
                 this->count = 0;
@@ -266,7 +266,7 @@ namespace JsUtil
                     JsUtil::ExternalApi::RaiseOnIntOverflow();
                 }
 
-                newLength = max(requiredCapacity, newLength);
+                newLength = std::max(requiredCapacity, newLength);
 
                 if (Int32Math::Mul(sizeof(T), newLength, &newBufferSize)
                     || Int32Math::Mul(sizeof(T), length, &oldBufferSize))
@@ -366,7 +366,7 @@ namespace JsUtil
             EnsureArray(index + 1);
             // TODO: (SWB)(leish) find a way to force user defined copy constructor
             this->buffer[index] = item;
-            this->count = max(this->count, index + 1);
+            this->count = std::max(this->count, index + 1);
         }
 
         void SetExistingItem(int index, const T& item)

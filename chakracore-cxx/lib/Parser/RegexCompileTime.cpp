@@ -19,7 +19,7 @@ namespace UnifiedRegex
 
         if (instLen - instNext < size)
         {
-            CharCount newLen = max(instLen, initInstBufSize);
+            CharCount newLen = std::max(instLen, initInstBufSize);
             CharCount instLenPlus = static_cast<CharCount>(instLen + size - 1);
 
             // check for overflow
@@ -954,7 +954,7 @@ namespace UnifiedRegex
 
         CharCount effectiveOffset = offset + skipped * (isEquivClass ? CaseInsensitive::EquivClassSize : 1);
         CharCount effectiveLength = length - skipped;
-        skipped -= min(skipped, length);
+        skipped -= std::min(skipped, length);
 
         if (effectiveLength == 1)
         {
@@ -1387,7 +1387,7 @@ namespace UnifiedRegex
         //   MatchChar(2|3|4)?
         //
 
-        skipped -= min(skipped, static_cast<CharCount>(1));
+        skipped -= std::min(skipped, static_cast<CharCount>(1));
 
         Emit(compiler, cs, isEquivClass);
     }
@@ -1642,7 +1642,7 @@ namespace UnifiedRegex
         //   MatchSet
         //
 
-        skipped -= min(skipped, static_cast<CharCount>(1));
+        skipped -= std::min(skipped, static_cast<CharCount>(1));
 
         RuntimeCharSet<Char> *runtimeSet;
         if(isNegation)
@@ -1897,7 +1897,7 @@ namespace UnifiedRegex
             firstSet = Anew(compiler.ctAllocator, UnicodeCharSet);
             isFirstExact = true;
             item = 0;
-            for (ConcatNode* curr = this; item <= min(emptyPrefix, n - 1); curr = curr->tail, item++)
+            for (ConcatNode* curr = this; item <= std::min(emptyPrefix, n - 1); curr = curr->tail, item++)
             {
                 AnalysisAssert(curr);
                 firstSet->UnionInPlace(compiler.ctAllocator, *curr->head->firstSet);
@@ -2581,7 +2581,7 @@ namespace UnifiedRegex
             CharCount thisLen = curr->head->MinSyncronizingLiteralLength(compiler, localNumLiterals);
             if (thisLen <= 1)
                 return 0;
-            minLen = min(minLen, thisLen);
+            minLen = std::min(minLen, thisLen);
         }
         numLiterals = localNumLiterals;
 

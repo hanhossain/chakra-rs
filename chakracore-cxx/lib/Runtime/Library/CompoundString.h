@@ -1077,7 +1077,7 @@ namespace Js
         {
             Output::Print(
                 u"CompoundString::AppendGeneric(JavascriptString *s = \"%.*s%s\", startIndex = %u, appendCharLength = %u, appendChars = %s)\n",
-                min(static_cast<CharCount>(8), appendCharLength),
+                std::min(static_cast<CharCount>(8), appendCharLength),
                 s->IsFinalized() ? &s->GetString()[startIndex] : u"",
                 !s->IsFinalized() || appendCharLength > 8 ? u"..." : u"",
                 startIndex,

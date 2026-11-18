@@ -11,7 +11,7 @@ namespace Js
         uint32_t newSize = UInt32Math::Add(static_cast<uint32_t>(m_current), static_cast<uint32_t>(cb));
         if (newSize >= m_capacity)
         {
-            size_t newCapacity = UInt32Math::Add(max(newSize, UInt32Math::Mul(static_cast<uint32_t>(m_capacity), 2)), 100);
+            size_t newCapacity = UInt32Math::Add(std::max(newSize, UInt32Math::Mul(static_cast<uint32_t>(m_capacity), 2)), 100);
             BEGIN_LEAVE_SCRIPT(scriptContext)
             {
                 m_buffer = m_stream->ExtendBuffer(m_buffer, newCapacity, &m_capacity);

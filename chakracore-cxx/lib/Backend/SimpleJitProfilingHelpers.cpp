@@ -21,7 +21,7 @@ using namespace Js;
         // Ignore the first param. 'this' is profiled as part of LdThis.
         ArgSlot paramIndex = 1;
 
-        const auto maxValid = min((ArgSlot)args.Info.Count, requiredInParamCount);
+        const auto maxValid = std::min((ArgSlot)args.Info.Count, requiredInParamCount);
         for (; paramIndex < maxValid; paramIndex++)
         {
             dynamicInfo->RecordParameterInfo(executeFunction, paramIndex - 1, args[paramIndex]);

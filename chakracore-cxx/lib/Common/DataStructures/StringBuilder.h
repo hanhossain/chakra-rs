@@ -153,7 +153,7 @@ namespace Js
             {
                 if (this->initialSize < MaxLength)
                 {
-                    newLength = max(newLength, this->initialSize + 1);
+                    newLength = std::max(newLength, this->initialSize + 1);
                 }
                 else
                 {

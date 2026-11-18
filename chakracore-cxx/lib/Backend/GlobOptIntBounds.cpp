@@ -431,8 +431,8 @@ ValueInfo *GlobOpt::UpdateIntBoundsForEqual(
         return nullptr;
     }
 
-    const int32_t newMin = max(constantBounds.LowerBound(), boundConstantBounds.LowerBound());
-    const int32_t newMax = min(constantBounds.UpperBound(), boundConstantBounds.UpperBound());
+    const int32_t newMin = std::max(constantBounds.LowerBound(), boundConstantBounds.LowerBound());
+    const int32_t newMax = std::min(constantBounds.UpperBound(), boundConstantBounds.UpperBound());
     return newMin <= newMax ? NewIntRangeValueInfo(valueInfo, newMin, newMax) : nullptr;
 }
 
@@ -580,7 +580,7 @@ ValueInfo *GlobOpt::UpdateIntBoundsForGreaterThanOrEqual(
     {
         return nullptr;
     }
-    const int32_t newMin = max(constantBounds.LowerBound(), adjustedBoundMin);
+    const int32_t newMin = std::max(constantBounds.LowerBound(), adjustedBoundMin);
     return
         newMin <= constantBounds.UpperBound()
             ? NewIntRangeValueInfo(valueInfo, newMin, constantBounds.UpperBound())
@@ -665,7 +665,7 @@ ValueInfo *GlobOpt::UpdateIntBoundsForLessThanOrEqual(
     {
         return nullptr;
     }
-    const int32_t newMax = min(constantBounds.UpperBound(), adjustedBoundMax);
+    const int32_t newMax = std::min(constantBounds.UpperBound(), adjustedBoundMax);
     return
         newMax >= constantBounds.LowerBound()
             ? NewIntRangeValueInfo(valueInfo, constantBounds.LowerBound(), newMax)

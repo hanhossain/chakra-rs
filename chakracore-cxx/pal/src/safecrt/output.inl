@@ -888,7 +888,7 @@ int _output (
                 /* print a string --                            */
                 /* ANSI rules on how much of string to print:   */
                 /*   all if precision is default,               */
-                /*   min(precision, length) if precision given. */
+                /*   std::min(precision, length) if precision given. */
                 /* prints '(null)' if a null string is passed   */
 
                 int i;

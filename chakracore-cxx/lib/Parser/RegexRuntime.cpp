@@ -2206,7 +2206,7 @@ namespace UnifiedRegex
         {
             // Backup at most by backup.upper for new start
             CharCount maxBackup = inputOffset - matchStart;
-            matchStart = inputOffset - min(maxBackup, static_cast<CharCount>(backup.upper));
+            matchStart = inputOffset - std::min(maxBackup, static_cast<CharCount>(backup.upper));
         }
         // else: leave start where it is
 
@@ -2274,7 +2274,7 @@ namespace UnifiedRegex
         {
             // Backup at most by backup.upper for new start
             CharCount maxBackup = inputOffset - matchStart;
-            matchStart = inputOffset - min(maxBackup, static_cast<CharCount>(backup.upper));
+            matchStart = inputOffset - std::min(maxBackup, static_cast<CharCount>(backup.upper));
         }
         // else: leave start where it is
 
@@ -2341,7 +2341,7 @@ namespace UnifiedRegex
         {
             // Set new start at most backup.upper from start of literal
             CharCount maxBackup = inputOffset - matchStart;
-            matchStart = inputOffset - min(maxBackup, static_cast<CharCount>(backup.upper));
+            matchStart = inputOffset - std::min(maxBackup, static_cast<CharCount>(backup.upper));
         }
         // else: leave start where it is
 
@@ -2520,7 +2520,7 @@ namespace UnifiedRegex
         {
             // Set new start at most backup.upper from start of literal
             CharCount maxBackup = bestMatchOffset - matchStart;
-            matchStart = bestMatchOffset - min(maxBackup, static_cast<CharCount>(backup.upper));
+            matchStart = bestMatchOffset - std::min(maxBackup, static_cast<CharCount>(backup.upper));
         }
         // else: leave start where it is
 
@@ -4660,7 +4660,7 @@ namespace UnifiedRegex
 
         // If loopInfo->number now is less than begins->repeats.lower, the loop
         // shouldn't match anything. In that case, stop backtracking.
-        loopInfo->number = max(loopInfo->number, begin->repeats.lower);
+        loopInfo->number = std::max(loopInfo->number, begin->repeats.lower);
         // Rewind input
         inputOffset = loopInfo->startInputOffset + loopInfo->number;
 

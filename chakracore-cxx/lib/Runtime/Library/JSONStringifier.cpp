@@ -23,7 +23,7 @@ JSONStringifier::JSONStringifier(_In_ ScriptContext* scriptContext) :
 void
 JSONStringifier::SetStringGap(_In_ JavascriptString* spaceString)
 {
-    this->gapLength = min(MaxGapLength, spaceString->GetLength());
+    this->gapLength = std::min(MaxGapLength, spaceString->GetLength());
     if (this->gapLength != 0)
     {
         this->gap = RecyclerNewArrayLeaf(this->scriptContext->GetRecycler(), char16_t, this->gapLength);
@@ -50,7 +50,7 @@ JSONStringifier::ReadSpace(_In_opt_ Var space)
         switch (JavascriptOperators::GetTypeId(space))
         {
         case TypeIds_Integer:
-            this->SetNumericGap(static_cast<charcount_t>(max(0, min(static_cast<int>(MaxGapLength), TaggedInt::ToInt32(space)))));
+            this->SetNumericGap(static_cast<charcount_t>(std::max(0, std::min(static_cast<int>(MaxGapLength), TaggedInt::ToInt32(space)))));
 
             break;
         case TypeIds_Number:

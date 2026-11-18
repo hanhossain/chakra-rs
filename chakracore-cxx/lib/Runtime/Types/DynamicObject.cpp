@@ -56,7 +56,7 @@ namespace Js
         Assert(typeHandler->IsObjectHeaderInlinedTypeHandler() || !ThreadContext::IsOnStack(this->auxSlots));
         int propertyCount = typeHandler->GetPropertyCount();
         int inlineSlotCapacity = GetTypeHandler()->GetInlineSlotCapacity();
-        int inlineSlotCount = min(inlineSlotCapacity, propertyCount);
+        int inlineSlotCount = std::min(inlineSlotCapacity, propertyCount);
         typename WriteBarrierFieldTypeTraits<Var>::Type* srcSlots = instance->GetInlineSlots();
         typename WriteBarrierFieldTypeTraits<Var>::Type* dstSlots = this->GetInlineSlots();
         // Copy the inline slot data from the source instance. Deep copy is implicit because

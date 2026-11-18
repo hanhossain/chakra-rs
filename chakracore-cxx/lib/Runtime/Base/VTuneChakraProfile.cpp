@@ -24,7 +24,7 @@ utf8char_t* VTuneChakraProfile::GetUrl(Js::FunctionBody* body, size_t* urlBuffer
         {
             size_t urlCharLength = std::u16string(url).length();
             charcount_t ccUrlCharLength = static_cast<charcount_t>(urlCharLength);
-            ccUrlCharLength = min(ccUrlCharLength, UINT_MAX);       // Just truncate if it is too big
+            ccUrlCharLength = std::min(ccUrlCharLength, UINT_MAX);       // Just truncate if it is too big
 
             *urlBufferLength = UInt32Math::MulAdd<3, 1>(ccUrlCharLength);
             utf8Url = HeapNewNoThrowArray(utf8char_t, *urlBufferLength);

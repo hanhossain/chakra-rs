@@ -9,7 +9,7 @@ namespace Js {
     TypePath* TypePath::New(Recycler* recycler, uint size)
     {
         Assert(size <= MaxPathTypeHandlerLength);
-        size = max(size, InitialTypePathSize);
+        size = std::max(size, InitialTypePathSize);
 
 
         if (PHASE_OFF1(Js::TypePathDynamicSizePhase))

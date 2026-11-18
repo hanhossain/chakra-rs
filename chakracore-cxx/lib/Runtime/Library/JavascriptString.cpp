@@ -1058,7 +1058,7 @@ case_2:
         // 3.  Let searchStr be ToString(searchString).
         // 4.  Let pos be ToInteger(position). (If position is undefined, this step produces the value 0).
         // 5.  Let len be the number of characters in S.
-        // 6.  Let start be min(max(pos, 0), len).
+        // 6.  Let start be std::min(std::max(pos, 0), len).
         // 7.  Let searchLen be the number of characters in searchStr.
         // 8.  Return the smallest possible integer k not smaller than start such that k+ searchLen is not greater than len, and for all nonnegative integers j less than searchLen, the character at position k+j of S is the same as the character at position j of searchStr); but if there is no such integer k, then return the value -1.
         // NOTE
@@ -1084,7 +1084,7 @@ case_2:
             else
             {
                 position = ConvertToIndex(args[2], scriptContext); // this is to adjust corner cases like MAX_VALUE
-                position = min(max(position, 0), len);  // adjust position within string limits
+                position = std::min(std::max(position, 0), len);  // adjust position within string limits
             }
         }
 
@@ -1168,7 +1168,7 @@ case_2:
         // 4. Let numPos be ? ToNumber(position). (If position is undefined, this step produces the value NaN.)
         // 5. If numPos is NaN, let pos be +infinity; otherwise, let pos be ToInteger(numPos).
         // 6. Let len be the number of elements in S.
-        // 7. Let start be min(max(pos, 0), len).
+        // 7. Let start be std::min(std::max(pos, 0), len).
 
         const charcount_t inputLen = pThis->GetLength();
         const charcount_t searchLen = searchArg->GetLength();
@@ -1192,7 +1192,7 @@ case_2:
                     // No point searching beyond the possible end point.
                     pos = inputLen - searchLen;
                 }
-                position = (charcount_t)min(max(pos, (double)0), (double)inputLen); // adjust position within string limits
+                position = (charcount_t)std::min(std::max(pos, (double)0), (double)inputLen); // adjust position within string limits
             }
         }
 
@@ -1201,7 +1201,7 @@ case_2:
             // No point searching beyond the possible end point.
             position = inputLen - searchLen;
         }
-        const char16_t* const searchUpperBound = searchLowerBound + min(position, inputLen - 1);
+        const char16_t* const searchUpperBound = searchLowerBound + std::min(position, inputLen - 1);
 
         // 8. Let searchLen be the number of elements in searchStr.
         // 9. Return the largest possible nonnegative integer k not larger than start such that k + searchLen is
@@ -1824,7 +1824,7 @@ case_2:
 
         if (idxStart < 0)
         {
-            idxStart = max(len + idxStart, 0);
+            idxStart = std::max(len + idxStart, 0);
         }
         else if (idxStart > len)
         {
@@ -1833,7 +1833,7 @@ case_2:
 
         if (idxEnd < 0)
         {
-            idxEnd = max(len + idxEnd, 0);
+            idxEnd = std::max(len + idxEnd, 0);
         }
         else if (idxEnd > len )
         {
@@ -1950,8 +1950,8 @@ case_2:
             }
         }
 
-        idxStart = min(max(idxStart, 0), len);
-        idxEnd = min(max(idxEnd, 0), len);
+        idxStart = std::min(std::max(idxStart, 0), len);
+        idxEnd = std::min(std::max(idxEnd, 0), len);
         if(idxEnd < idxStart)
         {
             //swap
@@ -1998,7 +1998,7 @@ case_2:
         }
         if (idxStart < 0)
         {
-            idxStart = max(len + idxStart, 0);
+            idxStart = std::max(len + idxStart, 0);
         }
         else if (idxStart > len)
         {
@@ -2592,7 +2592,7 @@ case_2:
             if (!JavascriptOperators::IsUndefinedObject(args[2]))
             {
                 startPosition = ConvertToIndex(args[2], scriptContext); // this is to adjust corner cases like MAX_VALUE
-                startPosition = min(max(startPosition, 0), thisStrLen);
+                startPosition = std::min(std::max(startPosition, 0), thisStrLen);
             }
         }
 
@@ -2646,7 +2646,7 @@ case_2:
             if (!JavascriptOperators::IsUndefinedObject(args[2]))
             {
                 endPosition = ConvertToIndex(args[2], scriptContext); // this is to adjust corner cases like MAX_VALUE
-                endPosition = min(max(endPosition, 0), thisStrLen);
+                endPosition = std::min(std::max(endPosition, 0), thisStrLen);
             }
         }
 
@@ -3406,7 +3406,7 @@ case_2:
             lMatchedJump = jmpTable[searchFirst].shift;
         }
         char16_t c;
-        char16_t const * p = inputStr + min(len - searchLen, position);
+        char16_t const * p = inputStr + std::min(len - searchLen, position);
 
         while (true)
         {
@@ -3559,7 +3559,7 @@ case_2:
         uint string1Len = string1->GetLength();
         uint string2Len = string2->GetLength();
 
-        int result = PAL_wmemcmp(string1->GetString(), string2->GetString(), min(string1Len, string2Len));
+        int result = PAL_wmemcmp(string1->GetString(), string2->GetString(), std::min(string1Len, string2Len));
 
         return (result == 0) ? (int)(string1Len - string2Len) : result;
     }

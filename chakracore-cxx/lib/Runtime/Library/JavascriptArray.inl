@@ -247,7 +247,7 @@ namespace Js
             // Update the size so that it does not exceed SparseArraySegmentBase::INLINE_CHUNK_SIZE.
 
             uint inlineChunkSize = SparseArraySegmentBase::INLINE_CHUNK_SIZE;
-            uint size = min(alignedInlineElementSlots, inlineChunkSize);
+            uint size = std::min(alignedInlineElementSlots, inlineChunkSize);
 
             array = RecyclerNewPlusZ(recycler, allocationPlusSize, className, length, arrayType);
 

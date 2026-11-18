@@ -7281,7 +7281,7 @@ void Parser::ParseExpressionLambdaBody(ParseNodeFnc * pnodeLambda, bool fAllowIn
         // but do it here manually since we know there is no outer statement node.
         pnodeRet->grfnop = 0;
 
-        pnodeLambda->ichLim = max(pnodeRet->ichLim, lastRParen);
+        pnodeLambda->ichLim = std::max(pnodeRet->ichLim, lastRParen);
         pnodeLambda->cbLim = this->GetScanner()->IecpLimTokPrevious();
         pnodeLambda->pnodeScopes->ichLim = pnodeRet->ichLim;
 
@@ -7298,7 +7298,7 @@ void Parser::ParseExpressionLambdaBody(ParseNodeFnc * pnodeLambda, bool fAllowIn
     }
     else
     {
-        pnodeLambda->ichLim = max(this->GetScanner()->IchLimTokPrevious(), lastRParen);
+        pnodeLambda->ichLim = std::max(this->GetScanner()->IchLimTokPrevious(), lastRParen);
         pnodeLambda->cbLim = this->GetScanner()->IecpLimTokPrevious();
     }
 }

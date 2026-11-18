@@ -3236,7 +3236,7 @@ JsErrorCode WriteStringCopy(
         return JsErrorInvalidArgument;  // start out of range, no chars written
     }
 
-    size_t count = min(static_cast<size_t>(length), strLength - start);
+    size_t count = std::min(static_cast<size_t>(length), strLength - start);
     if (count == 0)
     {
         return JsNoError;  // no chars written

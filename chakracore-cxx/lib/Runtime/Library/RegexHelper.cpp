@@ -505,7 +505,7 @@ namespace Js
                 }
                 globalIndex++;
             }
-            offset = lastActualMatch.offset + max(lastActualMatch.length, static_cast<CharCountOrFlag>(1));
+            offset = lastActualMatch.offset + std::max(lastActualMatch.length, static_cast<CharCountOrFlag>(1));
         } while (isGlobal);
         PrimEndMatch(state, scriptContext, pattern);
         if (updateHistory)
@@ -998,20 +998,20 @@ namespace Js
                 long length = JavascriptConversion::ToLength(
                     JavascriptOperators::GetProperty(resultObj, PropertyIds::length, scriptContext),
                     scriptContext);
-                unsigned long numberOfCaptures = (unsigned long) max(length - 1, (long) 0);
+                unsigned long numberOfCaptures = (unsigned long) std::max(length - 1, (long) 0);
 
                 JavascriptString* matchStr = GetMatchStrFromResult(resultObj, scriptContext);
 
                 long index = JavascriptConversion::ToLength(
                     JavascriptOperators::GetProperty(resultObj, PropertyIds::index, scriptContext),
                     scriptContext);
-                CharCount position = max(
-                    min(JavascriptRegExp::GetIndexOrMax(index), inputLength),
+                CharCount position = std::max(
+                    std::min(JavascriptRegExp::GetIndexOrMax(index), inputLength),
                     (CharCount) 0);
 
                 // Capture groups can be referenced using at most two digits.
                 const unsigned long maxNumberOfCaptures = 99;
-                size_t numberOfCapturesToKeep = (size_t) min(numberOfCaptures, maxNumberOfCaptures);
+                size_t numberOfCapturesToKeep = (size_t) std::min(numberOfCaptures, maxNumberOfCaptures);
                 if (captures == nullptr)
                 {
                     captures = RecyclerNewArray(recycler, typename WriteBarrierFieldTypeTraits<Var>::Type, numberOfCapturesToKeep + 1);
@@ -1105,7 +1105,7 @@ namespace Js
             // If lastIndex > 0, append input[0..offset] characters to the result
             if (offset > 0)
             {
-                concatenated.Append(input, 0, min(offset, inputLength));
+                concatenated.Append(input, 0, std::min(offset, inputLength));
             }
 
             do
@@ -1262,7 +1262,7 @@ namespace Js
 
         if (offset > 0)
         {
-            concatenated.Append(input, 0, min(offset, inputLength));
+            concatenated.Append(input, 0, std::min(offset, inputLength));
         }
 
         do
@@ -1609,7 +1609,7 @@ namespace Js
             else
             {
                 CharCount endIndex = JavascriptRegExp::GetLastIndexProperty(splitter, scriptContext); // 'e' in spec
-                endIndex = min(endIndex, inputLength);
+                endIndex = std::min(endIndex, inputLength);
                 if (endIndex == substringStartIndex)
                 {
                     substringEndIndex = AdvanceStringIndex(input, substringEndIndex, unicode);
@@ -1629,7 +1629,7 @@ namespace Js
                     long length = JavascriptConversion::ToLength(
                         JavascriptOperators::GetProperty(resultObject, PropertyIds::length, scriptContext),
                         scriptContext);
-                    unsigned long numberOfCaptures = max(length - 1, (long) 0);
+                    unsigned long numberOfCaptures = std::max(length - 1, (long) 0);
                     for (unsigned long i = 1; i <= numberOfCaptures; ++i)
                     {
                         Var nextCapture = JavascriptOperators::GetItem(resultObject, i, scriptContext);
@@ -1808,7 +1808,7 @@ namespace Js
         CharCount matchLen = match->GetLength();
         if (matchLen == 0)
         {
-            CharCount count = min(input->GetLength(), limit);
+            CharCount count = std::min(input->GetLength(), limit);
             ary = scriptContext->GetLibrary()->CreateArray(count);
             const char16_t * charString = input->GetString();
             for (CharCount i = 0; i < count; i++)
@@ -1828,7 +1828,7 @@ namespace Js
                 if (offset != CharCountFlag)
                 {
                     ary->DirectSetItemAt(i++, SubString::New(input, prevOffset, offset-prevOffset));
-                    offset += max(matchLen, static_cast<CharCount>(1));
+                    offset += std::max(matchLen, static_cast<CharCount>(1));
                     if (offset > input->GetLength())
                         break;
                 }

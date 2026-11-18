@@ -190,7 +190,7 @@ namespace Js
             if (!(NumberUtilities::IsNan(t) || JavascriptNumber::IsPosInf(t)))
             {
                 int32_t t1 = JavascriptConversion::ToInt32(t);
-                timeout = (uint32_t)max(0, t1);
+                timeout = (uint32_t)std::max(0, t1);
             }
         }
 
@@ -243,7 +243,7 @@ namespace Js
             if (!(NumberUtilities::IsNan(d) || JavascriptNumber::IsPosInf(d)))
             {
                 int32_t c = JavascriptConversion::ToInt32(d);
-                count = max(0, c);
+                count = std::max(0, c);
             }
         }
 
