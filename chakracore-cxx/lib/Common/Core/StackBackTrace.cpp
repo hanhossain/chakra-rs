@@ -2,9 +2,10 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
+#include "StackBackTrace.h"
 
 #ifdef STACK_BACK_TRACE
-#include "Core/StackBackTrace.h"
+#include "Output.h"
 
 StackBackTrace::StackBackTrace(uint32_t framesToSkip, uint32_t framesToCapture) : requestedFramesToCapture(framesToCapture)
 {
@@ -23,7 +24,7 @@ StackBackTrace::Capture(char* buffer, size_t bufSize, uint32_t framesToSkip)
 }
 
 // This can be called multiple times, together with Create, in which case we will use (overwrite) same buffer.
-uint32_t StackBackTrace::Capture(uint32_t framesToSkip)
+uint32_t StackBackTrace::Capture([[maybe_unused]] uint32_t framesToSkip)
 {
     this->framesCount = CaptureStackBackTrace(framesToSkip + BaseFramesToSkip, this->requestedFramesToCapture, this->stackBackTrace, NULL);
     return this->framesCount;

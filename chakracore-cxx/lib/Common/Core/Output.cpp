@@ -3,8 +3,11 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include <string>
-#include "pal.h"
 #include "Output.h"
+#include "pal.h"
+#include "Assertions.h"
+#include "Api.h"
+#include "ConfigFlagsTable.h"
 
 // Initialization order
 //  AB AutoSystemInfo
@@ -31,7 +34,6 @@ thread_local const char16_t* Output::prefix = nullptr;
 
 #define MAX_OUTPUT_BUFFER_SIZE 10 * 1024 * 1024  // 10 MB maximum before we force a flush
 
-#ifdef ENABLE_TRACE
 size_t
 Output::Trace(Js::Phase phase, const char16_t *form, ...)
 {
@@ -125,7 +127,6 @@ Output::VTrace(const char16_t* shortPrefixFormat, const char16_t* prefix, const 
     retValue += Output::VPrint(form, argptr);
     return retValue;
 }
-#endif // ENABLE_TRACE
 
 ///----------------------------------------------------------------------------
 ///

@@ -31,7 +31,7 @@ ThreadContextId JsUtil::ExternalApi::GetCurrentThreadContextId()
 }
 
 #if DBG || defined(EXCEPTION_CHECK)
-BOOL JsUtil::ExternalApi::IsScriptActiveOnCurrentThreadContext()
+bool JsUtil::ExternalApi::IsScriptActiveOnCurrentThreadContext()
 {
     return ThreadContext::GetContextForCurrentThread() != nullptr &&
         ThreadContext::GetContextForCurrentThread()->IsScriptActive();

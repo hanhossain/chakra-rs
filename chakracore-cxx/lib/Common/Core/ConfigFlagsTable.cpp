@@ -2644,17 +2644,15 @@ namespace Js
         Sse(DEFAULT_CONFIG_Sse),
         ForceStringKeyedSimpleDictionaryTypeHandler(DEFAULT_CONFIG_ForceStringKeyedSimpleDictionaryTypeHandler),
         BigDictionaryTypeHandlerThreshold(DEFAULT_CONFIG_BigDictionaryTypeHandlerThreshold),
-        PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel),
+        PerfHintLevel(DEFAULT_CONFIG_PerfHintLevel)
 
 #if DBG
-        InitializeInterpreterSlotsWithInvalidStackVar(false),
+        , InitializeInterpreterSlotsWithInvalidStackVar(false)
 #endif
 
 #if DBG
-            SimulatePolyCacheWithOneTypeForInlineCacheIndex(-1),
+            , SimulatePolyCacheWithOneTypeForInlineCacheIndex(-1)
 #endif
-
-        nDummy(0)
     {
         for(int i=0; i < FlagCount; flagPresent[i++] = false);
 

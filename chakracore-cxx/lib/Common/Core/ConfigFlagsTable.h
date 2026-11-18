@@ -1785,11 +1785,6 @@ namespace Js
         int             rawInputFromConfigFileIndex;
 
     private:
-        //
-        // This variable is defined for the constructor
-        //
-                int             nDummy;
-
                 // indicates whether a flag is a parent flag
                 bool            flagIsParent[FlagMax + 1];
 

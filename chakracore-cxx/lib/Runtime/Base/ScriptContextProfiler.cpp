@@ -5,6 +5,7 @@
 
 #ifdef PROFILE_EXEC
 #include "Base/ScriptContextProfiler.h"
+#include "Core/ProfileInstrument.h"
 
 namespace Js
 {

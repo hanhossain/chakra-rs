@@ -5,7 +5,9 @@
 #pragma once
 
 #ifdef STACK_BACK_TRACE
-
+#include "Core/Assertions.h"
+#include <cstddef>
+#include <cstdint>
 #include <execinfo.h>
 #define CaptureStackBackTrace(FramesToSkip, FramesToCapture, buffer, hash) \
     backtrace(buffer, FramesToCapture)

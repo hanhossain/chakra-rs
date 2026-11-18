@@ -2,14 +2,15 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
-#include <string>
-#include <rust/cxx.h>
-
+#include "Core/ConfigParser.h"
+#include "Core/ConfigFlagsTable.h"
 #include "Memory/ForcedMemoryConstraints.h"
 #include "Core/ICustomConfigFlags.h"
 #include "Core/CmdParser.h"
-#include "Core/ConfigParser.h"
+#include "Memory/ArenaAllocator.h"
 
+#include <string>
+#include <rust/cxx.h>
 #include <filesystem>
 #include <unistd.h>
 

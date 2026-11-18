@@ -99,7 +99,6 @@
 #endif
 #define SECURITY_TESTING
 
-#define PROFILE_EXEC
 #define BGJIT_STATS
 #define REJIT_STATS
 #define PERF_HINT
@@ -185,7 +184,6 @@
 // #define BGJIT_STATS
 
 // Profile defines that can be enabled in release build
-// #define PROFILE_EXEC
 // #define MEMSPECT_TRACKING
 
 // Recycler defines that can be enabled in release build
@@ -254,19 +252,6 @@
 //----------------------------------------------------------------------------------------------------
 
 #define ENABLE_PREJIT
-
-// Enable Output::Trace
-#define ENABLE_TRACE
-
-#if !(defined(__clang__) && defined(_M_ARM32_OR_ARM64)) // xplat-todo: ARM
-#define STACK_BACK_TRACE
-#endif
-
-// ENABLE_DEBUG_STACK_BACK_TRACE is for capturing stack back trace for debug only.
-// (STACK_BACK_TRACE is enabled on release build, used by RECYCLER_PAGE_HEAP.)
-#if defined(STACK_BACK_TRACE)
-#define ENABLE_DEBUG_STACK_BACK_TRACE 1
-#endif
 
 #if defined(USED_IN_STATIC_LIB)
 #undef RECYCLER_DUMP_OBJECT_GRAPH
